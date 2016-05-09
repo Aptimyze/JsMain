@@ -1,0 +1,39 @@
+<html>
+<head>
+        <script language="JavaScript" type="text/javascript">
+        function MM_openBrWindow(obj,theURL,winName,features)
+        {
+                window.open(theURL,winName,features);
+        }
+                                                                                                 
+        </script>
+
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+        <title>Jeevansathi.com</title>
+        <link rel="stylesheet" href="/billing/jeevansathi1.css" type="text/css">
+</head>
+<body>
+<form action="search_rev_user.php" method="post">	
+<table  border="0" cellspacing="4" cellpadding="4" width="40%" align="center">
+<tr>
+<td colspan=2 class='formhead' align='center'>Companies Found </td>
+</tr>
+~foreach from=$COMPANIES item=val`
+<tr>
+<td class='fieldsnew'>
+<input type='radio' name='phrase' value='~$val`'></td>
+<td class='fieldsnew' value=~$val`>~$val`</td>
+</tr>
+~/foreach`
+<tr>
+<td class='fieldsnew' colspan=2 align='center'>
+<input type='submit' name='submitCompany' value='Search Client' />	
+</td>
+</tr>
+</table>
+<input type='hidden' value='uname' name='criteria' />
+<input type='hidden' value=~$CID` name='cid' />
+<input type='hidden' value='selected' name='companySelected' />	
+</form>
+</body>
+</html>

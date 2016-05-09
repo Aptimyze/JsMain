@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="../test/phpUnit/bootstrap.php"
+         backupGlobals="false"
+         backupStaticAttributes="false"
+         strict="false"  
+         verbose="true">
+       
+  <testsuites>
+    <testsuite name="PhpUnit : Unit Test">
+      <directory suffix="Test.php">../test/phpUnit/unit</directory>
+      <directory suffix="Test.class.php">../test/phpUnit/unit</directory>
+      <exclude>../test/phpUnit/unit/photoUpload/</exclude>
+      <exclude>../test/phpUnit/unit/profileCompletionScoreTest.php</exclude>
+    </testsuite>
+    <testsuite name="PhpUnit : Functional Test">
+      <directory suffix="Test.php">../test/phpUnit/functional</directory>
+    </testsuite>
+  </testsuites>
+
+  <logging>
+    <log type="coverage-html" target="coverage"/>
+    <log type="coverage-clover" target="logs/clover.xml"/>
+    <log type="coverage-crap4j" target="logs/crap4j.xml"/>
+    <log type="junit" target="logs/junit.xml" logIncompleteSkipped="false"/>
+  </logging>
+
+  <filter>
+    <whitelist addUncoveredFilesFromWhitelist="true">
+      <directory suffix=".php">../lib/model/lib/picture</directory>
+      <file>../lib/model/lib/assistedProduct/getIntroCallHistory.class.php</file>
+      <file>../lib/model/lib/canSend/canSendEmail.class.php</file>
+      <file>../lib/model/lib/profile/checkForSharingProfile.class.php</file>
+      <exclude>
+		<directory suffix=".php">../lib/vendor</directory>
+		<directory suffix=".php">../cache</directory>
+		<directory suffix=".php">../plugins</directory>
+        <file>../test/phpUnit/bootstrap.php</file>
+      </exclude>
+    </whitelist>
+  </filter>
+</phpunit>

@@ -1,0 +1,67 @@
+<html>
+	<title>Matri-profile</title>
+	<head>
+		<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+	</head>
+	<script>
+		function validate()
+		{
+			if(document.form1.comment.value=="")
+			{
+				alert("Comment field should not be blank");
+				return false;
+			}
+		}
+	</script>
+	<body>
+		<table width="50%" align="center" cellpadding="4" cellspacing="4" border="0">
+			<tr>
+				<td align="center"><img src="../profile/images/logo_1.gif" width="192" height="65"></td>
+			</tr>
+		</table>
+		~if $COMMENTED`
+			~$MATRI_MESSAGE`
+		~else`
+			<form name="form1" method="post" action="matri_add_comment.php" onSubmit="return validate();">
+			<input type="hidden" name="checksum" value="~$checksum`">
+			<input type="hidden" name="username" value="~$username`">
+			<input type="hidden" name="profileid" value="~$profileid`">
+			<table width="60%" align="center" cellpadding="4" cellspacing="2">
+				<tr align="center">
+					<td class="formhead" colspan="2" align="center">Add Comment</td>
+				</tr>
+				<tr align="center">
+					<td class="label">Comment</td>
+					<td class="fieldsnew">
+						<textarea name="comment" rows="5" cols="30"></textarea>
+					</td>
+				</tr>
+				<tr align="center">
+					<td class="fieldsnew" colspan="2">
+						<input type="submit" name="submit" value="Submit" class="buttons1">
+					</td>
+				</tr>
+			</table>
+			</form>
+			<table width="90%" align="center" cellpadding="4" cellspacing="2">
+				<tr class="formhead" align="center">
+					<td colspan="4">Comment(s) for ~$username`</td>
+				</tr>
+				<tr class="label" align="center">
+					<td>S.No</td>
+					<td>Comment</td>
+					<td>Comment by</td>
+					<td>Date</td>
+				</tr>
+				~section name=next loop=$details`
+					<tr class="fieldsnew" align="center">
+						<td>~$details[next].SNO`</td>
+						<td>~$details[next].COMMENT`</td>
+						<td>~$details[next].COMMENT_BY`</td>
+						<td>~$details[next].ENTRY_DT`</td>
+					</tr>
+				~/section`
+			</table>
+		~/if`
+	</body>
+</html>

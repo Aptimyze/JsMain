@@ -1,0 +1,140 @@
+<html>
+<head>
+<title>Jeevansathi.com - MIS - ZONE STATUS </title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+                                                                                                 
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+                                                                                                 
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br><br>
+~if $flag eq '1'`
+~if $mflag eq '1'`
+<table width="100%" align="center" border=0 cellspacing=2 cellpadding=5>
+<tr class="formhead">
+	<td colspan=100% align="center">&nbsp;&nbsp;&nbsp;&nbsp;Year : ~$myear`</td>
+</tr>
+<tr class="label">
+	<td align="center" width=6%>&nbsp;
+	<font color="green" >NEW</font>+<font color="blue">EDIT</font>=
+	<font color="red">Total</font>
+	</td>
+	~section name=mm loop=$mmarr`
+        <td align="center">&nbsp;~$mmarr[mm]`</td>
+	~/section`
+</tr>
+~section name=usr loop=$operators`
+<tr class="fieldsnew">
+	<td align="left" class="label">&nbsp;~$operators[usr]`	
+	</td>
+	~section name=mm loop=$mmarr`
+	<td width=6% align="center" valign="center">
+	~if $cnt[usr][mm].new eq 0 and $cnt[usr][mm].edit eq 0`
+                &nbsp;
+        ~else`
+		<font color="green">~$cnt[usr][mm].new`</font>+
+		<font color="blue">~$cnt[usr][mm].edit`</font>=
+		<font color="red">~$cnt[usr][mm].total`</font>
+	~/if`
+	</td>
+	~/section`
+</tr>
+~/section`
+<td colspan=100% align="center">&nbsp;</td>
+</table>
+~elseif $dflag eq '1'`
+<table width="100%" align="center" border=0 cellspacing=2 cellpadding=5>
+<tr class="formhead">
+	<td colspan=100% align="center">&nbsp;&nbsp;&nbsp;&nbsp;Month : ~$dmonth` Year : ~$dyear`</td>
+</tr>
+<tr class="label">
+	<td align="center" width=6%>&nbsp;
+	<font color="green">NEW</font>+
+	<font color="blue">EDIT</font>=
+	<font color="red">TOTAL</font>
+	</td>
+	~section name=dd loop=$ddarr`
+	<td align="center">&nbsp;~$ddarr[dd]`</td>
+	~/section`
+</tr>
+~section name=usr loop=$operators`
+<tr class="fieldsnew">
+	<td align="center" class="label">&nbsp;~$operators[usr]`</td>
+	~section name=dd loop=$ddarr`
+	<td width=6% align="center" valign="center">
+	~if $cnt[usr][dd].new eq 0 and $cnt[usr][dd].edit eq 0`
+		&nbsp;
+	~else`
+		<font color="green">~$cnt[usr][dd].new`</font>+
+		<font color="blue">~$cnt[usr][dd].edit`</font>=
+		<font color="red">~$cnt[usr][dd].total`</font>
+	~/if`
+	</td>
+	~/section`
+</tr>
+~/section`
+<td colspan=100% align="center">&nbsp;</td>
+</table>
+	~/if`
+
+~else`
+<form method=post action="new_edit_mis.php">
+<table width=80% border=0 align="center" cellpadding=5>
+<tr>
+	<td colspan=2>&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr>
+	<td colspan=2 class="textboxes" align="center"><strong>MIS to separately view number of new and edit profiles screened</strong></td>
+</tr>
+<tr>
+	<td colspan=2>&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr>
+	<td>&nbsp;&nbsp;&nbsp;<input name="type" type="radio" value='M' checked>&nbsp;Month View</td>
+	<td >
+	<select name="myear">
+	~section name=yr loop=$yyarr`
+		<option value=~$yyarr[yr]`>~$yyarr[yr]`</option>
+	~/section`
+	</select>&nbsp;Year
+	</td>
+</tr>
+<tr>
+	<td>&nbsp;&nbsp;&nbsp;<input name="type" type="radio" value='D'>Day View</td>
+	<td>
+	<select name="dmonth">
+	~section name=mon loop=$mmarr`
+		<option value=~$mmarr[mon]`>~$mmarr[mon]`</option>
+	~/section`
+	</select>&nbsp;Month
+	<select name="dyear">
+	~section name=yr loop=$yyarr`
+		<option value=~$yyarr[yr]`>~$yyarr[yr]`</option>
+	~/section`
+	</select>&nbsp;Year
+	</td>
+</tr>
+<tr>
+	<input type="hidden" name="checksum" value=~$CHECKSUM`>
+	<td colspan=2 align="center"><input type="SUBMIT" name="SUBMIT" value="     Go     "></td>
+</tr>
+</table>
+</form>
+~/if`
+</body>
+</html>
+

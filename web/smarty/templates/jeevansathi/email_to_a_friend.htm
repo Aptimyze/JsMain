@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>Forward to a Friend</title>
+	<link rel="stylesheet" href="/profile/css/~$comm_style_css`" type="text/css">
+
+	<style type="text/css">
+		.ol{width:340px; height:280px; background:#FFFDDF; border:1px solid #9B9B9B; padding:10px}
+		.inbx{width:100%;font:bold 15px verdana,arial; color:#EF9429; padding:4px; border-bottom:1px solid #000000;}
+		.pd{ padding-top:10px}
+	</style>
+</head>
+
+<body>
+<form method="post" action="forward_profile.php">
+<div class="ol">
+	<div class="inbx">
+		<div>Forward this profile to your Friend</div>
+	</div>
+	<div class="spacer">&nbsp;</div>
+	~if $cfname or $cfemail`
+		<div class="lftflow"><img src="~$IMG_URL`/profile/images/error_1.gif"></div>
+		<div class="leftflow bele">Please fill the details of your friend.</div>
+		<div class="spacer">&nbsp;</div>
+	~elseif $cname or $cemail`
+		<div class="lftflow"><img src="~$IMG_URL`/profile/images/error_1.gif"></div>
+		<div class="leftflow bele">Please fill your details.</div>
+		<div class="spacer">&nbsp;</div>
+	~/if`
+	<div class="greyele leftflow pd" style="width:95% ">
+		<div class="lftflow" style="width:50% ">
+			~if $cfname`
+				<font color="red">Friend's Name</font>
+			~else`
+				Friend's Name
+			~/if`
+			<div class="spacer1">&nbsp;</div>
+			<input type="text" name="fname[]" value="~$fname[0]|encodehtml`" class="textbox" tabindex="1">
+			<div class="spacer1">&nbsp;</div>
+			<input type="text" name="fname[]" value="~$fname[1]|encodehtml`" class="textbox" tabindex="3">
+			<div class="spacer1">&nbsp;</div>
+			<input type="text" name="fname[]" value="~$fname[2]|encodehtml`" class="textbox" tabindex="5">
+		</div>
+		<div class="lftflow" style="width:45% ">
+			~if $cfemail`
+				<font color="red">Email ID</font>
+			~else`
+				Email ID
+			~/if`
+			<div class="spacer1">&nbsp;</div>
+			<input type="text" name="femail[]" value="~$femail[0]|encodehtml`" class="textbox" tabindex="2">
+			<div class="spacer1">&nbsp;</div>
+			<input type="text" name="femail[]" value="~$femail[1]|encodehtml`" class="textbox" tabindex="4">
+			<div class="spacer1">&nbsp;</div>
+			<input type="text" name="femail[]" value="~$femail[2]|encodehtml`" class="textbox" tabindex="6">
+		</div>
+	</div>
+
+	<div class="spacer15">&nbsp;</div>
+	<div class="spacerg">&nbsp;</div>
+	<div class="greyele leftflow pd" style="width:95% ">
+		<div class="lftflow" style="width:50% ">
+			~if $cname eq '1'`
+				<font color="red">Your Name</font>
+			~else`
+				Your Name
+			~/if`
+			<div class="spacer1">&nbsp;</div>
+			<input type="text" name="name" value="~$name|encodehtml`"class="textbox">
+		</div>
+		<div class="lftflow" style="width:45% ">
+			~if $cemail eq '1'`
+				<font color="red">Email ID</font>
+			~else`
+				Email ID
+			~/if`
+			<div class="spacer1">&nbsp;</div>
+			<input type="text" name="email" value="~$email|encodehtml`" disabled="disabled" class="textbox">
+		</div>
+	</div>
+	<div class="spacer15">&nbsp;</div>
+	<div class="spacerg">&nbsp;</div>
+	<div class="spacer15">&nbsp;</div>
+	<div align="center">
+		<input type="submit" name="send" value="Send" style="width:90px" class="buttonor">
+	</div>
+</div>
+<input type="hidden" name="profilechecksum" value="~$PROFILECHECKSUM|encodehtml`">
+<input type="hidden" name="send" value="true">
+<input type="hidden" name="crmback" value="~$crmback`">
+<input type="hidden" name="inf_checksum" value="~$inf_checksum`">
+</form>
+</body>
+</html>

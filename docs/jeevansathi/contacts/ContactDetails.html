@@ -1,0 +1,1629 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class ContactDetails</title>
+			<link rel="stylesheet" href="../../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class ContactDetails</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">ContactDetails contains  methods to calculate individual profile viewcontact details  and set the required attributes for creating Pre Post component respectively</p>
+	<ul class="tags">
+				<li><span class="field">author:</span> Nitesh Sethi</li>
+				<li><span class="field">version:</span> 1.0   SVN: $Id:  Privilege 23810 2012-11-16 nitesh.s $</li>
+				<li><span class="field">usedby:</span> <a href="../../jeevansathi/contacts/ViewContacts.html#methodsetPreComponent">ViewContacts::setPreComponent()</a></li>
+				<li><span class="field">usedby:</span> <a href="../../jeevansathi/contacts/ViewContacts.html#methodsetPostComponent">ViewContacts::setPostComponent()</a></li>
+			</ul>
+		<p class="notes">
+			Located in <a class="field" href="_contacts---ContactDetails.class.php.html">/contacts/ContactDetails.class.php</a> (line <span class="field">12</span>)
+		</p>
+		
+				
+		<pre></pre>
+	
+			</div>
+</div>
+
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+												<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																																																																																																																																																																																																																																																																																																																																																												
+												<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#__construct" title="details" class="method-name">__construct</a>
+											(<span class="var-type">Profile</span>&nbsp;<span class="var-name">$profileObj</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$directCall</span> = <span class="var-default">&quot;&quot;</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$fromMobile</span> = <span class="var-default">&quot;&quot;</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#checkDetails" title="details" class="method-name">checkDetails</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getALT_MOBILE" title="details" class="method-name">getALT_MOBILE</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getALT_MOBILE_LABEL" title="details" class="method-name">getALT_MOBILE_LABEL</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getCONTACT_LOCKED" title="details" class="method-name">getCONTACT_LOCKED</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getEMAIL_ID" title="details" class="method-name">getEMAIL_ID</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getLEFT_ALLOTED" title="details" class="method-name">getLEFT_ALLOTED</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getMOB_PHONE_NO" title="details" class="method-name">getMOB_PHONE_NO</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getMOB_PHONE_OWNER_NAME" title="details" class="method-name">getMOB_PHONE_OWNER_NAME</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getMOB_PHONE_OWNER_NUMBER" title="details" class="method-name">getMOB_PHONE_OWNER_NUMBER</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getNO_SHIFT_MES" title="details" class="method-name">getNO_SHIFT_MES</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getPAID" title="details" class="method-name">getPAID</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getPROFILENAME" title="details" class="method-name">getPROFILENAME</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getRELATION_NAME" title="details" class="method-name">getRELATION_NAME</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getRES_PHONE_NO" title="details" class="method-name">getRES_PHONE_NO</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getRES_PHONE_OWNER_NAME" title="details" class="method-name">getRES_PHONE_OWNER_NAME</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getRES_PHONE_OWNER_NUMBER" title="details" class="method-name">getRES_PHONE_OWNER_NUMBER</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">char</span>
+										<a href="#getSHOW_ADDRESS" title="details" class="method-name">getSHOW_ADDRESS</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getSHOW_CONTACT" title="details" class="method-name">getSHOW_CONTACT</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getSHOW_MESSENGER" title="details" class="method-name">getSHOW_MESSENGER</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">char</span>
+										<a href="#getSHOW_PARENTS_ADDRESS" title="details" class="method-name">getSHOW_PARENTS_ADDRESS</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getTIME_TO_CALL_END" title="details" class="method-name">getTIME_TO_CALL_END</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getTIME_TO_CALL_START" title="details" class="method-name">getTIME_TO_CALL_START</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getVERIFIED_LANDLINE" title="details" class="method-name">getVERIFIED_LANDLINE</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getVERIFIED_MOB" title="details" class="method-name">getVERIFIED_MOB</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setALT_MOBILE" title="details" class="method-name">setALT_MOBILE</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$ALT_MOBILE</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setALT_MOBILE_LABEL" title="details" class="method-name">setALT_MOBILE_LABEL</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$ALT_MOBILE_LABEL</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setContactDetail" title="details" class="method-name">setContactDetail</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setCONTACT_LOCKED" title="details" class="method-name">setCONTACT_LOCKED</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$CONTACT_LOCKED</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setEMAIL_ID" title="details" class="method-name">setEMAIL_ID</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$EMAIL_ID</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setLEFT_ALLOTED" title="details" class="method-name">setLEFT_ALLOTED</a>
+											(<span class="var-type">integer</span>&nbsp;<span class="var-name">$LEFT_ALLOTED</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setMOB_PHONE_NO" title="details" class="method-name">setMOB_PHONE_NO</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$MOB_PHONE_NO</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setMOB_PHONE_OWNER_NAME" title="details" class="method-name">setMOB_PHONE_OWNER_NAME</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$MOB_PHONE_OWNER_NAME</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setMOB_PHONE_OWNER_NUMBER" title="details" class="method-name">setMOB_PHONE_OWNER_NUMBER</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$MOB_PHONE_OWNER_NUMBER</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setNO_SHIFT_MES" title="details" class="method-name">setNO_SHIFT_MES</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$NO_SHIFT_MES</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setPAID" title="details" class="method-name">setPAID</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$PAID</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setPROFILENAME" title="details" class="method-name">setPROFILENAME</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$PROFILENAME</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setRELATION_NAME" title="details" class="method-name">setRELATION_NAME</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$RELATION_NAME</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setRES_PHONE_NO" title="details" class="method-name">setRES_PHONE_NO</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$RES_PHONE_NO</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setRES_PHONE_OWNER_NAME" title="details" class="method-name">setRES_PHONE_OWNER_NAME</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$RES_PHONE_OWNER_NAME</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setRES_PHONE_OWNER_NUMBER" title="details" class="method-name">setRES_PHONE_OWNER_NUMBER</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$RES_PHONE_OWNER_NUMBER</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setSHOW_ADDRESS" title="details" class="method-name">setSHOW_ADDRESS</a>
+											(<span class="var-type">char</span>&nbsp;<span class="var-name">$SHOW_ADDRESS</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setSHOW_CONTACT" title="details" class="method-name">setSHOW_CONTACT</a>
+											(<span class="var-type">char</span>&nbsp;<span class="var-name">$SHOW_CONTACT</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setSHOW_MESSENGER" title="details" class="method-name">setSHOW_MESSENGER</a>
+											(<span class="var-type">char</span>&nbsp;<span class="var-name">$SHOW_MESSENGER</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setSHOW_PARENTS_ADDRESS" title="details" class="method-name">setSHOW_PARENTS_ADDRESS</a>
+											(<span class="var-type">char</span>&nbsp;<span class="var-name">$SHOW_PARENTS_ADDRESS</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setTIME_TO_CALL_END" title="details" class="method-name">setTIME_TO_CALL_END</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$TIME_TO_CALL_END</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setTIME_TO_CALL_START" title="details" class="method-name">setTIME_TO_CALL_START</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$TIME_TO_CALL_START</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setVERIFIED_LANDLINE" title="details" class="method-name">setVERIFIED_LANDLINE</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$VERIFIED_LANDLINE</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setVERIFIED_MOB" title="details" class="method-name">setVERIFIED_MOB</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$VERIFIED_MOB</span>)
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+
+<a name="method__construct" id="__construct"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number">209</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to initilaize the ContactDetails Class object.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			__construct
+		</span>
+					(<span class="var-type">Profile</span>&nbsp;<span class="var-name">$profileObj</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$directCall</span> = <span class="var-default">&quot;&quot;</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$fromMobile</span> = <span class="var-default">&quot;&quot;</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">Profile</span>
+				<span class="var-name">$profileObj</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$directCall</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$fromMobile</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodcheckDetails" id="checkDetails"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">checkDetails</span> (line <span class="line-number">717</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">used for testing purpose -&gt;print all the attributes value of ContactDetails</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			checkDetails
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetALT_MOBILE" id="getALT_MOBILE"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getALT_MOBILE</span> (line <span class="line-number">392</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to get the ALT_MOBILE attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getALT_MOBILE
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetALT_MOBILE_LABEL" id="getALT_MOBILE_LABEL"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getALT_MOBILE_LABEL</span> (line <span class="line-number">386</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to get the ALT_MOBILE_LABEL attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getALT_MOBILE_LABEL
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetCONTACT_LOCKED" id="getCONTACT_LOCKED"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getCONTACT_LOCKED</span> (line <span class="line-number">476</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to get the CONTACT_LOCKED attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getCONTACT_LOCKED
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetEMAIL_ID" id="getEMAIL_ID"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getEMAIL_ID</span> (line <span class="line-number">470</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to get the EMAIL_ID attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getEMAIL_ID
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetLEFT_ALLOTED" id="getLEFT_ALLOTED"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getLEFT_ALLOTED</span> (line <span class="line-number">518</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to get the LEFT_ALLOTED attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getLEFT_ALLOTED
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetMOB_PHONE_NO" id="getMOB_PHONE_NO"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getMOB_PHONE_NO</span> (line <span class="line-number">440</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to get the MOB_PHONE_NO attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getMOB_PHONE_NO
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetMOB_PHONE_OWNER_NAME" id="getMOB_PHONE_OWNER_NAME"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getMOB_PHONE_OWNER_NAME</span> (line <span class="line-number">458</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to get the MOB_PHONE_OWNER_NAME attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getMOB_PHONE_OWNER_NAME
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetMOB_PHONE_OWNER_NUMBER" id="getMOB_PHONE_OWNER_NUMBER"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getMOB_PHONE_OWNER_NUMBER</span> (line <span class="line-number">464</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to get the MOB_PHONE_OWNER_NUMBER attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getMOB_PHONE_OWNER_NUMBER
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetNO_SHIFT_MES" id="getNO_SHIFT_MES"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getNO_SHIFT_MES</span> (line <span class="line-number">500</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to get the NO_SHIFT_MES attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getNO_SHIFT_MES
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetPAID" id="getPAID"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getPAID</span> (line <span class="line-number">512</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to get the PAID attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getPAID
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetPROFILENAME" id="getPROFILENAME"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getPROFILENAME</span> (line <span class="line-number">494</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to get the PROFILENAME attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getPROFILENAME
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetRELATION_NAME" id="getRELATION_NAME"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getRELATION_NAME</span> (line <span class="line-number">422</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to get the RELATION_NAME attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getRELATION_NAME
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetRES_PHONE_NO" id="getRES_PHONE_NO"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getRES_PHONE_NO</span> (line <span class="line-number">434</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to get the RES_PHONE_NO attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getRES_PHONE_NO
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetRES_PHONE_OWNER_NAME" id="getRES_PHONE_OWNER_NAME"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getRES_PHONE_OWNER_NAME</span> (line <span class="line-number">446</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to get the RES_PHONE_OWNER_NAME attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getRES_PHONE_OWNER_NAME
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetRES_PHONE_OWNER_NUMBER" id="getRES_PHONE_OWNER_NUMBER"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getRES_PHONE_OWNER_NUMBER</span> (line <span class="line-number">452</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to get the RES_PHONE_OWNER_NUMBER attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getRES_PHONE_OWNER_NUMBER
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetSHOW_ADDRESS" id="getSHOW_ADDRESS"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getSHOW_ADDRESS</span> (line <span class="line-number">398</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to get the SHOW_ADDRESS attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">char</span>
+		<span class="method-name">
+			getSHOW_ADDRESS
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetSHOW_CONTACT" id="getSHOW_CONTACT"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getSHOW_CONTACT</span> (line <span class="line-number">506</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to get the SHOW_CONTACT attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getSHOW_CONTACT
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetSHOW_MESSENGER" id="getSHOW_MESSENGER"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getSHOW_MESSENGER</span> (line <span class="line-number">428</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to get the SHOW_MESSENGER attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getSHOW_MESSENGER
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetSHOW_PARENTS_ADDRESS" id="getSHOW_PARENTS_ADDRESS"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getSHOW_PARENTS_ADDRESS</span> (line <span class="line-number">404</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to get the SHOW_PARENTS_ADDRESS attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">char</span>
+		<span class="method-name">
+			getSHOW_PARENTS_ADDRESS
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetTIME_TO_CALL_END" id="getTIME_TO_CALL_END"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getTIME_TO_CALL_END</span> (line <span class="line-number">416</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to get the TIME_TO_CALL_END attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getTIME_TO_CALL_END
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetTIME_TO_CALL_START" id="getTIME_TO_CALL_START"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getTIME_TO_CALL_START</span> (line <span class="line-number">410</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to get the TIME_TO_CALL_START attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getTIME_TO_CALL_START
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetVERIFIED_LANDLINE" id="getVERIFIED_LANDLINE"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getVERIFIED_LANDLINE</span> (line <span class="line-number">482</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to get the VERIFIED_LANDLINE attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getVERIFIED_LANDLINE
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetVERIFIED_MOB" id="getVERIFIED_MOB"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getVERIFIED_MOB</span> (line <span class="line-number">488</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to get the VERIFIED_MOB attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getVERIFIED_MOB
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodsetALT_MOBILE" id="setALT_MOBILE"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setALT_MOBILE</span> (line <span class="line-number">230</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to set the ALT_MOBILE attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setALT_MOBILE
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$ALT_MOBILE</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$ALT_MOBILE</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetALT_MOBILE_LABEL" id="setALT_MOBILE_LABEL"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setALT_MOBILE_LABEL</span> (line <span class="line-number">223</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to set the ALT_MOBILE_LABEL attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setALT_MOBILE_LABEL
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$ALT_MOBILE_LABEL</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$ALT_MOBILE_LABEL</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetContactDetail" id="setContactDetail"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setContactDetail</span> (line <span class="line-number">531</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">calculate the view contact details of a viewed member and set the corresponding attribute</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+				<li><span class="field">uses:</span> profileObj - dbPrivilegeObj</li>
+				<li><span class="field">uses:</span> NEWJS_JPROFILE_CONTACT</li>
+				<li><span class="field">uses:</span> jsadmin_CONTACTS_ALLOTED</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setContactDetail
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodsetCONTACT_LOCKED" id="setCONTACT_LOCKED"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setCONTACT_LOCKED</span> (line <span class="line-number">328</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to set the CONTACT_LOCKED attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setCONTACT_LOCKED
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$CONTACT_LOCKED</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$CONTACT_LOCKED</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetEMAIL_ID" id="setEMAIL_ID"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setEMAIL_ID</span> (line <span class="line-number">321</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to set the EMAIL_ID attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setEMAIL_ID
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$EMAIL_ID</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$EMAIL_ID</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetLEFT_ALLOTED" id="setLEFT_ALLOTED"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setLEFT_ALLOTED</span> (line <span class="line-number">377</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to set the LEFT_ALLOTED attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setLEFT_ALLOTED
+		</span>
+					(<span class="var-type">integer</span>&nbsp;<span class="var-name">$LEFT_ALLOTED</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">integer</span>
+				<span class="var-name">$LEFT_ALLOTED</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetMOB_PHONE_NO" id="setMOB_PHONE_NO"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setMOB_PHONE_NO</span> (line <span class="line-number">286</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to set the MOB_PHONE_NO attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setMOB_PHONE_NO
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$MOB_PHONE_NO</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$MOB_PHONE_NO</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetMOB_PHONE_OWNER_NAME" id="setMOB_PHONE_OWNER_NAME"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setMOB_PHONE_OWNER_NAME</span> (line <span class="line-number">307</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to set the MOB_PHONE_OWNER_NAME attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setMOB_PHONE_OWNER_NAME
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$MOB_PHONE_OWNER_NAME</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$MOB_PHONE_OWNER_NAME</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetMOB_PHONE_OWNER_NUMBER" id="setMOB_PHONE_OWNER_NUMBER"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setMOB_PHONE_OWNER_NUMBER</span> (line <span class="line-number">314</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to set the MOB_PHONE_OWNER_NUMBER attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setMOB_PHONE_OWNER_NUMBER
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$MOB_PHONE_OWNER_NUMBER</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$MOB_PHONE_OWNER_NUMBER</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetNO_SHIFT_MES" id="setNO_SHIFT_MES"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setNO_SHIFT_MES</span> (line <span class="line-number">356</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to set the NO_SHIFT_MES attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setNO_SHIFT_MES
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$NO_SHIFT_MES</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$NO_SHIFT_MES</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetPAID" id="setPAID"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setPAID</span> (line <span class="line-number">370</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to set the PAID attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setPAID
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$PAID</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$PAID</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetPROFILENAME" id="setPROFILENAME"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setPROFILENAME</span> (line <span class="line-number">349</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to set the PROFILENAME attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setPROFILENAME
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$PROFILENAME</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$PROFILENAME</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetRELATION_NAME" id="setRELATION_NAME"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setRELATION_NAME</span> (line <span class="line-number">265</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to set the RELATION_NAME attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setRELATION_NAME
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$RELATION_NAME</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$RELATION_NAME</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetRES_PHONE_NO" id="setRES_PHONE_NO"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setRES_PHONE_NO</span> (line <span class="line-number">279</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to set the RES_PHONE_NO attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setRES_PHONE_NO
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$RES_PHONE_NO</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$RES_PHONE_NO</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetRES_PHONE_OWNER_NAME" id="setRES_PHONE_OWNER_NAME"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setRES_PHONE_OWNER_NAME</span> (line <span class="line-number">293</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to set the RES_PHONE_OWNER_NAME attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setRES_PHONE_OWNER_NAME
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$RES_PHONE_OWNER_NAME</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$RES_PHONE_OWNER_NAME</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetRES_PHONE_OWNER_NUMBER" id="setRES_PHONE_OWNER_NUMBER"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setRES_PHONE_OWNER_NUMBER</span> (line <span class="line-number">300</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to set the RES_PHONE_OWNER_NUMBER attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setRES_PHONE_OWNER_NUMBER
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$RES_PHONE_OWNER_NUMBER</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$RES_PHONE_OWNER_NUMBER</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetSHOW_ADDRESS" id="setSHOW_ADDRESS"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setSHOW_ADDRESS</span> (line <span class="line-number">237</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to set the SHOW_ADDRESS attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setSHOW_ADDRESS
+		</span>
+					(<span class="var-type">char</span>&nbsp;<span class="var-name">$SHOW_ADDRESS</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">char</span>
+				<span class="var-name">$SHOW_ADDRESS</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetSHOW_CONTACT" id="setSHOW_CONTACT"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setSHOW_CONTACT</span> (line <span class="line-number">363</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to set the SHOW_CONTACT attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setSHOW_CONTACT
+		</span>
+					(<span class="var-type">char</span>&nbsp;<span class="var-name">$SHOW_CONTACT</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">char</span>
+				<span class="var-name">$SHOW_CONTACT</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetSHOW_MESSENGER" id="setSHOW_MESSENGER"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setSHOW_MESSENGER</span> (line <span class="line-number">272</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to set the SHOW_MESSENGER attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setSHOW_MESSENGER
+		</span>
+					(<span class="var-type">char</span>&nbsp;<span class="var-name">$SHOW_MESSENGER</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">char</span>
+				<span class="var-name">$SHOW_MESSENGER</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetSHOW_PARENTS_ADDRESS" id="setSHOW_PARENTS_ADDRESS"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setSHOW_PARENTS_ADDRESS</span> (line <span class="line-number">244</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to set the SHOW_PARENTS_ADDRESS attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setSHOW_PARENTS_ADDRESS
+		</span>
+					(<span class="var-type">char</span>&nbsp;<span class="var-name">$SHOW_PARENTS_ADDRESS</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">char</span>
+				<span class="var-name">$SHOW_PARENTS_ADDRESS</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetTIME_TO_CALL_END" id="setTIME_TO_CALL_END"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setTIME_TO_CALL_END</span> (line <span class="line-number">258</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to set the TIME_TO_CALL_END attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setTIME_TO_CALL_END
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$TIME_TO_CALL_END</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$TIME_TO_CALL_END</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetTIME_TO_CALL_START" id="setTIME_TO_CALL_START"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setTIME_TO_CALL_START</span> (line <span class="line-number">251</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to set the TIME_TO_CALL_START attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setTIME_TO_CALL_START
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$TIME_TO_CALL_START</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$TIME_TO_CALL_START</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetVERIFIED_LANDLINE" id="setVERIFIED_LANDLINE"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setVERIFIED_LANDLINE</span> (line <span class="line-number">335</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to set the VERIFIED_LANDLINE attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setVERIFIED_LANDLINE
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$VERIFIED_LANDLINE</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$VERIFIED_LANDLINE</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetVERIFIED_MOB" id="setVERIFIED_MOB"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setVERIFIED_MOB</span> (line <span class="line-number">342</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to set the VERIFIED_MOB attribute of <a href="../../jeevansathi/contacts/ContactDetails.html">ContactDetails</a> Class</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setVERIFIED_MOB
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$VERIFIED_MOB</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$VERIFIED_MOB</span>			</li>
+				</ul>
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Mon, 03 Dec 2012 19:37:57 +0530 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.4</a>
+	</p>
+	</div></body>
+</html>

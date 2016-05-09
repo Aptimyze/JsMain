@@ -1,0 +1,742 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="http://www.jeevansathi.com/profile/imagesnew/styles.css" type="text/css">
+<title>JeevanSathi Matrimonials - Form for Input of Matrimonial Data</title>
+<link rel="stylesheet" href="http://www.jeevansathi.com/P/I/styles.php" type="text/css">
+<link rel="stylesheet" href="/profile/css/~$comm_style_css`" type="text/css">
+<script language="JavaScript" SRC="/profile/~$profile_js`"></SCRIPT>
+<style type="text/css">
+<!--
+.unnamed1 { font-family: Verdana, Arial, Helvetica, sans-serif;	font-size: 12px; font-weight: bold; background-color: #00CC00; color: #FFFFFF; height:27px; width:185px;}
+//-->
+</style>
+<script language="JavaScript">
+<!--
+function callCityLocator(no)
+{
+        val='city.php?cityflag=1&frominput=1';         cityLocator = window.open(val,'','height=257,width=411,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,top=0,left=0');
+}
+
+function validate1()
+{
+	var docF=document.form1;
+	if(docF.Body_Type.value=="")
+	{
+		alert("Please specify Body Type");
+		docF.Body_Type.focus();
+		return false;
+	}
+	if(docF.Complexion.value=="")
+	{
+		alert("Please specify Complexion");
+		docF.Complexion.focus();
+		return false;
+        }
+	if(docF.Smoke.value=="")
+	{
+		alert("Please specify whether you Smoke or not");
+		docF.Smoke.focus();
+		return false;
+	}
+														     
+	if(docF.Drink.value=="")
+	{
+		alert("Please specify whether you Drink or not");
+		docF.Drink.focus();
+		return false;
+	}
+	var sel = -1;
+        for (i=0;i<docF.display_horo.length;i++)
+        {
+                if(docF.display_horo[i].checked)
+                {
+                        sel =i;
+                }
+        }
+	//var horo_option = docF.display_horo[sel].value;
+	if (sel == -1)
+        {
+                alert("Please specify Horoscope Display Option");
+                return false;
+        }
+	else
+		var horo_option = docF.display_horo[sel].value;
+	
+        if (horo_option == 'N')
+        {
+		if(docF.Country_Birth.value=="")
+		{
+			alert("Please specify Country of Birth");
+			docF.Country_Birth.focus();
+			return false;
+		}
+		if(docF.City_Birth.value=="")
+        	{
+                	alert("Please specify City of Birth");
+			docF.City_Birth.focus();
+                	return false;
+        	}
+		if(docF.Hour_Birth.value=="")
+        	{
+                	alert("Please specify Time of Birth");
+			docF.Hour_Birth.focus();
+                	return false;
+        	}
+	}
+	if(docF.Manglik_Status.value=="")
+	{
+		alert("Please specify Manglik Status");
+		docF.Manglik_Status.focus();
+		return false;
+	}
+	if(docF.Rstatus.value=="")
+	{
+		alert("Please specify Residency Status");
+		docF.Rstatus.focus();
+		return false;
+	}
+	if(docF.Family_Back.value=="")
+	{
+		alert("Please specify your Family Background");
+		docF.Family_Back.focus();
+		return false;
+	}
+	if(docF.Family_Values.value=="")
+	{
+		alert("Please specify your Family Values");
+		docF.Family_Values.focus();
+		return false;
+	}
+	if(docF.Address&&trim(docF.Address.value)=="")
+	{
+		alert("Please specify your Contact Address");
+		docF.Address.focus();
+		return false;
+	}
+	if(docF.pincode&&trim(docF.pincode.value)=="")
+	{
+		alert("Please specify Pincode");
+		docF.pincode.focus();
+		return false;
+	}
+	~if $country_res eq '51'`
+		if(isNaN(docF.pincode.value))
+		{
+			alert("Please specify a valid Pincode");
+			docF.pincode.focus();
+			return false;
+		}
+	~/if`
+return true;
+}
+function trim(inputString)
+{
+        if (typeof inputString != "string")
+        {
+                return inputString;
+        }
+        var retValue = inputString;
+        var ch = retValue.substring(0, 1);
+        while (ch == " ")
+        {
+                retValue = retValue.substring(1, retValue.length);
+                ch = retValue.substring(0, 1);
+        }
+        ch = retValue.substring(retValue.length-1, retValue.length);
+        while (ch == " ")
+        {
+                retValue = retValue.substring(0, retValue.length-1);
+                ch = retValue.substring(retValue.length-1, retValue.length);
+        }
+        while (retValue.indexOf("  ") != -1)
+        {
+                retValue = retValue.substring(0, retValue.indexOf("  ")) + retValue.substring(retValue.indexOf("  ")+1, retValue.length);
+        }
+        return retValue;
+}
+function disable_astroform()
+{
+	var sel = -1;
+	var docF=document.form1;
+	for (i=0;i<docF.display_horo.length;i++)
+        {
+                if(docF.display_horo[i].checked)
+                {
+                        sel =i;
+                }
+        }
+	var horo_option = docF.display_horo[sel].value;
+	if (horo_option == 'Y')
+	{
+		/*docF.Country_Birth.disabled = 'true';
+		docF.City_Birth.disabled = 'true';
+		docF.Hour_Birth.disabled = 'true';
+		docF.Min_Birth.disabled = 'true';
+		docF.button_birth.disabled='true';*/
+		document.getElementById('astro_data').style.display="none";
+                document.getElementById('astro_msg').style.display="block";
+                                                                                                                            
+	}
+	else
+	{
+		/*docF.Country_Birth.disabled = false;
+                docF.City_Birth.disabled = false;
+                docF.Hour_Birth.disabled = false;
+                docF.Min_Birth.disabled = false;
+		docF.button_birth.disabled=false;*/
+		document.getElementById('astro_data').style.display="block";
+                document.getElementById('astro_msg').style.display="none";
+	}
+}
+function MM_openBrWindow(theURL,winName,features)
+{
+        window.open(theURL,winName,features);
+}
+function hide_msg()
+{
+        document.getElementById('astro_msg').style.display='none';
+}
+//-->
+</script>
+
+~include file="../jeevansathi/google_analytics.htm"`</head>
+
+<body onload="hide_msg();">
+~if $source=="DGM_amj_08_cpa"`
+<img height="1" width="3" src="http://www.s2d6.com/x/?x=s&amp;h=17773&amp;o=ORDERID&amp;s=0.00" [^] alt="" />
+~/if`
+~if $mbchecksum eq ""`
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td width="68%"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="1" height="10"><br>&nbsp;&nbsp;&nbsp;<img src="~$IMG_URL`/profile/ser4_images/Matrimonial.gif"><br><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="1" height="10"></td>
+ </tr>
+ <tr>
+  <td height="24" bgcolor="#D53A66" align="center">
+ <b><font size="2" face="Verdana" color="#FFFFFF">A naukri.com Group Company &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 27 Offices across India &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1000s of success stories</font> </b></td>
+ </tr>
+</table>
+~else`
+~$HEAD`
+~/if`
+
+<table width="97%"  border="0" align="center" cellpadding="4" cellspacing="0" class="mblack">
+ <tr>
+  <td height="10"></td>
+ </tr>
+ <tr>
+  <td><b><font style="font-size:13px">Describe Yourself and...<br>Get Relevant Matches Faster. 
+</font></b><br>
+<br>
+  Note: Fields marked with <font color="#CC0000">*</font> are compulsory. </td>
+</tr></table>
+ <br>
+~if $hit_source neq 'O'`
+<form action="/profile/inputprofile1.php" method="post" name="form1" onsubmit="return validate1();">
+~else`
+<form action="/profile/inputprofile1.php" method="post" name="form1">
+~/if`
+
+
+<input type="hidden" name="USERNAME" value="~$USERNAME`">
+<input type="hidden" name="source" value="~$source`">                                                                                                      
+<input type="hidden" name="gender" value="~$gender`">
+<input type="hidden" name="maritalstatus" value="~$maritalstatus`">
+<input type="hidden" name="hit_source" value="~$hit_source`">
+<input type="hidden" name="checksum" value="~$CHECKSUM`">
+<input type="hidden" name="id" value="~$ID_AFF`">
+<input type="hidden" name="tieup_source" value="~$tieup_source`">
+<input type="hidden" name="country_res" value="~$country_res`">
+<input type="hidden" name="BIRTH_YR" value="~$BIRTH_YR`">
+<input type="hidden" name="BIRTH_DAY" value="~$BIRTH_DAY`">
+<input type="hidden" name="BIRTH_MON" value="~$BIRTH_MON`">
+<input type="hidden" name="js_UniqueID" value="~$js_UniqueID`">
+
+~if $NO_OF_ERROR`
+<font color="red" size="2" face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;There are ~$NO_OF_ERROR` Error(s) in your form. They are marked in red. Please correct them and submit the form again</font>
+~/if`
+
+ <table width="97%"  border="0" align="center" cellpadding="4" cellspacing="0" class="mblack">
+ <tr>
+  <td colspan="2"><b>Your Education and Career</b></td>
+  </tr>
+ <tr>
+  <td width="22%" valign="top">Education Details</td>
+  <td width="78%"><input type="text" name="Educ_Qualification" value="~$educ_qualification`" class="formselect1" style="width: 325px;">
+   <font color="#999999" face="Verdana" size="1"> Example: B.com(hons) from JMC in 1997</font> <br>   </td>
+  </tr>
+ <tr>
+  <td>Your Job and Workplace </td>
+  <td class="sgrey">
+<textarea name="Job" style="width:325px" rows="6" class="formselect1">~$job`</TEXTAREA>
+ </td>
+ </tr>
+ </table>
+ <table width="97%"  border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+   <td height="8"></td>
+  </tr>
+  <tr>
+   <td height="1" bgcolor="#F8EDF1"></td>
+  </tr>
+  <tr>
+   <td height="8"></td>
+  </tr>
+ </table>
+
+ <table width="97%"  border="0" align="center" cellpadding="4" cellspacing="0" class="mblack">
+ <tr>
+  <td colspan="2"><b>Your Physical Traits </b></td>
+  </tr>
+ <tr>
+  <td width="22%">~if $check_bodytype eq "Y"`<font color= "red">Body Type</font> ~else`Body Type~/if`<font color="#CC0000">*</font><br></td>
+  <td width="78%"><select name="Body_Type" size="1" class="formselect1" style="width:170px">
+   <option value="" selected ></option>
+   <option value="1" ~if $body eq '1'` selected ~/if`>Slim</option>
+   <option value="2" ~if $body eq '2'` selected ~/if`>Average</option>
+   <option value="3" ~if $body eq '3'` selected ~/if`>Athletic</option>
+   <option value="4" ~if $body eq '4'` selected ~/if`>Heavy</option>
+  </select>
+</td>
+ </tr>
+ <tr>
+  <td>~if $check_complexion eq "Y"` <font color= "red">Complexion</font> ~else`Complexion~/if`<font color="#CC0000">*</font></td>
+  <td> <select name="Complexion" size="1" class="formselect1" style="width:170px">
+    <option value="" selected ></option>
+    <option value="1" ~if $complexion eq '1'` selected ~/if`>Very Fair</option>
+    <option value="2" ~if $complexion eq '2'` selected ~/if`>Fair</option>
+    <option value="3" ~if $complexion eq '3'` selected ~/if`>Wheatish</option>
+    <option value="4" ~if $complexion eq '4'` selected ~/if`>Wheatish Brown</option>
+    <option value="5" ~if $complexion eq '5'` selected ~/if`>Dark</option>
+  </select> </td>
+ </tr>
+ <tr>
+  <td>~if $check_phyhcp eq "Y"` <font color= "red">Physically/Mentally Challenged</font>~else`Physically/Mentally Challenged~/if`<font color="#CC0000">*</font></td>
+  <td><select name="Phyhcp" size="1" class="formselect1">
+      <option value="N" selected >None</option>
+      <option value="1" ~if $phyhcp eq '1'` selected ~/if`>Physical Handicap from birth</option>
+      <option value="2" ~if $phyhcp eq '2'` selected ~/if`>Physical Handicap due to accident</option>
+      <option value="3" ~if $phyhcp eq '3'` selected ~/if`>Mentally Challenged from birth</option>
+      <option value="4" ~if $phyhcp eq '4'` selected ~/if`>Mentally Challenged due to accident</option>
+   </select></td>
+ </tr>
+ <tr>
+  <td>Diet<font color="#CC0000">*</font></td>
+  <td><input type=radio value="V" name="Diet"  ~if $diet eq 'V' || !$Diet`checked ~/if`>
+  Vegetarian&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <input type=radio value="N" name="Diet" ~if $diet eq 'N'`checked ~/if`>
+  Non-Vegetarian &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <input type=radio value="J" name="Diet" ~if $diet eq 'J'`checked ~/if`>
+  Jain</td>
+ </tr>
+ <tr>
+  <td nowrap>~if $check_smoke eq "Y"`<font color="red">Do you Smoke?<font>~else`Do you Smoke?~/if`<font color="#CC0000">*</font></td>
+  <td><select name="Smoke" size="1" class="formselect1" style="width:170px">
+    <option value="" selected ></option>
+    <option value="Y" ~if $smoke eq 'Y'` selected ~/if`>Yes</option>
+    <option value="N" ~if $smoke eq 'N'` selected ~/if`>No</option>
+    <option value="O" ~if $smoke eq 'O'` selected ~/if`>Occassionally</option>
+   </select></td>
+ </tr>
+ <tr>
+  <td nowrap>~if $check_drink eq "Y"`<font color="red">Do you Drink?<font>~else`Do you Drink?~/if`<font color="#CC0000">*</font></td>
+  <td><select name="Drink" size="1" class="formselect1" style="width:170px">
+    <option value="" selected ></option>
+    <option value="Y" ~if $drink eq 'Y'` selected ~/if`>Yes</option>
+    <option value="N" ~if $drink eq 'N'` selected ~/if`>No</option>
+    <option value="O"~if $drink eq 'O'` selected ~/if`>Occassionally</option>
+   </select></td>
+ </tr>
+ </table>
+ <table width="97%"  border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+   <td height="8"></td>
+  </tr>
+  <tr>
+   <td height="1" bgcolor="#F8EDF1"></td>
+  </tr>
+  <tr>
+   <td height="8"></td>
+  </tr>
+ </table>
+ <table width="97%"  border="0" align="center" cellpadding="4" cellspacing="0" class="mblack">
+  <tr>
+   <td colspan="2"><b>Horoscope Information </b></td>
+  </tr>
+  <tr>
+   <td width="22%">~if $check_horo eq "Y"`<font color="red">~/if`Add your Horoscope<font color="#CC0000">*</font></td>
+   <td width="78%">
+<!--<input type="radio" name="display_horo" value="Y" ~if $display_horo eq 'Y' OR $display_horo eq ''` checked ~/if` onclick="disabl_astroform();">Yes-->
+<input type="radio" name="display_horo" value="Y" ~if $display_horo eq 'Y'` checked ~/if` onclick="disable_astroform();MM_openBrWindow('http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?BirthPlace?JS_UniqueID=~$js_UniqueID`&JS_Year=~$BIRTH_YR`&JS_Month=~$BIRTH_MON`&JS_Day=~$BIRTH_DAY`','Astro_Details','width=500,height=500,left=200,top=100,scrollbars=1,resizable=0,toolbar=0,location=0,menubar=0,status=0,directories=0')">Yes
+<input type="radio" name="display_horo" value="N" ~if $display_horo eq 'N'` checked ~/if` onclick="disable_astroform();">No
+</td>
+  </tr>
+</tr></table>
+<div id="astro_data">
+<table width="97%"  border="0" align="center" cellpadding="4" cellspacing="0" class="mblack">
+  <tr>
+   <td width="22%">~if $check_country_birth eq "Y"`<font color="red">Country of Birth<font> ~else` Country of Birth ~/if`<font color="#CC0000">*</font> <br>
+   </td>
+   <td width="78%"><select name="Country_Birth" size = "1" class="formselect1" style="width:170px ">
+	<OPTION value="" selected ></OPTION>
+        ~$top_country`
+        <OPTION value="">&nbsp;</OPTION>
+        ~$country_birth`
+   </SELECT></td>
+  </tr>
+  <tr>
+   <td>~if $check_city_birth eq "Y"`<font color="red">City of Birth<font> ~else`City of Birth~/if`<font color="#CC0000">*</font> </td>
+   <td> <input type="text" name="City_Birth" value="~$city_birth`" class="formselect1" style="width:170px "><!--input type="button" name="button_birth" class="formselect1" value="Birth place locator" onClick="callCityLocator(1)"--></td>
+  </tr>
+  <tr>
+   <td nowrap>~if $check_time_birth eq "Y"`<font color="red">Time of Birth<font> ~else`Time of Birth~/if`<font color="#CC0000">*</font> </td>
+   <td><select name=Hour_Birth class="formselect1">
+    <option value="" selected ><font size="2">Select Hour</font></option>
+    <option value="00" ~if $hour_birth eq '00'` selected ~/if`><font size="2">00</font></option>
+    <option value="01" ~if $hour_birth eq '01'` selected ~/if`><font size="2">01</font></option>
+    <option value="02" ~if $hour_birth eq '02'` selected ~/if`><font size="2">02</font></option>
+    <option value="03" ~if $hour_birth eq '03'` selected ~/if`><font size="2">03</font></option>
+    <option value="04" ~if $hour_birth eq '04'` selected ~/if`><font size="2">04</font></option>
+    <option value="05" ~if $hour_birth eq '05'` selected ~/if`><font size="2">05</font></option>
+    <option value="06" ~if $hour_birth eq '06'` selected ~/if`><font size="2">06</font></option>
+    <option value="07" ~if $hour_birth eq '07'` selected ~/if`><font size="2">07</font></option>
+    <option value="08" ~if $hour_birth eq '08'` selected ~/if`><font size="2">08</font></option>
+    <option value="09" ~if $hour_birth eq '09'` selected ~/if`><font size="2">09</font></option>
+    <option value="10" ~if $hour_birth eq '10'` selected ~/if`><font size="2">10</font></option>
+    <option value="11" ~if $hour_birth eq '11'` selected ~/if`><font size="2">11</font></option>
+    <option value="12" ~if $hour_birth eq '12'` selected ~/if`><font size="2">12</font></option>
+    <option value="13" ~if $hour_birth eq '13'` selected ~/if`><font size="2">13</font></option>
+    <option value="14" ~if $hour_birth eq '14'` selected ~/if`><font size="2">14</font></option>
+    <option value="15" ~if $hour_birth eq '15'` selected ~/if`><font size="2">15</font></option>
+    <option value="16" ~if $hour_birth eq '16'` selected ~/if`><font size="2">16</font></option>
+    <option value="17" ~if $hour_birth eq '17'` selected ~/if`><font size="2">17</font></option>
+    <option value="18" ~if $hour_birth eq '18'` selected ~/if`><font size="2">18</font></option>
+    <option value="19" ~if $hour_birth eq '19'` selected ~/if`><font size="2">19</font></option>
+    <option value="20" ~if $hour_birth eq '20'` selected ~/if`><font size="2">20</font></option>
+    <option value="21" ~if $hour_birth eq '21'` selected ~/if`><font size="2">21</font></option>
+    <option value="22" ~if $hour_birth eq '22'` selected ~/if`><font size="2">22</font></option>
+    <option value="23" ~if $hour_birth eq '23'` selected ~/if`><font size="2">23</font></option>
+   </select>
+    <SELECT name=Min_Birth class="formselect1">
+     <OPTION value="" selected >Select Min</OPTION>
+	<OPTION ~if $min_birth eq '00'` selected ~/if`>00</OPTION>
+	<OPTION ~if $min_birth eq '01'` selected ~/if`>01</OPTION>
+	<OPTION ~if $min_birth eq '02'` selected ~/if`>02</OPTION>
+	<OPTION ~if $min_birth eq '03'` selected ~/if`>03</OPTION>
+	<OPTION ~if $min_birth eq '04'` selected ~/if`>04</OPTION>
+	<OPTION ~if $min_birth eq '05'` selected ~/if`>05</OPTION>
+	<OPTION ~if $min_birth eq '06'` selected ~/if`>06</OPTION>
+	<OPTION ~if $min_birth eq '07'` selected ~/if`>07</OPTION>
+	<OPTION ~if $min_birth eq '08'` selected ~/if`>08</OPTION>
+	<OPTION ~if $min_birth eq '09'` selected ~/if`>09</OPTION>
+	<OPTION ~if $min_birth eq '10'` selected ~/if`>10</OPTION>
+	<OPTION ~if $min_birth eq '11'` selected ~/if`>11</OPTION>
+	<OPTION ~if $min_birth eq '12'` selected ~/if`>12</OPTION>
+	<OPTION ~if $min_birth eq '13'` selected ~/if`>13</OPTION>
+	<OPTION ~if $min_birth eq '14'` selected ~/if`>14</OPTION>
+	<OPTION ~if $min_birth eq '15'` selected ~/if`>15</OPTION>
+	<OPTION ~if $min_birth eq '16'` selected ~/if`>16</OPTION>
+	<OPTION ~if $min_birth eq '17'` selected ~/if`>17</OPTION>
+	<OPTION ~if $min_birth eq '18'` selected ~/if`>18</OPTION>
+	<OPTION ~if $min_birth eq '19'` selected ~/if`>19</OPTION>
+	<OPTION ~if $min_birth eq '20'` selected ~/if`>20</OPTION>
+	<OPTION ~if $min_birth eq '21'` selected ~/if`>21</OPTION>
+	<OPTION ~if $min_birth eq '22'` selected ~/if`>22</OPTION>
+	<OPTION ~if $min_birth eq '23'` selected ~/if`>23</OPTION>
+	<OPTION ~if $min_birth eq '24'` selected ~/if`>24</OPTION>
+	<OPTION ~if $min_birth eq '25'` selected ~/if`>25</OPTION>
+	<OPTION ~if $min_birth eq '26'` selected ~/if`>26</OPTION>
+	<OPTION ~if $min_birth eq '27'` selected ~/if`>27</OPTION>
+	<OPTION ~if $min_birth eq '28'` selected ~/if`>28</OPTION>
+	<OPTION ~if $min_birth eq '29'` selected ~/if`>29</OPTION>
+	<OPTION ~if $min_birth eq '30'` selected ~/if`>30</OPTION>
+	<OPTION ~if $min_birth eq '31'` selected ~/if`>31</OPTION>
+	<OPTION ~if $min_birth eq '32'` selected ~/if`>32</OPTION>
+	<OPTION ~if $min_birth eq '33'` selected ~/if`>33</OPTION>
+	<OPTION ~if $min_birth eq '34'` selected ~/if`>34</OPTION>
+	<OPTION ~if $min_birth eq '35'` selected ~/if`>35</OPTION>
+	<OPTION ~if $min_birth eq '36'` selected ~/if`>36</OPTION>
+	<OPTION ~if $min_birth eq '37'` selected ~/if`>37</OPTION>
+	<OPTION ~if $min_birth eq '38'` selected ~/if`>38</OPTION>
+	<OPTION ~if $min_birth eq '39'` selected ~/if`>39</OPTION>
+	<OPTION ~if $min_birth eq '40'` selected ~/if`>40</OPTION>
+	<OPTION ~if $min_birth eq '41'` selected ~/if`>41</OPTION>
+	<OPTION ~if $min_birth eq '42'` selected ~/if`>42</OPTION>
+	<OPTION ~if $min_birth eq '43'` selected ~/if`>43</OPTION>
+	<OPTION ~if $min_birth eq '44'` selected ~/if`>44</OPTION>
+	<OPTION ~if $min_birth eq '45'` selected ~/if`>45</OPTION>
+	<OPTION ~if $min_birth eq '46'` selected ~/if`>46</OPTION>
+	<OPTION ~if $min_birth eq '47'` selected ~/if`>47</OPTION>
+	<OPTION ~if $min_birth eq '48'` selected ~/if`>48</OPTION>
+	<OPTION ~if $min_birth eq '49'` selected ~/if`>49</OPTION>
+	<OPTION ~if $min_birth eq '50'` selected ~/if`>50</OPTION>
+	<OPTION ~if $min_birth eq '51'` selected ~/if`>51</OPTION>
+	<OPTION ~if $min_birth eq '52'` selected ~/if`>52</OPTION>
+	<OPTION ~if $min_birth eq '53'` selected ~/if`>53</OPTION>
+	<OPTION ~if $min_birth eq '54'` selected ~/if`>54</OPTION>
+	<OPTION ~if $min_birth eq '55'` selected ~/if`>55</OPTION>
+	<OPTION ~if $min_birth eq '56'` selected ~/if`>56</OPTION>
+	<OPTION ~if $min_birth eq '57'` selected ~/if`>57</OPTION>
+	<OPTION ~if $min_birth eq '58'` selected ~/if`>58</OPTION>
+	<OPTION ~if $min_birth eq '59'` selected ~/if`>59</OPTION>
+
+	</SELECT> </td>
+  </tr>
+</tr></table>
+</div>
+<div id="astro_msg"><table width="97%"  border="0" align="center" cellpadding="4" cellspacing="0" class="mblack">
+<tr><td><font color="#0444B9"><b>>> Your astro details will be updated within a few minutes</b></font></td></tr></table>
+</div>
+<table width="97%"  border="0" align="center" cellpadding="4" cellspacing="0" class="mblack">
+<tr>
+  <tr>
+   <td width="22%">~if $check_manglik eq "Y"`<font color= "red">Manglik Status</font> ~else`Manglik Status~/if`<font color="#CC0000">*</font></td>
+   <td width="78%"><select name="Manglik_Status" size="1" class="formselect1" style="width:170px ">
+    <option value="" selected ></option>
+    <option value="M" ~if $manglik eq 'M'` selected ~/if`>Manglik</option>
+    <option value="N" ~if $manglik eq 'N'` selected ~/if`>Non Manglik</option>
+    <option value="D" ~if $manglik eq 'D'` selected ~/if`>Don't Know</option>
+   </select></td>
+  </tr>
+  <tr>
+   <td nowrap>Nakshatram</td>
+   <td><select name="Nakshatram" class="formselect1" style="width:170px ">
+	<OPTION value="" selected ></OPTION>
+        ~$nak_array`
+   </select></td>
+  </tr>
+ </table>
+ <table width="97%"  border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+   <td height="8"></td>
+  </tr>
+  <tr>
+   <td height="1" bgcolor="#F8EDF1"></td>
+  </tr>
+  <tr>
+   <td height="8"></td>
+  </tr>
+ </table>
+ <table width="97%"  border="0" align="center" cellpadding="4" cellspacing="0" class="mblack">
+  <tr>
+   <td colspan="3"><b>Your Family Details </b></td>
+  </tr>
+  <tr>
+   <td width="22%">~if $check_rstatus eq "Y"`<font color="red">Residency Status</font>~else`Residency Status~/if`<font color="#CC0000">*</font><br>
+   </td>
+   <td width="78%" colspan="2"><select name="Rstatus" size="1" class="formselect1" style="width:170px ">
+   <option value="" selected ></option>
+   <option value="1" ~if $rstatus eq '1'` selected ~/if`>Citizen</option>
+   <option value="2" ~if $rstatus eq '2'` selected ~/if`>Permanent Resident</option>
+   <option value="3" ~if $rstatus eq '3'` selected ~/if`>Work Permit</option>
+   <option value="4" ~if $rstatus eq '4'` selected ~/if`>Student Visa</option>
+   <option value="5" ~if $rstatus eq '5'` selected ~/if`>Temporary Visa</option>
+   </select></td>
+  </tr>
+  <tr>
+   <td>~if $check_familyback eq "Y"`<font color= "red">Family Background</font>~else`Family Background~/if`<font color="#CC0000">*</font></td>
+   <td colspan="2"><select name="Family_Back" size="1" class="formselect1" style="width:170px ">
+    <option selected value=""></option>
+	~$family_back`
+   </select></td>
+  </tr>
+  <tr>
+   <td nowrap>~if $check_familyvalues eq "Y"`<font color= "red">Family Values</font>~else`Family Values~/if`<font color="#CC0000">*</font></td>
+   <td colspan="2"><span class="mediumblack"><span class="smallblack">
+    <select name="Family_Values" size="1" class="formselect1" style="width:170px ">
+     <option selected value=""></option>
+     <option value="1" ~if $familyvalues eq '1'` selected ~/if`>Traditional</option>
+     <option value="2" ~if $familyvalues eq '2'` selected ~/if`>Moderate</option>
+     <option value="3" ~if $familyvalues eq '3'` selected ~/if`>Liberal</option>
+    </select>
+   </span></span> </td>
+  </tr>
+  <tr>
+   <td>Your Family Details </td>
+   <td colspan="2"><span class="sgrey">
+    <textarea name="Father_Info" rows="4" style="width:325px " class="formselect1">~$father_info`</textarea>
+   </span></td>
+  </tr>
+  <tr>
+   <td>Do you live with your parents?<font color="#CC0000">*</font></td>
+   <td colspan="2"><input type=radio value="Y" name="Parent_City_Same" ~if ($parent_city_same eq 'Y' || !$parent_city_same)` checked ~/if`>     Yes &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type=radio value="N" name="Parent_City_Same" ~if ($parent_city_same eq 'N')` checked ~/if`>
+    No &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+    <input type=radio value="D" name="Parent_City_Same" ~if ($parent_city_same eq 'D')` checked ~/if`>
+   Not Aplicable</td>
+  </tr>
+  <tr>
+   <td >Do you have children?<font color="#CC0000">*</font></td>
+   <td colspan="2"><input type="radio" name="Has_Children" value="N" ~if ($Has_Children eq 'N' || !$Has_Children)` checked ~/if`>
+No &nbsp;
+<input type="radio" name="Has_Children" value="YT" ~if $Has_Children eq 'YT'` checked ~/if`>
+Yes, living together&nbsp;&nbsp;
+<input type="radio" name="Has_Children" value="YS" ~if $Has_Children eq 'YS'` checked ~/if`>
+Yes, living separately</td></tr></table>
+  <table width="97%"  border="0" align="center" cellpadding="0" cellspacing="0">
+   <tr>
+    <td height="8"></td>
+   </tr>
+   <tr>
+    <td height="1" bgcolor="#F8EDF1"></td>
+   </tr>
+   <tr>
+    <td height="8"></td>
+   </tr>
+  </table>
+~if $mbchecksum eq ""`
+  <table width="97%"  border="0" align="center" cellpadding="4" cellspacing="0" class="mblack">
+  <tr>
+   <td colspan="2"><b>Contact Details </b></td>
+   </tr>
+  <tr>
+   <td width="22%"> ~if $check_address eq "Y"`<font color="red">Your Contact Address</font>~else`Your Contact Address~/if`<font color="#CC0000">*</font> <br>
+    <span class="sgrey">(Do not enter email id)</span></td>
+   <td width="78%"><input name="Address" type="text" class="formselect1" style="width:325px " value="~$address`">
+    ~if $check_pin eq "Y"`<font color="red">~/if`PIN No.~if $check_pin eq "Y"`</font>~/if`<font color="#CC0000">*</font> 
+     <input name="pincode" type="text" class="formselect1" value="~$PINCODE`" size="6" maxlength="6">
+    <br><input type="checkbox" name="showAddress" value="N" ~if $SHOWADDRESS eq N` checked ~/if`>
+     Hide my contact details from Jeevansathi users </td>
+   </tr>
+  <tr>
+   <td colspan="2" height="5"></td>
+   </tr>
+  <tr>
+   <td>Contact address of your parents  </td>
+   <td>
+    <input name="Parents_Contact" type="text" class="formselect1" style="width:325px " value="~$parents_contact`">   <br>
+     <input type="checkbox" name="showParentsContact" value="N" ~if $SHOWPARENTSCONTACT eq N` checked ~/if`>
+   Hide my contact details from Jeevansathi users</td>
+  </tr>
+  <tr>
+   <td colspan="2" height="5"></td>
+   </tr>
+  <tr>
+   <td>Messenger ID</td>
+   <td><input type="text" name="Messenger_ID" value="~$messenger_id`" class="formselect1" style="width:130px "> 
+    @ 
+     <select name="Messenger" size="1" class="formselect1">
+	<option value="1" ~if $messenger eq '1'` selected ~/if`>Yahoo</option>
+        <option value="2" ~if $messenger eq '2'` selected ~/if`>MSN</option>
+        <option value="3" ~if $messenger eq '3'` selected ~/if`>Skype</option>
+        <option value="5" ~if $messenger eq '5'` selected ~/if`>ICQ</option>
+	<option value="4" ~if $messenger eq '4'` selected ~/if`>Others</option>
+	<option value="6" ~if $messenger eq '4'` selected ~/if`>Google Talk</option>
+     </select>
+     .com<br>
+     <input type="checkbox" name="showMessenger" value="N" ~if $SHOWMESSENGER eq N` checked ~/if`>
+Hide my messenger ID from Jeevansathi users </td>
+  </tr>
+ </table>
+~/if`
+ <table width="97%"  border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+   <td height="8"></td>
+  </tr>
+  <tr>
+   <td height="1" bgcolor="#F8EDF1"></td>
+  </tr>
+  <tr>
+   <td height="8"></td>
+  </tr>
+ </table>
+ <table width="97%"  border="0" align="center" cellpadding="0" cellspacing="0" class="mblack">
+  <tr>
+   <td height="19">Note- This form will be screened and may take upto 24 hrs to go live.</td>
+  </tr>
+ </table>
+ <br>
+ <table width="97%"  border="0" align="center" cellpadding="0" cellspacing="0">
+ <tr>
+  <td align="center"><div align="center">
+  </div>
+  <input type="submit" name="Submit" value="Save My Detailed Profile" class="unnamed1" style="width:300px"></td>
+ </tr>
+</table>
+<br>
+~$FOOT`
+</form>
+~if $SHOW_GOOGLE eq 'Y'`
+<!-- Google Code for Lead Conversion Page -->
+<script language="JavaScript" type="text/javascript">
+<!--
+var google_conversion_id = 1067322789;
+var google_conversion_language = "en_US";
+var google_conversion_format = "1";
+var google_conversion_color = "666666";
+if (1) {
+ var google_conversion_value = 1;
+}
+var google_conversion_label = "Lead";
+//-->
+</script>
+<script language="JavaScript" src="http://www.googleadservices.com/pagead/conversion.js">
+</script>
+<noscript>
+<img height=1 width=1 border=0 src="http://www.googleadservices.com/pagead/conversion/1067322789/?value
+=1&label=Lead&script=0">
+</noscript>
+                                                                                                                             
+<!-- Google Conversion Code -->
+<script language="JavaScript" type="text/javascript">
+<!--
+google_conversion_id = 1072672959;
+google_conversion_language = "en_US";
+//google_conversion_format = "2";     old code line
+google_conversion_format = "1";
+google_conversion_color = "FFFFFF";
+// new code
+if (1) {
+  var google_conversion_value = 1;
+}
+var google_conversion_label = "Signup";
+// new code upto here
+-->
+</script>
+<script language="JavaScript"
+src="http://www.googleadservices.com/pagead/conversion.js">
+</script>
+<noscript>
+<!--  old code
+<img height=1 width=1 border=0
+src="http://www.googleadservices.com/pagead/conversion/1072672959/?script=0">
+-->
+<img height=1 width=1 border=0
+src="http://www.googleadservices.com/pagead/conversion/1072672959/?value=1&label=Signup&script=0">
+                                                                                                                             
+</noscript>
+~/if`
+~if $groupname eq "wchutney"`
+<SCRIPT LANGUAGE="JavaScript" src="http://www.webchutney.net/chutneytrack/js/iqtracker.js"></SCRIPT>
+                                                                                                                             
+<SCRIPT LANGUAGE="JavaScript">
+                                                                                                                             
+<!--
+                                                                                                                             
+var clntid = "JVNSTHI";
+                                                                                                                             
+trackThisPage();
+                                                                                                                             
+//-->
+                                                                                              
+</SCRIPT>
+~/if`
+~if $groupname eq "mediaturf"`
+<!--Enhance Conversion Tracking (Lead) -->
+<img src="http://c.enhance.com/t?cid=1059840&filltype=5 " width="1" height="1" border="0">
+~/if`
+~if $groupname eq 'Tyroo_India_JFM08' or $groupname  eq 'Tyroo_NRI_JFM08'`
+<script type="text/javascript" src="http://tq.tyroo.com:8080/acquire/tyr_aqui.js"></script>
+~/if`
+
+<!-- Advertiser '91  Naukri',  Include user in segment 'Jeevansathi' –
+
+DO NOT MODIFY THIS PIXEL IN ANY WAY -->
+~if $groupname eq 'Integrid_CPA_08'`
+<img src="http://ad.adserverplus.com/pixel?id=99680&t=2" width="1" height="1" />
+~/if`
+<!-- End of segment tag -->
+</body>
+</html>

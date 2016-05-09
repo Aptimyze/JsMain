@@ -1,0 +1,20 @@
+# Script for making banners live
+##At the end of the day
+05 00 * * * /usr/local/bin/php -q /usr/local/apache/htdocs/bmsjs/cron/bms_makelive.php               
+                                                                                                                             
+# Script for expiry of duration based banners
+#At the end of the day	
+06 00 * * * /usr/local/bin/php -q /usr/local/apache/htdocs/bmsjs/cron/bms_durationexpiry.php
+                                                                                                                             
+# Script for logging of day wise impressions
+##At the end of the day	
+08 00 * * * /usr/local/bin/php -q /usr/local/apache/htdocs/bmsjs/cron/bms_dailymis.php
+
+#Script for updation of banners served
+#After every half an hour		
+*/30 * * * * /usr/local/bin/php -q /usr/local/apache/htdocs/bmsjs/cron/bms_updateserved.php | /usr/local/bin/php -q /usr/local/apache/htdocs/bmsjs/cron/bms_impressionexpiry.php
+                                                                                                                             
+# Script for parsing of criteria logging flat file
+#At midnight local time	
+#00 00 * * * /usr/local/bin/php -q /usr/local/apache/htdocs/bmsjs/cron/bms_parsecriteria.php
+

@@ -1,0 +1,208 @@
+nikff3af201a4e55224c9a7af15e8508f95894100b6
+GmailSubscription is running
+Bot up
+gmail id is >>>>>raka14@gmaila.com
+Done
+gmail id is >>>>>raka13@gmaila.com
+Done
+gmail id is >>>>>raka10@gmail.com
+Done
+gmail id is >>>>>raka12@gmaila.com
+Done
+gmail id is >>>>>raka3@gmaila.com
+Done
+gmail id is >>>>>raka2@gmaila.com
+Done
+gmail id is >>>>>ramu39@gmail.com
+Done
+gmail id is >>>>>Testanurag@gmail.com
+Done
+gmail id is >>>>>ramu33@gmail.com
+Done
+gmail id is >>>>>ramu28@gmail.com
+Done
+gmail id is >>>>>ramu27@gmail.com
+Done
+gmail id is >>>>>ramu26@gmail.com
+Done
+gmail id is >>>>>ramu22@gmail.com
+Done
+gmail id is >>>>>ramu21@gmaila.com
+Done
+gmail id is >>>>>ramu23@gmail.com
+Done
+gmail id is >>>>>rana123@gmail.com
+Done
+gmail id is >>>>>c88.ankit@gmail.com
+Done
+gmail id is >>>>>c88.anaksdskit@gmail.com
+Done
+gmail id is >>>>>raamjane@gmail.com
+Done
+gmail id is >>>>>anuradha.majalkar@gmail.com
+Done
+gmail id is >>>>>arvindkumar27@gmail.com
+Done
+gmail id is >>>>>nehaverma.dce1@gmail.com
+Done
+gmail id is >>>>>saifa4@gmail.com
+Done
+gmail id is >>>>>jaiswal.amit@gmail.com
+Done
+gmail id is >>>>>shivali.shivalisood@gmail.com
+Done
+gmail id is >>>>>kushi1970@gmail.com
+Done
+gmail id is >>>>>garimagary@gmail.com
+Done
+gmail id is >>>>>abhilasha.mangla@gmail.com
+Done
+gmail id is >>>>>raka15@gmaila.com
+Done
+GmailSubscription is running
+nikff3af201a4e55224c9a7af15e8508f95894100b6
+Bot up
+nick in the subscriptionListener is >>>testjeevs006
+Done
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>1
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>1
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>1
+falsehifalse
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>0
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>1
+update  user_info for gmailid is >>>jaiswal.amit@gmail.com>>>and on_off_flag is >>>0
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>0
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>1
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>1
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>0
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>1
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>0
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>1
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>1
+update  user_info for gmailid is >>>arvindkumar27@gmail.com>>>and on_off_flag is >>>0
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>1
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>0
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>1
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>1
+GmailSubscription is running
+stream:error (conflict)
+	at org.jivesoftware.smack.PacketReader.parsePackets(PacketReader.java:260)
+	at org.jivesoftware.smack.PacketReader.access$000(PacketReader.java:43)
+	at org.jivesoftware.smack.PacketReader$1.run(PacketReader.java:70)
+nikff3af201a4e55224c9a7af15e8508f95894100b6
+GmailSubscription is running
+Bot up
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>0
+java.sql.SQLException: Can not issue data manipulation statements with executeQuery().
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1055)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:956)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:926)
+	at com.mysql.jdbc.StatementImpl.checkForDml(StatementImpl.java:413)
+	at com.mysql.jdbc.PreparedStatement.executeQuery(PreparedStatement.java:1821)
+	at chat.StatusUpdater.setStatus(StatusUpdater.java:86)
+	at chat.SubscriptionListener.presenceChanged(SubscriptionListener.java:50)
+	at org.jivesoftware.smack.Roster.fireRosterPresenceEvent(Roster.java:627)
+	at org.jivesoftware.smack.Roster.access$600(Roster.java:50)
+	at org.jivesoftware.smack.Roster$PresencePacketListener.processPacket(Roster.java:688)
+	at org.jivesoftware.smack.Connection$ListenerWrapper.notifyListener(Connection.java:807)
+	at org.jivesoftware.smack.PacketReader$ListenerNotification.run(PacketReader.java:453)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:441)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:138)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:886)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:908)
+	at java.lang.Thread.run(Thread.java:662)
+java.sql.SQLException: Can not issue data manipulation statements with executeQuery().
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1055)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:956)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:926)
+	at com.mysql.jdbc.StatementImpl.checkForDml(StatementImpl.java:413)
+	at com.mysql.jdbc.PreparedStatement.executeQuery(PreparedStatement.java:1821)
+	at chat.StatusUpdater.setStatus(StatusUpdater.java:86)
+	at chat.SubscriptionListener.presenceChanged(SubscriptionListener.java:50)
+	at org.jivesoftware.smack.Roster.fireRosterPresenceEvent(Roster.java:627)
+	at org.jivesoftware.smack.Roster.access$600(Roster.java:50)
+	at org.jivesoftware.smack.Roster$PresencePacketListener.processPacket(Roster.java:688)
+	at org.jivesoftware.smack.Connection$ListenerWrapper.notifyListener(Connection.java:807)
+	at org.jivesoftware.smack.PacketReader$ListenerNotification.run(PacketReader.java:453)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:441)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:138)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:886)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:908)
+	at java.lang.Thread.run(Thread.java:662)
+nikff3af201a4e55224c9a7af15e8508f95894100b6
+GmailSubscription is running
+Bot up
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>1
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>0
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>1
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>1
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>0
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>1
+gmail is >>>>testjeevs006@gmail.com
+Database connection established
+UPDATE userplane.`LOG_CHAT_REQUEST` SET RECEIVED ='1' WHERE SEN ='136580' AND REC='144111' order by ID DESC LIMIT 1
+falseyestrue
+coming to setStatus of status updater
+truereallyfalse
+truecool featurefalse
+true@endtrue
+to whomtest4js to136580@xmppdev.jeevansathi.com profileid144111msgpacketnull
+gmail is >>>>testjeevs006@gmail.com
+Database connection established
+UPDATE userplane.`LOG_CHAT_REQUEST` SET RECEIVED ='1' WHERE SEN ='136580' AND REC='144111' order by ID DESC LIMIT 1
+falseyestrue
+coming to setStatus of status updater
+trueasdfafalse
+trueyestrue
+truedfalse
+true@endtrue
+to whomtest4js to136580@xmppdev.jeevansathi.com profileid144111msgpacketnull
+gmail is >>>>testjeevs006@gmail.com
+Database connection established
+UPDATE userplane.`LOG_CHAT_REQUEST` SET RECEIVED ='1' WHERE SEN ='136580' AND REC='144111' order by ID DESC LIMIT 1
+falseyestrue
+coming to setStatus of status updater
+trueasdfafalse
+gmail is >>>>testjeev001@gmail.com
+Database connection established
+UPDATE userplane.`LOG_CHAT_REQUEST` SET RECEIVED ='1' WHERE SEN ='136580' AND REC='3187771' order by ID DESC LIMIT 1
+truehifalse
+truejifalse
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>1
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>1
+GmailSubscription is running
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>1
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>1
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>1
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>1
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>1
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>0
+GmailSubscription is running
+GmailSubscription is running
+GmailSubscription is running
+GmailSubscription is running
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>1
+gmail is >>>>testjeevs006@gmail.com
+Database connection established
+UPDATE userplane.`LOG_CHAT_REQUEST` SET RECEIVED ='1' WHERE SEN ='136580' AND REC='144111' order by ID DESC LIMIT 1
+falsenotrue
+coming to setStatus of status updater
+UPDATE userplane.`LOG_CHAT_REQUEST` SET RECEIVED ='1' WHERE SEN ='136580' AND REC='144111' order by ID DESC LIMIT 1
+falsenotrue
+coming to setStatus of status updater
+UPDATE userplane.`LOG_CHAT_REQUEST` SET RECEIVED ='1' WHERE SEN ='136580' AND REC='144111' order by ID DESC LIMIT 1
+falseyestrue
+coming to setStatus of status updater
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>0
+update  user_info for gmailid is >>>testjeevs006@gmail.com>>>and on_off_flag is >>>1
+gmail is >>>>testjeevs006@gmail.com
+Database connection established
+UPDATE userplane.`LOG_CHAT_REQUEST` SET RECEIVED ='1' WHERE SEN ='136580' AND REC='144111' order by ID DESC LIMIT 1
+false@endtrue
+falseyestrue
+coming to setStatus of status updater
+trueadfafalse
+true@endtrue
+to whomtest4js to136580@xmppdev.jeevansathi.com profileid144111msgpacketnull

@@ -1,0 +1,47 @@
+<div align="CENTER">
+	<div align="center"><b><font color="blue">IMPRESSION DETAILS</font></b></div><br>
+	<table width="100%" border="1" vspace="0" hspace="0" cellpadding="4" cellspacing="0" bordercolor="#DFDFDF" style="border-collapse:collapse;">
+	<tr>
+		<td class="text" width="10%" height="20" valign="TOP" bgcolor="#E6EEF9"><b>S.No.</b></td>
+		<td class="text" width="10%" height="20" valign="TOP" bgcolor="#E6EEF9"><b>Campaign Name</b></td>
+		<td class="text" width="15%" height="20" valign="TOP" bgcolor="#E6EEF9"><b>Banner Preview</b></td>
+		<td class="text" width="15%" height="20" valign="TOP" bgcolor="#E6EEF9"><b>Banner Duration</b></td>
+		<td class="text" width="15%" height="20" valign="TOP" bgcolor="#E6EEF9"><b>Size<br>(pixels)</b></td>
+		<td class="text" width="15%" height="20" valign="TOP" bgcolor="#E6EEF9"><b>Impresions</b></td>
+		<td class="text" width="15%" height="20" valign="TOP" bgcolor="#E6EEF9"><b>Clicks</b></td>
+		<td class="text" width="15%" height="20" valign="TOP" bgcolor="#E6EEF9"><b>CTR<br>(in %)</b></td>
+		<td class="text" width="15%" height="20" valign="TOP" bgcolor="#E6EEF9"><b>Criteria</b></td>
+		<td class="text" width="15%" height="20" valign="TOP" bgcolor="#E6EEF9"><b></b></td>
+	</tr>
+
+	~section name=i loop=$bannarr`                 
+	~assign var=banner value=$bannarr[i]`
+	<tr>
+		<td class="text" height="20" valign="TOP">~$resarr[$banner].sno`</td>	
+		<td class="text-new" height="20" valign="TOP">&nbsp;
+			~if $resarr[$banner].site eq '99acres'`
+				<IMG SRC="gifs/99logo.gif" ALT="99acres" WIDTH="15" HEIGHT="15" align="top">
+			~else`
+				<IMG SRC="gifs/jslogo.gif" ALT="JS" WIDTH="15" HEIGHT="15" align="top">
+			~/if`
+			(~$resarr[$banner].status`)<br><a href="bms_campaign.php?campaignname=~$resarr[$banner].campaign`&campaignstatusselected=all&campaignid=~$resarr[$banner].campaignid`&id=~$id`" align="right">~$resarr[$banner].campaign`</a><br>
+		</td>
+		<td class="text" height="20" valign="TOP">~$resarr[$banner].banner`</td>
+		<td class="text" height="20" valign="TOP">~$resarr[$banner].startdt` to ~$resarr[$banner].enddt`</td>
+		<td class="text" height="20" valign="TOP">~$size`</td>
+		<td class="text" height="20" valign="TOP">~$resarr[$banner].impressions`</td>
+		<td class="text" height="20" valign="TOP">~$resarr[$banner].clicks`</td>
+		<td class="text" height="20" valign="TOP">~$resarr[$banner].ctr`</td>
+		<td class="text" height="20" valign="TOP">~$resarr[$banner].criteria`</td>
+		<td class="text" height="20" valign="TOP">
+			~if $flag_mis eq 1`
+				<a href="bms_admindatewisemis.php?id=~$id`&campaignid=~$resarr[$banner].campaignid`&startday=~$startday`&startmonth=~$startmonth`&startyear=~$startyear`&endday=~$endday`&endmonth=~$endmonth`&endyear=~$endyear`&showresults_x=1&camp=1&site=~$site`&invenory_mis=1&bannerid=~$resarr[$banner].bannerid`">View Date Wise Results</a>
+			~else`
+				<a href="bms_admindatewisemis.php?id=~$id`&campaignid=~$resarr[$banner].campaignid`&startday=~$startday`&startmonth=~$startmonth`&startyear=~$startyear`&endday=~$endday`&endmonth=~$endmonth`&endyear=~$endyear`&showresults_x=1&camp=1&site=~$site`&flag_year=1&bannerid=~$resarr[$banner].bannerid`">View Month Wise Result</a>
+			~/if`
+		</td>
+	</tr>
+	~/section`
+	</table>
+</div>
+

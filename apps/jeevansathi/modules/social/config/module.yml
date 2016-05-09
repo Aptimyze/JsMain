@@ -1,0 +1,55 @@
+all:
+  tanugupta:  1
+  video: 0
+  audio: 0
+  video_email: 'videos@jeevansathi.com'
+  audio_email: 'audios@jeevansathi.com'
+  post_no: '201951'
+  postal_address: 'B-8, Sector-132, Noida, Uttar Pradesh - 201301'
+  max_no_of_videos: 3
+  max_video_size: 10
+  video_formats: 'mpeg, wmv, flv, avi'
+  facebook_timeout: 120000
+  flickr_timeout: 180000
+  picasa_timeout: 120000
+  general_timeout: 60000
+  album:
+    enable_login: off
+    enable_google_analytics:  off
+  compUploadAction:  
+    enable_login:  off    
+  addPhotos:
+    highlight: profile
+  saveImportImages:
+    enable_login:  off
+  updatePictureDetails:
+    enable_login:  off
+  imageDetails:
+    enable_login:  off
+  saveAlbumInfo:
+    enable_login:  off
+  saveProfilePic:
+    enable_login:  off
+    enable_google_analytics:  off
+  loadingLayer:
+    enable_login:  off    
+    enable_google_analytics:  off
+  deletePic:
+    enable_login:  off    
+  deleteLayer:
+    enable_login:  off    
+    enable_google_analytics:  off
+  deleteProfilePicLayer:
+    enable_login:  off    
+    enable_google_analytics:  off
+  profileLayer:
+    enable_login:  off    
+    enable_google_analytics:  off
+  GetAlbumV1:
+    enable_login:  off   
+  photoRequest:
+    enable_login:  off
+    enable_google_analytics:  off
+  MobilePhotoAlbum:
+    enable_login:  off
+    enable_google_analytics:  off

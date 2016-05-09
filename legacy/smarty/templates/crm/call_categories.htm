@@ -1,0 +1,366 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+ <head>
+<SCRIPT language="JavaScript">
+<!--
+function MM_openBrWindow(theURL,winName,features)
+{
+        window.open(theURL,winName,features);
+}
+function loadForm()
+{
+	document.form1.submit();
+}                                                                                                 
+//-->
+</script>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>JeevanSathi</title>
+  <link rel="stylesheet" href="../jsadmin/jeevansathi.css" type="text/css">
+  <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+ </head>
+ ~include file="head.htm"`
+ <br>
+ <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+  <table width=100% cellspacing="1" cellpadding='0' ALIGN="CENTER" >
+   <tr width=100% border=1>
+    <td width="30%" class="formhead" height="23"><font><b>Welcome : ~$name`</b></font></td>
+    <td width="25%" class="formhead" align="center"><a href="../jsadmin/mainpage.php?cid=~$cid`">Click here to go to main page</a></td>
+    <td width="6%" class="formhead" align='LEFT' height="23">
+	<a href="../jsadmin/logout.php?cid=~$cid`">Logout</a>
+    </td>
+    <td width="3%" class="formhead" height="23"><a href="service_call.php?cid=~$cid`&name=~$name`">Back</a>
+    </td>
+   </tr>
+  </table>
+~if $cat eq 'P'`
+  <table width=100% align="CENTER" >
+   <tr align="CENTER">
+    <td class="formhead" colspan="100%" height="23">
+     <b>Paid Profiles for the day</b>
+    </td>
+   </tr>
+   <tr align="CENTER">
+   	<td class="formhead" colspan="100%" height="23">
+        <b>
+	<font color="red">Page ~$CURRENTPAGE` of ~$NO_OF_PAGES`</font> 
+     	</b>
+    	</td>
+   </tr>
+   <tr align="CENTER">
+    <td class="label" width=5% height="20"><b>S.No.</b></td>      
+    <td class="label" width=15% height="20"><b>Name</b></td>
+    <td class="label" width=20% height="20"><b>User Name/Email</b></td>
+    <td class="label" width=15% height="20"><b>Phone No.</b></td>
+    <td class="label" width=15% height="20"><b>City</b></td>
+    <td class="label" width=10% height="20"><b>Gender</b></td>
+    <td class="label" width=20% height="20"><b>No. of times Payment made</b></td>
+   </tr>
+   ~if $ordersusersarr` 
+	   ~section name=index loop=$ordersusersarr`
+	     <tr class=fieldsnew>
+	     <td height="21" width="5%" align=center>~$ordersusersarr[index].SNO`.</td>
+	     <td height="21" width="5%" align=center>~$ordersusersarr[index].NAME`</td>
+	     <td height="21" width="10%" align="LEFT"><a href="#" onclick="MM_openBrWindow('call_process.php?username=~$ordersusersarr[index].USERNAME`&profileid=~$ordersusersarr[index].PROFILEID`&cid=~$cid`&flag=P','','width=800,height=600,scrollbars=yes'); return false;">~$ordersusersarr[index].USERNAME`<br>~$ordersusersarr[index].EMAIL`</a></td>
+             <td height="21" width="10%" align=left>~if $ordersusersarr[index].RES_NO neq "-"` R:<font class=blue> ~$ordersusersarr[index].RES_NO` </font><br>~/if` ~if $ordersusersarr[index].MOB_NO neq "-"` M:<font class=red> ~$ordersusersarr[index].MOB_NO`</font>~/if`</td>
+             <td height="21" width="10%" align=center>~$ordersusersarr[index].CITY_INDIA`</td>
+	     <td height="21" width="10%" align=center>~$ordersusersarr[index].GENDER`</td>
+	     <td height="21" width="10%" align=center>~$ordersusersarr[index].PAYMENTS_MADE`</td>
+	    </tr>
+	   ~/section`
+   ~else`
+	   	<tr><td  align="center" colspan=100% class=fieldsnew><font color="red">
+	   		There are no records to show
+	   	</font></td></tr>
+   ~/if`
+   <tr bgcolor="#fbfbfb">
+    <td colspan="100%" height="21">
+    </td>
+   </tr>
+   <tr>
+    <td colspan="100%" height="21">
+     &nbsp; 
+    </td>
+   </tr>    
+  </table>
+~/if`
+~if $cat eq 'C'`
+  <table width=100% align="CENTER" >
+   <tr align="CENTER">
+    <td class="formhead" colspan="100%" height="23">
+     <b>Profiles Completed 30 days of membership</b>
+    </td>
+   </tr>
+   <tr align="CENTER">
+        <td class="formhead" colspan="100%" height="23">
+        <b>
+        <font color="red">Page ~$CURRENTPAGE` of ~$NO_OF_PAGES`</font> 
+        </b>
+        </td>
+   </tr>
+   <tr align="CENTER">
+    <td class="label" width=5% height="20"><b>S.No.</b></td>
+    <td class="label" width=15% height="20"><b>Name</b></td>
+    <td class="label" width=20% height="20"><b>User Name/Email</b></td>
+    <td class="label" width=15% height="20"><b>Phone No.</b></td>
+    <td class="label" width=15% height="20"><b>City</b></td>
+    <td class="label" width=10% height="20"><b>Gender</b></td>
+    <td class="label" width=20% height="20"><b>Comments of Call 1</b></td>
+   </tr>
+   ~if $ordersusersarr`
+           ~section name=index loop=$ordersusersarr`
+             <tr class=fieldsnew>
+             <td height="21" width="5%" align=center>~$ordersusersarr[index].SNO`.</td>
+             <td height="21" width="5%" align=center>~$ordersusersarr[index].NAME`</td>
+             <td height="21" width="10%" align="LEFT"><a href="#" onclick="MM_openBrWindow('call_process.php?username=~$ordersusersarr[index].USERNAME`&profileid=~$ordersusersarr[index].PROFILEID`&cid=~$cid`&flag=C','','width=800,height=600,scrollbars=yes'); return false;">~$ordersusersarr[index].USERNAME`<br>~$ordersusersarr[index].EMAIL`</a></td>
+             <td height="21" width="10%" align=left>~if $ordersusersarr[index].RES_NO neq "-"` R:<font class=blue> ~$ordersusersarr[index].RES_NO` </font><br>~/if` ~if $ordersusersarr[index].MOB_NO neq "-"` M:<font class=red> ~$ordersusersarr[index].MOB_NO`</font>~/if`</td>
+             <td height="21" width="10%" align=center>~$ordersusersarr[index].CITY_INDIA`</td>
+   	     <td height="21" width="10%" align=center>~$ordersusersarr[index].GENDER`</td>
+             <td height="21" width="10%" align=center>~$ordersusersarr[index].HANDLED_COMMENTS`</td>
+            </tr>
+           ~/section`
+   ~else`
+                <tr><td  align="center" colspan=100% class=fieldsnew><font color="red">
+                        There are no records to show
+                </font></td></tr>
+   ~/if`
+   <tr bgcolor="#fbfbfb">
+    <td colspan="100%" height="21">
+    </td>
+   </tr>
+   <tr>
+    <td colspan="100%" height="21">
+     &nbsp;
+    </td>
+   </tr>
+  </table>
+~/if`
+~if $cat eq 'E'`
+  <table width=100% align="CENTER" >
+   <tr align="CENTER">
+    <td class="formhead" colspan="100%" height="23">
+     <b>Subscribed Profiles expiring on 10th day from now</b>
+    </td>
+   </tr>
+   <tr align="CENTER">
+        <td class="formhead" colspan="100%" height="23">
+        <b>
+        <font color="red">Page ~$CURRENTPAGE` of ~$NO_OF_PAGES`</font> 
+        </b>
+        </td>
+   </tr>
+   <tr align="CENTER">
+    <td class="label" width=5% height="20"><b>S.No.</b></td>
+    <td class="label" width=15% height="20"><b>Name</b></td>
+    <td class="label" width=15% height="20"><b>User Name/Email</b></td>
+    <td class="label" width=15% height="20"><b>Phone No.</b></td>
+    <td class="label" width=10% height="20"><b>City</b></td>
+    <td class="label" width=10% height="20"><b>Gender</b></td>
+    <td class="label" width=15% height="20"><b>Comments of Call 1</b></td>
+    <td class="label" width=15% height="20"><b>Comments of Call 2</b></td>
+   </tr>
+   ~if $ordersusersarr`
+           ~section name=index loop=$ordersusersarr`
+             <tr class=fieldsnew>
+             <td height="21" width="5%" align=center>~$ordersusersarr[index].SNO`.</td>
+             <td height="21" width="5%" align=center>~$ordersusersarr[index].NAME`</td>
+             <td height="21" width="10%" align="LEFT"><a href="#" onclick="MM_openBrWindow('call_process.php?username=~$ordersusersarr[index].USERNAME`&profileid=~$ordersusersarr[index].PROFILEID`&cid=~$cid`&flag=E','','width=800,height=600,scrollbars=yes'); return false;">~$ordersusersarr[index].USERNAME`<br>~$ordersusersarr[index].EMAIL`</a></td>
+             <td height="21" width="10%" align=left>~if $ordersusersarr[index].RES_NO neq "-"` R:<font class=blue> ~$ordersusersarr[index].RES_NO` </font><br>~/if` ~if $ordersusersarr[index].MOB_NO neq "-"` M:<font class=red> ~$ordersusersarr[index].MOB_NO`</font>~/if`</td>
+	     <td height="21" width="10%" align=center>~$ordersusersarr[index].CITY_INDIA`</td>
+             <td height="21" width="10%" align=center>~$ordersusersarr[index].GENDER`</td>
+             <td height="21" width="10%" align=center>~$ordersusersarr[index].HANDLED_COMMENTS`</td>
+	     <td height="21" width="10%" align=center>~$ordersusersarr[index].FEEDBACK_COMMENTS`</td>
+            </tr>
+           ~/section`
+   ~else`
+                <tr><td  align="center" colspan=100% class=fieldsnew><font color="red">
+                        There are no records to show
+                </font></td></tr>
+   ~/if`
+   <tr bgcolor="#fbfbfb">
+    <td colspan="100%" height="21">
+    </td>
+   </tr>
+   <tr>
+    <td colspan="100%" height="21">
+     &nbsp;
+    </td>
+   </tr>
+  </table>
+~/if`
+~if $cat eq 'F'`
+  <table width=100% align="CENTER" >
+   <tr align="CENTER">
+    <td class="formhead" colspan="100%" height="23">
+     <b>Follw Up Profiles for the day</b>
+    </td>
+   </tr>
+   <tr align="CENTER">
+        <td class="formhead" colspan="100%" height="23">
+        <b>
+        <font color="red">Page ~$CURRENTPAGE` of ~$NO_OF_PAGES`</font> 
+        </b>
+        </td>
+   </tr>
+   <tr align="CENTER">
+    <td class="label" width=5% height="20"><b>S.No.</b></td>
+    <td class="label" width=10% height="20"><b>Name</b></td>
+    <td class="label" width=15% height="20"><b>User Name/Email</b></td>
+    <td class="label" width=10% height="20"><b>Phone No.</b></td>
+    <td class="label" width=10% height="20"><b>City</b></td>
+    <td class="label" width=10% height="20"><b>Gender</b></td>
+    <td class="label" width=15% height="20"><b>Comments of Call 1</b></td>
+    <td class="label" width=15% height="20"><b>Comments of Call 2</b></td>
+    <td class="label" width=10% height="20"><b>Call Status</b></td>
+   </tr>
+   ~if $ordersusersarr`
+           ~section name=index loop=$ordersusersarr`
+             <tr class=fieldsnew>
+             <td height="21" width="5%" align=center>~$ordersusersarr[index].SNO`.</td>
+             <td height="21" width="5%" align=center>~$ordersusersarr[index].NAME`</td>
+             <td height="21" width="10%" align="LEFT"><a href="#" onclick="MM_openBrWindow('call_process.php?username=~$ordersusersarr[index].USERNAME`&profileid=~$ordersusersarr[index].PROFILEID`&cid=~$cid`&flag=F','','width=800,height=600,scrollbars=yes'); return false;">~$ordersusersarr[index].USERNAME`<br>~$ordersusersarr[index].EMAIL`</a></td>
+	     <td height="21" width="10%" align=left>~if $ordersusersarr[index].RES_NO neq "-"` R:<font class=blue> ~$ordersusersarr[index].RES_NO` </font><br>~/if` ~if $ordersusersarr[index].MOB_NO neq "-"` M:<font class=red> ~$ordersusersarr[index].MOB_NO`</font>~/if`</td>
+             <td height="21" width="10%" align=center>~$ordersusersarr[index].CITY_INDIA`</td>
+             <td height="21" width="10%" align=center>~$ordersusersarr[index].GENDER`</td>
+             <td height="21" width="10%" align=center>~$ordersusersarr[index].HANDLED_COMMENTS`</td>
+             <td height="21" width="10%" align=center>~$ordersusersarr[index].FEEDBACK_COMMENTS`</td>
+	     <td height="21" width="10%" align=center>~$ordersusersarr[index].CALL_STATUS`</td>
+            </tr>
+           ~/section`
+   ~else`
+                <tr><td  align="center" colspan=100% class=fieldsnew><font color="red">
+                        There are no records to show
+                </font></td></tr>
+   ~/if`
+   <tr bgcolor="#fbfbfb">
+    <td colspan="100%" height="21">
+    </td>
+   </tr>
+   <tr>
+    <td colspan="100%" height="21">
+     &nbsp;
+    </td>
+   </tr>
+  </table>
+~/if`
+~if $cat eq 'H'`
+  <table width=100% align="CENTER" >
+   <tr align="CENTER">
+    <td class="formhead" colspan="100%" height="23">
+     <b>Previously Handled Profiles</b>
+    </td>
+   </tr>
+   <tr align="CENTER">
+        <td class="formhead" colspan="100%" height="23">
+        <b>
+        <font color="red">Page ~$CURRENTPAGE` of ~$NO_OF_PAGES`</font> 
+        </b>
+        </td>
+   </tr>
+   <tr align="CENTER">
+    <td class="label" width=5% height="20"><b>S.No.</b></td>
+    <td class="label" width=10% height="20"><b>Name</b></td>
+    <td class="label" width=15% height="20"><b>User Name/Email</b></td>
+    <td class="label" width=10% height="20"><b>Phone No.</b></td>
+    <td class="label" width=10% height="20"><b>City</b></td>
+    <td class="label" width=10% height="20"><b>Gender</b></td>
+    <td class="label" width=15% height="20"><b>Comments of Call 1</b></td>
+    <td class="label" width=15% height="20"><b>Comments of Call 2</b></td>
+    <td class="label" width=10% height="20"><b>Call Status</b></td>
+   </tr>
+   ~if $ordersusersarr`
+           ~section name=index loop=$ordersusersarr`
+             <tr class=fieldsnew>
+             <td height="21" width="5%" align=center>~$ordersusersarr[index].SNO`.</td>
+             <td height="21" width="5%" align=center>~$ordersusersarr[index].NAME`</td>
+             <td height="21" width="10%" align="LEFT"><a href="#" onclick="MM_openBrWindow('call_process.php?username=~$ordersusersarr[index].USERNAME`&profileid=~$ordersusersarr[index].PROFILEID`&cid=~$cid`&flag=H','','width=800,height=600,scrollbars=yes'); return false;">~$ordersusersarr[index].USERNAME`<br>~$ordersusersarr[index].EMAIL`</a></td>
+ <td height="21" width="10%" align=left>~if $ordersusersarr[index].RES_NO neq "-"` R:<font class=blue> ~$ordersusersarr[index].RES_NO` </font><br>~/if` ~if $ordersusersarr[index].MOB_NO neq "-"` M:<font class=red> ~$ordersusersarr[index].MOB_NO`</font>~/if`</td>
+             <td height="21" width="10%" align=center>~$ordersusersarr[index].CITY_INDIA`</td>
+             <td height="21" width="10%" align=center>~$ordersusersarr[index].GENDER`</td>
+             <td height="21" width="10%" align=center>~$ordersusersarr[index].HANDLED_COMMENTS`</td>
+             <td height="21" width="10%" align=center>~$ordersusersarr[index].FEEDBACK_COMMENTS`</td>
+             <td height="21" width="10%" align=center>~$ordersusersarr[index].CALL_STATUS`</td>
+            </tr>
+           ~/section`
+   ~else`
+                <tr><td  align="center" colspan=100% class=fieldsnew><font color="red">
+                        There are no records to show
+                </font></td></tr>
+   ~/if`
+   <tr bgcolor="#fbfbfb">
+    <td colspan="100%" height="21">
+    </td>
+   </tr>
+   <tr>
+    <td colspan="100%" height="21">
+     &nbsp;
+    </td>
+   </tr>
+  </table>
+~/if`
+~if $cat eq 'N'`
+  <table width=100% align="CENTER" >
+   <tr align="CENTER">
+    <td class="formhead" colspan="100%" height="23">
+     <b>Profiles not handled on time</b>
+    </td>
+   </tr>
+   <tr align="CENTER">
+        <td class="formhead" colspan="100%" height="23">
+        <b>
+        <font color="red">Page ~$CURRENTPAGE` of ~$NO_OF_PAGES`</font> 
+        </b>
+        </td>
+   </tr>
+   <tr align="CENTER">
+    <td class="label" width=5% height="20"><b>S.No.</b></td>
+    <td class="label" width=10% height="20"><b>Name</b></td>
+    <td class="label" width=15% height="20"><b>User Name/Email</b></td>
+    <td class="label" width=10% height="20"><b>Phone No.</b></td>
+    <td class="label" width=10% height="20"><b>City</b></td>
+    <td class="label" width=10% height="20"><b>Gender</b></td>
+    <td class="label" width=15% height="20"><b>Comments of Call 1</b></td>
+    <td class="label" width=15% height="20"><b>Comments of Call 2</b></td>
+    <td class="label" width=10% height="20"><b>Call Status</b></td>
+   </tr>
+   ~if $ordersusersarr`
+           ~section name=index loop=$ordersusersarr`
+             <tr class=fieldsnew>
+             <td height="21" width="5%" align=center>~$ordersusersarr[index].SNO`.</td>
+             <td height="21" width="5%" align=center>~$ordersusersarr[index].NAME`</td>
+             <td height="21" width="10%" align="LEFT"><a href="#" onclick="MM_openBrWindow('call_process.php?username=~$ordersusersarr[index].USERNAME`&profileid=~$ordersusersarr[index].PROFILEID`&cid=~$cid`&flag=N','','width=800,height=600,scrollbars=yes'); return false;">~$ordersusersarr[index].USERNAME`<br>~$ordersusersarr[index].EMAIL`</a></td>
+<td height="21" width="10%" align=left>~if $ordersusersarr[index].RES_NO neq "-"` R:<font class=blue> ~$ordersusersarr[index].RES_NO` </font><br>~/if` ~if $ordersusersarr[index].MOB_NO neq "-"` M:<font class=red> ~$ordersusersarr[index].MOB_NO`</font>~/if`</td>
+             <td height="21" width="10%" align=center>~$ordersusersarr[index].CITY_INDIA`</td>
+             <td height="21" width="10%" align=center>~$ordersusersarr[index].GENDER`</td>
+             <td height="21" width="10%" align=center>~$ordersusersarr[index].HANDLED_COMMENTS`</td>
+             <td height="21" width="10%" align=center>~$ordersusersarr[index].FEEDBACK_COMMENTS`</td>
+             <td height="21" width="10%" align=center>~$ordersusersarr[index].CALL_STATUS`</td>
+            </tr>
+           ~/section`
+   ~else`
+                <tr><td  align="center" colspan=100% class=fieldsnew><font color="red">
+                        There are no records to show
+                </font></td></tr>
+   ~/if`
+   <tr bgcolor="#fbfbfb">
+    <td colspan="100%" height="21">
+    </td>
+   </tr>
+   <tr>
+    <td colspan="100%" height="21">
+     &nbsp;
+    </td>
+   </tr>
+  </table>
+~/if`
+<table>
+   <tr bgcolor="#fbfbfb">
+    <td colspan="100%" height="21">
+    ~$PAGELINK`
+    </td>
+   </tr>
+</table>
+ </form> 
+ <br><br>
+ ~include file="foot.htm"`
+ </body>
+</html>

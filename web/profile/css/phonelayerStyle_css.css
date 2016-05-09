@@ -1,0 +1,60 @@
+.mt10{margin-top:10px}
+.orVer{font-size:13px;}
+.orVer span{display:block; margin-top:1px;}
+.orVer span em{color:#b13131; font:bold 12px arial}
+.veri {font:normal 12px arial; line-height:16px}
+.veri span{display:block; font:bold 14px arial;color:#616161}
+.veri span em{font:normal 11px arial; display:block}
+.yllw{background:#ffe400; float:left}
+button{border:0; padding:0; margin:0;cursor:pointer}
+.f17{font-size:17px}
+.f12{font-size:12px}
+.f15{font-size:15px}
+.f14{font-size:14px}
+.f13{font-size:13px}
+.p20{padding:20px}
+.p10{padding:10px}
+.midCont{background-color:#FDF4F5;border:1px solid #FDF4F5;padding:10px 10px 0 12px;overflow:auto}
+.orgClr{color:#cb5209}
+.fL{float:left}
+.fR{float:right}
+.w200{width:200px}
+.contR{float:right;width:220px; background:#fee6a5; padding:5px}
+.contL{width:420px;float:left;}
+.verify{font-siz:12px; margin:0 0 20px 0}
+.verify span{font:bold 14px arial; display:block;}
+.verify b{font-size:12px}
+.edit{font:bold 16px arial; margin:0 0 15px 0}
+.edit{color:#9e0000;}
+.edit p{color:#000;}
+.edit em{font:normal 12px arial;color:red; display:block}
+.edit p a{color:#117daa; font-size:14px; text-decoration:underline;padding-left:10px}
+.edit .saveBtn{background: url("IMG_URL/profile/images/sprite.png") no-repeat 0 -340px; width:188px; height:12px; padding:3px 0; display:block; margin:5px 0}
+.edit .saveBtn a{color:#fff!important; text-decoration:none; font:normal 12px arial}
+
+.edit .saveBtnD{background: url("IMG_URL/profile/images/sprite.png") no-repeat 0 -443px; width:188px; height:12px; padding:3px 0; display:block; margin:5px 0}
+.edit .saveBtnD a{color:#fff; text-decoration:none; font:normal 12px arial}
+
+
+.bg_y{ background: url("IMG_URL/profile/images/bg_y.png") repeat-y right}
+.bdrP{border:1px solid #f1aa63; padding:10px}
+.benefits{margin:10px 0; font-size:14px;}
+.benefits ul li {background: url("IMG_URL/profile/images/sprite.png") no-repeat 0 3px;padding:10px 0 5px 14px; }
+.verified{background: url("IMG_URL/profile/images/sprite.png") no-repeat 0 -45px; width:200px; height:158px}
+.numBene{background: url("IMG_URL/profile/images/sprite.png") no-repeat 0 -212px; width:200px; height:37px}
+.btnL{background: url("IMG_URL/profile/images/sprite.png") no-repeat -289px -260px;height:30px; padding-left:10px}
+.btnR{background: url("IMG_URL/profile/images/sprite.png") no-repeat right -295px;height:20px;padding:5px;color:#fff; font-size:14px;}
+
+.btnDL{background: url("IMG_URL/profile/images/sprite.png") no-repeat -283px -363px;height:30px; padding-left:10px}
+.btnDR{background: url("IMG_URL/profile/images/sprite.png") no-repeat right -398px;height:20px;padding:5px;color:#fff; font-size:14px;}
+.btnDR a{color:#fff}
+.btnR a{color:#fff!important}
+
+.dspN{display:none;}
+.err{font:normal 12px arial;color:red;}
+.dspB{display:block}
+.w25{width:25px}
+.w100{width:100px}
+.w30{width:30px}
+.w80{width:80px}
+.fB{font-weight:bold}

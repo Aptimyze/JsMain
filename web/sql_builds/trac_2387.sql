@@ -1,0 +1,4 @@
+use incentive;
+
+ALTER TABLE incentive.PAYMENT_COLLECT ADD `DISCOUNT_PERCENT` tinyint(2) NULL DEFAULT 0;
+

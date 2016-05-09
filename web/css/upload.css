@@ -1,0 +1,115 @@
+#demo-loader
+{
+	padding:		15px 20px 15px 15px;
+	width:			500px;
+	height:			auto;
+	overflow:		hidden;
+}
+
+#demo-status
+{
+	background-color:	#f9f9f9;
+	border:			1px solid #dddddd;
+	padding:		15px 20px 15px 15px;
+	width:			500px;
+	height:			150px;
+	overflow:		hidden;
+}
+
+#demo-status1
+{
+	font-weight:	bold;
+	font-size:	13px;
+}
+
+#browse_flash_button
+{
+	margin-top:	-35px;
+	z-index:	1;
+}
+ 
+#demo-status2
+{
+	padding:		15px 20px 15px 0px;
+	width:			500px;
+	height:			auto;
+	overflow:		hidden;
+}
+
+#demo-status .progress
+{
+	background:		white url(../assets/progress-bar/progress.gif) no-repeat;
+	background-position:	+50% 0;
+	margin-right:		0.5em;
+}
+ 
+#demo-status .progress-text
+{
+	font-size:	0.8em;
+	font-weight:	bold;
+}
+ 
+#demo-list-left
+{
+	position: 	relative;
+	float:		left;
+	width:		250px;
+	list-style:	none;
+	margin:		0;
+	font-size:	13px;
+}
+ 
+#demo-list-left span.file
+{
+	display: 		block;
+	margin-bottom:		15px;
+}
+#demo-list-right
+{
+	position: 	relative;
+	float:		right;
+	width:		250px;
+	list-style:	none;
+	margin:		0;
+	font-size:	13px;
+}
+ 
+#demo-list-right span.file
+{
+	display:		block;
+	margin-bottom:		15px;
+}
+ 
+#demo-list-left span.file .no_b
+{
+	/*font-size:	0.9em;*/
+	margin-left:	0px;
+	font-weight:	none;
+}
+#demo-list-right span.file .no_b
+{
+	/*font-size:	0.9em;*/
+	margin-left:	0px;
+	font-weight:	none;
+}
+
+.current-title
+{
+	font-size: 	0.9em;
+	font-weight: 	bold;
+}
+.overall-title
+{
+	font-size: 	0.9em;
+	font-weight: 	bold;
+}
+
+.err_display
+{
+	font-size:	13px;
+}
+
+.disabled_text_box
+{
+	background:	#FFFFFF;
+}

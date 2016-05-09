@@ -1,0 +1,133 @@
+<html>
+<head>
+<title>JeevanSathi Matrimonials - Contact</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+<body leftmargin="5" topmargin="5">
+  <table width="760" border="0" cellspacing="0" cellpadding="0" align="center">
+    <tr>
+      <td>~$HEAD`
+        ~$SUBHEADER`
+        <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td colspan="3" height="3" valign="top"></td>
+            <SPACER height="3" type="block"></SPACER> </tr>
+          <tr>
+            <td width="190" valign="top" bgcolor="FCE1B1"><div align="center">
+                <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td bgcolor="#FFFFFF">~$TOPLEFT`</td>
+                  </tr>
+                  <tr>
+                    <td width="190">~$LEFTPANEL`</td>
+                        </tr>
+                      </table>
+                      <br></td>
+                  </tr>
+                </table>
+              </div></td>
+            <TD width=10 vAlign=top class=small><SPACER type="block" 
+            width="10"></TD>
+            <td width="571" valign="top"><table width="99%"  border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><div align="center"><br>
+                 
+                    <table width="70%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="bigblack"><div align="center" class="extralargepink"><strong>Summary Of multiple contacts made by you </strong></div></td>
+                      </tr>
+                    </table>
+                    <strong><br>
+                    </strong></div></td>
+              </tr>
+
+              <tr>
+                <td class="mediumblack"><table width="94%"  border="0" align="center" cellpadding="0" cellspacing="0">                  
+                  ~if $RECEIVERS_WITH_HISTORY`
+                  	<tr><td colspan="2">              	  	
+              	  	<font size="2">
+                  	For these users,there is some history.To check that click on the individual links
+                  	</font>              	
+              	  	</td></tr>
+              	  <tr bgcolor="#FCE1B1" class="mediumblack">
+                    <td width="30%" height="18"><strong>&nbsp;Username</strong></td>
+                    <td height="18"><strong>Details</strong></td>
+                  </tr>                  
+                  <tr>
+                  	<td height="5" colspan="2"></td>
+                    <SPACER height="5" type="block"></SPACER> 
+                  </tr>
+                                	  	  
+              	  	~section name="index" loop=$RECEIVERS_WITH_HISTORY`
+              	  		<tr class="mediumblack">
+                    	<td height="18"><strong><a href="viewprofile.php?checksum=~$CHECKSUM`&profilechecksum=~$RECEIVERS_WITH_HISTORY[index].PROFILECHECKSUM`">~$RECEIVERS_WITH_HISTORY[index].NAME`</a></strong></td>                    	
+	                  	</tr>
+	                 	<tr>
+	                    	<td height="3" colspan="2"></td>
+	                      	<SPACER height="3" type="block"></SPACER> 
+	                    </tr>
+	                 	<tr bgcolor="cccccc">
+	                        <td height="1" colspan="2"></td>
+	                        <SPACER height="1" type="block"></SPACER> 
+	                   	</tr>
+	                 	<tr>
+	                        <td height="3" colspan="2"></td>
+	                      	<SPACER height="3" type="block"></SPACER> 
+	                    </tr>
+              	  	~/section`
+              	  ~/if`
+              	                  			
+                  ~if $RECEIVERS_CONTACTED`
+                  
+				  <tr bgcolor="#FCE1B1" class="mediumblack">
+                    <td width="30%" height="18"><strong>&nbsp;Username</strong></td>
+                    <td height="18"><strong>Details</strong></td>
+                  </tr> 
+                  
+                  <tr>
+                  	<td height="5" colspan="2"></td>
+                    <SPACER height="5" type="block"></SPACER> 
+                  </tr>
+                   
+                  ~section name="index" loop=$RECEIVERS_CONTACTED`
+                  	<tr class="mediumblack">
+                    	<td height="18"><strong>~$RECEIVERS_CONTACTED[index].NAME`</strong></td>
+                    	<td height="18">~$RECEIVERS_CONTACTED[index].MESSAGE`</td>
+                  	</tr>
+                 	<tr>
+                    	<td height="3" colspan="2"></td>
+                      	<SPACER height="3" type="block"></SPACER> 
+                    </tr>
+                 	<tr bgcolor="cccccc">
+                        <td height="1" colspan="2"></td>
+                        <SPACER height="1" type="block"></SPACER> 
+                   	</tr>
+                 	<tr>
+                        <td height="3" colspan="2"></td>
+                      	<SPACER height="3" type="block"></SPACER> 
+                    </tr>
+              	  ~/section`
+              	  ~/if`
+              	  
+              	   
+					
+				</td>
+<!-- insert </table> after </td> if any prb  --> 
+              </tr>
+              <tr>
+					<td colspan=2 class="bigblack"><div align="center"><strong><br>
+					  <br>
+					  <span class="class6"><a href="~$SCRIPTNAME`?j=~$PAGENO`&checksum=~$CHECKSUM`&searchchecksum=~$SEARCHCHECKSUM`">Back to search results </a></span></strong></div></td>
+					</tr>
+              
+            </table></td>
+          </tr>
+        </table></td>
+    </tr>
+  </table>
+  <br>
+  ~$SUBFOOTER`
+  <br>
+  ~$FOOT`
+</body>
+</html>

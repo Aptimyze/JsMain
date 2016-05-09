@@ -1,0 +1,57 @@
+# You can find more information about this file on the symfony website:
+# http://www.symfony-project.org/reference/1_4/en/11-App
+# default values
+all: 
+  whichMachine:  'local'
+  SITE_URL: "<?php echo JsConstants::$siteUrl?>"
+  IMG_URL:  "<?php echo JsConstants::$imgUrl?>"
+  IMG_URL2: "<?php echo JsConstants::$imgUrl2?>"
+  PHOTO_URL: "<?php echo JsConstants::$unscreenedPhotoUrl?>"
+  BMS_URL:  "<?php echo JsConstants::$bmsUrl?>"
+  REG_IMG:  "<?php echo JsConstants::$regImg?>"
+  REG_IMG:  "<?php echo JsConstants::$regImg?>"
+  DAY_LIMIT:  "Contact cannot be initiated. You have reached your daily contact limit"
+  WEEK_LIMIT:  "Contact cannot be initiated. You have reached your weekly contact limit"
+  MONTH_LIMIT:  "Contact cannot be initiated. You have reached your monthly contact limit"
+  OVERALL_LIMIT_PAID:    "Contact cannot be initiated. Your contact limit as a paid member has been reached."
+  OVERALL_LIMIT_FREE:  "Contact cannot be initiated. Your contact limit as a free member has been reached. Please <a href='javascript:{$.colorbox.close();document.location=\"mem_comparison.php\";}'>pay</a> to make more contacts"
+  INFO_LIMIT_SITE: 650
+  INFO_LIMIT_MOB: 100
+  tout: 1800
+  API_PROFILE_DELETED: "This profile can't be shown as it has been deleted."
+  API_PROFILE_UNKNOWN: "This profile couldn't be shown because of an unknown error."
+  API_PROFILE_HIDDEN: "Profile can't be shown because it is hidden by the user."
+  API_PROFILE_FILTERED: "This profile can't be shown because the user has filtered you out."
+  API_PROFILE_REQUIRES_LOGIN: "This profile requires login before it can be viewed."
+  PROFILE_IGNORED_BY_OTHER: "You cannot view this profile as the profile has blocked you"
+  PROFILE_IGNORED_BY_ME: "You cannot view <USERNAME>'s profile as you have blocked <USERNAME>. To view <USERNAME>'s profile, unblock <USERNAME> from blocked members list"
+  PROFILE_NOT_FOUND: "Sorry, the profile you requested was not found"
+  PROFILE_SCREENED: "This profile is currently being Screened. Kindly view this profile after 24 hours"
+  PROFILE_HIDDEN:  "This profile is currently hidden. Please check after a couple of weeks"
+  PROFILE_NO_CONTACT: "Sorry, you cannot view this user's profile as the user has chosen to show profile only to contacted members"
+  PROFILE_FILTERED: "Sorry, you cannot view this profile as you have been FILTERED"
+  PROFILE_PHOTO_PRIVACY: "Sorry, you cannot view this user's photos as the user has chosen to show photos only to contacted members"
+  PROFILE_PHOTO_ABSENT: "Photo not uploaded. <a class='thickbox' href='SITE_URL/social/photoRequest?showtemp=Y&other_username=USERNAME&checksum=&profilechecksum=PROFILECHECKSUM'>Click here</a> to Request photo"
+  PROFILE_PHOTO_SCREEN: "Photo is currently under screening. Please check later"    
+  max_photo_size: 6
+  max_no_of_photos: 20
+  photo_formats: 'Jpeg, Gif, Jpg'
+  photo_email: 'photos@jeevansathi.com'
+  SCREENED_PHOTO_URL: "<?php echo JsConstants::$screenedPhotosUrl?>"
+  screened_dir_path: "<?php echo JsConstants::$screenedPhotoDir?>"
+  ftp_username: "<?php echo JsConstants::$ftpUsername?>"
+  ftp_password: "<?php echo JsConstants::$ftpPassword?>"
+  ftp_host: "<?php echo JsConstants::$ftpHost?>"
+  php5path:  "<?php echo JsConstants::$php5path?>"
+  php4path:  ''
+  .array:
+        social_keywords: ["My photo", "My family", "My friends", "My office", "My home", "Others"]
+        photo_formats_to_check: ["image/jpg","image/jpeg","image/gif","image/JPG","image/JPEG","image/GIF","image/pjpeg","image/PJPEG"]
+  myprofile_new_on: 1
+  wkhtmltopdf: 'lib/utils/wkhtmltopdf-i386' 
+  pdffolder: '/tmp'
+  timetracker: '0'
+  mobiletracker: '0'
+  #################Google Analytics process######################
+  #enable_google_analytics: true
+  #############################################################

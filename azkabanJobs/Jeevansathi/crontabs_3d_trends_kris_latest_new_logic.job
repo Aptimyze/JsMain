@@ -1,0 +1,2 @@
+type=command
+command=${php5} ${docRoot}/crontabs/3d_trends_kris_latest_new_logic.php

@@ -1,0 +1,130 @@
+<html>
+
+<head>
+	<link rel="stylesheet" href="/mis/jeevansathi.css" type="text/css">
+	<link rel="stylesheet" href="/profile/images/styles.css" type="text/css">
+</head>
+
+<body>
+<br>
+<table width=100%>
+	<tr class=formhead align=center>
+		<td>&nbsp;Financial Year : ~$yy`</td>
+	</tr>
+</table>
+<br>
+<table border=0 cellspacing="4" cellpadding="4" width=100%>
+	<tr class=label>
+                <td>&nbsp;</td>
+                ~section name=a  start=0 loop=12 step=1`
+                <td>&nbsp;~$mth[a]`</td>
+                ~/section`
+	</tr>
+	<tr>
+		<td class="label">Daily Login</td>
+		~section name=a  start=0 loop=12 step=1`
+		<td class="fieldsnew">&nbsp;~$daily_login[a]`</td>
+		~/section`
+	</tr>
+	<tr>
+		<td class="label">Total Contacts</td>
+		~section name=a start=0 loop=12 step=1`
+		<td class="fieldsnew">&nbsp;~$total_contacts[a]`</td>
+		~/section`
+	</tr>
+	<tr>
+		<td class="label">Initial Contacts</td>
+		~section name=a start=0 loop=12 step=1`
+		<td class="fieldsnew">&nbsp;~$initial_contacts[a]`</td>
+		~/section`
+	</tr>
+	<tr>
+		<td class="label">Accepted Contacts</td>
+		~section name=a start=0 loop=12 step=1`
+		<td class="fieldsnew">&nbsp;~$accepted_contacts[a]`</td>
+		~/section`
+	</tr>
+	<tr>
+		<td class="label">Declined Contacts</td>
+		~section name=a start=0 loop=12 step=1`
+		<td class="fieldsnew">&nbsp;~$declined_contacts[a]`</td>
+		~/section`
+	</tr>
+	<tr>
+		<td class="label">Cancelled Contacts</td>
+		~section name=a start=0 loop=12 step=1`
+		<td class="fieldsnew">&nbsp;~$cancelled_contacts[a]`</td>
+		~/section`
+	</tr>
+        <tr>
+                <td class="label">Total Amount</td>
+		~section name=a start=0 loop=12 step=1`
+                <td class="fieldsnew">&nbsp;~$ss_totamt[a]`</td>
+                ~/section`
+        </tr>
+        <tr>
+                <td class="label">Indian Members' Payment</td>
+		~section name=a start=0 loop=12 step=1`
+                <td class="fieldsnew">&nbsp;~$ss_totamti[a]`</td>
+                ~/section`
+        </tr>
+        <tr>
+                <td class="label">NRI Members' Payment</td>
+		~section name=a start=0 loop=12 step=1`
+                <td class="fieldsnew">&nbsp;~$ss_totamtn[a]`</td>
+                ~/section`
+        </tr>
+        <tr>
+                <td class="label">Online Members' Payment</td>
+		~section name=a start=0 loop=12 step=1`
+                <td class="fieldsnew">&nbsp;~$online[a].ol`</td>
+                ~/section`
+        </tr>
+        <tr>
+                <td class="label">Complete Profiles</td>
+                ~section name=a start=0 loop=12 step=1`
+                <td class="fieldsnew">&nbsp;~$comp_profiles[a].m`</td>
+                ~/section`
+        </tr>
+        <tr>
+                <td class="label">Incomplete Profiles</td>
+                ~section name=a start=0 loop=12 step=1`
+                <td class="fieldsnew">&nbsp;~$incomp_profiles[a].m`</td>
+                ~/section`
+        </tr>
+        <tr>
+                <td class="label">Total Profiles </td>
+                ~section name=a start=0 loop=12 step=1`
+                <td class="fieldsnew">&nbsp;~$all_profiles[a].m`</td>
+                ~/section`
+        </tr>
+        <tr>
+                <td class="label">Live Profiles</td>
+                ~section name=a start=0 loop=12 step=1`
+                <td class="fieldsnew">&nbsp;~$live_profiles[a].m`</td>
+                ~/section`
+        </tr>
+	~section name=srcname loop=$breakup_name`
+	<tr>
+		<td class="label">&nbsp;~$breakup_name[srcname]`</td>
+		~section name=a start=0 loop=12 step=1`
+                <td class="fieldsnew">&nbsp;~$breakup_val[srcname][a].m`</td>
+		~/section`
+	</tr>
+	~/section`
+	<tr>
+                <td class="label">Conversion</td>
+                ~section name=a start=0 loop=12 step=1`
+                <td class="fieldsnew">&nbsp;~$all_profiles[a].p`</td>
+                ~/section`
+        </tr>
+	<tr>
+                <td class="label">Hits</td>
+                ~section name=a start=0 loop=12 step=1`
+                <td class="fieldsnew">&nbsp;~$all_profiles[a].h`</td>
+                ~/section`
+        </tr>
+</table>
+
+</body>
+</html>

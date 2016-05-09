@@ -1,0 +1,79 @@
+<html>
+<head>
+   <title>Jeevansathi.com - CRM</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br><br>
+~if $flag eq '1'`
+	<table width=80% align=center cellpadding=4 cellspacing=3>
+        <tr class=formhead>
+                  <td colspan="3" align="right"><a href="outbound.php?cid=~$cid`&name=~$name`">Click here to go to Main Page</a></td>
+        </tr>
+        <tr class=formhead>
+                <td width=4% align=center>SNO</td>
+                <td width=4% align=center>PROFILEID</td>
+                <td width=4% align=center>PHONE.NO</td>
+        </tr>
+        ~if $norecord neq 1`
+        ~section name=fp loop=$followup`
+                <tr class=fieldsnew>
+                        <td align=center>~$smarty.section.fp.index_next`</td>
+                        <td align=center>~$followup[fp].PROFILEID`</td>
+			<td align=center>~$followup[fp].PHONE`</td>
+		</tr>
+	~/section`
+        ~else`
+		<tr class=label>
+		<td colspan=100% class=red align=center>No records to show</td> 
+		</tr>
+        ~/if`
+        </table>
+~else`
+        <form method=post action="crm_daily_allot_mis.php">
+        <table width=80% border=0 align="center" cellpadding=5>
+        <tr align="center">
+        <td>
+        <select name="day">
+        ~section name=dd loop=$ddarr`
+                <option value=~$ddarr[dd]`>~$ddarr[dd]`</option>
+        ~/section`
+        </select> -
+        <select name="month">
+        ~section name=mon loop=$mmarr`
+                <option value=~$mmarr[mon]`>~$mmarr[mon]`</option>
+        ~/section`
+        </select> -
+        <select name="year">
+        ~section name=yr loop=$yyarr`
+                <option value=~$yyarr[yr]`>~$yyarr[yr]`</option>
+        ~/section`
+        </select>&nbsp;Day - Month - Year
+        </td>
+        </tr>
+        <tr>
+        <td align="center"><input type="hidden" name="cid" value="~$cid`"><input type="submit" name="CMDGo" value="     Go     "></td>
+        </tr>
+        </table>
+        </form>
+~/if`
+<br><br>
+</body>
+</html>

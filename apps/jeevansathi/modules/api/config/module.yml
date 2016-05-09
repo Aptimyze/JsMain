@@ -1,0 +1,12 @@
+all:
+  apiRequest:
+    enable_login:  off
+  LoginV1:
+    enable_login: off
+  ForgotloginV1:
+    enable_login: off
+  AppRegV1:
+    enable_login:  off
+    enable_authToken:  off
+  versionupgrade_v1:
+    enable_login: off

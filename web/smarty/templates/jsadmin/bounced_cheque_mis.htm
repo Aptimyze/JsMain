@@ -1,0 +1,111 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+    <SCRIPT language="JavaScript">
+   <!--
+   function MM_openBrWindow(obj,theURL,winName,features)
+   {
+        window.open(theURL,winName,features);
+        obj.style.color='#008800';
+                                                                                                                            
+                                                                                                                                                                                                                                                         
+   }
+   //-->
+  </SCRIPT>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<br>
+~if $flag eq '1'`
+<table width=560 align=center>
+<tr class=bigblack><td colspan="2" align="center"><h2>Bounced Cheque Reminder List </h2></td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr class=label>
+<td>Welcome : &nbsp;~$user` </td>
+<td class="label" valign="middle" width="24%" align="right">
+       <a href="../jsadmin/mainpage.php?user=~$user`&cid=~$cid`">Main page</a>
+</td>
+</tr>
+</table>
+<br>
+
+<table width="70%" align="center">
+	<tr class="fieldsnew">
+		<td align="right" colspan="6">
+			<a href="bounced_cheque_mis.php?CMDGo=Go&cid=~$cid`&flag=1&year=~$year`&month=~$month`" >Show Active</a>&nbsp;&nbsp;&nbsp;
+			<a href="bounced_cheque_mis.php?CMDGo=Go&cid=~$cid`&flag=1&showall=1&year=~$year`&month=~$month`" >Show all</a>
+		</td>
+	</tr>
+	<tr class="label">
+		<td align="left" width="15%">&nbsp;UserName</td>
+		<td align="left" width="15%">&nbsp;Entry Date</td>
+		<td align="center" width="15%">&nbsp;Bounce Date</td>
+		<td align="center" width="15%">&nbsp;Reminder Date</td>
+		<td align="center" width="30%">&nbsp;Bounce Reason</td>
+		<td align="center" width="15%">&nbsp;Sale By</td>
+	</tr>
+	~section name=sec loop=$arr`
+		<tr class=fieldsnew>
+			<td align="left">
+				&nbsp;<a href="search_user.php?phrase=~$arr[sec].username`&criteria=uname&cid=~$cid`">~$arr[sec].username`</a>
+				<span>
+					<br>
+					~if $arr[sec].action neq ''`
+						(~if $arr[sec].action eq 'D'` reminder set  for ~$arr[sec].reminder_dt`
+					~elseif $arr[sec].action eq 'R'`
+						removed from list ~/if`)
+					~/if`
+				</span>
+			</td>
+			<td align="center">&nbsp;~$arr[sec].entry_dt`</td>
+			<td align="center">&nbsp;~$arr[sec].bounce_dt`</td>
+			<td align="center">&nbsp;~$arr[sec].reminder_dt`</td>
+			<td align="center">&nbsp;~$arr[sec].bounce_reason`</td>
+			<td align="center">&nbsp;~$arr[sec].sale_by`</td>
+		</tr>
+	~/section`
+</table>
+<br>
+~else`
+	<form method=post action="bounced_cheque_mis.php">
+	<table width=80% border=0 align="center" cellpadding=5>
+
+	<tr>
+	<td>&nbsp;&nbsp;&nbsp;<input name="vtype" type="radio" value='M' checked>&nbsp;Month Wise</td>
+	<td colspan=2>
+	<select name="month">
+        ~section name=mon loop=$mmarr`
+                <option value=~$mmarr[mon]`>~$mmarr[mon]`</option>
+        ~/section`
+        </select> - 
+	<select name="year">
+	~section name=yr loop=$yyarr`
+        	<option value=~$yyarr[yr]`>~$yyarr[yr]`</option>
+        ~/section`
+        </select>&nbsp;Year
+	</td>
+	<!--tr>
+	<td><br><br>&nbsp;&nbsp;&nbsp; Select Branch <br><br></td>
+	<td colspan=2>
+	<select name="branch">
+                <option value="">All</option>
+		~section name=sec loop=$brancharr`
+                <option value="~$brancharr[sec]`">~$brancharr[sec]`</option>
+		~/section`
+        </select>
+	</td>
+	</tr-->
+	<tr>
+	<input type="hidden" name="cid" value=~$cid`>
+	<td align="right"><input type="submit" name="CMDGo" value="     Go     "></td>
+	</tr>
+	</table>
+	</form>
+~/if`
+</body>
+</html>

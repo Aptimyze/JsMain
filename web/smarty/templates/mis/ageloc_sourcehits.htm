@@ -1,0 +1,304 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="../mis/jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br>
+<center>
+<font color=green>Color Green = Females</font>&nbsp;&nbsp;
+<font color=red>Color Red = Males</font>&nbsp;&nbsp;
+<font color=blue>Color Blue = Total </font>
+</center>
+<br>
+<table width=100% border=0 align="center">
+~if $dflag eq '1'`
+	<tr class="formhead">
+	<td colspan=100% align="center">&nbsp;Month : ~$dt`</td>
+	</tr>
+~elseif $mflag eq '1'`
+	<tr class="formhead">
+	<td colspan=100% align="center">&nbsp;Financial Year ~$dt`-~$dt1`</td>
+	</tr>
+~/if`
+	
+</table>
+<br>
+<table width=100% border=0 align="center" cellspacing="4" cellpadding=5>
+<tr class="label">
+<td colspan=100% align="center">&nbsp;Source : ~if $sourceval neq ''` ~$sourceval` ~else` All ~/if`</td>
+</tr>
+~if $mflag eq '1'`
+	~if $locflag eq '1'`
+                <table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+                <tr class="label">
+                        <td colspan=100% align="center">&nbsp;Country : INDIA</td>
+                </tr>
+                </table>
+                <table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+                <tr class="label">
+                <td align="center" width=15%>&nbsp;Month</td>
+                ~section name=mon loop=$mmarr`
+                        <td width=6% align="center">&nbsp;~$mmarr[mon]`</td>
+                ~/section`
+                <td align="center" width=13%>&nbsp;Total</td>
+                </tr>
+                </table>
+                ~section name=cc loop=$indarrlab`
+                <table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+                        <tr class="fieldsnew">
+                        <td align="center" class="label" width=15%>&nbsp;~$indarrlab[cc]`</td>
+                        ~section name=mon loop=$mmarr`
+                                <td width=6% align="center">&nbsp;<span class=green>~$icntg[cc][mon][1]`</span><br><span class=red>~$icntg[cc][mon][0]`</span><br><span class=blue>~$icnt[cc][mon]`</span></td>
+                        ~/section`
+                        <td align="center" class="label" width=13%>&nbsp;<span class=green>~$itotga[cc][1]`</span><br><span class=red>~$itotga[cc][0]`</span><br><span class=blue>~$itota[cc]`</span></td>
+                        </tr>
+                </table>
+                ~/section`
+                <table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+                <tr class="label">
+                <td align="center" width=15%>&nbsp;Total</td>
+                ~section name=mon loop=$mmarr`
+                        <td width=6% align="center">&nbsp;<span class=green>~$itotgb[mon][1]`</span><br><span class=red>~$itotgb[mon][0]`</span><br><span class=blue>~$itotb[mon]`</span></td>
+                ~/section`
+                <td align="center" width=13%>&nbsp;<span class=green>~$itotallg[1]`</span><br><span class=red>~$itotallg[0]`</span><br><span class=blue>~$itotall`</span></td>
+                </tr>
+                </table>
+                <br><br>
+                <table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+                <tr class="label">
+                        <td colspan=100% align="center">&nbsp;Country : USA</td>
+                </tr>
+                </table>
+                <table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+                <tr class="label">
+                <td align="center" width=15%>&nbsp;Month</td>
+                ~section name=mon loop=$mmarr`
+                        <td width=6% align="center">&nbsp;~$mmarr[mon]`</td>
+                ~/section`
+                <td align="center" width=13%>&nbsp;Total</td>
+                </tr>
+                </table>
+                ~section name=cc loop=$usaarrlab`
+                <table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+                        <tr class="fieldsnew">
+                        <td align="center" class="label" width=15%>&nbsp;~$usaarrlab[cc]`</td>
+                        ~section name=mon loop=$mmarr`
+                                <td width=6% align="center">&nbsp;<span class=green>~$ucntg[cc][mon][1]`</span><br><span class=red>~$ucntg[cc][mon][0]`</span><br><span class=blue>~$ucnt[cc][mon]`</span></td>
+                        ~/section`
+                        <td align="center" class="label" width=13%>&nbsp;<span class=green>~$utotga[cc][1]`</span><br><span class=red>~$utotga[cc][0]`</span><br><span class=blue>~$utota[cc]`</span></td>
+                        </tr>
+                </table>
+                ~/section`
+                <table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+                <tr class="label">
+                <td align="center" width=15%>&nbsp;Total</td>
+                ~section name=mon loop=$mmarr`
+                        <td width=6% align="center">&nbsp;<span class=green>~$utotgb[mon][1]`</span><br><span class=red>~$utotgb[mon][0]`</span><br><span class=blue>~$utotb[mon]`</span></td>
+                ~/section`
+                <td align="center" width=13%>&nbsp;<span class=green>~$utotallg[1]`</span><br><span class=red>~$utotallg[0]`</span><br><span class=blue>~$utotall`</span></td>
+                </tr>
+                </table>
+                <br><br>
+                <table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+                <tr class="label">
+                        <td colspan=100% align="center">&nbsp;Country : Others</td>
+                </tr>
+                </table>
+                <table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+                <tr class="label">
+                <td align="center" width=15%>&nbsp;Month</td>
+                ~section name=mon loop=$mmarr`
+                        <td width=6% align="center">&nbsp;~$mmarr[mon]`</td>
+                ~/section`
+                <td align="center" width=13%>&nbsp;Total</td>
+                </tr>
+                </table>
+                ~section name=cc loop=$ctryarrlab`
+                <table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+                        <tr class="fieldsnew">
+                        <td align="center" class="label" width=15%>&nbsp;~$ctryarrlab[cc]`</td>
+                        ~section name=mon loop=$mmarr`
+                                <td width=6% align="center">&nbsp;<span class=green>~$ocntg[cc][mon][1]`</span><br><span class=red>~$ocntg[cc][mon][0]`</span><br><span class=blue>~$ocnt[cc][mon]`</span></td>
+                        ~/section`
+                        <td align="center" class="label" width=13%>&nbsp;<span class=green>~$ototga[cc][1]`</span><br><span class=red>~$ototga[cc][0]`</span><br><span class=blue>~$otota[cc]`</span></td>
+                        </tr>
+                </table>
+                ~/section`
+                <table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+                <tr class="label">
+                <td align="center" width=15%>&nbsp;Total</td>
+                ~section name=mon loop=$mmarr`
+                        <td width=6% align="center">&nbsp;<span class=green>~$ototgb[mon][1]`</span><br><span class=red>~$ototgb[mon][0]`</span><br><span class=blue>~$ototb[mon]`</span></td>
+                ~/section`
+                <td align="center" width=13%><span class=green>~$ototallg[1]`</span><br><span class=red>~$ototallg[0]`</span><br><span class=blue>~$ototall`</span></td>
+                </tr>
+                </table>
+	~else`
+		<table width="150%" align="center" border=0 cellspacing=4 cellpadding=5>
+		<tr class="label">
+		<td align="center">&nbsp;Month</td>
+		~section name=mon loop=$mmarr`
+			<td width=6% align="center">&nbsp;~$mmarr[mon]`</td>
+		~/section`
+		<td align="center">&nbsp;Total</td>
+		</tr>
+			~section name=src loop=$srcarr`
+					<tr class="fieldsnew">
+					<td align="center" class="label">&nbsp;~$srcarr[src]`</td>
+					~section name=mon loop=$mmarr`
+						<td width=6% align="center"><span class="green" valign=top>~$cntg[src][mon][1]`</span><br><span class="red" valign=top>~$cntg[src][mon][0]`</span><br><span class="blue" valign=center>~$cnt[src][mon]`</span></td>
+					~/section`
+					<td align="center" class="label"><span class="green" valign=top>~$totga[src][1]`</span><br><span class="red" valign=top>~$totga[src][0]`</span><br><span class="blue" valign=bottom>~$tota[src]`</span></td>
+					</tr>
+			~/section`
+			<tr class="label">
+			<td align="center">&nbsp;Total</td>
+			~section name=mon loop=$mmarr`
+				<td width=6% align="center"><span class="green" valign=top>~$totgb[mon][1]`</span><br><span class="red" valign=top>~$totgb[mon][0]`</span><br><span class="blue" valign=bottom>~$totb[mon]`</span></td>
+			~/section`
+			<td align="center"><span class="green" valign=top>~$totallg[1]`</span><br><span class="red" valign=top>~$totallg[0]`</span><br><span class="blue" valign=bottom>~$totall`</span></td>
+		</tr>
+		</table>
+	~/if`
+~else`
+	~if $locflag eq '1'`
+                <table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+                <tr class="label">
+                        <td colspan=100% align="center">&nbsp;Country : INDIA</td>
+                </tr>
+                </table>
+                <table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+                <tr class="label">
+                <td align="center" width=4%>&nbsp;Day</td>
+                ~section name=dd loop=$ddarr`
+                        <td align="center" >&nbsp;~$ddarr[dd]`</td>
+                ~/section`
+                <td align="center" width="4%">&nbsp;Total</td>
+                </tr>
+                ~section name=cc loop=$indarrlab`
+                        <tr class="fieldsnew">
+                        <td align="center" class="label">&nbsp;~$indarrlab[cc]`</td>
+                        ~section name=dd loop=$ddarr`
+                                <td align="center">&nbsp;<span class=green>~$icntg[cc][dd][1]`</span><br><span class=red>~$icntg[cc][dd][0]`</span><br><span class=blue>~$icnt[cc][dd]`</span></td>
+                        ~/section`
+                        <td align="center" class="label" >&nbsp;<span class=green>~$itotga[cc][1]`</span><br><span class=red>~$itotga[cc][0]`</span><br><span class=blue>~$itota[cc]`</span></td>
+                        </tr>
+                ~/section`
+                <tr class="label">
+                <td align="center">&nbsp;Total</td>
+                ~section name=dd loop=$ddarr`
+                        <td align="center">&nbsp;<span class=green>~$itotgb[dd][1]`</span><br><span class=red>~$itotgb[dd][0]`</span><br><span class=blue>~$itotb[dd]`</span></td>
+                ~/section`
+                <td align="center">&nbsp;<span class=green>~$itotallg[1]`</span><br><span class=red>~$itotallg[0]`</span><br><span class=blue>~$itotall`</span></td>
+                </tr>
+                </table>
+                <br><br>
+                <table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+                <tr class="label">
+                        <td colspan=100% align="center">&nbsp;Country : USA</td>
+                </tr>
+                </table>
+                <table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+                <tr class="label">
+                <td align="center" width=4%>&nbsp;Day</td>
+                ~section name=dd loop=$ddarr`
+                        <td align="center" width=3%>&nbsp;~$ddarr[dd]`</td>
+                ~/section`
+                <td align="center" width="4%">&nbsp;Total</td>
+                </tr>
+                ~section name=cc loop=$usaarrlab`
+                        <tr class="fieldsnew">
+                        <td align="center" class="label">&nbsp;~$usaarrlab[cc]`</td>
+                        ~section name=dd loop=$ddarr`
+                                <td align="center">&nbsp;<span class=green>~$ucntg[cc][dd][1]`</span><br><span class=red>~$ucntg[cc][dd][0]`</span><br><span class=blue>~$ucnt[cc][dd]`</span></td>
+                        ~/section`
+                        <td align="center" class="label" >&nbsp;<span class=green>~$utotga[cc][1]`</span><br><span class=red>~$utotga[cc][0]`</span><br><span class=blue>~$utota[cc]`</span></td>
+                        </tr>
+                ~/section`
+                <tr class="label">
+                <td align="center">&nbsp;Total</td>
+                ~section name=dd loop=$ddarr`
+                        <td align="center">&nbsp;<span class=green>~$utotgb[dd][1]`</span><br><span class=red>~$utotgb[dd][0]`</span><br><span class=blue>~$utotb[dd]`</span></td>
+                ~/section`
+                <td align="center">&nbsp;<span class=green>~$utotallg[1]`</span><br><span class=red>~$utotallg[0]`</span><br><span class=blue>~$utotall`</span></td>
+                </tr>
+                </table>
+                <br><br>
+                <table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+                <tr class="label">
+                        <td colspan=100% align="center">&nbsp;Country : Others</td>
+                </tr>
+                </table>
+                <table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+                <tr class="label">
+                <td align="center" width=4%>&nbsp;Day</td>
+                ~section name=dd loop=$ddarr`
+                        <td align="center" width=3%>&nbsp;~$ddarr[dd]`</td>
+                ~/section`
+                <td align="center" width="4%">&nbsp;Total</td>
+                </tr>
+                ~section name=cc loop=$ctryarrlab`
+                        <tr class="fieldsnew">
+                        <td align="center" class="label">&nbsp;~$ctryarrlab[cc]`</td>
+                        ~section name=dd loop=$ddarr`
+                                <td align="center">&nbsp;<span class=green>~$ocntg[cc][dd][1]`</span><br><span class=red>~$ocntg[cc][dd][0]`</span><br><span class=blue>~$ocnt[cc][dd]`</span></td>
+                        ~/section`
+                        <td align="center" class="label" >&nbsp;<span class=green>~$ototga[cc][1]`</span><br><span class=red>~$ototga[cc][0]`</span><br><span class=blue>~$otota[cc]`</span></td>
+                        </tr>
+                ~/section`
+                <tr class="label">
+                <td align="center">&nbsp;Total</td>
+                ~section name=dd loop=$ddarr`
+                        <td align="center">&nbsp;<span class=green>~$ototgb[dd][1]`</span><br><span class=red>~$ototgb[dd][0]`</span><br><span class=blue>~$ototb[dd]`</span></td>
+                ~/section`
+                <td align="center"><span class=green>~$ototallg[1]`</span><br><span class=red>~$ototallg[0]`</span><br><span class=blue>~$ototall`</span></td>
+                </tr>
+                </table>
+	~else`
+		<table width="100%" align="center" border=0 cellspacing=2 cellpadding=5>
+		<tr class="label">
+		<td align="center" width=4%>&nbsp;Day</td>
+		~section name=dd loop=$ddarr`
+			<td align="center">&nbsp;~$ddarr[dd]`</td>
+		~/section`
+		<td align="center" width="4%">&nbsp;Total</td>
+		</tr>
+		~section name=src loop=$srcarr`
+				<tr class="fieldsnew">
+				<td align="center" class="label">&nbsp;~$srcarr[src]`</td>
+				~section name=dd loop=$ddarr`
+					<td align="center"><span class="green" valign=top>~$cntg[src][dd][1]`</span><br><span class="red" valign=top>~$cntg[src][dd][0]`</span><br><span class="blue" valign=bottom>~$cnt[src][dd]`</span></td>
+				~/section`
+				<td align="center" class="label"><span class="green" valign=top>~$totga[src][1]`</span><br><span class="red" valign=top>~$totga[src][0]`</span><br><span class="blue" valign=bottom>~$tota[src]`</span></td>
+				</tr>
+		~/section`
+		<tr class="label">
+		<td align="center">&nbsp;Total</td>
+		~section name=dd loop=$ddarr`
+			<td align="center"><span class="green" valign=top>~$totgb[dd][1]`</span><br><span class="red" valign=top>~$totgb[dd][0]`</span><br><span class="blue" valign=bottom>~$totb[dd]`</span></td>
+		~/section`
+		<td align="center"><span class="green" valign=top>~$totallg[1]`</span><br><span class="red" valign=top>~$totallg[0]`</span><br><span class="blue" valign=bottom>~$totall`</span></td>
+		</tr>
+		</table>
+	~/if`
+~/if`
+</body>
+</html>

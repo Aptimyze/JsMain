@@ -1,0 +1,332 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="stylesheet" type="text/css" href="css/style_main.css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Profile Extra Details Form</title>
+<style>
+*{margin:0; padding:0; float:0; list-style:none;}
+body{font:13px Arial, Helvetica, sans-serif; color:#383838;}
+input,select{font:12px Arial, Helvetica, sans-serif;}
+
+.fl{float:left;}
+.fr{float:right;}
+.clr{clear:both; height:0; overflow:hidden;}
+.clr_15{clear:both; height:15px; overflow:hidden;}
+a img{border:0;}
+
+.ml_15{margin-left:15px;}
+.ml_6{margin-left:6px;}
+.pd_tp_3{padding-top:3px;}
+
+.cur_sprte{background:url(/profile/images/det_curves.gif);}
+.h_w_6{height:6px; width:6px; font-size:2px;}
+.t_l_c{top:-2px; left:-2px;}
+.t_r_c{background-position:-6px 0; top:-2px; right:-2px;}
+.b_r_c{background-position:-6px -6px; bottom:-2px; right:-2px;}
+.b_l_c{background-position:0 -6px; bottom:-2px; left:-2px;}
+
+.p_abs{position:absolute;}
+.p_rel{position:relative;}
+
+.det_cont{width:773px; margin:auto; padding-top:10px;}
+.det_cont .fmr{float:left; width:688px; border:2px solid #e9e9e9; padding:15px 40px; margin-top:6px;}
+.det_cont h2{font:bold 18px Arial, Helvetica, sans-serif; color:#ffb400; margin-bottom:15px;}
+.det_cont .fmr ul{list-style:none; margin:0; padding:0; width:90%;}
+.det_cont .fmr ul li{float:left; width:99.9%; margin-bottom:21px;}
+~if $ex_form_print eq ''`
+.det_cont .fmr ul li b{width:99.9%; float:left; margin-bottom:8px;}
+~/if`
+.det_cont .fmr ul li p{margin-left:15px; display:inline; float:left;}
+.det_cont .fmr ul li p input.txt1{float:left; width:199px; height:12px; border:1px solid #ccc; padding:5px;}
+.det_cont .fmr ul li p select.sel1{float:left; width:58px; height:22px; border:1px solid #ccc;}
+.det_cont .fmr ul li p textarea.txt_1{float:left; width:394px; height:52px; border:1px solid #ccc;}
+h6 {
+        page-break-after:always;
+        height:0;
+        margin:0;
+        padding:0;
+        float:left;
+        width:100%;
+        overflow:hidden;
+}
+
+</style>
+</head>
+
+<body>
+<!--main container starts herer-->
+<div class="det_cont">
+<a href="#"><img src="~$SITE_URL`/profile/images/js_offline_logo.gif" /></a>
+
+<!--Form starts here-->
+<div class="fmr p_rel">
+
+<b class="t_l_c p_abs cur_sprte h_w_6">
+</b>
+<b class="t_r_c p_abs cur_sprte h_w_6">
+</b>
+<b class="b_l_c p_abs cur_sprte h_w_6">
+</b>
+<b class="b_r_c p_abs cur_sprte h_w_6">
+</b>
+
+~if $msg neq ''`
+	<h4>~$msg`</h4>
+	<br>
+~/if`
+<h2>Details of person whose profile is being Registered</h2>
+
+<form name="form1" action="~$SITE_URL`/jsadmin/ap_profile_extra_form.php?profileid=~$profileid`&list=~$list`&cid=~$cid`" method="post" enctype="multipart/form-data" style="margin: 0px">
+<!--Form elements starts here-->
+<ul>
+<li>
+	<b>1. Name </b><br>
+	<p>
+	~if $action eq '' && ($fname || $lname)`
+		<label class="fl ml_15 pd_tp_3">~$fname` ~$lname` </label>
+	~else`
+		<input name="fname" type="text" class="txt1" value="~$fname`" />
+		<input name="lname" type="text" class="txt1 ml_15" value="~$lname`" />
+	~/if`
+	</p>
+</li>
+<li>
+	<b>2. Current Location </b><br>
+	<p>
+        <select name="city_location" id="city_location" class="sel1" style="width:201px;">
+                <option value="">Please select</option>
+                ~$city_location`
+        </select>
+        ~if $action eq '' && $city_location_other`
+		<label class="fl ml_15 pd_tp_3">If Others: ~$city_location_other` </label>
+	~else`
+		<label class="fl ml_15 pd_tp_3">If Others</label> <input name="city_location_other" type="text" class="txt1 ml_6" value="~$city_location_other`" />
+	~/if`
+	</p>
+</li>
+<li>
+	<b>3. Date / Time of Birth</b><br>
+	<p>
+	<select name="day" id="day" class="sel1">
+        	<option selected value="">Day</option>
+                <option ~if $DAY eq '1'` selected ~/if` value="1" >1</option>
+                <option ~if $DAY eq '2'` selected ~/if` value="2" >2</option>
+                <option ~if $DAY eq '3'` selected ~/if` value="3" >3</option>
+                <option ~if $DAY eq '4'` selected ~/if` value="4" >4</option>
+                <option ~if $DAY eq '5'` selected ~/if` value="5" >5</option>
+                <option ~if $DAY eq '6'` selected ~/if` value="6" >6</option>
+                <option ~if $DAY eq '7'` selected ~/if` value="7" >7</option>
+                <option ~if $DAY eq '8'` selected ~/if` value="8" >8</option>
+                <option ~if $DAY eq '9'` selected ~/if` value="9" >9</option>
+                <option ~if $DAY eq '10'` selected ~/if` value="10" >10</option>
+                <option ~if $DAY eq '11'` selected ~/if` value="11" >11</option>
+                <option ~if $DAY eq '12'` selected ~/if` value="12" >12</option>
+                <option ~if $DAY eq '13'` selected ~/if` value="13" >13</option>
+                <option ~if $DAY eq '14'` selected ~/if` value="14" >14</option>
+                <option ~if $DAY eq '15'` selected ~/if` value="15" >15</option>
+                <option ~if $DAY eq '16'` selected ~/if` value="16" >16</option>
+                <option ~if $DAY eq '17'` selected ~/if` value="17" >17</option>
+                <option ~if $DAY eq '18'` selected ~/if` value="18" >18</option>
+                <option ~if $DAY eq '19'` selected ~/if` value="19" >19</option>
+                <option ~if $DAY eq '20'` selected ~/if` value="20" >20</option>
+                <option ~if $DAY eq '21'` selected ~/if` value="21" >21</option>
+                <option ~if $DAY eq '22'` selected ~/if` value="22" >22</option>
+                <option ~if $DAY eq '23'` selected ~/if` value="23" >23</option>
+                <option ~if $DAY eq '24'` selected ~/if` value="24" >24</option>
+                <option ~if $DAY eq '25'` selected ~/if` value="25" >25</option>
+                <option ~if $DAY eq '26'` selected ~/if` value="26" >26</option>
+                <option ~if $DAY eq '27'` selected ~/if` value="27" >27</option>
+                <option ~if $DAY eq '28'` selected ~/if` value="28" >28</option>
+                <option ~if $DAY eq '29'` selected ~/if` value="29" >29</option>
+                <option ~if $DAY eq '30'` selected ~/if` value="30" >30</option>
+                <option ~if $DAY eq '31'` selected ~/if` value="31" >31</option>
+	</select>
+	<select name="month" id="month" class="sel1 ml_15">
+                <option selected value="">Month</option>
+                <option ~if $MONTH eq '1'` selected ~/if` value="1" >Jan</option>
+                <option ~if $MONTH eq '2'` selected ~/if` value="2" >Feb</option>
+                <option ~if $MONTH eq '3'` selected ~/if` value="3" >Mar</option>
+                <option ~if $MONTH eq '4'` selected ~/if` value="4" >Apr</option>
+                <option ~if $MONTH eq '5'` selected ~/if` value="5" >May</option>
+                <option ~if $MONTH eq '6'` selected ~/if` value="6" >Jun</option>
+                <option ~if $MONTH eq '7'` selected ~/if` value="7" >Jul</option>
+                <option ~if $MONTH eq '8'` selected ~/if` value="8" >Aug</option>
+                <option ~if $MONTH eq '9'` selected ~/if` value="9" >Sep</option>
+                <option ~if $MONTH eq '10'` selected ~/if` value="10">Oct</option>
+                <option ~if $MONTH eq '11'` selected ~/if` value="11">Nov</option>
+                <option ~if $MONTH eq '12'` selected ~/if` value="12">Dec</option>
+	</select>
+	<select name="year" id="year" class="sel1 ml_15">
+                <option selected value="">Year</option>
+                	~section name=foo loop=$yearArray`
+                       	<option ~if $YEAR eq $yearArray[foo]` selected ~/if` value=~$yearArray[foo]` >~$yearArray[foo]` </option>
+                        ~/section`
+	</select>  
+
+	<label class="fl ml_15">/</label> 
+
+	<select name="hour" id="hour" class="sel1 ml_15">
+                <option selected value="">Hour</option>
+                        ~section name=foo loop=$hourArray`
+                        <option ~if $HOUR eq $hourArray[foo]` selected ~/if` value=~$hourArray[foo]` >~$hourArray[foo]` </option>
+                        ~/section`
+	</select>
+	<select name="minute" id="minute" class="sel1 ml_15">
+                <option selected value="">Min</option>
+                        ~section name=foo loop=$min_sec_Array`
+                        <option ~if $MINUTE eq $min_sec_Array[foo]` selected ~/if` value=~$min_sec_Array[foo]` >~$min_sec_Array[foo]` </option>
+                        ~/section`
+	</select>
+	<select name="second" id="second" class="sel1 ml_15">
+                <option selected value="">Sec</option>
+                        ~section name=foo loop=$min_sec_Array`
+                        <option ~if $SECOND eq $min_sec_Array[foo]` selected ~/if` value=~$min_sec_Array[foo]` >~$min_sec_Array[foo]` </option>
+                        ~/section`
+	</select>
+	</p>
+</li>
+<li>
+	<b>4. Place of Birth </b><br>
+	<p>
+        <select name="city_birth" id="city_birth" class="sel1" style="width:201px;">
+	        <option value="">Please select</option>
+                ~$city_birth`
+        </select>
+	~if $action eq '' && $city_birth_other`
+		<label class="fl ml_15 pd_tp_3">If Others: ~$city_birth_other` </label>
+	~else`
+		<label class="fl ml_15 pd_tp_3">If Others</label> <input name="city_birth_other" type="text" class="txt1 ml_6" value="~$city_birth_other`"/>
+	~/if`
+	</p>
+</li>
+<li>
+	<b>5. Details of Highest Educational Qualification</b><br>
+	<p>
+	<select name="degree" id="degree" onblur="validate('degree');" class="sel1" style="width:201px;">
+	        <option value="">Please select</option>
+                ~$degree`
+	</select>
+	~if $action eq '' && $college`
+		<label class="fl ml_15 pd_tp_3">College: ~$college` </label>
+	~else`
+  		<label class="fl ml_15 pd_tp_3">College</label> <input name="college" type="text" class="txt1 ml_6" value="~$college`" />
+	~/if`
+	</p>
+</li>
+<li>
+	<b>6. Details of Occupation </b><br>
+	<p>
+	<select name="occupation" id="occupation" class="sel1" onblur="validate('occupation');" style="width:201px;">
+		<option value="">Please select</option>
+		~$occupation`
+	</select>
+	~if $action eq '' && $company`
+		<label class="fl ml_15 pd_tp_3">Company: ~$company`</label>
+	~else`
+  		<label class="fl ml_15 pd_tp_3">Company</label> <input name="company" type="text" class="txt1 ml_6" value="~$company`"/>
+	~/if`
+	</p>
+</li>
+
+
+<li>
+	<b>7. Manglik </b><br>
+	<p>
+	<label class="fl">
+		<input type="radio" name="manglik" value="D" ~if $manglik eq "D"`checked~/if`/> Don't know
+	</label>
+	<label class="fl ml_15">
+		<input type="radio" name="manglik" value="M" ~if $manglik eq "M"`checked~/if`/> Yes
+	</label>
+	<label class="fl ml_15">
+		<input type="radio" name="manglik" value="A" ~if $manglik eq "A"`checked~/if`/> Angshik(Partial Manglik)
+	</label>
+	<label class="fl ml_15">
+		<input type="radio" name="manglik" value="N" ~if $manglik eq "N"`checked~/if`/> No			
+	</label>
+	</p>
+</li>
+</ul>
+<!--Form elements ends here-->
+
+<div class="clr"></div>
+
+<h2>Family Details</h2>
+
+<!--Form elements starts here-->
+<ul>
+<li>
+	<b>1. Name of the contact person</b><br>
+	<p>
+	~if $action eq '' && ($fname_contact || $lname_contact)`
+		<label class="fl ml_15 pd_tp_3"> ~$fname_contact` ~$lname_contact`</label>
+	~else`
+		<input name="fname_contact" type="text" class="txt1" value="~$fname_contact`" />
+		<input name="lname_contact" type="text" class="txt1 ml_15" value="~$lname_contact`" />
+	~/if`
+	</p>
+</li>
+<li>
+	<b>2. Relation of the Contact Person</b><br>
+	<p>
+	<select name="relationship" class="sel1" style="width:201px;">
+                <option value="1" ~if $relationship eq "1"`selected~/if`>Bride</option>
+                <option value="2" ~if $relationship eq "2"`selected~/if`>Groom</option>
+		<option value="3" ~if $relationship eq "3"`selected~/if`>Parent</option>
+                <option value="6" ~if $relationship eq "6"`selected~/if`>Sibling</option>
+                <option value="7" ~if $relationship eq "7"`selected~/if`>Other</option>
+	</select>
+	</p>
+</li>
+<li>
+	<b>3. Native of</b><br>
+	<p>
+        <select name="city_native" id="city_native" class="sel1" style="width:201px;">
+                <option value="">Please select</option>
+                ~$city_native`
+        </select>
+	~if $action eq '' && $city_native_other`
+		<label class="fl ml_15 pd_tp_3">If Others: ~$city_native_other`</label>
+	~else`
+		<label class="fl ml_15 pd_tp_3">If Others</label><input name="city_native_other" type="text" class="txt1 ml_6" value="~$city_native_other`"/>
+	~/if`	
+	</p>
+</li>
+<li>
+	<b>4. More about family</b><br>
+	~if $action eq '' && $family_info`
+		<p class="fl ml_15 pd_tp_3">~$family_info`</p>
+	~else`
+		<p><textarea name="family_info" class="txt_1" rows="2" cols="2">~$family_info`</textarea></p>
+	~/if`
+</li>
+</ul>
+<!--Form elements ends here-->
+<div class="clr_15"></div>
+<div align="center">
+
+~if $action eq 'submit'`
+	<input type="submit" name="submit" value="submit" class="b green_btn">
+	<!--<input name="pagesubmit" type="image" src="~$SITE_URL`/profile/images/save_close_btn.gif" border="0">--> 
+~elseif $action eq 'update'`
+	<input type="submit" name="submit" value="update" class="b green_btn">
+	<!--<input name="pagesubmit" type="image" src="~$SITE_URL`/profile/images/save_close_btn.gif" border="0">-->    
+~else`
+	<input type="hidden" name="submit" value="">	
+~/if`
+
+</div>
+<div class="clr_15"></div>
+</div>
+<!--Form ends here-->
+</div>
+<!--main container ends herer-->
+</form>
+
+<div class="clr_15"></div>
+<h6>&nbsp;</h6>
+
+</body>
+</html>
+

@@ -1,0 +1,12 @@
+indexSuccess:
+  stylesheets:    [search_result_css]
+  javascripts:    [revampCommon_js,colorbox]
+  layout: jspcLayout
+showLevelOne:
+  stylesheets:    [search_result_css]
+  javascripts:    [revampCommon_js,colorbox]
+  layout: jspcLayout
+showLevelTwo:
+  stylesheets:    [search_result_css]
+  javascripts:    [revampCommon_js,colorbox]
+  layout: jspcLayout

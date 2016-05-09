@@ -1,0 +1,46 @@
+A {
+   	TEXT-DECORATION: none
+   }
+   A:hover {
+   TEXT-DECORATION: underline
+   }
+   }
+
+
+.hdwht {
+	FONT-WEIGHT: bold; FONT-SIZE: 12px; COLOR: #FFFFFF; FONT-FAMILY: arial; TEXT-DECORATION: none; line-height: 18px;
+}
+.bline {
+	FONT-WEIGHT: normal; FONT-SIZE: 12px; COLOR: #336699; FONT-FAMILY: arial; TEXT-DECORATION: none;
+}
+.subindiansm {FONT-FAMILY: times new roman; FONT-SIZE: 12px; font-weight: bold; color: #FF0000}
+
+.subindian {FONT-FAMILY: times new roman; FONT-SIZE: 14px; font-weight: bold; color: #FF0000}
+.subhdwht {COLOR: #FFFFFF; FONT-WEIGHT: bold; FONT-FAMILY: arial; line-height: 18px; FONT-SIZE: 12px;}
+.subhdbg3 {FONT-FAMILY: arial; FONT-SIZE: 18px;}
+.subhdbg2 {FONT-FAMILY: arial; FONT-SIZE: 14px;}
+.subhdsm {FONT-FAMILY: arial; line-height: 13px; FONT-SIZE: 12px;}
+.small4 {font-family: verdana; font-size: 10px; line-height: 12px; font-style: bold; font-weight: normal}
+.subhdbg {FONT-FAMILY: arial; FONT-SIZE: 13px;}
+.small3 {font-family: verdana; font-size: 10px; line-height: 16px; font-style: bold; font-weight: normal}
+.subhd1 {FONT-FAMILY: arial; line-height: 18px; FONT-SIZE: 12px;}
+.TextBox {FONT-SIZE: 8pt; FONT-FAMILY: Arial;font-weight: normal}
+.smbox {FONT-SIZE: 7pt; FONT-FAMILY: Verdana;font-weight: normal}
+.testpull {
+	FONT-SIZE: 12px; FONT-FAMILY: arial}
+.testbox {
+	FONT-SIZE: 10px; FONT-FAMILY: arial}
+
+.subhd {FONT-FAMILY: arial; FONT-SIZE: 12px;}
+.subhd1 {FONT-FAMILY: arial; FONT-SIZE: 12px; font-weight:4}
+.small {font-weight: normal; line-height: 1.1em; font-size: 11px;font-style: normal; font-family: arial}
+.small2 {font-family: verdana; font-size: 10px; font-style: bold; font-weight: normal}
+.small1 {font-family: verdana; font-size: 9px; font-style: normal; font-weight: normal}
+.hdg {
+	FONT-WEIGHT: bold; FONT-SIZE: 16px; MARGIN: 0px; COLOR: #000000; FONT-STYLE: normal; FONT-FAMILY: ms sans serif; TEXT-DECORATION: none
+}
+.hdgsm {
+	FONT-WEIGHT: bold; FONT-SIZE: 13px; MARGIN: 0px; COLOR: #000000; FONT-STYLE: normal; FONT-FAMILY: ms sans serif; TEXT-DECORATION: none
+}
+.small5 {font-family: verdana; font-size: 11px; line-height: 12px; font-style: bold; font-weight: normal}
+

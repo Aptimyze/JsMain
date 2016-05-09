@@ -1,0 +1,38 @@
+default:
+  metas:
+    title:        Jeevansathi Free Trial Offer
+
+offerCSuccess:
+  stylesheets: [fto_css,jquery_countdown_css]
+  javascripts:  [contactEngineLayer_js@bottom,jquery_countdown_js,fto_js@bottom]
+offerD1Success:
+  stylesheets: [fto_css,contactEngine_css]
+  javascripts:  [contactEngineLayer_js@bottom,fto_js@bottom]
+offerD2Success:
+  stylesheets: [fto_css,contactEngine_css,jquery_countdown_css]
+  javascripts:  [contactEngineLayer_js@bottom,jquery_countdown_js,fto_js@bottom]
+offerESuccess:
+  stylesheets: [fto_css,contactEngine_css]
+offerISuccess:
+  stylesheets: [fto_css,contactEngine_css]
+  javascripts:  [contactEngineLayer_js@bottom,fto_js@bottom]
+mobileOfferCSuccess:
+  stylesheets: [-*,mobilejs_css,rupeeSymbol_css]
+  javascripts:  [-*]
+  layout: moblayout
+mobileOfferD1Success:
+  stylesheets: [-*,mobilejs_css]
+  javascripts:  [-*]
+  layout: moblayout
+mobileOfferD2Success:
+  stylesheets: [-*,mobilejs_css]
+  javascripts:  [-*]
+  layout: moblayout
+mobileOfferESuccess:
+  stylesheets: [-*,mobilejs_css]
+  javascripts:  [-*]
+  layout: moblayout
+mobileOfferISuccess:
+  stylesheets: [-*,mobilejs_css]
+  javascripts:  [-*]
+  layout: moblayout

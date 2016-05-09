@@ -1,0 +1,6 @@
+all:
+  jsmsPerform:
+    enable_login:  on
+  jsmsMessages:
+    enable_login:  on
+

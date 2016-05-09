@@ -1,0 +1,305 @@
+
+<HTML>
+  
+  <HEAD>
+    <TITLE>BMS : Campaign Management System</TITLE>
+    <LINK HREF="gifs/style.css" REL="stylesheet" TYPE="text/css">
+    <LINK rel="stylesheet" href="http://www.jeevansathi.com/jsadmin/jeevansathi.css" type="text/css">
+    <LINK rel="stylesheet" href="http://www.jeevansathi.com/profile/images/styles.css" type="text/css">
+	<script language="JavaScript">
+<!--
+
+function validateForm()
+{
+    var docF=document.bmssums;
+    var error="";
+	var len_course = docF.campaigntype.options.length;
+	for(var m1=0;m1<len_course;m1++) {
+       if (docF.campaigntype.options[m1].selected == true) {
+           c = docF.campaigntype.options[m1].value;
+       }
+       }
+	   
+    if(docF.campaignname.value=="")
+    {
+     error=error+"\n Please fill in the campaign name";
+    }
+	else if(c=="impression" && (docF.campaignimpression.value=="" || (!isInteger(docF.campaignimpression.value)|| docF.campaignimpression.value=="0" ))) 
+    {
+        
+       error=error+"\n Please fill in the correct value for banner impressions";
+       
+    }
+	else if(c=="duration"&&docF.campaignimpression.value!="")
+	{
+		 error=error+"\n You cannot provide banner impressions for duration type campaigns";
+		
+	}
+	else if(docF.startyear.value==""||docF.startmonth.value==""||docF.startday.value==""||docF.endyear.value==""||docF.endmonth.value==""||docF.endday.value=="")
+	{
+	
+		error="Please select dates ";
+
+	}
+	else
+	{	
+		var startdate=docF.startyear.value+"-"+docF.startmonth.value+"-"+docF.startday.value;
+		var enddate=docF.endyear.value+"-"+docF.endmonth.value+"-"+docF.endday.value;
+		if(startdate>enddate)
+		{
+			error="Please select correct duration of start and end dates. ";
+		}
+		else if(enddate<docF.campaignenddate.value)
+		{
+			error="you can not reduce the campaign duration";
+		}	
+		
+	}
+	if(error=="")
+    {   
+        return true;
+    }
+    else
+    {
+        alert(error);
+        return false;
+    }   
+}
+function isInteger(iNumber)
+{
+	var i;
+	
+	for (i=0;i<iNumber.length;i++)
+	{
+		var c = iNumber.charAt(i);
+	
+		if (!isDigit(c))
+		{
+			return false;
+		}
+	}
+	
+  	return true;
+}
+function isDigit (c)
+{
+		 return ((c >= "0") && (c <= "9"))
+}
+
+function checkDisable()
+{
+	var docF=document.bmssums;
+    	var error="";
+	var len_course = docF.campaigntype.options.length;
+	for(var m1=0;m1<len_course;m1++) 
+	{
+       		if (docF.campaigntype.options[m1].selected == true) 
+		{
+           		c = docF.campaigntype.options[m1].value;
+       		}
+     	}
+	if(c=="duration")
+		docF.campaignimpression.disabled=true;
+	else
+		docF.campaignimpression.disabled=false;
+	
+	if(docF.id.value!="")
+	{
+	
+		docF.campaignname.disabled=true;
+		docF.campaigntype.disabled=true;
+		docF.startday.disabled=true;
+		docF.startmonth.disabled=true;
+		docF.startyear.disabled=true;
+		
+	}
+}
+function checkCat(thisform,limit)
+{
+	var all=0;
+	var count=0;
+	for(var i=0; i< thisform.options.length; i++)
+	{
+		if(thisform.options[i].selected&&thisform.options[i].text=="All") 
+		{
+			all++;
+			count++;
+		}
+		else if(thisform.options[i].selected)
+			count++;
+	}
+	if(all&&(count>1))
+	{
+		alert("You cannot select ALL with any other option.");
+		for(var i=0; i< thisform.options.length; i++) 
+		{
+			if(thisform.options[i].selected) 
+			{
+				thisform.options[i].selected = false;
+				thisform.focus();
+			}
+		}
+	}
+}
+-->
+
+</script>   
+  </HEAD>
+  <BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#000000" VLINK="#000000" 
+  ALINK="#000000" LEFTMARGIN="0" TOPMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0" onLoad="checkDisable();" onRefresh="checkDisable();" >
+  ~$bmsheader`
+    <DIV CLASS="text-under" STYLE="margin-left:20px;">
+  <A HREF="bms_adminindex.php?id=~$id`" TARGET="">MIS Home</A> &gt;&gt;<a href="bms_campaign.php?id=~$id`" target=""> Campaign Details</a> 
+  </DIV>
+<br>
+  <DIV CLASS="text-under" STYLE="margin-left:20px;"><BR>
+  <b>Enter Campaign details</b></DIV>
+  <DIV CLASS="text"><BR>
+  <TABLE WIDTH="100%" BORDER="0">
+  ~if $errormsg`
+  <TR> 
+    <TD WIDTH="20%" ALIGN="RIGHT"><img src="gifs/error-2.gif" alt="New Clients" border="0" hspace="0" vspace="0" width="16" height="16"></TD>
+    <TD WIDTH="80%" CLASS="error">~$errormsg`</TD>
+  </TR>
+  ~/if`
+    <TR> 
+      <TD WIDTH="20%" ALIGN="RIGHT"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="180" HEIGHT="1"><IMG SRC="gifs/tick.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="13" HEIGHT="11"> 
+      </TD>
+      <TD WIDTH="80%" CLASS="text">You can enter details of the campaign here.</TD>
+    </TR>
+  </TABLE>
+  <BR>
+</DIV>
+    <FORM name="bmssums" method="POST" action="bms_editcampaign.php" onSubmit="return validateForm();" onLoad="checkDisable();" onRefresh="checkDisable();"  ><TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" 
+    ALIGN="CENTER" >
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/page-bg.gif"><IMG SRC="gifs/lt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0" HSPACE="0"></TD>
+        <TD VALIGN="MIDDLE" HEIGHT="31" WIDTH="100%"><TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" HEIGHT="31">
+          <TR>
+            <TD BACKGROUND="gifs/page-bg.gif" WIDTH="70%"><DIV CLASS="text"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="30" HEIGHT="1"><B></B></DIV></TD>
+            <TD WIDTH="30%" BACKGROUND="gifs/page-bg.gif" ALIGN="RIGHT"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="30" HEIGHT="1"></TD>
+          </TR>
+        </TABLE></TD>
+        <TD ALIGN="RIGHT" WIDTH="18" BACKGROUND="gifs/page-bg.gif"><IMG SRC="gifs/rt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+      </TR>
+    </TABLE><TABLE WIDTH="100%" BORDER="0" VSPACE="0" HSPACE="0" 
+    CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/lt-line-bg-1.gif"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></TD>
+        <TD WIDTH="100%"> <BR><DIV ALIGN="CENTER"><TABLE WIDTH="60%" BORDER="0" VSPACE="0" HSPACE="0" CELLPADDING="4" CELLSPACING="0">
+          <TR>
+            <TD CLASS="text" WIDTH="45%" HEIGHT="20" VALIGN="TOP"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="170" HEIGHT="1"><BR>
+                <B>Campaign name (Unique) <font color="#FF0000" size="2">*</font></B></TD>
+            <TD ALIGN="LEFT" WIDTH="55%"><INPUT TYPE="text" NAME="campaignname" SIZE="30" MAXLENGTH="30" VALUE="~$campaignname`" CLASS="textbox"></TD>
+          </TR>
+          <TR>
+              <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><B>Campaign Type</B> <b> 
+                <font color="#FF0000" size="2">*</font></b><BR>
+                (Duration/Impression)</TD>
+            <TD ALIGN="LEFT"><SELECT NAME="campaigntype" CLASS="text-small" onchange="checkDisable();">
+            ~section  name=i loop=$campaigntypearr`
+                         <option value="~$campaigntypearr[i].campaignvalue`" ~if $campaigntype eq $campaigntypearr[i].campaignvalue` selected ~/if`>~$campaigntypearr[i].campaigntype`</option>
+						 ~/section`	
+			</SELECT> </TD>
+          </TR>
+          <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><B>Start Date</B></TD>
+            <TD ALIGN="LEFT">
+	    <SELECT NAME="startday" CLASS="text-small">
+	     ~section  name=i loop=$days`
+                <option value="~$days[i].daysvalue`" ~if $days[i].daysvalue eq $startday` selected ~/if` >~$days[i].daysname` </option>
+               ~/section`
+            </SELECT>
+            <SELECT NAME="startmonth" CLASS="text-small">
+            ~section  name=i loop=$months`
+	      <option value="~$months[i].monthvalue`" ~if $months[i].monthvalue eq $startmonth` selected ~/if` >~$months[i].monthname` </option>
+	   ~/section`
+	    </SELECT>
+            <SELECT NAME="startyear" CLASS="text-small">
+            ~section  name=i loop=$years`
+	       <option value="~$years[i].yearsvalue`" ~if $years[i].yearsvalue eq $startyear` selected ~/if` >~$years[i].yearsvalue` </option>
+	   ~/section`
+	    </SELECT> <BR><BR>
+          </TD>
+        </TR>
+        <TR>
+           <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><b>End Date</b></TD>
+            <TD ALIGN="LEFT" VALIGN="TOP">
+            <select name="endday" class="text-small">
+             ~section  name=i loop=$days`
+	       <option value="~$days[i].daysvalue`"  ~if $days[i].daysvalue eq $endday` selected ~/if`>~$days[i].daysname` 
+             ~/section` 
+            </select>
+            <select name="endmonth" class="text-small">
+             ~section  name=i loop=$months`
+	       <option value="~$months[i].monthvalue`" ~if $months[i].monthvalue eq $endmonth` selected ~/if` >~$months[i].monthname`      </option>
+            ~/section`
+	    </select>
+	    <select name="endyear" class="text-small">
+            ~section  name=i loop=$years`
+	      <option value="~$years[i].yearsvalue`" ~if $years[i].yearsvalue eq $endyear` selected ~/if` >~$years[i].yearsvalue`          </option>
+            ~/section`
+	    </select>
+           </TD>
+        </TR>
+        <TR>
+              <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><B>No of impression <font color="#FF0000" size="2">*</font> 
+                <font color="#FF0000" size="2">*</font><br />
+                (Only for impression type Campaigns.) </B></TD>
+            <TD ALIGN="LEFT" VALIGN="TOP"><INPUT TYPE="text" NAME="campaignimpression" SIZE="30" MAXLENGTH="30" VALUE="~$campaignimpression`" CLASS="textbox"></TD>
+          </TR>
+	  <TR> 
+              <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><font color="#FF0000" size="2"></font><b>Show MIS to clients</b><b> 
+                <font color="#FF0000" size="2"><br>
+                </font></b></TD>
+              <TD CLASS="text" ALIGN="LEFT" VALIGN="TOP">Yes 
+                <input type="radio" name="showmis" value="Y" ~if $showmis eq 'Y'` checked ~/if` >No 
+                <input type="radio" name="showmis" value="N" ~if $showmis eq 'N'` checked ~/if`>
+              </TD>
+           </TR>
+           <TR>
+              <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><b>Select the fields you 
+                want him to view</b><br>
+                (Mandatory if yes)</TD>
+              <TD CLASS="text" ALIGN="LEFT" VALIGN="TOP">
+		<SELECT NAME="misdetails[]" MULTIPLE="MULTIPLE" SIZE="3" ONCHANGE="return checkCat(this,2);" CLASS="textbox">
+		~$mis`
+		<!--	<option value="1" >All </option>
+			<option value="3" >Impressions Served </option>
+			<option value="4" >Clicks </option>
+			<option value="5" >CTR </option>-->
+		</SELECT>
+              </TD>
+            </TR>
+        </TABLE></DIV><BR><DIV CLASS="text"><font color="#FF0000" size="2">*</font> Mandatory <br>
+<font color="#FF0000" size="2">*</font><font color="#FF0000" size="2">*</font> Mandatory only for impression type Campaigns.<br>
+<br>
+  </DIV><DIV ALIGN="CENTER"><TABLE WIDTH="40%" BORDER="0">
+          <TR>
+            <TD WIDTH="50%"><INPUT TYPE="image" NAME="resetform" SRC="gifs/reset.gif" BORDER="0"></TD>
+            <TD WIDTH="50%"><INPUT TYPE="image" NAME="savedetails" SRC="gifs/continue.gif" BORDER="0"></TD>
+          </TR>
+        </TABLE>
+          <b></b></DIV>
+        <BR>
+        <P></P>
+        <P></P></TD>
+        <TD BACKGROUND="gifs/rt-line-bg-1.gif" WIDTH="18"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></TD>
+      </TR>
+    </TABLE><TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" 
+    ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/page-bg-1.gif"><IMG SRC="gifs/lt-low-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+        <TD VALIGN="MIDDLE" HEIGHT="31" BACKGROUND="gifs/page-bg-1.gif">&nbsp;</TD>
+        <TD ALIGN="RIGHT" WIDTH="18" BACKGROUND="gifs/page-bg-1.gif"><IMG SRC="gifs/lt-rt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+      </TR>
+    </TABLE>
+	<input type="hidden" name="transactionid" value="~$transactionid`" />
+	<input type="hidden" name="id" value="~$id`" />
+	<input type="hidden" name="campaignid" value="~$campaignid`" />
+	<input type="hidden" name="campaignenddate" value="~$campaignenddate`" />
+	</FORM>
+    
+   ~$bmsfooter`
+  </BODY>
+</HTML>

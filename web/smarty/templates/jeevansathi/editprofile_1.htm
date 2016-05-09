@@ -1,0 +1,825 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- editprofile_1.htm-->
+<head>
+<title>JeevanSathi Matrimonials - Edit Profile I</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="/P/I/styles.php" type="text/css">
+<link rel="stylesheet" href="/P/IN/styles.php" type="text/css">
+<script language="JavaScript" SRC="profile.js"></SCRIPT>
+<script language="javascript">
+<!--
+
+function validate()
+{	
+        var docF=document.form1;
+	
+	        //alert(docF.Email.value);
+	if(document.getElementById)
+        {
+		if(document.getElementById('email_span'))
+                        document.getElementById('email_span').style.color="#000000";
+                if(document.getElementById('relationship_span'))
+                        document.getElementById('relationship_span').style.color="#000000";
+                document.getElementById('height_span').style.color="#000000";
+                document.getElementById('mstatus_span').style.color="#000000";
+                document.getElementById('children_span').style.color="#000000";
+                document.getElementById('manglik_span').style.color="#000000";
+                document.getElementById('religion_span').style.color="#000000";
+                document.getElementById('mtongue_span').style.color="#000000";
+                document.getElementById('caste_span').style.color="#000000";
+                document.getElementById('country_res_span').style.color="#000000";
+                document.getElementById('city_res_span').style.color="#000000";
+                document.getElementById('height_span').style.color="#000000";
+                document.getElementById('edu_span').style.color="#000000";
+                document.getElementById('occ_span').style.color="#000000";
+                document.getElementById('income_span').style.color="#000000";
+                document.getElementById('diet_span').style.color="#000000";
+                document.getElementById('smoke_span').style.color="#000000";
+                document.getElementById('drink_span').style.color="#000000";
+                document.getElementById('btype_span').style.color="#000000";
+                document.getElementById('complexion_span').style.color="#000000";
+               
+		/* 
+		document.getElementById('date_span').style.color="#000000";
+                document.getElementById('phone_span').style.color="#000000";
+                document.getElementById('mobile_span').style.color="#000000";
+                document.getElementById('term_span').style.color="#000000";
+                document.getElementById('info_span').style.color="#000000";
+		*/
+	}
+
+        if(docF.Email&&trim(docF.Email.value)=="")
+        {
+	        alert("Please specify Email ID");
+        	if(document.getElementById)
+                                document.getElementById('email_span').style.color="red";
+			
+		docF.Email.focus();
+		return false;
+        }
+
+        if(docF.Email&&!checkemail(docF.Email.value))
+        {
+                alert(docF.Email.value);                                                                                                             
+                alert(docF.Email.value + " is not a valid Email ID");
+                if(document.getElementById)
+                                document.getElementById('email_span').style.color="red";
+                //alert(docF.Email.value);                                                                                                             
+                        docF.Email.focus();
+
+		return false;
+        }
+
+        if(docF.Relationship&&docF.Relationship.value=="")
+        {
+	        alert("Please specify the relation with the person whose profile is being put");
+        	if(document.getElementById)
+                                document.getElementById('relationship_span').style.color="red";
+                                                                                                                             
+                        docF.Relationship.focus();
+
+		return false;
+        }
+
+        if(docF.Height.value=="")
+        {
+	        alert("Please specify Height");
+        	if(document.getElementById)
+                                document.getElementById('height_span').style.color="red";
+                                                                                                                             
+                        docF.Height.focus();
+
+		return false;
+        }
+
+        if(docF.Marital_Status.value=="")
+        {
+	        alert("Please specify Marital Status");
+        	if(document.getElementById)
+                                document.getElementById('mstatus_span').style.color="red";
+                                                                                                                             
+                        docF.Marital_Status.focus();
+
+		return false;
+        }
+	
+	if(docF.Has_Children.value=="")
+        {
+                alert("Please specify whether you have childrens");
+                if(document.getElementById)
+                                document.getElementById('children_span').style.color="red";
+                                                                                                                             
+                        //docF.Has_Children.focus();
+                        docF.Marital_Status.focus();
+                                                                                                                             
+                return false;
+        }
+
+        if(docF.Manglik_Status.value=="")
+        {
+		alert("Please specify Manglik Status");
+        	if(document.getElementById)
+                                document.getElementById('manglik_span').style.color="red";
+                                                                                                                             
+                        docF.Manglik_Status.focus();
+
+		return false;
+        }
+
+        if(docF.Religion.value=="")
+	{
+        	alert("Please specify Religion");
+	        if(document.getElementById)
+                                document.getElementById('religion_span').style.color="red";
+                                                                                                                             
+                        docF.Religion.focus();
+
+		 return false;
+	}
+
+	if(docF.Caste.value=="")
+	{
+        	alert("Please specify Caste");
+	        if(document.getElementById)
+                                document.getElementById('caste_span').style.color="red";
+                                                                                                                             
+                        docF.Caste.focus();
+
+		return false;
+	}
+
+	if(docF.Caste.value==0)
+        {
+                alert("Caste and Religion Can't be Same");
+                if(document.getElementById)
+                                document.getElementById('caste_span').style.color="red";
+
+                        docF.Caste.focus();
+
+                return false;
+        }
+	
+
+        if(docF.Mtongue.value=="")
+        {
+        	alert("Please specify Mother Tongue");
+		if(document.getElementById)
+			document.getElementById('mtongue_span').style.color="red";
+													     
+                        docF.Mtongue.focus();
+
+		return false;
+        }
+
+        if(docF.Country_Residence.value=="")
+        {
+	        alert("Please specify Country of Residence");
+        	if(document.getElementById)
+                	document.getElementById('country_res_span').style.color="red";
+                                                                                                                             
+                        docF.Country_Residence.focus();
+
+		return false;
+        }
+
+	//if((docF.City_India.disabled == false) && (docF.City_India.value == ""))
+	if((docF.Country_Residence.value == "51") && (docF.City_India.value == ""))
+	{
+		alert("Please specify City of Residence");
+		if(document.getElementById)
+                        document.getElementById('city_res_span').style.color="red";
+                                                                                                                             
+                        docF.City_India.focus();
+
+		return false;
+	}
+
+        //if((docF.City_USA.disabled == false) && (docF.City_USA.value == ""))
+        if((docF.Country_Residence.value == "128") && (docF.City_USA.value == ""))
+        {
+                alert("Please specify City of Residence");
+	 	if(document.getElementById)
+			document.getElementById('city_res_span').style.color="red";
+                                                                                                                             
+                        docF.City_USA.focus();
+
+		return false;
+        }
+
+        if(docF.Rstatus.value=="")
+        {
+                alert("Please specify Residency Status");
+	 	if(document.getElementById)
+			document.getElementById('rstatus_span').style.color="red";
+                                                                                                                             
+                        docF.Rstatus.focus();
+		return false;
+        }
+
+        if(docF.Education_Level.value=="")
+        {
+                alert("Please specify Highest Degree");
+		if(document.getElementById)
+			document.getElementById('edu_span').style.color="red";
+													     
+                docF.Education_Level.focus();
+
+		return false;
+        }
+
+        if(docF.Occupation.value=="")
+        {
+                alert("Please specify Occupation");
+                if(document.getElementById)
+			document.getElementById('occ_span').style.color="red";
+                                                                                                                             
+                        docF.Occupation.focus();
+		 return false;
+        }
+
+	if(docF.Income.value=="")
+        {
+                alert("Please specify Income");
+                if(document.getElementById)
+			document.getElementById('income_span').style.color="red";
+                                                                                                                             
+                        docF.Income.focus();
+		return false;
+        }
+	if(docF.Diet.value=="")
+        {
+                alert("Please specify your Diet");
+                if(document.getElementById)
+                        document.getElementById('diet_span').style.color="red";
+                                                                                                                             
+                        //docF.Diet.focus();
+                        docF.Income.focus();
+                return false;
+        }
+
+        if(docF.Smoke.value=="")
+        {
+                alert("Please specify whether you Smoke or not");
+         	if(document.getElementById)
+                        document.getElementById('smoke_span').style.color="red";
+                                                                                                                             
+                        docF.Smoke.focus();
+        	return false;
+        }
+
+        if(docF.Drink.value=="")
+        {
+                alert("Please specify whether you Drink or not");
+         	if(document.getElementById)
+                        document.getElementById('drink_span').style.color="red";
+                                                                                                                             
+                        docF.Drink.focus();
+        	return false;
+        }
+
+        if(docF.Complexion.value=="")
+        {
+	        alert("Please specify Complexion");
+         	if(document.getElementById)
+                        document.getElementById('complexion_span').style.color="red";
+                                                                                                                             
+                        docF.Complexion.focus();
+		return false;
+        }
+
+	if(docF.Body_Type.value=="")
+        {
+        	alert("Please specify Body Type");
+	 	if(document.getElementById)
+                        document.getElementById('btype_span').style.color="red";
+                                                                                                                             
+                        docF.Body_Type.focus();
+        	return false;
+        }
+return true;
+}
+
+function activate_cityres()
+{
+	var docF=document.form1;
+
+        if(docF.Country_Residence.value=="51")
+        {
+		docF.City_India.disabled = false;
+		docF.City_USA.disabled = true;
+		docF.City_USA.value = "";
+        }
+	else if(docF.Country_Residence.value=="128")
+	{
+                docF.City_India.disabled = true;
+		docF.City_India.value = "";
+                docF.City_USA.disabled = false;
+	}
+	else
+	{
+                docF.City_India.disabled = true;
+		docF.City_India.value = "";
+                docF.City_USA.disabled = true;
+		docF.City_USA.value = "";
+	}
+}
+function agentAlert()
+{
+	var docF	= document.form1;
+        var error 	= document.getElementById('errors');
+        if (!error)
+        {
+                window.open('../smarty/templates/infovision/alertAgent.htm','','width=170,height=130');
+        }
+}
+
+//-->
+</SCRIPT>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+
+ ~if $crmback eq 'admin'`
+<body onload = "activate_cityres();agentAlert()">
+~else`
+<body onload = "activate_cityres()">
+~/if`
+
+<!--body onload="activate_cityres();"-->
+
+~$HEAD`
+~if $SHOWLINKS eq "Y"`
+
+~/if`
+~$LEFTPANEL`
+<table width="78%" height="1110"border="0" cellspacing="0" cellpadding="0" align="center">
+<tr><td valign="top">
+<form name="form1" method="post" action="editprofile.php" onsubmit="return validate();">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+   <tr>
+    <td class="headbigblack"><b>Edit Profile I </b></td>
+   </tr>
+   <tr class="bgred">
+    <td height="1"></td>
+    <SPACER height="1" type="block"></SPACER> </tr>
+   <tr>
+    <td height="2"></td>
+    <SPACER height="2" type="block"></SPACER> </tr>
+ </table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td width="2%"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></td>
+  <td width="98%" height="18" class="smallblack"><FONT color=#cc3300>Note: Fields marked with * are compulsory. </FONT></td>
+ </tr>
+</table>
+ <br>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+~if $NO_OF_ERROR`<tr><td colspan="3">
+<font color="red" size="2" face="Arial" ~if $crmback eq 'admin'` id="errors" ~/if` >&nbsp;&nbsp;&nbsp;&nbsp;There are ~$NO_OF_ERROR` Error(s) in your form. They are marked in red. Please correct them and submit the form again</font></td></tr>
+~/if`
+ <tr>
+  <td  valign="top" ><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1">&nbsp;</td>
+  <td  valign="top" class="mediumblack" height="25"><b><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="180" height="1"><br>a. Username</b></td>
+  <td width="100%" height="25" valign="top" class="mediumblack"><b>~$USERNAME`</b></td>
+  </tr>
+ <tr>
+  <td  valign="top" class="mediumblack">&nbsp;</td>
+  <td valign="top" class="mediumblack"><b>b. <b>Gender </b></b></td>
+  <td height="25" valign="top" class="mediumblack"><b>~if $GENDER eq "M"` Male ~elseif $GENDER eq "F"` Female ~/if`</b></td>
+  </tr>
+ <tr>
+  <td height="19" valign="top" class="mediumblack">&nbsp;</td>
+  <td valign="top" class="mediumblack"><b>c. Date of Birth</b></td>
+  <td height="25" valign="top" class="mediumblack"><b>~$DTOFBIRTH` </b></td>
+  </tr>
+</table>
+<br>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr class="bggrey">
+  <td width="2%"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></td>
+  <td width="98%" class="mediumblack" height="18"><b style="color:#CC3300 ">1. Basic Information </b></td>
+ </tr>
+</table>
+<br>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td width="2%" valign="top"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></td>
+~if $mb_username_profile eq""`
+
+   ~if $crmback eq 'admin'`
+
+      ~if $inf_profile eq "Y"`
+
+	 <td width="32%" valign="top" class="mediumblack"><b><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="180" height="1"><br>a.<span id="email_span"> ~if $check_email eq "1"`<font color="red">Email ID*<br>Enter a valid Email ID</font>~else`~if $check_dup_email eq "Y"`<font color="red">Email ID*<br>This Email Id already exists in another profile</font>~else`Email ID*~/if`~/if`</span></b></td>
+
+      ~else`
+
+       <td width="32%" valign="top" class="mediumblack"><b><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="180" height="1"><br>a.<span id="email_span">&nbsp;Email ID*</span></b></td>
+
+      ~/if`
+   ~else`
+
+  <td width="32%" valign="top" class="mediumblack"><b><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="180" height="1"><br>a.<span id="email_span"> ~if $check_email eq "1"`<font color="red">Email ID*<br>Enter a valid Email ID</font>~else`~if $check_dup_email eq "Y"`<font color="red">Email ID*<br>This Email Id already exists in another profile</font>~else`Email ID*~/if`~/if`</span></b></td>
+
+   ~/if`
+
+  <td width="66%" valign="top" height="32" ~if $crmback eq 'admin'` class="mediumblack" ~/if`>
+  ~if $crmback eq 'admin'` ~if $inf_profile eq "Y"` <input type="text" name="Email" value="~$EMAIL`" class="testbox"> ~else` ~$EMAIL` ~/if` ~else` <input type="text" name="Email" value="~$EMAIL`" class="testbox"> ~/if`
+   </td>
+  </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top"><span class="mediumblack"><b>b.<span id="relationship_span"> ~if check_relationship eq "Y"`<font color="red">Relationship*</font>~else`Relationship*~/if`</span></b></span></td>
+  <td valign="top" height="50"><select name="Relationship" size="1" class="TextBox">
+                <option value="" ~if $RELATION eq ""`selected~/if`>Select any one option</option>
+                <option value="1" ~if $RELATION eq "1"`selected~/if`>Self</option>
+                <option value="2" ~if $RELATION eq "2"`selected~/if`>Parent/Guardian</option>
+                <option value="3" ~if $RELATION eq "3"`selected~/if`>Sibling</option>
+                <option value="4" ~if $RELATION eq "4"`selected~/if`>Friend</option>
+                <option value="5" ~if $RELATION eq "5"`selected~/if`>Marriage Bureau</option>
+                <option value="6" ~if $RELATION eq "6"`selected~/if`>Other</option>
+
+  </select><br><span class="smallblack">Relationship with the person whose profile is being input</span>   </td>
+  </tr>
+~/if`
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top" class="mediumblack"><b>c.<span id="height_span"> ~if $check_height eq "Y"` <font color= "red">Height*</font> ~else` Height* ~/if`</span></b></td>
+  <td valign="top" height="32"><select name="Height" size="1" class="TextBox">
+   <option value="" selected>Select any one option</option>
+		~$HEIGHT`
+  </select>   </td>
+  </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top" class="mediumblack"><b>d.<span id="mstatus_span"> ~if $check_marital eq "Y"` <font color= "red">Marital status*</font>~else` Marital status* ~/if`</span></b></td>
+  <td valign="top" height="32"><select name="Marital_Status" size="1" class="TextBox">
+                  <option value="" ~if $MSTATUS eq ""`selected~/if`>Select any one option</option>
+                  <option value="N" ~if $MSTATUS eq "N"`selected~/if`>Never Married</option>
+                  <option value="W" ~if $MSTATUS eq "W"`selected~/if`>Widowed</option>
+                  <option value="D" ~if $MSTATUS eq "D"`selected~/if`>Divorced</option>
+                  <option value="S" ~if $MSTATUS eq "S"`selected~/if`>Separated</option>
+                  <option value="O" ~if $MSTATUS eq "O"`selected~/if`>Other</option>
+
+  </select>
+   </td>
+  </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top" class="mediumblack"><b>e. <span id="children_span">~if $check_children eq "Y"`<font color="red">Do you have children?*</font>~else`Do you have children?*~/if`</span></b></td>
+  <td valign="top" height="32" class="mediumblack">
+   <input type="radio" name="Has_Children" value="N"  checked >
+No &nbsp;
+<input type="radio" name="Has_Children" value="YT" ~if $HAVECHILD eq "YT"`checked~/if`>
+Yes living together&nbsp;&nbsp;
+<input type="radio" name="Has_Children" value="YS" ~if $HAVECHILD eq "YS"`checked~/if`>
+Yes living separately</td>
+  </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top" class="mediumblack"><b>f. <span id="manglik_span">~if $check_manglik eq "Y"` <font color= "red">Manglik status*</font> ~else` Manglik status* ~/if`</span> </b></td>
+  <td valign="top" height="32"><span class="mediumblack">
+  <select name="Manglik_Status" size="1" class="TextBox">
+	<option value="" ~if $MANGLIK eq ""`selected~/if`>Select any one option</option>
+	<option value="M" ~if $MANGLIK eq "M"`selected~/if`>Manglik</option>
+	<option value="N" ~if $MANGLIK eq "N"`selected~/if`>Non Manglik</option>
+	<option value="D" ~if $MANGLIK eq "D"`selected~/if`>Don't Know</option>
+  </select>
+  </span></td>
+  </tr>
+</table>
+<br>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr class="bggrey">
+  <td width="2%" class="mediumblack"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></td>
+  <td width="98%" class="mediumblack" height="18"><b style="color:#CC3300 ">2. Religion &amp; Ethnicity</b> </td>
+ </tr>
+</table>
+<br>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td width="2%" valign="top"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></td>
+  <td width="32%" valign="top"><span class="mediumblack"><b><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="180" height="1"><br>
+   a.	<span id="religion_span">~if $check_religion eq "Y"` <font color= "red">Religion*</font> ~else` Religion* ~/if`</span></b></span></td>
+  <td width="66%" height="32" valign="top"><select name="Religion" class="TextBox" onChange="PopSPEC(this,8,10);">
+   <option value="" selected>Select any one option</option>
+	~$RELIGION`
+  </select></td>
+  </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top"><span class="mediumblack"><b>b. <span id="mtongue_span">~if $check_mtongue eq "Y"` <font color= "red">Mother tongue/ Ethnicity*</font>~else`Mother tongue/ Ethnicity*~/if`</span> </b></span></td>
+  <td height="32" valign="top"><select name="Mtongue" size="1" class="TextBox">
+   <option selected value="">Select any one option</option>
+	~$MTONGUE`
+  </select></td>
+  </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top"><span class="mediumblack"><b>c.	<b><span id="caste_span">~if $check_caste eq "Y"` <font color= "red">Caste*</font> ~else` Caste* ~/if` </span></b></b></span></td>
+  <td height="32" valign="top"><select name="Caste" class="TextBox">
+~if $check_religion eq 'Y'`
+   <option  value="" selected>Select Religion First</option>
+~/if`
+	~$CASTE`
+  </select></td>
+  </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top" class="mediumblack"><b>d. ~if $check_subcaste eq "Y"` <font color= "red">Subcaste* </font> ~else`Subcaste ~/if`</b></td>
+  <td height="40" valign="top"><span class="mediumblack">
+   <input type="text" name="Subcaste" value="~$SUBCASTE`" class="testbox">
+   <br>
+   <span class="smallred">Each time you edit this field, it will be screened and may take up to 24 hrs to go live.</span> </span></td>
+  </tr>
+</table>
+<br>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr class="bggrey">
+  <td width="2%" class="mediumblack"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></td>
+  <td width="98%" class="mediumblack" height="18"><b style="color:#CC3300 ">3. Residence </b></td>
+ </tr>
+</table>
+<br>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td width="2%" valign="top"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></td>
+  <td width="32%" valign="top"><span class="mediumblack"><b><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="180" height="1"><br>
+   a. <span id="country_res_span">~if $check_countryres eq "Y"` <font color= "red">Country of Residence*</font> ~else` Country of Residence* ~/if` </span></b></span></td>
+  <td width="66%" height="32" valign="top"><span class="mediumblack">
+   <select name="Country_Residence" size = "1" class="TextBox" onchange="activate_cityres();">
+    <OPTION value="" selected>Select any one option</OPTION>
+	~$COUNTRY_RES`
+   </SELECT>
+  </span></td>
+  </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top" class="mediumblack"><b>b.<span id="city_res_span"> ~if $check_cityres eq "Y"`<font color= "red"> ~/if`Current Place of Residence*~if $check_cityres eq "Y"`</font>~/if` </span></b></td>
+  <td height="32" valign="top"><span class="mediumblack">&nbsp;
+  </span></td>
+  </tr>
+
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top" class="mediumblack"><b>If in India</b></td>
+  <td height="32" valign="top"><span class="mediumblack">
+          <select name="City_India" size="1" class="TextBox">
+            <option value="" selected>Select any one option</option>
+                ~$CITY_INDIA`
+          </select>
+  </span></td>
+  </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top" class="mediumblack"><b>If in USA </b></td>
+  <td height="32" valign="top"><span class="mediumblack">
+          <select name="City_USA" size="1" class="TextBox">
+            <option value="" selected>Select any one option</option>
+                ~$CITY_USA`
+          </select>
+  </span></td>
+  </tr>
+
+
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top" class="mediumblack"><b>c. <span id="rstatus_span">~if $check_rstatus eq "Y"`<font color="red">Residency status*</font>~else`Residency status*~/if`</span> </b></td>
+  <td height="32" valign="top"><span class="smallblack">
+   <select name="Rstatus" size="1" class="TextBox">
+   <option value="" selected >Select any one option</option>
+   <option value="1" ~if $RES_STATUS eq '1'` selected ~/if`>Citizen</option>
+   <option value="2" ~if $RES_STATUS eq '2'` selected ~/if`>Permanent Resident</option>
+   <option value="3" ~if $RES_STATUS eq '3'` selected ~/if`>Work Permit</option>
+   <option value="4" ~if $RES_STATUS eq '4'` selected ~/if`>Student Visa</option>
+   <option value="5" ~if $RES_STATUS eq '5'` selected ~/if`>Temporary Visa</option>
+   </select>
+  </span></td>
+  </tr>
+</table>
+<br>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr class="bggrey">
+  <td width="2%" class="mediumblack"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></td>
+  <td width="98%" class="mediumblack" height="18"><b style="color:#CC3300 ">4. Education and Occupation </b></td>
+ </tr>
+</table>
+<br>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td width="2%" valign="top"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></td>
+  <td width="32%" valign="top" class="mediumblack"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="180" height="1"><br>
+   <b>a.<span id="edu_span"> ~if $check_education_level eq "Y"`<font color="red">Highest Degree*<font> ~else` Highest Degree* ~/if`</span> </b></td>
+  <td width="66%" height="32" valign="top"><select name="Education_Level" size="1" class="TextBox">
+   <option value="" selected>Select any one option</option>
+	~$education_level`
+  </select>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top" class="mediumblack"><b>b. Education Details </b></td>
+  <td height="50" valign="top">
+      <input type="text" name="Educ_Qualification" value="~$EDUCATION`" size="55" class="testbox">
+   <!--<br><span class=class8><a href="" onclick="window.open('education_popup.htm','','width=420,height=170');return false;">View Samples </a></Span>-->
+   <br>
+   <span class="smallred">Each time you edit this field, it will be screened and may take up to 24 hrs to go live.</span></td>
+ </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top" class="mediumblack"><b>c. <b> <span id="occ_span">~if $check_occupation eq "Y"`<font color="red">Occupation*</font> ~else` Occupation* ~/if`</span> </b></td>
+  <td height="32" valign="top"><select name="Occupation" class="testbox">
+   <option value="">Select</option>
+	~$occupation`
+  </select></td>
+ </tr>
+ <tr>
+  <td valign="top" >&nbsp;</td>
+  <td valign="top" class="mediumblack"><b>d.<span id="income_span"> ~if $check_income eq "Y"`<font color="red">Annual income*</font> ~else` Annual income* ~/if`</span> </b></td>
+  <td height="32" valign="top"><span class="mediumblack">
+   <select name="Income" class="TextBox">
+    <option value="" selected>Select any one option</option>
+	~$INCOME`
+   </select>
+
+<!--
+  <select name="Ctc_Type" class="TextBox">
+    <option value="" selected>Currency</option>
+    <option value="R" ~if $currency eq 'R'` selected ~/if`>Rupees</option>
+    <option value="D" ~if $currency eq 'D'` selected ~/if`>Dollars</option>
+  </select>
+  <select name="Ctc_Lacs" class="TextBox">
+    <option value="">Lacs</option>
+        ~$ctc_lacs`
+  </select>
+  <select name="Ctc_Thousand" class="TextBox">
+    <option value="">Thousand</option>
+        ~$ctc_thousand`
+  </select>
+-->
+</span></td>
+ </tr>
+</table>
+<br>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr class="bggrey">
+  <td width="2%" class="mediumblack"><span class="smallblack"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></span></td>
+  <td width="98%" class="mediumblack" height="18"><b style="color:#CC3300 ">5. Lifestyle and Attributes </b></td>
+ </tr>
+</table>
+<br>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td width="2%" valign="top"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></td>
+  <td width="32%" valign="top" class="mediumblack"><b><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="180" height="1"><br>
+   a. <span id="diet_span"> Are you a* </span></b></td>
+  <td width="66%" height="32" valign="top"><span class="mediumblack">
+	<input type=radio value="V" name="Diet" ~if $DIET eq 'V' || !$DIET`checked ~/if`>
+	Vegetarian&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<input type=radio value="N" name="Diet" ~if $DIET eq 'N'`checked ~/if`>
+	Non-Vegetarian &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<input type=radio value="J" name="Diet" ~if $DIET eq 'J'`checked ~/if`>
+	Jain</td>
+ </tr>
+ <tr>
+  <td valign="top" >&nbsp;</td>
+  <td valign="top" class=mediumblack><b>b. <b<span id="smoke_span">~if $check_smoke eq "Y"`<font color="red">Do you smoke?*<font>~else`Do you smoke?*~/if`</span> </b></b></td>
+  <td height="32" valign="top"><span class="smallblack"> <span class="mediumblack">
+   <select name="Smoke" size="1" class="TextBox">
+	<option value="" selected >Select any one option</option>
+	<option value="Y" ~if $SMOKE eq 'Y'` selected ~/if`>Yes</option>
+        <option value="N" ~if $SMOKE eq 'N'` selected ~/if`>No</option>
+        <option value="O" ~if $SMOKE eq 'O'` selected ~/if`>Occassionally</option>
+   </select>
+   </span></span> </td>
+ </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top"><span class="mediumblack"><b>c. <b><span id="drink_span">~if $check_drink eq "Y"`<font color="red">Do you drink?*<font>~else`Do you drink?*~/if`</span></b></b></span></td>
+  <td height="32" valign="top"><span class="mediumblack"><span class="smallblack">
+   <select name="Drink" size="1" class="TextBox">
+	<option value="" selected >Select any one option</option>
+        <option value="Y"  ~if $DRINK eq 'Y'` selected ~/if`>Yes</option>
+        <option value="N"  ~if $DRINK eq 'N'` selected ~/if`>No</option>
+        <option value="O"  ~if $DRINK eq 'O'` selected ~/if`>Occassionally</option>
+   </select>
+  </span>
+   </span></td>
+ </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top"><span class="mediumblack"><b>d. <b><span id="complexion_span">~if $check_complexion eq "Y"` <font color= "red">Complexion*</font> ~else` Complexion* ~/if`</span> </b></b></span></td>
+  <td height="32" valign="top"><span class="mediumblack"> <span class="smallblack">
+   <select name="Complexion" size="1" class="TextBox">
+	<option value="" ~if $COMPLEXION eq ""`selected~/if`>Select any one option</option>
+        <option value="1" ~if $COMPLEXION eq "1"`selected~/if`>Very Fair</option>
+        <option value="2" ~if $COMPLEXION eq "2"`selected~/if`>Fair</option>
+        <option value="3" ~if $COMPLEXION eq "3"`selected~/if`>Wheatish</option>
+        <option value="4" ~if $COMPLEXION eq "4"`selected~/if`>Wheatish Brown</option>
+        <option value="5" ~if $COMPLEXION eq "5"`selected~/if`>Dark</option>
+   </select>
+  </span> </span></td>
+ </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top"><span class="mediumblack"><b>e. <b> <span id="btype_span">~if $check_bodytype eq "Y"` <font color= "red">Body Type*</font> ~else` Body Type* ~/if`</span></b></b></span></td>
+  <td height="32" valign="top"><span class="mediumblack"> <span class="smallblack">
+   <select name="Body_Type" size="1" class="TextBox">
+	<option value="" ~if $BTYPE eq ""`selected~/if`>Select any one option</option>
+        <option value="1" ~if $BTYPE eq "1"`selected~/if`>Slim</option>
+        <option value="2" ~if $BTYPE eq "2"`selected~/if`>Average</option>
+        <option value="3" ~if $BTYPE eq "3"`selected~/if`>Athletic</option>
+        <option value="4" ~if $BTYPE eq "4"`selected~/if`>Heavy</option>
+   </select>
+  </span> </span></td>
+ </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top" class="mediumblack"><b>f. ~if $check_phyhcp eq "Y"` <font color= "red">Physically/Mentally Challenged*</font>~else`Physically/Mentally Challenged*~/if`</b></td>
+  <td height="32" valign="top"><span class="mediumblack">
+   <select name="Phyhcp" size="1" class="TextBox">
+	<option value="N" ~if $HANDICAPPED eq "N"`selected~/if`>None</option>
+        <option value="1" ~if $HANDICAPPED eq "1"`selected~/if`>Physical Handicap from birth</option>
+        <option value="2" ~if $HANDICAPPED eq "2"`selected~/if`>Physical Handicap due to accident</option>
+        <option value="3" ~if $HANDICAPPED eq "3"`selected~/if`>Mentally Challenged from birth</option>
+        <option value="4" ~if $HANDICAPPED eq "4"`selected~/if`>Mentally Challenged due to accident</option>
+   </select>
+  </span></td>
+ </tr>
+</table>
+<br>
+~if $mb_username_profile eq""`
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr class="bggrey">
+  <td width="2%" class="mediumblack"><span class="smallblack"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></span></td>
+  <td width="98%" class="mediumblack" height="18"><b style="color:#CC3300 ">6. Privacy Settings*</b></td>
+ </tr>
+</table>
+<br>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td width="30"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="30" height="1"></td>
+  <td width="30" class="mediumblack"><input name="radioprivacy" type="radio" value="A" ~if $RADIOPRIVACY eq "A"`checked~/if`>
+  </td>
+  <td width="100%" height="18" class="mediumblack">Allow my detailed profile to be viewed by all visitors. (Recommended)</td>
+ </tr>
+ <tr>
+  <td>&nbsp;</td>
+  <td class="mediumblack"><input name="radioprivacy" type="radio" value="R" ~if $RADIOPRIVACY eq "R"`checked~/if`></td>
+  <td height="18" class="mediumblack">Allow my detailed profile to be viewed only by registered users. </td>
+ </tr>
+ <tr>
+  <td>&nbsp;</td>
+  <td class="mediumblack"><input name="radioprivacy" type="radio" value="F" ~if $RADIOPRIVACY eq "F"`checked~/if`></td>
+  <td height="18" class="mediumblack">Allow my detailed profile to be viewed only by registered users who pass my filters.</td>
+ </tr>
+ <tr>
+  <td>&nbsp;</td>
+  <td valign="top" class="mediumblack"><input name="radioprivacy" type="radio" value="C" ~if $RADIOPRIVACY eq "C"`checked~/if` >
+  </td>
+  <td height="18" class="mediumblack">Don't show my detailed profile or summary profile to any user, I will contact and search profiles. </td>
+ </tr>
+ <tr>
+  <td>&nbsp;</td>
+  <td></td>
+  <td><span class="smallred">NOTE: Please note that in the first three settings your summary profile will be viewable by all visitors. It will show your User name, Age, Height, Caste, Occupation, City and Date of updation. This information is typically not personally identifiable. However, if you choose the fourth option, even your summary profile will not be viewable to any visitor.</span></td>
+ </tr>
+</table>
+~/if`
+<br>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="smallblack"><div align="center"><br>
+	<input type="hidden" name="checksum" value="~$CHECKSUM`">
+	<input type="hidden" name="Username" value="~$USERNAME`">
+	<input type="hidden" name="cor" value=~$cor`>
+	<input type="hidden" name="showlinks" value=~$SHOWLINKS`>
+	~if $crmback eq 'admin'`
+		<input type="hidden" name="inf_profile" value="~$inf_profile`">
+		<input type="hidden" name="crmback" value="admin">
+		<input type="hidden" name="profileid" value="~$profileid`">
+		<Input type="hidden" name="gender" value="~$CRMBK_GENDER`">
+		<input type="hidden" name="cid" value="~$cid`">
+		<input type="hidden" name="company" value="~$company`">
+		<input type="hidden" name="INCOMPLETE" value="~$INCOMPLETE`">
+	~/if`
+	<input type="submit" name="CMDsubmit" value="Continue" class="TextBox">
+  </div></td>
+ </tr>
+</table>
+</form>
+ <br></td></tr>
+</table>
+</td>
+</tr>
+</table>
+
+</td>
+</tr>
+</table>
+<br>
+~$SUBFOOTER`
+<br>
+~$FOOT`
+</body>
+</html>

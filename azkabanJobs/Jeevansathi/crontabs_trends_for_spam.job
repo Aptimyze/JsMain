@@ -1,0 +1,2 @@
+type=command
+command=${php5} ${docRoot}/crontabs/trends_for_spam.php

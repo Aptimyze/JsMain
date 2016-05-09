@@ -1,0 +1,247 @@
+<link rel="stylesheet" type="text/css" href="~$SITE_URL`/min/?f=/profile/css/~$hdr_css`,/profile/css/~$my_js_css`">
+<script>
+function display_error(doc)
+{
+	~if $MSG`
+		parent.document.getElementById('vishwas1').style.display="block";
+		parent.document.getElementById('vishwas2').style.display="none";
+		parent.document.getElementById('vishwasmsg').style.display="block";
+		~if $ERROR`
+			parent.document.getElementById('vishwasmsg').innerHTML='';
+			parent.document.getElementById('vishwasmsg').innerHTML='<span style="color:#FF0000"><b><img src="~$IMG_URL`/profile/images/iconError_16x16.gif"> ~$ERROR`</b></span>';
+		~else`
+			parent.document.getElementById('vishwas1').innerHTML='<u style="_top:475px; top:464px; ">3</u><span style="color:green"><b><img src="~$IMG_URL`/profile/images/tick_g.gif"> Uploaded Successfully</b></span><h4><em>Postal Address</em></h4><p>The address proof provided by you is under screening. In the meanwhile, please verify your email id<br />and phone number if not done already. The vishwas seal will be displayed on your profile as soon<br />as all three are verified. </p>';
+
+		~/if`
+	~/if`
+		return false;
+}
+</script>
+<body>
+
+
+<!-- Jeevansathi Vishwas Seal starts-->
+<div class="pink_box" style="width:705px; height:auto;">
+	<div class="tp_hdr">
+		<a href="#" class="fr b" onClick="$.colorbox.close();return false;" >Close [X]</a>
+		<div class="clr"></div>
+	</div>
+	<div class="fl p_rel" style=" overflow-y:auto; overflow-x:hidden;height:415px; width:705px;">
+		<div class="gtlk_cont fl d_inl" style="width:650px; margin:0 0 30px 19px; background:none;">
+			<div class="clr_15"></div>
+
+	<div class="clr_15"></div>
+	<div class="fl">
+<img src="~$IMG_URL`/profile/images/js_vishwas_seal.png" align="js" />
+</div>
+<div class="fr" style="width:521px;"><b class="org f_19">Jeevansathi.com Vishwas Seal</b><br />
+Add the seal of trust to your Jeevansathi.com's profile and see the response to your profile shoot up!
+Follow 3 simple steps to get the <b class="org">Jeevansathi.com Vishwas Seal</b></div>
+<div class="clr_15"></div>
+
+
+			<div class="clr_15"></div>
+			<div class="clr_15"></div>
+			<div style="height: 5px;">
+				<div class="c" style="border-width: 2px 0pt 0pt; margin: 0pt 5px -2px;"></div>
+				<s class="c c1"></s> 
+				<s class="c c2"></s> 
+				<s class="c c3"></s> 
+				<s class="c c4"></s> 
+			</div>
+
+			<div class="jvs_tup">
+				<div class="fl gtlk_mid_txt d_inl"> 
+					<u style="top:138px;">1</u>
+					 ~if $MOB_VER eq Y`
+					<h4><em>Mobile Number</em></h4>
+					<p class="pd_0 fl mr_8">Your number <b class="org">~$MYMOBILE`</b> is verified </p>
+					~elseif $RES_VER eq 'Y'`	
+					<h4><em>Landline Number</em></h4>
+					<p class="pd_0 fl mr_8">Your number <b class="org">~$PHONE_RES`</b> is verified </p>
+					~elseif $ALT_VER eq 'Y'`
+					<h4><em>Alternate Number</em></h4>
+					<p class="pd_0 fl mr_8">Your number <b class="org">~$ALT_MOBILE`</b> is verified </p>
+					~/if`
+					<i class="phne_icon btn_sprte fl mt_10"></i>
+				</div>
+				<div class="clr"></div>
+			</div>
+
+			<div class="clr"></div>
+			<div style="height: 5px; margin-top: -1px;"> 
+				<s class="c c4"></s> 
+				<s class="c c3"></s> 
+				<s class="c c2"></s> 
+				<s class="c c1"></s>
+				<div class="c gtlk_btm_cur"></div>
+			</div>
+		</div>
+
+		<div class="clr_15"></div>
+		<div class="gtlk_cont fl d_inl" style="width:650px; margin:0 0 30px 19px; background:none;">
+			<div style="height: 5px;">
+				<div class="c" style="border-width: 2px 0pt 0pt; margin: 0pt 5px -2px;"></div>
+				<s class="c c1"></s> 
+				<s class="c c2"></s> 
+				<s class="c c3"></s> 
+				<s class="c c4"></s> 
+			</div>
+
+			<div class="jvs_tup">
+				<div class="fl gtlk_mid_txt d_inl"> <u style="top:274px;">2</u>
+					<h4><em>Email ID</em></h4>
+					~if $emailverified`
+						<p class="pd_0 fl mr_8">Your email id is verified.</p>
+						<i class="err_txt sprte_icon fl d_inl grn_tck_icon mt_10"></i>
+					~else`
+						<p id="email_verify_id">The email id which you have provided is not verified.</p>
+						<p id="email_verify_id1"><a href="#" class="blink b" onClick="myjs_email_verify();return false;">Click Here</a> 
+						to receive a verification mail on ~$email`.<br>
+						Click on the link in the mail to verify your email id</p>
+					~/if`
+				</div>
+				<div class="clr"></div>
+			</div>
+
+			<div class="clr"></div>
+			<div style="height: 5px; margin-top: -1px;"> 
+				<s class="c c4"></s> 
+				<s class="c c3"></s> 
+				<s class="c c2"></s> 
+				<s class="c c1"></s>
+				<div class="c gtlk_btm_cur"></div>
+			</div>
+
+		</div>
+
+		<div class="clr_15"></div>
+		<div class="gtlk_cont fl d_inl" style="width:650px; margin:0 0 30px 19px; background:none;">
+			<div style="height: 5px;">
+				<div class="c" style="border-width: 2px 0pt 0pt; margin: 0pt 5px -2px;"></div>
+				<s class="c c1"></s> 
+				<s class="c c2"></s> 
+				<s class="c c3"></s> 
+				<s class="c c4"></s> 
+			</div>
+
+			<div class="jvs_tup">
+				<div class="fl gtlk_mid_txt d_inl" id="vishwas1"> 
+					<u style="_top:479px; top:468px; ">3</u>
+
+					<!--Added-->
+					<span id="vishwasmsg"class="b t18 italic" style="display:none">
+					</span>
+					<br>
+					<!--Added-->
+					<h4><em>Postal Address</em></h4>
+
+					~if $postalverified`
+						<p class="pd_0 fl mr_8">Your postal address is verified.</p>
+						<i class="err_txt sprte_icon fl d_inl grn_tck_icon mt_10"></i>
+					~elseif $postalunderScreening`
+					        <p>The address proof provided by you is under screening. In the meanwhile, please verify your email id<br />and phone number if not done already. The vishwas seal will be displayed on your profile as soon<br />as all three are verified. </p>
+					~else`
+					<p>Your Postal Address is not verified.</p>
+					<p><b>To verify your postal address, you can upload a scanned copy of any one of</b></p>
+					<p>1. Ration Card<br />
+					2. Passport<br />
+					3. Insurance Policy<br />
+					4. Telephone Bill<br />
+					5. Electricity Bill<br />
+					6. House Tax Bill<br />
+					7. Income Tax Certificate<br />
+					8. Lease Agreement<br />
+					9. Water Bill </p>
+					<div class="clr"></div>
+					<div>
+
+					<form style="margin: 0px;" name=fr1 method="POST" action="myjs_vishwas_seal.php" enctype="multipart/form-data" target="upload_target" onsubmit="lavesh();">
+					<iframe id="upload_target" name="upload_target" src="" style="width:0px;height:0px;border:0px" onLoad="return display_error(document);"></iframe>
+					<input type="file" name="filename" style="float:left;"><input type="hidden" name="checksum" value=~$checksum`>
+					<input type="image" src="~$IMG_URL`/profile/images/upload_btn.gif" style="border:none;float:left;margin:1px 0px 0px 4px;width:61px;" onClick="submit_form();">
+					</form>
+					<!--input type="file">
+					<input type="button" value="upload"-->
+					</div>
+					<div class="clr"></div>
+					<p class="pd_0">or</p>
+					<p> post an attested photocopy to our address:</p>
+					<p><b>Jeevansathi.com<br />
+					Shaily Patwal<br />
+					B-8, Sector- 132,<br />
+					Noida -201301</b></p>
+					<p>(Kindly mention your jeevansathi.com user id on the back of the envelope)</p>
+					~/if`
+				</div>
+				<!--Added-->
+				<div class="green_b_l_cur" style="padding:20px 15px 0 60px;display:none;" id="vishwas2">
+					<img src="~$IMG_URL`/profile/images/loader_big.gif">
+				</div>
+				<!--Added-->
+				<div class="clr"></div>
+			</div>
+			<div class="clr"></div>
+			<div style="height: 5px; margin-top: -1px;"> 
+				<s class="c c4"></s> 
+				<s class="c c3"></s> 
+				<s class="c c2"></s> 
+				<s class="c c1"></s>
+				<div class="c gtlk_btm_cur"></div>
+			</div>
+		</div>
+	</div>
+	<div class="clr"></div>
+</div>
+<script>
+var mypid=~$profileid`;
+var mychecksum='~$checksum`';
+
+function submit_form()
+{
+	document.fr1.submit();
+}
+function myjs_checkXmlHttpStatus_email_verify()
+{
+        if (req.readyState != 4)
+        {
+                return;
+        }
+        if (req.status == 200)
+        {	
+                if(req.responseText=='N')
+			document.getElementById('email_verify_id').innerHTML='<b class="red"><img src="~$IMG_URL`/profile/images/iconError_16x16.gif">An error has occurred! We will be correcting this problem at the earliest. Kindly check back later.</b>';
+		else
+			document.getElementById('email_verify_id').innerHTML="A verification email has been sent to <b class='b orange'>" + req.responseText + "</b>. Click on the link in the mail to verify your email id.<br><a href='#' class='blink b' onclick='myjs_email_verify();return false;'>Click Here</a> to send the mail again.";
+        }       
+}
+
+function myjs_email_verify()
+{
+        var to_post = "checksum=" + mychecksum;
+        var req = createNewXmlHttpObject();
+        req.open("POST","/P/myjs_resend_email_verify.php",true);
+        req.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+        req.send(to_post);
+        document.getElementById('email_verify_id').innerHTML='<img src="~$IMG_URL`/profile/images/loader_big.gif">';
+	document.getElementById('email_verify_id1').style.display="none";
+        req.onreadystatechange = myjs_checkXmlHttpStatus_email_verify;
+        return false;
+}
+
+function lavesh()
+{
+	if(document.fr1.filename.value=='')
+        {
+                alert('Please select a document to upload!!');
+                return;
+        }
+	document.getElementById('vishwas1').style.display="none";
+	document.getElementById('vishwas2').style.display="block";
+	document.getElementById('vishwasmsg').style.display="none";
+	return true;
+}
+
+</script>
+</body>
+</html>

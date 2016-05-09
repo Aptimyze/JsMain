@@ -1,0 +1,371 @@
+<html>
+<head>
+<title>JeevanSathi Matrimonials - Search Results</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="I/styles.php" type="text/css">
+<script language="javascript">
+<!--
+
+function MM_openBrWindow(theURL,winName,features)
+{
+	window.open(theURL,winName,features);
+}
+
+function checkDrop(formName)
+{
+	if(document.form1.buttonno.value==1 && formName.SELaction1.value=="")
+	{
+		alert ("Please select an appropriate action from the dropdown");
+		return false;
+	}
+	
+	if(document.form1.buttonno.value==2 && formName.SELaction2.value=="")
+	{
+		alert ("Please select an appropriate action from the dropdown");
+		return false;
+	}
+	
+	return true;
+}
+
+function check1(inum)
+{
+	document.form1.buttonno.value=inum;
+}
+	
+function checkAll()
+{
+	var docF=document.form1;
+	
+	for(var i=0;i<docF.elements.length;i++)
+	{
+		if(docF.elements[i].type=="checkbox")
+			docF.elements[i].checked=docF.checkfull.checked;
+	}
+}
+
+//-->
+</SCRIPT>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body leftmargin="5" topmargin="5">
+~$HEAD`
+~$SUBHEADER`
+<table width="760" border="0" cellpadding="0" cellspacing="0" align="center">
+<tr>
+<td colspan="3" height="5"></td>
+<SPACER height="5" type="block"></SPACER> 
+</tr>
+<tr>
+<td width="187" height="578" valign="top" class="bgyell"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr height="2">
+    <td bgcolor="#FFFFFF"><div align="center">~$TOPLEFT`</div></td>
+  </tr>
+  <tr height="2">
+    <td height="526">~$LEFTPANEL`</td>
+        </tr>
+      </table>
+      </td>
+  </tr>
+</table></td>
+<TD class=small vAlign=top width=10><B>
+<SPACER type="block" width="10"></B></TD>
+<td width="584" valign="top">            
+<table width="98%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+       <td height="4"></td>
+       <SPACER height="4" type="block"></SPACER> </tr>
+      <tr>
+       <td class="headbigblack"><b>Search Results </b></td>
+      </tr>
+      <tr class="bgred">
+       <td height="1"></td>
+       <SPACER height="1" type="block"></SPACER> </tr>
+        <tr>
+       <td height="8"></td>
+       <SPACER height="8" type="block"></SPACER> </tr>
+     </table></td>
+  </tr>
+  <TR>
+    <TD colSpan=15 height=5><SPACER height="5" type="block"></TD>
+  </TR>
+  ~if $RECORDCOUNT eq "0" or $RECORDCOUNT eq ""`
+  <TR>
+<TD height=5 colSpan=15 class="bigred">No results found. Please refine your search criteria</TD>
+</TR>
+~/if`
+</table>
+~if $RECORDCOUNT neq "0" and $RECORDCOUNT neq ""`
+<table width="98%"  border="0" cellspacing="0" cellpadding="0">
+<form name="form1" action="searchaction.php" method="post" onsubmit="return checkDrop(this);">
+<tr class="bggrey">
+<td colspan="2"><table width="100%"  border="0" cellpadding="1" cellspacing="1">
+<tr>
+<td width="361" height="23">
+<table width="81%" border="0" cellpadding="0" cellspacing="0">
+<tr>
+  <td width="169" class="mediumblack"><div align="center"><span class="class5"><a href="" onClick="MM_openBrWindow('signsmean.htm','','width=425,height=225'); return false;">What do these signs mean?</a></span></div></td>
+  <td width="20"><img src="~$IMG_URL`/profile/ser4_images/ac.gif" width="13" height="13"></td>
+  <td width="20"><img src="~$IMG_URL`/profile/ser4_images/rj.gif" width="13" height="13"></td>
+  <td width="20"><img src="~$IMG_URL`/profile/ser4_images/open.gif" width="12" height="10"></td>
+  <td width="20"><img src="~$IMG_URL`/profile/ser4_images/whitecam.gif" width="14" height="12"></td>
+  <td width="20"><img src="~$IMG_URL`/profile/ser4_images/bm.gif" width="11" height="13"></td>
+</tr>
+</table></td>
+<td width="135"><select name="SELaction1" class="testbox">
+<option value="">Select one option</option>
+<option value="C">Initiate Contact</option>
+<option value="B">Bookmark</option>
+</select></td>
+<td width="53"><input type="hidden" name="searchchecksum" value="~$SEARCHCHECKSUM`"><input type="hidden" name="checksum" value="~$CHECKSUM`"><input type="hidden" name="scriptname" value="~$SCRIPTNAME`"><input type="hidden" name="pageno" value="~$BACK_TO_SEARCH_PAGE`"><input type="hidden" name="buttonno" value=""><input name="CMDsubmit1" type="submit" class="TextBox" value="Submit" onclick="check1(1);"></td>
+</tr>
+</table></td>
+</tr>
+<TR>
+<TD colSpan=15 height=8><SPACER height="8" type="block"></TD>
+</TR>
+<tr>
+  <td width="51%"><b class="mediumblack">~$RECORDCOUNT` matches found </b></td>
+  <td width="49%"><div align="right"><strong class="mediumblack">Page ~$CURPAGE` of ~$NO_OF_PAGES` </strong></div></td>
+</tr>
+<tr>
+  <td colspan="2" height="3"></td>
+  <SPACER height="3" type="block"></SPACER> </tr>
+</table>
+<table width="98%" height="20" border="0" cellpadding="0" cellspacing="0">
+~section name=i loop=$ROWS`
+
+	~if $ROWS[i].RELATION eq '1'`
+		~if $ROWS[i].RANDOM_NUM eq '1'`
+		  <tr>
+		  <td class="mediumblack" height="30">I am ~$ROWS[i].AGE` years old, ~$ROWS[i].COMPLEXION`, ~$ROWS[i].HEIGHT` tall,~$ROWS[i].CASTE` ~$ROWS[i].GENDER`, ~$ROWS[i].OCCUPATION`, earning ~$ROWS[i].INCOME`. My username is : ~$ROWS[i].USERNAME`</td>	
+		  </tr> 		
+		~else`
+		  <tr>
+		  <td class="mediumblack" height="30">This is ~$ROWS[i].USERNAME`, ~$ROWS[i].AGE` years old, ~$ROWS[i].COMPLEXION`, ~$ROWS[i].HEIGHT` tall ~$ROWS[i].CASTE` ~$ROWS[i].GENDER` from ~$ROWS[i].RESIDENCE`, ~$ROWS[i].OCCUPATION`, earning ~$ROWS[i].INCOME`.  </td>	
+		  </tr>	
+		~/if`		
+	~else`
+		~if $ROWS[i].RANDOM_NUM eq '1'`
+		  <tr>
+		  <td class="mediumblack" height="30">Wanted alliance for ~$ROWS[i].USERNAME`, ~$ROWS[i].AGE` years old ~$ROWS[i].CASTE` ~$ROWS[i].GENDER`. ~if $ROWS[i].GENDER eq "male"` He ~else` She ~/if` is ~$ROWS[i].COMPLEXION`, ~$ROWS[i].HEIGHT` tall and resides in ~$ROWS[i].RESIDENCE`, ~$ROWS[i].OCCUPATION`, earning ~$ROWS[i].INCOME`. </td>	
+		  </tr>				
+		~elseif $ROWS[i].RANDOM_NUM eq '2'`
+		  <tr>
+		  <td class="mediumblack" height="30">We invite matches for ~$ROWS[i].AGE` years old ~$ROWS[i].CASTE` ~$ROWS[i].GENDER`, ~$ROWS[i].COMPLEXION`, ~$ROWS[i].HEIGHT` tall, ~$ROWS[i].OCCUPATION`, earning ~$ROWS[i].INCOME`. ~if $ROWS[i].GENDER eq "male"` His ~else` Her ~/if` username is : ~$ROWS[i].USERNAME` </td>	
+		  </tr>	
+		~else`
+		  <tr>
+		    <td class="mediumblack" height="30">Wanted ~if $ROWS[i].GENDER eq "male"` bride ~else` groom ~/if` for a ~$ROWS[i].CASTE` ~$ROWS[i].GENDER`, ~$ROWS[i].AGE`, ~$ROWS[i].HEIGHT`, ~$ROWS[i].COMPLEXION`, ~$ROWS[i].OCCUPATION`, earning ~$ROWS[i].INCOME`. Username is : ~$ROWS[i].USERNAME`</td>	
+		  </tr>		
+		~/if`
+
+	~/if`
+<TR>
+  <TD height=1 colSpan=16><SPACER height="3" type="block"></TD>
+</TR>
+
+<TR bgcolor="#cccccc">
+  <TD height=1 colSpan=16><SPACER height="3" type="block"></TD>
+</TR>
+
+~/section`
+</table>
+<!--
+</table> -->
+<table>
+<tr><td class="mediumblack"><br>
+~$PAGELINK`
+</td></tr>
+</table>
+  <table width="98%"  border="0" cellpadding="1" cellspacing="1">
+    <tr class="bggrey">
+      <td width="359" height="23"><div align="left"></div>
+      </td>
+      <td width="135"><select name="SELaction2" class="testbox">
+          <option value="">Select one option</option>
+          <option value="C">Initiate Contact</option>
+          <option value="B">Bookmark</option>
+      </select></td>
+      <td width="55"><input name="CMDsubmit2" type="submit" class="TextBox" value="Submit" onclick="check1(2);"></td>
+    </tr>
+    </form>
+  </table>
+  ~/if`
+  <br>
+  <form name="searchbar" method="post" action="search.php">
+  <table width="450" height="105" border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#FEC45E">
+<tr>
+<td valign="top"><table width="450" height="105" border="0" align="center" cellpadding="3" cellspacing="0" bgcolor="#FFFFFF">
+<tr class="bgyell">
+<td colspan="2" class=mediumblack><div align="center"><b class="mediumblack">Search Partner</b></div></td>
+</tr>
+<tr bgcolor="#FFFFFF">
+<td colspan="2" class=mediumblack><table width="450" border="0" cellspacing="0" cellpadding="0">
+<tr>
+  <td width="100" class="mediumblack">Searching For</td>
+  <td width="80"><select name="Gender" class="TextBox" >
+<option value="M" ~if $SEARCHGENDER eq "M"`selected~/if`>Male</option>
+<option value="F" ~if $SEARCHGENDER eq "F"`selected~/if`>Female</option>
+</select></td>
+  <td width="40" class="mediumblack">Caste</td>
+  <td width="230"><select name="Caste" class="TextBox">
+<option value="" selected>All</option>
+~$SEARCHCASTE`
+</select></td>
+</tr>
+</table></td>
+</tr>
+<tr bgcolor="#FFFFFF">
+<td width="96" class=mediumblack>Mother Tongue</td>
+<td width="350"><select name="Mtongue" size="1" class="TextBox">
+<option selected value="">All</option>
+~$SEARCHMTONGUE`
+</select></td>
+</tr>
+<tr bgcolor="#FFFFFF">
+<td height="38" colspan="2" bgcolor="#FFFFFF" class=mediumblack><table width="450" border="0" cellspacing="1" cellpadding="0">
+<tr>
+<td width="100" class="mediumblack">Age</td>
+<td width="225"><table width="65%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+  <td width="59" ><select name="lage" class="TextBox">
+<option value="18" ~if $SEARCHLAGE eq "18"`selected~/if`>18</option>
+<option value="19" ~if $SEARCHLAGE eq "19"`selected~/if`>19</option>
+<option value="20" ~if $SEARCHLAGE eq "20"`selected~/if`>20</option>
+<option value="21" ~if $SEARCHLAGE eq "21"`selected~/if`>21</option>
+<option value="22" ~if $SEARCHLAGE eq "22"`selected~/if`>22</option>
+<option value="23" ~if $SEARCHLAGE eq "23"`selected~/if`>23</option>
+<option value="24" ~if $SEARCHLAGE eq "24"`selected~/if`>24</option>
+<option value="25" ~if $SEARCHLAGE eq "25"`selected~/if`>25</option>
+<option value="26" ~if $SEARCHLAGE eq "26"`selected~/if`>26</option>
+<option value="27" ~if $SEARCHLAGE eq "27"`selected~/if`>27</option>
+<option value="28" ~if $SEARCHLAGE eq "28"`selected~/if`>28</option>
+<option value="29" ~if $SEARCHLAGE eq "29"`selected~/if`>29</option>
+<option value="30" ~if $SEARCHLAGE eq "30"`selected~/if`>30</option>
+<option value="31" ~if $SEARCHLAGE eq "31"`selected~/if`>31</option>
+<option value="32" ~if $SEARCHLAGE eq "32"`selected~/if`>32</option>
+<option value="33" ~if $SEARCHLAGE eq "33"`selected~/if`>33</option>
+<option value="34" ~if $SEARCHLAGE eq "34"`selected~/if`>34</option>
+<option value="35" ~if $SEARCHLAGE eq "35"`selected~/if`>35</option>
+<option value="36" ~if $SEARCHLAGE eq "36"`selected~/if`>36</option>
+<option value="37" ~if $SEARCHLAGE eq "37"`selected~/if`>37</option>
+<option value="38" ~if $SEARCHLAGE eq "38"`selected~/if`>38</option>
+<option value="39" ~if $SEARCHLAGE eq "39"`selected~/if`>39</option>
+<option value="40" ~if $SEARCHLAGE eq "40"`selected~/if`>40</option>
+<option value="41" ~if $SEARCHLAGE eq "41"`selected~/if`>41</option>
+<option value="42" ~if $SEARCHLAGE eq "42"`selected~/if`>42</option>
+<option value="43" ~if $SEARCHLAGE eq "43"`selected~/if`>43</option>
+<option value="44" ~if $SEARCHLAGE eq "44"`selected~/if`>44</option>
+<option value="45" ~if $SEARCHLAGE eq "45"`selected~/if`>45</option>
+<option value="46" ~if $SEARCHLAGE eq "46"`selected~/if`>46</option>
+<option value="47" ~if $SEARCHLAGE eq "47"`selected~/if`>47</option>
+<option value="48" ~if $SEARCHLAGE eq "48"`selected~/if`>48</option>
+<option value="49" ~if $SEARCHLAGE eq "49"`selected~/if`>49</option>
+<option value="50" ~if $SEARCHLAGE eq "50"`selected~/if`>50</option>
+<option value="51" ~if $SEARCHLAGE eq "51"`selected~/if`>51</option>
+<option value="52" ~if $SEARCHLAGE eq "52"`selected~/if`>52</option>
+<option value="53" ~if $SEARCHLAGE eq "53"`selected~/if`>53</option>
+<option value="54" ~if $SEARCHLAGE eq "54"`selected~/if`>54</option>
+<option value="55" ~if $SEARCHLAGE eq "55"`selected~/if`>55</option>
+<option value="56" ~if $SEARCHLAGE eq "56"`selected~/if`>56</option>
+<option value="57" ~if $SEARCHLAGE eq "57"`selected~/if`>57</option>
+<option value="58" ~if $SEARCHLAGE eq "58"`selected~/if`>58</option>
+<option value="59" ~if $SEARCHLAGE eq "59"`selected~/if`>59</option>
+<option value="60" ~if $SEARCHLAGE eq "60"`selected~/if`>60</option>
+<option value="61" ~if $SEARCHLAGE eq "61"`selected~/if`>61</option>
+<option value="62" ~if $SEARCHLAGE eq "62"`selected~/if`>62</option>
+<option value="63" ~if $SEARCHLAGE eq "63"`selected~/if`>63</option>
+<option value="64" ~if $SEARCHLAGE eq "64"`selected~/if`>64</option>
+<option value="65" ~if $SEARCHLAGE eq "65"`selected~/if`>65</option>
+<option value="66" ~if $SEARCHLAGE eq "66"`selected~/if`>66</option>
+<option value="67" ~if $SEARCHLAGE eq "67"`selected~/if`>67</option>
+<option value="68" ~if $SEARCHLAGE eq "68"`selected~/if`>68</option>
+<option value="69" ~if $SEARCHLAGE eq "69"`selected~/if`>69</option>
+<option value="70" ~if $SEARCHLAGE eq "70"`selected~/if`>70</option>
+</select>
+</td>
+<td class=mediumblack width="44">to</td>
+<td width="13"><select name="hage" class="TextBox">
+<option value="18" ~if $SEARCHHAGE eq "18"`selected~/if`>18</option>
+<option value="19" ~if $SEARCHHAGE eq "19"`selected~/if`>19</option>
+<option value="20" ~if $SEARCHHAGE eq "20"`selected~/if`>20</option>
+<option value="21" ~if $SEARCHHAGE eq "21"`selected~/if`>21</option>
+<option value="22" ~if $SEARCHHAGE eq "22"`selected~/if`>22</option>
+<option value="23" ~if $SEARCHHAGE eq "23"`selected~/if`>23</option>
+<option value="24" ~if $SEARCHHAGE eq "24"`selected~/if`>24</option>
+<option value="25" ~if $SEARCHHAGE eq "25"`selected~/if`>25</option>
+<option value="26" ~if $SEARCHHAGE eq "26"`selected~/if`>26</option>
+<option value="27" ~if $SEARCHHAGE eq "27"`selected~/if`>27</option>
+<option value="28" ~if $SEARCHHAGE eq "28"`selected~/if`>28</option>
+<option value="29" ~if $SEARCHHAGE eq "29"`selected~/if`>29</option>
+<option value="30" ~if $SEARCHHAGE eq "30"`selected~/if`>30</option>
+<option value="31" ~if $SEARCHHAGE eq "31"`selected~/if`>31</option>
+<option value="32" ~if $SEARCHHAGE eq "32"`selected~/if`>32</option>
+<option value="33" ~if $SEARCHHAGE eq "33"`selected~/if`>33</option>
+<option value="34" ~if $SEARCHHAGE eq "34"`selected~/if`>34</option>
+<option value="35" ~if $SEARCHHAGE eq "35"`selected~/if`>35</option>
+<option value="36" ~if $SEARCHHAGE eq "36"`selected~/if`>36</option>
+<option value="37" ~if $SEARCHHAGE eq "37"`selected~/if`>37</option>
+<option value="38" ~if $SEARCHHAGE eq "38"`selected~/if`>38</option>
+<option value="39" ~if $SEARCHHAGE eq "39"`selected~/if`>39</option>
+<option value="40" ~if $SEARCHHAGE eq "40"`selected~/if`>40</option>
+<option value="41" ~if $SEARCHHAGE eq "41"`selected~/if`>41</option>
+<option value="42" ~if $SEARCHHAGE eq "42"`selected~/if`>42</option>
+<option value="43" ~if $SEARCHHAGE eq "43"`selected~/if`>43</option>
+<option value="44" ~if $SEARCHHAGE eq "44"`selected~/if`>44</option>
+<option value="45" ~if $SEARCHHAGE eq "45"`selected~/if`>45</option>
+<option value="46" ~if $SEARCHHAGE eq "46"`selected~/if`>46</option>
+<option value="47" ~if $SEARCHHAGE eq "47"`selected~/if`>47</option>
+<option value="48" ~if $SEARCHHAGE eq "48"`selected~/if`>48</option>
+<option value="49" ~if $SEARCHHAGE eq "49"`selected~/if`>49</option>
+<option value="50" ~if $SEARCHHAGE eq "50"`selected~/if`>50</option>
+<option value="51" ~if $SEARCHHAGE eq "51"`selected~/if`>51</option>
+<option value="52" ~if $SEARCHHAGE eq "52"`selected~/if`>52</option>
+<option value="53" ~if $SEARCHHAGE eq "53"`selected~/if`>53</option>
+<option value="54" ~if $SEARCHHAGE eq "54"`selected~/if`>54</option>
+<option value="55" ~if $SEARCHHAGE eq "55"`selected~/if`>55</option>
+<option value="56" ~if $SEARCHHAGE eq "56"`selected~/if`>56</option>
+<option value="57" ~if $SEARCHHAGE eq "57"`selected~/if`>57</option>
+<option value="58" ~if $SEARCHHAGE eq "58"`selected~/if`>58</option>
+<option value="59" ~if $SEARCHHAGE eq "59"`selected~/if`>59</option>
+<option value="60" ~if $SEARCHHAGE eq "60"`selected~/if`>60</option>
+<option value="61" ~if $SEARCHHAGE eq "61"`selected~/if`>61</option>
+<option value="62" ~if $SEARCHHAGE eq "62"`selected~/if`>62</option>
+<option value="63" ~if $SEARCHHAGE eq "63"`selected~/if`>63</option>
+<option value="64" ~if $SEARCHHAGE eq "64"`selected~/if`>64</option>
+<option value="65" ~if $SEARCHHAGE eq "65"`selected~/if`>65</option>
+<option value="66" ~if $SEARCHHAGE eq "66"`selected~/if`>66</option>
+<option value="67" ~if $SEARCHHAGE eq "67"`selected~/if`>67</option>
+<option value="68" ~if $SEARCHHAGE eq "68"`selected~/if`>68</option>
+<option value="69" ~if $SEARCHHAGE eq "69"`selected~/if`>69</option>
+<option value="70" ~if $SEARCHHAGE eq "70"`selected~/if`>70</option>
+</select>
+  </td>
+</tr>
+</table></td>
+<td width="125" colspan="2" rowspan="2" class="mediumblack"><input type="hidden" name="checksum" value="~$CHECKSUM`"><input name="CMDsubmit" type="submit" class="TextBox" value="Search"></td>
+</tr>
+<tr>
+<td height="14" width="100" class="mediumblack">Photos</td>
+<td><input type="checkbox" name="Photos" value="Y" ~if $SEARCHWITHPHOTO eq "Y"`checked~/if`></td>
+</tr>
+</table></td>
+</tr>
+</table></td>
+</tr>
+</table>
+</form></td>
+</tr>
+</table></td>
+</tr>
+</table></td>
+</tr>
+</table>
+<br>
+~$SUBFOOTER`
+<br>
+~$FOOT`
+</body>
+</html>

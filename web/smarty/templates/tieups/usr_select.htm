@@ -1,0 +1,518 @@
+<html>
+<head>
+<title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="~$SITE_URL`/profile/images/styles.css" type="text/css">
+</head>
+<body>
+~$HEAD`
+<br>
+
+<form name="f1" action="usr_hits.php" method="post">
+  
+
+  <span> </span>
+  <div class="tableWrap">
+	<input type="hidden" name="sourcegp" value="~$SOURCEGP`">
+	<input type="hidden" id="submitMis" name="submitMis" value=0>
+	<input type="hidden" id="formatType" name="formatType" value="html"/>
+	<input type="hidden" id="mobileVerify" name="mobileVerify" value="Y"/>
+	<input type="hidden" id="photo" name="photo" value="A"/>
+	<input type="hidden" id="duplicate" name="duplicate" value="N"/>
+	<input type="hidden" id="mtongueArr" name="mtongueArr[]" value=""/>
+	<input type="hidden" id="profileActivArr" name="profileActivArr[]" value=""/>
+	<input type="hidden" id="outsideLocation" name="outsideLocation" value=0>
+	<input type="hidden" id="allIndiaSelected" name="allIndiaSelected" value=0>
+	<input type="hidden" id="preferredStatesSelected" name="preferredStatesSelected" value=1>
+	<input type="hidden" id="allMtongueSelected" name="allMtongueSelected" value=1>
+	<input type="hidden" id="preferredMtongueSelected" name="preferredMtongueSelected" value=0>
+	<input type="hidden" id="indianLocationArr" name="indianLocationArr[]" value="">
+	~if $MULTIPLE eq 'Y'`
+	<table width=100%>
+	<tr>
+	<td width=100% align=center>Select source &nbsp;&nbsp; 
+	<select name=group>
+	~section name=sec loop=$gparr`
+		~if $gparr[sec] eq google_custom`
+			<option value="~$gparr[sec]`" selected >~$gparr[sec]`</option>
+		~else`
+			<option value="~$gparr[sec]`">~$gparr[sec]`</option>
+		~/if`
+	~/section`
+	</select>
+	</td>
+	</tr>
+	</table>
+	~/if`
+	<input type=hidden name=cid value=~$CID`>
+  <table border="0" align="center" cellpadding="1" cellspacing="1"  >
+    <tbody>
+      <tr>
+        <td colspan="6" align="left"><table border="0" align="left" cellpadding="1" cellspacing="1">
+            <tbody id="dateCondition">
+              <tr>
+                <!--<td><input name="radioNoRange" id="radioNoRange" checked="checked" onClick="radioSelect(1)" type="radio" style="padding:0; margin:0;"></td>
+                <td>Select reporting Month and Year </td>
+                <td><select name="ddate_mon">
+					~section name=src loop=$rangeMon`
+					~if $cMon eq $rangeMon[src]`
+					<option value=~$smarty.section.src.index` selected >~$rangeMon[src]`</option>
+					~else`
+					<option value=~$smarty.section.src.index`>~$rangeMon[src]`</option>
+					~/if`
+					~/section`
+                  </select></td>
+                <td><select name="ddate_yyyy">
+					~section name=src loop=$rangeYear`
+					~if $cYear eq $rangeYear[src]`
+					<option value=~$rangeYear[src]` selected>~$rangeYear[src]`</option>
+					~else`
+					<option value=~$rangeYear[src]`>~$rangeYear[src]`</option>
+					~/if`
+					~/section`
+                  </select></td>
+                <td colspan="3" align="center">&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>-->
+                <td><input name="radioRange" checked="checked" id="radioRange" onClick="radioSelect(0)" type="radio"  style="padding:0; margin:0;"></td>
+                <td>Select reporting Date range </td>
+                 <td><select name="ddate_date1" id= "ddate_date1">
+                    ~section name=src loop=$rangeDate`
+					~if $cDate30 eq $rangeDate[src]`
+					<option value=~$rangeDate[src]` selected>~$rangeDate[src]`</option>
+					~else`
+					<option value=~$rangeDate[src]`>~$rangeDate[src]`</option>
+					~/if`
+					~/section`
+                  </select></td>
+                <td><select name="ddate_mon1" id= "ddate_mon1">
+                    ~section name=src loop=$rangeMon`
+					~if $cMon30 eq $rangeMon[src]`
+					<option value=~$smarty.section.src.index` selected >~$rangeMon[src]`</option>
+					~else`
+					<option value=~$smarty.section.src.index`>~$rangeMon[src]`</option>
+					~/if`
+					~/section`
+                  </select></td>
+                <td><select name="ddate_yyyy1" id= "ddate_yyyy1">
+                    ~section name=src loop=$rangeYear`
+					~if $cYear30 eq $rangeYear[src]`
+					<option value=~$rangeYear[src]` selected>~$rangeYear[src]`</option>
+					~else`
+					<option value=~$rangeYear[src]`>~$rangeYear[src]`</option>
+					~/if`
+					~/section`
+                  </select></td>               
+                <td></td>
+                <td></td>
+                <td> To </td>
+                <td></td>
+                <td></td>
+                <td><select name="ddate_date2" id= "ddate_date2">
+			   ~section name=src loop=$rangeDate`
+				~if $cDate eq $rangeDate[src]`
+				<option value=~$rangeDate[src]` selected>~$rangeDate[src]`</option>
+				~else`
+				<option value=~$rangeDate[src]`>~$rangeDate[src]`</option>
+				~/if`
+				~/section`
+                  </select></td>
+                <td><select name="ddate_mon2" id= "ddate_mon2">
+				~section name=src loop=$rangeMon`
+				~if $cMon eq $rangeMon[src]`
+				<option value=~$smarty.section.src.index` selected >~$rangeMon[src]`</option>
+				~else`
+				<option value=~$smarty.section.src.index`>~$rangeMon[src]`</option>
+				~/if`
+				~/section`
+                 </select></td>
+                <td><select name="ddate_yyyy2" id= "ddate_yyyy2">
+                 ~section name=src loop=$rangeYear`
+				~if $cYear eq $rangeYear[src]`
+				<option value=~$rangeYear[src]` selected>~$rangeYear[src]`</option>
+				~else`
+				<option value=~$rangeYear[src]`>~$rangeYear[src]`</option>
+				~/if`
+				~/section`
+                  </select></td>                
+                   <td colspan="6" align="center">&nbsp;</td>
+              </tr>
+             
+            </tbody>
+            
+          </table></td>
+          
+      </tr>
+      <tr>
+        <td valign="top"><strong>Profile Activation:</strong></td>
+        <td valign="top"><input name="allActivation" class="proActiv" value="A" type="checkbox">
+          Complete</td>
+        <td valign="top"><input name="yesActivation" checked="checked" class="proActiv" value="Y" type="checkbox">
+          Yes</td>
+        <td valign="top"><input name="noActivation" class="proActiv" value="N" type="checkbox">
+          No</td>
+        <td valign="top"><input name="hiddenActivation" class="proActiv" value="H" type="checkbox">
+          Hidden</td>
+        <td valign="top"><input name="deletedActivation" class="proActiv" value="D" type="checkbox">
+          Deleted</td>
+      </tr>
+      <tr>
+        <td valign="top"><strong>Phone Verified:</strong></td>
+        <td valign="top"><input name="allVerify" id="allVerify" value="A" onClick="checkBoxVerify(0)" type="radio">
+          All</td>
+        <td valign="top"><input name="yesVerify" id="yesVerify" checked="checked" value="Y" onClick="checkBoxVerify(1)" type="radio">
+          Yes</td>
+        <td valign="top"><input name="noVerify" id="noVerify" value="N" onClick="checkBoxVerify(2)" type="radio">
+          No</td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top">&nbsp;</td>
+      </tr>
+      <tr>
+        <td valign="top"><strong>Photo Present?:</strong></td>
+        <td valign="top"><input name="allPhoto" id="allPhoto" checked="checked" value="All" onClick="checkBoxPhoto(0)" type="radio">
+          All</td>
+        <td valign="top"><input name="yesPhoto" id="yesPhoto" value="Yes" onClick="checkBoxPhoto(1)" type="radio">
+          Yes</td>
+        <td valign="top"><input name="noPhoto" id="noPhoto" value="No" onClick="checkBoxPhoto(2)" type="radio">
+          No</td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top">&nbsp;</td>
+      </tr>
+      <tr>
+        <td valign="top"><strong>Mother Tongue:</strong></td>
+        <td colspan="4" valign="top"><select multiple="multiple" name="mtongues">
+		<option id ="allMtongue" name="allMtongue" checked  onclick="javascript:selectAllMtongue('allMtongue');" selected value="All">All</option>
+		<option  id ="preferredMtongue" name="preferredMtongue" class="preferredMtongue" onclick="javascript:selectAllMtongue('preferredMtongue');" value="preferredMtongue">Preferred</option>
+            ~section name=src loop=$mtongueArr`
+			~if $mtongueArr[src] neq ""`
+			<option name =~$mtongueArr[src].name` id=~$mtongueArr[src].value` class="mtongue" selected onclick="javascript:selectAllMtongue('selectedMtongue');">~$mtongueArr[src].name`</option>
+			~/if`
+			~/section`
+          </select></td>
+       
+      </tr>
+      <tr>
+        <td valign="top"><strong>Location:</strong></td>
+		<td colspan="6" valign="top"><select multiple="multiple" name="indianStates">
+		<option  name="outIndia" id = "outsideIndia" class="location" value="out" onclick="javascript:selectAllStates('outsideIndia');" >Outside India</option>
+		<option id ="allIndia" name="allIndia" checked class="location" onclick="javascript:selectAllStates('allIndia');" value="allIndia">All India</option>
+		<option  id ="preferredStates" name="preferredStates" class="preferredStates" selected onclick="javascript:selectAllStates('preferredStates');" value="preferredStates">Preferred</option>
+		~section name=src loop=$stateArr`
+		<option name =~$stateArr[src].name` id=~$stateArr[src].value` class="indianLocation"  onclick="javascript:selectAllStates('indianStates');">~$stateArr[src].name`</option>
+		~/section`
+          </select></td>
+      </tr>
+      <tr>
+        <td valign="top"><strong>Duplicate?:</strong></td>
+        <td valign="top"><input name="allDuplicate" id="allDuplicate" value="A" onClick="checkBoxDuplicate(0)" type="radio">
+          All</td>
+        <td valign="top"><input name="yesDuplicate" id="yesDuplicate" value="Y" onClick="checkBoxDuplicate(1)" type="radio">
+          Yes</td>
+        <td valign="top"><input name="noDuplicate" id="noDuplicate" checked="checked" value="N" onClick="checkBoxDuplicate(2)" type="radio">
+          No</td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top">&nbsp;</td>
+      </tr>
+      <tr>
+        <td colspan="6" align="center"></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <table align="center">
+    <tbody>
+      <tr>
+        <td><input name="htmlFormat" id="htmlFormat" checked="checked" onClick="radioSelectFormat(0)" type="radio">
+          HTML Format</td>
+        <td><input name="excelFormat" id="excelFormat" onClick="radioSelectFormat(1)" type="radio">
+          Excel Format</td>
+      </tr>
+    </tbody>
+  </table>
+  <table align="center">
+    <tbody>
+      <tr>
+        <td><input id="submit" name="submit" onClick="return appendData()" value="Submit" type="submit"></td>
+      </tr>
+    </tbody>
+  </table>
+</form>
+<br>
+<br>
+<br>
+<br>
+~$FOOT`
+<script type = "text/javascript" src = "https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>	
+<script>
+	if(document.getElementById("preferredStatesSelected").value==1){
+		if($("#"+"outsideIndia").is(":not(':checked')"))
+		{
+			document.getElementById("outsideLocation").value=0;
+		}					
+		document.getElementById("preferredStates").checked=true;
+		if($("#"+"allIndia").is(":not(':checked')")){
+			document.getElementById("allIndiaSelected").value=0;;
+			$(function() {
+				$(".indianLocation").each(function() {
+					var preferredArr = ["PU","UP","GU","MH","RA","AP","KA","BI","WB","CH","HA","KE","MP","PH","OR","HP","UK","GU","JH","JK",];
+					if(jQuery.inArray(this.id, preferredArr)!=-1){
+						this.selected=true;
+					}
+				});
+			});
+		}
+	}
+function appendData(){
+		
+		 if($("#"+"submitMis").val()==0){
+			 var d1 = new Date($("#"+"ddate_yyyy1").val(),$("#"+"ddate_mon1").val(),$("#"+"ddate_date1").val());
+			 var d2 = new Date($("#"+"ddate_yyyy2").val(),$("#"+"ddate_mon2").val(),$("#"+"ddate_date2").val());
+			var diffValue=92*24*60*60*1000;
+			var errtext1="<tr id=\"dateError\"><td colspan=\"6\" valign=\"top\" style=\"color:red;\">Please select a date range of less than 92 days.</td></tr>"
+			var errtext2="<tr id=\"dateError\"><td colspan=\"6\" valign=\"top\" style=\"color:red;\">First Date should be smaller than second date</td></tr>"
+			if(d2.getTime()-d1.getTime()<0){
+				$("#"+"dateError").remove();
+				$("#"+"dateCondition").append(errtext2);
+				return false;
+			}
+			else if(d2.getTime()-d1.getTime() > diffValue){
+				$("#"+"dateError").remove();
+				$("#"+"dateCondition").append(errtext1);
+				//$("#"+"dateError").attr("style", " color:red;visibility: visible");
+				return false;
+			}
+		
+		 }
+		 
+		 if(($("#preferredMtongueSelected").val()==0) && ($("#allMtongueSelected").val()==0)){
+			var mtongueArr = [];
+			$(".mtongue:selected").each(function() {
+				mtongueArr.push(this.id);
+			});
+			document.getElementById("mtongueArr").value=mtongueArr;
+		}
+		
+		var profileActivArr=[];
+		$(".proActiv:checked").each(function() {
+			profileActivArr.push(this.value);
+		});
+		document.getElementById("profileActivArr").value=profileActivArr;
+		
+		if ($("#preferredStatesSelected").val() && (!$("#allIndiaSelected").val()) && (!$("#outsideLocation").val())){
+			var indianLocationArr=["AP","AR","AS","BI","CH"];
+			document.getElementById("indianLocationArr").value=indianLocationArr;
+		}
+		else{
+			var indianLocationArr=[];
+			$(".indianLocation:selected").each(function() {
+				indianLocationArr.push(this.id);
+			});
+			document.getElementById("indianLocationArr").value=indianLocationArr;
+		}
+		
+		return true;
+}
+function radioSelect(val)
+{
+	if(val==1){
+		document.getElementById("radioRange").checked=false;
+		document.getElementById("submitMis").value=1;
+	}
+	else{
+		document.getElementById("radioNoRange").checked=false;
+		document.getElementById("submitMis").value=0;
+	}
+}
+function radioSelectFormat(val)
+{
+	if(val==1){
+		document.getElementById("htmlFormat").checked=false;
+		document.getElementById("formatType").value="excel";
+	}
+	else{
+		document.getElementById("excelFormat").checked=false;
+		document.getElementById("formatType").value="html";
+	}
+}
+function checkBoxVerify(val)
+{
+	if(val==1){
+		document.getElementById("allVerify").checked=false;
+		document.getElementById("yesVerify").checked=true;
+		document.getElementById("noVerify").checked=false;
+		document.getElementById("mobileVerify").value="Y";
+	}
+	else if(val==2){
+		document.getElementById("allVerify").checked=false;
+		document.getElementById("yesVerify").checked=false;
+		document.getElementById("noVerify").checked=true;
+		document.getElementById("mobileVerify").value="N";
+	}
+	else{
+		document.getElementById("allVerify").checked=true;
+		document.getElementById("yesVerify").checked=false;
+		document.getElementById("noVerify").checked=false;
+		document.getElementById("mobileVerify").value="A";
+	}
+}
+
+function checkBoxPhoto(val)
+{
+	if(val==1){
+		document.getElementById("allPhoto").checked=false;
+		document.getElementById("yesPhoto").checked=true;
+		document.getElementById("noPhoto").checked=false;
+		document.getElementById("photo").value="Y";
+	}
+	else if(val==2){
+		document.getElementById("allPhoto").checked=false;
+		document.getElementById("yesPhoto").checked=false;
+		document.getElementById("noPhoto").checked=true;
+		document.getElementById("photo").value="N";
+	}
+	else{
+		document.getElementById("allPhoto").checked=true;
+		document.getElementById("yesPhoto").checked=false;
+		document.getElementById("noPhoto").checked=false;
+		document.getElementById("photo").value="A";
+	}
+}
+
+function checkBoxDuplicate(val)
+{
+	if(val==1){
+		document.getElementById("allDuplicate").checked=false;
+		document.getElementById("yesDuplicate").checked=true;
+		document.getElementById("noDuplicate").checked=false;
+		document.getElementById("duplicate").value="Y";
+	}
+	else if(val==2){
+		document.getElementById("allDuplicate").checked=false;
+		document.getElementById("yesDuplicate").checked=false;
+		document.getElementById("noDuplicate").checked=true;
+		document.getElementById("duplicate").value="N";
+	}
+	else{
+		document.getElementById("allDuplicate").checked=true;
+		document.getElementById("yesDuplicate").checked=false;
+		document.getElementById("noDuplicate").checked=false;
+		document.getElementById("duplicate").value="A";
+	}
+}
+function selectAllMtongue(element){
+	if(element=="allMtongue"){
+		document.getElementById("allMtongueSelected").value=1;
+		document.getElementById("preferredMtongueSelected").value=0;
+		document.getElementById("allMtongue").checked=true;
+       if($("#"+element).is(":checked")) {
+			$(function() {
+				$(".mtongue").each(function() {
+					this.selected=true;
+				});
+			});
+		}
+	}	
+	else if(element=="preferredMtongue"){
+		document.getElementById("preferredMtongue").checked=true;
+		document.getElementById("preferredMtongueSelected").value=1;
+		if($("#"+"allMtongue").is(":not(':checked')")){
+			document.getElementById("allMtongueSelected").value=0;
+			$(function() {
+				$(".mtongue").each(function() {
+					var preferredArr = ['7','10','13','14','19','20','27','28','30','33','34'];
+					if(jQuery.inArray(this.id, preferredArr)!=-1){
+						this.selected=true;
+					}
+				});
+			});
+		}
+		else
+		{
+			document.getElementById("preferredMtongueSelected").value=0;
+		}
+	}
+	else
+	{
+		document.getElementById("preferredMtongue").selected=false;
+		document.getElementById("allMtongue").selected=false;
+		document.getElementById("allMtongueSelected").value=0;
+		document.getElementById("preferredMtongueSelected").value=0;
+	}
+		
+}
+function selectAllStates(element){
+	if(element=="allIndia"){
+		if($("#"+"outsideIndia").is(":not(':checked')"))
+		{
+			document.getElementById("outsideLocation").value=0;
+		}
+		document.getElementById("allIndiaSelected").value=1;
+		document.getElementById("preferredStatesSelected").value=0;		
+       if($("#"+element).is(":checked")) {
+			$(function() {
+				$(".indianLocation").each(function() {
+					this.selected=true;
+				});
+			});
+			document.getElementById("preferredStates").checked=false;
+		}
+	}
+	else if(element=="outsideIndia")
+	{
+			document.getElementById("outsideLocation").value=1;
+		if($("#"+"allIndia").is(":not(':checked')")){
+			document.getElementById("allIndiaSelected").value=0;
+		}
+		if($("#"+"preferredStatesSelected").is(":not(':checked')")){
+			document.getElementById("preferredStatesSelected").value=0;
+		}
+	}	
+	else if(element=="preferredStates")
+	{
+		document.getElementById("preferredStatesSelected").value=1;
+		if($("#"+"outsideIndia").is(":not(':checked')"))
+		{
+			document.getElementById("outsideLocation").value=0;
+		}					
+		document.getElementById("preferredStates").checked=true;
+		if($("#"+"allIndia").is(":not(':checked')")){
+			document.getElementById("allIndiaSelected").value=0;;
+			$(function() {
+				$(".indianLocation").each(function() {
+					var preferredArr = ["PU","UP","GU","MH","RA","AP","KA","BI","WB","CH","HA","KE","MP","PH","OR","HP","UK","GU","JH","JK",];
+					if(jQuery.inArray(this.id, preferredArr)!=-1){
+						this.selected=true;
+					}
+				});
+			});
+		}
+		else
+		{
+			document.getElementById("allIndiaSelected").value=1;			
+			document.getElementById("preferredStatesSelected").value=0
+		}
+		
+	}
+	else
+	{
+		document.getElementById("preferredStates").selected=false;
+		document.getElementById("allIndia").selected=false;
+		document.getElementById("allIndiaSelected").value=0;
+		document.getElementById("preferredStatesSelected").value=0;
+		document.getElementById("outsideLocation").value=0;
+	}
+	
+}
+
+
+
+</script>
+</body>
+</html>

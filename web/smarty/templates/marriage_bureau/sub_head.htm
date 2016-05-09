@@ -1,0 +1,5 @@
+<div class="rf pd" >~if $LOGIN`<span id="save_search_option" style="position:relative;z-index:101" onclick="javascript:check_window('save_search_options(\'hide\',~$profileid`)')"><img src="images/icon_rect.gif"> <a href="javascript:save_search_options('show',~$profileid`)" class="blink">My saved search</a></span>~/if`&nbsp;&nbsp;&nbsp;<span id="search_by_id" style="position:relative;width:200px;z-index:100" onclick="javascript:check_window('search_by_id(\'hide\')')"> <img src="images/icon_rect.gif"> <a href="javascript:search_by_id('show')" class="blink"> Search By display name</a></span>&nbsp;&nbsp;&nbsp;~if $LOGIN`<span id="more_option" style="position:relative;width:200px"  onclick="javascript:check_window('show_more_options(\'hide\')')"> <img src="images/icon_rect.gif"> <a class=blink" href="javascript:show_more_options('show')">More Options</a></span>~else`<img src="images/icon_rect.gif"> <a href="~$SITE_URL`/P/advance_search.php" class="blink">Advanced Search</a>~/if`&nbsp;</div>
+<div class="sp5"></div>
+<script>
+document.body.onclick=check_window
+</script>

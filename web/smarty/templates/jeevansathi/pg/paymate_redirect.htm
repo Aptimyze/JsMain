@@ -1,0 +1,49 @@
+<HTML>
+<HEAD>
+<TITLE>Payment gateway redirect page</TITLE>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, , initial-scale=1.0">
+<meta name="description" content=""/>
+<link href="/css/fonts/fonts.css" rel="stylesheet" type="text/css"/>
+</HEAD>
+<BODY bgcolor="#ffffff" onLoad="document.form_mob.submit();">
+<div class="outerdiv" style="display:table; margin:0 auto; height:100%;">
+	<div class="fontlig" style="color:#d9475c; display:table-cell; vertical-align:middle">
+		<div style="font-size:42px;" class="">Re-directing</div>
+		<div style="font-size:15px">Please wait ...</div>
+	</div>
+</div>
+<!--form name=form1 method="post" action="http://demo.itzcash.com/payment/servlet/ITZPaymentServlet"-->
+<form name=form_mob method="post" action="paymate.php">
+<input type="hidden" name="service" value="~$SERVICE_SELECTED`">
+<input type="hidden" name="voicemail" value="~$VOICEMAIL`">
+<input type="hidden" name="horoscope" value="~$HOROSCOPE`">
+<input type="hidden" name="boldlisting" value="~$BOLDLISTING`">
+<input type="hidden" name="matri_profile" value="~$MATRI_PROFILE`">
+<input type="hidden" name="kundli" value="~$KUNDLI`">
+
+<input type="hidden" name="service_str" value="~$SERVICE_STR`">
+<input type="hidden" name="service_main" value="~$SERVICE_MAIN`">
+<input type="hidden" name="ser_main" value="~$SER_MAIN`">
+<input type="hidden" name="ser_duration" value="~$SER_DURATION`">
+<input type="hidden" name="type" value="~$TYPE`">
+<input type="hidden" name="discount" value="~$DISCOUNT_VALUE`">
+<input type="hidden" name="total" value="~$TOTAL`">
+<input type="hidden" name="paymode" value="~$PAYMODE`">
+<input type="hidden" name="setactivate" value="~$SETACTIVATE`">
+<input type="hidden" name="checksum" value="~$CHECKSUM`">
+<input type="hidden" name="checkout" value="true">
+<input type="hidden" name="ACTION_PATH" value="~$ACTION_PATH`">
+<input type="hidden" name="profileid" value="~$PROFILEID`">
+<input type="hidden" name="addon" value="~$ADDON`">
+<input type="hidden" name="stp" value="~$SER_MAIN`">
+<input type="hidden" name="dec_ag" value="~$DEC_AG`">
+
+<input type="hidden" name="cus_mobno" value="~$cus_mobno`">
+<input type="hidden" name="checksum" value="~$CHECKSUM`">
+<input type="hidden" name="mer_orderid" value="~$ORDERID`">
+<input type="hidden" name="mer_username" value="~$MERCHANTUSERNAME`">
+<input type="hidden" name="mer_refno" value="~$MERCHANTREFNO`">
+<input type="hidden" name="txn_amount" value="~$AMOUNT`">
+</form>
+</BODY>
+</HTML>

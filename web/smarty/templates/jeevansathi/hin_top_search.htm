@@ -1,0 +1,552 @@
+﻿<script language="javascript">
+<!--
+function keyword_search()
+{
+	window.location.href="~$SITE_URL`/profile/top_search_band.php?checksum=~$CHECKSUM`&STYPE=K";
+}
+//-->
+</script>
+<script language=JavaScript1.2 type=text/javascript>
+var categorylist=~$RELIGION_LABEL`
+var communitylist=~$MTONGUE_LABEL`
+var citylist=~$CITY_LABEL`
+var count=~$COUNT_REG`
+var categoryvalue=~$RELIGION_VALUE`
+var communityvalue=~$MTONGUE_VALUE`
+var cityvalue=~$CITY_VALUE`
+var checkedCity='~$City_res`'
+var checkedCountry='~$Country_res`'
+var checkedCaste='~$Caste_res`';
+var checkedCommunity='~$Mtongue_res`';
+
+</SCRIPT>
+<SCRIPT language=JavaScript1.2 src="~$IMG_URL`/profile/js/~$multiselect_top_js`"
+type=text/javascript></SCRIPT>
+<!--DIV id=TipLayer
+style="position:absolute; left:120px; top:330px;BORDER-RIGHT: #3061a3 1px solid; BORDER-TOP: #3061a3 1px solid; Z-INDEX: 2000; VISIBILITY: hidden; BORDER-LEFT: #3061a3 1px solid; BORDER-BOTTOM: #3061a3 1px solid; "></DIV>
+<DIV id=TipLayer1
+style="BORDER-RIGHT: #3061a3 1px solid; BORDER-TOP: #3061a3 1px solid; Z-INDEX: 2000;  VISIBILITY: hidden; BORDER-LEFT: #3061a3 1px solid; BORDER-BOTTOM: #3061a3 1px solid; POSITION: absolute;left:120px; top:330px;"></DIV>
+<DIV id=TipLayer2
+style="BORDER-RIGHT: #3061a3 1px solid; BORDER-TOP: #3061a3 1px solid; Z-INDEX: 2000; VISIBILITY: hidden; BORDER-LEFT: #3061a3 1px solid; BORDER-BOTTOM: #3061a3 1px solid; POSITION: absolute ; LEFT: 2000px ;TOP: 2000px"></DIV-->
+<link rel="stylesheet" href="/P/I/styles.php" type="text/css">
+<link rel="stylesheet" href="/P/IN/styles.php" type="text/css">
+<table width="100%" height="90" border="0"  bgcolor="#b52618" cellspacing="0" cellpadding="1" align="center">
+<tr>
+<td>
+<table width="100%" height="90" border="0"  cellspacing="0" cellpadding="0" align="center">
+~if $STYPE eq "P"`
+<form name="search_partner" action="~$SITE_URL`/profile/search_test.php" method="post" target="_parent">
+~else`
+<form name="search_partner" action="~$SITE_URL`/profile/search.php" method="post" target="_parent">
+~/if`
+<tr bgcolor="#ffcd8a">
+<td width="13%"  style="border-bottom:1px solid #b52618" ~if $SET_SELECTED eq "K"` bgcolor="#ffffff"><div align="center"><b><span class="blacklink"><a href="#" onclick="return keyword_search()"; class="mediumblackb">शब्दों द्वारा खोजें</a></span></b></div>~else` bgcolor="#b52618"<div align="center"><b><span class="blacklink"><a href="#" onclick="return keyword_search()"; class="mediumblackb"><font color="#ffffff">शब्दों द्वारा खोजें</font></a></span></b></div> ~/if`</td>
+
+<td width="10%" style="border-bottom:1px solid #b52618" ~if $SET_SELECTED eq "Q"` bgcolor="#ffffff"><div align="center"><b><span class="blacklink"><a href="~$SITE_URL`/P/search.php?Gender=~$G`&checksum=~$CHECKSUM`&STYPE=Q" target="_parent" class="mediumblackb">तुरन्त खोजें</a></span></b></div>
+~else` bgcolor="#b52618" <div align="center"><b><span class="blacklink"><a href="~$SITE_URL`/P/search.php?Gender=~$G`&checksum=~$CHECKSUM`&STYPE=Q" target="_parent" class="mediumblackb"><font color="#ffffff">तुरन्त खोजें</font></a></span></b></div> ~/if`</td>
+
+<td width="13%" style="border-bottom:1px solid #b52618" ~if $SET_SELECTED eq "A"` bgcolor="#ffffff"><div align="center"><b> <span class="blacklink"><a href="~$SITE_URL`/P/advance_search.php?FLAG=search&checksum=~$CHECKSUM`" target="_parent" class="mediumblackb">एडवांस खोज</a></span></b></div> ~else` bgcolor="#b52618" <div align="center"><b> <span class="blacklink"><a href="~$SITE_URL`/P/advance_search.php?FLAG=search&checksum=~$CHECKSUM`" target="_parent" class="mediumblackb"><font color="#ffffff">एडवांस खोज</font></a></span></b></div> ~/if`</td>
+<td width="12%" style="border-bottom:1px solid #b52618" ~if $SET_SELECTED eq "C"` bgcolor="#ffffff"><div align="center"><b>
+<span class="blacklink"><a href="~$SITE_URL`/P/search.php?Gender=~$G`&searchonline=1&STYPE=O&checksum=~$CHECKSUM`" target="_parent" class="mediumblackb">चैट के लिए खोजें</a></span></b></div> ~else` bgcolor="#b52618"<div align="center"><b> <span class="blacklink"><a href="~$SITE_URL`/P/search.php?Gender=~$G`&searchonline=1&STYPE=O&checksum=~$CHECKSUM`" target="_parent" class="mediumblackb"><font color="#ffffff">चैट के लिए खोजें</font></a></span></b></div>~/if`</td>
+<td width="15%" style="border-bottom:1px solid #b52618" ~if $SET_SELECTED eq "P"` bgcolor="#ffffff"><div align="center"><span class="blacklink"><a href="~$SITE_URL`/P/search_test.php?Gender=~$G`&photobrowse=Y&Photos=Y&STYPE=P&checksum=~$CHECKSUM`&submit=Go" name="photo_club" target="_parent" class="mediumblackb">फोटो ब्राउस</a></span></div>~else` bgcolor="#b52618"<div align="center"><span class="blacklink"><a href="~$SITE_URL`/P/search_test.php?Gender=~$G`&photobrowse=Y&Photos=Y&STYPE=P&checksum=~$CHECKSUM`&submit=Go" name="photo_club" target="_parent" class="mediumblackb"><font color="#ffffff">फोटो ब्राउस</font></a></span>
+</div>~/if`</td>
+<td width="14%" style="border-bottom:1px solid #b52618" ~if $SET_SELECTED eq "E"` bgcolor="#ffffff"><div align="center"><b>
+<span class="blacklink"><a href="~$SITE_URL`/P/search.php?Gender=~$G`&E_CLASS=D&checksum=~$CHECKSUM`" target="_parent" class="mediumblackb">ई-क्लासीफाइड</a></span></b></div> ~else` bgcolor="#b52618"><div align="center"><b>
+<span class="blacklink"><a href="~$SITE_URL`/P/search.php?Gender=~$G`&E_CLASS=D&checksum=~$CHECKSUM`" target="_parent" class="mediumblackb"><font color="#ffffff">ई-क्लासीफाइड</font></a></span></b></div> ~/if`</td>
+</tr>
+<tr>
+<td colspan="11" bgcolor="#ffffff" style="padding-left:1px">
+~if $STYPE eq "K"`
+<table width="100%"  border="0" cellspacing="0" cellpadding="1">
+<input type="hidden" name="TOP_BAND_SEARCH" value="Y">
+<tr>
+<td width="14%" style="padding-left:1px">
+<select class="formselect" name=Gender>
+~if $Gender eq ""`
+<option value=F ~if $G eq "F"`  selected ~/if`selected>वधु</option>
+<option value=M ~if $G eq "M"`  selected ~/if`>वर</option>
+~else`
+<option value=F ~if $Gender eq "F"`  selected ~/if`selected>वधु</option>
+<option value=M ~if $Gender eq "M"`  selected ~/if`>वर</option>
+~/if`
+</select>
+</td>
+<td width="5%" class="mediumblack">आयु</td>
+<td width="21%"><table width="97%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="49">
+<select name="lage" class="formselect">
+<option value="18" ~if $lage eq "18"` selected~/if`>18</option>
+<option value="19" ~if $lage eq "19"` selected~/if`>19</option>
+<option value="20" ~if $lage eq "20"` selected~/if`>20</option>
+<option value="21" ~if $lage eq "" || $lage eq "21" || $lage eq "0"` selected~/if`>21</option>
+<option value="22" ~if $lage eq "22"` selected~/if`>22</option>
+<option value="23" ~if $lage eq "23"` selected~/if`>23</option>
+<option value="24" ~if $lage eq "24"` selected~/if`>24</option>
+<option value="25" ~if $lage eq "25"` selected~/if`>25</option>
+<option value="26" ~if $lage eq "26"` selected~/if`>26</option>
+<option value="27" ~if $lage eq "27"` selected~/if`>27</option>
+<option value="28" ~if $lage eq "28"` selected~/if`>28</option>
+<option value="29" ~if $lage eq "29"` selected~/if`>29</option>
+<option value="30" ~if $lage eq "30"` selected~/if`>30</option>
+<option value="31" ~if $lage eq "31"` selected~/if`>31</option>
+<option value="32" ~if $lage eq "32"` selected~/if`>32</option>
+<option value="33" ~if $lage eq "33"` selected~/if`>33</option>
+<option value="34" ~if $lage eq "34"` selected~/if`>34</option>
+<option value="35" ~if $lage eq "35"` selected~/if`>35</option>
+<option value="36" ~if $lage eq "36"` selected~/if`>36</option>
+<option value="37" ~if $lage eq "37"` selected~/if`>37</option>
+<option value="38" ~if $lage eq "38"` selected~/if`>38</option>
+<option value="39" ~if $lage eq "39"` selected~/if`>39</option>
+<option value="40" ~if $lage eq "40"` selected~/if`>40</option>
+<option value="41" ~if $lage eq "41"` selected~/if`>41</option>
+<option value="42" ~if $lage eq "42"` selected~/if`>42</option>
+<option value="43" ~if $lage eq "43"` selected~/if`>43</option>
+<option value="44" ~if $lage eq "44"` selected~/if`>44</option>
+<option value="45" ~if $lage eq "45"` selected~/if`>45</option>
+<option value="46" ~if $lage eq "46"` selected~/if`>46</option>
+<option value="47" ~if $lage eq "47"` selected~/if`>47</option>
+<option value="48" ~if $lage eq "48"` selected~/if`>48</option>
+<option value="49" ~if $lage eq "49"` selected~/if`>49</option>
+<option value="50" ~if $lage eq "50"` selected~/if`>50</option>
+<option value="51" ~if $lage eq "51"` selected~/if`>51</option>
+<option value="52" ~if $lage eq "52"` selected~/if`>52</option>
+<option value="53" ~if $lage eq "53"` selected~/if`>53</option>
+<option value="54" ~if $lage eq "54"` selected~/if`>54</option>
+<option value="55" ~if $lage eq "55"` selected~/if`>55</option>
+<option value="56" ~if $lage eq "56"` selected~/if`>56</option>
+<option value="57" ~if $lage eq "57"` selected~/if`>57</option>
+<option value="58" ~if $lage eq "58"` selected~/if`>58</option>
+<option value="59" ~if $lage eq "59"` selected~/if`>59</option>
+<option value="60" ~if $lage eq "60"` selected~/if`>60</option>
+<option value="61" ~if $lage eq "61"` selected~/if`>61</option>
+<option value="62" ~if $lage eq "62"` selected~/if`>62</option>
+<option value="63" ~if $lage eq "63"` selected~/if`>63</option>
+<option value="64" ~if $lage eq "64"` selected~/if`>64</option>
+<option value="65" ~if $lage eq "65"` selected~/if`>65</option>
+<option value="66" ~if $lage eq "66"` selected~/if`>66</option>
+<option value="67" ~if $lage eq "67"` selected~/if`>67</option>
+<option value="68" ~if $lage eq "68"` selected~/if`>68</option>
+<option value="69" ~if $lage eq "69"` selected~/if`>69</option>
+<option value="70" ~if $lage eq "70"` selected~/if`>70</option>
+</select></td>
+<td width="9" class=mediumblack>से</td>
+<td width="48">
+<select name="hage" class="formselect">
+<option value="18" ~if $hage eq "18"` selected~/if`>18</option>
+<option value="19" ~if $hage eq "19"` selected~/if`>19</option>
+<option value="20" ~if $hage eq "20"` selected~/if`>20</option>
+<option value="21" ~if $hage eq "21"` selected~/if`>21</option>
+<option value="22" ~if $hage eq "22"` selected~/if`>22</option>
+<option value="23" ~if $hage eq "23"` selected~/if`>23</option>
+<option value="24" ~if $hage eq "24"` selected~/if`>24</option>
+<option value="25" ~if $hage eq "25"` selected~/if`>25</option>
+<option value="26" ~if $hage eq "26"` selected~/if`>26</option>
+<option value="27" ~if $hage eq "27"` selected~/if`>27</option>
+<option value="28" ~if $hage eq "28"` selected~/if`>28</option>
+<option value="29" ~if $hage eq "29"` selected~/if`>29</option>
+<option value="30" ~if $hage eq "30"` selected~/if`>30</option>
+<option value="31" ~if $hage eq "31"` selected~/if`>31</option>
+<option value="32" ~if $hage eq "32"` selected~/if`>32</option>
+<option value="33" ~if $hage eq "33"` selected~/if`>33</option>
+<option value="34" ~if $hage eq "34"` selected~/if`>34</option>
+<option value="35" ~if $hage eq "35"` selected~/if`>35</option>
+<option value="36" ~if $hage eq "36"` selected~/if`>36</option>
+<option value="37" ~if $hage eq "37"` selected~/if`>37</option>
+<option value="38" ~if $hage eq "38"` selected~/if`>38</option>
+<option value="39" ~if $hage eq "39"` selected~/if`>39</option>
+<option value="40" ~if $hage eq "" || $hage eq "40" || $hage eq "0"` selected~/if`>40</option>
+<option value="41" ~if $hage eq "41"` selected~/if`>41</option>
+<option value="42" ~if $hage eq "42"` selected~/if`>42</option>
+<option value="43" ~if $hage eq "43"` selected~/if`>43</option>
+<option value="44" ~if $hage eq "44"` selected~/if`>44</option>
+<option value="45" ~if $hage eq "45"` selected~/if`>45</option>
+<option value="46" ~if $hage eq "46"` selected~/if`>46</option>
+<option value="47" ~if $hage eq "47"` selected~/if`>47</option>
+<option value="48" ~if $hage eq "48"` selected~/if`>48</option>
+<option value="49" ~if $hage eq "49"` selected~/if`>49</option>
+<option value="50" ~if $hage eq "50"` selected~/if`>50</option>
+<option value="51" ~if $hage eq "51"` selected~/if`>51</option>
+<option value="52" ~if $hage eq "52"` selected~/if`>52</option>
+<option value="53" ~if $hage eq "53"` selected~/if`>53</option>
+<option value="54" ~if $hage eq "54"` selected~/if`>54</option>
+<option value="55" ~if $hage eq "55"` selected~/if`>55</option>
+<option value="56" ~if $hage eq "56"` selected~/if`>56</option>
+<option value="57" ~if $hage eq "57"` selected~/if`>57</option>
+<option value="58" ~if $hage eq "58"` selected~/if`>58</option>
+<option value="59" ~if $hage eq "59"` selected~/if`>59</option>
+<option value="60" ~if $hage eq "60"` selected~/if`>60</option>
+<option value="61" ~if $hage eq "61"` selected~/if`>61</option>
+<option value="62" ~if $hage eq "62"` selected~/if`>62</option>
+<option value="63" ~if $hage eq "63"` selected~/if`>63</option>
+<option value="64" ~if $hage eq "64"` selected~/if`>64</option>
+<option value="65" ~if $hage eq "65"` selected~/if`>65</option>
+<option value="66" ~if $hage eq "66"` selected~/if`>66</option>
+<option value="67" ~if $hage eq "67"` selected~/if`>67</option>
+<option value="68" ~if $hage eq "68"` selected~/if`>68</option>
+<option value="69" ~if $hage eq "69"` selected~/if`>69</option>
+<option value="70" ~if $hage eq "70"` selected~/if`>70</option>
+</select></td>
+</tr>
+</table></td>
+<!--td width="24%" class="mediumblack"><select class="formselect" name=Caste[]>
+ <option value=All>All Religion/Caste</option>
+</select></td-->
+~if $Caste_res eq ''`
+        <TD width=21% align=right><INPUT type="text" class=formselect id=caste readOnly value="सभी जाति" name=caste size=13 ><A onclick="javascript:if(window.parent.document.getElementById('TipLayer').style.visibility=='hidden') {stm(Text[2],Style[9],'caste')}" href="javascript:void(0);"><IMG src="~$IMG_URL`/profile/ser4_imagesnew/top_search_button.gif" width="19" height="20" border="0" align="absmiddle"></A></td>
+~else`
+        <TD width=21% align=right><INPUT type="text" class=formselect id=caste readOnly value='~$Caste_res`' name=caste size=13 ><A onclick="javascript:if(window.parent.document.getElementById('TipLayer').style.visibility=='hidden') {stm(Text[2],Style[9],'caste')}" href="javascript:void(0);"><IMG src="~$IMG_URL`/profile/ser4_imagesnew/top_search_button.gif" width="19" height="20" border="0" align="absmiddle"></A></td>
+~/if`
+
+<!--TD width="7%" vAlign=center class=separator><A onclick="javascript:if(window.parent.document.getElementById('TipLayer').style.visibility=='hidden') {stm(Text[2],Style[9],'caste')}" href="javascript:void(0);"><IMG src="~$IMG_URL`/profile/ser4_imagesnew/top_search_button.gif" width="19" height="20" border="0" align="absmiddle"></A> </TD-->
+<input type="hidden" name="Caste" id="Caste" value='~$Caste_val`'>
+<input type="hidden" name="Caste_display" id="Caste_display" value='~$Caste_display`'>
+<input type="hidden" id="Caste_val" value='~$Caste_val`' name="Caste_val">
+
+<!--td width="25%"><select class="formselect" name=Mtongue[]>
+ <option value=All selected>All Communities</option>
+<option value="">
+</select></td-->
+~if $Mtongue_res eq ''`
+<TD width=21% align=right><INPUT type="text" class=formselect id=community readOnly value="सभी समुदाय" name=community size=13><A onclick="javascript:if(window.parent.document.getElementById('TipLayer1').style.visibility=='hidden') {stm(Text[1],Style[9],'community')}" href="javascript:void(0);"><IMG src="~$IMG_URL`/profile/ser4_imagesnew/top_search_button.gif" width="19" height="20" border="0" align="absmiddle"></A></td>
+~else`
+<TD width=21% align=right><INPUT type="text" class=formselect id=community readOnly value='~$Mtongue_res`' name=community size=13><A onclick="javascript:if(window.parent.document.getElementById('TipLayer1').style.visibility=='hidden') {stm(Text[1],Style[9],'community')}" href="javascript:void(0);"><IMG src="~$IMG_URL`/profile/ser4_imagesnew/top_search_button.gif" width="19" height="20" border="0" align="absmiddle"></A></td>
+~/if`
+
+<!--TD width=7% vAlign=center class=separator><A onclick="javascript:if(window.parent.document.getElementById('TipLayer1').style.visibility=='hidden') {stm(Text[1],Style[9],'community')}" href="javascript:void(0);"><IMG src="~$IMG_URL`/profile/ser4_imagesnew/top_search_button.gif" width="19" height="20" border="0" align="absmiddle"></A> </TD-->
+<input type="hidden" id="Mtongue" value="~$Mtongue_val`" name="Mtongue">
+<input type="hidden" id="Mtongue_val" value='~$Mtongue_val`' name="Mtongue_val">
+
+</tr>
+<tr><td height=4px></td></tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="17%" class="mediumblack" style="padding-left:2px">शब्दों द्वारा खोजें </td>
+<td width="25%" class="formselect"><input type="text" name="Keyword" value="~$Keyword`">
+</td>
+<td width="16%">
+ <select class="formselect" name=Keyword_type>
+  <option value="Y">कोई भी शब्द</option>
+  <option value="" ~if $Keyword_type eq ''` selected ~/if`>सभी शब्द </option>
+ </select>
+</td>
+<td width="5%" class="mediumblack">फोटो</td>
+<td width="3%"><input type="checkbox" name="Photos" ~if $Photos eq "Y"` checked ~/if` value="Y"></td>
+<!--input type="hidden" name="lage" value="21">
+<input type="hidden" name="hage" value="40">
+<input type="hidden" name="lheight" value="4">
+<input type="hidden" name="hheight" value="20">
+<input type="hidden" name="Caste" value="Array">
+<input type="hidden" name="Mtongue" value="Array">
+<input type="hidden" name="hp_mstatus" value="">
+<input type="hidden" name="City_Res"  value=""-->
+~if $STYPE eq 'A'`
+<input type="hidden" name="STYPE"  value="Q">
+~else`
+<input type="hidden" name="STYPE"  value="~$STYPE`">
+~/if`
+<input type="hidden" name="searchonline"  value="~$searchonline`">
+<input type="hidden" name="E_CLASS"  value="~$E_CLASS`">
+
+<input type="hidden" name="submit" value="Search">
+<td width="9%"><input type="image" name="submit" value="Search" img src="~$IMG_URL`/P/imagesnew/hin_search_button_new.gif" width="45" height="21" border="0" onClick="HideLayer('caste');HideLayer('community');HideLayer('city')"></td>
+</tr>
+</table>
+~else`
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+   <input type="hidden" name="TOP_BAND_SEARCH" value="Y">
+    <tr>
+     <td width="15%">
+      <select class="formselect" name=Gender>
+       <option value=F ~if $Gender eq "F"`  selected ~/if`selected>वधु</option>
+       <option value=M ~if $Gender eq "M"`  selected ~/if`>वर</option>
+      </select>
+      </td>
+     <td width="5%" class="mediumblack">आयु</td>
+     <td width="22%"><table width="97%" border="0" cellspacing="0" cellpadding="0">
+       <tr>
+        <td width="49">
+          <select name="lage" class="formselect">
+                <option value="18" ~if $lage eq "18"` selected~/if`>18</option>
+                <option value="19" ~if $lage eq "19"` selected~/if`>19</option>
+                <option value="20" ~if $lage eq "20"` selected~/if`>20</option>
+                <option value="21" ~if $lage eq "" || $lage eq "21" || $lage eq "0"` selected~/if`>21</option>
+                <option value="22" ~if $lage eq "22"` selected~/if`>22</option>
+                <option value="23" ~if $lage eq "23"` selected~/if`>23</option>
+                <option value="24" ~if $lage eq "24"` selected~/if`>24</option>
+                <option value="25" ~if $lage eq "25"` selected~/if`>25</option>
+                <option value="26" ~if $lage eq "26"` selected~/if`>26</option>
+                <option value="27" ~if $lage eq "27"` selected~/if`>27</option>
+                <option value="28" ~if $lage eq "28"` selected~/if`>28</option>
+                <option value="29" ~if $lage eq "29"` selected~/if`>29</option>
+                <option value="30" ~if $lage eq "30"` selected~/if`>30</option>
+                <option value="31" ~if $lage eq "31"` selected~/if`>31</option>
+                <option value="32" ~if $lage eq "32"` selected~/if`>32</option>
+                <option value="33" ~if $lage eq "33"` selected~/if`>33</option>
+                <option value="34" ~if $lage eq "34"` selected~/if`>34</option>
+                <option value="35" ~if $lage eq "35"` selected~/if`>35</option>
+                <option value="36" ~if $lage eq "36"` selected~/if`>36</option>
+                <option value="37" ~if $lage eq "37"` selected~/if`>37</option>
+                <option value="38" ~if $lage eq "38"` selected~/if`>38</option>
+                <option value="39" ~if $lage eq "39"` selected~/if`>39</option>
+                <option value="40" ~if $lage eq "40"` selected~/if`>40</option>
+		<option value="41" ~if $lage eq "41"` selected~/if`>41</option>
+                <option value="42" ~if $lage eq "42"` selected~/if`>42</option>
+                <option value="43" ~if $lage eq "43"` selected~/if`>43</option>
+                <option value="44" ~if $lage eq "44"` selected~/if`>44</option>
+                <option value="45" ~if $lage eq "45"` selected~/if`>45</option>
+                <option value="46" ~if $lage eq "46"` selected~/if`>46</option>
+                <option value="47" ~if $lage eq "47"` selected~/if`>47</option>
+                <option value="48" ~if $lage eq "48"` selected~/if`>48</option>
+                <option value="49" ~if $lage eq "49"` selected~/if`>49</option>
+                <option value="50" ~if $lage eq "50"` selected~/if`>50</option>
+                <option value="51" ~if $lage eq "51"` selected~/if`>51</option>
+                <option value="52" ~if $lage eq "52"` selected~/if`>52</option>
+                <option value="53" ~if $lage eq "53"` selected~/if`>53</option>
+                <option value="54" ~if $lage eq "54"` selected~/if`>54</option>
+                <option value="55" ~if $lage eq "55"` selected~/if`>55</option>
+                <option value="56" ~if $lage eq "56"` selected~/if`>56</option>
+                <option value="57" ~if $lage eq "57"` selected~/if`>57</option>
+                <option value="58" ~if $lage eq "58"` selected~/if`>58</option>
+                <option value="59" ~if $lage eq "59"` selected~/if`>59</option>
+                <option value="60" ~if $lage eq "60"` selected~/if`>60</option>
+                <option value="61" ~if $lage eq "61"` selected~/if`>61</option>
+                <option value="62" ~if $lage eq "62"` selected~/if`>62</option>
+                <option value="63" ~if $lage eq "63"` selected~/if`>63</option>
+                <option value="64" ~if $lage eq "64"` selected~/if`>64</option>
+                <option value="65" ~if $lage eq "65"` selected~/if`>65</option>
+                <option value="66" ~if $lage eq "66"` selected~/if`>66</option>
+                <option value="67" ~if $lage eq "67"` selected~/if`>67</option>
+                <option value="68" ~if $lage eq "68"` selected~/if`>68</option>
+                <option value="69" ~if $lage eq "69"` selected~/if`>69</option>
+                <option value="70" ~if $lage eq "70"` selected~/if`>70</option>
+         </select></td>
+           <td width="9" class=mediumblack>से</td>
+           <td width="48">
+            <select name="hage" class="formselect">
+               <option value="18" ~if $hage eq "18"` selected~/if`>18</option>
+                <option value="19" ~if $hage eq "19"` selected~/if`>19</option>
+                <option value="20" ~if $hage eq "20"` selected~/if`>20</option>
+<option value="21" ~if $hage eq "21"` selected~/if`>21</option>
+                <option value="22" ~if $hage eq "22"` selected~/if`>22</option>
+                <option value="23" ~if $hage eq "23"` selected~/if`>23</option>
+                <option value="24" ~if $hage eq "24"` selected~/if`>24</option>
+                <option value="25" ~if $hage eq "25"` selected~/if`>25</option>
+                <option value="26" ~if $hage eq "26"` selected~/if`>26</option>
+                <option value="27" ~if $hage eq "27"` selected~/if`>27</option>
+                <option value="28" ~if $hage eq "28"` selected~/if`>28</option>
+                <option value="29" ~if $hage eq "29"` selected~/if`>29</option>
+                <option value="30" ~if $hage eq "30"` selected~/if`>30</option>
+                <option value="31" ~if $hage eq "31"` selected~/if`>31</option>
+                <option value="32" ~if $hage eq "32"` selected~/if`>32</option>
+                <option value="33" ~if $hage eq "33"` selected~/if`>33</option>
+                <option value="34" ~if $hage eq "34"` selected~/if`>34</option>
+                <option value="35" ~if $hage eq "35"` selected~/if`>35</option>
+                <option value="36" ~if $hage eq "36"` selected~/if`>36</option>
+                <option value="37" ~if $hage eq "37"` selected~/if`>37</option>
+                <option value="38" ~if $hage eq "38"` selected~/if`>38</option>
+                <option value="39" ~if $hage eq "39"` selected~/if`>39</option>
+		<option value="40" ~if $hage eq "" || $hage eq "40" || $hage eq "0"` selected~/if`>40</option>
+                <option value="41" ~if $hage eq "41"` selected~/if`>41</option>
+                <option value="42" ~if $hage eq "42"` selected~/if`>42</option>
+                <option value="43" ~if $hage eq "43"` selected~/if`>43</option>
+                <option value="44" ~if $hage eq "44"` selected~/if`>44</option>
+                <option value="45" ~if $hage eq "45"` selected~/if`>45</option>
+                <option value="46" ~if $hage eq "46"` selected~/if`>46</option>
+                <option value="47" ~if $hage eq "47"` selected~/if`>47</option>
+                <option value="48" ~if $hage eq "48"` selected~/if`>48</option>
+                <option value="49" ~if $hage eq "49"` selected~/if`>49</option>
+                <option value="50" ~if $hage eq "50"` selected~/if`>50</option>
+                <option value="51" ~if $hage eq "51"` selected~/if`>51</option>
+                <option value="52" ~if $hage eq "52"` selected~/if`>52</option>
+                <option value="53" ~if $hage eq "53"` selected~/if`>53</option>
+                <option value="54" ~if $hage eq "54"` selected~/if`>54</option>
+                <option value="55" ~if $hage eq "55"` selected~/if`>55</option>
+                <option value="56" ~if $hage eq "56"` selected~/if`>56</option>
+                <option value="57" ~if $hage eq "57"` selected~/if`>57</option>
+                <option value="58" ~if $hage eq "58"` selected~/if`>58</option>
+		<option value="59" ~if $hage eq "59"` selected~/if`>59</option>
+                <option value="60" ~if $hage eq "60"` selected~/if`>60</option>
+                <option value="61" ~if $hage eq "61"` selected~/if`>61</option>
+                <option value="62" ~if $hage eq "62"` selected~/if`>62</option>
+                <option value="63" ~if $hage eq "63"` selected~/if`>63</option>
+                <option value="64" ~if $hage eq "64"` selected~/if`>64</option>
+                <option value="65" ~if $hage eq "65"` selected~/if`>65</option>
+                <option value="66" ~if $hage eq "66"` selected~/if`>66</option>
+                <option value="67" ~if $hage eq "67"` selected~/if`>67</option>
+                <option value="68" ~if $hage eq "68"` selected~/if`>68</option>
+                <option value="69" ~if $hage eq "69"` selected~/if`>69</option>
+                <option value="70" ~if $hage eq "70"` selected~/if`>70</option>
+         </select></td>
+       </tr>
+      </table></td>
+     <td width="6%" class="mediumblack">कद</td>
+     <td width="29%"><table width="132" border="0" cellspacing="0" cellpadding="0">
+       <tr>
+        <td width="65"><select name="lheight" size="1" class="formselect">
+                <option value="1" ~if $lheight eq "1"`selected~/if`>4' 5&quot;</option>
+                <option value="2" ~if $lheight eq "2"`selected~/if`>4' 6&quot;</option>
+                <option value="3" ~if $lheight eq "3"`selected~/if`>4' 7&quot;</option>
+                <option value="4" ~if $lheight eq "" or $lheight eq "4"`selected~/if`>4' 8&quot;</option>
+                <option value="5" ~if $lheight eq "5"`selected~/if`>4' 9&quot;</option>
+                <option value="6" ~if $lheight eq "6"`selected~/if`>4' 10&quot;</option>
+                <option value="7" ~if $lheight eq "7"`selected~/if`>4' 11&quot;</option>
+                <option value="8" ~if $lheight eq "8"`selected~/if`>5' 0&quot;</option>
+                <option value="9" ~if $lheight eq "9"`selected~/if`>5' 1&quot;</option>
+                <option value="10" ~if $lheight eq "10"`selected~/if`>5' 2&quot;</option>
+                <option value="11" ~if $lheight eq "11"`selected~/if`>5' 3&quot;</option>
+                <option value="12" ~if $lheight eq "12"`selected~/if`>5' 4&quot;</option>
+                <option value="13" ~if $lheight eq "13"`selected~/if`>5' 5&quot;</option>
+                <option value="14" ~if $lheight eq "14"`selected~/if`>5' 6&quot;</option>
+                <option value="15" ~if $lheight eq "15"`selected~/if`>5' 7&quot;</option>
+                <option value="16" ~if $lheight eq "16"`selected~/if`>5' 8&quot;</option>
+                <option value="17" ~if $lheight eq "17"`selected~/if`>5' 9&quot;</option>
+<option value="18" ~if $lheight eq "18"`selected~/if`>5' 10&quot;</option>
+                <option value="19" ~if $lheight eq "19"`selected~/if`>5' 11&quot;</option>
+                <option value="20" ~if $lheight eq "20"`selected~/if`>6' 0&quot;</option>
+                <option value="21" ~if $lheight eq "21"`selected~/if`>6' 1&quot;</option>
+                <option value="22" ~if $lheight eq "22"`selected~/if`>6' 2&quot;</option>
+                <option value="23" ~if $lheight eq "23"`selected~/if`>6' 3&quot;</option>
+                <option value="24" ~if $lheight eq "24"`selected~/if`>6' 4&quot;</option>
+                <option value="25" ~if $lheight eq "25"`selected~/if`>6' 5&quot;</option>
+                <option value="26" ~if $lheight eq "26"`selected~/if`>6' 6&quot;</option>
+                <option value="27" ~if $lheight eq "27"`selected~/if`>6' 7&quot;</option>
+                <option value="28" ~if $lheight eq "28"`selected~/if`>6' 8&quot;</option>
+                <option value="29" ~if $lheight eq "29"`selected~/if`>6' 9&quot;</option>
+                <option value="30" ~if $lheight eq "30"`selected~/if`>6' 10&quot;</option>
+                <option value="31" ~if $lheight eq "31"`selected~/if`>6' 11&quot;</option>
+                <option value="32" ~if $lheight eq "32"`selected~/if`>7' plus</option>
+         </select></td>
+        <td width="10" class="mediumblack">से</td>
+        <td width="49"><select name="hheight" size="1" class="formselect">
+                <option value="32" ~if $hheight eq "32"`selected~/if`>7' plus</option>
+                <option value="31" ~if $hheight eq "31"`selected~/if`>6' 11&quot;</option>
+                <option value="30" ~if $hheight eq "30"`selected~/if`>6' 10&quot;</option>
+                <option value="29" ~if $hheight eq "29"`selected~/if`>6' 9&quot;</option>
+                <option value="28" ~if $hheight eq "28"`selected~/if`>6' 8&quot;</option>
+                <option value="27" ~if $hheight eq "27"`selected~/if`>6' 7&quot;</option>
+                <option value="26" ~if $hheight eq "26"`selected~/if`>6' 6&quot;</option>
+                <option value="25" ~if $hheight eq "25"`selected~/if`>6' 5&quot;</option>
+                <option value="24" ~if $hheight eq "24"`selected~/if`>6' 4&quot;</option>
+                <option value="23" ~if $hheight eq "23"`selected~/if`>6' 3&quot;</option>
+                <option value="22" ~if $hheight eq "22"`selected~/if`>6' 2&quot;</option>
+                <option value="21" ~if $hheight eq "21"`selected~/if`>6' 1&quot;</option>
+                <option value="20" ~if $hheight eq "" or $hheight eq "20"`selected~/if`>6' 0&quot;</option>
+                <option value="19" ~if $hheight eq "19"`selected~/if`>5' 11&quot;</option>
+                <option value="18" ~if $hheight eq "18"`selected~/if`>5' 10&quot;</option>
+                <option value="17" ~if $hheight eq "17"`selected~/if`>5' 9&quot;</option>
+                <option value="16" ~if $hheight eq "16"`selected~/if`>5' 8&quot;</option>
+                <option value="15" ~if $hheight eq "15"`selected~/if`>5' 7&quot;</option>
+                <option value="14" ~if $hheight eq "14"`selected~/if`>5' 6&quot;</option>
+<option value="13" ~if $hheight eq "13"`selected~/if`>5' 5&quot;</option>
+                <option value="12" ~if $hheight eq "12"`selected~/if`>5' 4&quot;</option>
+                <option value="11" ~if $hheight eq "11"`selected~/if`>5' 3&quot;</option>
+                <option value="10" ~if $hheight eq "10"`selected~/if`>5' 2&quot;</option>
+                <option value="9" ~if $hheight eq "9"`selected~/if`>5' 1&quot;</option>
+                <option value="8" ~if $hheight eq "8"`selected~/if`>5' 0&quot;</option>
+                <option value="7" ~if $hheight eq "7"`selected~/if`>4' 11&quot;</option>
+                <option value="6" ~if $hheight eq "6"`selected~/if`>4' 10&quot;</option>
+                <option value="5" ~if $hheight eq "5"`selected~/if`>4' 9&quot;</option>
+                <option value="4" ~if $hheight eq "4"`selected~/if`>4' 8&quot;</option>
+                <option value="3" ~if $hheight eq "3"`selected~/if`>4' 7&quot;</option>
+                <option value="2" ~if $hheight eq "2"`selected~/if`>4' 6&quot;</option>
+                <option value="1" ~if $hheight eq "1"`selected~/if`>4' 5&quot;</option>
+         </select></td>
+       </tr>
+      </table></td>
+     <td width="23%">
+      <select class="formselect" name=hp_mstatus>
+        <option value="" ~if $hp_mstatus eq ""` selected ~/if`>सभी वैवाहिक स्थिति</option>
+        <option value=N  ~if $hp_mstatus eq "N"` selected ~/if`>अविवाहित</option>
+        <option value=E  ~if $hp_mstatus eq "E"` selected ~/if`>पहले विवाहित</option>
+      </select>
+      </td>
+    </tr>
+<tr><td height=5px></td></tr>
+   </table>
+   <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+    <tr vAlign=center>
+     <!--td width="25%">
+      <select class="formselect" name=Caste[]>
+       <option value=All selected>All Religion/Caste</option>
+      </select>
+      </td-->
+~if $Caste_res eq ''`
+	<TD style="padding-left:2px" width="19%"><INPUT type="text" class=formselect id=caste style="background-color:#ffffff" readOnly value="सभी जाति" name=caste size=11 ><A vAlign=center onclick="javascript:if(window.parent.document.getElementById('TipLayer').style.visibility=='hidden') {stm(Text[2],Style[9],'caste')}" href="javascript:void(0);"><IMG src="~$IMG_URL`/profile/ser4_imagesnew/top_search_button.gif" width="19" height="20" border="0" align="absmiddle"></A></td>
+~else`
+	<TD style="padding-left:4px" width="19%"><INPUT type="text" class=formselect id=caste style="background-color:#ffffff" readOnly value='~$Caste_res`' name=caste size=11 ><A onclick="javascript:if(window.parent.document.getElementById('TipLayer').style.visibility=='hidden') {stm(Text[2],Style[9],'caste')}" href="javascript:void(0);"><IMG src="~$IMG_URL`/profile/ser4_imagesnew/top_search_button.gif" width="19" height="20" border="0" align="absmiddle"></A></td>
+~/if`
+	<!--TD width=5% vAlign=center class=separator><A
+            onclick="javascript:if(window.parent.document.getElementById('TipLayer').style.visibility=='hidden') {stm(Text[2],Style[9],'caste')}" href="javascript:void(0);"><IMG src="~$IMG_URL`/profile/ser4_imagesnew/top_search_button.gif" width="19" height="20" border="0" align="left"></A> </TD-->
+<input type="hidden" name="Caste" id="Caste" value='~$Caste_val`'>
+<input type="hidden" name="Caste_display" id="Caste_display" value='~$Caste_display`'>
+<input type="hidden" id="Caste_val" value='~$Caste_val`' name="Caste_val">
+     <!--td width="27%">
+      <select class="formselect" name=Mtongue[]>
+       <option value=All selected>All Communities</option>
+       <option value="">
+      </select>
+      </td-->
+~if $Mtongue_res eq ''`
+<TD width=19%><INPUT type="text" class=formselect id=community readOnly value="सभी समुदाय" name=community size=11 ><A onclick="javascript:if(window.parent.document.getElementById('TipLayer1').style.visibility=='hidden') {stm(Text[1],Style[9],'community')}" href="javascript:void(0);"><IMG src="~$IMG_URL`/profile/ser4_imagesnew/top_search_button.gif" width="19" height="20" border="0" align="absmiddle"></A></td>
+~else`
+<TD width=19%><INPUT type="text" class=formselect id=community readOnly value='~$Mtongue_res`' name=community size=11 ><A onclick="javascript:if(window.parent.document.getElementById('TipLayer1').style.visibility=='hidden') {stm(Text[1],Style[9],'community')}" href="javascript:void(0);"><IMG src="~$IMG_URL`/profile/ser4_imagesnew/top_search_button.gif" width="19" height="20" border="0" align="absmiddle"></A></td>
+~/if`
+<!--TD width="5%" vAlign=center class=separator><A onclick="javascript:if(window.parent.document.getElementById('TipLayer1').style.visibility=='hidden') {stm(Text[1],Style[9],'community')}" href="javascript:void(0);"><IMG src="~$IMG_URL`/profile/ser4_imagesnew/top_search_button.gif" width="19" height="20" border="0" align="absmiddle"></A> </TD-->
+<input type="hidden" id="Mtongue" value="~$Mtongue_val`" name="Mtongue">
+<input type="hidden" id="Mtongue_val" value='~$Mtongue_val`' name="Mtongue_val">
+     <!--td width="29%">
+      <select name="City_Res" size="1" class="formselect">
+       <option value="" selected>All Cities</option>
+      </select>
+     </td-->
+~if $City_res eq '' && $Country_res eq ''`
+<TD width=19%><INPUT type="text" class=formselect id=city readOnly value="सभी शहर" name=city size=11 ><A onclick="javascript:if(window.parent.document.getElementById('TipLayer2').style.visibility=='hidden') {stm(Text[3],Style[9],'city')}" href="javascript:void(0);"><IMG src="~$IMG_URL`/profile/ser4_imagesnew/top_search_button.gif" width="19" height="20" border="0" align="absmiddle"></A></td>
+~elseif $City_res neq '' && $Country_res eq ''`
+<TD width=19%><INPUT type="text" class=formselect id=city readOnly value='~$City_res`' name=city size=11 ><A onclick="javascript:if(window.parent.document.getElementById('TipLayer2').style.visibility=='hidden') {stm(Text[3],Style[9],'city')}" href="javascript:void(0);"><IMG src="~$IMG_URL`/P/IN/top_search_button.gif" width="19" height="20" border="0" align="absmiddle"></A></td>
+~elseif $Country_res neq '' && $City_res eq ''`
+<TD width=19% align=right><INPUT type="text" class=formselect id=city readOnly value='~$Country_res`' name=city size=11><A onclick="javascript:if(window.parent.document.getElementById('TipLayer2').style.visibility=='hidden') {stm(Text[3],Style[9],'city')}" href="javascript:void(0);"><IMG src="~$IMG_URL`/P/IN/top_search_button.gif" width="19" height="20" border="0" align="absmiddle"></A></td>
+~else`
+<TD width=19% align=right><INPUT type="text" class=formselect id=city readOnly value='~$City_res`;~$Country_res`' name=city size=11><A onclick="javascript:if(window.parent.document.getElementById('TipLayer2').style.visibility=='hidden') {stm(Text[3],Style[9],'city')}" href="javascript:void(0);"><IMG src="~$IMG_URL`/P/IN/top_search_button.gif" width="19" height="20" border="0" align="absmiddle"></A></td>
+
+~/if`
+	<!--TD width="4%" vAlign=center class=separator><A onclick="javascript:if(window.parent.document.getElementById('TipLayer2').style.visibility=='hidden') {stm(Text[3],Style[9],'city')}" href="javascript:void(0);"><IMG src="~$IMG_URL`/P/IN/top_search_button.gif" width="19" height="20" border="0" align="absmiddle"></A> </TD-->
+<input type="hidden" id="City_res" value="" name="City_res">
+<input type="hidden" id="City_res_val" value='~$City_res_val`' name="City_res_val">
+<input type="hidden" id="Country_res" value="" name="Country_res">
+<input type="hidden" id="Country_res_val" value='~$Country_res_val`' name="Country_res_val">
+
+     <td width="3%" class="mediumblack">फोटो</td>
+     <td width="2%"><input type="checkbox" name="Photos" ~if $Photos eq "Y"` checked ~/if` ~if $STYPE eq "P"` disabled ~/if` value="Y"></td>
+     ~if $STYPE eq "P"`
+     <input type="hidden" name="Photos"  value="Y">
+     ~/if`
+     <!--input type="hidden" name="lage" value="~$lage`">
+     <input type="hidden" name="hage" value="~$hage`">
+     <input type="hidden" name="lheight" value="~$lheight`">
+     <input type="hidden" name="hheight" value="~$hheight`">
+     <input type="hidden" name="Caste" value="~$Caste`">
+     <input type="hidden" name="Mtongue" value="~$Mtongue`">
+     <input type="hidden" name="hp_mstatus" value="~$hp_mstatus`">
+     <input type="hidden" name="City_Res"  value="~$City_Res`"-->
+~if $STYPE eq 'A'`
+<input type="hidden" name="STYPE"  value="Q">
+~else`
+     <input type="hidden" name="STYPE"  value="~$STYPE`">
+~/if`
+     <input type="hidden" name="searchonline"  value="~$searchonline`">
+     <input type="hidden" name="E_CLASS"  value="~$E_CLASS`">
+
+     <input type="hidden" name="submit" value="Search">
+     <td width="3%"><input type="image" name="submit" value="Search" img src="~$IMG_URL`/P/imagesnew/hin_search_button_new.gif" width="45" height="21" border="0" onClick="HideLayer('caste');HideLayer('community');HideLayer('city')"></td>
+    </tr>
+   </table>
+~/if`
+</td>
+</tr>
+</form>
+</table>
+</td>
+</tr>
+</table>

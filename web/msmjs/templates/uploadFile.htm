@@ -1,0 +1,27 @@
+<html>
+<head>
+<title>Jeevansathi - MSMJS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="~$siteUrl`/profile/images/styles.css" type="text/css">
+
+<link rel="stylesheet" href="~$siteUrl`/jsadmin/jeevansathi.css" type="text/css">
+<script type="text/javascript" src="js/sendMessage.js"></script>
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+
+</head>
+
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+~$msmjsHeader`
+<br><br><br>
+        <form enctype='multipart/form-data' name="sendMessageForm" method="post" action="sendMessage.php" onSubmit="return checkFileExtension(this)";>
+	<input type="hidden" name="cid" value="~$cid`">
+	<input type="hidden" name="fileId" value="~$fileId`">
+	~$setMessageWidget`
+      </form>
+
+</body>
+</html>

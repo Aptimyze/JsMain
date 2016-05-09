@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Gift Voucher</title>
+</head>
+
+<body>
+<table width="500" border="0" cellpadding="5" cellspacing="0" bgcolor="#EFE4B3">
+  <tr>
+    <td><table width="500" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFCEF">
+      <tr>
+        <td><table width="472" border="0" align="center" cellpadding="0" cellspacing="0">
+          <tr>
+            <td width="472">&nbsp;</td>
+          </tr>
+          <tr>
+            <td><img src="~$IMG_URL`/profile/ser4_images/logo_pro_mailer.gif" width="183" height="37"></td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+          </tr>
+        </table>
+          <table width="460" border="0" align="center" cellpadding="1" cellspacing="0" bgcolor="#CFC185">
+            <tr>
+              <td><table width="472"  align="center" cellpadding="8" cellspacing="0" bgcolor="#FFFFFF">
+                <tr>
+                  <td width="472"><font face="Verdana, Arial" size="2">Dear User,<br>
+                        <br>
+      Congratulations! You've won 'FABULOUS GIFTS' on taking the Jeevansathi paid membership.<br>
+      <br>
+      As a paid member, you now get access to our premium services and benefits along with the following gift vouchers i.e. <br>
+      <br>
+	~section name=loop loop=$client`
+	<table width="420" border="0" cellspacing="0" cellpadding="0" style="margin-left:40px ">
+	  <tr>
+	~foreach from=$client[loop] key=k item=v`
+	~if $v.clientid`
+	~if $v.conditions`
+	     <td valign="top" width="130"><img src="~$IMG_URL`/jsadmin/voucher_backend_display.php?clientid=~$v.clientid`&file=VLOGO" width="108" height="39">
+	      <table border="0" cellspacing="0" cellpadding="0">
+		 <tr>
+		  <td height="10px"><font face="Verdana, Arial" size="1">* Conditions Apply </font></td>
+		</tr>
+	      </table></td>
+	~else`
+	<td valign="top" width="130"><img src="~$IMG_URL`/jsadmin/voucher_backend_display.php?clientid=~$v.clientid`&file=VLOGO" width="108" height="39"></td>
+	~/if`
+	~else`
+ 	<td valign="top" width="130">&nbsp;</td>
+	~/if`
+	~/foreach`
+ 	 </tr>
+  	<tr>
+    	<td colspan="3" valign="top">&nbsp;</td>
+    	</tr>
+	</table>
+	~/section`
+
+      <br>
+      You are entitled to Free Coupons from our partners. <a href="~$SITE_URL`/profile/promo_optin.php?username=~$USERNAME`"><strong>Click Here</strong></a> to redeem them <br>
+      <br>
+      Please read and agree to our <a href="~$SITE_URL`/profile/promo_optin.php?username=~$USERNAME`"><strong>terms and conditions</strong></a>.<br>
+      <br>
+      Hurry! Don&rsquo;t miss out the excitement, Grab the rewarding experience.<br>
+      <br>
+      Thanks<br>
+      <strong>The Jeevansathi Team<br>
+      <br>
+      </strong></font>
+                      <table width="460" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+
+                          <td><div align="right"><font face="Verdana, Arial" size="1">*Conditions Apply</font></div></td>
+                        </tr>
+                      </table>
+                      <font face="Verdana, Arial" size="2"><strong> </strong></font></td>
+                </tr>
+              </table></td>
+            </tr>
+          </table>
+
+          <br></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+</body>
+</html>
+

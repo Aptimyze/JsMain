@@ -1,0 +1,34 @@
+all:
+  lead_banner: 0
+  show_mobile: 0
+  show_age: 0
+  show_mtongue: 0
+
+  home:
+    enable_login:  off
+
+  login:
+    enable_login:  off
+    has_layout:  false
+
+  unsubscribe:
+    enable_login:  off
+    has_layout:  false
+
+  showMIS:
+    enable_login:  off
+
+  openCount:
+    enable_login:  off
+
+  createCsv:
+    enable_login:  off
+
+  redirectUrl:
+    enable_login: off
+
+  viewMailInBrowser:
+    enable_login: off
+
+  trackAdvProperty:
+    enable_login: off

@@ -1,0 +1,211 @@
+<?php
+$PAGE1=array();
+$PAGE1['posted_by_c']='relationship';
+$PAGE1['gender_c']='gender';
+$PAGE1['marital_status_c']='mstatus';
+$PAGE1['height_c']='height';
+$PAGE1['city_c']='city_residence';
+$PAGE1['phone_mobile']='mobile';
+$PAGE1['mother_tongue_c']='mtongue';
+$PAGE1['religion_c']='religion';
+$PAGE1['caste_c']='caste';
+$PAGE1['education_c']='degree';
+$PAGE1['occupation_c']='occupation';
+$PAGE1['income_c']='income';
+$PAGE1['drink_c']='drink';
+$PAGE1['smoke_c']='smoke';
+$PAGE1['date_birth_c']='birthdate';
+$PAGE1['have_children_c']='has_children';
+$PAGE1['seriousness_count_c']='seriousness_count';
+$LEADSCSTM=array(
+	'age_c',
+	'gender_c',
+	'height_c',
+	'posted_by_c',
+	'marital_status_c',
+	'religion_c',
+	'caste_c',
+	'mother_tongue_c',
+	'education_c',
+	'occupation_c',
+	'income_c',
+	'manglik_c',
+	'city_c',
+	'type_c',
+	'product_c',
+	'product_value_c',
+	'do_not_email_c',
+	'have_photo_c',
+	'have_email_c',
+	'std_c',
+	'subcaste_c',
+	'new_mtongue_c',
+	'isd_c',
+	'enquirer_mobile_no_c',
+	'isd_enquirer_c',
+	'std_enquirer_c',
+	'enquirer_landline_c',
+	'p_o_box_no_c',
+	'drink_c',
+	'smoke_c',
+	'school_name_c',
+	'college_name_c',
+	'current_employer_c',
+	'gothra_c',
+	'work_c',
+	'father_occupation_c',
+	'hobbies_c',
+	'jsprofileid_c',
+	'no_of_brothers_c',
+	'no_of_brothers_married_c',
+	'no_of_sisters_c',
+	'no_of_sisters_married_c',
+	'horoscope_dob_c',
+	'horoscope_place_of_birth_c',
+	'about_the_profile_c',
+	'enquirer_email_id_c',
+	'date_birth_c',
+	'lead_attribute_c',
+	'have_children_c',
+	'js_source_c',
+	'viewed_profileid_c',
+);	
+$LEADS=array(
+	'id',
+	'phone_home',
+	'phone_mobile',
+	'deleted',
+);
+$JPROFILECOLMS=array(
+	'PROFILEID',
+	'USERNAME',
+	'GENDER',
+	'RELIGION',
+	'CASTE',
+	'MANGLIK',
+	'MTONGUE',
+	'MSTATUS',
+	'DTOFBIRTH',
+	'OCCUPATION',
+	'COUNTRY_RES',
+	'CITY_RES',
+	'HEIGHT',
+	'EDU_LEVEL',
+	'EMAIL',
+	'RELATION',
+	'COUNTRY_BIRTH',
+	'SOURCE',
+	'INCOMPLETE',
+	'DRINK',
+	'SMOKE',
+	'HAVECHILD',
+	'DIET',
+	'INCOME',
+	'ACTIVATED',
+	'AGE',
+	'GOTHRA',
+	'PHONE_RES',
+	'PHONE_MOB',
+	'FAMILY_BACK',
+	'SCREENING',
+	'SUBCASTE',
+	'YOURINFO',
+	'FAMILYINFO',
+	'SPOUSE',
+	'EDUCATION',
+	'HAVEPHOTO',
+	'PINCODE',
+	'EDU_LEVEL_NEW',
+	'FATHER_INFO',
+	'SIBLING_INFO',
+	'WIFE_WORKING',
+	'JOB_INFO',
+	'PARENTS_CONTACT',
+	'FAMILY_VALUES',
+	'VERIFY_EMAIL',
+	'STD',
+	'ISD',
+	'T_BROTHER',
+	'T_SISTER',
+	'M_BROTHER',
+	'M_SISTER',
+	'FAMILY_TYPE',
+	'FAMILY_STATUS',
+	'CITIZENSHIP',
+	'BLOOD_GROUP',
+	'WEIGHT',
+	'PARENT_CITY_SAME',
+	'WORK_STATUS',
+	'PHONE_WITH_STD',
+	'MOB_STATUS',
+	'LANDL_STATUS',
+	'PHONE_FLAG',
+	'YOURINFO',
+	'CONTACT',
+	'SOURCE',
+	'SERIOUSNESS_COUNT',
+);
+$SUGARCRMDBCOLUMNS=array_merge($LEADS,$LEADSCSTM);
+$PROFILETOLEAD=array(
+	'MSTATUS'=>'marital_status_c',
+	'RELATION'=>'posted_by_c',
+	'GENDER'=>'gender_c',
+	'HEIGHT'=>'height_c',
+	'RELIGION'=>'religion_c',
+	'EDU_LEVEL_NEW'=>'education_c',
+	'INCOME'=>'income_c',
+    'DRINK'=>'drink_c',
+	'SMOKE'=>'smoke_c',
+	'MTONGUE'=>'mother_tongue_c',
+	'OCCUPATION'=>'occupation_c',
+	'USERNAME'=>'jsprofileid_c',
+	'DTOFBIRTH'=>'date_birth_c',
+	'MANGLIK'=>'manglik_c',
+	'HAVEPHOTO'=>'have_photo_c',
+	'ISD'=>'isd_c',
+	'GOTHRA'=>'gothra_c',
+	'MARRIED_WORKING'=>'work_c',
+	'FAMILY_BACK'=>'father_occupation_c',
+	'T_BROTHER'=>'no_of_brothers_c',
+	'M_BROTHER'=>'no_of_brothers_married_c',
+	'T_SISTER'=>'no_of_sisters_c',
+	'M_SISTER'=>'no_of_sisters_married_c',
+	'SUBCASTE'=>'subcaste_c',
+	'CONTACT'=>'primary_address_street',
+	'YOURINFO'=>'about_the_profile_c',
+	'SOURCE'=>'js_source_c',
+	'SERIOUSNESS_COUNT'=>'seriousness_count_c',
+);
+$PROFILETOLEAD['STD']='std_c';
+$LEADTOJPROFLE=array_flip($PROFILETOLEAD);
+$PROFILETOLEAD['PHONE_MOB']='phone_mobile';
+$PROFILETOLEAD['PHONE_RES']='phone_home';
+$PROFILETOLEAD['PLACE_BIRTH']='horoscope_place_of_birth_c';
+$PROFILETOLEAD['HOBBY']='hobbies_c';
+$REGPAGE1=array();
+$REGPAGE1['posted_by_c']='relationship';
+$REGPAGE1['gender_c']='gender';
+$REGPAGE1['marital_status_c']='mstatus';
+$REGPAGE1['height_c']='height';
+$REGPAGE1['city_c']='city_residence';
+$REGPAGE1['phone_mobile']='mobile';
+$REGPAGE1['phone_home']='phone';
+$REGPAGE1['mother_tongue_c']='mtongue';
+$REGPAGE1['religion_c']='religion';
+$REGPAGE1['caste_c']='caste';
+$REGPAGE1=array_flip($REGPAGE1);
+$LEADTOJPROFILEOTHERPAGES=array(
+	'drink_c'=>'DRINK',
+	'smoke_c'=>'SMOKE',
+	'isd_c'=>'ISD',
+	'gothra_c'=>'GOTHRA',
+	'work_c'=>'MARRIED_WORKING',
+	'father_occupation_c'=>'FAMILY_BACK',
+    'no_of_brothers_c'=>'T_BROTHER',
+	'no_of_brothers_married_c'=>'M_BROTHER',
+	'no_of_sisters_c'=>'T_SISTER',
+	'no_of_sisters_married_c'=>'M_SISTER',
+	'subcaste_c'=>'SUBCASTE',
+	'primary_address_street'=>'CONTACT',
+);
+?>

@@ -1,0 +1,8 @@
+
+use database MOBILE_API;
+
+CREATE TABLE `AUTHTOKEN_ARCHIVING` (
+ `AUTHTOKEN` varchar(500) NOT NULL DEFAULT '',
+ `ENTRY_DT` datetime NOT NULL,
+ PRIMARY KEY (`AUTHTOKEN`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='records the unique authtoken'

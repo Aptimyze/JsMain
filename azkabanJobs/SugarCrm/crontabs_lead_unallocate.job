@@ -1,0 +1,5 @@
+type=command
+dependencies=crontabs_lead_status_update
+command=${php5} ${docRoot}/crontabs/sugarcrm/lead_unallocate.php
+retries=2
+retry.backoff=10000

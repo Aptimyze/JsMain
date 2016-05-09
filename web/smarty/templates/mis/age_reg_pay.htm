@@ -1,0 +1,91 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br><br>
+<form action="regpay_mainpage.php" method=post>
+<table width=80% align=center>
+<tr class=label align=center>
+<td>Select
+        <select name=val>
+                <option value='income' ~if $select eq 'income'` selected ~/if`>Income Wise</option>
+                <option value='source' ~if $select eq 'source'` selected ~/if`>Source Wise</option>
+                <option value='city' ~if $select eq 'city'` selected ~/if`>City/Country Wise</option>
+                <option value='age' ~if $select eq 'age'` selected ~/if`>Age/Gender Wise</option>
+                <option value='community' ~if $select eq 'community'` selected ~/if`>Community Wise</option>
+        </select>
+</td>
+<td>
+<input type=hidden name="cid" value="~$cid`">
+<input type=submit name="CMDGo" value="  Go  ">
+</td>
+</tr>
+</table>
+</form>
+<br>
+<table width="100%" align="center" border=0 cellspacing=4 cellpadding=5>
+<tr class="formhead">
+<td align=center colspan=100% class=blue>&nbsp;Records from Dec 2004 Onwards</td>
+</tr>
+</table>
+<br>
+<table width="100%" align="center" border=0 cellspacing=4 cellpadding=5>
+<tr class="label">
+<td align=center width=10%>&nbsp;Age group</td>
+<td align=center width=10%>&nbsp;Total Registrations</td>
+<td align=center width=10%>&nbsp;Total Paid</td>
+<td align=center width=10%>&nbsp;Total Percentage</td>
+<td align=center width=10%>&nbsp;Total Male Registrations</td>
+<td align=center width=10%>&nbsp;Total Male Paid</td>
+<td align=center width=10%>&nbsp;Male Percentage</td>
+<td align=center width=10%>&nbsp;Total Female Registrations</td>
+<td align=center width=10%>&nbsp;Total Female Paid</td>
+<td align=center width=10%>&nbsp;Female Percentage</td>
+</tr>
+~section name=age loop=$agearr`
+	<tr class="fieldsnew">
+	<td align=center class=label>&nbsp;~$agearr[age]`</td>
+	<td align=center>&nbsp;~$reg_tot[age]`</td>
+	<td align=center>&nbsp;~$paid_tot[age]`</td>
+	<td align=center>&nbsp;~$pertot[age]`</td>
+	~section name=ind loop=$genderarr`
+	<td align=center>&nbsp;~$reg_cnt[age][ind]`</td>
+	<td align=center>&nbsp;~$paid_cnt[age][ind]`</td>
+	<td align=center>&nbsp;~$percent[age][ind]`</td>
+	~/section`
+	</tr>
+~/section`
+<tr class="label">
+<td align=center>&nbsp;Total</td>
+<td align=center>&nbsp;~$reg_totall`</td>
+<td align=center>&nbsp;~$paid_totall`</td>
+<td align=center>&nbsp;~$pertotall`</td>
+~section name=ind loop=$genderarr`
+<td align=center>&nbsp;~$reg_tot1[ind]`</td>
+<td align=center>&nbsp;~$paid_tot1[ind]`</td>
+<td align=center>&nbsp;~$pertot1[ind]`</td>
+~/section`
+</tr>
+</table>
+<br>
+</body>
+</html>

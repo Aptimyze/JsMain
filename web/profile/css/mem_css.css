@@ -1,0 +1,132 @@
+/* Membership CSS Created By Vishal Kaul */
+
+.clr{clear:both; height:0; overflow:hidden;}
+.fl{float:left!important;}
+.fr{float:right!important;}
+.grn{color:#00b515;}
+.brwn{color:#cc4800;}
+.wht{color:#fff;}
+.pd_0{padding:0!important;}
+.f_2{font-size:2px;}
+.f_17{font-size:17px;}
+.f_18{font-size:18px;}
+.totl{font-size:33px; float:left;}
+.mp_0{margin:0; padding:0;}
+.blu{color:#117DAA!important;}
+.mar_clr{color:#b7030e;}
+#mem_cont{width:773px; margin:auto;}
+#mem_cont *{list-style:none; border:0;}
+#mem_cont a{color:#117daa;}
+h1,ul,p{margin:0; padding:0; float:none;}
+#mem_cont h1{font:bold 16px Arial, Helvetica, sans-serif; color:#E51219;}
+#mem_cont ul.mem_proc{font-size:16px; color:#726f6f; font-weight:bold; margin-top:15px; padding-left:15px;}
+#mem_cont ul.mem_proc li{margin-right:26px; float:left;}
+#mem_cont .sprte{background:url(IMG_URL/profile/images/membership_sprite.png);}
+#mem_cont .grw_arw{width:36px; height:25px; float:left;}
+#mem_cont table.main{padding:0;}
+#mem_cont table.main td .ben{font-size:20px; color:#FE8A0D; padding-left:6px;}
+#mem_cont .e_vlu{width:38px; height:12px; background-position:0 -26px; float:left;}
+#mem_cont .e_rshta{width:47px; height:14px; background-position:0 -40px; float:left;}
+#mem_cont .grn_tck{width:21px; height:20px; background-position:0 -57px; float:left;}
+#mem_cont .rd_crs{width:15px; height:14px; background-position:0 -77px; float:left;}
+#mem_cont table.inr{background:#f7fce3; border:1px solid #fed369;}
+#mem_cont table.inr td{padding:6px;}
+#mem_cont table.inr td sup{color:#f00;}
+#mem_cont table.inr td em{font:normal 11px Arial, Helvetica, sans-serif; color:#757575; padding-left:5px;}
+.gry_bdr_bot{border-bottom:1px solid #eaefd1!important;}
+ul.mnth_rps{float:left; width:289px;}
+ul.mnth_rps li{border-bottom:1px solid #eaefd1!important; float:left; width:99.9%; padding:0 0 5px;}
+ul.mnth_rps li b{float:left; font-weight:normal; width:190px;}
+ul.mnth_rps li u{float:left; text-decoration:none; width:95px;}
+#mem_cont .buy_smry{width:720px; margin:21px auto;}
+#mem_cont .buy_smry .y_tp_bg{background-position:0 -114px; background-repeat:repeat-x; height:8px;}
+#mem_cont .buy_smry .y_btm_bg{background-position:0 -123px; background-repeat:repeat-x; height:8px;}
+#mem_cont .buy_smry .t_l_c{width:8px; height:8px; background-position:0 -93px;}
+#mem_cont .buy_smry .t_r_c{width:8px; height:8px; background-position:-9px -93px;}
+#mem_cont .buy_smry .b_l_c{width:8px; height:8px; background-position:0 -102px;}
+#mem_cont .buy_smry .b_r_c{width:8px; height:8px; background-position:-9px -102px;}
+#mem_cont .buy_smry .srvce_sltd{width:612px; background:#fff; padding:10px; margin:auto; margin-bottom:21px;}
+#mem_cont .buy_smry .srvce_sltd ul{float:left; width:99.9%;}
+#mem_cont .buy_smry .srvce_sltd ul li{float:left; width:99.9%; padding:0 0 14px;}
+#mem_cont .buy_smry .srvce_sltd ul li em{float:left; width:448px; font-style:normal;}
+#mem_cont .buy_smry .srvce_sltd ul li u{float:left; width:76px; text-decoration:none;}
+#mem_cont .buy_smry .srvce_sltd ul li a{float:left; width:60px; font-style:normal; font-size:11px;}
+#mem_cont .prced_btn{ width:223px;height:60px; background-position:0 -133px; float:right; font: bold 27px Arial, Helvetica, sans-serif; color:#fff; text-align:center; cursor:pointer;}
+#mem_cont .prced_btn .l{width:3px; height:60px; background-position:-40px -55px; float:left;}
+#mem_cont .prced_btn .r{width:3px; height:60px; background-position:-44px -55px; float:right;}
+#mem_cont .prced_btn b{padding:15px 15px 0 14px; font-weight:normal;}
+.buy_smry_shdw{background:url(IMG_URL/profile/images/buy_smry_main_bg.gif) repeat-y;}
+.buy_smry_shdw .inr_bg{width:712px; background:#ffd43e url(IMG_URL/profile/images/buy_smry_bg.gif) repeat-x; margin:auto;}
+#mem_cont .tot_prcd_btn{width:654px; float:left; border-bottom:1px solid #fff; padding:0 0 10px; margin:0 0 15px 35px;display:inline;}
+#mem_cont .evry_trns{float:left; padding:0 0 10px 37px;}
+.sec_cont{margin-right:21px; width:130px;}
+#mem_cont .scure_trns{width:11px; height:16px; background-position:-36px 0;}
+#mem_cont .gt_dscnt{width:769px; height:49px; background-position:0 -243px; margin:auto; margin-bottom:15px;}
+#mem_cont .gt_dscnt .l{float:left; width:5px; height:49px; background-position:0 -193px;}
+#mem_cont .gt_dscnt .r{float:right; width:31px; height:49px; background-position:-6px -193px;}
+#mem_cont .spcl_dscnt{width:750px; padding:10px; background:#689199; color:#fff; margin:10px 0 15px; font-size:19px;}
+.ylw_bg_clr{background:#fdc609; padding:5px; color:#000;}
+#mem_cont .slash_img_dol{float:left; margin:10px 0 0 -22px; position:relative; width:25px;}
+#mem_cont .slash_img{float:left; margin:10px 0 0 -32px; position:relative;}
+#mem_cont table.inr td s{float:left; margin:0px 0 0 9px; text-decoration:none;}
+#mem_cont table.inr td i{font-style:normal; color:#c91600;}
+#mem_cont .rd_arw{width:13px; height:7px; background-position:-24px -57px; margin:0 0 0 33px;}
+.buy_smry_shdw .inr_bg .exp_msg{float:left; padding-left:30px; font:20px Arial, Helvetica, sans-serif;}
+#mem_cont .exp_bt_bg{background-position:0 -292px; background-repeat:repeat-x; height:8px;}
+#mem_cont .buy_smry .b_l_c_exp{width:8px; height:8px; background-position:-20px -102px;}
+#mem_cont .buy_smry .b_r_c_exp{width:8px; height:8px; background-position:-29px -102px;}
+#mem_cont .dcnt_bg{width:775px; margin:auto; background:url(IMG_URL/profile/images/dscnt_bg.png) repeat-y}
+
+#mem_cont .ord_dtls{width:756px; margin:auto; border:1px solid #f5fcdb; padding:10px;}
+#mem_cont .ord_dtls ul{float:left; width:621px;}
+#mem_cont .ord_dtls ul li{float:left; width:99.9%; padding:2px 0 8px;}
+#mem_cont .ord_dtls ul li b{float:left; width:438px; color:#726f6f;font-size:16px;}
+#mem_cont .ord_dtls ul li s{float:left; width:83px; color:#726f6f;text-decoration:none;font-size:16px;}
+#mem_cont .ord_dtls ul li a{float:left; width:99px; padding:3px 0 0;}
+#mem_cont .vsa{width:36px; height:24px; background-position:0 -268px!important;}
+#mem_cont .mstr{width:39px; height:25px; background-position:-35px -268px!important;}
+#mem_cont .am_exp{width:38px; height:23px; background-position:-76px -268px!important;}
+#mem_cont .esy_bill{width:30px; height:30px; background-position:-114px -268px!important;}
+#mem_cont .dnr_clb{width:82px; height:23px; background-position:0 -298px!important;}
+#mem_cont .itz{width:47px; height:21px; background-position:-84px -298px!important;}
+#mem_cont .cty_bnk{width:50px; height:23px; background-position:0 -322px!important;}
+#mem_cont .mode{width:85%; float:left; padding:0 0 10px;}
+#mem_cont .mode b{font:normal 18px Arial, Helvetica, sans-serif; float:left; padding:0 6px 0 0;}
+#mem_cont .mode i{float:left; margin:0 6px 0 0;}
+#mem_cont .mode u{float:left; padding:5px; width:702px; font-size:11px; text-decoration:none; background:#f5f5f5; border:1px solid #ccc; margin:10px 0 10px 30px;}
+.ur_tlt{font:29px Arial, Helvetica, sans-serif; padding:10px 185px 0 0;}
+.totl{font-size:33px; float:left;}
+#mem_cont .sprte_smry{background:url(IMG_URL/profile/images/smry_mbrshp_pg.png);}
+.dscnt{font:bold 16px Arial,Verdana; text-indent:18px; float:left; width:428px; color:#FE8A0D;}
+.rd{color:#e40410!important; font-weight:bold;}
+.mem_spr{background:url(IMG_URL/profile/images/ord_dlt_bg.gif);}
+.or_dt_bg_lng{background:url(IMG_URL/profile/images/ord_dlt_bg.gif)}
+/*bank hover starts here*/
+.bnk{width:349px; background:url(IMG_URL/profile/images/bank_bg_img.png) repeat-y;}
+.bnk .tp{width:349px; height:4px; background:url(IMG_URL/profile/images/bank_tp_btm_cur.png); font-size:2px;}
+.bnk .btm{width:349px; height:4px; background:url(IMG_URL/profile/images/bank_tp_btm_cur.png) 0 -5px; font-size:2px;}
+.bnk ul{list-style:none; float:left!important; width:158px!important; padding:4px; float:left;}
+.bnk ul li{float:left!important; width:99.9%!important; margin:1.5px!important; font:10px Arial, Helvetica, sans-serif; padding:0!important;}
+/*bank hover ends here*/
+
+.ref_id{float:left; width: 270px; font-size:18px; padding:0 10px 0 0;}
+.pay_id{float:left; width:214px; background:#FFBE40; padding:3px; font-size:18px;}
+.rf_cnt{background:url(IMG_URL/profile/img_revamp/osbps_logo.gif) no-repeat right!important; float:left; width:745px!important;padding:30px 15px!important;}
+.gry_bdr{border:1px solid #eaefd1!important;}
+.pddng{padding:6px 0 0 6px;}
+/* For location starts*/
+#loc{float:left;width:450px;}
+#loc h3{font:18px Arial,Verdana;}
+#loc div{margin:7px 0 0; float:left; width:99.9%}
+#loc div label{float:left;width:125px;text-align:left;}
+#loc div select{float:left;width:230px;border:1px solid #ccc;}
+.inr_adr{background:#f0f0f0; width:92%; padding:2px; float:left; margin:2px;}
+/* For location ends*/
+
+
+#imp_ins{float:left; width:300px; padding:10px; background:#FFF7A4;}
+#imp_ins ul{float:left; list-style:none; width:99.9%;}
+#imp_ins ul li{float:left; width:93%; margin: 3px 0 0; background:url(IMG_URL/profile/images/imp_ins_li_img.gif) no-repeat 4px 3px; padding:0 0 0 12px;
+}
+b.hd{background:#f0f0f0; width:97.5%; padding:5px; float:left;}
+#inr td input{vertical-align:top;}

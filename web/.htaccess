@@ -1,0 +1,212 @@
+<IfModule mod_rewrite.c>
+RewriteEngine on
+RewriteOptions inherit
+#RewriteCond %{REQUEST_URI} !/site_down.htm
+#RewriteCond %{REQUEST_URI} !/beat.html
+#RewriteCond %{REQUEST_URI} !/api/
+#RewriteCond %{REQUEST_FILENAME} !/symfony_index.php
+#RewriteRule ^(.*)$ /site_down.htm [R=307,L]
+
+RewriteRule ^bussiness_sathi/ / [R=301]
+RewriteRule ^P/mem_comparison.php$ /symfony_index.php/membership/jspc
+RewriteRule ^P/payment.php$ /symfony_index.php/membership/jspc
+RewriteRule ^profile/payment.php$ /symfony_index.php/membership/jspc
+RewriteRule ^profile/mem_comparison.php$ /symfony_index.php/membership/jspc
+
+
+RewriteRule ^(.*)-matrimony-matrimonials /symfony_index.php/seo/index
+RewriteRule ^(.*)-brides-girls$ /symfony_index.php/seo/index
+RewriteRule ^(.*)-grooms-boys$ /symfony_index.php/seo/index
+RewriteRule ^cancer\/vcare(.*) /symfony_index.php/seo/cancer/vcare$1
+RewriteRule ^matrimony-profiles(.*)html$ /symfony_index.php/sitemap/show
+RewriteRule ^brides-profiles(.*).html$ /symfony_index.php/sitemap/show
+RewriteRule ^grooms-profiles(.*).html$ /symfony_index.php/sitemap/show
+RewriteRule ^profile/site_map.php /symfony_index.php/sitemap/index
+RewriteRule ^matrimonial-matrimony-(.*)$ /index.php
+RewriteCond %{REQUEST_URI} /creditcard
+RewriteRule ^(.*)$ http://ieplads.com/mailers/dont_delay_july17/index.html [R=301]
+RewriteCond %{REQUEST_URI} /resources/ [OR]
+RewriteCond %{REQUEST_URI} /profile/resources.php [OR]
+RewriteCond %{REQUEST_URI} /P/howjs.php
+RewriteRule ^(.*)$ / [L,R=301]
+RewriteCond %{REQUEST_URI} /P/search_landing.php [OR]
+RewriteCond %{REQUEST_URI} /profile/search_landing.php
+RewriteRule ^(.*)$ http://www.jeevansathi.com/profile/advance_search.php [L,R=301]
+RewriteCond %{REQUEST_URI} /SMS-Download-Android-App
+RewriteRule ^(.*)$ symfony_index.php/common/smsDownloadAndroidApp
+
+RewriteCond %{REQUEST_URI} /profile/voucher/
+RewriteRule ^(.*)$ / [R=301]
+RewriteCond %{REQUEST_URI} !/sugarcrm
+RewriteRule ^(.*)\.css$ /css_rule.php?file=$1 [T=application/x-httpd-php]
+RewriteCond %{REQUEST_URI} !/sugarcrm
+RewriteRule ^(.*)\.js$ /js_rule.php?file=$1 [T=application/x-httpd-php]
+RewriteCond %{HTTP_HOST} ^hindijeevansathi.in [NC]
+RewriteRule robots.txt robot_nofollow.txt [L]
+RewriteCond %{HTTP_HOST} ^www.hindijeevansathi.in [NC]
+RewriteRule robots.txt robot_nofollow.txt [L]
+RewriteCond %{HTTP_HOST} ^jeevansathi.co.in [NC]
+RewriteRule robots.txt robot_nofollow.txt [L]
+RewriteCond %{HTTP_HOST} ^www.jeevansathi.co.in [NC]
+RewriteRule robots.txt robot_nofollow.txt [L]
+RewriteCond %{HTTP_HOST} ^punjabijeevansathi.com [NC]
+RewriteRule robots.txt robot_nofollow.txt [L]
+RewriteCond %{HTTP_HOST} ^www.punjabijeevansathi.com [NC]
+RewriteRule robots.txt robot_nofollow.txt [L]
+RewriteCond %{HTTP_HOST} ^punjabijeevansathi.in [NC]
+RewriteRule robots.txt robot_nofollow.txt [L]
+RewriteCond %{HTTP_HOST} ^www.punjabijeevansathi.in [NC]
+RewriteRule robots.txt robot_nofollow.txt [L]
+RewriteCond %{HTTP_HOST} ^hindujeevansathi.com [NC]
+RewriteRule robots.txt robot_nofollow.txt [L]
+RewriteCond %{HTTP_HOST} ^www.hindujeevansathi.com [NC]
+RewriteRule robots.txt robot_nofollow.txt [L]
+RewriteCond %{HTTP_HOST} ^marathijeevansathi.in [NC]
+RewriteRule robots.txt robot_nofollow.txt [L]
+RewriteCond %{HTTP_HOST} ^www.marathijeevansathi.in [NC]
+RewriteRule robots.txt robot_nofollow.txt [L]
+RewriteCond %{HTTP_HOST} ^ser6.jeevansathi.com [NC]
+RewriteRule robots.txt robot_nofollow.txt [L]
+RewriteCond %{HTTP_HOST} ^static.jeevansathi.com [NC]
+RewriteRule robots.txt robot_nofollow.txt [L]
+RewriteCond %{HTTP_HOST} ^jeevansathionmobile.com [NC]
+RewriteRule robots.txt robot_nofollow.txt [L]
+RewriteCond %{HTTP_HOST} ^www.jeevansathionmobile.com [NC]
+RewriteRule robots.txt robot_nofollow.txt [L]
+RewriteRule nri_matrimony /nri-matrimony-matrimonials [R=301]
+RewriteRule matrimonial-([0-9]+.[0-9])\.htm$ symfony_index.php/profile/view?uPID=$1 [T=application/x-httpd-php]
+RewriteRule ^(groom|bride)-(.*)-profiles$ symfony_index.php/profile/view?canurl=$2
+# Rules for symfony modules
+RewriteCond %{REQUEST_FILENAME} profile\/pdf [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/jeevansathi_dev.php\/ [NC]
+RewriteRule ^(.*)$ jeevansathi_dev.php [L]
+RewriteCond %{REQUEST_FILENAME} profile\/viewprofile.php [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_FILENAME} P\/viewprofile.php [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/social\/ [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/inbox\/ [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/search\/ [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/common\/ [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/contacts\/ [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/static\/ [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/fto\/ [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/profile\/dpp [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/profile\/edit_profile.php [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/P\/edit_profile.php [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/profile\/edit_dpp.php [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/P\/edit_dpp.php [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/profile\/editProfile [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_FILENAME} profile\/albumpage [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/phone\/ [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/notification\/ [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/mailer\/ [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/myjs\/ [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/testautomation\/ [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/profile\/requestHoroscope [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/profile\/mobhoroscope [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+
+RewriteCond %{REQUEST_URI} \/register\/ [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} [profile|P]\/(registration_new.php|registration_page1.php|registration_pg1.php) [NC]
+RewriteRule ^(.*)$ symfony_index.php/register/page1 [L]
+
+RewriteCond %{REQUEST_URI} matchalert\/top_matches_4_u_v2.php [NC]
+RewriteRule ^(.*)$ symfony_index.php/mailer/openRate [L]
+
+RewriteCond %{REQUEST_URI} \/membership\/ [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+
+RewriteCond %{REQUEST_URI} \/settings\/ [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+
+RewriteRule profile\/layer_photocheck.php symfony_index.php/social/album 
+RewriteRule P\/layer_photocheck.php symfony_index.php/social/album
+RewriteRule profile\/photocheck.php operations.php/photoScreening/album 
+RewriteRule P\/photocheck.php operations.php/photoScreening/album 
+RewriteRule ^profile\/autoSug symfony_index.php
+RewriteRule profile\/summary_profiles.php symfony_index.php/search/summaryProfiles 
+RewriteRule P\/summary_profiles.php symfony_index.php/search/summaryProfiles
+RewriteRule P\/advance_search.php symfony_index.php/search/AdvancedSearch
+
+#Rules for autologin
+RewriteCond %{QUERY_STRING} &?CMGFRMMMMJS=([^&]+)
+RewriteCond %{REQUEST_URI} !/mmmjs_autologin.php
+RewriteRule ^(.*)$ /profile/mmmjs_autologin.php?id=$1 [QSA,L] 
+RewriteCond %{QUERY_STRING} ^echecksum=([^&]+)
+RewriteCond %{REQUEST_URI} !/mmmjs_autologin.php
+RewriteRule ^(.*)$ /profile/mmmjs_autologin.php?id=$1 [QSA,L]
+RewriteCond %{QUERY_STRING} &echecksum=([^&]+)
+RewriteCond %{REQUEST_URI} !/mmmjs_autologin.php
+RewriteRule ^(.*)$ /profile/mmmjs_autologin.php?id=$1 [QSA,L]
+
+RewriteCond %{HTTP_HOST} ^js(1|2).in [NC]
+RewriteRule ^(\w+)$ redirectShortUrl.php?id=$1  [L]
+RewriteCond %{HTTP_HOST} ^js(1|2).in [NC]
+RewriteRule ^(.*)$ redirectShortUrl.php  [L]
+ErrorDocument 404 /symfony_index.php/seo/404
+RewriteCond %{REQUEST_FILENAME} profile\/search.php [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_FILENAME} P\/search.php [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/e\/ [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/successStory\/ [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/profile\/contact.php [NC]
+RewriteRule ^(.*)$ /contactus/index [R=301]
+RewriteCond %{REQUEST_URI} \/P\/contact.php [NC]
+RewriteRule ^(.*)$ /contactus/index [R=301]
+RewriteCond %{REQUEST_URI} \/contactus\/ [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/faq\/ [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/faq_main.php [NC]
+RewriteRule ^(.*)$ /faq/index [R=301]
+RewriteCond %{REQUEST_URI} \/faq_other.php [NC]
+RewriteRule ^(.*)$ /faq/feedback [R=301]
+RewriteCond %{REQUEST_URI} \/api\/v[0-9]+ [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/disclaimer.php [NC]
+RewriteRule ^(.*)$ /static/page/disclaimer [R=301]
+RewriteCond %{REQUEST_URI} \/privacy_policy.php [NC]
+RewriteRule ^(.*)$ /static/page/privacypolicy [R=301]
+RewriteCond %{REQUEST_URI} \/third_party_content.php [NC]
+RewriteRule ^(.*)$ /static/page/thirdparty [R=301]
+RewriteCond %{REQUEST_URI} \/conf_policy.php [NC]
+RewriteRule ^(.*)$ /static/page/privacyfeatures [R=301]
+RewriteCond %{REQUEST_URI} \/summon_grievance.php [NC]
+RewriteRule ^(.*)$ /static/grievance$2 [R=301,QSA]
+RewriteCond %{REQUEST_URI} \/profile/advertise.php [NC]
+RewriteRule ^(.*)$ /static/advertise [R=301]
+RewriteCond %{REQUEST_URI} ^\/seo\/ [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} ^/browse-matrimony-profiles-by-community-jeevansathi [NC]
+RewriteRule ^(.*)$ symfony_index.php/seo/seo_IndexTabs [L]
+RewriteCond %{REQUEST_FILENAME} jsmb\/login_home.php [NC]
+RewriteRule ^(.*)$ /symfony_index.php/static/logoutPage [L]
+RewriteCond %{REQUEST_URI} \/homepage\/ [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+</IfModule>

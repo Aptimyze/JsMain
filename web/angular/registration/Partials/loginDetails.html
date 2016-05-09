@@ -1,0 +1,32 @@
+<div style="height:{{MaxHeight+'px'}}" id="perspective" resize>
+  <div class="fullwid bg4" ng-class=""> 
+    <!--start:div-->
+    <div reg-tab enable-back="bEnableBack" on-back="myBack" data={{tabName}}></div>
+    <!--end:div-->
+    
+	<form name='regForm' novalidate> 
+		<div class="scrollContent" style="height:{{fieldsHeight+'px'}}" >
+      <div reg-text-field enable-next-btn="enableNextBtn" data='field_name' ng-show='field_name.show' on-next='enableNextBtn' validation-type="nameField" ></div>
+			<div reg-email-field enable-next-btn="enableNextBtn" data='field_email' ng-show='field_email.show'></div>
+			<div reg-pwd-field enable-next-btn="enableNextBtn" data='field_pwd' ng-show='field_pwd.show'></div> 
+			<div reg-phone-field  enable-next-btn="enableNextBtn" data='field_phone' ng-show='field_phone.show' on-next='myNext' ></div>	
+
+            <div ng-class={'posabs':300<fieldsHeight,'pt20':fieldsHeight<300} class="btm0 fullwid fontlig btm70px">
+				<div class="txtc set_btmlink">
+                    <a ng-click="openInNewTab('terms')">Terms of Use</a>
+                    <span class="f14 set_color1">•</span>
+                    <a ng-click="openInNewTab('privacy')">Privacy Policy</a>
+				</div>
+			</div>
+			 
+	    </div>
+	    
+	    <!--start:Next-->
+	    <div next-btn on-next="myNext" enable="{{bNextEnable}}" btn-label="Accept & Continue"></div>
+	    <!--end:Next--> 
+	</form>
+  </div>
+  <!-- Modal window overlay- overlay_1 page-->
+  <ng-include id="modalView" ng-class={'slide-down':bModalWindow} ng-if="bModalWindow" src="'/angular/registration/Partials/errorModalWindow.html'" scope="" onload=""></ng-include>
+</div>
+</div>

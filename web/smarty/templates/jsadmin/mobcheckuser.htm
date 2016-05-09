@@ -1,0 +1,115 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>JeevanSathi.com - Phone Search</title>
+  <link rel="stylesheet" href="/jsadmin/jeevansathi.css" type="text/css">
+  <link rel="stylesheet" href="/profile/images/styles.css" type="text/css">
+<script>
+function IsNumeric(sText)
+{
+   var ValidChars = "0123456789";
+   var Char;
+   for (i = 0; i < sText.length; i++) 
+      { 
+      Char = sText.charAt(i)
+      if (ValidChars.indexOf(Char) == -1) 
+         {
+         return false;
+         }
+      }
+   return true;
+   
+}
+function validate()
+{
+	num = document.mobform.mobno.value;
+	numlen = document.mobform.mobno.value.length;
+	if(!IsNumeric(num))
+	{
+		alert('Not a valid mobile number');
+		return false;
+	}
+	/*if(numlen != 10)
+	{
+		alert('Please check the entered mobile number');
+		return false;
+	}*/
+	return true;
+}
+function MM_openBrWindow(theURL,winName,features)
+{
+        window.open(theURL,winName,features);
+}
+</script>
+</head>
+
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+~include file="head.htm"`
+
+  <table width=59% cellspacing="1" cellpadding='0' ALIGN="CENTER" style="padding-top:15px">
+   <tr width=100% border=1 >
+    <td width="30%" class="formhead" height="23"><font><b>Welcome : ~$username`</b></font></td>
+    <td width="25%" class="formhead" align="center"><a href="mainpage.php?cid=~$cid`">Click here to go to main page</a></td>
+     <td width="6%" class="formhead" align='RIGHT' height="23">
+        <a href="logout.php?cid=~$cid`">Logout</a>
+    </td>
+    
+   </tr>
+  </table>
+<br>
+<br>
+
+<form name="mobform" method="post" action="mobcheckuser.php" onsubmit="return validate();">
+
+<input type="hidden" name="cid" value="~$cid`">
+	
+<table cellpadding=5 align=center width="80%">
+
+	<tr class="fieldsnew">
+		<td class="label">Phone Number</td>
+ 	        <td><input type="text" name="mobno" value="~$mobno`"></td>
+		<td><input type="submit" name="submit" value="Search"></td>
+	</tr>
+</table>
+</form>
+
+~if $flag eq '1'`
+<table cellpadding = 5 align=center width=80%>
+
+<tr class="formhead">
+	<td width="40%">List of usernames</td>
+	<td>Activated</td>
+</tr>
+
+~if $NO_RECORD eq 'Y'`
+	<tr class="fieldsnew">
+	<td class="red" colspan=2>No Record Found</td>
+	</tr>
+~else`
+	~section name=next loop=$lusers`
+	<tr class="label">
+	~if $hyperlink`
+		<td>
+			<a href="#" onclick="MM_openBrWindow('mobUserInfo.php?username=~$lusers[next].USERNAME`&cid=~$cid`','','width=800,height=600,scrollbars=yes'); return false;">~$lusers[next].USERNAME` </a>
+		</td>
+	~else`
+		<td>~$lusers[next].USERNAME`</td>
+	~/if`
+	<td>~$lusers[next].ACTIVATED`</td>
+	</tr>
+	~/section`
+~/if`
+</table>
+~/if`
+
+<br>
+<br>
+<br>
+<br>
+<br>
+
+~include file="foot.htm"`
+
+</body>
+</html>

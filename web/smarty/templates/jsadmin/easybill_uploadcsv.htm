@@ -1,0 +1,32 @@
+<html>
+<title>Upload Easy Bill CSV.</title>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+	<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+</head>
+~include file="head.htm"`
+<body>
+		<form name="form1" action="easybill_uploadcsv.php" enctype="multipart/form-data" method="post">
+		<table border="0" cellpadding="4" cellspacing="4" align="center" width="80%">
+		<tr class="formhead" align="center">
+			<td><a href="mainpage.php?cid=~$cid`">Mainpage</a></td>
+		</tr>
+		~if $ERROR OR $SUCCESS`
+			<tr class="formhead" align="center">
+			<td><font color="red">~$MESSAGE`</font></td>
+			</tr>
+		~/if`
+		<tr class="formhead" align="center">
+			<td>Select a CSV file to Upload</td>
+		</tr>
+		<tr class="fieldsnew" align="center">
+			<td>
+				<input type="file" name="mainfile">
+				<input type="submit" name="CMDUpload" value="Upload">
+			</td>
+		</table>
+		<input type="hidden" name="cid" value="~$cid`">
+		</form>
+</body>
+</html>

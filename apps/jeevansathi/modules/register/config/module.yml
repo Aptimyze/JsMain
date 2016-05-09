@@ -1,0 +1,56 @@
+all:
+  login:
+    enable_login: off
+  index:
+    enable_login: off
+  page1:
+    enable_login: off
+  regPage:
+    enable_login: off  
+  page2:
+    enable_login: off
+  page3:
+    enable_login: off
+  page4:
+    enable_login: off
+  page5:
+    enable_login: off
+  page6:
+    enable_login: on
+    enable_google_analytics: on
+  minireg:
+    enable_login: off
+  minireglead:
+    enable_login: off
+  misRegCapturelead:
+    enable_login: off
+  jsmbPage1:
+    enable_login: off
+  jsmbPage2:
+    enable_login: off
+  jsmbPage3:
+    enable_login: off 
+  jsmbPage4:
+    enable_login: off
+  jsmbPage5:
+    enable_login: off     
+  customreg:
+    enable_login: off   
+  page1api_v1:
+    enable_login: off
+  StaticDataV1:
+    enable_login: off
+  page1v1:
+    enable_login: off
+  page3v1:
+    enable_login: off
+  newJsmsReg:
+    enable_login: off
+  newJsmsPage1:
+    enable_login: off
+  newJsmsPage2:
+    enable_login: off
+  trackJsmsReg:
+    enable_login: off
+  default:
+    LoggedInProfile:  PROFILEID,USERNAME,PASSWORD,GENDER,RELIGION,CASTE,SECT,MANGLIK,MTONGUE,MSTATUS,DTOFBIRTH,OCCUPATION,COUNTRY_RES,CITY_RES,HEIGHT,EDU_LEVEL,EMAIL,ENTRY_DT,MOD_DT,RELATION,COUNTRY_BIRTH,SOURCE,INCOMPLETE,PROMO,DRINK,SMOKE,HAVECHILD,RES_STATUS,BTYPE,COMPLEXION,DIET,HEARD,INCOME,CITY_BIRTH,BTIME,HANDICAPPED,SUBSCRIPTION,ACTIVATED,AGE,GOTHRA,GOTHRA_MATERNAL,NAKSHATRA,MESSENGER_ID,MESSENGER_CHANNEL,PHONE_RES,PHONE_MOB,FAMILY_BACK,SCREENING,CONTACT,SUBCASTE,YOURINFO,FAMILYINFO,SPOUSE,EDUCATION,LAST_LOGIN_DT,SHOWPHONE_RES,SHOWPHONE_MOB,KEYWORDS,PROMO_MAILS,SERVICE_MESSAGES,PERSONAL_MATCHES,SHOWADDRESS,UDATE,SHOWMESSENGER,PINCODE,PARENT_PINCODE,PRIVACY,EDU_LEVEL_NEW,FATHER_INFO,SIBLING_INFO,WIFE_WORKING,JOB_INFO,MARRIED_WORKING,PARENT_CITY_SAME,PARENTS_CONTACT,SHOW_PARENTS_CONTACT,FAMILY_VALUES,SORT_DT,SHOW_HOROSCOPE,GET_SMS,STD,ISD,MOTHER_OCC,T_BROTHER,T_SISTER,M_BROTHER,M_SISTER,FAMILY_TYPE,FAMILY_STATUS,CITIZENSHIP,BLOOD_GROUP,HIV,WEIGHT,NATURE_HANDICAP,WORK_STATUS,ANCESTRAL_ORIGIN,HOROSCOPE_MATCH,SPEAK_URDU,RASHI,PHONE_WITH_STD,MOB_STATUS,LANDL_STATUS,PHONE_FLAG,CRM_TEAM,activatedKey,HAVE_JCONTACT,HAVE_JEDUCATION,SUNSIGN,FAMILY_INCOME

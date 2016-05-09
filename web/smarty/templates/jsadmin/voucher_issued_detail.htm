@@ -1,0 +1,70 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style TYPE="text/css">
+P.breakhere {page-break-before: always}
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br>
+<br>
+        <table width=100% align=center>
+        <tr class=label colspan=3>
+                <td align=center>SNo</td>
+                <td align=center>Name</td>
+                <td align=center>User Name</td>
+                <td align=center>EMail</td>
+                <td align=center>Address</td>
+                <td align=center>City</td>
+                <td align=center>Phone</td>
+                <td align=center>Mobile</td>
+                ~section name=sec loop=$client_name`
+                <td align=center>~$client_name[sec]`</td>
+                ~/section`
+        </tr>
+        ~section name=sec loop=$voucher`
+        <tr class=fieldsnew>
+                <input type=hidden name=cid value=~$cid`>
+                <input type=hidden name=profileid value=~$voucher[sec].PROFILEID`>
+                <input type=hidden name=user value=~$voucher[sec].NAME`>
+                <td align=center>~$voucher[sec].SNO`</td>
+                <td align=center>~$voucher[sec].NAME`</td>
+                <td align=center>~$voucher[sec].USERNAME`</td>
+                <td align=center>~$voucher[sec].EMAIL`</td>
+                <td align=center>~$voucher[sec].CONTACT`</td>
+                <td align=center>~$voucher[sec].CITY_RES`</td>
+                <td align=center>~$voucher[sec].PHONE_RES`</td>
+                <td align=center>~$voucher[sec].PHONE_MOB`</td>
+                ~section name=sec1 loop=$clientid`
+                <td align=center>~$voucher[sec][sec1].TYPE`<br>~$voucher[sec][sec1].VOUCHER_NO`</td>
+                ~/section`
+        <tr>
+        ~/section`
+        </table>
+	<center><br>
+	<table>
+	<tr class=priNormal align=center>
+	    <td colspan="80%" height="21">
+	    ~$PAGELINK`
+	    </td>
+	   </tr>
+	</table>
+	</center>
+
+</body>
+</html>
+<P CLASS="breakhere">

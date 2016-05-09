@@ -1,0 +1,152 @@
+<Results>
+
+<AuthorInfo description="Jeevansathi.com - India's No 1 Matrimonial Site" author="praveen.kodur@naukri.com"/>
+
+<ResultSpec id="m1">
+   <Query>[Matrimonial]</Query>
+    <Response>
+        <Output name="title">Free Indian Matrimonial</Output>
+        <Output name="more_url">http://www.jeevansathi.com</Output>
+        <Output name="text1">Over 600000 Registered members</Output>
+        <Output name="text2">Register and Search 100000+ Photo Profiles</Output></Response>
+</ResultSpec>
+
+<ResultSpec id="m2">
+    <Query>[match]</Query>
+    <Response>
+        <Output name="title">Looking for [match]</Output>
+        <Output name="more_url">http://www.jeevansathi.com</Output>
+        <Output name="text1">Over 600000 Registered members</Output>
+        <Output name="text2">Register and Search 100000+ Photo Profiles</Output></Response>
+</ResultSpec>
+
+<ResultSpec id="m3">
+    <Query>Find a [match]</Query>
+    <Response>
+        <Output name="title">Looking for [match]</Output>
+        <Output name="more_url">http://www.jeevansathi.com</Output>
+        <Output name="text1">Over 600000 Registered members</Output>
+        <Output name="text2">Register and Search 100000+ Photo Profiles</Output></Response>
+</ResultSpec>
+
+<ResultSpec id="m4">
+    <Query>Looking for [match]</Query>
+    <Response>
+        <Output name="title">Looking for [match]</Output>
+        <Output name="more_url">http://www.jeevansathi.com</Output>
+        <Output name="text1">Over 600000 Registered members</Output>
+        <Output name="text2">Register and Search 100000+ Photo Profiles</Output></Response>
+</ResultSpec>
+
+<ResultSpec id="m5">
+    <Query>Brides in [capital]</Query>
+    <Response>
+        <Output name="title">Looking for Brides in [capital]</Output>
+        <Output name="more_url">http://www.jeevansathi.com</Output>
+        <Output name="text1">Over 600000 Registered members</Output>
+        <Output name="text2">Register and Search 100000+ Photo Profiles</Output></Response>
+</ResultSpec>
+
+<ResultSpec id="m6">
+   <Query>Grooms in [capital]</Query>
+    <Response>
+        <Output name="title">Looking for Grooms in [capital]</Output>
+        <Output name="more_url">http://www.jeevansathi.com</Output>
+        <Output name="text1">Over 600000 Registered members</Output>
+        <Output name="text2">Register and Search 100000+ Photo Profiles</Output></Response>
+</ResultSpec>
+
+<ResultSpec id="m7">
+   <Query>Brides in [city]</Query>
+    <Response>
+        <Output name="title">Looking for Brides in [city]</Output>
+        <Output name="more_url">http://www.jeevansathi.com</Output>
+        <Output name="text1">Over 600000 Registered members</Output>
+        <Output name="text2">Register and Search 100000+ Photo Profiles</Output></Response>
+</ResultSpec>
+
+<ResultSpec id="m8">
+   <Query>Grooms in [city]</Query>
+    <Response>
+        <Output name="title">Looking for Grooms in [city]</Output>
+        <Output name="more_url">http://www.jeevansathi.com</Output>
+        <Output name="text1">Over 600000 Registered members</Output>
+        <Output name="text2">Register and Search 100000+ Photo Profiles</Output></Response>
+</ResultSpec>
+
+<ResultSpec id="m9">
+  <Query>Matchmaking in [city]</Query>
+    <Response>
+        <Output name="title">Finding a Match in [city]</Output>
+        <Output name="more_url">http://www.jeevansathi.com</Output>
+        <Output name="text1">Over 600000 Registered members</Output>
+        <Output name="text2">Register and Search 100000+ Photo Profiles</Output></Response>
+</ResultSpec>
+
+<ResultSpec id="m10">
+  <Query>Matchmaking in [capital]</Query>
+    <Response>
+        <Output name="title">Finding a Match in [capital]</Output>
+        <Output name="more_url">http://www.jeevansathi.com</Output>
+        <Output name="text1">Over 600000 Registered members</Output>
+        <Output name="text2">Register and Search 100000+ Photo Profiles</Output></Response>
+</ResultSpec>
+
+
+<ResultSpec id="m10">
+  <Query>Brides in [towns]</Query>
+    <Response>
+        <Output name="title">Find Brides in [towns]</Output>
+        <Output name="more_url">http://www.jeevansathi.com</Output>
+        <Output name="text1">Over 600000 Registered members</Output>
+        <Output name="text2">Register and Search 100000+ Photo Profiles</Output></Response>
+</ResultSpec>
+
+<ResultSpec id="m11">
+  <Query>Grooms in [towns]</Query>
+    <Response>
+        <Output name="title">Find Grooms in [towns]</Output>
+        <Output name="more_url">http://www.jeevansathi.com</Output>
+        <Output name="text1">Over 600000 Registered members</Output>
+        <Output name="text2">Register and Search 100000+ Photo Profiles</Output></Response>
+</ResultSpec>
+
+<ResultSpec id="m11">
+    <Query>Matchmaking in [towns]</Query>
+    <Response>
+        <Output name="title">Finding a Match in [towns]</Output>
+        <Output name="more_url">http://www.jeevansathi.com</Output>
+        <Output name="text1">Over 600000 Registered members</Output>
+        <Output name="text2">Register and Search 100000+ Photo Profiles</Output></Response>
+</ResultSpec>
+
+<DataObject id="jeevansathi" type="Matrimonial">
+      <QueryName value="matrimonial"/>
+      <QueryName value="matrimonials"/>
+      <QueryName value="matchmaking"/>
+      <QueryName value="find a match"/>
+</DataObject>
+<DataObject id="match" type="match">
+      <QueryName value="indian bride"/>
+      <QueryName value="indian groom"/>
+</DataObject>
+<DataObject id="capital" type="capital">
+      <QueryName value="delhi"/>
+      <QueryName value="NCR"/>
+      <QueryName value="New Delhi"/>
+      <QueryName value="Capital Region"/>
+</DataObject>
+<DataObject id="city" type="city">
+      <QueryName value="Bombay"/>
+      <QueryName value="Mumbai"/>
+      <QueryName value="Bangalore"/>
+      <QueryName value="Chennai"/>
+      <QueryName value="Kolkata"/>
+</DataObject>
+<DataObject id="Towns" type="towns">
+      <QueryName value="ahmedabad"/>
+      <QueryName value="pune"/>
+      <QueryName value="chandigarh"/>
+      <QueryName value="Lucknow"/>
+</DataObject>
+</Results>

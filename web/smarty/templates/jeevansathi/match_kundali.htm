@@ -1,0 +1,140 @@
+<html>
+<head>
+<title>JeevanSathi Matrimonials - Jeevansathi Kundali Matcher</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="http://www.jeevansathi.com/P/I/styles.php" type="text/css">
+<link rel="stylesheet" href="http://www.jeevansathi.com/P/IN/styles.php" type="text/css">
+<script language="JavaScript">
+        function callCityLocator(no)
+                {
+                        //val='city.php?cityflag='+no;
+                        val='city.php?cityflag=1&frominput=0';
+                        cityLocator = window.open(val,'','height=257,width=411,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,top=0,left=0');
+                }
+	function validate()
+	{
+		var str=document.form1;
+		var elem;
+		for(var i=0;i<str.elements.length;i++)
+		{
+			if(str.elements[i].name=='birth_place')
+			{
+				elem= str.elements[i];
+			}
+		}
+		if(elem.value=='')
+		{
+			alert ("Please select City using Birth Place Locator or request info from member.");
+			return false;
+		}
+		else
+			return true;
+	}
+	function request(URL)
+	{
+		location.href=URL+'&flag=BLOCATOR';
+	}
+</SCRIPT>
+
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body leftmargin="5" topmargin="5">
+~$HEAD` ~$SUBHEADER`~$LEFTPANEL`
+
+<form name=form1 method="POST" action="call_kundali.php" onSubmit="return validate();">
+
+<input type=hidden name="ClientID" value="jeevansaathi">
+
+<input type=hidden name='fpgender' value='~$FPGENDER`'>
+<input type=hidden name='fpcity' value='~$FPCITY`'>
+<input type=hidden name='fpcountry' value='~$FPCOUNTRY`'>
+<input type=hidden name='fpname' value='~$FPNAME`'>
+<input type=hidden name='fpdobd' value='~$FPDOBD`'>
+<input type=hidden name='fpdobm' value='~$FPDOBM`'>
+<input type=hidden name='fpdoby' value='~$FPDOBY`'>
+<input type=hidden name='fptobh' value='~$FPTOBH`'>
+<input type=hidden name='fptobm' value='~$FPTOBM`'>
+
+
+<input type=hidden name='spgender' value='~$GENDER`'>
+<input type=hidden name='fname' value='~$USERNAME`'>
+<input type=hidden name='dobday' value='~$DOBDAY`'>
+<input type=hidden name='dobmonth' value='~$DOBMONTH`'>
+<input type=hidden name='dobyear' value='~$DOBYEAR`'>
+<input type=hidden name='bhour' value='~$HOUR_BIRTH`'>
+<input type=hidden name='bminutes' value='~$MIN_BIRTH`'>
+
+
+<table width="78%" height="1110" border="0" cellspacing="0" cellpadding="0" align="center">
+<td valign="top">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td height="18" class="headbigblack"><b>Kundali Matcher Service </b></td>
+ </tr>
+ <tr>
+  <td height="1" bgcolor="#CC0033"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="1" height="1"></td>
+ </tr>
+ <tr>
+  <td height="8"><br>
+   <table width="324" border="0" align="center" cellpadding="3" cellspacing="3">
+   <tr>
+    <td class="mediumblack"><b>Astro data of</b></td>
+    <td class="mediumblack"><b>~$USERNAME`</b></td>
+   </tr>
+   <tr>
+    <td width="135" class="mediumblack"><b> Date of Birth </b> </td>
+    <td width="180" class="mediumblack"><b>~$DTOFBIRTH` </b></td>
+   </tr>
+   <tr>
+    <td class="mediumblack"><b> Birth Hour </b> </td>
+    <td class="mediumblack"><b>~if $NOBTIME neq "Y"`~$HOUR_BIRTH` Hr ~/if`</b><br>
+  </td>
+   </tr>
+   <tr>
+    <td class="mediumblack"><b> Birth Minute</b> </td>
+    <td class="mediumblack"><b>~if $NOBTIME neq "Y"`~$MIN_BIRTH` Min ~/if`</b><br>
+     </td>
+   </tr>
+   <tr>
+    <td valign="top" class="mediumblack"><b>Place of birth </b></td>
+    <td class="mediumblack"><b>~if $NOCITY_BIRTH neq "Y"`~$CITY_BIRTH`, ~$COUNTRY_BIRTH` ~/if`</b> <br>
+     (As mentioned by the member)     <br><br>
+<input type="button" name="button_birth" class="testbox" value="    Birth place locator    " onClick="callCityLocator(1)">
+<input type="hidden" name="birth_place" value="">
+<input type=hidden name="birth_country" value="">
+<input type="hidden" name="astro" value="~$ASTRO`">
+
+     <br>
+     (Select nearest city to the Place of Birth using the Birth Place Locator) <br><center><b>OR</b></center><br><input name="Submit" type="button" value="  Request Info   " onclick="request('request_kundali_data.php?checksum=~$CHECKSUM`&profilechecksum=~$PROFILECHECKSUM`')"><br>
+   </tr>
+<!--   <tr>
+    <td valign="top" class="mediumblack"><b>Country of birth </b></td>
+    <td class="mediumblack"><b>~if $NOCOUNTRY_BIRTH neq "Y"`~$COUNTRY_BIRTH`</b><br>
+    	~else`
+     The member has not entered this information in his profile, so click on the Request Info link to send an automated mail. ~/if`</td>
+   </tr>
+-->
+   <tr>
+    <td colspan="2" class="bigblack"><div align="center">
+     <br>
+     <input name="checksum_astro" type="hidden" value="~$CHECKSUM_ASTRO`">
+     <input name="checksum" type="hidden" value="~$CHECKSUM`">
+     <input name="profilechecksum" type="hidden" value="~$PROFILECHECKSUM`">
+     <input name="Submit" type="submit" value="  Match my Kundali   ">
+    </div></td>
+    </tr>
+  </table></td>
+ </tr>
+</table>
+</td>
+</tr>
+</table>
+
+</form>
+<br>
+~$SUBFOOTER` <br>
+<br>
+<br>
+~$FOOT`
+</body>
+</html>
+

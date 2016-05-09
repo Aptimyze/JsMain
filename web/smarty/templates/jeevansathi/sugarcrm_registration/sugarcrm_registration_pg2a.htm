@@ -1,0 +1,281 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="description" content="Register for Free in Jeevansathi.com. Create your matrimonial profile and find your dream life partner. Join Jeevansathi.com today, the leading India matrimonials website in India. Search matrimonials, matrimony profiles, NRI bride and groom from our online matrimonial and matchmaking services."/>
+		<meta name="keywords" content="Jeevansathi.com, Indian matrimony, India, matrimony, matrimonial, matrimonials, matrimony services,online matrimonials, Indian marriage, match making, matchmaking, matchmaker, match maker, marriage bureau , matchmaking services, matrimonial profiles, bride, groom, matrimony classified."/>
+		<meta name="robots" content="noindex, nofollow">
+<title>Jeevansathi Registration</title>
+<link href="~$IMG_URL`/min/?f=profile/css/~$sugarcrm_common_css`" rel="stylesheet" type="text/css" />
+<style>
+.mt_min_19 {
+	margin-top:-19px;
+	z-index:10;
+	position:relative;
+}
+h1 {
+	font:11px verdana, Helvetica, sans-serif;
+}
+ul.wrte_abt {
+	width:190px;
+	margin:0 0 0 0;
+	padding:0;
+	float:left;
+	background:#fafafa;
+	padding:10px;
+}
+ul.wrte_abt li {
+	float:left;
+	width:99.9%;
+	padding-bottom:4px;
+}
+.grn_tick {
+	width:10px;
+	height:9px;
+	background-position:-290px -94px;
+}
+</style>
+<script language="JavaScript" SRC="/profile/js/~$registration_ajax_new_js`"></script>
+<script language="JavaScript" SRC="/profile/js/~$revampCommon_js`"></script>
+<script language="JavaScript">
+function trim_newline(string){
+	return string.replace(/^\s*|\s*$/g, "");
+}
+
+function trim(inputString) {
+   if (typeof inputString != "string") { return inputString; }
+   var retValue = inputString;
+   var ch = retValue.substring(0, 1);
+   while (ch == " " || ch == '\n' || ch == '\t' || ch == '\r') {
+      retValue = retValue.substring(1, retValue.length);
+      ch = retValue.substring(0, 1);
+   }
+   ch = retValue.substring(retValue.length-1, retValue.length);
+   while (ch == " " || ch == '\n' || ch == '\t' || ch == '\r') {
+      retValue = retValue.substring(0, retValue.length-1);
+      ch = retValue.substring(retValue.length-1, retValue.length);
+   }
+   while (retValue.indexOf("  ") != -1) {
+      retValue = retValue.substring(0, retValue.indexOf("  ")) + retValue.substring(retValue.indexOf("  ")+1, retValue.length);
+   }
+   return retValue;
+}
+
+function changeCount()
+{
+	var docF=document.form1;
+	var str=new String();
+	str=trim(docF.about_yourself.value);
+	str=trim_newline(str);
+	document.getElementById("about_yourself_count").disabled=false;
+	if(str.length >= 100)
+	{
+		document.getElementById("about_yourself_count").style.color = '#00BB00';
+	}
+	else
+	{
+		document.getElementById("about_yourself_count").style.color = '#FF0000';
+	}
+	docF.wordcount.value=str.length;
+}
+function validate(flag){
+        var docF=document.form1;
+	var err_i=0,focusSet=0;
+	document.getElementById("about_yourself_count").disabled=true;
+
+	
+	//Compulsary field Validations
+	if(flag=='' || flag=='about_yourself')
+	{
+		var str=new String();
+		str=trim(docF.about_yourself.value);
+		str=trim_newline(str);
+		if(str.length<100){
+			err_i++;
+			if(flag==0)
+			{
+				if(!focusSet)
+					document.getElementById("about_yourself").focus();
+				focusSet=1;
+			}
+			document.getElementById("about_yourself_error").style.color="red";
+			document.getElementById("about_yourself_submit_err").style.display = "block";
+		}
+		else{
+			document.getElementById("about_yourself_error").style.color="#4B4B4B";
+			document.getElementById("about_yourself_submit_err").style.display = "none";
+		}
+	}
+		
+	//yourinfo Validation
+	if(flag==0){	
+		var str_ajax_cnt=docF.about_yourself.value;
+		if(err_i>0){
+			var docF=document.form1;
+		        logerror_on_second_submit(1,"~$USERNAME`",str_ajax_cnt.length);
+		        return false;
+		}
+		logerror_on_second_submit(2,"~$USERNAME`",str_ajax_cnt.length);
+	        return true;
+        }
+	return true;
+}        
+ function submitform()
+ {
+	 document.getElementById("page2asubmit").value="";
+	 if("~$gender`"=="M")
+	     document.form1.action="registration_page2b.php?record_id=~$record_id`";
+		 else 
+	     document.form1.action="registration_page2c.php?record_id=~$record_id`";
+		     document.form1.submit();
+			     return false;
+ }
+ var after_see='<span id="before_see"><div id="see" class="fl" style="width:352px;position:absolute;left:-100px;z-index:1000;top:-225px;"><div class="tooldp_topbg"><div id="close_tip" style="text-align: right; padding: 10px 20px;"><a onclick="see_sample(\'hide\');return false;" href="#">[X]</a></div></div><div class="tooldp_hrbg" style="z-index:1000;"><div class="tooldp_style"><b style="color:#505050; font-size:12px;"><u>Sample of what to write in about yourself</u></b><br>My daughter is beautiful, charming, jovial and cheerful person who is hardworking and self-confident. She strongly believes and respects Hindu culture and follows family traditions. We are a simple, educated family with strong cultural background. She is an adaptable kind and strongly believes in God and truthful living. She is well balanced in her thinking with matured understanding of others. She has done B.SC.(BIO),MA(English), \'A\' Level course in Software Engineering and is presently pursuing MCA </div> </div> <div class="tooldp_footerbg"></div></div><a onclick="see_sample(\'hide\');return false;" href="#" style="color:#007ef4; text-decoration:underline;">See Sample</a></span>';
+var before_see='<a onclick="see_sample(\'show\');return false;" href="#" style="color:#007ef4; text-decoration:underline;">See Sample</a>';
+ function see_sample(what){
+	 if(what=='show'){
+		 check_window('see_sample(\'hide\')');
+		 document.getElementById("see_sample").innerHTML=after_see;
+		 document.getElementById("see").focus();
+		  common_check=1;
+		          function_to_call="see_sample('hide')";
+
+		 }
+		 if(what=='hide'){
+		 common_check=0;
+		         function_to_call="";
+	document.getElementById("see_sample").innerHTML=before_see;
+
+}
+ }
+
+</script>
+
+</head>
+<body>
+	<noscript>
+		<div style="position:fixed;z-index:1000;width:100%">
+			<div style="text-align:center;padding-bottom:3px;font-family:verdana,Arial;font-size:12px;font-size-adjust:none;font-stretch:normal;font-style:normal;font-variant:normal;font-weight:normal;line-height:normal;background-color:#E5E5E5;">
+				<b><img src="~$IMG_URL`/profile/images/registration_new/error.gif" width="23" height="20"> Javascript is disabled in your browser.Due  to this certain functionalities will not work. 
+					<a href="~$SITE_URL`/P/js_help.htm" target="_blank">Click Here</a> , to know how  to enable it.
+				</b>
+			</div>
+		</div>
+	</noscript>
+<p class="tp_bg sprte1"></p>
+<div class="reg_cont"><!--  <a href="#" class="fr mar b mt_min_19" onclick="javascript:window.open('http://server.iad.liveperson.net/hc/13507809/?cmd=file&file=visitorWantsToChat&offlineURL=http://www.jeevansathi.com/P/faq_redirect.php&site=13507809&imageUrl=http://www.jeevansathi.com/images_try/liveperson&referrer='+escape(document.location),'chat13507809','width=472,height=320');return false;">
+  <p class="hlp fl sprte1"></p>
+ 
+      
+    &nbsp;Live help</a> -->
+  <p class="clr cl_5"></p>
+  <div class="fl">
+		<a href="~$SITE_URL`" style="cursor:pointer;">
+			<p class="logo sprte1"></p></a>
+    <h1 class="ml_128"> Indian Matrimonials - We Match Better </h1>
+  </div>
+  <div class="fr" style="width:151px;"><span class="fl">A </span> <span class="nkri_lgo sprte1 fl" style="margin:2px;"></span> <span class="fl">venture</span></div>
+  <div class="clr cl21"></div>
+  <h4 class="drk_gry u">You are only one step away from entering Jeevansathi.com </h4>
+  <div class="clr cl_5"></div>
+  <div class="fl mt_10" style="width:770px;">
+    <div class="fl f_11 lt_gry">Note :Your Username in Jeevansathi.com is <span class="mar">~$username`</span></div>
+    <div class="fr drk_gry"> Fields marked <sup class="orng">*</sup> are compulsory </div>
+    <div class="clr cl_5"></div>
+	<form action="registration_page2a.php" method="post" onsubmit="return validate(0);" name="form1">
+		 <input type="hidden" name="gender" value="~$gender`">
+		 <input type="hidden" name="yourHeading" value="~$yourHeading`">
+		 <input type="hidden" name="site_url" value="~$SITE_URL`" />
+		 <input type="hidden" name="img_url" value="~$IMG_URL`" />
+		 <input type="hidden" name="email" value="~$EMAIL`" />
+		 <input type="hidden" name="checksum" value="~$checksum`" />
+		 <input type="hidden" name="leadid" value="~$LEADID`" />
+		 <input type="hidden" name="tieup_source" value="~$TIEUP_SOURCE`" />
+		 <input type="hidden" name="hit_source" value="~$HITSOURCE`" />
+		 <input type="hidden" name="newip" value="~$NEWIP`" />
+		 <input type="hidden" name="adnetwork" value="~$ADNETWORK`" />
+		 <input type="hidden" name="account" value="~$ACCOUNT`" />
+		 <input type="hidden" name="campaign" value="~$CAMPAIGN`" />
+		 <input type="hidden" name="adgroup" value="~$ADGROUP`" />
+		 <input type="hidden" name="keyword" value="~$KEYWORD`" />
+		 <input type="hidden" name="match" value="~$MATCH`" />
+		 <input type="hidden" name="lmd" value="~$LMD`" />
+		 <input type="hidden" name="showlogin" value="~$SHOWLOGIN`" />
+		 <input type="hidden" name="frommarriagebureau" value="~$FROMMARRIAGEBUREAU`" />
+		 <input type="hidden" name="groupname" value="~$GROUPNAME`" />
+		 <input type="hidden" name="id" value="~$ID_AFF`" />
+		 <input type="hidden" name="current_date" value="~$CURRENT_DATE`" />
+		 <input type="hidden" name="doesnt_matter_for_javascript" value="~$doesntMatterForJavascript`" />
+		 <input type="hidden" name="phone" value="~$PHONE`" />
+		 <input type="hidden" name="mobile" value="~$MOBILE`" />
+		 <input type="hidden" name="state_code" value="~$STATE_CODE`" />
+		 <input type="hidden" name="profileid" value="~$PROFILEID`" />
+		 <input type="hidden" name="religion" value="~$RELIGION`" />
+		 <input type="hidden" name="caste" value="~$CASTE`" />
+		 <input type="hidden" name="year" value="~$YEAR_OF_BIRTH`" />
+		 <input type="hidden" name="month" value="~$MONTH_OF_BIRTH`" />
+		 <input type="hidden" name="day" value="~$DAY_OF_BIRTH`" />
+		 <input type="hidden" name="record_id" value="~$record_id`" >
+		 <input type="hidden" name="from_sugar_exec" value="~$from_sugar_exec`"/>
+		 <input type="hidden" name="country_residence" value="~$COUNTRY_RESIDENCE`" />
+    <div class="main_form_cont pos_rltv" style="width:770px;"> <i class="d_t_l pos_abs h_w_6 sprte1"></i><i class="d_t_r pos_abs h_w_6 sprte1 p_tr_0"></i><i class="d_b_r pos_abs h_w_6 sprte1 p_br_0"></i><i class="d_b_l pos_abs h_w_6 sprte1 p_bl_0"></i>
+      <ul class="form" style="margin-top:5px;">
+        <li>
+          <h2>About Yourself</h2>
+        </li>
+        
+        <li>
+		<label id=about_yourself_error ~if $yourinfoError`style="color:red"~/if`>Write about ~if $yourHeading`~$yourHeading`~else`yourself~/if`<u>*</u> :</label>
+          Tell us about your family background, education, lifestyle, interests, hobbies etc
+          <div class="clr"></div>
+          <label>&nbsp;</label>
+          <textarea name="about_yourself" id="about_yourself" onKeyup="changeCount();" onblur="validate('about_yourself');" cols="1" rows="1" style="width:342px; height:153px;" class="fl">~$about_yourself`</textarea>
+          
+          <ul class="wrte_abt f_11">
+            <li><b style="font-size:12px;">Here you can write about</b></li>
+            <li><i class="grn_tick sprte1 fl"></i>Your Personality, Values, Lifestyle.</li>
+            <li><i class="grn_tick sprte1 fl"></i>Your education – school and college</li>
+            <li><i class="grn_tick sprte1 fl"></i>Your Occupation, Income and Goals </li>
+            <li><i class="grn_tick sprte1 fl"></i>Your family – Dad, Mom, Siblings </li>
+          </ul>
+ 
+		  <div class="b"><span id="see_sample" onclick="javascript:check_window('see_sample(\'hide\')');" style="position:relative;width:319px;z-index:100">
+				  <span id="before_see"><a onclick="see_sample('show');return false;" href="#" style="color:#007ef4; text-decoration:underline;">See Sample</a></span>
+					  </span>
+				  </div>
+ <div class="clr"></div>
+          <label>&nbsp;</label>
+	<div id="about_yourself_submit_err" ~if !$yourinfoError` style="display:none;margin:10px 0 10px 10px; _margin:-15px 0 10px 4px;" ~/if` class="err fl f_11">
+		<label style="width: 1px; float: left;">&nbsp;</label>
+		<span id="about_yourself_error1" class="fl">To be able to contact members you like and get contacted by other members, <br />please fill 100 characters in the field  </span>
+	</div>
+        </li>
+		  <div class="fl f_11 drk_gry" style="width:345px;margin: 0pt 0pt 0px 177px;"><span class="fl">Number of characters : <span class="grn">  
+						<input id="about_yourself_count" disabled="true" name="wordcount" type="text" class="grn" value="" size="3" style="background:none; border:0;width:30px;"> 
+		  </span></span><span class="fr">(Minimum number of characters- 100 )</span></div>
+      </ul>
+      <div class="clr"></div>
+     <li>
+<div class="fl">
+<input name="page2asubmit" id="page2asubmit" type="image" src="~$SITE_URL`/profile/images/registration_revamp_new/fin_reg.png" border="0" style="margin-bottom: 30px; margin-left: 195px; display: inline;" value="page2asubmit" >
+<input name="page2asubmit" value="page2asubmit" type="hidden" >
+</div>
+<div class="fl">
+<a href="javascript:submitform()" class="fl ml_10 b f_13" style="color:#057ec3;"><br />
+Help me to build about yourself
+</a>
+</div>
+</li>
+</ul>
+<div class="clr"></div>
+      
+    </div>
+  </div>
+</div>
+</form>
+<div class="clr cl21"></div>
+<div align="center">Copyright © 2010 Jeevansathi Internet Services</div>
+<div class="clr cl21"></div>
+
+</body>
+</html>

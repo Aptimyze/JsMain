@@ -1,0 +1,32 @@
+.clr{clear:both; height:0; overflow:hidden;}
+.img_cont{width:68px;}
+/*
+.pop_albm{width:470px; border:1px solid #ccc; padding:5px;}
+.pop_albm .about{width:300px; color:#6b6b6b; line-height:18px; position:relative;}
+.pop_albm .about img.arr{position:absolute;}
+*/
+.img_cont_big_photo{}
+.img_cont_big_photo iframe
+{
+  display:none;/*sorry for IE5*/
+  display/**/:block;/*sorry for IE5*/
+  position:absolute;/*must have*/
+  top:0;/*must have*/
+  left:0;/*must have*/
+  z-index:-1;/*must have*/
+  filter:mask();/*must have*/
+  width:485px;/*must have for any big value*/
+  height:200px/*must have for any big value*/;
+  border:0px;
+}
+.flnew{float:left;}
+.frnew{float:right;}
+.p_tup{width:463px; border:1px solid #ccc; font:12px Arial, Helvetica, sans-serif; float:left;}
+.p_tup *{margin:0; padding:0;}
+.p_tup h6{width:443px; height:19px; background:#ffde94; font-size:14px; padding:2px 10px;text-align:left}
+.p_tup .cmplete_info{width:453px; padding:5px; float:left;}
+.p_tup .cmplete_info .b_info{width:121px; float:left; color:#6b6b6b; font-weight:bold; margin-left:5px;text-align:left}
+.p_tup .cmplete_info p{float:left; width:221px;color:#6b6b6b; margin-left:5px;}
+.no_b{font-weight:normal!important;}
+.p_tup .clr{clear:both; height:0; overflow:hidden;}
+.p_tup .icns img{margin:0 2px 0 0;}

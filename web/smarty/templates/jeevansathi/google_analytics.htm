@@ -1,0 +1,68 @@
+<script>
+	
+	var domainCode={};
+	domainCode[".hindijeevansathi.in"]="UA-20942264-1";
+	domainCode[".jeevansathi.co.in"]="UA-20941176-1";
+	domainCode[".marathijeevansathi.in"]="UA-20941180-1";
+	domainCode[".punjabijeevansathi.com"]="UA-20941670-1";
+	domainCode[".punjabijeevansathi.in"]="UA-20941669-1";
+	domainCode[".jeevansathi.com"]="UA-179986-1";
+	
+	var host_url="http://"+window.location.host;
+	var j_domain=host_url.match(/:\/\/[\w]{0,10}(.[^/]+)/)[1];
+	j_domain=j_domain.toLowerCase();
+//Load google js
+	var ucode=domainCode[j_domain];
+	
+	if(ucode)
+	{
+		var _gaq = _gaq || [];
+		
+		_gaq.push(['_setAccount', ucode]);
+		_gaq.push(['_setDomainName', j_domain]);
+		_gaq.push(['_trackPageview']);
+		_gaq.push(['_trackPageLoadTime']);
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();		
+	}
+	function trackJsEventGA(category, action, label){
+               if(ucode){
+                       _gaq.push(['_trackEvent', category, action, label]);
+               }
+               else
+               return false;
+       }
+</script>
+~if $REGISTRATION`
+<script type="text/javascript" src="~$IMG_URL`/min/?f=/js/time-tracker.js"></script>
+<script type="text/javascript">
+	var time_trac_count=0;
+	function ga_time_track(){
+		var timeTracker = new TimeTracker(); 
+		if(window._gat){
+		var pageTracker = _gat._getTracker('UA-179986-1'); 
+		$(document).ready(function() {
+		$('form[name=form1]').find('input, select, textarea, radio').each(function() { 
+
+		$(this).focus(function() {
+		timeTracker._recordStartTime();
+		});
+		$(this).blur(function() {
+		timeTracker._recordEndTime();
+		timeTracker._track(pageTracker, $(this).attr('name'), 'RegTest');
+		});
+		});
+		});
+		}
+		else{
+			if(time_trac_count++ <20)
+			setTimeout(arguments.callee,500);
+		}
+	}
+	
+
+</script>
+~/if`

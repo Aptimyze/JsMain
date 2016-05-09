@@ -1,0 +1,11 @@
+/*to be executed in all shards*/
+CREATE TABLE MIS.RESPONSETRACKING (
+ `CONTACTID` int(11) unsigned NOT NULL DEFAULT '0',
+ `PROFILEID` int(11) unsigned DEFAULT NULL,
+ `CONTACT_TYPE` enum('A','D','C','E') DEFAULT 'A',
+ `DATE` date NOT NULL,
+ `TRACKING_STRING` varchar(11) NOT NULL,
+ PRIMARY KEY (`CONTACTID`),
+ KEY `PROFILEID` (`PROFILEID`),
+ KEY `DATE` (`DATE`)
+);

@@ -1,0 +1,13 @@
+autoload:
+  DeAllocation_lib:
+    path:        %SF_APP_MODULE_DIR%/crmDeallocation/lib
+    recursive:   true
+
+  Allocation_lib:
+    path:        %SF_APP_MODULE_DIR%/crmAllocation/lib
+    recursive:   true
+
+  PreAllocation_lib:
+    path:        %SF_APP_MODULE_DIR%/crmPreAllocation/lib
+    recursive:   true
+

@@ -1,0 +1,77 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<script>
+
+function page_load(to_page)
+{
+        var page="~$CUR_PAGE`&j="+to_page;
+        //page=page+"&date_search_submit=1&date1xx=~$date1`&&date2xx=~$date2`";
+        document.location=page;
+}
+
+</script>
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tr>
+        <td valign="top" width="40%" align="center"><img src="../profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+</tr>
+<tr>
+        <td align="center" class="label">
+	<a href="mainpage.php?cid=~$cid`">Mainpage</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<a href="sugarcrm_LTF_report.php?cid=~$cid`&outside=~$outside`">LTF Homepage </a>
+	</td>
+</tr>
+~if $err`
+<tr>
+	<td colspan="100%" align="center" class="label"> <font color="red">Error has occured, please try again </font></td>
+</tr>
+~/if`
+</table>
+
+~if $err eq ''`
+  <br><br>
+  <table width="100%" border="0" cellpadding="4" cellspacing="4" align="center">
+        <tr class="label" align="right">
+                <td colspan="100%"><b>
+			<a href="sugarcrm_LTF_report_2.php?cid=~$cid`&agentName=~$agentName`&start_dt=~$start_dt`&end_dt=~$end_dt`&type=~$type`&format_type=XLS">Download xls sheet</a> 
+		</b></td>
+        </tr>
+
+	<tr class="formhead" align="center">
+		<td colspan="100%">~$head_label`</td>
+	</tr>
+	<tr align="left">
+			<td class="fieldsnew"><font color="red"><b>~$agentName`</b></font></td>
+	</tr>
+	<table width="25%" border="0" cellpadding="4" cellspacing="4" align="left">		
+	<tr align="center">
+		<td class="fieldsnew"><b>Date </b></td>
+		<td class="fieldsnew"><b>Username </b></td>
+		~if $type eq 'PAID'`
+			<td class="fieldsnew"><b>Payment</b></td>
+		~/if`
+	</tr>
+	~foreach from=$profileidArr item=val1 key=key1`	
+		<tr align="center">
+			<td class="fieldsnew">~$dateArr[$key1]` </td>
+			<td class="fieldsnew">~$val1`  		</td>
+			~if $type eq 'PAID'`
+				<td class="fieldsnew">~$amountArr[$key1]` </td>
+			~/if`
+		</tr>
+	~/foreach`
+	</table>
+  </table>
+~/if`
+
+</body>
+</html>

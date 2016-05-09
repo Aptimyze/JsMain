@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c>
+RewriteEngine on
+RewriteOptions inherit
+RewriteCond %{HTTP_HOST} ^jeevansathi\. [NC]
+RewriteBase /success/
+RewriteRule ^page([^.]+).htm$ success_stories.php?tpl=page$1.htm [T=application/x-httpd-php]
+RewriteRule ^success_stories.php$ /successStory/story [T=application/x-httpd-php,R=301]
+RewriteRule ^no_success_story.php$ /successStory/morestory [R=301,L]
+RewriteRule ^complete_success_stories.php$ /successStory/completestory [T=application/x-httpd-php,R=301]
+</IfModule>

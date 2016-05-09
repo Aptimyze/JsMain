@@ -1,0 +1,96 @@
+<html>
+<head>
+        <title>Inbound Allot Mis</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+        <link rel="stylesheet" href="jeevansathi.css" type="text/css">
+</head>
+<body>
+        <p align="center"><img src="../profile/images/logo_1.gif" width="209" height="63" align="center" border="0"></p>
+        <table cellpadding="4" cellspacing="4" border="0" width="80%" align="center">
+                <tr class="formhead" align="center">
+                        <td><b>Inbound Allot MIS</b></td>
+                </tr>
+                <tr class="formhead" align="center">
+                        <td><span class="blue">Count</span><br><span class="green">Net-off Tax</span><br><span class="red">Gross</span></td>
+                </tr>
+                <tr class="fieldsnew" align="center">
+                        <td><a href="mainpage.php?cid=~$cid`">Mainpage</a></td>
+                </tr>
+        </table>
+	~if $SUBMITTED`
+		~$NET_OFF_MSG`
+                <table cellpadding="4" cellspacing="4" border="0" width="80%" align="center">
+                        <tr class="label" align="center">
+				<td>~$display_msg`</td>
+				~section name=next loop=$group_by_names`
+					<td>~$group_by_names[next]`
+				~/section`
+			</tr>
+			~section name=next loop=$agent_array`
+				<tr align="center">
+					<td class="label">~$agent_array[next]`</td>
+					~section name=sub_next loop=$group_by_values`
+						<td class="fieldsnew">
+							<span class="blue">~$count_arr[next][sub_next]`</span><br>
+							<span class="green">~$net_off_tax_arr[next][sub_next]`</span><br>
+							<span class="red">~$revenue_arr[next][sub_next]`</span><br>
+						</td>
+					~/section`
+				</tr>
+			~/section`
+			<tr class="label" align="center">
+				<td>Total</td>
+				~section name=next loop=$group_by_values`
+					<td>
+						<span class="blue">~$total_count_arr[next]`</span><br>
+						<span class="green">~$net_off_tax_total_arr[next]`</span><br>
+						<span class="red">~$total_revenue_arr[next]`</span><br>
+					</td>
+				~/section`
+			</tr>
+		</table>
+	~else`
+                <form name="form1" action="inbound_allot_mis.php" method="post">
+                <input type="hidden" name="cid" value="~$cid`">
+                <input type="hidden" name="user" value="~$user`">
+                <table cellpadding="4" cellspacing="4" border="0" width="40%" align="center">
+                        <tr>
+                                <td class="label">Month : </td>
+				<td class="fieldsnew">
+                                        <select name="Month">
+                                                ~section name=next loop=$mmarr`
+                                                        <option value="~$mmarr[next].VALUE`" ~if $mmarr[next].VALUE eq $curmonth` selected ~/if`>~$mmarr[next].NAME`</option>
+                                                ~/section`
+                                        </select>
+                                </td>
+                        </tr>
+                        <tr>
+                                <td class="label">Year : </td>
+                                <td class="fieldsnew">
+                                        <select name="Year">
+                                                ~section name=next loop=$yyarr`
+                                                        <option value="~$yyarr[next]`" ~if $yyarr[next] eq $curyear` selected ~/if`>~$yyarr[next]`</option>
+                                                ~/section`
+                                        </select>
+                                </td>
+                        </tr>
+                        <tr>
+                                <td class="label">Group By : </td>
+                                <td class="fieldsnew">
+                                        <select name="group_by">
+						<option value="CS">Call Source</option>
+						<option value="QT">Query Type</option>
+                                        </select>
+                                </td>
+                        </tr>
+                        <tr class="label" align="center">
+                                <td colspan="2">
+                                        <input type="submit" name="submit" value="Go">
+                                </td>
+                        </tr>
+                </table>
+                </form>
+	~/if`
+        <br>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Affiliate Payment MIS</title>
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+</head>
+
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<input type="hidden" name=cid value="~$cid`">
+
+<table  width=100% ALIGN="CENTER" border=0 bordercolor=940000>
+    <tr class="formhead">
+          <td class="formhead" align='CENTER'><font><b>Welcome : ~$user`</b></font></td>
+          <td class="formhead" align="center"><a href="mainpage.php?name=&cid=~$cid`">Main Page</a></td>
+          <td class="formhead" align='CENTER'><a href="logout.php?cid=~$cid`">Logout</a></td>
+    </tr>
+</table>
+<br>
+<table width=100%>
+<tr class="formhead"><td align=center>Viewing Records for: ~$USERNAME`</td></tr>
+</table>
+<br><br>
+
+<table width="100%" border="0" rows=4 cols=2 align="center">
+	<tr class="label">
+		<td>Detail View</td>
+		<td>Payment Model</td>
+		<td>Since</td>
+		<td>Clicks</td>
+		<td>Rate per click</td>
+		<td class="red">Revenue from Clicks</td>
+		<td>Registrations</td>
+		<td>Rate per Free Registration</td>
+		<td class="red">Revenue from Free Registrations</td>
+		<td>Rate for 1 to 50 Registration</td>
+		<td>Rate for 51 to 200 Registration</td>
+		<td>Rate for more than 201 Registrations</td>
+		<td>Total paid Registrations</td>
+		<td class="red">Revenue from Paid Registrations</td>
+		<td class="red">Conversion %</td>
+		<td class="red">Unique IP %</td>
+	<tr>
+
+~section name=a loop=$DATA`
+	<tr class="fieldsnew">
+		<td><a href="payment_mis_details.php?cid=~$cid`&id=~$ID`&username=~$USERNAME`&entry_date=~$DATA[a].ENTRY_DT`&start_date=~$start_date`&end_date=~$end_date`">Click Here</a>
+		<td>~$DATA[a].PAYMENT_MODEL`</td>
+		<td>~$DATA[a].ENTRY_DT`</td>
+
+~if $DATA[a].PAYMENT_MODEL eq 'C' || $DATA[a].PAYMENT_MODEL eq 'CP'`	
+		<td>~$DATA[a].CNT`</td>
+~else`
+		<td>&nbsp;</td>
+~/if`
+		<td>~$DATA[a].CLICKS_RATE`</td>
+
+~if $DATA[a].PAYMENT_MODEL eq 'C' || $DATA[a].PAYMENT_MODEL eq 'CP'`
+		<td class="red">~$DATA[a].CNT_REV`</td>
+~else`
+		<td>&nbsp;</td>
+~/if`
+		
+~if $DATA[a].PAYMENT_MODEL eq 'F' || $DATA[a].PAYMENT_MODEL eq 'FP'`
+                <td>~$DATA[a].CNT`</td>
+~else`
+                <td>&nbsp;</td>
+~/if` 
+		<td>~$DATA[a].FREE_RATE`</td>
+
+~if $DATA[a].PAYMENT_MODEL eq 'F' || $DATA[a].PAYMENT_MODEL eq 'FP'`
+		<td class="red">~$DATA[a].CNT_REV`</td>
+~else`
+		<td>&nbsp;</td>
+~/if`
+		<td>~$DATA[a].PAID_1_TO_50`</td>
+		<td>~$DATA[a].PAID_51_TO_200`</td>
+		<td>~$DATA[a].PAID_201`</td>
+		<td>~$DATA[a].CNT_PAID`</td>
+		<td class="red">~$DATA[a].PAID_REV`</td>
+		<td class="red">~$DATA[a].CONVERSION`</td>
+		<td class="red">~$DATA[a].IP`</td>
+	</tr>
+~/section`
+		
+</table>
+<br>
+<table width=100% cols=2>
+	<tr class="label"><td class="blue" align="right">Total Revenue:</td><td class="blue" align="left">~$GRAND_TOTAL`</td></tr>
+</table>
+</body>
+</html>

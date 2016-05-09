@@ -1,0 +1,84 @@
+<html>
+~include file="head_billing.htm"`
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Mark Bounce</title>
+<!--link rel="stylesheet" href="images/resservice.css" type="text/css"-->
+<link rel="stylesheet" href="jeevansathi1.css" type="text/css">
+</head>
+<body>
+~if $flag eq '1'`
+	<br><br>
+	<table width=100% align="CENTER" >
+		<tr class="formhead" align="center">
+        		<td align="center" class="label">
+	        	        <a href="search_user.php?user=~$USER`&cid=~$CID`&phrase=~$phrase`&criteria=~$criteria`&billid=~$billid`&offline_billing=~$offline_billing`">Continue &gt;&gt;</a>
+		        </td>
+		</tr>
+	</table>
+~else`
+	<br><br>
+	<form method=post action="mark_bounce.php">
+	<table width=50% align="center">
+		<tr class="formhead" align="center">
+			<td colspan=2>Cheque Details</td>
+		</tr>
+		<tr align="center">
+			<td class="label" width=30%>Cheque Number</td>
+			<td class="fieldsnew">~$cd_num`</td>
+		</tr>
+		<tr align="center">
+			<td class="label">Cheque Date</td>
+			<td class="fieldsnew">~$cd_dt`</td>
+		</tr>
+		<tr align="center">
+			<td class="label">Amount</td>
+			<td class="fieldsnew">~$amt`</td>
+		</tr>
+		<tr align="center">
+			<td class="label">Bank</td>
+			<td class="fieldsnew">~$bank`</td>
+		</tr>
+		<tr align="center">
+			<td class="label">City</td>
+			<td class="fieldsnew">~$cd_city`</td>
+		</tr>
+		<tr align="center">
+			<td class="label">Reason</td>
+			<td class="fieldsnew">
+				<select name="bounce_reason">
+				~section name=next loop=$bounce_reason_arr`
+					<option value="~$bounce_reason_arr[next].value`">~$bounce_reason_arr[next].reason`</option>
+				~/section`
+				</select>
+			</td>
+		</tr>
+		<tr align="center">
+			<td class="label">Other Reason</td>
+			<td class="fieldsnew"><textarea rows="4" cols=30 name="reason" >~$reason`</textarea></td>
+		</tr>
+		<tr align="center">
+			<td class="label">&nbsp;</td>
+			<td class="fieldsnew">
+				Continue Services<input type="radio" name="cmdcheck" value="continue" checked>
+	&nbsp;&nbsp;&nbsp;&nbsp;Stop Services<input type="radio" name="cmdcheck" value="stop">
+			</td>
+		</tr>
+		<tr align="center">
+			<td class="fieldsnew" colspan="2">
+				<input type="submit" name="CMDSubmit" value="Submit" class="buttons1">
+			</td>
+		</tr>
+	</table>
+	<input type="hidden" name="amt" value="~$amt`">
+	<input type="hidden" name="billid" value="~$billid`">
+	<input type="hidden" name="user" value="~$USER`">
+	<input type="hidden" name="cid" value="~$CID`">
+	<input type="hidden" name="phrase" value="~$phrase`">
+	<input type="hidden" name="criteria" value="~$criteria`">
+	<input type="hidden" name="receiptid" value="~$receiptid`">
+	<input type="hidden" name="offline_billing" value="~$offline_billing`">
+	</form>
+~/if`
+</body>
+</html>

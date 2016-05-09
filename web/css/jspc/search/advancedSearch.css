@@ -1,0 +1,154 @@
+.advbg1{background-color:#f2f1f1}
+.advbg2{background-color:#f6f6f6}
+
+.advcolor1{color:#787878}
+
+.advwid1{width:495px}
+.advwid2{width:250px}
+.advwid3{width:249px}
+.advwid4{width:245px}
+.advwid5{width:990px}
+
+.activeopt{ background-color:#d9475c !important; color:#fff}
+
+.advic1{background-position:-2px -198px; width:13px; height:14px}
+.advsub{background-position:-2px -214px}
+
+#adv-topNav .topnavpos1 {top:0;}
+.advsti{width: 990px;position:fixed;bottom:0}
+.js-selected {
+    background-color: #d9475c;
+    color: #fff;
+}
+.cusorNone {
+    cursor: default;
+}
+.advp1{padding:5px 0}
+.advp2{padding:30px}
+.advp3{padding:7px 11px}
+.advp4{ padding:13px 0}
+.advp5{margin: 3px 5px 3px 0;padding: 5px 20px 5px 5px; line-height:13px}
+.advp6{ padding:13px 0 13px 10px}
+.advp7{padding:27px 0 25px}
+.advp8{padding:0 30px 30px 30px}
+.advp9{padding:0 60px}
+.advp10{padding:0 26px}
+ul.tab1 li span{display:inline-block; line-height:37px; width:100%; margin:5px 0}
+
+.advbdr1{border-right:1px solid #d1d1d1}
+.advbdr2{border-bottom:1px solid #d1d1d1}
+.advbdr3{border:1px solid #d1d1d1}
+.advbdr4{border-top:1px solid #d1d1d1}
+.advbr1{border-radius:2px}
+.advhgt1{height:2px}
+
+.advpos1{top:3px; right:0}
+
+.outw{outline:#FFF}
+
+.advbtn1 button{ background:none; border:0;border:1px solid #d1d1d1; line-height:44px; width:240px}
+
+.avdgr1{ background:url(IMG_URL/images/jspc/searchImg/grad1.png) repeat-x; height:68px}
+
+
+
+
+ul.formbox >li label{ width:260px; float:left; text-align:right; color:#999999;opacity: 0.9;	filter: alpha(opacity=90);}
+ul.formbox >li > div{width:492px; float:left; margin-left:20px}
+
+/*-- same css being used in edit dpp --*/
+
+.dpp-drop-down {background-position: -2px -1px;width: 17px;height: 10px;}
+.dpp_pos1 {right: 10px;top: 5px;}
+.dpp-pos5 {top: -9px;left: 40px;}
+.dpp-pos4 {top: 31px;right: -5px;}
+.dpp-up-arrow {background-position: -2px -31px;width: 14px;height: 11px;}
+.dpp-pos2 {
+    bottom: -16px;
+    left:40%;
+}
+.dppbox {
+    border: 1px solid #d9475c;
+    background-color: #fff;
+    border-radius: 2px;
+    display: block;
+}
+.dpp-pos3 {
+    top: 31px;
+    left: 0;
+}
+.dppbox ul {
+    list-style-type: none;
+}
+.dppbox ul.list-minage li, .dppbox ul.list-maxage li {width: 38px;}
+
+.dppbox ul.list-minheight li,.dppbox ul.list-maxheight li {
+    width: 156px;
+    border-bottom: 0;
+}
+
+.dppbox ul li {
+    float: left;
+    border-bottom: 1px solid #d9d9d9;
+    line-height: 40px;
+	text-align:center
+}
+.advwidH {
+    width: 490px;
+}
+.dppbox ul li:hover{background-color:#d9475c;color:#fff}
+.dppbox ul li.color12.bg-white:hover{background-color:#fff;color:#999}
+/*-- this same css is also used in edit dpp but it properties have been modified here --*/
+.chosen-container.chosen-with-drop .chosen-drop {left: -11px;}
+.chosen-container-multi .chosen-choices li.search-field input[type="text"] {
+  margin: 3px 5px 3px 0;
+  padding: 5px 20px 5px 5px;
+  line-height:13px;
+  outline: 0;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none;
+  color: #34495e;
+  font-size: 100%;
+  font-family: sans-serif;
+  line-height: normal;
+  border-radius: 0;
+}
+.chosenDropWid {width: 149px;}
+.chosen-drop ul{padding:10px !important}
+.chosen-container .chosen-results li{padding:10px 6px !important}
+.chosen-container .chosen-drop{width:492px !important}
+.dppbox ul.list-minlincome li,.dppbox  ul.list-maxhincome li,.dppbox ul.list-minlincome_dol li, .dppbox ul.list-maxhincome_dol li {
+    width: 220px;
+    border-bottom: 0;
+}
+#incomeRangeDol{margin-top: 20px; margin-left: 193px}
+.fullwidImp{width:100% !important}
+.chosen-choices li input{width:200px !important}
+
+
+.advp11{padding-left: 280px;}
+.advwid6{width: 492px}
+.advwid7{width: 240px}
+
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+.heightie{height: 26px;}
+}
+.vis-hid{
+visibility:hidden;
+}
+
+/*saved search css*/
+ul.searchlist li{padding:40px;border-bottom:1px solid #d9d9d9;}
+ul.searchlist li:hover{ background-color:#fbfbfb}
+  ul.searchlist a.deleteSearch:hover .delic1{background-position:-42px 1px;}
+.sscolr1{color:#999999}
+.delicon{background-image:url(IMG_URL/images/jspc/searchImg/delicon-ss.png); background-repeat:no-repeat;width:43px; height:43px}
+.delic1{background-position:1px 1px; }
+.mar-aut0{
+    margin: 0 auto;
+}
+.wid114{
+    width:114px;
+}

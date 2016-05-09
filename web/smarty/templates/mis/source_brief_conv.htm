@@ -1,0 +1,44 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+
+
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+</body>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br>
+<br>
+<br>
+<table width=100% border=0 align="center" cellspacing="4" cellpadding=5>
+<tr class="label">
+<td width=10% align="center">&nbsp;Source : ~if $source neq ''` ~$source` ~else` All ~/if`&nbsp;&nbsp;&nbsp;&nbsp;Date Range:~$dt_from`&nbsp;&nbsp;To&nbsp;&nbsp;~$dt_to`&nbsp;&nbsp;&nbsp;&nbsp;Secondary sources : ~if $sec_sources` ~$sec_sources` ~else` All ~/if`</td>
+</tr>
+</table>
+<table width=100% border=0 align="center" cellspacing="4" cellpadding=5>
+<tr><td align="center" class="label">Source</td><td align="center" class="label">Hits</td><td align="center" class="label">Members</td><td align="center" class="label">Active-Members</td><td align="center" class="label">Relevant-Members</td><td align="center" class="label">Paid-Members</td><td align="center" class="label">Conversion Ratio</td><td align="center" class="label">Hits Ratio</td></tr>	
+</tr>
+		~section name=src loop=$srcarr`
+				<tr class="label">
+				<td align="center" class="label">&nbsp;~$srcarr[src]`</td>  <td align="center" class="fieldsnew">&nbsp;~$cnt[src].h`</td><td align="center" class="fieldsnew">&nbsp;~$cnt[src].m`</td><td align="center" class="fieldsnew">&nbsp;~$cnt[src].a`</td><td align="center" class="fieldsnew">&nbsp;~$cnt[src].r`</td><td align="center" class="fieldsnew">&nbsp;~$cnt[src].pd`</td><td align="center" class="fieldsnew">&nbsp;~$cnt[src].cp`</td><td align="center" class="fieldsnew">&nbsp;~$cnt[src].p`</td>   </tr>
+		~/section`
+<tr class="label">
+                    <td align="center" class="label">&nbsp;Total</td>  <td align="center" class="label">&nbsp;~$totallh`</td><td align="center" class="label">&nbsp;~$totallm`</td><td align="center" class="label">&nbsp;~$totalla`</td><td align="center" class="label">&nbsp;~$totallr`</td><td align="center" class="label">&nbsp;~$totallpd`</td><td align="center" class="label">&nbsp;~$totallcp`</td><td align="center" class="label">&nbsp;</td>   </tr>
+</table>
+</body>
+</html>

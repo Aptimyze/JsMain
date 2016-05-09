@@ -1,0 +1,298 @@
+<html>
+~include file="head_billing.htm"`
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+        <link rel="stylesheet" href="jeevansathi1.css" type="text/css">
+        <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+
+	<script language="javascript">
+		window.history.forward(1);
+	</script>
+</head>
+  <title>Jeevansathi - Billing</title>
+</head>
+<form method="post" name="pg3_frm" action="new_entry_insert_billing.php">
+<input type="hidden" name="cid" value="~$cid`">
+<input type="hidden" name="user" value="~$user`">
+<input type="hidden" name=source value="~$source`">
+<input type="hidden" name=crm_id value="~$crm_id`">
+<input type="hidden" name="username" value="~$username`">
+<input type="hidden" name="custname" value="~$custname`">
+<input type="hidden" name="gender" value="~$gender`">
+<input type="hidden" name="email" value="~$email`">
+<input type="hidden" name="address" value="~$address`">
+<input type="hidden" name="city" value="~$city`">
+<input type="hidden" name="pin" value="~$pin`">
+<input type="hidden" name="rphone" value="~$rphone`">
+<input type="hidden" name="ophone" value="~$ophone`">
+<input type="hidden" name="mphone" value="~$mphone`">
+<input type="hidden" name="curtype" value="~$curtype`">
+<input type="hidden" name="curtype_disp" value="~$curtype_disp`">
+<input type="hidden" name="addons" value="~$addons`">
+<input type="hidden" name="duration_sel" value="~$duration_sel`">
+<input type="hidden" name="main_service_id" value="~$main_service_id`">
+<input type="hidden" name="addon_services" value="~$addon_services`">
+<input type="hidden" name="addonid" value="~$addonid`">
+<input type="hidden" name="walkin" value="~$walkin`">
+<input type="hidden" name="discount" value="~$discount`">
+<input type="hidden" name="voucher_discount_code" value="~$voucher_discount_code`">
+<input type="hidden" name="discount_type" value="~$discount_type1`">
+<input type="hidden" name="reason" value="~$reason`">
+<input type="hidden" name="price" value="~$price`">
+<input type="hidden" name="tax_rate" value="~$tax_rate`">
+<input type="hidden" name="tax" value="~$tax`">
+<input type="hidden" name="total_pay" value="~$total_pay`">
+<input type="hidden" name="comment" value="~$comment`">
+<input type="hidden" name="mode" value="~$mode`">
+<input type="hidden" name="from_source" value="~$from_source`">
+<input type="hidden" name="transaction_number" value="~$transaction_number`">
+<input type="hidden" name="amount" value="~$amount`">
+<input type="hidden" name="cdnum" value="~$cdnum`">
+<input type="hidden" name="cd_date" value="~$cd_date`">
+<input type="hidden" name="cd_city" value="~$cd_city`">
+<input type="hidden" name="bank" value="~$bank`">
+<input type="hidden" name="obank" value="~$obank`">
+<input type="hidden" name="overseas" value="~$overseas`">
+<input type="hidden" name="separateds" value="~$separateds`">
+<input type="hidden" name="due_date" value="~$due_date`">
+<input type="hidden" name="dep_date" value="~$dep_date`">
+<input type="hidden" name="dep_branch" value="~$dep_branch`">
+<input type="hidden" name="renew" value="~$renew`">
+<input type="hidden" name="criteria" value="~$criteria`">
+<input type="hidden" name="phrase" value="~$phrase`">
+<input type="hidden" name="offline_billing" value="~$offline_billing`">
+<input type="hidden" name="convert_curr" value="~$convert_curr`">
+~if $renew`
+<table cellpadding="4" cellspacing="4" width="30%" align="center">
+        <tr>
+                <td align="center" colspan="2" class="formhead">User Details</td>
+        </tr>
+        <tr>
+                <td class="label">
+                        Username*
+                </td>
+                <td class="fieldsnew">~$username`</td>
+        </tr>
+        <tr>
+                <td class="label">
+                        Email
+                </td>
+                <td class="fieldsnew">~$email`</td>
+        </tr>
+        <tr>
+                <td class="label">
+                        Current Membership
+                </td>
+                <td class="fieldsnew">~$sname`</td>
+        </tr>
+        <tr>
+                <td class="label">
+                        Addon Service(s)
+                </td>
+                <td class="fieldsnew">~$addon_services_lastbill`</td>
+        </tr>
+        <tr>
+                <td class="label">
+                        Expiry Date
+                </td>
+        </td>
+                <td class="fieldsnew">~$expiry_dt`</td>
+        </tr>
+</table>
+~else`
+<table width="30%" cellpadding="4" cellspacing="4" align="center">
+	<tr>
+		<td align="center" class="formhead" colspan="2"><b><u>User Details</u></b></td>
+	</tr>
+	<tr>
+		<td class="label">Username</td>
+		<td class="fieldsnew">~$username`</td>
+	</tr>
+	<tr>
+		<td class="label">Name</td>
+		<td class="fieldsnew"> ~$custname`</td>
+	</tr>
+		<td class="label">Gender</td>
+		<td class="fieldsnew">~$gender_disp`</td>
+	</tr>
+	<tr>
+		<td class="label">Email</td>
+		<td class="fieldsnew">~$email`</td>
+	</tr>
+	<tr>	
+		<td class="label">Mailing Address</td>
+		<td class="fieldsnew">~$address`</td>
+	</tr>
+	<tr>
+		<td class="label">City</td>
+		<td class="fieldsnew">~$city`</td>
+	</tr>
+	<tr>
+		<td class="label">Pincode</td>
+		<td class="fieldsnew">~$pin`</td>
+	</tr>
+	<tr>
+		<td class="label">Phone(RES)</td>
+		<td class="fieldsnew">~$rphone`</td>
+	</tr>
+	<tr>
+		<td class="label">Phone(OFF)</td>
+		<td class="fieldsnew">~$ophone`</td>
+	</tr>
+	<tr>
+		<td class="label">Phone(MOB)</td>
+		<td class="fieldsnew">~$mphone`</td>
+	</tr>
+</table>
+~/if`
+<hr>
+<table width="30%" cellpadding="4" cellspacing="4" align="center">
+	<tr>
+		<td align="center" colspan="3" class="formhead"><b><u>ServiceDetails</u></b></td>
+	</tr>
+</table>
+<table width="30%" cellpadding="4" cellspacing="4" align="center">
+	<tr>
+		<td class="label">Currency Type</td>
+		<td class="fieldsnew">~$curtype_disp`</td>
+	</tr>
+	<tr>
+		<td class="label" colspan="2" align="center">Service(s)</td>
+	</tr>
+	~section name=next loop=$service_names`
+		<tr>
+			<td class="fieldsnew" colspan="2" align="center">
+				~$service_names[next].NAME` (~$service_names[next].PRICE`)
+			</td>
+		</tr>
+	~/section`
+	<tr>
+		<td class="label">Walkin by</td>
+		<td class="fieldsnew">~$walkin`</td>
+	</tr>
+	~if $discount`
+	<tr>
+		<td class="label">Discount</td>
+		<td class="fieldsnew">~$discount`</td>
+	</tr>
+	<tr>
+		<td class="label">Discount Type</td>
+		<td class="fieldsnew">~$disc_type1`</td>
+	</tr>
+	<tr>
+		<td class="label">Discount Reason</td>
+		<td class="fieldsnew">~$reason`</td>
+	</tr>
+	~/if`
+	<tr>
+		<td class="label">Price</td>
+		<td class="fieldsnew">~$price`</td>
+	</tr>
+	~if $curtype eq '0'`
+	<tr>
+		<td class="label">Tax @ ~$tax_rate`</td>
+		<td class="fieldsnew">~$tax`</td>
+	</tr>
+	~/if`
+	<tr>
+		<td class="label">Total Payment Amount</td>
+		<td class="fieldsnew">~$total_pay`</td>
+	</tr>
+</table>
+<hr>
+<table width="30%" cellpadding="4" cellspacing="4" align="center">
+	<tr>
+		<td colspan="2" align="center" class="formhead"><b><u>Payment Details</u></b></td>
+	</tr>
+	<tr>
+		<td class="label">Comment</td>
+		<td class="fieldsnew">~$comment`</td>
+	</tr>
+	~if $transaction_number`
+		<tr>
+                        <td class="label">Transaction Number</td>
+                        <td class="fieldsnew">~$transaction_number`</td>
+                </tr>
+        ~/if`
+	<tr>
+		<td class="label">Mode of Payment</td>
+		<td class="fieldsnew">~$mode`</td>
+	</tr>
+	<tr>
+		<td class="label">Source of Payment</td>
+		<td class="fieldsnew">~$from_source`</td>
+	</tr>
+	<tr>
+		<td class="label">Amount</td>
+		<td class="fieldsnew">~$amount`</td>
+	</tr>
+	<tr>
+		<td class="label">Cheque/DD Number/CC Offline Transaction No</td>
+		<td class="fieldsnew">~$cdnum`</td>
+	</tr>
+	<tr>
+		<td class="label">Cheque/DD Date</td>
+		<td class="fieldsnew">~$cd_date`</td>
+	</tr>
+	<tr>
+		<td class="label">Cheque/DD City</td>
+		<td class="fieldsnew">~$cd_city`</td>
+	</tr>
+	<tr>
+		<td class="label">Bank Name</td>
+		<td class="fieldsnew">
+			~if $bank neq "Other" and $bank neq ""`
+				~$bank`
+			~else`
+				~$obank`
+			~/if`
+		</td>
+	</tr>
+	~if $overseas`
+	<tr>
+		<td class="label">Overseas</td>
+		<td class="fieldsnew">Yes</td>
+	</tr>
+	~/if`
+	~if $separateds`
+        <tr>
+                <td class="label">Separate Deposit Slip</td>
+                <td class="fieldsnew">Yes</td>
+        </tr>
+        ~/if`
+	~if $amount lt $total_pay`
+	<tr>
+		<td class="label">Due Date</td>
+		<td class="fieldsnew">~$due_date`</td>
+	</tr>
+	~/if`
+	<tr>
+		<td class="label">Bank Deposit Date</td>
+		<td class="fieldsnew">~$dep_date`</td>
+	</tr>
+	<tr>
+		<td class="label">Deposit Branch</td>
+		<td class="fieldsnew">~$dep_branch`</td>
+	</tr>
+	 ~if $convert_to`
+        <tr>
+                <td class="label">Bill Type</td>
+                <td class="fieldsnew" colspan='2' align='center'>~$convert_to`</td>
+        </tr>
+        ~/if`
+	<tr>
+		<td align="center" colspan="2" class="fieldsnew"><input type="button" name="pg2_edit" value="<< Edit" onClick="history.back()" class="buttons1" /></td>
+	</tr>
+	<tr>
+		<td align="center" colspan="2" class="label"><input type="submit" name="submit" value="Submit" class="buttons1" /></td>
+	</tr>
+	<tr class="fieldsnew">
+                <td align="center" colspan="2">
+                        <font color="red">
+                                Transaction Number is the number depending on source of payment (eg: if SOURCE is EB_CASH, then TRANSACTION NUMBER is Easy Bill Reference ID)
+                        </font>
+                </td>
+        </tr>
+</table>
+</form>
+</html>

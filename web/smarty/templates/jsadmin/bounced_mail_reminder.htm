@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="http://www.jeevansathi.com/profile/images/styles.css" type="text/css">
+<title>Untitled Document</title>
+</head>
+
+<body>
+<table width="600"  border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#FF0000">
+ <tr>
+  <td><table width="600" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
+   <tr>
+
+    <td><br>
+     <table width="75%"  border="0" align="center" cellpadding="0" cellspacing="0">
+     <tr>
+      <td class="bigblack"><b>Dear ~$USERNAME` </b><br>
+        <br>
+
+   You registered as a member on Jeevansathi.com on ~$ENTRY_DT` (GMT) from IP Address ~$REGISTER_IP`. Further you took our "Paid Membership" for ~$N` months on ~$PAYMENT_ENTRY_DT` ~if $ORDERID neq ''` via order id ~$ORDERID` ~/if`. We had sent you a mail confirming this on ~$BOUNCE_DT`. We have received no reply from you. <br>
+   <br>
+   You have used your subscription as follows:<br>
+   <br>
+
+   <table width="550"  border="0" align="center" cellpadding="1" cellspacing="1">
+    <tr>
+     <td width="260" class="bigblack"><table width="240" border="0" cellpadding="0" cellspacing="1" class="bgyell">
+       <tr>
+        <td><table width="240"  border="0" cellpadding="2" cellspacing="2" bgcolor="#FFFFFF">
+
+          <tr class="bglyell">
+           <td width="200" class="bigblack"><b>Members who have contacted you</b></td>
+           <td class="bigblack"><strong >~$RECEIVEDSUM`</strong></td>
+          </tr>
+          <tr class="mediumblack">
+           <td><span class=" class5"><a href="~$SITE_URL`/profile/contacts_made_received.php?checksum=&flag=I&type=R&mail=Y">Of which you are yet to respond</a></span></td>
+           <td>~$RECEIVED_I`</td>
+
+          </tr>
+          <tr class="mediumblack">
+           <td><span class=" class5"><a href="~$SITE_URL`/profile/contacts_made_received.php?checksum=&flag=A&type=R&mail=Y">Of which you Accepted</a></span></td>
+           <td>~$RECEIVED_A`</td>
+          </tr>
+          <tr class="mediumblack">
+           <td><span class=" class5"><a href="~$SITE_URL`/profile/contacts_made_received.php?checksum=&flag=D&type=R&mail=Y">Of which you Declined</a></span></td>
+
+           <td>~$RECEIVED_D`</td>
+          </tr>
+        </table></td>
+       </tr>
+     </table></td>
+     <td width="260" class="bigblack"><table width="240" border="0" cellpadding="0" cellspacing="1" class="bgyell">
+       <tr>
+        <td><table width="240"  border="0" cellpadding="2" cellspacing="2" bgcolor="#FFFFFF">
+
+          <tr class="bglyell">
+           <td width="200" class="bigblack"><b>Members you have contacted</b></td>
+           <td class="bigblack"><b>~$MADESUM`</b></td>
+          </tr>
+          <tr class="mediumblack">
+           <td><span class=" class5"><a href="~$SITE_URL`/profile/contacts_made_received.php?checksum=&flag=I&type=M&mail=Y">Of which no response</a></span></td>
+           <td>~$MADE_I`</td>
+
+          </tr>
+          <tr class="mediumblack">
+           <td><span class=" class5"><a href="~$SITE_URL`/profile/contacts_made_received.php?checksum=&flag=A&type=M&mail=Y">Of which Accepted</a></span></td>
+           <td>~$MADE_A`</td>
+          </tr>
+          <tr class="mediumblack">
+           <td><span class=" class5"><a href="~$SITE_URL`/profile/contacts_made_received.php?checksum=&flag=D&type=M&mail=Y">Of which Declined</a></span></td>
+
+           <td>~$MADE_D`</td>
+          </tr>
+        </table></td>
+       </tr>
+     </table></td>
+    </tr>
+   </table>
+   <br>
+
+   <br>
+   The last contact was made on <b>~$LAST_CONTACT_DT`</b>.<br>
+   <br>
+	~if $CHARGE_BACK eq 'Y'`
+   Subsequently we received a charge back request from your side with the following reason:<br>
+	~elseif $MARK_BOUNCE eq 'Y'`
+   Subsequently your cheque was returned by your bank with the following reason:<br>
+	~/if`
+	<i>~$BOUNCE_REASON_REMINDER`</i><br><br>
+   Consequently we had no choice but to block your profile. <br>
+   <br>
+	~if $MARK_BOUNCE eq 'Y'`
+   We will request you to please send us a Demand Draft to regularise your payment ~if $ORDERID neq ''` against this Order id ~/if`.
+	~elseif $CHARGE_BACK eq 'Y'`
+   We will request you to please cancel the charge back request to your Credit card. 
+	~/if`
+
+   This will enable us to activate your membership, failing which we will have to no choice but to proceed with legal action~if $STERN eq 'S'` under the Negotiable Instruments Act~/if`. This mail is also being marked to our legal head for information. <br>
+
+   In case of any clarification please get in touch with the undersigned. <br>
+   In case you have sent the Cheque/DD, please ignore this mail. <br>
+   <br>
+   <b>Thanks and Regards,</b><br>
+   <br>
+   <b>Jeevansathi support team</b><br>
+   <br>
+   Phone no: 1800-419-6299/0120-4393500<br><br>
+   <font color=red>
+   CC : Ambarish Raghuvanshi<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CFO &amp; Legal Head<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Info Edge (India) Pvt. Ltd.<br>
+   </font>
+</td>
+     </tr>
+    </table>
+     <br></td>
+   </tr>
+  </table></td>
+ </tr>
+
+</table>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<html>
+<head>
+   <title>New Advertisers</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="~$SITE_URL`/jsadmin/jeevansathi.css" type="text/css">
+
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../../profile/images/logo_1.gif" width="209" hei
+ght="63"  border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br><br>
+
+
+<table width=100% border=0 align="center" cellspacing="4" cellpadding=5>
+<tr class="formhead">
+	<td align="center">Advertiser Details</td>
+</tr>
+</table><br>
+<table width=100% >
+<tr class="right">
+	<td align="right" class="fieldsnew"><a href="mainAds.php?cid=~$cid`">Go to Main Page</a></td>
+</tr>
+</table>
+<br>
+	<table width=100% border=0 cellspacing=4 cellpadding=5>
+	<tr class="label">
+	<td>Id</td>
+	<td>Name</td>
+	<td>Contact Person</td>
+	<td>Address</td>
+	<td>Status</td>
+	<td>Category</td>
+	<td colspan=2 align=center>Action</td>
+	</tr>
+	~section name=a loop=$det`
+	<tr class="fieldsnew">
+	<td>~$det[a].ADV_ID`</td>
+	<td>~$det[a].NAME`</td>
+	<td>~$det[a].CONTACT_PERSON`</td>
+	<td>~$det[a].ADDRESS`</td>
+	<td>~if $det[a].STATUS eq 'A'`Approved ~elseif $det[a].STATUS eq 'N'`New~/if`</td>
+	<td>~$det[a].CATEGORY`</td>
+	<td>
+	~if $fl eq 'N'`
+	<a href="actionAds.php?ID=~$det[a].ADV_ID`&cid=~$cid`">Approve/Disapprove</a>
+	~elseif $fl eq 'A'`
+	<a href="delAds.php?ID=~$det[a].ADV_ID`&act=D&cid=~$cid`">Delete</a>
+	~/if`
+	</td>
+
+	<td>
+	~if $fl eq 'A'`
+	<a href="delAds.php?ID=~$det[a].ADV_ID`&act=M&cid=~$cid`">Modify</a>
+	~/if`
+	</td>
+	
+	</tr>
+	~/section`
+	</table>
+</body>
+</html>

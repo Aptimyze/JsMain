@@ -1,0 +1,134 @@
+<html>
+<head>
+        <title>Jeevansathi.com - MIS</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+        <link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+        DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+                                                                                                                             
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+ <br /><br />
+         <table width=760 cellspacing="1" cellpadding='0' ALIGN="CENTER" >
+           <tr width=100% border=1>
+            <td width=30% class="formhead" height="23" align="center"><font><b>Welcome </b></font></td>
+         <td width=30% class="formhead" align='CENTER' height="23">
+            <a href="mainpage.php?cid=~$CHECKSUM`">Click here to go to mainpage</a>
+            </td>
+            <td width=30% class="formhead" align='CENTER' height="23">
+             <a href="/jsadmin/logout.php?cid=~$CHECKSUM`">Logout</a>
+            </td>
+           </tr>
+          </table>
+        <br>
+	~if $search`
+	<table width=760 align="center">
+        <tr class="formhead"  align="center">
+        <td align="center"><a href="survey_response.php?cid=~$CHECKSUM`">View all responses</a></td>
+        </tr>
+        </table>
+        <br />
+	~else`
+	<table width=760 align="center">
+	<tr class="formhead"  align="center">
+	<td align="center"><a href="survey_response.php?cid=~$CHECKSUM`&search=1">Search for a response</a></td>
+	</tr>
+	</table>
+	<br />
+	~/if`
+	~if $search`
+	~if $nouser || $nores`
+	<p align="center"><font color="red">~if $nouser`Invalid username entered!~else`No response from user!~/if`</font></p><br>
+	~/if`
+	<form action="survey_response.php" method="post">
+	<table align="center" width="50%">
+	<tr align="center" class="formhead"><td align="center" colspan="2">Please enter the following details</td></tr>
+	<tr align="center" class="fieldsnew">
+	<td align="center" class="label">Enter username</td>
+	<td align="center"><input type="text" name="username"></input>
+	</tr>
+	<tr class="fieldsnew" align="center">
+	<td align="center" class="label" colspan="2">
+	<input type="submit" name="submit" value="Search">
+	</td>
+	</tr>
+	</table>
+	<input type="hidden" name="cid" value="~$CHECKSUM`">
+	<input type="hidden" name="search" value="~$search`">
+	</form>
+	<br><br>
+	~/if`
+	~if $table`
+	<table width=760 align="center">
+	<tr align="center" class="formhead">
+	<td align="center">Total Number of Responses : ~$responses` ~if $rel || $mtongue`( ~$mtongue` ~if $rel && $mtongue`/~/if` ~$rel` )~/if`</td>
+	</tr>
+	</table>
+	<br>
+        <table width=100% align="center">
+        <tr class="formhead">
+        <td colspan=100% align="center">&nbsp;Survey Response</td>
+        </tr>
+        </table>
+	<br />
+	<table align="center">
+	<tr align="center" class="formhead">
+	<td align="center" width="5%">S.No</td>
+	<td align="center" width="5%">Username</td>
+	~if !$rel`
+	<td align="center" width="5%">Religion</td>
+	~/if`
+	~if !$mtongue`
+	<td align="center" width="5%">Community</td>
+	~/if`
+	<td align="center" width="5%">Caste</td>
+	<td align="center" width="20%">Ques 1</td>
+	<td align="center" width="20%">Ques 2</td>
+	<td align="center" width="20%">Ques 3</td>
+	<td align="center" width="20%">Ques 4</td>
+	</tr>
+	~foreach from=$table key=k item=v`
+	<tr align="center" class="fieldsnew">
+	<td align="center">~$v.sno`</td>
+	<td align="center">~$v.username`</td>
+	~if !$rel`
+	<td align="center">~$v.religion`</td>
+	~/if`
+	~if !$mtongue`
+	<td align="center">~$v.mtongue`</td>
+	~/if`
+	<td align="center">~$v.caste`</td>
+	<td align="center">~$v.ques1`</td>
+	<td align="center">~$v.ques2`</td>
+	<td align="center">~$v.ques3`</td>
+	<td align="center">~$v.ques4`</td>
+	</tr>
+	~/foreach`
+	</table>
+	~if $PAGELINK`
+	<center><br>
+	<table>
+	<tr class=priNormal align=center>
+	    <td colspan="80%" height="21">
+	    ~$PAGELINK`
+	    </td>
+	 </tr>
+	</table>
+	</center>
+	~/if`
+	~/if`
+<br /><br />
+</body>
+</html>
+

@@ -1,0 +1,25 @@
+<html>
+~include file="head_billing.htm"`
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+        <link rel="stylesheet" href="jeevansathi1.css" type="text/css">
+        <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+        <title>Jeevansathi - Billing</title>
+</head>
+<table cellpadding="4" cellspacing="4" width="80%" align="center">
+	~if $SERVICE_NOT_CHANGED`
+		<tr class="formhead">
+			<td>Upgrade Unsuccessful</td>
+		</tr>
+		<tr class="fieldsnew">
+			<td>There is no change in the selected service and the previous service</td>
+		</tr>
+	~else`
+		<tr>
+			<td class="label" align="center">~if $degrade` Degrade ~else` Upgrade ~/if` Successful</td>
+		</tr>
+		<tr>
+			<td class="fieldsnew" align="center"><a href="search_user.php?cid=~$cid`&criteria=~$criteria`&phrase=~$phrase`">Continue&gt;&gt;</a></td>
+		</tr>
+	~/if`
+</table>

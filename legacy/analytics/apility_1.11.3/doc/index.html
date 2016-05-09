@@ -1,0 +1,576 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="./resources/layout.css">
+		<link rel="shortcut icon" href="./resources/favicon.ico">
+		<title>Google APIlity Library Documentation</title>
+	</head>
+	<body>
+		<div id="header">
+			<table width="100%" border="0">
+				<tr>
+					<td width="150">
+						<a href="http://code.google.com/"><img src="resources/googlecode_small.gif" alt="Go to Google" border="0" align="absmiddle"></a>
+					</td>
+					<td>
+						<h1>&nbsp;Google APIlity Library Documentation</h1>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<div id="navigation">
+			<p>
+				<a href="http://code.google.com/">code.google.com</a>
+			</p>
+			<p>
+				<a href="reference.html">Reference</a>
+			</p>
+			<p>
+				<a href="https://sourceforge.net/projects/google-apility/">Project Page</a>
+			</p>
+			<p>
+				<a href="https://sourceforge.net/project/showfiles.php?group_id=144351">Downloads</a>
+			</p>
+			<p>
+				<b>APIlity in action:</b>
+			</p>
+			<p>
+				<a href="agua.html">APIlity Agua</a>
+				<br />
+				<a href="agua_biz.html">APIlity Agua Biz</a>
+			</p>
+			<a href="http://www.sourceforge.net/"><img src="resources/sflogo.png" alt="SourceForge.net Logo" border="0" height="31" width="88"></a>
+		</div>
+
+		<div id="weblinks">
+			<p class="box">
+				AdWords API
+			</p>
+			<p>
+				Visit the <a href="http://www.google.com/apis/adwords/index.html">AdWords API Home</a>
+			</p>
+			<p class="box">
+				Support
+			</p>
+			<p>
+				Get help in the <a href="http://groups-beta.google.com/group/adwords-api-php">AdWords API PHP Forum</a>.
+			</p>
+			<p>
+				Stay tuned with the <a href="http://adwordsapi.blogspot.com/">AdWords API Blog</a>.
+			</p>
+			<p class="box">
+				AdWords API Docs
+			</p>
+			<p>
+				See the generic <a href="http://www.google.com/apis/adwords/developer/adwords_api_services.html">AdWords API Docs</a>.
+			</p>
+			<p class="box">
+				Contact
+			</p>
+			<p>
+				<a href="mailto:opensource@google.com">opensource@google.com</a>
+			</p>
+			<div align="right">
+				<i>
+					<font size="-2">Last modified
+						<script type="text/javascript">
+							<!--
+							var lastMod = new Date(document.lastModified);
+							document.write(lastMod.toDateString());
+							//-->
+					  </script>
+			  	</font>
+			  </i>
+			</div>
+		</div>
+
+		<div id="content">
+			<table border="0" cellpadding="10" cellspacing="0">
+				<tr>
+					<td valign="top" style="font-size:8pt;">
+						<p>
+							<img src="./resources/apility_phonetic.png" alt="APIlity Phonetic" vspace="5" hspace="5" width="50" height="15" align="left" />
+							The <span style="font-family:Verdana;font-weight:bold;">APIlity</span> PHP Library provides an object-oriented way to easily
+							access and manage the Google AdWords API from within PHP.
+							This comes along with an abstraction from the SOAP and WSDL details.
+							<br />
+							The name APIlity is a wordplay on "<u>API</u>" and "abi<u>lity</u>", symbolizing that the AdWords API gives you the ability
+							to do whatever you ever wanted to do with AdWords, and even more.
+						</p>
+						<p class="box">
+							Some words about the AdWords API
+						</p>
+						<p>
+							With the AdWords API you can not only manage and organize your accounts
+							more efficiently, easily and smoothly, but also more creatively. Using
+							the API, you can create your own report-pulling software, synchronize
+							your bids with your warehousing or have your own mass uploading tool
+							control your accounts.
+						</p>
+
+						<h4>Web Services</h4>
+
+						<p>
+							All	these tasks can be focused programmatically through web services where
+							clients can be invoked, perform the required tasks on the remote server
+							and return the results. Getting started with web service is a bit
+							challenging and may be even discouraging as there are a lot of things
+							to be taken into account that application developers have not usually
+							come across. So we decided to offer client libraries like APIlity that
+							provide an abstraction of these web service details and cover them in
+							high-level language constructs.
+						</p>
+						<h4>See APIlity in action</h4>
+						<p>
+							<a href="agua.html"><img src="./resources/screenshotAccountStructureAgua.png" width="100" align="left" vspace="5" hspace="10" alt="APIlity Agua Screenshot" border="0" /></a>
+							<a href="agua_biz.html"><img src="./resources/screenshotStocks.png" width="100" align="left" vspace="5" hspace="10" alt="APIlity Agua Biz Screenshot" border="0" /></a>
+							<b>Agua</b> is an <b>A</b>jax <b>GU</b>I for <b>A</b>dWords and lets you experience AdWords in a revolutionary new way. <b>Agua Biz</b> is a business mash-up of Google
+							Checkout and AdWords which allows you to see how these two services can be integrated in one single Ajax application.
+						</p>
+						<p>
+							Download the two open source projects now: <a href="agua.html">APIlity Agua</a> and <a href="agua_biz.html">APIlity Agua Biz</a> - <b>A</b>jax <b>GU</b>I for <b>A</b>dWords (Agua)
+						</p>
+					</td>
+					<td valign="top" style="font-size:8pt;">
+						<div style="background-color: #efefef;width:400px;border: silver dashed 1px;padding:0em;">
+								<h4 style="margin:0em 0em 0.5em 0em;">Sections of this Document</h4>
+								 &nbsp;<a href="#Introduction_to_APIlity">Introduction to APIlity</a><br />
+								&nbsp;&nbsp;&nbsp; <a href="#APIlity_Class_Organigram">APIlity Class Organigram<br /></a>
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#APIlity_Class_Organigram"><img vspace="3" src="./resources/apility_organigram.png" width="70" border="0" alt="APIlity Class Organigram" /></a><br />
+								&nbsp;&nbsp;&nbsp; <a href="#The_Role_of_IDs">The Role of IDs</a><br />
+								&nbsp;&nbsp;&nbsp; <a href="#APIlity_Object_Hierarchy">APIlity Object Hierarchy</a><br />
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#APIlity_Object_Hierarchy"><img vspace="3" src="./resources/apility_hierarchy.png" width="70" border="0" alt="APIlity Object Hierarchy" /></a><br />
+								&nbsp;<a href="#Requirements">Requirements</a><br />
+								&nbsp;<a href="#Getting_Started">Getting Started</a><br />
+								&nbsp;<a href="#Authentication_and_Context_Switching">Authentication and Context Switching</a><br />
+								&nbsp;<a href="#Error_Management">Error Management</a><br />
+								&nbsp;&nbsp;&nbsp; <a href="#Error_Management_Strategy">Error Management Strategy</a><br />
+								&nbsp;&nbsp;&nbsp; <a href="#Defensive_and_StraightForward_Programming">Defensive and Straight-Forward Programming</a><br />
+								&nbsp;&nbsp;&nbsp; <a href="#Error_Message_Styles">Error Message Styles</a><br />
+								&nbsp;&nbsp;&nbsp; <a href="#Fault_Stack">Fault Stack</a><br />
+								&nbsp;<a href="#Settings">Settings</a><br />
+								&nbsp;&nbsp;&nbsp; <a href="#Sandbox">Sandbox</a><br />
+								&nbsp;&nbsp;&nbsp; <a href="#API_Versioning">API Versioning</a><br />
+								&nbsp;&nbsp;&nbsp; <a href="#Exchange_Rate">Exchange Rate</a><br />
+								&nbsp;&nbsp;&nbsp; <a href="#Campaign_Negative_Criteria">Campaign Negative Criteria</a><br />
+								&nbsp;&nbsp;&nbsp; <a href="#Campaign_isEnabledOptimizedAdServing_Attribute">Campaign isEnabledOptimizedAdServing Attribute</a><br />
+								&nbsp;&nbsp;&nbsp; <a href="#Silence_Stealth_Mode">Silence Stealth Mode</a><br />
+								&nbsp;&nbsp;&nbsp; <a href="#WSDL_Caching">WSDL Caching</a><br />
+								&nbsp;&nbsp;&nbsp; <a href="#Object_Orientation">APIlity Object-Oriented</a><br />								
+								&nbsp;<a href="#Quota_Usage_in_APIlity">Quota Usage in APIlity</a><br />
+								&nbsp;<a href="#Debugging">Debugging</a><br />
+						</div>
+					</td>
+				</tr>
+			</table>
+			<a name="Introduction_to_APIlity"></a>
+			<p class="box">
+				Introduction to APIlity
+			</p>
+			<p>
+				The APIlity client library provides an object-oriented and easy-to-use
+				way to access the Google AdWords API from within PHP. This helps
+				programmers to concentrate on sophisticated programs and tools, not on
+				complex API details.
+			</p>
+			<div align="center">
+				<a name="APIlity_Class_Organigram"></a>
+				<img src="resources/apility_organigram.png" border="0" alt="APIlity Class Organigram" width="643" height="359">
+				<br>
+				<small>(fig. 1) APIlity Class Organigram</small>
+			</div>
+			<a name="The_Role_of_IDs"></a>
+			<h4>The Role of IDs</h4>
+
+			<p>
+				When using the API, you need to think in IDs. Everything in the AdWords
+				world has an ID which represents its only point of access. To get all
+				Keywords for an AdGroup you first need to know the Campaign in which
+				the AdGroup concerned resides. When you have found the correct
+				Campaign, you need to remember its ID. Then you need to know what
+				AdGroups this Campaign contains and among these find the ID of the one
+				you are searching for. Now with these two IDs, the one for the AdGroup
+				concerned and the one for the Campaign concerned, you are ready to get
+				a list of all Keywords which in turn - yes, you guessed it - are
+				equipped with IDs.
+			</p>
+			<div align="center">
+				<a name="APIlity_Object_Hierarchy"></a>
+				<img src="resources/apility_hierarchy.png" border="0" alt="APIlity Object Hierarchy" width="831" height="391">
+				<br>
+				<small>(fig. 2) APIlity object hierarchy</small>
+			</div>
+			<p>
+				The APIlity Library tries to give the programmer a more intuitive,
+				object-oriented user interface. Once an object has been created, all
+				known actions can be easily performed directly on it, for instance the
+				status of an AdGroup object can be changed via the following instruction:
+			</p>
+	<pre>$someAdGroupObject-&gt;setStatus("Paused");</pre>
+			<p>
+				What happens in the background is that the AdGroup client is invoked,
+				establishes a connection to the Google AdWords server, updates the
+				AdGroup's status and closes the connection. All this is hidden from the
+				programmer. All he gets in touch with is high-level PHP objects.
+			</p>
+			<a name="Requirements"></a>
+			<p class="box">
+				Requirements
+			</p>
+			<p>
+				APIlity works both with PHP4 and PHP5 and usually only requires the
+				cURL extension to be installed. This can be done very easily by
+				uncommenting the line
+			</p>
+	<pre>; extension=php_curl.dll</pre>
+			<p>
+				in your php.ini file, i.e. remove the semicolon at the beginning of the
+				line. If you are using PHP4, you additionally need to enable the
+				DOM/XML by uncommenting the line
+				<pre>; extension=php_domxml.dll</pre>
+			</p>
+			<p>
+				In case where one of the extensions is not installed APIlity will write a warning to the screen. cURL is needed in PHP4 and PHP5 for downloading reports.
+				DOM/XML is needed in PHP4 to modify the XML reports.
+			</p>
+			If you can life fine without these features you can just ignore the warnings.
+			<a name="Getting_Started"></a>
+			<p class="box">
+				Getting Started
+			</p>
+			<p>
+				APIlity is designed along Larry Wall's credo <i>"Easy things should be easy and hard things should be possible"</i>. So getting started is extremely simple and consists of two steps:
+			</p>
+			<ol>
+				<li>edit <b>authentication.ini</b> and enter your data according to your <a href="https://adwords.google.com/select/ApiWelcome">API account settings</a></li>
+
+				<li>include <b>apility.php</b> in your project by <pre>require_once('apility.php');</pre></li>
+			</ol>
+				<p>
+					<font color="red"><b>Possible security issue:</b></font> Please make sure that <b>authentication.ini is not in a web-readable folder</b> of your web server.
+				</p>
+				<p>
+					The most secure way to make sure no one can steal your account login data is to provide the login data directly. Therefore, after including APIlity into your project file, set the authentication context
+					manually as shown below:
+				</p>
+				<pre>  include('apility');
+  $apilityUser = new APIlityUser(
+      'email@isp.tld',
+      'p455woRd',
+      'clientEmail@isp.tld',
+      'D3v3Lop3rT0keN',
+      '4pPlicaTi0nTok3n');</pre>
+				This means leaving authentication.ini untouched.
+			<a name="Authentication_and_Context_Switching"></a>
+			<p class="box">
+				Authentication and Context Switching
+			</p>
+			<p>
+				After importing APIlity, the SOAP clients are automatically created and
+				have their headers set according to the values given in <b>authentication.ini</b>.
+				You can overwrite (or later change) this information by modifying the
+				authentication context. This can be done by accessing the standard
+				authentication context, which exists by default after the import of
+				APIlity.
+			</p>
+			<pre>  $apilityUser = new APIlityUser();
+  $apilityUser-&gt;setClientEmail("yourClientsEmail@someISP.tld");</pre>
+			<p>
+				or by setting a completely new authentication context
+			</p>
+		<pre>  $apilityUser = new APIlityUser();
+  $authentication = array();
+  $authentication['Client_Email'] = 'clientEmail@isp.tld';
+  $authentication['Email'] = 'email@isp.tld';
+  $authentication['Password'] = 'S3cretP455woRd';
+  $authentication['Developer_Token'] = 'D3v3Lop3rT0keN';
+  $authentication['Application_Token'] = '4pPlicaTi0nTok3n';
+  $apilityUser-&gt;setContext($authentication);</pre>
+			<p>
+				This new authentication context is then automatically passed to the SOAP
+				clients which update their headers. This design is very flexible and
+				gives you the opportunity to manage several clients in one loop in only
+				one script - and this for even more than one MyClientCenter managers.
+			</p>
+			<a name="Error_Management"></a>
+			<p class="box">
+				Error Management
+			</p>
+			Errors happen. Every programmer would subscribe to this, however, when a remote Web service gets
+			involved, good error management becomes even more important.
+			<a name="Error_Management_Strategy"></a>
+			<h4>Error Management Strategy</h4>
+			APIlity allows both: straight-forward
+			coding and defensive programming. The convention for the behavior of all functions is:
+			<ul>
+				<li>return <b>false</b> if something went <span style="font-weight:bold;color:red;">wrong on the <u>SOAP level</u></span></li>
+        <li>return <b>null</b> if something went <span style="font-weight:bold;color:red;">wrong on the <u>non-SOAP level</u></span> (i.e. request for non-existing objects)</li>
+				<li>if everything went <span style="font-weight:bold;color:darkgreen;"><u>well</u></span></li>
+				<ul>
+					<li>return the <b>object</b> when there is something to return</li>
+					<li>return <b>true</b> when there is nothing to return</li>
+				</ul>
+			</ul>
+			An exception of this are simple object get-functions as they require a successfully created object. The
+			function addCampaign() for example, well, adds a campaign and returns this just added campaign. So in
+			case where everything goes well, you can expect a Campaign Object as returned value, and false when
+			the AdWords API for some reason does not like your campaign.
+
+			<a name="Defensive_and_StraightForward_Programming"></a>
+			<h4>Defensive and Straight-Forward Programming</h4>
+			There are two possibilities to code: defensive programming and straight-forward coding. Straight-forward coding
+			is a bit faster, whereas defensive programming takes a bit longer, however is more reliable.
+			<pre>
+// defensive programming
+if ( !$campaignObject = addCampaign(...) ) {
+  // treat the error
+}
+print_r($campaignObject);
+
+// straight-forward coding
+$campaignObject = addCampaign(...);
+print_r($campaignObject);
+</pre>
+			<a name="Fault_Stack"></a>
+			<h4>Fault Stack</h4>
+			All errors are pushed on the <b>fault stack</b>. This behavior is very flexible as the fault stack stores faults in a
+			generic fault object format and therefore allows just-in-time conversion of these fault objects to HTML,
+			plaintext, XML error messages; or nothing at all, just to the needs of the developer. Usually all errors are printed
+			as they occur. However it is possible to access the fault stack manually:
+			<pre>
+$fault = array_pop($apilityUser-&gt;getFaultStack());
+$fault->printFault();	// prints the last fault in the format given in settings.ini
+</pre>
+			The maximum size of the fault stack can be adjusted in Fault.php:
+			<pre>define("FAULT_STACK_SIZE", 10);</pre>
+			<a name="Error_Message_Styles"></a>
+			<h4>Error Message Styles</h4>
+			<ul>
+				<li>First, you can just output errors in <b>HTML</b> which is easily readable but relatively useless for creating an error log file.
+					  <pre>Display_Error_Style = HTML</pre>
+						<p>
+							Example HTML error message:
+						</p>
+						<p>
+							<style type='text/css'> .string { color:maroon; } .tag { color:darkgreen; } </style>
+							<div style='padding:0.5em; margin:0.5em; border:1px dashed gray;'>
+								<small>
+								<font color='blue'><b>Ouch!</b></font> I am not proud to announce the following <font color='maroon'><u>AdWords API Error</u></font>:
+								<br />&nbsp;&nbsp;<b>Message:</b> An internal error has occurred.  Please retry your request.
+								<br />
+								&nbsp;&nbsp;<b>Trigger:</b>
+								<br />
+								&nbsp;&nbsp;<b>Code:</b> <font color='blue'>0</font>
+								<br />
+								&nbsp;&nbsp;<b>Fault Origin:</b> <font color='blue'>/apility/project.php:getManagersClientAccounts()</font>
+								<br />&nbsp;&nbsp;<b>SOAP Parameters:</b>
+								<br />
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;getClientAccounts&gt;</span><span class="tag">&lt;/getClientAccounts&gt;</span>
+								</small>
+							</div>
+						</p>
+				<li>Second, you can print fault objects as visible <b>plaintext</b>.
+						Thus creating an error log file is possible.<pre>Display_Error_Style = Plaintext</pre>
+						<p>
+							Example plaintext error message:
+						</p>
+						<p>
+							<font face="courier-new,courier">
+								<small>
+									&nbsp;&nbsp;Code: 0<br />
+									&nbsp;&nbsp;Message: An internal error has occurred.  Please retry your request.<br />
+									&nbsp;&nbsp;Trigger:<br />
+									&nbsp;&nbsp;Errors:<br />
+									&nbsp;&nbsp;Fault Origin: /apility/project.php:getManagersClientAccounts()<br />
+									&nbsp;&nbsp;SOAP Parameters: <getClientAccounts></getClientAccounts><br />
+								</small>
+							</font>
+						</p></li>
+			</ul>
+
+			<ul>
+				<li>Third, fault objects can be printed in <b>XML</b> format. This is useful when the error message needs
+					  to be parsed or processed otherwise.
+					  <pre>Display_Error_Style = XML</pre>
+					  	<p>
+					  	<font face="courier-new,courier">
+					  		<small>
+									&nbsp;&nbsp;&lt;adWordsApiError&gt;<br />
+									&nbsp;&nbsp;&lt;code&gt;0&lt;/code&gt;<br />
+									&nbsp;&nbsp;&lt;message&gt;An internal error has occurred. Please retry your request.&lt;/message&gt;<br />
+									&nbsp;&nbsp;&lt;trigger&gt;&lt;/trigger&gt;<br />
+									&nbsp;&nbsp;&lt;faultOrigin&gt;/apility/project.php:getManagersClientAccounts()&lt;/faultOrigin&gt;<br />
+									&nbsp;&nbsp;&lt;soapParameters&gt;<br />
+									&nbsp;&nbsp;&nbsp;&nbsp;&lt;getClientAccounts&gt;&lt;/getClientAccounts&gt;<br />
+									&nbsp;&nbsp;&lt;/soapParameters&gt;<br />
+									&nbsp;&nbsp;&lt;/adWordsApiError&gt;<br />
+								</small>
+							</font>
+				</p>
+			</li>
+		</ul>
+
+			<a name="Settings"></a>
+			<p class="box">
+				Settings
+			</p>
+			<p>
+				All settings concerning APIlity's behaviour can be adjusted in the file <b>settings.ini</b>.
+			</p>
+
+			<a name="Sandbox"></a>
+			<h4>Sandbox</h4>
+
+			<p>
+				The AdWords API Sandbox is an environment that replicates the API of the live site
+				for developing, testing and debugging applications that use the AdWords API.
+				There is <b>no quota on the Sandbox system</b>, users are free to make all the calls they want.
+				In order to enable the sandbox, change the corresponding variable in the settings:
+				<pre>; Use_Sandbox = no
+Use_Sandbox = yes</pre>
+			</p>
+			<p>
+				When the sandbox is used, a currency code must be specified for the accounts. Once set, it cannot
+				be changed. If you attempt to change it, the change is ignored.
+				<pre>Currency_For_Sandbox = USD
+; Currency_For_Sandbox = EUR</pre>
+			</p>
+			<p>
+				The first time you log in to the sandbox a set of five clients is automatically created. The best
+				way to make sure this went well is to use the following code snippet for the first sandbox call:
+				<pre>print_r(getManagersClientAccounts());</pre>
+				This should print a list of five clients with the prefix client_#, where # is a number from 1 to 5.
+				The complete client name is <b>client_#+yourEmail@someISP.tld</b>. Use this value for the authentication.ini:
+				<pre>Client_Email = "client_#+yourEmail@someISP.tld"</pre>
+			</p>
+			<a name="API_Versioning"></a>
+			<h4>API Versioning</h4>
+			<p>
+				APIlity is a library to access the AdWords API. When using APIlity, programmers usually do not need
+				to interact with the native API directly, as the client library (i.e. APIlity) provides a complete
+				interface to the native API functions. With version 3 of the AdWords API, Google introduced a feature
+				which is called &quot;versioning&quot;. Versioning gives developers the possibility to switch their code base
+				piecewise, without the need to update all code at once when the native API version changes. When such
+				version change occurs, the outdated version stays active for a specified period of time. Afterwards the
+				old version gets disabled.
+			</p>
+			<p>
+				APIlity lets developers choose the version of the native API to use. By default the most current version
+				is selected. To change this preselection modify the corresponding variable in the settings:
+				<pre>Use_API_Version = v10
+; Use_API_Version = v11</pre>
+			</p>
+			<p>
+				Please note that changing the API version to use comes along with the <b>presence or absence of features</b> which have
+				been added or removed from the particular API versions. For details please see the <a href="http://www.google.com/apis/adwords/developer/ReleaseNotes.html">AdWords API Release Notes</a>.
+			</p>
+			<a name="Exchange_Rate"></a>
+			<h4>Exchange Rate</h4>
+
+			<p>
+				By default, the API thinks in micro units, i.e. 1$ becomes 1,000,000
+				micros. This might be a little confusing and error-prone. APIlity gives
+				you the opportunity to set your own exchange rate. So when you set your
+				exchange rate to 1,000,000, 1$ becomes what you expect it to be: 1.
+				However, if you prefer to think in micros, you just set your exchange
+				rate to 1 and 1$ is 1,000,000.
+			</p>
+			<pre>Exchange_Rate = 1000000
+; Exchange_Rate = 1</pre>
+			<a name="Campaign_Negative_Criteria"></a>
+			<h4>Campaign Negative Criteria</h4>
+			<p>
+				By default, Campaign Negative Criteria are no attribute of Campaign Objects, but have to be queried separately from the
+				Criteria service. APIlity offers the possibility to include Campaign Negative Criteria as an object attribute to
+				simplify the Campaign handling, however this costs minimally more quota to query the particulat Website or Keyword Criteria each time.
+			</p>
+			<pre>Include_Campaign_Negative_Criteria = yes
+; Include_Campaign_Negative_Criteria = no</pre>
+			<a name="Campaign_isEnabledOptimizedAdServing_Attribute"></a>
+			<h4>Campaign isEnabledOptimizedAdServing Attribute</h4>
+				<p>
+					Ad Serving of Campaigns by default happens in a self-optimizing manner. This in general is considered to make sense.
+					There is the possibility to switch this optimization off. However, most advertisers don't. Campaign objects have
+					an isEnabledOptimizedAdServing attribute which can be set via an API call which consumes quota. As almost no one switches
+		 			this optimization off, this attribute usually is redundant (as it is always true). You can select whether you want
+					this attribute to be set or not if you are interested in its value. This defaults to no.
+					<pre>Is_Enabled_Optimized_Ad_Serving_Attribute = no
+; Is_Enabled_Optimized_Ad_Serving_Attribute = yes</pre>
+			<a name="Silence_Stealth_Mode"></a>
+			<h4>Silence Stealth Mode</h4>
+			Usually APIlity is quite verbose and prints warnings, error message and the like. In some cases, for example when
+			the library should be run embedded in an application, this behavior is not wanted. The <b>Silence Stealth Mode</b> makes APIlity
+			not print any warning or error message and also switches PHP's warnings off. This requires the programmer to carefully test
+			the code in advance, before switching the Silence Stealth Mode on. In general, it is a good idea to combine the Silence Stealth Mode
+			with XML error messages, as they can be parsed easily.
+			<pre>; Silence_Stealth_Mode = yes
+Silence_Stealth_Mode = no</pre>
+			<a name="WSDL_Caching"></a>
+			<h4>WSDL caching</h4>
+			<p>To reduce network latency APIlity allows the caching of WSDL files locally. However, this is considered a "know-what-you-do" feature. If the caching is enabled
+				APIlity will download the WSDL files once, and then work with the cached versions. There are no checks performed whether the cached version is still up to date.
+				Given that the WSDL files rarely change, this feature might be useful for power users. If unexplainable errors occur, turning off the WSDL caching and deleting the
+				the eventually updated WSDL files manually might be a solution.
+			</p>
+			<p>
+				If any part of the cache fails it does so silently and just reverts back to the remote WSDL file. By default WSDL caching is turned on. You can switch it off by setting:
+			</p>
+			<pre>WSDL_Cache_Enabled = no
+; WSDL_Cache_Enabled = yes</pre>
+			<p>
+				If you have caching enabled, you can set the time in seconds the cache file is good for:
+			</p>
+			<pre>WSDL_Cache_Time = 86400</pre>
+			<p>
+				To set the directory to cache the files in modify the WSDL cache directory. Please note that you need to specify an absulote path according to your web server structure.
+				By default APIlity stores the WSDL files in the wsdl_cache folder of the APIlity home folder.
+			</p>
+			<pre>WSDL_Cache_Directory = ./wsdl_cache</pre>
+			<a name="Object_Orientation"></a>
+			<h4>APIlity Object-Oriented</h4>
+			APIlity allows you to program in a completely object-oriented way where rather than calling functions in the global scope you call methods in the scope of an APIlityUser or
+			APIlityManager object. In order to activate this mode, set the corresponding flag in settings.ini:
+      <pre>Enable_APIlity_Object_Oriented_Mode = yes
+; Enable_APIlity_Object_Oriented_Mode = no</pre> 			
+      Please note that this mode currently <b>requires PHP5</b>.
+			<a name="Quota_Usage_in_APIlity"></a>
+			<p class="box">
+				Quota Usage in APIlity
+			</p>
+			APIlity provides some information of the consumed quota units. This is a feature of the SOAP clients which can be accessed by calling the following methods.
+			<h4>Overall consumed units</h4>
+			<pre>$apilityUser->getOverallConsumedUnits()</pre>
+			This returns the overall number of consumed quota units since a script was started. This covers all SOAP clients (like AdGroup client, Campaign client, ...) involved.
+		  <h4>Overall performed operations</h4>
+	    <pre>$apilityUser->getOverallPerformedOperations()</pre>
+	    This returns the overall number of operations preformed since a script was started. In general this number will be less than the number of consumed quota units since some operations are more expensive than others.
+	    <h4>Last response times</h4>
+	    <pre>$apilityUser->getLastResponseTimes()</pre>
+	    This returns the last n response times of the performed SOAP calls. This gives an idea of how long the single SOAP operations take. The number n can be set by modifying a constant in the file Clients.php:
+	    <pre>define("N_LAST_RESPONSE_TIMES", 10);	// change 10 to whatever n you want</pre>
+	    <a name="Debugging"></a>
+	    <p class="box">
+	    	Debugging
+	    </p>
+	    In general, APIlity is designed as an abstractation of the SOAP details of the API. By default, programmers never get in touch with SOAP. However,
+	    it is possible to do so. To enable debugging, set the following constant  to yes in settings.ini:
+	    <pre>Enable_Debug_Mode = yes
+; Enable_Debug_Mode = no</pre>
+				To see the debugging information for the SOAP headers and requests that an APIlity function creates, run:
+      	<pre>// run the APIlity function
+apilityFunction(toBeDebugged);
+// then print_r the SOAP Requests and Responses this function has generated.
+print_r($apilityUser->getLastSoapRequests());
+print_r($apilityUser->getLastSoapResponses());</pre>
+		</div>
+
+		<div id="footer">
+			<img src="resources/art.gif" alt="o ooO" border="0" align="absmiddle">
+			<p>
+				<a href="http://code.google.com/">Code.google.com</a>
+				is Google's open-source project, releasing useful pieces of Google software into the wild.  Keep watching for more.
+			</p>
+		</div>
+
+	</body>
+</html>

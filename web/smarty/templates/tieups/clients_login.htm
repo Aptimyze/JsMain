@@ -1,0 +1,63 @@
+<html>
+<head>
+<title>Clients Login</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+</head>
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+        <table width="760" border="0" cellspacing="0" cellpadding="2" align="CENTER">
+<tr>
+<td><img src="../profile/images/logo_1.gif" width="192" height="65"></td>
+</tr>
+<tr>
+<td class=bigwhite bgcolor="6BB97B">&nbsp;
+</td>
+
+</tr>
+</table>
+<br><br>
+	~if $login_error`
+	<table width=80% border="0" cellspacing="1" cellpadding="4" align="center">
+	  <tr>
+            <td class="fielsnew" align="center" colspan="2"><font color=red size=2>~$login_error`</font> </td>
+          </tr>
+	</table><br>
+	~/if`
+	<form method="post" action="voucher_clients.php">
+        <table width="49%" border="0" cellspacing="1" cellpadding="4" align="center">
+          <tr>
+            <td class="formhead" valign="middle" colspan="2">Clients Login : </td>
+          </tr>
+          <tr>
+
+            <td width="49%" class="label" bgcolor="#F9F9F9">Username</td>
+            <td width="51%" bgcolor="#F9F9F9">
+              <input type="text" name="username" value="~$username`" size="18" maxlength="40" class="textboxes1">
+            </td>
+          </tr>
+          <tr>
+            <td width="49%" class="label" bgcolor="#F9F9F9">Password</td>
+            <td width="51%" bgcolor="#F9F9F9">
+
+              <input type="password" name="password" size="18" maxlength="40" class="textboxes1">
+            </td>
+          </tr>
+          <tr valign="middle" align="LEFT">
+            <td width="49%" class="label" bgcolor="#F9F9F9">&nbsp;</td>
+              <td bgcolor="#F9F9F9"><input type="submit" name="login" value="Login" class="textboxes1"></td></tr>
+            
+          <tr valign="top" align="right">
+            <td colspan="2" bgcolor="#F9F9F9" class="lftpan">&nbsp;</td>
+          </tr>
+
+        </table>
+      </form>
+
+
+      </td>
+  </table>
+
+</table>
+</html>
+

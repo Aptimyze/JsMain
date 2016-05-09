@@ -1,0 +1,4 @@
+type=command
+command=${php5} ${docRoot}/crontabs/contact_search_flow.php
+retries=2
+retry.backoff=500000

@@ -1,0 +1,70 @@
+td {
+	FONT-FAMILY: Arial,Helvetica,sans-serif;
+	font-size: 12px;
+	color: #3E3E3E;
+	text-decoration: none;
+	border: none;
+}
+
+.inputsubmit {  
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 11px; 
+	background-color: #00A6DD; 
+	color: #FFFFFF;
+	border: #666666; 
+	border-style: solid;
+ 	border-top-width: 1px; 
+	border-right-width: 1px; 
+	border-bottom-width: 1px; 
+	border-left-width: 1px
+}
+
+.inputsubmit2 {  
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 11px; 
+	background-color: #FFFFFF; 
+	color: #006699;
+	border: #FFFFFF; 
+	border-style: solid;
+ 	border-top-width: 1px; 
+	border-right-width: 1px; 
+	border-bottom-width: 1px; 
+	border-left-width: 1px
+}
+
+.barTxt {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #FFFFFF;
+	text-decoration: none;
+	border: none;
+}
+
+.error {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #FF0000;
+	text-decoration: none;
+	border: none;
+	font-weight: bold;
+}
+
+textarea { width: 100%; }
+.mainTable { background-color: #F4FAFF; }
+.mainTableAlt { background-color: #FFFFFF; }
+.mainTableOn { background-color: #FFFFF0; }
+.TableHeader { background-color: #00A6DD; }
+.TableHeaderText { color: #FFFFFF; font-size: 11px; font-weight: bold; }
+.TableInfoText { color: #000000; font-size: 11px; background-color: #FFFFFF; }
+.priLow { background-color: #DDFFDD; }
+.priNormal { background-color: #FFFFF0; }
+.priHigh { background-color: #FEE7E7; }
+.privReceived { background-color: #3669CF; color: white; }
+.privBox { background-color: #FFFFFF; }
+.privBorder { background-color: Black; }
+.privAttachments { background-color: #94C7FF; }
+.msgReceived { background-color: #00A6DD; color: #FFFFFF; }
+.msgAnswered { background-color: #999999; color: #FFFFFF; }
+.msgAttachments { background-color: #7CAFFF; color: #FFFFFF; }
+.msgBorder { background-color: #000000; }
+.msgBox { background-color: #F9F9F9; }

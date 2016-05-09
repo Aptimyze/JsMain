@@ -1,0 +1,408 @@
+/*********************************************************************************
+ * SugarCRM is a customer relationship management program developed by
+ * SugarCRM, Inc. Copyright (C) 2004-2010 SugarCRM Inc.
+ * 
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License version 3 as published by the
+ * Free Software Foundation with the addition of the following permission added
+ * to Section 15 as permitted in Section 7(a): FOR ANY PART OF THE COVERED WORK
+ * IN WHICH THE COPYRIGHT IS OWNED BY SUGARCRM, SUGARCRM DISCLAIMS THE WARRANTY
+ * OF NON INFRINGEMENT OF THIRD PARTY RIGHTS.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, see http://www.gnu.org/licenses or write to the Free
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301 USA.
+ * 
+ * You can contact SugarCRM, Inc. headquarters at 10050 North Wolfe Road,
+ * SW2-130, Cupertino, CA 95014, USA. or at email address contact@sugarcrm.com.
+ * 
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ * 
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "Powered by
+ * SugarCRM" logo. If the display of the logo is not reasonably feasible for
+ * technical reasons, the Appropriate Legal Notices must display the words
+ * "Powered by SugarCRM".
+ ********************************************************************************/
+
+
+.menuItem:hover,.menuItemHilite:hover,.menuItem:active,.menuItemHilite:active,.menuItemX:hover,.menuItemHiliteX:hover,.menuItemX:active,.menuItemHiliteX:active
+{
+	background-color:#CCC;
+}
+
+.h3Row,.monthHeader,.schedulerTopDateCell, .detail th h4, #scheduler h3
+{	
+	background-color:#f9b358;
+}
+#scheduler .schedulerDiv h3 {
+border-color: #ab6101;
+}
+a:link,a:visited
+{
+}
+
+a:hover, #header .headerList a:hover
+{
+	color:#ab6101;
+}
+
+button, td input[type=submit], td input[type=reset],td  input[type=button], div input[type=submit], div input[type=reset],div  input[type=button]
+{
+    border-color:#ab6101;
+}
+button, td input[type=submit]:hover, td input[type=reset]:hover,td  input[type=button]:hover, #massupdate_form .button:hover, #newRecord form .button:hover,
+ button[selected], input[type=submit][selected], input[type=reset][selected], input[type=button][selected],button, input[type=submit], input[type=reset], input[type=button]:hover,button, input[type=submit], input[type=reset], input[type=button]:focus,button[selected], input[type=submit][selected], input[type=reset][selected], input[type=button][selected]:focus
+{
+    background-color:#ab6101;
+}
+
+.edit .button, .search_form .button{
+border-color:#ab6101;
+}
+
+input,select, textarea
+{
+	border-color:#ab6101;
+}
+#header a:hover{
+    color:#000;
+}
+#globalLinks a:hover, a.body:hover 
+{
+    color:#000;
+    background-color:#f9b358;
+}
+#moduleList
+{    
+}
+#moduleList ul
+{
+}
+#endTab
+{
+	background:#000;
+}
+#moduleList ul li span{
+    float: left;
+}
+#moduleList ul li {
+    display:list-item;
+    margin:0;
+}
+#moduleList ul li span:hover, #moduleList ul #moduleTabExtraMenu:hover {
+    background-color:#f9b358;
+}
+ul.cssmenu{
+    margin-left:-0.9em !important;
+    top:80px;
+    padding:0;
+}
+ul.cssmenu li:hover{
+    background-color:#CCCCCC;
+}
+ul.cssmenu li a{
+    font-weight:bold;
+}
+.currentTab
+{
+	background-color:#f9b358;
+}
+
+.currentTab a:link, .currentTab a:visited, .currentTab a:hover
+{
+}
+
+#moduleList ul #moduleTabExtraMenu
+{
+}
+.notCurrentTab, #moduleTabExtraMenu
+{
+    
+}
+
+.notCurrentTab a:link,.notCurrentTab a:visited
+{
+}
+
+/*Grouped tabs*/
+#subModuleList span a
+{
+	border-right-color:#ab6101;
+}
+/*END Grouped tabs*/
+#subModuleList
+{
+}
+
+ul#subModuleList li
+{
+}
+
+ul#subModuleList li a
+{
+}
+
+ul#subModuleList li span
+{
+}
+.formHeader td h3{
+    background-image: url(../../../../index.php?entryPoint=getImage&imageName=h3ArrowOrange.gif);
+}
+
+.leftList h3, #newRecord h3
+{
+border-color:#ab6101;
+}
+.leftList ul li a:hover{
+    background-color:#f9b358;
+}
+.moduleTitle
+{
+}
+#header{
+    background-image:url(../../../../index.php?entryPoint=getImage&imageName=bgOrangeHeader.gif);
+}
+
+#search .button{
+background-color:#ab6101;
+}
+
+#search .button:hover{
+ background-color:#ab6101;
+}
+ #header .headerList
+{
+	border-top-color: #ab6101;
+}
+
+#subtabs
+{
+	background-color:#f9b358;
+	border-color: #ab6101;
+}
+ul.subTabs
+{
+	font:12px Arial, Verdana, Helvetica, sans-serif;
+	margin:2px 0;
+	padding:2px 0;
+}
+
+ul.subTabs li
+{
+	list-style:none;
+	display:inline;
+	margin:0;
+}
+
+ul.subTabs li a
+{
+	border-right:1px solid;
+	text-decoration:none;
+	font-weight:700;
+	margin:0;
+	padding:2px 8px;
+}
+
+ul.subTabs li a:link,ul.subTabs li a:visited,ul.subTabs li a:active
+{
+	text-decoration:none;
+}
+
+ul.subTabs li a:hover
+{
+	background:#fff;
+}
+
+.subTabMore
+{
+	font-size:12px;
+	text-decoration:none;
+	padding-top:3px;
+}
+
+.date
+{
+	font-size:13px;
+	font-weight:700;
+	border-bottom:1px solid;
+	padding-right:10px;
+}
+.monthCalBodyTH th[scope=row],.monthCalBodyTH th, table.list  th,.list th, .list td[scope=col], .subpanelTabForm .list th
+{
+border-color: #ab6101;
+}
+
+.list tr.oddListRowS1 td, .list tr.evenListRowS1 td
+{
+border-bottom: 1px solid #f9b358;
+}
+
+.evenListRowS1:hover, 
+.oddListRowS1:hover
+{
+background: #fff;
+}
+.subpanelTabForm table tr.pagination td, .subpanelTabForm tr.pagination td, .subpanelTabForm .list, .subpanelTabForm table tr th
+{
+border-color:#ab6101;
+}
+
+
+.list tr.pagination {
+border-color:#ab6101;
+}
+.pagination button [title="Return to List"]:hover{
+    background-image:none;
+    background-color:#ab6101;
+    color:#fff;
+}
+
+table.list  tr.pagination td table.paginationTable
+{
+border-color: #ab6101;
+}
+
+.edit
+{
+border-color:#ab6101;
+}
+.detail
+{
+	border-color:#ab6101;
+	border-right-color:#f9b358;
+}
+
+.detail tr td, .detail tr td[scope="row"]{
+    border-color:#f9b358;
+}
+
+.detail tr td[scope="row"]{
+    border-color:#f9b358;
+	background: #f6f6f6;
+}
+
+table.other
+{
+    border-color:#f9b358!important;
+}
+.other td[scope=row]
+{
+	background: #fff;
+}
+
+.other td
+{
+	background: #f6f6f6;
+}
+table.monthBox td.monthCalBody {
+background: #f9b358;
+}
+.monthCalBody td{
+background: #fff;
+}
+.monthCalBody td.weekEnd
+{
+	background: #f6f6f6;
+}
+.monthHeader, .monthFooter td
+{
+	border-color:#ab6101;
+}
+.monthFooter td
+{
+	background: #ddd;
+}
+#bodyItem div a {
+color:#ab6101;
+}
+.monthCalBody td.yearCalBody{
+background: #ab6101;
+}
+
+.monthCalBody td.yearCalBody table td.yearCalBodyMonth {
+background: #ddd;
+}
+.yearCalBodyMonth #daily_cal_table .monthCalBodyTH th
+{
+border-bottom:1px solid #999999;
+border-top:1px solid #999999;
+}
+.calSharedUser
+{
+	background: #ddd;
+}
+
+#globalLinks li a
+{
+    border-color:#f9b358;
+}
+
+#colorPicker
+{
+    border-color:#f9b358;
+}
+
+#colorPicker #themepickerLinkSpan:hover {
+    background-color:#f9b358;
+}
+
+ul.tablist, ul.subpaneltablist, .tablist li a, .tablist li a:link,.tablist li a:visited, ul.subpanelTablist li a, .subpanelTabForm,ul.tablist, ul.subpanelTablist
+{
+border-color:#ab6101;
+}
+
+.tablist li a:hover, ul.subpanelTablist li a:hover
+{
+	color:#000;
+	background:#f9b358;
+	border-color:#000;
+}
+
+.tablist li a.current,ul.tabList li a.current:hover, ul.subpanelTablist li a.current, ul.subpanelTablist li a.current:hover
+{
+	background:#f6f6f6;
+border-color:#ab6101;
+border-bottom: 1px solid #f6f6f6;
+}
+
+#tabList li a.current, #tabList li a.current:hover
+{
+	background:transparent;
+	border-bottom:1px solid #fff;
+}
+
+ul.subpanelTablist #addPageItem a,ul.subpanelTablist #addPageItem a:hover
+{
+	border:none;
+	background:transparent;
+	text-decoration:none;
+}
+
+#sitemap .edit.view {
+border-color:#ab6101;
+}
+
+
+iframe.teamNoticeBox
+{
+	border-color:#ab6101;
+}
+
+
+/* NEW */
+
+ .topheader{
+    border-color:#ab6101;
+ }
+.leftList ul li, #hiddenShortcuts ul li{
+border-color:#f9b358;
+}

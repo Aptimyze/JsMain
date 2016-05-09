@@ -1,0 +1,128 @@
+<html>
+<!-- astro_admin.htm-->
+<head>
+   <title>Jeevansathi.com - MIS - Services</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="../../jsadmin/jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../../P/I/styles.php" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>                                                                                                                
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+                                                             
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../../profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+<tr class="formhead" width="100%"><td align="center" colspan=14><a href="astro_admin.php?login=~$login`">MAIN PAGE</a></td></tr>
+
+</tbody>
+</table>
+<br><br>
+
+
+
+~if $flagabc eq 1`
+ <table width=100% border=0 align="center">
+                <tr class="formhead">
+                <td colspan=14 align="center">&nbsp;Financial Year ~$yy`</td>
+                </tr>
+ </table>
+                <br>
+                
+ <table width=100% border=0 align="center" cellspacing="4" cellpadding=5>
+                <tr class="label">
+                <td align="center">&nbsp;Service</td>
+                ~section name=mon loop=$mmarr`
+                        <td width=6% align="center">&nbsp;~$mmarr[mon]`</td>
+                ~/section`
+                <td align="center">&nbsp;Total</td>
+                </tr>
+		
+		<tr class="label">
+                <td>Horoscope</td>
+                                
+			~section name=mon loop=$mmarr`
+                        <td class=fieldsnew width=6% align="center">&nbsp;<a href="astro_details.php?month=~$smarty.section.mon.index`&year=~$yy`&service=h&records=~$services[0][mon]`&login=~$login`">~$services[0][mon]`</a></td>
+                        ~/section`
+                        <td align="center" class="label">&nbsp;~$htotal`</td>
+                </tr>
+		
+		<tr class="label">
+                <td>Kundli</td>
+                   ~section name=mon loop=$mmarr`
+                        <td class=fieldsnew width=6% align="center">&nbsp;<a href="astro_details.php?month=~$smarty.section.mon.index`&year=~$yy`&service=k&records=~$services[1][mon]`&login=~$login`"> ~$services[1][mon]`</a> </td>
+                        ~/section`
+                        <td align="center" class="label">&nbsp;~$ktotal`</td>
+
+		</tr>
+		
+		<tr class="label">
+                <td>Kundli and Horoscope</td>
+		       ~section name=mon loop=$mmarr`
+                        <td class=fieldsnew width=6% align="center">&nbsp;<a href="astro_details.php?month=~$smarty.section.mon.index`&year=~$yy`&service=kh&records=~$services[2][mon]`&login=~$login`"> ~$services[2][mon]`</a> </td>
+                        ~/section`
+                        <td align="center" class="label">&nbsp;~$khtotal`</td>
+
+                </tr>
+			
+	
+		<tr class="label">
+                <td>Total in a Month</td>
+                       ~section name=mon loop=$mmarr`
+                        <td width=6% align="center">&nbsp;~$mtotal[mon]`</td>
+                        ~/section`
+                        <td align="center" class="label">&nbsp;~$finaltotal`</td>
+          </tr>
+		<tr class="label">
+                <td>Astroyogi Site Hits</td>
+                       ~section name=mon loop=$mmarr`
+                        <td class=fieldsnew width=6% align="center">&nbsp;~if $services[3][mon] neq 0`<a href="astrolink_count.php?mm=~$smarty.section.mon.index`&year=~$yy`&login=~$login`&flag=page2">~$services[3][mon]`</a> ~else` 0 ~/if`</td>
+                        ~/section`
+                        <td align="center" class="label">&nbsp;~$asttotal`</td>
+                                                                                                 
+                </tr>
+                                                                                                 
+	
+		 <tr class="label">
+                 <td ><a href="astro_horoscope.php?login=~$login`">Horoscope Hits</a></td>
+                                                                                                                                                  
+                 </tr>
+
+		 <tr class="label">
+                  <td><a href="astro_kundli.php?login=~$login`"> Kundli  Details</a></td>
+                 </tr>
+
+
+
+
+	</table>
+
+~else`
+		
+		<form method=post action="astro_admin.php">
+		<input type=hidden name=login value="~$login`">
+		<br>
+             	<table width=100% border=0 align="center" cellspacing="4" cellpadding=5>
+		<tr>
+		<td>Month Wise Details&nbsp;&nbsp;
+                <select name="year">
+                ~section name=yr loop=$yyarr`
+                        <option value=~$yyarr[yr]`>~$yyarr[yr]`</option>
+                ~/section`
+                </select>
+        	</td>
+		</tr>
+		<tr>
+		<td align="left"><input type="submit" name="submit" value="     Go     "></td>
+                </tr>
+		</table>
+		</form>
+~/if`
+
+</html>

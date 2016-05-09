@@ -1,0 +1,155 @@
+<html>
+<head>
+<title>JeevanSathi Matrimonials - Response to Your Profile</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="http://www.jeevansathi.com/P/I/styles.php" type="text/css">
+
+<style type="text/css">
+<!--
+.style7 {font-size: 16px; font-family: Arial; font-weight: bold; }
+-->
+</style>
+<style type="text/css">
+<!--
+p.MsoNormal {
+margin:0in;
+margin-bottom:.0001pt;
+font-size:12.0pt;
+font-family:"Times New Roman";
+}
+-->
+</style>
+</head>
+<body leftmargin="5" topmargin="5">
+<table width="562" border="0" align="center" cellpadding="1" cellspacing="1" class=bgsgrey>
+<tr>
+<td><table width="560" border="0" align="center" cellpadding="1" cellspacing="0" class=bgwhi>
+  <tr>
+    <td><table width="560" border="0" cellspacing="0" cellpadding="2" align="CENTER">
+    ~if $MARKCC eq "Y"`
+<tr class=bglgrey>
+ <td class=bigred><div align="center"><b>This is CC mail of the contact declined by you</b></div></td>
+</tr>
+~/if`
+<tr> 
+  <td><span class="style7">&nbsp;&nbsp;&nbsp;&nbsp;<img src="~$IMG_URL`/profile/ser4_images/logo_mailer.gif"></span></td>
+</tr>
+</table></td>
+</tr>
+<tr>
+<td class="mediumblack"><table width="100%"  border="0" align="center" cellpadding="2" cellspacing="2">
+<tr>
+<td width="430" height="3" colspan="2"></td>
+<SPACER height="3" type="block"></SPACER> </tr>
+<tr>
+<td class="mediumblack"><div align="center"><img src="~$IMG_URL`/profile/ser4_images/in_con_declined_op.gif" width="469" height="138"><br>
+<br>
+</div></td>
+</tr>
+<tr>
+<td class="mediumblack"><strong>
+Dear ~$RECEIVERNAME`</strong></td>
+</tr>
+<tr>
+<td class="mediumblack"><p>
+This is to inform you that Jeevansathi member ~$SENDERNAME` has declined your initial contact offer.<br><br>
+~if $PAID eq 'Y' and $CUSTMESSAGE`
+<table width="400" border="0" align="center" cellpadding="1" cellspacing="0" class=bgsgrey>
+<tr>
+<td><table width="400" border="0" cellpadding="3" cellspacing="0" class=bgwhi>
+<tr class=bglgrey>
+<td class=mediumblack><b>Message from ~$SENDERNAME` </b></td>
+</tr>
+<tr>
+<td>~$CUSTMESSAGE`</td>
+</tr>
+</table></td>
+</tr>
+</table>
+<br>
+~/if`
+There are lots of other Jeevansathi members to choose from, however, as our database includes over 3 lac profiles, so do not give up hope.<br>
+<br>
+
+~if $MARKCC eq "N" and $RECEIVER_IS_PAID neq "1"`
+You can increase your chances of finding your dream match by sending personalized messages to those you contact. For that, become a <b><span class="class7"><a href="~$SITE_URL`/profile/memberships.php">FULL MEMBER</a></span></b> now!<br>
+~/if`
+
+<br>
+To search more partner profiles, <span class=class7><b><a href="~$SITE_URL`/profile/advance_search.php?FLAG=search">click here</a></b></span>.<br>
+<br>
+We wish you the best in your partner search.<br>
+<br>
+<b>Warm regards,</b><br>
+<br>
+The JeevanSathi Team <br><a href="http://www.jeevansathi.com">
+www.jeevansathi.com</a></p>
+~if $MARKCC eq "N" and $RECEIVER_IS_PAID neq "1"`
+<table width="530" border="0" align="center" cellpadding="0" cellspacing="0" class=bgyell>
+<tr>
+<td><table width="500" border="0" align="center" cellpadding="2" cellspacing="0" >
+<tr>
+<td colspan="2" height="8"></td>
+</tr>
+<tr>
+<td colspan="2" class=bigblack><b>As a FULL MEMBER, you can:</b></td>
+</tr>
+<tr>
+<td width="13"><img src="~$IMG_URL`/profile/ser4_images/arrow_red.gif" width="6" height="8"> </td>
+<td width="479" class=bigblack>Send Personalized message to all members with your contact details! </td>
+</tr>
+<tr>
+<td><img src="~$IMG_URL`/profile/ser4_images/arrow_red.gif" width="6" height="8"></td>
+<td class=bigblack>Chat with all members using Jeevansathi messenger!</td>
+</tr>
+<tr>
+<td colspan="2" class=bigblack><b><span class=class7><a href="~$SITE_URL`/profile/memberships.php">UPGRADE NOW</a></span></b> </td>
+</tr>
+<tr>
+<td colspan="2" height="8"></td>
+</tr>
+</table></td>
+</tr>
+</table><br>
+~elseif $MARKCC eq "Y" and SENDER_IS_PAID neq "1"`
+<table width="530" border="0" align="center" cellpadding="0" cellspacing="0" class=bgyell>
+<tr>
+<td><table width="500" border="0" align="center" cellpadding="2" cellspacing="0" >
+<tr>
+<td colspan="2" height="8"></td>
+</tr>
+<tr>
+<td colspan="2" class=bigblack><b>As a FULL MEMBER, you can:</b></td>
+</tr>
+<tr>
+<td width="13"><img src="~$IMG_URL`/profile/ser4_images/arrow_red.gif" width="6" height="8"> </td>
+<td width="479" class=bigblack>Send Personalized message to all members with your contact details! </td>
+</tr>
+<tr>
+<td><img src="~$IMG_URL`/profile/ser4_images/arrow_red.gif" width="6" height="8"></td>
+<td class=bigblack>Chat with all members using Jeevansathi messenger!</td>
+</tr>
+<tr>
+<td colspan="2" class=bigblack><b><span class=class7><a href="~$SITE_URL`/profile/memberships.php">UPGRADE NOW</a></span></b> </td>
+</tr>
+<tr>
+<td colspan="2" height="8"></td>
+</tr>
+</table></td>
+</tr>
+</table><br>
+~/if`
+</td>
+</tr>
+<tr>
+<td height="17" class="mediumblack"><div align="center">THIS IS AN AUTOMATED MESSAGE. PLEASE DO NOT REPLY TO THIS MAIL. </div></td>
+</tr>
+</table></td>
+</tr>
+</table></td>
+</tr>
+</table>
+<br>
+<br>
+</body>
+</html>

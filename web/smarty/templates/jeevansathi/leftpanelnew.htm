@@ -1,0 +1,316 @@
+<!--LEFT PANNEL STARTS HERE-->
+<style type="text/css">
+.mdo{ float:left;border:1px solid #F1BD81; background-color:#FFF8A0; width:175px}
+.mdbg{background-color:#E1DA7F; border-bottom:1px solid #F1BD81; font:normal 11px verdana,arial; padding:3px; color:#656328}
+.mdl{float:left;width:35px;background-color:#FFFFFF; padding:2px;}
+.mdr{float:left;width:132px;font:normal 11px verdana,arial; color:#CC0000;padding:2px}
+.lbo{width:170px; padding:0px; margin-left:2px; border:1px solid #666666 }
+.lfline{border-top:1px solid #e0dce1;margin-left:8px; margin-right:8px}
+.lfg{padding-top:3px; width:10px}
+.rtg{padding-top:3px; width:140px}
+.ben{width:160px;margin-left:8px; padding-top:3px}
+.benbg{float:left;width:183px; height:220px;background-image:url(~$SER6_URL`/profile/images/pre_login_bg.gif); background-repeat:no-repeat}
+.linklhd{ background-image:url(~$SER6_URL`/profile/images/leftbar-head-bg.gif); background-position:left; background-repeat:repeat-x; padding:2px 2px 2px 10px; font:bold 11px verdana,Arial; }
+</style>
+
+<SCRIPT language=JavaScript1.2 src="~$IMG_URL`/profile/js/~$leftpanelnew_js`" type=text/javascript></SCRIPT>
+<SCRIPT language=JavaScript1.2 src="~$IMG_URL`/profile/js/~$search_js`" type=text/javascript></SCRIPT>
+<!--SCRIPT language=JavaScript1.2 src="~$IMG_URL`/profile/js/~$tooltip_new_js`" type=text/javascript></SCRIPT-->
+<script type="text/javascript">
+<!--
+
+function send_profile_data()
+{
+	window.open('/profile/viewprofile.php?search=1&username=' + document.subheader1.username.value,'','width=760,height=570,resizable=1,scrollbars=1');
+}
+
+function register_user()
+{
+        window.location.href="/P/inputprofile.php?source=hpblack_r&newip=1&showlogin=0";
+}
+                                                                                                                             
+//-->
+</script>
+
+<div id="leftpannel2" class="bluelink">
+	~if $CURRENTUSERNAME eq ""`
+		<div style="cursor:pointer;background-image:url(~$SER6_URL`/profile/images/pre_login_top.gif); width:183px; height:64px" onClick="register_user();">
+			<div style="font:bold 12px verdana,arial; padding:6px 14px 0 0;color:#a55669" align="right">&nbsp;</div>
+		</div>
+
+		<div class="benbg" onClick="register_user();" style="cursor:pointer;">
+			<div class="wele ben"><b>Benefits of Joining !!</b></div>
+
+			<div class="spacer">&nbsp;</div>
+			<div class="lfline">
+				<div class="lftflow lfg"><img src="~$SER6_URL`/profile/images/tick_w.gif" width="10" height="9"></div>
+				<div class="leftflow wele rtg">Create profile to find your Jeevansathi</div>
+			</div>
+
+			<div class="spacer">&nbsp;</div>
+			<div class="lfline">
+				<div class="lftflow lfg"><img src="~$SER6_URL`/profile/images/tick_w.gif" width="10" height="9"></div>
+				<div class="leftflow wele rtg">Receive Marriage Proposals</div>
+			</div>
+
+			<div class="spacer">&nbsp;</div>
+			<div class="lfline">
+				<div class="lftflow lfg"><img src="~$SER6_URL`/profile/images/tick_w.gif" width="10" height="9"></div>
+				<div class="leftflow wele rtg">Search and Express Interest</div>
+			</div>
+
+			<div class="spacer">&nbsp;</div>
+			<div class="lfline">
+				<div class="lftflow lfg"><img src="~$SER6_URL`/profile/images/tick_w.gif" width="10" height="9"></div>
+				<div class="leftflow wele rtg">Chat with Online Members</div>
+			</div>
+
+			<div class="spacer">&nbsp;</div>
+			<div class="lfline">
+				<div class="spacer">&nbsp;</div>
+				<div class="lftflow lfg">&nbsp;</div>
+				<div class="leftflow wele rtg">
+					<form action="/P/inputprofile.php?source=hpblack_r" method="post">
+					<input type="submit" name="register" value="Join Free" style="cursor:pointer ">
+					</form>
+				</div>
+			</div>
+
+			<div class="spacer">&nbsp;</div>
+		</div>
+
+		<div style="width:183px;"><img src="~$SER6_URL`/profile/images/pre_login_b.gif" width="183" height="17"></div>
+
+		<div class="spacer">&nbsp;</div>
+		<div class="bluelink lbo">
+			<div class="lftflow0"><img src="~$SER6_URL`/profile/images/exlogin.gif" width="71" height="49"></div>
+			<div class="leftflow btwe" style="padding-top:5px"><b>Login to<br>Jeevansathi</b></div>
+
+			<form name="login" action="~$SITE_URL`/profile/login.php" method="post">
+
+			<div class="spacer">&nbsp;</div>
+			<div class="bele pad2">User Id / Email</div>
+			<div class="lftflow pad2">
+				<input type="text" name="username" class="textbox" style="width:110px ">
+			</div>
+
+			<div class="spacer1">&nbsp;</div>
+			<div class="bele pad2">Password</div>
+			<div class="lftflow pad2">
+				<input type="password" name="password" class="textbox" style="width:110px ">
+			</div>
+
+			<div class="spacer15">&nbsp;</div>
+			<div class="lftflow bele" style="width:20px ">
+				<input type="checkbox" name="rememberme" value="Y">
+			</div>
+			<div class="lftflow bele">Remember me on this computer</div>
+
+			<div class="spacer">&nbsp;</div>
+			<div class="rightflow" ><input type="submit" name="submit" value="Login" style="cursor:pointer "></div>
+			</form>
+
+			<div class="spacer15">&nbsp;</div>
+			<div align="center" class="bele"><a href="/P/forgotpassword.php">Forgot your User Id or Password?</a></div>
+			<div class="spacer15">&nbsp;</div>
+			<div class="pad4 bele"><b>Don't have a Jeevansathi User id or Password?</b></div>
+			<div class="spacer">&nbsp;</div>
+			<div class="btwe pad4" align="right"><font color="#FF0000">Free</font> <b><a href="/P/inputprofile.php?source=hpblack&newip=1&showlogin=0">Register Now</a> </b></div>
+
+			<div class="spacer">&nbsp;</div>
+		</div>
+	~/if`
+	~if $CURRENTUSERNAME neq "" && !$crmback`
+	<!--CONTACT DETAILS STARTS-->
+	<div><img src="~$IMG_URL`/profile/ser4_images/login_top.gif" width="165" height="7"></div>
+	<div class="lbg bluel">
+		<div class=" bele pad2" align="center">
+			<a href="~$SITE_URL`/P/viewprofile.php?checksum=~$CHECKSUM`&profilechecksum=~$MYPROFILECHECKSUM`"><b>Welcome ~$CURRENTUSERNAME`,</b></a>
+		</div>
+		<div class="spacer">&nbsp;</div>
+		<div class="spacer1" style="background-color:#B5B5B5; margin-left:10px; margin-right:10px ">&nbsp;</div>
+		<div class="spacer">&nbsp;</div>
+		<div class="logic"><img src="~$IMG_URL`/profile/ser4_images/icon_nmess_left.gif"></div>
+		<div class="logbox bten">
+			<a href="~$SITE_URL`/P/mm_showmsg.php?checksum=~$CHECKSUM`" class="bluel" title="New Messages Received">All New Messages </a>
+		</div>
+		<div class="lognum bten">~$INBOX_CNT`</div>
+		<div class="spacer1">&nbsp;</div>
+		<div class="logic"><img src="~$IMG_URL`/profile/ser4_images/open_left.gif"></div>
+			<div class="logbox bten">
+				~if $TOPLEFT_OPEN neq "0"`
+				<a href="~$SITE_URL`/P/contacts_made_received.php?checksum=~$CHECKSUM`&type=R&flag=I" class="bluel" title="Members Awaiting My Response">
+			~/if`
+			Awaiting Response</a>
+			</div>
+			<div class="lognum bten">~if $TOPLEFT_OPEN eq 0`~$TOPLEFT_OPEN`~else`<b style="color:green; font-size:12px">~$TOPLEFT_OPEN`</b>~/if`</div>
+			<div class="spacer1">&nbsp;</div>
+			<div class="logic"><img src="~$IMG_URL`/profile/ser4_images/ac_left.gif"></div>
+			<div class="logbox bten">
+				<a href="~$SITE_URL`/P/mainmenu.php?checksum=~$CHECKSUM`&hide_search_bar=y" class="bluel" title="Members Who Accepted My Profile">Accepted Contacts</a>
+			</div>
+			<div class="lognum bten">~$TOPLEFT_ACCEPTED`</div>
+			<div class="spacer1">&nbsp;</div>
+
+			~if $my_photo neq 1`
+			<div class="logic"><img src="~$IMG_URL`/profile/ser4_images/whitecam_left.gif" width="16" height="16"></div>
+			<div class="logbox bten">
+				<a href="~$SITE_URL`/P/photo_requests_list.php?checksum=~$CHECKSUM`" class="bluel" title="Members Who Have Requested My Photo">Photo Requests</a>
+			</div>
+			<div class="lognum bten">~$PHOTO_REQUEST_CNT`</div>
+			<div class="spacer15">&nbsp;</div>
+			~/if`
+
+			<div class="logic"><img src="~$IMG_URL`/profile/ser4_images/stats_left.gif"></div>
+                        <div class="logbox bten">
+                        <a href="~$SITE_URL`/P/profile_stats.php?checksum=~$CHECKSUM`" class="bluel" title="View all Statistics">View all Statistics</a>
+                        </div>
+                        <div class="lognum bten">&nbsp;</div>
+
+			<div class="spacer">&nbsp;</div>
+			<div class="spacer1" style="background-color:#B5B5B5; margin-left:10px; margin-right:10px ">&nbsp;</div>
+			<div class="spacer">&nbsp;</div>
+		<div class=" bten pad2 bluelink" align="center" id="dhtmltooltip7">
+			<a href="#" onMouseover="ddrivetip('<b>All New Messages</b> <br> Total number of new unread messages, new contacts, acceptances, declines received. <br><br> <b>Awaiting Response</b><br> Say &quot;Yes&quot; or &quot;No&quot; to members who have shown interest in you.<br><br><b>Accepted Contacts</b> <br> These are your total accepted members. Either you have accepted them or they accepted your initial proposal. View their contact details now. <br><br><b>Photo Requests</b> <br> Requests you have received from genuinely interested members. Upload photo to generate more response. <br><br><b>View all statistics</b><br> View detailed figures related to your matrimonial profile. For ex. Contacts initiated, contacts received, acceptances, declines, photo requests received and many more.','#FDFBE6','300')"; onMouseout="hideddrivetip()"><img src="~$IMG_URL`/profile/ser4_images/pd.gif" border=0>&nbsp;What is this?</a>&nbsp; <a href="~$SITE_URL`/P/logout.php?checksum=~$CHECKSUM`"><b>[Logout]</b></a>
+		</div>
+	</div><br clear="all">
+
+	<div><img src="~$IMG_URL`/profile/ser4_images/login_bott.gif" width="165" height="12"></div>
+	<div class="spacer">&nbsp;</div>
+
+	<!--CONTACT DETAILS ENDS-->
+
+	<!--LINKS-->
+	<div id="leftpannel">
+	<div>
+		<div class="linklhd">Partner Searches</div>
+		<div id="lftbt" class="bluel">
+			<ul>
+			<li><a href="~$SITE_URL`/P/Partner_Profile_Match.php?checksum=~$CHECKSUM`">Members I'm Looking For</a></li>
+			<li>
+				<a href="~$SITE_URL`/profile/save_search.php?checksum=~$CHECKSUM`">My Saved Searches</a>
+				~if $SEARCH_AGENT_CNT neq 0`
+				<div class="pad2 bluel">
+					~section name="section_search_agent" start=0 loop=$SEARCH_AGENT_NAME`	
+						-<a href="~$SITE_URL`/profile/save_search.php?mysearchid=~$SEARCH_AGENT_ID[section_search_agent]`&checksum=~$CHECKSUM`&savesearch=Y&myaction=R">~$SEARCH_AGENT_NAME[section_search_agent]`</a><br>
+					~/section`
+				</div>
+				~/if`
+			</li>
+			<li><a href="~$SITE_URL`/P/advance_search.php?checksum=~$CHECKSUM`&FLAG=search">Advanced search</a></li>
+			<li><a href="~$SITE_URL`/P/quicksearch.php?search=2&checksum=~$CHECKSUM`" onclick="window.open('http://~$CHAT_URL`/profile/mwindow.php?alreadyloggedin=2&checksum=~$CHECKSUM4CHAT`&profileid=~$PROFILEID4CHAT`','jsmessenger','width=225,height=300,status=1,scrollbars=0,resizable=no');window.location.href='~$SITE_URL`/P/quicksearch.php?search=2&checksum=~$CHECKSUM`';return false;">Online Members</a></li>
+			<li><a href="~$SITE_URL`/P/quicksearch.php?checksum=~$CHECKSUM`&search=3">eValuePack Members</a></li>
+			</ul>
+			<form name="subheader1" method="post" action="~$SITE_URL`/P/viewprofile.php" target="profile_window">
+			<input type="hidden" name="checksum" value="~$CHECKSUM`">
+			<div class="linksub" style="margin-top:10px">Search Profile by ID<br>
+				<input name="username" type="text" class="textbox">
+				<input type="submit" name="CMDsubmit" value="Go" class="textbox" style="width:25px" onclick="send_profile_data();return false;">
+			</div>
+			</form>
+		</div>
+
+		<div class="spacer15">&nbsp;</div>
+
+		<div class="linklhd">Manage My Profile</div>
+		<div id="lftbt" class="bluel"><ul>
+			~if $show4newusername eq "1"`
+			<li><a href="~$SITE_URL`/profile/customised_username.php?checksum=~$CHECKSUM`">Edit your ID</a></li>
+			~/if`
+			<li><a href="~$SITE_URL`/P/editdesiredprofile.php?checksum=~$CHECKSUM`">Edit Desired Partner Profile</a></li>
+			<li><a href="~$SITE_URL`/P/viewprofile.php?checksum=~$CHECKSUM`&profilechecksum=~$MYPROFILECHECKSUM`">Edit your profile</a></li>
+			<li><a href="~$SITE_URL`/P/print_version.php?checksum=~$CHECKSUM`&profilechecksum=~$MYPROFILECHECKSUM`" onclick="MM_openProfileWindow('~$SITE_URL`/P/print_version.php?checksum=~$CHECKSUM`&profilechecksum=~$MYPROFILECHECKSUM`','','');return false;">My profile (as seen by others)</a></li>
+			<li><a href="~$SITE_URL`/P/change_password.php?checksum=~$CHECKSUM`">Change Password</a></li>
+			<li><a href="~$SITE_URL`/P/unsubscribe.php?checksum=~$CHECKSUM`">My alert Manager</a></li>
+			<li><a href="~$SITE_URL`/P/filter.php?checksum=~$CHECKSUM`">Manage Filters</a></li>
+			<li><a href="~$SITE_URL`/P/uploadphoto.php?checksum=~$CHECKSUM`">Upload Photo</a></li>
+			<li><a href="~$SITE_URL`/P/horoscope_details.php?checksum=~$CHECKSUM`">~if $HOROSCOPE_EXISTS` Edit/Upload Horoscope ~else` Create/Upload Horoscope ~/if`</a></li>
+			~if $SHOW_SEARCH_CONTACTS`
+				<li><a href="~$SITE_URL`/P/contacts_made_received.php?checksum=~$CHECKSUM`&type=R&no_default_profiles=1">Search Contacts</a></li>
+			~/if`
+			<li><a href="~$SITE_URL`/P/deleteprofile.php?checksum=~$CHECKSUM`">~if $CURRENTACTIVATED eq "H"`UnHide~else`Hide~/if`/Delete profile </a></li>
+			<li><a name="filters" href="~$SITE_URL`/P/revamp_privacy_settings.php?checksum=~$CHECKSUM`&EditWhat=Filters">Privacy Settings</a></li>
+			~if $MYVOUCHERS eq "1"`
+			<li><a href="~$SITE_URL`/P/myvouchers.php">My Vouchers (~$VOUCHER_COUNT`)</a></li></ul>
+			~/if`
+		</div>
+		<div class="spacer15">&nbsp;</div>
+
+		<div class="linklhd">My Contacts</div>
+		<div id="lftbt" class="bluel">
+			<ul>
+			<li><a href="~$SITE_URL`/P/mm_showmsg.php?checksum=~$CHECKSUM`">My Inbox</a></li>
+			<li><a href="~$SITE_URL`/P/profile_stats.php?checksum=~$CHECKSUM`">Profile Statistics</a></li>
+			<li><a href="~$SITE_URL`/P/bookmark.php?checksum=~$CHECKSUM`">My Favorite Profiles</a></li>
+			<li><a href="~$SITE_URL`/P/ignore_profiles_list.php?checksum=~$CHECKSUM`">My Ignored Profiles</a></li></ul>
+		</div>
+		</div>
+		</div>
+
+		~if $mem_case eq 1`
+		<div class="spacer15">&nbsp;</div>
+		<div class="mdo">
+			<div class="mdbg" align="center">Your Membership Details</div>
+			<div class="mdl" align="center" style="height:70px "><img src="~$IMG_URL`/profile/ser4_images/ex_red.gif" width="8" height="28" vspace="18"></div>
+			<div class="mdr bluelink" style="height:70px "><b>~$my_membership`</b><div class="spacer">&nbsp;</div>
+				<span style="color:#666666">Expires on ~$expiry_dt`</span><br>~$days_left_expire` days left in Expiry<br>
+				<a href="~$SITE_URL`/profile/mem_comparison.php?checksum=~$checksum`">Upgrade Membership</a>
+			</div>
+		</div>
+		~elseif $mem_case eq 2`
+		<div class="spacer15">&nbsp;</div>
+		<div class="mdo">
+			<div class="mdbg" align="center">Your Membership Details</div>
+			<div class="mdl" style="height:36px " align="center"><img src="~$IMG_URL`/profile/ser4_images/ex_yell.gif" width="8" height="28" vspace="4"></div>
+			<div class="mdr bluelink" style="height:36px "><b>Free Member</b><div class="spacer">&nbsp;</div><a href="~$SITE_URL`/profile/mem_comparison.php?checksum=~$CHECKSUM`">Upgrade Membership</a></div>
+		</div>
+		~elseif $mem_case eq 3`
+		<div class="spacer15">&nbsp;</div>
+		<div class="mdo">
+			<div class="mdbg" align="center">Your Membership Details</div>
+			<div class="mdl" align="center" style="height:46px "><img src="~$IMG_URL`/profile/ser4_images/ex_green.gif" width="8" height="28" vspace="7"></div>
+			<div class="mdr bluelink" style="height:46px"><b>~$my_membership`</b><div class="spacer">&nbsp;</div><span style="color:#666666">Expires on ~$expiry_dt`</span>
+			</div>
+		</div>
+		~/if`
+	<!-- LINK ENDS-->
+	~/if`
+
+~if $MEM_PAGE eq 'Y' && $CURRENTUSERNAME eq ""`
+<!--SS STARTS-->
+	<div class="spacer15">&nbsp;</div>
+	<div class="ss bluelink">
+		<div class="bgor wele pad2" align="center"><b>Celebrating Marriage</b></div>
+		<div class="spacer">&nbsp;</div>
+		<div align="center"><img src="~$IMG_URL`/profile/ser4_imagesnew/ss2.gif" width="137" height="138"></div>
+		<div class="spacer1">&nbsp;</div>
+		<div style="width:137px; margin-left:20px ">I and my wife Vashali are thankful to jeevansathi.com in helping us finding each other
+			<div><a href="~$SITE_URL`/success/complete_success_stories.php?sid=65">Complete Story</a></div>
+
+			<div class="spacer">&nbsp;</div>
+			<div><a href="~$SITE_URL`/success/success_stories.php">Other Success Stories</a></div>
+		</div>
+	</div>
+	<div class="spacer bgor">&nbsp;</div>
+<!--SS ends-->
+~/if`
+
+~if !$crmback`
+	<div class="spacer15">&nbsp;</div>
+	<div class="iconl"><img src="~$IMG_URL`/profile/ser4_images/icon_invite.gif"></div>
+	<div class="leftflow bele"><a href="~$SITE_URL`/P/invitee.php?checksum=~$CHECKSUM`"><b>Invite Friends</b></a></div>
+	<div class="spacer">&nbsp;</div>
+	<div class="iconl"><img src="~$IMG_URL`/profile/ser4_images/icon_needhelp.gif" width="19" height="17"></div>
+	<div class="leftflow bele"><a href="~$SITE_URL`/P/faq_main.php?checksum=~$CHECKSUM`&NO_NAVIGATION=1" onclick="MM_openFAQWindow('~$SITE_URL`/P/faq_main.php?checksum=~$CHECKSUM`&NO_NAVIGATION=1','','');return false;"><b>Need Help?</b></a></div>
+	<div class="spacer">&nbsp;</div>
+	<div class="iconl"><img src="~$IMG_URL`/profile/ser4_images/icon_reportabuse.gif"></div>
+	<div class="leftflow bele"><a href="~$SITE_URL`/P/faq_other.php?checksum=~$CHECKSUM`&tracepath=0&abuse=Y"><b>Report Abuse</b></a></div><br><br>
+
+	<div><!--img src="~$IMG_URL`/profile/ser4_images/120x240.gif"-->
+		<IFRAME WIDTH=175 HEIGHT=600 MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no BORDERCOLOR="#000000" SRC="~$bmsVariable`/bmsjs/bms_display_final.php?zonestr=~$bms_left`&data=~$data`&showall=1&searchid=~$bms_searchid`"></IFRAME>
+	</div>
+	<div class="spacer">&nbsp;</div>
+~/if`
+<!--LEFT PANNEL ENDS HERE-->
+
+</div>

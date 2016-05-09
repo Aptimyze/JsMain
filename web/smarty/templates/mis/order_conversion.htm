@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+    <head>
+        <title>Jeevansathi.com - MIS</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+        <link rel="stylesheet" href="jeevansathi.css" type="text/css">
+        <style>
+                                                DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+        </style>
+    </head>
+    <body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+            <tbody>
+                <tr>
+                    <td valign="top" width="30%" bgcolor="#efefef"></td>
+                    <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"/></td>
+                    <td valign="bottom" width="30%" bgcolor="#efefef">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        ~if $flag eq '1'`
+        <center>
+        <font color=orange><u>Online Order Conversion MIS</u><br></font>&nbsp;&nbsp;
+        <font color=red>Red -> Converted members till date</font>&nbsp;&nbsp;
+        <font color=blue>Blue -> Total Requests generated </font>
+        </center>
+        <br>
+        <table width=100% border=0 align="center">
+            <tr class="formhead">
+                <td colspan=14 align="center">&nbsp;For:- ~$dt`</td>
+            </tr>
+        </table>
+        <br>
+        <table width=100% border=0 align="center" cellspacing="4" cellpadding=5>
+            ~if $source_arr`
+            <table width="150%" align="center" border=0 cellspacing=4 cellpadding=5>
+                <tr class="label">
+                    <td align="center" width=6%>&nbsp;~$sel_type`</td>
+                    ~section name=mon loop=$mmarr`
+                    <td width=7% align="center">&nbsp;~$mmarr[mon]`</td>
+                    ~/section`
+                    <td align="center" width=10%>&nbsp;Total</td>
+                </tr>
+                ~foreach from=$source_arr key=k item=v name=sourceLoop`
+                <tr class="label">
+                    <td colspan=100% align=center style="color:black;background-color:lightgrey;">~$k`</td>
+                </tr>
+                <tr class="label">
+                    <td colspan=100% align=center>Dollar Tries</td>
+                </tr>
+                <tr class="fieldsnew">
+                    <td align="center" width=6%><span class="orange" valign=top>&nbsp;Converted</span><br><span class="red" valign=top>&nbsp;Not-Converted</span><br><span class="blue" valign=center>&nbsp;Total</span><br><span class="green" valign=center>&nbsp;Percentage</span></td>
+                    ~section name=ss loop=$cnt_cur[$v]`
+                    <td width=6% align="center"><span class="orange" valign=top>~$cnt_cur[$v][ss][0].C`</span> <br><span class="red" valign=top>~if $cnt_cur[$v][ss][0].N neq '0'` ~$cnt_cur[$v][ss][0].N`~/if`</span> <br><span class="blue" valign=center>~$cnt_cur[$v][ss][0].T`</span><br><br><span class="green" valign=center>~$cnt_cur[$v][ss][0].P`</span> </td>
+                    ~/section`
+                    <td width=6% align="center"><span class="red" valign=top>~$tota_cur[$v][0]`</span> <br><span class="grey" valign=top>~$totn_cur[$v][0]`</span> <br><span class="blue" valign=center>~$totb_cur[$v][0]`</span>  <br><span class="green" valign=center>~$totp_cur[$v][0]`</span></td>
+                </tr>
+                <tr class="label">
+                    <td colspan=100% align=center>Rupees Tries</td>
+                </tr>
+                <tr class="fieldsnew">
+                    <td align="center" width=6%><span class="orange" valign=top>&nbsp;Converted</span><br><span class="red" valign=top>&nbsp;Not-Converted</span><br><span class="blue" valign=center>&nbsp;Total</span><br><span class="green" valign=center>&nbsp;Percentage</span></td>
+                    ~section name=ss loop=$cnt_cur[$v]`
+                    <td width=6% align="center"><span class="orange" valign=top>~$cnt_cur[$v][ss][1].C`</span> <br><span class="red" valign=top>~if $cnt_cur[$v][ss][1].N neq '0'` ~$cnt_cur[$v][ss][1].N`~/if`</span> <br><span class="blue" valign=center>~$cnt_cur[$v][ss][1].T`</span><br><br><span class="green" valign=center>~$cnt_cur[$v][ss][1].P`</span> </td>
+                    ~/section`
+                    <td width=6% align="center"><span class="red" valign=top>~$tota_cur[$v][1]`</span> <br><span class="grey" valign=top>~$totn_cur[$v][1]`</span> <br><span class="blue" valign=center>~$totb_cur[$v][1]`</span>  <br><span class="green" valign=center>~$totp_cur[$v][1]`</span></td>
+                </tr>
+                <tr class="label">
+                    <td colspan=100% align=center>Total Tries</td>
+                </tr>
+                <tr class="fieldsnew">
+                    <td align="center" width=6%><span class="orange" valign=top>&nbsp;Converted</span><br><span class="red" valign=top>&nbsp;Not-Converted</span><br><span class="blue" valign=center>&nbsp;Total</span><br><span class="green" valign=center>&nbsp;Percentage</span></td>
+                    ~section name=ss loop=$cnt[$v]`
+                    <td width=6% align="center"><span class="orange" valign=top>~if $sel_type eq 'Day'`<a href='showconverted.php?cid=~$cid`&d=~$smarty.section.ss.index`&mm=~$mm`&yr1=~$yr1`' color="orange" target="_blank">~$cnt[$v][ss].C`</a>~else` ~$cnt[$v][ss].C`~/if`</span> <br><span class="red" valign=top>~if $sel_type eq 'Day' and $cnt[$v][ss].N neq '0'`<a href='showconverted.php?cid=~$cid`&d=~$smarty.section.ss.index`&mm=~$mm`&yr1=~$yr1`&ctype=N' target="_blank">~$cnt[$v][ss].N`</a>~elseif $cnt[$v][ss].N neq '0'` ~$cnt[$v][ss].N`~/if`</span> <br><span class="blue" valign=center>~$cnt[$v][ss].T`</span><br><br><span class="green" valign=center>~$cnt[$v][ss].P`</span> </td>
+                    ~/section`
+                    <td width=6% align="center"><span class="red" valign=top>~$tota[$v]`</span> <br><span class="grey" valign=top>~$totn[$v]`</span> <br><span class="blue" valign=center>~$totb[$v]`</span> <br><span class="green" valign=center>~$totp[$v]`</span></td>
+                </tr>
+                ~/foreach`
+            </table>
+            ~else`
+            <table width="150%" align="center" border=0 cellspacing=4 cellpadding=5>
+                <tr class="label">
+                    <td align="center" width=6%>&nbsp;~$sel_type`</td>
+                    ~section name=mon loop=$mmarr`
+                    <td width=7% align="center">&nbsp;~$mmarr[mon]`</td>
+                    ~/section`
+                    <td align="center" width=10%>&nbsp;Total</td>
+                </tr>
+                <tr class="label">
+                    <td colspan=100% align=center>Dollar Tries</td>
+                </tr>
+                <tr class="fieldsnew">
+                    <td align="center" width=6%><span class="orange" valign=top>&nbsp;Converted</span><br><span class="red" valign=top>&nbsp;Not-Converted</span><br><span class="blue" valign=center>&nbsp;Total</span><br><span class="green" valign=center>&nbsp;Percentage</span></td>
+                    ~section name=ss loop=$cnt_cur`
+                    <td width=6% align="center"><span class="orange" valign=top>~$cnt_cur[ss][0].C`</span> <br><span class="red" valign=top>~if $cnt_cur[ss][0].N neq '0'` ~$cnt_cur[ss][0].N`~/if`</span> <br><span class="blue" valign=center>~$cnt_cur[ss][0].T`</span><br><br><span class="green" valign=center>~$cnt_cur[ss][0].P`</span> </td>
+                    ~/section`
+                    <td width=6% align="center"><span class="red" valign=top>~$tota_cur[0]`</span> <br><span class="grey" valign=top>~$totn_cur[0]`</span> <br><span class="blue" valign=center>~$totb_cur[0]`</span>  <br><span class="green" valign=center>~$totp_cur[0]`</span></td>
+                </tr>
+                <tr class="label">
+                    <td colspan=100% align=center>Rupees Tries</td>
+                </tr>
+                <tr class="fieldsnew">
+                    <td align="center" width=6%><span class="orange" valign=top>&nbsp;Converted</span><br><span class="red" valign=top>&nbsp;Not-Converted</span><br><span class="blue" valign=center>&nbsp;Total</span><br><span class="green" valign=center>&nbsp;Percentage</span></td>
+                    ~section name=ss loop=$cnt_cur`
+                    <td width=6% align="center"><span class="orange" valign=top>~$cnt_cur[ss][1].C`</span> <br><span class="red" valign=top>~if $cnt_cur[ss][1].N neq '0'` ~$cnt_cur[ss][1].N`~/if`</span> <br><span class="blue" valign=center>~$cnt_cur[ss][1].T`</span><br><br><span class="green" valign=center>~$cnt_cur[ss][1].P`</span> </td>
+                    ~/section`
+                    <td width=6% align="center"><span class="red" valign=top>~$tota_cur[1]`</span> <br><span class="grey" valign=top>~$totn_cur[1]`</span> <br><span class="blue" valign=center>~$totb_cur[1]`</span>  <br><span class="green" valign=center>~$totp_cur[1]`</span></td>
+                </tr>
+                <tr class="label">
+                    <td colspan=100% align=center>Total Tries</td>
+                </tr>
+                <tr class="fieldsnew">
+                    <td align="center" width=6%><span class="orange" valign=top>&nbsp;Converted</span><br><span class="red" valign=top>&nbsp;Not-Converted</span><br><span class="blue" valign=center>&nbsp;Total</span><br><span class="green" valign=center>&nbsp;Percentage</span></td>
+                    ~section name=ss loop=$cnt`
+                    <td width=6% align="center"><span class="orange" valign=top>~if $sel_type eq 'Day'`<a href='showconverted.php?cid=~$cid`&d=~$smarty.section.ss.index`&mm=~$mm`&yr1=~$yr1`' color="orange" target="_blank">~$cnt[ss].C`</a>~else` ~$cnt[ss].C`~/if`</span> <br><span class="red" valign=top>~if $sel_type eq 'Day' and $cnt[ss].N neq '0'`<a href='showconverted.php?cid=~$cid`&d=~$smarty.section.ss.index`&mm=~$mm`&yr1=~$yr1`&ctype=N' target="_blank">~$cnt[ss].N`</a>~elseif $cnt[ss].N neq '0'` ~$cnt[ss].N`~/if`</span> <br><span class="blue" valign=center>~$cnt[ss].T`</span><br><br><span class="green" valign=center>~$cnt[ss].P`</span> </td>
+                    ~/section`
+                    <td width=6% align="center"><span class="red" valign=top>~$tota`</span> <br><span class="grey" valign=top>~$totn`</span> <br><span class="blue" valign=center>~$totb`</span>  <br><span class="green" valign=center>~$totp`</span></td>
+                </tr>
+            </table>
+            ~/if`
+            ~else`
+            <form method=post action="order_conversion.php">
+                <br><br><br>
+                <table>
+                    <tr>
+                        <td>&nbsp;&nbsp;&nbsp;<input name="vtype" type="radio" value='D' checked>&nbsp;Day Wise : (For a particular Month)
+                        </td>
+                        <td>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <select name="mm">
+                                ~section name=mon loop=$mmarr`
+                                <option value=~$mmarr[mon]`>~$mmarr[mon]`</option>
+                                ~/section`
+                            </select> -
+                            <select name="yr1">
+                                ~section name=yy loop=$yyarr`
+                                <option value="~$yyarr[yy]`">~$yyarr[yy]`</option>
+                                ~/section`
+                            </select>
+                        </td>
+                    </tr>
+                    <br><br>
+                    <tr>
+                        <td>&nbsp;&nbsp;&nbsp;<input name="vtype" type="radio" value='M'>&nbsp;Month Wise : (For a particular year)</td>
+                        <td>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <select name="yr">
+                                ~section name=yy loop=$yyarr`
+                                <option value="~$yyarr[yy]`">~$yyarr[yy]`</option>
+                                ~/section`
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;Display Settings
+                <br><br>
+                &nbsp;&nbsp;&nbsp;<input name="channel" type="radio" value='Cur' checked>&nbsp;By Currency
+                &nbsp;&nbsp;&nbsp;<input name="channel" type="radio" value='Chn'>&nbsp;By Channel
+                <input type="hidden" name="checksum" value="~$cid`">
+                <p align='center'><input type="submit" name="CMDGo" value="   Go   "></p>
+            </form>
+            ~/if`
+        </table>
+    </body>
+</html>

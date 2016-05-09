@@ -1,0 +1,161 @@
+<html>
+<head>
+<title>JeevanSathi Matrimonials - Advertise with us</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="/P/I/styles.php" type="text/css">
+<link rel="stylesheet" href="/P/IN/styles.php" type="text/css">
+<SCRIPT language="JavaScript" SRC="/profile/~$profile_js`"></SCRIPT>
+<script language="JavaScript">
+function validate()
+{
+	var docF=document.form1;
+	if(trim(docF.organisation.value)=="")
+        {
+		alert("Please specify Organisation / Company Name");
+		return false;
+        }
+	if(trim(docF.name.value)=="")
+        {
+                alert("Please specify Your Name");
+                return false;
+        }
+	if(trim(docF.business.value)=="")
+        {
+                alert("Please specify Nature of Business");
+                return false;
+        }
+	if(trim(docF.address.value)=="")
+        {
+                alert("Please specify Contact Address");
+                return false;
+        }
+	if(trim(docF.phone.value)=="")
+        {
+                alert("Please specify Contact Phone");
+                return false;
+	}
+	if(trim(docF.email.value)=="")
+	{
+		alert("Please specify E-mail");
+		return false;
+	}
+	if(!checkemail(docF.email.value))
+	{
+		alert(docF.email.value + " is not a valid E-mail");
+		return false;
+	}
+	if(trim(docF.details.value)=="")
+        {
+                alert("Please specify Details / Queries about advertisement");
+                return false;
+        }
+
+return true;
+	
+
+}
+</script>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body>
+~$HEAD`
+~$LEFTPANEL`
+<form name="form1" action="advertise.php" method="post" onsubmit="return validate();">
+<table width="78%" height="1110" border="0" cellspacing="0" cellpadding="0" align="center">
+<tr><td valign="top">
+<br>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+  <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+   <tr>
+    <td class="headbigblack"><b>Advertise with us </b></td>
+   </tr>
+   <tr class="bgred">
+    <td height="1"></td>
+    <SPACER height="1" type="block"></SPACER> </tr>
+   <tr>
+    <td height="2"></td>
+    <SPACER height="2" type="block"></SPACER> </tr>
+ </table></td>
+</tr>
+
+<tr>
+  <td width="100%" colspan="2"><table width="100%" border="0" align="center" cellpadding="2" cellspacing="2">
+    <tr>
+      <td colspan="2" class=mediumgreen><strong>Advertise your Business / Brand on our site</strong>~if $MESSAGE eq "Y"`&nbsp;<font color="red">(Fields marked red are compulsory)</font> ~/if`<br>
+        <br></td>
+      </tr>
+    <tr>
+      <td width="220" valign="top" class="mediumblack"><strong>~if $CHECK_ORG eq "Y"` <font color="red">Organisation / Company Name :</font>~else`Organisation / Company Name :~/if`</strong></td>
+      <td width="280"><input name="organisation" type="text" value="~$ORGANISATION`" class="TextBox"></td>
+    </tr>
+    <tr>
+      <td valign="top" class="mediumblack"><strong>~if $CHECK_NAME eq "Y"` <font color="red">Your Name :</font>~else`Your Name : ~/if`</strong></td>
+      <td><input name="name" type="text" value="~$NAME`" class="TextBox"></td>
+    </tr>
+    <tr>
+      <td valign="top" class="mediumblack"><strong>~if $CHECK_BUSINESS eq "Y"` <font color="red">Nature of Business :</font> ~else` Nature of Business : ~/if`</strong></td>
+      <td><input name="business" type="text" value="~$BUSINESS`" class="TextBox"></td>
+    </tr>
+    <tr>
+      <td valign="top" class="mediumblack"><strong>~if $CHECK_ADDRESS eq "Y"` <font color="red">Contact Address : </font> ~else` Contact Address : ~/if`</strong></td>
+      <td><textarea name="address" cols="50" rows="4" class="TextBox">~$ADDRESS`</textarea></td>
+    </tr>
+    <tr>
+      <td valign="top" class="mediumblack"><strong>~if $CHECK_PHONE eq "Y"` <font color="red">Contact Phone :</font> ~else` Contact Phone : ~/if`</strong></td>
+      <td><input name="phone" type="text" value="~$PHONE`" class="TextBox"></td>
+    </tr>
+    <tr>
+      <td valign="top" class="mediumblack"><strong>~if $CHECK_EMAIL eq "Y"` <font color="red">E-mail :</font> ~else` E-mail : ~/if`</strong></td>
+      <td><input name="email" type="text" value="~$EMAIL`" class="TextBox"></td>
+    </tr>
+    <tr>
+      <td valign="top" class="mediumblack"><strong>~if $CHECK_DETAILS eq "Y"` <font color="red">Details / Queries about advertisement :</font> ~else` Details / Queries about advertisement : ~/if`</strong></td>
+      <td><textarea name="details" cols="50" rows="4" class="TextBox">~$DETAILS`</textarea></td>
+    </tr>
+    <tr>
+      <td colspan="2">&nbsp;</td>
+      </tr>
+    <tr>
+      <td>&nbsp;</td>
+	<input type="hidden" name="Submit" value="Submit">
+      <td><input type="image" name="Submit" value="Submit" src="images/submit_button.gif" width="76" height="23" border="0"></td>
+    </tr>
+  </table>
+    <br>
+    <table width="100%" border="0" align="center" cellpadding="2" cellspacing="2" bgcolor="#FDF2DF">
+      <tr class="mediumblack">
+        <td width="119" valign="top"><strong>Corporate Office</strong></td>
+        <td width="8">:</td>
+        <td width="356"> JeevanSathi Internet Services B - 8, Sector - 132, <br>
+        Noida - 201301, India. </td>
+      </tr>
+      <tr class="mediumblack">
+        <td valign="top"><strong>Phone no. </strong></td>
+        <td>:</td>
+        <td>0120 5303200/141/138 .<br>
+        Please prefix Code 95120 (instead of 0120) if calling from Delhi. </td>
+      </tr>
+      <tr class="mediumblack">
+        <td valign="top"><strong>Fax no.</strong></td>
+        <td>:</td>
+        <td>0120 2420111 <br>
+        Please prefix Code 95120 (instead of 0120) if calling <br>
+        from Delhi. </td>
+      </tr>
+    </table>
+    <br></td>
+</tr>
+</table>
+<br>
+</td>
+</tr>
+</table>
+
+</form>
+<br>
+<br>
+~$SUBFOOTER`
+<br>
+~$FOOT`
+</body>
+</html>

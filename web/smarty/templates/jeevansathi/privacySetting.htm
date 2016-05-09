@@ -1,0 +1,115 @@
+<style>
+
+.vam {vertical-align:middle;}
+
+.pink_phone{ ^M
+
+background-color: #FDF4F5;
+
+    border: 1px solid #F0CED6;
+
+width: 750px;
+
+}^M
+
+.scrollbox2_1{background-color:#FDF4F5;border:1px solid #FDF4F5;overflow:auto;padding:5px 2px 0px 11px; width:auto; 
+
+min-height:325px;_min-height:350px}
+.topPadding{padding:15px 10px 5px 10px;}
+.topPaddingNonFto{padding:15px 0px 0px 0px;}
+.topPaddingFto{padding:0px 0px 0px 0px;}
+
+.title { font:18px arial; color:#505050; position:relative; top:5px; left:8px;}
+
+.blink1
+
+ { font:18px arial; color:#1171ae; position:relative; top:5px; right:5px}
+
+.lf{float:left}
+.fr{float:right}
+
+.txtpnk{font:20px/35px Arial, Helvetica, sans-serif;color:#fff;background-color:#B13A4E;}
+.padleftpnk{padding-left:10px;}
+
+.fntwbld{font-weight:bold;}
+.greybrdr{border:2px solid #DDD5D6;}
+.content{text-shadow: -2px -1px 2px #000;}
+.btnGreenPrivacy {
+    background: url("~$IMG_URL`/profile/images/btn_green_privacy.png") no-repeat scroll 0px 2px transparent;
+    border: medium none;
+    color: #FFFFFF;
+    height: 37px;
+    width: 152px;
+	font-size:16px;
+}
+</style>
+
+
+
+<form action="/profile/edit_profile.php" method="post" name="form1" id="form1" style="margin:0px;padding:0px;">
+
+<div class="pink_phone">
+
+
+
+<div class="topbg">
+
+<span class="title lf">Phone Privacy Settings </span>
+<span class="fr"><a href="#" class="blink1 " onClick="$.colorbox.close();return false;">Close [X]</a></span>
+
+
+</div>
+
+<div class="clear"></div>
+
+<!-- Top ends here -->
+
+<input type="hidden" id="any_verified" value="~$ANY_VERIFIED`">
+
+<input type="hidden" id="sourcepage" value="~$SOURCEPAGE`">
+
+<input type="hidden" id="mymobile" value="~$MYMOBILE`">
+
+<input type="hidden" id="mylandline" value="~$MYLANDLINE`">
+
+<input type="hidden" id="alt_mobile" value="~$ALT_MOBILE`">
+
+<input type="hidden" id="mobile_valid" value="~$MOBILE_VALID`">
+
+<input type="hidden" id="landline_valid" value="~$LANDLINE_VALID`">
+
+<input type="hidden" id="alternate_valid" value="~$ALTERNATE_VALID`">
+
+<input type="hidden" id="tickHideNumbers" value="~$tickHideNumbers`">
+
+<div class="scrollbox2_1 ">
+<div id="sourcePageLine" class="topPadding">
+                <div class="fs16 black">You have currently hidden your phone number(s) from all users. You can now show your number <br/>to only members you like. Change your phone privacy settings to get better response.
+
+                </div>
+</div>
+<div class="sp12">&nbsp;</div>
+<div class="fs16 topPadding black">
+	<input type="radio" name="settings"  value="N" class ="fs16" checked="checked"/> Don't show to anybody<br/><br/>
+	<input type="radio" name="settings"  value="C" class="fs16"/> Show only to Members I like (Members I have accepted or Expressed Interest in)<br/><br/>
+	<input type="radio" name="settings"  value="Y" class="fs16" /> Show to all members<br/><br/>
+	<input  type="button" id="saveClose"  class="btnGreenPrivacy"  style="font-weight:bold;" value="Save & Close" />
+</div>
+</div>
+</div></form>
+<script type="text/javascript">
+$("#saveClose").click(function(){
+var myRadio = $('input[name=settings]');
+var checkedValue = myRadio.filter(':checked').val();
+    // Do something interesting here
+request = $.ajax({
+url: "~$SITE_URL`/profile/privacySettingLayer.php",
+type: "POST",
+data: {ajax:1,checkedValue:checkedValue}
+}).done(function(result){
+$.colorbox.close();
+return false;
+});
+
+});
+</script>

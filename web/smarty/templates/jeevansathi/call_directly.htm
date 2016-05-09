@@ -1,0 +1,81 @@
+<div ~if $SHOW_CROSS`style="width:255px;"~/if`>
+<div id="CALL_CONTACT" style="display:inline">
+	 ~if $CONTACT_LOCKED eq 1`
+	<div class="dark_orange t14 b lf">Contact Details</div>
+                        ~if $SHOW_CROSS`<div style="float:right"><a onclick="$.colorbox.close();close_all_con_layer();return false;" class="blink" href="#"><B>[ x ]</B></a></div>~/if`
+	<div class="sp5"></div>
+                            <ul class="con_list" >
+                                ~if $SHOW_MOBILE`
+                              <li>Mobile no.~if $MOB_PROFILENAME` of  ~$MOB_PROFILENAME` (~$MOB_RELATION_NAME`)~/if`<br>
+                                <b>~$SHOW_MOBILE`</b></li>
+                                ~/if`
+                                ~if $ALT_MOBILE`
+                              <li>Alternative Mobile no.~if $ALT_MOBILE_LABEL`~$ALT_MOBILE_LABEL`~/if`<br>
+                                <b>~$ALT_MOBILE`</b></li>
+                                ~/if`
+                                ~if $PHONE_NO`
+                              <li>Landline no.~if $PHONE_PROFILENAME` of  ~$PHONE_PROFILENAME` (~$PHONE_RELATION_NAME`)~/if`<br>
+                                <b>~$PHONE_NO`</b></li>
+                                ~/if`
+                                <!----------Call now---------->
+                                ~$SHOW_CALLNOW_LINK`
+                                <!--------------Ends here----------->
+
+                                ~if $TIME_TO_CALL_START`
+                              <li>Suitable time to call<br>
+                                <b>~$TIME_TO_CALL_START` to ~$TIME_TO_CALL_END`</b></li>
+                                ~/if`
+                                ~if $SHOW_ADDRESS`
+                              <li>Address<br>
+                                <b>~$SHOW_ADDRESS`</b></li>
+                                ~/if`
+                               ~if $SHOW_PARENTS_ADDRESS`
+                              <li>Parent's address<br>
+                                <b>~$SHOW_PARENTS_ADDRESS`</b></li>
+                                ~/if`
+                                ~if $EMAIL_ID`
+                                <li>Email ID<br>
+                                <b>~$EMAIL_ID`</b>
+                                </li>
+                                ~/if`
+                                ~if $SHOW_MESSENGER`
+                              <li>Messenger ID<br>
+                                <b>~$SHOW_MESSENGER`</b></li>
+                                ~/if`
+                            </ul>
+                                ~else`
+                                        <div class="dark_orange t14 b">Contact Details are Locked</div>
+                                            <div class="sp5"></div>
+                                            <ul class="con_list" style="background:url(~$IMG_URL`/img_revamp/locked.gif) no-repeat 78% 37%; margin-top:12px; height:128px;">
+                                              <li>Mobile no.</li>
+                                              <li>Landline no.</li>
+                                              <li>Suitable time to call</li>
+                                              <li>Address</li>
+                                              <li>Parent's address</li>
+                                              <li>Email ID</li>
+                                            </ul>
+                                            <div class="sp5">
+                                            </div>
+                                ~/if`
+                        ~if $MOB_NOT_VERI && $LANDLINE_NOT_VERI`
+                                <div class="t11 b">Contact details are locked because you have not verified your phone number(s). <a href="~$SITE_URL`/profile/myjs_verify_phoneno.php?width=700" class="thickbox">Click here</a> to know how to verify your contact details and unlock
+                                </div>
+                        ~else`
+                                ~if $TYPE eq 'D' && $WHO eq 'SENDER'`
+                                <div class="t11 b"><BR>~$CONTACT_HEADLINE`
+                                </div>
+                                ~else`
+                                <div class="t11" style="position: absolute; bottom: 5px; left: 10px;">~$CON_DET_MES`
+                                </div>
+                                ~/if`
+                        ~/if`
+                       ~if $CONTACT_LOCKED neq 0`
+                                ~if $PHONE_NO || $SHOW_MOBILE`
+                                <div class="t11 lf" ><a class=thickbox" href="" onclick="javascript:{close_all_con_layer();$.colorbox({href:'~$SITE_URL`/profile/report_invalid_phone.php?checksum=~$CHECKSUM`&profilechecksum=~$PROFILECHECKSUM`'});return false;}">Report Invalid telephone number</a>
+                                </div>
+                                ~/if`
+				<div style="border-style: none none solid; border-color: rgb(182, 182, 182); border-width: 1px;float: left; padding-top: 4px; padding-bottom: 4px;width:~if !$SHOW_CROSS`340~else`264~/if`px;height:1px"></div>
+				<div class="t11 lf" style="width:300px">Please note you have <span class="dark_orange b t14">~$LEFT_ALLOTED`</span> more contacts available. </div>
+				
+                        ~/if`
+	</div>

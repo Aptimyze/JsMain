@@ -1,0 +1,83 @@
+<div class="pink" style="width:600px;">
+	<div class="topbg">
+		<div class="lf pd b t12"></div>
+		<div class="rf pd b t12"><a href="#" class="blink" onClick="if(dID('reload')){$.colorbox.close();window.location.reload();return false;}else{$.colorbox.close();return false;}">Close [x]</a></div>
+	</div>
+	<div class="clear"></div>
+	<script src="js/~$removeBookmark_js`" type="text/javascript"></script>
+	<input type="hidden" name="reload" id="reload" value="">
+	<div class="scrollbox1 t12" style="height:auto;width:585px;overflow:hidden" >
+		<div class="gry_bdr f14 pd_5" style="background:#fff; margin:5px 20px;">
+			<div id="first_layer" style="display:inline";>
+				<div class="save_hrbg_photo" style="padding:10px;width:99%">
+					~if $to_do eq "add_intro"`
+					~if $OFFLINE_ASSISTANT_REM`
+					<div class="lf t14 b" style="width:100%">You have already added ~$PROFILENAME` to your 'Members to be called' List.</div>
+					<div class="sp5"></div>
+					~else`
+					~if $OFFLINE_ASSISTANT_ADD`
+					<div class="lf t14 b" style="width:100%">Do you want to add ~$PROFILENAME` to your 'Members to be called' List?</div>
+					<div class="sp5"></div>
+					<div class="lf" style="text-align:center;width:90%;margin-top:10px;">
+						<input type="button" class="b green_btn" value="Yes" onclick="add_intro_call('~$senders_data`','show_book_congrats_add_intro')"> &nbsp;<input type="button" class="b green_btn" value="No" onClick="$.colorbox.close();return false;">
+					</div>
+					~else`
+					<div class="lf t14 b" style="width:100%">You have already added ~$introCallDetail.PURCHASED` profiles to your 'Members to be called' List.</div>
+					<div class="sp5"></div>
+					~/if`
+					~/if`
+					~elseif $to_do eq "remove_intro"`
+                                        <div class="lf t14 b" style="width:100%">Do you want to remove ~$PROFILENAME` from 'Members to be called' List?</div>
+                                        <div class="sp5"></div>
+                                        <div class="lf" style="text-align:center;width:90%;margin-top:10px;">
+                                                <input type="button" class="b green_btn" value="Yes" onclick="remove_intro_call('~$senders_data`','show_book_congrats_remove_intro')"> &nbsp;<input type="button" class="b green_btn" value="No" onClick="$.colorbox.close();return false;">
+                                        </div>
+					~/if`
+					<div class="sp3"></div>
+				</div>
+			</div>
+			<div id="second_layer" style="display:none">
+				<div style="margin:5px; text-align:center"><img src="~$IMG_URL`/images/loader_big.gif"></div>
+			</div>
+			<div id="third_layer" style="display:none">
+				<div style="padding: 10px;" class="">
+					<div style="width: 100%;" class="lf">
+						<div style="width: auto" class="lf"><img align="absmiddle" src="~$IMG_URL`/images/confirm.gif"/></div>
+						<div style="padding: 6px 0pt 0pt 5px;" class="lf t14 b">~$PROFILENAME` has been added to your 'Members to be called' List.</div>
+
+						<!--Purchase info starts here-->
+						<style>
+						ul.pur_info{margin:0; padding:10px; float:left; width:90%; list-style:none; font:12px arial,helvetica;}
+						ul.pur_info li {float:left; width:94.9%; padding:3px 0; border-bottom:1px solid #ccc;}
+						ul.pur_info li label{float:left; width:65%;}
+						ul.pur_info li b{float:left; width:32%;}
+						</style>
+						<ul class="pur_info">
+						<li><label>Total Purchased</label><b>: ~$introCallDetail.PURCHASED`</b></li>
+						<li><label>Members to be called</label><b>: ~$introCallDetail.TO_BE_CALLED` (of which ~$introCallDetail.CALLED` called)</b></li>
+						<li style="border-bottom:none;"><label>Remaining profiles that can be added to the list</label><b>: ~$introCallDetail.TO_BE_ADDED`</b></li>
+						</ul>
+						<div class="clr"></div>
+						<div align="center">
+							<input type="button" class="b green_btn" value="OK" onClick="$.colorbox.close();window.location.reload();return false;">
+						</div>
+						<!--Purchase info ends here-->
+					</div>
+					<div class="clr"></div>
+				</div>
+			</div>
+			<div id="error_layer" style="display:none">
+				<div style="padding: 10px;" class="">
+					<div style="width: 100%;" class="lf">
+						<div style="width:auto" class="lf">
+							<img align="absmiddle" src="~$IMG_URL`/images/cross.gif"/>
+						</div>
+						<div style="padding: 6px 0pt 0pt 5px;" class="lf t14 b" id="ERROR_MES">Error message</div>
+					</div>
+					<div class="sp12"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+

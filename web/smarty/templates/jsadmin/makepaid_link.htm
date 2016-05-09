@@ -1,0 +1,48 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>JeevanSathi</title>
+  <link rel="stylesheet" href="jeevansathi.css" type="text/css">
+  <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+ </head>
+ ~include file="head.htm"`
+ <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<br>
+  <br><br>
+<form action="makepaid_link.php" method="post">
+  <table width=760 align="CENTER" >
+   <tr>
+    <td height="23" class="formhead" align="center">
+     ~$MSG1`
+    </td>
+   </tr>      
+   <tr>
+    <td height="23" class="formhead" align="center">
+     ~$MSG`
+    </td>
+   </tr>      
+~if $val neq 'refund'`<tr><td align="center">	<input type="submit" name="SUBMIT" value="click"></td></tr>~/if`
+  </table>
+	<input type="hidden" name="show" value="makepaid">
+	<input type="hidden" name="cid" value=~$cid`>
+        <input type="hidden" name="user" value=~$user`>
+        <input type="hidden" name="val" value=~$val`>
+        <input type="hidden" name="username" value=~$username`>
+        <input type="hidden" name="mtype" value=~$mtype`>
+        <input type="hidden" name="duration" value=~$duration`>
+        <input type="hidden" name="pid" value=~$pid`>
+        <input type="hidden" name="serviceid" value=~$serviceid`>
+        <input type="hidden" name="billid" value=~$billid`>
+        <input type="hidden" name="link_msg" value=~$link_msg`>
+        <input type="hidden" name="paidamount" value=~$PAIDAMOUNT`>
+        <input type="hidden" name="dueamount_new" value=~$DUEAMOUNT_NEW`>
+        <input type="hidden" name="pricenew" value=~$PRICENEW`>
+        <input type="hidden" name="entrydt" value=~$ENTRYDT`>
+	<input type="hidden" name="cur_type" value="~$CURRENCY_TYPE`">
+  <br><br><br>
+</form>
+  <br>
+  ~include file="foot.htm"`
+ </body>
+</html>

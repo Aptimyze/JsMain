@@ -1,0 +1,7 @@
+all:
+  login:
+    enable_login:  off
+  album:
+    enable_login:  off
+  changeImageName:
+    enable_login:  off

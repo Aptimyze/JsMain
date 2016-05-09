@@ -1,0 +1,83 @@
+<html>
+~include file="head_billing.htm"`
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Edit Details</title>
+<link rel="stylesheet" href="jeevansathi1.css" type="text/css">
+<br>
+<br>
+<SCRIPT language="Javascript">
+function deleteReason()
+{
+	if(document.form1.reason.value=='')
+	{
+		alert("Reason to write-off should not be Empty");
+		return false;
+	}
+	if(parseFloat(document.form1.wrt_amount.value) > parseFloat(document.form1.dueamount.value))
+	{
+		alert("Write-off amount should be less than due amount ")
+		document.form1.wrt_amount.value=0
+		return false;
+	}
+	else
+	   return true;
+}
+function checkNaN()
+{
+        if(isNaN(document.form1.wrt_amount.value))
+        {
+                alert("please enter only digits")
+                document.form1.wrt_amount.value=0
+        }
+	else
+	{
+	}
+}
+
+</script>
+</head>
+<body>
+~if $flag eq 'saved'`
+<br><br>
+<table width="70%" align="center" border="0" cellspacing="4" cellpadding="4">
+	<tr class="formhead">
+			<td align="center">
+				Write off successful.
+			</td>
+	</tr>
+	<tr class="fieldsnew">
+		<td align="center">
+			<a href="search_rev_user.php?user=~$USER`&cid=~$CID`&phrase=~$phrase`&criteria=~$criteria`">Continue &gt;&gt;</a>
+		</td>
+	</tr>
+</table>
+~else`
+<br>
+<form name=form1 method=post action="misc_write_off.php">
+<table width="70%" border=0 align="center" cellspacing="4" cellpadding="4">
+	<tr>
+		<td class="formhead">Due-Amount</td>
+		<td class="fieldsnew">~$cur_type`&nbsp;&nbsp;&nbsp;~$dueamount`</td>
+	</tr>
+	<tr>
+		<td class="formhead" height="21">Write-Off Amount</td>
+		<td class="fieldsnew">~$cur_type`&nbsp;<input type="text" name="wrt_amount" value="~$wrt_amount`" onKeyUp="checkNaN()">
+	</tr>
+	<tr>
+		<td class="formhead" height="21">Reason </td>
+		<td class="fieldsnew"><textarea rows=5 cols=50 name="reason"></textarea></td>
+	</tr>
+	<tr>
+		<td align="center" class="fieldsnew" colspan="2"><input type="submit" name="submit" value="Submit" class="buttons1" onClick="return deleteReason()"></td>
+	</tr>
+</table>
+<input type="hidden" name="user" value="~$USER`">
+<input type="hidden" name="cid" value="~$CID`">
+<input type="hidden" name="saleid" value="~$saleid`">
+<input type="hidden" name="cur_type" value="~$cur_type`">
+<input type="hidden" name="dueamount" value="~$dueamount`">
+</form>
+~/if`
+</body>
+</html>

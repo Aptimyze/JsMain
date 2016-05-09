@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Untitled Document</title>
+<link href="~$SITE_URL`/jsadmin/jeevansathi.css" rel="stylesheet" type="text/css">
+<link href="~$SITE_URL`/jsadmin/main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<form name="add_comments" method="POST" action="user_comments.php">
+<input type="hidden" name="cid" value="~$cid`">
+<input type="hidden" name="op" value="~$op`">
+<input type="hidden" name="pid" value="~$pid`">
+<table width="351" height="115" border="0" cellpadding="0" cellspacing="0" align="center">
+  <tr>
+    <td align="left" valign="top"><img src="~$PHOTO_URL`/profile/images/top-left.gif" width="8" height="8"></td>
+    <td background="~$PHOTO_URL`/profile/images/top-bg1.gif" height="8"></td>
+    <td align="right" valign="top"><img src="~$PHOTO_URL`/profile/images/top-rite.gif" width="8" height="8"></td>
+  </tr>
+  <tr>
+    <td background="~$PHOTO_URL`/profile/images/left-bg.gif" width="8"></td>
+    <td bgcolor="#FFF5AB"><table width="320" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#FFF5AB">
+      <tr>
+        <td width="218" class="regular-text">Add Comment</td>
+        <td width="102" align="right" style="font-family:verdana; font-size:9px"><a href="javascript: self.close ()">Close[x]</a></td>
+      </tr>
+      <tr>
+        <td class="main-text" style="padding:5px 0px 5px 10px; line-height:25px"><textarea name="comments" rows="3"></textarea></td>
+        <td class="main-text" style="padding:5px 0px 5px 10px; line-height:25px"><a href="#" onClick="javascript : document.add_comments.submit();"><img src="~$PHOTO_URL`/profile/images/submit.gif" title="Submit" width="69" height="18" border="0"></a></td>
+      </tr>
+    </table></td>
+    <td background="~$PHOTO_URL`/profile/images/rite-bg.gif" width="8"></td>
+  </tr>
+  <tr>
+    <td align="left" valign="bottom"><img src="~$PHOTO_URL`/profile/images/btm-left.gif" width="8" height="8"></td>
+    <td background="~$PHOTO_URL`/profile/images/btm-bg.gif" height="8"></td>
+    <td align="right" valign="bottom"><img src="~$PHOTO_URL`/profile/images/btm-rite.gif" width="8" height="8"></td>
+ </tr>
+</table>
+</form>
+</br>
+</br>
+~if $show_table eq '1'`
+<div id=abc>
+&nbsp;</div>
+</body>
+<script>
+var divs="<p><Table  width=100% border=\"1\" cellpadding=\"0\" cellspacing=\"0\"><tr class=\"formhead\"><td align=\"center\">&nbsp;Date</td>	<td align=\"center\">&nbsp;Operator</td>	<td align=\"center\">&nbsp;Comments</td></tr>	~foreach from=$data item=val`<tr class=\"label\">	~foreach from =$val item=val1`<td align=\"center\">&nbsp;~$val1`</td>~/foreach`		</tr>~/foreach`</TABLE>";
+document.getElementById("abc").innerHTML=divs;
+//alert(document.getElementById("abc").offsetHeight);
+//alert(window.height);
+//alert(document.getElementById("abc").offsetHeight);
+if(document.getElementById("abc").offsetHeight<=400)
+window.resizeTo("400",document.getElementById("abc").offsetHeight+200);
+else
+window.resizeTo("400","500");
+</script>
+~else`
+</body>
+~/if`
+</html>
+

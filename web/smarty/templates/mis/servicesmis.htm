@@ -1,0 +1,181 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS - Services</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br><br>
+~if $flag eq '1'`
+	<table width=100% border=0 align="center">
+		<tr class="formhead">
+			<td colspan=14 align="center">&nbsp;
+			~if $type eq 'M'`
+				Financial Year ~$yy`-~$yyp1`
+			~elseif $type eq 'D'`
+				Report for Month ~$yy`-~$rmonth`
+			~/if`
+			</td>
+		</tr>
+	</table>
+	<br>
+~if $displayUnit`
+	<table width=100% border=0 align="center" cellspacing="4" cellpadding=5>
+		<tr class="label">
+			<td align="center">&nbsp;Month</td>
+			~if $type eq 'M'`
+				~foreach from=$monthOrderArr item=val key=k`
+					<td width=6% align="center">&nbsp;~$k`</td>
+				~/foreach`
+			~else`
+				~foreach from=$monthOrderArr item=val key=k`
+					<td width=6% align="center">&nbsp;~$val`</td>
+				~/foreach`
+			~/if`
+			<td align="center">&nbsp;Total</td>
+		</tr>
+		~foreach from=$serviceNameArr key=k item=sname`
+		<tr class="fieldsnew">
+			<td align="center" class="label">&nbsp;~$sname`</td>
+			~foreach from=$monthOrderArr item=dd`
+				<td width=6% align="center">&nbsp;~$serviceWiseArr[~$k`][~$dd`]`</td>
+			~/foreach`
+			<td align="center" class="label">&nbsp;~$serviceWiseArr[~$k`]['TOTAL']`</td>
+		</tr>
+		~/foreach`
+		<tr class="label">
+			<td align="center">&nbsp;Total</td>
+			~foreach from=$monthOrderArr item=dd`
+				<td width=6% align="center">&nbsp;~$durationWiseArr[$dd]`</td>
+			~/foreach`
+			<td align="center">~$durationWiseArr['TOTAL']`</td>
+		</tr>
+	</table>
+~else`
+	<table width=100% border=0 align="center" cellspacing="4" cellpadding=5>
+		<tr class="label">
+			<td align="center">&nbsp;Month</td>
+			<!--
+			~section name=mon loop=$mmarr`
+				<td width=6% align="center">&nbsp;~$mmarr[mon]`</td>
+			~/section`
+			-->
+			~foreach from=$mmarr item=data_val key=k`
+				<td width=6% align="center">&nbsp;~$data_val`</td>
+			~/foreach`
+			<td align="center">&nbsp;Total</td>
+		</tr>
+		~section name=sn loop=$ssarr`
+		<tr class="fieldsnew">
+			<td align="center" class="label">&nbsp;~$ssarr[sn]`</td>
+			<!--
+			~section name=mon loop=$mmarr`
+				<td width=6% align="center">&nbsp;~$tot[sn][mon]`</td>
+			~/section`
+			-->
+			~foreach from=$mmarr item=data_val key=kk`
+				<td width=6% align="center">&nbsp;~$tot[sn][~$kk`]`</td>
+			~/foreach`
+			<td align="center" class="label">&nbsp;~$tota[sn]`</td>
+		</tr>
+		~/section`
+		<tr class="label">
+			<td align="center">&nbsp;Total</td>
+			<!--
+			~section name=mon loop=$mmarr`
+				<td width=6% align="center">&nbsp;~$totb[mon]`</td>
+			~/section`
+			-->
+			~foreach from=$mmarr item=data_val key=kkk`
+				<td width=6% align="center">&nbsp;~$totb[~$kkk`]`</td>
+			~/foreach`
+			<td align="center">~$totall`</td>
+		</tr>
+	</table>
+~/if`
+~else`
+	<form method=post action="servicesmis.php">
+	<table width=80% border=0 align="center" cellpadding=5>
+	<tr>
+		<td>&nbsp;&nbsp;&nbsp;
+			~if $VIEWALL eq 'Y'`
+			Branch :
+                	        <select name="branch">
+					<option value="">ALL</option>
+				~section name=brn loop=$branches`
+                	                <option value="~$branches[brn]`">~$branches[brn]`</option>
+				~/section`
+                	        </select>
+			~/if`
+		</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td width=25%>&nbsp;</td><td></td>
+	</tr>
+	<tr>
+		<td>&nbsp;&nbsp;&nbsp;&nbsp;Select Report Period </td>
+		<td>
+				&nbsp;&nbsp;&nbsp;<input name="type" type="radio" value='M' checked>&nbsp;Month-wise
+				&nbsp;&nbsp;&nbsp;
+				 ~html_select_date prefix=M start_year='-9' display_days=false display_months=false`
+				<br>
+ 	       			&nbsp;&nbsp;&nbsp;<input name="type" type="radio" value='D' checked>&nbsp;Date-wise
+				&nbsp;&nbsp;&nbsp;
+				~html_select_date prefix=D start_year='-9' display_days=false`
+		</td>
+        </tr>
+	<tr>
+		<br><br>
+	        <td>&nbsp;&nbsp;&nbsp;&nbsp;Select Report Type</td>
+	        <td>
+			&nbsp;&nbsp;&nbsp;<input name="reportType" type="radio" value='D' checked>&nbsp;Detailed Report<br>
+			&nbsp;&nbsp;&nbsp;<input name="reportType" type="radio" value='S' checked>&nbsp;Summary Report
+	        </td>
+        </tr>
+    <tr>
+		<br><br>
+	        <td>&nbsp;&nbsp;&nbsp;&nbsp;Select Paid/Free Tickets</td>
+	        <td>
+			&nbsp;&nbsp;&nbsp;<input name="profileType[]" type="checkbox" value='P' checked>&nbsp;Paid<br>
+			&nbsp;&nbsp;&nbsp;<input name="profileType[]" type="checkbox" value='F' >&nbsp;Free
+	        </td>
+        </tr>
+	<tr>
+    <tr>
+		<br><br>
+	        <td>&nbsp;&nbsp;&nbsp;&nbsp;Select Display Unit</td>
+	        <td>
+			&nbsp;&nbsp;&nbsp;<input name="displayUnit" type="radio" value="TICKET" checked>&nbsp;Tickets<br>
+			&nbsp;&nbsp;&nbsp;<input name="displayUnit" type="radio" value="REVENUE" >&nbsp;Revenues
+	        </td>
+        </tr>
+	<tr>
+		<input type="hidden" name="cid" value=~$cid`>
+		~if $priv eq 'MC' or $priv eq 'MD'`
+			<input type="hidden" name="branch" value=~$branch`>
+		~/if`
+		<td align="right"><input type="submit" name="CMDGo" value="     Go     "></td>
+	</tr>
+	</table>
+	</form>
+~/if`
+</body>
+</html>

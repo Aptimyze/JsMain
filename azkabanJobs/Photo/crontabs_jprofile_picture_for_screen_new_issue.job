@@ -1,0 +1,2 @@
+type=command
+command=${php5} -q ${docRoot}/crontabs/jprofile_picture_for_screen_new_issue.php

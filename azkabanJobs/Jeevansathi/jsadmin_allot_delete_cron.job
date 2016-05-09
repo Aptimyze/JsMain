@@ -1,0 +1,2 @@
+type=command
+command=${php5} ${docRoot}/crontabs/jsadmin/cron_jsadmin_allot_delete.php

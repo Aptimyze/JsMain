@@ -1,0 +1,70 @@
+<html>
+<head>
+<title>JeevanSathi Matrimonials - Jeevansathi horoscope thanks</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="http://www.jeevansathi.com/P/I/styles.php" type="text/css">
+<link rel="stylesheet" href="http://www.jeevansathi.com/P/IN/styles.php" type="text/css">
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body leftmargin="5" topmargin="5">
+~$HEAD` ~$SUBHEADER`
+   ~$LEFTPANEL`
+   <table width="78%" height="1110" border="0" cellspacing="0" cellpadding="0" align="center">
+   <tr>
+<td  valign="top">
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr>
+~if $astro eq "H"`
+  <td height="18" class="headbigblack"><b> Horoscope Service</b> </td>
+~elseif $astro eq "K"`
+  <td height="18" class="headbigblack"><b> Kundali Matcher Service</b> </td>
+~elseif $astro eq "H,K"`
+  <td height="18" class="headbigblack"><b> Horoscope and Kundali Matcher Service</b> </td>
+~else`
+  <td height="18" class="headbigblack"><b> Astro Service</b> </td>
+~/if`
+ </tr>
+ <tr>
+  <td height="1" bgcolor="#CC0033"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="1" height="1"></td>
+ </tr>
+ <tr>
+  <td height="8"><br>
+   <table width="500" border="0" align="center" cellpadding="0" cellspacing="0">
+    <tr>
+     <td class=mediumblack><div align="center">
+	~if $astro eq "H"`
+      <p align="center"> <b>Thank you </b>for availing of the <b>JeevanSathi Horoscope Service</b>. <br>
+       <br>
+       Your Horoscope has now been activated and will be visible to all the <br>
+       members of JeevanSathi.com. </p>
+	~elseif $astro eq "K"`
+	<p align="center">  Thank you for availing of the <b>JeevanSathi Kundli Matcher Service</b>. <br>
+       <br>
+       Your can now match your Kundli on JeevanSathi.com with all the prospective profiles that have provided their Astro Data. </p>
+	~elseif $astro eq "H,K"`
+	<p align="center">  Thank you for availing of the <b>JeevanSathi Horoscope Service and JeevanSathi Kundli Matcher Service</b>. <br>
+       <br>
+	Your Horoscope has now been activated and will be visible to all the <br>
+       members of JeevanSathi.com.
+	<br>
+       Your can now match your Kundli on JeevanSathi.com with all the prospective profiles that have provided their Astro Data. </p>
+	~else`
+	<p align="center">  Thank you for Filling up your astro details.<br></p>
+	~/if`
+     </div></td>
+    </tr>
+   </table>
+   <br>
+   </td>
+ </tr>
+</table>
+</td>
+</tr>
+</table>
+
+<br>
+~$SUBFOOTER` <br>
+<br>
+<br>
+~$FOOT`
+</body>
+</html>

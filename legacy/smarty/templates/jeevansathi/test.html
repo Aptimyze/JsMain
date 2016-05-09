@@ -1,0 +1,39 @@
+<html>
+<title>Messenger - JS</title>
+<meta http-equiv="PRAGMA" content="NO-CACHE">
+<head>
+<SCRIPT src="http://www.jeevansathi.com/userplane/copy_of_functions.js" LANGUAGE="JScript" TYPE="text/javascript">
+</SCRIPT>
+<script>
+/*function message() {
+        msg="You will exit Jeevansathi.com Messenger.\nPress CANCEL to receive/send chat requests";
+        return msg;
+}*/
+
+function setCookie_exp(name, value, expires, path, domain, secure) {
+                                                                                                 
+        //expires=0;
+	domain=".jeevansathi.com";
+        var curCookie = name + "=" + escape(value) +((expires) ? "; expires=" + expires.toGMTString() : "") +((path) ? "; path=" + path : "") +((domain) ? "; domain=" + domain : "") +((secure) ? "; secure" : "");
+        document.cookie = curCookie;
+}
+                                                                                                 
+function setCookie(name1,value1,name2,value2)
+{
+        var now = new Date();
+        now.setTime(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+        setCookie_exp(name1,value1,now,'/');
+        setCookie_exp(name2,value2,now,'/');
+}
+
+</script>
+</head>
+<body style="margin-top:0px;margin-left:0px">
+~if $CURRENTUSERNAME eq "test4js" or $CURRENTUSERNAME eq "test4darshan" or $CURRENTUSERNAME eq "alok_vishwakarma"`
+<embed src="/messenger_new/messenger.swf?username=~$username`&pid=~$profileid`&valuable=~$valuable`&gender=~$gender`&alreadyloggedin=~$alreadyloggedin`" width="225" height="300"></embed>
+~else`
+<embed src="http://198.104.137.142/messenger/messenger.swf?username=~$username`&pid=~$profileid`&valuable=~$valuable`&gender=~$gender`&alreadyloggedin=~$alreadyloggedin`" width="225" height="300"></embed>
+~/if`
+</body>
+
+</html>

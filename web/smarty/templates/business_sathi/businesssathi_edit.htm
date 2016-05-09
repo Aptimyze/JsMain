@@ -1,0 +1,241 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>My Business Sathi</title>
+<link rel="stylesheet" href="http://www.jeevansathi.com/profile/images/styles.css" type="text/css">
+<style type="text/css">
+<!--
+body {
+	margin-left: 5px;
+	margin-top: 5px;
+}
+-->
+</style>
+<script language="javascript">
+function disable(cbox)
+{
+	if(cbox.value=='N')
+	{
+		document.forms[0].sitename.disabled=true;
+		document.forms[0].url.disabled=true;
+		document.forms[0].desc.disabled=true;
+		document.forms[0].category.disabled=true;
+	}
+	else
+	{
+		document.forms[0].sitename.disabled=false;
+                document.forms[0].url.disabled=false;
+                document.forms[0].desc.disabled=false;
+                document.forms[0].category.disabled=false;
+	}
+}
+</script>
+</head>
+
+<body>
+<form action="businesssathi_edit.php" method="post">
+~$HEAD`
+<table width="760" border="0" align="center" cellpadding="0" cellspacing="0">
+ <tr>
+  <td width="190" valign="top" class="bgyell">~$LEFT`</td>
+  <td width="10">&nbsp;</td>
+  <td valign="top" width="560"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td height="18" class="headbigblack"><b>Business Sathi Edit Details </b></td>
+ </tr>
+ <tr>
+  <td height="1" class="bgred"><img src="images/zero.gif" width="1" height="1"></td>
+ </tr>
+ <tr>
+  <td height="8"></td>
+ </tr>
+</table>
+~if $iserror neq 0`<font color="red" size=2>There are ~$iserror` errors in your form. They are marked in red. Please correct them and submit the form again</font><br><br>
+~/if`
+   <table width="85%"  border="0" cellspacing="0" cellpadding="0">
+    <tr>
+     <td width="5%"><img src="images/zero.gif" width="30" height="1"></td>
+     <td width="95%" class="bigblack"><b style="color:#CC3300 ">1. Contact Details </b></td>
+    </tr>
+   </table>
+   <br>
+   <table width="85%"  border="0" cellspacing="0" cellpadding="0">
+    <tr>
+     <td valign="top"><img src="images/zero.gif" width="30" height="1"></td>
+     <td valign="top" class="mediumblack"><b><img src="images/zero.gif" width="180" height="1"><br>
+   a.<font color="~$nameclr`"> Name</font> </b></td>
+     <td width="100%" height="32" valign="top"><input type="text" name="name" value= "~$name`" class="testbox">
+     </td>
+    </tr>
+    <tr>
+     <td valign="top">&nbsp;</td>
+     <td valign="top" class="mediumblack"><b>b.<font color="~$emailclr`"> Email</font> </b></td>
+     <td height="32" valign="top"><input type="text" name="email" value= "~$email`" class="testbox">
+     </td>
+    </tr>
+    <tr>
+     <td valign="top">&nbsp;</td>
+     <td valign="top" class="mediumblack"><b>c.<font color="~$phoneclr`"> Telephone</font> </b></td>
+     <td height="32" valign="top" class="smallblack"><input type="text" name="phone" value= "~$phone`" class="testbox">
+     <br>   </td>
+    </tr>
+    <tr>
+     <td valign="top">&nbsp;</td>
+     <td valign="top" class="mediumblack"><b>d. Do you have a website? </b></td>
+     <td height="32" valign="top" class="mediumblack"><input name="has_site" type="radio" value="Y" ~if $has_site neq "N"` checked ~/if` onClick="javascript:disable(this)">
+      <b>Yes </b>&nbsp;&nbsp;&nbsp;&nbsp;
+      <input name="has_site" type="radio" value="N" ~if $has_site eq "N"` checked ~/if` onClick="javascript:disable(this)">
+      <b>No</b></td>
+    </tr>
+   </table>
+  <br>
+  <table width="85%"  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+    <td width="5%"><img src="images/zero.gif" width="30" height="1"></td>
+    <td width="95%" class="bigblack"><b style="color:#CC3300 ">2. Website Details ( If yes) </b></td>
+   </tr>
+  </table>
+  <br>
+  <table width="85%"  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+    <td valign="top"><img src="images/zero.gif" width="30" height="1"></td>
+    <td valign="top" class="mediumblack"><b><img src="images/zero.gif" width="180" height="1"><br>
+   a. 
+
+<font color="~$sitenameclr`">
+Website name
+</font>
+</b></td>
+    <td width="100%" height="32" valign="top"><input type="text" name="sitename" value= "~$sitename`" ~if $has_site eq "N"` disabled ~/if` Class="testbox">
+    </td>
+   </tr>
+   <tr>
+    <td valign="top">&nbsp;</td>
+    <td valign="top" class="mediumblack"><b>b. 
+
+<font color="~$urlclr`">
+Website URL </font></b></td>
+    <td height="32" valign="top"><input type="text" name="url" value= "~$url`" ~if $has_site eq "N"` disabled ~/if` class="testbox">
+    </td>
+   </tr>
+   <tr>
+    <td valign="top">&nbsp;</td>
+    <td valign="top" class="mediumblack"><b>c. 
+
+
+About your website
+
+</b></td>
+    <td height="70" valign="top" class="smallblack"><textarea name="desc" cols="50" rows="4" class="testbox" ~if $has_site eq "N"` disabled ~/if`>~$desc`</textarea></td></tr>
+   <tr>
+    <td valign="top">&nbsp;</td>
+    <td valign="top" class="mediumblack"><b>d. 
+
+
+Category of your<br>
+website</b></td>
+    <td height="32" valign="top" class="smallblack"><select name="category" size="1" class="TextBox" ~if $has_site eq "N"` disabled ~/if`>
+     ~section name=a loop=$cat`
+	<option value="~$cat[a].VAL`"   ~if $cat[a].VAL eq $category` selected ~/if`>
+	~$cat[a].LAB`
+	</option>
+	~/section`
+    </select></td>
+   </tr>
+  </table>
+  <br>
+  <table width="85%"  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+    <td width="5%"><img src="images/zero.gif" width="30" height="1"></td>
+    <td width="95%" class="bigblack"><b style="color:#CC3300 ">3. Payee details </b></td>
+   </tr>
+  </table>
+  <br>
+  <table width="85%"  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+    <td valign="top"><img src="images/zero.gif" width="30" height="1"></td>
+    <td valign="top" class="mediumblack"><b><img src="images/zero.gif" width="180" height="1"><br>
+   a. Is the contact person same as the payee? * </b></td>
+    <td width="100%" height="40" valign="top"><span class="mediumblack">
+     <input name="payee" type="radio" value="Y" ~if $payee neq "N"` checked ~/if`>
+     <b>Yes </b>&nbsp;&nbsp;&nbsp;&nbsp;
+     <input name="payee" type="radio" value="N" ~if $payee eq "N"` checked ~/if`>
+     <b>No</b></span> </td>
+   </tr>
+   <tr>
+    <td valign="top">&nbsp;</td>
+    <td valign="top" class="mediumblack"><b>b.<font color="~$payee_nameclr`"> Payee's Name*</font></b></td>
+    <td height="32" valign="top"><input type="text" name="payee_name" value= "~$payee_name`" class="testbox">
+    </td>
+   </tr>
+   <tr>
+    <td valign="top">&nbsp;</td>
+    <td valign="top" class="mediumblack"><b>c.<font color="~$mail_nameclr`"> Maling Name*</font></b></td>
+    <td height="32" valign="top" class="smallblack"><input type="text" name="mail_name" value= "~$mail_name`" class="testbox"></td>
+   </tr>
+   <tr>
+    <td valign="top">&nbsp;</td>
+    <td valign="top" class="mediumblack"><b>d.<font color="~$companyclr`"> Company</font> </b></td>
+    <td height="32" valign="top" class="smallblack"><input type="text" name="company" value= "~$company`" class="testbox"></td>
+   </tr>
+   <tr>
+    <td valign="top">&nbsp;</td>
+    <td valign="top" class="mediumblack"><b>e.<font color="~$addclr`"> Address*</font></b></td>
+    <td height="32" valign="top" class="smallblack"><input type="text" name="address" value= "~$address`" class="testbox"></td>
+   </tr>
+   <tr>
+    <td valign="top">&nbsp;</td>
+    <td valign="top" class="mediumblack"><b>f.<font color="~$cityclr`"> City*</font></b></td>
+    <td height="32" valign="top" class="smallblack"><input type="text" name="city" value= "~$city`" class="testbox"></td>
+   </tr>
+   <tr>
+    <td valign="top">&nbsp;</td>
+    <td valign="top" class="mediumblack"><b>g.<font color="~$stateclr`"> State*</font> </b></td>
+    <td height="32" valign="top" class="smallblack"><input type="text" name="state" value= "~$state`" class="testbox"></td>
+   </tr>
+   <tr>
+    <td valign="top">&nbsp;</td>
+    <td valign="top" class="mediumblack"><b>h. 
+
+
+Country*</b></td>
+    <td height="32" valign="top" class="smallblack"><select name="country" size = "1" class="TextBox">
+	 ~section name=a loop=$ctry`
+	<option value="~$ctry[a].VAL`"   ~if $ctry[a].VAL eq $country` selected ~/if`>
+	~$ctry[a].LAB`
+	</option>
+	~/section`
+	</SELECT></td>
+   </tr>
+   <tr>
+    <td valign="top">&nbsp;</td>
+    <td valign="top" class="mediumblack"><b>i.<font color="~$zipclr`"> Zip/Pin code*</font> </b></td>
+    <td height="32" valign="top" class="smallblack"><input type="text" name="zip" value= "~$zip`" class="testbox"></td>
+   </tr>
+   <tr>
+    <td valign="top">&nbsp;</td>
+    <td valign="top" class="mediumblack"><b>j. 
+
+
+PAN number (if any)</b></td>
+    <td height="32" valign="top" class="smallblack"><input type="text" name="pan" value= "~$pan`" class="testbox"></td>
+   </tr>
+  </table>
+  <br>
+  <br>
+  <br>
+  <table width="85%"  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+    <td><div align="center">
+	<input type="hidden" name="submit" value="submit">
+	<input type="image" name="submit" src="images/submit.gif" value="submit"></div></td>
+    </tr>~$msg`
+  </table>
+  <br></td>
+ </tr>
+</table>
+</form>
+</body>
+</html>

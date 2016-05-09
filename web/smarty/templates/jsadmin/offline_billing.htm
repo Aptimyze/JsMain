@@ -1,0 +1,57 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>JeevanSathi : Offline Customer Billing</title>
+  <link rel="stylesheet" href="jeevansathi1.css" type="text/css">
+  <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+</head>
+~include file="head.htm"`
+<br>
+ <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+  <table width=760 cellspacing="1" cellpadding='0' ALIGN="CENTER" >
+   <tr width=100% border=1>
+    <td width=30% class="formhead" height="23" align="center"><font><b>Welcome</b></font></td>
+    <td width=30% class="formhead" align='CENTER' height="23">
+     <a href="~$SITE_URL`/jsadmin/mainpage.php?cid=~$cid`">Click here to go to mainpage</a>
+    </td>
+    <td width=30% class="formhead" align='CENTER' height="23">
+     <a href="~$SITE_URL`/jsadmin/logout.php?cid=~$cid`">Logout</a>
+    </td>
+   </tr>
+  </table>
+~if $NOUSER`
+<p align="center"><font color="red"><strong>Username does not exist!</strong></font></p>
+~else`
+	~if $PROCEED_SEARCH`
+	<p align="center"><strong>Username found!</strong><br>
+	<a href="~$SITE_URL`/billing/search_user.php?cid=~$cid`&phrase=~$phrase`&offline_billing=1&criteria=uname">Proceed to Billing</a></p>
+	~elseif $PROCEED_NEW_ENTRY`
+		~if $MARKED_FOR_DELETION`
+			<table cellpadding="4" cellspacing="4" align="center" width="70%">
+				<tr class="fieldsnew">
+					<td align="center">
+						<font color="red" face="Arial" size="3">
+							Cannot proceed to billing for this profile as it has been marked for deletion.
+						</font>
+					</td>
+				</tr>
+			</table>
+		~else`
+			<p align="center"><strong>Username found!</strong><br>
+			<a href="new_entry_billing.php?cid=~$cid`&pid=~$pid`&phrase=~$phrase`&offline_billing=1&criteria=uname">Proceed to Billing</a>
+		~/if`
+	~/if`
+~/if`
+<br>
+<form method="post" action="offline_billing.php" name="srchfrm">
+<table border="0" cellspacing="2" cellpadding="2" width="70%" align="center">
+<tr>
+        <td class="formhead">Search for Offline Members</td>
+        <td class="fieldsnew"><input type="text" name="phrase" value="" /></td>
+        <td align="center" class="fieldsnew"><input type="submit" name="search" value="Go" class="buttons"></td>
+</tr>
+<input type="hidden" name="cid" value="~$cid`" />
+</table>
+</form>
+</body>
+</html>

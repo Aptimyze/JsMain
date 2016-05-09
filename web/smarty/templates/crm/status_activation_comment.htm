@@ -1,0 +1,41 @@
+<html>
+<head>
+<title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+<link rel="stylesheet" href="../jsadmin/jeevansathi.css" type="text/css">
+
+<script language="Javascript">
+function display()
+{
+        setTimeout("window.close()",3000);
+}
+</script>
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" ~if $CONFIRM eq 'Y'` onload="display()" ~/if`>
+<br>
+~if $CONFIRM eq 'Y'`
+	<p align = "center">~$MSG`</p>	
+~else`
+<form name="f1" action="status_activation_comment.php" method="post">
+<input type="hidden" name="cid" value=~$cid`>
+<input type="hidden" name="pid" value=~$profileid`>
+<input type="hidden" name="id" value=~$id`>
+<input type="hidden" name="user" value=~$user`>
+<input type="hidden" name="username" value=~$username`>
+<table width=60% align=center valign=center border=0>
+        <tr class="formhead">
+        <td>Enter your comments for ~$username` :</td>
+        </tr>
+        <tr class=fieldsnew>
+        <td><textarea name="comment" rows=3 cols=50></textarea></td>
+        </tr>
+        <tr>
+        <td align=center bgcolor="#F9F9F9"><input type=submit name="submit" value="Submit" class="textboxes1"></td>
+        </tr>
+</table>
+</form>
+~/if`
+</body>
+</html>
+

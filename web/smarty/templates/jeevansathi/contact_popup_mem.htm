@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Send Personalized Messages</title>
+<link rel="stylesheet" href="http://www.jeevansathi.com/profile/css/searchstyle.css" type="text/css">
+<style type="text/css">
+.bb_l {background: url(~$IMG_URL`/profile/ser4_images/bb_l.gif) 0 100% no-repeat}
+.bb_r {background: url(~$IMG_URL`/profile/ser4_images/bb_r.gif) 100% 100% no-repeat}
+.bt_l {background: url(~$IMG_URL`/profile/ser4_images/bt_l.gif) 0 0 no-repeat}
+.bt_r {background: url(~$IMG_URL`/profile/ser4_images/bt_r.gif) 100% 0 no-repeat; padding:3px} 
+.yb_l {background: url(~$IMG_URL`/profile/ser4_images/yb_l.gif) 0 100% no-repeat}
+.yb_r {background: url(~$IMG_URL`/profile/ser4_images/yb_r.gif) 100% 100% no-repeat}
+.yt_l {background: url(~$IMG_URL`/profile/ser4_images/yt_l.gif) 0 0 no-repeat}
+.yt_r {background: url(~$IMG_URL`/profile/ser4_images/yt_r.gif) 100% 0 no-repeat; padding:3px} 
+.top {background: url(~$IMG_URL`/profile/ser4_images/dot.gif) 0 0 repeat-x; width: 100%;}
+.bot {background: url(~$IMG_URL`/profile/ser4_images/dot.gif) 0 100% repeat-x}
+.lft {background: url(~$IMG_URL`/profile/ser4_images/dot.gif) 0 0 repeat-y}
+.rgt {background: url(~$IMG_URL`/profile/ser4_images/dot.gif) 100% 0 repeat-y} 
+</style>
+<script language="javascript">
+
+function call_membership()
+{
+	window.opener.location.href ='~$SITE_URL`/profile/mem_comparison.php';
+	window.close();
+}
+function call_registration()
+{
+	window.opener.location.href ='~$SITE_URL`/profile/inputprofile_tieup.php?source=sndmsg_pop';
+        window.close();
+}
+</script>
+
+</head>
+
+<body>
+<!--ROUNDED COR BOX-->
+<div class="top" style="margin:10px 10px 0px 10px; width:400px; background-color:#E0E1F8">
+	<div class="bot">
+		<div class="lft">
+			<div class="rgt">
+				<div class="bb_l">
+					<div class="bb_r">
+						<div class="bt_l">
+							<div class="bt_r">
+								<!--Content-->
+								<div class="leftflow pad4">
+									<div style="font:bold 18px verdana,arial">Registered User</div>
+									<div class="spacer">&nbsp;</div>
+									<div class="bele">How do I send personlaized message to Jeevansathi members?</div>
+									<div class="spacer15">&nbsp;</div>
+									<div>
+										<form name="form1" method="post" action="~$SITE_URL`/profile/mem_comparison.php" onSubmit="return call_membership();return false;">
+										<input type="submit" name="Submit" value="Upgrade your Membership" class="textbox" style="width:180px">
+										</form>
+									<div class="greyele">* Membership starts at ~if $NRI neq 'Y'`Rs. ~$PAY_ERISHTA.rscard2`~else` $ ~$PAY_ERISHTA.uscard2`~/if`</div>
+									</div>
+									<div class="spacer15">&nbsp;</div>
+									<div class="greyele">Along with the facility of writing unlimited personalized messages also view contact details of accepted members. You can also initiate chat with thousands of online jeevansathi members.</div>
+								</div>
+								<div class="spacer1">&nbsp;</div>
+
+							<!--Content-->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="greyele" style="margin:5px 10px 20px 10px; width:400px; color:#F7941C">** As a registered user you can send Expression of Interest <span style="background-color:#FF0000; padding:2px; color:#FFFFFF">Free</span> which will not include your contact details and personlaized message.</div>
+<!--ROUNDED COR BOX ENDS-->
+
+~if $PERSON_LOGGED_IN neq '1'`
+<!--ROUNDED COR BOX-->
+<div class="top" style="margin:10px; width:400px; background-color:#FFFABD">
+	<div class="bot">
+		<div class="lft">
+			<div class="rgt">
+				<div class="yb_l">
+					<div class="yb_r">
+						<div class="yt_l">
+							<div class="yt_r">
+								<!--Content-->
+								<div class="leftflow pad4">
+									<div style="font:bold 18px verdana,arial">New User</div>
+									<div class="spacer">&nbsp;</div>
+									<div class=" greyele">If you are not a registered member, we recommend you to register yourself with Jeevansathi.com and avail the benefits.</div>
+									 <div class="spacer15">&nbsp;</div>
+									 <div class="bele">
+										<form name="form1" method="post" action="~$SITE_URL`/profile/mem_comparison.php" onSubmit="return call_registration();return false;">
+											<input type="submit" name="Submit" value="Register Now" class="textbox" style="width:100px"> <span style="color:#FF0000">Free</span>
+										</form>
+									</div>
+								</div>
+								<div class="spacer1">&nbsp;</div>
+								<!--Content-->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+~/if`
+<!--ROUNDED COR BOX ENDS-->
+</body>
+</html>
+

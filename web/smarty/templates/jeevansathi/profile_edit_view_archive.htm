@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jeevansathi - Contact Archive</title>
+<link href="css/~$common_css`" type="text/css" rel="stylesheet">
+<link href="/css/~$edit_css`" type="text/css" rel="stylesheet">
+<style>
+	.pd_right50 {padding-right:50px;}
+	.pd_right40 {padding-right:40px;}
+</style>
+</head>
+
+<body>
+<div class="pink_edit" id="small">
+<div class="topbg_edit">
+<div class="title_edit lf">View Archive</div><div class="fr"><a href="#" class="blink_edit" onclick="$.colorbox.close();return false;">Close [x]</a></div>
+</div><div class="clear"></div>
+<div class="edit_scrollbox2_1">
+
+<table border="0" cellpadding="1" cellspacing="2" width="96%" class="tbl-data">
+<tr><td colspan="4">Email Id Archive</td></tr>
+<tr><td class="pd_right40">&nbsp;</td><td class="maroon">Date</td><td class="maroon pd_right50">&nbsp;</td><td class="maroon">IP Address</td><td class="maroon pd_right50">&nbsp;</td>
+	<td class="maroon">Saved Email Id</td></tr>
+~foreach from=$info_email item=values`
+	<tr>
+		~foreach from=$values item=k`
+		 <td >&nbsp;</td>
+		<td style="white-space:nowrap;">~$k`</td>
+		~/foreach`
+		~foreach from=$values item=k`
+		<td >~$values[ip]`</td>
+		~/foreach`
+		~foreach from=$values item=k`
+		<td >~$values[val]`</td>
+		~/foreach`
+	</tr>
+~/foreach`
+<tr><td colspan="4" style="line-height:30px">&nbsp;</td></tr>
+<tr><td colspan="4">Mobile Number Archive</td></tr>
+<tr><td class="pd_right40">&nbsp;</td><td class="maroon">Date</td><td class="maroon pd_right50">&nbsp;</td><td class="maroon">IP Address</td><td class="maroon pd_right50">&nbsp;</td>
+		<td class="maroon">Saved Mobile Number</td></tr>
+~foreach from=$info_mob item=values`
+<tr>
+~foreach from=$values item=k`
+<td>&nbsp;</td>
+<td >~$k`</td>
+~/foreach`
+~foreach from=$values item=k`
+<td >~$values[ip]`</td>
+~/foreach`
+~foreach from=$values item=k`
+<td >~$values[val]`</td>
+~/foreach`
+</tr>
+~/foreach`
+<tr><td colspan="4" style="line-height:30px">&nbsp;</td></tr>
+<tr><td colspan="4">Phone Number Archive</td></tr>
+<tr><td class="pd_right40">&nbsp;</td><td class="maroon">Date</td><td class="maroon pd_right50">&nbsp;</td><td class="maroon">IP Address</td><td class="maroon pd_right50">&nbsp;</td>
+<td class="maroon">Saved Phone Number</td></tr>
+~foreach from=$info_res item=values`
+<tr>
+~foreach from=$values item=k`
+<td>&nbsp;</td>
+<td >~$k`</td>
+~/foreach`
+~foreach from=$values item=k`
+<td >~$values[ip]`</td>
+~/foreach`
+~foreach from=$values item=k`
+<td >~$values[val]`</td>
+~/foreach`
+</tr>
+~/foreach`
+<tr><td colspan="4" style="line-height:30px">&nbsp;</td></tr>
+<tr><td colspan="4" >Contact Address Archive</td></tr>
+<tr><td class="pd_right40">&nbsp;</td><td class="maroon">Date</td><td class="maroon pd_right50">&nbsp;</td><td class="maroon">IP Address</td><td class="maroon pd_right50">&nbsp;</td>
+		<td class="maroon" style="width:448px;">Saved Contact Address</td></tr>
+~foreach from=$info_contact item=values`
+<tr>
+~foreach from=$values item=k`
+<td>&nbsp;</td>
+<td >~$k`</td>
+~/foreach`
+~foreach from=$values item=k`
+<td >~$values[ip]`</td>
+~/foreach`
+~foreach from=$values item=k`
+<td >~$values[val]`</td>
+~/foreach`
+</tr>
+~/foreach`
+<tr><td colspan="4" style="line-height:30px">&nbsp;</td></tr>
+<tr><td colspan="4">Parents' Address Archive</td></tr>
+<tr><td class="pd_right40">&nbsp;</td><td class="maroon">Date</td><td class="maroon pd_right50">&nbsp;</td><td class="maroon">IP Address</td><td class="maroon pd_right50">&nbsp;</td>
+		<td class="maroon"  style="width:448px;">Saved Parents' Address</td></tr>
+~foreach from=$info_pcontact item=values`
+<tr>
+~foreach from=$values item=k`
+<td>&nbsp;</td>
+<td >~$k`</td>
+~/foreach`
+~foreach from=$values item=k`
+<td >~$values[ip]`</td>
+~/foreach`
+~foreach from=$values item=k`
+<td >~$values[val]`</td>
+~/foreach`
+</tr>
+~/foreach`
+<tr><td colspan="4" style="line-height:30px">&nbsp;</td></tr>
+<tr><td colspan="4" >Messenger ID Archive</td></tr>
+<tr><td class="pd_right40">&nbsp;</td><td class="maroon">Date</td><td class="maroon pd_right50">&nbsp;</td><td class="maroon">IP Address</td><td class="maroon pd_right50">&nbsp;</td>
+	<td class="maroon">Saved Messenger ID</td></tr>
+~foreach from=$info_messenger item=values`
+<tr>
+~foreach from=$values item=k`
+<td>&nbsp;</td>
+<td >~$k`</td>
+~/foreach`
+~foreach from=$values item=k`
+<td >~$values[ip]`</td>
+~/foreach`
+~foreach from=$values item=k`
+<td >~$values[val]`</td>
+~/foreach`
+</tr>
+~/foreach`
+</table>
+
+</div>
+
+<div class="clear"></div>
+<div class="clear"></div>
+<div class="sp12 border-footer"></div>
+<br><br>
+
+</div>
+
+
+
+</body>
+</html>

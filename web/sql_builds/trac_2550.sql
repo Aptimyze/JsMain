@@ -1,0 +1,10 @@
+use MIS;
+
+CREATE TABLE `LOGIN_TRACKING` (
+ `PROFILEID` int(11) NOT NULL,
+ `URL` varchar(500) NOT NULL,
+ `DATE` datetime NOT NULL,
+ `CHANNEL` char(1) NOT NULL,
+ `WEBSITE_VERSION` char(1) NOT NULL,
+ `STYPE` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='login tracking'

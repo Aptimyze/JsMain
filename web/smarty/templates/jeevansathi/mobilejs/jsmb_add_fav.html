@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta http-equiv="Content-Type" content="text/xhtml+xml; charset=utf-8" />
+<title>Shortlist Profile - Jeevansathi</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<!-- Stylesheet start-->
+<link href="~$IMG_URL`/min/?f=/css/~$mobile_media_css`,/profile/css/~$mobilejs_css`,/css/~$mobilejs_revamp`,/css/~$mobile_hamburger_css`" rel="stylesheet" type="text/css" />
+<!-- Stylesheet end-->
+<link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/apple-touch-icon-72x72-precomposed.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/apple-touch-icon-114x114-precomposed.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+<script type = "text/javascript" src = "~$JQUERY_JS`"></script>
+<script src="~$IMG_URL`/min/?f=/js/html5_js.js,/js/mobBrowser_js.js,/js/~$mobHamburger_js`"></script>
+<SCRIPT>
+function restrict(chars_limit)
+{
+	message_id=document.getElementById("message");
+	if(message_id)
+	{
+		var message=message_id.value;
+		if(message.length>chars_limit)
+		{
+			message_id.value=message.substring(0,chars_limit);
+		}
+	}
+}
+</SCRIPT>
+~include file="../jeevansathi/google_analytics.htm"`
+</head>
+<body>
+	<div id="main">
+~$LEFT_SLIDER`
+<div id="maincomponent">
+<!-- Header start-->
+~$HEADER`
+<!-- Header end-->
+<!-- backbutton start-->
+<div id="mainpart">
+					<!-- Header end-->
+					<!-- search for start-->
+					<!-- Sub Title -->
+	<section class="s-info-bar">
+		<div class="pgwrapper">
+			Add to Shortlist
+			~$BREADCRUMB`
+		</div>
+	</section>
+</div>
+
+<!-- backbutton end-->
+<!-- search for start-->
+~if $ERROR_MESSAGE`
+ ~$ERROR_MESSAGE`
+ ~else`
+<!-- search for end-->
+
+<form name="form1" method="post" action="~$SITE_URL`/P/bookmark_add.php?~$NAVIGATOR`"/>
+	<input type="hidden" name="senders_data" value="~$senders_data`"/>
+	<input type="hidden" name="TYPE_OF" value="~$MODE`"/>
+	<input type="hidden" name="nav_type" value="~$NAV_TYPE`"/>
+<div class="quick1">
+	Please provide comment<br/>
+	<textarea id='message' name="MESSAGE" cols="1" rows="1" style="width:200px; height:75px; font-family:Arial, Helvetica, sans-serif; font-size:12px;" onkeyup="javascript:restrict(250)"  onblur="javascript:restrict(250)"></textarea>
+
+<!-- search button start-->
+<div class="frm-container">
+	<div class="row04">
+<input type="submit" value="Add" class="actived-btn" />
+</div>
+</div>
+</div>
+<!-- search button end-->
+</form>
+<!-- Newuser/existing user end-->
+~/if`
+</div>
+<!-- footer start-->
+~$FOOTER`
+<!-- footer end-->
+</div>
+~$RIGHT_SLIDER`
+</div>
+</body>
+</html>

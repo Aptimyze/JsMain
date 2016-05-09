@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<title>JeevanSathi Matrimonials - My Vouchers</title>
+<link rel="stylesheet" href="css/~$comm_style_css`" type="text/css">
+<style type="text/css">
+.pghd{float:left; width:99% }
+.r14{font:bold 14px verdana,Arial; color:#CC0000; padding-top:5px}
+.w1{width:3%;}
+.w2{width:95%;}
+
+</style>
+<script language="javascript">
+function checkOne()
+{
+	document.form1.clearall.checked=false;
+	document.form1.checkall.checked=false;
+}
+function selectAll()
+{
+        var docF=document.form1;
+        
+        for(var i=0;i<docF.elements.length;i++)
+        {
+                if(docF.elements[i].type=="checkbox")
+		{
+                	docF.elements[i].checked=docF.checkall.checked;
+		}
+		
+        }
+	docF.clearall.checked=false;
+
+	
+}
+function clearAll()
+{
+	var docF=document.form1;
+	for(var i=0;i<docF.elements.length;i++)
+	{
+		if(docF.elements[i].type=="checkbox")
+		{
+			docF.elements[i].checked=false;
+		}
+	}
+	docF.checkall.checked=false;
+	docF.clearall.checked=true;
+}
+function MM_openBrWindow_R(obj,theURL,winName,features)
+{
+ 
+	var flag=0;  
+	 for(var i=0;i<document.form1.elements.length;i++)
+	{
+		if(document.form1.elements[i].type=="checkbox")
+		{
+			if(document.form1.elements[i].checked == true)
+			{
+				theURL= theURL+'^'+document.form1.elements[i].value;
+				if(document.form1.elements[i].name != "clearall")
+				flag=1;
+			}
+		}
+	}
+	if(flag==1)
+	  window.open(theURL,winName,features);
+	else
+	alert("Please select atleast one voucher!");
+                
+}
+function checkEmail()
+{
+	var flag=0;
+	for(var i=0;i<document.form1.elements.length;i++)
+	{
+		if(document.form1.elements[i].checked == true)
+		{
+			if(document.form1.elements[i].name!="clearall")
+			flag=1;
+		}
+	}
+	if(flag==1)
+	return true;
+	else
+	{
+		alert("Please select atleast one voucher!");
+		return false;
+	}	
+}
+</script>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body>
+<DIV id="dhtmltooltip" class="ttip"></DIV>
+<SCRIPT language=JavaScript1.2 src="http://www.jeevansathi.com/profile/js/~$tooltip_new_js`" type=text/javascript></SCRIPT>
+<div id="container">
+<!--HEADER STARTS-->
+~$HEAD`
+<!--QUICK SEARCH STARTS-->
+<div class="spacer15">&nbsp;</div>
+<!--QUICK SEARCH ENDS-->
+<!--WRAPPER STARTS HERE-->
+<div id="wrapper">
+<!--LEFT PANNEL STARTS HERE-->
+~$LEFTPANEL`
+<!--CENTER STARTS HERE-->
+<div id="center">
+~if $NODISP eq "1"`
+<div class="pghd">
+<div class="r14"> <font color="#cc0000">~$MSG`</font></div>
+</div>
+~else`
+~if $MSG`
+<div class="pghd">
+<div class="r14"> <font color="#cc0000">~$MSG`</font></div>
+</div>
+<br /><br />
+~/if`
+<form action="myvouchers.php" name="form1" method="post">
+<div class="pghd bele bluelink">
+<div style="margin:0px 0 0 20px" class="bele">Following is the list of Vouchers available to you.<br>
+Kindly select the ones you want to redeem and click on a button to proceed
+<div class="spacer15">&nbsp;</div><div class="spacer15">&nbsp;</div>
+
+<div class="lftflow pad2" style="border-bottom:1px solid #cccccc; width:97%">
+<div style="width:200px; float:left" class="bluelink"><input type="checkbox" value="checkall" name="checkall" onclick="selectAll();">Select All</input>&nbsp;<input type="checkbox" value="clearall" name="clearall" onclick="clearAll();"></input>Clear All</div>
+<div style="width:200px; float:right">
+<input type="submit" name="Download" value="View" class="button" onclick="MM_openBrWindow_R(this,'voucher_download.php?checksum=~$CHECKSUM`&client=','mywindow',''); return false;">
+<input type="submit" name="Email" value="Email" class="button" onclick="return checkEmail();">
+</div></div>
+
+<div class="spacer15">&nbsp;</div><div class="spacer15">&nbsp;</div><div class="spacer15">&nbsp;</div>
+
+
+<div style="width:100%;">
+~section name=mainloop loop=$availoptions`
+~foreach from=$availoptions[mainloop] key=k item=v`
+~if $v`
+<div class="lftflow" style="margin-top:11px "><input type="checkbox" name="client[]" value="~$v`" onclick="checkOne();"></div>
+<div class="lftflow" style="width:130px "><a href="#"><img src="~$IMG_URL`/jsadmin/voucher_backend_display.php?clientid=~$v`&file=VLOGO" width="108" height="39" border="0" onClick="window.open('~$SITE_URL`/profile/voucher_pop.php?deal=~$v`','popup_window','width=280,height=280,resizable=no,status=0,scrollbars=0');return false;"></a></div>
+~/if`
+~/foreach`
+<div class="spacer15">&nbsp;</div><div class="spacer15">&nbsp;</div>
+~/section`
+</div>
+</div>
+
+<div class="spacer15">&nbsp;</div><div class="spacer15">&nbsp;</div><div class="spacer15">&nbsp;</div>
+<div class="lftflow pad2" style="border-top:1px solid #cccccc; width:97%">
+<div style="width:200px; float:left" class="bluelink"></div>
+<div style="width:200px; float:right">
+<input type="submit" name="Download" value="View" class="button" onclick="MM_openBrWindow_R(this,'voucher_download.php?checksum=~$CHECKSUM`&client=','mywindow',''); return false;">
+<input type="submit" name="Email" value="Email" class="button" onclick="return checkEmail();">
+<input type="hidden" name="checksum" value="~$CHECKSUM`">
+</div></div>
+
+</div>
+</div>
+</form>
+~/if`
+<!--pghd ENDS-->
+</div>
+<!--CENTER ENDS HERE-->
+</div>
+<!--WRAPPER ENDS HERE-->
+</div>
+~$FOOT`
+</body>
+</html>
+

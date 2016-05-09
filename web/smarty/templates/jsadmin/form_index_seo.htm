@@ -1,0 +1,61 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Input title and keywords for Jeevansathi.com home page</title>
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+</head>
+<body leftmargin="5" topmargin="5">
+~$HEAD`
+<br><br>
+<table width=760 cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+    <tr class="formhead">
+          <td width=55% class="formhead" border=1><font><b>Welcome : </b></font></td>
+          <td width="35%" class="formhead" align="center"><a href="mainpage.php?name=&cid=~$CID`"
+>Main Page</a></td>
+
+          <td width=10% class="formhead" border=1 align='CENTER'><a href="logout.php?cid=~$CID`">
+Logout</a></td>
+    </tr>
+</table>
+<br><br>
+<form name="f1" action="form_index_seo.php" method="post">
+<input type=hidden name=cid value=~$CID`>
+<table width="80%" align="center" border=0>
+~if $MSG`
+  <tr>
+  <td class="formhead" colspan=2 align="center">~$MSG`</td>
+  </tr>
+  <tr>
+  <td class="formhead" colspan=2 align="center"><a href="mainpage.php?cid=~$CID`">Click here to go to mainpage</a></td>
+  </tr>
+~else`
+  <tr>
+  <td class="formhead" colspan=2 align="center">Enter Title and meta tag information</td>
+  </tr>
+  <tr>
+  <td width=50% class="label" bgcolor="#F9F9F9">Title :</td>
+  <td width=50% bgcolor="#F9F9F9"><input type=text name="title" size="75" class="textboxes1" value="~$TITLE`"></td>
+  </tr>
+  <tr>
+  <td width=50% class="label" bgcolor="#F9F9F9">Description :</td>
+  <td width=50% bgcolor="#F9F9F9">
+  <textarea name ="description" cols="75" rows="3" class="textboxes1">~$DESCRIPTION`</textarea>
+  </td>
+  </tr>
+  <tr>
+  <td width=50% class="label" bgcolor="#F9F9F9">Keywords :</td>
+  <td width=50% bgcolor="#F9F9F9">
+  <textarea name ="keywords" cols="75" rows="3" class="textboxes1">~$KEYWORDS`</textarea>
+  </td>
+  </tr>
+  <tr>
+  <td bgcolor="#F9F9F9" width=50% class="label">&nbsp;</td>
+  <td width=50% align=left bgcolor="#F9F9F9"><input type=submit name="Submit" value="Submit"  class="textboxes1"></td>
+  </tr>
+~/if`
+</table>
+</form>
+~$FOOT`
+</body>
+</html>

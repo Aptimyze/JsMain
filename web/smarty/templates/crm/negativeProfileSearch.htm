@@ -1,0 +1,107 @@
+<html>  
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title> ADDING NEW USER INFORMATION </title>
+	<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+	<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+</head>
+<body>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<table width=760 cellspacing="1" cellpadding='0' ALIGN="CENTER" >
+<tr width=100% border=1>
+       	<td width=30% class="formhead" height="23" align="center"><font><b>Welcome </b></font></td>
+       	<td width=30% class="formhead" align='CENTER' height="23">
+       		<a href="mainpage.php?cid=~$cid`">Mainpage</a>
+       	</td>
+       	<td width=30% class="formhead" align='CENTER' height="23">
+	       	<a href="/jsadmin/logout.php?cid=~$cid`">Logout</a>
+       	</td>
+</tr>
+</table>
+<center><h5>Search Negative Profiles<h5><center>
+<table width=760 ALIGN="CENTER">
+<tr align="right">
+        <td>
+               <h5> <a href="negativeProfileAdd.php?cid=~$cid`">Add new profile </a></h5>
+        </td>
+</tr>
+</table>
+
+<form name="insertForm" action="negativeProfileSearch.php?cid=~$cid`" method=POST>
+<table border="0" cellspacing="2" cellpadding="2" width=80% align=center>
+~if $empty_err_msg`
+<tr>
+	<td>
+		<font color="red" size="2">Please fill up atleast one field for search</font>
+	</td>
+</tr>
+~/if`
+<br>
+<tr>
+        <td class=label width=40%>
+               <input type="radio" name="whichType" value="T" ~if $whichType eq 'T'` checked ~/if`><b>Select Type Only</b> 
+        </td>
+</tr>
+<tr>
+        <td class=label width=40%>
+		Type                           
+        </td>
+        <td class=fieldsnew>
+		<select name=selectTypeDropdown>
+			~$typeDropdown`	
+		</select>
+	</td>
+</tr>
+<tr>
+	<td class=label width=40%>
+		<input type="radio" name="whichType" value="O" ~if $whichType eq 'O'` checked ~/if`><b>Select below details</b>
+	</td>
+</tr>
+
+<tr>
+	<td class=label width=40%>
+		~if $check_mobile`<font color="red"> Mobile Number</font> ~else` Mobile Number ~/if`		
+	</td>
+	<td class=fieldsnew><input type=text   name=mobile  value="~$mobile`" maxlength='10'></td>
+</tr>
+<tr>
+        <td class=label width=40%>
+		~if $check_landline || $check_std` <font color="red"> Landline Number</font> ~else` Landline Number ~/if`
+	</td>
+	<td class=fieldsnew>
+		<input type=text name="std" value="~$std`" size=4 maxlength=6>~if $check_std` <font color="red"> STD</font> ~else` STD ~/if` &nbsp;&nbsp;
+		<input type=text name="landline" value="~$landline`" size=10 maxlength=10>~if $check_landline` <font color="red">LANDLINE ~else` LANDLINE ~/if`
+	</td>
+</tr>
+<tr>
+        <td class=label>
+        	Website 
+        </td>
+        <td class=fieldsnew><input type=text   name=website  value="~$website`"></td>
+</tr>
+<tr>
+	<td class=label>
+		~if $check_email`<font color="red"> Email</font> ~else` Email ~/if`
+	</td>
+	<td class=fieldsnew><input type=text   name=email  value="~$email`"></td>
+</tr>
+
+<tr align=center>
+	<td class=fieldsnew colspan=100%>
+		<input type=hidden  name=cid    value=~$cid`>
+		<input type=submit  name=submit value=Submit>
+	</td>
+</tr>
+</table>
+</body>
+</html>   

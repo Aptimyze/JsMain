@@ -1,0 +1,2 @@
+type=command
+command=${php5} ${docRoot}/crontabs/sugarcrm/incomplete_to_lead_cron.php

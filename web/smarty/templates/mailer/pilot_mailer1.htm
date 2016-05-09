@@ -1,0 +1,455 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>Pre-Acceptance Mailer</title>
+
+</head>
+
+
+
+<body>
+
+<table width="600" border="0" cellspacing="0" cellpadding="0" align="center" style="border:1px solid #f1e9f2; font-family:Arial, Helvetica, sans-serif; font-size:13px; color:#000000;" bgcolor="#FFFFFF">
+
+  <tr>
+
+    <td colspan="2" valign="top"><img src="~$IMG_URL`/profile/images/ppu_logo.gif" width="222" height="56" vspace="0" hspace="0" align="left" /></td>
+
+    <td colspan="2" height="59"><img src="~$IMG_URL`/profile/images/ppu_venture.gif" width="295" height="59" vspace="0" hspace="0" align="right" /></td>
+
+  </tr>	
+
+  <tr>
+
+    <td width="27">&nbsp;</td>
+
+    <td width="278" background="~$IMG_URL`/profile/images/ppu_img1.gif" height="182"><table width="262" border="0" cellspacing="0" cellpadding="0" style="font-family:Georgia, Times New Roman, Times, serif; font-size:37px; color:#000000;">
+
+      <tr>
+
+        <td height="70"></td>
+
+      </tr>
+
+      <tr>
+
+        <td><em><strong>Baat Pakki</strong></em></td>
+
+      </tr>
+
+      <tr>
+
+        <td style="color:#8c439c;" align="right">Karein?</td>
+
+      </tr>
+
+    </table></td>
+
+	<td width="268" background="~$IMG_URL`/profile/images/ppu_frame.gif" align="left" valign="top"><table width="236" border="0" cellspacing="0" cellpadding="0">
+
+  <tr>
+
+  	<td width="22">&nbsp;</td>
+
+    <td width="102">
+	<!--<img src="images/pr_imgT.jpg" width="102" height="135" vspace="20" hspace="0" align="left" />-->
+	<img src="~$receiver_photo`" width="102" height="135" vspace="20" hspace="0" align="left" />
+    </td>
+
+    <td width="10">&nbsp;</td>
+
+    <td width="102">
+	<!--<img src="images/pr_imgg.jpg" width="102" height="135" vspace="20" hspace="0" align="left" />-->
+	<img src="~$sender_photo`" width="102" height="135" vspace="20" hspace="0" align="left" />
+    </td>
+
+  </tr>
+
+</table>
+
+</td>
+
+    <td width="27">&nbsp;</td>
+
+  </tr>
+
+  <tr>
+
+    <td>&nbsp;</td>
+
+    <td colspan="2" bgcolor="#8c439c" height="28" style="font-family:Tahoma, Geneva, sans-serif; color:#fddcfd; font-size:12px; font-weight:bold;">&nbsp;~$senderUsername` has liked & expressed interest in you</td>
+
+    <td>&nbsp;</td>
+
+  </tr>
+
+  <tr>
+
+    <td>&nbsp;</td>
+
+    <td colspan="2"><table width="546" border="0" cellspacing="0" cellpadding="0" style="border:1px solid #e9dfec;">
+
+          <tr>
+
+            <td height="7"></td>
+
+            <td></td>
+
+            <td></td>
+
+            <td></td>
+
+          </tr>
+
+          <tr>
+
+            <td width="5"></td>
+
+            <td width="102">
+		<!--<img src="images/pr_imgg1.jpg" width="102" height="135" vspace="0" hspace="0" align="left" />-->
+		<a href="~$IMG_URL`/P/payment.php?services=P1W" target="_blank" style="text-decoration:none; color:#ffffff;"><img src="~$sender_photo`" width="102" height="135" vspace="0" hspace="0" align="left" /></a>
+	    </td>
+
+            <td width="7">&nbsp;</td>
+
+            <td valign="top"><table width="422" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Times New Roman, Times, serif; font-size:12px; color:#000000; line-height:17px;">
+
+                      <tr>
+
+                        <td colspan="3" height="15">&nbsp;</td>
+
+                      </tr>
+		~if $senderAge || $senderHeight`	
+                      <tr>
+                        <td width="112" height="17" valign="top"><strong>~if $senderAge`Age ~/if` &amp; ~if $senderHeight`Height ~/if`</strong></td>
+                        <td width="8">:</td>
+                        <td width="302">~$senderAge` yrs ~if $senderHeight`;~/if` ~$senderHeight`</td>
+                      </tr>
+		~/if`
+
+		~if $senderReligion || $senderCaste`
+                      <tr>
+                        <td><strong>~if $senderReligion`Religion ~/if` &amp; ~if $senderCaste`Caste ~/if`</strong></td>
+                        <td>:</td>
+                        <td>~$senderReligion` ~if $senderCaste`;~/if` ~$senderCaste`</td>
+                      </tr>
+		~/if`
+
+		~if $senderMTongue`	
+                      <tr>
+                        <td><strong>Mother Tongue</strong></td>
+                        <td>:</td>
+                        <td>~$senderMTongue`</td>
+                      </tr>
+		~/if`
+
+		~if $senderEdu || $senderOccupation`
+                      <tr>
+                        <td><strong>~if $senderEdu`Edu. ~/if` &amp; ~if $senderOccupation` Occupation ~/if`</strong></td>
+                        <td>:</td>
+                        <td>~$senderEdu`~if $senderOccupation`;~/if` ~$senderOccupation`</td>
+                      </tr>
+		~/if`
+
+		~if $senderIncome`
+                      <tr>
+                        <td><strong>Income</strong></td>
+                        <td>:</td>
+                        <td>~$senderIncome` ~if $senderIncome neq 'No Income'` per annum ~/if`</td>
+                      </tr>
+			
+		~/if`
+	
+		~if $senderLocation`
+                      <tr>
+                        <td><strong>Location</strong></td>
+                        <td>:</td>
+                        <td>~$senderLocation`</td>
+                      </tr>
+		~/if`
+
+                    </table></td>
+
+          </tr>
+
+           <tr>
+
+            <td height="7"></td>
+
+            <td></td>
+
+            <td></td>
+
+            <td></td>
+
+          </tr>
+
+        </table></td>
+
+    <td valign="bottom"><img src="~$IMG_URL`/profile/images/ppu_img5.gif" width="27" height="95" vspace="0" hspace="0" align="right" /></td>
+
+  </tr>
+
+  <tr>
+
+    <td height="54" valign="top"><img src="~$IMG_URL`/profile/images/ppu_img2.gif" width="27" height="54" vspace="0" hspace="0" align="left" /></td>
+
+    <td colspan="2" valign="top"><table width="546" border="0" cellspacing="0" cellpadding="0">
+
+  <tr>
+
+    <td height="45" background="~$IMG_URL`/profile/images/ppu_bg_img1.gif" align="center">
+	<a href="~$IMG_URL`/P/payment.php?services=P1W" target="_blank" style="text-decoration:none; color:#ffffff;"><span style="font-family:Georgia, Times New Roman, Times, serif; color:#ffffff; font-size:17px; font-weight:bold;"><em>Do you like ~$genderText1` too?</em></span><span style="font-family:Tahoma, Geneva, sans-serif; color:#fddcfd; font-size:14px; font-weight:bold;"> Send ~$genderText1` your Pone No./Email in just Rs. 299/-</span></a>
+    </td>
+
+  </tr>
+
+  <tr>
+
+    <td height="17"><img src="~$IMG_URL`/profile/images/ppu_img4.gif" width="546" height="17" vspace="0" hspace="0" align="left" /></td>
+
+  </tr>
+
+</table>
+
+</td>
+
+    <td valign="top"><img src="~$IMG_URL`/profile/images/ppu_img3.gif" width="27" height="54" vspace="0" hspace="0" align="left" /></td>
+
+  </tr>
+
+  <tr>
+
+    <td colspan="4" height="23">&nbsp;</td>
+
+  </tr>
+
+  <tr>
+
+    <td>&nbsp;</td>
+
+    <td colspan="2">Just click on the button below and ~$genderText2` will receive your contact details:</td>
+
+    <td>&nbsp;</td>
+
+  </tr>
+
+  <tr>
+
+    <td colspan="4" height="10">&nbsp;</td>
+
+  </tr>
+
+  <tr>
+
+    <td>&nbsp;</td>
+
+    <td colspan="2" valign="top">
+
+    	<table width="546" border="0" cellspacing="0" cellpadding="0">
+
+          <tr>
+
+            <td width="407" valign="top">
+
+            	<table width="390" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif; font-size:13px; color:#000000;">
+
+                  <tr>
+
+                    <td valign="top"><table width="321" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#000000;">
+
+                          <tr>
+
+                            <td width="35">&nbsp;</td>
+
+                            <td width="49" valign="bottom" align="center"><img src="~$IMG_URL`/profile/images/ppu_mobile_ic.gif" width="28" height="33" vspace="0" hspace="0" /></td>
+
+                            <td width="40">&nbsp;</td>
+
+                            <td width="53" align="center" valign="bottom"><img src="~$IMG_URL`/profile/images/ppu_mail_ic.gif" width="51" height="29" vspace="0" hspace="0" /></td>
+
+                            <td width="40">&nbsp;</td>
+
+                            <td width="108" align="center" valign="bottom"><img src="~$IMG_URL`/profile/images/ppu_lap_ic.gif" width="59" height="35" vspace="0" hspace="0" /></td>
+
+                          </tr>
+
+                          <tr>
+
+                            <td height="22">&nbsp;</td>
+
+                            <td align="center">on SMS</td>
+
+                            <td>&nbsp;</td>
+
+                            <td align="center">via Email</td>
+
+                            <td>&nbsp;</td>
+
+                            <td align="center">on Jeevansathi.com</td>
+
+                          </tr>
+
+                        </table></td>
+
+                  </tr>
+
+                  <tr>
+
+                    <td height="10">&nbsp;</td>
+
+                  </tr>
+
+                  <tr>
+
+                    <td valign="top"><table width="390" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif">
+
+                          <tr>
+
+                            <td width="223" background="~$IMG_URL`/profile/images/ppu_btn_bg.gif" height="27" style="border:1px solid #ae22cc; font-size:13px;" align="center" bgcolor="#6e257f">
+				<a href="~$IMG_URL`/P/payment.php?services=P1W" target="_blank" style="text-decoration:none; color:#ffffff;"><img src="~$IMG_URL`/profile/images/ppu_btn_ar.gif" width="16" height="13" vspace="0" hspace="0" align="right" border="0" /><strong>Send your Phone/Email Now</strong></a>
+			    </td>
+
+                            <td style="font-size:11px; color:#575656;"><img src="~$IMG_URL`/profile/images/ppu_lock.gif" width="26" height="24" vspace="0" hspace="0" align="left" /><em>Easy and secure payment options available</em></td>
+
+                          </tr>
+
+                        </table></td>
+
+                  </tr>
+
+                  <tr>
+
+                    <td height="15">&nbsp;</td>
+
+                  </tr>
+
+                  <tr>
+
+                    <td>That's not all, you can also send reminders for <strong>FREE!</strong></td>
+
+                  </tr>
+
+                   <tr>
+
+                    <td height="35">&nbsp;</td>
+
+                  </tr>
+
+                  <tr>
+
+                    <td>This <strong>value for money offer</strong> is exclusively for you and<br />can be availed <span style="font-size:17px; color:#8c439c;"><strong>till ~$dateExpiry`.</strong></span></td>
+
+                  </tr>
+
+                  <tr>
+
+                    <td height="55">&nbsp;</td>
+
+                  </tr>
+
+                  <tr>
+
+                    <td style="color:#8c439c;">For queries, call ~$execName` at +91-~$execPhone`</td>
+
+                  </tr>
+
+                </table>
+
+
+
+            </td>
+
+            <td width="139"><table width="139" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif;">
+
+                  <tr>
+
+                    <td style="font-size:13px; color:#8c439c;" valign="bottom" width="139"><img src="~$IMG_URL`/profile/images/ppu_arrow.gif" width="12" height="26" vspace="5" hspace="0" align="right" /><em>This is how your message will appear</em></td>
+
+                  </tr>
+
+                  <tr>
+
+                    <td background="~$IMG_URL`/profile/images/ppu_mobile.jpg" height="272" valign="top"><table width="139" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif; font-size:11px;">
+
+                          <tr>
+
+                            <td colspan="3" height="56">&nbsp;</td>
+
+                          </tr>
+
+                          <tr>
+
+                            <td width="19"></td>
+
+                            <td align="center" width="103"><strong>TD-JvnSathi</strong></td>
+
+                            <td width="17"></td>
+
+                          </tr>
+
+                          <tr>
+
+                            <td colspan="3" height="10"></td>
+
+                          </tr>
+
+                          <tr>
+
+                            <td>&nbsp;</td>
+
+                            <td style="font-size:11px; line-height:15px;">
+				<a href="~$IMG_URL`/P/payment.php?services=P1W" target="_blank" style="text-decoration:none;">
+				Hi, ~$genderText3` (~$receiverUsername`)<br />also like your profile.<br />
+				Please contact ~$genderText4` at<br />
+				+~$receiverISD`-~if $receiverMobile neq ''`~$receiverMobile` ~else` ~$receiverResidence` ~/if` or<br />
+				~$receiverEmail`<br />
+				</a>
+			    </td>
+
+                            <td>&nbsp;</td>
+
+                          </tr>
+
+                        </table></td>
+
+                  </tr>
+
+                </table></td>
+
+          </tr>
+
+        </table>
+
+
+
+    </td>
+
+    <td>&nbsp;</td>
+
+  </tr>
+
+    <tr>
+
+    <td height="10">&nbsp;</td>
+
+    <td>&nbsp;</td>
+
+    <td>&nbsp;</td>
+
+    <td>&nbsp;</td>
+
+  </tr>
+
+</table>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,74 @@
+<html>
+<head>
+   <title>Increase Credits</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<!--link rel="stylesheet" href="stylesheet.css" type="text/css"-->
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+</head>
+~include file="head.htm"`
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table width=760 cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+    <tr class="formhead">
+          <td width=33% class="formhead" border=1 align="center"><font><b>Welcome ~$user`</b></font></td>
+          <td width="33%" class="formhead" align="center"><a href="mainpage.php?cid=~$cid`">Main Page</a></td>
+          <td width=33% class="formhead" border=1 align='CENTER'><a href="logout.php?cid=~$cid`">Logout</a></td>
+    </tr>
+</table>
+<br>
+<form action="ap_increase_credits.php" method="post">
+<input type="hidden" name="cid" value="~$cid`">
+~if $totalCount || $usedCount`
+<input type="hidden" name="totalCount" value="~$totalCount`">
+<input type="hidden" name="usedCount" value="~$usedCount`">
+<input type="hidden" name="searchedUserName" value="~$userName`">
+<input type="hidden" name="profileid" value="~$profileid`">
+<table width="600" align="center" cellspacing="5" cellpadding="2">
+<tr align="center" class="fieldsnew">
+<td align="center" class="label">Username</td>
+<td align="center">~$userName`</td>
+</tr>
+<tr align="center" class="fieldsnew">
+<td align="center" class="label">Total Count</td>
+<td align="center">~if $totalCount`~$totalCount`~else`0~/if`</td>
+</tr>
+<tr align="center" class="fieldsnew">
+<td align="center" class="label">Used Count</td>
+<td align="center">~if $usedCount`~$usedCount`~else`0~/if`</td>
+</tr>
+<tr align="center" class="fieldsnew">
+<td align="center" class="label">Enter credits to be added</td>
+<td align="center">
+<select name="addCredits">
+~section name=next loop=$credits`
+<option value="~$credits[next]`">~$credits[next]`</option>
+~/section`
+</select>
+</td>
+</tr>
+<tr align="center" class="fieldsnew">
+<td align="center" class="label" colspan="2"><input type="submit" name="increaseCredits" value="Increase Credits"></input></td>
+</tr>
+</table>
+<br><br>
+~/if`
+~if $errorMessage`
+<p align="center">~$errorMessage`</p>
+~/if`
+<table align="center" width="60%">
+<tr class="formhead">
+<td width="50%" align="center">
+Enter username
+</td>
+<td width="50%" align="center">
+<input type="text" name="userName" value="~$userName`"></input>
+</td>
+</tr>
+<tr class="formhead">
+<td colspan="2" align="center">
+<input type="submit" name="searchProfile" value="Submit">
+</td>
+</tr>
+</table>
+</form>
+</body>
+</html>

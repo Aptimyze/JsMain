@@ -1,0 +1,237 @@
+.com_right1 {
+	right:0;
+	top:15px
+}
+.com_left1 {
+	left:0;
+	top:0
+}
+.com_brdr_radsrp {
+	border-top-left-radius:38px;
+	border-top-right-radius:38px;
+	border-bottom-right-radius:38px;
+	border-bottom-left-radius:38px;
+}
+.com_cross {
+	background-position: -161px -227px;
+	width: 23px;
+	height: 23px;
+}
+.com_pad1 {
+	padding:20px 10px 20px 0
+}
+.com_pad_l{
+	padding-left:50px;
+}
+.com_pad2{padding:0px 0px 2px 10px}
+.ot_active{background-color:#ebedef;color:#34495e}
+.ot_notactive{color:#ebedef}
+.ot_brdr1{border:1px solid #ebedef}
+.ot_pos1{left:0;top:5px}
+.ot_pos2 {top: -4px;right: 0;}
+.ot_msg{background-position: -228px -49px;width: 28px;height: 20px;}
+.ot_dot{background-position: -277px -59px;width: 11px;height: 39px;}
+.ot_sprtie{	background-image:url(/images/ot_sprtie.png);	background-repeat:no-repeat;}
+.ot_chk{background-position: -5px -4px;width: 34px;height: 18px;}
+.ot_icon1{background-position: -6px -26px;width: 24px;height: 25px;}
+.ot_bell{background-position: -4px -58px;width: 28px;height: 26px;}
+.ot_pos3 {top:25px;right:20px;}
+.ot_pos4 {top:85px;right:20px;}
+.ot_pos5{top: -5px;right: -6px;}
+.ot_ntf1{width:20px; height:20px;border-top-left-radius:38px;	border-top-right-radius:38px;	border-bottom-right-radius:38px;	border-bottom-left-radius:38px;}
+.ot_blurred {  -webkit-filter: blur(8px);  -moz-filter: blur(8px);  -o-filter: blur(8px);  -ms-filter: blur(8px);    opacity:0.5}
+.ot_bg1{background-color:#364046}	
+/* new css added for 9.-accepted-member---paid */
+.com_pad3{padding:5px 0 5px 10px}
+.com_pad4{padding:12px 14px 0 0}
+.inp_1{background-color:#5f4247; border-radius:5px;}
+.brdr23_contact {
+	border-top: 1px solid #4f4541;
+}
+.padl30_contact {
+	padding-left:35px;
+}
+.topM_con {
+	margin-top:100px;
+}
+.pad2_con{
+	padding: 12px 0px;	
+}
+
+.reportAbuse{
+    background-position: -158px -322px;
+    width: 22px;
+    height: 23px;
+}
+
+.con_errorIcon{
+        background-position: -124px -321px;
+        width: 30px;
+        height: 28px;
+}
+.tapoverlayContact {
+        z-index: 101;
+        overflow-x:none;
+        overflow-y:auto;
+        width:100%;
+}
+
+#contactLoader {
+vertical-align:middle; 
+text-align:center;
+top: 180px;
+bottom: 0%;
+left: 0%;
+right: 0%;
+z-index:1000;
+ }
+.top20px {
+	margin-top: 16px; 
+}
+.lh15{
+	line-height:15px;
+}
+.pad20_con{
+	padding: 22px 0px;
+}
+.lineH_con{
+	line-height:40px;
+	text-align:center;
+}
+.contact_dialog_overlay {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        background: rgb(0,0,0);
+        opacity: .70;
+        filter: alpha(opacity=70);
+        -moz-opacity: .70;
+        z-index: 109;
+        overflow-x:none;
+}
+.loaderOverlayDialog{
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        background: rgb(0,0,0);
+        opacity: .95;
+        filter: alpha(opacity=95);
+        -moz-opacity: .95;
+        z-index: 109;
+        overflow-x:none;
+        overflow-y:hidden;
+}
+.srpoverlay_2 {width: 100%;position: absolute;left: 0%;z-index: 109;}
+.blurry-text {
+text-shadow: 0 0 32px white;
+color: transparent;
+}
+.txtAr_bg1{background-color:#272727}
+.hdrHght_con{
+	height:48px;
+}
+.txtl_10p{
+	padding-left:10px;
+}
+.deleteDecline{
+	background-image:url(IMG_URL/images/jsms/commonImg/decline.png); background-repeat: no-repeat; background-position: -6px -90px; width: 25px; height: 25px;
+}
+.deleteDeclineNew{
+  background-image:url(IMG_URL/images/jsms/commonImg/main-sprite.png); background-position: -162px -230px; width: 20px; height: 19px;;
+}
+.blurred_bg_contacts_groom{
+	background-image:url(IMG_URL/images/jsms/commonImg/grooms.jpg);
+	background-repeat: no-repeat;
+	background-size:100%;
+}
+.blurred_bg_contacts_bride{
+	background-image:url(IMG_URL/images/jsms/commonImg/brides.jpg);
+	background-repeat: no-repeat;
+	background-size:100%;
+}  
+.comH_radius {
+	border-radius:5px
+}
+.comH_pos2 {
+	bottom:20px
+}
+.sclick_colr1 {
+  color: #666666
+  }
+
+.newitcross {
+  background-image:url(/images/jsms/commonImg/newoticon1.png);  
+  background-repeat:no-repeat;
+  background-position:1px 1px; width:20px; height:20px
+  }
+
+.newitchk {
+  background-image:url(/images/jsms/commonImg/newoticon1.png);
+  background-repeat:no-repeat;
+  background-position:1px -27px; width:22px; height:20px
+}
+
+
+/* css for report abuse*/
+.com_cross {
+    background-position: -161px -227px;
+    width: 23px;
+    height: 23px;
+}      
+.srp_box3 {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: 5px;
+    top: 0px;
+}  
+
+
+.arow_new {
+    background-position: -41px -53px;
+    width: 25px;
+    height: 19px;
+    margin-left: 7px;
+    position: absolute;
+    margin-top: 15px;
+}
+.dashedBorder {
+    border-bottom: 1px dotted #7e7e7e;
+}
+.brdr_new {
+     border-bottom: 1px solid #7e7e7e;
+}
+.view_ce {
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+} 
+.RAcorrectImg {
+    position: absolute;
+    right: 12px;
+}
+    
+ .reportAbuseScreen{
+    display: inline-block;
+    width: 50%;
+    position: relative;
+}
+
+.pad3015{
+    padding: 30px 15px;
+
+}
+
+.z112{z-index:112;}

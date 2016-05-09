@@ -1,0 +1,37 @@
+<html>
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+        <link rel="stylesheet" href="jeevansathi1.css" type="text/css">
+        <title>Jeevansathi - Billing</title>
+</head>
+<body>
+<table width="90%" cellpadding="4" cellspacing="4" align="center">
+	<tr>
+		<td class="formhead" align="center" colspan="6">Edit History</td>
+	</tr>
+	<tr>
+		<td class="label" align="center">Username</td>
+		<td class="label" align="center">Bill ID</td>
+		<td class="label" align="center">Receipt ID</td>
+		<td class="label" align="center">Changes Made</td>
+		<td class="label" align="center">Entry By</td>
+		<td class="label" align="center">Entry Date</td>
+	</tr>
+	~section name=next loop=$arr`
+	<tr>
+		<td class="fieldsnew" align="center">~$username`</td>
+		<td class="fieldsnew" align="center">~$arr[next].BILLID`</td>
+		<td class="fieldsnew" align="center">~$arr[next].RECEIPTID`</td>
+		<td class="fieldsnew" align="center">~$arr[next].CHANGES`</td>
+		<td class="fieldsnew" align="center">~$arr[next].ENTRYBY`</td>
+		<td class="fieldsnew" align="center">~$arr[next].ENTRY_DT`</td>
+	</tr>	
+	~/section`
+	<tr>
+		<td class="fieldsnew" align="center" colspan="6">
+			<input type="button" name="close" value="Close" class="buttons1" onclick="window.close();">
+		</td>
+	</tr>
+</table>
+</body>
+</html>

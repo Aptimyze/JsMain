@@ -1,0 +1,50 @@
+/* Comman fonts */
+.ele_gray{font:Verdana, Arial 11px; color:#9c9c9c;}
+.bten{font:normal 10px verdana,Arial;}
+.befs{font-family:Verdana, Arial; font-size:11px; color:#000000;}
+.elebold{font-size:11px; font-weight:bold; color:#FFFFFF; text-align:left;}
+a.elebold:link , a.elebold:visited, a.elebold:active{font-size:11px; font-weight:bold; text-decoration:none; color:#FFFFFF; text-align:left;}
+.textbox{FONT-SIZE: 11px; FONT-FAMILY: verdana,Arial;}
+.spacer{clear:both; line-height:8px;}
+.spacer1{clear:both; line-height:4px;}
+.row{float:left;width:100%;}
+.r1	{float:left; width:22%; font:bold 11px verdana,arial; padding:5px 10px 4px 0; text-align:right}
+.r2	{float:left; width:76%; font:normal 11px verdana,arial; color:#000000; padding:3px 0 4px 0;}
+.l1	{float:left; width:26%; font:bold 11px verdana,arial; padding:5px 10px 4px 0; text-align:right}
+.l2	{float:left; width:70%; font:normal 11px verdana,arial; color:#000000; padding:3px 0 4px 0;}
+.button{background-image:url(IMG_URL/profile/images/registration_new/bgbutton.gif); border:#b7b4b2 1px; border-style:solid; font:normal 10px arial; text-align:center; background-repeat:repeat-x; width:46px; color:#454544; height:20px;}
+.blbutton{background-image:url(IMG_URL/profile/images/registration_new/blbutton.gif); border:#85b2d1 1px; border-style:solid; font:normal 10px arial; text-align:center; background-repeat:repeat-x; width:46px; color:#454544; height:20px;}
+textarea {font:11px normal verdana; color:#989491; width:100px; height:50px;}
+select{font-family: verdana, Arial, Helvetica, sans-serif;font-size: 11px;color:#000;}
+a.blue:link, a.blue:visited, a.blue:active{font-weight:bold; color:#0550ad;}
+a.gr:link, a.gr:visited, a.gr:active {color:#27aae2; text-decoration:none;}
+/* CSS 4 Multipal select  */>
+.dhrow{padding:2px 0 2px 0; float:left; width:100%;}
+div.dhrow input{vertical-align:middle;margin:2px;}
+.clear{clear:both;}
+.scrollHolder{position:relative; overflow:hidden;width:185px; height:170px;z-index:100;}
+/*.scrollWindow{position:absolute; left:0px; top:0px; width:170px; height:170px; clip:rect(0px, 170px, 170px, 0px); overflow:hidden;z-index:1; }*/
+.scrollWindow{position:absolute; left:0px; top:0px; width:185px; height:170px; overflow:hidden;z-index:1; }
+.scrollLinks{width:14px}
+.scrollBar{position:relative; left:0; top:0;width:14px; height:144px; font-size:1px; z-index:1;}
+.scrollUp{position:absolute; left:0; top:0; z-index:2 }  
+.scrollTrack{position:absolute; left:0; top:15px;width:14px; height:116px;background-image:url(IMG_URL/profile/images/registration_new/track.gif); background-repeat:repeat-y; z-index:1;}
+.scrollDragBar{position:absolute; left:1px; top:1px;width:14px; height:47.3868px;background-image:url(IMG_URL/profile/images/registration_new/bar.gif);background-repeat:no-repeat;z-index:1;}  
+.scrollDown{position:absolute; left:0; bottom:0; z-index:3 }  
+.scrollDiv{overflow-y:auto;overflow-x:hidden;height:170px;width:183px};
+div.content{position:absolute; visibility:hidden;left:0px; top:0px; z-index:1;}
+table.main{ background-color:#ecf6ff; margin:0px; padding:0px;width:189px; text-align:left;}
+table.main td.text{vertical-align:top; text-align:left; width:189px; padding:0px; }
+a:link, a:visited{color:#339}	
+a img{border:none}
+.msheading{font:bold 11px verdana,arial; line-height:17px; padding:5px 4px 5px 7px;}
+.dhbutton{background-image:url(IMG_URL/profile/images/registration_new/dhbutton.gif); border:#b7b4b2 1px; border-style:solid; font:normal 10px arial; text-align:center; background-repeat:repeat-x; width:100px; color:#454544; height:15px; }
+
+/*added for input boxes for div content*/
+#divcontent input{font:10px arial;}
+
+.b{font-weight:bold}
+.rf{float:right}
+.lf{float:left}
+.green{color:#33b300;}
+.mar_left_10{margin-left:10px;}

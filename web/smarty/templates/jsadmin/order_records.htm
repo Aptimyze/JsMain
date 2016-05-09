@@ -1,0 +1,141 @@
+<html>
+<head>
+<title>Order Records</title>
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+</head>
+<body>
+<br><br>
+~if $search eq 'Y'`
+<table width=760 align="center">
+<tr class=formhead>
+<td align="left">Services :=>&nbsp;&nbsp;F -> Full Member&nbsp;&nbsp;B->Profile Highlighting</td>
+<td align="right"><a href="../jsadmin/logout.php?cid=~$CID`">Logout</a></td>
+</tr>
+</table>
+~/if`
+<br><br>
+~if $init eq 'Y'`
+<form method=post action="../billing/order_records.php">
+<table width=50% align="center">
+<tr class=formhead><td colspan=6>Search on one criteria</td></tr>
+<tr> 
+<td class=label><input name="criteria" type="radio" value='D' >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date </td>
+<td class=fieldsnew>
+<input type="text" name="syear" value="~$syear`" size=4>
+<input type="text" name="smonth" value="~$smonth`" size=2>
+<input type="text" name="sday" value="~$sday`" size=2>
+&nbsp;&nbsp;
+To
+&nbsp;&nbsp;
+<input type="text" name="eyear" value="~$eyear`" size=4>
+<input type="text" name="emonth" value="~$emonth`" size=2>
+<input type="text" name="eday" value="~$eday`" size=2>
+</td>
+</tr><tr><td class=label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Transacion type</td>
+<td class=fieldsnew><select name="ttype">
+	<option value="Y">Transactions Successful</option>
+	<option value="N">Transactions Failed</option>
+	<option value="">No Response </option>
+	<option value="A">Transactions Accepted</option>
+	<option value="R">Transactions Rejected</option>
+	<option value="B">Transactions on Hold</option>
+	<option value="ALL">ALL</option>
+</select></td>
+</tr>
+<tr>
+<td class=label >
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Group By </td>
+<td class=fieldsnew><select name="group_by">
+        <option value="USERNAME">Username</option>
+        <option value="ID">Entry_Time</option>
+	</select>
+</td>
+</tr>
+
+</table>
+<br>
+<table width=50% align="center">
+<tr> 
+<td class=label ><input name="criteria" type="radio" value='U' >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Username : </td>
+<td class=fieldsnew>
+<input type="text" name="username">
+</td>
+</tr>
+</table>
+<br>
+<table width=50% align="center">
+<tr>
+<td class=label><input name="criteria" type="radio" value='O' >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OrderID : </td>
+<td class=fieldsnew>
+<input type="text" name="orderid">
+</td>
+</tr>
+<tr>
+<td colspan=2 align="center" class=fieldsnew>
+<input type="submit" name="CMDSearch" value="Search">
+<input type="hidden" name="user" value="~$USER`">
+<input type="hidden" name="cid" value="~$CID`">
+</form>
+~elseif $search eq 'Y'`
+<form action="../billing/order_records.php" method=post>
+<table width=760 align="center" border=0>
+<tr class=formhead>
+<td>Username</td>
+<td>Date</td>
+<td>Paymode</td>
+<td>Service</td>
+<td>Duration</td>
+<td>Status</td>
+<td>Amount</td>
+<td>Email</td>
+<td>Orderid</td>
+<td>Gateway</td>
+<td>Subscription</td>
+<!--<td>Accept</td>-->
+<td>Reject</td>
+<td>Deselect</td>
+</tr>
+~section name="sec" loop=$orderarr`
+~if $orderarr[sec].orderid eq $ord_id`<tr bgcolor='pink'>
+~else`
+<tr class=fieldsnew>
+~/if`
+<td>~$orderarr[sec].username`</td>
+<td>~$orderarr[sec].entry_dt`</td>
+<td>~$orderarr[sec].paymode`</td>
+<td>~$orderarr[sec].servefor`</td>
+<td>~$orderarr[sec].duration` M</td>
+<td ~if $FAIL eq 'Y'` class="red" ~/if`>~$orderarr[sec].status`</td>
+<td>~$orderarr[sec].amount`</td>
+<td>~$orderarr[sec].bill_email`</td>
+<td>~$orderarr[sec].orderid`</td>
+<td>~$orderarr[sec].gateway`</td>
+<td>~$orderarr[sec].subscription`</td>
+<!--<td><input type="radio" name="~$orderarr[sec].orderid`" value="A"></td>-->
+<td><input type="radio" name="~$orderarr[sec].orderid`" value="R"></td>
+<td><input type="radio" name="~$orderarr[sec].orderid`" value="" checked></td>
+</tr>
+~/section`
+<!--
+<tr class=fieldsnew><td colspan=10 align="right">
+<select name="acc_rej">
+<option value="A">Accept</option>
+<option value="R">Reject</option>
+</select></td>
+</tr>
+-->
+<tr class=fieldsnew>
+<td colspan=9 align="right">Stop Services</td>
+<td><input type="checkbox" name="service" value="Y"></td>
+</tr>
+<tr class=fieldsnew>
+<td colspan=10 align="right"> <input type="submit" name="CMDGo" value="   Go   ">
+<input type="hidden" name="user" value="~$USER`">
+<input type="hidden" name="cid" value="~$CID`">
+</form>
+~else`
+<br><br>
+<center>~$MSG`</center>
+~/if`
+</body>
+</html>

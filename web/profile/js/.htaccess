@@ -1,0 +1,7 @@
+<IfModule mod_rewrite.c>
+RewriteEngine on
+RewriteOptions inherit
+RewriteRule ^search.js$ search.php [T=application/x-httpd-php]
+RewriteRule ^headnew.js$ headnew.php [T=application/x-httpd-php]
+</IfModule>
+

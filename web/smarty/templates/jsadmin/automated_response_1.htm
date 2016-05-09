@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<base href='~$SITE_URL`/profile/'>
+<title>Untitled Document</title>
+</head>
+
+<body>
+<table width="600" border="0" align="center" cellpadding="0" cellspacing="0" style="border:solid 1px #d6d6d6;">
+  <tr>
+    <td valign="top" bgcolor="#FBE6B1"><img src="~$SITE_URL`/profile/images/logo.gif" alt="Jeevansathi.com" width="341" height="91" hspace="0" vspace="0" border="0" align="left" usemap="#Map" style="font-family:Arial, Helvetica; font-size:23px; color:#d7151e; font-weight:bold; font-style:italic;" /></td>
+    <td valign="top" bgcolor="#FBE6B1"><img src="~$SITE_URL`/profile/images/img1.jpg" width="259" height="91" align="left" vspace="0" hspace="0" /></td>
+  </tr>
+  <tr>
+    <td valign="top" bgcolor="#8FBC01"><img src="~$SITE_URL`/profile/images/img2.gif" width="341" height="190" align="left" vspace="0" hspace="0" alt="Welcome to Jeevansathi family" style="font-family:Georgia, 'Times New Roman'; font-size:20px; color:#ffffff; font-weight:bold; font-style:italic;" /></td>
+    <td valign="top" bgcolor="#8FBC01"><img src="~$SITE_URL`/profile/images/img3.jpg" width="259" height="190" align="left" vspace="0" hspace="0" /></td>
+  </tr>
+  <tr>
+    <td height="7" colspan="2" valign="top" bgcolor="#fef7e7"></td>
+  </tr>
+  <tr>
+    <td colspan="2" style="padding:20px 20px 20px 22px;" align="justify"><div style="font-family:Verdana, Arial; font-size:12px; line-height:19px; color:#393939;"><b>Dear ~$username`,</b><br /><br />
+<span style="color:#d60202;"><b>Your profile has been activated</b></span> and is now live on the site. It can be viewed by others members, according to your privacy settings. <a href="~$SITE_URL`/profile/revamp_privacy_settings.php?from_mail=1" target="_blank" style="color:#0039a2; text-decoration:underline;">Click to view settings</a><br />
+<br />
+You can also share your profile with others through your personal link : <br />
+<a href="~$SITE_URL`/profiles/~$username`" target="_blank" style="color:#0039a2; text-decoration:underline;">http://www.jeevansathi.com/profiles/~$username`</a></div></td>
+  </tr>
+~if $show neq 1`
+  <tr>
+    <td colspan="2" style="padding:15px 20px 10px 22px;"><div style="font-family:Verdana, Arial; font-size:12px; color:#565656; line-height:19px;"><b>To get the most out of Jeevansathi.com, we request you to provide the following details :</b></div></td>
+  </tr>
+  <tr>
+    <td colspan="2" style="padding:0px 0px 10px 22px;">
+     <table width="560" border="0" cellspacing="0" cellpadding="0">
+	~if $condition[1] eq 1`
+      <tr>
+        <td width="66" align="left" valign="top" style="padding-top:4px;"><a href="~$SITE_URL`/profile/view.php?checksum=~$CHECKSUM`&profilechecksum=~$myprofilechecksum`&EditWhatNew=FocusPhoto"><img border=0 src="~$SITE_URL`/profile/images/icon1.gif" width="66" height="52" /></a></td>
+        <td width="494" align="left" valign="top"><div style="font-family:Verdana, Arial; font-size:13px; color:#7da502; line-height:28px;"><a href="~$SITE_URL`/profile/view.php?checksum=~$CHECKSUM`&profilechecksum=~$myprofilechecksum`&EditWhatNew=FocusPhoto"><b>Add photo &amp; make an album</b></a></div>
+            <div style="font-family:Verdana, Arial; font-size:12px; line-height:18px; color:#626161;">Add your photos &amp; increase the response you receive by 10 times as profiles with photos are viewed more. </div></td>
+      </tr>
+	~/if`
+	~if $condition[2] eq 1`
+      <tr>
+        <td colspan="2" align="left"><img src="~$SITE_URL`/profile/images/spacer.gif" width="400" height="20" /></td>
+      </tr>
+      <tr>
+        <td align="left" valign="top" style="padding-top:3px;"><a href="~$SITE_URL`/profile/view.php?checksum=~$CHECKSUM`&profilechecksum=~$myprofilechecksum`&EditWhatNew=incompletProfile"><img border=0 src="~$SITE_URL`/profile/images/icon2.gif" width="52" height="48" /></a></td>
+        <td align="left" valign="top"><div style="font-family:Verdana, Arial; font-size:13px; color:#7da502; line-height:28px;"><b><a href="~$SITE_URL`/profile/view.php?checksum=~$CHECKSUM`&profilechecksum=~$myprofilechecksum`&EditWhatNew=incompletProfile">Details about your family</a></b></div>
+            <div style="font-family:Verdana, Arial; font-size:12px; line-height:18px; color:#626161;">Your family reflects a lot about you. Give a brief description about your parents, what they do and what their backgrounds are.</div></td>
+      </tr>
+        ~/if`
+        ~if $condition[3] eq 1`
+      <tr>
+        <td colspan="2" align="left"><img src="~$SITE_URL`/profile/images/spacer.gif" width="400" height="20" /></td>
+      </tr>
+      
+      <tr>
+        <td align="left" valign="top" style="padding-top:3px;"><a href="~$SITE_URL`/profile/view.php?checksum=~$CHECKSUM`&profilechecksum=~$myprofilechecksum`&EditWhatNew=aboutDPP"><img border=0 src="~$SITE_URL`/profile/images/icon3.gif" width="46" height="54" /></a></td>
+        <td align="left" valign="top"><div style="font-family:Verdana, Arial; font-size:13px; color:#7da502; line-height:28px;"><a href="~$SITE_URL`/profile/view.php?checksum=~$CHECKSUM`&profilechecksum=~$myprofilechecksum`&EditWhatNew=aboutDPP"><b>Describe your desired partner profile </b></a></div>
+            <div style="font-family:Verdana, Arial; font-size:12px; line-height:18px; color:#626161;">To help us match the right profiles with you, tell us what kind of a life partner you are looking for.</div></td>
+      </tr>
+	~/if`
+      <tr>
+        <td colspan="2" align="left"><img src="~$SITE_URL`/profile/images/spacer.gif" width="400" height="20" /></td>
+      </tr>
+
+
+    </table>
+   </td>
+  </tr>
+~/if`
+  <tr>
+    <td colspan="2" align="left" valign="top" style="padding:0px 0px 32px 22px;"><table width="281" border="0" align="left" cellpadding="0" cellspacing="0">
+        <tr>
+          <td width="281" height="52" align="center" valign="middle" background="~$SITE_URL`/profile/images/button_bg.gif" bgcolor="#84AD05"><div style="font-family:Arial, Helvetica; font-size:18px; color:#ffffff;"><b><a href="~$SITE_URL`/P/view.php?profilechecksum=~$PROFILE_CHECKSUM`" style="color:#ffffff; text-decoration:none; display:block;">Complete your profile now</a></b></div></td>
+        </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="left" valign="top" style="padding:0px 0px 5px 30px;"><div style="font-family:Verdana, Arial; font-size:12px; color:#565656;"><b>In case of a query :</b></div></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="left" valign="top" background="~$SITE_URL`/profile/images/footer_bg.gif" style="padding:8px 0px 15px 37px;"><div style="font-family:Verdana, Arial; font-size:11px; color:#3d3d3d; line-height:21px;">Please reach us at : B-8, Sector - 132, Noida - 201301<br />
+      Phone no : 0120 - 4393500, 0120 - 6000629<br />
+      E-mail id : <a href="mailto:feedback@jeevansathi.com" style="color:#0478e5; text-decoration:underline;"><b>feedback@jeevansathi.com</b></a></div></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="left" valign="top" style="padding:22px 0px 22px 22px;"><div style="font-family:Verdana, Arial; font-size:12px; color:#000000; line-height:22px;">Wish you good luck in your search for Jeevansathi.<br />
+            <br />
+            <b>Regards,<br />
+            <font color="#c4151c">Jeevansathi</font>.com Team</b> </div></td>
+  </tr>
+</table>
+
+<map name="Map" id="Map"><area shape="rect" coords="18,17,262,78" href="http://www.jeevansathi.com/" target="_blank" />
+</map>
+<table width="600" border="0" align="center" cellpadding="0" 
+cellspacing="0">
+
+  <tr>
+
+    <td style="padding:15px 0px 0px 0px; font-family:Verdana, Arial; 
+font-size:10px; color:999999;"><div align="center" 
+style="font-size:10px; color:999999; font-family:Verdana, Arial;">You
+are receiving this mail as a registered member of Jeevansathi.com. In
+case you do not wish to receive mails from Jeevansathi.com in the
+future, you can <a 
+href="~$SITE_URL`/profile/unsubscribe.php">unsubscribe</a></div></td>
+
+  </tr>
+
+</table>
+</body>
+</html>
+

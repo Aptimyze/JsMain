@@ -1,0 +1,641 @@
+<html><head><title>Billing@jeevansathi.com</title>
+<script language="javascript">
+function validate_amount()
+{
+        if(document.insertForm.amount.value>9999)
+        {
+                alert("Amount can not exceed Rs 10000");
+                document.insertForm.amount.value=0
+                                                                                                                             
+        }
+}
+function validate_matri_serv()
+{
+        if(document.insertForm.service_type.value=="M")
+	{
+                document.insertForm.duration_sel.disabled=true;
+		var docF=document.insertForm;
+		cboxes = docF['addon_services[]'];
+                                                                                                                             
+		for(var i=0;i<cboxes.length;i++)
+		{
+			if(cboxes[i].type=="checkbox")
+			{
+				cboxes[i].checked=false;
+				cboxes[i].disabled=true;
+			}
+		}
+
+	}
+	else
+	{
+		
+		document.insertForm.duration_sel.disabled=false;
+		var docF=document.insertForm;
+		cboxes = docF['addon_services[]'];
+                                                                                                                             
+                for(var i=0;i<cboxes.length;i++)
+                {
+                        if(cboxes[i].type=="checkbox")
+                        {
+                                cboxes[i].disabled=false;
+                        }
+                }
+
+                                                                                                                             
+
+	}
+}
+
+
+function check()
+{
+        if(document.insertForm.mode.value=="CASH")
+        {
+		document.insertForm.cdnum.value="";
+                document.insertForm.cd_date.value="";
+                document.insertForm.cd_city.value="";
+                document.insertForm.Bank.value="";
+                document.insertForm.obank.value="";
+                document.insertForm.cdnum.disabled=true;
+                document.insertForm.cd_date.disabled=true;
+                document.insertForm.cd_city.disabled=true;
+                document.insertForm.Bank.disabled=true;
+                document.insertForm.obank.disabled=true;
+        }
+        else
+        {
+                document.insertForm.cdnum.disabled=false;
+                document.insertForm.cd_date.disabled=false;
+                document.insertForm.cd_city.disabled=false;
+                document.insertForm.Bank.disabled=false;
+                document.insertForm.obank.disabled=false;
+        }
+}
+                                                                                                                             
+                                                                                                                             
+</script>
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+
+
+<!--link rel="stylesheet" href="images/resservice.css" type="text/css"-->
+</head>
+
+
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+  <tbody><tr>
+    <td valign="top" width="26%" bgcolor="#efefef"><img src="../profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+    <td valign="top" width="29%" bgcolor="#efefef"> </td>
+    <td valign="bottom" width="45%" bgcolor="#efefef">
+      <table width="70%" border="0" cellspacing="0" cellpadding="3" align="right" class="tops">
+        <tbody><tr valign="middle">
+          <td align="center" width="70"><a href="http://www.jeevansathi.com/" class="tops">Home</a></td>
+          <td width="4"><img src="../billing/images/verttop.gif" width="5" height="15"></td>
+          <td valign="middle" align="center" width="72"><a href="http://www.naukri.com/infoedge/naukhome.htm" class="tops">About Us</a></td>
+          <td width="5"><img src="../billing/images/verttop.gif" width="5" height="15"></td>
+          <td align="center" width="78"><a href="http://www.naukri.com/contact/" class="tops">Contact Us</a></td>
+        </tr>
+      </tbody></table>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" colspan="3" bgcolor="#c4bfc4"><img src="../billing/images/spacer.gif" width="1" height="2"></td>
+  </tr>
+</tbody></table>
+<map name="Map"><area shape="rect" coords="344,326,532,375" href="http://www.naukri.com/" alt="Home" title="Home"></map>
+<form name="insertForm" method="post" action="entryfrm.php" >
+<br>
+  <table width="100%" border="0" cellspacing="2" cellpadding="3" align="center">
+    <tr>
+
+      <td class="label" width="21%">~if $CHECK_USERNAME eq "Y"`<font color=red>Username*</font>~elseif $MSG_USERNAME neq ''`<font color=red>Username* (~$MSG_USERNAME`)</font>~else`Username*~/if`</td>
+      <td colspan="4" bgcolor="#f5f5f5">
+<!--~if $SOURCE eq "A"`
+	<class="label">~$USERNAME`
+~else`
+        <input type="text" name="username" class="textboxes1" size="15" maxlength="40" value="~$USERNAME`">
+~/if`
+-->
+	<class="label">~$USERNAME`
+      </td>
+    </tr>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+</table>
+  <table width="100%" border="0" cellspacing="2" cellpadding="3" align="center">
+    <tbody><tr>
+      <td class="formhead" height="24" colspan="2">Contact Details</td>
+      <td class="formhead" height="24" colspan="2"><b><font face="arial" size="2">Fields
+        marked by * are compulsory</font></b></td>
+    </tr>
+    <tr valign="middle">
+      <td class="label" width="21%">~if $CHECK_CUSTNAME eq "Y"`<font color="red">Name*</font>~else`Name~/if` </td>
+      <td bgcolor="#f5f5f5" colspan="3">
+        <input type="text" name="custname" class="textboxes1" size="30" maxlength="35" value="~$CUSTNAME`">
+      </td>
+    </tr>
+    <tr>
+      <td class="label" width="21%">~if $CHECK_GENDER eq "Y"`<font color="red">Gender*</font>~else`Gender*~/if`</td>
+      <td bgcolor="#f5f5f5" colspan="4">
+         <select name="gender" size="1" class="TextBoxes1">
+            <option value="">Select</option>
+            <option value="M" ~if $GENDER eq 'M'` selected ~/if`>Male</option>
+            <option value="F" ~if $GENDER eq 'F'` selected ~/if`>Female</option>
+          </select>
+      </td>
+    </tr>
+  
+    <tr valign="middle">
+      <td class="label" width="21%" valign="top">~if $CHECK_ADDRESS eq "Y"`<font color="red">Mailing Address*</font>~else`Mailing Address*~/if`</td>
+      <td bgcolor="#f5f5f5" colspan="3">
+<!--
+        <input type="text" name="contadd1" class="textboxes1" size="30" maxlength="50" value="~$CONTADD1`">
+        <br>
+        <input type="text" name="contadd2" class="textboxes1" size="30" maxlength="50" value="~$CONTADD2`">
+        <br>
+        <input type="text" name="contadd3" class="textboxes1" size="30" maxlength="50" value="~$CONTADD3`">
+-->
+<textarea name="address"  class="testbox" cols="25" rows="3">~$ADDRESS`</textarea>
+      </td>
+    </tr>
+    <tr valign="middle">
+      <td class="label" width="21%" valign="middle">~if $CHECK_CITY eq "Y"`<font color="red">City*</font>~else`City*~/if`</td>
+      <td bgcolor="#f5f5f5" width="33%">
+	 <select name="City_India" size="1" class="TextBoxes1">
+            <option value="">Select</option>
+               ~$city_india`
+          </select>
+
+      </td>
+      <td bgcolor="#f5f5f5" class="label" width="15%">If "Other"</td>
+      <td bgcolor="#f5f5f5" width="31%">
+      <input type="text" name="ocity" size="30" class="textboxes1" maxlength="40" value="~$OCITY`">
+      </td>
+    </tr>
+    <tr valign="middle">
+      <td class="label" width="21%">Pin Code</td>
+      <td bgcolor="#f5f5f5" colspan="3">
+        <input type="text" name="pin" size="10" class="textboxes1" maxlength="6" value="~$PIN`">
+      </td>
+    </tr>
+	<tr valign="middle">
+      <td class="label" width="21%">~if $CHECK_EMAIL eq "Y"`<font color="red">Email*</font>~elseif $CHECK_EMAIL eq "Y1"`<font color="red">Email*(please insert in correct format)</font>~else`Email~/if`</td>
+      <td bgcolor="#f5f5f5" colspan="3">
+        <input type="text" name="email" size="30" class="textboxes1" maxlength="100" value="~$EMAIL`">
+      </td>
+    </tr>
+    <tr valign="middle">
+      <td class="label" width="21%" valign="top">Phone</td>
+      <td colspan="3" bgcolor="#f5f5f5" valign="top">
+        <table width="100%" border="0" cellspacing="1" cellpadding="3">
+                <tbody><tr>
+                  <td width="14%"><font face="Verdana" size="2" color="#333333">Residence</font></td>
+                  <td width="86%">
+
+                    <b><font face="Verdana" size="2" color="#003366">-</font></b>
+
+              <input type="text" name="rphone" size="14" maxlength="14" class="textboxes1" value="~$RPHONE`">
+              <br>
+<span class="help"></span></td>
+                </tr>
+                <tr>
+                  <td width="14%"><font face="Verdana" size="2" color="#333333">Office</font></td>
+                  <td width="86%">
+
+                    <b><font face="Verdana" size="2" color="#003366">-</font></b>
+
+              <input type="text" name="ophone" size="14" maxlength="14" class="textboxes1" value="~$OPHONE`">
+                  </td>
+                </tr>
+                <tr>
+                  <td width="14%"><font face="Verdana" size="2" color="#333333">Mobile</font></td>
+                  <td width="86%">
+                    <b><font face="Verdana" size="2" color="#003366">-</font></b>
+                    <input type="text" name="mphone" size="14" maxlength="11" class="textboxes1" value="~$MPHONE`">
+                  </td>
+                </tr>
+              </tbody></table>
+            </td>
+    </tr>
+    </tbody></table>
+        <br>
+  <table width="100%" border="0" cellspacing="2" cellpadding="3" align="center">
+    <tbody><tr>
+      <td class="formhead" colspan="6" height="24">Payment Details</td>
+    </tr>
+        <tr>
+      <td class="label" width="21%">Comment</td>
+      <td bgcolor="#f5f5f5" colspan="4">
+        <input type="text" name="comment" class="textboxes1" size="30" maxlength="250" value="~$COMMENT`">
+      </td>
+    </tr>
+    <tr>
+      <td class="label" valign="middle" width="21%" height="34">~if $CHECK_MODE eq "Y"`<font color=red> Mode of Payment* </font>~else` Mode of Payment* ~/if`<br>
+      </td>
+      <td width="26%" bgcolor="#f5f5f5" height="34">
+        <select name="mode" class="textboxes1" onchange="check()"><option value="" selected="selected">Select</option><option value="CASH" ~if $MODE eq "CASH"` selected ~/if`>Cash</option><option value="CHEQUE" ~if $MODE eq "CHEQUE"` selected ~/if`>Cheque</option><option value="DD" ~if $MODE eq "DD"` selected ~/if`>Demand Draft</option><option value="TT" ~if $MODE eq "TT"` selected ~/if`>TT</option><option value="CCOFFLINE" ~if $MODE eq "CCOFFLINE"` selected ~/if`>CCOFFLINE</option></select>
+      </td>
+      <td width="15%" class="label" height="34" valign="middle">~if $CHECK_CURTYPE eq "Y"`<font color=red> Type*</font> ~else` Type* ~/if`</td>
+      <td bgcolor="#f5f5f5" height="34" valign="middle" width="17%">
+        <input type="radio" name="curtype" value="0" ~if $CURTYPE eq "0"`checked~/if` checked>
+        <font face="Verdana" size="2" color="#333333">Rupees</font> </td>
+      <td width="21%" bgcolor="#f5f5f5" height="34" valign="middle"> <font face="Verdana" size="2" color="#333333">
+        <input type="radio" name="curtype" value="1" ~if $CURTYPE eq "1"`checked~/if`>
+        $ (US)</font> </td>
+    </tr>
+    <tr>
+      <td class="label" width="21%">~if $CHECK_AMOUNT eq "Y"`<font color=red>Amount*</font>~else`Amount* ~/if`  </td>
+      <td bgcolor="#f5f5f5">
+        <input type="text" name="amount" class="textboxes1" size="10" maxlength="20" value="~$AMOUNT`" onkeyup="validate_amount()">
+      </td>
+      
+    </tr>
+    <tr>
+      <td class="label" width="21%">~if $CHECK_CDNUM eq "Y"`<font color=red> Cheque/DD Number/CC Offline Transaction No </font>~else` Cheque/DD Number/CC Offline Transaction No ~/if` </td>
+      <td bgcolor="#f5f5f5" colspan="4">
+        <input type="text" name="cdnum" class="textboxes1" size="20" maxlength="35" value="~$CDNUM`">
+      </td>
+    </tr>
+    <tr>
+      <td class="label" width="21%">~if $CHECK_CDDATE eq "Y"`<font color=red> Cheque/DD Date </font>~else`Cheque/DD Date ~/if` </td>
+      <td bgcolor="#f5f5f5" colspan="4">
+<script type="text/javascript" src="calendar.js"></script>
+<input type=text name="cd_date" value="~$CD_DATE`" size=20 maxlength=99 class=textfield tabindex="1" id="field_5_4">
+<script type="text/javascript">
+    <!--
+    document.write('<a title="Calendar" href="javascript:openCalendar(\'lang=en-iso-8859-1&amp;server=1\', \'insertForm\', \'field_5_4\', \'date\')"><img class="calendar" src="../crm/img/b_calendar.png" alt="Calendar"/ border=0></a>');
+    //-->
+    </script>
+
+      </td>
+    </tr>
+    <tr>
+      <td class="label" width="21%">~if $CHECK_CDCITY eq "Y"` <font color=red>Cheque/DD City</font>~else`Cheque/DD City~/if` </td>
+      <td bgcolor="#f5f5f5" width="26%">
+        <input type="text" name="cd_city" class="textboxes1" size="20" maxlength="35" value="~$CD_CITY`">
+      </td>
+      <td bgcolor="#f5f5f5" valign="middle" width="15%">
+        <input type="checkbox" name="overseas" value="Y" ~if $OVERSEAS eq "Y"` checked ~/if`>
+        <font face="Verdana" size="2" color="#333333">Overseas</font></td>
+      <td bgcolor="#f5f5f5" colspan="2">
+        <input type="checkbox" name="separateds" value="Y" ~if $SEPARATEDS eq "Y"` checked ~/if`>
+        <font face="Verdana" size="2" color="#333333">Separate Deposit slip</font>
+    </td></tr>
+    <tr>
+      <td class="label" width="21%">~if $CHECK_BANK eq "Y"`<font color=red> Bank Name</font>~else` Bank Name ~/if` </td>
+      <td bgcolor="#f5f5f5" width="26%">
+	<select name="Bank" size="1" class="TextBoxes1">
+            <option value="">Select</option>
+               ~$bank`
+            <option value="Other" ~if $BANK eq "Other"`selected ~/if`>Other</option>
+          </select>
+	
+      </td>
+      <td class="label" valign="middle" width="15%">~if $CHECK_OBANK eq "Y"`<font color=red> If Other </font> ~else` If Other ~/if`</td>
+      <td bgcolor="#f5f5f5" colspan="2">
+        <input type="text" name="obank" class="textboxes1" size="30" maxlength="50" value="~$OBANK`">
+      </td>
+    </tr>
+	
+    <tr>
+      <td class="label" width="21%">~if $CHECK_DISCOUNT eq "Y"`<font color=red>Discount</font>~else` Discount ~/if` </td>
+      <td bgcolor="#f5f5f5" width="26%">
+        <input type="text" name="discount" class="textboxes1" size="20" maxlength="35" value="~$DISCOUNT`">
+      </td>
+      <td class="label" valign="middle" width="15%">~if $CHECK_REASON eq "Y"`<font color=red>Reason</font>~else` Reason ~/if` </td>
+      <td bgcolor="#f5f5f5" colspan="2">
+        <input type="text" name="reason" class="textboxes1" size="30" maxlength="35" value="~$REASON`">
+      </td>
+    </tr>
+    <tr>
+      <td class="label" width="21%">~if $CHECK_DISCOUNT_TYPE eq "Y"`<font color=red>Discount Type</font>~else`Discount Type ~/if` </td>
+      <td bgcolor="#f5f5f5" colspan="4">
+	 <select name="discount_type" size="1" class="TextBoxes1">
+            <option value="">Select</option>
+            <option value="1" ~if $DISCOUNT_TYPE eq "1"` selected ~/if`>Renewal Discount</option>
+            <option value="2" ~if $DISCOUNT_TYPE eq "2"` selected ~/if`>General Discount</option>
+            <option value="3" ~if $DISCOUNT_TYPE eq "3"` selected ~/if`>Complementary Discount</option>
+            <option value="4" ~if $DISCOUNT_TYPE eq "4"` selected ~/if`>Referral Discount</option>
+          </select>
+      </td>
+    </tr>
+<tr><td class="label" colspan=3>In case Amount+Discount is not equal to the Price, then fill the date by which rest of the payment will come.</td></tr>
+    <tr>
+      <td class="label" width="21%">~if $CHECK_DUEDATE eq "Y"`<font color=red>Due Date</font>~else` Due Date ~/if`  </td>
+      <td bgcolor="#f5f5f5">
+	<select name="due_day">
+			<option value="">date</option>
+                        ~section name=sec loop=$ddarr`
+                        <option value="~$ddarr[sec]`" ~if $due_day eq $ddarr[sec]`selected ~/if`>~$ddarr[sec]`</option>
+                        ~/section`
+                </select> -
+                <select name="due_month">
+			<option value="">month</option>
+                        ~section name=sec loop=$mmarr`
+                        <option value="~$mmarr[sec]`" ~if $due_month eq $mmarr[sec]`selected ~/if`>~$mmarr[sec]`</option>
+                        ~/section`
+                </select> -
+                <select name="due_year">
+			<option value="">year</option>
+                        ~section name=sec loop=$yyarr`
+                        <option value="~$yyarr[sec]`" ~if $due_year eq $yyarr[sec]`selected ~/if`>~$yyarr[sec]`</option>
+                        ~/section`
+                </select>
+</td>      
+    </tr>
+    <tr>
+      <td class="label" width="21%">~if $CHECK_WALKIN eq "Y"`<font color="red">Walk In*</font>~else`Walk In*~/if`</td>
+      <td bgcolor="#f5f5f5" colspan="4">
+	 <select name="Walkin" size="1" class="TextBoxes1">
+            <option value="">Select</option>
+            <option value="ONLINE" ~if $walkin1 eq "ONLINE"` selected ~/if`>ONLINE</option>
+<!--            <option value="rajnikant">Rajnikant</option> -->
+            <option value="OFFLINE" ~if $walkin1 eq "OFFLINE"` selected ~/if`>OFFLINE</option>
+            <option value="ARAMEX" ~if $walkin1 eq "ARAMEX"` selected ~/if`>ARAMEX</option>
+               ~$walkin`
+          </select>
+      </td>
+    </tr>
+<tr>
+        <td class="label" width="21%">~if $CHECK_DEPDATE eq "Y"`<font color=red>Bank-Deposit Date* </font>~else`Bank-Deposit Date* ~/if` </td>
+        <td bgcolor="#f5f5f5" colspan="4">
+                                                                                                                             
+        <select name="dep_day" class="textboxes1">
+                <option value="01" ~if $DEP_DAY eq "01"`selected ~/if`>1</option>
+                <option value="02" ~if $DEP_DAY eq "02"`selected ~/if`>2</option>
+                <option value="03" ~if $DEP_DAY eq "03"`selected ~/if`>3</option>
+                <option value="04" ~if $DEP_DAY eq "04"`selected ~/if`>4</option>
+                <option value="05" ~if $DEP_DAY eq "05"`selected ~/if`>5</option>
+                <option value="06" ~if $DEP_DAY eq "06"`selected ~/if`>6</option>
+                <option value="07" ~if $DEP_DAY eq "07"`selected ~/if`>7</option>
+                <option value="08" ~if $DEP_DAY eq "08"`selected ~/if`>8</option>
+                <option value="09" ~if $DEP_DAY eq "09"`selected ~/if`>9</option>
+                <option value="10" ~if $DEP_DAY eq "10"`selected ~/if`>10</option>
+                <option value="11" ~if $DEP_DAY eq "11"`selected ~/if`>11</option>
+                <option value="12" ~if $DEP_DAY eq "12"`selected ~/if`>12</option>
+                <option value="13" ~if $DEP_DAY eq "13"`selected ~/if`>13</option>
+                <option value="14" ~if $DEP_DAY eq "14"`selected ~/if`>14</option>
+                <option value="15" ~if $DEP_DAY eq "15"`selected ~/if`>15</option>
+                <option value="16" ~if $DEP_DAY eq "16"`selected ~/if`>16</option>
+                <option value="17" ~if $DEP_DAY eq "17"`selected ~/if`>17</option>
+                <option value="18" ~if $DEP_DAY eq "18"`selected ~/if`>18</option>
+                <option value="19" ~if $DEP_DAY eq "19"`selected ~/if`>19</option>
+                <option value="20" ~if $DEP_DAY eq "20"`selected ~/if`>20</option>
+                <option value="21" ~if $DEP_DAY eq "21"`selected ~/if`>21</option>
+                <option value="22" ~if $DEP_DAY eq "22"`selected ~/if`>22</option>
+                <option value="23" ~if $DEP_DAY eq "23"`selected ~/if`>23</option>
+                <option value="24" ~if $DEP_DAY eq "24"`selected ~/if`>24</option>
+                <option value="25" ~if $DEP_DAY eq "25"`selected ~/if`>25</option>
+                <option value="26" ~if $DEP_DAY eq "26"`selected ~/if`>26</option>
+                <option value="27" ~if $DEP_DAY eq "27"`selected ~/if`>27</option>
+                <option value="28" ~if $DEP_DAY eq "28"`selected ~/if`>28</option>
+                <option value="29" ~if $DEP_DAY eq "29"`selected ~/if`>29</option>
+                <option value="30" ~if $DEP_DAY eq "30"`selected ~/if`>30</option>
+                <option value="31" ~if $DEP_DAY eq "31"`selected ~/if`>31</option>
+</select>
+                                                                                                                             
+        <select name="dep_month" class="textboxes1">
+                <option value="01" ~if $DEP_MONTH eq "01"` selected ~/if`>Jan</option>
+                <option value="02" ~if $DEP_MONTH eq "02"` selected ~/if`>Feb</option>
+                <option value="03" ~if $DEP_MONTH eq "03"` selected ~/if`>Mar</option>
+                <option value="04" ~if $DEP_MONTH eq "04"` selected ~/if`>Apr</option>
+                <option value="05" ~if $DEP_MONTH eq "05"` selected ~/if`>May</option>
+                <option value="06" ~if $DEP_MONTH eq "06"` selected ~/if`>Jun</option>
+                <option value="07" ~if $DEP_MONTH eq "07"` selected ~/if`>Jul</option>
+                <option value="08" ~if $DEP_MONTH eq "08"` selected ~/if`>Aug</option>
+                <option value="09" ~if $DEP_MONTH eq "09"` selected ~/if`>Sep</option>
+                <option value="10" ~if $DEP_MONTH eq "10"` selected ~/if`>Oct</option>
+                <option value="11" ~if $DEP_MONTH eq "11"` selected ~/if`>Nov</option>
+                <option value="12" ~if $DEP_MONTH eq "12"` selected ~/if`>Dec</option>
+        </select>
+        <select name="dep_year" class="textboxes1">
+                <option value="2006" ~if $DEP_YEAR eq "2006"` selected ~/if`>2006</option>
+                <option value="2007" ~if $DEP_YEAR eq "2007"` selected ~/if`>2007</option>
+                <option value="2008" ~if $DEP_YEAR eq "2008"` selected ~/if`>2008</option>
+                <option value="2009" ~if $DEP_YEAR eq "2009"` selected ~/if`>2009</option>
+                <option value="2010" ~if $DEP_YEAR eq "2010"` selected ~/if`>2010</option>
+        </select>
+        </td>
+</tr>
+<tr>
+        <td class="label" width="21%">~if $CHECK_BRANCH eq "Y"`<font color=red> Deposit Branch*</font>~else` Deposit Branch* ~/if` </td>
+        <td bgcolor="#f5f5f5" width="26%" colspan="4">
+        <select name="dep_branch" size="1" class="TextBoxes1">
+        ~section name=sec loop=$dep_branch_arr`
+                        <option value=~$dep_branch_arr[sec]` ~if $dep_branch eq $dep_branch_arr[sec]` selected ~/if`>~$dep_branch_arr[sec]`</option>
+                ~/section`
+        </select>
+</td>
+</tr>
+
+  </tbody></table>
+	     <br>
+  <table width="100%" border="0" cellspacing="2" cellpadding="3" align="center">
+    <tbody><tr>
+      <td class="formhead" colspan="6" height="24"> Matrimonial Services </td>
+    </tr>
+    <tr>
+      <td class="formhead" colspan="3" height="24"> </td>
+     <!-- <td class="formhead" width="67%" height="24">~if $CHECK_SERVICE eq "Y"`<font color=red>Individual Matrimonial Services* (Please check your service)</font>~else`Individual Matrimonial Services* ~/if` &nbsp; ( All prices are exclusive of taxes)</td>-->
+      <td class="formhead" width="27%" height="24">Individual Matrimonial Services* </td>	
+      <td class="formhead" width="25%" height="24" align="center"></td>
+      <td class="formhead" width="27%" height="24" align="center"></td>
+    </tr>
+~if $SOURCE neq "A"`
+<tr>
+<td class="label" width="21%">~if $CHECK_DURATION eq "Y"`<font color="red">DURATION*</font>~else`DURATION*~/if` (One month duration is valid only for e-Rishta without any addon-service.) </td>
+<td class="label" colspan="3" height="24">
+<select name="duration_sel" size="1" class="TextBoxes1">
+            <option value="">Select</option>
+	    <option value="1" ~if $DURATION_SEL eq '1'` selected ~/if`>For one month</option> 
+	    <option value="2" ~if $DURATION_SEL eq '2'` selected ~/if`>For two months</option>
+	    <option value="3" ~if $DURATION_SEL eq '3'` selected ~/if`>For three months</option>		          
+            <option value="4" ~if $DURATION_SEL eq '4'` selected ~/if`>For four months</option>
+            <option value="5" ~if $DURATION_SEL eq '5'` selected ~/if`>For five months</option>
+            <option value="6" ~if $DURATION_SEL eq '6'` selected ~/if`>For six months</option>
+            <option value="12" ~if $DURATION_SEL eq '12'` selected ~/if`>For twelve months</option>
+</select>
+</td>
+<td class="label" width="21%">~if $CHECK_SERVICE_TYPE eq "Y"`<font color="red">SERVICE-TYPE*</font>~else`SERVICE-TYPE*~/if`</td>
+<td class="label" colspan="3" height="24">
+<select name="service_type" size="1" class="TextBoxes1"  onchange="validate_matri_serv()">
+            <option value="">Select</option>
+            <option value="P" ~if $SERVICE_TYPE eq 'P'` selected ~/if`>e-Rishta</option>
+            <option value="D" ~if $SERVICE_TYPE eq 'D'` selected ~/if`>e-Classified</option>
+            <option value="C" ~if $SERVICE_TYPE eq 'C'` selected ~/if`>e-Value</option>
+            <option value="M" ~if $SERVICE_TYPE eq 'M'` selected ~/if`>Matri-Profile</option>
+</select>
+</td>
+~/if`
+
+~if $SOURCE eq "A"`
+<tr>
+<td class="label" width="21%">SELECTED-SERVICE</td>
+<td class="label" colspan="3" height="24">~$SERVICE_NAME`</td>
+</tr>
+~/if`
+
+
+
+  <!--  ~section name=i loop=$SERVICES_LIST`	
+    <tr>
+	<td class="label" colspan="3" height="24">	
+      ~if $SOURCE neq "A"` 
+	 <input type="radio" name="service[]" value="~$SERVICES_LIST[i].SERVICEID`" ~if $SERVICE_SELECTED  eq $SERVICES_LIST[i].SERVICEID`checked~/if`>
+     ~/if` 
+	~if $SOURCE eq "A" AND $SERVICE_SELECTED  eq $SERVICES_LIST[i].SERVICEID`
+		<img src="../billing/images/tick.gif">
+	~/if`
+      <td bgcolor="#f5f5f5" width="67%" height="24"><font face="Verdana" size="2" color="#333333">
+        ~$SERVICES_LIST[i].NAME`</font></td>
+      <td bgcolor="#f5f5f5" width="15%" height="24" align="center"><font face="Verdana" size="2" color="#333333">~$SERVICES_LIST[i].PRICE_DOL`</font></td>
+      <td width="12%" height="24" bgcolor="#f5f5f5" align="center"><font face="Verdana" size="2" color="#333333">~$SERVICES_LIST[i].PRICE_RS`</font></td>
+
+	</td>	
+    </tr>		
+    ~/section`-->
+
+
+   <tr>
+      <td class="formhead" height="24" colspan="3"></td>		
+      <td class="formhead" height="24" colspan=3>Paid Add On Services</td>
+    </tr>
+
+   ~if $SOURCE eq "A"`
+    <tr>
+	<td class="label" colspan="3">
+	~if $BOLD_LISTING_SELECTED eq "Y"`
+		<!--<img src="../billing/images/tick.gif"> -->
+		<img src="/P/imagesnew/tick.gif">
+		<input type="hidden" name="addon_services[]" value="B">
+	~/if`
+	</td>
+	<td bgcolor="#f5f5f5" colspan="3">
+	<font face="Verdana" size="2" color="#333333">Profile Highlighting</font>
+	</td>
+    </tr>
+<!--
+    <tr>
+        <td class="label" colspan="3">
+        ~if $VOICEMAIL_SELECTED eq "Y"`
+                <img src="../billing/images/tick.gif">
+                <input type="hidden" name="addon_services[]" value="V">
+        ~/if`
+        </td>
+        <td bgcolor="#f5f5f5" colspan="3">
+        <font face="Verdana" size="2" color="#333333">Voicemail</font>
+        </td>
+    </tr>
+-->
+    <tr>
+        <td class="label" colspan="3">
+        ~if $HOROSCOPE_SELECTED eq "Y"`
+               <!-- <img src="../billing/images/tick.gif">-->
+		<img src="/P/imagesnew/tick.gif">
+                <input type="hidden" name="addon_services[]" value="H">
+        ~/if`
+        </td>
+        <td bgcolor="#f5f5f5" colspan="3">
+        <font face="Verdana" size="2" color="#333333">Horoscope</font>
+        </td>
+    </tr>
+    <tr>
+        <td class="label" colspan="3">
+        ~if $KUNDLI_SELECTED eq "Y"`
+              <!--  <img src="../billing/images/tick.gif">-->
+		<img src="/P/imagesnew/tick.gif">
+                <input type="hidden" name="addon_services[]" value="K">
+        ~/if`
+        </td>
+        <td bgcolor="#f5f5f5" colspan="3">
+        <font face="Verdana" size="2" color="#333333">Kundli</font>
+        </td>
+    </tr>
+    <tr>
+        <td class="label" colspan="3">
+        ~if $MATRI_PROFILE_SELECTED eq "Y"`
+              <!--  <img src="../billing/images/tick.gif">-->
+		<img src="/P/imagesnew/tick.gif">
+                <input type="hidden" name="addon_services[]" value="M">
+        ~/if`
+        </td>
+        <td bgcolor="#f5f5f5" colspan="3">
+        <font face="Verdana" size="2" color="#333333">Matri-Profile</font>
+        </td>
+    </tr>
+
+
+   ~else`	
+   <tr>
+      <td class="label" colspan="3"><input type="checkbox" name="addon_services[]" value="B" ~if
+$BOLD_LISTING_SELECTED eq "Y"`checked ~/if`</td>
+      <td bgcolor="#f5f5f5" colspan="3"><font face="Verdana" size="2" color="#333333">Profile Highlighting</font> </td>
+   </tr>
+
+<!--
+   <tr>
+      <td class="label" colspan="3"><input type="checkbox" name="addon_services[]" value="V" ~if
+$VOICEMAIL_SELECTED eq "Y"`checked ~/if`></td>
+      <td bgcolor="#f5f5f5" colspan="3"><font face="Verdana" size="2" color="#333333">Voicemail</font> </td>	
+   </tr>
+-->
+   <tr>
+      <td class="label" colspan="3"><input type="checkbox" name="addon_services[]" value="H" ~if
+$HOROSCOPE_SELECTED eq "Y"`checked ~/if`></td>
+      <td bgcolor="#f5f5f5" colspan="3"><font face="Verdana" size="2" color="#333333">Horoscope</font> </td>
+   </tr>
+   <tr>
+      <td class="label" colspan="3"><input type="checkbox" name="addon_services[]" value="K" ~if
+$KUNDLI_SELECTED eq "Y"`checked ~/if`></td>
+      <td bgcolor="#f5f5f5" colspan="3"><font face="Verdana" size="2" color="#333333">Kundli</font> </td>
+   </tr>
+   <tr>
+      <td class="label" colspan="3"><input type="checkbox" name="addon_services[]" value="M" ~if
+$MATRI_PROFILE_SELECTED eq "Y"`checked ~/if`></td>
+      <td bgcolor="#f5f5f5" colspan="3"><font face="Verdana" size="2" color="#333333">Matri-Profile</font> </td>
+   </tr>
+
+   ~/if`
+
+  <br>
+  
+  <table width="100%" border="0" cellspacing="2" cellpadding="3" align="center">
+     <tbody><tr>
+      <td valign="middle" height="45" bgcolor="#f5f5f5" align="center" width="25%">
+         <input type="submit" name="Logout" value="Logout" class="buttons1">
+      </td>
+      <td valign="middle" height="45" bgcolor="#f5f5f5" align="center" width="52%">
+        <input type="reset" name="submit3" value="Clear Fields" class="buttons1">
+      </td>
+      <td valign="middle" height="45" bgcolor="#f5f5f5" width="23%" align="center">
+        <input type="submit" name="Continue" value="Continue" class="buttons1">
+      </td>
+    </tr>
+  </tbody></table>
+<input type="hidden" name=cid value="~$CID`">
+<input type="hidden" name=source value="~$SOURCE`">
+<input type="hidden" name=crm_id value="~$CRM_ID`">
+<input type="hidden" name=username value="~$USERNAME`">
+<input type="hidden" name=service_selected value="~$SERVICE_SELECTED`">
+<input type="hidden" name=bold_listing value="~$BOLD_LISTING_SELECTED`">
+<input type="hidden" name=loginname value="~$LOGINNAME`">
+ </form>
+<br>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody><tr>
+<td valign="top" bgcolor="#c4bfc4"><img src="../billing/images/spacer.gif" width="1" height="2"></td>
+  </tr>
+  <tr>
+  <td valign="middle" bgcolor="#efefef" align="center" height="23" class="bottom"><a href="http://www.naukri.com/infoedge/naukhome.htm" class="bottom">About Us</a> - <a href="http://www.naukri.com/infoedge/clients/clients.htm" class="bottom">Our Clients</a> - <a href="http://www.naukri.com/infoedge/pageview.htm" class="bottom">Check Hits</a> - <a href="http://www.naukri.com/infoedge/naukri.htm" class="bottom">Disclaimer</a> - <a href="http://www.naukri.com/faq" class="bottom"> F.A.Q's</a> - <a href="http://www.naukri.com/" class="bottom">Home</a> - <a href="http://www.naukri.com/contact/" class="bottom">Contact Us</a></td>
+	 </tr>
+</tbody></table>
+</body></html>

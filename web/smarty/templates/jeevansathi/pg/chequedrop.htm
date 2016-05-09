@@ -1,0 +1,419 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jeevansathi.com - Upgrade your Membership - Membership Value Packs - Register Free - Create Matrimony Profile - Post your Matrimonials Profile</title><meta name="description" content="Upgrade your membership in Jeevansathi.com. Membership Value Packs - Premium members have an advantage over free members. While free members have to wait to be contacted, Premium members have the power to start a conversation and write personal email messages to any profile. Search matrimonials, matrimony profiles, NRI bride and groom from our online matrimonial and matchmaking services." />
+<meta name="keywords" content="Jeevansathi.com, Indian matrimony, India, matrimony, matrimonial, matrimonials, matrimony services, online matrimonials, Indian marriage, match making, matchmaking, matchmaker, match maker, marriage bureau , matchmaking services, matrimonial profiles, bride, groom, matrimony classified." />
+<link rel="stylesheet" type="text/css" href="~$IMG_URL`/min/?f=/profile/css/~$mem_css_css`,/profile/css/~$chk_drp_css`" />
+~include file="../jeevansathi/google_analytics.htm"`
+</head>
+
+<body topmargin="0" leftmargin="0">
+<div id="main">
+	~$REVAMP_HEAD`
+	~$TRACK_HEAD`
+        ~$TRACK_JSFLAG`
+
+<!--- new code --->
+<div id="mem_cont">
+<br>
+<br>
+        <h1>Membership Options</h1>
+        <ul class="mem_proc lf">
+        <li><b class="blink" id='aid1'>Choose Service</b></li>
+        <li class="sprte grw_arw"></li>
+        <li ><a class="blink_org" href='../../payment.php?checksum=~$checksum`&services=~$IDS`&DISCOUNT_TYPE=~$DISCOUNT_TYPE`&voucher_code=~$voucher_code`&DISCOUNT_MSG=~$DISCOUNT_MSG`&DISCOUNT=~$DISCOUNT`&mode=cheque'>Choose Payment Mode</a></li>
+        <li class="sprte grw_arw"></li>
+        <li class="orange">Confirm Details</li>
+        </ul>
+        <p class="clr"></p><br />
+        <b class="orange f_18 b fl mar_left_10">Summary</b>
+        <p class="clr"></p><br />
+        <div class="ord_dtls mem_spr">
+                <p class="fl t14">Dear ~$USERNAME`,<br />
+                Your order details are given below, Select the mode of payment and proceed<br /><br />
+                </p>
+                <p class="clr"></p>
+                <ul>
+                 ~if $CHECK/10000 ge 1`
+                <li id="csdiv"><b>1. ~$MNAME` <span class="black t14"><!--[ 225 Direct Calls Available ]--></span></b><s>~if $CURRENCY eq 'RS'`Rs. ~$MPRICE`~else`~$MPRICE` $~/if` </s></li>
+                ~assign var="CHECK" value=$CHECK-10000`
+                ~/if`
+                ~if $CHECK/1000 ge 1`
+                <li id="bdiv"><b><span>~$FORB`</span>. ~$BNAME`</b><s>~if $CURRENCY eq 'RS'`Rs. ~$BPRICE`~else`~$BPRICE` $~/if`</s></li>
+                ~assign var="CHECK" value=$CHECK-1000`
+                ~/if`
+                ~if $CHECK/100 ge 1`
+                <li id="tdiv"><b><span id="fort">~$FORT`</span>. ~$TNAME` </b><s>~if $CURRENCY eq 'RS'`Rs. ~$TPRICE`~else`~$TPRICE` $~/if` </s></li>
+                ~assign var="CHECK" value=$CHECK-100`
+		 ~/if`
+                ~if $CHECK/10 ge 1`
+                <li id="mdiv"><b><span id="formm">~$FORM`</span>. ~$MANAME`</b><s>~if $CURRENCY eq 'RS'`Rs. ~$MAPRICE`~else`~$MAPRICE` $~/if`</s></li>
+                ~assign var="CHECK" value=$CHECK-10`
+                ~/if`
+                ~if $CHECK eq 1`
+                <li id="adiv"><b><span id="fora">~$FORA`</span>. ~$ANAME` </b><s>~if $CURRENCY eq 'RS'`Rs. ~$APRICE`~else`~$APRICE` $~/if`</s></li>
+                ~/if`
+                ~if $DISC eq 'Y' && $DISCOUNTED_PRICE ge 1`
+                <li id="adiv"><span class="dscnt">~$DISCOUNT_MSG`</span><s class="rd">- ~if $CURRENCY eq 'RS'`Rs. ~$DISCOUNTED_PRICE`~else`~$DISCOUNTED_PRICE` $~/if`</s></li>
+                ~/if`
+                 ~if $CHECK1 ge 1000`
+                 ~if $Fest`
+                  ~if $DISCOUNT ge 1`
+			 <li id="adiv"><span class="dscnt">~$DISCOUNT_FMSG`</span><s class="rd">- ~if $CURRENCY eq 'RS'`Rs. ~$DISCOUNT`~else`~$DISCOUNT` $~/if`</s></li>
+                  ~/if`
+                ~/if`
+               ~/if`
+                </ul>
+                <p class="clr"></p>
+                <p class="ur_tlt fr">Your Total  <span id='total'>~if $CURRENCY eq 'RS'`Rs. ~$PRICE`~else`~$PRICE` $~/if`</span></p>
+                <p class="clr"></p>
+        </div>
+	<p class="clr"></p>
+	<br>
+	<b class="t20 orange">Selected Mode of Payment - Cheque & Draft &nbsp;&nbsp;</b> <a href="../../payment.php?checksum=~$checksum`&services=~$IDS`&DISCOUNT_TYPE=~$DISCOUNT_TYPE`&voucher_code=~$voucher_code`&DISCOUNT_MSG=~$DISCOUNT_MSG`&DISCOUNT=~$DISCOUNT`&mode=cheque"><b>[change mode of payment]</b></a>
+	<p class="sp8"></p>
+	<div class="ord_dtls sprte_smry" style="background:none">
+		<ul class="md">
+		 ~if $COURIER eq "Y"`
+		<li><input type="radio" checked name="r" id="risa1" > <span id="da1" >Cheque pick up facility <span class="red">free</span></span></li>
+		 ~/if`
+		 ~if $indian eq "Y"`
+		<li><input type="radio"  ~if $COURIER neq 'Y'` checked ~/if` name="r" id="risa2" > <span id="da2">Drop cheque in Jeevansathi.com's nearest branch</span></li>
+		<li><input type="radio" name="r" id="risa3" > <span id="da3">Drop cheque in ICICI nearest drop box</span></li>
+	~/if`
+		<li><input type="radio" name="r" id="risa4" ~if $COURIER neq 'Y' and $indian neq 'Y'`checked~/if`  > <span id="da4">Courier or post cheque to us ~if $CURRENCY neq 'RS'`(Cheques should be payable in the United States of America) ~/if`</span></li>
+		</ul>
+		<input type="hidden" name="ser_main" value="~$SER_MAIN`">
+		<input type="hidden" name="submit_on_enter" value="">
+		~if $indian eq "Y"`
+		<input type="hidden" name="checksum" value=~$CHECKSUM`>
+		<input type="hidden" name="USERNAME" value=~$USERNAME`>
+		<input type="hidden" name="val" value=~$val`>
+		<input type="hidden" name="phrase" value=~$phrase`>
+		<input type="hidden" name="criteria" value=~$criteria`>
+		<input type="hidden" name="REQUESTID" value=~$REQUESTID`>
+		<input type="hidden" name="PROFILEID" value=~$PROFILEID`>
+		<input type=hidden name=EMAIL value="~$EMAIL`">
+		<input type=hidden name=SERVICE value="~$SERVICE`">
+		<input type=hidden name=ADDON_SERVICES value="~$ADDON_SERVICES`">
+		<input type=hidden name=REQUESTID value="~$REQUESTID`">
+		<input type=hidden name=MAIN_SER_NAME value="~$MAIN_SER_NAME`">
+		<input type=hidden name=amount value="~$AMOUNT`">
+		<input type=hidden name=curtype value="~$CURTYPE`">
+
+		<input type="hidden" name="subs" value=~$subs`>
+		<input type="hidden" name="show" value=~$show`>
+		<input type="hidden" name="indian" value=~$indian`>
+		~/if`
+
+		<p class="sp12"></p>
+	</div>
+	<p class="sp12"></p>
+	<div class="chk_frm" id='d1'>
+		  ~if $COURIER eq "Y"`
+		<form name="form1" >
+		 <input type="hidden" name="ser_main" value="~$SER_MAIN`">
+			<input type=hidden name=stp value="~$STP`">
+			<input type=hidden name=checksum value="~$CHECKSUM`">
+		<input type=hidden name=USERNAME value="~$USERNAME`">
+		<input type=hidden name=EMAIL value="~$EMAIL`">
+		<input type=hidden name=SERVICE value="~$IDS`">
+		<input type=hidden name=profileid value="~$PROFILEID`">
+		<input type=hidden name=AMOUNT value="~$AMOUNT`">
+		<input type=hidden name=ADDON_SER value="~$ADDON_SER`">
+		<input type=hidden name=ADDON_SERVICES value="~$ADDON_SERVICES`">
+		<input type=hidden name=REQUESTID value="~$ORDERID`">
+		<input type=hidden name=MAIN_SER_NAME value="~$MAIN_SER_NAME`">
+		<input type=hidden name=CUR_TYPE value="~$CUR_TYPE`">
+		<input type=hidden name=dec_ag value="~$DEC_AG`">
+		<input type=hidden name=COURIER value="~$COURIER`">
+		<input type=hidden name=PINCODE value="~$PINCODE`">
+		<b>Please Provide Details for Cheque Pick Up<br><br></b>
+		<div>
+			<label>Name:</label><input type="text"  name="NAME1" class="txt1" value="~$NAME1`" id='f'>
+			<p id='f1' style='display:none;'>
+			<img style="vertical-align: bottom;" src="~$IMG_URL`/profile/images/registration_new/alert.gif"/> Please enter a valid name
+			</p>
+		</div>
+		<div><label>Phone Number :</label><input type="text" name="PHONE_RES" class="txt1" value="~$PHONE_RES`" maxlength="15" id='g'>
+			<p id='g1' style='display:none;'>
+			<img style="vertical-align: bottom;" src="~$IMG_URL`/profile/images/registration_new/alert.gif"/> Please enter a valid Phone number
+			</p>
+			<p id='g2' style='display:none;'>
+			<img style="vertical-align: bottom;" src="~$IMG_URL`/profile/images/registration_new/alert.gif"/> Invalid Phone number
+			</p>
+		</div>
+		<div><label>Mobile Number :</label><input type="text" class="txt1" name="PHONE_MOB" value="~$PHONE_MOB`" maxlength="15" id='h'>
+			<p id='h1' style='display:none;'>
+			<img style="vertical-align: bottom;" src="~$IMG_URL`/profile/images/registration_new/alert.gif"/> Please enter a valid Mobile number
+			</p>
+			<p id='h2' style='display:none;'>
+			<img style="vertical-align: bottom;" src="~$IMG_URL`/profile/images/registration_new/alert.gif"/> Invalid mobile number
+			</p>
+		</div>
+		<div>
+			<label>City :</label><select class="txt1"  name="city_res" id='i'>~section name=sec loop=$NEAR_ARR`<option value="~$NEAR_ARR[sec].VALUE`" ~if $NEAR_ARR[sec].VALUE eq $CITY_RES` selected ~/if`>~$NEAR_ARR[sec].LABEL`</option>~/section`</select>
+		</div>
+		<div><label>Address :</label><textarea rows="4" cols="8" id='n' style="width:270px;" name='ADDRESS' class="txt1">~$ADDRESS`</textarea>
+			<p id='j1' style='display:none;'>
+			<img style="vertical-align: bottom;" src="~$IMG_URL`/profile/images/registration_new/alert.gif"/> Please enter a valid Mobile number
+			</p>
+		</div>
+		<div><label>Preferred Date :</label><select class="ml_5"  name="pref_day" id='k'>
+			~section name=next loop=$ddarr`<option value="~$ddarr[next]`" ~if $PREF_DAY eq $ddarr[next]`selected ~elseif $ddarr[next] eq $after2_date` selected ~/if`>~$ddarr[next]`</option>~/section`</select>
+			<select name="pref_month"  class="ml_5"  id='l'>~section name=next loop=$mmarr`<option value="~$mmarr[next]`" ~if $PREF_MONTH eq $mmarr[next]` selected ~elseif $mmarr[next] eq $after2_month` selected ~/if`>~$mmarr[next]`</option>~/section`</select>&nbsp;
+			<select name="pref_year"  class="ml_5"  id='m'>~section name=next loop=$yyarr`<option value="~$yyarr[next]`" ~if $PREF_YEAR eq $yyarr[next]` selected ~elseif $yyarr[next] eq $after2_year` selected ~/if`>~$yyarr[next]`</option>~/section`</select>
+			<p id='k1' style='display:none;'>
+			<img style="vertical-align: bottom;" src="~$IMG_URL`/profile/images/registration_new/alert.gif"/> Please select a valid preferred date
+			</p>
+			<p id='k2' style='display:none;'>
+			<img style="vertical-align: bottom;" src="~$IMG_URL`/profile/images/registration_new/alert.gif"/> Please select a valid date
+			</p>
+		<p id='k3' style='display:none;'>
+		<img style="vertical-align: bottom;" src="~$IMG_URL`/profile/images/registration_new/alert.gif"/>  Preferred date should be day after tommorrow or after  that
+		</p>
+		</div>
+		<u>Pick up request takes 48 hours to execute.</u>
+		<div>
+			<label>Comments :</label><textarea rows="4" cols="8" id='j' style="width:270px;" name='COMMENTS' class="txt1">~$COMMENTS`</textarea>
+		</div>
+		<u>Put comments, I like you want us to give you a<br> call before coming to your place, any particular<br> time to come</u>
+		<br>
+		<p class="prced_btn sprte" style="float: left; margin-left: 145px;display:inline;"><i class="l sprte"></i><b class="fl" id='pr1' onclick="form1_submit();"> Submit request</b><i class="r sprte"></i></p>
+		</form>
+		~/if`
+	</div>
+	~if $indian eq "Y"`
+	<div class="chk_frm" id='d2' ~if $COURIER eq 'Y'`style="display:none;"~/if`>
+		<h3>Locate your nearest Jeevansathi.com's Branch</h3>
+		<form name='form2' >
+		<input type=hidden name=checksum value="~$CHECKSUM`">
+		<div>
+			<label>City</label>
+			<select  name='lynj' id='lynj'>
+				~section name=sec loop=$STATES`
+				<option value="~$STATES[sec]`" ~if $STATES[sec] eq $near_branches[0].STATE` selected ~/if`>~$STATES[sec]`</option>
+				~/section`
+			</select>
+		</div>
+		<div class="sp16"></div>
+		<b id="innershow" class="hd">Jeevansathi.com's branches in <span id='chc'>~$near_branches[0].STATE`</span></b>
+			<p class="clr"></p>
+		<div id="narayan">
+			~section name=sec loop=$near_branches`
+			<b>~$near_branches[sec].NAME`</b>
+			<i>CONTACT</i>
+			<s>~$near_branches[sec].CONTACT_PERSON`</s>
+			<i>ADDRESS</i>
+			<s>~$near_branches[sec].ADDRESS`</s>
+			<i>PHONE</i>
+			<s>~$near_branches[sec].PHONE`</s>
+			<i>MOBILE</i>
+			<s>~$near_branches[sec].MOBILE`</s>
+			<p class="bdr_gry_ln"></p>
+
+			<div class="clear"></div>
+			~/section`
+		</div>
+		</form>
+	</div>
+	 <div class="chk_frm" id='d3' style="display:none;">
+		<form name="form3" >
+		<input type=hidden name=REQUESTID value="~$ORDERID`">
+		<b>To deposit your subscription amount, our bank details are : <br> JEEVANSATHI INTERNET SERVICES A/C NO. 003705010255<br><br></b>
+		<p class="sp3"></p>
+		<b class="orange">Important Instructions :</b><br>
+		A/c No : 003705010255<br>
+		Bank : ICICI Bank Ltd., Preet Vihar Branch,<br>
+		New Delhi - 110096<br>
+		<b class="green">(Note : Cash will not be accepted)</b>
+		<div>
+			<label>Cheque number :</label><input type="text" class="txt1" name="cdnum" maxlength="35" value="~$CDNUM`" id='z'>
+			<p class="sp2"></p>
+			<p class="chq_err" id="z1" style='display:none;'>
+			<img style="vertical-align: bottom;" src="~$IMG_URL`/profile/images/registration_new/alert.gif"/> Please enter a cheque number
+			</p>
+		</div>
+
+		<div>
+			<label>Date :</label><select class="ml_5"  id='ya' name="cd_day">
+				~section name=next loop=$ddarr`<option value="~$ddarr[next]`" ~if $CD_DAY eq $ddarr[next]`selected ~elseif $ddarr[next] eq $cur_day` selected ~/if`>~$ddarr[next]`</option>~/section`</select>
+				<select name="cd_month"  class="ml_5"  id='yb' name="cd_month">~section name=next loop=$mmarr`<option value="~$mmarr[next]`" ~if $CD_MONTH eq $mmarr[next]` selected ~elseif $mmarr[next] eq $cur_month` selected ~/if`>~$mmarr[next]`</option>~/section`</select>&nbsp;
+			<select name="cd_year"  class="ml_5"  id='yc' name="cd_year">~section name=next loop=$yyarr`<option value="~$yyarr[next]`" ~if $CD_YEAR eq $yyarr[next]` selected ~elseif $yyarr[next] eq $cur_year` selected ~/if`>~$yyarr[next]`</option>~/section`</select>
+			<p class="sp2"></p>
+			<p id='y1' style='display:none;' class="chq_err" >
+			<img style="vertical-align: bottom;" src="~$IMG_URL`/profile/images/registration_new/alert.gif"/> Please select a valid preferred date
+			</p>
+			<p id='y2' style='display:none;' class="chq_err" >
+			<img style="vertical-align: bottom;" src="~$IMG_URL`/profile/images/registration_new/alert.gif"/> Cheque/DD date cannot be older than 4 Months
+			</p>
+			<p id='y3' style='display:none;' class="chq_err" >
+		<img style="vertical-align: bottom;" src="~$IMG_URL`/profile/images/registration_new/alert.gif"/> Post dated cheque cannot exeed 1 month duration
+			</p>
+		</div>
+		
+		<div>
+			<label>Bank Name :</label>
+			<select class="ml_5" id='xa' name="Bank" style="width: 260px;"><option value=''>Select</option>~section name=sec loop=$bank`<option value="~$bank[sec]`">~$bank[sec]`</option>~/section`<option value='Other'>Other</option></select>
+		</div>
+		
+		<div>
+			<label>If Other :</label><input type="text" class="txt1" name="obank" id='xb' maxlength="35" value="~$OBANK`">
+			<p class="sp2"></p>
+			<p id='x1' style='display:none;' class="chq_err" >
+                <img style="vertical-align: bottom;" src="~$IMG_URL`/profile/images/registration_new/alert.gif"/> Please select a Bank or fill the Other bank field
+                </p>
+		</div>
+		
+		 <div>
+			<label>Cheque/DD City :</label>
+			<input type="text" class="txt1" name="cd_city" id='w' maxlength="35" value="~$CD_CITY`">
+			<p class="sp2"></p>
+			<p id='w1' style='display:none;' class="chq_err" >
+			<img style="vertical-align: bottom;" src="~$IMG_URL`/profile/images/registration_new/alert.gif"/> Please enter Cheque/DD city 
+			</p>
+		</div>
+
+		 <div>
+			<label>Mobile Number :</label>
+			<input type="text" class="txt1" name="MOB_NO" id='v' maxlength="15" value="~$MOB_NO`">
+			<p class="sp2"></p>
+			<p id='v1' style='display:none;' class="chq_err" >
+			<img style="vertical-align: bottom;" src="~$IMG_URL`/profile/images/registration_new/alert.gif"/> Please enter a valid Mobile number 
+			</p>
+			<p id='v2' style='display:none;' class="chq_err" >
+			<img style="vertical-align: bottom;" src="~$IMG_URL`/profile/images/registration_new/alert.gif"/> Invalid Mobile number
+			</p>
+		</div>
+
+		<div>
+			<label>Amount :</label>~if $CURRENCY eq 'RS'`Rs. ~$PRICE`~else`~$PRICE` $~/if`
+		</div>
+
+		<div>
+			<label>Comments :</label><textarea rows="4" cols="8"  class="txt1" name="COMMENTS" style="width:270px;">~$COMMENTS`</textarea>
+		</div>
+		<p class="sp5"></p>
+		<p class="prced_btn sprte" style="float: left; margin-left: 145px;display:inline;width:123px;"><i class="l sprte"></i><b class="fl" id='pr1' onclick="form3_submit();"> Submit</b><i class="r sprte"></i></p>
+	</form>
+	</div>
+
+	~/if`
+
+	<div class="chk_frm t14 b" id='d4' ~if $COURIER eq 'Y' or $indian eq 'Y'`style="display:none;"~/if`>
+		<b class="orange">Cheque/Demand Draft payable to</b><br>
+		<b>"Jeevansathi Internet Services".</b>
+		<p class="sp12"></p>
+		<b class="orange">Courier / post this to -</b><br>
+		<b>Jeevansathi Internet Services <br> B - 8, Sector - 132, Noida - 201301, INDIA. <br> Phone : 91-120-4393500</b><br>
+	</div>
+
+	<div class="fr" style="width:297px;">
+		<b class="smple_chk" id="oth">Sample Cheque</b>
+		<div class="chk_bg" name="pickup_image" id="pickup_image2">
+			<u>~$ORDERDATE`</u>
+			<h5>Jeevansathi Internet Services</h5>
+			<b>~$AMOUNT_WORDS`</b>
+			<em>~if $CURRENCY eq 'RS'`Rs. ~$PRICE`~else`~$PRICE` $~/if`</em>
+		</div>
+		<div class="chk_bg_new" name="pickup_image_new" id="pickup_image2_new" style="display:none">
+			<u>~$ORDERDATE`</u>
+			<b>~$AMOUNT_WORDS`</b>
+			<em>~if $CURRENCY eq 'RS'`Rs. ~$PRICE`~else`~$PRICE` $~/if`</em>
+		</div>
+		<div id="imp_ins" style="float:right; width:277px;">
+			<ul>
+			<li style="background:none;"><b class="orange">Important Instructions :</b> </li>
+			<li><b> Do not forget to sign your cheque. </b></li>
+			<li> Remember to mention your User Id and Date on the reverse of the Cheque / Demand Draft.</li>
+			<li> Please quote your User Id and date in all future correspondence with us.</li>
+			<li> Your subscription will be activated within 2 working days of receipt of your payment.</li>
+			</ul>
+		</div>
+	</div>
+
+	<p class="clr"></p>
+        <div style="width:720px; margin:auto;">
+                <div class="buy_smry">
+                        <div class="sprte y_tp_bg f_2">
+                                <i class="t_l_c sprte fl"></i><i class="t_r_c sprte fr"></i>
+                        </div>
+                        <p class="clr"></p>
+                        <div class="buy_smry_shdw">
+                                <div class="inr_bg">
+                                        <p class="evry_trns">
+                                        Every transaction on Jeevansathi.com is secure. Any personal information provided by you<br />will be
+					handled according to our <a href="~$SITE_URL`/P/privacy_policy.php" target="_blank">Privacy Policy</a>
+                                        </p>
+                                        <div class="fr sec_cont"><b class="fr">&nbsp;Secure Transaction</b><i class="scure_trns fr sprte"></i></div>
+                                        <p class="clr"></p>
+                                </div>
+                        </div>
+                        <p class="clr"></p>
+			<div class="sprte exp_bt_bg f_2">
+                        <i class="b_l_c_exp sprte fl"></i><i class="b_r_c_exp sprte fr"></i>
+                        </div>
+                </div>
+        </div>
+        <p class="clr">
+        </p>
+</div>
+	<div id="container1" style="display:none">
+		<div id="mem_cont"><br><br>
+			<h1>Cheque pick up Confirmation</h1><p class="sp12"></p>
+			<b><img src="~$IMG_URL`/profile/images/confirm_small.gif" hspace="10" vspace="0" align="absmiddle">&nbsp;Dear ~$USERNAME`, your request for cheque pick up facility has been accepted. Jeevansathi.com's personal will contact you based on details within 48 hrs.</b>
+<p class="clr"></p>		
+		<div class="chk_pck_dtls">
+			<b class="fl" style="width:180px;">Cheque pick up details-</b><p class="fr" style="width:90px;"><img src="~$IMG_URL`/profile/images/ic_print_profile.gif"> <a class="blink" href="javascript:window.print()">Print Reciept</a></p><p class="sp12"></p>
+			<ul>
+			<li><b>Name:</b><i id='con1'>~$NAME1`</i></li>
+			<li><b>Phone no :</b><i id='con2'>~$PHONE_RES`</i></li>
+			<li><b>Mobile no :</b><i id='con3'>~$PHONE_MOB`</i></li>
+			<li><b>City :</b><i id='con4'>~$CITY_RES`</i></li>
+			<li><b>Address :</b><i id='con5'>~$ADDRESS`</i></li>
+			<li><b>Preferred date :</b><i id='con6'>~$PREF_DAY`/~$PREF_MONTH`/~$PREF_YEAR`</i></li>
+			<li><b>Comments :</b><i id='con7'>~$COMMENTS`</i></li>
+			</ul>
+			<b class="fl" >Please visit <a class="blink" href="../../mainmenu.php">My Jeevansathi</a> to get maximum value from your membership.</b>
+		</div>
+		</div>
+	</div>
+	<div id="container2" style="display:none">
+		<div id="mem_cont"><br><br>
+			<h1>Cheque drop Confirmation</h1><p class="sp12"></p>
+			<b><img src="~$IMG_URL`/profile/images/confirm_small.gif" hspace="10" vspace="0" align="absmiddle">&nbsp;Thanks ~$USERNAME` your cheque with following details have been successfully submitted.</b>
+<p class="clr"></p>		
+		<div class="chk_pck_dtls">
+			<b class="fl" style="width:180px;">Cheque details-</b><p class="fr" style="width:90px;"><img src="~$IMG_URL`/profile/images/ic_print_profile.gif"> <a class="blink" href="javascript:window.print()">Print Reciept</a></p><p class="sp12"></p>
+			<ul>
+			<li><b>Cheque number :</b><i id='pro1'>~$CDNUM`</i></li>
+			<li><b>Date :</b><i id='pro2'>~$CD_DAY`/~$CD_MONTH`/~$CD_YEAR`</i></li>
+			<li><b>Bank name :</b><i id='pro3'>~$OBANK`</i></li>
+						<li><b>City :</b><i id='pro4'>~$CD_CITY`</i></li>
+						<li><b>Mobile number :</b><i id='pro5'>~$MOB_NO`</i></li>
+						<li><b>Amount :</b><i id='pro6'>~if $CURRENCY eq 'RS'`Rs. ~$PRICE`~else`~$PRICE` $~/if`</i></li>
+						</ul>
+				<b class="fl" >Please visit <a class="blink" href="../../mainmenu.php">My Jeevansathi</a> to get maximum value from your membership.</b>
+		</div>
+		</div>
+	</div> 
+</div>
+~$FOOT`
+<script type="text/javascript">
+var cur_day = parseInt(~$cur_day`);
+var cur_month = parseInt(~$cur_month`);
+var cur_year = parseInt(~$cur_year`);
+var after2_date = parseInt(~$after2_date`);
+var after2_month = parseInt(~$after2_month`);
+var after2_year = parseInt(~$after2_year`);
+var date_select_string = after2_date + "/" + after2_month + "/" + after2_year;
+var flag1 = 1,flag3 = 1,flag4,flag5,focus1=0,focus2=0;
+var flag2;
+</script>
+<script src="~$IMG_URL`/min/?f=/profile/js/~$chk_drp_js`"></script>
+<script type="text/javascript">
+onload1();
+</script>
+</body>
+</html>

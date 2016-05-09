@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uploadPhoto>
+	<messages>
+		<uploadError>
+			There was an error in uploading your photo. Please choose a .gif or .jpg file less than 1 MB.
+		</uploadError>
+		<uploadSuccessful>
+			Your photo has been uploaded and is now under processing. The photo will be attached to your profile and go online within 2-3 working days.
+		</uploadSuccessful>
+	</messages>
+</uploadPhoto>
+<!--			There has been an error in uploading your photo.<br />The error could be due to:<br />1. No photo has been chosen. OR <br />2. The photo chosen is not in .jpg or .gif format. OR <br />3. The photo is more than 1 MB in size. <br /><br />-->

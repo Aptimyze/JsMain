@@ -1,0 +1,45 @@
+<html>
+<head>
+<title>~$DISPLAY`</title>
+<script language="Javascript">
+function display()
+{
+	setTimeout("window.close()",3000);
+}
+</script>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+</head>
+<body ~if $FROM_POPUP`onLoad="display()"~/if` bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+~if $FROM_POPUP`
+        <div align="center">~$DISPLAY`</div>
+~else`
+~$HEAD`
+<br>
+<table width=760 cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+    <tr class="formhead">
+          <td width=55% class="formhead" border=1><font><b>Welcome : </b></font></td>
+          <td width="35%" class="formhead" align="center"><a href="mainpage.php?name=&cid=~$CID`"
+>Main Page</a></td>
+
+          <td width=10% class="formhead" border=1 align='CENTER'><a href="logout.php?cid=~$CID`">
+Logout</a></td>
+    </tr>
+</table>
+
+<table width=760 border=0 align=center>
+        <tr class="fieldsnew">
+        <td align="center">~$DISPLAY`</td>
+        </tr>
+	<tr class="fieldsnew">
+        <td align="center"><a href="check_obscene_msg.php?cid=~$CID`">Click here to go back</a></td>
+        </tr>
+
+
+</table>
+
+~/if`
+</table>
+</body>
+</html>

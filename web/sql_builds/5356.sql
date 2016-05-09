@@ -1,0 +1,18 @@
+use MIS;
+CREATE TABLE `TVSHOWCASE_ERROR` (
+ `ID` mediumint(8) unsigned NOT NULL auto_increment,
+ `MOBILE_NUMBER` varchar(100) default NULL,
+ `ENTRY_DT` datetime NOT NULL,
+ PRIMARY KEY  (`ID`),
+ KEY `MOBILE_NUMBER` (`MOBILE_NUMBER`)
+) ENGINE=MyISAM;
+
+CREATE TABLE `TVSHOWCASELOG` (
+ `ID` mediumint(9) NOT NULL auto_increment,
+ `PROFILEID` int(5) unsigned default NULL,
+ `SHOWCASE_PROFILEID` int(5) unsigned default NULL,
+ `ENTRY_DT` datetime NOT NULL,
+ PRIMARY KEY  (`ID`),
+ KEY `PROFILEID` (`PROFILEID`),
+ KEY `SHOWCASE_PROFILEID` (`SHOWCASE_PROFILEID`)
+) ENGINE=MyISAM;

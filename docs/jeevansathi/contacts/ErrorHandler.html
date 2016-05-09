@@ -1,0 +1,1249 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class ErrorHandler</title>
+			<link rel="stylesheet" href="../../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class ErrorHandler</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+											<a href="#sec-const-summary">Constants</a> (<a href="#sec-consts">details</a>)
+						
+			</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">The ErrorHandler class contains the functions to check any kind of error while doing the contact  between sender and receiver.</p>
+	<ul class="tags">
+				<li><span class="field">author:</span> Rohit Khandelwal</li>
+				<li><span class="field">author:</span> Hemant Agrawal</li>
+			</ul>
+		<p class="notes">
+			Located in <a class="field" href="_contacts---ErrorHandler.class.php.html">/contacts/ErrorHandler.class.php</a> (line <span class="field">11</span>)
+		</p>
+		
+				
+		<pre></pre>
+	
+			</div>
+</div>
+
+
+	<a name="sec-const-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Class Constant Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+						<span class="disabled">Constants</span> (<a href="#sec-consts">details</a>)
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<div class="const-summary">
+								<div class="const-title">
+					<a href="#CONTACT_LIMIT" title="details" class="const-name">CONTACT_LIMIT</a> = 					<span class="var-type"> 'CONTACT_LIMIT'</span>
+
+				</div>
+								<div class="const-title">
+					<a href="#CONT_VIEW_LIMIT" title="details" class="const-name">CONT_VIEW_LIMIT</a> = 					<span class="var-type"> 'VIEW_LIMIT'</span>
+
+				</div>
+								<div class="const-title">
+					<a href="#DAY" title="details" class="const-name">DAY</a> = 					<span class="var-type"> 'day'</span>
+
+				</div>
+								<div class="const-title">
+					<a href="#DECLINED" title="details" class="const-name">DECLINED</a> = 					<span class="var-type"> 'DECLINED'</span>
+
+				</div>
+								<div class="const-title">
+					<a href="#DELETED" title="details" class="const-name">DELETED</a> = 					<span class="var-type"> 'DELETED'</span>
+
+				</div>
+								<div class="const-title">
+					<a href="#DUP_LIVE_DATE" title="details" class="const-name">DUP_LIVE_DATE</a> = 					<span class="var-type"> '2012-08-13'</span>
+
+				</div>
+								<div class="const-title">
+					<a href="#EOI_ACTION_TYPE" title="details" class="const-name">EOI_ACTION_TYPE</a> = 					<span class="var-type">&quot;ContactHandler::ACCEPT,ContactHandler::CANCEL,ContactHandler::DECLINE,ContactHandler::CANCELINITIATED,ContactHandler::SEND_REMINDER,ContactHandler::INITIATED,ContactHandler::COMMUNICATION&quot;</span>
+
+				</div>
+								<div class="const-title">
+					<a href="#EOI_CONTACT_LIMIT" title="details" class="const-name">EOI_CONTACT_LIMIT</a> = 					<span class="var-type"> 'EOI_CONTACT_LIMIT'</span>
+
+				</div>
+								<div class="const-title">
+					<a href="#ERROR_FOUND" title="details" class="const-name">ERROR_FOUND</a> = 					<span class="var-type"> 2</span>
+
+				</div>
+								<div class="const-title">
+					<a href="#FILTERED" title="details" class="const-name">FILTERED</a> = 					<span class="var-type"> 'FILTERED'</span>
+
+				</div>
+								<div class="const-title">
+					<a href="#INCOMPLETE" title="details" class="const-name">INCOMPLETE</a> = 					<span class="var-type"> 'INCOMPLETE'</span>
+
+				</div>
+								<div class="const-title">
+					<a href="#KEY_NOT_PRESENT" title="details" class="const-name">KEY_NOT_PRESENT</a> = 					<span class="var-type"> 'ErrorHandler class key not present'</span>
+
+				</div>
+								<div class="const-title">
+					<a href="#MONTH" title="details" class="const-name">MONTH</a> = 					<span class="var-type"> 'month'</span>
+
+				</div>
+								<div class="const-title">
+					<a href="#OVERALL" title="details" class="const-name">OVERALL</a> = 					<span class="var-type"> 'overall'</span>
+
+				</div>
+								<div class="const-title">
+					<a href="#PHONE_NOT_VERIFIED" title="details" class="const-name">PHONE_NOT_VERIFIED</a> = 					<span class="var-type"> 'PHONE_NOT_VERIFIED'</span>
+
+				</div>
+								<div class="const-title">
+					<a href="#POST" title="details" class="const-name">POST</a> = 					<span class="var-type"> 'POST'</span>
+
+				</div>
+								<div class="const-title">
+					<a href="#PRE" title="details" class="const-name">PRE</a> = 					<span class="var-type"> 'PRE'</span>
+
+				</div>
+								<div class="const-title">
+					<a href="#PRIVILEGE" title="details" class="const-name">PRIVILEGE</a> = 					<span class="var-type"> 'PRIVILEGE'</span>
+
+				</div>
+								<div class="const-title">
+					<a href="#PROFILE_HIDDEN" title="details" class="const-name">PROFILE_HIDDEN</a> = 					<span class="var-type">'PROFILE_HIDDEN'</span>
+
+				</div>
+								<div class="const-title">
+					<a href="#REMINDER_COUNT" title="details" class="const-name">REMINDER_COUNT</a> = 					<span class="var-type"> 3</span>
+
+				</div>
+								<div class="const-title">
+					<a href="#REMINDER_LIMIT" title="details" class="const-name">REMINDER_LIMIT</a> = 					<span class="var-type"> 'REMINDER_LIMIT'</span>
+
+				</div>
+								<div class="const-title">
+					<a href="#SAMEGENDER" title="details" class="const-name">SAMEGENDER</a> = 					<span class="var-type"> 'SAMEGENDER'</span>
+
+				</div>
+								<div class="const-title">
+					<a href="#UNDERSCREENING" title="details" class="const-name">UNDERSCREENING</a> = 					<span class="var-type"> 'UNDERSCREENING'</span>
+
+				</div>
+								<div class="const-title">
+					<a href="#VIEWED_LIMIT_COUNT" title="details" class="const-name">VIEWED_LIMIT_COUNT</a> = 					<span class="var-type"> 10</span>
+
+				</div>
+								<div class="const-title">
+					<a href="#WEEK" title="details" class="const-name">WEEK</a> = 					<span class="var-type"> 'week'</span>
+
+				</div>
+							</div>
+		</div>
+	</div>
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-const-summary">Constants</a> (<a href="#sec-consts">details</a>)
+							
+									<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																																																																																																																				
+												<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#checkContactlimit" title="details" class="method-name">checkContactlimit</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#checkDeclineError" title="details" class="method-name">checkDeclineError</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#checkDeleted" title="details" class="method-name">checkDeleted</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">bool</span>
+										<a href="#checkError" title="details" class="method-name">checkError</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#checkHiddenProfile" title="details" class="method-name">checkHiddenProfile</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#checkIncomplete" title="details" class="method-name">checkIncomplete</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#checkPrivilegeError" title="details" class="method-name">checkPrivilegeError</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">bool</span>
+										<a href="#checkProfileFiltered" title="details" class="method-name">checkProfileFiltered</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#checkSameGender" title="details" class="method-name">checkSameGender</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#checkUnderScreening" title="details" class="method-name">checkUnderScreening</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#checkViewLimit" title="details" class="method-name">checkViewLimit</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#getAllError" title="details" class="method-name">getAllError</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getErrorMessage" title="details" class="method-name">getErrorMessage</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#getErrorType" title="details" class="method-name">getErrorType</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#reminderLimit" title="details" class="method-name">reminderLimit</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setErrorMessage" title="details" class="method-name">setErrorMessage</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$error</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setErrorType" title="details" class="method-name">setErrorType</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$value</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#temporaryInterest" title="details" class="method-name">temporaryInterest</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#updateErrorBits" title="details" class="method-name">updateErrorBits</a>
+											([<span class="var-type">bool</span>&nbsp;<span class="var-name">$errorKey</span> = <span class="var-default">&quot;&quot;</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">ErrorHandler</span>
+										<a href="#__construct" title="details" class="method-name">__construct</a>
+											(<span class="var-type"><a href="../../jeevansathi/contacts/ContactHandler.html">ContactHandler</a></span>&nbsp;<span class="var-name">$contactHandlerObj</span>)
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																		<a href="#sec-const-summary">Constants</a> (<a href="#sec-consts">details</a>)
+							
+										<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+
+<a name="methodcheckContactlimit" id="checkContactlimit"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">checkContactlimit</span> (line <span class="line-number">499</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Check if the contact limit has been reached and set the error message.</p>
+	<ul class="tags">
+				<li><span class="field">uses:</span> <a href="../../jeevansathi/contacts/ContactsMemcache.html#methodgetTotalContactsMade">ContactsMemcache::getTotalContactsMade()</a></li>
+				<li><span class="field">uses:</span> <a href="../../jeevansathi/contacts/ContactsMemcache.html#methodgetTodayInitiatedByMe">ContactsMemcache::getTodayInitiatedByMe()</a></li>
+				<li><span class="field">uses:</span> <a href="../../jeevansathi/contacts/ContactsMemcache.html#methodgetWeekInitiatedByMe">ContactsMemcache::getWeekInitiatedByMe()</a></li>
+				<li><span class="field">uses:</span> <a href="../../jeevansathi/contacts/ContactsMemcache.html#methodupdateMemcacheData">ContactsMemcache::updateMemcacheData()</a></li>
+				<li><span class="field">usedby:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodcheckError">ErrorHandler::checkError()</a></li>
+				<li><span class="field">uses:</span> <a href="../../jeevansathi/contacts/ContactsMemcache.html#methodgetOverallContactsMade">ContactsMemcache::getOverallContactsMade()</a></li>
+				<li><span class="field">uses:</span> <a href="../../jeevansathi/contacts/ContactsMemcache.html#methodgetMonthInitiatedByMe">ContactsMemcache::getMonthInitiatedByMe()</a></li>
+				<li><span class="field">uses:</span> CommonFunction::getContactLimits()</li>
+				<li><span class="field">uses:</span> $errorTypeArr</li>
+				<li><span class="field">uses:</span> CommonFunction::isContactVerified()</li>
+				<li><span class="field">uses:</span> <a href="../../jeevansathi/contacts/ContactsMemcache.html#methodgetContactsCountMadeAfterDCMLiveDate">ContactsMemcache::getContactsCountMadeAfterDCMLiveDate()</a></li>
+				<li><span class="field">uses:</span> <a href="../../jeevansathi/contacts/ContactsMemcache.html#methodgetInstance">ContactsMemcache::getInstance()</a></li>
+				<li><span class="field">uses:</span> $contactHandlerObj</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			checkContactlimit
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodcheckDeclineError" id="checkDeclineError"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">checkDeclineError</span> (line <span class="line-number">458</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Check if the viewer is already been declined and set the error message.</p>
+	<ul class="tags">
+				<li><span class="field">usedby:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodcheckError">ErrorHandler::checkError()</a></li>
+				<li><span class="field">uses:</span> $errorTypeArr</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			checkDeclineError
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodcheckDeleted" id="checkDeleted"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">checkDeleted</span> (line <span class="line-number">436</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Check if the viewed profile is deleted and set the error message.</p>
+	<ul class="tags">
+				<li><span class="field">usedby:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodcheckError">ErrorHandler::checkError()</a></li>
+				<li><span class="field">uses:</span> $errorTypeArr</li>
+				<li><span class="field">uses:</span> $contactHandlerObj</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			checkDeleted
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodcheckError" id="checkError"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">checkError</span> (line <span class="line-number">167</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns false when error exists and action must be stopped.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> true of false</li>
+				<li><span class="field">access:</span> public</li>
+				<li><span class="field">uses:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodcheckViewLimit">ErrorHandler::checkViewLimit()</a></li>
+				<li><span class="field">uses:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodcheckUnderScreening">ErrorHandler::checkUnderScreening()</a></li>
+				<li><span class="field">uses:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodreminderLimit">ErrorHandler::reminderLimit()</a></li>
+				<li><span class="field">uses:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodsetErrorMessage">ErrorHandler::setErrorMessage()</a></li>
+				<li><span class="field">uses:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodsetErrorType">ErrorHandler::setErrorType()</a></li>
+				<li><span class="field">uses:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodcheckSameGender">ErrorHandler::checkSameGender()</a></li>
+				<li><span class="field">uses:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodcheckProfileFiltered">ErrorHandler::checkProfileFiltered()</a></li>
+				<li><span class="field">uses:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodcheckDeleted">ErrorHandler::checkDeleted()</a></li>
+				<li><span class="field">uses:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodcheckDeclineError">ErrorHandler::checkDeclineError()</a></li>
+				<li><span class="field">uses:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodcheckHiddenProfile">ErrorHandler::checkHiddenProfile()</a></li>
+				<li><span class="field">uses:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodcheckIncomplete">ErrorHandler::checkIncomplete()</a></li>
+				<li><span class="field">uses:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodcheckPrivilegeError">ErrorHandler::checkPrivilegeError()</a></li>
+				<li><span class="field">uses:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodcheckContactlimit">ErrorHandler::checkContactlimit()</a></li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">bool</span>
+		<span class="method-name">
+			checkError
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodcheckHiddenProfile" id="checkHiddenProfile"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">checkHiddenProfile</span> (line <span class="line-number">371</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Check if the profile is currently hidden and set the error message</p>
+	<ul class="tags">
+				<li><span class="field">usedby:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodcheckError">ErrorHandler::checkError()</a></li>
+				<li><span class="field">uses:</span> $errorTypeArr</li>
+				<li><span class="field">uses:</span> $contactHandlerObj</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			checkHiddenProfile
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodcheckIncomplete" id="checkIncomplete"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">checkIncomplete</span> (line <span class="line-number">314</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Check if the profile is incomplete and set the error message</p>
+	<ul class="tags">
+				<li><span class="field">usedby:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodcheckError">ErrorHandler::checkError()</a></li>
+				<li><span class="field">uses:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodtemporaryInterest">ErrorHandler::temporaryInterest()</a></li>
+				<li><span class="field">uses:</span> $errorTypeArr</li>
+				<li><span class="field">uses:</span> $contactHandlerObj</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			checkIncomplete
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodcheckPrivilegeError" id="checkPrivilegeError"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">checkPrivilegeError</span> (line <span class="line-number">585</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">check privilege post action error</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+				<li><span class="field">usedby:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodcheckError">ErrorHandler::checkError()</a></li>
+				<li><span class="field">uses:</span> $contactHandlerObj</li>
+				<li><span class="field">uses:</span> $errorTypeArr</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			checkPrivilegeError
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodcheckProfileFiltered" id="checkProfileFiltered"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">checkProfileFiltered</span> (line <span class="line-number">394</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Check if the profile is filtered.</p>
+	<ul class="tags">
+				<li><span class="field">usedby:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodcheckError">ErrorHandler::checkError()</a></li>
+				<li><span class="field">uses:</span> $errorTypeArr</li>
+				<li><span class="field">uses:</span> $contactHandlerObj</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">bool</span>
+		<span class="method-name">
+			checkProfileFiltered
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodcheckSameGender" id="checkSameGender"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">checkSameGender</span> (line <span class="line-number">295</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Check if both the viewer and viewed are of same gender and set error message.</p>
+	<ul class="tags">
+				<li><span class="field">usedby:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodcheckError">ErrorHandler::checkError()</a></li>
+				<li><span class="field">uses:</span> $errorTypeArr</li>
+				<li><span class="field">uses:</span> $contactHandlerObj</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			checkSameGender
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodcheckUnderScreening" id="checkUnderScreening"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">checkUnderScreening</span> (line <span class="line-number">343</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Check if the profile is under screening and set the error message</p>
+	<ul class="tags">
+				<li><span class="field">usedby:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodcheckError">ErrorHandler::checkError()</a></li>
+				<li><span class="field">uses:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodtemporaryInterest">ErrorHandler::temporaryInterest()</a></li>
+				<li><span class="field">uses:</span> $errorTypeArr</li>
+				<li><span class="field">uses:</span> $contactHandlerObj</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			checkUnderScreening
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodcheckViewLimit" id="checkViewLimit"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">checkViewLimit</span> (line <span class="line-number">546</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Check if the alloted count limit has been reached and set the error message.</p>
+	<ul class="tags">
+				<li><span class="field">usedby:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodcheckError">ErrorHandler::checkError()</a></li>
+				<li><span class="field">uses:</span> jsadmin_VIEW_CONTACTS_LOG</li>
+				<li><span class="field">uses:</span> jsadmin_CONTACTS_ALLOTED</li>
+				<li><span class="field">uses:</span> $errorTypeArr</li>
+				<li><span class="field">uses:</span> $contactHandlerObj</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			checkViewLimit
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetAllError" id="getAllError"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getAllError</span> (line <span class="line-number">102</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">returns the error array having bits set for error occured of all kinds of error.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			getAllError
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetErrorMessage" id="getErrorMessage"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getErrorMessage</span> (line <span class="line-number">72</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getErrorMessage
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetErrorType" id="getErrorType"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getErrorType</span> (line <span class="line-number">93</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">returns the error array having  bits set for no error,probable errors and error occured of all kinds of error.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			getErrorType
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodreminderLimit" id="reminderLimit"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">reminderLimit</span> (line <span class="line-number">414</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Check if the reminder has been sent more than given limit.</p>
+	<ul class="tags">
+				<li><span class="field">usedby:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodcheckError">ErrorHandler::checkError()</a></li>
+				<li><span class="field">uses:</span> $errorTypeArr</li>
+				<li><span class="field">uses:</span> $contactHandlerObj</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			reminderLimit
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodsetErrorMessage" id="setErrorMessage"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setErrorMessage</span> (line <span class="line-number">62</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Used to set error message from Messages class.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+				<li><span class="field">usedby:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodcheckError">ErrorHandler::checkError()</a></li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setErrorMessage
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$error</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$error</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetErrorType" id="setErrorType"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setErrorType</span> (line <span class="line-number">83</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">set the array errorTypeArr value for the given type.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+				<li><span class="field">usedby:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodcheckError">ErrorHandler::checkError()</a></li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setErrorType
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$value</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$type</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$value</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodtemporaryInterest" id="temporaryInterest"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">temporaryInterest</span> (line <span class="line-number">473</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Check if the profile is incomplete or underscreening.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Underscreening or Incomplete</li>
+				<li><span class="field">usedby:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodcheckUnderScreening">ErrorHandler::checkUnderScreening()</a></li>
+				<li><span class="field">usedby:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodcheckIncomplete">ErrorHandler::checkIncomplete()</a></li>
+				<li><span class="field">uses:</span> $contactHandlerObj</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			temporaryInterest
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodupdateErrorBits" id="updateErrorBits"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">updateErrorBits</span> (line <span class="line-number">120</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Update bits for probable erros</p>
+	<ul class="tags">
+				<li><span class="field">usedby:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#method__construct">ErrorHandler::__construct()</a></li>
+				<li><span class="field">uses:</span> newjs_CONTACT_ERROR</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			updateErrorBits
+		</span>
+					([<span class="var-type">bool</span>&nbsp;<span class="var-name">$errorKey</span> = <span class="var-default">&quot;&quot;</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">bool</span>
+				<span class="var-name">$errorKey</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method__construct" id="__construct"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number">47</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Used to initialize object of ErrorHandler class.</p>
+	<ul class="tags">
+				<li><span class="field">uses:</span> <a href="../../jeevansathi/contacts/ErrorHandler.html#methodupdateErrorBits">ErrorHandler::updateErrorBits()</a></li>
+				<li><span class="field">uses:</span> $errorTypeArr</li>
+				<li><span class="field">uses:</span> $contactHandlerObj</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">ErrorHandler</span>
+		<span class="method-name">
+			__construct
+		</span>
+					(<span class="var-type"><a href="../../jeevansathi/contacts/ContactHandler.html">ContactHandler</a></span>&nbsp;<span class="var-name">$contactHandlerObj</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"><a href="../../jeevansathi/contacts/ContactHandler.html">ContactHandler</a></span>
+				<span class="var-name">$contactHandlerObj</span>			</li>
+				</ul>
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+	<a name="sec-consts"></a>
+	<div class="info-box">
+		<div class="info-box-title">Class Constants</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Constants</a> (<span class="disabled">details</span>)
+						
+			
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<a name="constCONTACT_LIMIT" id="CONTACT_LIMIT"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">CONTACT_LIMIT</span>
+			 = <span class="const-default"> 'CONTACT_LIMIT'</span>
+			(line <span class="line-number">22</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constCONT_VIEW_LIMIT" id="CONT_VIEW_LIMIT"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">CONT_VIEW_LIMIT</span>
+			 = <span class="const-default"> 'VIEW_LIMIT'</span>
+			(line <span class="line-number">24</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constDAY" id="DAY"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">DAY</span>
+			 = <span class="const-default"> 'day'</span>
+			(line <span class="line-number">13</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constDECLINED" id="DECLINED"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">DECLINED</span>
+			 = <span class="const-default"> 'DECLINED'</span>
+			(line <span class="line-number">26</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constDELETED" id="DELETED"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">DELETED</span>
+			 = <span class="const-default"> 'DELETED'</span>
+			(line <span class="line-number">27</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constDUP_LIVE_DATE" id="DUP_LIVE_DATE"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">DUP_LIVE_DATE</span>
+			 = <span class="const-default"> '2012-08-13'</span>
+			(line <span class="line-number">17</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constEOI_ACTION_TYPE" id="EOI_ACTION_TYPE"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">EOI_ACTION_TYPE</span>
+			 = <span class="const-default">&quot;ContactHandler::ACCEPT,ContactHandler::CANCEL,ContactHandler::DECLINE,ContactHandler::CANCELINITIATED,ContactHandler::SEND_REMINDER,ContactHandler::INITIATED,ContactHandler::COMMUNICATION&quot;</span>
+			(line <span class="line-number">35</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constEOI_CONTACT_LIMIT" id="EOI_CONTACT_LIMIT"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">EOI_CONTACT_LIMIT</span>
+			 = <span class="const-default"> 'EOI_CONTACT_LIMIT'</span>
+			(line <span class="line-number">36</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constERROR_FOUND" id="ERROR_FOUND"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">ERROR_FOUND</span>
+			 = <span class="const-default"> 2</span>
+			(line <span class="line-number">34</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constFILTERED" id="FILTERED"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">FILTERED</span>
+			 = <span class="const-default"> 'FILTERED'</span>
+			(line <span class="line-number">21</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constINCOMPLETE" id="INCOMPLETE"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">INCOMPLETE</span>
+			 = <span class="const-default"> 'INCOMPLETE'</span>
+			(line <span class="line-number">18</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constKEY_NOT_PRESENT" id="KEY_NOT_PRESENT"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">KEY_NOT_PRESENT</span>
+			 = <span class="const-default"> 'ErrorHandler class key not present'</span>
+			(line <span class="line-number">33</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constMONTH" id="MONTH"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">MONTH</span>
+			 = <span class="const-default"> 'month'</span>
+			(line <span class="line-number">15</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constOVERALL" id="OVERALL"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">OVERALL</span>
+			 = <span class="const-default"> 'overall'</span>
+			(line <span class="line-number">16</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constPHONE_NOT_VERIFIED" id="PHONE_NOT_VERIFIED"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">PHONE_NOT_VERIFIED</span>
+			 = <span class="const-default"> 'PHONE_NOT_VERIFIED'</span>
+			(line <span class="line-number">23</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constPOST" id="POST"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">POST</span>
+			 = <span class="const-default"> 'POST'</span>
+			(line <span class="line-number">29</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constPRE" id="PRE"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">PRE</span>
+			 = <span class="const-default"> 'PRE'</span>
+			(line <span class="line-number">30</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constPRIVILEGE" id="PRIVILEGE"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">PRIVILEGE</span>
+			 = <span class="const-default"> 'PRIVILEGE'</span>
+			(line <span class="line-number">28</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constPROFILE_HIDDEN" id="PROFILE_HIDDEN"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">PROFILE_HIDDEN</span>
+			 = <span class="const-default">'PROFILE_HIDDEN'</span>
+			(line <span class="line-number">37</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constREMINDER_COUNT" id="REMINDER_COUNT"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">REMINDER_COUNT</span>
+			 = <span class="const-default"> 3</span>
+			(line <span class="line-number">32</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constREMINDER_LIMIT" id="REMINDER_LIMIT"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">REMINDER_LIMIT</span>
+			 = <span class="const-default"> 'REMINDER_LIMIT'</span>
+			(line <span class="line-number">25</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constSAMEGENDER" id="SAMEGENDER"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">SAMEGENDER</span>
+			 = <span class="const-default"> 'SAMEGENDER'</span>
+			(line <span class="line-number">20</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constUNDERSCREENING" id="UNDERSCREENING"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">UNDERSCREENING</span>
+			 = <span class="const-default"> 'UNDERSCREENING'</span>
+			(line <span class="line-number">19</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constVIEWED_LIMIT_COUNT" id="VIEWED_LIMIT_COUNT"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">VIEWED_LIMIT_COUNT</span>
+			 = <span class="const-default"> 10</span>
+			(line <span class="line-number">31</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constWEEK" id="WEEK"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">WEEK</span>
+			 = <span class="const-default"> 'week'</span>
+			(line <span class="line-number">14</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+						
+		</div>
+	</div>
+
+	<p class="notes" id="credit">
+		Documentation generated on Mon, 03 Dec 2012 19:37:59 +0530 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.4</a>
+	</p>
+	</div></body>
+</html>

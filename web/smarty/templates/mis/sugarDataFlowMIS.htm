@@ -1,0 +1,194 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Lead Entry Monitoring MIS : Jeevansathi.com Matrimonial Services</title>
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+</head>
+~include file="head.htm"`
+
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table width=80% cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+    <tr class="formhead">
+          <td width=50% class="formhead" border=1 align="CENTER"><font><b>Welcome</b></font></td>
+          <td width=50% class="formhead" border=1 align='CENTER'><a href="/mis/mainpage.php?cid=~$cid`&user=~$user`">MIS Home</a></td>
+    </tr>
+</table>
+<br><br><br>
+~if $errorMsg`
+<p align="center"><font color="red">~$errorMsg`</font></p>
+~/if`
+~if $results`
+~if $criteria eq 'detailed_report'`
+<table align="center" cellspacing="1" cellpadding="3">
+	<th colspan="17" class="formhead">Detailed Report of Leads entered by Lead Entry Vendors</th>
+	<tr><td colspan="17" class="formhead" align="center">~$fromDateToDate`</td></tr>
+	<tr>
+		<td width="6%" class="label" align="center">Sl. No.</td>
+		<td width="10%" class="label" align="center">Lead ID</td>
+		<td width="10%" class="label" align="center"><a href="~$entryByLink`">Entry By</a></td>
+		<td width="10%" class="label" align="center"><a href="~$campaignLink`">Campaign</a></td>
+		<td width="10%" class="label" align="center"><a href="~$createdOnLink`">Created On</a></td>
+		<td width="10%" class="label" align="center">Lead Email ID</td>
+		<td width="10%" class="label" align="center">Enquirer Email ID</td>
+		<td width="10%" class="label" align="center">Mobile 1</td>
+		<td width="10%" class="label" align="center">STD 1</td>
+		<td width="10%" class="label" align="center">Landline 1</td>
+		<td width="10%" class="label" align="center">Mobile 2</td>
+		<td width="10%" class="label" align="center">STD 2</td>
+		<td width="10%" class="label" align="center">Landline 2</td>
+		<td width="10%" class="label" align="center">Gender</td>
+		<td width="10%" class="label" align="center">Age</td>
+		<td width="10%" class="label" align="center">Status</td>
+		<td width="10%" class="label" align="center">Disposition</td>
+	</tr>
+	~foreach from=$resultArr key=l item=m`
+	~foreach from=$resultArr[$l] key=a item=b`
+	~foreach from=$resultArr[$l][$a] key=c item=d`
+	~foreach from=$resultArr[$l][$a][$c] key=k item=v` 
+	<tr>
+		<td width="6%" class="label" align="center">~if $resultArr[$l][$a][$c][$k].highlight eq '1'`<font color="red">~$resultArr[$l][$a][$c][$k].count`</font>~else`~$resultArr[$l][$a][$c][$k].count`~/if`</td>
+		<td width="6%" class="label" align="center">~if $resultArr[$l][$a][$c][$k].highlight`<font color="red">~$resultArr[$l][$a][$c][$k].name`</font>~else`~$resultArr[$l][$a][$c][$k].name`~/if`</td>
+		<td width="6%" class="label" align="center">~if $resultArr[$l][$a][$c][$k].highlight`<font color="red">~$resultArr[$l][$a][$c][$k].entry_by`</font>~else`~$resultArr[$l][$a][$c][$k].entry_by`~/if`</td>
+		<td width="6%" class="label" align="center">~if $resultArr[$l][$a][$c][$k].highlight`<font color="red">~$resultArr[$l][$a][$c][$k].campaign`</font>~else`~$resultArr[$l][$a][$c][$k].campaign`~/if`</td>
+		<td width="6%" class="label" align="center">~if $resultArr[$l][$a][$c][$k].highlight`<font color="red">~$resultArr[$l][$a][$c][$k].created_on`</font>~else`~$resultArr[$l][$a][$c][$k].created_on`~/if`</td>
+		<td width="6%" class="label" align="center">~if $resultArr[$l][$a][$c][$k].highlight`<font color="red">~$resultArr[$l][$a][$c][$k].lead_email_id`</font>~else`~$resultArr[$l][$a][$c][$k].lead_email_id`~/if`</td>
+		<td width="6%" class="label" align="center">~if $resultArr[$l][$a][$c][$k].highlight`<font color="red">~$resultArr[$l][$a][$c][$k].enquirer_email_id`</font>~else`~$resultArr[$l][$a][$c][$k].enquirer_email_id`~/if`</td>
+		<td width="6%" class="label" align="center">~if $resultArr[$l][$a][$c][$k].highlight`<font color="red">~$resultArr[$l][$a][$c][$k].Mobile1`</font>~else`~$resultArr[$l][$a][$c][$k].Mobile1`~/if`</td>
+		<td width="6%" class="label" align="center">~if $resultArr[$l][$a][$c][$k].highlight`<font color="red">~$resultArr[$l][$a][$c][$k].STD1`</font>~else`~$resultArr[$l][$a][$c][$k].STD1`~/if`</td>
+		<td width="6%" class="label" align="center">~if $resultArr[$l][$a][$c][$k].highlight`<font color="red">~$resultArr[$l][$a][$c][$k].Landline1`</font>~else`~$resultArr[$l][$a][$c][$k].Landline1`~/if`</td>
+		<td width="6%" class="label" align="center">~if $resultArr[$l][$a][$c][$k].highlight`<font color="red">~$resultArr[$l][$a][$c][$k].Mobile2`</font>~else`~$resultArr[$l][$a][$c][$k].Mobile2`~/if`</td>
+		<td width="6%" class="label" align="center">~if $resultArr[$l][$a][$c][$k].highlight`<font color="red">~$resultArr[$l][$a][$c][$k].STD2`</font>~else`~$resultArr[$l][$a][$c][$k].STD2`~/if`</td>
+		<td width="6%" class="label" align="center">~if $resultArr[$l][$a][$c][$k].highlight`<font color="red">~$resultArr[$l][$a][$c][$k].Landline2`</font>~else`~$resultArr[$l][$a][$c][$k].Landline2`~/if`</td>
+		<td width="6%" class="label" align="center">~if $resultArr[$l][$a][$c][$k].highlight`<font color="red">~$resultArr[$l][$a][$c][$k].Gender`</font>~else`~$resultArr[$l][$a][$c][$k].Gender`~/if`</td>
+		<td width="6%" class="label" align="center">~if $resultArr[$l][$a][$c][$k].highlight`<font color="red">~$resultArr[$l][$a][$c][$k].Age`</font>~else`~$resultArr[$l][$a][$c][$k].Age`~/if`</td>
+		<td width="6%" class="label" align="center">~if $resultArr[$l][$a][$c][$k].highlight`<font color="red">~$resultArr[$l][$a][$c][$k].Status`</font>~else`~$resultArr[$l][$a][$c][$k].Status`~/if`</td>
+		<td width="6%" class="label" align="center">~if $resultArr[$l][$a][$c][$k].highlight`<font color="red">~$resultArr[$l][$a][$c][$k].Disposition`</font>~else`~$resultArr[$l][$a][$c][$k].Disposition`~/if`</td>
+	</tr>
+	~/foreach`
+	~/foreach`
+	~/foreach`
+	~/foreach`
+</table>
+~elseif $criteria eq 'source_performance' || $criteria eq 'exec_performance'`
+<table align="center" cellspacing="1" cellpadding="3">
+        <th colspan="~$totalSpan`" class="formhead">~$title`</th>
+        <tr><td colspan="~$totalSpan`" class="formhead" align="center">~$selectedTimePeriod`</td></tr>
+	<tr>
+		<td colspan="~$totalSpan`" class="formhead" align="center">
+			<table>
+			<tr><td class="formhead" align="center"><font color="red">Registered Leads</font> ( <font color="green">Percentage of Registered Leads</font> )</td></tr>
+			<tr><td class="formhead" align="center"><font color="blue">Total Leads Created</font></td></tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+	<td class="formhead"></td>
+	~foreach from=$timeArr key=k item=v`
+		<td class="formhead" align="center" width="~$width`">~$v`</td>
+	~/foreach`
+	</tr>
+	~foreach from=$labelArr key=k item=v`
+	<tr>
+		<td class="formhead" align="center">~$v`</td>
+		~foreach from=$timeArr key=l item=m`
+			<td class="label" align="center" width="~$width`">
+			<table>
+			<tr>
+				<td class="label" align="center"><font color="red">~$resultArr[$k][$m].registered`</font>&nbsp;(<font color="green">~$resultArr[$k][$m].reg_percentage`</font>)</td>
+			</tr>
+			<tr>
+				<td class="label" align="center"><font color="blue">~$resultArr[$k][$m].total`</font></td>
+			</tr>
+			</table>
+			</td>
+		~/foreach`
+	</tr>
+	~/foreach`
+	<tr>
+		<td class="formhead" align="center">Totals</td>
+		~foreach from=$timeArr key=k item =v`
+			<td class="label" align="center" width="~$width`">
+			<table>
+                        <tr>
+                                <td class="label" align="center"><font color="red">~$totalResultArr[$v].registered`</font>&nbsp;(<font color="green">~$totalResultArr[$v].reg_percentage`</font>)</td>
+                        </tr>
+                        <tr>
+                                <td class="label" align="center"><font color="blue">~$totalResultArr[$v].total`</font></td>
+                        </tr>
+                        </table>
+
+			</td>
+		~/foreach`
+	</tr>		
+</table>
+~/if`
+~else`
+<form action="sugarDataFlowMIS.php" method="post">
+<table align="center" width=20% cellspacing="1" cellpadding="3">
+<th><td colspan="9" class="formhead" align="center">Select Report Type</td></th>
+</table>
+<br><br>
+<table align="center" width=90% cellspacing="1" cellpadding="3">
+	<tr>
+		<td width="10%" class="label" align="left"><input type="radio" name="criteria" value="detailed_report">Detailed Report</input></td>
+		<td width="15%" class="label" align="center">For the Date Range :</td>
+		<td width="10%" class="label" align="center">Date : <select name="detailed_from_date">~$dayDD`</select></td>
+		<td width="10%" class="label" align="center">Month : <select name="detailed_from_month">~$monthDD`</select></td>
+		<td width="10%" class="label" align="center">Year : <select name="detailed_from_year">~$yearDD`</select></td>
+		<td width="5%" class="label" align="center">To</td>
+		<td width="10%" class="label" align="center">Date : <select name="detailed_to_date">~$dayDD`</select></td>
+		<td width="10%" class="label" align="center">Month : <select name="detailed_to_month">~$monthDD`</select></td>
+		<td width="10%" class="label" align="center">Year : <select name="detailed_to_year">~$yearDD`</select></td>	
+	</tr>
+</table>
+<br><br>
+<table align="center" width=50% cellspacing="3" cellpadding="3">
+	<tr>
+                <td width="30%" class="label" align="left"><input type="radio" name="criteria" value="exec_performance">Executive Performance</input></td>
+                <td width="70%" class="label" align="left" rowspan="2">
+		<table align="center" cellspacing="1" cellpadding="3">
+		<tr>
+			<td width="40%" class="label" align="center"><input type="radio" name="performance_range" value="month_wise">Month-wise</input></td>
+			<td width=20% class="label"></td>
+			<td width="40%" class="label" align="center"><input type="radio" name="performance_range" value="date_wise">Date-wise</input></td>
+		</tr>
+		<tr>
+			<td width="40%" class="label" align="center">For the Year : <select name="performance_year">~$yearDD`</select></td>
+			<td width=20% class="label"></td>
+                        <td width="40%" class="label" align="center">For the Month : <select name="performance_month">~$monthDD`</select></td>
+		</tr>
+		</table>
+		</td>
+        </tr>
+	<tr>
+                <td width="30%" class="label" align="left"><input type="radio" name="criteria" value="source_performance">Source Performance</input></td>
+        </tr>
+</table>
+<br><br>
+<table align="center" width="20%" cellspacing="1" cellpadding="3">
+<tr>
+<td class="formhead" colspan="2" align="center">Select Report Format</td>
+</tr>
+<tr>
+	<td class="label" align="center"><input type="radio" name="result_format" value="html" checked></input></td>
+	<td class="label" align="center">HTML format</td>
+</tr>
+<tr>
+        <td class="label" align="center"><input type="radio" name="result_format" value="xls"></input></td>
+        <td class="label" align="center">Excel format</td>
+</tr>
+</table>
+<br><br>
+<table align="center" width=20% cellspacing="1" cellpadding="3">
+	<tr>
+		<td colspan="9" class="label" align="center"><input type="submit" name="submit" value="Submit"></td>
+	</tr>
+</table>
+<input type="hidden" name="cid" value="~$cid`">
+<input type="hidden" name="user" value="~$user`">
+</form>
+~/if`
+<br><br><br>
+</body>
+</html>

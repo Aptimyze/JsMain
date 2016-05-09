@@ -1,0 +1,14 @@
+INSERT INTO `CONTACT_US` VALUES (69, '69', 'DehraDun', '', '', '', '', '', 'DehraDun', '', 'UT', '', '');
+INSERT INTO `CONTACT_US` VALUES (70, '70', 'Patna', '', '', '', '', '', 'Patna', '', 'BI', '', '');
+INSERT INTO `CONTACT_US` VALUES (71, '71', 'Allahabad', '', '', '', '', '', 'Allahabad', '', 'UP', '', '');
+INSERT INTO `CONTACT_US` VALUES (72, '72', 'Varanasi', '', '', '', '', '', 'Varanasi', '', 'UP', '', '');
+INSERT INTO `CONTACT_US` VALUES (73, '73', 'Jabalpur', '', '', '', '', '', 'Jabalpur', '', 'MP', '', '');
+INSERT INTO `CONTACT_US` VALUES (74, '74', 'Nanded', '', '', '', '', '', 'Nanded', '', 'MH', '', '');
+INSERT INTO `CONTACT_US` VALUES (75, '75', 'Gwalior', '', '', '', '', '', 'Gwalior', '', 'MP', '', '');
+INSERT INTO `CONTACT_US` VALUES (76, '76', 'Jalandhar', '', '', '', '', '', 'Jalandhar', '', 'PU', '', '');
+INSERT INTO `CONTACT_US` VALUES (77, '77', 'Ludhiana', '', '', '', '', '', 'Ludhiana', '', 'PU', '', '');
+INSERT INTO `CONTACT_US` VALUES (78, '78', 'Ranchi', '', '', '', '', '', 'Ranchi', '', 'JH', '', '');
+INSERT INTO `CONTACT_US` VALUES (79, '79', 'Bhavnagar', '', '', '', '', '', 'Bhavnagar', '', 'GU', '', '');
+INSERT INTO `CONTACT_US` VALUES (80, '80', 'Lake Town', '', '', '', '', '', 'Kolkata', '', 'WB', '', '');
+UPDATE `CONTACT_US` SET `STATE_VAL` = 'CH' WHERE `ID` = '22';
+UPDATE `CONTACT_US` SET `STATE_VAL` = 'JH' WHERE `ID` = '47';

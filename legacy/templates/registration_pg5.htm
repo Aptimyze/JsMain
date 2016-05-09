@@ -1,0 +1,694 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="description" content="Register for Free in Jeevansathi.com. Create your matrimonial profile and find your dream life partner. Join Jeevansathi.com today, the leading India matrimonials website in India. Search matrimonials, matrimony profiles, NRI bride and groom from our online matrimonial and matchmaking services."/>
+        <meta name="keywords" content="Jeevansathi.com, Indian matrimony, India, matrimony, matrimonial, matrimonials, matrimony services,online matrimonials, Indian marriage, match making, matchmaking, matchmaker, match maker, marriage bureau , matchmaking services, matrimonial profiles, bride, groom, matrimony classified."/>
+	<title>Jeevansathi.com Registration - Partner preferences</title>
+<link href="css/~$reg_common_css`" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="~$SITE_URL`/css/~$rupeeSymbol_css`">
+<style>
+.mt_min_19 {
+	margin-top:-19px;
+	z-index:10;
+	position:relative;
+}
+h1 {
+	font:11px verdana, Helvetica, sans-serif;
+}
+.w_202 {
+	width:252px;
+}
+.gry_bdr {
+	border:1px solid #ccc;
+}
+.pl_2 {
+	padding-left:2px;
+}
+.chk_box_cont {
+	overflow: auto;
+	width: 250px;
+	height: 98px;
+}
+div.chk_box_cont label{font-weight:normal!important; float:none!important; padding:0!important; width:auto!important; text-align:left;color:#000000!important}
+div.chk_box_cont input{margin:0 2px 3px 0;}
+</style>
+<script>
+var page = "REG";
+var docF = document.form1;
+</script>
+<script src="~$JQUERY_JS`" type="text/javascript"></script>
+<script src="js/~$revampCommon_js`" type="text/javascript"></script>
+<script type="text/javascript">
+//added by ankit 
+function fill_default_val()
+{
+        var caste, rel, city;
+        ~foreach from=$checked_religion key=k item=v`
+                if(rel)
+                        rel+=",'"+"~$v`"+"'";
+                else
+                        rel="'~$v`'";
+        ~/foreach`
+        if(rel && rel!='undefined')
+	        document.getElementById("partner_religion_str").value=rel;
+        ~foreach from=$checked_caste key=k item=v`
+                if(caste)
+                        caste+=",'"+~$v`+"'";
+                else
+                        caste="'"+~$v`+"'";
+        ~/foreach`
+	if(caste)
+        document.getElementById("partner_caste_selected").value=caste;
+}
+
+function addOption(selectbox,text,value )
+{
+        var optn = document.createElement("OPTION");
+        optn.text = text;
+        optn.value = value;
+        selectbox.options.add(optn);
+}
+
+//function for ajax
+function ajaxFunction(strSubmit){
+        var ajaxRequest;  // The variable that makes Ajax possible!
+        
+        try{
+                // Opera 8.0+, Firefox, Safari
+                ajaxRequest = new XMLHttpRequest();
+        } catch (e){
+                // Internet Explorer Browsers
+                try{
+                        ajaxRequest = new ActiveXObject("Msxml2.XMLHTTP");
+                } catch (e) {
+                        try{
+                                ajaxRequest = new ActiveXObject("Microsoft.XMLHTTP");
+                        } catch (e){
+                                // Something went wrong
+                                alert("Your browser broke!");
+                                return false;
+                        }
+                }
+        }
+        var queryString = "registration_page5.php?ajax=1";
+        
+         ajaxRequest.onreadystatechange = function(){
+                if(ajaxRequest.readyState == 4)
+                {
+                        strResponse=ajaxRequest.responseText;
+                        switch (ajaxRequest.status) {
+                   // Page-not-found error
+                   case 404:
+                           alert('Error: Not Found. The requested URL ' + 
+                                   strURL + ' could not be found.');
+                           break;
+ // Display results in a full window for server-side errors
+                   case 500:
+                           handleErrFullPage(strResponse);
+                           break;
+                   default:
+                           // Call JS alert for custom error or debug messages
+                           if (strResponse.indexOf('Error:') > -1 || 
+                                   strResponse.indexOf('Debug:') > -1) {
+                                   alert(strResponse);
+                           }
+                           // Call the desired result function
+                 }      
+                document.getElementById("count").innerHTML=ajaxRequest.responseText;
+                }
+        }
+
+        var str1=strSubmit; 
+        ajaxRequest.open('POST',queryString,true);
+        ajaxRequest.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+        ajaxRequest.send(str1); 
+}
+
+function validate_income()
+{
+		if((document.getElementById('rsLIncome').value!='') && (document.getElementById('rsHIncome').value!=''))
+		{
+			if(parseInt(document.getElementById('rsLIncome').value) > parseInt(document.getElementById('rsHIncome').value) || (parseInt(document.getElementById('rsLIncome').value) == parseInt(document.getElementById('rsHIncome').value) && parseInt(document.getElementById('rsHIncome').value)!=0  ))
+			{
+				alert('Maximum income should be greater than minimum income.');
+		                document.getElementById('rsLIncome').focus();
+		                return false;
+			}
+		}
+		
+		if((document.getElementById('doLIncome').value!='') && (document.getElementById('doHIncome').value!=''))
+		{
+			 if(parseInt(document.getElementById('doLIncome').value) > parseInt(document.getElementById('doHIncome').value) || (parseInt(document.getElementById('doLIncome').value) == parseInt(document.getElementById('doHIncome').value) && parseInt(document.getElementById('doHIncome').value)!=0))
+			 {
+				alert('Maximum income should be greater than minimum income.');
+		                document.getElementById('doLIncome').focus();
+		                return false;
+			 }
+		}
+
+		if((document.getElementById('rsLIncome').value!='') && (document.getElementById('rsHIncome').value==''))
+		{
+			alert('Please enter both the values to define income range.');
+			document.getElementById('rsHIncome').focus();
+			return false;
+		}
+
+		if((document.getElementById('rsLIncome').value=='') && (document.getElementById('rsHIncome').value!=''))
+		{
+			alert('Please enter both the values to define income range.');
+			document.getElementById('rsLIncome').focus();
+			return false;
+		}
+
+		if((document.getElementById('doLIncome').value!='') && (document.getElementById('doHIncome').value==''))
+		{
+			alert('Please enter both the values to define dollar range.');
+			document.getElementById('doHIncome').focus();
+			return false;
+		}
+
+		if((document.getElementById('doLIncome').value=='') && (document.getElementById('doHIncome').value!=''))
+		{
+			alert('Please enter both the values to define dollar range.');
+			document.getElementById('doLIncome').focus();
+			return false;
+		}
+
+		return true;
+}
+
+function check_gender()
+{
+	if(document.getElementById("Min_Age").value>document.getElementById("Max_Age").value)
+	{
+		document.getElementById("Min_Age").focus();
+		alert('Please enter valid Age range !');
+		return false;
+	}
+	else if(parseInt(document.getElementById("Min_Height").value) > parseInt(document.getElementById("Max_Height").value))
+	{
+		document.getElementById("Min_Height").focus();
+		alert('Please enter valid Height range !');
+		return false;
+	}
+	else if(document.getElementById('Gender').value=='M' && document.getElementById("Min_Age").value<'21')
+	{
+		alert('Please enter valid Age !');
+                return false;
+	}
+	else 
+	{
+		if(validate_income())
+			document.form1.submit();
+		else 
+			return false;
+	}
+}
+
+function apply_thickbox_class()
+{
+        $('.thickbox').colorbox();
+        imgLoader = new Image();// preload image
+        imgLoader.src = tb_pathToImage;
+}
+
+function changeCount()
+{
+	var docF=document.form1;
+	var str=new String();
+	str=docF.spouseDetail.value;
+	document.getElementById("wordCount").innerHTML=str.length;
+																
+}
+
+function submit_skip_page(pg)
+{
+	if(pg=='pg6')
+		document.form1.action=document.form1.action+'?skip_to_next_page6=1';document.form1.submit();
+	if(pg=='fto')
+		document.form1.action=document.form1.action+'?skip_to_fto=1';document.form1.submit();
+	return false;
+}
+
+</script>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+~$TRACK_HEAD`
+~$TRACK_JSFLAG`
+~$TRACK_HEAD`
+~$TRACK_JSFLAG`
+<body>
+	~$TRACK_JSFLAGTRACK`
+<noscript>
+<div style="position:fixed;z-index:1000;width:100%">
+	<div style="text-align:center;padding-bottom:3px;font-family:verdana,Arial;font-size:12px;font-size-adjust:none;font-stretch:normal;font-style:normal;font-variant:normal;font-weight:normal;line-height:normal;background-color:#E5E5E5;">
+		<b><img src="~$IMG_URL`/profile/images/registration_new/error.gif" width="23" height="20"> Javascript is disabled in your browser.Due  to this certain functionalities will not work. 
+			<a href="~$SITE_URL`/P/js_help.htm" target="_blank">Click Here</a> , to know how  to enable it.
+		</b>
+	</div>
+</div>
+</noscript>
+
+<p class="tp_bg sprte"></p>
+<div class="reg_cont"> 
+	<a href="http://server.iad.liveperson.net/hc/13507809/?cmd=file&file=visitorWantsToChat&offlineURL=~$SITE_URL`/P/faq_redirect.php&site=13507809&byhref=1&imageUrl=http://www.jeevansathi.com/images_try/liveperson" target="_blank"  onclick="javascript:window.open('http://server.iad.liveperson.net/hc/13507809/?cmd=file&file=visitorWantsToChat&offlineURL=~$SITE_URL`/P/faq_redirect.php&site=13507809&imageUrl=http://www.jeevansathi.com/images_try/liveperson&referrer='+escape(document.location),'chat13507809','width=472,height=320');return false;" class="fr mar b mt_min_19"><p class="hlp fl sprte"></p>&nbsp;Live help</a>
+	<p class="clr cl_5"></p>
+	<div class="fl">
+		<a href="~$SITE_URL`" style="cursor:pointer;">
+		<p class="logo sprte"></p>
+		</a>
+		<h1>Indian Matrimonials - We Match Better </h1>
+	</div>
+	<div class="fr" style="width:151px;">
+		<span class="fl">A </span> 
+		<span class="nkri_lgo sprte fl" style="margin:2px;"></span> 
+		<span class="fl">venture</span>
+	</div>
+	<div class="clr cl21"></div>
+	<h4 class="drk_gry u">To help us match better, describe your desired partner profile</h4>
+	<div class="clr cl_5"></div>
+	<div class="fl mt_10" style="width:770px;">
+		<div class="clr cl_5"></div>
+		<div class="main_form_cont pos_rltv" style="width:770px;"> 
+~if $IS_FTO_LIVE`
+		<div class="fto-notification-box box3">
+			<p style="color:#bc001d">Complete the form and 
+			     Get Jeevansathi Paid Membership for <span style="font-family:WebRupee; color:#bc001d">R</span><span style=" text-decoration: line-through; color:#000 "><span style="color:#bc001d">1100</span></span><strong> FREE</strong> 
+				 </p>
+				 <div style=" height:5px"></div>
+				 <p>See e-mail IDs / Phone numbers of people you like.</p>
+			 </div>
+			 <div style="width:100%" class="fl">
+				 <div class="fto-arrow-down sprte">&nbsp;</div>
+			 </div>
+			 <div class="clr cl_10"></div>
+		~/if`
+			<i class="d_t_l pos_abs h_w_6 sprte"></i>
+			<i class="d_t_r pos_abs h_w_6 sprte p_tr_0"></i>
+			<i class="d_b_r pos_abs h_w_6 sprte p_br_0"></i>
+			<i class="d_b_l pos_abs h_w_6 sprte p_bl_0"></i>
+			<form name="form1" method="post" action="registration_page5.php" style="margin: 0px">
+			<input type="hidden" name="type" value="~$type`">
+			<input type="hidden" name="checksum" value="~$checksum`">
+			<input type="hidden" name="profilechecksum" value="~$profilechecksum`">
+			<input type="hidden" name="data_auth" value="~$data_auth`">
+			<input type="hidden" name="profileid" value="~$profileid`">
+			<input type="hidden" name="sem" value="~$sem`">
+			<input type="hidden" name="img_url" value="~$SITE_URL`/profile/images">
+			<input type="hidden" name="Gender" id="Gender" value="~$Gender`">
+			<input type="hidden" name="tieup_source" id="tieup_source" value="~$tieup_source`">
+
+			<ul class="form" style="margin-top:5px;">
+			<li>
+				<h2>Your Partner Preferences</h2>
+				<div id="count" class="fr b">&nbsp;</div>
+			</li>
+			<li>
+				<label id ="my_age">Age :</label>
+				<select class="sel_sml fl" style="width:45px;" name="Min_Age" id="Min_Age">
+				<option value="18"~if $MIN_AGE eq '18'` selected="selected"~/if`>18</option>
+				<option value="19"~if $MIN_AGE eq '19'` selected="selected"~/if`>19</option>
+				<option value="20"~if $MIN_AGE eq '20'` selected="selected"~/if`>20</option>
+				<option value="21"~if $MIN_AGE eq '21'` selected="selected"~/if`>21</option>
+				<option value="22"~if $MIN_AGE eq '22'` selected="selected"~/if`>22</option>
+				<option value="23"~if $MIN_AGE eq '23'` selected="selected"~/if`>23</option>
+				<option value="24"~if $MIN_AGE eq '24'` selected="selected"~/if`>24</option>
+				<option value="25"~if $MIN_AGE eq '25'` selected="selected"~/if`>25</option>
+				<option value="26"~if $MIN_AGE eq '26'` selected="selected"~/if`>26</option>
+				<option value="27"~if $MIN_AGE eq '27'` selected="selected"~/if`>27</option>
+				<option value="28"~if $MIN_AGE eq '28'` selected="selected"~/if`>28</option>
+				<option value="29"~if $MIN_AGE eq '29'` selected="selected"~/if`>29</option>
+				<option value="30"~if $MIN_AGE eq '30'` selected="selected"~/if`>30</option>
+				<option value="31"~if $MIN_AGE eq '31'` selected="selected"~/if`>31</option>
+				<option value="32"~if $MIN_AGE eq '32'` selected="selected"~/if`>32</option>
+				<option value="33"~if $MIN_AGE eq '33'` selected="selected"~/if`>33</option>
+				<option value="34"~if $MIN_AGE eq '34'` selected="selected"~/if`>34</option>
+				<option value="35"~if $MIN_AGE eq '35'` selected="selected"~/if`>35</option>
+				<option value="36"~if $MIN_AGE eq '36'` selected~/if`>36</option>
+				<option value="37"~if $MIN_AGE eq '37'` selected~/if`>37</option>
+				<option value="38"~if $MIN_AGE eq '38'` selected~/if`>38</option>
+				<option value="39"~if $MIN_AGE eq '39'` selected~/if`>39</option>
+				<option value="40"~if $MIN_AGE eq '40'` selected~/if`>40</option>
+				<option value="41"~if $MIN_AGE eq '41'` selected~/if`>41</option>
+				<option value="42"~if $MIN_AGE eq '42'` selected~/if`>42</option>
+				<option value="43"~if $MIN_AGE eq '43'` selected~/if`>43</option>
+				<option value="44"~if $MIN_AGE eq '44'` selected~/if`>44</option>
+				<option value="45"~if $MIN_AGE eq '45'` selected~/if`>45</option>
+				<option value="46"~if $MIN_AGE eq '46'` selected~/if`>46</option>
+				<option value="47"~if $MIN_AGE eq '47'` selected~/if`>47</option>
+				<option value="48"~if $MIN_AGE eq '48'` selected~/if`>48</option>
+				<option value="49"~if $MIN_AGE eq '49'` selected~/if`>49</option>
+				<option value="50"~if $MIN_AGE eq '50'` selected~/if`>50</option>
+				<option value="51"~if $MIN_AGE eq '51'` selected~/if`>51</option>
+				<option value="52"~if $MIN_AGE eq '52'` selected~/if`>52</option>
+				<option value="53"~if $MIN_AGE eq '53'` selected~/if`>53</option>
+				<option value="54"~if $MIN_AGE eq '54'` selected~/if`>54</option>
+				<option value="55"~if $MIN_AGE eq '55'` selected~/if`>55</option>
+				<option value="56"~if $MIN_AGE eq '56'` selected~/if`>56</option>
+				<option value="57"~if $MIN_AGE eq '57'` selected~/if`>57</option>
+				<option value="58"~if $MIN_AGE eq '58'` selected~/if`>58</option>
+				<option value="59"~if $MIN_AGE eq '59'` selected~/if`>59</option>
+				<option value="60"~if $MIN_AGE eq '60'` selected~/if`>60</option>
+				<option value="61"~if $MIN_AGE eq '61'` selected~/if`>61</option>
+				<option value="62"~if $MIN_AGE eq '62'` selected~/if`>62</option>
+				<option value="63"~if $MIN_AGE eq '63'` selected~/if`>63</option>
+				<option value="64"~if $MIN_AGE eq '64'` selected~/if`>64</option>
+				<option value="65"~if $MIN_AGE eq '65'` selected~/if`>65</option>
+				<option value="66"~if $MIN_AGE eq '66'` selected~/if`>66</option>
+				<option value="67"~if $MIN_AGE eq '67'` selected~/if`>67</option>
+				<option value="68"~if $MIN_AGE eq '68'` selected~/if`>68</option>
+				<option value="69"~if $MIN_AGE eq '69'` selected~/if`>69</option>
+				<option value="70"~if $MIN_AGE eq '70'` selected~/if`>70</option>
+				</select>
+				<span class="fl" style="margin:2px 10px;">to</span>
+				<select class="sel_sml fl" style="width:45px;" name="Max_Age" id="Max_Age">
+				<option value="18"~if $MAX_AGE eq '18'` selected~/if`>18</option>
+				<option value="19"~if $MAX_AGE eq '19'` selected~/if`>19</option>
+				<option value="20"~if $MAX_AGE eq '20'` selected~/if`>20</option>
+				<option value="21"~if $MAX_AGE eq '21'` selected~/if`>21</option>
+				<option value="22"~if $MAX_AGE eq '22'` selected~/if`>22</option>
+				<option value="23"~if $MAX_AGE eq '23'` selected~/if`>23</option>
+				<option value="24"~if $MAX_AGE eq '24'` selected~/if`>24</option>
+				<option value="25"~if $MAX_AGE eq '25'` selected~/if`>25</option>
+				<option value="26"~if $MAX_AGE eq '26'` selected~/if`>26</option>
+				<option value="27"~if $MAX_AGE eq '27'` selected~/if`>27</option>
+				<option value="28"~if $MAX_AGE eq '28'` selected~/if`>28</option>
+				<option value="29"~if $MAX_AGE eq '29'` selected~/if`>29</option>
+				<option value="30"~if $MAX_AGE eq '30'` selected~/if`>30</option>
+				<option value="31"~if $MAX_AGE eq '31'` selected~/if`>31</option>
+				<option value="32"~if $MAX_AGE eq '32'` selected~/if`>32</option>
+				<option value="33"~if $MAX_AGE eq '33'` selected~/if`>33</option>
+				<option value="34"~if $MAX_AGE eq '34'` selected~/if`>34</option>
+				<option value="35"~if $MAX_AGE eq '35'` selected~/if`>35</option>
+				<option value="36"~if $MAX_AGE eq '36'` selected~/if`>36</option>
+				<option value="37"~if $MAX_AGE eq '37'` selected~/if`>37</option>
+				<option value="38"~if $MAX_AGE eq '38'` selected~/if`>38</option>
+				<option value="39"~if $MAX_AGE eq '39'` selected~/if`>39</option>
+				<option value="40"~if $MAX_AGE eq '40'` selected~/if`>40</option>
+				<option value="41"~if $MAX_AGE eq '41'` selected~/if`>41</option>
+				<option value="42"~if $MAX_AGE eq '42'` selected~/if`>42</option>
+				<option value="43"~if $MAX_AGE eq '43'` selected~/if`>43</option>
+				<option value="44"~if $MAX_AGE eq '44'` selected~/if`>44</option>
+				<option value="45"~if $MAX_AGE eq '45'` selected~/if`>45</option>
+				<option value="46"~if $MAX_AGE eq '46'` selected~/if`>46</option>
+				<option value="47"~if $MAX_AGE eq '47'` selected~/if`>47</option>
+				<option value="48"~if $MAX_AGE eq '48'` selected~/if`>48</option>
+				<option value="49"~if $MAX_AGE eq '49'` selected~/if`>49</option>
+				<option value="50"~if $MAX_AGE eq '50'` selected~/if`>50</option>
+				<option value="51"~if $MAX_AGE eq '51'` selected~/if`>51</option>
+				<option value="52"~if $MAX_AGE eq '52'` selected~/if`>52</option>
+				<option value="53"~if $MAX_AGE eq '53'` selected~/if`>53</option>
+				<option value="54"~if $MAX_AGE eq '54'` selected~/if`>54</option>
+				<option value="55"~if $MAX_AGE eq '55'` selected~/if`>55</option>
+				<option value="56"~if $MAX_AGE eq '56'` selected~/if`>56</option>
+				<option value="57"~if $MAX_AGE eq '57'` selected~/if`>57</option>
+				<option value="58"~if $MAX_AGE eq '58'` selected~/if`>58</option>
+				<option value="59"~if $MAX_AGE eq '59'` selected~/if`>59</option>
+				<option value="60"~if $MAX_AGE eq '60'` selected~/if`>60</option>
+				<option value="61"~if $MAX_AGE eq '61'` selected~/if`>61</option>
+				<option value="62"~if $MAX_AGE eq '62'` selected~/if`>62</option>
+				<option value="63"~if $MAX_AGE eq '63'` selected~/if`>63</option>
+				<option value="64"~if $MAX_AGE eq '64'` selected~/if`>64</option>
+				<option value="65"~if $MAX_AGE eq '65'` selected~/if`>65</option>
+				<option value="66"~if $MAX_AGE eq '66'` selected~/if`>66</option>
+				<option value="67"~if $MAX_AGE eq '67'` selected~/if`>67</option>
+				<option value="68"~if $MAX_AGE eq '68'` selected~/if`>68</option>
+				<option value="69"~if $MAX_AGE eq '69'` selected~/if`>69</option>
+				<option value="70"~if $MAX_AGE eq '70'` selected~/if`>70</option>
+				</select>
+			</li>
+			<li>
+				<label id="mstatus_label" >Marital Status :</label>
+				<div class="fl w_202 no_b blk"> 
+					<span class="fl f_11">Select Items</span>
+					<span class="fr f_11"><a href="#" class="blue" id="partner_mstatus_select_all" onClick="return false;">Select All</a></span>
+					<div class="clr"></div>
+					<div class="gry_bdr pl_2 chk_box_cont">
+						<div style="display:none" id="partner_mstatus_div">
+							<input type="hidden" name="partner_mstatus_str" id="partner_mstatus_str" ~if $checked_mstatus` value="~$checked_mstatus`" ~else` value="" ~/if`>
+							~$hidden_mstatus`
+						</div>
+						<div style="overflow:hidden;" id="partner_mstatus_source_div">
+							~$shown_mstatus`
+						</div>
+					</div>
+				</div>
+				<div class="fl w_202 no_b blk ml_10"> 
+					<span class="fl f_11">Selected Items</span>
+					<span class="fr f_11"><a href="#" class="blue" id="partner_mstatus_clear_all">Clear All</a></span>
+					<div class="clr"></div>
+					<div class="gry_bdr pl_2 chk_box_cont">
+						<div style="overflow:hidden;" id="partner_mstatus_target_div">
+							<div id="partner_mstatus_DM"><label>Doesn't Matter</label></div>
+						</div>
+					</div>
+				</div>
+			</li>
+			<li>
+				<label id ="my_height" >Height :</label>
+				<select class="sel_mid fl" name="Min_Height" id="Min_Height">
+				~$minheight`
+				</select >
+				<span class="fl" style="margin:2px 10px;">to</span>
+				<select class="sel_mid fl" name="Max_Height" id="Max_Height">
+				~$maxheight`
+				</select>
+			</li>
+			<li>
+				<label id="mtongue_label" >Mother Tongue :</label>
+				<div class="fl w_202 no_b blk"> 
+					<span class="fl f_11">Select Items</span>
+					<span class="fr f_11">
+					<a href="#" class="blue" id="partner_mtongue_select_all">Select All</a>
+					</span>
+					<div class="clr"></div>
+					<input type="hidden" id="partner_mtongue_selected" value="~$mapped_mton`" style="display:none;">
+					<div class="gry_bdr pl_2 chk_box_cont">
+						<div style="display:none" id="partner_mtongue_div">
+							<input type="hidden" id="mton_sel" ~if $checked_mtongue` value="~$checked_mtongue`" ~else` value="" ~/if`>
+							<input type="hidden" name="partner_mtongue_str" id="partner_mtongue_str" value="">
+							~$hidden_mton`
+						</div>
+						<div style="overflow:hidden;" id="partner_mtongue_source_div">
+							~$priority_mton`
+							<div class="dhrow"><span style="color: rgb(10, 137, 254);">------</span></div>
+							~$shown_mton`
+						</div>
+					</div>
+				</div>
+				<div class="fl w_202 no_b blk ml_10"> 
+					<span class="fl f_11">Selected Items</span>
+					<span class="fr f_11">
+					<a href="#" class="blue" id="partner_mtongue_clear_all">Clear All</a>
+					</span>
+					<div class="clr"></div>
+					<div class="gry_bdr pl_2 chk_box_cont"> 
+						<div style="overflow:hidden;" id="partner_mtongue_target_div">
+							<div id="partner_mtongue_DM"><label>All</label></div>
+						</div>
+					</div>
+				</div>
+			</li>
+			<li>
+				<label id="rel_label" >Religion :</label>
+				<div class="fl w_202 no_b blk"> 
+					<span class="fl f_11">Select Items</span>
+					<span class="fr f_11">
+					<a href="#" class="blue" id="partner_religion_select_all">Select All</a>
+					</span>
+					<div class="clr"></div>
+					<input type="hidden" id="partner_religion_selected" value="~$mapped_rel`" style="display:none;">
+					<div class="gry_bdr pl_2 chk_box_cont">
+						<div style="display:none" id="partner_religion_div">
+						<input type="hidden" name="partner_religion_str" id="partner_religion_str" value="">
+							<input type="checkbox" name="partner_religion_arr[]" id="partner_religion_DM" value="DM"><label id="partner_religion_label_DM">Any</label><br>
+							~$hidden_religion`
+						</div>
+						<div style="overflow:hidden;" id="partner_religion_source_div">
+							~$priority_religion`
+							<div class="dhrow"><span style="color: rgb(10, 137, 254);">------</span></div>
+							~$shown_religion`
+						</div>
+					</div>
+				</div>
+				<div class="fl w_202 no_b blk ml_10"> 
+					<span class="fl f_11">Selected Items</span>
+					<span class="fr f_11">
+						<a href="#" class="blue" id="partner_religion_clear_all">Clear All</a>
+					</span>
+					<div class="clr"></div>
+					<div class="gry_bdr pl_2 chk_box_cont"> 
+						<div style="overflow:hidden;" id="partner_religion_target_div">
+							All
+						</div>
+					</div>
+				</div>
+			</li>
+			<li>
+				<div id="caste" style="display:none;float:left">
+					<label id="rel_caste" >Caste :</label>
+					<div class="fl w_202 no_b blk"> 
+						<span class="fl f_11">Select Items</span>
+						<span class="fr f_11">
+							<a href="#" class="blue" id="partner_caste_select_all">Select All</a>
+						</span>
+						<div class="clr"></div>
+						<input type="hidden" id="partner_caste_selected" value="~$mapped_caste`" >
+						<div class="gry_bdr pl_2 chk_box_cont">
+							<div style="display:none" id="partner_caste_div">&nbsp;</div>
+							<div style="overflow:hidden;" id="partner_caste_source_div"></div>
+						</div>
+					</div>
+					<div class="fl w_202 no_b blk ml_10"> 
+						<span class="fl f_11">Selected Items</span>
+						<span class="fr f_11">
+							<a href="#" class="blue" id="partner_caste_clear_all">Clear All</a>
+						</span>
+						<div class="clr"></div>
+						<div class="gry_bdr pl_2 chk_box_cont"> 
+							<div style="overflow:hidden;" id="partner_caste_target_div">Any</div>
+						</div>
+					</div>
+				</div>
+			</li>
+			<li style="padding:5px;width:98%">
+				<label id="income_label">Annual Income :</label>
+				<span style="width: 125px;font-weight:normal;">Select income range</span>
+				<div class="clr"></div>
+				<div style="height: 80px;" class="scrollbox_adv">
+					<div style="margin-bottom: 3px;padding: 3px 3px 3px 6px;">
+						<span style="display: none; color: rgb(255, 0, 0);" id="invalidUser">
+							<img src="images/iconError_16x16.gif"><b>Please make a selection before continuing.</b>
+						</span>
+					</div>
+					<div style="padding: 0pt 0pt 0pt 188px;font-weight:normal;">
+						<span style="color:#4B4B4B;font-weight:bold;">Indian Rupees</span>&nbsp;
+						<select style="width: 150px;" name="rsLIncome" id="rsLIncome">
+							<option value="">Please Select</option>
+                                                         ~foreach from=$MIN_LABEL_RS key=k1 item=v1`
+                                                         	    <option value="~$k1`" ~if $selectedLowerIncomeRs neq '' && $k1 eq $selectedLowerIncomeRs`selected~/if`>~$v1`</option>
+                                                         ~/foreach`
+						</select> &nbsp;&nbsp;to&nbsp;&nbsp;
+
+						<select style="width: 150px;" name="rsHIncome" id="rsHIncome">
+							<option value="">Please Select</option>
+							~foreach from=$MAX_LABEL_RS key=k1 item=v1`
+                                                                    <option value="~$k1`"  ~if $selectedUpperIncomeRs neq '' && $k1 eq $selectedUpperIncomeRs`selected~/if`>~$v1`</option>
+                                                        ~/foreach`
+						</select>
+					</div>
+					<div style="padding: 20px 0pt 0pt 186px;font-weight:normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<span style="color:#4B4B4B;font-weight:bold;">US Dollar</span>&nbsp;
+						<select style="width: 150px;" name="doLIncome" id="doLIncome">
+							<option value="">Please Select</option>
+                                                         ~foreach from=$MIN_LABEL_DO key=k1 item=v1`
+                                                              <option value="~$k1`"  ~if $selectedLowerIncomeDo neq '' && $k1 eq $selectedLowerIncomeDo`selected~/if`>~$v1`</option>
+                                                         ~/foreach`
+						</select> &nbsp;&nbsp;to&nbsp;&nbsp;
+						<select style="width: 150px;" name="doHIncome" id="doHIncome">
+							 <option value="">Please Select</option>
+                                                         ~foreach from=$MAX_LABEL_DO key=k1 item=v1`
+                                                              <option value="~$k1`"  ~if $selectedUpperIncomeDo neq '' && $k1 eq $selectedUpperIncomeDo`selected~/if`>~$v1`</option>
+                                                         ~/foreach`
+						</select>
+					</div>
+				</div>
+			</li>
+                        <li style="display:none">
+                                <label id="income_label" >Annual Income :</label>
+                                <div class="fl w_202 no_b blk">
+                                        <span class="fl f_11">Select Items</span>
+                                        <span class="fr f_11">
+                                        <a href="#" class="blue" id="partner_income_select_all">Select All</a>
+                                        </span>
+                                        <div class="clr"></div>
+                                        <input type="hidden" id="partner_income_selected" value="~$mapped_income`" style="display:none;">
+                                        <div class="gry_bdr pl_2 chk_box_cont">
+                                                <div style="display:none" id="partner_income_div">
+                                                        <input type="hidden" id="inc_sel" ~if $checked_income` value="~$checked_income`" ~else` value="" ~/if`>
+                                                        <input type="hidden" name="partner_income_str" id="partner_income_str" ~if $checked_income` value="~$checked_income`" ~else` value="" ~/if`>
+                                                        ~$hidden_income`
+                                                </div>
+                                                <div style="overflow:hidden;" id="partner_income_source_div">
+                                                        ~$priority_income`
+                                                        ~if $priority_income`<div class="dhrow"><span style="color: rgb(10, 137, 254);">------</span></div>~/if`
+                                                        ~$shown_income`
+                                                </div>
+                                        </div>
+                                </div>
+                                <div class="fl w_202 no_b blk ml_10">
+                                        <span class="fl f_11">Selected Items</span>
+                                        <span class="fr f_11">
+                                        <a href="#" class="blue" id="partner_income_clear_all">Clear All</a>
+                                        </span>
+                                        <div class="clr"></div>
+                                        <div class="gry_bdr pl_2 chk_box_cont">
+                                                <div style="overflow:hidden;" id="partner_income_target_div">
+                                                        <div id="partner_income_DM"><label>All</label></div>
+                                                </div>
+                                        </div>
+                                </div>
+                        </li-->
+
+			<li>
+				<label >Describe your :<br />desired partner</label>
+				Tell us about your expectations & what you’re looking for.
+				<div class="clr"></div>
+				<label >&nbsp;</label>
+				<textarea name="spouseDetail" cols="1" rows="1" style="width:342px; height:98px;margin-bottom:1px" class="fl" onKeyup="changeCount();"></textarea><br>
+				<div class="clr"></div>
+				<label >&nbsp;</label>
+				Number of characters : <span id="wordCount" class="grn" size="3"  style="border: 1px solid #ffffff;"/></span>
+			</li>
+			~if $Gender eq 'M'`
+				<li> 
+					<div class="fl">
+						<input type="hidden" name="submitReg" value="submit"> 
+						<input type=image name="submitReg" value="submit" src="~$IMG_URL`/profile/images/registration_revamp_new/save_cont_btn.png" border="0" style="margin-bottom:30px;margin-left:195px; display:inline;"></input>
+					</div>
+		~if !$RECORD_ID`			<div class="fl" onclick="return submit_skip_page('pg6');">
+						<a href="#" class="fl ml_10 b f_13" style="color:#057ec3;"><br />          Skip to Next page</a> 
+					</div>
+					~/if`
+				</li>
+			~/if`
+			~if $Gender eq 'F'`
+				<li>
+					<div class="fl" style="margin-left:195px; display:inline;">
+						<input type="hidden" name="submitReg" value="submit"> 
+						<input type="image" src="~$IMG_URL`/profile/images/registration_revamp_new/fin_reg.png" border="0" name="submitReg" value="submit"/>
+					</div>
+					~if !$RECORD_ID`		
+					~if !$IS_FTO_LIVE`
+					<a href="~$SITE_URL`/profile/intermediate.php?parentUrl=/social/addPhotos?from_registration=1" class="fl ml_10 b f_13" style="color:#057ec3;"><br />Skip to Upload Photo</a>
+					~else`
+					<div class="fl" onclick="return submit_skip_page('fto');">
+						<a href="#" class="fl ml_10 b f_13" style="color:#057ec3;"><br />Skip to Free Trial Offer details</a></div>~/if`~/if` 
+				</li>
+			~/if`
+		</ul>
+		<div class="clr"></div>
+		</div>
+		</form>
+	</div>
+</div>
+<div class="clr cl21"></div>
+~$TRACK_FOOT`
+</body>
+<script>
+</script>
+<SCRIPT type="text/javascript" language="Javascript" SRC="~$IMG_URL`/min/?f=/profile/js/~$behaviour_js`,/profile/js/~$registration_js`,/profile/js/~$gadget_reg_dpp_js`"></SCRIPT>
+<script>
+	fill_default_val();
+        fill_details(partner_fields_array);
+	~if $checked_caste`
+        var pr_arr= new Array("partner_caste");
+        fill_details(pr_arr);
+	~/if`
+var len=partner_fields_array.length;
+for(var i=0;i<len;i++)
+restore_checkboxes(partner_fields_array[i]);
+</script>
+
+</html>

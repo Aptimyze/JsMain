@@ -1,0 +1,63 @@
+<html>
+<head>
+<title>JeevanSathi Matrimonials - Resources</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="~$SITE_URL`/profile/images/styles.css" type="text/css">
+<link rel="stylesheet" href="~$SITE_URL`/jsadmin/jeevansathi.css" type="text/css">
+</head>
+<body leftmargin="5" topmargin="5">
+~$HEAD`
+<br>
+
+<table width=100% align="CENTER" >
+<tr>
+<td align=center valign=top class="formhead"><h3>~$CAT_DISPLAY`</h3></td>
+</tr>
+</table>
+
+
+<table width=100%>
+<tr class="formhead">
+<td>Title</td>
+<td>Name</td>
+<td>Email</td>
+<td>URL</td>
+<td>Description</td>
+<td>Show on page</td>
+<td>Edit</td>
+<td>Delete</td>
+</tr>
+~section name=i loop=$ROWS`
+<tr class="fieldsnew">
+<td>~$ROWS[i].TITLE`</td>
+<td>~$ROWS[i].NAME`</td>
+<td>~$ROWS[i].EMAIL`</td>
+<td>~$ROWS[i].LINK`</td>
+<td>~$ROWS[i].DESCR`</td>
+<td>~$ROWS[i].VISIBLE`</td>
+<td><a href="resources_form.php?flag=edit&id=~$ROWS[i].ID`&cid=~$CID`">Edit</a></td>
+<td><a href="resources_add_info.php?flag=delete&id=~$ROWS[i].ID`&cid=~$CID`&CatId=~$ROWS[i].CAT_ID`" onClick="return confirm('Are you sure. You want to delete?');">Delete</a></td>
+</tr>
+~/section`
+<tr>
+<td colspan=6>&nbsp;</td>
+</tr>
+<tr bgcolor="white">
+<td class="fieldsnew" colspan="6" height="20" align="center">
+        ~$PAGELINK`
+</td>
+ </tr>
+
+</table>
+<br>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right" class="bigblack"><span class="class5"><a href="resources_form.php?cid=~$CID`&flag=add">Add Resource</a></td>
+</tr>
+</table>
+<br>
+~$FOOT`
+<br>
+</body>
+</html>
+

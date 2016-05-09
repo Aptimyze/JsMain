@@ -1,0 +1,174 @@
+<html>
+<head>
+<title>Jeevansathi.com - MMM - Assign Variables</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="http://www.jeevansathi.com/profile/images/styles.css" type="text/css">
+<link rel="stylesheet" href="http://www.jeevansathi.com/jsadmin/jeevansathi.css" type="text/css">
+<style type=text/css>
+	.td_left{ALIGN:left; BGCOLOR:#F5F5F5; HEIGHT:"15"}
+</style>
+
+<script>
+// ADDED By Neha on 14/07/2012: function added to allow only one value for 99 mailers.
+function getNumberofVar(value){
+	var arr = value.split("_");
+	if(arr[1]=='9'){
+		document.getElementById("no").value=1;
+		document.getElementById("no").disabled=true;
+	}
+	else
+        {
+                document.getElementById("no").disabled=false;
+        }
+	return true;
+}
+
+function trim(inputString)
+{
+	// Removes leading and trailing spaces from the passed string. Also removes
+	// consecutive spaces and replaces it with one space. If something besides
+	// a string is passed in (null, custom object, etc.) then return the input.
+
+	if(typeof inputString != "string")
+	{
+		return inputString;
+	}
+
+	var retValue = inputString;
+	var ch = retValue.substring(0, 1);
+
+	while(ch == " ")  // Check for spaces at the beginning of the string
+	{
+		retValue = retValue.substring(1, retValue.length);
+		ch = retValue.substring(0, 1);
+	}
+
+	ch = retValue.substring(retValue.length-1, retValue.length);
+
+	while (ch == " ")   // Check for spaces at the end of the string
+	{
+		retValue = retValue.substring(0, retValue.length-1);
+		ch = retValue.substring(retValue.length-1, retValue.length);
+	}
+
+	while (retValue.indexOf("  ") != -1) // Note that there are two spaces in the string - look for multiple spaces within the string
+	{
+		retValue = retValue.substring(0, retValue.indexOf("  ")) + retValue.substring(retValue.indexOf("  ")+1, retValue.length); // Again, there are two spaces in each of the strings
+	}
+
+	return retValue; // Return the trimmed string back to the user
+} // Ends the "trim" function
+
+function isDigit (c)
+{
+	return ((c >= "0") && (c <= "9"))
+}
+
+function isInteger(s)
+{
+	var i;
+       
+	if(s.length==0 || s==null)
+	{
+		return false;
+	}
+	else
+	{
+		for(i=0;i<s.length;i++)
+		{
+			var c = s.charAt(i);
+			if(!isDigit(c))
+			{
+				return false;
+			}
+		}
+	}
+
+	return true;
+} 
+
+function validate()
+{
+	
+	// num variable consist of sum of total records which needs to be splitted	
+
+	var no=trim(document.form1.no.value);
+
+	if(!isInteger(no))
+	{
+		alert("Please Enter value of Number Of Variables");
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+</script>
+</head>
+
+<body>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="http://www.jeevansathi.com/profile/images/logo.gif" width="269" height="82" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+
+<tr><td colspan="4" align="center"><h2>Welcome to<br> Mass Mailer Management Sytem<br><span class=red >>>>&nbsp;&nbsp;Enter The Variables to Assign&nbsp;&nbsp;>>></h2><br><br></td></tr>
+</tbody>
+</table>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tr>
+  <td class="headbigblack" width="100%"><b>Assign No. Of Variables for the mailer </b></td>
+</tr>
+<tr class="bgred">
+   <td height="1"></td>
+ <SPACER height="1" type="block"></SPACER> </tr>
+<tr>
+</table>
+<br>
+<br>
+
+<form name="form1" method="post" action="mmm_mail_vars.php" onsubmit="return validate()">
+
+<table WIDTH="75%" BORDER="0" CELLSPACING="2" CELLPADDING="0" BORDERCOLOR="#2F3193" ALIGN="center">
+<tr> 
+	<td class=label width=50%><b>Select Mailer</b></td>
+	<td class=fieldsnew>
+		<select name="mailer_id" onClick="getNumberofVar(this.value);">
+		~section name=index loop=$mailer_id_arr`
+			~if $mailer_id_arr[index].mailer_for eq "9"`
+				<option value=~$mailer_id_arr[index].mailer_id`_~$mailer_id_arr[index].mailer_for` >~$mailer_id_arr[index].mailer_name`</option>
+			~else`
+				<option value=~$mailer_id_arr[index].mailer_id`>~$mailer_id_arr[index].mailer_name`</option>
+			~/if`
+		~/section`	
+		</select>
+	</td>
+</tr>
+
+<tr>
+	<td class=label><b>Enter the no of Variables that you want to Include in mail </b></td>
+	<td class=fieldsnew>
+		<input type="text" id="no" name="no" value="" size="2">
+	</td>
+</tr>
+
+<tr>
+	<td  class="td_left" colspan="2" class=fieldsnew>
+		<input type="hidden" name="cid" value="~$cid`">
+		<input type="submit" name="submit" value="submit">
+		
+		<input type="hidden" name="mailerid" value="~$mailer_id_arr`" />
+		
+	</td>
+</tr>
+</table>
+<br>
+</form>
+</body>
+</html>

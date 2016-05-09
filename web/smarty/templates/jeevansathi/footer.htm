@@ -1,0 +1,369 @@
+<input type="Hidden" name="id_checked" id="id_checked" value="~$ID_CHECKED`" >
+<input type="Hidden" name="CALL_THICK" id="CALL_THICK" value="~$CALL_THICKBOX`" >
+<input type="Hidden" name="AFTER_LOGIN_CALL" id="AFTER_LOGIN_CALL" value="~$AFTER_LOGIN_CALL`">
+<input type="hidden" name="NAVIGATOR" value="~$NAVIGATOR`" id="NAVI">
+
+<!--styles for app icons (IOS and ANDROID)-->
+<style type="text/css">
+ 
+.appsp {
+  background-image:url(/images/Promo/appicons.png);
+  background-repeat:no-repeat
+}
+.icon1 {
+  background-position: 1px 0px;
+  width: 133px;
+  height: 39px;
+}
+.icon2 {
+  background-position:-138px 0px;
+  width: 117px;
+  height: 39px;
+}
+
+</style>
+
+~if !$FROM_HOMEPAGE`
+<SCRIPT type="text/javascript" language="Javascript" SRC="~$IMG_URL`/min/?f=/js/~$contactEngineLayer_js`"></SCRIPT>
+~/if`
+~if 0`
+    ~$SHOW_HELP`
+~else`
+    ~$HELP_WIDGET`
+~/if`
+
+~if $SULEKHACO neq "1" or $LOGIN`
+
+
+<script type="text/javascript">
+  //Navigation value helps while you contacting or accepting contact.
+  var navig=document.getElementById("NAVI").value;
+</script>
+~if $AJAX_CALL_MEMCACHE eq 2`
+<script>
+  window.onload = function(){
+    $.ajax({
+  url: "/common/ProfileMemcache/",
+  context: document.body
+});
+  }
+</script>
+~/if` 
+<div style="clear:both;">
+</div>
+<div style="padding:0px;" class="t11 m_t_b_15">
+<div align="center" style="margin-bottom:15px;">
+   ~assign var=zedo value= $zedoVariable.zedo`
+   ~assign var=zedoTag value= $zedo["tag"]`
+   ~if $zedoTag.bottom`
+ <div class="bms" id="bms">
+   <div id="zt_~$zedo['masterTag']`_bottom"> 
+   </div>
+ </div>  
+~/if`
+</div>
+<div class="ftr f11">
+<div class="ftr_cont">
+
+  <div class="ftr_links t11" ~if $newHomePage`onMouseDown="javascript:trackClicks('F');"~/if`>
+  
+  <BR>
+    <div style="width:100%">
+      <div class="r9">
+        <label class="l1 b">Explore</label>
+        <ul class="foot">
+  ~if $LOGIN`
+        <li><a href="~$SITE_URL`/profile/mainmenu.php">My Jeevansathi</a></li>
+          <li>I</li>
+        <li><a href="~$SITE_URL`/profile/contacts_made_received.php">My Contacts</a></li>
+          <li>I</li>
+        <li><a href="~$SITE_URL`/profile/viewprofile.php?checksum=~$checksum`&profilechecksum=~$MYPROFILECHECKSUM`">My Profile</a></li>
+          <li>I</li>
+        <li><a href="~$SITE_URL`/profile/revamp_filter.php">Settings</a></li>
+        ~else`  
+  <li><a href="~$SITE_URL`/">Home</a></li>
+          <li>I</li>
+  <li><a href="~$SITE_URL`/profile/login.php?SHOW_LOGIN_WINDOW=1" class="thickbox">Login</a></li>
+          <li>I</li>
+  <li><a href="~$SITE_URL`/profile/registration_pg1.php?source=js_footer">Register Free</a></li>
+  ~/if`
+          <li>I</li>
+  
+  <li><a href="~$SITE_URL`/profile/advance_search.php">Advanced Search</a></li>
+          <li>I</li>
+   <li><a href="~$SITE_URL`/successStory/story">Success Stories</a></li>
+          <li>I</li>
+          <li><a href="~$SITE_URL`/profile/site_map.php">Sitemap</a></li>
+
+
+        </ul>
+      </div>
+      <div class="r9 mar_top_15">
+        <label class="l1 b">Services</label>
+        <ul class="foot">
+          <li><a target="_blank" href="http://www.jeevansathimatchpoint.com">Jeevansathi Offline</a></li>
+          <li>I</li>
+          <li><a href="~$SITE_URL`/profile/mem_comparison.php?from_source=from_footer">Membership Options</a></li>
+          <li>I</li>
+          <li><a href="~$SITE_URL`/static/advertise">Advertise with us</a></li>
+          <li>I</li>
+          <li><a TARGET="_blank" href="http://careers.jeevansathi.com">Jeevansathi Careers</a></li>
+          
+        </ul>
+      </div>
+      <div class="r9 mar_top_15">
+        <label class="l1 b">Help</label>
+        <ul class="foot">
+  <li><a href="~$SITE_URL`/contactus/index">Contact us</a></li>
+  <li>I</li>
+          <!-- <li><a onclick="javascript:window.open('http://server.iad.liveperson.net/hc/13507809/?cmd=file&amp;file=visitorWantsToChat&amp;offlineURL=~$SITE_URL`/P/faq_redirect.php&amp;site=13507809&amp;imageUrl=http://www.jeevansathi.com/images_try/liveperson&amp;referrer='+escape(document.location),'chat13507809','width=472,height=320');return false;" target="chat13507809" href="http://server.iad.liveperson.net/hc/13507809/?cmd=file&amp;file=visitorWantsToChat&amp;offlineURL=~$SITE_URL`/P/faq_redirect.php&amp;site=13507809&amp;byhref=1&amp;imageUrl=http://www.jeevansathi.com/images_try/liveperson" >Live help</a></li>
+          <li>I</li> -->
+    <li><a href="~$SITE_URL`/faq/feedback?width=512&checksum=~$CHECKSUM`" class="thickbox">Feedback</a></li>
+    <li>I</li>
+          <li><a  href="~$SITE_URL`/faq/index">Frequently Asked Questions</a></li>
+          
+        </ul>
+      </div>
+      <div class="r9 mar_top_15">
+        <label class="l1 b">Legal</label>
+        <ul class="foot">
+          <li><a href="http://www.infoedge.in">About Us</a></li>
+          <li>I</li>
+          <li><a href="~$SITE_URL`/static/page/fraudalert">Fraud Alert</a></li>
+          <li>I</li>
+          <li><a href="~$SITE_URL`/P/disclaimer.php">Terms & Conditions</a></li>
+          <li>I</li>
+          <li><a href="~$SITE_URL`/profile/third_party_content.php">Third Party Terms & Conditions</a></li>
+          <li>I</li>
+          <li><a href="~$SITE_URL`/P/privacy_policy.php">Privacy Policy</a></li>
+          <li>I</li>
+          <li><a href="~$SITE_URL`/P/conf_policy.php">Privacy Features</a></li>
+          <li>I</li>
+          
+        </ul>
+      </div>
+ <div class="r9 mar_top_15" style="width:99%">
+                <label class="l1 b">&nbsp;</label>
+                <ul class="foot">
+                         <li><a  TARGET="_blank" href="~$SITE_URL`/static/grievance?summon=1">Summons/Notices</a> </li>
+                         <li>I</li>
+                     <li><a TARGET="_blank" href="~$SITE_URL`/static/grievance?grievance=1">Grievances</a> </li>
+        </ul>
+                </div>
+      <div class="r9 mar_top_15" style="width:99%">
+        <label class="l1 b">Our group</label>
+        <ul class="foot">
+          <li><a TARGET="_blank" href="http://www.naukri.com">Jobs in India</a></li>
+          <li>I</li>
+          <li><a TARGET="_blank" href="http://www.Firstnaukri.com">Jobsite for Freshers</a></li>
+          <li>I</li>
+          <li><a TARGET="_blank" href="http://www.99acres.com">Real Estate in India</a></li>
+          <li>I</li>
+          <li><a TARGET="_blank" href="http://www.allcheckdeals.com">Property Brokerage in India</a></li>
+          <li>I</li>
+          <li><a TARGET="_blank" href="http://www.shiksha.com">Education &amp; Career</a></li>
+          <li>I</li>
+          <li><a TARGET="_blank" href="http://www.brijj.com">Brijj.com</a></li>
+        </ul>
+      </div>
+      <div class="r9 mar_top_15" style="width:99%">
+        <label class="l1 b">Our partners</label>
+        <ul class="foot">
+          <li><a TARGET="_blank" href="http://www.policybazaar.com">Online Insurance</a></li>
+          <li>I</li>
+          <li><a TARGET="_blank" href="http://www.meritnation.com">Online Educational Assessment</a></li>
+    <li>I</li>
+          <li><a TARGET="_blank" href="http://www.mydala.com/" title="Online Shopping in India - Best Deals">mydala - Best deals in India</a></li>
+    <li>I</li>
+          <li><a  TARGET="_blank" href="http://www.zomato.com">Zomato - Restaurant Directory</a> </li>
+  
+        
+          
+        </ul>
+  </div>
+  
+  
+  <div style="clear:both;height:1px;overflow:hidden">&nbsp;</div>
+</div>
+
+
+      <div class="clear">
+    </div>
+      <div align="center" style="margin-top:15px;">
+      ~if JsConstants::$AndroidPromotion`
+      <div style="margin-bottom: 7PX;font-size: 13px;">Get instant notifications. Download our Free Apps</div>
+      <a href="~$SITE_URL`/static/Appredirect?type=iosPcFooter" target="_blank"><i class="appsp icon1"></i></a> <a href="~$SITE_URL`/static/Appredirect?type=androidMobFooter" target="_blank"><i class="appsp icon2"></i></a>
+<div style='height:15px;'> </div>
+      ~/if`
+    <div class="switchBx">
+      <b>Switch</b> &nbsp; &nbsp; <a href="~$SITE_URL`?mobile_view=Y">Mobile</a>&nbsp; &nbsp; <span class="switchDdr">|</span> &nbsp; &nbsp; Desktop
+    </div>
+    
+    <a href="http://www.naukri.com" ><input type="button" class="naukri_btn" value="" alt="naukri" title="naukri" /></a></div>
+  <div align="center" class="mar_top_15"><span class="b">Copyright &copy;   ~$smarty.now|date_format:"%Y"`  Jeevansathi Internet Services</span></br></br></div>
+    </br></br>
+    </div>
+    <div class="clear">
+    </div>
+</div>
+</div>
+
+<script>
+$('.thickbox').colorbox();
+imgLoader = new Image();// preload image
+imgLoader.src = tb_pathToImage;
+</script>
+
+~else`
+<div style="clear:both;height:35px;"></div>
+<style>
+
+.sul_ftr {
+
+  width:976px;
+
+  margin:auto;
+  border-top:1px solid #000;
+  padding-top: 15px;
+}
+
+.sul_ftr ul.sul {
+
+  float:left;
+
+  list-style:none;
+
+  margin:0;
+
+  padding:0;
+
+}
+
+.sul_ftr ul.sul li {
+
+  float:left;
+
+  font:13px Arial, Helvetica, sans-serif;
+
+  border-right:1px;
+
+  size: #000;
+
+  margin-right:10px;
+
+}
+
+.sul_ftr ul.sul li a {
+
+  color:#214A75;
+
+  float:left;
+
+  text-decoration:none;
+
+}
+
+.sul_ftr .copyrite{font:11px Arial, Helvetica, sans-serif;}
+.sul_ftr  b{color:#a40d98; padding-left:5px;}
+</style>
+<script>
+$('.thickbox').colorbox();
+imgLoader = new Image();// preload image
+imgLoader.src = tb_pathToImage;
+</script>
+
+<!--
+<script type="text/javascript">
+  var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+  <script type="text/javascript">
+  try {
+  var pageTracker = _gat._getTracker("UA-10426389-1");
+  pageTracker._trackPageview();
+} catch(err) {}</script>
+-->
+<div class="sul_ftr">
+  <ul class="sul">
+    <li><a rel="nofollow" title="Advertise with Us" href="http://www.sulekha.com/COLLATERAL/index.htm">Advertise with Us</a> <b>|</b></li>
+    <li><a rel="nofollow" title="Sulekha Media" href="http://www.sulekha.com/COLLATERAL/press.htm">Media </a> <b>|</b></li>
+    <li><a rel="nofollow" title="Sulekha Press" href="http://www.sulekha.com/COLLATERAL/pr_rel.htm">Press </a> <b>|</b></li>
+    <li><a rel="nofollow" title="Sulekha Terms & Conditions" href="http://www.sulekha.com/COLLATERAL/tc.htm">Terms &amp; Conditions</a> <b>|</b></li>
+    <li><a rel="nofollow" title="Sulekha Privacy Policy" href="http://www.sulekha.com/COLLATERAL/tc.htm#privacy">Privacy Policy </a> <b>|</b></li>
+    <li><a rel="nofollow" title="Sulekha Sitemap" href="http://www.sulekha.com/COLLATERAL/sitemap.htm">Sitemap </a> <b>|</b></li>
+    <li><a target="_blank" title="Sulekha B2B" href="http://www.sulekhab2b.com">SulekhaB2B</a> <b>|</b></li>
+    </ul>
+  <ul class="sul" style="float:right;">
+    <li><a rel="nofollow" title="Sulekha Feedback" href="http://www.sulekha.com/COLLATERAL/contact.htm">Feedback </a> <b>|</b></li>
+    <li><a rel="nofollow" title="Sulekha Careers" href="http://www.sulekha.com/COLLATERAL/careers.htm">Careers</a> <b>|</b></li>
+    <li><a rel="nofollow" title="About Sulekha" href="http://www.sulekha.com/COLLATERAL/about.htm">About Sulekha</a></li>
+  </ul>
+  <div style="clear:both; height:5px; overflow:hidden;">
+  </div>
+  <div align="center" class="copyrite">
+  &copy; 1998-2010 Copyright Sulekha.com Connecting Indians Worldwide, All Rights Reserved.</br></br>
+  </div>
+</div>
+<div style="clear:both;height:35px;"></div>
+~/if`
+~$TRACK_FOOT`
+<script>
+if(screen.width<=800)
+{
+if((screen.width-10)>document.body.offsetWidth)
+{
+        parent.document.body.style.width=(screen.width+30)+"px";
+}
+}
+else
+{
+  if(parent.document!=document)
+  {
+    parent.document.scroll="no";
+    parent.document.body.scroll="no";
+    parent.document.body.style.overflow="hidden";
+  }
+}
+if(typeof(user_login)!="undefined" && !user_login)
+{
+        if(window.parent!==window)
+        {
+                //parent.document.location.href=document.location.href;
+        }
+}
+try{
+  if(document.title)
+    top.document.title=document.title;
+  else
+    top.document.title="Jeevansathi.com";
+}
+catch(err)
+{
+  
+}
+
+</script>
+
+~* webengage code starts *`
+<script id="_webengage_script_tag" type="text/javascript">
+var _weq = _weq || {};
+~if $smarty.server.HTTP_HOST eq "xmppdev.jeevansathi.com"`
+_weq['webengage.licenseCode'] = '~ldelim`1341067c1';
+~else`
+_weq['webengage.licenseCode'] = '~ldelim`10a5cc320';
+~/if`
+_weq['webengage.widgetVersion'] = "4.0";
+_weq['webengage.notification.ruleData'] = {
+      "Gender" : "~$zedoVariable.A2`",
+      "Source": "~$zedoVariable.j1`",
+      "Days since registration" : ~if $zedoValue.j2`~$zedoValue.j2`~else`0~/if`,
+      "Paid" : "~$zedoVariable.d2`",
+      "Community" : "~$zedoVariable.j3`"
+    };
+(function(d)
+{ var _we = d.createElement('script'); _we.type = 'text/javascript'; _we.async = true; _we.src = (d.location.protocol == 'https:' ? "https://ssl.widgets.webengage.com" : "http://cdn.widgets.webengage.com") + "/js/widget/webengage-min-v-4.0.js"; var _sNode = d.getElementById('_webengage_script_tag'); _sNode.parentNode.insertBefore(_we, _sNode); }
+
+)(document);
+</script>
+~* webengage code ends *`
+

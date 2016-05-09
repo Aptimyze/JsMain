@@ -1,0 +1,33 @@
+<html>
+<head>
+<title>Jeevansathi.com - MIS</title>
+</head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="/profile/images/styles.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<br><br>
+<table width=80% align="center">
+<tr><td colspan=2>
+        <table width="100%" aligh="center"><tr align="center" class="bigblack">
+        <td width="25%" class="class3"><a href="../jsadmin/mainpage.php?name=~$username`&cid=~$CID`">JSAdmin</a></td>
+        <td width="25%" class="class3"><a href="../jsadmin/mainpage.php?name=~$username`&cid=~$CID`">Billing</a></td>
+        <td width="25%" class="class3"><a href="../mis/mainpage.php?name=~$username`&cid=~$CID`">Mis</a></td>
+	<td width="25%" class="class3"><a href="../jsadmin/logout.php?name=~$username`&cid=~$CID`">Logout</a></td>
+        </tr></table><br><br>
+</td></tr>
+<tr><td colspan=2><h2>According to your assigned privilages we found following link(s) for you.</h2><br><br></td></tr>
+~section name=sec loop=$linkarr`
+<tr class="bigblack">
+	<td class="class4" width=50%>~$smarty.section.sec.index+1`. ~$linkarr[sec].main`</td>
+	<td class="class4">~$linkarr[sec].jump`</td>
+</tr>
+~/section`
+</table>
+<br><br>
+</body>
+</html>

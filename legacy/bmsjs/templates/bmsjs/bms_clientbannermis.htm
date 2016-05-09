@@ -1,0 +1,271 @@
+<!DOCTYPE HTML PUBLIC "-//SoftQuad//DTD HoTMetaL PRO 4.0::19970714::extensions to HTML 4.0//EN"
+ "hmpro4.dtd">
+
+<HTML>
+  
+  <HEAD>
+    <TITLE>BMS : Campaign Management System</TITLE>
+    <link rel="stylesheet" href="http://www.jeevansathi.com/jsadmin/jeevansathi.css" type="text/css"><link rel="stylesheet" href="http://www.jeevansathi.com/profile/images/styles.css" type="text/css">
+    <LINK HREF="gifs/style.css" REL="stylesheet" TYPE="text/css">
+  </HEAD>
+  
+  <BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#000000" VLINK="#000000" 
+  ALINK="#000000" LEFTMARGIN="0" TOPMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+   ~$bmsheader`
+    <DIV CLASS="text-under" STYLE="margin-left:20px;"><BR><A HREF="bms_clientmis.php?id=~$id`" TARGET="">MIS
+      Home</A> &gt;&gt; <B>~$campaignname`</B></DIV>
+    <DIV CLASS="text"><BR>
+	
+	<TABLE WIDTH="100%" BORDER="0">
+      <TR>
+        <TD WIDTH="20%" ALIGN="RIGHT" VALIGN="TOP"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="180" HEIGHT="1"><IMG SRC="gifs/tick.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="13" HEIGHT="11">
+        </TD>
+        <TD WIDTH="80%" CLASS="text">Details of Campaign constituents namely
+        banners, mailers, pop-up.<!-- <BR>To view criteria-wise breakup click on
+        criteria.--></TD>
+      </TR>
+    </TABLE><BR></DIV>
+    <FORM><TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" 
+    ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/page-bg.gif"><IMG SRC="gifs/lt-curve.gif" ALT="BMS - jeevansathi.com" WIDTH="18" HEIGHT="31" BORDER="0" HSPACE="0"></TD>
+        <TD VALIGN="MIDDLE" HEIGHT="31" WIDTH="100%"><TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" HEIGHT="31">
+          <TR>
+            <TD BACKGROUND="gifs/page-bg.gif" WIDTH="50%" CLASS="text"><DIV><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="10" HEIGHT="1"></DIV></TD>
+            <TD WIDTH="50%" BACKGROUND="gifs/page-bg.gif" ALIGN="RIGHT"><DIV CLASS="text-under"><!--<input type="image"  NAME="downloadcampaigndetails" SRC="gifs/download-icon.gif" ALT="Download" WIDTH="107" HEIGHT="23">&nbsp;&nbsp;-->
+            <IMG SRC="gifs/print-this-page-icon.gif" ALT="Print this page" onClick="window.print();"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="5" HEIGHT="1"></DIV></TD>
+          </TR>
+        </TABLE></TD>
+        <TD ALIGN="RIGHT" WIDTH="18" BACKGROUND="gifs/page-bg.gif"><IMG SRC="gifs/rt-curve.gif" ALT="BMS - jeevansathi.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+      </TR>
+    </TABLE>
+	
+	<TABLE WIDTH="100%" BORDER="0" VSPACE="0" HSPACE="0" 
+    CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/lt-line-bg-1.gif"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></TD>
+        <TD WIDTH="100%"> <BR><DIV ALIGN="CENTER"><TABLE WIDTH="100%" BORDER="1" VSPACE="0" HSPACE="0" CELLPADDING="4" CELLSPACING="0" BORDERCOLOR="#DFDFDF" STYLE="border-collapse:collapse;">
+          
+		 <TR>
+            <TD CLASS="text" WIDTH="5%" HEIGHT="20" VALIGN="MIDDLE" 
+            BGCOLOR="#E6EEF9"><B>S.No</B></TD>
+              <TD CLASS="text" WIDTH="20%" HEIGHT="20" VALIGN="MIDDLE" 
+            BGCOLOR="#E6EEF9"><B>Type</B></TD>
+            <TD CLASS="text" WIDTH="100" HEIGHT="20" VALIGN="MIDDLE" 
+            BGCOLOR="#E6EEF9"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="100" HEIGHT="1"><BR><B>Banner Preview</B></TD>
+              <TD CLASS="text" WIDTH="10%" HEIGHT="20" VALIGN="MIDDLE" 
+            BGCOLOR="#E6EEF9"><B>Size </B><BR>
+                (pixels)</TD>
+              <TD CLASS="text" WIDTH="15%" HEIGHT="20" VALIGN="MIDDLE" 
+            BGCOLOR="#E6EEF9"><B>Location</B><BR>
+                (Region/Zone)</TD>
+            <TD CLASS="text" WIDTH="10%" HEIGHT="20" VALIGN="MIDDLE" 
+            BGCOLOR="#E6EEF9"><B>Impressions</B></TD>
+            <TD CLASS="text" WIDTH="5%" HEIGHT="20" VALIGN="MIDDLE" 
+            BGCOLOR="#E6EEF9"><B>Clicks</B></TD>
+            <TD CLASS="text" WIDTH="5%" HEIGHT="20" VALIGN="MIDDLE" 
+            BGCOLOR="#E6EEF9"><B>CTR</B></TD>
+            <TD CLASS="text-under" WIDTH="15%" HEIGHT="20" VALIGN="MIDDLE" 
+            BGCOLOR="#E6EEF9"><B><!--<A HREF="#" TARGET="" TITLE="Click to view Criteria-wise breakup">-->Criteria</A><FONT SIZE="+1" COLOR="#FF0000"></FONT></B></TD>
+            <TD CLASS="text-under" WIDTH="15%" HEIGHT="20" VALIGN="MIDDLE" 
+            BGCOLOR="#E6EEF9"><B></B></TD>
+          </TR>
+		   ~section name=i loop=$campaigndetailsarr`
+		 
+		   ~if $campaigndetailsarr[i].bannertype neq "Mailer" and $campaigndetailsarr[i].show eq "true"`
+          <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">~$campaigndetailsarr[i].sno`</TD>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">~$campaigndetailsarr[i].bannertype` 
+		~if $campaigndetailsarr[i].bannerstatus eq "live"` 
+			<IMG SRC="gifs/live.gif" ALT="Live" WIDTH="26" HEIGHT="18">
+		~elseif $campaigndetailsarr[i].bannerstatus eq "served"` 
+			<IMG SRC="gifs/served.gif" ALT="Served" WIDTH="45" HEIGHT="18">
+		~elseif $campaigndetailsarr[i].bannerstatus eq "deactive" or $campaigndetailsarr[i].bannerstatus eq "deactivesums"` 
+			<IMG SRC="gifs/deactive.gif" ALT="Deactive" WIDTH="26" HEIGHT="18"> 
+		~/if`
+	    </TD>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">
+		~if $campaigndetailsarr[i].bannerclass  eq "PopUp" or $campaigndetailsarr[i].bannerclass eq "PopUnder"`
+			~if $campaigndetailsarr[i].bannergif`<a href="#" onClick=window.open("~$campaigndetailsarr[i].bannergif`");>View PopUp</a>
+			~else` 
+				No url specified 
+			~/if` 
+		~elseif $campaigndetailsarr[i].bannerclass  eq "MailerFlash" or $campaigndetailsarr[i].bannerclass eq "Flash"` 
+			~if $campaigndetailsarr[i].bannergif`
+			<object>
+			 <embed src="~$campaigndetailsarr[i].bannergif`" width=100 height=25>
+                         </embed> 
+                      	</object>
+			~else` 
+			 No gif specified 
+			~/if` 
+		~elseif $campaigndetailsarr[i].bannerclass eq "Image" or $campaigndetailsarr[i].bannerclass eq "MailerImage"` 				~if $campaigndetailsarr[i].bannergif`
+				<a href="#" onClick=window.open("~$campaigndetailsarr[i].bannergif`"); ><img src='~$campaigndetailsarr[i].bannergif`' width="100" height="25" border="1"></a>
+			~else` 
+                      		No gif specified 
+			~/if` 
+		~/if` 
+	     </TD>
+
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">~$campaigndetailsarr[i].heightwidth`</TD>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">~if $campaigndetailsarr[i].regionname` ~$campaigndetailsarr[i].regionname`<BR /> ~$campaigndetailsarr[i].zonename` ~/if`</TD>
+~if $campaigntype eq "impression" or $campaigntype eq "duration"`
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">~if $showimpressions eq '1'` ~$campaigndetailsarr[i].bannerimpressions`~else` Not Applicable</TD>~/if`
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">~if $showclicks eq '1'`~$campaigndetailsarr[i].bannerclicks` ~else` Not Applicable</TD>~/if`
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP"> ~if $showctr eq '1'` ~$campaigndetailsarr[i].bannerctr` ~else` Not Applicable</TD>~/if`
+            <TD CLASS="text-under" HEIGHT="20" VALIGN="TOP">~if $campaigndetailsarr[i].bannercriteria neq "Default"`<!--<A HREF="#" TARGET="" TITLE="Click to view Criteria-wise breakup">-->~$campaigndetailsarr[i].bannercriteria`</A>~else` ~$campaigndetailsarr[i].bannercriteria` ~/if`</TD>
+            <TD CLASS="text-under" HEIGHT="20" VALIGN="TOP"><A HREF="bms_datewisemis.php?id=~$id`&bannerid=~$campaigndetailsarr[i].bannerid`&bannerstartdate=~$campaigndetailsarr[i].bannerstartdate`&bannerenddate=~$campaigndetailsarr[i].bannerenddate`&campaignid=~$campaignid`" TARGET="" TITLE="Click to view Criteria-wise breakup">View
+              Date-wise details</A></TD>
+~else`
+
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">&nbsp; </TD>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">&nbsp;</TD>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">&nbsp;</TD>
+            <TD CLASS="text-under" HEIGHT="20" VALIGN="TOP">&nbsp;</TD>
+            <TD CLASS="text-under" HEIGHT="20" VALIGN="TOP">&nbsp;</TD>
+~/if`
+          </TR>
+		  
+		  ~/if`
+		 ~sectionelse`
+		 <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP" colspan="15">No records to show</TD>
+		 </TR>
+		   ~/section`
+~if $campaigntype eq "impression"`
+	
+          <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP" COLSPAN="5" ALIGN="RIGHT"><B>Total
+            :</B>&nbsp;</TD>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">~$totalimpressions`</TD>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">~$totalclicks`</TD>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP"></TD>
+            <TD CLASS="text-under" HEIGHT="20" VALIGN="TOP"></TD>
+            <TD CLASS="text-under" HEIGHT="20" VALIGN="TOP"></TD>
+          </TR>
+~/if`
+        </TABLE></DIV> <BR>
+		<DIV CLASS="text-blue"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="4" HEIGHT="1"><FONT SIZE="+1" COLOR="#FF0000"><!--*</FONT>Click
+        on Criteria to view details for individual banner/popup.<BR><BR><BR>--></DIV>
+        </TD>
+        <TD BACKGROUND="gifs/rt-line-bg-1.gif" WIDTH="18"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></TD>
+      </TR>
+    </TABLE>
+	
+	~section name=i loop=$campaigndetailsarr`
+	
+	~if $campaigndetailsarr[i].bannertype eq "Mailer" and $campaigndetailsarr[i].show eq "true"`
+
+	<TABLE WIDTH="100%" BORDER="0" VSPACE="0" HSPACE="0" 
+    CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/lt-line-bg-1.gif"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></TD>
+        <TD WIDTH="100%">
+        <DIV CLASS="text-blue"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="4" HEIGHT="1"><FONT SIZE="+1">Mailer
+        ~$campaigndetailsarr[i].sno`</FONT></DIV><DIV ALIGN="CENTER">
+		
+		<TABLE WIDTH="100%" BORDER="1" VSPACE="0" HSPACE="0" CELLPADDING="4" CELLSPACING="0" BORDERCOLOR="#DFDFDF" STYLE="border-collapse:collapse;">
+         <TR>
+            <TD CLASS="text" WIDTH="5%" HEIGHT="20" VALIGN="TOP" 
+            BGCOLOR="#E6EEF9"><B>S.No</B></TD>
+            <TD CLASS="text" WIDTH="10%" HEIGHT="20" VALIGN="TOP" 
+            BGCOLOR="#E6EEF9"><B>Type</B></TD>
+            <TD CLASS="text" WIDTH="100" HEIGHT="20" VALIGN="TOP" 
+            BGCOLOR="#E6EEF9"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="100" HEIGHT="1"><BR><B>Banner</B></TD>
+            <TD CLASS="text" WIDTH="15%" HEIGHT="20" VALIGN="TOP" 
+            BGCOLOR="#E6EEF9"><B>Size </B>(pixels)</TD>
+            <TD CLASS="text" WIDTH="30%" HEIGHT="20" VALIGN="TOP" 
+            BGCOLOR="#E6EEF9"><B>Mailer Name</B></TD>
+            <TD CLASS="text" WIDTH="20%" HEIGHT="20" VALIGN="TOP" 
+            BGCOLOR="#E6EEF9"><B>Total mails sent</B></TD>
+            <TD CLASS="text" WIDTH="10%" HEIGHT="20" VALIGN="TOP" 
+            BGCOLOR="#E6EEF9"><B>Open Rate</B></TD>
+            <TD CLASS="text" WIDTH="20%" HEIGHT="20" VALIGN="TOP" 
+            BGCOLOR="#E6EEF9"><B>Clicks</B></TD>
+          </TR>
+          <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">~$campaigndetailsarr[i].sno`</TD>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">~if $campaigndetailsarr[i].bannerstatus eq "live"` <IMG SRC="gifs/live.gif" ALT="Live" WIDTH="26" HEIGHT="18">~elseif $campaigndetailsarr[i].bannerstatus eq "served"` <IMG SRC="gifs/served.gif" ALT="Served" WIDTH="26" HEIGHT="18">~elseif $campaigndetailsarr[i].bannerstatus eq "deactive" or $campaigndetailsarr[i].bannerstatus eq "deactive"` <IMG SRC="gifs/deactive.gif" ALT="Deactive" WIDTH="26" HEIGHT="18"> ~/if`~$campaigndetailsarr[i].bannertype` </TD>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">~if $campaigndetailsarr[i].bannerclass 
+                      eq "PopUp" or $campaigndetailsarr[i].bannerclass eq "PopUnder"`~if 
+                      $campaigndetailsarr[i].bannergif`<a href="#" onClick=window.open("~$campaigndetailsarr[i].bannergif`");>View 
+                      PopUp</a>~else` No url specified ~/if` ~elseif $campaigndetailsarr[i].bannerclass 
+                      eq "MailerFlash" or $campaigndetailsarr[i].bannerclass eq "Flash"` 
+                      ~if $campaigndetailsarr[i].bannergif`<object>
+                        <embed src="~$campaigndetailsarr[i].bannergif`" width=100 height=25>
+                        </embed> 
+                      </object>~else` No gif specified ~/if` ~elseif $campaigndetailsarr[i].bannerclass 
+                      eq "Image" or $campaigndetailsarr[i].bannerclass eq "MailerImage"` 
+                      ~if $campaigndetailsarr[i].bannergif`<a href="#" onClick=window.open("~$campaigndetailsarr[i].bannergif`"); ><img src='~$campaigndetailsarr[i].bannergif`' width="100" height="25" border="1"></a>~else` 
+                      No gif specified ~/if` ~/if` </TD>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">~if $campaigndetailsarr[i].regionname` ~$campaigndetailsarr[i].regionname`<BR /> ~$campaigndetailsarr[i].zonename` ~/if`</TD>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">&nbsp;</TD>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">~$campaigndetailsarr[i].mailersent`</TD>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">~$campaigndetailsarr[i].maileropenrate`% %---10%</TD>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">~$campaigndetailsarr[i].bannerclicks`</TD>
+          </TR>
+        </TABLE></DIV><BR><BR> </TD>
+        <TD BACKGROUND="gifs/rt-line-bg-1.gif" WIDTH="18"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></TD>
+      </TR>
+    </TABLE>
+	~/if`
+	~/section`
+	
+	<!--
+	<TABLE WIDTH="100%" BORDER="0" VSPACE="0" HSPACE="0" 
+    CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/lt-line-bg-1.gif"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></TD>
+        <TD WIDTH="100%">
+        <DIV CLASS="text-blue"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="4" HEIGHT="1"><FONT SIZE="+1">Mailer
+        2</FONT></DIV><DIV ALIGN="CENTER"><TABLE WIDTH="100%" BORDER="1" VSPACE="0" HSPACE="0" CELLPADDING="4" CELLSPACING="0" BORDERCOLOR="#DFDFDF" STYLE="border-collapse:collapse;">
+          <TR>
+            <TD CLASS="text" WIDTH="5%" HEIGHT="20" VALIGN="TOP" 
+            BGCOLOR="#E6EEF9"><B>S.No</B></TD>
+            <TD CLASS="text" WIDTH="10%" HEIGHT="20" VALIGN="TOP" 
+            BGCOLOR="#E6EEF9"><B>Type</B></TD>
+            <TD CLASS="text" WIDTH="100" HEIGHT="20" VALIGN="TOP" 
+            BGCOLOR="#E6EEF9"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="100" HEIGHT="1"><BR><B>Banner</B></TD>
+            <TD CLASS="text" WIDTH="15%" HEIGHT="20" VALIGN="TOP" 
+            BGCOLOR="#E6EEF9"><B>Size </B>(pixels)</TD>
+            <TD CLASS="text" WIDTH="30%" HEIGHT="20" VALIGN="TOP" 
+            BGCOLOR="#E6EEF9"><B>Mailer Name</B></TD>
+            <TD CLASS="text" WIDTH="20%" HEIGHT="20" VALIGN="TOP" 
+            BGCOLOR="#E6EEF9"><B>Total mails sent</B></TD>
+            <TD CLASS="text" WIDTH="10%" HEIGHT="20" VALIGN="TOP" 
+            BGCOLOR="#E6EEF9"><B>Open Rate</B></TD>
+            <TD CLASS="text" WIDTH="20%" HEIGHT="20" VALIGN="TOP" 
+            BGCOLOR="#E6EEF9"><B>Clicks</B></TD>
+          </TR>
+          <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">1.</TD>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">Banner1</TD>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><IMG SRC="gifs/hdfcmidban[1].gif" ALT="HDFC Banner" WIDTH="100" HEIGHT="25" BORDER="1"></TD>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">233 x 60</TD>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">Career Headlines</TD>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">2400000</TD>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">10%</TD>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">562</TD>
+          </TR>
+        </TABLE></DIV><BR><BR> </TD>
+        <TD BACKGROUND="gifs/rt-line-bg-1.gif" WIDTH="18"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></TD>
+      </TR>
+    </TABLE>
+	
+	-->
+	<TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" 
+    ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/page-bg-1.gif"><IMG SRC="gifs/lt-low-curve.gif" ALT="BMS - jeevansathi.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+        <TD VALIGN="MIDDLE" HEIGHT="31" BACKGROUND="gifs/page-bg-1.gif">&nbsp;</TD>
+        <TD ALIGN="RIGHT" WIDTH="18" BACKGROUND="gifs/page-bg-1.gif"><IMG SRC="gifs/lt-rt-curve.gif" ALT="BMS - jeevansathi.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+      </TR>
+    </TABLE></FORM>
+    
+    <P></P>
+    
+    <P></P>
+    <DIV CLASS="text" ALIGN="CENTER" STYLE="color:#666666;">Copyright &copy;
+    2004 Jeevansathi.com. All rights reserved. <BR><BR></DIV>
+  </BODY>
+</HTML>

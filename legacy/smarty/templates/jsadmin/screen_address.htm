@@ -1,0 +1,93 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Admin Search : Jeevansathi.com Matrimonial Services</title>
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+</head>
+<script>
+~if $msg`
+window.opener.document.location.reload();
+~/if`
+</script>
+~include file="head.htm"`
+
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<form action="screen_address.php" method="post" enctype="multipart/form-data">
+<input type="hidden" name=cid value="~$cid`">
+<input type="hidden" name=user value="~$user`">
+<input type="hidden" name=pid value="~$pid`">
+<input type="hidden" name=username value="~$username`">
+<input type="hidden" name=CHECKDELETED value="~$CHECKDELETED`">
+<table width=760 cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+    <tr class="formhead">
+          <td width=55% class="formhead" border=1><font><b>Welcome : ~$user`</b></font></td>
+          <td width="35%" class="formhead" align="center"><a href="mainpage.php?name=&cid=~$cid`">Main Page</a></td>
+          <td width=10% class="formhead" border=1 align='CENTER'><a href="logout.php?cid=~$cid`">Logout</a></td>
+    </tr>
+</table>
+<br><br>
+<table width="60%" border="0" cellspacing="1" cellpadding="4" align="center">
+~if $blank`
+<tr class="fieldsnew">
+<td align='center' colspan='2'>Please enter a valid username!!!</td>
+</tr>
+~else`
+<tr class="fieldsnew">
+<td width='50%'>Username</td>
+<td width='50%'>~$username`</td>
+</tr>
+~if $name`
+<tr class="fieldsnew">
+<td width='50%'>Name</td>
+<td width='50%'>~$name`</td>
+</tr>
+~/if`
+<tr class="fieldsnew">
+<td width='50%'>Gender</td>
+<td width='50%'>~$gen`</td>
+</tr>
+<tr class="fieldsnew">
+<td width='50%'>Address</td>
+<td width='50%'><b>~$contact`</b></td>
+</tr>
+<tr class="fieldsnew">
+<td width='50%'>Phone No.</td>
+<td width='50%'>~$phone`</td>
+</tr>
+<tr class="fieldsnew">
+<td width='50%'>Email</td>
+<td width='50%'>~$email`</td>
+</tr>
+<tr class="fieldsnew">
+<td width='50%'>Date of Birth</td>
+<td width='50%'>~$birth_dt`</td>
+</tr>
+~if $screened`
+<tr class="fieldsnew">
+<td align="center" colspan='2'><a href='#' onclick="window.open('~$SITE_URL`/jsadmin/screen_address.php?cid=~$cid`&pid=~$pid`&view=1','','resizable=1,scrollbars=1');">View uploaded Document</a></td>
+</tr>
+<tr class="fieldsnew">
+<td align="center" colspan='2'><input type='checkbox' name='verified' value='Y' ~if $screened eq 'Y'` checked="checked" ~/if`>&nbsp;Address Verified</td>
+</tr>
+<tr class="fieldsnew">
+<td align="center" colspan='2'><input type='submit' name='submit' value='Submit'/></td>
+</tr>
+~else`
+<tr class="fieldsnew">
+<td align="center" colspan='2'>
+<input type="hidden" name="which_photo" value="mainphoto">
+<input type="file" class="textbox file" name="mainphotofile"  />
+<input type='submit' value='Upload address proof' name='upload'/>
+</td>
+</tr>
+~/if`
+<tr class="fieldsnew">
+<td align='center' colspan='2' style="color:red;">~$msg`</td>
+</tr>
+~/if`
+<tr class="fieldsnew">
+<td align='center' colspan='2'><a href='javascript: self.close ()'>Close[X]</a></td>
+</tr>
+</table>
+</body>

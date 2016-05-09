@@ -1,0 +1,44 @@
+<html>
+<head>
+   <title>Modify Bank Details</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+</head>
+                                                                                                                            
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width=100% border=0 align="center" cellspacing="4" cellpadding=5>
+<tr class="formhead">
+        <td align="center">Modify Bank Details</td>
+</tr>
+</table>
+<br>
+<form action="bank_mod.php" method="post">
+<table width=70% border=0 align="center" cellspacing="4" cellpadding=5>
+~if $flag eq "M"`
+<tr>
+	<td class="label">Bank ID</td>
+	<td class="fieldsnew">~$ID`</td>
+</tr>
+~/if`
+<tr>
+	<td class="label">Bank NAME</td>
+        <td class="fieldsnew"><input type="text" name="bank_name" value="~$NAME`"></td>
+</tr>
+<input type="hidden" name="ID" value=~$ID`>
+<input type="hidden" name="flag" value="M">
+<input type="hidden" name="checksum" value="~$checksum`">
+</table>
+<center>
+~if $flag eq "M"`
+<input type="submit" name="submit_mod" value="Modify">
+~else`
+<input type="submit" name="submit_add" value="Add"></center>
+~/if`
+
+</form>
+</body>
+</html>

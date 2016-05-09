@@ -1,0 +1,120 @@
+/* New CSS added for edit profile layers */
+
+* {margin:0; padding:0}
+.pink_edit{width:770px;border:1px #f0ced6;border-style:solid; background-color:#fdf4f5;}
+.title_edit { font:18px arial; color:#505050; position:relative; top:5px; left:8px;}
+.blink_edit { font:18px arial; color:#1171ae; position:relative; top:5px; right:5px}
+.fullwidth { width:100%;}
+.edit_input select,.edit_input input,.edit_input textarea {width:200px; height:20px; border-width:1px;border-color:#CCC; border-style:solid;font: 12px Arial,Helvetica,sans-serif;}
+.no-margin-padding{margin:0!important; padding:0!important}
+.sp15 {clear:both; height:15px; overflow:hidden; }
+.sp12{clear:both;height:12px;overflow:hidden}
+.grey_note_box {background-color:#f6f5f5;padding:5px;width:78%!important;border:1px #dedddd solid; float:right;}
+.green-hash {color:#8cc502}
+.block { display:block}
+.center { text-align:center}
+.fs18 { font-size:18px;}
+.green_btn_2 { background-image: url("IMG_URL/images/green_button_bg1.gif");    background-repeat: no-repeat;    color: #FFFFFF;    cursor: pointer;border:none!important;}
+.edit_scrollbox2_1{background-color:#FDF4F5;border:1px solid #FDF4F5;overflow:auto;/*padding:25px 2px 0px 50px;*/padding:25px 2px 0px 11px; width:auto; height:325px;_height:350px; min-height:325px;_min-height:350px} 
+.edit_scrollbox2_2{background-color:#FDF4F5;border:1px solid #FDF4F5;overflow:auto;/*padding:25px 2px 0px 50px;*/padding:1px 2px 0px 11px; width:auto; height:325px;_height:350px; min-height:325px;_min-height:350px} 
+.border-footer {border:1px #F0CED6; border-top-style:solid}
+.mar_left_50 {margin-left:50px; display:inline}
+.blue {color:#2179b2!important;}
+div.row4{float:left;width:96%; margin:5px 0px}
+div.row4 label{float:left;text-align:right;width:145px;padding:2px 6px 0 0;color:#726f6f;font-weight:bold;}
+div.row4 span{float:left;text-align:left;width:230px;padding-left:5px;}
+div.row4 span span{float:left;text-align:left;padding:0 3px 0 0;}
+div.row3 label.grey, div.row4 label.grey {vertical-align:top;padding-right:10px;float:left;color:#797979!important; font-size:13px; width:189px}
+.combo-small{width:131px!important; height:20px;}
+.combo-small-more{width:65px!important; height:20px!important;}
+.combo-small-more2{width:50px!important; height:20px!important;}
+.textarea-big { width:284px!important; height:60px!important;}
+.decotxt_2 {width:265px!important; height:20px!important}
+.btn-add {background:url(IMG_URL/images/sprite_ico.gif) -9px -81px scroll no-repeat; margin:0px 10px; display:inline; width:18px!important; height:18px;}
+.btn-rem {background:url(IMG_URL/images/sprite_ico.gif) -9px -102px scroll no-repeat; margin:0px 10px; display:inline; width:18px!important; height:18px;}
+.btn-key {background:url(IMG_URL/images/sprite_ico.gif) -8px -5px scroll no-repeat;width:20px; height:20px; display:inline-block;}
+.btn-archive {background:url(IMG_URL/images/sprite_ico.gif) -8px -28px scroll no-repeat;width:16px; height:16px; display:inline-block; vertical-align:top}
+.vam{vertical-align:middle;}
+.fs12 { font:12px arial;}
+.fs13 { font:13px arial;}
+.green_btn { background-image:url(IMG_URL/images/green_button_bg.gif); background-repeat:repeat-x; height:22px; border:1px #578d00; border-style:solid; padding-bottom:2px; font-size:11px; color:#fff; cursor:pointer;}
+.topbg_edit {background-image: url(IMG_URL/images/top_bg.jpg);background-repeat: repeat-x;height: 33px;}
+.scroll{background-color:#FFFFFF!important;border:1px solid #cccccc;overflow:auto;padding:3px 2px 4px 3px;width:247px!important; height:105px;}
+.red_new {color:#e93a3e !important}
+.combo-dimens {width:117px!important; height:20px;}
+.textbox-small {width:160px!important; height:20px}
+.textarea-big-2 { width:400px!important; height:135px!important;}
+.textarea2 {width: 520px!important;_width:518px!important; font: 12px arial; height: 65px!important; vertical-align: top;}
+
+.fs12 { font:12px arial;}
+.fs13 { font:13px arial!important;}
+.hideme { display:none!important;}
+.hack_close {position:relative; _top:-16px!important}
+.horz_sp35{ width:30px!important;_width:25px }
+.setwidth { width:242px!important; display:inline-block!important}
+.widthauto { width:auto!important;}
+.vam{vertical-align:middle;}
+.horz_sp20 { width:20px;}
+.fr { float:right!important} 
+.maroon { color:#cd3737}
+
+.tbl-data { font:13px arial; color:#505050; font-weight:bold; }
+.b { font-weight:bold!important;}
+span.containerSp { width:284px!important;}
+
+.next-line {display:inline;background-color: rgb(251, 236, 239);float:left; font: 12px ariaL; clear: both; margin-left:267px;  padding: 5px; width: 425px;}
+
+.width100 {width:100%!important;_width:100%!important}
+
+.red { border:1px solid red}
+
+.box-help {z-index: 1000; position: absolute; float: left; display: none; left: 633px; top: 108px;}
+
+.setmargin {margin-top:-2px; float:left}
+
+.box-links {display:inline; float:left; position:relative; left:-9px}
+
+
+.chbx { border: medium none;    height: 16px;    margin: 0;   
+ padding: 0;    width: 16px!important;}
+
+.mar_left_10 { margin-left:10px!important}
+.mar_left_38 { margin-left:38px!important}
+.mar_left_big { margin-left:272px;}
+
+.green {
+    color: #33B300;
+}
+
+.ttip_top {padding:5px 0 0 77px;
+}
+
+.note { color:#797979; margin-left:90px; font-size:13px; display:inline}
+.orng{color:#ff7a00;}
+.scroll_new{background-color:#FFFFFF!important;border:1px solid #cccccc;overflow:auto!important;padding:3px 2px 4px 3px!important;width:242px!important; height:105px;}
+.sml_pink_box {background:#fbedf0; padding:20px; float:left ;
+	 height:auto; border:1px solid #f5e1e5; width:575px }
+ *html  .sml_pink_box {width:620px}
+ .sml_pink_box div { padding:3px 0px;}
+
+ .div_txt_left {width:302px;}
+ div	.border_top_bot {border-top:1px solid #d7cdcf; border-bottom:1px solid #d7cdcf;}
+
+ .mar_left_14 { margin-left:14px}
+
+ .div_panel {padding:5px;width:330px; border:1px solid #9E9E9E;
+	  background-color:#F2F2F2; background-image:url(/profile/ser4_images/bgpay_1.gif)}
+  .new-red12 {font-size:10px; color:#fe0000; position:relative; top:-4px;z-index:100;}
+.fto-notification-box {
+	 border:3px solid #fec928;
+	 height:auto;
+	 padding: 10px;
+	 clear:both;
+	 background:#f8f8f8;
+	 font:20px Arial, Helvetica, sans-serif;
+	 margin: 0 auto;
+	 margin-top:7px;
+	 position:relative;
+	 font-variant:normal
+  }
+

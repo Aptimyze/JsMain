@@ -1,0 +1,177 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<title>Jeevansathi Matrimonials - Decide who all can contact you</title>
+<link rel="stylesheet" href="css/~$comm_style_css`" type="text/css">
+<style type="text/css">
+.pghd{float:left; width:99% }
+.r14{font:bold 14px verdana,Arial; color:#CC0000; padding-top:5px}
+.w1{width:25%;}
+.w2{width:25%;}
+.w3{width:40%;}
+.line{line-height:1px; background-color:#CCCCCC; width:98%}
+</style>
+<script language="javascript">
+<!--
+function MM_openBrWindow1(theURL,winName,features)
+{
+window.open(theURL,winName,features);
+}
+//-->
+</script>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body>
+<DIV id="dhtmltooltip" class="ttip"></DIV>
+<SCRIPT language=JavaScript1.2 src="~$IMG_URL`/profile/js/~$tooltip_new_js`" type=text/javascript></SCRIPT>
+<div id="container">
+	<!--HEADER STARTS-->
+     	   ~$HEAD`
+	<!--HEADER ENDS-->
+	<!--QUICK SEARCH STARTS-->
+	    <div class="spacer15">&nbsp;</div>
+	<!--QUICK SEARCH ENDS-->
+
+	<!--WRAPPER STARTS HERE-->
+	   <div id="wrapper">
+	<!--LEFT PANNEL STARTS HERE-->
+		~$LEFTPANEL`
+	<!--LEFT PANNEL ENDS HERE-->
+
+	<!--CENTER STARTS HERE-->
+		<div id="center">
+		~if $dpp eq "NO"`
+			<div class="pghd">
+     				<div class="r14"><img src="images/icon_chpass.gif" width="14" height="14"> My Filter - Decide who all can contact you </div>
+      				<div class="spacer15" style="border-top:1px solid #000000; margin-top:5px;" >&nbsp;</div>
+      				<div class="greyele bluelink lh">
+       					Setting filters would mean:<br>
+         				1- Restricting the number of members who contact you.<br>
+				        2- Be very careful while setting filters, you may block some relevant members who are keen to contact you.<br>
+				        3- Value of criteria have been picked from the Partner Profile set by you.<br>
+              				<div class="pad4"><input type="submit" name="Submit" value="Set desired partner profile" class="textbox" onclick="javascript:window.open('~$SITE_URL`/profile/advance_search.php?FLAG=partner&checksum=~$CHECKSUM`')"></div>
+                          </div>
+			  <div class="spacer15">&nbsp;</div>
+                </div>
+			    ~else`
+			<div class="pghd">
+                                <div class="r14"><img src="images/icon_chpass.gif" width="14" height="14"> My Filter - Decide who can contact you </div>
+                                <div class="spacer15" style="border-top:1px solid #000000; margin-top:5px;" >&nbsp;</div>
+                                <div class="greyele bluelink lh">
+        				Setting filters would mean:<br>
+				        1- Restricting the number of members who contact you.<br>
+				        2- Be very careful while setting filters, you may block some relevant members who are keen to contact you.<br>
+				        3- Value of criteria have been picked from the Partner Profile set by you.  <a href="~$SITE_URL`/P/viewprofile.php?checksum=~$CHECKSUM`&profilechecksum=~$MYPROFILECHECKSUM`#partnerinfo">View Your Partner Profile</a>     </div>
+        			<div class="spacer15">&nbsp;</div>
+			</div>
+
+
+			<!--div class="pghd">
+			     <div class="r14"><img src="images/icon_chpass.gif" width="14" height="14"> My Filter - Decide who can contact you </div>
+			     <div class="spacer15" style="border-top:1px solid #000000; margin-top:5px;" >&nbsp;</div>
+			     <div class="greyele bluelink">Filters allow you to choose certain criteria - Age, Marital Status, Religion, and Community. Members who match these criteria will be able to express interest in you.</div>
+			     <div class="spacer15">&nbsp;</div>
+		        </div-->
+
+                        <div style="float:left; width:100%;">
+			   <form action="filter.php" method="post" >
+			      <input type="hidden" name="Filterid" value="~$Filterid`">
+			      <input type="hidden" name="checksum" value="~$CHECKSUM`">
+			      <input type="hidden" name="crmback" value="~$crmback`">
+			      <input type="hidden" name="cid" value="~$cid`">
+			      <input type="hidden" name="pid" value="~$pid`">
+
+			      <div>
+				   <div class="pad2 bele" style="background-color:#EBEBEB">&nbsp;Set Your Filter</div>
+			           <div class="spacer">&nbsp;</div>
+			           <div class="pad2 bele lftflow w1"><b>Age</b></div>
+                                   <div class="pad2 greyele lftflow w2">~$lage` to ~$hage`</div>
+                                   <div class="pad2 greyele lftflow w3">
+                                         <input type="radio" name="age_filter" value="Y"~if $age_flag eq "Y"` checked ~/if`> Yes &nbsp;&nbsp;&nbsp;
+                                         <input type="radio" name="age_filter" value="N" ~if $age_flag eq "N" ||$age_flag eq ""`checked ~/if`> No
+                                   </div>
+				   <div class="spacer">&nbsp;</div>
+                                   <div class="line">&nbsp;</div>
+                                   <div class="spacer">&nbsp;</div>
+                            </div>
+			    ~if $check_mstatus neq "Y"`
+			    <div>
+                                   <div class="pad2 bele lftflow w1"><b>Marital Status</b><br></div>
+                                   <div class="pad2 greyele lftflow w2">~$mstatus`</div>
+                                   <div class="pad2 greyele lftflow w3">
+                                        <input type="radio" name="mstatus_filter" value="Y" ~if $mstatus_flag eq "Y"` checked ~/if`> Yes &nbsp;&nbsp;&nbsp;
+					<input type="radio" name="mstatus_filter" value="N" ~if $mstatus_flag eq "N" ||$mstatus_flag eq ""`checked ~/if`> No
+				   </div>
+				   <div class="spacer">&nbsp;</div>
+                                   <div class="line">&nbsp;</div>
+				   <div class="spacer">&nbsp;</div>
+                           </div>
+			   ~else`
+				   <input type="hidden" name="mstatus_filter" value="~$mstatus_filter`">
+			   ~/if`
+			   ~if $check_religion neq "Y"`
+			   <div>
+		                  <div class="pad2 bele lftflow w1"><b>Religion</b><br></div>
+		                  <div class="pad2 greyele lftflow w2">~$religion`</div>
+                                  <div class="pad2 greyele lftflow w3">
+                                        <input type="radio" name="religion_filter" value="Y" ~if $religion_flag eq "Y"` checked  ~/if`> Yes &nbsp;&nbsp;&nbsp;
+                                        <input type="radio" name="religion_filter" value="N" ~if $religion_flag eq "N" ||$religion_flag eq ""`checked ~/if`> No
+                                  </div>
+				  <div class="spacer">&nbsp;</div>
+				  <div class="line">&nbsp;</div>
+				  <div class="spacer">&nbsp;</div>
+			  </div>
+			  ~else`
+				  <input type="hidden" name="religion_filter" value="~$religion_filter`">
+                          ~/if`
+                           ~if $check_country neq "Y"`
+                           <div>
+                                  <div class="pad2 bele lftflow w1"><b>Country of Residence</b><br></div>
+                                  <div class="pad2 greyele lftflow w2">~$country_res`</div>
+                                  <div class="pad2 greyele lftflow w3">
+                                        <input type="radio" name="country_filter" value="Y" ~if $country_flag eq "Y"` checked  ~/if`> Yes &nbsp;&nbsp;&nbsp;
+                                        <input type="radio" name="country_filter" value="N" ~if $country_flag eq "N" ||$country_flag eq ""`checked ~/if`> No
+                                  </div>
+                                  <div class="spacer">&nbsp;</div>
+                                  <div class="line">&nbsp;</div>
+                                  <div class="spacer">&nbsp;</div>
+                          </div>
+                          ~else`
+					<input type="hidden" name="country_filter" value="~$country_filter`">
+                          ~/if`
+			  <div>
+				~if $check_mtongue neq "Y"`
+			          <div class="pad2 bele lftflow w1"><b>Community</b><br></div>
+     				  <div class="pad2 greyele lftflow w2">~$mtongue`</div>
+				  <div class="pad2 greyele lftflow w3">
+				        <input type="radio" name="mtongue_filter" value="Y" ~if $mtongue_flag eq "Y"` checked  ~/if`> Yes &nbsp;&nbsp;&nbsp;
+				        <input type="radio" name="mtongue_filter" value="N" ~if $mtongue_flag eq "N" ||$mtongue_flag eq ""`checked ~/if`> No
+				  </div>
+				  <div class="spacer">&nbsp;</div>
+				  <div class="line">&nbsp;</div>
+                                  ~else`
+                                        <input type="hidden" name="mtongue_filter" value="~$mtongue_filter`">
+				  ~/if`
+				  <div class="spacer15">&nbsp;</div>
+				  <div class="pad2 bele lftflow w1">&nbsp;</div>
+                                  <div class="pad2 bele lftflow w2">
+					<input type="hidden" name="company" value="~$company`">
+                                        <input type="submit" name="Submit" value="Apply Filters">
+                                  </div>
+                         </div>
+                         <div class="spacer">&nbsp;</div>
+                       </form>
+                     </div>
+		~/if`
+                  </div>
+               
+<!--CENTER ENDS HERE-->
+             </div>
+<!--WRAPPER ENDS HERE-->
+	~$FOOT`
+</div>
+</body>
+</html>

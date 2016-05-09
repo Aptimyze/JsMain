@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+	<TITLE>BMS : Campaign Management System</TITLE>
+	<LINK HREF="gifs/style.css" REL="stylesheet" TYPE="text/css">
+	<LINK REL="stylesheet" HREF="http://www.jeevansathi.com/jsadmin/jeevansathi.css" TYPE="text/css">
+	<LINK REL="stylesheet" HREF="http://www.jeevansathi.com/profile/images/styles.css" TYPE="text/css">
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#000000" VLINK="#000000" ALINK="#000000" LEFTMARGIN="0" TOPMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0"> 
+	~$bmsheader`    
+	<DIV CLASS="text-under" STYLE="margin-left:20px;">
+		<A HREF="bms_adminindex.php?id=~$id`&site=~$site`" TARGET="">Admin Home</A>
+	</DIV>
+	<br>
+	<P></P>
+	<DIV ALIGN=center CLASS="text" STYLE="margin-left:20px;">
+		<b>
+			Current Category/Sub-category status for :  ~$criteria`
+		</b>
+	</DIV>
+	
+	<DIV CLASS="text">
+		<BR>
+		<TABLE WIDTH="100%" BORDER="0">
+		<TR> 
+			<TD WIDTH="20%" ALIGN="RIGHT"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="180" HEIGHT="1"><IMG SRC="gifs/tick.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="13" HEIGHT="11"> </TD>
+			<TD WIDTH="80%" CLASS="text">You can add/create category/subcategory here.</TD>
+		</TR>
+		</TABLE>
+		<BR>
+	</DIV>
+
+	<FORM name="frm_main" method="POST" action="bms_createcategory.php" onSubmit="return select_values();">
+		<TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER" >
+		<TR>
+			<TD WIDTH="18" BACKGROUND="gifs/page-bg.gif"><IMG SRC="gifs/lt-curve.gif" ALT="jeevansathi.com" WIDTH="18" HEIGHT="31" BORDER="0" HSPACE="0"></TD>
+			<TD VALIGN="MIDDLE" HEIGHT="31" WIDTH="100%">
+				<TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" HEIGHT="31">
+				<TR>
+					<TD BACKGROUND="gifs/page-bg.gif" WIDTH="70%"><DIV CLASS="text"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="30" HEIGHT="1"><B></B></DIV></TD>
+					<TD WIDTH="30%" BACKGROUND="gifs/page-bg.gif" ALIGN="RIGHT"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="30" HEIGHT="1"></TD>
+				</TR>
+				</TABLE>
+			</TD>
+	
+			<TD ALIGN="RIGHT" WIDTH="18" BACKGROUND="gifs/page-bg.gif"><IMG SRC="gifs/rt-curve.gif" ALT="jeevansathi.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+		</TR>
+		</TABLE>
+
+		<TABLE WIDTH="100%" BORDER="0" VSPACE="0" HSPACE="0" CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER">
+		<TR>
+			<TD WIDTH="18" BACKGROUND="gifs/lt-line-bg-1.gif"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></TD>
+			<TD WIDTH="100%"> 
+				<BR>
+				<DIV ALIGN="CENTER">
+					<TABLE WIDTH="60%" BORDER="0" VSPACE="0" HSPACE="0" CELLPADDING="4" CELLSPACING="0">
+					<TR>
+						~section name=c loop=$cat`
+						<table border="2" align="center" width="70%">
+							~section name=sc loop=$subcat[c]`
+								~section name=e loop=$element[c][sc]`
+									<tr>
+										~if $cat[c] neq $cat_old`
+											<td width="30%">~$cat[c]`</td>
+										~else`
+											<td width="30%">&nbsp;</td>
+										~/if`
+										~if $subcat[c][sc] neq $subcat_old`
+											<td width="30%">~$subcat[c][sc]`</td>
+										~else`
+											<td width="30%">&nbsp;</td>
+										~/if`
+										<td width="30%">~$element[c][sc][e]`</td>
+										~assign var="cat_old" value=$cat[c]`
+										~assign var="subcat_old" value=$subcat[c][sc]`
+									</tr>
+								~/section`
+							~/section`
+						<tr>
+							<td>
+								~if $cat[c] eq 'Default' `
+									<a href="bms_createcategory.php?&id=~$id`&criteria=~$criteria`&category=new&submit2=submit&from_display=1">Create category</a>
+								~elseif $subcat[c]`
+									<a href="bms_createcategory.php?id=~$id`&category=~$cat[c]`&criteria=~$criteria`&from_display=1">Create Subcategory</a>
+								~/if`
+							</td>
+						</tr>
+						</table>
+						~/section`
+					</TR>
+					</TABLE>
+				</DIV>
+				<BR>
+				<P></P>
+				<P></P>
+			</TD>
+			<TD BACKGROUND="gifs/rt-line-bg-1.gif" WIDTH="18"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></TD>
+		</TR>
+		</TABLE>
+
+		<TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER">
+		<TR>
+			<TD WIDTH="18" BACKGROUND="gifs/page-bg-1.gif"><IMG SRC="gifs/lt-low-curve.gif" ALT="jeevansathi.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+			<TD VALIGN="MIDDLE" HEIGHT="31" BACKGROUND="gifs/page-bg-1.gif">&nbsp;</TD>
+			<TD ALIGN="RIGHT" WIDTH="18" BACKGROUND="gifs/page-bg-1.gif"><IMG SRC="gifs/lt-rt-curve.gif" ALT="jeevansathi.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+		</TR>
+		</TABLE>
+	</FORM>
+	~$bmsfooter`
+</BODY>
+</HTML>

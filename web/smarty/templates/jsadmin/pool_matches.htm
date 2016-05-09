@@ -1,0 +1,712 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jeevansathi.com</title>
+<link href="~$SITE_URL`/jsadmin/main.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+.p1 { background-image:url(~$PHOTO_URL`/profile/images/p1.gif); background-position:right; background-repeat:no-repeat; }
+.p2 { background-image:url(~$PHOTO_URL`/profile/images/p2.gif); background-position:right; background-repeat:no-repeat; }
+.p3 { background-image:url(~$PHOTO_URL`/profile/images/p3.gif); background-position:right; background-repeat:no-repeat; }
+.p4 { background-image:url(~$PHOTO_URL`/profile/images/p4.gif); background-position:right; background-repeat:no-repeat; }
+.p4-1 { background-image:url(~$PHOTO_URL`/profile/images/p4-1.gif); background-position:right; background-repeat:no-repeat; }
+.p5 { background-image:url(~$PHOTO_URL`/profile/images/p5.gif); background-position:right; background-repeat:no-repeat; }
+.p6 { background-image:url(~$PHOTO_URL`/profile/images/p6.gif); background-position:right; background-repeat:no-repeat; }
+.p7 { background-image:url(~$PHOTO_URL`/profile/images/p7.gif); background-position:right; background-repeat:no-repeat; }
+
+
+</style>
+<script src="~$SITE_URL`/profile/js/dw_viewport.js" type="text/javascript"></script>
+<script src="~$SITE_URL`/profile/js/searchhover.js" type="text/javascript"></script>
+<script src="~$SITE_URL`/profile/js/tooltip_new.js" type="text/javascript"></script>
+<SCRIPT language=JavaScript1.2 src="~$SITE_URL`/profile/profile.js" type=text/javascript></SCRIPT>
+<SCRIPT type=text/javascript language="JavaScript" SRC="~$SITE_URL`/profile/js/search.js"></SCRIPT>
+<SCRIPT type=text/javascript language="JavaScript" SRC="~$SITE_URL`/profile/js/conf_layer.js"></SCRIPT>
+<script type="text/javascript">
+function formsubmit(profileid)
+{
+	document.poolform.sl_profileid.value=profileid;
+	document.poolform.submit();
+}
+function checkboxes()
+{
+	var i=0;
+	for(i=0;i<document.poolform.elements.length;i++)
+	{
+		if((document.poolform.elements[i].type=="checkbox") && (document.poolform.elements[i].name!="photocheck"))
+		{
+			if(document.poolform.elements[i].checked==true)
+			{
+				document.poolform.submit();
+				return true;
+			}
+		}
+	}
+	alert("No profiles selected!");
+	return false;
+}
+function sendmail()
+{
+	var i=0;
+	var check=0;
+        var pids= '';
+	for(i=0;i<document.poolform.elements.length;i++)
+        {
+                if((document.poolform.elements[i].type=="checkbox") && (document.poolform.elements[i].checked))
+                {
+                        if(document.poolform.elements[i].checked==true)
+                        {
+                                if(pids=='')
+                                        pids=document.poolform.elements[i].value;
+                                else
+                                        pids=pids+","+document.poolform.elements[i].value;      
+                                check++;
+                        }
+                }
+        }
+        if(check>0)
+        {
+
+		var temp_cid = "~$cid`";
+                var page="send_email.php?cid="+temp_cid+"&pids="+pids+"&profileid="+~$profileid`;
+                window.open(page,'','width=365,height=160,resizable=1,scrollbars=1');
+                return false;
+		
+	}
+	else
+        alert("Please select atleast one profile!");
+        
+        return false;
+}
+function shownote(e,divname,textname)
+{
+	var x=0, y=0; viewport.getAll();
+	var o=document.getElementById(divname);
+	var offx=10;
+	var offy=10;
+	textname='note'+textname;
+	// check positioning choices
+	if ( this.offX == "c" ) 
+	{
+		x = Math.round( (viewport.width - o.offsetWidth)/2 ) + viewport.scrollX;
+	} 
+	else 
+	{  // use mouse location onclick to position
+		x = e.pageX? e.pageX: e.clientX + viewport.scrollX;
+		offx = offx || this.offX;  // check for passed offsets
+		if ( x + o.offsetWidth + offx > viewport.width + viewport.scrollX )
+		x = viewport.width + viewport.scrollX - o.offsetWidth;
+		else x = x + offx;
+	}
+	if ( this.offY == "c" ) 
+	{
+		y = Math.round( (viewport.height - o.offsetHeight)/2 ) + viewport.scrollY;                
+	} 
+	else 
+	{
+		y = e.pageY? e.pageY: e.clientY + viewport.scrollY;                        
+		offy = offy || this.offY;
+		if ( y + o.offsetHeight + offy > viewport.height + viewport.scrollY )
+		y = viewport.height + viewport.scrollY - o.offsetHeight;
+		else y = y + offy;
+	}
+	document.getElementById(divname).style.left = x + "px"; 
+	document.getElementById(divname).style.top = y + "px";
+	document.getElementById(divname).style.visibility='visible';
+	document.getElementById(divname).style.display="inline";
+	eval('document.poolform.'+textname+'.focus()');
+
+} 
+function hidenote(divname)
+{
+	document.getElementById(divname).style.visibility='hidden';
+}
+function win_open(url)
+{
+        window.open(url,'','width=790,height=570,resizable=1,scrollbars=1');
+}
+function win_open_contact(url)
+{
+        window.open(url,'','width=365,height=160,resizable=1,scrollbars=1');
+}
+function $() {
+var elements = new Array();
+for (var i=0;i<arguments.length;i++) {
+var element = arguments[i];
+if (typeof element == 'string') element = document.getElementById(element);
+if (arguments.length == 1) return element;
+elements.push(element);
+}
+return elements;
+}
+var BoxHeights = {
+maxh: 0,
+boxes: Array(),
+num: 0,
+op_test: false,
+equalise: function() {
+this.num = arguments.length;
+for (var i=0;i<this.num;i++) if (!$(arguments[i])) return;
+this.boxes = arguments;
+this.maxheight();
+for (var i=0;i<this.num;i++) $(arguments[i]).style.height = this.maxh+"px";
+},
+maxheight: function() {
+var heights = new Array();
+for (var i=0;i<this.num;i++) {
+if (navigator.userAgent.toLowerCase().indexOf('opera') == -1) {
+heights.push($(this.boxes[i]).scrollHeight);
+} else {
+heights.push($(this.boxes[i]).offsetHeight);
+}
+}
+heights.sort(this.sortNumeric);
+this.maxh = heights[this.num-1];
+},
+sortNumeric: function(f,s) {
+return f-s;
+}
+}
+
+window.onload = function() {
+BoxHeights.equalise('one','two');BoxHeights.equalise('three','four');BoxHeights.equalise('five','six');BoxHeights.equalise('seven','eight');BoxHeights.equalise('nine','ten');
+BoxHeights.equalise('a1','a2');BoxHeights.equalise('a3','a4');BoxHeights.equalise('a5','a6');BoxHeights.equalise('a7','a8');
+BoxHeights.equalise('a9','a10');
+BoxHeights.equalise('b1','b2');BoxHeights.equalise('b3','b4');BoxHeights.equalise('b5','b6');BoxHeights.equalise('b7','b8');
+BoxHeights.equalise('b9','b10');
+BoxHeights.equalise('c1','c2');BoxHeights.equalise('c3','c4');BoxHeights.equalise('c5','c6');BoxHeights.equalise('c7','c8');
+BoxHeights.equalise('c9','c10');
+BoxHeights.equalise('d1','d2');BoxHeights.equalise('d3','d4');BoxHeights.equalise('d5','d6');BoxHeights.equalise('d7','d8');
+BoxHeights.equalise('d9','d10');
+}
+</script>
+</head>
+
+<body topmargin="0" rightmargin="0" bottommargin="0" leftmargin="0" ~if $detailview && $PRINT` onLoad="javascript : window.print();" ~/if`>
+~if !$PFLAG`
+<table width="775" border="0" align="center" cellpadding="0" cellspacing="0" style="border:1px solid #f09329">
+~else`
+<table width="750" border="0" align="center" cellpadding="0" cellspacing="0" style="border:0px solid #f09329">
+~/if`
+  <tr>
+	~if $detailview`
+	<td><img src="~$PHOTO_URL`/profile/images/js-logo.gif" width="226" height="63" hspace="15" vspace="5"></td>
+	~if !$PFLAG`
+	<td align="right"><a href="#" onClick="javascript : window.close();">Close this window</a>
+	~/if`
+	~else`
+    	<td colspan="2"><img src="~$PHOTO_URL`/profile/images/js-logo.gif" width="226" height="63" hspace="15" vspace="5"></td>
+	~/if`
+  </tr>
+~if !$PFLAG`
+  <tr>
+    <td height="6" colspan="2" bgcolor="#bc001d"></td>
+  </tr>
+  <tr>
+    <td height="1" colspan="2"></td>
+  </tr>
+  <tr>
+    <td height="20" colspan="2" bgcolor="#f09329"></td>
+  </tr>
+~else`
+<tr>
+    <td height="3" colspan="2" bgcolor="#bc001d"></td>
+  </tr>
+
+~/if`
+<form ~if $detailview` action="displayprofile.php" ~else` action="pool_matches.php" ~/if` name="poolform" method="post">
+<input type="hidden" name="cid" value="~$cid`">
+<input type="hidden" name="profileid" value="~$profileid`">
+~if $detailview`
+~if $SHORTLISTED`
+<tr>
+	<td colspan="2" align="center"><font color="red"><strong>Profile was successfully shorlisted!</strong></font></td>
+</tr>
+~else`
+	~if !$p_expire`
+	~if !$PFLAG`
+	<tr>
+	<input type="hidden" name="page" value="~$page`">
+	<input type="hidden" name="searched_profileid" value="~$SEARCHED_PROFILEID`">
+	<div id="shortlistnote" style="position: absolute; visibility: hidden; width:180px; height:120px; background-color: #FDFBE6; border: 1px solid #888;">
+	<textarea name=note cols="30" rows="3"></textarea>
+	<div style="padding-top:10px; float:left "><input type="submit" name="shortlist" value="Shortlist" class="textbox" style="width:65px"><input type="button" name="canmsg" value="Cancel" class="textbox" style="width:65px " onClick="hidenote('shortlistnote');"></input></div>
+	</div>
+	<td valign="top" align="left"><a href="#" onClick="return shownote(event,'shortlistnote','');"><img src="~$PHOTO_URL`/profile/images/shortlist.gif" width="69" height="18" hspace="11" vspace="5" border="0"></a></td>
+	<td valign="top" align="right">
+	<span class="main-text"><strong><a href="#" onClick="win_open('~$SITE_URL`/jsadmin/displayprofile.php?cid=~$cid`&profileid=~$profileid`&searchid=~$SEARCHED_PROFILEID`&page=pool&pflag=1&print=1');return false;" style="color:#000000">Print this Profile</a><br>
+	       ~if $COMPATIBILITY_LINK eq 'R'`
+                <a href="#" onClick="window.open('~$SITE_URL`/profile/horoscoperequest.php?profileid=~$profileid`&profilechecksum=~$PROFILECHECKSUM`&via_ofm=1','','width=340,height=310,resizable=1');" style="color:#000000"><strong> Request Horoscope</strong></a><br>
+                ~else`
+                <a href="#" onClick="window.open('~$SITE_URL`/profile/horoscope_astro.php?checksum=~$cid`&profilechecksum=~$PROFILECHECKSUM`','','width=625,height=625,resizable=1,scrollbars=1');" style="color:#000000"><strong> View Horoscope</strong></a><br>
+                ~/if`
+                ~if $COMPATIBILITY_SUBSCRIPTION eq '1'`
+                ~if $COMPATIBILITY_LINK eq 'C'`
+                <a href="#" onClick="window.open('~$SITE_URL`/profile/check_horoscope_compatibility.php?profileid=~$profileid`&checksum=~$cid`&profilechecksum=~$PROFILECHECKSUM`&via_ofm=1&compatibility_subscription=~$COMPATIBILITY_SUBSCRIPTION`','','width=570,height=570,resizable=1');" style="color:#000000"><strong> Check Astro Compatibilty</strong></a><br>
+                ~/if`
+                ~/if`
+	</strong> &nbsp;&nbsp;&nbsp;&nbsp;</span>
+	</td>   
+	</tr>
+	~/if`
+	~else`
+	<tr>
+	<td colspan="2" align="center"><font color="red"><strong>This action is disallowed as your account is now inactive</strong></font></td>
+	</tr>
+	~/if`
+~/if`
+<tr>
+<td colspan="2">~$viewprofile`</td>
+</tr>
+~if !$SHORTLISTED && !$p_expire && !PFLAG`
+<tr>
+<td colspan="2" valign="top" align="left"><a href="#" onClick="return shownote(event,'shortlistnote','');"><img src="~$PHOTO_URL`/profile/images/shortlist.gif" width="69" height="18" hspace="11" vspace="5" border="0"></a></td>
+</tr>
+~/if`
+~else`
+  <tr>
+    <td height="50" colspan="2" background="~$PHOTO_URL`/profile/images/top-bg.gif" class="main-text" style="padding-left:5px; color:#525252"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="52%"><strong>You are logged in as ~$customer_name` | <a href="javascript: self.close()" style="color:#525252">Logout</a></strong></td>
+        <td width="35%" align="right" style="line-height:20px">Profiles Remaining :&nbsp;<br>
+          Days Remaining :&nbsp; </td>
+        <td width="13%" align="left" style="line-height:20px"><strong>~$acc_remain`<br>
+          ~$day_remain`</strong></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td width="198" align="left" valign="top" bgcolor="#f4f4f4" style="border-right:1px solid #bdbdbd"><table width="198" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="32" class="left-links-inactive"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7"> <a href="login_customer.php?profileid=~$profileid`&flag=1&cid=~$cid`" style="text-decoration:none; color:#000000">Home</a></td>
+      </tr>
+      <tr>
+        <td height="32" class="left-links-inactive"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7"> <a href=# onclick="win_open('~$SITE_URL`/P/profileselect_oc.php?profileid=~$profileid`&profilechecksum=~$profilechecksum`')" style="text-decoration:none; color:#000000">My Profile</a></td>
+      </tr>
+	  <tr>
+        <td height="32" class="left-links-inactive"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7"> <a href="search_profiles.php?profileid=~$profileid`&cid=~$cid`" style="text-decoration:none; color:#000000">Search Profile</a></td>
+      </tr>
+	  <tr>
+        <td height="32" class="left-links-active"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7"> Pool of available matches</td>
+      </tr>
+	  <tr>
+        <td height="32" class="left-links-inactive"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7"> <a href="shortlisted_profiles.php?cid=~$cid`&profileid=~$profileid`" style="text-decoration:none; color:#000000">Short Listed Profiles</a></td>
+      </tr>
+	  <tr>
+        <td height="32" class="left-links-inactive"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7"> <a href="accept_matches.php?profileid=~$profileid`&cid=~$cid`" style="text-decoration:none; color:#000000">Accepted Profiles</a></td>
+      </tr>
+	 <tr>
+        <td height="32" class="left-links-inactive"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7"> <a href="~$SITE_URL`/jsadmin/accept_matches.php?profileid=~$profileid`&cid=~$cid`&crd_status=1" style="text-decoration:none; color:#000000">Couriered Profiles</a></td>
+      </tr>
+	  <tr>
+        <td height="32" class="left-links-inactive"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7"> <a href="~$SITE_URL`/jsadmin/rejected_matches.php?cid=~$cid`&profileid=~$profileid`" style="text-decoration:none; color:#000000">Rejected Profiles</a></td>
+      </tr>
+	~if $profile_verified eq 'N'`
+         <tr>
+        <td height="32" class="left-links-inactive" style="color:red"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7">&nbsp;User reported for verification failure</td>
+      </tr>
+        ~else`
+          <tr>
+        <td height="32" class="left-links-inactive" ><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7"> <a href="#" onclick="win_open_contact('~$SITE_URL`/jsadmin/verification_failed.php?profileid=~$profileid`&cid=~$cid`')"  style="text-decoration:none; color:red">Report verification failure</a></td>
+      </tr>
+        ~/if`
+	  <tr>
+	    <td>&nbsp;</td>
+	    </tr>
+	  <tr>
+	    <td>&nbsp;</td>
+	    </tr>
+	  <tr>
+	    <td>&nbsp;</td>
+	    </tr>
+    </table></td>
+	~if $NOREC || $NORES`
+	<td>
+	~if $SHORTLISTED`
+        <p align="center"><font><strong>~if $SHORTLISTED eq "N"` Profiles have ~else` Profile has ~/if` been successfully shortlisted!</strong></p>
+        <br>
+	~/if`
+	~if $NOREC`
+	<p align="center"><font color="red"><strong>No profiles currently in pool</strong></font></p>
+	~else`
+	<p align="center"><a href="~$SITE_URL`/jsadmin/pool_matches.php?profileid=~$profileid`&cid=~$cid`">Show all profiles in the pool</a></p>
+	<p align="center"><font color="red"><strong>No profiles in pool matching search criteria</strong></font></p>
+	~/if`
+	</td>
+	~else`
+    <td width="577" align="left" valign="top"><table width="573"  border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td colspan="5">&nbsp;</td>
+      </tr>
+	<tr>
+        <td align="center" class="main-text">&nbsp;</td>
+        <td width="279" align="center" class="main-text"><strong>Search Profile by ID</strong>
+          <input name="searchid" type="text" class="main-text"></td>
+        <td align="center" class="main-text">&nbsp;</td>
+        <td width="279" align="left" class="main-text"><a href="#" onClick="javascript : document.poolform.submit();"><img src="~$PHOTO_URL`/profile/images/search.gif" width="69" height="18" border="0"></a></td>
+        <td align="center" class="main-text">&nbsp;</td>
+      </tr>
+	~if $searchbar eq '1'`
+	<input type="hidden" name="searchsubmit" value="~$searchsubmit`">
+	<input type="hidden" name="photo" value="~$photo`">
+	~if $searchsubmit eq '1'`
+	<tr>
+        <td colspan="5">&nbsp;</td>
+        </tr>
+        <tr>
+        <td colspan="5" align="left"><a href="~$SITE_URL`/jsadmin/pool_matches.php?profileid=~$profileid`&cid=~$cid`">Show all profiles in the pool</a></td>
+        </tr>
+        <tr>
+        <td colspan="5">&nbsp;</td>
+        </tr>
+	<input type="hidden" name="city_val" value="~$city_val`">
+	<input type="hidden" name="education_val" value="~$education_val`">
+	<input type="hidden" name="mtongue_val" value="~$mtongue_val`">
+	<input type="hidden" name="occupation_val" value="~$occupation_val`">
+	<input type="hidden" name="caste_val" value="~$caste_val`">
+	<input type="hidden" name="lage_val" value="~$lage_val`">
+	<input type="hidden" name="hage_val" value="~$hage_val`">
+	<input type="hidden" name="mstatus_val" value="~$mstatus_val`">
+	~/if`
+      <tr>
+        <td colspan="5" height="10"></td>
+      </tr>
+	 <tr>
+        <td height="10" colspan="5"><table width="100%" border="0" cellspacing="3" cellpadding="0" style="font-family:Verdana; font-size:11px; color:#000000; background-image:url(~$PHOTO_URL`/profile/images/awaiting-table-bg.gif); background-position:bottom; background-repeat:repeat-x; border:1px solid #deddad">
+	<tr>
+            <td width="14%" align="right">Age:              </td>
+            <td width="24%">~$lowerage_dd` to ~$higherage_dd`</td>
+
+            <td width="12%" align="right">Education:              </td>
+            <td width="15%">~$education_dd`</td>
+            <td width="17%" align="right">Community:              </td>
+            <td width="18%">~$mtongue_dd`</td>
+          </tr>
+          <tr>
+            <td align="right">City:              </td>
+            <td>~$city_dd`</td>         
+                <td align="right">Religion:</td>
+            <td>~$caste_dd`</td>
+            <td align="center">Marital Status:</td>
+            <td>~$mstatus_dd`</td>
+          </tr>
+          <tr>
+            <td align="right">Occupation:              </td>
+            <td>~$occupation_dd`</td>
+            <td>&nbsp;</td>
+            <td><input type="checkbox" name="photocheck" value="1" ~if $photo` checked ~/if`>
+Photo</td>
+	<td colspan="2" align="center"><a href="#" onClick=" if(document.poolform.photocheck.checked==true) document.poolform.photo.value=1;  else document.poolform.photo.value=0; document.poolform.searchsubmit.value=1; document.poolform.submit(); return false;"><img src="~$PHOTO_URL`/profile/images/submit.gif" width="69" height="18" border="0"></a></td>
+          </tr>
+        </table></td>
+      </tr>
+	~/if`
+
+      ~if $WRONGID`
+     <tr>
+	<td colspan="5" height="10" align="center"><font color="red">Invalid username entered!</font></td>
+     </tr>
+      ~/if`
+      ~if $NOTINPOOL`
+  	<tr>
+		<td colspan="5" height="10" align="center"><font color="red">Profile Not In Pool!</font></td>
+	</tr>
+      ~/if`
+      ~if $SHORTLISTED`
+	<tr>
+		<td colspan="5" height="10" align="center">~if $SHORTLISTED eq "N"`Profiles have ~else`Profile has~/if` been successfully shortlisted!</td>
+	</tr>
+      ~/if`
+      <tr align="center">
+        <td colspan="5"><img src="~$PHOTO_URL`/profile/images/seperator-big.gif" width="559" height="1"></td>
+      </tr>
+      <tr>
+        <td colspan="5" height="10"></td>
+      </tr>
+	~if $SEARCHED_PROFILE`
+	<tr>
+	<input type="hidden" name="searched_profileid" value=~$SEARCHED_PROFILEID`>
+	<div id="shortlistnote" style="position: absolute; visibility: hidden; width:180px; height:120px; background-color: #FDFBE6; border: 1px solid #888;">
+	<textarea name=note cols="30" rows="3"></textarea>
+	<div style="padding-top:10px; float:left "><input type="submit" name="shortlist" value="Shortlist" class="textbox" style="width:65px"><input type="button" name="canmsg" value="Cancel" class="textbox" style="width:65px " onClick="hidenote('shortlistnote');"></input></div>
+	</div>
+    	<td colspan="2" valign="top" align="left"><a href="#" onClick="return shownote(event,'shortlistnote','');"><img src="~$PHOTO_URL`/profile/images/shortlist.gif" width="69" height="18" hspace="11" vspace="5" border="0"></a></td>
+	<td>&nbsp;</td>
+	<td colspan="2" valign="top" align="right">
+	<span class="main-text"><strong><a href="#" onClick="win_open('~$SITE_URL`/jsadmin/displayprofile.php?cid=~$cid`&profileid=~$profileid`&searchid=~$SEARCHED_PROFILEID`&pool=1&print=1');"style="color:#000000">Print this Profile</a><br>
+	~if $COMPATIBILITY_LINK eq 'R'`
+                <a href="#" onClick="window.open('~$SITE_URL`/profile/horoscoperequest.php?profileid=~$profileid`&profilechecksum=~$PROFILECHECKSUM`&via_ofm=1','','width=340,height=310,resizable=1');" style="color:#000000"><strong> Request Horoscope</strong></a><br>
+                ~else`
+                <a href="#" onClick="window.open('~$SITE_URL`/profile/horoscope_astro.php?checksum=~$cid`&profilechecksum=~$PROFILECHECKSUM`','','width=625,height=625,resizable=1,scrollbars=1');" style="color:#000000"><strong> View Horoscope</strong></a><br>
+                ~/if`
+                ~if $COMPATIBILITY_SUBSCRIPTION eq '1'`
+                ~if $COMPATIBILITY_LINK eq 'C'`
+                <a href="#" onClick="window.open('~$SITE_URL`/profile/check_horoscope_compatibility.php?profileid=~$profileid`&checksum=~$cid`&profilechecksum=~$PROFILECHECKSUM`&via_ofm=1&compatibility_subscription=~$COMPATIBILITY_SUBSCRIPTION`','','width=570,height=570,resizable=1');" style="color:#000000"><strong> Check Astro Compatibilty</strong></a><br>
+                ~/if`
+                ~/if`
+	</strong> &nbsp;&nbsp;&nbsp;&nbsp;</span>
+	</td>
+  	</tr>
+	<tr>
+		<td width="2">&nbsp;</td>
+		<td colspan="4" rowspan="5" valign="top">
+		~$viewprofile`
+		</td>
+	</tr>
+	~else`
+      <tr>
+        <td height="10">&nbsp;</td>
+        <td height="10" colspan="3"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+		<td valign="top" align="left"><a href="#" onClick="return checkboxes();"><img src="~$PHOTO_URL`/profile/images/shortlist.gif" width="69" height="18" hspace="11" vspace="5" border="0"></a>
+		<input type="image" src="~$PHOTO_URL`/profile/images/email.gif"  hspace="11" vspace="5" onclick="return sendmail();">
+		</td>
+                <td align="right" class="main-text">~$PAGELINK`</td>
+          </tr>
+        </table></td>
+        <td height="10">&nbsp;</td>
+      </tr>
+      <tr>
+        <td colspan="5" height="10"></td>
+      </tr>
+      <tr>
+        <td width="2">&nbsp;</td>
+        <td colspan="3" rowspan="5" valign="top">
+	<div id="srf">
+	<input type="hidden" name="sl_profileid" value="">
+	~assign var="tab" value=0`
+	~section name="tr1" start=0 loop=$length`
+	~assign var="finalval" value=$tab`
+	~if $RESULTS_ARRAY[$finalval].PROFILEID neq ''`
+	~if $finalval % 2 eq 0`
+		<ul>
+	~/if`
+	<li>
+		~if $RESULTS_ARRAY[$finalval].BOLDLISTING eq 0`
+		<div class="mbx">
+		~else`
+		<div class="mbx-fea">
+		~/if`
+		~if $RESULTS_ARRAY[$finalval].CATEGORY neq ''`
+			~if $RESULTS_ARRAY[$finalval].CATEGORY eq '4' AND $RESULTS_ARRAY[$finalval].SHOW_STAR eq '1'`
+				<div class="prf p~$RESULTS_ARRAY[$finalval].CATEGORY`-1" id="~$a[$finalval]`">
+			~else`
+				~if $RESULTS_ARRAY[$finalval].MEMBER_101 eq "1"`
+				<div class="prfh p~$RESULTS_ARRAY[$finalval].CATEGORY`" id="~$a[$finalval]`">
+				~else`
+				<div class="prf p~$RESULTS_ARRAY[$finalval].CATEGORY`" id="~$a[$finalval]`" style="height:25px;">
+				~/if`
+			~/if`
+		~else`
+			~if $RESULTS_ARRAY[$finalval].MEMBER_101 eq "1"`
+				<div class="prfh" id="~$a[$finalval]`">
+			~else`
+				<div class="prf" id="~$a[$finalval]`">  
+			~/if`
+		~/if`
+			~if $RESULTS_ARRAY[$finalval].CATEGORY neq '7'`
+			<input type="checkbox" name="profile[]" value="~$RESULTS_ARRAY[$finalval].PROFILEID`" style="vertical-align:middle">
+			~/if`
+			<span class="blacklink">                                                                                                <label for="un~$finalval`" style="cursor:pointer;">~$RESULTS_ARRAY[$finalval].USERNAME`</label>
+		 	</span>
+		</div>
+		<div class="tx bluelink" id="~$boxheight[$finalval]`">
+		~$RESULTS_ARRAY[$finalval].MY_PHOTO`
+			~if $RESULTS_ARRAY[$finalval].CATEGORY neq "7"`
+			<span class="blacklink"><a href="#" onClick="win_open('~$SITE_URL`/jsadmin/displayprofile.php?cid=~$cid`&profileid=~$profileid`&searchid=~$RESULTS_ARRAY[$finalval].PROFILEID`&page=pool');return false;"><b>~$RESULTS_ARRAY[$finalval].PROTITLE`</b>~$RESULTS_ARRAY[$finalval].YOURINFO`</a></span>
+			...
+			<a href="#" onclick="win_open('~$SITE_URL`/jsadmin/displayprofile.php?cid=~$cid`&profileid=~$profileid`&searchid=~$RESULTS_ARRAY[$finalval].PROFILEID`&page=pool&compatibility_subscription=~$COMPATIBILITY_SUBSCRIPTION`');return false;">Read More</a>...
+			~/if`
+		</div>
+		 ~if $RESULTS_ARRAY[$finalval].BOLDLISTING eq 0`
+		<div class="dts" id="~$b[$finalval]`">
+		~else`
+		<div class="dts-fea" id="~$b[$finalval]`">
+		~/if`
+		~$RESULTS_ARRAY[$finalval].INFO`
+		</div>
+		<div id="~$e[$finalval]`" style="position: absolute; visibility: hidden; width:180px; height:120px; background-color: #FDFBE6; border: 1px solid #888;">
+	        <textarea name="note~$RESULTS_ARRAY[$finalval].PROFILEID`" cols="20" rows="3"></textarea>
+        	<div style="padding-top:10px; float:left "><input type="submit" name="shortlist" value="Shortlist" class="textbox" style="width:65px" onClick="formsubmit(~$RESULTS_ARRAY[$finalval].PROFILEID`)";><input type="button" name="canmsg" value="Cancel" class="textbox" style="width:65px " onClick="hidenote('~$e[$finalval]`');"></input></div>
+        	</div>
+		<div class="lks" id="~$c[$finalval]`">
+		~if $RESULTS_ARRAY[$finalval].CATEGORY neq "7"`
+		~if $RESULTS_ARRAY[$finalval].ICON eq 1`
+		<img src="~$PHOTO_URL`/profile/images/mobilephone3_set3.gif" title="Valid phone number(s) not available" width="14" height="22" border="0">
+		~/if`
+		<a href="#" onClick="shownote(event,'~$e[$finalval]`','~$RESULTS_ARRAY[$finalval].PROFILEID`'); return false;"><strong> Short List this Profile</strong></a><br>
+		~if $RESULTS_ARRAY[$finalval].COMPATIBILITY_LINK eq 'R'`
+		<a href="#" onClick="window.open('~$SITE_URL`/profile/horoscoperequest.php?profileid=~$profileid`&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`&via_ofm=1','','width=340,height=310,resizable=1');"><strong> Request Horoscope</strong></a><br>
+		~else`
+		<a href="#" onClick="window.open('~$SITE_URL`/profile/horoscope_astro.php?checksum=~$cid`&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`','','width=625,height=625,resizable=1,scrollbars=1');"><strong> View Horoscope</strong></a><br>
+		~/if`
+		~if $COMPATIBILITY_SUBSCRIPTION eq '1'`
+		~if $RESULTS_ARRAY[$finalval].COMPATIBILITY_LINK eq 'C'`
+		<a href="#" onClick="window.open('~$SITE_URL`/profile/check_horoscope_compatibility.php?profileid=~$profileid`&checksum=~$cid`&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM``&via_ofm=1&compatibility_subscription=~$COMPATIBILITY_SUBSCRIPTION`','','width=570,height=570,resizable=1');"><strong> Check Astro Compatibilty</strong></a><br>
+		~/if`
+		~/if`
+		~else`
+		<br>
+		<a href=# onclick="win_open_contact('~$SITE_URL`/jsadmin/view_contact.php?cid=~$cid`&profileid=~$RESULTS_ARRAY[$finalval].PROFILEID`&from_vp=no&from_vcd=yes&check=1&affiliate=1');return false;"><strong>View Contact Details</strong></a><br>
+		~/if`
+		</div>
+		<div class="tx">~if $RESULTS_ARRAY[$finalval].CATEGORY neq "7"`
+		<strong>Profile Score:</strong> ~$RESULTS_ARRAY[$finalval].PSCORE`/600                                
+		<br>
+		~/if`
+		</div>
+		<div class="tx" align="left">~if $RESULTS_ARRAY[$finalval].DATE_ADDED`<strong>Date Added : </strong>~$RESULTS_ARRAY[$finalval].DATE_ADDED`~/if`<br></div>
+		<!-- mbx div ends-->
+	</li>
+	 ~assign var="tab" value=$tab+1`
+	~if $finalval % 2 eq 1`
+	</ul>
+	<div class="spacer">&nbsp;</div>
+	~/if`
+	
+	~if $finalval eq $RESULTS_ARRAY_COUNT-1 && $RESULTS_ARRAY_COUNT % 2 neq 0`
+	</ul>
+	<div class="spacer">&nbsp;</div>
+	~/if`
+	~/if`
+	~/section`
+	</div>
+
+<!--my code-->
+        <!--  <ul>
+            <li>
+              <div class="mbx">
+                <div class="prf" id="a1">
+                  <input type="checkbox" name="checkbox" value="checkbox" style="vertical-align:middle">
+          Savita_27</div>
+                <div class="tx bluelink" id="one"><img src="~$PHOTO_URL`/profile/images/profile-1.jpg" width="60" height="60" hspace="5" vspace="0" align="left">I am self con fident girl from middle class family,middle class family, persuing masters in business administration. Father is retired from classrsuing retired from masters is retired from class - 1 government services, Mother is house fddffdfdf fdf f f d d f d dfwife...<a href="jjj.htm">More</a>...</div>
+                <div class="dts" id="b1"><b>Age:</b> 28 <b>Height:</b> 5' 11" <b>Caste:</b> Aggarwal (Agarwal) <b>Gothra</b>: goel , <b>Community:</b> Rajasthani / Marwari / Malwi / Jaipuri <b>Occupation:</b> MBA/PGDM, IT Software <b>Annual Income</b>: Rs. 7.5 - 10Lac <b>City:</b> Kolkata</div>
+                <div class="lks" id="c1"><a href="#"><strong> Short List this Profile</strong></a><br>
+                   </div>
+              </div>
+            </li>
+            <li>
+              <div class="mbx-fea">
+                <div class="prf" id="a2">
+                  <input type="checkbox" name="checkbox" value="checkbox" style="vertical-align:middle">
+          Savita_217</div>
+                <div class="tx bluelink" id="two"><img src="~$PHOTO_URL`/profile/images/profile-1.jpg" width="60" height="60" hspace="5" vspace="0" align="left">I am self con fident girl from middle class family,middle class family, persuing masters in business administration. Father is retired from classrsuing retired dasdasd asdas dasd asd asd asdas dasdas dasd asd asd asdas das das dasd asd asd asd as das das das das das d asd asd asd asd asd asdasd asd asd asdd as dsafrom masters is retired from class - 1 government services, Mother is house wife <a href="abc.htm">More</a>...</div>
+                <div class="dts-fea " id="b2"><b>Age:</b> 28 <b>Height:</b> 5' 11" <b>Caste:</b> Aggarwal (Agarwal) <b>Gothra</b>: goel , <b>Community:</b> Rajasthani / Marwari / Malwi / Jaipuri <b>Occupation:</b> MBA/PGDM, IT Software <b>Annual Income</b>: Rs. 7.5 - 10Lac <b>City:</b> Kolkata</div>
+                <div class="lks" id="c2"><a href="#"><strong> Short List this Profile</strong></a></div>
+              </div>
+            </li>
+          </ul>
+          <div class="spacer15">&nbsp;</div>
+          <ul>
+            <li>
+              <div class="mbx">
+                <div class="prf" id="a4">
+                  <input type="checkbox" name="checkbox" value="checkbox" style="vertical-align:middle">
+                  Savita_27</div>
+                <div class="tx bluelink" id="four"><img src="~$PHOTO_URL`/profile/images/profile-1.jpg" width="60" height="60" hspace="5" vspace="0" align="left">I am self con fident girl from middle class family,middle class family, persuing masters in business administration. Father is retired from classrsuing retired from masters is retired from class - 1 government services, Mother is house wife <a href="abc1.htm">More</a>...</div>
+                <div class="dts" id="b4"><b>Age:</b> 28 <b>Height:</b> 5' 11" <b>Caste:</b> Aggarwal (Agarwal) <b>Gothra</b>: goel , <b>Community:</b> Rajasthani / Marwari / Malwi / Jaipuri <b>Occupation:</b> MBA/PGDM, IT Software <b>Annual Income</b>: Rs. 7.5 - 10Lac <b>City:</b> Kolkata</div>
+                <div class="lks" id="c4"><a href="#"><strong> Short List this Profile</strong></a></div>
+              </div>
+            </li>
+            <li>
+              <div class="mbx">
+                <div class="prf" id="a5">
+                  <input type="checkbox" name="checkbox" value="checkbox" style="vertical-align:middle">
+                  Savita_27</div>
+                <div class="tx bluelink" id="five"><img src="~$PHOTO_URL`/profile/images/profile-1.jpg" width="60" height="60" hspace="5" vspace="0" align="left">I am self con fident girl from middle class family,middle class family, persuing masters in business administration. Father is retired from classrsuing retired das dasd asd asdas d as dasd as das das das das das d asd asd asd asd asd asd as das das das das das das das das d asd asd asd asd as das das from masters is retired from class - 1 government services, Mother is house wife <a href="abc.htm">More</a>...</div>
+                <div class="dts" id="b5"><b>Age:</b> 28 <b>Height:</b> 5' 11" <b>Caste:</b> Aggarwal (Agarwal) <b>Gothra</b>: goel , <b>Community:</b> Rajasthani / Marwari / Malwi / Jaipuri <b>Occupation:</b> MBA/PGDM, IT Software <b>Annual Income</b>: Rs. 7.5 - 10Lac <b>City:</b> Kolkata</div>
+                <div class="lks" id="c5"><a href="#"><strong> Short List this Profile</strong></a></div>
+              </div>
+            </li>
+          </ul>
+          <div class="spacer15">&nbsp;</div>
+          <ul>
+            <li>
+              <div class="mbx">
+                <div class="prf" id="a7">
+                  <input type="checkbox" name="checkbox" value="checkbox" style="vertical-align:middle">
+                  Savita_27</div>
+                <div class="tx bluelink" id="seven"><img src="~$PHOTO_URL`/profile/images/profile-1.jpg" width="60" height="60" hspace="5" vspace="0" align="left">I am self con fident girl from middle class family,middle class family, persuing masters in business administration. Father is retired from classrsuing retired from masters is retired from class - 1 government services, Mother is house wife <a href="abc.htm">More</a>...</div>
+                <div class="dts" id="b7"><b>Age:</b> 28 <b>Height:</b> 5' 11" <b>Caste:</b> Aggarwal (Agarwal) <b>Gothra</b>: goel , <b>Community:</b> Rajasthani / Marwari / Malwi / Jaipuri <b>Occupation:</b> MBA/PGDM, IT Software <b>Annual Income</b>: Rs. 7.5 - 10Lac <b>City:</b> Kolkata</div>
+                <div class="lks" id="c7"><a href="#"><strong> Short List this Profile</strong></a></div>
+              </div>
+            </li>
+            <li>
+              <div class="mbx">
+                <div class="prf" id="a8">
+                  <input type="checkbox" name="checkbox" value="checkbox" style="vertical-align:middle">
+                  Savita_27</div>
+                <div class="tx bluelink" id="eight"><img src="~$PHOTO_URL`/profile/images/profile-1.jpg" width="60" height="60" hspace="5" vspace="0" align="left">I am self con fident girl from middle class family,middle class family, persuing masters in business administration. Father is retired from classrsuing retired from masters is retired from class - 1 government services, Mother is house wife <a href="abc.htm">More</a>...</div>
+                <div class="dts" id="b8"><b>Age:</b> 28 <b>Height:</b> 5' 11" <b>Caste:</b> Aggarwal (Agarwal) <b>Gothra</b>: goel , <b>Community:</b> Rajasthani / Marwari / Malwi / Jaipuri <b>Occupation:</b> MBA/PGDM, IT Software <b>Annual Income</b>: Rs. 7.5 - 10Lac <b>City:</b> Kolkata</div>
+                <div class="lks" id="c8"><a href="#"><strong> Short List this Profile</strong></a></div>
+              </div>
+            </li>
+          </ul>
+          <div class="spacer15">&nbsp;</div>
+          <ul>
+            <li>
+              <div class="mbx">
+                <div class="prf" id="a10">
+                  <input type="checkbox" name="checkbox" value="checkbox" style="vertical-align:middle">
+                  Savita_27</div>
+                <div class="tx bluelink" id="ten"><img src="~$PHOTO_URL`/profile/images/profile-1.jpg" width="60" height="60" hspace="5" vspace="0" align="left">I am self con fident girl from middle class family,middle class family, persuing masters in business administration. Father is retired from classrsuing retired from masters is retired from class - 1 government services, Mother is house wife <a href="abc.htm">More</a>...</div>
+                <div class="dts" id="b10"><b>Age:</b> 28 <b>Height:</b> 5' 11" <b>Caste:</b> Aggarwal (Agarwal) <b>Gothra</b>: goel , <b>Community:</b> Rajasthani / Marwari / Malwi / Jaipuri <b>Occupation:</b> MBA/PGDM, IT Software <b>Annual Income</b>: Rs. 7.5 - 10Lac <b>City:</b> Kolkata</div>
+                <div class="lks" id="c10"><a href="#"><strong> Short List this Profile</strong></a></div>
+              </div>
+            </li>
+            <li>
+              <div class="mbx">
+                <div class="prf" id="a11">
+                  <input type="checkbox" name="checkbox" value="checkbox" style="vertical-align:middle">
+                  Savita_27</div>
+                <div class="tx bluelink" id="eleven"><img src="~$PHOTO_URL`/profile/images/profile-1.jpg" width="60" height="60" hspace="5" vspace="0" align="left">I am self con fident girl from middle class family,middle class family, persuing masters in business administration. Father is retired from classrsuing retired from masters is retired from class - 1 government services, Mother is house wife <a href="abc.htm">More</a>...</div>
+                <div class="dts" id="b11"><b>Age:</b> 28 <b>Height:</b> 5' 11" <b>Caste:</b> Aggarwal (Agarwal) <b>Gothra</b>: goel , <b>Community:</b> Rajasthani / Marwari / Malwi / Jaipuri <b>Occupation:</b> MBA/PGDM, IT Software <b>Annual Income</b>: Rs. 7.5 - 10Lac <b>City:</b> Kolkata</div>
+                <div class="lks" id="c11"><a href="#"><strong> Short List this Profile</strong></a></div>
+              </div>
+            </li>
+          </ul>
+        </div>-->
+	</td>
+        <td width="2">&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="8" colspan="5"></td>
+      </tr>
+      <tr>
+        <td colspan="5">&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="8" colspan="5"></td>
+     </tr>
+      <tr>
+        <td colspan="5">&nbsp;</td>
+      </tr>
+      <tr>
+      <td height="10" colspan="5"></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td colspan="3"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+	    <td valign="top" align="left"><a href="#" onClick="return checkboxes();"><img src="~$PHOTO_URL`/profile/images/shortlist.gif" width="69" height="18" hspace="11" vspace="5" border="0"></a>
+	<input type="image" src="~$PHOTO_URL`/profile/images/email.gif" hspace="11" vspace="5" onclick="return sendmail();">
+	</td>
+            <td align="right" class="main-text">~$PAGELINK`</td>
+          </tr>
+	 </table></td>
+        <td>&nbsp;</td>
+      </tr>
+      ~/if`
+     </table>	
+    </td>
+~/if`
+  </tr>
+~/if`
+</form>
+</table>
+</body>
+</html>

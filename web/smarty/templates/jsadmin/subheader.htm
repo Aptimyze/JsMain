@@ -1,0 +1,35 @@
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr> 
+<td><table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="FFE3B3">
+<tr bgcolor="#FFFFFF">
+<td height="1" colspan="12" class=smallblack></td><SPACER height="1" type="block"></SPACER>
+</tr>
+<tr>
+<td height="2" width="100" class=smallblack><div align="center"><b>Partner Search</b></div></td>
+<td height="2" width="20" class=smallblack><img src="~$SITE_URL`/profile/images/arrow_green_bgyel.gif" width="6" height="10"></td>
+<td height="2" width="120" class=smallblack><span class="class2"><b><a href="~$SITE_URL`/profile/quick_search.php?checksum=~$CHECKSUM`">Quick Search </a></b></span></td>
+<form name="subheader1" action="~$SITE_URL`/profile/viewprofile.php" method="get">
+<td height="2" width="82" class=smallblack><b>Search by id: </b></td>
+<td height="2" width="100" class=smallblack><input type="text" name="username" size="12" class="testbox">
+</td>
+<td height="2" width="70" class=smallblack><input type="hidden" name="checksum" value="~$CHECKSUM`"><input type="submit" name="CMDsubmit" value="Go" class="testbox">
+</td>
+</form>
+<form name="subheader2" action="~$SITE_URL`/search/perform" method="post">
+<td height="2" width="92" class=smallblack><b>Search Photo:</b> </td>
+<td height="2" width="28" class=smallblack><input name="gender" type="radio" value="M" ~if $CURRENTGENDER eq "F"`checked~/if`>
+</td>
+<td height="2" width="30" class=smallblack><b>Male </b></td>
+<td height="2" width="30" class=smallblack><input name="gender" type="radio" value="F" ~if $CURRENTGENDER eq "M" || $CURRENTGENDER eq ""`checked~/if`>
+</td>
+<td height="2" width="50" class=smallblack><b>Female</b></td>
+<td height="2" width="40"><input type="hidden" name="havePhoto" value="Y"><input type="hidden" name="checksum" value="~$CHECKSUM`"><input type="hidden" name="photobrowse" value="Y"><input type="submit" name="CMDsubmit" value="Go" class="testbox">
+</td>
+</form>
+</tr>
+</table></td>
+</tr>
+<tr> 
+<td valign="top" height="2"><img src="~$SITE_URL`/profile/images/yellow_line.gif" width="760" height="8"></td>
+</tr>
+</table>

@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Untitled Document</title>
+<style type="text/css">
+.roundcont { width:350px; background-color: #12910C;color: #ffffff; font:normal 11px verdana,Arial;}
+.roundcont p {margin: 0 5px;}
+.roundtop { background: url(~$IMG_URL`/profile/ser4_images/gtr.gif) no-repeat top right; }
+.roundbottom {background: url(~$IMG_URL`/profile/ser4_images/gbr.gif) no-repeat top right; }
+img.corner {width: 4px;height: 4px;border: none;display: block !important;}
+.con{background-color:#FFFFFF; margin:5px 4px 0px 4px; height:80px; padding:20px 5px 10px 5px}
+.ico{float:left; color:#000000; margin-right:10px; width:22px}
+.txt{float:left;color:#000000; width:280px; margin-top:3px}
+.txtg{float:left;color:#959595; width:280px;}
+.textbox {FONT-SIZE: 10px; FONT-FAMILY: verdana,Arial}
+.bluelink a { color:#003498; text-decoration:underline;}
+.bluelink a:visited{ color:#800080;text-decoration:underline;} 
+
+
+</style>
+<script language="javascript">
+function doit()
+{
+	var docF=window.opener.document.form1;
+        for(var i=0;i<docF.elements.length;i++)
+        {
+                if(docF.elements[i].type=="checkbox" && docF.elements[i].checked)
+                {
+                        docF.elements[i].checked = false;
+                }
+        }
+        window.close();
+}
+</script>
+</head>
+
+<body>
+
+<div class="roundcont">
+	<div class="roundtop"><img src="~$IMG_URL`/profile/ser4_images/gtl.gif" alt="" width="4" height="4" class="corner" style="display: none" /></div>
+	<p><b>Personal Profile of ~$USERNAME`</b></p>
+
+	<div class="con">
+		~if $favourable_response eq 'Y'`
+		<div class="ico"><img src="~$IMG_URL`/profile/ser4_images/layer_tick.gif" width="22" height="22"></div>
+		<div class="txt">~$ymessage`</div>
+		<div style="clear:both; line-height:5px ">&nbsp;</div>
+		~/if`
+
+		~if $unfavourable_response eq 'Y'`
+		<div class="ico"><img src="~$IMG_URL`/profile/ser4_images/layer_cross.gif" width="22" height="22"></div>
+		<div class="txt">~$nmessage`</a></b></div>
+		<div style="clear:both; line-height:5px ">&nbsp;</div>
+		~/if`
+
+		~if $error_msg`
+		<div class="ico">&nbsp;</div>
+		<div class="txtg">~$error_msg`</div>
+		<div style="clear:both; line-height:5px ">&nbsp;</div>
+		~/if`
+
+		~if $LOGIN_INDIRECT eq 1`
+			<div class="txt" align="center"><input type="submit" name="Submit" value="OK" class="textbox" style="width:40px "onClick="window.close();"></div>
+		~else`
+			<div class="txt" align="center"><input type="submit" name="Submit" value="OK" class="textbox" style="width:40px "onClick="doit();"></div>
+		~/if`
+		<div style="clear:both; line-height:5px ">&nbsp;</div>
+	</div>
+	<div class="roundbottom"><img src="~$IMG_URL`/profile/ser4_images/gbl.gif" alt="" width="4" height="4" class="corner" style="display: none" /></div>
+
+</div>
+</body>
+</html>
+

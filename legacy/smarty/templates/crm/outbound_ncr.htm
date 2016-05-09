@@ -1,0 +1,128 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+ <head>
+<SCRIPT language="JavaScript">
+<!--
+function MM_openBrWindow(theURL,winName,features)
+{
+        window.open(theURL,winName,features);
+}
+
+//-->
+</script>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>JeevanSathi.com - CRM - Get User History</title>
+  <link rel="stylesheet" href="../jsadmin/jeevansathi.css" type="text/css">
+  <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+ </head>
+ ~include file="head.htm"`
+ <br>
+ <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+  <table width=100% cellspacing="1" cellpadding='0' ALIGN="CENTER" >
+   <tr width=100% border=1>
+    <td width="30%" class="formhead" height="23"><font><b>Welcome :~$name`</b></font></td>
+    <td width="25%" class="formhead" align="center"><a href="../jsadmin/mainpage.php?cid=~$cid`&name=~$name`">Click here to go to main page</a></td>
+    <td width="6%" class="formhead" align='RIGHT' height="23">
+        <a href="logout.php?cid=~$cid`">Logout</a>
+    </td>
+    <td width="3%" class="formhead" height="23">&nbsp;
+    </td>
+   </tr>
+  </table>
+~if $flag eq '1'`
+ <br><br>
+ <form action=outbound_ncr.php method=post>
+ <table width=80% align=center>
+ <tr class=fieldsnew>
+  <td align=center width="40%"> PROFILEID : 
+    <input type=text name="profileid" value="~$PROFILEID`">
+  </td>
+  <td align=center width="20%"> Failed payment 
+    <input type=checkbox name="orders" value="Y">
+  </td>
+  <td align=left>
+    <input type=submit name="GetHistory" value="Go">
+    <input type="hidden" name="cid" value="~$cid`">
+    <input type="hidden" name="name" value="~$name`">
+  </td>
+ </tr>
+ </table>
+ </form>
+ ~if $welcome_profile eq 'Y'`
+  <br><br>
+  <table width=80% align=center>
+  <tr>
+	<td class=label align=center>Sorry! This profile is registered in the last 10 days, <a href="welcome_call.php?cid=~$cid`&profileid=~$PROFILEID`&submit=1" target="_blank">Click Here</a> to make a welcome call </td>
+  </tr>
+  </table>
+ ~elseif $wrong_username eq 'Y' or $NOTFOUND eq 'Y'`
+  <br><br>
+  <table width=80% align=center>
+  <tr>
+	<td class=label align=center>Sorry! No Record Found </td>
+  </tr>
+  </table>
+ ~elseif $SHOW_FOLLOW eq 'Y' or $ALREADY_PAID eq 'Y'`
+ <br>
+ <table width=80% align=center>
+ <tr class=label>
+ ~if $ALREADY_PAID eq 'Y'`
+  <td align=center class=red>&nbsp;This member is already paid.</td>
+ ~else`
+   <td align=center width="50%"><a href="#" onclick="MM_openBrWindow('invalid_phone.php?username=~$USERNAME`&profileid=~$PROFILEID`&cid=~$cid`&ncr=Y','','width=200,height=200,scrollbars=yes'); return false;"class="class4">Click here to mark Phone No.- Wrong/Unreachable</a></td>
+  <td align=center><a href="#" onclick="MM_openBrWindow('~$SITE_URL`/operations.php/crmAllocation/agentAllocation?username=~$USERNAME`&profileid=~$PROFILEID`&cid=~$cid`&ncr=Y&orders=~$ORDERS`','','width=800,height=600,scrollbars=yes'); return false;">Click here to follow this user</a></td>
+  ~/if`
+ </tr>
+ </table>
+ ~elseif $INBOUND eq 'Y'`
+<br>
+ <table width=80% align=center>
+ <tr class=label>
+	<td align=center> This profile is alloted to <span class=blue>~$orig_alloted_to`</span></td>
+ </tr>
+ </table>
+ <br><br>
+<!--br>
+ <form action="enter_comments.php" method=post>
+ <table width=80% align=center>
+ <tr class=label>
+	<td align=center valign=top>&nbsp;~if $NO_COMMENTS eq 'Y'` <font color=red> ~/if` Enter Your Comments : ~if $NO_COMENTS eq 'Y'` </font> ~/if`</td>
+ </tr>
+ <tr class=fieldsnew>
+	<td align=center>&nbsp;<textarea name="comments" cols=50 rows=10>~$comments`</textarea></td>
+ </tr>
+ <tr class=label>
+	<td align=center valign=top>
+		<input type="hidden" name="cid" value ="~$cid`">
+		<input type="hidden" name="profileid" value ="~$PROFILEID`">
+		<input type="hidden" name="username" value ="~$USERNAME`">
+		<input type="submit" name="CMDSubmit" value ="  Go  ">
+	</td>
+ </tr>
+ </table>
+ </form-->
+  ~/if`
+~else`
+ <br><br>
+ <form action=outbound_ncr.php method=post>
+ <table width=80% align=center>
+ <tr class=fieldsnew>
+  <td align=center width="40%"> PROFILEID : 
+    <input type=text name="profileid" value="~$PROFILEID`">
+  </td>
+  <td align=center width="20%"> Failed payment 
+    <input type=checkbox name="orders" value="Y">
+  </td>
+  <td align=left>
+    <input type=submit name="GetHistory" value="Go">
+    <input type="hidden" name="cid" value="~$cid`">
+    <input type="hidden" name="name" value="~$name`">
+  </td>
+ </tr>
+ </table>
+ </form>
+~/if`
+  <br><br>
+ ~include file="foot.htm"`
+ </body>
+</html>

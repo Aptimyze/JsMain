@@ -1,0 +1,60 @@
+<html>
+<head>
+<title>Source Wise Hits</title>
+</head>
+<body>
+
+<form method=post action="source_brief_conv.php">
+<br>
+<br>
+<table width=80% align=center>
+<tr>
+<td>&nbsp;Group&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<select name="sourcegp">
+~section name=grp loop=$srcgrp`
+	<option value="~$srcgrp[grp]`">~$srcgrp[grp]`</option>
+~/section`
+</select>
+</td>
+</tr>
+
+<tr>
+        <td colspan=2>DATE:-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <select name="day">
+		<option value="">Select</option>
+        ~section name=dd loop=$ddarr`
+                <option value=~$ddarr[dd]`>~$ddarr[dd]`</option>
+        ~/section`
+        </select>
+        <select name="month">
+        ~section name=mon loop=$mmarr`
+                <option value=~$mmarr[mon]`>~$mmarr[mon]`</option>
+        ~/section`
+        </select> -
+        <select name="year">
+        ~section name=yr loop=$yyarr`
+                <option value=~$yyarr[yr]`>~$yyarr[yr]`</option>
+        ~/section`
+        </select>&nbsp;Year
+        </td>
+        </tr>
+		<tr>
+		<td>
+			<input type="checkbox" name="self" value="S"  checked > Self &nbsp;&nbsp;&nbsp;
+			<input type="checkbox" name="js_mailer" value="M" ~if $MAILER_CHECKED` checked ~/if`> JS Mailer &nbsp;&nbsp;&nbsp;
+			<input type="checkbox" name="sug_mailer" value="y" ~if $SUG_CHECKED` checked ~/if`> Sugar Mailer &nbsp;&nbsp;&nbsp;
+			<input type="checkbox" name="sug_called" value="y" ~if $CALL_CHECKED` checked ~/if`> Called &nbsp;&nbsp;&nbsp;
+		</td>
+	</tr>
+
+<tr>
+<td>
+<input type="hidden" name="checksum" value="~$checksum`">
+<input type="submit" name="CMDGo" value="   Go   ">
+</td>
+</tr>
+</table>
+</form>
+
+</body>
+</html>

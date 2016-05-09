@@ -1,0 +1,250 @@
+﻿<html>
+<head>
+<title>JeevanSathi Matrimonials - ~if $SEARCHONLINE eq "1"`Jeevansathi Online Search~else`Jeevansathi Quick Search~/if`</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="/P/I/styles.php" type="text/css">
+<link rel="stylesheet" href="/P/IN/styles.php" type="text/css">
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body leftmargin="5" topmargin="5">
+
+~$HEAD`
+~$LEFTPANEL`
+<table width="78%" height="1110" border="0" cellspacing="0" cellpadding="0" align="center">
+<tr><td valign="top">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tr>
+<td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+       <td height="4"></td>
+       <SPACER height="4" type="block"></SPACER> </tr>
+      <tr>
+       <td class="headbigblack"><b>~if $SEARCHONLINE eq "1"`ऑनलाइन सदस्य खोजें ~else`शीघ्र खोजें ~/if` </b></td>
+      </tr>
+      <tr class="bgred">
+       <td height="1"></td>
+       <SPACER height="1" type="block"></SPACER> </tr>
+        <tr>
+       <td height="8"></td>
+       <SPACER height="8" type="block"></SPACER> </tr>
+     </table></td>
+</tr>
+<tr>
+<td height="442" class=mediumblack><b> <b>&nbsp;&nbsp;&nbsp;</b>अपने साथी के बारे मे जानकारी दें जिसके लिए आप खोज करना चाहते है। </b><br><table width="98%"  border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td height="6" colspan="2"></td>
+<spacer height="6" type="block"></spacer> </tr>
+<tr>
+<td height="43" class="mediumblack"><ul>
+<li>एक से अधिक विकल्पों के लिए ctrl बटन को दबायें रखें। 
+</ul></td>
+</tr>
+<tr bgcolor="ffffff">
+<td height="6" colspan="2"></td>
+<spacer height="6" type="block"></spacer> </tr>
+<tr bgcolor="cccccc">
+<td height="1" colspan="2"></td>
+<spacer height="1" type="block"></spacer> </tr>
+<tr bgcolor="ffffff">
+<td height="6" colspan="2"></td>
+<spacer height="6" type="block"></spacer> </tr>
+<tr>
+<form method="post" action="search.php">
+<input type="hidden" name="STYPE" value="~if $SEARCHONLINE eq "1"`O~else`Q~/if`">
+<input type="hidden" name="checksum" value="~$CHECKSUM`">
+<td height="18" class="mediumblack"><table width="93%" border="0" align="center" cellpadding="2" cellspacing="1">
+<tr>
+<td class="mediumblack" width="192">खोज रहे हैं</td>
+<td width="307"><select name="Gender" class="TextBox">
+<option value="M">वर</option>
+<option value="F" selected>वधु</option>
+</select>
+</td>
+</tr>
+<tr>
+<td class="mediumblack" width="192">जाति</td>
+<td width="307"><select name="Caste[]" size="1" class="TextBox">
+<option  value="All">सभी</option>
+~$caste`
+</select>
+</td>
+</tr>
+<tr>
+<td class="mediumblack" width="192">आयु</td>
+<td width="307"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="65">
+<select name="lage" class="TextBox">
+<option>18</option>
+<option>19</option>
+<option selected>20</option>
+<option>21</option>
+<option>22</option>
+<option>23</option>
+<option>24</option>
+<option>25</option>
+<option>26</option>
+<option>27</option>
+<option>28</option>
+<option>29</option>
+<option>30</option>
+<option>31</option>
+<option>32</option>
+<option>33</option>
+<option>34</option>
+<option>35</option>
+<option>36</option>
+<option>37</option>
+<option>38</option>
+<option>39</option>
+<option>40</option>
+<option>41</option>
+<option>42</option>
+<option>43</option>
+<option>44</option>
+<option>45</option>
+<option>46</option>
+<option>47</option>
+<option>48</option>
+<option>49</option>
+<option>50</option>
+<option>51</option>
+<option>52</option>
+<option>53</option>
+<option>54</option>
+<option>55</option>
+<option>56</option>
+<option>57</option>
+<option>58</option>
+<option>59</option>
+<option>60</option>
+<option>61</option>
+<option>62</option>
+<option>63</option>
+<option>64</option>
+<option>65</option>
+<option>66</option>
+<option>67</option>
+<option>68</option>
+<option>69</option>
+<option>70</option>
+</select>
+</td>
+<td class="mediumblack" width="57">से</td>
+<td width="287" class="mediumblack">
+<select name="hage" class="TextBox">
+<option>18</option>
+<option>19</option>
+<option>20</option>
+<option>21</option>
+<option>22</option>
+<option>23</option>
+<option>24</option>
+<option selected>25</option>
+<option>26</option>
+<option>27</option>
+<option>28</option>
+<option>29</option>
+<option>30</option>
+<option>31</option>
+<option>32</option>
+<option>33</option>
+<option>34</option>
+<option>35</option>
+<option>36</option>
+<option>37</option>
+<option>38</option>
+<option>39</option>
+<option>40</option>
+<option>41</option>
+<option>42</option>
+<option>43</option>
+<option>44</option>
+<option>45</option>
+<option>46</option>
+<option>47</option>
+<option>48</option>
+<option>49</option>
+<option>50</option>
+<option>51</option>
+<option>52</option>
+<option>53</option>
+<option>54</option>
+<option>55</option>
+<option>56</option>
+<option>57</option>
+<option>58</option>
+<option>59</option>
+<option>60</option>
+<option>61</option>
+<option>62</option>
+<option>63</option>
+<option>64</option>
+<option>65</option>
+<option>66</option>
+<option>67</option>
+<option>68</option>
+<option>69</option>
+<option>70</option>
+</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;तक
+</td>
+</tr>
+</table></td>
+</tr>
+<tr>
+<td class="mediumblack" width="192">फोटो</td>
+<td width="307"><input type="checkbox" name="Photos" value="Y">
+</td>
+</tr>
+<tr>
+<td width="192" valign="top" class="mediumblack">समुदाय <br>
+ </td>
+<td width="307"><select name="Mtongue[]"  size="4" multiple class="TextBox">
+<option value="" selected>सभी</option>
+~$top_mtongue`
+<option value="">&nbsp;</option>
+~$mtongue`
+</select>
+</td>
+</tr>
+<tr>
+<td valign="top" class="mediumblack">निवास देश </td>
+<td><select name="Country_Res[]" multiple size="4"  class="TextBox">
+<option value="" selected >सभी</option>
+~$country_residence`
+</select>
+</td>
+</tr>
+<tr>
+<td valign="top" class="mediumblack">निवास शहर </td>
+<td class="mediumblack"><select name="City_Res[]"  multiple size="4" class="TextBox">
+<option value="" selected>सभी</option>
+~$city_india`
+</select></td>
+</tr>
+<tr>
+<td height="43" valign="top" class="mediumblack">&nbsp;</td>
+<td><br>
+<input type="hidden" name="searchonline" value="~$SEARCHONLINE`">
+<input type="submit" name="Submit3" value="Search" class="testbox"></td>
+</tr>
+</table></td>
+</form>
+</tr>
+~if $SEARCHONLINE eq "1"`
+<tr>
+<td height="6" colspan="2"><br><br><a href="memberships.php?checksum=~$CHECKSUM`"><img src="~$IMG_URL`/profile/ser4_images/search_online_banner.jpg" width="548" height="137" border="0"></a></td>
+ </tr>
+ ~/if`
+</table>
+</td>
+</tr>
+</table></td>
+</tr>
+</table>
+</td></tr></table>
+<br>
+~$SUBFOOTER`
+<br>
+~$FOOT`
+</body>
+</html>

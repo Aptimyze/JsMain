@@ -1,0 +1,830 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Offline System</title>
+<link rel="stylesheet" type="text/css" href="css/style_main.css" />
+<link href="~$SITE_URL`/min/?f=/profile/css/common1.css,/profile/css/colorbox_css.css" type="text/css" rel="stylesheet">
+<script type = "text/javascript" src = "~$JQUERY_JS`"></script>
+<SCRIPT type="text/javascript" language="Javascript" SRC="~$SITE_URL`/min/?f=/profile/js/revampCommon_js.js,/profile/js/colorbox.js,/profile/js/assisted_product_2.js"></SCRIPT>
+<style>
+.tp {
+	color:#000;
+	line-height:18px;
+}
+#main_cont .mid_cont .right_cont .info label {
+	float:left;
+	width:245px;
+	padding-bottom:5px;
+}
+.info {
+	color:#423f3f!important;
+}
+.sprte_det_pro {
+	background:url(/profile/images/det_pro_curvs.gif) no-repeat;
+	font-size:2px;
+}
+.h_w_12 {
+	width:12px;
+	height:12px;
+}
+.det_pro_t_l_c {
+	top:-1px;
+	left:-1px;
+}
+.det_pro_t_r_c {
+	top:-1px;
+	right:-1px;
+	background-position:-12px 0;
+}
+.det_pro_b_l_c {
+	bottom:-1px;
+	left:-1px;
+	background-position:0 -12px;
+}
+.det_pro_b_r_c {
+	bottom:-1px;
+	right:-1px;
+	background-position:-12px -12px;
+}
+.det_pro_intro img.pro {
+	float:left;
+	border:1px solid #ccc;
+}
+.det_pro_intro ul.intro {
+	width:230px;
+	float:left;
+	margin:18px 10px 0 0;
+}
+.det_pro_intro ul.intro li {
+	float:left;
+	width:99.9%;
+	margin-bottom:3px;
+}
+.det_pro_intro ul.intro li i {
+	float:left;
+	width:125px;
+	text-align:right;
+	font-style:normal;
+	color:#7a7a7a;
+	padding-right:5px;
+}
+.grn_box {
+	width:97%;
+	border:1px solid #d4d28d;
+	padding:10px;
+	font:normal 13px Arial, Helvetica, sans-serif;
+	background:#fdffd9;
+}
+ul.nav{float:right; width:270px; height:27px; margin-bottom:-1px; z-index:10000; position:relative; font-size:13px;}
+ul.nav li{float:left; margin-right:5px;}
+ul.nav li a b{background:url(/profile/images/ul_bar_lft_cur.gif) no-repeat; float:left; height:27px; width:3px;}
+ul.nav li a.active b{background:url(/profile/images/ul_bar_lft_cur_hov.gif) no-repeat;}
+ul.nav li a i{background:url(/profile/images/ul_bar_right_cur.gif) no-repeat right; height:17px; float:left; font-style:normal; padding:5px 18px; cursor:pointer;}
+ul.nav li a.active i{background:url(/profile/images/ul_bar_right_cur_hov.gif) no-repeat right;}
+#main_cont .mid_cont .right_cont .info p{float:left; width:121px;}
+#main_cont .mid_cont .right_cont .info label{float:left; width:230px; padding-bottom:3px;}
+
+textarea.txt2{width:608px; height:42px; border:1px solid #ccc; padding:5px;}
+a.ad_cmnt{width:129px; height:52px; border:1px solid #ccc; background:#eaebea; color:#4e4e4e; text-align:center; line-height:53px;}
+
+.lgt_gry_source{width:735px; padding:10px 10px 5px; background:#f9f9f9; border:1px solid #ccc;}
+ul.intro_2{float:left; width:400px;}
+ul.intro_2 li{float:left; width:99.9%; margin-bottom:5px;}
+ul.intro_2 li b{width:166px; color:#7a7a7a; padding-right:5px; float:left; text-align:right;}
+ul.intro_2 li i{float:left; font-style:normal;}
+
+</style>
+</head>
+<body>
+<div id="main_cont">
+  <!-- header starts here-->
+  <div class="hdr fl"><a href="#"><img src="~$SITE_URL`/profile/images/offlineLogo.gif" alt="jeevansathi" border="0" /></a></div>
+  <!-- header ends here-->
+
+  <p class="clr"></p>
+  <!-- mid cont starts here-->
+  <div class="mid_cont">
+    <!--Left navigation starts here-->
+	~$LINKS`
+    <!--Left navigation ends here-->
+    <!-- Right cont starts here-->
+
+    <div class="right_cont fl">
+
+      <!--  PREV NEXT LINKS  -->		
+      ~if $SHOW_NEXT_PREV`	  		
+      <div class="fl" style="border-bottom:1px solid #959595; padding:0 0 5px; width:99%;">
+	~if $link_text eq 'Go Back'`
+        	<div class="b f_16">
+                <a href="javascript:history.back()" class="blink">~$link_text`</a>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                ~if !($ROLE eq 'TC' && $comment_TBC)`
+					~if $comments_display eq 1`
+						<a id="remove_prof_link" href="#" class="b f_12" onclick="javascript:removeProfileFromList('~$profileid_comments`','~$matchid_comments`','~$cid`','~$SITE_URL`');">Remove From Queue</a>
+					~/if`
+                ~/if`
+
+        	</div>
+	~else`
+		<div class="b f_16 fl"><a href="~$link_page`" class="blink">~$link_text`</a> &nbsp;~if $link_search`~$link_search`~/if`</div>	
+	~/if`
+        <div class="b fr">
+	        ~if $SHOW_PREV`
+	                <a href="ap_viewprofile.php?~$prev_link`~if $search_param`~$search_param`~/if`" class="blink">&lt;&lt; Previous Profile</a>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	        ~else`
+	                Previous Profile  
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	        ~/if`
+	        ~if $SHOW_NEXT`
+	                <a href="ap_viewprofile.php?~$next_link`~if $search_param`~$search_param`~/if`" class="blink"> Next Profile &gt;&gt;</a>
+	        ~else`
+	                Next Profile
+	        ~/if`
+	</div>
+      </div>
+      <!-- END  PREV NEXT LINK  -->	
+      <br />
+      <br />
+      ~/if`
+
+<!-- Print profile button Start -->
+	~if $PRINT_BUTTON eq '1'`
+	<div align="center">
+<!--
+<a href="#" class="blink" onclick="MM_openBrWindow('~$SITE_URL`/jsadmin/ap_viewprofile.php?profileid=~$profileid`&matchid=~$matchid`&user_list=~$user_list`&PRINT=1&cid=~$cid`&lead=~$lead`','','width=800,height=600,scrollbars=yes');"><img src="~$SITE_URL`/profile/images/print_pro_btn.gif" alt="print" title="print" style="margin-top:40px;"/></a>
+-->
+<a href="~$SITE_URL`/jsadmin/ap_viewprofile.php?profileid=~if $lead`~$lead_id`~else`~$profileid`~/if`&matchid=~$matchid`&user_list=~$user_list`&PRINT=1&cid=~$cid`&lead=~$lead`"><img src="~$SITE_URL`/profile/images/print_pro_btn.gif" alt="print" title="print" style="margin-top:40px;"/></a>
+	</div>
+	~else`
+      	<br />
+      	<br />
+	~/if`
+<!-- end  -->
+
+	
+<!-----------   Add Comments Section  ---------->
+	<!-- Edit Comments -->
+	<span id="edit_comments" style="~if $comments_display eq 1` display:block ~else` display:none ~/if`">
+	<div class="fl mb_8" style="width: 99%;">
+	  ~if $ROLE eq 'TC' && $comment_TBC`<b class="fl"> Tele Caller Comments &nbsp</b> ~if $comment_date` <b>on</b> ~$comment_date` ~/if`
+	  ~else`
+	  <b class="fl">Comments with this profile ~if $CALL_CLOSED`(Call Closed)~/if`</b>
+	  ~/if`
+	  <a href="#" class="fr" onclick="javascript:ProfileEditComments();" ><b>Edit Comments </b></a>
+          <p class="clr"></p>
+          <div class="grn_box">
+	    <span id="show_p_comments">~$comments`</span>
+          </div>
+        </div>
+	</span>
+
+	<!-- Add Comments  -->
+	<span id="add_comments" style="~if $comments_add eq 1` display:block ~else` display:none ~/if`">
+        <div class="fl mb_8">
+	  ~if $ROLE eq 'TC' && $comment_TBC` 
+          	<b>Tele caller Comments</b>
+	  ~else`
+		<b>Add Comments to this profile ~if $CALL_CLOSED`(Call Closed)~/if` </b><span style="float:right"><input type="checkbox" value="Y" id="close_call"/>Close this Call</span>
+	  ~/if`	
+          <p class="clr"></p>
+          <textarea class="txt2 fl mt_5" rows="2" cols="2" id="get_p_comments" name="get_p_comments">~$comments`</textarea>
+          <a href="#" class="ad_cmnt fl b f_16 ml_8 mt_5" onclick="javascript:addProfileComments('~$profileid_comments`','~$matchid_comments`','~$cid`','~$SITE_URL`');">Add Comments</a>
+        </div>
+	</span>
+
+	<div class="clr"></div>
+<!----------  Add Comments Section Ends ------>
+
+      <span id="adResponse"></span>         		
+      <div class="clr"></div>
+      <div class="fl mt_10 ml_8 d_inl"><b class="f_16 fl">Detailed Profile of ~$PROFILENAME` </b>
+
+	<!-- Add Request Section  Starts-->
+		<img id="adReq" src="~$SITE_URL`/profile/images/req_add_pro.gif" class="ml_15 fl" align="top" onclick="javascript:sendProfileAdRequest('~$profileid`','~$cid`','~$SITE_URL`','1')" />
+		<input id="adRes" name="AD_REQUEST" type="button" class="b green_btn ml_15 fl"  align="top" value="Send Reminder" style="width:100px;height:23px"  onclick="javascript:sendProfileAdRequest('~$profileid`','~$cid`','~$SITE_URL`','')" />
+	<!-- Add Request Section Ends -->
+
+      </div>
+      
+      <ul class="nav b mt_10">
+      <li><a href="#" id="basic_detail_id" ~if $CONTACT_DETAILS` onclick="show_detail('B')" ~/if` ><b></b><i id="b_black" class="blk" >Basic Details</i></a></li>
+      ~if $CONTACT_DETAILS` 	
+      <li><a href="#" id="contact_detail_id" class="active" onclick="show_detail('C')"><b></b><i id="c_black">Contact Details</i></a></li>
+       ~/if`	
+      </ul>
+
+       ~if $ex_form_detail eq 'add'`		
+      		<div class="fr mr_10 mt_15">
+<a href=	"~$SITE_URL`/jsadmin/ap_profile_extra_form.php?profileid=~$profileid`&list=~$list`&cid=~$cid`" target=_blank><i class="blk b">:: Add Extra Details</i></a>
+		</div>
+      ~elseif $ex_form_detail eq 'show'`
+		<div class="fr mr_10 mt_15">
+      		<a href="~$SITE_URL`/jsadmin/ap_profile_extra_form.php?profileid=~$profileid`&list=~$list`&cid=~$cid`" target=_blank><i class="blk b">:: Show Extra Details</i></a>
+		</div>
+      ~/if`
+      <div class="det_pro_intro fl p_rel">
+        <div class="det_pro_t_l_c sprte_det_pro p_abs h_w_12">&nbsp;</div>
+        <div class="det_pro_t_r_c sprte_det_pro p_abs h_w_12">&nbsp;</div>
+        <div class="det_pro_b_l_c sprte_det_pro p_abs h_w_12">&nbsp;</div>
+        <div class="det_pro_b_r_c sprte_det_pro p_abs h_w_12">&nbsp;</div>
+
+	<!-- Main Photo Start-->
+	<div style="width:150px; float:left; background-image:url(~$PHOTOFILE`)"><img src="~$PHOTOFILE`" width="150" height="200" border="0" class="pro fl" /></div>
+	<!-- Main Photo Ends-->
+
+	<!-- Common var assign -->
+		<input type="hidden" name="cid" value="~$cid`">
+		<input type="hidden" name="profileid" value="~$profileid`">
+	<!--  Ends -->	
+
+<span id="show_basic">
+~if $BASIC_DETAILS`
+        <ul class="intro b">
+          <li><i>Age :</i>~$AGE`</li>
+
+          <li><i>Height :</i>~$HEIGHT` </li>
+
+          <li><i>Gender :</i>~$PROFILEGENDER`</li>
+
+          <li><i>Religion :</i><b class="fl" style="width:90px">~$RELIGION_SELF`</b></li>
+
+	  ~if $CASTE neq ''`
+	  	~if $CASTE neq 'Buddhist' and $CASTE neq 'No Religion/Caste'`
+          	<li><i>	~if $RELIGION_SELF eq 'Muslim' or $RELIGION_SELF eq 'Christian'`Sect~else`Caste ~/if` :</i><b class="fl" style="width:90px">~$CASTE`</b></li>
+	  	~/if`
+	  ~/if`
+
+          <li><i> Mother tongue :</i><b class="fl" style="width:90px">~if $MTONGUE eq ""`-~else`~$MTONGUE`~/if`</b></li>
+
+	  ~if $RELIGION_SELF eq 'Hindu' && $GOTHRA`
+          	<li><i>Gotra :</i><b class="fl" style="width:90px">~if $GOTHRA eq ""`~else`~$GOTHRA`~/if`</b></li>
+	  ~/if`
+        </ul>
+
+        <ul class="intro b" style="width:310px;">
+
+          <li><i>Marital Status:</i>~if $MSTATUS eq ""`-~else`~$MSTATUS`~/if`</li>
+
+	  ~if $MSTATUS neq 'Never Married' && $CHILDREN`
+	          <li><i>Have Children :</i> ~if $CHILDREN neq ""`~$CHILDREN`~else`-~/if`</li>
+	  ~/if`
+
+          <li><i>Posted By :</i>~$RELATION`</li>
+
+          <li><i>Education :</i><b class="fl" style="width:154px">~if $EDU_LEVEL_NEW eq ""`-~else`~$EDU_LEVEL_NEW`~/if`</b></li>
+
+          <li><i>Occupation :</i><b class="fl" style="width:154px"> ~if $OCCUPATION eq ""`-~else`~$OCCUPATION`~/if`</b></li>
+
+          <li><i>Location :</i>~$CITY_RES` ~if $COUNTRY_RES neq ''`<span id="SET_COUNTRYRES" style="padding:0px;margin:0px;width:auto">~if $CITY_RES neq ''`,~/if` ~$COUNTRY_RES`</span>~/if` </li>
+
+          <li><i>India Annual Income :</i><b class="fl" style="width:154px">~if $INCOME eq ''` - ~else` ~$INCOME` ~/if`</b></li>
+	~if $RSTATUS`
+          <li><i>Resident status :</i>~if $RSTATUS neq ""`~$RSTATUS`~else`-~/if`</li>
+	~/if`
+        </ul>
+~/if`
+</span>
+<span id="show_contact" style="display:none">
+~if $CONTACT_DETAILS`
+        <ul class="intro b" style="width:450px;">
+	~if $SHOW_MOBILE`	  
+          <li><i>Mobile no.~if $MOB_PROFILENAME` of  ~$MOB_PROFILENAME` ~/if` ~if $PHONE_RELATION_NAME` (~$PHONE_RELATION_NAME`)~/if`:</i>~$SHOW_MOBILE`</li>
+	~/if`
+	~if $PHONE_NO`
+          <li><i>Landline no.~if $PHONE_PROFILENAME` of  ~$PHONE_PROFILENAME` ~/if` ~if $PHONE_RELATION_NAME` (~$PHONE_RELATION_NAME`)~/if` </i>~$PHONE_NO`</li>
+	~/if`
+	~if $TIME_TO_CALL_START`
+          <li><i>Suitable time to call :</i>~$TIME_TO_CALL_START` to ~$TIME_TO_CALL_END`</li>
+	~/if`
+	~if $SHOW_ADDRESS`
+          <li><i>Address :</i><b class="fl" style="width:154px">~$SHOW_ADDRESS`</b></li>
+	~/if`
+	~if $SHOW_PARENTS_ADDRESS`
+	  <li><i>Parent's address :</i><b class="fl" style="width:154px">~$SHOW_PARENTS_ADDRESS`</b></li>
+	~/if`
+	~if $EMAIL_ID`
+          <li><i>email ID :</i><b class="fl">~$EMAIL_ID`</b></li>
+	~/if`
+	~if $SHOW_MESSENGER`
+          <li><i>Messenger ID :</i> <b class="fl"> ~$SHOW_MESSENGER` </b></li>
+	~/if`
+        </ul>
+~/if`
+</span>
+      </div>
+
+ <!--  lead check to show the lead details-->
+~if $lead eq '1'`
+      <div class="fr mr_10 b d_inl mt_10"><b class="drk_gry">Enquirer's Name :</b> ~$assistant`</div>
+	~if $filename`	
+      	<div class="fl mr_10 b d_inl mt_10"><b class="drk_gry">Attached Bio data :</b> <a href="~$SITE_URL`/sugarcrm/cache/upload/~$file_id`" target="_blank"> ~$filename` </a></div>
+	~/if`
+	<div class="clr"></div>
+	<div class="fl mt_24">
+	<b>Sourced From</b><p class="clr"></p>
+	<div class="lgt_gry_source fl mt_5">
+
+	<ul class="intro_2 b">
+	~if $source eq '4'`	
+		<li><b>News Paper Name :</b> <i>~$source_name`</i></li>
+		<li><b>Newspaper edition date :</b> <i>~$edition_date`</i></li>
+	~else`
+		<li><b>Source :</b> <i>~$source_name`</i></li>
+	~/if`
+	</ul>
+	</div>
+	</div>
+~/if`
+<!--  lead check ends -->
+
+~if $lead neq '1'`  <!-- Check for the lead profile -->	
+      <div class="ylw_cont m_18">
+        <div class="tp drk_gry"><img src="~$SITE_URL`/profile/images/pro_l_cur.gif" class="fl" style="margin:-1px 0 0 -5px; position:relative; z-index:10;" /> <b class="fl">About ~$PROFILENAME`</b><img src="~$SITE_URL`/profile/images/pro_r_cur.gif" class="fr" style="margin:-1px -5px 0 0; position:relative; z-index:10;" /> </div>
+        <div class="fl pd_4">
+
+          <p class="fl pd_5">
+	  ~if $YOURINFO neq ''`<span class="no_b">~$SUBYOURINFO`~$YOURINFO`</span>~/if`
+	  </p>
+	  <div class="clr"></div>
+
+	  ~if $FAMILYINFO neq ''`
+          <p class="pd_5 fl"><b>Family</b><br />
+	  <span class="no_b">~$FAMILYINFO`</span>
+	  </p>
+	  <div class="clr"></div>
+	  ~/if` 
+
+	  ~if $EDUCATION neq ''`
+          <p class="pd_5"> <b>Education </b><br />
+	  ~$EDUCATION`
+          </p>
+	  <div class="clr"></div>
+	  ~/if`
+
+	  ~if $JOBINFO neq ''`	
+          <p class="fl pd_5"><b>Occupation </b><br />
+	  ~$JOBINFO`
+	  </p>	
+          <div class="clr"></div>
+	  ~/if`	
+
+	  ~if $SPOUSEINFO neq ''`	
+          <p class="pd_5"><b>Preferred Partner</b><br/>
+	  ~$SPOUSEINFO`	
+	  </p>
+          <div class="clr"></div>
+	   ~/if`
+
+          <div class="info fl drk_gry"> 
+		<b class="fl" style="background-color:#eeeeee; width:94%; float:left; padding:5px;">
+		Religion and Ethnicity
+		</b>
+            <div class="clr"></div>
+            <div class="fl pd_5">
+              <p>Religion </p>
+              <label>: ~$RELIGION_SELF` </label>
+
+              <p>Mother tongue</p>
+              <label>: ~$MTONGUE` </label>
+        ~if $RELIGION_SELF eq 'Hindu'`		
+	<!--HINDU START-->	
+              <p>Caste</p>
+              <label>: ~$CASTE` </label>
+
+              <p>Sub Caste /Surname</p>
+              <label>: ~if $SUBCASTE neq ''`~$SUBCASTE`~else`-~/if` </label>
+
+              <div class="clr"></div>
+              <p>Nakshatram</p>
+              <label>:  ~if $NAKSHATRA neq ''`~$NAKSHATRA`~else`-~/if`</label>
+
+              <p>Rashi</p>
+              <label>: ~if $RASHI neq ''`~$RASHI`~else`-~/if`</label>
+
+              <p>Gothra</p>
+              <label>: ~if $GOTHRA neq ''`~$GOTHRA`~else`-~/if`</label>
+
+              <p>Native Place</p>
+              <label>: ~if $NATIVE_PLACE neq ''`~$NATIVE_PLACE`~else`-~/if`</label>
+
+              <p>Horoscope Match<br /> 
+		Needed</p>
+              <label>: ~if $HOROSCOPE_MATCH neq ''`~if $HOROSCOPE_MATCH eq 'Y'`Must~else`Not necessary~/if`~else`-~/if`</label>
+              <div class="clr"></div>
+
+              <p>Manglik/Chewai<br />
+                Dosham</p>
+              <label>: ~if $MANGLIK neq ''`~$MANGLIK`~else`-~/if`</label>
+	~elseif $RELIGION_SELF eq 'Jain'`
+	<!--JAIN START-->
+              <p>Caste<br />
+                Dosham</p>
+              <label>: ~$CASTE`</label>
+	      ~if $CASTE eq 'Jain: Shwetamber'`
+              		<p>Sampraday<br /></p>
+	      		<label>:  ~if $SAMPRADAY neq ''`~$SAMPRADAY`~else`-~/if`</label>	
+	      ~/if`	
+	~elseif $RELIGION_SELF eq 'Christian'`
+	<!--CHRISTIAN START-->
+		<p>Sect</p>
+		<label>: ~$CASTE` </label>
+
+		<p>Diocese</p>
+		<label>: ~if $DIOCESE neq ''`~$DIOCESE`~else`-~/if`</label>
+
+		<p>Baptised</p>
+		<label>: ~if $BAPTISED neq ''`~if $BAPTISED eq 'Y'`Yes~else`No~/if`~else`-~/if`</label>
+
+		<!--	
+		<p>Do You Read Bible Everyday?</p>
+		<label>: ~if $READ_BIBLE neq ''`~if $READ_BIBLE eq 'Y'`Yes~else`No~/if`~else`-~/if`</label>
+
+		<p>Do You Offer Tithe Regularly?</p>
+		<label>: ~if $OFFER_TITHE neq ''`~if $OFFER_TITHE eq 'Y'`Yes~else`No~/if`~else`-~/if`</label>
+		-->
+
+		<p>Interested in spreading the Gospel?</p>
+		<label>: ~if $SPREADING_GOSPEL neq ''`~if $SPREADING_GOSPEL eq 'Y'`Yes~else`No~/if`~else`-~/if`</label>
+	~elseif $RELIGION_SELF eq 'Muslim'`
+	<!--MUSLIM START -->
+		<p>Sect</p>
+		<label id='SET_CASTE_1'>: ~$CASTE`</label>
+
+		<p>Ma'thab</p>
+		<label>: ~if $MATHTHAB neq ''`~$MATHTHAB`~else`-~/if`</label>
+
+		<p>Speak Urdu</p>
+		<label>: ~if $SPEAK_URDU neq ''`~if $SPEAK_URDU eq 'Y'`Yes~else`No~/if`~else`-~/if`</label>
+
+		<p>Namaz</p>
+		<label>: ~if $NAMAZ neq ''`~$NAMAZ`~else`-~/if`</label>
+
+		<p>Zakat</p>
+		<label>: ~if $ZAKAT neq ''`~if $ZAKAT eq 'Y'`Yes~else`No~/if`~else`-~/if`</label>
+
+		<p>Fasting</p>
+		<label>: ~if $FASTING neq ''`~$FASTING`~else`-~/if`</label>
+
+		<p>Umrah/Hajj</p>
+		<label>: ~if $UMRAH_HAJJ neq ''`~$UMRAH_HAJJ`~else`-~/if`</label>
+
+		<!--
+		<p> Do You Read The Quran?</p>
+		<label>: ~if $QURAN neq ''` ~$QURAN`~else`- ~/if`</label>
+		-->
+
+		~if $GENDER_LOGGED_IN eq 'M'`
+			<p>Sunnah Beard</p><label>: ~if $SUNNAH_BEARD neq ''`~$SUNNAH_BEARD`~else`- ~/if`</label>
+			<p>Sunnah Cap</p><label>: ~if $SUNNAH_CAP neq ''`~$SUNNAH_CAP`~else`-~/if`</label>
+		~/if`
+
+		~if $GENDER_LOGGED_IN eq 'M'`
+			<p>Hijab</p>
+			<label>: ~if $HIJAB neq ''`~if $HIJAB eq 'Y'`Yes~else`No~/if`~else`-~/if`</label>
+		~else`
+			<p>Hijab after marriage</p>
+			<label>: ~if $HIJAB_MARRIAGE neq ''`~if $HIJAB_MARRIAGE eq 'Y'`Yes~elseif $HIJAB_MARRIAGE eq 'N'`No~else`Not Decided~/if`~else`-~/if`</label>
+		~/if`
+
+		~if $GENDER_LOGGED_IN eq 'M'`
+			<p>Can the Girl Work After Marriage?</p>
+			<label>: ~if $WORKING_MARRIAGE neq ''`~if $WORKING_MARRIAGE eq 'Y'`Yes~else`No~/if`~else`-~/if`</label>
+		~/if`
+	~elseif $RELIGION_SELF eq 'Sikh'`
+	<!--SIKH START -->
+		<p>Caste</p>
+		<label id="SET_CASTE_1">: ~$CASTE`</label>
+
+		<p>Are You Amritdhari?</p>
+		<label>: ~if $AMRITDHARI neq ''`~if $AMRITDHARI eq 'Y'`Yes~else`No~/if`~else`-~/if`</label>
+
+		~if $AMRITDHARI eq 'N'`
+			<p>Do You Cut Your Hair?</p>
+			<label>: ~if $CUT_HAIR neq ''`~if $CUT_HAIR eq 'Y'`Yes~else`No~/if`~else`-~/if`</label>
+		~/if`
+
+		~if $GENDER_LOGGED_IN eq 'M'`
+			~if $AMRITDHARI eq 'N'`
+				<p>Do You Trim Your Beard?</p><label>: ~if $TRIM_BEARD neq ''`~if $TRIM_BEARD eq 'Y'`Yes~else`No~/if`~else`-~/if`</label>
+				<p>Do You Wear Turban?</p><label>: ~if $WEAR_TURBAN neq ''`~if $WEAR_TURBAN eq 'Y'`Yes~else`No~/if`~else`-~/if`</label>
+				<p>Are You Clean Shaven?</p><label>: ~if $CLEAN_SHAVEN neq ''`~if $CLEAN_SHAVEN eq 'Y'`Yes~else`No~/if`~else`-~/if`</label>
+			~/if`
+		~/if`
+	~elseif $RELIGION_SELF eq 'Parsi'`
+	<!--PARSI START -->
+		<!--
+		<p>Are You a Zarathushtri?</p>
+		<label>: ~if $ZARATHUSHTRI neq ''`~if $ZARATHUSHTRI eq 'Y'`Yes~else`No~/if`~else`-~/if`</label>
+		<p>Are Both Parents Zarathushtri?</p>
+		<label>: ~if $PARENTS_ZARATHUSHTRI neq ''`~if $PARENTS_ZARATHUSHTRI eq 'Y'`Yes~else`No~/if`~else`-~/if`</label>
+		-->
+	~/if`
+
+            </div>
+          </div>
+          <div class="info fl drk_gry"><b class="fl" style="background-color:#eeeeee; width:94%; float:left; padding:5px;">Astro Details</b>
+            <div class="clr"></div>
+            <div class="fl pd_5">
+              <p>Date of Birth </p>
+              <label> : ~$DTOFBIRTH` </label>
+
+              <p>Country of Birth</p>
+              <label> : ~$COUNTRY_BIRTH` </label>
+
+              <p>City of Birth</p>
+              <label> : ~$CITYBIRTH` </label>
+
+              <p>Time of Birth</p>
+              <label>: ~if $BTIMEHOUR neq "" and $BTIMEMIN neq ""`~$BTIMEHOUR`hrs:~$BTIMEMIN`mins~else` Not Available ~/if`</label>
+	      ~if $HOROSCOPE eq 'Y'`
+	      ~if $RELIGION_SELF eq 'Hindu' OR $RELIGION_SELF eq 'Jain'`
+	      		<div class="clr "></div>
+	      		<p><a href="#" class="blink b" onclick="javascript:{change_tab(dID('horoscope'),'Horoscope');return false;}"> </a></p>
+	      ~/if`
+	      ~/if`
+            </div>
+          </div>
+          <div class="clr"> </div>
+          <div class="info fl drk_gry"><b class="fl" style="background-color:#eeeeee; width:94%; float:left; padding:5px;">Family Details</b>
+            <div class="clr"></div>
+            <div class="fl pd_5">
+              <p>Family Values</p>
+              <label> : ~if $FAMILY_VALUES eq ""` -~else` ~$FAMILY_VALUES` ~/if` </label>
+
+              <p>Family Type</p>
+              <label> : ~if $FAMILY_TYPE eq ""` -~else` ~$FAMILY_TYPE` ~/if` </label>
+
+              <p>Family Status</p>
+              <label>: ~if $FAMILY_STATUS eq ""` -~else` ~$FAMILY_STATUS` ~/if` </label>
+
+              <p>Father</p>
+              <label>: ~if $FAMILY_BACK eq ""` -~else` ~$FAMILY_BACK` ~/if`</label>
+              <div class="clr"></div>
+
+              <p>Mother</p>
+              <label>:  ~if $MOTHER_OCC eq ''` - ~else` ~$MOTHER_OCC` ~/if`</label>
+
+	      ~if $T_BROTHER neq ""`
+              		<p>Brother(s)</p>
+              		<label>: ~$T_BROTHER` brother~if $T_BROTHER neq '1'`s~/if` ~if $M_BROTHER neq '0'` <span class="gray">of which married</span> ~$M_BROTHER`~/if` </label>
+	       ~/if`
+
+	      ~if $T_SISTER neq ""`
+	              <p>Sister(s)</p>
+        	      <label>: ~$T_SISTER` sister~if $T_SISTER neq '1'`s~/if` ~if $M_SISTER neq '0'` <span class="gray">of which married</span> ~$M_SISTER`~/if`</label>
+              ~/if`
+
+              <p>Living with Parents</p>
+              <label>:  ~if $LIVE_WITH_PARENTS eq ''` - ~else` ~$LIVE_WITH_PARENTS` ~/if`</label>
+            </div>
+          </div>
+          <div class="info fl drk_gry"> <b class="fl" style="background-color:#eeeeee; width:94%; float:left; padding:5px;">Education and Occupation</b>
+            <div class="clr"></div>
+            <div class="fl pd_5">
+              <p>Highest Degree </p>
+              <label> : ~if $EDU_LEVEL_NEW neq ""`~$EDU_LEVEL_NEW`~else`-~/if` </label>
+
+              <p>Occupation</p>
+              <label> : ~if $OCCUPATION eq ''` - ~else` ~$OCCUPATION` ~/if` </label>
+
+              <p>Annual Income</p>
+              <label>: ~if $INCOME eq ''` - ~else` ~$INCOME` ~/if` </label>
+
+              <p>Work Status</p>
+              <label>: ~if $WORK_STATUS eq ''` - ~else` ~$WORK_STATUS` ~/if` </label>
+
+	      ~if $GENDER_LOGGED_IN eq 'F'`	
+           		<p>Plan to work after marriage</p>
+              		<label>: ~if $CAREER_AFTER_MARRIAGE eq "Y"`Yes~/if`~if $CAREER_AFTER_MARRIAGE eq "N"`No~/if`~if $CAREER_AFTER_MARRIAGE eq "D"`Undecided~/if` </label>
+	      ~/if` 
+            </div>
+          </div>
+          <div class="clr"> </div>
+          <div class="info fl drk_gry"> <b class="fl" style="background-color:#eeeeee; width:94%; float:left; padding:5px;">Lifestyle And Attributes </b>
+            <div class="clr"></div>
+            <div class="fl pd_5">
+              <p>Diet</p>
+              <label> : ~if $DIET eq ""`-~else`~$DIET`~/if` </label>
+
+              <p>Smoke</p>
+              <label> : ~if $SMOKE eq ""`-~else`~$SMOKE`~/if` </label>
+
+              <p>Drink</p>
+              <label>: ~if $DRINK eq ""`-~else`~$DRINK`~/if` </label>
+
+              <p>Complexion</p>
+              <label>: ~if $COMPLEXION eq ""`-~else`~$COMPLEXION`~/if`</label>
+              <div class="clr"></div>
+
+              <p>Body Type </p>
+              <label>: ~if $BODYTYPE eq ""`-~else`~$BODYTYPE`~/if`</label>
+
+              <p>Blood Group</p>
+              <label>: ~if $BLOOD_GROUP eq ""`-~else`~$BLOOD_GROUP`~/if`</label>
+
+              <p>Weight</p>
+              <label>:  ~if $WEIGHT neq 0`~$WEIGHT`~else`-~/if`</label>
+
+              <p>Challenged</p>
+              <label>: ~if $HANDICAPPED eq ""`-~else`~$HANDICAPPED`~/if`</label>
+
+	       ~if $NATURE_HANDICAP neq ""`
+	       		<p>Nature of Handicap</p><label>: ~$NATURE_HANDICAP`
+	       		</label>
+	       ~/if`
+
+               ~if $HIV eq 'Y'`
+               		<p>HIV</p><label>: Positive
+               		</label>
+               ~/if`
+            </div>
+          </div>
+          <div class="info fl drk_gry"> <b class="fl" style="background-color:#eeeeee; width:94%; float:left; padding:5px;">Hobbies and Interests</b>
+            <div class="clr"></div>
+            <div class="fl pd_5">
+              <p>Hobbies </p>
+              <label> :  ~if $HOBBY eq ""`-~else`~$HOBBY`~/if` </label>
+              <p>Favorite Music</p>
+
+              <label> : ~if $MUSIC eq ""`-~else`~$MUSIC`~/if`</label>
+              <p>Interests</p>
+
+              <label>: ~if $INTEREST eq ""`-~else`~$INTEREST`~/if` </label>
+              <p>Favorite Read</p>
+
+              <label>: ~if $BOOK eq ""`-~else`~$BOOK`~/if`</label>
+              <div class="clr"></div>
+
+              <p>Preferred Movies</p>
+              <label>: ~if $MOVIE eq ""`-~else`~$MOVIE`~/if`</label>
+
+              <p>Sports/ Fitness</p>
+              <label>: ~if $SPORTS eq ""`-~else`~$SPORTS`~/if`</label>
+
+              <p>Favorite Cuisine</p>
+              <label>: ~if $CUISINE eq ""`-~else`~$CUISINE`~/if`</label>
+
+              <p>Dress Style</p>
+              <label>:  ~if $DRESS eq ""`-~else`~$DRESS`~/if`</label>
+
+              <p>Spoken Langauge</p>
+              <label>: ~if $LANGUAGE eq ""`-~else`~$LANGUAGE`~/if`</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+<!--- Partner Profile Section Starts --- >
+~if $SHOW_PARTNER_PROFILE`
+
+      <div class="ylw_cont m_18" >
+        <div class="tp drk_gry" ><img src="~$SITE_URL`/profile/images/pro_l_cur.gif" class="fl" style="margin:-1px 0 0 -5px; position:relative; z-index:10;" /> <b class="fl">&nbsp;~$PROFILENAME`'s Desired Partner Profile</b><img src="~$SITE_URL`/profile/images/pro_r_cur.gif" class="fr" style="margin:-1px -5px 0 0; position:relative; z-index:10;" /> </div>
+
+        <div class="fl pd_4">
+          <div class="info fl drk_gry"> <b class="fl" style="background-color:#eeeeee; width:94%; float:left; padding:5px;">Basic Details</b>
+            <div class="clr"></div>
+            <div class="fl pd_5">
+
+              <p>Height </p>
+              <label> : ~$PARTNER_HEIGHT` </label>
+
+              <p>Age</p>
+              <label> : ~$PARTNER_AGE`</label>
+              <p>Marital Status</p>
+              <label>:  ~$PARTNER_MSTATUS` </label>
+
+              <p>Country</p>
+              <label>: ~$PARTNER_COUNTRYRES` </label>
+
+              <div class="clr"></div>
+          <p>City</p>
+              <label>: ~if $PARTNER_CITYRES neq ""`~$PARTNER_CITYRES`~else`-~/if`</label>
+
+            </div>
+          </div>
+          <div class="info fl drk_gry"> <b class="fl" style="background-color:#eeeeee; width:94%; float:left; padding:5px;">Religion and Ethnicity</b>
+            <div class="clr"></div>
+            <div class="fl pd_5">
+
+              <p>Religion </p>
+              <label> : ~$PARTNER_RELIGION` </label>
+
+              <p>Caste</p>
+              <label>: ~$PARTNER_CASTE` </label>
+
+              <p>Mother tongue</p>
+              <label> : ~$PARTNER_MTONGUE` </label>
+
+              <p>Manglik</p>
+              <label>: ~$Partner_Manglik_Status`</label>
+
+            </div>
+          </div>
+          <div class="clr"> </div>
+
+          <div class="info fl drk_gry"> <b class="fl" style="background-color:#eeeeee; width:94%; float:left; padding:5px;">Lifestyle And Attributes </b>
+            <div class="clr"></div>
+            <div class="fl pd_5">
+
+              <p>Diet</p>
+              <label> : ~$PARTNER_DIET`</label>
+
+              <p>Smoke</p>
+              <label> : ~$PARTNER_SMOKE`</label>
+
+              <p>Drink</p>
+              <label>: ~$PARTNER_DRINK` </label>
+
+              <p>Complexion</p>
+              <label>: ~$PARTNER_COMP`</label>
+
+              <div class="clr"></div>
+              <p>Body Type </p>
+              <label>: ~$PARTNER_BTYPE`</label>
+
+              <p>Challenged</p>
+              <label>: ~$PARTNER_HANDICAPPED`</label>
+
+            </div>
+          </div>
+          <div class="info fl drk_gry"> <b class="fl" style="background-color:#eeeeee; width:94%; float:left; padding:5px;">Education and Occupation</b>
+            <div class="clr"></div>
+            <div class="fl pd_5">
+
+              <p>Education Level </p>
+              <label> :  ~$PARTNER_ELEVEL_NEW`</label>
+
+              <p>Occupation</p>
+              <label> : ~$PARTNER_OCC` </label>
+
+              <p>Income</p>
+              <label>: ~$PARTNER_INCOME` </label>
+
+            </div>
+          </div>
+
+	  <div class="clr"></div>
+    </div>
+  </div>
+~/if`
+<!--- Partner Profile Section Ends --->
+
+~/if`	<!-- Check for the lead profile --> 
+
+      <div class="fr mr_10 b d_inl mt_10"><a href="#">Go to top <img src="~$SITE_URL`/profile/images/blue_sml_tp_arw.gif" align="bottom" /></a></div>
+	<div class="clr"></div>
+
+      	<!--  PREV NEXT LINKS  -->
+      	~if $SHOW_NEXT_PREV`
+      	  <div class="b fr" style="margin-right:292px; display:inline;">
+      	          ~if $SHOW_PREV`
+      	                  <a href="ap_viewprofile.php?~$prev_link`" class="blink">&lt;&lt; Previous Profile</a>
+      	                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      	          ~else`
+      	                  Previous Profile
+      	                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      	          ~/if`
+      	          ~if $SHOW_NEXT`
+      	                  <a href="ap_viewprofile.php?~$next_link`" class="blink"> Next Profile &gt;&gt;</a>
+      	          ~else`
+      	                  Next Profile
+      	          ~/if`
+      	  </div>
+      	<!-- END  PREV NEXT LINK  --> 
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+	~/if`
+
+    </div>
+     
+    <!-- Right cont ends here-->
+  </div>
+  <!-- mid cont ends here-->
+
+  <div class="clr"></div>
+</div>
+<script>
+
+// Check added for the ad request 
+if('~$ad_request`' =='1'){
+        dID('adReq').style.display="block";
+        dID('adRes').style.display="none";
+}
+else if('~$ad_reminder`'=='1'){
+        dID('adReq').style.display="none";
+        dID('adRes').style.display="block";
+}
+else{
+	dID('adReq').style.display="none";
+	dID('adRes').style.display="none";
+}
+
+</script>
+</body>
+</html>
+

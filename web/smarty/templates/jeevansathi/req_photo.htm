@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>JeevanSathi Matrimonials - Request Photo</title>
+<link rel="stylesheet" href="http://www.jeevansathi.com/P/I/styles.php" type="text/css">
+</head>
+
+<body>
+<table width="300" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td><table width="300" border="0" cellspacing="0" cellpadding="1">
+   <tr>
+    <td><img src="~$IMG_URL`/profile/ser4_images/logo_albumb.gif"></td>
+   </tr>
+   <tr class=bgred>
+    <td class=bigwhite><div align="right"><b>Request Photo&nbsp; </b></div></td>
+    </tr>
+  </table>
+~if $FLAG_SHOW_TEMPLATE eq 'Y'`
+   <table width="300" border="0" cellspacing="0" cellpadding="2">
+    <tr>
+     <td height="8"></td>
+    </tr>
+     <tr>
+     <td class=mediumblack>Your request to <b>~$USERNAME` </b>for a photo has been made.</td>
+     </tr>
+    <tr>
+     <td height="15"></td>
+     </tr>
+    ~if $photohave neq 'Y'`
+    <tr>
+     <td class=mediumblack>You can add your own photo to your profile </td>
+    </tr>
+    ~/if`
+    <tr>
+     <td height="3"></td>
+    </tr>
+    ~if $photosubs eq 'Y'`
+    <tr>
+     <td class=mediumblack>~if $photohave neq 'Y'`OR ~/if`Upgrade to e-Rishta to get good responses.</td>
+    </tr>
+    ~/if`
+
+    <!--tr>
+     <td class=mediumblack>You can request ~$USERNAME` for a photo after your own photo is added to your profile.</td>
+    </tr>
+    <tr>
+     <td height="3"></td>
+    </tr>
+    <tr>
+     <td class=mediumblack>OR upgrade to full membership</td>
+    </tr-->
+   </table>
+  <br>
+  <table width="297" border="0" align="center" cellpadding="2" cellspacing="0">
+   ~if $photohave neq 'Y'`
+   <tr>
+    <td width="171" class=mediumblack><b>Wish to add your photo?</b></td>
+    <td width="57"><a href="javascript:parent.window.opener.location='uploadphoto.php?checksum=~$CHECKSUM`';window.close();"><img src="~$IMG_URL`/profile/ser4_images/yes.gif" width="53" height="18" border="0"></a></td>
+    <td width="57"><!--a href="javascript:window.close();"><img src="~$IMG_URL`/profile/ser4_images/no.gif" width="53" height="18" border="0"></a-->&nbsp;</td>
+   </tr>
+   ~/if`
+   ~if $photosubs eq 'Y'`
+   <tr>
+    <td colspan="3" height="5"></td>
+    </tr>
+   <tr>
+    <td class=mediumblack><b>Wish to Upgrade?</b></td>
+    <td><a href="javascript:parent.window.opener.location='payment.php?checksum=~$CHECKSUM`';window.close();"><img src="~$IMG_URL`/profile/ser4_images/yes.gif" width="53" height="18" border="0"></a></td>
+    <td>&nbsp;<!--a href="javascript:window.close();"><img src="~$IMG_URL`/profile/ser4_images/no.gif" width="53" height="18" border="0"></a--></td>
+   </tr>
+   ~/if`
+  </table>
+~elseif $FLAG_SHOW_TEMPLATE eq 'N'`
+<table width="300" border="0" cellspacing="0" cellpadding="2">
+    <tr>
+     <td height="8"></td>
+    </tr>
+    <tr>
+     <td class=mediumblack>Your request to ~$USERNAME` for a photo has been made.</td>
+    </tr>
+    <tr>
+     <td height="3"></td>
+    </tr>
+</table>
+~elseif $FLAG_SHOW_TEMPLATE eq 'E'`
+<table width="300" border="0" cellspacing="0" cellpadding="2">
+    <tr>
+     <td height="8"></td>
+    </tr>
+    <tr>
+     <td class=mediumblack>You have already made request twice to ~$USERNAME` for a photo.</td>
+    </tr>
+    <tr>
+     <td height="3"></td>
+    </tr>
+</table>
+~elseif $FLAG_SHOW_TEMPLATE eq 'F'`
+<table width="300" border="0" cellspacing="0" cellpadding="2">
+    <tr>
+     <td height="8"></td>
+    </tr>
+    <tr>
+     <td class=mediumblack>Sorry! You cannot request ~$USERNAME` for a photo as you have been filtered out by ~$USERNAME`.</td>
+    </tr>
+    <tr>
+     <td height="3"></td>
+    </tr>
+</table>
+~elseif $FLAG_SHOW_TEMPLATE eq 'G'`
+<table width="300" border="0" cellspacing="0" cellpadding="2">
+    <tr>
+     <td height="8"></td>
+    </tr>
+    <tr>
+     <td class=mediumblack>Sorry! You cannot request ~$USERNAME` for a photo as your gender is the same as that of ~$USERNAME`.</td>
+    </tr>
+    <tr>
+     <td height="3"></td>
+    </tr>
+</table>
+
+~/if`
+
+</td>
+ </tr>
+</table>
+<br>
+<!--table width="300" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class=bgsgrey>&nbsp;</td>
+ </tr>
+ <tr>
+  <td height="50" class=bglgrey>&nbsp;</td>
+ </tr>
+</table-->
+<br>
+</body>
+</html>

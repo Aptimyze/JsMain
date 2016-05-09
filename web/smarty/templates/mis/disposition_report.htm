@@ -1,0 +1,232 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tr>
+        <td valign="top" width="40%" align="center"><img src="../profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+</tr>
+<tr>
+        <td align="center" class="label">
+	<a href="mainpage.php?cid=~$cid`">Mainpage</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	~if $RESULT || $err`
+	<a href="disposition_report.php?cid=~$cid`&outside=~$outside`">Back</a>	
+	~/if`
+	</td>
+</tr>
+~if $err`
+<tr>
+	<td colspan="100%" align="center" class="label"> <font color="red">Please select the date range </font></td>
+</tr>
+~/if`
+</table>
+
+~if $err eq ''`
+<br><br>
+~if $RESULT eq '1'`
+  <table width="100%" border="0" cellpadding="4" cellspacing="4" align="center">
+	<tr class="formhead" align="center">
+		<td colspan="100%">~$head_label`</td>
+	</tr>
+	<tr class="label" align="center">
+		<td></td>
+		~foreach from=$dispositionNewArr item=data_val key=k`
+		<td>~$data_val`</td>
+		~/foreach`
+	</tr>
+	<tr align="center">
+			<td class="fieldsnew"><font color="red"><b>~$name`</b></font></td>
+	</tr>	
+	~foreach from=$disposition_countArr item=data_val1 key=k1`	
+		<tr align="center">
+			<td class="fieldsnew"></td>
+			<td class="fieldsnew">~$data_val1.NAME` </td>
+			<td class="fieldsnew">~$data_val1.TOTAL` </td>
+			~foreach from=$dispositionLabelArr item=data_val2 key=k2`
+				<td class="fieldsnew">~$data_val1.$k2` </td>
+			~/foreach`
+		</tr>
+	~/foreach`
+
+
+	~foreach from=$sup_team_avg item=val_arr key=k1`
+		<tr align="center">
+			<td class="fieldsnew"></td>
+			<td class="fieldsnew">~$val_arr.NAME` </td>
+			<td class="fieldsnew">~$val_arr.TOTAL` </td>
+			~foreach from=$dispositionLabelArr item=val_arr2 key=k2`
+        			<td class="fieldsnew">~$val_arr.$k2` </td>
+			~/foreach`
+		</tr>
+        ~/foreach`
+  </table>
+~elseif $RESULT eq '2'`
+  <table width="100%" border="0" cellpadding="4" cellspacing="4" align="center">
+        <tr class="formhead" align="center">
+                <td colspan="100%">~$head_label`</td>
+        </tr>
+        <tr class="label" align="center">
+                <td></td>
+                <td>Executive</td>
+		<!--<td>Profileid</td>-->
+		<td>Username</td>
+		<td>DateTime</td>
+		<td>Disposition</td>
+		<td>Validation</td>
+		<td>Comments</td>
+		<td>Currently Allotted To</td>
+        </tr>
+        <tr align="center">
+                        <td class="fieldsnew"><font color="red"><b>~$name`</b></font></td>
+        </tr>
+        ~foreach from=$data_arr item=data_val key=k`
+               	<tr align="center">
+               	        <td class="fieldsnew"></td>
+               	        <td class="fieldsnew">~$k` </td>
+		</tr>
+		<!--~assign var="profileid" value=$data_val.PROFILEID`-->
+		~assign var="username" value=$data_val.USERNAME`		
+                ~assign var="entry_dt" value=$data_val.ENTRY_DT`
+                ~assign var="disposition" value=$data_val.DISPOSITION`
+                ~assign var="validation" value=$data_val.VALIDATION`
+		~assign var="comment" value=$data_val.COMMENT`
+                ~assign var="alloted_to" value=$data_val.ALLOTED_TO`
+
+		~foreach from=$entry_dt item=data_val2 key=k2`
+		<tr align="center">
+			<td></td>
+			<td></td>
+			<!--<td class="fieldsnew">~$profileid.$k2`  </td>-->
+			<td class="fieldsnew">~$username.$k2`      </td>	
+                       	<td class="fieldsnew">~$data_val2` 	</td>
+                       	<td class="fieldsnew">~$disposition.$k2`</td>
+			<td class="fieldsnew">~$validation.$k2`	</td>
+			<td class="fieldsnew">~$comment.$k2` </td>
+			<td class="fieldsnew">~$alloted_to.$k2`	</td>
+                </tr>
+		~/foreach`
+        ~/foreach`
+  </table>	
+~else`
+	<form name="form1" method="post" action="disposition_report.php">
+	<input type="hidden" name="cid" value="~$cid`">
+	<input type="hidden" name="MGR" value="~$MGR`">
+	<table border="0" align="center" width="60%" cellpadding="4" cellspacing="4" border="0">
+		<tr class="formhead" align="center">
+			<td colspan="2">Select Month or Date</td>
+		</tr>
+		<tr align="center">
+			<td class="label">
+				<input type="radio" name="select_type" value="M" checked>Monthly
+			</td>
+			<td class="fieldsnew">
+				<select name="month" class="textboxes1">
+					<option value="">Month</option>
+					~section name=mm loop=$mmarr`
+						<option value="~$mmarr[mm].VALUE`" ~if $mmarr[mm].VALUE eq $curmonth` selected ~/if`>~$mmarr[mm].NAME`</option>
+					~/section`
+				</select>
+				&nbsp;
+				<select name="year_month" class="textboxes1">
+					<option value="">Year</option>
+					~section name=yy loop=$yyarr`
+						<option value="~$yyarr[yy]`" ~if $yyarr[yy] eq $curyear` selected ~/if`>~$yyarr[yy]`</option>
+					~/section`
+				</select>
+				 Select single Agent &nbsp;
+                                <select name="usernamesArray1[]" class="textboxes1">
+                                        <option value="">Select Agent</option>
+                                        ~section name=ag loop=$usernames_array`
+                                                <option value="~$usernames_array[ag]`">~$usernames_array[ag]`</option>
+                                        ~/section`
+                                </select>
+                                &nbsp;
+
+			</td>
+		</tr>
+                <tr align="center">
+                        <td class="label">
+                                <input type="radio" name="select_type" value="R">Date
+                        </td>
+                       <td class="fieldsnew">
+				<table align="center">
+				<tr>
+				<td class="fieldsnew">
+                                <select name="day_r1" class="textboxes1">
+                                        <option value="">Day</option>
+                                        ~section name=dd loop=$ddarr`
+                                                <option value="~$ddarr[dd]`" ~if $ddarr[dd] eq $curday` selected ~/if`>~$ddarr[dd]`</option>
+                                        ~/section`
+                                </select>
+                                &nbsp;
+                                <select name="month_r1" class="textboxes1">
+                                        <option value="">Month</option>
+                                        ~section name=mm loop=$mmarr`
+                                                <option value="~$mmarr[mm].VALUE`" ~if $mmarr[mm].VALUE eq $curmonth` selected ~/if`>~$mmarr[mm].NAME`</option>
+                                        ~/section`
+                                </select>
+                                &nbsp;
+                                <select name="year_r1" class="textboxes1">
+                                        <option value="">Year</option>
+                                        ~section name=yy loop=$yyarr`
+                                                <option value="~$yyarr[yy]`" ~if $yyarr[yy] eq $curyear` selected ~/if`>~$yyarr[yy]`</option>
+                                        ~/section`
+                                </select>
+				Multiselect Agent &nbsp;
+				</td><td>	
+                                <select name="usernamesArray2[]" class="textboxes1" multiple="multiple" size="10" scrolling>
+                                        <option value="" selected>Select Agent</option>
+                                        ~section name=ag loop=$usernames_array`
+                                                <option value="~$usernames_array[ag]`">~$usernames_array[ag]`</option>
+                                        ~/section`
+                                </select>
+                                &nbsp;
+				</td>
+				<tr>
+				</table>
+
+                        </td>
+                </tr>
+                <tr align="center">
+                        <td class="label">
+                                Report Format
+                        </td>
+                        <td class="fieldsnew">
+				<input type="radio" name="format_type" value="XLS">&nbsp;Excel Format <br>
+				<input type="radio" name="format_type" value="HTML" checked>&nbsp;HTML Format
+                                &nbsp;
+                        </td>
+                </tr>
+
+                <tr align="center">
+                        <td class="label">
+                        	Select Report Depth       	 
+                        </td>
+                        <td class="fieldsnew">
+                                <input type="radio" name="field_level" value="AGG" checked>&nbsp; Aggregate level  <br>
+                                <input type="radio" name="field_level" value="DET">&nbsp;Detailed level
+                                &nbsp;
+                        </td>
+                </tr>
+
+		<tr align="center">
+			<td class="label" colspan="2">
+				<input type="hidden" name="outside" value="~$outside`">
+				<input type="submit" name="submit" value="Go" class="buttons1">
+			</td>
+		</tr>
+	</table>
+	</form>
+
+~/if` <!-- RESULT else condition ends -->
+~/if` <!--  error condition ends-->
+</body>
+</html>

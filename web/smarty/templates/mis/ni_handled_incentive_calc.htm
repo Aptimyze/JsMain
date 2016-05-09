@@ -1,0 +1,111 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br><br>
+~if $flag eq '1'`
+	~$NET_OFF_MSG`
+	<table width=100% align=center>
+        <tr class=formhead>
+                <td width=4% align=center>Branch/Executive</td>
+		~section name=dd loop=$ddarr`
+                <td width=3% align=center>~$ddarr[dd]`</td>
+		~/section`
+                <td width=4% align=center>Total</td>
+                <td width=4% align=center>Total (without tax)</td>
+        </tr>
+	~if $BRANCH eq 'Y'`
+        ~section name=brn loop=$brancharr`
+		~assign var="checkT" value='1'`	
+                <tr class=formhead>
+                        <td class=blue align=center>~$brancharr[brn]`</td>
+                        <td colspan=100%>&nbsp;</td>
+                </tr>
+                ~section name=op loop=$operatorarr[brn]`
+                        <tr class=fieldsnew>
+                                <td class=label align=center>~$operatorarr[brn][op]`</td>
+                                ~section name=dd loop=$ddarr`
+                                        <td align=center>&nbsp;~$amt[brn][op][dd]`</td>
+                                ~/section`
+				<td align=center class=label>~$amta[brn][op]`</td>
+				<td align=center class=label>~$net_off_tax[brn][op]`</td>
+                        </tr>
+                ~/section`
+		<tr class=label>
+			<td class=label align=center>&nbsp;</td>
+			~section name=dd loop=$ddarr`
+				<td align=center>~$amtb[brn][dd]`</td>
+			~/section`
+			<td align=center class=red>~$amttot[brn]`</td>
+			<td align=center class=red>~$net_off_tax_final[brn]`</td>
+		</tr>
+        ~/section`
+	~else`
+		<tr class=label>
+		<td colspan=100% class=red align=center>No records to show</td> 
+		</tr>
+	~/if`
+	
+	~if $checkT`
+	<tr class=label>
+		<td class=label align=center>Total </td>
+		~section name=dd loop=$ddarr`
+			<td align=center>~$amt_all[dd]` </td>
+		~/section`
+		<td align=center class=red>~$totamnt`</td>
+		<td align=center class=red>~$net_off_tax_total`</td>
+	</tr>
+	~/if`
+
+        </table>
+~else`
+        <form method=post action="ni_handled_incentive_calc.php">
+
+        <table width=80% border=0 align="center" cellpadding=5>
+        <tr>
+        <td>&nbsp;&nbsp;&nbsp;<input name="vtype" type="radio" value='M' checked>&nbsp;Month Wise</td>
+        <td>
+        <select name="mmonth">
+        ~section name=mon loop=$mmarr`
+                <option value=~$mmarr[mon]`>~$mmarr[mon]`</option>
+        ~/section`
+        </select> -
+        <select name="myear">
+        ~section name=yr loop=$yyarr`
+                <option value=~$yyarr[yr]`>~$yyarr[yr]`</option>
+        ~/section`
+        </select>&nbsp;Month - Year
+        </td>
+        </tr>
+        <tr>
+        <input type="hidden" name="cid" value=~$cid`>
+        ~if $ONLYBRANCH eq 'Y'`
+                <input type="hidden" name="branch" value=~$branch`>
+        ~/if`
+        <td align="right"><input type="submit" name="CMDGo" value="     Go     "></td>
+        </tr>
+        </table>
+        </form>
+~/if`
+<br><br>
+</body>
+</html>

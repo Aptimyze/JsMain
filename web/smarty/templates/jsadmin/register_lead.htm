@@ -1,0 +1,27 @@
+<html>
+	<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jeevansathi.com - Register a lead</title>
+	</head>
+<body>
+~include file='head.htm'`
+<br>
+<table width=570 border=0 align="center" border="0" cellspacing="0" cellpadding="0">
+<tr class=formhead>
+<td align=center><a href="mainpage.php?cid=~$cid`">Click here to go to main page</a></td>
+</tr>
+</table>
+<br> <br>
+<form name=form1 method=post action="/jsadmin/register_lead.php" enctype="multipart/form-data">
+<input type=hidden name="cid" value="~$cid`">
+<div align="center">
+Enter lead id:&nbsp;&nbsp; <input type="text" name="lead_id" style="width:365px;">
+<br>
+~if $err_code eq 1`<div style="color:red;">Please log-in using a valid user name.</div>~/if`
+~if $err_code eq 2`<div style="color:red;">Please enter a valid lead ID.</div>~/if`
+~if $err_code eq 3`<div style="color:red;">Please contact your supervisor to register this lead.</div>~/if`
+<input type="submit" name="submit" value="submit">
+</div>
+</form>
+</body>
+</html>

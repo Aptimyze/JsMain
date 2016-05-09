@@ -1,0 +1,3 @@
+all:
+  index:
+    enable_login:  off

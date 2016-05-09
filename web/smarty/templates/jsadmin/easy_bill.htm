@@ -1,0 +1,97 @@
+<html>
+~include file="head_billing.htm"`
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+        <link rel="stylesheet" href="jeevansathi1.css" type="text/css">
+	<title>Jeevansathi Billing</title>
+</head>
+<body>
+	<form action="easy_bill.php" method="post">
+	<table cellpadding="4" cellspacing="4" width="80%" align="center">
+		<tr>
+			<td class="formhead">Search for Easy Bill Reference Number</td>
+			<td class="fieldsnew"><input type="text" name="phrase"></td>
+			<td class="fieldsnew">
+				<select name="criteria" class="textboxes1" size="1">
+					<option value="ref_id">By Reference ID</option>
+					<option value="uname">By Username</option>
+				</select>
+			</td>
+			<td align="center" class="fieldsnew">
+				<input type="submit" name="submit" value="Go" class="buttons1">
+			</td>
+		</tr>
+		<input type="hidden" name="user" value="~$USER`" />
+		<input type="hidden" name="cid" value="~$cid`" />
+		<input type="hidden" name="offline_billing" value="~$offline_billing`" />
+	</table>
+	<br><br>
+	~if $ONLINE_TRYING_OFFLINE`
+		<table border="0" cellpadding="4" cellspacing="4" align="center">
+			<tr class="label">
+				<td>This is an offline profile please do the billing from offline billing link
+			</tr>
+		</table>
+	~elseif $OFFLINE_TRYING_ONLINE`
+		<table border="0" cellpadding="4" cellspacing="4" align="center">
+			<tr class="label">
+				<td>This is an online profile please do the billing from online billing link
+			</tr>
+		</table>
+	~elseif $NO_RESULT`
+		<table cellpadding="4" cellspacing="4" width="80%" align="center">
+			<tr class="fieldsnew">
+				<td align="center">No Result found.</td>
+			</tr>
+		</table>
+	~else`
+		~section name=next loop=$details`
+			~if $details[next].REF_ID`
+			<table cellpadding="4" cellspacing="4" width="80%" align="center">
+				<tr class="formhead">
+					<td colspan="4" align="center">Reference Id : ~$details[next].REF_ID`</td>
+				</tr>
+				<tr class="label">
+					<td align="center" width="20%">Username</td>
+					<td align="center" width="30%">Service</td>
+					<td align="center" width="25%">Amount</td>
+					<td align="center" width="25%">Entry Date</td>
+				</tr>
+				<tr class="fieldsnew">
+					<td align="center" width="20%">~$details[next].USERNAME`</td>
+					<td align="center" width="30%">~$details[next].MAIN_SERVICE`~if $details[next].ADDON_SERVICE` with ~$details[next].ADDON_SERVICE` ~/if`</td>
+					<td align="center" width="25%">~$details[next].AMOUNT`</td>
+					<td align="center" width="25%">~$details[next].ENTRY_DT`</td>
+				</tr>
+			</table>
+			<br>
+			~/if`
+			<table cellpadding="4" cellspacing="4" width="60%" align="center">
+				~if $details[next].RECT_ID`
+					<tr class="formhead">
+						<td align="center" colspan="4">Receipt Id : ~$details[next].RECT_ID`</td>
+					</tr>
+					<tr class="fieldsnew">
+						<td align="center" width="25%">Date : ~$details[next].TRANSACTION_DT`</td>
+						<td align="center" width="25%">Amount : ~$details[next].RECT_AMOUNT`</td>
+						<td align="center" width="25%">Retailer Name : ~$details[next].RETAILER_NAME`</td>
+						<td align="center" width="25%">City : ~$details[next].CITY`</td>
+					</tr>
+					~if $details[next].CD_NUM and $details[next].CD_DT and $details[next].CD_CITY`
+						<tr class="fieldsnew">
+							<td align="center" width="25%">Cheque Number: ~$details[next].CD_NUM`</td>
+							<td align="center" width="25%">Cheque Date: ~$details[next].CD_DT`</td>
+							<td align="center" width="25%">Cheque City: ~$details[next].CD_CITY`</td>
+							<td align="center" width="25%">Bank Name: ~$details[next].BANK_NAME`</td>
+						</tr>
+					~/if`
+				~else`
+					<tr class="fieldsnew" align="center"><td>No Receipts found</td></tr>
+				~/if`
+			</table>
+			<br>
+		~/section`
+	~/if`
+	</form>
+</body>
+</html>

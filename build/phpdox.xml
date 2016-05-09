@@ -1,0 +1,28 @@
+<phpdox xmlns="http://xml.phpdox.net/config">
+ <project name="jenkins-Test" source="../lib/model/lib/ProfileCompletion" workdir="phpdox/xml">
+  <collector publiconly="false">
+   <include mask="*.php" />
+  </collector>
+ 
+  <generator output=".">
+   <enrich base=".">
+    <source type="build">
+     <file name="../build.xml" />
+    </source>
+    <source type="phploc">
+     <file name="logs/phploc.xml" />
+    </source>   
+    <source type="checkstyle">
+      <file name="logs/checkstyle.xml" />
+    </source>
+    <source type="pmd">
+     <file name="logs/pmd.xml" />
+     <file name="logs/pmd-cpd.xml" />
+    </source>
+   </enrich>
+   <build engine="html" enabled="true" output="api" >
+      <file extension="html" />
+   </build>  
+  </generator>
+ </project>
+</phpdox>

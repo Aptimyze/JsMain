@@ -1,0 +1,1912 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	<title>Jeevansathi Registration Page 3</title>
+	<link rel="stylesheet" href="/profile/css/~$comm_style_css`" type="text/css">
+	<link rel="stylesheet" href="/profile/css/~$registerstyle_css`" type="text/css">
+<style type="text/css">
+.pghd{float:left; width:100% }
+.r14{font:bold 14px verdana,Arial; color:#CC0000; padding-top:5px}
+.o16{ font:bold 16px verdana,arial; color:#FF6600}
+.row{float:left; width:100%; background-color:#F8F8F8;}
+.r1{float:left; width:22%; font:normal 11px verdana,arial; color:#666666; padding:9px 10px 7px 0;text-align:right}
+.r2{float:left; width:76%; font:normal 11px verdana,arial; color:#666666; padding:7px 0 7px 0;}
+.yrow{float:left; width:100%; background-color:#F8F8F8;background-color:#F8F5DB}
+.prow{float:left; width:100%; background-color:#F8F8F8;background-color:#FFF8E2}
+.tbox {FONT-SIZE: 10px; FONT-FAMILY: verdana,Arial; width:70px}
+.pb{float:left;font:normal 11px verdana,arial; color:#666666; padding:7px 0 7px 40px}
+.spo{border-bottom:2px solid #FF6600;}
+</style>
+<script language="JavaScript">
+<!--
+
+//collecting data to POST values through ajax
+function data2string(docForm) 
+{
+	
+	var j=0;
+        var strSubmit       = '';
+        var formElem;
+        var strLastElemName = '';
+	var str= '';
+        
+        for (i = 0; i < docForm.elements.length; i++) 
+        {
+                formElem = docForm.elements[i];
+                switch (formElem.type) {
+                        // Text, select, hidden, password, textarea elements
+                        case 'checkbox':
+				strSubmit += formElem.name + 
+                                '=' + escape(formElem.checked) + '&'
+				break;
+                        case 'radio':
+				if(str!=formElem.name)
+				{
+					str=formElem.name;
+					if(str=='Has_Children')
+					{
+						len=document.form1.Has_Children.length;
+						for (j = 0; j<len; j++) 
+		                                {
+                		                        strSubmit += document.form1.Has_Children[j].name +'['+j+']'+ 
+                                		        '=' + escape(document.form1.Has_Children[j].checked) + '&';
+                                		}
+
+					}
+					if(str=='Handicapped')
+					{
+                                                len=document.form1.Handicapped.length;
+						for (j = 0; j<len; j++) 
+                                                {
+                                                        strSubmit += document.form1.Handicapped[j].name +'['+j+']' + 
+                                                        '=' + escape(document.form1.Handicapped[j].checked) + '&';
+                                                }
+
+					}
+					if(str=='wife_working')
+					{
+                                                len=document.form1.wife_working.length;
+						for (j = 0; j<len; j++) 
+					        {
+							strSubmit += document.form1.wife_working[j].name +'['+j+']' + 
+        	        		                '=' + escape(document.form1.wife_working[j].checked) + '&';
+						}
+					}
+				}
+                                break;
+                        case 'text':
+                        case 'select-one':
+                        case 'hidden':
+                        case 'password':
+                        case 'textarea':
+                                strSubmit += formElem.name + 
+                                '=' + escape(formElem.value) + '&'
+                        break;
+                        }
+        }
+~if $tieup_source eq 'ofl_prof'`
+        ajaxFunction(strSubmit);       
+~/if`
+}
+
+
+//function for ajax
+function ajaxFunction(strSubmit){
+	var ajaxRequest;  // The variable that makes Ajax possible!
+	
+	try{
+		// Opera 8.0+, Firefox, Safari
+		ajaxRequest = new XMLHttpRequest();
+	} catch (e){
+		// Internet Explorer Browsers
+		try{
+			ajaxRequest = new ActiveXObject("Msxml2.XMLHTTP");
+		} catch (e) {
+			try{
+				ajaxRequest = new ActiveXObject("Microsoft.XMLHTTP");
+			} catch (e){
+				// Something went wrong
+				alert("Your browser broke!");
+				return false;
+			}
+		}
+	}
+	// Create a function that will receive data sent from the server
+	var l_age = document.getElementById('minage').value;
+	var m_age = document.getElementById('maxage').value;
+	var queryString = "inputprofile2_revamp.php?ajax=1";
+	
+	 ajaxRequest.onreadystatechange = function(){
+                if(ajaxRequest.readyState == 4)
+		{
+			strResponse=ajaxRequest.responseText;
+			switch (ajaxRequest.status) {
+                   // Page-not-found error
+                   case 404:
+                           alert('Error: Not Found. The requested URL ' + 
+                                   strURL + ' could not be found.');
+                           break;
+                   // Display results in a full window for server-side errors
+                   case 500:
+                           handleErrFullPage(strResponse);
+                           break;
+                   default:
+                           // Call JS alert for custom error or debug messages
+                           if (strResponse.indexOf('Error:') > -1 || 
+                                   strResponse.indexOf('Debug:') > -1) {
+                                   alert(strResponse);
+                           }
+                           // Call the desired result function
+                 }	
+                document.getElementById("count").innerHTML=ajaxRequest.responseText;
+		document.getElementById("count1").innerHTML=ajaxRequest.responseText;        
+                }
+        }
+	var min=document.getElementById("minage").value
+	var str1=strSubmit; 
+	ajaxRequest.open('POST',queryString,true);
+	ajaxRequest.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+	ajaxRequest.send(str1); 
+}
+ 
+                                                                                                                            
+//function to display or hide a given element
+function showHideItems(myItem)
+{
+        //this is the ID of the hidden item
+	myItemobj = document.getElementById('item1');
+        myItemobj2 = document.getElementById('item2');
+	myItemobj3 = document.getElementById('plus_1');
+        myItemobj4 = document.getElementById('minus_1');
+	myItemobj5 = document.getElementById('plus_2');
+        myItemobj6 = document.getElementById('minus_2');
+
+	if(myItem=='0')
+	{
+		myItemobj.style.display = "none";
+		myItemobj2.style.display = "none";
+		myItemobj4.style.display = "none";
+		myItemobj6.style.display = "none";
+	}
+        else
+        {
+                //this is the ID of the plus/minus button image
+                //var myButton = document.getElementById(myButton);
+		if(myItem=='item1')
+		{
+			if (myItemobj.style.display != "none")
+			{
+				//items are currently displayed, so hide them
+				myItemobj.style.display = "none";
+				myItemobj4.style.display = "none";
+				myItemobj3.style.display = "block";
+			
+				// swapImage(myButton,"plus");
+			}
+			else
+			{
+				//items are currently hidden, so display them
+				myItemobj.style.display = "block";
+				myItemobj3.style.display = "none";
+                                myItemobj4.style.display = "block";
+			}
+		}	
+		else
+		{
+			if (myItemobj2.style.display != "none")
+			{
+				myItemobj2.style.display = "none";
+				myItemobj6.style.display = "none";
+                                myItemobj5.style.display = "block";
+			}
+			else
+			{
+				myItemobj2.style.display = "block";
+				myItemobj5.style.display = "none";
+                                myItemobj6.style.display = "block";
+			}
+		}	
+        }
+}
+
+
+
+function ManglikSelected(obj)
+{
+        var docF=document.form1;
+	
+                                                                                                                             
+        if(obj.checked)
+        {
+                if (obj.name=="Manglik_Status1")
+                {
+                        docF.Manglik_Status2.checked=false;
+                        docF.Manglik_Status3.checked=false;
+                        //docF.Manglik_Status4.checked=false;
+                }
+                if (obj.name=="Manglik_Status2")
+                {
+                        docF.Manglik_Status1.checked=false;
+                        docF.Manglik_Status3.checked=false;
+                        //docF.Manglik_Status4.checked=false;
+                }
+                if (obj.name=="Manglik_Status3")
+                {
+                        docF.Manglik_Status1.checked=false;
+                        docF.Manglik_Status2.checked=false;
+                        //docF.Manglik_Status4.checked=false;
+                }
+		/*if (obj.name=="Manglik_Status4")
+                {
+                        docF.Manglik_Status1.checked=false;
+                        docF.Manglik_Status2.checked=false;
+                        docF.Manglik_Status3.checked=false;
+                }*/
+        }
+~if $tieup_source eq 'ofl_prof'`
+data2string(document.form1);
+~/if`
+}
+                                                                                                                             
+function DietSelected(obj)
+{
+        var docF=document.form1;
+        if(obj.checked)
+        {
+                if (obj.name=="Diet1")
+                {
+                        docF.Diet2.checked=false;
+                        docF.Diet3.checked=false;
+                        docF.Diet4.checked=false;
+                }
+                if (obj.name=="Diet2")
+                {
+                        docF.Diet1.checked=false;
+                }
+                if (obj.name=="Diet3")
+                {
+                        docF.Diet1.checked=false;
+                }
+                if (obj.name=="Diet4")
+                {
+                        docF.Diet1.checked=false;
+                }
+        }
+	~if $tieup_source eq 'ofl_prof'`
+	data2string(document.form1);
+	~/if`
+
+}
+
+
+function MaritalSelected(obj)
+{
+        var docF=document.form1;
+	
+                                                                                                                             
+        if(obj.checked)
+        {
+                if (obj.name=="Marital_Status1")
+                {
+                        docF.Marital_Status2.checked=false;
+                        docF.Marital_Status3.checked=false;
+                        docF.Marital_Status4.checked=false;
+                        docF.Marital_Status5.checked=false;
+                        
+                }
+                                                                                                                             
+                if (obj.name=="Marital_Status2")
+                        docF.Marital_Status1.checked=false;
+                                                                                                                             
+                if (obj.name=="Marital_Status3")
+                        docF.Marital_Status1.checked=false;
+                                                                                                                             
+                if (obj.name=="Marital_Status4")
+                        docF.Marital_Status1.checked=false;
+                                                                                                                             
+                if (obj.name=="Marital_Status5")
+                        docF.Marital_Status1.checked=false;
+                                                                                                                             
+
+
+	}
+	
+	~if $default_setting neq ''`
+	var make_visibles=0;
+	if(docF.Marital_Status1.checked==false && docF.Marital_Status3.checked==false  && docF.Marital_Status4.checked==false  &&  docF.Marital_Status5.checked==false     && docF.Marital_Status2.checked==true)
+		{
+			make_visibles=1;
+		}
+		
+		if(make_visibles==1)
+		{
+			document.getElementById("show_children").style.display='none';
+			docF.Has_Children[1].checked='true';
+		}
+		else
+		{
+			document.getElementById("show_children").style.display='inline';
+			//docF.Has_Children[0].checked='true';
+		}
+	
+	~/if`
+	~if $tieup_source eq 'ofl_prof'`
+	data2string(document.form1);
+	~/if`
+}
+
+
+function BtypeSelected(obj)
+{
+	var docF=document.form1;
+                                                                                                                             
+        if(obj.checked)
+        {
+                if (obj.name=="Body_Type1")
+                {
+                        docF.Body_Type2.checked=false;
+			docF.Body_Type3.checked=false;
+			docF.Body_Type4.checked=false;
+			docF.Body_Type5.checked=false;
+                }
+                                                                                                                             
+                if (obj.name=="Body_Type2")
+        	{
+                        docF.Body_Type1.checked=false;
+        	}
+                                                                                                                             
+                if (obj.name=="Body_Type3")
+        	{
+                	docF.Body_Type1.checked=false;
+	                docF.Body_Type2.checked=true;
+        	}
+                                                                                                                             
+                if (obj.name=="Body_Type4")
+        	{
+                	docF.Body_Type1.checked=false;
+	                docF.Body_Type2.checked=true;
+                        docF.Body_Type3.checked=true;
+        	}
+                                                                                                                             
+                if (obj.name=="Body_Type5")
+        	{
+                	docF.Body_Type1.checked=false;
+	                docF.Body_Type2.checked=true;
+        		docF.Body_Type3.checked=true;
+                        docF.Body_Type4.checked=true;
+        	}
+        }
+	~if $tieup_source eq 'ofl_prof'`
+	data2string(document.form1);
+	~/if`
+}
+
+function ComplexionSelected(obj)
+{
+	var docF=document.form1;
+
+	if(obj.checked)
+	{
+		if (obj.name=="Complexion1")
+		{
+		    docF.Complexion2.checked=false;
+		    docF.Complexion3.checked=false;
+		    docF.Complexion4.checked=false;
+		    docF.Complexion5.checked=false;
+		    docF.Complexion6.checked=false;
+		}
+
+		if (obj.name=="Complexion2")
+		{
+		    docF.Complexion1.checked=false;
+		}
+
+		if (obj.name=="Complexion3")
+		{
+		    docF.Complexion1.checked=false;
+		    docF.Complexion2.checked=true;
+		}
+
+		if (obj.name=="Complexion4")
+		{
+		    docF.Complexion1.checked=false;
+		    docF.Complexion2.checked=true;
+		    docF.Complexion3.checked=true;
+		}
+
+		if (obj.name=="Complexion5")
+		{
+		    docF.Complexion1.checked=false;
+		    docF.Complexion2.checked=true;
+		    docF.Complexion3.checked=true;
+		    docF.Complexion4.checked=true;
+		}
+
+		if (obj.name=="Complexion6")
+		{
+		    docF.Complexion1.checked=false;
+		    docF.Complexion2.checked=true;
+		    docF.Complexion3.checked=true;
+		    docF.Complexion4.checked=true;
+		    docF.Complexion5.checked=true;
+		}
+	}
+	~if $tieup_source eq 'ofl_prof'`
+	data2string(document.form1);
+	~/if`
+}
+
+
+function SmokeSelected(obj)
+{
+        var docF=document.form1;
+                                                                                                                             
+	if(obj.checked)
+	{
+		if (obj.name=="Smoke1")
+		{
+		    docF.Smoke2.checked=false;
+		    docF.Smoke3.checked=false;
+		    docF.Smoke4.checked=false;
+		}
+
+		if (obj.name=="Smoke2")
+		{
+			docF.Smoke1.checked=false;
+		}
+
+		if (obj.name=="Smoke3")
+		{
+			docF.Smoke1.checked=false;
+		}
+
+		if (obj.name=="Smoke4")
+		{
+			docF.Smoke1.checked=false;
+			docF.Smoke3.checked=true;
+		}
+	}
+	~if $tieup_source eq 'ofl_prof'`
+data2string(document.form1);
+~/if`
+}
+
+function DrinkSelected(obj)
+{
+        var docF=document.form1;
+                                                                                                                             
+	if(obj.checked)
+	{
+		if (obj.name=="Drink1")
+		{
+			docF.Drink2.checked=false;
+			docF.Drink3.checked=false;
+			docF.Drink4.checked=false;
+		}
+
+		if (obj.name=="Drink2")
+		{
+			docF.Drink1.checked=false;
+		}
+
+		if (obj.name=="Drink3")
+		{
+			docF.Drink1.checked=false;
+		}
+
+		if (obj.name=="Drink4")
+		{
+			docF.Drink1.checked=false;
+			docF.Drink3.checked=true;
+		}
+	}
+	~if $tieup_source eq 'ofl_prof'`
+data2string(document.form1);
+~/if`
+}
+
+function validate()
+{	
+	var docF=document.form1;
+
+	
+	var str=document.form1;
+	var flag=0;
+
+		
+
+	document.getElementById('my_age').style.color="#666666";
+	document.getElementById('my_height').style.color="#666666";
+	
+	if(docF.Gender.value=='M')
+	{	
+		if(document.getElementById('married_work'))
+			document.getElementById('married_work').style.color="#666666";
+	}
+	else
+	{
+		if(document.getElementById('wife_work'))
+			document.getElementById('wife_work').style.color="#666666";
+	}
+
+	if(document.getElementById('minage').value > document.getElementById('maxage').value)
+	{
+		 alert("Age range is not correct.");
+		 document.getElementById('my_age').style.color="red";
+	  	 docF.Min_Age.focus();
+		 return false;
+	}
+//if(document.getElementById('minh').value > document.getElementById('maxh').value)
+	var min_h=parseInt(document.getElementById('minh').value);
+	var max_h=parseInt(document.getElementById('maxh').value);
+	
+	if(max_h<min_h)
+	{
+		alert("Height range is not correct.");
+		document.getElementById('my_height').style.color="red"; 
+		document.getElementById('minh').focus();
+		return false;
+	}
+	return true;
+
+}
+
+function add(var1,var2,hiddenvar)
+{
+	var hiddenvalue;
+	var str=document.form1;
+	var flag=0;
+	while(flag<str.elements.length)
+	{
+		if(str.elements[flag].name==var1)
+		{
+				obj1=str.elements[flag];
+				break;
+		}
+		flag++;
+	}
+
+	var flag=0;
+
+	while(flag<str.elements.length)
+	{
+		if(str.elements[flag].name==var2)
+		{
+			obj2=str.elements[flag];
+			break;
+		}
+		flag++;
+	}
+
+	var flag=0;
+
+	while(flag<str.elements.length)
+	{
+		if(str.elements[flag].name==hiddenvar)
+		{
+			hidden_name=str.elements[flag];
+			break;
+		}
+		flag++;
+	}
+	
+	
+	if(obj2.options.length>0 && obj2.options[0].value=="All")
+	{
+		var l = obj1.options.selectedIndex;
+		if(l==-1)
+		   ;
+		else
+		{
+			obj2.options[0]=null;
+			var len=obj1.options.length-1;
+			for(a=len;a>=0;a--)
+			{
+				if(obj1.options[a].selected)
+				{
+					var optn=document.createElement("OPTION");
+					optn.text=obj1.options[a].text;
+					optn.value=obj1.options[a].value;
+					obj2.options.add(optn);
+				}
+			}
+			remove(var1,var2,hiddenvar);
+		}
+			
+	}
+	else
+	{
+		if(obj1.options.length == 0)
+			;
+		else
+		{
+			var k=obj1.options.length-1;
+			var len_obj2 = obj2.length;
+			while(k>=0)
+			{
+				if(obj1.options[k].selected)
+				{
+					var arr = new Option();
+					arr.value=obj1.options[k].value;
+					arr.text=obj1.options[k].text;
+					obj1.remove(k);
+															     
+					for(i=0;i<obj2.options.length;i++)
+					if(obj2[i].value == arr.value)
+					{
+						var repeat_name=true;
+							break;
+					}	
+				    
+					if(repeat_name == true)
+					{
+						repeat_name=false;
+					}
+					else
+					{
+						if (arr.value=="All" || arr.value=="0")
+							obj2.options.length=0;
+						else
+						{
+							for(var l=0;l<obj2.options.length;l++)
+							if(obj2.options[l].value=="All" || obj2.options[l].value=="0")
+								obj2.options[l]=null;
+						}
+						obj2.options[obj2.options.length]=arr;
+
+						if (arr.value=="All" || arr.value=="0")
+                                                        remove(var1,var2,hiddenvar);
+					}
+				}
+				k--;
+			}
+		}
+	}
+
+	var k=0,str1='',str2;
+
+	while(k<obj2.options.length)
+	{
+		str2=obj2.options[k].value;
+		str1=str1+str2+",";
+		k++;
+	}
+
+hidden_name.value=str1;
+
+~if $tieup_source eq 'ofl_prof'`
+data2string(document.form1);
+~/if`
+}
+
+function remove(var1,var2,hiddenvar)
+{
+	var str=document.form1;
+	var flag=0;
+	
+	while(flag<str.elements.length)
+	{
+		if(str.elements[flag].name==var1)
+		{
+				obj1=str.elements[flag];
+				break;
+		}
+		flag++;
+	}
+
+	var flag=0;
+
+	while(flag<str.elements.length)
+	{
+		if(str.elements[flag].name==var2)
+		{
+				obj2=str.elements[flag];
+				break;
+		}
+		flag++;
+	}
+	
+	var flag=0;
+
+	while(flag<str.elements.length)
+	{
+		if(str.elements[flag].name==hiddenvar)
+		{
+				hidden_name=str.elements[flag];
+				break;
+		}
+		flag++;
+	}
+	if(obj2.options.length == 0)
+		;
+	else
+	{
+		var len=obj2.options.length;
+		for(a=len-1;a>=0;a--)
+		{
+			if(obj2.options[a].selected == true)
+			obj2.remove(a);
+		}
+		obj1.innerHTML="";
+		if((var1=="Occupation[]")||(var1=="Education_Level_New[]") ||(var1=="Education_Level") ||(var1=="Education_Level[]")||(var1=="Caste[]")||(var1=="Income[]"))
+	        {
+			if(var1=="Occupation[]")
+			{
+				var origval="~$occupationval`".split("#");
+	                        var origlab="~$occupationlab`".split("#");
+			}
+			else if(var1=="Education_Level_New[]")
+			{
+				var origval="~$eduqualval`".split("#");
+				var origlab="~$eduquallab`".split("#");
+			}
+			else if(var1=="Education_Level[]")
+			{
+				var origval="~$edulevelval`".split("#");
+				var origlab="~$edulevellab`".split("#");
+			}
+			else if(var1=="Caste[]")
+			{
+				var origval="~$religionval`".split("#");
+				var origlab="~$religionlab`".split("#");
+			}
+			else if(var1=="Income[]")
+			{
+				var origval="~$incomeval`".split("#");
+				var origlab="~$incomelab`".split("#");
+			}
+			var addflag=1;
+			for(a=0;a<origval.length;a++)
+			{
+				addflag=1;
+				for(var b=0;b<obj2.options.length;b++)
+				{
+			        	if(origlab[a]==obj2.options[b].text)
+					{
+						addflag=0;
+						break;
+					}
+				}
+				if(addflag==1)
+				{
+					var optn = document.createElement("OPTION");
+					optn.value=origval[a];
+					optn.text=origlab[a];
+					obj1.options.add(optn);
+				}				
+			}
+			
+                }
+		else if(var1=="Country_Residence[]")
+		{
+			var origval="~$countryresval`".split("#");
+			var origlab="~$countryreslab`".split("#");
+			var addflag=1;
+			var a=0;
+			for(a=0;a<15;a++)
+			{
+				addflag=1;
+				for(var b=0;b<obj2.options.length;b++)
+				{
+					if(origlab[a]==obj2.options[b].text)
+					{
+						addflag=0;
+						break;
+					}
+			
+				}
+				if(addflag==1)
+				{
+					var optn=document.createElement("OPTION");
+					optn.value=origval[a];
+					optn.text=origlab[a];
+					obj1.options.add(optn);
+				}
+			}
+			var optgrp=document.createElement("OPTGROUP");
+			optgrp.innerHTML="&nbsp;";
+			obj1.appendChild(optgrp);
+			for(a=15;a<origval.length;a++)
+                        {
+                                addflag=1;
+                                for(var b=0;b<obj2.options.length;b++)
+                                {
+                                        if(origlab[a]==obj2.options[b].text)
+                                        {
+                                                addflag=0;
+                                                break;
+                                        }
+                        
+                                }
+                                if(addflag==1)
+                                {
+                                        var optn=document.createElement("OPTION");
+                                        optn.value=origval[a];
+                                        optn.text=origlab[a];
+                                        obj1.options.add(optn);
+                                }
+                        }
+		}
+		else if(var1=="City_India[]")
+		{
+			var origvallist="~$cityresval`".split("%");
+			var origlablist="~$cityreslab`".split("%");
+			var origval1=origvallist[0].split("#");
+			var origlab1=origlablist[0].split("#");
+			var origval2=origvallist[1].split("#");
+			var origlab2=origlablist[1].split("#");
+			var origval3=origvallist[2].split("#");
+			var origlab3=origlablist[2].split("#");
+			var a=0;
+			var addflag=1;
+			len=origval1.length-1;
+			for(a=0;a<len;a++)
+                        {
+                                addflag=1;
+                                for(var b=0;b<obj2.options.length;b++)
+                                {
+                                        if(origlab1[a]==obj2.options[b].text)
+                                        {
+                                                addflag=0;
+                                                break;
+                                        }
+                        
+                                }
+                                if(addflag==1)
+                                {
+                                        var optn=document.createElement("OPTION");
+                                        optn.value=origval1[a];
+                                        optn.text=origlab1[a];
+                                        obj1.options.add(optn);
+                                }
+                        }
+			var optgrp=document.createElement("OPTGROUP");
+			optgrp.innerHTML="&nbsp;";
+			obj1.appendChild(optgrp);
+			len=origval2.length-1;
+			for(a=0;a<len;a++)
+                        {
+                                addflag=1;
+                                for(var b=0;b<obj2.options.length;b++)
+                                {
+                                        if(origlab2[a]==obj2.options[b].text)
+                                        {
+                                                addflag=0;
+                                                break;
+                                        }
+                        
+                                }
+                                if(addflag==1)
+                                {
+                                        var optn=document.createElement("OPTION");
+                                        optn.value=origval2[a];
+                                        optn.text=origlab2[a];
+                                        obj1.options.add(optn);
+                                }
+                        }
+			var optgrp=document.createElement("OPTGROUP");
+                        optgrp.innerHTML="&nbsp;";
+                        obj1.appendChild(optgrp);
+                        for(a=0;a<origval3.length;a++)
+                        {
+                                addflag=1;
+                                for(var b=0;b<obj2.options.length;b++)
+                                {
+                                        if(origlab3[a]==obj2.options[b].text)
+                                        {
+                                                addflag=0;
+                                                break;
+                                        }
+                        
+                                }
+                                if(addflag==1)
+                                {
+                                        var optn=document.createElement("OPTION");
+                                        optn.value=origval3[a];
+                                        optn.text=origlab3[a];
+                                        obj1.options.add(optn);
+                                }
+                        }
+
+		}
+		else if(var1=="Mtongue[]")
+		{
+			var origvallist="~$mtongueval`".split("%");
+			var origlablist="~$mtonguelab`".split("%");
+			
+			for(var b=0;b<origvallist.length;b++)
+			{
+				var origval=origvallist[b].split("#");
+				var origlab=origlablist[b].split("#");
+				len=origval.length-1;
+				var a=0;
+				var addflag=1;
+				if(b==1)
+				{
+					var optn=document.createElement("OPTION");
+					optn.text="All Hindi";
+					optn.value="10,19,33,7,28,13";
+					obj1.options.add(optn);
+					var optgrp=document.createElement("OPTGROUP");
+        	                        optgrp.innerHTML="&nbsp;";
+                	                obj1.appendChild(optgrp);
+					var optgrp=document.createElement("OPTGROUP");
+					optgrp.label="Communities in North India";
+					optgrp.style.color="#5494C6";
+					obj1.appendChild(optgrp);
+				}
+				else if(b==2)
+				{
+					var optgrp=document.createElement("OPTGROUP");
+					optgrp.label="Communities in West India";
+					optgrp.style.color="#5494C6";
+					obj1.appendChild(optgrp);
+				}
+				else if(b==3)
+				{
+					var optgrp=document.createElement("OPTGROUP");
+					optgrp.label="Communities in South India";
+					optgrp.style.color="#5494C6";
+					obj1.appendChild(optgrp);
+				}
+				else if(b==4)
+				{
+					var optgrp=document.createElement("OPTGROUP");
+					optgrp.label="Communites in East India";
+					optgrp.style.color="#5494C6";
+					obj1.appendChild(optgrp);
+				}
+				else if(b==5) 
+				{
+					var optgrp=document.createElement("OPTGROUP");
+					optgrp.label="-----------------";
+					obj1.appendChild(optgrp);
+				}
+				for(a=0;a<len;a++)
+				{
+					addflag=1;
+                                	for(var c=0;c<obj2.options.length;c++)
+	                                {
+        	                                if(origlab[a]==obj2.options[c].text)
+                	                        {
+                        	                        addflag=0;
+                                	                break;
+                                        	}
+		                         }
+                	                if(addflag==1)
+                        	        {
+						var optn=document.createElement("OPTION");
+                                        	optn.value=origval[a];
+	                                        optn.text=origlab[a];
+	    	                                obj1.options.add(optn);
+                	                }
+				}
+				var optgrp=document.createElement("OPTGROUP");
+				optgrp.innerHTML="&nbsp;";
+				obj1.appendChild(optgrp);
+			}	
+		}
+		
+	}
+
+	/*if(obj2.options.length == 0)
+	{
+		var arr = new Option();
+		arr.value=obj1.options[0].value;
+		arr.text=obj1.options[0].text;
+		obj2.options[obj2.options.length]=arr;
+	}*/
+
+	var k=0,str1='',str2;
+
+	while(k<obj2.options.length)
+	{
+		str2=obj2.options[k].value;
+		str1=str1+str2+",";
+		k++;
+	}
+	hidden_name.value=str1;
+
+~if $tieup_source eq 'ofl_prof'`
+data2string(document.form1);
+~/if`
+}
+
+function autofill()
+{
+        add('Mtongue[]','Mtongue1[]','mtonguevalue');
+        resetDrop('Mtongue[]');
+       /* ~if $d_caste eq ''`
+	add('Caste[]','Caste1[]','castevalue');
+	~/if`
+        add('Occupation[]','Occupation1[]','occupationvalue');
+        add('Country_Residence[]','Country_Residence1[]','country_residencevalue');
+        add('City_India[]','City_India1[]','city_indiavalue');
+        //add('Rstatus[]','Rstatus1[]','rstatusvalue');
+        add('Education_Level[]','Education_Level1[]','education_levelvalue');
+        add('Education_Level_New[]','Education_Level1_New[]','education_level_new_value');
+        ~if $SHOWINCOME neq "1"`
+        add('Income[]','Income1[]','incomevalue');
+        ~/if`
+	 ~if $d_caste eq ''`
+        resetDrop('Caste[]');
+	~/if`
+        resetDrop('Occupation[]');
+        resetDrop('Country_Residence[]');
+        resetDrop('City_India[]');
+        //resetDrop('Rstatus[]');
+        resetDrop('Education_Level[]');
+        resetDrop('Education_Level_New[]');
+        ~if $SHOWINCOME neq "1"`
+        resetDrop('Income[]');
+        ~/if`
+	*/
+}
+
+function resetDrop(objName)
+{
+        var doc1=document.form1;
+
+        for(var i=0;i<doc1.elements.length;i++)
+        {
+                if(doc1.elements[i].name==objName)
+                {
+                        doc1.elements[i].selectedIndex=-1;
+                        break;
+                }
+        }
+}
+
+//-->
+</script>
+
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body onload="autofill()">
+<div id="container">
+	<!--HEADER STARTS-->
+	
+	<!--WRAPPER STARTS HERE-->
+	<div id="wrapper">
+		<div style="padding:10px;">
+			<div class="roundcont">
+				<div class="roundtop">
+					<img src="~$IMG_URL`/profile/ser4_images/tl.gif" alt="" width="4" height="4" class="corner" style="display: none" />
+				</div>
+				<p>
+					Your detailed personal profile is created. Enter details about your Desired Partner Profile.
+					~if $NO_OF_ERROR`
+						<font color="red" size="2" face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;
+							There are ~$NO_OF_ERROR` Error(s) in your form. They are marked in red. Please correct them and submit the form again
+						</font>
+					~/if`
+				</p>
+				<div class="roundbottom">
+					<img src="~$IMG_URL`/profile/ser4_images/bl.gif" alt="" width="4" height="4" class="corner" style="display: none" />
+				</div>
+			</div>
+			<div class="space15">&nbsp;</div>
+			<div class="pghd">
+				<div id="artab">
+					<ul>
+						<li>
+							<a class="previous">
+							<div class="lftflow g30">01</div> 
+							<div class="pd">
+								Details About<br>Yourself
+							</div> 
+							</a>
+						</li>
+						<li>
+							<a class="current" title="About Partner Profile">
+							<div class="lftflow g30">02</div> 
+							<div class="pd pd1">
+								<b>Desired Partner<br>Profile</b>
+							</div>
+							</a>
+						</li>
+						<li>
+							<a href="~$SITE_URL`/profile/inputprofile2_revamp.php?checksum=~$CHECKSUM`&Submit=1&skip_to_aboutfamily=1&gender=~$gender`&hit_source=~$hit_source`&tieup_source=~$tieup_source`&maritalstatus=~$maritalstatus`&id=~$ID_AFF`" title="About Family">
+							<div class="lftflow g30" style="cursor:hand">03</div> 
+							<div class="pd" style="cursor:hand">
+								Details About<br>Family
+							</div>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<br clear="all">
+				<div class="hline">&bull;
+					More than 1 million profiles &nbsp;&nbsp;&nbsp;&nbsp;&bull; 100% profile screening &nbsp;&nbsp;&nbsp;&nbsp; &bull; Exclusive privacy features
+				</div>
+			</div>
+			<div class="spacer">&nbsp;</div>
+			<form action="inputprofile2_revamp.php" method="post" name="form1" onsubmit="return validate();">
+<input type="hidden" id="checksum" name="checksum" value="~$CHECKSUM`">
+<input type="hidden" name="mbureau" value="~$mbureau`">
+<input type="hidden" name="FLAG" value="~$FLAG`">
+<input type="hidden" name="castevalue" value="">
+<input type="hidden" name="mtonguevalue" value="">
+<input type="hidden" name="occupationvalue" value="">
+<input type="hidden" name="country_residencevalue" value="">
+<input type="hidden" name="city_indiavalue" value="">
+<!--input type="hidden" name="rstatusvalue" value=""-->
+<input type="hidden" name="education_levelvalue" value="">
+<input type="hidden" name="education_level_new_value" value="">
+<input type="hidden" name="incomevalue" value="">
+<input type="hidden" name="edit_mysearchid" value=~$edit_mysearchid`>
+<input type="hidden" name="checksum" value="~$CHECKSUM`">
+<input type="hidden" name="id" value="~$ID_AFF`">
+<input type="hidden" name="gender" value="~$gender`">
+<input type="hidden" name="maritalstatus" value="~$maritalstatus`">
+<input type="hidden" name="SHOW_MTONGUE_MAPPING" value="~$SHOW_MTONGUE_MAPPING`">
+<input type="hidden" name="hit_source" value="~$hit_source`">
+<input type="hidden" name="tieup_source" value="~$tieup_source`">
+<input type="hidden" name="frommarriagebureau" value="~$frommarriagebureau`">
+<!--Added-->
+<div id="container">
+	<!--HEADER STARTS-->
+	
+	<!--HEADER ENDS-->
+
+	<!--QUICK SEARCH STARTS-->
+	<div class="spacer15">&nbsp;</div>
+	<!--QUICK SEARCH ENDS-->
+
+	<!--WRAPPER STARTS HERE-->
+	<div id="wrapper">
+		<div class="wrap_ad">
+
+			
+
+			<div class="lftflow0" style="width:100%;">
+				<div class="lftflow0 o16">Edit Desired Partner Profile
+</div>
+				<DIV class="rightflow o16" style="color:#CC0000 " id="count">&nbsp;</DIV>			
+				<div class="spacer1 spo">&nbsp;</div>
+						
+				<!--FORM STARTS-->
+				<div class="row">
+					<div class="r1"> Gender:</div>
+					<div class="r2"> 
+						~if $G eq "F"` <input name="Gender" value="F" type="hidden"> Bride ~elseif $G eq "M"`<input name="Gender" value="M" type="hidden"> Groom
+						~/if`
+					</div>
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+
+				<div class="row">
+					<div class="r1"><span id="my_age">~if $check_age eq "Y"`<font color="red"> Age:</font>~else` Age:~/if`</span></div>
+					<div class="r2">
+						<select name="Min_Age" class="textbox" id="minage" ~if $tieup_source eq 'ofl_prof'` onChange="data2string(document.form1)" ~/if`>
+						<option value="18"~if $MIN_AGE eq '18'` selected~/if`>18</option>
+						<option value="19"~if $MIN_AGE eq '19'` selected~/if`>19</option>
+						<option value="20"~if $MIN_AGE eq '20'` selected~/if`>20</option>
+						<option value="21"~if $MIN_AGE eq '21'` selected~/if`>21</option>
+						<option value="22"~if $MIN_AGE eq '22'` selected~/if`>22</option>
+						<option value="23"~if $MIN_AGE eq '23'` selected~/if`>23</option>
+						<option value="24"~if $MIN_AGE eq '24'` selected~/if`>24</option>
+						<option value="25"~if $MIN_AGE eq '25'` selected~/if`>25</option>
+						<option value="26"~if $MIN_AGE eq '26'` selected~/if`>26</option>
+						<option value="27"~if $MIN_AGE eq '27'` selected~/if`>27</option>
+						<option value="28"~if $MIN_AGE eq '28'` selected~/if`>28</option>
+						<option value="29"~if $MIN_AGE eq '29'` selected~/if`>29</option>
+						<option value="30"~if $MIN_AGE eq '30'` selected~/if`>30</option>
+						<option value="31"~if $MIN_AGE eq '31'` selected~/if`>31</option>
+						<option value="32"~if $MIN_AGE eq '32'` selected~/if`>32</option>
+						<option value="33"~if $MIN_AGE eq '33'` selected~/if`>33</option>
+						<option value="34"~if $MIN_AGE eq '34'` selected~/if`>34</option>
+						<option value="35"~if $MIN_AGE eq '35'` selected~/if`>35</option>
+						<option value="36"~if $MIN_AGE eq '36'` selected~/if`>36</option>
+						<option value="37"~if $MIN_AGE eq '37'` selected~/if`>37</option>
+						<option value="38"~if $MIN_AGE eq '38'` selected~/if`>38</option>
+						<option value="39"~if $MIN_AGE eq '39'` selected~/if`>39</option>
+						<option value="40"~if $MIN_AGE eq '40'` selected~/if`>40</option>
+						<option value="41"~if $MIN_AGE eq '41'` selected~/if`>41</option>
+						<option value="42"~if $MIN_AGE eq '42'` selected~/if`>42</option>
+						<option value="43"~if $MIN_AGE eq '43'` selected~/if`>43</option>
+						<option value="44"~if $MIN_AGE eq '44'` selected~/if`>44</option>
+						<option value="45"~if $MIN_AGE eq '45'` selected~/if`>45</option>
+						<option value="46"~if $MIN_AGE eq '46'` selected~/if`>46</option>
+						<option value="47"~if $MIN_AGE eq '47'` selected~/if`>47</option>
+						<option value="48"~if $MIN_AGE eq '48'` selected~/if`>48</option>
+						<option value="49"~if $MIN_AGE eq '49'` selected~/if`>49</option>
+						<option value="50"~if $MIN_AGE eq '50'` selected~/if`>50</option>
+						<option value="51"~if $MIN_AGE eq '51'` selected~/if`>51</option>
+						<option value="52"~if $MIN_AGE eq '52'` selected~/if`>52</option>
+						<option value="53"~if $MIN_AGE eq '53'` selected~/if`>53</option>
+						<option value="54"~if $MIN_AGE eq '54'` selected~/if`>54</option>
+						<option value="55"~if $MIN_AGE eq '55'` selected~/if`>55</option>
+						<option value="56"~if $MIN_AGE eq '56'` selected~/if`>56</option>
+						<option value="57"~if $MIN_AGE eq '57'` selected~/if`>57</option>
+						<option value="58"~if $MIN_AGE eq '58'` selected~/if`>58</option>
+						<option value="59"~if $MIN_AGE eq '59'` selected~/if`>59</option>
+						<option value="60"~if $MIN_AGE eq '60'` selected~/if`>60</option>
+						<option value="61"~if $MIN_AGE eq '61'` selected~/if`>61</option>
+						<option value="62"~if $MIN_AGE eq '62'` selected~/if`>62</option>
+						<option value="63"~if $MIN_AGE eq '63'` selected~/if`>63</option>
+						<option value="64"~if $MIN_AGE eq '64'` selected~/if`>64</option>
+						<option value="65"~if $MIN_AGE eq '65'` selected~/if`>65</option>
+						<option value="66"~if $MIN_AGE eq '66'` selected~/if`>66</option>
+						<option value="67"~if $MIN_AGE eq '67'` selected~/if`>67</option>
+						<option value="68"~if $MIN_AGE eq '68'` selected~/if`>68</option>
+						<option value="69"~if $MIN_AGE eq '69'` selected~/if`>69</option>
+						<option value="70"~if $MIN_AGE eq '70'` selected~/if`>70</option>
+						</select> 
+					 to  
+						<select name="Max_Age" class="textbox" id="maxage" ~if $tieup_source eq 'ofl_prof'` onChange="data2string(document.form1)" ~/if`>
+						<option value="18"~if $MAX_AGE eq '18'` selected~/if`>18</option>
+						<option value="19"~if $MAX_AGE eq '19'` selected~/if`>19</option>
+						<option value="20"~if $MAX_AGE eq '20'` selected~/if`>20</option>
+						<option value="21"~if $MAX_AGE eq '21'` selected~/if`>21</option>
+						<option value="22"~if $MAX_AGE eq '22'` selected~/if`>22</option>
+						<option value="23"~if $MAX_AGE eq '23'` selected~/if`>23</option>
+						<option value="24"~if $MAX_AGE eq '24'` selected~/if`>24</option>
+						<option value="25"~if $MAX_AGE eq '25'` selected~/if`>25</option>
+						<option value="26"~if $MAX_AGE eq '26'` selected~/if`>26</option>
+						<option value="27"~if $MAX_AGE eq '27'` selected~/if`>27</option>
+						<option value="28"~if $MAX_AGE eq '28'` selected~/if`>28</option>
+						<option value="29"~if $MAX_AGE eq '29'` selected~/if`>29</option>
+						<option value="30"~if $MAX_AGE eq '30'` selected~/if`>30</option>
+						<option value="31"~if $MAX_AGE eq '31'` selected~/if`>31</option>
+						<option value="32"~if $MAX_AGE eq '32'` selected~/if`>32</option>
+						<option value="33"~if $MAX_AGE eq '33'` selected~/if`>33</option>
+						<option value="34"~if $MAX_AGE eq '34'` selected~/if`>34</option>
+						<option value="35"~if $MAX_AGE eq '35'` selected~/if`>35</option>
+						<option value="36"~if $MAX_AGE eq '36'` selected~/if`>36</option>
+						<option value="37"~if $MAX_AGE eq '37'` selected~/if`>37</option>
+						<option value="38"~if $MAX_AGE eq '38'` selected~/if`>38</option>
+						<option value="39"~if $MAX_AGE eq '39'` selected~/if`>39</option>
+						<option value="40"~if $MAX_AGE eq '40'` selected~/if`>40</option>
+						<option value="41"~if $MAX_AGE eq '41'` selected~/if`>41</option>
+						<option value="42"~if $MAX_AGE eq '42'` selected~/if`>42</option>
+						<option value="43"~if $MAX_AGE eq '43'` selected~/if`>43</option>
+						<option value="44"~if $MAX_AGE eq '44'` selected~/if`>44</option>
+						<option value="45"~if $MAX_AGE eq '45'` selected~/if`>45</option>
+						<option value="46"~if $MAX_AGE eq '46'` selected~/if`>46</option>
+						<option value="47"~if $MAX_AGE eq '47'` selected~/if`>47</option>
+						<option value="48"~if $MAX_AGE eq '48'` selected~/if`>48</option>
+						<option value="49"~if $MAX_AGE eq '49'` selected~/if`>49</option>
+						<option value="50"~if $MAX_AGE eq '50'` selected~/if`>50</option>
+						<option value="51"~if $MAX_AGE eq '51'` selected~/if`>51</option>
+						<option value="52"~if $MAX_AGE eq '52'` selected~/if`>52</option>
+						<option value="53"~if $MAX_AGE eq '53'` selected~/if`>53</option>
+						<option value="54"~if $MAX_AGE eq '54'` selected~/if`>54</option>
+						<option value="55"~if $MAX_AGE eq '55'` selected~/if`>55</option>
+						<option value="56"~if $MAX_AGE eq '56'` selected~/if`>56</option>
+						<option value="57"~if $MAX_AGE eq '57'` selected~/if`>57</option>
+						<option value="58"~if $MAX_AGE eq '58'` selected~/if`>58</option>
+						<option value="59"~if $MAX_AGE eq '59'` selected~/if`>59</option>
+						<option value="60"~if $MAX_AGE eq '60'` selected~/if`>60</option>
+						<option value="61"~if $MAX_AGE eq '61'` selected~/if`>61</option>
+						<option value="62"~if $MAX_AGE eq '62'` selected~/if`>62</option>
+						<option value="63"~if $MAX_AGE eq '63'` selected~/if`>63</option>
+						<option value="64"~if $MAX_AGE eq '64'` selected~/if`>64</option>
+						<option value="65"~if $MAX_AGE eq '65'` selected~/if`>65</option>
+						<option value="66"~if $MAX_AGE eq '66'` selected~/if`>66</option>
+						<option value="67"~if $MAX_AGE eq '67'` selected~/if`>67</option>
+						<option value="68"~if $MAX_AGE eq '68'` selected~/if`>68</option>
+						<option value="69"~if $MAX_AGE eq '69'` selected~/if`>69</option>
+						<option value="70"~if $MAX_AGE eq '70'` selected~/if`>70</option>
+						</select> </div>
+				</div>
+				
+				<div class="spacer1">&nbsp;</div>
+
+				<div class="row">
+					<div class="r1"><span id="my_height">~if $check_height eq "Y"`<font color="red"> Height:</font>~else` Height:~/if`</span></div>
+					<div class="r2">
+						<select name="Min_Height[]" class="textbox" id="minh" ~if $tieup_source eq 'ofl_prof'` onChange="data2string(document.form1)" ~/if`>
+							~$minheight`
+						</select>
+						  and 
+						 <select name="Max_Height[]" class="textbox" id="maxh" ~if $tieup_source eq 'ofl_prof'` onChange="data2string(document.form1)" ~/if`>
+							~$maxheight`
+						 </select> 
+					</div>
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+
+				<div class="row">
+					<div class="r1">Religion/Caste:</div>
+					<div class="r2">
+						<div class="lftflow0"> 
+							<select id="caste_default" name="Caste[]" size="4" multiple class="textbox" style="width:225px">
+								<option  value="All"~if $f_caste eq "1" && $d_caste eq ''`selected ~/if`>ALL</option>
+								
+								~$caste`
+							</select>
+						</div>
+
+						<div class="lftflow0 pad4">
+							<input type="button" name="Submit" value="Add &raquo;" class="tbox" onclick="add('Caste[]','Caste1[]','castevalue')" ><br><br>
+							<input type="button" name="Submit" value="&laquo; Remove" class="tbox" onclick="remove('Caste[]','Caste1[]','castevalue')"><br>
+						</div>
+
+						<div class="lftflow0">
+							<select name="Caste1[]" size="4" multiple class="textbox" style="width:225px ">
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+
+				<div class="row">
+					<div class="r1"> ~if $check_mtongue eq "Y"`<font color= "red">Mother Tongue,Community:</font>~else`Mother Tongue,Community:~/if`</div>
+					<div class="r2">
+						<div class="lftflow0">
+							<select name="Mtongue[]" size="4" multiple class="textbox" style="width:225px">
+								<option  value="All" ~if $f_mtongue eq "1"`selected ~/if`>ALL</option>~$top_mtongue` ~$mtongue`
+							</select>
+						</div>
+														     
+						<div class="lftflow0 pad4">
+							<input type="button" name="Submit" value="Add &raquo;" class="tbox"  onclick="add('Mtongue[]','Mtongue1[]','mtonguevalue')"><br><br>
+
+							<input type="button" name="Submit" value="&laquo; Remove" class="tbox" onclick="remove('Mtongue[]','Mtongue1[]','mtonguevalue')"><br>
+						</div>
+														     
+						<div class="lftflow0">
+							<select name="Mtongue1[]" size="4" multiple class="textbox" style="width:225px ">
+							</select>
+						</div>
+					</div>
+				</div>
+														     
+
+				<div class="spacer1">&nbsp;</div>
+
+				<div class="row">
+				<div class="r1"><span id="my_mstatus">~if $MARITAL_S eq "y"`<font color="red"> Marital Status:</font>~else` Marital Status:~/if`</span></div>
+					<div class="r2">
+						<input type="checkbox" name=Marital_Status1  id="ms1" value="All" ~if ( $d_mstatus eq '') && ($MARITAL_STATUS1 eq "y" || (($MARITAL_STATUS1 eq "") && ($MARITAL_STATUS2 eq "") && ($MARITAL_STATUS3 eq "") &&
+($MARITAL_STATUS4 eq "") && ($MARITAL_STATUS5 eq "") ))`checked~/if` onClick="MaritalSelected(this)">
+						All&nbsp;&nbsp;&nbsp;
+						<input type="checkbox" name=Marital_Status2  value="N" ~if $MARITAL_STATUS2 eq "y" || $d_mstatus eq 'N'`checked~/if`  onClick="MaritalSelected(this)">
+						Single&nbsp;&nbsp;&nbsp; 
+						
+<input type="checkbox" name=Marital_Status3   value="W" ~if $MARITAL_STATUS3 eq "y" || $d_mstatus eq 'W'`checked~/if` onClick="MaritalSelected(this)">
+						Widowed&nbsp;&nbsp;&nbsp;   
+   <input type="checkbox" name=Marital_Status4  value="D"~if $MARITAL_STATUS4 eq "y" || $d_mstatus eq 'D'`checked~/if` onClick="MaritalSelected(this)">
+						Divorced&nbsp;&nbsp;&nbsp;
+
+   <input type="checkbox" name=Marital_Status5  value="A"~if $MARITAL_STATUS5 eq "y" || $d_mstatus eq 'A'`checked~/if` onClick="MaritalSelected(this)">
+                                                Annulled&nbsp;&nbsp;&nbsp;
+			
+			
+					</div>
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+				<span id ="show_children">
+				<div class="row">
+					<div class="r1">~if $HAS_CHILDREN eq "y"`<font color="red">Has Children:</font>~else`Has Children:~/if`</div>
+					<div class="r2">
+						<input type="radio" name="Has_Children" value="All" ~if ($CHILDREN1 eq "y" || (!$CHILDREN1 && !$CHILDREN2 && !$CHILDREN3))`checked~/if`  ~if $tieup_source eq 'ofl_prof'` onClick="data2string(document.form1)" ~/if`>
+						Doesn't Matter &nbsp;&nbsp;&nbsp;
+						<input type="radio" name="Has_Children" value="N"~if $CHILDREN2 eq "y"`checked~/if` ~if $tieup_source eq 'ofl_prof'` onClick="data2string(document.form1)" ~/if`>No &nbsp;&nbsp;&nbsp;
+						<input type=radio  name="Has_Children" value="Y"~if $CHILDREN3 eq "y"`checked~/if` ~if $tieup_source eq 'ofl_prof'` onClick="data2string(document.form1)" ~/if`>Yes
+					</div>
+				</div>
+				</span>
+				~if $d_mstatus eq 'N'`<script>
+						
+						docF=document.form1;
+						document.getElementById("show_children").style.display='none';
+						docF.Has_Children[1].checked='true';
+						</script>
+						~/if`
+				<div class="spacer1">&nbsp;</div>
+
+				~if $FLAG eq "search" || $posted_by eq '1'`
+                                <div class="row">
+                                        <div class="r1"> Profile posted by:</div>
+                                        <div class="r2">
+						<input name="relation1" type="checkbox" value="1" ~if $relation1 eq 'Y'`checked~/if`> Self
+						<input name="relation2" type="checkbox" value="2,3"~if $relation2 eq 'Y'`checked~/if`> Parents /Siblings
+						<input name="relation3" type="checkbox" value="5"~if $relation3 eq 'Y'`checked~/if`>  Marriage Bureau
+						<input name="relation4" type="checkbox" value="4,6"~if $relation4 eq 'Y'`checked~/if`>  Others
+                                        </div>
+                                </div>
+                                ~/if`
+
+
+				<div class="spacer1">&nbsp;</div>
+				~if $def_manglik eq ''`
+				<div class="row">
+					<div class="r1"><span id="my_manglik">~if $MANGLIK_S eq "y"`<font color="red">~$Partner_Manglik` :</font>~else` ~$Partner_Manglik`:~/if`</span></div>
+					<div class="r2">
+						<input type="checkbox" name=Manglik_Status1  id='ms2' value="All" ~if  ($d_manglik eq "" || $d_manglik eq "D" ) && ($MANGLIK_STATUS1 eq "y" || (($MANGLIK_STATUS1 eq "") && ($MANGLIK_STATUS2 eq "") && ($MANGLIK_STATUS3 eq "") &&
+($MANGLIK_STATUS4 eq "")))`checked~/if` onClick="ManglikSelected(this)"> Doesn't Matter &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="checkbox" name=Manglik_Status2  value="M"~if $MANGLIK_STATUS2 eq "y" || $d_manglik eq 'M'` checked~/if` onClick="ManglikSelected(this)" >Yes &nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="checkbox" name=Manglik_Status3  value="N" ~if $MANGLIK_STATUS3 eq "y"|| $d_manglik eq 'N'`checked~/if` onClick="ManglikSelected(this)">No &nbsp;&nbsp;&nbsp;&nbsp;
+						<!--input type="checkbox" name=Manglik_Status4  value="D" ~if $MANGLIK_STATUS4 eq "y"`checked~/if` onClick="ManglikSelected(this)">Don't Know-->
+					</div>
+				</div>
+			</div>
+			~/if`
+			<!--FORM ENDS-->
+
+
+			<div class="lftflow0" style="width:100%; margin-top:20px">
+				<div class="lftflow0 o16">Lifestyle and Attributes</div>
+				<div class="spacer1 spo">&nbsp;</div>
+
+				<!--AGAIN FORM STARTS-->
+				<div class="row">
+					<div class="r1"><span id="my_diet">~if $DIET eq "y"`<font color="red"> Diet:</font>~else` Diet:~/if`</span></div>
+					<div class="r2">
+						<input type="checkbox" name="Diet1" id="d2" value="Doesnt Matter"~if $DIET1 eq "y"` checked ~elseif !($DIET2 || $DIET3 || $DIET4)` checked ~/if`onClick="DietSelected(this)"> Doesn't Matter &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="checkbox" name="Diet2" value="V"~if $DIET2 eq "y"` checked ~/if`onClick="DietSelected(this)">Veg &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="checkbox" name="Diet3" value="N"~if $DIET3 eq "y"` checked ~/if`onClick="DietSelected(this)"> Non-Veg &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="checkbox" name="Diet4" value="J"~if $DIET4 eq "y"` checked ~/if`onClick="DietSelected(this)"> Jain
+					</div>
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+				
+				<!---->
+				<div class="yrow">
+					<div class="r1">&nbsp;</div>
+					<div class="r2" id="plus_1"> 
+						<span style="cursor: pointer;"><a onclick="showHideItems('item1');"><img src="~$IMG_URL`/profile/ser4_images/adplus.gif" width="14" height="14" border="0"> More Options (Complexion, Body Type, Smoke, Drink, Handicapped)&laquo;Click Here&raquo;</a></span>
+					</div>
+
+					<div class="r2" id="minus_1">
+						<span style="cursor: pointer;"><a onclick="showHideItems('item1');"><img src="~$IMG_URL`/profile/ser4_images/adminus.gif" width="14" height="14" border="0"> Fewer Options &laquo;Click Here&raquo;</a></span>
+					</div>
+
+				</div>
+				<!---->
+				
+				<div class="spacer1">&nbsp;</div>
+
+				<div id="item1"><!--added by me-->
+				<div class="yrow">
+					<div class="r1">~if $COMPLEXION eq "y"`<font color="red">Complexion:</font>~else`Complexion:~/if`</div>
+					<div class="r2">
+						<input type="checkbox" name=Complexion1  value="Any"  ~if ($COMPLEXION1 eq "y" || (($COMPLEXION1 eq "") && ($COMPLEXION2 eq "") && ($COMPLEXION3 eq "") && ($COMPLEXION4 eq "") && ($COMPLEXION5 eq "") && ($COMPLEXION6 eq "")))` checked ~/if` onClick="ComplexionSelected(this)">
+Any&nbsp;&nbsp;&nbsp;
+						<input type="checkbox" name=Complexion2 value="1" ~if $COMPLEXION2 eq "y"` checked ~/if` onClick="ComplexionSelected(this)"> Very Fair&nbsp;&nbsp;&nbsp;
+						<input type="checkbox" name=Complexion3 value="2" ~if $COMPLEXION3 eq "y"` checked ~/if` onClick="ComplexionSelected(this)"> Fair&nbsp;&nbsp;&nbsp;
+						<input type="checkbox" name=Complexion4 value="3" ~if $COMPLEXION4 eq "y"` checked ~/if` onClick="ComplexionSelected(this)"> Wheatish&nbsp;&nbsp;&nbsp;
+						<input type="checkbox" name=Complexion5 value="4" ~if $COMPLEXION5 eq "y"` checked ~/if` onClick="ComplexionSelected(this)"> Wheatish Brown&nbsp;&nbsp;&nbsp;
+						<input type="checkbox" name=Complexion6 value="5" ~if $COMPLEXION6 eq "y"` checked ~/if` onClick="ComplexionSelected(this)"> Dark
+
+					</div>
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+
+				<div class="yrow">
+					<div class="r1">~if $BODY_T eq "y"`<font color="red">Body Type:</font>~else`Body Type:~/if`</div>
+					<div class="r2">
+						<input type="checkbox" name=Body_Type1  value="Any" ~if ($BODY_TYPE1 eq "y" || (($BODY_TYPE1 eq "") && ($BODY_TYPE2 eq "") && ($BODY_TYPE3 eq "") && ($BODY_TYPE4 eq "") && ($BODY_TYPE5 eq "")))`checked~/if` onClick="BtypeSelected(this)"> Any&nbsp;&nbsp;&nbsp;
+						<input type="checkbox" name=Body_Type2  value="1" ~if $BODY_TYPE2 eq "y"`checked~/if` onClick="BtypeSelected(this)"> Slim&nbsp;&nbsp;&nbsp;
+						<input type="checkbox" name=Body_Type3  value="2" ~if $BODY_TYPE3 eq "y"`checked~/if` onClick="BtypeSelected(this)"> Average&nbsp;&nbsp;&nbsp;
+						<input type="checkbox" name=Body_Type4  value="3" ~if $BODY_TYPE4 eq "y"`checked~/if` onClick="BtypeSelected(this)"> Athletic&nbsp;&nbsp;&nbsp;
+						<input type="checkbox" name=Body_Type5  value="4" ~if $BODY_TYPE5 eq "y"`checked~/if` onClick="BtypeSelected(this)">Heavy
+					</div>
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+
+				<div class="yrow">
+					<div class="r1">~if $SMOKE eq "y"`<font color="red">Smoke:</font>~else`Smoke:~/if`</div>
+					<div class="r2">
+						<input type="checkbox" name=Smoke1  value="Doesnt Matter" ~if ($SMOKE1 eq "y" || (($SMOKE1 eq "") && ($SMOKE2 eq "") && ($SMOKE3 eq "") && ($SMOKE4 eq "")))` checked~/if` onClick="SmokeSelected(this)">Doesn't Matter&nbsp;&nbsp;&nbsp;
+						<input type="checkbox" name=Smoke2  value="Y" ~if $SMOKE2 eq "y"` checked~/if` onClick="SmokeSelected(this)">Yes &nbsp;&nbsp;&nbsp;
+						<input type="checkbox" name=Smoke3  value="N" ~if $SMOKE3 eq "y"` checked~/if` onClick="SmokeSelected(this)">No &nbsp;&nbsp;&nbsp;
+						<input type="checkbox" name=Smoke4  value="O" ~if $SMOKE4 eq "y"` checked~/if` onClick="SmokeSelected(this)">Occassionally
+					</div>
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+
+				<div class="yrow">
+					<div class="r1"> ~if $DRINK eq "y"`<font color="red">Drink:</font>~else`Drink:~/if`</div>
+					<div class="r2">
+						<input type="checkbox" name="Drink1"  value="Doesnt Matter" ~if ($DRINK1 eq "y" || (($DRINK1 eq "") && ($DRINK2 eq "") && ($DRINK3 eq "") && ($DRINK4 eq "")))` checked~/if` onClick="DrinkSelected(this)"> Doesn't Matter&nbsp;&nbsp;&nbsp;
+						<input type="checkbox" name="Drink2"  value="Y"~if $DRINK2 eq "y"` checked~/if` onClick="DrinkSelected(this)"> Yes &nbsp;&nbsp;&nbsp;
+						<input type="checkbox" name="Drink3"  value="N"~if $DRINK3 eq "y"` checked~/if` onClick="DrinkSelected(this)"> No &nbsp;&nbsp;&nbsp;
+						<input type="checkbox" name="Drink4"  value="O"~if $DRINK4 eq "y"` checked~/if` onClick="DrinkSelected(this)"> Occassionally
+					</div>
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+
+				<div class="yrow">
+					<div class="r1">~if $HANDICAPPED eq "y"`<font color="red">Physically Challenged:</font>~else`Physically Challenged:~/if`</div>
+					<div class="r2">
+						<input type="radio" name="Handicapped" value="All"~if ($HANDICAPPED1 eq "y" || (!$HANDICAPPED1 && !$HANDICAPPED2 && !$HANDICAPPED3))`checked~/if` ~if $tieup_source eq 'ofl_prof'` onClick="data2string(document.form1)" ~/if`>
+All &nbsp;&nbsp;&nbsp;
+						<input type="radio" name="Handicapped" value="Not Handicapped"~if $HANDICAPPED2 eq "y"`checked~/if` onClick="data2string(document.form1)">Not Handicapped &nbsp;&nbsp;&nbsp;<input type="radio" name="Handicapped" value="Only Handicapped"~if $HANDICAPPED3 eq "y"`checked~/if` ~if $tieup_source eq 'ofl_prof'` onClick="data2string(document.form1)" ~/if`>Only Handicapped
+					</div>
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+				</div>
+			</div>
+			
+			<!--AGAIN FORM ENDS-->
+			<div class="lftflow0" style="width:100%; margin-top:20px">
+				<div class="lftflow0 o16">Career, Education and Location</div>
+				<div class="spacer1 spo">&nbsp;</div>
+				<!--Carrer FORM STARTS-->
+				<div class="row">
+					<div class="r1">~if $check_occupation eq "Y"`<font color="red">Occupation:</font>~else`Occupation:~/if`</div>
+					<div class="r2">
+						<div class="lftflow0">
+							<select name="Occupation[]" size="4" multiple class="textbox" style="width:225px">
+								<option  value="All" ~if $f_occupation eq "1"`selected ~/if` >ALL</option>
+								~$occupation` 
+							</select>
+						</div>
+														     
+						<div class="lftflow0 pad4">
+							<input type="button" name="Submit" value="Add &raquo;" class="tbox" onclick="add('Occupation[]','Occupation1[]','occupationvalue')"><br><br>
+							<input type="button" name="Submit" value="&laquo; Remove" class="tbox" onclick="remove('Occupation[]','Occupation1[]','occupationvalue')"><br>
+						</div>
+														     
+						<div class="lftflow0">
+							<select name="Occupation1[]" size="4" multiple class="textbox" style="width:225px ">
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+	
+				~if $SHOWINCOME neq "1"`
+				<div class="row">                                                 
+					<div class="r1">Annual Income</div>
+					<div class="r2">
+						<div class="lftflow0">
+							<select name="Income[]" size="4" multiple class="textbox" style="width:225px">
+							~$income`
+							</select>
+						</div>                                                                                                                                                                                       <div class="lftflow0 pad4">
+							<input type="button" name="Submit" value="Add &raquo;" class="tbox" onclick="add('Income[]','Income1[]','incomevalue')"><br><br>
+							<input type="button" name="Submit" value="&laquo; Remove" class="tbox" onclick="remove('Income[]','Income1[]','incomevalue')"><br>
+						</div>                                                                                                                              
+						<div class="lftflow0">
+							<select name="Income1[]" size="4" multiple class="textbox" style="width:225px ">
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+				~/if`
+
+				<div class="row">
+					<div class="r1">~if $check_education_level_new eq "Y"`<font color="red">Education Qualifications:</font>~else`Education Qualifications:~/if`</div>
+					<div class="r2">
+						<div class="lftflow0">
+							<select name="Education_Level_New[]" size="4" multiple class="textbox" style="width:225px">
+								<option value="All" ~if $f_education_new eq "1"`selected ~/if` >Doesn't Matter</option>
+								~$education_level_new`
+							</select>
+						</div>
+														     
+						<div class="lftflow0 pad4">
+							<input type="button" name="Submit" value="Add &raquo;" class="tbox" onclick="add('Education_Level_New[]','Education_Level1_New[]','education_level_new_value')"><br><br>
+							<input type="button" name="Submit" value="&laquo; Remove" class="tbox" onclick="remove('Education_Level_New[]','Education_Level1_New[]','education_level_new_value')"><br>
+						</div>
+														     
+						<div class="lftflow0">
+							<select name="Education_Level1_New[]" size="4" multiple class="textbox" style="width:225px ">
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+
+				<div class="row">
+					<div class="r1">~if $check_city eq "Y"`<font color= "red">City/State of Residence:</font>~else`City/State of Residence:~/if`</div>
+					<div class="r2">
+						<div class="lftflow0">
+							<select name="City_India[]" size="4" multiple class="textbox" style="width:225px">
+								<option value="All" ~if $f_city eq "1"`selected ~/if`>ALL</option>
+								~$city_india`
+							</select>
+						</div>
+														     
+						<div class="lftflow0 pad4">
+							<input type="button" name="Submit" value="Add &raquo;" class="tbox"  onclick="add('City_India[]','City_India1[]','city_indiavalue')"><br><br>
+							<input type="button" name="Submit" value="&laquo; Remove" class="tbox"  onclick="remove('City_India[]','City_India1[]','city_indiavalue')"><br>
+						</div>
+														     
+						<div class="lftflow0">
+							<select name="City_India1[]" size="4" multiple class="textbox" style="width:225px ">
+							</select>
+						</div>
+					</div>
+				</div>				
+
+
+				<div class="spacer1">&nbsp;</div>
+
+				<div class="row">
+					<div class="r1"> ~if $check_countryres eq "Y"`<font color= "red">Country of Residence:</font>~else`Country of Residence:~/if`</div>
+					<div class="r2">
+						<div class="lftflow0">
+							<select name="Country_Residence[]" size="4" multiple class="textbox" style="width:225px">
+								<option value="All" ~if $f_country eq "1"`selected ~/if`>ALL  </option>
+								~$country_residence`
+							</select>
+						</div>
+														     
+						<div class="lftflow0 pad4">
+							<input type="button" name="Submit" value="Add &raquo;" class="tbox"  onclick="add('Country_Residence[]','Country_Residence1[]','country_residencevalue')"><br><br>
+							<input type="button" name="Submit" value="&laquo; Remove" class="tbox"  onclick="remove('Country_Residence[]','Country_Residence1[]','country_residencevalue')"><br>
+						</div>
+														     
+						<div class="lftflow0">
+							<select name="Country_Residence1[]" size="4" multiple class="textbox" style="width:225px ">
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+
+				<!---->
+				<div class="yrow">
+					<div class="r1">&nbsp;</div>
+					<div class="r2" id="plus_2"> 
+						<span style="cursor: pointer;"><a onclick="showHideItems('item2');"><img src="~$IMG_URL`/profile/ser4_images/adplus.gif" width="14" height="14" border="0"> More Options (Education Level)&laquo;Click Here&raquo;</a> </span>
+					</div>
+
+					<div class="r2" id="minus_2">
+						<span style="cursor: pointer;"><a onclick="showHideItems('item2');"><img src="~$IMG_URL`/profile/ser4_images/adminus.gif" width="14" height="14" border="0"> Fewer Options &laquo;Click Here&raquo;</a></span>                                                 
+					</div>
+				</div>
+				<!---->
+
+				<div class="spacer1">&nbsp;</div>
+
+				<div id="item2"><!--added By me-->
+				<div class="yrow">
+					<div class="r1">~if $check_education_level eq "Y"`<font color="red">Education Level:</font>~else`Education Level:~/if`</div>
+					<div class="r2">
+						<div class="lftflow0">
+							<select name="Education_Level[]" size="4" multiple class="textbox" style="width:225px">
+								<option value="All" ~if $f_education eq "1"`selected ~/if` >Doesn't Matter </option>
+								~$education_level`
+							</select>
+						</div>
+														     
+						<div class="lftflow0 pad4">
+							<input type="button" name="Submit" value="Add &raquo;" class="tbox"  onclick="add('Education_Level[]','Education_Level1[]','education_levelvalue')"><br><br>
+							<input type="button" name="Submit" value="&laquo; Remove" class="tbox"  onclick="remove('Education_Level[]','Education_Level1[]','education_levelvalue')"><br>
+						</div>
+														     
+						<div class="lftflow0">
+							<select name="Education_Level1[]" size="4" multiple class="textbox" style="width:225px ">
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<!--div class="spacer1">&nbsp;</div>
+
+				<div class="yrow">
+					<div class="r1">~if $check_rstatus eq "Y"`<font color="red">* Residency Status:</font>~else`* Residency Status:~/if`</div>
+					 <div class="r2">
+						<div class="lftflow0">
+							<select name="Rstatus[]" size="4" multiple class="textbox" style="width:225px">
+								<option value="0" ~if $r0 eq 1` selected ~/if`>ALL</option> 
+								<option value="1" ~if $r1 eq 1` selected ~/if` >Citizen</option>
+								<option value="2" ~if $r2 eq 1` selected ~/if`>Permanent Resident</option> 
+								<option value="3" ~if $r3 eq 1` selected ~/if`>Work Permit</option> 
+								<option value="4" ~if $r4 eq 1` selected ~/if`>Student Visa</option>
+								<option value="5" ~if $r5 eq 1` selected ~/if`>Temporary Visa</option>
+							</select>
+						</div>
+														     
+						<div class="lftflow0 pad4">
+							<input type="button" name="Submit" value="Add &raquo;" class="tbox"  onclick="add('Rstatus[]','Rstatus1[]','rstatusvalue')"><br><br>
+							<input type="button" name="Submit" value="&laquo; Remove" class="tbox"  onclick="remove('Rstatus[]','Rstatus1[]','rstatusvalue')"><br>
+						</div>
+														     
+						<div class="lftflow0">
+							<select name="Rstatus1[]" size="4" multiple class="textbox" style="width:225px ">
+							</select>
+						</div>
+					</div>
+				</div-->
+				</div><!--ends-->
+				<div class="spacer1">&nbsp;</div>
+
+				~if $FLAG eq 'partner'`
+				<div class="yrow">
+					<div class="r1"><span class="edl">Desired characteristics of your spouse</span>:</div>
+					<div class="r2">
+						<div class="lftflow0">
+							<textarea name="Spouse" cols="40" rows="5" class="textbox">~$SPOUSE`</textarea>
+							<br>Each time you edit this field, it will be screened and may take up to 24 hrs to go live.
+						</div>
+						<div class="lftflow0 pad4"><br><br></div>
+						<div class="lftflow0"></div>
+					</div>
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+
+				<div class="prow">
+					~if $G eq 'F'`
+					<div style="float:left;font:normal 11px verdana,arial; color:#666666; padding:7px 0 7px 40px; width:80%"><span id="wife_work"><strong> Will you prefer a Working Life Partner?</strong></span>
+						<div class="spacer1">&nbsp;</div>
+						<div class="lftflow" style="width:20% ">
+							<input name="wife_working" type="radio" value="D" ~if $wife_working eq 'D'` checked ~/if` > Doesn't Matter 
+						</div>
+						<div class="lftflow" style="width:20% ">
+							<input name="wife_working" type="radio" value="Y" ~if $wife_working eq 'Y'` checked ~/if`>Yes 
+						</div>
+						<div class="lftflow" style="width:20% ">
+							<input name="wife_working" type="radio" value="N" ~if $wife_working eq 'N'` checked ~/if`>No 
+						</div>
+					</div>
+					~else`
+					<div style="float:left;font:normal 11px verdana,arial; color:#666666; padding:7px 0 7px 40px; width:80%"><span id="married_work"><strong> Do you plan to work after your marriage</strong></span>
+						<div class="spacer1">&nbsp;</div>
+                                                <div class="lftflow" style="width:20% ">
+							<input name="married_working" type="radio" value="D" ~if $married_working eq 'D'` checked ~/if`> Not Decided 
+						</div>
+                                                <div class="lftflow" style="width:20% ">
+							<input name="married_working" type="radio" value="Y" ~if $married_working eq 'Y'` checked ~/if`>Yes 
+						</div>
+                                                <div class="lftflow" style="width:20% ">
+							<input name="married_working" type="radio" value="N" ~if $married_working eq 'N'` checked ~/if`>No 
+						</div>
+                                        </div>
+
+					~/if`
+				</div>
+				
+				<div class="spacer1">&nbsp;</div>
+				~/if`
+
+				~if $FLAG eq "search" || $nri_cosmo eq '1'`
+				~if $nri || $cosmo`
+				<div class="prow">
+					<div class="pb">
+						 <input type="checkbox" name="nri" value="1" ~if $nri eq 1`checked~/if`>
+						 NRI Profiles 
+					</div>
+
+					<div class="pb"> 
+						<input type="checkbox" name="cosmo" value="1" ~if $cosmo eq 1`checked~/if`>Cosmopolitan Profiles
+					</div>
+				</div>
+				~/if`
+
+				<div class="spacer1">&nbsp;</div>
+
+				<div class="prow">
+					<div class="pb">
+						 <input type="checkbox" value="Y" name="Profile"~if $PROFILE2 eq "y"`checked~/if`>
+						 Show Profiles with Photos only
+					</div>
+
+					<div class="pb"><input type="checkbox" name="FRESHNESS" value="S" ~if $fresh_yes eq 1` checked ~/if`>Sort Profiles by Freshness</div>
+				</div>
+
+				~if $PERSON_LOGGED_IN eq '1'`
+				~if !$edit_mysearchid` 
+				<div class="spacer1">&nbsp;</div>
+				<div class="prow">
+					<div class="pb"><!--Save this Search as &nbsp;&nbsp;&nbsp;-->
+					<DIV id="dhtmltooltip" class="ttip"></DIV>
+					<SCRIPT language=JavaScript1.2 src="~$IMG_URL`/profile/js/~$tooltip_new_js`" type=text/javascript></SCRIPT>
+					~if $SEARCH_AGENT_CNT lt '3'`
+						<!--input type="text" name="save_search_name" class="textbox">&nbsp;-->
+						<div class="box">
+                                                Save this Search as <b>Agent</b><img src="~$IMG_URL`/profile/ser4_images/qmark.gif" onMouseover="ddrivetip('This feature allows you to save the search query and results for future reference. You can store the search as your preferred search and define a name for it.<br>For ex. Brahmin Doctors<br>When you login next - click on your saved search and the matching results will get displayed.','#FDFBE6','280')"; onMouseout="hideddrivetip()" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Agent name:
+						<input type="text" name="save_search_name" class="textbox">&nbsp;
+						<input type="hidden" name="not_edited" value=1>
+						</div>
+
+					~else`
+						<div class="box">
+						 Save this Search as <b>Agent</b><img src="~$IMG_URL`/profile/ser4_images/qmark.gif" onMouseover="ddrivetip('This feature allows you to save the search query and results for future reference. You can store the search as your preferred search and define a name for it.<br>For ex. Brahmin Doctors<br>When you login next - click on your saved search and the matching results will get displayed.','#FDFBE6','280')"; onMouseout="hideddrivetip()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Agent name: 
+						<select name="save_search_name" class="textbox">
+						<option value="">Select Saved Search</option>
+						~section name=num loop=$SEARCH_AGENT_ID`
+							<option value="~$SEARCH_AGENT_ID[num]`">~$SEARCH_AGENT_NAME[num]`</option>
+						~/section`
+						</select>
+						<input type="hidden" name="overwrite_save_search" value='1'>	
+					~/if`
+					 </div>
+				</div>			
+				~/if`
+				~/if`
+				
+				<div class="spacer1">&nbsp;</div>
+				~/if`
+<div class="yrow">
+					<div class="r1"><span class="edl">Desired characteristics of your spouse</span>:</div>
+					<div class="r2">
+						<div class="lftflow0">
+							<textarea name="Spouse" cols="40" rows="5" class="textbox">~$SPOUSE`</textarea>
+							<br>Each time you edit this field, it will be screened and may take up to 24 hrs to go live.
+						</div>
+						<div class="lftflow0 pad4"><br><br></div>
+						<div class="lftflow0"></div>
+					</div>
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+
+				<div class="prow">
+					~if $G eq 'F'`
+					<div style="float:left;font:normal 11px verdana,arial; color:#666666; padding:7px 0 7px 40px; width:6666660%"><span id="wife_work"><strong> Will you prefer a Working Life Partner?</strong></span>
+						<div class="spacer1">&nbsp;</div>
+						<div class="lftflow" style="width:20% ">
+							<input name="wife_working" type="radio" value="D" ~if $wife_working eq 'D'` checked ~/if`> Doesn't Matter 
+						</div>
+						<div class="lftflow" style="width:20% ">
+							<input name="wife_working" type="radio" value="Y" ~if $wife_working eq 'Y'` checked ~/if`>Yes 
+						</div>
+						<div class="lftflow" style="width:20% ">
+							<input name="wife_working" type="radio" value="N" ~if $wife_working eq 'N'` checked ~/if`>No 
+						</div>
+					</div>
+					~else`
+					<div style="float:left;font:normal 11px verdana,arial; color:#666666; padding:7px 0 7px 40px; width:60%"><span id="married_work"><strong> Do you plan to work after your marriage</strong></span>
+						<div class="spacer1">&nbsp;</div>
+                                                <div class="lftflow" style="width:20% ">
+							<input name="married_working" type="radio" value="D" ~if $married_working eq 'D'` checked ~/if`> Not Decided 
+						</div>
+                                                <div class="lftflow" style="width:20% ">
+							<input name="married_working" type="radio" value="Y" ~if $married_working eq 'Y'` checked ~/if`>Yes 
+						</div>
+                                                <div class="lftflow" style="width:20% ">
+							<input name="married_working" type="radio" value="N" ~if $married_working eq 'N'` checked ~/if`>No 
+						</div>
+                                        </div>
+
+					~/if`
+					 <DIV class="rightflow o16" style="color:#CC0000 " id="count1">&nbsp;</DIV>
+				
+				
+		<div class="row bluelink" style="background-color:#FFEAAB ">
+			<div class="r1" align="center">&nbsp;</div>
+			<div style="float:left; width:30%; padding-top:6px">
+				<input type="submit" name="Submit" value="Save My Detailed Profile" class="redb" style="width:200px ">
+			</div>
+			<div class="bele bluelink" style="float:left; width:40%; padding:10px 0 10px 0" align="right">
+				<a href="~$SITE_URL`/profile/inputprofile2_revamp.php?checksum=~$CHECKSUM`&Submit=1&skip_to_aboutfamily=1&id=~$ID_AFF`&gender=~$gender`&maritalstatus=~$maritalstatus`&hit_source=~$hit_source`&tieup_source=~$tieup_source`">Skip to About your family</a>
+			</div>
+		</div><div class="spacer1">&nbsp;</div>
+				
+
+			<!--Carrer FORM ENDS-->
+			</div>
+		</div>
+	</div>
+	<!--WRAPPER ENDS HERE-->
+	<!-- Need To be added WHAT DO these signs mean -->
+	<!--FOOTER STARTS HERE-->
+	
+	<!--FOOTER ENDS HERE-->
+</div>
+</form>
+<!--CONTAINER ENDS HERE-->
+	
+	<div class="spacer15">&nbsp;</div>
+	~$SMALLFOOTER`
+</div>
+</body>
+~if $d_caste neq ''`<script> document.getElementById('caste_default').value=~$d_caste`;</script>
+~/if`
+</html>

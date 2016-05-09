@@ -1,0 +1,163 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Insurance Mailer</title>
+<script language="JavaScript">
+function validate()
+{
+        var docF=document.form;
+        if((docF.First_Name.value=="")||(docF.First_Name.value=="First Name"))
+        {
+                alert("Please specify First Name");
+                return false;
+        }
+        if((docF.Surname.value=="")||(docF.Surname.value=="SurName"))
+        {
+                alert("Please specify Surname");
+                return false;
+        }
+        if(docF.Pin_Code.value=="")
+        {
+                alert("Please specify Pin Code");
+                return false;
+        }
+        return true;
+}
+</script>
+</head>
+
+<body>
+<table width="600" border="0" align="center" cellpadding="0" cellspacing="0" style="border:solid 1px #5C7579;">
+  <tr>
+    <td valign="top" bgcolor="#3B4141"><img src="http://www.ieplads.com/mailers/dedicated_Insurance_mailer/images/landing_img1.gif" alt="" width="293" height="239" /></td>
+    <td valign="top" bgcolor="#3B4141"><img src="http://www.ieplads.com/mailers/dedicated_Insurance_mailer/images/landing_img2.jpg" alt="" width="307" height="239" /></td>
+  </tr>
+~if $Done`
+<tr>
+    <td colspan="2" valign="top" style="padding:25px 10px 30px 13px;"><div style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:12px; color:#333333; line-height:18px;"><b>"Thank you for showing interest in insurance plans offered by our partners. Our<br />
+&nbsp;    partners will soon get in touch with you"</b></div></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center" valign="middle"><table width="575" border="0" align="center" cellpadding="0" cellspacing="0" style="border:solid 1px #B8CCCF;">
+      <tr>
+        <td height="31" align="left" valign="middle" background="http://www.ieplads.com/mailers/dedicated_Insurance_mailer/images/repetor_partners.jpg" bgcolor="#E1E1E1" style="border-bottom:solid 1px #A6A6A6;"><div style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:12px; color:#000000; padding-left:10px;"><b>OUR PARTNERS</b></div></td>
+
+      </tr>
+      <tr>
+        <td height="15" align="center" valign="middle"></td>
+      </tr>
+      <tr>
+        <td align="center" valign="middle"><table width="575" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td align="center"><img src="http://www.ieplads.com/mailers/dedicated_Insurance_mailer/images/Aegon_Religare.JPG" alt="" width="115" height="48" /></td>
+              <td align="center"><img src="http://www.ieplads.com/mailers/dedicated_Insurance_mailer/images/Aviva_Life_Insurance.jpg" alt="" width="129" height="45" /></td>
+
+              <td align="center"><img src="http://www.ieplads.com/mailers/dedicated_Insurance_mailer/images/MNYL.jpg" alt="" width="106" height="42" /></td>
+            </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td height="15"></td>
+      </tr>
+      <tr>
+	<tr>
+
+        <td><table width="575" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td align="center"><img src="http://www.ieplads.com/mailers/dedicated_Insurance_mailer/images/Birla_Sun_Life.GIF" alt="" width="110" height="80" /></td>
+              <td align="center"><img src="http://www.ieplads.com/mailers/dedicated_Insurance_mailer/images/Reliance_Life_Insurance.JPG" alt="" width="140" height="40" /></td>
+              <td align="center"><a href="#" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#CB0000;"><b>and many more</b></a></td>
+            </tr>
+        </table></td>
+
+      </tr>
+      <tr>
+        <td height="15"></td>
+      </tr>
+    </table></td>
+  </tr>
+~else`
+  <tr>
+    <td colspan="2" valign="top" style="padding-top:23px;">
+	<form action="http://www.jeevansathi.com/profile/capture_insurance_lead.php?profileid=~$profileid`&SOURCE=~$SOURCE`&click_source=~$click_source`" method="post" style="margin:0px; padding:0px;" name="form" onsubmit="return validate();">
+	<table width="600" border="0" cellspacing="0" cellpadding="0" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px; color:#333333; line-height:18px;">
+	<tr>
+        <td style="padding-left:12px;"><strong>We really appreciate your interest
+        </strong><br />
+
+        <br />
+Please select the type of insurance you would like to avail.</td>
+      </tr>
+      <tr>
+        <td height="12"></td>
+      </tr>
+      <tr>
+        <td><table width="600" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+
+            <td width="30" align="right"><input name="Life_Insurance" type="checkbox" value="LI" checked="checked"></td>
+            <td width="291" height="27" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:11px; padding-left:6px;">Life Insurance</td>
+            <td width="151" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:11px; padding-left:6px;">Insurance Amount</td>
+            <td width="219"><input style="width:150px; height:20px; font-size:11px; color:#333333; font-family:Verdana, Arial, Helvetica, sans-serif;" type="text" name="Insurance_Amount" value="" onkeyup="javascript:{if (isNaN(this.value)) this.value='';}" /></td>
+          </tr>
+          <tr>
+            <td width="29" align="right"><input type="checkbox" name="General_Insurance" value="GI"></td>
+            <td width="291" height="26" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:11px; padding-left:6px;">General Insurance (Health, Car, Home)</td>
+
+            <td width="151" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:11px; padding-left:6px;">&nbsp;</td>
+            <td width="219">&nbsp;</td>
+          </tr>
+        </table></td>
+      </tr>
+      
+      <tr>
+        <td style="padding:19px 5px 15px 12px;">* Please fill the mandatory fields below as they help our clients to know you and serve you more efficiently.</td>
+      </tr>
+
+      <tr>
+        <td><table width="600" border="0" cellspacing="0" cellpadding="0" style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:12px; color:#333333;">
+          <tr>
+            <td width="12">&nbsp;</td>
+            <td width="141">* First Name</td>
+            <td width="447"><input style="width:175px; height:20px; font-size:11px; color:#333333; font-family:Verdana, Arial, Helvetica, sans-serif;" type="text" name="First_Name" onblur="(this.value=='')? (this.value='First Name',this.style.color='#666666'):''" onkeyup="javascript:{if (!isNaN(this.value)) this.value='';}" onfocus="(this.value=='First Name')? (this.value='',this.style.color='#000000'):''" value="~$First_Name`"></td>
+          </tr>
+          <tr>
+	           <td colspan="3" height="8"></td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+            <td>* Surname</td>
+            <td><input style="width:175px; height:20px; font-size:11px; color:#333333; font-family:Verdana, Arial, Helvetica, sans-serif;" type="text" name="Surname" onblur="(this.value=='')? (this.value='SurName',this.style.color='#666666'):''" onkeyup="javascript:{if (!isNaN(this.value)) this.value='';}" onfocus="(this.value=='SurName')? (this.value='',this.style.color='#000000'):''" value="~$Surname`"></td>
+          </tr>
+          <tr>
+	           <td colspan="3" height="8"></td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+            <td>* Pin Code</td>
+            <td><input style="width:175px; height:20px; font-size:11px; color:#333333; font-family:Verdana, Arial, Helvetica, sans-serif;" type="text" name="Pin_Code" value="~$Pin_Code`" onkeyup="javascript:{if (isNaN(this.value)) this.value='';}" /></td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td style="padding:20px 0px 20px 230px;"><input type="submit" name="Submit" value="Submit" style="background:url(images/submit_bg.gif) repeat-x top left; width:104px; height:28px; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:13px; font-weight:bold; color:#FFFFFF; border:solid 1px #C3520A; background-color:#D26C1C;"></td>
+      </tr>
+~/if`
+  <tr>
+    <td colspan="3">
+        <div style="font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#999999; padding:15px;"><center><div style="border-top:1px solid #CCCCCC; width:560px; height:5px;"></div></center><b>Disclaimer</b><br />
+        &gt; Opting in here would imply that you are authorizing Info edge to pass on  this expression of interest to our partners and<br />
+&nbsp;&nbsp;&nbsp; this is with your consent. <br />
+
+&gt; Info edge collects this information and forwards it to our partners <br />
+&gt; Information shared would be to the extent that helps our partners to  provide you with best deals/offers in this category <br />
+&gt; No other information specific to you would be shared without your consent <br />
+&gt; Our partners can contact you through SMS/Call/email on the details that  you have provided to Info Edge</div></td>
+  </tr>
+</table></form></td>
+  </tr>
+</table>
+</body>
+</html>
+
+

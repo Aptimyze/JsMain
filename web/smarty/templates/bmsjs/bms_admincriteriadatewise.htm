@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//SoftQuad//DTD HoTMetaL PRO 4.0::19970714::extensions to HTML 4.0//EN"
+ "hmpro4.dtd">
+
+<HTML>
+  
+  <HEAD>
+    <TITLE>BMS : Campaign Management System</TITLE>
+    <LINK HREF="gifs/style.css" REL="stylesheet" TYPE="text/css">
+    <LINK rel="stylesheet" href="http://www.jeevansathi.com/jsadmin/jeevansathi.css" type="text/css">
+    <LINK rel="stylesheet" href="http://www.jeevansathi.com/profile/images/styles.css" type="text/css">
+  </HEAD>
+  
+  <BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#000000" VLINK="#000000" 
+  ALINK="#000000" LEFTMARGIN="0" TOPMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+    ~$bmsheader`
+    <DIV CLASS="text-under" STYLE="margin-left:20px;"><BR><A HREF="bms_adminmis.php?id=~$id`" TARGET="">MIS
+      Home</A> &gt;&gt; <A HREF="bms_adminbannermis.php?id=~$id`&campaignid=~$campaignid`" TARGET="">Banner details</A> &gt;&gt;
+    <A HREF="bms_criteriamis.php?id=~$id`&criteria=~$criteria`&bannerid=~$bannerid`&campaignid=~$campaignid`&bannerstartdate=~$bannerstartdate`&bannerenddate=~$bannerenddate`" TARGET="">Criteria-wise Break up</A> &gt;&gt; <B>Date-wise
+    Break up</B></DIV>
+    <DIV CLASS="text"><BR><TABLE WIDTH="100%" BORDER="0">
+      <TR>
+        <TD WIDTH="20%" ALIGN="RIGHT"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="180" HEIGHT="1"><IMG SRC="gifs/tick.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="13" HEIGHT="11">
+        </TD>
+        <TD WIDTH="80%" CLASS="text">You are currently viewing the date-wise
+        breakup of  ~$criteria` : <B>~$criteria`</B>.</TD>
+      </TR>
+    </TABLE><BR></DIV>
+    <FORM action="bms_admindatewisemis.php"><TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" 
+    ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/page-bg.gif"><IMG SRC="gifs/lt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0" HSPACE="0"></TD>
+        <TD VALIGN="MIDDLE" HEIGHT="31" WIDTH="100%"><TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" HEIGHT="31">
+          <TR>
+            <TD BACKGROUND="gifs/page-bg.gif" WIDTH="50%">&nbsp;</TD>
+            <TD WIDTH="50%" BACKGROUND="gifs/page-bg.gif" ALIGN="RIGHT"><DIV CLASS="text-under"><input type="image" name="downloaddatecriteriamis" SRC="gifs/download-icon.gif" ALT="Download" WIDTH="107" HEIGHT="23">&nbsp;&nbsp;
+            <IMG SRC="gifs/print-this-page-icon.gif" ALT="Print this page" onClick="window.print();"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="5" HEIGHT="1"></DIV></TD>
+          </TR>
+        </TABLE></TD>
+        <TD ALIGN="RIGHT" WIDTH="18" BACKGROUND="gifs/page-bg.gif"><IMG SRC="gifs/rt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+      </TR>
+    </TABLE><TABLE WIDTH="100%" BORDER="0" VSPACE="0" HSPACE="0" 
+    CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/lt-line-bg-1.gif"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></TD>
+        <TD WIDTH="100%"> <BR><DIV ALIGN="CENTER"><TABLE WIDTH="100%" BORDER="1" VSPACE="0" HSPACE="0" CELLPADDING="4" CELLSPACING="0" BORDERCOLOR="#DFDFDF" STYLE="border-collapse:collapse;">
+          <TR>
+            <TD CLASS="text" WIDTH="5%" HEIGHT="20" VALIGN="TOP" 
+            BGCOLOR="#E6EEF9"><B>S.No</B></TD>
+            <TD CLASS="text-under" WIDTH="30%" HEIGHT="20" VALIGN="TOP" 
+            BGCOLOR="#E6EEF9"><B>Date</B></TD>
+            <TD CLASS="text" WIDTH="25%" HEIGHT="20" VALIGN="TOP" 
+            BGCOLOR="#E6EEF9"><B>Impressions</B></TD>
+          </TR>
+		   ~section name=i loop=$resultarr`
+          <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">~$resultarr[i].sno`</TD>
+            <TD CLASS="text-under" HEIGHT="20" VALIGN="TOP">~$resultarr[i].date`</TD>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP">~$resultarr[i].impressions`</TD>
+          </TR>
+         
+           ~sectionelse`
+          <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP" colspan="3">No results.</TD>
+            ~/section`
+          </TR>
+        </TABLE></DIV> <BR><DIV CLASS="text"><B CLASS="red">Note : </B><BR>1.
+        You can view details for maximum 3 months at one time.<BR>2. This MIS
+        is updated once every two days.<BR><BR><BR></DIV> </TD>
+        <TD BACKGROUND="gifs/rt-line-bg-1.gif" WIDTH="18"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></TD>
+      </TR>
+    </TABLE><TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" 
+    ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/page-bg-1.gif"><IMG SRC="gifs/lt-low-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+        <TD VALIGN="MIDDLE" HEIGHT="31" BACKGROUND="gifs/page-bg-1.gif">&nbsp;</TD>
+        <TD ALIGN="RIGHT" WIDTH="18" BACKGROUND="gifs/page-bg-1.gif"><IMG SRC="gifs/lt-rt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+      </TR>
+    </TABLE>
+	<input type="hidden" name="bannerstartdate" value="~$bannerstartdate`" />
+	<input type="hidden" name="bannerenddate" value="~$bannerenddate`" />
+	<input type="hidden" name="campaignid" value="~$campaignid`" />
+	<input type="hidden" name="bannerid" value="~$bannerid`" />
+	<input type="hidden" name="startday" value="~$startday`" />
+	<input type="hidden" name="startmonth" value="~$startmonth`" />
+	<input type="hidden" name="startyear" value="~$startyear`" />
+	<input type="hidden" name="endday" value="~$endday`" />
+	<input type="hidden" name="endmonth" value="~$endmonth`" />
+	<input type="hidden" name="endyear" value="~$endyear`" />
+	<input type="hidden" name="id" value="~$id`" />
+	<input type="hidden" name="criteria" value="~$criteria`" />
+	<input type="hidden" name="criteriavalue" value="~$criteriavalue`" />
+	<input type="hidden" name="showresults" value="~$showresults`" />
+	</FORM>
+    
+   ~$bmsfooter`
+  </BODY>
+</HTML>

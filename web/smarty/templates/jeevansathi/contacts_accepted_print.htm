@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Jeevansathi</title>
+<link rel="stylesheet" type="text/css" href="css/contact_center.css" />
+<style>
+.cc .mid_strip .rgt_cont{padding-bottom:10px;}
+.green_btn{font:bold 12px Arial, Helvetica, sans-serif!important; padding:0 5px;}
+.prnt_accp_t_cur{width:779px; height:7px; background:url(~$IMG_URL`/profile/images/prnt_accp_t_b_c.png);}
+.prnt_accp_b_cur{width:779px; height:7px; background:url(~$IMG_URL`/profile/images/prnt_accp_t_b_c.png) 0 -7px;}
+.rgt_cont{width:751px!important;}
+.y_tpl{width:743px;}
+.y_tpl .info{width:710px;}
+h6.breakhere {page-break-before: always}
+</style>
+</head>
+<body>
+~$REVAMP_HEAD`
+<div class="sp16"></div>
+<div style="width:799px;margin:auto">
+	<div class="cc">
+		<div class="fl t18 d_inl black" style="margin-left:5px;">~$TITLE`</div> 
+		<input type="button" class="green_btn fl" value="Print" style="margin-left:125px;" onclick="javascript:window.print();"/>
+		<div class="sp2"></div>
+		<div class="prnt_accp_t_cur fl f_2"> </div>
+		<div class="mid_strip fl" style="background:url(~$IMG_URL`/profile/images/prnt_acc_mid_strip.gif) repeat-y; width:779px;">
+			<div class="rgt_cont fr d_inl">
+				<div class="sp12"> </div>
+				~assign var="tab" value=0`
+				~section name="tr1" start=0 loop=$length`
+				~assign var="finalval" value=$tab`
+				~if $CONTACTS_ARR[$finalval].PROFILEID neq ''`
+				~assign var="cur_pid" value=$CONTACTS_ARR[$finalval].PROFILEID`
+
+				<div class="y_tpl fl p_rel"> <b class="wh_8_22 y_t_l p_abs t0 l0 sprt_cn_ctr"></b> <b class="wh_8_22 y_t_r p_abs t0 r0 sprt_cn_ctr"></b> <b class="wh_5 y_b_l p_abs b0 l0 sprt_cn_ctr"></b> <b class="wh_5 y_b_r p_abs b0 r0 sprt_cn_ctr"></b>
+					<p class="y_tpl_bg sprt_cn_ctr"><b class="red fl">~$CONTACTS_ARR[$finalval].NAME`</b></p>
+					<div class="info mar_top_6 p_rel">
+						<div class="img_cont"> ~$CONTACTS_ARR[$finalval].MY_PHOTO`</div>
+						<div class="spec b black"> 
+							~$CONTACTS_ARR[$finalval].SMALL_TAG`
+						</div>
+						~$CONTACTS_ARR[$finalval].CONTACT_GADGET`
+					</div>
+					<div class="clr"> </div>
+				</div>
+				<div class="sp12"> </div>
+				~/if`
+				~assign var="tab" value=$tab+1`
+				~/section`				
+				<h6 class="breakhere"></h6>
+				<div class="clr"></div>
+			</div>
+			<div class="sp12"></div>
+			<div class="prnt_accp_b_cur f_2 fr"></div>      
+		</div>
+	</div>
+	<div class="sp16"></div>
+	<div align="center">
+		<input type="button" class="green_btn" onclick="javascript:window.print();" value="Print"/>
+	</div>
+	<div class="sp16"></div>
+	<div align="center">
+		<a href="http://www.naukri.com"><img src="~$IMG_URL`/profile/images/naukri_btn.gif" border="0" style="margin-bottom:15px;" /></a><br />
+		Copyright &copy; ~$smarty.now|date_format:"%Y"` Jeevansathi Internet Services
+	</div>
+</div>
+</body>
+</html>

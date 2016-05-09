@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Payment Collection Status</title>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <link rel="stylesheet" href="99acres.css" type="text/css">
+  <link rel="stylesheet" href="styles.css" type="text/css">
+<script language="javascript">
+function toggle()
+{
+	var base=document.search;
+	var base_emp=document.search['employee[]']
+	var base_branch=document.search['branch[]']
+	if(base.show[0].checked)
+	{
+		base_emp.disabled=true;
+		base_branch.disabled=false;
+	}
+	else
+	{
+		base_branch.disabled=true;
+		base_emp.disabled=false;
+	}
+}
+</script>
+
+</head>
+<center>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<center>
+
+<h3> <font color="green"> Collection Status </font> </h3>
+</center>
+<br>
+<form name="search" method="post" action="offline_collection_status.php">
+<input type="hidden" name="cid" value="~$cid`">
+<table border=0 cellspacing=0 cellpadding=0 width="80%">
+<!--
+<tr>
+	<td>Show details of receipts received only within the specified date range</td>
+	<td><input type="checkbox" name="details" value="Y" checked></td>
+</tr>
+-->
+<tr ><td colspan="3" >&nbsp;</td></tr>
+<tr >
+	<td width="20%" class="label">Date range </td><td class="fieldsnew">From:&nbsp;&nbsp;&nbsp;&nbsp; 
+	<select name=day>
+                        ~section name=sec loop=$ddarr`
+                        <option value="~$ddarr[sec]`">~$ddarr[sec]`</option>
+                        ~/section`
+                </select> -
+                <select name=month>
+                        ~section name=sec loop=$mmarr`
+                        <option value="~$mmarr[sec]`"~if $mm eq $mmarr[sec]`selected ~/if`>~$mmarr[sec]`</option>
+                        ~/section`
+                </select> -
+                <select name=year>
+                        ~section name=sec loop=$yyarr`
+                        <option value="~$yyarr[sec]`"~if $yy eq $yyarr[sec]`selected ~/if`>~$yyarr[sec]`</option>
+                        ~/section`
+                </select>
+	
+	<td class="fieldsnew">To&nbsp;&nbsp;&nbsp;&nbsp; : <select name=day2>
+                        ~section name=sec loop=$ddarr`
+                        <option value="~$ddarr[sec]`" ~if $dt eq $ddarr[sec]`selected ~/if`>~$ddarr[sec]`</option>
+                        ~/section`
+                </select> -
+                <select name=month2>
+                        ~section name=sec loop=$mmarr`
+                        <option value="~$mmarr[sec]`"~if $mm eq $mmarr[sec]`selected ~/if`>~$mmarr[sec]`</option>
+                        ~/section`
+                </select> -
+                <select name=year2>
+                        ~section name=sec loop=$yyarr`
+                        <option value="~$yyarr[sec]`"~if $yy eq $yyarr[sec]`selected ~/if`>~$yyarr[sec]`</option>
+                        ~/section`
+                </select>
+
+	</td>
+</tr>
+<tr><td colspan="2">&nbsp;</td></tr>
+
+<tr>
+<td class="label">Collection Status</td>
+<td class="fieldsnew"><select name="collection_status"><option value="A" selected>All</option><option value="P"> New</option><option value='Y'> Collected </option></select></td></tr>
+<tr><td colspan="2">&nbsp;</td></tr>
+
+<tr>
+	<td class="label">Collection (Receipt) Amount</td>
+	<td class="fieldsnew"> <input type="radio" name="currency" value="inr">INR <input type="radio" name="currency" value="usd">USD <input type="radio" name="currency" value="" checked>Both</td>
+</tr>
+
+<tr><td colspan="2">&nbsp;</td></tr>
+                                                                                                 
+<tr>
+        <td class="label"> Collection Source</td>
+        <td class="fieldsnew">
+		<select name="mode[]" multiple size=4>
+			<option value="CASH" selected>Cash</option>
+			<option value="CHEQUE">Cheque/DD</option>
+			<option value="CCOFFLINE">CCOFFLINE</option>
+			<option value="ONLINE">ONLINE</option>
+			<option value="BANK_TRSFR_CHQ">Bank Transfer Cheque</option>
+			<option value="BANK_TRSFR_CASH">Bank Transfer Cash</option>
+			<option value="BANK_TRSFR_ONLINE">Bank Transfer Online</option>
+			<option value="EB_CASH">Easy Bill Cash</option>
+			<option value="EB_CHEQUE">Easy Bill Cheque</option>
+			<option value="ALL_CASH">All Cash</option>
+			<option value="ALL_CHEQUE">All Cheque</option>
+			<option value="ALL_ONLINE">All Online</option>
+			<option value="" >All</option>
+		</select>
+	</td>
+</tr>
+
+<tr><td colspan="2">&nbsp;</td></tr>
+
+<tr>
+        <td class="label"> Specific to</td>
+        <td class="fieldsnew"> <input type="radio" name="show" value="branch" checked ~ if $from_tds neq "Y"` Onclick="toggle();" ~/if` >Branch ~ if $from_tds neq "Y"`<input type="radio" name="show" value="emp" onclick="toggle();">Employee ~/if`</td>
+</tr>
+<tr>
+	<td class="label">Deposit Branch :</td>
+	<td class="fieldsnew"><select name="branch[]" multiple size=4><option value="All" selected>All</option>~section name=sec loop=$branch` <option value="~$branch[sec]`" >~$branch[sec]`</option>
+                        ~/section`
+</select></td>
+</tr>
+<tr>
+        <td class="label"> Employee(s) </td>
+        <td class="fieldsnew"> <select name="employee[]" multiple size=4 disabled><option value="All" selected>All</option>~section name=sec loop=$employee` <option value="~$employee[sec]`" >~$employee[sec]`</option>
+                        ~/section`
+</select></td>
+</tr>
+<tr><td colspan="2">&nbsp;</td></tr>
+
+
+<tr>
+        <td class="label"> Sort by </td>
+        <td class="fieldsnew"> <select name="sort" ><option value="Branch" selected>Branch</option><option value="Employee">Employee</option><option value="Mode">Mode</option></select></td>
+</tr>
+<tr><td colspan="2">&nbsp;</td></tr>
+~if $admin eq 'Y'`
+<tr>
+	<td>Show All Branches/Employees(including Regions handled by others)</td>
+	<td><input type="checkbox" name="showall" value="Y"></td>
+</tr>
+~/if`
+<tr><td colspan="2">&nbsp;</td></tr>
+<tr><td colspan="2" align="center" class="label"><input type="submit" name="CMDGo" value="Search"></td></tr>
+<tr><td colspan="2">&nbsp;</td></tr>
+<tr><td colspan="2">&nbsp;</td></tr>
+</table>
+</form>
+</body>
+</html>
+

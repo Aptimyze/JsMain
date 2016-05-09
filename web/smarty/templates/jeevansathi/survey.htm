@@ -1,0 +1,197 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jeevansathi Customer Survey</title>
+<style type="text/css">
+.roundcont { width:400px; background-color: #EF9429;color: #ffffff; font:normal 11px verdana,Arial;}
+.roundtop { background: url(~$IMG_URL`/profile/ser4_images/otr.gif) no-repeat top right; }
+.roundbottom {background: url(~$IMG_URL`/profile/ser4_images/obr.gif) no-repeat top right; }
+img.corner {width: 4px;height: 4px;border: none;display: block !important;}
+.con{background-color:#FFFFFF; margin:0px 4px 0px 4px; padding:10px 10px 15px 10px}
+.ico{float:left; color:#000000; margin-right:10px; width:22px}
+.txt{float:left;color:#000000; width:280px;}
+.textbox {FONT-SIZE: 10px; FONT-FAMILY: verdana,Arial}
+.textbox_l {FONT-SIZE: 9px; FONT-FAMILY: verdana,Arial}
+.txtg{float:left;color:#959595; width:280px;}
+.fg{font:normal 10px verdana,Arial; color:#3BBA77;}
+cstbx2 {
+        PADDING-RIGHT: 0px; PADDING-LEFT: 0px; FLOAT: left; PADDING-BOTTOM: 0px; MARGIN: 0px 0px 0px; FONT: 11px verdana,Arial; WIDTH: 98%; COLOR: #000000; PADDING-TOP: 0px
+}
+.orgbgbox {BORDER-RIGHT: #EF9429 1px solid; PADDING-RIGHT: 0px; BORDER-TOP: #EF9429 1px solid; MARGIN-TOP: 15px; PADDING-LEFT: 5px; FLOAT: left; PADDING-BOTTOM: 2px; FONT: 11px verdana,Arial; BORDER-LEFT: #EF9429 1px solid; WIDTH: 95%; PADDING-TOP: 2px; BORDER-BOTTOM: #EF9429 1px solid; BACKGROUND-COLOR: #EF9429
+}
+.orgbox {BORDER-RIGHT: #EF9429 1px solid; PADDING-RIGHT: 0px; BORDER-TOP: #EF9429 1px solid; PADDING-LEFT: 5px; BACKGROUND: #FFFAC4; FLOAT: left; PADDING-BOTTOM: 5px; FONT: 11px verdana,Arial; BORDER-LEFT: #EF9429 1px solid; WIDTH: 95%; PADDING-TOP: 5px; BORDER-BOTTOM: #EF9429 1px solid}
+
+.bluel A {COLOR: #003498; TEXT-DECORATION: none}
+.bluel A:visited {COLOR: #003498; TEXT-DECORATION: none}
+.y{background-color:#FEFF9F;}
+.y_b_l {background: url(~$IMG_URL`/profile/ser4_images/y_b_l.gif) 0 100% no-repeat}
+.y_b_r {background: url(~$IMG_URL`/profile/ser4_images/y_b_r.gif) 100% 100% no-repeat}
+.y_t_l {background: url(~$IMG_URL`/profile/ser4_images/y_t_l.gif) 0 0 no-repeat}
+.y_t_r {background: url(~$IMG_URL`/profile/ser4_images/y_t_r.gif) 100% 0 no-repeat; padding:3px}
+.y_top {background: url(~$IMG_URL`/profile/ser4_images/y_dot.gif) 0 0 repeat-x; width: 100%;}
+.y_bot {background: url(~$IMG_URL`/profile/ser4_images/y_dot.gif) 0 100% repeat-x}
+.y_lft {background: url(~$IMG_URL`/profile/ser4_images/y_dot.gif) 0 0 repeat-y}
+.y_rgt {background: url(~$IMG_URL`/profile/ser4_images/y_dot.gif) 100% 0 repeat-y}
+.gx{ background-color:#D6CFB5; border:1px solid #D6CFB5; padding:2px 0px 2px 5px; font:normal 11px verdana,Arial; width:100%; float:left;}
+.gxin{border:1px solid #D6CFB5; padding:5px 0 5px 5px; font:normal 11px verdana,Arial; width:100%; float:left;}
+.cl{width:100%;border:1px solid #D5CEB7; background-color:#F7F7F7}
+.nw1{float:left;width:23%;}
+.nw2{float:left;width:76%;}
+</style>
+</head>
+<script language="javascript">
+function validate()
+{
+	var flag=0;
+	var s;
+	for(var i=0;i<document.survey.elements.length;i++)
+	{
+		if(document.survey.elements[i].type=="textarea")
+		{
+			s=document.survey.elements[i].value;
+			if(s.length>1000)
+			{
+				alert("Length of your answer cannot exceed 1000 characters!");
+				document.survey.elements[i].focus();
+				return false;
+			}
+			
+		}
+	}
+	return true;
+}
+function checklayer()
+{
+	~if $layer eq '1'`
+	void testWipe('in top');
+	~/if`
+}
+</script>
+<body onload="javascript: checklayer();">
+<SCRIPT type=text/javascript language="JavaScript" SRC="~$IMG_URL`/profile/js/~$conf_layer_js`"></SCRIPT>
+                                <script src="~$IMG_URL`/profile/js/~$dw_core_js`" type="text/javascript"></script>
+                                <script src="~$IMG_URL`/profile/js/~$dw_clip_js`" type="text/javascript"></script>
+                                <script src="~$IMG_URL`/profile/js/~$dw_wipes_js`" type="text/javascript"></script>
+				
+
+                                <DIV id=TipLayer3
+                                style="border: 3px solid #b4bd62; position:absolute; left:120px; top:330px; Z-INDEX: 1500; VISIBILITY: hidden; BORDER:#B5AE7C 3px solid "></DIV>
+                                <DIV id=TipLayer4
+                                style="background-color=#ffe5cc; BORDER:#B5AE7C 3px solid; Z-INDEX: 2000;  VISIBILITY: hidden; POSITION: absolute;left:120px; top:330px;"></DIV>
+                                <DIV id=TipLayer5
+                        style="background-color=#ffe5cc; BORDER:#B5AE7C 3px solid; Z-INDEX: 2000; VISIBILITY: hidden; POSITION: absolute ; LEFT:120px ;TOP: 330px"></DIV>
+                                <DIV id=outerDiv style=" background-color=#000000; BORDER:#000000 0px solid; Z-INDEX: 3000; VISIBILITY: hidden; POSITION: absolute; LEFT:120px ;TOP: 330px">
+                                        <div class="roundcont">
+                                                <div class="roundtop"><img src="~$IMG_URL`/profile/ser4_images/otl.gif" alt="" width="4" height="4" class="corner" style="display: none" /></div>
+                                                <div class="con bluelink">
+                                                        <div align="right"><img src="~$IMG_URL`/profile/ser4_images/ocross.gif"onClick="close_layer();"></div>
+                                                        <div style="line-height:1px; clear:both ">&nbsp;</div>
+                                                        <div class="ico"><img src="~$IMG_URL`/profile/ser4_images/layer_tick.gif" width="22" height="22"></div>
+                                                        <div class="txt">Thank your for your time. We value your feedback and will work towards fulfilling your needs</div>
+							
+                                                        <div style="clear:both; line-height:5px ">&nbsp;</div>
+                                                        <div><img src="~$IMG_URL`/profile/ser4_images/logo_layer.gif" width="119" height="26"></div>
+                                                </div>
+                                                <div class="roundbottom"><img src="~$IMG_URL`/profile/ser4_images/obl.gif" alt="" width="4" height="4" class="corner" style="display: none" /></div>
+                                        </div>
+                                </div>
+
+
+<table width="760"  border="1" cellspacing="0" cellpadding="0" align="center" style="font:normal 12px verdana,arial ">
+  <tr>
+    <td>
+
+
+<table width="740"  border="0" align="center"  cellpadding="6" cellspacing="0" style=" border-bottom:2px solid #cccccc">
+  <tr>
+    <td width="215"><img src="~$IMG_URL`/profile/ser4_images/Matrimonial.gif"></td>
+    <td width="521" style="font:normal 22px verdana,arial; color:#666666">Survey</td>
+  </tr>
+</table>
+<br>
+<form name="survey" action="survey.php" method="post">
+~if $empty`
+<table width="740" border="0" align="center" cellpadding="6" cellspacing="0">
+<tr><td><font color="red">Please complete the questionnaire before submission!</font></td></tr>
+</table>
+<br>
+~/if`
+<table width="740"  border="0" align="center"  cellpadding="6" cellspacing="0">
+  <tr>
+    <td>1. What are the top 3 things you like about Jeevansathi?</td>
+  </tr>
+~if $1long eq "1"`
+<tr>
+	<td><font color="red">Answer cannot exceed 1000 characters!</font></td>
+</tr>
+~/if`
+  <tr>
+    <td><textarea name="ques1" cols="50" rows="5">~$ques1`</textarea></td>
+  </tr>
+</table>
+<br>
+<table width="740"  border="0" align="center" cellpadding="6" cellspacing="0">
+  <tr>
+    <td>2. What are the things you would want Jeevansathi to change/improve on immediately?</td>
+  </tr>
+~if $2long eq "1"`
+<tr>
+        <td><font color="red">Answer cannot exceed 1000 characters!</font></td>
+</tr>
+~/if`
+
+  <tr>
+    <td><textarea name="ques2" cols="50" rows="5">~$ques2`</textarea></td>
+  </tr>
+</table>
+<br>
+<table width="740"  border="0" align="center"  cellpadding="6" cellspacing="0">
+  <tr>
+    <td>3. Are you satisfied with the level of understanding we displayed about your religion, community, and caste? Do you think that we left asking anything important about these?</td>
+  </tr>
+~if $3long eq "1"`
+<tr>
+        <td><font color="red">Answer cannot exceed 1000 characters!</font></td>
+</tr>
+~/if`
+
+  <tr>
+    <td><textarea name="ques3" cols="50" rows="5">~$ques3`</textarea></td>
+  </tr>
+</table>
+<br>
+<table width="740"  border="0" align="center"  cellpadding="6" cellspacing="0">
+  <tr>
+    <td>4. Apart from common criteria already provided like Caste, Community, Age, Height, Marital Status, City, etc., what are the other criteria that you&rsquo;d want to use in search and you feel weren&rsquo;t provided?</td>
+  </tr>
+~if $4long eq "1"`
+<tr>
+        <td><font color="red">Answer cannot exceed 1000 characters!</font></td>
+</tr>
+~/if`
+
+  <tr>
+    <td><textarea name="ques4" cols="50" rows="5">~$ques4`</textarea></td>
+  </tr>
+</table>
+<br>
+<table width="740"  border="0" align="center"  cellpadding="6" cellspacing="0">
+  <tr>
+    <td><div align="center">
+      <input type="hidden" name="profileid" value="~$PROFILEID`">
+      <input type="submit" name="submit" value="Submit Survey" onclick="return validate();">
+    </div></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+</form>
+</td>
+  </tr>
+</table>
+
+</body>
+</html>

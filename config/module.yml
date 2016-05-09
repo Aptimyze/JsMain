@@ -1,0 +1,6 @@
+default: # For all environments
+ enabled:            true
+ is_internal:        false
+ view_class:         sfSmarty
+ partial_view_class: sfSmarty
+

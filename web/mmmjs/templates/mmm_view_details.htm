@@ -1,0 +1,296 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="http://www.jeevansathi.com/profile/images/styles.css" type="text/css">
+<link rel="stylesheet" href="http://www.jeevansathi.com/jsadmin/jeevansathi.css" type="text/css"><style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+                                                                                                 
+                                                                                                 
+<title>
+  MMMJS View Details 
+</title>
+<script language="JavaScript">
+function show_spec(obj,URL)
+{
+	var tempname= obj.options[obj.selectedIndex].value;	
+	URL=URL+"&flag=change&tempname1="+tempname;
+	window.location.href = URL;
+}
+</script>
+</head>
+<body>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="http://www.jeevansathi.com/profile/images/logo.gif" width="269" height="82" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+
+<tr><td colspan="4" align="center"><h2>Welcome to<br> Mass Mailer Management Sytem<br><span class=red >>>>&nbsp;&nbsp;View Completed Mail Details &nbsp;&nbsp;>>></h2><br><br></td></tr>
+</tbody>
+</table>
+
+
+
+<br>
+<br>
+
+
+<form name="form1" method="post" action="mmm_activate_template.php?cid=~$cid`&mailer_id=~$mailer_id`&tempname1=~$tempname1`">
+<input type="hidden" name="cid" value="~$cid`">
+<input type="hidden" name="mailer_id" value="~$mailer_id`">
+
+<table width="90%" border="0" cellspacing="2" cellpadding="0" align="center">
+
+<tr>
+<td width="49%" class="label" bgcolor="#F9F9F9" ><b>Name Of Mailer</b>
+</td>
+<td class=fieldsnew>
+~$mailer_name`
+</td>
+</tr>
+
+<tr>
+<td width="49%" class="label" bgcolor="#F9F9F9" ><b>Name Of Client</b>
+</td>
+<td class=fieldsnew>
+~$client_name`
+</td>
+</tr>
+                                                                                                 
+<tr>
+<td width="49%" class="label" bgcolor="#F9F9F9" ><b>Type Of Mailer</b>
+</td>
+<td class=fieldsnew>
+~$mail_type`
+</td>
+</tr>
+                                                                                                 
+<tr>
+<td width="49%" class="label" bgcolor="#F9F9F9" ><b>Sub Query Of Mailer</b>
+</td>
+<td class=fieldsnew>
+~$sub_query`
+</td>
+</tr>
+                                                                                                 
+<tr>
+<td width="49%" class="label" bgcolor="#F9F9F9" ><b>Response Type </b>
+</td>
+<td class=fieldsnew>
+~$response_type`
+</td>
+</tr>
+                                                                                                 
+<tr>
+<td width="49%" class="label" bgcolor="#F9F9F9" ><b>State</b>
+</td>
+<td class=fieldsnew>
+~$state`
+</td>
+</tr>
+                                                                                                 
+<tr>
+<td width="49%" class="label" bgcolor="#F9F9F9" ><b>Period Of Stay</b>
+</td>
+<td class=fieldsnew>
+~$period_of_stay`
+</td>
+</tr>
+                                                                                                 
+<tr>
+<td width="49%" class="label" bgcolor="#F9F9F9" ><b>City Of Mailer</b>
+</td>
+<td class=fieldsnew>
+~$city`
+</td>
+</tr>
+                                                                                                 
+<tr>
+<td width="49%" class="label" bgcolor="#F9F9F9" ><b>Test</b>
+</td>
+<td class=fieldsnew>
+~$test`
+</td>
+</tr>
+                                                                                                 
+<tr>
+<td width="49%" class="label" bgcolor="#F9F9F9" ><b>Retest</b>
+</td>
+<td class=fieldsnew>
+~$retest`
+</td>
+</tr>
+                                                                                                 
+<tr>
+<td width="49%" class="label" bgcolor="#F9F9F9" ><b>Server 1 Start Fire</b>
+</td>
+<td class=fieldsnew>
+~$s1_fire`
+</td>
+</tr>
+                                                                                                 
+<tr>
+<td width="49%" class="label" bgcolor="#F9F9F9" ><b>Server 2 Start Fire</b>
+</td>
+<td class=fieldsnew>
+~$s2_fire`
+</td>
+</tr>
+                                                                                                 
+<tr>
+<td width="49%" class="label" bgcolor="#F9F9F9" ><b>Server 1 Fired</b>
+</td>
+<td class=fieldsnew>
+~$s1_fired`
+</td>
+</tr>
+                                                                                                 
+<tr>
+<td width="49%" class="label" bgcolor="#F9F9F9" ><b>Server 2 Fired</b>
+</td>
+<td class=fieldsnew>
+~$s2_fired`
+</td>
+</tr>
+
+
+<tr>
+<td width="49%" class="label" bgcolor="#F9F9F9" ><b>Stop</b>
+</td>
+<td class=fieldsnew>
+~$stop`
+</td>
+</tr>
+                                                                                                 
+<tr>
+<td width="49%" class="label" bgcolor="#F9F9F9" ><b>Sent</b>
+</td>
+<td class=fieldsnew>
+~$sent`
+</td>
+</tr>
+                                                                                                 
+<tr>
+<td width="49%" class="label" bgcolor="#F9F9F9" ><b>Deleted</b>
+</td>
+<td class=fieldsnew>
+~$del`
+</td>
+</tr>
+</table>
+
+<table width="90%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tr>
+<td class=label><b>View Other Templates For this mailer</b>
+</td>
+                                                                                                 
+<td bgcolor="#ffffcc" class=fieldsnew>
+
+
+~if $show_activate eq N`
+
+<select name="tempname1" onChange="show_spec(this,'mmm_view_details.php?cid=~$cid`&mailer_id=~$mailer_id`&show_template=N');">
+~else`
+
+<select name="tempname1" onChange="show_spec(this,'mmm_view_details.php?cid=~$cid`&mailer_id=~$mailer_id`');">
+~/if`
+
+
+        <option value='' selected> Select a template name</option>
+        ~section name=index loop=$arr`
+        <option value="~$arr[index].template_name`" ~if $arr[index].template_name eq $tempname1` selected ~/if`>~$arr[index].template_name`</option>
+        ~/section`
+</select>
+</td>
+~if $mail_type eq tpm`
+<td class=label>
+<a href="mmm_template_mail_add.php?cid=~$cid`&mailer_id=~$mailer_id`">Add template</a>
+</td>
+~elseif $mail_type eq hcm`
+<td class=label>
+<a href="mmm_hardcode_mail_add.php?cid=~$cid`&mailer_id=~$mailer_id`">Add harcode template</a>
+</td>
+~elseif $mail_type eq urm`
+<td class=label>
+<a href="mmm_url_mail_add.php?cid=~$cid`&mailer_id=~$mailer_id`">Add url template</a>
+</td>
+~/if`
+</tr>
+</table>       
+                                                                                          
+
+<table width="90%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tr>
+<td class="headbigblack"><b>Present Mailer Specifications </b></td>
+</tr>
+                                                                                                 
+<tr class="bgred">
+<br>
+<td height="1"></td>
+<SPACER height="1" type="block"></SPACER>
+</tr>
+</table>
+
+
+<table width="90%" border="0" cellspacing="2" cellpadding="0" align="center">
+<tr>
+<td width="49%" class="label" bgcolor="#F9F9F9" ><b>From</b>
+</td>
+<td class=fieldsnew>
+~$f_email`
+</td>
+</tr>
+
+<tr>
+<td width="49%" class="label" bgcolor="#F9F9F9" ><b>Subject</b>
+</td>
+<td class=fieldsnew>
+~$subject`
+</td>
+</tr>
+
+<tr>
+<td width="49%" class="label" bgcolor="#F9F9F9" ><b>Template</b>
+</td>
+</tr>
+                                                                                                 
+
+
+
+</table>
+
+
+<table width="90%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tr class="bgred">
+<br>
+<td height="1"></td>
+<SPACER height="1" type="block"></SPACER>
+</tr>
+</table>
+
+~if $show_activate eq N`
+~else`
+<input type=submit name="activate" value="activate" align="center">
+~/if`
+</form>
+~$data`
+
+
+<table width="90%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tr class="bgred">
+<br>
+<td height="1"></td>
+<SPACER height="1" type="block"></SPACER>
+</tr>
+</table>
+
+
+                                                                                                 
+</tbody>
+</table>
+</body>
+</html>

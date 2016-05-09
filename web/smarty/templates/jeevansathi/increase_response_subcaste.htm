@@ -1,0 +1,191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<title>Jeevansathi Matrimonials- Update my religion and community </title>
+<link rel="stylesheet" href="css/~$comm_style_css`" type="text/css">
+<style type="text/css">
+.pghd{float:left; width:99% }
+.r14{float:left;font:bold 14px verdana,Arial; color:#CC0000; padding-top:5px}
+.co1{float:left; width:20%;padding:2px }
+.co2{float:left; width:50%; padding:2px}
+</style>
+<script language="javascript">
+<!--
+function MM_openBrWindow1(theURL,winName,features)
+{
+window.open(theURL,winName,features);
+}
+                                                                                                                             
+function validate()
+{
+        if(document.getElementById)
+        {
+                document.getElementById('caste_span').style.color="#000000";
+                document.getElementById('mtongue_span').style.color="#000000";
+        }
+                                                                                                                             
+        var docF=document.form1;
+                                                                                                                             
+        if(docF.Caste.value=="")
+        {
+                alert("Please specify Caste");
+                if(document.getElementById)
+                        document.getElementById('caste_span').style.color="red";
+                docF.Caste.focus();
+                return false;
+        }
+                                                                                                                             
+        if(docF.Caste.value==0)
+        {
+                alert("Caste and Religion Can't be Same");
+                if(document.getElementById)
+                        document.getElementById('caste_span').style.color="red";
+                docF.Caste.focus();
+                return false;
+        }
+	 if(docF.Mtongue.value=="")
+        {
+                alert("Please specify Community");
+                if(document.getElementById)
+                document.getElementById('mtongue_span').style.color="red";
+                docF.Mtongue.focus();
+                return false;
+        }
+}
+                                                                                                                             
+//-->
+</script>
+<script language=JavaScript1.2 type=text/javascript>
+<!--
+var edulist=new Array(); var occlist=new Array();
+var incomelist=new Array();
+var count=new Array(); var eduvalue=new Array();
+var occvalue=new Array(); var incomevalue=new Array();
+var checkededu=''
+var checkedoccupation=''
+var checkedincome=''
+var checkedincomelabel=''
+//-->
+</SCRIPT>
+                                                                                                                             
+<SCRIPT language=JavaScript1.2 src="http://ser4.jeevansathi.com/profile/js/~$multiselect_clustering_js`"
+type=text/javascript></SCRIPT>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+
+
+<body>
+<DIV id="dhtmltooltip" class="ttip"></DIV>
+<SCRIPT language=JavaScript1.2 src="~$IMG_URL`/profile/js/~$tooltip_new_js`" type=text/javascript></SCRIPT>
+<div id="container">
+<div id="container">
+	<!--HEADER STARTS-->
+        ~$HEAD`
+        <!--HEADER ENDS-->
+                                                                                                                             
+        <!--WRAPPER STARTS HERE-->
+        <div id="wrapper">
+                <!--LEFT PANNEL STARTS HERE-->
+                ~$LEFTPANEL`
+                <!--LEFT PANNEL ENDS HERE-->
+
+		<!--CENTER STARTS HERE-->
+		<div id="center">
+			~if $NO_OF_ERROR`
+			<font color="red">&nbsp;&nbsp;&nbsp;&nbsp;There are ~$NO_OF_ERROR` Error(s) in your form. They are marked in red. Please correct them and submit the form again</font><br>
+			~/if` 
+			<form action="/profile/increase_response_subcaste.php" method="post" name="form1" onsubmit="return validate();">
+			<div class="pghd">
+				<div class="r14"><img src="images/icon_chpass.gif" width="14" height="14"> Update your caste</div>
+				<div class="rightflow bele bluelink" align="right" style="padding-top:3px "><a href="/P/mainmenu.php?checksum=~$CHECKSUM`">Skip to my Jeevansathi &raquo;</a></div>
+				<div class="spacer1">&nbsp;</div>
+				<div class="spacer15" style="border-top:1px solid #000000; margin-top:5px;" >&nbsp;</div>
+				<div class="greyele bluelink">Dear Member ~$username`,<br>
+				Everyday - more than 80% of searches on jeevansathi are done on caste / community.
+				To increase more response to your profile, complete the following information:
+				</div>
+			</div>
+
+			<div class="space15">&nbsp;</div>
+
+			<br><br><br><br><br>
+
+			<div style="float:left; width:100%">
+
+				<div class="bele co1" align="right"><span id="caste_span">~if $check_caste eq "Y"` <font color= "red">Your Caste: <br>(Caste Cannot Be Blank)</font> ~else` Your Caste: ~/if`</span></div>
+				<div class="co2">
+					<select name="Caste" class="textbox">
+						~if $NO_OF_ERROR eq ''`
+				        		<option selected value="">Select any one option</option>
+						~/if`
+					        ~$caste`
+					</select>
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+
+				<div class="bele co1" align="right"><span id="mtongue_span">~if $check_mtongue eq "Y"` <font color= "red">Your Community: <br>(Community Cannot Be Blank)</font> ~else`Your Community: ~/if`</span></div>
+				<div class="co2">
+					<select name="Mtongue" class="textbox">
+				        	<option selected value="">Select any one option</option>
+					        ~$mtongue`
+			                </select>
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+
+				<div class="bele co1" align="right">~if $check_subcaste eq 'Y'` <font color=red> SubCaste/ Surname: </font> ~else` SubCaste/ Surname: ~/if`</div>
+				<div class="co2">
+					<input type="text" name="Subcaste" value="~$subcaste`" class="textbox">
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+
+				<div class="bele co1" align="right">Gothra: </div>
+				<div class="co2">
+					<input type="text" name="Gothra"  value="~$gothra`" class="textbox">
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+				<div class="bele co1" align="right">Nakshatra: </div>
+				<div class="co2">
+					<select name="Nakshatram" class="formselect1">
+					        ~$nak_array`
+					</select>
+				</div>
+
+				<div class="spacer15">&nbsp;</div>
+				<div class="bele" style="float:left; width:20%;padding:2px " align="right">&nbsp;</div>
+				<div style="float:left; width:50%; padding:2px">
+					<input type="hidden" name="checksum" value="~$CHECKSUM`">
+				        <input type="hidden" name="religion" value="~$religion`">
+					 <input type="submit" name="Submit" value="Update my Caste Details" class="textbox">
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+				<br>
+				<br>
+				<div class="spacerg">&nbsp;</div>
+
+			</div>
+			<div class="spacer15">&nbsp;</div>
+
+		</div>
+	</form>
+	</div>
+	<!--CENTER ENDS HERE-->
+<!--/div-->
+	<!--WRAPPER ENDS HERE-->
+	<div class="spacer15">&nbsp;</div>
+	<!--WRAPPER ENDS HERE-->
+
+        <!--FOOTER STARTS HERE-->
+        ~$FOOT`
+        <!--FOOTER ENDS HERE-->
+</div>
+</body>
+</html>
+

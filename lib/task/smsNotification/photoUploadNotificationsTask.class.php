@@ -1,0 +1,57 @@
+<?php
+
+/*
+ * This task gets send notification to users who have requested photo on photo upload.
+ */
+
+class photoUploadNotifications extends sfBaseTask
+{
+  protected function configure()
+  {
+
+    $this->namespace        = 'smsNotification';
+    $this->name             = 'photoUploadNotifications';
+    $this->briefDescription = 'send Instant Notification Photo Upload';
+    $this->detailedDescription = <<<EOF
+      The [KnwlarityvnoTableCleanup|INFO] task gets all the profiles with last loggin date before the date passed and remove all such profiles from the knwlarityvno table.
+      Call it with:
+
+      [php symfony smsNotification:photoUploadNotifications] 
+EOF;
+$this->addOptions(array(
+        new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', 'jeevansathi'),
+     ));
+  }
+
+  protected function execute($arguments = array(), $options = array())
+  {
+        if(!sfContext::hasInstance())
+                sfContext::createInstance($this->configuration);
+
+	// Added Instant Notification for first photo upload
+	
+	$ID ='14';
+	$lastHandledDateObj =new incentive_LAST_HANDLED_DATE();
+	$dateTimeStart =$lastHandledDateObj->getHandledDate($ID);
+
+	$instantNotifObj =new InstantAppNotification('PHOTO_UPLOAD');
+	$photo_firstObj =new PHOTO_FIRST();
+	$photoProfiles =$photo_firstObj->getProfilesScreenedForNotification($dateTimeStart);	
+
+	if(is_array($photoProfiles)){
+		foreach($photoProfiles as $key=>$data){
+			$profileid 	=$data['PROFILEID'];
+			$dateTimeSet 	=$data['ENTRY_DT'];
+			$InformationTypeAdapterObj =new InformationTypeAdapter('PHOTO_REQUEST_RECEIVED',$profileid);	
+			$profiles =$InformationTypeAdapterObj->getProfiles('','');
+
+			// send Instant Notification
+			foreach($profiles as $key=>$pid){
+				$instantNotifObj->sendNotification($key,$profileid);
+			}
+			unset($profiles);
+		}
+		$lastHandledDateObj->setHandledDate($ID, $dateTimeSet);
+	}
+  }
+}

@@ -1,0 +1,360 @@
+<!DOCTYPE HTML PUBLIC "-//SoftQuad//DTD HoTMetaL PRO 4.0::19970714::extensions to HTML 4.0//EN"
+ "hmpro4.dtd">
+
+<HTML>
+  
+  <HEAD>
+    <TITLE>BMS : Campaign Management System</TITLE>
+    <LINK HREF="gifs/style.css" REL="stylesheet" TYPE="text/css">
+	 <script language="JavaScript">
+<!--
+
+function validateForm2()
+{
+	var docF=document.searchform;
+    var error="";
+	var len_course = docF.region.options.length;
+	for(var m1=0;m1<len_course;m1++) {
+       if (docF.region.options[m1].selected == true) {
+           c = docF.region.options[m1].value;
+       }
+       }
+	   
+    if(c==""||c=="select")
+    {
+     alert("Please select a region");
+	 return false;
+	 
+	}
+	var len_course = docF.zone.options.length;
+	for(var m1=0;m1<len_course;m1++) {
+     if (docF.zone.options[m1].selected == true) {
+           c = docF.zone.options[m1].value;
+		   
+      }
+      }
+	  
+	   if(c==""||c=="select")
+    	{
+     	alert("Please select a zone");
+		return false;
+	 	}
+	
+	if(docF.startyear.value==""||docF.startmonth.value==""||docF.startday.value==""||docF.endyear.value==""||docF.endmonth.value==""||docF.endday.value=="")
+	{
+	
+		alert("Please select dates ");
+		return false;
+	}
+	else
+	{	
+		var startdate=docF.startyear.value+"-"+docF.startmonth.value+"-"+docF.startday.value;
+		var enddate=docF.endyear.value+"-"+docF.endmonth.value+"-"+docF.endday.value;
+		if(startdate>enddate)
+		{
+			alert("Please select correct duration of start and end dates. ");
+			return false;
+
+		}
+		else if(startdate<docF.campaignstartdate.value || enddate>docF.campaignenddate.value)
+		{
+			alert("Please select duration of start and end dates within the campaign duration. ");
+			return false;
+		
+		}
+	}
+	
+	return true;
+    
+        
+       
+
+}
+
+function  validateForm()
+{
+
+	var docF=document.searchform;
+    var error="";
+	var checkcond1,checkcond2,checkcond3;
+	
+	checkcond1=cond1();
+	//alert("1");
+	//alert(checkcond1);
+	checkcond2=cond2();
+	//alert("2");
+	//alert(checkcond2);
+	checkcond3=cond3();
+	//alert("3");
+	//alert(checkcond3);
+	
+	if((checkcond1+checkcond2+checkcond3)>1)
+	{
+		alert("You cannot select more than one criteria.");
+		return false;
+	}
+	else if((checkcond1+checkcond2+checkcond3)==0)
+	{
+		alert("Please select at least one criteria.");
+		return false;
+	}
+	
+	if(checkcond1)
+	{
+		if(validateCampaignName())
+			return 1;
+		else
+			return 0;
+	}
+	else if(checkcond2)
+	{
+		return validateAll();
+	}
+	else if(checkcond3)
+	{
+		return 1;
+	}
+
+}
+
+function cond1()
+{
+	if(trim(document.searchform.campaignname.value==""))
+		return 0;
+	else
+		return 1;
+
+}
+
+function cond2()
+{
+	var docF= document.searchform;
+	if((docF.campaignstatusselected.value)||(docF.campaignlimit.value)||(docF.startday.value)||
+	(docF.startmonth.value)||(docF.startyear.value)||(docF.endday.value)||(docF.endmonth.value)||(docF.endyear.value))
+		return 1;
+	else
+		return 0;
+}
+
+function cond3()
+{
+	if((document.searchform.showall.checked)==true)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+function validateCampaignName()
+{
+	if(trim(document.searchform.campaignname.value==""))
+		return true;
+	else
+		return false;
+}
+
+
+function trim(inputString) {
+   // Removes leading and trailing spaces from the passed string. Also removes
+   // consecutive spaces and replaces it with one space. If something besides
+   // a string is passed in (null, custom object, etc.) then return the input.
+   if (typeof inputString != "string") { return inputString; }
+   var retValue = inputString;
+   var ch = retValue.substring(0, 1);
+   while (ch == " ") { // Check for spaces at the beginning of the string
+      retValue = retValue.substring(1, retValue.length);
+      ch = retValue.substring(0, 1);
+   }
+   ch = retValue.substring(retValue.length-1, retValue.length);
+   while (ch == " ") { // Check for spaces at the end of the string
+      retValue = retValue.substring(0, retValue.length-1);
+      ch = retValue.substring(retValue.length-1, retValue.length);
+   }
+   while (retValue.indexOf("  ") != -1) { // Note that there are two spaces in the string - look for multiple spaces within the string
+      retValue = retValue.substring(0, retValue.indexOf("  ")) + retValue.substring(retValue.indexOf("  ")+1, retValue.length); // Again, there are two spaces in each of the strings
+   }
+   return retValue; // Return the trimmed string back to the user
+} // Ends the "trim" function
+
+
+function validateAll()
+{
+	var docF,error;
+	docF=document.searchform;
+	if(docF.campaignstatusselected.value=="")
+		error="select campaign status";
+	else if(docF.campaignlimit.value=="")
+		error="select campaign limit";
+	if(error)
+	{
+		alert(error);
+		return false;
+	}
+	else
+		return true;
+}
+
+-->
+
+</script>   
+  </HEAD>
+  
+  <BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#000000" VLINK="#000000" 
+  ALINK="#000000" LEFTMARGIN="0" TOPMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+    ~$bmsheader`
+	
+<DIV CLASS="text-under" STYLE="margin-left:20px;">
+  <A HREF="bms_adminindex.php?id=~$id`" TARGET="">Admin Home</A> &gt;&gt; Campaign Search Form</a> 
+  </DIV>
+<br>
+<DIV CLASS="text"><TABLE WIDTH="100%" BORDER="0">
+      <TR>
+        <TD WIDTH="20%" ALIGN="RIGHT"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="250" HEIGHT="1"><IMG SRC="gifs/tick.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="13" HEIGHT="11">
+        </TD>
+        
+      <TD WIDTH="80%" CLASS="text">You can define banner properties on this page 
+        like region, zone, start &amp; end date etc.</TD>
+      </TR>
+	  ~if $errormsg`
+	  <TR> 
+    <TD WIDTH="20%" ALIGN="RIGHT"><img src="gifs/error-2.gif" alt="New Clients" border="0" hspace="0" vspace="0" width="16" height="16"></TD>
+    <TD WIDTH="80%" CLASS="error">~$errormsg`</TD>
+  </TR>
+  ~/if`
+  ~if $cnfrmmsg`
+  <TR>
+    <TD WIDTH="20%" ALIGN="RIGHT"><img src="gifs/action-performed.gif" alt="New Clients" border="0" hspace="0" vspace="0" width="16" height="16"></TD>
+    <TD WIDTH="80%" CLASS="text">~$cnfrmmsg`</TD>
+  </TR>
+  ~/if`
+    </TABLE></DIV>	
+    <FORM name="searchform" ~if $show eq "campaigndetails"` action="bms_campaign.php" ~elseif $show eq "adminmis"`  action="bms_adminmis.php" ~/if` method="post" onSubmit="return validateForm();"><TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" 
+    ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/page-bg.gif"><IMG SRC="gifs/lt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0" HSPACE="0"></TD>
+        <TD VALIGN="MIDDLE" HEIGHT="31" WIDTH="100%"><TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" HEIGHT="31">
+          <TR>
+            <TD BACKGROUND="gifs/page-bg.gif" WIDTH="100%"><DIV CLASS="text"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="30" HEIGHT="1"></DIV></TD>
+          </TR>
+        </TABLE></TD>
+        <TD ALIGN="RIGHT" WIDTH="18" BACKGROUND="gifs/page-bg.gif"><IMG SRC="gifs/rt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+      </TR>
+    </TABLE><TABLE WIDTH="100%" BORDER="0" VSPACE="0" HSPACE="0" 
+    CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/lt-line-bg-1.gif"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></TD>
+        <TD WIDTH="100%"> <BR><DIV ALIGN="CENTER"><TABLE WIDTH="60%" BORDER="0" VSPACE="0" HSPACE="0" CELLPADDING="4" CELLSPACING="0">
+		
+		  <TR>
+            <TD CLASS="text" WIDTH="40%" HEIGHT="20" VALIGN="TOP"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="90" HEIGHT="1"><BR><B>Enter Campaign name</B></TD>
+            <TD ALIGN="LEFT" WIDTH="60%"><input type="text" name="campaignname" /></TD>
+          </TR>
+ <TR>
+            <TD CLASS="text" WIDTH="40%" HEIGHT="20" VALIGN="TOP"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="90" HEIGHT="1"><BR><B>OR </B></TD>
+            <TD ALIGN="LEFT" WIDTH="60%">&nbsp;</TD>
+          </TR> 
+		
+          <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><B>Campaign Status</B></TD>
+            <TD ALIGN="LEFT">
+		
+			<select name="campaignstatusselected" class="textbox">
+			<option value="">Select</option>
+            ~section  name=i loop=$campaignstatusarr`
+                <option value="~$campaignstatusarr[i]`" ~if $campaignstatus eq $campaignstatusarr[i]` selected ~/if` >~$campaignstatusarr[i]`</option>
+			~/section`
+              </select>
+			</TD>
+          </TR>
+		  <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><B>Recent</B></TD>
+            <TD ALIGN="LEFT">
+		
+			<select name="campaignlimit" class="textbox">
+			<option value="">Select</option>
+            ~section  name=i loop=$maxlimit`
+                <option value="~$maxlimit[i].value`" ~if $campaignstatus eq $campaignstatusarr[i]` selected ~/if` >~$maxlimit[i].name`</option>
+			~/section`
+              </select>
+			</TD>
+          </TR>
+          <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><B>Campaign Start Date</B></TD>
+            <TD ALIGN="LEFT">
+			<SELECT NAME="startday" CLASS="textbox">
+			<option value="">Select</option>
+            ~section  name=i loop=$daysarr`
+			 <option value="~$daysarr[i].daysvalue`" ~if $daysarr[i].daysvalue eq $bannerdetails.bannerstartday` selected ~/if` >~$daysarr[i].daysname` </option>
+              ~/section`
+			</SELECT>
+			
+            <SELECT NAME="startmonth" CLASS="textbox">
+			<option value="">Select</option>
+            ~section  name=i loop=$monthsarr`
+			 <option value="~$monthsarr[i].monthvalue`" ~if $monthsarr[i].monthvalue eq $bannerdetails.bannerstartmonth` selected ~/if` >~$monthsarr[i].monthname` </option>
+             ~/section`
+			</SELECT>
+			
+            <SELECT NAME="startyear" CLASS="textbox">
+			<option value="">Select</option>
+             ~section  name=i loop=$yearsarr`
+			 <option value="~$yearsarr[i].yearsvalue`" ~if $yearsarr[i].yearsvalue eq $bannerdetails.bannerstartyear` selected ~/if` >~$yearsarr[i].yearsvalue` </option>
+             ~/section`
+			</SELECT> </TD>
+          </TR>
+          <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><B>Campaign End Date</B></TD>
+            <TD ALIGN="LEFT">
+			<SELECT NAME="endday" CLASS="textbox">
+			<option value="">Select</option>
+             ~section  name=i loop=$daysarr`
+			<option value="~$daysarr[i].daysvalue`"  ~if $daysarr[i].daysvalue eq $bannerdetails.bannerendday` selected ~/if`>~$daysarr[i].daysname`
+             ~/section`
+			 </SELECT>
+			 
+			 <SELECT NAME="endmonth" CLASS="textbox">
+			 <option value="">Select</option>
+             ~section  name=i loop=$monthsarr`
+			 <option value="~$monthsarr[i].monthvalue`" ~if $monthsarr[i].monthvalue eq $bannerdetails.bannerendmonth` selected ~/if` >~$monthsarr[i].monthname` </option>
+              ~/section`
+			 </SELECT>
+			 
+            <SELECT NAME="endyear" CLASS="textbox">
+			<option value="">Select</option>
+             ~section  name=i loop=$yearsarr`
+			 <option value="~$yearsarr[i].yearsvalue`" ~if $yearsarr[i].yearsvalue eq $bannerdetails.bannerendyear` selected ~/if` >~$yearsarr[i].yearsvalue` </option>
+             ~/section`
+			</SELECT></TD>
+          </TR>
+         <TR>
+            <TD CLASS="text" WIDTH="40%" HEIGHT="20" VALIGN="TOP"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="90" HEIGHT="1"><BR><B>OR</B></TD>
+            <TD ALIGN="LEFT" WIDTH="60%">&nbsp;</TD>
+          </TR> 
+		  <TR>
+            <TD CLASS="text" WIDTH="40%" HEIGHT="20" VALIGN="TOP"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="90" HEIGHT="1"><BR><B>Click here to show ALL campaigns</B></TD>
+            <TD ALIGN="LEFT" WIDTH="60%"><input type="checkbox" name="showall" /></TD>
+          </TR> 
+		 
+   
+          
+        </TABLE></DIV><BR><CENTER><INPUT TYPE="IMAGE" NAME="showadvbannerdetails" SRC="gifs/continue-select.gif" BORDER="0"></CENTER><BR>
+        <P></P>
+        <P></P></TD>
+        <TD BACKGROUND="gifs/rt-line-bg-1.gif" WIDTH="18"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></TD>
+      </TR>
+    </TABLE><TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" 
+    ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/page-bg-1.gif"><IMG SRC="gifs/lt-low-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+        <TD VALIGN="MIDDLE" HEIGHT="31" BACKGROUND="gifs/page-bg-1.gif">&nbsp;</TD>
+        <TD ALIGN="RIGHT" WIDTH="18" BACKGROUND="gifs/page-bg-1.gif"><IMG SRC="gifs/lt-rt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+      </TR>
+    </TABLE>
+<input type="hidden" name="id" value="~$id`">
+</FORM>
+    ~$bmsfooter`
+  </BODY>
+</HTML>

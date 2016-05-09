@@ -1,0 +1,56 @@
+<html>
+<head>
+   <title>Delete SE</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<!--link rel="stylesheet" href="stylesheet.css" type="text/css"-->
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+</head>
+~include file="head.htm"`
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table width=760 cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+    <tr class="formhead">
+          <td width=33% class="formhead" border=1 align="center"><font><b>Welcome ~$user`</b></font></td>
+          <td width="33%" class="formhead" align="center"><a href="mainpage.php?cid=~$cid`">Main Page</a></td>
+          <td width=33% class="formhead" border=1 align='CENTER'><a href="logout.php?cid=~$cid`">Logout</a></td>
+    </tr>
+</table>
+<br>
+<form action="ap_delete_se.php" method="post">
+<input type="hidden" name="cid" value="~$cid`">
+~if $errorMessage`
+<p align="center">~$errorMessage`</p>
+~/if`
+<table align="center" width="60%">
+<tr class="formhead">
+<td width="50%" align="center">
+SE to be deleted
+</td>
+<td width="50%" align="center">
+SE to reassign profiles to
+</td>
+</tr>
+<tr class="fieldsnew">
+<td align="center">
+<select name="deleteSe">
+~section name=next loop=$se`
+<option value="~$se[next]`">~$se[next]`</option>
+~/section`
+</select>
+</td>
+<td align="center">
+<select name="reassignSe">
+~section name=next loop=$se`
+<option value="~$se[next]`">~$se[next]`</option>
+~/section`
+</select>
+</td>
+</tr>
+<tr class="formhead">
+<td colspan="2" align="center">
+<input type="submit" name="submit" value="Submit">
+</td>
+</tr>
+</table>
+</form>
+</body>
+</html>

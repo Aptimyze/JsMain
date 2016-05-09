@@ -1,0 +1,120 @@
+<html>
+<head>
+	<title>Telecaller - Voice Log Details</title>
+	<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+	<script language="javascript">
+	<!--
+		function MM_openBrWindow(theUrl,windowname,features)
+		{
+			window.open(theUrl,windowname,'width=800,height=600,scrollbars=yes');
+		}
+	//-->
+	</script>
+</head>
+<body>
+	<p align="center"><img src="../profile/images/logo_1.gif" width="209" height="63" align="center" border="0"></p>
+	<table cellpadding="4" cellspacing="4" border="0" width="80%" align="center">
+		<tr class="formhead" align="center">
+			<td><b>Voice Log Details</b></td>
+		</tr>
+		~if $FLAG neq 'VIEW_HISTORY'`
+			<tr class="fieldsnew" align="center">
+				<td><a href="/jsadmin/mainpage.php?cid=~$cid`">Mainpage</a></td>
+			</tr>
+		~/if`
+	</table>
+	~if $FLAG eq "VIEW_VOICE_LOG"`
+		<table cellpadding="4" cellspacing="4" width="80%" align="center">
+		<tr class="formhead" align="center">
+			<td>S.No.</td>
+			<td>Username</td>
+			<td>Phone</td>
+			<td>Alloted To</td>
+			<td>Count</td>
+		</tr>
+		~section name=next loop=$details`
+		<tr align="center" class="fieldsnew">
+			<td>~$details[next].SNO`</td>
+			<td>
+				<a href="telec_voice_log.php?cid=~$cid`&view_call_history=1&pid=~$details[next].PROFILEID`&entry_dt=~$details[next].ENTRY_DT`&allot_time=~$details[next].ALLOT_TIME`" onClick="MM_openBrWindow('telec_voice_log.php?cid=~$cid`&view_call_history=1&pid=~$details[next].PROFILEID`&entry_dt=~$details[next].ENTRY_DT`&allot_time=~$details[next].ALLOT_TIME`','',''); return false;">~$details[next].USERNAME`</a>
+			</td>
+			<td>~$details[next].PHONE`</td>
+			<td>~$details[next].ALLOTED_TO`</td>
+			<td>~$details[next].COUNT`</td>
+		~/section`
+		</tr>
+	~elseif $FLAG eq "VIEW_HISTORY"`
+		<table cellpadding="4" cellspacing="4" width="80%" align="center">
+			<tr class="formhead" align="center">
+				<td>S.No.</td>
+				<td width="10%">Username</td>
+				<td width="50%">Comment</td>
+				<td width="15%">Entry By</td>
+				<td width="15%">Entry Date</td>
+			</tr>
+			~section name=next loop=$history_details`
+				<tr class="fieldsnew" align="center">
+					<td>~$history_details[next].SNO`</td>
+					<td>~$history_details[next].USERNAME`</td>
+					<td>~$history_details[next].COMMENT`</td>
+					<td>~$history_details[next].ENTRYBY`</td>
+					<td>~$history_details[next].ENTRY_DT`</td>
+				</tr>
+			~/section`
+			</table>
+	~else`
+		<form name="form1" action="telec_voice_log.php" method="post">
+		<table cellpadding="4" cellspacing="4" width="60%" align="center">
+			<tr class="formhead" align="center">
+				<td colspan="4">Select Duration</td>
+			</tr>
+			<tr align="center" class="fieldsnew">
+				<td>From</td>
+				<td>
+					<select name="from_date">
+						~section name="next" loop=$ddarr`
+							<option value="~$ddarr[next]`">~$ddarr[next]`</option>
+						~/section`
+					</select>
+					<select name="from_month">
+						~section name="next" loop=$mmarr`
+							<option value="~$mmarr[next]`" ~if $mmarr[next] eq $cur_month` selected ~/if`>~$mmarr[next]`</option>
+						~/section`
+					</select>
+					<select name="from_year">
+						~section name="next" loop=$yyarr`
+							<option value="~$yyarr[next]`" ~if $yyarr[next] eq $cur_year` selected ~/if`>~$yyarr[next]`</option>
+						~/section`
+					</select>
+				</td>
+				<td>To</td>
+				<td>
+					<select name="to_date">
+						~section name="next" loop=$ddarr`
+							<option value="~$ddarr[next]`" ~if $ddarr[next] eq $cur_date` selected ~/if`>~$ddarr[next]`</option>
+						~/section`
+					</select>
+					<select name="to_month">
+						~section name="next" loop=$mmarr`
+							<option value="~$mmarr[next]`" ~if $mmarr[next] eq $cur_month` selected ~/if`>~$mmarr[next]`</option>
+						~/section`
+					</select>
+					<select name="to_year">
+						~section name="next" loop=$yyarr`
+							<option value="~$yyarr[next]`" ~if $yyarr[next] eq $cur_year` selected ~/if`>~$yyarr[next]`</option>
+						~/section`
+					</select>
+				</td>
+			</tr>
+			<tr class="fieldsnew" align="center">
+				<td colspan="4">
+					<input type="submit" name="submit" value="Go" class="buttons1">
+				</td>
+			</tr>
+		</table>
+		<input type="hidden" name="cid" value="~$cid`">
+		<input type="hidden" name="name" value="~$name`">
+		</form>
+	~/if`
+</body>
+</html>

@@ -1,0 +1,3 @@
+use MOBILE_API;
+
+INSERT INTO  `BROWSER_NOTIFICATION_TEMPLATE` (  `ID` ,  `NOTIFICATION_KEY` ,  `MESSAGE` ,  `TITLE` ,  `ICON` ,  `TAG` ,  `CHANNEL` ,  `STATUS` ,  `SUBSCRIPTION` ,  `FREQUENCY` ,  `TIME_CRITERIA` ,  `LANDING_ID` ,  `TTL` , `COUNT` ) VALUES ('',  'PROFILE_VISITOR',  '{MESSAGE_RECEIVED}',  'Recent Profile Visitors',  'D',  'PV',  'M',  'Y',  'A',  'I',  '15',  '4',  '0',  'SINGLE');

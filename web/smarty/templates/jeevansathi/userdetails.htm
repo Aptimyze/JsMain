@@ -1,0 +1,277 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<title>Jeevansathi Matrimonials- Update contact details</title>
+<link rel="stylesheet" href="css/~$comm_style_css`" type="text/css">
+<style type="text/css">
+.pghd{float:left; width:99% }
+.r14{float:left;font:bold 14px verdana,Arial; color:#CC0000; padding-top:5px}
+.co1{float:left; width:29%;padding:2px }
+.co2{float:left; width:65%; padding:2px}
+</style>
+<script language="JavaScript" SRC="/profile/~$profile_js`"></SCRIPT>
+<script language="JavaScript" SRC="/profile/phonecodes.js"></script>
+<script language="javascript" src="/profile/newip_1.js"></script>
+<script language="javascript">
+function setcitycode()
+{
+        get_code('c','~$country_isd_code`');
+}
+</script>
+                                                                                                                             
+<script language="javascript">
+function trim_newline(string)
+{
+	return string.replace(/^\s*|\s*$/g, "");
+}
+
+function validate()
+{
+        //activate_cityres();
+        var docF=document.form1;
+                                                                                                                             
+        if(document.getElementById)
+        {
+                document.getElementById('country_res_span').style.color="#000000";
+                document.getElementById('contact_res_span').style.color="#000000";
+                document.getElementById('city_res_span').style.color="#000000";
+                document.getElementById('phone_res_span').style.color="#000000";
+                document.getElementById('mobile_res_span').style.color="#000000";
+                document.getElementById('name_res_span').style.color="#000000";
+        }
+                                                                                                                             
+        if (docF.Name.value)
+        {
+                var re = /^[a-zA-Z ]+$/;
+                if (!docF.Name.value.match(re))
+                {
+                        alert("Please Enter Valid Value for  Name of the profile posted(Only Alphabets/space allowed)");
+                        if(document.getElementById)
+                                document.getElementById('name_res_span').style.color="red";
+                                                                                                                             
+                        docF.Name.focus();
+                                                                                                                             
+                        return false;
+                }
+	}
+
+        if((trim(docF.contact.value)=="") || trim_newline(docF.contact.value)=="")
+        {
+                alert("Please specify Contact Address");
+                if(document.getElementById)
+                        document.getElementById('contact_res_span').style.color="red";
+                                                                                                                             
+                        docF.contact.focus();
+                                                                                                                             
+                 return false;
+        }
+                                                                                                                             
+        if(docF.Country_Residence.value=="")
+        {
+                alert("Please specify Country of Residence");
+                if(document.getElementById)
+                        document.getElementById('country_res_span').style.color="red";
+                                                                                                                             
+                        docF.Country_Residence.focus();
+                                                                                                                             
+                return false;
+        }
+
+	if((docF.City_India.disabled == false) && (docF.City_India.value == ""))
+        {
+                alert("Please specify City of Residence");
+                if(document.getElementById)
+                        document.getElementById('city_res_span').style.color="red";
+                                                                                                                             
+                        docF.City_India.focus();
+                                                                                                                             
+                return false;
+        }
+        if((docF.City_USA.disabled == false) && (docF.City_USA.value == ""))
+        {
+                alert("Please specify City of Residence");
+                if(document.getElementById)
+                        document.getElementById('city_res_span').style.color="red";
+                                                                                                                             
+                        docF.City_USA.focus();
+                                                                                                                             
+                return false;
+        }
+                                                                                                                             
+	var phone_mob=validate_phone_mobile(docF.phone_res.value,docF.phone_mob.value);
+	if(phone_mob=='OK')
+		return true;
+	else
+	{
+		if(phone_mob=="PM")
+		{
+			if(document.getElementById)
+			{
+				document.getElementById('phone_res_span').style.color="red";
+				document.getElementById('mobile_res_span').style.color="red";
+			}
+			docF.phone_res.focus();
+		}
+		else if(phone_mob=="P")
+		{
+			if(document.getElementById)
+				document.getElementById('phone_res_span').style.color="red";
+			docF.phone_res.focus();
+		}
+		else if(phone_mob=='M')
+		{
+			if(document.getElementById)
+				document.getElementById('mobile_res_span').style.color="red";
+			docF.phone_mob.focus();
+		}
+		return false;
+	}
+return true;
+}
+                                                                                                                             
+</SCRIPT>
+                                                                                                                             
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body onLoad = "activate_cityres();">
+<DIV id="dhtmltooltip" class="ttip"></DIV>
+<SCRIPT language=JavaScript1.2 src="~$IMG_URL`/profile/js/~$tooltip_new_js`" type=text/javascript></SCRIPT>
+                                           
+<div id="container">
+	
+	<!--HEADER STARTS-->
+	~$HEAD`
+	<!--HEADER ENDS-->
+
+	<!--QUICK SEARCH STARTS-->
+	<div class="spacer15">&nbsp;</div>
+	<!--QUICK SEARCH ENDS-->
+
+	<!--WRAPPER STARTS HERE-->
+	<div id="wrapper">
+
+		<!--LEFT PANNEL STARTS HERE-->
+		~$LEFTPANEL`
+		<!--LEFT PANNEL ENDS HERE-->
+
+		<!--CENTER STARTS HERE-->
+		<div id="center">
+			~if $NO_OF_ERROR`
+                        <font color="red">&nbsp;&nbsp;&nbsp;&nbsp;There are ~$NO_OF_ERROR` Error(s) in your form. They are marked in red. Please correct them and submit the form again</font><br>
+                        ~/if`
+			<form name="form1" method="post" action="userdetails.php" onsubmit="return validate();">
+			<div class="pghd">
+				<div class="r14"><img src="images/icon_chpass.gif" width="14" height="14"> Update your Contact Details </div>
+				<div class="rightflow bele bluelink" align="right" style="padding-top:3px "><a href="/P/mainmenu.php?checksum=~$CHECKSUM`">Skip to My Jeevansathi &raquo;</a></div>
+
+				<div class="spacer1">&nbsp;</div>
+
+				<div class="spacer15" style="border-top:1px solid #000000; margin-top:5px;" >&nbsp;</div>
+				<div class="greyele bluelink">
+				~if $case eq 1`
+					We tried to contact you.<br>Our customer support team tried to reach you to generate more response and to get more out of your profile on Jeevansathi.com, we suggest you to keep your contact details updated, Always.
+				~elseif $case eq 2`
+					Other users are trying to speak to you.<br>Users in your acceptance list would try to reach you. We suggest to take the matter further and to increase more response of your profile on Jeevansathi.com, we suggest you to keep your contact details updated, Always. 
+				~else`
+					To generate more response and to get more out of your profile on Jeevansathi.com, we suggest you to keep your contact details updated, Always. 
+				~/if`
+				</div>
+			</div>
+
+			<div style="float:left; width:100%">
+			<div class="spacer15">&nbsp;</div>
+				<div class="bele co1" align="right"><span id="name_res_span">~if $name_error eq 'Y'`<font color="red">Name of the profile posted : <br>(~$name_msg`)</font>~else`Name of the profile posted : ~/if`</span></div>
+				<div class="co2">
+					<input type="text" name="Name" value="~$Name`" class="textbox">
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+
+				<div class="bele co1" align="right"><span id="contact_res_span">~if $check_address eq "Y"`<font color="red">* Contact Address : <br>(~$contact_msg`)</font>~else`* Contact Address : ~/if`</span></div>
+				<div class="co2">
+					<textarea name="contact" cols="40" rows="5" class="textbox">~$contact`</textarea>
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+
+				<div class="bele co1" align="right"><span id="country_res_span">~if $check_countryres eq "Y"` <font color= "red">* Country of Residence : </font>~else` * Country of Residence : ~/if`</span></div>
+				<div class="co2">
+					<select name="Country_Residence" class="textbox" onchange="activate_cityres();">
+						<OPTION value="" selected>Select any one option</OPTION>
+					        ~$COUNTRY_RES` 
+					</SELECT>
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+
+				<div class="bele co1" align="right"><span id="city_res_span">~if $check_cityres eq "Y"`<font color= "red">* City of Residence  : </font>~else`* City of Residence  : ~/if`</span> </div>
+				<div class="co2">
+					<select name="City_India" class="textbox" ~if $CITY_USA eq "Y"`disabled ~/if`  onchange="get_code('i','~$india_std_code`')";>
+						<option value="" selected>Select any one option</option>
+						~$CITY_INDIA`
+				       </select>
+					<select name="City_USA" class="textbox">
+				        	<option value="" selected>Select any one option</option>
+				                ~$CITY_USA`
+				        </select>
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+
+				<div class="bele co1" align="right">Parent&#39;s Address : </div>
+				<div class="co2">
+					<textarea name="parent_contact" cols="40" rows="5" class="textbox">~$parent_contact`</textarea>
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+				<div class="bele co1" align="right"><span id="phone_res_span">~if $check_phone eq 'Y'`<font color="red">* Phone no : <br>(~$phone_msg`)</font>~else`* Phone no : ~/if`</span></div>
+				<div class="co2">
+					<input name="Country_Code"  value="~$Country_Code`" type="text" class="textbox" size="4" maxlength="5">
+					<input type="text" name="State_Code" value="~$State_Code`" class="textbox" size="4" maxlength="10">
+					<input type="text" name="phone_res" value="~$phone_res`" class="textbox"  maxlength="15">
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+
+				<div class="bele co1" align="right"><span id="mobile_res_span">~if $check_mob eq 'Y'`<font color="red">Mobile no : <br>(~$mob_msg`)</font>~else`Mobile no : ~/if`</span></div>
+				<div class="co2 bele">
+					<input type="text" name="Country_Code_Mob" value="~$country_code_mob`" class="textbox" style="width:20px;" maxlength="5">
+                                -
+				 	<input type="text" name="phone_mob" value="~$phone_mob`" class="textbox" maxlength="15">
+					 <div class="spacer1">&nbsp;</div>
+					<input type="checkbox" name="show_others" value="1" ~if $tick_checkbox eq "1"`checked~/if`> Don't show to others 
+				 </div>
+
+				<div class="spacer15">&nbsp;</div>
+				<div class="bele" style="float:left; width:20%;padding:2px " align="right">&nbsp;</div>
+				<div style="float:left; width:50%; padding:2px">
+					<input type="hidden" name="checksum" value=~$checksum`>
+					<input type="hidden" name="invalid_phone" value=~$invalid_phone`>
+					<input type="hidden" name="frommarriagebureau" value="~$frommarriagebureau`">
+					<input type="hidden" name="checksum" value=~$checksum`>
+					<input type="submit" name="submitted" value="Update My Contact Details" class="textbox">
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+				<br>
+				<br>
+				<div class="spacerg">&nbsp;</div>
+
+			</div>
+			<div class="spacer15">&nbsp;</div>
+		</div>
+	<!--/div-->
+		<!--CENTER ENDS HERE-->
+	</div>
+	<!--WRAPPER ENDS HERE-->
+
+	<!--FOOTER STARTS HERE-->
+        ~$FOOT`
+        <!--FOOTER ENDS HERE-->
+</div>
+</body>
+</html>
+

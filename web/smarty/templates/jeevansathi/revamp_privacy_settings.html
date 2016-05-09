@@ -1,0 +1,193 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Change Privacy Settings</title>
+<link href=css/~$search_result_css` type="text/css" rel="stylesheet">
+<style>
+body{margin:0; padding:0; font-size:12px; color:#000000; font-family:Arial,sans-serif}
+#main{width:100%; margin:0px;float:left;}
+#container{width: 778px; margin: 0px auto; }
+
+/* search */
+.sreach_pannal{background-image:url(images/bg_search.gif);background-repeat:repeat-x;width:778px;}
+.pd2{padding:2px 2px 2px 5px;}
+div.row{clear:both; padding:3px 0 0px 0;color:#000;width:98%;margin:auto;}
+
+
+/* setting */
+.st_open_tab{float:left;font:normal 12px arial;padding:3px 0 7px 1px;color:#117DAA;clear:both;width:155px;}
+.st_close_tab{ background-image:url(images/open_tab_setting.gif);background-repeat:no-repeat;width:163px;height:25px;font:bold 12px arial;padding:2px 0 0 1px;color:#117DAA;clear:both; background-position:right}
+.sub_st_tab{padding:4px 0 0 12px;}
+.success_bg{background-image:url(images/bg_success_story.gif); background-repeat:no-repeat;width:118px; height:94px;}
+.hide_delete_bg{ background-color:#ffed77;border:1px #ffe742 solid; padding:5px;}
+</style>
+<script language="JavaScript">
+var httprequest=false
+var ankit;
+function createAjaxObj(url,parameters)
+{
+        httprequest=false
+        if (window.XMLHttpRequest)
+        { // if Mozilla, Safari etc
+                httprequest=new XMLHttpRequest()
+                if (httprequest.overrideMimeType)
+                        httprequest.overrideMimeType('text/html')
+        }
+        else if (window.ActiveXObject)
+        { // if IE
+                try 
+                {
+                        httprequest=new ActiveXObject("Msxml2.XMLHTTP");
+                } 
+                catch (e)
+                {
+                        try
+                        {
+                                httprequest=new ActiveXObject("Microsoft.XMLHTTP");
+                        }
+                        catch (e){}
+                }
+        }
+        if (!httprequest) 
+        {
+                 alert('Cannot create XMLHTTP instance');
+                return false;
+        }
+
+        httprequest.onreadystatechange = alertContents;
+        httprequest.open('POST', url, true);
+        httprequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        httprequest.setRequestHeader("Content-length", parameters.length);
+        httprequest.setRequestHeader("Connection", "close");
+        httprequest.send(parameters);
+
+}
+function alertContents() 
+{
+        if (httprequest.readyState == 4) 
+        {
+                if (httprequest.status == 200) 
+                {//alert(httprequest.responseText);
+                        result = httprequest.responseText;
+                //      alert(result);
+                        if(result=='You have logged out or Your Session has expired')
+                        {
+                                window.location.reload();
+                        }
+			else
+			{
+			       // result = httprequest.responseText;
+				document.getElementById('confirm').style.display = 'block';  
+				 document.getElementById("PRI_SET").style.display='inline';
+				document.getElementById("SHOW_LOADER").style.display="none";
+				//alert('');
+			}
+                } 
+                else 
+                {
+                        alert('There was a problem with the request.');
+                }
+         }
+}
+function get() 
+{
+	var val = '';
+
+	for( i = 0; i < document.myform.privacy.length; i++ )
+	{
+		if( document.myform.privacy[i].checked == true )
+		{
+			val = document.myform.privacy[i].value;
+		}
+	}
+//alert( "val = " + val );
+
+      var poststr ="new_value=" + val+"&checksum=" + document.myform.checksum.value +"&Submit="+ escape(encodeURI( document.myform.Submit.value )) ;
+//alert(poststr);
+      createAjaxObj('revamp_privacy_settings.php', poststr);
+//alert(poststr);
+}
+
+function setF()
+{
+        var docF=document.myform;       
+}
+
+function hide_confirmation()
+{
+        document.getElementById('confirm').style.display = 'none';
+}
+function validate()
+{
+	document.getElementById("PRI_SET").style.display='none';
+        document.getElementById('confirm').style.display = 'none';
+	document.getElementById("SHOW_LOADER").style.display="inline";
+	//alert("1")
+	get();
+	//alert("1")
+        return true;
+
+}
+
+</script>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+
+<body topmargin="0" leftmargin="0"  onload="setF();return false;">
+<div id="main">
+	~$REVAMP_HEAD`
+	<div style="width:778px;margin:auto">
+		
+		<div id="container">
+			<div id="topSearchBand"></div>
+			<div class="clear"></div>
+			
+			~$SUB_HEAD`
+			<h1 style="float:left">Settings - Profile Visibility</h1>
+			<div class="sp3"></div>
+			<!-- start middle section -->
+			~$REVAMP_LEFT_PANEL`
+			~$REVAMP_RIGHT_PANEL`
+
+			<div style="margin-right:135px;margin-left:180px;" id="loader">
+				<div style="display:none" id="confirm">
+					<div class="lf"  style="padding:5px; width:452px; background-color:#ffffbb" >
+						<div class="lf">
+							<img src="images/confirm.gif" hspace="10" vspace="0" align="left">
+						</div>
+						<div class="lf t14 b" style="width:382px;padding-top:5px;" id ="myspan">Profile visibility settings saved</div>
+						<div class="rf b"><a href="#" onclick ="hide_confirmation(); return false;">[x]</a></div>
+					</div>
+				</div>
+				<div id="PRI_SET" class="lf" style="width:100%;display:inline;">
+					<div style="border:1px #aaaaaa; border-top-style:solid;">
+						<div class="sp5"></div>
+						<form  name="myform" id="myform" >
+							<div class="row1"><label style="width:12px;margin:0px"><input type="radio" id=privacyA name="privacy" class="chbx" align="top" style="border:none;" value="A" ~if $PRIVACY eq "A"`checked~/if`></label>Allow my detailed profile to be viewed by all visitors. (Recommended)</div>
+							<div class="row1"><label style="width:12px;margin:0px"><input id=privacyF type="radio" class="chbx" name="privacy" align="bottom" style="border:none;" value="F" ~if $PRIVACY eq "F"`checked~/if`></label> Allow my detailed profile to be viewed only by registered users who pass my filters. <a href="revamp_filter.php?checksum=~$CHECKSUM`" class="blink">Manage Filters</a></div>
+							<div class="row1"><label style="width:12px;margin:0px"><input id=privacyC type="radio" class="chbx" name="privacy" align="bottom" style="border:none;" value="C" ~if $PRIVACY eq "C"`checked~/if`></label> Don't show my detailed profile or summary profile to any user, I will search and contact profiles.</div>
+							<div class="sp3"></div>
+							<div class="sp3"></div>
+							<div class="row1" style="padding-left:20px;"><span class="green b"># NOTE:</span> Please note that in the first two settings your summary profile will be viewable by all visitors. It will show your User name, Age, Height, Religion, Caste, Occupation, Salary and City . This information is typically not personally identifiable. However, if you choose the third option, even your summary profile will not be viewable to any visitor. </div>
+							<div style="width:100%;text-align:center;margin-top:15px;"><input type="hidden" name="checksum" value="~$CHECKSUM`"><input type="button" id="Submit" name="Submit" class="b green_btn" value="Save" style="width:70px;" onclick="return validate();"></div>
+						</form>
+						<div class="sp3"></div>
+						<div class="sp3"></div>
+						<div style="text-align:center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="conf_policy.php" class="blink b">Privacy Features</a></div>
+					</div>
+				</div>
+				<div id="SHOW_LOADER" style="display:none">
+					 <div class="lf" style="width:100%;margin-top:25px;text-align:center;">
+						<img src="images/loader_big.gif" width="54" height="55"><br><br>
+						<span style="font:normal 20px Arial, Helvetica, sans-serif">Saving profile visibility settings<span style="font-size:13px">...</span></span>
+					</div>		
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+~$FOOT`
+<script type='text/javascript'>var fc_CSS=document.createElement('link');fc_CSS.setAttribute('rel','stylesheet');var isSecured = (window.location && window.location.protocol == 'https:');var rtlSuffix = ((document.getElementsByTagName('html')[0].getAttribute('lang')) === 'ar') ? '-rtl' : '';fc_CSS.setAttribute('type','text/css');fc_CSS.setAttribute('href',((isSecured)? 'https://d36mpcpuzc4ztk.cloudfront.net':'http://assets1.chat.freshdesk.com')+'/css/visitor'+rtlSuffix+'.css');document.getElementsByTagName('head')[0].appendChild(fc_CSS);var fc_JS=document.createElement('script'); fc_JS.type='text/javascript';fc_JS.src=((isSecured)?'https://d36mpcpuzc4ztk.cloudfront.net':'http://assets.chat.freshdesk.com')+'/js/visitor.js';(document.body?document.body:document.getElementsByTagName('head')[0]).appendChild(fc_JS);window.freshchat_setting= 'eyJ3aWRnZXRfc2l0ZV91cmwiOiJqZWV2YW5zYXRoaS5mcmVzaGRlc2suY29tIiwicHJvZHVjdF9pZCI6bnVsbCwibmFtZSI6IkluZm8gRWRnZSBJbmRpYSBMdGQuIiwid2lkZ2V0X2V4dGVybmFsX2lkIjpudWxsLCJ3aWRnZXRfaWQiOiIwYmJiNTU3OS1hYzQ0LTQ5ZTktOTQ1OS03NWZjY2JkOWQ3MjYiLCJzaG93X29uX3BvcnRhbCI6dHJ1ZSwicG9ydGFsX2xvZ2luX3JlcXVpcmVkIjpmYWxzZSwiaWQiOjUwMDAwNTM1NzYsIm1haW5fd2lkZ2V0Ijp0cnVlLCJmY19pZCI6ImE3MDI5YTQ5N2MzN2E4YzUwZGRiODVjZTM5OWIxM2JjIiwic2hvdyI6MSwicmVxdWlyZWQiOjIsImhlbHBkZXNrbmFtZSI6IkluZm8gRWRnZSBJbmRpYSBMdGQuIiwibmFtZV9sYWJlbCI6Ik5hbWUiLCJtYWlsX2xhYmVsIjoiRW1haWwiLCJtZXNzYWdlX2xhYmVsIjoiTWVzc2FnZSIsInBob25lX2xhYmVsIjoiUGhvbmUgTnVtYmVyIiwidGV4dGZpZWxkX2xhYmVsIjoiVGV4dGZpZWxkIiwiZHJvcGRvd25fbGFiZWwiOiJEcm9wZG93biIsIndlYnVybCI6ImplZXZhbnNhdGhpLmZyZXNoZGVzay5jb20iLCJub2RldXJsIjoiY2hhdC5mcmVzaGRlc2suY29tIiwiZGVidWciOjEsIm1lIjoiTWUiLCJleHBpcnkiOjE0NDU4NTIwNjEwMDAsImVudmlyb25tZW50IjoicHJvZHVjdGlvbiIsImRlZmF1bHRfd2luZG93X29mZnNldCI6MzAsImRlZmF1bHRfbWF4aW1pemVkX3RpdGxlIjoiQ2hhdCBpbiBwcm9ncmVzcyIsImRlZmF1bHRfbWluaW1pemVkX3RpdGxlIjoiTGV0J3MgdGFsayEiLCJkZWZhdWx0X3RleHRfcGxhY2UiOiJZb3VyIE1lc3NhZ2UiLCJkZWZhdWx0X2Nvbm5lY3RpbmdfbXNnIjoiV2FpdGluZyBmb3IgYW4gYWdlbnQiLCJkZWZhdWx0X3dlbGNvbWVfbWVzc2FnZSI6IkhpISBIb3cgY2FuIHdlIGhlbHAgeW91IHRvZGF5PyIsImRlZmF1bHRfd2FpdF9tZXNzYWdlIjoiT25lIG9mIHVzIHdpbGwgYmUgd2l0aCB5b3UgcmlnaHQgYXdheSwgcGxlYXNlIHdhaXQuIiwiZGVmYXVsdF9hZ2VudF9qb2luZWRfbXNnIjoie3thZ2VudF9uYW1lfX0gaGFzIGpvaW5lZCB0aGUgY2hhdCIsImRlZmF1bHRfYWdlbnRfbGVmdF9tc2ciOiJ7e2FnZW50X25hbWV9fSBoYXMgbGVmdCB0aGUgY2hhdCIsImRlZmF1bHRfYWdlbnRfdHJhbnNmZXJfbXNnX3RvX3Zpc2l0b3IiOiJZb3VyIGNoYXQgaGFzIGJlZW4gdHJhbnNmZXJyZWQgdG8ge3thZ2VudF9uYW1lfX0iLCJkZWZhdWx0X3RoYW5rX21lc3NhZ2UiOiJUaGFuayB5b3UgZm9yIGNoYXR0aW5nIHdpdGggdXMuIElmIHlvdSBoYXZlIGFkZGl0aW9uYWwgcXVlc3Rpb25zLCBmZWVsIGZyZWUgdG8gcGluZyB1cyEiLCJkZWZhdWx0X25vbl9hdmFpbGFiaWxpdHlfbWVzc2FnZSI6Ik91ciBhZ2VudHMgYXJlIHVuYXZhaWxhYmxlIHJpZ2h0IG5vdy4gU29ycnkgYWJvdXQgdGhhdCwgYnV0IHBsZWFzZSBsZWF2ZSB1cyBhIG1lc3NhZ2UgYW5kIHdlJ2xsIGdldCByaWdodCBiYWNrLiIsImRlZmF1bHRfcHJlY2hhdF9tZXNzYWdlIjoiV2UgY2FuJ3Qgd2FpdCB0byB0YWxrIHRvIHlvdS4gQnV0IGZpcnN0LCBwbGVhc2UgdGVsbCB1cyBhIGJpdCBhYm91dCB5b3Vyc2VsZi4iLCJhZ2VudF90cmFuc2ZlcmVkX21zZyI6IllvdXIgY2hhdCBoYXMgYmVlbiB0cmFuc2ZlcnJlZCB0byB7e2FnZW50X25hbWV9fSIsImFnZW50X3Jlb3Blbl9jaGF0X21zZyI6Int7YWdlbnRfbmFtZX19IHJlb3BlbmVkIHRoZSBjaGF0IiwidmlzaXRvcl9zaWRlX2luYWN0aXZlX21zZyI6IlRoaXMgY2hhdCBoYXMgYmVlbiBpbmFjdGl2ZSBmb3IgdGhlIHBhc3QgMjAgbWludXRlcy4iLCJhZ2VudF9kaXNjb25uZWN0X21zZyI6Int7YWdlbnRfbmFtZX19IGhhcyBiZWVuIGRpc2Nvbm5lY3RlZCIsInNpdGVfaWQiOiJhNzAyOWE0OTdjMzdhOGM1MGRkYjg1Y2UzOTliMTNiYyIsImFjdGl2ZSI6dHJ1ZSwid2lkZ2V0X3ByZWZlcmVuY2VzIjp7IndpbmRvd19jb2xvciI6IiM3Nzc3NzciLCJ3aW5kb3dfcG9zaXRpb24iOiJCb3R0b20gUmlnaHQiLCJ3aW5kb3dfb2Zmc2V0IjoiMzAiLCJtaW5pbWl6ZWRfdGl0bGUiOiJMZXQncyB0YWxrISIsIm1heGltaXplZF90aXRsZSI6IkNoYXQgaW4gcHJvZ3Jlc3MiLCJ0ZXh0X3BsYWNlIjoiWW91ciB0ZXh0IGdvZXMgaGVyZSIsIndlbGNvbWVfbWVzc2FnZSI6IkhpISBIb3cgY2FuIHdlIGhlbHAgeW91IHRvZGF5PyIsInRoYW5rX21lc3NhZ2UiOiJUaGFuayB5b3UgZm9yIGNoYXR0aW5nIHdpdGggdXMuIElmIHlvdSBoYXZlIGFkZGl0aW9uYWwgcXVlc3Rpb25zLCBmZWVsIGZyZWUgdG8gcGluZyB1cyEiLCJ3YWl0X21lc3NhZ2UiOiJPbmUgb2YgdXMgd2lsbCBiZSB3aXRoIHlvdSByaWdodCBhd2F5LCBwbGVhc2Ugd2FpdC4iLCJjb25uZWN0aW5nX21zZyI6IndhaXRpbmcgZm9yIGFnZW50IiwiYWdlbnRfbGVmdF9tc2ciOiJ7e2FnZW50X25hbWV9fSBoYXMgbGVmdCB0aGUgY2hhdCAiLCJhZ2VudF9qb2luZWRfbXNnIjoie3thZ2VudF9uYW1lfX0gb2Yge3toZWxwZGVza19uYW1lfX0gaGFzIGpvaW5lZCB0aGUgY2hhdCJ9LCJyb3V0aW5nIjp7ImRyb3Bkb3duX2Jhc2VkIjoiZmFsc2UiLCJjaG9pY2VzIjp7Imxpc3QxIjpbIjAiXSwibGlzdDIiOlsiMCJdLCJsaXN0MyI6WyIwIl0sImRlZmF1bHQiOlsiMCJdfX0sInByZWNoYXRfZm9ybSI6dHJ1ZSwicHJlY2hhdF9tZXNzYWdlIjoiV2UgY2FuJ3Qgd2FpdCB0byB0YWxrIHRvIHlvdS4gQnV0IGZpcnN0LCBwbGVhc2UgdGFrZSBhIGNvdXBsZSBvZiBtb21lbnRzIHRvIHRlbGwgdXMgYSBiaXQgYWJvdXQgeW91cnNlbGYuIiwicHJlY2hhdF9maWVsZHMiOnsibmFtZSI6eyJ0aXRsZSI6Ik5hbWUiLCJzaG93IjoiMiJ9LCJlbWFpbCI6eyJ0aXRsZSI6IkVtYWlsIEFkZHJlc3MiLCJzaG93IjoiMSJ9LCJwaG9uZSI6eyJ0aXRsZSI6IlBob25lIE51bWJlciIsInNob3ciOiIxIn0sInRleHRmaWVsZCI6eyJ0aXRsZSI6Ik1lc3NhZ2UiLCJzaG93IjoiMCJ9LCJkcm9wZG93biI6eyJ0aXRsZSI6IkRyb3BEb3duIiwic2hvdyI6IjAiLCJvcHRpb25zIjpbImxpc3QxIiwibGlzdDIiLCJsaXN0MyJdfX0sImJ1c2luZXNzX2NhbGVuZGFyIjpudWxsLCJub25fYXZhaWxhYmlsaXR5X21lc3NhZ2UiOm51bGwsInByb2FjdGl2ZV9jaGF0Ijp0cnVlLCJwcm9hY3RpdmVfdGltZSI6MTUsInNpdGVfdXJsIjoiamVldmFuc2F0aGkuZnJlc2hkZXNrLmNvbSIsImV4dGVybmFsX2lkIjpudWxsLCJkZWxldGVkIjpmYWxzZSwib2ZmbGluZV9jaGF0Ijp7InNob3ciOiIxIiwiZm9ybSI6eyJuYW1lIjoiTmFtZSIsImVtYWlsIjoiRW1haWwiLCJtZXNzYWdlIjoiTWVzc2FnZSJ9LCJtZXNzYWdlcyI6eyJ0aXRsZSI6IkxlYXZlIHVzIGEgbWVzc2FnZSEiLCJ0aGFuayI6IlRoYW5rIHlvdSBmb3Igd3JpdGluZyB0byB1cy4gV2Ugd2lsbCBnZXQgYmFjayB0byB5b3Ugc2hvcnRseS4iLCJ0aGFua19oZWFkZXIiOiJUaGFuayB5b3UhIn19LCJtb2JpbGUiOnRydWUsImNyZWF0ZWRfYXQiOiIyMDE0LTEyLTI3VDAzOjA2OjUzLjAwMFoiLCJ1cGRhdGVkX2F0IjoiMjAxNS0xMC0wNVQxMTo0ODo0MS4wMDBaIn0=';</script>
+</body>
+</html>

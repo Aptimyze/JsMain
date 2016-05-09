@@ -1,0 +1,737 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jeevansathi : Indian Matrimonial Site</title>
+</head>
+<script language="JavaScript" SRC="profile.js"></script>
+<script >
+function checkall()
+{
+if(document.fr1.LOAN3.checked == true)
+{
+	if(document.fr1.InsuranceAmount.value =="" )
+	{
+		alert("Please Enter the Insurance Amount");
+		document.getElementById("span_amount").style.color="RED";
+		document.fr1.InsuranceAmount.focus();
+		return false;
+	}
+	if(isNaN(document.fr1.InsuranceAmount.value))
+	{
+		alert("Please Enter the Insurance Amount only in Digits");
+		document.getElementById("span_amount").style.color="RED";
+                document.fr1.InsuranceAmount.focus();
+                return false;
+	}
+
+}
+	
+if(document.fr1.LOAN4.checked == true)
+{
+	if(document.fr1.FixedDeposits.checked==false && document.fr1.MutualFunds.checked==false && document.fr1.SavingAccounts.checked==false && document.fr1.Einvestment.checked==false)
+	{
+		alert("Please select one of the options in Financial Investment");
+		document.getElementById("span_investment").style.color="RED";
+		return false;
+	}
+}
+
+name= check_name(document.fr1.name,'name');
+if(name==2)
+return false;
+sname=check_name(document.fr1.sname,'surname');
+if(sname==2)
+return false;
+
+~if $profileid eq 0`
+email= check_email(document.fr1.email);
+if(email==2)
+return false;
+
+mob= check_number(document.fr1.residence,document.fr1.mobile);
+if(mob==2)
+return false;
+~/if`
+if(trim(document.fr1.pincode.value)=="")
+{
+alert("Please Specify Pincode");
+document.getElementById("span_pincode").style.color="RED";
+document.fr1.pincode.focus();
+return false;
+}
+else if(trim(isNaN(document.fr1.pincode.value)))
+{
+alert("Pincode is not valid");
+document.getElementById("span_pincode").style.color="RED";
+document.fr1.pincode.focus();
+return false;
+}
+else
+document.getElementById("span_pincode").style.color="black";
+~if $profileid eq 0`
+if(trim(document.fr1.age.value)=="" || (!parseInt(document.fr1.age.value)))
+{
+if(document.fr1.age.value=="")
+ages="Please Specify your Age";
+else
+ages=document.fr1.age.value+" is not a Valid Age";
+
+alert(ages);
+document.getElementById("span_age").style.color="red";
+document.fr1.age.focus();
+return false;
+}
+else
+{
+age_val=parseInt(document.fr1.age.value);
+if(age_val<18 ||age_val>70)
+{
+alert("Age should be between 18-70");
+document.getElementById("span_age").style.color="red";
+document.fr1.age.focus();
+return false;
+}
+else
+document.getElementById("span_age").style.color="black";
+}
+
+
+if(document.fr1.city.value==-1)
+{
+alert("Please specify City");
+document.getElementById("span_city").style.color='red';
+document.fr1.city.focus();
+return false;
+}
+else
+{
+document.getElementById("span_city").style.color='black';
+}
+if(document.fr1.occupation.value==-1)
+{
+alert("Please specify Occupation");
+document.getElementById("span_occupation").style.color='red';
+document.fr1.occupation.focus();
+return false;
+}
+else
+{
+document.getElementById("span_occupation").style.color='black';
+}
+~/if`
+}
+
+
+function check_number(a,b)
+{
+e=a.value;
+var filter  = /^[0-9]+$/;
+error=0;
+if(a.value!="")
+{
+
+res=(a.value).length;
+if(res<6||res>15)
+{
+alert("Please specify Residence no. between 6-15 digits");
+document.getElementById('span_residence').style.color='red';
+error=1;
+a.focus();
+}
+else if(!filter.test(a.value))
+{
+alert(a.value+" is not a valid Residence no., only Numbers are allowed");
+document.getElementById('span_residence').style.color='red';
+error=1;
+a.focus();
+}
+else
+document.getElementById('span_residence').style.color='black';
+}
+else
+document.getElementById("span_residence").style.color='black';
+if(b.value!="")
+{
+res=(b.value).length;
+if(res<10||res>15)
+{
+alert("Please specify Mobile  no. between 10-15 digits");
+document.getElementById('span_mobile').style.color='red';
+error=1;
+b.focus();
+
+}
+
+else if(!filter.test(b.value))
+{
+alert(b.value+" is not a valid Mobile no., only Numbers are allowed");
+document.getElementById('span_mobile').style.color='red';
+error=1;
+b.focus();
+}
+else
+document.getElementById('span_mobile').style.color='black';
+}
+else
+document.getElementById('span_mobile').style.color='black';
+if(a.value=="" && b.value=="")
+{
+alert("Please specify Residence no. or Mobile no.");
+document.getElementById('span_mobile').style.color="red";
+document.getElementById('span_residence').style.color="red";
+error=1;
+a.focus();
+}
+if(error==1)
+return 2;
+document.getElementById('span_mobile').style.color="black";
+document.getElementById('span_residence').style.color="black";
+return 1;
+}
+
+function check_name(a,b)
+{
+error=0;
+e=a.value;
+e=trim(e);
+total_apos=0;
+if(e=="")
+error=1;
+else
+{
+ok = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+for(i=0; i < e.length ;i++)
+{
+if(ok.indexOf(e.charAt(i))<0)
+{
+if((e.charAt(i))=="'" && e.length>1 && e.charAt(0)!="'" && e.charAt((e.length-1))!="'")
+{
+if(total_apos<1)
+total_apos=1;
+else
+error=1;
+}
+else
+error=1;
+}
+}
+}
+if(error==1)
+{
+if(e=="")
+errors="Please specify "+(b.substring(0,1)).toUpperCase()+b.substring(1,b.length);
+else
+errors=e+" is not a Valid "+(b.substring(0,1)).toUpperCase()+b.substring(1,b.length);
+alert(errors);
+eval("document.getElementById('span_"+b+"').style.color='red';");
+a.focus();
+return 2;
+}
+else
+{
+eval("document.getElementById('span_"+b+"').style.color='black';");
+return 1;
+}
+}
+function check_email(a)
+{
+error=0;
+e=a.value;
+if(trim(e)=="")
+error=1;
+var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9])+$/;
+if(!checkemail(e))
+{
+error=1;
+}
+if(error==0)
+if(!filter.test(e))
+error=1;
+
+if(error==1)
+{
+
+if(e=="")
+errors="Email ID is not Valid";
+else
+errors=e+" is not a Valid Email ID";
+alert(errors);
+eval("document.getElementById('span_email').style.color='red';");
+a.focus();
+return 2;
+}
+else
+{
+eval("document.getElementById('span_email').style.color='black';");
+return 1;
+}
+
+
+
+}
+function singlecheck(a)
+{
+if(a.checked==true)
+{
+document.fr1.ALL_LOAN.checked=false;
+for(var i=1;i<=4;i++)
+{
+eval("var temp=document.fr1.LOAN"+i+".checked");
+
+if(temp==false)
+break;
+}
+if(i==5)
+{
+document.fr1.ALL_LOAN.checked=true;
+for(var i=1;i<=4;i++)
+{
+eval("document.fr1.LOAN"+i+".checked=false;");
+}
+show_element1(document.fr1.LOAN1);
+show_element2(document.fr1.LOAN2);
+show_element3(document.fr1.LOAN3);
+show_element4(document.fr1.LOAN4);
+}
+}
+else
+{
+for(var i=1;i<=4;i++)
+{
+eval("var temp=document.fr1.LOAN"+i+".checked");
+
+if(temp==true)
+break;
+}
+
+if(i==5)
+document.fr1.ALL_LOAN.checked=true;
+}
+
+}
+function disableall()
+{
+if(document.fr1.ALL_LOAN.checked)
+{
+for(var i=1;i<=4;i++)
+{
+eval("document.fr1.LOAN"+i+".checked=false;");
+}
+show_element1(document.fr1.LOAN1);
+show_element2(document.fr1.LOAN2);
+show_element3(document.fr1.LOAN3);
+show_element4(document.fr1.LOAN4);
+document.getElementById('d1').checked=true;
+document.getElementById('Y').checked=true;
+document.getElementById('Insurance1').checked=true;
+document.getElementById('loanamount1').selected=true;
+document.getElementById('loanamount2').selected=true;
+document.getElementById('budget1').selected=true;
+document.getElementById('budget2').selected=true;
+document.getElementById('Insurance2').checked=false;
+document.getElementById('InsuranceAmount').value="";
+for(var j=2;j<=4;j++)
+{
+eval("document.getElementById('d"+j+"').checked=false;");
+}
+
+
+}
+else
+document.fr1.ALL_LOAN.checked=true;
+
+}
+
+
+function show_element1(element)
+{
+if(element.checked==true)
+{
+        document.getElementById('loan_1').style.display='inline';
+}       
+else
+{
+        document.getElementById('loan_1').style.display='none';
+}
+}
+
+function show_element2(element)
+{
+if(element.checked==true)
+{
+        document.getElementById('loan_2').style.display='inline';
+}       
+else
+{
+        document.getElementById('loan_2').style.display='none';
+}
+}
+function show_element3(element)
+{
+if(element.checked==true)
+{
+        document.getElementById('loan_3').style.display='inline';
+}       
+else
+{
+        document.getElementById('loan_3').style.display='none';
+}
+}
+function show_element4(element)
+{
+if(element.checked==true)
+{
+        document.getElementById('loan_4').style.display='inline';
+}       
+else
+{
+        document.getElementById('loan_4').style.display='none';
+}
+}
+function isNum(str)
+{
+        var string = str + '';
+        var flag=1;
+                        for (var i=0;i < string.length;i++)
+                {
+                if (((string.substring(i,i+1) < '0') || (string.substring(i,i+1) > '9')) && (string.substring(i,i+1) != "."))
+                {
+                        return false;
+                }
+                }
+    return true;/*   
+        for(var i=0;i < str.length;i++)
+        {
+                if((str[i]>=0 && str[i]<=9)||str[i]==".")
+                {}
+                else
+                        return 0;
+        }
+        return flag;//*/
+}
+/*function validate(str)
+{
+	if(isNaN(str))
+	{
+		alert("Please Enter the amount only in Digits");
+		//document.fr1.InsuranceAmount.focus();
+	}
+return true;
+}*/
+
+</script>
+<body>
+<table width="700" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" align="center" style="border: 1px solid #EBEBEB;">
+<tr>
+  <td colspan="2" align="left" valign="top"><img src="~$IMG_URL`/profile/ser4_images/header.jpg" alt="Header" width="700" height="155" style="padding-bottom:18px;"></td>
+</tr>
+
+<tr>
+<td colspan="2" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px; padding-left:20px; padding-top:6px; padding-bottom:6px;">We really appreciate your interest. <br><br>Fill in the details and get offers from:-</td>
+</tr>
+
+<form name=fr1 action="~$SITE_URL`/profile/promo_entry.php" method=POST onsubmit="return checkall()">
+<input type='hidden' name=profileid value=~$profileid`>
+<input type='hidden' name="enable_javascript" value="no">
+<input type='hidden' name="SOURCE" value=~$SOURCE`>
+
+<script>document.fr1.enable_javascript.value="yes";</script>
+<tr>
+<td colspan="2"><table width="700" border="0" cellspacing="0" cellpadding="0">
+<div align="center" style="margin: 0pt 7px; font-family: Verdana; font-style: normal; font-variant: normal; font-weight: normal; font-size: 11px; line-height: normal; font-size-adjust: none; font-stretch: normal; color: rgb(255, 0, 0); background-color: rgb(255, 251, 184); height: 35px; display:~$SUBMIT_ERROR`">
+<span style="background:#ffffff">&nbsp;</span>
+<img src="~$IMG_URL`/profile/ser4_images/error_1.gif" align="absmiddle" height="21" width="21">
+&nbsp;There are ~$TOTAL_ERROR` incomplete field(s) in your form. They are marked in red.<BR><span style="background:#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Please correct them and submit the form again.<br><br>
+</div>
+<TR><TD colspan=7><span style=" font-family: Verdana; font-style: normal; font-variant: normal; font-weight: normal; font-size: 11px;color:red;margin-left:22px" >~$OPTION_ERROR`</span></td></tr>
+
+<tr>
+	<td colspan="5" height="8"></td>
+</tr>
+<tr>
+	<td width="9" bgcolor="#E9E9E9">&nbsp;</td>
+	<td width="24" bgcolor="#E9E9E9"><input name="ALL_LOAN" type="checkbox" onclick="javascript:disableall()" value="ALL_LOAN" ~$ALL_LOAN` ></td>
+	<td width="292" bgcolor="#E9E9E9" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px;"><strong>All</strong></td>
+	<td width="20" bgcolor="#E9E9E9" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px;">&nbsp;</td>
+	<td width="355" bgcolor="#E9E9E9" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px;">&nbsp;</td>
+</tr>
+<tr>
+	<td colspan="5" height="8"></td>
+</tr>
+<tr>
+	<td width="9" bgcolor="#E9E9E9">&nbsp;</td>
+	<td width="24" bgcolor="#E9E9E9"> <input type="checkbox" name="LOAN1" value="LOAN_AGAINST_PROPERTY"  onclick="javascript:singlecheck(document.fr1.LOAN1),show_element1(document.fr1.LOAN1)" ~$LOAN1`></td>
+	<td width="292"  bgcolor="#E9E9E9" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px;"><strong>Home Loan</strong></td>
+	<td width="20" bgcolor="#E9E9E9"  style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px;"><input type="checkbox" name="LOAN2" value="PersonalLoan" onclick="javascript:singlecheck(document.fr1.LOAN2),show_element2(document.fr1.LOAN2)"  ~$LOAN2`></td>
+	<td width="355"  bgcolor="#E9E9E9" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px;"><strong>Personal Loan</strong></td>	
+</tr>
+<tr>
+	<td colspan="5" height="10"></td>
+</tr>
+<tr>
+	<td colspan="5" height="10"><table width="700" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="328"><table width="321" border="0" cellspacing="0" cellpadding="0" style="display:~$loan_1`" id="loan_1">
+
+  
+<tr>
+    <td width="159" height="27" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:11px; padding-left:11px;">Loan Amount</td>
+    <td width="159"><select style="width:120px; font-family: Verdana, Arial, Helvetica, sans-serif; font-size:11px;" name="LoanAmount1">
+~if $error gt  0`
+<option value="~$LoanAmount1`" selected>~$LoanAmount1`</option>
+~else` 
+<option value="0 to 5 Lakhs" id="loanamount1" selected>0 to 5 Lakhs</option>
+~/if`
+<option value="5 to 10 Lakhs">5 to 10 Lakhs</option>
+<option value="10 to 15 Lakhs">10 to 15 Lakhs</option>
+<option value="15 to 20 Lakhs">15 to 20 Lakhs</option>
+<option value="20+ Lakhs">20+ Lakhs</option>
+        </select></td>
+    <td width="3" rowspan="3" bgcolor="#CCCCCC"></td>
+</tr>
+   <tr>
+    <td width="159" height="26" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:11px; padding-left:11px;">Budget</td>
+    <td width="159"><select style="width:120px; font-family: Verdana, Arial, Helvetica, sans-serif; font-size:11px;" name="Budget1">
+~if $error gt  0`
+<option value="~$Budget1`" selected>~$Budget1`</option>
+~else`
+<option value="Upto 7 Lakhs" id="budget1" selected>Upto 7 Lakhs</option>
+~/if`
+<option value="7-15 Lakhs">7-15 Lakhs</option>
+<option value="15-20 Lakhs">15-20 Lakhs</option>
+<option value="20-25 Lakhs">20-25 Lakhs</option>
+<option value="Above 25 Lakhs">Above 25 Lakhs</option>
+        </select></td>
+    </tr>
+ <tr>
+    <td width="159" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:11px; padding-top:5px; padding-left:11px;">Property Identified</td>
+    <td width="159"><div align="left" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px;">
+            <input type="radio" name="property_identified" id="Y" value="Y" ~$property_identified1`>
+        Yes&nbsp;&nbsp;&nbsp; <input type="radio" name="property_identified" value="N" ~$property_identified2`>
+        No</div></td>
+    </tr>
+</table>
+</td>
+        <td width="372"><table width="367" border="0" cellspacing="0" cellpadding="0" style="display:~$loan_2`" id="loan_2">
+  <tr>
+     <td width="146" height="27" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:11px;">&nbsp;&nbsp;Loan Amount</td>
+    <td width="221"><select style="width:120px; font-family: Verdana, Arial, Helvetica, sans-serif; font-size:11px;" name="LoanAmount2">
+~if $error gt  0`
+<option value="~$LoanAmount2`" selected>~$LoanAmount2`</option>
+~else`
+<option value="0 to 5 Lakhs" id="loanamount2" selected>0 to 5 Lakhs</option>
+~/if`
+<option value="5 to 10 Lakhs">5 to 10 Lakhs</option>
+<option value="10 to 15 Lakhs">10 to 15 Lakhs</option>
+<option value="15 to 20 Lakhs">15 to 20 Lakhs</option>
+<option value="20+ Lakhs">20+ Lakhs</option>
+        </select></td>
+  </tr>
+   <tr>
+    <td width="146" height="29" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:11px;">&nbsp;&nbsp;Budget</td>
+    <td width="221"><select style="width:120px; font-family: Verdana, Arial, Helvetica, sans-serif; font-size:11px;" name="Budget2">
+~if $error gt  0`
+<option value="~$Budget2`" selected>~$Budget2`</option>
+~else`
+<option value="Upto 7 Lakhs" id="budget2" selected>Upto 7 Lakhs</option>
+~/if`
+<option value="7-15 Lakhs">7-15 Lakhs</option>
+<option value="15-20 Lakhs">15-20 Lakhs</option>
+<option value="20-25 Lakhs">20-25 Lakhs</option>
+<option value="Above 25 Lakhs">Above 25 Lakhs</option>
+        </select></td>
+  </tr>
+</table>
+</td>
+      </tr>
+    </table></td>
+</tr>
+
+<tr>
+	<td colspan="5" height="10"></td>
+</tr>
+<tr>
+	<td width="9" bgcolor="#E9E9E9">&nbsp;</td>
+	
+<td bgcolor="#E9E9E9"><input type="checkbox" name="LOAN3" value="Insurance" onclick="javascript:singlecheck(document.fr1.LOAN3),show_element3(document.fr1.LOAN3)"  ~$LOAN3`></td>
+	<td width="292"  bgcolor="#E9E9E9" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px;"><strong>Insurance</strong></td>
+	<td width="20" bgcolor="#E9E9E9"  style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px;">&nbsp;</td>
+	<td width="355"  bgcolor="#E9E9E9" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px;">&nbsp;</td>	
+</tr>
+<tr>
+	<td colspan="5" height="10"></td>
+</tr>
+<tr>
+~if $INSURANCE__ERROR eq "RED"`
+	<td colspan="5" height="10"><table width="690" border="0" cellspacing="0" cellpadding="0"  id="loan_3">
+~else`	
+
+	<td colspan="5" height="10"><table width="690" border="0" cellspacing="0" cellpadding="0" style="display:~$loan_3`" id="loan_3">
+~/if`
+  <tr>
+   <td width="29" align="right"><input  type="checkbox" name="Insurance1" id="Insurance1" value="GeneralInsurance" ~$GeneralInsurance` ></td>
+    <td width="291" height="27" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:11px; padding-left:6px;">General (Health, Car, Home)</td>
+   
+    
+    <td width="151" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:11px; padding-left:6px;"><span id="span_amount" style="color:~$INSURANCE_ERROR`"> *Insurance Amount </span></td>
+    <td width="219"><input style="width:120px;"  type="text" name="InsuranceAmount" id="InsuranceAmount" value="~$InsuranceAmount`" ></td>
+  </tr>
+   <tr>
+   <td width="29" align="right"><input name="Insurance2" id="Insurance2" type="checkbox" value="LifeInsurance" ~$LifeInsurance`></td>
+    <td width="291" height="26" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:11px; padding-left:6px;">Life insurance</td>
+    
+   </tr>
+</table></td>
+</tr>
+<tr>
+	<td colspan="5" height="10"></td>
+</tr>
+
+<tr>
+	<td width="9" bgcolor="#E9E9E9">&nbsp;</td>
+	
+<td bgcolor="#E9E9E9"><input type="checkbox" name="LOAN4" value="Financialinvestments" onclick="javascript:singlecheck(document.fr1.LOAN4),show_element4(document.fr1.LOAN4)" ~$LOAN4` ></td>
+	<td width="292"  bgcolor="#E9E9E9" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px;"><strong><span id="span_investment" style="color:~$INVESTMENT_ERROR`">Financial Investment</span></strong></td>
+	<td width="20" bgcolor="#E9E9E9"  style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px;">&nbsp;</td>
+	<td width="355"  bgcolor="#E9E9E9" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px;">&nbsp;</td>	
+</tr>
+<tr>
+	<td colspan="5" height="10"></td>
+</tr>
+<tr>
+	<td colspan="5" height="10"><table width="690" border="0" cellspacing="0" cellpadding="0" style="display:~$loan_4`" id="loan_4">
+  <tr>
+    <td width="11">&nbsp;</td>
+    <td width="20" align="right"><input type="checkbox" name="FixedDeposits" id="d1" value="FixedDeposits" ~$FixedDeposits`></td>
+    <td width="115" height="27" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:11px; padding-left:6px;">Fixed Deposits</td> 
+    <td width="11">&nbsp;</td>
+    <td width="20" align="right"><input type="checkbox" name="MutualFunds" id="d2" value="MutualFunds" ~$MutualFunds` ></td>
+    <td width="118" height="27" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:11px; padding-left:6px;">Mutual Funds</td>
+    <td width="11">&nbsp;</td>
+    <td width="20" align="right"><input type="checkbox" name="SavingAccounts" id="d3" value="Saving Accounts" ~$SavingAccounts` ></td>
+    <td width="126" height="27" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:11px; padding-left:6px;">Saving Accounts</td>
+     <td width="11">&nbsp;</td>
+    <td width="20"><input type="checkbox" name="Einvestment" id="d4" value="Einvestment" ~$Einvestment`></td>
+    <td width="215" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:11px; padding-left:6px;">E-investment</td>
+  </tr>
+</table></td>
+</tr>
+</table>
+</td></tr>
+
+<tr>
+	<td colspan="2" height="10"></td>
+</tr>
+<tr>
+        <td colspan="2" height="10" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:11px; padding-left:8px;">* Please fill the mandatory fields below as they help our clients to understand your need better and to serve you more efficiently.</td>
+</tr>
+<tr>
+<td width="163" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px; padding-top:5px; padding-left:20px;"><span id="span_name" style="color:~$NAME_ERROR`">*Name</span></td>
+
+    <td width="322" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px; padding: 5px;"><input style="width:175px;"  type="text" name="name" value="~$name`"></td>
+  </tr>
+  <tr>
+    <td width="163" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px; padding-top:5px; padding-left:20px;"><span id="span_surname" style="color:~$SURNAME_ERROR`">*Surname</span></td>
+    <td width="322" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px; padding: 5px;"><input style="width:175px;"  type="text" name="sname" value="~$sname`"></td>
+  </tr>
+~if $profileid eq 0`
+  <tr>
+    <td width="163" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px; padding-top:5px; padding-left:20px;"><span id="span_email" style="color:~$EMAIL_ERROR`">*Email id</span></td>
+    <td width="322" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px; padding: 5px;"><input style="width:175px;"  type="text" name="email" value="~$email`"></td>
+  </tr>
+~/if`
+~if $profileid eq 0`
+  <tr>
+    <td width="163" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px; padding-top:5px; padding-left:20px;"><span id="span_residence" style="color:~$RESIDENCE_ERROR`">*Residence No.</span> </td>
+    <td width="322" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px; padding: 5px;"><input style="width:175px;"  type="text" name="residence" value="~$residence`"></td>
+  </tr>
+  <tr>
+    <td width="163" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px; padding-top:5px; padding-left:25px;"><span id="span_mobile" style="color:~$MOBILE_ERROR`">Mobile No.</span></td>
+    <td width="322" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px; padding: 5px;"><input style="width:175px;"  type="text" name="mobile" value="~$mobile`" ></td>
+  </tr>
+~/if`
+~if $profileid eq 0`
+    <tr>
+    <td width="163" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px; padding-top:5px; padding-left:20px;"><span id="span_age" style="color:~$AGE_ERROR`">*Age</span></td>
+    <td width="322" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px; padding: 5px;"><input style="width:175px;"  type="text" name="age" value="~$age`" maxlength=2></td>
+  </tr>
+    <tr>
+    <td width="163" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px; padding-top:5px; padding-left:20px;"><span id="span_city" style="color:~$CITY_ERROR`">*City</span</td>
+    <td width="322" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px; padding: 5px;"><select style="width:180px;" name="city">
+
+ 			<option value="-1" selected>Select City</option>
+                          ~$city`
+			 
+                          </select>
+</td>
+  </tr>
+~/if`
+<tr>
+        <td width="163" style="font-family: Verdana, Arial,Helvetica, sans-serif;font-size:12px;padding-top:5px; padding-left
+:20px;"><span id="span_pincode" style="color:~$PINCODE_ERROR`">*Pin no.</span></td>
+        <td width="322" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px; padding: 5px;">
+        <input type="text" name="pincode" value="~$PINCODE`" size="6"></td>
+</TR>
+~if $profileid eq 0` 
+  <tr>
+    <td width="163" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px; padding-top:5px; padding-left:20px;"><span id="span_gender" style="color:~$GENDER_ERROR`">*Gender</span> </td>
+    <td width="322" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px; padding: 5px;"><table width="180" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="25"><input type="radio" name="gender" value="M" ~$gender_M`></td>
+    <td width="47">Male</td>
+    <td width="25"><input type="radio" name="gender" value="F" ~$gender_F`></td>
+    <td width="125">Female</td>
+  </tr>
+
+</table>
+</td>
+  </tr>
+~/if`
+~if $profileid eq 0`
+<tr>
+ <td style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px; padding-top: 5px; padding-left:20px;"><span id="span_occupation" style="color:~$OCCUPATION_ERROR`">*Occupation</span></td>
+ <td style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px; padding: 5px;"><select style="width:180px;" name="occupation" id="empStat2" >
+
+			<option value="-1">Please select one</option>
+~$occupation`		
+</select> </td>
+  </tr>
+~/if`
+~if $profileid eq 0`
+  <tr>
+    <td style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px; padding-top: 5px; padding-left:25px;">Yearly Income</td>
+    <td style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px; padding: 5px;"><select name="income" style="width:180px;">
+
+<option value="">Select</option>
+~$income`
+</select></td>
+  </tr>
+~/if`
+
+  </tr>
+<tr>
+<td style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px; padding: 5px;"><p>&nbsp;</p>
+</td>
+<td style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px; padding: 5px;"><input type="submit" name="Submit" value="Submit"></td>
+</tr>
+<tr>
+<td colspan="2" height="10"></td>
+</tr>
+<tr>
+<td colspan="2" height="10" style="font-family:Verdana, Arial, Helvetica, sans-serif; padding-left:10px; font-size:9px; color:#C9C9C9 "><strong>Disclaimer</strong><br>
+> Opting in here would imply that you are authorizing Info edge to pass on this expression of interest to our partners and this is with your consent. <br>
+> Info edge collects this information and forwards it to our partners <br>
+> Information shared would be to the extent that helps our partners to provide you with best deals/offers in this category <br>
+> No other information specific to you would be shared without your consent <br>
+> Our partners can contact you through SMS/Call/email on the details that you have provided to Info Edge</td>
+</tr>
+<tr>
+<td colspan="2" height="10"></td>
+</tr>
+</form>
+</table>
+</body>
+</html>
+

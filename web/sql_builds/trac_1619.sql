@@ -1,0 +1,9 @@
+use test;
+
+CREATE TABLE `IP_ALERT` (
+ `USERNAME` varchar(40) DEFAULT NULL,
+ `AGENT` varchar(40) DEFAULT NULL,
+ `ALLOTED_TO` varchar(40) DEFAULT NULL,
+ `DATE` datetime DEFAULT NULL,
+ KEY `DATE` (`DATE`)
+)

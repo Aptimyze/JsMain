@@ -1,0 +1,5 @@
+redirect 301 /mis/serve_banner_source.php http://ser6.jeevansathi.com/mis/serve_banner_source.php
+redirect 301 /mis/indicator_index.php http://ser6.jeevansathi.com/mis/indicator_index.php
+redirect 301 /mis/indicator_serve.php http://ser6.jeevansathi.com/mis/indicator_serve.php
+redirect 301 /mis/paynext.php http://ser6.jeevansathi.com/mis/paynext.php
+redirect 301 /mis/profile_acqstn_source_revenue.php http://ser6.jeevansathi.com/mis/profile_acqstn_source_revenue.php

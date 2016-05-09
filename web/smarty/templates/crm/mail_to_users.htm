@@ -1,0 +1,107 @@
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>Jeevansathi.com - Send Mail</title>
+  <link rel="stylesheet" href="../jsadmin/jeevansathi.css" type="text/css">
+  <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+ </head>
+ ~include file="head.htm"`
+ <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+  <br>
+ <table width=100% cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+    <tr width=100% class="formhead">
+          <td width=25% class="formhead" border=1><font><b>Welcome : ~$name`</b></font></td>
+          <td width="65%" class="formhead" align="center">&nbsp;
+</td>
+          <td width=10% class="formhead" border=1 align='CENTER'>&nbsp;
+</td>
+    </tr>
+</table>
+<br><br>
+<form action="mail_to_users.php" method=post>
+<table width=80% align=center>
+~if not $error and $preview`
+<tr>
+<td width=30% align=center class=label>Username</td>
+<td width=70% class=fieldsnew>~$username`</td>
+</tr>
+
+<tr>
+<td width=30% align=center class=label>From</td>
+<td width=70% class=fieldsnew>~$from`</td>
+</tr>
+
+<tr>
+<td width=30% align=center class=label>Subject</td>
+<td width=70% class=fieldsnew>~$subject`</td>
+</tr>
+
+<tr>
+<td width=30% align=center class=label>Message </td>
+<td width=70% class=fieldsnew><textarea name="message" rows=20 cols=70>~$message`</textarea></td>
+</tr>
+<tr>
+<td width=30% class=label>&nbsp;</td>
+<input type=hidden name="subject" value="~$subject`">
+<td width=70%  class=fieldsnew align=center>
+       <input type=submit name="send" value="Send">
+</td>
+</tr>
+~else`
+<tr>
+<td width=30% align=center class=label>Username</td>
+<td width=70% class=fieldsnew>~$username`</td>
+</tr>
+<tr>
+<tr>
+<td width=30% align=center class=label>From</td>
+<td width=70% class=fieldsnew>~$from_email`</td>
+</tr>
+<tr>
+<td width=30% align=center class=label>~if $NOSUBJECT eq 'Y'` <span class="red">Subject</span>~else`Subject~/if`</td>
+<td class=fieldsnew width=70%>
+	 ~section name=head loop=$header`                              
+             <input type="radio" name="heademail" value="~$header[head].ID`" ~if $header[head].ID eq $heademail` checked ~/if`>~$header[head].TITLE`<br>
+       ~/section`
+</td>
+</tr>
+<tr>
+<td width=30% align=center class=label>~if $NOBODY eq 'Y' or $MORETHAN3BODY eq 'Y'` <span class="red">Body<br>[Can not select more than 3 checkboxes]</span>~else`Body<br>[Can not select more than 3 checkboxes]~/if`</td>
+<td class=fieldsnew width=70%>
+	~section name=body loop=$body`
+		<input type="checkbox" name="bodyemail[]" value="~$body[body].ID`"~if $select[body] eq "Y"` checked ~/if`>~$body[body].TITLE`
+		~if $body[body].TITLE eq 'Other offers'`
+			 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~if $NOOOFFERUPTO eq 'Y'`<span class="red">Upto</span>~else`Upto~/if`&nbsp;&nbsp;&nbsp;<input type="text" name="Upto" value="" style="width:30px">&nbsp;%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~if $NOOOFFERTILL eq 'Y'`<span class="red">Till</span>~else`Till~/if`&nbsp;&nbsp;<select name="OO_till"><option  value="" selected>Select</option>~$days_arr`</select>
+		~/if`
+		~if $body[body].TITLE eq 'Festive Offer'`
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~if $NOFOFFERTILL eq 'Y'`<span class="red">Till</span>~else`Till~/if`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select name="FO_till"><option  value="" selected>Select</option>~$days_arr`</select>
+		~/if`
+		~if $body[body].TITLE eq 'Jeevansathi Branch Details'`
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~if $NOSUBLOCATION eq 'Y'`<span class="red">List of Branches</span>~else`List of Branches~/if`<select name="SUBLOCATION"><option  value="" selected>Select</option>~$sublocation`</select>
+		~/if`
+		<br>
+	~/section`
+</td>
+</tr>
+
+<!--tr>
+<td width=30% align=center class=label>~if $NOMESSAGE eq 'Y'` <span class="red">Message</span>~else`Message~/if`</td>
+<td class=fieldsnew width=70%><textarea name="footmessage" rows=10 cols=70>~$footmessage`</textarea></td>
+</tr-->
+<tr>
+<td width=30% class=label>&nbsp;</td>
+<td class=fieldsnew>
+	<input type=submit name="CMDSend" value="Preview">
+</td>
+</tr>
+~/if`
+</table>
+<input type=hidden name="cid" value="~$cid`">
+<input type=hidden name="username" value="~$username`">
+<input type=hidden name="profileid" value="~$profileid`">
+</form>
+
+  <br><br><br>
+  ~include file="foot.htm"`
+ </body>
+</html>

@@ -1,0 +1,304 @@
+homeSuccess:
+  metas:
+    #title:        Home
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    [/css/mmm_js/styles.css, /css/mmm_js/jeevansathi.css, /css/mmm_js/div.css]
+
+  javascripts:    []
+
+loginSuccess:
+  has_layout:  false
+  metas:
+    #title:        symfony project
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    []
+
+  javascripts:    []
+
+welcomeSuccess:
+  metas:
+    #title:        Welcome to MMM
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    [/css/mmm_js/styles.css]
+
+  javascripts:    []
+
+menuSuccess:
+  metas:
+    #title:        symfony project
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    [/css/mmm_js/styles.css]
+
+  javascripts:    [/js/mmm_js/menu.js]
+
+
+createMailerSuccess:
+  metas:
+    #title:        Create Mailer
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    [/css/mmm_js/styles.css, /css/mmm_js/jeevansathi.css, /css/mmm_js/div.css]
+
+  javascripts:    [/js/mmm_js/createMailer.js]
+
+createMailerMsgSuccess:
+  metas:
+    #title:        Mailer Message
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    [/css/mmm_js/styles.css, /css/mmm_js/jeevansathi.css, /css/mmm_js/div.css]
+
+  javascripts:    []
+
+formQuery_99Success:
+  metas:
+    #title:        form Query - 99acres.com
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    [/css/mmm_99/styles.css, /css/mmm_99/jeevansathi.css, /css/mmm_99/formQuery.css, /css/mmm_99/div.css]
+
+  javascripts:    [/js/mmm_99/formQuery.js]
+
+formQueryJsSuccess:
+  metas:
+    #title:        Advanced Search
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    [/css/mmm_js/calendar.css, /css/mmm_js/styles.css, /css/mmm_js/jeevansathi.css]
+
+  javascripts:    [/js/mmm_js/calendar.js, /js/mmm_js/formQuery.js]
+  
+formQuery_jsSaveSuccess:
+   metas:
+    #title:        MMMJS Message
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+   stylesheets:    [/css/mmm_js/styles.css, /css/mmm_js/jeevansathi.css]
+
+   javascripts:    []
+
+csvUploadSuccess:
+  metas:
+    #title:        Upload a CSV file
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    [/css/mmm_js/styles.css, /css/mmm_js/jeevansathi.css]
+
+  javascripts:    []
+
+writeMailSuccess:
+  metas:
+    #title:        symfony project
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    [/css/mmm_js/styles.css, /css/mmm_js/jeevansathi.css]
+
+  javascripts:    []
+
+urlMailSuccess:
+  metas:
+    #title:        symfony project
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    [/css/mmm_js/styles.css, /css/mmm_js/jeevansathi.css, /css/mmm_99/99_calendar.css]
+
+  javascripts:    [/js/mmm_js/writeMail_url.js, /js/mmm_js/urlMail.js, /js/mmm_99/99_calendar.js]
+
+Url_mailSuccess:
+  metas:
+    #title:        symfony project
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    [/css/mmm_js/styles.css, /css/mmm_js/jeevansathi.css]
+
+  javascripts:    []
+
+hardcodeMailSuccess:
+  metas:
+    #title:        symfony project
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    [/css/mmm_js/styles.css, /css/mmm_js/jeevansathi.css]
+
+  javascripts:    [/js/mmm_js/writeMail_hardcode.js]
+
+Hardcode_mailSuccess:
+  metas:
+    #title:        MMMJS MESSAGE
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    [/css/mmm_js/styles.css, /css/mmm_js/jeevansathi.css]
+
+  javascripts:    []
+
+setTestIdSuccess:
+  metas:
+    #title:        MMMJS SET EMAIL ID
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    [/css/mmm_js/styles.css, /css/mmm_js/jeevansathi.css, /css/mmm_js/div.css]
+
+  javascripts:    [/js/mmm_js/setTestId.js]
+
+fireMenuSuccess:
+  metas:
+    #title:        MMMJS FIREMAIL MENU
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    [/css/mmm_js/styles.css, /css/mmm_js/jeevansathi.css, /css/mmm_js/div.css]
+
+  javascripts:    [/js/mmm_js/fireMenu.js]
+
+misSuccess:
+  metas:
+    #title:        MIS
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    [/css/mmm_js/styles.css, /css/mmm_js/jeevansathi.css, /css/mmm_js/div.css]
+
+  javascripts:    [/js/mmm_js/mis.js]
+
+MISInfoSuccess:
+  metas:
+    #title:        MIS
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    [/css/mmm_js/styles.css, /css/mmm_js/jeevansathi.css, /css/mmm_js/div.css]
+
+  javascripts:    []
+
+
+clientMISLinkSuccess:
+  metas:
+    #title:        CLIENT MIS
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    [/css/mmm_js/styles.css, /css/mmm_js/jeevansathi.css, /css/mmm_js/div.css]
+
+  javascripts:    []
+
+showMISSuccess:
+  metas:
+    #title:        Showing MIS
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    [/css/mmm_js/jeevansathi.css, /css/mmm_js/div.css]
+
+  javascripts:    []
+
+logoutSuccess:
+  metas:
+    #title:        Jeevansathi.com
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    [/css/mmm_js/styles.css, /css/mmm_js/jeevansathi.css]
+
+  javascripts:    []
+
+createCsvSuccess:
+  metas:
+    #title:        Jeevansathi.com
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    [/css/mmm_js/styles.css, /css/mmm_js/jeevansathi.css]
+
+  javascripts:    []
+
+mis99Success:
+  metas:
+    #title:        symfony project
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    [/css/mmm_99/99_calendar.css]
+
+  javascripts:    [/js/mmm_99/99_calendar.js]
+
+mis99InfoSuccess:
+  metas:
+
+    #title:        symfony project
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    [/css/mmm_99/table.css]
+
+  javascripts:    []
+

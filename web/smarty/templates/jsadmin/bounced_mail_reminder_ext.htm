@@ -1,0 +1,133 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Extension of Bounced Mail Reminder</title>
+<link rel="stylesheet" href="/P/I/styles.css" type="text/css">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+</head>
+~include file="head.htm"`
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+~if $flag eq '1'`
+<br><br>
+<table width=100% align="CENTER" >
+<tr class="formhead" align="center">
+        <td>
+                <a href="search_user.php?user=~$USER`&cid=~$CID`&phrase=~$phrase`&criteria=~$criteria`&billid=~$billid`">Continue &gt;&gt;</a>
+        </td>
+</tr>
+</table>
+~else`
+<br><br>
+<table width=650 align="center">
+<tr class="formhead" align="center">
+<td colspan=8>User Details</td>
+</tr>
+<tr align="center">
+<td class="label" width=30%>Username</td>
+<td class="fieldsnew" colspan="7">~$username`</td>
+</tr>
+<tr class="label" align="center">
+        <td width=11%>Receipt ID</td>
+        <td width=13%>Bill ID</td>
+        <td width=15%>Status</td>
+        <td width=12%>Reason</td>
+        <td width=12%>Reminder Date</td>
+        <td width=12%>Entry Date</td>
+        <td width=14%>Entry By</td>
+</tr>
+~if $norecord`
+<tr class="fieldsnew" align="center" class="red">
+  <td align="center" colspan="7">
+     <font color="red">~$norecord`</font>
+  </td>
+</tr>
+~else`
+~section name=mysec loop=$userinfo`
+<tr class="fieldsnew" align="center">
+        <td width=11%>~$userinfo[mysec].receiptid`</td>
+        <td width=13%>~$userinfo[mysec].billid`</td>
+        <td width=15%>~$userinfo[mysec].action`</td>
+        <td width=12%>~$userinfo[mysec].del_reason`</td>
+        <td width=12%>~$userinfo[mysec].reminder_dt`</td>
+        <td width=12%>~$userinfo[mysec].entry_dt`</td>
+        <td width=14%>~$userinfo[mysec].entryby`</td>
+</tr>
+~/section`
+~/if`
+</table>
+<br>
+<form method=post action="bounced_mail_reminder_ext.php"  name="bounce_form">
+<table width=650 align="center">
+<tr class="formhead" align="center">
+<td colspan=2>Cheque Details</td>
+</tr>
+<tr align="center">
+<td class="label" width=30%>Cheque Number</td>
+<td class="fieldsnew">~$cd_num`</td>
+</tr>
+<tr align="center">
+<td class="label">Cheque Date</td>
+<td class="fieldsnew">~$cd_dt`</td>
+</tr>
+<tr align="center">
+<td class="label">Amount</td>
+<td class="fieldsnew">~$amt`</td>
+</tr>
+<tr align="center">
+<td class="label">Bank</td>
+<td class="fieldsnew">~$bank`</td>
+</tr>
+<tr align="center">
+<td class="label">City</td>
+<td class="fieldsnew">~$cd_city`</td>
+</tr>
+<tr align="center">
+<td class="label">Reason</td>
+<td class="fieldsnew">~$reason`</td>
+</tr>
+<tr align="center">
+<td class="label">Action to be taken</td>
+<td class="fieldsnew">
+<select name="action" class="textboxes1">
+<option value="D" ~if $action eq 'D'` selected ~/if`>Delay of Reminder Mail</option>
+<option value="R" ~if $action eq 'R'` selected ~/if`>Removal from List </option>
+</select>
+</td>
+</tr>
+<tr align="center" class="fieldsnew">
+<td class="label"><font color="~$dt_clr`">Reminder Date</font></td>
+<td class="fieldsnew">
+ <script type="text/javascript" src="calendar.js"></script>
+ <input type=text name="reminder_dt" value="~$reminder_dt`" size=10 maxlength=99 class=textfield id="field_5_3">
+ <script type="text/javascript">
+  <!--
+   document.write('<a title="Calendar" href="javascript:openCalendar(\'lang=en-iso-8859-1&amp;server=1\',\'bounce_form\', \'field_5_3\', \'date\')"><img class="calendar" src="../crm/img/b_calendar.png" alt="Calendar"  border=0></a>');
+//-->
+ </script>
+
+</tr>
+<tr align="center">
+<td class="label"><font color=~$reason_clr`>Comments</font></td>
+<td class="fieldsnew"><textarea rows="4" cols=30 name="del_reason" class="textboxes1">~$del_reason`</textarea></td>
+</tr>
+<tr align="center">
+<td class="label">&nbsp;</td>
+<td class="fieldsnew">
+	<input type="hidden" name="amt" value=~$amt`>
+	<input type="hidden" name="billid" value=~$billid`>
+	<input type="hidden" name="user" value=~$USER`>
+	<input type="hidden" name="username" value=~$username`>
+	<input type="hidden" name="cid" value=~$CID`>
+	<input type="hidden" name="phrase" value=~$phrase`>
+	<input type="hidden" name="criteria" value=~$criteria`>
+	<input type="hidden" name="receiptid" value=~$receiptid`>
+        <input type="hidden" name="profileid" value=~$profileid`>
+	<input type="submit" name="CMDSubmit" value="Submit" class="buttons1">
+</td>
+</tr-->
+</table>
+</form>
+~/if`
+
+</body>
+</html>

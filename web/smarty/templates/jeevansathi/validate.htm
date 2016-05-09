@@ -1,0 +1,496 @@
+<html>
+<head>
+<title>JeevanSathi Matrimonials - Complete your profile</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="~$IMG_URL`/profile/ser4_images/styles.php" type="text/css">
+<script language="JavaScript" SRC="profile.js"></SCRIPT>
+<script language="JavaScript">
+<!--
+
+function changeShowAddress()
+{
+	var docF=document.form1;
+	
+	if(docF.showAddress.checked)
+		docF.AddressText.value="Only for jeevansathi.com to contact you. Will not be disclosed on the site";
+	else
+		docF.AddressText.value="";
+}
+
+function changeCount()
+{
+	var docF=document.form1;
+	var str=new String();
+	
+	str=docF.Information.value;
+	docF.wordcount.value=str.length;
+}
+
+function validate1()
+{
+	var docF=document.form1;
+	
+	if(docF.Occupation.value=="")
+	{
+		alert("Please specify Occupation");
+		return false;
+	}
+	
+	/*
+	if(docF.Income.value=="")
+	{
+		alert("Please specify Annual Income");
+		return false;
+	}
+	*/
+	if(docF.Rstatus.value=="")
+	{
+		alert("Please specify Residency Status");
+		return false;
+	}
+	
+	~if $check eq "N"`
+	if(docF.City_Res.value=="")
+	{
+		alert("Please specify Place of current residence");
+		return false;
+	}
+	~/if`
+		
+	if(docF.Country_Birth.value=="")
+	{
+		alert("Please specify Country of Birth");
+		return false;
+	}
+	
+	if(docF.Education_Level.value=="")
+	{
+		alert("Please specify Education Level");
+		return false;
+	}
+	
+	if(docF.Smoke.value=="")
+	{
+		alert("Please specify whether you Smoke or not");
+		return false;
+	}
+	
+	if(docF.Drink.value=="")
+	{
+		alert("Please specify whether you Drink or not");
+		return false;
+	}
+	
+	if(trim(docF.Address.value)=="")
+	{
+		alert("Please specify your Contact Address");
+		return false;
+	}
+	
+	if(trim(docF.pincode.value)=="")
+	{
+		alert("Please specify Pincode");
+		return false;
+	}
+	
+	if(trim(docF.Information.value)=="")
+	{
+		alert("Please specify Information about yourself");
+		return false;
+	}
+	
+	var iStr=docF.Information.value;
+	if(iStr.length < 100)
+	{
+		alert("Information about yourself should contain a minimum of 100 characters");
+		return false;
+	}
+
+	return true;
+}
+
+//-->
+</SCRIPT>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body leftmargin="5" topmargin="5">
+        <table width="760" border="0" cellspacing="0" cellpadding="2" align="center">
+          <tr> 
+            <td width="192"><table width="192" border="0" cellspacing="2" cellpadding="0">
+  <tr>
+    <td width="192"><a href="~$SITE_URL`/"><img src="~$IMG_URL`/profile/ser4_images/logo_1.gif" width="192" height="47" border="0" alt="Indian matrimonials"></a></td>
+  </tr>
+  <tr>
+    <td height="16" bgcolor="#d9d9d9" class="mediumblack"><div align="center"><strong class="smallblack1">India's Leading Matrimonial Site</strong></div></td>
+  </tr>
+</table></td>
+            <td width="389" valign="bottom"><!--<a href="~$SITE_URL`/profile/contact.php?checksum=e8250347ec21ebfbb5b948f61bc1cb87i91208"><img src="~$IMG_URL`/profile/ser4_images/walkin_banner.gif"border="0"></a>-->&nbsp;</td>
+            <!-- <td width="150" valign="bottom"><a href='http://server.iad.liveperson.net/hc/13507809/?cmd=file&file=visitorWantsToChat&offlineURL=~$SITE_URL`/P/faq_redirect.php&site=13507809&byhref=1&imageUrl=~$SITE_URL`/P/images/liveperson' target='chat13507809'  onClick="javascript:window.open('http://server.iad.liveperson.net/hc/13507809/?cmd=file&file=visitorWantsToChat&offlineURL=~$SITE_URL`/P/faq_redirect.php&site=13507809&imageUrl=~$SITE_URL`/images/liveperson&referrer='+escape(document.location),'chat13507809','width=472,height=320');return false;" ><img src='http://server.iad.liveperson.net/hc/13507809/?cmd=repstate&site=13507809&&ver=1&imageUrl=~$SITE_URL`/images/liveperson' name='hcIcon' width=144 height=49 border=0></a></td> -->
+          </tr>
+       <td height="8" bgcolor="#6bb90b" colspan="3"></td>
+<SPACER height="8" type="block"></SPACER> </tr>
+</table>
+        <table width="760" border="0" cellspacing="0" cellpadding="0" align="center">
+<tr> 
+<td valign="top" height="2"><img src="~$IMG_URL`/profile/ser4_images/yellow_line.gif" width="760" height="8"></td>
+</tr>
+</table>
+  <table width="600"  border="0" align="center" cellpadding="1" cellspacing="1" bgcolor="#FCE1B1">
+  <form name="form1" method="post" action="editprofile1.php" onsubmit="return validate1();">
+    <tr>
+      <td><table width="600" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
+         <tr>
+          <td height="5" colspan="2"></td>
+          <SPACER height="5" type="block"></SPACER> </tr>
+        <tr>
+          <td><div align="center"><img src="~$IMG_URL`/profile/ser4_images/edit_profile.gif" width="534" height="36"></div></td>
+        </tr>
+        <tr>
+          <td class=mediumblack height="42"><table width="600" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td height="605"><table width="600" border="0" cellspacing="4" cellpadding="2" align="center">
+                    <tr>
+                      <td class="extralargepink" colspan="2" height="2">Complete your Profile </td>
+                    </tr>
+                    ~if $NO_OF_ERROR`<tr><td colspan="2">
+        <font color="red" size="2" face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;There are ~$NO_OF_ERROR` Error(s) in your form. They are marked in red. Please correct them and submit the form again</font></td></tr>
+        ~/if`
+                    <tr>
+                      <td class=mediumblack colspan="2" height="2"><strong>Please Note:</strong>Your profile is incomplete. Please take this opportunity to fill in ALL the required details now. Once it&rsquo;s completed, your profile will be posted on our site and you will be able to contact our members. </td>
+                    </tr>
+                    <tr>
+                      <td class=mediumblack colspan="2" height="2"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 8. What is Your</b> </td>
+                    </tr>
+                    <tr>
+                      <td class=mediumblack width="200"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>a. ~if $check_occupation eq "Y"`<font color="red">Occupation*</font> ~else`Occupation*~/if` </td>
+                      <td width="400"><select name="Occupation" size="1" class="TextBox">
+                          <option  value="" >Select any one option</option>
+                                ~$OCCUPATION`
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class=mediumblack><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>b. ~if $check_income eq "Y"`<font color="red">Annual income</font>~else`Annual income~/if` </td>
+                      <td class=mediumblack><select name="Income" class="TextBox">
+                          <option value="" >Select any one option</option>
+                                ~$INCOME`
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class=mediumblack><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td width="18%" valign="top" class="mediumblack">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c.</td>
+                            <td width="82%" class=mediumblack>Place of current residence*</td>
+                          </tr>
+                      </table></td>
+                      <td class=mediumblack>~if $check eq "N"`
+                          <select name="City_Res" size="1" class="TextBox">
+                            <option value="" selected>Select any one option</option>
+				~if $cor eq "51"` ~$CITY_INDIA` ~elseif $cor eq "128"` ~$CITY_USA` ~/if`	
+                          </select>~/if`
+			   ~if $check eq "Y"`
+				~$COUNTRY_LABEL` 
+			   ~/if`
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class=mediumblack><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>d. ~if $check_rstatus eq "Y"`<font color="red">Residency status*</font>~else`Residency status*~/if` </td>
+                      <td><select name="Rstatus" size="1" class="TextBox">
+                          <option value="" selected >Select any one option</option>
+                                <option value="1" ~if $RES_STATUS eq '1'` selected ~/if`>Citizen</option>
+                            <option value="2" ~if $RES_STATUS eq '2'` selected ~/if`>Permanent Resident</option>
+                            <option value="3" ~if $RES_STATUS eq '3'` selected ~/if`>Work Permit</option>
+                            <option value="4" ~if $RES_STATUS eq '4'` selected ~/if`>Student Visa</option>
+                            <option value="5" ~if $RES_STATUS eq '5'` selected ~/if`>Temporary Visa</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class=mediumblack height="12"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>f. ~if $check_country_birth eq "Y"`<font color="red">Country of birth*<font>~else`Country of birth*~/if` </td>
+                      <td class=mediumblack height="12"><select name="Country_Birth" size = "1" class="TextBox">
+                          <OPTION value="" >Select any one option</OPTION>
+                                ~$COUNTRY_BIRTH`
+                        </SELECT>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class=mediumblack><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>g. ~if $check_city_birth eq "Y"`<font color="red">City of birth<font>~else`City of birth~/if` </td>
+                      <td><input type="text" name="City_Birth" value="~$CITY_BIRTH`" class="textbox">
+                          <br>
+                          <span class="smallred">Each time you edit this field, it will be screened and may take upto 24 hrs to go live.</span></td>
+                    </tr>
+                    <tr>
+                      <td class=mediumblack><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>h. Time of birth </td>
+                      <td><select name=Hour_Birth class="TextBox">
+                          <option value="" ><font size="2">Select Hour</font></option>
+                <option value="00" ~if $HOUR eq "00"`selected~/if`><font size="2">00</font></option>
+                <option value="01" ~if $HOUR eq "01"`selected~/if`><font size="2">01</font></option>
+                <option value="02" ~if $HOUR eq "02"`selected~/if`><font size="2">02</font></option>
+                <option value="03" ~if $HOUR eq "03"`selected~/if`><font size="2">03</font></option>
+                <option value="04" ~if $HOUR eq "04"`selected~/if`><font size="2">04</font></option>
+                <option value="05" ~if $HOUR eq "05"`selected~/if`><font size="2">05</font></option>
+                <option value="06" ~if $HOUR eq "06"`selected~/if`><font size="2">06</font></option>
+                <option value="07" ~if $HOUR eq "07"`selected~/if`><font size="2">07</font></option>
+                <option value="08" ~if $HOUR eq "08"`selected~/if`><font size="2">08</font></option>
+                <option value="09" ~if $HOUR eq "09"`selected~/if`><font size="2">09</font></option>
+                <option value="10" ~if $HOUR eq "10"`selected~/if`><font size="2">10</font></option>
+                <option value="11" ~if $HOUR eq "11"`selected~/if`><font size="2">11</font></option>
+                <option value="12" ~if $HOUR eq "12"`selected~/if`><font size="2">12</font></option>
+                <option value="13" ~if $HOUR eq "13"`selected~/if`><font size="2">13</font></option>
+                <option value="14" ~if $HOUR eq "14"`selected~/if`><font size="2">14</font></option>
+                <option value="15" ~if $HOUR eq "15"`selected~/if`><font size="2">15</font></option>
+                <option value="16" ~if $HOUR eq "16"`selected~/if`><font size="2">16</font></option>
+                <option value="17" ~if $HOUR eq "17"`selected~/if`><font size="2">17</font></option>
+                <option value="18" ~if $HOUR eq "18"`selected~/if`><font size="2">18</font></option>
+                <option value="19" ~if $HOUR eq "19"`selected~/if`><font size="2">19</font></option>
+                <option value="20" ~if $HOUR eq "20"`selected~/if`><font size="2">20</font></option>
+                <option value="21" ~if $HOUR eq "21"`selected~/if`><font size="2">21</font></option>
+                <option value="22" ~if $HOUR eq "22"`selected~/if`><font size="2">22</font></option>
+                <option value="23" ~if $HOUR eq "23"`selected~/if`><font size="2">23</font></option>
+                        </select>
+                  :
+                  <SELECT name=Min_Birth class="TextBox">
+                    <OPTION value="" >Select Min</OPTION>
+                <OPTION value="00" ~if $MINUTE eq '00'` selected ~/if`>00</OPTION>
+                <OPTION value="01" ~if $MINUTE eq '01'` selected ~/if`>01</OPTION>
+                <OPTION value="02" ~if $MINUTE eq '02'` selected ~/if`>02</OPTION>
+                <OPTION value="03" ~if $MINUTE eq '03'` selected ~/if`>03</OPTION>
+                <OPTION value="04" ~if $MINUTE eq '04'` selected ~/if`>04</OPTION>
+                <OPTION value="05" ~if $MINUTE eq '05'` selected ~/if`>05</OPTION>
+                <OPTION value="06" ~if $MINUTE eq '06'` selected ~/if`>06</OPTION>
+                <OPTION value="07" ~if $MINUTE eq '07'` selected ~/if`>07</OPTION>
+                <OPTION value="08" ~if $MINUTE eq '08'` selected ~/if`>08</OPTION>
+                <OPTION value="09" ~if $MINUTE eq '09'` selected ~/if`>09</OPTION>
+                <OPTION value="10" ~if $MINUTE eq '10'` selected ~/if`>10</OPTION>
+                <OPTION value="11" ~if $MINUTE eq '11'` selected ~/if`>11</OPTION>
+                <OPTION value="12" ~if $MINUTE eq '12'` selected ~/if`>12</OPTION>
+                <OPTION value="13" ~if $MINUTE eq '13'` selected ~/if`>13</OPTION>
+                <OPTION value="14" ~if $MINUTE eq '14'` selected ~/if`>14</OPTION>
+                <OPTION value="15" ~if $MINUTE eq '15'` selected ~/if`>15</OPTION>
+                <OPTION value="16" ~if $MINUTE eq '16'` selected ~/if`>16</OPTION>
+                <OPTION value="17" ~if $MINUTE eq '17'` selected ~/if`>17</OPTION>
+                <OPTION value="18" ~if $MINUTE eq '18'` selected ~/if`>18</OPTION>
+                <OPTION value="19" ~if $MINUTE eq '19'` selected ~/if`>19</OPTION>
+                <OPTION value="20" ~if $MINUTE eq '20'` selected ~/if`>20</OPTION>
+                <OPTION value="21" ~if $MINUTE eq '21'` selected ~/if`>21</OPTION>
+                <OPTION value="22" ~if $MINUTE eq '22'` selected ~/if`>22</OPTION>
+                <OPTION value="23" ~if $MINUTE eq '23'` selected ~/if`>23</OPTION>
+                <OPTION value="24" ~if $MINUTE eq '24'` selected ~/if`>24</OPTION>
+                <OPTION value="25" ~if $MINUTE eq '25'` selected ~/if`>25</OPTION>
+                <OPTION value="26" ~if $MINUTE eq '26'` selected ~/if`>26</OPTION>
+                <OPTION value="27" ~if $MINUTE eq '27'` selected ~/if`>27</OPTION>
+                <OPTION value="28" ~if $MINUTE eq '28'` selected ~/if`>28</OPTION>
+                <OPTION value="29" ~if $MINUTE eq '29'` selected ~/if`>29</OPTION>
+                <OPTION value="30" ~if $MINUTE eq '30'` selected ~/if`>30</OPTION>
+                <OPTION value="31" ~if $MINUTE eq '31'` selected ~/if`>31</OPTION>
+                <OPTION value="32" ~if $MINUTE eq '32'` selected ~/if`>32</OPTION>
+                <OPTION value="33" ~if $MINUTE eq '33'` selected ~/if`>33</OPTION>
+                <OPTION value="34" ~if $MINUTE eq '34'` selected ~/if`>34</OPTION>
+                <OPTION value="35" ~if $MINUTE eq '35'` selected ~/if`>35</OPTION>
+                <OPTION value="36" ~if $MINUTE eq '36'` selected ~/if`>36</OPTION>
+                <OPTION value="37" ~if $MINUTE eq '37'` selected ~/if`>37</OPTION>
+                <OPTION value="38" ~if $MINUTE eq '38'` selected ~/if`>38</OPTION>
+                <OPTION value="39" ~if $MINUTE eq '39'` selected ~/if`>39</OPTION>
+                <OPTION value="40" ~if $MINUTE eq '40'` selected ~/if`>40</OPTION>
+                <OPTION value="41" ~if $MINUTE eq '41'` selected ~/if`>41</OPTION>
+                <OPTION value="42" ~if $MINUTE eq '42'` selected ~/if`>42</OPTION>
+                <OPTION value="43" ~if $MINUTE eq '43'` selected ~/if`>43</OPTION>
+                <OPTION value="44" ~if $MINUTE eq '44'` selected ~/if`>44</OPTION>
+                <OPTION value="45" ~if $MINUTE eq '45'` selected ~/if`>45</OPTION>
+                <OPTION value="46" ~if $MINUTE eq '46'` selected ~/if`>46</OPTION>
+                <OPTION value="47" ~if $MINUTE eq '47'` selected ~/if`>47</OPTION>
+                <OPTION value="48" ~if $MINUTE eq '48'` selected ~/if`>48</OPTION>
+                <OPTION value="49" ~if $MINUTE eq '49'` selected ~/if`>49</OPTION>
+                <OPTION value="50" ~if $MINUTE eq '50'` selected ~/if`>50</OPTION>
+                <OPTION value="51" ~if $MINUTE eq '51'` selected ~/if`>51</OPTION>
+                <OPTION value="52" ~if $MINUTE eq '52'` selected ~/if`>52</OPTION>
+                <OPTION value="53" ~if $MINUTE eq '53'` selected ~/if`>53</OPTION>
+                <OPTION value="54" ~if $MINUTE eq '54'` selected ~/if`>54</OPTION>
+                <OPTION value="55" ~if $MINUTE eq '55'` selected ~/if`>55</OPTION>
+                <OPTION value="56" ~if $MINUTE eq '56'` selected ~/if`>56</OPTION>
+                <OPTION value="57" ~if $MINUTE eq '57'` selected ~/if`>57</OPTION>
+                <OPTION value="58" ~if $MINUTE eq '58'` selected ~/if`>58</OPTION>
+                <OPTION value="59" ~if $MINUTE eq '59'` selected ~/if`>59</OPTION>
+                  </SELECT>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class=mediumblack><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>i. ~if $check_education_level eq "Y"`<font color="red">Education level*<font>~else`Education level*~/if` </td>
+                      <td><select name="Education_Level" size="1" class="TextBox">
+                          <option value="" selected >Select any one option</option>
+                                ~$EDUCATION_LEVEL`
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class=mediumblack height="2"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>j. Educational Qualification</td>
+                      <td class=smallblack height="2"><input type="text" name="Educ_Qualification" value="~$EDUCATION`" size="55" class="testbox">
+                          <br>
+                          <span class="smallred">Each time you edit this field, it will be screened and may take upto 24 hrs to go live.</span> </td>
+                    </tr>
+                  </table>
+                    <table width="96%" border="0" cellspacing="0" align="center" cellpadding="0">
+                      <tr>
+                        <td bgcolor="#CCCCCC"><img src="~$IMG_URL`/profile/ser4_images/blank_grey.gif"></td>
+                      </tr>
+                    </table>
+                    <br>
+                    <table width="600" border="0" cellspacing="4" cellpadding="2" align="center">
+                      <tr>
+                        <td class=mediumblack colspan="2"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9. More information about yourself</b></td>
+                      </tr>
+                      <tr>
+                        <td width="200" class=mediumblack>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. ~if $check_smoke eq "Y"`<font color="red">Smoke*<font>~else`Smoke*~/if` </td>
+                        <td width="400"><select name="Smoke" size="1" class="TextBox">
+                            <option value="" selected >Select any one option</option>
+                                  <option value="Y" ~if $SMOKE eq 'Y'` selected ~/if`>Yes</option>
+                            <option value="N" ~if $SMOKE eq 'N'` selected ~/if`>No</option>
+                            <option value="O" ~if $SMOKE eq 'O'` selected ~/if`>Occassionally</option>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class=mediumblack>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b. ~if $check_drink eq "Y"`<font color="red">Drink*<font>~else`Drink*~/if` </td>
+                        <td><select name="Drink" size="1" class="TextBox">
+                            <option value="" >Select any one option</option>
+                                  <option value="Y"  ~if $DRINK eq 'Y'` selected ~/if`>Yes</option>
+                            <option value="N"  ~if $DRINK eq 'N'` selected ~/if`>No</option>
+                            <option value="O"  ~if $DRINK eq 'O'` selected ~/if`>Occassionally</option>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class=mediumblack>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c. Diet*</td>
+                        <td class=mediumblack><input type=radio value="V" name="Diet" ~if $DIET eq 'V' || !$DIET`checked ~/if`>
+                  Vegetarian&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <input type=radio value="N" name="Diet" ~if $DIET eq 'N'`checked ~/if`>
+                  Non-Vegetarian &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <input type=radio value="J" name="Diet" ~if $DIET eq 'J'`checked ~/if`>
+                  Jain </td>
+                      </tr>
+                      <tr>
+                        <td class=mediumblack height="26" valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td width="18%" valign="top" class="mediumblack">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d.&nbsp;</td>
+                              <td width="82%" class="mediumblack"> ~if $check_information eq "Y"`<font color="red">Other Information about yourself*<font>~else`Other Information about yourself*~/if` </td>
+                            </tr>
+                        </table></td>
+                        <td class=smallblack height="26"><textarea name="Information"  class="testbox" cols="55" rows="3" onKeyup="changeCount();">~$YOURINFO`</textarea>
+                            <br>
+                            <table width="300" border="0" cellspacing="1" cellpadding="1">
+                              <tr>
+                                <td width="100" class= "mediumblack">No. of characters </td>
+                                <td width="14"><input name="wordcount" type="text" class="testbox" value="~$CHARACTERS`" size="3" disabled style="border: 1px solid #ffffff;"></td>
+                                <td width="176" class="smallblack">(minimum 100 characters)</td>
+                              </tr>
+                            </table>
+                            [Give additional information about your (i) occupation &amp; income; (ii) personality; (iii) siblings; (iv) family background; and (v) any other.] <br>
+                            <span class="smallred">Each time you edit this field, it will be screened and may take upto 24 hrs to go live.</span> </td>
+                      </tr>
+                    </table>
+                    <table width="96%" border="0" cellspacing="0" cellpadding="0" align="center">
+                      <tr>
+                        <td bgcolor="#CCCCCC"><img src="~$IMG_URL`/profile/ser4_images/blank_grey.gif"></td>
+                      </tr>
+                    </table>
+                    <br>
+                    <table width="600" border="0" cellspacing="4" cellpadding="2" align="center">
+                      <tr>
+                        <td width="200" valign="top" class=mediumblack><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td width="22%" valign="top" class="mediumblack">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>10.&nbsp;</b></td>
+                              <td width="78%"><b class="mediumblack"> Desired characteristics of&nbsp;your spouse</b></td>
+                            </tr>
+                        </table></td>
+                        <td width="400" class=smallblack><textarea name="Spouse" class="testbox" cols="55" rows="3">~$SPOUSE`</textarea>
+                            <br>
+                        <span class="smallred">Each time you edit this field, it will be screened and may take upto 24 hrs to go live.</span> </td>
+                      </tr>
+                      <tr>
+                        <td class=mediumblack height="5" valign="top">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>11. ~if $check_address eq "Y"`<font color="red">~/if`Contact Address*~if $check_address eq "Y"`</font>~/if`</b></td>
+                        <td class=smallblack height="5"><textarea name="Address" cols="55" rows="3" class="testbox">~$CONTACT`</TEXTAREA>
+                            <br>
+                            <table width="300" border="0" cellspacing="1" cellpadding="1">
+                              <tr>
+                                <td width="48" class="mediumblack"><b>~if $check_pincode eq "Y"`<font color="red">~/if`PIN No.*~if $check_pincode eq "Y"`</font>~/if`</b></td>
+                                <td width="252"><input name="pincode" type="text" class="testbox" value="~$PINCODE`" size="6" maxlength="6"></td>
+                              </tr>
+                            </table>
+                            (Please DO NOT enter your e-mail id here. Contact details other than e-mail id may be given here.) <span class="smallred">Each time you edit this field, it will be screened and may take upto 24 hrs to go live.</span> </td>
+                      </tr>
+                      <tr>
+                        <td>&nbsp;</td>
+                        <td><input name="AddressText" type="text" class="testbox1" ~if $SHOWADDRESS eq "N"`value="Only for jeevansathi.com to contact you. Will not be disclosed on the site"~else`value=""~/if` size="65" readonly>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>&nbsp;</td>
+                        <td class=smallblack height="1"><table width="300" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td width="28" class= "mediumblack"><input type="checkbox" name="showAddress" value="N" ~if $SHOWADDRESS eq "N"`checked~/if` onclick="changeShowAddress();"></td>
+                              <td width="252" class="mediumblack">Don't reveal my Contact Address</td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                      <tr>
+                        <td height="2" valign="top" class=mediumblack>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>12. Messenger ID</b></td>
+                        <td height="2" class=mediumblack><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td width="152"><input type="text" name="Messenger_ID" value="~$MESSENGER_ID`" class="testbox">
+                              </td>
+                              <td width="268">~if $check_messenger eq "Y"`<font class=testbox color="red">Please select an option</font>~/if`<select name="Messenger" class="testbox">
+                                        <option value="" selected>Select one option</option>
+                                        <option value="1" ~if $MESSENGER_CHANNEL eq '1' or $MESSENGER_CHANNEL eq ''` selected ~/if`>Yahoo</option>
+                                  <option value="2" ~if $MESSENGER_CHANNEL eq '2'` selected ~/if`>MSN</option>
+                                  <option value="3" ~if $MESSENGER_CHANNEL eq '3'` selected ~/if`>Skype</option>
+                                  <option value="5" ~if $MESSENGER_CHANNEL eq '5'` selected ~/if`>ICQ</option>
+				<option value="7" ~if $MESSENGER_CHANNEL eq '7'` selected ~/if`>Rediff Bol</option>
+                                  <option value="4" ~if $MESSENGER_CHANNEL eq '4'` selected ~/if`>Others</option>
+                                      </select>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td colspan="2"><table width="300" border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td width="28"><input type="checkbox" name="showMessenger" value="N" ~if $SHOWMESSENGER eq "N"`checked~/if`></td>
+                                    <td width="272" class="mediumblack">Don't reveal my Messenger ID</td>
+                                  </tr>
+                              </table></td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                      <tr>
+                        <td height="2" valign="top" class=mediumblack><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;13. About your family</b></td>
+                        <td class=mediumblack height="2"><textarea name="Family" class="testbox" cols="55" rows="3">~$FAMILYINFO`</textarea>
+                            <br>
+                            <span class="smallred">Each time you edit this field, it will be screened and may take upto 24 hrs to go live.</span> </td>
+                      </tr>
+                      <tr>
+                        <td class=mediumblack>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td class=mediumblack><br>
+                            <input type="hidden" name="checksum" value="~$CHECKSUM`">
+                              <input type="hidden" name="cor" value="~$cor`">
+                              <input type="hidden" name="scriptvalidate" value="1">
+                                  <input type="submit" name="Fsubmit" value="Submit" class="TextBox">
+                        </td>
+                      </tr>
+                    </table>
+                    <table width="96%" border="0" cellspacing="0" cellpadding="0" align="center">
+                      <tr>
+                        <td bgcolor="#CCCCCC"><img src="~$IMG_URL`/profile/ser4_images/blank_grey.gif"></td>
+                      </tr>
+                  </table></td>
+              </tr>
+            </table>
+              <br></td>
+        </tr>
+      </table></td>
+    </tr>
+	</form>
+  </table>
+<br>
+~$SUBFOOTER`
+<br>
+~$FOOT`
+</body>
+</html>

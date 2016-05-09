@@ -1,0 +1,107 @@
+/*! jQuery-Dynameter by Tzechiu Lei
+*   http://tze1.com/dynameter/
+*   v0.5.6
+*   2014-06-13
+*   Copyright (c) 2014 Tzechiu Lei.  MIT license. */
+
+div.dm-wrapperDiv {
+  display: block;
+  position: relative;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  zoom: 1;
+  overflow: hidden;
+  width: 129px;
+  height:69px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1;
+}
+div.dm-wrapperDiv * {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  zoom: 1;
+}
+div.dm-wrapperDiv div {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+div.dm-wrapperDiv div.dm-bgClrDiv,
+div.dm-wrapperDiv div.dm-maskDiv {
+  width: 127px;
+  height: 63px;
+}
+div.dm-wrapperDiv div.dm-bgClrDiv,
+div.dm-wrapperDiv div.dm-maskDiv {
+  -webkit-border-radius: 100px 100px 0 0;
+  -moz-border-radius: 100px 100px 0 0;
+  -ms-border-radius: 100px 100px 0 0;
+  border-radius: 100px 100px 0 0;
+  border: 2px solid #F0F2F7;
+  border-bottom: 0;
+  -webkit-transform-origin: center bottom;
+  -moz-transform-origin: center bottom;
+  -ms-transform-origin: center bottom;
+  transform-origin: center bottom;
+}
+div.dm-wrapperDiv div.dm-bgClrDiv.normal {
+  background-image:url(IMG_URL/images/jspc/editProfileImg/progbar1.jpg);
+}
+div.dm-wrapperDiv div.dm-bgClrDiv.warn {
+  background-image: url(IMG_URL/images/jspc/editProfileImg/progbar1.jpg);
+}
+div.dm-wrapperDiv div.dm-bgClrDiv.error {
+  background-image: url(IMG_URL/images/jspc/editProfileImg/progbar1.jpg);
+}
+div.dm-wrapperDiv div.dm-maskDiv {
+  background-color: #dddddd;
+  z-index: 4;
+}
+div.dm-wrapperDiv div.dm-innerDiv {
+  bottom: 0;
+  left: 20px;
+  -webkit-border-radius: 80px 80px 0 0;
+  -moz-border-radius: 80px 80px 0 0;
+  -ms-border-radius: 80px 80px 0 0;
+  border-radius: 80px 80px 0 0;
+  border-bottom: 1px #F0F2F7;
+  width: 87px;
+  height: 42px;
+  padding-top: .7em;
+  background-color: #eeeeee;
+  text-align: center;
+  text-transform: uppercase;
+  z-index: 5;
+}
+div.dm-wrapperDiv div.dm-innerDiv p {
+  margin: 3px auto;
+  width: auto;
+  max-width: 85%;
+  overflow: hidden;
+  text-align: center;
+}
+div.dm-wrapperDiv div.dm-innerDiv p.dm-valueP {
+  font-size: 210%;
+  line-height: .85;
+}
+div.dm-wrapperDiv div.dm-innerDiv p.dm-unitP {
+  margin-top: 0;
+  font-size: 75%;
+  font-weight: normal;
+}
+div.dm-wrapperDiv div.dm-innerDiv p.dm-labelP {
+  font-size: 100%;
+}
+div.dm-wrapperDiv{
+  margin-left: 62px;
+}

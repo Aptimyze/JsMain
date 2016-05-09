@@ -1,0 +1,98 @@
+@CHARSET "UTF-8";
+/* Large desktop */
+@media (min-width: 1200px) {
+	.pgwrapper{width:1170px;padding: 0 15px 0 15px}
+	.pgwrapperAlb{width:1151px !important;}
+	.wd_fp{ width:100% !important;}
+	.w100{ width:100% !important;}
+	.widthAlbum{width:1140px;margin-right:16px;}
+}
+
+/* Portrait tablet to landscape and desktop */
+@media (min-width: 768px) and (max-width: 979px) {
+	.pgwrapper{width:724px;padding: 0 15px 0 15px}
+	.pgwrapperAlb{width:711px !important;}
+	.wd_fp{ width:100% !important;}
+	.w100{ width:100% !important;}
+	.widthAlbum{width:694px;margin-right:16px;}
+}
+
+/* Landscape phone to portrait tablet */
+@media (max-width: 767px) {
+	.pgwrapper{width:auto;padding: 0 15px 0 15px}
+	.pgwrapperAlb{width:90% !important;}
+	.wd_fp{ width:100% !important;}
+	.w100{ width:100% !important;}
+	.widthAlbum{width:3.33%;margin-right:16px;}
+}
+
+/* Landscape phones and down */
+@media (max-width: 480px) {
+	.pgwrapper{width:auto;padding: 0 15px 0 15px}
+	.pgwrapperAlb{width:90% !important;}
+	.wd_fp{ width:100% !important;}
+	.w100{ width:100% !important;}
+	.widthAlbum{width:3.33%;margin-right:16px;}
+}
+
+
+
+@media (min-width: 280px) and (max-width: 320px) {
+        .pgwrapper{width:auto;padding: 0 15px 0 15px}
+	.pgwrapperAlb{width:90% !important;}
+	.widthAlbum{width:3.33%;margin-right:16px;}
+       
+		.wd_name, .wd_pwd{ width:90% !important; }
+		.wd_fp{ width:100% !important;}
+	    .w100{ width:100% !important;}
+		.mbNum .num2{ width:83% !important;}
+		.w90p{ width:90% !important;}
+		.feed_ta{width:90%;}
+		.gender_style{ margin:4px 3px 0px 1px;}
+		.showhide{right:23px;}
+		
+}
+
+@media (max-width: 280px) {
+        .pgwrapper{width:auto;padding: 0 15px 0 15px}
+	.pgwrapperAlb{width:90% !important;margin-right:16px;}
+	.widthAlbum{width:3.33%}
+        .mrtp3{
+			margin-top:-2px !important;
+		}
+		.mrlf5{
+			margin-left:5px;
+		}
+		.mrrgt5{
+			margin-right:3px;
+		}
+		.src_prof{
+			/*height: 16px !important; */
+			font-size: 13px;
+			width:150px;
+			float:left;
+		}
+		.wd_name, .wd_pwd{ width:90% !important; }
+		.mbNum .num2{ width:80% !important;}
+		.gender_style{ margin:-4px 3px 0px 1px !important;width:20px; height:10px;border:1px solid #000;}		
+		.grid-col-3 .gridCol{ width:40% !important;}
+		
+		
+		
+
+}
+
+@media (max-width: 979px) {
+	
+}
+
+@media (min-width: 980px) {
+}
+
+@CHARSET "UTF-8";
+*{
+	margin:0 auto;padding:0
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}

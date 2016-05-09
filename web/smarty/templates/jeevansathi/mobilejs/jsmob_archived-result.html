@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta http-equiv="Content-Type" content="text/xhtml+xml; charset=utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Search Matrimonial profiles-Jeevansathi</title>
+<meta name="description" content="Search Matrimonial Profiles - Matrimonial - Matrimony. in the leading matrimony site for Indian & NRI matrimonial Profiles. Add Free Matrimonial Profile – Jeevansathi.com ! Find suitable Indian and NRI brides and grooms. Ready for Marriage ? Search matrimonials, matrimony profiles, bride and groom from our online matrimonial and matchmaking services."> 
+<meta name="keywords" content="Jeevansathi.com, Indian matrimony, India, matrimony, matrimonial, matrimonials, matrimony services, online matrimonials, Indian marriage, match making, matchmaking, matchmaker, match maker, marriage bureau , matchmaking services, matrimonial profiles, bride, groom, matrimony classified.">
+<!-- Stylesheet start-->
+<link href="~$IMG_URL`/min/?f=/css/~$mobile_media_css`,/profile/css/~$mobilejs_css`,/css/~$mobilejs_revamp`,/css/~$mobile_hamburger_css`" rel="stylesheet" type="text/css" />
+<!-- Stylesheet end-->
+<link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/apple-touch-icon-72x72-precomposed.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/apple-touch-icon-114x114-precomposed.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+<script type = "text/javascript" src = "~$JQUERY_JS`"></script>
+<script src="~$IMG_URL`/min/?f=/js/html5_js.js,/js/mobBrowser_js.js,/js/~$mobHamburger_js`"></script>
+<style>
+.cont_mid{font-family:Arial, Helvetica, sans-serif;font-size:12px; color:#0000000; padding: 0px 20px 0px 20px;line-height:16px;}
+
+b.wh{font-family:Arial, Helvetica, sans-serif;font-size:17px; color:#0000000;float:left;}
+b.whsmall{font-family:Arial, Helvetica, sans-serif;color:#0000000;float:left;margin-top:2px;}
+.cross{ margin:2px 3px 0px 0px; color:#bc001d;display:inline;float:left}
+.clr_18{clear:both; height:18px; overflow:hidden;}
+.sprte{background:url(~$IMG_URL`/profile/images/jsarch_sprte.png);}
+.act_btn{width:114px; height:27px; background-position:-84px -60px; margin:0px; border:0;cursor:pointer;}
+input.txt1{float:left; width:130px; height:19px; border:1px solid #ccc; padding-left:3px;}
+</style>
+~include file="../jeevansathi/google_analytics.htm"`
+</head>
+<body >
+<!-- Header start-->
+		<div id="main">
+~$LEFT_SLIDER`
+<div id="maincomponent">
+~$HEADER`
+<div id="mainpart">
+<!-- Header end-->
+<!-- search for start-->
+<div  class="cont_mid" id="cont_mid_first" ~$FIRST_STYLE`>
+	<div class="existing1 fbld" >Please activate your account</div>
+	<div style="float:left;"></div>
+	<!-- search for end-->
+	<div class="srch1">Due to your inactivity on site jeevansathi.com, your account has been deactivated, If you want to activate your account please provide
+	your Email id below. The activation mail will be sent to this email ID </div>
+	<div style="padding-bottom:3px;">
+	</div>
+	<div style="padding:12px;">
+	<form name=fr1 action="retrieve_archived.php" method="POST" style="margin:0;padding:0" onSubmit="return check_validate_arc(1)">
+	<div style="float:left;margin-top:3px"><b>Email id &nbsp;</b></div>
+		<div style="float:left">
+			<div>	<input name="email" id="email_js" type="text" value="~$EMAIL`" class="txt1"></input><BR>
+			<p class="cross" id="cross" ~$ERROR_CROSS`><img src="~$IMG_URL`/profile/images/cross_icon.gif"> Invalid Email.</p>
+			</div>
+			<div>
+				<p class="clr_18"></p>
+				<a  class="normalbtn fbld"  id="submit_button" style="cursor:pointer" onclick="return check_validate_arc(0)">Activate Account</a>
+				<input type="submit" class="act_btn sprte" name="Submit" style="width:0px;height:0px;overflow:none;display:none">
+			</div>
+	
+		</div>
+	</form>
+	</div>
+</div>
+
+<div  id="cont_mid_second" ~$SECOND_STYLE`>
+        <div class="existing1 fbld" >Account activation</div>
+        <div style="float:left;"></div>
+        <!-- search for end-->
+        <div class="srch1"></div>
+        <div style="padding-bottom:3px;">
+        </div>
+        <div style="padding:12px;">
+	An email has been sent to <b>~$EMAIL`</b><BR><BR>
+	Please check your mail after some time and click on the link to get your account activated<BR><BR>
+        </div>
+        <p style="height:50px;"></p>
+</div>
+
+<div  id="cont_mid_third" ~$THIRD_STYLE`>
+        <div class="existing1 fbld" >Account activated</div>
+        <div style="float:left;"></div>
+        <!-- search for end-->
+        <div class="srch1"></div>
+        <div style="padding-bottom:3px;">
+        </div>
+        <div style="padding:12px;">
+        Your account has been sent for activation.<BR><BR>
+Do check back your account within 1 hour.<BR><BR>
+        </div>
+        <p style="height:50px;"></p>
+</div>
+
+<p class="clr"></p>  
+<p style="height:50px;"></p>
+<!-- footer start-->
+</div>
+~$FOOTER`
+</div>
+~$RIGHT_SLIDER`
+</div>
+<!-- footer end-->
+<script>
+function check_validate_arc(ret)
+{
+       	var em_val=document.getElementById("email_js").value; 
+        if((em_val.indexOf(".") > 2) && (em_val.indexOf("@") > 0))
+        {
+		document.getElementById("cross").style.display="none";
+		if(ret==1)
+			return true;
+		else
+			document.fr1.submit();
+
+        }
+        else
+        {
+		document.getElementById("cross").style.display="inline";
+		return false;
+        }               
+}
+</script>
+</body>
+</html>

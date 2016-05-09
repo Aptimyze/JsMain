@@ -1,0 +1,2 @@
+type=command
+command=${php5} ${docRoot}/crontabs/hits_to_oldhits.php

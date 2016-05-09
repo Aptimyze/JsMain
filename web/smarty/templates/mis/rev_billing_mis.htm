@@ -1,0 +1,138 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br><br>
+~if $flag eq '1'`
+	<table width=100% align=center>
+	<tr class=formhead>
+	<td align=center>&nbsp;~$DATE1` &nbsp; &nbsp;TO &nbsp; ~$DATE2`</td>
+	</tr>
+	<tr class=formhead>
+	<td align=center>Total(Rs)&nbsp;&nbsp;~$tot_rs`  &nbsp; &nbsp;And &nbsp;Total(DOL) &nbsp;~if $tot_dol eq ''`0 ~else` ~$tot_dol` ~/if`</td>
+	</tr>
+	</table>
+
+	<table width=100% align=center>
+	<tr class=label>
+		<td align=center>Client-NAME</td>
+		<td align=center>Sale-Id</td>
+		<td align=center>Receipt-Id</td>
+		<td align=center>Mode</td>
+		<td align=center>Amount</td>
+		<td align=center>TDS</td>
+		<td align=center>Transaction-No</td>
+		<td align=center>Cheque/DD-Dt</td>
+		<td align=center>Cheque/DD-No</td>
+		<td align=center>Cheque/DD-City</td>
+		<td align=center>Bank</td>
+		<td align=center>Entry-Dt</td>
+		<td align=center>Sale-By</td>
+		<td align=center>Deposit-Dt</td>
+		<td align=center>Deposit-Branch</td>
+	
+		
+	</tr>
+	~if $arr neq ''`
+	~section name=sec loop=$arr`
+	 ~if $arr[sec].new_tab eq 'Y'`<tr class=formhead>
+        <td align=center colspan='15'>~$arr[sec].last_sort`</td></tr>~/if`
+	<tr class=fieldsnew>
+		<td align=center>~$arr[sec].client`</td>
+		<td align=center>~$arr[sec].saleid`</td>
+		<td align=center>~$arr[sec].receiptid`</td>
+		<td align=center>~$arr[sec].mode`</td>
+		<td align=center>~$arr[sec].type`&nbsp;&nbsp;~$arr[sec].amt`</td>
+		<td align=center>~$arr[sec].type`&nbsp;&nbsp;~$arr[sec].tds`</td>
+		<td align=center>~$arr[sec].t_num`</td>
+		<td align=center>~$arr[sec].cd_dt`</td>
+		<td align=center>~$arr[sec].cd_num`</td>
+		<td align=center>~$arr[sec].cd_city`</td>
+		<td align=center>~$arr[sec].bank`</td>
+		<td align=center>~$arr[sec].entry_dt`</td>
+		<td align=center>~$arr[sec].sale_by`</td>
+		<td align=center>~$arr[sec].deposit_dt`</td>
+		<td align=center>~$arr[sec].deposit_branch`</td>
+	<tr>
+	~if $arr[sec].tot_sort_amt_rs neq ''`
+	<tr class=formhead>
+        <td align=center colspan='14'>Total(Rs)&nbsp;&nbsp;~$arr[sec].tot_sort_amt_rs` &nbsp;&nbsp; &nbsp;&nbsp;Total(Dol)&nbsp;&nbsp;~$arr[sec].tot_sort_amt_dol`</td></tr>~/if`
+	~/section`
+	~else`
+	<tr class=label>
+	<td colspan=100% align=center>&nbsp;No Records Found</td>
+	</tr>
+	~/if`
+	</table>
+	<br>
+~else`
+	<form action="rev_billing_mis.php" method=post>
+	<table width=80% align=center>
+	<tr>
+		<td>  From </td>
+		<td>
+		<select name=day>
+			~section name=sec loop=$ddarr`
+			<option value="~$ddarr[sec]`">~$ddarr[sec]`</option>
+			~/section`
+		</select> -
+		<select name=month>
+			~section name=sec loop=$mmarr`
+			<option value="~$mmarr[sec]`">~$mmarr[sec]`</option>
+			~/section`
+		</select> -  
+		<select name=year>
+			~section name=sec loop=$yyarr`
+			<option value="~$yyarr[sec]`">~$yyarr[sec]`</option>
+			~/section`
+		</select> 
+		</td>
+		<td>To </td>
+		<td>
+		<select name=day2>
+			~section name=sec loop=$ddarr`
+			<option value="~$ddarr[sec]`">~$ddarr[sec]`</option>
+			~/section`
+		</select> -
+		<select name=month2>
+			~section name=sec loop=$mmarr`
+			<option value="~$mmarr[sec]`">~$mmarr[sec]`</option>
+			~/section`
+		</select> -  
+		<select name=year2>
+			~section name=sec loop=$yyarr`
+			<option value="~$yyarr[sec]`">~$yyarr[sec]`</option>
+			~/section`
+		</select> 
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<input type=hidden name=cid value="~$cid`">
+			<input type=submit name=CMDGo value="  Go  ">
+		</td>
+	<tr>
+	</table>
+	</form>
+~/if`
+</body>
+</html>

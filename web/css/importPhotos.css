@@ -1,0 +1,22 @@
+.gactainer{width:590px; margin-bottom:4px;background:#fff; }
+Input.Pdis{color:#a5a5a5; border:0px; font-size:16px; background:0% 4px no-repeat; padding-left:15px; width:95px;}
+Input.Pact{color:#0776BC; border:0px; font-size:16px; background: 0% 4px no-repeat; padding-left:15px; cursor:pointer;}
+Input.Ndis{color:#a5a5a5; border:0px; font-size:16px;background: 100% 4px no-repeat; padding-right:15px;width:65px;}
+Input.Nact{color:#0776BC; border:0px; font-size:16px;background:100% 4px no-repeat; padding-right:15px; cursor:pointer;}
+.npbtncont{float:left; font-size:17px; padding-top:20px;}
+.gallgbgbx{background:#fafafa; border:1px #ececec solid; padding:13px 10px 13px 36px; float:left; width:540px;}
+.gallery li {
+        display: inline;
+        list-style: none;
+        float: left;
+        margin: 0 29px 10px 0;
+        text-align: left;
+	}
+.gallery li img{
+	border:1px #dddddd solid;
+	padding:15px 0 15px 0;
+}
+.gallery li input
+{
+	margin: 0 0 4px 0;
+}

@@ -1,0 +1,65 @@
+<html>
+<head>
+<title>Jeevansathi.com - CRM - Operator Record</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="../mis/jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br><br>
+<table align=center>
+<tr class=formhead>
+<td align=center><a href="mainpage.php?cid=~$cid`">Click here to go to main page</a></td>
+</tr>
+</table>
+<br><br>
+
+<table width=90% align="center">
+<tr class="label">
+<td align=center colspan=100% class=green>These records are the claims for the current month</td>
+</tr>
+<tr class="label">
+<td align="center" width=33%>Total Claim*</td>
+<td align="center" width=33%>Total Paid</td>
+<td align="center" width=34%>Total Non-Paid</td>
+</tr>
+<tr class="fieldsnew">
+<td class="label" align="center"><a href="individual_operator_detail.php?cid=~$cid`">~$total_claim`</a></td>
+<!--<td class="label" align="center">~$total_claim`</td>-->
+<td align="center">~$total_paid`</td>
+<td align="center">~$total_nonpaid`</td>
+</tr>
+</table>
+<br>
+<table width=90% align="center">
+<tr class="label">
+<td align=center colspan=100% class=green>These records are the sales for the current month</td>
+</tr>
+<tr class="label">
+<td align="center" width=33%%>Total Amount**</td>
+<td align="center" class=fieldsnew width=33%><a href="individual_operator_detail_sales.php?cid=~$cid`">~$total_amt`</a></td>
+<td align="center" class=fieldsnew width=34%>&nbsp;</td>
+</tr>
+</table>
+
+<br>
+<center><h2>* The link on claim shows the records claimed in the current month and their status.</h2>
+<center><h2>** The link on the amount shows the records of your sales in the current month.</h2>
+<br><br>
+</body>
+</html>

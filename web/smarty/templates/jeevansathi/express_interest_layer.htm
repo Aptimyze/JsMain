@@ -1,0 +1,145 @@
+<style>
+/* search */
+.sreach_pannal{background-image:url(images/bg_search.gif);background-repeat:repeat-x;width:778px;}
+.pd2{padding:2px 2px 2px 5px;}
+div.row{clear:both; padding:3px 0 0px 0;color:#000;width:98%;margin:auto;}
+
+#subtab {margin: 0px}
+#subtab ul {margin: 0; padding: 0; list-style: none; }
+#subtab li {float: left; margin: 0 0 0 0; white-space: nowrap; background-image:url(images/subtab_nav_bg.gif); background-position:bottom; background-repeat:repeat-x; font: bold 12px Arial; height:24px }
+#subtab a {float: left; padding: 0 0 1px 9px; text-decoration: none;color:#117daa;}
+#subtab a:hover{color: #000000;}
+#subtab a.current {background-position: 0 -28px; background: url(images/subtab_nav_left.gif) no-repeat; color:#2673bb; }
+#subtab a span {float: left; padding: 4px 30px 4px 22px;}
+#subtab a:hover span{cursor: pointer; color:#2673bb; }
+#subtab a.current span {background-position: 100% -28px; background: url(images/subtab_nav_rite.gif) no-repeat 100% 0; cursor: pointer;}
+#subtab a.current:hover span {cursor: default;}
+/* end search */
+/* view css */
+.sr_top_bg{background-image:url(images/sr_top_bg.gif); background-repeat:repeat-x; height:20px;}
+.sr_bottom_bg{background-image:url(images/sr_bottom_bg.gif); background-repeat:repeat-x; height:5px;}
+.orange_border{border:1px #fed369; border-left-style:solid; border-right-style:solid; padding:5px;}
+.white_top_big_curve{background-image:url(images/white_top_big_curve.gif); background-repeat:no-repeat;height:3px;clear:both}
+.white_bottom_big_curve{background-image:url(images/white_bottom_big_curve.gif); background-repeat:no-repeat;height:3px;clear:both}
+.white_big_curve_bg{background-image:url(images/white_big_curve_bg.gif); background-repeat:repeat-y;width:530px;float:left}
+.scrollbox4{background-color:#f3fbd1;height:180px;overflow:auto;width:588px}
+.view_album{padding:7px; text-align:center;float:left; border:1px #fed369 solid}
+.similar_bg{ background-image:url(images/similar_bg.gif); width:180px; height:77px;}
+.crsl_left_btn{background-image:url(images/crsl_left_button.gif); width:24px; height:98px; background-position:left ;background-repeat:no-repeat;}
+.crsl_right_btn{background-image:url(images/crsl_right_button.gif); width:24px; height:98px; background-repeat:no-repeat;background-position:right}
+.crsl_left_btn_hover{background-image:url(images/crsl_left_button_hover.gif); width:24px; height:98px; background-position:left ;background-repeat:no-repeat;}
+.crsl_right_btn_hover{background-image:url(images/crsl_right_button_hover.gif); width:24px; height:98px; background-repeat:no-repeat;background-position:right}
+#carousel{margin:8px 0 0 5px; width:610px; float:left}
+.crsl_border{border:1px #777b77 solid; padding:2px}
+.crsl_snapslot{width:132px;margin-right:6px;text-align:center;float:left}
+.rfree_panel{ background-image:url(images/rfree_panel_bg.gif);background-repeat:no-repeat;width:124px;height:255px;}
+.dark_orange{color:#ff5a00;}
+.pgbar{background-color:#24c10e;}
+.scrollbox4{background-color:#f3fbd1;height:290px;overflow:auto;width:588px}
+/* layer starts here*/
+.lyr{width:314px; background:url(~$IMG_URL`/profile/images/lyr_bg_img.gif) repeat-y;}
+.lyr_tp_cur{width:314px; height:12px; font-size:2px; background:url(~$IMG_URL`/profile/images/lyr_tp_btm_cur.gif);}
+.lyr_btm_cur{width:314px; height:12px; font-size:2px; background:url(~$IMG_URL`/profile/images/lyr_tp_btm_cur.gif) 0 -12px;}
+.lyr .cnt{width:280px; float:right;margin:10px 15px 10px 0; display:inline;}
+.lyr .cnt h4{font:bold 14px Arial, Helvetica, sans-serif; color:#ff5a00; margin:0; padding:0; width:80%; float:left;}
+.lyr a.crs{color:#117daa; text-decoration:none; margin:-10px 0 0 0; position:relative;}
+.lyr textarea.txt_area1{float:left; width:260px; height:67px; border:1px solid #ccc; padding:10px; font:11px Arial, Helvetica, sans-serif;}
+.lyr .shw_info{width:232px; padding:10px; background:#f6f5f5; border:1px solid #ccc;}
+.lyr .shw_info ul{margin:0; padding:0; float:left; width:230px; list-style:none;}
+.lyr .shw_info ul li{float:left; width:99.9%; margin:0 0 6px;}
+.lyr .shw_info ul li label{float:left; width:58px;}
+.lyr .shw_info ul li i{float:left; width:150px; font-style:normal;}
+/* layer ends here*/
+
+</style>
+<div class="lf" style="padding:1px 0px;width:315px;position:relative;z-index:1000;" id="show_express">
+<div class="lyr">
+<div class="lyr_tp_cur"></div>
+<div class="cnt" style="padding:2px 0 0 10px;width:273px;height:225px" id="main_layer">
+<div style="width:267px;"><div class="dark_orange t14 b"  style="float:left">Express Interest</div>
+<div style="float:right"><a onclick="return hide_exp_layer()" class="blink" href="#"><B>[ x ]</B></a></div>
+<div class="sp5"></div>
+<div class="t11" id="SINGLE_EOI">~$CONTACT_MESSAGE1`.</div>
+<div class="t11" id="MULTI_EOI">~$CONTACT_MESSAGE2`.</div>
+<div class="sp5"></div>
+<input type='hidden' name=status value='I'>
+<div class="sp5"></div>
+<div class="rf">
+<select name="draft_name" id="message_id" onChange="javavscript:change_message(this.value)" style="width:155px;" >
+</select>
+</div>
+<div class="sp5"></div>
+
+<textarea id='text_id' name="custmessage" style="width:254px;height:~if !$PAID`45px~else`80px~/if`;font-family:tahoma; font-size:11px;" cols="10" rows="3" class="pd"   ~if $PAID eq 0` disabled >~$DEFAULT_MESSAGE`~else` >~/if`</textarea>
+<div class="sp5"></div>
+
+</div>
+<div style="text-align:center; left: 60px;" ><input name="Submit" id="multi_button" type="button" class="b  green_btn " value="Express Interest" style="width:150px;"  onclick="javascript:express_interest()"></div>
+<div class="sp5"></div>
+~if !$PAID`
+<span class="t11" style="text-align:center">
+Please note that your message does not include your contact details. To include contact details and edit message.
+<div class="t14" style="font-size:16px;text-align:center"><a href="~$SITE_URL`/profile/mem_comparison.php?from_source=express_interest_layer" class="t14 b" style="font-size:15px">Become a Paid Member Now</a></div></span>
+~/if`
+<div class="sp5"></div>
+</div>
+<div class="clr"></div>
+<div class="lyr_btm_cur"></div>
+</div>
+</div>
+<script>
+var selid=document.getElementById("message_id");
+var textid=document.getElementById("text_id");
+var buttonid=document.getElementById("multi_button");
+var MES = new Array();
+var temp="";
+var pattern1 = /\#n\#/g;
+~foreach from=$DRA_MES item=message key=id`
+       temp="~$message`";
+        MES['~$id`']=temp.replace(pattern1,"\n");
+
+~/foreach`
+
+var accept=new Array();
+var decline=new Array();
+~foreach from=$ACCEPT_OPTION item=message key=id`
+accept['~$id`']="~$message`";
+~/foreach`
+function change_message(values)
+{
+	var selid=document.getElementById("message_id");
+	var textid=document.getElementById("text_id");
+	var buttonid=document.getElementById("multi_button");
+        sel_id=values;
+        if(sel_id!="" && sel_id!='und')
+                textid.value=check_special_chars(MES[sel_id]);
+        else
+                textid.value="";
+	if(values!='und')
+		selid.value=values;
+        
+}
+function set_dropdown(select_id,val_mes)
+{
+        //removeAllOptions(select_id);
+        for(key in val_mes)
+        {
+                var optn = document.createElement("OPTION");
+                optn.text= check_special_chars(val_mes[key]);
+                optn.value=key;
+                select_id.options.add(optn);
+
+        }
+	change_message(select_id.options[0].value);
+
+}
+function hide_dropdown(select_id)
+{
+	if(select_id.length==1)
+		select_id.style.display='none';
+}
+set_dropdown(selid,accept);
+~if $PAID eq 0`
+hide_dropdown(selid);
+~/if`
+</script>

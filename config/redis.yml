@@ -1,0 +1,6 @@
+all:
+  connections:
+    default:
+      host: "<?php echo JsConstants::$redis['HOST']?>"
+      port: "<?php echo JsConstants::$redis['PORT']?>"
+      persistent: true

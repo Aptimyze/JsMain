@@ -1,0 +1,32 @@
+<div id='noChatBar-layer' class="layerMidset setshare layersZ pos_fix chatwid1 disp-none">
+        <div class="chathgt1 calbg1 fullwid disp-tbl txtc">
+            <div class="disp-cell vmid fontlig color11">
+                <div class="wid470 mauto">
+                    <p class="f28">Close other chats</p>
+                    <p class="f14 pt25 lh22">Are you sure you wish to chatting on this tab? if you proceed,<br> chats open in other tabs, if any, will be lost.</p>
+                </div>            
+            </div>
+        </div>
+        <div class="clearfix">
+            <button onclick="return parentChat();" class="cursp bg_pink f18 colrw txtc fontreg lh61 brdr-0 chatwid2 fl">Okey, proceed</button>
+            <button id='closeButtonCALayer' class="cursp bg6 f18 colrw txtc fontreg lh61 brdr-0 chatwid2 fl">Cancel</button>
+        </div>
+    </div>
+<script>
+function parentChat()
+{
+	var loc=document.location.href;
+	if(loc.indexOf("search.php")!=-1)
+	{
+		if(loc.indexOf("?")==-1)
+	                loc=loc+'?temp=1';
+		if(typeof(searchidL)!='undefined')
+		{
+			loc=loc+"&searchid="+searchidL;
+		}
+	}
+	var redirectTo="/profile/intermediate.php?parentUrl="+loc;
+	top.document.location.href=redirectTo;
+	return false;
+}
+</script>

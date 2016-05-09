@@ -1,0 +1,61 @@
+<html>
+	<head>
+        <title>Jeevansathi.com - 101 Statistics</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+        <link rel="stylesheet" href="jeevansathi.css" type="text/css">
+		<style>
+        	DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+		</style>
+	</head>
+	<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+		<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+			<tbody>
+				<tr>
+        			<td valign="top" width="30%" bgcolor="#efefef"></td>
+        			<td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+        			<td valign="bottom" width="30%" bgcolor="#efefef"></td>
+				</tr>
+			</tbody>
+		</table>
+		<br>
+		 <table width=760 cellspacing="1" cellpadding='0' ALIGN="CENTER" >
+           <tr width=100% border=1>
+            <td width=30% class="formhead" height="23" align="center"><font><b>Welcome</b></font></td>
+            <td width=30% class="formhead" align='CENTER' height="23">
+             <a href="mainpage.php?cid=~$cid`">Click here to go to mainpage</a>
+            </td>
+            <td width=30% class="formhead" align='CENTER' height="23">
+             <a href="logout.php?cid=~$cid`">Logout</a>
+            </td>
+           </tr>
+          </table>
+
+		<br>
+        <table width=100% align="center">
+        	<tr class="formhead">
+        		<td align="center">&nbsp;Operator Name : ~$name`</td>
+		</tr>
+        </table>
+        <p align="center"><font color="red">Number of profiles assigned : ~$count` </font></p>
+	<table width=100% align="center">
+        	<tr class="formhead">
+        		<td align="center">&nbsp;User Name</td>
+			<td align="center">&nbsp;Password</td>
+        		<td align="center">&nbsp;Contact Number</td>
+        	</tr>
+        	~foreach from=$table item=d key=pid`
+        	<tr class="label">		
+			<td align="center" bgcolor="#B9BDFF">&nbsp;~$d.USERNAME`</td> 
+			<td align="center">~$d.PASSWORD`</td>
+			<td align="center">~$d.CONTACT`</td>
+        	</tr>        	
+        	~/foreach`        	
+        </table>
+    </body>
+</html>	        
+        
+        	
+
+
+
+

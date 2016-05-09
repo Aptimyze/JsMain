@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="css/hdr_css_v01.css" />
+<link rel="stylesheet" type="text/css" href="css/contact_center.css" />
+<title>More Details</title>
+</head>
+
+<body>
+<div class="pink_box" style="width:520px; height:462px;">
+<p class="tp_hdr b"><b class="fl">More details about this person</b> <a href="#" class="fr" onclick="$.colorbox.close(); return false;">Close [X]</a></p>
+<p class="clr_8"></p>
+<div class="more_dtls">
+	<ul>
+		<li><b>Name</b><i> : ~$fname` ~$lname`</i></li>
+		<li><b>Current Location</b><i> : ~$city_location`  ~$city_location_other` </i></li>
+		<li><b>Date / Time of Birth</b><i> : ~$date_time_birth`</i></li>
+		<li><b>Place of birth</b><i> : ~$city_birth`  ~$city_birth_other`</i></li>
+		<li><b>Details of Highest Educational Qualifications</b><i> : ~$degree` ~if $college`  from  ~/if` ~$college`</i></li>
+		<li><b>Details of Occupation</b><i> : ~$occupation` ~if $company`,  ~/if` ~$company`</i></li>
+		<li><b>Manglik </b><i> : ~$manglik`</i></li>
+	</ul>
+	<p class="clr_15"></p>
+	<b class="fl ml_10">Family Details</b>
+	<p class="clr_8"></p>
+	<ul>
+		<li><b>Name of the <br />contact person</b><i> : ~$fname_contact` ~$lname_contact`</i></li>
+		<li><b>Relation of the <br />contact person</b><i> : ~$relationship`</i></li>
+		<li><b>Native of</b><i> : ~$city_native` ~$city_native_other`</i></li>
+		<li><b>More about family</b><i> : ~$family_info` </i></li>
+	</ul>
+</div>
+</div>
+</body>
+</html>

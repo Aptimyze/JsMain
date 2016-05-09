@@ -1,0 +1,43 @@
+use newjs;
+
+DROP TABLE IF EXISTS RELIGION;
+
+-- 
+-- Table structure for table `RELIGION`
+-- 
+
+CREATE TABLE `RELIGION` (
+  `LABEL` varchar(50) NOT NULL DEFAULT '',
+  `VALUE` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `SORTBY` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`VALUE`)
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+
+-- 
+-- Dumping data for table `RELIGION`
+-- 
+
+INSERT INTO `RELIGION` VALUES ('Hindu', 1, 1);
+INSERT INTO `RELIGION` VALUES ('Muslim', 2, 2);
+INSERT INTO `RELIGION` VALUES ('Christian', 3, 4);
+INSERT INTO `RELIGION` VALUES ('Sikh', 4, 3);
+INSERT INTO `RELIGION` VALUES ('Parsi', 5, 7);
+INSERT INTO `RELIGION` VALUES ('Jewish', 6, 8);
+INSERT INTO `RELIGION` VALUES ('Buddhist', 7, 5);
+INSERT INTO `RELIGION` VALUES ('Other', 8, 10);
+INSERT INTO `RELIGION` VALUES ('Jain', 9, 6);
+INSERT INTO `RELIGION` VALUES ('Bahai', 10, 9);
+
+update CASTE set SORTBY=SORTBY+1 where SORTBY>451;
+
+update CASTE set TOP_SORTBY=TOP_SORTBY+1 where TOP_SORTBY>8;
+
+insert into CASTE(ID,PARENT,LABEL,SMALL_LABEL,VALUE,SORTBY,ISALL,ISGROUP,TOP_SORTBY,REG_DISPLAY) VALUES ('',10,'Bahai','Bahai',496,452,'Y','',9,'');
+
+use bms2;
+
+drop table if exists RELIGION;
+
+create table bms2.RELIGION like newjs.RELIGION;
+
+insert into bms2.RELIGION select * from newjs.RELIGION;

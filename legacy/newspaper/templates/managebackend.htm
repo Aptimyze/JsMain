@@ -1,0 +1,19 @@
+<html>
+  <head>	
+     <title>Jeevansathi.com - JSADMIN</title>
+	<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+	<link rel="stylesheet" href="styles.css" type="text/css">
+  </head>
+<body bgcolor = "#FFFFFF">
+<br><br>
+<table width=60% align="center">
+<tr class="bigblack">
+<td align=center class=class5><a href="mainpage.php?cid=~$cid`&name=~$name`&mode=~$mode`">Main page</a><br><br></td>
+</tr>
+<tr></tr>
+~section name=sec loop=$linkarr`
+<tr class="bigblack"><td class=class4>~%sec.index_next%`. ~$linkarr[sec]`</td></tr>
+~/section`
+</table>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<html>
+<head>
+<title>
+</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="http://www.jeevansathi.com/profile/images/styles.css" type="text/css">
+<link rel="stylesheet" href="http://www.jeevansathi.com/jsadmin/jeevansathi.css" type="text/css">
+
+<script>
+
+function trim(inputString) {
+   // Removes leading and trailing spaces from the passed string. Also removes
+   // consecutive spaces and replaces it with one space. If something besides
+   // a string is passed in (null, custom object, etc.) then return the input.
+   if (typeof inputString != "string") { return inputString; }
+   var retValue = inputString;
+   var ch = retValue.substring(0, 1);
+   while (ch == " ") { // Check for spaces at the beginning of the string
+      retValue = retValue.substring(1, retValue.length);
+      ch = retValue.substring(0, 1);
+   }
+   ch = retValue.substring(retValue.length-1, retValue.length);
+   while (ch == " ") { // Check for spaces at the end of the string
+      retValue = retValue.substring(0, retValue.length-1);
+      ch = retValue.substring(retValue.length-1, retValue.length);
+   }
+   while (retValue.indexOf("  ") != -1) { // Note that there are two spaces in the string - look for multiple spaces within the string
+      retValue = retValue.substring(0, retValue.indexOf("  ")) + retValue.substring(retValue.indexOf("  ")+1, retValue.length); // Again, there are two spaces in each of the strings
+   }
+   return retValue; // Return the trimmed string back to the user
+} // Ends the "trim" function
+
+
+function validate()
+{
+
+	$err='';
+	
+	if(trim(document.form1.url.value)=="")
+	{
+	$err+="Please Enter a url\n";
+	}
+	
+	if(trim(document.form1.url.value)=="")
+	{
+	$err+="Please Enter The subject of mail\n";
+	}
+	
+	if(trim(document.form1.f_email.value)=="" ) 
+	{
+		$err+="Please enter the value of From Email\n";
+	}
+
+	if (document.form1.f_email.value.indexOf("@")==-1)
+	 {
+        $err+="Please enter a valid Email address\n";
+	 }
+	
+	if($err != "")
+	 {
+	 alert("You forget to choose following.\n" + $err);
+	 return false;
+	 }	
+	 return true;
+}
+
+</script>
+</head>
+<body>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="http://www.jeevansathi.com/profile/images/logo.gif" width="269" height="82" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+                                                                                                 
+<tr><td colspan="4" align="center"><h2>Welcome to<br> Mass Mailer Management Sytem<br><span class=red>>>>&nbsp;&nbsp; Add a new template corresponding to the same URL-MAILER &nbsp;&nbsp;>>></span></h2><br><br></td></tr>
+</tbody>
+</table>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tr>
+  <td class="headbigblack" width="100%"><b>Add Url Template for same mailerid </b></td>
+</tr>
+<tr class="bgred">
+   <td height="1"></td>
+ <SPACER height="1" type="block"></SPACER> </tr>
+<tr>
+</table>
+<br>
+
+<font color="red"><b>~$message`</b></font>
+
+<form name="form1" method="post" action="mmm_url_mail_add.php" onsubmit="return validate()">
+<input type="hidden" name="mailer_id" value="~$mailer_id`">
+<table WIDTH="75%" BORDER="0" CELLSPACING="2" CELLPADDING="0" BORDERCOLOR="#2F3193">
+            
+
+<tr>
+<td width="49%" class="label" bgcolor="#F9F9F9">
+<b>Enter Template Name Corresponding to this mailer</b>
+</td>
+<td class="fieldsnew" >
+<input type ="text" name="template_name" value="~$template_name`" size="100">
+</td>
+</tr>
+
+<tr>
+<td width="49%" class="label" bgcolor="#F9F9F9">
+<b>Enter Complete Url</b>
+</td>
+<td class="fieldsnew" >
+<input type ="text" name="url" value="~$url`" size="100">
+</td>
+</tr>
+
+<tr>
+<td width="49%" class="label" bgcolor="#F9F9F9">
+<b>Enter Subject</b>
+</td>
+<td class="fieldsnew" >
+<input type ="text" name="subject" value="~$subject`" size="100">
+</td>
+</tr>
+
+<tr>
+<td width="49%" class="label" bgcolor="#F9F9F9">
+<b>Enter Sender Email Id</b>
+</td>
+<td class="fieldsnew">
+<input type ="text" name="f_email" value="~$f_email`" size="100">
+</td>
+</tr>
+
+<tr>
+<td width="49%" class="label" bgcolor="#F9F9F9">
+<b>Enter Sender Name</b>
+</td>
+<td class="fieldsnew">
+<input type ="text" name="f_name" value="jeevansathi.com" size="100">
+</td>
+</tr>
+
+<tr>
+<td width="49%" class="label" bgcolor="#F9F9F9">
+<input type="hidden" name="mail_type" value="1">
+<input type="hidden" name="cid" value="~$cid`">
+<input type="submit" name="submit" value="submit">
+</td>
+</tr>
+
+
+</form>
+</table>
+
+</body>
+</html>
+

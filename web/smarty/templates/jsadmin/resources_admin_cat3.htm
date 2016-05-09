@@ -1,0 +1,34 @@
+<html>
+<head>
+<title>JeevanSathi Matrimonials - Resources</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="~$SITE_URL`/profile/images/styles.css" type="text/css">
+<link rel="stylesheet" href="~$SITE_URL`/jsadmin/jeevansathi.css" type="text/css">
+</head>
+<body>
+~$HEAD`
+<br>
+<a href="resources_admin_cat.php?cid=~$CID`">Main Page</a>
+    <table>
+     <tr>
+       <td>Category Name</td>
+	<td>Status</td>
+     </tr>  
+	~section name=ii  loop=$ROWS`
+ <form name="f~$ROWS[ii].CAT_ID`" action="resources_admin_cat.php" method=post>
+    <input type=hidden name=cid value=~$CID`>
+    <input type=hidden name=fn value='viewdc'>
+     <tr>
+       <td>~$ROWS[ii].CAT_DISPLAY`</td>
+	<td><input type="submit" name="ACTIVATE" value="Activate" ></td>
+	 <input type=hidden name='CAT_ID' value="~$ROWS[ii].CAT_ID`" >
+     </tr>
+ </form>
+	~/section`
+
+   </table> 
+<br>
+~$FOOT`
+<br>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<html>
+	<title>Matri Profile MIS</title>
+	<head>
+		<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+	</head>
+	<body>
+		<table width="50%" align="center" cellpadding="4" cellspacing="4" border="0">
+			<tr>
+				<td align="center"><img src="../profile/images/logo_1.gif" width="192" height="65"></td>
+			</tr>
+		</table>
+		<br>
+
+	       	<table width=760 cellspacing="1" cellpadding='0' ALIGN="CENTER" >
+	           <tr width=100% border=1>
+	            <td width=30% class="formhead" height="23" align="center"><font><b>Welcome </b></font></td>
+	         <td width=30% class="formhead" align='CENTER' height="23">
+	            <a href="mainpage.php?cid=~$cid`">Click here to go to mainpage</a>
+	            </td>
+	            <td width=30% class="formhead" align='CENTER' height="23">
+	             <a href="/jsadmin/logout.php?cid=~$cid`">Logout</a>
+	            </td>
+	           </tr>
+	          </table>
+
+			<table width="50%" align="center" cellpadding="4" cellspacing="4" border="0">
+				<tr class="formhead" align="center">
+					<td>Queue Report</td>
+				</tr>
+			</table>
+			<form name="form1" method="post" action="ap_queue_report.php">
+			<input type="hidden" name="cid" value="~$cid`">
+			<table width="30%" cellpadding="4" cellspacing="4" border="0" align="center">
+				<tr class="fieldsnew" align="left">
+					<td>
+						DPP Queue:
+					</td>
+                                        <td>
+                                                ~$dpp_queue_count`
+                                        </td>
+			
+				</tr>
+                                <tr class="fieldsnew" align="left">
+                                        <td>
+                                                DISPATCHER Queue:
+                                        </td>
+                                        <td>
+                                                ~$dis_queue_count`
+                                        </td>
+                                </tr>
+                                <tr class="fieldsnew" align="left">
+                                        <td>
+                                                DISPATCHER - MISSED Queue:
+                                        </td>
+                                        <td>
+                                                ~$dis_queue_count_miss`
+                                        </td>
+                                </tr>
+                                <tr class="fieldsnew" align="left">
+                                        <td>
+                                                TELECALLER Queue:
+                                        </td>
+                                        <td>
+                                                ~$tc_queue_count`
+                                        </td>
+                                </tr>
+
+			</table>
+			</form>
+	</body>
+</html>

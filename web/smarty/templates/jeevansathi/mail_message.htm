@@ -1,0 +1,207 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head><!--MAIL_MESSAGE.HTM-->
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>JeevanSathi Matrimonials - Your Messages</title>
+<link href="/P/I/styles.php" rel="stylesheet" type="text/css">
+<link href="/P/IN/styles.php" rel="stylesheet" type="text/css">
+<link href="css/~$mailstyles_css`" rel="stylesheet" type="text/css">
+<!--link href="css/~$dropdown_css`" rel="stylesheet" type="text/css"-->
+<!--script language="JavaScript" SRC="js/~$dropdown_js`"></script-->
+
+<script type="text/javascript">
+function DeleteMsg(x)
+{
+	if (confirm('Are you sure you want to delete this message ?'))
+        {
+		var docF=document.form_msg;
+		docF.del_mov_mark.value = 'delete';
+		if(x=='send')
+			docF.send_delete.value = 'send_delete';
+		docF.submit();
+
+        }
+	else
+        	return false;
+}
+
+function Mark_Unviewed()
+{
+	//if (confirm('Are you sure you want to mark all the messages from this user as unviewed'))
+        {
+                var docF=document.form_msg;
+                docF.del_mov_mark.value = 'mark';
+                //docF.ids.value = id;
+                docF.submit();
+        }
+        //else
+          //      return false;
+
+}
+/*function MoveMsg(folderid)
+{
+        if (confirm('Are you sure you want to move this message to '))
+	{
+                var docF=document.form_msg;
+                docF.del_mov_mark.value = 'move';
+                docF.msg_move.value = folderid;
+                docF.submit();         
+	}
+        else                 
+		return false;
+}*/
+function reply()
+{
+	var docF=document.form_msg;
+	//docF.del_mov_mark.value = 'move';
+	//docF.msg_move.value = folderid;
+	docF.submit();
+}
+
+</script>
+
+<style type="text/css">
+<!--
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+}
+-->
+</style>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+
+<body>
+~$HEAD`
+<!--table width="100%"  border="0" align="center" cellpadding="0" cellspacing="0">
+ <tr align=left>
+  <td height="800" valign="top" align=left-->
+~$LEFTPANEL`
+<br>
+<!-- left pannel starts here -->
+<table width="78%" height="1110" border="0" align="center" cellpadding="0" cellspacing="0">
+ <tr>
+  <td height="550" valign="top">
+   <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+    <tr>
+~if $SHOW_INBOX_RED eq "Y"`
+     <td width="65"><a href="/profile/mm_showmsg.php?checksum=~$CHECKSUM`&folderid=0"><img src="~$IMG_URL`/profile/ser4_imagesnew/mail_inbox_m.gif" alt="inbox" width="63" height="19" border="0"></a></td>
+~else`
+     <td width="65"><a href="/profile/mm_showmsg.php?checksum=~$CHECKSUM`&folderid=0"><img src="~$IMG_URL`/profile/ser4_imagesnew/mail_inbox_g.gif" alt="inbox" width="63" height="19" border="0"></a></td>
+~/if`
+~if $SHOW_SENT eq "Y"`
+     <td width="65"><a href="/profile/mm_showmsg.php?checksum=~$CHECKSUM`&send=y"><img src="~$IMG_URL`/profile/ser4_imagesnew/mail_sent_m.gif" alt="sent" width="63" height="19" border="0"></a></td>
+~else`
+     <td width="65"><a href="/profile/mm_showmsg.php?checksum=~$CHECKSUM`&send=y"><img src="~$IMG_URL`/profile/ser4_imagesnew/mail_sent_g.gif" alt="sent" width="63" height="19" border="0"></a></td>
+~/if`
+~if $SHOW_FOLDER eq "Y"`
+     <td><a href="/profile/mm_folders.php?checksum=~$CHECKSUM`"><img src="~$IMG_URL`/profile/ser4_imagesnew/mail_folder_m.gif" alt="Your folders" width="63" height="19" border="0"></a></td>
+~else`
+     <td><a href="/profile/mm_folders.php?checksum=~$CHECKSUM`"><img src="~$IMG_URL`/profile/ser4_imagesnew/mail_folder_g.gif" alt="Your folders" width="63" height="19" border="0"></a></td>
+~/if`
+    </tr>
+    <tr>
+     <td colspan="3" height="5" bgcolor="#B02C2C"></td>
+    </tr>
+   </table>
+~if $FOLDER neq ''`
+<table width="100%"  border="0" cellspacing="1" cellpadding="3" class="mediumbrownd">
+   <tr class="bgbrownL3">
+<td><b><i> ~$FOLDER`</i></b></td><td width="49%"><div align="right"><strong class="mediumblack"></strong></div></td>
+   </tr>
+</table>
+~/if`
+
+<form action="/profile/mm_showmsg.php?checksum=~$CHECKSUM`&folderid=~$folderid`" method="post" name="form_msg">
+<input type="hidden" name="del_mov_mark" value="">
+<input type="hidden" name="msg_move" value="">
+<input type="hidden" name="send_delete" value="">
+<input type="hidden" name="folderid" value="~$folderid`">
+<input type="hidden" name="ids[]" value="~$highlight_id`">
+   <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+    <tr>
+     <td colspan="4" height="5"></td>
+    </tr>
+    <tr>
+<td width="59"><span style="cursor: pointer"><img src="~$IMG_URL`/profile/ser4_imagesnew/mail_delete.gif" width="56" height="21" border="0" onclick='~if $SHOW_SENT eq "Y"`return DeleteMsg("send")~else` return DeleteMsg() ~/if`;'></span></td>
+~if $SHOW_SENT eq "Y"`
+        <td  width="59"></td>
+	<td width="226"></td>
+	<td></td>
+~else`
+     <td width="59"><a href="/profile/mm_reply.php?checksum=~$CHECKSUM`&id=~$highlight_id`"><img src="~$IMG_URL`/profile/ser4_imagesnew/mail_reply.gif" width="56" height="21" border="0" onclick='return reply();'></a></td>
+     <td width="106"><span style="cursor: pointer"><img src="~$IMG_URL`/profile/ser4_imagesnew/mail_unviewed.gif" width="103" height="21" border="0" onclick="return Mark_Unviewed();"></span></td>
+     <td>&nbsp;</td>
+     <!--td><span style="cursor: pointer"><img src="~$IMG_URL`/profile/ser4_imagesnew/mail_movetofolder.gif" width="113" height="21" border="0" onClick="return clickreturnvalue()" onMouseover="dropdownmenu(this, event, menu1, '109px')" onMouseout="delayhidemenu()"></span></td-->
+~/if`
+    </tr>
+   </table>
+   <br>
+~section name=i loop=$arr_msg`
+   <table width="100%"  border="0" align="center" cellpadding="3" cellspacing="0" class="mediumbrownd">
+    ~if $arr_id[i] eq "$highlight_id"`
+    <tr class="bgbrownL">
+    ~elseif $arr_color[i] eq "i"`
+   <tr class="bgbrownL3">
+    ~elseif $arr_color[i] eq "s"`
+   <tr class="bggrey3">
+    ~/if`
+     <!--td width="20%">From : ~$arr_from[i]`</td-->
+     <!--td width="20%">From : ~if $arr_color[i] eq "i"`<a href="/profile/viewprofile.php?checksum=~$PROFILE_CHECKSUM_ARR[i]`&profilechecksum=~$CHECKSUM_ARR[i]`" target="_blank">~$arr_from[i]`</a>~else` ~$arr_from[i]` ~/if`</td>
+     <td width="35%">To :~if $arr_color[i] eq "s"` <a href="/profile/viewprofile.php?checksum=~$CHECKSUM_ARR[i]`&profilechecksum=~$PROFILE_CHECKSUM_ARR[i]`" target="_blank">~$arr_to[i]` </a> ~else` ~$arr_to[i]` ~/if`</td-->
+     <td width="20%">From : ~if $arr_color[i] eq "i"`<a href="/profile/viewprofile.php?username=~$arr_from[i]`&checksum=~$CHECKSUM`" target="_blank">~$arr_from[i]`</a>~else` ~$arr_from[i]` ~/if`</td>
+     <td width="35%">To :~if $arr_color[i] eq "s"` <a href="/profile/viewprofile.php?username=~$arr_to[i]`&checksum=~$CHECKSUM`" target="_blank">~$arr_to[i]` </a> ~else` ~$arr_to[i]` ~/if`</td>
+	<!--td width="35%">To : ~$arr_to[i]`</td-->
+     <td width="20%">Date : ~$arr_date[i]`</td>
+     ~if $SHOW_SENT neq "Y" AND $ARR_FOLDER_NAME[i] neq ""`<td width="20%">Folder : ~$ARR_FOLDER_NAME[i]`</td>~else`<td width="20%"></td>~/if`
+    </tr>
+   </table>
+   <table width="100%"  border="0" cellspacing="0" cellpadding="4">
+    ~if $arr_id[i] eq "$highlight_id"`
+    <tr class="bgbrownL">
+    ~elseif $arr_color[i] eq "i"`
+   <tr class="bgbrownL3">
+    ~elseif $arr_color[i] eq "s"`
+   <tr class="bggrey3">
+    ~/if`
+     <td class="mediumblack12">~$arr_msg[i]`</td>
+    </tr>
+   </table>
+   <br>
+~/section`
+<!--tr align=right valign=top><td class="mediumblack">
+</td>
+</tr--> 
+  <br>
+  <br>
+  <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+<td width="59" align=left><span style="cursor: pointer"><img src="~$IMG_URL`/profile/ser4_imagesnew/mail_delete.gif" width="56" height="21" border="0" onclick='~if $SHOW_SENT eq "Y"`return DeleteMsg("send")~else` return DeleteMsg() ~/if`;'></span></td>
+~if $SHOW_SENT eq "Y"`
+     <!--td width="59"><a href="/profile/mm_reply.php?checksum=~$checksum`&id=~$highlight_id`"><img src="~$IMG_URL`/profile/ser4_imagesnew/mail_reply.gif" width="56" height="21" border="0" onclick='return reply();'></a></td-->
+
+        <td  width="59"></td>
+        <td width="226"></td>
+        <td></td>
+~else`
+     <td width="59"><a href="/profile/mm_reply.php?checksum=~$CHECKSUM`&id=~$highlight_id`"><img src="~$IMG_URL`/profile/ser4_imagesnew/mail_reply.gif" width="56" height="21" border="0" onclick='return reply();'></a><!--input type="image" name="Reply" title="Reply" src="imagesnew/mail_reply.gif" width="56" height="21" border="0" onclick="reply();"></form--></td>
+     <td width="106"><span style="cursor: pointer"><img src="~$IMG_URL`/profile/ser4_imagesnew/mail_unviewed.gif" width="103" height="21" border="0" onclick="return Mark_Unviewed();"></span></td>
+     <td>&nbsp;</td>
+     <!--td><span style="cursor: pointer"><img src="~$IMG_URL`/profile/ser4_imagesnew/mail_movetofolder.gif" width="113" height="21" border="0" onClick="return clickreturnvalue()" onMouseover="dropdownmenu(this, event, menu1, '109px')" onMouseout="delayhidemenu()"></span></td-->
+
+~/if`
+
+   </tr>
+  </table>
+<br>
+</td>
+ </tr>
+</form>
+</table>
+</td>
+</tr>
+</table>
+~$FOOT`
+</body>
+</html>

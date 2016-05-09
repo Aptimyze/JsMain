@@ -1,0 +1,63 @@
+<html>
+<head>
+<title>Jeevansathi.com - MIS - Cost Per Profile Acquisition</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="/mis/jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="/profile/images/styles.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+<script language=javascript>
+<!--
+        function loadForm()
+        {
+//alert("hi");
+                document.form1.submit();
+        }
+-->
+</script>
+
+</head>
+~if $flag eq '0'`
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="/profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br><br>
+<form name=form1 action="profile_acqstn_source_revenue.php" method=post>
+<table width=100% align=center>
+<tr class=label align=center>
+<td>Select Group
+<select name="source">
+	~section name=sec loop=$srcarr`
+		<option value="~$srcarr[sec]`" ~if $source eq $srcarr[sec]` selected ~/if`>~$srcarr[sec]`</option>
+	~/section`
+</select>
+</td>
+<td>Select Year
+<select name="year">
+        ~section name=yr loop=$yyarr`
+                <option value=~$yyarr[yr]`>~$yyarr[yr]`</option>
+        ~/section`
+</select>
+</td>
+<td width=10%>
+<input type=hidden name=cid value="~$cid`">
+<input type=submit name="CMDSubmit" value="  Go  ">
+</td>
+</tr>
+</table>
+</form>
+~/if`
+<br><br>
+</body>
+</html>

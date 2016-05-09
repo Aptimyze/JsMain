@@ -1,0 +1,84 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>AdminSearch : Jeevansathi.com Matrimonial Services</title>
+		<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+		<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+		<script>
+			function validate()
+			{
+				if(document.form1.reason.value=="Other" && document.form1.oth_reason.value.length==0)
+				{
+					alert('Please Specify Other Reason');
+					document.form1.oth_reason.focus();
+					return false;
+				}
+			}
+		</script>
+	</head>
+	~include file="head.htm"`
+	<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+		~if $SUCCESSFUL eq 'Y'`
+			<table width="30%" cellspacing="4" cellpadding='4' align="center">
+				<tr class="formhead" align="center">
+					<td>
+						~$msg`
+						<a href="screen_new.php?cid=~$cid`&user=~$user`&val=~$val`">Continue</a>
+					</td>
+				</tr>
+			</table>
+		~else`
+			<form name="form1" action="onhold.php" method="post" onSubmit="return validate();">
+				<input type="hidden" name="cid" value="~$cid`">
+				<input type="hidden" name="pid" value="~$pid`">
+				<input type="hidden" name="val" value="~$val`">
+				<input type="hidden" name="user" value="~$user`">
+				<input type="hidden" name="open_fields" value="~$open_fields`">
+				<table width="75%" cellspacing="4" cellpadding='4' align="center" >
+					<tr class="formhead" align="center">
+						<td><font><b>Welcome : ~$user`</b></font></td>
+						<td><a href="logout.php?cid=~$cid`">Logout</a></td>
+					</tr>
+				</table>
+				<br><br>
+				<table width="50%" border="0" cellspacing="1" cellpadding="4" align="center">
+					<tr>
+						<td class="label">Reason :</td>
+						<td class="fieldsnew">
+							<select name="reason">
+								<option value="M" ~if $reason eq 'M'` selected ~/if`>Marital Status Query</option>
+								<option value="G" ~if $reason eq 'G'` selected ~/if`>Gender Query</option>
+								<option value="Other" ~if $reason eq 'Other'` selected ~/if`>Other</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="label">
+							~if $CHECK_OTH_REASON eq "Y"`
+								<font color="red">If other reason :</font>
+							~else`
+								If other reason :
+							~/if`
+						</td>
+						<td class="fieldsnew">
+							<textarea name="oth_reason" value="" rows="5" cols="50" class="textbox"></textarea>
+						</td>
+					</tr>
+					<tr>
+						<td class="fieldsnew" colspan="2" align="center">
+							<font color="red">
+								Please fill the other reason properly as this will be mailed to the user.
+							</font>
+						</td>
+					</tr>
+					<tr class="fieldsnew">
+						<td colspan="2" align="center">
+							<input type="submit" name="Submit" value="Submit" class="buttons">
+						</td>
+					</tr>
+				</table>
+			</form>
+		~/if`
+		~include file="foot.htm"`
+	</body>
+</html>

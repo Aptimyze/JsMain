@@ -1,0 +1,70 @@
+<form name="form1" action="faq_other.php" method="post"><span id="SATISFIED" style="display:~$SHOW_HELP`"><div class="pad2" ><b>Was this helpful? If no,</b></div>
+  <div><input type="button" name="Submit" value="Click here to get contacted personally" style="width:250px "                        ~$javascript`></div></span>
+<div></div><BR>
+<div id="DISPLAYFORM" style="display:~$SHOW_FORM`">
+		<!--CENTER STARTS HERE-->
+		<div class="pghd">
+			<div class="r14">
+				<img src="~$IMG_URL2`/profile/images/icon_chpass.gif" width="14" height="14">Your Question
+			</div>
+			<div class="rightflow greyele bluelink" align="right" style="padding-top:3px ">
+				* Compulsory Fields
+			</div>
+			<div class="spacer1">&nbsp;</div>
+			<div class="spacer15" style="border-top:1px solid #000000; margin-top:5px;" >&nbsp;</div>
+			<div class="greyele bluelink">
+				Please submit your question / concern here and we will get back to you at the earliest:
+			</div>
+		</div>
+		<div class="space15">&nbsp;</div>
+		<div style="float:left; width:100%; margin-top:10px">
+			
+			<div class="bele co1" align="right">Name : </div>
+			<div class="co2">
+				 <input type="text" name="name" value="~$name`" class="textbox">
+			</div>
+			<div class="spacer1">&nbsp;</div>
+			<div class="bele co1" align="right">Username : </div>
+			<div class="co2">
+				 ~$USERNAME_FIELD`
+			</div>
+			<div class="spacer1">&nbsp;</div>
+			<div class="bele co1" align="right" id="my_email">
+				~if $ER_EMAIL eq 'Y'`
+					 <font color="red">* Email : </font>
+				~else`
+					 * Email :
+				~/if`
+			</div>
+			<div class="co2">
+				<input type="text" name="email" value="~$email`" class="textbox">
+			</div>
+			<div class="spacer1">&nbsp;</div>
+			<div class="bele co1" align="right" id="my_question">
+				~if $ER_MESSAGE eq 'Y'`
+					<font color="red">* Your Question : </font>
+				~else`
+					* Your Question :
+				~/if`
+			</div>
+			<div class="co2">
+				 <textarea name="message" cols="50" rows="5" class="textbox">~$message`</textarea>
+			</div>
+			<div class="spacer15">&nbsp;</div>
+			<div class="bele" style="float:left; width:20%;padding:2px " align="right">&nbsp;</div>
+			<div style="float:left; width:50%; padding:2px">
+				<input type=hidden name="abuse" value="~$abuse`">
+				<input type=hidden name='FEEDBACK_ID' value="~$FEEDBACK_ID`">
+				<input type='hidden' name='allcategory' value="~$allcategory`">
+				<input type='hidden' name='question' value="~$question`">
+				<input type=hidden name="tracepath" value="~$tracepath`">
+				<input type=hidden name="checksum" value="~$CHECKSUM`">
+				<input type=hidden name="NO_NAVIGATION" value="~$NO_NAVIGATION`">
+				<input type=hidden name='questiontext' value="~$questiontext`">
+				<input type="submit" name="CMDSubmit" value="Send" class="textbox" onClick="return validate();">
+			</div>
+			<div class="spacer15">&nbsp;</div>
+			</form>
+		</div>
+	</div>
+</div>

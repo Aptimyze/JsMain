@@ -1,0 +1,270 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jeevansathi.com</title>
+<link href="~$SITE_URL`/jsadmin/main.css" rel="stylesheet" type="text/css">
+</head>
+<script language="JavaScript">
+	function checkblank()
+	{
+		if(document.search_profile.searchid.value == "")
+		{
+        		alert("Please Enter Profile ID");
+        		return false;
+		}		
+        return true;
+	}
+	function win_open_contact(url)
+{
+        window.open(url,'','width=365,height=160,resizable=1,scrollbars=1');
+}
+	function win_open(url)
+	{
+        window.open(url,'My_Profile','resizable=1,scrollbars=1,width=600,height=500');
+	}                                                  
+	function submit_button()
+	{
+		var notext=checkblank();
+		if(notext==true)
+			document.search_profile.submit();
+		else
+			return notext;
+	}                                                                          
+</script>
+<body topmargin="0" rightmargin="0" bottommargin="0" leftmargin="0">
+<table width="800" border="0" align="center" cellpadding="0" cellspacing="0" style="border:1px solid #f09329">
+  <tr>
+          ~if $detailview`
+        <td><img src="/profile/images/js-logo.gif" width="226" height="63" hspace="15" vspace="5"></td>
+        <td align="right"><a href="#" onClick="javascript : window.close();">Close this window</a>
+        ~else`
+        <td colspan="2"><img src="~$PHOTO_URL`/profile/images/js-logo.gif" width="226" height="63" hspace="15" vspace="5"></td>
+        ~/if`
+  </tr>
+  <tr>
+    <td height="6" colspan="2" bgcolor="#bc001d"></td>
+  </tr>
+  <tr>
+    <td height="1" colspan="2"></td>
+  </tr>
+  <tr>
+    <td height="20" colspan="2" bgcolor="#f09329"></td>
+  </tr>
+ ~if $detailview`
+ <tr>
+        <input type="hidden" name="page" value="~$page`">
+        <input type="hidden" name="searched_profileid" value="~$SEARCHED_PROFILEID`">
+        <td valign="top" align="right">
+        <span class="main-text"><strong><a href="#" onClick="javascript : window.print();" style="color:#000000">Print this Profile</a><br>
+	~if $COMPATIBILITY_LINK eq 'R'`
+        	<a href="#" onClick="window.open('~$SITE_URL`/profile/horoscoperequest.php?profileid=~$profileid`&profilechecksum=~$PROFILECHECKSUM`&via_ofm=1','','width=340,height=310,resizable=1');" style="color:#000000"><strong> Request Horoscope</strong></a><br>
+        ~else`
+        	<a href="#" onClick="window.open('~$SITE_URL`/profile/horoscope_astro.php?checksum=~$cid`&profilechecksum=~$PROFILECHECKSUM`','','width=625,height=625,resizable=1,scrollbars=1');" style="color:#000000"><strong> View Horoscope</strong></a><br>
+        ~/if`
+        ~if $COMPATIBILITY_SUBSCRIPTION eq '1'`
+        ~if $COMPATIBILITY_LINK eq 'C'`
+                <a href="#" onClick="window.open('~$SITE_URL`/profile/check_horoscope_compatibility.php?profileid=~$profileid`&checksum=~$cid`&profilechecksum=~$PROFILECHECKSUM`&via_ofm=1&compatibility_subscription=~$COMPATIBILITY_SUBSCRIPTION`','','width=570,height=570,resizable=1');" style="color:#000000"><strong> Check Astro Compatibilty</strong></a><br>
+        ~/if`
+        ~/if`
+	</strong> &nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </td>
+        </tr>
+<tr>
+<td colspan="2">~$viewprofile`</td>
+</tr>
+~else`
+  <tr>
+    <td height="50" colspan="2" background="~$PHOTO_URL`/profile/images/top-bg.gif" class="main-text" style="padding-left:5px; color:#525252"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="52%"><strong>You are logged in as ~$customer_name` | <a href="javascript: self.close()" style="color:#525252">Logout</a></strong></td>
+        <td width="35%" align="right" style="line-height:20px">Profiles Remaining :&nbsp;<br>
+          Days Remaining :&nbsp; </td>
+        <td width="13%" align="left" style="line-height:20px"><strong>~$acc_remain`<br>
+          ~$day_remain`</strong></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td width="155" align="left" valign="top" bgcolor="#f4f4f4" style="border-right:1px solid #bdbdbd"><table width="155" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="32" class="left-links-inactive"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7"><a href="~$SITE_URL`/jsadmin/login_customer.php?cid=~$cid`&profileid=~$profileid`&flag=1" style="text-decoration:none; color:#000000">Home</a></td>
+      </tr>
+	~if $p_expire neq 'Y'`
+      <tr>
+        <td height="32" class="left-links-inactive"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7"><a href=# onclick="win_open('~$SITE_URL`/P/profileselect_oc.php?profileid=~$profileid`')" style="text-decoration:none; color:#000000">My Profile</a></td>
+      </tr>
+	  <tr>
+        <td height="32" class="left-links-active"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7">Search Profile</td>
+      </tr>
+	  <tr>
+        <td height="32" class="left-links-inactive"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7"><a href="~$SITE_URL`/jsadmin/pool_matches.php?cid=~$cid`&profileid=~$profileid`" style="text-decoration:none; color:#000000">Pool of available matches</a></td>
+      </tr>
+	  <tr>
+        <td height="32" class="left-links-inactive"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7"><a href="~$SITE_URL`/jsadmin/shortlisted_profiles.php?cid=~$cid`&profileid=~$profileid`" style="text-decoration:none; color:#000000">Short Listed Profiles</a></td>
+      </tr>
+	~/if`
+	  <tr>
+        <td height="32" class="left-links-inactive"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7"><a href="~$SITE_URL`/jsadmin/accept_matches.php?profileid=~$profileid`&cid=~$cid`" style="text-decoration:none; color:#000000">Accepted Profiles</a></td>
+      </tr>
+	 <tr>
+        <td height="32" class="left-links-inactive"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7"> <a href="~$SITE_URL`/jsadmin/accept_matches.php?profileid=~$profileid`&cid=~$cid`&crd_status=1" style="text-decoration:none; color:#000000">Couriered Profiles</a></td>
+      </tr>
+	~if $p_expire neq 'Y'`
+	  <tr>
+        <td height="32" class="left-links-inactive"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7"><a href="~$SITE_URL`/jsadmin/rejected_matches.php?cid=~$cid`&profileid=~$profileid`" style="text-decoration:none; color:#000000">Rejected Profiles</a></td>
+      </tr>
+	~/if`
+	~if $profile_verified eq 'N'`
+         <tr>
+        <td height="32" class="left-links-inactive" style="color:red"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7">&nbsp;User reported for verification failure</td>
+      </tr>
+        ~else`
+          <tr>
+        <td height="32" class="left-links-inactive" ><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7"> <a href="#" onclick="win_open_contact('~$SITE_URL`/jsadmin/verification_failed.php?profileid=~$profileid`&cid=~$cid`')"  style="text-decoration:none; color:red">Report verification failure</a></td>
+      </tr>
+        ~/if`
+	  <tr>
+	    <td>&nbsp;</td>
+	    </tr>
+	  <tr>
+	    <td>&nbsp;</td>
+	    </tr>
+	  <tr>
+	    <td>&nbsp;</td>
+	    </tr>
+    </table></td>
+    <td width="610" align="left" valign="top"><table width="605"  border="0" cellspacing="0" cellpadding="0">
+         <form name= "search_profile" action="~$SITE_URL`/jsadmin/search_profiles.php" method="POST">
+      <tr>
+        <td colspan="5">&nbsp;</td>
+      </tr>
+      <tr>
+        <td width="2" align="center" class="main-text">&nbsp;</td>
+        <td align="left" class="main-text" width="250" colspan ="2"><strong>Search Profile by ID</strong>
+           <input name="searchid" type="text" class="main-text">
+        </td>        
+        <td width="93" align="left" class="main-text">
+		<a href="#" onClick="javascript : submit_button();"><img src="~$PHOTO_URL`/profile/images/search.gif" width="69" height="18" border="0"></a>
+	<td>
+			<input name="cid" type="hidden" value=~$cid`>
+				<input name="prev" type="hidden" value="OC">
+				<input name="showdetail" type="hidden" value="yes">
+				<input name="flagc" type="hidden" value="hide">	       
+	                 	<input type="hidden" name="profileid" value="~$profileid`">
+			</form>
+		
+        <td align="center" class="main-text">&nbsp;</td>       
+      </tr>      
+      <tr>
+        <td colspan="5" height="20"></td>
+      </tr>
+     
+      ~if $flagd eq "yes"`
+	~if $addmsg`
+	<form name="nudgemsgform" action="search_profiles.php" method="post">
+	<input type="hidden" name="cid" value="~$cid`">
+	<input type="hidden" name="profileid" value="~$profileid`">
+	<input type="hidden" name="search_pid" value="~$search_pid`">
+	<input type="hidden" name="three_dpp" value="~$three_dpp`">
+	<input type="hidden" name="nudgenow" value=1>
+	 <tr>
+      <td align="center" class="main-text">&nbsp;</td>
+        <td colspan="4"><table width="555" height="123" class="search-top"  border="0" align="center" cellpadding="0" cellspacing="0" background="~$PHOTO_URL`/profile/images/search-bg.gif" style="border:1px solid #cecece" >
+	<tr>
+	<td align="center">Add comments</td>
+	<td colspan="3" align="center"><textarea name="nudgemsg" rows="5" cols="40"></textarea></td>
+	<td align="center"><a href="#" onClick="javascript : document.nudgemsgform.submit();"><img src="~$PHOTO_URL`/profile/images/submit.gif" title="Submit" width="69" height="18" border="0"></a></td>
+	</tr>
+	</table>
+	</td>
+	<tr>
+	</form>
+	~else`
+      <tr>
+      <td align="center" class="main-text">&nbsp;</td>
+        <td colspan="4"><table width="555" height="123" class="search-top"  border="0" align="center" cellpadding="0" cellspacing="0" background="~$PHOTO_URL`/profile/images/search-bg.gif" style="border:1px solid #cecece" >
+          <tr>
+            <td width="18">&nbsp;</td>
+            <td width="258" class="search-top-bg">Satisfies the Offline Customer's Desired Partner Profile?</td>
+            <td colspan="2" class="search-top-bg">~$sat_dpp`</td>
+            <td width="16">&nbsp;</td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+            <td class="search-top-bg">Response to the Nudge?</td>
+            <td width="101" class="search-top-bg">~$res_nudge`</td>
+           <td width="160" class="search-top-bg">
+            ~if $show eq "yes"`
+            <a href="~$SITE_URL`/jsadmin/search_profiles.php?cid=~$cid`&profileid=~$profileid`&search_pid=~$search_pid`&enter=1&three_dpp=~$THREE_DPP`"><img  src="~$PHOTO_URL`/profile/images/nudge-now.gif" width="84" height="18" border="0"></a>
+            ~/if`
+            </td>     
+            <td>&nbsp;</td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+            <td class="search-top-bg">Is currently in the POOL?</td>
+            <td colspan="2" class="search-top-bg">~$in_pool`</td>
+            <td>&nbsp;</td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+            <td class="search-top-bg">Is in the short listed profiles?</td>
+            <td colspan="2" class="search-top-bg">~$in_sl`</td>
+            <td>&nbsp;</td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+            <td class="search-top-bg">Was sent to the Offline Customer?</td>
+            <td colspan="2" class="search-top-bg">~$sent_oc`</td>
+            <td>&nbsp;</td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+            <td class="search-top-bg">Response from the Offline Customer?</td>
+            <td colspan="2" class="search-top-bg">~$res_oc`</td>
+            <td>&nbsp;</td>
+          </tr>
+        </table></td>
+      </tr>
+	~/if`
+      <tr>
+        <td height="20" colspan="5" class="main-text" align="right"><strong>
+	<a href="#" onclick="win_open('~$SITE_URL`/jsadmin/displayprofile.php?cid=~$cid`&profileid=~$profileid`&searchid=~$search_pid`&page=search');return false;">Print this Profile</a><br>
+	~if $COMPATIBILITY_LINK eq 'R'`
+                <a href="#" onClick="window.open('~$SITE_URL`/profile/horoscoperequest.php?profileid=~$profileid`&profilechecksum=~$PROFILECHECKSUM`&via_ofm=1','','width=340,height=310,resizable=1');"><strong> Request Horoscope</strong></a><br>
+        ~else`
+                <a href="#" onClick="window.open('~$SITE_URL`/profile/horoscope_astro.php?checksum=~$cid`&profilechecksum=~$PROFILECHECKSUM`','','width=625,height=625,resizable=1,scrollbars=1');"><strong> View Horoscope</strong></a><br>
+        ~/if`
+        ~if $COMPATIBILITY_SUBSCRIPTION eq '1'`
+        ~if $COMPATIBILITY_LINK eq 'C'`
+                <a href="#" onClick="window.open('~$SITE_URL`/profile/check_horoscope_compatibility.php?profileid=~$profileid`&checksum=~$cid`&profilechecksum=~$PROFILECHECKSUM`&via_ofm=1&compatibility_subscription=~$COMPATIBILITY_SUBSCRIPTION`','','width=570,height=570,resizable=1');"><strong> Check Astro Compatibilty</strong></a><br>
+        ~/if`
+        ~/if`
+        </strong></td>
+      </tr>
+      <tr>
+      <td colspan="5" valign="top">~$viewprofile`</td>
+      </tr>  
+      ~/if`
+      ~if $flagd eq "no"`
+      <tr align="center">
+        <td colspan="5" style="font-family:verdana; font-size:12px; color:#FF0000"><strong>The Profile ID is either incorrect or has been inactivated.</strong></td>
+      </tr>
+      ~/if`
+      <tr>
+        <td colspan="5" height="10"></td>
+      </tr>      
+      <tr>
+        <td colspan="5" height="5"></td>
+     </tr>
+   </table></td>
+  </tr>
+~/if`
+</table>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<?php
+include("connect.inc");
+echo $cid;
+if(authenticated($cid))
+{
+        $smarty->assign("cid",$cid);
+        $smarty->assign("name",$name);
+        $smarty->display("login.htm");
+}
+else
+{echo "sorry";
+        $msg="Error: Incorrect userid or password";
+        $smarty->assign("name",$adminname);
+        $smarty->assign("cid",$cid);
+        $smarty->assign("MSG",$msg);
+        $smarty->display("../jsadmin_msg.tpl");
+                                                                                                 
+}
+?>
+

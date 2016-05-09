@@ -1,0 +1,891 @@
+<!DOCTYPE HTML PUBLIC "-//SoftQuad//DTD HoTMetaL PRO 4.0::19970714::extensions to HTML 4.0//EN"
+ "hmpro4.dtd">
+
+<HTML>
+  
+  <HEAD>
+    <TITLE>BMS : Campaign Management System</TITLE>
+    <LINK HREF="gifs/style.css" REL="stylesheet" TYPE="text/css">
+
+<link rel="stylesheet" href="http://www.jeevansathi.com/jsadmin/jeevansathi.css" type="text/css"><link rel="stylesheet" href="http://www.jeevansathi.com/profile/images/styles.css" type="text/css">
+	<!--<script src="http://shiksha.com/public/js/shikshaBMS.js"></script>-->
+	<script src="http://shiksha.com/public/BmsJs/common.js"></script>
+	<script src="http://shiksha.com/public/BmsJs/categoryList.js"></script>
+	<!--script language="javascript" src="http://shiksha.com/public/js/cityList.js"></script-->
+	<script language="javascript" src="http://shiksha.com/common/getTierCities/new/" type="text/javascript"></script>
+	<script>
+
+function selectShiskhaCombos(shikshaCombo, shikshaValues){
+	for(var shikshaValuesCount = 0; shikshaValuesCount < shikshaValues.length;shikshaValuesCount++) {
+		for(var comboLength = 0; comboLength < shikshaCombo.length ; comboLength++) {
+			if(shikshaCombo[comboLength].getAttribute('selected') != 'true' ) {
+				shikshaCombo[comboLength].removeAttribute('selected');
+			}
+			if(shikshaCombo[comboLength].value == trim(shikshaValues[shikshaValuesCount])){
+				shikshaCombo[comboLength].setAttribute('selected',true);
+			}
+		}
+	} 
+}
+
+function countSelected(a)
+{
+	var total,d;
+	d=document.advbannerdetails;
+	total=0;
+	for (var i=0;i < d.elements.length;i++)
+	{
+		var e = d.elements[i];
+		if (e.type == "checkbox")
+		{
+			if(e.checked)
+				total=total+1;
+		}
+	}
+	/*if(a.checked==true && total>3)
+	{
+		alert("you can not select more than 3 options");
+		return false;
+	}
+	else*/
+		return true;
+}
+function populateinr()
+{
+	try{
+	var sel = -1;
+	var val = document.getElementById('category');
+	var docF = document.advbannerdetails;
+	for (i=0;i<docF.bannerpropcat.length;i++)
+    	{
+		if(docF.bannerpropcat[i].checked)
+		{
+			sel =i;
+		}
+        	//if (docF.sitename[i].checked)
+                //	radio_site = true;
+    	}	
+	if (sel == -1)
+	{
+		document.getElementById('budget').style.visibility = 'hidden';
+	}
+	var inr = docF.bannerpropcat[sel].value;
+	if (inr=='Rent')
+	{
+		document.getElementById('budget').style.visibility = 'visible';
+		document.getElementById('rentinr').style.visibility='visible';
+		document.getElementById('buyinr').style.visibility='hidden';
+	}
+	else if (inr == 'Buy')
+	{
+		document.getElementById('budget').style.visibility = 'visible';
+		document.getElementById('rentinr').style.visibility='hidden';
+                document.getElementById('buyinr').style.visibility='visible';
+	}
+	}catch(e){}
+}
+function checkCat(thisform,limit)
+{
+	var c=0;
+	for(var i=0; i< thisform.options.length; i++) 
+	{
+		if(thisform.options[i].selected) 
+		{
+			c++;
+		}
+	}
+	if(c>limit && limit)
+	{
+		alert("Please choose "+limit+" categories only !");
+		for(var i=0; i< thisform.options.length; i++) 
+		{
+			if(thisform.options[i].selected)
+			{
+				thisform.options[i].selected = false;
+				thisform.focus();
+			}
+		}
+	}
+}
+
+function validateForm()
+{
+	var total,d;
+	d=document.advbannerdetails;
+	if(d.bannerdefault.value!='Y' && d.bannerfixed.value!='Y')
+	{
+		total=0;
+		for (var i=0;i < d.elements.length;i++)
+		{
+			var e = d.elements[i];
+			if (e.type == "checkbox")
+			{
+				if(e.checked)
+				{
+					total=total+1;
+					if(e.value=="Keywords")
+					{	
+						if((d.bannerkeyword.value)=="")
+						{
+							alert("Please enter proper keyword.");
+							return false;
+						}
+						else if((d.bannerkeystype.options[d.bannerkeystype.selectedIndex].value)<1)
+						{
+							alert("Please enter proper keys type.");
+							return false;
+						}
+					}
+					/*else if(e.value=="Location")
+					{
+						if((d.bannerlocation.value)=="")
+						{
+							alert("Please enter proper location.");
+							return false;
+						}
+					}*/
+					else if(e.value=="Exp")
+					{
+						if((d.bannerexpmin.options[d.bannerexpmin.selectedIndex].value)==""||(d.bannerexpmax.options[d.bannerexpmax.selectedIndex].value==""))
+						{
+							alert("Please select experience.");
+							return false;
+						}
+						else if(parseInt(d.bannerexpmin.options[d.bannerexpmin.selectedIndex].value)>parseInt(d.bannerexpmax.options[d.bannerexpmax.selectedIndex].value))
+						{
+							alert("Please enter proper range of experienceee.");
+							return false;
+						}
+					}
+					else if(e.value=="Farea")
+					{
+						if((d.elements['bannerfarea[]'].selectedIndex)< 1)
+						{
+							alert("Please select a functional area");
+							return false;
+						}
+
+					}
+					else if(e.value=="Industry")
+					{
+						if((d.elements['bannerindtype[]'].selectedIndex)< 1)
+						{
+							alert("Please select a industry");
+							return false;
+						}
+					}
+					else if(e.value=="Categories")
+					{
+						if((d.elements['bannercategories[]'].selectedIndex)< 1)
+						{
+							alert("Please select a category");
+							return false;
+						}
+					}
+					else if(e.value=="IP")
+					{
+						if((d.elements['bannerip[]'].selectedIndex)< 1)
+						{
+							alert("Please select a city");
+							return false;
+						}
+					}
+					else if(e.value=="Location")
+                                        {
+                                                if((d.elements['bannerloc_country[]'].selectedIndex)< 1)
+                                                {
+                                                        alert("Please select a country");
+                                                        return false;
+                                                }
+                                        }
+					else if(e.value=="MEM")
+                                        {
+                                                if((d.elements['bannermem[]'].selectedIndex)< 1)
+                                                {
+                                                        alert("Please select a subscription type");
+                                                        return false;
+                                                }
+                                        }
+					else if(e.value=="Ctc")
+					{
+						if((d.elements['bannerctc[]'].selectedIndex)< 1)
+						{
+							alert("Please select an Income range");
+							return false;
+						}
+					}
+					else if(e.value=="Age")
+					{
+						if(d.banneragemax.options[d.banneragemax.selectedIndex].value=="")
+						{
+							alert("Please select max age");
+							return false;
+						}
+						else if(d.banneragemin.options[d.banneragemin.selectedIndex].value=="")
+						{
+							alert("Please select min age");
+							return false;
+						}
+						else if(parseInt(d.banneragemin.options[d.banneragemin.selectedIndex].value)>parseInt(d.banneragemax.options[d.banneragemax.selectedIndex].value))
+						{
+							alert("Please select correct range age");
+							return false;
+						}
+
+					}
+					else if(e.value=="Gender")
+					{
+						if(d.bannergender.options[d.bannergender.selectedIndex].value=="")
+						{
+							alert("Please select gender");
+							return false;
+						}
+					}
+					else if(e.value=="ExpResman")
+					{
+						if((d.bannerresmanexpmin.options[d.bannerresmanexpmin.selectedIndex].value)==""||(d.bannerresmanexpmax.options[d.bannerresmanexpmax.selectedIndex].value==""))
+						{
+							alert("Please enter proper range of experience.");
+							return false;
+						}
+						else if(parseInt(d.bannerresmanexpmin.options[d.bannerresmanexpmin.selectedIndex].value)>parseInt(d.bannerresmanexpmax.options[d.bannerresmanexpmax.selectedIndex].value))
+						{
+							alert("Please enter proper range of experience.");
+							return false;
+
+						}
+					}
+					else if(e.value=="IndustryResman")
+					{
+						if((d.elements['bannerresmanindtype[]'].selectedIndex)< 1)
+						{
+							alert("Please select a industry");
+							return false;
+						}
+					}
+					else if(e.value=="FareaResman")
+					{
+						if((d.elements['bannerresmanfarea[]'].selectedIndex)< 1)
+						{
+							alert("Please select a functional area");
+							return false;
+						}
+					}
+				}
+			}
+
+		}
+		if(total==0)
+		{
+			alert("Please select at least one criteria");
+			return false;
+		}
+	}
+	if((d.elements['bannerpriority'].selectedIndex)< 1)
+	{
+		alert("Please select priority");
+		return false;
+	}
+	else if((d.elements['bannerweightage'].value)==""||(!isInteger(d.elements['bannerweightage'].value)))
+	{
+		alert("Please enter correct weightage.");
+		return false;
+	}
+	else
+		return true;
+}
+	
+
+function isInteger(iNumber)
+{
+	var i;
+	
+	for (i=0;i<iNumber.length;i++)
+	{
+		var c = iNumber.charAt(i);
+	
+		if (!isDigit(c))
+		{
+			return false;
+		}
+	}
+	
+  	return true;
+}
+function activate_cityres(thisform)
+{
+	
+        var docF=document.advbannerdetails;
+        var cnt = 0;
+        var valarr = new Array(30);
+        for(var i=0; i<document.advbannerdetails.bannerloc_country.options.length;i++)
+        {
+                if (document.advbannerdetails.bannerloc_country.options[i].selected)
+                {
+//                      alert("docF.bannerloc_country.options[i].text");
+                        //alert(document.advbannerdetails.bannerloc_country.options[i].value);
+                        cnt++;
+                        //alert(cnt);
+                        valarr[cnt] = document.advbannerdetails.bannerloc_country.options[i].value;
+                }
+        }
+        var incode = 0;
+        var uscode = 0;
+        for (var i=1 ;i <=cnt;i++)
+        {
+                if (valarr[i] == "51")
+                        incode = 1;
+                if (valarr[i] == "127")
+                        uscode = 1;
+        }
+        if (incode == '1' && uscode == '1')
+        {
+                //alert('both');
+                document.advbannerdetails.bannerloc_uscity.disabled = false;
+                document.advbannerdetails.bannerloc_incity.disabled = false;
+        }
+	if (incode == '1' && uscode == '0')
+        {
+                        document.advbannerdetails.bannerloc_uscity.disabled = true;
+                        document.advbannerdetails.bannerloc_incity.disabled = false;
+                         //alert('india');
+        }
+       if (uscode == '1' && incode == '0')
+       {
+                        document.advbannerdetails.bannerloc_uscity.disabled = false;
+                        document.advbannerdetails.bannerloc_incity.disabled = true;
+                        //alert('us');
+       }
+       if (incode == '0' && uscode == '0')
+       {
+                        document.advbannerdetails.bannerloc_uscity.disabled = true;
+                        document.advbannerdetails.bannerloc_incity.disabled = true;
+                        //alert('none');
+        }
+}
+
+
+function isDigit (c)
+{
+		 return ((c >= "0") && (c <= "9"))
+}
+	
+	
+	-->
+	</script>   
+  </HEAD>
+  
+  <BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#000000" VLINK="#000000" 
+  ALINK="#000000" LEFTMARGIN="0" TOPMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0" onload='populateinr()'>
+
+    
+ ~$bmsheader`
+<DIV CLASS="text-under" STYLE="margin-left:20px;"><BR>
+  <A HREF="bms_adminindex.php?id=~$id`" TARGET="">MIS Home</A> &gt;&gt;<a href="bms_campaign.php?id=~$id`" target=""> Campaign Details</a> 
+  &gt;&gt; <a href="bms_campaigndetails.php?id=~$id`&campaignid=~$campaignid`" target="">Banner Details</a> &gt;&gt;<B> Banner Criteria</B></DIV>
+<br>
+<DIV CLASS="text"><TABLE WIDTH="100%" BORDER="0">
+      <TR>
+        <TD WIDTH="20%" ALIGN="RIGHT"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="250" HEIGHT="1"><IMG SRC="gifs/tick.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="13" HEIGHT="11">
+        </TD>
+        
+      <TD WIDTH="80%" CLASS="text">You can define the banner targeting criterias 
+        on this page</TD>
+      </TR>
+	  ~if $errormsg`
+	  <TR> 
+    <TD WIDTH="20%" ALIGN="RIGHT"><img src="gifs/error-2.gif" alt="New Clients" border="0" hspace="0" vspace="0" width="16" height="16"></TD>
+    <TD WIDTH="80%" CLASS="error">~$errormsg` </TD>
+  </TR>
+  ~/if`
+  ~if $cnfrmmsg`
+  <TR>
+      <TD WIDTH="20%" ALIGN="RIGHT" valign="top"><img src="gifs/action-performed.gif" alt="New Clients" border="0" hspace="0" vspace="0" width="16" height="16"></TD>
+    <TD WIDTH="80%" CLASS="text">~$cnfrmmsg`</TD>
+  </TR>
+  ~/if`
+    </TABLE></DIV>
+    <FORM name="advbannerdetails" action="bms_advbannerdetails.php" method="POST" onSubmit="return validateForm();">
+	<TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" 
+    ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/page-bg.gif"><IMG SRC="gifs/lt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0" HSPACE="0"></TD>
+        <TD VALIGN="MIDDLE" HEIGHT="31" WIDTH="100%"><TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" HEIGHT="31">
+          <TR>
+            <TD BACKGROUND="gifs/page-bg.gif" WIDTH="100%"><DIV CLASS="text"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="30" HEIGHT="1"><B>SELECT
+            BANNER CRITERIAS</B></DIV></TD>
+          </TR>
+        </TABLE></TD>
+        <TD ALIGN="RIGHT" WIDTH="18" BACKGROUND="gifs/page-bg.gif"><IMG SRC="gifs/rt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+      </TR>
+    </TABLE><TABLE WIDTH="100%" BORDER="0" VSPACE="0" HSPACE="0" 
+    CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/lt-line-bg-1.gif"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></TD>
+        <TD WIDTH="100%"> <BR><DIV ALIGN="CENTER"><TABLE WIDTH="100%" BORDER="0" VSPACE="0" HSPACE="0" CELLPADDING="5" CELLSPACING="0">
+<!-- ******COMMENTS BY SHOBHA TO DISABLE LOCATION "temporarily" ***********************-->
+~if $LOCATION`
+<TR>
+            <TD CLASS="text" WIDTH="20%" HEIGHT="20" VALIGN="TOP">
+                        <INPUT TYPE="checkbox" NAME="criteriaarr[]" value="Location" onclick="return countSelected(this);"~if $bannerdetails.bannerlocation` checked  ~/if`>
+            &nbsp;<B>Location</B></TD>
+          </TR>
+          <TR valign="center">
+            <TD WIDTH="20%" CLASS="text" valign="center"><B>Country</B></TD>
+            <TD CLASS="text"  WIDTH="20%" valign="center">
+            <SELECT name="bannerloc_country[]" id=bannerloc_country  CLASS="textbox" onchange="activate_cityres(this);" MULTIPLE="MULTIPLE" SIZE="3">
+                <option value="">Select</option>
+                        ~section  name=i loop=$loc_ctryarr`
+                                <option value="~$loc_ctryarr[i].value`" ~$loc_ctryarr[i].selected`>~$loc_ctryarr[i].name` </option>
+                        ~/section`
+            </SELECT>
+	    </TD>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+           <TD valign="center" CLASS="text"><B>Indian City</B></TD>
+           <TD valign="center"  WIDTH="20%" CLASS="text">
+            <SELECT name=bannerloc_incity[] id=bannerloc_incity  MULTIPLE="MULTIPLE" SIZE="3" CLASS="textbox">
+                        ~section  name=i loop=$loc_Incityarr`
+                                <option value="~$loc_Incityarr[i].value`" ~$loc_Incityarr[i].selected`>~$loc_Incityarr[i].name` </option>
+                        ~/section`
+            </SELECT>
+            </TD>
+            <TD valign="center" CLASS="text" WIDTH="20%"><B>US City</B></TD>
+            <TD valign="center"  WIDTH="20%" CLASS="text">
+            <SELECT name=bannerloc_uscity[] id=bannerloc_uscity MULTIPLE="MULTIPLE" SIZE="3" CLASS="textbox">
+                        ~section  name=i loop=$loc_Uscityarr`
+                                <option value="~$loc_Uscityarr[i].value`" ~$loc_Uscityarr[i].selected`>~$loc_Uscityarr[i].name` </option>
+                        ~/section`
+            </SELECT>
+            </TD>
+                                                                                                                            
+          </TR>
+
+~/if`
+<!--     ******COMMENTS BY SHOBHA TO DISABLE LOCATION "temporarily" **********************-->
+~if $IP`
+
+          <TR>
+            <TD CLASS="text" WIDTH="30%" HEIGHT="30" >
+			<INPUT TYPE="checkbox" NAME="criteriaarr[]"  value="IP" onclick="return countSelected(this);" ~if $bannerdetails.bannerip` checked  ~/if`>
+            &nbsp;<B>IP</B></TD>
+            <TD ALIGN="LEFT" WIDTH="60%" CLASS="text"><SELECT NAME="bannerip[]" MULTIPLE="MULTIPLE" SIZE="3" CLASS="textbox">
+            <option value="">Select</option>
+		~section  name=i loop=$ipcitiesarr`
+		<option value="~$ipcitiesarr[i].value`" ~$ipcitiesarr[i].selected`>~$ipcitiesarr[i].name` </option>
+             ~/section`
+			 </SELECT> </TD>
+          </TR>
+~/if`
+~if $SUBSCRIPTION`
+        <TR>
+            <TD CLASS="text" WIDTH="30%" HEIGHT="30" >
+                        <INPUT TYPE="checkbox" NAME="criteriaarr[]" value="MEM" onclick="return countSelected(this);" ~if $bannerdetails.bannermem` checked  ~/if`>
+            &nbsp;<B>Membership</B></TD>
+            <TD ALIGN="LEFT" WIDTH="60%" CLASS="text">&nbsp;<SELECT NAME="bannermem[]" size="4" CLASS="textbox" multiple>
+                <option value="">Select</option>
+                ~section  name=i loop=$memarr`
+                <option value="~$memarr[i].value`" ~$memarr[i].selected`>~$memarr[i].name` </option>
+             ~/section`</select>
+          </TR>
+~/if`
+~if $RELIGION`
+        <TR>
+            <TD CLASS="text" WIDTH="30%" HEIGHT="30" >
+                        <INPUT TYPE="checkbox" NAME="criteriaarr[]" value="REL" onclick="return countSelected(this);" ~if $bannerdetails.bannerrel` checked  ~/if`>
+            &nbsp;<B>Religion</B></TD>
+            <TD ALIGN="LEFT" WIDTH="60%" CLASS="text">&nbsp;<SELECT NAME="bannerrel[]" size="4" CLASS="textbox" multiple>
+                <option value="">Select</option>
+                ~section  name=i loop=$relarr`
+                <option value="~$relarr[i].value`" ~$relarr[i].selected`>~$relarr[i].name` </option>
+             ~/section`</select>
+          </TR>
+~/if`
+~if $EDUCATION`
+        <TR>
+            <TD CLASS="text" WIDTH="30%" HEIGHT="30" >
+                        <INPUT TYPE="checkbox" NAME="criteriaarr[]" value="EDU" onclick="return countSelected(this);" ~if $bannerdetails.banneredu` checked  ~/if`>&nbsp;<B>Education</B></TD>
+            <TD ALIGN="LEFT" WIDTH="60%" CLASS="text">&nbsp;
+	      <SELECT NAME="banneredu[]" size="4" CLASS="textbox" multiple>
+                <option value="">Select</option> 
+                ~section  name=i loop=$eduarr`
+                  <option value="~$eduarr[i].value`" ~$eduarr[i].selected`>~$eduarr[i].name` </option>
+                ~/section`</select>
+          </TR>
+~/if`
+~if $OCCUPATION`
+        <TR>
+            <TD CLASS="text" WIDTH="30%" HEIGHT="30" >
+                        <INPUT TYPE="checkbox" NAME="criteriaarr[]" value="OCC" onclick="return countSelected(this);" ~if $bannerdetails.bannerocc` checked  ~/if`>
+             &nbsp;<B>Occupation</B></TD>
+            <TD ALIGN="LEFT" WIDTH="60%" CLASS="text">&nbsp;<SELECT NAME="bannerocc[]" size="4" CLASS="textbox" multiple>
+                <option value="">Select</option>
+                ~section  name=i loop=$occarr`
+                <option value="~$occarr[i].value`" ~$occarr[i].selected`>~$occarr[i].name` </option>
+                ~/section`</select>
+          </TR>
+~/if`
+~if $COMMUNITY`
+        <TR>
+            <TD CLASS="text" WIDTH="30%" HEIGHT="30" >
+                        <INPUT TYPE="checkbox" NAME="criteriaarr[]" value="COM" onclick="return countSelected(this);" ~if $bannerdetails.bannercom` checked  ~/if`>            
+	     &nbsp;<B>Community</B></TD>
+            <TD ALIGN="LEFT" WIDTH="60%" CLASS="text">&nbsp;<SELECT NAME="bannercom[]" size="4" CLASS="textbox" multiple>
+                <option value="">Select</option>
+                 ~section  name=i loop=$comarr`
+                  <option value="~$comarr[i].value`" ~$comarr[i].selected`>~$comarr[i].name` </option>
+                 ~/section`</select>
+          </TR>
+~/if`
+~if $MARITALSTATUS`
+        <TR>
+            <TD CLASS="text" WIDTH="30%" HEIGHT="30" >
+                        <INPUT TYPE="checkbox" NAME="criteriaarr[]" value="MARITALSTATUS" onclick="return countSelected(this);" ~if $bannerdetails.bannermstatus` checked  ~/if`>
+            &nbsp;<B>Marital status</B></TD>
+            <TD ALIGN="LEFT" WIDTH="60%" CLASS="text">&nbsp;<SELECT NAME="bannermstatus[]" size="4" CLASS="textbox" multiple>
+                <option value="">Select</option>
+                ~section  name=i loop=$mstatusarr`
+                <option value="~$mstatusarr[i].value`" ~$mstatusarr[i].selected`>~$mstatusarr[i].name` </option>
+             ~/section`</select>
+          </TR>
+~/if`
+~if $INCOME`
+	<TR>
+            <TD CLASS="text" WIDTH="30%" HEIGHT="30" >
+                        <INPUT TYPE="checkbox" NAME="criteriaarr[]" value="Ctc" onclick="return countSelected(this);" ~if $bannerdetails.bannerctc` checked  ~/if`>
+            &nbsp;<B>CTC</B></TD>
+            <TD ALIGN="LEFT" WIDTH="60%" CLASS="text">&nbsp;<SELECT NAME="bannerctc[]" size="4" CLASS="textbox" multiple>
+                <option value="">Select</option>
+                ~section  name=i loop=$ctcarr`
+                <option value="~$ctcarr[i].value`" ~$ctcarr[i].selected`>~$ctcarr[i].name` </option>
+             ~/section`</select>
+          </TR> 
+~/if`
+
+~if $AGE`
+          <TR>
+            <TD CLASS="text" WIDTH="30%" HEIGHT="30" >
+			<INPUT TYPE="checkbox" NAME="criteriaarr[]" value="Age" onclick="return countSelected(this);" ~if $bannerdetails.banneragemin or $bannerdetails.banneragemax`  ~if $bannerdetails.banneragemax neq '-1' and $bannerdetails.banneragemin neq '-1'` checked ~/if` ~/if`>
+            &nbsp;<B>Age</B></TD>
+			
+            <TD ALIGN="LEFT" WIDTH="60%" CLASS="text">Min&nbsp;<SELECT NAME="banneragemin" CLASS="textbox">
+           ~section  name=i loop=$agearr`
+		<option value="~$agearr[i].value`" ~if $bannerdetails.banneragemin eq $agearr[i].value` selected ~/if`>~$agearr[i].label` </option>
+             ~/section`
+			 </SELECT>&nbsp;&nbsp;&nbsp;Max&nbsp;<SELECT NAME="banneragemax" CLASS="textbox">
+			~section  name=i loop=$agearr`
+		<option value="~$agearr[i].value`" ~if $bannerdetails.banneragemax eq $agearr[i].value` selected ~/if`>~$agearr[i].label` </option>
+             ~/section`
+			</SELECT></TD>
+			
+          </TR>
+~/if`
+~if $GENDER`
+          <TR>
+            <TD CLASS="text" WIDTH="30%" HEIGHT="30" >
+			<INPUT TYPE="checkbox" NAME="criteriaarr[]" value="Gender" onclick="return countSelected(this);" ~if $bannerdetails.bannergender` checked ~/if`>
+            &nbsp;<B>Gender</B></TD>
+            <TD ALIGN="LEFT" WIDTH="60%" CLASS="text"><SELECT NAME="bannergender" CLASS="textbox">
+            <option value="F" ~if $bannerdetails.bannergender eq "F"` selected ~/if`>F</option>
+				<option value="M" ~if $bannerdetails.bannergender eq "M"` selected ~/if`>M </option>
+				
+				</SELECT></TD>
+          </TR>
+~/if`
+~if $PROPTYPE`
+        <TR>
+            <TD CLASS="text" WIDTH="30%" HEIGHT="30" >
+               <INPUT TYPE="checkbox" NAME="criteriaarr[]" value="PROPTYPE" onclick="return countSelected(this);" ~if $bannerdetails.bannerproptype` checked  ~/if`>
+            &nbsp;<B>99 ACRES PROPERTY TYPE</B></TD>
+            <TD ALIGN="LEFT" WIDTH="60%" CLASS="text">&nbsp;<SELECT NAME="bannerproptype[]" size="4" CLASS="textbox"  multiple>
+                <option value="">Select</option>
+                ~section  name=i loop=$proptypearr`
+                <option value="~$proptypearr[i].value`" ~$proptypearr[i].selected`>~$proptypearr[i].name` </option>
+             ~/section`</select>
+          </TR>
+~/if`
+~if $PROPCITY`
+        <TR>
+            <TD CLASS="text" WIDTH="30%" HEIGHT="30" >
+               <INPUT TYPE="checkbox" NAME="criteriaarr[]" value="PROPCITY" onclick="return countSelected(this);" ~if $bannerdetails.bannerpropcity` checked  ~/if`>
+            &nbsp;<B>99 ACRES LOCATION</B></TD>
+            <TD ALIGN="LEFT" WIDTH="60%" CLASS="text">&nbsp;<SELECT NAME="bannerpropcity[]" size="4" CLASS="textbox"  multiple>
+                <option value="">Select</option>
+                ~section  name=i loop=$propcityarr`
+                <option value="~$propcityarr[i].value`" ~$propcityarr[i].selected`>~$propcityarr[i].name` </option>
+             ~/section`</select>
+          </TR>
+~/if`
+~if $PROPCAT`
+        <TR>
+            <TD CLASS="text" WIDTH="30%" HEIGHT="30" >
+               <INPUT TYPE="checkbox" NAME="criteriaarr[]" value="PROPCAT" onclick="return countSelected(this);" ~if $bannerdetails.bannerpropcat` checked  ~/if`>
+            &nbsp;<B>99 ACRES PROPERTY CATEGORY</B></TD>
+            <TD ALIGN="LEFT" WIDTH="60%" CLASS="text">&nbsp;Rent<INPUT TYPE ="radio" NAME="bannerpropcat"  VALUE=Rent ~if $bannerpropcat eq 'Rent'` checked ~/if` CLASS="textbox" id ="category" onchange="populateinr()">
+                Buy <INPUT TYPE ="radio" NAME="bannerpropcat"  VALUE=Buy ~if $bannerpropcat eq 'Buy'` checked ~/if` CLASS="textbox" id="category" onchange="populateinr()"> &nbsp;&nbsp;(Property INR can be chosen only after selecting a category )
+          </TR>
+~/if`
+~if $PROPINR`
+        <TR id='budget'>
+            <TD CLASS="text" WIDTH="30%" HEIGHT="30" >
+               <INPUT TYPE="checkbox" NAME="criteriaarr[]" value="PROPINR" onclick="return countSelected(this);" ~if $bannerdetails.bannerpropinr` checked  ~/if`>
+            &nbsp;<B>99 ACRES INR</B></TD>
+            <TD ALIGN="LEFT" WIDTH="60%" CLASS="text">&nbsp;
+              <SELECT NAME="bannerproprentinr[]" size="4" CLASS="textbox" id="rentinr" multiple>
+                <option value="">Select</option>
+                ~section  name=i loop=$proprentinrarr`
+                   <option value="~$proprentinrarr[i].value`" ~$proprentinrarr[i].selected`>~$proprentinrarr[i].name` </option>
+                ~/section`</select>
+             <SELECT NAME="bannerpropinr[]" size="4" CLASS="textbox" id="buyinr" multiple>
+                <option value="">Select</option>
+                ~section  name=i loop=$propinrarr`
+                   <option value="~$propinrarr[i].value`" ~$propinrarr[i].selected`>~$propinrarr[i].name` </option>
+                ~/section`</select>
+          </TR>
+~/if`
+
+~if $SHIKSHA_CATEGORY`
+
+          <TR>
+	            <TD CLASS="text" WIDTH="30%" HEIGHT="30" >
+			<INPUT TYPE="checkbox" NAME="criteriaarr[]"  value="SHIKSHA_CATEGORY" onclick="return countSelected(this);" ~if $bannerdetails.bannerShikshaCategories` checked  ~/if`>
+            &nbsp;<B>Shiksha Categories</B></TD>
+            <TD ALIGN="LEFT" WIDTH="60%" CLASS="text">
+
+		<span id="c_categories_combo"></span>
+		<script>
+			getCategories(false);
+			//document.getElementById('c_categories').setAttribute('size',5);
+			document.getElementById('c_categories').setAttribute('name','shikshaCategory[]');
+			var shikshaCategoriesList = '~$bannerdetails.bannerShikshaCategories`';
+			var shikshaCategories= shikshaCategoriesList.split(',');
+			selectShiskhaCombos(document.getElementById('c_categories'), shikshaCategories);
+		</script>
+	  </TD>
+	
+          </TR>
+~/if`
+~if $SHIKSHA_COUNTRY`
+
+          <TR>
+	            <TD CLASS="text" WIDTH="30%" HEIGHT="30" >
+			<INPUT TYPE="checkbox" NAME="criteriaarr[]"  value="SHIKSHA_COUNTRY" onclick="return countSelected(this);" ~if $bannerdetails.bannerShikshaCountries` checked  ~/if`>
+            &nbsp;<B>Shiksha Country</B></TD>
+            <TD ALIGN="LEFT" WIDTH="60%" CLASS="text">
+		<SELECT NAME="shikshaCountry[]" CLASS="textbox"  onchange="getCitiesForCountry('cities',true);" id="country">
+			 </SELECT> </TD>
+	
+          </TR>
+	<script>
+		createShikshaCountryDD('country');
+		var shikshaCountry = '~$bannerdetails.bannerShikshaCountries`';
+		selectComboBox(document.getElementById('country'), shikshaCountry);
+	</script>
+~/if`
+~if $SHIKSHA_CITY`
+
+          <TR>
+	            <TD CLASS="text" WIDTH="30%" HEIGHT="30" >
+			<INPUT TYPE="checkbox" NAME="criteriaarr[]"  value="SHIKSHA_CITY" onclick="return countSelected(this);" ~if $bannerdetails.bannerShikshaCities` checked  ~/if`>
+            &nbsp;<B>Shiksha Cities</B></TD>
+            <TD ALIGN="LEFT" WIDTH="60%" CLASS="text">
+
+<select name="shikshaCities[]" id="cities" onChange="checkCity(this, 'updateInstitutes');" multiple="multiple" size="10">
+                            </select>
+                            <input type="hidden" name="cities_other" id="cities_other" value="" />
+			<script>
+				getCitiesForCountry('cities',true);
+				var shikshaCitiesList = '~$bannerdetails.bannerShikshaCities`';
+				shikshaCitiesList = shikshaCitiesList.split(',');
+				selectShiskhaCombos(document.getElementById('cities'), shikshaCitiesList);
+			</script>
+		</TD>
+	
+          </TR>
+~/if`
+~if $SHIKSHA_KEYWORD`
+
+          <TR>
+	            <TD CLASS="text" WIDTH="30%" HEIGHT="30" >
+			<INPUT TYPE="checkbox" NAME="criteriaarr[]"  value="SHIKSHA_KEYWORD" onclick="return countSelected(this);" ~if $bannerdetails.bannerShikshaKeyword` checked  ~/if`>
+            &nbsp;<B>Shiksha Keywords</B></TD>
+            <TD ALIGN="LEFT" WIDTH="60%" CLASS="text"><input NAME="shikshaKeyword" type="text"  CLASS="textbox" value="~$bannerdetails.bannerShikshaKeyword`" />
+			  </TD>
+	
+          </TR>
+~/if`
+
+<!-- new lavesh rawat -->
+~if $VARIABLE_DISCOUNT`
+<TR>
+    <TD CLASS="text" WIDTH="30%" HEIGHT="30" >
+		<INPUT TYPE="checkbox" NAME="criteriaarr[]" value="vd" onclick="return countSelected(this);" ~if $bannerdetails.bannerJsVd` checked  ~/if`>
+     &nbsp;<B>Variable Discount</B></TD>
+    <TD ALIGN="LEFT" WIDTH="60%" CLASS="text">&nbsp;<SELECT NAME="vd[]" size="4" CLASS="textbox" multiple>
+	<option value="">Select</option>
+	~section  name=i loop=$vdArr`
+	<option value="~$vdArr[i].value`" ~$vdArr[i].selected`>~$vdArr[i].name` </option>
+	~/section`
+	</select>
+
+  </TR>
+~/if`
+
+~if $PROFILE_STATUS`
+<TR>
+    <TD CLASS="text" WIDTH="30%" HEIGHT="30" >
+		<INPUT TYPE="checkbox" NAME="criteriaarr[]" value="profileStatus" onclick="return countSelected(this);" ~if $bannerdetails.bannerJsProfileStatus` checked  ~/if`>
+     &nbsp;<B>Profile Status</B></TD>
+    <TD ALIGN="LEFT" WIDTH="60%" CLASS="text">&nbsp;<SELECT NAME="profileStatus[]" size="4" CLASS="textbox" multiple>
+	<option value="">Select</option>
+	~section  name=i loop=$profileStatusArr`
+	<option value="~$profileStatusArr[i].value`" ~$profileStatusArr[i].selected`>~$profileStatusArr[i].name` </option>
+	~/section`
+	</select>
+  </TR>
+~/if`
+
+~if $GMAIL_ID`
+<TR>
+    <TD CLASS="text" WIDTH="30%" HEIGHT="30" >
+		<INPUT TYPE="checkbox" NAME="criteriaarr[]" value="jsMailID" onclick="return countSelected(this);" ~if $bannerdetails.bannerJsMailID` checked  ~/if`>
+     &nbsp;<B>Mail ID</B></TD>
+    <TD ALIGN="LEFT" WIDTH="60%" CLASS="text">&nbsp;<SELECT NAME="jsMailID[]" size="4" CLASS="textbox" multiple>
+	<option value="">Select</option>
+	~section  name=i loop=$mailIDArr`
+	<option value="~$mailIDArr[i].value`" ~$mailIDArr[i].selected`>~$mailIDArr[i].name` </option>
+	~/section`
+	</select>
+  </TR>
+~/if`
+
+~if $EOI_STATUS`
+<TR>
+    <TD CLASS="text" WIDTH="30%" HEIGHT="30" >
+                <INPUT TYPE="checkbox" NAME="criteriaarr[]" value="jsEoiStatus" onclick="return countSelected(this);" ~if $bannerdetails.bannerJsEoiStatus` checked  ~/if`>
+     &nbsp;<B>EOI STATUS</B></TD>
+    <TD ALIGN="LEFT" WIDTH="60%" CLASS="text">&nbsp;<SELECT NAME="jsEoiStatus[]" size="4" CLASS="textbox" multiple>
+        <option value="">Select</option>
+	~section  name=i loop=$eoiStatusArr`
+	<option value="~$eoiStatusArr[i].value`" ~$eoiStatusArr[i].selected`>~$eoiStatusArr[i].name` </option>
+	~/section`
+	</select>
+  </TR>
+~/if`
+
+~if $REGISTRATION_STATUS`
+<TR>
+    <TD CLASS="text" WIDTH="30%" HEIGHT="30" >
+                <INPUT TYPE="checkbox" NAME="criteriaarr[]" value="jsRegistrationStatus" onclick="return countSelected(this);" ~if $bannerdetails.bannerJsRegistrationStatus` checked  ~/if`>
+     &nbsp;<B>Registration Status</B></TD>
+    <TD ALIGN="LEFT" WIDTH="60%" CLASS="text">&nbsp;<SELECT NAME="jsRegistrationStatus[]" size="4" CLASS="textbox" multiple>
+        <option value="">Select</option>
+	~section  name=i loop=$registrationStatusArr`
+	<option value="~$registrationStatusArr[i].value`" ~$registrationStatusArr[i].selected`>~$registrationStatusArr[i].name` </option>
+	~/section`
+	</select>
+  </TR>
+~/if`
+
+
+~if $FTO_STATE`
+<TR>
+    <TD CLASS="text" WIDTH="30%" HEIGHT="30" >
+                <INPUT TYPE="checkbox" NAME="criteriaarr[]" value="jsFtoStatus" onclick="return countSelected(this);" ~if $bannerdetails.bannerJsFtoStatus` checked  ~/if`>
+     &nbsp;<B>FTO State</B></TD>
+    <TD ALIGN="LEFT" WIDTH="60%" CLASS="text">&nbsp;<SELECT NAME="jsFtoStatus[]" size="4" CLASS="textbox" multiple>
+        <option value="">Select</option>
+        ~section  name=i loop=$ftoStateArr`
+        <option value="~$ftoStateArr[i].value`" ~$ftoStateArr[i].selected`>~$ftoStateArr[i].name` </option>
+        ~/section`
+        </select>
+  </TR>
+~/if`
+
+~if $FTO_EXPIRY`
+<TR>
+    <TD CLASS="text" WIDTH="30%" HEIGHT="30" >
+                <INPUT TYPE="checkbox" NAME="criteriaarr[]" value="jsFtoExpiry" onclick="return countSelected(this);" ~if $bannerdetails.bannerJsFtoExpiry` checked  ~/if`>
+     &nbsp;<B>FTO Expiry</B></TD>
+    <TD ALIGN="LEFT" WIDTH="60%" CLASS="text">&nbsp;<SELECT NAME="jsFtoExpiry[]" size="4" CLASS="textbox" multiple>
+        <option value="">Select</option>
+        ~section  name=i loop=$ftoExpiryArr`
+        <option value="~$ftoExpiryArr[i].value`" ~$ftoExpiryArr[i].selected`>~$ftoExpiryArr[i].name` </option>
+        ~/section`
+        </select>
+  </TR>
+~/if`
+
+~if $PROFILE_COMPLETE_STATE`
+<TR>
+    <TD CLASS="text" WIDTH="30%" HEIGHT="30" >
+                <INPUT TYPE="checkbox" NAME="criteriaarr[]" value="jsProfileCompletionState" onclick="return countSelected(this);" ~if $bannerdetails.bannerJsProfileCompletionState` checked  ~/if`>
+     &nbsp;<B>PROFILE COMPLETE STATE</B></TD>
+    <TD ALIGN="LEFT" WIDTH="60%" CLASS="text">&nbsp;<SELECT NAME="jsProfileCompletionState[]" size="4" CLASS="textbox" multiple>
+        <option value="">Select</option>
+        ~section  name=i loop=$profileCompletionStateArr`
+        <option value="~$profileCompletionStateArr[i].value`" ~$profileCompletionStateArr[i].selected`>~$profileCompletionStateArr[i].name` </option>
+        ~/section`
+        </select>
+  </TR>
+~/if`
+
+
+<!-- new -->
+          <TR>
+            <TD CLASS="text" WIDTH="30%" HEIGHT="20"></TD>
+            <TD ALIGN="LEFT" WIDTH="60%" CLASS="text"></TD>
+          </TR>
+          <TR>
+            <TD CLASS="text" WIDTH="30%" HEIGHT="30"><B>Select Subzone</B></TD>
+            <TD ALIGN="LEFT" WIDTH="60%" CLASS="text">
+			<SELECT NAME="bannerpriority" CLASS="textbox">
+			<option value="">Select</option>
+				~section  name=i loop=$bannerpriorityarr`
+				<option value="~$bannerpriorityarr[i].value`" ~$bannerpriorityarr[i].selected` >~$bannerpriorityarr[i].name`</option>
+                ~/section`
+            </SELECT></TD>
+          </TR>
+          <TR>
+            <TD CLASS="text" WIDTH="30%" HEIGHT="30" ><B>Enter
+            weightage</B></TD>
+            <TD ALIGN="LEFT" WIDTH="60%" CLASS="text"><INPUT TYPE="text" NAME="bannerweightage" CLASS="textbox" value="~$bannerdetails.bannerweightage`"></TD>
+          </TR>
+        </TABLE></DIV><BR><CENTER><INPUT TYPE="IMAGE" NAME="saveadvbannerdetails" SRC="gifs/save.gif" BORDER="0"></CENTER><BR>
+        <P></P>
+        <P></P></TD>
+        <TD BACKGROUND="gifs/rt-line-bg-1.gif" WIDTH="18"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></TD>
+      </TR>
+    </TABLE><TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" 
+    ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/page-bg-1.gif"><IMG SRC="gifs/lt-low-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+        <TD VALIGN="MIDDLE" HEIGHT="31" BACKGROUND="gifs/page-bg-1.gif">&nbsp;</TD>
+        <TD ALIGN="RIGHT" WIDTH="18" BACKGROUND="gifs/page-bg-1.gif"><IMG SRC="gifs/lt-rt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+      </TR>
+    </TABLE>
+	<input type="hidden" name="bannerid" value="~$bannerid`" />
+<input type="hidden" name="site" value="~$site`" />
+<input type="hidden" name="id" value="~$id`" />
+<input type="hidden" name="campaignid" value="~$campaignid`" />
+<input type="hidden" name="bannerdefault" value="~$bannerdefault`" />
+<input type="hidden" name="bannerfixed" value="~$bannerfixed`" />
+<input type="hidden" name="bannerclass" value="~$bannerclass`" />
+<input type="hidden" name="bannerstartdate" value="~$bannerstartdate`" />
+<input type="hidden" name="bannerenddate" value="~$bannerenddate`" />
+<input type="hidden" name="bannergif" value="~$bannergif`" />
+<input type="hidden" name="bannerurl" value="~$bannerurl`" />
+<input type="hidden" name="bannerintext" value="~$bannerintext`" />
+<input type="hidden" name="bannerfeaturelist" value="~$bannerfeaturelist`" />
+<input type="hidden" name="mailerid" value="~$mailerid`" />
+<input type="hidden" name="bannerstatic" value="~$bannerstatic`" />
+<input type="hidden" name="bannerstatus" value="~$bannerstatus`" />
+<input type="hidden" name="zoneid" value="~$zoneid`" />
+	</FORM>
+    
+    <P></P>
+    
+    <P></P>
+    <DIV CLASS="text" ALIGN="CENTER" STYLE="color:#666666;">Copyright &copy;
+    2002 Naukri.com. All rights reserved. <BR><BR></DIV>
+  </BODY>
+</HTML>

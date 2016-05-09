@@ -1,0 +1,332 @@
+	<div id="forgot_layer">
+		<div class="pink" style="width:342px;height:auto;">
+			<div class="topbg">
+				<div class="lf pd b t12">Forgot  Password</div>
+				<div class="rf pd b t12"><a href="#" class="blink"  onclick="$.colorbox.close();return false;" >Close [x]</a></div>
+			</div>
+	
+			<div class="clear"></div>
+			<div class="row4 red t11" id="Error_Mes" style="padding-left:6px;display:none"> </div>
+			
+			<div class="scrollbox1 t12" style="width:330px;height:120px;" id="forgot_bef_loader">
+				<div class="red t11" style="margin:1px 0px;" id="forgot_error" ></div>
+				<div class="t12" style="margin:3px 0px 6px;color:green;" id="fetched_pass"></div>
+				<div class="t12" id="email_label" style="margin:3px 0px 6px;display:inline">Enter your registered email of Jeevansathi to receive an Email & SMS with the link to reset your password</div>
+				<div id="PASS_FETCHED" style="display:none">
+					<div class="lf"><img src="~$IMG_URL`/profile/images/small_tick_img.gif"></div>
+					<div class="row4 green t11" style="padding-left:6px;margin:0px;width:300px"> 
+				</div>
+			</div>
+				<div class="sp8"></div>
+				<div class="row3" id="enter_email" style="display:inline">
+					<label style="font-weight:normal;color:#000;width:136px;">My registered Email id is </label>
+					<input type="text" style="width:130px;" id="forgot_email">
+				</div>
+	
+				<div class="sp8"></div>
+					<div class="row3"><label>&nbsp;</label>
+					<input type="button" class="b green_btn" id="REQ_PASS" value="Submit"	style="width:150px;display:inline" onClick="javascript:submit_email();">
+				</div>
+			</div>
+	
+			<div class="scrollbox1 t12" style="width:330px;height:120px;display:none" id="forgot_aft_loader" >
+				<div style="margin:12px 0 0 120px"><img src="~$IMG_URL`/profile/images/loader_big.gif"></div>
+			</div>
+		</div>
+	</div>
+
+	<script >
+	var login_layer_id=document.getElementById("login_layer");
+	var login_bef_loader_id=document.getElementById("login_bef_loader");
+	var login_aft_loader_id=document.getElementById("login_aft_loader");
+	var head_text_id=document.getElementById("head_text");
+	var email_id=document.getElementById("EMAIL");
+	var password_id=document.getElementById("PASSWORD");
+	var remember_id=document.getElementById("REMEMBER_ME");
+	var error_mes_id=document.getElementById("Error_Mes");
+	var pass_fetched_id=document.getElementById("PASS_FETCHED");
+	var user_error_id=document.getElementById("USERNAME_ERROR");
+	var pass_error_id=document.getElementById("PASS_ERROR");
+	var request_password_id=document.getElementById("REQ_PASS");
+	
+	var forgot_layer_id=document.getElementById("forgot_layer");
+	var forgot_email_id=document.getElementById("forgot_email");
+	var required_password_id=document.getElementById("REQ_PASS");
+	var enter_email_id=document.getElementById("enter_email");
+	var email_label_id=document.getElementById("email_label");
+
+	var forgot_bef_loader_id=document.getElementById("forgot_bef_loader");
+	var forgot_aft_loader_id=document.getElementById("forgot_aft_loader");
+	var forgot_error_id=document.getElementById("forgot_error");
+	
+	var fetched_pass_id=document.getElementById("fetched_pass");
+	//Url to which we have to redirect if login successfull.
+	var prev_url="~$SITE_URL`~$PREV_URL`";
+	
+	
+	var red_img="<img src='~$SITE_URL`/profile/images/alert.gif'>";
+	var gr_img="<img src='~$SITE_URL`/profile/images/grtick.gif'>";
+	var email_mes=red_img+" Please provide Email id or Username";
+	var password_mes=red_img+" Please provide valid password";
+	var no_rec=red_img+" Username & Password do not match";
+	var common_mes="";
+	var forgot_data="";
+	
+	function submit_email()
+	{
+		forgot_email_value=forgot_email_id.value;
+		if(check_for_email(forgot_email_value))
+		{
+			complete_url="~$SITE_URL`/profile/forgotpassword.php?home=~$home`&ajaxValidation=Y&submit_email=1&email="+escape(forgot_email_value);
+			send_login_information(complete_url,"FORGOT");
+		}
+		else if(forgot_email_value=='')
+		{
+			forgot_error_id.innerHTML=red_img+" Please provide an Email-ID";
+			forgot_error_id.style.display='inline';
+			return 1;
+		}	
+		else
+		{
+			forgot_error_id.innerHTML=red_img+" Please provide correct Email-ID";
+			forgot_error_id.style.display='inline';
+			return 1;
+		}	
+		
+	}
+	function check_for_email(emailadd)
+	{
+		var result = false;
+		var theStr = new String(emailadd);
+		var index = theStr.indexOf("@");
+		if (index > 0)
+		{
+		var pindex = theStr.indexOf(".",index);
+		if ((pindex > index+1) && (theStr.length > pindex+2))
+			result = true;
+		}
+			
+		return result;
+	}
+	
+	function show_forgot_temp()
+	{
+		forgot_error_id.style.display="none";
+		error_mes_id.style.display="none";
+		login_layer_id.style.display="none";
+		forgot_layer_id.style.display="inline";
+		$.colorbox.resize();
+	}
+function login_user()
+{
+	//Disable the fetched password message is enabled.
+	fetched_pass_id.innerHTML="";
+	pass_fetched_id.style.display='none';
+	var email_val=email_id.value;
+	var password_val=password_id.value;
+
+	forgot_error_id.style.display="none";
+	error_mes_id.style.display="none";
+	user_error_id.style.visibility='hidden';
+	pass_error_id.style.visibility="hidden";	
+	if(remember_id.checked)
+		remember_val='Y';
+	else
+		remember_val='N';
+	if(email_val=="")
+	{
+		//error_mes_id.innerHTML=common_mes+email_mes;
+		//error_mes_id.style.display='inline';
+		//login_bef_loader_id.style.height="237px";
+		user_error_id.style.visibility='visible';
+		return 1;
+	}
+	if(password_val=="")
+	{
+		//error_mes_id.innerHTML=common_mes+password_mes;
+		//error_mes_id.style.display='inline';
+		pass_error_id.style.visibility="visible";
+		//login_bef_loader_id.style.height="237px";
+		return 1;
+	}
+	var complete_url="~$SITE_URL`/profile/login.php?username="+escape(email_val)+"&password="+escape(password_val)+"&rememberme="+escape(remember_val)+"&ajaxValidation=1";
+
+	error=send_login_information(complete_url,"LOGIN");
+	if(error=='N')
+	{
+		erro_mes_id.innerHTML=common_mes+no_rec;
+	}
+	
+	
+}
+function send_login_information(url,page)
+{
+	if(page=='LOGIN')
+	{
+		before_call_func="before_login";
+		after_call_func="after_login";
+		method="POST";
+		
+	}
+	else if(page=='FORGOT')
+	{
+		before_call_func="before_forgot";
+		after_call_func="after_forgot";
+		method="POST";
+	}
+	if(page!="")
+		send_ajax_request(url,before_call_func,after_call_func,method);
+}
+function before_login()
+{
+	login_bef_loader_id.style.display='none';
+	login_aft_loader_id.style.display='block';
+}
+function before_forgot()
+{
+	forgot_bef_loader_id.style.display='none';
+	forgot_aft_loader_id.style.display='block';
+
+}
+function after_login()
+{
+	if(result=='A_E')
+	{
+		login_bef_loader_id.innerHTML=common_error;
+                error_mes_id.style.display='inline';
+                login_bef_loader_id.style.display='block';
+                //login_bef_loader_id.style.height="237px";
+                login_aft_loader_id.style.display='none';
+                
+                return 1;
+	}
+	else if(result=='N')
+	{
+		error_mes_id.innerHTML=common_mes+no_rec;
+		error_mes_id.style.display='inline';
+		login_bef_loader_id.style.display='block';
+		//login_bef_loader_id.style.height="237px";
+		login_aft_loader_id.style.display='none';
+		return 1;
+	}
+	else if(result=='Y')
+        {
+                var ids_checked="";
+                //Checkbox_checked function is defined in new_changes_search.htm
+                if(typeof checkbox_checked=="function")
+                        ids_checked=checkbox_checked();
+        
+                var values="";
+                if(ids_checked && prev_url)
+                        values=escape(prev_url);
+                else
+                        values=escape(prev_url);
+                        
+                
+                //window.reload();
+                $.colorbox.close();
+                var address_url=document.location.href;
+                if((address_url.indexOf("search.php")!=-1 || address_url.indexOf("/search/")!=-1) && address_url.indexOf("?")==-1)
+                {
+                        
+                        if(document.getElementById("SEARCH_LINK"))
+                        {
+                                var str=document.getElementById("SEARCH_LINK").value;
+
+                                if(str.indexOf("NaN")==0)
+                                        str=str.substr(3,str.length);
+
+                                str=str+"&CALL_ME="+values;
+
+                                if(ids_checked)
+                                        str=str+"&ID_CHECKED="+ids_checked;     
+
+                                document.location=str;
+
+                                return 1;
+                        }
+		}
+		 else if(values.indexOf("login.php")==-1)
+		{
+			//Right now not setting call_me variable
+			//var str=address_url+"&CALL_ME="+values;
+			var str=address_url;
+			str=str.replace("#","");
+			document.location=str;
+                                
+			return 1;
+		}
+		location.reload(true);
+		//forgot_email_value=forgot_email_id.value;
+		//send_login_information(prev_url,"EXP");
+		return 1;
+	}
+	else
+        {
+                document.getElementById('forgot_layer').innerHTML=result;
+	}
+	
+}
+function after_forgot()
+{
+	if(result=='A_E')
+	{
+		forgot_bef_loader_id.style.display='block';
+		forgot_aft_loader_id.style.display='none';
+		//forgot_loader_id.innerHTML=forgot_data;
+
+		forgot_error_id.style.display="inline";
+		error_mes_id.style.display="none";
+		forgot_error_id.innerHTML=common_error;
+		return 1;
+	}
+	if(result=='JA')
+	{
+		top.document.location.href='/profile/retrieve_archived.php';
+	        return 1;
+	}
+	if(result=='D1' || result=='E2' || result=='E1' || result=='E3')
+        {
+                forgot_bef_loader_id.style.display='block';
+                forgot_aft_loader_id.style.display='none';
+                //forgot_loader_id.innerHTML=forgot_data;
+
+                forgot_error_id.style.display="inline";
+                error_mes_id.style.display="none";
+
+                if(result=='E1')
+                      forgot_error_id.innerHTML=red_img+" Please provide correct Email-ID";
+                else if(result=='E2')
+                        forgot_error_id.innerHTML=red_img+" This Email does not exist in our database.";
+		else if(result=='E3')
+			forgot_error_id.innerHTML=red_img+' This profile is deleted. To know more, <a href="/profile/faq_main.php?flagged=1" id="retrieve_profile_link">click here</a>';
+			//forgot_error_id.innerHTML=red_img+' This profile is deleted. To retrieve, <a href="/profile/faqs_layer.php?width=700&questiontext='+escape('Retrieve username/password')+'&retrieve_profile=1&" class="thickbox" id="retrieve_profile_link">click here</a>';
+                else if(result=='D1')
+                {
+                        //Adjusting the width of login layer.
+                        TB_WIDTH=345
+                        $("#TB_window").css({marginLeft: '-' + parseInt((TB_WIDTH / 2),10) + 'px', width: 0 + 'px'});
+                        //login_layer_id.style.display="inline";
+                        forgot_layer_id.style.display="inline";
+                        forgot_error_id.style.display="none";
+                        forgot_email_value=forgot_email_id.value;
+                        pass_fetched_id.style.display='inline';
+                        //pass_fetched_id.innerHTML='<div class="row4 green t11" style="padding-left:6px;margin:0px;width:300px;height:10px;" > Your password has been sent to '+forgot_email_value+', please check your email and login again</div>';
+                        pass_fetched_id.innerHTML='<div class="row4 green t11" style="padding-left:6px;margin:0px;width:300px;height:10px;" >An Email & SMS has been sent to you. Please click on the link provided to reset your password.</div>';
+                    //    forgot_email_id.disabled="true";
+		    //	request_password_id.disabled="true";
+		    	required_password_id.style.display='none';
+			enter_email_id.style.display='none';
+			email_label_id.style.display='none';
+
+                }
+                return 1;
+        }
+	else
+        {
+                document.getElementById('forgot_layer').innerHTML=result;
+	}
+	
+}
+	
+	</script>

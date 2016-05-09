@@ -1,0 +1,93 @@
+<html>
+	<title>Search - Matri-profile members</title>
+	<head>
+		<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+	</head>
+	<body>
+		~if $show_image`
+		<table width="50%" align="center" cellpadding="4" cellspacing="4" border="0">
+			<tr>
+				<td align="center"><img src="../profile/images/logo_1.gif" width="192" height="65"></td>
+			</tr>
+		</table>
+		~/if`
+		<form method="post" action="search_matri_profile.php">
+		<input type="hidden" name="checksum" value="~$checksum`">
+		<table width="40%" align="center" cellpadding="4" cellspacing="2">
+			<tr align="center">
+				<td class="formhead" colspan="4" align="center">Search Matri-Profile member</td>
+			</tr>
+			<tr align="center">
+				<td class="label">Search : </td>
+				<td class="label">
+					<input type="text" name="keywordy" value="" class="textboxes1">
+				</td>
+				<td class="fieldsnew">
+					<select name="criteria" class="textboxes1">
+						<option value="USERNAME">USERNAME</option>
+						<option value="EMAILID">EMAIL ID</option>
+						<option value="BILLID">BILLID</option>
+						<option value="PROFILEID">PROFILEID</option>
+						<option value="CDNUM">CHEQUE/DD NUMBER</option>
+						<option value="ORDERID">ORDER ID</option>
+					</select>
+				</td>
+				<td class="fieldsnew">
+					<input type="submit" name="submit" value="Go" class="buttons1">
+				</td>
+			</tr>
+		</table>
+		</form>
+		~if $RESULT`
+			<br>
+			~if $details.PROFILEID`
+				<table width="40%" align="center" cellpadding="4" cellspacing="2">
+					<tr>
+						<td class="label">Username</td>
+						<td class="fieldsnew">~$details.USERNAME`</td>
+					</tr>
+					<tr>
+						<td class="label">Profile ID</td>
+						<td class="fieldsnew">~$details.PROFILEID`</td>
+					</tr>
+					<tr>
+						<td class="label">Service</td>
+						<td class="fieldsnew">~$details.SERVICE` ~$details.DURATION`</td>
+					</tr>
+					<tr>
+						<td class="label">Addon Service</td>
+						<td class="fieldsnew">~$details.ADDON_SERVICE`</td>
+					</tr>
+				</table>
+				<br>
+			~/if`
+			<table width="90%" align="center" cellpadding="4" cellspacing="2">
+				<tr class="formhead" align="center">
+					<td colspan="8">~$details.STATUS_MESSAGE`</td>
+				</tr>
+				~if $details.ALLOTTED_TO`
+					<tr class="label" align="center">
+						<td>Entry date</td>
+						<td>Allot time</td>
+						<td>Verified date</td>
+						<td>Allotted to</td>
+						<td>Verified by</td>
+						<td>Cuts</td>
+						<td>Hold time</td>
+						<td>Hold reason</td>
+					</tr>
+					<tr class="fieldsnew" align="center">
+						<td>~$details.ENTRY_DT`</td>
+						<td>~$details.ALLOT_TIME`</td>
+						<td>~$details.VERIFIED_DATE`</td>
+						<td>~$details.ALLOTTED_TO`</td>
+						<td>~$details.VERIFIED_BY`</td>
+						<td>~$details.CUTS`</td>
+						<td>~$details.ONHOLD_TIME`</td>
+						<td>~$details.ONHOLD_REASON`</td>
+					</tr>
+				~/if`
+			</table>
+		~/if`
+	</body>
+</html>

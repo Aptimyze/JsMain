@@ -1,0 +1,7 @@
+export JAVA_HOME=/usr/local/java
+export PATH=$PATH:/usr/local/java/bin
+#export CLASSPATH=$CLASSPATH:/usr/local/tomcat/common/lib/:/usr/local/smack/lib/:/usr/local/smack/:/usr/local/smack/lib/mysql-connector-java-5.1.7-bin.jar
+#export CLASSPATH=$CLASSPATH:/usr/local/tomcat/common/lib/:/usr/local/smack/lib/serializer.jar:/usr/local/smack/lib/mysql-connector-java-5.1.7-bin.jar:/usr/local/smack/lib/xalan.jar:/usr/local/smack/lib/xercesImpl.jar:/usr/local/smack/lib/xml-apis.jar:/usr/local/smack/lib/xsltc.jar:/usr/local/smack
+export CLASSPATH=$CLASSPATH:/usr/local/tomcat/common/lib/:/usr/local/smack/lib/smack.jar:/usr/local/smack/lib/mysql-connector-java-5.1.7-bin.jar:/usr/local/smack/lib/smackx.jar:/usr/local/smack/lib/smackx-debug.jar:/usr/local/smack/lib/smackx-jingle.jar:/usr/local/smack
+
+/usr/local/java/bin/java chat.GtalkBot

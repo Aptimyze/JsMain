@@ -1,0 +1,61 @@
+.mainsp{background-image:url(IMG_URL/images/jsms/commonImg/main-sprite_new_1.png); background-repeat:no-repeat}
+
+.savsrc-mauto{margin:0 auto}
+.savsrc-sp {background-image:url(IMG_URL/images/jsms/searchImg/sav-src-sprite.png);background-repeat: no-repeat;}
+.savsrc-pos1{top:18px; right:0}
+.savsrc-pos2{top: -11px;right: -7px;}
+.savsrc-pos3{top: 2px;right: 7px;}
+.savsrc-pos4{top:0; right:0}
+.savsrc-pos5{bottom:10px}
+.savsrc-icon1{background-position:1px 1px; width:23px; height:21px}
+.savsrc-icon2{background-position:1px -19px; width:23px; height:20px}
+.savsrc-icon3{background-position: -162px -227px;width: 20px;height: 23px;}
+.savsrc-icon4{width: 39px;height: 42px;background-position: -50px -245px;}
+.savsrc-icon5{background-position: -71px -139px;width: 13px;height: 19px;}
+.savsrc-circle {background-position: -67px -54px;width: 20px;height: 19px;}
+.savsrc-colr1 {color:#999999}
+.savsrc-mrt2{margin-top:2px} 
+.savsrc-mrl7{margin-left:-7px} 
+.savsrc-padl5{padding-left:5px} 
+.svasrc-pada{padding:20px 10px}
+.savsrc-wid2{width:255px} 
+.sasrc span{display:inline-block}
+.savsrc-list ul{list-style-type:none; margin:0; padding:0}
+.savsrc-list ul li{display:inline-block}
+.savsrc-cir{width:25px; height:25px;border-radius:25px}
+.sacsrc-brdr1{border-bottom:1px solid #181a1d}
+.savsrc-vtop{vertical-align:top}
+.sacsrc-class1{z-index:110;border-radius:5px}
+.savsrc-bg1{ background-color:rgba(32, 43, 50, 0.9); color:#fff}
+.undo{opacity: 0.4;filter: alpha(opacity=40);}
+.undo .namesav, .undo ul li:nth-child(odd){text-decoration:line-through;}
+.savsrc-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 106;
+  background-color: rgba(0, 0, 0, 0.95);
+}
+.savsrc-overlay1{z-index:107; position:fixed; top:0; left:0;}
+.givename ::-webkit-input-placeholder { /* WebKit browsers */
+    color:#fff;opacity: 0.4;filter: alpha(opacity=40);
+}
+.givename :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color:#fff;opacity: 0.4;filter: alpha(opacity=40);
+}
+.givename ::-moz-placeholder { /* Mozilla Firefox 19+ */
+  color:#fff;opacity: 0.4;filter: alpha(opacity=40);
+}
+.givename :-ms-input-placeholder { /* Internet Explorer 10+ */
+   color:#fff;opacity: 0.4;filter: alpha(opacity=40);
+}
+
+@media (min-width: 280px) and (max-width: 320px) {
+	.savsrc-ft1{font-size:14px}
+}
+@media (min-width: 321px) {
+	.savsrc-ft1{font-size:16px}
+}
+#saveSearchSubmit:focus {outline:0;}

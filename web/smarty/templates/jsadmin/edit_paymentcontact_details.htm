@@ -1,0 +1,108 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Edit Details</title>
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+</head>
+<body>
+~include file='head.htm'`
+~if $flag eq 'saved'`
+<br><br>
+<table width=100% align="CENTER" border="0" cellspacing="0" cellpadding="0">
+<tr class="formhead" align="center">
+        <td>
+                <a href="search_user.php?user=~$USER`&cid=~$CID`&phrase=~$phrase`&criteria=~$criteria`&billid=~$billid`">Continue &gt;&gt;</a>
+        </td>
+</tr>
+</table>
+        </td>
+</tr>
+</table>
+~else`
+<br>
+<form name=paymentcontact_crm  method=post action="edit_paymentcontact_details.php">
+<table width=570 border=0 align="center" border="0" cellspacing="0" cellpadding="0">
+<tr>
+        <td class="formhead" height="21">Username</td>
+        <td class="fieldsnew">  ~$UNAME`</td>
+</tr>
+<tr>
+        <td class="formhead" height="21">
+        Name
+        </td>
+        <td class="fieldsnew">
+                <select name="prefix_name" class="textbox">
+                        <option value="Mr." ~if $prefix_name eq 'Mr.'`selected ~/if`>Mr</option>
+                        <option value="Mrs." ~if $prefix_name eq 'Mrs.'`selected ~/if`>Mrs</option>
+                        <option value="Miss." ~if $prefix_name eq 'Miss.'`selected ~/if`>Miss</option>
+                        <option value="Dr." ~if $prefix_name eq 'Dr.'`selected ~/if`>Dr</option>
+                </select>&nbsp;&nbsp;
+                <input type="text" name="name_req" value="~$NAME_REQ`">
+        </td>
+</tr>
+<tr>
+<td class="formhead" height="21">Main-service</td>
+<td class="fieldsnew"> 
+<select name="SERVICE_NOW[]"  class="TextBox" multiple="multiple">
+   ~section name=i loop=$SERVICE_MAIN`
+        <option value='~$SERVICE_MAIN[i].SERVICEID`' ~if strstr($SERVICE,$SERVICE_MAIN[i].SERVICEID) || ($SERVICE_MAIN[i].SERVICEID eq 'M9' && strstr($SERVICE,'M'))` selected ~/if` >~$SERVICE_MAIN[i].NAME`</option>
+   ~/section`
+  </select>
+</td>
+</tr>
+
+<tr>
+<td class="formhead" height="21">Pref_Time</td>
+<!--<td class="fieldsnew"><input type="text" name="pref_time" value="~$PREF_TIME`">&nbsp;(YYYY-MM-DD)</td>-->
+      <td><script type="text/javascript" src="calendar.js"></script>
+       <input type=text name="pref_time" value="~$PREF_TIME`" size=20 maxlength=99 class=textfield id="field_5_3" disabled>
+       <script type="text/javascript">
+<!--
+document.write('<a title="Calendar" href="javascript:openCalendar(\'lang=en-iso-8859-1&amp;server=1\', \'paymentcontact_crm\', \'field_5_3\', \'datetime\')"><img class="calendar" src="/P/images/b_calendar.png" alt="Calendar"/ border=0 onclick="javascript:document.paymentcontact_crm.pref_time.disabled=false"></a>');
+//-->
+</script>
+      </td>
+     </tr>
+
+
+
+
+<tr>
+<td class="formhead" height="21">Phone_Res</td>
+<td class="fieldsnew"><input type="text" name="phone_res" value="~$PHONE_RES`"></td>
+</tr>
+<tr>
+<td class="formhead" height="21">Phone_Mob</td>
+<td class="fieldsnew"><input type="text" name="phone_mob" value="~$PHONE_MOB`"></td>
+</tr>
+<tr>
+<td class="formhead" height="21"><b>DISCOUNT(in Rs)</b></td>
+<td class="fieldsnew"><input type="text" name="discount" value="~$DISCOUNT`"></td>
+</tr>
+<tr>
+<td class="formhead" height="21">Address</td>
+<td class="fieldsnew"><textarea rows=5 cols=50 name="address">~$ADDRESS`</textarea></td>
+</tr>
+<tr>
+<tr>
+	<td class="formhead" height="21">Pincode</td>
+	<td class="fieldsnew"><input type=text name="pincode" value="~$pincode`" size=10 maxlength=6></td>
+</tr>
+<tr>
+	<td class="formhead" height="21">Landmark</td>
+	<td class="fieldsnew"><textarea rows=5 cols=50 name="LANDMARK">~$LANDMARK`</textarea></td>
+</tr>
+
+<tr>
+<input type="hidden" name="id" value=~$ID`>
+<input type="hidden" name="cid" value=~$CID`>
+<input type="hidden" name="uname" value=~$uname`>
+<td align="center" class="fieldsnew"><input type="submit" name="save" value="Save"></td>
+</table>
+</form>
+~/if`
+<br><br>
+~include file='foot.htm'`
+</body>
+</html>

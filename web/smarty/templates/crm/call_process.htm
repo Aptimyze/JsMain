@@ -1,0 +1,330 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>JeevanSathi</title>
+  <link rel="stylesheet" href="../jsadmin/jeevansathi.css" type="text/css">
+  <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+	<script language="JavaScript" SRC="common.js"></SCRIPT>
+  <SCRIPT language="JavaScript">
+ <!--
+  function openBrWindow(theURL,winName,features)
+  {
+	var status = confirm("Do you really want to mark this user as Do Not Call?");
+	if (status)
+        	win = window.open(theURL,winName,features);
+  }
+	function validate()
+	{
+	        var docF=document.insertForm;
+		if(isNaN(docF.ALTERNATE_NO.value))
+                {
+                        alert("Please enter a valid Alternate No.");
+                        docF.ALTERNATE_NO.focus();
+                        return false;
+                }
+		if(docF.flag.value=='P')
+                {	
+			if(docF.COMFORT[2].checked)
+			{
+                                var status = confirm("Do you really want to mark this user as Not Connected?");     					     if(!status)
+				{
+					docF.ALTERNATE_NO.focus();
+                        		return false;	
+				}				
+                        }
+		}
+		if(docF.flag.value=='E')
+		{
+			if(docF.WILL_PAY.value=="")
+			{
+				alert("Please specify whether user will pay or not");
+				docF.WILL_PAY.focus();
+				return false;
+			}
+			if(docF.REASON.value=="")
+			{
+				alert("Please specify reason as well");
+				docF.REASON.focus();
+				return false;
+	               	}
+			if(docF.WILL_PAY.value=="N|X|N1$Customer Busy#N2$Phone Busy#N3$Answering Machine#N4$Customer not available#N5$Network Busy#N6$Incorrect Person#N7$Incorrect Number")
+                        {
+                                if(docF.follow_time.value=="0000:00:00 00:00")
+                                {
+                                        alert("Please specify the followup time for this case");
+                                        docF.follow_time.focus();
+                                        return false;
+                                }
+                        }
+
+		}
+		if(docF.flag.value=='C')
+                {
+			if(docF.CALL_TYPE.value=="")
+	                {
+        	                alert("Please specify the call type");
+                	        docF.CALL_TYPE.focus();
+                        	return false;
+	                }
+        	        if(docF.SUBTYPE.value=="")
+                	{
+	                        if(docF.CALL_TYPE.value=="S|X|S1$TextArea") 
+				{
+					if(docF.SUBTYPE_TEXT.value=="")
+					{
+						alert("Please specify suggestion as well");
+                        	                docF.SUBTYPE_TEXT.focus();
+                                	        return false;
+					}
+				}
+				else
+				{
+					alert("Please specify sub type as well");
+                                        docF.SUBTYPE.focus();
+                                        return false;
+				}	
+                	}
+		}	
+		if(docF.COMMENTS.value=="")
+                {
+                        alert("Please specify comments");
+                        docF.COMMENTS.focus();
+                        return false;
+                }
+		return true;
+	}
+function showtext()
+{
+	var docF=document.insertForm;
+	if(docF.CALL_TYPE.value=="S|X|S1$TextArea")	
+	{	
+		document.getElementById("S").style.display="inline";
+		document.getElementById("notS").style.display="none";
+	}
+	else
+	{
+		document.getElementById("S").style.display="none";
+		document.getElementById("notS").style.display="inline";
+	}
+}
+  //-->
+ </script>
+ </head>
+ ~include file="head.htm"`
+ <br>
+ <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+  <table width=100% cellspacing="1" cellpadding='0' ALIGN="CENTER" >
+   <tr width=100% border=1>
+    <td width="25%" class="formhead" height="23"><font><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Welcome : ~$name`</b></font></td>
+    <td width="65%" class="formhead" align="center"><font color="brown"></font><a href="../jsadmin/mainpage.php?cid=~$cid`">Click here to go to main page</a></td>
+    <td width="10%" class="formhead" align='CENTER' height="23">
+        <a href="../jsadmin/logout.php?cid=~$cid`">Logout</a>
+    </td>
+    <td width="3%" class="formhead" height="23">&nbsp;
+    </td>
+   </tr>
+  </table>
+~if $WAS_PAID eq 'Y'`
+<br>
+<center class=red>This member has some payment history</center>
+<center class=label><a href="~$SITE_URL`/billing/search_user.php?cid=~$cid`&phrase=~$USERNAME`&criteria=uname" target="_blank">Click here to see the billing details of this member</a></center>
+<br>
+~/if`
+<center class=red>~$ACTIVE_STATUS_MESSAGE`</center>
+~if $arr`
+<table width=90% align=center>
+<tr class=label>
+	<td align=center>OrderID</td>
+	<td align=center>Date</td>
+	<td align=center>Payment Mode</td>
+	<td align=center>Service</td>
+</tr>
+	~section name=sec loop=$arr`
+	<tr class=label>
+		<td align=center>~$arr[sec].orderid`</td>
+		<td align=center>~$arr[sec].entry_dt`</td>
+		<td align=center>~$arr[sec].paymode`</td>
+		<td align=center>~$arr[sec].service`</td>
+	</tr>
+	~/section`
+</table>
+<br>
+~/if`
+<form name=insertForm method="post" action="call_process.php" onsubmit="return validate();">
+~if $arr`
+	<input type=hidden name=orders value="Y">
+~/if`
+<input type=hidden name=cid value="~$cid`">
+<input type=hidden name=name value="~$name`">
+<input type=hidden name=USERNAME value="~$USERNAME`">
+<input type=hidden name=PHONE_RES value="~$PHONE_RES`">
+<input type=hidden name=PHONE_MOB value="~$PHONE_MOB`">
+<input type=hidden name=profileid value="~$profileid`">
+<input type=hidden name=ROW value="~$ROW`">
+<input type=hidden name=flag value="~$flag`">
+
+<table width=90% align="center" cellspacing=2 cellpadding=1 border=0>
+~if $flag neq 'H'`
+<tr>
+ <td class=label align="right" colspan="2"><a href="#" onclick="openBrWindow('call_process.php?username=~$USERNAME`&profileid=~$profileid`&cid=~$cid`&donotcall=1','','width=200,height=200,scrollbars=yes'); return false;">Mark User as Do Not Call</a></td>
+</tr>
+~/if`
+<tr>
+ <td class=label align="left" width=30%> Name</td>
+ <td class=fieldsnew width=70%> ~$NAME_OF_USER` </a></td>
+</tr>
+<tr>
+ <td class=label align="left" width=30%> Username</td>
+ <td class=fieldsnew width=70%> ~$USERNAME` </a></td>
+</tr>
+<tr>
+ <td class=label align="left" width=30%> Email</td>
+ <td class=fieldsnew width=70%> ~$EMAIL` </a></td>
+</tr>
+<tr>
+ <td class=label align="left" width=30%> Phone No. (Residence)</td>
+ <td class=fieldsnew> ~$PHONE_RES` </td>
+</tr>
+<tr>
+ <td class=label width=30%> Phone No. (Mobile) </td>
+ <td class=fieldsnew> ~$PHONE_MOB` </td>
+</tr>
+~if $flag neq 'H'`
+<tr>
+ <td class=label width="30%">
+ ~if $check_alternate eq "Y"`<font color="red"> Alternate No. ~else` Alternate No. ~/if` </td>
+	<td class=fieldsnew>
+		<input type="text" name="ALTERNATE_NO" value="~$ALTERNATE_NO`" class="textbox">
+		<input type="hidden" name="UNEDITED_ALTERNATE_NO" value="~$ALTERNATE_NO`" class="textbox">
+	</td>
+</tr>
+~/if`
+~if $flag neq 'H'`
+<tr>
+<td class=label> ~if $check_followtime eq "Y"`<font color="red"> Follow Up Time<font> ~else` Follow Up Time ~/if`</td>
+ <td bgcolor="#d5d5d5" class=fieldsnew>
+
+<script type="text/javascript" src="calendar.js"></script>
+<input type=text name="follow_time" value="~$follow_time`" size=20 maxlength=99 class=textfield tabindex="1" id="field_5_3">
+<script type="text/javascript">
+    <!--
+    document.write('<a title="Calendar" href="javascript:openCalendar(\'lang=en-iso-8859-1&amp;server=1\', \'insertForm\', \'field_5_3\', \'datetime\')"><img class="calendar" src="img/b_calendar.png" alt="Calendar"/ border=0></a>');
+    //-->
+    </script>
+</td>
+</tr>
+~if $flag eq 'P'`
+<tr>
+	<td class=label width="30%">Is client comfortable using website?</td>
+	<td class=fieldsnew><input type="radio" name="COMFORT" value="Y" checked>&nbsp;Yes&nbsp;<input type="radio" name="COMFORT" value="N">&nbsp;No&nbsp;<input type="radio" name="COMFORT" value="NC" >&nbsp;Not Connected&nbsp;</td>
+</tr>
+~elseif $flag eq 'C'`
+<tr>
+  <td class=label width="30%">Call Type</td>
+  <td class=fieldsnew>
+        <select name="CALL_TYPE" class="textbox" onChange="PopSPEC(this,'CALL_TYPE','SUBTYPE');showtext();">
+                <option value="" selected>Select any one option</option>
+                ~$CALL_TYPE`
+        </select><span id="notS">&nbsp;&nbsp;Sub Type:
+        <select name="SUBTYPE" class="textbox">
+                <option  value="" selected>Select any one option</option>
+                ~$SUBTYPE`
+        </select></span>
+	<span id="S" style="display:none"><input name="SUBTYPE_TEXT" type="text">
+	</span>
+  </td>
+</tr>
+~else`
+<tr>
+  <td class=label width="30%">
+   ~if $WILL_PAY eq "y"`<font color="red"> Will Pay Again</font>~else` Will Pay Again~/if`</td>
+  <td class=fieldsnew>
+	<select name="WILL_PAY" class="textbox" onChange="PopSPEC(this,'WILL_PAY','REASON');">
+                <option value="" selected>Select any one option</option>
+                ~$WILL_PAY`
+	</select>&nbsp;&nbsp;Reason:
+        <select name="REASON" class="textbox">
+                <option  value="" selected>Select</option>
+                ~$REASON`
+	</select>
+  </td>
+</tr>
+~/if`
+~/if`
+~if $flag neq 'H'`
+<tr>
+ <td width="30%" class="label"> ~if $check_comments eq "Y"`<font color="red"> Comments*<font> ~else` Comments*
+~/if`</td>
+ <td class=fieldsnew height="26">
+  <textarea name="COMMENTS"  class="textbox" cols="55" rows="3" ></textarea>
+ </td>
+</tr>
+~/if`
+
+<tr>
+~if $flag neq 'H'` 
+ <td class=label width="30%" height="2">&nbsp;</td>
+~/if`
+ <td colspan="2" height="2" class=fieldsnew>&nbsp;
+~if $flag neq 'H'`
+ <input type="submit" name="submit" value="submit">
+~/if`
+ </td>
+</tr>
+<tr>
+<td colspan=2 align=center><br><hr></td></tr>
+
+ <table width=100% align="CENTER" class="fieldsnew" border="1">
+    <tr align="CENTER">
+      <td class="formhead" colspan="4" height="23"><b><font size="3" color="blue">History</font></b></td>
+    </tr>
+    <tr align="CENTER">
+      <td class="label" width=5% height="20"><b>S.No.</b></td>
+      <td class="label" width=10% height="20"><b>Handled By</b></td>
+      <td class="label" width=10% height="21"><b>Date</b></td>
+      <td class="label" width=75% height="21"><b>Comments</b></td>
+    </tr>
+ ~section name=index loop=$ROW`
+    <tr align="CENTER" bgcolor="#fbfbfb" >
+      <td height="20" align="CENTER" width="5%">~$ROW[index].SNO`</td>
+      <td height="20" width="10%">~$ROW[index].NAME`</td>
+      <td height="21" width="10%">~$ROW[index].DATE`</td>
+      <td height="21" width="75%">~$ROW[index].COMMENTS`</td>
+    </tr>
+    ~/section`
+ </table>
+
+<tr>
+<td colspan=2 align=center>
+~$msg`
+<td>
+</tr>
+<tr>
+<td colspan=2 align=center><br><hr></td></tr>
+<tr>
+<td colspan=2 align=center>
+~$pmsg`
+<td>
+</tr>
+<tr class=fieldsnew>
+<td align=center><a href="../profile/advance_search.php?FLAG=partner&crmback=admin&profileid=~$profileid`&gender=~$CRM_GENDER`&cid=~$cid`" target="_blank">Edit desired partner profile for this user</a><br><br></td>
+</tr>
+<tr class=fieldsnew>
+<td align=center><a href="../profile/Partner_Profile_Match.php?crmback=admin&profileid=~$profileid`" target="_blank">View Your Partner Matches</a><br><br></td>
+</tr>
+<tr class=label>
+<td align=center><a href="mail_to_users.php?cid=~$cid`&profileid=~$profileid`&username=~$USERNAME`" target="_blank">Click here to send mail to this user</a><br><br></td>
+</tr>
+<tr class=fieldsnew>
+<td align=center><a href="~$SITE_URL`/P/filter.php?checksum=&crmback=admin&pid=~$profileid`&cid=~$cid`" target="_blank">Click here to set filter for this user</a><br><br></td>
+</tr>
+<tr class=fieldsnew>
+<td align=center><a href="~$SITE_URL`/crm/online_pickup.php?cid=~$cid`&pid=~$pid`&username=~$USERNAME`" target="_blank">Click here for online payment request </a><!--<br><br>--></td>
+</tr>
+ </form>
+ <br><br>
+ ~include file="foot.htm"`
+ </body>
+</html>
+

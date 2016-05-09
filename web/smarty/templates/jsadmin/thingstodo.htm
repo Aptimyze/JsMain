@@ -1,0 +1,57 @@
+<!-- changes for things to do -->
+
+   ~if $SHOWTHINGSTODO eq "Y"`
+   <table width="100%"  border="0" cellpadding="1" cellspacing="0" bordercolor="#FF6600" bgcolor="#FF9933">
+  <tr>
+    <td width="7%" class=mediumblack12>&nbsp;</td>
+    <td width="93%" class=extrabigblack><strong>Things To Do:</strong></td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <table width="100%"  border="0" cellpadding="1" cellspacing="0" bgcolor="#FFFFFF">
+       ~if $HAVEPHOTO eq "N"`
+      <tr>
+        <td width="7%"><img src="http://ser4.jeevansathi.com/P/imagesnew/photo.jpg" width="29" height="35"></td>
+        <td class=mediumblack12 width="93%"><div align="left"> <a href="~$SITE_URL`/P/uploadphoto.php?checksum=~$CHECKSUM`"><strong>Add a photo:</strong></a> Increase response manifold; after all, over 85% searches are made only for photo profiles. </div></td>
+      </tr>
+      ~/if`
+      ~if $HAVEFAMILYINFO eq "N"`
+      <tr>
+        <td><img src="http://ser4.jeevansathi.com/P/imagesnew/family.jpg" width="33" height="29"></td>
+        <td class=mediumblack12><div align="left"><!--a href="~$SITE_URL`/P/editprofile.php?checksum=~$CHECKSUM`"-->
+         <a href="~$SITE_URL`/P/edit_profile.php?checksum=~$CHECKSUM`&EditWhat=FamilyDetails">
+            <p><strong>Your family:</strong></a> You don&rsquo;t just marry a person, you marry into a family. Tell us more about yours.</p>
+        </div></td>
+      </tr>
+      ~/if`
+      ~if $HAVEEDUINFO eq "N"`
+      <tr>
+        <td><img src="http://ser4.jeevansathi.com/P/imagesnew/work.jpg" width="26" height="36">
+        <td class=mediumblack12><div align="left"><a href="~$SITE_URL`/P/edit_profile.php?checksum=~$CHECKSUM`&EditWhat=EduOcc"><strong>Your work/education</strong></a>: Don&rsquo;t be just another name, another profile. Help other Jeevansathi members know more about you.</div></td>
+      </tr>
+      ~/if`
+      ~if $HAVEPARTNER eq "N"`
+      <tr>
+        <td><img src="http://ser4.jeevansathi.com/P/imagesnew/search.jpg" width="30" height="25"></td>
+        <td class=mediumblack12><p align="left"><a href="~$SITE_URL`/P/editdesiredprofile.php?checksum=~$CHECKSUM`"><strong>Your life partner</strong></a>: Tell us who you are looking for; it will help us help you shortlist your perfect life partner.</p></td>
+      </tr>
+      ~/if`
+      ~if $HAVEHOBBY eq "N"`
+      <tr>
+        <td><img src="http://ser4.jeevansathi.com/P/imagesnew/play.jpg" width="26" height="24"></td>
+        <td class=mediumblack12><a href="~$SITE_URL`/P/edit_profile.php?checksum=~$CHECKSUM`&EditWhat=Interests"><div align="left"><strong>Your interests</strong></a>: Make your profile come alive by jotting down your interest and hobbies.</div></td>
+      </tr>
+      ~/if`
+	~if $RECEIVED_I`
+	<tr>
+        <td><img src="http://ser4.jeevansathi.com/P/imagesnew/people_waiting.gif" width="26" height="24"></td>
+        <td class=mediumblack12><a href="~$SITE_URL`/P/contacts_made_received.php?checksum=~$CHECKSUM`&type=R&flag=I"><div align="left"><strong>~$RECEIVED_I` People Awaiting Response, Say 'Yes' or 'No'</strong></a>:Marriage is for lifetime. The people who have contacted you, however, won't wait that long. Click here to respond them.</div></td>
+      </tr>
+	~/if`
+	</table>
+   </td>
+    </td>
+   </tr>
+  </table>
+ ~/if`
+<!-- changes end here-->

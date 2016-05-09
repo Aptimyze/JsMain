@@ -1,0 +1,44 @@
+/* CSS Document */
+
+.accordion2 {
+	width: 250px;
+	border-bottom: solid 1px #c4c4c4;
+}
+.accordion2 h3 {
+	background: #7097ae  no-repeat right -51px;
+	padding: 2px 11px;
+	margin: 0;
+	font: bold 11px Arial, Helvetica, sans-serif;
+	border: solid 1px #c4c4c4;
+	color:#ffffff;
+	border-bottom: none;
+	font-size:100%;
+}
+.accordion2 h3:hover {
+	background-color: #7097ae;
+}
+.accordion2 h3.active {
+	background-position: right 5px;
+}
+.accordion2 p {
+	background: #ffffff;
+	font-size:12px;
+	margin: 0;
+	padding: 10px 10px 10px;
+	border-left: solid 1px #c4c4c4;
+	border-right: solid 1px #c4c4c4;
+	display: none;
+	
+}
+a:focus {
+	outline: none;
+}
+#panel {
+	background: #023a87;
+	height: 256px;
+	display: none;
+	padding-left: 2px;
+	padding-top:4px;
+}
+#panel a{ color:#023a87;
+} 

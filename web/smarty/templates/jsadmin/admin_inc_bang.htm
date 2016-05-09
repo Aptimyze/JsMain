@@ -1,0 +1,42 @@
+<html>
+<head>
+   <title>Jeevansathi.com - JSADMIN</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br><br>
+	<form method=post action="admin_inc_bang.php">
+	<table width=80% border=0 align="center" cellpadding=5>
+	<tr>
+	<td> Select Branch : 
+	<select name="branch">
+        ~section name=sec loop=$brancharr`
+                <option value=~$brancharr[sec]`>~$brancharr[sec]`</option>
+        ~/section`
+        </select>
+	</td>
+	</tr>
+	<tr>
+	<input type="hidden" name="cid" value=~$cid`>
+	<td ><input type="submit" name="CMDGo" value="     Go     "></td>
+	</tr>
+	</table>
+	</form>
+</body>
+</html>

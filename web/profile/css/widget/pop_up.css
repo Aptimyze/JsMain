@@ -1,0 +1,21 @@
+@charset "utf-8";
+/* Created By Vishal Kaul */
+*{margin:0; padding:0; float:none;}
+.fl{float:left;}
+.fr{float:right;}
+.clr{clear:both;}
+
+a,a:link,a:visited{color:#197ecc; text-decoration:none;}
+
+.pop_cont{float:left; width:303px; padding:5px; font:12px Arial, Helvetica, sans-serif; font:11px Arial, Helvetica, sans-serif;}
+.lgo{float:left; width:189px; height:40px; background:url(IMG_URL/P/images/widget/sprte.png);}
+.reg_btn{float:left; width:109px; height:28px; background:url(IMG_URL/P/images/widget/sprte.png) 0 -40px; border:none; cursor:pointer;}
+.mron{color:#bd001f;}
+h2{font:16px Arial, Helvetica, sans-serif; margin:12px 0 5px;}
+.f_10{font-size:10px;}
+input,select{width:175px; height:16px; border:1px solid #ccc; margin:0 0 7px; font:11px Arial, Helvetica, sans-serif; padding:1px;}
+select{padding:0; width:180px; height:18px;}
+select option{padding:3px; float:left;}
+.m2{width:53px; margin:0 10px 7px 0;}
+.err_msg{ margin:0 0 10px;float:left; width:99.9%; color:#f00; font-size:12px;}
+

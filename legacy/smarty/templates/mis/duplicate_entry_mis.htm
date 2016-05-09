@@ -1,0 +1,169 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+<SCRIPT language="JavaScript">
+<!--
+
+function MM_openBrWindow(obj,theURL,winName,features)
+{
+        window.open(theURL,winName,features);
+        obj.onclick= null;
+        obj.style.color='#008800';
+}
+
+//-->
+</script>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br><br>
+~if $flag eq '1'`
+	<table width=100% border=0 align=center cellpadding=5>
+	<tr class=formhead>
+	<td align=center colspan=100%>~$month` - ~$year` ( ~if $paymode eq 'CDNUM'` Cheque ~elseif $paymode eq 'CASH'` Cash ~elseif $paymode eq 'ONLINE'` Online ~/if` Payments )</td>
+	</tr>
+	<tr class=label>
+	<td>&nbsp;Profileid</td>
+	<td>&nbsp;Username</td>
+	<td>&nbsp;Billid</td>
+	<td>&nbsp;Receiptid</td>
+	<td>&nbsp;Entry Date</td>
+	<td>&nbsp;Mode</td>
+	<td>&nbsp;Status</td>
+	<td>&nbsp;Cheque/DD No.</td>
+	<td>&nbsp;Cheque/DD Date</td>
+	<td>&nbsp;Cheque/DD City</td>
+	<td>&nbsp;Entry by</td>
+	<td>&nbsp;Type</td>
+	<td>&nbsp;Amount</td>
+	<td>&nbsp;Edit</td>
+	</tr>
+	~if $arr neq ''`
+	~section name=cd loop=$arr`
+		<tr class=fieldsnew>
+		<td>&nbsp;~$arr[cd].profileid`</td>
+		<td>&nbsp;~$arr[cd].username`</td>
+		<td>&nbsp;~$arr[cd].billid`</td>
+		<td>&nbsp;~$arr[cd].receiptid`</td>
+		<td>&nbsp;~$arr[cd].entry_dt`</td>
+		<td>&nbsp;~$arr[cd].mode`</td>
+		<td>&nbsp;~$arr[cd].status`</td>
+		<td>&nbsp;~$arr[cd].cdnum`</td>
+		<td>&nbsp;~$arr[cd].cd_dt`</td>
+		<td>&nbsp;~$arr[cd].cd_city`</td>
+		<td>&nbsp;~$arr[cd].entryby`</td>
+		<td>&nbsp;~$arr[cd].type`</td>
+		<td>&nbsp;~$arr[cd].amt`</td>
+		<td>&nbsp;<a href="#" color="D80101" onclick="MM_openBrWindow(this,'../billing/edit_details.php?cid=~$cid`&pid=~$arr[cd].profileid`&receiptid=~$arr[cd].receiptid`&dup=Y','','width=640,height=480,screenX=100,screenY=100')">Edit</a></td>
+		</tr>
+	~/section`
+	~else`
+		<tr class=fieldsnew>
+		<td colspan=100% align=center class=red>No Records Found</td>
+		</tr>
+	~/if`
+<!--
+	~section name=cs loop=$csprarr`
+		<tr class=fieldsnew>
+		<td>&nbsp;~$csprarr[cs].profileid`</td>
+		<td>&nbsp;~$csprarr[cs].username`</td>
+		<td>&nbsp;~$csprarr[cs].billid`</td>
+		<td>&nbsp;~$csprarr[cs].receiptid`</td>
+		<td>&nbsp;~$csprarr[cs].entry_dt`</td>
+		<td>&nbsp;~$csprarr[cs].mode`</td>
+		<td>&nbsp;~$csprarr[cs].status`</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;~$csprarr[cs].entryby`</td>
+		<td>&nbsp;~$csprarr[cs].type`</td>
+		<td>&nbsp;~$csprarr[cs].amt`</td>
+		<td>&nbsp;<a href="../billing/edit_details.php?cid=~$cid`&pid=~$csprarr[cs].profileid`&receiptid=~$csprarr[cs].receiptid`" target="_blank">Edit</a></td>
+		</tr>
+	~/section`
+	~section name=ol loop=$olprarr`
+		<tr class=fieldsnew>
+		<td>&nbsp;~$olprarr[ol].profileid`</td>
+		<td>&nbsp;~$olprarr[ol].username`</td>
+		<td>&nbsp;~$olprarr[ol].billid`</td>
+		<td>&nbsp;~$olprarr[ol].receiptid`</td>
+		<td>&nbsp;~$olprarr[ol].entry_dt`</td>
+		<td>&nbsp;~$olprarr[ol].mode`</td>
+		<td>&nbsp;~$olprarr[ol].status`</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;~$olprarr[ol].entryby`</td>
+		<td>&nbsp;~$olprarr[ol].amt`</td>
+		</tr>
+	~/section`
+-->
+	</table>
+~else`
+	<form method=post action="duplicate_entry_mis.php">
+	<table width=80% border=0 align="center" cellpadding=5>
+<!--	<tr>
+	<td>&nbsp;&nbsp;&nbsp;
+	~if $VIEWALL eq 'Y'`
+		Branch :
+                <select name="branch">
+			<option value="ALL">ALL</option>
+		~section name=brn loop=$brancharr`
+                	<option value="~$brancharr[brn].name`">~$brancharr[brn].name`</option>
+		~/section`
+                </select>
+	~/if`
+	</td>
+	</tr>
+-->
+	<tr>
+	<td>&nbsp;&nbsp;&nbsp;Mode of Payment</td>
+	<td>
+	<select name="paymode">
+		<option value="">--Select--</option>
+		<option value="CDNUM">Cheque/DD</option>
+		<option value="CASH">Cash</option>
+		<option value="ONLINE">Online</option>
+	</select>
+	</td>
+	</tr>
+	<tr>
+	<td>&nbsp;&nbsp;&nbsp;Month-Year</td>
+	<td>
+	<select name="month">
+	~section name=mm loop=$mmarr`
+		<option value="~$mmarr[mm]`">~$mmarr[mm]`</option>
+	~/section`
+	</select>-
+	<select name="year">
+	~section name=yr loop=$yyarr`
+        	<option value="~$yyarr[yr]`">~$yyarr[yr]`</option>
+        ~/section`
+        </select>&nbsp;
+	</td>
+	</tr>
+	<tr>
+	<input type="hidden" name="cid" value=~$cid`>
+	<td align="right"><input type="submit" name="CMDGo" value="     Go     "></td>
+	</tr>
+	</table>
+	</form>
+~/if`
+</body>
+</html>

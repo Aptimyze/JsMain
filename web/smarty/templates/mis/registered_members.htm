@@ -1,0 +1,337 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br><br>
+~if $flag eq '1'`
+	<table width=100% border=0 align="center">
+	~if $dflag eq '1'`
+		<tr class="formhead">
+		<td colspan=100% align="center">&nbsp;Month : ~$dt`</td>
+		</tr>
+	~elseif $mflag eq '1'`
+		<tr class="formhead">
+		<td colspan=100% align="center">&nbsp;Financial Year ~$dt`-~$dt1`</td>
+		</tr>
+	~/if`
+	</table>
+	<br>
+	~if $mflag eq '1'`
+		<table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+		<tr class="label">
+			<td colspan=100% align="center">&nbsp;Country : INDIA</td>
+		</tr>
+		</table>
+		<table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+		<tr class="label">
+		<td align="center" width=15%>&nbsp;Month</td>
+		~section name=mon loop=$mmarr`
+			<td width=6% align="center">&nbsp;~$mmarr[mon]`</td>
+		~/section`
+		<td align="center" width=13%>&nbsp;Total</td>
+		</tr>
+		</table>
+		~section name=cc loop=$icityarr`
+		<table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+			<tr class="fieldsnew">
+			<td align="center" class="label" width=15%>&nbsp;~$icityarr[cc]`</td>
+			~section name=mon loop=$mmarr`
+				<td width=6% align="center">&nbsp;~$icnt[cc][mon]`</td>
+			~/section`
+			<td align="center" class="label" width=13%>&nbsp;~$itota[cc]`</td>
+			</tr>
+		</table>
+		~/section`
+		<table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+		<tr class="label">
+		<td align="center" width=15%>&nbsp;Total</td>
+		~section name=mon loop=$mmarr`
+			<td width=6% align="center">&nbsp;~$itotb[mon]`</td>
+			~assign var="itd" value=$itotb[mon]`
+			~assign var="itotall" value=$itotall+$itd`
+		~/section`
+		<td align="center" width=13%>~$itotall`</td>
+		</tr>
+		</table>
+		<br><br>
+		<table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+		<tr class="label">
+			<td colspan=100% align="center">&nbsp;Country : USA</td>
+		</tr>
+		</table>
+		<table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+		<tr class="label">
+		<td align="center" width=15%>&nbsp;Month</td>
+		~section name=mon loop=$mmarr`
+			<td width=6% align="center">&nbsp;~$mmarr[mon]`</td>
+		~/section`
+		<td align="center" width=13%>&nbsp;Total</td>
+		</tr>
+		</table>
+		~section name=cc loop=$ucityarr`
+		<table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+			<tr class="fieldsnew">
+			<td align="center" class="label" width=15%>&nbsp;~$ucityarr[cc]`</td>
+			~section name=mon loop=$mmarr`
+				<td width=6% align="center">&nbsp;~$ucnt[cc][mon]`</td>
+			~/section`
+			<td align="center" class="label" width=13%>&nbsp;~$utota[cc]`</td>
+			</tr>
+		</table>
+		~/section`
+		<table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+		<tr class="label">
+		<td align="center" width=15%>&nbsp;Total</td>
+		~section name=mon loop=$mmarr`
+			<td width=6% align="center">&nbsp;~$utotb[mon]`</td>
+			~assign var="utd" value=$utotb[mon]`
+			~assign var="utotall" value=$utotall+$utd`
+		~/section`
+		<td align="center" width=13%>~$utotall`</td>
+		</tr>
+		</table>
+		<br><br>
+		<table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+		<tr class="label">
+			<td colspan=100% align="center">&nbsp;Country : Others</td>
+		</tr>
+		</table>
+		<table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+		<tr class="label">
+		<td align="center" width=15%>&nbsp;Month</td>
+		~section name=mon loop=$mmarr`
+			<td width=6% align="center">&nbsp;~$mmarr[mon]`</td>
+		~/section`
+		<td align="center" width=13%>&nbsp;Total</td>
+		</tr>
+		</table>
+		~section name=cc loop=$ocityarr`
+		<table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+			<tr class="fieldsnew">
+			<td align="center" class="label" width=15%>&nbsp;~$ocityarr[cc]`</td>
+			~section name=mon loop=$mmarr`
+				<td width=6% align="center">&nbsp;~$ocnt[cc][mon]`</td>
+			~/section`
+			<td align="center" class="label" width=13%>&nbsp;~$otota[cc]`</td>
+			</tr>
+		</table>
+		~/section`
+		<table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+		<tr class="label">
+		<td align="center" width=15%>&nbsp;Total</td>
+		~section name=mon loop=$mmarr`
+			<td width=6% align="center">&nbsp;~$ototb[mon]`</td>
+			~assign var="otd" value=$ototb[mon]`
+			~assign var="ototall" value=$ototall+$otd`
+		~/section`
+		<td align="center" width=13%>~$ototall`</td>
+		</tr>
+		</table>
+	~elseif $dflag eq '1'`
+		<table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+		<tr class="label">
+			<td colspan=100% align="center">&nbsp;Country : INDIA</td>
+		</tr>
+		</table>
+		<table width="150%" align="center" border=0 cellspacing=2 cellpadding=2>
+		<tr class="label">
+		<td align="center" width=15%>&nbsp;Day</td>
+		~section name=dd loop=$ddarr`
+			<td align="center" width=5%>&nbsp;~$ddarr[dd]`</td>
+		~/section`
+		<td align="center" width="10%">&nbsp;Total</td>
+		</tr>
+<!--
+		</table>
+-->
+		~section name=cc loop=$icityarr`
+<!--
+		<table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+-->
+			<tr class="fieldsnew">
+			<td align="center" class="label">&nbsp;~$icityarr[cc]`</td>
+			~section name=dd loop=$ddarr`
+				<td align="center">&nbsp;~$icnt[cc][dd]`</td>
+			~/section`
+			<td align="center" class="label" >&nbsp;~$itota[cc]`</td>
+			</tr>
+<!--
+		</table>
+-->
+		~/section`
+<!--
+		<table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+-->
+		<tr class="label">
+		<td align="center" width=6%>&nbsp;Total</td>
+		~section name=dd loop=$ddarr`
+			<td width=3% align="center">&nbsp;~$itotb[dd]`</td>
+			~assign var="itd" value=$itotb[dd]`
+			~assign var="itotall" value=$itotall+$itd`
+		~/section`
+		<td align="center" width=4%>~$itotall`</td>
+		</tr>
+		</table>
+		<br><br>
+		<table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+		<tr class="label">
+			<td colspan=100% align="center">&nbsp;Country : USA</td>
+		</tr>
+		</table>
+		<table width="150%" align="center" border=0 cellspacing=2 cellpadding=2>
+		<tr class="label">
+		<td align="center" width=15%>&nbsp;Day</td>
+		~section name=dd loop=$ddarr`
+			<td align="center" width=5%>&nbsp;~$ddarr[dd]`</td>
+		~/section`
+		<td align="center" width="10%">&nbsp;Total</td>
+		</tr>
+<!--
+		</table>
+-->
+		~section name=cc loop=$ucityarr`
+<!--
+		<table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+-->
+			<tr class="fieldsnew">
+			<td align="center" class="label">&nbsp;~$ucityarr[cc]`</td>
+			~section name=dd loop=$ddarr`
+				<td align="center">&nbsp;~$ucnt[cc][dd]`</td>
+			~/section`
+			<td align="center" class="label">&nbsp;~$utota[cc]`</td>
+			</tr>
+<!--
+		</table>
+-->
+		~/section`
+<!--
+		<table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+-->
+		<tr class="label">
+		<td align="center">&nbsp;Total</td>
+		~section name=dd loop=$ddarr`
+			<td align="center">&nbsp;~$utotb[dd]`</td>
+			~assign var="utd" value=$utotb[dd]`
+			~assign var="utotall" value=$utotall+$utd`
+		~/section`
+		<td align="center">~$utotall`</td>
+		</tr>
+		</table>
+		<br><br>
+		<table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+		<tr class="label">
+			<td colspan=100% align="center">&nbsp;Country : Others</td>
+		</tr>
+		</table>
+		<table width="150%" align="center" border=0 cellspacing=2 cellpadding=2>
+		<tr class="label">
+		<td align="center" width=15%>&nbsp;Day</td>
+		~section name=dd loop=$ddarr`
+			<td align="center" width=5%>&nbsp;~$ddarr[dd]`</td>
+		~/section`
+		<td align="center" width="10%">&nbsp;Total</td>
+		</tr>
+<!--
+		</table>
+-->
+		~section name=cc loop=$ocityarr`
+<!--
+		<table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+-->
+			<tr class="fieldsnew">
+			<td align="center" class="label">&nbsp;~$ocityarr[cc]`</td>
+			~section name=dd loop=$ddarr`
+				<td align="center">&nbsp;~$ocnt[cc][dd]`</td>
+			~/section`
+			<td align="center" class="label">&nbsp;~$otota[cc]`</td>
+			</tr>
+<!--
+		</table>
+-->
+		~/section`
+<!--
+		<table width="100%" align="center" border=0 cellspacing=2 cellpadding=2>
+-->
+		<tr class="label">
+		<td align="center">&nbsp;Total</td>
+		~section name=dd loop=$ddarr`
+			<td align="center">&nbsp;~$ototb[dd]`</td>
+			~assign var="otd" value=$ototb[dd]`
+			~assign var="ototall" value=$ototall+$otd`
+		~/section`
+		<td align="center">~$ototall`</td>
+		</tr>
+		</table>
+	~/if`
+~else`
+<form method=post action="registered_members.php">
+<table width=80% align="center">
+<tr>
+<td width=10%>
+	<input type=radio name="dt_type" value="day" checked>
+</td>
+<td width=30%>Day Wise : (For a particular month)</td>
+<td width=30%>
+	<select name="ddate_mon">
+	~section name=mm loop=$mmarr`
+		<option value="~$mmarr[mm]`">~$mmarr[mm]`</option>
+	~/section`
+	</select>
+	<select name="ddate_yyyy">
+	~assign var=thisYear value=$smarty.now|date_format:"%Y"`
+	~section name=years start=2004 loop=$thisYear+1 step=1`
+		<option value="~$smarty.section.years.index`">~$smarty.section.years.index`</option>
+	~/section`
+	</select>
+</td>
+</tr>
+<tr>
+<tr><td><br><br><br><br></td></tr>
+<td width=10%>
+	<input type=radio name="dt_type" value="mnt">
+</td>
+<td width=30%>Month Wise : (For a particular year)</td>
+<td width=30%>
+	<select name="mdate_yyyy">
+	~assign var=thisYear value=$smarty.now|date_format:"%Y"`
+	~section name=years start=2004 loop=$thisYear+1 step=1`
+		<option value="~$smarty.section.years.index`">~$smarty.section.years.index`</option>
+	~/section`
+	</select>
+</td>
+</tr>
+<tr><td><br><br><br></td></tr>
+<tr>
+<td>
+	<input type=checkbox name="get_today" value="Y">
+</td>
+<td> &nbsp; Get current records</td>
+</tr>
+<tr><td><br><br><br></td></tr>
+<tr><td colspan=100%>
+<input type="submit" name="CMDGo" value="   Go   ">
+</td></tr>
+</table>
+</form>
+~/if`
+</body>
+</html>

@@ -1,0 +1,147 @@
+<div class="pink" style="width:512px;">
+<div class="topbg">
+<div class="lf pd b t12">Horoscope Request</div>
+<div class="rf pd b t12"><a href="#" class="blink" onClick="$.colorbox.close();return false;">Close [x]</a></div>
+</div><div class="clear"></div>
+
+<div class="scrollbox1 t12" style="height:auto;" >
+<div id="first_layer" style="display:inline";>
+<div class="save_hrbg_photo" style="padding:10px;width:412px">
+ <div class="lf t14 b" style="width:100%">Do you want to request ~$USERNAME` for Horoscope?</div>
+  <div class="sp5"></div>
+  <div class="lf" style="text-align:center;width:100%;margin-top:10px;">
+    <input type="button" class="b green_btn" value="Continue" style="width:85px;" onclick="javascript:common_ajax_request('HOROS_REQ','horos_req_layer.php','photo_req_start()','photo_req_end','profilechecksum=~$profilechecksum`')"> &nbsp;<a href="#" class="b blink" onClick="$.colorbox.close();return false;">Cancel</a>
+  </div>
+  <div class="sp3"></div>
+
+	</div>
+	</div>
+<div id="second_layer" style="display:none">
+<div style="margin:5px; text-align:center"><img src="~$IMG_URL`/img_revamp/loader_big.gif">
+</div>
+
+</div>
+<div id="third_layer" style="display:none">
+<div style="padding: 10px;" class="save_hrbg_photo">
+ <div style="width: 100%;" class="lf"><div style="width: 30px;" class="lf">
+<img align="absmiddle" src="~$IMG_URL`/img_revamp/confirm.gif"/></div>
+<div style="padding: 6px 0pt 0pt 5px;" class="lf t14 b">Your Horoscope Request has been sent to ~$USERNAME`</div></div>
+  <div class="sp12"></div>
+	</div>
+	</div>
+<div id="error_layer" style="display:none">
+<div style="padding: 10px;" class="save_hrbg_photo">
+ <div style="width: 100%;" class="lf"><div style="width: 30px;" class="lf">
+<img align="absmiddle" src="~$IMG_URL`/img_revamp/cross.gif"/></div>
+<div style="padding: 6px 0pt 0pt 5px;" class="lf t14 b" id="ERROR_MES">Error message</div></div>
+  <div class="sp12"/>
+        </div>
+</div>
+</div>
+<script>
+first_id=dID("first_layer");
+second_id=dID("second_layer");
+third_id=dID("third_layer");
+error_id=dID("error_layer");
+error_mes=dID("ERROR_MES");
+function photo_req_start()
+{
+	first_id.style.display='none';
+	second_id.style.display='none';
+	third_id.style.display='none';
+	error_id.style.display='none';
+	second_id.style.display='inline';
+}
+function photo_req_end(error)
+{
+	var mes="Oops, please try after sometime.";
+	first_id.style.display='none';
+	second_id.style.display='none';
+	third_id.style.display='none';
+	error_id.style.display='none';
+	if(error)
+	{	
+		if(error=='A_E')
+			mes=common_error;
+		if(error=='F')
+			mes="Your profile has been filtered out";
+		if(error=='G')
+			mes="Horoscope request for same gender is not allowed";
+		if(error=='E')
+			mes="You have already requested this user for horoscope.";
+		if(error=='U')
+			mes="Please wait till your profile is screened.";
+		error_id.style.display='inline';
+		error_mes.innerHTML=mes;
+	}
+	else
+	{
+		third_id.style.display='inline';
+		change_tab(dID('contact_history'),'Contact_History');
+		
+	}
+        //third_id.style.display='inline';
+	
+
+}
+function common_ajax_request(type,send_to,java_before_send,java_after_send,send_url)
+{
+	var ajaxRequest;  // The variable that makes Ajax possible!
+
+        try
+        {
+                // Opera 8.0+, Firefox, Safari
+                ajaxRequest = new XMLHttpRequest();
+        }
+        catch (e)
+        {
+                // Internet Explorer Browsers
+                try
+                {
+                        ajaxRequest = new ActiveXObject("Msxml2.XMLHTTP");
+                }
+                catch (e)
+                {
+                        try
+                        {
+                                ajaxRequest = new ActiveXObject("Microsoft.XMLHTTP");
+                        }
+                        catch (e)
+                        {
+                                // Something went wrong
+                                alert("Your browser broke!");
+                                return false;
+                        }
+                }
+        }
+        // Create a function that will receive data sent from the server
+        ajaxRequest.onreadystatechange = function()
+        {
+                if(ajaxRequest.readyState == 4)
+                {
+			
+                        var result= ajaxRequest.responseText;
+			if(result=='A_E')
+				eval(java_after_send+"('A_E')");
+			else if(result=='G')
+				eval(java_after_send+"('G')");
+			else if(result=='E')
+				eval(java_after_send+"('E')");
+			else if(result=='F')
+				eval(java_after_send+"('F')");
+			else
+				eval(java_after_send+"('')");
+                        
+                }
+        }
+        
+        var message="?"+send_url+"&ajax_error=2&Submit=1";
+
+        //document.write("friend_discount.php"+message);
+        ajaxRequest.open("POST", send_to+message, true);
+	
+        ajaxRequest.send(null);
+	eval(java_before_send);
+}	
+</script>
+

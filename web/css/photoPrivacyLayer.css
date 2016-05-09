@@ -1,0 +1,98 @@
+@charset "utf-8";
+/* CSS Document */
+
+* {margin:0; padding:0}
+body {font:13px arial}
+.pink{ border:1px solid #f0ced6; background-color:#fdf4f5;}
+
+.block { display:block}
+
+.center { text-align:center}
+
+.fs18 { font-size:18px;}
+.fs20 { font-size:20px;}
+.fs16 { font-size:16px;}
+
+.fl { float:left}
+
+.topbg {background-image:url(IMG_URL/images/sprite-bg-popup.png);background-repeat: repeat-x;height: 33px;
+
+background-position:0 -36px}
+
+.title { font:18px arial; color:#505050; position:relative; top:5px; left:8px;}
+
+.blink1 { color: #117DAA;
+    font: 18px/1.8 arial;
+    margin-right: 6px;
+    text-decoration: none;
+    width: auto;}
+
+.photoscrollbox2_1{background-color:#FDF4F5;border:1px solid #FDF4F5;
+padding:25px 2px 0px 11px;width:auto;  font-size:13px!important; } 
+
+.border-footer {border:1px #F0CED6; border-top-style:solid}
+
+
+
+
+
+
+
+
+
+
+
+.btn-green-submit {
+	background:url(IMG_URL/images/sprite-bg-popup.png) 0 0;
+	 color: #FFFFFF;
+    height: 32px;	
+}
+.fullwidth { width:100%!important;	}
+
+
+select,input, textarea {
+	width:200px; height:20px; border-width:1px; 
+border-color:#CCC; border-style:solid;   
+ font: 13px Arial,Helvetica,sans-serif; color:#505050;}
+
+
+.sp15 {clear:both; height:15px; }
+
+
+
+
+
+
+
+
+
+
+
+.vam{vertical-align:middle;}
+.fs12 { font:12px arial;}
+
+
+
+.widthauto { width:auto!important;}
+.fr { float:right!important} 
+
+.maroon { color:#cd3737}
+
+
+.b { font-weight:bold!important;}
+
+.red { border:1px solid red}
+
+.chbx { border: medium none;    height: 16px;    margin: 0;   
+ padding: 0;    width: 16px!important;}
+
+ 
+ 
+.box {
+border-right: 1px solid #737373;
+    float: left;
+    height: 165px;
+    padding: 0 30px;
+    width: 179px;
+}
+

@@ -1,0 +1,14 @@
+<subpictures>
+<stream>
+<spu
+     force="yes"
+     start="00:00:00.00"
+     select="png/4_5_contact.png"
+     highlight="png/4_5_contact.png"
+     autooutline="infer"
+     outlinewidth="6"
+     autoorder="rows" >
+</spu>
+</stream>
+</subpictures>
+

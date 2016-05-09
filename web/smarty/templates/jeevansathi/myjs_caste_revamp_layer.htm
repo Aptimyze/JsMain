@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<style>
+.pink1{width:770px;border:1px #f0ced6;border-style:solid; background-color:#fdf4f5;}
+.title { font:18px arial; color:#505050; position:relative; top:5px; left:8px;}
+.blink1 { font:18px arial; color:#1171ae; position:relative; top:5px; right:5px}
+.fullwidth { width:100%;}
+ select,input, textarea {width:200px; height:20px; border-width:1px;border-color:#CCC; border-style:solid;font: 12px Arial,Helvetica,sans-serif;}
+.no-margin-padding{margin:0!important; padding:0!important}
+.sp15 {clear:both; height:15px; overflow:hidden; }
+.block { display:block}
+.center { text-align:center}
+.fs18 { font-size:18px;}
+.green_btn_2 { background-image: url("~$IMG_URL`/images/green_button_bg1.gif");    background-repeat: no-repeat;    color: #FFFFFF;    cursor: pointer;height: 35px; width:101px;border:none!important;}
+.border-footer {border:1px #F0CED6; border-top-style:solid}
+div.row3 label.grey, div.row4 label.grey {vertical-align:top;padding-right:10px;float:left;color:#797979!important; font-size:13px; width:189px}
+.topbg {background-image: url("~$IMG_URL`/images/top_bg.jpg");background-repeat: repeat-x;height: 33px;}
+.green {color: #33B300;}
+.scrollbox2_1 {background-color: #FDF4F5;border: 1px solid #FDF4F5;color: #505050;padding: 10px;width: auto;}
+.mar_left_20{margin-left: 20px;}
+.dn{display: none;}
+</style>
+<script type = "text/javascript" src = "~$IMG_URL`/min/?f=/profile/js/ajax_js.js"></script>
+<script type = "text/javascript">
+function update_caste_revamp_layer()
+{
+	document.getElementById("data_layer").style.display = "none";
+	document.getElementById("loader_layer").style.display = "block";
+	var params = new Array();
+	var i =0;
+	~if $CASTE_DISPLAY`
+		params[i] = "caste="+document.form1.Caste.value;
+		i++;
+	~/if`
+	~if $OCCUPATION_DISPLAY`
+		params[i] = "occ="+document.form1.Occupation.value;
+		i++;
+	~/if`
+	~if $EDUCATION_DISPLAY`
+		params[i] = "edu="+document.form1.Education.value;
+		i++;
+	~/if`
+	
+	var paramStr = params.join("&");
+	var url = "~$SITE_URL`/profile/update_caste_revamp_layer.php?"+paramStr;
+	sendRequest("GET",url);
+}
+</script>
+</head>
+<body>
+<!--
+~if $CLOSE_LAYER`
+<script type = "text/javascript">
+$.colorbox.close();
+</script>
+ ~/if`
+-->
+<div style="height: auto;" class="pink1" id="data_layer">
+	<form name="form1" method="post" action="" style="margin:0px;padding:0px;">
+        <div class="topbg">
+                <span class="title lf">Help us in improving your profile</span>
+		<span class="fr"><a class="blink1" href="#" onclick="$.colorbox.close();return false;">Close [x]</a></span>
+        </div>
+        <div class=" scrollbox2_1">
+		<div class="row3 no-margin-padding">
+			<p class=" fs18" style = "line-height: 23px">
+				<!--
+				~if $DISABLED_DROPDOWN`
+					~if $OLD_CASTE_VAL_NUM eq 336 || $OLD_CASTE_VAL_NUM eq 169 || $OLD_CASTE_VAL_NUM eq 189 || $OLD_CASTE_VAL_NUM eq 186`
+						To enable you to find more suitable matches, we have changed your caste as shown below:
+					~else`
+						The castes &lt;&lt;~$MERGE1`&gt;&gt; and &lt;&lt;~$MERGE2`&gt;&gt; have been merged as they have been identified to be the same. Your new caste is as follows:
+					~/if`
+				~else`
+					We have refined the list of castes so that members can search for matching profiles in their community easily. Please choose your caste below:
+				~/if`
+				-->
+				To help you in partner search, we have made changes to ~$FIELD_VALS`. Please select the option which describes you best.
+			</p><br />
+		</div>
+		~if $CASTE_DISPLAY`
+		<div class="sp15">&nbsp;</div>
+		<div class="row3 no-margin-padding">
+			<label class="grey">Caste :</label>
+			<select name="Caste">
+				<option value = "~$CURRENT_CASTE_VAL_NUM`" selected = "selected">~$CURRENT_CASTE_VAL`</option>
+				~foreach from = $CASTE_DROPDOWN item = value key = kk`
+					<option value = "~$kk`">~$value`</option>
+				~/foreach`
+			</select>
+			<i class="mar_left_20">&nbsp;</i><font class="green">Presently listed as : ~$OLD_CASTE_VAL`</font>
+		</div>
+		~/if`
+		~if $OCCUPATION_DISPLAY`
+		<div class="sp15">&nbsp;</div>
+		<div class="row3 no-margin-padding">
+			<label class="grey">Occupation :</label>
+			<select name="Occupation">
+				<option value = "~$CURRENT_OCC_VAL_NUM`" selected = "selected">~$NEW_OCCUPATION`</option>
+				~foreach from = $OCC_DROPDOWN item = value key = kk`
+					<option value = "~$kk`">~$value`</option>
+				~/foreach`
+			</select>
+			<i class="mar_left_20">&nbsp;</i><font class="green">Presently listed as : ~$OLD_OCCUPATION`</font>
+		</div>
+		~/if`
+		~if $EDUCATION_DISPLAY`
+		<div class="sp15">&nbsp;</div>
+		<div class="row3 no-margin-padding">
+			<label class="grey">  Education :</label>
+			<select name="Education">
+				<!--<option value = "~$CURRENT_EDU_VAL_NUM`" selected = "selected">~$NEW_EDUCATION`</option>-->
+				~foreach from = $EDU_DROPDOWN item = value key = kk`
+					<option value = "~$kk`" ~if $CURRENT_EDU_VAL_NUM eq $kk` selected ~/if`>~$value`</option>
+				~/foreach`
+			</select>
+			<i class="mar_left_20">&nbsp;</i><font class="green">Presently listed as : ~$OLD_EDUCATION`</font>
+		</div>
+		~/if`
+		<div class="sp15"></div><div class="sp15"></div>
+		<!--
+		<div class="sp15">&nbsp;</div>
+		<div class="row3 no-margin-padding">
+			<label name="my_height" class="grey">Education :</label>
+			<select> <option>Edit country living in</option></select>
+		</div>
+		<div class="sp15">&nbsp;</div>
+		<div class="row3 no-margin-padding">
+			<label name="my_height" class="grey">Profession :</label>
+			<select> <option>United states</option></select>
+		</div>
+		<div class="sp15">&nbsp;</div>
+		<div class="row3 no-margin-padding">
+			<label class="grey"><font color="#FF0000">*</font> state :</label>
+			State
+		</div>
+		-->
+        </div><!-- 'midCont' Ends -->
+
+	<div class="sp12"></div>
+
+	<!-- Bottom starts here -->
+	<div class="clear"></div>
+	<div class="clear"></div>
+	<div class="sp12 border-footer"></div>
+	<div class="center fullwidth">
+		~if $DISPLAY_LAYER_MULTIPLE`
+			<input class=" green_btn_2 fs18" value="Save"  type="Submit" onclick="update_caste_revamp_layer(); return false;">
+		~else`
+			<input class=" green_btn_2 fs18" value="OK"  type="Submit" onclick="$.colorbox.close(); return false;">
+		~/if`
+	</div>
+	<div class="sp12"></div>
+	<!--Bottom Ends Here -->
+	</form>
+</div>
+<div style="height: auto;" class="pink1 dn" id="loader_layer">
+	<center>
+	<table align="center" height = "250px">
+	<tr><td valign = "center"><img src = "~$IMG_URL`/images/loadingAnimation.gif"></td>
+	</table>
+	</center>
+</div>
+</body></html>

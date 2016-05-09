@@ -1,0 +1,26 @@
+<div class="loader" id="pageloader"></div>
+<div class="fullwid bg4" style="height:{{MaxHeight+'px'}}" resize>
+  <!--start:div-->
+  <div reg-tab  enable-back="bEnableBack" on-back="myBack" data={{tabName}} ></div>
+  <!--end:div--> 
+  <!--start:textbox-->
+  <div id="scrollContent" class="scrollContent bg4" style="height:{{fieldsHeight+'px'}}" >
+	  <div class="pad1 brdr1 bg11">
+        <div class="pt15 pb10 fullwid">
+          <div class="fl color12 f12">Type min 100 Chars</div>
+          <div class="fr color12 f12">Count - <span ng-class={'color2':myDetailLen<100,'colorGreen':!(myDetailLen<100)} ng-class={'color2':myDetailLen<100}> {{myDetailLen}}</span></div>
+          <div class="clr"></div>
+        </div>
+		<div class="pt10">
+            <textarea ng-blur="onDetailChange(myDetail)" ng-focus="hideHint()" ng-change="onKeyPress()" ng-model="myDetail" class="fullwid color12 f17 fontlig lh30 hgt180 bg11" ></textarea>
+		</div>
+	  </div>
+  </div>
+  <!--end:textbox--> 
+  <!--start:Next-->
+  <div class="posfix fullwid posabs btmo" >
+    <div class="pt20" id='doneBtn' ng-click="myNext()"> <div ng-class={'bggrey':aboutUser.value.length<100} class="bg7 white lh30 dispbl txtc lh50 ">{{SubmitName}}</div> </div>
+  </div>
+  <!--end:Next--> 
+  <ng-include id="modalView" ng-class={'slide-down':bModalWindow} ng-if="bModalWindow" src="'/angular/registration/Partials/errorModalWindow.html'" scope="" onload=""></ng-include>
+</div>

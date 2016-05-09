@@ -1,0 +1,70 @@
+<html>
+	<head>
+		<title>Jeevansathi - Reason to Reject</title> 
+		<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+		<script language="javascript">
+			function close_window()
+			{
+				window.close();
+				opener.window.location.reload(true);
+			}
+			function validate()
+			{
+				docF = document.form1;
+				if(docF.reject_reason.value == "")
+				{
+					alert("Please select a Reason to reject");
+					docF.reject_reason.focus();
+					return false;
+				}
+			}
+		</script>
+	</head>
+	<body>
+		~if $successfully_rejected`
+			<table width="90%" cellpadding="4" cellspacing="4" border="0" align="center">
+				<tr align="center" class="formhead">
+					<td>Entry Successfully Rejected</td>
+				</tr>
+				<tr align="center" class="fieldsnew">
+					<td>
+						<input type="button" value="Close Window" class="buttons1" onClick="close_window();">
+					</td>
+				</tr>
+			</table>
+		~else`
+			<form name="form1" method="post" action="reject_reason.php" onSubmit="return validate();">
+			<table width="90%" cellpadding="4" cellspacing="4" border="0" align="center">
+				<tr align="center" class="formhead">
+					<td colspan="2">Please Enter Reason for Rejection</td>
+				</tr>
+				<tr align="center">
+					<td class="label">
+						~if $CHECK_REASON`
+							<font color="red">Reason :</font>
+						~else`
+							Reason :
+						~/if`
+					</td>
+					<td class="fieldsnew">
+						<select name="reject_reason">
+							<option value="">Select</option>
+							~section name=next loop=$reject_reason_arr`
+								<option value="~$reject_reason_arr[next].value`">~$reject_reason_arr[next].name`</option>
+							~/section`
+						</select>
+					</td>
+				</tr>
+				<tr align="center" class="label">
+					<td colspan="2">
+						<input type="submit" name="submit" value="Submit" class="buttons1">
+					</td>
+				</tr>
+			</table>
+			<input type="hidden" name="cid" value="~$cid`">
+			<input type="hidden" name="order_id" value="~$order_id`">
+			<input type="hidden" name="from" value="~$from`">
+			</form>
+		~/if`
+	</body>
+</html>

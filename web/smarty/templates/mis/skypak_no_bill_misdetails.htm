@@ -1,0 +1,60 @@
+<html>
+   <head>
+      <title>SKYPAK MIS</title>
+      <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+      <link rel="stylesheet" href="jeevansathi.css" type="text/css">
+      <style>
+        DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+      </style>
+   </head>
+   <body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+   <br><br>
+~if $flag eq '1'`
+	<table width="100%" align="center" border=0 cellspacing=4 cellpadding=5>
+	   <tr class="formhead">
+              <td colspan=100% align="center">SKYPAK NO BILLING MIS</td>
+	   </tr>
+	   <tr class="formhead">
+	      <td colspan=100% align="center">MIS FOR &nbsp;~if $day`~$day`-~/if`~$month`-~$year` ~if $CITY_LBL neq ''`(~$CITY_LBL`) ~/if`</td>
+	   </tr>
+	</table>
+	<br>
+	<table width="760" align="center" border=0 cellspacing=2 cellpadding=1>
+	   <tr class="label">
+	      <td width=5% align="center" class=green>&nbsp;Sno.</td>
+	      <td width=95% >
+		<table width="100%"  border="0" cellspacing=3 cellpadding=2 align=center>
+		   <tr class="green" align="center">
+		      <td width="10%">REQ ID</td>
+		      <td width="15%">SENT TO</td>
+		      <td width="20%">STATUS</td>
+		      <td width="15%">CITY</td>
+		      <td width="15%">REQUESTED BY</td>
+		      <td width="25%">PHONE NO.</td>
+		   </tr>
+		</table>
+		</td>
+	   </tr>
+	 ~section name=i loop=$details`
+	   <tr>
+	      <td width=5% align="center" class="fieldsnew">&nbsp;~$smarty.section.i.index_next`</td>
+	      <td width=95% class="fieldsnew">
+		<table width="100%" border="0" cellspacing=3 cellpadding=2 align=center>
+		~section name=j loop=$sent_name[i]`
+		   <tr class="~$sent_name[i][j].ROWCOLOR`" align="center">
+		      <td width="10%">~$sent_name[i][j].REQID`</td>
+		      <td width="15%">~$sent_name[i][j].name`</td>
+		      <td width="20%">~$sent_name[i][j].status`</td>
+		      <td width="15%">~$sent_name[i][j].CITY`</td>
+		      <td width="15%">~$sent_name[i][j].ENTRYBY`</td>
+		      <td width="25%">&nbsp;~$sent_name[i][j].PHONE`</td>
+		   </tr>
+		~/section`
+		</table>
+	      </td>
+	    </tr>
+	~/section`
+	</table>
+~/if`
+</body>
+</html>

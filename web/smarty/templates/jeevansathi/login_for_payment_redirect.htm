@@ -1,0 +1,43 @@
+<html>
+<head>
+<title>Payment gateway redirect page</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, , initial-scale=1.0">
+<meta name="description" content=""/>
+<link href="/css/fonts/fonts.css" rel="stylesheet" type="text/css"/>
+</head>
+<body bgcolor="#ffffff" ~if $ACTIVE neq "YES"`onLoad="document.form1.submit();"~/if`>
+<div class="outerdiv" style="display:table; margin:0 auto; height:100%;">
+        <div class="fontlig" style="color:#d9475c; display:table-cell; vertical-align:middle">
+                <div style="font-size:42px;" class="">Re-directing</div>
+                <div style="font-size:15px">Please wait ...</div>
+        </div>
+</div>
+<form name="form1" action="~$ACTION_PATH`" method="post">
+
+			<input type="hidden" name="service_main" value="~$SERVICE3`">
+                        <input type="hidden" name="service" value="~$SERVICE2`">
+                        <input type="hidden" name="type" value="~$TYPE`">
+                        <input type="hidden" name="profileid" value="~$PROFILEID`">
+                        <input type="hidden" name="spt" value="~$spt`">
+                        <input type="hidden" name="DISCOUNT" value="~$TOTAL_DISCOUNT_INCTAX`">
+                        <input type="hidden" name="DISCOUNT_MSG" value="ONLINE BACKEND DISCOUNT">
+                        <input type="hidden" name="DISCOUNT_TYPE" value="2">
+                        <input type="hidden" name="COURIER" value="~$COURIER`">
+                        <input type="hidden" name="paymode" value="~$PAYMODE`">
+                        <input type="hidden" name="checksum" value="~$CHECKSUM`">
+                        <input type="hidden" name="checkout" value="true">
+			<input type="hidden" name="chk_ids" value="~$chk_ids`">
+			<input name="checkout" type="image" src="images/submit_button.gif" width="76" height="23">
+			<input type="hidden" name="BcKlinK" value="~$BcKlinK`">
+<!--input type="image" src="http://www.paypal.com/en_US/i/btn/x-click-but01.gif" name="submit" title="Make payments with PayPal - it's fast, free and secure!"-->
+~if $ACTIVE eq "YES"`
+<br><br><center><h3>We found that you have already active subscription on our site.</h3><br>If you want to continue... Press Continue<br><br><input type=submit name=checkout value=Continue></center>
+~/if`
+<noscript>
+<br><br>
+<center> <b>Javascript</b> is disabled in your browser.<br>Please click click on <b>Redirect</b> to continue<br><br>
+<input type=submit name=checkout value=Redirect></center>
+</noscript>
+</form>
+</body>
+</html>

@@ -1,0 +1,337 @@
+<html>
+
+<head>
+	<link rel="stylesheet" href="/mis/jeevansathi.css" type="text/css">
+	<link rel="stylesheet" href="/profile/images/styles.css" type="text/css">
+</head>
+
+<body>
+<br>
+<table width=100%>
+	<tr class=formhead align=center>
+		<td>&nbsp;Month : ~$mm` - Year : ~$yy`</td>
+	</tr>
+</table>
+<br>
+<table border=0 cellspacing="4" cellpadding="4" width=100%>
+	<tr class=label>
+                <td>&nbsp;</td>
+                ~section name=a  start=0 loop=31 step=1`
+                <td>&nbsp;~$mth[a]`</td>
+                ~/section`
+		<td class="label">Total</td>
+	</tr>
+
+	<tr>
+		<td class="label">Daily Login</td>
+		~section name=a  start=0 loop=31 step=1`
+		<td class="fieldsnew">&nbsp;~$daily_login[a]`</td>
+		~/section`
+		<td class="label">~$sum_daily_login`</td>
+	</tr>
+
+	<tr><td style="padding:0px">&nbsp;</td></tr>
+
+	<tr>
+		<td class="label">Total Contacts</td>
+		~section name=a start=0 loop=31 step=1`
+		<td class="fieldsnew" style="background-color:#EFFFF1">&nbsp;~$total_contacts[a]`</td>
+		~/section`
+		<td class="label">~$sum_total_contacts`</td>
+	</tr>
+	<tr>
+		<td class="label">Initial Contacts</td>
+		~section name=a start=0 loop=31 step=1`
+		<td class="fieldsnew" style="background-color:#EFFFF1">&nbsp;~$initial_contacts[a]`</td>
+		~/section`
+		<td class="label">~$sum_initial_contacts`</td>
+	</tr>
+	<tr>
+		<td class="label">Accepted Contacts</td>
+		~section name=a start=0 loop=31 step=1`
+		<td class="fieldsnew" style="background-color:#EFFFF1">&nbsp;~$accepted_contacts[a]`</td>
+		~/section`
+		<td class="label">~$sum_accepted_contacts`</td>
+	</tr>
+	<tr>
+		<td class="label">Declined Contacts</td>
+		~section name=a start=0 loop=31 step=1`
+		<td class="fieldsnew" style="background-color:#EFFFF1">&nbsp;~$declined_contacts[a]`</td>
+		~/section`
+		<td class="label">~$sum_declined_contacts`</td>
+	</tr>
+	<tr>
+		<td class="label">Cancelled Contacts</td>
+		~section name=a start=0 loop=31 step=1`
+		<td class="fieldsnew" style="background-color:#EFFFF1">&nbsp;~$cancelled_contacts[a]`</td>
+		~/section`
+		<td class="label">~$sum_cancelled_contacts`</td>
+	</tr>
+
+	<tr><td style="padding:0px">&nbsp;</td></tr>
+
+	
+        <tr>
+                <td class="label">Paid Members Total</td>
+		~section name=a start=1 loop=32 step=1`
+                <td class="fieldsnew" style="background-color:#F1F4FF">&nbsp;~$paidNPer[a].totamt`</td>
+                ~/section`
+                <td class="label">~$sum_total`</td>
+        </tr>
+        <tr>
+                <td class="label">Paid Members Indian</td>
+		~section name=a start=1 loop=32 step=1`
+                <td class="fieldsnew" style="background-color:#F1F4FF">&nbsp;~$paidNPer[a].totamti`</td>
+                ~/section`
+                <td class="label">~$sum_totali`</td>
+        </tr>
+        <tr>
+                <td class="label">Paid Members N.R.I</td>
+		~section name=a start=1 loop=32 step=1`
+                <td class="fieldsnew" style="background-color:#F1F4FF">&nbsp;~$paidNPer[a].totamtn`</td>
+                ~/section`
+                <td class="label">~$sum_totaln`</td>
+        </tr>
+        <tr>
+                <td class="label">Paid Members Online</td>
+		~section name=a start=0 loop=31 step=1`
+                <td class="fieldsnew" style="background-color:#F1F4FF">&nbsp;~$online[a].ol`</td>
+                ~/section`
+                <td class="label">~$sum_online`</td>
+        </tr>
+
+	<tr><td style="padding:0px">&nbsp;</td></tr>
+
+        <tr>
+                <td class="label">Complete Profiles</td>
+                ~section name=a start=0 loop=31 step=1`
+                <td class="fieldsnew" style="background-color:#FFEEEE">&nbsp;~$comp_profiles[a].m`</td>
+                ~/section`
+                <td class="label">~$sum_complete_pro`</td>
+        </tr>
+        <tr>
+                <td class="label">Incomplete Profiles</td>
+                ~section name=a start=0 loop=31 step=1`
+                <td class="fieldsnew" style="background-color:#FFEEEE">&nbsp;~$incomp_profiles[a].m`</td>
+                ~/section`
+                <td class="label">~$sum_incom_pro`</td>
+        </tr>
+        <tr>
+                <td class="label">Total Profiles </td>
+                ~section name=a start=0 loop=31 step=1`
+                <td class="fieldsnew" style="background-color:#FFEEEE">&nbsp;~$all_profiles[a].m`</td>
+                ~/section`
+                <td class="label">~$sum_total_pro`</td>
+        </tr>
+        <tr>
+                <td class="label">Live Profiles</td>
+                ~section name=a start=0 loop=31 step=1`
+                <td class="fieldsnew" style="background-color:#FFEEEE">&nbsp;~$live_profiles[a].m`</td>
+                ~/section`
+                <td class="label">~$sum_live`</td>
+        </tr>
+
+	<tr><td style="padding:0px">&nbsp;</td></tr>
+
+	~section name=srcname loop=$breakup_name`
+	<tr>
+		<td class="label">&nbsp;~$breakup_name[srcname]`</td>
+		~section name=a start=0 loop=31 step=1`
+                <td class="fieldsnew">&nbsp;~$breakup_val[srcname][a].m`</td>
+		~/section`
+                <td class="label">~$sum_source[srcname]`</td>
+	</tr>
+	~/section`
+
+	<tr><td style="padding:0px">&nbsp;</td></tr>
+
+	<tr>
+                <td class="label">Conversion</td>
+                ~section name=a start=0 loop=31 step=1`
+                <td class="fieldsnew">&nbsp;~$all_profiles[a].p`</td>
+                ~/section`
+                <td class="label">~$avg_conver` (avg)</td>
+        </tr>
+	<tr>
+                <td class="label">Hits</td>
+                ~section name=a start=0 loop=31 step=1`
+                <td class="fieldsnew">&nbsp;~$all_profiles[a].h`</td>
+                ~/section`
+                <td class="label">~$sum_hits`</td>
+        </tr>
+
+	<tr><td style="padding:0px">&nbsp;</td></tr>
+
+	<tr>
+                <td class="label">Total Searches</td>
+                ~section name=a start=1 loop=32 step=1`
+                <td class="fieldsnew">&nbsp;~$search[a]`</td>
+                ~/section`
+                <td class="label">~$sum_search`</td>
+        </tr>
+	<tr>
+                <td class="label">View Similar Count</td>
+                ~section name=a start=0 loop=31 step=1`
+                <td class="fieldsnew">&nbsp;~$view_sim[a]`</td>
+                ~/section`
+                <td class="label">~$sum_view_sim`</td>
+        </tr>
+
+	<tr><td style="padding:0px">&nbsp;</td></tr>
+
+	<tr>
+		<td class="label">Cluster Search Count</td>
+		~section name=a start=1 loop=32 step=1`
+		<td class="fieldsnew">&nbsp;~$cluster[a].COUNT`</td>
+		~/section`
+                <td class="label">~$sum_cluster`</td>
+	</tr>
+
+	<tr><td style="padding:0px">&nbsp;</td></tr>
+
+	<tr>
+		<td class="label">People Using Save As Matchalert (Registered)</td>
+		~section name=a start=1 loop=32 step=1`
+		<td class="fieldsnew">~$saveMatchalert[a].COUNT`</td>
+		~/section`
+		<td class="label">~$sum_matchalert`</td>
+	</tr>
+	<tr>
+		<td class="label">People Using Save As Matchalert (Unregistered)</td>
+		~section name=a start=1 loop=32 step=1`
+		<td class="fieldsnew">~$saveMatch[a]`</td>
+		~/section`
+		<td class="label">~$sumMatch`</td>
+	</tr>
+	<tr>
+                <td class="label">"Welcome-mail" count</td>
+                ~section name=a start=1 loop=32 step=1`
+                <td class="fieldsnew">~$WEL_MAIL[a]`</td>
+                ~/section`
+                <td class="label">~$SUM_WEL_MAIL`</td>
+        </tr>
+	<tr>
+                <td class="label">Unsubscribed Users</td>
+                ~section name=a start=1 loop=32 step=1`
+                <td class="fieldsnew">~$UNSUB[a]`</td>
+                ~/section`
+                <td class="label">~$SUM_UNSUB`</td>
+        </tr>
+	<tr>
+                <td class="label">Open Rate</td>
+                ~section name=a start=1 loop=32 step=1`
+                <td class="fieldsnew">~$OPEN_RATE[a]`</td>
+                ~/section`
+                <td class="label">~$SUM_OPEN_RATE`</td>
+        </tr>
+
+	<tr><td style="padding:0px">&nbsp;</td></tr>
+
+	<tr>
+                <td class="label">Server Load (Minimum)</td>
+                ~section name=a start=0 loop=31 step=1`
+                <td class="fieldsnew">&nbsp;~$minima[a]`</td>
+                ~/section`
+                <td class="label">&nbsp;</td>
+        </tr>
+	<tr>
+                <td class="label">Server Load (Maximum)</td>
+                ~section name=a start=0 loop=31 step=1`
+                <td class="fieldsnew">&nbsp;~$maxima[a]`</td>
+                ~/section`
+                <td class="label">&nbsp;</td>
+        </tr>
+	<tr>
+                <td class="label">Server Load (Average)</td>
+                ~section name=a start=0 loop=31 step=1`
+                <td class="fieldsnew">&nbsp;~$average[a]`</td>
+                ~/section`
+                <td class="label">&nbsp;</td>
+        </tr>
+
+	<tr><td style="padding:0px">&nbsp;</td></tr>
+
+        <tr>
+                <td class="label">Search Agents (Saved)</td>
+                ~section name=a start=0 loop=31 step=1`
+                <td class="fieldsnew">&nbsp;~$savesearch_agent_count[a]`</td>
+                ~/section`
+                <td class="label">&nbsp;~$sum_savesearch_agent_count`</td>
+        </tr>
+        <tr>
+                <td class="label">Users saving search agents</td>
+                ~section name=a start=0 loop=31 step=1`
+                <td class="fieldsnew">&nbsp;~$savesearch_user_count[a]`</td>
+                ~/section`
+                <td class="label">&nbsp;~$sum_savesearch_user_count`</td>
+        </tr>
+
+	<tr><td style="padding:0px">&nbsp;</td></tr>
+
+        <tr>
+                <td class="label">Users saving DPP during registration</td>
+                ~section name=a start=0 loop=31 step=1`
+                <td class="fieldsnew">&nbsp;~$total_regdpp[a]`</td>
+                ~/section`
+                <td class="label">&nbsp;~$sum_total_regdpp`</td>
+        </tr>
+        <tr>
+                <td class="label">Users saving DPP in My Jeevansathi</td>
+                ~section name=a start=0 loop=31 step=1`
+                <td class="fieldsnew">&nbsp;~$total_myjsdpp[a]`</td>
+                ~/section`
+                <td class="label">&nbsp;~$sum_total_myjsdpp`</td>
+        </tr>
+        <tr>
+                <td class="label">Total Users updating DPP</td>
+                ~section name=a start=0 loop=31 step=1`
+                <td class="fieldsnew">&nbsp;~$total_dpp[a]`</td>
+                ~/section`
+                <td class="label">&nbsp;~$sum_total_dpp`</td>
+        </tr>
+
+	<tr><td style="padding:0px">&nbsp;</td></tr>
+
+        <tr>
+                <td class="label">Photo requests generated by Male</td>
+                ~section name=a start=0 loop=31 step=1`
+                <td class="fieldsnew">&nbsp;~$photoreq_by_male[a]`</td>
+                ~/section`
+                <td class="label">&nbsp;~$sum_photoreq_by_male`</td>
+        </tr>
+        <tr>
+                <td class="label">Photo requests generated by Female</td>
+                ~section name=a start=0 loop=31 step=1`
+                <td class="fieldsnew">&nbsp;~$photoreq_by_female[a]`</td>
+                ~/section`
+                <td class="label">&nbsp;~$sum_photoreq_by_female`</td>
+        </tr>
+        <tr>
+                <td class="label">Total Photo requests</td>
+                ~section name=a start=0 loop=31 step=1`
+                <td class="fieldsnew">&nbsp;~$photoreq_total[a]`</td>
+                ~/section`
+                <td class="label">&nbsp;~$sum_photoreq_total`</td>
+        </tr>
+
+	<tr><td style="padding:0px">&nbsp;</td></tr>
+
+        <tr>
+                <td class="label">Paid contacts (initiated)</td>
+                ~section name=a start=0 loop=31 step=1`
+                <td class="fieldsnew">&nbsp;~$cnt_paidrec[a]`</td>
+                ~/section`
+                <td class="label">&nbsp;~$sum_cnt_paidrec`</td>
+        </tr>
+        <tr>
+                <td class="label">Paid users (sender) initiating these paid contacts</td>
+                ~section name=a start=0 loop=31 step=1`
+                <td class="fieldsnew">&nbsp;~$cnt_paidsender[a]`</td>
+                ~/section`
+                <td class="label">&nbsp;~$sum_cnt_paidsender`</td>
+        </tr>
+
+</table>
+
+</body>
+</html>

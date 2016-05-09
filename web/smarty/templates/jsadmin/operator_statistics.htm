@@ -1,0 +1,131 @@
+<html>
+	<head>
+        <title>Jeevansathi.com - Operator Statistics</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+        <link rel="stylesheet" href="jeevansathi.css" type="text/css">
+		<style>
+        	DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+		</style>
+		<script>
+		function win_open(url)
+		{
+		        window.open(url,'','width=365,height=200,resizable=1,scrollbars=1');
+		}
+		</script>
+
+	</head>
+	<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+		<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+			<tbody>
+				<tr>
+        			<td valign="top" width="30%" bgcolor="#efefef"></td>
+        			<td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+        			<td valign="bottom" width="30%" bgcolor="#efefef"></td>
+				</tr>
+			</tbody>
+		</table>
+		~if $transferDone`
+			<p align="center">Records have been successully transferred!</p>
+		~else`
+		<br>
+		~/if`
+                <form action="operator_statistics.php" method="POST">
+                <input type="hidden" name="cid" value="~$CHECKSUM`">
+                <table border="0" align="center">
+                                <tr>
+                                <td>
+                                        <select name="operator">
+                                        <option value="All" ~if $operator_name eq "All"`selected~/if`>All</option>
+                                        ~section name=userNameLoop loop=$userArray`
+                                        <option value=~$userArray[userNameLoop]` ~if $operator_name eq $userArray[userNameLoop]`selected~/if`>~$userArray[userNameLoop]`</option>
+                                         ~/section`
+                                        </select>
+                                </td>
+                                <td>
+                                                <input type="submit" name="View" value="View">
+                                </td>
+                                </tr>
+                </table>
+                </form>
+                <br>
+	~if $transfer eq '1'`
+	<form action="operator_statistics.php" method="post">
+	<input type="hidden" name="cid" value="~$CHECKSUM`">
+	<input type="hidden" name="transfer" value="~$transfer`">
+	<input type="hidden" name="operator" value="~$operator`">
+	<p align="center">Select operator to whom profiles of ~$operator` have to be assigned</p>
+	<p align="center"><select name=operatorSelected>
+	~foreach from=$operatorArray key=k item=v`
+		<option value="~$v`">~$v`</option>
+	~/foreach`
+	</select></p>
+	<p align="center"><input type="submit" name="doTransfer" value="Transfer"></p>
+	</form>
+	~/if`
+	~if $searchFlag eq "1"`	
+		<table width=760 cellspacing="1" cellpadding='0' ALIGN="CENTER" >
+        	<tr width=100% border=1>
+            	<td width=30% class="formhead" height="23" align="center"><font><b>Welcome </b></font></td>
+         		<td width=30% class="formhead" align='CENTER' height="23">
+            		<a href="mainpage.php?cid=~$CHECKSUM`">Click here to go to mainpage</a>
+            	</td>
+            	<td width=30% class="formhead" align='CENTER' height="23">
+             		<a href="/jsadmin/logout.php?cid=~$CHECKSUM`">Logout</a>
+            	</td>
+           </tr>
+        </table>
+        <br><br>
+        <table width=100% align="center">
+        	<tr class="formhead">
+        		<td colspan=50% align="center">&nbsp;Operator Name : ~$operator_name`</td>
+			<td bgcolor="#87FF5C" align="center">&nbsp;Billed</td>
+			<td bgcolor="#B9BDFF" align="center">&nbsp;Unbilled</td>
+        	</tr>
+        </table>
+		<p align="center"><font color="red">Number of profiles assigned : ~$assigned_profile` </font></p>
+		~if $operator_name neq 'All' && $assigned_profile`
+		<p align="center"><a href="~$SITE_URL`/jsadmin/operator_statistics.php?cid=~$CHECKSUM`&transfer=1&operator=~$operator_name`">Transfer records</a></p>
+		~/if`
+		<br>
+		<table width=100% align="center">
+        	<tr class="formhead">
+        		<td align="center">&nbsp;User Name</td>
+			<td align="center">&nbsp;Password</td>
+        		<td align="center">&nbsp;Contact Number</td>
+			<td align="center">&nbsp;Profiles in Pool</td>
+        		<td align="center">&nbsp;Short Listed Profiles</td>
+        		<td align="center">&nbsp;Total Acceptance</td>
+        		<td align="center">&nbsp;Acceptance Left</td>
+        		<td align="center">&nbsp;Start Date</td>
+        		<td align="center">&nbsp;Days Remaining</td>
+			<td align="center">&nbsp;Comments</td>
+		</tr>
+        	~foreach from=$tableArray item=d key=pid`
+        	<tr class="label">		
+        	~foreach name=users from=$d item=k`
+			~if $smarty.foreach.users.first` 
+				~if $k eq 'billed'`
+					~assign var= 'color' value='green'`
+				~else`
+					~assign var= 'color' value='blue'`	
+				~/if`
+			~else`
+				~if $smarty.foreach.users.iteration eq '2'`	
+        			~if $color eq 'green'`<td align="center" bgcolor="#87FF5C"> ~else` <td align="center" bgcolor="#B9BDFF"> ~/if`&nbsp;~$k`</td> ~else`
+					<td align="center">&nbsp;~$k`</td>
+				~/if`
+			~/if`       	
+        	~/foreach`  
+			<td align="center">&nbsp;<a href="#" onclick="win_open('~$SITE_URL`/jsadmin/user_comments.php?cid=~$CHECKSUM`&pid=~$pid`&op=~$name`');return false;">Comments</a></td>      	
+        	</tr>        	
+        	~/foreach`        	
+        </table>
+	~/if`
+     </body>
+</html>	        
+        
+        	
+
+
+
+

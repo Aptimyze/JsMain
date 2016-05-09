@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<scripts>
+  <script name="Top">
+    <![CDATA[
+<script type="text/javascript">
+var WRInitTime=(new Date()).getTime();
+</script>
+]]>
+  </script>
+  <script name="Bottom" DoNotReplaceCondition="&lt;!-- No ClickTale -->" InsertBefore="&lt;!-- ClickTale Bottom part Here -->|&lt;/body>">
+    <![CDATA[
+<div id="ClickTaleDiv" style="display: none;"></div>
+<script src="http://s.clicktale.net/WRb.js" type="text/javascript"></script>
+<script type="text/javascript">
+ClickTaleFetchFrom="%FetchFromUrl%";
+if(typeof ClickTale=='function') ClickTale(31176,0.002,"www");
+</script>
+]]>
+</script>
+</scripts>

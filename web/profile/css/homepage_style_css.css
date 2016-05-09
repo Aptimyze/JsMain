@@ -1,0 +1,484 @@
+/* Homepage CSS created By Vishal Kaul */
+
+*{margin:0; padding:0; float:none; list-style:none;}
+.lf{float:left;}
+.rf{float:right;}
+.fl{float:left;}
+.fr{float:right;}
+.clr{clear:both; height:0; overflow:hidden;}
+.clr_new{clear:both; height:5px; overflow:hidden;}
+.clr_4{clear:both; height:4px; overflow:hidden;}
+.clr_18{clear:both; height:18px; overflow:hidden;}
+.black{color:#000}
+
+body{font:12px Arial, Helvetica, sans-serif;}
+input, select {
+        font:12px Arial, Helvetica, sans-serif;
+        border:1px solid #ccc;
+}
+.f_2{font-size:2px;}
+.f_14{font-size:14px;}
+.mron{color:#d20000;}
+.gry{color:#828282;}
+.orng{color:#ff7a00;}
+.b{font-weight:bold;}
+
+.m_t_b_15 {margin:15px 0!important;}
+.mt_10 {margin-top:10px;}
+.mt_4 {margin-top:4px;}
+.ml_17 {margin-left:17px!important;}
+.mt_min_12{margin:-12px 0 0!important; position:relative;}
+a{text-decoration:none; color:#003498;}
+.d_inl{display:inline!important;}
+.no_bdr{border:0!important;}
+
+#main_cont{width:778px; margin:auto;}
+.sprte{background:url(IMG_URL/profile/images/hm_pg_sprte.png);}
+.hdr{width:99.9%; float:left;}
+.lgo{width:208px; height:35px; margin-top:24px;}
+.hdr i{float:left; font:11px Arial, Helvetica, sans-serif;}
+.tp_lnks{float:right; width:/*375*/380px; padding:3px 0 16px;}
+.spky{width:14px; height:13px; background-position:-81px -37px; margin:1px 3px;}
+.tp_plus_call{width:381px; float:right;}
+.call_us{font:bold 16px Arial, Helvetica, sans-serif; float:right;}
+.hdr u{width:15px; height:25px; background-position:-81px -51px; margin:0 7px;}
+/*quick search bar css starts here*/
+.q_search {
+	width:778px;
+	height:73px;
+	background:url(IMG_URL/profile/images/hm_pg_sprte.png) 0 -147px;
+	margin:auto;
+	float:left;
+}
+.l_search {
+	width:70px;
+	height:73px;
+	background:url(IMG_URL/profile/images/hm_pg_sprte.png) 0 -35px;
+}
+.r_search {
+	width:7px;
+	height:73px;
+	background:url(IMG_URL/profile/images/hm_pg_sprte.png) -71px -35px;
+}
+.w_133 {
+	width:133px;
+}
+.w_167 {
+	width:167px;
+}
+.w_150 {
+	width:150px;
+}
+.w_59 {
+	width:59px;
+}
+.s_btn {
+	width:62px;
+	height:24px;
+	background:url(IMG_URL/profile/images/hm_pg_sprte.png) -80px -95px;
+	overflow:hidden;
+	cursor:pointer;
+}
+/*quick search bar css ends here*/
+.blue_arw{width:6px; height:10px; background:url(IMG_URL/profile/images/hm_pg_sprte.png) -101px -37px; margin:2px;}
+.banner{width:578px; height:257px; float:left;}
+.lgn_pnl{width:190px; /*height:249px;*/ float:right;}
+.lgn_pnl h5{font:16px Arial, Helvetica, sans-serif; color:#808080; margin:10px 0;}
+.lgn_t_l_c{width:4px; height:52px; background-position:-170px -36px;}
+.lgn_t_r_c{width:4px; height:52px; background-position:-175px -36px;}
+.lgn_b_l_c{width:4px; height:52px; background-position:-180px -36px;}
+.lgn_b_r_c{width:4px; height:52px; background-position:-186px -36px;}
+.lgn_mid{width:178px; float:left; border-top:1px solid #ccc; padding:17px 0 0 2px;}
+.txt1{float:left; width:145px; height:17px; border:1px solid #ccc;}
+.lgn_err_img{width:13px; height:14px; background-position:-142px -106px; margin:0;}
+.lgn_btn{padding:3px; cursor:pointer;}
+.frgt_pswd{width:173px; float:left; border-bottom:1px solid #ccc; border-width:0 0 1px; padding:0 0 5px 8px;}
+.reg_bg{width:99.9%; height:111px; float:left; color:#323232;border:1px solid #e3e3e3;}
+.reg_l_c{float:left; width:6px; height:111px; background-position:-204px -36px;}
+.reg_r_c{float:right; width:6px; height:111px; background-position:-213px -37px;}
+.reg_stp_1{width:42px; height:53px; background-position:0 -333px;}
+.reg_stp_2{width:42px; height:53px; background-position:-43px -333px;}
+.reg_stp_3{width:52px; height:44px; background-position:-87px -333px;}
+.mr_24_r_12{margin:24px 12px 24px 10px;}
+.reg_bg .head_plus_cntnt{float:left; width:121px; padding:21px 0 0;}
+.reg_bg .head_plus_cntnt h3{font:20px Arial, Helvetica, sans-serif; color:#4f4f4f;}
+.reg_bg .head_plus_cntnt .h_3{font:20px Arial, Helvetica, sans-serif; color:#4f4f4f;}
+.reg_free_btn_bg{width:194px; height:62px; background-position:0 -473px; font:22px Arial, Helvetica, sans-serif; color:#fff;}
+.reg_free_btn_bg .l{width:6px; height:61px; background-position:-140px -332px;}
+.reg_free_btn_bg .r{width:6px; height:61px; background-position:-148px -332px;}
+.reg_free_btn_bg .txt{float:left; width:156px; margin:18px 10px 0 12px; display:inline}
+.suc_strs{float:left; width:512px; padding:10px 24px; border:1px solid #e3e3e3; margin:10px 0 15px;}
+.suc_strs ul.suc{float:left; width:498px;}
+.suc_strs ul.suc li{float:left; margin:0 4px 0 0; width:24%; text-align:center;}
+.suc_strs ul.suc li img{border:1px solid #000; margin-bottom:5px;}
+.suc_strs ul.suc li b{float:none; display:block; margin:auto;} 
+.txt_plus_ul{float:left; width:565px;}
+.txt_plus_ul ul.tab{float:left; width:99.9%; border-bottom:1px solid #ccc; margin:10px 0 0;}
+.txt_plus_ul ul.tab li{float:left; margin:0 5px 0 0;}
+.txt_plus_ul ul.tab li a {color: #4D4D4D;}
+.txt_plus_ul ul.tab li span{color:#4d4d4d; cursor:pointer}
+.txt_plus_ul ul.tab li span u{float:left; width:auto; height:14px; padding:6px 6px 6px 4px; background:url(IMG_URL/profile/images/hm_pg_sprte.png) right -563px; text-decoration:none;}
+.txt_plus_ul ul.tab li span i{float:left; width:4px; height:26px; background:url(IMG_URL/profile/images/hm_pg_sprte.png) -198px -36px;}
+.txt_plus_ul ul.tab li.active{margin-bottom:-2px; position:relative;z-index:10; border-bottom:1px solid #fff;}
+.txt_plus_ul ul.tab li.active u{float:left; width:auto; height:14px; padding:6px 6px 6px 4px; background:url(IMG_URL/profile/images/hm_pg_sprte.png) right -535px; text-decoration:none;}
+.txt_plus_ul ul.tab li.active i{float:left; width:4px; height:26px; background:url(IMG_URL/profile/images/hm_pg_sprte.png) -192px -36px;}
+.txt_plus_ul .brwse{float:left; width:99.9%; padding:6px 0 0;}
+.txt_plus_ul .brwse a{color:#000; padding:2px;}
+.advrtsmnt{width:203px; height:194px; font:11px Arial, Helvetica, sans-serif; font-weight: normal;color:#bdbdbd; float:right; text-align:right;}
+/*footer starts here*/
+.ftr { background:url(IMG_URL/profile/images/hdr_bg_1.png) repeat-x 0 -392px; padding:20px 14px 5px; }
+.ftr .ftr_cont {
+	margin:auto;
+	width:750px;
+}
+.ftr_links {
+	float:left;
+	width:749px;
+}
+.ftr_links .r9 {width:99%;float:left;}
+
+.ftr_links label.l1 {float:left; width:71px;  padding-right:10px;}
+
+ul.foot {
+	margin:0;
+	padding:0;
+}
+ul.foot li {
+	float:left;
+	margin:0 5px;
+	color:#9a9999;
+	list-style:none;
+}
+ul.foot li a:hover {
+	text-decoration:underline;
+}
+ul.foot li a, ul.foot li a:visited {
+	color:#117daa;
+	text-decoration:none;
+}
+.naukri_btn{width:130px; height:37px; background:url(IMG_URL/profile/images/hdr_bg_1.png) -89px -223px; margin:10px auto; border:0;}
+.mar_top_15 {margin-top:15px;}
+
+.f11 {font-size:11px}
+
+/*footer ends here*/
+
+/*Thickbox*/
+.sr_display_top {
+          background-image:url(IMG_URL/profile/images/sr_display_top.gif);
+          width:270px;
+          height:26px;
+          background-repeat:no-repeat;
+}
+.sr_display_hr {
+          background-image:url(IMG_URL/profile/images/sr_display_hr.gif);
+          width:270px;
+          background-repeat:repeat-y;
+}
+.sr_display_footer {
+          background-image:url(IMG_URL/profile/images/sr_display_footer.gif);
+          width:270px;
+          background-repeat:no-repeat;
+          height:8px;
+}
+.sp5{clear:both;height:5px; overflow:hidden}
+.sp8{clear:both;height:8px;overflow:hidden}
+.red{color:#e40410}
+
+.seo_top_links{background-image:url(IMG_URL/profile/images/comm_pages/top_tab_bg.gif); background-repeat:repeat-x; width:777px; height:38px; border-right: solid 1px #e2e2e2; border-left: solid 1px #e2e2e2;}
+
+.seo_top_style {font-family:Arial, Helvetica, sans-serif;font-size:13px; font-weight:bold; padding:10px 0px 0px 0px;; text-align:center;color:#117daa;}
+.seo_top_style a {color:#117daa;text-decoration:none;}
+.seo_top_style2 {font-family:Arial, Helvetica, sans-serif;font-size:13px;padding:10px 0px 0px 0px;; text-align:center;}
+.seo_top_style2 a {color:#000000;text-decoration:none;}
+.seo_top_style_box { font-family:Arial, Helvetica, sans-serif;font-size:13px; font-weight:bold; background-color:#f4f4f4;padding: 9px 2px 10px 2px;background:url(IMG_URL/profile/images/comm_pages/hm_pg_sprte.png) 0% -396px repeat-x; border: 1px solid #c4dd37;}
+
+/*dropdown css*/
+.seodp_topbg{background-image:url(IMG_URL/profile/images/comm_pages/drop-down-up.gif);width:93px;height:37px;background-repeat:no-repeat;}
+.seodp_hrbg{background-image:url(IMG_URL/profile/images/comm_pages/drop-down-up1.gif);width:93px; background-repeat:repeat-y;}
+.seodp_footerbg{background-image:url(IMG_URL/profile/images/comm_pages/drop-down-up2.gif); width:93px; background-repeat:no-repeat; height:4px;}
+.seodp_style{font-family:Arial, Helvetica, sans-serif;color:#3c84c1; font-size:13px;}
+.seodp_style a {color:#3c84c1;}
+.seodp_style a:hover {font-weight:bold;font-size:13px;}
+/*dropdown css*/
+
+/*dropdown more css*/
+.more_dpseo_topbg_new{background-image:url(IMG_URL/profile/images/comm_pages/drop-down-more.png);width:371px;height:34px;background-repeat:no-repeat;}
+.more_dpseo_hrbg{background-image:url(IMG_URL/profile/images/comm_pages/drop-down-more1.png); width:371px; text-align:center;background-repeat:repeat-y;}
+.more_dpseo_footerbg{background-image:url(IMG_URL/profile/images/comm_pages/drop-down-more2.png); width:371px; background-repeat:no-repeat;height:5px;}
+.more_dpseo_close{ font-weight:bold;font-size:11px; border: 1px solid #adadad; padding:2px; background-color:#f6f6f6; color:#117daa;}
+.more_seodp_style{font-family:Arial, Helvetica, sans-serif;color:#3c84c1; font-size:13px; padding:8px; text-align:left; padding-left:12px;}
+.more_seodp_style a {color:#3c84c1;}
+.more_lwft3{float:left; width:110px;font-size:12px;}
+.more_lwft a, .more_lwft3 a{display:block; color:#0776bc; padding:2px 0 2px 5px; text-decoration:none; }
+.more_lwft4{float:left; width:115px;font-size:12px;}
+.more_lwft a, .more_lwft4 a{display:block; color:#0776bc; padding:2px 0 2px 5px; text-decoration:none; }
+/*dropdown more css*/
+.green_btn{background-image:url(IMG_URL/profile/images/green_button_bg.gif); background-repeat:repeat-x; height:22px; border:1px #578d00;border-style:solid; padding-bottom:2px; font-size:11px; color:#fff; cursor:pointer;}
+
+/* Mobile view Switcher*/
+
+.switchBx{border:1px solid #ccc;padding:4px;width:169px;}
+.switchDdr{color:#9A9999;}
+
+
+/* style sheet for community footer */
+
+u.deco{
+    background: url(IMG_URL/profile/images/comm_pages/hm_pg_sprte.png) repeat scroll right -561px transparent;
+    cursor: pointer;
+    float: left;
+    height: 14px;
+    padding: 6px 6px 6px 4px;
+    text-decoration: none;
+    width: auto;
+}
+
+i.deco{
+    background: url(IMG_URL/profile/images/comm_pages/hm_pg_sprte.png) repeat scroll -205px -93px transparent;
+    float: left;
+    height: 26px;
+    width: 4px;
+}
+
+ul.tab li {
+    float: left;
+    width: auto;
+    margin: 0;
+    padding: 0;
+    list-style-type:none;
+    text-align: center;
+}
+
+u.deco{
+    background: url(IMG_URL/profile/images/comm_pages/hm_pg_sprte.png) repeat scroll right -561px transparent;
+    cursor: pointer;
+    float: left;
+    height: 14px;
+    padding: 6px 6px 6px 4px;
+    text-decoration: none;
+    width: auto;
+}
+
+i.deco{
+    background: url(IMG_URL/profile/images/comm_pages/hm_pg_sprte.png) repeat scroll -205px -93px transparent;
+    float: left;
+    height: 26px;
+    width: 4px;
+}
+
+div.tabcontents {
+    padding: 3px;
+}
+
+.f_14{font-size:14px;}
+.gry{color:#828282;}
+
+div.tabcontents div.content {
+    text-align:center;
+    width: 100%;
+    height: 230px;
+}
+
+.brwse{float:left; width:99.9%; padding:10px 0 0; font-family:Arial, Helvetica, sans-serif; color:#117daa; font-size:12px;}
+.brwse a{color:#117daa; padding:2px; line-height:16px; text-decoration:none;}
+
+
+#nav, #nav ul {
+	float: left;
+/*	width: 265px;*/
+	list-style: none;
+	line-height: 1;
+	padding: 0;
+	margin: 0 35px 1em 0;
+}
+.ulpadd{ margin-left:32px;}
+
+#nav a {
+	display: block;
+	width: auto;
+	w\idth: auto;
+	color: #000000;
+	text-decoration: none;
+	padding:8px 0px 5px 0px;
+}
+
+#nav a.daddy {
+	background: url(IMG_URL/profile/images/comm_pages/seprator.gif) center right no-repeat; padding:5px 5px 5px 0;
+}
+#nav a.daddy_out {
+	background: url(IMG_URL/profile/images/comm_pages/seprator.gif) center right no-repeat; float:left; font-weight:normal;font-size:12px;
+}
+
+#nav a.arrowmain{background:url(IMG_URL/profile/images/comm_pages/hm_pg_sprte.png) 0% -728px no-repeat;width:32px;height:20px;position:absolute;margin-left:-1px; }
+#nav a.arrowmain:hover{background:url(IMG_URL/profile/images/comm_pages/hm_pg_sprte.png) 0% -759px no-repeat; width:32px; height:30px; position:absolute;}
+
+#nav a.arrowmore{ width:60px; height:17px; position:absolute;
+margin-left:11px;}
+#nav a.arrowmore:hover{width:60px; height:17px; position:absolute; z-index:100000}
+
+/*
+#nav a.moreimg{float:left; margin-top:3px; position:absolute;width:57px; z-index:1000000;}
+#nav a.moreimg:hover{float:left; margin-top:3px; width:57px; padding-left:3px; margin-left:0px; height:20px; position:absolute; z-index:1000000;background:url(more.png) 0% 0% no-repeat;}
+*/
+
+.mnuhding{float:left; padding-top:7px;color:#000;}
+.arrowbox{background: url(IMG_URL/profile/images/comm_pages/hm_pg_sprte.png) 0% -664px no-repeat;width:31px; height:45px; float:right; text-align:right; clear:left; margin:1px 1px 0 0;}
+.flowleft{ float:left;color:#000;}
+#nav li {
+	float: left;
+	padding: 0;
+	width: auto;
+}
+
+#nav li ul {
+	position: absolute;
+	left: -999em;
+	height: auto;
+	width: 237px;
+	w\idth: 237px;
+	font-weight: normal;
+	background: #fff;
+	border:2px #E2E2E2 solid;
+	margin: 0;
+	padding-left:5px;
+/*	opacity: .95;
+*/
+}
+
+/* This is to make opacity work in IE. */
+/*
+* html #nav li ul {
+	background-color: transparent;
+}
+* html #nav li li {
+	background: #fff;
+	filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=90);
+}
+*/
+
+#nav li li {
+	padding-right: 5px;
+	width: auto
+}
+
+#nav li ul a {
+	width: auto;
+	w\idth: auto;
+}
+
+#nav li ul ul {
+	margin: -1.75em 0 0 14em;
+	margin: -1.7em 0 0 13.95em;
+}
+
+#nav li:hover ul ul, #nav li:hover ul ul ul, #nav li.sfhover ul ul, #nav li.sfhover ul ul ul {
+	left: -999em;
+}
+
+#nav li:hover ul, #nav li li:hover ul, #nav li li li:hover ul, #nav li.sfhover ul, #nav li li.sfhover ul, #nav li li li.sfhover ul {
+	left: auto;margin-left:-178px; margin-top:-2px;
+}
+
+#nav li:hover, #nav li.sfhover {
+}
+
+
+/* Support for the "iehover-fix.js" */
+
+ul.nav iframe {
+	position: absolute;
+	/* account for the border */
+	left: -0.25em;
+	top: -0.25em;
+	z-index: -1;
+	filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);
+}
+
+* html ul.nav li { z-index: 201; }
+.seo_top_style a { color: #117DAA;text-decoration: none;}
+.seo_top_style {font-family:Arial, Helvetica, sans-serif;font-size:13px; font-weight:bold; padding:10px 0px 0px 0px;; text-align:center;color:#117daa;}
+.seo_top_style_box { font-family:Arial, Helvetica, sans-serif;font-size:13px; font-weight:bold; background-color:#f4f4f4;padding: 9px 2px 10px 2px;background:url(IMG_URL/profile/images/comm_pages/hm_pg_sprte.png) 0% -396px repeat-x; border: 1px solid #c4dd37;}
+.cat_bg{margin:0 auto;text-align:center;width:100%;background:url(IMG_URL/profile/images/comm_pages/hm_pg_sprte.png) 0% -630px repeat-x;padding-top:3px;}
+.sub-options {
+background: url(IMG_URL/images/seo/grad-grey.jpg) repeat-x;
+border: 1px solid #ccc;
+position: absolute;
+top: 14px;
+margin-left:-60px;
+border-radius: 10px;
+padding: 10px 10px;
+text-align: center;
+width: auto;
+white-space: nowrap;
+z-index: 1000;
+display:none;
+}
+
+
+div.tabcontents{height:100px;overflow:visible;}
+.content{height:150px;}
+.innty{display:none;}
+.sBG{position:relative;clear:both;}
+.sBG:hover span{display:inline;}
+
+.pointer{position: absolute;
+z-index: 100;
+top: -10px;
+left: 70px;}
+/* this is for IE 5.0
+select.hide { visibility: hidden; }
+End Support for the "iehover-fix.js" */
+/* Ends here */
+
+/* added new css for common use (temporary) */
+.pink{width:420px;border:1px #f0ced6;border-style:solid; background-color:#fdf4f5;}
+.topbg{background-image:url(IMG_URL/profile/images/top_bg.gif); background-repeat:repeat-x; height:24px;}
+.pd{padding:3px}
+div.row4{float:left;width:96%; margin:5px 0px}
+div.row3{float:left;width:97%; margin:3px 0px}
+div.row3 label{float:left;text-align:right;width:126px;padding-right:6px;color:#726f6f;font-weight:bold;}
+.sp12{clear:both;height:12px;overflow:hidden}
+.scrollbox1{background-color:#FDF4F5;border:1px solid #FDF4F5;overflow:auto;padding:8px 2px 4px 8px;width:500px; height:270px;}
+
+/* facebook css */
+#fb_block { min-width:100px; width:auto; height:40px; float:left;}
+#fb_block .mid{border-top:1px solid #7fa534;border-bottom:1px solid #7fa534; height:37px; float:left; background:#fdfef4; width:auto; min-width:75px; padding-left:7px;}
+#fb_block .left {background: url("IMG_URL/images/hm_pg_sprte2.png") no-repeat scroll -34px -237px transparent;float: left;height: 40px;width: 9px;}
+#fb_block .right { background:url(IMG_URL/images/hm_pg_sprte2.png) no-repeat -53px -226px; width:11px; float:left; height:40px;}
+#fb_block .mid .fb_like {float:left; height:20px; width:45px; margin-top:8px; margin-bottom:5px}
+
+.fblogo{background:url(IMG_URL/images/hm_pg_sprte2.png) no-repeat -73px -227px;  height:12px; width:12px; float:right; margin-left:5px;}
+.rf{float:right}
+.lf{float:left}
+/* FOOT BANNER FB*/
+#fb_block .right2 { background:url("IMG_URL/images/hm_pg_sprte2.png") no-repeat -23px -224px; width:11px; float:left; height:61px}
+#fb_block .left2 { background: url("IMG_URL/images/hm_pg_sprte2.png") no-repeat scroll -10px -224px transparent;    float: left;    height: 62px;    width: 9px; z-index:100;}
+#fb_block .mid2{border-top:1px solid #7fa534;border-bottom:1px solid #7fa534; height:50px; float:left; background:#fdfef4; width:57px; padding-left:2px;margin-top:2px;padding-top:8px;}
+#fb_block .mid2 iframe{padding-top:10px;}
+
+/* neww css for HP author:atul */
+.ncolr{color:#bb001f;}
+.ngrey{color:#B7B1B1;}
+.npad1{padding:13px 0px 7px 0px;}
+.npt5{padding-top:5px;}
+.npl10{padding-left:10px;}
+.nbtn{width:153px; font:17px Arial, Helvetica, sans-serif; color:#fff;background-color:#bb001f;}
+.nhptxtc{text-align:center;}
+.npad10{padding:12px 0px;}
+.regband_newc{float:left; width:99.9%; height:111px;}
+.icon_newc{background:url(IMG_URL/profile/images/hm_reg_icon_newc.png) no-repeat; }
+.iconreg_newc{background-position:-11px -11px;width:42px;height:51px;}
+.iconsrch_newc{background-position:-75px -11px;width:42px;height:51px;}
+.iconcnt_newc{background-position:-145px -11px;width:48px;height:51px;}
+.nclr_10{clear:both; height:10px; overflow:hidden;}
+.call_us{font:bold 16px Arial, Helvetica, sans-serif;float:right;top:-19px; position:relative;}
+.gry{color:#828282;}
+.orng{color:#ff7a00;}
+/*new css classes add start*/
+.orng1{font-size:36px;color:#ff7a00;position:relative;top:8px;}
+.orng2{margin-top:-15px; position:relative; top:31px; right:-306px; font-size:11px; font-family:Arial, Helvetica, sans-serif; width:100px;}
+.orng3{top:0px; position:relative;font-size:17px;color:#ff7a00;}
+.succ_stry_sprte{background:url(IMG_URL/success/images/loader_extra_small.gif) no-repeat center; width:85px; height:55px; border:1px solid #000;}
+.backloader{background:url(IMG_URL/profile/images/ajax-loader.gif) no-repeat center;display:inline!important}
+

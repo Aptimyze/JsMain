@@ -1,0 +1,61 @@
+<html>
+<head>
+<title>JeevanSathi Matrimonials - Form for Input of Matrimonial Data</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="/P/I/styles.php" type="text/css">
+<link rel="stylesheet" href="/P/IN/styles.php" type="text/css">
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body leftmargin="5" topmargin="5">
+
+~$HEAD`
+
+~$LEFTPANEL`
+<table width="78%" height="1110" border="0" cellspacing="0" cellpadding="0" align="center">
+    <tr>
+        <td valign="top">
+
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+       <td height="4"></td>
+       <SPACER height="4" type="block"></SPACER> </tr>
+      <tr>
+       <td class="headbigblack"><b>My Email Manager </b></td>
+      </tr>
+      <tr class="bgred">
+       <td height="1"></td>
+       <SPACER height="1" type="block"></SPACER> </tr>
+        <tr>
+       <td height="8"></td>
+       <SPACER height="8" type="block"></SPACER> </tr>
+     </table></td>
+              </tr>
+              <TR>
+                <TD height=5><SPACER height="5" type="block"></TD>
+              </TR>
+            </table>
+              <table width="100%"  border="0" cellspacing="3" cellpadding="0">
+                <tr>
+		<td align="left" class="mediumblack"><b>Dear Member,</b></td>
+		</tr>
+                <tr>
+		<td align="center" class="mediumblack">
+		<br><br><br>~$MSG`</td>
+		</tr>
+	        ~if $crmback eq 'admin'`
+		<tr>
+                <td align="center" class="mediumblack">
+                <br><br><br><a href="~$SITE_URL`/jsadmin/searchpage.php?user=&cid=~$cid`">BACK TO JSADMIN</a> </td>
+                </tr>
+		~/if`
+		</table>
+      </td>
+  </tr>
+</table>
+<br>
+~$SUBFOOTER`
+<br>
+~$FOOT`
+</body>
+</html>

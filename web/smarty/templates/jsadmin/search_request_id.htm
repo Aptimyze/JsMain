@@ -1,0 +1,77 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jeevansathi.com</title>
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+~include file='head.htm'`
+<br>
+    <table width="90%" border="0" cellspacing="1" cellpadding="4" align="center">
+      <tbody>
+      <tr>
+        <form action="search_request_id.php" method="post">
+        <td class="formhead" valign="middle" width="10%">Search Online Orders</td>
+        <td class="label" valign="middle" width="24%">
+        <input type="text" name="phrase" class="textboxes1">
+        </td>
+        <td class="label" valign="middle" width="30%">
+	<select name="criteria" class="textboxes1" size="1">
+                <option value="req_id">By Request-ID</option>
+                <option value="uname">By Username &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+              </select>
+
+        </td>
+        <td class="label" valign="middle" width="12%">
+        <input type="hidden" name="offline_billing" value="~$offline_billing`">
+        <input type="hidden" name="cid" value=~$CID`>
+        <input type="hidden" name="user" value=~$USER`>
+        <input type="submit" name="submit" value="Go" class="buttons1">
+        </td>
+        <td class="label" valign="middle" width="24%">
+	<a href="../jsadmin/mainpage.php?user=~$USER`&cid=~$CID`">Main page</a>
+        </td>
+        </form>
+      </tr>
+      </tbody>
+    </table>
+<br><br>
+~if $ONLINE_TRYING_OFFLINE`
+<table border="0" cellpadding="4" cellspacing="4" align="center">
+        <tr class="label">
+                <td>This is an offline profile please do the billing from offline billing link
+        </tr>
+</table>
+~elseif $OFFLINE_TRYING_ONLINE`
+<table border="0" cellpadding="4" cellspacing="4" align="center">
+        <tr class="label">
+                <td>This is an online profile please do the billing from online billing link
+        </tr>
+</table>
+~elseif $flag eq 1`
+~section name=mysec loop=$arr`
+<table width=90% border=0 align="center">
+<tr><td colspan=8 bgcolor="orange">&nbsp;</td></tr>
+<tr class="label" align="center">
+	<td><b>Username:&nbsp;</b>~$arr[mysec].USERNAME`</td>
+	<td><b>Request ID:&nbsp;</b> ~$arr[mysec].REQUEST_ID`</td>
+	<td><b>Amount:&nbsp;</b>~$arr[mysec].AMOUNT`</td>
+	<td><b>Services:&nbsp;</b>~$arr[mysec].SERVEFOR`</td>
+	<td><b>Request date:&nbsp;</b>~$arr[mysec].ENTRY_DT`</td>
+</tr>
+</table>
+</table>
+~/section`
+
+~elseif $flag eq 0`
+<br><br>
+<table width=90% border=0 align="center">
+<tr class="fieldsnew" align="center">
+<td>No Record Found</td>
+</tr>
+</table>
+~/if`
+<br>
+</body>
+</html>

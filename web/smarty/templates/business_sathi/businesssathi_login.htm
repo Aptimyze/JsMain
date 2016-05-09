@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>My Business Sathi</title>
+<link rel="stylesheet" href="http://www.jeevansathi.com/profile/images/styles.css" type="text/css">
+<style type="text/css">
+<!--
+body {
+	margin-left: 5px;
+	margin-top: 5px;
+}
+-->
+</style>
+</head>
+
+<body>
+<form action="businesssathi_login.php" method="post">
+~$HEAD`
+<table width="760" border="0" align="center" cellpadding="0" cellspacing="0">
+ <tr>
+  <td width="190" valign="top" class="bgyell">~$LEFT`<br>
+    <br>
+    <br>
+    <br></td><td width="10"></td>
+  <td valign="top" width="560"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td height="18" class="headbigblack"><b>Business Sathi Login </b></td>
+ </tr>
+ <tr>
+  <td height="1" class="bgred"><img src="images/zero.gif" width="1" height="1"></td>
+ </tr>
+ <tr>
+  <td height="8">~if $LOGOUT eq "1"`<font color="red">You have been logged out</font>~/if`
+		~if $WRONGUSER eq "1"`<font color="red">You are not authorised to use this service</font>~/if`</td>
+ </tr>
+</table>
+   <br>
+   <table width="74%"  border="0" align="center" cellpadding="0" cellspacing="0">
+    <tr>
+     <td width="29%" valign="top" class="mediumblack"><b>Username </b></td>
+     <td width="71%" height="32" valign="top"><input type="text" name="uname" value= "~$uname`" class="testbox">
+	~if $erruname eq "1"`<font color="red" size=2>Username cannot be blank.</font>~/if`
+	~if $NOUSER eq "1"`<font color="red" size=2>The Username does not exists.</font>~/if`
+     </td>
+    </tr>
+    <tr>
+     <td valign="top" class="mediumblack"><b>Password</b></td>
+     <td height="32" valign="top"><input type="password" name="pwd" value= "" class="testbox">
+	~if $errpwd eq "1"`<font color="red" size=2>Password cannot be blank</font>~/if`
+	~if $WRONGPWD eq "1"`<font color="red" size=2>Password is incorrect</font>~/if`
+     </td>
+    </tr>
+    <tr>
+     <td valign="top" class="mediumblack">&nbsp;</td>
+     <td height="32" valign="top" class="smallblack">
+	<input type="hidden" value="submit" name="submit">
+	<input type="image" value="submit" name="submit" src="images/submit.gif" height="22">
+	</td>
+    </tr>
+    <tr>
+     <td valign="top" class="mediumblack">&nbsp;</td>
+     <td height="32" valign="top" class="bigblack"><span class="class5">
+      <br>
+     <span class="class6"><b><a href="businesssathi_input.php">New user? Register here </a></b></span>     </span></td>
+    </tr>
+   </table>
+   <br></td>
+ </tr>
+</table>
+</form>
+</body>
+</html>

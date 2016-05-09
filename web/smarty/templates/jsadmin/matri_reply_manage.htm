@@ -1,0 +1,67 @@
+<html>
+	<head>
+		<title>Matri-Profile</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<link rel="stylesheet" href="../mis/jeevansathi.css" type="text/css">
+		<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+		<style>
+			DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+		</style>
+		<script language="javascript">
+			function MM_openBrWindow(url,winName,features)
+			{
+				window.open(url,'','width=600,height=400,scrollbars=yes,resizable=yes');
+			}
+		</script>
+	</head>
+	<body>
+		<table width="80%" border="0" cellspacing="0" cellpadding="2" align="CENTER">
+			<tr>
+				<td><img src="../profile/images/logo_1.gif" width="192" height="65"></td>
+			</tr>
+			<tr>
+				<td class=bigwhite bgcolor="6BB97B" align=center><b><font size =3 color=white>Matri-Profile(s) waiting for executive response.</font></b></td>
+			</tr>
+		</table>
+		<table width="80%" align="center" border=0 cellspacing="0" cellpadding="2">
+			<tr class="formhead" width="100%">
+				<td width =50% align="center" colspan=14>
+					<a href="../jsadmin/mainpage.php?cid=~$checksum`">MAIN PAGE</a></td><td width=50%><center><a href="show_matri_allot.php?checksum=~$checksum`"><b>BACK</b></a></center>
+				</td>
+			</tr>
+		</table>
+		<br>
+		~if $FOUND`
+			<table width="80%" align="center" border="0" cellspacing="4" cellpadding="4">
+				<tr align="center" class="label">
+					<td>USERNAME</td>
+					<td>COMMENTS</td>
+					<td>DATE</td>
+					<td>ALLOTTED TO</td>
+					<td>DOWNLOAD</td>
+					<td>UPLOAD</td>
+				</tr>
+				~section name=next loop=$details`
+				<tr align="center" class="fieldsnew">
+					<td>~$details[next].USERNAME`</td>
+					<td>~$details[next].COMMENTS`</td>
+					<td>~$details[next].ENTRY_DT`</td>
+					<td>~$details[next].ALLOTTED_TO`</td>
+					<td>
+						<a href="matri_downfile.php?id=~$details[next].PROFILEID`&cuts=~$details[next].CUTS`&username=~$details[next].USERNAME`">Download</a>
+					</td>
+					<td>
+						<input type="button" value="Upload" class="buttons1" onClick="MM_openBrWindow('matri_attach.php?checksum=~$checksum`&profileid=~$details[next].PROFILEID`&username=~$details[next].USERNAME`&status=~$details[next].STATUS`','','');return false;">
+					</td>
+				</tr>
+				~/section`
+			</table>
+		~else`
+			<table width="80%" align="center" border="0" cellspacing="4" cellpadding="4">
+				<tr align="center" class="label">
+					<td><font color="red">No record found</font></td>
+				</tr>
+			</table>
+		~/if`
+	</body>
+</html>

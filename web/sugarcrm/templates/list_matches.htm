@@ -1,0 +1,36 @@
+<HTML>
+        <HEAD>
+ <TITLE>List of Matches</TITLE>
+                <link rel="stylesheet" href="../jsadmin/jeevansathi.css" type="text/css">
+        </HEAD>
+        <BODY>
+        <br>
+        <center>
+        <p style="font-family:Verdana; font-size:10pt; font-color:#FCFFCF; font-weight: bold">LIST OF MATCHES</p>
+        <br>
+        <table width="70%" cellspacing ="2" cellpadding= "2">
+        <tr class="formhead" height="23">
+                <td colspan="2" align="center">~$msg`</td>
+        </tr>
+	~if $data`
+	<tr>
+                <td width="30%"class="label" align="center">Date
+                </td>
+                <td class="fieldsnew" align="left" >Matches sent
+		</td>
+        </tr>
+		~foreach from=$data key=k item=v`
+	<tr>
+                <td width="30%"class="label" align="center">~$k`
+                </td>
+                <td class="fieldsnew" align="left" style="border:1px solid #000080">~$v`
+		</td>
+        </tr>
+		~/foreach`
+	~/if`
+	 <table>
+        </center>
+        </BODY>
+</HTML>
+
+

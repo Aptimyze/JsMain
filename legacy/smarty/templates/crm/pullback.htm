@@ -1,0 +1,110 @@
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>Jeevansathi.com - Pullback</title>
+  <link rel="stylesheet" href="../jsadmin/jeevansathi.css" type="text/css">
+  <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+ </head>
+ ~include file="head.htm"`
+ <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+  <br>
+ <table width=100% cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+    <tr width=100% class="formhead">
+          <td width=25% class="formhead" border=1><font><b>Welcome : ~$name`</b></font></td>
+          <td width="65%" class="formhead" align="center"><a href="mainpage.php?user=~$name`&cid=~$cid`">Click here to go to main page</a></td>
+          <td width=10% class="formhead" border=1 align='CENTER'><a href="logout.php?cid=~$cid`">Logout</a></td>
+    </tr>
+</table>
+
+  <table width=100% align="CENTER" >
+   <tr>
+    <td height="23" align="center">
+<br>
+<table width=100% border=0>
+<tr>
+        <td>
+        <table border=0 align="center">
+        <tr>
+                <td class=formhead>Total Profiles in Queue  :</td><td class=fieldsnew> ~$total`</td>
+        </tr>
+        </table>
+        </td>
+        <td>
+        <table border=0>
+        <tr class=formhead>
+                <td align=center>Operator's Name</td>
+                <td align=center>Operator's Center</td>
+                <td align="center">Total profiles with the user</td>
+        </tr>
+        ~section name="uname" loop=$operators`
+        <tr>
+                <td align="center" class=label>~$operators[uname].NAME`</td>
+                <td align="center" class=label>~$operators[uname].CENTER`</td>
+                <td align="center" class=fieldsnew>~$operators[uname].COUNT`</td>
+        </tr>
+        ~/section`
+        </tr>
+        </table>
+        </td>
+</tr>
+</table>
+<br><br><br>
+<tr class=fieldsnew>
+<td align=center>
+<form method=post action="pullback.php">
+&nbsp;&nbsp;
+Pullback From <select name="old_alloted">
+~section name="usec" loop=$operators`
+<option value=~$operators[usec].NAME`>~$operators[usec].NAME`</option>
+~/section`
+</select>
+&nbsp;&nbsp;&nbsp;
+Allot To <select name="new_allot_to">
+~section name="usec" loop=$operators`
+<option value=~$operators[usec].NAME`>~$operators[usec].NAME`</option>
+~/section`
+</select>
+&nbsp;&nbsp;&nbsp;
+Count
+<input type="text" name="num" size=5>
+<input type="hidden" name="val" value=~$val`>
+<input type="hidden" name="cid" value=~$cid`>
+<input type="hidden" name="name" value=~$name`>
+&nbsp;&nbsp;&nbsp;
+<input type="submit" name="CMDAssign" value="Assign">
+</form>
+</td>
+</tr>
+<tr class=fieldsnew>
+<td align=center>
+<br><br><br>
+<form method=post action="pullback_single.php">
+&nbsp;&nbsp;
+Pullback From <select name="old_alloted">
+~section name="usec" loop=$operators`
+<option value=~$operators[usec].NAME`>~$operators[usec].NAME`</option>
+~/section`
+</select>
+&nbsp;&nbsp;&nbsp;
+Allot To <select name="new_allot_to">
+~section name="usec" loop=$operators`
+<option value=~$operators[usec].NAME`>~$operators[usec].NAME`</option>
+~/section`
+</select>
+&nbsp;&nbsp;&nbsp;
+Username
+<input type="text" name="username" size=5>
+<input type="hidden" name="val" value=~$val`>
+<input type="hidden" name="cid" value=~$cid`>
+<input type="hidden" name="name" value=~$name`>
+&nbsp;&nbsp;&nbsp;
+<input type="submit" name="CMDAssign" value="Assign">
+</form>
+</td>
+</tr>
+</table>
+  <br><br><br>
+  <br>
+  ~include file="foot.htm"`
+ </body>
+</html>

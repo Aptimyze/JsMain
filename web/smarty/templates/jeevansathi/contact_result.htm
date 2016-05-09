@@ -1,0 +1,1102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<title>
+	~if $metaTitle`
+		~$metaTitle`
+	~else`
+		Jeevansathi Matrimonials- Search Results
+	~/if`
+</title>
+<link rel="stylesheet" href="/profile/css/~$comm_style_css`" type="text/css">
+<link rel="stylesheet" href="/profile/css/searchstyle.css" type="text/css">
+<link rel="stylesheet" type="/profile/text/css" href="css/~$chromestyle_css`" />
+<style type="text/css">
+.roundcont { width:350px; background-color: #EF9429;color: #ffffff; font:normal 11px verdana,Arial;}
+.roundtop { background: url(~$IMG_URL`/profile/ser4_images/otr.gif) no-repeat top right; }
+.roundbottom {background: url(~$IMG_URL`/profile/ser4_images/obr.gif) no-repeat top right; }
+img.corner {width: 4px;height: 4px;border: none;display: block !important;}
+.con{background-color:#FFFFFF; margin:0px 4px 0px 4px; padding:5px 5px 10px 5px}
+.ico{float:left; color:#000000; margin-right:10px; width:22px}
+.txt{float:left;color:#000000; width:280px;}
+.textbox {FONT-SIZE: 10px; FONT-FAMILY: verdana,Arial}
+.txtg{float:left;color:#959595; width:280px;}
+.sp{line-height:1px; clear:both }
+.sp5{clear:both; line-height:5px }
+#mr{margin:0 10px 0 50px};
+*html #mr{margin:0 10px 0 25px};
+</style>
+
+<script language="javascript">
+function MM_openBrWindow(theURL,winName,features)         
+{                
+	window.open(theURL,winName,features);         
+}
+
+function changeAction(actionName)
+{
+        document.form1.SELaction.value=actionName;
+}
+</script>
+<img src="contact_hit_try.php" id="checkit" style="display:none">
+<SCRIPT language="JavaScript" SRC="~$IMG_URL`/profile/js/~$search_js`"></SCRIPT>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<div>
+<DIV id="dhtmltooltip" class="ttip"></DIV>
+<SCRIPT language=JavaScript1.2 src="~$IMG_URL`/profile/js/~$tooltip_new_js`" type=text/javascript></SCRIPT>
+<SCRIPT language="JavaScript" SRC="~$IMG_URL`/profile/js/~$searchhover_js`"></SCRIPT>
+<!--<script src="~$IMG_URL`/profile/js/dw_event.js" type="text/javascript"></script>-->
+<script src="~$IMG_URL`/profile/js/~$dw_viewport_js`" type="text/javascript"></script>
+<!--<script src="~$IMG_URL`/profile/js/dw_drag.js" type="text/javascript"></script>
+<script src="~$IMG_URL`/profile/js/dw_writedrag.js" type="text/javascript"></script>-->
+<script language="javascript">
+/*var notesarray=new Array('','','','','','','','','','','','','');
+function closesuccessmsg()
+{
+	document.getElementById('successmsg').style.visibility='hidden';
+}
+function checkcontent(fieldname,numname, formname)
+{
+	var str=document.forms[formname].elements[fieldname].value.length;
+	if(str>250)
+	{
+		var msg=document.forms[formname].elements[fieldname].value.substring(0,250);
+		document.forms[formname].elements[fieldname].value=msg;
+		document.forms[formname].elements[numname].value=0;
+	}
+	else
+	{
+		str=250-str;
+		document.forms[formname].elements[numname].value=str;
+	}
+
+}
+function ajaxFunction(formname,divname,fieldname,bookmarkee,bookmarker,n,linkname)
+{
+var xmlHttp;
+try
+{
+	// Firefox, Opera 8.0+, Safari
+	xmlHttp=new XMLHttpRequest();
+}
+catch (e)
+{
+	// Internet Explorer
+	try
+	{
+		xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
+	}
+	catch (e)
+	{
+		try
+		{                       
+			xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		catch (e)
+		{
+			alert("Your browser does not support AJAX!");
+			return false;
+		}
+	}
+}       
+xmlHttp.onreadystatechange=function()
+{
+	if(xmlHttp.readyState==4)
+	{
+	//	document.forms[formname].elements[fieldname].value=xmlHttp.responseText;
+	}
+}
+var x=(document.forms[formname].elements[fieldname].value).replace(/\n/g," ");
+var y=escape(x);
+if(n==1)
+{
+	xmlHttp.open("GET","bookmarktest.php?bookmarker="+bookmarker+"&bkmarkee="+bookmarkee+"&text="+y,true);
+	document.getElementById(linkname).display='none';
+        document.getElementById(linkname).style.visibility='hidden';
+	document.getElementById(divname).style.visibility='hidden';
+	if(document.getElementById('successmsg').style.visibility=='hidden')
+	document.getElementById('successmsg').style.visibility='visible';
+	document.getElementById('successmsg').style.visibility='visible';
+	var y=document.getElementById(divname).style.left;
+	document.getElementById('successmsg').style.left=y;
+	y=document.getElementById(divname).style.top;
+	document.getElementById('successmsg').style.top=y;
+	setTimeout("closesuccessmsg()",2000);
+}
+else
+{
+xmlHttp.open("GET","bookmarktest.php?edit=1&bookmarker="+bookmarker+"&bookmarkee="+bookmarkee+"&text="+y,true);
+if(divname.length==3)
+var index=divname.substr(1,2);
+else
+var index=divname.substr(1,1);
+if(x=="")
+notesarray[index]="blank";
+else
+notesarray[index]=x;
+}
+xmlHttp.send(null);
+document.getElementById(divname).style.visibility='hidden';
+return false;
+}
+/*************************************************************************
+This code is from Dynamic Web Coding at http://www.dyn-web.com/
+Copyright 2002-3 by Sharon Paine 
+See Terms of Use at http://www.dyn-web.com/bus/terms.html
+regarding conditions under which you may use this code.
+This notice must be retained in the code as is!
+*************************************************************************/
+/*writeDrag.handleId = "";
+writeDrag.writeId = "cntnt";
+var show=0;
+function wrapContent(e, img, w, h, txt, wd, offx, offy, orignote, fieldname, divname, numname, formname) 
+{
+	if(divname.length==2)
+	var index=divname.substr(1,1);
+	else
+	var index=divname.substr(1,2);
+	if(txt!=notesarray[index] && notesarray[index]!="")
+	{
+		if(notesarray[index]!="blank")
+		{
+			orignote=notesarray[index];
+			txt=wordwrap(notesarray[index]);
+		}
+		else
+		{
+			orignote="";
+			txt="";
+		}
+	}
+	cleardiv();
+	document.getElementById('dragDiv').style.display='inline';
+	var cntnt, win, str;
+	if ( dragObj.supported && typeof document.body.innerHTML != "undefined" ) 
+	{
+	    cntnt = '<div style="width: 185px; background-color: #FDFBE6; border: 1px solid #888; padding:5px 25px 0px 9px;" onMouseover="showmsg();" onMouseout="hidemsg();"><div class="bele">'+txt+'</div><div class="spacer1">&nbsp;</div><div class="spacer1">&nbsp;</div><div align="right" class="bluelink bele" style="margin-right:5px "><a href="#" onClick="return showmsgedit(\''+orignote+'\',\''+fieldname+'\',\''+divname+'\',\''+numname+'\',\''+formname+'\');">Edit comment</a></div></div>';
+		if (!wd) wd = w; 
+                        writeDrag.set(e, cntnt, wd, offx, offy);
+	} 
+	else 
+	{ // non-capable browsers will open sub window
+		w = w+80 || wd || 250; h = h+80 || 250; // size
+		win = window.open('', 'subwin', 'resizable,width='+w+',height='+h+',left=100,top=100');
+		if (win && !win.closed) win.resizeTo(w,h); 
+		str = '<html><head><title>Image Display</title></head>';
+		str += '<body style="text-align:center">';
+		str += imgStr + (txt? '<p>' + txt + '</p>':"");
+		str += '</body></html>'
+		win.document.write(str);
+		win.document.close();
+		if (win && !win.closed) win.focus(); 
+	} 
+return false;
+}
+function showmsgedit(formname,fieldname,numname,divname,dragdivname,txt)
+{
+    if(theTimeout)
+    clearTimeout(theTimeout);
+    if(divname.length==2)
+    var index=divname.substr(1,1);
+    else
+    var index=divname.substr(1,2);
+    if(txt!=notesarray[index] && notesarray[index]!="")
+    {
+	if(notesarray[index]!="blank")
+	{
+		txt=notesarray[index];
+	}
+	else
+	{
+		txt="";
+	}
+    }
+    cleardiv(formname);
+    document.getElementById(dragdivname).style.display='none';
+    if(document.getElementById(divname).style.display=='none')
+    document.getElementById(divname).style.display='inline';
+    document.getElementById(divname).style.visibility='visible';
+    var y=document.getElementById(dragdivname).style.left;
+    document.getElementById(divname).style.left=y;
+    y=document.getElementById('dragDiv').style.top;
+    document.getElementById(divname).style.top=y;
+    document.forms[formname].elements[fieldname].value=txt;
+    y=txt.length;
+    document.forms[formname].elements[numname].value=250-y;
+    document.forms[formname].elements[fieldname].focus();
+	    return false;
+}
+function hidemsg(divname)
+{
+	theTimeout=setTimeout("disappear('"+divname+"')",500);
+}
+function disappear(divname)
+{
+	document.getElementById(divname).style.display='none';
+}
+function showmsg(divname)
+{
+	if(theTimeout)
+	clearTimeout(theTimeout);
+	document.getElementById(divname).style.display='inline';
+}
+function hidemsgedit(divname)
+{
+	document.getElementById(divname).style.visibility='hidden';
+}
+function showmsgadd(e, offx, offy, divname,formname,origmsg,bkmark)         
+{                
+		cleardiv(formname);
+		if(divname.length==3)
+                var index=divname.substr(1,2);
+                else
+                var index=divname.substr(1,1);
+		if((index==1) || (index==4) || (index==7) || (index==10))
+                offx=1;
+                if(bkmark==1)
+                {
+                        divname='l'+index;              
+                        var dragdivname='t'+index;
+                }
+                var x=0, y=0; viewport.getAll();
+                var o=document.getElementById(divname);
+		if((divname=="f1") || (divname=="f4") || (divname=="f7") || (divname=="f10"))
+                {
+                        offx=1;
+                        offy=1;
+                }
+                // check positioning choices
+		if ( this.offX == "c" ) 
+                {
+                        x = Math.round( (viewport.width - o.offsetWidth)/2 ) + viewport.scrollX;
+                } 
+                else 
+                {  // use mouse location onclick to position
+                        x = e.pageX? e.pageX: e.clientX + viewport.scrollX;
+                        offx = offx || this.offX;  // check for passed offsets
+                        if ( x + o.offsetWidth + offx > viewport.width + viewport.scrollX )
+                        x = viewport.width + viewport.scrollX - o.offsetWidth;
+                        else x = x + offx;
+                }
+                if ( this.offY == "c" ) 
+                {
+                        y = Math.round( (viewport.height - o.offsetHeight)/2 ) + viewport.scrollY;                } 
+                else 
+                {
+                        y = e.pageY? e.pageY: e.clientY + viewport.scrollY;                        offy = offy || this.offY;
+                        if ( y + o.offsetHeight + offy > viewport.height + viewport.scrollY )
+                        y = viewport.height + viewport.scrollY - o.offsetHeight;
+                        else y = y + offy;
+                }
+                document.getElementById(divname).style.left = x + "px"; 
+                document.getElementById(divname).style.top = y + "px";
+                document.getElementById(divname).style.visibility = "visible";
+		document.getElementById(divname).style.display="inline";
+		if(bkmark==1)
+                {
+                        if(origmsg!=notesarray[index] && notesarray[index]!="")
+                        {
+                                if(notesarray[index]!="blank")
+                                {
+                                        document.getElementById(dragdivname).innerHTML=wordwrap(notesarray[index]);
+                                }
+                                else
+                                {
+                                        document.getElementById(dragdivname).innerHTML="";
+                                }
+                        }
+                        
+                }       
+                else
+                eval('document.'+formname+'.e'+index+'.focus()');
+}
+function cleardiv(formname)
+{
+	var formname='form1';
+	if(document.getElementById('f1'))
+	{
+		if(document.getElementById('f1').style.visibility=='visible')
+		{
+			document.forms[formname].elements['e1'].blur();
+			document.getElementById('f1').style.visibility='hidden';
+		}
+	}
+	if(document.getElementById('f2'))
+	{
+		if(document.getElementById('f2').style.visibility=='visible')
+		{
+			document.forms[formname].elements['e2'].blur();
+			document.getElementById('f2').style.visibility='hidden';
+		}
+	}
+	if(document.getElementById('f3'))
+	{
+		if(document.getElementById('f3').style.visibility=='visible')                 
+		{
+			document.forms[formname].elements['e3'].blur();
+			document.getElementById('f3').style.visibility='hidden'; 
+		}
+	}
+	 if(document.getElementById('f4'))
+	{
+		if(document.getElementById('f4').style.visibility=='visible')
+		{
+			document.forms[formname].elements['e4'].blur();
+			document.getElementById('f4').style.visibility='hidden'; 
+		}
+	}
+	if(document.getElementById('f5'))
+	{
+		if(document.getElementById('f5').style.visibility=='visible')                
+		{
+			document.forms[formname].elements['e5'].blur();
+			document.getElementById('f5').style.visibility='hidden'; 
+		}
+	}
+	if(document.getElementById('f6'))
+	{
+		if(document.getElementById('f6').style.visibility=='visible')                
+		{
+			document.forms[formname].elements['e6'].blur(); 
+			document.getElementById('f6').style.visibility='hidden'; 
+		}
+	}
+	if(document.getElementById('f7'))
+	{
+		if(document.getElementById('f7').style.visibility=='visible')                
+		{
+			document.forms[formname].elements['e7'].blur();
+			document.getElementById('f7').style.visibility='hidden'; 
+		}
+	}
+	 if(document.getElementById('f8'))
+	{
+		if(document.getElementById('f8').style.visibility=='visible')
+		{
+			document.forms[formname].elements['e8'].blur();
+			document.getElementById('f8').style.visibility='hidden'; 
+		}
+	}
+	if(document.getElementById('f9'))
+	{
+		if(document.getElementById('f9').style.visibility=='visible')                
+		{
+                                document.forms[formname].elements['e9'].blur();         
+                                document.getElementById('f9').style.visibility='hidden'; 
+		}
+	}
+	if(document.getElementById('f10'))
+	{
+		if(document.getElementById('f10').style.visibility=='visible')                
+		{
+			document.forms[formname].elements['e10'].blur();
+			document.getElementById('f10').style.visibility='hidden'; 
+		}
+	}
+	if(document.getElementById('f11'))
+	{
+		if(document.getElementById('f11').style.visibility=='visible')                
+		{
+			document.forms[formname].elements['e11'].blur();
+			document.getElementById('f11').style.visibility='hidden'; 
+		}
+	}
+	if(document.getElementById('f12'))
+	{
+		if(document.getElementById('f12').style.visibility=='visible')                
+		{
+			document.forms[formname].elements['e12'].blur();
+			document.getElementById('f12').style.visibility='hidden'; 
+		}
+	}
+}
+function wordwrap(txt)
+{
+	var a=txt;
+	var final='';
+	if(a)
+	{
+	while(a.length>30)
+	{
+		var display=a.substr(0,30);
+		if(display[29]=='')
+		{
+			a=a.substr(30,a.length-30);
+		}
+		else
+		{
+			for(var i=display.length-1;i>=0;i--)
+			{
+				if(display[i]==" ")
+				break;
+			}
+			if(i>=19)
+			{
+				var leftover=display.substr(i+1,display.length-i-1);
+				display=display.substr(0,i+1);
+
+				a=a.substr(30,a.length-30);
+				a=leftover+a;
+
+			}
+			else
+			a=a.substr(30,a.length-30);
+		}
+		final=final+display+"<br>";
+	}
+	final=final+a;
+	return final;
+	}
+}*/
+</script>
+<div id="container">
+	<!--LAYER CODE STARTS-->
+	<script type="text/javascript">
+		function $() {
+		var elements = new Array();
+		for (var i=0;i<arguments.length;i++) {
+		var element = arguments[i];
+		if (typeof element == 'string') element = document.getElementById(element);
+		if (arguments.length == 1) return element;
+		elements.push(element);
+		}
+		return elements;
+		}
+		var BoxHeights = {
+		maxh: 0,
+		boxes: Array(),
+		num: 0,
+		op_test: false,
+		equalise: function() {
+		this.num = arguments.length;
+		for (var i=0;i<this.num;i++) if (!$(arguments[i])) return;
+		this.boxes = arguments;
+		this.maxheight();
+		for (var i=0;i<this.num;i++) $(arguments[i]).style.height = this.maxh+"px";
+		},
+		maxheight: function() {
+		var heights = new Array();
+		for (var i=0;i<this.num;i++) {
+		if (navigator.userAgent.toLowerCase().indexOf('opera') == -1) {
+		heights.push($(this.boxes[i]).scrollHeight);
+		} else {
+		heights.push($(this.boxes[i]).offsetHeight);
+		}
+		}
+		heights.sort(this.sortNumeric);
+		this.maxh = heights[this.num-1];
+		},
+		sortNumeric: function(f,s) {
+		return f-s;
+		}
+		}
+
+		var day_limit=~$DAY_LIMIT`-1;
+                var month_limit=~$MONTH_LIMIT`-1;
+                var overall_limit=~$OVERALL_LIMIT`-1;
+
+		function checkDrop(docF,windowname)
+		{                 
+			var total_con=0;
+			for(var i=0;i<docF.elements.length;i++)
+                        {
+                                if(docF.elements[i].type=="checkbox" && docF.elements[i].checked)
+                                {
+                                         total_con++;
+                                }                 
+                        }
+			if(total_con>0)
+                        {
+                                error=0;
+                                if(document.form1.SELaction.value=='C')
+                                {
+                                        ~if $ALLOW_GENDER eq 'M'`
+                                        day=~$TODAY_INI_TOTAL`+total_con;
+                                        if(day>day_limit)
+                                        {
+                                                mes="You are exceeding your contact limit for day and no contacts shall be made for today.";
+                                                document.getElementById("checkit").src="contact_hit_try.php?type=T";
+                                                error=1;
+                                        }
+                                        month=~$MONTH_INI_TOTAL`+total_con;
+                                         if(month>month_limit && error!=1)
+                                        {
+                                                mes="You are exceeding your contact limit for this month and no contacts shall be made for this month.";
+                                                document.getElementById("checkit").src="contact_hit_try.php?type=M";
+                                                error=1;
+                                        }
+                                        ~/if`
+
+                                        ~if $TOTAL_CONTACTS_MADE neq ''`
+                                        overall=~$TOTAL_CONTACTS_MADE`+total_con;
+                                        if(overall>overall_limit && error!=1)
+                                        {
+                                                mes="You are exceeding your contact limit as a free user and no contacts shall be made";
+                                                document.getElementById("checkit").src="contact_hit_try.php?type=O";
+                                                error=1;
+                                        }
+                                        ~/if`
+                                 }
+				 if(error)
+                                {
+                                        alert(mes);
+					for(var i=0;i<docF.elements.length;i++)
+                        		{
+		                                if(docF.elements[i].type=="checkbox" && docF.elements[i].checked)
+                		                {
+							docF.elements[i].checked=false;
+                                		   
+		                                }                 
+                        		}
+
+                                        return false;
+                                }
+
+                                return true;
+                        }
+			if(document.form1.SELaction.value=='C')
+	                {
+                        
+				~if $SUBSCRIPTION eq 'Y'`
+                                	alert("Select profile(s) to Contact Member");
+	                        ~else`
+        	                        alert("Select profile(s) to Express Interest");
+				~/if`
+			}
+		else
+                        alert("Select profile(s) to Add to Shortlist");
+
+                                                                                                                             
+                return false;
+        }
+	</script>
+	<SCRIPT type=text/javascript language="JavaScript" SRC="~$IMG_URL`/profile/js/~$conf_layer_js`"></SCRIPT>
+	<script src="~$IMG_URL`/profile/js/~$dw_core_js`" type="text/javascript"></script>
+	<script src="~$IMG_URL`/profile/js/~$dw_clip_js`" type="text/javascript"></script>
+	<script src="~$IMG_URL`/profile/js/~$dw_wipes_js`" type="text/javascript"></script>
+	<DIV id=outerDiv style=" background-color=#000000; BORDER:#000000 0px solid; Z-INDEX: 3000; VISIBILITY: hidden; POSITION: absolute; LEFT:120px ;TOP: 330px">
+		<div class="roundcont">
+			<div class="roundtop"><img src="~$IMG_URL`/profile/ser4_images/otl.gif" alt="" width="4" height="4" class="corner" style="display: none" /></div>
+			<div class="con bluelink">
+				<div align="right"><img src="~$IMG_URL`/profile/ser4_images/ocross.gif"onClick="close_layer();"></div>
+				~if $favourable_response eq 'Y'`
+				<div style="line-height:1px; clear:both ">&nbsp;</div>
+				<div class="ico"><img src="~$IMG_URL`/profile/ser4_images/layer_tick.gif" width="22" height="22"></div>
+				<div class="txt">~$ymessage`</div>
+				~/if`
+												     
+				~if $unfavourable_response eq 'Y'`
+				<div style="clear:both; line-height:5px ">&nbsp;</div>
+				<div class="ico"><img src="~$IMG_URL`/profile/ser4_images/layer_cross.gif" width="22" height="22"></div>
+				<div class="txt bluelink">~$nmessage`</div>
+				~/if`
+												     
+				~if $error_msg`
+				<div style="clear:both; line-height:5px ">&nbsp;</div>
+				<div class="ico">&nbsp;</div>
+				<div class="txtg">~$error_msg`</div>
+				~/if`
+				<div style="clear:both; line-height:5px ">&nbsp;</div>
+				<div><img src="~$IMG_URL`/profile/ser4_images/logo_layer.gif" width="119" height="26"></div>
+			</div>
+			<div class="roundbottom"><img src="~$IMG_URL`/profile/ser4_images/obl.gif" alt="" width="4" height="4" class="corner" style="display: none" /></div>
+		</div>
+	</div>
+	<!--LAYER CODE ENDS-->
+	<!--HEADER STARTS-->
+		~$HEAD`
+	<!--HEADER ENDS-->
+	<div class="spacer15">&nbsp;</div>
+	<!--WRAPPER STARTS HERE-->
+	<div id="wrapper">
+		<!--CENTER STARTS HERE-->
+		<!--MESSAGE STARTS HERE-->
+		~if $message_left`
+                <div class="confmsg bluelink" id="mr" style="float:left; ">~$message_left`<BR><BR></div>
+                ~/if`
+		~if $redirect neq '1' and $dontshow_msg neq '1'`<!--redirect start-->
+		<div style="float:left">
+		~if $FREE_CONTACT_LIMIT_EXPIRED`
+			<div class="confmsg bluelink" id="mr" style="float:left; width:340px "><b style="color:#CC0000 ">Initial Contact cannot be sent, Upgrade to </b><br>
+			<div>
+				<a href="/profile/memberships.php"><img src="~$IMG_URL`/profile/ser4_images/logo_evaluepack.gif" border="0"></a>
+			</div>
+			<div class="spacer">&nbsp;</div>
+			~else`
+			<div class="confmsg bluelink"  id="mr" style="float:left; width:340px "><b style="color:#CC0000 ">Dear ~$CURRENTUSERNAME`,</b><br />
+			<div class="spacer">&nbsp;</div>
+			~/if`
+				~if $MSG neq ""`
+					~if $status neq "D" and  $N_DECLINE neq '1'`
+					<b>Congratulations!</b>
+					~/if`
+					~if $NO_FURTHER_DISPLAY`
+						<img src="~$IMG_URL`/profile/ser4_images/tick_g.gif">
+					~/if`
+					~$MSG`
+                                        ~if $COMPATIBILITY_LINK eq 'C'`
+						~if $ASTRO_DETAILS eq '1'`
+                                                	~if $COMPATIBILITY_SUBSCRIPTION eq '1'`
+                                                        	<br><a href="check_horoscope_compatibility.php?checksum=~$CHECKSUM`&profilechecksum=~$profilechecksum`" target="_blank">Check Astro Compatibility</a>
+                                                        ~else`
+                                                        	<br><a href="check_horoscope_compatibility.php?checksum=~$CHECKSUM`&profilechecksum=~$profilechecksum`&sample=1" target="_blank">Check Astro Compatibility</a>
+                                                        ~/if`
+                                                ~else`
+                                                	<a href="" onclick="MM_openBrWindow('~$SITE_URL`/profile/check_horoscope_compatibility.php?checksum=~$CHECKSUM`&no_astro_details=1','','width=370,height=250,scrollbars=no'); return false;">Check Astro Compatibility</a>
+                                                ~/if`
+                                       	~elseif $COMPATIBILITY_LINK eq "R"`
+                                        	<br><a href="#" onclick="window.open('horoscoperequest.php?checksum=~$CHECKSUM`&profilechecksum=~$profilechecksum`','','width=340,height=310'); return false;">Request Astro Details to check Compatibility</a>
+                                        ~/if`
+
+					~elseif $ERROR_MSG neq ""`
+					~$ERROR_MSG`
+				~/if`
+				~if $SHOW_CONTACT_DETAILS and $CONTACT_DETAILS`
+					<div class="spacer15">&nbsp;</div>
+					<div class="bele leftflow"><img src="~$IMG_URL`/profile/ser4_images/unlock.gif"></div>
+					<div class="bele lftflow lh" style="padding:5px ">
+						<span style="color:#F68E55">
+							~$CONTACT_DETAILS`
+						</span>
+					</div>
+				~/if`
+			</div>
+			~if $UPGRADE_MEMBERSHIP eq 'Y'`
+			<div style="float:left; width:280px">
+			<FIELDSET class="mb" style="height:182px; border:1px solid #000000">
+                                <LEGEND><img src="~$IMG_URL`/profile/ser4_images/conf_jsmem.gif" width="172" height="37"></LEGEND>
+                                <b>Express Your Seriousness</b><br>
+                                1- Write Personalized message <br>
+                                2- View Contact Details<br>
+                                3- Send contact details along with your message <br>
+                                <form method="post" action="mem_comparison.php" name="upgrade" target="_blank" style="margin:0px">
+                                <div class="pad2">
+                                        <input type="submit" name="Submit3" value="Upgrade Your Membership" class="textbox">
+                                </div>
+                                </form>
+                        </FIELDSET>
+			</div>
+			</div>
+			<div class="spacer">&nbsp;</div>
+			~/if`
+			~/if`<!--redirect end-->
+			~if $INBOX_GO_BACK`
+				<div class="spacer">&nbsp;</div>
+				~$INBOX_GO_BACK`
+			~/if`
+		</div>
+		<!--MESSAGE ENDS-->
+		<!--EXTRA DIV FOR THIS PAGE STARTS HERE-->
+		<div class="spacer">&nbsp;</div>
+		<form action="searchaction.php" method="post" name="form1" onsubmit="return checkDrop(this,'form1');">
+<DIV class="rightflow o16" style="display:none" id="astro_res"></DIV>
+		~if $crmback neq "admin" && $offline neq '1'`
+			~if $RESULTS_ARRAY`
+			<div style="margin:10px 50px 0 50px">
+				<div class="msixb">~if $SIM_MESSAGE`~$SIM_MESSAGE` ~else` These are profiles similar to the one that you just expressed interest in and we thought you may be interested in these as well ~/if`</div>
+				<div class="spacer">&nbsp;</div>
+				<input type=hidden name="countlogic" value="1">
+				<input type=hidden name="newsearch" value="~$newsearch`">
+				<input type=hidden name="suggest_profile" value ="1">
+				<input type="hidden" name="searchchecksum" value="~$SEARCHCHECKSUM`">
+				<input type="hidden" name="checksum" value="~$CHECKSUM`">
+				<!--input type="hidden" name="scriptname" value="/P/simprofile_search.php"-->
+				<input type="hidden" name="scriptname" value="single_contact_aj.php">
+				<input type="hidden" name="pageno" value="~$BACK_TO_SEARCH_PAGE`">
+				<input type="hidden" name="SELaction" value="">
+				<input type="hidden" name="PERSON_LOGGED_IN" value="1">
+				<input type="hidden" name="CURRENTUSERNAME" value="~$CURRENTUSERNAME`">	
+				<input type="hidden" name="CMDsubmit" value="~$CMDsubmit`">	
+				<input type="hidden" name="profilechecksum" value="~$profilechecksum`">	
+				<input type="hidden" name="status" value="~$status`">
+				~if $STYPE eq 'CO' || $STYPE eq 'CN' || $STYPE eq 'CN2'` 
+					<input type="hidden" name="stype" value="~$STYPE`">
+				~else`
+					<input type="hidden" name="stype" value="C">
+				~/if`
+				<!--RESULTS STARTS HERE-->
+				<div class="results">
+					
+					<span id='hide1'>
+                                        <div class="utility">
+                                                 <div class="lftflow0">
+							~if $FULLMEMBER eq 'Y'`
+							<input type="submit" value="Contact Now" class="button-create" style="width:152px" onClick="return changeAction('C');">
+							~else`
+							<input type="submit" value="Express Interest free" class="button-membership" style="width:207px" onClick="return changeAction('C');">
+							~/if`
+						
+						</div>
+						<div class="spacer1">&nbsp;</div>
+						<div style="font:normal 10px verdana; color:#000000">
+							
+							~if $FULLMEMBER eq 'Y'`
+								Contact Now
+							~else`
+								Express Interest 
+							~/if`
+							by selecting relevant matches. To select profiles, click on checkboxes
+							<img src="~$IMG_URL`/profile/ser4_images/CB.gif" width="10" height="10">
+						
+						</div>
+					</div>
+					</span>
+					<div class="spacer15">&nbsp;</div>
+					 <div id="successmsg" style="position:absolute; visibility:hidden;">
+                                                        <div style="width:230px; height:120px; background-color: #FDFBE6; border: 1px solid #888">
+                                                        <div style="padding:20px 25px 0px 9px;">
+                                                        <div class="btwe" style="line-height:22px "><img src="~$IMG_URL`/profile/ser4_images/tick_g.gif"> Congratulations!
+                                                        <div class="spacer15">&nbsp;</div>
+                                                          Profile was successfully added to shortlist</div>
+                                                       </div>
+                                                        </div>
+                                                        </div>
+					<div id="srf">
+							~assign var="tab" value=0`
+							~section name="tr1" start=0 loop=9`
+							~assign var="finalval" value=$tab`
+							~if $finalval eq 0`
+							<ul>
+							~/if`
+							~if $RESULTS_ARRAY[$finalval].PROFILEID neq ''`
+							~assign var="cur_pid" value=$RESULTS_ARRAY[$finalval].PROFILEID`
+							<li>
+								~if $RESULTS_ARRAY[$finalval].BOLDLISTING eq 0`
+								<div class="mbx"  >
+								~else`
+								<div class="mbx-fea">
+								~/if`
+									<div class="prf" id="~$a[$finalval]`" style="height: 25px;~if $RESULTS_ARRAY[$finalval].COLOR neq ''` background-color:#cd9fcb~/if`" >
+                                                                        <div style="float:left;">
+										<span id='hide~$smarty.section.tr1.index+3`'>	
+										<input name=check[] type=checkbox value=~$RESULTS_ARRAY[$finalval].PROFILEID` style="vertical-align:middle">
+										</span>
+											<span class="blacklink">
+
+											~if $STYPE eq 'CO' || $STYPE eq 'CN' || $STYPE eq 'CN2'` 
+												<a href="/profile/viewprofile.php?checksum=~$CHECKSUM`&suggest_profile=1&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`&stype=~$STYPE`" onclick="MM_openProfileWindow('/profile/viewprofile.php?checksum=~$CHECKSUM`&suggest_profile=1&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`&stype=~$STYPE`','',''); return false;">~$RESULTS_ARRAY[$finalval].USERNAME`</a>
+											~else`
+												<a href="/profile/viewprofile.php?checksum=~$CHECKSUM`&suggest_profile=1&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`&stype=C" onclick="MM_openProfileWindow('/profile/viewprofile.php?checksum=~$CHECKSUM`&suggest_profile=1&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`&stype=C','',''); return false;">~$RESULTS_ARRAY[$finalval].USERNAME`</a>
+											~/if`
+											</span>
+</div>
+~if $RESULTS_ARRAY[$finalval].COLOR neq ''`<div style="float:right; font:bold 11px verdana,arial; color:#000; padding-top:5px;" onmouseover="ddrivetip('Match Point Profile','#FDFBE6','100')" onmouseout="hideddrivetip()"><em>Match Point</em> &nbsp;&nbsp;</div>~/if`
+									</div>
+									<div class="tx bluelink" id="~$boxheight[$finalval]`">
+										~$RESULTS_ARRAY[$finalval].MY_PHOTO`
+											<span class="blacklink">
+											~if $STYPE eq 'CO' || $STYPE eq 'CN' || $STYPE eq 'CN2'` 
+												<a href="/profile/viewprofile.php?checksum=~$CHECKSUM`&suggest_profile=1&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`&stype=~$STYPE`" onclick="MM_openProfileWindow('/profile/viewprofile.php?checksum=~$CHECKSUM`&suggest_profile=1&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`&stype=~$STYPE`','',''); return false;">~$RESULTS_ARRAY[$finalval].PROTITLE` ~$RESULTS_ARRAY[$finalval].YOURINFO`</a>
+											~else`
+												<a href="/profile/viewprofile.php?checksum=~$CHECKSUM`&suggest_profile=1&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`&stype=C" onclick="MM_openProfileWindow('/profile/viewprofile.php?checksum=~$CHECKSUM`&suggest_profile=1&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`&stype=C','',''); return false;">~$RESULTS_ARRAY[$finalval].PROTITLE` ~$RESULTS_ARRAY[$finalval].YOURINFO`</a>
+											~/if`
+											</span>
+										...
+											~if $STYPE eq 'CO' || $STYPE eq 'CN' || $STYPE eq 'CN2'` 
+												<a href="/profile/viewprofile.php?checksum=~$CHECKSUM`&suggest_profile=1&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`&stype=~$STYPE`" onclick="MM_openProfileWindow('/profile/viewprofile.php?checksum=~$CHECKSUM`&suggest_profile=1&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`&stype=~$STYPE`','',''); return false;">Read More</a>
+											~else`
+												<a href="/profile/viewprofile.php?checksum=~$CHECKSUM`&suggest_profile=1&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`&stype=C" onclick="MM_openProfileWindow('/profile/viewprofile.php?checksum=~$CHECKSUM`&suggest_profile=1&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`&stype=C','',''); return false;">Read More</a>
+											~/if`
+										...
+									</div>
+									~if $RESULTS_ARRAY[$finalval].BOLDLISTING eq 0`
+									<div class="dts" id="~$b[$finalval]`">
+									~else`
+									<div class="dts-fea" id="~$b[$finalval]`">
+									~/if`
+										~$RESULTS_ARRAY[$finalval].INFO`
+									</div>
+									<div class="lks" id="~$c[$finalval]`">
+						
+									~if $FULLMEMBER eq 'Y' or $RESULTS_ARRAY[$finalval].CONTACT_DETAILS eq 1`
+										~if $STYPE eq 'CO' || $STYPE eq 'CN' || $STYPE eq 'CN2'` 
+										<a href="/profile/viewprofile.php?checksum=~$CHECKSUM`&suggest_profile=1&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`&stype=~$STYPE`" target="_blank"><strong>Contact Now</strong></a><br><br>
+										~else`
+										<a href="/profile/viewprofile.php?checksum=~$CHECKSUM`&suggest_profile=1&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`&stype=C" target="_blank"><strong>Contact Now</strong></a><br><br>
+										~/if`
+									~else`
+										~if $USERSUBSCRIPTION eq '' || $USERSUBSCRIPTION eq 'D'`
+											~if $STYPE eq 'CO' || $STYPE eq 'CN' || $STYPE eq 'CN2'`  
+											<a href="/profile/single_contact_aj.php?checksum=~$CHECKSUM`&suggest_profile=1&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`&status=I&stype=~$STYPE`" target="_blank"><strong>Express Interest</strong></a> <span class="fr">Free</span><br><br>
+											~else`
+											<a href="/profile/single_contact_aj.php?checksum=~$CHECKSUM`&suggest_profile=1&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`&status=I&stype=C" target="_blank"><strong>Express Interest</strong></a> <span class="fr">Free</span><br><br>
+											~/if`
+										~else`
+											~if $STYPE eq 'CO' || $STYPE eq 'CN' || $STYPE eq 'CN2'` 
+											<a href="/profile/viewprofile.php?checksum=~$CHECKSUM`&suggest_profile=1&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`&stype=~$STYPE`" target="_blank"><strong>Contact Now</strong></a> <span class="fr">Free</span><br><br>
+											~else`
+											<a href="/profile/viewprofile.php?checksum=~$CHECKSUM`&suggest_profile=1&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`&stype=C" target="_blank"><strong>Contact Now</strong></a> <span class="fr">Free</span><br><br>
+											~/if`
+										~/if`
+									~/if`
+									~if $RESULTS_ARRAY[$finalval].GTALK_ONLINE eq "1"`
+                                                                        <span class="chat_now"><a href="" onClick="MM_openBrWindow('~$SITE_URL`/profile/gtalk_chatwindow.php?sendersid=~$RESULTS_ARRAY[$finalval].PROFILEID`&checksum=~$CHECKSUM`','gtalkwin','width=342,height=274,status=1,scrollbars=0,resizable=yes'); return false;" class="chat_now"> Chat on Google Talk</a> <img src="~$IMG_URL2`/profile/images/~$G_STATUS[$cur_pid]`" width="9" height="9" title="~$G_TITLE[$cur_pid]`"><br></span>
+                                                                        ~/if`
+									~if $RESULTS_ARRAY[$finalval].YAHOO_ONLINE eq "1"`
+                                                                        <span class="chat_now"><a href="" onClick="MM_openBrWindow('~$SITE_URL`/profile/yahoo_chatwindow.php?sendersid=~$RESULTS_ARRAY[$finalval].PROFILEID`&checksum=~$CHECKSUM`','yahoowin','width=342,height=274,status=1,scrollbars=0,resizable=yes'); return false;" class="chat_now"> Chat on Yahoo</a> <img src="~$IMG_URL2`/profile/images/~$Y_STATUS[$cur_pid]`" width="9" height="9" title="~$Y_TITLE[$cur_pid]`"><br></span>
+                                                                        ~/if`
+									~if $RESULTS_ARRAY[$finalval].BOOKMARKED neq '1'`
+									 <div id="~$l[$finalval]`"><a href="#" onClick="showmsgadd(event,-10,-10,'~$f[$finalval]`','form1'); return false;" style="line-height:21px"><strong>Add to Shortlist</strong></a></div><br>
+									~/if`
+                                                                        ~if $RESULTS_ARRAY[$finalval].CONTACT_DETAILS eq '1'`
+                                                                                <div>
+~if $STYPE eq 'CO' || $STYPE eq 'CN' || $STYPE eq 'CN2'`
+
+                <a href="/profile/viewprofile.php?checksum=~$CHECKSUM`&suggest_profile=1&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`&stype=~$STYPE`" onclick="MM_openProfileWindow('/profile/viewprofile.php?checksum=~$CHECKSUM`&suggest_profile=1&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`&stype=~$STYPE`','',''); return false;">View Contact Details</a>
+
+        ~else`
+
+                <a href="/profile/viewprofile.php?checksum=~$CHECKSUM`&suggest_profile=1&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`&stype=C" onclick="MM_openProfileWindow('/profile/viewprofile.php?checksum=~$CHECKSUM`&suggest_profile=1&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`&stype=C','',''); return false;">View Contact Details</a>
+
+        ~/if`
+                                                                                </div>
+                                                                                <div style="position:relative">
+                                                                                        <div class="spacer">&nbsp;</div>
+                                                                                        ~$RESULTS_ARRAY[$finalval].CONTACT_LAYER_TEMPLATE`
+                                                                                </div>
+                                                                        ~/if`
+									</div>
+									 <div id="~$f[$finalval]`" style="position: absolute; visibility: hidden; width:180px; height:123px; background-color: #FDFBE6; border: 1px solid #888;">
+									<textarea name="~$e[$finalval]`" cols="19" rows="3" onKeyup="checkcontent('~$e[$finalval]`','~$n[$finalval]`','form1');"></textarea>
+									<div style="padding-top:10px; float:left "><input type="button" name="editmsg" ~if $RESULTS_ARRAY[$finalval].BOOKMARKED eq '1'` value="Edit" ~else` value="Add" ~/if` class="textbox" style="width:50px " ~if $RESULTS_ARRAY[$finalval].BOOKMARKED eq '1'` onClick="return ajaxFunction('form1','~$f[$finalval]`','~$e[$finalval]`','~$RESULTS_ARRAY[$finalval].PROFILEID`','~$CHECKSUM`',0,'','~$SITE_URL`');" ~else` onClick="return ajaxFunction('form1','~$f[$finalval]`','~$e[$finalval]`','~$RESULTS_ARRAY[$finalval].PROFILEID`','~$CHECKSUM`',1,'~$l[$finalval]`','~$SITE_URL`');" ~/if`> <input type="button" name="canmsg" value="Cancel" class="textbox" style="width:50px " onClick="hidemsgedit('~$f[$finalval]`');"></input></div>
+									<div class="rightflow greyele" style="padding:2px 2px 2px 2px ">characters left <input name="~$n[$finalval]`" type="text" style=" width:25px;"  value="250" disabled></input> </div>
+									</div>
+									 ~if $RESULTS_ARRAY[$finalval].BOOKMARKED eq 1`
+									<div id="~$l[$finalval]`" style="position:absolute; visibility:hidden;">
+									<div style="width: 210px; background-color: #FDFBE6; border: 1px solid #888; padding:5px 5px 5px 5px;" onMouseover="showmsg('~$l[$finalval]`');" onMouseout="hidemsg('~$l[$finalval]`');"><div id="~$t[$finalval]`" class="bele">~if $RESULTS_ARRAY[$finalval].BKNOTEDIS` ~$RESULTS_ARRAY[$finalval].BKNOTEDIS`~else`~$RESULTS_ARRAY[$finalval].BKNOTE`~/if`</div><div class="spacer1">&nbsp;</div><div class="spacer1">&nbsp;</div><div align="right" class="bluelink bele" style="margin-right:5px "><a href="#" onClick="return showmsgedit('form1','~$e[$finalval]`','~$n[$finalval]`','~$f[$finalval]`','~$l[$finalval]`','~$RESULTS_ARRAY[$finalval].BKNOTE`');">Edit comment</a></div></div>
+									</div>
+									~/if`
+							
+
+
+									<div id="ic" style="height:20px; margin-bottom:0px">
+										<ul>~if $RESULTS_ARRAY[$finalval].VIEWED_BY_USER eq 'yes'`<li><img src="~$IMG_URL`/profile/ser4_imagesnew/viewed.gif" title="Profile Viewed" border="0"></li>~/if`
+											~if $RESULTS_ARRAY[$finalval].CONTACTSTATUS eq 'A'`
+												<li><img src="~$IMG_URL`/profile/ser4_imagesnew/ac.gif"title="Contact Accepted" width="13" height="13"></li>
+											~elseif $RESULTS_ARRAY[$finalval].CONTACTSTATUS eq 'D'`
+												<li><img src="~$IMG_URL`/profile/ser4_imagesnew/rj.gif" title="Contact Declined" width="13" height="13"></li>
+											~elseif $RESULTS_ARRAY[$finalval].CONTACTSTATUS eq 'I'`
+												<li><img src="~$IMG_URL`/profile/ser4_imagesnew/open.gif" width="13" height="13" title="Contact Member"></li>
+											~/if`
+											~if $RESULTS_ARRAY[$finalval].BOOKMARKED eq '1'`
+											 ~if $f[$finalval] eq 'f3' || $f[$finalval] eq 'f6' || $f[$finalval] eq 'f9' || $f[$finalval] eq 'f12'`
+											<li><img src="~$IMG_URL`/profile/ser4_imagesnew/bm.gif" width="16" height="16" onMouseover="showmsgadd(event,-30, 10,'~$f[$finalval]`','form1','~$RESULTS_ARRAY[$finalval].BKNOTE`',1);" onMouseout="hidemsg('~$l[$finalval]`');"></li>
+
+											~else`
+                                                                                <li><img src="~$IMG_URL`/profile/ser4_imagesnew/bm.gif" width="16" height="16" onMouseover="showmsgadd(event,-120, 10,'~$f[$finalval]`','form1','~$RESULTS_ARRAY[$finalval].BKNOTE`',1);" onMouseout="hidemsg('~$l[$finalval]`');"></li>
+
+											~/if`
+											~/if`
+											~if $RESULTS_ARRAY[$finalval].ONLINE eq '1'`
+											    <li><img src="~$IMG_URL`/profile/ser4_imagesnew/messanger5.gif" title="Online Member" width="22" height="12"></li>
+											~/if`
+											~if $RESULTS_ARRAY[$finalval].HOROSCOPE eq "Y"`
+												<li><a href="/P/~$RESULTS_ARRAY[$final_tr3].HORO_LINK`?checksum=~$CHECKSUM`&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`" target="_blank"><img src="~$IMG_URL`/profile/ser4_imagesnew/horoscope_icon.gif" title="Horoscope" border="0"></a></li>
+<input type ="hidden" name="horo_astro_~$RESULTS_ARRAY[$finalval].PROFILEID`" value="~$RESULTS_ARRAY[$finalval].HOROSCOPE_ASTRO`">
+											~/if`
+											~if $RESULTS_ARRAY[$finalval].MARRIAGE_BUREAU eq 'Y'`
+												<li><img src="~$IMG_URL`/profile/ser4_imagesnew/MB_logo.gif" title="Marriage_Bureau" border="0"></li>
+											~/if`
+											~if $RESULTS_ARRAY[$final_tr3].CHAT_REQUEST eq 'Y'`
+												<!--li><a href="~$SITE_URL`/profile/chat_by_sms.php?checksum=~$CHECKSUM`&username=~$RESULTS_ARRAY[$finalval].USERNAME`&GENDER=~$RESULTS_ARRAY[$finalval].GENDER`&recid=~$RESULTS_ARRAY[$finalval].PROFILEID`" onClick="MM_openBrWindow('~$SITE_URL`/profile/chat_by_sms.php?checksum=~$CHECKSUM`&username=~$RESULTS_ARRAY[$finalval].USERNAME`&GENDER=~$RESULTS_ARRAY[$finalval].GENDER`&recid=~$RESULTS_ARRAY[$finalval].PROFILEID`','','width=420,height=330,scrollbars=1'); return false;"><img src="~$IMG_URL`/profile/ser4_imagesnew/icon.gif" title="Send SMS" border="0"></a></li-->
+											~/if`
+                                                                                        ~if $RESULTS_ARRAY[$finalval].ERISHTA_MEMBER eq '1'`
+                                                                                            <li><img src="~$IMG_URL`/profile/ser4_imagesnew/icon_small_erishta.gif" title="Erishta Member"></li>
+                                                                                        ~/if`
+                                                                                        ~if $RESULTS_ARRAY[$finalval].CONTACT_DETAILS eq '1'`
+                                                                                            <li><img src="~$IMG_URL`/profile/ser4_imagesnew/icon_small_evaluepack.gif" title="Evaluepack Member"></li>
+                                                                                        ~/if`
+											<li>&nbsp;</li>
+										</ul>
+									</div>
+<br>
+<div id="~$f[$finalval]`">
+<div id="~$RESULTS_ARRAY[$finalval].PROFILEID`" style="display:none">
+<div id="lagan">
+<ul>
+<li id="hl1p_~$RESULTS_ARRAY[$finalval].PROFILEID`" style="display:none"><img src="~$IMG_URL`/profile/ser4_images/lagan_p.jpg" title="Lagan Favourable" border="0"></li>
+<li id="hl1n_~$RESULTS_ARRAY[$finalval].PROFILEID`" style="display:none"><img src="~$IMG_URL`/profile/ser4_images/lagan_m.jpg" title="Lagan Unfavourable" border="0"></li>
+<li id="hl2p_~$RESULTS_ARRAY[$finalval].PROFILEID`" style="display:none"><img src="~$IMG_URL`/profile/ser4_images/sun_p.jpg" title="Sun Favourable" border="0"></li>
+<li id="hl2n_~$RESULTS_ARRAY[$finalval].PROFILEID`" style="display:none"><img src="~$IMG_URL`/profile/ser4_images/sun_m.jpg" title="Sun Unfavourable" border="0"></li>
+<li id="hl3p_~$RESULTS_ARRAY[$finalval].PROFILEID`" style="display:none"><img src="~$IMG_URL`/profile/ser4_images/murcury_p.jpg" title="Mercury Favourable" border="0"></li>
+<li id="hl3n_~$RESULTS_ARRAY[$finalval].PROFILEID`" style="display:none"><img src="~$IMG_URL`/profile/ser4_images/murcury_m.jpg" title="Mercury Unfavourable" border="0"></li>
+<li id="hl4p_~$RESULTS_ARRAY[$finalval].PROFILEID`" style="display:none"><img src="~$IMG_URL`/profile/ser4_images/jupitar_p.jpg" title="Jupitor Favourable" border="0"></li>
+<li id="hl4n_~$RESULTS_ARRAY[$finalval].PROFILEID`" style="display:none"><img src="~$IMG_URL`/profile/ser4_images/jupitar_m.jpg" title="Jupitor Unfavourable" border="0"></li>
+<li id="hl5p_~$RESULTS_ARRAY[$finalval].PROFILEID`" style="display:none"><img src="~$IMG_URL`/profile/ser4_images/saturn_p.jpg" title="Saturn Favourable" border="0"></li>
+<li id="hl5n_~$RESULTS_ARRAY[$finalval].PROFILEID`" style="display:none"><img src="~$IMG_URL`/profile/ser4_images/saturn_m.jpg" title="Saturn Unfavourable" border="0"></li>
+<li id="Guna_~$RESULTS_ARRAY[$finalval].PROFILEID`" style="display:none;width:100px;"></li><br>
+</ul>
+</div>
+</div>
+</div>
+<div class="spacer1"></div>
+								</div><!-- mbx div ends-->
+							</li>
+							~assign var="tab" value=$tab+1`
+							~/if`
+							~if $finalval % 3 eq 2`
+								</ul>
+								<div class="spacer15">&nbsp;</div>
+								<ul>
+							~elseif $finalval eq 9`
+								</ul>
+							~/if`
+							~/section`
+						</div>
+						<div class="spacer15">&nbsp;</div>
+						<span id='hide2'>
+						<div class="utility">
+							<div class="lftflow0">
+								~if $FULLMEMBER eq 'Y'`
+									<input type="submit" value="Contact Now" class="button-create" style="width:152px" onClick="changeAction('C');">
+								~else`
+									<input type="submit" value="Express Interest free" class="button-membership" style="width:207px" onClick="changeAction('C');">
+								~/if`
+							</div>
+							<div class="spacer1">&nbsp;</div>
+							<div style="font:normal 10px verdana; color:#000000">
+								~if $FULLMEMBER eq 'Y'`
+									Contact Now
+								~else`
+									Express Interest 
+								~/if`
+								by selecting relevant matches. To select profiles, click on checkboxes
+								<img src="~$IMG_URL`/profile/ser4_images/CB.gif" width="10" height="10">
+							</div>
+						</div>	
+						</span>
+						<div class="pg greyele bluelink">
+							~if $disable_link neq '1'`
+							<div class="rightflow">
+								<a href="/P/view_similar_profile.php?checksum=~$CHECKSUM`&contact=~$contact`&total=~$totalrec`&j=~$BACK_TO_SEARCH_PAGE`&no_navigation=1&searchchecksum=~$SEARCHCHECKSUM`&CURRENTUSERNAME=~$CURRENTUSERNAME`&status=~$status`&newsearch=~$newsearch`&FULLMEMBER=~$FULLMEMBER`&OPP_ECL=~$OPP_ECL`&j=~$j`&UPGRADE_MEMBERSHIP=~$UPGRADE_MEMBERSHIP`"><img src="~$IMG_URL`/profile/ser4_images/arrow.gif" width="14" height="14" border="0"></a>
+							</div>
+							<div class="rightflow">
+								<b><a href="/P/view_similar_profile.php?profilechecksum=~$profilechecksum`&checksum=~$CHECKSUM`&contact=~$contact`&total=~$totalrec`&j=~$BACK_TO_SEARCH_PAGE`&no_navigation=1&searchchecksum=~$SEARCHCHECKSUM`&CURRENTUSERNAME=~$CURRENTUSERNAME`&status=~$status`&newsearch=~$newsearch`&FULLMEMBER=~$FULLMEMBER`&OPP_ECL=~$OPP_ECL`&j=~$j`&UPGRADE_MEMBERSHIP=~$UPGRADE_MEMBERSHIP`">View More profiles</a></b>
+							</div>
+							~/if`
+					       </div>
+					</div>
+					<!-- ICONS START HERE -->
+                                        <div align="right" class="pad4 bele bluelink lftflow" style="width:97% "><a href="#" onClick="MM_openBrWindow('~$SITE_URL`/profile/icon_popup.htm','','width=332,height=440'); return false;">What do these Icons mean?</a> &nbsp;&nbsp;<img src="~$IMG_URL`/profile/ser4_imagesnew/ac.gif" width="17" height="17" title="Contact Accepted">&nbsp;&nbsp; <img src="~$IMG_URL`/profile/ser4_imagesnew/rj.gif" width="15" height="15" title="Contact Declined">&nbsp;&nbsp; <img src="~$IMG_URL`/profile/ser4_imagesnew/open.gif" width="14" height="10" title="Contact Open">&nbsp;&nbsp; <img src="~$IMG_URL`/profile/ser4_imagesnew/con_ca1.gif" width="16" height="16" title="Contact Cancelled">&nbsp;&nbsp; <img src="~$IMG_URL`/profile/ser4_imagesnew/bm.gif" width="16" height="16" title="Shortlisted Profile">&nbsp;&nbsp; <img src="~$IMG_URL`/profile/ser4_imagesnew/whitecam.gif" width="16" height="14" title="Photo Request">&nbsp;&nbsp; <img src="~$IMG_URL`/profile/ser4_imagesnew/icon_small_erishta.gif" width="27" height=16" title="eRishta">&nbsp;&nbsp; <img src="~$IMG_URL`/profile/ser4_imagesnew/icon_small_evaluepack.gif" width="27" height="16" title="eValuepack">&nbsp;&nbsp; <img src="~$IMG_URL`/profile/ser4_imagesnew/messanger5.gif" width="16" height="16" title="Online Member">&nbsp;&nbsp; <img src="~$IMG_URL`/profile/ser4_imagesnew/horoscope_icon.gif" width="16" height="16" title="Horoscope Profile">&nbsp;&nbsp; <img src="~$IMG_URL`/profile/ser4_images/MB_logo.gif" title="Profile posted by Marriage Bureau">&nbsp;&nbsp; <img src="~$IMG_URL`/profile/ser4_images/ip.gif" width="16" height="16" title="Ignore Profile">&nbsp;&nbsp;  <img src="~$IMG_URL`/profile/ser4_imagesnew/viewed.gif" width="16" height="16" title="Viewed Profile">&nbsp;&nbsp;<!--img src="~$IMG_URL`/profile/ser4_imagesnew/icon.gif" width="16" height="17" ="Send SMS" title="SMS Contact"--></div>
+					<!--ICONS END HERE -->
+				~elseif !$RESULTS_ARRAY and $dontshow_msg eq '1'`
+					<div class="msixb">No Result found</div>
+				~/if`
+				<div class="spacer">&nbsp;</div>
+			</div>
+		</div>
+		<div class="spacer">&nbsp;</div>
+		</form>
+		<!--MEMBERSHIP BOX STARTS HERE-->
+		~if $UPGRADE_MEMBERSHIP eq 'Y'`
+			<div style="margin:0 auto;width:620px;">
+			 <FIELDSET class="mb" style="height:185px; border:1px solid #000000">
+				<LEGEND><img src="~$IMG_URL`/profile/ser4_images/conf_jsmem.gif" width="172" height="37"></LEGEND>
+				<b>Express Your Seriousness</b><br>
+                                1- Write Personalized message <br>
+                                2- View Contact Details<br>
+                                3- Send contact details along with your message 
+                                <form method="post" action="mem_comparison.php" name="upgrade" target="_blank" style="margin:0px">
+                                <div class="pad2">
+                                        <input type="submit" name="Submit3" value="Upgrade Your Membership" class="textbox">
+                                </div>
+                                </form>
+			</FIELDSET>
+			<FIELDSET class="mb" style="height:185px;border:1px solid #000000">
+				<LEGEND><img src="~$IMG_URL`/profile/ser4_images/conf_jscon.gif" width="187" height="37"></LEGEND>
+				<b>~$branch_name`</b><br>
+				<u>Contact Person:</u> ~$contact_person`<br>
+				<u>Phone:</u> ~$phone`<br>
+				<u>Address:</u> ~$branch_address`
+			</FIELDSET>
+			</div>
+		~/if`
+		<!--MEMBERSHIP BOX ENDS HERE-->
+		~/if`
+		<div class="spacer15">&nbsp;</div>
+		~if $crmback neq 'admin'`
+			<div align="center">
+			<SCRIPT language="javascript">
+				document.write('<iframe WIDTH=560 HEIGHT=520 FRAMEBORDER=0 SCROLLING=no FRAMEBORDER="#000000" SRC="~$bmsVariable`/bmsjs/bms_display_final.php?zonestr=15&data=~$data`&subzone=1"></iframe>\n');
+			</SCRIPT>
+			<noscript>
+				<iframe height="520" width="560" frameborder="0" scrolling="no" src="~$bmsVariable`/bmsjs/bms_display_new.php?zonestr=15&data=~$data`&subzone=1"></iframe>
+			</noscript>
+			</div>
+		~/if`
+                <div class="spacer1">&nbsp;</div>
+	</div>
+	<!--WRAPPER ENDS HERE-->
+	<!--FOOTER STARTS HERE-->
+	~$FOOT`
+	<!--FOOTER ENDS HERE-->
+<!--</div>-->
+~if $layer eq '1'`
+<script type="text/javascript">
+void testWipe('in top');
+</script>
+~/if`
+
+</body>
+<script language="JavaScript" SRC="/profile/js/~$ajax_js`"></script>
+<script type="text/javascript">
+adjustbox();
+function cal_astro()
+{
+        var docF= document.form1;
+        var pstring="";
+        for(var i=0;i<docF.elements.length;i++)
+        {
+                if(docF.elements[i].name.match("horo_astro"))
+                {
+                        pstring1=docF.elements[i].value;
+                        pstring=pstring+pstring1+"@";
+                }
+        }
+        var request_url = "/profile/issue_2472.php?profileid=~$PROFILEID`&compstring="+pstring;
+        sendRequest('GET',request_url);
+}
+cal_astro();
+disable_interest();
+function disable_interest()
+{
+	var allow_disable=0; 
+	~if $ALLOW_GENDER eq 'M'`
+	if(~$TODAY_INI_TOTAL`>=day_limit || ~$MONTH_INI_TOTAL`>=month_limit)
+		allow_disable=1;
+	~/if`
+	~if $SUBSCRIPTION eq ''`
+	if(~$TOTAL_CONTACTS_MADE`>=overall_limit )
+		allow_disable=1;
+	~/if`
+	~if $SPAM eq 'Y'`
+	allow_disable=1;
+	~/if`
+	if(allow_disable)
+	{
+	
+	
+		for(i=1;i<12;i++)
+		{
+			if(eval("document.getElementById('hide"+i+"')"))
+				eval("document.getElementById('hide"+i+"').style.display='none'");
+		}
+				
+	}
+}
+	function adjustbox() 
+	{
+                BoxHeights.equalise('one','two','three');BoxHeights.equalise('four','five','six');BoxHeights.equalise('seven','eight','nine');
+                BoxHeights.equalise('a1','a2','a3');BoxHeights.equalise('a4','a5','a6');BoxHeights.equalise('a7','a8','a9');
+                BoxHeights.equalise('b1','b2','b3');BoxHeights.equalise('b4','b5','b6');BoxHeights.equalise('b7','b8','b9');
+                BoxHeights.equalise('c1','c2','c3');BoxHeights.equalise('c4','c5','c6');BoxHeights.equalise('c7','c8','c9');
+                BoxHeights.equalise('d1','d2','d3');BoxHeights.equalise('d4','d5','d6');BoxHeights.equalise('d7','d8','d9');
+		BoxHeights.equalise('f1','f2','f3');BoxHeights.equalise('f4','f5','f6');BoxHeights.equalise('f7','f8','f9');
+        }
+</script>
+
+</html>

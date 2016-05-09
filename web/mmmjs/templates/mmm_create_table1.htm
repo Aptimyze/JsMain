@@ -1,0 +1,72 @@
+<html>
+<head>
+<title>
+</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="http://www.jeevansathi.com/profile/images/styles.css" type="text/css">
+<link rel="stylesheet" href="http://www.jeevansathi.com/jsadmin/jeevansathi.css" type="text/css">
+</head>
+<body>
+<form name="form1" method="post" action="mmm_create_table.php" >
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="http://www.jeevansathi.com/profile/images/logo.gif" width="269" height="82" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+                                                                                                 
+<tr><td colspan="4" align="center"><h2>Welcome to<br> Mass Mailer Management Sytem<br><span class=red>>>>&nbsp;&nbsp; Select mailer for which the table is to be created &nbsp;&nbsp;>>></span></h2><br><br></td></tr>
+</tbody>
+</table>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tr>
+  <td class="headbigblack" width="100%"><b>Select a mailer for table creation </b></td>
+</tr>
+<tr class="bgred">
+   <td height="1"></td>
+ <SPACER height="1" type="block"></SPACER> </tr>
+<tr>
+</table>
+<br>
+
+
+
+<table WIDTH="75%" BORDER="0" CELLSPACING="2" CELLPADDING="0" BORDERCOLOR="#2F3193" ALIGN="CENTER">
+
+<tr><td><b>~$msg`</b></td></tr>
+<tr>
+<td colspan="2" class="label">
+</td>
+
+<tr> 
+<td colspan="2" class="label"><b>Select Mailer</b>
+</td>
+
+<td bgcolor="#ffffcc" class="fieldsnew">
+<select name="mailer_id">
+	~section name=index loop=$mailer_id_arr`
+	<option value=~$mailer_id_arr[index].mailer_id` >~$mailer_id_arr[index].mailer_name`</option>
+	~/section`	
+</select>
+</td>
+</tr>
+
+
+<tr>
+<td   colspan="2" align="center">
+<input type="hidden" name="cid" value="~$cid`">
+<input type="submit" name="submit" value="submit">
+</td>
+</tr>
+
+
+</table>
+
+
+</body>
+</html>
+

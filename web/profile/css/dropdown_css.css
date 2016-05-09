@@ -1,0 +1,34 @@
+                                                                                                                             
+#dropmenudiv
+{
+position:absolute;
+border:1px solid black;
+border-bottom-width: 1;
+font:normal 12px Verdana;
+line-height:10px;
+z-index:15;
+}
+                                                                                                                             
+#dropmenudiv a
+{
+width: 100%;
+display: block;
+text-indent: 1px;
+border-bottom: 1px solid black;
+padding: 1px 0;
+text-decoration: none;
+font-weight: bold;
+}
+                                                                                                                             
+#dropmenudiv a:hover
+{ /*hover background color*/
+background-color:#999999;
+/*background-color:#FFE5CC;*/
+}
+
+
+#dropmenudiv div:hover
+{ /*hover background color*/
+/*background-color:#FFE5CC;*/
+background-color:#999999;
+}

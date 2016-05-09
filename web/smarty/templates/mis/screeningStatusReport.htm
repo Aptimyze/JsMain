@@ -1,0 +1,40 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tr>
+        <td valign="top" width="40%" align="center"><img src="../profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+</tr>
+<tr>
+        <td align="center" class="label">
+	<a href="mainpage.php?cid=~$cid`">Mainpage</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</td>
+</tr>
+</table>
+
+  <br><br>
+  <table width="90%" border="0" cellpadding="4" cellspacing="4" align="center">
+       <tr class="formhead" align="center">
+                <td colspan="100%">Probable Duplicate Screening pending queue length</td>
+        </tr>
+
+	<tr class="fieldsnew" align="left">
+		<td colspan="100%">Number of profile pairs yet to be screened by executives: ~if $screenCntExec` ~$screenCntExec` ~else` 0 ~/if` </td>
+	</tr>
+	<tr class="fieldsnew" align="left">
+		<td colspan="100%">Number of profile pairs yet to be screened by supervisor: ~if $screenCntSup` ~$screenCntSup` ~else` 0 ~/if` </td>
+	</tr>
+  </table>
+
+</body>
+</html>

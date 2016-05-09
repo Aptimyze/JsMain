@@ -1,0 +1,88 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jeevansathi.com - Manage Banner Sources</title>
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+<script>
+function loadForm()
+{
+        document.form1.CMDGetSrc=true;
+        document.form1.submit();
+}
+function addOption(selectbox,text,value )
+{
+	var optn = document.createElement("OPTION");
+	optn.text = text;
+	optn.value = value;
+	selectbox.options.add(optn);
+}
+function add_property()
+{
+	var prop_name=prompt("Please enter property name","")
+	if (prop_name!=null && prop_name!="")
+	{
+		addOption(document.form1.property,prop_name,prop_name); 
+	}
+}
+</script>
+<body>
+~include file='head.htm'`
+<br>
+<table width=570 border=0 align="center" border="0" cellspacing="0" cellpadding="0">
+<tr class=formhead>
+<td align=center><a href="mainpage.php?cid=~$cid`">Click here to go to main page</a></td>
+</tr>
+</table>
+<br> <br>
+~if $flag eq "1"`
+~else`
+<table width=570 border=0 align="center" border="0" cellspacing="0" cellpadding="0">
+<tr class=formhead>
+<td align=center>Upload banner for source</a></td>
+<!--td align=center><a href="manage_banner_sources.php?cid=~$cid`&val=edit">Edit a source</a></td-->
+</tr>
+</table>
+<form name=form1 method=post action="manage_source_property.php" enctype="multipart/form-data">
+<table width=570 border=0 align="center" border="0" cellspacing="3" cellpadding="4">
+<tr class=label>
+<td align=center>Source</td> <td class=fieldsnew align=center colspan="2">~$source`</td>
+</tr>
+<tr class=label>
+<td align=center>~if $ER_PROPERTY eq 'Y'` <font color=red> Select Property </font> ~else` Select Property ~/if`</td>        <td class=fieldsnew align=center>
+    <select name="property">
+          <option value="">Select a property</option>
+          ~section name=p loop=$proparr`
+                 <option value="~$proparr[p].PROP_VAL`" ~if $propval eq $proparr[p].PROP_VAL` selected ~/if`>~$proparr[p].PROP_NAME`</option>
+          ~/section`
+    </select>
+</td>
+<td class=fieldsnew align=center><input type=button name=addproperty onclick="add_property();" value="Add Property"></td>
+</tr>
+<tr class=label>
+<td align=center>Type of Creative</td> <td class=fieldsnew align=center colspan="2">
+<select name="bannertype">
+<option value="gif" ~if $btype eq "gif"` selected ~/if`>Image</option>
+<option value="htm" ~if $btype eq "htm"` selected ~/if`>Html</option>
+<option value="swf" ~if $btype eq "swf"` selected ~/if`>Flash</option>
+</select>
+</td>
+</tr>
+<tr class=label>
+<td align=center>~if $flag eq "2"` <font color="red">~/if`Upload the creative <br>~$Error`</font></td>
+<td class=fieldsnew align=center colspan="2"><input  type="file" name=banner value="~$banner`"></td>
+<!--td class=fieldsnew align=center><input type=button name=template value="Upload"></td-->
+</tr>
+<tr class=fieldsnew>
+<td colspan=100% align=center>
+<input type=hidden name="cid" value="~$cid`">
+<input type=hidden name="source" value="~$source`">
+<input type=hidden name="group" value="~$group`">
+<input type=submit name=CMDGo value="  Go  ">
+</td>
+</tr>
+</table>
+</form>
+~/if`
+</body>
+</html>

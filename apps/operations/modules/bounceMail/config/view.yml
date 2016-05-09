@@ -1,0 +1,6 @@
+bounceMailDetectionSuccess:
+  metas:
+    title:        Jeevansathi.com
+  javascripts: [jspc/bounceMail/bounceMailDetection_js]
+  stylesheets: []
+                                             

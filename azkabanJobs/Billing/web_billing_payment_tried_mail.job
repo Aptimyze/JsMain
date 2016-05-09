@@ -1,0 +1,2 @@
+type=command
+command=${php5} ${docRoot}/web/billing/payment_tried_mail.php

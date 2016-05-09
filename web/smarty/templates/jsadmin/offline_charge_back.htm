@@ -1,0 +1,111 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Mark Bounce</title>
+<!--link rel="stylesheet" href="images/resservice.css" type="text/css"-->
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+  <tbody>
+  <tr>
+    <td valign="top" width="27%" bgcolor="#efefef"><img src="../profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+    <td valign="top" width="29%" bgcolor="#efefef"></td>
+    <td valign="bottom" width="44%" bgcolor="#efefef">
+    <table width="70%" border="0" cellspacing="0" cellpadding="3" align="right" class="tops">
+      <tbody>
+      <tr valign="middle">
+        <td align="center" width="70"><a href="http://www.naukri.com/" class="tops">Home</a></td>
+        <td width="4"><img src="../billing/images/verttop.gif" width="5" height="15"></td>
+        <td valign="middle" align="center" width="72"><a href="http://www.naukri.com/infoedge/naukhome.htm" class="tops">About Us</a></td>
+        <td width="5"><img src="../billing/images/verttop.gif" width="5" height="15"></td>
+        <td align="center" width="78"><a href="http://www.naukri.com/contact/" class="tops">Contact Us</a></td>
+      </tr>
+    </tbody>
+    </table>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" colspan="3" bgcolor="#c4bfc4"><img src="../billing/images/spacer.gif" width="1" height="2"></td>
+  </tr>
+  </tbody>
+</table>
+~if $flag eq '1'`
+<br><br>
+<table width=100% align="CENTER" >
+<tr class="formhead" align="center">
+        <td>
+                <a href="../jsadmin/mainpage.php?user=~$USER`&cid=~$CID`">Continue &gt;&gt;</a>
+        </td>
+</tr>
+</table>
+~elseif $flag eq '2'`
+<br>
+<table width=50% align="center">
+<form action="offline_charge_back.php" method=post>
+<tr align="center">
+<td class="label">Username</td>
+<td class="fieldsnew">~$username`</td>
+</tr>
+<tr align="center">
+<td class="label">Order ID</td>
+<td class="fieldsnew">~$orderid`</td>
+</tr>
+<tr align="center">
+<td class="label">Payment Date</td>
+<td class="fieldsnew">~$paid_date`</td>
+</tr>
+<tr align="center">
+<td class="label">Amount</td>
+<td class="fieldsnew">~$amt`</td>
+</tr>
+<tr align="center">
+<td class="label">Service</td>
+<td class="fieldsnew">
+<select name="service">
+	<option value="S1" ~if $service eq 'S1'` selected ~/if`>Full Member - 3 Months</option>
+	<option value="S2" ~if $service eq 'S2'` selected ~/if`>Full Member - 6 Months</option>
+	<option value="S3" ~if $service eq 'S3'` selected ~/if`>Full Member - 12 Months</option>
+	<option value="S4" ~if $service eq 'S4'` selected ~/if`>Value Added Member - 3 Months</option>
+	<option value="S5" ~if $service eq 'S5'` selected ~/if`>Value Added Member - 6 Months</option>
+	<option value="S6" ~if $service eq 'S6'` selected ~/if`>Value Added Member - 12 Months</option>
+</select>
+</td>
+</tr>
+<tr align="center">
+<td class="label">~if $NO_REASON eq 'Y'` <font color=red>Reason</font>~else` Reason ~/if`</td>
+<td class="fieldsnew"><textarea rows="4" cols=30 name="reason" >~$reason`</textarea></td>
+</tr>
+<tr align="center">
+<td class="label">&nbsp;</td>
+<td class=fieldsnew>
+	<input type="hidden" name="profileid" value=~$profileid`>
+	<input type="hidden" name="orderid" value=~$orderid`>
+	<input type="hidden" name="paid_date" value=~$paid_date`>
+	<input type="hidden" name="username" value=~$username`>
+	<input type="hidden" name="amt" value=~$amt`>
+	<input type="hidden" name="cid" value=~$CID`>
+	<input type="submit" name="CMDGo" value="Submit">
+</td>
+</tr>
+</form>
+</table>
+~else`
+<br><br>
+<form method=post action="offline_charge_back.php">
+<table width=50% align="center">
+<tr align="center">
+<td class="label">~if $NO_USER eq 'Y'` <font color=red>Username</font>~else`Username~/if` ~if $NO_RECORD eq 'Y'` <font color=red>(No Record Found) </font>~/if`</td>
+<td class="fieldsnew"><input type="text" name="username" value="~$username`"></td>
+</tr>
+<tr align="center">
+<td class="label">&nbsp;</td>
+<td class="fieldsnew">
+	<input type="hidden" name="cid" value=~$CID`>
+	<input type="submit" name="CMDSubmit" value="Submit">
+</td>
+</table>
+~/if`
+
+</body>
+</html>

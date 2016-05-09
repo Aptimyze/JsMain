@@ -1,0 +1,333 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<title>Jeevansathi Matrimonials</title><style type="text/css">
+html, body{margin:0; padding:0;}
+#wrapper {float: left; width: 100%;}
+#top{ padding:5px 10px 5px 10px}
+#tabrow{width:100%;background-color:#BC001D}
+#tabrowy{width:100%;height:20px; margin-top:1px;background-image:url("~$IMG_URL`/profile/ser4_images/ybg.gif")}
+.bele{font:normal 11px verdana,Arial;}
+.bten{font:normal 10px verdana,Arial;}
+.greyele{font:normal 11px verdana,Arial; color:#666666}
+
+
+
+</style><script>
+
+table1=' <table width="100%"  border="0" cellpadding="2" cellspacing="0" bgcolor="#eeeddc" class="bele" style="margin:10px 0 10px 0 "><tr valign="top"><td width="4%">';
+table2='.</td><td width="33%">';
+table3='</td><td width="31%">';
+table4=' </td><td width="23%">';
+table5='</td><td width="9%">';
+table6="<a href=\"javascript:send_again(";
+table7=")\">Send Again </a></td></tr></table>";
+sending='<table width="100%"  border="0" cellpadding="2" cellspacing="0" bgcolor="#FFFFFF" class="bele" style="margin:10px 0 10px 0 ">          <tr valign="top">              <td width="4%">4.</td>              <td width="33%">2442-4355-58735-093</td>             <td width="31%" class="greyele">Sending...</td>              <td width="23%">&nbsp;</td>              <td width="9%">&nbsp;</td>          </tr>          </table>';
+
+function checkemail(emailadd)
+{
+	var result = false;
+  	var theStr = new String(emailadd);
+  	var index = theStr.indexOf("@");
+  	if (index > 0)
+  	{
+    	var pindex = theStr.indexOf(".",index);
+    	if ((pindex > index+1) && (theStr.length > pindex+2))
+		result = true;
+  	}
+  		
+  	return result;
+}
+function check_name(names)
+{
+	str=names;
+
+	if(str.length==0)
+		return false;
+	if(str.length==1 && str=="'")
+		return false;
+        str=str.search(/[^a-zA-Z|\'|\ ]+/g);
+	if(str==-1)
+		return true;
+	else
+		return false;
+
+        
+}
+function send_mail(a,code)
+{
+	sender=document.fr1.sender.value;
+	eval("receiver_n=document.fr1.receiver"+a+".value");
+	eval("receiver_email=document.fr1.email"+a+".value");
+	eval("document.getElementById('error_name"+a+"').style.display='none';");
+	eval("document.getElementById('error_name"+a+"').style.display='none';");
+
+	if(!check_name(receiver_n))
+	{
+		eval("document.getElementById('error_name"+a+"').style.display='inline';");
+		return false;
+	}
+	if(!checkemail(receiver_email))
+	{
+		eval("document.getElementById('error_email"+a+"').style.display='inline';");
+		return false;
+	}
+	send_data(sender,code,receiver_n,receiver_email,a);
+	
+	
+	
+}
+function send_data(sender,code,receiver_name,receiver_email,a)
+{
+	var ajaxRequest;  // The variable that makes Ajax possible!
+
+        try{
+                // Opera 8.0+, Firefox, Safari
+                ajaxRequest = new XMLHttpRequest();
+        } catch (e){
+                // Internet Explorer Browsers
+                try{
+                        ajaxRequest = new ActiveXObject("Msxml2.XMLHTTP");
+                } catch (e) {
+                        try{
+                                ajaxRequest = new ActiveXObject("Microsoft.XMLHTTP");
+                        } catch (e){
+                                // Something went wrong
+                                alert("Your browser broke!");
+                                return false;
+                        }
+                }
+        }
+        // Create a function that will receive data sent from the server
+        ajaxRequest.onreadystatechange = function(){
+                if(ajaxRequest.readyState == 4){
+                	var result= ajaxRequest.responseText;
+			receiver_name=result;
+			
+			change_table(a,code,receiver_name,receiver_email);
+			
+		//document.getElementById("span"+mySplitResult.length).innerHTML=" "+result;
+		//document.fr1.ff.value+=result;
+                }
+        }
+
+	receiver_name=receiver_name.replace(/[\ ]+/g,'%20');	
+	message="?sender="+sender+"&receiver="+receiver_name+"&email="+receiver_email+"&discount_code="+code;
+
+	//document.write("friend_discount.php"+message);
+	ajaxRequest.open("POST", "friend_discount.php"+message, true);
+	
+	eval("document.getElementById('finish"+a+"').innerHTML='"+sending+"';");
+	ajaxRequest.send(null);	
+
+}
+function change_table(a,code,receiver_name,receiver_email)
+{	
+	
+	eval("val='<input type=hidden name=email"+a+" value=" +receiver_email+"><input type=hidden name=receiver"+a+" value=" +receiver_name+">'");
+	str=val+table1+a+table2+code+table3+receiver_name+table4+receiver_email+table5+table6+a+",\\'"+code+"\\'"+table7;
+
+	eval("document.getElementById('finish"+a+"').innerHTML='"+str+"'");
+}
+function send_again(a,code)
+{
+
+table21='<table width="100%"  border="0" cellpadding="2" cellspacing="0" bgcolor="#FFFFFF" class="bele" style="margin:10px 0 10px 0 ">            <tr valign="top"> <td width="4%">'+a+'.</td>              <td width="33%">'+code+'</td>              <td width="31%"><input type="text" name="receiver'+a+'" style="font-size:11px; width:150px">		<span id="error_name'+a+'" style="display:none">                <br>                <table width="100%"  border="0" cellspacing="0" cellpadding="0">                 <tr>                    <td style="font:normal 10px verdana,arial; color:#CC0000">* Put your friends name </td>                  </tr>                </table>		</span></td>              <td width="23%"><input type="text" name="email'+a+'" style="font-size:11px; width:150px">		<span id="error_email'+a+ '" style="display:none">                <br>                <table width="100%"  border="0" cellspacing="0" cellpadding="0">                  <tr>                    <td style="font:normal 10px verdana,arial; color:#CC0000">* Put your friends email </td>                  </tr>                </table>	</span></td>              <td width="9%"><input type="button" name="Submit'+a+'" value="Send" style="font:normal 11px verdana,arial;width:50px; height:20px " onclick=javascript:send_mail("'+a+'","'+code+'") ></td>            </tr>         </table>';
+
+eval("document.getElementById('finish"+a+"').innerHTML='"+table21+"'");
+
+}
+</script>
+</head>
+<body>
+<div id="top">
+<div class="bten">
+<a href="http://www.jeevansathi.com"><img src="~$IMG_URL`/profile/ser4_images/Matrimonial.gif" alt="Matrimonials" width="219" height="35" border="0"></a><br>
+         Indian Matrimonials - We Match Better
+      </div>
+<div id="tabrow"><img src="~$IMG_URL`/profile/ser4_images/toplinks_bg.gif"></div>
+<div id="tabrowy">&nbsp;</div>
+
+<br><br>
+
+<!--WRAPPER STARTS HERE-->
+<!--WRAPPER ENDS HERE-->
+<table width="96%"  border="0" align="center" cellpadding="1" cellspacing="0" class="bele">
+  <tr>
+    <td> Dear<User> ~$SENDER`,
+
+      <br>
+      <br>
+      Celebrate your marriage by helping your friends in finding the special someone they have been looking for. 
+Share the following discount codes with your friends that will enable them to avail a 15% discount on any 
+membership on jeevansathi.com.
+</td>
+  </tr></table><br>
+<form name =fr1 method="POST" action="friend_discount.php" >
+<input type='hidden' name=sender value="~$SENDER`">
+<table width="96%"  border="0" align="center" cellpadding="1" cellspacing="0" bgcolor="#bdcb5c">
+
+  <tr>
+    <td><table width="100%"  border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
+      <tr>
+        <td><table width="100%"  border="0" cellpadding="2" cellspacing="0" background="http://localhost/P/I/bg_vouchmailer.gif" class="bele">
+          <tr>
+            <td width="4%">Sno</td>
+            <td width="33%">Code</td>
+            <td width="31%">Friend's Name </td>
+            <td width="23%">Friends Email ID </td>
+            <td width="9%">&nbsp;</td>
+          </tr>
+        </table>
+         <span id="finish1">
+          <table width="100%"  border="0" cellpadding="2" cellspacing="0" bgcolor="#FFFFFF" class="bele" style="margin:10px 0 10px 0 ">
+            <tr valign="top">
+              <td width="4%">1.</td>
+              <td width="33%">~$discount_code1`</td>
+              <td width="31%"><input type="text" name="receiver1" style="font-size:11px; width:150px">
+		<span id="error_name1" style="display:none">
+                <br>
+                <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td style="font:normal 10px verdana,arial; color:#CC0000">* Put your friends name </td>
+                  </tr>
+                </table>
+		</span></td>
+              <td width="23%"><input type="text" name="email1" style="font-size:11px; width:150px">
+		<span id="error_email1" style="display:none">
+                <br>
+                <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td style="font:normal 10px verdana,arial; color:#CC0000">* Put your friends email </td>
+                  </tr>
+                </table>
+		</span></td>
+              <td width="9%"><input type="button" name="Submit1" value="Send" style="font:normal 11px verdana,arial; width:50px; height:20px " onclick="javascript:send_mail('1','~$discount_code1`')" ></td>
+            </tr>
+          </table>
+	</span>
+	<span id="finish2">
+	<table width="100%"  border="0" cellpadding="2" cellspacing="0" bgcolor="#FFFFFF" class="bele" style="margin:10px 0 10px 0 ">
+            <tr valign="top">
+              <td width="4%">2.</td>
+              <td width="33%">~$discount_code2`</td>
+              <td width="31%"><input type="text" name="receiver2" style="font-size:11px; width:150px">
+		<span id="error_name2" style="display:none">
+                <br>
+                <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td style="font:normal 10px verdana,arial; color:#CC0000">* Put your friends name </td>
+                  </tr>
+                </table>
+		</span></td>
+              <td width="23%"><input type="text" name="email2" style="font-size:11px; width:150px">
+		<span id="error_email2" style="display:none">
+                <br>
+                <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td style="font:normal 10px verdana,arial; color:#CC0000">* Put your friends email </td>
+                  </tr>
+                </table>
+		</span></td>
+              <td width="9%"><input type="button" name="Submit2" value="Send" style="font:normal 11px verdana,arial; width:50px; height:20px " onclick="javascript:send_mail('2','~$discount_code2`')" ></td>
+            </tr>
+          </table>
+	</span>
+	<span id="finish3">
+	
+	<table width="100%"  border="0" cellpadding="2" cellspacing="0" bgcolor="#FFFFFF" class="bele" style="margin:10px 0 10px 0 ">
+            <tr valign="top">
+              <td width="4%">3.</td>
+              <td width="33%">~$discount_code3`</td>
+              <td width="31%"><input type="text" name="receiver3" style="font-size:11px; width:150px">
+		<span id="error_name3"  style="display:none">
+                <br>
+                <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td style="font:normal 10px verdana,arial; color:#CC0000">* Put your friends name </td>
+                  </tr>
+                </table>
+		</span></td>
+              <td width="23%"><input type="text" name="email3" style="font-size:11px; width:150px">
+		<span id="error_email3" style="display:none">
+                <br>
+                <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td style="font:normal 10px verdana,arial; color:#CC0000">* Put your friends email </td>
+                  </tr>
+                </table>
+		</span></td>
+              <td width="9%"><input type="button" name="Submit3" value="Send" style="font:normal 11px verdana,arial; width:50px; height:20px " onclick="javascript:send_mail('3','~$discount_code3`')" ></td>
+            </tr>
+          </table>
+	</span>
+	<span id="finish4">
+	<table width="100%"  border="0" cellpadding="2" cellspacing="0" bgcolor="#FFFFFF" class="bele" style="margin:10px 0 10px 0 ">
+            <tr valign="top">
+              <td width="4%">4.</td>
+              <td width="33%">~$discount_code4`</td>
+              <td width="31%"><input type="text" name="receiver4" style="font-size:11px; width:150px">
+		<span id="error_name4"  style="display:none">
+                <br>
+                <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td style="font:normal 10px verdana,arial; color:#CC0000">* Put your friends name </td>
+                  </tr>
+                </table>
+		</span></td>
+              <td width="23%"><input type="text" name="email4" style="font-size:11px; width:150px">
+		<span id="error_email4" style="display:none">
+                <br>
+                <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td style="font:normal 10px verdana,arial; color:#CC0000">* Put your friends email </td>
+                  </tr>
+                </table>
+		</span></td>
+              <td width="9%"><input type="button" name="Submit4" value="Send" style="font:normal 11px verdana,arial; width:50px; height:20px " onclick="javascript:send_mail('4','~$discount_code4`')" ></td>
+            </tr>
+          </table>
+	</span>
+	<span id="finish5">
+	
+	<table width="100%"  border="0" cellpadding="2" cellspacing="0" bgcolor="#FFFFFF" class="bele" style="margin:10px 0 10px 0 ">
+            <tr valign="top">
+              <td width="4%">5.</td>
+              <td width="33%">~$discount_code5`</td>
+              <td width="31%"><input type="text" name="receiver5" style="font-size:11px; width:150px">
+		<span id="error_name5"  style="display:none">
+                <br>
+                <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td style="font:normal 10px verdana,arial; color:#CC0000">* Put your friends name </td>
+                  </tr>
+                </table>
+		</span></td>
+              <td width="23%"><input type="text" name="email5" style="font-size:11px; width:150px">
+		<span id="error_email5" style="display:none">
+                <br>
+                <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td style="font:normal 10px verdana,arial; color:#CC0000">* Put your friends email </td>
+                  </tr>
+                </table>
+		</span></td>
+              <td width="9%"><input type="button" name="Submit5" value="Send" style="font:normal 11px verdana,arial; width:50px; height:20px " onclick="javascript:send_mail('5','~$discount_code5`')" ></td>
+            </tr>
+          </table>
+	</span>
+ 	</td>
+  </tr>
+</table>
+</td></tr></table></form><script>
+~section name=aa loop=$SERIAL`
+
+change_table('~$SNO[aa]`','~$code[aa]`','~$RECEIVER[aa]`','~$EMAIL[aa]`');
+~/section`
+</script>
+</body>
+</html>

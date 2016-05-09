@@ -1,0 +1,200 @@
+<HTML>
+<HEAD>
+	<TITLE>BMS : Campaign Management System</TITLE>
+	<LINK HREF="gifs/style.css" REL="stylesheet" TYPE="text/css">
+	<LINK REL="stylesheet" HREF="http://www.jeevansathi.com/jsadmin/jeevansathi.css" TYPE="text/css">
+	<LINK REL="stylesheet" HREF="http://www.jeevansathi.com/profile/images/styles.css" TYPE="text/css">
+	<script language="javascript" src="category.js"></script>
+        <SCRIPT LANGUAGE="JavaScript">
+		function textCounter(field,maxlimit)
+		{
+			if (field.value.length > maxlimit)
+				field.value = field.value.substring(0, maxlimit);
+		}
+
+		function Trim(s)
+		{
+			while ((s.substring(0,1) == ' ') || (s.substring(0,1) == '\n') || (s.substring(0,1) == '\r'))
+			{
+				s = s.substring(1,s.length);
+			}
+
+			while ((s.substring(s.length-1,s.length) == ' ') || (s.substring(s.length-1,s.length) == '\n') || (s.substring(s.length-1,s.length) == '\r'))
+			{
+				s = s.substring(0,s.length-1);
+			}
+			return s;
+		}
+	</script>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#000000" VLINK="#000000" ALINK="#000000" LEFTMARGIN="0" TOPMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0"> 
+	~$bmsheader`    
+	<DIV CLASS="text-under" STYLE="margin-left:20px;">
+		<A HREF="bms_adminindex.php?id=~$id`&site=~$site`" TARGET="">Admin Home</A>
+	</DIV>
+	<br>
+	<P></P>
+	<DIV ALIGN=center CLASS="text" STYLE="margin-left:20px;">
+		<b>
+		~if $confirmation` 
+			You have successfully edited information for bannertype(bannerclass): ~$bannertype`
+		~else` 
+			Enter New Category Details(name or/and  Description)
+		~/if`
+		</b>
+	</DIV>
+	
+	~if $confirmation`
+		<br><br><div class="text" align="center">
+				<a href="bms_editbannertype.php?id=~$id`&site=~$site`">Edit More Banner Type</a><br><br>
+				<a href="bms_adminindex.php?id=~$id`&site=~$site`">Go Back To Home</a><br><br><br><br>
+			</div>
+	~else`
+	
+	<DIV CLASS="text">
+		<BR>
+		<TABLE WIDTH="100%" BORDER="0">
+		<TR> 
+			<TD WIDTH="20%" ALIGN="RIGHT"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="180" HEIGHT="1"><IMG SRC="gifs/tick.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="13" HEIGHT="11"> </TD>
+			<TD WIDTH="80%" CLASS="text">You can add details of the ~if $subcategory` sub-~/if`category here.</TD>
+		</TR>
+		</TABLE>
+		<BR>
+	</DIV>
+
+	<FORM name="frm_main" method="POST" action="bms_createcategory.php" onSubmit="return select_values();">
+		<TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER" >
+		<TR>
+			<TD WIDTH="18" BACKGROUND="gifs/page-bg.gif"><IMG SRC="gifs/lt-curve.gif" ALT="jeevansathi.com" WIDTH="18" HEIGHT="31" BORDER="0" HSPACE="0"></TD>
+			<TD VALIGN="MIDDLE" HEIGHT="31" WIDTH="100%">
+				<TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" HEIGHT="31">
+				<TR>
+					<TD BACKGROUND="gifs/page-bg.gif" WIDTH="70%"><DIV CLASS="text"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="30" HEIGHT="1"><B></B></DIV></TD>
+					<TD WIDTH="30%" BACKGROUND="gifs/page-bg.gif" ALIGN="RIGHT"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="30" HEIGHT="1"></TD>
+				</TR>
+				</TABLE>
+			</TD>
+	
+			<TD ALIGN="RIGHT" WIDTH="18" BACKGROUND="gifs/page-bg.gif"><IMG SRC="gifs/rt-curve.gif" ALT="jeevansathi.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+		</TR>
+		</TABLE>
+
+		<TABLE WIDTH="100%" BORDER="0" VSPACE="0" HSPACE="0" CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER">
+		<TR>
+			<TD WIDTH="18" BACKGROUND="gifs/lt-line-bg-1.gif"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></TD>
+			<TD WIDTH="100%"> 
+				<BR>
+				<DIV ALIGN="CENTER">
+					<TABLE WIDTH="60%" BORDER="0" VSPACE="0" HSPACE="0" CELLPADDING="4" CELLSPACING="0">
+					~if $error`
+					<TR>
+						<font color="red">Please choose different category/sub-category name as this name already exists</font><BR><BR>
+					</TR>
+					~/if`
+
+					~if $parent_category`
+					<TR>
+						<font colOr="GREEN">Category: ~$parent_category` will be the parent caegory of now created sub-category. </font><BR><BR>
+					</TR>
+					~/if`
+
+					<TR>
+						<TD CLASS="text" WIDTH="45%" HEIGHT="20" VALIGN="TOP"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="170" HEIGHT="1"><BR>
+							<B><span id="name_span">~if $subcategory` Sub-~/if`Category Name</span></B>
+						</TD>
+						<TD ALIGN="LEFT" WIDTH="55%">
+							~if $cat_name`
+								<INPUT TYPE="hidden" NAME="cat_name" value='~$cat_name`' SIZE="50" MAXLENGTH="30" CLASS="textbox" style="border:1px solid #D6AA63;" id="name_id">~$cat_name`
+							~else`
+							<INPUT TYPE="text" NAME="cat_name" value='~$cat_name`' SIZE="50" MAXLENGTH="30" CLASS="textbox" style="border:1px solid #D6AA63;" id="name_id">
+							~/if`
+						</TD>
+					</TR>
+
+					<TR>
+						<TD CLASS="text" HEIGHT="20" VALIGN="TOP">
+							<B>Details</B>
+						</TD>
+						<TD>
+							<textarea name="cat_details" cols=33 rows=4 style="border:1px solid #D6AA63;" onKeyDown="textCounter(this.form.cat_details,200);" onKeyUp="textCounter(this.form.cat_details,200);" id="desc_id">~$cat_detail`</textarea>
+						</TD>
+					</TR>
+						<TD CLASS="text" HEIGHT="20" VALIGN="TOP">
+							<B>Values</B>
+						</TD>
+
+					</TABLE>
+					<table cellpadding="0" cellspacing="0" border="0" style="margin: 5 0 5 0px;">
+					<tr>
+						<b>~if $parent_category` ~$parent_category` ~else` Others ~/if` &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~if $parent_category` Subcategory  ~else` Current ~/if`</b>
+
+					<tr>
+
+					<tr>
+						<td>
+							<select MULTIPLE name="category_fromarray[]" SIZE="10" class="formselect" style="width: 175px;">
+							~section name=ACC loop=$my_arr`
+								<option value="~$my_arr[ACC].value`" ~$my_arr[ACC].newfont`>~$my_arr[ACC].label`</option>
+							~/section`
+							</select>
+						</td>
+						<td align="center">
+							<img src="http://ser4.jeevansathi.com/P/IN/add1.gif" value="Add" hspace="10" vspace="4" onClick = "copytolist(document.frm_main.elements['category_fromarray[]'],document.frm_main.elements['categoryarray[]']);"><br>
+							<img src="http://ser4.jeevansathi.com/P/IN/remove1.gif" value="Remove" hspace="10" vspace="4" onClick = "copytolist(document.frm_main.elements['categoryarray[]'],document.frm_main.elements['category_fromarray[]']);"><br>
+						</td>
+						<td>
+							<select multiple name="categoryarray[]" SIZE="10" class="formselect" style="width: 175px;">
+							~section name=ACC loop=$selected_my_arr`
+							 ~assign var="zeroselected" value=1`
+								<option value="~$selected_my_arr[ACC].value`" ~$selected_my_arr[ACC].newfont`>~$selected_my_arr[ACC].label`</option>
+							~/section`
+							~if !$zeroselected`
+								<option value="" id="lavesh" >No value Present</option>
+							~/if`
+							</select>
+						</td>
+					</tr>
+					</table>
+
+					</DIV>
+				<BR>
+
+				<DIV CLASS="text"><font color="#FF0000" size="2">*</font> Mandatory <br><br></DIV>
+				<DIV ALIGN="CENTER">
+					<TABLE WIDTH="40%" BORDER="0" ALIGN=CENTER>
+					<TR>
+					        <input type="hidden" name="id" value="~$id`">
+					        <input type="hidden" name="site" value="~$site`">
+						<input type="hidden" name="criteria" value="~$criteria`">
+						<input type="hidden" name="category" value="~$category`">
+						~if $subcategory`
+						<input type="hidden" name="subcategory" value="~$subcategory`">
+						<input type="hidden" name="from_display" value="1">
+						<input type="hidden" name="parent_value" value="~$parent_value`">
+						~/if`
+						<TD WIDTH="50%" ALIGN=CENTER><INPUT TYPE="submit" NAME="submit3"  value="Submit"></TD>
+					</TR>
+					</TABLE>
+					<b></b>
+				</DIV>
+				<BR>
+				<P></P>
+				<P></P>
+			</TD>
+			<TD BACKGROUND="gifs/rt-line-bg-1.gif" WIDTH="18"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></TD>
+		</TR>
+		</TABLE>
+
+		<TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER">
+		<TR>
+			<TD WIDTH="18" BACKGROUND="gifs/page-bg-1.gif"><IMG SRC="gifs/lt-low-curve.gif" ALT="jeevansathi.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+			<TD VALIGN="MIDDLE" HEIGHT="31" BACKGROUND="gifs/page-bg-1.gif">&nbsp;</TD>
+			<TD ALIGN="RIGHT" WIDTH="18" BACKGROUND="gifs/page-bg-1.gif"><IMG SRC="gifs/lt-rt-curve.gif" ALT="jeevansathi.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+		</TR>
+		</TABLE>
+	</FORM>
+	~/if`
+	~$bmsfooter`
+</BODY>
+</HTML>

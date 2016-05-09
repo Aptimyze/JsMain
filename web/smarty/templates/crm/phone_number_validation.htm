@@ -1,0 +1,79 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>JeevanSathi</title>
+		<link rel="stylesheet" href="../jsadmin/jeevansathi.css" type="text/css">
+		<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+		<script>
+		function MM_openBrWindow(theURL,winName,features)
+		{
+			window.open(theURL,winName,features);
+		}
+		</script>
+	</head>
+	~include file="head.htm"`
+	<br>
+	<body bgcolor="#FFFFFF">
+			~if $VERIFIED`
+				<table width="30%" align="center">
+					<tr class="formhead" align="center">
+						<td>The selected number(s) has been marked as verified.</td>
+					</tr>
+					<tr class="formhead" align="center">
+						<td><input type="button" name="close" value="Close" class="buttons1" onClick="window.close();"></td>
+					</tr>
+				</table>
+			~elseif $ALREADY_VERIFIED`
+				<table width="30%" align="center">
+					<tr class="formhead" align="center">
+						<td>The phone number of this user has been already verified.</td>
+					</tr>
+					<tr class="formhead" align="center">
+						<td><input type="button" name="close" value="Close" class="buttons1" onClick="window.close();"></td>
+					</tr>
+				</table>
+			~else`
+				<form name="form1" method="post" action="phone_number_validation.php">
+				<table width="30%" align="center">
+					<tr>
+						~if $errorSet`
+							<td align="center" class="label" colspan="2"><font color="red">Please select number to be marked as verified.</font></td>
+						~else`
+							<td align="center" class="label" colspan="2">Select number to be marked as verified.</td>
+						~/if`
+					</tr>
+					~if $phone_res`
+						<tr>
+							<td align="center" class="fieldsnew"><input type="checkbox" name="verify_phone_res" value="Y"></td>
+							<td align="center" class="fieldsnew">~$phone_res`</td>
+						</tr>
+					~/if`
+					~if $phone_mob`
+						<tr>
+							<td align="center" class="fieldsnew"><input type="checkbox" name="verify_phone_mob" value="Y"></td>
+							<td align="center" class="fieldsnew">~$phone_mob`</td>
+						</tr>
+					~/if`
+                                        ~if $phone_alt`
+                                                <tr>
+                                                        <td align="center" class="fieldsnew"><input type="checkbox" name="verify_phone_alt" value="Y"></td>
+                                               		<td align="center" class="fieldsnew">~$phone_alt`</td>
+                                        	</tr>
+                                        ~/if`
+					<tr align="center" class="label">
+						<td colspan="2"><input type="submit" name="verify" value="Verify" class="buttons1"></td>
+					</tr>
+				</table>
+				<input type="hidden" name="validate_phone" value="1">
+				<input type="hidden" name="phone_res" value="~$phone_res`">
+				<input type="hidden" name="phone_mob" value="~$phone_mob`">
+				<input type="hidden" name="phone_alt" value="~$phone_alt`">
+				<input type="hidden" name="cid" value="~$cid`">
+				<input type="hidden" name="profileid" value="~$profileid`">
+				<input type="hidden" name="name" value="~$name`">
+				</form>
+				<br><br>
+			~/if`
+	</body>
+</html>

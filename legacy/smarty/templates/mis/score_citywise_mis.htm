@@ -1,0 +1,107 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+<script>
+function checkDuration()
+{
+	var c=0;
+	var d=document.rel_score;
+	if (d.month.options[d.month.selectedIndex].value != 'ALL' && d.year.options[d.year.selectedIndex].value=='ALL')
+        {
+		alert('Please select year as well');
+		return false;
+	}
+	else if (d.month.options[d.month.selectedIndex].value == 'ALL' && d.year.options[d.year.selectedIndex].value !='ALL')
+	{
+		alert('Please select month as well');
+		return false;
+        }
+	else
+		return true;
+}
+</script>                                                                                                                      
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+                                                                                                                             
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="/profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br>
+<center>
+This MIS gives us scorewise breakup of users registered in a particular month and alloted to a telecalling operator.<br>
+<font color=red>Members converted after telecalling</font><br>
+<font color=blue>Members alloted to the operator</font><br>
+<font color=green>Cumulative percentage of profiles alloted</font>
+</center>
+<br>
+<form name="rel_score" method=post action="score_citywise_mis.php">
+        <table width=100% border=0 align="center" cellpadding=5>
+        <tr align="center">
+        <td align="center">Select Month &nbsp;
+        <select name="month">
+	<option value="ALL">ALL</option>
+        ~section name=mm loop=$mmarr`
+                <option value=~$mmarr[mm]` ~if $mmarr[mm] eq $month` selected ~/if`>~$mmarr[mm]`</option>
+        ~/section`
+        </select>&nbsp;-
+        <select name="year">
+	<option value="ALL">ALL</option>
+        ~section name=yr loop=$yyarr` 
+                <option value=~$yyarr[yr]` ~if $yyarr[yr] eq $myear` selected ~/if`>~$yyarr[yr]`</option>
+        ~/section`
+        </select>
+        </td>
+        <td align="center">
+            <input type="hidden" name="cid" value="~$cid`">
+            <input type="submit" name="CMDGo" value="Go">
+        </td>
+        </tr>
+        </table>
+</form>
+~if $flag eq 1`
+<table width=100% border=0 align="center" cellspacing="2" cellpadding=2>
+        <tr class="label">
+        <td align="center" width=10%>&nbsp;City/Score</td>
+        ~section name=ind loop=$scorearr`
+                <td width=6% align="center">&nbsp;~$scorearr[ind]`</td>
+        ~/section`
+        <td align="center" width=12%>&nbsp;Total</td>
+        </tr>
+        ~if $CITY eq 'Y'`
+	~section name=cty loop=$cityarr`
+	<tr class="fieldsnew">
+	<td align="center" class=label>&nbsp;~$cityarr[cty]`</td>
+		 ~section name=ss loop=$scorearr`
+			<td align="center"><span class="red">~$paid_cnt[cty][ss]`</span><br><span class="blue">~$cnt[cty][ss]`</span><br><span class="green">~$percent[cty][ss]`</span></td>
+		~/section`
+		<td align="center" class=label><span class="red">~$paid_tot_city[cty]`</span><br><span class="blue">~$tot_city[cty]`</span></td>
+	</tr>
+       ~/section`
+	<tr class="label">
+        <td align="center" width=10%>&nbsp;Total</td>
+		~section name=ss loop=$scorearr`
+			<td align="center" class=label><span class="red">~$paid_tot_scr[ss]`</span><br><span class="blue">~$tot_scr[ss]`</span><br><span class="green">~$percent_all[ss]`</span></td>
+		~/section`
+		<td align="center" class=label><span class="red">~$paid_tot_all`</span><br><span class="blue">~$tot_all`</span></td>
+	</tr>
+      ~else`
+                <tr class=label>
+                <td colspan=100% class=red align=center>No records to show</td>
+                </tr>
+        ~/if`
+</table>
+~/if`
+</body>
+</html>                      

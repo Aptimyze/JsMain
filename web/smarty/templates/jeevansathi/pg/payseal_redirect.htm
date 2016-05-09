@@ -1,0 +1,39 @@
+<html>
+<head>
+<title>Payment gateway redirect page</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, , initial-scale=1.0">
+<meta name="description" content=""/>
+<link href="/css/fonts/fonts.css" rel="stylesheet" type="text/css"/>
+</head>
+<body bgcolor="#ffffff" ~if $ACTIVE neq "YES"`onLoad="document.form1.submit();"~/if`>
+<div class="outerdiv" style="display:table; margin:0 auto; height:100%;">
+	<div class="fontlig" style="color:#d9475c; display:table-cell; vertical-align:middle">
+		<div style="font-size:42px;" class="">Re-directing</div>
+		<div style="font-size:15px">Please wait ...</div>
+	</div>
+</div>
+<form name="form1" action="http://www.jeevansathi.com/jspellhtml2k4/TestSsl.jsp" method="post">
+<input type="hidden" name="return" value="~$RETURN`">
+<input type="hidden" name="merchantid" value="~$MERCHANTID`">
+<input type="hidden" name="item_name" value="~$SERVICE`">
+<input type="hidden" name="orderid" value="~$ORDERID`">
+<input type="hidden" name="currency_code" value="~$CURRENCY`">
+<input type="hidden" name="amount" value="~$AMOUNT`">
+<input type="hidden" name="image_url" value="~$IMAGE_URL`">
+<input type="hidden" name="rm" value="~$RETURN_METHOD`">
+<input type="hidden" name="num_currency_code" value="~$NUM_CURRENCY_CODE`">
+<input type="hidden" name="display_amt" value="~$DISPLAY_AMT`">
+<input type="hidden" name="purchase_amt" value="~$PURCHASE_AMT`">
+<input type="hidden" name="pm_mod" value="~$pm_mod`">
+<!--input type="image" src="http://www.paypal.com/en_US/i/btn/x-click-but01.gif" name="submit" title="Make payments with PayPal - it's fast, free and secure!"-->
+~if $ACTIVE eq "YES"`
+<br><br><center><h3>We found that you already have active subscription on our site.</h3><br>If you want to continue... Press Continue<br><br><input type=submit name=Submit value=Continue></center>
+~/if`
+<noscript>
+<br><br>
+<center>We cannot redirect you to online payment gateway because <b>Javascript</b> is disabled in your browser.<br>Please click click on <b>Redirect</b> to reach online payment gateway.<br><br>
+<input type=submit name=redirect value=Redirect></center>
+</noscript>
+</form>
+</body>
+</html>

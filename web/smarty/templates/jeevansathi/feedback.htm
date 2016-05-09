@@ -1,0 +1,125 @@
+<html>
+<head>
+<title>JeevanSathi Matrimonials - Form for Input of Matrimonial Data</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="I/styles.php" type="text/css">
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body leftmargin="5" topmargin="5">
+<table width="760" border="0" cellspacing="0" cellpadding="0" align="center">
+  <tr>
+<td height="702"> 
+~$HEAD`
+~$SUBHEADER`
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td colspan="3" height="5"></td>
+   <SPACER height="5" type="block"></SPACER> 
+  </tr>
+  <tr>
+    <td width="187" height="578" valign="top" class="bgyell"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td bgcolor="#FFFFFF"><div align="center">~$TOPLEFT`</div></td>
+      </tr>
+      <tr>
+        <td height="526">~$LEFTPANEL`</td>
+            </tr>
+          </table>
+          </td>
+      </tr>
+    </table></td>
+    <TD class=small vAlign=top width=10><B>
+		<SPACER type="block" width="10"></B></TD>
+    <td width="584" valign="top">            
+		<table width="98%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+       <td height="4"></td>
+       <SPACER height="4" type="block"></SPACER> </tr>
+      <tr>
+       <td class="headbigblack"><b>Feedback </b></td>
+      </tr>
+      <tr class="bgred">
+       <td height="1"></td>
+       <SPACER height="1" type="block"></SPACER> </tr>
+        <tr>
+       <td height="8"></td>
+       <SPACER height="8" type="block"></SPACER> </tr>
+     </table></td>
+      </tr>
+      <TR>
+        <TD height=5 colSpan=15 class="mediumblack"><strong>
+          </strong>
+          <table width="100%"  border="0" cellspacing="2" cellpadding="2">
+            <tr>
+              <td height="108" class="mediumblack"><br>
+Thank you for choosing to give us your feedback. We assure you that your 
+suggestions will be taken into careful consideration, and your queries answered 
+promptly. <br>
+<br>
+We would also highly appreciate your feedback &amp; comments in case you have found success through JeevanSathi.Com.<br>
+<br>
+Please submit your comments/suggestions/queries in the following format:</td>
+</tr>
+<form action="feedback.php" method="post">
+<input type="hidden" name="checksum" value="~$CHECKSUM`">
+    <tr>
+      <td height="108" class="mediumblack"><br>
+        <table width="74%"  border="0" align="center" cellpadding="4" cellspacing="6">
+        <tr>
+          <td width="28%" class="bigblack"><div align="right"><strong>Name</strong></div></td>
+          <td width="72%"><span class="smallblack">
+            <input type="text" name="NAME" value="" size="55" class="testbox">
+          </span></td>
+        </tr>
+        <tr>
+          <td class="bigblack"><div align="right"><strong>Address</strong></div></td>
+          <td><span class="smallblack">
+            <input type="text" name="ADDRESS" value="" size="55" class="testbox">
+          </span></td>
+        </tr>
+        <tr>
+          <td class="bigblack"><div align="right"><strong>Email</strong></div></td>
+          <td><span class="smallblack">
+            <input type="text" name="EMAIL" value="" size="55" class="testbox">
+          </span></td>
+        </tr>
+        <tr>
+          <td class="bigblack"><div align="right"><strong>Suggestion/<br>
+            Comments</strong></div></td>
+          <td><span class="smallblack">
+            <textarea name="COMMENTS" cols="57" rows="5" class="testbox"></textarea>
+          </span></td>
+        </tr>
+        <tr>
+          <td class="bigblack">&nbsp;</td>
+          <td>
+		<input type="submit" name="fsubmit" value="submit" class="TextBox">
+		~if $abuse eq 'Y'`
+			<input type="hidden" name="abuse" value="Y">
+		~/if`
+	  </td>
+        </tr>
+      </table></td></form>
+    </tr>
+  </table>
+          <br>
+          <br>
+          <SPACER height="5" type="block"></TD>
+      </TR>
+    </table>
+      <br>
+    </td>
+  </tr>
+</table>
+
+      </td>
+  </tr>
+</table>
+<br>
+
+~$SUBFOOTER`
+<br>
+~$FOOT`
+</body>
+</html>

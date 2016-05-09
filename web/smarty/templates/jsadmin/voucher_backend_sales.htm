@@ -1,0 +1,591 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>JeevanSathi</title>
+  <link rel="stylesheet" href="jeevansathi.css" type="text/css">
+  <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+<script language="javascript">
+function checknum1()
+{
+	if(document.comform.vnum.value.length==0)
+	{
+		alert("Please enter a valid number of vouchers!");
+		return false;
+	}
+	else
+	{
+		var y=document.comform.vnum.value;
+		if(isNaN(y)==true)
+		{
+			alert("Please enter a valid number of vouchers!");
+			document.comform.vnum.value="";
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+		
+	}
+}
+function checknum2()
+{
+	if(document.noform.vnum.value.length==0)
+        {
+                alert("Please enter a valid number of vouchers!");
+                return false;
+        }
+        else
+        {
+                var y=document.noform.vnum.value;
+                if(isNaN(y)==true)
+                {
+                        alert("Please enter a valid number of vouchers!");
+                        document.noform.vnum.value="";
+                        return false;
+                }
+                else
+                {
+                        return true;
+                }
+                
+        }
+
+}
+</script>
+</head>
+ ~include file="head.htm"`
+ <br>
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+	<table width=760 cellspacing="1" cellpadding='0' ALIGN="CENTER" >
+		<tr width=100% border=1>
+			<td width=30% class="formhead" height="23" align="center"><font><b>Welcome :~$name`</b></font></td>
+			<td width=30% class="formhead" align='CENTER' height="23">
+				<a href="mainpage.php?cid=~$cid`">Click here to go to mainpage</a>
+			</td>
+			<td width=30% class="formhead" align='CENTER' height="23">
+				<a href="logout.php?cid=~$cid`">Logout</a>
+			</td>
+		</tr>
+	</table>
+	<br>
+	<table width=760 cellspacing="1" cellpadding="0" align="center">
+		<tr align="center" class="formhead">
+			<td align="center" width=25%><a href="voucher_backend_sales.php?cid=~$cid`&name=~$name`&new=1">Upload New Deal</a></td>
+			<td align="center" width=25%><a href="voucher_backend_sales.php?cid=~$cid`&name=~$name`&edit=1">Edit/Renew Existing Deal</a></td>
+			<td align="center" width=25%><a href="voucher_backend_sales.php?cid=~$cid`&name=~$name`&stop=1">Stop a deal</a></td>
+			<td align="center" width=25%><a href="voucher_backend_sales.php?cid=~$cid`&name=~$name`&tech=1">Upload Series</a></td>
+			
+		</tr>
+	</table>
+		
+~if $DONE`
+	<br><br>
+	<p align="center">
+	~if $tech`
+		~if $skip`
+		You have successfully skipped uploading series for
+		~else`
+		You have successfully uploaded series for
+		~/if`
+	~else`
+		~if $stop`
+		You have successfully stopped 
+		~else`
+			~if $new`
+			You have successfully uploaded details for	
+			~else`
+			You have successfully edited details for
+			~/if`
+		~/if`
+	~/if`~$donedeal`
+	</p>
+	<br>
+	~if $stop`
+		<p align="center"><a href="voucher_backend_sales.php?cid=~$cid`&name=~$name`&stop=1">Click Here to Continue</a></p>
+	~else`
+		~if $new`
+			<p align="center"><a href="voucher_backend_sales.php?cid=~$cid`&name=~$name`&new=1">Click Here to Continue</a></p>
+		~else`
+			~if $tech`
+			<p align="center"><a href="voucher_backend_sales.php?cid=~$cid`&name=~$name`&tech=1">Click Here to Continue</a></p>
+			~else`
+			<p align="center"><a href="voucher_backend_sales.php?cid=~$cid`&name=~$name`&edit=1">Click Here to Continue</a></p>
+			~/if`
+		~/if`
+	~/if`
+
+~else`
+	~if $new || $editdeal`
+		<br><br>
+		<form enctype="multipart/form-data" action="voucher_backend_sales.php" method="post">
+		<table align="center" cellspacing="5" cellpadding="2">
+			<tr class="formhead" align="center"><td colspan="2" align="center">Please enter the details</td></tr>
+			~if $error`	
+			<tr class="fieldsnew" align="center"><td class="label" colspan="2"><font color="red">Please check the entries marked <font color="red">*</font></td></tr>
+			~if $date_error`
+			<tr class="fieldsnew" align="center"><td class="label" colspan="2"><font color="red">Start Date must be atleast ~if $service eq 'N'`2 days from~/if` today</font></td></tr>
+			~/if`
+			~if $zipfiletype_error`
+			<tr class="fieldsnew" align="center"><td class="label" colspan="2"><font color="red">Only zip file is allowed for images and voucher</font></td></tr>
+			~/if`
+			~if $slab_error`
+			<tr class="fieldsnew" align="center"><td class="label" colspan="2"><font color="red">Please choose a slab</td></tr>
+			~/if`
+			~if $contact_error`
+			<tr class="fieldsnew" align="center"><td class="label" colspan="2"><font color="red">Please select a contacts display option</td></tr>
+			~/if`
+			~if $city_error`	
+			<tr class="fieldsnew" align="center"><td class="label" colspan="2"><font color="red">Please select a city option</td></tr>
+			~/if`
+			~if $state_error`
+			<tr class="fieldsnew" align="center"><td class="label" colspan="2"><font color="red">Please select a state option</td></tr>
+			~/if`
+			~if $hyperlink_error`
+			<tr class="fieldsnew" align="center"><td class="label" colspan="2"><font color="red">Hyperlink must begin with http://</font></td></tr>
+			~/if`
+			~/if`
+			<tr class="fieldsnew" align="center">
+				<td align="center" class="label">Client's Name~if $cname_error`<font color="red">*</font>~/if`</td>
+				<td align="center"><input type="text" name="cname" value="~$cname`"></td>
+			</tr>
+			<tr class="fieldsnew" align="center">
+				<td align="center" class="label">Voucher Type</td>
+				<td align="center"><select name="type">
+							<option value="E" ~if $type eq "E"` selected ~/if`>Electronic</option>
+							<option value="P" ~if $type eq "P"` selected ~/if`>Paper</option>
+					   </select>
+			</td>
+			</tr>
+			<tr class="fieldsnew" align="center">
+				<td align="center" class="label">Headline~if $headline_error`<font color="red">*</font>~/if`</td>
+				<td align="center"><input type="text" name="headline" value="~$headline`"></td>
+			</tr>
+			<tr class="fieldsnew" align="center">
+				<td align="center" class="label">Voucher Summary~if $summary_error`<font color="red">*</font>~/if`</td>
+				<td align="center"><textarea name="summary" rows=10 cols=50>~$summary`</textarea></td>
+			</tr>
+			<tr class="fieldsnew" align="center">
+				<td align="center" class="label">Voucher Details~if $vdetails_error`<font color="red">*</font>~/if`</td>
+				<td align="center"><textarea name="vdetails" rows=10 cols=50>~$vdetails`</textarea></td>
+			</tr>
+			<tr class="fieldsnew" align="center">
+				<td align="center" class="label">Client Details~if $cdetails_error`<font color="red">*</font>~/if`</td>
+				<td align="center"><textarea name="cdetails" rows=10 cols=50>~$cdetails`</textarea></td>
+			</tr>
+			~if $imagelink`
+			<tr align="center" class="fieldsnew">
+				<td align="center" class="label">Uploaded images file</td>
+				<td align="center">~$imagelink`</td>
+			</tr>
+			~else`
+				~if $editdeal`
+			<tr align="center" class="fieldsnew">
+				<td align="center" class="label" colspan="2">Previous Client, no uploaded zip</td>
+			</tr>
+				~/if`
+			~/if`
+			<tr class="fieldsnew" align="center">
+				<td align="center" class="label">Images & Voucher files <font color="red">(only zip format)</font>~if $zipfile_error || $zipfiletype_error`<font color="red">*</font>~/if`</td>
+				<td align-"center"><input type="file" name="zipfile"></td>
+			</tr>
+			<tr class="fieldsnew" align="center">
+				<td align="center" class="label">Gender specification (if any)</td>
+				<td align="center"><select name="gender">	
+							<option value="B" ~if $gender eq "B" || $gender eq ''`selected~/if`>Both</option>
+							<option value="M" ~if $gender eq "M"`selected~/if`>Male</option>
+							<option value="F" ~if $gender eq "F"`selected~/if`>Female</option>
+						   </select>
+				</td>	
+			</tr>
+			<tr class="fieldsnew" align="center">
+				<td align="center" class="label">Slab specification ~if $slab_error`<font color="red">*</font>~/if`</td>
+				<td align="center"><select name="slab[]" size="4" multiple class="textbox" style="width:225px">
+						~$slabs`
+						   </select>
+			</tr>
+			<tr class="fieldsnew" align="center">
+				<td align="center" class="label">Number of Vouchers</td>
+				<td align="center"><input type="text" name="number" value="~$number`"></td>
+			</tr>
+			~if $leftnum`
+			<tr class="fieldsnew" align="center">
+				<td align="center" class="label">Number of vouchers left</td>
+				<td align="center">~$leftnum`</td>
+			</tr>
+			~/if`
+			<tr class="fieldsnew" align="center">
+				<td align="center" class="label">City Specification~if $city_error`<font color="red">*</font>~/if`</td>
+				<td align="center">
+					<select name="city[]" size="4" multiple class="textbox" style="width:225px">
+					~$city_india`
+					</select>
+
+				</td>
+			</tr>
+			<tr class="fieldsnew" align="center">
+				<td align="center" class="label">State Specification ~if $state_error`<font color="red">*</font>~/if`</td>
+				<td align="center"> 
+					<select name="state[]" size="4" multiple class="textbox" style="width:225px">
+					~$state_india`
+					</select>
+				</td>
+			</tr>
+			<tr class="fieldsnew" align="center">	
+				<td align="center" class="label">Contacts Display in MIS~if $contact_error`<font color="red">*</font>~/if`</td>
+				<td align="center">
+				<select name="contact[]" size="4" multiple class="textbox" style="width:225px">
+					~$contact_display`				
+				</select>
+				</td>
+			</tr>
+			<tr class="fieldsnew" align="center">
+				<td align="center" class="label">Start Date~if $date_error`<font color="red">*</font>~/if`</td>
+				<td align="center">
+				<select name="day">
+				<option value="1" ~if $day eq "1"`selected~/if`>1</option>
+				<option value="2" ~if $day eq "2"`selected~/if`>2</option>
+				<option value="3" ~if $day eq "3"`selected~/if`>3</option>
+				<option value="4" ~if $day eq "4"`selected~/if`>4</option>
+				<option value="5" ~if $day eq "5"`selected~/if`>5</option>
+				<option value="6" ~if $day eq "6"`selected~/if`>6</option>
+				<option value="7" ~if $day eq "7"`selected~/if`>7</option>
+				<option value="8" ~if $day eq "8"`selected~/if`>8</option>
+				<option value="9" ~if $day eq "9"`selected~/if`>9</option>
+				<option value="10" ~if $day eq "10"`selected~/if`>10</option>
+				<option value="11" ~if $day eq "11"`selected~/if`>11</option>
+				<option value="12" ~if $day eq "12"`selected~/if`>12</option>
+				<option value="13" ~if $day eq "13"`selected~/if`>13</option>
+				<option value="14" ~if $day eq "14"`selected~/if`>14</option>
+				<option value="15" ~if $day eq "15"`selected~/if`>15</option>
+				<option value="16" ~if $day eq "16"`selected~/if`>16</option>
+				<option value="17" ~if $day eq "17"`selected~/if`>17</option>
+				<option value="18" ~if $day eq "18"`selected~/if`>18</option>
+				<option value="19" ~if $day eq "19"`selected~/if`>19</option>
+				<option value="20" ~if $day eq "20"`selected~/if`>20</option>
+				<option value="21" ~if $day eq "21"`selected~/if`>21</option>
+				<option value="22" ~if $day eq "22"`selected~/if`>22</option>
+				<option value="23" ~if $day eq "23"`selected~/if`>23</option>
+				<option value="24" ~if $day eq "24"`selected~/if`>24</option>
+				<option value="25" ~if $day eq "25"`selected~/if`>25</option>
+				<option value="26" ~if $day eq "26"`selected~/if`>26</option>
+				<option value="27" ~if $day eq "27"`selected~/if`>27</option>
+				<option value="28" ~if $day eq "28"`selected~/if`>28</option>
+				<option value="29" ~if $day eq "29"`selected~/if`>29</option>
+				<option value="30" ~if $day eq "30"`selected~/if`>30</option>
+				<option value="31" ~if $day eq "31"`selected~/if`>31</option>
+				</select> / <select name="month">
+				<option value="1" ~if $month eq "1"`selected~/if`>1</option>
+				<option value="2" ~if $month eq "2"`selected~/if`>2</option>
+				<option value="3" ~if $month eq "3"`selected~/if`>3</option>
+				<option value="4" ~if $month eq "4"`selected~/if`>4</option>
+				<option value="5" ~if $month eq "5"`selected~/if`>5</option>
+				<option value="6" ~if $month eq "6"`selected~/if`>6</option>
+				<option value="7" ~if $month eq "7"`selected~/if`>7</option>
+				<option value="8" ~if $month eq "8"`selected~/if`>8</option>
+				<option value="9" ~if $month eq "9"`selected~/if`>9</option>
+				<option value="10" ~if $month eq "10"`selected~/if`>10</option>
+				<option value="11" ~if $month eq "11"`selected~/if`>11</option>
+				<option value="12" ~if $month eq "12"`selected~/if`>12</option>
+				</select> / <select name="year">
+				<option value="2007" ~if $year eq "2007"`selected~/if`>2007</option>
+				<option value="2008" ~if $year eq "2008"`selected~/if`>2008</option>
+				</td>
+			</tr>
+			<tr class="fieldsnew" align="center">
+				<td align="center" class="label">Duration in months</td>
+				<td><select name="duration">
+				<option value="1" ~if $duration eq "1"`selected~/if`>1</option>
+				<option value="2" ~if $duration eq "2"`selected~/if`>2</option>
+				<option value="3" ~if $duration eq "3"`selected~/if`>3</option>
+				<option value="4" ~if $duration eq "4"`selected~/if`>4</option>
+				<option value="5" ~if $duration eq "5"`selected~/if`>5</option>
+				<option value="6" ~if $duration eq "6"`selected~/if`>6</option>
+				<option value="7" ~if $duration eq "7"`selected~/if`>7</option>
+				<option value="8" ~if $duration eq "8"`selected~/if`>8</option>
+				<option value="9" ~if $duration eq "9"`selected~/if`>9</option>
+				<option value="10" ~if $duration eq "10"`selected~/if`>10</option>
+				<option value="11" ~if $duration eq "11"`selected~/if`>11</option>
+				<option value="12" ~if $duration eq "12"`selected~/if`>12</option>
+				<option value="13" ~if $duration eq "13"`selected~/if`>13</option>
+				<option value="14" ~if $duration eq "14"`selected~/if`>14</option>
+				<option value="15" ~if $duration eq "15"`selected~/if`>15</option>
+				<option value="16" ~if $duration eq "16"`selected~/if`>16</option>
+				<option value="17" ~if $duration eq "17"`selected~/if`>17</option>
+				<option value="18" ~if $duration eq "18"`selected~/if`>18</option>
+				<option value="19" ~if $duration eq "19"`selected~/if`>19</option>
+				<option value="20" ~if $duration eq "20"`selected~/if`>20</option>
+				<option value="21" ~if $duration eq "21"`selected~/if`>21</option>
+				<option value="22" ~if $duration eq "22"`selected~/if`>22</option>
+				<option value="23" ~if $duration eq "23"`selected~/if`>23</option>
+				<option value="24" ~if $duration eq "24"`selected~/if`>24</option>
+				</select>
+				</td>
+			</tr>
+			<tr class="fieldsnew" align="center">
+				<td align="center" class="label">Username~if $username_error`<font color="red">*</font>~/if`</td>
+				<td align="center"><input type="text" name="username" value="~$username`">
+			</tr>
+			<tr class="fieldsnew" align="center">
+				<td align="center" class="label">Password~if $password_error`<font color="red">*</font>~/if`</td>
+				<td align="center"><input type="text" name="password" value="~$password`">
+			</tr>
+			<tr class="fieldsnew" align="center">
+				<td align="center" class="label">Comments</td>
+				<td align="center"><textarea name="comments" rows=8 cols=35>~$comments`</textarea></td>
+			</tr>
+			<tr class="fieldsnew" align="center">
+				<td align-"center" class="label">HyperLink~if $hyperlink_error`<font color="red">*</font>~/if`</td>
+				<td align="center"><input type="text" value="~$hyperlink`" name="hyperlink"></td>
+			</tr>
+			~if $design`
+			<tr align="center" class="fieldsnew">
+				<td align="center" class="label">Logo</td>
+				<td align="center"><img src="voucher_backend_display.php?clientid=~$deal`&file=LOGO_FILE"></img></td>
+			</tr>
+			<tr align="center" class="fieldsnew">
+				<td align="center" class="label">Vlogo</td>
+				<td align="center"><img src="voucher_backend_display.php?clientid=~$deal`&file=VLOGO"></img></td>
+			</tr>
+			<tr align="center" class="fieldsnew">
+				<td align="center" class="label">Creative 1</td>
+				<td align="center"><img src="voucher_backend_display.php?clientid=~$deal`&file=CREATIVE1"></img></td>
+			</tr>
+			<tr align="center" class="fieldsnew">
+				<td align="center" class="label">Creative 2</td>
+				<td align="center"><img src="voucher_backend_display.php?clientid=~$deal`&file=CREATIVE2"</img></td>
+			</tr>
+			~if $type eq "E"`
+			~if $oldvoucher`
+			<tr align="center" class="fieldsnew">
+				<td align="center" class="label" colspan="2">Previous client, Voucher template on disk</td>
+			</tr>
+			~else`
+			<tr align="center" class="fieldsnew">
+				<td align="center" class="label">Voucher</td>
+				<td align="center"><img height=400 width=400 src="voucher_backend_display.php?clientid=~$deal`&file=VOUCHER"></img></td>
+			</tr>
+			~/if`
+			~/if`
+			~/if`
+			
+		</table>
+		<br />
+		<table width=70% align="center" cellspacing="2">
+			<tr align="center" class="formhead">
+			~if $new`
+				<td align="center"><input type="submit" name="formsubmit" value="Upload deal"></td>
+			~/if`
+
+			~if $editdeal`
+				<td align="center"><input type="submit" name="directsubmit" ~if $service eq 'N'` value="Renew deal directly" ~else` value="Upload client details" ~/if` ></td>
+				~if $service eq 'N' && $type eq 'E'`
+				<td align="center"><input type="submit" name="sersubmit" value="Renew & Forward for series upload"></td>
+				<td align="center"><input type="submit" name="destechsubmit" value="Renew & Forward for series & design"></td>
+				~/if`
+				<td align="center"><input type="submit" name="designsubmit" ~if $service eq 'N'` value="Renew & Forward to Design Team" ~else` value="Forward to Design Team" ~/if`></td>
+			~/if`
+			</tr>
+		</table>
+		~if $new`
+		<input type="hidden" name="new" value="~$new`">
+		~/if`
+		~if $editdeal`
+		<input type="hidden" name="deal" value="~$deal`">
+		<input type="hidden" name="editdeal" value="~$editdeal`">
+		<input type="hidden" name="service" value="~$service`">
+		<input type="hidden" name="leftnum" value="~$leftnum`">
+			~if $design`
+			<input type="hidden" name="design" value="~$design`">
+			~if $oldvoucher`
+			<input type="hidden" name="oldvoucher" value="~$oldvoucher`">
+			~/if`
+			~/if`
+		~/if`
+		<input type="hidden" name="name" value="~$name`">
+		<input type="hidden" name="cid" value="~$cid`">
+		</form>
+	~else`
+		~if $edit || $stop || $tech`
+			<br><br>
+			~if $nodeals`
+			<p align="center">No pending deals left!</p>
+			~else`
+			<form action="voucher_backend_sales.php" method="post">
+			<table align="center" width="50%" cellspacing="2" cellpadding="2">
+			<tr align="center" class="formhead">
+			<td align="center">Please select a deal</td>
+			</tr>
+			<tr align="center" class="fieldsnew">
+			<td align="center"><select name="deal">~$options`</select></td>
+			</tr>
+			<tr align="center" class="fieldsnew">
+			~if $edit`
+			<td align="center" class="label"><input type="submit" name="Editdeal" value="Edit">
+			~else`
+				~if $stop`
+				<td align="center" class="label"><input type="submit" name="Stopdeal" value="Stop">
+				~else`
+				<td align="center" class="label"><input type="submit" name="techdeal" value="Upload Series">
+				~/if`
+			~/if`
+			</tr>
+			</table>
+			<input type="hidden" name="name" value="~$name`">
+			<input type="hidden" name="cid" value="~$cid`">
+			</form>
+			~/if`
+		~else`
+			~if $mode`
+				~if $error`
+				<p align="center"><font color="red">~$error`</font></p>
+				~/if`
+				~if $mode eq "csv"`
+				<p align="center">Please enter only csv file in format VOUCHER NUMBER For eg :</p>
+                        	<p align="center">JSOFFER1</p>
+	                        <p align="center">JSOFFER2</p>
+        	                <br>
+				<form enctype="multipart/form-data" action="voucher_backend_sales.php" method="post">
+				<table align="center" width="50%">
+				<tr align="center" class="fieldsnew">
+				<td align="center" class="label">Upload file</td>
+				<td align="center"><input type="file" name="seriesfile"></input></td>
+				</tr>
+				<tr align="center" class="fieldsnew">
+				<td align="center" colspan="2"><input type="submit" value="Upload Series" name="techsubmit"></input>
+				</tr>
+				</table>
+				<input type="hidden" name="cid" value="~$cid`">
+				<input type="hidden" name="name" value="~$name`">
+				<input type="hidden" name="edate" value="~$edate`">
+				<input type="hidden" name="clientid" value="~$clientid`">
+				<input type="hidden" name="mode" value="~$mode`">
+				</form>
+				~else`
+					~if $mode eq "common"`
+					<br>
+					<form name="comform" action="voucher_backend_sales.php" method="post">
+					<table align="center" width="50%">
+					<tr align="center" class="fieldsnew">
+					<td align="center" class="label">Number of Vouchers</td>
+					<td align="center"><input type="text" name="vnum" value="~$vnum`"></input></td>
+					</tr>
+					<tr align="center" class="fieldsnew">
+					<td align="center" class="label">Common Code</td>
+					<td align="center"><input type="text" name="code" value="~$code`"></input></td>
+					</tr>
+					<tr align="center" class="fieldsnew">
+					<td align="center" class="label" colspan="2"><input type="submit" name="techsubmit" value="Upload Series" onClick="return checknum1();"></td>
+					</tr>
+					</table>
+					<input type="hidden" name="name" value="~$name`">
+					<input type="hidden" name="cid" value="~$cid`">
+					<input type="hidden" name="edate" value="~$edate`">
+					<input type="hidden" name="clientid" value="~$clientid`">
+					<input type="hidden" name="mode" value="~$mode`">
+					</form>
+					~else`
+					<br>
+					<form name="noform" action="voucher_backend_sales.php" method="post">
+					<table align="center" width="50%">
+					<tr align="center" class="fieldsnew">	
+					<td align="center" class="label">Number of Vouchers</td>
+					<td align="center"><input type="text" name="vnum" value="~$vnum`"></input></td>
+					</tr>
+					<tr align="center" class="fieldsnew">
+					<td align="center" class="label" colspan="2"><input type="submit" name="techsubmit" value="Upload Series" onClick="return checknum2();"></input></td>
+					</tr>
+					</table>
+					<input type="hidden" name="name" value="~$name`">
+					<input type="hidden" name="cid" value="~$cid`">
+					<input type="hidden" name="edate" value="~$edate`">
+					<input type="hidden" name="clientid" value="~$clientid`">
+					<input type="hidden" name="mode" value="~$mode`">
+					</form>
+					~/if`
+				~/if`
+			~else`
+			~if $error`
+			<p align="center"><font color="red">~$error`</font></p>
+			~/if`
+		        <p align="center">Please enter only csv file in format VOUCHER NUMBER For eg :</p>
+			<p align="center">JSOFFER1</p>
+			<p align="center">JSOFFER2</p>
+			<br>
+			<form action="voucher_backend_sales.php" method="post">
+			 <table align="center" width="50%" cellspacing="2" cellpadding="2">
+			<tr align="center" class="formhead">
+			<td align="center" colspan="2">Please upload series for the following client</td>
+			</tr>
+			<tr align="center" class="fieldsnew">
+			<td align="center" class="label">Client Name</td>
+			<td align="center">~$cname`</td>
+			</tr>
+			<tr align="center" class="fieldsnew">
+			<td align="center" class="label">Client ID</td>
+			<td align="center">~$clientid`</td>
+			</tr>
+			<tr align="center" class="fieldsnew">
+			<td align="center" class="label">Start Date</td>
+			<td align="center">~$sdate`</td>
+			</tr>
+			<tr align="center" class="fieldsnew">
+			<td align="center" class="label">Expiry Date</td>
+			<td align="center">~$edate`</td>
+			</tr>
+			<tr align="center" class="fieldsnew">
+			<td align="center" class="label">Duration</td>
+			<td align="center">~$duration`</td>
+			</tr>
+			<tr align="center" class="fieldsnew">
+			<td align="center" class="label">Comments</td>
+			<td align="center">~$comments`</td>
+			</tr>
+			~if $num`
+			<tr align="center" class="fieldsnew">
+			<td align="center" class="label">Number of Vouchers</td>
+			<td align="center">~$num`</td>
+			</tr>
+			~/if`
+			 <tr align="center" class="fieldsnew">
+                        <td align="center" class="label">Series file</td>
+                        <td align="center">
+			<table align="center">
+			<tr align="center" class="fieldsnew">
+			<td align="left"><input type="radio" name="mode" value="csv">Upload CSV</input></td>
+			</tr>
+			<tr align="center" class="fieldsnew">
+			<td align="left"><input type="radio" name="mode" value="common">Common Code</input></td>
+			</tr>
+			<tr align="center" class="fieldsnew">
+			<td align="left"><input type="radio" name="mode" value="nocode">No Code Required</input></td>
+			</tr>
+			</table>
+			</td>
+                        </tr>
+			 <tr align="center" class="fieldsnew">
+			<td align="center" class="label">
+			<input type="hidden" name="edate" value="~$edate`">
+                        <input type="hidden" name="comments" value="~$comments`">
+                        <input type="hidden" name="num" value="~$num`">
+                        <input type="hidden" name="duration" value="~$duration`">
+                        <input type="hidden" name="sdate" value="~$sdate`">
+                        <input type="hidden" name="cname" value="~$cname`">
+                        <input type="hidden" name="clientid" value="~$clientid`">
+                        <input type="hidden" name="name" value="~$name`">
+                        <input type="hidden" name="cid" value="~$cid`">
+			<input type="submit" name="cmode" value="Choose Mode">
+			</td>
+			<td align="center" class="label"><input type="submit" value="Skip series upload" name="Skip"></td>
+			</tr>
+			</table>
+			</form>
+			~/if`
+                ~/if`
+
+	~/if`
+~/if`
+</body>
+</html>
+

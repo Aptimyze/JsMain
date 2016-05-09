@@ -1,0 +1,5 @@
+uploadVDSuccess:
+  metas:
+    title:        Upload Variable Discount Data
+  stylesheets:    [jspc/commonInterface/VDUpload]
+  javascripts:    [jspc/crm/uploadVD_js,jspc/crm/loader_js]                         

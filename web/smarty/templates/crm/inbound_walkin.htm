@@ -1,0 +1,276 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>JeevanSathi</title>
+  <link rel="stylesheet" href="../jsadmin/jeevansathi.css" type="text/css">
+  <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+ </head>
+ ~include file="head.htm"`
+ <br>
+ <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+  <table width=100% cellspacing="1" cellpadding='0' ALIGN="CENTER" >
+   <tr width=100% border=1>
+    <td width="30%" class="formhead" height="23"><font><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Welcome :~$name`</b></font></td>
+    <td width="25%" class="formhead" align="center">
+~if $MODE eq "I"`<font color="brown">| INBOUND MODULE |</font>~/if`
+~if $MODE eq "W"`<font color="brown">| WALK-IN MODULE |</font>~/if`
+<a href="mainpage.php?cid=~$cid`">Click here
+to go to main page</a></td>
+    <td width="6%" class="formhead" align='RIGHT' height="23">
+        <a href="logout.php?cid=~$cid`">Logout</a>
+    </td>
+    <td width="3%" class="formhead" height="23">&nbsp;
+    </td>
+   </tr>
+  </table>
+<br>
+
+<form name=insertForm method="post" action="inbound_walkin.php">
+<input type=hidden name=cid value="~$cid`">
+<input type=hidden name=name value="~$name`">
+<input type=hidden name=mode value="~$MODE`">
+<input type=hidden name=USERNAME value="~$USERNAME`">
+<input type=hidden name=EMAIL value="~$EMAIL`">
+<input type=hidden name=RES_NO value="~$RES_NO`">
+<input type=hidden name=flag value="~$flag`">
+<input type=hidden name=MOB_NO value="~$MOB_NO`">
+
+<table width=80% align="center" cellspacing=2 cellpadding=1 border=0>
+<tr>
+ <td class=label align="left" width=30%>~if $check_username eq "Y"`<font color="red"> Username* </font> ~else` Username* ~/if`
+~if $wrong_username eq "Y"`
+<font color="red">
+Username does not exist
+</font>
+~/if`
+</td>
+ <td class=fieldsnew width=70%><input type="text" name="USERNAME" value="~$USERNAME`" class="textbox"></td>
+
+ <td class=label align="left" width=30%>
+<input type="submit" name="history" value="Get History">
+</td>
+
+</tr>
+<tr>
+ <td class=label align="left" width=30%>~if $check_email eq "Y"`<font color="red"> Email*</font> ~else` Email* ~/if`</td>
+ <td class=fieldsnew width=70%><input type="text" name="EMAIL" value="~$EMAIL`" class="textbox"></td>
+</tr>
+<tr>
+ <td width=30% class=label>~if $check_res eq "Y"`<font color="red"> Phone No. (Residence)</font> ~else` Phone No. (Residence) ~/if`</td>
+ <td class=fieldsnew><input type="text" name="RES_NO" value="~$RES_NO`" class="textbox"></td>
+</tr>
+<tr>
+ <td class=label width=30%>~if $check_mob eq "Y"`<font color="red"> Phone No. (Mobile)</font> ~else` Phone No. (Mobile) ~/if`</td>
+ <td class=fieldsnew><input type="text" name="MOB_NO" value="~$MOB_NO`" class="textbox"></td>
+</tr>
+
+<tr>
+ <td class=label width="30%">
+   Alternate No.</td>
+ <td class=fieldsnew><input type="text" name="ALTERNATE_NO" value="~$ALTERNATE_NO`" class="textbox"></td>
+</tr>
+
+<tr>
+ <td class=label width="30%">
+  ~if $check_follow eq "Y"` <font color= "red"> Follow Up</font> ~else` Follow Up ~/if`</b></td>
+  <td width="28" class= "fieldsnew"><input type="checkbox" name="follow" value="F" ~if $follow eq "F"`checked~/if` ></td>
+</tr>
+
+<tr>
+<td class=label> ~if $check_status eq "Y"`<font color="red"> Follow Up Time<font> ~else` Follow Up Time ~/if`</td>
+ <td bgcolor="#d5d5d5" class=fieldsnew>
+
+<script type="text/javascript" src="calendar.js"></script>
+<input type=text name="follow_time" value="~$follow_time`" size=20 maxlength=99 class=textfield tabindex="1" id="field_5_3">
+<script type="text/javascript">
+    <!--
+    document.write('<a title="Calendar" href="javascript:openCalendar(\'lang=en-iso-8859-1&amp;server=1\', \'insertForm\', \'field_5_3\', \'datetime\')"><img class="calendar" src="img/b_calendar.png" alt="Calendar"/ border=0></a>');
+    //-->
+    </script>
+
+</td>
+</tr>
+<!--
+<tr>
+ <td class=label> ~if $check_ctime eq "Y"`<font color="red"> Convince Time<font> ~else` Convince Time ~/if`</td>
+ <td class=fieldsnew>
+                          <select name=chour class="TextBox">
+                            <option value="" ><font size="2">Select Hour</font></option>
+                            <option value="00"  ~if $chour eq '01'`selected ~/if`><font size="2">00</font></option>
+                            <option value="01" ~if $chour eq '01'`selected ~/if`><font size="2">01</font></option>
+                            <option value="02" ~if $chour eq '02'` selected ~/if`><font size="2">02</font></option>
+                            <option value="03" ~if $chour eq '03'` selected ~/if`><font size="2">03</font></option>
+                            <option value="04" ~if $chour eq '04'` selected ~/if`><font size="2">04</font></option>
+                            <option value="05" ~if $chour eq '05'` selected ~/if`><font size="2">05</font></option>
+                            <option value="06" ~if $chour eq '06'` selected ~/if`><font size="2">06</font></option>
+                            <option value="07" ~if $chour eq '07'` selected ~/if`><font size="2">07</font></option>
+                            <option value="08" ~if $chour eq '08'` selected ~/if`><font size="2">08</font></option>
+                            <option value="09" ~if $chour eq '09'` selected ~/if`><font size="2">09</font></option>
+                            <option value="10" ~if $chour eq '10'` selected ~/if`><font size="2">10</font></option>
+                            <option value="11" ~if $chour eq '11'` selected ~/if`><font size="2">11</font></option>
+                            <option value="12" ~if $chour eq '12'` selected ~/if`><font size="2">12</font></option>
+                            <option value="13" ~if $chour eq '13'` selected ~/if`><font size="2">13</font></option>
+                            <option value="14" ~if $chour eq '14'` selected ~/if`><font size="2">14</font></option>
+                            <option value="15" ~if $chour eq '15'` selected ~/if`><font size="2">15</font></option>
+                            <option value="16" ~if $chour eq '16'` selected ~/if`><font size="2">16</font></option>
+                            <option value="17" ~if $chour eq '17'` selected ~/if`><font size="2">17</font></option>
+                            <option value="18" ~if $chour eq '18'` selected ~/if`><font size="2">18</font></option>
+                            <option value="19" ~if $chour eq '19'` selected ~/if` ><font size="2">19</font></option>
+                            <option value="20" ~if $chour eq '20'` selected ~/if`><font size="2">20</font></option>
+                            <option value="21" ~if $chour eq '21'` selected ~/if`><font size="2">21</font></option>
+                            <option value="22" ~if $chour eq '22'` selected ~/if`><font size="2">22</font></option>
+                            <option value="23" ~if $chour eq '23'` selected ~/if`><font size="2">23</font></option>
+                          </select>
+                          :
+                          <SELECT name=cmin class="TextBox">
+                            <OPTION value="" >Select Min</OPTION>
+                            <OPTION value="00" ~if $cmin eq '00'` selected ~/if`>00</OPTION>
+                            <OPTION value="01" ~if $cmin eq '01'` selected ~/if`>01</OPTION>
+                            <OPTION value="02" ~if $cmin eq '02'` selected ~/if`>02</OPTION>
+                            <OPTION value="03" ~if $cmin eq '03'` selected ~/if`>03</OPTION>
+                            <OPTION value="04" ~if $cmin eq '04'` selected ~/if`>04</OPTION>
+                            <OPTION value="05" ~if $cmin eq '05'` selected ~/if`>05</OPTION>
+                            <OPTION value="06" ~if $cmin eq '06'` selected ~/if`>06</OPTION>
+                            <OPTION value="07" ~if $cmin eq '07'` selected ~/if`>07</OPTION>
+                            <OPTION value="08" ~if $cmin eq '08'` selected ~/if`>08</OPTION>
+                            <OPTION value="09" ~if $cmin eq '09'` selected ~/if`>09</OPTION>
+                            <OPTION value="10" ~if $cmin eq '10'` selected ~/if`>10</OPTION>
+                            <OPTION value="11" ~if $cmin eq '11'` selected ~/if`>11</OPTION>
+                            <OPTION value="12" ~if $cmin eq '12'` selected ~/if`>12</OPTION>
+                            <OPTION value="13" ~if $cmin eq '13'` selected ~/if`>13</OPTION>
+                            <OPTION value="14" ~if $cmin eq '14'` selected ~/if`>14</OPTION>
+                           <OPTION value="15" ~if $cmin eq '15'` selected ~/if`>15</OPTION>
+                           <OPTION value="16" ~if $cmin eq '16'` selected ~/if`>16</OPTION>
+                           <OPTION value="17" ~if $cmin eq '17'` selected ~/if`>17</OPTION>
+                           <OPTION value="18" ~if $cmin eq '18'` selected ~/if`>18</OPTION>
+                           <OPTION value="19" ~if $cmin eq '19'` selected ~/if`>19</OPTION>
+                          <OPTION value="20" ~if $cmin eq '20'` selected ~/if`>20</OPTION>
+                            <OPTION value="21" ~if $cmin eq '21'` selected ~/if`>21</OPTION>
+                            <OPTION value="22" ~if $cmin eq '22'` selected ~/if`>22</OPTION>
+                            <OPTION value="23" ~if $cmin eq '23'` selected ~/if`>23</OPTION>
+                            <OPTION value="24" ~if $cmin eq '24'` selected ~/if`>24</OPTION>
+                            <OPTION value="25" ~if $cmin eq '25'` selected ~/if`>25</OPTION>
+                            <OPTION value="26" ~if $cmin eq '26'` selected ~/if`>26</OPTION>
+                            <OPTION value="27" ~if $cmin eq '27'` selected ~/if`>27</OPTION>
+                            <OPTION value="28" ~if $cmin eq '28'` selected ~/if`>28</OPTION>
+                            <OPTION value="29" ~if $cmin eq '29'` selected ~/if`>29</OPTION>
+                            <OPTION value="30" ~if $cmin eq '30'` selected ~/if`>30</OPTION>
+                            <OPTION value="31" ~if $cmin eq '31'` selected ~/if`>31</OPTION>
+                            <OPTION value="32" ~if $cmin eq '32'` selected ~/if`>32</OPTION>
+                            <OPTION value="33" ~if $cmin eq '33'` selected ~/if`>33</OPTION>
+                            <OPTION value="34" ~if $cmin eq '34'` selected ~/if`>34</OPTION>
+                            <OPTION value="35" ~if $cmin eq '35'` selected ~/if`>35</OPTION>
+                            <OPTION value="36" ~if $cmin eq '36'` selected ~/if`>36</OPTION>
+                            <OPTION value="37" ~if $cmin eq '37'` selected ~/if`>37</OPTION>
+                            <OPTION value="38" ~if $cmin eq '38'` selected ~/if`>38</OPTION>
+                            <OPTION value="39" ~if $cmin eq '39'` selected ~/if`>39</OPTION>
+                            <OPTION value="40" ~if $cmin eq '40'` selected ~/if`>40</OPTION>
+                            <OPTION value="41" ~if $cmin eq '41'` selected ~/if`>41</OPTION>
+                            <OPTION value="42" ~if $cmin eq '42'` selected ~/if`>42</OPTION>
+                            <OPTION value="43" ~if $cmin eq '43'` selected ~/if`>43</OPTION>
+                            <OPTION value="44" ~if $cmin eq '44'` selected ~/if`>44</OPTION>
+                            <OPTION value="45" ~if $cmin eq '45'` selected ~/if`>45</OPTION>
+                            <OPTION value="46" ~if $cmin eq '46'` selected ~/if`>46</OPTION>
+                            <OPTION value="47" ~if $cmin eq '47'` selected ~/if`>47</OPTION>
+                            <OPTION value="48" ~if $cmin eq '48'` selected ~/if`>48</OPTION>
+                            <OPTION value="49" ~if $cmin eq '49'` selected ~/if`>49</OPTION>
+                            <OPTION value="50" ~if $cmin eq '50'` selected ~/if`>50</OPTION>
+                            <OPTION value="51" ~if $cmin eq '51'` selected ~/if`>51</OPTION>
+                            <OPTION value="52" ~if $cmin eq '52'` selected ~/if`>52</OPTION>
+                            <OPTION value="53" ~if $cmin eq '53'` selected ~/if`>53</OPTION>
+                            <OPTION value="54" ~if $cmin eq '54'` selected ~/if`>54</OPTION>
+                            <OPTION value="55" ~if $cmin eq '55'` selected ~/if`>55</OPTION>
+                            <OPTION value="56" ~if $cmin eq '56'` selected ~/if`>56</OPTION>
+                            <OPTION value="57" ~if $cmin eq '57'` selected ~/if`>57</OPTION>
+                            <OPTION value="58" ~if $cmin eq '58'` selected ~/if`>58</OPTION>
+                            <OPTION value="59" ~if $cmin eq '59'` selected ~/if`>59</OPTION>
+                    </SELECT>
+ </td>
+</tr>
+-->
+<tr>
+  <td class=label width="30%">
+   ~if $WILL_PAY eq "y"`<font color="red"> Will Pay</font>~else` Will Pay~/if`</td>
+  <td class=fieldsnew>
+  <input type="radio" name="WILL_PAY" value="N"~if $WILL_PAY eq "N"`checked~/if` checked> No
+  <input type=radio  name="WILL_PAY" value="Y"~if $WILL_PAY eq "Y"`checked~/if`>  Yes
+  </td>
+</tr>
+
+<tr>
+ <td width="30%" class="label"> ~if $check_comments eq "Y"`<font color="red"> Comments<font> ~else` Comments
+~/if`</td>
+ <td class=fieldsnew height="26">
+  <textarea name="COMMENTS" value="~$COMMENTS`"  class="textbox" cols="55" rows="3" >~$COMMENTS`</textarea>
+ </td>
+</tr>
+
+<tr>
+ <td class=label width="30%" height="2">&nbsp;</td>
+ <td colspan="2" height="2" class=fieldsnew> &nbsp;
+ <input type="submit" name="submit" value="submit">
+ </td>
+</tr>
+
+
+
+<tr>
+<td colspan=2 align=center><br><hr></td></tr>
+                                                                                                 
+ <table width=100% align="CENTER" class="fieldsnew">
+	~if $ROW.show_IM eq 'Y'`
+    <tr align="CENTER" bgcolor="#fgfgfg">
+      <td class="formhead" colspan="4" height="23"><b><font size="5" color="green">Incentive Multiplier : ~$ROW.IM`</font></b></td>
+    </tr>
+	~/if`
+    <tr align="CENTER">
+      <td class="formhead" colspan="4" height="23"><b><font size="3" color="black">History</font></b></td>
+    </tr>
+    <tr align="CENTER">
+      <td class="label" width=5% height="20"><b>S.No.</b></td>
+      <td class="label" width="15" height="20"><b>Handled By</b></td>
+      <td class="label" width=20% height="21"><b>Date</b></td>
+      <td class="label" width=15% height="21"><b>Mode</b></td>
+      </tr>
+ ~section name=index loop=$ROW`
+    <tr align="CENTER" bgcolor="#fbfbfb" >
+      <td height="20" align="CENTER" width="5%">~$ROW[index].SNO`</td>
+      <td height="20" width="15%">~$ROW[index].NAME`</td>
+      <td height="21" width="20%">~$ROW[index].DATE`</td>
+      <td height="21" width="15%" align="LEFT">~$ROW[index].MODE`</td>
+    </tr>
+  ~if $ROW[index].COMMENTS neq ''` 
+    <tr bgcolor="#fgfgfg" >
+      <td height="21" align="CENTER" width="5%">&nbsp;</td>
+      <td width=20% height="21"><b>Comments</b></td>
+      <td height="21" colspan="4">~$ROW[index].COMMENTS`</td>
+    </tr>
+  ~/if`
+        <tr class="label">
+      <td height="21" align="CENTER" width="5%" colspan=7>&nbsp;</td>
+        </tr>
+    ~/section`
+ </table>
+                                                                                                 
+<tr>
+<td colspan=2 align=center>
+~$msg`
+<td>
+</tr>
+<tr>
+<td colspan=2 align=center><br><hr></td></tr>
+<tr>
+<td colspan=2 align=center>
+~$pmsg`
+<td>
+</tr>
+
+
+</table>
+ </form>
+ <br><br>
+ ~include file="foot.htm"`
+ </body>
+</html>
+

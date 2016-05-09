@@ -1,0 +1,96 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br><br>
+~if $flag eq '1'`
+	<table width=80% align=center>
+	<tr class=formhead>
+	<td align=center>&nbsp;~$DATE`</td>
+	</tr>
+	</table>
+
+	<table width=100% align=center>
+	<tr class=label>
+		<td align=center>USERNAME</td>
+		<td align=center>EMAIL</td>
+		<td align=center>QUERY</td>
+		<td align=center>REPLY</td>
+		<td align=center>STATUS</td>
+		<td align=center>REPLYBY</td>
+		<td align=center>REPLY DATE</td>
+	</tr>
+	~if $arr neq ''`
+	~section name=sec loop=$arr`
+	<tr class=fieldsnew>
+		<td align=center>~$arr[sec].USERNAME`</td>
+		<td align=center>~$arr[sec].EMAIL`</td>
+		<td align=center>~$arr[sec].QUERY`</td>
+		<td align=center>~$arr[sec].REPLY`</td>
+		<td align=center>~$arr[sec].STATUS`</td>
+		<td align=center>~$arr[sec].REPLYBY`</td>
+		<td align=center>~$arr[sec].REPLY_DT`</td>
+	<tr>
+	~/section`
+	~else`
+	<tr class=label>
+	<td colspan=100% align=center>&nbsp;No Records Found</td>
+	</tr>
+	~/if`
+	</table>
+	<br>
+~else`
+	<form action="faqmis.php" method=post>
+	<table width=80% align=center>
+	<tr>
+		<td>Select Date (YYYY-MM-DD)</td>
+	</tr>
+	<tr>
+		<td>
+		<select name=year>
+			~section name=sec loop=$yyarr`
+			<option value="~$yyarr[sec]`">~$yyarr[sec]`</option>
+			~/section`
+		</select> - 
+		<select name=month>
+			~section name=sec loop=$mmarr`
+			<option value="~$mmarr[sec]`">~$mmarr[sec]`</option>
+			~/section`
+		</select> - 
+		<select name=day>
+			~section name=sec loop=$ddarr`
+			<option value="~$ddarr[sec]`">~$ddarr[sec]`</option>
+			~/section`
+		</select>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<input type=hidden name=cid value="~$cid`">
+			<input type=submit name=CMDGo value="  Go  ">
+		</td>
+	</tr>
+	</table>
+	</form>
+~/if`
+</body>
+</html>

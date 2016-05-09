@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Jeevansathi on Your Mobile</title>
+
+<SCRIPT language=JavaScript type=text/javascript>
+function createXmlHttpRequest()
+{
+ var xmlHttp=null; // Defines that xmlHttp is a new variable.
+ //Try to get the right object for different browser
+ try {
+        // Firefox, Opera 8.0+, Safari, IE7+
+        xmlHttp = new XMLHttpRequest(); // xmlHttp is now a XMLHttpRequest.
+ } catch (e) {
+        // Internet Explorer
+        try {
+               xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
+        } catch (e) {
+                xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+ }
+ xmlHttp.onreadystatechange = function() {  }
+ return xmlHttp;
+}
+function jsBannerResponse(mobileNo)
+{
+        var url ="http://localhost/profile/mobile_banner.php";
+        url +='?mobile='+mobileNo;
+        reqjsBanner = createXmlHttpRequest();
+        reqjsBanner.open("GET", url,false);
+        reqjsBanner.send(null);
+        if (reqjsBanner.readyState == 4)
+        {
+                try
+                {
+                        if (reqjsBanner.status == 200)
+                        {
+                                response = reqjsBanner.responseText;
+                                //alert(response);
+                                if(response=='SUCCESS'){
+                                        document.getElementById("Success").innerHTML = "Message sent successfully";
+                                        document.getElementById("mobile_id").value="";
+                                }
+                                else if(response=='FETCH_ERR')
+                                        document.getElementById("Error").innerHTML = "SMS Failure!";
+                                else if(response=='SMS_ERR')
+                                        document.getElementById("Error").innerHTML = "SMS Failure! ";
+                                return;
+                        }
+                }
+                catch(e){}
+        }
+}
+function ValidateMobileNumber(frm_mob)
+{
+        var MobileNumber= document.getElementById("mobile_id").value;
+        var ErrorMsg = "";
+        document.getElementById("Success").innerHTML="";
+        document.getElementById("Error").innerHTML="";
+        if(MobileNumber.length =='0'){
+                 ErrorMsg="Enter Mobile No.";
+                 document.getElementById("Error").innerHTML = ErrorMsg;
+        }
+        else if(!checkNum(MobileNumber)){
+                ErrorMsg="Invalid Number";
+                document.getElementById("Error").innerHTML = ErrorMsg;
+        }
+        else if(MobileNumber.length<10 || MobileNumber.length>10){
+                ErrorMsg="Invalid Number";
+                document.getElementById("Error").innerHTML = ErrorMsg;
+        }
+        else{
+                //document.frm_mob.submit();
+                jsBannerResponse(MobileNumber);
+        }
+        return false;
+}
+function checkNum(iNumber)
+{
+    var i;
+    for (i=0;i<iNumber.length;i++)
+    {
+        var c = iNumber.charAt(i);
+        if (! checkDigit(c))
+            return false
+    }
+
+    return true;
+}
+function checkDigit(c)
+{
+    return ((c >= "0") && (c <= "9"))
+}
+</SCRIPT>
+</head>
+
+<body>
+<table width="726" border="0" align="center" cellpadding="0" cellspacing="0" style="border:solid 1px #a6c330;">
+  <tr>
+    <td height="88" align="left" valign="top" background="http://ieplads.com/banner/mobisoc/images/bg_728.gif"><table width="726" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="251"><img src="http://ieplads.com/banner/mobisoc/images/logo_728.gif" alt="jeevansathi.com" width="251" height="88" border="0" usemap="#Map" /></td>
+        <td width="61"><img src="http://ieplads.com/banner/mobisoc/images/mobile_728.gif" alt="" width="61" height="88" /></td>
+        <td width="412" valign="top">
+	<form action="" method="post" name="frm_mob" id="frm_mobId" style="margin:0px; padding:0px;">
+		<div align="left" style="height:44px;"><img src="http://ieplads.com/banner/mobisoc/images/txt_728.gif" alt="" width="414" height="44" /></div>
+
+                 <!-- Success Message Start-->
+		<div style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:14px; color:#000000; padding:1px 0px 0px 50px;" align="center"><div style="float:left; width:40px; padding:3px 0px 0px 0px;"></div>
+                <div id="Success" style=" font-family:Verdana, Arial; font-size:10px; color:#FF0000; padding:0px 0px 0px 0px;" align="left" ></div>
+                <div id="Error" style="font-family:Verdana, Arial; font-size:10px; color:#FF0000; padding:0px 0px 0px 0px;" align="left"></div>
+		</div>
+                 <!-- Success Message End-->
+	
+        	<div style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:14px; color:#000000; padding:10px 0px 0px 50px;" align="center"><div style="float:left; width:40px; padding:3px 0px 0px 0px;"><b>+91</b></div>
+        	<div style="float:left; width:180px; height:22px;"><input type="text" name="mobile_no" id="mobile_id" style="width:175px; height:18px; border:solid 1px #999999; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:12px; color:#000000; font-weight:bold; padding:3px 0px 0px 0px;" align="middle" /></div><div style="float:left; width:60px; height:23px; padding:1px 0px 0px 5px;"><input type="image" src="http://ieplads.com/banner/mobisoc/images/button_728.gif" width="56" height="23" alt="GO" value="Go" align="absmiddle" onClick="javascript:ValidateMobileNumber(frm_mob); return false;" /></div></div>
+	</form>
+   </td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+
+<map name="Map" id="Map"><area shape="rect" coords="63,12,240,53" href="http://www.jeevansathi.com/" target="_blank" alt="Jeevansathi.com" />
+</map></body>
+</html>

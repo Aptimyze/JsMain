@@ -1,0 +1,28 @@
+all:
+  login:
+    enable_login: off
+    enable_google_analytics:  on
+  layer:
+    enable_login: on
+    enable_google_analytics: on
+  story:
+    enable_login: off
+    enable_google_analytics:  on
+  jspcStory:
+    enable_login: off
+    enable_google_analytics:  on
+  jspcLayer:
+    enable_login: on
+    enable_google_analytics:  on
+  morestory:
+    enable_login: off
+    enable_google_analytics:  on
+  completestory:
+    enable_login: off
+    enable_google_analytics:  on 
+  submitlayer:
+    enable_login: off
+    enable_google_analytics: on
+  spriteimages:
+    enable_login: off
+    enable_google_analytics: on

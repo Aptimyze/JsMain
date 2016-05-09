@@ -1,0 +1,696 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>JeevanSathi Matrimonials - Edit Profile II</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="/P/I/styles.php" type="text/css">
+<link rel="stylesheet" href="/P/IN/styles.php" type="text/css">
+<script language="JavaScript" SRC="profile.js"></SCRIPT>
+<script language="JavaScript" src="/jspellhtml2k4/jspell.js"></script>
+<script language="JavaScript">
+<!--
+function getSpellCheckArray() {
+	var fieldsToCheck=new Array();
+
+	// make sure to enclose form/field object reference in quotes!
+	fieldsToCheck[fieldsToCheck.length]='document.forms["form1"].Job_Info';
+	fieldsToCheck[fieldsToCheck.length]='document.forms["form1"].Information';
+	fieldsToCheck[fieldsToCheck.length]='document.forms["form1"].Spouse';
+	fieldsToCheck[fieldsToCheck.length]='document.forms["form1"].Father_Info';
+	fieldsToCheck[fieldsToCheck.length]='document.forms["form1"].Sibling_Info';
+	fieldsToCheck[fieldsToCheck.length]='document.forms["form1"].Family';
+
+	return fieldsToCheck;
+}
+var language;
+//-->
+</script>
+<script language="JavaScript">
+<!--
+//Added By Puneet for astro service for city locator
+function callCityLocator(no)
+                {
+                        val='city.php?cityflag=1&frominput=1';
+                        cityLocator = window.open(val,'','height=257,width=411,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,top=0,left=0');
+                }
+
+
+function changeCount()
+{
+        var docF=document.form1;
+        var str=new String();
+
+        str=docF.Information.value;
+        docF.wordcount.value=str.length;
+}
+
+function changeShowAddress()
+{
+        var docF=document.form1;
+
+        if(docF.showAddress.checked)
+                docF.AddressText.value="Only for jeevansathi.com to contact you. Will not be disclosed on the site";
+        else
+                docF.AddressText.value="";
+}
+
+
+function validate1()
+{
+        var docF=document.form1;
+                 //alert(docF.Email.value);
+        if(document.getElementById)
+        {
+                document.getElementById('country_birth_span').style.color="#000000";
+                document.getElementById('city_birth_span').style.color="#000000";
+                document.getElementById('time_birth_span').style.color="#000000";
+                document.getElementById('wife_working_span').style.color="#000000";
+                document.getElementById('family_back_span').style.color="#000000";
+                document.getElementById('city_parents_span').style.color="#000000";
+                document.getElementById('address_span').style.color="#000000";
+                document.getElementById('pin_span').style.color="#000000";
+                document.getElementById('phone_span').style.color="#000000";
+                document.getElementById('mobile_span').style.color="#000000";
+                //document.getElementById('term_span').style.color="#000000";
+                document.getElementById('info_span').style.color="#000000";
+        }
+
+	if(docF.Country_Birth.value=="")
+        {
+                alert("Please specify Country of Birth");
+        	if(document.getElementById)
+                	document.getElementById('country_birth_span').style.color="red";
+                                                                                                                             
+                        docF.Country_Birth.focus();
+        	return false;
+        }
+	
+	if(docF.display_horo.checked)
+	{	if(docF.City_Birth.value=="")
+        	{
+                	alert("Please specify City of Birth");
+                 	if(document.getElementById)
+                        	document.getElementById('city_birth_span').style.color="red";
+                                                                                                                             
+                        docF.City_Birth.focus();
+			return false;
+        	}
+		else if(docF.Hour_Birth.value=="")
+		{	
+			alert("Please specify your Hour of Birth");
+		 	if(document.getElementById)
+                        	document.getElementById('time_birth_span').style.color="red";
+                                                                                                                             
+                        docF.Hour_Birth.focus();
+			return false;
+		}
+		else if(docF.Min_Birth.value=="")
+                {
+                        alert("Please specify your Minute of Birth");
+                 	if(document.getElementById)
+                        	document.getElementById('time_birth_span').style.color="red";
+                                                                                                                             
+                        docF.Min_Birth.focus();
+       	 		return false;
+                }
+	}
+	~if $GENDER eq "M"`
+	var radio_choice = false;
+	
+	for(counter=0;counter<docF.Wife_Working.length;counter++)
+	{
+		if(docF.Wife_Working[counter].checked)
+			radio_choice = true;
+	}
+	if (!radio_choice)
+	{
+		alert("Please specify if you would prefer your wife to be working");
+		
+		if(document.getElementById)
+                        document.getElementById('wife_working_span').style.color="red";
+                                                                                                                             
+                        //docF.Wife_Working.focus();
+                        docF.Job_Info.focus();
+		return false;
+	}
+	~elseif $GENDER eq "F"`
+        var radio_choice = false;
+        for(counter=0;counter<docF.Married_Working.length;counter++)
+        {
+                if(docF.Married_Working[counter].checked)
+                        radio_choice = true;
+        }
+        if (!radio_choice)
+        {
+                alert("Please specify if you would prefer to work after marriage");
+         	if(document.getElementById)
+                        document.getElementById('wife_working_span').style.color="red";
+                                                                                                                             
+                        //docF.Married_Working.focus();
+                        docF.Job_Info.focus();
+        	return false;
+        }
+	~/if`
+
+        if(trim(docF.Information.value)=="")
+        {
+                alert("Please specify Information about yourself");
+         	if(document.getElementById)
+                        document.getElementById('info_span').style.color="red";
+                                                                                                                             
+                        docF.Information.focus();
+        	return false;
+        }
+
+        var iStr=docF.Information.value;
+        if(iStr.length < 100)
+        {
+                alert("Information about yourself should contain a minimum of 100 characters");
+         	if(document.getElementById)
+                        document.getElementById('info_span').style.color="red";
+                                                                                                                             
+                        docF.Information.focus();
+        	return false;
+        }
+
+        if(docF.Family_Back.value=="")
+        {
+	        alert("Please specify Family Background");
+         	if(document.getElementById)
+                        document.getElementById('family_back_span').style.color="red";
+                                                                                                                             
+                        docF.Family_Back.focus();
+		return false;
+        }
+
+        var radio_choice = false;
+        for(counter=0;counter<docF.Parent_City_Same.length;counter++)
+        {
+                if(docF.Parent_City_Same[counter].checked)
+                        radio_choice = true;
+        }
+        if (!radio_choice)
+        {
+                alert("Please specify if your parents live in same city");
+         	if(document.getElementById)
+                        document.getElementById('city_parents_span').style.color="red";
+                                                                                                                             
+                        //docF.Parent_City_Same.focus();
+                        docF.Sibling_Info.focus();
+        	return false;
+        }
+
+        if(trim(docF.Address.value)=="")
+        {
+                alert("Please specify your Contact Address");
+         	if(document.getElementById)
+                        document.getElementById('address_span').style.color="red";
+                                                                                                                             
+                        docF.Address.focus();
+        	return false;
+        }
+
+        if(trim(docF.pincode.value)=="")
+        {
+                alert("Please specify Pincode");
+         	if(document.getElementById)
+                        document.getElementById('pin_span').style.color="red";
+                                                                                                                             
+                        docF.pincode.focus();
+        	return false;
+        }
+
+        if(trim(docF.Phone.value)=="" && trim(docF.Mobile.value)=="")
+        {
+                alert("Please specify one of the two phone Nos.");
+         	if(document.getElementById)
+                {        
+			document.getElementById('mobile_span').style.color="red";
+                        document.getElementById('phone_span').style.color="red";
+                }                                                                                                            
+                        docF.Phone.focus();
+        	return false;
+        }
+
+return true;
+}
+//-->
+</SCRIPT>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body>
+
+~$HEAD`
+
+~if $SHOWLINKS eq "Y"`
+~$LEFTPANEL`
+~/if`
+<table width="78%" height="1110" border="0" cellspacing="0" cellpadding="0" align="center">
+<tr><td valign="top">
+<form name="form1" method="post" action="editprofile1.php" onsubmit="return validate1();">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="headbigblack"><b>~if $CALLVALIDATE` अपना पौफइल पूरा करै ~else` प्रोफाइल में बदलाव II ~/if`</b></td>
+ </tr>
+ <tr class="bgred">
+  <td height="1"></td>
+  <SPACER height="1" type="block"></SPACER> </tr>
+ <tr>
+  <td height="2"></td>
+  <SPACER height="2" type="block"></SPACER> </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td width="2%"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></td>
+  <td width="98%" height="18" class="smallblack"><FONT color=#cc3300>नोटः * द्रारा चिन्हित जानकारी भरनी अनिवार्य है।</FONT></td>
+ </tr>
+</table>
+ <br>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+~if $NO_OF_ERROR`<tr><td colspan="3">
+<font color="red" size="2" face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;आपके फार्म में ~$NO_OF_ERROR` गलती(याँ) है। वे सभी नीचे लाल रंग से दर्शायी गई है। उन्हे ठीक करें और फिर दुबारा से फार्म सबमिट करें।</font></td></tr>
+~/if`
+
+ <tr class="bggrey">
+  <td width="2%" class="mediumblack"><span class="smallblack"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></span></td>
+  <td width="98%" class="mediumblack" height="18"><b style="color:#CC3300 ">ऐस्टो् ङाटा</b></td>
+ </tr>
+</table>
+<br>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td valign="top"><span class="mediumblack"><span class="smallblack"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></span></span></td>
+  <td valign="top"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="180" height="1"><br>
+    <span class="mediumblack"><b>a.<span id="country_birth_span"> ~if $check_country_birth eq "Y"`<font color="red">जन्म देश*</font>~else`जन्म देश*~/if`</span> </b></span></td>
+  <td width="100%" height="32" valign="top"><span class="mediumblack">
+   <select name="Country_Birth" size = "1" class="TextBox">
+	<OPTION value="" >कोई एक विकल्प चुनिए</OPTION>
+		~$COUNTRY_BIRTH`
+   </SELECT>
+  </span> </td>
+ </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top"><span class="mediumblack"><b>b. <span id="city_birth_span"> ~if $check_city_birth eq "Y"`<font color="red">जन्म शहर</font>~else`जन्म शहर~/if`</span> </b></span></td>
+  <td height="60" valign="top"><input type="text" name="City_Birth" value="~$CITY_BIRTH`" class="textbox"><!-- added by puneet makkar--><input type="button" name="button_birth" class="testbox" value="    जन्म शहर ढुंढने वाला   " onClick="callCityLocator(1)">
+   <br>  
+ <span class="mediumblack"><span class="smallred">(हर बार बदलाव के बाद जानकारी की पुष्टि की जाएगी और इस जानकारी को लाइव होने में 48 घंटे तक का समय लगेगा।)
+</span> </span></td>
+ </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top"><span class="mediumblack"><b>c.<span id="time_birth_span">  ~if $check_time_birth eq "Y"`<font color="red">जन्म समय<font>~else`जन्म समय~/if`</span> </b></span></td>
+  <td height="32" valign="top"><select name=Hour_Birth class="TextBox">
+	<option value="" selected ><font size="2">घंटे चुनिए</font></option>
+	<option value="00" ~if $HOUR eq "00"`selected~/if`><font size="2">00</font></option>
+	<option value="01" ~if $HOUR eq "01"`selected~/if`><font size="2">01</font></option>
+	<option value="02" ~if $HOUR eq "02"`selected~/if`><font size="2">02</font></option>
+	<option value="03" ~if $HOUR eq "03"`selected~/if`><font size="2">03</font></option>
+	<option value="04" ~if $HOUR eq "04"`selected~/if`><font size="2">04</font></option>
+	<option value="05" ~if $HOUR eq "05"`selected~/if`><font size="2">05</font></option>
+	<option value="06" ~if $HOUR eq "06"`selected~/if`><font size="2">06</font></option>
+	<option value="07" ~if $HOUR eq "07"`selected~/if`><font size="2">07</font></option>
+	<option value="08" ~if $HOUR eq "08"`selected~/if`><font size="2">08</font></option>
+	<option value="09" ~if $HOUR eq "09"`selected~/if`><font size="2">09</font></option>
+	<option value="10" ~if $HOUR eq "10"`selected~/if`><font size="2">10</font></option>
+	<option value="11" ~if $HOUR eq "11"`selected~/if`><font size="2">11</font></option>
+	<option value="12" ~if $HOUR eq "12"`selected~/if`><font size="2">12</font></option>
+	<option value="13" ~if $HOUR eq "13"`selected~/if`><font size="2">13</font></option>
+	<option value="14" ~if $HOUR eq "14"`selected~/if`><font size="2">14</font></option>
+	<option value="15" ~if $HOUR eq "15"`selected~/if`><font size="2">15</font></option>
+	<option value="16" ~if $HOUR eq "16"`selected~/if`><font size="2">16</font></option>
+	<option value="17" ~if $HOUR eq "17"`selected~/if`><font size="2">17</font></option>
+	<option value="18" ~if $HOUR eq "18"`selected~/if`><font size="2">18</font></option>
+	<option value="19" ~if $HOUR eq "19"`selected~/if`><font size="2">19</font></option>
+	<option value="20" ~if $HOUR eq "20"`selected~/if`><font size="2">20</font></option>
+	<option value="21" ~if $HOUR eq "21"`selected~/if`><font size="2">21</font></option>
+	<option value="22" ~if $HOUR eq "22"`selected~/if`><font size="2">22</font></option>
+	<option value="23" ~if $HOUR eq "23"`selected~/if`><font size="2">23</font></option>
+   </select>
+   :
+   <SELECT name=Min_Birth class="TextBox">
+    <OPTION value="" selected >मिनट चुनिए</OPTION>
+<OPTION value="00" ~if $MINUTE eq '00'` selected ~/if`>00</OPTION>
+<OPTION value="01" ~if $MINUTE eq '01'` selected ~/if`>01</OPTION>
+<OPTION value="02" ~if $MINUTE eq '02'` selected ~/if`>02</OPTION>
+<OPTION value="03" ~if $MINUTE eq '03'` selected ~/if`>03</OPTION>
+<OPTION value="04" ~if $MINUTE eq '04'` selected ~/if`>04</OPTION>
+<OPTION value="05" ~if $MINUTE eq '05'` selected ~/if`>05</OPTION>
+<OPTION value="06" ~if $MINUTE eq '06'` selected ~/if`>06</OPTION>
+<OPTION value="07" ~if $MINUTE eq '07'` selected ~/if`>07</OPTION>
+<OPTION value="08" ~if $MINUTE eq '08'` selected ~/if`>08</OPTION>
+<OPTION value="09" ~if $MINUTE eq '09'` selected ~/if`>09</OPTION>
+<OPTION value="10" ~if $MINUTE eq '10'` selected ~/if`>10</OPTION>
+<OPTION value="11" ~if $MINUTE eq '11'` selected ~/if`>11</OPTION>
+<OPTION value="12" ~if $MINUTE eq '12'` selected ~/if`>12</OPTION>
+<OPTION value="13" ~if $MINUTE eq '13'` selected ~/if`>13</OPTION>
+<OPTION value="14" ~if $MINUTE eq '14'` selected ~/if`>14</OPTION>
+<OPTION value="15" ~if $MINUTE eq '15'` selected ~/if`>15</OPTION>
+<OPTION value="16" ~if $MINUTE eq '16'` selected ~/if`>16</OPTION>
+<OPTION value="17" ~if $MINUTE eq '17'` selected ~/if`>17</OPTION>
+<OPTION value="18" ~if $MINUTE eq '18'` selected ~/if`>18</OPTION>
+<OPTION value="19" ~if $MINUTE eq '19'` selected ~/if`>19</OPTION>
+<OPTION value="20" ~if $MINUTE eq '20'` selected ~/if`>20</OPTION>
+<OPTION value="21" ~if $MINUTE eq '21'` selected ~/if`>21</OPTION>
+<OPTION value="22" ~if $MINUTE eq '22'` selected ~/if`>22</OPTION>
+<OPTION value="23" ~if $MINUTE eq '23'` selected ~/if`>23</OPTION>
+<OPTION value="24" ~if $MINUTE eq '24'` selected ~/if`>24</OPTION>
+<OPTION value="25" ~if $MINUTE eq '25'` selected ~/if`>25</OPTION>
+<OPTION value="26" ~if $MINUTE eq '26'` selected ~/if`>26</OPTION>
+<OPTION value="27" ~if $MINUTE eq '27'` selected ~/if`>27</OPTION>
+<OPTION value="28" ~if $MINUTE eq '28'` selected ~/if`>28</OPTION>
+<OPTION value="29" ~if $MINUTE eq '29'` selected ~/if`>29</OPTION>
+<OPTION value="30" ~if $MINUTE eq '30'` selected ~/if`>30</OPTION>
+<OPTION value="31" ~if $MINUTE eq '31'` selected ~/if`>31</OPTION>
+<OPTION value="32" ~if $MINUTE eq '32'` selected ~/if`>32</OPTION>
+<OPTION value="33" ~if $MINUTE eq '33'` selected ~/if`>33</OPTION>
+<OPTION value="34" ~if $MINUTE eq '34'` selected ~/if`>34</OPTION>
+<OPTION value="35" ~if $MINUTE eq '35'` selected ~/if`>35</OPTION>
+<OPTION value="36" ~if $MINUTE eq '36'` selected ~/if`>36</OPTION>
+<OPTION value="37" ~if $MINUTE eq '37'` selected ~/if`>37</OPTION>
+<OPTION value="38" ~if $MINUTE eq '38'` selected ~/if`>38</OPTION>
+<OPTION value="39" ~if $MINUTE eq '39'` selected ~/if`>39</OPTION>
+<OPTION value="40" ~if $MINUTE eq '40'` selected ~/if`>40</OPTION>
+<OPTION value="41" ~if $MINUTE eq '41'` selected ~/if`>41</OPTION>
+<OPTION value="42" ~if $MINUTE eq '42'` selected ~/if`>42</OPTION>
+<OPTION value="43" ~if $MINUTE eq '43'` selected ~/if`>43</OPTION>
+<OPTION value="44" ~if $MINUTE eq '44'` selected ~/if`>44</OPTION>
+<OPTION value="45" ~if $MINUTE eq '45'` selected ~/if`>45</OPTION>
+<OPTION value="46" ~if $MINUTE eq '46'` selected ~/if`>46</OPTION>
+<OPTION value="47" ~if $MINUTE eq '47'` selected ~/if`>47</OPTION>
+<OPTION value="48" ~if $MINUTE eq '48'` selected ~/if`>48</OPTION>
+<OPTION value="49" ~if $MINUTE eq '49'` selected ~/if`>49</OPTION>
+<OPTION value="50" ~if $MINUTE eq '50'` selected ~/if`>50</OPTION>
+<OPTION value="51" ~if $MINUTE eq '51'` selected ~/if`>51</OPTION>
+<OPTION value="52" ~if $MINUTE eq '52'` selected ~/if`>52</OPTION>
+<OPTION value="53" ~if $MINUTE eq '53'` selected ~/if`>53</OPTION>
+<OPTION value="54" ~if $MINUTE eq '54'` selected ~/if`>54</OPTION>
+<OPTION value="55" ~if $MINUTE eq '55'` selected ~/if`>55</OPTION>
+<OPTION value="56" ~if $MINUTE eq '56'` selected ~/if`>56</OPTION>
+<OPTION value="57" ~if $MINUTE eq '57'` selected ~/if`>57</OPTION>
+<OPTION value="58" ~if $MINUTE eq '58'` selected ~/if`>58</OPTION>
+<OPTION value="59" ~if $MINUTE eq '59'` selected ~/if`>59</OPTION>
+</SELECT></td>
+ </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top"><span class="mediumblack"><b>d. नक्षत्रम</b></span></td>
+  <td height="40" valign="top"><span class="mediumblack">
+   <input type="text" name="Nakshatram" value="~$NAKSHATRA`" class="testbox">
+   <br>
+   <span class="smallred">(हर बार बदलाव के बाद जानकारी की पुष्टि की जाएगी और इस जानकारी को लाइव होने में 48 घंटे तक का समय लगेगा।)
+</span></span></td>
+ </tr>
+
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top"><span class="mediumblack"><b>e. क्या आप अपनी जन्मपत्रिका अन्य सदस्यों को दिखाना चाहते है?* </b></span></td>
+  <td height="40" valign="top"><span class="mediumblack">
+   <input type="checkbox" name="display_horo" value="Y" ~if $display_horo eq 'Y'`checked~/if`>
+   <br>
+   </span></td>
+ </tr>
+
+</table>
+<br>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr class="bggrey">
+  <td width="2%" height="19" class="mediumblack"><span class="smallblack"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></span></td>
+  <td width="98%" class="mediumblack" height="18"><b style="color:#CC3300 ">2. अन्य जानकारी</b></td>
+ </tr>
+</table>
+<br>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td width="2%" valign="top"><span class="smallblack"><span class="mediumblack"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></span></span></td>
+  <td width="32%" valign="top"><span class="mediumblack"><b><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="180" height="1"><br>
+   a. आपका कार्य व कार्यस्थान	</b></span></td>
+  <td width="66%" height="60" valign="top"><span class="mediumblack"><span class="smallblack">
+   <textarea name="Job_Info" class="testbox" cols="55" rows="3">~$JOB_INFO`</textarea>
+   <br>
+   <span class="smallred">(हर बार बदलाव के बाद जानकारी की पुष्टि की जाएगी और इस जानकारी को लाइव होने में 48 घंटे तक का समय लगेगा।)</span> </span></span></td>
+  </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top">
+  <span class="mediumblack">
+  ~if $GENDER eq "F"`
+	<b>b.<span id="wife_working_span"> ~if $check_married_working eq "Y"`<font color="red">~/if`क्या आप शादी के बाद काम/नौकरी करने की योजना बना रहे है?*~if $check_married_working eq "Y"`</font>~/if`</span> </b></span></td>
+  
+ <td height="32" valign="top">
+<span class="mediumblack">
+  <span class="smallblack">
+  <input type=radio value="Y" name="Married_Working" ~if $MARRIED_WORKING eq "Y"`checked ~/if`>
+हाँ &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio value="N" name="Married_Working" ~if $MARRIED_WORKING eq "N"`checked ~/if` >
+नही &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio value="D" name="Married_Working" ~if $MARRIED_WORKING eq "D"`checked ~/if`>
+पता नही</span> </span></td>
+  ~elseif $GENDER eq "M"`
+        <b>b.<span id="wife_working_span"> ~if $check_wife_working eq "Y"`<font color="red">~/if`क्या आप चाहते है कि शादी के बाद आपकी पत्नी नौकरी करें।?*~if $check_wife_working eq "Y"`</font>~/if`</span> </b></span></td>
+  <td height="32" valign="top"><span class="mediumblack">
+  <span class="smallblack">
+  <input type=radio value="Y" name="Wife_Working" ~if $WIFE_WORKING eq "Y"`checked ~/if`>
+हाँ &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio value="N" name="Wife_Working" ~if $WIFE_WORKING eq "N"`checked ~/if`>
+नही &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio value="D" name="Wife_Working" ~if $WIFE_WORKING eq "D"`checked ~/if`>
+अमान्य</span> </span></td>
+  ~/if`
+  </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top"><span class="mediumblack"><b>c.<span id="info_span"> ~if $check_information eq "Y"`<font color="red">अन्य जानकारी</font>~else`अन्य जानकारी* ~/if` </span></b></span></td>
+  <td height="130" valign="top"><span class="smallblack">
+   <textarea name="Information" class="testbox" cols="55" rows="3" onKeyup="changeCount();">~$YOURINFO`</textarea>
+   <br>
+  </span>
+   <table width="95%" border="0" cellspacing="1" cellpadding="1">
+    <tr>
+     <td width="40%" class= "mediumblack">No. of characters </td>
+     <td><input name="wordcount" type="text" class="testbox" value="~$CHARACTERS`" size="3" disabled style="border: 1px solid #ffffff;"></td>
+     <td width="60%" class="smallblack">(minimum 100 characters)</td>
+    </tr>
+   </table>
+   <span class="smallblack">   <span class="smallblack">(अपने (i)व्यवसाय व आय(ii)व्यक्तित्व(iii)सिबलिंग(iv)परिवार की जानकारी(v)कोई और; के बारे में और अधिक जानकारी दीजिए।)
+<br>
+   <span class="smallred">(हर बार बदलाव के बाद जानकारी की पुष्टि की जाएगी और इस जानकारी को लाइव होने में 48 घंटे तक का समय लगेगा।)</span> </span></span></td>
+  </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top"><span class="mediumblack"><b>d. अपने जीवनसाथी की इच्छित विशेषताऐं बताऐं।</b></span></td>
+  <td height="60" valign="top"><span class="mediumblack">
+  <span class="smallblack">
+  <textarea name="Spouse" class="testbox" cols="55" rows="3">~$SPOUSE`</textarea>
+  <br>
+  <span class="smallred">(हर बार बदलाव के बाद जानकारी की पुष्टि की जाएगी और इस जानकारी को लाइव होने में 48 घंटे तक का समय लगेगा।)</span></span> </span></td>
+  </tr>
+</table>
+<br>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr class="bggrey">
+  <td width="2%" height="19" class="mediumblack"><span class="smallblack"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></span></td>
+  <td width="98%" class="mediumblack" height="18"><b style="color:#CC3300 ">3. आपका परिवार</b></td>
+ </tr>
+</table>
+<br>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td width="2%" valign="top"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></td>
+  <td width="32%" valign="top" class="mediumblack"><b><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="180" height="1"><br>
+   a. <span id="family_back_span">~if $check_family_back eq "Y"`<font color="red">पारिवारिक जानकारी*</font>~else`पारिवारिक जानकारी*~/if`</span> </b></td>
+  <td width="66%" height="32" valign="top">
+   <select name="Family_Back" size="1" class="TextBox">
+    <option selected value="">कोई एक विकल्प चुनिए</option>
+	~$FAMILY_BACK`
+   </select></td>
+ </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top"><span class="mediumblack"><b>b. पारिवारिक वेल्युस</b></span></td>
+  <td height="32" valign="top"><select name="Family_Values" size="1" class="TextBox">
+    <option selected value="">कोई एक विकल्प चुनिए</option>
+    <option value="1" ~if $FAMILY_VALUES eq "1"` selected ~/if`>परम्परागत</option>
+    <option value="2" ~if $FAMILY_VALUES eq "2"` selected ~/if`>सामान्य/मध्यम</option>
+    <option value="3" ~if $FAMILY_VALUES eq "3"` selected ~/if`>लीबरल</option>
+   </select></td>
+ </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top"><span class="mediumblack"><b>c. गोत्र </b></span></td>
+  <td height="50" valign="top"><span class="smallblack">   <span class="mediumblack"><span class="smallred">
+   <input type="text" name="Gothra"  value="~$GOTHRA`" class="testbox">
+  </span>   <br>
+   <span class="smallred">(हर बार बदलाव के बाद जानकारी की पुष्टि की जाएगी और इस जानकारी को लाइव होने में 48 घंटे तक का समय लगेगा।)</span></span></span></td>
+ </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top"><span class="mediumblack"><b>d. अपने माता पिता के बारे में बतायें?(तुम्हारे माता पिता क्या करते है व उनके बारे में पूरी जानकारी दीजिए।). </b></span></td>
+  <td height="50" valign="top"><span class="mediumblack"> <span class="smallblack">
+  <textarea name="Father_Info" class="testbox" cols="55" rows="3">~$FATHER_INFO`</textarea>
+  </span> <span class="smallblack"><span class="smallred">(हर बार बदलाव के बाद जानकारी की पुष्टि की जाएगी और इस जानकारी को लाइव होने में 48 घंटे तक का समय लगेगा।)</span> </span>  </span></td>
+ </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top"><span class="mediumblack"><b>e. आपके कितने भाई व बहन है और वे क्या करते है? </b></span></td>
+  <td height="50" valign="top"><span class="smallblack"><span class="mediumblack">
+   <textarea name="Sibling_Info" class="testbox" cols="55" rows="3">~$SIBLING_INFO`</textarea>
+   <span class="smallred">(हर बार बदलाव के बाद जानकारी की पुष्टि की जाएगी और इस जानकारी को लाइव होने में 48 घंटे तक का समय लगेगा।)</span></span></span></td>
+ </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top"><span class="mediumblack"><b>f.<span id="city_parents_span"> ~if $check_parent_city eq "Y"`<font color="red">~/if`क्या आप भी उसी शहर मे रहते है जिसमे आपके माता पिता?*~if $check_parent_city eq "Y"`</font>~/if`</span></b></span></td>
+  <td height="32" valign="top"><span class="mediumblack">
+   <input type=radio value="Y" name="Parent_City_Same" ~if $PARENT_CITY_SAME eq "Y"`checked ~/if`>हाँ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio value="N" name="Parent_City_Same" ~if $PARENT_CITY_SAME eq "N"`checked ~/if`>
+नही &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio value="D" name="Parent_City_Same" ~if $PARENT_CITY_SAME eq "D"`checked ~/if`>
+अमान्य
+</span></td>
+ </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top"><span class="mediumblack"><b>g. आपके विस्तृत परिवार में अन्य लोगो के बारे में बतायें? </b></span></td>
+  <td height="32" valign="top"><span class="mediumblack"><span class="smallblack">
+   <textarea name="Family" class="testbox" cols="55" rows="3">~$FAMILYINFO`</textarea>
+   <br>
+   <span class="smallred">(हर बार बदलाव के बाद जानकारी की पुष्टि की जाएगी और इस जानकारी को लाइव होने में 48 घंटे तक का समय लगेगा।)</span> </span></span></td>
+ </tr>
+</table>
+<br>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr class="bggrey">
+  <td width="2%" height="19" class="mediumblack"><span class="smallblack"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></span></td>
+  <td width="98%" class="mediumblack" height="18"><b style="color:#CC3300 ">4. आपका सम्पर्क पता</b></td>
+ </tr>
+</table>
+<br>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td valign="top"><span class="mediumblack"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></span></td>
+  <td valign="top"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="180" height="1"><br>
+    <span class="mediumblack"><b>a. आपके माता पिता सम्पर्क पता</b></span></td>
+  <td width="100%" height="50" valign="top"><span class="mediumblack">
+  <input name="Parents_Contact" type="text" class="testbox" value="~$PARENTS_CONTACT`" size="55">
+  <br>
+  <span class="smallred">(हर बार बदलाव के बाद जानकारी की पुष्टि की जाएगी और इस जानकारी को लाइव होने में 48 घंटे तक का समय लगेगा।)</span> </span> </td>
+ </tr>
+<tr>
+  <td valign="top"><span class="mediumblack"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></span></td>
+<td>&nbsp;</td>
+<td class=smallblack height="1"><table width="300" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="28" class= "mediumblack"><input type="checkbox" name="Show_Parents_Contact" value="N" ~if $SHOW_PARENTS_CONTACT eq "N"`checked~/if`></td>
+<td width="252" class="mediumblack">मेरे माता पिता का सम्पर्क पता प्रकाशित न करें</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+  <td valign="top"><span class="mediumblack"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></span></td>
+  <td valign="top"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="180" height="1"><br>
+    <span class="mediumblack"><b>b.<span id="address_span">  ~if $check_address eq "Y"`<font color="red">~/if`आपका सम्पर्क पता*~if $check_address eq "Y"`</font>~/if`</span> </b></span></td>
+<td class=smallblack height="5"><textarea name="Address" cols="55" rows="3" class="testbox">~$CONTACT`</TEXTAREA>
+<br><table width="300" border="0" cellspacing="1" cellpadding="1">
+<tr>
+<td width="48" class="mediumblack"><b> <span id="pin_span">~if $check_pincode eq "Y"`<font color="red">~/if`पिन नम्बर*~if $check_pincode eq "Y"`</font>~/if`</span> </b></td>
+<td width="252"><input name="pincode" type="text" class="testbox" value="~$PINCODE`" size="6"></td>
+</tr>
+</table>
+(कृपया यहाँ अपना ईमेल ID मत लिखें। यहाँ ईमेल ID के अलावा केवल सम्पर्क जानकारी ही दी जाएगी।)<span class="smallred">(हर बार बदलाव के बाद जानकारी की पुष्टि की जाएगी और इस जानकारी को लाइव होने में 48 घंटे तक का समय लगेगा।).</span> </td>
+            </tr>
+            <tr>
+  <td valign="top"><span class="mediumblack"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></span></td>
+<td>&nbsp;</td>
+<td><input name="AddressText" type="text" class="testbox1" ~if $SHOWADDRESS eq "N"`value="यह जानकारी केवल jeevansathi.com को आपसे सम्पर्क के लिए है और यह साइट पर प्रकाशित नही होगी।"~else`value=""~/if` size="60" readonly>
+</td>
+</tr>
+<tr>
+  <td valign="top"><span class="mediumblack"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></span></td>
+<td>&nbsp;</td>
+<td class=smallblack height="1"><table width="300" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="28" class= "mediumblack"><input type="checkbox" name="showAddress" value="N" ~if $SHOWADDRESS eq 'N'`checked~/if` onclick="changeShowAddress();"></td>
+<td width="252" class="mediumblack">मेरा सम्पर्क पता प्रकाशित न करें</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+</table></td>
+</tr>
+
+<tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top">~if $check_phone eq 'Y'`<span class="mediumred"> ~else` <span class="mediumblack"> ~/if`<b>c. <span id="phone_span"> फोन नम्बर </span></b>~if $check_phone eq 'Y'` <br>~$phone_msg` ~/if` </span></td>
+  <td height="40" valign="top"><span class="mediumblack">
+   <input type="text" name="Phone" value="~$PHONE_RES`" class="testbox">
+&nbsp;&nbsp;&nbsp;कृपया औरो को न दिखाए
+<input type="checkbox" name="Showphone" value="N" ~if $SHOWPHONE_RES eq "N"`checked~/if`  >
+</span></td>
+ </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top"> ~if $check_phone eq 'Y'`<span class="mediumred"> ~else` <span class="mediumblack"> ~/if`<b>d.<b><span id="mobile_span"> मोबाइल नम्बर</span> <b> </b></b></b>~if $check_phone eq 'Y'` <br>~$phone_msg` ~/if`</span> </td>
+  <td height="55" valign="top"><span class="mediumblack">
+   <input type="text" name="Mobile" value="~$PHONE_MOB`" class="testbox">
+&nbsp;&nbsp;&nbsp;कृपया औरो को न दिखाए
+<input type="checkbox" name="Showmobile" value="N" ~if $SHOWPHONE_MOB eq "N"`checked~/if` >
+<br>
+<input type="checkbox" name="GET_SMS" value="Y" ~if $GET_SMS eq "Y" OR $GET_SMS eq ""` checked ~/if`>&nbsp;क्या आप jeevansathi की मोबाइल SMS सर्विस पाना चाहते है? <br>
+~if $check_phone eq 'Y'`<span class="smallred">~/if`(कृप्या दोनो में से कम से कम एक फोन नम्बर लिखें।) </span></td>
+ </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top" class="mediumblack"><b>e.<b> मैसेंजर ID</b></b><br>
+  </td>
+  <td height="60" valign="top"><span class="mediumblack">
+    <input type="text" name="Messenger_ID" value="~$MESSENGER_ID`" class="testbox">
+   ~if $check_messenger eq "Y"`<font class=testbox color="red">कोई एक विकल्प चुनिए</font>~/if` <select name="Messenger" class="testbox">
+	<option value="" selected>कोई एक विकल्प चुनिए</option>
+	<option value="1" ~if $MESSENGER_CHANNEL eq '1' or $MESSENGER_CHANNEL eq ''` selected ~/if`>Yahoo</option>
+        <option value="2" ~if $MESSENGER_CHANNEL eq '2'` selected ~/if`>MSN</option>
+        <option value="3" ~if $MESSENGER_CHANNEL eq '3'` selected ~/if`>Skype</option>
+        <option value="5" ~if $MESSENGER_CHANNEL eq '5'` selected ~/if`>ICQ</option>
+        <option value="4" ~if $MESSENGER_CHANNEL eq '4'` selected ~/if`>Others</option>
+    </select>
+    <br>
+    <input type="checkbox" name="showMessenger" value="N" ~if $SHOWMESSENGER eq "N"`checked~/if`>
+मेरा मैसेंजर ID अन्य सदस्यों को न दिखायें<br>
+  </span></td>
+ </tr>
+</table>
+<br>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td width="190">&nbsp;</td>
+  <td class="mediumblack"><a href="" onClick="spellcheck();return false;">Click Here</a> to do spell check<br><br></td>
+ </tr>
+ <tr>
+  <td width="190">&nbsp;</td>
+  <td class="smallblack">
+	<input type="hidden" name="checksum" value="~$CHECKSUM`">
+	<input type="hidden" name="cor" value="~$cor`">
+	<input type="hidden" name="gender" value=~$GENDER`>
+	<input type="hidden" name="showlinks" value=~$SHOWLINKS`>
+	<input type="hidden" name="callValidate" value=~$CALLVALIDATE`>
+	<input type="submit" name="Fsubmit" value="मेरा रजिस्ट्रेशन पूरा करें" class="TextBox">
+  </td>
+ </tr>
+</table>
+</form>
+<br></td></tr>
+</table>
+</td>
+</tr>
+</table>
+
+</td>
+</tr>
+</table>
+<br>
+~$SUBFOOTER`
+<br>
+~$FOOT`
+</body>
+</html>

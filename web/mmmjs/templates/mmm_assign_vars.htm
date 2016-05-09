@@ -1,0 +1,103 @@
+<html>
+<head>
+<title>Jeevansathi.com - MMM - Assign Variables</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="http://www.jeevansathi.com/profile/images/styles.css" type="text/css">
+<link rel="stylesheet" href="http://www.jeevansathi.com/jsadmin/jeevansathi.css" type="text/css">
+<script>
+function validate()
+{
+	for(x=0;x<form1.elements.length; x++)
+	{
+		if(theForm.elements[x].type=="text" && theForm.elements[x].value=="")
+		{      
+			alert("Please fill all the text box");
+			return false;
+		}
+	}
+	return true;
+}	
+</script>
+</head>
+
+<body>
+<form name="form1" method="post" action="mmm_mail_vars.php" onsubmit="return validate()">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="http://www.jeevansathi.com/profile/images/logo.gif" width="269" height="82" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+                                                                                                 
+<tr><td colspan="4" align="center"><h2>Welcome to<br> Mass Mailer Management Sytem<br><span class=red>>>>&nbsp;&nbsp; Write mail for the MAILER &nbsp;&nbsp;>>></span></h2><br><br></td></tr>
+</tbody>
+</table>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tr>
+  <td class="headbigblack" width="100%"><b>Assign Variable Names for the mailer </b></td>
+</tr>
+<tr class="bgred">
+   <td height="1"></td>
+ <SPACER height="1" type="block"></SPACER> </tr>
+<tr>
+</table>
+<br>
+
+
+<table WIDTH="75%" BORDER="0" CELLSPACING="2" CELLPADDING="0" BORDERCOLOR="#2F3193" ALIGN="CENTER">
+<tr class=label>
+	<td >
+		<b>Variable name</b>
+	</td>
+	<td>
+		<b>Table Field Name</b>
+	</td>
+</tr>
+
+<tr class=label>
+	<td class=fieldsnew>
+		<input type="text" name="email" value="">
+	</td>
+	<td>EMAIL</td>
+</tr>
+
+~section name=index1 loop=$nno`
+<tr class=fieldsnew>
+	<td>
+		<input type="text" name="var_name[~$nno[index1].count`]" >
+	</td>
+	<td>
+		<select name="table_var_name[~$nno[index1].count`]" >
+		~section name=index loop=$field_arr`
+			<option value="~$field_arr[index].field_name`" >~$field_arr[index].field_name`</option>
+		~/section`
+	</td>
+</tr>
+~/section`
+
+<input type="hidden" name="mailer_id" value="~$mailer_id`">
+
+<tr class=fieldsnew>
+	<td colspan="2" align="center">
+		<input type="hidden" name="no" value=~$no`>
+		<input type="hidden" name="cid" value=~$cid`>
+		<input type="hidden" name="mailer_id" value="~$mailer_id`">
+<!--		<input type="hidden" name="table_var_name" value="~$table_var_name`">
+		<input type="hidden" name="var_name" value="~$var_name`">
+-->		<input type="submit" name="assign_values" value="Assign Values">
+	</td>
+</tr>
+</table>
+<br>
+<tr><td colspan="4" align="center"><h3><b><span class=red>&nbsp;&nbsp; ~$message` &nbsp;&nbsp;</span></b></h3><br><br></td></tr>
+
+
+
+</form> 
+<br>
+</body>
+</html>

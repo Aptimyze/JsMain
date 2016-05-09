@@ -1,0 +1,571 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jeevansathi.com</title>
+<link href="main.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+.p1 { background-image:url(~$PHOTO_URL`/profile/images/p1.gif); background-position:right; background-repeat:no-repeat; }
+.p2 { background-image:url(~$PHOTO_URL`/profile/images/p2.gif); background-position:right; background-repeat:no-repeat; }
+.p3 { background-image:url(~$PHOTO_URL`/profile/images/p3.gif); background-position:right; background-repeat:no-repeat; }
+.p4 { background-image:url(~$PHOTO_URL`/profile/images/p4.gif); background-position:right; background-repeat:no-repeat; }
+.p4-1 { background-image:url(~$PHOTO_URL`/profile/images/p4-1.gif); background-position:right; background-repeat:no-repeat; }
+.p5 { background-image:url(~$PHOTO_URL`/profile/images/p5.gif); background-position:right; background-repeat:no-repeat; }
+.p6 { background-image:url(~$PHOTO_URL`/profile/images/p6.gif); background-position:right; background-repeat:no-repeat; }
+</style>
+
+<script type="text/javascript">
+function win_open(url)
+{
+        window.open(url,'','width=760,height=570,resizable=1,scrollbars=1');
+}
+function win_open_contact(url)
+{
+        window.open(url,'','width=365,height=160,resizable=1,scrollbars=1');
+}
+function checkboxes(action)
+{
+	var i=0;
+	var check=0;
+	var pids= '';
+	document.poolform.action.value=action;
+	for(i=0;i<document.poolform.elements.length;i++)
+	{
+		if((document.poolform.elements[i].type=="checkbox") && (document.poolform.elements[i].checked))
+		{
+			if(document.poolform.elements[i].checked==true)
+			{
+				if(pids=='')
+					pids=document.poolform.elements[i].value;
+				else
+					pids=pids+","+document.poolform.elements[i].value;	
+				check++;
+			}
+		}
+	}
+	if(check>0)
+	{
+		if(action==2)
+		{
+			var temp_cid = "~$cid`";
+			var page="send_email.php?cid="+temp_cid+"&pids="+pids+"&profileid="+~$profileid`;
+			window.open(page,'','width=365,height=160,resizable=1,scrollbars=1');
+			return false;	
+		}
+		else
+		{
+			if(action==1 && check>document.poolform.acc_rem.value)
+			{
+				alert("No of profiles selected are greater than acceptances remaining!");
+				return false;
+			}
+			document.poolform.submit();
+			return false;
+		}
+	}
+	else
+	alert("Please select atleast one profile!");
+	
+	return false;
+}
+function $() {
+var elements = new Array();
+for (var i=0;i<arguments.length;i++) {
+var element = arguments[i];
+if (typeof element == 'string') element = document.getElementById(element);
+if (arguments.length == 1) return element;
+elements.push(element);
+}
+return elements;
+}
+var BoxHeights = {
+maxh: 0,
+boxes: Array(),
+num: 0,
+op_test: false,
+equalise: function() {
+this.num = arguments.length;
+for (var i=0;i<this.num;i++) if (!$(arguments[i])) return;
+this.boxes = arguments;
+this.maxheight();
+for (var i=0;i<this.num;i++) $(arguments[i]).style.height = this.maxh+"px";
+},
+maxheight: function() {
+var heights = new Array();
+for (var i=0;i<this.num;i++) {
+if (navigator.userAgent.toLowerCase().indexOf('opera') == -1) {
+heights.push($(this.boxes[i]).scrollHeight);
+} else {
+heights.push($(this.boxes[i]).offsetHeight);
+}
+}
+heights.sort(this.sortNumeric);
+this.maxh = heights[this.num-1];
+},
+sortNumeric: function(f,s) {
+return f-s;
+}
+}
+
+window.onload = function() {
+BoxHeights.equalise('one','two');BoxHeights.equalise('three','four');BoxHeights.equalise('five','six');BoxHeights.equalise('seven','eight');BoxHeights.equalise('nine','ten');
+BoxHeights.equalise('a1','a2');BoxHeights.equalise('a3','a4');BoxHeights.equalise('a5','a6');BoxHeights.equalise('a7','a8');
+BoxHeights.equalise('a9','a10');
+BoxHeights.equalise('b1','b2');BoxHeights.equalise('b3','b4');BoxHeights.equalise('b5','b6');BoxHeights.equalise('b7','b8');
+BoxHeights.equalise('b9','b10');
+BoxHeights.equalise('c1','c2');BoxHeights.equalise('c3','c4');BoxHeights.equalise('c5','c6');BoxHeights.equalise('c7','c8');
+BoxHeights.equalise('c9','c10');
+BoxHeights.equalise('d1','d2');BoxHeights.equalise('d3','d4');BoxHeights.equalise('d5','d6');BoxHeights.equalise('d7','d8');
+BoxHeights.equalise('d9','d10');
+}
+</script>
+</head>
+
+<body topmargin="0" rightmargin="0" bottommargin="0" leftmargin="0" ~if $detailview && $PRINT` onLoad="javascript : window.print();" ~/if`>
+~if !$PFLAG`
+<table width="775" border="0" align="center" cellpadding="0" cellspacing="0" style="border:1px solid #f09329">
+~else`
+<table width="750" border="0" align="center" cellpadding="0" cellspacing="0" style="border:0px solid #f09329">
+~/if`
+  <tr>
+   ~if $detailview`
+	<td><img src="~$PHOTO_URL`/profile/images/js-logo.gif" width="226" height="63" hspace="15" vspace="5"></td>
+	~if !$PFLAG`
+	<td align="right"><a href="#" onClick="javascript : window.close();">Close this window</a>
+	~/if`
+
+	~else`
+    	<td colspan="2"><img src="~$PHOTO_URL`/profile/images/js-logo.gif" width="226" height="63" hspace="15" vspace="5"></td>
+	~/if` 
+  </tr>
+~if !$PFLAG`
+  <tr>
+    <td height="6" colspan="2" bgcolor="#bc001d"></td>
+  </tr>
+  <tr>
+    <td height="1" colspan="2"></td>
+  </tr>
+  <tr>
+    <td height="20" colspan="2" bgcolor="#f09329"></td>
+  </tr>
+~else`
+ <tr>
+    <td height="3" colspan="2" bgcolor="#bc001d"></td>
+  </tr>
+
+~/if`
+   ~if $detailview`
+~if $ACCEPTED`
+<tr>
+	<td colspan="2" align="center"><font color="red"><strong>Profile was successfully accepted!</strong></font></td>
+</tr>
+~elseif $REJECTED`
+   <tr>
+	<td colspan="2" align="center"><font color="red"><strong>Profile was successfully rejected!</strong></font></td>
+</tr>	
+~else`
+	~if !$p_expire`
+	~if !$PFLAG`
+	<tr>
+	<input type="hidden" name="page" value="~$page`">
+	<input type="hidden" name="searched_profileid" value="~$SEARCHED_PROFILEID`">
+	
+	<td valign="top" align="left"><a href="~$SITE_URL`/jsadmin/displayprofile.php?cid=~$cid`&profileid=~$profileid`&searched_profileid=~$SEARCHED_PROFILEID`&page=shortlist&accept=1" ><img src="~$PHOTO_URL`/profile/images/accept.gif" width="69" height="18" hspace="11" vspace="5" border="0"></a>
+	<a href="~$SITE_URL`/jsadmin/displayprofile.php?cid=~$cid`&profileid=~$profileid`&searched_profileid=~$SEARCHED_PROFILEID`&page=shortlist&reject=1" ><img src="~$PHOTO_URL`/profile/images/reject.gif" width="69" height="18" hspace="11" vspace="5" border="0"></a></td>
+	<td valign="top" align="right">
+	<span class="main-text"><strong><a href="#" onClick="win_open('~$SITE_URL`/jsadmin/displayprofile.php?cid=~$cid`&profileid=~$profileid`&searchid=~$SEARCHED_PROFILEID`&page=shortlist&print=1');return false;" style="color:#000000">Print this Profile</a><br>
+               ~if $COMPATIBILITY_LINK eq 'R'`
+                <a href="#" onClick="window.open('~$SITE_URL`/profile/horoscoperequest.php?profileid=~$profileid`&profilechecksum=~$PROFILECHECKSUM`&via_ofm=1','','width=340,height=310,resizable=1');" style="color:#000000"><strong> Request Horoscope</strong></a><br>
+                ~else`
+                <a href="#" onClick="window.open('~$SITE_URL`/profile/horoscope_astro.php?checksum=~$cid`&profilechecksum=~$PROFILECHECKSUM`','','width=625,height=625,resizable=1,scrollbars=1');" style="color:#000000"><strong> View Horoscope</strong></a><br>
+                ~/if`
+                ~if $COMPATIBILITY_SUBSCRIPTION eq '1'`
+                ~if $COMPATIBILITY_LINK eq 'C'`
+                <a href="#" onClick="window.open('~$SITE_URL`/profile/check_horoscope_compatibility.php?profileid=~$profileid`&checksum=~$cid`&profilechecksum=~$PROFILECHECKSUM`&via_ofm=1&compatibility_subscription=~$COMPATIBILITY_SUBSCRIPTION`','','width=570,height=570,resizable=1');" style="color:#000000"><strong> Check Astro Compatibilty</strong></a><br>
+                ~/if`
+                ~/if`
+	</strong> &nbsp;&nbsp;&nbsp;&nbsp;</span>
+	</td>   
+	</tr>
+	~/if`
+	~else`
+	<tr>
+	<td colspan="2" align="center"><font color="red"><strong>This action is disallowed as your account is now inactive</strong></font></td>
+	</tr>
+	~/if`
+~/if`
+<tr>
+    <td width="263" class="regular-text"><u>Contact Details of ~$USERNAME`</u></td>
+    <td width="57" align="right" style="font-family:verdana; font-size:9px"></td>
+</tr>
+<tr>
+    <td colspan="2" class="main-text" style="padding:5px 0px 5px 10px; line-height:25px"><strong>Email Address :</strong> ~$EMAIL`<br>
+        ~if $PHN_P neq '0'`
+        <strong>Contact No. :</strong> ~$PHONE`<br>
+        ~/if`
+        ~if $ADR_P neq '0'`
+        <strong>Contact Address :</strong> ~$ADDRESS`<br>
+        ~/if`
+        ~if $MESNGR neq '0'`
+        <strong>~$MESSENGER_CH` Messenger ID :</strong> ~$MESSENGER_ID`<br>
+        ~/if`
+    </td>
+</tr>
+~if $OP_NAME`
+<tr>
+	<td width="263" class="regular-text"><u>Contact Details of Operator</u></td>
+	<td width="57" align="right" style="font-family:verdana; font-size:9px"></td>
+</tr>
+<tr>
+	<td colspan="2" class="main-text" style="padding:5px 0px 5px 10px; line-height:25px">
+	<strong>Name :</strong>~$OP_NAME`<br>
+	~if $OP_EMAIL neq ''`
+        <strong>Email Address :</strong> ~$OP_EMAIL`<br>
+        ~/if`
+        ~if $OP_PHONE neq ''`
+        <strong>Contact No. :</strong> ~$OP_PHONE`<br>
+        ~/if`
+	 ~if $OP_CENTER neq ''`
+        <strong>Location :</strong> ~$OP_CENTER`<br>
+        ~/if`
+	</td>
+</tr>
+~/if`
+<tr>
+<td colspan="2">~$viewprofile`</td>
+</tr>
+~else`
+  <tr>
+    <td height="50" colspan="2" background="~$PHOTO_URL`/profile/images/top-bg.gif" class="main-text" style="padding-left:5px; color:#525252"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="42%"><strong>You are logged in as ~$customer_name`  | <a href="javascript: self.close()" style="color:#525252">Logout</a></strong></td>
+    	   <td width="25%" align="right" style="line-height:20px">Profiles Remaining :&nbsp;<br>
+          Days Remaining :&nbsp; </td>
+        <td width="13%" align="left" style="line-height:20px"><strong>~$acc_remain`<br>
+          ~$day_remain`</strong></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td width="198" align="left" valign="top" bgcolor="#f4f4f4" style="border-right:1px solid #bdbdbd"><table width="198" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>&nbsp;</td>
+      </tr>
+   ~if $p_expire neq 'Y'`   
+      <tr>
+	  <td height="32" class="left-links-inactive"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7"> <a href="~$SITE_URL`/jsadmin/login_customer.php?profileid=~$profileid`&flag=1&cid=~$cid`" style="text-decoration:none; color:#000000">Home</a></td>
+      </tr>
+      <tr>
+        <td height="32" class="left-links-inactive"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7"> <a href=# onclick="win_open('~$SITE_URL`/P/profileselect_oc.php?profileid=~$profileid`')" style="text-decoration:none; color:#000000">My Profile</a></td>
+      </tr>
+	  <tr>
+        <td height="32" class="left-links-inactive"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7"> <a href="~$SITE_URL`/jsadmin/search_profiles.php?cid=~$cid`&profileid=~$profileid`" style="text-decoration:none; color:#000000">Search Profile</a></td>
+      </tr>
+	  <tr>
+        <td height="32" class="left-links-inactive"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7"><a href="~$SITE_URL`/jsadmin/pool_matches.php?cid=~$cid`&profileid=~$profileid`" style="text-decoration:none; color:#000000"> Pool of available matches</a></td>
+      </tr>
+	  <tr>
+        <td height="32" class="left-links-active"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7"> Short Listed Profiles</td>
+      </tr>
+      ~/if`
+	  <tr>
+        <td height="32" class="left-links-inactive"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7"> <a href="~$SITE_URL`/jsadmin/accept_matches.php?cid=~$cid`&profileid=~$profileid`" style="text-decoration:none; color:#000000">Accepted Profiles</a></td>
+      </tr>
+	 <tr>
+        <td height="32" class="left-links-inactive"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7"> <a href="~$SITE_URL`/jsadmin/accept_matches.php?profileid=~$profileid`&cid=~$cid`&crd_status=1" style="text-decoration:none; color:#000000">Couriered Profiles</a></td>
+      </tr>
+      ~if $p_expire neq 'Y'`
+	  <tr>
+        <td height="32" class="left-links-inactive"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7"> <a href="~$SITE_URL`/jsadmin/rejected_matches.php?cid=~$cid`&profileid=~$profileid`" style="text-decoration:none; color:#000000">Rejected Profiles</a></td>
+         
+	</tr>
+	~/if`
+	~if $profile_verified eq 'N'`
+         <tr>
+        <td height="32" class="left-links-inactive" style="color:red"><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7">&nbsp;User reported for verification failure</td>
+      </tr>
+        ~else`
+          <tr>
+        <td height="32" class="left-links-inactive" ><img src="~$PHOTO_URL`/profile/images/bullet.gif" width="4" height="7"> <a href="#" onclick="win_open_contact('~$SITE_URL`/jsadmin/verification_failed.php?profileid=~$profileid`&cid=~$cid`')"  style="text-decoration:none; color:red">Report verification failure</a></td>
+      </tr>
+        ~/if`
+
+	  <tr>
+	    <td>&nbsp;</td>
+	    </tr>
+	  <tr>
+	    <td>&nbsp;</td>
+	    </tr>
+	  <tr>
+	    <td>&nbsp;</td>
+	    </tr>
+    </table></td>
+
+~if $NOREC`
+	<td>
+	~if $ACCEPTED`
+        <p align="center"><font><strong>~if $ACCEPTED eq "N"`Profiles have ~else`Profile has~/if` been successfully accepted!</strong></p>
+        <br>
+	~/if`
+	~if $REJECTED`
+        <p align="center"><font><strong>~if $REJECTED eq "N"`Profiles have ~else`Profile has~/if` been successfully rejected!</strong></p>
+        <br>
+	~/if`
+	<p align="center"><font color="red"><strong>No profile currently shortlisted</strong></font></p>
+	</td>
+	~else` 
+	<form ~if $detailview` action="~$SITE_URL`/jsadmin/displayprofile.php" ~else` action="shortlisted_profiles.php" ~/if` name="poolform" method="post">
+	<input type="hidden" name="cid" value="~$cid`">
+	<input type="hidden" name="profileid" value="~$profileid`">
+	<input type="hidden" name="action" value="">
+	<input type="hidden" name="acc_rem" value="~$acc_remain`">
+    
+   <td width="577" align="left" valign="top"><table width="573"  border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td colspan="5">&nbsp;</td>
+      </tr>
+      <tr>
+        <td width="2" align="center" class="main-text">&nbsp;</td>
+        <td align="center" class="main-text"><strong>Search Profile by ID</strong>
+           <input name="searchid" type="text" class="main-text"></td>
+        <td align="center" class="main-text">&nbsp;</td>
+        <td width="279" align="left" class="main-text"><a href="#" onClick="javascript : document.poolform.submit();"><img src="~$PHOTO_URL`/profile/images/search.gif" width="69" height="18" border="0"></a></td>
+        <td align="center" class="main-text">&nbsp;</td>
+      </tr>
+      <tr>
+        <td colspan="5" height="10"></td>
+      </tr>
+      ~if $WRONGID`
+     <tr>
+	<td colspan="5" height="10" align="center"><font color="red">Invalid username entered!</font></td>
+     </tr>
+      ~/if`
+      ~if $NOTINREJ`
+  	<tr>
+		<td colspan="5" height="10" align="center"><font color="red">Profile Not shortlisted!</font></td>
+	</tr>
+      ~/if`
+      ~if $ACCEPTED`
+  	<tr>
+		<td colspan="5" height="10" align="center">~if $ACCEPTED eq "N"`Profiles have ~else`Profile has~/if` been successfully accepted!</td>
+	</tr>
+      ~/if`
+      ~if $REJECTED`
+  	<tr>
+		<td colspan="5" height="10" align="center">~if $REJECTED eq "N"`Profiles have ~else`Profile has~/if` been successfully rejected!</td>
+	</tr>
+      ~/if`
+      <tr align="center">
+        <td colspan="5"><img src="~$PHOTO_URL`/profile/images/seperator-big.gif" width="559" height="1"></td>
+       </tr>
+      <tr>
+        <td colspan="5" height="10"></td>
+      </tr>
+      ~if !$p_expire && !$PFLAG`
+      <tr align="left">
+      <td></td>
+    	<td colspan="2" valign="top">
+    	  	<input type="image" src="~$PHOTO_URL`/profile/images/accept.gif" onclick="return checkboxes('1');">
+    	   	<input type="image" src="~$PHOTO_URL`/profile/images/reject.gif" onclick="return checkboxes('0');">    		
+		<input type="image" src="~$PHOTO_URL`/profile/images/email.gif" onclick="return checkboxes('2');">
+    </td>	   	
+	 ~if $SEARCHED_PROFILE`
+        <td colspan="2" valign="top" align="right">
+        <span class="main-text"><strong><a href="#" onClick="win_open('~$SITE_URL`/jsadmin/displayprofile.php?cid=~$cid`&profileid=~$profileid`&searchid=~$SEARCHED_PROFILEID`&pool=1&print=1');"style="color:#000000">Print this Profile</a><br>
+        ~if $COMPATIBILITY_LINK eq 'R'`
+                <a href="#" onClick="window.open('~$SITE_URL`/profile/horoscoperequest.php?profileid=~$profileid`&profilechecksum=~$PROFILECHECKSUM`&via_ofm=1','','width=340,height=310,resizable=1');" style="color:#000000"><strong> Request Horoscope</strong></a><br>
+                ~else`
+                <a href="#" onClick="window.open('~$SITE_URL`/profile/horoscope_astro.php?checksum=~$cid`&profilechecksum=~$PROFILECHECKSUM`','','width=625,height=625,resizable=1,scrollbars=1');" style="color:#000000"><strong> View Horoscope</strong></a><br>
+                ~/if`
+                ~if $COMPATIBILITY_SUBSCRIPTION eq '1'`
+                ~if $COMPATIBILITY_LINK eq 'C'`
+                <a href="#" onClick="window.open('~$SITE_URL`/profile/check_horoscope_compatibility.php?profileid=~$profileid`&checksum=~$cid`&profilechecksum=~$PROFILECHECKSUM`&via_ofm=1&compatibility_subscription=~$COMPATIBILITY_SUBSCRIPTION`','','width=570,height=570,resizable=1');" style="color:#000000"><strong> Check Astro Compatibilty</strong></a><br>
+                ~/if`
+                ~/if`
+        </strong> &nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </td>
+	~/if`
+  	</tr>
+  	~/if`
+	~if $SEARCHED_PROFILE`
+	<tr>
+		<td width="2">&nbsp;</td>
+		<td colspan="3" rowspan="5" valign="top">
+		~$viewprofile`
+		</td>
+	</tr>
+	~else`
+      <tr>
+        <td height="10">&nbsp;</td>
+        <td height="10" colspan="3"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                 <tr>
+            <td></td>
+            <td align="right" class="main-text">~$PAGELINK`</td>
+          </tr>
+        </table></td>
+        <td height="10">&nbsp;</td>
+      </tr>
+      <tr>
+        <td colspan="5" height="10"></td>
+      </tr>
+      <tr>
+        <td width="2">&nbsp;</td>
+        <td colspan="3" rowspan="5" valign="top">
+	<div id="srf">
+	~assign var="tab" value=0`
+	~section name="tr1" start=0 loop=$length`
+	~assign var="finalval" value=$tab`
+	~if $RESULTS_ARRAY[$finalval].PROFILEID neq ''`
+	~if $finalval % 2 eq 0`
+		<ul>
+	~/if`
+	<li>
+		~if $RESULTS_ARRAY[$finalval].BOLDLISTING eq 0`
+		<div class="mbx">
+		~else`
+		<div class="mbx-fea">
+		~/if`
+		~if $RESULTS_ARRAY[$finalval].CATEGORY neq ''`
+			~if $RESULTS_ARRAY[$finalval].CATEGORY eq '4' AND $RESULTS_ARRAY[$finalval].SHOW_STAR eq '1'` 
+                                <div class="prf p~$RESULTS_ARRAY[$finalval].CATEGORY`-1" id="~$a[$finalval]`">
+                        ~else`                                  ~if $RESULTS_ARRAY[$finalval].MEMBER_101 eq "1"`
+                                <div class="prfh p~$RESULTS_ARRAY[$finalval].CATEGORY`" id="~$a[$finalval]`">
+                                ~else`
+                                <div class="prf p~$RESULTS_ARRAY[$finalval].CATEGORY`" id="~$a[$finalval]`">
+                                ~/if`
+                        ~/if`   
+                ~else`
+			 ~if $RESULTS_ARRAY[$finalval].MEMBER_101 eq "1"`
+                                <div class="prfh" id="~$a[$finalval]`">
+                        ~else`
+                                <div class="prf" id="~$a[$finalval]`">
+                        ~/if`
+                ~/if`
+		~if $RESULTS_ARRAY[$finalval].ACTIVATED neq 'D'`
+		<input name=profile[] type=checkbox value=~$RESULTS_ARRAY[$finalval].PROFILEID` id="un~$finalval`" style="vertical-align:middle"> 
+		~/if`
+		~if $crmback`
+			<span class="blacklink">			
+			<label for="un~$finalval`" style="cursor:pointer;">~$RESULTS_ARRAY[$finalval].USERNAME`</label>
+			</span>
+			~else`
+			<span class="blacklink">			
+			<label for="un~$finalval`" style="cursor:pointer;">~$RESULTS_ARRAY[$finalval].USERNAME`</label>
+			</span>
+		~/if`
+		</div>
+		<div class="tx bluelink" id="~$boxheight[$finalval]`">
+		~$RESULTS_ARRAY[$finalval].MY_PHOTO`
+			<span class="blacklink"><b>~$RESULTS_ARRAY[$finalval].PROTITLE`</b>~$RESULTS_ARRAY[$finalval].YOURINFO`</a></span>
+			...
+			<a href="#" onclick="win_open('~$SITE_URL`/jsadmin/displayprofile.php?cid=~$cid`&profileid=~$profileid`&searchid=~$RESULTS_ARRAY[$finalval].PROFILEID`&page=shortlist&compatibility_subscription=~$COMPATIBILITY_SUBSCRIPTION`');return false;">Read More</a>...
+		</div>
+		 ~if $RESULTS_ARRAY[$finalval].BOLDLISTING eq 0`
+		<div class="dts" id="~$b[$finalval]`">
+		~else`
+		<div class="dts-fea" id="~$b[$finalval]`">
+		~/if`
+		~$RESULTS_ARRAY[$finalval].INFO`
+		</div>
+		~if $RESULTS_ARRAY[$finalval].MESSAGE1`
+               	<div class="pmsg" id="~$d[$finalval]`">~$RESULTS_ARRAY[$finalval].MESSAGE1`</div>
+                ~else`
+                	<div class="nmsg" id="~$d[$finalval]`"></div>
+                ~/if`
+		<div class="lks" id="~$c[$finalval]`">
+		~if $RESULTS_ARRAY[$finalval].ACTIVATED eq 'D'`
+          	<strong>This profile was deleted.</strong><br>
+		~else`
+		<a href="shortlisted_profiles.php?cid=~$cid`&profileid=~$profileid`&accid=~$RESULTS_ARRAY[$finalval].PROFILEID`"><strong>Accept this Profile</strong></a><br>
+		<a href="shortlisted_profiles.php?cid=~$cid`&profileid=~$profileid`&accid=~$RESULTS_ARRAY[$finalval].PROFILEID`&flagr=1"><strong>Reject this Profile</strong></a><br>
+		~if $RESULTS_ARRAY[$finalval].ICON eq 1`
+                <img src="~$PHOTO_URL`/profile/images/mobilephone3_set3.gif" title="Valid phone number(s) not available" width="14" height="22" border="0">
+                ~/if`
+		<a href=# onclick="win_open_contact('~$SITE_URL`/jsadmin/view_contact.php?cid=~$cid`&profileid=~$RESULTS_ARRAY[$finalval].PROFILEID`&from_vp=no&from_vcd=yes&check=1');return false;"><strong>View Contact Details</strong></a><br>
+		 ~if $RESULTS_ARRAY[$finalval].COMPATIBILITY_LINK eq 'R'`
+                <a href="#" onClick="window.open('~$SITE_URL`/profile/horoscoperequest.php?profileid=~$profileid`&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`&via_ofm=1','','width=340,height=310,resizable=1');"><strong> Request Horoscope</strong></a><br>
+                ~else`
+                <a href="#" onClick="window.open('~$SITE_URL`/profile/horoscope_astro.php?checksum=~$cid`&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM`','','width=625,height=625,resizable=1,scrollbars=1');"><strong> View Horoscope</strong></a><br>
+                ~/if`
+                ~if $COMPATIBILITY_SUBSCRIPTION eq '1'`
+                ~if $RESULTS_ARRAY[$finalval].COMPATIBILITY_LINK eq 'C'`
+                <a href="#" onClick="window.open('~$SITE_URL`/profile/check_horoscope_compatibility.php?profileid=~$profileid`&checksum=~$cid`&profilechecksum=~$RESULTS_ARRAY[$finalval].PROFILECHECKSUM``&via_ofm=1&compatibility_subscription=~$COMPATIBILITY_SUBSCRIPTION`','','width=570,height=570,resizable=1');"><strong> Check Astro Compatibilty</strong></a><br>
+                ~/if`
+                ~/if`
+		~/if`
+		</div>
+		 <div class="tx"><strong>Profile Score:</strong> ~$RESULTS_ARRAY[$finalval].PSCORE`/600
+	<br>
+		 <strong>Date Shortlisted:</strong>~$RESULTS_ARRAY[$finalval].SL_DATE`
+        <br>
+	</div><!-- mbx div ends-->
+	</li>
+	 ~assign var="tab" value=$tab+1`
+	~if $finalval % 2 eq 1`
+	</ul>
+	<div class="spacer">&nbsp;</div>
+	~/if`
+	
+	~if $finalval eq $RESULTS_ARRAY_COUNT-1 && $RESULTS_ARRAY_COUNT % 2 neq 0`
+	</ul>
+	<div class="spacer">&nbsp;</div>
+	~/if`
+	~/if`
+	~/section`
+	</div>
+        
+
+
+</td>
+        <td width="2">&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="8"></td>
+        <td height="8"></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="8"></td>
+        <td height="8"></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+      <td height="10"></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr align="left">
+      <td></td>
+    	<td colspan="2" valign="top">
+    	  	<input type="image" src="~$PHOTO_URL`/profile/images/accept.gif" onclick="return checkboxes('1');">
+    	   	<input type="image" src="~$PHOTO_URL`/profile/images/reject.gif" onclick="return checkboxes('0');">    		
+		<input type="image" src="~$SITE_URL`/profile/images/email.gif" onclick="return checkboxes('2');">
+    </td>	   	
+  	</tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td colspan="3"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+          
+            <td align="right" class="main-text">~$PAGELINK`</td>
+          </tr>  ~/if`      </table></td>
+        <td>&nbsp;</td>
+      </tr>
+~/if`
+    </table>
+  </td>
+</form>
+~/if`
+  </tr>
+</table>
+</body>
+</html>

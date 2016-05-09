@@ -1,0 +1,435 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	<title>Jeevansathi Matrimonials- Hide / Unhide / Delete Profile</title>
+	<script src="profile.js"></script>
+	<link rel="stylesheet" href="/profile/css/~$comm_style_css`" type="text/css">
+	<style type="text/css">
+		.pghd{float:left; width:99% }
+		.r14{font:bold 14px verdana,Arial; color:#CC0000; padding-top:5px}
+		.o14{font:normal 14px verdana,Arial; color:#EF9429; padding-top:5px}
+		.co1{float:left; width:20%;padding:2px }
+		.co2{float:left; width:50%; padding:2px}
+		.gf{width:430px;margin-top:50px; height:70px; border-bottom:1px solid #ACACAC;border-top:1px solid #ACACAC; background-image:url(~$IMG_URL`/profile/ser4_images/bghd.gif)}
+	</style>
+	<script language="javascript">
+		
+		function hide_show()
+		{
+			var label_id = document.getElementById('showreasonlabel');
+			var reason_box = document.getElementById('showreasonbox');
+
+			if(document.form1.delete_reason.value=='I found my match on Jeevansathi.com')
+			{
+				change_delete_button();
+				document.getElementById('showcheckbox').style.display='inline';
+				document.getElementById('showreasonlabel').style.display = 'none';
+				document.getElementById('showreasonbox').style.display = 'none';
+			}
+			else if(document.form1.delete_reason.value == "I found my match on another matrimonial site")
+			{
+				disable();
+				document.getElementById('showreasonlabel').style.display = 'block';
+				document.getElementById('showreasonbox').style.display = 'block';
+				label_id.innerHTML = "Please Specify the site :";
+			}
+			else if(document.form1.delete_reason.value == "I found my match elsewhere" || document.form1.delete_reason.value == "Other reasons")
+			{
+				disable();
+				document.getElementById('showreasonlabel').style.display = 'block';
+				document.getElementById('showreasonbox').style.display = 'block';
+				label_id.innerHTML = "Please specify :";
+			}
+			else if(document.form1.delete_reason.value == "I am unhappy with Jeevansathi.com services")
+			{
+				disable();
+				document.getElementById('showreasonlabel').style.display = 'block';
+				document.getElementById('showreasonbox').style.display = 'block';
+				label_id.innerHTML = "Kindly specify the reason(s) for your dissatisfaction";
+			}
+			else if(document.form1.delete_reason.value == "")
+			{
+				disable();
+				document.getElementById('showreasonlabel').style.display = 'none';
+				document.getElementById('showreasonbox').style.display = 'none';
+			}
+			~if $FLAG_PSWD_H`
+				document.form11.Hpasswd.focus();
+			~elseif $FLAG_PSWD_D`
+				document.form1.Dpasswd.focus();
+			~/if`
+		}
+		function validate_page(flag)
+		{
+			if(flag == 'H')
+			{
+				if(document.form11.Hpasswd.value.length==0)
+				{
+					alert('Please enter the Password');
+					document.form11.Hpasswd.focus();
+					return false;
+				}
+				~if $CURRENTACTIVATED neq "H"`
+				if(document.form11.HIDEFOR.value.length==0)
+				{
+					alert ("Please select an appropriate action from the dropdown");
+					document.form11.HIDEFOR.focus();
+					return false;
+				}
+				~/if`
+			}
+			else if(flag == 'D')
+			{
+				var error_occured = 0;
+				if(document.form1.Dpasswd.value.length==0)
+				{
+					alert('Please enter the Password');
+					document.form1.Dpasswd.focus();
+					error_occured = 1;
+					return false;
+				}
+				if(document.form1.delete_reason.value.length==0)
+				{
+					alert ("Please select a reason for deletion");
+					document.form1.delete_reason.focus();
+					error_occured = 1;
+					return false;
+				}
+				if(document.form1.delete_reason.value=='I found my match on Jeevansathi.com')
+				{
+	
+					if(document.form1.SUBMIT_SUCCESS.checked)
+					{
+						if(!blank_entry(document.form1.name_h,'span_name',' Husband name'))
+							return false;
+					
+						if(!blank_entry(document.form1.name_w,'span_name',' Wife name'))
+							return false;
+						if(document.form1.username_h.value=="" && document.form1.email_h.value=="")
+						{
+							alert("Please Provide  Husband's Email ID or User ID");
+		
+							document.form1.username_h.focus();
+							return false;
+						}
+						else
+						{
+							if(document.form1.email_h.value!="")
+							{
+								email= check_email(document.form1.email_h,' Husband email');
+								if(email==2)
+								{
+									document.form1.email_h.focus();	
+									return false;
+								}	
+							}
+						}	
+
+						if(document.form1.username_w.value=="" && document.form1.email_w.value=="")
+						{
+							alert("Please Provide Wife's Email ID or User ID");
+							document.form1.username_w.focus();
+							return false;
+						}
+						else
+						{
+							if(document.form1.email_w.value!="")
+							{
+								email= check_email(document.form1.email_w,' Wife Email');
+								if(email==2)
+								{
+									document.form1.email_w.focus();	
+									return false;
+								
+								}
+							}
+						}
+						
+						
+						if(!blank_entry(document.form1.contact_details,'span_address',' Address'))
+							return false;
+						
+						if(!blank_entry(document.form1.comments,'span_comment',' story'))
+							return false;
+					}
+					document.form1.action=document.form1.action+'?CMDdelete=1';
+				}
+				else
+				{
+					if(document.form1.specify_reason.value.length==0)
+					{
+						var label_id = document.getElementById("showreasonlabel").innerHTML;
+						alert (label_id + " should not be blank");
+						document.form1.delete_reason.focus();
+						error_occured = 1;
+						return false;
+					}
+				}
+				if(error_occured==0)
+				{
+					return confirm('Are you sure you want to delete your profile?');
+				}
+			}
+		}
+		function clear_this()
+		{
+			if(document.form1.story.value=='Write your Success Story here')
+			{
+				document.form1.story.value="";
+			}
+		}
+function blank_entry(a,b,c)
+{
+	e=a.value;
+	if(trim(e)=='')
+	{
+		eval("document.getElementById('"+b+"').style.color='red'");
+		a.focus();
+		alert('Please mention'+c );
+		return false;
+	}
+	else
+		eval("document.getElementById('"+b+"').style.color='black'");
+	return true;
+}	
+
+function check_email(a,b)
+{
+error=0;
+e=a.value;
+if(trim(e)=="")
+error=1;
+var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9])+$/;
+if(!checkemail(e))
+{
+error=1;
+}
+if(error==0)
+if(!filter.test(e))
+error=1;
+
+if(error==1)
+{
+
+if(e=="")
+errors=b+" ID is not Valid";
+else
+errors=e+" is not a Valid "+b+" ID";
+alert(errors);
+eval("document.getElementById('span_email').style.color='red';");
+a.focus();
+return 2;
+}
+else
+{
+eval("document.getElementById('span_email').style.color='black';");
+return 1;
+}
+
+
+
+}
+
+
+</script>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body onload="hide_show()">
+<DIV id="dhtmltooltip" class="ttip"></DIV>
+<SCRIPT language=JavaScript1.2 src="~$IMG_URL`/profile/js/~$tooltip_new_js`" type=text/javascript></SCRIPT>
+<div id="container">
+	<!--HEADER STARTS-->
+	~$HEAD`
+	<!--HEADER ENDS-->
+	<!--QUICK SEARCH STARTS-->
+	<div class="spacer15">&nbsp;</div>
+	<!--QUICK SEARCH ENDS-->
+	<!--WRAPPER STARTS HERE-->
+	<div id="wrapper">
+		<!--LEFT PANNEL STARTS HERE-->
+		~$LEFTPANEL`
+		<!--LEFT PANNEL ENDS HERE-->
+		<!--CENTER STARTS HERE-->
+		<div id="center">
+			<div class="pghd">
+				<div class="r14">
+					<img src="~$IMG_URL`/profile/images/icon_chpass.gif" width="14" height="14">
+					~if $CURRENTACTIVATED eq "H"`
+						Unhide Delete Profile
+					~else`
+						Hide Delete Profile
+					~/if`
+				</div>
+				<div class="spacer15" style="border-top:1px solid #000000; margin-top:5px;" >&nbsp;</div>
+				<div class="greyele bluelink">
+					~if $CURRENTACTIVATED eq "H"`
+						Your profile is currently hidden...<br><br>
+					~else`
+						Jeevansathi.com now lets you TEMPORARILY hide your profile.<br><br>
+					~/if`
+					~if $CURRENTACTIVATED eq "H"`
+						Your profile is currently hidden... This restricts others from seeing your profile and results in no new contacts. To avail services of our site please unhide your profile.<br>
+					~else`
+						- Use this feature when you have decided to stop looking temporarily since you are busy, moving, in the middle of some big lifestyle changes and cannot spare the time to look seriously.<br><br>
+						- If you think you may have found someone but are not sure yet. So you would like to stop looking till you are sure one way or the other.<br><br>
+						- When you hide your profile it will no longer be visible on Jeevansathi.com. The profile will NOT show up in search results and members who do try to access the profile will be told that the profile is temporarily unavailable.<br><br>
+						-After the specified number of your days, your profile will automatically GO LIVE and become visible.<br>
+					~/if`
+				</div>
+			</div>
+			<form name="form11" action="deleteprofile.php" method="post" enctype="multipart/form-data">
+			<input type="hidden" name="checksum" value="~$CHECKSUM`">
+			<div class="lftflow" style="width:99% ">
+				<div class="space15">&nbsp;</div>
+				~if $CURRENTACTIVATED eq "H"`
+					<div class="o14"><b>Unhide</b> your Profile</div>
+					<div class="spacer">&nbsp;</div>
+					<div class="bele">
+						~if $FLAG_PSWD_H`
+							<font color="red">Password:</font>
+						~else`
+							Password:
+						~/if`
+						<input type="password" name="Hpasswd" class="texbtox">
+						~if $FLAG_PSWD_H`
+							<font color="red">(Incorrect password)</font>
+						~/if`
+					</div>
+					<div class="spacer15">&nbsp;</div>
+					<div>
+						<input type="submit" name="CMDunhide" value="Unhide my profile" class="buttonor" onclick="return validate_page('H');" style="width:140px">
+					</div>
+				~else`
+					<div class="o14"><b>Temporarily Hide</b> your Profile</div>
+					<div class="spacer">&nbsp;</div>
+					<div class="bele">
+						~if $FLAG_DURATION`
+							<font color="red">Select Duration: </font>
+						~else`
+							Select Duration: 
+						~/if`
+						 <select name="HIDEFOR" class="textbox">
+							<option value="" selected>Select any one option</option>
+							<option value="7" ~if $HIDEFOR eq "7"` selected ~/if`>For 7 days</option>
+							<option value="15" ~if $HIDEFOR eq "15"` selected ~/if`>For 15 days</option>
+							<option value="30" ~if $HIDEFOR eq "30"` selected ~/if`>For 30 days</option>
+						 </select>
+					</div>
+					<div class="spacer15">&nbsp;</div>
+					<div class="bele">
+						~if $FLAG_PSWD_H`
+							<font color="red">Password:</font>
+                                                ~else`
+							Password:
+						~/if`
+						<input type="password" name="Hpasswd" class="textbox">
+						~if $FLAG_PSWD_H`
+							<font color="red">(Incorrect password)</font>
+						~/if`
+					</div>
+					<div class="spacer15">&nbsp;</div>
+					<div>
+						<input type="hidden" name="checksum" value="~$CHECKSUM`">
+						<input type="submit" name="CMDhide" value="Hide Profile" class="buttonor" onclick="return validate_page('H');" style="width:100px">
+					</div>
+
+					<div class="space15">&nbsp;</div>
+					<div class="spacerg">&nbsp;</div>
+				~/if`
+				</form>
+<form name="form1" action="deleteprofile.php" method="post" enctype="multipart/form-data">
+			</div>
+			~if $from_search_error neq '1'`
+			<div class="lftflow bele" style="width:99% ">
+				<div class="space15">&nbsp;</div>
+				<div class="o14"><b>Permanently Delete</b> your Profile</div>
+				<div class="spacer">&nbsp;</div>
+				<div class="greyele">
+					Please use this feature when you are engaged or have found your life partner. This feature deletes your profile permanently from the site. We would appreciate your feedback on Jeevansathi.com.
+				</div>
+				<div class="spacer15">&nbsp;</div>
+				<div>
+					~if $FLAG_DEL_REASON`
+						<font color="red">Select a Reason: </font>
+					~else`
+						Select a Reason: 
+					~/if`
+					<select name="delete_reason" class="textbox" onchange="hide_show()">
+						<option value="" selected>[Choose]</option>
+						~section name=next loop=$del_reason_arr`
+							<option value="~$del_reason_arr[next].value`" ~if $del_reason_arr[next].value eq $delete_reason` selected ~/if`>~$del_reason_arr[next].value`</option>
+						~/section`
+					</select>
+				</div>
+				<div class="spacer15">&nbsp;</div>
+				<div class="bele">
+					~if $FLAG_PSWD_D`
+						<font color="red">Password:</font>
+					~else`
+						Password:
+					~/if`
+					<input type="password" name="Dpasswd" class="textbox" value=~$DPASSWORD`>
+					~if $FLAG_PSWD_D`
+						<font color="red"> (Incorrect password)</font>
+					~/if`
+				</div>
+				<div class="spacer15">&nbsp;</div>
+				<div class="spacer15">&nbsp;</div>
+				~include file="$TEMPLATES_DIR/upload_success_story.htm"`
+				<span class="red">
+					~if $FLAG_SPECIFY_REASON`
+						Please specify :
+					~else`
+						<div id="showreasonlabel" name="showreasonlabel" style="display:none">
+						</div>
+					~/if`
+				</span>
+				
+				<div class="spacer1">&nbsp;</div>
+				<div id="showreasonbox" name="showreasonbox" style="display:none">
+					<textarea name="specify_reason" rows="5" cols="40">~$specify_reason`</textarea>
+				</div>
+				<div class="spacer15">&nbsp;</div>
+				<div class="spacer15">&nbsp;</div>
+				
+				<div id="show_delete">
+					<input type="submit" name="CMDdelete" value="Delete Profile" class="buttonor" onclick="return validate_page('D');" style="width:100px">
+				</div>
+				
+			</div>
+			~/if`
+			</form>
+			
+		<!--CENTER ENDS HERE-->
+	</div>
+<script>
+
+change_delete_button();
+
+
+function change_delete_button()
+{
+	if(document.form1.SUBMIT_SUCCESS.checked && document.form1.delete_reason.value=='I found my match on Jeevansathi.com')
+	{
+		document.getElementById('show_delete').style.display='none';
+		document.getElementById('show_uss').style.display='inline';
+		enable();
+		
+	}
+	else
+	{
+		document.getElementById('show_delete').style.display='inline';
+		document.getElementById('show_uss').style.display='none';
+		
+	}
+}
+	</script>
+	<!--WRAPPER ENDS HERE-->
+	<div class="spacer15">&nbsp;</div>
+</div>
+~$FOOT`
+</body>
+</html>
