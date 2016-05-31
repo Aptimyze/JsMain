@@ -4,7 +4,7 @@
     <div class="srpprofbox mt25 js-tupleOuterDiv  CEParent" id="{tupleOuterDiv}Tuple">
         <div class="bg-white fullwid clearfix {highlightedProfile}"> 
           <!--start:image-->
-          <div class="fl pos-rel f14 fontlig js-searchTupleImage" id="{tupleImage}" data="{album_count},{username},{profilechecksum},{hasAlbum}"> 
+          <div class="fl pos-rel f14 fontlig js-searchTupleImage ~if !$loggedIn` loginLayerJspc loginAlbumSearch ~/if`" id="{tupleImage}" data="{album_count},{username},{profilechecksum},{hasAlbum}"> 
             <!--start:count-->
             <div class="pos-abs srppos1 {countDisplay}" >
               <div class="disp-tbl opaclr1 countwid1 brdr_rad1 colrw txtc">
@@ -19,7 +19,7 @@
           </div>
           <!--end:image--> 
           <!--start:description-->
-    <div class="srppad13 fl srpwid9">
+    <div class="srppad13 fl srpwid9 ~if !$loggedIn` loginLayerJspc  loginProfileSearch~/if`">
           <a href="" id="idP{profileNoId}" class="fullwid  cursp js-profileDesc" data="{profilechecksum}"  tupleOffset="{tupleOffset}"> 
             <!--start:name-->
             <div class="srpbdr4 fontlig clearfix pb3">
@@ -43,7 +43,7 @@
             </div>
             </a>
             <!--end:listing--> 
-            <a href="/static/agentinfo" class="{verificationSeal}">
+            <a href="~if !$loggedIn` javascript:void(0) ~else` /static/agentinfo ~/if`" class="{verificationSeal}">
                 <div id="idVS{profileNoId}" class="pt30 fontlig js-verificationSeal">
                   <div class="f15 colr2 clearfix"> <i class="fl icons verficon {verificationSeal}"></i>
                     <div class="fl pt1 {verificationSeal}">Verified by visit</div> 	

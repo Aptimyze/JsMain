@@ -76,7 +76,7 @@ class PreWriteMessagev2Action extends sfAction
 			$data2 = $memHandlerObj->fetchHamburgerMessage($request);
 			$MembershipMessage = $data2['hamburger_message']['top']; 
 			//$MembershipMessage = "get 30% off";
-			$responseArray["errmsglabel"]= "To Send Personalized messages & initiate chat with ".$this->Profile->getUSERNAME();
+			$responseArray["errmsglabel"]= "Upgrade membership to Send messages & initiate chat with ".$this->Profile->getUSERNAME();
 			$responseArray["footerbutton"]["label"]  = "View Membership Plans";
 			$responseArray["footerbutton"]["value"] = "";
 			$responseArray["footerbutton"]["action"] = "MEMBERSHIP";

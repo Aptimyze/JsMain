@@ -164,6 +164,7 @@ class desktopRegister1 extends registrationBaseClass {
   {
 	$this->pageVar[groupNameParams]=RegistrationFunctions::assignGroupName($this->sourceVar['source']);
 	$this->groupname = $this->pageVar['groupNameParams'][GROUPNAME];
+	$this->sourcename = $this->sourceVar['source'];
   }
 
   public function preSubmit() {

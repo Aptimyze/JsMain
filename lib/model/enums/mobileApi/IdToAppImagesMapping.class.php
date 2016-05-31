@@ -32,4 +32,5 @@ class IdToAppImagesMapping
 	CONST A_IGNORE			= '89';
 	CONST A_UNDO_IGNORE		= '90';
 	CONST REPORTABUSE 		= '021' ;
+	CONST EADVANTAGE_SRP 	='eadvantage';
 }

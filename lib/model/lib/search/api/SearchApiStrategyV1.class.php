@@ -105,6 +105,8 @@ class SearchApiStrategyV1
                         $this->searchCat = 'matchalerts';
 		elseif($request->getParameter("kundlialerts")==1)
                         $this->searchCat = 'kundlialerts';
+		elseif($request->getParameter("contactViewAttempts")==1)
+                        $this->searchCat = 'contactViewAttempts';
 
                 $this->setMetaDataResponse($SearchParamtersObj,$currentPage,$searchId,$noOfPages,$relaxedResults,$casteMappingCnt,$casteMappingCastes,$relaxCriteria,$loggedInProfileObj);
                 if($this->noResults!=1)
@@ -114,9 +116,14 @@ class SearchApiStrategyV1
 			if($this->results_orAnd_cluster!='onlyResults')
 				$this->setClusters($searchClustersArray,$SearchParamtersObj);
 		}
+                $params['request'] = $request;
+                $params['searchCat'] = $this->searchCat;
+                $params['loggedInProfileObj'] = $loggedInProfileObj;
+                $params['noOfResults'] = $this->responseObj->getTotalResults();
+                $outputArray = $this->SearchChannelObj->setRequestParameters($params);
+                $this->output = array_merge($this->output,$outputArray);
 		return $this->output;
 	}
-
 
 
 	/**
@@ -136,11 +143,12 @@ class SearchApiStrategyV1
 		$cnt = $this->responseObj->getTotalResults();
 		$this->output["dppLinkAtEnd"] = null;
 		$this->output["myPageTitle"] = null;
-		if(in_array($this->searchCat,array('justJoinedMatches','matchalerts','kundlialerts')))
+		if(in_array($this->searchCat,array('justJoinedMatches','matchalerts','kundlialerts','contactViewAttempts')))
 			$this->output["showSortingOption"] = 'N';
 		else
 			$this->output["showSortingOption"] = 'Y';
 		
+                
 		$params["Version"]=$this->version;
 		$params["Channel"]= $this->channel;
 		$params["SearchType"]= $this->getSearchType($SearchParamtersObj->getSEARCH_TYPE());
@@ -270,6 +278,8 @@ class SearchApiStrategyV1
 			return "matchalerts";
 		else if($this->searchCat == "kundlialerts" )
                         return "kundlialerts";
+		else if($this->searchCat == "contactViewAttempts" )
+                        return "contactViewAttempts";
 		else
 			return "";
 	}
@@ -300,36 +310,32 @@ class SearchApiStrategyV1
                         $this->output["searchSummary"]=$searchSummaryResult;
                 }
                 $featuredProfileArrNew = array();
+               // echo '<pre>';
+                //print_r($resultsArray);
 								
-								
-                if($this->responseObj->getFeturedProfileArr()){
-									
-												$getExcludedFeatured = false; // Need to exclude first featured profile from result
-												$profileidsArray = $this->responseObj->getSearchResultsPidArr();
-										
-                        foreach($this->responseObj->getFeturedProfileArr() as $k=>$v){
-													
-													$featured[$v["id"]]=$v;
-                        }
-											
-                        foreach($resultsArray as $k=>$v){
-                          if($featured[$k])
-													{
-													
-                              if($getExcludedFeatured == true && is_array($profileidsArray) && in_array($k,$profileidsArray))
-															{
-																$resultArrNew[$k] =  $v;
-															}
-															else
-																$getExcludedFeatured= true;
-															$v["stype"] = $this->SearchChannelObj->getFeaturedProfilesStype();
-															$featuredProfileArrNew[$k] =  $v;
-                              
-													}
-													elseif(is_array($profileidsArray) && in_array($k,$profileidsArray))
-														$resultArrNew[$k] =  $v;
-                        }
-                        $resultsArray=$resultArrNew;
+                if($this->responseObj->getFeturedProfileArr()){					
+                    $getExcludedFeatured = false; // Need to exclude first featured profile from result
+                    $profileidsArray = $this->responseObj->getSearchResultsPidArr();
+
+                    foreach($this->responseObj->getFeturedProfileArr() as $k=>$v){
+                            $featured[$v["id"]]=$v;
+                    }
+
+                    foreach($resultsArray as $k=>$v){
+                          if($featured[$k]){							
+                                  if($getExcludedFeatured == true && is_array($profileidsArray) && in_array($k,$profileidsArray))
+                                  {
+                                          $resultArrNew[$k] =  $v;
+                                  }
+                                  else
+                                          $getExcludedFeatured= true;
+                                  $v["stype"] = $this->SearchChannelObj->getFeaturedProfilesStype();
+                                  $featuredProfileArrNew[$k] =  $v;
+                          }
+                          elseif(is_array($profileidsArray) && in_array($k,$profileidsArray))
+                                  $resultArrNew[$k] =  $v;
+                    }
+                    $resultsArray=$resultArrNew;
                 }
                 $profilesArr["profiles"] = $resultsArray;
                 $profilesArr["featuredProfiles"] = $featuredProfileArrNew;
@@ -513,7 +519,7 @@ class SearchApiStrategyV1
                                         $value='Y';
                                 break;
 			case "timetext":
-				if($this->searchCat == 'justJoinedMatches' || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::AppJustJoinedMatches || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::JustJoinedMatches || $this->searchCat == 'matchalerts' || $this->searchCat == 'kundlialerts')
+				if($this->searchCat == 'justJoinedMatches' || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::AppJustJoinedMatches || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::JustJoinedMatches || $this->searchCat == 'matchalerts' || $this->searchCat == 'kundlialerts' || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::contactViewAttempt)
 				{
 					if($this->searchCat == 'matchalerts' || $this->searchCat == 'kundlialerts')
 					{
@@ -525,6 +531,15 @@ class SearchApiStrategyV1
 					}
 					else
 					{
+                                          if($this->searchCat == 'contactViewAttempts'){
+                                                if(stripos($infoArr['SENT_DATE'],'today') === false){
+                                                  $infoArr['SENT_DATE'] = "on ".$infoArr['SENT_DATE'];
+                                                }
+                                            if($SearchParamtersObj->getGENDER()=='M')
+                                                    $value = "He contacted you ".$infoArr['SENT_DATE'];
+                                            else
+                                                    $value = "She contacted you ".$infoArr['SENT_DATE'];
+                                          }else{
 						$value = CommonUtility::convertDateToDay($value);
                                                 if(stripos($value,'today') === false){
                                                   $value = "on ".$value;
@@ -533,6 +548,7 @@ class SearchApiStrategyV1
 							$value = "He joined ".$value;
 						else
 							$value = "She joined ".$value;
+                                          }
 					}
 				}
 				else
@@ -560,6 +576,8 @@ class SearchApiStrategyV1
 					$value = mainMem::ERISHTA_LABEL;
 				elseif(CommonFunction::isJsExclusiveMember($value))
                     $value = mainMem::JSEXCLUSIVE_LABEL;
+                elseif(CommonFunction::isEadvantageMember($value))
+                	$value = mainMem::EADVANTAGE_LABEL;
                 else
                     $value = null;
 				break;
@@ -578,6 +596,13 @@ class SearchApiStrategyV1
 						$value = IdToAppImagesMapping::ERISHTA_SRP;
 					else
 						$value = mainMem::ERISHTA_LABEL;
+				}
+				elseif(CommonFunction::isEadvantageMember($value))
+				{
+					if(MobileCommon::isApp())
+						$value = IdToAppImagesMapping::EADVANTAGE_SRP;
+					else
+						$value = mainMem::EADVANTAGE_LABEL;
 				}
 				elseif(CommonFunction::isJsExclusiveMember($value))
 				{

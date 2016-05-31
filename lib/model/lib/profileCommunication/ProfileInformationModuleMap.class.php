@@ -56,6 +56,7 @@ class ProfileInformationModuleMap
                                    return $k;
                         }
                 }
+               
                 throw new JsException("","Wrong module or infoType is given in profileInformationModuleMap.class.php");
         }
         
@@ -73,7 +74,7 @@ class ProfileInformationModuleMap
 			"APP_TYPE"=> "ANDROID",
 			"VERSION"=> "1",
 			"SORT_ORDER"=> "1",
-			"COUNT"=> "2",
+			"COUNT"=> "10",
 			"TUPLE"=> "NO_USERNAME_TUPLE",
 			"TUPLE_ORDER"=> "TIME",
 			"ACTIVE_FLAG"=> "Y",
@@ -443,7 +444,7 @@ class ProfileInformationModuleMap
 			"TITLE"=> "Accepted Members",
 			"SUBTITLE"=> "Accepted me",
 			"ICONS"=> "",
-			"BUTTONS"=> "MESSAGE|CONTACT",
+			"BUTTONS"=> "MESSAGE|CONTACT|CANCEL",
 			"TRACKING"=> "",
 		),
 		"ACCEPTANCES_SENT"=>Array( 
@@ -459,7 +460,7 @@ class ProfileInformationModuleMap
 			"TITLE"=> "Accepted Members",
 			"SUBTITLE"=> "Accepted By Me",
 			"ICONS"=> "",
-			"BUTTONS"=> "MESSAGE|CONTACT",
+			"BUTTONS"=> "MESSAGE|CONTACT|DECLINE",
 			"TRACKING"=> "",
 		),
 		"MY_MESSAGE"=>Array( 
@@ -498,7 +499,7 @@ class ProfileInformationModuleMap
 			"ID"=> "6",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "10",
-			"TUPLE"=> "INBOX_APP",
+			"TUPLE"=> "INBOX_VIEWED_DATE_NO_MESSAGE",
 			"TUPLE_ORDER"=> "",
 			"ACTIVE_FLAG"=> "Y",
 			"AJAX_FLAG"=> "N",
@@ -872,7 +873,7 @@ self::$ContactCenterMYJS=Array(
 			"TITLE"=> "Recent Profile Visitors",
 			"SUBTITLE"=> "",
 			"HEADING"=> "Profile Visitors",
-			"CCMESSAGE"=> "These members can be your potential match, they have visited your profile in the last one week.",
+			"CCMESSAGE"=> "These members can be your potential match, they have visited your profile in the last 15 days.",
 			"ICONS"=> "",
 			"BUTTONS"=> "INITIATE|SHORTLIST|PHOTO|CONTACT",
 			"TRACKING"=> "",

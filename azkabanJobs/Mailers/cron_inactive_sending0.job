@@ -1,0 +1,3 @@
+type=command
+dependencies=cron_inactive_mailer
+command=${php5} ${docRoot}/symfony mailer:NEWJS_INACTIVE_PROFILES 4 0

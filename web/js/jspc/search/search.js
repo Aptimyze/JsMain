@@ -118,6 +118,9 @@ $(document).ready(function() {
                 case 'visitors':
                         clickOn = "js-visitors";
                         break;
+                case 'contactViewAttempts':
+                        clickOn = "js-viewAttempts";
+                        break;
             }
             $('.matchtabs li.active').removeClass('active').addClass("cursp");
             $("#"+clickOn).closest('li').addClass('active');
@@ -185,6 +188,10 @@ function searchListingAction(thisElement){
                                 postParams = "verifiedMatches=1";
 				listType="search";
                                 break;
+                        case 'js-viewAttempts':
+                                postParams = "contactViewAttempts=1";
+				listType="search";
+                                break;
                 }
                 if(postParams1)
 	                updateHistory(postParams1.split("=")[0],1);
@@ -233,7 +240,7 @@ function pageResponsePopulate(response) {
 			/**
 			* show clusters section is replace by title on left in case of shortlisted section / visitors
 			*/
-			if(response.listType=='cc')
+			if(response.listType=='cc' || response.listType=='noClusSearch')
 			{
 				var infoArr1 = {};
 				infoArr1["action"] = "noClusterSection";
@@ -294,7 +301,7 @@ function pageResponsePopulate(response) {
 	{
 		$("#js-searchContainer").show();
 		$("#zeroResultSection").hide();
-		if(response.listType=='cc')
+		if(response.listType=='cc' || response.listType == 'noClusSearch')
 	                $("#heightRight").addClass('srpHeightRightcc').removeClass('srpHeightRight');
 		else
 	                $("#heightRight").addClass('srpHeightRight').removeClass('srpHeightRightcc');
@@ -332,7 +339,7 @@ function loadPageResponse(response) {
 
 	if(response.result_count)
 	{
-		if(response.listType=='cc')
+		if(response.listType=='cc' || response.listType == 'noClusSearch')
 		{
 			$("#searchResultsBlock").removeClass("mt8").addClass("mt13");
 			$("#pageHeading").hide();
@@ -391,6 +398,11 @@ function loadPageResponse(response) {
 	 */
 	if(response.no_of_results!=0)
 		handlePagination(response);
+	/** 
+	 * Call to function handling RCB on page load
+	 */
+	if(response.no_of_results!=0)
+		handleRCB(response);
 	
 	//LOGIN Binding
 	LoginBinding();
@@ -400,7 +412,51 @@ function loadPageResponse(response) {
 		renderBanners();
 	
 }
-
+function handleRCB(response){
+        //RCB Communication 
+  if (response.hasOwnProperty('display_rcb_comm') && response.display_rcb_comm &&
+    typeof response.profiles != "undefined" && response.profiles != null) {
+    var countOfProfiles = response.no_of_results;
+    
+    if(countOfProfiles >= 3){
+      $("<div class='rel_c js-rcbMessage' id='callDiv1'><div class='ccp2 fontlig color11'><div class='mainBrdr clearfix'><div class='f14 fontlig wid60p inDisp fl'>Become an EValue member and allow hundreds of matching profiles like these to view your contacts without membership. Would you like us to call you and explain the benefits of Evalue?</div><div class='pt15 pb30 color2 f14 fr inDisp verTop'><span class='hlpcl1 calUserDiv cursp' id='callUser'>Yes, call me</span><span id='noButton' class='hlpcl11 cursp bg6 noUserDiv'>No, Later</span></div></div></div></div>").insertAfter("#idd3");
+      
+      //On Yes Call Now
+      $("#callUser").off("click");
+      $("#callUser").on("click", function () {
+        $('<input>').attr({type: 'hidden',id:'rcbResponse', name: 'rcbResponse',value:'Y'}).appendTo('#Widget');
+        $(".js-openRequestCallBack").click();
+      });
+      
+      //On Not Now Button
+      $("#noButton").off("click");
+      $("#noButton").on("click", function () {
+        
+        var url = '/common/requestCallBack';
+        $.ajax({
+          type: "POST",
+          url: url,
+          cache: false,
+          timeout: 5000, 
+          data: {rcbResponse:'N'},
+          success:function(result){
+            $("#callDiv1").remove();
+            $("<div class='rel_c js-rcbMessage' id='callDiv2'><div class='ccp11 pb20 fontlig color11'><div class='mainBrdr2'><div class='f14 fontlig'>Never mind. You still can reach out to us later whenever you want. We will remind you about this after two weeks.</div></div></div></div>").insertAfter("#outerCCTupleDiv3");        
+          },
+          error:function(result){
+            $("#callDiv1").hide();
+            $("<div class='rel_c js-rcbMessage' id='callDiv2'><div class='ccp11 pb20 fontlig color11'><div class='mainBrdr2'><div class='f14 fontlig'>Something Went Wrong</div></div></div></div>").insertAfter("#outerCCTupleDiv3");                  setTimeout(function(){
+              $('#callDiv2').remove();
+              $("#callDiv1").show();
+            },1000)
+          }
+        });
+        
+      });
+				      
+    }
+  }
+}
 
 /**Show Online now profiles only*/
 function sorting(sort,listType){

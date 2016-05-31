@@ -264,7 +264,7 @@ style="height:387px; background-image: url('~$arrOutDisplay["about"]["coverPhoto
         ~if $arrOutDisplay['pic']['pic_count'] eq "0"`
         <div class="fl pos-rel imgSize" data="~$arrOutDisplay['pic']['pic_count']`,~$arrOutDisplay['about']['username']`,~$arrOutDisplay['page_info']['profilechecksum']`">
         ~else`
-         <div class="fl pos-rel imgSize photoClick js-searchTupleImage cursp" data="~$arrOutDisplay['pic']['pic_count']`,~$arrOutDisplay['about']['username']`,~$arrOutDisplay['page_info']['profilechecksum']`">
+         <div class="fl pos-rel imgSize photoClick js-searchTupleImage cursp ~if !$loginProfile->getPROFILEID()` loginLayerJspc loginAlbumSearch ~/if`" data="~$arrOutDisplay['pic']['pic_count']`,~$arrOutDisplay['about']['username']`,~$arrOutDisplay['page_info']['profilechecksum']`">
          ~/if`
           <div class="prfpos2 pos-abs">
             ~if $arrOutDisplay['pic']['pic_count'] neq "0"` <div class="disp-tbl prfclr1 prfdim1 prfrad1 colrw txtc">

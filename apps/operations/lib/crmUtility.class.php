@@ -365,6 +365,9 @@ class crmUtility
 		$priv10=array('PreAll','ExcPrm','RmnInd');
 		$priv11=array('ExcEP','PreNri');
 		$priv12=array('ExcWL','ExcPrm');
+                $billingPriv 	=array('BU','BA');
+                $aramexPriv 	=array('IUP');
+		$offlineExclusive =array('OA','OB');
 
 		$allPrivilege		=array_merge($priv1,$priv2,$priv3,$priv4,$priv5,$priv6);
 		$failedPaymentPriv 	=array_merge($priv1,$priv2,$priv3,$priv4,$priv6);
@@ -379,7 +382,7 @@ class crmUtility
 		$csvPriv		=$priv8;
 		$newFieldSales   	=array_merge($priv6,$priv9);
 		$onlineNewProfilesPriv  =array_merge($priv10);
-		
+	
 		foreach($privilegeArr as $key=>$val){
 
 			if(in_array("$val",$newFieldSales))
@@ -416,6 +419,12 @@ class crmUtility
                                 $linkArr['FS'] ='Y';
 			if(in_array("$val",$csvPriv))
 				$linkArr['CSV'] ='Y';
+                        if(in_array("$val",$billingPriv))
+                                $linkArr['BILLING'] ='Y';
+                        if(in_array("$val",$aramexPriv))
+                                $linkArr['ARAMEX'] ='Y';
+			if(in_array("$val",$offlineExclusive))
+				$linkArr['OFFLINE_EXECUTIVE'] ='Y';
 		}	
 		return $linkArr;	
 	}

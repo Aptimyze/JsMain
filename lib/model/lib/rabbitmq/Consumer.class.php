@@ -71,7 +71,8 @@ class Consumer
     try 
     {
       $this->channel->queue_declare(MQ::MAILQUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);   
-      $this->channel->queue_declare(MQ::SMSQUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);  
+      $this->channel->queue_declare(MQ::SMSQUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+      $this->channel->queue_declare(MQ::BUFFER_INSTANT_NOTIFICATION_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
     } 
     catch (Exception $exception) 
     {
@@ -83,6 +84,7 @@ class Consumer
     {
       $this->channel->basic_consume(MQ::MAILQUEUE, MQ::CONSUMER, MQ::NO_LOCAL, MQ::NO_ACK,MQ::CONSUMER_EXCLUSIVE , MQ::NO_WAIT, array($this, 'processMessage'));
       $this->channel->basic_consume(MQ::SMSQUEUE, MQ::CONSUMER, MQ::NO_LOCAL, MQ::NO_ACK,MQ::CONSUMER_EXCLUSIVE , MQ::NO_WAIT, array($this, 'processMessage'));
+      $this->channel->basic_consume(MQ::BUFFER_INSTANT_NOTIFICATION_QUEUE, MQ::CONSUMER, MQ::NO_LOCAL, MQ::NO_ACK,MQ::CONSUMER_EXCLUSIVE , MQ::NO_WAIT, array($this, 'processMessage'));
     }
     catch (Exception $exception) 
     {
@@ -139,6 +141,9 @@ class Consumer
         case 'GCM':   
           $handlerObj->sendGCM($type,$body);  
           break;
+        case 'BUFFER_INSTANT_NOTIFICATIONS':
+          $handlerObj->sendInstantNotification($type,$body);
+            break;
       }     
     }
     catch (Exception $exception) 

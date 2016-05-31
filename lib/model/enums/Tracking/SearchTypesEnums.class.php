@@ -47,6 +47,10 @@ class SearchTypesEnums
 	const AppTwoWayMatch = 'AT';
         const MobileEOIConfirmationPage = 'WC';
 	const JustJoinedMatchesDesktop = 'DU';
+	const contactViewAttempt = 'VCD';
+	const contactViewAttemptAndroid = 'VCDA';
+	const contactViewAttemptIOS = 'VCDI';
+	const contactViewAttemptJSMS = 'VCDM';
         const JustJoinedMatches = 'WU';
 	const AppJustJoinedMatches = 'AU';
         const iOSJustJoinedMatches = 'IU';
@@ -121,6 +125,6 @@ class SearchTypesEnums
 	const PHOTO_UPLOAD_ANDROID ='PU';
         const PHOTO_REQUEST_IOS ='PRI';
         const PHOTO_UPLOAD_IOS ='PUI';
-	
+        const APPLY_ONLY_CLUSTER = 'XX';
 }
 ?>

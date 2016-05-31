@@ -805,7 +805,7 @@ var padding = 31;
     dobType.prototype.createYearList = function () {
       var d = new Date();
       var n = d.getFullYear();
-      yearHtml = dobType.prototype.generalList(n - 19, n - 61, "year", n - 18);
+      yearHtml = dobType.prototype.generalList(n - 19, n - 70, "year", n - 18);
       $("#yearsub").html(yearHtml);
     }
     //general list creator 

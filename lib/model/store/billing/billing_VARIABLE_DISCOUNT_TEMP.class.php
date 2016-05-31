@@ -53,9 +53,9 @@ class billing_VARIABLE_DISCOUNT_TEMP extends TABLE{
         {
             if(is_array($params) && $params)
             {
-                $valuesStr = $valuesStr."(:PROFILEID,:SDATE,:EDATE,:SERVICE,:DISC3,:DISC6,:DISC12)"; 
+                $valuesStr = $valuesStr."(:PROFILEID,:SDATE,:EDATE,:SERVICE,:DISC2,:DISC3,:DISC6,:DISC12)"; 
                     
-                $sql = "INSERT IGNORE INTO billing.VARIABLE_DISCOUNT_TEMP (`PROFILEID`,`SDATE`,`EDATE`,`SERVICE`,`3`,`6`,`12`) VALUES ".$valuesStr;
+                $sql = "INSERT IGNORE INTO billing.VARIABLE_DISCOUNT_TEMP (`PROFILEID`,`SDATE`,`EDATE`,`SERVICE`,`2`,`3`,`6`,`12`) VALUES ".$valuesStr;
                 
                 $res = $this->db->prepare($sql);
               
@@ -63,6 +63,7 @@ class billing_VARIABLE_DISCOUNT_TEMP extends TABLE{
                 $res->bindValue(":SDATE",$params["SDATE"], PDO::PARAM_STR);
                 $res->bindValue(":EDATE",$params["EDATE"], PDO::PARAM_STR);
                 $res->bindValue(":SERVICE",$params["SERVICE"], PDO::PARAM_STR);
+		$res->bindValue(":DISC2", $params["2"], PDO::PARAM_INT);
                 $res->bindValue(":DISC3", $params["3"], PDO::PARAM_INT);
                 $res->bindValue(":DISC6", $params["6"], PDO::PARAM_INT);
                 $res->bindValue(":DISC12", $params["12"], PDO::PARAM_INT);

@@ -1,17 +1,27 @@
 <script>
 
     function criticalLayerButtonsAction(clickAction,button) {
+
         $("#CALButton"+button).attr('onclick','');
             
                 var layerId= $("#CriticalActionlayerId").val();
-                    if(clickAction=="close") {
+                
+                    
+                    if(clickAction=="close" || clickAction=='RCB') {
                     var URL="/common/criticalActionLayerTracking";
                     $.ajax({
                         url: URL,
                         type: "POST",
                         data: {"button":button,"layerId":layerId},
                     });
+
                     closeCurrentLayerCommon();
+                    if(clickAction=='RCB')
+                    {
+                        toggleRequestCallBackOverlay(1);
+                        $('.js-dd ul li[value="M"]').trigger('click');
+                    }
+                
                 }
                 else {
                 window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 

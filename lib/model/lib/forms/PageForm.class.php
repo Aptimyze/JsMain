@@ -88,7 +88,12 @@ class PageForm extends sfForm
 					  $mobile_reg[$column_name]=$value;
 					  break;
 				  case "NATIVE_PLACE":
-						$nativePlaceArr[$column_name] = $value;
+                                                $nativePlaceArr[$column_name] = $value;
+                                                if($column_name=="NATIVE_COUNTRY"&&$value!='51')
+                                                {
+                                                        $nativePlaceArr['NATIVE_CITY']='';
+                                                        $nativePlaceArr['NATIVE_STATE']='';
+                                                }
 					  break;
                                  case "NAME_OF_USER":
 						$nameOfUserArr[$column_name] = $value;

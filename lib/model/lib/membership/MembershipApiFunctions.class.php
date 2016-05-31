@@ -809,7 +809,14 @@ class MembershipApiFunctions
             $vasNames = $this->getCurrentlyActiveVasNames($apiObj);
             
             if ($apiObj->memID == "ESP" || $apiObj->memID == "NCP") {
-                $topBlockMessage["currentBenefitsMessages"] = array_values(array_merge(array_slice($benefits, 0, 3) , $vasNames));
+               if ($vasNames != NULL) 
+                {
+                    $topBlockMessage["currentBenefitsMessages"] = array_values(array_merge($benefits , $vasNames));
+                }
+                else 
+                {
+                    $topBlockMessage["currentBenefitsMessages"] = array_values($benefits);
+                }
             } 
             else {
                 if ($vasNames != NULL) {
@@ -954,7 +961,8 @@ class MembershipApiFunctions
             $apiObj->mainServices['change_text'] = "Change Plan";
         }
 
-        if (($apiObj->mainMem == 'ESP' || $apiObj->mainMem == 'NCP') && !empty($apiObj->mainMemDur)) {
+        if (($apiObj->mainMem == 'ESP' || $apiObj->mainMem == 'NCP') && !empty($apiObj->mainMemDur)) 
+        {
             if ($apiObj->mainMem == 'ESP') {
                 $arr = VariableParams::$eSathiAddOns;
             } 
@@ -980,7 +988,15 @@ class MembershipApiFunctions
             else {
                 $apiObj->preSelectedEValuePlusVas = $preSelectedVas;
             }
-            $apiObj->selectedVas = $preSelectedVas;
+            if($apiObj->mainMem=="NCP" && $preSelectedVas)
+            {
+                if($apiObj->selectedVas)
+                    $apiObj->selectedVas = $apiObj->selectedVas.",".$preSelectedVas;
+                else
+                    $apiObj->selectedVas = $preSelectedVas;
+            }
+            else
+                $apiObj->selectedVas = $preSelectedVas;
         }
     }
     
@@ -1007,7 +1023,7 @@ class MembershipApiFunctions
                                 $v['vas_id'] = $z['id'];
                                 $v['orig_price'] = $z['orig_price'];
                                 $v['orig_price_formatted'] = $z['orig_price_formatted'];
-                                if ($apiObj->mainMem == "ESP" || $apiObj->mainMem == "X" || $apiObj->mainMem == "NCP") {
+                                if (in_array($apiObj->mainMem, VariableParams::$skipVasPageMembershipBased) || ($apiObj->mainMem=='NCP' && in_array($vv['vas_key'], VariableParams::$mainMemBasedVasFiltering[$apiObj->mainMem]))) {
                                     $v['discount_given'] = NULL;
                                     $price = "0";
                                     $v['vas_price'] = "0";
@@ -1023,7 +1039,7 @@ class MembershipApiFunctions
                                     $v['vas_price'] = "" . number_format($v['price'], 2, '.', ',');
                                     $v['vas_price_strike'] = $z['vas_price_strike'];
                                 }
-                                if ($apiObj->mainMem == "ESP" || $apiObj->mainMem == "X" || $apiObj->mainMem == "NCP") {
+                                if (in_array($apiObj->mainMem, VariableParams::$skipVasPageMembershipBased) || ($apiObj->mainMem=='NCP' && in_array($vv['vas_key'], VariableParams::$mainMemBasedVasFiltering[$apiObj->mainMem]))) {
                                     $v['remove_text'] = NULL;
                                     $v['change_text'] = NULL;
                                 } 
@@ -1032,12 +1048,24 @@ class MembershipApiFunctions
                                     $v['change_text'] = "Change Duration";
                                 }
                             }
+                            else if($apiObj->mainMem=="NCP" && in_array($vv['vas_key'], VariableParams::$mainMemBasedVasFiltering[$apiObj->mainMem]))
+                            {
+                                $v['discount_given'] = NULL;
+                                $price = "0";
+                                $v['vas_price'] = "0";
+                                $v['orig_price'] = "0";
+                                $v['orig_price_formatted'] = "0.00";
+                                $v['vas_price_strike'] = "0";
+                                $v['remove_text'] = NULL;
+                                $v['change_text'] = NULL;
+                            }
                         }
                     }
                 }
             }
             if(empty($v['vas_price_strike'])){
             	$v['vas_price_strike'] = 0;
+
             }
             $apiObj->totalVASOrigPrice+= $v['orig_price'];
             $apiObj->totalVASPrice+= $v['price'];
@@ -1077,5 +1105,26 @@ class MembershipApiFunctions
         return $apiObj;
     }
     
+    /*filter out vas services based on main membership
+    * @inputs: $vasData,$apiObj,$mainMem
+    * @output: none
+    */
+    public function filterMainMemBasedVASData($vasData,$apiObj,$mainMem)
+    {  
+        if(is_array($vasData) && $vasData && VariableParams::$mainMemBasedVasFiltering[$mainMem])
+        {
+            foreach ($vasData as $key => $details)
+            {
+                //remove vas service if present in filter list of mainMemID
+                if(in_array($details["vas_key"], VariableParams::$mainMemBasedVasFiltering[$mainMem]))
+                    unset($vasData[$key]);
+            } 
+            $apiObj->custVAS = array_values($vasData);
+        }
+        else
+        {
+            $apiObj->custVAS = $vasData;
+        }
+    }
     
 }

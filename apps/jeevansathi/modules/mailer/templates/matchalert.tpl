@@ -73,7 +73,7 @@
                     </tr>
                     <tr>
                         <td colspan="3">
-                        	~include_partial("global/mailerSurvey")`
+                        	~include_partial("global/mailerSurvey",[surveyLink=>$data.surveyLink])`
                         </td>
                     </tr>
                     <tr>

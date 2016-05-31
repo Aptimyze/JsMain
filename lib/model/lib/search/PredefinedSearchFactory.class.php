@@ -49,6 +49,9 @@ class PredefinedSearchFactory
                         case 'verifiedMatches' :
                                 $object = new verifiedMatches($loggedInProfileObj);
                                 break;
+                        case 'ContactViewAttempts' :
+                                $object = new ContactViewAttempts($loggedInProfileObj);
+                                break;
                 }
                 return $object;
 	}

@@ -3,7 +3,7 @@ $curFilePath = dirname(__FILE__)."/";
 include_once("/usr/local/scripts/DocRoot.php");
 
 include("$docRoot/crontabs/connect.inc");
-$db=connect_db();
+$db=connect_slave();
 
                 $strArr   	   	=array(); 
 		$cnt			=0;

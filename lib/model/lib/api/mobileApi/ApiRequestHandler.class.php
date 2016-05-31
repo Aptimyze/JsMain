@@ -177,14 +177,14 @@ class ApiRequestHandler
 			if($request->getParameter("actionName")=="staticTablesData" || $request->getParameter("actionName")=="searchFormData")
                         {
                         }
-			if(($loginData[INCOMPLETE]=="Y") && ($output["actionName"]!="ApiEditSubmitV1" && $request->getAttribute("incomplete")!="Y") && ($output["moduleName"]!="register") &&  ($output["actionName"]!="logoutv1" && $output["moduleName"]!="api"))
+			if(($loginData[INCOMPLETE]=="Y") && ($output["actionName"]!="ApiEditSubmitV1" && $request->getAttribute("incomplete")!="Y") && ($output["moduleName"]!="register") && ($output["actionName"]!="AlertManagerV1") &&  ($output["actionName"]!="logoutv1" && $output["moduleName"]!="api"))
 			{
 				$request->setParameter('sectionFlag',"incomplete");
 				$output["moduleName"] = "profile";
 				$output["actionName"] = RequestHandlerConfig::$moduleActionVersionArray[$output["moduleName"]]["editprofile"][$request->getParameter("version")];
 			}
 
-			elseif($output["actionName"]!="ApiEditSubmitV1" && $request->getAttribute("incomplete")!="Y"  &&  ($output["actionName"]!="logoutv1" && $output["moduleName"]!="api"))
+			elseif($output["actionName"]!="ApiEditSubmitV1" && $request->getAttribute("incomplete")!="Y"  &&  ($output["actionName"]!="logoutv1" && $output["moduleName"]!="api") && ($output["actionName"]!="AlertManagerV1"))
 			{
 				$verifyPhoneForRequest=JsCommon::verifyPhoneForRequest($profileid, $output['moduleName'],$output['actionName']);
 				if($verifyPhoneForRequest)

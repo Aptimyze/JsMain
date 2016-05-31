@@ -32,6 +32,13 @@ class MailerGroup{
   const DUPLICATE_PROFILES= 27;
   const MEMB_EXPIRY=30;	
   const IMPROVE_SCORE = 31;
-  const INCOMPLETE = 27;
-  const INACTIVE_2 = 28;
+  const INCOMPLETE_90 = 34;
+  const INCOMPLETE_120 = 35;
+  const INCOMPLETE_145 = 36;
+  const INACTIVE_15 = 37;
+  const INACTIVE_30 = 38;
+  const INACTIVE_45 = 39;
+  const INACTIVE_60 = 40;
+  const INACTIVE_75 = 41;
+  const DPP_REVIEW = 27;
 }

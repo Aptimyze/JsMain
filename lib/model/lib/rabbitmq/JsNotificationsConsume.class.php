@@ -136,7 +136,7 @@ class JsNotificationsConsume
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in JsNotificationConsume, Unable to process message: " .$exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"browserNotification");
+      //RabbitmqHelper::sendAlert($str,"browserNotification");
      
       /*
        * The message due to which error is caused is reframed into a new message and the original message is dropped.

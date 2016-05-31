@@ -28,7 +28,7 @@ EOF;
 		$mmObj = new MembershipMailer();
 		$profilesArr =$mmObj->getJsExclusiveProfiles();
 		if(count($profilesArr)>0){
-			$jprofileObj = new JPROFILE();
+			$jprofileObj = new JPROFILE('newjs_slave');
 			$subsArr = $jprofileObj->getAllSubscriptionsArr($profilesArr);
 			foreach($profilesArr as $key=>$profileid)
 				if(strpos($subsArr[$profileid]['ISD'], "91") !== false){

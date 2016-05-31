@@ -36,7 +36,8 @@ class CommunicationHistoryV1Action extends sfAction
 			if($havePhoto=='Y'){
 			    $pictureServiceObj=new PictureService($this->Profile);
 			    $profilePicObj = $pictureServiceObj->getProfilePic();
-			    if(!$profilePicObj){
+			    if($profilePicObj)
+			    {
 					$thumbNailArray = PictureFunctions::mapUrlToMessageInfoArr($profilePicObj->getThumbailUrl(),'ThumbailUrl','',$otherGender);
             	  	if($thumbNailArray[label] != '')
                    		$thumbNail = PictureFunctions::getNoPhotoJSMS($otherGender,'ProfilePic120Url');
@@ -52,14 +53,22 @@ class CommunicationHistoryV1Action extends sfAction
 			unset($havePhoto);
 			unset($thumbNailArray);
 			$havePhoto=$this->loginProfile->getHAVEPHOTO();
-			if($havePhoto=='Y'){
+			if($havePhoto=='Y')
+			{
+			
 			$pictureServiceObj=new PictureService($this->loginProfile);
 			$profilePicObj = $pictureServiceObj->getProfilePic();
-			$thumbNailArray = PictureFunctions::mapUrlToMessageInfoArr($profilePicObj->getThumbailUrl(),'ThumbailUrl','',$gender);
-			if($thumbNailArray[label] != '')
-			$ownthumbNail = PictureFunctions::getNoPhotoJSMS($gender,'ProfilePic120Url');
-			else $ownthumbNail = $thumbNailArray['url'];
-		} 
+				if($profilePicObj)
+				{
+				$thumbNailArray = PictureFunctions::mapUrlToMessageInfoArr($profilePicObj->getThumbailUrl(),'ThumbailUrl','',$gender);
+				if($thumbNailArray[label] != '')
+				$ownthumbNail = PictureFunctions::getNoPhotoJSMS($gender,'ProfilePic120Url');
+				else $ownthumbNail = $thumbNailArray['url'];
+				}
+				else 
+				$ownthumbNail = PictureFunctions::getNoPhotoJSMS($gender,'ProfilePic120Url');
+
+			} 
 		else 
 				$ownthumbNail = PictureFunctions::getNoPhotoJSMS($gender,'ProfilePic120Url');
 		

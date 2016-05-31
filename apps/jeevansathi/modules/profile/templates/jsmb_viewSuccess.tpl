@@ -46,6 +46,8 @@
 				<b class="login-info b" style="background-color:white;float:right;color:#800000;font-size:14px" >~mainMem::EVALUE_LABEL`</b>
 			~else if CommonFunction::isErishtaMember($profile->getSUBSCRIPTION())`
 				<b class="login-info b" style="background-color:white;float:right;color:#800000;font-size:14px">~mainMem::ERISHTA_LABEL`</b>
+				~else if CommonFunction::isEadvantageMember($profile->getSUBSCRIPTION())`
+				<b class="login-info b" style="background-color:white;float:right;color:#800000;font-size:14px">~mainMem::EADVANTAGE_LABEL`</b>
 			~/if`
 			<ul>
 				<li>

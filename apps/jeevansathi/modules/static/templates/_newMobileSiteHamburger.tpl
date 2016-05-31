@@ -70,7 +70,6 @@
             <div class="clr"></div>
           </div>
           <!--end:top header hamburger-->
-                <!--start:offer-->
                 <div class="brdr9_ham">
                   <div class="newham_pad1 lh25">
                     <div class="white fb1 fontrobbold f15">~$MembershipMessage.top`</div>
@@ -81,6 +80,7 @@
                 <!--start:listing1-->
                 <div class="brdr9_ham pt20">
                   <ul class="fontlig">
+                  <li><a href="#" onclick=translateSite('~$translateURL`'); bind-slide=1 class="white" style="font-size: 19px;">हिंदी में</a></li>
                     <li><a href="/profile/mainmenu.php" bind-slide=1 class="white" style="font-size: 17px;">Home</a></li>
                     <li><a href="/search/topSearchBand?isMobile=Y" bind-slide=1 class="white">Search</a></li>
                     <li><a href="/search/searchByProfileId" bind-slide=1 class="white">Search by Profile ID</a></li>
@@ -154,7 +154,6 @@
                     
                     <li><a href="/static/settings" bind-slide=1 class="white">Settings</a></li>
                     
-                    <li><a href="#" onclick=translateSite('~$translateURL`'); bind-slide=1 class="white">हिंदी में</a></li>
                    <!-- <li><a href="#" bind-slide=1 class="white">Feedback</a></li>-->
                     
                     <!--<li><a href="#" bind-slide=1 class="white">Contact Us</a></li>-->
@@ -216,13 +215,13 @@
 			 <!--start:listing1-->
                 <div class=" pt20  hampad1">
                   <ul class="fontlig">
+                  <li><a href="#" onclick=translateSite('~$translateURL`'); bind-slide=1 class="white" style="font-size: 19px">हिंदी में</a></li>
                     <li><a href="/profile/mainmenu.php" bind-slide=1 class="white" style="font-size: 17px">Home</a></li>
                     <li><a href="/search/topSearchBand?isMobile=Y" bind-slide=1 class="white">Search</a></li>
                     <li><a href="/search/searchByProfileId" bind-slide=1 class="white">Search by Profile ID</a></li>
                      <li><a href="/browse-matrimony-profiles-by-community-jeevansathi" bind-slide=1 class="white">Browse by Community</a></li>
                     <li><a href="/contactus/index" bind-slide=1 class="white">Contact Us</a></li>
                     <li><a href="/static/settings" bind-slide=1 class="white">Settings</a></li>
-                    <li><a href="#" onclick=translateSite('~$translateURL`'); bind-slide=1 class="white">हिंदी में</a></li>
                   </ul>
                 </div>
                 

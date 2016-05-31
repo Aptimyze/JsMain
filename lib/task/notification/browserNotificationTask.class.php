@@ -26,7 +26,12 @@ EOF;
      ));
     }
     
-    protected function execute($arguments = array(), $options = array()) {
+    protected function execute($arguments = array(), $options = array()) 
+    {
+        //setting memory_limit and max_execution_time
+        ini_set('max_execution_time',-1);
+        ini_set('memory_limit','256M');
+
         if(!sfContext::hasInstance())
             sfContext::createInstance($this->configuration);
         if($arguments){

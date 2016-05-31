@@ -287,6 +287,9 @@ public function executePerformV2(sfWebRequest $request)
 						case 'erishta' :
 							$response2['profiles'][$key]['subscription_icon']=mainMem::ERISHTA_LABEL;
 							break;
+						case 'eadvantage':
+							$response2['profiles'][$key]['subscription_icon']=mainMem::EADVANTAGE_LABEL;
+							break;
 							
 					}
 				}

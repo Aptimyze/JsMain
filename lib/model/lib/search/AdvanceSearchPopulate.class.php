@@ -208,8 +208,11 @@ class AdvanceSearchPopulate
 		$i=0;
 		foreach($arr as $key=>$val)
 		{
-			$output[$key]["VALUE"]=$key;
-			$output[$key]["LABEL"]=$val;
+                        if($feild == 'manglik_label' && $key == 'D'){ // Do not show 'Dont know' in manglik status
+                        }else{
+                                $output[$key]["VALUE"]=$key;
+                                $output[$key]["LABEL"]=$val;
+                        }
 			
 		}
 		return $output;

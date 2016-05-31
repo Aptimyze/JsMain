@@ -18,6 +18,17 @@ function dropdown() {
     });
 }
 
+function jsMemExpandAnimate(closeView)
+{
+    $('.js-expand').animate({
+                    height: "toggle"
+                }, 1000, function() {
+                    changeclass();
+                    if(closeView==true)
+                        $('.js-closeview ').css('display', 'block');
+                });
+}
+
 function changeclass() {
     $("#js-panelbtn").toggleClass("mem-down");
 }
@@ -29,7 +40,7 @@ function changeTabContent(param1, param2, timeout) {
         "left": contWidth
     }, timeout);
     $(".planfeat").each(function() {
-        $(".planfeat").css('display', 'none');
+        $(this).css('display', 'none');
     });
     $('.list-' + param1).slideDown(timeout);
 }
@@ -47,8 +58,7 @@ function createCookie(name, value, days) {
 }
 
 function readCookie(name) {
-    var nameEQ = escape(name) + "=";
-    var ca = document.cookie.split(';');
+    var nameEQ = escape(name) + "=",ca = document.cookie.split(';');
     for (var i = 0; i < ca.length; i++) {
         var c = ca[i];
         while (c.charAt(0) === ' ') c = c.substring(1, c.length);
@@ -177,12 +187,7 @@ function updateVasPageCart() {
         if (tempArr.length > 0) {
             // remove passed vasId
             tempArr.forEach(function(item, index) {
-                var vasKey = item.substring(0, 1);
-                var vasId = item;
-                var vasName = $("#" + vasKey + "_name").html();
-                var vasDuration = $("#" + vasId + "_duration").html();
-                var vasPrice = $("#" + vasId + "_price span.prc").html();
-                var vasPriceStrike = $("#" + vasId + "_price_strike span.prc").html();
+                var vasKey = item.substring(0, 1),vasId = item,vasName = $("#" + vasKey + "_name").html(),vasDuration = $("#" + vasId + "_duration").html(),vasPrice = $("#" + vasId + "_price span.prc").html(),vasPriceStrike = $("#" + vasId + "_price_strike span.prc").html();
                 if (!checkEmptyOrNull(vasPriceStrike)) {
                     vasPriceStrike = '';
                 }
@@ -191,10 +196,7 @@ function updateVasPageCart() {
         }
     }
     $("#vasServices").append(newHTML);
-    var mainPrice = 0;
-    var mainPriceStrike = 0;
-    var vasPriceTotal = 0;
-    var vasPriceStrikeTotal = 0;
+    var mainPrice = 0,mainPriceStrike = 0,vasPriceTotal = 0,vasPriceStrikeTotal = 0;
     if ($("#mainPlanPrice").length > 0) {
         mainPrice = parseFloat($("#mainPlanPrice").html().replace(',', ''));
     }
@@ -244,24 +246,24 @@ function preSelectVas() {
     if (dur == 'L') {
         dur = 12;
     }
-    var index = 0;
-    var vasDur;
-    var vasKey;
-    var newSelectedVas = new Array();
+    var index = 0,vasDur,vasKey,newSelectedVas = new Array();
+    var PSVAS = preSelectVasGlobal.split(',');
     $('#VASdiv ul li').each(function() {
-        if (index < 3) {
+        if (index < 6) {
             var loopVal = 0;
             flag = 0
             $(this).find(".vascell").each(function() {
                 vasDur = $(this).attr('id');
                 vasKey = vasDur.substring(0, 1);
                 vasDur = vasDur.replace(/[^0-9]/g, '');
-                if (vasKey == 'I' && flag != 1) {
-                    dur = dur + '0';
-                    flag = 1;
-                }
-                if (parseInt(vasDur) <= parseInt(dur)) {
-                    loopVal = vasDur;
+                if(inArray(vasKey,PSVAS)){
+                    if (vasKey == 'I' && flag != 1) {
+                        dur = dur + '0';
+                        flag = 1;
+                    }
+                    if (parseInt(vasDur) <= parseInt(dur)) {
+                        loopVal = vasDur;
+                    }
                 }
             });
             if (loopVal) {
@@ -276,8 +278,17 @@ function preSelectVas() {
     }
 }
 
+function inArray(needle, haystack) {
+    var length = haystack.length;
+    for(var i = 0; i < length; i++) {
+        if(haystack[i] == needle) return true;
+    }
+    return false;
+}
+
 function updateAlreadySelectedVas() {
     var currentVas = readCookie('selectedVas');
+
     if (currentVas.indexOf(",") > -1) {
         // case when more than one vas was selected
         var tempArr = currentVas.split(",");
@@ -285,30 +296,39 @@ function updateAlreadySelectedVas() {
         // case when only one vas was selected
         var tempArr = [currentVas];
     }
+    var mainMem = readCookie('mainMem');
+    var memBasedFilteredVas = JSON.parse(filteredVasServices.replace(/&quot;/g,'"'));
+    var newVasArr = [];
     if (tempArr.length > 0) {
         // remove all other vas which start with supplied character except currently selected
         tempArr.forEach(function(item, index) {
-            $("#" + item).addClass('mem-vas-active');
-            var vasKey = item.substring(0, 1);
-            if ($("#" + vasKey + "_overlay").hasClass('disp-none')) {
-                $("#" + vasKey + "_overlay").removeClass('disp-none');
-                $("#" + item + "_overlay").removeClass('disp-none');
-            } else {
-                $("#" + vasKey + "_overlay").addClass('disp-none');
-                $("#" + item + "_overlay").addClass('disp-none');
-            }
+                var vasKey = item.substring(0, 1);
+                //filter out vas for eAdvantage if present in selected vas
+                $("#" + item).addClass('mem-vas-active');
+                if ($("#" + vasKey + "_overlay").hasClass('disp-none')) {
+                    if(memBasedFilteredVas[mainMem]=== "undefined" || $.inArray(vasKey,memBasedFilteredVas[mainMem])===-1)
+                    {
+                        newVasArr.push(item);
+                    }
+                    $("#" + vasKey + "_overlay").removeClass('disp-none');
+                    $("#" + item + "_overlay").removeClass('disp-none');
+                } else {
+                    if(memBasedFilteredVas[mainMem]=== "undefined" || $.inArray(vasKey,memBasedFilteredVas[mainMem])===-1)
+                    {
+                        newVasArr.push(item);
+                    }
+                    $("#" + vasKey + "_overlay").addClass('disp-none');
+                    $("#" + item + "_overlay").addClass('disp-none');
+                }
         });
+        currentVas = newVasArr.join(",");
+        createCookie('selectedVas',currentVas,0);
     }
 }
 
 function updateTimeSpan(countdown) {
-    var span1 = document.getElementById('bannerExpandedTimer');
-    var span2 = document.getElementById('bannerMinimizedTimer');
-    var span3 = document.getElementById('bannerTimerVas');
-    var d = new Date(countdown);
-    var t = new Date();
-    var ms;
-    var s, m, h;
+    var span1 = document.getElementById('bannerExpandedTimer'),span2 = document.getElementById('bannerMinimizedTimer'),span3 = document.getElementById('bannerTimerVas');
+    var d = new Date(countdown),t = new Date(),ms,s, m, h;
     // get the difference between right now and expiry date
     ms = d - t;
     // get the days between now and then
@@ -356,15 +376,12 @@ function checkEmptyOrNull(item) {
 }
 
 function managePriceStrike(m, d) {
-    var strikePrice = $("#" + m + d + "_price_strike").text().trim().replace(',', '');
-    var actualPrice = $("#" + m + d + "_price").text().trim().replace(',', '');
-    var difference = (strikePrice - actualPrice);
+    var strikePrice = $("#" + m + d + "_price_strike").text().trim().replace(',', ''),actualPrice = $("#" + m + d + "_price").text().trim().replace(',', ''),difference = (strikePrice - actualPrice);
     if (strikePrice.length != 0) {
         $('.overflowPinkRipple').css('margin-top', '0px');
         $('#' + m + "_savings_container").show();
         $('#' + m + "_savings").html(removeZeroInDecimal(difference.toFixed(2)));
     } else {
-        $('#' + m + "_savings_container").hide();
         $('#' + m + "_savings_container").hide();
         $('.overflowPinkRipple').css('margin-top', '20px');
     }
@@ -374,25 +391,20 @@ function managePriceStrike(m, d) {
 function initializeMembershipPage() {
     $(".planlist li").eq(0).addClass('active').trigger('click');
     $(".benefits div").eq(0).removeClass('disp-none');
-    $('#sliderContainer div').each(function() {
-        var m = $(this).find('.plansel').attr('mainMem');
-        var d = $(this).find('.plansel').attr('mainMemDur');
+    $('#sliderContainer div').find('.plansel').each(function() {
+        var m = $(this).attr('mainMem'),d = $(this).attr('mainMemDur');
         managePriceStrike(m, d);
     });
-    $('#exclusiveContainer div').each(function() {
-        var m = $(this).find('.active').attr('mainMem');
-        var d = $(this).find('.active').attr('mainMemDur');
+    $('#exclusiveContainer div').find('.active').each(function() {
+        var m = $(this).attr('mainMem'),d = $(this).attr('mainMemDur');
         managePriceStrike(m, d);
     });
     if (checkEmptyOrNull(readCookie('mainMemTab')) && readCookie('mainMem') != "X") {
         $("ul.tabs li.active").removeClass('active');
         $("ul.tabs li[mainMemTab=" + readCookie('mainMemTab') + "]").addClass('active');
-        var tabNum = $("ul.tabs li.active").index();
-        var getTabId = $("ul.tabs li.active").attr('id');
+        var tabNum = $("ul.tabs li.active").index(),getTabId = $("ul.tabs li.active").attr('id');
         changeTabContent(getTabId, tabNum, 0);
-        var m = readCookie('mainMem');
-        var d = readCookie('mainMemDur');
-        var c = readCookie('mainMemContact');
+        var m = readCookie('mainMem'),d = readCookie('mainMemDur'),c = readCookie('mainMemContact');
         if (checkEmptyOrNull(m) && checkEmptyOrNull(d)) {
             $("#tab_" + m + " .plansel").removeClass('plansel');
             $("#" + m + d).addClass('plansel');
@@ -401,8 +413,7 @@ function initializeMembershipPage() {
     }
     if (readCookie('mainMem') == "X") {
         $(".jsxDur.active").removeClass('active');
-        var m = readCookie('mainMem');
-        var d = readCookie('mainMemDur');
+        var m = readCookie('mainMem'),d = readCookie('mainMemDur');
         $("#" + m + d).addClass('active');
         managePriceStrike(m, d);
     }
@@ -410,8 +421,7 @@ function initializeMembershipPage() {
 //function to format numbers in display as comma seperated
 function commaSeparateNumber(val) {
     val = val.replace(',', '');
-    var array = val.split('');
-    var index = -3;
+    var array = val.split(''),index = -3;
     while (array.length + index > 0) {
         array.splice(index, 0, ',');
         index -= 4;
@@ -458,25 +468,20 @@ function closeAllOverlays() {
     $('#cmpplan').addClass('disp-none');
     $("#topNavigationBar").removeClass('pos-rel layersZ');
     $("#requestCallback").removeClass('js-reqcallbck opa50');
-    $("#requestCallbackLogout").hide();
-    $("#requestCallbackLogin").hide();
+    $("#requestCallbackLogout,#requestCallbackLogin").hide();
     $("#js-footer").removeClass('pos-rel').removeClass('layersZ');
     $("#topNavigationBar").addClass('layersZ');
     $("#footerRequestCallback").removeClass('js-reqcallbck').removeClass('opa50');
-    $('.overlay1').remove();
-    $("#footerRequestCallbackLogout").hide();
-    $("#footerRequestCallbackLogin").hide();
+    //$('.overlay1').remove();
+    $("#footerRequestCallbackLogout,#footerRequestCallbackLogin").hide();
     $("#topNavigationBar").removeClass('pos-rel').removeClass('layersZ');
     $("#headerRequestCallback").removeClass('js-reqcallbck').removeClass('opa50');
-    $('.overlay1').remove();
-    $("#headerRequestCallbackLogout").hide();
-    $("#headerRequestCallbackLogin").hide();
+    //$('.overlay1').remove();
+    $("#headerRequestCallbackLogout,#headerRequestCallbackLogin").hide();
 }
 
 function manageSelectedItem() {
-    var paymentOption;
-    var selectedName;
-    var selectedCardType;
+    var paymentOption,selectedName,selectedCardType;
     $("a.accordion-section-title").each(function() {
         if ($(this).hasClass('active')) {
             paymentOption = $(this).attr('paymentSel');
@@ -741,7 +746,7 @@ function removeCoupon(e) {
     }
 };
 
-$(document).bind("keydown", removeCoupon);
+//$(document).bind("keydown", removeCoupon);
 $(document).on("keydown", removeCoupon);
 
 function pad(str, max) {

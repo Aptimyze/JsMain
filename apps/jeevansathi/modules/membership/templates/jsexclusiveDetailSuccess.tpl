@@ -1,4 +1,5 @@
 ~assign var=loggedIn value= $sf_request->getAttribute('login')`
+~assign var=currency value= $sf_request->getAttribute('currency')`
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
     <head>
@@ -22,8 +23,8 @@
                     <div class="rcb_fl">JS Exclusive</div>
                     <!--end:logo-->
                 </div>
-                <div class="rcb_fr wid49p f20 fontlig">
-                    <div class="rcb_fl rcb_pt17">Call Advisor : 8800909042</div>
+                <div class="rcb_fr wid49p f18 fontlig">
+                    <div class="rcb_fl rcb_pt17">Call Advisor : ~if $currency eq 'RS'`1800-419-6299~else`+911204393500~/if`</div>
                     <div class="rcb_fl rcb_padj">or</div>
                     <!--start:call back btn-->
                     <div class="rcb_fl">

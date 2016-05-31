@@ -436,8 +436,17 @@ class SearchApiDisplay
         	                                        $this->SearchParamtersObj->setAlertsDateConditionArr($tempArr);
                 	                        }
                         	                $this->finalResultsArray[$pid]['SENT_DATE'] = date("d M Y",MatchAlerts::getLogicalDateFromLogDate($tempArr[$pid]));
-                                	}
-	                                elseif($this->SearchParamtersObj && $this->SearchParamtersObj->getSEARCH_TYPE() == SearchTypesEnums::JustJoinedMatchesDesktop)
+                                	}elseif($this->SearchParamtersObj && $this->SearchParamtersObj->getSEARCH_TYPE() == SearchTypesEnums::contactViewAttempt){
+                                            $tempArr = $this->SearchParamtersObj->getAttemptConditionArr();
+                                            if(!$tempArr)
+                                            {
+                                                    $VCDTrackingObj = new VCDTracking;
+                                                    $tempArr = $VCDTrackingObj->getContactAttemptProfiles($this->viewerObj->getPROFILEID());
+                                                    $this->SearchParamtersObj->setAttemptConditionArr($tempArr);
+                                            }
+                                            $this->finalResultsArray[$pid]['SENT_DATE'] = CommonUtility::convertDateToDay($tempArr[$pid]);
+                                          
+                                        }elseif($this->SearchParamtersObj && $this->SearchParamtersObj->getSEARCH_TYPE() == SearchTypesEnums::JustJoinedMatchesDesktop)
 					{
         	                                if($this->searchResultsData[$key]["ENTRY_DT"])
                 	                                $this->finalResultsArray[$pid]['JOIN_DATE'] = CommonUtility::convertDateToDayDiff($this->searchResultsData[$key]["ENTRY_DT"]);

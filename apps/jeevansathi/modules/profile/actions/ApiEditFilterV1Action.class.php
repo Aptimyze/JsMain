@@ -82,6 +82,8 @@ class ApiEditFilterV1Action extends sfActions
 	public function filterApiValFormat($key,$val)
 	{
 		$arr["key"]=$key;
+		if($val=='')
+			$val = "N";
 		$arr["val"]=$val;
 		return $arr;
 	}

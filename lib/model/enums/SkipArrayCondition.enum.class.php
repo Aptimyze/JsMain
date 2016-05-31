@@ -13,6 +13,12 @@ class SkipArrayCondition {
 									ContactHandler::CANCEL,
 									ContactHandler::CANCEL_CONTACT),
 						"IGNORE");
+  public static $SHORTLIST = array(
+						"CONTACT"=>array(
+									ContactHandler::DECLINE,
+									ContactHandler::CANCEL,
+									ContactHandler::CANCEL_CONTACT),
+						"IGNORE");
 	
 	public static $MESSAGE = array(
 						"CONTACT"=>array(

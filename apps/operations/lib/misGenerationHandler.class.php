@@ -23,15 +23,15 @@ class misGenerationhandler
 		elseif($processName=='CRM_HANDLED_REVENUE')
 		{
 			$method 		=$processObj->getMethod();
-			$paymentDetailsObj      =new BILLING_PAYMENT_DETAIL();
+			$paymentDetailsObj      =new BILLING_PAYMENT_DETAIL('newjs_slave');
 			if($method=='NEW_PROFILES'){
-				$monthlyIncentiveObj 	=new incentive_MONTHLY_INCENTIVE_ELIGIBILITY();	
+				$monthlyIncentiveObj 	=new incentive_MONTHLY_INCENTIVE_ELIGIBILITY('newjs_slave');	
 				$receiptId 		=$monthlyIncentiveObj->getMaxReceiptId();
 				$profiles 		=$paymentDetailsObj->getPaidProfiles($receiptId);
 			}
 			elseif($method=='MANUAL_ALLOT'){
-				$lastHandledDtObj	=new incentive_LAST_HANDLED_DATE();				
-				$manualAllotObj		=new MANUAL_ALLOT();
+				$lastHandledDtObj	=new incentive_LAST_HANDLED_DATE('newjs_slave');				
+				$manualAllotObj		=new MANUAL_ALLOT('newjs_slave');
 				$id                     =$processObj->getIdAllot();
 				$lastManualEntryDt	=$lastHandledDtObj->getHandledDate($id);
 				$profilesArr 		=$manualAllotObj->getManualAllotedProfiles($lastManualEntryDt);
@@ -59,7 +59,7 @@ class misGenerationhandler
 		{
 			$method		  =$processObj->getMethod();
 			$manualEntryDt 	  =$processObj->getStartDate();	
-			$crmDailyAllotObj =new CRM_DAILY_ALLOT();
+			$crmDailyAllotObj =new CRM_DAILY_ALLOT('newjs_slave');
 			foreach($profiles as $key=>$dataArr)
 			{
 				$profileid	=$dataArr['PROFILEID'];
@@ -110,7 +110,7 @@ class misGenerationhandler
                 		$manualEntryDt 		=$processObj->getStartDate();
                 		$lastHandledDtObj       =new incentive_LAST_HANDLED_DATE();
                 		$monthlyIncentiveObj    =new incentive_MONTHLY_INCENTIVE_ELIGIBILITY();
-                		$pswrdsObj		=new jsadmin_PSWRDS(); 
+                		$pswrdsObj		=new jsadmin_PSWRDS('newjs_slave'); 
                 		$profilesCount 		=count($profiles);
                 		for($i=0; $i<$profilesCount; $i++)
                 		{
@@ -220,11 +220,11 @@ class misGenerationhandler
                 }
                 public function checkProfileValidityForPayment($profileid, $allotedTo, $allotTime, $deAllocationDt, $billId, $method, $manualEntryDt='',$realDeAllocationDt) 
                 {
-                	$deAllocationTrackObj 	=new incentive_DEALLOCATION_TRACK();
-                	$purchaseObj		=new BILLING_PURCHASES();
-                	$crmDailyAllotObj	=new CRM_DAILY_ALLOT();
-                	$manualAllotObj		=new MANUAL_ALLOT();
-                	$historyObj		=new incentive_HISTORY();
+                	$deAllocationTrackObj 	=new incentive_DEALLOCATION_TRACK('newjs_slave');
+                	$purchaseObj		=new BILLING_PURCHASES('newjs_slave');
+                	$crmDailyAllotObj	=new CRM_DAILY_ALLOT('newjs_slave');
+                	$manualAllotObj		=new MANUAL_ALLOT('newjs_slave');
+                	$historyObj		=new incentive_HISTORY('newjs_slave');
 
 			// 1. filter to check Actual De-allocation done
                 	if($method=='MANUAL_ALLOT'){
@@ -293,7 +293,7 @@ class misGenerationhandler
 	// JS premium / JS premium Outsourced filter
 	public function jsPremiumFilter($serviceId, $allotedTo)
 	{
-		$jsadPswrdsObj          =new jsadmin_PSWRDS();
+		$jsadPswrdsObj          =new jsadmin_PSWRDS('newjs_slave');
 		$privilegeStr           =$jsadPswrdsObj->getPrivilegeForAgent($allotedTo);
 		$privilages             =explode("+",$privilegeStr);
 		if(in_array("ExcPrm",$privilages) || in_array("ExPrmO",$privilages))
@@ -311,8 +311,9 @@ class misGenerationhandler
 	}
 	public function handleMonthlyIncentivePool($processObj)
 	{
-		$deAllocationTrackObj	=new incentive_DEALLOCATION_TRACK();
-		$lastHandledDtObj       =new incentive_LAST_HANDLED_DATE();
+		$deAllocationTrackObj	=new incentive_DEALLOCATION_TRACK('newjs_slave');
+		$lastHandledDtObj       =new incentive_LAST_HANDLED_DATE('newjs_slave');
+		$lastHandledDtSetObj    =new incentive_LAST_HANDLED_DATE();
 		$monthlyIncentiveObj    =new incentive_MONTHLY_INCENTIVE_ELIGIBILITY();		
 
 		// filter Manual Released profiles
@@ -329,10 +330,10 @@ class misGenerationhandler
 			}
 		}
 		if($deAllocationDt)
-			$lastHandledDtObj->setHandledDate($id, $deAllocationDt);			
+			$lastHandledDtSetObj->setHandledDate($id, $deAllocationDt);			
 
 		// filter Payment Refund/Cancel Status profiles
-		$paymentDetailsObj      =new BILLING_PAYMENT_DETAIL();
+		$paymentDetailsObj      =new BILLING_PAYMENT_DETAIL('newjs_slave');
 		$billDetails 		=$paymentDetailsObj->getLast30DaysCancelledBill();
 		if(count($billDetails)>0){
 			foreach($billDetails as $key=>$dataArr)

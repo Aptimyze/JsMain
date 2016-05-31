@@ -27,7 +27,7 @@ class Dialer
         {
 		$method =$processObj->getMethod();
                 if($method=='IN_DIALER_ELIGIBILITY'){
-			$indialerTempPool =new incentive_IN_DIALER_TEMP_POOL();
+			$indialerTempPool =new incentive_IN_DIALER_TEMP_POOL('newjs_slave');
 
                         // DO NOT CALL Filter
                         $filter ='DO_NOT_CALL';
@@ -70,7 +70,7 @@ class Dialer
 
 		$method =$processObj->getMethod();
 		if($method=='IN_DIALER_ELIGIBILITY'){
-			$indialerObj    =new incentive_IN_DIALER_TEMP_POOL();
+			$indialerObj    =new incentive_IN_DIALER_TEMP_POOL('newjs_slave');
 			$profiles       =$indialerObj->getDialerProfileBasedOnJoins('incentive.MAIN_ADMIN_POOL', 'PROFILEID,ANALYTIC_SCORE');
 		}
 		return $profiles;	
@@ -79,13 +79,9 @@ class Dialer
 	public function filterProfiles($profileArr){
 
 		if($profileArr){
-			/*$negTreatObj 	=new INCENTIVE_NEGATIVE_TREATMENT_LIST('newjs_bmsSlave');
-			$dncObj 	=new incentive_DO_NOT_CALL('newjs_bmsSlave');
-			$preAllocTechObj=new incentive_PROFILE_ALLOCATION_TECH('newjs_bmsSlave');
-			*/	
-			$alertsObj 	=new newjs_JPROFILE_ALERTS('newjs_bmsSlave');
-			$historyObj 	=new incentive_HISTORY('newjs_bmsSlave');
-			$jprofileObj    =new JPROFILE('newjs_bmsSlave');
+			$alertsObj 	=new newjs_JPROFILE_ALERTS('newjs_slave');
+			$historyObj 	=new incentive_HISTORY('newjs_slave');
+			$jprofileObj    =new JPROFILE('newjs_slave');
 	                $purchaseObj 	=new BILLING_PURCHASES('newjs_slave');
         	        $everPaidPool  	=$purchaseObj->fetchEverPaidPool();
 
@@ -100,26 +96,11 @@ class Dialer
                         	$analyticScore  =$dataFieldArr['ANALYTIC_SCORE'];
                         	$profileid      =$dataFieldArr['PROFILEID'];
 	
-				//if(!$username)
-				//	continue;
-
                         	if($analyticScore<70 || $analyticScore>100){
                         	        $this->updateIndialerProfileLog($profileid,$username,'N',"ANALYTIC_SCORE",$analyticScore);
 					continue;	
 				}
-				/*if($negTreatObj->isFlagOutboundCall($profileid,'N')){
-					$this->updateIndialerProfileLog($profileid,$username,'N',"NEGATIVE_TREATMENT",'Y'); 
-					continue;
-				}
-				if($dncObj->checkProfileDNC($profileid)>0){
-					$this->updateIndialerProfileLog($profileid,$username,'N',"DO_NOT_CALL",'Y');  
-					continue;
-				}
-				if($preAllocTechObj->getAllocationStatusOfProfile($profileid)>0){
-					$this->updateIndialerProfileLog($profileid,$username,'N',"PRE_ALLOCATED",'Y');  
-					continue;
-				}
-				*/	
+	
 				$memStatus 	=$alertsObj->fetchMembershipStatus($profileid);
 				$memCall   	=$memStatus["MEMB_CALLS"];
 				$offerCall	=$memStatus["OFFER_CALLS"];
@@ -225,7 +206,7 @@ class Dialer
 		$date_30Days 	=date('Y-m-d', strtotime('-29 days'));	
 
 		$dbName 	=JsDbSharding::getShardNo($profileid);
-		$loginObj 	=new NEWJS_LOGIN_HISTORY($dbName);
+		$loginObj 	=new NEWJS_LOGIN_HISTORY($dbName,"slave");
 		$loginCnt 	=$loginObj->getLoginCount($profileid,$date_30Days);
 		unset($loginObj);
 

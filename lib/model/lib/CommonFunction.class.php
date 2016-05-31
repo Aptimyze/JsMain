@@ -147,6 +147,11 @@ class CommonFunction
 		return (mainMem::JSEXCLUSIVE === self::getMainMembership($subscription));
 	}
     
+	public static function isEadvantageMember($subscription)
+	{
+		return (mainMem::EADVANTAGE === self::getMainMembership($subscription));
+	}
+
 	public static function isOfflineMember($subscription)
 	{
         $offline = false;
@@ -522,7 +527,9 @@ class CommonFunction
 	}	
 
 	public static function getMainMembership($subscription){
-		if(strstr($subscription,"F,D") || strstr($subscription,"D,F") || strstr($subscription,"D")){
+		if(strpos($subscription,"N") !== false){
+			return mainMem::EADVANTAGE;
+		} elseif(strstr($subscription,"F,D") || strstr($subscription,"D,F") || strstr($subscription,"D")){
 			return mainMem::EVALUE;
 		} elseif(strstr($subscription,"F,X") || strstr($subscription,"X,F")){
 			return mainMem::JSEXCLUSIVE;
@@ -551,6 +558,17 @@ class CommonFunction
 			$source=CONTACT_ELEMENTS::CALL_DIRECTLY_TRACKING;
 		return $source;
 	}
-	
+        
+        public static function setManglikWithoutDontKnow($manglikVal){
+                $manglikArr = explode(",", $manglikVal);
+                $returnStr = "";
+                foreach ($manglikArr as $key=>$val){
+                    if($val == "'D'" || $val=="D" || $val == "Don't know" || $val == " Don't know")
+                        continue;
+                    else
+                        $returnStr.=",".$val;
+                }
+                return trim($returnStr,',');
+        }
 }
 ?>

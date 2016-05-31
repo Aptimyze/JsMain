@@ -29,9 +29,9 @@ EOF;
 		include_once($_SERVER['DOCUMENT_ROOT']."/classes/Membership.class.php");
 		include_once($_SERVER['DOCUMENT_ROOT']."/profile/connect_db.php");
 
-		connect_db();
+		//connect_db();
 
-		$sObj = new billing_SERVICES();
+		$sObj = new billing_SERVICES('newjs_slave');
 		$price = $sObj->fetchServicePrice("P12", 'desktop');
 		$price_rs = round($price['PRICE_RS_TAX']/365);   // service price in rupees
 		$price_cent = round($price['PRICE_DOL']/365*100);   // service price in cents

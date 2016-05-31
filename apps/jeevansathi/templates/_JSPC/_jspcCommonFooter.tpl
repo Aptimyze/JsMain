@@ -89,7 +89,7 @@
                     <ul class="f14 listnone foot">
                         <li class="f16 fontreg">Help</li>
                         <li><a href="/contactus/index">Contact us</a></li>
-                        <li id="liveChatLinkFooter" class="cursp colorw">Live help</li>
+                        <!-- <li id="liveChatLinkFooter" class="cursp colorw">Live help</li> -->
                         <li><a href="/faq/feedback?width=512&checksum=~$profilechecksum`">Feedback / Queries</a></li>
                         <li><a href="/contactus/index">Jeevansathi centers (32)</a></li>
                     </ul>
@@ -187,15 +187,15 @@
 <!--end:footer-->
 <script type="text/javascript">
     $(window).load(function(){
-        ~if $module eq 'membership' or $module eq 'contactus'`
-        ~if $profileid`
-            var udObj = '~CommonUtility::getFreshDeskDetails($profileid)`';
-            var userDetails = $.parseJSON(udObj);
-            populateFreshDeskGlobal(userDetails['username'], userDetails['email']);
-            ~if $module eq 'membership'`
-                popupFreshDeskGlobal(userDetails['username'], userDetails['email']);
+        ~if $module eq 'register' || $module eq 'membership' || $action eq 'phoneVerificationPcDisplay'`
+            ~if $profileid`
+                var udObj = '~CommonUtility::getFreshDeskDetails($profileid)`';
+                var userDetails = $.parseJSON(udObj);
+                populateFreshDeskGlobal(userDetails['username'], userDetails['email']);
+                ~if $module eq 'membership'`
+                    popupFreshDeskGlobal(userDetails['username'], userDetails['email']);
+                ~/if`
             ~/if`
-        ~/if`
         ~/if`
         slider();
         ~if $module neq 'register'`
@@ -203,6 +203,6 @@
         ~/if`
     });
 </script>
-~if $module eq 'membership' or $module eq 'contactus'`
+~if $module eq 'register' || $module eq 'membership' || $action eq 'phoneVerificationPcDisplay'`
     ~include_partial('global/freshDesk')`
 ~/if`

@@ -123,6 +123,10 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 				 case "OTP":
 				 return true;
 
+				 //added case for sending sms to a user in case mail gets bounced
+				 case "BOUNCED_MAILS":
+				 	return true;
+
 
 			default:
 				return $this->profileDetails["MOB_STATUS"] == 'Y';

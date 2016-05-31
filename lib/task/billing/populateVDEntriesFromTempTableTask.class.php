@@ -35,6 +35,8 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
+    ini_set('max_execution_time',0);
+    ini_set('memory_limit',-1);
     if (!sfContext::hasInstance())
       sfContext::createInstance($this->configuration);
     $sendMailAlert = true;    //send mail alert in case of cron failure
@@ -49,10 +51,6 @@ EOF;
     $VDObj->populateRecordsFromVDTemp($entryDate,$limit,$sendMailAlert);
     unset($VDObj);
 
-
-    $VDTempObj = new billing_VARIABLE_DISCOUNT_TEMP();
-    $VDTempObj->truncateTable();
-    unset($VDTempObj);
   }
 }
 ?>

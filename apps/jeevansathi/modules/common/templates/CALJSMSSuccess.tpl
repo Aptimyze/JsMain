@@ -11,7 +11,7 @@ $(document).ready(function() {
             
 </script>
 <style>
-.pad18Incomplete{padding:15% 0 8% 0;}
+.pad18Incomplete{padding:5% 0 8% 0;}
 
  @media (min-width: 280px) {
  	.image_incomplete{ width:80px; height:80px; margin-top: 4px; margin-left: 4px; z-index:3; position:relative; border-radius:100%;}
@@ -49,5 +49,5 @@ $(document).ready(function() {
 	<div id='CALButtonB1' class="bg7 f18 white lh30 fullwid dispbl txtc lh50" onclick="criticalLayerButtonsAction('~$calObject.ACTION1`','B1');">~$calObject.BUTTON1`</div>
   </div>
   <!--end:div-->
-  <div id='CALButtonB2' onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');" style='color:#cccccc;' class="pdt15 pb10 txtc white f14">~$calObject.BUTTON2`</div>
+  <div id='CALButtonB2' onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');" style='color:#cccccc; padding-top: 12%;' class="pdt15 pb10 txtc white f14">~$calObject.BUTTON2`</div>
   </div>

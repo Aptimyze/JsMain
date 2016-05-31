@@ -47,6 +47,8 @@ class postCancelInterestv2Action extends sfAction
 						$profileid     = JsCommon::getProfileFromChecksum($this->userProfile);
 						$this->Profile->getDetail($profileid, "PROFILEID");
 						$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
+						if($this->contactObj->getType() == ContactHandler::ACCEPT)
+							$this->tobetype = ContactHandler::CANCEL;
 					}
 					$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,$this->tobetype,ContactHandler::POST);
 					$this->contactHandlerObj->setElement("STATUS",$this->tobetype);

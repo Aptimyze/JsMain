@@ -114,7 +114,7 @@ class FieldSalesExecutivePerformanceMis
 	}
 
 	//This function generated the profiles paid count
-	/*public function generateProfilesWhichPaidData()
+	public function generateProfilesWhichPaidData()
 	{
 		$start_dt = date('Y-m-d 00:00:00', strtotime('-29 day', strtotime($this->start_dt)));
 		if($this->execArray && is_array($this->execArray))
@@ -135,7 +135,7 @@ class FieldSalesExecutivePerformanceMis
 				$this->resultArr[$v["D"]][$v["ALLOTED_TO"]]["PROFILES_COUNT_WHO_PAID"] += 1;
 			}
 		}
-	}*/
+	}
 
 	//This function generates the total sales amount
 	public function generateSalesData()
@@ -157,7 +157,6 @@ class FieldSalesExecutivePerformanceMis
 				 	continue;
 				unset($maObj);
 				$this->resultArr[$v["D"]][$v["ALLOTED_TO"]]["SALES"] += $v["AMOUNT"];
-				$this->resultArr[$v["D"]][$v["ALLOTED_TO"]]["PROFILES_COUNT_WHO_PAID"] += 1;
 			}
 		}
 	}
@@ -838,13 +837,13 @@ class FieldSalesExecutivePerformanceMis
 		return $output;
 	}
 	//Function to generate team wise data
-	public function generateTeamWiseData($ddarr, $allReporters,$loggedInAgent){
-		$h_obj = new hierarchy($loggedInAgent);
-		$h = $h_obj->getAllReporters();
-		unset($h[0]);
-		unset($h_obj);
+	public function generateTeamWiseData($ddarr, $allReporters){
 		foreach($ddarr as $dd=>$val){
 			foreach($allReporters as $agent){
+				$h_obj = new hierarchy($agent);
+				$h = $h_obj->getAllReporters();
+				unset($h[0]);
+
 				if($h && is_array($h)){
 					foreach($h as $rep){
 						if($this->resultArr[$dd][$rep]['FRESH_VISITS'])
@@ -855,6 +854,7 @@ class FieldSalesExecutivePerformanceMis
 							$this->resultArr[$dd][$agent]['SALES'] += $this->resultArr[$dd][$rep]['SALES'];
 					}					
 				}
+				unset($h_obj);			
 			}
 		}
 	}

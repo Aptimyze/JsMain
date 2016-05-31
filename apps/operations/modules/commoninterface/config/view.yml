@@ -2,4 +2,12 @@ uploadVDSuccess:
   metas:
     title:        Upload Variable Discount Data
   stylesheets:    [jspc/commonInterface/VDUpload]
-  javascripts:    [jspc/crm/uploadVD_js,jspc/crm/loader_js]                         
+  javascripts:    [jspc/crm/uploadVD_js,jspc/crm/loader_js]
+
+ShowProfileStatsSuccess:
+ metas:
+    title:        Admin Search : Jeevansathi.com Matrimonial Services
+ http_metas:
+    X-UA-Compatible:    IE=edge
+ stylesheets:    [operations/showStatViewProfile_css]
+ javascripts:    []

@@ -48,9 +48,14 @@ You need to be a Registered Member<br />to connect with this user</div>
 				</div>
 				<div class="clr"></div>           
 			</div>
-			<!--end:password-->  
+			<!--end:password--> 
+
+
+			
+
+			
 			  <!--start:forgot password-->
-				<div class="txtc pad12">
+				<div id="afterCaptcha" class="txtc pad12">
 					<a href="/static/forgotPassword" bind-slide="1" class="white f14 fontlig">Forgot Password</a>
 				</div>
 				<!--end:forgot password-->	      
@@ -96,9 +101,18 @@ You need to be a Registered Member<br />to connect with this user</div>
 <script>
 	var d = new Date();
 	var hrefVal = $("#calltopSearch").attr("href")+"&stime="+d.getTime();
+	var captchaShow=~$captchaDiv`;
+	var nua = navigator.userAgent;
+		var is_android = ((nua.indexOf('Mozilla/5.0') > -1 && nua.indexOf('Android ') > -1 &&     nua.indexOf('AppleWebKit') > -1) && !(nua.indexOf('Chrome') > -1));
+	if(is_android){
+		captchaShow=1;
+	}
+	
 	$("#calltopSearch").attr("href",hrefVal);
     enableLoader = function()
     {
         $('.loader').addClass('simple').addClass('dark').addClass('image');
     }
+
+
 </script> 

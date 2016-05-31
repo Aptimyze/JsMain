@@ -3,6 +3,8 @@ include("connect.inc");
 
 $db=connect_db();
 $data=authenticated($checksum);
+if($hideDelete)
+	$pswrd=rawurldecode($pswrd);
 if($data)
 {
 	$sql="SELECT PASSWORD FROM newjs.JPROFILE WHERE  activatedKey=1 and PROFILEID='$data[PROFILEID]'";

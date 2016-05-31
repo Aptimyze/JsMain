@@ -161,16 +161,13 @@ class billing_VARIABLE_DISCOUNT extends TABLE{
                 }
         }
 
-        public function checkValidProfileCountForDate($entryDt,$noOfTimes,$frequency,$logStartDt,$logEndDt,$logEntryDt){
+        public function checkValidProfileCountForDate($entryDt,$noOfTimes,$frequency){
         	try{
-        		$sql = "SELECT COUNT(*) AS CNT FROM billing.VARIABLE_DISCOUNT WHERE :ENTRY_DT BETWEEN SDATE AND EDATE AND PROFILEID%:TIMES=:FREQUENCY AND SDATE=:SDATE AND EDATE=:EDATE AND ENTRY_DT=:ENTRY_DT1";
+        		$sql = "SELECT COUNT(*) AS CNT FROM billing.VARIABLE_DISCOUNT WHERE :ENTRY_DT BETWEEN SDATE AND EDATE AND PROFILEID%:TIMES=:FREQUENCY AND SENT!='Y'";
         		$prep = $this->db->prepare($sql);
         		$prep->bindValue(":ENTRY_DT",$entryDt,PDO::PARAM_STR);
         		$prep->bindValue(":TIMES",$noOfTimes,PDO::PARAM_INT);
         		$prep->bindValue(":FREQUENCY",$frequency,PDO::PARAM_INT);
-			$prep->bindValue(":SDATE",$logStartDt,PDO::PARAM_STR);
-			$prep->bindValue(":EDATE",$logEndDt,PDO::PARAM_STR);
-			$prep->bindValue(":ENTRY_DT1",$logEntryDt,PDO::PARAM_STR);
         		$prep->execute();
         		$row = $prep->fetch(PDO::FETCH_ASSOC);
         		$count = $row['CNT'];

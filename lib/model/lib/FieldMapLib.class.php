@@ -9037,7 +9037,7 @@ case "children_ascii_array":
 );
 
 		break;
-
+        //Don't know in this field is not currently being used refer - JSM-2308
 	case "manglik_label":
 
 		$arr=array(
@@ -9045,6 +9045,17 @@ case "children_ascii_array":
 "N" => "Non Manglik",
 "D" => "Don't know",
 "A" => "Angshik (partial manglik)",
+);
+
+		break;
+        // new label for search string and cluster for dont know as not filled in.
+	case "mangliks_label":
+
+		$arr=array(
+"M" => "Manglik",
+"N" => "Non Manglik",
+"A" => "Angshik (partial manglik)",
+"D" => "Not Mentioned",
 );
 
 		break;

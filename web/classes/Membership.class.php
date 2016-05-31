@@ -915,7 +915,7 @@ class Membership
     function addExclusiveMemberEntry()
     {
         $exclusiveObj = new billing_EXCLUSIVE_MEMBERS();
-        $detailsArr = array("PROFILEID"=>$this->profileid,"ASSIGNED_TO"=>NULL,"ASSIGNED"=>'N',"BILLING_DT"=>date("Y-m-d"),"ASSIGNED_DT"=>'0000-00-00');
+        $detailsArr = array("PROFILEID"=>$this->profileid,"ASSIGNED_TO"=>NULL,"ASSIGNED"=>'N',"BILLING_DT"=>date("Y-m-d"),"BILL_ID"=>$this->billid,"ASSIGNED_DT"=>'0000-00-00');
         $exclusiveObj->addExclusiveMember($detailsArr);
         unset($exclusiveObj);
     }
@@ -997,7 +997,7 @@ class Membership
         if ($this->dol_conv_bill == 'Y') {
             if (!$this->serviceid) $this->serviceid = $myrow['SERVICEID'];
             $serviceids = explode(',', $this->serviceid);
-            $sids = implode("','", $serviceids);
+            $sids = "'".implode("','", $serviceids)."'";
             $serviceDetailsArr = $billingServObj->fetchAllServiceDetails($sids);
             foreach ($serviceDetailsArr as $key=>$myrow) {
                 $dol_conv_price[$myrow['SERVICEID']] = round(($myrow[$this->device.'_DOL'] * $this->DOL_CONV_RATE), 2);
@@ -1616,7 +1616,7 @@ class Membership
 
     function getSpecialDiscount($profile) {
         $today = date('Y-m-d');
-        $billingVarDiscObj = new billing_VARIABLE_DISCOUNT();
+        $billingVarDiscObj = new billing_VARIABLE_DISCOUNT('newjs_slave');
         $row = $billingVarDiscObj->getDiscountDetails($profile);
         if ($row['DISCOUNT']) {
             $data['DISCOUNT'] = $row['DISCOUNT'];

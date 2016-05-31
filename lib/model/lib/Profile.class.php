@@ -154,6 +154,7 @@ class Profile{
 	private $PG_COLLEGE;
 	private $COLLEGE;
 	private $NAME;
+	private $SERIOUSNESS_COUN;
 	private $education_other;
 	protected $fieldsArray=array();
         /**
@@ -1777,6 +1778,14 @@ class Profile{
 					ProfileFieldsLogging::callFieldStack(1);
 			}
 		return $this->ENTRY_DT; }
+        function setSERIOUSNESS_COUNT($SERIOUSNESS_COUNT) { $this->SERIOUSNESS_COUNT = $SERIOUSNESS_COUNT; }
+        function getSERIOUSNESS_COUNT() {
+                if(!$this->SERIOUSNESS_COUNT)
+                        {
+                                if(!in_array("SERIOUSNESS_COUNT",$this->fieldsArray))
+                                        ProfileFieldsLogging::callFieldStack(1);
+                        }
+                return $this->SERIOUSNESS_COUNT; }
 	function setMOD_DT($MOD_DT) { $this->MOD_DT = $MOD_DT; }
 	function getMOD_DT() { 
 		if(!$this->MOD_DT)

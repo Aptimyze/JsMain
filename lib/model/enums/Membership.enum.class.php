@@ -535,6 +535,12 @@ class VariableParams
             "id" => "comment"
         )
     );
+
+    //remove specified vas services from vas content based on main membership 
+    public static $mainMemBasedVasFiltering = array('NCP'=>array('R','T'));
+
+    //skip vas page for below main memberships
+    public static $skipVasPageMembershipBased = array('X','ESP');
 }
 class discountType
 {
@@ -548,11 +554,15 @@ class mainMem
     const ERISHTA = "erishta";
     const EVALUE = "evalue";
     const JSEXCLUSIVE = "jsexclusive";
-    
-    // labels Currently used in search api
+    const ECLASSIFIED = "eclassified";	
+    const EADVANTAGE = "eadvantage";
+
+   // labels Currently used in search api
     const ERISHTA_LABEL = "eRishta";
     const EVALUE_LABEL = "eValue";
     const JSEXCLUSIVE_LABEL = "JS Exclusive";
+    const ECLASSIFIED_LABEL = "eClassified";	
+    const EADVANTAGE_LABEL = "eAdvantage";
 }
 class paymentOption
 {

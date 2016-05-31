@@ -329,8 +329,8 @@ class Services
         	$search_id = $id . '%';
         }
         
-        $billingServicesObj = new billing_SERVICES();
-        $discountOfferObj = new billing_DISCOUNT_OFFER();
+        $billingServicesObj = new billing_SERVICES('newjs_slave');
+        $discountOfferObj = new billing_DISCOUNT_OFFER('newjs_slave');
         
         if ($cur_type == 'DOL') {
         	$price_str = $device."_DOL";
@@ -345,12 +345,12 @@ class Services
         if (!empty($userObj)){
         	if($userObj->getFestInfo()){
         		$fest = 1;
-	            $festiveOfferLookupObj = new billing_FESTIVE_OFFER_LOOKUP();
+	            $festiveOfferLookupObj = new billing_FESTIVE_OFFER_LOOKUP('newjs_slave');
 	            $festiveDetailsArr = $festiveOfferLookupObj->retrieveCurrentLookupTable();
         	}
         } else if ($this->getFestive()) {
             $fest = 1;
-            $festiveOfferLookupObj = new billing_FESTIVE_OFFER_LOOKUP();
+            $festiveOfferLookupObj = new billing_FESTIVE_OFFER_LOOKUP('newjs_slave');
             $festiveDetailsArr = $festiveOfferLookupObj->retrieveCurrentLookupTable();
         }
         
@@ -358,7 +358,7 @@ class Services
         	$user_disc = $renew;
         }
 
-        $billingDccObj = new billing_DIRECT_CALL_COUNT();
+        $billingDccObj = new billing_DIRECT_CALL_COUNT('newjs_slave');
         $direct_call = $billingDccObj->getDirectCallCountForServiceArr(array_keys($row_services));
 
         $cashDiscountArr = $discountOfferObj->getDiscountOfferForServiceArr(array_keys($row_services));
@@ -420,7 +420,7 @@ class Services
                 $memHandlerObj = new MembershipHandler();
                 $renew_discount_rate = $memHandlerObj->getVariableRenewalDiscount($profileid);
             }
-            return round(($renew_discount_rate / 100) * $service_price, 2);
+            return ceil(($renew_discount_rate / 100) * $service_price);
         } 
         else if ($discount_type == 6) {
         	// when having internal call within this file
@@ -543,7 +543,7 @@ class Services
     }
     
     public function getFestive() {
-        $billingFestObj = new billing_FESTIVE_LOG_REVAMP();
+        $billingFestObj = new billing_FESTIVE_LOG_REVAMP('newjs_slave');
         $isFestive = $billingFestObj->getFestiveFlag();
         return $isFestive;
     }
@@ -577,7 +577,7 @@ class Services
         }
     }
     public function getLowestActiveMainMembership($serviceArr = "", $device='desktop') {
-        $billingServicesObj = new billing_SERVICES();
+        $billingServicesObj = new billing_SERVICES('newjs_slave');
         $output = $billingServicesObj->getLowestActiveMainMembership($serviceArr, $device);
         return $output;
     }
@@ -589,7 +589,7 @@ class Services
     }
     
     public function getActiveServices() {
-        $billingServicesObj = new billing_SERVICES();
+        $billingServicesObj = new billing_SERVICES('newjs_slave');
         $serviceTabs = $billingServicesObj->getEnabledServices();
         return $serviceTabs;
     }
@@ -601,7 +601,7 @@ class Services
         	$price_str = $device."_RS";
         }
 
-        $billingServicesObj = new billing_SERVICES();
+        $billingServicesObj = new billing_SERVICES('newjs_slave');
         $addon = $billingServicesObj->getAddOnInfo($price_str,$offer);
         
         return $addon;

@@ -3,15 +3,16 @@
 
 class MessageQueues
 {
-  CONST CONSUMERCOUNT = 2;  //Number of instances of Consumer class run at a time.
-  CONST NOTIFICATIONCONSUMERCOUNT = 1;  //Number of instances of JsNotificationsConsume class run at a time.
+  CONST CONSUMERCOUNT = 4;  //Number of instances of Consumer class run at a time.
+  CONST NOTIFICATIONCONSUMERCOUNT = 2;  //Number of instances of JsNotificationsConsume class run at a time.
   CONST MAILQUEUE = "MailQueue";  //Queue for storing mails
   CONST SMSQUEUE = "SmsGcmQueue"; //Queue for storing sms
+  CONST BUFFER_INSTANT_NOTIFICATION_QUEUE = "BufferInstantNotificationsQueue"; //Queue for storing buffer instant notifications(JSPC/JSMS/FSO)
   CONST CONTACTCACHEINITIATE = "ContactCacheInitiate"; //Queue for sending data to webservice to create cache
   CONST GCMQUEUE = "SmsGcmQueue"; //Queue for storing gcm. Currenly same queue is used for both SMS and GCM.
 
   //per queue msg limit mapping
-  public static $upperMessageLimitPerQueue = array("default"=>1000,"INSTANT_NOTIFICATION_QUEUE"=>50000);
+  public static $upperMessageLimitPerQueue = array("default"=>1000,"INSTANT_NOTIFICATION_QUEUE"=>10000);
   public static $queuesWithoutMsgCountLimit = array("SCHEDULED_NOTIFICATION_QUEUE1","SCHEDULED_NOTIFICATION_QUEUE2", "SCHEDULED_NOTIFICATION_QUEUE3"); //queues not to be considered for msg upper limit alert
   CONST SAFE_LIMIT = 200000000;     //Limit in MB's for the difference between memory allowed and memory used by rabbitmq.
   CONST MSGBODYLIMIT = NULL;  //to prevent truncation of message. NULL specify that a message of any length can be sent over the queue.

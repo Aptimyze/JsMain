@@ -36,7 +36,13 @@ class SearchJS implements SearchChannelInterface
         {
                 
         }
-        
+        /**
+        * getSearchTypeContactViewAttempt.
+        */
+        public static function getSearchTypeContactViewAttempt()
+        {        
+                
+        }
         /**
         * getMembersLookingForMe
         */
@@ -111,5 +117,8 @@ class SearchJS implements SearchChannelInterface
 		{
 			return "PC";
 		}
+                public function setRequestParameters($params){
+                  return array();
+                }
 }
 ?>

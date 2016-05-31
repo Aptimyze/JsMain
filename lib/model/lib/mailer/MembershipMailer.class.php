@@ -192,7 +192,7 @@ class MembershipMailer {
     }   
 
     public function isExclusive($profileid) {
-        $ssObj = new BILLING_SERVICE_STATUS();
+        $ssObj = new BILLING_SERVICE_STATUS('newjs_slave');
         return($ssObj->isExclusiveActive($profileid));
     }
 
@@ -207,11 +207,11 @@ class MembershipMailer {
     }
 
     public function getAllPaidProfiles($purchase_dt) {
-        $pObj = new BILLING_PURCHASES();
+        $pObj = new BILLING_PURCHASES('newjs_slave');
         return($pObj->getPaidProfiles($purchase_dt));
     }
     public function getJsExclusiveProfiles() {
-        $serviceStatusObj = new BILLING_SERVICE_STATUS();
+        $serviceStatusObj = new BILLING_SERVICE_STATUS('newjs_slave');
         $profiles =$serviceStatusObj->getProfilesServiceBased('X');
 	return $profiles;
     }

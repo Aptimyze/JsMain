@@ -32,7 +32,7 @@
             <div class="fl comH_list padl20">
               <ul>
                 ~foreach item=j from=0|@range:$i`
-                <li><a href="~$tabs[$j]`#brides" bind-slide="1" title="~$tabs2[$j]`">~$tabs2[$j]` ~if $tabs2[$j]`Matrimony~/if`</a></li>
+                <li><a href="~$tabs[$j]`#brides" bind-slide="1" title="~$tabs2[$j]`">~$tabs2[$j]` ~if $tabs2[$j]`Matrimonial~/if`</a></li>
                 ~$j=$j+1`
                 ~/foreach`
               </ul>

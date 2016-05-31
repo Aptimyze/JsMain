@@ -19,13 +19,14 @@ class billing_EXCLUSIVE_MEMBERS extends TABLE
     {
       if(is_array($params) && $params)
       {
-        $sql = "INSERT IGNORE INTO billing.EXCLUSIVE_MEMBERS (ID,PROFILEID,ASSIGNED_TO,ASSIGNED,BILLING_DT,ASSIGNED_DT) VALUES(NULL,:PROFILEID,:ASSIGNED_TO,:ASSIGNED,:BILLING_DT,:ASSIGNED_DT)";
+        $sql = "INSERT IGNORE INTO billing.EXCLUSIVE_MEMBERS (ID,PROFILEID,ASSIGNED_TO,ASSIGNED,BILLING_DT,BILL_ID,ASSIGNED_DT) VALUES(NULL,:PROFILEID,:ASSIGNED_TO,:ASSIGNED,:BILLING_DT,:BILL_ID,:ASSIGNED_DT)";
         $res = $this->db->prepare($sql);
         $res->bindValue(":PROFILEID", $params["PROFILEID"], PDO::PARAM_INT);
         $res->bindValue(":ASSIGNED_DT", $params["ASSIGNED_DT"], PDO::PARAM_STR);
         $res->bindValue(":ASSIGNED_TO", $params["ASSIGNED_TO"], PDO::PARAM_STR);
         $res->bindValue(":ASSIGNED", $params["ASSIGNED"], PDO::PARAM_STR);
         $res->bindValue(":BILLING_DT", $params["BILLING_DT"], PDO::PARAM_STR);
+        $res->bindValue(":BILL_ID", $params["BILL_ID"], PDO::PARAM_INT);
         $res->execute();
       }
     }

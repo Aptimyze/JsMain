@@ -82,5 +82,25 @@ class MIS_LOGIN_TRACKING extends TABLE{
                 }
         }
 
+        public function getLoginChannel($profileid,$date)
+        {
+                if (!$profileid)
+                        throw new jsException("", "Profile id not passed");
+                try {
+                        $sql = "SELECT DISTINCT `WEBSITE_VERSION` FROM MIS.`LOGIN_TRACKING` WHERE `PROFILEID`=:PROFILEID AND date(DATE)>=:DATE";
+                        $res = $this->db->prepare($sql);
+                        $res->bindValue(":PROFILEID", $profileid,PDO::PARAM_INT);
+                        $res->bindValue(":DATE", $date,PDO::PARAM_STR);
+                        $res->execute();
+                        while ($result = $res->fetch(PDO::FETCH_ASSOC)) {
+                                $output[] = $result['WEBSITE_VERSION'];
+                        }
+                        return $output;
+                } catch (PDOException $e) {
+                        throw new jsException($e);
+                }
+        }
+
+
 }
 ?>

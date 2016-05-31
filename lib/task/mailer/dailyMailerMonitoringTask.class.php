@@ -137,6 +137,14 @@ EOF;
                         $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
                         unset($countArr);
                 }
+                //dpp review mailer
+                if($mailer_key[0]=='DPP_REVIEW_MAILER')
+                {
+                        $dppMailerLogObj = new PROFILE_DPP_REVIEW_MAILER_LOG();
+                        $countArr = $dppMailerLogObj->getMailCountForRange();
+                        $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
+                        unset($countArr);
+                }
 	}
   }
 }

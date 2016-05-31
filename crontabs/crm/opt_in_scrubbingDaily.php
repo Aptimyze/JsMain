@@ -18,9 +18,9 @@ $campaignArr =array('FP_JS','UPSELL_JS');
 foreach($campaignArr as $key=>$campaignName)
 {
 	if($campaignName=='FP_JS')
-		$dateTime =date("Y-m-d H:i:s",time()-12*60*60);
+		$dateTime =date("Y-m-d H:i:s",time()-26*60*60);
 	elseif($campaignName=='UPSELL_JS')
-		$dateTime =date("Y-m-d H:i:s",time()-24*60*60);
+		$dateTime =date("Y-m-d H:i:s",time()-48*60*60);
 
 	$msg    	="Start time:".@date('H:i:s');
 	$dnc_array      =$dialerDncScrubingObj->compute_dnc_array($campaignName, $dateTime);
@@ -40,16 +40,19 @@ foreach($campaignArr as $key=>$campaignName)
 // OB_Sales OPT-IN Check
 $msg    	="Start time:".@date('H:i:s');
 $campaignName 	='OB_Sales';
-$leadId 	=date("Y-m-d"); //'2016-02-18';
+$leadId 	=date("Y-m-d",time()-24*60*60);  
 $dnc_phoneArray =$dialerDncScrubingObj->compute_dnc_array_forSalesCampaign($campaignName, $leadId);
-foreach($dnc_phoneArray as $phoneNo=>$profileArr){
-	foreach($profileArr as $key=>$profileid){
-		$profileidArr[] =$profileid;
-		$phoneArr[$profileid] =$phoneNo;
-	}	
+if(count($dnc_phoneArray)){
+	foreach($dnc_phoneArray as $phoneNo=>$profileArr){
+		foreach($profileArr as $key=>$profileid){
+			$profileidArr[] =$profileid;
+			$phoneArr[$profileid] =$phoneNo;
+		}	
+	}
 }		
 unset($dnc_phoneArray);
-$opt_in_array 	=$dialerDncScrubingObj->compute_opt_in_array($profileidArr);
+if(is_array($profileidArr))
+	$opt_in_array 	=$dialerDncScrubingObj->compute_opt_in_array($profileidArr);
 for($i=0;$i<count($opt_in_array);$i++){
 	$profileid =$opt_in_array[$i];
 	$phoneNo =$phoneArr[$profileid];

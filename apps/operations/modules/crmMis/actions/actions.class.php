@@ -1095,11 +1095,11 @@ class crmMisActions extends sfActions
                                 	$this->emp_id_arr = $fsepmObj->getExecEmployeeID($allReporters);
                                 	$filterDocumentVerification = true;
                                         $fsepmObj->generateFreshVisitsData($filterDocumentVerification);
-                                        //$fsepmObj->generateProfilesWhichPaidData();
+                                        $fsepmObj->generateProfilesWhichPaidData();
                                         $fsepmObj->generateSalesData();
                                         $this->individual_result = $fsepmObj->getResultArr();
                                         $this->individual_execWiseAndDayWiseSummation = $fsepmObj->generateExecutiveWiseAndDayWiseSummation();
-                                        $fsepmObj->generateTeamWiseData($ddarr, $allReporters,$this->agentName);
+                                        $fsepmObj->generateTeamWiseData($ddarr, $allReporters);
                                         $this->execWiseAndDayWiseSummation = $fsepmObj->generateExecutiveWiseAndDayWiseSummation(); // Team-wise data
                                         $this->result = $fsepmObj->getResultArr(); // Team-wise data
                                         if($formArr["report_format"]=="XLS" && $this->result && is_array($this->result))

@@ -62,8 +62,8 @@ class desktopView extends DetailedViewApi
         $this->m_arrOut['astro_sunsign'] = $astroArr['sunsign'];
         $this->m_arrOut['astro_time_check'] = $astroArr['birthTimeHour'];
         $this->m_arrOut['rashi'] = $astroArr['rashi'];
-        $cManglik = $this->m_objProfile->getMANGLIK();
-  $szManglik = ApiViewConstants::getManglikLabel($cManglik);
+        $cManglik = CommonFunction::setManglikWithoutDontKnow($this->m_objProfile->getMANGLIK());
+        $szManglik = ApiViewConstants::getManglikLabel($cManglik);
         $this->m_arrOut['astro_manglik'] = $szManglik;
         $this->m_arrOut['toShowHoroscope']  = $bHoroScope;
         $horoscope = new Horoscope;
@@ -582,6 +582,8 @@ class desktopView extends DetailedViewApi
           break;
           case "jsexclusive" : return "JS Exclusive";
           break;
+          case "eadvantage" : return "eAdvantage";
+          break;
       }
   }
 
@@ -779,7 +781,7 @@ class desktopView extends DetailedViewApi
       $horo_match = ApiViewConstants::$arrHoroScope_Required[$objProfile->getHOROSCOPE_MATCH()] ;
         
         $astro_privacy = FieldMap::getFieldLabel("astro_privacy_label", $objProfile->getSHOW_HOROSCOPE());
-        $cManglik = $objProfile->getMANGLIK();
+        $cManglik = CommonFunction::setManglikWithoutDontKnow($objProfile->getMANGLIK());
     $szManglik = ApiViewConstants::getManglikLabel($cManglik);
         $rashi = $arrAstroKundali->rashi;
         $sunsign = $arrAstroKundali->sunsign;

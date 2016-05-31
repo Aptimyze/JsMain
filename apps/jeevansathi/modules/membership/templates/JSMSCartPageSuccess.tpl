@@ -214,6 +214,7 @@
 </div>
 <script type="text/javascript">
 	var AndroidPromotion = 0;
+	var skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
 	$(document).ready(function(){
 		$('html').addClass('rv2_bg1');
 		$("#continueBtn").show();
@@ -377,7 +378,8 @@
 				}
 		    	window.location.href = url
 			} else if(readCookie('backState') == "failurePage") {
-				if(checkEmptyOrNull(readCookie('mainMem')) && (readCookie("mainMem") != "X" || readCookie("mainMem") != "ESP")){
+				if(checkEmptyOrNull(readCookie('mainMem')) && ($.inArray(readCookie('mainMem'),skipVasPageMembershipBased)==-1))
+				{
 					url = "/membership/jsms?displayPage=2&mainMem="+readCookie('mainMem')+"&mainMemDur="+readCookie('mainMemDur');
 				} else {
 					url = "/membership/jsms?displayPage=1";
@@ -397,7 +399,7 @@
 				paramStr = "displayPage=5&backendRedirect=1&checksum=~$data.backendLink.checksum`&profilechecksum=~$data.backendLink.profilechecksum`&reqid=~$data.backendLink.reqid`";
 			~else`
 			if(checkEmptyOrNull(readCookie('mainMem')) && checkEmptyOrNull(readCookie('mainMemDur'))){
-				if(checkEmptyOrNull(readCookie('selectedVas')) && readCookie('mainMem') != 'ESP' && readCookie('mainMem') != 'X' && readCookie('mainMem') != 'NCP'){
+				if(checkEmptyOrNull(readCookie('selectedVas')) && $.inArray(readCookie('mainMem'),skipVasPageMembershipBased)==-1){
 					paramStr = "displayPage=5&mainMembership="+readCookie("mainMem")+readCookie("mainMemDur")+"&vasImpression="+readCookie('selectedVas');  
 			    } else {
 					paramStr = "displayPage=5&mainMembership="+readCookie("mainMem")+readCookie("mainMemDur")+"&vasImpression=";

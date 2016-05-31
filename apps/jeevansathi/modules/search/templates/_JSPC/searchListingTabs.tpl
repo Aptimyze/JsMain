@@ -48,6 +48,12 @@
 			<li>
 				<div><span data-attr="4" id="js-visitors" class="cursp js-searchLists">Profile Visitors</span></div>
 			</li>
+                        ~if CommonFunction::getMainMembership($subscriptionType) eq mainMem::EVALUE || CommonFunction::getMainMembership($subscriptionType) eq mainMem::EADVANTAGE`
+                        ~else`
+                        <li>
+				<div><span data-attr="3" id="js-viewAttempts" class="js-searchLists cursp">Contact View Attempts</span></div>
+			</li>
+                        ~/if`
 		</ul>
             <div id="leftPointUnderline" class="pos-abs" style="left:~$clickOn`px;height: 2px; background: #34495e;width: 200px;"></div>
             

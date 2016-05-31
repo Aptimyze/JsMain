@@ -109,6 +109,8 @@ EOF;
 	public function execute($arguments = array(), $options = array())
 	{
 		ini_set('memory_limit','1024M');	
+		ini_set("gd.jpeg_ignore_warning", 1);
+		error_reporting(E_ALL & ~E_NOTICE);
 		$this->initVariables();
                 $this->UpdateForCorruptPrevent();
 		$arrPictures =  $this->getPictures($arguments);

@@ -93,7 +93,7 @@
       <div class="fullwid pos_rel clearfix">
         <div class="reg-wid3 fr reg-divselc bg-white outl-none toValidate" data-attr="manglik" tabindex="0" id="manglik_box">
           <label class="lblreg pos_abs js-manglik js-list pos1_lbl2" id="manglik_label" data-attr="manglik">Are you manglik?&nbsp;&nbsp;&nbsp;</label>
-          <div class="js-tBox reg-mainlist showdd" id='manglik_value' data-number="4" data-type="radio" data-validate=true data-required=false data-toSave ="manglik" data-fieldtype="manglik">
+          <div class="js-tBox reg-mainlist showdd" id='manglik_value' data-number="3" data-type="radio" data-validate=true data-required=false data-toSave ="manglik" data-fieldtype="manglik">
             <div id="manglik-inputBox_set"></div>
             <ul class="rlist manglikopt" id="manglik-list_set">
             </ul>

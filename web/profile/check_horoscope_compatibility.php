@@ -52,7 +52,7 @@
 		if(strstr($data['SUBSCRIPTION'],'A'))
 			$sample="";
 		
-		if(!check_astro_details($profileid))
+		if(!check_astro_details($profileid,'Y'))
 		{
 			$no_astro_details=1;	
 		}

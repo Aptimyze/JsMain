@@ -9,7 +9,7 @@
   </div>
   <!--end:div--> 
   <!--start:div-->
-  <div class="pad18 color20 f14 fontlig brdr1">Setting filter means only profiles satisfying your criteria will be able to contact you. For example, if you set an Age Filter of 24 to 26, a 27 year profile will not be able to contact you</div>  
+  <div class="pad18 color20 f14 fontlig brdr1">Filters help you control who contacts you. For example, if your Desired Partner’s age range is 24-27 years old, and its filter is ‘ON’, then profiles younger than 24 years or older than 27 years will not be able to see your Phone/EmailID and their Interests will go to your Filtered Inbox.</div>  
   <!--end:div-->
   <!--start:div-->
   <div id="filterSection" class="dn">

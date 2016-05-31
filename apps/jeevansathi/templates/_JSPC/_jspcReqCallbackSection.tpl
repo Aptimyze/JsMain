@@ -75,16 +75,15 @@
 
         $("#headerRequestCallback").click(function(e){
             if(!$(".overlay1").length){
-                $("#topNavigationBar").addClass('pos-rel').addClass('layersZ');
-                $("#headerRequestCallback").addClass('js-reqcallbck').addClass('opa50');
+                $("#topNavigationBar").addClass('pos-rel layersZ');
+                $("#headerRequestCallback").addClass('js-reqcallbck opa50');
                 $('header').before('<div class="overlay1"></div>');
                 $("#headerRequestCallbackLogout").show();
             } else {
-                $("#topNavigationBar").removeClass('pos-rel').removeClass('layersZ');
-                $("#headerRequestCallback").removeClass('js-reqcallbck').removeClass('opa50');
+                $("#topNavigationBar").removeClass('pos-rel layersZ');
+                $("#headerRequestCallback").removeClass('js-reqcallbck opa50');
                 $('.overlay1').remove();
-                $("#headerRequestCallbackLogout").hide();
-                $("#headerRequestCallbackLogin").hide();
+                $("#headerRequestCallbackLogout,#headerRequestCallbackLogin").hide();
             }
         });
         
@@ -118,9 +117,7 @@
                         $("#headerReqCallBackMessage").text(response);
                         $("#headerRequestCallbackLogout").hide();
                         $("#headerRequestCallbackLogin").show();
-                        $("#headerReqQueryError").hide();
-                        $("#headerReqEmailError").hide();
-                        $("#headerReqMobError").hide();
+                        $("#headerReqQueryError,#headerReqEmailError,#headerReqMobError").hide();
                     });
                 } else {
                     $.post("/common/requestCallBack",{'email':email.trim(),'phone':phNo.trim(),'query_type':'P'},function(response){
@@ -131,9 +128,7 @@
                         }
                         $("#headerRequestCallbackLogout").hide();
                         $("#headerRequestCallbackLogin").show();
-                        $("#headerReqQueryError").hide();
-                        $("#headerReqEmailError").hide();
-                        $("#headerReqMobError").hide();
+                        $("#headerReqQueryError,#headerReqEmailError,#headerReqMobError").hide();
                     });
                 }
             } else {
@@ -150,11 +145,10 @@
         });
 
         $('#headerRequestCallbackLoginCloseBtn, #headerRequestCallbackLogoutCloseBtn').click(function(e){
-            $("#topNavigationBar").removeClass('pos-rel').removeClass('layersZ');
-            $("#headerRequestCallback").removeClass('js-reqcallbck').removeClass('opa50');
+            $("#topNavigationBar").removeClass('pos-rel layersZ');
+            $("#headerRequestCallback").removeClass('js-reqcallbck opa50');
             $('.overlay1').remove();
-            $("#headerRequestCallbackLogout").hide();
-            $("#headerRequestCallbackLogin").hide();
+            $("#headerRequestCallbackLogout,#headerRequestCallbackLogin").hide();
         });
 
         if(module == 'membership'){
@@ -172,11 +166,10 @@
         $(document).keyup(function(e) {
             if($("#headerRequestCallbackLogout,#headerRequestCallbackLogin").is(':visible')){
                 if (e.keyCode == 27) {
-                    $("#topNavigationBar").removeClass('pos-rel').removeClass('layersZ');
-                    $("#headerRequestCallback").removeClass('js-reqcallbck').removeClass('opa50');
+                    $("#topNavigationBar").removeClass('pos-rel layersZ');
+                    $("#headerRequestCallback").removeClass('js-reqcallbck opa50');
                     $('.overlay1').remove();
-                    $("#headerRequestCallbackLogout").hide();
-                    $("#headerRequestCallbackLogin").hide();
+                    $("#headerRequestCallbackLogout,#headerRequestCallbackLogin").hide();
                 }
             }
         });
@@ -192,8 +185,7 @@
         });
         $('.reqCalbck-drop1 ul li').click(function(event) {
             event.stopPropagation();
-            var OptSel = $(this).text();
-            var getlistName = $(this).parent().attr('data-attr');
+            var OptSel = $(this).text(),getlistName = $(this).parent().attr('data-attr');
             var b = getlistName.split('-');
             var temp = b[0];
             $('span.' + temp + '-val').text(OptSel);
@@ -281,13 +273,13 @@
 
         $("#footerRequestCallback").click(function(e){
             if(!$(".overlay1").length){
-                $("#js-footer").addClass('pos-rel').addClass('layersZ');
-                $("#footerRequestCallback").addClass('js-reqcallbck').addClass('opa50');
+                $("#js-footer").addClass('pos-rel layersZ');
+                $("#footerRequestCallback").addClass('js-reqcallbck opa50');
                 $('footer').before('<div class="overlay1"></div>');
                 $("#footerRequestCallbackLogout").show();
             } else {
-                $("#js-footer").removeClass('pos-rel').removeClass('layersZ');
-                $("#footerRequestCallback").removeClass('js-reqcallbck').removeClass('opa50');
+                $("#js-footer").removeClass('pos-rel layersZ');
+                $("#footerRequestCallback").removeClass('js-reqcallbck opa50');
                 $('.overlay1').remove();
                 $("#footerRequestCallbackLogout").hide();
                 $("#footerRequestCallbackLogin").hide();
@@ -337,9 +329,7 @@
                         }
                         $("#footerRequestCallbackLogout").hide();
                         $("#footerRequestCallbackLogin").show();
-                        $("#footerReqQueryError").hide();
-                        $("#footerReqEmailError").hide();
-                        $("#footerReqMobError").hide();
+                        $("#footerReqQueryError,#footerReqEmailError,#footerReqMobError").hide();
                     });
                 }
             } else {
@@ -356,9 +346,9 @@
         });
 
         $('#footerRequestCallbackLoginCloseBtn, #footerRequestCallbackLogoutCloseBtn').click(function(e){
-            $("#js-footer").removeClass('pos-rel').removeClass('layersZ');
+            $("#js-footer").removeClass('pos-rel layersZ');
             $("#topNavigationBar").addClass('layersZ');
-            $("#footerRequestCallback").removeClass('js-reqcallbck').removeClass('opa50');
+            $("#footerRequestCallback").removeClass('js-reqcallbck opa50');
             $('.overlay1').remove();
             $("#footerRequestCallbackLogout").hide();
             $("#footerRequestCallbackLogin").hide();
@@ -371,12 +361,11 @@
         $(document).keyup(function(e) {
             if($("#footerRequestCallbackLogout,#footerRequestCallbackLogin").is(':visible')){
                 if (e.keyCode == 27) {
-                    $("#js-footer").removeClass('pos-rel').removeClass('layersZ');
+                    $("#js-footer").removeClass('pos-rel layersZ');
                     $("#topNavigationBar").addClass('layersZ');
-                    $("#footerRequestCallback").removeClass('js-reqcallbck').removeClass('opa50');
+                    $("#footerRequestCallback").removeClass('js-reqcallbck opa50');
                     $('.overlay1').remove();
-                    $("#footerRequestCallbackLogout").hide();
-                    $("#footerRequestCallbackLogin").hide();
+                    $("#footerRequestCallbackLogout,#footerRequestCallbackLogin").hide();
                 }
             }
         });

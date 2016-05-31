@@ -31,7 +31,7 @@ EOF;
         $lastPartitionName = intval($lastActiveLogObj->getLastActivePartition());
         //get Last Partition Range
         $lastPartitionRange = intval($matchAlertsObj->getLatestPartitionRange('p'.$lastPartitionName));
-        if($gap >= $lastPartitionRange){
+        if($gap >= ($lastPartitionRange-1)){
             //drop and create partition
             $matchAlertsObj->replacePartitions('p'.($lastPartitionName-2),'p'.($lastPartitionName+1),$lastPartitionRange+15);
             //update new partition number

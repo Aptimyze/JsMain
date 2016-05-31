@@ -145,7 +145,7 @@ function ajaxPassword(checksum,pswrd,hideAction)
   $.ajax(
                 {                 
                         url: '/profile/password_check.php?',
-                        data: "checksum="+checksum+"&pswrd="+pswrd,
+                        data: "hideDelete=1&checksum="+checksum+"&pswrd="+escape(pswrd),
                         //timeout: 5000,
                         success: function(response) 
                         {

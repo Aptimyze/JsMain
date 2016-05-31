@@ -14,6 +14,7 @@
   </div>
   <!--end:overlay-->
   <!--start:header-->
+  ~include_partial("global/gtm",['groupname'=>$groupname,'sourcename'=>$sourcename])`
   ~include_partial("global/JSPC/_jspcCommonMemRegHeader",['PAGE'=>$pageObj->getPageName()])`
 
   <!--end:header--> 

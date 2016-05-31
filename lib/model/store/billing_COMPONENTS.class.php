@@ -221,5 +221,31 @@ class billing_COMPONENTS extends TABLE{
             throw new jsException($e);
         }
     }
+
+    public function getDurationRightsForServiceDetails($serviceid, $package) {
+        try {
+        	if($package = "Y"){
+	            $sql = "Select c.DURATION,c.RIGHTS from billing.SERVICES a, billing.PACK_COMPONENTS b, billing.COMPONENTS c where a.PACKID = b.PACKID AND b.COMPID = c.COMPID AND a.SERVICEID = :SERVICEID";
+	            $resSelectDetail = $this->db->prepare($sql);
+	            $resSelectDetail->bindValue(":SERVICEID", $serviceid, PDO::PARAM_STR);
+	            $resSelectDetail->execute();
+	            while ($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)) {
+	            	$output[] = $rowSelectDetail;
+	            }
+	        } else {
+	        	$sql = "Select c.DURATION,c.RIGHTS from billing.SERVICES a, billing.COMPONENTS c where c.COMPID = a.COMPID AND a.SERVICEID = :SERVICEID";
+	            $resSelectDetail = $this->db->prepare($sql);
+	            $resSelectDetail->bindValue(":SERVICEID", $serviceid, PDO::PARAM_STR);
+	            $resSelectDetail->execute();
+	            if ($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)) {
+	            	$output = $rowSelectDetail;
+	            }
+	        }
+            return $output;
+        }
+        catch(Exception $e) {
+            throw new jsException($e);
+        }
+    }
 }
 ?>

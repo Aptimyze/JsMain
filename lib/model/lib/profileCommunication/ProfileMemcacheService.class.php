@@ -796,7 +796,7 @@ public function unsett()
     public function setBookmarkData()
     {
         $bookmarkObj = new Bookmarks();
-        $skipContactedType = SkipArrayCondition::$default;
+        $skipContactedType = SkipArrayCondition::$SHORTLIST;
         $skipProfileObj    = SkipProfile::getInstance($this->profileid);
         $skipProfile       = $skipProfileObj->getSkipProfiles($skipContactedType);
         $count       = $bookmarkObj->getBookmarkCount($this->profileid,$skipProfile);

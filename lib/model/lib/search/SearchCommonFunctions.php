@@ -197,7 +197,7 @@ class SearchCommonFunctions
 	/**
 	* This section will show the dpp matches.
 	*/
-	public static function getMyDppMatches($sort="",$loggedInProfileObj='',$limit='',$currentPage="",$paramArr='',$removeMatchAlerts="",$dontShowFilteredProfiles="",$twoWayMatches='',$clustersToShow='')
+	public static function getMyDppMatches($sort="",$loggedInProfileObj='',$limit='',$currentPage="",$paramArr='',$removeMatchAlerts="",$dontShowFilteredProfiles="",$twoWayMatches='',$clustersToShow='',$results_orAnd_cluster='',$notInProfiles='')
 	{
                 $searchEngine = 'solr';
                 $outputFormat = 'array';
@@ -226,7 +226,10 @@ class SearchCommonFunctions
                 $SearchServiceObj = new SearchService($searchEngine,$outputFormat,$showAllClustersOptions);
 		$SearchServiceObj->setSearchSortLogic($SearchParamtersObj,$loggedInProfileObj,"",$sort);
 		$SearchUtilityObj =  new SearchUtility;
-		$SearchUtilityObj->removeProfileFromSearch($SearchParamtersObj,'spaceSeperator',$loggedInProfileObj,'',$noAwaitingContacts,$removeMatchAlerts);
+                if($notInProfiles)
+                   $SearchUtilityObj->removeProfileFromSearch($SearchParamtersObj,'spaceSeperator',$loggedInProfileObj,'',$noAwaitingContacts,$removeMatchAlerts,$notInProfiles);
+                else
+                    $SearchUtilityObj->removeProfileFromSearch($SearchParamtersObj,'spaceSeperator',$loggedInProfileObj,'',$noAwaitingContacts,$removeMatchAlerts);
                 $responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,$results_orAnd_cluster,$clustersToShow,$currentPage,'',$loggedInProfileObj);
 		$arr['PIDS'] = $responseObj->getsearchResultsPidArr();
 		$arr['CNT']  = $responseObj->getTotalResults();

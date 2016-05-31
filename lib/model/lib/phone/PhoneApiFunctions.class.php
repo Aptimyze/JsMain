@@ -4,7 +4,7 @@ class PhoneApiFunctions
 {
 	public static $interval = '5';
 	public static $frequency = '12';
-        public static $phoneTitle = "Verify your number";
+        public static $phoneTitle = "Verify Your Number";
         public static $phoneMessage = "Phone verification is mandatory to use Jeevansathi.com";
         public static function phoneVerifyProcessMessage($virtualNumber,$isd='')
         {

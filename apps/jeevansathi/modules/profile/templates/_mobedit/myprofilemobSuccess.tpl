@@ -106,7 +106,7 @@
 </div>
 <div id="filterButton" class ="dn">
 	<div class="fullwid bg7">
-	<div class="dispbl lh50 txtc white" onClick="showFilterOverlayer()">Set Contact Filters</div>
+	<div class="dispbl lh50 txtc white" onClick="showFilterOverlayer()">Manage Filters</div>
 	</div>
  </div>
 ~if isset($horoExist)`
@@ -123,6 +123,19 @@
   </div>
 </div>
 ~/if`
+<div id='dppToolTip' class='dn'>
+  <div  class="fullwid  brdr1 bwhite">
+  <div class="pad1">
+    <div class="pad2">
+      <div class="fl wid94p wwrap fontlig f14 color3">
+      The criteria you mention here determines the ‘Desired Partner Matches’ you see. So please review this information carefully. Moreover, Filters determine whose Interests/Calls you want to receive.
+      </div>
+      <div class="clr"></div>
+    </div>
+  </div>
+</div>
+</div>
+
 <script>
 	showLoader();	
 		var renderPage=new mobEditPage;
@@ -144,3 +157,6 @@
 <div id="albumPage" class="dn">
 ~include_partial("social/mobile/mobilePhotoUploadProgress",[gender=>~$GENDER`,username=>~$USERNAME`,selectTemplate=>~$selectTemplate`,alreadyPhotoCount=>~$alreadyPhotoCount`,profilepicurl=>~$profilepicurl`,selectFile=>~$selectFile`,privacy=>~$privacy`,selectFileOrNot=>~$selectFileOrNot`,picturecheck=>~$picturecheck`])`
 </div>
+~if $sourcename && $groupname && $fromPhoneVerify`
+~include_partial("global/gtm",['groupname'=>$groupname,'sourcename'=>$sourcename])`
+~/if`

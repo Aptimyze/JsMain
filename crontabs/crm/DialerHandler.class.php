@@ -266,10 +266,13 @@ class DialerHandler
 		else
 			return "ignore";
 	}
-        public function getProfilesForCampaign($tableName, $csvEntryDate)
+        public function getProfilesForCampaign($tableName, $csvEntryDate,$campaignName='')
         {
 		$tableName =trim($tableName);
-		$sql = "SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE='$csvEntryDate' ORDER BY PRIORITY DESC,ANALYTIC_SCORE DESC,LAST_LOGIN_DATE DESC";
+		if($campaignName=='OB_JS_PAID')
+			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE='$csvEntryDate'";
+		else
+			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE='$csvEntryDate' ORDER BY PRIORITY DESC,ANALYTIC_SCORE DESC,LAST_LOGIN_DATE DESC";
                 $res = mysql_query($sql,$this->db_master) or die("$sql".mysql_error($this->db_master));
                 while($row = mysql_fetch_assoc($res)){
 			$dataArr[] =$row;
@@ -297,9 +300,14 @@ class DialerHandler
 		else
 			$discountField ='VD_PERCENT';
 
-		$fieldNameArr =array('DataID'=>'DataID','Campaign'=>'Campaign','CreateTimeStamp'=>'CreateTimeStamp','UpdateTimeStamp'=>'UpdateTimeStamp','StatusCode'=>'StatusCode','PROFILEID'=>'PROFILEID','priority'=>'PRIORITY','SCORE'=>'ANALYTIC_SCORE','Old_priority'=>'OLD_PRIORITY','DIAL_STATUS'=>'DIAL_STATUS','AGENT'=>'AGENT','VD_PERCENT'=>"$discountField",'LAST_LOGIN_DATE'=>'LAST_LOGIN_DATE','PHONE_NO1'=>'PHONE_NO1','PHONE_NO2'=>'PHONE_NO2','PHOTO'=>'PHOTO','DATE_OF_BIRTH'=>'DOB','MSTATUS'=>'MSTATUS','EVER_PAID'=>'EVER_PAID','GENDER'=>'GENDER','POSTEDBY'=>'POSTEDBY','NEW_VARIABLE'=>'NEW_VARIABLE1','EOI'=>'NEW_VARIABLE2','TOTAL_ACCEPTANCES'=>'NEW_VARIABLE3','Phone1'=>'PHONE_NO3','Phone2'=>'PHONE_NO4','LEAD_ID'=>'LEAD_ID','CSV_ENTRY_DATE'=>'CSV_ENTRY_DATE','EXPIRY_DT'=>'EXPIRY_DT');
-
-		$dateFieldsArr			=array("LAST_LOGIN_DATE","DOB");
+		$fieldNameArr =array('DataID'=>'DataID','Campaign'=>'Campaign','CreateTimeStamp'=>'CreateTimeStamp','UpdateTimeStamp'=>'UpdateTimeStamp','StatusCode'=>'StatusCode','PROFILEID'=>'PROFILEID','priority'=>'PRIORITY','SCORE'=>'ANALYTIC_SCORE','Old_priority'=>'OLD_PRIORITY','DIAL_STATUS'=>'DIAL_STATUS','AGENT'=>'AGENT','VD_PERCENT'=>"$discountField",'LAST_LOGIN_DATE'=>'LAST_LOGIN_DATE','PHONE_NO1'=>'PHONE_NO1','PHONE_NO2'=>'PHONE_NO2','PHOTO'=>'PHOTO','DATE_OF_BIRTH'=>'DOB','MSTATUS'=>'MSTATUS','EVER_PAID'=>'EVER_PAID','GENDER'=>'GENDER','POSTEDBY'=>'POSTEDBY','NEW_VARIABLE'=>'NEW_VARIABLE1','EOI'=>'NEW_VARIABLE2','TOTAL_ACCEPTANCES'=>'NEW_VARIABLE3','Phone1'=>'PHONE_NO1','Phone2'=>'PHONE_NO2','LEAD_ID'=>'LEAD_ID','CSV_ENTRY_DATE'=>'CSV_ENTRY_DATE','EXPIRY_DT'=>'EXPIRY_DT');
+		if($campaignName=='OB_JS_PAID'){
+			$fieldNameArr1 =array('USERNAME'=>'USERNAME','MEMBERSHIP'=>'MEMBERSHIP','ADDON'=>'ADDON','PAYMENT_DATE'=>'PAYMENT_DT');
+			$fieldNameArr =array_merge($fieldNameArr,$fieldNameArr1);
+			$dateFieldsArr =array();
+		}
+		else
+			$dateFieldsArr		=array("LAST_LOGIN_DATE","DOB");
 		$phoneFieldsArr			=array("PHONE_NO1","PHONE_NO2","PHONE_NO3","PHONE_NO4");
 
 		$dataArr['DataID'] 		=$campaignName."-".$csvEntryDate;
@@ -315,11 +323,12 @@ class DialerHandler
 				$field =date("d/m/y",strtotime($field));
 				$dataArr[$key1] =$field;
 			}
+			if($key!='Phone1' && $key!='Phone2'){
 			if(in_array($key1,$phoneFieldsArr)){
 				$field =$dataArr[$key1];
 				$field ='0'.$field;
 				$dataArr[$key1] =$field;	
-			}
+			}}
 			$dataSet[$key] =$dataArr[$key1];	
 		}	
 		return $dataSet;

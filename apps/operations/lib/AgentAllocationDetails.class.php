@@ -4,7 +4,7 @@ class AgentAllocationDetails
 	//Returns executives eligible for the process
 	public function fetchExecutives($processObj)
 	{
-	$jsAdminPSWRDSObj=new jsadmin_PSWRDS();
+	$jsAdminPSWRDSObj=new jsadmin_PSWRDS('newjs_slave');
 	if($processObj->getProcessName()=="DeAllocation")
 
 	{
@@ -220,9 +220,9 @@ public function fetchProfiles($processObj)
 			$startDt = $processObj->getStartDate();
 			$endDt = $processObj->getEndDate();
 			foreach($fsAgents as $key=>$val){
-				$mainAdminObj = new incentive_MAIN_ADMIN();
+				$mainAdminObj = new incentive_MAIN_ADMIN('newjs_slave');
 				$profileList = $mainAdminObj->getAllotedProfilesWithAllotTimeForAgent($val);
-				$paymentDetailObj = new BILLING_PAYMENT_DETAIL();
+				$paymentDetailObj = new BILLING_PAYMENT_DETAIL('newjs_slave');
 				foreach($profileList as $profileid=>$allotDate){
 					// IF RETURN IS TRUE, WE ADD IT TO THE LIST OF PROFILES FOR FURTHER PROCESSING
 					if($paymentDetailObj->getPaidStatusForProfileInRange($profileid, $allotDate, $startDt, $endDt)){
@@ -504,6 +504,14 @@ public function fetchProfiles($processObj)
         {
 		$profiles =$this->getProfilesInRenewalPeriod();
         }
+	elseif($processObj->getProcessName()=='paidCampaignProcess'){
+		$purchasesObj   =new BILLING_PURCHASES('newjs_slave');
+		$date 		=date('Y-m-d',time()-86400);
+		$startDate 	=$date." 00:00:00";
+		$endDate   	=$date." 23:59:59";
+		$profiles       =$purchasesObj->getFreshPaidProfiles($startDate, $endDate);
+		//print_r($profiles);
+	}
 	return $profiles;
 }
 public function fetchAllCenters()
@@ -2471,7 +2479,7 @@ public function fetchPincodesOfCities($cities)
         }
     	public function getProfilesInRenewalPeriod()
     	{
-                $billingSerStatusObj    =new BILLING_SERVICE_STATUS();
+                $billingSerStatusObj    =new BILLING_SERVICE_STATUS('newjs_slave');
                 $startDate              =date("Y-m-d", time()-9*86400);
                 $endDate                =date("Y-m-d", time()+29*86400);
                 $profiles               =$billingSerStatusObj->getRenewalProfilesForDates($startDate,$endDate);

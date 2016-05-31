@@ -24,7 +24,7 @@ if($Submit)
 		$gender=$myrow_name['GENDER'];
 		$contact_status=get_contact_status($profileid,$chkprofilechecksum[1]);
                                                                                                                              
-        if($contact_status!='RI' && $contact_status!='RA' && $contact_status!='RD')
+        if($contact_status!='RI' && $contact_status!='RA' && $contact_status!='RD' && $contact_status!='A')
         {
 			if($gender==$data['GENDER'])
 				$samegender=1;

@@ -23,6 +23,7 @@ class MessageHandleV1Action extends sfAction
 		//Contains logined Profile information;
 		$this->loginProfile = LoggedInProfile::getInstance();
 		$this->loginProfile->getDetail($this->loginData["PROFILEID"], "PROFILEID");
+
 		if ($request->getParameter('profilechecksum')) {
 			$messageCommunication = new MessageCommunication('',$this->loginProfile->getPROFILEID());
 			$messageCommunication->insertMessage();
@@ -30,9 +31,16 @@ class MessageHandleV1Action extends sfAction
 			{
 				$draft = $request->getParameter("draft");
 				$type  = $request->getParameter('type');
+				$contactId  = $request->getParameter('contactId');
 				$LastSentMessageObj = new LastSentMessage();
-				$LastSentMessageObj->insertMessage($this->loginProfile->getPROFILEID(),$type,$draft);
+				$profileId=$this->loginProfile->getPROFILEID();
+				$LastSentMessageObj->insertMessage($profileId,$type,$draft);
 				
+				// for updating the message sent by paid member for ERM mailer
+				if($contactId) {
+					(new contactOnce())->updateMessageForPaidMembers($contactId,$draft);
+				}  
+
 				if($type=="R")
 				{
 					//send eoi reminder notification with reminder message set by paid member

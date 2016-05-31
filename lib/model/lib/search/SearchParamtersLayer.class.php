@@ -27,6 +27,8 @@ class SearchParamtersLayer
 		$justJoinedMatches = $request->getParameter("justJoinedMatches");
 		$QuickSearchBand = $request->getParameter("QuickSearchBand");
                 $verifiedMatches = $request->getParameter("verifiedMatches");
+                $ContactViewAttempts = $request->getParameter("contactViewAttempts");
+                
 		$uri = $request->getUri();
 		if($specialSearch=='AppSearch')
 			$AppSearch=1;
@@ -37,7 +39,7 @@ class SearchParamtersLayer
 		elseif($request->getParameter("appnotification")==1)
 			$appnotification=1;
 
-		if($mySaveSearchId || $searchId || $dpp || $membersLookingForMe || $appnotification || $twowaymatch || $justJoinedMatches || $matchalerts || $kundlialerts || $verifiedMatches)
+		if($mySaveSearchId || $searchId || $dpp || $membersLookingForMe || $appnotification || $twowaymatch || $justJoinedMatches || $matchalerts || $kundlialerts || $verifiedMatches || $ContactViewAttempts)
 		/**
 		* If predifined searches like save-search , dpp , reversedpp is run
 		*/
@@ -88,22 +90,29 @@ class SearchParamtersLayer
 			{
 				$SearchParamtersObj = PredefinedSearchFactory::getSetterBy('MatchAlertsSearch',$loggedInProfileObj);
         
-        //Get Reset Match Alert Count Params
-        $request=sfContext::getInstance()->getRequest();
-	/*
-        $bResetMatchAlertCount = $request->getParameter("resetMatchAlertCount") == 1 ? true : false;
-        $bResetMatchAlertCount = !$bResetMatchAlertCount && 1 == $request->getAttribute("resetMatchAlertCount") ? true : false;
-        if ($bResetMatchAlertCount) {
-	*/
-        if ($request->getParameter("resetMatchAlertCount") || $request->getAttribute("resetMatchAlertCount")) {
-          $profileCacheObj = new ProfileMemcacheService($loggedInProfileObj);
-          $profileCacheObj->unsetKey("MATCHALERT");
-          $SearchParamtersObj->storeLastVistTime();
-        }
+                                //Get Reset Match Alert Count Params
+                                $request=sfContext::getInstance()->getRequest();
+                                /*
+                                $bResetMatchAlertCount = $request->getParameter("resetMatchAlertCount") == 1 ? true : false;
+                                $bResetMatchAlertCount = !$bResetMatchAlertCount && 1 == $request->getAttribute("resetMatchAlertCount") ? true : false;
+                                if ($bResetMatchAlertCount) {
+                                */
+                                if ($request->getParameter("resetMatchAlertCount") || $request->getAttribute("resetMatchAlertCount")) {
+                                  $profileCacheObj = new ProfileMemcacheService($loggedInProfileObj);
+                                  $profileCacheObj->unsetKey("MATCHALERT");
+                                  $SearchParamtersObj->storeLastVistTime();
+                                }
         
 				$SearchParamtersObj->getSearchCriteria();
 				//print_r($SearchParamtersObj);
 				//die;
+			}
+			elseif($ContactViewAttempts && !$searchId)
+			/* two way match*/
+			{
+				$SearchParamtersObj = PredefinedSearchFactory::getSetterBy('ContactViewAttempts',$loggedInProfileObj);
+				$SearchParamtersObj->getSearchCriteria();
+                                //echo '<pre>';print_r($SearchParamtersObj);die;
 			}
 			elseif($kundlialerts && !$searchId)
 			/* two way match*/
@@ -126,6 +135,8 @@ class SearchParamtersLayer
 					$SearchParamtersObj = PredefinedSearchFactory::getSetterBy('TwoWayMatch',$loggedInProfileObj);
                                 elseif($verifiedMatches)
 					$SearchParamtersObj = PredefinedSearchFactory::getSetterBy('verifiedMatches',$loggedInProfileObj);
+                                elseif($ContactViewAttempts)
+					$SearchParamtersObj = PredefinedSearchFactory::getSetterBy('ContactViewAttempts',$loggedInProfileObj);
 				else
 					$SearchParamtersObj = PredefinedSearchFactory::getSetterBy('searchId',$loggedInProfileObj);
 				$SearchParamtersObj->getSearchCriteria($searchId);

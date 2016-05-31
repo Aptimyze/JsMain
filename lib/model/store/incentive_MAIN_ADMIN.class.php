@@ -147,7 +147,7 @@ class incentive_MAIN_ADMIN extends TABLE {
 			throw new jsException($e);
 		}
 	}
-	public function getArray($valueArray="",$excludeArray="",$greaterThanArray="",$fields="PROFILEID",$lessThanArray="")
+	public function getArray($valueArray="",$excludeArray="",$greaterThanArray="",$fields="PROFILEID",$lessThanArray="",$indexOutputBy="")
 	{
 		if(!$valueArray && !$excludeArray  && !$greaterThanArray)
 			throw new jsException("","no where conditions passed");
@@ -199,11 +199,15 @@ class incentive_MAIN_ADMIN extends TABLE {
 					$count++;
 				}
 			}
+			
 			$resSelectDetail = $this->db->prepare($sqlSelectDetail);
 			$resSelectDetail->execute();
 			while($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC))
 			{
-				$detailArr[] = $rowSelectDetail;
+				if($indexOutputBy)
+					$detailArr[$rowSelectDetail['PROFILEID']] = $rowSelectDetail;
+				else
+					$detailArr[] = $rowSelectDetail;
 			}
 			return $detailArr;
 		}

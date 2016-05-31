@@ -96,6 +96,14 @@ class SearchJSMS extends SearchJS
         {
                  return SearchTypesEnums::WapMatchAlertsCC;
         }
+        
+	/**
+        * getSearchTypeContactViewAttempt.
+        */
+        public static function getSearchTypeContactViewAttempt()
+        {        
+                 return SearchTypesEnums::contactViewAttemptJSMS;
+        }
         /**
         * getMembersLookingForMe
         */
@@ -254,7 +262,6 @@ class SearchJSMS extends SearchJS
 		{
 			return "JSMS";
 		}
-        
         
 }
 ?>

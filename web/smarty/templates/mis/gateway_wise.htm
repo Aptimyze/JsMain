@@ -71,21 +71,25 @@ ght="63" usemap="#Map" border="0"></td>
 
 <table width=100% align=center>
     <tr class=label>
-        <td align="center" width=20% >&nbsp;Date</td>
+        <td align="center" width=10%>&nbsp;Date</td>
         <!--td align=center width=75 >&nbsp;Profileid</td-->
-        <td align="center" width=25%>&nbsp;Username</td>
-        <td align="center" width=35% >&nbsp;OrderId</td>
-        <td align="center" width=20%>&nbsp;Amount</td>
+        <td align="center" width=15%>&nbsp;Username</td>
+        <td align="center" width=15%>&nbsp;OrderId</td>
+        <td align="center" width=15%>&nbsp;Amount</td>
+        <td align="center" width=15%>&nbsp;Gateway</td>
+        <td align="center" width=15%>&nbsp;Invoice No</td>
     </tr>
 </table>
 ~section name=sec loop=$arr`
 <table width=100% align="center">
     <tr class=fieldsnew>
-        <td align="center" width=20% >&nbsp;~$arr[sec].entry_dt`</td>
+        <td align="center" width=10%>&nbsp;~$arr[sec].entry_dt`</td>
         <!--td align=left   width=75>&nbsp;~$arr[sec].profileid`</td-->
-        <td align="center" width=25%>&nbsp;~$arr[sec].username`</td>
-        <td align="center" width=35%>&nbsp;~$arr[sec].ordno`</td>
-        <td align="center" width=20% >&nbsp;~$arr[sec].type` &nbsp;  ~$arr[sec].amt_topay`</td>
+        <td align="center" width=15%>&nbsp;~$arr[sec].username`</td>
+        <td align="center" width=15%>&nbsp;~$arr[sec].ordno`</td>
+        <td align="center" width=15%>&nbsp;~$arr[sec].type` &nbsp;  ~$arr[sec].amt_topay`</td>
+        <td align="center" width=15%>&nbsp;~$arr[sec].gateway`</td>
+        <td align="center" width=15%>&nbsp;~$arr[sec].invoice_no`</td>
     </tr>
 </table>
 ~/section`

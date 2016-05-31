@@ -245,9 +245,9 @@
               <div class="filbtn fl pos-rel h31">
               ~if $fieldData.filter.FILTER eq "Y"`
                 ~if $fieldData.filter.FILTER_VALUE eq "N"`
-                <div class="filter posthide ml10 cursp" id="~$fieldData.filter.FILTER_MAP`-filter"><span class="colrw">Set as filter</span></div>
+                <div class="filter posthide ml10 cursp" id="~$fieldData.filter.FILTER_MAP`-filter"><span>Filter OFF</span></div>
                 ~else`
-                <div class="filterset posthide ml10 cursp" id="~$fieldData.filter.FILTER_MAP`-filter"><span>Filter set</span></div>
+                <div class="filterset posthide ml10 cursp" id="~$fieldData.filter.FILTER_MAP`-filter"><span class="colrw"><span>Filter ON</span></div>
                  ~/if`
                 <div class="pos-abs edwid3 z2 edpos1 filterhover">
                   <div class="edp3">
@@ -259,7 +259,7 @@
                         ~else`
                         <p class="js-~$fieldData.filter.FILTER_MAP`-filter colr5 f15 lh30">~$fieldData.label` set as filter</p>
                         ~/if`
-                        <p class="f13 color11">~$fieldData.filter.FILTER_HINT_TEXT` </p>
+                        <p class="f13 color11 lnHt">~$fieldData.filter.FILTER_HINT_TEXT` </p>
                       </div>
                     </div>
                   </div>

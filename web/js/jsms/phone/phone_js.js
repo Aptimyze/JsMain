@@ -12,6 +12,7 @@ function jsmsPhoneReady()
 	if($("#fromReg").val()==1)
 		fromReg = 1;
 	groupname = $("#groupname").val();
+        sourcename = $("#sourcename").val();
 	iteration = 0;
 	limit=0;
 	isd = $("#isdNumber").val();
@@ -387,7 +388,7 @@ function verifiedOk()
 	setHash("verifiedOk");
 	$('#mydiv').show();
 	if(fromReg==1)
-		window.location.href="/profile/viewprofile.php?ownview=1&groupname="+groupname;
+		window.location.href="/profile/viewprofile.php?ownview=1&groupname="+groupname+"&sourcename="+sourcename+"&fromPhone=1";
 	else
 		window.location.href="/profile/mainmenu.php";
 }

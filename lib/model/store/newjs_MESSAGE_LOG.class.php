@@ -935,6 +935,34 @@ return $result;
 
 }
 
+	public function getInterestRecievedInLastWeek($profileid)
+	{
+		try 
+		{
+			if($profileid)
+			{ 
+				$startDt = date("Y-m-d H:i:s", (time()-7*24*60*60));
+				$sql="SELECT SQL_CACHE COUNT(1) AS CNT FROM newjs.MESSAGE_LOG WHERE RECEIVER=:PROFILEID and TYPE ='I' AND DATE>=:START_DT";
+				$prep=$this->db->prepare($sql);
+				$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+				$prep->bindValue(":START_DT",$startDt,PDO::PARAM_STR);
+				$prep->execute();
+				if ($result = $prep->fetch(PDO::FETCH_ASSOC))
+				{
+					$res = $result['CNT'];
+				}
+				
+				return $res;
+			}	
+		}
+		catch(PDOException $e)
+		{
+			/*** echo the sql statement and error message ***/
+			throw new jsException($e);
+		}
+		
+	}
+
 
 
 	}

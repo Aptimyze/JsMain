@@ -32,7 +32,7 @@ EOF;
 	$startDt  = date("Y-m-d");
 	$discountExpiryDt = date("Y-m-d",strtotime("$expiryDt +10 days"));
 
-        $ssObj = new BILLING_SERVICE_STATUS();
+        $ssObj = new BILLING_SERVICE_STATUS('newjs_slave');
         $res = $ssObj->getRenewalProfiles($expiryDt);
 
         $memHandlerObj = new MembershipHandler();

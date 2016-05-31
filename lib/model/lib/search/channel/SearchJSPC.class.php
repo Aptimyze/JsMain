@@ -113,7 +113,7 @@ class SearchJSPC extends SearchJS
                 if($request->getParameter("searchBasedParam")){
 			$actionObject->searchListings=1;
                         $actionObject->isRightListing=0;
-			if(in_array($request->getParameter("searchBasedParam"),array('kundlialerts','reverseDpp','shortlisted','visitors')))
+			if(in_array($request->getParameter("searchBasedParam"),array('kundlialerts','reverseDpp','shortlisted','visitors','contactViewAttempts')))
                                 $actionObject->isRightListing=1;
                         switch ($request->getParameter("searchBasedParam")){
                                 case 'matchalerts':
@@ -143,6 +143,9 @@ class SearchJSPC extends SearchJS
                                 case 'verifiedMatches':
                                         $clickOn = 4;
                                         break;
+                                case 'contactViewAttempts':
+                                        $clickOn = 10;
+                                        break;
                             }
                 }
                 else{
@@ -153,15 +156,26 @@ class SearchJSPC extends SearchJS
                         }
                         $actionObject->isRightListing=0;
                 }
+                $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
+                $subscriptionType = $loggedInProfileObj->getSUBSCRIPTION();
+                $actionObject->subscriptionType = $subscriptionType;
 		if($request->getParameter("showKundliList")==1)
 		{
-			$actionObject->setGap = 810;
+                        if(CommonFunction::getMainMembership($subscriptionType) == mainMem::EVALUE || CommonFunction::getMainMembership($subscriptionType) == mainMem::EADVANTAGE){
+                                $actionObject->setGap = 810;
+                        }else{
+                                $actionObject->setGap = 1010;
+                        }
 			$actionObject->showKundliList=1;
 		}
 		else
 		{
 			$actionObject->showKundliList=0;
-			$actionObject->setGap = 610;
+			if(CommonFunction::getMainMembership($subscriptionType) == mainMem::EVALUE || CommonFunction::getMainMembership($subscriptionType) == mainMem::EADVANTAGE){
+                                $actionObject->setGap = 610;
+                        }else{
+                                $actionObject->setGap = 810;
+                        }
 			if($clickOn>6)
 				$clickOn--;
 		}
@@ -285,6 +299,14 @@ class SearchJSPC extends SearchJS
         public static function getSearchTypeMatchalerts()
         {
                  return SearchTypesEnums::MatchAlerts;
+        }
+        
+	/**
+        * getSearchTypeContactViewAttempt.
+        */
+        public static function getSearchTypeContactViewAttempt()
+        {        
+                 return SearchTypesEnums::contactViewAttempt;
         }
         /**
         * getMembersLookingForMe
@@ -483,6 +505,24 @@ class SearchJSPC extends SearchJS
 		{
 			return "PC";
 		}
+                
+       public function setRequestParameters($params){
+            $output = array();
+            $request = $params["request"];
+            if($params["searchCat"] == 'contactViewAttempts'){
+                    $output['listType'] = 'noClusSearch';
+                    $output['clusters'] = null;
+                    $output['heading'] = 'Contact View Attempts';
+                    $output['pageHeading'] = null;
+                    $output['total'] = $params['noOfResults'];
+                    $output['ccmessage'] = 'These are people who tried to view your contact details in the last 3 months and match your desired partner preferences';
+                    $output['searchBasedParam'] = 'contactViewAttempts';
+                    $rcbObj = new RequestCallBack($params['loggedInProfileObj']);
+                    $output['display_rcb_comm'] = $rcbObj->getRCBStatus();
+                    unset($rcbObj);
+            }
+            return $output;
+       }
         
 }
 ?>

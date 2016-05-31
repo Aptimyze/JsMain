@@ -18,7 +18,9 @@
     var vasNames;
     var paidBenefits;
     var openedCount;
-    
+    var filteredVasServices = "~$data.filteredVasServices`";
+    var skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
+    var preSelectVasGlobal = "~$data.preSelectVasGlobal`";
 </script>
 ~include_partial('global/JSPC/_jspcCommonMemRegHeader',[pageName=>'membership'])`
 <!--start:plan-->
@@ -141,7 +143,10 @@
                         <span>Your Savings &nbsp;</span><span>~$data.currency`</span><span id="totalSavings"></span>
                     </div>
                     <div style="overflow:hidden;position: relative;">
-                    <div id="payNowBtn" class="fullwid txtc lh50 pinkRipple hoverPink"><span>~if $data.currency eq '$'`USD~else`~$data.currency`~/if`&nbsp;</span><span id="totalPrice"></span>&nbsp;|&nbsp;<span class="colrw">Pay Now</span></div>
+                        <div id="payNowBtn" class="fullwid txtc lh50 pinkRipple hoverPink">
+                            <span>~if $data.currency eq '$'`USD~else`~$data.currency`~/if`&nbsp;</span>
+                            <span id="totalPrice"></span>&nbsp;|&nbsp;<span class="colrw">Pay Now</span>
+                        </div>
                     </div>
                     <div class="pt10 f11 txtc">PRICE INCLUDES ~$data.taxRate`% SERVICE TAX</div>
                 </div>

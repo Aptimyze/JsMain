@@ -109,7 +109,7 @@ Class ButtonResponseJSMS
 						$button[]                 = self::getSendMessageButton();
 						$button[]                 = self::getContactDetailsButton();
 						$button[]                 = self::getShortListButton($this->loginProfile, $this->otherProfile,$params["BOOKMARKED"]);//,0,false);
-						$button[]                 = self::getDeclineButton("",$declineAfterAccept = true,$enable=false);
+						$button[]                 = self::getCancelInterestButton();
 						
 						if (MobileCommon::isApp()=='I')
 						{

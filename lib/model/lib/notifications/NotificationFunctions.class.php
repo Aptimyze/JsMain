@@ -31,7 +31,7 @@ class NotificationFunctions
 				$registrationIdObj->updateProfileId($registrationid,$profileid);
 		}
 		else{
-			$appVersion =floor($appVersion*100)/100;
+			$appVersion =abs($appVersion*100)/100;
 			$registrationIdObj->insert($registrationid,$profileid,$osType,$appVersion,$osVersion,$deviceBrand,$deviceModel);
 		}
 		return true;
@@ -42,7 +42,7 @@ class NotificationFunctions
 	        $deviceModel = $request->getParameter('DEVICE_MODEL');
 	        $osVersion =$request->getParameter('CURRENT_VERSION');
 		$appVersion =$request->getParameter('API_APP_VERSION');
-		$appVersion =floor($appVersion*100)/100;
+		$appVersion =abs($appVersion*100)/100;
 	        $registationIdObj = new MOBILE_API_REGISTRATION_ID;
 		if($registrationid)
 		        $registationIdObj->updateVersion($registrationid,$appVersion,$osVersion,$deviceBrand,$deviceModel);

@@ -152,8 +152,14 @@ class MembershipAPIResponseHandler {
             if (($key = array_search("D", $this->curActServices)) !== false) {
                 unset($this->curActServices[$key]);
             }
+            if (($key = array_search("P", $this->curActServices)) !== false) {
+		unset($this->allMainMem['P']['P2']);
+            }
+            if (($key = array_search("C", $this->curActServices)) !== false) {
+		unset($this->allMainMem['C']['C2']);
+            }
         }
-        
+
         if ($this->device == "mobile_website" || $this->device == "Android_app" || $this->device == "desktop") {
             if (($key = array_search("ESP", $this->curActServices)) !== false) {
                 unset($this->curActServices[$key]);
@@ -171,6 +177,24 @@ class MembershipAPIResponseHandler {
         
         $dataArr = $this->generateHamburgerMessageResponse();
         $this->topDiscountBanner = $dataArr['hamburger_message'];
+
+        if(!empty($this->profileid) && $this->userObj->userType != 5 && $this->userObj->userType != 6){
+	        // VAS Logic data required
+	        $profileObj = LoggedInProfile::getInstance('newjs_master');
+	        $horoscopeObj = new Horoscope();
+			$horoscopeSet = $profileObj->getHOROSCOPE_MATCH();
+			$horoscopeFilled = $horoscopeObj->isHoroscopeExist($profileObj);
+			if($horoscopeSet == "Y" || $horoscopeFilled == "Y"){
+				$this->horoscopeSetting = "Y";
+			} else {
+				$this->horoscopeSetting = "N";
+			}
+			$profileMemcacheObj = new ProfileMemcacheService($profileObj);
+			$this->acceptanceCount = $profileMemcacheObj->get('ACC_ME');
+			$shardDb = JsDbSharding::getShardNo($this->profileid,'slave');
+			$newjsMessageLogObj = new NEWJS_MESSAGE_LOG($shardDb);
+			$this->interestRecCount = $newjsMessageLogObj->getInterestRecievedInLastWeek($this->profileid);
+		}
     
         return $this;
     }
@@ -268,7 +292,6 @@ class MembershipAPIResponseHandler {
     
     public function generateLandingPageResponse($request) {
         $this->memApiFuncs->getTopBlockContent($this);
-        
         if ($this->currency == "RS") {
             $topHelp = array(
                 "title" => "Help",
@@ -331,6 +354,9 @@ class MembershipAPIResponseHandler {
         
         if ($this->userObj->userType == 5 && $this->device != "iOS_app" && $this->contactsRemaining != 0) {
             $this->memApiFuncs->customizeVASDataForAPI(0, 0, $this);
+
+            //filter out vas services from vas content based on main membership if vas content is there
+            $this->memApiFuncs->filterMainMemBasedVASData($this->custVAS,$this,$this->memID);
             $this->memApiFuncs->removeExtraParamsFromVAS($this->custVAS, $this);
             $this->service_data = NULL;
         } 
@@ -354,7 +380,7 @@ class MembershipAPIResponseHandler {
         else {
             $userId = $this->profileid;
         }
-        
+        $vasFiltering = json_encode(VariableParams::$mainMemBasedVasFiltering);
         $output = array(
             'title' => $title,
             'topBlockMessage' => $this->topBlockMessage,
@@ -374,7 +400,9 @@ class MembershipAPIResponseHandler {
             'allBenefits' => $allBenefits,
             'userDetails' => $this->userDetails,
             'taxRate' => billingVariables::TAX_RATE,
-            'tracking_params' => $tracking_params
+            'tracking_params' => $tracking_params,
+            'filteredVasServices'=>$vasFiltering,
+            'skipVasPageMembershipBased'=>json_encode(VariableParams::$skipVasPageMembershipBased)
         );
         
         if (empty($this->getAppData) && empty($this->trackAppData) && $this->device == "Android_app") {
@@ -393,8 +421,22 @@ class MembershipAPIResponseHandler {
     public function generateVasPageResponse($request) {
         $this->memApiFuncs->getTopBlockContent($this);
         $this->memApiFuncs->customizeVASDataForAPI(0, 0, $this);
+        //filter out vas services from vas content based on main membership
+        $this->memApiFuncs->filterMainMemBasedVASData($this->custVAS,$this,$this->mainMem);
         $this->memApiFuncs->removeExtraParamsFromVAS($this->custVAS, $this);
-        
+
+        $preSelectVasGlobal = array();
+        if($this->horoscopeSetting == "Y"){
+        	$preSelectVasGlobal[] = "A";
+        }
+        if($this->acceptanceCount <= 3){
+        	$preSelectVasGlobal[] = "T";	
+        }
+        if($this->interestRecCount < 3){
+        	$preSelectVasGlobal[] = "R";
+        }
+        $preSelectVasGlobal = implode(",",$preSelectVasGlobal);
+
         $tracking_params = array(
             "source" => "602",
             "tab" => "62",
@@ -436,7 +478,7 @@ class MembershipAPIResponseHandler {
         if ($this->device != 'desktop') {
             unset($this->service_data);
         }
-        
+        $vasFiltering = json_encode(VariableParams::$mainMemBasedVasFiltering);
         $output = array(
             'title' => 'Value Added Services',
             'topBlockMessage' => NULL,
@@ -456,9 +498,11 @@ class MembershipAPIResponseHandler {
             'device' => $this->device,
             'taxRate' => billingVariables::TAX_RATE,
             'userDetails' => $this->userDetails,
-            'tracking_params' => $tracking_params
+            'tracking_params' => $tracking_params,
+            'filteredVasServices'=>$vasFiltering,
+            'skipVasPageMembershipBased'=>json_encode(VariableParams::$skipVasPageMembershipBased),
+            'preSelectVasGlobal'=>$preSelectVasGlobal
         );
-        
         if (empty($this->getAppData) && empty($this->trackAppData) && $this->device == "Android_app") {
             $this->memHandlerObj->trackMembershipProgress($this->userObj, '602', '62', '2', $this->device, $this->user_agent, implode(",", $this->curActServices));
         } 
@@ -599,7 +643,8 @@ class MembershipAPIResponseHandler {
             'userDetails' => $this->userDetails,
             'tracking_params' => $tracking_params,
             'proceed_text' => $skip_text,
-            'username' => $userName
+            'username' => $userName,
+            'skipVasPageMembershipBased'=>json_encode(VariableParams::$skipVasPageMembershipBased)
         );
         
         if ($this->device == 'desktop') {
@@ -910,7 +955,8 @@ class MembershipAPIResponseHandler {
                 'reqid' => $this->reqid
             ),
             'continueText' => "Continue",
-            'username' => $userName
+            'username' => $userName,
+            'skipVasPageMembershipBased'=>json_encode(VariableParams::$skipVasPageMembershipBased)
         );
         
         if ($this->device == 'desktop') {
@@ -935,7 +981,7 @@ class MembershipAPIResponseHandler {
         else if (empty($this->getAppData) && empty($this->trackAppData) && $this->device != 'Android_app') {
             $this->memHandlerObj->trackMembershipProgress($this->userObj, '503', '53', '3', 'discount_link', $this->user_agent, $allMemberships, $mainMembership, $vasImpression, $finalCartDiscount, $finalCartPrice, 53, 'F');
         }
-        
+       
         return $output;
     }
     

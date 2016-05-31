@@ -50,7 +50,7 @@ class VariableDiscount
 	public function getAllDiscountWithService($profileid)
 	{
 		$discountNewArr =array();
-		$vdOfferDurationObj =new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
+		$vdOfferDurationObj =new billing_VARIABLE_DISCOUNT_OFFER_DURATION('newjs_slave');
 		$discountDetails =$vdOfferDurationObj->getDiscountDetailsForProfile($profileid);
 		if(count($discountDetails)>0){
                 	foreach($discountDetails as $key=>$val){
@@ -64,6 +64,48 @@ class VariableDiscount
 		return $discountNewArr;
 	}
 
+    // get VD Discount Labels 
+    public function getDiscountWithMemType($profileid,$discountArr=array())
+    {
+	if($profileid)
+	        $discountArr =$this->getAllDiscountWithService($profileid);
+	if(!is_array($discountArr))
+		return;
+	foreach($discountArr as $service=>$discount){
+		$memName = VariableParams::$mainMembershipNamesArr[$service];
+		foreach($discount as $duration=>$disVal)
+			$memArr[] =$duration."M -".$disVal."%";
+		
+		$memStr =implode(", ", $memArr);
+		unset($memArr);
+		$discountArrNew[] =$memName.' :: '.$memStr;
+		unset($memStr);
+	}
+	if(is_array($discountArr))
+		$discountStr =implode(' , ',$discountArrNew);	
+	return $discountStr;
+    }
+    // get VD Discount Labels 
+    public function getPreviousVdLogDetails($profileid)
+    {
+	$vdLogObj =new billing_VARIABLE_DISCOUNT_OFFER_DURATION_LOG('newjs_slave');
+        $vdLogDetailsArr =$vdLogObj->getDiscountDetails($profileid);
+        $lastVdExpiryDate =$vdLogDetailsArr[0]['EDATE'];
+	if($lastVdExpiryDate){
+		foreach($vdLogDetailsArr as $key=>$val){
+			$discountArr =$val;
+			$service =$discountArr['SERVICE'];
+			unset($discountArr['PROFILEID']);
+			unset($discountArr['SERVICE']);
+			unset($discountArr['EDATE']);
+			$discountNewArr[$service] =$discountArr;
+			unset($discountArr);
+		}
+		$discountStr =$this->getDiscountWithMemType('',$discountNewArr);
+	}	
+	return array("EDATE"=>$lastVdExpiryDate,"DISCOUNT"=>$discountStr);	
+
+    }
     // get discount details 
     public function getDiscountDetails($profileid)
     {
@@ -82,7 +124,7 @@ class VariableDiscount
     // get All discount values          
     public function getAllDiscountForProfile($profileid)
     {
-        $vdOfferDurationObj =new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
+        $vdOfferDurationObj =new billing_VARIABLE_DISCOUNT_OFFER_DURATION('newjs_slave');
         $discountDetails =$vdOfferDurationObj->getDiscountDetailsForProfile($profileid);
 	if(is_array($discountDetails)){
         foreach($discountDetails as $key=>$val){
@@ -103,7 +145,7 @@ class VariableDiscount
     }
 
     public function getVdProfilesForMailer(){
-    	$vdObj =new billing_VARIABLE_DISCOUNT();
+    	$vdObj =new billing_VARIABLE_DISCOUNT('newjs_slave');
         $profilesArr =$vdObj->getVdProfilesForMailer();
         return $profilesArr;
     }
@@ -140,7 +182,7 @@ class VariableDiscount
     
     public function getCashDiscountDispText($profileid='',$caseType)
     {
-		$cashDiscountOfferObj 	=new billing_DISCOUNT_OFFER();
+		$cashDiscountOfferObj 	=new billing_DISCOUNT_OFFER('newjs_slave');
         $flatDiscount           =$cashDiscountOfferObj->checkFlatDiscount();
         //$discountLimitText      =VariableParams::$discountLimitText;
 		$discountTextVal        =$this->getDiscountCaseTypeText($caseType, $flatDiscount);
@@ -161,7 +203,7 @@ class VariableDiscount
        */ 
     public function activateVDForProfile($profileid,$discountDetails,$serviceArr,$sendMail=false,$sendSMS=false)
     {
-        $vdObj = new billing_VARIABLE_DISCOUNT();
+        $vdObj1 = new billing_VARIABLE_DISCOUNT('newjs_slave');
         $SENT_MAIL = 'Y';  //$SENT_MAIL = 'Y' specifies no mail to be sent
         $SENT_SMS = 'Y'; //$SENT_SMS = 'Y' specifies no sms to be sent
         if($sendMail==true)
@@ -169,13 +211,17 @@ class VariableDiscount
         if($sendSMS == true)
             $SENT_SMS = 'N'; //$SENT_SMS = 'N' specifies sms to be sent
         //add entry in tables if no entry in VARIABLE_DISCOUNT table earlier for profile
-        if(!$vdObj->getProfileidWithDiscount($profileid))
+        if(!$vdObj1->getProfileidWithDiscount($profileid))
         {
+	    $vdObj = new billing_VARIABLE_DISCOUNT();
             $vdObj->addVDProfile($profileid,$discountDetails["discountPercent"],$discountDetails["startDate"],$discountDetails["endDate"],$discountDetails["entryDate"],$SENT_MAIL,$SENT_SMS);
             $durationObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
-            $params = array("PROFILEID"=>$profileid,"SERVICE"=>$serviceArr,"DISC3"=>$discountDetails["DISC3"],"DISC6"=>$discountDetails["DISC6"],"DISC12"=>$discountDetails["DISC12"],"DISCL"=>$discountDetails["DISCL"]);
+            $params = array("PROFILEID"=>$profileid,"SERVICE"=>$serviceArr,"DISC2"=>$discountDetails["DISC2"],"DISC3"=>$discountDetails["DISC3"],"DISC6"=>$discountDetails["DISC6"],"DISC12"=>$discountDetails["DISC12"],"DISCL"=>$discountDetails["DISCL"]);
             $durationObj->addVDOfferDurationServiceWise($params);
         }
+	unset($vdObj1);
+	unset($vdObj);
+	unset($durationObj);
     }
 
     /**
@@ -338,6 +384,7 @@ class VariableDiscount
                 {
                     $service  =explode(",",$details['SERVICE']);
                     $discL    =$details['12'];
+		    $disc2 = $details['2'];	
                     $disc3 = $details['3'];
                     $disc6 = $details['6'];
                     $disc12 = $details['12'];
@@ -346,7 +393,7 @@ class VariableDiscount
                       $edate  =$details['EDATE'];
                       $dateArr=array("$sdate","$edate");
                     }
-                    $discMax  =max($disc3,$disc6,$disc12,$discL);
+                    $discMax  =max($disc2,$disc3,$disc6,$disc12,$discL);
                     if(!isset($profileArr[$pid]))
                     {
                         $profileArr[$pid] = 0;
@@ -358,7 +405,7 @@ class VariableDiscount
                     }
                   
                     //add entry into VD Offer Duration table
-                    $params = array("PROFILEID"=>$pid,"SERVICE"=>$service,"DISC3"=>$disc3,"DISC6"=>$disc6,"DISC12"=>$disc12,"DISCL"=>$discL);
+                    $params = array("PROFILEID"=>$pid,"SERVICE"=>$service,"DISC2"=>$disc2,"DISC3"=>$disc3,"DISC6"=>$disc6,"DISC12"=>$disc12,"DISCL"=>$discL);
                     $VDDuartionObj->addVDOfferDurationServiceWise($params,$sendAlert);
                 }
             }
@@ -396,23 +443,13 @@ class VariableDiscount
             $rows = $uploadObj->fetchSelectedRecords("*",$limit,$i);
             foreach ($rows as $key => $value) 
             {
-                //add fetched rows one by one in temp table
                 $tempObj->addVDRecordsInTemp($value);
-                //JsMemcache::getInstance()->set("lastVDEntryIDInTemp",$lastInsertedID); 
-                /*if($lastInsertedID==5)
-                    break;*/
             }
-           /*if($lastInsertedID==5)
-                    break;*/
         }
      
         unset($tempObj);
         unset($uploadObj);
-        /*if($lastInsertedID!=$count)
-            return uploadVD::INCOMPLETE_UPLOAD;
-        else*/
-
-            return uploadVD::COMPLETE_UPLOAD;
+        return uploadVD::COMPLETE_UPLOAD;
     }
 }
 ?>

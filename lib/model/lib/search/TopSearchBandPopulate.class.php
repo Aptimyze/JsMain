@@ -1148,9 +1148,11 @@ class TopSearchBandPopulate
                 $i=0;
 		foreach(FieldMap::getFieldLabel("manglik_label",'',1) as $k=>$v)
                 {
-			$output[$i]["VALUE"] = $k;
-			$output[$i]["LABEL"] = $v;
-			$i++;
+                        if($k !== 'D'){
+                                $output[$i]["VALUE"] = $k;
+                                $output[$i]["LABEL"] = $v;
+                                $i++;
+                        }
 		}
                 return $output;
         }
@@ -2624,7 +2626,8 @@ class TopSearchBandPopulate
                   $manglikArr = FieldMap::getFieldLabel("manglik_label",'',1);
                   $manglikArray = explode(",",$this->selectedManglik);
                   foreach($manglikArray as $selectedVal){
-                        $manglik[] = $manglikArr[$selectedVal];
+                          if($selectedVal != 'D')
+                                $manglik[] = $manglikArr[$selectedVal];
                   }
                   $manglikSize = sizeof($manglik);
                   if($manglikSize>1){

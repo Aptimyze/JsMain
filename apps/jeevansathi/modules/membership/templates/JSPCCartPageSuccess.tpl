@@ -19,6 +19,7 @@
     var vasNames;
     var paidBenefits;
     var openedCount;
+    var skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
     
 </script>
 ~include_partial('global/JSPC/_jspcCommonMemRegHeader',[pageName=>'membership'])`
@@ -663,7 +664,7 @@
                     }
                 ~else`
                 if (checkEmptyOrNull(readCookie('mainMem')) && checkEmptyOrNull(readCookie('mainMemDur'))) {
-                    if(readCookie('mainMem') == 'X' || readCookie('mainMem') == 'ESP' || readCookie('mainMem') == 'NCP') {
+                    if($.inArray(readCookie('mainMem'),skipVasPageMembershipBased)>-1) {
                         if (checkEmptyOrNull(readCookie('couponID'))) {
                             $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':'', 'couponID':readCookie('couponID'), 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType')});
                         } else {

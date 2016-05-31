@@ -70,10 +70,10 @@ if(authenticated($checksum))
 				$profileid=$row['PROFILEID'];
 				$billid=$row['BILLID'];
 				$entry_dt=$row['ENTRY_DT'];
-				$billOrdDevObj = new billing_ORDERS_DEVICE();
+				/*$billOrdDevObj = new billing_ORDERS_DEVICE('newjs_slave');
 				if($mode == 'ONLINE' || $row['SOURCE'] == 'ONLINE'){
 					$orderId = $billOrdDevObj->getPaymentSourceFromBillidStr($billid);
-				}
+				}*/
 				$arr[$i]["username"]=$row['USERNAME'];
 				$sid=$row['SERVICEID'];
 				if(($row['MODE']=='CASH'||$row['MODE']=='GHAR_PAY_CASH') && $row['WALKIN']=='ONLINE')

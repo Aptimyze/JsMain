@@ -846,12 +846,12 @@ function setUnsetFilter(status,filterId){
     var filterTextId = filterId.split("-")[0];
     if(status == "Y"){
                   $("#"+filterId).addClass("filterset").removeClass("filter");
-                  $("#"+filterId).children().removeClass("colrw").html("Filter set");
+                  $("#"+filterId).children().addClass("colrw").html("Filter ON");
                   $(".js-"+filterId).html($("#"+filterTextId+"-hint").val()+" set as filter");
                 }
                 else{
                   $("#"+filterId).removeClass("filterset").addClass("filter");  
-                  $("#"+filterId).children().addClass("colrw").html("Set as filter");
+                  $("#"+filterId).children().removeClass("colrw").html("Filter OFF");
                   $(".js-"+filterId).html("Setting "+$("#"+filterTextId+"-hint").val()+" as filter?");
                 }
 }

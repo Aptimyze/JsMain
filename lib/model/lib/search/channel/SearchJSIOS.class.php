@@ -42,6 +42,13 @@ class SearchJSIOS extends SearchJS
                  return SearchTypesEnums::iOSMatchAlertsCC;
         }
         
+	/**
+        * getSearchTypeContactViewAttempt.
+        */
+        public static function getSearchTypeContactViewAttempt()
+        {        
+                 return SearchTypesEnums::contactViewAttemptIOS;
+        }
         /**
         * getMembersLookingForMe
         */
@@ -205,6 +212,5 @@ class SearchJSIOS extends SearchJS
                 }
                 return $clustersToShow;
         }
-
 }
 ?>

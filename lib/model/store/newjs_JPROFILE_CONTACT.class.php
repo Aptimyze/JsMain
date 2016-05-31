@@ -25,7 +25,7 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
          * @exception PDOException for database level error handling
          */
 
-	public function getArray($valueArray="",$excludeArray="",$greaterThanArray="",$fields="PROFILEID")
+	public function getArray($valueArray="",$excludeArray="",$greaterThanArray="",$fields="PROFILEID",$indexProfileId = 0)
 	{
 		if(!$valueArray && !$excludeArray  && !$greaterThanArray)
 			throw new jsException("","no where conditions passed");
@@ -78,7 +78,11 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
 			$resSelectDetail->execute();
 			while($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC))
 			{
-				$detailArr[] = $rowSelectDetail;
+                                if($indexProfileId == 1){
+                                        $detailArr[$rowSelectDetail['PROFILEID']] = $rowSelectDetail;
+                                }else{
+                                        $detailArr[] = $rowSelectDetail;
+                                }
 			}
 			return $detailArr;
 		}

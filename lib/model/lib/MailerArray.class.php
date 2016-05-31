@@ -18,7 +18,7 @@
 '9'=>array('APP_SCREEN_ID'=>'a10','LINK_NAME'=>'DECLINE','URL'=>'profile/viewprofile.php','OTHER_GET_PARAMS'=>'CAME_FROM_CONTACT_MAIL=1&button=decline&search_decline=1','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '10'=>array('APP_SCREEN_ID'=>'a10','LINK_NAME'=>'Phone_Email_View Contact Details','URL'=>'profile/viewprofile.php','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '11'=>array('APP_SCREEN_ID'=>'a2','LINK_NAME'=>'HOME_PAGE','URL'=>'P/mainmenu.php','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
-'12'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'UNSUBSCRIBE','URL'=>'profile/unsubscribe.php','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
+'12'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'UNSUBSCRIBE','URL'=>'settings/alertManager','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '13'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'JS_FB_PAGE','URL'=>'http://www.facebook.com/jeevansathi','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'N','OUTER_LINK'=>'Y'),
 '14'=>array('APP_SCREEN_ID'=>'a3','LINK_NAME'=>'UPLOAD_PHOTO','URL'=>'social/addPhotos','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '15'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'VERIFY_PHONE','URL'=>'P/mainmenu.php','OTHER_GET_PARAMS'=>'verify_link_from_mailer=yes','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),

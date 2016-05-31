@@ -34,10 +34,18 @@
 <!--end:overlay2-->
 <script type="text/javascript">
   $(document).ready(function(){
+
+    
     $("#jsmsReqCallbackBtn").on("click",function(e){
 		showRCBLayer(e);
 	});
 	
+
+  ~if sfContext::getInstance()->getRequest()->getParameter('showRCBForCAL') eq '1'`
+      $("#jsmsReqCallbackBtn").trigger('click');
+    ~/if`
+
+
   $('.tapoverlay').on('click',popBrowserStack);
 	$("#closeOvr2").on('click',popBrowserStack);
   

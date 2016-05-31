@@ -68,6 +68,11 @@ interface SearchChannelInterface
 	* This function will set the channel type
 	*/
 	public function getChannelType();
-
-}
+         
+        /**
+         * This fucntion will set the cluster block if page is calling search without cluster
+         * @param params : need to be set  
+         */
+        public function setRequestParameters($params);
+} 
 ?>

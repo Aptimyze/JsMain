@@ -348,6 +348,8 @@ var mobEditPage=(function(){
 		SkipToSection();
 		var filterButton=$("#filterButton").html();
 		$("#DppEditSection").after(filterButton);
+    var dppHint = $("#dppToolTip").html();
+    $("#DppEditSection").prepend(dppHint);
     //Check horoscope button exist, if yes then add functionality
     if($("#horoscopeButton").length){
       var horoscopeButton=$("#horoscopeButton").html();

@@ -18,7 +18,8 @@
     var vasNames = new Array();
     var paidBenefits = new Array();
     var openedCount = "~$data.openedCount`";
-
+    var filteredVasServices = "~$data.filteredVasServices`";
+    var skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
     ~if $data.serviceContent` 
             var pageType = 'membershipPage';
     ~/if`
@@ -341,7 +342,7 @@
                     <li>Hand-picking of profiles by Jeevansathi that match your expectations</li>
                     <li>Contact shortlisted profiles & arrange meetings on your behalf</li>
                 </ul>
-                <div id="jsxKnowMoreLink" class="pl19"><a href="~sfConfig::get('app_site_url')`/membership/jsexclusiveDetail" class="fontreg f13 colr5">Know More</a></div>
+                <div id="jsxKnowMoreLink" class="pl19 pt10"><a href="~sfConfig::get('app_site_url')`/membership/jsexclusiveDetail" class="fontreg f16 colr5">Know More</a></div>
                 <!--start:value-->
                 <div id="exclusiveContainer" class="mem_mr1 clearfix fontreg">
                     <!--start:div-->
@@ -508,7 +509,11 @@
                     <div id="savingsBlock" class="txtc f15 pb10 disp-none">
                         <span>Your Savings &nbsp;</span><span>~$data.currency`</span><span id="totalSavings"></span>
                     </div>
-                    <div id="payNowBtn" class="fullwid txtc lh50"><span>~if $data.currency eq '$'`USD~else`~$data.currency`~/if`</span>&nbsp;<span id="totalPrice"></span>&nbsp;|&nbsp;<span class="colrw">Pay Now</span></div>
+                    <div style="overflow:hidden;position: relative;">
+                        <div id="payNowBtn" class="fullwid txtc lh50">
+                            <span>~if $data.currency eq '$'`USD~else`~$data.currency`~/if`</span>&nbsp;<span id="totalPrice"></span>&nbsp;|&nbsp;<span class="colrw">Pay Now</span>
+                        </div>
+                    </div>
                     <div class="pt10 f11 txtc">PRICE INCLUDES ~$data.taxRate`% SERVICE TAX</div>
                 </div>
                 <!--end:total-->
@@ -569,50 +574,38 @@
     if(window.top.location.href != window.location.href){
         window.top.location.href = window.location.href;
     }
+    $(document).ready(function() {
     ~if $data.serviceContent`
-    $(window).load(function() {
         eraseCookie('paymentMode');
         eraseCookie('cardType');
         eraseCookie('couponID');
-        ~foreach from=$data.serviceContent key=k item=v name=servicesLoop`
-            var containerWidth = ~$smarty.foreach.servicesLoop.total`-1;
-        ~/foreach`
+        
+        initializeMembershipPage();
+
+        var containerWidth = ~$data.serviceContent|count`-1;
         containerWidth = containerWidth*621;
-        var ScreenHgt = $(window).height();
-        var ScreenWid = $(window).width();
-        var leftval = (ScreenWid / 2) - 450;
+        var ScreenHgt = $(window).height(),ScreenWid = $(window).width(),leftval = (ScreenWid / 2) - 450;
         $("#sliderContainer").css('width',containerWidth);
         $('#cmpplan').css('left', leftval);
-        initializeMembershipPage();
         $('#js-panelbtn').click(function(e) {
-            if (!$("#js-panelbtn").hasClass("mem-down")) {
-                $('.js-expand').animate({
-                    height: "toggle"
-                }, 1000, function() {
-                    changeclass();
-                    $('.js-closeview ').css('display', 'block');
-                });
+            if (!$("#js-panelbtn").hasClass("mem-down")) 
+            {
+                jsMemExpandAnimate(true);
             } else {
                 $('.js-closeview ').css('display', 'none');
-                $('.js-expand').animate({
-                    height: "toggle"
-                }, 1000, function() {
-                    changeclass();
-                });
+                jsMemExpandAnimate(false);
             }
         });
         $("ul.tabs li").click(function(e) {
             if (!$(this).hasClass("active")) {
                 $("ul.tabs li.active").removeClass("active");
                 $(this).addClass("active");
-                var m = $(this).attr('mainMemTab')
-                var d = $("#tab_"+m+" .durSel.plansel").attr("mainMemDur");
+                var m = $(this).attr('mainMemTab'),d = $("#tab_"+m+" .durSel.plansel").attr("mainMemDur");
                 managePriceStrike(m,d);
                 createCookie('mainMemTab', m);
                 createCookie('mainMem', m);
                 createCookie('mainMemDur', d);
-                var tabNum = $(this).index();
-                var getTabId = $(this).attr('id');
+                var tabNum = $(this).index(),getTabId = $(this).attr('id');
                 changeTabContent(getTabId, tabNum, 200);
             }
         });
@@ -627,16 +620,12 @@
         $(".jsxDur").click(function(e){
             $(".jsxDur.active").removeClass('active');
             $(this).addClass('active');
-            var m = $(this).attr("mainMem");
-            var d = $(this).attr("mainMemDur");
-            var c = $(this).attr("mainMemContact");
+            var m = $(this).attr("mainMem"),d = $(this).attr("mainMemDur"),c = $(this).attr("mainMemContact");
             changeMemCookie(m,d,c);
             managePriceStrike(m,d);
         });
         $(".durSel").click(function(e){
-            var m = $(this).attr("mainMem");
-            var d = $(this).attr("mainMemDur");
-            var c = $(this).attr("mainMemContact");
+            var m = $(this).attr("mainMem"),d = $(this).attr("mainMemDur"),c = $(this).attr("mainMemContact");
             $("#tab_"+m+" .durSel.plansel").removeClass('plansel');
             $(this).addClass('plansel');
             changeMemCookie(m,d,c);
@@ -648,28 +637,28 @@
             createCookie('mainMemTab', $(this).attr('viewDurLink'));
             $("ul.tabs li.active").removeClass('active');
             $("ul.tabs li[mainMemTab="+readCookie('mainMemTab')+"]").addClass('active');
-            var tabNum = $("ul.tabs li.active").index();
-            var getTabId = $("ul.tabs li.active").attr('id');
+            var tabNum = $("ul.tabs li.active").index(),getTabId = $("ul.tabs li.active").attr('id');
             changeTabContent(getTabId,tabNum, 200);
         })
         $(".continueBtn").click(function(){
-            if ($(this).attr('id') == 'mainServContinueBtn') {
-                if(checkEmptyOrNull(readCookie('selectedVas')) && checkEmptyOrNull(readCookie('mainMemDur'))){
-                    var currentVas = readCookie('selectedVas');
-                    var tempArr = currentVas.split(",");
-                    var vasId = null;
+            if ($(this).attr('id') == 'mainServContinueBtn') 
+            {
+                var mainMemDurCookie = readCookie('mainMemDur'),selectedVasCookie = readCookie('selectedVas');
+                if(checkEmptyOrNull(selectedVasCookie) && checkEmptyOrNull(mainMemDurCookie))
+                {
+                    var currentVas = selectedVasCookie,tempArr = currentVas.split(","),vasId = null;
                     if(tempArr.length > 0){
                         // remove all other vas which start with supplied character except currently selected
                         tempArr.forEach(function(item, index){
                             if(item.substring(0, 1) == "M"){
-                                if(readCookie('mainMemDur') != item.substring(0, 1)){
+                                if(mainMemDurCookie != item.substring(0, 1)){
                                     tempArr.splice(index, 1);
-                                    if(readCookie('mainMemDur') == "L"){
+                                    if(mainMemDurCookie == "L"){
                                         vasId = "M12";
                                     } else {
-                                        vasId = "M"+readCookie('mainMemDur');
+                                        vasId = "M"+mainMemDurCookie;
                                     }
-                                    if (!checkEmptyOrNull(readCookie('mainMemDur'))) {
+                                    if (!checkEmptyOrNull(mainMemDurCookie)) {
                                         vasId = "M3";
                                     }
                                 }
@@ -682,27 +671,25 @@
                     currentVas = tempArr.join(",");
                     createCookie('selectedVas', currentVas, 0);
                 }
-                if(!checkEmptyOrNull(readCookie('mainMem')) || readCookie('mainMem') == "X"){
-                    var currentMainSel = $(".planlist li.active").attr('mainMemTab');
-                    var m = currentMainSel;
-                    var d = $('#tab_'+m+' .durSel.plansel').attr("mainMemDur");
-                    var c = $('#tab_'+m+' .durSel.plansel').attr("mainMemContact");
+                var mainMemCookie = readCookie('mainMem');
+                if(!checkEmptyOrNull(mainMemCookie) || mainMemCookie == "X"){
+                    var currentMainSel = $(".planlist li.active").attr('mainMemTab'),m = currentMainSel,d = $('#tab_'+m+' .durSel.plansel').attr("mainMemDur"),c = $('#tab_'+m+' .durSel.plansel').attr("mainMemContact");
                     changeMemCookie(m,d,c);
                 }
-                if (checkEmptyOrNull(readCookie('mainMem')) && readCookie('mainMem') != "ESP" && readCookie('mainMem') != "NCP") {
-                    $.redirectPost('/membership/jspc', {'displayPage':2, 'mainMem':readCookie('mainMem'), 'mainMemDur':readCookie('mainMemDur'), 'device':'desktop'});
+                mainMemCookie = readCookie('mainMem');
+                if (checkEmptyOrNull(readCookie('mainMem')) && readCookie('mainMem') != "ESP" ) {
+                    $.redirectPost('/membership/jspc', {'displayPage':2, 'mainMem':mainMemCookie, 'mainMemDur':readCookie('mainMemDur'), 'device':'desktop'});
                 } else {
-                    $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':readCookie('mainMem'), 'mainMemDur':readCookie('mainMemDur'), 'device':'desktop'});
+                    $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':mainMemCookie, 'mainMemDur':readCookie('mainMemDur'), 'device':'desktop'});
                 }
             } else {
-                if(!checkEmptyOrNull(readCookie('mainMem')) || readCookie('mainMem') != "X"){
-                    var currentXSel = $(".jsxDur.active");
-                    var m = $(currentXSel).attr("mainMem");
-                    var d = $(currentXSel).attr("mainMemDur");
-                    var c = $(currentXSel).attr("mainMemContact");
+                var mainMemCookie = readCookie('mainMem');
+                if(!checkEmptyOrNull(mainMemCookie) || mainMemCookie != "X"){
+                    var currentXSel = $(".jsxDur.active"),m = $(currentXSel).attr("mainMem"),d = $(currentXSel).attr("mainMemDur"),c = $(currentXSel).attr("mainMemContact");
                     changeMemCookie(m,d,c);
                 }
-                $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':readCookie('mainMem'), 'mainMemDur':readCookie('mainMemDur'), 'device':'desktop'});
+                mainMemCookie = readCookie('mainMem');
+                $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':mainMemCookie, 'mainMemDur':readCookie('mainMemDur'), 'device':'desktop'});
             }
         });
         $(".durationTextPlaceholder").each(function(){
@@ -713,17 +700,16 @@
                 $(this).html(str);
             }
         });
-    });
     ~/if`
     ~if $data.vasContent`
-    $(window).load(function() {
         eraseCookie('paymentMode');
         eraseCookie('cardType');
         eraseCookie('couponID');
         eraseCookie('mainMem');
         eraseCookie('mainMemDur');
         checkLogoutCase(profileid);
-        if(readCookie('selectedVas') && checkEmptyOrNull(readCookie('selectedVas'))){
+        var selectedVasCookie = readCookie('selectedVas');
+        if(selectedVasCookie && checkEmptyOrNull(selectedVasCookie)){
             updateAlreadySelectedVas();
         }
         $(".vascell").click(function(e){
@@ -743,8 +729,7 @@
             updateVasPageCart();
         });
         $('.vasoverlay,.vasoverlay2').click(function(e){
-            var vasKey = $(this).parent().attr('id').replace('_overlay','');
-            var vasId;
+            var vasKey = $(this).parent().attr('id').replace('_overlay',''),vasId;
             $("#"+vasKey+" .vascell").each(function(e){
                 if($(this).hasClass('mem-vas-active')){
                     vasId = $(this).attr('id');
@@ -756,18 +741,18 @@
             updateVasPageCart();
         });
         $("#payNowBtn").click(function(e){
-            if(parseInt($("#totalPrice").html()) > 0 && checkEmptyOrNull(readCookie('selectedVas'))){
-                $.redirectPost('/membership/jspc', {'displayPage':3, 'selectedVas':readCookie('selectedVas'), 'device':'desktop'});
+            var selectedVasCookie = readCookie('selectedVas');
+            
+            if(parseInt($("#totalPrice").html()) > 0 && checkEmptyOrNull(selectedVasCookie)){
+                $.redirectPost('/membership/jspc', {'displayPage':3, 'selectedVas':selectedVasCookie, 'device':'desktop'});
             } else {
                 e.preventDefault();
                 //sweetAlert("Hi !", "Please select atleast one item to continue", "error");
             }
         });
         updateVasPageCart();
-        var ScreenHgt = $(window).height();
-        var ScreenWid = $(window).width();
-        var leftval = (ScreenWid / 2) - 450;
+        var ScreenHgt = $(window).height(),ScreenWid = $(window).width(),leftval = (ScreenWid / 2) - 450;
         $('#cmpplan').css('left', leftval);
-    });
     ~/if`
+    });
 </script>

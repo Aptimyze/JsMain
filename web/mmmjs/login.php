@@ -22,7 +22,7 @@ $connection = login($username, $password);
 if($connection)//successful login
 {
 //	header("Location: $SITE_URL/mainpage.php?name=$username&cid=$connection");	
-	setLoginCookies($connection,$username);
+	//setLoginCookies($connection,$username);
 		
 	$smarty->assign("username","$username");
 	$smarty->assign("cid","$connection");

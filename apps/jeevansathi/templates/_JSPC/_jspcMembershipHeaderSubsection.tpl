@@ -261,31 +261,28 @@
     </div>
 </div>
 <script type="text/javascript">
-$(window).load(function() {
+$(document).ready(function() {
     bindEscapeKey();
     
     if(pageType == 'membershipPage'){
         $("#memebershipPageContent").show();
     }
 
-    if(pageType == 'ConditionsBasedHeader'){
+    else if(pageType == 'ConditionsBasedHeader'){
         $("#messageDiv").html(message);
-        $("#ConditionsBasedDiv").show();
-        $("#vasPagePaidMemberContent").show();
+        $("#ConditionsBasedDiv,#vasPagePaidMemberContent").show();
     }
 
-    if (pageType == 'vasPage'){
+    else if (pageType == 'vasPage'){
         $("#vasPageContent").show();
     }
 
-    if (pageType == 'vasPagePaidMember'){
-        $("#NoConditionsBasedDiv").show();
-        $("#vasPagePaidMemberContent").show();
+    else if (pageType == 'vasPagePaidMember'){
+        $("#NoConditionsBasedDiv,#vasPagePaidMemberContent").show();
     }
 
-    if (pageType == 'ConditionsBasedDivVasPaid'){
-        $("#ConditionsBasedDivVasPaid").show();
-        $("#vasPagePaidMemberContent").show();
+    else if (pageType == 'ConditionsBasedDivVasPaid'){
+        $("#ConditionsBasedDivVasPaid,#vasPagePaidMemberContent").show();
         if(paidBenefits){
             var insertText = "";
             paidBenefits.forEach(function(item, index){
@@ -295,19 +292,19 @@ $(window).load(function() {
     }
     }
     
-    if (pageType == 'cartPage'){
+    else if (pageType == 'cartPage'){
         $("#cartPageContent").show();
     }
     
-    if (pageType == 'successPage'){
+    else if (pageType == 'successPage'){
         $("#successPageContent").show();
     }
     
-    if (pageType == 'failurePage'){
+    else if (pageType == 'failurePage'){
         $("#failurePageContent").show();
     }
     
-    if (pageType == 'chequeSuccessPage'){
+    else if (pageType == 'chequeSuccessPage'){
         $("#chequeSuccessPageContent").show();
     }
     
@@ -323,9 +320,7 @@ $(window).load(function() {
         $('#bannerMinimize').show();
         if(bannerMsg)
         {
-            $('#bannerTextTop').html(bannerMsg);
-            $('#bannerTextVas').html(bannerMsg); 
-            $('#bannerTextMinimize span').html(bannerMsg);
+            $('#bannerTextTop,#bannerTextVas,#bannerTextMinimize span').html(bannerMsg);
         }     
         else
         {
@@ -338,8 +333,13 @@ $(window).load(function() {
             changeclass();
             $('.js-closeview ').css('display', 'block');
         });
-    } else {    
-        $('#bannerTextTop').html("<div class='f24 pb5'>More Value</div><div class='fontreg f14 pb10'>LESS PRICE</div><div class='lh20 f14'>Lowest Price per contact<br>Maximum benefits per month<br>Biggest Savings Per Plan</div>");
+    } else {   
+        if(bannerMsg)
+        {
+           $('#bannerTextTop').html(bannerMsg); 
+        } 
+        else
+            $('#bannerTextTop').html("<div class='f24 pb5'>More Value</div><div class='fontreg f14 pb10'>LESS PRICE</div><div class='lh20 f14'>Lowest Price per contact<br>Maximum benefits per month<br>Biggest Savings Per Plan</div>");
         $('#bannerMinimize').hide();
     }
     

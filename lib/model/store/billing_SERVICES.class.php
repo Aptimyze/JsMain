@@ -93,10 +93,16 @@ class billing_SERVICES extends TABLE
         $rsKey = $device."_RS";
         $dolKey = $device."_DOL";
         if(is_array($serviceId) && !empty($serviceId)){
-        	$service_str = "'".implode("','", $serviceId)."'";
+        	foreach ($serviceId as $key => $val) {
+        		$str[] = ":SERVICEID$key";
+        	}
+            $newStr = @implode(",", $str);
         	try {
-	            $sql = "SELECT SERVICEID, NAME, {$rsKey} AS PRICE, ADDON from billing.SERVICES WHERE SERVICEID IN ($service_str)";
+	            $sql = "SELECT SERVICEID, NAME, {$rsKey} AS PRICE, ADDON from billing.SERVICES WHERE SERVICEID IN ({$newStr})";
 	            $resSelectDetail = $this->db->prepare($sql);
+	            foreach ($serviceId as $key => $val) {
+	            	$resSelectDetail->bindValue(":SERVICEID$key", $val, PDO::PARAM_STR);
+	            }
 	            $resSelectDetail->execute();
 	            while($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){
 	            	$resultArr[$rowSelectDetail['SERVICEID']] = $rowSelectDetail;
@@ -126,10 +132,16 @@ class billing_SERVICES extends TABLE
         $rsKey = $device."_RS";
         $dolKey = $device."_DOL";
         if(is_array($serviceId) && !empty($serviceId)){
-        	$service_str = "'".implode("','", $serviceId)."'";
+        	foreach ($serviceId as $key => $val) {
+        		$str[] = ":SERVICEID$key";
+        	}
+            $newStr = @implode(",", $str);
         	try {
-	            $sql = "SELECT SERVICEID, NAME, {$dolKey} AS PRICE, ADDON from billing.SERVICES WHERE SERVICEID IN ($service_str)";
+	            $sql = "SELECT SERVICEID, NAME, {$dolKey} AS PRICE, ADDON from billing.SERVICES WHERE SERVICEID IN ({$newStr})";
 	            $resSelectDetail = $this->db->prepare($sql);
+	            foreach ($serviceId as $key => $val) {
+	            	$resSelectDetail->bindValue(":SERVICEID$key", $val, PDO::PARAM_STR);
+	            }
 	            $resSelectDetail->execute();
 	            while($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){
 	            	$resultArr[$rowSelectDetail['SERVICEID']] = $rowSelectDetail;
@@ -155,15 +167,17 @@ class billing_SERVICES extends TABLE
     }
     
     public function fetchAllServiceDetails($serviceid_str) {
-    	$serviceid_str = "'".$serviceid_str."'";
-    	$serviceid_str = str_replace("''","'",$serviceid_str);
-        try {
-        	$tempCheck = str_replace("'", "", $serviceid_str);
-        	if(empty($tempCheck)){
-        		return NULL;
+    	try {
+        	$serviceIdArr = explode(",", $serviceid_str);
+        	foreach ($serviceIdArr as $key => $val) {
+        		$str[] = ":SERVICEID$key";
         	}
-            $sql = "SELECT * from billing.SERVICES WHERE SERVICEID IN ($serviceid_str)";
+            $newStr = @implode(",", $str);
+            $sql = "SELECT * from billing.SERVICES WHERE SERVICEID IN ({$newStr})";
             $resSelectDetail = $this->db->prepare($sql);
+            foreach ($serviceIdArr as $key => $val) {
+            	$resSelectDetail->bindValue(":SERVICEID$key", trim($val,"'"), PDO::PARAM_STR);
+            }
             $resSelectDetail->execute();
             while ($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)) {
                 $res[] = $rowSelectDetail;
@@ -413,12 +427,34 @@ class billing_SERVICES extends TABLE
         	throw new jsException("", "SERVICEID IS BLANK");
         }
         try {
-        	$serviceIdStr = "'".implode("','",$serviceIdArr)."'";
-            $sql = "SELECT SQL_CACHE NAME, SERVICEID from billing.SERVICES WHERE SERVICEID IN ($serviceIdStr)";
+        	foreach ($serviceIdArr as $key => $val) {
+        		$str[] = ":SERVICEID$key";
+        	}
+            $newStr = @implode(",", $str);
+            $sql = "SELECT SQL_CACHE NAME, SERVICEID from billing.SERVICES WHERE SERVICEID IN ({$newStr})";
             $resSelectDetail = $this->db->prepare($sql);
+            foreach ($serviceIdArr as $key => $val) {
+            	$resSelectDetail->bindValue(":SERVICEID$key", $val, PDO::PARAM_STR);
+            }
             $resSelectDetail->execute();
             while($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){
             	$output[$rowSelectDetail['SERVICEID']] = $rowSelectDetail['NAME'];
+            }
+            return $output;
+        }
+        catch(Exception $e) {
+            throw new jsException($e);
+        }
+    }
+    public function getServiceDetailsArr($fields='') {
+        try {
+	    if(!$fields)
+		$fields ="*";
+            $sql = "SELECT SQL_CACHE $fields from billing.SERVICES";
+            $resSelectDetail = $this->db->prepare($sql);
+            $resSelectDetail->execute();
+            while($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){
+                $output[$rowSelectDetail['SERVICEID']] = $rowSelectDetail;
             }
             return $output;
         }

@@ -328,6 +328,7 @@
 <script type="text/javascript">
 	var AndroidPromotion = 0;
 	var source = "~$passedKey`";
+	var filteredVasServices = "~$data.filteredVasServices`",skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
 	$(document).ready(function(){
 		~if $data.device eq 'Android_app'`
 		createCookie('device',"~$data.device`");
@@ -338,33 +339,7 @@
 		eraseCookie('mainMem');
 		eraseCookie('mainMemDur');
 		if(readCookie('selectedVas')){
-			var currentVas = readCookie('selectedVas');
-			if(currentVas.indexOf(",") > -1){
-				// case when more than one vas was selected
-				var tempArr = currentVas.split(",");
-			} else {
-				// case when only one vas was selected
-				var tempArr = [currentVas];
-			}
-			if(tempArr.length > 0){
-				// remove all other vas which start with supplied character except currently selected
-				$.each(tempArr, function(index, item){
-					if(index == 0){
-						if(index == 0){
-							$("body").find("#"+item).parent().parent().addClass("scrollTo");
-						}
-					}
-					if(checkEmptyOrNull(readCookie('device'))){
-						$("#"+item).addClass(readCookie('device')+'_vassel');	
-					} else {
-						$("#"+item).addClass('vassel');	
-					}
-				});
-				$('html, body').animate({
-					scrollTop: 0
-				}, 0);  
-				$("#continueBtn").show();
-			}
+			updateSelectedVas("jsmsLandingPage");	
 		}
 		~/if`
 		if(checkEmptyOrNull(readCookie("mainMem")) && checkEmptyOrNull(readCookie("mainMemDur"))){
@@ -476,7 +451,7 @@
 			$("#mainContent").addClass('posrel');
 			$("#callButton").hide();
 		});
-		$('.tapoverlay').click(function(e){
+		$('#callOvrOneJS .tapoverlay,#callOvrTwoJS .tapoverlay').click(function(e){
 			$("#callOvrTwo").hide();
 			$("#callOvrOne").hide();
 			$("#callOvrTwoJS").hide();
@@ -579,13 +554,18 @@
 				createCookie('selectedVas', currentVas, 0);
 			}
 			if(readCookie('backState') == "changePlan"){
-				if(checkEmptyOrNull(readCookie('selectedVas')) && readCookie('mainMem') != "X" && readCookie('mainMem') != "NCP" && readCookie('mainMem') != "ESP"){
-					if(checkEmptyOrNull(readCookie('mainMem'))){
+				if(checkEmptyOrNull(readCookie('selectedVas')) && $.inArray(readCookie('mainMem'),skipVasPageMembershipBased)==-1)
+				{
+					updateSelectedVas();
+					if(checkEmptyOrNull(readCookie('mainMem')))
+					{
 						paramStr = "displayPage=3&mainMem="+readCookie("mainMem")+"&mainMemDur="+readCookie("mainMemDur")+"&selectedVas="+readCookie('selectedVas');
-					} else {
+					} else 
+					{
 						paramStr = "displayPage=3&selectedVas="+readCookie('selectedVas');
 					}
-				} else {
+				} 
+				else {
 					paramStr = "displayPage=3&mainMem="+readCookie("mainMem")+"&mainMemDur="+readCookie("mainMemDur")+"&selectedVas=";
 				}
 				if(checkEmptyOrNull(readCookie('device'))){
@@ -600,7 +580,8 @@
 				~if $data.serviceContent`
 				var paramStr = "";
 				if(checkEmptyOrNull(readCookie("mainMem")) && checkEmptyOrNull(readCookie("mainMemDur"))){ 
-					if(readCookie("mainMem") == "ESP" || readCookie("mainMem") == "X" || readCookie("mainMem") == "NCP"){
+					if($.inArray(readCookie('mainMem'),skipVasPageMembershipBased)>-1)
+					{
 						paramStr = "displayPage=3&mainMem="+readCookie("mainMem")+"&mainMemDur="+readCookie("mainMemDur");
 					} else {
 						paramStr = "displayPage=2&mainMem="+readCookie("mainMem")+"&mainMemDur="+readCookie("mainMemDur")
@@ -650,8 +631,9 @@
 				window.history.back();
 			}
 		});
-		if(source == "REQUEST_CALLBACK")
-			$('#reqCallBack').trigger('click');
+		if(source == "REQUEST_CALLBACK"){
+			$('#jsmsReqCallbackBtn').trigger('click');
+		}
 		var username = "~$data.userDetails.USERNAME`";
 		var email = "~$data.userDetails.EMAIL`";
 		setInterval(function(){

@@ -24,6 +24,61 @@ class LoginV1Action extends sfActions
 		$loginObj->hashedPasswordFromDb=true;
 	$email=trim($request->getParameter("email"));
 	$password=$request->getParameter("password");
+	$apiObj=ApiResponseHandler::getInstance();
+	//Captcha check for PC and mobile
+	if(MobileCommon::isNewMobileSite() || MobileCommon::isDesktop())
+	{
+			$captcha=$request->getParameter("captcha");
+			$loginFailedObj = new LOGIN_FAILED1;
+			if(JsMemcache::getInstance()->get($email."_failedLogin")!==null){
+				$count=JsMemcache::getInstance()->get($email."_failedLogin");
+			}
+			else{
+				$count=$loginFailedObj->selectFailedLoginPerDay($email,"1");
+				if($count)
+					JsMemcache::getInstance()->set($email."_failedLogin",$count);
+				else
+					JsMemcache::getInstance()->set($email."_failedLogin",0);
+			}
+        	//print_r($count);die;
+        	if($count>2)
+        	{
+        		setcookie('loginAttempt','1',time()+86400000,"/");
+        		if($captcha!=1)
+        		{
+        			if(MobileCommon::isDesktop())
+        			{
+        				$szToUrl = JsConstants::$siteUrl;
+						if($_SERVER['HTTPS'] && strlen($_SERVER['HTTPS']) && $_GET['fmPwdReset'])
+						{
+							$szToUrl = JsConstants::$ssl_siteUrl;
+						}
+						$js_function = " <script>	var message = \"\";
+						if(window.addEventListener)	
+							message ={\"body\":\"1\"};
+						else
+							message = \"1\";
+
+						if (typeof parent.postMessage != \"undefined\") {
+							parent.postMessage(message, \"$szToUrl\");
+						} else {
+							window.name = message; //FOR IE7/IE6
+							window.location.href = '$szToUrl';
+						}
+						</script> ";
+						
+						echo $js_function;
+						die;
+        			}
+					else{
+						$apiObj->setHttpArray(ResponseHandlerConfig::$LOGIN_FAILURE_ACCESS);
+						$apiObj->generateResponse();
+						die;
+					}
+        			//return 0;
+        		}
+        	}
+	}
 	if(MobileCommon::isNewMobileSite() || MobileCommon::isDesktop())
 	{
 		$password=rawurldecode($password);
@@ -31,7 +86,7 @@ class LoginV1Action extends sfActions
 	$registrationid=$request->getParameter("registrationid");
 	$rememberMe=$request->getParameter("rememberme");
 	$result=$loginObj->login($email,$password,$rememberMe);
-	$apiObj=ApiResponseHandler::getInstance();
+	
 	if($result && $result[ACTIVATED]<>'D' && $result[GENDER]!="")
 	{
 		$apiObj->setAuthChecksum($result[AUTHCHECKSUM]);
@@ -106,7 +161,18 @@ class LoginV1Action extends sfActions
 			$apiObj->setHttpArray(ResponseHandlerConfig::$LOGIN_FAILURE_ACCESS);
 			$loginFailedObj=new LOGIN_FAILED1();
 			$ip=CommonFunction::getIP();
-			$loginFailedObj->insertFailedLogin($email,$password,$_SERVER[HTTP_USER_AGENT],$ip);
+			if($email && $password){
+				$loginFailedObj->insertFailedLogin($email,$password,$_SERVER[HTTP_USER_AGENT],$ip);
+				if(JsMemcache::getInstance()->get($email."_failedLogin")!==null)
+					JsMemcache::getInstance()->set($email."_failedLogin",JsMemcache::getInstance()->get($email."_failedLogin")+1);
+				else{
+					$count=$loginFailedObj->selectFailedLoginPerDay($email,"1");
+					if($count)
+						JsMemcache::getInstance()->set($email."_failedLogin",$count);
+					else
+						JsMemcache::getInstance()->set($email."_failedLogin",0);
+				}
+			}
 			//ValidationHandler::getValidationHandler("","Login details provided were not correct");
 		}
 		if($request->getParameter("fromPc"))

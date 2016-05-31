@@ -14,7 +14,7 @@
 	
 	<!-- Listing Tabs -->
 	~if $searchListings`
-	~include_partial("search/JSPC/searchListingTabs",['isRightListing'=>$isRightListing,'clickOn'=>$clickOn,'setGap'=>$setGap,'showKundliList'=>$showKundliList])`
+	~include_partial("search/JSPC/searchListingTabs",['isRightListing'=>$isRightListing,'clickOn'=>$clickOn,'setGap'=>$setGap,'subscriptionType'=>$subscriptionType,'showKundliList'=>$showKundliList])`
 	~/if`
 
 	<!-- loader -->

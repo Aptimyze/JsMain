@@ -146,14 +146,14 @@ function serve_for($service_main, $service_str) {
  *    RETURNS       :    Returns associative array indexing keys as properties to their values
  ***********************************************************************/
 function getServiceDetails($serviceid) {
-    $sql = "SELECT * from billing.SERVICES where SERVICEID = '$serviceid'";
-    $result = mysql_query_decide($sql) or logError($error_msg, $sql, "ShowErrTemplate", $announce_to_email);
-    $myrow = mysql_fetch_array($result);
-    
+	$billServObj = new billing_SERVICES();
+	$serviceid = implode("','",explode(",", $serviceid));
+	$myrow = $billServObj->fetchAllServiceDetails($serviceid);
+
     if ($myrow["PACKAGE"] == "Y") {
-        $sql = "Select c.DURATION,c.RIGHTS from billing.SERVICES a, billing.PACK_COMPONENTS b, billing.COMPONENTS c where a.PACKID = b.PACKID AND b.COMPID = c.COMPID AND a.SERVICEID = '$serviceid'";
-        $result_duration = mysql_query_decide($sql) or logError($error_msg, $sql, "ShowErrTemplate", $announce_to_email);;
-        while ($myrow_duration = mysql_fetch_array($result_duration)) {
+    	$billCompObj = new billing_COMPONENTS();
+        $row = $billCompObj->getDurationRightsForServiceDetails($serviceid, $myrow['PACKAGE']);
+        foreach ($row as $key=>$myrow_duration) {
             $myrow["DURATION"] = $myrow_duration["DURATION"];
             $rights[] = $myrow_duration["RIGHTS"];
         }
@@ -168,9 +168,8 @@ function getServiceDetails($serviceid) {
         $myrow['RIGHTS'] = $rights_str;
     } 
     elseif ($myrow["PACKAGE"] == "N") {
-        $sql = "Select c.DURATION,c.RIGHTS from billing.SERVICES a, billing.COMPONENTS c where c.COMPID = a.COMPID AND a.SERVICEID = '$serviceid'";
-        $result_duration = mysql_query_decide($sql) or logError($error_msg, $sql, "ShowErrTemplate", $announce_to_email);;
-        $myrow_duration = mysql_fetch_array($result_duration);
+        $billCompObj = new billing_COMPONENTS();
+        $myrow_duration = $billCompObj->getDurationRightsForServiceDetails($serviceid, $myrow['PACKAGE']);
         $myrow["DURATION"] = $myrow_duration["DURATION"];
         $myrow["RIGHTS"] = $myrow_duration["RIGHTS"];
     }
@@ -179,14 +178,15 @@ function getServiceDetails($serviceid) {
 function getTotalPriceAll($serviceid, $curtype, $device = 'desktop') {
     if ($curtype == "DOL") $price_string = $device."_DOL";
     else $price_string = $device."_RS";
-    
     $serviceid = @explode(",", $serviceid);
-    $serviceid = @implode("','", $serviceid);
-    $sql = "SELECT SERVICEID, $price_string AS PRICE FROM billing.SERVICES WHERE SERVICEID IN ('$serviceid')";
-    $res = mysql_query_decide($sql) or logError($error_msg, $sql, "ShowErrTemplate", $announce_to_email);
-    $price = 0;
-    while ($row = mysql_fetch_assoc($res)) {
-        $price+= $row["PRICE"];
+    $billServObj = new billing_SERVICES();
+    if($curtype == "DOL"){
+    	$row = $billServObj->fetchServiceDetailForDollarTrxn($serviceid, $device);
+    } else {
+    	$row = $billServObj->fetchServiceDetailForRupeesTrxn($serviceid, $device);
+    }
+    foreach ($row as $key=>$val) {
+        $price+= $val["PRICE"];
     }
     return $price;
 }
@@ -247,17 +247,25 @@ function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $servic
         //$discount=round($discount*(100/(100+$tax_rate)),2);
         $discount = round($discount, 2);
         $service_main = ltrim(rtrim($service_main, ","),",");
-        $sql1 = "insert into billing.ORDERS (PROFILEID, USERNAME, ORDERID, PAYMODE, SERVICEMAIN, CURTYPE,SERVEFOR, AMOUNT, ENTRY_DT, EXPIRY_DT, BILL_ADDRESS, PINCODE, BILL_COUNTRY, BILL_PHONE, BILL_EMAIL, IPADD,ADDON_SERVICEID,DISCOUNT,SET_ACTIVATE,GATEWAY, DISCOUNT_TYPE) values ('$profileid', '" . addslashes($data[USERNAME]) . "', '$ORDERID', '$paymode', '$service_main','$curtype','$servefor', '$data[AMOUNT]', NOW(), '', '" . addslashes(stripslashes($data[CONTACT])) . "', '" . addslashes(stripslashes($data[PINCODE])) . "', '" . addslashes(stripslashes($data[COUNTRY])) . "', '$data[PHONE]', '$data[EMAIL]','$ip','$addon_serviceid','$discount','$setactivate','$gateway','$discount_type')";
-        $res1 = mysql_query_decide($sql1) or logError($error_msg, $sql1, "ShowErrTemplate", $announce_to_email);
         
-        $insert_id = mysql_insert_id_js();
+        $billingOrderObj = new BILLING_ORDERS();
+        $paramsStr = "PROFILEID, USERNAME, ORDERID, PAYMODE, SERVICEMAIN, CURTYPE,SERVEFOR, AMOUNT, ENTRY_DT, EXPIRY_DT, BILL_ADDRESS, PINCODE, BILL_COUNTRY, BILL_PHONE, BILL_EMAIL, IPADD,ADDON_SERVICEID,DISCOUNT,SET_ACTIVATE,GATEWAY, DISCOUNT_TYPE";
+        $valuesStr = "'$profileid', '" . addslashes($data[USERNAME]) . "', '$ORDERID', '$paymode', '$service_main','$curtype','$servefor', '$data[AMOUNT]', NOW(), '', '" . addslashes(stripslashes($data[CONTACT])) . "', '" . addslashes(stripslashes($data[PINCODE])) . "', '" . addslashes(stripslashes($data[COUNTRY])) . "', '$data[PHONE]', '$data[EMAIL]','$ip','$addon_serviceid','$discount','$setactivate','$gateway','$discount_type'";
+        $insert_id = $billingOrderObj->genericOrderInsert($paramsStr, $valuesStr);
+        
         $data["ORDERID"] = $ORDERID . "-" . $insert_id;
-        if ($device == NULL) $device = 'desktop';
+        if ($device == NULL) {
+        	$device = 'desktop';
+        }
         $ordrDeviceObj = new billing_ORDERS_DEVICE();
         $ordrDeviceObj->insertOrderDetails($insert_id, $ORDERID, $device, $profileid, $couponCodeVal);
         unset($ordrDeviceObj);
-        if ($insert_id) return $data;
-        else return false;
+        if ($insert_id) {
+        	return $data;
+        }
+        else {
+        	return false;
+        }
     } 
     else return false;
 }

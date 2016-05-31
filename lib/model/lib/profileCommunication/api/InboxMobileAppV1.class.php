@@ -89,8 +89,10 @@ class InboxMobileAppV1
 				"edu_level_new",
 				"userloginstatus",
 				"VERIFICATION_SEAL",
-                                "VERIFICATION_STATUS"
-				),
+        "VERIFICATION_STATUS",
+        "INTEREST_VIEWED_DATE",
+				"SEEN"
+        ),
 			"ACCEPTANCES_SENT"=>Array(
 				"PROFILECHECKSUM",
 				"USERNAME",
@@ -377,7 +379,19 @@ class InboxMobileAppV1
 				$buttonDetails = array();
                                	$profile[$count]["album_count"] = $tupleObj->getPHOTO_COUNT();
                                 
-                                
+        if($infoKey=="INTEREST_SENT")
+				{
+							if($profile[$count]["seen"]!=null && $profile[$count]["seen"]=="Y")
+							{
+								$heshe = $tupleObj->getGENDER()=="F"?"She":"He";
+								$viewedDate=$tupleObj->getINTEREST_VIEWED_DATE();
+								$profile[$count]["timetext"] = "$heshe viewed your interest ".($viewedDate!=''?((stripos($viewedDate,'today')=== false)?'on ':"").$viewedDate:"");
+							}
+							$profile[$count]["seen"]=null; // We are not required to show New so setting it to blank
+							$profile[$count]["interest_viewed_date"] = null;
+							
+				}                  
+				     
 				if($infoKey!="MY_MESSAGE" && $infoKey!="PHOTO_REQUEST_RECEIVED")
 				{
 					 if($infoKey=="NOT_INTERESTED" || $infoKey=="NOT_INTERESTED_BY_ME")

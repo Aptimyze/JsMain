@@ -15,19 +15,38 @@ class incentive_NAME_OF_USER extends TABLE{
 
         public function getName($profileid)
         {
-                try
+            try
+            {
+                if(is_array($profileid))
                 {
-                        $sql="SELECT NAME from incentive.NAME_OF_USER WHERE PROFILEID = :PROFILEID";
-                        $resSelectDetail = $this->db->prepare($sql);
-                        $resSelectDetail->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
-                        $resSelectDetail->execute();
-                        $rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC);
-                        return $rowSelectDetail['NAME'];
+                    $profileStr = implode(",", $profileid);
+                    $whereStr = "PROFILEID IN(".$profileStr.")";
                 }
-                catch(Exception $e)
+                else
                 {
-                        throw new jsException($e);
+                    $whereStr = "PROFILEID = :PROFILEID";
                 }
+                $sql="SELECT PROFILEID,NAME from incentive.NAME_OF_USER WHERE ".$whereStr;
+                $resSelectDetail = $this->db->prepare($sql);
+                if(!is_array($profileid))
+                    $resSelectDetail->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
+                $resSelectDetail->execute();
+                if(is_array($profileid))
+                {
+                    while($rowSelectDetail=$resSelectDetail->fetch(PDO::FETCH_ASSOC))
+                        $output[$rowSelectDetail['PROFILEID']] =$rowSelectDetail['NAME'];
+                    return $output;
+                }
+                else
+                {    
+                    $rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC);
+                    return $rowSelectDetail['NAME'];
+                }
+            }
+            catch(Exception $e)
+            {
+                    throw new jsException($e);
+            }
 		}
 		/* This function inserts entry into NAME_OF_USER table
 		 * */

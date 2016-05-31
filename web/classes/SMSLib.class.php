@@ -527,7 +527,7 @@ include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 				return $messageValue["ACCEPTANCE_COUNT"];
 
 			case "RC_URL":
-				$longURL = $this->SITE_URL."/membership/membershipMaster?from_source=REQUEST_CALLBACK";
+				$longURL = $this->SITE_URL."/membership/jsms?from_source=REQUEST_CALLBACK";
 				return $this->getShortURL ($longURL, $messageValue["RECEIVER"]["PROFILEID"],$messageValue["RECEIVER"]["EMAIL"]);
                 
             case "EXEC_NAME":
@@ -535,6 +535,10 @@ include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
             case "OTP":
 				//return "test";
 				return $messageValue["OTP"];
+			//added case for sending sms to user in case an entry goes into bounce mails
+			case "EDIT_CONTACT_ON_BOUNCE":
+				$longURL = $this->SITE_URL."/profile/viewprofile.php?".$messageValue["RECEIVER"]["USERNAME"]."&CMGFRMMMMJS=mobile&ownview=1";
+				return $this->getShortURL ($longURL, $messageValue["RECEIVER"]["PROFILEID"],$messageValue["RECEIVER"]["EMAIL"],'',"#Contact");
 				 
 			default:
 				return "";

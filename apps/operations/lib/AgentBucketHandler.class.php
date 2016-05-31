@@ -325,7 +325,7 @@ class AgentBucketHandler
 		$subMethod=$processObj->getSubMethod();
 		$profilesForDeletion=array();
 		$serviceStatusObj=new BILLING_SERVICE_STATUS();
-		$mainAdminObj=new incentive_MAIN_ADMIN();
+		$mainAdminObj=new incentive_MAIN_ADMIN('newjs_slave');
 		if($subMethod=="SALES_OTHERS" || $subMethod=="NEGATIVE_LIST")
 		{
 			for($i=0;$i<count($profiles);$i++)

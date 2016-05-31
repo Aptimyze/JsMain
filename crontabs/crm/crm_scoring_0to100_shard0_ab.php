@@ -127,6 +127,7 @@ $globalParamsObj = new ScoringGlobalParams_ab($total_profiles_str);
 //Master Connection
 $maDb=connect_db();
 mysql_query('set session wait_timeout=50000',$maDb);
+$date =date("Y-m-d");
 
 //Score computation for each data set
 for($t=0;$t<count($ptype_arr);$t++)
@@ -167,22 +168,28 @@ for($t=0;$t<count($ptype_arr);$t++)
                                         $score = round(json_decode($response,true),0);
                                         // temporary_logging
                                         $score1 = json_decode($response,true);
-                                        if(!is_numeric($score1))
+                                        if(!is_numeric($score1)){
                                                 $score1 ='NULL';
-                                        else
+                                                $hit_log1 =$profileid;
+                                                $fileName1 ="score_hit_log_for_nullResponse".$date.".txt";
+                                                passthru("echo '$hit_log1' >>/tmp/$fileName1");
+					}
+                                        else{
                                                 $score1 =round($score1,0);
+					}
                                         // temporary_logging   
                                         $hit_log = $flag."#".$profileid."#".$score1;
-                                        $date =date("Y-m-d");
                                         $fileName ="score_hit_log".$date.".txt";
                                         passthru("echo '$hit_log' >>/tmp/$fileName");
                                 }
 				if(isset($score))
 				{
+					if($score1!='NULL'){
                                         $sql_up = "update incentive.MAIN_ADMIN_POOL set ANALYTIC_SCORE='$score',CUTOFF_DT=now() where PROFILEID='$profileid'";
                                         mysql_query_decide($sql_up,$maDb) or die($sql_up.mysql_error($maDb));
 					updateScoreLog($profileid, $score, $ptype);
 					$count++;
+					}
 				}
                                 unset($scorevars);
                                 unset($score);

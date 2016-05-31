@@ -8,7 +8,7 @@ foreach($splitFileContent as $k=>$v)
 {
 	foreach($DirectoryModifyTest as $i=>$dir)
 	{
-        	if(strpos($v,$dir))
+        	if(strpos($v,$dir)!==false)
         	{
         		$tmpexplode= explode($dir,$v);
         		$filesChanged[$dir][]=$tmpexplode[1];

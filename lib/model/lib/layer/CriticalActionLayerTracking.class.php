@@ -4,6 +4,10 @@
  */
 class CriticalActionLayerTracking
 {
+
+  const ANALYTIC_SCORE_THRESHOLD=90;
+  const RCB_LAYER_REF_DATE='2011-01-01';
+
   /* this function will select entries for today
    *@param- profile id, layer on which user gives response,button the user presses
    */
@@ -13,6 +17,38 @@ class CriticalActionLayerTracking
     $result=$layerButtonTrack->select($profileId);
     return $result;
   }
+
+
+
+  /* this function will Check whether todays date is matching the remainder condition
+   *@param- profile id
+   */
+  
+  public static function satisfiesDateCondition($profileId)
+  {
+     $now = time(); // or your date as well
+     $your_date = strtotime(self::RCB_LAYER_REF_DATE);
+     $datediff = $now - $your_date;
+     $dayDiff=floor($datediff/(60*60*24));  
+     $remainder=$dayDiff=$dayDiff%10;
+     if($remainder==$profileId%10)return true;
+     else return false;
+  }
+
+
+  
+  public static function satisfiesCallBackCondition($dateTime)
+  {
+     $now = time(); // or your date as well
+     $your_date = strtotime($dateTime);
+      $datediff = $now - $your_date;
+     if($datediff>15*60*60*24)
+      return true;  
+     else 
+      return false;
+  }
+
+  
   /* this function will insert CA layer type and button type entry on a 
    * particular profile id
    *@param- profile id, layer on which user gives response,button the user presses
@@ -107,8 +143,9 @@ return 0;
           return false;
             
     $profileid = $profileObj->getPROFILEID();
-      $show=0;
-      
+    $show=0;
+    $request=sfContext::getInstance()->getRequest();
+
         switch ($layerToShow) {
           case '1': 
                     $picObj= new PictureService($profileObj);
@@ -127,7 +164,50 @@ return 0;
                     break;  
           case '5': if(MobileCommon::isApp()!='I')
                     $show=1;
-                    break;  
+                    break;
+          case '6': 
+
+                  
+                  if(!MobileCommon::isApp())
+                    {
+                      
+                      $loggedInUser=LoggedInProfile::getInstance();
+                      if(self::satisfiesDateCondition($profileid) &&  !CommonFunction::isPaid($loggedInUser->getSUBSCRIPTION()))
+                      {
+
+  
+                        $analyticRow=(new incentive_MAIN_ADMIN_POOL())->get($profileid,"PROFILEID","ANALYTIC_SCORE");
+                        if($analyticRow['ANALYTIC_SCORE'] && $analyticRow['ANALYTIC_SCORE']>=self::ANALYTIC_SCORE_THRESHOLD)
+                        {
+
+                          $callBackRow=(new billing_EXC_CALLBACK())->getLatestEntryDate($profileid);
+                          if(!$callBackRow || self::satisfiesCallBackCondition($callBackRow))
+                            $show=1;
+                        }
+                      }
+                      
+                    } 
+                    
+                    break;
+
+          case '7': if(!MobileCommon::isApp())
+                      {  
+                      
+                      $entryDate=$profileObj->getENTRY_DT();
+                      if((time()-strtotime($entryDate))>7*24*60*60)
+                      {
+                      $arr=array("WHERE"=>array("IN"=>array("SENDER"=>$profileid)),"ORDER"=>"`TIME`","LIMIT"=>1);
+                      $resultArr=(new newjs_CONTACTS(JsDbSharding::getShardNo($profileid)))->getContactedProfileArray($arr);
+                      if(!$resultArr)
+                        $show=1;
+                      else 
+                        {
+                          $lastInterest=strtotime(array_values($resultArr)[0]['TIME']);
+                          if((time()-$lastInterest)>15*24*60*60) $show=1;
+                        }
+                      }
+                    }
+                    break;            
                               
           default : return false;
         }

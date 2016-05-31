@@ -295,7 +295,7 @@ class detailedAction extends sfAction
 					*checks if the page is hit from a mailer and if it is being opened in an iPhone
 					*added code for deepLinking in IOS
 					*/
-  					if($request->getParameter("from_mailer") && 0)
+  					if($request->getParameter("from_mailer"))
   					{
   						$deepLinkingObj = new deepLinking();
   						$resultValue = $deepLinkingObj->getDeepLinkingHeader($request);

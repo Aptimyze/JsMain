@@ -415,7 +415,7 @@ class BILLING_SERVICE_STATUS extends TABLE {
     {
         try
         {
-            $sql="SELECT PROFILEID, MAX(EXPIRY_DT) AS EXPIRY_DT FROM billing.SERVICE_STATUS WHERE SERVEFOR LIKE '%F%'  AND ACTIVE = 'Y' GROUP BY PROFILEID HAVING EXPIRY_DT=:EXPIRY_DT";
+            $sql="SELECT PROFILEID, MAX(EXPIRY_DT) AS EXPIRY_DT FROM billing.SERVICE_STATUS WHERE SERVEFOR LIKE '%F%' AND ACTIVE = 'Y' GROUP BY PROFILEID HAVING EXPIRY_DT=:EXPIRY_DT";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":EXPIRY_DT",$expiryDate,PDO::PARAM_STR);
             $prep->execute();
@@ -703,5 +703,48 @@ class BILLING_SERVICE_STATUS extends TABLE {
         } catch (Exception $ex) {
             throw new jsException($ex);
         }
+    }
+
+    /*fetch billing details by bill id for profileid's
+    * @input : $billId(array or single int value),$fields="*",$serveFor=""
+    * @output: $rows
+    */
+    public function fetchServiceDetailsByBillId($billId,$fields="*",$serveFor="")
+    {
+        try
+        {
+            if(is_array($billId) && $billId)
+            {
+                $valueStr = "BILLID IN (".implode(",", $billId).")";
+            }
+            else if($billId)
+            {
+                $valueStr = "BILLID = :BILLID";
+            }
+            if($valueStr)
+            {
+                $sql= "SELECT ".$fields." FROM billing.SERVICE_STATUS WHERE ";
+                if($serveFor)
+                    $sql = $sql."SERVEFOR LIKE :SERVEFOR AND ".$valueStr;
+                else
+                    $sql = $sql.$valueStr;
+                $prep = $this->db->prepare($sql);
+                if(!is_array($billId))
+                    $prep->bindValue(":BILLID", $billId, PDO::PARAM_INT);
+                if($serveFor)
+                    $prep->bindValue(":SERVEFOR", $serveFor, PDO::PARAM_STR);
+                $prep->execute();
+                while($result=$prep->fetch(PDO::FETCH_ASSOC))
+                {
+                   $rows[$result['PROFILEID']] = $result; 
+                }
+                return $rows;
+            }
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+        return $result;
     }
 }

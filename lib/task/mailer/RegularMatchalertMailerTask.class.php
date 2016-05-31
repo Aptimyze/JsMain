@@ -70,6 +70,7 @@ EOF;
 				$subjectAndBody= $this->getSubjectAndBody($data["USERS"][0],$data["COUNT"],$values["LOGIC_USED"]);
 				$data["body"]=$subjectAndBody["body"];
 				$data["showDpp"]=$subjectAndBody["showDpp"];
+				$data["surveyLink"]=$subjectAndBody["surveyLink"];
 				$subject ='=?UTF-8?B?' . base64_encode($subjectAndBody["subject"]) . '?='; 
 				$this->smarty->assign('data',$data);
 				$msg = $this->smarty->fetch(MAILER_COMMON_ENUM::getTemplate($this->mailerName).".tpl");
@@ -130,16 +131,19 @@ EOF;
 			$subject["subject"]= $count." Desired Partner".$matchStr." for today | $today";
 			$subject["body"]="You may send interest to".$these." ".$count.strtolower($matchStr)." based on your Desired Partner Profile.";
                         $subject["showDpp"]= 1;
+                        $subject["surveyLink"]= 'NT';
 			break;
 		case "2":// T-NT case
                         $subject["subject"]= $count." Desired Partner".$matchStr." for today | $today"; 
 			$subject["body"]="You may send interest to".$these." ".$count.strtolower($matchStr)." based on your Desired Partner Profile.";
                         $subject["showDpp"]= 1;
+                        $subject["surveyLink"]= 'NT';
                         break;
 		case "4":// NT -T case
 		case "1":// T-T case
                         $subject["subject"]= $count.$matchStr." based on your recent activity | $today";
 			$subject["body"]="You may send interest to".$these." ".$count.strtolower($matchStr)." based on your recent activity. Your recent activity includes the interests, acceptances and declines sent in the last two months.";
+                        $subject["surveyLink"]= 'T';
                         break;
 		default :
 			 throw  new Exception("No logic send in subjectAndBody() in RegularMatchAlerts task");

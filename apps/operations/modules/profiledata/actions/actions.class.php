@@ -74,6 +74,105 @@ class ProfileDataActions extends sfActions
 		
 		return sfView::NONE;
 	}
+        /**
+         * This function generates the csv for contact details actions
+         * @param sfWebRequest $request
+         */
+        public function executeCsv(sfWebRequest $request)
+	{
+                // CSV data headers
+                $headerArray = array(
+                    "'Logout'" => array(array("Logout Data"),array("IP Address","Time")),
+                    'Login' => array(array("Login Data"),array("IP Address","Time")),
+                    "EditLog" => array(array("Modification Log : MOD_INDEXVAL"),array("MOD_INDEXVAL","Mod_Date","IP")),
+                    "EOILog" => array(array("Contact History"),array("Sender","Receiver","Date (IST)","TYPE","IP","MESSAGE","Phone Mobile","Phone Res","Phone Alternate","Contact")),
+                    "PaymentLog" => array(array("Payment Data"),array("Bill Id","Payment Mode","Cheque No","Cheque Date(EST)","Cheque City","Bank","IP","Status","Entry Date(EST)*","Service Names","Gateway*","TXN Ref No*","RRN*")),
+                );
+                
+                //get data from respective actions
+		$actionName=$request->getParameter('actiontocall');
+                ob_start();
+                $request->setParameter('useSfViewNone','1');
+                $request->setParameter('profileid1',$this->profileid);
+                sfContext::getInstance()->getController()->getPresentationFor('profiledata',$actionName);
+                $pageResponse = ob_get_contents(); //we can also get output from above command.
+                ob_end_clean();
+                
+                $pageResponse = json_decode($pageResponse);
+                if($actionName == 'Login' || $actionName == "'Logout'" || $actionName == "PaymentLog"){
+                        foreach($headerArray[$actionName] as $header){
+                            $csvData .= implode(',',$header)."\n";
+                        }
+                        if(!empty($pageResponse)){
+                                foreach($pageResponse as $pageData){
+                                   $pageData = (array)$pageData;
+                                   $csvData .= implode(',',$pageData)."\n";    
+                                }
+                        }else{
+                                $csvData .= "No Record(s) Found";   
+                        }
+                        if($actionName == "'Logout'"){
+                                $actionName = 'Logout';
+                        }
+                }elseif($actionName == 'EditLog'){
+                       $pageResponse = (array)$pageResponse;
+                       $csvData = '';
+                       if(!empty($pageResponse)){
+                                foreach($pageResponse as $indexVal => $pageModData){
+                                         $csvHeader = '';
+                                         foreach($headerArray[$actionName] as $header){
+                                             $csvHeader .= implode(',',$header)."\n";
+                                         } 
+                                         $csvHeader = str_replace('MOD_INDEXVAL', $indexVal, $csvHeader);
+                                         $csvData .= $csvHeader;
+                                         if(!empty($pageModData)){
+                                                 foreach($pageModData as $pageData){
+                                                         $csvData .= implode(',',$pageData)."\n";    
+                                                 }
+                                         }else{
+                                                 $csvData .= "No Record(s) Found";   
+                                         }
+                                 }
+                       }else{
+                                $csvData .= "Modification Log:\n";   
+                                $csvData .= "No Record(s) Found";   
+                       }
+                }elseif($actionName == 'EOILog'){
+                        $pageResponse = (array)$pageResponse;
+                        foreach($headerArray[$actionName] as $header){
+                            $csvData .= implode(',',$header)."\n";
+                        }
+                        if(!empty($pageResponse)){
+                                foreach($pageResponse as $indexVal => $pageModData){
+                                        $pageModData = (array)$pageModData;
+                                        foreach($pageModData as $indexVal => $pageData){
+                                                $pageData = (array)$pageData;
+                                                foreach($pageData as $indexVal => $messageDetails){
+                                                   $messageDetails = (array)$messageDetails;
+                                                   $csvData .= $messageDetails['SENDER'].",";
+                                                   $csvData .= $messageDetails['RECEIVER'].",";
+                                                   $csvData .= $messageDetails['DATE'].",";
+                                                   $csvData .= $messageDetails['TYPE'].",";
+                                                   $csvData .= $messageDetails['IP'].",";
+                                                   $csvData .= '"'.$messageDetails['MESSAGE'].'"'.",";
+                                                   $csvData .= $messageDetails['PHONE_MOB'].",";
+                                                   $csvData .= $messageDetails['PHONE_RES'].",";
+                                                   $csvData .= $messageDetails['PHONE_ALT'].",";
+                                                   $csvData .= '"'.$messageDetails['CONTACT'].'"'."\n";
+                                                }
+                                        }
+                                }  
+                        }else{
+                                $csvData .= "No Record(s) Found";   
+                        }
+                }
+                header("Content-Type: application/vnd.csv");
+                header("Content-Disposition: attachment; filename=$actionName.csv");
+                header("Pragma: no-cache");
+                header("Expires: 0");
+                echo $csvData;
+                die;
+	}
 	public function executeIndex(sfWebRequest $request)
 	{
 		
@@ -133,13 +232,22 @@ class ProfileDataActions extends sfActions
 	{
 		$loginObj = new LoginData($this->profileid);
 		$this->loginArr = $loginObj->login($this->profileid);
-		
+		if($request->getParameter("useSfViewNone") == 1){
+                        echo json_encode($this->loginArr);
+                        return sfView::NONE;
+                        die;
+                }
 	}
 	
 	public function executeLogout(sfWebRequest $request)
 	{
 		$loginObj = new LoginData($this->profileid);
 		$this->logoutArr = $loginObj->logout($this->profileid);
+                if($request->getParameter("useSfViewNone") == 1){
+                        echo json_encode($this->logoutArr);
+                        return sfView::NONE;
+                        die;
+                }
 	}
 	
 	public function executeProfileLog(sfWebRequest $request)
@@ -190,7 +298,11 @@ class ProfileDataActions extends sfActions
 		//Get EOI data
 		$EOIObj = new EOIData($this->profileid);
 		$this->EOIArr = $EOIObj->getEOIData($this->profileid);
-		   
+                if($request->getParameter("useSfViewNone") == 1){
+                        echo json_encode($this->EOIArr);
+                        return sfView::NONE;
+                        die;
+                }
 	}
 	
 	public function executeEditLog(sfWebRequest $request)
@@ -200,7 +312,11 @@ class ProfileDataActions extends sfActions
 		$profObj=new ProfileInfo1($this->profileid);
 	
 		$this->modArr=$profObj->getAllModified();
-		//print_r($this->modArr);die;		
+		if($request->getParameter("useSfViewNone") == 1){
+                        echo json_encode($this->modArr);
+                        return sfView::NONE;
+                        die;
+                }		
 	}
 	
 	public function executePaymentLog(sfWebRequest $request)
@@ -208,8 +324,11 @@ class ProfileDataActions extends sfActions
 	   //Get Payment History
 		$paymentObj = new Payment();
 		$this->paymentArr = $paymentObj->paymentDetails($this->profileid);
-		
-				
+                if($request->getParameter("useSfViewNone") == 1){
+                        echo json_encode($this->paymentArr);
+                        return sfView::NONE;
+                        die;
+                }
 	}
 		
 	

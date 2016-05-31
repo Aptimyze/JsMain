@@ -32,23 +32,33 @@ EOF;
 	{
 		 $IncompleteMasterobj = new NEWJS_INACTIVE_PROFILES("newjs_master");
 		 $IncompleteSlaveobj = new NEWJS_INACTIVE_PROFILES("newjs_slave");
-		 $profilemail=$IncompleteSlaveobj->SelectProfilesInactivated($arguments["totalScript"],$arguments["currentScript"]);
+		 $profilemail=$IncompleteMasterobj->SelectProfilesInactivated($arguments["totalScript"],$arguments["currentScript"]);
+		 
 		// print_r(MailerGroup::INCOMPLETE);die;
 		 foreach ($profilemail as $key => $value) {
 		 	//$value=45;
-		 	if($value>=90)
-		 	{
 		 		//echo $value;die;
-		        $email_sender = new EmailSender(MailerGroup::INCOMPLETE, 1819);
-				$emailTpl = $email_sender->setProfileId($key);
-			}
-			else
-			{
-				$email_sender = new EmailSender(MailerGroup::INACTIVE_2, 1822);
+		 		if($value==90)
+					$email_sender = new EmailSender(MailerGroup::INCOMPLETE_90, 1827);
+				elseif($value==120)
+					$email_sender = new EmailSender(MailerGroup::INCOMPLETE_120, 1828);
+				elseif($value==145)
+					$email_sender = new EmailSender(MailerGroup::INCOMPLETE_145, 1829);
+			
+				elseif($value==15)
+					$email_sender = new EmailSender(MailerGroup::INACTIVE_15, 1822);
+				elseif($value==30)
+					$email_sender = new EmailSender(MailerGroup::INACTIVE_30, 1823);	
+				elseif($value==45)
+					$email_sender = new EmailSender(MailerGroup::INACTIVE_45, 1824);
+				elseif($value==60)
+					$email_sender = new EmailSender(MailerGroup::INACTIVE_60, 1825);
+				elseif($value==75)
+					$email_sender = new EmailSender(MailerGroup::INACTIVE_75, 1826);
 				$emailTpl = $email_sender->setProfileId($key);
 				$smartyObj = $emailTpl->getSmarty();
 				$smartyObj->assign("interval",$value);
-			}
+		
 			$email_sender->send();
 			$IncompleteMasterobj->UpdateStatusIncomplete($key);
 			}

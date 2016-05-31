@@ -141,7 +141,8 @@ class Producer
       $this->channel->queue_declare(MQ::SMSQUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
       $this->channel->queue_declare(MQ::CONTACTCACHEINITIATE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
       $this->channel->queue_declare(MQ::CONTACTCACHEINITIATE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
-      $this->channel->queue_declare(MQ::AGENT_NOTIFICATIONSQUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);  
+      $this->channel->queue_declare(MQ::AGENT_NOTIFICATIONSQUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE); 
+      $this->channel->queue_declare(MQ::BUFFER_INSTANT_NOTIFICATION_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE); 
     } 
     catch (Exception $exception) 
     {
@@ -174,6 +175,9 @@ class Producer
                     //$data=$msgdata['data'];
                     //$msg = new AMQPMessage($data,array('delivery_mode' =>MQ::DELIVERYMODE));
                     //$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::CONTACTCACHEINITIATE,MQ::MANDATORY,MQ::IMMEDIATE);
+                    break;
+        case "BUFFER_INSTANT_NOTIFICATIONS" :
+                    $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::BUFFER_INSTANT_NOTIFICATION_QUEUE,MQ::MANDATORY,MQ::IMMEDIATE);
                     break;
       }
     }

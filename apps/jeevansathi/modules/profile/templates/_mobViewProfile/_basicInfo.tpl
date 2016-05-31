@@ -8,8 +8,10 @@
             ~mainMem::EVALUE_LABEL`
         ~else if $arrData.subscription_icon eq jsexclusive` 
             ~mainMem::JSEXCLUSIVE_LABEL`
-        ~else`
+       ~else if $arrData.subscription_icon eq erishta`
             ~mainMem::ERISHTA_LABEL`
+        ~else if $arrData.subscription_icon eq eadvantage`
+            ~mainMem::EADVANTAGE_LABEL`
         ~/if` </div>
   ~/if`	
   <div class="clr hgt10"></div>

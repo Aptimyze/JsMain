@@ -93,6 +93,7 @@ class Scoring_ab
 		$this->newmodel[MTONGUE] = $this->MTONGUE;
 		$this->newmodel[DOB] = $this->DTOFBIRTH;
 		$this->newmodel[LAST_LOGIN_DT] = $this->LAST_LOGIN_DT;	
+		$this->newmodel[ENTRY_DT] = $this->ENTRY_DT;
 
 		//Purchase Data
 		$this->newmodel[SUBSCRIPTION_START_DATE] = "";

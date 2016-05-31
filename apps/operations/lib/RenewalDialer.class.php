@@ -33,7 +33,7 @@ class RenewalDialer {
         $method =$processObj->getMethod();
         if($method =='IN_RENEWAL_DIALER_ELIGIBILITY')
         {
-            $inRenewDialerTempPool = new incentive_RENEWAL_IN_DIALER_TEMP_POOL();
+            $inRenewDialerTempPool = new incentive_RENEWAL_IN_DIALER_TEMP_POOL('newjs_slave');
             
             // DO NOT CALL Filter
             $filter ='DO_NOT_CALL';
@@ -72,7 +72,7 @@ class RenewalDialer {
         $method =$processObj->getMethod();
         if($method=='IN_RENEWAL_DIALER_ELIGIBILITY')
         {
-            $inRenewDialerObj = new incentive_RENEWAL_IN_DIALER_TEMP_POOL();
+            $inRenewDialerObj = new incentive_RENEWAL_IN_DIALER_TEMP_POOL('newjs_slave');
             $profiles = $inRenewDialerObj->fetchProfiles();
         }
         return $profiles;
@@ -91,9 +91,9 @@ class RenewalDialer {
                     $eligibleProfilesArr[] = $val["PROFILEID"];
                 }
             }
-            $alertsObj = new newjs_JPROFILE_ALERTS('newjs_bmsSlave');
-            $historyObj = new incentive_HISTORY('newjs_bmsSlave');
-            $jprofileObj = new JPROFILE('newjs_bmsSlave');
+            $alertsObj = new newjs_JPROFILE_ALERTS('newjs_slave');
+            $historyObj = new incentive_HISTORY('newjs_slave');
+            $jprofileObj = new JPROFILE('newjs_slave');
             
             $excl_dnc_dt    =@date('Y-m-d',time()-(7-1)*86400);
             $excl_cf_dt     =@date('Y-m-d',time()-(7-1)*86400);

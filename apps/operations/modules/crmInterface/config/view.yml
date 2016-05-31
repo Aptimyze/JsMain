@@ -39,3 +39,9 @@ fetchMailerDataSuccess:
     title:        Mailer Statistics Interface
   stylesheets:    [jquery_dateLists]
   javascripts:    [jquery_dateLists]                     
+
+helpBackendSuccess:
+    metas:
+        title:    Jeevansathi Help Module
+    stylesheets:  [operations/help_module]
+    javascripts:  []

@@ -13,7 +13,6 @@ include_once($_SERVER['DOCUMENT_ROOT']."/jsadmin/connect.inc");
 include_once($_SERVER['DOCUMENT_ROOT']."/billing/comfunc_sums.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Services.class.php");
 include_once($_SERVER["DOCUMENT_ROOT"]."/classes/Membership.class.php");
-$db_slave = connect_slave();
 if(authenticated($cid))
 {
 	maStripVARS_sums('stripslashes');
@@ -50,7 +49,7 @@ if(authenticated($cid))
 			mysql_query_decide($sql_log) or logError_sums($sql_log,1);
 
 			//passing billid, the modified string and "C" indicating that the transaction has been cancelled
-			change_notify_mail($billid, $changes,"C",$db_slave);
+			change_notify_mail($billid, $changes,"C");
 
 			//set STATUS=CANCEL in PURCHASES table.
 			$reason = addslashes(stripslashes($reason));

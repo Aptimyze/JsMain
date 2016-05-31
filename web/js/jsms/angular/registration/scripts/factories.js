@@ -170,7 +170,8 @@
 		"s4": [{"label":"Children","value":notFilled,"show":"false","screenName":"s4","userDecision":"","dindex":"0","storeKey":"havechild",dshow:"children"},
 			{"label":"Caste","value":notFilled,"show":"false","screenName":"s4","userDecision":"","dindex":"1","storeKey":"caste",dshow:"reg_caste_"}],
         "s9": [{"label":"Of which married","value":notFilled,"show":"false","screenName":"s4","userDecision":"","dindex":"0","storeKey":"m_brother",dshow:"m_brother","labelPrefix":" brother(s) of which married "},
-			{"label":"Of which married","value":notFilled,"show":"false","screenName":"s4","userDecision":"","dindex":"1","storeKey":"m_sister",dshow:"m_sister","labelPrefix":" sister(s) of which married "}],
+			{"label":"Of which married","value":notFilled,"show":"false","screenName":"s4","userDecision":"","dindex":"1","storeKey":"m_sister",dshow:"m_sister","labelPrefix":" sister(s) of which married "},
+			{"label":"City","value":notFilled,"show":"false","storeKey":"native_city","screenName":"s9","dshow":"reg_city_","userDecision":"","dindex":"2","labelPrefix":"-"}],
 		};
 		
 		var listOfScreens = ['s1','s2','s3','s4','s5','s6','s9','s10'];
@@ -216,7 +217,9 @@
             {"label":"Mother's Occupation","value":notFilled,"show":"true","screenName":"s9","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","depValue":"","dshow":"mother_occ","userDecision":"","dindex":"5","storeKey":"mother_occ","tapName":"Mother's Occupation"},
             {"label":"Brother(s)","value":notFilled,"show":"true","screenName":"s9","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"m_brother","depValue":"","dshow":"t_brother","userDecision":"","dindex":"6","storeKey":"t_brother","tapName":"Brother(s)","dependant_tapName":"Of which married","optIndex":"0"},
             {"label":"Sister(s)","value":notFilled,"show":"true","screenName":"s9","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"m_sister","depValue":"","dshow":"t_sister","userDecision":"","dindex":"7","storeKey":"t_sister","tapName":"Sister(s)","dependant_tapName":"Of which married","optIndex":"1"},
-            {"label":"Gothra","value":"","inputType":"text","hint":notFilled,"show":"true","screenName":"s9","storeKey":"gothra","hamburgermenu":"0","dindex":"8"}
+			{"label":"Family based out of","value":notFilled,"show":"true","storeKey":"native_state","screenName":"s9","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"reg_city_","depValue":"","dshow":"native_state_jsms","userDecision":"","dindex":"8","tapName":'Family based out of',"optIndex":"2","dependant_tapName":"Family based out of"},
+			{"label":"Please specify(city)","value":"","show":"false","storeKey":"ancestral_origin","screenName":"s9","hamburgermenu":"0","dindex":"9","hint":notFilled,"inputType":"text","userDecision":"","required":"false"},
+            {"label":"Gothra","value":"","inputType":"text","hint":notFilled,"show":"true","screenName":"s9","storeKey":"gothra","hamburgermenu":"0","dindex":"10"},
             
 			],
             "s10": [{"label":"About family","value":"","show":"true","screenName":"s10","storeKey":"familyinfo",'errorLabel':"","hint":"Write about your parents and brothers or sisters. Where do they live? What are they doing?","userDecision":""}],
@@ -439,7 +442,14 @@
 					factory.initDobField(field,preFilledData);
 					return;
 				}
-									
+				if(field.storeKey=="native_state" && screenName=="s9" && !preFilledData['native_state'])
+				{
+                                        field.userDecision = preFilledData["native_country"];
+					val = factory.getLabel("native_country_jsms",field.userDecision);
+					if(val)
+						field.value = val;
+					return;
+				}					
 				if( field.storeKey && 
 					(preFilledData[field.storeKey] && 
 					preFilledData[field.storeKey] != "undefined")
@@ -529,12 +539,60 @@
 		{
 			var fields = factory.getRegFields(screenName);
 			var optionFields = factory.getRegOptionalFields(screenName);
-			
 			if(fields[indexPos].multiField == "1")
 			{
 				factory.updateMultiGuiFields(screenName,indexPos,output);
 				return ;
 			}
+				if(fields[indexPos].storeKey=="native_country" && output.hasOwnProperty(fields[indexPos].dshow) && output[fields[indexPos].dshow].value!="NI")
+				{
+					fields[indexPos].storeKey="native_state";
+				}
+			if((fields[indexPos].storeKey=="native_state" && output.hasOwnProperty(fields[indexPos].dshow) && output[fields[indexPos].dshow].value=="NI")||(fields[indexPos].storeKey=="native_country" && output.hasOwnProperty("native_country_jsms"))|| 
+	(fields[indexPos].storeKey=="native_state" && output.hasOwnProperty("native_country_jsms") && $.isNumeric(output["native_country_jsms"].value)))
+			{
+				UserDecision.store("native_country",output['native_country_jsms']['value']);
+				UserDecision.store("native_state",'');
+				UserDecision.store("native_city",'');
+				fields[indexPos].userDecision=output['native_country_jsms'].value;
+				fields[indexPos].value=output['native_country_jsms'].label;
+				fields[indexPos].storeKey="native_country";
+				fields[indexPos].errorLabel = "";	
+				fields[indexPos].value = factory.sanitizeString(fields[indexPos].value);
+				var iIndex              = fields[indexPos].optIndex;
+				optionFields[iIndex].value =  "native_city";
+				optionFields[iIndex].userDecision = "";
+				factory.handleDepValue(fields[indexPos]);
+				if(output.hasOwnProperty(fields[indexPos].dshow))
+					output[fields[indexPos].dshow].value='';
+				return;
+			}
+			else if(fields[indexPos].storeKey=="native_state" && output.hasOwnProperty(fields[indexPos].dshow) && output[fields[indexPos].dshow].value!="NI")
+			{
+				UserDecision.store("native_country",'51');
+				UserDecision.store("native_state",output['native_state_jsms']['value']);
+				$.each(output, function (key,val){ 
+				if(key.indexOf('reg_city')>-1)
+				{
+					UserDecision.store("native_city",val['value']);
+					depUserSelection = val['value'];
+					depLabel		= val['label'];
+				}
+				var iIndex              = fields[indexPos].optIndex;
+				labelPrefix = optionFields[iIndex].labelPrefix;
+				optionFields[iIndex].value =  depLabel;
+				optionFields[iIndex].userDecision = depUserSelection;
+				fields[indexPos].userDecision=output['native_state_jsms']['value'];
+				fields[indexPos].errorLabel = "";	
+				fields[indexPos].depValue= depUserSelection;
+				fields[indexPos].value = output['native_state_jsms']['label'] + labelPrefix + depLabel;
+				fields[indexPos].value = factory.sanitizeString(fields[indexPos].value);
+				factory.handleDepValue(fields[indexPos]);
+				return;
+				 });
+			}
+			else
+			{
 			fields[indexPos].userDecision=output[fields[indexPos].dshow].value;
 			fields[indexPos].value=output[fields[indexPos].dshow].label;
 			fields[indexPos].errorLabel = "";	
@@ -558,7 +616,6 @@
 					depLabel		= output[fields[indexPos].dependant].label;
 					fields[indexPos].value = fields[indexPos].value + labelPrefix + depLabel;
 				}
-				
 				if(iIndex && iIndex.length)
 				{
 					optionFields[iIndex].value =  depLabel;
@@ -571,6 +628,7 @@
 			//parse
 			fields[indexPos].value = factory.sanitizeString(fields[indexPos].value);
 			factory.handleDepValue(fields[indexPos]);
+			}
 		}
 			
 		factory.updateMultiGuiFields = function(screenName,indexPos,output)
@@ -741,7 +799,7 @@
 			"s4":["mstatus","mtongue","religion","caste","havechild","horoscope_match"],
 			"s5":["name_of_user","email","password","phone_mob"],
 			"s6":["yourinfo"],
-            "s9":["t_brother","m_brother","t_sister","m_sister","family_type","family_values","family_status","family_income","family_back","mother_occ","gothra"],
+            "s9":["t_brother","m_brother","t_sister","m_sister","family_type","family_values","family_status","family_income","family_back","mother_occ","gothra","native_country","native_state","native_city","ancestral_origin"],
             "s10":["familyinfo"],
 			};
 		var szUDKey = 'UD';
@@ -777,7 +835,11 @@
 				delete data["city_res"];
 				delete data["pincode"];
 			}
-			
+			if(key=="native_country")
+			{
+				delete data["native_state"];
+				delete data["native_city"];
+			}
 			if(key=="mstatus")
 			{	
 				delete data["havechild"];
@@ -915,6 +977,10 @@
             'reg[family_values]':'',
             'reg[familyinfo]':'',
             'reg[family_income]':'',
+            'reg[native_country]':'',
+            'reg[native_state]':'',
+            'reg[native_city]':'',
+      'reg[ancestral_origin]':'',
 			'reg[trackingParams]':''
 		};
 		var generateFormData=function(inputArray,regPageArray)
@@ -1033,7 +1099,10 @@
                       }
                     }
                 });
-               
+               if(outputPageData.hasOwnProperty('native_state') && outputPageData['native_state']!='')
+		{
+			outputPageData['native_country']='51';
+		}
                 generateFormData(outputPageData,regPage3Fields);
                 var aboutFamilyField = Gui.getRegFields(allowedScreen[1]);
 				regPage3Fields['reg[familyinfo]'] = aboutFamilyField[0].userDecision;
@@ -1562,7 +1631,7 @@
             });
         }
         factory.trackClientInfo = function(screenName)
-        {
+        {return;
             if(!screenName || typeof screenName != "string" || !screenName.length)
                 return ;
             var info = Storage.getUserData(clientInfoKey);
@@ -1587,7 +1656,7 @@
             }
         }
         factory.resetClientInfo = function()
-        {
+        {return;
             clientInfo.trackDoneFor = [];
         }
 		return factory;

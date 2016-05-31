@@ -204,6 +204,7 @@ if(typeof response.searchid!="undefined")
 	{
 		updateHistory("",1);
 		/** handling zero results message */
+		$("#HorizontalTab"+activeHorizontalTabInfoID+" .js-resultsCount").remove();
 		var zeroResultsHeading = "<span class='bold f28'> 0</span> ",upgradeButtonText="View Membership Plans";
 		$("#upgradeMembershipButton").html(upgradeButtonText);
 		if(activeVerticalTab == "1")
@@ -253,7 +254,7 @@ if(typeof response.searchid!="undefined")
     var countOfProfiles = Object.keys(response.profiles).length;
     
     if(countOfProfiles >= 3){
-      $("<div class='rel_c js-rcbMessage' id='callDiv1'><div class='ccp2 fontlig color11'><div class='mainBrdr clearfix'><div class='f14 fontlig wid60p inDisp fl'>To reach out to your accepted members, you may consider upgrading your membership. Would you like us to call you to explain the benifits of our membership plans?</div><div class='pt15 pb30 color2 f14 fr inDisp verTop'><span class='hlpcl1 calUserDiv cursp' id='callUser'>Yes, call me</span><span id='noButton' class='hlpcl11 cursp bg6 noUserDiv'>No, Later</span></div></div></div></div>").insertAfter("#outerCCTupleDiv3");
+      $("<div class='rel_c js-rcbMessage' id='callDiv1'><div class='ccp2 fontlig color11'><div class='mainBrdr clearfix'><div class='f14 fontlig wid60p inDisp fl'>To reach out to your accepted members, you may consider upgrading your membership. Would you like us to call you to explain the benefits of our membership plans?</div><div class='pt15 pb30 color2 f14 fr inDisp verTop'><span class='hlpcl1 calUserDiv cursp' id='callUser'>Yes, call me</span><span id='noButton' class='hlpcl11 cursp bg6 noUserDiv'>No, Later</span></div></div></div></div>").insertAfter("#outerCCTupleDiv3");
       
       //On Yes Call Now
       $("#callUser").off("click");

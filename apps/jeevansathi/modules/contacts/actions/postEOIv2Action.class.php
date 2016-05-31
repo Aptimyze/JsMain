@@ -103,6 +103,7 @@ class postEOIv2Action extends sfAction
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
 		$buttonObj = new ButtonResponse($this->loginProfile,$this->Profile,"",$this->contactHandlerObj);
 		$responseButtonArray["button"] = $buttonObj->getInitiatedButton();
+
 		if($this->contactEngineObj->messageId)
 		{
 			if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")
@@ -110,10 +111,13 @@ class postEOIv2Action extends sfAction
 				$responseArray["headerthumbnailurl"] = $thumbNail;
 				$responseArray["headerlabel"] = $this->Profile->getUSERNAME();
 				$responseArray["selfthumbnailurl"] = $ownthumbNail;
-				$param = "&messageid=".$this->contactEngineObj->messageId."&type=I";
+				$contactId = $this->contactEngineObj->contactHandler->getContactObj()->getCONTACTID(); 
+				$param = "&messageid=".$this->contactEngineObj->messageId."&type=I&contactId=".$contactId;
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
 				$responseArray['draftmessage'] = "Write a personalized message to ".$this->Profile->getUSERNAME()." along with your interest";
 				$responseArray['lastsent'] = LastSentMessage::getLastSentMessage($this->loginProfile->getPROFILEID(),"I");
+				
+
 			}	
 			else
 			{

@@ -10,6 +10,7 @@ class gunaScore
 		/*This function is called by the gunaScoreApi and it verifies conditions and 
 		 * and accordingly fetches and returns the gunaScoreArr  
 		 */
+
         public function getGunaScore($profileId,$caste,$profilechecksumArr,$gender)
         {	$parentValueArr = gunaScoreConstants::$parentValues;
         	$searchIdArr = array();
@@ -66,14 +67,30 @@ class gunaScore
         				}
         			}
         			if($logged_astro_details && is_array($compstring))
-					{	
-						$gunaData = $this->thirdPartyVendorCall($logged_astro_details,$compstring);
-						return ($gunaData);
-					}
-					else
-					{
-						return;
-					}
+                                {	
+                                        $compstringAlteredArr = array();
+                                        if(sizeof($compstring)>=gunaScoreConstants::BATCH_NO)
+                                        {
+                                               $compstringAlteredArr = array_chunk($compstring, gunaScoreConstants::BATCH_NO);
+                                        }
+                                        if(!empty($compstringAlteredArr))
+                                        {
+                                                $gunaData_1 = $this->thirdPartyVendorCall($logged_astro_details,$compstringAlteredArr[0]);
+                                                $gunaData_2 = $this->thirdPartyVendorCall($logged_astro_details,$compstringAlteredArr[1]);
+                                                $gunaData = array_merge($gunaData_1,$gunaData_2);
+                                                return $gunaData;
+                                        }
+                                        else
+                                        {
+                                                $gunaData = $this->thirdPartyVendorCall($logged_astro_details,$compstring);
+                                                return ($gunaData);
+                                        }
+                                        
+                                }
+                                else
+                                {
+                                  return;
+                          }
         	}
         	else
         	{

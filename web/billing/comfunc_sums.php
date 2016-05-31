@@ -507,7 +507,7 @@ function maStripVARS_sums($action)
         }
 }
 
-function change_notify_mail($id, $message, $flag, $db_slave)
+function change_notify_mail($id, $message, $flag)
 {
 	if($flag=="C")
 	{
@@ -536,9 +536,11 @@ function change_notify_mail($id, $message, $flag, $db_slave)
 		$msg .= "Details : \n".$message;
 		$subject = "Receipt ID : ".$id." has been modified";
 	}
-
+	$db_slave = connect_slave();
 	$email 		=get_email($row_wlk['WALKIN'],$db_slave);
 	$boss_email 	=get_boss_email($row_wlk['WALKIN'],$db_slave);
+	unset($db_slave);
+	$db = connect_db();
 
 	$from 		="info_sums@jeevansathi.com";
 	$emailHead	="anamika.singh@jeevansathi.com";	

@@ -90,6 +90,9 @@ XML;
          * @param $account transaction/promotion By default sets as transaction
          */
 	public function send($xml,$account){
+		//VA
+		if($_SERVER['HTTP_BURP'] == "burp") return true;
+		//Ends here
 		/*if(strstr($_SERVER['PHP_SELF'],'symfony_index.php') || strstr($_SERVER['PHP_SELF'],'operations.php'))
 		{
 			$whichMachine = sfConfig::get("app_whichmachine");

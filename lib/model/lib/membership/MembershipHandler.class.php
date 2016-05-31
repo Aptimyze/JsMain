@@ -24,7 +24,7 @@ class MembershipHandler
 
     	$memCacheObject = JsMemcache::getInstance();
 
-    	$servicesObj = new billing_SERVICES();
+    	$servicesObj = new billing_SERVICES('newjs_slave');
         
         if ($membership == "MAIN") {
             $key_main = $device . "_MAIN_MEMBERSHIP";
@@ -180,7 +180,7 @@ class MembershipHandler
     }
 
     public function isDiscountOfferActive() {
-        $discountOfferLogObj = new billing_DISCOUNT_OFFER_LOG();
+        $discountOfferLogObj = new billing_DISCOUNT_OFFER_LOG('newjs_slave');
         $active = $discountOfferLogObj->checkDiscountOffer();
         $this->discountOfferID = $active;
         return $active;
@@ -938,6 +938,7 @@ class MembershipHandler
         $serviceid_str = @implode("','", $serviceid_arr);
         
         $serviceObj = new billing_SERVICES();
+        $serviceid_str = "'".$serviceid_str."'";
         $servicesArr = $serviceObj->fetchAllServiceDetails($serviceid_str);
         $service_name = array();
         if (is_array($servicesArr)) {
@@ -1386,10 +1387,10 @@ class MembershipHandler
                 // New Scoring logic for Renewal discount Start
                 $score =0;
                 $discount =0;
-                $score =new incentive_MAIN_ADMIN_POOL();
+                $score =new incentive_MAIN_ADMIN_POOL('newjs_slave');
                 $score =$score->getAnalyticScore($profileid);
 
-                $renewalDiscountLookup =new billing_RENEWAL_DISCOUNT_LOOKUP();
+                $renewalDiscountLookup =new billing_RENEWAL_DISCOUNT_LOOKUP('newjs_slave');
                 $discount =$renewalDiscountLookup->getDiscountForScore($score);
                 if(!$discount)
                         $discount =userDiscounts::RENEWAL;
@@ -1398,11 +1399,18 @@ class MembershipHandler
                 // New Scoring logic End
     }
     
-    public function getVariableRenewalDiscount($profileid) {
+    public function getVariableRenewalDiscount($profileid,$notApplicable='') {
         $rdObj = new billing_RENEWAL_DISCOUNT();
         $res = $rdObj->getDiscount($profileid);
-        if ($res['DISCOUNT']) return $res['DISCOUNT'];
-        else return userDiscounts::RENEWAL;
+        if($res['DISCOUNT']){ 
+		return $res['DISCOUNT'];
+	}
+        else{ 
+		if($notApplicable)
+			return;
+		else
+			return userDiscounts::RENEWAL;
+	}
     }
     
     public function sendEmailForCallback($subject, $msgBody, $to = '') {
@@ -1562,28 +1570,91 @@ class MembershipHandler
     public function getExclusiveAllocationDetails($assigned=false,$orderBy="")
     {
         $exclusiveObj = new billing_EXCLUSIVE_MEMBERS();
-        $allocationDetails = $exclusiveObj->getExclusiveMembers("PROFILEID,BILLING_DT,ASSIGNED_TO",$assigned,$orderBy);
+        $allocationDetails = $exclusiveObj->getExclusiveMembers("PROFILEID,DATE_FORMAT(BILLING_DT, '%d/%m/%Y') AS BILLING_DT,ASSIGNED_TO,BILL_ID",$assigned,$orderBy);
         if(is_array($allocationDetails) && $allocationDetails)
         {
             $profileIDArr = array_keys($allocationDetails);
-            $whereCondition = array("SUBSCRIPTION"=>'%X%',"ACTIVATED"=>'Y');
-            $jprofleSlaveObj = new JPROFILE("newjs_slave");
-            $profileDetails = $jprofleSlaveObj->getProfileSelectedDetails($profileIDArr,"PROFILEID,USERNAME,EMAIL,PHONE_MOB",$whereCondition);
-            unset($jprofleSlaveObj);
-            foreach ($allocationDetails as $profileid=> $value) {
+            if(is_array($profileIDArr) && $profileIDArr)
+            {
+                $whereCondition = array("SUBSCRIPTION"=>'%X%',"ACTIVATED"=>'Y');
+                //get jprofile details
+                $jprofleSlaveObj = new JPROFILE("newjs_slave");
+                $profileDetails = $jprofleSlaveObj->getProfileSelectedDetails($profileIDArr,"PROFILEID,USERNAME,EMAIL,PHONE_MOB,AGE,MSTATUS,RELIGION,CASTE,INCOME,GENDER,HEIGHT",$whereCondition);
+                unset($jprofleSlaveObj);
+                
+                //get names of profiles
+                $incentiveObj = new incentive_NAME_OF_USER("newjs_slave");
+                $profileNamesArr = $incentiveObj->getName($profileIDArr);
+                unset($incentiveObj);
+
+                //get names of agents to whom profiles are allotted
+                $mainAdminObj = new incentive_MAIN_ADMIN("newjs_slave");
+                $jsadminDetails = $mainAdminObj->getArray(array("PROFILEID"=>implode(",",$profileIDArr)),"","","ALLOTED_TO AS SALES_PERSON,PROFILEID","","PROFILEID");
+                unset($mainAdminObj);
+
+                //get billing details of profiles via billid's
+                $billIdArr = array_map(function ($arr) { return $arr['BILL_ID']; }, $allocationDetails); 
+                if(is_array($billIdArr) && $billIdArr)
+                {
+                    $billingObj = new BILLING_SERVICE_STATUS("newjs_slave");
+                    $billingDetails = $billingObj->fetchServiceDetailsByBillId(array_filter($billIdArr),"PROFILEID,SERVICEID,DATE_FORMAT(EXPIRY_DT, '%d/%m/%Y') AS EXPIRY_DT","%X%");
+                    unset($billingObj);
+                }
+            }
+            foreach ($allocationDetails as $profileid=> $value) 
+            {
                 if($profileDetails[$profileid])
                 {
-                    $allocationDetails[$profileid]["USERNAME"] = $profileDetails[$profileid]["USERNAME"];
-                    $allocationDetails[$profileid]["EMAIL"] = $profileDetails[$profileid]["EMAIL"];
-                    $allocationDetails[$profileid]["PHONE_MOB"] = $profileDetails[$profileid]["PHONE_MOB"];
+                    $allocationDetails[$profileid] = $this->modifyExclusiveMembersDetails($profileid,$profileDetails[$profileid],$allocationDetails[$profileid],$jsadminDetails[$profileid],$billingDetails[$profileid],$profileNamesArr[$profileid]);
                 }
                 else
                     unset($allocationDetails[$profileid]);
             }
+            unset($billingDetails);
+            unset($jsadminDetails);
+            unset($profileNamesArr);
         }
         return $allocationDetails;
     }
 
+    /*function to reform and merge details of exclusive members
+  *@param : $profileid,$profileDetails,$allocationDetails,$jsadminDetails,$billingDetails,$profileName
+  * @return : $allocationDetails
+  */
+    private function modifyExclusiveMembersDetails($profileid,$profileDetails,$allocationDetails,$jsadminDetails="",$billingDetails="",$profileName="")
+    {
+        //reform profile details format
+        $columnsToBeMapped = array("INCOME","RELIGION","CASTE","HEIGHT");
+        $profileDetails = exclusiveMemberList::mapColumnsToActualValues($profileDetails,$columnsToBeMapped);
+        unset($columnsToBeMapped);
+
+        //get name of profile
+        $profileDetails['PROFILE_NAME'] = $profileName;
+
+        //get dpp matches count for profile
+        $loggedInProfileObj = Operator::getInstance();
+        $loggedInProfileObj->getDetail($profileid,'PROFILEID','*');
+        $dppDetails = SearchCommonFunctions::getMyDppMatches("",$loggedInProfileObj,"","","","","","","","onlyCount");
+        $profileDetails['MATCHES'] = $dppDetails['CNT'];
+        unset($dppDetails);
+        unset($loggedInProfileObj);
+
+        //reformat billing details(serviceid to service duration)
+        if($billingDetails)
+            $billingDetails = exclusiveMemberList::mapColumnsToActualValues($billingDetails,array("SERVICEID"));
+
+        //merge all details
+        if(is_array($billingDetails) && is_array($jsadminDetails))
+            $allocationDetails = array_merge($allocationDetails,$profileDetails,$billingDetails,$jsadminDetails);
+        else if(is_array($billingDetails))
+            $allocationDetails = array_merge($allocationDetails,$profileDetails,$billingDetails);
+        else if(is_array($jsadminDetails[$profileid]))
+            $allocationDetails = array_merge($allocationDetails,$profileDetails,$jsadminDetails);
+        else
+            $allocationDetails = array_merge($allocationDetails,$profileDetails);
+        return $allocationDetails;
+
+    }
     public function showVerificationWidgetOrNot(){
     	$loginProfile = LoggedInProfile::getInstance();
     	if($loginProfile){

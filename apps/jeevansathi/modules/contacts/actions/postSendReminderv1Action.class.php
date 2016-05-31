@@ -93,8 +93,11 @@ class postSendReminderv1Action extends sfAction
 				$responseArray["headerthumbnailurl"] = $thumbNail;;
 				$responseArray["headerlabel"] = $this->Profile->getUSERNAME();
 				$responseArray["selfthumbnailurl"] = $ownthumbNail;
-				$param = "&messageid=".$this->contactEngineObj->messageId."&type=R";
+				$contactId = $this->contactEngineObj->contactHandler->getContactObj()->getCONTACTID(); 
+				$param = "&messageid=".$this->contactEngineObj->messageId."&type=R&contactId=".$contactId;
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
+				
+
 			}
 		}
 		else

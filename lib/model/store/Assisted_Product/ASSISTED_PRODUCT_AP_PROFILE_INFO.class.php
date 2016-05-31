@@ -36,13 +36,13 @@ class ASSISTED_PRODUCT_AP_PROFILE_INFO extends TABLE
         
 	/*
 	This function fetches the profile id's which are LIVE after checking with temp table which store
-         * already sent records in case of cron failure
+         * already sent records in case of cron failure ordering them with last login date
 	@return an array of profileid 
 	*/
     public function getAPProfilesResumed()
     {
       try {
-        $sql = "SELECT I.PROFILEID FROM Assisted_Product.AP_PROFILE_INFO AS I LEFT JOIN Assisted_Product.AP_PROFILE_INFO_LOG AS L ON I.PROFILEID = L.PROFILEID WHERE I.STATUS='LIVE' AND I.SEND='Y' AND L.PROFILEID IS NULL order by I.PROFILEID DESC";
+        $sql = "SELECT I.PROFILEID FROM Assisted_Product.AP_PROFILE_INFO AS I LEFT JOIN Assisted_Product.AP_PROFILE_INFO_LOG AS L ON I.PROFILEID = L.PROFILEID LEFT JOIN newjs.JPROFILE AS J ON I.PROFILEID = J.PROFILEID  WHERE I.STATUS='LIVE' AND I.SEND='Y' AND L.PROFILEID IS NULL AND J.ACTIVATED!='D' and J.activatedkey=1 order by J.LAST_LOGIN_DT DESC";
         $res = $this->db->prepare($sql);
         $res->execute();
         while($result=$res->fetch(PDO::FETCH_ASSOC)) {

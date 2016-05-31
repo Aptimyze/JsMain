@@ -254,7 +254,7 @@ class BILLING_PURCHASES extends TABLE{
     public function fetchTotalSalesProfileWise($rangeType, $start_dt, $end_dt)
     {
         try{
-            $sql = "SELECT p.PROFILEID, p.ENTRY_DT, if(TYPE='DOL',ROUND(AMOUNT*DOL_CONV_RATE*(1-TAX_RATE/100),0),ROUND(AMOUNT*(1-TAX_RATE/100),0)) as SALE, ".$rangeType."(p.ENTRY_DT) as rangeType FROM billing.PAYMENT_DETAIL AS pd, billing.PURCHASES AS p WHERE p.BILLID=pd.BILLID AND p.STATUS='DONE' AND pd.STATUS='DONE' AND p.ENTRY_DT >= :START_DT AND p.ENTRY_DT <= :END_DT";
+            $sql = "SELECT p.PROFILEID, p.ENTRY_DT, if(TYPE='DOL',ROUND(AMOUNT*DOL_CONV_RATE*((100/(100+TAX_RATE))),0),ROUND(AMOUNT*((100/(100+TAX_RATE))),0)) as SALE, ".$rangeType."(p.ENTRY_DT) as rangeType FROM billing.PAYMENT_DETAIL AS pd, billing.PURCHASES AS p WHERE p.BILLID=pd.BILLID AND p.STATUS='DONE' AND pd.STATUS='DONE' AND p.ENTRY_DT >= :START_DT AND p.ENTRY_DT <= :END_DT";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":START_DT", $start_dt, PDO::PARAM_STR);
             $prep->bindValue(":END_DT", $end_dt, PDO::PARAM_STR);
@@ -401,7 +401,24 @@ class BILLING_PURCHASES extends TABLE{
         }
         return $profiles;
     }
-
+    public function getFreshPaidProfiles($startDate, $endDate)
+    {
+        try
+        {
+            $sql ="SELECT count(PROFILEID) cnt, PROFILEID, SERVICEID,ENTRY_DT FROM billing.PURCHASES p WHERE p.STATUS = 'DONE' AND p.MEMBERSHIP='Y' AND p.ENTRY_DT >=:START_DATE AND p.ENTRY_DT <=:END_DATE AND SERVICEID NOT LIKE '%X%' GROUP BY PROFILEID HAVING cnt=1";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":START_DATE",$startDate,PDO::PARAM_STR);
+            $prep->bindValue(":END_DATE",$endDate,PDO::PARAM_STR);
+            $prep->execute();
+            while($result=$prep->fetch(PDO::FETCH_ASSOC))
+                $profiles[]=$result;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+        return $profiles;
+    }
     public function updateStatus($status, $billid)
     {
         try
@@ -489,6 +506,23 @@ class BILLING_PURCHASES extends TABLE{
         	}
         } 
         catch (Exception $e){
+            throw new jsException($e);
+        }
+    }
+
+    public function getProfilesWithinDateRange($start_dt, $end_dt) {
+        try {
+            $sql = "SELECT * FROM billing.PURCHASES WHERE ENTRY_DT>=:START_DT AND ENTRY_DT<=:END_DT AND STATUS='DONE'";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":START_DT", $start_dt, PDO::PARAM_STR);
+            $prep->bindValue(":END_DT", $end_dt, PDO::PARAM_STR);
+            $prep->execute();
+            while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
+                $output[$result['BILLID']] = $result;
+            }
+            return $output;
+        }
+        catch(PDOException $e) {
             throw new jsException($e);
         }
     }

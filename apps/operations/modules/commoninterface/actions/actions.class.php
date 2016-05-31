@@ -271,14 +271,8 @@ class commoninterfaceActions extends sfActions
   {
   	$uploadIncomplete = false;
 	$tempObj = new billing_VARIABLE_DISCOUNT_TEMP();
-	/*if($params["INCOMPLETEUPLOAD"])
-	{
-		$uploadIncomplete = true;
-		$lastUploadedId = JsMemcache::getInstance()->get("lastVDEntryIDInTemp");
-	}*/
 	if($uploadIncomplete==false)
 	{
-		//empty temp table before filling new entries if not clicked on "upload again"	
 		$tempObj->truncateTable();
 	}
 	unset($tempObj);
@@ -293,19 +287,15 @@ class commoninterfaceActions extends sfActions
 	$vdObj = new VariableDiscount();
 	$status = $vdObj->transferVDRecordsToTemp($limit,$offset);
    	if($status==uploadVD::EMPTY_SOURCE)
-    {
-    	//show error message
+    	{
+    		//show error message
 		$this->forwardTo("commoninterface","uploadVD?NODATA=1&cid=".$this->cid);
-    }
-    if($status==uploadVD::INCOMPLETE_UPLOAD)
-    {
-    	//show error message
+    	}
+    	if($status==uploadVD::INCOMPLETE_UPLOAD)
+    	{
+    		//show error message
 		$this->forwardTo("commoninterface","uploadVD?INCOMPLETEUPLOAD=1&cid=".$this->cid);
-    }
-  	/*else
-  	{
-  		JsMemcache::getInstance()->remove("lastVDEntryIDInTemp");
-  	}*/
+    	}
   }
 
   /* function executeUploadVD
@@ -343,15 +333,14 @@ class commoninterfaceActions extends sfActions
 		$this->transferVDRecords($params);
         
 		//run script to populate entries to VD main tables in background
-		passthru(JsConstants::$php5path." ".JsConstants::$alertSymfonyRoot."/symfony billing:populateVDEntriesFromTempTable > /dev/null &",$out);
-		//send mail alert in case of failure to start above script
-		if($out!=0)
+		passthru(JsConstants::$php5path." ".JsConstants::$alertSymfonyRoot."/symfony billing:populateVDEntriesFromTempTable > /dev/null &");
+		/*if($out!=0)
 		{
 			$message = "Error in running populateVDEntriesFromTempTable cron in apps/operations/modules/commoninterface/actions/actions.class.php";
 			CRMAlertManager::sendMailAlert($message,"VDUploadFromTable");
 			//show error message
 			$this->forwardTo("commoninterface","uploadVD?BACKGROUND_FAILURE=1&cid=".$this->cid);
-		}
+		}*/
 		//show success message
 		$this->forwardTo("commoninterface","uploadVD?SUCCESSFUL=1&cid=".$this->cid);
 	}

@@ -41,6 +41,13 @@ class SearchJSAPP extends SearchJS
         {        
                  return SearchTypesEnums::AppMatchAlertsCC;
         }
+	/**
+        * getSearchTypeContactViewAttempt.
+        */
+        public static function getSearchTypeContactViewAttempt()
+        {        
+                 return SearchTypesEnums::contactViewAttemptAndroid;
+        }
         /**
         * getMembersLookingForMe
         */
@@ -117,6 +124,5 @@ class SearchJSAPP extends SearchJS
 			{
 				return SearchTypesEnums::AAFeatureProfile;
 			}
-			
 }
 ?>

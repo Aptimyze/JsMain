@@ -12,6 +12,7 @@ class APSendEOITask extends sfBaseTask
         private $minEois = 10;
         private $clusterForMutualMatches = array(0=>'LAST_ACTIVITY');
         private $removeFilteredProfiles = true;
+        private $maxEoiReceiver = 5;
 	public function Showtime($mes)
 	{
 		$time=time();
@@ -48,8 +49,9 @@ EOF;
 		$profileInfoObj = new ASSISTED_PRODUCT_AP_PROFILE_INFO();
                 $tempProfileRecords = new ASSISTED_PRODUCT_AP_PROFILE_INFO_LOG();
 		$autoContObj = new ASSISTED_PRODUCT_AUTOMATED_CONTACTS_TRACKING();
+                $receiverEoiObj = new receiverEoiCount();
 		$profileArr = $profileInfoObj->getAPProfilesResumed();
-		//$profileArr=array(0=>array("PROFILEID"=>3186764));
+		//$profileArr=array(1=>array("PROFILEID"=>144111));
 		$totalContactsMade = 0;
 		$totalSenders = 0;
                 $date = date("Y-m-d");
@@ -89,10 +91,14 @@ EOF;
 				$profileObj->getDetail('','','*');
 				$partnerObj = new SearchCommonFunctions();
                                 
+                                //find profiles who have already received eoi's limited for today
+                                $notInProfiles = $receiverEoiObj->getReceiversWithLimit($this->maxEoiReceiver);
+                                
                                 $searchMutualMatches = true;
                                 
                                 //get mutual matches first
-				$mutualMatchesArr = $partnerObj->getMyDppMatches('',$profileObj,$limit,'','','',$this->removeFilteredProfiles,$searchMutualMatches,$this->clusterForMutualMatches);
+				$mutualMatchesArr = $partnerObj->getMyDppMatches('',$profileObj,$limit,'','','',$this->removeFilteredProfiles,$searchMutualMatches,$this->clusterForMutualMatches,'',$notInProfiles);
+                                
                                 $mutualMatchesCount = $mutualMatchesArr['ClusterCount']['LAST_ACTIVITY'][2]+$mutualMatchesArr['ClusterCount']['LAST_ACTIVITY'][1];
                                 
                                 //get subscription details of pack
@@ -105,9 +111,11 @@ EOF;
                                 $stringToWrite = "Sender-:  ".$senderId."    mutual matches-:  ".$mutualMatchesCount."     numberSent-:  ".$numberToBeSent;
                                 fwrite($file,$stringToWrite."\n");
                                 //if mutual matches are less than number expected find partner matches
-                                if(($mutualMatchesCount < $numberToBeSent) || !$mutualMatchesCount){
+                                //$mutualMatchesCount < $numberToBeSent) || !$mutualMatchesCount
+                                if(1){
                                     $searchMutualMatches= false;
-                                     $partnerMatchesArr = $partnerObj->getMyDppMatches('',$profileObj,$limit,'','','',$this->removeFilteredProfiles,$searchMutualMatches);
+                                    //get dpp matches with not in param
+                                     $partnerMatchesArr = $partnerObj->getMyDppMatches('',$profileObj,$limit,'','','',$this->removeFilteredProfiles,$searchMutualMatches,'','',$notInProfiles);
                                      $resultArr = $partnerMatchesArr;
                                      $dppLoop++; 
                                 }
@@ -124,7 +132,7 @@ EOF;
 					
 					foreach($matchArr as $k=>$receiverId)
 					{
-						
+                                            
 						try{
 						
 						$receiverObj = new Profile('',$receiverId);
@@ -153,6 +161,8 @@ EOF;
 							$limitCounter++;
 							try{
 								$autoContObj->insertIntoAutoContactsTracking($senderId,$receiverId);
+                                                                // insert entry in receiver limit array
+                                                                $receiverEoiObj->insertOrUpdateEntryForReceiver($receiverId);
 							}
 							catch(Exception $ex)
 							{
@@ -162,9 +172,9 @@ EOF;
 						$contactEngineObj=null;
 						if($limit <= $limitCounter)
 							break;
-					}
+                                            }
+                                        }
 				}
-			}
 			catch(Exception $ex)
 			{
 				$this->setExceptionError($ex);
@@ -183,6 +193,7 @@ EOF;
                 $todaysSentContacts = $autoContObj->getCountAfterDate(date('Y-m-d'));
 		$HistoryRecord = new ASSISTED_PRODUCT_HISTORY_EOI_SENT();
 		$HistoryRecord->INSERT($todaysSentContacts);
+                $receiverEoiObj->emptyTable();
 		
 		// if script completes successfully send mail
                 SendMail::send_email("ankitshukla125@gmail.com","$todaysSentContacts Auto Contacts sent out for $alreadySentCount users","Auto Contacts cron completed");

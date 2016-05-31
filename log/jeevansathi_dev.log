@@ -4466,3 +4466,1981 @@ Mar 07 14:46:53 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilt
 Mar 07 14:46:53 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
 Mar 07 14:46:53 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
 Mar 07 14:46:53 symfony [info] {phoneActions} Call "phoneActions->executePhoneVerificationPcDisplay()"
+Apr 19 16:33:53 symfony [info] {sfPatternRouting} Match route "homepage" (/) for / with parameters array (  'module' => 'homepage',  'action' => 'index',)
+Apr 19 16:33:54 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:33:54 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:34:07 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:34:07 symfony [info] {homepageActions} Call "homepageActions->executeIndex()"
+Apr 19 16:34:07 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/homepage/templates/indexSuccess.tpl"
+Apr 19 16:34:07 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcCommonTopNavBar.tpl"
+Apr 19 16:34:07 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcSearchByID.tpl"
+Apr 19 16:34:07 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/homepage/templates/_searchBand.tpl"
+Apr 19 16:34:08 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcAppPromo.tpl"
+Apr 19 16:34:08 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcMatrimonialLinks.tpl"
+Apr 19 16:34:08 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcSeoText.tpl"
+Apr 19 16:34:08 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcCommonFooter.tpl"
+Apr 19 16:34:08 symfony [info] {main} Call "common->executeHelpWidget()"
+Apr 19 16:34:08 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/common/templates/_helpWidget.tpl"
+Apr 19 16:34:08 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_freshDesk.tpl"
+Apr 19 16:34:08 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jspcLayout.tpl"
+Apr 19 16:34:08 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jspcLayout.tpl"
+Apr 19 16:34:08 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:34:08 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:34:08 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:34:08 symfony [info] {main} Get slot "disableFbRemarketing"
+Apr 19 16:34:08 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 19 16:34:08 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 19 16:34:08 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:34:08 symfony [info] {sfWebDebugLogger} Configuration 744.55 ms (12)
+Apr 19 16:34:08 symfony [info] {sfWebDebugLogger} Factories 798.06 ms (1)
+Apr 19 16:34:08 symfony [info] {sfWebDebugLogger} Action "homepage/index" 30.56 ms (1)
+Apr 19 16:34:08 symfony [info] {sfWebDebugLogger} View "Success" for "homepage/index" 1237.64 ms (1)
+Apr 19 16:34:08 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcCommonTopNavBar" 249.11 ms (1)
+Apr 19 16:34:08 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcSearchByID" 8.73 ms (1)
+Apr 19 16:34:08 symfony [info] {sfWebDebugLogger} Partial "homepage/_searchBand" 193.34 ms (1)
+Apr 19 16:34:08 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcAppPromo" 40.18 ms (1)
+Apr 19 16:34:08 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcMatrimonialLinks" 294.11 ms (1)
+Apr 19 16:34:08 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcSeoText" 35.22 ms (1)
+Apr 19 16:34:08 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcCommonFooter" 159.26 ms (1)
+Apr 19 16:34:08 symfony [info] {sfWebDebugLogger} Component "common/helpWidget" 0.07 ms (1)
+Apr 19 16:34:08 symfony [info] {sfWebDebugLogger} Partial "common/_helpWidget" 22.89 ms (1)
+Apr 19 16:34:08 symfony [info] {sfWebDebugLogger} Partial "global/_freshDesk" 22.41 ms (1)
+Apr 19 16:34:08 symfony [info] {sfWebResponse} Send content (320340 o)
+Apr 19 16:34:12 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /seo/404 with parameters array (  'module' => 'seo',  'action' => '404',)
+Apr 19 16:34:12 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:34:12 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:34:12 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:34:12 symfony [info] {seoActions} Call "seoActions->execute404()"
+Apr 19 16:34:12 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/seo/templates/404Success.tpl"
+Apr 19 16:34:12 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/inbox/templates/_JSPC/inboxHeader.tpl"
+Apr 19 16:34:12 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcCommonTopNavBar.tpl"
+Apr 19 16:34:12 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcSearchByID.tpl"
+Apr 19 16:34:12 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcCommonFooter.tpl"
+Apr 19 16:34:12 symfony [info] {main} Call "common->executeHelpWidget()"
+Apr 19 16:34:12 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/common/templates/_helpWidget.tpl"
+Apr 19 16:34:12 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_freshDesk.tpl"
+Apr 19 16:34:12 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jspcLayout.tpl"
+Apr 19 16:34:12 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jspcLayout.tpl"
+Apr 19 16:34:13 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:34:13 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:34:13 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:34:13 symfony [info] {main} Get slot "disableFbRemarketing"
+Apr 19 16:34:13 symfony [info] {sfWebResponse} Send status "HTTP/1.1 404 Not Found"
+Apr 19 16:34:13 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 19 16:34:13 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:34:13 symfony [info] {sfWebDebugLogger} Configuration 66.44 ms (12)
+Apr 19 16:34:13 symfony [info] {sfWebDebugLogger} Factories 14.39 ms (1)
+Apr 19 16:34:13 symfony [info] {sfWebDebugLogger} Action "seo/404" 0.38 ms (1)
+Apr 19 16:34:13 symfony [info] {sfWebDebugLogger} View "Success" for "seo/404" 199.90 ms (1)
+Apr 19 16:34:13 symfony [info] {sfWebDebugLogger} Partial "inbox/_JSPC/inboxHeader" 44.80 ms (1)
+Apr 19 16:34:13 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcCommonTopNavBar" 5.12 ms (1)
+Apr 19 16:34:13 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcSearchByID" 1.28 ms (1)
+Apr 19 16:34:13 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcCommonFooter" 6.35 ms (1)
+Apr 19 16:34:13 symfony [info] {sfWebDebugLogger} Component "common/helpWidget" 0.17 ms (1)
+Apr 19 16:34:13 symfony [info] {sfWebDebugLogger} Partial "common/_helpWidget" 1.31 ms (1)
+Apr 19 16:34:13 symfony [info] {sfWebDebugLogger} Partial "global/_freshDesk" 1.13 ms (1)
+Apr 19 16:34:13 symfony [info] {sfWebResponse} Send content (94832 o)
+Apr 19 16:37:12 symfony [info] {sfPatternRouting} Match route "homepage" (/) for / with parameters array (  'module' => 'homepage',  'action' => 'index',)
+Apr 19 16:37:22 symfony [info] {sfPatternRouting} Match route "homepage" (/) for /?echecksum=47ebf64a247f4a6d2c7fda1aba3c7f7b|i|074e1a0d2f123319c2247aba58fff024i8580596______1461064041______&checksum=074e1a0d2f123319c2247aba58fff024i8580596 with parameters array (  'module' => 'homepage',  'action' => 'index',)
+Apr 19 16:37:28 symfony [info] {sfPatternRouting} Match route "homepage" (/) for / with parameters array (  'module' => 'homepage',  'action' => 'index',)
+Apr 19 16:37:28 symfony [info] {sfPatternRouting} Match route "homepage" (/) for / with parameters array (  'module' => 'homepage',  'action' => 'index',)
+Apr 19 16:37:28 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:37:28 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:37:28 symfony [info] {sfPatternRouting} Match route "homepage" (/) for / with parameters array (  'module' => 'homepage',  'action' => 'index',)
+Apr 19 16:37:28 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:37:28 symfony [info] {homepageActions} Call "homepageActions->executeIndex()"
+Apr 19 16:37:28 symfony [info] {homepageActions} Forward to action "myjs/jspcPerform"
+Apr 19 16:37:28 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:37:28 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:37:28 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:37:28 symfony [info] {myjsActions} Call "myjsActions->executeJspcPerform()"
+Apr 19 16:37:28 symfony [info] {sfFrontWebController} Get presentation for action "membership/ApiMembershipDetailsV3" (view class: "")
+Apr 19 16:37:29 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:37:29 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:37:29 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:37:29 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /seo/404 with parameters array (  'module' => 'seo',  'action' => '404',)
+Apr 19 16:37:29 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:37:29 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:37:29 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:37:29 symfony [info] {seoActions} Call "seoActions->execute404()"
+Apr 19 16:37:29 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/seo/templates/404Success.tpl"
+Apr 19 16:37:29 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/inbox/templates/_JSPC/inboxHeader.tpl"
+Apr 19 16:37:29 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcCommonTopNavBar.tpl"
+Apr 19 16:37:29 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcSearchByID.tpl"
+Apr 19 16:37:29 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcCommonFooter.tpl"
+Apr 19 16:37:29 symfony [info] {main} Call "common->executeHelpWidget()"
+Apr 19 16:37:29 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/common/templates/_helpWidget.tpl"
+Apr 19 16:37:29 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_freshDesk.tpl"
+Apr 19 16:37:29 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jspcLayout.tpl"
+Apr 19 16:37:29 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jspcLayout.tpl"
+Apr 19 16:37:29 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:37:29 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:37:29 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:37:29 symfony [info] {main} Get slot "disableFbRemarketing"
+Apr 19 16:37:29 symfony [info] {sfWebResponse} Send status "HTTP/1.1 404 Not Found"
+Apr 19 16:37:29 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 19 16:37:29 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:37:29 symfony [info] {sfWebDebugLogger} Configuration 0.87 ms (11)
+Apr 19 16:37:29 symfony [info] {sfWebDebugLogger} Factories 5.19 ms (1)
+Apr 19 16:37:29 symfony [info] {sfWebDebugLogger} Action "seo/404" 0.33 ms (1)
+Apr 19 16:37:29 symfony [info] {sfWebDebugLogger} View "Success" for "seo/404" 47.46 ms (1)
+Apr 19 16:37:29 symfony [info] {sfWebDebugLogger} Partial "inbox/_JSPC/inboxHeader" 12.81 ms (1)
+Apr 19 16:37:29 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcCommonTopNavBar" 11.71 ms (1)
+Apr 19 16:37:29 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcSearchByID" 0.90 ms (1)
+Apr 19 16:37:29 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcCommonFooter" 2.62 ms (1)
+Apr 19 16:37:29 symfony [info] {sfWebDebugLogger} Component "common/helpWidget" 0.10 ms (1)
+Apr 19 16:37:29 symfony [info] {sfWebDebugLogger} Partial "common/_helpWidget" 0.49 ms (1)
+Apr 19 16:37:29 symfony [info] {sfWebDebugLogger} Partial "global/_freshDesk" 0.53 ms (1)
+Apr 19 16:37:29 symfony [info] {sfWebResponse} Send content (75978 o)
+Apr 19 16:37:29 symfony [info] {sfFrontWebController} Get presentation for action "common/ApiCALayerV1" (view class: "")
+Apr 19 16:37:29 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:37:29 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:37:29 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:37:29 symfony [info] {myjsActions} Change template to "CURRENT/_jspcMyjs/jspcPerform"
+Apr 19 16:37:29 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/_jspcMyjs/jspcPerformSuccess.tpl"
+Apr 19 16:37:29 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcCommonTopNavBar.tpl"
+Apr 19 16:37:29 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcSearchByID.tpl"
+Apr 19 16:37:29 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/_jspcMyjs/Container.tpl"
+Apr 19 16:37:30 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/_jspcMyjs/_CardsSection.tpl"
+Apr 19 16:37:30 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/_jspcMyjs/_helpScreens.tpl"
+Apr 19 16:37:30 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcAppPromo.tpl"
+Apr 19 16:37:30 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcCommonFooter.tpl"
+Apr 19 16:37:30 symfony [info] {main} Call "common->executeHelpWidget()"
+Apr 19 16:37:30 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/common/templates/_helpWidget.tpl"
+Apr 19 16:37:30 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_freshDesk.tpl"
+Apr 19 16:37:30 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jspcLayout.tpl"
+Apr 19 16:37:30 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jspcLayout.tpl"
+Apr 19 16:37:30 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:37:30 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:37:30 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:37:30 symfony [info] {main} Get slot "disableFbRemarketing"
+Apr 19 16:37:30 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 19 16:37:30 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 19 16:37:30 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:37:30 symfony [info] {sfWebDebugLogger} Configuration 102.23 ms (21)
+Apr 19 16:37:30 symfony [info] {sfWebDebugLogger} Factories 4.76 ms (1)
+Apr 19 16:37:30 symfony [info] {sfWebDebugLogger} Action "homepage/index" 1394.23 ms (1)
+Apr 19 16:37:30 symfony [info] {sfWebDebugLogger} Action "myjs/jspcPerform" 900.99 ms (1)
+Apr 19 16:37:30 symfony [info] {sfWebDebugLogger} Action "membership/ApiMembershipDetailsV3" 36.64 ms (1)
+Apr 19 16:37:30 symfony [info] {sfWebDebugLogger} View "None" for "membership/ApiMembershipDetailsV3" 0.01 ms (1)
+Apr 19 16:37:30 symfony [info] {sfWebDebugLogger} Action "common/ApiCALayerV1" 318.71 ms (1)
+Apr 19 16:37:30 symfony [info] {sfWebDebugLogger} View "None" for "common/ApiCALayerV1" 0.01 ms (1)
+Apr 19 16:37:30 symfony [info] {sfWebDebugLogger} View "Success" for "myjs/jspcPerform" 453.43 ms (1)
+Apr 19 16:37:30 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcCommonTopNavBar" 3.21 ms (1)
+Apr 19 16:37:30 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcSearchByID" 0.69 ms (1)
+Apr 19 16:37:30 symfony [info] {sfWebDebugLogger} Partial "myjs/_jspcMyjs/Container" 51.79 ms (1)
+Apr 19 16:37:30 symfony [info] {sfWebDebugLogger} Partial "myjs/_jspcMyjs/_CardsSection" 119.17 ms (1)
+Apr 19 16:37:30 symfony [info] {sfWebDebugLogger} Partial "myjs/_jspcMyjs/_helpScreens" 45.02 ms (1)
+Apr 19 16:37:30 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcAppPromo" 1.21 ms (1)
+Apr 19 16:37:30 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcCommonFooter" 4.89 ms (1)
+Apr 19 16:37:30 symfony [info] {sfWebDebugLogger} Component "common/helpWidget" 0.11 ms (1)
+Apr 19 16:37:30 symfony [info] {sfWebDebugLogger} Partial "common/_helpWidget" 1.03 ms (1)
+Apr 19 16:37:30 symfony [info] {sfWebDebugLogger} Partial "global/_freshDesk" 0.85 ms (1)
+Apr 19 16:37:30 symfony [info] {sfWebResponse} Send content (121263 o)
+Apr 19 16:37:35 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /static/criticalActionLayerDisplay with parameters array (  'module' => 'static',  'action' => 'criticalActionLayerDisplay',)
+Apr 19 16:37:35 symfony [info] {sfPatternRouting} Match route "api_rule" (/api/:version/:moduleName/:actionName) for /api/v2/inbox/perform with parameters array (  'module' => 'api',  'action' => 'apiRequest',  'version' => 'v2',  'moduleName' => 'inbox',  'actionName' => 'perform',)
+Apr 19 16:37:35 symfony [info] {sfPatternRouting} Match route "api_rule" (/api/:version/:moduleName/:actionName) for /api/v2/inbox/perform with parameters array (  'module' => 'api',  'action' => 'apiRequest',  'version' => 'v2',  'moduleName' => 'inbox',  'actionName' => 'perform',)
+Apr 19 16:37:35 symfony [info] {sfPatternRouting} Match route "api_rule" (/api/:version/:moduleName/:actionName) for /api/v2/common/engagementcount with parameters array (  'module' => 'api',  'action' => 'apiRequest',  'version' => 'v2',  'moduleName' => 'common',  'actionName' => 'engagementcount',)
+Apr 19 16:37:35 symfony [info] {sfPatternRouting} Match route "api_rule" (/api/:version/:moduleName/:actionName) for /api/v1/search/perform with parameters array (  'module' => 'api',  'action' => 'apiRequest',  'version' => 'v1',  'moduleName' => 'search',  'actionName' => 'perform',)
+Apr 19 16:37:35 symfony [info] {sfPatternRouting} Match route "api_rule" (/api/:version/:moduleName/:actionName) for /api/v2/inbox/perform with parameters array (  'module' => 'api',  'action' => 'apiRequest',  'version' => 'v2',  'moduleName' => 'inbox',  'actionName' => 'perform',)
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:37:35 symfony [info] {apiActions} Call "apiActions->executeApiRequest()"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:37:35 symfony [info] {apiActions} Call "apiActions->executeApiRequest()"
+Apr 19 16:37:35 symfony [info] {apiActions} Call "apiActions->executeApiRequest()"
+Apr 19 16:37:35 symfony [info] {apiActions} Forward to action "search/performV1"
+Apr 19 16:37:35 symfony [info] {apiActions} Forward to action "inbox/performV2"
+Apr 19 16:37:35 symfony [info] {apiActions} Forward to action "inbox/performV2"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:37:35 symfony [info] {apiActions} Call "apiActions->executeApiRequest()"
+Apr 19 16:37:35 symfony [info] {apiActions} Forward to action "inbox/performV2"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:37:35 symfony [info] {staticActions} Call "staticActions->executeCriticalActionLayerDisplay()"
+Apr 19 16:37:35 symfony [info] {staticActions} Change template to "CURRENT/criticalActionLayer"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:37:35 symfony [info] {apiActions} Call "apiActions->executeApiRequest()"
+Apr 19 16:37:35 symfony [info] {apiActions} Forward to action "common/GetEngagementCountv1"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:37:35 symfony [info] {inboxActions} Call "inboxActions->executePerformV2()"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:37:35 symfony [info] {inboxActions} Call "inboxActions->executePerformV2()"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:37:35 symfony [info] {commonActions} Call "commonActions->executeGetEngagementCountv1()"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:37:35 symfony [info] {inboxActions} Call "inboxActions->executePerformV2()"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:37:35 symfony [info] {searchActions} Call "searchActions->executePerformV1()"
+Apr 19 16:37:35 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 19 16:37:35 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:37:35 symfony [info] {sfWebDebugLogger} Configuration 11.55 ms (13)
+Apr 19 16:37:35 symfony [info] {sfWebDebugLogger} Factories 17.50 ms (1)
+Apr 19 16:37:35 symfony [info] {sfWebDebugLogger} Action "api/apiRequest" 73.05 ms (1)
+Apr 19 16:37:35 symfony [info] {sfWebDebugLogger} Action "inbox/performV2" 47.55 ms (1)
+Apr 19 16:37:35 symfony [info] {sfWebDebugLogger} View "None" for "inbox/performV2" 0.01 ms (1)
+Apr 19 16:37:35 symfony [info] {sfWebResponse} Send content (0 o)
+Apr 19 16:37:35 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/criticalActionLayerSuccess.tpl"
+Apr 19 16:37:35 symfony [info] {sfPatternRouting} Match route "api_rule" (/api/:version/:moduleName/:actionName) for /api/v1/search/perform with parameters array (  'module' => 'api',  'action' => 'apiRequest',  'version' => 'v1',  'moduleName' => 'search',  'actionName' => 'perform',)
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:37:35 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 19 16:37:35 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:37:35 symfony [info] {sfWebDebugLogger} Configuration 150.93 ms (11)
+Apr 19 16:37:35 symfony [info] {sfWebDebugLogger} Factories 8.97 ms (1)
+Apr 19 16:37:35 symfony [info] {sfWebDebugLogger} Action "static/criticalActionLayerDisplay" 0.67 ms (1)
+Apr 19 16:37:35 symfony [info] {sfWebDebugLogger} View "Success" for "static/criticalActionLayerDisplay" 122.04 ms (1)
+Apr 19 16:37:35 symfony [info] {sfWebResponse} Send content (1359 o)
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:37:35 symfony [info] {apiActions} Call "apiActions->executeApiRequest()"
+Apr 19 16:37:35 symfony [info] {apiActions} Forward to action "search/performV1"
+Apr 19 16:37:35 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 19 16:37:35 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:37:35 symfony [info] {sfWebDebugLogger} Configuration 41.41 ms (13)
+Apr 19 16:37:35 symfony [info] {sfWebDebugLogger} Factories 17.42 ms (1)
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:37:35 symfony [info] {sfWebDebugLogger} Action "api/apiRequest" 150.82 ms (1)
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:37:35 symfony [info] {sfWebDebugLogger} Action "inbox/performV2" 109.48 ms (1)
+Apr 19 16:37:35 symfony [info] {sfWebDebugLogger} View "None" for "inbox/performV2" 0.01 ms (1)
+Apr 19 16:37:35 symfony [info] {sfWebResponse} Send content (0 o)
+Apr 19 16:37:35 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:37:35 symfony [info] {searchActions} Call "searchActions->executePerformV1()"
+Apr 19 16:37:38 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 19 16:37:38 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:37:38 symfony [info] {sfWebDebugLogger} Configuration 37.09 ms (13)
+Apr 19 16:37:38 symfony [info] {sfWebDebugLogger} Factories 11.70 ms (1)
+Apr 19 16:37:38 symfony [info] {sfWebDebugLogger} Action "api/apiRequest" 2526.91 ms (1)
+Apr 19 16:37:38 symfony [info] {sfWebDebugLogger} Action "inbox/performV2" 2494.92 ms (1)
+Apr 19 16:37:38 symfony [info] {sfWebDebugLogger} View "None" for "inbox/performV2" 0.01 ms (1)
+Apr 19 16:37:38 symfony [info] {sfWebResponse} Send content (0 o)
+Apr 19 16:38:20 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /common/criticalActionLayerTracking with parameters array (  'module' => 'common',  'action' => 'criticalActionLayerTracking',)
+Apr 19 16:38:20 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:38:20 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:38:20 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:38:20 symfony [info] {commonActions} Call "commonActions->executeCriticalActionLayerTracking()"
+Apr 19 16:38:20 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 19 16:38:20 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:38:20 symfony [info] {sfWebDebugLogger} Configuration 0.88 ms (9)
+Apr 19 16:38:20 symfony [info] {sfWebDebugLogger} Factories 6.69 ms (1)
+Apr 19 16:38:20 symfony [info] {sfWebDebugLogger} Action "common/criticalActionLayerTracking" 0.84 ms (1)
+Apr 19 16:38:20 symfony [info] {sfWebDebugLogger} View "None" for "common/criticalActionLayerTracking" 0.01 ms (1)
+Apr 19 16:38:20 symfony [info] {sfWebResponse} Send content (0 o)
+Apr 19 16:40:53 symfony [info] {sfPatternRouting} Match route "api_rule" (/api/:version/:moduleName/:actionName) for /api/v2/inbox/perform with parameters array (  'module' => 'api',  'action' => 'apiRequest',  'version' => 'v2',  'moduleName' => 'inbox',  'actionName' => 'perform',)
+Apr 19 16:40:53 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:40:53 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:40:53 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:40:53 symfony [info] {apiActions} Call "apiActions->executeApiRequest()"
+Apr 19 16:40:53 symfony [info] {apiActions} Forward to action "inbox/performV2"
+Apr 19 16:40:53 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:40:53 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:40:53 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:40:53 symfony [info] {inboxActions} Call "inboxActions->executePerformV2()"
+Apr 19 16:40:54 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 19 16:40:54 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:40:54 symfony [info] {sfWebDebugLogger} Configuration 1.16 ms (12)
+Apr 19 16:40:54 symfony [info] {sfWebDebugLogger} Factories 8.76 ms (1)
+Apr 19 16:40:54 symfony [info] {sfWebDebugLogger} Action "api/apiRequest" 1114.79 ms (1)
+Apr 19 16:40:54 symfony [info] {sfWebDebugLogger} Action "inbox/performV2" 1110.83 ms (1)
+Apr 19 16:40:54 symfony [info] {sfWebDebugLogger} View "None" for "inbox/performV2" 0.01 ms (1)
+Apr 19 16:40:54 symfony [info] {sfWebResponse} Send content (0 o)
+Apr 19 16:40:56 symfony [info] {sfPatternRouting} Match route "inbox_rule1" (/inbox/:infoTypeId/:pageNo) for /inbox/3/1 with parameters array (  'module' => 'inbox',  'action' => 'index',  'infoTypeId' => '3',  'pageNo' => '1',)
+Apr 19 16:40:56 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:40:56 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:40:56 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:40:56 symfony [info] {inboxActions} Call "inboxActions->executeIndex()"
+Apr 19 16:40:56 symfony [info] {sfFrontWebController} Get presentation for action "inbox/performV2" (view class: "")
+Apr 19 16:40:56 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:40:56 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:40:56 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:40:56 symfony [info] {inboxActions} Call "inboxActions->executePerformV2()"
+Apr 19 16:40:56 symfony [info] {inboxActions} Change template to "CURRENT/index"
+Apr 19 16:40:57 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/inbox/templates/indexSuccess.tpl"
+Apr 19 16:40:57 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/inbox/templates/_JSPC/inboxHeader.tpl"
+Apr 19 16:40:57 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcCommonTopNavBar.tpl"
+Apr 19 16:40:57 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcSearchByID.tpl"
+Apr 19 16:40:57 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/inbox/templates/_JSPC/inboxListingTabs.tpl"
+Apr 19 16:40:57 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/inbox/templates/_JSPC/inboxRequestTypeListings.tpl"
+Apr 19 16:40:57 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/inbox/templates/_JSPC/zeroResults.tpl"
+Apr 19 16:40:57 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/inbox/templates/_inboxBasicTuple.tpl"
+Apr 19 16:40:57 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcContactEngineButtons.tpl"
+Apr 19 16:40:57 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/inbox/templates/_JSPC/pagination.tpl"
+Apr 19 16:40:57 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcCommonFooter.tpl"
+Apr 19 16:40:57 symfony [info] {main} Call "common->executeHelpWidget()"
+Apr 19 16:40:57 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/common/templates/_helpWidget.tpl"
+Apr 19 16:40:57 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_freshDesk.tpl"
+Apr 19 16:40:57 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcContactEngineButtons.tpl"
+Apr 19 16:40:57 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jspcLayout.tpl"
+Apr 19 16:40:57 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jspcLayout.tpl"
+Apr 19 16:40:57 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:40:57 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:40:57 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:40:57 symfony [info] {main} Get slot "disableFbRemarketing"
+Apr 19 16:40:57 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 19 16:40:57 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:40:57 symfony [info] {sfWebDebugLogger} Configuration 43.72 ms (15)
+Apr 19 16:40:57 symfony [info] {sfWebDebugLogger} Factories 4.43 ms (1)
+Apr 19 16:40:57 symfony [info] {sfWebDebugLogger} Action "inbox/index" 406.75 ms (1)
+Apr 19 16:40:57 symfony [info] {sfWebDebugLogger} Action "inbox/performV2" 401.78 ms (1)
+Apr 19 16:40:57 symfony [info] {sfWebDebugLogger} View "None" for "inbox/performV2" 0.01 ms (1)
+Apr 19 16:40:57 symfony [info] {sfWebDebugLogger} View "Success" for "inbox/index" 352.88 ms (1)
+Apr 19 16:40:57 symfony [info] {sfWebDebugLogger} Partial "inbox/_JSPC/inboxHeader" 3.71 ms (1)
+Apr 19 16:40:57 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcCommonTopNavBar" 2.91 ms (1)
+Apr 19 16:40:57 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcSearchByID" 0.69 ms (1)
+Apr 19 16:40:57 symfony [info] {sfWebDebugLogger} Partial "inbox/_JSPC/inboxListingTabs" 38.91 ms (1)
+Apr 19 16:40:57 symfony [info] {sfWebDebugLogger} Partial "inbox/_JSPC/inboxRequestTypeListings" 13.90 ms (1)
+Apr 19 16:40:57 symfony [info] {sfWebDebugLogger} Partial "inbox/_JSPC/zeroResults" 23.87 ms (1)
+Apr 19 16:40:57 symfony [info] {sfWebDebugLogger} Partial "inbox/_inboxBasicTuple" 84.97 ms (1)
+Apr 19 16:40:57 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcContactEngineButtons" 65.36 ms (2)
+Apr 19 16:40:57 symfony [info] {sfWebDebugLogger} Partial "inbox/_JSPC/pagination" 20.19 ms (1)
+Apr 19 16:40:57 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcCommonFooter" 2.81 ms (1)
+Apr 19 16:40:57 symfony [info] {sfWebDebugLogger} Component "common/helpWidget" 0.12 ms (1)
+Apr 19 16:40:57 symfony [info] {sfWebDebugLogger} Partial "common/_helpWidget" 0.58 ms (1)
+Apr 19 16:40:57 symfony [info] {sfWebDebugLogger} Partial "global/_freshDesk" 0.52 ms (1)
+Apr 19 16:40:57 symfony [info] {sfWebResponse} Send content (147224 o)
+Apr 19 16:40:57 symfony [info] {sfPatternRouting} Match route "inbox_rule1" (/inbox/:infoTypeId/:pageNo) for /inbox/3/%7BccTupleImage%7D with parameters array (  'module' => 'inbox',  'action' => 'index',  'infoTypeId' => '3',  'pageNo' => '{ccTupleImage}',)
+Apr 19 16:40:57 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:40:57 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:40:57 symfony [info] {sfPatternRouting} Match route "inbox_rule1" (/inbox/:infoTypeId/:pageNo) for /inbox/3/%7Bmyimage%7D with parameters array (  'module' => 'inbox',  'action' => 'index',  'infoTypeId' => '3',  'pageNo' => '{myimage}',)
+Apr 19 16:40:57 symfony [info] {sfPatternRouting} Match route "inbox_rule1" (/inbox/:infoTypeId/:pageNo) for /inbox/3/%7Botherimage%7D with parameters array (  'module' => 'inbox',  'action' => 'index',  'infoTypeId' => '3',  'pageNo' => '{otherimage}',)
+Apr 19 16:40:57 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:40:57 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:40:57 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:40:57 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:40:57 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:40:57 symfony [info] {inboxActions} Call "inboxActions->executeIndex()"
+Apr 19 16:40:57 symfony [info] {sfFrontWebController} Get presentation for action "inbox/performV2" (view class: "")
+Apr 19 16:40:57 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:40:57 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:40:57 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:40:57 symfony [info] {inboxActions} Call "inboxActions->executePerformV2()"
+Apr 19 16:40:57 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:40:57 symfony [info] {inboxActions} Call "inboxActions->executeIndex()"
+Apr 19 16:40:57 symfony [info] {sfFrontWebController} Get presentation for action "inbox/performV2" (view class: "")
+Apr 19 16:40:57 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:40:57 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:40:57 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:40:57 symfony [info] {inboxActions} Call "inboxActions->executePerformV2()"
+Apr 19 16:40:57 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:40:57 symfony [info] {inboxActions} Call "inboxActions->executeIndex()"
+Apr 19 16:40:57 symfony [info] {sfFrontWebController} Get presentation for action "inbox/performV2" (view class: "")
+Apr 19 16:40:57 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:40:57 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:40:57 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:40:57 symfony [info] {inboxActions} Call "inboxActions->executePerformV2()"
+Apr 19 16:41:02 symfony [info] {sfPatternRouting} Match route "inbox_rule1" (/inbox/:infoTypeId/:pageNo) for /inbox/3/%7BccTupleImage%7D with parameters array (  'module' => 'inbox',  'action' => 'index',  'infoTypeId' => '3',  'pageNo' => '{ccTupleImage}',)
+Apr 19 16:41:02 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:02 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:02 symfony [info] {sfPatternRouting} Match route "inbox_rule1" (/inbox/:infoTypeId/:pageNo) for /inbox/3/%7Botherimage%7D with parameters array (  'module' => 'inbox',  'action' => 'index',  'infoTypeId' => '3',  'pageNo' => '{otherimage}',)
+Apr 19 16:41:02 symfony [info] {sfPatternRouting} Match route "inbox_rule1" (/inbox/:infoTypeId/:pageNo) for /inbox/3/%7Bmyimage%7D with parameters array (  'module' => 'inbox',  'action' => 'index',  'infoTypeId' => '3',  'pageNo' => '{myimage}',)
+Apr 19 16:41:02 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:02 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:02 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:02 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:03 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:03 symfony [info] {inboxActions} Call "inboxActions->executeIndex()"
+Apr 19 16:41:03 symfony [info] {sfFrontWebController} Get presentation for action "inbox/performV2" (view class: "")
+Apr 19 16:41:03 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:03 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:03 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:03 symfony [info] {inboxActions} Call "inboxActions->executePerformV2()"
+Apr 19 16:41:03 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:03 symfony [info] {inboxActions} Call "inboxActions->executeIndex()"
+Apr 19 16:41:03 symfony [info] {sfFrontWebController} Get presentation for action "inbox/performV2" (view class: "")
+Apr 19 16:41:03 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:03 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:03 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:03 symfony [info] {inboxActions} Call "inboxActions->executePerformV2()"
+Apr 19 16:41:03 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:03 symfony [info] {inboxActions} Call "inboxActions->executeIndex()"
+Apr 19 16:41:03 symfony [info] {sfFrontWebController} Get presentation for action "inbox/performV2" (view class: "")
+Apr 19 16:41:03 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:03 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:03 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:03 symfony [info] {inboxActions} Call "inboxActions->executePerformV2()"
+Apr 19 16:41:03 symfony [info] {sfPatternRouting} Match route "api_rule" (/api/:version/:moduleName/:actionName) for /api/v2/common/engagementcount with parameters array (  'module' => 'api',  'action' => 'apiRequest',  'version' => 'v2',  'moduleName' => 'common',  'actionName' => 'engagementcount',)
+Apr 19 16:41:03 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:03 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:03 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:03 symfony [info] {apiActions} Call "apiActions->executeApiRequest()"
+Apr 19 16:41:03 symfony [info] {apiActions} Forward to action "common/GetEngagementCountv1"
+Apr 19 16:41:03 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:03 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:03 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:03 symfony [info] {commonActions} Call "commonActions->executeGetEngagementCountv1()"
+Apr 19 16:41:04 symfony [info] {sfPatternRouting} Match route "api_rule" (/api/:version/:moduleName/:actionName) for /api/v2/inbox/perform with parameters array (  'module' => 'api',  'action' => 'apiRequest',  'version' => 'v2',  'moduleName' => 'inbox',  'actionName' => 'perform',)
+Apr 19 16:41:04 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:04 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:04 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:04 symfony [info] {apiActions} Call "apiActions->executeApiRequest()"
+Apr 19 16:41:04 symfony [info] {apiActions} Forward to action "inbox/performV2"
+Apr 19 16:41:04 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:04 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:04 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:04 symfony [info] {inboxActions} Call "inboxActions->executePerformV2()"
+Apr 19 16:41:04 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 19 16:41:04 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:41:04 symfony [info] {sfWebDebugLogger} Configuration 0.81 ms (12)
+Apr 19 16:41:04 symfony [info] {sfWebDebugLogger} Factories 4.62 ms (1)
+Apr 19 16:41:04 symfony [info] {sfWebDebugLogger} Action "api/apiRequest" 95.54 ms (1)
+Apr 19 16:41:04 symfony [info] {sfWebDebugLogger} Action "inbox/performV2" 92.65 ms (1)
+Apr 19 16:41:04 symfony [info] {sfWebDebugLogger} View "None" for "inbox/performV2" 0.01 ms (1)
+Apr 19 16:41:04 symfony [info] {sfWebResponse} Send content (0 o)
+Apr 19 16:41:05 symfony [info] {sfPatternRouting} Match route "api_rule" (/api/:version/:moduleName/:actionName) for /api/v2/inbox/perform with parameters array (  'module' => 'api',  'action' => 'apiRequest',  'version' => 'v2',  'moduleName' => 'inbox',  'actionName' => 'perform',)
+Apr 19 16:41:05 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:05 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:05 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:05 symfony [info] {apiActions} Call "apiActions->executeApiRequest()"
+Apr 19 16:41:05 symfony [info] {apiActions} Forward to action "inbox/performV2"
+Apr 19 16:41:05 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:05 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:05 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:05 symfony [info] {inboxActions} Call "inboxActions->executePerformV2()"
+Apr 19 16:41:05 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 19 16:41:05 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:41:05 symfony [info] {sfWebDebugLogger} Configuration 1.60 ms (12)
+Apr 19 16:41:05 symfony [info] {sfWebDebugLogger} Factories 9.76 ms (1)
+Apr 19 16:41:05 symfony [info] {sfWebDebugLogger} Action "api/apiRequest" 86.99 ms (1)
+Apr 19 16:41:05 symfony [info] {sfWebDebugLogger} Action "inbox/performV2" 83.62 ms (1)
+Apr 19 16:41:05 symfony [info] {sfWebDebugLogger} View "None" for "inbox/performV2" 0.01 ms (1)
+Apr 19 16:41:05 symfony [info] {sfWebResponse} Send content (0 o)
+Apr 19 16:41:07 symfony [info] {sfPatternRouting} Match route "api_rule" (/api/:version/:moduleName/:actionName) for /api/v2/inbox/perform with parameters array (  'module' => 'api',  'action' => 'apiRequest',  'version' => 'v2',  'moduleName' => 'inbox',  'actionName' => 'perform',)
+Apr 19 16:41:07 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:07 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:07 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:07 symfony [info] {apiActions} Call "apiActions->executeApiRequest()"
+Apr 19 16:41:07 symfony [info] {apiActions} Forward to action "inbox/performV2"
+Apr 19 16:41:07 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:07 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:07 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:07 symfony [info] {inboxActions} Call "inboxActions->executePerformV2()"
+Apr 19 16:41:07 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 19 16:41:07 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:41:07 symfony [info] {sfWebDebugLogger} Configuration 0.91 ms (12)
+Apr 19 16:41:07 symfony [info] {sfWebDebugLogger} Factories 4.78 ms (1)
+Apr 19 16:41:07 symfony [info] {sfWebDebugLogger} Action "api/apiRequest" 97.87 ms (1)
+Apr 19 16:41:07 symfony [info] {sfWebDebugLogger} Action "inbox/performV2" 94.61 ms (1)
+Apr 19 16:41:07 symfony [info] {sfWebDebugLogger} View "None" for "inbox/performV2" 0.01 ms (1)
+Apr 19 16:41:07 symfony [info] {sfWebResponse} Send content (0 o)
+Apr 19 16:41:08 symfony [info] {sfPatternRouting} Match route "api_rule" (/api/:version/:moduleName/:actionName) for /api/v2/inbox/perform with parameters array (  'module' => 'api',  'action' => 'apiRequest',  'version' => 'v2',  'moduleName' => 'inbox',  'actionName' => 'perform',)
+Apr 19 16:41:08 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:08 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:08 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:08 symfony [info] {apiActions} Call "apiActions->executeApiRequest()"
+Apr 19 16:41:08 symfony [info] {apiActions} Forward to action "inbox/performV2"
+Apr 19 16:41:08 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:08 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:08 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:08 symfony [info] {inboxActions} Call "inboxActions->executePerformV2()"
+Apr 19 16:41:08 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 19 16:41:08 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:41:08 symfony [info] {sfWebDebugLogger} Configuration 1.25 ms (12)
+Apr 19 16:41:08 symfony [info] {sfWebDebugLogger} Factories 6.46 ms (1)
+Apr 19 16:41:08 symfony [info] {sfWebDebugLogger} Action "api/apiRequest" 83.90 ms (1)
+Apr 19 16:41:08 symfony [info] {sfWebDebugLogger} Action "inbox/performV2" 80.35 ms (1)
+Apr 19 16:41:08 symfony [info] {sfWebDebugLogger} View "None" for "inbox/performV2" 0.01 ms (1)
+Apr 19 16:41:08 symfony [info] {sfWebResponse} Send content (0 o)
+Apr 19 16:41:08 symfony [info] {sfPatternRouting} Match route "api_rule" (/api/:version/:moduleName/:actionName) for /api/v2/inbox/perform with parameters array (  'module' => 'api',  'action' => 'apiRequest',  'version' => 'v2',  'moduleName' => 'inbox',  'actionName' => 'perform',)
+Apr 19 16:41:08 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:08 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:08 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:08 symfony [info] {apiActions} Call "apiActions->executeApiRequest()"
+Apr 19 16:41:08 symfony [info] {apiActions} Forward to action "inbox/performV2"
+Apr 19 16:41:08 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:08 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:08 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:08 symfony [info] {inboxActions} Call "inboxActions->executePerformV2()"
+Apr 19 16:41:09 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 19 16:41:09 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:41:09 symfony [info] {sfWebDebugLogger} Configuration 1.00 ms (12)
+Apr 19 16:41:09 symfony [info] {sfWebDebugLogger} Factories 4.45 ms (1)
+Apr 19 16:41:09 symfony [info] {sfWebDebugLogger} Action "api/apiRequest" 98.76 ms (1)
+Apr 19 16:41:09 symfony [info] {sfWebDebugLogger} Action "inbox/performV2" 95.80 ms (1)
+Apr 19 16:41:09 symfony [info] {sfWebDebugLogger} View "None" for "inbox/performV2" 0.01 ms (1)
+Apr 19 16:41:09 symfony [info] {sfWebResponse} Send content (0 o)
+Apr 19 16:41:11 symfony [info] {sfPatternRouting} Match route "homepage" (/) for / with parameters array (  'module' => 'homepage',  'action' => 'index',)
+Apr 19 16:41:11 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:11 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:11 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:11 symfony [info] {homepageActions} Call "homepageActions->executeIndex()"
+Apr 19 16:41:11 symfony [info] {homepageActions} Forward to action "myjs/jsmsPerform"
+Apr 19 16:41:11 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:11 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:11 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:11 symfony [info] {myjsActions} Call "myjsActions->executeJsmsPerform()"
+Apr 19 16:41:11 symfony [info] {sfFrontWebController} Get presentation for action "myjs/performV1" (view class: "")
+Apr 19 16:41:11 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:11 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:11 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:11 symfony [info] {myjsActions} Call "myjsActions->executePerformV1()"
+Apr 19 16:41:11 symfony [info] {sfFrontWebController} Get presentation for action "membership/ApiMembershipDetailsV3" (view class: "")
+Apr 19 16:41:11 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:11 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:11 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:11 symfony [info] {sfFrontWebController} Get presentation for action "common/ApiCALayerV1" (view class: "")
+Apr 19 16:41:11 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:11 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:11 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:11 symfony [info] {sfFrontWebController} Get presentation for action "common/ApiCALayerV1" (view class: "")
+Apr 19 16:41:11 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:11 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:11 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:11 symfony [info] {myjsActions} Change template to "CURRENT/jsmsPerform"
+Apr 19 16:41:11 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/jsmsPerformSuccess.tpl"
+Apr 19 16:41:12 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/_jsmsAwaitingResponseSection.tpl"
+Apr 19 16:41:12 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/_jsmsVistorsSection.tpl"
+Apr 19 16:41:12 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/_jsmsMatchalertSection.tpl"
+Apr 19 16:41:12 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/_jsmsBrowseMyMatchesBand.tpl"
+Apr 19 16:41:12 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/_jsmsAwaitingResponseSectionAbsent.tpl"
+Apr 19 16:41:12 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/_jsmsVistorsSection.tpl"
+Apr 19 16:41:12 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/_jsmsMatchalertSection.tpl"
+Apr 19 16:41:12 symfony [info] {main} Call "common->executeNotificationLayerJsms()"
+Apr 19 16:41:12 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/common/templates/_notificationLayerJsms.tpl"
+Apr 19 16:41:12 symfony [info] {main} Call "static->executeNewMobileSiteHamburger()"
+Apr 19 16:41:12 symfony [info] {sfFrontWebController} Get presentation for action "search/saveSearchCallV1" (view class: "")
+Apr 19 16:41:12 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:12 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:12 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:12 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger.tpl"
+Apr 19 16:41:12 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:41:12 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:41:12 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsmsCommonHeader.tpl"
+Apr 19 16:41:12 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:41:12 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:41:12 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:41:12 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:41:12 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 19 16:41:12 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 19 16:41:12 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:41:12 symfony [info] {sfWebDebugLogger} Configuration 3.16 ms (30)
+Apr 19 16:41:12 symfony [info] {sfWebDebugLogger} Factories 10.21 ms (1)
+Apr 19 16:41:12 symfony [info] {sfWebDebugLogger} Action "homepage/index" 797.83 ms (1)
+Apr 19 16:41:12 symfony [info] {sfWebDebugLogger} Action "myjs/jsmsPerform" 141.05 ms (1)
+Apr 19 16:41:12 symfony [info] {sfWebDebugLogger} Action "myjs/performV1" 138.70 ms (1)
+Apr 19 16:41:12 symfony [info] {sfWebDebugLogger} Action "membership/ApiMembershipDetailsV3" 19.91 ms (1)
+Apr 19 16:41:12 symfony [info] {sfWebDebugLogger} View "None" for "membership/ApiMembershipDetailsV3" 0.01 ms (1)
+Apr 19 16:41:12 symfony [info] {sfWebDebugLogger} Action "common/ApiCALayerV1" 3.15 ms (2)
+Apr 19 16:41:12 symfony [info] {sfWebDebugLogger} View "None" for "common/ApiCALayerV1" 0.01 ms (2)
+Apr 19 16:41:12 symfony [info] {sfWebDebugLogger} View "None" for "myjs/performV1" 0.01 ms (1)
+Apr 19 16:41:12 symfony [info] {sfWebDebugLogger} View "Success" for "myjs/jsmsPerform" 652.70 ms (1)
+Apr 19 16:41:12 symfony [info] {sfWebDebugLogger} Partial "myjs/_jsmsAwaitingResponseSection" 31.95 ms (1)
+Apr 19 16:41:12 symfony [info] {sfWebDebugLogger} Partial "myjs/_jsmsVistorsSection" 46.50 ms (2)
+Apr 19 16:41:12 symfony [info] {sfWebDebugLogger} Partial "myjs/_jsmsMatchalertSection" 44.49 ms (2)
+Apr 19 16:41:12 symfony [info] {sfWebDebugLogger} Partial "myjs/_jsmsBrowseMyMatchesBand" 24.27 ms (1)
+Apr 19 16:41:12 symfony [info] {sfWebDebugLogger} Partial "myjs/_jsmsAwaitingResponseSectionAbsent" 8.50 ms (1)
+Apr 19 16:41:12 symfony [info] {sfWebDebugLogger} Component "common/notificationLayerJsms" 1.58 ms (1)
+Apr 19 16:41:12 symfony [info] {sfWebDebugLogger} Partial "common/_notificationLayerJsms" 31.69 ms (1)
+Apr 19 16:41:12 symfony [info] {sfWebDebugLogger} Component "static/newMobileSiteHamburger" 48.09 ms (1)
+Apr 19 16:41:12 symfony [info] {sfWebDebugLogger} Action "search/saveSearchCallV1" 35.07 ms (1)
+Apr 19 16:41:12 symfony [info] {sfWebDebugLogger} View "None" for "search/saveSearchCallV1" 0.01 ms (1)
+Apr 19 16:41:12 symfony [info] {sfWebDebugLogger} Partial "static/_newMobileSiteHamburger" 103.79 ms (1)
+Apr 19 16:41:12 symfony [info] {sfWebDebugLogger} Partial "global/_jsmsCommonHeader" 21.96 ms (1)
+Apr 19 16:41:12 symfony [info] {sfWebResponse} Send content (92043 o)
+Apr 19 16:41:16 symfony [info] {sfPatternRouting} Match route "homepage" (/) for / with parameters array (  'module' => 'homepage',  'action' => 'index',)
+Apr 19 16:41:16 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:16 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:16 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:16 symfony [info] {homepageActions} Call "homepageActions->executeIndex()"
+Apr 19 16:41:16 symfony [info] {homepageActions} Forward to action "myjs/jsmsPerform"
+Apr 19 16:41:16 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:16 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:16 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:16 symfony [info] {myjsActions} Call "myjsActions->executeJsmsPerform()"
+Apr 19 16:41:16 symfony [info] {sfFrontWebController} Get presentation for action "myjs/performV1" (view class: "")
+Apr 19 16:41:16 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:16 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:16 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:16 symfony [info] {myjsActions} Call "myjsActions->executePerformV1()"
+Apr 19 16:41:16 symfony [info] {sfFrontWebController} Get presentation for action "membership/ApiMembershipDetailsV3" (view class: "")
+Apr 19 16:41:16 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:16 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:16 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:16 symfony [info] {sfFrontWebController} Get presentation for action "common/ApiCALayerV1" (view class: "")
+Apr 19 16:41:16 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:16 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:16 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:16 symfony [info] {sfFrontWebController} Get presentation for action "common/ApiCALayerV1" (view class: "")
+Apr 19 16:41:16 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:16 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:16 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:16 symfony [info] {myjsActions} Change template to "CURRENT/jsmsPerform"
+Apr 19 16:41:16 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/jsmsPerformSuccess.tpl"
+Apr 19 16:41:16 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/_jsmsAwaitingResponseSection.tpl"
+Apr 19 16:41:16 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/_jsmsVistorsSection.tpl"
+Apr 19 16:41:16 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/_jsmsMatchalertSection.tpl"
+Apr 19 16:41:16 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/_jsmsBrowseMyMatchesBand.tpl"
+Apr 19 16:41:16 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/_jsmsAwaitingResponseSectionAbsent.tpl"
+Apr 19 16:41:16 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/_jsmsVistorsSection.tpl"
+Apr 19 16:41:16 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/_jsmsMatchalertSection.tpl"
+Apr 19 16:41:16 symfony [info] {main} Call "common->executeNotificationLayerJsms()"
+Apr 19 16:41:16 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/common/templates/_notificationLayerJsms.tpl"
+Apr 19 16:41:16 symfony [info] {main} Call "static->executeNewMobileSiteHamburger()"
+Apr 19 16:41:16 symfony [info] {sfFrontWebController} Get presentation for action "search/saveSearchCallV1" (view class: "")
+Apr 19 16:41:16 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:16 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:16 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:16 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger.tpl"
+Apr 19 16:41:16 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:41:16 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:41:16 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsmsCommonHeader.tpl"
+Apr 19 16:41:17 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:41:17 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:41:17 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:41:17 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:41:17 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 19 16:41:17 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 19 16:41:17 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:41:17 symfony [info] {sfWebDebugLogger} Configuration 3.80 ms (30)
+Apr 19 16:41:17 symfony [info] {sfWebDebugLogger} Factories 15.58 ms (1)
+Apr 19 16:41:17 symfony [info] {sfWebDebugLogger} Action "homepage/index" 411.95 ms (1)
+Apr 19 16:41:17 symfony [info] {sfWebDebugLogger} Action "myjs/jsmsPerform" 132.15 ms (1)
+Apr 19 16:41:17 symfony [info] {sfWebDebugLogger} Action "myjs/performV1" 129.17 ms (1)
+Apr 19 16:41:17 symfony [info] {sfWebDebugLogger} Action "membership/ApiMembershipDetailsV3" 17.94 ms (1)
+Apr 19 16:41:17 symfony [info] {sfWebDebugLogger} View "None" for "membership/ApiMembershipDetailsV3" 0.01 ms (1)
+Apr 19 16:41:17 symfony [info] {sfWebDebugLogger} Action "common/ApiCALayerV1" 15.24 ms (2)
+Apr 19 16:41:17 symfony [info] {sfWebDebugLogger} View "None" for "common/ApiCALayerV1" 0.02 ms (2)
+Apr 19 16:41:17 symfony [info] {sfWebDebugLogger} View "None" for "myjs/performV1" 0.01 ms (1)
+Apr 19 16:41:17 symfony [info] {sfWebDebugLogger} View "Success" for "myjs/jsmsPerform" 267.62 ms (1)
+Apr 19 16:41:17 symfony [info] {sfWebDebugLogger} Partial "myjs/_jsmsAwaitingResponseSection" 1.73 ms (1)
+Apr 19 16:41:17 symfony [info] {sfWebDebugLogger} Partial "myjs/_jsmsVistorsSection" 47.05 ms (2)
+Apr 19 16:41:17 symfony [info] {sfWebDebugLogger} Partial "myjs/_jsmsMatchalertSection" 2.83 ms (2)
+Apr 19 16:41:17 symfony [info] {sfWebDebugLogger} Partial "myjs/_jsmsBrowseMyMatchesBand" 1.17 ms (1)
+Apr 19 16:41:17 symfony [info] {sfWebDebugLogger} Partial "myjs/_jsmsAwaitingResponseSectionAbsent" 1.31 ms (1)
+Apr 19 16:41:17 symfony [info] {sfWebDebugLogger} Component "common/notificationLayerJsms" 0.95 ms (1)
+Apr 19 16:41:17 symfony [info] {sfWebDebugLogger} Partial "common/_notificationLayerJsms" 1.37 ms (1)
+Apr 19 16:41:17 symfony [info] {sfWebDebugLogger} Component "static/newMobileSiteHamburger" 12.55 ms (1)
+Apr 19 16:41:17 symfony [info] {sfWebDebugLogger} Action "search/saveSearchCallV1" 0.93 ms (1)
+Apr 19 16:41:17 symfony [info] {sfWebDebugLogger} View "None" for "search/saveSearchCallV1" 0.01 ms (1)
+Apr 19 16:41:17 symfony [info] {sfWebDebugLogger} Partial "static/_newMobileSiteHamburger" 12.05 ms (1)
+Apr 19 16:41:17 symfony [info] {sfWebDebugLogger} Partial "global/_jsmsCommonHeader" 1.32 ms (1)
+Apr 19 16:41:17 symfony [info] {sfWebResponse} Send content (92253 o)
+Apr 19 16:41:43 symfony [info] {sfPatternRouting} Match route "homepage" (/) for / with parameters array (  'module' => 'homepage',  'action' => 'index',)
+Apr 19 16:41:51 symfony [info] {sfPatternRouting} Match route "homepage" (/) for / with parameters array (  'module' => 'homepage',  'action' => 'index',)
+Apr 19 16:41:51 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:51 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:51 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:51 symfony [info] {homepageActions} Call "homepageActions->executeIndex()"
+Apr 19 16:41:51 symfony [info] {homepageActions} Forward to action "myjs/jsmsPerform"
+Apr 19 16:41:51 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:51 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:51 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:51 symfony [info] {myjsActions} Call "myjsActions->executeJsmsPerform()"
+Apr 19 16:41:51 symfony [info] {sfFrontWebController} Get presentation for action "myjs/performV1" (view class: "")
+Apr 19 16:41:51 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:51 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:51 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:51 symfony [info] {myjsActions} Call "myjsActions->executePerformV1()"
+Apr 19 16:41:51 symfony [info] {sfFrontWebController} Get presentation for action "membership/ApiMembershipDetailsV3" (view class: "")
+Apr 19 16:41:51 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:51 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:51 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:51 symfony [info] {sfFrontWebController} Get presentation for action "common/ApiCALayerV1" (view class: "")
+Apr 19 16:41:51 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:51 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:51 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:51 symfony [info] {sfFrontWebController} Get presentation for action "common/ApiCALayerV1" (view class: "")
+Apr 19 16:41:51 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:51 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:51 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:51 symfony [info] {myjsActions} Change template to "CURRENT/jsmsPerform"
+Apr 19 16:41:51 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/jsmsPerformSuccess.tpl"
+Apr 19 16:41:51 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/_jsmsAwaitingResponseSection.tpl"
+Apr 19 16:41:51 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/_jsmsVistorsSection.tpl"
+Apr 19 16:41:51 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/_jsmsMatchalertSection.tpl"
+Apr 19 16:41:51 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/_jsmsBrowseMyMatchesBand.tpl"
+Apr 19 16:41:51 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/_jsmsAwaitingResponseSectionAbsent.tpl"
+Apr 19 16:41:51 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/_jsmsVistorsSection.tpl"
+Apr 19 16:41:51 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/myjs/templates/_jsmsMatchalertSection.tpl"
+Apr 19 16:41:51 symfony [info] {main} Call "common->executeNotificationLayerJsms()"
+Apr 19 16:41:51 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/common/templates/_notificationLayerJsms.tpl"
+Apr 19 16:41:51 symfony [info] {main} Call "static->executeNewMobileSiteHamburger()"
+Apr 19 16:41:51 symfony [info] {sfFrontWebController} Get presentation for action "search/saveSearchCallV1" (view class: "")
+Apr 19 16:41:51 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:41:51 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:41:51 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:41:51 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger.tpl"
+Apr 19 16:41:51 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:41:51 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:41:51 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsmsCommonHeader.tpl"
+Apr 19 16:41:51 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:41:51 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:41:51 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:41:51 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:41:51 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 19 16:41:51 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 19 16:41:51 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:41:51 symfony [info] {sfWebDebugLogger} Configuration 2.82 ms (30)
+Apr 19 16:41:51 symfony [info] {sfWebDebugLogger} Factories 6.57 ms (1)
+Apr 19 16:41:51 symfony [info] {sfWebDebugLogger} Action "homepage/index" 182.30 ms (1)
+Apr 19 16:41:51 symfony [info] {sfWebDebugLogger} Action "myjs/jsmsPerform" 106.08 ms (1)
+Apr 19 16:41:51 symfony [info] {sfWebDebugLogger} Action "myjs/performV1" 103.81 ms (1)
+Apr 19 16:41:51 symfony [info] {sfWebDebugLogger} Action "membership/ApiMembershipDetailsV3" 16.53 ms (1)
+Apr 19 16:41:51 symfony [info] {sfWebDebugLogger} View "None" for "membership/ApiMembershipDetailsV3" 0.01 ms (1)
+Apr 19 16:41:51 symfony [info] {sfWebDebugLogger} Action "common/ApiCALayerV1" 2.72 ms (2)
+Apr 19 16:41:51 symfony [info] {sfWebDebugLogger} View "None" for "common/ApiCALayerV1" 0.01 ms (2)
+Apr 19 16:41:51 symfony [info] {sfWebDebugLogger} View "None" for "myjs/performV1" 0.01 ms (1)
+Apr 19 16:41:51 symfony [info] {sfWebDebugLogger} View "Success" for "myjs/jsmsPerform" 72.83 ms (1)
+Apr 19 16:41:51 symfony [info] {sfWebDebugLogger} Partial "myjs/_jsmsAwaitingResponseSection" 0.67 ms (1)
+Apr 19 16:41:51 symfony [info] {sfWebDebugLogger} Partial "myjs/_jsmsVistorsSection" 1.07 ms (2)
+Apr 19 16:41:51 symfony [info] {sfWebDebugLogger} Partial "myjs/_jsmsMatchalertSection" 1.04 ms (2)
+Apr 19 16:41:51 symfony [info] {sfWebDebugLogger} Partial "myjs/_jsmsBrowseMyMatchesBand" 0.48 ms (1)
+Apr 19 16:41:51 symfony [info] {sfWebDebugLogger} Partial "myjs/_jsmsAwaitingResponseSectionAbsent" 0.49 ms (1)
+Apr 19 16:41:51 symfony [info] {sfWebDebugLogger} Component "common/notificationLayerJsms" 0.88 ms (1)
+Apr 19 16:41:51 symfony [info] {sfWebDebugLogger} Partial "common/_notificationLayerJsms" 0.83 ms (1)
+Apr 19 16:41:51 symfony [info] {sfWebDebugLogger} Component "static/newMobileSiteHamburger" 10.37 ms (1)
+Apr 19 16:41:51 symfony [info] {sfWebDebugLogger} Action "search/saveSearchCallV1" 0.75 ms (1)
+Apr 19 16:41:51 symfony [info] {sfWebDebugLogger} View "None" for "search/saveSearchCallV1" 0.01 ms (1)
+Apr 19 16:41:51 symfony [info] {sfWebDebugLogger} Partial "static/_newMobileSiteHamburger" 9.91 ms (1)
+Apr 19 16:41:51 symfony [info] {sfWebDebugLogger} Partial "global/_jsmsCommonHeader" 0.68 ms (1)
+Apr 19 16:41:51 symfony [info] {sfWebResponse} Send content (92310 o)
+Apr 19 16:41:57 symfony [info] {sfPatternRouting} Match route "homepage" (/) for / with parameters array (  'module' => 'homepage',  'action' => 'index',)
+Apr 19 16:42:55 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:42:55 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:42:55 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:42:55 symfony [info] {inboxActions} Call "inboxActions->executeJsmsPerform()"
+Apr 19 16:42:55 symfony [info] {sfFrontWebController} Get presentation for action "inbox/performV2" (view class: "")
+Apr 19 16:42:55 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:42:55 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:42:55 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:42:55 symfony [info] {inboxActions} Call "inboxActions->executePerformV2()"
+Apr 19 16:42:55 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/inbox/templates/jsmsPerformSuccess.tpl"
+Apr 19 16:42:55 symfony [info] {main} Call "common->executeJsmsReqCallback()"
+Apr 19 16:42:55 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/common/templates/_jsmsReqCallback.tpl"
+Apr 19 16:42:56 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsms3DotLayer.tpl"
+Apr 19 16:42:56 symfony [info] {main} Call "static->executeNewMobileSiteHamburger()"
+Apr 19 16:42:56 symfony [info] {sfFrontWebController} Get presentation for action "search/saveSearchCallV1" (view class: "")
+Apr 19 16:42:56 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:42:56 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:42:56 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:42:56 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger.tpl"
+Apr 19 16:42:56 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:42:56 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:42:56 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsmsCommonHeader.tpl"
+Apr 19 16:42:56 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:42:56 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:42:56 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:42:56 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:42:56 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 19 16:42:56 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:42:56 symfony [info] {sfWebDebugLogger} Configuration 1.67 ms (16)
+Apr 19 16:42:56 symfony [info] {sfWebDebugLogger} Factories 6.33 ms (1)
+Apr 19 16:42:56 symfony [info] {sfWebDebugLogger} Action "inbox/jsmsPerform" 163.66 ms (1)
+Apr 19 16:42:56 symfony [info] {sfWebDebugLogger} Action "inbox/performV2" 158.42 ms (1)
+Apr 19 16:42:56 symfony [info] {sfWebDebugLogger} View "None" for "inbox/performV2" 0.01 ms (1)
+Apr 19 16:42:56 symfony [info] {sfWebDebugLogger} View "Success" for "inbox/jsmsPerform" 283.79 ms (1)
+Apr 19 16:42:56 symfony [info] {sfWebDebugLogger} Component "common/jsmsReqCallback" 0.07 ms (1)
+Apr 19 16:42:56 symfony [info] {sfWebDebugLogger} Partial "common/_jsmsReqCallback" 57.46 ms (1)
+Apr 19 16:42:56 symfony [info] {sfWebDebugLogger} Partial "global/_jsms3DotLayer" 59.06 ms (1)
+Apr 19 16:42:56 symfony [info] {sfWebDebugLogger} Component "static/newMobileSiteHamburger" 12.19 ms (1)
+Apr 19 16:42:56 symfony [info] {sfWebDebugLogger} Action "search/saveSearchCallV1" 1.30 ms (1)
+Apr 19 16:42:56 symfony [info] {sfWebDebugLogger} View "None" for "search/saveSearchCallV1" 0.01 ms (1)
+Apr 19 16:42:56 symfony [info] {sfWebDebugLogger} Partial "static/_newMobileSiteHamburger" 11.15 ms (1)
+Apr 19 16:42:56 symfony [info] {sfWebDebugLogger} Partial "global/_jsmsCommonHeader" 0.51 ms (1)
+Apr 19 16:42:56 symfony [info] {sfWebResponse} Send content (50237 o)
+Apr 19 16:43:10 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:43:10 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:43:10 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:43:10 symfony [info] {inboxActions} Call "inboxActions->executeJsmsPerform()"
+Apr 19 16:43:10 symfony [info] {sfFrontWebController} Get presentation for action "inbox/performV2" (view class: "")
+Apr 19 16:43:10 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:43:10 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:43:10 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:43:10 symfony [info] {inboxActions} Call "inboxActions->executePerformV2()"
+Apr 19 16:43:10 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/inbox/templates/jsmsPerformSuccess.tpl"
+Apr 19 16:43:10 symfony [info] {main} Call "common->executeJsmsReqCallback()"
+Apr 19 16:43:10 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/common/templates/_jsmsReqCallback.tpl"
+Apr 19 16:43:10 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsms3DotLayer.tpl"
+Apr 19 16:43:10 symfony [info] {main} Call "static->executeNewMobileSiteHamburger()"
+Apr 19 16:43:10 symfony [info] {sfFrontWebController} Get presentation for action "search/saveSearchCallV1" (view class: "")
+Apr 19 16:43:10 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:43:10 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:43:10 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:43:10 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger.tpl"
+Apr 19 16:43:10 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:43:10 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:43:10 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsmsCommonHeader.tpl"
+Apr 19 16:43:10 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:43:10 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:43:10 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:43:10 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:43:10 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 19 16:43:10 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:43:10 symfony [info] {sfWebDebugLogger} Configuration 1.59 ms (16)
+Apr 19 16:43:10 symfony [info] {sfWebDebugLogger} Factories 5.70 ms (1)
+Apr 19 16:43:10 symfony [info] {sfWebDebugLogger} Action "inbox/jsmsPerform" 125.19 ms (1)
+Apr 19 16:43:10 symfony [info] {sfWebDebugLogger} Action "inbox/performV2" 120.16 ms (1)
+Apr 19 16:43:10 symfony [info] {sfWebDebugLogger} View "None" for "inbox/performV2" 0.01 ms (1)
+Apr 19 16:43:10 symfony [info] {sfWebDebugLogger} View "Success" for "inbox/jsmsPerform" 88.48 ms (1)
+Apr 19 16:43:10 symfony [info] {sfWebDebugLogger} Component "common/jsmsReqCallback" 0.08 ms (1)
+Apr 19 16:43:10 symfony [info] {sfWebDebugLogger} Partial "common/_jsmsReqCallback" 1.04 ms (1)
+Apr 19 16:43:10 symfony [info] {sfWebDebugLogger} Partial "global/_jsms3DotLayer" 0.69 ms (1)
+Apr 19 16:43:10 symfony [info] {sfWebDebugLogger} Component "static/newMobileSiteHamburger" 11.97 ms (1)
+Apr 19 16:43:10 symfony [info] {sfWebDebugLogger} Action "search/saveSearchCallV1" 1.12 ms (1)
+Apr 19 16:43:10 symfony [info] {sfWebDebugLogger} View "None" for "search/saveSearchCallV1" 0.02 ms (1)
+Apr 19 16:43:10 symfony [info] {sfWebDebugLogger} Partial "static/_newMobileSiteHamburger" 9.77 ms (1)
+Apr 19 16:43:10 symfony [info] {sfWebDebugLogger} Partial "global/_jsmsCommonHeader" 0.64 ms (1)
+Apr 19 16:43:10 symfony [info] {sfWebResponse} Send content (50237 o)
+Apr 19 16:43:26 symfony [info] {sfPatternRouting} Match route "api_rule" (/api/:version/:moduleName/:actionName) for /api/v2/contacts/postCancelInterest with parameters array (  'module' => 'api',  'action' => 'apiRequest',  'version' => 'v2',  'moduleName' => 'contacts',  'actionName' => 'postCancelInterest',)
+Apr 19 16:43:26 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:43:26 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:43:26 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:43:26 symfony [info] {apiActions} Call "apiActions->executeApiRequest()"
+Apr 19 16:43:26 symfony [info] {apiActions} Forward to action "contacts/postCancelInterestv2"
+Apr 19 16:43:26 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:43:26 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:43:26 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:43:53 symfony [info] {sfPatternRouting} Match route "viewprofile_rule" (/profile/viewprofile.php/*) for /profile/viewprofile.php with parameters array (  'module' => 'profile',  'action' => 'view',)
+Apr 19 16:43:53 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:43:53 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:43:53 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:43:53 symfony [info] {viewAction} Forward to action "profile/detailed"
+Apr 19 16:43:53 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:43:53 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:43:53 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:43:54 symfony [info] {detailedAction} Change template to "CURRENT/_mobViewProfile/jsmsViewProfile"
+Apr 19 16:43:54 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/profile/templates/_mobViewProfile/jsmsViewProfileSuccess.tpl"
+Apr 19 16:43:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/profile/templates/_mobViewProfile/_communicationHistoryOverlay.tpl"
+Apr 19 16:43:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsms3DotLayer.tpl"
+Apr 19 16:43:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/profile/templates/_mobViewProfile/_tabHeader.tpl"
+Apr 19 16:43:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/profile/templates/_mobViewProfile/_imageWidget.tpl"
+Apr 19 16:43:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/profile/templates/_mobViewProfile/_basicInfo.tpl"
+Apr 19 16:43:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/profile/templates/_mobViewProfile/_educationAndCareerInfo.tpl"
+Apr 19 16:43:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/profile/templates/_mobViewProfile/_kundaliAndAstroInfo.tpl"
+Apr 19 16:43:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/profile/templates/_mobViewProfile/_lifestyleInfo.tpl"
+Apr 19 16:43:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/profile/templates/_mobViewProfile/_familyInfo.tpl"
+Apr 19 16:43:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/profile/templates/_mobViewProfile/_dppInfo.tpl"
+Apr 19 16:43:54 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:43:54 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:43:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsmsCommonHeader.tpl"
+Apr 19 16:43:54 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:43:54 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:43:54 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:43:54 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:43:54 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 19 16:43:54 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 19 16:43:54 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:43:54 symfony [info] {sfWebDebugLogger} Configuration 50.12 ms (14)
+Apr 19 16:43:54 symfony [info] {sfWebDebugLogger} Factories 4.37 ms (1)
+Apr 19 16:43:54 symfony [info] {sfWebDebugLogger} Action "profile/view" 1090.31 ms (1)
+Apr 19 16:43:54 symfony [info] {sfWebDebugLogger} Action "profile/detailed" 359.63 ms (1)
+Apr 19 16:43:54 symfony [info] {sfWebDebugLogger} View "Success" for "profile/detailed" 670.64 ms (1)
+Apr 19 16:43:54 symfony [info] {sfWebDebugLogger} Partial "profile/_mobViewProfile/_communicationHistoryOverlay" 32.32 ms (1)
+Apr 19 16:43:54 symfony [info] {sfWebDebugLogger} Partial "global/_jsms3DotLayer" 0.73 ms (1)
+Apr 19 16:43:54 symfony [info] {sfWebDebugLogger} Partial "profile/_mobViewProfile/_tabHeader" 14.88 ms (1)
+Apr 19 16:43:54 symfony [info] {sfWebDebugLogger} Partial "profile/_mobViewProfile/_imageWidget" 37.59 ms (1)
+Apr 19 16:43:54 symfony [info] {sfWebDebugLogger} Partial "profile/_mobViewProfile/_basicInfo" 49.21 ms (1)
+Apr 19 16:43:54 symfony [info] {sfWebDebugLogger} Partial "profile/_mobViewProfile/_educationAndCareerInfo" 66.15 ms (1)
+Apr 19 16:43:54 symfony [info] {sfWebDebugLogger} Partial "profile/_mobViewProfile/_kundaliAndAstroInfo" 81.80 ms (1)
+Apr 19 16:43:54 symfony [info] {sfWebDebugLogger} Partial "profile/_mobViewProfile/_lifestyleInfo" 61.37 ms (1)
+Apr 19 16:43:54 symfony [info] {sfWebDebugLogger} Partial "profile/_mobViewProfile/_familyInfo" 67.39 ms (1)
+Apr 19 16:43:54 symfony [info] {sfWebDebugLogger} Partial "profile/_mobViewProfile/_dppInfo" 66.81 ms (1)
+Apr 19 16:43:54 symfony [info] {sfWebDebugLogger} Partial "global/_jsmsCommonHeader" 0.59 ms (1)
+Apr 19 16:43:54 symfony [info] {sfWebResponse} Send content (27706 o)
+Apr 19 16:43:58 symfony [info] {sfPatternRouting} Match route "api_rule" (/api/:version/:moduleName/:actionName) for /api/v1/profile/gunascore with parameters array (  'module' => 'api',  'action' => 'apiRequest',  'version' => 'v1',  'moduleName' => 'profile',  'actionName' => 'gunascore',)
+Apr 19 16:43:58 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:43:58 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:43:58 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:43:58 symfony [info] {apiActions} Call "apiActions->executeApiRequest()"
+Apr 19 16:43:58 symfony [info] {apiActions} Forward to action "profile/gunascorev1"
+Apr 19 16:43:58 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:43:58 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:43:58 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:04 symfony [info] {sfPatternRouting} Match route "homepage" (/) for / with parameters array (  'module' => 'homepage',  'action' => 'index',)
+Apr 19 16:44:11 symfony [info] {sfPatternRouting} Match route "api_rule" (/api/:version/:moduleName/:actionName) for /api/v2/contacts/postAccept with parameters array (  'module' => 'api',  'action' => 'apiRequest',  'version' => 'v2',  'moduleName' => 'contacts',  'actionName' => 'postAccept',)
+Apr 19 16:44:11 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:11 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:11 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:11 symfony [info] {apiActions} Call "apiActions->executeApiRequest()"
+Apr 19 16:44:11 symfony [info] {apiActions} Forward to action "contacts/postAcceptv2"
+Apr 19 16:44:11 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:11 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:11 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:44 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:44 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:44 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:44 symfony [info] {inboxActions} Call "inboxActions->executeJsmsPerform()"
+Apr 19 16:44:44 symfony [info] {sfFrontWebController} Get presentation for action "inbox/performV2" (view class: "")
+Apr 19 16:44:44 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:44 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:44 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:44 symfony [info] {inboxActions} Call "inboxActions->executePerformV2()"
+Apr 19 16:44:44 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/inbox/templates/jsmsPerformSuccess.tpl"
+Apr 19 16:44:44 symfony [info] {main} Call "common->executeJsmsReqCallback()"
+Apr 19 16:44:44 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/common/templates/_jsmsReqCallback.tpl"
+Apr 19 16:44:44 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsms3DotLayer.tpl"
+Apr 19 16:44:44 symfony [info] {main} Call "static->executeNewMobileSiteHamburger()"
+Apr 19 16:44:44 symfony [info] {sfFrontWebController} Get presentation for action "search/saveSearchCallV1" (view class: "")
+Apr 19 16:44:44 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:44 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:44 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:44 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger.tpl"
+Apr 19 16:44:44 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:44:44 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:44:44 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsmsCommonHeader.tpl"
+Apr 19 16:44:44 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:44 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:44 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:44 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:44 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 19 16:44:44 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:44:44 symfony [info] {sfWebDebugLogger} Configuration 1.45 ms (16)
+Apr 19 16:44:44 symfony [info] {sfWebDebugLogger} Factories 5.29 ms (1)
+Apr 19 16:44:44 symfony [info] {sfWebDebugLogger} Action "inbox/jsmsPerform" 120.78 ms (1)
+Apr 19 16:44:44 symfony [info] {sfWebDebugLogger} Action "inbox/performV2" 116.81 ms (1)
+Apr 19 16:44:44 symfony [info] {sfWebDebugLogger} View "None" for "inbox/performV2" 0.01 ms (1)
+Apr 19 16:44:44 symfony [info] {sfWebDebugLogger} View "Success" for "inbox/jsmsPerform" 95.24 ms (1)
+Apr 19 16:44:44 symfony [info] {sfWebDebugLogger} Component "common/jsmsReqCallback" 0.07 ms (1)
+Apr 19 16:44:44 symfony [info] {sfWebDebugLogger} Partial "common/_jsmsReqCallback" 1.06 ms (1)
+Apr 19 16:44:44 symfony [info] {sfWebDebugLogger} Partial "global/_jsms3DotLayer" 0.50 ms (1)
+Apr 19 16:44:44 symfony [info] {sfWebDebugLogger} Component "static/newMobileSiteHamburger" 11.70 ms (1)
+Apr 19 16:44:44 symfony [info] {sfWebDebugLogger} Action "search/saveSearchCallV1" 1.19 ms (1)
+Apr 19 16:44:44 symfony [info] {sfWebDebugLogger} View "None" for "search/saveSearchCallV1" 0.01 ms (1)
+Apr 19 16:44:44 symfony [info] {sfWebDebugLogger} Partial "static/_newMobileSiteHamburger" 10.19 ms (1)
+Apr 19 16:44:44 symfony [info] {sfWebDebugLogger} Partial "global/_jsmsCommonHeader" 0.51 ms (1)
+Apr 19 16:44:44 symfony [info] {sfWebResponse} Send content (104164 o)
+Apr 19 16:44:45 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /seo/404 with parameters array (  'module' => 'seo',  'action' => '404',)
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /seo/404 with parameters array (  'module' => 'seo',  'action' => '404',)
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /seo/404 with parameters array (  'module' => 'seo',  'action' => '404',)
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /seo/404 with parameters array (  'module' => 'seo',  'action' => '404',)
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /seo/404 with parameters array (  'module' => 'seo',  'action' => '404',)
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /seo/404 with parameters array (  'module' => 'seo',  'action' => '404',)
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {seoActions} Call "seoActions->execute404()"
+Apr 19 16:44:45 symfony [info] {seoActions} Forward to action "static/page404"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {staticActions} Call "staticActions->executePage404()"
+Apr 19 16:44:45 symfony [info] {staticActions} Change template to "CURRENT/jsmsmob404"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {seoActions} Call "seoActions->execute404()"
+Apr 19 16:44:45 symfony [info] {seoActions} Forward to action "static/page404"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {staticActions} Call "staticActions->executePage404()"
+Apr 19 16:44:45 symfony [info] {staticActions} Change template to "CURRENT/jsmsmob404"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/jsmsmob404Success.tpl"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {seoActions} Call "seoActions->execute404()"
+Apr 19 16:44:45 symfony [info] {seoActions} Forward to action "static/page404"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {seoActions} Call "seoActions->execute404()"
+Apr 19 16:44:45 symfony [info] {seoActions} Forward to action "static/page404"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {staticActions} Call "staticActions->executePage404()"
+Apr 19 16:44:45 symfony [info] {staticActions} Change template to "CURRENT/jsmsmob404"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/jsmsmob404Success.tpl"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {staticActions} Call "staticActions->executePage404()"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/jsmsmob404Success.tpl"
+Apr 19 16:44:45 symfony [info] {staticActions} Change template to "CURRENT/jsmsmob404"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/jsmsmob404Success.tpl"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {seoActions} Call "seoActions->execute404()"
+Apr 19 16:44:45 symfony [info] {seoActions} Forward to action "static/page404"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {staticActions} Call "staticActions->executePage404()"
+Apr 19 16:44:45 symfony [info] {staticActions} Change template to "CURRENT/jsmsmob404"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/jsmsmob404Success.tpl"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {seoActions} Call "seoActions->execute404()"
+Apr 19 16:44:45 symfony [info] {seoActions} Forward to action "static/page404"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {staticActions} Call "staticActions->executePage404()"
+Apr 19 16:44:45 symfony [info] {staticActions} Change template to "CURRENT/jsmsmob404"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/jsmsmob404Success.tpl"
+Apr 19 16:44:45 symfony [info] {main} Call "static->executeNewMobileSiteHamburger()"
+Apr 19 16:44:45 symfony [info] {sfFrontWebController} Get presentation for action "search/saveSearchCallV1" (view class: "")
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsmsCommonHeader.tpl"
+Apr 19 16:44:45 symfony [info] {main} Call "static->executeNewMobileSiteHamburger()"
+Apr 19 16:44:45 symfony [info] {main} Call "static->executeNewMobileSiteHamburger()"
+Apr 19 16:44:45 symfony [info] {main} Call "static->executeNewMobileSiteHamburger()"
+Apr 19 16:44:45 symfony [info] {main} Call "static->executeNewMobileSiteHamburger()"
+Apr 19 16:44:45 symfony [info] {main} Call "static->executeNewMobileSiteHamburger()"
+Apr 19 16:44:45 symfony [info] {sfFrontWebController} Get presentation for action "search/saveSearchCallV1" (view class: "")
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {sfFrontWebController} Get presentation for action "search/saveSearchCallV1" (view class: "")
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfFrontWebController} Get presentation for action "search/saveSearchCallV1" (view class: "")
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfFrontWebController} Get presentation for action "search/saveSearchCallV1" (view class: "")
+Apr 19 16:44:45 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger.tpl"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {sfFrontWebController} Get presentation for action "search/saveSearchCallV1" (view class: "")
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger.tpl"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsmsCommonHeader.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsmsCommonHeader.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsmsCommonHeader.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsmsCommonHeader.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsmsCommonHeader.tpl"
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send status "HTTP/1.1 404 Not Found"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Status: 404 Not Found"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Configuration 2.20 ms (17)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Factories 9.35 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "seo/404" 287.04 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "static/page404" 0.37 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} View "Success" for "static/page404" 282.41 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Component "static/newMobileSiteHamburger" 23.37 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "search/saveSearchCallV1" 1.23 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} View "None" for "search/saveSearchCallV1" 0.01 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Partial "static/_newMobileSiteHamburger" 12.48 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Partial "global/_jsmsCommonHeader" 1.09 ms (1)
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send status "HTTP/1.1 404 Not Found"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Status: 404 Not Found"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Configuration 4.45 ms (17)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Factories 16.97 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "seo/404" 283.45 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "static/page404" 0.90 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} View "Success" for "static/page404" 275.07 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Component "static/newMobileSiteHamburger" 35.33 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "search/saveSearchCallV1" 1.95 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} View "None" for "search/saveSearchCallV1" 0.01 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Partial "static/_newMobileSiteHamburger" 20.06 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Partial "global/_jsmsCommonHeader" 0.96 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send content (65790 o)
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send status "HTTP/1.1 404 Not Found"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Status: 404 Not Found"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Configuration 2.12 ms (17)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Factories 14.22 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "seo/404" 386.06 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "static/page404" 0.44 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} View "Success" for "static/page404" 379.56 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Component "static/newMobileSiteHamburger" 33.89 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "search/saveSearchCallV1" 2.81 ms (1)
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} View "None" for "search/saveSearchCallV1" 0.01 ms (1)
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Partial "static/_newMobileSiteHamburger" 12.03 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Partial "global/_jsmsCommonHeader" 1.07 ms (1)
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send status "HTTP/1.1 404 Not Found"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Status: 404 Not Found"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send status "HTTP/1.1 404 Not Found"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Status: 404 Not Found"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Configuration 2.29 ms (17)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Factories 12.80 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "seo/404" 341.87 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "static/page404" 0.86 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} View "Success" for "static/page404" 327.96 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Component "static/newMobileSiteHamburger" 31.75 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "search/saveSearchCallV1" 4.85 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} View "None" for "search/saveSearchCallV1" 0.01 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Partial "static/_newMobileSiteHamburger" 17.55 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Partial "global/_jsmsCommonHeader" 0.95 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Configuration 2.16 ms (17)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Factories 13.11 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "seo/404" 274.43 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "static/page404" 0.41 ms (1)
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send status "HTTP/1.1 404 Not Found"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Status: 404 Not Found"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Configuration 2.22 ms (17)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Factories 25.64 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "seo/404" 308.00 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "static/page404" 0.44 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} View "Success" for "static/page404" 299.76 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Component "static/newMobileSiteHamburger" 34.88 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "search/saveSearchCallV1" 1.57 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} View "None" for "search/saveSearchCallV1" 0.02 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Partial "static/_newMobileSiteHamburger" 27.85 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Partial "global/_jsmsCommonHeader" 0.89 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} View "Success" for "static/page404" 270.36 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Component "static/newMobileSiteHamburger" 29.20 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "search/saveSearchCallV1" 1.17 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} View "None" for "search/saveSearchCallV1" 0.04 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Partial "static/_newMobileSiteHamburger" 29.32 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Partial "global/_jsmsCommonHeader" 1.02 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send content (65797 o)
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send content (65801 o)
+Apr 19 16:44:45 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /seo/404 with parameters array (  'module' => 'seo',  'action' => '404',)
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send content (65803 o)
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send content (65795 o)
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send content (65803 o)
+Apr 19 16:44:45 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /seo/404 with parameters array (  'module' => 'seo',  'action' => '404',)
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /seo/404 with parameters array (  'module' => 'seo',  'action' => '404',)
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {seoActions} Call "seoActions->execute404()"
+Apr 19 16:44:45 symfony [info] {seoActions} Forward to action "static/page404"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {staticActions} Call "staticActions->executePage404()"
+Apr 19 16:44:45 symfony [info] {staticActions} Change template to "CURRENT/jsmsmob404"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/jsmsmob404Success.tpl"
+Apr 19 16:44:45 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /seo/404 with parameters array (  'module' => 'seo',  'action' => '404',)
+Apr 19 16:44:45 symfony [info] {main} Call "static->executeNewMobileSiteHamburger()"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {seoActions} Call "seoActions->execute404()"
+Apr 19 16:44:45 symfony [info] {seoActions} Forward to action "static/page404"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {staticActions} Call "staticActions->executePage404()"
+Apr 19 16:44:45 symfony [info] {sfFrontWebController} Get presentation for action "search/saveSearchCallV1" (view class: "")
+Apr 19 16:44:45 symfony [info] {staticActions} Change template to "CURRENT/jsmsmob404"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/jsmsmob404Success.tpl"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {seoActions} Call "seoActions->execute404()"
+Apr 19 16:44:45 symfony [info] {seoActions} Forward to action "static/page404"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {main} Call "static->executeNewMobileSiteHamburger()"
+Apr 19 16:44:45 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger.tpl"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {staticActions} Call "staticActions->executePage404()"
+Apr 19 16:44:45 symfony [info] {staticActions} Change template to "CURRENT/jsmsmob404"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/jsmsmob404Success.tpl"
+Apr 19 16:44:45 symfony [info] {main} Call "static->executeNewMobileSiteHamburger()"
+Apr 19 16:44:45 symfony [info] {sfFrontWebController} Get presentation for action "search/saveSearchCallV1" (view class: "")
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsmsCommonHeader.tpl"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger.tpl"
+Apr 19 16:44:45 symfony [info] {sfFrontWebController} Get presentation for action "search/saveSearchCallV1" (view class: "")
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsmsCommonHeader.tpl"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {seoActions} Call "seoActions->execute404()"
+Apr 19 16:44:45 symfony [info] {seoActions} Forward to action "static/page404"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {staticActions} Call "staticActions->executePage404()"
+Apr 19 16:44:45 symfony [info] {staticActions} Change template to "CURRENT/jsmsmob404"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/jsmsmob404Success.tpl"
+Apr 19 16:44:45 symfony [info] {main} Call "static->executeNewMobileSiteHamburger()"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsmsCommonHeader.tpl"
+Apr 19 16:44:45 symfony [info] {sfFrontWebController} Get presentation for action "search/saveSearchCallV1" (view class: "")
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 19 16:44:45 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 19 16:44:45 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 19 16:44:45 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsmsCommonHeader.tpl"
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send status "HTTP/1.1 404 Not Found"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Status: 404 Not Found"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Configuration 6.33 ms (17)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Factories 22.01 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "seo/404" 98.44 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "static/page404" 0.57 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} View "Success" for "static/page404" 94.39 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Component "static/newMobileSiteHamburger" 19.53 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "search/saveSearchCallV1" 0.94 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} View "None" for "search/saveSearchCallV1" 0.01 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Partial "static/_newMobileSiteHamburger" 10.20 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Partial "global/_jsmsCommonHeader" 0.56 ms (1)
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send content (65151 o)
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send status "HTTP/1.1 404 Not Found"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Status: 404 Not Found"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Configuration 2.17 ms (17)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Factories 14.41 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "seo/404" 145.10 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "static/page404" 0.45 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} View "Success" for "static/page404" 141.33 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Component "static/newMobileSiteHamburger" 22.11 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "search/saveSearchCallV1" 1.38 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} View "None" for "search/saveSearchCallV1" 0.01 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Partial "static/_newMobileSiteHamburger" 15.96 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Partial "global/_jsmsCommonHeader" 1.01 ms (1)
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send status "HTTP/1.1 404 Not Found"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Status: 404 Not Found"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Configuration 2.53 ms (17)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Factories 8.21 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "seo/404" 105.06 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "static/page404" 0.41 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} View "Success" for "static/page404" 101.74 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Component "static/newMobileSiteHamburger" 23.87 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "search/saveSearchCallV1" 1.12 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} View "None" for "search/saveSearchCallV1" 0.01 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Partial "static/_newMobileSiteHamburger" 10.18 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Partial "global/_jsmsCommonHeader" 0.89 ms (1)
+Apr 19 16:44:45 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send status "HTTP/1.1 404 Not Found"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Status: 404 Not Found"
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Configuration 2.15 ms (17)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Factories 8.20 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "seo/404" 144.80 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "static/page404" 0.52 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} View "Success" for "static/page404" 139.83 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Component "static/newMobileSiteHamburger" 20.48 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Action "search/saveSearchCallV1" 1.00 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} View "None" for "search/saveSearchCallV1" 0.01 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Partial "static/_newMobileSiteHamburger" 16.19 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebDebugLogger} Partial "global/_jsmsCommonHeader" 0.93 ms (1)
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send content (65161 o)
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send content (65158 o)
+Apr 19 16:44:45 symfony [info] {sfWebResponse} Send content (65164 o)
+Apr 25 14:54:41 symfony [info] {sfPatternRouting} Match route "homepage" (/) for / with parameters array (  'module' => 'homepage',  'action' => 'index',)
+Apr 25 14:54:41 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:54:41 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:54:41 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:54:41 symfony [info] {homepageActions} Call "homepageActions->executeIndex()"
+Apr 25 14:54:42 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/homepage/templates/indexSuccess.tpl"
+Apr 25 14:54:42 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcCommonTopNavBar.tpl"
+Apr 25 14:54:42 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcSearchByID.tpl"
+Apr 25 14:54:42 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/homepage/templates/_searchBand.tpl"
+Apr 25 14:54:42 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcAppPromo.tpl"
+Apr 25 14:54:42 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcMatrimonialLinks.tpl"
+Apr 25 14:54:42 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcSeoText.tpl"
+Apr 25 14:54:42 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcCommonFooter.tpl"
+Apr 25 14:54:42 symfony [info] {main} Call "common->executeHelpWidget()"
+Apr 25 14:54:42 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/common/templates/_helpWidget.tpl"
+Apr 25 14:54:42 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_freshDesk.tpl"
+Apr 25 14:54:42 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jspcLayout.tpl"
+Apr 25 14:54:42 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jspcLayout.tpl"
+Apr 25 14:54:42 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:54:42 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:54:42 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:54:42 symfony [info] {main} Get slot "disableFbRemarketing"
+Apr 25 14:54:42 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 25 14:54:42 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 25 14:54:42 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 25 14:54:42 symfony [info] {sfWebDebugLogger} Configuration 1.34 ms (11)
+Apr 25 14:54:42 symfony [info] {sfWebDebugLogger} Factories 146.56 ms (1)
+Apr 25 14:54:42 symfony [info] {sfWebDebugLogger} Action "homepage/index" 128.87 ms (1)
+Apr 25 14:54:42 symfony [info] {sfWebDebugLogger} View "Success" for "homepage/index" 243.99 ms (1)
+Apr 25 14:54:42 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcCommonTopNavBar" 2.95 ms (1)
+Apr 25 14:54:42 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcSearchByID" 0.72 ms (1)
+Apr 25 14:54:42 symfony [info] {sfWebDebugLogger} Partial "homepage/_searchBand" 18.08 ms (1)
+Apr 25 14:54:42 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcAppPromo" 11.70 ms (1)
+Apr 25 14:54:42 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcMatrimonialLinks" 13.27 ms (1)
+Apr 25 14:54:42 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcSeoText" 1.05 ms (1)
+Apr 25 14:54:42 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcCommonFooter" 35.43 ms (1)
+Apr 25 14:54:42 symfony [info] {sfWebDebugLogger} Component "common/helpWidget" 0.09 ms (1)
+Apr 25 14:54:42 symfony [info] {sfWebDebugLogger} Partial "common/_helpWidget" 1.22 ms (1)
+Apr 25 14:54:42 symfony [info] {sfWebDebugLogger} Partial "global/_freshDesk" 0.97 ms (1)
+Apr 25 14:54:42 symfony [info] {sfWebResponse} Send content (320529 o)
+Apr 25 14:54:42 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /seo/404 with parameters array (  'module' => 'seo',  'action' => '404',)
+Apr 25 14:54:42 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:54:42 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:54:46 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:54:46 symfony [info] {seoActions} Call "seoActions->execute404()"
+Apr 25 14:54:46 symfony [info] {seoActions} Forward to action "static/page404"
+Apr 25 14:54:46 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:54:46 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:54:46 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:54:46 symfony [info] {staticActions} Call "staticActions->executePage404()"
+Apr 25 14:54:46 symfony [info] {staticActions} Change template to "CURRENT/jsmsmob404"
+Apr 25 14:54:46 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/jsmsmob404Success.tpl"
+Apr 25 14:54:46 symfony [info] {main} Call "static->executeNewMobileSiteHamburger()"
+Apr 25 14:54:47 symfony [info] {sfFrontWebController} Get presentation for action "membership/ApiMembershipDetailsV3" (view class: "")
+Apr 25 14:54:47 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:54:47 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:54:47 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:54:47 symfony [info] {sfFrontWebController} Get presentation for action "search/saveSearchCallV1" (view class: "")
+Apr 25 14:54:47 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:54:47 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:54:47 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:54:48 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger.tpl"
+Apr 25 14:54:51 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 25 14:54:51 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 25 14:54:51 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsmsCommonHeader.tpl"
+Apr 25 14:54:51 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:54:51 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:54:51 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:54:51 symfony [info] {sfWebResponse} Send status "HTTP/1.1 404 Not Found"
+Apr 25 14:54:51 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 25 14:54:51 symfony [info] {sfWebResponse} Send header "Status: 404 Not Found"
+Apr 25 14:54:51 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 25 14:54:51 symfony [info] {sfWebDebugLogger} Configuration 2.79 ms (20)
+Apr 25 14:54:51 symfony [info] {sfWebDebugLogger} Factories 8.55 ms (1)
+Apr 25 14:54:51 symfony [info] {sfWebDebugLogger} Action "seo/404" 5221.59 ms (1)
+Apr 25 14:54:51 symfony [info] {sfWebDebugLogger} Action "static/page404" 0.36 ms (1)
+Apr 25 14:54:51 symfony [info] {sfWebDebugLogger} View "Success" for "static/page404" 5183.23 ms (1)
+Apr 25 14:54:51 symfony [info] {sfWebDebugLogger} Component "static/newMobileSiteHamburger" 1931.80 ms (1)
+Apr 25 14:54:51 symfony [info] {sfWebDebugLogger} Action "membership/ApiMembershipDetailsV3" 61.91 ms (1)
+Apr 25 14:54:51 symfony [info] {sfWebDebugLogger} View "None" for "membership/ApiMembershipDetailsV3" 0.01 ms (1)
+Apr 25 14:54:51 symfony [info] {sfWebDebugLogger} Action "search/saveSearchCallV1" 1041.28 ms (1)
+Apr 25 14:54:51 symfony [info] {sfWebDebugLogger} View "None" for "search/saveSearchCallV1" 0.01 ms (1)
+Apr 25 14:54:51 symfony [info] {sfWebDebugLogger} Partial "static/_newMobileSiteHamburger" 3113.14 ms (1)
+Apr 25 14:54:51 symfony [info] {sfWebDebugLogger} Partial "global/_jsmsCommonHeader" 7.34 ms (1)
+Apr 25 14:54:51 symfony [info] {sfWebResponse} Send content (64680 o)
+Apr 25 14:55:11 symfony [info] {sfPatternRouting} Match route "homepage" (/) for / with parameters array (  'module' => 'homepage',  'action' => 'index',)
+Apr 25 14:55:11 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:55:11 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:55:11 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:55:11 symfony [info] {homepageActions} Call "homepageActions->executeIndex()"
+Apr 25 14:55:11 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/homepage/templates/indexSuccess.tpl"
+Apr 25 14:55:11 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcCommonTopNavBar.tpl"
+Apr 25 14:55:11 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcSearchByID.tpl"
+Apr 25 14:55:11 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/homepage/templates/_searchBand.tpl"
+Apr 25 14:55:11 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcAppPromo.tpl"
+Apr 25 14:55:11 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcMatrimonialLinks.tpl"
+Apr 25 14:55:11 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcSeoText.tpl"
+Apr 25 14:55:11 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcCommonFooter.tpl"
+Apr 25 14:55:11 symfony [info] {main} Call "common->executeHelpWidget()"
+Apr 25 14:55:11 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/common/templates/_helpWidget.tpl"
+Apr 25 14:55:11 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_freshDesk.tpl"
+Apr 25 14:55:11 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jspcLayout.tpl"
+Apr 25 14:55:11 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jspcLayout.tpl"
+Apr 25 14:55:11 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:55:11 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:55:11 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:55:11 symfony [info] {main} Get slot "disableFbRemarketing"
+Apr 25 14:55:11 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 25 14:55:11 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 25 14:55:11 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 25 14:55:11 symfony [info] {sfWebDebugLogger} Configuration 0.84 ms (11)
+Apr 25 14:55:11 symfony [info] {sfWebDebugLogger} Factories 5.52 ms (1)
+Apr 25 14:55:11 symfony [info] {sfWebDebugLogger} Action "homepage/index" 1.72 ms (1)
+Apr 25 14:55:11 symfony [info] {sfWebDebugLogger} View "Success" for "homepage/index" 43.85 ms (1)
+Apr 25 14:55:11 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcCommonTopNavBar" 1.44 ms (1)
+Apr 25 14:55:11 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcSearchByID" 0.43 ms (1)
+Apr 25 14:55:11 symfony [info] {sfWebDebugLogger} Partial "homepage/_searchBand" 0.56 ms (1)
+Apr 25 14:55:11 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcAppPromo" 0.43 ms (1)
+Apr 25 14:55:11 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcMatrimonialLinks" 0.45 ms (1)
+Apr 25 14:55:11 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcSeoText" 0.42 ms (1)
+Apr 25 14:55:11 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcCommonFooter" 2.28 ms (1)
+Apr 25 14:55:11 symfony [info] {sfWebDebugLogger} Component "common/helpWidget" 0.05 ms (1)
+Apr 25 14:55:11 symfony [info] {sfWebDebugLogger} Partial "common/_helpWidget" 0.49 ms (1)
+Apr 25 14:55:11 symfony [info] {sfWebDebugLogger} Partial "global/_freshDesk" 0.42 ms (1)
+Apr 25 14:55:11 symfony [info] {sfWebResponse} Send content (320517 o)
+Apr 25 14:55:12 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /seo/404 with parameters array (  'module' => 'seo',  'action' => '404',)
+Apr 25 14:55:12 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:55:12 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:55:15 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:55:15 symfony [info] {seoActions} Call "seoActions->execute404()"
+Apr 25 14:55:15 symfony [info] {seoActions} Forward to action "static/page404"
+Apr 25 14:55:15 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:55:15 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:55:15 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:55:15 symfony [info] {staticActions} Call "staticActions->executePage404()"
+Apr 25 14:55:15 symfony [info] {staticActions} Change template to "CURRENT/jsmsmob404"
+Apr 25 14:55:15 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/jsmsmob404Success.tpl"
+Apr 25 14:55:15 symfony [info] {main} Call "static->executeNewMobileSiteHamburger()"
+Apr 25 14:55:15 symfony [info] {sfFrontWebController} Get presentation for action "membership/ApiMembershipDetailsV3" (view class: "")
+Apr 25 14:55:15 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:55:15 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:55:15 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:55:15 symfony [info] {sfFrontWebController} Get presentation for action "search/saveSearchCallV1" (view class: "")
+Apr 25 14:55:15 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:55:15 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:55:15 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:55:15 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger.tpl"
+Apr 25 14:55:15 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 25 14:55:15 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 25 14:55:15 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsmsCommonHeader.tpl"
+Apr 25 14:55:15 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:55:15 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:55:15 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:55:15 symfony [info] {sfWebResponse} Send status "HTTP/1.1 404 Not Found"
+Apr 25 14:55:15 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 25 14:55:15 symfony [info] {sfWebResponse} Send header "Status: 404 Not Found"
+Apr 25 14:55:15 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 25 14:55:15 symfony [info] {sfWebDebugLogger} Configuration 2.10 ms (20)
+Apr 25 14:55:15 symfony [info] {sfWebDebugLogger} Factories 9.85 ms (1)
+Apr 25 14:55:15 symfony [info] {sfWebDebugLogger} Action "seo/404" 111.19 ms (1)
+Apr 25 14:55:15 symfony [info] {sfWebDebugLogger} Action "static/page404" 0.25 ms (1)
+Apr 25 14:55:15 symfony [info] {sfWebDebugLogger} View "Success" for "static/page404" 108.51 ms (1)
+Apr 25 14:55:15 symfony [info] {sfWebDebugLogger} Component "static/newMobileSiteHamburger" 28.78 ms (1)
+Apr 25 14:55:15 symfony [info] {sfWebDebugLogger} Action "membership/ApiMembershipDetailsV3" 11.03 ms (1)
+Apr 25 14:55:15 symfony [info] {sfWebDebugLogger} View "None" for "membership/ApiMembershipDetailsV3" 0.01 ms (1)
+Apr 25 14:55:15 symfony [info] {sfWebDebugLogger} Action "search/saveSearchCallV1" 1.23 ms (1)
+Apr 25 14:55:15 symfony [info] {sfWebDebugLogger} View "None" for "search/saveSearchCallV1" 0.01 ms (1)
+Apr 25 14:55:15 symfony [info] {sfWebDebugLogger} Partial "static/_newMobileSiteHamburger" 14.44 ms (1)
+Apr 25 14:55:15 symfony [info] {sfWebDebugLogger} Partial "global/_jsmsCommonHeader" 0.87 ms (1)
+Apr 25 14:55:15 symfony [info] {sfWebResponse} Send content (64666 o)
+Apr 25 14:55:25 symfony [info] {sfPatternRouting} Match route "homepage" (/) for / with parameters array (  'module' => 'homepage',  'action' => 'index',)
+Apr 25 14:55:25 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:55:25 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:55:26 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:55:26 symfony [info] {homepageActions} Call "homepageActions->executeIndex()"
+Apr 25 14:55:26 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/homepage/templates/indexSuccess.tpl"
+Apr 25 14:55:26 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcCommonTopNavBar.tpl"
+Apr 25 14:55:26 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcSearchByID.tpl"
+Apr 25 14:55:26 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/homepage/templates/_searchBand.tpl"
+Apr 25 14:55:26 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcAppPromo.tpl"
+Apr 25 14:55:26 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcMatrimonialLinks.tpl"
+Apr 25 14:55:26 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcSeoText.tpl"
+Apr 25 14:55:26 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcCommonFooter.tpl"
+Apr 25 14:55:26 symfony [info] {main} Call "common->executeHelpWidget()"
+Apr 25 14:55:26 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/common/templates/_helpWidget.tpl"
+Apr 25 14:55:26 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_freshDesk.tpl"
+Apr 25 14:55:26 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jspcLayout.tpl"
+Apr 25 14:55:26 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jspcLayout.tpl"
+Apr 25 14:55:26 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:55:26 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:55:26 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:55:26 symfony [info] {main} Get slot "disableFbRemarketing"
+Apr 25 14:55:26 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 25 14:55:26 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 25 14:55:26 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 25 14:55:26 symfony [info] {sfWebDebugLogger} Configuration 0.83 ms (11)
+Apr 25 14:55:26 symfony [info] {sfWebDebugLogger} Factories 5.27 ms (1)
+Apr 25 14:55:26 symfony [info] {sfWebDebugLogger} Action "homepage/index" 1.99 ms (1)
+Apr 25 14:55:26 symfony [info] {sfWebDebugLogger} View "Success" for "homepage/index" 45.97 ms (1)
+Apr 25 14:55:26 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcCommonTopNavBar" 1.43 ms (1)
+Apr 25 14:55:26 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcSearchByID" 0.44 ms (1)
+Apr 25 14:55:26 symfony [info] {sfWebDebugLogger} Partial "homepage/_searchBand" 0.52 ms (1)
+Apr 25 14:55:26 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcAppPromo" 0.47 ms (1)
+Apr 25 14:55:26 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcMatrimonialLinks" 0.77 ms (1)
+Apr 25 14:55:26 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcSeoText" 0.72 ms (1)
+Apr 25 14:55:26 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcCommonFooter" 2.89 ms (1)
+Apr 25 14:55:26 symfony [info] {sfWebDebugLogger} Component "common/helpWidget" 0.06 ms (1)
+Apr 25 14:55:26 symfony [info] {sfWebDebugLogger} Partial "common/_helpWidget" 0.67 ms (1)
+Apr 25 14:55:26 symfony [info] {sfWebDebugLogger} Partial "global/_freshDesk" 0.50 ms (1)
+Apr 25 14:55:26 symfony [info] {sfWebResponse} Send content (320518 o)
+Apr 25 14:55:26 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /seo/404 with parameters array (  'module' => 'seo',  'action' => '404',)
+Apr 25 14:55:26 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:55:26 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:55:29 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:55:29 symfony [info] {seoActions} Call "seoActions->execute404()"
+Apr 25 14:55:29 symfony [info] {seoActions} Forward to action "static/page404"
+Apr 25 14:55:29 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:55:29 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:55:29 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:55:29 symfony [info] {staticActions} Call "staticActions->executePage404()"
+Apr 25 14:55:29 symfony [info] {staticActions} Change template to "CURRENT/jsmsmob404"
+Apr 25 14:55:29 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/jsmsmob404Success.tpl"
+Apr 25 14:55:29 symfony [info] {main} Call "static->executeNewMobileSiteHamburger()"
+Apr 25 14:55:29 symfony [info] {sfFrontWebController} Get presentation for action "membership/ApiMembershipDetailsV3" (view class: "")
+Apr 25 14:55:29 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:55:29 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:55:29 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:55:29 symfony [info] {sfFrontWebController} Get presentation for action "search/saveSearchCallV1" (view class: "")
+Apr 25 14:55:29 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:55:29 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:55:29 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:55:29 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger.tpl"
+Apr 25 14:55:29 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 25 14:55:29 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 25 14:55:29 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsmsCommonHeader.tpl"
+Apr 25 14:55:29 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:55:29 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:55:29 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:55:29 symfony [info] {sfWebResponse} Send status "HTTP/1.1 404 Not Found"
+Apr 25 14:55:29 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 25 14:55:29 symfony [info] {sfWebResponse} Send header "Status: 404 Not Found"
+Apr 25 14:55:29 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 25 14:55:29 symfony [info] {sfWebDebugLogger} Configuration 1.76 ms (20)
+Apr 25 14:55:29 symfony [info] {sfWebDebugLogger} Factories 9.41 ms (1)
+Apr 25 14:55:29 symfony [info] {sfWebDebugLogger} Action "seo/404" 78.58 ms (1)
+Apr 25 14:55:29 symfony [info] {sfWebDebugLogger} Action "static/page404" 0.33 ms (1)
+Apr 25 14:55:29 symfony [info] {sfWebDebugLogger} View "Success" for "static/page404" 75.20 ms (1)
+Apr 25 14:55:29 symfony [info] {sfWebDebugLogger} Component "static/newMobileSiteHamburger" 26.54 ms (1)
+Apr 25 14:55:29 symfony [info] {sfWebDebugLogger} Action "membership/ApiMembershipDetailsV3" 10.51 ms (1)
+Apr 25 14:55:29 symfony [info] {sfWebDebugLogger} View "None" for "membership/ApiMembershipDetailsV3" 0.01 ms (1)
+Apr 25 14:55:29 symfony [info] {sfWebDebugLogger} Action "search/saveSearchCallV1" 0.86 ms (1)
+Apr 25 14:55:29 symfony [info] {sfWebDebugLogger} View "None" for "search/saveSearchCallV1" 0.00 ms (1)
+Apr 25 14:55:29 symfony [info] {sfWebDebugLogger} Partial "static/_newMobileSiteHamburger" 9.27 ms (1)
+Apr 25 14:55:29 symfony [info] {sfWebDebugLogger} Partial "global/_jsmsCommonHeader" 0.64 ms (1)
+Apr 25 14:55:29 symfony [info] {sfWebResponse} Send content (64661 o)
+Apr 25 14:55:54 symfony [info] {sfPatternRouting} Match route "homepage" (/) for / with parameters array (  'module' => 'homepage',  'action' => 'index',)
+Apr 25 14:55:54 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:55:54 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:55:54 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:55:54 symfony [info] {homepageActions} Call "homepageActions->executeIndex()"
+Apr 25 14:55:54 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/homepage/templates/indexSuccess.tpl"
+Apr 25 14:55:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcCommonTopNavBar.tpl"
+Apr 25 14:55:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcSearchByID.tpl"
+Apr 25 14:55:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/homepage/templates/_searchBand.tpl"
+Apr 25 14:55:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcAppPromo.tpl"
+Apr 25 14:55:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcMatrimonialLinks.tpl"
+Apr 25 14:55:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcSeoText.tpl"
+Apr 25 14:55:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcCommonFooter.tpl"
+Apr 25 14:55:54 symfony [info] {main} Call "common->executeHelpWidget()"
+Apr 25 14:55:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/common/templates/_helpWidget.tpl"
+Apr 25 14:55:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_freshDesk.tpl"
+Apr 25 14:55:54 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jspcLayout.tpl"
+Apr 25 14:55:54 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jspcLayout.tpl"
+Apr 25 14:55:54 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:55:54 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:55:54 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:55:54 symfony [info] {main} Get slot "disableFbRemarketing"
+Apr 25 14:55:54 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 25 14:55:54 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 25 14:55:54 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} Configuration 1.17 ms (11)
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} Factories 7.79 ms (1)
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} Action "homepage/index" 2.32 ms (1)
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} View "Success" for "homepage/index" 42.09 ms (1)
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcCommonTopNavBar" 1.84 ms (1)
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcSearchByID" 0.50 ms (1)
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} Partial "homepage/_searchBand" 0.56 ms (1)
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcAppPromo" 0.44 ms (1)
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcMatrimonialLinks" 0.51 ms (1)
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcSeoText" 0.43 ms (1)
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcCommonFooter" 2.31 ms (1)
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} Component "common/helpWidget" 0.05 ms (1)
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} Partial "common/_helpWidget" 0.49 ms (1)
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} Partial "global/_freshDesk" 0.42 ms (1)
+Apr 25 14:55:54 symfony [info] {sfWebResponse} Send content (320518 o)
+Apr 25 14:55:54 symfony [info] {sfPatternRouting} Match route "homepage" (/) for / with parameters array (  'module' => 'homepage',  'action' => 'index',)
+Apr 25 14:55:54 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:55:54 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:55:54 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:55:54 symfony [info] {homepageActions} Call "homepageActions->executeIndex()"
+Apr 25 14:55:54 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/homepage/templates/indexSuccess.tpl"
+Apr 25 14:55:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcCommonTopNavBar.tpl"
+Apr 25 14:55:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcSearchByID.tpl"
+Apr 25 14:55:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/homepage/templates/_searchBand.tpl"
+Apr 25 14:55:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcAppPromo.tpl"
+Apr 25 14:55:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcMatrimonialLinks.tpl"
+Apr 25 14:55:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcSeoText.tpl"
+Apr 25 14:55:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcCommonFooter.tpl"
+Apr 25 14:55:54 symfony [info] {main} Call "common->executeHelpWidget()"
+Apr 25 14:55:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/common/templates/_helpWidget.tpl"
+Apr 25 14:55:54 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_freshDesk.tpl"
+Apr 25 14:55:54 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jspcLayout.tpl"
+Apr 25 14:55:54 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jspcLayout.tpl"
+Apr 25 14:55:54 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:55:54 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:55:54 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:55:54 symfony [info] {main} Get slot "disableFbRemarketing"
+Apr 25 14:55:54 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 25 14:55:54 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 25 14:55:54 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} Configuration 1.04 ms (11)
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} Factories 6.87 ms (1)
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} Action "homepage/index" 1.60 ms (1)
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} View "Success" for "homepage/index" 47.77 ms (1)
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcCommonTopNavBar" 1.40 ms (1)
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcSearchByID" 0.42 ms (1)
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} Partial "homepage/_searchBand" 0.59 ms (1)
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcAppPromo" 0.47 ms (1)
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcMatrimonialLinks" 0.45 ms (1)
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcSeoText" 0.43 ms (1)
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcCommonFooter" 3.50 ms (1)
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} Component "common/helpWidget" 0.05 ms (1)
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} Partial "common/_helpWidget" 0.82 ms (1)
+Apr 25 14:55:54 symfony [info] {sfWebDebugLogger} Partial "global/_freshDesk" 0.64 ms (1)
+Apr 25 14:55:54 symfony [info] {sfWebResponse} Send content (320518 o)
+Apr 25 14:55:54 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /seo/404 with parameters array (  'module' => 'seo',  'action' => '404',)
+Apr 25 14:55:54 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:55:54 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:55:58 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:55:58 symfony [info] {seoActions} Call "seoActions->execute404()"
+Apr 25 14:55:58 symfony [info] {seoActions} Forward to action "static/page404"
+Apr 25 14:55:58 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:55:58 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:55:58 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:55:58 symfony [info] {staticActions} Call "staticActions->executePage404()"
+Apr 25 14:55:58 symfony [info] {staticActions} Change template to "CURRENT/jsmsmob404"
+Apr 25 14:55:58 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/jsmsmob404Success.tpl"
+Apr 25 14:55:58 symfony [info] {main} Call "static->executeNewMobileSiteHamburger()"
+Apr 25 14:55:58 symfony [info] {sfFrontWebController} Get presentation for action "membership/ApiMembershipDetailsV3" (view class: "")
+Apr 25 14:55:58 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:55:58 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:55:58 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:55:58 symfony [info] {sfFrontWebController} Get presentation for action "search/saveSearchCallV1" (view class: "")
+Apr 25 14:55:58 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:55:58 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:55:58 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:55:58 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger.tpl"
+Apr 25 14:55:58 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 25 14:55:58 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 25 14:55:58 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsmsCommonHeader.tpl"
+Apr 25 14:55:58 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:55:58 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:55:58 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:55:58 symfony [info] {sfWebResponse} Send status "HTTP/1.1 404 Not Found"
+Apr 25 14:55:58 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 25 14:55:58 symfony [info] {sfWebResponse} Send header "Status: 404 Not Found"
+Apr 25 14:55:58 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 25 14:55:58 symfony [info] {sfWebDebugLogger} Configuration 1.99 ms (20)
+Apr 25 14:55:58 symfony [info] {sfWebDebugLogger} Factories 8.45 ms (1)
+Apr 25 14:55:58 symfony [info] {sfWebDebugLogger} Action "seo/404" 85.22 ms (1)
+Apr 25 14:55:58 symfony [info] {sfWebDebugLogger} Action "static/page404" 0.27 ms (1)
+Apr 25 14:55:58 symfony [info] {sfWebDebugLogger} View "Success" for "static/page404" 82.36 ms (1)
+Apr 25 14:55:58 symfony [info] {sfWebDebugLogger} Component "static/newMobileSiteHamburger" 29.22 ms (1)
+Apr 25 14:55:58 symfony [info] {sfWebDebugLogger} Action "membership/ApiMembershipDetailsV3" 11.42 ms (1)
+Apr 25 14:55:58 symfony [info] {sfWebDebugLogger} View "None" for "membership/ApiMembershipDetailsV3" 0.01 ms (1)
+Apr 25 14:55:58 symfony [info] {sfWebDebugLogger} Action "search/saveSearchCallV1" 0.92 ms (1)
+Apr 25 14:55:58 symfony [info] {sfWebDebugLogger} View "None" for "search/saveSearchCallV1" 0.01 ms (1)
+Apr 25 14:55:58 symfony [info] {sfWebDebugLogger} Partial "static/_newMobileSiteHamburger" 11.02 ms (1)
+Apr 25 14:55:58 symfony [info] {sfWebDebugLogger} Partial "global/_jsmsCommonHeader" 0.57 ms (1)
+Apr 25 14:55:58 symfony [info] {sfWebResponse} Send content (64664 o)
+Apr 25 14:56:17 symfony [info] {sfPatternRouting} Match route "homepage" (/) for / with parameters array (  'module' => 'homepage',  'action' => 'index',)
+Apr 25 14:56:17 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:56:17 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:56:17 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:56:17 symfony [info] {homepageActions} Call "homepageActions->executeIndex()"
+Apr 25 14:56:17 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/homepage/templates/indexSuccess.tpl"
+Apr 25 14:56:17 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcCommonTopNavBar.tpl"
+Apr 25 14:56:17 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcSearchByID.tpl"
+Apr 25 14:56:17 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/homepage/templates/_searchBand.tpl"
+Apr 25 14:56:17 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcAppPromo.tpl"
+Apr 25 14:56:17 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcMatrimonialLinks.tpl"
+Apr 25 14:56:17 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcSeoText.tpl"
+Apr 25 14:56:17 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcCommonFooter.tpl"
+Apr 25 14:56:17 symfony [info] {main} Call "common->executeHelpWidget()"
+Apr 25 14:56:17 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/common/templates/_helpWidget.tpl"
+Apr 25 14:56:17 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_freshDesk.tpl"
+Apr 25 14:56:17 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jspcLayout.tpl"
+Apr 25 14:56:17 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jspcLayout.tpl"
+Apr 25 14:56:17 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:56:17 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:56:17 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:56:17 symfony [info] {main} Get slot "disableFbRemarketing"
+Apr 25 14:56:17 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 25 14:56:17 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 25 14:56:17 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} Configuration 0.98 ms (11)
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} Factories 5.41 ms (1)
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} Action "homepage/index" 1.76 ms (1)
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} View "Success" for "homepage/index" 46.15 ms (1)
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcCommonTopNavBar" 1.48 ms (1)
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcSearchByID" 0.47 ms (1)
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} Partial "homepage/_searchBand" 0.57 ms (1)
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcAppPromo" 0.44 ms (1)
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcMatrimonialLinks" 0.43 ms (1)
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcSeoText" 0.41 ms (1)
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcCommonFooter" 2.26 ms (1)
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} Component "common/helpWidget" 0.05 ms (1)
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} Partial "common/_helpWidget" 0.48 ms (1)
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} Partial "global/_freshDesk" 0.42 ms (1)
+Apr 25 14:56:17 symfony [info] {sfWebResponse} Send content (320520 o)
+Apr 25 14:56:17 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /seo/404 with parameters array (  'module' => 'seo',  'action' => '404',)
+Apr 25 14:56:17 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:56:17 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:56:17 symfony [info] {sfPatternRouting} Match route "homepage" (/) for / with parameters array (  'module' => 'homepage',  'action' => 'index',)
+Apr 25 14:56:17 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:56:17 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:56:17 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:56:17 symfony [info] {homepageActions} Call "homepageActions->executeIndex()"
+Apr 25 14:56:17 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/homepage/templates/indexSuccess.tpl"
+Apr 25 14:56:17 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcCommonTopNavBar.tpl"
+Apr 25 14:56:17 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcSearchByID.tpl"
+Apr 25 14:56:17 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/homepage/templates/_searchBand.tpl"
+Apr 25 14:56:17 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcAppPromo.tpl"
+Apr 25 14:56:17 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcMatrimonialLinks.tpl"
+Apr 25 14:56:17 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcSeoText.tpl"
+Apr 25 14:56:17 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcCommonFooter.tpl"
+Apr 25 14:56:17 symfony [info] {main} Call "common->executeHelpWidget()"
+Apr 25 14:56:17 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/common/templates/_helpWidget.tpl"
+Apr 25 14:56:17 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_freshDesk.tpl"
+Apr 25 14:56:17 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jspcLayout.tpl"
+Apr 25 14:56:17 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jspcLayout.tpl"
+Apr 25 14:56:17 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:56:17 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:56:17 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:56:17 symfony [info] {main} Get slot "disableFbRemarketing"
+Apr 25 14:56:17 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 25 14:56:17 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 25 14:56:17 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} Configuration 1.17 ms (11)
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} Factories 8.30 ms (1)
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} Action "homepage/index" 1.91 ms (1)
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} View "Success" for "homepage/index" 80.20 ms (1)
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcCommonTopNavBar" 3.05 ms (1)
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcSearchByID" 0.97 ms (1)
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} Partial "homepage/_searchBand" 1.18 ms (1)
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcAppPromo" 0.91 ms (1)
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcMatrimonialLinks" 0.83 ms (1)
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcSeoText" 0.76 ms (1)
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcCommonFooter" 4.70 ms (1)
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} Component "common/helpWidget" 0.11 ms (1)
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} Partial "common/_helpWidget" 1.05 ms (1)
+Apr 25 14:56:17 symfony [info] {sfWebDebugLogger} Partial "global/_freshDesk" 0.95 ms (1)
+Apr 25 14:56:17 symfony [info] {sfWebResponse} Send content (320520 o)
+Apr 25 14:56:18 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /seo/404 with parameters array (  'module' => 'seo',  'action' => '404',)
+Apr 25 14:56:18 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:56:18 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:56:20 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:56:20 symfony [info] {seoActions} Call "seoActions->execute404()"
+Apr 25 14:56:20 symfony [info] {seoActions} Forward to action "static/page404"
+Apr 25 14:56:20 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:56:20 symfony [info] {seoActions} Call "seoActions->execute404()"
+Apr 25 14:56:20 symfony [info] {seoActions} Forward to action "static/page404"
+Apr 25 14:56:20 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:56:20 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:56:20 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:56:20 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:56:20 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:56:20 symfony [info] {staticActions} Call "staticActions->executePage404()"
+Apr 25 14:56:20 symfony [info] {staticActions} Change template to "CURRENT/jsmsmob404"
+Apr 25 14:56:20 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:56:20 symfony [info] {staticActions} Call "staticActions->executePage404()"
+Apr 25 14:56:20 symfony [info] {staticActions} Change template to "CURRENT/jsmsmob404"
+Apr 25 14:56:20 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/jsmsmob404Success.tpl"
+Apr 25 14:56:20 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/jsmsmob404Success.tpl"
+Apr 25 14:56:20 symfony [info] {main} Call "static->executeNewMobileSiteHamburger()"
+Apr 25 14:56:20 symfony [info] {main} Call "static->executeNewMobileSiteHamburger()"
+Apr 25 14:56:20 symfony [info] {sfFrontWebController} Get presentation for action "membership/ApiMembershipDetailsV3" (view class: "")
+Apr 25 14:56:20 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:56:20 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:56:20 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:56:20 symfony [info] {sfFrontWebController} Get presentation for action "membership/ApiMembershipDetailsV3" (view class: "")
+Apr 25 14:56:20 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:56:20 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:56:20 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:56:20 symfony [info] {sfFrontWebController} Get presentation for action "search/saveSearchCallV1" (view class: "")
+Apr 25 14:56:20 symfony [info] {sfFrontWebController} Get presentation for action "search/saveSearchCallV1" (view class: "")
+Apr 25 14:56:20 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:56:20 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:56:20 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:56:20 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:56:20 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:56:20 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:56:20 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger.tpl"
+Apr 25 14:56:20 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger.tpl"
+Apr 25 14:56:20 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 25 14:56:20 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 25 14:56:20 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 25 14:56:20 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 25 14:56:20 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsmsCommonHeader.tpl"
+Apr 25 14:56:20 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsmsCommonHeader.tpl"
+Apr 25 14:56:20 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:56:20 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:56:20 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:56:20 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:56:20 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:56:20 symfony [info] {sfWebResponse} Send status "HTTP/1.1 404 Not Found"
+Apr 25 14:56:20 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 25 14:56:20 symfony [info] {sfWebResponse} Send header "Status: 404 Not Found"
+Apr 25 14:56:20 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 25 14:56:20 symfony [info] {sfWebDebugLogger} Configuration 1.61 ms (20)
+Apr 25 14:56:20 symfony [info] {sfWebDebugLogger} Factories 4.83 ms (1)
+Apr 25 14:56:20 symfony [info] {sfWebDebugLogger} Action "seo/404" 83.26 ms (1)
+Apr 25 14:56:20 symfony [info] {sfWebDebugLogger} Action "static/page404" 0.24 ms (1)
+Apr 25 14:56:20 symfony [info] {sfWebDebugLogger} View "Success" for "static/page404" 80.99 ms (1)
+Apr 25 14:56:20 symfony [info] {sfWebDebugLogger} Component "static/newMobileSiteHamburger" 28.35 ms (1)
+Apr 25 14:56:20 symfony [info] {sfWebDebugLogger} Action "membership/ApiMembershipDetailsV3" 10.66 ms (1)
+Apr 25 14:56:20 symfony [info] {sfWebDebugLogger} View "None" for "membership/ApiMembershipDetailsV3" 0.01 ms (1)
+Apr 25 14:56:20 symfony [info] {sfWebDebugLogger} Action "search/saveSearchCallV1" 1.01 ms (1)
+Apr 25 14:56:20 symfony [info] {sfWebDebugLogger} View "None" for "search/saveSearchCallV1" 0.01 ms (1)
+Apr 25 14:56:20 symfony [info] {sfWebDebugLogger} Partial "static/_newMobileSiteHamburger" 10.52 ms (1)
+Apr 25 14:56:20 symfony [info] {sfWebDebugLogger} Partial "global/_jsmsCommonHeader" 0.60 ms (1)
+Apr 25 14:56:20 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:56:20 symfony [info] {sfWebResponse} Send status "HTTP/1.1 404 Not Found"
+Apr 25 14:56:20 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 25 14:56:20 symfony [info] {sfWebResponse} Send header "Status: 404 Not Found"
+Apr 25 14:56:20 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 25 14:56:20 symfony [info] {sfWebDebugLogger} Configuration 2.11 ms (20)
+Apr 25 14:56:20 symfony [info] {sfWebDebugLogger} Factories 6.95 ms (1)
+Apr 25 14:56:20 symfony [info] {sfWebDebugLogger} Action "seo/404" 86.26 ms (1)
+Apr 25 14:56:20 symfony [info] {sfWebDebugLogger} Action "static/page404" 0.28 ms (1)
+Apr 25 14:56:20 symfony [info] {sfWebDebugLogger} View "Success" for "static/page404" 83.36 ms (1)
+Apr 25 14:56:20 symfony [info] {sfWebDebugLogger} Component "static/newMobileSiteHamburger" 28.36 ms (1)
+Apr 25 14:56:20 symfony [info] {sfWebDebugLogger} Action "membership/ApiMembershipDetailsV3" 11.58 ms (1)
+Apr 25 14:56:20 symfony [info] {sfWebDebugLogger} View "None" for "membership/ApiMembershipDetailsV3" 0.01 ms (1)
+Apr 25 14:56:20 symfony [info] {sfWebDebugLogger} Action "search/saveSearchCallV1" 1.12 ms (1)
+Apr 25 14:56:20 symfony [info] {sfWebDebugLogger} View "None" for "search/saveSearchCallV1" 0.01 ms (1)
+Apr 25 14:56:20 symfony [info] {sfWebDebugLogger} Partial "static/_newMobileSiteHamburger" 11.93 ms (1)
+Apr 25 14:56:20 symfony [info] {sfWebDebugLogger} Partial "global/_jsmsCommonHeader" 0.62 ms (1)
+Apr 25 14:56:20 symfony [info] {sfWebResponse} Send content (64665 o)
+Apr 25 14:56:20 symfony [info] {sfWebResponse} Send content (64665 o)
+Apr 25 14:59:29 symfony [info] {sfPatternRouting} Match route "homepage" (/) for / with parameters array (  'module' => 'homepage',  'action' => 'index',)
+Apr 25 14:59:29 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:59:29 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:59:29 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:59:29 symfony [info] {homepageActions} Call "homepageActions->executeIndex()"
+Apr 25 14:59:29 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/homepage/templates/indexSuccess.tpl"
+Apr 25 14:59:29 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcCommonTopNavBar.tpl"
+Apr 25 14:59:29 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcSearchByID.tpl"
+Apr 25 14:59:29 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/homepage/templates/_searchBand.tpl"
+Apr 25 14:59:29 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcAppPromo.tpl"
+Apr 25 14:59:29 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcMatrimonialLinks.tpl"
+Apr 25 14:59:29 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcSeoText.tpl"
+Apr 25 14:59:29 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_JSPC/_jspcCommonFooter.tpl"
+Apr 25 14:59:29 symfony [info] {main} Call "common->executeHelpWidget()"
+Apr 25 14:59:29 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/common/templates/_helpWidget.tpl"
+Apr 25 14:59:29 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_freshDesk.tpl"
+Apr 25 14:59:29 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jspcLayout.tpl"
+Apr 25 14:59:29 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jspcLayout.tpl"
+Apr 25 14:59:29 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:59:29 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:59:29 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:59:29 symfony [info] {main} Get slot "disableFbRemarketing"
+Apr 25 14:59:29 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+Apr 25 14:59:29 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 25 14:59:29 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 25 14:59:29 symfony [info] {sfWebDebugLogger} Configuration 1.61 ms (11)
+Apr 25 14:59:29 symfony [info] {sfWebDebugLogger} Factories 11.37 ms (1)
+Apr 25 14:59:29 symfony [info] {sfWebDebugLogger} Action "homepage/index" 2.56 ms (1)
+Apr 25 14:59:29 symfony [info] {sfWebDebugLogger} View "Success" for "homepage/index" 56.72 ms (1)
+Apr 25 14:59:29 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcCommonTopNavBar" 2.72 ms (1)
+Apr 25 14:59:29 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcSearchByID" 0.82 ms (1)
+Apr 25 14:59:29 symfony [info] {sfWebDebugLogger} Partial "homepage/_searchBand" 1.02 ms (1)
+Apr 25 14:59:29 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcAppPromo" 0.85 ms (1)
+Apr 25 14:59:29 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcMatrimonialLinks" 0.79 ms (1)
+Apr 25 14:59:29 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcSeoText" 0.70 ms (1)
+Apr 25 14:59:29 symfony [info] {sfWebDebugLogger} Partial "global/_JSPC/_jspcCommonFooter" 3.72 ms (1)
+Apr 25 14:59:29 symfony [info] {sfWebDebugLogger} Component "common/helpWidget" 0.08 ms (1)
+Apr 25 14:59:29 symfony [info] {sfWebDebugLogger} Partial "common/_helpWidget" 0.82 ms (1)
+Apr 25 14:59:29 symfony [info] {sfWebDebugLogger} Partial "global/_freshDesk" 0.70 ms (1)
+Apr 25 14:59:29 symfony [info] {sfWebResponse} Send content (317808 o)
+Apr 25 14:59:29 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /seo/404 with parameters array (  'module' => 'seo',  'action' => '404',)
+Apr 25 14:59:29 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:59:29 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:59:32 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:59:32 symfony [info] {seoActions} Call "seoActions->execute404()"
+Apr 25 14:59:32 symfony [info] {seoActions} Forward to action "static/page404"
+Apr 25 14:59:32 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:59:32 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:59:32 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:59:32 symfony [info] {staticActions} Call "staticActions->executePage404()"
+Apr 25 14:59:32 symfony [info] {staticActions} Change template to "CURRENT/jsmsmob404"
+Apr 25 14:59:32 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/jsmsmob404Success.tpl"
+Apr 25 14:59:32 symfony [info] {main} Call "static->executeNewMobileSiteHamburger()"
+Apr 25 14:59:32 symfony [info] {sfFrontWebController} Get presentation for action "membership/ApiMembershipDetailsV3" (view class: "")
+Apr 25 14:59:32 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:59:32 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:59:32 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:59:32 symfony [info] {sfFrontWebController} Get presentation for action "search/saveSearchCallV1" (view class: "")
+Apr 25 14:59:32 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+Apr 25 14:59:32 symfony [info] {sfFilterChain} Executing filter "AuthFilter"
+Apr 25 14:59:32 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+Apr 25 14:59:32 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger.tpl"
+Apr 25 14:59:32 symfony [info] {sfSmartyView} Decorate content with "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 25 14:59:32 symfony [info] {sfSmartyView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/jsmsMobLayout.tpl"
+Apr 25 14:59:32 symfony [info] {sfSmartyPartialView} Render "/var/www/html/branch/current/apps/jeevansathi/templates/_jsmsCommonHeader.tpl"
+Apr 25 14:59:32 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:59:32 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:59:32 symfony [info] {main} Get slot "optionaljsb9Key"
+Apr 25 14:59:32 symfony [info] {sfWebResponse} Send status "HTTP/1.1 404 Not Found"
+Apr 25 14:59:32 symfony [info] {sfWebResponse} Send header "Vary: User-Agent"
+Apr 25 14:59:32 symfony [info] {sfWebResponse} Send header "Status: 404 Not Found"
+Apr 25 14:59:32 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+Apr 25 14:59:32 symfony [info] {sfWebDebugLogger} Configuration 2.45 ms (20)
+Apr 25 14:59:32 symfony [info] {sfWebDebugLogger} Factories 8.87 ms (1)
+Apr 25 14:59:32 symfony [info] {sfWebDebugLogger} Action "seo/404" 121.65 ms (1)
+Apr 25 14:59:32 symfony [info] {sfWebDebugLogger} Action "static/page404" 0.43 ms (1)
+Apr 25 14:59:32 symfony [info] {sfWebDebugLogger} View "Success" for "static/page404" 117.67 ms (1)
+Apr 25 14:59:32 symfony [info] {sfWebDebugLogger} Component "static/newMobileSiteHamburger" 32.03 ms (1)
+Apr 25 14:59:32 symfony [info] {sfWebDebugLogger} Action "membership/ApiMembershipDetailsV3" 11.64 ms (1)
+Apr 25 14:59:32 symfony [info] {sfWebDebugLogger} View "None" for "membership/ApiMembershipDetailsV3" 0.01 ms (1)
+Apr 25 14:59:32 symfony [info] {sfWebDebugLogger} Action "search/saveSearchCallV1" 1.18 ms (1)
+Apr 25 14:59:32 symfony [info] {sfWebDebugLogger} View "None" for "search/saveSearchCallV1" 0.01 ms (1)
+Apr 25 14:59:32 symfony [info] {sfWebDebugLogger} Partial "static/_newMobileSiteHamburger" 10.84 ms (1)
+Apr 25 14:59:32 symfony [info] {sfWebDebugLogger} Partial "global/_jsmsCommonHeader" 1.10 ms (1)
+Apr 25 14:59:32 symfony [info] {sfWebResponse} Send content (64667 o)

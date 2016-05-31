@@ -122,9 +122,8 @@ function loadForm()
       <td height="21" width="8%" align="CENTER">
 	<a href="edit_details.php?cid=~$cid`&pid=~$ROW[index].Profileid`&user=~$ROW[index].Username`&SHOW=~$SHOW`">Edit
 	</a></td>
-      <td height="21" width="15%" align="CENTER"><a href="showstat.php?cid=~$cid`&profileid=~$ROW[index].Profileid`" target="_blank">Show statistics</a></td>
-
-
+      <!--<td height="21" width="15%" align="CENTER"><a href="showstat.php?cid=~$cid`&profileid=~$ROW[index].Profileid`" target="_blank">Show statistics</a></td>-->
+      <td height="21" width="15%" align="CENTER"><a href="../operations.php/commoninterface/ShowProfileStats?cid=~$cid`&profileid=~$ROW[index].Profileid`" target="_blank">Show statistics</a></td>	
 
 
 <!--      <td height="21" width="15%"><a href="show_album_photos.php?cid=~$cid`&profileid=~$ROW[index].Profileid`" target="_blank">View All Photos</a></td>-->

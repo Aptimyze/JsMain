@@ -29,7 +29,8 @@ function login_affiliate($username,$password)
 	//return $data;
 }
 
-
+if(!function_exists("authenticated"))
+{
 function authenticated($checksum="",$from_input_profile="")
 {
 
@@ -104,14 +105,17 @@ function authenticated($checksum="",$from_input_profile="")
 	//phone mandatory block end
 	return $return;
 }
+}
 
-
-function logout()
+if(!function_exists("logout"))
 {
-	global $protect_obj;
-	$loginObj=AuthenticationFactory::getAuthenicationObj();
-	$loginObj->removeLoginCookies();
-	$protect_obj->logout();
+	function logout()
+	{
+		global $protect_obj;
+		$loginObj=AuthenticationFactory::getAuthenicationObj();
+		$loginObj->removeLoginCookies();
+		$protect_obj->logout();
+	}
 }
 
 

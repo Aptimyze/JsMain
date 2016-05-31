@@ -101,5 +101,25 @@ class ProcessHandler
       }
     }    
   }
+  
+  public function sendInstantNotification($type, $body)
+  {
+    if($body){
+        $notificationType = "INSTANT"; //INSTANT/SCHEDULED
+        $notificationKey = $body["notificationKey"];
+        $selfUserId = $body["selfUserId"];    //profileid/agentid to whom notification is to be sent
+        $otherUserId = $body["otherUserId"]; //comma separated list of other profileids(whose data is used in notification)
+        $message = $body["message"]; //For any other detail which needs to be passed as parameter
+        if($otherUserId)
+            $otherUserId = explode(",", $otherUserId);
+        $processObj = new BrowserNotificationProcess();
+        if(in_array($notificationKey, BrowserNotificationEnums::$instantNotifications))
+        {
+            $processObj->setDetails(array("method"=>$notificationType,"notificationKey"=>$notificationKey,"selfUserId"=>$selfUserId,"otherUserId"=>$otherUserId, "message" => $message));
+            $browserNotificationObj = new BrowserNotification($notificationType,$processObj);
+            $browserNotificationObj->addNotification($processObj);
+        }
+    }
+  }
 }
 ?>

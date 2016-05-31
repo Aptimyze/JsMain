@@ -410,13 +410,15 @@ $('#cls-view-horo').click(function(){
 });
 
 $('.js-searchTupleImage').click(function(){
-	var photoData = $(this).attr("data");
+    var photoData = $(this).attr("data");
     photoData = photoData.split(",");
 
     var username = photoData[1];
     var profilechecksum = photoData[2];
     var albumCount = photoData[0];
-
+    if((typeof(loggedInJspcUser)!="undefined" && loggedInJspcUser=="") || !profilechecksum){
+                return true;
+     }
     openPhotoAlbum(username,profilechecksum,albumCount);
 
 })	

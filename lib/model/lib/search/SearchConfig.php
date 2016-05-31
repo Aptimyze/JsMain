@@ -93,7 +93,7 @@ class SearchConfig
                         "MSTATUS"  => "marital_status",
                         "CASTE" => "caste_clusters_breadcrumb",
                         "CASTE_GROUP" => "caste_clusters_breadcrumb",
-                        "MANGLIK" => "manglik_label",
+                        "MANGLIK" => "mangliks_label", // label change for string change from 'dont know' to 'not filled in'
                         "DIET" => "diet",
                         "LAST_ACTIVITY" => "user_last_activity_array",
                         "INDIA_NRI" => "india_nri_array",

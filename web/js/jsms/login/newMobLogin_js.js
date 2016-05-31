@@ -3,6 +3,7 @@ $(function(){
 
 	   var vwid = $( window ).width();
 	   var vhgt = $( window ).height();
+     var loginAttempts=0;
 	   $('body').css('height',vhgt);
 	   $('body').addClass("headerimg1");
 	 
@@ -23,6 +24,8 @@ $(function(){
 			RemovePresetColor();
 		});
 $("#loginButton").bind(clickEventType,function(){
+  
+  
 	$(window).scrollTop(0);
         var email=$("#email").val();
         var pass=$("#password").val();
@@ -32,9 +35,8 @@ $("#loginButton").bind(clickEventType,function(){
             if(email && pass)
             {
 				
-                if(validateEmail(email))
+                if(validateEmail(email) && validateCaptcha())
                 {       
-                        
                         stopTouchEvents(1);
                         setTimeout(function(){
                             stopTouchEvents(1,1,1);
@@ -44,12 +46,28 @@ $("#loginButton").bind(clickEventType,function(){
                             datatype:'json',
                             cache: true,
                             async:true,
-                            data:{email:email,password:escape(pass),newMob:1,rememberme:1},
+                            data:{email:email,password:escape(pass),newMob:1,rememberme:1,captcha:captchaShow},
                             success: function(result){
 								var redirectUrl="";
-								
-                                if((typeof result) != "object")
+								if((typeof result) != "object")
                                     result=JSON.parse(result);
+								if(document.cookie.indexOf("loginAttempt")!=-1 && result.responseStatusCode!=0 && result.responseStatusCode!=8)
+								{
+									if(!is_android){
+										removeCaptcha();
+										createCaptcha();
+									
+									  if(captchaShow!=1)
+									  {
+										
+										captchaShow=1;
+										ShowTopDownError(["Please slide to verify"]);
+										return 0;
+									  }
+								  }
+								}
+
+                                
                                
                                 if(result.responseStatusCode==0)
                                 {
@@ -104,9 +122,11 @@ $("#loginButton").bind(clickEventType,function(){
                 }
                 else
                 {    
-                    errorMes="Provide a valid Email ID";
-                    $("#emailErr1").show();
-                    setTimeout(function(){$("#emailErr1").hide();},3000);
+					if(validateCaptcha()){
+						errorMes="Provide a valid Email ID";
+						$("#emailErr1").show();
+						setTimeout(function(){$("#emailErr1").hide();},3000);
+					}
                 }   
             }
             else
@@ -141,6 +161,15 @@ function validateEmail(email) {
     return re.test(email);
     }
 
+function validateCaptcha()
+{
+	if($("#blueText").html()=="Slide to Verify" &&  $('#captchaDiv').is(':visible'))
+    {
+      ShowTopDownError(["Please slide to verify"]);
+      return false;
+    }
+    return true;
+}
 });
 $(window).load(function()
 {
@@ -164,7 +193,134 @@ $(window).load(function()
 			f=f?0:1;
                         $("#password").focus();
 	});
+	
+	 if(typeof(captchaShow)!="undefined")
+    {
+		
+		if(!is_android){
+			if(captchaShow==1)
+				createCaptcha();
+		}
+    }
+
 });
+
+
+function createCaptcha(){
+	
+	var captchaDiv='<div id="captchaOuterDiv" class="fullwid brdr10">                <div id="captchaDiv" class="captcha" style="">    <div class="blueTxt" id="blueText">Slide to Verify</div>                      	<div class="fullwid transLayer"></div>                    <div class="slideCap" id="slideCap">                                  </div>                    <div class="handle" style=""></div>                </div>            </div>';
+	
+	$('#afterCaptcha').before(captchaDiv);
+	 $('.captcha').slideToCAPTCHA();
+	
+	
+}
+function removeCaptcha()
+{
+	$("#captchaOuterDiv").remove();
+}
+
+
+(function($) {
+    $.fn.slideToCAPTCHA = function(options) {
+        options = $.extend({
+            handle: '.handle',
+            cursor: 'move',
+            direction: 'x', //x or y
+            customValidation: false,
+            completedText: 'Done!'
+        }, options);
+        
+        var $handle = this.find(options.handle),
+            $slide = this,
+            handleOWidth,
+            xPos,
+            yPos,
+            slideXPos,
+            slideWidth,
+            slideOWidth,
+            $activeHandle,
+      slipStart,
+            mousePressed = false,
+            sliderCompleted = false,
+            $formEl = $slide.parents('form');
+        startSlider();
+       
+         $handle.css('cursor', options.cursor)
+            .on('touchstart', function(e){ slideOn(e); });
+
+        function startSlider() {
+         
+            if (options.customValidation === false) {
+                $formEl.attr('onsubmit', "return $(this).attr('data-valid') === 'true';");
+            }
+            $slide.addClass('slide-to-captcha');
+            $handle.addClass('slide-to-captcha-handle');
+            handleOWidth = $handle.outerWidth();
+            slideWidth = $slide.width();
+            slideOWidth = $slide.outerWidth();
+        }
+        function slideOn(e) {
+            mousePressed = true;
+            $activeHandle = $handle.addClass('active-handle');
+             xPos = $handle.offset().left + handleOWidth - (Math.round(e.originalEvent.touches[0].pageX));
+            slideXPos = $slide.offset().left + ((slideOWidth - slideWidth) / 2);
+      slipStart = $handle.offset().left;
+             $activeHandle.on('touchmove', function(e){ slideMove(e); })
+                .on('touchend', function(e){ slideOff(); });
+            e.preventDefault();
+        }
+        function slideMove(e) {
+             var MovepageX = Math.round(e.originalEvent.touches[0].pageX);
+            var handleXPos = MovepageX + xPos - handleOWidth;
+      var width = $handle.offset().left - slipStart;
+            if (handleXPos > slideXPos && handleXPos < slideXPos + slideWidth - handleOWidth) {
+                if ($handle.hasClass('active-handle')) {
+          $('.active-handle').offset({
+                        left: handleXPos
+                    });
+          $("#slideCap").css("width",width);
+         
+                }
+            } else {
+                if (handleXPos <= slideXPos === false) {
+                    sliderComplete();
+                }
+                $activeHandle.mouseup();
+            }
+        }
+        function sliderComplete() {
+            sliderCompleted = true;
+            $("#blueText").addClass("slided");
+      $(".handle").removeClass("slide-to-captcha-handle").addClass("slide-to-captcha-handle-verified");
+     
+            $activeHandle.offset({
+                left: slideXPos + slideWidth - handleOWidth
+            });
+            $activeHandle.off();
+            slideOff();
+           
+            $slide.addClass('valid');
+      $('#blueText').html('Verified');
+      $("#slideCap").css("width","100%");
+      
+            //$('.slide-to-captcha').attr('data-content', options.completedText);
+        }
+        function slideOff() {
+            mousePressed = false;
+            if (sliderCompleted == false) {
+              $("#blueText").removeClass("slided");
+                $activeHandle.offset({
+                    left: slideXPos+1
+                });
+      
+                $activeHandle.removeClass('active-handle');
+        $("#slideCap").css("width","0");
+            }
+        }
+    }
+})(jQuery);
+
 
 function RemovePresetColor()
 {

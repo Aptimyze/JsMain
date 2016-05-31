@@ -40,6 +40,7 @@ class billing_VARIABLE_DISCOUNT_SMS_LOG extends TABLE{
 			if(!empty($row)){
 				return array($row['FREQUENCY'],$row['NO_OF_TIMES']);
 			}
+			return;
 		}
 		catch(Exception $e)
 		{

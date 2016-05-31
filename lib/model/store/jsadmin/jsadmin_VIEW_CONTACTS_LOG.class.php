@@ -112,6 +112,23 @@ class JSADMIN_VIEW_CONTACTS_LOG extends TABLE{
 				throw new jsException($e);
 			}
 	}
+	public function totalContactsByViewer($viewerPid)
+	{
+		try
+		{
+			$sql = "SELECT count(*) CNT FROM jsadmin.VIEW_CONTACTS_LOG WHERE VIEWER=:viewerPid AND SOURCE='".CONTACT_ELEMENTS::CALL_DIRECTLY_TRACKING."'";
+			$prep=$this->db->prepare($sql);
+			$prep->bindValue(":viewerPid", $viewerPid, PDO::PARAM_INT);
+			$prep->execute();
+			$result = $prep->fetch(PDO::FETCH_ASSOC);
+			return $result['CNT'];
+		}
+		catch(PDOException $e)
+		{
+			/*** echo the sql statement and error message ***/
+			throw new jsException($e);
+		}
+	}
 	
 	/**
  * @fn 	public function FinalTotalContactsViewed($viewerPid)

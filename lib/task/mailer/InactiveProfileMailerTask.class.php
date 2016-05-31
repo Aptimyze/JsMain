@@ -35,6 +35,7 @@ EOF;
 
 	protected function execute($arguments = array(), $options = array())
 	{
+			ini_set("memory_limit","512M");
 				if(!sfContext::hasInstance())
 	                sfContext::createInstance($this->configuration);
 	            $IncompleteMasterobj = new NEWJS_INACTIVE_PROFILES("newjs_master");
@@ -42,8 +43,9 @@ EOF;
 	            $IncompleteMasterobj->EmptyIncomplete();
 	         if($arguments["oneTime"]=="0"){
 	           		$profilemail1=$IncompleteSlaveobj->ProfilesInactivated($this->Interval);
+
 	           		 $profileMailArray=array_chunk($profilemail1, $this->chunk);
-	           
+	           		unset($profilemail1);
 	           		if($profileMailArray)
 	           		{
 	           			
@@ -56,7 +58,7 @@ EOF;
 
 			           		$profilemail2=$IncompleteSlaveobj->ProfilesInactivated($this->Interval);
 			           		 $profileMailArray=array_chunk($profilemail2, $this->chunk);
-			          
+			          unset($profilemail2);
 			         if($profileMailArray)
 	           		{
 			            foreach ($profileMailArray as $key => $value) {
@@ -67,7 +69,7 @@ EOF;
 			           		$this->Interval=$this->Interval+25;
 			           		$profilemail3=$IncompleteSlaveobj->ProfilesInactivated($this->Interval);
 			           		 $profileMailArray=array_chunk($profilemail3, $this->chunk);
-			           
+			           		unset($profilemail3);
 			        if($profileMailArray)
 	           		{
 			            foreach ($profileMailArray as $key => $value) {
@@ -77,7 +79,7 @@ EOF;
 			           }
 			           		$profilemail4=$IncompleteSlaveobj->ProfilesInactivated($this->Interval1);
 			           		 $profileMailArray=array_chunk($profilemail4, $this->chunk);
-			           
+			           		unset($profilemail4);
 			        if($profileMailArray)
 	           		{
 			            foreach ($profileMailArray as $key => $value) {
@@ -88,7 +90,7 @@ EOF;
 			           		$this->Interval1=$this->Interval1+15;
 			           		$profilemail5=$IncompleteSlaveobj->ProfilesInactivated($this->Interval1);
 			           		 $profileMailArray=array_chunk($profilemail5, $this->chunk);
-			           
+			           		unset($profilemail5);
 			        if($profileMailArray)
 	           		{
 			            foreach ($profileMailArray as $key => $value) {
@@ -99,7 +101,7 @@ EOF;
 			           		$this->Interval1=$this->Interval1+15;
 			           		$profilemail6=$IncompleteSlaveobj->ProfilesInactivated($this->Interval1);
 			           		 $profileMailArray=array_chunk($profilemail6, $this->chunk);
-			           
+			           		unset($profilemail6);
 			        if($profileMailArray)
 	           		{
 			            foreach ($profileMailArray as $key => $value) {
@@ -110,7 +112,7 @@ EOF;
 			           		$this->Interval1=$this->Interval1+15;
 			           		$profilemail7=$IncompleteSlaveobj->ProfilesInactivated($this->Interval1);
 			           		 $profileMailArray=array_chunk($profilemail7, $this->chunk);
-			           
+			           		unset($profilemail7);
 
 			        if($profileMailArray)
 	           		{
@@ -122,7 +124,7 @@ EOF;
 			           		$this->Interval1=$this->Interval1+15;
 			           		$profilemail8=$IncompleteSlaveobj->ProfilesInactivated($this->Interval1);
 			           		 $profileMailArray=array_chunk($profilemail8, $this->chunk);
-			           
+			           		unset($profilemail8);
 			        if($profileMailArray)
 	           		{
 			            foreach ($profileMailArray as $key => $value) {
@@ -142,6 +144,7 @@ EOF;
 	            		$IncompleteMasterobj->InsertStatusAlert($value,$this->Interval);
 	            	}
 	           }
+	           unset($profileMailArray);
 	         
 		}
 }

@@ -175,10 +175,11 @@ class dppAction extends sfAction {
                 
                 //get data for filters
                 $this->filterArr = $this->getFilterStatus($request);
-                
+                $this->sourcename = $this->loginProfile->getSOURCE(); 
                 $groupname = $request->getParameter('groupname');
                 $pixelcodeObj = new PixelCodeHandler($groupname,'','JSPCR6',$this->loginProfile);
                 $this->pixelcode = $pixelcodeObj->getPixelCode();
+		$this->groupname = $groupname;
                 //for editWhatNew parameters
                 $this->EditWhatNew = $request->getParameter("EditWhatNew");
                 if(!in_array($this->EditWhatNew,DPPConstants::$editWhatNewEnumArr))

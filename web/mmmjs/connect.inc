@@ -1,7 +1,7 @@
 <?php
 $TOUT = 14400;	
 include_once(JsConstants::$smartyDir);
-include_once("../jsadmin/handleCrmLogin.php");
+//include_once("../jsadmin/handleCrmLogin.php");
 
 
 $smarty=new Smarty;
@@ -217,12 +217,12 @@ function authenticated($checksum="")
 
 				$ret["ID"] = $md."i".$userno;
 				$ret["USER"]=$myrow["USER"];
-				setLoginCookies($ret["ID"],$_COOKIE["CRM_NOTIFICATION_AGENT"]);
+				//setLoginCookies($ret["ID"],$_COOKIE["CRM_NOTIFICATION_AGENT"]);
 				//$ret = TRUE;
 			}
 			else
 			{
-				unsetLoginCookies();
+				//unsetLoginCookies();
 				$ret = NULL;
 			}
 		}

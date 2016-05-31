@@ -599,7 +599,7 @@ die;
          * @param type $date date 
          * @return formatted Date
          */
-	public function convertDateToDay($date){
+	public static function convertDateToDay($date){
                 
                 /*
                   Comment below two lines and uncomment commented line. For date time change.

@@ -75,7 +75,24 @@ class NEWJS_CONTACTS_ONCE extends TABLE
             throw new jsException($e);
         }
     }
+  
+      public function updateMessage($contactId,$message)
+    {
+        if(!$contactId) return;
+        try {
+            $sql  = "UPDATE `CONTACTS_ONCE` SET `MESSAGE` = :MESSAGE WHERE CONTACTID = :CONTACTID";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":MESSAGE", $message, PDO::PARAM_STR);
+            $prep->bindValue(":CONTACTID", $contactId, PDO::PARAM_INT);
+            $prep->execute();
+        }
+        catch (PDOException $e) {
+            throw new jsException($e);
+        }
+    }
     
+  
+
     public function updateUnSentContactsOnce($notSendContactsId)
     {
         $contactId = implode("','", $notSendContactsId);

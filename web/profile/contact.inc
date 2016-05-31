@@ -617,12 +617,12 @@ function calc_last_30_90_open_contacts($profileid)
 				}
 				else
 				{
-					$message.="To view this user's contact details <a href=\"$SITE_URL/profile/memberships.php\">upgrade your membership</a><br>";
+					$message.="To view this user's contact details <a href=\"$SITE_URL/membership/jspc\">upgrade your membership</a><br>";
 				}
 			}
 			else
 			{
-                                $message="JeevanSathi Member <strong>\"".$sendername."\"</strong> has accepted your contact.<br>To view the sender's profile, <span class=\"class6\"><a href=\"$SITE_URL/profile/viewprofile.php?username=$sendername\">click here</a></span><br>To view this user's contact details <a href=\"$SITE_URL/profile/memberships.php\">upgrade your membership</a><br>";
+                                $message="JeevanSathi Member <strong>\"".$sendername."\"</strong> has accepted your contact.<br>To view the sender's profile, <span class=\"class6\"><a href=\"$SITE_URL/profile/viewprofile.php?username=$sendername\">click here</a></span><br>To view this user's contact details <a href=\"$SITE_URL/membership/jspc\">upgrade your membership</a><br>";
                         }
 		}
 		if($flag_response=='C')

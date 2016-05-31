@@ -154,8 +154,10 @@ class staticActions extends sfActions
   	} else {
   		$this->personalVerif = 0;
   	}
-        if(MobileCommon::isAppWebView())
+        if(MobileCommon::isAppWebView() || $request->getParameter("iosWebview") == 1)
           $this->webView = 1;
+        if($request->getParameter("iosWebview") == 1)
+            $this->removeBack = 1;
         if(MobileCommon::isNewMobileSite()){
             $this->setTemplate("jsmsVerificationStaticPage");
         }
@@ -175,6 +177,14 @@ class staticActions extends sfActions
 		$this->nextAction = "/search/perform?searchId=$searchId&currentPage=$currentPage";*/
 		
 		$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
+		if($request->getcookie('loginAttempt'))
+    {
+    	
+        		$this->captchaDiv=1;
+        	}
+        	else
+        		$this->captchaDiv=0;
+        	//print_r($this->captchaDiv);die;
 		if($loggedInProfileObj->getPROFILEID() != '')
 		{
 			//echo "<script>$.colorbox.close();document.location.href='".$this->nextAction."';</script>";
@@ -182,6 +192,9 @@ class staticActions extends sfActions
 	}
         public function executeNewMobLogin(sfWebRequest $request)
         { 
+        	//$loginFailedObj = new LOGIN_FAILED1;
+        	//$count=
+        	
 			$this->forward("static","LogoutPage");
         }
 
@@ -377,7 +390,14 @@ public function executeCALRedirection($request){
     //Logout page
   public function executeLogoutPage(sfWebRequest $request)
   {
-    
+    if($request->getcookie('loginAttempt'))
+    {
+    	
+        		$this->captchaDiv=1;
+        	}
+        	else
+        		$this->captchaDiv=0;
+        	//print_r($this->captchaDiv);die;
     
         $loginData = $request->getAttribute("loginData");
 		if($loginData[PROFILEID])
@@ -710,7 +730,7 @@ public function executeAppredirect(sfWebRequest $request)
 		  
 		  foreach($arrKeys as $key=>$val)
 		  {
-			  if($val !== "reg_caste_")
+			  if($val !== "reg_caste_" && $val!=="reg_city_")
 				$outData[$val] = $this->getFieldMapData($val);
 			  else//As in case of reg_caste_ , we are getting array of caste as per religion for optimising calls
 			  	$outData = array_merge($outData,$this->getFieldMapData($val));
@@ -782,7 +802,7 @@ public function executeAppredirect(sfWebRequest $request)
 		if($k=="p_manglik")
 		$k="manglik";
 		if($k=="manglik")
-		$output=$this->getField("manglik_label");
+                $output=  $this->removeDontKnowManglik();
 		if($k=="p_height" || $k=="height")
 		$k="height_without_meters";
 		if($k=="p_age")
@@ -887,6 +907,10 @@ public function executeAppredirect(sfWebRequest $request)
 			{
 				$output= $this->getRegCaste($k);
 			}
+		}
+		if(stristr($k,'reg_city'))
+		{
+				$output = $this->getNativeCity();
 		}
 		if($k=="isd")
 		{
@@ -1715,4 +1739,17 @@ public function executeAppredirect(sfWebRequest $request)
     }
 	  return array($output);
   }
+  
+  /*
+         * this function removes don't know value from array coming from field map
+         * @return - array with don't know removed
+         */
+        private function removeDontKnowManglik(){
+            $arr=FieldMap::getFieldLabel("manglik_label",'',1);
+            foreach($arr as $key=>$val){
+                if($val != "Don't know")
+                        $Arr[0][]=array($key=>$val);
+            }
+            return $Arr;
+        }
 }

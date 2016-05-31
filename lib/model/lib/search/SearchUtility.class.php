@@ -20,7 +20,7 @@ class SearchUtility
 	* @param profile to ignore is passed in the url (optional)
 	* @param noAwaitingContacts exclude awaiting contacts.
 	*/
-	function removeProfileFromSearch($SearchParamtersObj,$seperator,$loggedInProfileObj,$profileFromUrl="",$noAwaitingContacts='',$removeMatchAlerts="")
+	function removeProfileFromSearch($SearchParamtersObj,$seperator,$loggedInProfileObj,$profileFromUrl="",$noAwaitingContacts='',$removeMatchAlerts="",$notInArray = '')
 	{
 		//print_r($SearchParamtersObj);die;
 		if($profileFromUrl)
@@ -149,6 +149,11 @@ class SearchUtility
 					else
 						$showArr = '0 0';
 				}
+                                //remove profiles for AP cron
+                                if($notInArray)
+                                {
+                                        $hideArr.= $notInArray;
+                                }
 				if($hideArr)
 				{
 					if($SearchParamtersObj->getIgnoreProfiles())
@@ -184,6 +189,9 @@ class SearchUtility
 			if($request->getParameter("dollar")==1)
 				$cluster=$cluster."_DOL";
 			$clusterVal = $request->getParameter("appClusterVal");
+                        if($cluster == "MANGLIK" && $clusterVal != 'ALL'){ // check for cluster only search for not adding dont know to 'not manglik'
+                            $clusterVal .= ','.SearchTypesEnums::APPLY_ONLY_CLUSTER;
+                        }
 			if(MobileCommon::isApp()=='A')
 				$searchParamsSetter['SEARCH_TYPE']= SearchTypesEnums::AppClusters;
 			elseif(MobileCommon::isApp()=='I')
@@ -211,6 +219,7 @@ class SearchUtility
 		if($SearchParamtersObj->getNEWSEARCH_CLUSTERING())
 			$list_of_clusters = explode(",",$SearchParamtersObj->getNEWSEARCH_CLUSTERING());
 		$clusterGetter = "get".$cluster;
+                
 		if($clusterVal == 'ALL')
 		{
 			if($cluster != 'MATCHALERTS_DATE_CLUSTER' && $cluster != 'KUNDLI_DATE_CLUSTER')

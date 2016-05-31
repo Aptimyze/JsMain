@@ -120,6 +120,8 @@ var google_remarketing_only = true;
 						~mainMem::ERISHTA_LABEL`
 					~else if CommonFunction::isJSExclusiveMember($detailsArr['SUBSCRIPTION'])`
 						~mainMem::JSEXCLUSIVE_LABEL`
+					~else if CommonFunction::isEadvantageMember($detailsArr['SUBSCRIPTION'])`
+						~mainMem::EADVANTAGE_LABEL`
 					~/if`
 				</div>
 			~/if`

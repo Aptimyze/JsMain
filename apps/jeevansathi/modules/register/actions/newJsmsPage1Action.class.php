@@ -105,7 +105,8 @@ class newJsmsPage1Action extends sfAction
 			RegistrationMisc::setJpartnerAfterRegistration($this->loginProfile,$jpartnerFields);
 			RegistrationMisc::contactArchiveUpdate($this->loginProfile,$this->ip);
 			RegistrationMisc::insertInIncompleteProfileAndNames($this->loginProfile);
-
+                        $partnerField = new PartnerField();
+                        RegistrationFunctions::UpdateFilter($partnerField);
 			//Lead conversion update
 			RegistrationMisc::updateLeadConversion($this->loginProfile->getEMAIL(),$this->leadid);
 

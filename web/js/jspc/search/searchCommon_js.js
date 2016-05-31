@@ -37,7 +37,6 @@ function searchResultMaping(val, noPhotoDiv, val1, profileNoId, defaultImage, fe
     countDisplay = "disp-none";
     hasAlbum = "";
   }
-
   /** 
    * Featured profile display handling LATER 
    */
@@ -51,7 +50,7 @@ function searchResultMaping(val, noPhotoDiv, val1, profileNoId, defaultImage, fe
     removeThisProfile = "";
   }
   
-  if(resp.searchBasedParam=="justJoinedMatches" || resp.searchBasedParam=='matchalerts' ||  resp.searchBasedParam=='kundlialerts'){
+  if(resp.searchBasedParam=="justJoinedMatches" || resp.searchBasedParam=='matchalerts' ||  resp.searchBasedParam=='kundlialerts' || resp.searchBasedParam=='contactViewAttempts'){
         joinedOnMsg = val1.timetext.replace("She j","J").replace("He j","J");
         removeThisProfile = "disp-none";
     }
@@ -145,7 +144,10 @@ var verificationDocumentsList;
   /**
    * Mapping of placeholders and the values
    */
-   
+        if(typeof(loggedInJspcUser)!="undefined" && loggedInJspcUser=="" ){
+                val1.username = val1.username.substring(0, val1.username.length - 4);
+                val1.username += "****";
+        }
   var mapping = {
     '{noPhotoDiv}': removeNull(noPhotoDiv),
     '{searchTupleImage}': removeNull(searchTupleImage),
@@ -207,7 +209,7 @@ function noPhotoDivFn(photoLabel, profilechecksum, idd, action) {
      if(typeof(loggedInJspcUser)!="undefined" && loggedInJspcUser=="" )
      {
 		 var msg =
-      '<div id="requestphoto' + idd + '" class="pos-abs srppos3 fullwid cursp loginLayerJspc" data=' + profilechecksum + ' myaction=' + action + '>\
+      '<div id="requestphoto' + idd + '" class="pos-abs srppos3 fullwid cursp " data=' + profilechecksum + ' myaction=' + action + '>\
                   <div class=" bg5 txtc fontlig f14 colrw lh50">' + photoLabel + '</div>\
                  </div>';
 	 }
@@ -270,7 +272,11 @@ function fillProfileViewHref(response) {
   else
 	 var viewProfileUrl = '/profile/viewprofile.php?total_rec=' + totalCount + '&searchid=' + lastSearchId + '&' + navigator + '&profilechecksum=' + profilechecksum + trackingParams + '&Sort=' + response.sorting + '&offset=' + idd+'&j='+response.page_index;
   
-	$(this).attr("href", viewProfileUrl);
+        if(typeof(loggedInJspcUser)!="undefined" && loggedInJspcUser=="" ){
+                $(this).attr("href", "javascript:void(0)");
+        }else{
+                $(this).attr("href", viewProfileUrl);
+        }
 });
 
 }
@@ -278,6 +284,9 @@ function fillProfileViewHref(response) {
 
 /**Binding of photo to open album of the tuple*/
 $('body').on('click','.js-searchTupleImage:has(.js-openAlbum)', function() {
+        if(typeof(loggedInJspcUser)!="undefined" && loggedInJspcUser=="" ){
+                return true;
+        }
     var dataFound = $(this).attr("data");
     dataFound = dataFound.split(",");
     

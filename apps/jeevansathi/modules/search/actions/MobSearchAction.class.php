@@ -27,7 +27,7 @@ class MobSearchAction extends sfActions
                         $this->loggedIn=1;
                 }
                 /**temp soln for logged-out case untill nitesh handles loggedout scenario*/
-		if(($request->getParameter("justJoinedMatches")==1 || $request->getParameter("twowaymatch")==1 || $request->getParameter("reverseDpp")==1 || $request->getParameter("partnermatches")==1 || in_array($request->getParameter("searchBasedParam"),array('shortlisted','visitors','justJoinedMatches','twowaymatch','reverseDpp','partnermatches','matchalerts','kundlialerts')) || $request->getParameter("dashboard")==1) && $isLogout==1)
+		if(($request->getParameter("justJoinedMatches")==1 || $request->getParameter("twowaymatch")==1 || $request->getParameter("reverseDpp")==1 || $request->getParameter("partnermatches")==1 || $request->getParameter("contactViewAttempts")==1 || $request->getParameter("verifiedMatches")==1  || in_array($request->getParameter("searchBasedParam"),array('shortlisted','visitors','justJoinedMatches','twowaymatch','reverseDpp','partnermatches','matchalerts','kundlialerts','contactViewAttempts','verifiedMatches')) || $request->getParameter("dashboard")==1) && $isLogout==1)
 		        $this->forward("static","logoutPage");
                 $this->szNavType = 'SR';
                 if($request->getParameter("twowaymatch")==1){
@@ -71,7 +71,7 @@ class MobSearchAction extends sfActions
 		/* capturing api */
 
 		$ResponseArr = json_decode($jsonResponse,true);
-		if(($ResponseArr["searchBasedParam"]=="justJoinedMatches" || $ResponseArr["searchBasedParam"]=="twowaymatch" || $ResponseArr["searchBasedParam"]=="reverseDpp" || $ResponseArr["searchBasedParam"]=="partnermatches") && $isLogout==1)
+		if(($ResponseArr["searchBasedParam"]=="justJoinedMatches" || $ResponseArr["searchBasedParam"]=="twowaymatch" || $ResponseArr["searchBasedParam"]=="reverseDpp" || $ResponseArr["searchBasedParam"]=="partnermatches" || $ResponseArr["searchBasedParam"]=="contactViewAttempts" || $ResponseArr["searchBasedParam"]=="verifiedMatches") && $isLogout==1)
 		        $this->forward("static","logoutPage");
                 
 		$params["actionObject"] = $this;

@@ -43,11 +43,13 @@ class notificationActions extends sfActions
 	$deviceModel = $request->getParameter('DEVICE_MODEL');
         $osVersion=$request->getParameter('CURRENT_VERSION');
         $appVersion=$request->getParameter('API_APP_VERSION');
+        $loginData =$request->getAttribute("loginData");
+        $profileid =$loginData['PROFILEID'];
 	
-	if($request->getAttribute("loginData"))
+	if($profileid)
 	{
-		$loggedInProfileObj=LoggedInProfile::getInstance('newjs_master');
-		$profileid= $loggedInProfileObj->getPROFILEID();
+		//$loggedInProfileObj=LoggedInProfile::getInstance('newjs_master');
+		//$profileid= $loggedInProfileObj->getPROFILEID();
 		$maxAlarmTimeObj = new MOBILE_API_MAX_ALARM_TIME;
 		$alarmCurrentTimeData = $maxAlarmTimeObj->getArray();
 		$alarmCurrentTime = $alarmCurrentTimeData[0][MAX_ALARM_TIME];
@@ -73,10 +75,12 @@ class notificationActions extends sfActions
 	else
 		$status = NotificationEnums::$DELIVERED;
 	$osType =MobileCommon::isApp();
-        if($request->getAttribute("loginData"))
+        $loginData =$request->getAttribute("loginData");
+        $profileid =$loginData['PROFILEID'];
+        if($profileid)
         {
-                $loggedInProfileObj=LoggedInProfile::getInstance('newjs_master');
-                $profileid= $loggedInProfileObj->getPROFILEID();
+                //$loggedInProfileObj=LoggedInProfile::getInstance('newjs_master');
+                //$profileid= $loggedInProfileObj->getPROFILEID();
 		$scheduledNotificationKey  =NotificationEnums::$scheduledNotificationKey;
 
 		// code execute for Scheduled Notification	
@@ -118,11 +122,13 @@ class notificationActions extends sfActions
         $deviceBrand 		=$request->getParameter('DEVICE_BRAND');
         $deviceModel 		=$request->getParameter('DEVICE_MODEL');
         $registrationid 	=$request->getParameter('registrationid');
+	$loginData 		=$request->getAttribute("loginData");
+	$profileid 		=$loginData['PROFILEID'];
 
-	if($request->getAttribute("loginData")){
+	/*if($request->getAttribute("loginData")){
 	        $loggedInProfileObj=LoggedInProfile::getInstance('newjs_master');
 	        $profileid= $loggedInProfileObj->getPROFILEID();
-	}
+	}*/
 	$localLogObj= new MOBILE_API_LOCAL_NOTIFICATION_LOG();
 	$localLogObj->addLog($registrationid,$apiappVersion, $currentOSversion,$profileid,$deviceBrand,$deviceModel);
 	if(!$profileid){
@@ -136,7 +142,6 @@ class notificationActions extends sfActions
 	unset($registationIdObj);*/
 	$registationIdObj = new MOBILE_API_REGISTRATION_ID();
 	$registationIdObj->updateVersion($registrationid,$apiappVersion,$currentOSversion,$deviceBrand,$deviceModel);
-
 	$respObj = ApiResponseHandler::getInstance();
         if($profileid)
         {
@@ -148,9 +153,6 @@ class notificationActions extends sfActions
 		$alarmTimeObj = new MOBILE_API_ALARM_TIME('newjs_slave');
 		$alarmTime = $alarmTimeObj->getData($profileid);
 		$alarmDate = alarmTimeManager::getNextDate($alarmTime);
-		//$valueArr['PROFILEID']=$profileid;
-		//$alarmTime = $alarmTimeObj->getArray($valueArr,"","","ALARM_TIME");
-		//$alarmDate = alarmTimeManager::getNextDate($alarmTime[0]['ALARM_TIME']);
 	}
 	$notificationData['notifications'] = $notifications;
 	$notificationData['alarmTime']=$alarmDate;
@@ -190,6 +192,7 @@ class notificationActions extends sfActions
                 $paramsArr["ACTIVATED"] = "Y";
                 $paramsArr["USER_AGENT"] = $_SERVER['HTTP_USER_AGENT'];
                 $res = $browserRegObj->insertRegistrationDetails($paramsArr);
+                unset($paramsArr);
                 if($res){
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$BROWSER_ID_INSERT_SUCCESS);
                 }
@@ -213,6 +216,7 @@ class notificationActions extends sfActions
         $regId = $request->getParameter('regId');
         $browserNotificationObj = new MOBILE_API_BROWSER_NOTIFICATION();
         $notifications = $browserNotificationObj->getNotification($regId);
+
         if($notifications){
             $browserNotificationObj->updateEntryDetails("ID", $notifications["ID"],array("SENT_TO_CHANNEL" =>"Y","REQUEST_DT"=>date('Y-m-d H:i:s')));
             $response = array('title' => $notifications["TITLE"],
@@ -225,7 +229,14 @@ class notificationActions extends sfActions
             $apiResponseHandlerObj->setResponseBody($response);
         }
         else{
+            $response = array('title' => "Jeevansathi Notification",
+                          'body' => "Something went wrong,please ignore this notification",
+                          'icon' => 'D',
+                          'tag' => "",
+                          'regId' => $regId,
+                          'url'=> "/");
             $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$BROWSER_NOTIFICATION_FAILURE);
+            $apiResponseHandlerObj->setResponseBody($response);
         }
         /*
         $response = array('title' => 'Jeevansathi.com - Match Alert',
@@ -265,6 +276,34 @@ class notificationActions extends sfActions
         }
         else{
             $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$BROWSER_NOTIFICATION_INVALID_CHANNEL);
+        }
+        $apiResponseHandlerObj->generateResponse();
+        die;
+    }
+    
+    public function executeNotificationLayerSettingsV1($request){
+        $apiResponseHandlerObj = ApiResponseHandler::getInstance();
+        $channel = MobileCommon::isMobile()?"M":"D";
+        $loginData = $request->getAttribute("loginData");
+        $profileId = $loginData["PROFILEID"];
+        $active = $request->getParameter("active");
+        if($active == 'Y' || $active == 'N'){
+            if($channel == 'M'){
+                $paramsArr['MOBILE_LAST_CLICK'] = date('Y-m-d');
+                $paramsArr['MOBILE_COUNT'] = "MOBILE_COUNT";
+                $paramsArr["MOBILE_LAYER"] = $active;
+            }
+            else{
+                $paramsArr['DESKTOP_LAST_CLICK'] = date('Y-m-d');
+                $paramsArr['DESKTOP_COUNT'] = "DESKTOP_COUNT";
+                $paramsArr["DESKTOP_LAYER"] = $active;
+            }
+            $notificationLayerObj = new MOBILE_API_BROWSER_NOTIFICATION_LAYER();
+            $notificationLayerObj->updateEntryDetails("PROFILEID", $profileId, $paramsArr);
+            $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$BROWSER_NOTIFICATION_SUCCESS);
+        }
+        else{
+            $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$BROWSER_NOTIFICATION_INVALID_PARAM);
         }
         $apiResponseHandlerObj->generateResponse();
         die;

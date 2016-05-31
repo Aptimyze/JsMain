@@ -32,10 +32,10 @@ EOF;
 		// Fetch Comissions Percentage 
 		$franchiseeCommissionPercentage = franchiseeCommission::FRANCHISEE;
 
-		$appleCommissionObj = new billing_APPLE_COMMISSION_PERCENTAGE_LOG();
+		$appleCommissionObj = new billing_APPLE_COMMISSION_PERCENTAGE_LOG('newjs_slave');
 
 		// Fetch all Agents which Franchisee Priviledge
-		$jsadminPswrdsObj = new jsadmin_PSWRDS();
+		$jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
 		$agentArr1 = $jsadminPswrdsObj->fetchAgentsWithPriviliges("%ExcFSD%");
 		if(empty($agentArr1)){
 			$agentArr1 = array();
@@ -48,8 +48,8 @@ EOF;
 		
 		//echo "Active Franchisee Agent"; print_r($franchiseeAgentsArr); echo "\n\n";
 
-		// Pick all Payments within last 30 minutes
-		$startDt = date('Y-m-d H:i:s', time()-1800);
+		// Pick all Payments within last 1 hour
+		$startDt = date('Y-m-d H:i:s', time()-3600);
 		$endDt = date('Y-m-d H:i:s', time());
 
 		$billingPaymentDetailObj = new BILLING_PAYMENT_DETAIL();
@@ -57,8 +57,8 @@ EOF;
 
 		//echo "Picked Profiles"; print_r($profilesArr); echo "\n\n";
 
-		$incentiveCrmDailyAllotObj = new CRM_DAILY_ALLOT();
-		$billingOrdersDeviceObj = new billing_ORDERS_DEVICE();
+		$incentiveCrmDailyAllotObj = new CRM_DAILY_ALLOT('newjs_slave');
+		$billingOrdersDeviceObj = new billing_ORDERS_DEVICE('newjs_slave');
 
 		$comissionsArr = array();
 

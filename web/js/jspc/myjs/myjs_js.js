@@ -488,7 +488,7 @@ catch(e){
                           }
                           else
                           {
-                            $("#profileHandled"+count).html(contactDetails.contactdetailmsg+'<div class="brdr-0 bgnone fontrobbold f15 colr5 pt25 cursp"><a class="colr5" href="/profile/mem_comparison.php">UPGRADE MEMBERSHIP</a></div><div style="max-width:290px; height:21px; vertical-align: middle" class="colr5 disp_ib pt10 textTru ">'+contactDetails.footerbutton.text+'</div>');
+                            $("#profileHandled"+count).html(contactDetails.contactdetailmsg+'<div class="brdr-0 bgnone fontrobbold f15 colr5 pt25 cursp"><a class="colr5" href="/profile/mem_comparison.php">UPGRADE MEMBERSHIP</a></div><div style="max-width:290px; height:21px; vertical-align: middle" class="colr5 disp_ib pt10 textTru ">'+(contactDetails.footerbutton.text ? contactDetails.footerbutton.text:'') +'</div>');
                             $( "#phone"+count).addClass("disp-none");
                           }
                         }

@@ -197,24 +197,35 @@ class RegistrationFunctions
                 }
             }
         }
-        public static function UpdateFilter($partnerField) {
-        $mstatus_filter = '';
-        $religion_filter = '';
-        $caste_filter = '';
-        if ($partnerField->partnerObj->getPARTNER_MSTATUS()) $mstatus_filter = 'Y';
-        if ($partnerField->partnerObj->getPARTNER_RELIGION()) $religion_filter = 'Y';
-        if ($partnerField->partnerObj->getPARTNER_CASTE()) $caste_filter = 'Y';
-        if($mstatus_filter || $religion_filter || $caste_filter ){
-			$hardSoft="Y";
-			$count=10;
-		}
-		else{
-			$hardSoft="N";
-			$count=0;
-		}
-        $upStr = "MSTATUS='$mstatus_filter',RELIGION='$religion_filter',CASTE='$caste_filter',COUNT=$count,HARDSOFT='$hardSoft'";
-        $dbObj = new NEWJS_FILTER;
-        $dbObj->insertFilterEntry(LoggedInProfile::getInstance()->getPROFILEID(), $upStr);
+    /**
+     * UpdateFilter
+     * @param type $partnerField
+     */
+    public function UpdateFilter($partnerField) 
+    {
+      $arrFilter = array();
+      if ($partnerField->partnerObj->getPARTNER_MSTATUS()) {
+        $arrFilter["MSTATUS"] = 'Y';
+      } 
+      if ($partnerField->partnerObj->getPARTNER_RELIGION()) {
+        $arrFilter["RELIGION"] = 'Y';
+      } 
+      if ($partnerField->partnerObj->getPARTNER_CASTE()) {
+        $arrFilter["CASTE"] = 'Y';
+      } 
+
+      if(count($arrFilter)) {
+        $hardSoft="Y";
+        $count=10;
+      } else {
+        $hardSoft="N";
+        $count=0;
+      }
+      $arrFilter['HARDSOFT'] = $hardSoft;
+      $arrFilter['COUNT'] = $count;
+
+      $dbObj = new NEWJS_FILTER;
+      $dbObj->insertRecord(LoggedInProfile::getInstance()->getPROFILEID(), $arrFilter);
     }
         public static function getPrefilledDataForUser($loginProfileObj,$pageId) {
             $completeFields = array();
@@ -225,7 +236,7 @@ class RegistrationFunctions
                 $completeFields["mstatus"] = $loginProfileObj->getMSTATUS();
                 $completeFields["height"] = $loginProfileObj->getHEIGHT();
                 $completeFields["subcaste"] = $loginProfileObj->getSUBCASTE();
-                $completeFields["manglik"] = $loginProfileObj->getMANGLIK();
+                $completeFields["manglik"] = CommonFunction::setManglikWithoutDontKnow($loginProfileObj->getMANGLIK());
                 $completeFields["haveChildren"] = $loginProfileObj->getHAVECHILD();
                 $completeFields["pin"] = $loginProfileObj->getPINCODE();
                 $completeFields["horoscopeMatch"] = $loginProfileObj->getHOROSCOPE_MATCH();

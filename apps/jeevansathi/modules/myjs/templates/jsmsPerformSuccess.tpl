@@ -148,7 +148,7 @@
 <div class="pad1 preload" id="profileDetailSection" style="overflow-x:scroll; width:100% ;white-space: nowrap; background-color: #e4e4e4; overflow-y: hidden;">
 	<div class="row" style=" width:250%;">
         
-           	<div class="cell brdr6" style="width:14%;">
+           	<div class="cell brdr6" style="width:16%;">
                      <div class="fullwid pad12" id="jsmsProfilePic">
 				<div style="position:relative; float:left;">
 

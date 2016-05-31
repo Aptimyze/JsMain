@@ -289,6 +289,8 @@ class phoneActions extends sfActions
 		//If coming directly from registration, used for google pixel code
 		if (trim($request->getParameter('groupname'))) {
 			$this->pixelcode = PixelCode::fetchPixelcode($request->getParameter('groupname'), $request->getParameter('adnetwork1'),$this->loginProfile);
+                        $this->groupname = $request->getParameter('groupname');
+                        $this->sourcename =$request->getParameter('source');
 		}
 	}
 	ob_start();
@@ -338,7 +340,8 @@ class phoneActions extends sfActions
 	if($phoneVerified=='Y') $this->redirect('/register/page6?groupname='.$groupname); 
 	$this->requestUri='/register/page6?groupname='.$groupname;
 	$fromReg=1;	
-
+	$this->groupname = $request->getParameter('groupname');
+	$this->sourcename = $this->loginProfile->getSOURCE();
 
 			//If coming directly from registration, used for google pixel code
 		if (trim($request->getParameter('groupname'))) {

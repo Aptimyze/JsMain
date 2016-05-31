@@ -1531,7 +1531,7 @@
 		$scope.bNextEnable = true;
 		$scope.bEnableBack = false;
 		$scope.bHardReload = false;
-        
+       		$scope.optionFields = Gui.getRegOptionalFields($scope.screenName); 
         $scope.bShowSkip   = true;
 		$scope.fields = Gui.getRegFields($scope.screenName);
 		$scope.MaxHeight = Constants.getWindowHeight();
@@ -1554,6 +1554,11 @@
         $scope.myFormSubmit = function(ele,output,json,indexPos)
 		{
 			Gui.updateGuiFields($scope.screenName,indexPos,output);
+
+        if($scope.screenName=="s9" && indexPos==8)
+        {
+        $scope.initOtherCity();
+        }
 			$scope.hamOn = false;
 		}
 		$scope.$on('$locationChangeStart', function (event, newUrl, oldUrl) 
@@ -1590,6 +1595,19 @@
         {
             Gui.toastMsg($scope,szMsg);
         }
+    $scope.initOtherCity = function()
+    {
+	var otherCityIndex = 9;
+	var dec = $scope.optionFields[2].userDecision;
+      if(dec!='' && dec==="0") {
+        $scope.fields[otherCityIndex].show = true;
+      } else {
+        $scope.fields[otherCityIndex].show = false;
+        Gui.resetField('s9','dindex',otherCityIndex);
+      }
+    }
+    $scope.initOtherCity();
+
         //TrackParams.trackClientInfo($scope.screenName);
     });
     
@@ -1638,14 +1656,15 @@
             $timeout(function(){
                 var groupName = '';
                 var adnetwork1 = '';
+                var source = '';
                 try{
                     groupName = serverTrackParams.groupname;
                     adnetwork1 = serverTrackParams.adnetwork1;
+                    source = serverTrackParams.source;
                 }catch(e){
                     //console.log(e.stack);
                 }
-
-                var urlParams = "?fromReg=1&groupname="+groupName+"&adnetwork1=" + adnetwork1;
+                var urlParams = "?fromReg=1&groupname="+groupName+"&adnetwork1=" + adnetwork1+"&source=" + source;
                 
                 //If From Incomplete Flow then dont pass url params
                 if(Gui.isIncompleteFlow()){

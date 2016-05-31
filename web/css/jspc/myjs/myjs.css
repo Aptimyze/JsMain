@@ -363,3 +363,23 @@ textarea{
 .MyJsHelpScreen{z-index: 9;}
 .LWpos5 {    top: 31px;    right: 251px;    width: 280px;}
 
+/*For notification layer*/
+.hgt100 {
+	height:100px}
+.btm0 {bottom:0px}
+.boxshadow_new{-webkit-box-shadow: -1px -13px 33px -9px rgba(153,153,153,0.96);
+-moz-box-shadow: -1px -13px 33px -9px rgba(153,153,153,0.96);
+box-shadow: -1px -13px 33px -9px rgba(153,153,153,0.96);}
+.wid685 {width:685px;}
+.dispib {display:inline-block}
+.centerdiv {height: inherit;
+    width: 1000px;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%,0%);}
+.wid125{
+    width: 125px;
+}
+.margin_new18 {
+    margin: 18px 0px;
+}

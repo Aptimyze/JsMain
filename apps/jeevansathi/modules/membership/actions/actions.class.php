@@ -177,6 +177,7 @@ class membershipActions extends sfActions
                 break;
 
             case '4':
+                $this->skipVasPageMembershipBased = json_encode(VariableParams::$skipVasPageMembershipBased);
                 $template = 'JSMSCouponPage';
                 
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMemPage4Url);
@@ -1067,144 +1068,174 @@ class membershipActions extends sfActions
         $this->profileid = $request->getAttribute('profileid');
         $this->device = $request->getParameter('device');
         $profileObj = new PROFILE();
-        
-        if ($this->profileid) {
-            $bodyFields = $profileObj->getDetail($this->profileid, 'PROFILEID', "USERNAME,EMAIL,PHONE_MOB,PHONE_WITH_STD");
-            $Username = $bodyFields['USERNAME'];
-            $email = $bodyFields['EMAIL'];
-            $mobile1 = $bodyFields['PHONE_MOB'];
-            $phone_with_std = $bodyFields['PHONE_WITH_STD'];
-            
-            if ($mobile1 == '') $contact_str = "$phone_with_std";
-            else $contact_str = "$mobile1";
-            $this->mobNumber = $contact_str;
+
+        //validate inputs if passed to prevent cross site scripting
+        if($request->getParameter('phNo') && is_numeric($request->getParameter('phNo'))==false)
+        {
+            $message = "Something went wrong, enter the valid phone no.";
+            echo $message;
+            die;
+        }
+        if($request->getParameter('profileid') && is_numeric($request->getParameter('profileid'))==false)
+        {
+            $message = "Something went wrong";
+            echo $message;
+            die;
         }
         
-        if (MobileCommon::isMobile() && !MobileCommon::isNewMobileSite() && !$request->getParameter('INTERNAL')) {
-            $memCallback = 1;
-            $this->username = $Username;
-            $msgContent = "Membership Plans";
-            $subject = "$Username is interested in $msgContent";
-            $msgBody = "<html><body>$Username is interested in knowing more about $msgContent. Please contact at $email, $contact_str.</body></html>";
-            $emailSend = $memHandlerObj->checkEmailSendForDay($this->profileid, $email);
-            if (!$emailSend) {
-                if ($this->profileid) $profileAllotedExecEmail = $memHandlerObj->getAllotedExecEmail($this->profileid);
-                if (!$profileAllotedExecEmail) $profileAllotedExecEmail = 'inbound@jeevansathi.com';
-                $memHandlerObj->sendEmailForCallback($subject, $msgBody, $profileAllotedExecEmail);
+        if($request->getParameter('email') && strpos($request->getParameter('email'),'<script>')!==false)
+        {
+            $message = "Something went wrong";
+            echo $message;
+            die;
+        }
+        else
+        {
+            if ($this->profileid) 
+            {
+                $bodyFields = $profileObj->getDetail($this->profileid, 'PROFILEID', "USERNAME,EMAIL,PHONE_MOB,PHONE_WITH_STD");
+                $Username = $bodyFields['USERNAME'];
+                $email = $bodyFields['EMAIL'];
+                $mobile1 = $bodyFields['PHONE_MOB'];
+                $phone_with_std = $bodyFields['PHONE_WITH_STD'];
+                
+                if ($mobile1 == '') $contact_str = "$phone_with_std";
+                else $contact_str = "$mobile1";
+                $this->mobNumber = $contact_str;
             }
-            $memHandlerObj->memCallbackTracking($this->profileid, $contact_str, $email);
-            $this->referer = $request->getReferer();
-            $this->setTemplate('mem_addCallBack');
-        } 
-        else {
-            $this->profileid = $request->getAttribute('profileid');
-            $execCallbackType = $request->getParameter('execCallbackType');
-            $tabVal = $request->getParameter('tabVal');
-            $tabContentArr = VariableParams::$memTabContent;
-            if ($execCallbackType == 'JS_ALL') $memCallback = 1;
-            if (!$this->profileid) {
-                $phoneNo = $request->getParameter('phNo');
-                $email = $request->getParameter('email');
-                $jsSelectd = $request->getParameter('jsSelectd');
-                
-                if ($memCallback) {
-                    $subject = "Lead for Inbound Sales";
-                    $msgBody = $tabContentArr[1];
-                } 
-                else {
-                    if (!MobileCommon::isNewMobileSite() && $request->getPostParameter('callRequest') == 1) {
-                        $phoneNo = $request->getPostParameter('mobNumber');
-                        $subject = "Callback request for JS Exclusive";
-                        $msgBody = "<html><body>A callback request has been placed for explaining JS Exclusive service. Details below:</br>Username: Unregistered</br>Contact Number: " . $request->getPostParameter('mobNumber') . "</br>Date to call: " . $request->getPostParameter('dropDownDaySelected') . "</br>Time to call: From " . $request->getPostParameter('dropDownTimeStartSelected') . " To " . $request->getPostParameter('dropDownTimeEndSelected') . "</br></body></html>";
-                    } 
-                    else {
-                        $subject = "Lead for JS Exclusive";
-                        $msgBody = "JS Exclusive";
-                        $msgBody = "<html><body>Someone is interested in knowing more about $msgBody. Please contact at " . $email . " or " . $phoneNo . ".</body></html>";
-                    }
-                    $memHandlerObj->addCallBack($phoneNo, $email, $jsSelectd);
-                }
-            } 
-            else {
-                $profileObj = new PROFILE();
-                $contact_arr = array();
-                $contact_arr = $profileObj->getExtendedContacts(1);
-                if ($contact_arr != '') $mobile2 = $contact_arr['ALT_MOBILE'];
-                if ($tabVal && $memCallback) $msgContent = $tabContentArr[$tabVal];
-                else $msgContent = 'JS Exclusive';
-                
-                if ($mobile1 == '' && $phone_with_std == '') $contact_str = "$mobile2";
-                else if ($mobile1 == '' && $mobile2 == '') $contact_str = "$phone_with_std";
-                else if ($phone_with_std == '' && $mobile2 == '') $contact_str = "$mobile1";
-                else if ($mobile1 == '') $contact_str = "$phone_with_std or $mobile2";
-                else if ($mobile2 == '') $contact_str = "$mobile1 or $phone_with_std";
-                else if ($phone_with_std == '') $contact_str = "$mobile1 or $mobile2";
-                else $contact_str = "$mobile1 or $phone_with_std or $mobile2";
-                
-                if (!MobileCommon::isNewMobileSite() && $request->getPostParameter('callRequest') == 1) {
-                    $subject = "Callback request for JS Exclusive";
-                    $msgBody = "<html><body>A callback request has been placed for explaining JS Exclusive service. Details below:</br>Username: " . $Username . "</br>Contact Number: " . $request->getPostParameter('mobNumber') . "</br>Date to call: " . $request->getPostParameter('dropDownDaySelected') . "</br>Time to call: From " . $request->getPostParameter('dropDownTimeStartSelected') . " To " . $request->getPostParameter('dropDownTimeEndSelected') . "</br></body></html>";
-                } 
-                else {
-                    $subject = "$Username is interested in $msgContent";
-                    $msgBody = "<html><body>$Username is interested in knowing more about $msgContent. Please contact at $email, $contact_str.</body></html>";
-                }
-                if ($execCallbackType == 'JS_EXC'){
-                    $jsSelectd = $request->getParameter('jsSelectd');
-                    if(empty($jsSelectd)){
-                    	$jsSelectd = "X";
-                    }
-                    $phoneNo = $request->getPostParameter('mobNumber');
-                    if(empty($phoneNo)){
-                    	$phoneNo = $mobile1;
-                    }
-                    $memHandlerObj->addCallBack($phoneNo, $email, $jsSelectd,$this->profileid);
-                }
-            }
-            if ($memCallback) {
+            
+            if (MobileCommon::isMobile() && !MobileCommon::isNewMobileSite() && !$request->getParameter('INTERNAL')) 
+            {
+                $memCallback = 1;
+                $this->username = $Username;
+                $msgContent = "Membership Plans";
+                $subject = "$Username is interested in $msgContent";
+                $msgBody = "<html><body>$Username is interested in knowing more about $msgContent. Please contact at $email, $contact_str.</body></html>";
                 $emailSend = $memHandlerObj->checkEmailSendForDay($this->profileid, $email);
                 if (!$emailSend) {
                     if ($this->profileid) $profileAllotedExecEmail = $memHandlerObj->getAllotedExecEmail($this->profileid);
                     if (!$profileAllotedExecEmail) $profileAllotedExecEmail = 'inbound@jeevansathi.com';
                     $memHandlerObj->sendEmailForCallback($subject, $msgBody, $profileAllotedExecEmail);
                 }
-                if(empty($phoneNo)){
-                	$phoneNo = $mobile1;
-                }
-                $memHandlerObj->memCallbackTracking($this->profileid, $phoneNo, $email);
+                $memHandlerObj->memCallbackTracking($this->profileid, $contact_str, $email);
+                $this->referer = $request->getReferer();
+                $this->setTemplate('mem_addCallBack');
             } 
-            else {
-            	//if (!$this->profileid) {
-                	$memHandlerObj->sendEmailForCallback($subject, $msgBody);
-                //}
-            }
-            if (MobileCommon::isMobile() || isset($this->device)) {
-                if($this->device == 'desktop'){
-                    $message = "Our customer service executive will contact you on your mobile number " . $request->getParameter('phNo') . " within a day.";
-                } elseif ($memCallback) {
-                    $message = "Our customer service executive will contact you on your mobile number " . $this->mobNumber . " within a day.";
-                } else {
-                    $message = "A Jeevansathi customer service executive will get in touch with you to explain the benefits of JS Exclusive plan.";
+            else 
+            {
+                $this->profileid = $request->getAttribute('profileid');
+                $execCallbackType = $request->getParameter('execCallbackType');
+                $tabVal = $request->getParameter('tabVal');
+                $tabContentArr = VariableParams::$memTabContent;
+                if ($execCallbackType == 'JS_ALL') $memCallback = 1;
+                if (!$this->profileid) 
+                {
+                    $phoneNo = $request->getParameter('phNo');
+                    $email = $request->getParameter('email');
+                    $jsSelectd = $request->getParameter('jsSelectd');
+                    
+                    if ($memCallback) 
+                    {
+                        $subject = "Lead for Inbound Sales";
+                        $msgBody = $tabContentArr[1];
+                    } 
+                    else 
+                    {
+                        if (!MobileCommon::isNewMobileSite() && $request->getPostParameter('callRequest') == 1) 
+                        {
+                            $phoneNo = $request->getPostParameter('mobNumber');
+                            $subject = "Callback request for JS Exclusive";
+                            $msgBody = "<html><body>A callback request has been placed for explaining JS Exclusive service. Details below:</br>Username: Unregistered</br>Contact Number: " . $request->getPostParameter('mobNumber') . "</br>Date to call: " . $request->getPostParameter('dropDownDaySelected') . "</br>Time to call: From " . $request->getPostParameter('dropDownTimeStartSelected') . " To " . $request->getPostParameter('dropDownTimeEndSelected') . "</br></body></html>";
+                        } 
+                        else {
+                            $subject = "Lead for JS Exclusive";
+                            $msgBody = "JS Exclusive";
+                            $msgBody = "<html><body>Someone is interested in knowing more about $msgBody. Please contact at " . $email . " or " . $phoneNo . ".</body></html>";
+                        }
+                        $memHandlerObj->addCallBack($phoneNo, $email, $jsSelectd);
+                    }
+                } 
+                else {
+                    $profileObj = new PROFILE();
+                    $contact_arr = array();
+                    $contact_arr = $profileObj->getExtendedContacts(1);
+                    if ($contact_arr != '') $mobile2 = $contact_arr['ALT_MOBILE'];
+                    if ($tabVal && $memCallback) $msgContent = $tabContentArr[$tabVal];
+                    else $msgContent = 'JS Exclusive';
+                    
+                    if ($mobile1 == '' && $phone_with_std == '') $contact_str = "$mobile2";
+                    else if ($mobile1 == '' && $mobile2 == '') $contact_str = "$phone_with_std";
+                    else if ($phone_with_std == '' && $mobile2 == '') $contact_str = "$mobile1";
+                    else if ($mobile1 == '') $contact_str = "$phone_with_std or $mobile2";
+                    else if ($mobile2 == '') $contact_str = "$mobile1 or $phone_with_std";
+                    else if ($phone_with_std == '') $contact_str = "$mobile1 or $mobile2";
+                    else $contact_str = "$mobile1 or $phone_with_std or $mobile2";
+                    
+                    if (!MobileCommon::isNewMobileSite() && $request->getPostParameter('callRequest') == 1) {
+                        $subject = "Callback request for JS Exclusive";
+                        $msgBody = "<html><body>A callback request has been placed for explaining JS Exclusive service. Details below:</br>Username: " . $Username . "</br>Contact Number: " . $request->getPostParameter('mobNumber') . "</br>Date to call: " . $request->getPostParameter('dropDownDaySelected') . "</br>Time to call: From " . $request->getPostParameter('dropDownTimeStartSelected') . " To " . $request->getPostParameter('dropDownTimeEndSelected') . "</br></body></html>";
+                    } 
+                    else {
+                        $subject = "$Username is interested in $msgContent";
+                        $msgBody = "<html><body>$Username is interested in knowing more about $msgContent. Please contact at $email, $contact_str.</body></html>";
+                    }
+                    if ($execCallbackType == 'JS_EXC'){
+                        $jsSelectd = $request->getParameter('jsSelectd');
+                        if(empty($jsSelectd)){
+                        	$jsSelectd = "X";
+                        }
+                        $phoneNo = $request->getPostParameter('mobNumber');
+                        if(empty($phoneNo)){
+                        	$phoneNo = $mobile1;
+                        }
+                        $memHandlerObj->addCallBack($phoneNo, $email, $jsSelectd,$this->profileid);
+                    }
                 }
-            } 
-            else {
-                $message = "Thank you for showing interest in our services.\nOur matchmaking expert will contact you as soon as possible.";
+                if ($memCallback) {
+                    $emailSend = $memHandlerObj->checkEmailSendForDay($this->profileid, $email);
+                    if (!$emailSend) {
+                        if ($this->profileid) $profileAllotedExecEmail = $memHandlerObj->getAllotedExecEmail($this->profileid);
+                        if (!$profileAllotedExecEmail) $profileAllotedExecEmail = 'inbound@jeevansathi.com';
+                        $memHandlerObj->sendEmailForCallback($subject, $msgBody, $profileAllotedExecEmail);
+                    }
+                    if(empty($phoneNo)){
+                    	$phoneNo = $mobile1;
+                    }
+                    $memHandlerObj->memCallbackTracking($this->profileid, $phoneNo, $email);
+                } 
+                else {
+                	//if (!$this->profileid) {
+                    	$memHandlerObj->sendEmailForCallback($subject, $msgBody);
+                    //}
+                }
+                if (MobileCommon::isMobile() || isset($this->device)) {
+                    if($this->device == 'desktop'){
+                        $message = "Our customer service executive will contact you on your mobile number " . $request->getParameter('phNo') . " within a day.";
+                    } elseif ($memCallback) {
+                        $message = "Our customer service executive will contact you on your mobile number " . $this->mobNumber . " within a day.";
+                    } else {
+                        $message = "A Jeevansathi customer service executive will get in touch with you to explain the benefits of JS Exclusive plan.";
+                    }
+                } 
+                else {
+                    $message = "Thank you for showing interest in our services.\nOur matchmaking expert will contact you as soon as possible.";
+                }
+                echo $message;
+                $internalFlag = $request->getParameter("INTERNAL");
+                //RCB Tracking 
+                $rcbStatus = $request->getParameter('rcbResponse');
+                $arrAllowedStatus = array('Y','N');
+                if (isset($rcbStatus) && in_array($rcbStatus, $arrAllowedStatus)) {
+                  $loginObj = LoggedInProfile::getInstance();
+                  $rcbObject = new RequestCallBack($loginObj);
+                  $rcbObject->updateThis($rcbStatus);
+                  unset($rcbObject);
+                }
+                if (!empty($internalFlag)) {
+                    return sfView::NONE;
+                }
+                die();
             }
-            echo $message;
-            $internalFlag = $request->getParameter("INTERNAL");
-            //RCB Tracking 
-            $rcbStatus = $request->getParameter('rcbResponse');
-            $arrAllowedStatus = array('Y','N');
-            if (isset($rcbStatus) && in_array($rcbStatus, $arrAllowedStatus)) {
-              $loginObj = LoggedInProfile::getInstance();
-              $rcbObject = new RequestCallBack($loginObj);
-              $rcbObject->updateThis($rcbStatus);
-              unset($rcbObject);
-            }
-            if (!empty($internalFlag)) {
-                return sfView::NONE;
-            }
-            die();
         }
     }
     

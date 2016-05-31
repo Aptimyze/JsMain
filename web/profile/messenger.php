@@ -65,7 +65,7 @@ receive chat requests</b><br>
      	{
      		?>
 <b>To initiate chat requests <br>
-become a <a href="http://www.jeevansathi.com/profile/memberships.php" class="class7" target="_blank">full member</a><br>
+become a <a href="http://www.jeevansathi.com/membership/jspc" class="class7" target="_blank">full member</a><br>
      <?php
      	}
      	elseif($membership=="value")

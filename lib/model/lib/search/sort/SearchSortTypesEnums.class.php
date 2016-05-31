@@ -19,5 +19,6 @@ class SearchSortTypesEnums
         const justJoinedSortFlag = 'V';
         const matchAlertFlag = 'MA'; 
         const kundliAlertFlag = 'KA'; 
+        const viewAttemptFlag = 'VA'; 
 }
 ?>

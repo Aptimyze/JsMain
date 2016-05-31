@@ -13,6 +13,7 @@ class Inbox implements Module
 	private $totalCount;
 	private static $getTotal = "T";
 	public static $profileCount = 10;
+	
 	//Constructor need profile object for myjs page 
 	function __construct($module, Profile $profileObj)
 	{
@@ -64,16 +65,15 @@ class Inbox implements Module
 	 */
 	public function getCount($allFlag = '', $infoTypenav = '', $fromGetDisplayFunction='')
 	{
+		
 		try {
 			
 			if (is_array($infoTypenav) && $infoTypenav["NUMBER"]==1)
 			{
-				JsMemcache::getInstance()->remove($this->profileObj->getPROFILEID());
-						
+				JsMemcache::getInstance()->delete($this->profileObj->getPROFILEID());
+				
 			}
-			
-			$memcacheServiceObj = new ProfileMemcacheService($this->profileObj);
-			
+			$memcacheServiceObj = new ProfileMemcacheService($this->profileObj); 
 			$countObj           = array();
 			$ifHoroscopePresent = "";
 			$ifPhotoPresent     = "";
@@ -122,11 +122,13 @@ class Inbox implements Module
 						$key = "HOROSCOPE";
 						break;
 					case "INTRO_CALLS":
-						$memcacheServiceObj->setINTRO_CALLSData();
+						if($infoTypenav["NUMBER"] == 1)
+							$memcacheServiceObj->setINTRO_CALLSData();
 						$key = "INTRO_CALLS";
 						break;
 					case "INTRO_CALLS_COMPLETE":
-						$memcacheServiceObj->setINTRO_CALLSData();
+						if($infoTypenav["NUMBER"] == 1)
+							$memcacheServiceObj->setINTRO_CALLSData();
 						$key = "INTRO_CALLS_COMPLETE";
 						break;
 					case "ACCEPTANCES_SENT":
@@ -137,6 +139,10 @@ class Inbox implements Module
 						$key = "NOT_REP";
 						break;
 					case "SHORTLIST":
+						if($infoTypenav["NUMBER"] == 1 && $fromGetDisplayFunction=='')
+						{
+							$memcacheServiceObj->setBookmarkData();
+						}
 						$key = "BOOKMARK";
 						break;
 					case "NOT_INTERESTED":
@@ -147,16 +153,21 @@ class Inbox implements Module
 						$key = "DEC_BY_ME";
 						break;
 					case "CONTACTS_VIEWED":
+						if($infoTypenav["NUMBER"] == 1 && $fromGetDisplayFunction=='')
+							$memcacheServiceObj->setContactsViewedData();
 						$key = "CONTACTS_VIEWED";
 						break;
 					case "PEOPLE_WHO_VIEWED_MY_CONTACTS":
-						$key = "PEOPLE_WHO_VIEWED_MY_CONTACTS";
+						if($infoTypenav["NUMBER"] == 1 && $fromGetDisplayFunction=='')
+							$memcacheServiceObj->setContactViewersData();
+						$key = "PEOPLE_WHO_VIEWED_MY_CONTACTS";	
 						break;
 					case "IGNORED_PROFILES":
 						$key = "IGNORED_PROFILES";
 						$memKeyNotExists=1;
 						break;
 				} 
+			
 				if($key == "IGNORED_PROFILES")
 				{
 					$IgnoredObj = new IgnoredProfiles;
@@ -168,12 +179,16 @@ class Inbox implements Module
 
                                         $countObj[$infoTypenav["PAGE"]] = count($IgnoredList);
 				}	
+				
 				if ($keyNew != "")
 					$countObj[$infoTypenav["PAGE"]."_NEW"] = $memcacheServiceObj->get($keyNew);
 				if ($key != "" && $memKeyNotExists!=1)
+				{ 
 					$countObj[$infoTypenav["PAGE"]] = $memcacheServiceObj->get($key);
+					
+				}
 			} 
-
+			
 			if($infoTypenav["NUMBER"] == 1 && $infoTypenav["PAGE"] != "IGNORED_PROFILES" && $infoTypenav["PAGE"] != "MY_MESSAGE_RECEIVED")
 			{
 				if($infoTypenav["PAGE"] == "VISITORS")
@@ -184,7 +199,6 @@ class Inbox implements Module
 				}
 				
 			}
-			
 			
 			return $countObj;
 		}
@@ -216,13 +230,15 @@ class Inbox implements Module
 					$nav = $infoTypeNav["NUMBER"];
 				else
 					$nav =1;
-					
+				
 				if(($nav == 1))
 				{
 					
 					JsMemcache::getInstance()->remove($key);
+				
 					JsMemcache::getInstance()->set($keyCount,$countObj[$infoType]);
 					$this->totalCount = $countObj[$infoType];
+					
 				}
 				else
 				{
@@ -349,7 +365,7 @@ class Inbox implements Module
 					}
 			} //$config["COUNT"]
 			} //$this->completeProfilesInfo as $infoType => $values
-			unset($infoTypeObj);
+			unset($infoTypeObj); 
 			return $this->completeProfilesInfo;
 		} //is_array($infoTypeObj)
 		return null;
@@ -412,7 +428,11 @@ class Inbox implements Module
 				$skipProfileObj     = SkipProfile::getInstance($this->profileObj->getPROFILEID());
 				$this->skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
 				break;	
-					
+			case 'SHORTLIST':
+				$skipConditionArray = SkipArrayCondition::$SHORTLIST;
+				$skipProfileObj     = SkipProfile::getInstance($this->profileObj->getPROFILEID());
+				$this->skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
+				break;
 			case 'MATCH_ALERT':
 				$skipConditionArray = SkipArrayCondition::$MATCHALERT;
 				$skipProfileObj     = SkipProfile::getInstance($this->profileObj->getPROFILEID());

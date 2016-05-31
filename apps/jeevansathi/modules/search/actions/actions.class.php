@@ -1409,11 +1409,11 @@ class searchActions extends sfActions
 	
 		/** Desktop loggedout case **/	
 		if(MobileCommon::isDesktop())
-		{
+		{       
 			$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
         	        if($loggedInProfileObj && $loggedInProfileObj->getPROFILEID()=='')
 			{
-				if(($request->getParameter("justJoinedMatches")==1 || $request->getParameter("twowaymatch")==1 || $request->getParameter("reverseDpp")==1 || $request->getParameter("partnermatches")==1 || in_array($request->getParameter("searchBasedParam"),array('shortlisted','visitors','justJoinedMatches','twowaymatch','reverseDpp','partnermatches','matchalerts','kundlialerts')) || $request->getParameter("dashboard")==1))
+				if(($request->getParameter("justJoinedMatches")==1 || $request->getParameter("twowaymatch")==1 || $request->getParameter("reverseDpp")==1 || $request->getParameter("partnermatches")==1 || $request->getParameter("contactViewAttempts")==1 || in_array($request->getParameter("searchBasedParam"),array('shortlisted','visitors','justJoinedMatches','twowaymatch','reverseDpp','partnermatches','matchalerts','kundlialerts','contactViewAttempts')) || $request->getParameter("dashboard")==1))
 				{
 					$statusArr = ResponseHandlerConfig::$LOGOUT_PROFILE;
 					$respObj = ApiResponseHandler::getInstance();
@@ -1426,7 +1426,7 @@ class searchActions extends sfActions
 				}
 			}
 		}
-
+                
 		/** caching **/
 		$ifApiCached = SearchUtility::cachedSearchApi('get',$request);
 		if($ifApiCached)
@@ -1438,7 +1438,7 @@ class searchActions extends sfActions
 		}
                 elseif($resp["statusCode"] == ResponseHandlerConfig::$SUCCESS["statusCode"])
 		{
-                        $searchTypeArray = Array('twowaymatch','reverseDpp','justJoinedMatches','partnermatches','matchalerts','kundlialerts');
+                        $searchTypeArray = Array('twowaymatch','reverseDpp','justJoinedMatches','partnermatches','matchalerts','kundlialerts','contactViewAttempts','verifiedMatches');
                         $searchType = $request->getParameter("searchBasedParam");
                         if(in_array($searchType,$searchTypeArray))
                         {
@@ -1550,7 +1550,7 @@ class searchActions extends sfActions
 						$noCasteMapping = 1;
 						$hideFeatureProfile = 1;
 					}
-					if($request->getParameter("justJoinedMatches")==1 || $request->getParameter("partnermatches")==1 || $request->getParameter("reverseDpp")==1 || $request->getParameter("twowaymatch")==1 || $request->getParameter("verifiedMatches") == 1)
+					if($request->getParameter("justJoinedMatches")==1 || $request->getParameter("partnermatches")==1 || $request->getParameter("reverseDpp")==1 || $request->getParameter("twowaymatch")==1 || $request->getParameter("verifiedMatches") == 1 || $request->getParameter("contactViewAttempts") == 1)
 					{
 						$noRelaxation = 1;
 						$noCasteMapping = 1;
@@ -1563,7 +1563,9 @@ class searchActions extends sfActions
 			
 						}
 					}
-					
+                                        if($request->getParameter("contactViewAttempts") == 1 || $request->getParameter("searchBasedParam")=='contactViewAttempts'){
+                                          $results_orAnd_cluster = "onlyResults";
+                                        }
 					/** Auto Relaxation Section
 					* increasing search results by changing some search paramters
 					*/
@@ -1612,7 +1614,7 @@ class searchActions extends sfActions
                                 else
                                         $currentPageFeatured = $currentPage;
 
-				if($request->getParameter("justJoinedMatches")==1 || $request->getParameter("searchBasedParam")=='justJoinedMatches' || $request->getParameter("matchalerts")==1 || $request->getParameter("searchBasedParam")=='matchalerts' || $request->getParameter("searchBasedParam")=='verifiedMatches' || $request->getParameter("verifiedMatches") == 1)
+				if($request->getParameter("justJoinedMatches")==1 || $request->getParameter("searchBasedParam")=='justJoinedMatches' || $request->getParameter("matchalerts")==1 || $request->getParameter("searchBasedParam")=='matchalerts' || $request->getParameter("searchBasedParam")=='verifiedMatches' || $request->getParameter("searchBasedParam")=='contactViewAttempts' || $request->getParameter("verifiedMatches") == 1 || $request->getParameter("contactViewAttempts") == 1)
 					;
 				else
 					$request->setParameter("showFeaturedProfiles",$this->SearchChannelObj->getFeaturedProfilesCount());
@@ -1648,8 +1650,9 @@ class searchActions extends sfActions
 				$this->noOfPages = max($this->paginationArr);
                                 if(!$relaxCriteria)
                                         $relaxCriteria="";
-                          
-				$SearchApiStrategy = SearchApiStrategyFactory::getApiStrategy('V1',$responseObj,$results_orAnd_cluster);
+                                
+                                
+                                $SearchApiStrategy = SearchApiStrategyFactory::getApiStrategy('V1',$responseObj,$results_orAnd_cluster);
                                 $resultArr = $SearchApiStrategy->convertResponseToApiFormat($loggedInProfileObj,$this->searchClustersArray,$this->searchId,$SearchParamtersObj,$this->relaxedResults,$this->moreProfiles,$this->casteSuggestMessage,$currentPage,$this->noOfPages,$request,$relaxCriteria);
 			
 				if($resultArr["no_of_results"]==0)
@@ -1672,7 +1675,7 @@ class searchActions extends sfActions
 			//validation are logged in search validation.
 			$statusArr = $resp;
 		}   
-	
+                
                 unset($inputValidateObj);
                 $respObj = ApiResponseHandler::getInstance();
                 $respObj->setHttpArray($statusArr);//print_r($resultArr);die;

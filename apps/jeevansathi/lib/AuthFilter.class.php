@@ -132,7 +132,7 @@ class AuthFilter extends sfFilter {
 				
 				if($request->getParameter('module')!="e")
 				{
-		            if($request->getParameter('module')!="api" && $request->getParameter('module')!="static"  && ($request->getParameter('module')!="register" || $request->getParameter('action')=="page5") && $data['PROFILEID'])
+		            if($request->getParameter('module')!="api" && $request->getParameter('module')!="static"  && ($request->getParameter('module')!="register" || $request->getParameter('action')=="page5") && $request->getParameter('action')!="alertManager" && $data['PROFILEID'])
 		            {
 
 					            	if ($data['PROFILEID'])

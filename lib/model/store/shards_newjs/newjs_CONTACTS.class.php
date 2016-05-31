@@ -132,7 +132,7 @@ public function getSendersPending($profileids)
 		{
 			$sql = "SELECT count(*) as count, RECEIVER, GROUP_CONCAT( SENDER ORDER BY TIME DESC SEPARATOR ',' ) AS SENDER FROM  `CONTACTS` WHERE ".$chunkStr." AND `FILTERED` =  'Y' AND `TYPE` =  'I' AND TIME >= DATE_SUB(CURDATE(), INTERVAL 90 DAY) GROUP BY  `RECEIVER`";
 			$res = $this->db->prepare($sql);
-			$res->bindValue(":RECEIVER",$profileId,PDO::PARAM_INT);
+			//$res->bindValue(":RECEIVER",$profileId,PDO::PARAM_INT);
 			$res->execute();
 			while($row = $res->fetch(PDO::FETCH_ASSOC))
 			{

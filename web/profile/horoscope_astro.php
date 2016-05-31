@@ -97,10 +97,10 @@ include_once(JsConstants::$docRoot."/commonFiles/flag.php");
 	$row = mysql_fetch_array($result);
 
 	if($data['PROFILEID'])
-		if(!check_astro_details($data['PROFILEID']))
+                if(!check_astro_details($data['PROFILEID'],'Y'))
 		{
 			$smarty->assign("NO_ASTRO",1);
-			$smarty->assign("OWN_PROFILECHECKSUM",createChecksumForSearch($data['PROFILEID']));
+                        $smarty->assign("OWN_PROFILECHECKSUM",createChecksumForSearch($data['PROFILEID']));
 		}
 		else
 		{

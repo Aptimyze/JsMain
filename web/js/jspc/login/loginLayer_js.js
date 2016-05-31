@@ -1,18 +1,18 @@
-
+var loginAttempts=0;
 function LoginValidation()
 {
 	var email=$.trim($("#email").val());
 		var password=$("#password").val();
-
+   
 		if($("#remember").is(':checked'))
 			remember=1;
 		else
 			remember=0;
 		if(email && password)
 		{				
-			if(validateEmail(email))
+			if(validateEmail(email) && validateCaptcha())
 			{
-				loginUrl=SSL_SITE_URL+"/api/v1/api/login?fromPc=1&rememberme="+$("#remember").val();
+				loginUrl=SSL_SITE_URL+"/api/v1/api/login?&captcha="+captchaShow+"&fromPc=1&rememberme="+$("#remember").val();
 				$("#homePageLogin").attr('action',loginUrl);
 				if(typeof(LoggedoutPage)!="undefined")
 				{ 	
@@ -28,15 +28,19 @@ function LoginValidation()
 				return true;
 			}
 			else
-			{    
-				$("#emailErr").addClass("visb").html("Invalid Format");
-				$("#EmailContainer").addClass("brderred");
-				setTimeout(function(){
-					$("#emailErr").removeClass("visb");
-					$("#EmailContainer").removeClass("brderred");
-				},3000);
+			{   
+        
+				if(validateCaptcha()){
+					$("#emailErr").addClass("visb").html("Invalid Format");
+					$("#EmailContainer").addClass("brderred");
+					setTimeout(function(){
+						$("#emailErr").removeClass("visb");
+						$("#EmailContainer").removeClass("brderred");
+					},3000);
+				}
 				return false; 
 			}
+      
 		}
 		else
 		{
@@ -89,6 +93,18 @@ function validateEmail(email) {
     var re = /^([A-Za-z0-9._%+-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i;
     return re.test(email);
     }
+    
+function validateCaptcha()
+{
+	 if($("#blueText").html()=="Slide to Verify" &&  $('#captchaDiv').is(':visible'))
+    {
+      $("#LoginMessage").hide();
+      $("#LoginErrMessage").addClass("disp-none");
+      $("#LoginErrMessage2").removeClass("disp-none");
+      return false;
+    }
+    return true;
+}
 
 function after_login(response)
 	{
@@ -113,17 +129,49 @@ function onFrameLoginResponseReceived(message)
 				response= message.data.body;
 		if(response==1)
 		{
-			hideCommonLoader();
-			$("#LoginErrMessage").removeClass("disp-none");
-			$("#LoginMessage").addClass("disp-none");
-			$("#EmailContainer").addClass("brderred");
-			$("#PasswordContainer").addClass("brderred");
-			setTimeout(function(){
-				$("#emailErr").removeClass("visb");
-				$("#EmailContainer").removeClass("brderred");
-				$("#passwordErr").removeClass("visb");
-				$("#PasswordContainer").removeClass("brderred");
-				},3000);
+		  if(document.cookie.indexOf("loginAttempt")!=-1 && captchaShow!=1)
+		  {
+			  createCaptcha("logoutPage");
+				captchaShow=1;
+				hideCommonLoader();
+				$("#LoginMessage").addClass("disp-none");
+				$("#LoginErrMessage").addClass("disp-none");
+			  $("#LoginErrMessage2").removeClass("disp-none");
+			  hideCommonLoader();
+				removeCaptcha();
+				if($("#commonOverlay").is(':visible')){
+				 createCaptcha();
+			   }
+				else
+				{ 
+				  createCaptcha("logoutPage");
+				}
+		  }
+      else{
+  		/*	hideCommonLoader();
+        removeCaptcha();
+        if($("#commonOverlay").is(':visible')){
+          console.log("aaa");
+         createCaptcha();
+        }
+        else
+        { 
+          console.log("bbb");
+          createCaptcha("logoutPage");
+        }*/
+        hideCommonLoader();
+  			$("#LoginErrMessage").removeClass("disp-none");
+  			$("#LoginMessage").addClass("disp-none");
+  			$("#LoginErrMessage2").addClass("disp-none");
+  			$("#EmailContainer").addClass("brderred");
+  			$("#PasswordContainer").addClass("brderred");
+  			setTimeout(function(){
+  				$("#emailErr").removeClass("visb");
+  				$("#EmailContainer").removeClass("brderred");
+  				$("#passwordErr").removeClass("visb");
+  				$("#PasswordContainer").removeClass("brderred");
+  				},3000);
+      }
 		}
 		else
 		{
@@ -134,6 +182,16 @@ function onFrameLoginResponseReceived(message)
 		
 }
 
+function resetCaptcha(){
+	/*resetCaptchaClass();
+          $(".slideCap").width("0px");
+          $("#captchaDiv").removeClass("valid");
+          $(".handle").removeClass("slide-to-captcha-handle-verified").addClass("slide-to-captcha-handle").css("left","0px");
+           //$('#blueText').html('Slide to Verify');
+           $('#blueText').hide();
+           $("#blueText").html("Slide to Verify");          
+          $('.captcha').slideToCAPTCHA('captcha');*/
+}
 if(window.addEventListener)	
 	{
 		window.addEventListener("message", onFrameLoginResponseReceived, false);
@@ -171,6 +229,8 @@ function LoginBinding()
         $.ajax({
             type: "POST",
             url: '/static/newLoginLayer',
+            context:this,
+            //data:{'captchaShow':captchaShow},
             beforeSend: function() {
                 $('#commonOverlay').fadeIn(200, "linear");
                 $('#topNavigationBar').removeClass("z2");
@@ -178,26 +238,59 @@ function LoginBinding()
             success: function(response) {
                 $('#commonOverlay').after(response);
                 $('#login-layer').fadeIn(300, "linear");
+                if($(this).hasClass("loginAlbumSearch")){
+					$("#loginRegistration").addClass("loginAlbumSearch");
+					$("#LoginMessage").addClass('txtc').text("Login For the benefit of the privacy of all members, we require you to kindly Login or Register to view the photos");
+				}
+				else if($(this).hasClass("loginProfileSearch")){
+					$("#loginRegistration").addClass("loginProfileSearch");
+					$("#LoginMessage").addClass('txtc').text("For the benefit of the privacy of all members, we require you to kindly Login or Register to view the profile");
+				}
                 $('#cls-login').click(function() {
+                  //alert("scc");
                     $('#login-layer').fadeOut(200, "linear", function() {
                         $('.js-overlay').fadeOut(300, "linear");
                          $('#login-layer').remove();
                          $('#forgotPasswordLayer').remove();
+                       // $('.captcha2').slideToCAPTCHA('captcha')
+                       if(typeof(LoggedoutPage)!="undefined")
+                      {  
+                        if(LoggedoutPage){
+                        removeCaptcha();
+                        createCaptcha("logoutPage");
+                        }
+                      }
+        
                     });
+                    
                     commonLoginBinding();
+                 
                 });
                  $('.js-overlay').bind("click",function(){
 					 $('#login-layer').fadeOut(200, "linear", function() {
 						$('.js-overlay').fadeOut(300, "linear");
                          $('#login-layer').remove();
                          $('#forgotPasswordLayer').remove();
+                          if(typeof(LoggedoutPage)!="undefined")
+                      {  
+                        if(LoggedoutPage){
+                        removeCaptcha();
+                        createCaptcha("logoutPage");
+                        }
+                      }
 					});
                  $(this).unbind("click");
+                  
+			  
              });
                 //start remember me script
                commonLoginBinding();
                forgotPasswordBinding(1);
                customCheckboxLogin("remember",0);
+               if(captchaShow==1)
+      				{
+      				   createCaptcha();
+      				}
             },
             error: function(response) {
                 $('.js-overlay').fadeOut(300, "linear");
@@ -224,6 +317,10 @@ function commonLoginBinding()
                 $("#loginRegistration").click(function() {
 					if($(this).hasClass("logout"))
 						location.href="/register/page1?source=login_p";
+					else if($(this).hasClass("loginAlbumSearch"))
+						location.href="/register/page1?source=album_l";
+					else if($(this).hasClass("loginProfileSearch"))
+						location.href="/register/page1?source=profile_l";
 					else
 						location.href="/register/page1?source=login_l";
                 });
@@ -267,6 +364,20 @@ $(document).ready(function(){
 		if(ResetPasswordPage)
 			postForgotEmailLayer(3);
 	}
+  
+    if(typeof(captchaShow)!="undefined")
+    {
+		if(captchaShow==1){
+			if(typeof(LoggedoutPage)!="undefined")
+			{ 	
+				if(LoggedoutPage){
+					createCaptcha('loggedout');
+				}
+			}
+		}
+    }
+
+
 		
 });
 
@@ -400,3 +511,138 @@ function postForgotEmailLayer()
 			}
 		});
 }
+
+function createCaptcha(fromLoggedOut){
+	
+	var captchaDiv='<div id="captchaDiv" class="captcha" style=" width: 434px;">                                    <div class="slideCap" id="slideCap">                                        <div class="blueTxt" id="blueText">Slide to Verify</div>                                    </div>                                    <div id="textSlide" style="color: #888;z-index:9999; text-align:center; padding-top: 18px;">Slide to Verify</div>                                    <div class="handle" style="background-position: 10px 10px;background-image:url(/images/jsms/commonImg/nextIcon.png);background-repeat: no-repeat;"></div>                                </div>';
+	if(fromLoggedOut)
+	{
+		if(typeof(parent.LoggedoutPage)!==undefined)
+		{
+			 parent.$('#afterCaptcha').before(captchaDiv);
+			  parent.$("#loggedout").find('.captcha').slideToCAPTCHA('captcha');
+		}
+		else
+		{
+		   $('#afterCaptcha').before(captchaDiv);
+		  $("#loggedout").find('.captcha').slideToCAPTCHA('captcha');
+		}
+	}
+	else
+	{
+		$('#afterCaptcha').before(captchaDiv);
+		$("#newLoginLayerJspc").find('.captcha').slideToCAPTCHA('captcha');
+	}
+	
+	
+}
+
+function removeCaptcha()
+{
+  $('.captcha').each(function(index, element) {
+      $(element).remove();});
+}
+
+(function($) {
+    $.fn.slideToCAPTCHA = function(options) {
+        options = $.extend({
+            handle: '.handle',
+            cursor: 'move',
+            direction: 'x', //x or y
+            customValidation: false,
+            completedText: 'Done!'
+        }, options);
+        var $handle = this.find(options.handle),
+            $slide = this,
+            handleOWidth,
+            xPos,
+            yPos,
+            slideXPos,
+            slideWidth,
+            slideOWidth,
+            $activeHandle,
+			slipStart,
+            mousePressed = false,
+            sliderCompleted = false;
+			startSlider();
+			$handle.css('cursor', options.cursor).on('mousedown', function(e) {
+                slideOn(e);
+            }).on('mouseup', function(e) {
+				resetSlider();
+            }).on('mouseleave', function(e) {
+				if(mousePressed == true) {
+					resetSlider();  
+				}
+            });
+        function startSlider() {
+            $slide.addClass('slide-to-captcha');
+            $handle.addClass('slide-to-captcha-handle');
+            handleOWidth = $handle.outerWidth();
+            slideWidth = $slide.width();
+            slideOWidth = $slide.outerWidth();
+        }
+        function slideOn(e) {
+            mousePressed = true;
+            $activeHandle = $handle.addClass('active-handle');
+            xPos = $handle.offset().left + handleOWidth - e.pageX;
+            slideXPos = $slide.offset().left + ((slideOWidth - slideWidth) / 2);
+			slipStart = $handle.offset().left;
+            $activeHandle.on('mousemove', function(e) {
+                if (mousePressed == true) {
+                    slideMove(e);
+                }
+            });
+            e.preventDefault();
+        }
+        function slideMove(e) {
+            var handleXPos = e.pageX + xPos - handleOWidth;
+			var width = $handle.offset().left - slipStart;
+            if (handleXPos > slideXPos && handleXPos < slideXPos + slideWidth - handleOWidth) {
+                if ($handle.hasClass('active-handle')) {
+					$handle.offset({
+                        left: handleXPos
+                    });
+				$slide.find("#slideCap").css("width",width);
+				if(width >= 151) {
+					$slide.find("#blueText").show();  
+				}
+				else if(handleXPos < 151) {
+					$slide.find("#blueText").hide();
+					}
+                }
+            } else {
+                if (handleXPos <= slideXPos === false) {
+                    sliderComplete();
+                }
+                $activeHandle.mouseup();
+            }
+        }
+        function sliderComplete() {
+            sliderCompleted = true;
+			$handle.css("background-image","url('/images/jsms/commonImg/completed.png')");
+			$handle.css("background-position","0px -2px");
+			$handle.css("margin","0px");
+			$handle.css("border","1px solid #c0c0c0");
+            $activeHandle.offset({
+                left: slideXPos + slideWidth - handleOWidth
+            });
+            $activeHandle.off();
+            resetSlider();
+            $slide.addClass('valid');
+			$slide.find('#blueText').html('Verified');
+			$('LoginErrMessage2').hide();
+			$slide.find("#slideCap").css("width","377px");
+        }
+        function resetSlider() {
+            mousePressed = false;
+            if (sliderCompleted == false) {
+                $activeHandle.offset({
+                    left: slideXPos+1
+                });
+			$slide.find("#blueText").hide();
+            $activeHandle.removeClass('active-handle');
+			$slide.find("#slideCap").css("width","0");
+            }
+        }
+    }
+})(jQuery);

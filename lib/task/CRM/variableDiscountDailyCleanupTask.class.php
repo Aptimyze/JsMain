@@ -53,6 +53,7 @@ EOF;
         
         // Maintain records from VARIABLE_DISCOUNT_OFFER_DURATION for the expired discounts in VARIABLE_DISCOUNT_OFFER_DURATION_LOG
         $vdOfferDurationLogObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION_LOG();
+	$todaysDate =date("Y-m-d");
         $vdOfferDurationLogObj->maintainExpiredDiscounts($todaysDate);
         
         // Delete records from VARIABLE_DISCOUNT_OFFER_DURATION for the expired discounts

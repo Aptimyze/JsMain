@@ -78,6 +78,7 @@ Class ButtonResponseApi
 							if ($privilageArray["0"]["COMMUNICATION"]["MESSAGE"] == "Y") {
 								$button[]                 = self::getSendMessageButton();
 								$button[]                 = self::getContactDetailsButton();
+								$button[]                 = self::getCancelInterestButton();
 								$responseArray["buttons"] = $button;
 							} else {
 								if(strpos(sfContext::getInstance()->getRequest()->getParameter("newActions"), "MEMBERSHIP")!== false )
@@ -123,6 +124,7 @@ Class ButtonResponseApi
 							if ($privilageArray["0"]["COMMUNICATION"]["MESSAGE"] == "Y") {
 								$button[]                 = self::getSendMessageButton();
 								$button[]                 = self::getContactDetailsButton();
+								$button[]                 = self::getDeclineButton($this->page);
 								$responseArray["buttons"] = $button;
 							} else {
 								if(strpos(sfContext::getInstance()->getRequest()->getParameter("newActions"), "MEMBERSHIP")!== false )
@@ -371,6 +373,7 @@ Class ButtonResponseApi
 					if ($privilageArray["0"]["COMMUNICATION"]["MESSAGE"] == "Y") {
 						$button[]                      = $this->getSendMessageButton();
 						$button[]                      = self::getContactDetailsButton();
+						$button[]                 	   = self::getDeclineButton($this->page);
 						$responseArray["buttons"]      = $button;
 						$responseArray["infomsglabel"] = "You are now connected with " . $this->contactHandlerObj->getViewed()->getUSERNAME();
 						$responseArray["infomsgiconid"] = '023';
@@ -525,6 +528,7 @@ Class ButtonResponseApi
 				case ContactHandler::ACCEPT:
 					$button[] = self::getSendMessageButton();
 					$button[] = self::getContactDetailsButton();
+					$button[] = self::getCancelInterestButton();
 					$responseArray["buttons"] = $button;
 					break;
 				case ContactHandler::INITIATED:
@@ -569,6 +573,7 @@ Class ButtonResponseApi
 					//echo "ACCEPT";
 					$button[]                 = self::getSendMessageButton();
 					$button[]                 = self::getContactDetailsButton();
+					$button[]                 = self::getDeclineButton($page);
 					$responseArray["buttons"] = $button;
 					break;
 				case ContactHandler::DECLINE:

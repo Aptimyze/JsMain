@@ -30,15 +30,15 @@
                     	<ul class="listn gunna">
                             <li>
                                 <p class="color12">Place of Birth</p>
-                                <p class="~if $bEditView && !$apiData['about']['city_country']` color5 ~else` color11 ~/if` pt6">~if $apiData['about']['city_country']`~$apiData['about']['city_country']`~else`Not filled in~/if`</p>
+                                <p class="~if $bEditView && !$apiData['about']['city_country']` color5 ~else if $apiData['about']['city_country']` color11 ~else` notFilledInColor ~/if` pt6">~if $apiData['about']['city_country']`~$apiData['about']['city_country']`~else`Not filled in~/if`</p>
                             </li>
                         	<li>
                             	<p class="color12">Date of Birth</p>
-                                <p class="~if $bEditView && !$apiData['about']['astro_date']` color5 ~else` color11 ~/if` pt6">~if $apiData['about']['astro_date']`~$apiData['about']['astro_date']`~else`Not filled in~/if`</p>
+                                <p class="~if $bEditView && !$apiData['about']['astro_date']` color5 ~else if $apiData['about']['astro_date']` color11 ~else` notFilledInColor ~/if` pt6">~if $apiData['about']['astro_date']`~$apiData['about']['astro_date']`~else`Not filled in~/if`</p>
                             </li>
                             <li>
                             	<p class="color12">Time of Birth</p>
-                                <p class="~if $bEditView && !$apiData['about']['astro_time_check']` color5 ~else` color11 ~/if` pt6">~if $apiData['about']['astro_time_check']`~$apiData['about']['astro_time']`~else`Not filled in~/if`</p>
+                                <p class="~if $bEditView && !$apiData['about']['astro_time_check']` color5 ~else if $apiData['about']['astro_time_check']` color11 ~else` notFilledInColor ~/if` pt6">~if $apiData['about']['astro_time_check']`~$apiData['about']['astro_time']`~else`Not filled in~/if`</p>
                             </li>
                         </ul>
                         <div class="js-horoscopeView">
@@ -55,7 +55,7 @@
                             <li>
                             	<p class="color12">Sun sign</p>
                                 <p class="color11 pt6">
-                                    <span id="astro_sunsignView" ~if $bEditView && $apiData["about"]["astro_sunsign"] eq $notFilledInText`  class="color5" ~/if` >
+                                    <span id="astro_sunsignView" ~if $bEditView && $apiData["about"]["astro_sunsign"] eq $notFilledInText`  class="color5" ~else if ($apiData['about']['astro_sunsign'] eq "" || $apiData['about']['astro_sunsign'] eq "-")` class="notFilledInColor" ~/if` >
                                     ~if ($apiData['about']['astro_sunsign'] eq "" || $apiData['about']['astro_sunsign'] eq "-") && !$bEditView`
                                        Not filled in
                                     ~else`
@@ -67,7 +67,7 @@
                             <li>
                             	<p class="color12">Rashi/Moon Sign</p>
                                 <p class="color11 pt6">
-                                    <span id="rashiView" ~if $bEditView && $apiData["about"]["rashi"] eq $notFilledInText`  class="color5" ~/if` >
+                                    <span id="rashiView" ~if $bEditView && $apiData["about"]["rashi"] eq $notFilledInText`  class="color5" ~else if ($apiData['about']['rashi'] eq "" || $apiData['about']['rashi'] eq "-")` class="notFilledInColor" ~/if` >
                                         ~if ($apiData['about']['rashi'] eq "" || $apiData['about']['rashi'] eq "-") && !$bEditView`
                                             Not filled in
                                         ~else`
@@ -79,7 +79,7 @@
                             <li>
                             	<p class="color12">Nakshatra</p>
                                 <p class="color11 pt6">
-                                    <span id="nakshatraView" ~if $bEditView && $apiData["about"]["nakshatra"] eq $notFilledInText`  class="color5" ~/if` >
+                                    <span id="nakshatraView" ~if $bEditView && $apiData["about"]["nakshatra"] eq $notFilledInText`  class="color5" ~else if ($apiData['about']['nakshatra'] eq "" || $apiData['about']['nakshatra'] eq "-")` class="notFilledInColor" ~/if` >
                                         ~if ($apiData['about']['nakshatra'] eq "" || $apiData['about']['nakshatra'] eq "-") && !$bEditView`
                                             Not filled in
                                         ~else`
@@ -91,7 +91,7 @@
                             <li>
                             	<p class="color12">Manglik</p>
                                 <p class="color11 pt6">
-                                    <span id="astro_manglikView" ~if $bEditView && $apiData["about"]["astro_manglik"] eq $notFilledInText`  class="color5" ~/if` >
+                                    <span id="astro_manglikView" ~if $bEditView && $apiData["about"]["astro_manglik"] eq $notFilledInText`  class="color5" ~else if ($apiData['about']['astro_manglik'] eq "" || $apiData['about']['astro_manglik'] eq "-")` class="notFilledInColor" ~/if` >
                                         ~if ($apiData['about']['astro_manglik'] eq "" || $apiData['about']['astro_manglik'] eq "-")&& !$bEditView`
                                             Not filled in
                                         ~else`
@@ -104,7 +104,7 @@
                             <li>
                                 <p class="color12">Horoscope Privacy</p>
                                 <p class="color11 pt6">
-                                    <span id="astro_privacyView" ~if $apiData["about"]["astro_privacy"] eq $notFilledInText`  class="color5" ~/if` >
+                                    <span id="astro_privacyView" ~if $apiData["about"]["astro_privacy"] eq $notFilledInText`  class="color5" ~else if ($apiData['about']['astro_privacy'] eq "" || $apiData['about']['astro_privacy'] eq "-")` class="notFilledInColor" ~/if` >
                                         ~if ($apiData['about']['astro_privacy'] eq "" || $apiData['about']['astro_privacy'] eq "-")&& !$bEditView`
                                             Not filled in
                                         ~else`

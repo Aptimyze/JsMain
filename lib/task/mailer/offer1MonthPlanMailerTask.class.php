@@ -26,36 +26,32 @@ EOF;
 
 	protected function execute($arguments = array(), $options = array())
 	{
-	    // SET BASIC CONFIGURATION
+		// SET BASIC CONFIGURATION
 	    	ini_set('max_execution_time',0);
 	    	ini_set('memory_limit',-1);
 		if(!sfContext::hasInstance())
 		{
 			sfContext::createInstance($this->configuration);
 		}
-		$mailId ='1800';						//for 1 month eRISHTA offer plan
-		$service = 'P1';						//for eRISHTA service
+
+		//Configurable parameters	
 		$lastLoginOffset = "- 15 day";       	//to fetch profiles logged in within 15 days
-        $lastRegistrationOffset = "- 6 month";  //to fetch profiles registered before 6 months
-        $neverPaidFlag = true; 					//set to fetch never paid profiles
+	        $lastRegistrationOffset = "- 6 month";  //to fetch profiles registered before 6 months
+        	$neverPaidFlag = true; 			//set to fetch never paid profiles
 
-        //fetch price of service
-        $serviceObj = new billing_SERVICES('newjs_slave');
-        $servicePriceArr=$serviceObj->fetchServicePrice($service, 'desktop');
+		//fetch desired set of profiles                         
+                $mmObj = new MembershipMailer();
+                $profilesArr =$mmObj->fetchOfferConditionsBasedProfiles($lastLoginOffset,$lastRegistrationOffset,$neverPaidFlag);
 
-        //fetch desired set of profiles        			
-		$mmObj = new MembershipMailer();		
-		$profilesArr =$mmObj->fetchOfferConditionsBasedProfiles($lastLoginOffset,$lastRegistrationOffset,$neverPaidFlag);
-		
-		//send email to fetched profiles
-		if(count($profilesArr)>0)
-		{
-			foreach($profilesArr as $row)
-			{
-				$mmObj->sendServiceBasedEmail($mailId,$row,$service,$servicePriceArr,'desktop');
-			}
-				
-		}
+		//Store data of fetched profiles
+                if(count($profilesArr)>0)
+                {
+			$oneMonthObj=new incentive_BACKEND_LINK_MAILER();
+                        foreach($profilesArr as $row)
+				$oneMonthObj->setDataforMailer($row);
+                }
+
+		unset($oneMonthObj);
 		unset($mmObj);
 	}
 }

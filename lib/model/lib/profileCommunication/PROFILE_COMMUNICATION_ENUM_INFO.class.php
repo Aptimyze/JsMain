@@ -59,6 +59,7 @@ class PROFILE_COMMUNICATION_ENUM_INFO
 		self::$informationTypeEnum["MY_MESSAGE"]                 = "MessageRecord";
 		self::$tuplesEnum["MATCHALERT_MAILER_TUPLE"]                    = "MatchalertMailerTuple";
 		self::$tuplesEnum["INBOX_VIEWED_DATE"]                    = "ContactEngineInterestViewedTuple";
+		self::$tuplesEnum["INBOX_VIEWED_DATE_NO_MESSAGE"]                    = "ContactEngineInterestViewedNoMesageTuple";
 
 	}
 	

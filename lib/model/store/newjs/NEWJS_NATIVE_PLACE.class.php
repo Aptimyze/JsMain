@@ -117,5 +117,21 @@ class NEWJS_NATIVE_PLACE extends TABLE
 			throw new jsException($e);
 		}	
 	}
+   public function getNativeData($profileid)
+   {
+	try
+	{
+		$sql = "SELECT NATIVE_COUNTRY,NATIVE_STATE,NATIVE_CITY FROM newjs.NATIVE_PLACE WHERE PROFILEID = :PROFILEID";
+		$pdoStatement = $this->db->prepare($sql);
+		$pdoStatement->bindValue(":PROFILEID",$profileid);
+		$pdoStatement->execute();
+		$arrResult = $pdoStatement->fetchAll(PDO::FETCH_ASSOC);
+		return $arrResult[0];
+	}
+	catch(Exception $e)
+	{
+		throw new jsException($e);
+	}
+   }
 }
 ?>

@@ -1108,6 +1108,54 @@ public function duplicateEmail($email)
         }
         return $res;
     }
+    /*
+     * this function returns profileids with entry date specified
+     * @return - profileid array
+     */
+    public function getProfilesWithGivenRegDates($dateArr){
+        try{
+          if($dateArr && is_array($dateArr)){
+            $sql = "SELECT PROFILEID FROM newjs.JPROFILE AS I LEFT JOIN PROFILE.DPP_REVIEW_MAILER_LOG AS L ON I.PROFILEID = L.RECEIVER WHERE ((ENTRY_DT >= :FIRST_LOWER AND ENTRY_DT < :FIRST_UPPER) OR (ENTRY_DT >= :SEC_LOWER AND ENTRY_DT < :SEC_UPPER) OR (ENTRY_DT >= :THIRD_LOWER AND ENTRY_DT < :THIRD_UPPER) OR (ENTRY_DT >= :FOURTH_LOWER AND ENTRY_DT < :FOURTH_UPPER)) AND ACTIVATED = 'Y' AND L.RECEIVER IS NULL";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":FIRST_UPPER",$dateArr['first_up'],PDO::PARAM_STR);
+            $prep->bindValue(":FIRST_LOWER",$dateArr['first_low'],PDO::PARAM_STR);
+            $prep->bindValue(":SEC_UPPER",$dateArr['sec_up'],PDO::PARAM_STR);
+            $prep->bindValue(":SEC_LOWER",$dateArr['sec_low'],PDO::PARAM_STR);
+            $prep->bindValue(":THIRD_UPPER",$dateArr['third_up'],PDO::PARAM_STR);
+            $prep->bindValue(":THIRD_LOWER",$dateArr['third_low'],PDO::PARAM_STR);
+            $prep->bindValue(":FOURTH_UPPER",$dateArr['fourth_up'],PDO::PARAM_STR);
+            $prep->bindValue(":FOURTH_LOWER",$dateArr['fourth_low'],PDO::PARAM_STR);
+            $prep->execute();
+            while ($result = $prep->fetch(PDO::FETCH_ASSOC)){
+                $res[] = $result;
+            }
+            return $res;
+          }
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
+    /*
+     * this function return array of profileids who have registered within given dates
+     * @param - date after which users have registered
+     * @return - array of profiledids
+     */
+    public function getProfilesWithinGivenActiveDate($date){
+        try{
+          if($date){
+            $sql = "SELECT PROFILEID FROM newjs.JPROFILE AS I LEFT JOIN PROFILE.DPP_REVIEW_MAILER_LOG AS L ON I.PROFILEID = L.RECEIVER WHERE LAST_LOGIN_DT > :date AND ACTIVATED = 'Y' AND L.RECEIVER IS NULL";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":date",$date,PDO::PARAM_STR);
+            $prep->execute();
+            while ($result = $prep->fetch(PDO::FETCH_ASSOC)){
+                $res[] = $result;
+            }
+            return $res;
+          }  
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
     public function getLatestValue($field) {
         try {
             $sql = "SELECT ".$field." FROM newjs.JPROFILE ORDER BY PROFILEID DESC LIMIT 1";
@@ -1122,6 +1170,5 @@ public function duplicateEmail($email)
         }
         return $res;
     }
-    
 }
 ?>

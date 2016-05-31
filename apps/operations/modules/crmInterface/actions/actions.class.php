@@ -682,22 +682,69 @@ class crmInterfaceActions extends sfActions
         $this->name     =$request->getParameter('name');
 	$field		='ENTRY_DT';
 
-	$slaveNamesArr	=array('newjs_master','newjs_slave','newjs_bmsSlave','newjs_local111');		
+	$slaveNamesArr	=array('newjs_master','newjs_slave','newjs_local111');		
 	foreach($slaveNamesArr as $key=>$name){
 	        $jprofileObj 	=new JPROFILE($name);
 		$dataArr 	=$jprofileObj->getLatestValue($field);
-		if($name=='newjs_master')
-			$masterTime	=$dataArr[0][$field];
-		$slaveTime	=$dataArr[0][$field];
-		$diffTime 	=strtotime($slaveTime)-strtotime($masterTime);	
-		//$dateTimeArr[$name] =date('H:i', $diffTime);
-		$dateTimeArr[$name]   =$diffTime/60 ." Min";
-		unset($jprofileObj);
+
+                if($name=='newjs_master')
+                        $masterTime     =$dataArr[0][$field];
+                else
+                        $slaveTime      =$dataArr[0][$field];
+                $diffTime               =strtotime($masterTime)-strtotime($slaveTime);
+                $dateTimeArr[$name]     =round($diffTime/60)." Min";
+                unset($jprofileObj);
 	}
+	$this->masterTime =$masterTime;
 	$this->misSlave =$dateTimeArr['newjs_slave'];
-	$this->bmsSlave	=$dateTimeArr['newjs_bmsSlave'];
 	$this->slave111 =$dateTimeArr['newjs_local111'];	
 	
+    }
+    
+    public function executeHelpBackend(sfWebRequest $request)
+    {
+        $exit = 0;
+        $id = $request->getParameter("id");
+        $helpQuestionSlaveObj = new jsadmin_HELP_QUESTIONS("newjs_slave");
+        list($this->allQuestions, $this->editQuestion) = $helpQuestionSlaveObj->getAll($id);
+        $this->allCategories = array_keys($this->allQuestions);
+        $submit = $request->getParameter("submit");
+    	if($submit){
+            $question = $request->getParameter('question');
+            $answer = $request->getParameter('editor1');
+            $script = array("script");
+            $answer = CommonUtility::strip_selected_tags(html_entity_decode($answer),$script);
+            $category = $request->getParameter('category');
+            $status = $request->getParameter('status');
+            if($category == 'new'){
+                $category = $request->getParameter('other');
+            }
+            if(!($question && $answer && $category && $status)){
+                $this->errorMsg = "Some parameter missing";
+                $this->editQuestion['QUESTION'] = $question;
+                $this->editQuestion['ANSWER'] = $answer;
+                $this->editQuestion['CATEGORY'] = $category;
+                $this->editQuestion['ACTIVE'] = $status;
+                $exit = 1;
+            }
+            if($exit == 0){
+                $helpQuestionMasterObj = new jsadmin_HELP_QUESTIONS();
+                if($submit == "SUBMIT"){
+                    $helpQuestionMasterObj->insert($question,$answer,$category,$status);
+                    $this->successMsg = "Question has been added successfully. It will be visible in 10 minutes";
+                }
+                else{
+                    $helpQuestionMasterObj->update($id, $question,$answer,$category, $status);
+                    $this->successMsg = "Question has been modified successfully. It will be visible in 10 minutes";
+                }
+            }
+        }
+        else if($request->getParameter("resubmit")){
+            $this->editQuestion['QUESTION'] = $request->getParameter('question');
+            $this->editQuestion['ANSWER'] = $request->getParameter('editor1');
+            $this->editQuestion['CATEGORY'] = $request->getParameter('category');
+            $this->editQuestion['ACTIVE'] = $request->getParameter('status');
+        }
     }
 
 }

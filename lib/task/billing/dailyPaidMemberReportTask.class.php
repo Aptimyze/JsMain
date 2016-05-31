@@ -20,9 +20,9 @@ EOF;
     protected function execute($arguments = array(), $options = array())
     {
         sfContext::createInstance($this->configuration);
-
-        $start_time = date("Y-m-d 00:00:00", (time()-8640));
-        $end_time = date("Y-m-d 23:59:59", (time()-8640));
+        ini_set('memory_limit', '-1');
+        $start_time = date("Y-m-d 00:00:00", (time()-86400));
+        $end_time = date("Y-m-d 23:59:59", (time()-86400));
 
         $billPaymentDet = new BILLING_PAYMENT_DETAIL('newjs_slave');
         $billPurDet = new billing_PURCHASE_DETAIL('newjs_slave');

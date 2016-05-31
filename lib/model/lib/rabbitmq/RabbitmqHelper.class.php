@@ -28,7 +28,7 @@ class RabbitmqHelper
     if(file_exists($errorLogPath)==false)
       exec("touch"." ".$errorLogPath,$output);
     error_log($message,3,$errorLogPath);
-    SendMail::send_email($emailTo,$message,$subject);           
+    //SendMail::send_email($emailTo,$message,$subject);           
   }
 
   /**

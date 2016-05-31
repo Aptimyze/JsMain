@@ -236,7 +236,6 @@ var errorMsg = "Something went wrong!! Please try again later";
 			var ele=this;
 
 			$("#TAPNAME_"+this.tapid).html(this.TapName());	
-
 			//selected value
 			var selArr=new Array();
 			var duserdecision =this.duserDecision;
@@ -253,6 +252,12 @@ var errorMsg = "Something went wrong!! Please try again later";
 					else
 							selArr=tempArr;
 			}
+			if(ele.type=="native_state_jsms")
+			{
+				if($.isNumeric(selArr[0]))
+					ele.type = "native_country_jsms";
+			}
+
             setTimeout(function(){
                 staticTables.getData(ele.type,function(data){ele.parseData(selArr,data)});
             },100);
@@ -261,7 +266,6 @@ var errorMsg = "Something went wrong!! Please try again later";
         Hamburger.prototype.parseData=function(selArr,data)
         {
             var data=this.FilterData(JSON.parse(data));
-			
 			//Close hamburger if data not found
 			if(!data || data === -1)
 			{
@@ -277,6 +281,7 @@ var errorMsg = "Something went wrong!! Please try again later";
 					return false;
 			}});
             
+            $(this.ulOption).unbind("click");
             $(this.ulOption).bind("click",function(ev)
 			{
 				ele.clickInProgress = true;
@@ -442,6 +447,29 @@ var errorMsg = "Something went wrong!! Please try again later";
 			
 			var value=this.UpdateOutput(ele);
 			this.SpecialDependantLogic();
+				if(this.type=="native_country_jsms" && $.isNumeric(value))
+				{
+					this.dependant = "native_country_jsms";
+				}
+                                if(this.type=="native_state_jsms" && value=="NI")
+                                {
+					this.type= "native_country_jsms";
+					this.dependant = "native_country_jsms";
+					this.bIndependantCall=true;
+					this.UpdateHamburgerHTML();
+					startTouchEvents();
+					return;
+                                }
+
+                                if(this.type == "native_country_jsms" && value== "FI")
+                                {
+					this.type= "native_state_jsms";
+					this.dependant = "native_city_jsms";
+					this.bIndependantCall=true;
+					this.UpdateHamburgerHTML();
+					startTouchEvents();
+					return;
+                                }
 			if(this.whenHide=="multiple")
 			{
 				
@@ -482,7 +510,7 @@ var errorMsg = "Something went wrong!! Please try again later";
 		};
 		Hamburger.prototype.SpecialDependantLogic=function()
 		{
-			var specialType = ['religion','reg_mstatus','country_res','t_brother','t_sister'];
+			var specialType = ['religion','reg_mstatus','country_res','t_brother','t_sister',"native_state_jsms"];
 			if(specialType.indexOf(this.type)!=-1)
 			{
 				var o = this.output[this.type];
@@ -502,7 +530,11 @@ var errorMsg = "Something went wrong!! Please try again later";
 							this.dependant_tapName ='Caste';
 					}
 				}
-				
+				if(this.type=="native_state_jsms"&& this.selectedValue!="NI")
+				{
+					this.dependant = '';
+					this.dependant = "reg_city_" + this.selectedValue +"_";
+				}
 				if(this.type == 'reg_mstatus'  && o.value && o.value!='N') 
 				{
 					this.dependant = 'children';
@@ -578,6 +610,15 @@ var errorMsg = "Something went wrong!! Please try again later";
 			{
 				this.selectedValue = this.depValue;
 			}
+			if(this.type=="native_country_jsms" && json)
+				return json;
+			if(this.type.indexOf("reg_city_")>-1)
+			{
+				var split = this.type.split("_");
+				var state = split[2];
+				return json[state];
+			}
+				
 			if(this.selectedValue!=-1 && json)
 			{
 				if(json[this.selectedValue] && !this.bIndependantCall)

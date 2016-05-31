@@ -670,7 +670,7 @@ padding:5px 0 7px
 
 /* start css for Tab for match pages */
 .matcgbg{background-color:#f2f1f1}
-.tabwidt{width:1800px}
+.tabwidt{width:2000px}
 ul.matchtabs li{float:left; padding:5px 0; width:200px; text-align:center}
 ul.matchtabs li div{border-right:1px solid #ced2d6; width:100%; line-height:37px}
 ul.matchtabs li div span{}
@@ -729,3 +729,39 @@ height:0px;
 .srpHeightRight{
 height:28px;
 }
+
+.mainBrdr {
+  border-bottom: 1px solid #e2e4e7;
+  padding: 16px 0px;
+}
+.mainBrdr2 {
+    border-bottom: 1px solid #e2e4e7;
+    padding: 16px 0px 30px 0px;
+}
+
+.wid68p {
+  width: 68%;
+}
+.inDisp {
+  display: inline-block;
+}
+.wid30p {
+  width: 30%;
+}
+.verTop {
+  vertical-align: top;
+}
+.calUserDiv {
+  padding: 11px 13px;
+  border: 1px solid #C0BEBE;
+  margin: 18px;
+}
+.noUserDiv {
+  padding: 11px 15px;
+  border: 1px solid #C0BEBE;
+}
+.hlpcl11 {
+  color:white;
+  background-color: #999;
+}
+.wid60p{width:60%}

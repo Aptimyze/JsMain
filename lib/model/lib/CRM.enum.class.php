@@ -20,6 +20,7 @@ class csvFields
 class crmParams
 {
 	// Sales Regular Process
+	public static $southIndianCommunity    		=array(3,25,16,31,17,35,2,18,1,37);
         public static $salesRegularConsiderCommunity	=array(4,5,9,20,21,22,23,24,12,29,32,34,19);
 	public static $salesRegularIgnoreCommunity 	=array(3,16,17,31,4,5,9,20,21,22,23,24,12,29,32,34);
 	public static $salesRegularDelhiCity 		=array('DE00','HA03','HA02','UP12','UP25','UP47');
@@ -32,8 +33,8 @@ class crmParams
         public static $salesRegularCampaignTables	=array("noida"=>"incentive_SALES_CSV_DATA_NOIDA","mumbai"=>"incentive_SALES_CSV_DATA_MUMBAI","pune"=>"incentive_SALES_CSV_DATA_PUNE","nri"=>"incentive_SALES_CSV_DATA_NRI","delhi"=>"incentive_SALES_CSV_DATA_DELHI");
 
 	// Other Sales Campaign Tables for Processes
-	public static $salesCampaignTables		=array("failedPaymentInDialer"=>"incentive_SALES_CSV_DATA_FAILED_PAYMENT","upsellProcessInDialer"=>"incentive_SALES_CSV_DATA_UPSELL","renewalProcessInDialer"=>"incentive_SALES_CSV_DATA_RENEWAL");
-	public static $salesCampaign			=array("failedPaymentInDialer"=>"fp","upsellProcessInDialer"=>"upsell","renewalProcessInDialer"=>"renewal");
+	public static $salesCampaignTables		=array("failedPaymentInDialer"=>"incentive_SALES_CSV_DATA_FAILED_PAYMENT","upsellProcessInDialer"=>"incentive_SALES_CSV_DATA_UPSELL","renewalProcessInDialer"=>"incentive_SALES_CSV_DATA_RENEWAL","paidCampaignProcess"=>"incentive_SALES_CSV_DATA_PAID_CAMPAIGN");
+	public static $salesCampaign			=array("failedPaymentInDialer"=>"fp","upsellProcessInDialer"=>"upsell","renewalProcessInDialer"=>"renewal","paidCampaignProcess"=>"paid");
 	public static $crmCsvTables                     =array("DAILY_GHARPAY"=>"incentive_GHARPAY_CSV_DATA","QA_ONLINE"=>"incentive_QA_ONLINE_CSV_DATA");
 
 	// Field Sales Process	

@@ -2242,3 +2242,95 @@ line-height:25px;
 #loggedout input:-webkit-autofill { -webkit-box-shadow: 0 0 0px 1000px white inset; }
 .padall-6{padding:6px;}
 .mr15 {margin-right:15px;}
+
+.slide-to-captcha {
+  position: relative;
+  width: 395px;
+  height: 60px;
+  background-color: #CDCDCD;
+ 
+  -webkit-transition: background-color 0.3s;
+  -moz-transition: background-color 0.3s;
+  -ms-transition: background-color 0.3s;
+  -o-transition: background-color 0.3s;
+  transition: background-color 0.3s; }
+
+.slide-to-captcha:after {
+  display: none;
+  height: 100%;
+  margin-left: 10px;
+  line-height: 34px;
+  font-weight: bold;
+  color: #666;
+  color: transparent; }
+
+.slide-to-captcha-handle {
+  position: absolute;
+  width: 58px;
+  height: 58px;
+  background: #F3F3F3;
+  left: 0;
+  top: 0;
+  margin:1px;
+ 
+  -webkit-transition: opacity 0.3s;
+  -moz-transition: opacity 0.3s;
+  -ms-transition: opacity 0.3s;
+  -o-transition: opacity 0.3s;
+  transition: opacity 0.3s; }
+
+.slide-to-captcha-handle:before,
+.slide-to-captcha-handle:after {
+  position: absolute;
+  content: ' ';
+  display: none;
+  left: 14px;
+  top: 15%;
+  height: 70%;
+  width: 4px;
+  -webkit-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+  background-color: #aaaaaa;
+  background-image: -webkit-gradient(linear, 0 0, 100% 0, from(#cccccc), to(#aaaaaa));
+  background-image: -webkit-linear-gradient(left, #cccccc, #aaaaaa);
+  background-image: -moz-linear-gradient(left, #cccccc, #aaaaaa);
+  background-image: -ms-linear-gradient(left, #cccccc, #aaaaaa);
+  background-image: -o-linear-gradient(left, #cccccc, #aaaaaa);
+  background-image: linear-gradient(left, #cccccc, #aaaaaa);
+  background-repeat: repeat-x;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  overflow-y: hidden; }
+
+.slide-to-captcha-handle:after {
+  left: 22px; }
+
+.slide-to-captcha.valid {
+  background-color: rgba(221, 221, 221, 0.5); }
+
+.slide-to-captcha.valid:after {
+  position: relative;
+  content: attr(data-content);
+  display: block;
+  color: rgba(0, 0, 0, 0.6);
+  z-index: 1; }
+
+.slide-to-captcha.valid .slide-to-captcha-handle {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+  opacity: 0.5; }
+  
+ .slideCap {
+  height: 60px;
+    position: absolute;
+    background-color: #34495e; 
+  }
+.blueTxt {
+  position: absolute;
+    left: 150px;
+    margin-top: 18px;
+    width: 100px;
+  color:white;
+  display:none;
+  }

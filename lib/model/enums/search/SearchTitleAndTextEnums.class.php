@@ -36,12 +36,14 @@ class SearchTitleAndTextEnums
                 //self::$TITLE_MAPPING["V1"]["PC"]["matchalerts"] = "Match Alerts - Jeevansathi.com";
                 self::$TITLE_MAPPING["V1"]["PC"]["matchalerts"] = "Search Matrimonial Profile - Find Matrimony Profile - Jeevansathi.com";
                 self::$TITLE_MAPPING["V1"]["PC"]["verifiedMatches"] = "Matches Verified by Visit - Jeevansathi.com";
+                self::$TITLE_MAPPING["V1"]["PC"]["contactViewAttempts"] = "Contacts view attempts- Jeevansathi.com";
                 
                 self::$SEARCH_CRITERIA_TEXT_MAPPING["V1"]["PC"]["DEFAULT"] = "You searched for";
                 self::$SEARCH_CRITERIA_TEXT_MAPPING["V1"]["PC"]["partnermatches"] = "Your Desired Partner Profile";
                 self::$SEARCH_CRITERIA_TEXT_MAPPING["V1"]["PC"]["twowaymatch"] = "Your Desired Partner Profile";
                 self::$SEARCH_CRITERIA_TEXT_MAPPING["V1"]["PC"]["justJoinedMatches"] = "Your Desired Partner Profile";
                 self::$SEARCH_CRITERIA_TEXT_MAPPING["V1"]["PC"]["verifiedMatches"] = "Your Desired Partner Profile";
+                self::$SEARCH_CRITERIA_TEXT_MAPPING["V1"]["PC"]["contactViewAttempts"] = "People who contacted your profile";
                 
                 self::$HEADING_MAPPING["V1"]["PC"]["DEFAULT"] = "<formatNumber_format> Match<es>";
 		/*
@@ -78,6 +80,7 @@ class SearchTitleAndTextEnums
                 self::$SUBHEADING_MAPPING["V1"]["PC"]["matchalerts"]["dpp"] = array(0=>"Matches are based strictly on your Desired Partner Preferences.",1=>"Send me matches based on my history of interests & acceptances");
                 
                 self::$HEADING_0RESULT_MAPPING["V1"]["PC"]["DEFAULT"] = "0 People Match your Search Criteria";
+                self::$HEADING_0RESULT_MAPPING["V1"]["PC"]["contactViewAttempts"] = "0 Contact View Attempts";
                 self::$HEADING_0RESULT_MAPPING["V1"]["PC"]["reverseDpp"] = "0  People Looking for Me";
                 self::$HEADING_0RESULT_MAPPING["V1"]["PC"]["partnermatches"] = "0 Desired Partner Matches";
                 self::$HEADING_0RESULT_MAPPING["V1"]["PC"]["twowaymatch"] = "0 Mutual Matches";
@@ -99,6 +102,7 @@ class SearchTitleAndTextEnums
 		self::$MESSAGE_0RESULT_MAPPING["V1"]["PC"]["reverseDpp"] = "People whose Desired Partner Profile you match will appear here";
 		self::$MESSAGE_0RESULT_MAPPING["V1"]["PC"]["partnermatches"] = "People who match your Desired Partner Profile will appear here<br>Please relax your Desired Partner Profile to see results";
                 self::$MESSAGE_0RESULT_MAPPING["V1"]["PC"]["verifiedMatches"] = "People who match your Desired Partner Profile and are Verified By Visit will appear here<br>Please relax your Desired Partner Profile to see results";
+                self::$MESSAGE_0RESULT_MAPPING["V1"]["PC"]["contactViewAttempts"] = "People who attempted to view your contact will appear here.";
 		self::$MESSAGE_0RESULT_MAPPING["V1"]["PC"]["twowaymatch"] = "Profiles where both of you match each other's criteria will appear here<br>Please relax your Desired Partner Profile to see results";
 		self::$MESSAGE_0RESULT_MAPPING["V1"]["PC"]["justJoinedMatches"] = "People matching your desired partner profile and have joined in last one week will appear here<br>Please relax your Desired Partner Profile to see results";
 		self::$MESSAGE_0RESULT_MAPPING["V1"]["PC"]["kundlialerts"] = "Matches who have guna score of at least 18 will appear here<br>Please create a horoscope using Jeevansathi to start receiving Kundli Matches";
@@ -247,7 +251,6 @@ class SearchTitleAndTextEnums
                 {
 			$search = "DEFAULT";
 		}
-		
 		return str_replace('<cnt>',$params["Count"],$array[$version][$channel][$search]);
         }
 

@@ -220,6 +220,10 @@ class DetailedViewApi
 		{
 			$this->m_arrOut['subscription_text'] = mainMem::JSEXCLUSIVE_LABEL;
 		}
+		elseif($this->getMembershipType() == 'eadvantage')
+		{
+			$this->m_arrOut['subscription_text'] = mainMem::EADVANTAGE_LABEL;
+		}
 	}
 
 	
@@ -516,7 +520,7 @@ class DetailedViewApi
 		
 		// More About Astro
 		$arrMoreAstro = array('rashi'=>null,'nakshatra'=>null,'horo_match'=>null,'astro_privacy'=>null);
-		$cManglik = $objProfile->getMANGLIK();
+		$cManglik = $cManglik = CommonFunction::setManglikWithoutDontKnow($objProfile->getMANGLIK());
 		
 		$szManglik = ApiViewConstants::getManglikLabel($cManglik);
 				
@@ -998,7 +1002,10 @@ class DetailedViewApi
 		foreach(ApiViewConstants::$arrDPPInfo as $key=>$val)
 		{
 			$this->m_arrOut[strtolower($key)] = null;
-			$value = $jPartnerObj->$val();
+                        if($key == "DPP_MANGLIK")
+                            $value = CommonFunction::setManglikWithoutDontKnow($jPartnerObj->$val());
+                        else
+                            $value = $jPartnerObj->$val();
 			
 			if($value && $value != ApiViewConstants::getNullValueMarker())
 			{
@@ -1281,7 +1288,6 @@ class DetailedViewApi
         //Service Type
 		$serviceType = $this->m_objProfile->getSUBSCRIPTION();
         $value = CommonFunction::getMainMembership($serviceType);
-        
         //If JsExclusive and request does not contain jsexclusive action then return null
         if($value == false || ($value == mainMem::JSEXCLUSIVE && strpos($request->getParameter("newActions"), "JSEXCLUSIVE") === false )
           )

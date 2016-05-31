@@ -45,6 +45,7 @@ EOF;
 				    if(count($usercode)>10)
 				        $usercode = array_slice($usercode, 0, 10);
 				    $usercode = implode(',',$usercode);
+				    if($key!=0)
 					$mailerEOIFilterObj->InsertFilterEOI($key,$usercode,$count);
 	        }
 	    }

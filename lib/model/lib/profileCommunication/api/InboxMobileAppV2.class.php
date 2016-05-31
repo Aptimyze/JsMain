@@ -64,7 +64,8 @@ class InboxMobileAppV2
 				"ProfilePic120Url",
 				"ProfilePic450Url",
 				"MSTATUS",
-				"VERIFICATION_SEAL"
+				"VERIFICATION_SEAL",
+                                "VERIFICATION_STATUS"
 				),
 			"ACCEPTANCES_RECEIVED"=>Array(
 				"PROFILECHECKSUM",
@@ -88,7 +89,8 @@ class InboxMobileAppV2
 				"ProfilePic120Url",
 				"ProfilePic235Url",
 				"MSTATUS",
-				"VERIFICATION_SEAL"
+				"VERIFICATION_SEAL",
+                                "VERIFICATION_STATUS"
 				),
 			"INTEREST_SENT"=>Array(
 				"PROFILECHECKSUM",
@@ -113,7 +115,8 @@ class InboxMobileAppV2
 				"MSTATUS",
 				"VERIFICATION_SEAL",
 				"INTEREST_VIEWED_DATE",
-				"SEEN"
+				"SEEN",
+                                "VERIFICATION_STATUS"
 				),
 			"ACCEPTANCES_SENT"=>Array(
 				"PROFILECHECKSUM",
@@ -135,7 +138,8 @@ class InboxMobileAppV2
 				"userloginstatus",
 				"ProfilePic120Url",
 				"MSTATUS",
-				"VERIFICATION_SEAL"
+				"VERIFICATION_SEAL",
+                                "VERIFICATION_STATUS"
 				),
 			"MATCH_ALERT"=>Array(
 				"PROFILECHECKSUM",
@@ -158,7 +162,8 @@ class InboxMobileAppV2
 				"ProfilePic120Url",
 				"ProfilePic450Url",
 				"IS_BOOKMARKED",
-				"VERIFICATION_SEAL"
+				"VERIFICATION_SEAL",
+                                "VERIFICATION_STATUS"
                                 ),
 				"VISITORS"=>Array(
 				"PROFILECHECKSUM",
@@ -180,7 +185,8 @@ class InboxMobileAppV2
 				"ProfilePic235Url",
 				"ProfilePic450Url",
 				"userloginstatus",
-				"VERIFICATION_SEAL"
+				"VERIFICATION_SEAL",
+                                "VERIFICATION_STATUS"
 				),
 				"SHORTLIST"=>Array(
 				"PROFILECHECKSUM",
@@ -202,7 +208,8 @@ class InboxMobileAppV2
 				"ProfilePic235Url",
 				"ProfilePic450Url",
 				"userloginstatus",
-				"VERIFICATION_SEAL"
+				"VERIFICATION_SEAL",
+                                "VERIFICATION_STATUS"
 				),
 				"NOT_INTERESTED"=>Array(
 				"PROFILECHECKSUM",
@@ -224,7 +231,8 @@ class InboxMobileAppV2
 				"userloginstatus",
 				"ProfilePic120Url",
 				"MSTATUS",
-				"VERIFICATION_SEAL"
+				"VERIFICATION_SEAL",
+                                "VERIFICATION_STATUS"
 				),
                                 "NOT_INTERESTED_BY_ME"=>Array(
                                 "PROFILECHECKSUM",
@@ -245,7 +253,8 @@ class InboxMobileAppV2
                                 "userloginstatus",
                                 "ProfilePic120Url",
 								"MSTATUS",
-								"VERIFICATION_SEAL"
+								"VERIFICATION_SEAL",
+                                                                "VERIFICATION_STATUS"
                                 ),
 
 				"PHOTO_REQUEST_RECEIVED"=>Array(
@@ -267,7 +276,8 @@ class InboxMobileAppV2
                                 "userloginstatus",
                                 "ProfilePic120Url",
 								"MSTATUS",
-								"VERIFICATION_SEAL"),
+								"VERIFICATION_SEAL",
+                                                                "VERIFICATION_STATUS"),
 				"PHOTO_REQUEST_SENT"=>Array(
                                 "PROFILECHECKSUM",
                                 "USERNAME",
@@ -287,7 +297,8 @@ class InboxMobileAppV2
                                 "userloginstatus",
                                 "ProfilePic120Url",
 								"MSTATUS",
-								"VERIFICATION_SEAL"),
+								"VERIFICATION_SEAL",
+                                                                "VERIFICATION_STATUS"),
 				"HOROSCOPE_REQUEST_RECEIVED"=>Array(
                                 "PROFILECHECKSUM",
                                 "USERNAME",
@@ -307,7 +318,8 @@ class InboxMobileAppV2
                                 "userloginstatus",
                                 "ProfilePic120Url",
 								"MSTATUS",
-								"VERIFICATION_SEAL"),
+								"VERIFICATION_SEAL",
+                                                                "VERIFICATION_STATUS"),
 				"HOROSCOPE_REQUEST_SENT"=>Array(
                                 "PROFILECHECKSUM",
                                 "USERNAME",
@@ -327,7 +339,8 @@ class InboxMobileAppV2
                                 "userloginstatus",
                                 "ProfilePic120Url",
 								"MSTATUS",
-								"VERIFICATION_SEAL"),
+								"VERIFICATION_SEAL",
+                                                                "VERIFICATION_STATUS"),
 				"INTRO_CALLS"=>Array(
                                 "PROFILECHECKSUM",
                                 "USERNAME",
@@ -350,7 +363,8 @@ class InboxMobileAppV2
 								"VERIFICATION_SEAL",
 								"CALL_STATUS",
 								"CALL_COMMENTS",
-								"LAST_CALL_DATE"),
+								"LAST_CALL_DATE",
+                                                                "VERIFICATION_STATUS"),
 				"INTRO_CALLS_COMPLETE"=>Array(
                                 "PROFILECHECKSUM",
                                 "USERNAME",
@@ -373,7 +387,8 @@ class InboxMobileAppV2
 								"VERIFICATION_SEAL",
 								"CALL_STATUS",
 								"CALL_COMMENTS",
-								"LAST_CALL_DATE"),
+								"LAST_CALL_DATE",
+                                                                "VERIFICATION_STATUS"),
 				"CONTACTS_VIEWED"=>Array(
                                 "PROFILECHECKSUM",
                                 "USERNAME",
@@ -393,7 +408,8 @@ class InboxMobileAppV2
                                 "userloginstatus",
                                 "ProfilePic120Url",
 								"MSTATUS",
-								"VERIFICATION_SEAL"),
+								"VERIFICATION_SEAL",
+                                                                "VERIFICATION_STATUS"),
 				"PEOPLE_WHO_VIEWED_MY_CONTACTS"=>Array(
 				"PROFILECHECKSUM",
 				"USERNAME",
@@ -414,7 +430,8 @@ class InboxMobileAppV2
 				"userloginstatus",
 				"ProfilePic120Url",
 				"MSTATUS",
-				"VERIFICATION_SEAL"
+				"VERIFICATION_SEAL",
+                                "VERIFICATION_STATUS"
 				),
 	"FILTERED_INTEREST" => Array(
             	"PROFILECHECKSUM",
@@ -437,7 +454,8 @@ class InboxMobileAppV2
 				"ProfilePic120Url",
 				"userloginstatus",
 				"MSTATUS",
-				"VERIFICATION_SEAL"),
+				"VERIFICATION_SEAL",
+                                "VERIFICATION_STATUS"),
 	/*"MY_MESSAGE" => Array( //wrong, please use below
 				"PROFILECHECKSUM",
 				"USERNAME",
@@ -469,7 +487,8 @@ class InboxMobileAppV2
 				"userloginstatus",
 				"ProfilePic120Url",
 				"MSTATUS",
-				"VERIFICATION_SEAL"),
+				"VERIFICATION_SEAL",
+                                "VERIFICATION_STATUS"),
 	"MY_MESSAGE" => Array(
 				"PROFILECHECKSUM",
 				"USERNAME",
@@ -496,7 +515,8 @@ class InboxMobileAppV2
 				"ProfilePic120Url",
 				"ProfilePic235Url",
 				"MSTATUS",
-				"VERIFICATION_SEAL"),
+				"VERIFICATION_SEAL",
+                                "VERIFICATION_STATUS"),
 	"MY_MESSAGE_RECEIVED" => Array(
 					"PROFILECHECKSUM",
 					"USERNAME",
@@ -508,7 +528,8 @@ class InboxMobileAppV2
 					"ProfilePic120Url",
 					"ProfilePic235Url",
 					"MSTATUS",
-					"VERIFICATION_SEAL"),
+					"VERIFICATION_SEAL",
+                                        "VERIFICATION_STATUS"),
 			"INTEREST_RECEIVED_FILTER"=>Array(
 				"PROFILECHECKSUM",
 				"USERNAME",
@@ -531,7 +552,8 @@ class InboxMobileAppV2
 				"ProfilePic120Url",
 				"ProfilePic450Url",
 				"MSTATUS",
-				"VERIFICATION_SEAL"
+				"VERIFICATION_SEAL",
+                                "VERIFICATION_STATUS"
 				)
 			);
 		self::$informationTypeFields     = Array(
@@ -611,7 +633,8 @@ class InboxMobileAppV2
                                  $timeTextAppend = 'on '.$timeTextAppend;
                                }
                                if($infoKey=="NOT_INTERESTED" || $infoKey=="NOT_INTERESTED_BY_ME"){
-					$profile[$count]["timetext"] = $timeText;
+																	$profile[$count]["timetext"] = $timeText;
+
                                }else if($infoKey=="MATCH_ALERT"){
                                   $profile[$count]["timetext"] = $this->getDisplaylayerText($tupleObj->getGENDER(),$infoKey,$tupleObj->getCOUNT())." ".$timeTextAppend;
                                }else if($infoKey == "INTEREST_SENT"){
@@ -629,7 +652,22 @@ class InboxMobileAppV2
                                 //echo'<pre>';print_r($infoKey);die;
 				
 				$profile[$count]['edu_level_new']=$tupleObj->getedu_level_new();
-			
+				// Interest viewed required only in case of interest sent
+				if($infoKey=="INTEREST_SENT")
+				{
+							if($profile[$count]["seen"]!=null && $profile[$count]["seen"]=="Y")
+							{
+								$eoiViewedText = "Interest viewed".($profile[$count]["interest_viewed_date"]!=null?" on ".$profile[$count]["interest_viewed_date"]:"");
+								$profile[$count]["interest_viewed_date"] = $eoiViewedText;
+								if(!MobileCommon::isDesktop())
+									$profile[$count]["timetext"] = $profile[$count]["interest_viewed_date"];
+							}
+							else
+							{
+								$profile[$count]["seen"]=null; // We are not required to show New so setting it to blank
+								$profile[$count]["interest_viewed_date"] = null;
+							}
+				}
 				/** to make consistent with search**/
 				$profile[$count]['filter_reason'] = "";
 				if($infoKey == "INTRO_CALLS" || $infoKey == "INTRO_CALLS_COMPLETE")
@@ -647,7 +685,7 @@ class InboxMobileAppV2
                                 $profileObject=$tupleObj->getprofileObject();
         if(MobileCommon::isDesktop())
 				{
-					  if($infoKey=="INTEREST_RECEIVED")
+					  if($infoKey=="INTEREST_RECEIVED" || $infoKey=="FILTERED_INTEREST")
 							$profile[$count]['message'] =$this->getPersonalizedMessageOnly($profileObject,$profile[$count]['message']);
 						elseif($infoKey=="INTEREST_SENT")
 							$profile[$count]['message'] = $this->getPersonalizedMessageOnly(LoggedInProfile::getInstance('newjs_master'),$profile[$count]['sent_message']);
@@ -702,15 +740,7 @@ class InboxMobileAppV2
 						$page['CC_LISTING'] = $infoKey;
 						$page['isBookmarked'] = $tupleObj->getIS_BOOKMARKED();
 						$page["tracking"] = $this->getTracking($infoKey);
-						// Seen is set to null as not required for any listing expect INTEREST SENT in JSPC
-            if($infoKey=="INTEREST_SENT")
-            {
-									if($profile[$count]["seen"]!=null && $profile[$count]["seen"]=="Y")
-									{
-										$eoiViewedText = "Interest viewed".($profile[$count]["interest_viewed_date"]!=null?" on ".$profile[$count]["interest_viewed_date"]:"");
-										$profile[$count]["interest_viewed_date"] = $eoiViewedText;
-									}
-						}
+						
 						if($infoKey == "INTEREST_SENT")
 							$page["count"] = $tupleObj->COUNT;
 						if($infoKey == "NOT_INTERESTED_BY_ME" || $infoKey == "PEOPLE_WHO_VIEWED_MY_CONTACTS" || $infoKey=="CONTACTS_VIEWED" || $infoKey=="NOT_INTERESTED")

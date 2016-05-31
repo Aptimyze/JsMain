@@ -47,6 +47,7 @@ function onPhoneVerifyBack(){
 
 <input type="hidden" id="fromReg" value="~$apiData.phoneDetails.fromReg`">
 <input type="hidden" id="groupname" value="~$apiData.phoneDetails.groupname`">
+<input type="hidden" id="sourcename" value="~$sourcename`">
 <input type="hidden" id="mainPhoneNumber" value="~$apiData.phoneDetails.PHONE1`">
         <input type="hidden" id="isdNumber" value="~$apiData.phoneDetails.ISD`">
             <div class="fullwid rel_c1 outerdiv" id="mainScreen">
@@ -159,6 +160,9 @@ function onPhoneVerifyBack(){
             <div id="mydiv" class='otplayer' style="display:none;">
                 <img src="/images/jsms/commonImg/loader.gif" class="ajax-loader"/>
             </div>
+~if $sourcename && $groupname`
+~include_partial("global/gtm",['groupname'=>$groupname,'sourcename'=>$sourcename])`
+~/if`
 ~if $pixelcode`
 ~$pixelcode|decodevar`
 ~/if`

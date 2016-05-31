@@ -19,7 +19,7 @@ class VariableDiscountHandler
 		$this->cutOffDate		=date("Y-m-d",strtotime("$this->todayDate - $this->cutOffDurationInMonth month"));
                 $this->twoMonthOldDate  	=date("Y-m-d",strtotime("$this->todayDate - 2 month"));
 		$this->lastWeekDate		=date("Y-m-d",strtotime("$this->todayDate - 6 days"));     
-		$this->discountFieldMapping 	=array("3"=>"3_DISCOUNT","6"=>"6_DISCOUNT","12"=>"12_DISCOUNT","L"=>"L_DISCOUNT");
+		$this->discountFieldMapping 	=array("2"=>"2_DISCOUNT","3"=>"3_DISCOUNT","6"=>"6_DISCOUNT","12"=>"12_DISCOUNT","L"=>"L_DISCOUNT");
 
 		// New table structure is created as required
 		$this->createNewTableStructure();
@@ -338,37 +338,14 @@ class VariableDiscountHandler
 	// function to create table structure (tables:billing.VARIABLE_DISCOUNT_POOL_TECH, billing.VARIABLE_DISCOUNT_OFFER_DURATION)
 	public function createNewTableStructure()
 	{
-		$fieldNameArr1 	=array();
-		$fieldNameArr2 	=array();
-		$extraFields 	="`PROFILEID` int(11) NOT NULL DEFAULT 0,`SERVICE` char(6) NOT NULL DEFAULT ''";
-		foreach($this->discountFieldMapping as $duration=>$fieldName){
-			$fieldNameArr1[] ="`".$fieldName."` tinyint(3) DEFAULT 0";
-			$fieldNameArr2[] ="`".$duration."` tinyint(3) DEFAULT 0";
-		}
-		$fieldNameStr1 =implode(",", $fieldNameArr1);
-		$fieldNameStr2 =implode(",", $fieldNameArr2);	
-
                 // Truncate table billing.VARIABLE_DISCOUNT_POOL_TECH
                 $sql ="TRUNCATE TABLE billing.VARIABLE_DISCOUNT_POOL_TECH";
                 mysql_query_decide($sql,$this->myDb) or die($sql.mysql_error($this->myDb));
 
-		// Drop and Create table billing.VARIABLE_DISCOUNT_DURATION_POOL_TECH
-              	$sql ="DROP TABLE IF EXISTS billing.VARIABLE_DISCOUNT_DURATION_POOL_TECH";
+                // Truncate table billing.VARIABLE_DISCOUNT_POOL_TECH
+                $sql ="TRUNCATE TABLE billing.VARIABLE_DISCOUNT_DURATION_POOL_TECH";
                 mysql_query_decide($sql,$this->myDb) or die($sql.mysql_error($this->myDb));
 
-		$sql ="CREATE TABLE billing.`VARIABLE_DISCOUNT_DURATION_POOL_TECH` ($extraFields,$fieldNameStr1,UNIQUE KEY `PROFILEID` (`PROFILEID`,`SERVICE`)) ENGINE=InnoDB";
-		mysql_query_decide($sql,$this->myDb) or die($sql.mysql_error($this->myDb));
-
-		$vdActiveFlag =$this->isVdActive();
-		if(!$vdActiveFlag){
-			//Drop and Create table billing.VARIABLE_DISCOUNT_OFFER_DURATION
-	                $sql ="DROP TABLE IF EXISTS billing.VARIABLE_DISCOUNT_OFFER_DURATION";
-	                mysql_query_decide($sql,$this->myDb) or die($sql.mysql_error($this->myDb));
-
-	                $sql ="CREATE TABLE billing.`VARIABLE_DISCOUNT_OFFER_DURATION`($extraFields,$fieldNameStr2,UNIQUE KEY `PROFILEID` (`PROFILEID`,`SERVICE`)) ENGINE=InnoDB";
-	                mysql_query_decide($sql,$this->myDb) or die($sql.mysql_error($this->myDb));
-		}
-		unset($vdActiveFlag);
 	}
 
 }

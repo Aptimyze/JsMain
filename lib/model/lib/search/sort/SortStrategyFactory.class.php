@@ -19,6 +19,7 @@ class SortStrategyFactory
 	*/
 	static public function getSorterStrategy($SearchParamtersObj,$loggedInProfileObj='',$sortLogic='')
 	{
+                
 		$slogic = $SearchParamtersObj->getSORT_LOGIC();
 		if($sortLogic == SearchSortTypesEnums::featureSortFlag)
 			return new SortByFeatureProfileStrategy($SearchParamtersObj,$loggedInProfileObj);
@@ -36,6 +37,8 @@ class SortStrategyFactory
 			return new SortByMatchAlert($SearchParamtersObj,$loggedInProfileObj);
 		if($slogic == SearchSortTypesEnums::kundliAlertFlag) 
 			return new SortByKundliAlert($SearchParamtersObj,$loggedInProfileObj);
+                if($slogic == SearchSortTypesEnums::viewAttemptFlag) 
+			return new SortByViewAttempt($SearchParamtersObj,$loggedInProfileObj);
                 return new SortByDateStrategy($SearchParamtersObj,$loggedInProfileObj);
 	}
 }

@@ -104,6 +104,7 @@ class SearchParamters
 	protected $HVERIFY_ACTIVATED_DT;	
 	protected $showFilteredProfiles;	
         protected $alertsDateConditionArr;
+        protected $attemptConditionArr;
         protected $STATE_SELECTED;
         protected $CITY_RES_SELECTED;
         protected $CITY_INDIA_SELECTED;
@@ -202,9 +203,14 @@ class SearchParamters
         public function getHAVEPHOTO() { return $this->HAVEPHOTO; }
 	public function setMANGLIK($MANGLIK) 
 	{ 
+                // append Dont know to search string if 'not manglik' is selected. Exclude cluster search by APPLY_ONLY_CLUSTER enum.
+                if(strstr($MANGLIK,"N") && !strstr($MANGLIK,"D") && !strstr($MANGLIK,SearchTypesEnums::APPLY_ONLY_CLUSTER)){
+                        $MANGLIK .= ',D';
+                }
 		$validInput = SearchInputValidation::validateInput("MANGLIK",$MANGLIK);
-                if($validInput)
+                if($validInput){
 			$this->MANGLIK = $MANGLIK; 
+                }
 	}
 	public function getMANGLIK() { return $this->MANGLIK; }
 	public function setMSTATUS($MSTATUS) 
@@ -1037,5 +1043,7 @@ class SearchParamters
 	public function setAlertsDateConditionArr($x){$this->alertsDateConditionArr = $x;}
         public function setKUNDLI_DATE_CLUSTER($x){$this->KUNDLI_DATE_CLUSTER=$x;}
         public function getKUNDLI_DATE_CLUSTER(){return $this->KUNDLI_DATE_CLUSTER;}
+        public function getAttemptConditionArr(){return $this->attemptConditionArr;}
+	public function setAttemptConditionArr($x){$this->attemptConditionArr = $x;}
 	/* Getter and Setter public functions*/
 }

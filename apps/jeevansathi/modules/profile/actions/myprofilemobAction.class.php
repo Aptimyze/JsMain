@@ -20,6 +20,11 @@ class myprofilemobAction extends sfAction
 		//Testing Variables:
 		$request->setParameter("sectionFlag","all");
 		
+                if($request->getParameter("fromPhone") == "1"){
+                  $this->fromPhoneVerify = $request->getParameter("fromPhone");  
+                  $this->sourcename = $request->getParameter("sourcename");
+                  
+                }
 		
 		//Contains login credentials
 		$this->loginData=$request->getAttribute("loginData");

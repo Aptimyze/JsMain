@@ -462,6 +462,8 @@ class SearchDisplay
                                         $this->finalResultsArray[$pid]["paidLabel"] = mainMem::ERISHTA_LABEL;
                                 else if(CommonFunction::isJsExclusiveMember($subscr))
                                         $this->finalResultsArray[$pid]["paidLabel"] = mainMem::JSEXCLUSIVE_LABEL;
+                               	else if(CommonFunction::isEadvantageMember($subscr))
+                                        $this->finalResultsArray[$pid]["paidLabel"] = mainMem::EADVANTAGE_LABEL;
                                 else
                                         $this->finalResultsArray[$pid]["paidLabel"] = "";
                                 
