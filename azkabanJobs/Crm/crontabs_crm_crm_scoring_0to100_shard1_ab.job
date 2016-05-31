@@ -1,2 +1,0 @@
-type=command
-command=${php5} ${docRoot}/crontabs/crm/crm_scoring_0to100_shard1_ab.php

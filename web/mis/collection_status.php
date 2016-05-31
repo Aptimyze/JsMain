@@ -75,7 +75,8 @@ if(isset($data))
 
 		$billOrdDevObj = new billing_ORDERS_DEVICE('newjs_slave');
 		$billOrdObj = new BILLING_ORDERS('newjs_slave');
-		$orderId = $billOrdDevObj->getPaymentSourceFromBillidStr(implode(",",$billidArr));
+		if(is_array($billidArr))
+			$orderId = $billOrdDevObj->getPaymentSourceFromBillidStr(implode(",",$billidArr));
 
 		foreach($orderId as $temp=>$temp2){
 			$orderidArr[] = $temp2['ID'];
@@ -353,12 +354,14 @@ if(isset($data))
 
 		$billOrdDevObj = new billing_ORDERS_DEVICE('newjs_slave');
 		$billOrdObj = new BILLING_ORDERS('newjs_slave');
-		$orderId = $billOrdDevObj->getPaymentSourceFromBillidStr(implode(",",$billidArr));
+		if(is_array($billidArr))
+			$orderId = $billOrdDevObj->getPaymentSourceFromBillidStr(implode(",",$billidArr));
 
 		foreach($orderId as $temp=>$temp2){
 			$orderidArr[] = $temp2['ID'];
 		}
-		$ordersArr = $billOrdObj->getOrderDetailsForIdStr(implode(",",$orderidArr));
+		if(is_array($orderidArr))
+			$ordersArr = $billOrdObj->getOrderDetailsForIdStr(implode(",",$orderidArr));
 		
 		foreach($arr as $key=>&$val){
 			foreach($orderId as $k=>$v){

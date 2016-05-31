@@ -28,13 +28,14 @@ class Dialer
 		$method =$processObj->getMethod();
                 if($method=='IN_DIALER_ELIGIBILITY'){
 			$indialerTempPool =new incentive_IN_DIALER_TEMP_POOL('newjs_slave');
+			$indialerTempPoolRemove =new incentive_IN_DIALER_TEMP_POOL();
 
                         // DO NOT CALL Filter
                         $filter ='DO_NOT_CALL';
                         $profiles= $indialerTempPool->fetchDoNotCallProfiles();
                         if(count($profiles)>0){
                                 $this->dialerProfileLog($profiles,'N',$filter,'Y');
-                                $indialerTempPool->removeDoNotCallProfiles();
+                                $indialerTempPoolRemove->removeDoNotCallProfiles();
                                 unset($profiles);
                         }
                         // Negative Treatment Filter
@@ -42,7 +43,7 @@ class Dialer
                         $profiles =$indialerTempPool->fetchNegativeTreatmentProfiles();
                         if(count($profiles)>0){
                                 $this->dialerProfileLog($profiles,'N',$filter,'Y');
-                                $indialerTempPool->removeNegativeTreatmentProfiles();
+                                $indialerTempPoolRemove->removeNegativeTreatmentProfiles();
                                 unset($profiles);
                         }
                         // Pre-Allocation Filter
@@ -50,7 +51,7 @@ class Dialer
                         $profiles =$indialerTempPool->fetchPreAllocatedProfiles();
                         if(count($profiles)>0){
                                 $this->dialerProfileLog($profiles,'N',$filter,'Y');
-                                $indialerTempPool->removePreAllocatedProfiles();
+                                $indialerTempPoolRemove->removePreAllocatedProfiles();
                                 unset($profiles);
                         }
 		}	
