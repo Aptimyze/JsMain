@@ -1,2 +1,0 @@
-<?
-define('SCRIPT_END_REACHED', TRUE);

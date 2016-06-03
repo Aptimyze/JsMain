@@ -1,3 +1,0 @@
-use jsadmin;
-
-DELETE FROM `AGENT_ALLOTED` WHERE `CENTER`='North West Delhi' AND METHOD='FIELD_SALES' AND USER='aneesh.m';

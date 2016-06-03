@@ -1,6 +1,0 @@
-USE Assisted_Product;
-
-CREATE TABLE `AP_PROFILE_INFO_LOG` (
- `PROFILEID` int(11) unsigned NOT NULL,
- PRIMARY KEY (`PROFILEID`)
-)

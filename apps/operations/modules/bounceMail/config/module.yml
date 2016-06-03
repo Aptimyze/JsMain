@@ -1,4 +1,0 @@
-all:
-  BounceMailDetection:
-    enable_login:  off
-    

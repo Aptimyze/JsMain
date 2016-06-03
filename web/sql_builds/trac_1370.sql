@@ -1,6 +1,0 @@
-
-use newjs;
-CREATE TABLE `TEMP_SORT_PROFILEID` (
- `PROFILEID` mediumint(9) NOT NULL,
- PRIMARY KEY (`PROFILEID`)
-)

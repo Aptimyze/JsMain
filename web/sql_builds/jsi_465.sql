@@ -1,9 +1,0 @@
-INSERT INTO  `ContactCenterAPP_CONFIG` 
-VALUES ( 16,  'CONTACTS_VIEWED', NULL , 10,  'INBOX_EOI_APP', NULL ,  'Y',  'N', NULL , NULL ,  'Phonebook', NULL , NULL ,  'ACCEPT|DECLINE',  'stype=PCV' )
-
-CREATE TABLE  `PHONEBOOK` (
- `VIEWER` INT NOT NULL ,
- `DATE` DATETIME NOT NULL
-) COMMENT =  'Phonebook Tracking';
-
-

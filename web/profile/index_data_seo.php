@@ -1,5 +1,0 @@
-<?php
-$Title="Matrimonials - Matrimonial - Matrimony - India Matrimonials - Matrimonial Services – Online Matrimonials - Indian Marriage - Matrimony Matchmaking services";
-$Description="Matrimonials - Matrimonial - Matrimony. leading matrimony site for Indian & NRI matrimonial Profiles. Add Free Matrimonial Profile – Jeevansathi.com ! Find suitable Indian and NRI brides and grooms. Ready for Marriage ? Search matrimonials, matrimony profiles, bride and groom from our online matrimonial and matchmaking services.";
-$Keywords="Jeevansathi.com, matrimony, matrimonial, matrimonials, matrimony services, online matrimonials, Indian marriage, match making, matchmaking, matchmaker, match maker, marriage bureau , matchmaking services, matrimonial profiles, bride, groom, matrimony classified, Indian matrimonials, matrimonials for India, marriage website, partner search, matrimonials for indians, free matrimonial site, hindu matrimonial, muslim matrimonials, sikh, christians, marriage, weddings, indian matrimonial site, gujarati, marathi, punjabi, rajasthani, sindhi, bengali, kannada, malayalee, tamil, telugu, brahmin, kayastha, jain, marwari";
-?>

@@ -1,8 +1,0 @@
-all:
-  Screening:
-    enable_login:  on
-    LoggedInProfile:  PROFILEID,GENDER,EMAIL,USERNAME,SUBSCRIPTION,ACTIVATED,RELIGION
-  Notduplicate:
-    enable_login:  on
-    LoggedInProfile:  PROFILEID,GENDER
-

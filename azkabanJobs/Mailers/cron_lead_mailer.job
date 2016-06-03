@@ -1,4 +1,0 @@
-type=command
-command=${php5} ${docRoot}/crontabs/lead_mailer_cron.php
-retries=2
-retry.backoff=10000

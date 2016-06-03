@@ -1,2 +1,0 @@
-use incentive;
-ALTER TABLE incentive.PRE_ALLOCATION_LOG ADD SCORE int(3), ADD LAST_LOGIN_DT date DEFAULT '0000-00-00';

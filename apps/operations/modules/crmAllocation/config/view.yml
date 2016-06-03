@@ -1,5 +1,0 @@
-getExclusiveMembersSuccess:
-  metas:
-    title:        Exclusive Customer Service Onboarding
-  stylesheets:    [jspc/crm/loader_css]
-  javascripts:    [jspc/crm/exclusiveMemAllocation_js@bottom,jspc/crm/loader_js@bottom]                         

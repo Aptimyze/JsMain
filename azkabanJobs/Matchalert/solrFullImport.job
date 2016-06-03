@@ -1,2 +1,0 @@
-type=command
-command= curl ${matchAlertServer}/solr/dataimport?command=full-import

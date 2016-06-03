@@ -1,6 +1,0 @@
-all:
-  host: "<?php echo JsConstants::$memcache['HOST']?>"
-  port: "<?php echo JsConstants::$memcache['PORT']?>"
-  prefix: ~
-  lifetime: 3600
-  persistent: true

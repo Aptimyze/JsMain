@@ -1,3 +1,0 @@
-use jeevansathi_mailer;
-
-INSERT IGNORE INTO `LINK_MAILERS` (`APP_SCREEN_ID`,`LINK_NAME` ,`LINK_URL`,`OTHER_GET_PARAMS`,`REQUIRED_AUTOLOGIN`,`OUTER_LINK`)   VALUES ('a12', 'PROFILE_SHARE_LINK', 'profile/viewprofile.php', '', 'N', 'N');

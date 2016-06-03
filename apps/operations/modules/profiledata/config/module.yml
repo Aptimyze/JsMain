@@ -1,7 +1,0 @@
-all:
-  lead_banner: 1
-  show_mobile: 0
-  show_age: 0
-  show_mtongue: 0
-  index:
-    LoggedInProfile:  PROFILEID,GENDER,EMAIL,IPADD,PHONE_MOB,PHONE_RES,CONVERT_TZ(ENTRY_DT,'EST','IST') as ENTRY_DT,STD,ISD,CITY_RES,COUNTRY_RES,CONTACT

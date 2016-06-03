@@ -1,4 +1,0 @@
-prod:
-   enabled: on
-   level: err
-   rotate: on

@@ -1,2 +1,0 @@
-type=command
-command=${php5} ${docRoot}/symfony notification:schedulePushNotificationsKey CONTACTS_VIEWED_BY 1 0

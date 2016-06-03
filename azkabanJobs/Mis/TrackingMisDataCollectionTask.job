@@ -1,4 +1,0 @@
-type=command
-command=${php5} ${docRoot}/symfony tracking:TrackingMisDataCollection
-retries=2
-retry.backoff=500000

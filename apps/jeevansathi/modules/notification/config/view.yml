@@ -1,5 +1,0 @@
-notifySuccess:
-    metas:
-        title:  Jeevansathi Notification
-    javascripts: []
-    layout: notificationLayout

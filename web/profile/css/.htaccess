@@ -1,9 +1,0 @@
-<IfModule mod_rewrite.c>
-RewriteEngine on
-RewriteOptions inherit
-RewriteRule ^comm_style.css$ comm_style.php [T=application/x-httpd-php]
-RewriteRule ^homestyle.css$ homestyle.php [T=application/x-httpd-php]
-RewriteRule ^profileeditstyle.css$ profileeditstyle.php [T=application/x-httpd-php]
-RewriteRule ^searchstyle.css$ searchstyle.php [T=application/x-httpd-php]
-RewriteRule ^profilestyle.css$ profilestyle.php [T=application/x-httpd-php]
-</IfModule>

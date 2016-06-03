@@ -1,3 +1,0 @@
-type=command
-command=${php5} ${docRoot}/crontabs/ap_service_cron.php
-

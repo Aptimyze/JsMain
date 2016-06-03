@@ -1,3 +1,0 @@
-#!/bin/sh
-/usr/local/php/bin/php /var/www/html/sugarcrm/custom/crons/housekeeping.php
-/usr/local/php/bin/php -q /var/www/html/sugarcrm/custom/crons/sugarcrm_ltf_csv.php 

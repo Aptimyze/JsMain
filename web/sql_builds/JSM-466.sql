@@ -1,3 +1,0 @@
-use search;
-ALTER TABLE `LATEST_SEARCHQUERY` DROP INDEX `ProfileAndChannel` ,
-ADD UNIQUE `ProfileAndChannel` ( `PROFILEID` , `SEARCH_CHANNEL` , `SEARCH_TYPE` ) 

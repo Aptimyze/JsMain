@@ -1,4 +1,0 @@
-type=command
-command=${php5} ${docRoot}/crontabs/featured_profile_list_update_score_cron.php
-retries=2
-retry.backoff=1800000

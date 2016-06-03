@@ -1,3 +1,0 @@
-type=command
-dependencies=crontabs_swap_jprofile
-command=${php5} ${docRoot}/crontabs/swap_jpartner.php

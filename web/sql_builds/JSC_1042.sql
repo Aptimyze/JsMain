@@ -1,3 +1,0 @@
-use MOBILE_API;
-
-INSERT INTO MOBILE_API.`APP_NOTIFICATIONS` VALUES (33, 'EOI_REMINDER', '{MESSAGE_RECEIVED}', 1, 'ALL', 'Y', 'I', 3, 0, 'SINGLE', 'Y', 604800, 'A', 'A', 'Interest Reminder Received', 'D');

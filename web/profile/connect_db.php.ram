@@ -1,3 +1,0 @@
-<?php
-	include("/usr/local/scripts/connect_db.php");
-?>

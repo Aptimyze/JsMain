@@ -1,9 +1,0 @@
-dev:
-  .settings:
-
-    web_debug:              on
-    cache:                  off
-    no_script_name:         off
-    etag:                   off
-# Output escaping settings
-    escaping_strategy:      false

@@ -1,7 +1,0 @@
-autoload:
-  smarty:
-    name:           smarty
-    path:           <?php echo sfConfig::get('sf_lib_dir') . '/vendor/smarty' . "\n";?>
-    extension:      php
-    recursive:      on
-

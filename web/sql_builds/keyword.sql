@@ -1,2 +1,0 @@
-use MIS;
-ALTER TABLE  `KEYWORD_PROFILE_REPORT` ADD  `Sec_Source` VARCHAR( 20 ) AFTER  `Source` ;

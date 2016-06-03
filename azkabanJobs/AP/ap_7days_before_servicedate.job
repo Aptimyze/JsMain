@@ -1,3 +1,0 @@
-type=command
-command=${php5} ${docRoot}/crontabs/ap_7days_before_servicedate.php
-

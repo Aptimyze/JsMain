@@ -1,3 +1,0 @@
-type=command
-dependencies=PhotoArchiveTask_20_5_24_PICTURE
-command=${php5} ${docRoot}/symfony cron:PhotoArchive 20 6 24 PICTURE

@@ -1,7 +1,0 @@
-all:
-  index:
-    enable_login: off
-    enable_google_analytics:  on
-  show:
-    enable_login: off
-    enable_google_analytics:  on

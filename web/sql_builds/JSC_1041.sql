@@ -1,5 +1,0 @@
-use MOBILE_API;
-
-INSERT INTO `APP_NOTIFICATIONS` VALUES (30, 'FILTERED_EOI', 'These profiles have sent you an interest but landed in your filtered folder. You may want to consider them and accept/decline their interests.', 12, 'ALL', 'Y', 'SAT', '15', 50, 'SINGLE', 'Y', 604800, 'A', 'A', 'Filtered Interests', 'D');
-INSERT INTO `APP_NOTIFICATIONS` VALUES (31, 'FILTERED_EOI', 'These profiles have sent you an interest but landed in your filtered folder. You may want to consider them and accept/decline their interests.', 12, 'ALL', 'Y', 'SAT', '15', 50, 'DOUBLE', 'Y', 604800, 'A', 'A', 'Filtered Interests', 'D');
-INSERT INTO `APP_NOTIFICATIONS` VALUES (32, 'FILTERED_EOI', 'These profiles have sent you an interest but landed in your filtered folder. You may want to consider them and accept/decline their interests.', 12, 'ALL', 'Y', 'SAT', '15', 50, 'MUL', 'Y', 604800, 'A', 'A', 'Filtered Interests', 'D');

@@ -1,6 +1,0 @@
-use MIS;
-INSERT INTO MIS.SOURCE (SourceID,SourceName,GROUPNAME,CPC,ACTIVE,FORCE_EMAIL,NOREG,AURL,IURL) VALUES ('login_l','Login Layer','jeevansathi','','Y','','','','');
-INSERT INTO MIS.SOURCE (SourceID,SourceName,GROUPNAME,CPC,ACTIVE,FORCE_EMAIL,NOREG,AURL,IURL) VALUES ('login_p','Login Page','jeevansathi','','Y','','','','');
-INSERT INTO MIS.SOURCE (SourceID,SourceName,GROUPNAME,CPC,ACTIVE,FORCE_EMAIL,NOREG,AURL,IURL) VALUES ('gnb','Register button on GNB','jeevansathi','','Y','','','','');
-INSERT INTO MIS.SOURCE (SourceID,SourceName,GROUPNAME,CPC,ACTIVE,FORCE_EMAIL,NOREG,AURL,IURL) VALUES ('home','home page','jeevansathi','','Y','','','','');
-INSERT INTO MIS.SOURCE (SourceID,SourceName,GROUPNAME,CPC,ACTIVE,FORCE_EMAIL,NOREG,AURL,IURL) VALUES ('pd_login','view profile','jeevansathi','','Y','','','','');

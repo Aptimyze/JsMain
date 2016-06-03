@@ -1,1 +1,0 @@
-ifdown eth0

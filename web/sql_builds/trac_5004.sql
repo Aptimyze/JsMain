@@ -1,9 +1,0 @@
-USE incentive;
-
-INSERT INTO incentive.FIELD_SALES_CITY VALUES ('', 'PH00', 'Chandigarh');
-
-CREATE TABLE `FIELD_SALES_WIDGET` (
-  `PROFILEID` int(11) NOT NULL,
-  `ENTRY_DT` datetime NOT NULL,
-  PRIMARY KEY (`PROFILEID`)
-);

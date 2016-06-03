@@ -1,6 +1,0 @@
-all:
-  registrationIdInsertV1:
-    enable_login:  off
-    
-  getNotificationV1:
-    enable_login:  off

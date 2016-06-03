@@ -1,5 +1,0 @@
-<IfModule mod_rewrite.c>
-RewriteEngine on
-RewriteOptions inherit
-RewriteRule ^(.*)\/$ ../profile/resource_show.php?CatId=$1
-</IfModule>

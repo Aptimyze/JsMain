@@ -1,1 +1,0 @@
-UPDATE  MIS.`MIS_MAINPAGE` SET  `NAME` =  'Tickets and Sales distribution - Gender, Posted By, Currency, City, Country-wise, Community-wise' WHERE  `ID` =  '36';

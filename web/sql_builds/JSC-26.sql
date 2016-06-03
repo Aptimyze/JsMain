@@ -1,1 +1,0 @@
-INSERT INTO  MIS.`MIS_MAINPAGE` (  `ID` ,  `NAME` ,  `MAIN_URL` ,  `JUMP_URL` ,  `PRIVILEGE` ,  `ACTIVE` ) VALUES ('',  'CPPP MIS',  '/operations.php/crmMis/cpppMis?cid=$cid',  '/operations.php/crmMis/cpppMis?cid=$cid&outside=Y',  'SLHD+SLHDO+P+MG',  'Y');

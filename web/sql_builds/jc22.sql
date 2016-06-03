@@ -1,3 +1,0 @@
-use billing;
-
-ALTER TABLE  `VARIABLE_DISCOUNT` ADD  `SENT_MAIL` ENUM(  'Y',  'N' ) DEFAULT  'N' NOT NULL ;

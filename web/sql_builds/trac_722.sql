@@ -1,3 +1,0 @@
-use newjs;
-
-ALTER TABLE  `JPROFILE` ADD INDEX (  `CASTE` ,  `MTONGUE` );

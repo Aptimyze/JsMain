@@ -1,5 +1,0 @@
-use matchalerts;
-ALTER TABLE `LOG_TEMP` ADD `LOGICLEVEL` SMALLINT( 2 ) NOT NULL ;
-ALTER TABLE `LOG` ADD `LOGICLEVEL` SMALLINT( 2 ) NOT NULL ;
-ALTER TABLE `LOG_COPY` ADD `LOGICLEVEL` SMALLINT( 2 ) NOT NULL ;
-/* also query 2 need to be run for LOG merge tables in live */

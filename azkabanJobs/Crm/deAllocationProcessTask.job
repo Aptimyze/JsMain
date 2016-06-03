@@ -1,3 +1,0 @@
-type=command
-dependencies=crontabs_crm_checkPaidDeallocationDate
-command=${php5} ${docRoot}/symfony deAllocation:deAllocationProcess

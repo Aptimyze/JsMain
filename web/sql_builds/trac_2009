@@ -1,5 +1,0 @@
-use newjs;
-CREATE TABLE  `PrivacySettingLayer` (
- `PROFILEID` INT( 11 ) NOT NULL ,
- `DATE` DATE NOT NULL
-);

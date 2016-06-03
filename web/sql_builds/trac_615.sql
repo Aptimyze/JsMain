@@ -1,7 +1,0 @@
-use billing;
-
-update SERVICES SET NAME='JustPay-Offer',PRICE_RS='271.08',PRICE_RS_TAX='299',PRICE_DOL='6' where SERVICEID='P1W';
-
-update SERVICES SET NAME='JustPay-Special Offer',PRICE_RS='452.4',PRICE_RS_TAX='499',PRICE_DOL='10' where SERVICEID='P2W';
-
-update COMPONENTS SET DURATION='0.07' where COMPID IN('F1W','F2W');

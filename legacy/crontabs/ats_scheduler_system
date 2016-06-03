@@ -1,6 +1,0 @@
-#!/bin/sh
-basedir=$(dirname $0)
-/usr/local/php/bin/php -q $basedir/ats_variableDiscountDailyCleanup.php
-/usr/local/php/bin/php -q $basedir/atsDiscount.php
-/usr/local/php/bin/php -q $basedir/ats_bannerDailyCleanup.php
-/usr/local/php/bin/php -q $basedir/atsDiscountMailer_Sms.php

@@ -1,7 +1,0 @@
-all:
-  getProfiles:
-    enable_login:  off
-  getContactInfo:
-    enable_login:  off
-  deleteTestingContacts:
-    enable_login:  off

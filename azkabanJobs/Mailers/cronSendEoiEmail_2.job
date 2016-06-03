@@ -1,4 +1,0 @@
-type=command
-command=${php5} ${docRoot}/symfony cron:cronSendEoiEmail
-retries=10
-retry.backoff=50000

@@ -1,1 +1,0 @@
-INSERT INTO MOBILE_API.`APP_NOTIFICATIONS` VALUES (21, 'MESSAGE_RECEIVED', '{USERNAME_OTHER_1} sent you a message {MESSAGE_RECEIVED}', 10, 'ALL', 'Y', 'I', NULL, 0, 'SINGLE', 'Y', 604800, 'A', 'A', 'New Message Received', 'O');

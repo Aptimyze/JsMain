@@ -1,7 +1,0 @@
-all:
-  index:
-    enable_login:  off
-  loginValidation:
-    enable_login:  off
-  searchByProfileidValidation:
-    enable_login:  off

@@ -1,2 +1,0 @@
-type=command
-command=${php5} -q ${docRoot}/crontabs/hourly_photo_functionality_tracking_cron.php

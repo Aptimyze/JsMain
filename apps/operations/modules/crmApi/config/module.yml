@@ -1,3 +1,0 @@
-all:
-  ApiCrmAuthenticateV1:
-    enable_login: off

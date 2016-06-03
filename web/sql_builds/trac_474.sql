@@ -1,7 +1,0 @@
-use MIS;
-CREATE TABLE `MultiContactLog` (
- `DATE` date NOT NULL,
- `CNT` int(11) NOT NULL,
-`TOTAL_EOI` INT NOT NULL,
- UNIQUE KEY `DATE` (`DATE`)
-);
