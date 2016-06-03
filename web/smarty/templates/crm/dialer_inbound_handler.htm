@@ -1,0 +1,70 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+ <head>
+<SCRIPT language="JavaScript">
+function MM_openBrWindow(theURL,winName,features)
+{
+        window.open(theURL,winName,features);
+}
+</script>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>JeevanSathi</title>
+  <link rel="stylesheet" href="../jsadmin/jeevansathi.css" type="text/css">
+  <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+ </head>
+ ~include file="head.htm"`
+ <br>
+ <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+  <table width=100% cellspacing="1" cellpadding='0' ALIGN="CENTER" >
+   <tr width=100% border=1>
+    <td width="30%" class="formhead" height="23"><font><b>Welcome :~$name`</b></font></td>
+    <td width="25%" class="formhead" align="center"><a href="mainpage.php?cid=~$cid`">Click here to go to main page</a></td>
+    <td width="6%" class="formhead" align='RIGHT' height="23">
+	<a href="logout.php?cid=~$cid`">Logout</a>
+    </td>
+    <td width="3%" class="formhead" height="23">&nbsp;
+    </td>
+   </tr>
+  </table>
+  <table width=100% align="CENTER" >
+   <tr align="CENTER">
+    <td class="formhead" colspan="100%" height="23">
+     <b>Multiple Profiles</b>
+    </td>
+   </tr>
+   <tr align="CENTER">
+    <td class="label" width=5% height="20"><b>S.No.</b></td>      
+    <td class="label" width=9% height="20"><b>User Name</b></td>
+    <td class="label" width=10% height="20"><b>Registered Date</b></td>  
+    <td class="label" width=10% height="20"><b>Paid</b></td>
+    <td class="label" width=10% height="20"><b>Last Online Date</b></td>	 
+   </tr>
+   ~if $ordersusersarr` 
+	   ~section name=index loop=$ordersusersarr`
+	     <tr class=fieldsnew>
+	     <td height="21" width="5%" align=center>~$ordersusersarr[index].SNO`.</td>
+	     <td height="21" width="9%" align="LEFT"><a href="#" onclick="MM_openBrWindow('get_history.php?GetHistory=1&USERNAME=~$ordersusersarr[index].USERNAME`&name=~$name`&cid=~$cid`','','width=800,height=600,scrollbars=yes'); return false;">~$ordersusersarr[index].USERNAME`<br>~$ordersusersarr[index].EMAIL`</a></td>
+             <td height="21" width="10%" align=center>~$ordersusersarr[index].ENTRY_DT`</td>
+	     <td height="21" width="10%" align=center>~$ordersusersarr[index].PAID`</td>	
+	     <td height="21" width="10%" align=center>~$ordersusersarr[index].LAST_LOGIN_DT`</td>
+	    </tr>
+	   ~/section`
+   ~else`
+	   	<tr><td  align="center" colspan=100% class=fieldsnew><font color="red">
+	   		There are no records to show
+	   	</font></td></tr>
+   ~/if`
+   <tr bgcolor="#fbfbfb">
+    <td colspan="100%" height="21">
+    </td>
+   </tr>
+   <tr>
+    <td colspan="100%" height="21">
+     &nbsp; 
+    </td>
+   </tr>    
+  </table>
+ <br><br>
+ ~include file="foot.htm"`
+ </body>
+</html>

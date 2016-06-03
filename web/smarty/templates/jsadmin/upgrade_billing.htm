@@ -1,0 +1,565 @@
+<html>
+~include file="head_billing.htm"`
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+        <link rel="stylesheet" href="jeevansathi1.css" type="text/css">
+        <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+	<title>Jeevansathi - Billing</title>
+	
+	<script language="javascript">
+	function verify_page()
+	{
+		if(isNaN(document.ren_frm.discount.value))
+		{
+			alert('Please enter a valid discount value');
+			document.ren_frm.discount.value = "";
+			return false;
+		}
+		if(document.ren_frm.walkin.value.length=="0")
+		{
+			alert('Please select Walkin by');
+			return false;
+		}
+		if(document.ren_frm.curtype.value.length=="0")
+		{
+			alert('Please select Currency Type');
+			return false;
+		}
+		if(document.ren_frm.service_type.value.length=="0")
+		{
+			alert('Please select Service Type');
+			return false;
+		}
+		if(document.ren_frm.duration_sel.value.length=="0")
+		{
+			alert('Please select Duration');
+			return false;
+		}
+		if(document.ren_frm.stdate.value.length=="0")
+		{
+			alert('Please select Start Service From field');
+			return false;
+		}
+		if(document.ren_frm.discount.value > "0")
+		{
+			if(document.ren_frm.discount_type1.value.length=="0")
+			{
+				alert('Please select the discount type');
+				return false;
+			}
+			if(document.ren_frm.reason.value.length=="0")
+			{
+				alert('Please fill the discount reason field');
+				return false;
+			}
+		}
+		if(document.ren_frm.curtype.value=="0")
+                        var len=3;
+                else
+                        var len=6;
+                                                                                                                             
+                var disc = document.ren_frm.discount.value;
+                var subs = document.ren_frm.total_price.value.substring(len);
+                if(parseInt(disc) > parseInt(subs))
+                {
+                        alert('Discount cannot be greater than total Service(s) amount');
+                        document.ren_frm.discount.value = 0;
+                        return false;
+                }
+	}
+	function MM_openBrWindow(theURL,winName,features)
+	{
+        	window.open(theURL,winName,features);
+	}
+	function validate_matri_serv()
+	{
+		~$myArray`
+		~$myArray_dol`
+		var total_pr;
+
+		var ser_t = document.ren_frm.service_type.value;
+
+		if(document.ren_frm.service_type.value=="M")
+		{
+			if(document.ren_frm.curtype.value=="0")
+			{
+				document.ren_frm.calculate_price.value = 'Rs ' + myArray[ser_t];
+				total_pr = myArray[ser_t];
+			}
+			else
+			{
+				document.ren_frm.calculate_price.value = '(US)$ ' + myArray_dol[ser_t];
+				total_pr = myArray_dol[ser_t];
+			}
+
+
+			document.ren_frm.duration_sel.disabled=true;
+
+			document.ren_frm.blist.checked=false;
+			document.ren_frm.horoscope.checked=false;
+			document.ren_frm.kundali.checked=false;
+			document.ren_frm.matrip.checked=false;
+			document.ren_frm.astro_compatibility.checked=false;
+	
+			document.ren_frm.blist.disabled=true;
+			document.ren_frm.horoscope.disabled=true;
+			document.ren_frm.kundali.disabled=true;
+			document.ren_frm.matrip.disabled=true;
+			document.ren_frm.astro_compatibility.disabled=true;
+		}
+		else
+		{
+			var dur_s = document.ren_frm.duration_sel.value;
+			var ser_id = ser_t + dur_s;
+
+			if(document.ren_frm.curtype.value=="0")
+			{
+				document.ren_frm.calculate_price.value = 'Rs ' + myArray[ser_id];
+				total_pr = myArray[ser_id];
+			}
+			else
+			{
+				document.ren_frm.calculate_price.value = '(US)$ ' + myArray_dol[ser_id];
+				total_pr = myArray_dol[ser_id];
+			}
+
+			document.ren_frm.duration_sel.disabled=false;
+
+			document.ren_frm.blist.disabled=false;
+                        document.ren_frm.horoscope.disabled=false;
+                        document.ren_frm.kundali.disabled=false;
+                        document.ren_frm.matrip.disabled=false;
+                        document.ren_frm.astro_compatibility.disabled=false;
+		}
+		if(document.ren_frm.service_type.value=="P")
+		{
+			if(document.ren_frm.duration_sel.value=="1")
+			{
+				document.ren_frm.blist.disabled=true;
+				document.ren_frm.horoscope.disabled=true;
+				document.ren_frm.kundali.disabled=true;
+				document.ren_frm.matrip.disabled=true;
+				document.ren_frm.astro_compatibility.disabled=true;
+			}
+			else
+			{
+				document.ren_frm.blist.disabled=false;
+				document.ren_frm.horoscope.disabled=false;
+				document.ren_frm.kundali.disabled=false;
+				document.ren_frm.matrip.disabled=false;
+				document.ren_frm.astro_compatibility.disabled=false;
+			}
+		}
+		if(document.ren_frm.curtype.value=="0")
+		{
+			if(document.ren_frm.blist.checked==true)
+			{
+				var serv_idb = document.ren_frm.blist.value + document.ren_frm.duration_sel.value;
+				document.ren_frm.bprice.value = 'Rs ' + myArray[serv_idb];
+				total_pr = parseInt(total_pr) + parseInt(myArray[serv_idb]);
+			}
+			else
+			{
+				document.ren_frm.bprice.value = "";
+			}
+			if(document.ren_frm.horoscope.checked==true)
+			{
+				var serv_idh = document.ren_frm.horoscope.value + document.ren_frm.duration_sel.value;
+				document.ren_frm.hprice.value = 'Rs ' + myArray[serv_idh];
+				total_pr = parseInt(total_pr) + parseInt(myArray[serv_idh]);
+			}
+			else
+			{
+				document.ren_frm.hprice.value = "";
+			}
+			if(document.ren_frm.kundali.checked==true)
+			{
+				var serv_idk = document.ren_frm.kundali.value + document.ren_frm.duration_sel.value;
+				document.ren_frm.kprice.value = 'Rs ' + myArray[serv_idk];
+				total_pr = parseInt(total_pr) + parseInt(myArray[serv_idk]);
+			}
+			else
+			{
+				document.ren_frm.kprice.value = "";
+			}
+			if(document.ren_frm.matrip.checked==true)
+			{
+				var serv_idm = document.ren_frm.matrip.value + document.ren_frm.duration_sel.value;
+				document.ren_frm.mprice.value = 'Rs ' + myArray[serv_idm];
+				total_pr = parseInt(total_pr) + parseInt(myArray[serv_idm]);
+			}
+			else
+			{
+				document.ren_frm.mprice.value = "";
+			}
+			if(document.ren_frm.astro_compatibility.checked==true)
+			{
+				var serv_idm = document.ren_frm.astro_compatibility.value + document.ren_frm.duration_sel.value;
+				document.ren_frm.astro_price.value = 'Rs ' + myArray[serv_idm];
+				total_pr = parseInt(total_pr) + parseInt(myArray[serv_idm]);
+			}
+			else
+			{
+				document.ren_frm.astro_price.value = "";
+			}
+			document.ren_frm.total_price.value = 'Rs ' + total_pr;
+		}
+		else
+		{
+			if(document.ren_frm.blist.checked==true)
+                        {
+                                var serv_idb = document.ren_frm.blist.value + document.ren_frm.duration_sel.value;
+                                document.ren_frm.bprice.value = 'US($) ' + myArray_dol[serv_idb];
+				total_pr = parseInt(total_pr) + parseInt(myArray_dol[serv_idb]);
+                        }
+			else
+			{
+				document.ren_frm.bprice.value = "";
+			}
+                        if(document.ren_frm.horoscope.checked==true)
+                        {
+                                var serv_idh = document.ren_frm.horoscope.value + document.ren_frm.duration_sel.value;
+                                document.ren_frm.hprice.value = 'US($) ' + myArray_dol[serv_idh];
+				total_pr = parseInt(total_pr) + parseInt(myArray_dol[serv_idh]);
+                        }
+			else
+			{
+				document.ren_frm.hprice.value = "";
+			}
+                        if(document.ren_frm.kundali.checked==true)
+                        {
+                                var serv_idk = document.ren_frm.kundali.value + document.ren_frm.duration_sel.value;
+                                document.ren_frm.kprice.value = 'US($) ' + myArray_dol[serv_idk];
+				total_pr = parseInt(total_pr) + parseInt(myArray_dol[serv_idk]);
+                        }
+			else
+			{
+				document.ren_frm.kprice.value = "";
+			}
+                        if(document.ren_frm.matrip.checked==true)
+                        {
+                                var serv_idm = document.ren_frm.matrip.value + document.ren_frm.duration_sel.value;
+                                document.ren_frm.mprice.value = 'US($) ' + myArray_dol[serv_idm];
+				total_pr = parseInt(total_pr) + parseInt(myArray_dol[serv_idm]);
+                        }
+			else
+			{
+				document.ren_frm.mprice.value = "";
+			}
+                        if(document.ren_frm.astro_compatibility.checked==true)
+                        {
+                                var serv_idm = document.ren_frm.astro_compatibility.value + document.ren_frm.duration_sel.value;
+                                document.ren_frm.astro_price.value = 'US($) ' + myArray_dol[serv_idm];
+				total_pr = parseInt(total_pr) + parseInt(myArray_dol[serv_idm]);
+                        }
+			else
+			{
+				document.ren_frm.astro_price.value = "";
+			}
+			document.ren_frm.total_price.value = 'US($) ' + total_pr;
+		}
+	}
+	function validate_discount()
+	{
+		if(document.ren_frm.curtype.value=="0")
+			var len=3;
+		else
+			var len=6;
+ 
+		var disc = document.ren_frm.discount.value;
+		var subs = document.ren_frm.total_price.value.substring(len);
+		if(parseInt(disc) > parseInt(subs))
+		{
+			alert('Discount cannot be greater than total Service(s) amount');
+			document.ren_frm.discount.value = 0;
+			document.ren_frm.dis_perc.value = 0;
+			return false;
+		}
+		if(disc < 0)
+		{
+			alert('Please enter a valid discount amount');
+			document.ren_frm.discount.value = 0;
+			return false;
+		}
+		var total = document.ren_frm.total_price.value.substring(len);
+		var disc = document.ren_frm.discount.value;
+		var per_dis = (disc * 100)/total;
+		document.ren_frm.disc_perc.value=per_dis;
+		document.ren_frm.disc_perc.value=document.ren_frm.disc_perc.value.substring(0,5);
+	}
+	function validate_discount_perc()
+	{
+		if(document.ren_frm.curtype.value=="0")
+                        var len=3;
+                else
+                        var len=6;
+
+		if(document.ren_frm.disc_perc.value > 100)
+		{
+			alert('Discount Percentage cannot be greater than 100');
+			document.ren_frm.discount.value = 0;
+			document.ren_frm.disc_perc.value = 0;
+			return false;
+		}
+		var total = document.ren_frm.total_price.value.substring(len);
+		var total_len = document.ren_frm.total_price.value.substring(len).length;
+		var disc = document.ren_frm.disc_perc.value;
+		var per_dis = (disc/100)*total;
+		document.ren_frm.discount.value=per_dis;
+		document.ren_frm.discount.value=document.ren_frm.discount.value.substring(0,total_len);
+	}
+	</script>
+</head>
+<body onload="return validate_matri_serv();">
+~if $RECENTLY_UPDATED eq '1'`
+<table cellpadding="4" cellspacing="4" width="80%" align="center">
+	<tr>
+		<td class="fieldsnew" align="center">This profile has already been upgraded on ~$date_str`</td>
+	</tr>
+	<tr>
+		<td class="fieldsnew" align="center">Next Upgradation allowed after a week from last date of upgradation</td>
+	</tr>
+	<tr>
+		<td class="fieldsnew" align="center"><a href="search_user.php?cid=~$cid`&criteria=~$criteria`&phrase=~$phrase`">Click here to go back</a></td>
+	</tr>
+</table>
+~else`
+<form method="post" name="ren_frm" action="upgrade_billing.php">
+<table cellpadding="4" cellspacing="4" width="80%" align="center">
+	<tr>
+		<td align="center" colspan="2" class="formhead">User Details</td>
+	</tr>
+	<tr>
+		<td class="label">
+			~if $CHECK_USERNAME eq "Y"`
+				<font color=red>Username*</font>
+			~elseif $MSG_USERNAME neq ''`
+				<font color=red>Username* (~$MSG_USERNAME`)</font>
+			~else`
+				Username*
+			~/if`
+		</td>
+		<td class="fieldsnew">~$username`</td>
+	</tr>
+	<tr>
+		<td class="label">
+			Email
+		</td>
+		<td class="fieldsnew">~$email`</td>
+	</tr>
+	<tr>
+		<td class="label">
+			Old Service
+		</td>
+		<td class="fieldsnew">~$sname`</td>
+	</tr>
+	<tr>
+		<td class="label">
+			Addon Service(s)
+		</td>
+		<td class="fieldsnew">~$addon_services_lastbill`</td>
+	</tr>
+	<tr>
+		<td class="label">
+			Expiry Date
+		</td>
+		<td class="fieldsnew">~$expiry_dt`</td>
+	</tr>
+	<tr>
+		<td class="label" colspan="2" align="center">
+			Payment History
+		</td>
+	</tr>
+	~section name=next loop=$hist`
+	<tr>
+		<td class="label">~$hist[next].TYPE`</td>
+		<td class="fieldsnew">~$hist[next].AMOUNT`</td>
+	</tr>
+	~/section`
+</table>
+<br>
+<table cellpadding="4" cellspacing="4" width="80%" align="center">
+	<tr>
+		<td class="formhead" align="center" colspan="2">Service Details</td>
+	</tr>
+	<tr>
+		<td class="formhead" align="center" colspan="2">(One month duration is valid only for e-Rishta without any addon-service.)
+	</tr>
+	<tr>
+                <td class="label">
+                        ~if $CHECK_CURTYPE eq "Y"`
+                                <font color=red>Currency Type*</font>
+                        ~else`
+                                Currency Type*
+                        ~/if`
+                </td>
+                <td class="fieldsnew">
+                        <select name="curtype" onchange="validate_matri_serv()">
+                                <option value="0" ~if $curtype eq "0"` selected ~/if` selected>Rupees</option>
+                                <option value="1" ~if $curtype eq "1"` selected ~/if`>US($)</option>
+                        </select>
+                </td>
+        </tr>
+	<tr>
+                <td class="label">
+			~if $CHECK_SERVICE_TYPE eq "Y"`
+				<font color="red">Service Type*</font>
+			~else`
+				Service Type*
+			~/if`
+		</td>
+                <td class="fieldsnew">
+                        <select name="service_type" onchange="validate_matri_serv()">
+				~section name=next loop=$service_type_arr`
+                                <option value="~$service_type_arr[next].value`" ~if $service_type eq $service_type_arr[next].value` selected ~/if`>~$service_type_arr[next].name`</option>
+				~/section`
+                        </select>
+                </td>
+	</tr>
+	<tr>
+                <td class="label">
+			~if $CHECK_DURATION eq "Y"`
+				<font color="red">Select Duration*</font>
+			~else`
+				Select Duration*
+			~/if`
+		</td>
+                <td class="fieldsnew">
+                        <select name="duration_sel" onchange="validate_matri_serv()">
+			~section name=next loop=$service_duration`
+                                <option value="~$service_duration[next].value`" ~if $duration_sel eq $service_duration[next].value` selected ~/if`>~$service_duration[next].duration`</option>
+			~/section`
+                        </select>
+                </td>
+        </tr>
+	<tr>
+		<td class="label">Price</td>
+		<td class="fieldsnew"><input type="text" name="calculate_price" disabled></td>
+	</tr>
+	<tr>
+		<td class="label">Start Service From</td>
+		<td class="fieldsnew">
+			<select name="stdate">
+				<option value="previous_dt">Last Service Activation Date</option>
+				<option value="today">Today</option>
+			</select>
+		</td>
+	</tr>
+        <tr>
+                <td class="label" align="center" colspan="2"><u>Add On Service(s)</u></td>
+	</tr>
+		<tr>
+			<td class="fieldsnew"><input type="checkbox" name="blist" value="B" ~if $BOLD_LISTING_SELECTED eq "Y"` checked ~/if` onclick=" return validate_matri_serv();"/>Profile Highlighting</td>
+			<td class="fieldsnew"><input type="text" name="bprice" value=""  size="8" disabled /></td>
+		</tr>	
+		<tr>
+			<td class="fieldsnew"><input type="checkbox" name="horoscope" value="H" ~if $HOROSCOPE_SELECTED eq "Y"` checked ~/if` onclick=" return validate_matri_serv();"/>Horoscope</td>
+			<td class="fieldsnew"><input type="text" name="hprice" value="" size="8" disabled /></td>
+		</tr>
+		<tr>
+			<td class="fieldsnew"><input type="checkbox" name="kundali" value="K" ~if $KUNDLI_SELECTED eq "Y"` checked ~/if` onclick=" return validate_matri_serv();">Kundli</td>
+			<td class="fieldsnew"><input type="text" name="kprice" value="" size="8" disabled /></td>
+		</tr>
+		<tr>
+			<td class="fieldsnew"><input type="checkbox" name="matrip" value="M" ~if $MATRI_PROFILE_SELECTED eq "Y"`checked ~/if` onclick=" return validate_matri_serv();"/>Matri Profile</td>
+			<td class="fieldsnew"><input type="text" name="mprice" value="" size="8" disabled /></td>
+		</tr>
+		<tr>
+			<td class="fieldsnew"><input type="checkbox" name="astro_compatibility" value="A" ~if $ASTRO_COMPATIBILITY_SELECTED eq "Y"`checked ~/if` onclick=" return validate_matri_serv();"/>Astro Compatibility</td>
+			<td class="fieldsnew"><input type="text" name="astro_price" value="" size="8" disabled /></td>
+		</tr>
+		<tr>
+			<td class="label">Total (Including tax, if currency type is Rupees)</td>
+			<td class="fieldsnew"><input type="text" name="total_price" value="" size="8" disabled></td>
+		</tr>
+</table>
+<br>
+<table cellpadding="4" cellspacing="4" width="80%" align="center">
+	<tr>
+                <td colspan="2" align="center" class="formhead"><b>Sale Details</b></td>
+        </tr>
+        <tr>
+                <td class="label">
+			~if $CHECK_WALKIN eq "Y"`
+				<font color="red">Walk In*</font>
+			~else`
+				Walk In*
+			~/if`
+		</td>
+                <td class="fieldsnew">
+                        <select name="walkin">
+                                <option value="">Select</option>
+				<option value="ONLINE" ~if $walkin eq "ONLINE"` selected ~/if`>ONLINE</option>
+            			<option value="OFFLINE" ~if $walkin eq "OFFLINE"` selected ~/if`>OFFLINE</option>
+				<option value="ARAMEX" ~if $walkin eq "ARAMEX"` selected ~/if`>ARAMEX</option>
+		                ~$walkin_arr`
+                        </select>
+                </td>
+	</tr>
+	<tr>
+                <td class="label">
+			~if $CHECK_DISCOUNT eq "Y"`
+				<font color=red>Discount</font>
+			~else`
+				Discount
+			~/if`
+		</td>
+                <td class="fieldsnew">
+			<input type="text" name="discount" value="~$discount`" onkeyup="return validate_discount();"/>
+			&nbsp;OR
+			<input type="text" name="disc_perc" value="" size="6" onkeyup="return validate_discount_perc();" />
+			&nbsp;<b>%</b>
+		</td>
+        </tr>
+        <tr>
+                <td class="label">
+			~if $CHECK_DISCOUNT_TYPE eq "Y"`
+				<font color=red>Discount Type</font>
+			~else`
+				Discount Type
+			~/if`
+		</td>
+                <td class="fieldsnew">
+                        <select name="discount_type1">
+				<option value="">Select</option>
+				~section name=next loop=$discount_type`
+                                <option value="~$discount_type[next].value`" ~if $discount_type1 eq $discount_type[next].value` selected ~/if`>~$discount_type[next].dtype`</option>
+				~/section`
+                        </select>
+                </td>
+	</tr>
+	<tr>
+                <td class="label">
+			~if $CHECK_REASON eq "Y"`
+				<font color=red>Reason</font>
+			~else`
+				Reason
+			~/if`
+		</td>
+                <td class="fieldsnew">
+			<input type="text" name="reason" value="~$reason`" />
+		</td>
+        </tr>
+	<tr>
+                <td align="center" colspan="2"><input type="submit" name="pg1_submit" value="Next >>" class="buttons1" onclick="return verify_page();"/></td>
+	</tr>
+</table>
+<input type="hidden" name="username" value="~$username`">
+<input type="hidden" name="cid" value="~$cid`">
+<input type="hidden" name="pid" value="~$pid`">
+<input type="hidden" name="criteria" value="~$criteria`">
+<input type="hidden" name="phrase" value="~$phrase`">
+<input type="hidden" name="status" value="~$status`">
+<input type="hidden" name="user" value="~$user`">
+<input type="hidden" name="source" value="~$source`">
+<input type="hidden" name="crm_id" value="~$crm_id`">
+<input type="hidden" name="email" value="~$email`">
+<input type="hidden" name="sname" value="~$sname`">
+<input type="hidden" name="addon_services_lastbill" value="~$addon_services_lastbill`">
+<input type="hidden" name="expiry_dt" value="~$expiry_dt`">
+<input type="hidden" name="billid" value="~$billid`">
+<input type="hidden" name="degrade" value="~$degrade`">
+</form>
+~/if`
+</body>
+</html>

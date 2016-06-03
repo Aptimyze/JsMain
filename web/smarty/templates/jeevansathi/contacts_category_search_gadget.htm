@@ -1,0 +1,135 @@
+<!-- Parametric search starts here-->
+~if $SHOW_CATEGORY_SEARCH`
+<form name="more_form" action="contacts_made_received.php" method="post">
+<div>
+	<div class="search_box" style="background:#F5F5F5; margin:0 3px;">
+		<div class="top_line">
+			<div class="btm_line">
+				<div class="right_line">
+					<div class="left_line">
+						<div class="tp_left_cur">
+							<div class="tp_right_cur">
+								<div class="btm_left_cur">
+									<div class="btm_right_cur" style="padding:0; margin:0;">
+										<div style="padding:10px 10px 20px 10px;">
+											<span class="lf">~$searchTitle`</span><br>
+											~if $DISABLE_RELIGION eq 'Y'`
+												<select name="religion" class="mid lf" disabled>
+												<option value="~$religion_arr[0].VALUE`">~$religion_arr[0].LABEL`</option>
+												</select>
+											~else`
+												<select class="mid lf" name="religion" onchange="fillCaste(this.value,'~$CASTE_STR`', 'param')"> 
+												<option value="" selected>Select a religion</option>
+												~section name=next loop=$religion_arr`
+												<option value="~$religion_arr[next].VALUE`" ~if $RELIGION eq $religion_arr[next].VALUE`selected~/if`>~$religion_arr[next].LABEL`</option>
+												~/section`
+												</select>
+											~/if`
+											 ~if $DISABLE_CASTE eq 'Y'`
+												<select name="caste" class="big lf" disabled style="margin-left:10px;">
+												<option value="~$caste_arr[0].VALUE`">~$caste_arr[0].LABEL`</option>
+												</select>
+											~else`
+												<span id="casteParamId">
+												<select class="big lf" name="caste" style="margin-left:10px;">
+												<option value="" selected>Select a caste</option>
+												~section name=next loop=$caste_arr`
+												<option value="~$caste_arr[next].VALUE`" ~if $CASTE eq $caste_arr[next].VALUE` selected ~/if`>~$caste_arr[next].LABEL`</option>
+												~/section`
+												</select>
+											</span>
+											~/if`
+											<span id="more_options" style="display:none">
+											<div class="sp5"></div>
+											<select class="small lf" name="lage" ~if $DISABLE_AGE eq 'Y'` disabled ~/if`>
+											~section name=next loop=$age_arr`
+											<option value="~$age_arr[next]`" ~if $LAGE eq $age_arr[next]` selected ~elseif $MIN_AGE eq $age_arr[next]` selected ~/if`>~$age_arr[next]`</option>
+											~/section`
+											</select>
+											<span class="t12 lf" style="margin:0 5px">to</span>
+											<select class="small lf" name="hage" ~if $DISABLE_AGE eq 'Y'` disabled ~/if`>
+											~section name=next loop=$age_arr`
+												<option value="~$age_arr[next]`" ~if $HAGE`~if $HAGE eq $age_arr[next]` selected ~/if` ~else` ~if $MAX_AGE eq $age_arr[next]` selected ~/if`~/if`>~$age_arr[next]`</option>
+											~/section`
+											</select>
+											~if $DISABLE_MTONGUE eq 'Y'`
+												<select class="big lf" style="margin-left:22px;" name="mtongue" disabled>
+												<option value="~$mtongue_arr[0].VALUE`">~$mtongue_arr[0].LABEL`</option>	
+												</select>
+											~else`
+												<select class="big lf" style="margin-left:22px;" name="mtongue">
+												<option value="" selected>Select a Mother Tongue</option>
+												 ~section name=next loop=$mtongue_arr`
+												<option value="~$mtongue_arr[next].VALUE`" ~if $MTONGUE eq $mtongue_arr[next].VALUE`selected~/if`>~$mtongue_arr[next].LABEL`</option>
+												~/section`
+												</select>
+											~/if`
+											<div class="sp5">
+											</div>
+											~if $DISABLE_MSTATUS eq 'Y'`
+												<select class="mid lf" name="mstatus" disabled>
+												<option value="~$mstatus_arr[0].VALUE`">~$mstatus_arr[0].LABEL`</option>         
+												</select>
+												
+											~else`
+												<select class="mid lf" name="mstatus">
+												<option value="" selected>Select a Marital Status</option>       
+												 ~section name=next loop=$mstatus_arr`
+												<option value="~$mstatus_arr[next].VALUE`" ~if $MSTATUS eq $mstatus_arr[next].VALUE`selected~/if`>~$mstatus_arr[next].LABEL`</option>
+												~/section`
+												</select>
+											~/if`
+											~if $DISABLE_CITY eq 'Y'`
+												 <select name="city_res" class="mid lf" style="margin:0 10px; width:137px" disabled>
+													<option value="~$city_i_arr[0].VALUE`">~$city_i_arr[0].LABEL`</option>
+													<option value="~$city_u_arr[0].VALUE`">~$city_u_arr[0].LABEL`</option>
+												 </select>
+											~else`
+												 <select name="city_Res" class="mid lf" style="margin:0 10px; width:137px">
+													 <option value='' selected>Select a city</option>
+													~section name=next loop=$city_arr`
+														<option value="~$city_arr[next].VALUE`" ~if $CITY_RES eq $city_arr[next].VALUE`selected~/if`>~$city_arr[next].LABEL`</option>
+													~/section`
+												 </select>
+											~/if`
+											<input type="checkbox" name="havephoto" value="Y" ~if $DISABLE_PHOTO_CHECKED eq 'Y'` checked disabled ~elseif $DISABLE_PHOTO_UNCHECKED eq 'Y'` disabled ~/if` ~if $havephoto eq 'Y' or $HAVEPHOTO eq 'Y'` checked ~/if` style="border:none;" class="lf">
+											<span class="lf t11" style="margin:2px 5px 0 5px;">&nbsp;With Photo</span>
+											</span>
+											<input type="submit" style="font-weight:bold;" name="search_submit" value="Go" class="green_btn "/>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<div id="less_link" style="display:none;float:right; width:97px; height:17px; background:url(~$IMG_URL`/profile/images/more_options_bg.gif) no-repeat; margin:-10px 5px 0 0;">&nbsp;&nbsp;<a onClick="show_hide_options('less');return false;" class="blink t11">less options <img src="~$IMG_URL`/img_revamp/more_options_arrow.gif" alt="more options" border="0" title="more options"></a></div>
+
+	<div id="more_link" style="float:right; width:97px; height:17px; background:url(~$IMG_URL`/profile/images/more_options_bg.gif) no-repeat; margin:-10px 5px 0 0;">&nbsp;&nbsp;<a onClick="show_hide_options('more');return false;" class="blink t11">more options <img src="~$IMG_URL`/img_revamp/more_options_arrow_down.gif" alt="more options" border="0" title="more options"></a></div>
+</div>
+<br>
+~if $SEARCH_SUBMIT`
+<div class="lf">
+	<b>~if $searchResultsCount`~$searchResultsCount`~else`No~/if` result~if $searchResultsCount ne 1`s~/if` found</b>&nbsp;&nbsp;<span style="color: rgb(114, 111, 111); font-size: 11px;">[ ~$search_string` ]</span>&nbsp;&nbsp;<a class="blink t11" href="~$clearSearchUrl`">Clear Search</a>
+</div>
+<div class="clear"></div>
+~/if`
+<!--input type="hidden" name="searched_caste" value="~$CASTE`">
+<input type="hidden" name="searched_religion" value="~$RELIGION`">
+<input type="hidden" name="searched_mtongue" value="~$MTONGUE`">
+<input type="hidden" name="searched_lage" value="~$LAGE`">
+<input type="hidden" name="searched_hage" value="~$HAGE`">
+<input type="hidden" name="searched_mstatus" value="~$MSTATUS`">
+<input type="hidden" name="searched_havephoto" value="~$HAVEPHOTO`"-->
+<input type="hidden" name="page" value="~$page`">
+<input type="hidden" name="filter" value="~$filter`">
+<input type="hidden" name="checksum" value="~$CHECKSUM`">
+<input type="hidden" name="more_or_less" value="more">
+</form>
+<!-- Parametric search ends here-->
+~/if`
+

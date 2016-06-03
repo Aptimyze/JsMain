@@ -1,0 +1,17 @@
+# You can find more information about this file on the symfony website:
+# http://www.symfony-project.org/reference/1_4/en/13-View
+# For javascripts at bottom of the page: http://devjs.infoedge.com/mediawiki/index.php/Social_Project#Javascript_at_the_end
+default:
+
+  javascripts: [html5_js,mobHamburger_js,commonMob,mobBrowser_js,app_promo_js]
+  stylesheets: [mobile_media_css,mobilejs_revamp,mobile_hamburger_css,app_promo_css]
+
+jsmsMobLayout:
+
+  javascripts: [modernizr_p_js,tracking_js,jsms/common/CommonFunctions,jsms/common/scrollTo,jsms/common/urlParamHandling,app_promo_js,commonMob,jsms/common/touchswipe_js,jsms/common/disableScroll_js,jsms/common/history_js,commonExpiration_js,rippleEffectCommon_js,common_comscore_js]
+  stylesheets: [jsms/common/commoncss,jsms/common/errorBar,jsms/common/fonts,jsms/common/mediaquery,jsms/common/jsmsApp_promo_css,rippleEffectCommon_css]
+  
+newPhotoAlbumLayout:
+
+  javascripts: [modernizr_p_js,tracking_js,jsms/common/CommonFunctions,jsms/common/scrollTo,jsms/common/urlParamHandling,app_promo_js,commonMob,jsms/common/touchswipe_js,jsms/common/disableScroll_js,jsms/common/history_js]
+  stylesheets: [jsms/common/commoncss,jsms/common/errorBar,jsms/common/fonts,jsms/common/mediaquery,jsms/common/jsmsApp_promo_css]

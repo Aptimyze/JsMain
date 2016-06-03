@@ -1,0 +1,82 @@
+<html>
+<head>
+<title>Source Wise Hits</title>
+</head>
+<body>
+
+<form name=firstform method=post action="ageloc_sourcehits.php">
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<select name="sourcegp"  >
+<option value="">select-group</option>
+<option value="ALL">ALL</option>
+~section name=grp loop=$srcgrp`
+	<option value="~$srcgrp[grp]`">~$srcgrp[grp]`</option>
+~/section`
+</select>
+&nbsp;&nbsp;
+ : Group
+&nbsp;&nbsp;&nbsp;&nbsp;
+<h5>OR</h5>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<select name="sourceid">
+~section name=src loop=$srcid`
+	<option value="~$srcid[src].id`">~$srcid[src].id`-~$srcid[src].name`</option>
+~/section`
+</select>
+&nbsp;&nbsp;
+ : Source
+<br><br>
+<hr>
+
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=grouping value=age> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+:Age-Wise grouping
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=grouping value=location> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+:Location-Wise grouping
+<hr>
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=dt_type value=day checked> 
+&nbsp;&nbsp;&nbsp;&nbsp;
+Day Wise : (For a particular month)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<select name="ddate_mon">
+~section name=mm loop=$mmarr`
+	<option value="~$mmarr[mm]`">~$mmarr[mm]`</option>
+~/section`
+</select>
+<select name="ddate_yyyy">
+~assign var=thisYear value=$smarty.now|date_format:"%Y"`
+~section name=years start=2004 loop=$thisYear+1 step=1`
+        <option value="~$smarty.section.years.index`">~$smarty.section.years.index`</option>
+~/section`
+</select>
+<br><br><br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=dt_type value=mnt> 
+&nbsp;&nbsp;&nbsp;&nbsp;
+Month Wise : (For a particular year)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<select name="mdate_yyyy">
+~assign var=thisYear value=$smarty.now|date_format:"%Y"`
+~section name=years start=2004 loop=$thisYear+1 step=1`
+        <option value="~$smarty.section.years.index`">~$smarty.section.years.index`</option>
+~/section`
+</select>
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=checkbox name=get_today value=Y> Get current records
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="hidden" name="cid" value="~$cid`">
+<input type="submit" name="CMDGo" value="   Go   ">
+</form>
+
+</body>
+</html>

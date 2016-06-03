@@ -1,0 +1,272 @@
+@charset "utf-8";
+/* CSS Document */
+
+
+.hdr span {
+ padding: 2px 0 0;
+}
+
+.hdr-lgo-text { 
+ font:bold 18px Arial, Helvetica, sans-serif; 
+ color:#887f80; 
+ margin-top:12px; 
+}
+
+/* SMALL JS LOGO WITH BIG BANNER */
+.hdr-logo-small {
+ background-position: 0 -84px !important;
+ height: 33px;
+ margin-top: 40px;
+ width: 172px;
+}
+
+
+/* BIG JS LOGO WITH SMALL BANNER */
+
+.hdr-logo-big {
+ background-position: -7px -168px !important;
+ height: 43px;
+ margin-top: 20px;
+ width: 217px;
+}
+
+
+.hdr-logo-big-community {
+ background-position: -7px -168px !important;
+ height: 43px;
+ width: 217px;
+}
+
+.hdr-con {
+ width:930px;
+ margin:0 auto;
+ display:block;
+ height:auto;
+}
+
+.hdr-tp-bg {
+ height: 20px;
+ font-size:13px;
+}
+
+.hdr-tp-bg-txt {
+ color: #000000;
+ float: left;
+ padding: 1px 0 0 0px;
+}
+
+.hdr-tp-bg-txt1 {
+ color: #0776BC;
+ padding: 1px 0px 0 0;
+}
+
+.sprte-hdr-foot {
+  background:url(IMG_URL/images/sprite-header-footer.png) transparent;
+}
+
+
+.hdr-naukri-btn1 {
+ background-position: -11px -132px;
+ border: 0 none;
+ height: 14px;
+ width: 81px;
+ float:left;
+}
+
+.hdr-naukri-btn2 {
+ background-position: -175px -85px;
+ border: 0 none;
+ float: left;
+ height: 14px;
+ width: 94px;
+}
+
+.hdr-menu {
+ background-repeat: repeat-x;	
+ width:100%;
+ background-position: 0 -38px;
+}
+
+
+.hdr-indentmenu {
+ color: #0F7EAB;
+ font: bold 17px Arial;
+ margin: auto;
+ overflow: hidden;
+ width: 930px;
+ height:30px;
+}
+
+
+.hdr-indentmenu ul {
+ border-width: 1px 0;
+ float: left;
+ margin: 0;
+ padding: 0;
+ width: 930px;
+}
+
+.hdr-indentmenu ul li{
+ display:inline;
+ list-style:none;
+}
+
+.hdr-indentmenu ul li a {
+ display: inline;
+ float: left;
+ line-height: 32px;
+ padding: 0 11px;
+ text-decoration: none;
+}
+
+.hdr-indentmenu ul li.brd  {
+ background: #ddd;
+ width:1px;
+ height:30px;
+ display:inline;
+ float:left;
+ overflow:hidden
+}
+
+
+.hdr-spky {
+ background-position: -106px -137px;
+ height: 13px;
+ margin: 1px 3px;
+ width: 14px;
+}
+
+.gutter-banner-vertical {
+    position:absolute;  
+    margin-left:35px;
+    margin-top:180px;
+}
+
+.mar120left{margin-left:120px;}
+.mar160left{margin-left:160px;}
+
+/**************** FOOTER STARTS ***************/
+#fb_block { min-width:100px; width:auto; height:40px; float:left; margin-left:165px; margin-top:-2px;}
+#fb_block .right2 { background-position: -381px -88px; width:11px; float:left; height:61px}
+#fb_block .left2 { background-position: -366px -88px;    float: left;    height: 62px;    width: 9px; z-index:100;}
+#fb_block .mid2{border-top:1px solid #7fa534;border-bottom:1px solid #7fa534; height:50px; float:left; background:#fdfef4; width:57px; padding-left:2px;margin-top:2px;padding-top:8px;}
+#fb_block .mid2 iframe{padding-top:10px;}
+
+.switchBx{border:1px solid #ccc;padding:4px;width:169px;font-size:12px;margin:auto;}
+.switchDdr{color:#9A9999;}
+
+.ftr-divider {
+  border-top: 2px solid #cbcbcb;
+  margin:17px 0px;
+  height:1px;
+  display:block;
+  clear:both;
+}
+
+.ftr-divider2 {
+  border-top: 1px solid #EAEAEA;
+  margin:17px 0px;
+  height:1px;
+  display:block;
+  clear:both;
+}
+
+.ftr-banner {
+ width:728px;
+ height:105px;
+ margin:auto;
+}
+
+.ftr-banner2 {
+ width:468px;
+ height:60px;
+ margin-left:280px;
+}
+
+.ftr-browse-matri {
+ background-position:0px -256px;
+ height:45px;
+ border-top: 1px solid #cbcbcb;
+ border-bottom: 1px solid #cbcbcb;
+ width:100%;
+ clear:both;
+ margin-bottom:15px;
+ overflow:hidden;
+ 
+}
+
+
+.ftr-browse-matri span.text {
+ color:#767676;
+ line-height:3.8;
+ float:left;
+}
+
+
+.ftr-browse-matri .tabs {
+ background-position: 0 -326px;
+ border-color: #D4D5D3;
+ border-image: none;
+ border-radius: 6px 6px 0 0;
+ border-style: solid solid none;
+ border-width: 1px 1px medium;
+ color: #4D4D4D;
+ cursor: pointer;
+ margin-right: 8px;
+ overflow: hidden;
+ padding: 8px 10px;
+ float:left;
+ margin-top:16px; 
+}
+
+
+
+.ftr-con {
+ width:930px;
+ margin:0 auto;
+ display:block;
+ height:auto;
+
+ /*border:1px solid;*/ 
+
+}
+
+.ftr-links-bdr-grey {
+ border-left:1px solid #dadada;
+}
+
+
+.ftr-naukri-logo {
+ background-position:-192px -83px;
+ margin:0 auto;
+ 
+}
+
+.ftr-bot {
+ background-position:0px -256px;       border-top:1px solid #dadada;
+}
+
+p.set_menu {
+background: none repeat scroll 0 0 #FDF4F5;
+border: 1px solid #F0CED6;
+border-style: none solid solid;
+border-width: medium 1px 1px;
+width: 156px;
+}
+p.set_menu a {
+float: left;
+padding: 3px;
+width: 150px;
+font-weight: normal;
+}
+p.set_menu a:hover {
+background: none repeat scroll 0 0 #F8E6EA;
+font-weight: bold;
+}
+.p_abs {
+position: absolute;
+}
+.sideBarFixed
+{
+position:fixed;
+}

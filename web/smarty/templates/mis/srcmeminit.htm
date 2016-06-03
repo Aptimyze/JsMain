@@ -1,0 +1,68 @@
+<html>
+<head>
+<title>Jeevansathi.com - MIS - Source Wise Members</title>
+</head>
+<body>
+
+<form method=post action="source_members.php">
+<br><br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name="src_type" value=idwise checked>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<select name="sourceid">
+<option value="All">All</option>
+~section name=src loop=$srcid`
+	<option value="~$srcid[src]`">~$srcid[src]`</option>
+~/section`
+</select>
+&nbsp;&nbsp;
+ : Source
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name="src_type" value=groupwise>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<select name="sourcegp">
+<option value="All">All</option>
+~section name=grp loop=$srcgrp`
+	<option value="~$srcgrp[grp]`">~$srcgrp[grp]`</option>
+~/section`
+</select>
+&nbsp;&nbsp;
+ : Group
+&nbsp;&nbsp;&nbsp;&nbsp;
+<br><br>
+<hr>
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=dt_type value=day checked> 
+&nbsp;&nbsp;&nbsp;&nbsp;
+Day Wise : (For a particular month)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<select name="ddate_mon">
+~section name=mm loop=$mmarr`
+	<option value="~$mmarr[mm]`">~$mmarr[mm]`</option>
+~/section`
+</select>
+<select name="ddate_yyyy">
+<option value="2004">2004</option>
+<option value="2005">2005</option>
+<option value="2006">2006</option>
+</select>
+<br><br><br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=dt_type value=mnt> 
+&nbsp;&nbsp;&nbsp;&nbsp;
+Month Wise : (For a particular year)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<select name="mdate_yyyy">
+<option value="2004">2004</option>
+<option value="2005">2005</option>
+<option value="2006">2006</option>
+</select>
+<br><br><br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="submit" name="CMDGo" value="   Go   ">
+</form>
+
+</body>
+</html>

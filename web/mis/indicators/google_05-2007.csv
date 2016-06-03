@@ -1,0 +1,5 @@
+Day,clicks,Total Profiles,conv,Activated profiles,Activated profiles %,inactivated profiles,paid,Male>25,Female,Delhi,Maharashtra,Mumbai,Bangalore,NRI,irrelavant profiles(age wise),irrelavant profiles(age wise %),irrelavant profiles(location wise),irrelavant profiles(location wise)%
+2007-05-01,15189,797,5.25,659,82.69,138,2,356,141,48,88,46,42,70,162,90.5,17,9.5
+2007-05-02,15305,735,4.8,596,81.09,139,2,308,133,42,87,54,36,71,155,93.37,11,6.63
+2007-05-03,14448,697,4.82,554,79.48,143,1,289,142,46,79,47,32,70,123,86.01,20,13.99
+2007-05-04,14050,756,5.38,633,83.73,123,,341,136,61,89,43,39,81,156,90.17,17,9.83

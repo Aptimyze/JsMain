@@ -1,0 +1,66 @@
+<div style="clear:both"></div> 
+
+<div class="t12" style="border:1px #cad890; padding:10px 0px 0px 20px;width:603px;border-bottom-style:solid;border-left-style:solid;border-right-style:solid; background-color:#f3fbd1;">
+
+
+
+<div class="scrollbox4 t12" id="set_scroll">
+~if $MESSAGE`
+<div class="">
+
+    <div style="text-align: left;" class="row2">
+    ~$MESSAGE`
+    </div>
+  </div>
+~else`
+	~if $showCompatibility`
+		<div class="orange b t14">Jeevansathi Compatibility Score</div>
+		<div class="sp8"></div>
+		<div class="lf"><table style="border: 1px solid rgb(134, 134, 134); padding: 2px;" border="0" cellpadding="0" cellspacing="0" width="264">
+		<tbody><tr><td title="~$SCORE.score`%">
+		<table style="background-image: url(images/progress_bar.gif); background-repeat: no-repeat; width: 264px; height: 22px;" border="0" cellpadding="0" cellspacing="0">
+		 <tbody><tr><td width="~$SCORE.score`%">&nbsp;</td>
+		    <td bgcolor="#ffffff" width="*"><img src="images/spacer.gif" width="1"></td>
+		  </tr>
+		</tbody></table></td></tr></tbody></table></div>
+		<div class="t14" style="padding-top: 3px;">&nbsp;&nbsp;&nbsp;&nbsp;
+		~$SCORE.status`</div>
+		<div class="sp5"></div>
+		<div class="sp12"></div>
+	~/if`
+	<div class="orange b t14">Sun Sign Compatibility</div>
+	<div class="sp8"></div>
+	<table class="t14 b pd2" border="0" cellpadding="0" cellspacing="0" width="50%">
+	<tbody><tr><td>~$user_sunshine` <img src="images/~$user_sunshine`.png" align="absmiddle"></td><td>~$viewed_user_sunshine` <img src="images/~$viewed_user_sunshine`.png" align="absmiddle"></td></tr></tbody></table>
+	<div class="lf pd2">
+	~$viewed_user_sunshine_desc`
+	~if $sunshine_compat`
+		<br><br>
+		~$sunshine_compat`
+	~/if`
+	<br><br>
+		<span class="t11">
+		Powered by Ganesha Speaks. For more about astrology and compatibility, please visit: <a href="http://www.ganeshaspeaks.com" target=_blank >http://www.ganeshaspeaks.com</a>.
+		</span>
+	</div>
+	<!--
+	<iframe src="http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_CompatibilityReport_Matchstro.dll?CompareTwoPeople_And_GenerateReport?~$USERNAME_LOGGED_IN`:~$astrodata.MOON_DEGREES_FULL`:~$astrodata.MARS_DEGREES_FULL`:~$astrodata.VENUS_DEGREES_FULL`:~$astrodata.LAGNA_DEGREES_FULL`:~$astrodata_other.MOON_DEGREES_FULL`:~$astrodata_other.MARS_DEGREES_FULL`:~$astrodata_other.VENUS_DEGREES_FULL`:~$astrodata_other.LAGNA_DEGREES_FULL`:~$USERNAME_OTHER`" alt="LOADING HOROSCOPE COMPATIBILITY" height=210 width="100%" frameborder=0></iframe>
+	 <div style="border:1px #dbdbdb;border-bottom-style:solid;width:585px;">&nbsp;</div>
+	
+	  <div class="lf" style="width:585px; padding-top:4px">
+	
+	  <div style="float:left;"></div><div class="rf" style="text-align:right;cursor:pointer;" onclick="javascript:close_tab()"><img src="images/icon_hide.gif"></div></div>
+	
+	<div class="sp3"></div>
+	-->
+~/if`
+</div>
+
+<div style="border:1px #dbdbdb;border-bottom-style:solid;width:585px;">&nbsp;</div>
+
+  <div class="lf" style="width:585px; padding-top:4px">
+
+  <div style="float:left;"></div><div class="rf" style="text-align:right;cursor:pointer;" onclick="javascript:close_tab()"><img src="images/icon_hide.gif"></div></div>
+
+<div class="sp3"></div></div>
+

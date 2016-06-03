@@ -1,0 +1,2 @@
+type=command
+command=${php5} ${docRoot}/crontabs/if_view_simillar_table_updated.php

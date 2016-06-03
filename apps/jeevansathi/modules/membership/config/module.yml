@@ -1,0 +1,25 @@
+all:
+  jspc:
+    enable_login: off
+    enable_google_analytics: on
+    enable_call_help: on
+  jsExcPrices:
+    enable_login: off
+    enable_google_analytics: on
+    enable_call_help: off
+  addCallBck:
+    enable_login: off
+    enable_google_analytics: on
+    enable_call_help: off
+  jsms:
+    enable_login: off
+    enable_google_analytics: on
+    enable_call_help: off
+  ApiMembershipDetailsV1:
+    enable_login: off
+  ApiMembershipDetailsV2:
+    enable_login: off
+  ApiMembershipDetailsV3:
+    enable_login: off
+  jsexclusiveDetail:
+    enable_login: off

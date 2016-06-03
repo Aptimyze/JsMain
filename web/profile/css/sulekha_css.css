@@ -1,0 +1,293 @@
+/*Sulekha CSS Created By Vishal Kaul*/
+* {
+	margin:0;
+	padding:0;
+	float:none;
+}
+.fl {
+	float:left;
+}
+.fr {
+	float:right;
+}
+body {
+	font:12px Arial, Helvetica, sans-serif;
+}
+.clr {
+	clear:both;
+	height:0;
+	overflow:hidden;
+}
+.clr_18 {
+	clear:both;
+	height:18px;
+	overflow:hidden;
+}
+.f11 {
+	font-size:11px;
+}
+.f14 {
+	font-size:14px;
+}
+.mt_10{margin-top:10px;}
+.ml_27{margin-left:27px!important;}
+.w_53{width:58px; font-size:11px; height:18px;}
+.w_237{width:237px!important;}
+.mron{color:#a90000;}
+a, a:link, a:visited {
+	text-decoration:none;
+}
+.sprite_sul {
+	background:url(IMG_URL/profile/images/sul_sprte.gif);
+}
+.sul_hdr {
+	width:993px;
+	margin:auto;
+}
+.sul_hdr .bg {
+	height:35px;
+	background-position:0 -70px;
+	margin-bottom:15px;
+}
+.sul_hdr .bg .lft_cur {
+	width:6px;
+	height:35px;
+	background-position:-73px 0;
+}
+.sul_hdr .bg .rgt_cur {
+	width:6px;
+	height:35px;
+	background-position:-79px 0;
+}
+.sul_hdr .bg .lft_lg_bg {
+	width:180px;
+	background-position:0 -35px;
+	height:35px;
+	font:bold 16px Arial, Helvetica, sans-serif;
+	line-height:32px;
+	color:#fff;
+	text-indent:5px;
+}
+.sul_hdr .bg .lft_cur_sdw {
+	width:34px;
+	height:35px;
+}
+.sul_hdr .bg .rgt_cur_sdw {
+	width:34px;
+	height:35px;
+	background-position:-34px 0;
+}
+.sul_hdr .bg p {
+	width:484px;
+	text-align:center;
+	font:bold 12px Arial, Helvetica, sans-serif;
+	color:#fff;
+	float:left;
+	margin-top:8px;
+}
+/*curves starts here*/
+s {
+	display:block;
+}
+.c, .c1, c2, c3, c4 {
+	height:1px;
+	overflow:hidden;
+	border:1px solid #9a9a9a;
+	border-width:0 1px;
+}
+.c1 {
+	margin:0 4px;
+}
+.c2 {
+	margin:0 3px;
+}
+.c3 {
+	margin:0 2px;
+}
+.c4 {
+	margin:0 1px;
+}
+/*curves ends here*/
+
+.sul_lgo {
+	width:155px;
+	height:19px;
+	background-position:0 -151px;
+	margin:10px 5px 10px 10px;
+	display:inline;
+}
+.lgo_text {
+	font:bold 18px Arial, Helvetica, sans-serif;
+	color:#887f80;
+	margin-top:12px;
+}
+.pwrd_by {
+	width:139px;
+	height:35px;
+	background-position:0 -170px;
+	margin:5px 10px;
+}
+.sul_hdr ul.sul_nav {
+	float:left;
+	width:990px;
+	list-style:none;
+	margin:0;
+	padding:0;
+	display:inline;
+}
+.sul_hdr ul.sul_nav li {
+	float:left;
+}
+.sul_hdr ul.sul_nav li a {
+	float:left;
+	background:url(IMG_URL/profile/images/sul_sprte.gif) right -105px;
+	font:bold 11px Arial, Helvetica, sans-serif;
+	color:#fff;
+	text-decoration:none;
+	height:23px;
+	cursor:pointer!important;
+}
+.sul_hdr ul.sul_nav li a:hover {
+	background-position:right -128px;
+	color:#000;
+}
+.sul_hdr ul.sul_nav li a i {
+	float:left;
+	width:4px;
+	height:23px;
+	background:url(IMG_URL/profile/images/sul_sprte.gif) 0 -105px;
+	font-size:2px;
+}
+.sul_hdr ul.sul_nav li a:hover i {
+	background-position:0 -128px;
+}
+.sul_hdr ul.sul_nav li a b {
+	float:left;
+	margin:5px 5px 0 0;
+}
+.sul_hdr ul.sub_matri {
+	width:99%;
+	padding-left:10px;
+	background:#f9ed99;
+	float:left;
+	list-style:none;
+}
+.sul_hdr ul.sub_matri li {
+	float:left;
+	padding:5px 10px;
+	border-right:1px solid #000;
+	font:12px Arial, Helvetica, sans-serif;
+}
+.sul_hdr ul.sub_matri li a {
+	color:#000;
+	float:left;
+	text-decoration:none;
+}
+.sul_ftr {
+	width:976px;
+	margin:auto;
+	border-top:1px solid #000;
+	padding-top:15px;
+}
+.sul_ftr ul.sul {
+	float:left;
+	list-style:none;
+	margin:0;
+	padding:0;
+}
+.sul_ftr ul.sul li {
+	float:left;
+	font:13px Arial, Helvetica, sans-serif;
+	border-right:1px;
+	size: #000;
+	margin-right:10px;
+}
+.sul_ftr ul.sul li a {
+	color:#214A75;
+	float:left;
+	text-decoration:none;
+}
+.sul_ftr .copyrite {
+	font:11px Arial, Helvetica, sans-serif;
+}
+.sul_ftr b {
+	color:#a40d98;
+	padding-left:5px;
+}
+.main_cont{width:988px; margin:auto; background:url(IMG_URL/profile/images/sul_mid_couple.png) no-repeat right bottom; border:1px solid #fbdf46; border-width:0 1px;}
+.tp_cur {
+	width:990px;
+	height:8px;
+	font-size:2px;
+	background:url(IMG_URL/profile/images/sul_mid_tp_cur.gif) 0 -8px;
+	margin:auto;
+}
+.tp_cur i{float:left; width:8px; height:8px; font-size:2px; background:url(IMG_URL/profile/images/sul_mid_tp_cur.gif);}
+.tp_cur b{float:right; width:8px; height:8px; font-size:2px; background:url(IMG_URL/profile/images/sul_mid_tp_cur.gif) -8px 0;}
+.sul_ylw_bg{background:url(IMG_URL/profile/images/sul_mid_bg.gif) repeat-x bottom; width:990px; margin:auto;}
+.main_cont .reg_frm{float:left; width:523px; background:#fff; margin:10px; padding:10px;}
+.reg_frm a{color:#197ecc;}
+.main_cont .reg_frm h3{font:23px Arial, Helvetica, sans-serif; color:#2d2d2d; margin:0 0 5px;}
+.main_cont .reg_frm div{float:left; width:516px; margin:0 0 8px;}
+.main_cont .reg_frm div label{float:left; width:180px; text-align:right; padding:0 6px 0 0;}
+.main_cont .reg_frm div input.txt1,.main_cont .reg_frm div select.sel1{float:left; width:175px; height:18px; border:1px solid #969694; font-size:11px;}
+.main_cont .reg_frm .btn{float:left; border:0; width:138px; height:34px; background:url(IMG_URL/profile/images/reg_btn_icon.png); margin:10px 0 0 149px; display:inline;}
+.main_cont .phto, .main_cont .lck,.main_cont .phne{background:url(IMG_URL/profile/images/reg_btn_icon.png) no-repeat 0 -39px; width:99px; border-right:1px solid #c9c9c9; font-size:11px; padding-left:40px; float:left; margin:0 18px 15px 0;}
+.main_cont .lck{background-position:-2px -80px; padding-left:28px;}
+.main_cont .phne{background-position:0 -122px; border:none;}
+.sul_btm_cur{float:left; width:990px; height:8px; font-size:2px; background:url(IMG_URL/profile/images/reg_btn_icon.png) 0 -162px;}
+.sul_hdr .bg .lft_lg_bg a{background:url(IMG_URL/profile/images/sul_sprte.gif) no-repeat -68px 6px; padding:0 0 0 6px;}
+.suc_str_cont{float:left; width:243px; background:url(IMG_URL/profile/images/reg_btn_icon.png) no-repeat -667px 0; margin:58px 0 0 10px; padding:10px; line-height:18px;}
+.mr_10{margin:0 10px 0 0;}
+
+/*  New css added for the login layer */
+.blink{color:#117daa;cursor:pointer;}
+.sp5{clear:both;height:5px; overflow:hidden}
+.red{color:#e40410}
+.t11{font-size:11px;}
+.sr_display_top{background-image:url(IMG_URL/profile/images/sr_display_top.gif);width:270px;height:26px;background-repeat:no-repeat;}
+.t12{font-size:12px;}
+.b{font-weight:bold}
+.sr_display_hr{background-image:url(IMG_URL/profile/images/sr_display_hr.gif); width:270px; background-repeat:repeat-y;}
+.pd{padding:3px}
+.green_btn{background-image:url(IMG_URL/profile/images/green_button_bg.gif); background-repeat:repeat-x; height:22px; border:1px #578d00; border-style:solid; padding-bottom:2px; font-size:11px; color:#fff; cursor:pointer;}
+.sr_display_footer{background-image:url(IMG_URL/profile/images/sr_display_footer.gif); width:270px; background-repeat:no-repeat; height:8px;}
+.scrollbox1{background-color:#FDF4F5;border:1px solid #FDF4F5;overflow:auto;padding:8px 2px 4px 8px;width:500px; height:270px;}
+div.row3{float:left;width:97%; margin:3px 0px}
+div.row3 label{float:left;text-align:right;width:126px;padding-right:6px;color:#726f6f;font-weight:bold;}
+div.row3 span{float:left;text-align:left;width:190px;padding-left:5px;}
+div.row3 input.txt1{height:18px;}
+.sp8{clear:both;height:8px;overflow:hidden}
+.pink{width:420px;border:1px #f0ced6;border-style:solid; background-color:#fdf4f5;}
+.clear{clear:both; line-height:10px;}
+.rf{float:right}
+.sp12{clear:both;height:12px;overflow:hidden}
+div.row4{float:left;width:96%; margin:5px 0px}
+.green{color:#33b300;}
+.lf{float:left}
+.topbg{background-image:url(IMG_URL/profile/images/top_bg.gif); background-repeat:repeat-x; height:24px;}
+.rf{float:right}
+/*  Ends new added css */
+
+/* New active class */
+.sul_hdr ul.sul_nav li a.active {
+
+        background-position:right -128px;
+
+        color:#000;
+
+}
+.sul_hdr ul.sul_nav li a.active i {
+
+        background-position:0 -128px;
+
+}
+/* Ends active class */
+
+
+
+
+
+
+
+

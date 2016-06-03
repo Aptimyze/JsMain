@@ -1,0 +1,74 @@
+<?php
+$pay_arrayfull = array(	"uscard3" => "24",
+			"uscard6" => "35",
+			"uscard12" => "59",
+			"rscard3" => "750",
+			"rscard6" => "1100",
+			"rscard12" => "1800",
+			"uscheque3" => "24",
+			"uscheque6" => "35",
+			"uscheque12" => "59",
+			"rscheque3" => "750",
+			"rscheque6" => "1100",
+			"rscheque12" => "1800"
+		);
+
+$pay_arrayval = array(	"uscard3" => "27",
+			"uscard6" => "41",
+			"uscard12" => "68",
+			"rscard3" => "850",
+			"rscard6" => "1250",
+			"rscard12" => "2050",
+			"uscheque3" => "27",
+			"uscheque6" => "41",
+			"uscheque12" => "68",
+			"rscheque3" => "850",
+			"rscheque6" => "1250",
+			"rscheque12" => "2050"
+		);
+
+$pay_erishta = array(	"uscard2" => "24",
+			"uscard3" => "30",
+			"uscard4" => "35",
+			"uscard5" => "40",
+			"uscard6" => "45",
+			"uscard12" => "70",
+			"rscard2" => "800",
+			"rscard3" => "950",
+			"rscard4" => "1100",
+			"rscard5" => "1250",
+			"rscard6" => "1400",
+			"rscard12" => "2000",
+		);
+
+$pay_eclassified = array("uscard2" => "26",
+			"uscard3" => "32",
+			"uscard4" => "37",
+			"uscard5" => "43",
+			"uscard6" => "48",
+			"uscard12" => "75",
+			"rscard2" => "900",
+			"rscard3" => "1000",
+			"rscard4" => "1150",
+			"rscard5" => "1350",
+			"rscard6" => "1500",
+			"rscard12" => "2200",
+		);
+
+$pay_evalue = array(	"uscard2" => "40",
+			"uscard3" => "50",
+			"uscard4" => "58",
+			"uscard5" => "66",
+			"uscard6" => "75",
+			"uscard12" => "116",
+			"rscard2" => "1300",
+			"rscard3" => "1550",
+			"rscard4" => "1770",
+			"rscard5" => "2050",
+			"rscard6" => "2250",
+			"rscard12" => "3400",
+		);
+
+//This variable is used to get rupee value for doller payment
+//$DOL_CONV_RATE = 43; //prev value 45
+?>

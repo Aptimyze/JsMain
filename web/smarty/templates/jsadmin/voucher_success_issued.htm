@@ -1,0 +1,146 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<!--link rel="stylesheet" href="stylesheet.css" type="text/css"-->
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style TYPE="text/css">
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+P.breakhere {page-break-before: always}
+
+</style>
+<script language="javascript">
+function selectAll()
+{
+	var docF=document.form1;
+	
+	for(var i=0;i<docF.elements.length;i++)
+	{
+		if(docF.elements[i].type=="checkbox")
+			docF.elements[i].checked=docF.checkall.checked;
+	}
+}
+
+function MM_openBrWindow_R(obj,theURL,winName,features)
+{
+        if (confirm('Do you want to mark vouchers as dispatched?'))
+        {
+                window.open(theURL,winName,features);
+                obj.onclick= null;
+                obj.style.color='#008800';
+        }
+}
+function printformsubmit()
+{
+	var i=0;
+	id_str='';
+	for(i=0;i<document.form1.elements.length;i++)
+	{
+		if(document.form1.elements[i].name=="v_id[]")
+		{
+			if(document.form1.elements[i].checked==true)
+				id_str=id_str+document.form1.elements[i].value+"^";
+		}
+	}
+	id_str=id_str.substring(0,id_str.length-1);
+	window.open("voucher_success_print.php?id_str="+id_str+"&cid=~$cid`");
+}
+</script>
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<table width=760 cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+    <tr class="formhead">
+          <td width=55% class="formhead" border=1><font><b>Welcome </b></font></td>
+          <td width="35%" class="formhead" align="center"><a href="mainpage.php?cid=~$CID`">Main Page</a></td>
+          <td width=10% class="formhead" border=1 align='CENTER'><a href="logout.php?cid=~$CID`">Logout</a></td>
+    </tr>
+</table>
+
+	<br>
+	<form name="submitForm" action="voucher_success_issued.php" method="post">
+	<table width="80%" align="center">
+	<tr class="label" align="center">
+	<td>&nbsp;Select City
+	<select name="city_filter">
+	<option value="">All</option>
+	~section name="sec" loop=$cityarr`
+		<option value="~$cityarr[sec].VAL`" ~if $cityarr[sec].VAL eq $city_filter` selected ~/if`>~$cityarr[sec].LAB`</option>
+	~/section`
+	</select>
+	</td>
+	<td>&nbsp;
+		<input type="submit" name="CMDGo" value="  Go  ">
+		<input type="hidden" name="cid" value="~$cid`">
+	</td>
+	</tr>
+	</table>
+	</form>
+	~if $msg`
+		<p align="center"><font color="red">~$msg`</font></p>
+	~/if`
+	<form name="form1" action="voucher_success_issued.php" method="post">
+	<table width=100% align=center><tr class=fieldsnew colspan=3><td>
+	<!--input class="inputsubmit2" type=button onclick="selectAll()" value="Select All">&nbsp;&nbsp;<input class="inputsubmit2" type=reset value="Unselect">&nbsp;&nbsp;<a href="#" onClick="javascript:window.print();">Print</a-->
+	<input type="checkbox" name="checkall" onclick="selectAll();"> Select All&nbsp;&nbsp;<input type=button name=Print value="Print" onClick="printformsubmit();return false;"><input type="submit" name="CMDDispatch" value="Dispatch"> 
+	</td></tr></table>
+	<input type=hidden name=cid value=~$cid`>
+        <table width=100% align=center>
+        <tr class=label colspan=3>
+                <td align=center>&nbsp;</td>
+                <td align=center>Name</td>
+                <td align=center>User Name</td>
+                <td align=center>EMail</td>
+                <td align=center>Address</td>
+                <td align=center>City</td>
+                <td align=center>Phone</td>
+                <td align=center>Mobile</td>
+		~section name=sec loop=$client_name`
+		<td align=center>~$client_name[sec]`</td>
+		~/section`
+                <td align=center>Dispatch</td>
+        </tr>
+        ~section name=sec loop=$voucher`
+        <tr class=fieldsnew>
+		<!--form method="post" action="voucher_issued.php" target="mywindow"-->
+		<input type=hidden name=profileid value="~$voucher[sec].PROFILEID`">
+		<input type=hidden name=user value="~$voucher[sec].NAME`">
+		<td align=center><input type="checkbox" name="v_id[]" value="~$voucher[sec].ID`"></td>
+                <td align=center>~$voucher[sec].NAME`</td>
+                <td align=center>~$voucher[sec].USERNAME`</td>
+                <td align=center>~$voucher[sec].EMAIL`</td>
+                <td align=center>~$voucher[sec].CONTACT`</td>
+                <td align=center>~$voucher[sec].CITY_RES`</td>
+                <td align=center>~$voucher[sec].PHONE_RES`</td>
+                <td align=center>~$voucher[sec].PHONE_MOB`</td>
+		~section name=sec1 loop=$clientid`
+		<td align=center>~$voucher[sec][sec1]`</td>
+		~/section`
+                <td align=center><a href="#" onclick="MM_openBrWindow_R(this,'voucher_success_issued.php?Dispatch=1&cid=~$cid`&profileid=~$voucher[sec].PROFILEID`&user=~$voucher[sec].USERNAME`&id=~$voucher[sec].ID`','mywindow','width=450,height=75,scrollbars=yes'); return false;">Dispatch</a></td>
+	<!--/form-->
+        <tr>
+        ~/section`
+	</table>
+	</form>
+<center><br>
+<table>
+<tr class=priNormal align=center>
+    <td colspan="80%" height="21">
+    ~$PAGELINK`
+    </td>
+   </tr>
+</table>
+
+</body>
+</html>
+<P CLASS="breakhere">

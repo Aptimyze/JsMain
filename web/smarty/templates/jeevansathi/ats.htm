@@ -1,0 +1,41 @@
+<style type="text/css">
+		a.check			{ color:#0000ff; position:absolute; top:-2000px; left:-2000px; }
+		a.check:visited		{ color:#ff0000; }
+</style>
+<script type="text/javascript">
+	var val=$.cookie("ATS");
+	if(!val)
+	{
+		$(document).ready(function() {
+			var dom = $.ajax({
+					url: "/profile/ats.php",
+					async: false
+			}).responseText;
+			var doa=dom.split(",");
+			$(document).ready(function()
+			{
+				var visited = [];
+				$.each(doa,function()
+				{
+					var a = $('<a></a>').attr({href: '' + this,'class': 'check'}).appendTo(document.body);
+					if($(a).css('color') == '#ff0000' || $(a).css('color') == 'rgb(255, 0, 0)')
+					{
+						visited.push(this);
+					}
+					a.remove();
+				});
+
+				if(visited.length) 
+				{
+					var visi=visited.join('","');
+					$.ajax({
+					type: "GET",
+					url: "/profile/ats.php",
+					data: "yes="+visi+""
+					});
+				}
+			});
+		});
+	}
+	$.cookie("ATS", "true");
+</script>

@@ -1,0 +1,252 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Match Point - Jeevansathi.com</title>
+<link href="~$SITE_URL`/minify.php?files=/css/style.css" rel="stylesheet" type="text/css" />
+<SCRIPT type="text/javascript" language="Javascript" SRC="~$SITE_URL`/minify.php?files=/js/google_map_api.js,/js/common.js"></SCRIPT>
+<script type="text/javascript"> var SITE_URL='~$SITE_URL`'; </script>
+</head>
+<body>
+<noscript>
+	<div style="position:fixed;z-index:1000;width:100%">
+		<div style="text-align:center;padding-bottom:3px;font-family:verdana,Arial;font-size:12px;font-size-adjust:none;font-stretch:normal;font-style:normal;font-variant:normal;font-weight:normal;line-height:normal;background-color:#E5E5E5;">
+			<b><img class="err" width="23" height="20"> Javascript is disabled in your browser.Due  to this certain functionalities will not work. 
+				<a href="http://www.jeevansathi.com/P/js_help.htm" target="_blank">Click Here</a> , to know how  to enable it.
+			</b>
+		</div>
+	</div>
+</noscript>
+
+<div class="main_cont">
+	<div class="fr b"> <a href="mailto:achin.kapoor@jeevansathi.com" class="black no_under">Email us</a> I sms “centre ” to 57098 </div>
+	<div class="clear"></div>
+	<h1 class="fl logo mt_10"><a href="#"><img src="images/matchpoint_logo.gif" alt="Jeevansathi Matchpoint" title="Jeevansathi Matchpoint" border="0" /></a></h1>
+	<div class="fr mt_46"><img src="images/call_us_img.gif" alt="call us" title="call us" /></div>
+	<div class="clear"></div>
+	<div class="mid_cont">
+		<div class="fl lft_bnr" style="position:relative;" id="notexter">
+			<p class="f_16" style="height:53px;"><b style="margin:18px 0 0 11px; float:left;" id='texter1'>Why Jeevansathi.com Match Point?</b></p>
+			<p style="height:76px; position:absolute; bottom:0; _bottom:-1px;">
+				<s style="margin:18px 0 0 11px; float:left; text-decoration:none;" id="texter2">We offer you a convenient and hassle-free way of finding a life partner…</s>
+				<ul class="gal" style="position:absolute; bottom:15px; right:42%;">
+					<li><a id="move1"><img src="images/lft_gal_img.gif" class="mt_3" /></a></li>
+					<li class="active" id="move2"><b><a >1</a></b></li>
+					<li id="move3"><b><a >2</a></b></li>
+					<li id="move4"><b><a >3</a></b></li>
+					<li><a id="move5"><img src="images/rgt_gal_img.gif" class="mt_3" /></a></li>
+				</ul>
+			</p>
+			<a id="aji" href="match.php?m=1"><img src="images/rd_more.gif" border="0" style="position:absolute; bottom:24px; _bottom:21px; right:82.6%;" /></a>
+		</div>
+		<div class="locate_matchpoint fl">
+			<h2 class="f_18 dark_grey">Locate your nearest Jeevansathi Matchpoint center</h2>
+			<div class="mt_15">
+				<label class="b">Select City</label>
+				<select class="sel_city b" name='lynj' id='lynj'>
+					~section name=sec loop=$STATES`
+					<option value="~$STATES[sec]`" ~if $STATES[sec] eq $default_city` selected='selected' ~/if`>&nbsp; ~$STATES[sec]`</option>
+					~/section`
+				</select>
+	  		</div>
+			<div class="sel_city_cont">
+				<div class="left_cont b">Select  Centers in <span class="maroon" id='city_menu'>~$default_city`</span></div>
+				<div class="clear"></div>
+				<ul class="city b" id='narayan'>
+				~section name=sec loop=$details`
+					<li>
+						<a href="#" ~if $smarty.section.sec.first`class="active"~/if` id='changer~$smarty.section.sec.index`' tabindex='~$smarty.section.sec.index`'>~$details[sec].NAME`</a>
+						<ul class="address" style="display:~if $smarty.section.sec.first`block~else`none~/if`" id='changed~$smarty.section.sec.index`'>
+							<li>
+								<span class="black">Address of matchpoint center in</span> 
+								<span class="gry">~$details[sec].NAME`<br /><br />~$details[sec].ADDRESS`</span>
+								<br /><br />
+								<span class="fr"><a href="#" id="anched~$smarty.section.sec.index`" coords="~$details[sec].LATITUDE`,~$details[sec].LONGITUDE`" class="view_map">View Map directions</a></span>
+							</li>
+						</ul>
+					</li>
+				~/section`
+				</ul>
+			</div>
+			<div class="t_r_g_c"></div>
+			<div class="b_r_g_c"></div>
+		</div>
+		<div style="width:479px;" class="fl">
+			<a name='Error'> &nbsp; </a>
+			<a name='Success'> &nbsp; </a>
+			<div class="test_sucess fl mt_15">
+				<div class="grey_fill_t_l"></div>
+				<div class="grey_fill_t_r"></div>
+				<div class="b_l_g_c"></div>
+				<div class="b_r_g_c"></div>
+				<h5 class="m_5">Testimonials and Success stories</h5>
+				<ul class="stories" style="float:left; margin-left:11px;">
+					<li>
+						<img src="images/madhu_bindu.gif" alt="Baroda center" title="Baroda center" /><br />
+						<span class="dark_grey">Madhu Menon <br /> weds <br /> Bindu</span>
+					</li>
+					<li>
+						<img src="images/monal_chintan.gif" alt="Mumbai center" title="Mumbai center" /><br />
+						<span class="dark_grey">Monal <br /> weds <br /> Chintan</span>
+					</li>
+					<li>
+						<img src="images/akshay_chetna.gif" alt="Mumbai center" title="Mumbai center" /><br />
+						<span class="dark_grey">Akshay Pundir<br /> weds <br /> Chetna Kaushik</span>
+					</li>
+				</ul>
+				<div class="fr"><a href="story.php"><img src="images/rd_more.gif" class="fr" style="margin:4px 16px 10px 0;" border="0" /></a></div>
+				<div class="clear"></div>
+			</div>
+			<div class="test_sucess fl mt_15" style="height:115px;">
+				<div class="grey_fill_t_l"></div>
+				<div class="grey_fill_t_r"></div>
+				<div class="b_l_g_c"></div>
+				<div class="b_r_g_c"></div>
+				<h5 class="m_5">Jeevansathi.com Match Point Membership Options</h5>
+				<p class="fl mem_opt"><img src="images/rose_ring.gif" class="fl" style="margin:0 10px;" />Avail the Jeevansathi.com Match Point membership and get in touch with someone as special as you are. Our membership packages have been designed to help you get the best results in the least time. <a href="match.php?m=4"><img src="images/rd_more.gif" border="0" align="absbottom" /></a></p>
+			</div>
+		</div>
+		<div class="test_sucess fr mt_15">
+			<div class="grey_fill_t_l"></div>
+			<div class="grey_fill_t_r"></div>
+			<div class="b_l_g_c"></div>
+			<div class="b_r_g_c"></div>
+			<h5 class="m_5">Provide Details of a call back</h5>
+			<div class="call_back_form">
+				<form name="form2" action="index.php" method="post" enctype="multipart/form-data">
+					<ul>
+						<li><div class="maroon" style="display:~if $noerror`block~else`none~/if`" id="li1">Your details are registered with us, we will call you back soon</div></li>
+						<li>Please provide your personal details so that our service personel from matchpoint centres can contact you</li>
+						<li style="margin-top:-10px;">&nbsp;</li>
+						<li><label>Name :</label><input type="text" class="txt1 fl" name="first_name" value='~$first_name`'/><input name="last_name" value='~$last_name`' type="text" class="txt1 fl ml_5" /></li>
+						<li><div style="display:none" class="error" id="li2"><label>&nbsp;</label><span class="err" id="span2">Name cannot contain special characters and numbers</span></div></li>
+						<li><label>Email :</label><input type="text" class="txt1 fl" style="width:162px;" name="email" value="~$email`"/></li>
+						<li><div class="error" style="display:~if $error ge 2`block~else`none~/if`" id="li3"><label>&nbsp;</label><span class="err" id="span3">~$emailerror`</span></div></li>
+						<li>
+							<label>Location :</label>
+							<select class="sel1 fl" name="location">
+								<option value="">Please select location</option>
+							        ~section name=sec loop=$STATES`
+									<option class="~$std_code[sec]`" value="~$STATES[sec]`" ~if $STATES[sec] eq $location` selected='selected' ~/if`>&nbsp; ~$STATES[sec]`</option>
+								~/section`
+								<option class="" value="others" ~if $location eq 'others'`selected='selected'~/if`>&nbsp; Others</option>
+							</select>
+						</li>
+						<li><div  style="display:none" class="error" id="li4"><label>&nbsp;</label><span class="err" id="span4">Please select a location</span></div></li>
+						<li><label>Phone :</label><input type="text" name="state_code" class="txt1 fl" style="width:42px;" value='~$state_code`'/><input value='~$phone`' type="text" name="phone" class="txt1 fl ml_5" /></li>
+						<li><div style="display:none" class="error" id="li5"><label>&nbsp;</label><span class="err" id="span5">Please enter a minimum six digit phone number</span></div></li>
+						<li><label>Mobile :</label><input type="text" class="txt1 fl" name='mobile' style="width:162px;" value='~$mobile`'/></li>
+						<li><div class="error" style="display:none" id="li6"><label>&nbsp;</label><span class="err" id="span6">Please enter atleast Mobile or Phone number</span></div></li>
+						<li>
+							<label>Suitable Time of call :</label>
+							<select class="txt1 fl" style="width:43px;" name="start_time">
+								~section name=sec loop=13 start=1`
+									<option value="~$smarty.section.sec.index`" ~if $smarty.section.sec.index eq $start_time`selected='selected'~/if`>~$smarty.section.sec.index`</option>
+								~/section`
+							</select>
+							 <select class="txt1 fl ml_5" style="width:43px;" name="start_day">
+								<option value="AM" ~if $start_day eq 'AM'`selected='selected'~/if`> AM </option>
+								<option value="PM" ~if $start_day eq 'PM'`selected='selected'~/if`> PM </option>
+							</select>
+							<span class="fl">&nbsp;to&nbsp;</span>
+							<select class="txt1 fl" style="width:43px;" name="end_time">
+								~section name=sec loop=13 start=1`
+									<option value="~$smarty.section.sec.index`" ~if $smarty.section.sec.index eq $end_time`selected='selected'~/if`>~$smarty.section.sec.index`</option>
+								~/section`
+							</select>
+							<select class="txt1 fl ml_5" style="width:43px;" name="end_day">
+								<option ~if $end_day eq 'AM'`selected='selected'~/if` value="AM"> AM </option>
+								<option ~if $end_day eq 'PM'`selected='selected'~/if` value="PM"> PM </option>
+							</select>
+						</li>
+						<li>
+							<label>Upload your Biodata :</label>
+							<div class="fl" style="width:254px; position:relative;">
+								<input type="hidden" name="MAX_FILE_SIZE" value="5000000" />
+								<input name="biod" type="file" value="~$file`"/>
+							</div>
+						</li>
+						<li class="light_grey"><label>&nbsp;</label>Only microsoft word file accepted</li>
+						<li><div class="error" id="li7" style="display:~if !$error or $error gt 2`none~elseif $error le 2`block~/if`"><label>&nbsp;</label><span class="err" id="span6">Please choose a Microsoft word file under 5mb in size</span></div></li>
+					</ul>
+					<div class="clear"></div>
+					<div class="mt_10" style="text-align:center; padding-bottom:15px;">
+						<input type="submit" class="submit1 cur_ptr" value="Submit" name="sub"/>
+					</div>
+				</form>
+			</div>    
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+var store=0;
+
+var colored=2,flag=0;
+window.onload=function()
+{
+	~if $error`
+		window.location.hash="Error";
+	~elseif $noerror`
+		window.location.hash="Success";
+	~else`
+		window.location.hash=" ";
+	~/if`
+	document.getElementById("lynj").onchange=jnyl;
+	document.form2.onsubmit=validation;
+	document.form2.location.onchange=assign_code;
+	document.getElementById("move5").onclick=function()
+	{
+		document.getElementById("move"+colored).className="";
+		colored=(colored==4)?2:colored+1;
+		document.getElementById("move"+colored).className="active";
+		alignment();
+	}
+	document.getElementById("move1").onclick=function()
+	{
+		document.getElementById("move"+colored).className="";
+		colored=(colored==2)?4:colored-1;
+		document.getElementById("move"+colored).className="active";
+		alignment();
+	}
+	for(z=2;z<5;z++)
+	{
+		document.getElementById("move"+z).onclick=function()
+		{
+			document.getElementById("move"+colored).className="";
+			colored=this.id.substring(4);
+			this.className="active";
+			alignment();
+		}
+	}
+	dropper();
+	anchorji();
+}
+function alignment()
+{
+	if(colored==2)
+	{
+		document.getElementById("aji").href="match.php?m=1";
+		document.getElementById("texter1").innerHTML="Why Jeevansathi.com Match Point?";
+		document.getElementById("texter2").innerHTML="We offer you a convenient and hassle-free way of finding a life partner…";
+		document.getElementById("notexter").style.backgroundImage="";
+	}
+	else if(colored==3)
+	{
+		document.getElementById("aji").href="match.php?m=2";
+		document.getElementById("texter1").innerHTML="Jeevansathi.com Match Point Advantage?";
+		document.getElementById("texter2").innerHTML="Vast database of verified profiles across all communities and professions";
+		document.getElementById("notexter").style.backgroundImage="url(images/left_banner_img_1.jpg)";
+	}
+	else
+	{
+		document.getElementById("aji").href="match.php?m=3";
+		document.getElementById("texter1").innerHTML="How it works?";
+		document.getElementById("texter2").innerHTML="Follow three steps process to get closer to your Jeevnansathi…";
+		document.getElementById("notexter").style.backgroundImage="url(images/left_banner_img_2.jpg)";
+	}
+}
+</script>
+~$FOOT`
+</body>
+</html>
+~$GOOG`

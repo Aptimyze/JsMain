@@ -1,0 +1,12 @@
+CREATE TABLE newjs.TEMP_ACTIVITY_SMS (
+ `ID` int(12) NOT NULL auto_increment,
+ `PROFILEID` int(12) NOT NULL,
+ `USERNAME` varchar(40) NOT NULL,
+ `PHONE_MOB` varchar(100) NOT NULL,
+ `SUBSCRIPTION` varchar(10) NOT NULL,
+ `LAST_LOGIN_DT` date NOT NULL,
+ `ADD_TIME` datetime NOT NULL,
+ `SENT` varchar(1) NOT NULL,
+ PRIMARY KEY  (`ID`),
+ KEY `PROFILEID` (`PROFILEID`)
+)

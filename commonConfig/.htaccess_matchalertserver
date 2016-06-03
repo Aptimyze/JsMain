@@ -1,0 +1,9 @@
+<IfModule mod_rewrite.c>
+RewriteEngine on
+RewriteOptions inherit
+
+RewriteCond %{REQUEST_URI} \/mailer\/ [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} matchalert\/top_matches_4_u_v2.php [NC]
+RewriteRule ^(.*)$ symfony_index.php/mailer/openrate [L]
+</IfModule>

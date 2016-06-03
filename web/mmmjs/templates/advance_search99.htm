@@ -1,0 +1,1308 @@
+<html>
+<head>
+<title>99acres.com - Form Query</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="http://www.jeevansathi.com/profile/images/styles.css" type="text/css">
+<link rel="stylesheet" href="http://www.jeevansathi.com/jsadmin/jeevansathi.css" type="text/css"><style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+
+.boldclass {
+font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 11px;
+font-weight: bold; color: #003399;
+background-color: #DDEEFF;
+}
+
+</style>
+~$ajax_javascript`
+<script language="JavaScript">
+
+function IsNumeric(sText)
+{
+   var ValidChars = "0123456789.";
+   var IsNumber=true;
+   var Char;
+
+   for (i = 0; i < sText.length && IsNumber == true; i++) 
+      { 
+      Char = sText.charAt(i); 
+      if (ValidChars.indexOf(Char) == -1) 
+         {
+         IsNumber = false;
+         }
+      }
+   return IsNumber;
+   
+}
+
+function check_city_ajax()
+{
+        var docF=document.form1;
+	var val = docF.recipient_type;
+	if(val[2].checked)	//buyers
+	{
+        	var locality=document.getElementById('locality_div');
+		var city = document.getElementById('buyer_city');
+	}
+	if(val[1].checked)	//sellers
+	{
+		var locality=document.getElementById('locality_div2');
+                var city = document.getElementById('seller_city');	
+	}
+
+	var selected_cities = new Array();
+
+	for(i=0;i<city.options.length;i++)
+	{
+		if(city.options[i].selected==true)
+		{
+			selected_cities[selected_cities.length] = city.options[i].value;
+		}
+	}
+	
+        if(city.options[0].selected==true || selected_cities.length>1)
+        {
+                locality.innerHTML="There are no localities defined for this city";
+                return;
+        }
+        else
+        {
+		if(val[2].checked)
+	                ajax_populate_locality(selected_cities[0],1);
+		else if(val[1].checked)
+			ajax_populate_locality(selected_cities[0]);
+        }
+}
+function validate(){
+	var docF=document.form1;
+
+        if(docF.mailer_id.value == '')
+        {
+                alert("Please select a mailer to form query for");
+                docF.mailer_id.focus();
+                return false;
+        }
+
+}
+function validate1()
+{
+        var docF=document.form1;
+
+	if(docF.mailer_id.value == '')
+	{
+		alert("Please select a mailer to form query for");
+		docF.mailer_id.focus();
+		return false;
+	}
+	var dt1 = new Date();
+	var dt2 = new Date();
+	var temp;
+
+	if(docF.register_dt1.value && docF.register_dt2.value)
+	{
+		temp = docF.register_dt1.value.split("-");
+		dt1.setFullYear(temp[0],temp[1]-1,temp[2]);	//set start date
+
+		temp = docF.register_dt2.value.split("-");
+		dt2.setFullYear(temp[0],temp[1]-1,temp[2]);     //set end date
+
+		if(dt1>dt2)
+		{
+			alert("Registration Date: Start Date should be earlier than End Date");
+			docF.register_dt1.focus();
+			return false;
+		}
+	}
+
+        if(docF.lastlogin_dt1.value && docF.lastlogin_dt2.value)
+        {
+                temp = docF.lastlogin_dt1.value.split("-");
+                dt1.setFullYear(temp[0],temp[1]-1,temp[2]);     //set start date
+
+                temp = docF.lastlogin_dt2.value.split("-");
+                dt2.setFullYear(temp[0],temp[1]-1,temp[2]);     //set end date
+
+                if(dt1>dt2)
+                {
+                        alert("Last Login Date: Start Date should be earlier than End Date");
+			docF.lastlogin_dt1.focus();
+                        return false;
+                }
+        }
+
+	if(docF.modify_dt1.value && docF.modify_dt2.value)
+        {
+                temp = docF.modify_dt1.value.split("-");
+                dt1.setFullYear(temp[0],temp[1]-1,temp[2]);     //set start date
+
+                temp = docF.modify_dt2.value.split("-");
+                dt2.setFullYear(temp[0],temp[1]-1,temp[2]);     //set end date
+
+                if(dt1>dt2)
+                {
+                        alert("Modify Date: Start Date should be earlier than End Date");
+			docF.modify_dt1.focus();
+                        return false;
+                }
+        }
+
+
+
+	//SELLER CRITERIA CHECKS
+
+	//check whether super area entered is numeric and whether range makes sense(min<max)
+	if(!IsNumeric(docF.seller_area_from.value))
+	{
+		alert("Minimum Super Area entered is not numeric");
+		docF.seller_area_from.focus();
+		return false;
+	}
+	if(!IsNumeric(docF.seller_area_to.value))
+        {
+                alert("Maximum Super Area entered is not numeric");
+                docF.seller_area_to.focus();
+                return false;
+        }
+
+	if(parseFloat(docF.seller_area_from.value) > parseFloat(docF.seller_area_to.value))
+	{
+		alert("Maximum Super Area should be greater than Minimum Super Area");
+		docF.seller_area_from.focus();
+		return false;
+	}
+
+	//check whether price per sqft entered is numeric and whether range makes sense(min<max)
+        if(!IsNumeric(docF.seller_pricesqft_from.value))
+        {
+                alert("Minimum Price per sqft entered is not numeric");
+                docF.seller_pricesqft_from.focus();
+                return false;
+        }
+        if(!IsNumeric(docF.seller_pricesqft_to.value))
+        {
+                alert("Maximum Price per sqft entered is not numeric");
+                docF.seller_pricesqft_to.focus();
+                return false;
+        }
+
+        if(parseFloat(docF.seller_pricesqft_from.value) > parseFloat(docF.seller_pricesqft_to.value))
+        {
+                alert("Maximum Price per sqft should be greater than Minimum Price per sqft");
+                docF.seller_pricesqft_from.focus();
+                return false;
+        }
+	
+	//check whether super price entered is numeric and whether range makes sense(min<max)
+        if(!IsNumeric(docF.seller_price_from.value))
+        {
+                alert("Minimum Asking Price entered is not numeric");
+                docF.seller_price_from.focus();
+                return false;
+        }
+        if(!IsNumeric(docF.seller_price_to.value))
+        {
+                alert("Maximum Asking Price entered is not numeric");
+                docF.seller_price_to.focus();
+                return false;
+        }
+
+        if(parseFloat(docF.seller_price_from.value) > parseFloat(docF.seller_price_to.value))
+        {
+                alert("Maximum Asking Price should be greater than Minimum Asking Price");
+                docF.seller_price_from.focus();
+                return false;
+        }
+
+	//check property dates
+        if(docF.seller_register_dt1.value && docF.seller_register_dt2.value)
+        {
+                temp = docF.seller_register_dt1.value.split("-");
+                dt1.setFullYear(temp[0],temp[1]-1,temp[2]);     //set start date
+
+                temp = docF.seller_register_dt2.value.split("-");
+                dt2.setFullYear(temp[0],temp[1]-1,temp[2]);     //set end date
+
+                if(dt1>dt2)
+                {
+                        alert("Property Registration Date: Start Date should be earlier than End Date");
+			docF.seller_register_dt1.focus();
+                        return false;
+                }
+        }
+	if(docF.seller_modify_dt1.value && docF.seller_modify_dt2.value)
+        {
+                temp = docF.seller_modify_dt1.value.split("-");
+                dt1.setFullYear(temp[0],temp[1]-1,temp[2]);     //set start date
+
+                temp = docF.seller_modify_dt2.value.split("-");
+                dt2.setFullYear(temp[0],temp[1]-1,temp[2]);     //set end date
+
+                if(dt1>dt2)
+                {
+                        alert("Property Modify Date: Start Date should be earlier than End Date");
+                        docF.seller_modify_dt1.focus();
+                        return false;
+                }
+        }
+	if(docF.seller_expiry_dt1.value && docF.seller_expiry_dt2.value)
+        {
+                temp = docF.seller_expiry_dt1.value.split("-");
+                dt1.setFullYear(temp[0],temp[1]-1,temp[2]);     //set start date
+
+                temp = docF.seller_expiry_dt2.value.split("-");
+                dt2.setFullYear(temp[0],temp[1]-1,temp[2]);     //set end date
+
+                if(dt1>dt2)
+                {
+                        alert("Property Expiry Date: Start Date should be earlier than End Date");
+                        docF.seller_expiry_dt1.focus();
+                        return false;
+                }
+        }
+
+
+
+        //check whether property view times entered is numeric and whether range makes sense(min<max)
+        if(!IsNumeric(docF.seller_ntimes_from.value))
+        {
+                alert("Minimum Property Views entered is not numeric");
+                docF.seller_ntimes_from.focus();
+                return false;
+        }
+        if(!IsNumeric(docF.seller_ntimes_to.value))
+        {
+                alert("Maximum Property Views entered is not numeric");
+                docF.seller_ntimes_to.focus();
+                return false;
+        }
+
+        if(parseFloat(docF.seller_ntimes_from.value) > parseFloat(docF.seller_ntimes_to.value))
+        {
+                alert("Maximum Property Views should be greater than Minimum Property Views");
+                docF.seller_ntimes_from.focus();
+                return false;
+        }
+
+        //check whether property view times entered is numeric and whether range makes sense(min<max)
+        if(!IsNumeric(docF.seller_stimes_from.value))
+        {
+                alert("Minimum \"No. of times Property Displayed in Search Results\" entered is not numeric");
+                docF.seller_stimes_from.focus();
+                return false;
+        }
+        if(!IsNumeric(docF.seller_stimes_to.value))
+        {
+                alert("Maximum \"No. of times Property Displayed in Search Results\" entered is not numeric");
+                docF.seller_stimes_to.focus();
+                return false;
+        }
+
+        if(parseFloat(docF.seller_stimes_from.value) > parseFloat(docF.seller_stimes_to.value))
+        {
+                alert("Maximum \"No. of times Property Displayed in Search Results\" should be greater than Minimum \"No. of times Property Displayed in Search Results\"");
+                docF.seller_stimes_from.focus();
+                return false;
+        }
+
+	return true;	
+}
+
+function BuyerPreferenceSelected(obj)
+{
+	var docF=document.form1;
+	if(obj.checked)
+	{
+		if(obj.name=="buyer_preference_all")
+		{
+			docF.buyer_preference_buy.checked=false;
+			docF.buyer_preference_rent.checked=false;
+			docF.buyer_preference_lease.checked=false;
+			docF.buyer_preference_pg.checked=false;
+		}
+		else
+		{
+			docF.buyer_preference_all.checked=false;
+		}
+	}
+	var all = document.getElementsByName('buyer_preference_all');
+	var buy = document.getElementsByName('buyer_preference_buy');
+	var rent = document.getElementsByName('buyer_preference_rent');
+	var lease = document.getElementsByName('buyer_preference_lease');
+	var pg = document.getElementsByName('buyer_preference_pg');
+
+	if(all[0].checked==true)
+	{
+		document.getElementById('buying_budget').disabled=false;
+                document.getElementById('monthly_budget').disabled=false;
+	}
+	if(buy[0].checked==true && rent[0].checked==false && lease[0].checked==false && pg[0].checked==false)
+	{
+		document.getElementById('buying_budget').disabled=false;
+                document.getElementById('monthly_budget').disabled=true;
+	}
+	if(buy[0].checked==false && (rent[0].checked==true || lease[0].checked==true || pg[0].checked==true))
+	{
+		document.getElementById('buying_budget').disabled=true;
+                document.getElementById('monthly_budget').disabled=false;
+	}
+	if(buy[0].checked==true && (rent[0].checked==true || lease[0].checked==true || pg[0].checked==true))
+        {
+                document.getElementById('buying_budget').disabled=false;
+                document.getElementById('monthly_budget').disabled=false;
+        }
+	if(buy[0].checked==false && rent[0].checked==false && lease[0].checked==false && pg[0].checked==false)
+        {
+                document.getElementById('buying_budget').disabled=false;
+                document.getElementById('monthly_budget').disabled=false;
+
+		all[0].checked=true;
+        }
+}
+
+function SellerPreferenceSelected(obj)
+{
+        var docF=document.form1;
+        if(obj.checked)
+        {
+                if(obj.name=="seller_preference_all")
+                {
+                        docF.seller_preference_sell.checked=false;
+                        docF.seller_preference_rent.checked=false;
+                        docF.seller_preference_lease.checked=false;
+                        docF.seller_preference_pg.checked=false;
+                }
+                else
+                {
+                        docF.seller_preference_all.checked=false;
+                }
+        }
+        var all = document.getElementsByName('seller_preference_all');
+        var sell = document.getElementsByName('seller_preference_sell');
+        var rent = document.getElementsByName('seller_preference_rent');
+        var lease = document.getElementsByName('seller_preference_lease');
+        var pg = document.getElementsByName('seller_preference_pg');
+
+        if(sell[0].checked==false && rent[0].checked==false && lease[0].checked==false && pg[0].checked==false)
+        {
+                all[0].checked=true;
+        }
+
+	if(sell[0].checked && (rent[0].checked==true || lease[0].checked==true || pg[0].checked==true))
+	{
+		docF.seller_price_from.disabled=true;
+		docF.seller_price_to.disabled=true;
+		docF.seller_pricesqft_from.disabled=true;
+                docF.seller_pricesqft_to.disabled=true;
+	}
+	else
+	{
+		docF.seller_price_from.disabled=false;
+		docF.seller_price_to.disabled=false;
+		docF.seller_pricesqft_from.disabled=false;
+                docF.seller_pricesqft_to.disabled=false;
+	}
+}
+
+
+function RecipientsSelected()
+{
+	var docF = document.form1;
+	var val = docF.recipient_type;
+	if(val[0].checked==true)	//All recipients selected, hide both seller and buyer criteria
+	{
+		document.getElementById('register_city').disabled=false;
+		var buyer = document.getElementById('buyer_criteria');
+		buyer_cells = buyer.getElementsByTagName('tr');
+		for(i=0;i<buyer_cells.length;i++)
+		{
+			buyer_cells[i].style.display='none';
+		}
+
+		var seller = document.getElementById('seller_criteria');
+                seller_cells = seller.getElementsByTagName('tr');
+                for(i=0;i<seller_cells.length;i++)
+                {
+                        seller_cells[i].style.display='none';
+                }
+	}
+	else if(val[1].checked==true)	//Only sellers selected, hide buyer criteria and unhide seller criteria
+	{
+		document.getElementById('register_city').disabled=false;
+                var buyer = document.getElementById('buyer_criteria');
+                buyer_cells = buyer.getElementsByTagName('tr');
+                for(i=0;i<buyer_cells.length;i++)
+                {
+                        buyer_cells[i].style.display='none';
+                }
+
+                var seller = document.getElementById('seller_criteria');
+                seller_cells = seller.getElementsByTagName('tr');
+                for(i=0;i<seller_cells.length;i++)
+                {
+                        seller_cells[i].style.display='';
+                }
+		ResComSelected();
+
+	}
+	else				//Only buyers selected, hide seller criteria and unhide buyer criteria
+	{
+		document.getElementById('register_city').disabled=true;
+                var buyer = document.getElementById('buyer_criteria');
+                buyer_cells = buyer.getElementsByTagName('tr');
+                for(i=0;i<buyer_cells.length;i++)
+                {
+                        buyer_cells[i].style.display='';
+                }
+
+                var seller = document.getElementById('seller_criteria');
+                seller_cells = seller.getElementsByTagName('tr');
+                for(i=0;i<seller_cells.length;i++)
+                {
+                        seller_cells[i].style.display='none';
+                }
+		ResComSelected();
+	}
+}
+
+function ResComSelected()
+{
+	var docF = document.form1;
+	if(docF.recipient_type[2].checked)	//buyers
+	{
+		var res_com = document.getElementsByName('buyer_rescom');
+		var rent = docF.buyer_preference_rent;
+		var lease = docF.buyer_preference_lease;
+		var pg = docF.buyer_preference_pg;
+
+		//hide both residential and commercial features
+                var resf = document.getElementById('res_features');
+                resf.style.display="none";
+
+                var comf = document.getElementById('com_features');
+                comf.style.display="none";
+
+	}
+	
+	else if(docF.recipient_type[1].checked)	//sellers
+	{
+		var res_com = document.getElementsByName('seller_rescom');
+		var rent = docF.seller_preference_rent;
+                var lease = docF.seller_preference_lease;
+                var pg = docF.seller_preference_pg;
+	}
+
+	if(res_com[0].checked)	//both selected, display all
+	{
+		rent.disabled=false;
+		lease.disabled=false;
+		pg.disabled=false;
+
+		//hide both residential and commercial features
+		var resf = document.getElementById('res_features');
+		resf.style.display="none";
+
+		var comf = document.getElementById('com_features');
+		comf.style.display="none";
+
+		//enable Price per sqft.
+//		docF.seller_pricesqft_from.disabled=false;
+//		docF.seller_pricesqft_to.disabled=false;
+	}
+	if(res_com[1].checked)  //Residential selected
+        {
+                rent.disabled=false;
+                lease.disabled=true;
+                pg.disabled=false;
+
+		if(docF.recipient_type[1].checked) //sellers
+		{
+			//show residential features and hide commercial ones
+			var resf = document.getElementById('res_features');
+                	resf.style.display="";
+
+	                var comf = document.getElementById('com_features');
+        	        comf.style.display="none";
+
+			//disable Price per sqft.
+//	                docF.seller_pricesqft_from.disabled=true;
+  //      	        docF.seller_pricesqft_to.disabled=true;
+		}
+
+        }
+	if(res_com[2].checked)  //Commercial selected
+        {
+                rent.disabled=true;
+                lease.disabled=false;
+                pg.disabled=true;
+
+		if(docF.recipient_type[1].checked) //sellers
+                {
+			//show commercial features and hide residential ones
+        	        var resf = document.getElementById('res_features');
+                	resf.style.display="none";
+
+	                var comf = document.getElementById('com_features');
+        	        comf.style.display="";
+
+			//enable Price per sqft.
+//	                docF.seller_pricesqft_from.disabled=false;
+  //      	        docF.seller_pricesqft_to.disabled=false;
+		}
+        }
+
+	if(docF.recipient_type[1].checked && res_com[2].checked)	//commercial sellers
+	{
+		document.getElementById('seller_transact_type').disabled='true';
+		document.getElementById('seller_owntype').disabled='true';
+		document.getElementById('seller_bedroom_num').disabled='true';
+		document.getElementById('seller_facing').disabled='true';
+	}
+	if(docF.recipient_type[1].checked && res_com[1].checked)        //residential sellers
+        {
+                document.getElementById('seller_transact_type').disabled='';
+                document.getElementById('seller_owntype').disabled='';
+                document.getElementById('seller_bedroom_num').disabled='';
+                document.getElementById('seller_facing').disabled='';
+        }
+
+
+}
+
+function SellerClassSelected()
+{
+	var docF = document.form1;
+	if(docF.seller_class_agent.checked==false && docF.seller_class_builder.checked==false && docF.seller_class_owner.checked==false)
+	{
+		alert("Please select atleast one of Agents, Builders and Owners");
+		docF.seller_class_agent.checked=true;
+		docF.seller_class_builder.checked=true;
+		docF.seller_class_owner.checked=true;	
+	}
+}
+
+function SelectDefaults()
+{
+	var docF = document.form1;
+
+	docF.screening[1].checked=true;
+	docF.activated[1].checked=true;
+//	docF.sub_promo[1].checked=true;
+}
+
+</script>
+</head>
+<body leftmargin="5" topmargin="5" onLoad="BuyerPreferenceSelected(0);RecipientsSelected();SelectDefaults();">
+<form action="advance_search99.php" method="post" onsubmit="return validate();" name="form1">
+<table width="760" border="0" cellspacing="0" cellpadding="0" align="center">
+<tr>
+<td>
+<input type="hidden" name="checksum" value="~$CHECKSUM`">
+<input type="hidden" name="FLAG" value="~$FLAG`">
+<input type="hidden" name="cid" value="~$cid`">
+</td>
+
+<TD class=small vAlign=top width=10><B><SPACER type="block" 
+width="10"></B></TD>
+<td width="571" valign="top"> 
+
+<table width="99%" border="0" cellspacing="0" cellpadding="0">
+<br>
+<br>
+
+<tr>
+<td class=label><b>~if $check_mailerid eq 'Y'`<font color=red>~else`<font color=black>~/if`Select Mailer By Mailer Name</font></b>
+</td>
+                                                                                                 
+<td bgcolor="#ffffcc" class=fieldsnew>
+<select name="mailer_id">
+        <option value='' selected> Select a Mailername</option>
+        ~section name=index loop=$mailer_arr_mailername`
+        <option value=~$mailer_arr_mailername[index].mailer_id` ~if $mailer_id eq $mailer_arr_mailername[index].mailer_id`selected~/if`>~$mailer_arr_mailername[index].mailer_name`</option>
+        ~/section`
+</select>
+</td>
+</tr>
+      
+<tr>
+	<tr>
+       <td height="8"></td>
+       <SPACER height="8" type="block"></SPACER> </tr>
+        <tr>
+       <td height="8"></td>
+       <SPACER height="8" type="block"></SPACER> </tr>
+</tr>
+
+
+
+<tr>
+       <td class="headbigblack"><b>Compose Query </b></td>
+      </tr>
+      <tr class="bgred">
+       <td height="1"></td>
+       <SPACER height="1" type="block"></SPACER> </tr>
+        <tr>
+       <td height="8"></td>
+       <SPACER height="8" type="block"></SPACER> </tr>
+     </table></td>
+</tr>
+</table>
+
+<table width="98%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+      <td height="3" colspan="2"></td>
+</tr>
+
+<tr>
+      <td height="3" colspan="2"></td>
+<SPACER height="3" type="block"></SPACER> </tr>
+<tr>
+<td width="96%" height="2" class=mediumblack> To select multiple options press the +Ctrl key on your keyboard
+</td>
+</tr>
+<tr>
+<td width="96%" class=mediumblack> </td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td>
+<br>
+
+<!--Profile criteria starts here-->
+<table width="98%" border="0" cellspacing="4" cellpadding="2">
+<tr> 
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This mailer is meant for</td>
+<td  class=mediumblack width="60%">
+	<input type=radio name="recipient_type" value='A' checked onClick="RecipientsSelected()">All&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<input type=radio name="recipient_type" value='S' ~if $recipient_type eq 'S'`checked~/if` onClick="RecipientsSelected()">Sellers&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<input type=radio name="recipient_type" value='B' ~if $recipient_type eq 'B'`checked~/if` onClick="RecipientsSelected()">Buyers&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+</tr>
+<tr>
+<td class=mediumblack width="40%" colspan=2><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Select profile details</b> </td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;City of registration</b> </td>
+<td  class=mediumblack width="60%">
+	<select name="city[]" size="6" multiple class="TextBox" id="register_city">
+	<option value="" ~if $deselect_cityall neq '1'`selected~/if`>All</option>
+	~$CITY`
+	</select>
+</td>
+</tr>
+
+<tr>
+<td class="mediumblack" width="40%"><table width="100%" cellspacing="0" cellpadding="0"><tr><td class="mediumblack">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~if $check_registerdate eq 'Y'`<font color=red>Registration Date<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Start Date should be earlier than End Date~else`<font color=black>Registration Date~/if`</font></td><td align="right" class="mediumblack">between</td></tr></table></td>
+
+<td class="mediumblack">
+<script type="text/javascript" src="calendar.js"></script>
+<input type=text name="register_dt1" value="~$register_dt1`" size=10 maxlength=99 class=textfield id="field_5_1">
+<script type="text/javascript">
+    document.write('<a title="Calendar" href="javascript:openCalendar(\'lang=en-iso-8859-1&amp;server=1\', \'form1\', \'field_5_1\', \'date\')"><img class="calendar" src="b_calendar.png" alt="Calendar"/ border=0></a>');
+    </script>
+<script type="text/javascript" src="calendar.js"></script>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=text name="register_dt2" value="~$register_dt2`" size=10 maxlength=99 class=textfield id="field_5_2">
+<script type="text/javascript">
+    document.write('<a title="Calendar" href="javascript:openCalendar(\'lang=en-iso-8859-1&amp;server=1\', \'form1\', \'field_5_2\', \'date\')"><img class="calendar" src="b_calendar.png" alt="Calendar"/ border=0></a>');
+    </script>
+</td>
+
+</tr>
+
+<tr>
+<td class="mediumblack" width="40%"><table width="100%" cellspacing="0" cellpadding="0"><tr><td class="mediumblack">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~if $check_lastlogindate eq 'Y'`<font color=red>Last Login Date<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Start Date should be earlier than End Date~else`<font color=black>Last Login Date~/if`</font></td><td align="right" class="mediumblack">between</td></tr></table></td>
+<td class="mediumblack">
+<script type="text/javascript" src="calendar.js"></script>
+<input type=text name="lastlogin_dt1" value="~$lastlogin_dt1`" size=10 maxlength=99 class=textfield id="field_5_3">
+<script type="text/javascript">
+    document.write('<a title="Calendar" href="javascript:openCalendar(\'lang=en-iso-8859-1&amp;server=1\', \'form1\', \'field_5_3\', \'date\')"><img class="calendar" src="b_calendar.png" alt="Calendar"/ border=0></a>');
+    </script>
+<script type="text/javascript" src="calendar.js"></script>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=text name="lastlogin_dt2" value="~$lastlogin_dt2`" size=10 maxlength=99 class=textfield id="field_5_4">
+<script type="text/javascript">
+    document.write('<a title="Calendar" href="javascript:openCalendar(\'lang=en-iso-8859-1&amp;server=1\', \'form1\', \'field_5_4\', \'date\')"><img class="calendar" src="b_calendar.png" alt="Calendar"/ border=0></a>');
+    </script>
+
+</td>
+</tr>
+
+<tr>
+<td class="mediumblack" width="40%"><table width="100%" cellspacing="0" cellpadding="0"><tr><td class="mediumblack">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~if $check_modifydate eq 'Y'`<font color=red>Modify Date<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Start Date should be earlier than End Date~else`<font color=black>Modify Date~/if`</font></td><td align="right" class="mediumblack">between</td></tr></table></td>
+<td class="mediumblack">
+<script type="text/javascript" src="calendar.js"></script>
+<input type=text name="modify_dt1" value="~$modify_dt1`" size=10 maxlength=99 class=textfield id="field_5_5">
+<script type="text/javascript">
+    document.write('<a title="Calendar" href="javascript:openCalendar(\'lang=en-iso-8859-1&amp;server=1\', \'form1\', \'field_5_5\', \'date\')"><img class="calendar" src="b_calendar.png" alt="Calendar"/ border=0></a>');
+    </script>
+<script type="text/javascript" src="calendar.js"></script>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=text name="modify_dt2" value="~$modify_dt2`" size=10 maxlength=99 class=textfield id="field_5_6">
+<script type="text/javascript">
+    document.write('<a title="Calendar" href="javascript:openCalendar(\'lang=en-iso-8859-1&amp;server=1\', \'form1\', \'field_5_6\', \'date\')"><img class="calendar" src="b_calendar.png" alt="Calendar"/ border=0></a>');
+    </script>
+
+</td>
+</tr>
+
+<tr>
+<td class="mediumblack" width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Source</td>
+<td class="mediumblack">
+<input type=radio name=source value='' checked>All&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=source value='I' ~if $source eq 'I'`checked~/if`>Internal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=source value='E' ~if $source eq 'E'`checked~/if`>External
+</td></tr>
+
+<table width="98%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td bgcolor="cccccc" height="1"></td><SPACER height="1" type="block"></SPACER>
+</tr>
+</table>
+<br>
+<!--Profile criteria ends here-->
+
+<!--Status criteria starts here-->
+<table width="98%" border="0" cellspacing="4" cellpadding="2">
+<tr>
+<td class="mediumblack" colspan=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Status</b></td>
+</tr>
+
+<tr>
+<td class="mediumblack" width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Profile has been Screened</td>
+<td class="mediumblack">
+<input type=radio name=screening value='' checked>Doesn't Matter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=screening value='Y' ~if $screening eq 'Y'`checked~/if`>Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=screening value='N' ~if $screening eq 'N'`checked~/if`>No
+</td>
+</tr>
+
+<tr>
+<td class="mediumblack" width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Profile is Active</td>
+<td class="mediumblack">
+<input type=radio name=activated value='' checked>Doesn't Matter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=activated value='Y' ~if $activated eq 'Y'`checked~/if`>Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=activated value='N' ~if $activated eq 'N'`checked~/if`>No
+</td>
+</tr>
+
+<!--tr>
+<td class="mediumblack" width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Subscribed for Promotional Offers</td>
+<td class="mediumblack">
+<input type=radio name=sub_promo value='' checked>Doesn't Matter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=sub_promo value='Y' ~if $sub_promo eq 'Y'`checked~/if`>Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=sub_promo value='N' ~if $sub_promo eq 'N'`checked~/if`>No
+</td>
+</tr-->
+
+<tr>
+<td class="mediumblack" width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Susbscribed for Promotional Mails From Our Partners</td>
+<td class="mediumblack">
+<input type=radio name=sub_partners value='' checked>Doesn't Matter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=sub_partners value='Y' ~if $sub_partners eq 'Y'`checked~/if`>Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=sub_partners value='N' ~if $sub_partners eq 'N'`checked~/if`>No
+</td>
+</tr>
+
+<tr>
+<td class="mediumblack" width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Subscribed for Newsletter</td>
+<td class="mediumblack">
+<input type=radio name=sub_newsletter value='' checked>Doesn't Matter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=sub_newsletter value='Y' ~if $sub_newsletter eq 'Y'`checked~/if`>Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=sub_newsletter value='N' ~if $sub_newsletter eq 'N'`checked~/if`>No
+</td>
+</tr>
+
+<tr>
+<td class="mediumblack" width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Subscribed for Property Alerts</td>
+<td class="mediumblack">
+<input type=radio name=sub_propalert value='' checked>Doesn't Matter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=sub_propalert value='Y' ~if $sub_propalert eq 'Y'`checked~/if`>Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=sub_propalert value='N' ~if $sub_propalert eq 'N'`checked~/if`>No
+</td>
+</tr>
+
+<tr>
+<td class="mediumblack" width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Subscribed for Service Mailers</td>
+<td class="mediumblack">
+<input type=radio name=sub_service value='' checked>Doesn't Matter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=sub_service value='Y' ~if $sub_service eq 'Y'`checked~/if`>Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=sub_service value='N' ~if $sub_service eq 'N'`checked~/if`>No
+</td>
+</tr>
+</table>
+
+<table width="98%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td bgcolor="cccccc" height="1"></td><SPACER height="1" type="block"></SPACER>
+</tr>
+</table>
+<!--Status criteria ends here-->
+<br>
+
+<!--Buyer criteria starts here-->
+<table width="98%" border="0" cellspacing="4" cellpadding="2" id="buyer_criteria">
+<tr>
+<td class="mediumblack" colspan=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Buyer Criteria</b></td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Monthly Income</b> </td>
+<td  class=mediumblack width="60%">
+        <select name="buyer_income[]" size="4" multiple class="TextBox">
+        <option value="" ~if $deselect_incomeall neq '1'`selected~/if`>Doesn't Matter</option>
+        ~$INCOME`
+        </select>
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Residential or Commercial Property Buyer</b> </td>
+<td  class=mediumblack width="60%">
+<input type=radio name=buyer_rescom value='' checked onClick="ResComSelected()">Both&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=buyer_rescom value='R' ~if $buyer_rescom eq 'R'`checked~/if` onClick="ResComSelected()">Residential&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=buyer_rescom value='C' ~if $buyer_rescom eq 'C'`checked~/if` onClick="ResComSelected()">Commercial
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Preference</b> </td>
+<td  class=mediumblack width="60%">
+<input type=checkbox name=buyer_preference_all ~if $buyer_preference_all eq 'on'`checked~/if` onClick="BuyerPreferenceSelected(this)">Doesn't Matter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=checkbox name=buyer_preference_buy ~if $buyer_preference_buy eq 'on'`checked~/if` onClick="BuyerPreferenceSelected(this)">Buy&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=checkbox name=buyer_preference_rent ~if $buyer_preference_rent eq 'on'`checked~/if` onClick="BuyerPreferenceSelected(this)">Rent&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=checkbox name=buyer_preference_lease ~if $buyer_preference_lease eq 'on'`checked~/if` onClick="BuyerPreferenceSelected(this)">Lease&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=checkbox name=buyer_preference_pg ~if $buyer_preference_pg eq 'on'`checked~/if` onClick="BuyerPreferenceSelected(this)">PG
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Property Cities</b> </td>
+<td  class=mediumblack width="60%">
+        <select name="buyer_prop_city[]" size="4" multiple class="TextBox" onChange="check_city_ajax()" id='buyer_city'>
+        <option value="" ~if $deselect_buyercityall neq '1'`selected~/if`>Doesn't Matter</option>
+        ~$BUYER_CITY`
+        </select>
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Property Locality</b> </td>
+<td class=mediumblack width="60%" >
+	<span id="locality_div" width="100%" align=left style="display:''">
+<!--	<select name="buyer_property_locality[]" class="textboxes1" size="3" multiple disabled hidden>
+                        <option value=""></option>
+                        </select>-->
+                There are no localities defined for this city
+	</span>
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Property Type</b> </td>
+<td  class=mediumblack width="60%">
+	<select name="buyer_property_type[]" size="4" multiple class="TextBox">
+        <option value="" ~if $deselect_buyerpropertytypeall neq '1'`selected~/if`>Any</option>
+        ~$PROPERTY_TYPE`
+        </select>
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Buying Budget</b> </td>
+<td  class=mediumblack width="60%">
+        <select name="buyer_buying_budget[]" size="4" multiple class="TextBox" id="buying_budget">
+        <option value="" ~if $deselect_buyingbudgetall neq '1'`selected~/if`>Doesn't Matter</option>
+        ~$BUYING_BUDGET`
+        </select>
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Monthly Budget (In case of Rent/Lease/PG)</b> </td>
+<td  class=mediumblack width="60%">
+        <select name="buyer_monthly_budget[]" size="4" multiple class="TextBox" id="monthly_budget">
+        <option value="" ~if $deselect_monthlybudgetall neq '1'`selected~/if`>Doesn't Matter</option>
+        ~$MONTHLY_BUDGET`
+        </select>
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Area range (sq. ft.)</td>
+<td  class=mediumblack width="60%">
+        <select name="buyer_area_range[]" size="4" multiple class="TextBox" id="monthly_budget">
+        <option value="" ~if $deselect_areaall neq '1'`selected~/if`>Doesn't Matter</option>
+        ~$AREA_RANGE`
+        </select>
+</td>
+</tr>
+</table>
+<!--Buyer Criteria ends here-->
+
+<!--Seller Criteria starts here-->
+<table width="98%" border="0" cellspacing="4" cellpadding="2" id="seller_criteria">
+<tr>
+<td class="mediumblack" colspan=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Seller Criteria (Based on features of properties posted)</b></td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~if $check_sellerclass eq 'Y'`<font color=red>Seller Class<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Check atleast one~else`<font color=black>Seller Class~/if`</font></td>
+<td  class=mediumblack width="60%">
+        <input type="checkbox" name="seller_class_agent" class="TextBox" ~if $seller_class_agent eq 'on'`checked~/if` onClick="SellerClassSelected()">Agent&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<input type="checkbox" name="seller_class_builder" class="TextBox" ~if $seller_class_builder eq 'on'`checked~/if` onClick="SellerClassSelected()">Builder&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<input type="checkbox" name="seller_class_owner" class="TextBox" ~if $seller_class_owner eq 'on'`checked~/if` onClick="SellerClassSelected()">Owner&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Residential or Commercial Property Seller</b> </td>
+<td  class=mediumblack width="60%">
+<input type=radio name=seller_rescom value='' checked onClick="ResComSelected()">Both&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=seller_rescom value='R' ~if $seller_rescom eq 'R'`checked~/if` onClick="ResComSelected()">Residential&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=seller_rescom value='C' ~if $seller_rescom eq 'C'`checked~/if` onClick="ResComSelected()">Commercial
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Preference</b> </td>
+<td  class=mediumblack width="60%">
+<input type=checkbox name=seller_preference_all ~if $seller_preference_all eq 'on'`checked~/if` onClick="SellerPreferenceSelected(this)">Doesn't Matter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=checkbox name=seller_preference_sell ~if $seller_preference_sell eq 'on'`checked~/if` onClick="SellerPreferenceSelected(this)">Sell&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=checkbox name=seller_preference_rent ~if $seller_preference_rent eq 'on'`checked~/if` onClick="SellerPreferenceSelected(this)">Rent&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=checkbox name=seller_preference_lease ~if $seller_preference_lease eq 'on'`checked~/if` onClick="SellerPreferenceSelected(this)">Lease&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=checkbox name=seller_preference_pg ~if $seller_preference_pg eq 'on'`checked~/if` onClick="SellerPreferenceSelected(this)">PG
+</td>
+</tr>
+
+<tr>
+<td class="mediumblack" width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Property Listing Type(s)</td>
+<td class="mediumblack">
+        <select name="seller_listing[]" size="4" multiple class="TextBox">
+        <option value="" ~if ''|in_array:$seller_listing`selected~/if`>Doesn't Matter</option>
+        <option value="F" ~if 'F'|in_array:$seller_listing`selected~/if`>Free</option>
+        <option value="B" ~if 'B'|in_array:$seller_listing`selected~/if`>Basic</option>
+        <option value="P" ~if 'P'|in_array:$seller_listing`selected~/if`>Platinum</option>
+        </select>
+
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Property Type(s)</b> </td>
+<td  class=mediumblack width="60%">
+        <select name="seller_property_type[]" size="4" multiple class="TextBox">
+        <option value="" ~if $deselect_sellerpropertytypeall neq '1'`selected~/if`>Doesn't Matter</option>
+        ~$SELLER_PROPERTY_TYPE`
+        </select>
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The cities, seller has properties in</b> </td> <td  class=mediumblack width="60%">
+        <select name="seller_prop_city[]" size="4" multiple class="TextBox" onChange="check_city_ajax()" id='seller_city'>
+        <option value="" ~if $deselect_sellerpropcityall neq '1'`selected~/if`>Doesn't Matter</option>
+        ~$SELLER_CITY`
+        </select>
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Property Locality</b> </td>
+<td  class=mediumblack width="60%">
+
+<span id="locality_div2" width="100%" align=left style="display:''">
+	There are no localities defined for this city
+</span>
+
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~if $check_sellerarea1 eq 'Y'`<font color=red>Super Area of Property (in sqft.) Enter Numeric Value(s)</font>~elseif $check_sellerarea2 eq 'Y'`<font color=red>Super Area of Property (in sqft.)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Minimum Super Area can't exceed Maximum Super Area</font>~else`Super Area of Property (in sqft.)~/if`</td>
+<td  class=mediumblack width="60%">
+	<input type=text name=seller_area_from size=10 class=mediumblack value=~$seller_area_from`>&nbsp;&nbsp;&nbsp;to&nbsp;&nbsp;&nbsp;<input type=text name=seller_area_to size=10 class=mediumblack value=~$seller_area_to`>
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~if $check_sellerpricesqft1 eq 'Y'`<font color=red>Price per sqft. (COMMERCIAL PROPERTIES only) Enter Numeric Value(s)</font>~elseif $check_sellerpricesqft2 eq 'Y'`<font color=red>Price per sqft. (COMMERCIAL PROPERTIES only)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Minimum can't exceed Maximum</font>~else`Price per sqft. (COMMERCIAL PROPERTIES only)~/if`</b> </td>
+<td  class=mediumblack width="60%">
+        <input type=text name=seller_pricesqft_from size=10 class=mediumblack value=~$seller_pricesqft_from`>&nbsp;&nbsp;&nbsp;to&nbsp;&nbsp;&nbsp;<input type=text name=seller_pricesqft_to size=10 class=mediumblack value=~$seller_pricesqft_to`>
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~if $check_sellerprice1 eq 'Y'`<font color=red>Asking Price Enter Numeric Value(s)</font>~elseif $check_sellerprice2 eq 'Y'`<font color=red>Asking Price<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Minimum can't exceed Maximum</font>~else`Asking Price~/if` </b></td>
+<td  class=mediumblack width="60%">
+        <input type=text name=seller_price_from size=10 class=mediumblack value=~$seller_price_from`>&nbsp;&nbsp;&nbsp;to&nbsp;&nbsp;&nbsp;<input type=text name=seller_price_to size=10 class=mediumblack value=~$seller_price_to`>
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Transaction Type</td>
+<td  class=mediumblack width="60%">
+	<select name="seller_transact_type[]" size="3" multiple class="TextBox" id="seller_transact_type">
+        <option value="" ~if $deselect_sellertransactall neq '1'`selected~/if`>Doesn't Matter</option>
+	~$TRANSACT_TYPE`
+	</select>
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ownership Type</td>
+<td  class=mediumblack width="60%">
+        <select name="seller_owntype[]" size="5" multiple class="TextBox" id="seller_owntype">
+        <option value="" ~if $deselect_sellerowntypeall neq '1'`selected~/if`>Doesn't Matter</option>
+        ~$OWN_TYPE`
+        </select>
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No. of Bedrooms / Bathrooms</td>
+<td  class=mediumblack width="60%" valign="top">
+	<select name="seller_bedroom_num[]" multiple class="TextBox" size=4 id="seller_bedroom_num">
+
+            <option value="" ~if ''|in_array:$seller_bedroom_num`selected~/if`>Doesn't Matter</option>
+	~section name=index start=1 loop=10`
+	    <option value='~$smarty.section.index.index`' ~if $smarty.section.index.index|in_array:$seller_bedroom_num`selected~/if`>~$smarty.section.index.index`</option>
+        ~/section`
+            <option value="10" ~if '10'|in_array:$seller_bedroom_num`selected~/if`>9+</option>
+        </select>Bedrooms
+		&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;
+
+        <select name="seller_bathroom_num[]" multiple class="TextBox" size=4>
+
+            <option value="" ~if ''|in_array:$seller_bathroom_num`selected~/if`>Doesn't Matter</option>
+        ~section name=index start=1 loop=10`
+            <option value='~$smarty.section.index.index`' ~if $smarty.section.index.index|in_array:$seller_bathroom_num`selected~/if`>~$smarty.section.index.index`</option>
+        ~/section`
+            <option value="10" ~if '10'|in_array:$seller_bathroom_num`selected~/if`>9+</option>
+          </select>Bathrooms	
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Property is Furnished?</td>
+<td  class=mediumblack width="60%">
+        <select name="seller_furnish[]" size="4" multiple class="TextBox">
+        <option value="" ~if $deselect_sellerfurnishall neq '1'`selected~/if`>Doesn't Matter</option>
+        ~$FURNISH`
+        </select>
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Property is Facing</td>
+<td  class=mediumblack width="60%">
+        <select name="seller_facing[]" size="5" multiple class="TextBox" id="seller_facing">
+        <option value="" ~if $deselect_sellerfacingall neq '1'`selected~/if`>Doesn't Matter</option>
+        ~$FACING`
+        </select>
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Property Age</td>
+<td  class=mediumblack width="60%">
+        <select name="seller_age[]" size="5" multiple class="TextBox">
+        <option value="" ~if $deselect_sellerageall neq '1'`selected~/if`>Doesn't Matter</option>
+        ~$AGE`
+        </select>
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The floor the apartment is on /<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total no. of floors in the apartment complex</td>
+<td  class=mediumblack width="60%">
+        <select name="seller_floor[]" size="4" multiple class="TextBox">
+	<option value="" ~if ''|in_array:$seller_floor`selected~/if`>Doesn't Matter</option>
+        <option value="0" ~if '0'|in_array:$seller_floor`selected~/if`>Ground Floor</option>
+        ~section name=index start=1 loop=41`
+        <option value='~$smarty.section.index.index`' ~if $smarty.section.index.index|in_array:$seller_floor`selected~/if`>~$smarty.section.index.index`</option>
+        ~/section`
+        <option value="41" ~if '41'|in_array:$seller_floor`selected~/if`>40+</option>
+        </select>Apartment Floor
+
+	&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;
+
+	<select name="seller_totalfloors[]" size="4" multiple class="TextBox">
+        <option value="" ~if ''|in_array:$seller_totalfloors`selected~/if`>Doesn't Matter</option>
+        <option value="0" ~if '0'|in_array:$seller_totalfloors`selected~/if`>Ground Floor</option>
+        ~section name=index start=1 loop=41`
+        <option value='~$smarty.section.index.index`' ~if $smarty.section.index.index|in_array:$seller_totalfloors`selected~/if`>~$smarty.section.index.index`</option>
+        ~/section`
+        <option value="41" ~if '41'|in_array:$seller_totalfloors`selected~/if`>40+</option>
+        </select>Total Floors
+
+</td>
+</tr>
+
+<tr id="res_features">
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Property Features</td>
+<td  class=mediumblack width="60%">
+	<select name="seller_features[]" size="4" multiple class="TextBox">
+	<option value="" ~if $deselect_resfeaturesall neq '1'`selected~/if`>Doesn't Matter</option>
+	~$FEATURES`
+	</select>
+</td>
+</tr>
+
+<tr id="com_features">
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Property Features</td>
+<td  class=mediumblack width="60%">
+        <select name="seller_features_commercial[]" size="4" multiple class="TextBox">
+        <option value="" ~if $deselect_comfeaturesall neq '1'`selected~/if`>Doesn't Matter</option>
+        ~$FEATURES_COMMERCIAL`
+        </select>
+</td>
+</tr>
+
+
+
+<tr>
+<td class="mediumblack" width="40%"><table width="100%" cellspacing="0" cellpadding="0"><tr><td class="mediumblack">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~if $check_sellerregisterdate eq 'Y'`<font color=red>Registration Date of Property<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Start Date cannot be later than End Date~else`<font color=black>Registration Date of Property~/if`</font></td><td align="right" class="mediumblack">between</td></tr></table></td> <td class="mediumblack">
+<script type="text/javascript" src="calendar.js"></script>
+<input type=text name="seller_register_dt1" value="~$seller_register_dt1`" size=10 maxlength=99 class=textfield id="field_5_7">
+<script type="text/javascript">
+    document.write('<a title="Calendar" href="javascript:openCalendar(\'lang=en-iso-8859-1&amp;server=1\', \'form1\', \'field_5_7\', \'date\')"><img class="calendar" src="b_calendar.png" alt="Calendar"/ border=0></a>');
+    </script>
+<script type="text/javascript" src="calendar.js"></script>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=text name="seller_register_dt2" value="~$seller_register_dt2`" size=10 maxlength=99 class=textfield id="field_5_8">
+<script type="text/javascript">
+    document.write('<a title="Calendar" href="javascript:openCalendar(\'lang=en-iso-8859-1&amp;server=1\', \'form1\', \'field_5_8\', \'date\')"><img class="calendar" src="b_calendar.png" alt="Calendar"/ border=0></a>');
+    </script>
+
+</td>
+</tr>
+
+<tr>
+<td class="mediumblack" width="40%"><table width="100%" cellspacing="0" cellpadding="0"><tr><td class="mediumblack">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~if $check_sellermodifydate eq 'Y'`<font color=red>Modify Date of Property<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Start Date cannot be later than End Date~else`<font color=black>Modify Date of Property~/if`</font></td><td align="right" class="mediumblack">between</td></tr></table></td> <td class="mediumblack">
+<script type="text/javascript" src="calendar.js"></script>
+<input type=text name="seller_modify_dt1" value="~$seller_modify_dt1`" size=10 maxlength=99 class=textfield id="field_5_9">
+<script type="text/javascript">
+    document.write('<a title="Calendar" href="javascript:openCalendar(\'lang=en-iso-8859-1&amp;server=1\', \'form1\', \'field_5_9\', \'date\')"><img class="calendar" src="b_calendar.png" alt="Calendar"/ border=0></a>');
+    </script>
+<script type="text/javascript" src="calendar.js"></script>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=text name="seller_modify_dt2" value="~$seller_modify_dt2`" size=10 maxlength=99 class=textfield id="field_5_10">
+<script type="text/javascript">
+    document.write('<a title="Calendar" href="javascript:openCalendar(\'lang=en-iso-8859-1&amp;server=1\', \'form1\', \'field_5_10\', \'date\')"><img class="calendar" src="b_calendar.png" alt="Calendar"/ border=0></a>');
+    </script>
+
+</td>
+</tr>
+
+<tr>
+<td class="mediumblack" width="40%"><table width="100%" cellspacing="0" cellpadding="0"><tr><td class="mediumblack">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~if $check_sellerexpirydate eq 'Y'`<font color=red>Expiry Date of Property<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Start Date cannot be later than End Date~else`<font color=black>Expiry Date of Property~/if`</font></td><td align="right" class="mediumblack">between</td></tr></table></td> <td class="mediumblack">
+<script type="text/javascript" src="calendar.js"></script>
+<input type=text name="seller_expiry_dt1" value="~$seller_expiry_dt1`" size=10 maxlength=99 class=textfield id="field_5_11">
+<script type="text/javascript">
+    document.write('<a title="Calendar" href="javascript:openCalendar(\'lang=en-iso-8859-1&amp;server=1\', \'form1\', \'field_5_11\', \'date\')"><img class="calendar" src="b_calendar.png" alt="Calendar"/ border=0></a>');
+    </script>
+<script type="text/javascript" src="calendar.js"></script>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=text name="seller_expiry_dt2" value="~$seller_expiry_dt2`" size=10 maxlength=99 class=textfield id="field_5_12">
+<script type="text/javascript">
+    document.write('<a title="Calendar" href="javascript:openCalendar(\'lang=en-iso-8859-1&amp;server=1\', \'form1\', \'field_5_12\', \'date\')"><img class="calendar" src="b_calendar.png" alt="Calendar"/ border=0></a>');
+    </script>
+
+</td>
+</tr>
+
+<tr>
+<td class="mediumblack" width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Property Source</td>
+<td class="mediumblack">
+<input type=radio name=seller_source value='' checked>All&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=seller_source value='I' ~if $seller_source eq 'I'`checked~/if`>Internal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=seller_source value='E' ~if $seller_source eq 'E'`checked~/if`>External
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~if $check_sellerntimes1 eq '1'`<font color=red>No. of times property has been viewed. Enter numeric data~elseif $check_sellerntimes2 eq '1'`<font color=red>No. of times property has been viewed.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Maximum cannot be less than Minimum~else`<font color=black>No. of times property has been viewed.~/if`</font></td>
+<td  class=mediumblack width="60%">
+        <input type=text name=seller_ntimes_from size=10 class=mediumblack value=~$seller_ntimes_from`>&nbsp;&nbsp;&nbsp;to&nbsp;&nbsp;&nbsp;<input type=text name=seller_ntimes_to size=10 class=mediumblack value=~$seller_ntimes_to`>
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~if $check_sellerstimes1 eq '1'`<font color=red>No. of times property has been displayed<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in search results. Enter numeric data~elseif $check_sellerstimes2 eq '1'`<font color=red>No. of times property has been displayed <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in search results. Maximum cannot be less than Minimum~else`<font color=black>No. of times property has been displayed<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in search results.~/if`</font></td>
+<td  class=mediumblack width="60%">
+        <input type=text name=seller_stimes_from size=10 class=mediumblack value=~$seller_stimes_from`>&nbsp;&nbsp;&nbsp;to&nbsp;&nbsp;&nbsp;<input type=text name=seller_stimes_to size=10 class=mediumblack value=~$seller_stimes_to`>
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Property has Photo(s)?</td>
+<td  class=mediumblack width="60%">
+	<select name="seller_havephoto[]" multiple size="4" class="TextBox">
+	<option value="" ~if ''|in_array:$seller_havephoto`selected~/if`>Doesn't Matter</option>
+	<option value="Y" ~if 'Y'|in_array:$seller_havephoto`selected~/if`>Yes</option>
+	<option value="N" ~if 'N'|in_array:$seller_havephoto`selected~/if`>No</option>
+	<option value="D" ~if 'D'|in_array:$seller_havephoto`selected~/if`>Deleted</option>
+	</select>
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack colspan=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Property Status</b></td>
+</tr>
+
+<tr>
+<td class="mediumblack" width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Property has been Screened?</td>
+<td class="mediumblack">
+<input type=radio name=seller_screening value='' checked>Doesn't Matter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=seller_screening value='Y' ~if $seller_screening eq 'Y'`checked~/if`>Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=seller_screening value='N' ~if $seller_screening eq 'N'`checked~/if`>No
+</td>
+</tr>
+
+<tr>
+<td class="mediumblack" width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Property is Active?</td>
+<td class="mediumblack">
+<input type=radio name=seller_activated value='' checked>Doesn't Matter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=seller_activated value='Y' ~if $seller_activated eq 'Y'`checked~/if`>Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=seller_activated value='N' ~if $seller_activated eq 'N'`checked~/if`>No
+</td>
+</tr>
+
+<tr>
+<td class="mediumblack" width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Property Details is Incomplete?</td>
+<td class="mediumblack">
+<input type=radio name=seller_incomplete value='' checked>Doesn't Matter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=seller_incomplete value='Y' ~if $seller_incomplete eq 'Y'`checked~/if`>Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=seller_incomplete value='N' ~if $seller_incomplete eq 'N'`checked~/if`>No
+</td>
+</tr>
+
+</table>
+<!--Seller criteria ends here-->
+
+<table>
+<tr>
+<td width="25%">&nbsp;</td>
+<td class="mediumblack"><br>
+<input type="hidden" name="fsubmit" value="fsubmit">
+<input type="image" name="fsubmit" value="fsubmit"  src="http://www.jeevansathi.com/profile/images/submit_button.gif" width="76" height="23"></td>
+</tr>
+
+</table>
+
+  </td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<br>
+<br>
+</form>
+</body>
+</html>

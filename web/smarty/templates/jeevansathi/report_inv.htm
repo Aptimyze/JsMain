@@ -1,0 +1,82 @@
+<div class="pink" style="width:342px;height:300px;">
+
+<div class="topbg">
+
+<div class="lf pd b t12">Report invalid telephone number</div>
+
+<div class="rf pd b t12"><a href="#" class="blink" onClick="$.colorbox.close();return false;">Close [x]</a></div>
+
+</div><div class="clear"></div>
+<div style="display:inline" id="report_invalid">
+	<div class="scrollbox1 t12" style="width:330px;height:215px;" >
+	<input type="hidden" id="callnow" value="~$CALLNOW`">
+
+	~if !$CALLNOW`
+	<div class="t16 b orange">Select invalid number(s)</div>
+	~/if`
+
+	<div style="margin-top:7px;~if $PHONE_NO eq ''` display:none~/if`"><input type="checkbox" class="chbx" id=phone>
+	~$PHONE_NO`
+	</div>
+
+	<div style="margin-top:5px;~if $SHOW_MOBILE eq ''`display:none~/if`"><input type="checkbox" class="chbx" id=mobile>
+	~$SHOW_MOBILE` 
+	</div>
+
+	<div id="show_error" style="display:none"><span style="color:#FF0000" ><img src="images/iconError_16x16.gif"> <b>Please select phone number(s) to report </b></span></div>
+
+	<div style="margin: 5px 0px;">
+	~if $CALLNOW`  
+	Couldn't talk to the user? Please detail your problem and we will act immediately.	
+	~else`
+	Comments  
+	~/if`
+	</div>
+
+	<textarea style="width: 310px; height: 80px; vertical-align: top;" rows="4" cols="6" id="comments"></textarea>
+
+	</div><div class="sp5"></div>
+
+	<div style="text-align: center; width: 100%;">
+
+	<input class="b green_btn" type="button" style="width: 60px;" value="Report" onclick="javascript:report_invalid()"/>   &nbsp;&nbsp;<a href="#" class="blink" onClick="$.colorbox.close();return false;" >Cancel</a>
+
+	</div>
+</div>
+</div>
+<script>
+var results="";
+var callnow_id =dID("callnow");
+var mobile_id=dID("mobile");
+var phone_id=dID("phone");
+var comments=dID("comments");
+var report_invalids=dID("report_invalid");
+var show_error_id=dID("show_error");
+function report_invalid()
+{
+	var before_call_func="inv_loader";
+	var after_call_func="inv_conf";
+
+	if(!callnow_id.value){	
+		if(!mobile_id.checked && !phone_id.checked)
+		{
+			show_error_id.style.display='inline';
+			return 1;
+		}
+		else
+			show_error_id.style.display='none';
+	}
+	var url="report_invalid_phone.php?Submit=1&profilechecksum=~$PROFILECHECKSUM`&ajax_error=2&mobile="+mobile_id.checked+"&phone="+phone_id.checked+"&comments="+escape(comments.value)+"&callnow=1";
+	send_ajax_request(url,before_call_func,after_call_func);
+	
+}
+function inv_loader()
+{
+	report_invalids.innerHTML='<div id="second_layer" style=""><div style="margin:5px; text-align:center"><img src="images/loader_big.gif"></div>';
+	
+}
+function inv_conf()
+{
+	report_invalids.innerHTML=' <div class="scrollbox1 t12" style="width:330px;"><div class="t16 b orange" style="width:280px;margin-top:80px;margin-left:20px">Thank You. Your problem has been logged and we will look into it immediately.</div></div>';
+}
+</script>

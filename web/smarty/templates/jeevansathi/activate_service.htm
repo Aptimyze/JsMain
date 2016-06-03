@@ -1,0 +1,391 @@
+<html>
+<head>
+<title>JeevanSathi Matrimonials - Activate_Service</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="~$IMG_URL`/profile/ser4_images/styles.php" type="text/css">
+<link rel="stylesheet" href="http://ser4.jeevansathi.com/profile/imagesnew/styles.php" type="text/css">
+<script language="JavaScript" SRC="profile.js"></SCRIPT>
+<script language="JavaScript">
+<!--
+//Added By Puneet for astro service for city locator
+function callCityLocator(no)
+{
+	val='city.php?cityflag=1&frominput=1';
+	cityLocator = window.open(val,'','height=257,width=411,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,top=0,left=0');
+}
+
+function changeShowAddress()
+{
+        var docF=document.form1;
+                                                                                                                             
+        if(docF.showAddress.checked)
+                docF.AddressText.value="Only for jeevansathi.com to contact you. Will not be disclosed on the site";
+        else
+                docF.AddressText.value="";
+}
+                                                                                                                             
+                                                                                                                             
+function validate1()
+{
+        var docF=document.form1;
+        
+	~if $ASTRO eq "Y"`
+	if(docF.Country_Birth.value=="")
+        {
+                alert("Please specify Country of Birth");
+                return false;
+        }
+
+	if(trim(docF.City_Birth.value)=="")
+        {
+                alert("Please specify your City of Birth");
+                return false;
+        }
+	
+	if(trim(docF.Hour_Birth.value)=="")
+        {
+                alert("Please specify your Contact Address");
+                return false;
+        }
+	
+	if(trim(docF.Min_Birth.value)=="")
+        {                 
+		alert("Please specify your Contact Address");
+                return false;
+        }
+
+	~/if`
+
+	
+	~if $HAS_CONTACT eq "Y"`
+	if(trim(docF.Address.value)=="")
+        {
+                alert("Please specify your Contact Address");
+                return false;
+        }
+                                                                                                                             
+        if(trim(docF.pincode.value)=="")
+        {
+                alert("Please specify Pincode");
+                return false;
+        }
+                                                                                                                             
+        if(trim(docF.Phone.value)=="" && trim(docF.Mobile.value)=="")
+        {
+                alert("Please specify one of the two phone Nos.");
+                return false;
+        }
+	
+        if(trim(docF.Email.value==""))
+        {
+                alert("Please specify your Email Address");
+                return false;
+        }
+	~/if`                                                                                                                             
+        return true;
+
+}
+//-->
+</script>
+
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; }
+</style>
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+                                                                                                                             
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="~$IMG_URL`/profile/ser4_images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+
+
+
+<form name="form1" method="post" action="~$SITE_URL`/profile/activate_service.php?checksum=~$checksum`&subject=~$SUBJECT`" onsubmit="return validate1();">
+
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td width="2%"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></td>   <td width="98%" height="18" class="smallblack"><FONT color=#cc3300>Note: Fields marked with * are compulsory. </FONT></td>
+ </tr>
+</table>
+ <br>
+
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+~if $NO_OF_ERROR`<tr><td colspan="3">
+<font color="red" size="2" face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;There are ~$NO_OF_ERROR` Error(s) in your form. They are marked in red. Please correct them and submit the form again</font></td></tr>
+~/if`
+
+~if $ASTRO eq "Y"`                                                                                                             <tr class="bggrey">
+  <td width="2%" class="mediumblack"><span class="smallblack"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></span></td>
+  <td width="98%" class="mediumblack" height="18"><b style="color:#CC3300 "> Astro Data </b></td>
+ </tr>
+~/if`
+</table>
+
+~if $ASTRO eq "Y"`
+<br>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td valign="top"><span class="mediumblack"><span class="smallblack"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></span></span></td>
+  <td valign="top"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="180" height="1"><br>
+    <span class="mediumblack"><b>a. ~if $check_country_birth eq "Y"`<font color="red">Country of birth*</font>~else`Country of birth*~/if`</b></span></td>
+  <td width="100%" height="32" valign="top"><span class="mediumblack">
+   <select name="Country_Birth" size = "1" class="TextBox">
+	<OPTION value="" >Select any one option</OPTION>
+		~$COUNTRY_BIRTH`
+   </SELECT>
+  </span> </td>
+ </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top"><span class="mediumblack"><b>b. ~if $check_city_birth eq "Y"`<font color="red">City of birth*<font>~else`City of birth*~/if` </b></span></td>
+  <td height="60" valign="top"><input type="text" name="City_Birth" value="~$CITY_BIRTH`" class="textbox">
+<input type="button" name="button_birth" class="testbox" value="    Birth place locator    " onClick="callCityLocator(1)">
+<br>
+   <span class="mediumblack"><span class="smallred">Each time you edit this field, it will be screened and may take up to 24 hrs to go live.</span> </span>  </td>
+ </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top"><span class="mediumblack"><b>c.  ~if $check_time_birth eq "Y"`<font color="red">Time of birth*<font>~else`Time of birth*~/if`</b></span></td>
+  <td height="32" valign="top"><select name=Hour_Birth class="TextBox">
+	<option value="" selected ><font size="2">Select Hour</font></option>
+	<option value="00" ~if $HOUR eq "00"`selected~/if`><font size="2">00</font></option>
+	<option value="01" ~if $HOUR eq "01"`selected~/if`><font size="2">01</font></option>
+	<option value="02" ~if $HOUR eq "02"`selected~/if`><font size="2">02</font></option>
+	<option value="03" ~if $HOUR eq "03"`selected~/if`><font size="2">03</font></option>
+	<option value="04" ~if $HOUR eq "04"`selected~/if`><font size="2">04</font></option>
+	<option value="05" ~if $HOUR eq "05"`selected~/if`><font size="2">05</font></option>
+	<option value="06" ~if $HOUR eq "06"`selected~/if`><font size="2">06</font></option>
+	<option value="07" ~if $HOUR eq "07"`selected~/if`><font size="2">07</font></option>
+	<option value="08" ~if $HOUR eq "08"`selected~/if`><font size="2">08</font></option>
+	<option value="09" ~if $HOUR eq "09"`selected~/if`><font size="2">09</font></option>
+	<option value="10" ~if $HOUR eq "10"`selected~/if`><font size="2">10</font></option>
+	<option value="11" ~if $HOUR eq "11"`selected~/if`><font size="2">11</font></option>
+	<option value="12" ~if $HOUR eq "12"`selected~/if`><font size="2">12</font></option>
+	<option value="13" ~if $HOUR eq "13"`selected~/if`><font size="2">13</font></option>
+	<option value="14" ~if $HOUR eq "14"`selected~/if`><font size="2">14</font></option>
+	<option value="15" ~if $HOUR eq "15"`selected~/if`><font size="2">15</font></option>
+	<option value="16" ~if $HOUR eq "16"`selected~/if`><font size="2">16</font></option>
+	<option value="17" ~if $HOUR eq "17"`selected~/if`><font size="2">17</font></option>
+	<option value="18" ~if $HOUR eq "18"`selected~/if`><font size="2">18</font></option>
+	<option value="19" ~if $HOUR eq "19"`selected~/if`><font size="2">19</font></option>
+	<option value="20" ~if $HOUR eq "20"`selected~/if`><font size="2">20</font></option>
+	<option value="21" ~if $HOUR eq "21"`selected~/if`><font size="2">21</font></option>
+	<option value="22" ~if $HOUR eq "22"`selected~/if`><font size="2">22</font></option>
+	<option value="23" ~if $HOUR eq "23"`selected~/if`><font size="2">23</font></option>
+   </select>
+   :
+   <SELECT name=Min_Birth class="TextBox">
+    <OPTION value="" selected >Select Min</OPTION>
+<OPTION value="00" ~if $MINUTE eq '00'` selected ~/if`>00</OPTION>
+<OPTION value="01" ~if $MINUTE eq '01'` selected ~/if`>01</OPTION>
+<OPTION value="02" ~if $MINUTE eq '02'` selected ~/if`>02</OPTION>
+<OPTION value="03" ~if $MINUTE eq '03'` selected ~/if`>03</OPTION>
+<OPTION value="04" ~if $MINUTE eq '04'` selected ~/if`>04</OPTION>
+<OPTION value="05" ~if $MINUTE eq '05'` selected ~/if`>05</OPTION>
+<OPTION value="06" ~if $MINUTE eq '06'` selected ~/if`>06</OPTION>
+<OPTION value="07" ~if $MINUTE eq '07'` selected ~/if`>07</OPTION>
+<OPTION value="08" ~if $MINUTE eq '08'` selected ~/if`>08</OPTION>
+<OPTION value="09" ~if $MINUTE eq '09'` selected ~/if`>09</OPTION>
+<OPTION value="10" ~if $MINUTE eq '10'` selected ~/if`>10</OPTION>
+<OPTION value="11" ~if $MINUTE eq '11'` selected ~/if`>11</OPTION>
+<OPTION value="12" ~if $MINUTE eq '12'` selected ~/if`>12</OPTION>
+<OPTION value="13" ~if $MINUTE eq '13'` selected ~/if`>13</OPTION>
+<OPTION value="14" ~if $MINUTE eq '14'` selected ~/if`>14</OPTION>
+<OPTION value="15" ~if $MINUTE eq '15'` selected ~/if`>15</OPTION>
+<OPTION value="16" ~if $MINUTE eq '16'` selected ~/if`>16</OPTION>
+<OPTION value="17" ~if $MINUTE eq '17'` selected ~/if`>17</OPTION>
+<OPTION value="18" ~if $MINUTE eq '18'` selected ~/if`>18</OPTION>
+<OPTION value="19" ~if $MINUTE eq '19'` selected ~/if`>19</OPTION>
+<OPTION value="20" ~if $MINUTE eq '20'` selected ~/if`>20</OPTION>
+<OPTION value="21" ~if $MINUTE eq '21'` selected ~/if`>21</OPTION>
+<OPTION value="22" ~if $MINUTE eq '22'` selected ~/if`>22</OPTION>
+<OPTION value="23" ~if $MINUTE eq '23'` selected ~/if`>23</OPTION>
+<OPTION value="24" ~if $MINUTE eq '24'` selected ~/if`>24</OPTION>
+<OPTION value="25" ~if $MINUTE eq '25'` selected ~/if`>25</OPTION>
+<OPTION value="26" ~if $MINUTE eq '26'` selected ~/if`>26</OPTION>
+<OPTION value="27" ~if $MINUTE eq '27'` selected ~/if`>27</OPTION>
+<OPTION value="28" ~if $MINUTE eq '28'` selected ~/if`>28</OPTION>
+<OPTION value="29" ~if $MINUTE eq '29'` selected ~/if`>29</OPTION>
+<OPTION value="30" ~if $MINUTE eq '30'` selected ~/if`>30</OPTION>
+<OPTION value="31" ~if $MINUTE eq '31'` selected ~/if`>31</OPTION>
+<OPTION value="32" ~if $MINUTE eq '32'` selected ~/if`>32</OPTION>
+<OPTION value="33" ~if $MINUTE eq '33'` selected ~/if`>33</OPTION>
+<OPTION value="34" ~if $MINUTE eq '34'` selected ~/if`>34</OPTION>
+<OPTION value="35" ~if $MINUTE eq '35'` selected ~/if`>35</OPTION>
+<OPTION value="36" ~if $MINUTE eq '36'` selected ~/if`>36</OPTION>
+<OPTION value="37" ~if $MINUTE eq '37'` selected ~/if`>37</OPTION>
+<OPTION value="38" ~if $MINUTE eq '38'` selected ~/if`>38</OPTION>
+<OPTION value="39" ~if $MINUTE eq '39'` selected ~/if`>39</OPTION>
+<OPTION value="40" ~if $MINUTE eq '40'` selected ~/if`>40</OPTION>
+<OPTION value="41" ~if $MINUTE eq '41'` selected ~/if`>41</OPTION>
+<OPTION value="42" ~if $MINUTE eq '42'` selected ~/if`>42</OPTION>
+<OPTION value="43" ~if $MINUTE eq '43'` selected ~/if`>43</OPTION>
+<OPTION value="44" ~if $MINUTE eq '44'` selected ~/if`>44</OPTION>
+<OPTION value="45" ~if $MINUTE eq '45'` selected ~/if`>45</OPTION>
+<OPTION value="46" ~if $MINUTE eq '46'` selected ~/if`>46</OPTION>
+<OPTION value="47" ~if $MINUTE eq '47'` selected ~/if`>47</OPTION>
+<OPTION value="48" ~if $MINUTE eq '48'` selected ~/if`>48</OPTION>
+<OPTION value="49" ~if $MINUTE eq '49'` selected ~/if`>49</OPTION>
+<OPTION value="50" ~if $MINUTE eq '50'` selected ~/if`>50</OPTION>
+<OPTION value="51" ~if $MINUTE eq '51'` selected ~/if`>51</OPTION>
+<OPTION value="52" ~if $MINUTE eq '52'` selected ~/if`>52</OPTION>
+<OPTION value="53" ~if $MINUTE eq '53'` selected ~/if`>53</OPTION>
+<OPTION value="54" ~if $MINUTE eq '54'` selected ~/if`>54</OPTION>
+<OPTION value="55" ~if $MINUTE eq '55'` selected ~/if`>55</OPTION>
+<OPTION value="56" ~if $MINUTE eq '56'` selected ~/if`>56</OPTION>
+<OPTION value="57" ~if $MINUTE eq '57'` selected ~/if`>57</OPTION>
+<OPTION value="58" ~if $MINUTE eq '58'` selected ~/if`>58</OPTION>
+<OPTION value="59" ~if $MINUTE eq '59'` selected ~/if`>59</OPTION>
+</SELECT></td>
+ </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top"><span class="mediumblack"><b>d. Nakshatram </b></span></td>
+  <td height="40" valign="top"><span class="mediumblack">
+   <input type="text" name="Nakshatram" value="~$NAKSHATRA`" class="testbox">
+   <br>
+   <span class="smallred">Each time you edit this field, it will be screened and may take up to 24 hrs to go live.</span></span></td>
+ </tr>
+</table>
+<br>
+~/if`
+
+~if $HAS_CONTACT eq "Y"`
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr class="bggrey">
+  <td width="2%" height="19" class="mediumblack"><span class="smallblack"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></span></td>
+  <td width="98%" class="mediumblack" height="18"><b style="color:#CC3300 "> Contact Details</b></td>
+ </tr>
+</table>
+<br>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td valign="top"><span class="mediumblack"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></span></td>
+  <td valign="top"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="180" height="1"><br>
+    <span class="mediumblack"><b>a. Contact address of parents (include email id and telephone no.)</b></span></td>
+  <td width="100%" height="50" valign="top"><span class="mediumblack">
+  <input name="Parents_Contact" type="text" class="testbox" value="~$PARENTS_CONTACT`" size="55">
+  <br>
+  <span class="smallred">Each time you edit this field, it will be screened and may take up to 24 hrs to go live.</span> </span> </td>
+ </tr>
+<tr>
+  <td valign="top"><span class="mediumblack"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></span></td>
+<td>&nbsp;</td>
+<td class=smallblack height="1"><table width="300" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="28" class= "mediumblack"><input type="checkbox" name="Show_Parents_Contact" value="N" ~if $NO_OF_ERROR`~if $SHOW_PARENTS_CONTACT eq "N"`checked~/if`~/if`></td>
+<td width="252" class="mediumblack">Don't reveal my Parent's Contact Address</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+  <td valign="top"><span class="mediumblack"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></span></td>
+  <td valign="top"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="180" height="1"><br>
+    <span class="mediumblack"><b>b.  ~if $check_address eq "Y"`<font color="red">~/if`Your Contact Address* ~if $check_address eq "Y"`</font>~/if`</b></span></td>
+<td class=smallblack height="5"><textarea name="Address" cols="55" rows="3" class="testbox">~$CONTACT`</TEXTAREA>
+<br><table width="300" border="0" cellspacing="1" cellpadding="1">
+<tr>
+<td width="48" class="mediumblack"><b>~if $check_pincode eq "Y"`<font color="red">~/if`PIN No.*~if $check_pincode eq "Y"`</font>~/if`</b></td>
+<td width="252"><input name="pincode" type="text" class="testbox" value="~$PINCODE`" size="6"></td>
+</tr>
+</table>
+(Please DO NOT enter your e-mail id here. Contact details other than e-mail id may be given here.) <span class="smallred">Each time you edit this field, it will be screened and may take upto 24 hrs to go live.</span> </td>
+            </tr>
+            <tr>
+  <td valign="top"><span class="mediumblack"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></span></td>
+<td>&nbsp;</td>
+<td><input name="AddressText" type="text" class="testbox1" ~if $SHOWADDRESS eq "N"`value="Only for jeevansathi.com to contact you. Will not be disclosed on the site"~else`value=""~/if` size="60" readonly>
+</td>
+</tr>
+<tr>
+  <td valign="top"><span class="mediumblack"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="10" height="1"></span></td>
+<td>&nbsp;</td>
+<td class=smallblack height="1"><table width="300" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="28" class= "mediumblack"><input type="checkbox" name="showAddress" value="N" ~if $NO_OF_ERROR`~if $SHOWADDRESS eq 'N'`checked~/if`~/if` onclick="changeShowAddress();"></td>
+<td width="252" class="mediumblack">Don't reveal my Contact Address</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+</table></td>
+</tr>
+
+<tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top">~if $check_phone eq 'Y'`<span class="mediumred"> ~else` <span class="mediumblack"> ~/if`<b>c. Phone number</b>~if $check_phone eq 'Y'` <br>~$phone_msg` ~/if`</span></td>
+  <td height="40" valign="top"><span class="mediumblack">
+   <input type="text" name="Phone" value="~$PHONE_RES`" class="testbox">
+&nbsp;&nbsp;&nbsp;Don't show to others
+<input type="checkbox" name="Showphone" value="N" ~if $NO_OF_ERROR`~if $SHOWPHONE_RES eq "N"`checked~/if`~/if`  >
+</span></td>
+ </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top">~if $check_phone eq 'Y'`<span class="mediumred"> ~else` <span class="mediumblack"> ~/if`<b>d.<b> Mobile Number<b> </b></b></b>~if $check_phone eq 'Y'` <br>~$phone_msg` ~/if`</span></td>
+  <td height="55" valign="top"><span class="mediumblack">
+   <input type="text" name="Mobile" value="~$PHONE_MOB`" class="testbox">
+&nbsp;&nbsp;&nbsp;Don't show to others
+<input type="checkbox" name="Showmobile" value="N" ~if $NO_OF_ERROR`~if $SHOWPHONE_MOB eq "N"`checked~/if`~/if` >
+<br>
+<span class="smallred">On which you want to avail jeevansathi SMS service</span> <br>
+~if $check_phone eq 'Y'`<span class="smallred">~/if`(Please fill one of the two phone numbers.) </span></td>
+ </tr>
+ <tr>
+  <td valign="top">&nbsp;</td>
+  <td valign="top" class="mediumblack"><b>e.<b> Messenger Id </b></b><br>
+  </td>
+  <td height="60" valign="top"><span class="mediumblack">
+    <input type="text" name="Messenger_ID" value="~$MESSENGER_ID`" class="testbox">
+   ~if $check_messenger eq "Y"`<font class=testbox color="red">Please select an option</font>~/if` <select name="Messenger" class="testbox">
+	<option value="" selected>Select one option</option>
+	<option value="1" ~if $MESSENGER_CHANNEL eq '1' or $MESSENGER_CHANNEL eq ''` selected ~/if`>Yahoo</option>
+        <option value="2" ~if $MESSENGER_CHANNEL eq '2'` selected ~/if`>MSN</option>
+        <option value="3" ~if $MESSENGER_CHANNEL eq '3'` selected ~/if`>Skype</option>
+        <option value="5" ~if $MESSENGER_CHANNEL eq '5'` selected ~/if`>ICQ</option>
+        <option value="6" ~if $MESSENGER_CHANNEL eq '6'` selected ~/if`>Google Talk</option>
+	<option value="6" ~if $MESSENGER_CHANNEL eq '7'` selected ~/if`>Rediff Bol</option>
+        <option value="4" ~if $MESSENGER_CHANNEL eq '4'` selected ~/if`>Others</option>
+    </select>
+    <br>
+    <input type="checkbox" name="showMessenger" value="N" ~if $NO_OF_ERROR`~if $SHOWMESSENGER eq "N"`checked~/if`~/if`>
+Don't reveal my Messenger ID<br>
+  </span></td>
+</tr>
+
+ <tr>
+  <td valign="top">&nbsp;</td>
+<td valign="top">
+<span class="mediumblack"><b>f.</b></span> ~if $check_email eq "1"`<span class="mediumred"><b>Email ID*</b><br>Enter a valid Email ID ~else` ~if $check_dup_email eq "Y"`<span class="mediumred"><b>Email ID*</b><br>This Email Id already exists in another profile<span class="mediumred"> ~else`<span class="mediumblack"><b>Email ID*</b> ~/if`~/if`</td>
+
+<!--<td valign="top">~if $check_email eq 'Y'`<span class="mediumred"> ~else` <span class="mediumblack"> ~/if`<b>f.<b> Email Address <b> </b></b></b></span></td>-->
+  <td  valign="top"><span class="mediumblack">
+   <input type="text" name="Email" value="~$EMAIL`" class="testbox" size=30></td>
+</tr>
+</table>
+~/if`
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="center">
+<br>
+<input type="submit" name="submit" value="Submit" class="TextBox">
+<input type=hidden name=mis value=~$mis`>
+<input type=hidden name=cid value=~$cid`>
+</td>
+</tr>
+</table>
+
+</form>
+
+</body>
+</html>

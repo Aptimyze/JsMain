@@ -1,0 +1,192 @@
+<IFRAME id="iframeshim"  src="" style="display: inline; left: -60px; top: 32px; z-index: 2; position: absolute; width: 190px; height: 78px;filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);" frameBorder="0" scrolling="no"></IFRAME>
+<style>
+.scrollbox1{background-color:#FDF4F5;border:1px solid #FDF4F5;overflow:auto;padding:8px 2px 4px 8px;width:500px; height:240px;}
+.yellow{ color:#ffc000;}
+</style>
+<div class="pink" style="width:450px;height:420px;">
+<div class="topbg">
+<div class="lf pd b t12">~if $FULLVIEW` Full View ~else`Album View~/if` - ~$USERNAME`</div><div class="rf pd b t12"><a href="#" class="blink" onClick="$.colorbox.close();return false;">Close [x]</a></div>
+</div><div class="clear"></div>
+<div class="scrollbox1" style="width:437px;height:~if $alb1 eq 0 && $alb2 eq 0` 390px~else`320px~/if`">
+<div style="padding:5px; text-align:center;" id="show_img">
+<div style="margin: 0pt 0pt 3px 3px" class="t12 b" id="photo_title"></div>
+<img id="change_img" src="" border="2" onload="javascript:set_image()"></div>
+<div style="padding:5px; text-align:center;align=center;display:none" id="show_loader" ><img  src="~$IMG_URL`/img_revamp/loader_big.gif" border=0></div>
+<br></div>
+<div class="sp12" style="border:1px #F0CED6; border-top-style:solid"></div>
+~if $alb1 eq 1 OR $alb2 eq 1`
+<div  style="text-align:center;width:100%"><div align="center">
+<table width="200" border="0" align="center" cellpadding="2" cellspacing="2">
+  <tr>
+    <td width="8" rowspan="2"><a href="#" onclick="javascript:call_img(-1)"><img src="~$IMG_URL`/img_revamp/icon_pre_yl.gif" border="0" ></a></td>
+    <td width="86"><div id="DISP_0" style="display:~if $alb0`inline~else`none~/if`"><a href="#" onclick="javascript:call_img(0)"><img src="~$IMG_URL`/img_revamp/icon_yellowline.gif" border="0" id="hor_scroll0"></a></div><BR>
+<div class="yellow" id="MAIN0" style="display:~if $alb0`inline~else`none~/if`" align=center>Main Photo</div>
+</td>
+    <td width="52"><div id="DISP_1" style="display:~if $alb1`inline~else`none~/if`;width:102px"><a href="#" onclick="javascript:call_img(1)"><img src="~$IMG_URL`/img_revamp/icon_grayline.gif" border="0" id="hor_scroll1"></a></div>
+<BR>
+<div class="gray" id="MAIN1" style="display:~if $alb1`inline~else`none~/if`;width:102px" align=center >Album&nbsp;Photo&nbsp;1</div>
+</td>
+    <td width="8"><div id="DISP_2" style="display:~if $alb2`inline~else`none~/if`;width:0px"><a href="#" onclick="javascript:call_img(2)"><img src="~$IMG_URL`/img_revamp/icon_grayline.gif" border="0" id="hor_scroll2"></a></div>
+<BR>
+<div class="gray" id="MAIN2" style="display:~if $alb2`inline~else`none~/if`;" align=center>Album&nbsp;Photo&nbsp;2</div></td>
+    <td width="12" rowspan="2"><a href="#"onclick="javascript:call_img(3)"><img src="~$IMG_URL`/img_revamp/icon_next_yl.gif" border="0"></a></td>
+  </tr>
+</table>
+</div>
+</div>
+~/if`
+</div>
+<script>
+first_img=0;
+prev_img=0;
+var img_arr=new Array;
+//Symfony Photo Modification - start
+img_arr[0]="~$MAINPHOTO`";
+img_arr[1]="~$ALBUMPHOTO1`";
+img_arr[2]="~$ALBUMPHOTO2`";
+//Symfony Photo Modification - end
+
+var title_arr=new Array;
+title_arr[0]="~$FIRST_TITLE`";
+title_arr[1]="~$SECOND_TITLE`";
+title_arr[2]="~$THIRD_TITLE`";
+
+var image_id=document.getElementById("change_img");
+var show_imgid=document.getElementById("show_img");
+var show_loaderid=document.getElementById("show_loader");
+var photo_titleid=document.getElementById("photo_title");
+
+image_id.src=img_arr[0];
+photo_titleid.innerHTML=title_arr[0];
+
+img_high="~$IMG_URL`/img_revamp/icon_yellowline.gif";
+img_behind="~$IMG_URL`/img_revamp/icon_grayline.gif";
+class_high="yellow";
+class_behind="gray";
+dump=0;
+var real=1;
+var img0=1;
+var img1=0;
+var img2=0;
+function serve(data)
+{
+	if(data==1)
+		img1=1;
+	if(data==2)
+		img2=1;
+}
+function set_image()
+{
+	show_loaderid.style.display='none';
+	show_imgid.style.visibility='visible';
+	show_imgid.style.height="";
+        show_imgid.style.width=""
+	
+}
+function check_img_loaded()
+{
+	show_loaderid.style.display='block';
+	show_imgid.style.visibility='hidden';
+	show_imgid.style.height="50px";
+	show_imgid.style.width="15px";
+}
+function call_img(goto_img)
+{
+	dump=0;
+	prev_img=first_img;
+	
+	if(goto_img==-1)
+	{
+		if(first_img-1==goto_img)
+			return 1;
+		if(first_img-1<0)
+			return false;
+		else
+		{
+			
+			first_img=first_img-1;			
+		}
+	}
+	else if(goto_img==3)
+	{
+		//Stoping any further processing, since last album image is reached
+		if(first_img+1==goto_img)
+			return 1;
+		if(first_img+1>2)
+			dump=1;
+		else
+		{
+			var temp_img=first_img+1;
+			eval("var idd=document.getElementById('DISP_"+temp_img+"')");
+			if(idd.style.display=='none')
+				return false;
+			first_img=first_img+1;
+		}
+	}
+	else
+		first_img=goto_img;
+
+	check_img_loaded();
+	eval("var idd=document.getElementById('DISP_"+first_img+"')");
+	if(idd.style.display=='none')
+	{
+		first_img=prev_img;
+	}
+	else
+	{	
+		if(image_id)
+		{
+			image_id.src=img_arr[first_img];
+			photo_titleid.innerHTML=title_arr[first_img];
+		}
+	
+		if(!dump)
+		{
+			eval("document.getElementById('hor_scroll"+prev_img+"').src='"+img_behind+"'");	
+			eval("document.getElementById('MAIN"+prev_img+"').className='"+class_behind+"'");
+			eval("document.getElementById('hor_scroll"+first_img+"').src='"+img_high+"'");
+			eval("document.getElementById('MAIN"+first_img+"').className='"+class_high+"'");
+		}
+
+	}
+	return false;
+}
+<!--
+
+//Disable right mouse click Script
+//By Maximus (maximus@nsimail.com) w/ mods by DynamicDrive
+//For full source code, visit http://www.dynamicdrive.com
+
+var message="Function Disabled!";
+
+///////////////////////////////////
+function clickIE4(){
+if (event.button==2){
+//alert(message);
+return false;
+}
+}
+
+function clickNS4(e){
+if (document.layers||document.getElementById&&!document.all){
+if (e.which==2||e.which==3){
+//alert(message);
+return false;
+}
+}
+}
+
+if (document.layers){
+document.captureEvents(Event.MOUSEDOWN);
+document.onmousedown=clickNS4;
+}
+else if (document.all&&!document.getElementById){
+document.onmousedown=clickIE4;
+}
+
+//document.oncontextmenu=new Function("alert(message);return false")
+document.oncontextmenu=new Function("return false")
+
+// -->
+
+</script>

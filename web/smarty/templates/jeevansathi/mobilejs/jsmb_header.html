@@ -1,0 +1,18 @@
+~if JsConstants::$boomerjs eq 1`
+        <script type="text/javascript">
+                var t_pagestart = new Date().getTime();
+        </script>
+~/if`
+<header> <a href="~$SITE_URL`" class="hdLogo"><img src="~$IMG_URL`/images/mobilejs/logo.png" alt="logo"/></a>
+  <nav class="grid-col-4 navPanel">
+	 ~if $LOGIN`
+    <div class="gridCol"> <a href="~$SITE_URL`/P/mainmenu.php" style="color:white !important" ~if $HOME_ICON`class="active"~/if`><em class="homeIc"></em>Home</a> </div>
+    <div class="gridCol"> <a href="~$SITE_URL`/search/partnermatches" style="color:white !important"><em class="matchesIc"></em>Matches</a> </div>
+    ~else`
+     <div class="gridCol"> <a href="~$SITE_URL`/register/page1?source=mobreg1" style="color:white !important"><em class="reg"></em>Register</a> </div>
+    <div class="gridCol"> <a href="~$SITE_URL`/P/mainmenu.php" style="color:white !important" ~if $LOGIN_ICON`class="active"~/if`><em class="lgnIc"></em>Login</a> </div>
+    ~/if`
+    <div class="gridCol"> <a href="~$SITE_URL`/search/topSearchBand?isMobile=Y" style="color:white !important" ~if $SEARCH_ICON`class="active"~/if`><em class="srchIc"></em>Search</a> </div>
+    <div class="gridCol"> <a href="tel:18004196299" style="color:white !important"><em class="calIc"></em>Call us</a> </div>
+  </nav>
+</header>

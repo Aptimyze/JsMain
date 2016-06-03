@@ -1,0 +1,109 @@
+fieldSalesExecutivePerformanceMisResultScreen1Success:
+  metas:
+    title:        Jeevansathi.com - MIS
+
+  stylesheets:    []
+
+  javascripts:    []
+
+fieldSalesExecutivePerformanceMisResultScreen2Success:
+  metas:
+    title:        Jeevansathi.com - MIS
+
+  stylesheets:    []
+
+  javascripts:    []
+
+fieldSalesExecutivePerformanceMisSuccess:
+  metas:
+    title:        Jeevansathi.com - MIS
+
+  stylesheets:    [jquery_dateLists]
+
+  javascripts:    [jquery_dateLists]
+
+fieldSalesExecutiveEfficiencyMisResultScreen1Success:
+  metas:
+    title:        Jeevansathi.com - MIS
+
+  stylesheets:    []
+
+  javascripts:    []
+
+fieldSalesExecutiveEfficiencyMisResultScreen2Success:
+  metas:
+    title:        Jeevansathi.com - MIS
+
+  stylesheets:    []
+
+  javascripts:    []
+
+fieldSalesExecutiveEfficiencyMisSuccess:
+  metas:
+    title:        Jeevansathi.com - MIS
+
+  stylesheets:    [jquery_dateLists]
+
+  javascripts:    [jquery_dateLists]
+
+discountHeadsMisResultScreen1Success:
+  metas:
+    title:        Jeevansathi.com - MIS
+
+  stylesheets:    []
+
+  javascripts:    []
+
+discountHeadsMisResultScreen2Success:
+  metas:
+    title:        Jeevansathi.com - MIS
+
+  stylesheets:    []
+
+  javascripts:    []
+
+discountHeadsMisSuccess:
+  metas:
+    title:        Jeevansathi.com - MIS
+
+  stylesheets:    [jquery_dateLists]
+
+  javascripts:    [jquery_dateLists]
+
+cityWiseFreshAndRenewalMisSuccess:
+  metas:
+    title:        Jeevansathi.com - MIS
+
+  stylesheets:    [jquery_dateLists]
+
+  javascripts:    [jquery_dateLists]
+
+cityWiseFreshAndRenewalMisResultScreen1Success:
+  metas:
+    title:        Jeevansathi.com - MIS
+
+  stylesheets:    []
+
+  javascripts:    []
+
+gatewayWiseMisSuccess:
+  metas:
+    title:        Jeevansathi.com - MIS
+
+  stylesheets:    [jquery_dateLists]
+
+  javascripts:    [jquery_dateLists]
+
+fieldSalesDocumentVerificationMisSuccess:
+  metas:
+    title:        Jeevansathi.com - MIS
+
+  stylesheets:    [jquery_dateLists]
+
+  javascripts:    [jquery_dateLists]
+
+applePaymentsLoggingMisSuccess:
+  metas:
+    title:        Apple Payments Logging Interface
+  stylesheets:    []
+  javascripts:    []

@@ -1,0 +1,356 @@
+<html>
+<head>
+<title>JeevanSathi Matrimonials - Upload Photographs</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="/P/I/styles.php" type="text/css">
+<link rel="stylesheet" href="/P/IN/styles.php" type="text/css">
+<script language="javascript">
+<!--
+function MM_openBrWindow(theURL,winName,features)
+{
+        window.open(theURL,winName,features);
+}
+
+//function to display or hide a given element
+function showHideItems(myItem, myButton)
+{
+//this is the ID of the hidden item
+var myItem = document.getElementById(myItem);
+
+//this is the ID of the plus/minus button image
+var myButton = document.getElementById(myButton);
+
+    if (myItem.style.display != "none") 
+    {
+        //items are currently displayed, so hide them
+        myItem.style.display = "none";
+       // swapImage(myButton,"plus");
+
+    }
+    else 
+    {
+        //items are currently hidden, so display them
+        myItem.style.display = "block";
+        //swapImage(myButton,"minus");
+	d=document.getElementById("item2");
+	d.innerHTML = 'Choose your photo privacy option';
+    }
+
+}
+
+
+function hide_item1(x)
+{
+var myItem_1 = document.getElementById('item1');
+if(x=="A" || x== "")
+myItem_1.style.display="none";
+}
+//-->
+</script>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body onload="hide_item1('~$PHOTODISPLAY`')";>
+
+~$HEAD`
+~$SUBHEADER`
+~$LEFTPANEL`
+
+<table width="78%" height=1110 border="0" cellspacing="0" cellpadding="0" align="center">
+      <tr>
+        <td valign=top>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+      <tr>
+        <td>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+       <td height="4"></td>
+       <SPACER height="4" type="block"></SPACER> </tr>
+      <tr>
+       <td class="headbigblack"><b>Upload Photo </b></td>
+      </tr>
+      <tr class="bgred">
+       <td height="1"></td>
+       <SPACER height="1" type="block"></SPACER> </tr>
+        <tr>
+       <td height="8"></td>
+       <SPACER height="8" type="block"></SPACER> </tr>
+     </table>
+
+ <table width="474"  border="0" align="center" cellpadding="0" cellspacing="0">
+    <tr>
+     <td colspan="5"><img src="~$IMG_URL`/profile/ser4_imagesnew/get_photo_ad.gif" width="474" height="26" oncontextmenu="return false;"></td>
+    </tr>
+    <tr>
+     <td width="1" class="bggrey"><img src="~$IMG_URL`/profile/ser4_imagesnew/zero.gif" width="1" height="1" oncontextmenu="return false;"></td>
+     <td><img src="~$IMG_URL`/profile/ser4_imagesnew/photo_al_pic.jpg" width="143" height="216" oncontextmenu="return false;"></td>
+     <td width="1" class="bggrey"><img src="~$IMG_URL`/profile/ser4_imagesnew/zero.gif" width="1" height="1" oncontextmenu="return false;"></td>
+     <td width="328"><table width="328"  border="0" cellspacing="0" cellpadding="0">
+      <tr>
+       <td width="81"><img src="~$IMG_URL`/profile/ser4_imagesnew/album_1.gif" width="68" height="18" oncontextmenu="return false;"></td>
+       <td colspan="2"><img src="~$IMG_URL`/profile/ser4_imagesnew/zero.gif" width="186" height="1" oncontextmenu="return false;"></td>
+      </tr>
+      <tr>
+       <td colspan="3"><img src="~$IMG_URL`/profile/ser4_imagesnew/album_2.gif" width="327" height="133" oncontextmenu="return false;"></td>
+      </tr>
+      <tr>
+       <td colspan="2">&nbsp;</td>
+       <td width="254"><div align="right"><img src="~$IMG_URL`/profile/ser4_imagesnew/album_3.gif" width="64" height="64" oncontextmenu="return false;"></div></td>
+      </tr>
+     </table></td>
+     <td width="1" class="bggrey"><img src="~$IMG_URL`/profile/ser4_imagesnew/zero.gif" width="1" height="1"></td>
+    </tr>
+    <tr>
+     <td colspan="5" class="bggrey"><img src="~$IMG_URL`/profile/ser4_imagesnew/zero.gif" width="1" height="1"></td>
+    </tr>
+	<tr class="bgbrownL2">
+     <td colspan="5"><img src="~$IMG_URL`/profile/ser4_imagesnew/zero.gif" width="1" height="8"></td>
+    </tr>
+   </table><br>
+
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td width="50%" valign="top">
+                  <table width="100%" border="0" cellpadding="2" cellspacing="2">
+                    <tr bgcolor="#ffe9c9">
+                      <td colspan="2"><div align="center"><strong class="mediumblack">Current Status</strong></div></td>
+                      </tr>
+                    <tr>
+                      <td width="50%" class="mediumblack"><div align="left"><strong>Main photo </strong></div></td>
+                      <td width="50%" class="mediumblack"><div align="left">~$MAINPHOTOSTATUS`</div></td>
+                    </tr>
+                    <tr>
+                      <td class="mediumblack"><div align="left"><strong>Album photo1 </strong></div></td>
+                      <td class="mediumblack"><div align="left">~$ALBUMPHOTO1STATUS`</div></td>
+                    </tr>
+                    <tr>
+                      <td class="mediumblack"><div align="left"><strong>Album photo2</strong></div></td>
+                      <td class="mediumblack"><div align="left">~$ALBUMPHOTO2STATUS`</div></td>
+                    </tr>
+                  </table></td>
+                  <td valign="top"><table width="100%" border="0" cellpadding="2" cellspacing="2">
+                    <tr>
+                      <td colspan="2" bgcolor="#ffe9c9"><div align="center"><strong class="mediumblack">You are in control </strong></div></td>
+                      </tr>
+                    <tr>
+                      <td width="12%" class="mediumblack"><div align="center"><img src="~$IMG_URL`/profile/ser4_images/arrow_bg-white.gif" width="6" height="10"></div></td>
+                      <td width="88%" class="mediumblack">Add upto 3 photos</td>
+                    </tr>
+                    <tr>
+                      <td class="mediumblack"><div align="center"><img src="~$IMG_URL`/profile/ser4_images/arrow_bg-white.gif" width="6" height="10"></div></td>
+                      <td class="mediumblack">Decide sequence of your photos</td>
+                    </tr>
+                    <tr>
+                      <td class="mediumblack"><div align="center"><img src="~$IMG_URL`/profile/ser4_images/arrow_bg-white.gif" width="6" height="10"></div></td>
+                      <td class="mediumblack">Add/Replace Photos yourself</td>
+                    </tr>
+                    <tr>
+                      <td class="mediumblack"><div align="center"><img src="~$IMG_URL`/profile/ser4_images/arrow_bg-white.gif" width="6" height="10"></div></td>
+                      <td class="mediumblack">Delete Photo(s) instantly</td>
+                    </tr>
+                  </table></td>
+                </tr>
+              </table>
+          <br>
+      	  <table width="100%"  border="0" cellspacing="2" cellpadding="0">
+            <tr>
+              <td colspan="2" height="18" bgcolor="#ffe9c9" class="mediumblack"><strong>Add/Replace Photos </strong></td>
+            </tr>
+            <tr>
+              <td colspan="2" height="17" class="mediumred">Upload Photos yourself <FONT color=#ff0000>(.jpg or .gif format only. Max size of each photo = 1 MB)</FONT></td>
+            </tr>
+	  <TR>
+              <TD colspan="2" height=5><SPACER height="5" type="block"></TD>
+            </TR>
+	<form enctype="multipart/form-data" action="uploadphoto.php" method="POST">
+	  <input type="hidden" name="checksum" value="~$CHECKSUM`">
+            <tr>
+             	~if $MAINPHOTOSTATUS eq "Under processing"`
+          	<td class="mediumred" colspan="2" height="18"><FONT color=#ff0000><B>Main Photo</B> is ~$MAINPHOTOSTATUS`.</FONT>
+
+		It is being screened and will be attached to your profile shortly.
+		</td>
+		~elseif $MAINPHOTOSTATUS eq "Activated" or $MAINPHOTOSTATUS eq "Not uploaded"`
+                <td width="52%" class="mediumblack"><B>~if $MAINPHOTOSTATUS eq "Activated"` Replace ~else` Add ~/if`Main Photo<BR>
+                (This will be visible in your profile &amp; in your album)</B>
+                ~if $MAINPHOTOSTATUS neq "Activated"`
+                <input type="hidden" name="main_photo_not_uploaded" value="1">
+                ~/if`
+		</td>
+		<td width="48%" ><input name="mainphotofile" type="file" value= "" class="testbox"></td>
+		~/if`
+		</tr>
+                <tr>
+               	~if $ALBUMPHOTO1STATUS eq "Under processing"`
+       		<td class="mediumred" colspan="2" height="18"><FONT color=#ff0000><B>Album Photo 1</B> is ~$ALBUMPHOTO1STATUS`.</FONT>
+		It is being screened and will be attached to your profile shortly.
+		</td>
+		~elseif $ALBUMPHOTO1STATUS eq "Activated" or $ALBUMPHOTO1STATUS eq "Not uploaded"`
+       		<td width="52%" class="mediumblack"><B>~if $ALBUMPHOTO1STATUS eq "Activated"` Replace ~else` Add ~/if` Album Photo 1</B>
+		</td>
+		<td width="48%" ><input name="albumphoto1file" type="file" value= "" class="testbox"></td>
+		~/if`
+		</tr>
+                <tr>
+                ~if $ALBUMPHOTO2STATUS eq "Under processing"`
+                <td class="mediumred" colspan="2" height="18"><FONT color=#ff0000><B>Album photo 2</B> is ~$ALBUMPHOTO2STATUS`.</FONT>
+		It is being screened and will be attached to your profile shortly.
+		</td>
+		~elseif $ALBUMPHOTO2STATUS eq "Activated" or $ALBUMPHOTO2STATUS  eq "Not uploaded"`
+                <td width="52%" class="mediumblack" height="18"><B>~if $ALBUMPHOTO2STATUS eq "Activated"` Replace ~else` Add ~/if` Album Photo 2</B>
+		</td>
+		<td width="48%" ><input name="albumphoto2file" type="file" value= "" class="testbox"></td>
+		~/if`
+		</tr>
+	  <TR>
+              <TD colspan="2" height=5><SPACER height="5" type="block"></TD>
+            </TR>
+	~if $SHOWUPLOADPHOTO`
+           
+	  <tr>
+	  <td bgcolor="#ffe9c9" class="mediumblack" colspan="2" height="18">  
+	  <div id="item2">
+	  <table width="100%"  border="0" cellspacing="2" cellpadding="0">
+	  <tr> 
+             <td colspan="2" height="18" bgcolor="#ffe9c9" class="mediumblack"><!--img src="~$IMG_URL`/profile/ser4_imagesnew/plus.gif" width="8" height="8"-->&nbsp;~if $PHOTODISPLAY eq "A" || $PHOTODISPLAY eq ""`To choose your photo privacy option, <u><a onclick="showHideItems('item1', 'button1');" class="bluelinku">click here</a></u> ~else`Choose your photo privacy option ~/if`
+             </td> 
+          </tr>
+ 	  </table>
+	  </div>
+	  </td>
+	  </tr>
+
+	  <!--table width="100%"  border="0" cellspacing="2" cellpadding="0">
+	    <tr>
+	      <td colspan="2" height="18" bgcolor="#ffe9c9" class="mediumblack"><strong>Choose display option</strong></td>
+	    </tr>
+	    <tr>
+	  </table-->
+		<tr> 
+              <td colspan="2" height="20" class="mediumblack">
+		<div id="item1">
+		<table width="100%" border="0" align="center" cellpadding="2" cellspacing="2">
+                <tr>
+                  <td width="25"><input name="photo_display" type="radio" value="A" ~if $PHOTODISPLAY eq "A"`Checked="checked"~/if`></td>
+                  <td width="399" class="mediumblack">I want my photos to be visible to all members and to be shown in the Member's Photo Club (Recommended) </td>
+                </tr>
+                <tr>
+                  <td><input name="photo_display" type="radio" value="F" ~if $PHOTODISPLAY eq "F"`Checked="checked"~/if`></td>
+                  <td class="mediumblack">I don't want my photos to be visible to those members who I have filtered.</td>
+                </tr>
+                <tr>
+                  <td><input name="photo_display" type="radio" value="C" ~if $PHOTODISPLAY eq "C"`Checked="checked"~/if`></td>
+                  <td class="mediumblack">I want my photos to be visible only to members I contact and to members I accept.</td>
+                </tr>
+                <tr>
+                  <td><input name="photo_display" type="radio" value="H" ~if $PHOTODISPLAY eq "H"`Checked="checked"~/if`></td>
+                  <td class="mediumblack">I want to HIDE my photos temporarily</td>
+                </tr>
+		<!--tr>
+                  <td>&nbsp;</td>
+                  <td><input type="submit" name="submitted" value="Submit" class="TextBox"></td>
+                </tr-->
+              </table>
+	        </div>
+		</td>
+            </tr>
+	~/if`
+		<tr>
+                  <!--td>&nbsp;</td-->
+                  <td align="center"><input type="submit" name="submitted" value="Upload Photo" class="TextBox"></td>
+                  <td>&nbsp;</td>
+                </tr>
+	  </form>
+	~if $SHOWALTERNATEWAY eq "Y"`
+	    <TR>
+              <TD colspan=2 height=3><SPACER height="3" type="block"></TD>
+            </TR>
+	    <TR bgcolor="#cccccc">
+              <TD colspan=2 height=1><SPACER height="1" type="block"></TD>
+            </TR>
+	    <tr>
+              <td colspan=2 class="mediumblack"><strong>You can send your photo to: </strong>photos@jeevansathi.com<br>
+              </td>
+            </tr>
+            <tr>
+              <td colspan=2 class="mediumblack"><strong>OR</strong><br>
+              </td>
+            </tr>
+	    <tr>
+	      <td colspan=2 class="mediumblack"><strong>You can also post your photo to: </strong><br>
+		    JeevanSathi Internet Services <BR>
+		    B-8, Sector - 132, <BR>
+		    Noida - 201301, India. <br>
+		    <br>
+		    We will scan your photo, make a digital copy &amp; attach it with your profile. Remember to mention your username &amp; e-mail id on the reverse of your photo and clearly specify the main photo and album photos. </td>
+	      </td>
+	    </tr>
+	~/if`
+	    <TR>
+              <TD height=3><SPACER height="3" type="block"></TD>
+            </TR>
+	    <TR bgcolor="#cccccc">
+              <TD colspan=2 height=1><SPACER height="1" type="block"></TD>
+            </TR>
+            <tr bgcolor="#ffe9c9">
+              <td colspan=2 height="18" class="mediumblack"><B>Delete Your Photo(s)</B></td>
+            </tr>
+~if $SHOWDELETEBUTTON eq "N"`
+            <tr>
+              <td colspan=2 height="20" class="mediumblack">
+		<table width="100%"  border="0" align="center" cellpadding="2" cellspacing="0">
+                <tr>
+                  <td class="mediumblack">Delete Photo Option will be available only after your photo(s) are processed and attached to your profile</td>
+                </tr>
+                </table>
+	      </td>
+            </tr>
+~else`
+	<form enctype="multipart/form-data" action="uploadphoto.php" method="POST">
+		<input type="hidden" name="checksum" value="~$CHECKSUM`">
+		<tr>
+		<td colspan=2 height="20" class="mediumblack"><table width="100%" align="center" border="0" cellspacing="0" cellpadding="2">
+            ~if $ALBUMPHOTO1STATUS eq "Activated"`
+				<tr>
+              <td width="39%" class="mediumblack"><u>Delete</u> Album Photo - 1</td>
+              <td width="61%"><input name="delete_photo" type="radio" value="albumphoto1" Checked></td>
+            </tr>
+            ~/if`
+            ~if $ALBUMPHOTO2STATUS eq "Activated"`
+            <tr>
+               <td class="mediumblack"><u>Delete</u> Album Photo - 2</td>
+               <td><input name="delete_photo" type="radio" value="albumphoto2" Checked></td>
+            </tr>
+            ~/if`
+            ~if $MAINPHOTOSTATUS eq "Activated"`
+            <tr>
+               <td class="mediumblack"><u>Delete</u> All Photos</td>
+               <td><input name="delete_photo" type="radio" value="all" Checked></td>
+            </tr>
+            ~/if`
+            <tr>
+               <td colspan="2" class="mediumblack">Are you sure you want to <font color="#FF0000"> delete</font> your photograph(s)?</td>
+            </tr>
+            <tr>
+               <td colspan="2" class="mediumblack" align="center">
+               <input type="submit" name="Pdelete" value="Delete Photo" class="TextBox"></td>
+            </tr>
+              </table></td>
+	   </tr>
+	</form>
+~/if`
+          </table>
+    </table>
+    </td>
+  </tr>
+</table>
+      </td>
+  </tr>
+</table>
+      </td>
+  </tr>
+</table>
+<br>
+~$SUBFOOTER`
+<br>
+~$FOOT`
+</body>
+</html>

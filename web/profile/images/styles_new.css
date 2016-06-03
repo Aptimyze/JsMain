@@ -1,0 +1,64 @@
+.smallred {
+	FONT-SIZE: 9px; COLOR: #ff0000; FONT-FAMILY: Arial, Helvetica, sans-serif;
+}
+.mediumblack {
+	FONT-SIZE: 11px; COLOR: #000000; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+.mediumblackb {
+	FONT-SIZE: 11px; COLOR: #000000; FONT-FAMILY: Arial, Helvetica, sans-serif; font-weight:bold
+}
+.mediumgreyb {
+	FONT-SIZE: 11px; COLOR: #333333; FONT-FAMILY: Arial, Helvetica, sans-serif; font-weight:bold
+}
+
+.mediummaroonb {
+	FONT-SIZE: 11px; COLOR: #990000; FONT-FAMILY: Arial, Helvetica, sans-serif; font-weight:bold
+}
+
+
+
+
+
+
+.formselect{FONT-FAMILY: Arial; FONT-SIZE: 11px;}
+
+.bgbrowndark {background-color:#DB6422}
+.bgbrown {background-color:#F5A77C}
+.bgbrownL {background-color:#FDB88C}
+.bgbrownL1 {background-color:#FFC9A6}
+.bgbrownL2 {background-color:#FFD3A1}
+.bgbrownL3 {background-color:#FFE5CC}
+.bgbrownL4 {background-color:#FFF2E5}
+.bgyellow {background-color:#FFED9F}
+.bgwhite {background-color:#ffffff}
+.bggrey {background-color:#cccccc}
+
+
+
+img.floatLeft { float: left; margin: 2px; }
+
+
+.redlink A:link {text-decoration: underline; color: #ff0000;}
+.redlink A:visited {text-decoration: underline; color: #ff0000;}
+.redlink A:active {text-decoration: underline; color: #ff0000;}
+.redlink A:hover {text-decoration: underline; color: #ff0000;}
+
+.blacklink A:link {text-decoration: none; color: #000000;}
+.blacklink A:visited {text-decoration: none; color: #000000;}
+.blacklink A:active {text-decoration: none; color: #000000;}
+.blacklink A:hover {text-decoration: none; color: #000000;}
+
+.blacklinku A:link {text-decoration: underline; color: #000000;}
+.blacklinku A:visited {text-decoration: underline; color: #000000;}
+.blacklinku A:active {text-decoration: underline; color: #000000;}
+.blacklinku A:hover {text-decoration: underline; color: #000000;}
+
+.bluelinku A:link {text-decoration: underline; color: blue;}
+.bluelinku A:visited {text-decoration: underline; color: blue;}
+.bluelinku A:active {text-decoration: underline; color: blue;}
+.bluelinku A:hover {text-decoration: underline; color: blue;}
+
+.greenlinku A:link {text-decoration: underline; color: green;}
+.greenlinku A:visited {text-decoration: underline; color: green;}
+.greenlinku A:active {text-decoration: underline; color: green;}
+.greenlinku A:hover {text-decoration: underline; color: green;}

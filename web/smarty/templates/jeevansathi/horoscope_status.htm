@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<title>Jeevansathi Matrimonials - Astro Chart </title>
+<link rel="stylesheet" href="css/~$comm_style_css`" type="text/css">
+<SCRIPT type=text/javascript language="JavaScript" SRC="http://www.jeevansathi.com/profile/js/~$search_js`"></SCRIPT>
+<style type="text/css">
+.pghd{float:left; width:99% }
+.r14{font:bold 14px verdana,Arial; color:#CC0000; padding-top:5px}
+.w1{width:40%;}
+.w2{width:58%;}
+.line{line-height:1px; background-color:#CCCCCC; width:98%}
+</style>
+<script language=JavaScript type=text/javascript>
+<!--
+function MM_openFrame(tag)
+{
+var url="http://www.jeevansathi.com/profile/horoscope_details.php?" + tag + "=1";
+xmlHttp=GetXmlHttpObject(stateChanged);
+xmlHttp.open("GET", url , true);
+xmlHttp.send(null);
+
+if(document.getElementById)
+{
+document.getElementById("add_update_button").style.display = 'none';
+document.getElementById("astro_details").style.display = 'none';
+document.getElementById("astro_chart").style.display = 'none';
+document.getElementById("frame_show").style.display = 'block';
+}
+}
+//-->
+</script>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body>
+<DIV id="dhtmltooltip" class="ttip"></DIV>
+<SCRIPT language=JavaScript1.2 src="http://www.jeevansathi.com/profile/js/~$tooltip_new_js`" type=text/javascript></SCRIPT>
+
+<div id="container">
+<noscript>
+<div align="center" class="pad4 btwe bluelink bgg1"><b> <img src="~$IMG_URL`/profile/ser4_images/error.gif" width="23" height="20"> Javascript is disabled in your browser due to this certain functionalities will not work. <a href="http://www.jeevansathi.com/P/js_help.htm" target="_blank">Click Here</a>, to know how to enable it.</b></div>
+</noscript>
+<!--HEADER STARTS-->
+~$HEAD`
+<!--HEADER ENDS-->
+
+
+<div class="spacer15">&nbsp;</div>
+<!--LEFT PANNEL STARTS HERE-->
+~$LEFTPANEL`
+<!--LEFT PANNEL ENDS HERE-->
+
+
+<div id="center">
+<div class="pghd">
+<div class="r14">
+<img src="~$IMG_URL`/profile/ser4_images/horo.gif" width="16" height="16">
+Your Astro Chart
+</div>
+~if $astrodata`
+	<div class="space15">&nbsp;</div>
+	<div class="bele"><b>Your horoscope details</b></div>
+	<div class="space15">&nbsp;</div>
+	<div class="bele pad2">Date of Birth : ~$astrodata.DTOFBIRTH` </div>
+	<div class="bele pad2">Place of Birth : ~$astrodata.BPLACE`</div>
+	<div class="bele pad2">Time of Birth : ~$astrodata.BTIME`</div>
+	<div class="spacer">&nbsp;</div>
+~/if`
+<div class="spacer15" style="border-top:1px solid #000000; margin-top:5px;" >&nbsp;</div>
+</div>
+<div style="float:left; width:99%;">
+<div class="bele bluelink" style="margin-bottom:40px ">
+<div class="spacer15">&nbsp;</div>
+  ~$msg`
+</div>
+~if $link`
+	~$link`
+~/if`
+	
+</div>
+</div>
+</div>
+</div>
+</div>
+<!--WRAPPER ENDS HERE-->
+~$FOOT`
+</body>
+</html>

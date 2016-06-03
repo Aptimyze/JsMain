@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>~$pageTITLE`</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<!-- Stylesheet start-->
+<link href="~$IMG_URL`/min/?f=/css/~$mobile_media_css`,/css/~$mobilejs_revamp`,/css/~$mobile_hamburger_css`" rel="stylesheet" type="text/css">
+<!-- Stylesheet end-->
+~include file="../jeevansathi/google_analytics.htm"`
+</head>
+<script type = "text/javascript" src = "~$JQUERY_JS`"></script>
+<script src="~$IMG_URL`/min/?f=/js/html5_js.js,/js/~$mobHamburger_js`"></script>
+<body>
+		<div id="main">
+~$LEFT_SLIDER`
+<div id="maincomponent">
+<!-- Header start-->
+~$HEADER`
+<!-- Header end-->
+<div id="mainpart">
+		<section class="s-info-bar">
+		<div class="pgwrapper">
+			Confirmation
+		</div>
+	</section>
+		<section>
+		<div class="pgwrapper">
+			<div class="js-content">
+				~if $ERROR_MESSAGE`
+	<p style="float:left;color:#000000">
+	~$ERROR_MESSAGE`</p>
+~else`
+
+	~if $MESSAGE_SHOW`
+	<p class="flt"><img src="~$IMG_URL`/profile/I/mobilejs/right-arrow.gif" />&nbsp;	~$MESSAGE_SHOW`</p>
+	~/if`
+~/if`
+			</div>
+		</div> 
+	</section>
+<!-- Header end-->
+</div>
+~$FOOTER`
+<!-- footer end-->
+</div>
+~$RIGHT_SLIDER`
+</div>	
+</body>
+</html>

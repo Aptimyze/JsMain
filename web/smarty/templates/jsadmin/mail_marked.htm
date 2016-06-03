@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<TITLE>Delete Profiles</TITLE>
+                 <link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<script type="text/javascript">
+<!--
+var var1= new array(); 
+var var2= new array(); 
+function change()
+{
+	docF = document.form;
+        var w1 = docF.type.selectedIndex;
+        var selected_text1 = docF.type.options[w1].value;
+	var str="";
+	if(selected_text1!= "sel")
+	{
+		var1=selected_text1.split(",");
+		var len=var1.length;
+		var i=1;
+		var j;
+		var strn="";
+		for(i=1;i<len;i++)
+			str=var1[i]+","+str;
+		if(str== "")
+		{
+			alert("No "+var1[0]+" profile exists!");	
+		} 		
+	}
+	document.getElementById('to').value=str;
+}
+
+-->
+</script>
+
+</HEAD>
+~include file="head.htm"`
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table width=100% cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+    <tr class="formhead">
+          <td width=55% class="formhead" border=1><font><b>Welcome </b></font></td>
+          <td width="35%" class="formhead" align="center"><a href="mainpage.php?name=&cid=~$cid`">Main Page</a></td>
+          <td width=10% class="formhead" border=1 align='CENTER'><a href="logout.php?cid=~$cid`">Logout</a></td>
+    </tr>
+<tr class="formhead">
+	<td colspan=100% align=center>~$MSG`</td>
+</tr>
+</table>
+<br>
+
+<form name="form" method="post" action="del_profile_bulk.php">
+<input type="hidden" name="PAID" value="~$PAID`">
+<input type="hidden" name="FREE" value="~$FREE`">
+<table border="0" cellspacing="2" cellpadding="2" width=70% align=center>
+<tr>
+<tr>
+            <td width="30%" class="label" bgcolor="#F9F9F9">Select Profiles</td>
+            <td width="70%" bgcolor="#F9F9F9" >
+                <select name="type" class="textboxes1" onChange= "change();">
+			<option id="none" value="sel" selected>Select</option>
+                        <option id="paid" value="Paid~$PAID`">Paid Profiles</option>
+                        <option id="free" value="Free~$FREE`">Free Profiles</option>
+                </select>
+            </td>
+          </tr>
+
+<td class=label>~if $to_err`<font color="red">To</font>~else`To~/if`</td>
+        <td class=fieldsnew>
+        <input type="text" name=TO id="to" size=60 value="" />
+        </td>
+</tr>
+<tr>
+<td class=label>~if $cc_err`<font color="red">Cc</font>~else`Cc~/if`</td>
+        <td class=fieldsnew>
+        <input type="text" name=CC id="cc" size=60 value="~$STATE`"/>
+        </td>
+</tr>
+<tr>
+<td class=label>~if $bc_err`<font color="red">Bcc</font>~else`Bcc~/if`</td>
+        <td class=fieldsnew>
+        <input type="text" name=BCC id="bcc" size=60 value=""/>
+        </td>
+</tr>
+
+<tr>
+<td class=label>~if $sub_err`<font color="red">Subject</font>~else`Subject~/if`</td>
+        <td class=fieldsnew>
+        <input type="text" name=SUB size=60 id="sub"/>
+        </td>
+</tr>
+<tr>
+        <td class=label >~if $body_err`<font color="red">Body</font>~else` Body ~/if`</td>
+        <td class=fieldsnew><textarea rows=10 cols=70 name=BODY id="body"></textarea></td>
+</tr>
+<tr align=center>
+<td class=label colspan=100%>
+	<input type=Hidden  name=profiles value=~$profiles`>
+        <input type=Hidden  name=cid value=~$cid`>
+        <input type=Hidden  name=user value=~$user`>
+        <input type=submit  name=send value=SEND>
+</td>
+</tr>
+</table>
+</form>
+</body>
+</html>
+
+
+
+
+

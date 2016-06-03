@@ -1,0 +1,203 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Jeevansathi.com</title>
+</head>
+
+<body>
+<table width="487" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#9F1518">
+  <tr>
+    <td align="center" valign="middle" style="padding:1px 0px 1px 0px;"><table width="485" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="border:solid 1px #9F1518;">
+      <tr>
+        <td align="left" valign="top"><table width="485" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td width="307" align="left" valign="top" background="~$IMG_URL`/profile/ser4_images/repeator_top.gif"><a href="http://www.jeevansathi.com/"><img src="~$IMG_URL`/profile/ser4_images/logo_n.gif" alt="Jeevansathi.com" width="252" height="82" border="0" /></a></td>
+              <td width="178" height="68" align="left" valign="top" background="~$IMG_URL`/profile/ser4_images/repeator_top.gif" bgcolor="#750205">&nbsp;</td>
+            </tr>
+            <tr>
+              <td align="left" valign="top" background="~$IMG_URL`/profile/ser4_images/girls_img.jpg" bgcolor="#7B0406" style="padding:35px 0px 22px 12px;"><div style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:18px; color:#FFFFFF;"><span style="font-size:21px; font-weight:bold;"><em>Some decisions</em></span>,if delayed,<br />
+                will never let you know what<br />
+                is in <span style="font-size:21px; font-weight:bold;"><em>store for you</em></span></div></td>
+              <td rowspan="2" align="left" valign="top"><img src="~$IMG_URL`/profile/ser4_images/img_boy.jpg" alt="JS" width="186" height="292" /></td>
+            </tr>
+            <tr>
+              <td align="left" valign="top"><img src="~$IMG_URL`/profile/ser4_images/img_girls.jpg" alt="jeevansthi" width="299" height="163" /></td>
+            </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td align="left" valign="top"><div style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000000; line-height:16px; padding:11px 11px 11px 9px;">
+            <div align="justify"><strong>Dear Member (Your Profile Id is : ~$RECEIVER`),</strong><br />
+          <strong>1</strong> member of jeevansathi.com have shown interest in you and have contacted you as on ~$data_date`.
+        So, dont keep them waiting. Convey your feelings by responding to their
+        proposal.
+	</div>
+        </div></td>
+      </tr>
+      <tr>
+        <td align="left" valign="top"><table width="470" border="0" align="center" cellpadding="0" cellspacing="0" style="border:solid 1px #B80505;">
+	~section name=i loop=$DATA`     
+       <tr>
+              <td align="left" valign="top"><table width="470" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td height="12" colspan="2" align="left" valign="top"></td>
+                  </tr>
+                  <tr>
+		~if $DATA[i].havephoto eq 'Y'`
+			~if $DATA[i].source eq 'O'`
+			<!-- Symfony Photo Modification-->
+			<td width="79" title="Match Point Profile" align="left" valign="top" style="padding:2px 9px 0px 8px;"><a href="~$SITE_URL`/profile/viewprofile.php?username=~$DATA[i].username`&CAME_FROM_CONTACT_MAIL=1&button=accept" target=_"blank"><img src="~$DATA[i].ThumbnailUrl`" width="60" height="59" style="border:solid 1px #990000;"></a> <div style="float:left; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:11px; color:#C85502;" alt-text="Match Point Profile">Match Point</div></td>
+			<!--Symfony Photo Modification-->
+			~else`
+			<!-- Symfony Photo Modification-->
+			<td width="79" align="left" valign="top" style="padding:2px 9px 0px 8px;"><a href="~$SITE_URL`/profile/viewprofile.php?username=~$DATA[i].username`&CAME_FROM_CONTACT_MAIL=1&button=accept" target=_"blank"><img src="~$DATA[i].ThumbnailUrl`" width="60" height="59" style="border:solid 1px #990000;"></a></td>
+			<!-- Symfony Photo Modification-->
+			~/if`		
+          ~elseif $DATA[i].havephoto eq 'H'`
+			~if $DATA[i].source eq 'O'`
+			<td width="79" title="Match Point Profile" align="left" valign="top" style="padding:2px 9px 0px 8px;"><a href="~$SITE_URL`/profile/viewprofile.php?username=~$DATA[i].username`&CAME_FROM_CONTACT_MAIL=1&button=accept" target=_"blank"><img src="~$IMG_URL`/profile/ser4_images/search_page_girl_protected.gif" width="60" height="59" style="border:solid 1px #990000;"></a><div style="float:left; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:11px; color:#C85502;" alt-text="Match Point Profile">Match Point</div></td>
+			~else`
+                	<td width="79" align="left" valign="top" style="padding:2px 9px 0px 8px;"><a href="~$SITE_URL`/profile/viewprofile.php?username=~$DATA[i].username`&CAME_FROM_CONTACT_MAIL=1&button=accept" target=_"blank"><img src="~$IMG_URL`/profile/ser4_images/search_page_girl_protected.gif" width="60" height="59" style="border:solid 1px #990000;"></a></td>
+			~/if`
+          ~else`
+			~if $DATA[i].source eq 'O'`
+			<td width="79" title="Match Point Profile" align="left" valign="top" style="padding:2px 9px 0px 8px;"><a href="~$SITE_URL`/profile/photorequest.php?profilechecksum=~$DATA[i].PROFILECHECKSUM`" target=_"blank"><img src="~$IMG_URL`/profile/ser4_images/Request-a-photo-Female_small.gif" width="60" height="59" style="border:solid 1px #990000;"></a><div style="float:left; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:11px; color:#C85502;" alt-text="Match Point Profile">Match Point</div></td>
+			~else`
+        	        <td width="79" align="left" valign="top" style="padding:2px 9px 0px 8px;"><a href="~$SITE_URL`/profile/photorequest.php?profilechecksum=~$DATA[i].PROFILECHECKSUM`" target=_"blank"><img src="~$IMG_URL`/profile/ser4_images/Request-a-photo-Female_small.gif" width="60" height="59" style="border:solid 1px #990000;"></a></td>
+		~/if`
+          ~/if`
+                    <td width="391" align="left" valign="top"><div style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#666666; line-height:16px; padding:7px 8px 2px 0px;"><a href="~$SITE_URL`/profile/viewprofile.php?username=~$DATA[i].username`&CAME_FROM_CONTACT_MAIL=1&button=accept" target=_"blank" style="font-size:12px; color:#000000;">~$DATA[i].username`:</a> ~$DATA[i].age`~if $DATA[i].HEIGHT neq ''`/ ~$DATA[i].HEIGHT`~/if`~if $DATA[i].MTONGUE neq ''`/ ~$DATA[i].MTONGUE`~/if`/ ~$DATA[i].CASTE`~if $DATA[i].SUBCASTE`: ~$DATA[i].SUBCASTE`~/if`~if $DATA[i].OCCUPATION`/ ~$DATA[i].OCCUPATION`~/if`~if $DATA[i].RESIDENCE` in ~$DATA[i].RESIDENCE`~/if`~if $DATA[i].NAKSHATRA`/ Nakshatra: ~$DATA[i].NAKSHATRA`~/if`
+</br>
+                      </div>
+		~if $DATA[i].source neq 'O'`
+			 ~if $DATA[i].time_left neq '0'`
+                <div style="float:left; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:11px; height:12px; padding-top:5px; color:#C85502;">~$DATA[i].time_left` days to respond</div>
+                	~/if`
+		~/if`
+                ~assign var= 'pid' value=$DATA[i].profileid`
+         </td>
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top">&nbsp;</td>
+		~if $DATA[i].source eq 'O'`
+			 <td align="left" valign="top"><div style="float:left; padding:0px 5px 0px 0px;"><a href="~$SITE_URL`/profile/viewprofile.php?username=~$DATA[i].username`&CAME_FROM_CONTACT_MAIL=1&button=accept" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#AA0000;" target=_"blank">Express Interest</a></div>
+                        <div style="float:left; vertical-align:bottom; padding:3px 4px 0px 3px;"> <img src="~$IMG_URL`/profile/ser4_images/line1.gif" alt="" width="1" height="10" align="top"/> </div>
+                      <div style="float:left;"><a href="~$SITE_URL`/profile/viewprofile.php?username=~$DATA[i].username`&CAME_FROM_CONTACT_MAIL=1&button=decline&search_decline=1" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#AA0000;" target=_"blank">Not Interested</a></div>
+
+		~else`
+                    <td align="left" valign="top"><div style="float:left; padding:0px 5px 0px 0px;"><a href="~$SITE_URL`/profile/viewprofile.php?username=~$DATA[i].username`&CAME_FROM_CONTACT_MAIL=1&button=accept" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#AA0000;" target=_"blank">Accept</a></div>
+                        <div style="float:left; vertical-align:bottom; padding:3px 4px 0px 3px;"> <img src="~$IMG_URL`/profile/ser4_images/line.gif" alt="" width="1" height="10" align="top"/> </div>
+                      <div style="float:left;"><a href="~$SITE_URL`/profile/viewprofile.php?username=~$DATA[i].username`&CAME_FROM_CONTACT_MAIL=1&button=decline" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#AA0000;" target=_"blank">Decline</a></div>
+		~/if`
+                      <div style="float:right; background:#E9E9E9; padding:2px 4px 2px 4px; margin-right:4px;"><a href="~$SITE_URL`/profile/viewprofile.php?username=~$DATA[i].username`&CAME_FROM_CONTACT_MAIL=1&button=accept" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#AA0000; text-decoration:none;" target=_"blank">To view Profile click here</a></div></td>
+                  </tr>
+                  <tr>
+                    <td  height="6" colspan="2" align="left" valign="bottom"><img src="~$IMG_URL`/profile/ser4_images/line_hor.gif" alt="" width="474" height="1" /></td>
+                  </tr>
+              </table></td>
+            </tr>
+	~/section`
+            <tr>
+              <td height="4" align="left" valign="top"></td>
+            </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td align="left" valign="top"><div style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000000; line-height:16px; padding:11px 11px 11px 9px;">
+            <div align="justify">To accept/decline the above profiles, login using your user ID and password: <br />
+              Username - <strong>~$RECEIVER`</strong> <br />
+~if $no_tariff_table eq "1"`
+ </div>
+</div></td>
+  </tr>
+
+~else`
+              <br />
+              Upgrade your membership to view the contact details of the accepted profiles.</div>
+        </div></td>
+      </tr>
+      <tr>
+        <td align="center" valign="center"><div style="margin:0px; width:221px; background:#B80505; height:21px; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:13px; color:#FFFFFF; vertical-align:middle; padding-top:5px;" align="center"><strong>Online Membership options</strong></div></td>
+      </tr>
+      <tr>
+        <td align="left" valign="top" style="padding:0px 4px 4px 4px;"><table style="border: 1px solid #F0BCBC; background-color: rgb(255, 255, 255);" cellpadding="0" cellspacing="0" width="465">
+            <tbody>
+              <tr>
+                <td style="border-bottom: 1px solid #F0BCBC;" height="20" width="199">&nbsp;</td>
+                <td width="140" align="center" style="border-bottom: 1px solid #F0BCBC; padding: 5px; font-family: Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(0, 0, 0);"><div align="center"><img src="~$IMG_URL`/profile/ser4_images/evalue_pack.gif" alt="Evalue_Pack" width="122" height="25" /></div></td>
+                <td width="124" align="center" style="border-bottom: 1px solid #F0BCBC; padding: 5px; font-family: Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(0, 0, 0);"><div align="center"><img src="~$IMG_URL`/profile/ser4_images/erista_img.gif" alt="erishta" width="78" height="25" /></div></td>
+              </tr>
+              <tr>
+                <td align="left" style="border-right: 1px solid #F0BCBC; border-bottom: 1px solid #F0BCBC; padding: 3px; font-family: Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(0, 0, 0);"><div style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000000;">Display your contact details to   others</div></td>
+                <td align="center" style="border-right: 1px solid #F0BCBC; border-bottom: 1px solid #F0BCBC; font-family: Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(0, 0, 0);"><div align="center"><img src="~$IMG_URL`/profile/ser4_images/tick_mark.gif" alt="js" width="17" height="18" /></div></td>
+                <td align="center" style="border-bottom: 1px solid #F0BCBC; font-family: Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(0, 0, 0);"><div align="center"><img src="~$IMG_URL`/profile/ser4_images/cross_mark.gif" alt="js" width="19" height="16" /></div></td>
+              </tr>
+              <tr>
+                <td align="left" valign="top" style="border-right: 1px solid #F0BCBC; border-bottom: 1px solid #F0BCBC; padding: 3px; font-family: Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(0, 0, 0);"><div style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000000;">Send Personalised Messages</div></td>
+                <td align="center" style="border-right: 1px solid #F0BCBC; border-bottom: 1px solid #F0BCBC; font-family: Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(0, 0, 0);"><div align="center"><img src="~$IMG_URL`/profile/ser4_images/tick_mark.gif" alt="js" width="17" height="18" /></div></td>
+                <td align="center" style="border-right: 1px solid #F0BCBC; border-bottom: 1px solid #F0BCBC; font-family: Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(0, 0, 0);"><div align="center"><img src="~$IMG_URL`/profile/ser4_images/tick_mark.gif" alt="js" width="17" height="18" /></div></td>
+              </tr>
+              <tr>
+                <td align="left" valign="top" style="border-right: 1px solid #F0BCBC; border-bottom: 2px solid #B80505; padding: 3px; font-family: Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(0, 0, 0);"><div style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000000;">View Contact details of Accepted  Members</div></td>
+                <td align="center" style="border-right: 1px solid #F0BCBC; border-bottom: 2px solid #B80505; font-family: Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(0, 0, 0);"><div align="center"><img src="~$IMG_URL`/profile/ser4_images/tick_mark.gif" alt="js" width="17" height="18" /></div></td>
+                <td align="center" style="border-right: 1px solid #F0BCBC; border-bottom: 2px solid #B80505; font-family: Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(0, 0, 0);"><div align="center"><img src="~$IMG_URL`/profile/ser4_images/tick_mark.gif" alt="js" width="17" height="18" /></div></td>
+              </tr>
+              <tr>
+                <td align="left" valign="top" style="border-right: 1px solid #F0BCBC; border-bottom: 1px solid #F0BCBC; padding: 3px; font-family: Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(0, 0, 0);"><div style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000000; font-weight:bold;">Price for 9 Months</div></td>
+                <td align="center" style="border-right: 1px solid #F0BCBC; border-bottom: 1px solid #F0BCBC; padding: 3px; font-family: Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(0, 0, 0);"><div style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#333333; line-height:16px;">Rs. ~$PAY_EVALUE.rscard9` ~if $COUNTRY neq 'I'` (~$PAY_EVALUE.uscard9`) ~/if`<br />
+                    <a href="~$SITE_URL`/profile/payment.php?ser_main=C" style="color:#3333FF;">Subscribe now</a></div></td>
+                <td align="center" style="border-right: 1px solid #F0BCBC; border-bottom: 1px solid #F0BCBC; font-family: Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(0, 0, 0);"><div style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#333333; line-height:16px;">Rs. ~$PAY_ERISHTA.rscard9` ~if $COUNTRY neq 'I'` (~$PAY_ERISHTA.uscard9`) ~/if` <br />
+                    <a href="~$SITE_URL`/profile/payment.php?ser_main=P" style="color:#3333FF;">Subscribe now</a></div></td>
+              </tr>
+		<tr>
+                <td align="left" valign="top" style="border-right: 1px solid #F0BCBC; border-bottom: 1px solid #F0BCBC; padding: 3px; font-family: Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(0, 0, 0);"><div style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000000; font-weight:bold;">Price for 6 Months</div></td>
+                <td align="center" style="border-right: 1px solid #F0BCBC; border-bottom: 1px solid #F0BCBC; padding: 3px; font-family: Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(0, 0, 0);"><div style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#333333; line-height:16px;">Rs. ~$PAY_EVALUE.rscard6` ~if $COUNTRY neq 'I'` (~$PAY_EVALUE.uscard6`) ~/if`<br />
+                    <a href="~$SITE_URL`/profile/payment.php?ser_main=C" style="color:#3333FF;">Subscribe now</a></div></td>
+                <td align="center" style="border-right: 1px solid #F0BCBC; border-bottom: 1px solid #F0BCBC; font-family: Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(0, 0, 0);"><div style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#333333; line-height:16px;">Rs. ~$PAY_ERISHTA.rscard6` ~if $COUNTRY neq 'I'` (~$PAY_ERISHTA.uscard6`) ~/if` <br />
+                    <a href="~$SITE_URL`/profile/payment.php?ser_main=P" style="color:#3333FF;">Subscribe now</a></div></td>
+              </tr>
+		<tr>
+                <td align="left" valign="top" style="border-right: 1px solid #F0BCBC; border-bottom: 1px solid #F0BCBC; padding: 3px; font-family: Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(0, 0, 0);"><div style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000000; font-weight:bold;">Price for 4 Months</div></td>
+                <td align="center" style="border-right: 1px solid #F0BCBC; border-bottom: 1px solid #F0BCBC; padding: 3px; font-family: Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(0, 0, 0);"><div style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#333333; line-height:16px;">Rs. ~$PAY_EVALUE.rscard4` ~if $COUNTRY neq 'I'` (~$PAY_EVALUE.uscard4`) ~/if`<br />
+                    <a href="~$SITE_URL`/profile/payment.php?ser_main=C" style="color:#3333FF;">Subscribe now</a></div></td>
+                <td align="center" style="border-right: 1px solid #F0BCBC; border-bottom: 1px solid #F0BCBC; font-family: Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(0, 0, 0);"><div style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#333333; line-height:16px;">Rs. ~$PAY_ERISHTA.rscard4` ~if $COUNTRY neq 'I'` (~$PAY_ERISHTA.uscardi4`) ~/if` <br />
+                    <a href="~$SITE_URL`/profile/payment.php?ser_main=P" style="color:#3333FF;">Subscribe now</a></div></td>
+              </tr>
+              <tr>
+                <td align="left" valign="top" style="border-right: 1px solid #F0BCBC; border-bottom: 1px solid #F0BCBC; padding: 3px; font-family: Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(0, 0, 0);"><div style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000000; font-weight:bold;">Price for 3 Months</div></td>
+                <td align="center" style="border-right: 1px solid #F0BCBC; border-bottom: 1px solid #F0BCBC; padding: 3px; font-family: Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(0, 0, 0);"><div style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#333333; line-height:16px;">Rs. ~$PAY_EVALUE.rscard3` ~if $COUNTRY neq 'I'` (~$PAY_EVALUE.uscard3`) ~/if`<br />
+                    <a href="~$SITE_URL`/profile/payment.php?ser_main=C" style="color:#3333FF;">Subscribe now</a></div></td>
+                <td align="center" style="border-right: 1px solid #F0BCBC; border-bottom: 1px solid #F0BCBC; font-family: Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(0, 0, 0);"><div style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#333333; line-height:16px;">Rs. ~$PAY_ERISHTA.rscard3` ~if $COUNTRY neq 'I'` (~$PAY_ERISHTA.uscard3`) ~/if` <br />
+                    <a href="~$SITE_URL`/profile/payment.php?ser_main=P" style="color:#3333FF;">Subscribe now</a></div></td>
+              </tr>
+              <tr>
+                <td align="left" valign="top" style="border-right: 1px solid #F0BCBC; padding: 3px; font-family: Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(0, 0, 0);"><div style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000000; font-weight:bold;">Price for 2 Months</div></td>
+                <td align="center" style="border-right: 1px solid #F0BCBC; border-bottom: 1px solid #F0BCBC; padding: 3px; font-family: Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(0, 0, 0);"><div style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#333333; line-height:16px;">Rs. ~$PAY_EVALUE.rscard2` ~if $COUNTRY neq 'I'` (~$PAY_EVALUE.uscard2`) ~/if` <br />
+                    <a href="~$SITE_URL`/profile/payment.php?ser_main=C" style="color:#3333FF;">Subscribe now</a></div></td>
+                <td align="center" style="border-right: 1px solid #F0BCBC; border-bottom: 1px solid #F0BCBC; font-family: Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(0, 0, 0);"><div style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#333333; line-height:16px;">Rs. ~$PAY_ERISHTA.rscard2` ~if $COUNTRY neq 'I'` (~$PAY_ERISHTA.uscard2`) ~/if` <br />
+                    <a href="~$SITE_URL`/profile/payment.php?ser_main=P" style="color:#3333FF;">Subscribe now</a></div></td>
+              </tr>
+            </tbody>
+        </table></td>
+      </tr>
+~/if`
+      <tr>
+        <td align="left" valign="top"><div style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000000; line-height:16px; padding:11px 11px 11px 9px;">
+            <div align="justify">So Logon to www.jeevansathi.com and follow the instructions to respond to a particular contact.<br />
+                <br />
+                <strong>Warm regards</strong><br />
+              The Jeevansathi Team</div>
+        </div></td>
+      </tr>
+      <tr>
+        <td align="center" valign="center" bgcolor="#EFEFEF" style="padding:10px;"><a href="http://ser4.jeevansathi.com/bmsjs/bms_display_final.php?zonestr=42&mailer=1&subzone=1&hit=1" style="font-family:Arial, Helvetica, sans-serif; font-size:13px; color:#0000FF;" target=_"blank">One easy step to your new home</a> <br />
+           <a href="http://ser4.jeevansathi.com/bmsjs/bms_display_final.php?zonestr=42&mailer=1&subzone=1&hit=1" target=_"blank"><img src="~$IMG_URL`/profile/ser4_images/bms_display_final.php.gif" width="400" height="63" border="0"></a><br/>
+            <span style="font-family:arial; font-size:12px; color:#999999">THIS IS AN AUTOMATED MESSAGE. PLEASE DO NOT REPLY TO THIS MAIL<br />
+            <a href="~$SITE_URL`/profile/unsubscribe.php?mail=Y" target="_blank">Click here</a> to unsubscribe</span></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+</body>
+</html>

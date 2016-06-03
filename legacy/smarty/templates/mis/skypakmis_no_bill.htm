@@ -1,0 +1,79 @@
+<html>
+   <head>
+      <title>SKYPAK MIS</title>
+      <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+      <link rel="stylesheet" href="jeevansathi.css" type="text/css">
+      <style>
+        DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+      </style>
+   </head>
+   <body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+   <br><br>
+~if $flag eq '1'`
+	<table width="100%" align="center" border=0 cellspacing=4 cellpadding=5>
+	   <tr class="formhead">
+              <td colspan=100% align="center">SKYPAK NO BILLING MIS</td>
+	   </tr>
+	   <tr class="formhead">
+	      <td colspan=100% align="center">MIS FOR &nbsp;~$month`-~$year` ~if $CITY_LBL neq ''`(~$CITY_LBL`) ~/if`</td>
+	   </tr>
+	</table>
+	<br>
+	<table width="100%" align="center" border=0 cellspacing=4 cellpadding=5>
+	   <tr class=label>
+	      <td width=5% align=center rowspan=1><span class=black>DAYS </span></td>
+              ~section name=dd loop=$ddarr`
+                 <td align=center width=3%>~$ddarr[dd]`</td>
+              ~/section`
+              <td width=5% align=center>Total</td>
+          </tr>
+                <tr class=label>
+                     <td align=center><b>Total</b></td>
+                             ~section name=dd loop=$ddarr`
+                                  <td align=center>&nbsp;~ if $totalcount_no_bill[dd] neq 0`<font color='red'><a href="skypak_no_bill_misdetails.php?cid=~$cid`&day=~$smarty.section.dd.index_next`&month=~$month`&year=~$year`&city=~$CITY`">~$totalcount_no_bill[dd]`</a></font>~/if`<br><font color='green'>~$totalcount[dd]`</font></td>
+               	             ~/section`
+		     <td align=center>&nbsp;<font color='red'>~$grandtotal_no_bill`</font><br><font color='green'> ~$grandtotal`</font></td>
+               </tr>
+	</table>
+~else`
+	<form method=post action="skypak_nobill_mis.php">
+	   <table width=80% border=0 align="center" cellpadding=5>
+	      <tr>
+	         <td >SELECT PERIOD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	            <select name="month">
+                    ~section name=mon loop=$mmarr`
+                       <option value=~$mmarr[mon]`>~$mmarr[mon]`</option>
+                    ~/section`
+                    </select> - 
+	            <select name="year">
+                    ~section name=yr loop=$yyarr`
+                       <option value=~$yyarr[yr]`>~$yyarr[yr]`</option>
+                    ~/section`
+                    </select>&nbsp;Month - Year
+	         </td>
+	      </tr>
+	     <tr>
+		<td >CITY&nbsp;&nbsp;&nbsp;&nbsp;
+		<select name="city">
+                       <option value=''>ALL</option>
+                    ~section name=cnt loop=$city_arr`
+                       <option value=~$city_arr[cnt].VALUE`>~$city_arr[cnt].LABEL`</option>
+                    ~/section`
+                    </select>
+		</td>
+	     </tr> 
+              <tr> 
+                 <td>
+                    Show All Records&nbsp;&nbsp;
+                    <input type="checkbox" name="showall">
+                 </td>
+              </tr>
+	      <tr>
+	         <input type="hidden" name="cid" value=~$cid`>
+	         <td ><input type="submit" name="submit" value="submit"></td>
+	      </tr>
+	   </table>
+	</form>
+~/if`
+</body>
+</html>

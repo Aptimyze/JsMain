@@ -1,0 +1,7 @@
+
+use newjs;
+
+CREATE TABLE  `VIDEO_LINK` (
+ `PROFILEID` INT( 11 ) DEFAULT NULL
+);
+

@@ -1,0 +1,61 @@
+<html>
+<head>
+   <title>Users on Home Page</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="http://www.jeevansathi.com/profile/images/styles.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+</head>
+
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<br>
+<table width=100% border=0 align="center">
+<tr class="formhead">
+        <td align="center" width=80%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Homepage Users List</td>
+	<td align="right"><a href="manage_homepage.php?cid=~$cid`">Manage HomePage Profiles page</a></td>
+</tr>
+</table>
+<br>
+<center>
+<table width=100% border=0 cellspacing=4 cellpadding=5>
+        <tr class="label">
+        <td width=100>User Profile</td>
+        <td>Username</td>
+        <td>Gender</td>
+        <td>&nbsp;</td>
+        </tr>
+	~section name=a loop=$det`
+        <tr class="fieldsnew">
+~if $det[a].havephoto eq 'Y'`
+
+	~if $det[a].privacy eq 'R' OR $det[a].privacy eq 'F' OR $det[a].photo_display eq 'F' OR $det[a].photo_display eq 'C' OR $det[a].photo_display eq 'H'`
+	<td><img src="http://www.jeevansathi.com/P/I/photo_protected.jpg"></td>
+	~else`
+	<!-- Symfony Photo Modification-->
+        <td><img src="~$profilePicUrls[~$det[a].profileid`]['ThumbailUrl']`"></td>
+	<!-- Symfony Photo Modification-->
+	~/if`
+
+~else`
+	<td>&nbsp;</td>
+~/if`
+        <td>~$det[a].username`</td>
+	<td>~if $det[a].gender eq 'M'`Male ~elseif $det[a].gender eq 'F'`Female~/if`</td>
+	<td><a href="remove_homepage_user.php?ID=~$det[a].profileid`&cid=~$cid`">Remove</a></td>
+	~/section`
+        </tr>
+</table>
+<table width=100%> 
+      <tr bgcolor="#fbfbfb" align=center class="bglgrey">
+       <td height="21" class="mediumblack">
+	<span>
+         ~$PAGELINK`
+	</span>
+       </td>
+      </tr>
+    </table>
+</center>
+</body>
+</html>

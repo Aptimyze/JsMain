@@ -1,0 +1,43 @@
+<html>
+<head>
+   <title>Reassign Auto Apply Profile</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<!--link rel="stylesheet" href="stylesheet.css" type="text/css"-->
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+</head>
+~include file="head.htm"`
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table width=760 cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+    <tr class="formhead">
+          <td width=33% class="formhead" border=1 align="center"><font><b>Welcome ~$user`</b></font></td>
+          <td width="33%" class="formhead" align="center"><a href="mainpage.php?cid=~$cid`">Main Page</a></td>
+          <td width=33% class="formhead" border=1 align='CENTER'><a href="logout.php?cid=~$cid`">Logout</a></td>
+    </tr>
+</table>
+<br>
+<form action="ap_pull_profile.php" method="post">
+<input type="hidden" name="cid" value="~$cid`">
+<input type="hidden" name="myOperator" value="~$myOperator`">
+<input type="hidden" name="profileid" value="~$profileid`">
+<input type="hidden" name="searchedUserName" value="~$userName`">
+~if $errorMessage`
+<p align="center">~$errorMessage`</p>
+~/if`
+<table align="center" width="60%">
+<tr class="formhead">
+<td width="50%" align="center">
+Enter username / Email id
+</td>
+<td width="50%" align="center">
+<input type="text" name="userName" value="~$userName`"></input>
+</td>
+</tr>
+<tr class="formhead">
+<td colspan="2" align="center">
+<input type="submit" name="searchProfile" value="Submit">
+</td>
+</tr>
+</table>
+</form>
+</body>
+</html>

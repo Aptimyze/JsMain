@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!--ec thanks.htm-->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link href="http://ser4.jeevansathi.com/profile/imagesnew/styles.php" rel="stylesheet" type="text/css">
+<title>~$SUBJECT`</title>
+<style type="text/css">
+<!--
+.style1 {
+	font-family: Verdana;
+	font-size: 12px;
+}
+-->
+</style>
+</head>
+
+<body>
+<table width="600"  border="0" align="center" cellpadding="0" cellspacing="0">
+ <tr>
+  <td height="32"><a href="#"><img src="~$IMG_URL`/profile/ser4_imagesnew/logo.gif" width="193" height="32" border="0"></a></td>
+ </tr>
+</table>
+
+<br>
+~if $HAS_CONTACT eq "Y"`
+<table width="600"  border="0" align="center" cellpadding="0" cellspacing="0">
+ <tr bgcolor="#e2e2e2">
+  <td height="18" class="style1"><div align="center"><b><font color="#CC0000">JeevanSathi ~if $EVALUE eq "Y"` E-Value ~elseif $HAS_CONTACT eq "Y"`E-Classifieds~/if` : Confirmation and Activation process</font></b></div></td>
+ </tr>
+</table>
+<br>~/if`
+
+~if $HAS_CONTACT eq "Y"`
+<table width="600" border="0" align="center" cellpadding="0" cellspacing="0">
+ <tr>
+  <td class="style1" align="center"><b>THANK YOU</b>
+   <br>
+   <br>
+Thank you for confirming your contact details.
+   <br>
+   <br>
+  Your account will now be activated with ~if $EVALUE eq "Y"` e-Value ~else` e-Classifieds ~/if`<br>
+  and only the selected contact details will be displayed along with your profile.
+</td>
+ </tr>
+</table> <br>~/if`
+
+~if $ASTRO eq "Y"`
+<table width="600"  border="0" align="center" cellpadding="0" cellspacing="0">
+ <tr bgcolor="#e2e2e2">
+  <td height="18" class="style1"><div align="center"><b><font color="#CC0000">JeevanSathi  Astro Service <!--~if $KUNDALI eq "Y"` Kundali ~/if` ~if $HOROSCOPE  eq "Y"` Horoscope ~/if`--> : Confirmation and Activation process</font></b></div></td>
+ </tr>
+</table>
+<br>~/if`
+
+<table width="600" border="0" align="center" cellpadding="0" cellspacing="0">
+ <tr>
+  <td class="style1" align="center">~if $HAS_CONTACT neq "Y"` <b>THANK YOU</b>
+<br>
+<br>~/if`
+ ~if $ASTRO  eq "Y"` Thank you for confirming your astro details.
+   <br>
+   <br>
+  Your account will now be activated with astro service <!--~if $KUNDALI  eq "Y"` Kundali ~/if` ~if $HOROSCOPE eq "Y" && $KUNDALI eq "Y"` , ~/if` ~if $HOROSCOPE eq "Y"` Horoscope ~/if`--><br>
+  and you will be able to ~if $KUNDALI  eq "Y"` match your kundali ~if $HOROSCOPE neq "Y"` with ~/if` ~/if` ~if $KUNDALI  eq "Y" and  $HOROSCOPE eq "Y"` and~/if`  ~if $HOROSCOPE eq "Y"` show your horoscope to~/if` others.~/if`
+</td>
+ </tr>
+</table>
+<br>
+<br>
+<table width="600"  border="0" align="center" cellpadding="0" cellspacing="0">
+ <tr bgcolor="#e2e2e2">
+  <td height="2"></td>
+ </tr>
+</table>
+</body>
+</html>

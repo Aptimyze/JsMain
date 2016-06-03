@@ -1,0 +1,629 @@
+<html>
+<head>
+<title>Jeevansathi.com</title>
+</head>
+
+<body>
+<table width="600" border="0" cellspacing="0" cellpadding="0" align="center" bgcolor="#920606" style="font-family:Arial, Times New Roman, Times, serif; font-size:12px; line-height:17px;">
+  <tr>
+    <td width="10"><img src="~$IMG_PATH`/spacer.gif" width="10" height="1"></td>
+    <td width="580"></td>
+    <td width="10"><img src="~$IMG_PATH`/spacer.gif" width="10" height="1"></td>
+  </tr>
+  <tr>
+    <td colspan="3"><img src="~$SITE_SER2_URL`/jsmail/top_matches_4_u_V2.php?checksum=~$RECEIVER_PROFILECHECKSUM`&logic_used=~$logic`&sent_date=~$SENT_DATE`&freq=~$FREQUENCY`" width="600" height="30" vspace="0" hspace="0" align="left"></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td bgcolor="#FFFFFF"><table width="580" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Times New Roman, Times, serif; font-size:11px; line-height:17px; color:#000000;">
+        <tr bgcolor="#f7f6f6">
+          <td width="8"><img src="~$IMG_PATH`/spacer.gif" width="8" height="1"></td>
+          <td width="264"></td>
+          <td width="300"></td>
+          <td width="8"><img src="~$IMG_PATH`/spacer.gif" width="8" height="1"></td>
+        </tr>
+        <tr bgcolor="#f7f6f6">
+          <td height="43"></td>
+          <td valign="top"><a href="~$SITE_URL`" target="_blank" style="color:#f7f6f6; text-decoration:none;"><img src="~$IMG_PATH`/logo.gif" width="203" height="44" border="0"></a></td>
+          <td align="right" style="font-family:Arial; font-size:10px; color:#474646; line-height:0px;"><img src="~$IMG_PATH`/icon1.gif" width="21" height="22" align="middle"> <span style="font-size:11px;"><strong>Call us at:</strong></span>~$TOLL_FREE` (Toll free),<br>
+            0120-4393500</td>
+          <td></td>
+        </tr>
+         <tr bgcolor="#f7f6f6">
+          <td colspan="4" height="11"></td>
+        </tr>
+<!--
+        <tr bgcolor="#f7f6f6">
+          <td></td>
+          <td colspan="2"><strong>Please Note:</strong> Email Id verification is compulsory on Jeevansathi.com. <a href="#" style="color:#0f529d;">Click Here</a> to verify and get more responses.</td>
+          <td></td>
+        </tr>
+-->
+        <tr bgcolor="#f7f6f6">
+          <td colspan="4" height="8" style="border-bottom:1px solid #f1ecec;"></td>
+        </tr>
+        <tr>
+          <td colspan="4" height="17"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td height="22" valign="bottom" style="font-size:12px;">Dear ~$receiverName`<br></td>
+          <td align="right"><font face="Georgia" color="#000000" style="font-size:26px;"><font color="#920606">MATCH</font> ALERT</font></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td colspan="2" style="font-size:12px;" height="30">Based on your desired partner profile, we have shortlisted the most suitable matches for you.</td>
+          <td></td>
+        </tr>
+~if $VARIABLE_DISCOUNT_OFFER eq 1 && $PAID eq 0`
+	<tr>
+        	<td colspan="4" height="10"></td>
+       	</tr>
+              <tr>
+                <td colspan="4"><table border="0" cellspacing="0" cellpadding="0" width="100%" bgcolor="#fbebbf">
+                    <tr>
+                      <td width="484" style="font-family:Arial; font-size:13px; color:#000000; padding:6px 0 6px 11px;" height="42"> To call or email these matches, <strong style="color:#801212; font-size:14px;">upgrade</strong> your membership at <strong style="color:#801212; font-size:14px;">~$VARIABLE_DISCOUNT`% discount</strong>.<br />
+                        Hurry, offer expires on <strong style="color:#801212;">~$VD_END_DAY`<sup>~$VD_END_DAY_SUFFIX`</sup> ~$VD_END_MONTH`, ~$VD_END_YEAR`.</strong></td>
+
+                    </tr>
+                    <tr>
+                      <td style=" padding:0px 0 6px 11px;"><table width="100" border="0" cellspacing="0" cellpadding="0" align="left" style="border:1px solid #d40832; margin:0px 12px 10px 0px;">
+                          <tr>
+                            <td background="~$IMG_PATH`/btnBG.gif" height="27" align="center" bgcolor="#C31011" style=" margin-bottom:10px;"><a href="~$SITE_URL`/profile/mem_comparison.php?CMGFRMMMMJS=1&from_source=VDMA1~$VARIABLE_DISCOUNT`&checksum=~$RECEIVER_PROFILECHECKSUM`&profilechecksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&clicksource=~$STYPE`&stype=~$STYPE_ALBUM_PAGE`" target="_blank" style="font-family:Arial; font-size:13px; color:#ffffff; text-decoration:none;"><strong>Get Discount</strong></a></td>
+                          </tr>
+                        </table></td>
+
+                    </tr>
+                  </table></td>
+              </tr>
+	<tr>
+        	<td colspan="4" height="14"></td>
+       	</tr>
+~/if`
+
+~foreach from=$matchesData item=value key=k`
+        <tr>
+          <td></td>
+          <td colspan="2"><table width="562" border="0" cellspacing="0" cellpadding="0" bgcolor="#f7f6f6" style="border:1px solid #e4e4e4;">
+              <tr>
+                <td style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#575656;" height="25">&nbsp; &nbsp; <strong>~$value.USERNAME`</strong></td>
+              </tr>
+              <tr>
+                <td align="center"><table width="550" border="0" cellspacing="0" cellpadding="0" style="border:1px solid #ededed;" bgcolor="#FFFFFF">
+                    <tr>
+                      <td height="8"></td>
+                      <td colspan="2"></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td width="9"></td>
+                      <td width="110" align="left" valign="top" height="143"><a ~if $value.HAVEPHOTO eq 'Y'` ~if $value.PHOTO_DISPLAY neq 'C'` ~if $incomplete` href="~$SITE_URL`/profile/viewprofile.php?CMGFRMMMMJS=1&checksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&profilechecksum=~$RECEIVER_PROFILECHECKSUM`&enable_auto_loggedin=1&logic_used=~$logic`&is_user_active=~$is_user_active`&npos=~$k+1`&recomending=&clicksource=~$STYPE`&EditWhatNew=incompletProfile&stype=~$value.LOGICLEVEL`" ~else` href="~$SITE_URL`/profile/viewprofile.php?CMGFRMMMMJS=1&checksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&profilechecksum=~$value.PROFILECHECKSUM`&enable_auto_loggedin=1&logic_used=~$logic`&is_user_active=~$is_user_active`&npos=~$k+1`&clicksource=~$STYPE`&stype=~$value.LOGICLEVEL`~if $value.PRIVACY neq 'R' AND $value.PRIVACY neq 'F' AND $value.PHOTO_DISPLAY neq 'H' AND $value.PHOTO_DISPLAY neq 'C' AND $value.PHOTO_DISPLAY neq 'F'`&CALL_ME=~$value.ALBUM_LINK`~/if`" ~/if` ~else` ~if $incomplete` href="~$SITE_URL`/profile/viewprofile.php?CMGFRMMMMJS=1&checksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&profilechecksum=~$RECEIVER_PROFILECHECKSUM`&enable_auto_loggedin=1&logic_used=~$logic`&is_user_active=~$is_user_active`&npos=~$k+1`&recomending=&clicksource=~$STYPE`&EditWhatNew=incompletProfile&stype=~$value.LOGICLEVEL`" ~else` href="~$SITE_URL`/profile/viewprofile.php?CMGFRMMMMJS=1&checksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&profilechecksum=~$value.PROFILECHECKSUM`&enable_auto_loggedin=1&logic_used=~$logic`&is_user_active=~$is_user_active`&npos=~$k+1`&clicksource=~$STYPE`&stype=~$value.LOGICLEVEL`" ~/if` ~/if` ~else` ~if $incomplete` href="~$SITE_URL`/profile/viewprofile.php?CMGFRMMMMJS=1&checksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&profilechecksum=~$RECEIVER_PROFILECHECKSUM`&enable_auto_loggedin=1&logic_used=~$logic`&is_user_active=~$is_user_active`&npos=~$k+1`&recomending=&clicksource=~$STYPE`&EditWhatNew=incompletProfile&stype=~$value.LOGICLEVEL`" ~else` href="~$SITE_URL`/profile/viewprofile.php?CMGFRMMMMJS=1&checksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&profilechecksum=~$value.PROFILECHECKSUM`&enable_auto_loggedin=1&logic_used=~$logic`&is_user_active=~$is_user_active`&npos=~$k+1`&clicksource=~$STYPE`&stype=~$value.LOGICLEVEL`" ~/if` ~/if` style="text-decoration:none; color:#0f529d;" target="_blank"><img src="~$value.SearchPicUrl`" width="100" height="133" hspace="0" vspace="0" border="0" style="border:1px solid #e6e6e6;" /></a>
+                      </td>
+                      <td width="422" align="left"><table width="422" border="0" cellspacing="2" cellpadding="0" style="font-family:Arial, Verdana; font-size:12px; color:#000000;">
+                        <tr>
+                          <td valign="top"><table width="422" border="0" cellspacing="2" cellpadding="0" style="font-family:Arial, Verdana; font-size:12px; color:#000000;">
+                            <tr>
+                              <td width="107"><b>Age &amp; Height</b></td>
+                              <td width="5">:</td>
+                              <td width="298">~$value.AGE` yrs; ~$value.HEIGHT`</td>
+                            </tr>
+                            <tr>
+                              <td><b>Religion &amp; ~if $value.RELIGION_NO eq 2 || $value.RELIGION_NO eq 3`Sect~else`Caste~/if`</b></td>
+                              <td>:</td>
+                              <td>~$value.RELIGION`; ~$value.CASTE`</td>
+                            </tr>
+                            <tr>
+                              <td><b>Mother Tongue</b></td>
+                              <td>:</td>
+                              <td>~$value.MTONGUE`</td>
+                            </tr>
+                            <tr>
+                              <td><b>Education</b></td>
+                              <td>:</td>
+                              <td><a style="text-decoration:none; cursor:default; color:#000000;">~$value.EDU_LEVEL_NEW`</a></td>
+                            </tr>
+                            <tr>
+                              <td><b>Occupation</b></td>
+                              <td>:</td>
+                              <td>~$value.OCCUPATION`</td>
+                            </tr>
+                            <tr>
+                              <td><b>Income</b></td>
+                              <td>:</td>
+                              <td>~$value.INCOME`</td>
+                            </tr>
+                            <tr>
+                              <td><b>Location</b></td>
+                              <td>:</td>
+                              <td>~$value.CITY_RES`~if $value.CITY_RES`~if $value.COUNTRY_RES`,~/if`~/if` ~$value.COUNTRY_RES`</td>
+                            </tr>
+                          </table></td>
+                        </tr>
+                      </table></td>
+                      <td width="9"></td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td colspan="2"><table width="534" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Verdana; font-size:12px;">
+                                <tr>
+					~if $value.HAVEPHOTO eq 'Y'`
+                                		~if $value.PHOTO_DISPLAY neq 'C'`
+                                  		<td width="102" align="center" style="border:1px solid #c7c7c7; color:#0f529d" background="~$IMG_PATH`/gry_btn_bg.gif">
+							<a ~if $incomplete` href="~$SITE_URL`/profile/viewprofile.php?CMGFRMMMMJS=1&checksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&profilechecksum=~$RECEIVER_PROFILECHECKSUM`&enable_auto_loggedin=1&logic_used=~$logic`&is_user_active=~$is_user_active`&npos=~$k+1`&recomending=&clicksource=~$STYPE`&EditWhatNew=incompletProfile&stype=~$value.LOGICLEVEL`" ~else` href="~$SITE_URL`/profile/viewprofile.php?CMGFRMMMMJS=1&checksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&profilechecksum=~$value.PROFILECHECKSUM`&enable_auto_loggedin=1&logic_used=~$logic`&is_user_active=~$is_user_active`&npos=~$k+1`&clicksource=~$STYPE`&stype=~$value.LOGICLEVEL`~if $value.PRIVACY neq 'R' AND $value.PRIVACY neq 'F' AND $value.PHOTO_DISPLAY neq 'H' AND $value.PHOTO_DISPLAY neq 'C' AND $value.PHOTO_DISPLAY neq 'F'`&CALL_ME=~$value.ALBUM_LINK`~/if`" ~/if` style="text-decoration:none; color:#0f529d;" target="_blank" ><img src="~$IMG_PATH`/photoIC.gif" width="23" height="19" hspace="0" vspace="0" border="0" align="absmiddle" />Photo Album</a>
+						~else`
+                                  		<td width="102" align="center">
+						~/if`
+					~elseif $value.HAVEPHOTO eq 'N' || !$value.HAVEPHOTO`
+                                  		<td width="102" align="center">
+							<a ~if $incomplete` href="~$SITE_URL`/profile/viewprofile.php?CMGFRMMMMJS=1&checksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&profilechecksum=~$RECEIVER_PROFILECHECKSUM`&enable_auto_loggedin=1&logic_used=~$logic`&is_user_active=~$is_user_active`&npos=~$k+1`&recomending=&clicksource=~$STYPE`&EditWhatNew=incompletProfile&stype=~$value.LOGICLEVEL`" ~else` href="~$SITE_URL`/profile/viewprofile.php?CMGFRMMMMJS=1&checksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&profilechecksum=~$value.PROFILECHECKSUM`&enable_auto_loggedin=1&logic_used=~$logic`&is_user_active=~$is_user_active`&npos=~$k+1`&clicksource=~$STYPE`&stype=~$value.LOGICLEVEL`" ~/if` style="text-decoration:underline; color:#0f529d;" target="_blank">Request Photo</a>
+					~else`
+                                  		<td width="102" align="center">
+					~/if`
+				  </td>
+                                  <td width="10"></td>
+                                  <td width="100" align="center" style="border:1px solid #c7c7c7;" height="25" background="~$IMG_PATH`/gry_btn_bg.gif"><a ~if $incomplete` href="~$SITE_URL`/profile/viewprofile.php?CMGFRMMMMJS=1&checksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&profilechecksum=~$RECEIVER_PROFILECHECKSUM`&enable_auto_loggedin=1&logic_used=~$logic`&is_user_active=~$is_user_active`&npos=~$k+1`&recomending=&clicksource=~$STYPE`&EditWhatNew=incompletProfile&stype=~$value.LOGICLEVEL`" ~else` href="~$SITE_URL`/profile/viewprofile.php?CMGFRMMMMJS=1&checksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&profilechecksum=~$value.PROFILECHECKSUM`&enable_auto_loggedin=1&logic_used=~$logic`&is_user_active=~$is_user_active`&npos=~$k+1`&clicksource=~$STYPE`&stype=~$value.LOGICLEVEL`" ~/if` target="_blank" style="text-decoration:none; color:#0f529d;"><img src="~$IMG_PATH`/fullIC.gif" width="32" height="16" hspace="0" vspace="0" border="0" align="absmiddle" />Full Profile</a></td>
+                                  <td width="155"></td>
+                                  <td background="~$IMG_PATH`/expressBTN.gif" bgcolor="#950908" align="center" width="167"><a ~if $incomplete` href="~$SITE_URL`/profile/viewprofile.php?CMGFRMMMMJS=1&checksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&profilechecksum=~$RECEIVER_PROFILECHECKSUM`&enable_auto_loggedin=1&logic_used=~$logic`&is_user_active=~$is_user_active`&npos=~$k+1`&recomending=&clicksource=~$STYPE`&EditWhatNew=incompletProfile&stype=~$value.LOGICLEVEL`" ~else` href="~$SITE_URL`/profile/viewprofile.php?CMGFRMMMMJS=1&checksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&profilechecksum=~$value.PROFILECHECKSUM`&enable_auto_loggedin=1&logic_used=~$logic`&is_user_active=~$is_user_active`&npos=~$k+1`&clicksource=~$STYPE`&kundli_type=3&stype=~$value.LOGICLEVEL`" ~/if` target="_blank" style="text-decoration:none; color:#ffffff;">&nbsp; &nbsp; &nbsp; <strong>EXPRESS INTEREST</strong></a></td>
+                                </tr>
+                              </table></td>
+                      <td></td>
+                    </tr>
+                  </table></td>
+              </tr>
+              <tr>
+                <td height="8"></td>
+              </tr>
+            </table></td>
+          <td></td>
+        </tr>
+	~if $k eq 0`
+	~if $incomplete || $MATCHALERT_CASE`
+        <tr>
+          <td colspan="4" height="5"></td>
+        </tr>
+	<tr>
+          <td colspan="4" bgcolor="#fff5df" style="padding-left:12px;">
+		<table width="100%" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial; font-size:13px; color:#000000;">
+                	<tr>
+                        	<td colspan="3" height="13">&nbsp;</td>
+                	</tr>
+			~if $incomplete`
+			<tr>
+                		<td style="line-height:18px; font-size:14px;" height="80" width="365">~$receiverName`,<br/>
+                                Complete your profile so that interested members can contact you.
+~if $MATCHALERT_CASE`
+Also, add a photo & verify your phone number - to get <strong><font color="#a70805">FREE TRIAL OFFER</font></strong> worth Rs.~$FTO_WORTH`/-<br/>
+~/if`
+					<table width="242" border="0" cellspacing="0" cellpadding="0" style="margin-right:10px;margin-top:10px" align="left">
+                    				<tr>
+                      					<td height="33" width="242" background="~$IMG_PATH`/btnBG1.gif" bgcolor="#FFE817" valign="top"><a href="~$SITE_URL`/profile/viewprofile.php?CMGFRMMMMJS=1&checksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&profilechecksum=~$RECEIVER_PROFILECHECKSUM`&enable_auto_loggedin=1&logic_used=~$logic`&is_user_active=~$is_user_active`&npos=~$k+1`&recomending=&clicksource=~$STYPE`&EditWhatNew=incompletProfile&stype=~$STYPE_ALBUM_PAGE`" target="_blank" style="line-height:31px; font-family:Trebuchet MS; font-size:12px; color:#000000; text-decoration:none; display:block; text-transform:uppercase; text-align:center;">Complete your profile now</a>
+							</td>
+                    				</tr>
+                  			</table>
+				</td>
+			</tr>
+~if $MATCHALERT_CASE`
+			<tr>
+				<td>
+					<font style="color:#474747; font-size:11px; float:right"><a href="~$SITE_URL`/fto/offer?CMGFRMMMMJS=1&checksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&profilechecksum=~$RECEIVER_PROFILECHECKSUM`&logic_used=~$logic`&is_user_active=~$is_user_active`&clicksource=~$STYPE`&From_Mail=Y&stype=~$STYPE_ALBUM_PAGE`" target="_blank">Know more</a> about Free Trial Offer</font><br/>
+				</td>
+                       	</tr>
+~/if`
+			~elseif $MATCHALERT_CASE eq 1 || $MATCHALERT_CASE eq 2 || $MATCHALERT_CASE eq 3`
+                	<tr>
+                		<td style="line-height:18px; font-size:14px;" height="80" width="365">~$receiverName`, You can  <font color="#a70805" >see phone/email </font>of profiles for <strong><font color="#a70805">FREE!</font></strong><br />
+					<font style="font-size:12px; ">However, to get this Jeevansathi Free Trial Offer worth Rs. ~$FTO_WORTH`/- you must</font><br />
+					<table height="41" width="auto" style="font-size:12px">
+						<tr>
+							~if $MATCHALERT_CASE eq 1 || $MATCHALERT_CASE eq 2`
+							<td ~if $GENDER eq 'F'`background="~$IMG_PATH`/btn-update-female-trans.png"~elseif $GENDER eq 'M'`background="~$IMG_PATH`/btn-update-male-trans.png"~/if` width="110" style="font:12px 'Trebuchet MS', Arial, Helvetica, sans-serif; padding-left:50px"><a href="~$SITE_URL`/social/addPhotos?CMGFRMMMMJS=1&checksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&profilechecksum=~$RECEIVER_PROFILECHECKSUM`&logic_used=~$logic`&is_user_active=~$is_user_active`&clicksource=~$STYPE`&From_Mail=Y&stype=~$STYPE_ALBUM_PAGE`" style="COLOR:#000; text-decoration:NONE" target="_blank">UPLOAD PHOTO</a>
+							</td>
+							~/if`
+							~if $MATCHALERT_CASE eq 1`
+							<td>and</td>
+							~/if`
+							~if $MATCHALERT_CASE eq 1 || $MATCHALERT_CASE eq 3`
+							<td  background="~$IMG_PATH`/btn-verify.jpg" width="100" headers="41" style="font:12px 'Trebuchet MS', Arial, Helvetica, sans-serif; padding-left:50px"><a href="~$SITE_URL`/fto/offer?CMGFRMMMMJS=1&checksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&profilechecksum=~$RECEIVER_PROFILECHECKSUM`&logic_used=~$logic`&is_user_active=~$is_user_active`&clicksource=~$STYPE`&From_Mail=Y&stype=~$STYPE_ALBUM_PAGE`" style="COLOR:#000; text-decoration:NONE" target="_blank">VERIFY PHONE</a>
+							</td>
+							~/if`
+<td>before <strong>~$FTO_END_DAY_SINGLE_DOUBLE_DIGIT`<sup>~$FTO_END_DAY_SUFFIX`</sup> ~$FTO_END_MONTH` ~$FTO_END_YEAR`.</strong></td>
+						</tr>
+					</table>
+
+					<font style="color:#474747; font-size:11px; float:right"><a href="~$SITE_URL`/fto/offer?CMGFRMMMMJS=1&checksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&profilechecksum=~$RECEIVER_PROFILECHECKSUM`&logic_used=~$logic`&is_user_active=~$is_user_active`&clicksource=~$STYPE`&From_Mail=Y&stype=~$STYPE_ALBUM_PAGE`" target="_blank">Know more</a> about Free Trial Offer</font>
+				</td>
+                	</tr>
+			~elseif $MATCHALERT_CASE eq 4`
+			<tr>
+                		<td style="line-height:18px; font-size:14px;" height="80" width="365">~$receiverName`, You can  <font color="#a70805" >see phone/email </font>of profiles for <strong><font color="#a70805">FREE!</font></strong><br />
+                			<img src="~$IMG_PATH`/maroon-arrow.jpg" style="margin-right:8px" /><font style="font-size:12px; "> Express Interest in those you like.<br />
+               				<img src="~$IMG_PATH`/maroon-arrow.jpg" style="margin-right:8px"/>
+                			See their phone/email when they 'Accept' your Interest.</font>
+                  			<br /><br /><font style="color:#474747; font-size:11px "><a href="~$SITE_URL`/fto/offer?CMGFRMMMMJS=1&checksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&profilechecksum=~$RECEIVER_PROFILECHECKSUM`&logic_used=~$logic`&is_user_active=~$is_user_active`&clicksource=~$STYPE`&From_Mail=Y&stype=~$STYPE_ALBUM_PAGE`" target="_blank">Know more</a> about Free Trial Offer</font>
+				</td>
+                                <td width="60" align="center" valign="top">
+					<table width="47" border="0" cellspacing="0" cellpadding="0" align="center" style="font-family:Tahoma; font-size:10px; margin:10px 10px 0 0px;">
+              					<tr>
+                					<td bgcolor="#C00402" height="16" align="center" background="~$IMG_PATH`/calTop.jpg" style="color:#ffffff"><strong>~$FTO_END_MONTH_UPPERCASE`</strong>
+							</td>
+              					</tr>
+              					<tr>
+                					<td height="24" align="center" background="~$IMG_PATH`/dateBG.jpg" bgcolor="#E6E4E5" style="font-size:19px;"><strong>~$FTO_END_DAY`</strong>
+							</td>
+              					</tr>
+              					<tr>
+                					<td background="~$IMG_PATH`/calBot2.jpg" height="29" align="center" valign="top" style="color:#ffffff; line-height:15px;"><strong>~$FTO_END_YEAR`</strong>
+							</td>
+              					</tr>
+            				</table>
+				</td>
+            			<td width="143" ><strong ><font color="#A70805">Hurry!</font></strong><br />
+					Your Free Trial Offer<br />
+					ends on<strong> ~$FTO_END_DAY_SINGLE_DOUBLE_DIGIT`<sup>~$FTO_END_DAY_SUFFIX`</sup> ~$FTO_END_MONTH` ~$FTO_END_YEAR`.</strong>
+				</td>
+                	</tr>
+			~elseif $MATCHALERT_CASE eq 5`
+			<tr>
+                        	<td colspan="3">To get the most from your FREE TRIAL OFFER, express interest in <font color="#a70805">ALL profiles</font> you like.</td>
+                	</tr>
+			<tr>
+                		<td style="line-height:18px;" height="80">See phone/email of members who <font color="#a70805">'Accept'</font><br />your 'Interest' before <font color="#a70805">~$FTO_END_DAY_SINGLE_DOUBLE_DIGIT`<sup>~$FTO_END_DAY_SUFFIX`</sup> ~$FTO_END_MONTH` ~$FTO_END_YEAR`</font><br /><br /><em style="color:#474747;">Most people express interest in <strong>40 profiles</strong> to find a life partner.</em>
+				</td>
+                                <td width="70" align="center" valign="top">
+					<table width="47" border="0" cellspacing="0" cellpadding="0" align="center" style="font-family:Tahoma; font-size:10px; margin:10px 10px 0 0px;">
+              					<tr>
+                					<td bgcolor="#C00402" height="16" align="center" background="~$IMG_PATH`/calTop.jpg" style="color:#ffffff"><strong>~$FTO_END_MONTH_UPPERCASE`</strong>
+							</td>
+              					</tr>
+              					<tr>
+                					<td height="24" align="center" background="~$IMG_PATH`/dateBG.jpg" bgcolor="#E6E4E5" style="font-size:19px;"><strong>~$FTO_END_DAY`</strong>
+							</td>
+              					</tr>
+              					<tr>
+                					<td background="~$IMG_PATH`/calBot.jpg" height="31" align="center" valign="top" style="color:#ffffff; line-height:15px;"><strong>~$FTO_END_YEAR`</strong>
+							</td>
+              					</tr>
+            				</table>
+				</td>
+                	</tr>
+			~/if`
+		</table>
+	    </td>
+        </tr>
+	<tr>
+        <td colspan="4"><div style="width:100%"><img src="~$IMG_PATH`/FtoBOT.gif" style="device-width: 320px; display:block;orientation:portrait; width:inherit;" vspace="0" hspace="0" align="left" /></div></td>
+      </tr>
+	~/if`
+	~/if`
+        <tr>
+          <td colspan="4" height="13"></td>
+        </tr>
+~/foreach`
+<!--
+        <tr>
+          <td></td>
+          <td colspan="2" align="right"><table width="360" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000000;">Did you like the matches in this Match Alert?</td>
+                <td width="61"><a href="#" target="_blank"><img src="~$IMG_PATH`/yesBTN.jpg" width="57" height="28" border="0" /></a></td>
+                <td width="51"><a href="#" target="_blank"><img src="~$IMG_PATH`/noBTN.jpg" width="51" height="28" border="0" /></a></td>
+              </tr>
+            </table></td>
+          <td></td>
+        </tr>
+-->
+        <tr>
+          <td colspan="4" height="28"></td>
+        </tr>
+
+		~if $PAID eq 0 || ($PAID eq 1 && $SUBS1 eq 0)`
+              <tr bgcolor="#fff6de">
+                <td></td>
+                <td colspan="2"><table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#fff6de">
+                    <tr>
+                      <td height="17"></td>
+                    </tr>
+                    <tr>
+                      <td style="font-family:Arial; font-size:12px; color:#000000; padding-left:10px;" valign="top" height="21">
+				~if $PAID eq 0 && $VARIABLE_DISCOUNT_OFFER neq 1`
+					To see contact details of profile(s) you like, and avail other benefits of paid membership:
+				~elseif $PAID eq 1 && $SUBS1 eq 0`
+					~$pmsg`
+				~elseif $PAID eq 0 && $VARIABLE_DISCOUNT_OFFER eq 1`
+					To directly contact members you like,
+				~/if`
+			</td>
+                    </tr>
+		
+                    <tr>
+                      <td style="padding-left:10px;"><table width="154" border="0" cellspacing="0" cellpadding="0" align="left" style="border:1px solid #d40832; margin:0px 12px 6px 0px;">
+                          <tr>
+                            <td background="~$IMG_PATH`/btnBG.gif" height="27" align="center" bgcolor="#C31011" style=" margin-bottom:10px;">
+					~if $PAID eq 0 && $VARIABLE_DISCOUNT_OFFER eq 1`
+				<a href="~$SITE_URL`/profile/mem_comparison.php?CMGFRMMMMJS=1&from_source=VDMA2~$VARIABLE_DISCOUNT`&checksum=~$RECEIVER_PROFILECHECKSUM`&profilechecksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&clicksource=~$STYPE`&stype=~$STYPE_ALBUM_PAGE`" target="_blank" style="font-family:Arial; font-size:13px; color:#ffffff; text-decoration:none;">
+					<strong>
+						Upgrade at ~$VARIABLE_DISCOUNT`% OFF
+					</strong>
+				</a>
+					~elseif $PAID eq 0 && $VARIABLE_DISCOUNT_OFFER neq 1`
+				<a href="~$SITE_URL`/profile/mem_comparison.php?CMGFRMMMMJS=1&from_source=MA2&checksum=~$RECEIVER_PROFILECHECKSUM`&profilechecksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&clicksource=~$STYPE`&stype=~$STYPE_ALBUM_PAGE`" target="_blank" style="font-family:Arial; font-size:13px; color:#ffffff; text-decoration:none;">
+					<strong>
+						Upgrade Membership
+					</strong>
+				</a>
+					~elseif $PAID eq 1 && $RENEW_TEXT_DISC eq 1`
+				<a href="~$SITE_URL`/profile/mem_comparison.php?CMGFRMMMMJS=1&from_source=MA2RC&checksum=~$RECEIVER_PROFILECHECKSUM`&profilechecksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&clicksource=~$STYPE`&stype=~$STYPE_ALBUM_PAGE`" target="_blank" style="font-family:Arial; font-size:13px; color:#ffffff; text-decoration:none;">
+					<strong>
+						Renew at ~$RENEW_DISCOUNT`% OFF
+					</strong>
+				</a>
+					~elseif $PAID eq 1 && $RENEW_TEXT_DISC eq 0`
+				<a href="~$SITE_URL`/profile/mem_comparison.php?CMGFRMMMMJS=1&from_source=MA2RO&checksum=~$RECEIVER_PROFILECHECKSUM`&profilechecksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&clicksource=~$STYPE`&stype=~$STYPE_ALBUM_PAGE`" target="_blank" style="font-family:Arial; font-size:13px; color:#ffffff; text-decoration:none;">
+					<strong>
+						Renew Membership
+					</strong>
+				</a>
+					~/if`
+			    </td>
+                          </tr>
+                        </table>
+                        <table width="252" border="0" cellspacing="0" cellpadding="0" align="left">
+                          <tr>
+                            <td height="31" width="35" style="font-family:Arial; font-size:13px; color:#707070; text-decoration:none;">OR</td>
+                            <td><font face="Arial" color="#000000" style="font-size:13px;">Just call us (Toll Free) <br />
+                              ~$TOLL_FREE` </font></td>
+                          </tr>
+                        </table></td>
+			</tr>
+                    <tr>
+                      <td style="padding-left:10px;"><table width="252" border="0" cellspacing="0" cellpadding="0" align="left">
+                          <tr>
+                            <td height="31" width="24"><img src="~$IMG_PATH`/lockIC.gif" width="24" height="29" vspace="0" hspace="0" align="right" /></td>
+                            <td><font face="Arial" color="#575656" style="font-size:11px;"><em>Easy and secure payment options</em></font></td>
+                          </tr>
+                        </table></td>
+                    </tr>
+                    <tr>
+                     <td height="9" style="border-bottom:1px solid #f5e3b1;"><img src="~$IMG_PATH`/spacer.gif" width="1" height="1" vspace="0" hspace="0" align="left" /></td>
+                        </tr>
+                    <tr>
+                      <td height="10"></td>
+                    </tr>
+                    <tr>
+                      <td style="padding-left:10px;"><font face="Arial" color="#000000" style="font-size:13px; line-height:20px;">Benefits of Paid Membership:</font></td>
+                    </tr>
+                    <tr>
+			<td style="padding-left:10px;"><table width="262" border="0" cellspacing="0" cellpadding="0" align="left" style="font-family:Arial; font-size:11px; color:#000000;">
+                          <tr>
+                            <td><img src="~$IMG_PATH`/call_ic.gif" width="121" height="49" vspace="0" hspace="0" align="left" /></td>
+                            <td rowspan="2" width="15"></td>
+                            <td><img src="~$IMG_PATH`/chat_box.gif" width="121" height="49" vspace="0" hspace="0" align="left" /></td>
+                            <td rowspan="2" width="15"></td>
+                          </tr>
+                          <tr>
+                            <td align="center" height="44" valign="top" width="121" style="padding-top:5px;">See <strong><font color="#801212">phone numbers</font></strong><br>
+                              and <strong><font color="#801212">email id's</font></strong></td>
+                            <td valign="top" align="center" width="121" style="padding-top:5px;">Initiate <strong><font color="#801212">chats</font></strong> on<br>
+                              website or GTalk</td>
+                          </tr>
+                        </table>
+                        <table border="0" cellspacing="0" cellpadding="0" align="left" style="font-family:Arial; font-size:11px; color:#000000;">
+                          <tr>
+                            <td width="121"><img src="~$IMG_PATH`/msg_box.gif" width="121" height="49" vspace="0" hspace="0" align="left" /></td>
+                          </tr>
+                          <tr>
+                            <td align="center" height="44" valign="top" width="121" style="padding-top:5px;">Send <strong><font color="#801212">personalized <br>
+                              messages</font></strong></td>
+                          </tr>
+                        </table></td>
+                    </tr>
+                  </table></td>
+                <td></td>
+              </tr>
+	~/if`
+
+	<tr>
+          <td colspan="4" height="15"></td>
+        </tr>
+
+         <tr>
+          <td></td>
+          <td colspan="2" bgcolor="#f7f6f6">
+			<table width="556" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000000;">
+  <tr>
+    <td></td>
+    <td height="35" colspan="4"><strong>Desired Partner Profile specified by you <font color="#716f6f">(in brief):</font></strong></td>
+  </tr>
+  <tr>
+    <td width="11">&nbsp;</td>
+    <td width="107"><b>Age</b></td>
+    <td width="5">:</td>
+    <td width="298">~if $PARTNER_AGE` ~$PARTNER_AGE` ~else` - ~/if`</td>
+    <td width="7"></td>
+  </tr>
+  <tr>
+  	<td></td>
+    <td><b>Height</b></td>
+    <td>:</td>
+    <td>~if $PARTNER_HEIGHT` ~$PARTNER_HEIGHT` ~else` - ~/if`</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><b>Marital Status</b></td>
+    <td>:</td>
+    <td>~if $PARTNER_MSTATUS` ~$PARTNER_MSTATUS` ~else` - ~/if`</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><b>Religion:~if $SHOW_SECT`Sect~else`Caste~/if`</b></td>
+    <td>:</td>
+    <td>~if $RELIGION_CASTE_INFO` ~$RELIGION_CASTE_INFO` ~else` - ~/if`</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><b>Community</b></td>
+    <td>:</td>
+    <td>~if $PARTNER_MTONGUE` ~$PARTNER_MTONGUE` ~else` - ~/if`</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><b>Income</b></td>
+    <td>:</td>
+    <td>~if $PARTNER_INCOME` ~$PARTNER_INCOME` ~else` - ~/if`</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td height="17" colspan="5"></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td colspan="3">
+    	<table width="538" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif;">
+          <tr>
+            <td colspan="2"></td>
+            <td style="font-size:13px; color:#606064;" align="right"><img src="~$IMG_PATH`/bulb_IC.gif" width="25" height="24" align="absmiddle"><strong>Jeevansathi <span style="font-family:Times New Roman; color:#920606;"><em>Tip for you:</em></span></strong></td>
+          </tr>
+          <tr>
+            <td width="209" style="font-size:12px;"><strong>Looking for more relevant matches?<br />
+              <a ~if $incomplete` href="~$SITE_URL`/profile/viewprofile.php?CMGFRMMMMJS=1&checksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&profilechecksum=~$RECEIVER_PROFILECHECKSUM`&enable_auto_loggedin=1&logic_used=~$logic`&is_user_active=~$is_user_active`&npos=~$k+1`&recomending=&clicksource=~$STYPE`&EditWhatNew=incompletProfile&stype=~$STYPE_ALBUM_PAGE`" ~else` href="~$SITE_URL`/profile/dpp?CMGFRMMMMJS=1&checksum=~$RECEIVER_PROFILECHECKSUM`&echecksum=~$ECHECKSUM`&profilechecksum=~$RECEIVER_PROFILECHECKSUM`&enable_auto_loggedin=1&logic_used=~$logic`&is_user_active=~$is_user_active`&clicksource=~$STYPE`&From_Mail=Y&EditWhatNew=FocusDpp&stype=~$STYPE_ALBUM_PAGE`" ~/if` target="_blank" style="text-decoration:underline; color:#0f529d">See/Edit your desired partner profile</a></strong></td>
+            <td width="107">&nbsp;</td>
+            <td width="222" align="right" style="font-size:11px; color:#4b4b50;">Being little more <strong>SPECIFIC</strong> about your criteria can help you find more <strong>RELEVANT</strong> matches.</td>
+          </tr>
+        </table>
+
+    </td>
+    <td></td>
+  </tr>
+   <tr>
+    <td height="11" colspan="5"></td>
+  </tr>
+</table>
+		  </td>
+          <td></td>
+        </tr>
+        <tr>
+        <td colspan="4" height="45"></td>
+      </tr>
+      <tr>
+          <td></td>
+          <td colspan="2">Wish you success in your search.</td>
+          <td></td>
+        </tr>
+       <tr>
+          <td colspan="4" height="18"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td valign="top" style="font-size:12px;">Warm Regards,<br>
+            <strong><font color="#c4161c">Jeevansathi</font>.com Team</strong><br>
+            <a href="http://www.facebook.com/jeevansathi" target="_blank"><img src="~$IMG_PATH`/fbBTN.gif" width="111" height="29" border="0" alt="Join Us on Facebook" vspace="4"></a>
+            </td>
+          <td style="font-family:Arial; font-size:12px; color:#474646; float:right;" valign="top" align="right">
+<img src="~$IMG_PATH`/icon2.gif" width="21" height="22" align="absmiddle"> <span style="font-size:12px;"><strong>Call us at:</strong></span>~$TOLL_FREE` (Toll free)
+~if $CONTACT_PERSON`, or
+<table>
+        <tr>
+                <td>
+                        <img src="~$IMG_PATH`/visitIC.gif" width="32" height="33" align="left">
+                </td>
+                <td>
+                        <span style="font-size:11px; line-height:18px;">Visit your <strong>nearest Jeevansathi centre:</strong><br>~$CONTACT_ADDRESS`, ~$CONTACT_PERSON`- ~$CONTACT_NO`</span>
+                </td>
+        </tr>
+</table>
+~/if`
+
+
+<!--
+<img src="~$IMG_PATH`/icon2.gif" width="21" height="22" align="absmiddle"> <span style="font-size:12px;"><strong>Call us at:</strong></span>1800-419-6299 (Toll free)~if $CONTACT_PERSON`, or<br>
+          <img src="~$IMG_PATH`/visitIC.gif" width="32" height="33" align="left"><span style="font-size:11px; line-height:18px;">Visit your <strong>nearest Jeevansathi centre:</strong><br>~$CONTACT_ADDRESS`, ~$CONTACT_PERSON`- ~$CONTACT_NO`</span>~/if`
+    -->      
+
+</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="4" height="19"></td>
+        </tr>
+<!--
+        <tr>
+          <td></td>
+          <td colspan="2" align="center"><img src="~$IMG_PATH`/banner_spc.gif" width="470" height="62" vspace="0" hspace="0"></td>
+          <td></td>
+        </tr>
+-->
+        <tr>
+          <td></td>
+          <td colspan="2" height="31" background="~$IMG_PATH`/lineSep.gif">&nbsp;</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>You can also visit any of our 60+ offices across India  </td>
+          <td align="right"><a href="~$SITE_URL`/profile/contact.php" target="_blank" title="View all Centre Addesses" style="color:#0f529d">View all Centre Addesses</a></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="4" height="10"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td colspan="2"><span style="color:#711e1e">North India:</span> Noida, Gurgaon, Delhi - <font color="#7a7676">Laxmi Nagar, Connaught Place, Nehru Place, Kamla Nagar, Pitampura, Malviya Nagar, Rajori Garden,</font> Agra, Allahabad, Chandigarh, Jaipur, Kanpur, Dehradun, Varanasi, Lucknow, Ludhiana, Jallandhar, Gorakhpur, Pathankot, Amritsar, Jammu, Bareilly</span></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="4" height="5"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td colspan="2"><span style="color:#711e1e">West India:</span> Goa, Kolahpur, Ahmedabad, Aurangabad, Baroda, Nagpur, Nashik, Rajkot, Surat, Pune - <font color="#7a7676">Chinchwad, Deccan, Koregaon, Modelina Road, Mumbai - Andheri(West), Andheri East, Borivalli, Chembur, Ghatkopar, Mulund, Thane, Vashi, Worli</font></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="4" height="5"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td colspan="2"><span style="color:#711e1e">South India:</span> Chennai, Kochi, Coimboture, Hosur, Mangalore, Mysore, Trichy, Trivandrum, Vijaywada, Vyzag
+Bangalore - <font color="#7a7676">Dickenson Road, Koramangla,</font> Hyderabad - <font color="#7a7676">Begumpet, Himmayat Nagar</font></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="4" height="5"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td colspan="2"><span style="color:#711e1e">East & Central India:</span> Ranchi, Bhopal, Bhubneshwar, Indore, Patna, Jamshedpur,  Gwalior, Jabalpur, Raipur,
+Kolkata - <font color="#7a7676">Ghariat Road, Salt Lake, AJC Bose Road</font></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="4" height="20"></td>
+        </tr>
+        <tr bgcolor="#f7f6f6">
+    <td height="23">&nbsp;</td>
+    <td align="center" style="font-family:Verdana, Arial, Times New Roman, Times, serif; color:#676565; font-size:11px;" colspan="2">100% Profile Screening &nbsp;&nbsp;&nbsp;<font color="#b7b6b6">|</font>&nbsp;&nbsp;&nbsp; Lakhs of Success Stories &nbsp;&nbsp;&nbsp;<font color="#b7b6b6">|</font>&nbsp;&nbsp;&nbsp; Privacy Options</td>
+    <td></td>
+  </tr>
+    </table></td>
+    <td></td>
+    </tr>
+   <tr>
+    <td colspan="3" height="10"><img src="~$IMG_PATH`/botRound.gif" width="600" height="16"></td>
+  </tr>
+ <tr>
+  <td></td>
+  <td colspan="2" align="center" style="color:#c9c9c9; font-size:11px;">This email picks the best matches for you. If you do not login regularly, you may miss out on these potential matches.<br>Click here to <a href="~$SITE_URL`/profile/unsubscribe.php?matchalertTrack=1&logic_used=~$logic`" target="_blank" title="Click here" style="color:#c9c9c9;">UNSUBSCRIBE</a> from Match Alert mails.</td>
+  <td></td>
+</tr>
+ <tr>
+    <td colspan="3" height="10"></td>
+  </tr>
+</table>
+</body>
+</html>

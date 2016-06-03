@@ -1,0 +1,66 @@
+.srfrm_pos1 {
+	right:0;
+	top:18px
+}
+.srfrm_pos2 {
+	right:0;
+	top:6px
+}
+.srfrm_pos3 {
+	left:0;
+	top:4px
+}
+.srfrm_cross {
+	background-position: -44px -92px;
+	width: 25px;
+	height: 23px;
+}
+.srfrm_srch {
+	background-position: -144px -84px;
+	width: 25px;
+	height: 23px;
+}
+.textTruncate {
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+}
+#searchMainForm {
+height: auto;
+overflow: auto;
+}
+.srfrm_wrap{
+	word-wrap: break-word;
+}
+.srfrm_circle {
+	background-position: 1px -345px;
+	width: 35px;
+	height: 25px;
+}
+.srfrm_checked {
+	background-position: 1px -455px;
+	width: 35px;
+	height: 25px;
+}
+.srfrm_arwdwn {
+	background-position:1px -378px;
+	width: 35px;
+	height: 25px;
+}
+
+.srfrm_arwup {
+	background-position:1px -401px;
+	width: 35px;
+	height: 25px;
+}
+.srfrm_arwright {
+	background-position: 18px -427px;
+	width: 51px;
+	height: 25px;
+}
+.srfrm_arowright1{background-position:14px -431px;}
+
+#searchform_  ul li{
+	padding:15px 0;
+	list-style-type: none;
+}

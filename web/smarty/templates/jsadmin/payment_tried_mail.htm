@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body>
+<table width="600" border="1" cellpadding="10" cellspacing="0" bordercolor="#e6e6e6" style="font:normal 11px verdana,arial;">
+	<tr>
+		<td>
+			<table width="600" border="0" cellspacing="0" cellpadding="10">
+				<tr>
+					<td>
+						<img src="~$PHOTO_URL`/profile/images/logo.gif">
+					</td>
+				</tr>
+			</table>
+			<table width="600" border="0" cellspacing="0" cellpadding="10">
+                <tr>
+                    <td>Please add ~$fromEmailId` to your address book to ensure delivery of this mail into you inbox.</td><br><br>
+                </tr>
+				<tr>
+					<td>
+						Dear Member <b>~$USERNAME`</b><br><br>
+						We thank you for showing keen interest in upgrading your membership to a paid<br>
+						Membership on Jeevansathi.com. Our system shows that you have tried making your<br>
+						payments online and failed due to some reasons.<br><br>
+						<fieldset style="line-height:2; width:80%;">
+							<legend><b>You had selected</b></legend>
+							Membership type 
+~foreach from=$MAIN_SERVICE key=k item=v`
+   ~foreach from=$v key=kk item=vv`
+	<br>~$vv`
+	~/foreach`
+~/foreach`
+							~if $ADDON_SERVICE`
+								with ~$ADDON_SERVICE`
+							~/if`
+							.<br>
+							<a href="~$URL_TO_MEMBERSHIP_PAGE`"><b>Click here to pay online NOW</b></a>
+						</fieldset>
+						<br><br>Alternatively, you can pay us through these easy payment modes:<br><br>
+						1. Request for a cheque pick up from your doorstep,
+						<a href="~$URL_TO_MEMBERSHIP_PAGE1`">Click here </a>.<br><br>
+						2. You can walk in to a Jeevansathi branch near you,
+						<a href="~$SITE_URL`/P/contact.php">click here to locate a branch </a>.<br><br>
+						3. Courier / post the cheque to our head office,<br><br>
+						<fieldset style="line-height:2; width:80%;">
+							<legend >Cheque has to be in favor of
+								<b>'Jeevansathi Internet Services'</b>
+							</legend>
+							Postal Address: Jeevansathi Internet Services, B-8 Sector 132, Noida - 201301
+						</fieldset>
+						<br><br>For any further assistance, please feel free to
+						<b>call us at (0120) 4393500</b><br><br>
+						Regards<br>
+						The Jeevansathi.com Team<br><br>
+                        
+						<hr>
+						<div align="center"><br>
+							Please ignore this mail incase you have already made the payments.
+						</div>
+                        <br>
+                        You have received this mail because your e-mail ID is registered with Jeevansathi.com. This is a system-generated e-mail, please don't reply to this message. To stop receiving these mails <a href='~$unsubscribeLink`/0/0' target="_blank" style="text-decoration:none;">Unsubscribe</a>.
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+</body>
+</html>
+

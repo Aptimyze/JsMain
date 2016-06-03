@@ -1,0 +1,402 @@
+<html>
+<head>
+<title>JeevanSathi Matrimonials - Hobbies and Interests</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="/P/I/styles.php" type="text/css">
+<link rel="stylesheet" href="/P/IN/styles.php" type="text/css">
+<script language="javascript">
+<!--
+
+function chk_uncheck(chkname)
+{
+	var docF=document.form1;
+
+	for(var i=0;i<docF.elements.length;i++)
+	{
+		if(docF.elements[i].name==chkname && docF.elements[i].type=="checkbox")
+			docF.elements[i].checked=false;
+	}
+}
+
+function radio_uncheck(rdname)
+{
+	var docF=document.form1;
+
+	for(var i=0;i<docF.elements.length;i++)
+	{
+		if(docF.elements[i].name==rdname && docF.elements[i].type=="radio")
+			docF.elements[i].checked=false;
+	}
+}
+
+function validate()
+{
+
+	if(!check5("HOBBY[]"))
+	{
+		alert("You cannot select more than 5 Hobbies");
+		return false;
+	}
+
+	if(!check5("INTEREST[]"))
+	{
+		alert("You cannot select more than 5 Interests");
+		return false;
+	}
+
+	if(!check5("MUSIC[]"))
+	{
+		alert("You cannot select more than 5 Favourite Music");
+		return false;
+	}
+
+	if(!check5("BOOK[]"))
+	{
+		alert("You cannot select more than 5 Favourite Reads");
+		return false;
+	}
+
+	if(!check5("MOVIE[]"))
+	{
+		alert("You cannot select more than 5 Preferred Movies");
+		return false;
+	}
+
+	if(!check5("SPORTS[]"))
+	{
+		alert("You cannot select more than 5 Sports/fitness activities");
+		return false;
+	}
+
+	if(!check5("CUISINE[]"))
+	{
+		alert("You cannot select more than 5 Favourite Cuisines");
+		return false;
+	}
+
+	if(!check5("LANGUAGES[]"))
+	{
+		alert("You cannot select more than 5 Spoken Languages");
+		return false;
+	}
+
+	return true;
+}
+
+function check5(controlname)
+{
+	var docF=document.form1;
+	var j=0;
+
+	for(var i=0;i<docF.elements.length;i++)
+	{
+		if(docF.elements[i].name==controlname && docF.elements[i].type=="checkbox" && docF.elements[i].checked)
+			j++;
+	}
+
+	if(j>5)
+		return false;
+	else
+		return true;
+}
+
+//-->
+</script>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body>
+
+~$HEAD`
+~$LEFTPANEL`
+<table width="78%" height="1110" border="0" cellspacing="0" cellpadding="0" align="center">
+      <tr>
+        <td valign="top">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+       <td height="4"></td>
+       <SPACER height="4" type="block"></SPACER> </tr>
+      <tr>
+       <td class="headbigblack"><b>My Hobbies/Interests </b></td>
+      </tr>
+      <tr class="bgred">
+       <td height="1"></td>
+       <SPACER height="1" type="block"></SPACER> </tr>
+        <tr>
+       <td height="8"></td>
+       <SPACER height="8" type="block"></SPACER> </tr>
+     </table></td>
+      </tr>
+<TD colSpan=15 height=5 class="mediumblack"><strong><br>
+This section will significantly enhance your profile quality. You will also feature in specific keyword-based searches, improving response. <FONT
+    class=mediumblack><br>
+Don't miss out !</strong></td>
+</tr><tr>
+<TD colSpan=15 height=5>&nbsp;</td>
+</tr>
+<form name="form1" method="post" action="hobbies.php" onsubmit="return validate();">
+<tr>
+<TD colSpan=15 height=5><table cellspacing=0 cellpadding=0 width=560 border=0>
+<tbody>
+<tr bgcolor="#B5DCBD">
+  <td height="15" colspan=6 class=mediumblack>&nbsp;&nbsp;<strong>Hobbies ( choose up to 5 )</strong></td>
+</tr>
+~section name=hobby loop=$HOBBY`
+~if $smarty.section.hobby.index % 3 eq 0`
+<tr>
+~/if`
+  <td width=23 height=21><input type="checkbox" name="HOBBY[]" value="~$HOBBY[hobby].VALUE`" ~if $HOBBY[hobby].SELECTED eq "1"`checked~/if`></td>
+  <td class=smallblack1 width=167>~$HOBBY[hobby].LABEL`</td>
+~if $smarty.section.hobby.index % 3 eq 2 or $smarty.section.hobby.last`
+</tr>
+~/if`
+~/section`
+</tbody>
+</table></td>
+</tr>
+<tr>
+<TD colSpan=15 height=5>&nbsp;</td>
+</tr>
+<tr>
+<TD colSpan=15 height=5><TABLE cellSpacing=0 cellPadding=0 width=560 border=0>
+<TBODY>
+<TR bgcolor="#B5DCBD">
+  <TD height="15"
+  colSpan=6 class=mediumblack>&nbsp;&nbsp;<strong>Interests <FONT
+    class=mediumblack>( choose up to 5 )</font></strong></TD>
+</TR>
+~section name=interest loop=$INTEREST`
+~if $smarty.section.interest.index % 3 eq 0`
+<TR>
+~/if`
+	  <TD width=23 height=21><input type="checkbox" name="INTEREST[]" value="~$INTEREST[interest].VALUE`" ~if $INTEREST[interest].SELECTED eq "1"`checked~/if`></TD>
+  <TD class=smallblack1 width=167>~$INTEREST[interest].LABEL`</TD>
+  ~if $smarty.section.interest.index % 3 eq 2 or $smarty.section.interest.last`
+</TR>
+~/if`
+~/section`
+</TABLE></td>
+</tr>
+<tr>
+<TD colSpan=15 height=5>&nbsp;</td>
+</tr>
+<tr>
+<TD colSpan=15><TABLE cellSpacing=0 cellPadding=0 width=560 border=0>
+<TR bgcolor="#B5DCBD">
+<TD height="15" colSpan=6 class=mediumblack>&nbsp;&nbsp;<strong>Favourite music <FONT class=mediumblack>( choose up to 5 ) </FONT></strong></TD>
+</TR>
+~section name=music loop=$MUSIC`
+~if $smarty.section.music.index % 3 eq 0`
+<TR>
+~/if`
+	  <TD width=23 height=21><input type="checkbox" name="MUSIC[]" value="~$MUSIC[music].VALUE`" onclick="radio_uncheck('radio_music');" ~if $MUSIC[music].SELECTED eq "1"`checked~/if`></TD>
+  <TD class=smallblack1 width=167>~$MUSIC[music].LABEL`</TD>
+  ~if $smarty.section.music.index % 3 eq 2 or $smarty.section.music.last`
+</TR>
+~/if`
+~/section`
+<TR>
+<TD width=23 height=21><INPUT
+    onclick="chk_uncheck('MUSIC[]');" type=radio
+    value="Y" name="radio_music" ~if $ALLMUSIC eq "Y"`checked~/if`></TD>
+<TD class=smallblack1 width=167>Enjoy most forms of music</TD>
+<TD width=23 height=21><INPUT
+    onclick="chk_uncheck('MUSIC[]');" type=radio
+    value="N" name="radio_music" ~if $ALLMUSIC eq "N"`checked~/if`></TD>
+<TD class=smallblack1 width=167>Not too keen on music</TD>
+</TR>
+</TABLE></td>
+</tr>
+<tr>
+<TD colSpan=15 height=5>&nbsp;</td>
+</tr>
+<tr>
+<TD colSpan=15 height=5><TABLE cellSpacing=0 cellPadding=0 width=560 border=0>
+<TBODY>
+<TR bgcolor="#B5DCBD">
+  <TD height="15" colSpan=6 class=mediumblack>&nbsp;&nbsp;<strong>Favourite reads <FONT class=mediumblack>( choose up to 5 ) </FONT></strong></TD>
+</TR>
+~section name=book loop=$BOOK`
+~if $smarty.section.book.index % 3 eq 0`
+<TR>
+~/if`
+	  <TD width=23 height=21><input type="checkbox" name="BOOK[]" value="~$BOOK[book].VALUE`" onclick="radio_uncheck('radio_book');" ~if $BOOK[book].SELECTED eq "1"`checked~/if`></TD>
+  <TD class=smallblack1 width=167>~$BOOK[book].LABEL`</TD>
+  ~if $smarty.section.book.index % 3 eq 2 or $smarty.section.book.last`
+</TR>
+~/if`
+~/section`
+<TR>
+  <TD width=23 height=21><INPUT
+    onclick="chk_uncheck('BOOK[]');" type=radio
+    value="Y" name="radio_book" ~if $ALLBOOK eq "Y"`checked~/if`></TD>
+  <TD class=smallblack1 width=167>Love reading almost anything</TD>
+  <TD width=23 height=21><INPUT
+    onclick="chk_uncheck('BOOK[]');" type=radio
+    value="N" name="radio_book" ~if $ALLBOOK eq "N"`checked~/if`></TD>
+  <TD class=smallblack1 width=167>Not much of a reader</TD>
+</TR>
+</TBODY>
+</TABLE></td>
+</tr>
+<tr>
+<TD colSpan=15 height=5>&nbsp;</td>
+</tr>
+<tr>
+<TD colSpan=15 height=5><TABLE cellSpacing=0 cellPadding=0 width=560 border=0>
+<TBODY>
+<TR bgcolor="#B5DCBD">
+  <TD colSpan=6 class=mediumblack>&nbsp;&nbsp;<strong>Preferred Movies <FONT class=mediumblack>( choose up to 5 ) </FONT></strong></TD>
+</TR>
+~section name=movie loop=$MOVIE`
+~if $smarty.section.movie.index % 3 eq 0`
+<TR>
+~/if`
+	  <TD width=23 height=21><input type="checkbox" name="MOVIE[]" value="~$MOVIE[movie].VALUE`" onclick="radio_uncheck('radio_movie');" ~if $MOVIE[movie].SELECTED eq "1"`checked~/if`></TD>
+  <TD class=smallblack1 width=167>~$MOVIE[movie].LABEL`</TD>
+  ~if $smarty.section.movie.index % 3 eq 2 or $smarty.section.movie.last`
+</TR>
+~/if`
+~/section`
+<TR>
+  <TD width=23 height=21><INPUT
+    onclick="chk_uncheck('MOVIE[]');" type=radio
+    value="Y" name="radio_movie" ~if $ALLMOVIE eq "Y"`checked~/if`></TD>
+  <TD class=smallblack1 width=167>Love all kinds of movies</TD>
+  <TD width=23 height=21><INPUT
+    onclick="chk_uncheck('MOVIE[]');" type=radio
+    value="N" name="radio_movie" ~if $ALLMOVIE eq "N"`checked~/if`></TD>
+  <TD class=smallblack1 width=167>Not a movie buff</TD>
+</TR>
+</TBODY>
+</TABLE></td>
+</tr>
+<tr>
+<TD colSpan=15 height=5>&nbsp;</td>
+</tr>
+<tr>
+<TD colSpan=15 height=5><TABLE cellSpacing=0 cellPadding=0 width=560 border=0>
+<TBODY>
+<TR bgcolor="#B5DCBD">
+  <TD height="15" colSpan=6 class=mediumblack>&nbsp;&nbsp;<strong>Sports / fitness activities <FONT class=mediumblack>( choose up to 5 )</FONT></strong></TD>
+</TR>
+~section name=sports loop=$SPORTS`
+~if $smarty.section.sports.index % 3 eq 0`
+<TR>
+~/if`
+	  <TD width=23 height=21><input type="checkbox" name="SPORTS[]" value="~$SPORTS[sports].VALUE`" onclick="radio_uncheck('radio_sports');" ~if $SPORTS[sports].SELECTED eq "1"`checked~/if`></TD>
+  <TD class=smallblack1 width=167>~$SPORTS[sports].LABEL`</TD>
+  ~if $smarty.section.sports.index % 3 eq 2 or $smarty.section.sports.last`
+</TR>
+~/if`
+~/section`
+<TR>
+  <TD width=23 height=21><INPUT
+    onclick="chk_uncheck('SPORTS[]');"
+    type=radio value="N"
+    name="radio_sports" ~if $ALLSPORTS eq "N"`checked~/if`></TD>
+  <TD class=smallblack1 width=167>Not a sportsperson</TD>
+</TR>
+</TBODY>
+</TABLE></td>
+</tr>
+<tr>
+<TD colSpan=15 height=5>&nbsp;</td>
+</tr>
+<tr>
+<TD colSpan=15 height=5><TABLE cellSpacing=0 cellPadding=0 width=560 border=0>
+<TBODY>
+<TR bgcolor="#B5DCBD">
+  <TD height="15" colSpan=6 class=mediumblack>&nbsp;&nbsp;<strong>Favourite cuisine <FONT class=mediumblack>( choose up to 5 ) </FONT></strong></TD>
+~section name=cuisine loop=$CUISINE`
+~if $smarty.section.cuisine.index % 3 eq 0`
+<TR>
+~/if`
+	  <TD width=23 height=21><input type="checkbox" name="CUISINE[]" value="~$CUISINE[cuisine].VALUE`" onclick="radio_uncheck('radio_cuisine');" ~if $CUISINE[cuisine].SELECTED eq "1"`checked~/if`></TD>
+  <TD class=smallblack1 width=167>~$CUISINE[cuisine].LABEL`</TD>
+  ~if $smarty.section.cuisine.index % 3 eq 2 or $smarty.section.cuisine.last`
+</TR>
+~/if`
+~/section`
+<TR>
+  <TD width=23 height=21><INPUT
+    onclick="chk_uncheck('CUISINE[]');" type=radio
+    value="Y" name="radio_cuisine" ~if $ALLCUISINE eq "Y"`checked~/if`></TD>
+  <TD class=smallblack1 width=167>Anything edible is great!</TD>
+  <TD width=23 height=21><INPUT
+    onclick="chk_uncheck('CUISINE[]');" type=radio
+    value="N" name="radio_cuisine" ~if $ALLCUISINE eq "N"`checked~/if`></TD>
+  <TD class=smallblack1 width=167>Not much of a food-lover</TD>
+</TR>
+</TBODY>
+</TABLE></td>
+</tr>
+<tr>
+<TD colSpan=15 height=5>&nbsp;</td>
+</tr>
+<tr>
+<TD colSpan=15 height=5><TABLE cellSpacing=0 cellPadding=0 width=560 border=0>
+<TBODY>
+<TR bgcolor="#B5DCBD">
+  <TD height="15" colSpan=6 class=mediumblack>&nbsp;&nbsp;<strong>Preferred dress style</strong></TD>
+</TR>
+~section name=dress loop=$DRESS`
+~if $smarty.section.dress.index % 2 eq 0`
+<TR>
+~/if`
+  <TD width=23 height=21><INPUT type=radio value="~$DRESS[dress].VALUE`" name="DRESS" ~if $DRESS[dress].SELECTED eq "1"`checked~/if`></TD>
+  <TD class=smallblack1 width=262>~$DRESS[dress].LABEL`</TD>
+  ~if $smarty.section.dress.index % 2 eq 1 or $smarty.section.dress.last`
+</TR>
+~/if`
+~/section`
+</TBODY>
+</TABLE></td>
+</tr>
+<tr>
+<TD colSpan=15 height=5>&nbsp;</td>
+</tr>
+<tr>
+<TD colSpan=15 height=5><TABLE cellSpacing=0 cellPadding=0 width=560 border=0>
+<TBODY>
+<TR bgcolor="#B5DCBD">
+  <TD height="15" colSpan=6 class=mediumblack>&nbsp;&nbsp;<strong>Spoken Languages <FONT class=mediumblack>( choose up to 5 )</FONT></strong></TD>
+</TR>
+~section name=language loop=$LANGUAGE`
+~if $smarty.section.language.index % 3 eq 0`
+<TR>
+~/if`
+	  <TD width=23 height=21><input type="checkbox" name="LANGUAGE[]" value="~$LANGUAGE[language].VALUE`" ~if $LANGUAGE[language].SELECTED eq "1"`checked~/if`></TD>
+  <TD class=smallblack1 width=167>~$LANGUAGE[language].LABEL`</TD>
+  ~if $smarty.section.language.index % 3 eq 2 or $smarty.section.language.last`
+</TR>
+~/if`
+~/section`
+<TR>
+  <TD align=middle colSpan=6><BR>
+  <input type="hidden" name="checksum" value="~$CHECKSUM`">
+  <input type="hidden" name="CMDsubmit" value="submit">
+    <input type="image" src="images/submit_button.gif" name="CMDsubmit" value="submit" width="76" height="23"></TD>
+</TR>
+<TR>
+  <TD class=mediumblack colSpan=6><BR>
+      <B>PS:</B> Need some more options under any of the above heads?<BR>
+    &nbsp; &nbsp; &nbsp; Please <Span class= "class5">~if $mb_username_profile eq ""`<A href="feedback.php?checksum=~$CHECKSUM`">~else`<A href="mailto:anshul@jeevansathi.com">~/if` write to us</A></span> and we will try our best to add them here.</TD>
+</TR>
+</TABLE></td>
+</tr>
+<tr>
+<TD colSpan=15>&nbsp;</td>
+</tr>
+</table></td>
+</tr>
+</form>
+</table>
+<br>
+~$SUBFOOTER`
+<br>
+~$FOOT`
+</body>
+</html>

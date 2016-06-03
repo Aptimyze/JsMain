@@ -1,0 +1,20 @@
+screenSuccess:
+  metas:
+    title:        Profile Doc Screening Verification
+
+  stylesheets:    []
+
+  javascripts:    []
+
+requestFieldSalesVisitSuccess:
+  metas:
+    title:        Request Field Visit Interface
+  stylesheets:    [jquery_dateLists]
+  javascripts:    [jspc/crm/dateSelectionField_js,jquery_dateLists,jspc/crm/requestFieldVisit_js@bottom] 
+
+showPendingFSVisitsSuccess:
+  metas:
+    title:        Pending Field Visits Interface
+  stylesheets:    [jspc/crm/loader_css]
+  javascripts:    [jspc/crm/pendingFieldVisits_js@bottom,jspc/crm/loader_js@bottom] 
+

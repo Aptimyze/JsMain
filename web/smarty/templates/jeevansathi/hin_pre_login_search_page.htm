@@ -1,0 +1,209 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="/P/I/styles.php" type="text/css">
+<link rel="stylesheet" href="/P/IN/styles.php" type="text/css">
+<title>Untitled Document</title>
+
+<script language="javascript">
+<!--
+function search_clustering(item,value)
+{
+	document.form_search_clustering.item.value=item;
+	document.form_search_clustering.value.value=value;
+        document.form_search_clustering.submit();
+}
+//-->
+</script>
+<script language=JavaScript1.2 type=text/javascript>
+<!--
+var edulist=~$EDU_LABEL`
+var eduvalue=~$EDU_VALUE`
+var occlist=~$OCC_LABEL`
+var occvalue=~$OCC_VALUE`
+var incomelist=~$INCOME_LABEL`
+var incomevalue=~$INCOME_VALUE`
+var checkededu='~$EDU_LEVEL`'
+var checkedoccupation='~$OCCUPATION`'
+var checkedincome='~$INCOME`'
+var checkedincomelabel='~$INCOME_LABEL_CLUSTERING`'
+
+//-->
+
+</SCRIPT>
+
+<SCRIPT language=JavaScript1.2 src="http://ser4.jeevansathi.com/profile/js/~$multiselect_clustering_js`"
+type=text/javascript></SCRIPT>
+
+</head>
+
+<body>
+~if $STYPE eq 'P'`
+<form name="form_search_clustering" action="~$SITE_URL`/profile/search_test.php" method="post" target="_parent">
+~else`
+<form name="form_search_clustering" action="~$SITE_URL`/profile/search.php" method="post" target="_parent">
+~/if`
+<input type="hidden" name="SEARCH_CLUSTERING" value="Y">
+<input type="hidden" name="searchid" value="~$ID`">
+<input type="hidden" name="item" value="">
+<input type="hidden" name="value" value="">
+<input type="hidden" id="Mtongue" value="~$Mtongue_val`" name="Mtongue">
+<input type="hidden" name="Caste" id="Caste" value='~$Caste_val`'>
+<input type="hidden" id="City_res" value="~$City_res_val`" name="City_res">
+<input type="hidden" id="Country_res" value="~$Country_res_val`" name="Country_res">
+<input type="hidden" id="lage" value="~$lage`" name="lage">
+<input type="hidden" id="hage" value="~$hage`" name="hage">
+<input type="hidden" id="lheight" value="~$lheight`" name="lheight">
+<input type="hidden" id="hheight" value="~$hheight`" name="hheight">
+<input type="hidden" id="mstatus_clustering" value="~$hp_mstatus`" name="mstatus_clustering">
+<input type="hidden" id="Photos" value="~$Photos`" name="Photos">
+<input type="hidden" id="searchonline" value="~$searchonline`" name="searchonline">
+<input type="hidden" id="E_CLASS" value="~$E_CLASS`" name="E_CLASS">
+<input type="hidden" id="searchorder" value="~$FRESHNESS`" name="searchorder">
+<input type="hidden" id="STYPE" value="~$STYPE`" name="STYPE">
+<input type="hidden" id="Keyword" value="~$Keyword`" name="Keyword">
+<input type="hidden" id="Keyword_type" value="~$Keyword_type`" name="Keyword_type">
+~if $G eq $Gender`
+<input type="hidden" id="Gender" value="~$G`" name="Gender">
+~else`
+<input type="hidden" id="Gender" value="~$Gender`" name="Gender">
+~/if`
+
+<input type="hidden" value="~$DIET`" name="diet">
+<input type="hidden" value="~$RELATION_VAL`" name="relation">
+<input type="hidden" value="~$MANGLIK`" name="manglik">
+<input type="hidden" value="~$CASTE_DISPLAY`" name="Caste_display">
+<input type="hidden" value="~$RSTATUS`" name="rstatus">
+<input type="hidden" value="~$CHILDREN`" name="children">
+<input type="hidden" value="~$BTYPE`" name="btype">
+<input type="hidden" value="~$COMPLEXION`" name="complexion">
+<input type="hidden" value="~$SMOKE`" name="smoke">
+<input type="hidden" value="~$DRINK`" name="drink">
+<input type="hidden" value="~$HANDICAPPED`" name="handicapped">
+<input type="hidden" value="~$CHECKSUM`" name="checksum">
+<input type="hidden" id="edu" value="~$EDU_LEVEL_NEW`" name="edu">
+<input type="hidden" id="occupation" value="~$OCCUPATION`" name="occupation">
+<input type="hidden" id="income" value="~$INCOME`" name="income">
+
+<table width="140" border="0" cellpadding="0" cellspacing="0" height="480">
+<tr>
+	<td width="140"><img src="~$IMG_URL`/profile/ser4_imagesnew/zoom_in_search_results.gif" width="140" height="25"></td>
+  </tr>
+<tr>
+    <td colspan="2" bgcolor="#ffffff" style="padding-left:5px; padding-right:5px; border-bottom:1px solid #f26f4e; BORDER-RIGHT:1px solid #cccccc"><p class="link"><span class="mediumblack"><b>प्रोफाइल पोस्टेड बाई</b></span><br><font color="#990000">
+   ~if $RELATION_VAL eq '2'`<b>माता-पिता/संरक्षक</b>~else`<a href="#" onclick="search_clustering('relation','2');">माता-पिता/संरक्षक</a>~/if`,<br>~if $RELATION_VAL eq '3'`<b>सिबलिंग</b>~else`<a href="#" onclick="search_clustering('relation','3');">सिबलिंग</a>~/if`, ~if $RELATION_VAL eq '1'`<b>स्वयं</b>~else`<a href="#" onclick="search_clustering('relation','1');">स्वयं</a>~/if`
+    ~if $RELATION neq ''`, <a href="#" onclick="search_clustering('relation','All');">सभी</a>...~/if`
+    </font>
+    </p>
+    </td>
+  </tr>
+~if $STYPE eq 'A'`
+<tr>
+    <td colspan="2" bgcolor="#ffffff" style="padding-left:5px; padding-right:5px; border-bottom:1px solid #f26f4e; BORDER-RIGHT:1px solid #cccccc" nowrap="nowrap"><p class="link"><span class="mediumblack"><b>शैक्षणिक योग्यता</b></span><br><font color="#990000">
+~if $education_label_clustering eq 'N'`
+<a href="#" onclick="search_clustering('edu','All');">सभी</a>...
+<br>
+~else`
+<a href="#" onclick="search_clustering('edu','16');">एम.बी.ए</a> / <a href="#" onclick="search_clustering('edu','16');">पी.जी.डी.बी.एम</a> ,<br><a href="#" onclick="search_clustering('edu','3');">रिसर्च</a>/<a href="#" onclick="search_clustering('edu','3');">इंजीनियर</a>,<br><a href="#" onclick="search_clustering('edu','7');">सी.ए</a>/<a href="#" onclick="search_clustering('edu','8');">सी.एस</a> / <a href="#" onclick="search_clustering('edu','10');">आई.सी.डब्ल्यू.ए</a>...
+~/if`
+<A onclick="javascript:if(window.parent.document.getElementById('TipLayer').style.visibility=='hidden') {stm_cluster(Text[5],Style[9],'edu','~$currentusername`')}" href="javascript:void(0);"><b>और विकल्प</b></A></font></p>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" bgcolor="#ffffff" style="padding-left:5px; padding-right:5px; border-bottom:1px solid #f26f4e; BORDER-RIGHT:1px solid #cccccc"><p class="link"><span class="mediumblack"><b>वार्षिक आय</b></span><br>
+<span class="bigmahroon"><font color="#990000">
+~if $income_label_clustering eq 'N'`
+<a href="#" onclick="search_clustering('income','All');">सभी</a>...
+<br>
+~else`
+<a href="#" onclick="search_clustering('income','16');">Rs. 500,000 - 700,000</a><br>     <a href="#" onclick="search_clustering('income','5,6');">Rs. 300,000 - 500,000</a><br>     <a href="#" onclick="search_clustering('income','3,4');">Rs. 100,000 - 300,000</a>...
+~/if`
+<A onclick="javascript:if(window.parent.document.getElementById('TipLayer').style.visibility=='hidden') {stm_cluster(Text[6],Style[9],'income','~$currentusername`')}" href="javascript:void(0);">
+<b>और विकल्प</b></A></font><a href="#"></a></a></span></p></td>
+</tr>
+<tr>
+    <td colspan="2" bgcolor="#ffffff" style="padding-left:5px; padding-right:5px; border-bottom:1px solid #f26f4e; BORDER-RIGHT:1px solid #cccccc"><p class="link"><span class="mediumblack"><b>व्यवसाय</b></span><br>
+<font color="#990000">
+~if $occupation_label_clustering eq 'N'`
+<a href="#" onclick="search_clustering('occupation','All');">सभी</a>...
+<br>
+~else`
+<a href="#" onclick="search_clustering('occupation','13');">बिजनेसमैन</a>,&nbsp;<a href="#" onclick="search_clustering('occupation','7');">बैंकिग</a>,<br><a href="#" onclick="search_clustering('occupation','20');">आईटी सॉफ्टवेयर</a>...
+~/if`
+<A onclick="javascript:if(window.parent.document.getElementById('TipLayer').style.visibility=='hidden') {stm_cluster(Text[4],Style[9],'occupation','~$currentusername`')}" href="javascript:void(0);"><b>और विकल्प</b></A></font><a href="#"></a></a></p>
+</td>
+  </tr>
+<tr>
+    <td colspan="2" bgcolor="#ffffff" style="padding-left:5px; padding-right:5px; border-bottom:1px solid #f26f4e; BORDER-RIGHT:1px solid #cccccc"><p class="link"><span class="mediumblack"><b>खानपान</b></span><br>
+~if $DIET eq 'N'`<b>माँसाहारी</b>~else`<a href="#" onclick="search_clustering('diet','N');">माँसाहारी</a>~/if`<br>
+~if $DIET eq 'V'`<b>शाकाहारी</b>~else`<a href="#" onclick="search_clustering('diet','V');">शाकाहारी</a>~/if`, ~if $DIET eq 'J'`<b>जैन</b>~else`<a href="#" onclick="search_clustering('diet','J');">जैन</a>~/if`
+~if $DIET neq ''`, <a href="#" onclick="search_clustering('diet','All');">सभी</a>...~/if`<br>
+    </p>
+    </font></td>
+   </tr>
+<tr>
+    <td colspan="2" bgcolor="#ffffff" style="padding-left:5px; padding-right:5px; border-bottom:1px solid #f26f4e; BORDER-RIGHT:1px solid #cccccc"><p class="link"><span class="mediumblack"><b>मांगलिक स्थिति </b></span><br>
+~if $MANGLIK eq 'M'`<b>मांगलिक</b>~else`<a href="#" onclick="search_clustering('manglik','M');">मांगलिक</a>~/if`,&nbsp;~if $MANGLIK eq 'N'`<b>मांगलिक नहीं</b>~else`<a href="#" onclick="search_clustering('manglik','N');">मांगलिक नहीं</a>~/if`,&nbsp;&nbsp;&nbsp; ~if $MANGLIK eq 'D'`<b>पता नहीं</b>~else`<a href="#" onclick="search_clustering('manglik','D');">पता नहीं</a>~/if`~if $MANGLIK neq ''`, <a href="#" onclick="search_clustering('manglik','All');">सभी</a>...~/if`<br>
+    </p></td>
+</tr>
+~else`
+  <tr>
+    <td colspan="2" bgcolor="#ffffff" style="padding-left:5px; padding-right:5px; border-bottom:1px solid #f26f4e; BORDER-RIGHT:1px solid #cccccc"><p class="link"><span class="mediumblack"><b>शैक्षणिक योग्यता</b></span><br><font color="#990000">
+~if $education_label_clustering eq 'N'`
+<a href="#" onclick="search_clustering('edu','All');">सभी</a>...
+<br>
+~else`
+<a href="#" onclick="search_clustering('edu','16');">एम.बी.ए</a> / <a href="#" onclick="search_clustering('edu','16');">पी.जी.डी.बी.एम</a> ,<br><a href="#" onclick="search_clustering('edu','3');">इंजीनियर</a>, <a href="#" onclick="search_clustering('edu','4,14,17');">एम.बी.बी.एस</a>,<br><a href="#" onclick="search_clustering('edu','7,8,10');">सी.ए</a> / <a href="#" onclick="search_clustering('edu','7,8,10');">सी.एस</a> / <a href="#" onclick="search_clustering('edu','7,8,10');">आई.सी.डब्ल्यू.ए</a>...
+~/if`
+<A onclick="javascript:if(window.parent.document.getElementById('TipLayer').style.visibility=='hidden') {stm_cluster(Text[5],Style[9],'edu','~$currentusername`')}" href="javascript:void(0);"><b>और विकल्प</b></A></font></p>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" bgcolor="#ffffff" style="padding-left:5px; padding-right:5px; border-bottom:1px solid #f26f4e; BORDER-RIGHT:1px solid #cccccc"><p class="link"><span class="mediumblack"><b>वार्षिक आय</b></span><br>
+<span class="bigmahroon"><font color="#990000">
+~if $income_label_clustering eq 'N'`
+    <a href="#" onclick="search_clustering('income','All');">सभी</a>...
+<br>
+~else`
+    <a href="#" onclick="search_clustering('income','16');">Rs. 500,000 - 700,000</a><br>
+    <a href="#" onclick="search_clustering('income','5,6');">Rs. 300,000 - 500,000</a><br>
+    <a href="#" onclick="search_clustering('income','3,4');">Rs. 100,000 - 300,000</a>...
+~/if`
+<A onclick="javascript:if(window.parent.document.getElementById('TipLayer').style.visibility=='hidden') {stm_cluster(Text[6],Style[9],'income','~$currentusername`')}" href="javascript:void(0);">
+<b>और विकल्प</b></A></font><a href="#"></a></a></span></p></td>
+  </tr>
+  <tr>
+    <td colspan="2" bgcolor="#ffffff" style="padding-left:5px; padding-right:5px; border-bottom:1px solid #f26f4e; BORDER-RIGHT:1px solid #cccccc"><p class="link"><span class="mediumblack"><b>व्यवसाय</b></span><br>
+    <font color="#990000">
+~if $occupation_label_clustering eq 'N'`
+    <a href="#" onclick="search_clustering('occupation','All');">सभी</a>...
+<br>
+~else`
+    <a href="#" onclick="search_clustering('occupation','13');">बिजनेसमैन</a>,&nbsp;<a href="#" onclick="search_clustering('occupation','7');">बैंकिग</a>,<br><a href="#" onclick="search_clustering('occupation','20');">आईटी सॉफ्टवेयर</a>...
+~/if`
+<A onclick="javascript:if(window.parent.document.getElementById('TipLayer').style.visibility=='hidden') {stm_cluster(Text[4],Style[9],'occupation','~$currentusername`')}" href="javascript:void(0);"><b>और विकल्प</b></A></font><a href="#"></a></a></p>
+</td>
+  </tr>
+  <tr>
+    <td colspan="2" bgcolor="#ffffff" style="padding-left:5px; padding-right:5px; border-bottom:1px solid #f26f4e; BORDER-RIGHT:1px solid #cccccc"><p class="link"><span class="mediumblack"><b>खानपान</b></span><br>
+~if $DIET eq 'N'`<b>माँसाहारी</b>~else`<a href="#" onclick="search_clustering('diet','N');">माँसाहारी</a>~/if`<BR>
+~if $DIET eq 'V'`<b>शाकाहारी</b>~else`<a href="#" onclick="search_clustering('diet','V');">शाकाहारी</a>~/if`, ~if $DIET eq 'J'`<b>जैन</b>~else`<a href="#" onclick="search_clustering('diet','J');">जैन</a>~/if`
+~if $DIET neq ''`, <a href="#" onclick="search_clustering('diet','All');">सभी</a>...~/if`<br>
+    </p>
+    </font></td>
+   </tr>
+  <tr>
+    <td colspan="2" bgcolor="#ffffff" style="padding-left:5px; padding-right:5px; border-bottom:1px solid #f26f4e; BORDER-RIGHT:1px solid #cccccc"><p class="link"><span class="mediumblack"><b>मांगलिक स्थिति</b></span><br>
+~if $MANGLIK eq 'M'`<b>मांगलिक</b>~else`<a href="#" onclick="search_clustering('manglik','M');">मांगलिक</a>~/if`,&nbsp;~if $MANGLIK eq 'N'`<b>मांगलिक नहीं</b>~else`<a href="#" onclick="search_clustering('manglik','N');">मांगलिक नहीं</a>~/if`,&nbsp;&nbsp;&nbsp; ~if $MANGLIK eq 'D'`<b>पता नहीं</b>~else`<a href="#" onclick="search_clustering('manglik','D');">पता नहीं</a>~/if`~if $MANGLIK neq ''`, <a href="#" onclick="search_clustering('manglik','All');">सभी</a>...~/if`<br>
+</p></td>
+  </tr>
+~/if`
+  <!--tr>
+    <td colspan="2" bgcolor="#ffe5cc" style="padding-left:5px; padding-right:5px;"><a href="#"><img src="~$IMG_URL`/profile/ser4_images/search_button.gif" width="45" height="21" border="0"></a></td>
+  </tr-->
+</table>
+</form>
+</body>
+</html>

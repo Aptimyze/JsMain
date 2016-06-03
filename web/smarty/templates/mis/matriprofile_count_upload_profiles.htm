@@ -1,0 +1,173 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style><html>
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br><br>
+<table width="70%" align="center" border=0 cellspacing=4 cellpadding=5>
+        <tr class="formhead" width="100%"><td align="center" colspan=14><a href="../jsadmin/mainpage.php?cid=~$checksum`">MAIN PAGE</a></td></tr>
+</table>
+~if $flag eq '1'`
+	<form method="post" action="matriprofile_count_upload_profiles.php">
+        <table width="70%" align="center" border=0 cellspacing=4 cellpadding=5>
+	<tr width="100%">
+	<td align=center>From :&nbsp;
+	<select name="cd_day_from" class="textboxes1">
+                <option value="01" selected="selected">1</option>
+                <option value="01" ~if $CD_DAY eq "01"`selected ~/if`>1</option>
+                <option value="02" ~if $CD_DAY eq "02"`selected ~/if`>2</option>
+                <option value="03" ~if $CD_DAY eq "03"`selected ~/if`>3</option>
+                <option value="04" ~if $CD_DAY eq "04"`selected ~/if`>4</option>
+                <option value="05" ~if $CD_DAY eq "05"`selected ~/if`>5</option>
+                <option value="06" ~if $CD_DAY eq "06"`selected ~/if`>6</option>
+                <option value="07" ~if $CD_DAY eq "07"`selected ~/if`>7</option>
+                <option value="08" ~if $CD_DAY eq "08"`selected ~/if`>8</option>
+                <option value="09" ~if $CD_DAY eq "09"`selected ~/if`>9</option>
+                <option value="10" ~if $CD_DAY eq "10"`selected ~/if`>10</option>
+                <option value="11" ~if $CD_DAY eq "11"`selected ~/if`>11</option>
+                <option value="12" ~if $CD_DAY eq "12"`selected ~/if`>12</option>
+                <option value="13" ~if $CD_DAY eq "13"`selected ~/if`>13</option>
+                <option value="14" ~if $CD_DAY eq "14"`selected ~/if`>14</option>
+                <option value="15" ~if $CD_DAY eq "15"`selected ~/if`>15</option>
+                <option value="16" ~if $CD_DAY eq "16"`selected ~/if`>16</option>
+                <option value="17" ~if $CD_DAY eq "17"`selected ~/if`>17</option>
+                <option value="18" ~if $CD_DAY eq "18"`selected ~/if`>18</option>
+                <option value="19" ~if $CD_DAY eq "19"`selected ~/if`>19</option>
+                <option value="20" ~if $CD_DAY eq "20"`selected ~/if`>20</option>
+                <option value="21" ~if $CD_DAY eq "21"`selected ~/if`>21</option>
+                <option value="22" ~if $CD_DAY eq "22"`selected ~/if`>22</option>
+                <option value="23" ~if $CD_DAY eq "23"`selected ~/if`>23</option>
+                <option value="24" ~if $CD_DAY eq "24"`selected ~/if`>24</option>
+                <option value="25" ~if $CD_DAY eq "25"`selected ~/if`>25</option>
+                <option value="26" ~if $CD_DAY eq "26"`selected ~/if`>26</option>
+                <option value="27" ~if $CD_DAY eq "27"`selected ~/if`>27</option>
+                <option value="28" ~if $CD_DAY eq "28"`selected ~/if`>28</option>
+                <option value="29" ~if $CD_DAY eq "29"`selected ~/if`>29</option>
+                <option value="30" ~if $CD_DAY eq "30"`selected ~/if`>30</option>
+                <option value="31" ~if $CD_DAY eq "31"`selected ~/if`>31</option>
+        </select>
+	<select name="cd_month_from" class="textboxes1">
+                <option value="~$month_today_num`" selected="selected">~$month_today`</option>
+                <option value="01" ~if $CD_MONTH eq "01"` selected ~/if`>Jan</option>
+                <option value="02" ~if $CD_MONTH eq "02"` selected ~/if`>Feb</option>
+                <option value="03" ~if $CD_MONTH eq "03"` selected ~/if`>Mar</option>
+                <option value="04" ~if $CD_MONTH eq "04"` selected ~/if`>Apr</option>
+                <option value="05" ~if $CD_MONTH eq "05"` selected ~/if`>May</option>
+                <option value="06" ~if $CD_MONTH eq "06"` selected ~/if`>Jun</option>
+                <option value="07" ~if $CD_MONTH eq "07"` selected ~/if`>Jul</option>
+                <option value="08" ~if $CD_MONTH eq "08"` selected ~/if`>Aug</option>
+                <option value="09" ~if $CD_MONTH eq "09"` selected ~/if`>Sep</option>
+                <option value="10" ~if $CD_MONTH eq "10"` selected ~/if`>Oct</option>
+                <option value="11" ~if $CD_MONTH eq "11"` selected ~/if`>Nov</option>
+                <option value="12" ~if $CD_MONTH eq "12"` selected ~/if`>Dec</option>
+        </select>
+	<select name="cd_year_from" class="textboxes1">
+                <option value="~$year_today`" selected="selected">~$year_today`</option>
+                <option value="2006" ~if $CD_YEAR eq "2006"` selected ~/if`>2006</option>
+                <option value="2007" ~if $CD_YEAR eq "2007"` selected ~/if`>2007</option>
+                <option value="2008" ~if $CD_YEAR eq "2008"` selected ~/if`>2008</option>
+                <option value="2009" ~if $CD_YEAR eq "2009"` selected ~/if`>2009</option>
+                <option value="2010" ~if $CD_YEAR eq "2010"` selected ~/if`>2010</option>
+        </select>
+	</td>
+	<td align="center">To:&nbsp;
+	<select name="cd_day_to" class="textboxes1">
+                <option value="~$date_today`" selected="selected">~$date_today_nozero`</option>
+                <option value="01" ~if $CD_DAY eq "01"`selected ~/if`>1</option>
+                <option value="02" ~if $CD_DAY eq "02"`selected ~/if`>2</option>
+                <option value="03" ~if $CD_DAY eq "03"`selected ~/if`>3</option>
+                <option value="04" ~if $CD_DAY eq "04"`selected ~/if`>4</option>
+                <option value="05" ~if $CD_DAY eq "05"`selected ~/if`>5</option>
+                <option value="06" ~if $CD_DAY eq "06"`selected ~/if`>6</option>
+                <option value="07" ~if $CD_DAY eq "07"`selected ~/if`>7</option>
+                <option value="08" ~if $CD_DAY eq "08"`selected ~/if`>8</option>
+                <option value="09" ~if $CD_DAY eq "09"`selected ~/if`>9</option>
+                <option value="10" ~if $CD_DAY eq "10"`selected ~/if`>10</option>
+                <option value="11" ~if $CD_DAY eq "11"`selected ~/if`>11</option>
+                <option value="12" ~if $CD_DAY eq "12"`selected ~/if`>12</option>
+                <option value="13" ~if $CD_DAY eq "13"`selected ~/if`>13</option>
+                <option value="14" ~if $CD_DAY eq "14"`selected ~/if`>14</option>
+                <option value="15" ~if $CD_DAY eq "15"`selected ~/if`>15</option>
+                <option value="16" ~if $CD_DAY eq "16"`selected ~/if`>16</option>
+                <option value="17" ~if $CD_DAY eq "17"`selected ~/if`>17</option>
+                <option value="18" ~if $CD_DAY eq "18"`selected ~/if`>18</option>
+                <option value="19" ~if $CD_DAY eq "19"`selected ~/if`>19</option>
+                <option value="20" ~if $CD_DAY eq "20"`selected ~/if`>20</option>
+                <option value="21" ~if $CD_DAY eq "21"`selected ~/if`>21</option>
+                <option value="22" ~if $CD_DAY eq "22"`selected ~/if`>22</option>
+                <option value="23" ~if $CD_DAY eq "23"`selected ~/if`>23</option>
+                <option value="24" ~if $CD_DAY eq "24"`selected ~/if`>24</option>
+                <option value="25" ~if $CD_DAY eq "25"`selected ~/if`>25</option>
+                <option value="26" ~if $CD_DAY eq "26"`selected ~/if`>26</option>
+                <option value="27" ~if $CD_DAY eq "27"`selected ~/if`>27</option>
+                <option value="28" ~if $CD_DAY eq "28"`selected ~/if`>28</option>
+                <option value="29" ~if $CD_DAY eq "29"`selected ~/if`>29</option>
+                <option value="30" ~if $CD_DAY eq "30"`selected ~/if`>30</option>
+                <option value="31" ~if $CD_DAY eq "31"`selected ~/if`>31</option>
+        </select>
+	<select name="cd_month_to" class="textboxes1">
+                <option value="~$month_today_num`" selected="selected">~$month_today`</option>
+                <option value="01" ~if $CD_MONTH eq "01"` selected ~/if`>Jan</option>
+                <option value="02" ~if $CD_MONTH eq "02"` selected ~/if`>Feb</option>
+                <option value="03" ~if $CD_MONTH eq "03"` selected ~/if`>Mar</option>
+                <option value="04" ~if $CD_MONTH eq "04"` selected ~/if`>Apr</option>
+                <option value="05" ~if $CD_MONTH eq "05"` selected ~/if`>May</option>
+                <option value="06" ~if $CD_MONTH eq "06"` selected ~/if`>Jun</option>
+                <option value="07" ~if $CD_MONTH eq "07"` selected ~/if`>Jul</option>
+                <option value="08" ~if $CD_MONTH eq "08"` selected ~/if`>Aug</option>
+                <option value="09" ~if $CD_MONTH eq "09"` selected ~/if`>Sep</option>
+                <option value="10" ~if $CD_MONTH eq "10"` selected ~/if`>Oct</option>
+                <option value="11" ~if $CD_MONTH eq "11"` selected ~/if`>Nov</option>
+                <option value="12" ~if $CD_MONTH eq "12"` selected ~/if`>Dec</option>
+        </select>
+	<select name="cd_year_to" class="textboxes1">
+                <option value="~$year_today`" selected="selected">~$year_today`</option>
+                <option value="2006" ~if $CD_YEAR eq "2006"` selected ~/if`>2006</option>
+                <option value="2007" ~if $CD_YEAR eq "2007"` selected ~/if`>2007</option>
+                <option value="2008" ~if $CD_YEAR eq "2008"` selected ~/if`>2008</option>
+                <option value="2009" ~if $CD_YEAR eq "2009"` selected ~/if`>2009</option>
+                <option value="2010" ~if $CD_YEAR eq "2010"` selected ~/if`>2010</option>
+        </select>
+	</td>
+	<tr align="center"><td align="center" colspan="4"><input type="submit" name="submit" value="Go"></td></tr>
+	</table>
+	<input type="hidden" name="checksum" value="~$checksum`">
+	</form>
+	~if $flag1 eq '1'`
+	<table width="70%" align="center" border=0 cellspacing=4 cellpadding=5>
+	<tr class=fieldsnew>
+	<td align=center   width=60>Please select valid date</td>
+	</tr>
+	~/if`
+	~if $flag1 eq '2'`
+	<table width="70%" align="center" border=0 cellspacing=4 cellpadding=5>
+	<tr class=fieldsnew>
+        <td align=center   width=60>Number of Matri Profile Upload Requests</td>
+	<td align=center   width=5>~$UPLOAD_REQUESTS`</td> 
+	</tr>
+	<tr class=fieldsnew>
+        <td align=center   width=60>Number of Matri Profile Requests Uploaded</td>
+        <td align=center   width=5>~$UPLOADED`</td>
+        </tr>
+	</table>
+	~/if`
+~/if`
+</html>

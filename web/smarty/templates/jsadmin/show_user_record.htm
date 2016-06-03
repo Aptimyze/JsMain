@@ -1,0 +1,105 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>JeevanSathi.com</title>
+  <link rel="stylesheet" href="jeevansathi.css" type="text/css">
+  <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+ </head>
+ ~include file="head.htm"`
+ <br>
+ <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+  <table width=100% cellspacing="1" cellpadding='0' ALIGN="CENTER" >
+   <tr width=100% border=1>
+    <td width="25%" class="formhead" height="23"><font><b>Welcome :~$operator_name`</b></font></td>
+    <td width="30%" class="formhead" align="center"><a href="mainpage.php?cid=~$cid`">Click here to go to main page</a></td>
+    <td width="30%" class="formhead" align="center"><a href="showhoroscopetoassign.php?user=n&cid=~$cid`">Back</a></td>
+    <td width="6%" class="formhead" align='RIGHT' height="23">
+	<a href="logout.php?cid=~$cid`">Logout</a>
+    </td>
+    <td width="3%" class="formhead" height="23">&nbsp;
+    </td>
+   </tr>
+  </table>
+<br>
+<form name=form1 method=post action=show_user_record.php>
+<table align=center width=80%>
+<tr class=fieldsnew>
+<td>Enter Username</td>
+<td><input type=text name="username"></td>
+<td><input type=submit name="CMDSubmit" value="  Submit  "></td>
+</tr>
+</table>
+<input type=hidden name="cid" value="~$cid`">
+</form> 
+~if $FLAG eq '1'`
+  <table width=100% align="CENTER" >
+<tr align="CENTER"><td colspan=100% class="formhead">Current Status</td></tr>
+   <tr align="CENTER"><td colspan=100% class=label>~$username`</td></tr>
+   <tr align="CENTER">
+    <td class="label" width=4%><b>S.No.</b></td>      
+    <td class="label" width=9%><b>Screening Type</b></td>   
+    <td class="label" width=10%><b>Alloted To</b></td>
+    <td class="label" width=10%><b>Receive Time</b></td>
+    <td class="label" width=10%><b>Submited Time</b></td>
+    <td class="label" width=9%><b>Fields Screened</b></td>   
+    <td class="label" width=9%><b>Status</b></td>       
+   </tr>
+
+   ~if $RECORD`
+	~section name=index loop=$RECORD`
+            <tr align="CENTER" bgcolor="~$pcv[index].clr`" class="~$RECORD[index].bandcolor`">
+<!--        <tr align="CENTER" class=fieldsnew> -->
+             <td width="4%" >~$smarty.section.index.index_next`.</td>
+             <td width=9%>~$RECORD[index].scr_type`</td>
+             <td width="10%" >~$RECORD[index].alloted_to`</td>
+             <td width="10%" >~$RECORD[index].rcv_time`</td>
+             <td width="10%" >~$RECORD[index].submitted_time`</td>
+             <td width="9%" >~$RECORD[index].edited`</td>
+             <td width="9%" >~$RECORD[index].status`</td>
+            </tr>
+           ~/section`
+   ~else`
+	<tr><td  align="center" colspan=100%><font color="red">
+                        There are no records to show
+                </font></td></tr>
+	~/if`
+</table><br>
+~/if`
+~if $FLAG eq '1'`
+  <table width=100% align="CENTER" >
+   <tr align="CENTER"><td colspan=100% class="formhead">History</td></tr>
+   <tr align="CENTER"><td colspan=100% class=label>~$username`</td></tr>
+   <tr align="CENTER">
+    <td class="label" width=4%><b>S.No.</b></td>
+    <td class="label" width=9%><b>Screening Type</b></td>
+    <td class="label" width=10%><b>Alloted To</b></td>
+    <td class="label" width=10%><b>Receive Time</b></td>
+    <td class="label" width=10%><b>Submited Time</b></td>
+    <td class="label" width=9%><b>Fields Screened</b></td>
+    <td class="label" width=9%><b>Status</b></td>
+   </tr>
+
+	~if $REC` 
+	   ~section name=index loop=$REC`
+	    <tr align="CENTER" bgcolor="~$pcv[index].clr`" class="~$REC[index].bandcolor`">
+<!--	    <tr align="CENTER" class=fieldsnew> -->
+	     <td width="4%" >~$smarty.section.index.index_next`.</td>       
+	     <td width=9%>~$REC[index].scr_type`</td>   
+	     <td width="10%" >~$REC[index].alloted_to`</td>
+	     <td width="10%" >~$REC[index].rcv_time`</td>
+	     <td width="10%" >~$REC[index].submitted_time`</td>
+	     <td width="9%" >~$REC[index].edited`</td> 
+	     <td width="9%" >~$REC[index].status`</td> 
+	    </tr>
+	   ~/section`
+   ~else`
+	   	<tr><td  align="center" colspan=100%><font color="red">
+	   		There are no records to show
+	   	</font></td></tr>
+   ~/if`
+  </table>
+~/if`
+ <br><br><br><br><br><br><br>
+ </body>
+</html>

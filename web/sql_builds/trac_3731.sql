@@ -1,0 +1,138 @@
+use jeevansathi_mailer;
+
+INSERT INTO `EMAIL_TYPE` VALUES (1779, 1779, 'revamp_screening.tpl', NULL, 'revamp_footer.tpl', NULL, 16, 1, 'register@jeevansathi.com', NULL, 'D', NULL, NULL, NULL, NULL, NULL, NULL, 'Y', NULL, NULL, '');
+
+INSERT INTO `EMAIL_TYPE` VALUES (1780, 1780, 'revamp_welcome.tpl', NULL, 'revamp_footer.tpl', NULL, 4, 1, 'info@jeevansathi.com', NULL, 'D', NULL, NULL, NULL, NULL, NULL, NULL, 'Y', NULL, NULL, '');
+
+
+INSERT INTO  `MAILER_SUBJECT` (  `MAIL_ID` ,  `SUBJECT_TYPE` ,  `SUBJECT_CODE` ,  `DESCRIPTION` ) 
+VALUES (
+'1779',  'D',  'Welcome to Jeevansathi.com',  'Screening mailer revamp subject line Page2'
+);
+
+INSERT INTO  `MAILER_SUBJECT` (  `MAIL_ID` ,  `SUBJECT_TYPE` ,  `SUBJECT_CODE` ,  `DESCRIPTION` ) 
+VALUES (
+'1780',  'D',  'Welcome to Jeevansathi.com.',  'Revamp Welcome mailer subject line.'
+);
+
+INSERT INTO  `MAILER_TEMPLATE_VARIABLES_MAP` (  `VARIABLE_NAME` ,  `VARIABLE_PROCESSING_CLASS` ,  `DESCRIPTION` ,  `MAX_LENGTH` ,  `MAX_LENGTH_SMS` ,  `DEFAULT_VALUE` ,  `TPL_FORMAT` ) 
+VALUES (
+'HELP_EMAILID',  '1',  'NA',  '0',  '0',  'help@jeevansathi.com',  ''
+);
+INSERT INTO  `MAILER_TEMPLATE_VARIABLES_MAP` (  `VARIABLE_NAME` ,  `VARIABLE_PROCESSING_CLASS` ,  `DESCRIPTION` ,  `MAX_LENGTH` ,  `MAX_LENGTH_SMS` ,  `DEFAULT_VALUE` ,  `TPL_FORMAT` ) 
+VALUES (
+'PRIVACY',  '3',  'privacy settings url',  '255',  '0',  'NA',  ''
+);
+
+INSERT INTO  `LINK_MAILERS` (  `LINKID` ,  `LINK_NAME` ,  `LINK_URL` ,  `OTHER_GET_PARAMS` ,  `REQUIRED_AUTOLOGIN` ,  `OUTER_LINK` ) 
+VALUES (
+'',  'HELP_EMAILID',  'help@jeevansathi.com', NULL ,  'Y',  'N'
+);
+
+INSERT INTO  `LINK_MAILERS` (  `LINKID` ,  `LINK_NAME` ,  `LINK_URL` ,  `OTHER_GET_PARAMS` ,  `REQUIRED_AUTOLOGIN` ,  `OUTER_LINK` ) 
+VALUES (
+'',  'PRIVACY',  'profile/revamp_privacy_settings.php', NULL ,  'Y',  'N'
+);
+
+
+
+
+INSERT INTO  `MAILER_TEMPLATE_VARIABLES_MAP` (  `VARIABLE_NAME` ,  `VARIABLE_PROCESSING_CLASS` ,  `DESCRIPTION` ,  `MAX_LENGTH` ,  `MAX_LENGTH_SMS` ,  `DEFAULT_VALUE` ,  `TPL_FORMAT` ) 
+VALUES (
+'OWN_PROFILE',  '3',  'own profile view without layer',  '255',  '0',  'NA',  ''
+);
+INSERT INTO  `LINK_MAILERS` (  `LINKID` ,  `LINK_NAME` ,  `LINK_URL` ,  `OTHER_GET_PARAMS` ,  `REQUIRED_AUTOLOGIN` ,  `OUTER_LINK` ) 
+VALUES (
+'',  'OWN_PROFILE',  'P/viewprofile.php',  'ownview=1',  'Y',  'N'
+);
+
+
+UPDATE  `MAILER_SUBJECT` SET  `SUBJECT_CODE` =  'Your Relationship Executive will meet you soon' WHERE  `MAIL_ID` =  '1776' AND CONVERT(  `SUBJECT_TYPE` USING utf8 ) =  'D' AND CONVERT(  `SUBJECT_CODE` USING utf8 ) = 'Your Relationship Executive will visit you for verification' AND CONVERT(  `DESCRIPTION` USING utf8 ) =  'screening mailer kyc ' LIMIT 1 ;
+
+UPDATE  `MAILER_SUBJECT` SET  `SUBJECT_CODE` =  'Your Profile is active now!' WHERE  `MAIL_ID` =  '1780' AND CONVERT(  `SUBJECT_TYPE` USING utf8 ) =  'D' AND CONVERT(  `SUBJECT_CODE` USING utf8 ) =  'Welcome to Jeevansathi.com.' AND CONVERT( `DESCRIPTION` USING utf8 ) =  'Revamp Welcome mailer subject line.' LIMIT 1 ;
+
+
+
+UPDATE  `EMAIL_TYPE` SET  `HEADER_TPL` = NULL ,
+`TEMPLATE_EX_LOCATION` = NULL ,
+`SENDER_EMAILID` =  'info@jeevansathi.com',
+`DESCRIPTION` = NULL ,
+`GENDER` = NULL ,
+`PHOTO_PROFILE` = NULL ,
+`REPLY_TO_ENABLED` = NULL ,
+`FROM_NAME` = NULL ,
+`REPLY_TO_ADDRESS` = NULL ,
+`MAX_COUNT_TO_BE_SENT` = NULL ,
+`FTO_FLAG` = NULL ,
+`PRE_HEADER` = NULL WHERE  `ID` =  '1780' LIMIT 1 ;
+
+
+UPDATE  `EMAIL_TYPE` SET  `HEADER_TPL` = NULL ,
+`TEMPLATE_EX_LOCATION` = NULL ,
+`SENDER_EMAILID` =  'info@jeevansathi.com',
+`DESCRIPTION` = NULL ,
+`GENDER` = NULL ,
+`PHOTO_PROFILE` = NULL ,
+`REPLY_TO_ENABLED` = NULL ,
+`FROM_NAME` = NULL ,
+`REPLY_TO_ADDRESS` = NULL ,
+`MAX_COUNT_TO_BE_SENT` = NULL ,
+`FTO_FLAG` = NULL ,
+`PRE_HEADER` = NULL WHERE  `ID` =  '1779' LIMIT 1 ;
+
+
+UPDATE  `EMAIL_TYPE` SET  `HEADER_TPL` = NULL ,
+`TEMPLATE_EX_LOCATION` = NULL ,
+`SENDER_EMAILID` =  'info@jeevansathi.com',
+`DESCRIPTION` = NULL ,
+`GENDER` = NULL ,
+`PHOTO_PROFILE` = NULL ,
+`REPLY_TO_ENABLED` = NULL ,
+`FROM_NAME` = NULL ,
+`REPLY_TO_ADDRESS` = NULL ,
+`MAX_COUNT_TO_BE_SENT` = NULL ,
+`REQUIRE_AUTOLOGIN` = NULL ,
+`FTO_FLAG` = NULL ,
+`PRE_HEADER` = NULL WHERE  `ID` =  '1776' LIMIT 1 ;
+
+
+UPDATE  `EMAIL_TYPE` SET  `HEADER_TPL` = NULL ,
+`TEMPLATE_EX_LOCATION` = NULL ,
+`DESCRIPTION` = NULL ,
+`GENDER` = NULL ,
+`PHOTO_PROFILE` = NULL ,
+`REPLY_TO_ENABLED` = NULL ,
+`FROM_NAME` =  'Jeevansathi Info',
+`REPLY_TO_ADDRESS` = NULL ,
+`MAX_COUNT_TO_BE_SENT` = NULL ,
+`FTO_FLAG` = NULL ,
+`PRE_HEADER` = NULL WHERE  `ID` =  '1780' LIMIT 1 ;
+
+
+UPDATE  `EMAIL_TYPE` SET  `HEADER_TPL` = NULL ,
+`TEMPLATE_EX_LOCATION` = NULL ,
+`DESCRIPTION` = NULL ,
+`GENDER` = NULL ,
+`PHOTO_PROFILE` = NULL ,
+`REPLY_TO_ENABLED` = NULL ,
+`FROM_NAME` =  'Jeevansathi Info',
+`REPLY_TO_ADDRESS` = NULL ,
+`MAX_COUNT_TO_BE_SENT` = NULL ,
+`FTO_FLAG` = NULL ,
+`PRE_HEADER` = NULL WHERE  `ID` =  '1779' LIMIT 1 ;
+
+
+UPDATE  `EMAIL_TYPE` SET  `HEADER_TPL` = NULL ,
+`TEMPLATE_EX_LOCATION` = NULL ,
+`DESCRIPTION` = NULL ,
+`GENDER` = NULL ,
+`PHOTO_PROFILE` = NULL ,
+`REPLY_TO_ENABLED` = NULL ,
+`FROM_NAME` =  'Jeevansathi Info',
+`REPLY_TO_ADDRESS` = NULL ,
+`MAX_COUNT_TO_BE_SENT` = NULL ,
+`REQUIRE_AUTOLOGIN` = NULL ,
+`FTO_FLAG` = NULL ,
+`PRE_HEADER` = NULL WHERE  `ID` =  '1776' LIMIT 1 ;
+
+UPDATE  `jeevansathi_mailer`.`EMAIL_TYPE` SET  `FOOTER_TPL` =  'revamp_footer.tpl' WHERE  `EMAIL_TYPE`.`ID` =1776 LIMIT 1 ;

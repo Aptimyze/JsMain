@@ -1,0 +1,46 @@
+all:
+  perform:
+    enable_login:  off
+  moreClusterLayer:
+    enable_login:  off
+  saveDpp:
+    enable_login:  off
+  saveSearch:
+    enable_login:  off
+  saveSearchTop:
+    enable_login:  off
+  featuredAction:
+    enable_login:  off
+  displayMySaveSearch:
+    enable_login:  off
+  summaryProfiles:
+    enable_login:  off
+  topSearchBand:
+    enable_login:  off
+  performV1:
+    enable_login:  off
+  SearchFormDataV1:
+    enable_login:  off
+  goaChronicle:
+    enable_login:  off
+  viewSimilarProfile:
+    enable_login:  on
+  MobTopSearchBand:
+    enable_login:  off
+  MobSearch:
+    enable_login:  off
+  MobSimilarProfiles:
+    enable_login:  on
+  searchByProfileId:
+    enable_login:  off
+  MobSaveSearch:
+    enable_login:  on
+  15:
+    enable_login:  off
+  AdvancedSearch:
+    enable_login:  off
+  ViewSimilarProfilesV1:
+    enable_login:  off
+  SavedSearches:
+    enable_login:  on
+

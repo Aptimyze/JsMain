@@ -1,0 +1,7 @@
+use Assisted_Product;
+CREATE TABLE `Dummy_DPP_KEYWORDS` (
+  `PROFILEID` int(11) NOT NULL,
+  `KEYWORD_TYPE` varchar(5) DEFAULT NULL,
+  `KEYWORD` text,
+  PRIMARY KEY (`PROFILEID`)
+) ENGINE=MyISAM;

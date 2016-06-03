@@ -1,0 +1,172 @@
+<html>
+<head>
+<link rel="stylesheet" href="stylesheet.css" type="text/css">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<script language="JavaScript" type="text/javascript">
+<!--
+function PopWindow()
+{
+window.open('help.php','help','width=400,height=250,menubar=no,scrollbars=no,toolbar=no,location=yes,directories=no,resizable=no,top=200,left=300');
+}
+
+function loadForm()
+{
+	document.form1.submit();
+}
+//-->
+</script>
+</head>
+<body bgcolor="#FFFFFF" link="#000000" vlink="#000000" text="#000000" leftmargin="0" rightmargin="0" topmargin="0">
+<table bgcolor="#FFFFFF" width="97%" cellpadding="10" cellspacing="0" border="0" align="center">
+	<tr>
+		<td>
+<script>
+function selectAll()
+{
+  void(d=document);
+  void(el=d.getElementsByTagName('INPUT'));
+  for(i=0;i<el.length;i++)
+    void(el[i].checked=1) 
+}
+</script>
+
+<table width="100%" border="0" cellspacing=0 cellpadding=0 align="center">
+<tr><td class="error"></td></tr>
+<tr><td>&nbsp;&nbsp;<b>Open Queries</b><br><br></td></tr>
+</table>
+<table width="100%" border="0" cellspacing=1 cellpadding=2>
+<tr><td>
+<table width="100%" border="0" cellspacing=1 cellpadding=2 class="priNormal" align="center">
+<form name=form1 action=faq_admin_fetch.php method=post>
+<tr>
+<td width=10% align=center>&nbsp;</td>
+<td width=35% >&nbsp;Select Category
+<select name="category" onChange="loadForm()">
+<!--<option value="" align=center ~if $catarr[sec].id eq ''` selected ~/if`>All</option>-->
+<option value="0" align=center ~if $catarr[sec].id eq '0'` selected ~/if`>Top</option>
+~section name=sec loop=$catarr`
+<option value="~$catarr[sec].id`" ~if $catarr[sec].id eq $CURID` selected ~/if`>~$catarr[sec].name`</option>
+~/section`
+</select>
+</td>
+<td>&nbsp;
+<!--
+Select Date : &nbsp;&nbsp;  From
+<select name=day1>
+<option value="" align=center>Select</option>
+~section name=dd loop=$ddarr`
+<option value="~$ddarr[dd]`">~$ddarr[dd]`</option>
+~/section`
+</select>-
+<select name=month1>
+<option value="" align=center>Select</option>
+~section name=mm loop=$mmarr`
+<option value="~$mmarr[mm]`">~$mmarr[mm]`</option>
+~/section`
+</select>-
+<select name=year1>
+<option value="" align=center>Select</option>
+~section name=yy loop=$yyarr`
+<option value="~$yyarr[yy]`">~$yyarr[yy]`</option>
+~/section`
+</select>&nbsp; To
+<select name=day2>
+<option value="" align=center>Select</option>
+~section name=dd loop=$ddarr`
+<option value="~$ddarr[dd]`">~$ddarr[dd]`</option>
+~/section`
+</select>-
+<select name=month2>
+<option value="" align=center>Select</option>
+~section name=mm loop=$mmarr`
+<option value="~$mmarr[mm]`">~$mmarr[mm]`</option>
+~/section`
+</select>-
+<select name=year2>
+<option value="" align=center>Select</option>
+~section name=yy loop=$yyarr`
+<option value="~$yyarr[yy]`">~$yyarr[yy]`</option>
+~/section`
+</select>
+-->
+	<input type="hidden" name=cid value="~$cid`">
+</td>
+</tr>
+</form>
+</table>
+<br>
+~if $ER_IDARR neq ''`
+<table width="100%" border="0" cellspacing=1 cellpadding=2 class="TableHeader" align="center">
+        <tr class="red" onmouseover="this.className='mainTableOn';" onmouseout="this.className='priLow';">
+	<td colspan=100% align=center>No Records Selected</td>
+	</tr>
+</table>
+<br>
+~/if`
+
+<table width="100%" border="0" cellspacing=1 cellpadding=2 class="TableHeader" align="center">
+<form action="faq_admin_reply.php" method="POST">
+<tr>
+	<td width=4%>&nbsp;</td>
+	<td class="TableHeaderText" width=5%>S. No.</td>
+	<td class="TableHeaderText" width=11%>Date</td>
+	<td class="TableHeaderText" width=20%>Category</td>
+	<td class="TableHeaderText" width=5%>Counter</td>
+	<td class="TableHeaderText" width=55%>Message</td>
+</tr>
+~if $arr neq ''`
+~section name=sec loop=$arr`
+        <tr ~if $arr[sec].ABUSE eq ''` class="priLow" ~else` class="priHigh" ~/if` onmouseover="this.className='mainTableOn';" ~if $arr[sec].ABUSE eq ''` onmouseout="this.className='priLow';" ~else` onmouseout="this.className='priHigh';" ~/if`>
+		<td><input type="checkbox" name="idarr[]" value="~$arr[sec].ID`">
+<!--		<td>~$smarty.section.sec.index_next`</td>-->
+		<td>~$arr[sec].SNO`</td>
+		<td>~$arr[sec].ENTRY_DT`</td>
+		<td>~$arr[sec].CATEGORY`</td>
+		<td>~$arr[sec].COUNTER`</td>
+		<td>~$arr[sec].QUERY`</td>
+	</tr>
+~/section`
+~else`
+        <tr class="priLow" onmouseover="this.className='mainTableOn';" onmouseout="this.className='priLow';">
+	<td colspan=100% align=center>No Records to Show</td>
+	</tr>
+~/if`
+</table>
+<input class="inputsubmit2" type=button onclick="selectAll()" value="Select All"> 
+<input class="inputsubmit2" type=reset value="Unselect">
+<center><br>
+<table>
+<tr class=priNormal align=center>
+    <td colspan="80%" height="21">
+    ~$PAGELINK`
+    </td>
+   </tr>
+</table>
+</center>
+<center><br>
+	<table>
+	<tr>
+	<td>
+	<input type="hidden" name=cid value="~$cid`">
+	<input type="hidden" name=faqfetch value="Y">
+	<input type="hidden" name=category value="~$CURID`">
+	<input class="inputsubmit" type="submit" value="Reply to Message(s)" name="CMDReply1">
+	</td>
+	<td>
+	<input class="inputsubmit" type="submit" value="Forward Message(s)" name="CMDForward1">
+	</td>
+	<td>
+	<input class="inputsubmit" type="submit" value="Discard Message(s)" name="CMDDiscard">
+	</td>
+	</tr>
+	</table>
+</center>
+</td></tr>
+</form>
+</table>
+	</td>
+	</tr>
+</table>
+
+</body>
+</html>

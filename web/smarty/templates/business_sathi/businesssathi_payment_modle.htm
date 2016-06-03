@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>My Business Sathi</title>
+<link rel="stylesheet" href="http://www.jeevansathi.com/profile/images/styles.css" type="text/css">
+<style type="text/css">
+<!--
+body {
+	margin-left: 5px;
+	margin-top: 5px;
+}
+-->
+</style>
+</head>
+
+<body>
+~$HEAD`
+<table width="760" border="0" align="center" cellpadding="0" cellspacing="0">
+ <tr>
+  <td width="190" valign="top" class="bgyell">~$LEFT`</td>
+  <td width="10"></td>
+  <td valign="top" width="560"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+    <td height="18" class="headbigblack"><b>Payment MIS </b></td>
+   </tr>
+   <tr>
+    <td height="1" class="bgred"><img src="images/zero.gif" width="1" height="1"></td>
+   </tr>
+   <tr>
+    <td height="8"></td>
+   </tr>
+  </table>
+
+~section name=a loop=$DATA`
+~if $DATA[a].PAYMENT_MODEL`
+
+      <table width="560" border="0" cellspacing="0" cellpadding="0">
+       <tr>
+        <td class="mediumblack"><b>Your Revenue Model: 	~if $DATA[a].PAYMENT_MODEL eq 'C'`Only Per Click based Deal
+							~elseif $DATA[a].PAYMENT_MODEL eq 'F'`Only Per Free Registration
+							~elseif $DATA[a].PAYMENT_MODEL eq 'CP'`Per Click Deal &amp; comission on sale of membership
+							~elseif $DATA[a].PAYMENT_MODEL eq 'FP'`Per Free Registration Deal &amp; comission on sale of memberships~/if` </b>. Since <b>~$DATA[a].ENTRY_DT`</b>.</td>
+       </tr>
+      </table>
+
+      <br>
+
+	~if $DATA[a].PAYMENT_MODEL eq 'C'`
+        <table width="500" border="0" cellpadding="3" cellspacing="0">
+       	<tr class="mediumblack">
+         <td width="270" class="mediumblack">No. of clicks </td>
+         <td width="218">~if $DATA[a].CNT eq ''`0 ~else` ~$DATA[a].CNT`~/if`</td>
+        </tr>
+        <tr class="mediumblack">
+         <td>Cost Per Click </td>
+         <td>Rs. ~if $DATA[a].CLICKS_RATE eq ''` 0 ~else` ~$DATA[a].CLICKS_RATE` ~/if`</td>
+        </tr>
+        <tr class="mediumblack">
+         <td>Total Amount Payable </td>
+         <td>Rs. ~if $DATA[a].CNT_REV eq ''` 0 ~else` ~$DATA[a].CNT_REV` ~/if`</td>
+        </tr>
+       </table>
+	<hr>
+       <br>
+
+	~elseif $DATA[a].PAYMENT_MODEL eq 'F'`
+	<table width="500" border="0" cellpadding="3" cellspacing="0">
+        <tr class="mediumblack">
+         <td width="270" class="mediumblack">No. of Free Registrations</td>
+         <td width="218">~if $DATA[a].CNT eq ''` 0 ~else` ~$DATA[a].CNT` ~/if`</td>
+        </tr>
+        <tr class="mediumblack">
+         <td>Cost Per Click </td>
+         <td>Rs. ~if $DATA[a].FREE_RATE eq ''` 0 ~else` ~$DATA[a].FREE_RATE` ~/if`</td>
+        </tr>
+        <tr class="mediumblack">
+         <td>Total Amount Payable </td>
+         <td>Rs. ~if $DATA[a].CNT_REV eq ''` 0 ~else` ~$DATA[a].CNT_REV` ~/if`</td>
+        </tr>
+       </table>
+	<hr>
+       <br>
+
+	~elseif $DATA[a].PAYMENT_MODEL eq 'CP'`
+       <table width="500" border="0" cellpadding="3" cellspacing="0">
+        <tr class="mediumblack">
+         <td width="270">No. of Clicks</td>
+         <td width="218">~if $DATA[a].CNT eq ''` 0 ~else` ~$DATA[a].CNT` ~/if`</td>
+        </tr>
+        <tr class="mediumblack">
+         <td >Cost per Click</td>
+         <td>Rs. ~if $DATA[a].CLICKS_RATE eq ''` 0 ~else` ~$DATA[a].CLICKS_RATE` ~/if`</td>
+        </tr>
+        <tr class="mediumblack">
+         <td>Total Cost of Clicks</td>
+         <td>Rs. ~if $DATA[a].CNT_REV eq ''` 0 ~else` ~$DATA[a].CNT_REV` ~/if`</td>
+        </tr>
+        <tr class="mediumblack">
+         <td>No of payments </td>
+         <td>~if $DATA[a].CNT_PAID eq ''` 0 ~else` ~$DATA[a].CNT_PAID` ~/if`</td>
+        </tr>
+        <tr class="mediumblack">
+         <td><b>Commission Payment </b></td>
+         <td>&nbsp;</td>
+        </tr>
+	<tr class="mediumblack">
+	<td colspan=2><b>~$DATA[a].PAID_1_TO_50`</b>% for 1 to 50,<b> ~$DATA[a].PAID_51_TO_200`</b>% for 51 to 200,<b>~$DATA[a].PAID_201`</b>% for more than 200 Registrations</td>
+	</tr>
+        <tr class="mediumblack">
+         <td>Total Cost of Paid Leads</td>
+         <td>Rs. ~if $DATA[a].PAID_REV eq ''` 0 ~else` ~$DATA[a].PAID_REV` ~/if`<td>
+        </tr>
+       </table>
+       <br>
+
+	~elseif $DATA[a].PAYMENT_MODEL eq 'FP'`
+	<table width="500" border="0" cellpadding="3" cellspacing="0">
+        <tr class="mediumblack">
+         <td width="270">No. of Free Registrations</td>
+         <td width="218">~if $DATA[a].CNT eq ''` 0 ~else` ~$DATA[a].CNT` ~/if`</td>
+        </tr>
+        <tr class="mediumblack">
+         <td >Cost per Per Free Registration</td>
+         <td>Rs. ~if $DATA[a].FREE_RATE eq ''` 0 ~else` ~$DATA[a].FREE_RATE` ~/if`</td>
+        </tr>
+        <tr class="mediumblack">
+         <td>Total Cost of Free Registrations</td>
+         <td>Rs. ~if $DATA[a].CNT_REV eq ''` 0 ~else` ~$DATA[a].CNT_REV` ~/if`</td>
+        </tr>
+        <tr class="mediumblack">
+         <td>No of Paid Leads</td>
+         <td>~if $DATA[a].CNT_PAID eq ''` 0 ~else` ~$DATA[a].CNT_PAID` ~/if`</td>
+        </tr>
+        <tr class="mediumblack">
+         <td><b>Commission Payment </b></td>
+         <td>&nbsp;</td>
+        </tr>
+        <tr class="mediumblack">
+        <td colspan=2><b>~$DATA[a].PAID_1_TO_50`</b>% for 1 to 50,<b> ~$DATA[a].PAID_51_TO_200`</b>% for 51 to 200,<b>~$DATA[a].PAID_201`</b>% for more than 200 Registrations</td>
+        </tr>
+        <tr class="mediumblack">
+         <td>Total Cost of Paid Leads</td>
+         <td>Rs. ~if $DATA[a].PAID_REV eq ''` 0 ~else` ~$DATA[a].PAID_REV` ~/if`<td>
+        </tr>
+       </table>
+       <br>
+	~/if`
+~/if`
+~/section`
+       <table width="500" border="0" cellspacing="0" cellpadding="3" class =bggrey>
+        <tr>
+         <td width="270" class=bigred><b>Total</b></td>
+         <td width="218" class=bigred><b>Rs. ~if $GRAND_TOTAL eq ''` 0 ~else` ~$GRAND_TOTAL` ~/if`</b></td>
+        </tr>
+       </table><br><br>
+  </td>
+ </tr>
+</table>
+</body>
+</html>

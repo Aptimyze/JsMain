@@ -1,0 +1,91 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<!--link rel="stylesheet" href="stylesheet.css" type="text/css"-->
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<script language="javascript">
+function make_confirm()
+{
+	if(confirm('Do you really want to send Vouchers:'))
+		return true;
+	else
+		return false;
+}
+</script>
+</head>
+~include file="head.htm"`
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table width=760 cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+    <tr class="formhead">
+          <td width=55% class="formhead" border=1><font><b>Welcome </b></font></td>
+          <td width="35%" class="formhead" align="center"><a href="mainpage.php?cid=~$CID`">Main Page</a></td>
+          <td width=10% class="formhead" border=1 align='CENTER'><a href="logout.php?cid=~$CID`">Logout</a></td>
+    </tr>
+</table>
+<br>
+~if $msg`
+<table width="90%" border="0" cellspacing="2" cellpadding="2" align=center><tr><td class="fieldsnew" align="center"><font color="red" size="2">~$msg`</font></td></tr></table>
+~/if`
+~section name=sec loop=$voucher`
+<form method=post action="voucher_successstory.php">
+<input type=hidden name=cid value=~$CID`>
+<input type=hidden name=id value="~$voucher[sec].ID`">
+<table width="100%" border="0" cellspacing="2" cellpadding="2" align=center>
+<tr class=label>
+        <td align=center width=10% >S. No.</td>
+	<td align=center width=10%>Username [H]</td>
+        <td align=center width=10%>Username [W]</td>
+	<td align="center" width=10%>Name[H]</td>
+	<td align="center" width=10%>Name[W]</td>
+	<td align=center width=10%>Contact Detail</td>
+        <td align=center width=10%>Email</td>
+	<td align=center width=10%>City</td>
+	<td align="center" width=10%>Phone(Res)</td>
+	<td align="center" width=10%>Phone(Mob)</td>
+</tr>
+<!--/table>
+<table width="70%" border="0" cellspacing="2" cellpadding="2" align=center-->
+<tr align=center class=fieldsnew>
+        <td width=10%>~$voucher[sec].SNO`</td>
+	<td width=10%>~$voucher[sec].USERNAME_H`</td>
+	<td width=10%>~$voucher[sec].USERNAME_W`</td>
+        <td width=10%>~$voucher[sec].NAME_H`</td>
+        <td width=10%>~$voucher[sec].NAME_W`</td>
+	<td width=10%>~$voucher[sec].CONTACT`</td>
+	<td width=10%>~$voucher[sec].EMAIL`</td>
+       	<td width=10%>~$voucher[sec].CITY`</td>
+	<td width=10%>~$voucher[sec].PHONE_RES`</td>
+	<td width=10%>~$voucher[sec].PHONE_MOB`</td>
+</tr>
+</table>
+
+<table width="50%" border="0" cellspacing="2" cellpadding="2" align=center>
+<tr align=center class=label><td><b>Success Story</b></td></tr>
+<tr align=center class=fieldsnew>
+	<td>~$voucher[sec].COMMENTS`</td>
+</tr>
+</table>
+<table width="50%" cellspacing="2" cellpadding="2" align="center">
+<tr class="fieldsnew">
+~if $voucher[sec].SID`
+<td align="center" class="label" width=30%>UPLOADED PHOTO</td>
+<td align="center" width=70%><img src="photo_mail_serve.php?id=~$voucher[sec].ID`" width=150 height=200></img></td>
+~else`
+<td align="center" class="label" width="100%">NO PHOTO UPLOADED</td>
+~/if`
+</tr>
+</table>
+<table align="center" width=50% cellspacing="2" cellpadding="2">
+<tr align=center class=fieldsnew>
+	<td><input type=submit name=Action value="Send Vouchers" onClick=" return make_confirm()" class="textboxes1">&nbsp;&nbsp;<input type=submit name=Action value="Reject" class="textboxes1"></td>
+</tr>
+</table>
+<br>
+<input type="hidden" name="cid" value="~$CID`">
+<input type="hidden" name="storyid" value="~$voucher[sec].STORYID`">
+</form>
+~/section`
+
+</body>
+<html>

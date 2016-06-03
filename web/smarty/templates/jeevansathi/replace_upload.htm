@@ -1,0 +1,23 @@
+<link href="css/~$common_css`" type="text/css" rel="stylesheet">
+<style>
+.blink{color:#117daa;}
+a.blink:link, a.blink:visited, a.blink:active{color:#117daa; text-decoration:none;}
+a.blink:hover{color:#117daa; text-decoration:underline;}
+.file{position:relative;z-index:2; opacity:0;filter:alpha(opacity=0);}
+.textbox{FONT-SIZE: 10px; FONT-FAMILY: verdana,Arial;width:270px}
+.blbutton{background-image:url(/profile/images/registration_new/blbutton.gif); border:#85b2d1 1px; border-style:solid; font:normal 10px arial; text-align:center; background-repeat:repeat-x; width:70px; color:#454544; height:20px;}
+.absbut{position:absolute; top:0px; left:25px;}
+* html .absbut{position:absolute; top:0px; left:3px;}
+*:first-child+html .absbut{position:absolute; top:0px; left:3px;}
+.green_btn{background:url(/images/green_button_bg.gif) repeat-x; height:25px; border:1px solid #578d00; padding-bottom:2px; color:#fff; cursor:pointer; font-size:12px;}
+</style>
+<form name="upload_photo_form"  method="post" enctype="multipart/form-data" style="margin:0px" target="upload_target" action="uploadphoto1.php" >
+                <div style="width:120px;">
+			<input type="hidden" name="which_photo" value="mainphoto">
+			<input type="hidden" name="replace" value="1">
+                        <input type="file" class="textbox file" name="mainphotofile" size="1" style="width:40px" onchange="document.upload_photo_form.submit();"/>
+                        <div class="absbut" style="font:bold 12px arial; ">
+				<input class="green_btn" type="button" value="Replace" style="width:60px;height:20px;">
+                        </div>
+                </div>
+        </form>

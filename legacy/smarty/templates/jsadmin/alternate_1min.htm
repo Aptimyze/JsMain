@@ -1,0 +1,125 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>Alternate Way</title>
+  <link rel="stylesheet" href="jeevansathi.css" type="text/css">
+  <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+ </head>
+ ~include file="head.htm"`
+ <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+ <table width=100% cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+    <tr width=100% class="formhead">
+          <td width=20% class="formhead" border=1><font><b>Welcome : ~$name`</b></font></td>
+          <td width="70%" class="formhead" align="center"><a href="mainpage.php?cid=~$cid`">Click here to go to main page</a></td>
+          <!--td width="25%" class="formhead" align="center"><a href="add_edit_fields.php?cid=~$cid`">Add profiles to edit</a></td>
+          <td width=10% class="formhead" border=1 align='CENTER'>
+		~if $val eq 'new'`
+		<a href="admin_new.php?cid=~$cid`&name=~$name`">Alternate New</a>
+		~elseif $val eq 'edit'`
+		<a href="admin_edit.php?cid=~$cid`&name=~$name`">Alternate Edit</a>
+		~/if`
+	  </td>
+          <td width=10% class="formhead" border=1 align='CENTER'>
+		~if $val eq 'edit'`
+		<a href="alternate.php?name=~$name`&cid=~$cid`&val=new">New profiles</a>
+		~elseif $val eq 'new'`
+		<a href="alternate.php?name=~$name`&cid=~$cid`&val=edit">Edited profiles</a>
+		~/if`
+	  </td-->
+          <td width=10% class="formhead" align='CENTER'><a href="logout.php?cid=~$cid`">Logout</a></td>
+    </tr>
+</table>
+
+  <table width=100% align="CENTER" >
+   <tr>
+    <td height="23" class="formhead" align="center">
+<!--h2 align="center">
+~if $val eq 'new'`New ~elseif $val eq 'edit'`Edit ~/if` Profiles</h2-->
+	</td></tr>
+</table>
+<br><br>
+<table width=100% border=0>
+<tr>
+        <td>
+        <table border=0 align="center">
+        <tr>
+                <td class="label" align="center">
+                Total New Profiles 
+		</td>
+		<td class="fieldsnew"align="center">~$totalnew`</td>
+        </tr>
+        <tr>
+                <td class="label" align="center">
+                Profiles in progress (Alloted) : 
+		</td>
+		<td class="fieldsnew" align="center">~$totalqueue` </td>
+        </tr>
+        </table>
+        </td>
+        <td>
+        <table border=0>
+        <tr class="label" align="center">
+                <td>Operator's Name</td>
+                <td><table><tr><td align="center" class="label">Total profiles with the user</td></tr>
+		<tr><td align="center" class="label">(New+Edit)</td></tr></table> </td>
+        </tr>
+        ~section name="uname" loop=$user`
+        <tr>
+                <td align="center" class="label">~$user[uname]`</td>
+                <td align="center" class="fieldsnew">~$sno[uname]`</td>
+        </tr>
+        ~/section`
+        </tr>
+        </table>
+        </td>
+</tr>
+<tr>
+<td align="center">
+<form method=post action="alternate_1min.php">
+&nbsp;&nbsp;
+<select name="users">
+~section name="usec" loop=$user`
+<option value=~$user[usec]`>~$user[usec]`</option>
+~/section`
+</select>
+&nbsp;&nbsp;&nbsp;
+<input type="text" name="num" size=5>
+<input type="hidden" name="val" value=~$val`>
+<input type="hidden" name="cid" value=~$cid`>
+<input type="hidden" name="name" value=~$name`>
+&nbsp;&nbsp;&nbsp;
+<input type="submit" name="CMDAssign" value="Assign">
+</form>
+</td></tr>
+<tr>
+<td align="center">
+<form method=post action="pullback_1min.php">
+&nbsp;&nbsp;Pullback From
+<select name="old_alloted">
+~section name="usec" loop=$user`
+<option value=~$user[usec]`>~$user[usec]`</option>
+~/section`
+</select>
+&nbsp;&nbsp;&nbsp;Allot To
+<select name="new_allot_to">
+~section name="usec" loop=$user`
+<option value=~$user[usec]`>~$user[usec]`</option>
+~/section`
+</select>
+&nbsp;&nbsp;&nbsp;Count
+<input type="text" name="num" size=5>
+<!--input type="hidden" name="scr_type" value="O"-->
+<input type="hidden" name="val" value=~$val`>
+<input type="hidden" name="cid" value=~$cid`>
+<input type="hidden" name="name" value=~$name`>
+&nbsp;&nbsp;&nbsp;
+<input type="submit" name="CMDAssign" value="Assign">
+</form>
+</td></tr>
+</table>
+
+  <br><br>
+  ~include file="foot.htm"`
+ </body>
+</html>

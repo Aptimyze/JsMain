@@ -1,0 +1,17 @@
+use test;
+
+CREATE TABLE `CONTACTS6_MONTHS_OLD_RECORD` (
+ `SENDER` mediumint(11) unsigned NOT NULL default '0',
+ `RECEIVER` mediumint(11) unsigned NOT NULL default '0'
+) ENGINE=MyISAM;
+
+
+CREATE TABLE `DELETED_PROFILES` (
+  `PROFILEID` int(11) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`PROFILEID`)
+) ENGINE=MyISAM;
+
+CREATE TABLE `INACTIVE_RECORDS_6MONTHS` (
+ `PROFILEID` int(11) unsigned NOT NULL default '0',
+ PRIMARY KEY  (`PROFILEID`)
+) ENGINE=MyISAM;

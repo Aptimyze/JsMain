@@ -1,0 +1,3 @@
+use billing;
+
+ALTER TABLE billing.PURCHASES ADD `SERVICE_TAX_CONTENT` varchar(250) NOT NULL

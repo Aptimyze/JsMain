@@ -1,0 +1,94 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>UserEdit : Jeevansathi.com Matrimonial Services</title>
+		<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+	</head>
+	~include file="head.htm"`
+	<body>
+		<table cellpadding="4" cellspacing="4" border="0" width="76%" align="center">
+			<tr class="formhead" align="center">
+				<td><b>Edit Details</b></td>
+			</tr>
+			<tr class="fieldsnew" align="center">
+				<td><a href="mainpage.php?cid=~$cid`">Mainpage</a></td>
+			</tr>
+		</table>
+		<br>
+		~if $NO_CHANGE`
+			<table cellpadding="4" cellspacing="4" border="0" width="76%" align="center">
+				<tr class="formhead" align="center">
+					<td>You have not made any changes in the profile.<//td>
+				</tr>
+				<tr class="fieldsnew" align="center">
+					<td><a href="" onClick="history.back(); return false;">&lt;&lt;Go Back and Edit</a></td>
+				</tr>
+			</table>
+		~elseif $SUCCESSFUL`
+			<table cellpadding="4" cellspacing="4" border="0" width="76%" align="center">
+				<tr class="formhead" align="center">
+					<td>Details Successfully edited.<//td>
+				</tr>
+				<tr class="fieldsnew" align="center">
+					<td><a href="searchpage.php?cid=~$cid`">Continue&gt;&gt;</a></td>
+				</tr>
+			</table>
+		~else`
+			<form name="form1" method="post" action="gender_dob_editing.php">
+			<table cellpadding="4" cellspacing="4" border="0" width="50%" align="center">
+			<tr>
+				<td align="center" class="label">Gender</td>
+				<td class="fieldsnew">
+					<input type="radio" name="gender" value="M" ~if $details.GENDER eq 'M'` checked ~/if`>Male&nbsp;
+					<input type="radio" name="gender" value="F" ~if $details.GENDER eq 'F'` checked ~/if`>Female
+				</td>
+			</tr>
+			<tr>
+				<td align="center" class="label">Marital Status : </td>
+				<td class="fieldsnew">
+					<select name="mstatus">
+						<option value="">Select</option>
+						~section name=next loop=$marital_status_arr`
+							<option value="~$marital_status_arr[next].VALUE`" ~if $marital_status_arr[next].VALUE eq $details.MSTATUS` selected ~/if`>~$marital_status_arr[next].LABEL`</option>
+						~/section`
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td align="center" class="label">Date of Birth : </td>
+				<td class="fieldsnew">
+					<select name="day_of_birth">
+						~section name=next loop=$ddarr`
+						<option value="~$ddarr[next]`" ~if $ddarr[next] eq $details.DOB` selected ~/if`>~$ddarr[next]`</option>
+					~/section`
+				</select>
+				<select name="month_of_birth">
+					~section name=next loop=$mmarr`
+						<option value="~$mmarr[next].VALUE`" ~if $mmarr[next].VALUE eq $details.MOB` selected ~/if`>~$mmarr[next].LABEL`</option>
+					~/section`
+				</select>
+				<select name="year_of_birth">
+					~section name=next loop=$yyarr`
+						<option value="~$yyarr[next]`" ~if $yyarr[next] eq $details.YOB` selected ~/if`>~$yyarr[next]`</option>
+					~/section`
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td align="center" class="label">Photo Protect : </td>
+			<td class="fieldsnew">
+				<input type="radio" name="photo_display" value="A" ~if $details.PHOTO_DISPLAY eq 'A'` checked ~/if`>Visible to all (recomended).
+				<br><input type="radio" name="photo_display" value="C" ~if $details.PHOTO_DISPLAY eq 'C'` checked ~/if`>Visible to members whom I contact and to members I accept.
+				<br><input type="radio" name="photo_display" value="H" ~if $details.PHOTO_DISPLAY eq 'H'` checked ~/if`>Hide photo(s) temporarily.
+			</td>
+		</tr>
+		<tr align="center" class="label">
+			<input type="hidden" name="cid" value="~$cid`">
+			<input type="hidden" name="profileid" value="~$profileid`">
+			<td colspan="2"><input type="submit" name="submit" value="Submit" class="buttons1"></td>
+		</tr>
+		</table>
+		</form>
+		~/if`
+	</body>
+</html>

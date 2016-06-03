@@ -1,0 +1,79 @@
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>JeevanSathi.com - JSADMIN</title>
+  <link rel="stylesheet" href="jeevansathi.css" type="text/css">
+  <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+ </head>
+ <body>
+      <table align=center width="80%" border="0" cellpadding="2" cellspacing="2">
+	<tr align=center>
+	  <td colspan=100% class=formhead align=center>
+           <a href="mainpage.php?&cid=~$cid`&name=~$name`">Main Page
+           </a> 
+          </td>
+       </tr>
+      </table>
+      <br>
+      <table border="0" cellspacing="2" cellpadding="2" align=center width=100%>
+       <tr align="CENTER">
+        <td class="formhead" colspan="13" height="23">
+          <b>
+	   <font color="red">Page ~$CURRENTPAGE` of ~$NO_OF_PAGES`</font>
+          </b>
+        </td>
+       </tr>
+       <tr class=label align=center>
+	<td>SNO.</td>
+	<td>GENDER</td>
+	<td>FIELD</td>
+	<td>COMMUNITY</td>
+	<td>TITLE</td>
+	<td>DESCRIPTION</td>
+	<td>KEYWORD</td>
+	<td>NAME</td>
+	<td>LOGO_STRING</td>
+	<td>NAME OF COMMUNITY</td>
+	<td>SOURCE</td>
+	<td>CAPTION</td>
+	<td>EDIT</td>
+       </tr>
+      
+      ~section  name=show  loop=$matri`
+       <tr align=center class=fieldsnew>
+         <td>~$matri[show].SNO`</td>
+	 <td>~$matri[show].gender`</td>
+         <td>~$matri[show].fld`</td>
+         <td>~$matri[show].community`</td>
+         <td>~$matri[show].title`</td>
+         <td align=left>~$matri[show].description`</td>
+         <td>~$matri[show].keyword`</td>
+	 <td>~$matri[show].name`</td>
+	 <td>~$matri[show].logo_string`</td>
+	 <td>~$matri[show].name_of_com`</td>
+	 <td>~$matri[show].source`</td>
+	 <td>~$matri[show].caption`</td>
+         <td><a href="seo_edit_matrimonial.php?cid=~$cid`&ID=~$matri[show].ID`">Edit</a></td> </tr>
+      ~/section`
+                                                                                                                             
+       <tr bgcolor="#fbfbfb">
+        <td colspan="8" height="21"> </td>
+       </tr>
+       <tr>
+        <td colspan="8" height="21">
+          &nbsp;
+        </td>
+       </tr>
+    </table>
+ <center>
+    <table>
+      <tr bgcolor="#fbfbfb" align=center>
+       <td colspan="8" height="21">
+         ~$PAGELINK`
+       </td>
+      </tr>
+    </table>
+<a href="seo_edit_matrimonial.php?cid=~$cid`&flag=ADD">Add New Record</a>
+  </center>
+ </body>
+</html>

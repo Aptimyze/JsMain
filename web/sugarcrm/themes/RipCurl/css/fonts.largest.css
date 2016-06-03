@@ -1,0 +1,176 @@
+/*********************************************************************************
+ * SugarCRM is a customer relationship management program developed by
+ * SugarCRM, Inc. Copyright (C) 2004-2010 SugarCRM Inc.
+ * 
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License version 3 as published by the
+ * Free Software Foundation with the addition of the following permission added
+ * to Section 15 as permitted in Section 7(a): FOR ANY PART OF THE COVERED WORK
+ * IN WHICH THE COPYRIGHT IS OWNED BY SUGARCRM, SUGARCRM DISCLAIMS THE WARRANTY
+ * OF NON INFRINGEMENT OF THIRD PARTY RIGHTS.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, see http://www.gnu.org/licenses or write to the Free
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301 USA.
+ * 
+ * You can contact SugarCRM, Inc. headquarters at 10050 North Wolfe Road,
+ * SW2-130, Cupertino, CA 95014, USA. or at email address contact@sugarcrm.com.
+ * 
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ * 
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "Powered by
+ * SugarCRM" logo. If the display of the logo is not reasonably feasible for
+ * technical reasons, the Appropriate Legal Notices must display the words
+ * "Powered by SugarCRM".
+ ********************************************************************************/
+
+body, table,td
+{
+	font-size:14px;
+}
+
+h1
+{
+	font-size:20px;
+	}
+h2
+{
+	font-size:20px;
+	}
+
+h3{
+	font-size:18px;
+	}
+h4
+{
+	font-size:16px;
+	}
+
+h5
+{
+	font-size:15px;
+	}
+	
+input,select,textarea
+{
+font-size:13px;
+}
+#footer {
+font-size: 13px;
+}
+.subTabs
+{
+	font-size:12px;
+	}
+.subMenu2
+{
+	font-size:12px;
+	}
+a.subMenu2Link:link,a.subMenu2Link:visited
+{
+	font-size:12px;
+	}
+a.subMenuLink:link,a.subMenuLink:visited
+{
+	font-size:12px;
+	}
+#search input[name=query_string]
+{
+	font-size:13px;
+}
+.date
+{
+	font-size:15px;
+	}
+#lastView
+{
+	font-size:13px;
+}
+
+
+table.reportlistView td,table.reportlistView th
+{
+	font-size:13px;
+}
+.reportGroupViewTable .reportevenListRowS1,.reportGroupViewTable .reportoddListRowS1,.reportoddListRowS1
+{
+	font-size:13px;
+}
+.reportGroupNByTableEvenListRowS1
+{
+	font-size:14px;
+}
+.reportGroup1ByTable .reportGroupNByTableEvenListRowS1,.reportGroup1ByTable .reportGroup1ByTableEvenListRowS1
+{
+	font-size:15px;
+	}
+a.utilsLink:link,a.utilsLink:visited
+{
+	font-size:13px;
+}
+h4.edit td[scope=row]
+{
+	font-size:16px;
+}
+h5.edit td[scope=row]
+{
+	font-size:15px;
+	}
+a.tabFormAdvLink:link,a.tabFormAdvLink:visited
+{
+	font-size:12px;
+}
+.detail h4
+{    
+	font-size:16px;
+	}
+.monthViewDayHeight td[scope=row] a:link,.monthViewDayHeight td[scope=row] a:visited, .monthViewDayHeight td[scope=row] a:hover
+{
+	font-size:13px;
+}
+.yearCalBodyMonth > a:link,.yearCalBodyMonth > a:visited
+{
+	font-size:16px;
+	}
+#subpanel_list td h3{
+    font-size:15px;
+	}
+#sitemap h4 a:link,#sitemap h4 a:visited
+{
+	font-size:15px;
+}
+#header{
+	font-size: 14px;
+}
+.subshortcut a {
+font-size: 13px;
+}
+
+.olCapFontClass,.yui-module .hd, .yui-panel .hd
+{
+	font-size:14px;
+}
+#newRecord h3{
+    font-size:15px;
+}
+#header .subshortcut a {
+font-size: 13px;
+}
+.leftList ul li a, .leftList ul li.currentShortcut a,.leftList ul li.notCurrentShortcut a {
+font-size: 14px;
+}
+.moduleTitle h2{
+    font-size:18px;
+	}
+.edit h4{
+	font-size:15px;
+}

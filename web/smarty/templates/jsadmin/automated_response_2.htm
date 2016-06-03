@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<base href='~$SITE_URL`/profile/'>
+<title>Jeevansathi.com</title>
+</head>
+
+<body>
+<table width="600" border="0" align="center" cellpadding="0" cellspacing="0" style="border:solid 1px #e3e3e3;">
+  <tr>
+    <td background="~$SITE_URL`/profile/images/top_bg_rept.gif"><a href="http://www.jeevansathi.com/" target="_blank"><img src="~$SITE_URL`/profile/images/logo_an1.gif" width="304" height="99" hspace="0" vspace="0" border="0" align="left" /></a></td>
+    <td background="~$SITE_URL`/profile/images/top_bg_rept.gif"><img src="~$SITE_URL`/profile/images/top_img_right.gif" width="296" height="99" hspace="0" vspace="0" align="left" /></td>
+  </tr>
+  <tr>
+    <td height="18" colspan="2"></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="left" valign="top" style="padding:0px 15px 30px 23px;"><div style="font-family:Verdana, Arial; font-size:12px; color:#000000; line-height:17px;"><b>Dear ~$username`,</b><br /><br />
+      The changes made by you in your profile are active now.</div></td>
+  </tr>
+  <tr>
+    <td colspan="2" style="padding:0px 15px 22px 23px;"><table width="552" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td height="29" align="left" valign="middle" background="~$SITE_URL`/profile/images/orange_top_bg.gif" bgcolor="#FEF3D5" style="padding:0px 0px 0px 15px;"><div style="font-family:Verdana, Arial; font-size:12px; color:#3b3a3a;"><b>Profile Status</b></div></td>
+      </tr>
+      <tr>
+        <td style="border:solid 1px #fce6ad; border-top:none; padding:18px 10px 18px 15px;" background="~$SITE_URL`/profile/images/box_bg_rept.jpg">
+		<table width="517" border="0" cellspacing="0" cellpadding="0">
+          		<tr>
+		            <td align="left" valign="top"><div style="font-family:Verdana, Arial; font-size:11px; color:#3a3a3a;"><b>Your Profile is ~$PROFILE_PERCENT`% complete</b></div></td>
+		        </tr>
+          	<tr>
+			<td>
+<div style="border: 1px solid #87B43F!important; float: left; width: 300px!important; margin-top:10px;"><table width="~$PROFILE_PERCENT`%"><tbody><tr>
+<td background="http://ser4.jeevansathi.com/img_revamp/mjspgbar.gif" style="background-repeat:x 0; background-position:0 1px; height: 13px;">  </td>
+</tr></tbody></table></div>
+			</td>
+</tr>
+          	<tr>
+            			<td height="22"></td>
+		        </tr>
+	~if $PROFILE_PERCENT neq 100`
+          <tr>
+            <td><div style="font-family:Verdana, Arial; font-size:11px; line-height:17px; color:#3a3a3a;"><b>Prospective matches want to know more about you. Follow these simple steps to make your profile 100% complete :</b></div></td>
+          </tr>
+	~/if`
+          <tr>
+            <td height="10"></td>
+          </tr>
+	~assign var="loop_percent" value=0`
+	~if $PERCENT_ARR_MYJS[0] eq "Y"`
+	~assign var="loop_percent" value=$loop_percent+1`
+          <tr>
+            <td><div style="font-family:Verdana, Arial; font-size:11px;"> &nbsp; &nbsp; <img src="~$SITE_URL`/profile/images/bullet.gif" width="4" height="8" align="absmiddle" /> &nbsp; 
+            <a href="~$SITE_URL`/P/viewprofile.php?echecksum=~$CHECKSUM`&checksum=~$myprofilechecksum`&EditWhatNew=FocusPhoto&ownview=1&CMGFRMMMMJS=1" style="color:#0262a6; text-decoration:underline;">Adding your photo will bring <b>~$TOT_PHOTO_PERCENT_LEFT`%</b></a></div></td></tr>
+	<tr><td height="10"></td></tr>
+	~/if`
+	~if $PERCENT_ARR_MYJS[1] eq "Y"`
+	~assign var="loop_percent" value=$loop_percent+1`
+          <tr>
+            <td><div style="font-family:Verdana, Arial; font-size:11px;"> &nbsp; &nbsp; <img src="~$SITE_URL`/profile/images/bullet.gif" width="4" height="8" align="absmiddle" /> &nbsp; 
+            <a href="~$SITE_URL`/P/viewprofile.php?echecksum=~$CHECKSUM`&checksum=~$myprofilechecksum`&EditWhatNew=incompletProfile&ownview=1&CMGFRMMMMJS=1" style="color:#0262a6; text-decoration:underline;">Writing more about yourself will bring <b>~$YOUR_INFO_PERCENT_LEFT`%</b></a></div></td></tr>
+          <tr><td height="10"></td></tr>
+                                ~/if`
+                                 ~if $PERCENT_ARR_MYJS[2] eq "Y"`
+				~assign var="loop_percent" value=$loop_percent+1`
+          <tr>
+            <td><div style="font-family:Verdana, Arial; font-size:11px;"> &nbsp; &nbsp; <img src="~$SITE_URL`/profile/images/bullet.gif" width="4" height="8" align="absmiddle" /> &nbsp; 
+            <a href="~$SITE_URL`/P/viewprofile.php?echecksum=~$CHECKSUM`&checksum=~$myprofilechecksum`&MYMOBILE=~$MOBILE_NO`&EditWhatNew=VerContact&ownview=1&CMGFRMMMMJS=1" style="color:#0262a6; text-decoration:underline;">Verifying your contact number(s) will bring <b>~$CONTACT_NO_VERIFY_LEFT`%</b></a></div></td>
+        </tr>
+          <tr><td height="10"></td></tr>
+                                 ~/if`
+                                ~if $PERCENT_ARR_MYJS[3] eq "Y" and $loop_percent lt 3`
+				~assign var="loop_percent" value=$loop_percent+1`
+          <tr>
+            <td><div style="font-family:Verdana, Arial; font-size:11px;"> &nbsp; &nbsp; <img src="~$SITE_URL`/profile/images/bullet.gif" width="4" height="8" align="absmiddle" /> &nbsp; 
+            <a href="~$SITE_URL`/P/viewprofile.php?echecksum=~$CHECKSUM`&checksum=~$myprofilechecksum`&EditWhatNew=EduOcc&ownview=1&CMGFRMMMMJS=1" style="color:#0262a6; text-decoration:underline;">Adding details about your education and occupation will bring <b>~$EDUCATION_PERCENT_LEFT`%</b></a></div></td>
+        </tr>
+          <tr><td height="10"></td></tr>
+                                ~/if`
+                                ~if $PERCENT_ARR_MYJS[4] eq "Y" and $loop_percent lt 3`
+				~assign var="loop_percent" value=$loop_percent+1`
+          <tr>
+            <td><div style="font-family:Verdana, Arial; font-size:11px;"> &nbsp; &nbsp; <img src="~$SITE_URL`/profile/images/bullet.gif" width="4" height="8" align="absmiddle" /> &nbsp; <a href="~$SITE_URL`/P/viewprofile.php?echecksum=~$CHECKSUM`&checksum=~$myprofilechecksum`&EditWhatNew=FamilyDetails&ownview=1&CMGFRMMMMJS=1" style="color:#0262a6; text-decoration:underline;">Adding details about your family will bring <b>~$FAMILY_PERCENT_LEFT`%</b></a></div></td>
+        </tr>
+          <tr><td height="10"></td></tr>
+                                ~/if`
+                                ~if $PERCENT_ARR_MYJS[5] eq "Y"  and $loop_percent lt 3`
+				~assign var="loop_percent" value=$loop_percent+1`
+          <tr>
+            <td><div style="font-family:Verdana, Arial; font-size:11px;"> &nbsp; &nbsp; <img src="~$SITE_URL`/profile/images/bullet.gif" width="4" height="8" align="absmiddle" /> &nbsp; 
+            <a href="~$SITE_URL`/P/viewprofile.php?echecksum=~$CHECKSUM`&checksum=~$myprofilechecksum`&EditWhatNew=RelEthnic&gender_logged_in=~$GENDER_LOGGED_IN`&ownview=1&CMGFRMMMMJS=1" style="color:#0262a6; text-decoration:underline;">Adding details about your religion and ethnicity will bring <b>~$RELIGION_PERCENT_LEFT`%</b></a></div></td>
+	</tr>
+          <tr><td height="10"></td></tr>
+                                ~/if`
+                                ~if $PERCENT_ARR_MYJS[6] eq "Y" and $loop_percent lt 3`
+				~assign var="loop_percent" value=$loop_percent+1`
+          <tr>
+            <td><div style="font-family:Verdana, Arial; font-size:11px;"> &nbsp; &nbsp; <img src="~$SITE_URL`/profile/images/bullet.gif" width="4" height="8" align="absmiddle" /> &nbsp; 
+            <a href="~$SITE_URL`/P/viewprofile.php?echecksum=~$CHECKSUM`&checksum=~$myprofilechecksum`&EditWhatNew=LifeStyle&ownview=1&CMGFRMMMMJS=1" style="color:#0262a6; text-decoration:underline;">Adding details about your lifestyle will bring <b>~$PHYSICAL_PERCENT_LEFT`% </b></a></div></td>
+        </tr>
+          <tr><td height="10"></td></tr>
+                                ~/if`
+                                ~if $PERCENT_ARR_MYJS[7] eq "Y" and $loop_percent lt 3`
+				~assign var="loop_percent" value=$loop_percent+1`
+          <tr>
+            <td><div style="font-family:Verdana, Arial; font-size:11px;"> &nbsp; &nbsp; <img src="~$SITE_URL`/profile/images/bullet.gif" width="4" height="8" align="absmiddle" /> &nbsp; <a href="~$SITE_URL`/P/viewprofile.php?echecksum=~$CHECKSUM`&checksum=~$myprofilechecksum`&EditWhatNew=AstroData&ownview=1&CMGFRMMMMJS=1" style="color:#0262a6; text-decoration:underline;">Adding your Horoscope will bring <b>~$HOROSCOPE_PERCENT_LEFT`% </b></a></div></td></tr>
+          <tr><td height="10"></td></tr>
+                                ~/if`
+                                ~if $PERCENT_ARR_MYJS[8] eq "Y" and $loop_percent lt 3`
+				~assign var="loop_percent" value=$loop_percent+1`
+            <td><div style="font-family:Verdana, Arial; font-size:11px;"> &nbsp; &nbsp; <img src="~$SITE_URL`/profile/images/bullet.gif" width="4" height="8" align="absmiddle" /> &nbsp; <a href="~$SITE_URL`/P/viewprofile.php?echecksum=~$CHECKSUM`&checksum=~$myprofilechecksum`&EditWhatNew=incompletProfile&ownview=1&CMGFRMMMMJS=1" style="color:#0262a6; text-decoration:underline;">Writing about your family will bring <b>~$FAMILYINFO_PERCENT_LEFT`% </b></a></div></td></tr>
+          <tr><td height="10"></td></tr>
+                                ~/if`
+                                ~if $PERCENT_ARR_MYJS[9] eq "Y" and $loop_percent lt 3`
+				~assign var="loop_percent" value=$loop_percent+1`
+            <td><div style="font-family:Verdana, Arial; font-size:11px;"> &nbsp; &nbsp; <img src="~$SITE_URL`/profile/images/bullet.gif" width="4" height="8" align="absmiddle" /> &nbsp; <a href="~$SITE_URL`/P/viewprofile.php?echecksum=~$CHECKSUM`&checksum=~$myprofilechecksum`&EditWhatNew=ContactDetails&ownview=1&CMGFRMMMMJS=1" style="color:#0262a6; text-decoration:underline;">Adding an additional contact number will bring <b>~$CONTACT_PERCENT_LEFT`%</b></a></div></td></tr>
+          <tr><td height="10"></td></tr>
+                                ~/if`
+                                ~if $PERCENT_ARR_MYJS[10] eq "Y"  and $loop_percent lt 3`
+				~assign var="loop_percent" value=$loop_percent+1`
+            <td><div style="font-family:Verdana, Arial; font-size:11px;"> &nbsp; &nbsp; <img src="~$SITE_URL`/profile/images/bullet.gif" width="4" height="8" align="absmiddle" /> &nbsp; <a href="~$SITE_URL`/P/viewprofile.php?echecksum=~$CHECKSUM`&checksum=~$myprofilechecksum`&EditWhatNew=RelEthnic&ownview=1&CMGFRMMMMJS=1" style="color:#0262a6; text-decoration:underline;">Adding details about your religion and ethnicity will bring <b>~$MANGLIK_PERCENT_LEFT`%</b></a></div></td></tr>
+          <tr><td height="10"></td></tr>
+                                ~/if`
+                                ~if $PERCENT_ARR_MYJS[11] eq "Y"  and $loop_percent lt 3`
+				~assign var="loop_percent" value=$loop_percent+1`
+            <td><div style="font-family:Verdana, Arial; font-size:11px;"> &nbsp; &nbsp; <img src="~$SITE_URL`/profile/images/bullet.gif" width="4" height="8" align="absmiddle" /> &nbsp; <a  href="~$SITE_URL`/P/viewprofile.php?echecksum=~$CHECKSUM`&checksum=~$myprofilechecksum`&EditWhatNew=Interests&ownview=1&CMGFRMMMMJS=1" style="color:#0262a6; text-decoration:underline;">Adding details about languages you speak will bring <b>~$SPOKEN_LANG_PERCENT_LEFT`% </b></a></div></td></tr>
+          <tr><td height="10"></td></tr>
+                                ~/if`
+                                ~if $PHOTO_PERCENT eq 'Y' and $loop_percent lt 3`
+				~assign var="loop_percent" value=$loop_percent+1`
+            <td><div style="font-family:Verdana, Arial; font-size:11px;"> &nbsp; &nbsp; <img src="~$SITE_URL`/profile/images/bullet.gif" width="4" height="8" align="absmiddle" /> &nbsp; <a href="~$SITE_URL`/P/viewprofile.php?echecksum=~$CHECKSUM`&checksum=~$myprofilechecksum`&EditWhatNew=FocusPhoto&ownview=1&CMGFRMMMMJS=1" style="color:#0262a6; text-decoration:underline;">Making photo visible to all will bring <b>~$TOT_PHOTO_PERCENT_LEFT`% </b></a></div></td></tr>
+          <tr><td height="10"></td></tr>
+                                ~/if`
+                                ~if $YOUR_INFO eq 'Y' and $loop_percent lt 3`
+				~assign var="loop_percent" value=$loop_percent+1`
+            <td><div style="font-family:Verdana, Arial; font-size:11px;"> &nbsp; &nbsp; <img src="~$SITE_URL`/profile/images/bullet.gif" width="4" height="8" align="absmiddle" /> &nbsp; <a href="~$SITE_URL`/P/viewprofile.php?echecksum=~$CHECKSUM`&checksum=~$myprofilechecksum`&EditWhatNew=incompletProfile&ownview=1&CMGFRMMMMJS=1" style="color:#0262a6; text-decoration:underline;">Writing more about yourself will bring <b>~$YOUR_INFO_PERCENT_LEFT`%</b></a></div></td></tr>
+          <tr><td height="10"></td></tr>
+                                ~/if`
+                                ~if $FAMILY_INFO eq 'Y' and $loop_percent lt 3`
+            <td><div style="font-family:Verdana, Arial; font-size:11px;"> &nbsp; &nbsp; <img src="~$SITE_URL`/profile/images/bullet.gif" width="4" height="8" align="absmiddle" /> &nbsp; <a href="~$SITE_URL`/P/viewprofile.php?echecksum=~$CHECKSUM`&checksum=~$myprofilechecksum`&EditWhatNew=incompletProfile&ownview=1&CMGFRMMMMJS=1" style="color:#0262a6; text-decoration:underline;">Writing more about your family will bring <b>~$FAMILYINFO_PERCENT_LEFT`% </b></a></div></td></tr>
+          <tr><td height="10"></td></tr>
+                                ~/if`
+          
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="left" valign="top" style="padding:0px 0px 32px 22px;"><table width="281" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="281" height="52" align="center" valign="middle" background="~$SITE_URL`/profile/images/button_bg.gif" bgcolor="#84AD05"><div style="font-family:Arial, Helvetica; font-size:18px; color:#ffffff;"><b><a href="~$SITE_URL`/P/viewprofile.php?echecksum=~$CHECKSUM`&checksum=~$PROFILE_CHECKSUM`&ownview=1&CMGFRMMMMJS=1" style="color:#ffffff; text-decoration:none; display:block;">Complete your profile now</a></b></div></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="left" valign="top" style="padding:0px 0px 5px 30px;"><div style="font-family:Verdana, Arial; font-size:12px; color:#565656;"><b>In case of a query :</b></div></td>
+  </tr>
+  <tr>
+    <td height="80" colspan="2" align="left" valign="top" background="~$SITE_URL`/profile/images/footer_bg.gif" style="padding:8px 0px 0px 37px;"><div style="font-family:Verdana, Arial; font-size:11px; color:#3d3d3d; line-height:21px;">Please reach us at : B-8, Sector - 132, Noida - 201301<br />
+      Phone no : 0120 - 4393500, 0120 - 6000629<br />
+      E-mail id : <a href="mailto:feedback@jeevansathi.com" style="color:#0478e5; text-decoration:underline;"><strong>feedback@jeevansathi.com</strong></a></div></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="left" valign="top" style="padding:22px 0px 22px 28px;"><div style="font-family:Verdana, Arial; font-size:12px; color:#000000; line-height:22px;">Wish you good luck in your search for Jeevansathi.<br />
+            <br />
+            <b>Regards,<br />
+            <font color="#c4151c">Jeevansathi</font>.com Team</b> </div></td>
+  </tr>
+</table>
+<table width="600" border="0" align="center" cellpadding="0" 
+cellspacing="0">
+
+  <tr>
+
+    <td style="padding:15px 0px 0px 0px; font-family:Verdana, Arial; 
+font-size:10px; color:999999;"><div align="center" 
+style="font-size:10px; color:999999; font-family:Verdana, Arial;">You
+are receiving this mail as a registered member of Jeevansathi.com. In
+case you do not wish to receive mails from Jeevansathi.com in the
+future, you can <a 
+href="~$SITE_URL`/profile/unsubscribe.php">unsubscribe</a></div></td>
+
+  </tr>
+
+</table>
+
+</body>
+</html>

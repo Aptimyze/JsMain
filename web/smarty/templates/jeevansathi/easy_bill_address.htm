@@ -1,0 +1,91 @@
+<html>
+<head>
+	<link rel="stylesheet" href="/profile/css/~$comm_style_css`" type="text/css">
+	<style type="text/css">
+		.loc{width:370px;border:3px solid #CBCABF;}
+		.lok{background-color:#CBCABF; width:100%; padding:1px}
+		.ci{float:left;width:100px; padding:4px}
+		.bi{float:left;width:240px}
+	</style>
+	<script language="javascript">
+<!--
+	function PopLocality(sel_locality)
+	{
+		docF = document.form1;
+		var city = docF.city.value;
+		var city_trim = city.split("|X|");
+		var locality_all = city_trim[1].split("|#|");
+		docF.locality.options.length = 0;
+		for(var k=0; k<locality_all.length; k++)
+		{
+			var opt = new Option();
+			opt.text = locality_all[k];
+			opt.value = locality_all[k];
+			docF.locality.options[k] = opt;
+
+			if(opt.text==sel_locality)
+				docF.locality.options[k].selected = true;
+		}
+	}
+//-->
+	</script>
+</head>
+<body onLoad="PopLocality('~$locality`');">
+<form name="form1" action="easy_bill_address.php" method="post">
+<input type="hidden" name="checksum" value="~$checksum`">
+<input type="hidden" name="CRM" value="~$CRM`">
+<div class="loc bele">
+	<div class="lftflow0 lok">
+		<b>Locate the nearest easybill outlet</b>
+	</div>
+	<div class="spacer">&nbsp;</div>
+	<div class="ci">
+		City
+	</div>
+	<div class="bi">
+		<select name="city" class="textbox" onChange="PopLocality();">
+			~section name=next loop=$city_label`
+				<option value="~$locality_arr[next]`" ~if $city eq $city_label[next]` selected ~/if`>~$city_label[next]`</option>
+			~/section`
+		</select>
+	</div>
+	<div class="spacer">&nbsp;</div>
+	<div class="ci">
+		Outlet Locality
+	</div>
+	<div style="float:left;width:54%">
+		<select name="locality" class="textbox">
+			<option value="">Select City First</option>
+		</select>
+	</div>
+	<div class="spacer">&nbsp;</div>
+	<div class="pad4">
+		<input type="submit" name="Submit" value="Locate nearest outlet" class="buttonor" style="width:190px">
+	</div>
+	<div class="spacer">&nbsp;</div>
+</div>
+</form>
+<div class="spacer">&nbsp;</div>
+<div style="width:370px" class="bele lftflow">
+	~section name=next loop=$details`
+		~if $smarty.section.next.index eq 0`
+		<div style="background-color:#EEEDED; padding:4px" class="greyele">
+			<strong>
+				Easy Bill Centers at : <br>
+				~$details[next].LOCALITY`, ~$details[next].CITY_LABEL` 
+			</strong>
+		</div>
+		~/if`
+		 <!--for loop-->
+		<div class="pad4" style="margin:5px 0 5px 0">
+			<strong>~$details[next].SHOP_NAME`</strong><br>
+			~$details[next].ADDRESS` <br>
+			~$details[next].LOCALITY`, ~$details[next].CITY_LABEL`
+		</div>
+		<div class="spacer1" style="background-color:#CCCCCC ">&nbsp;</div>
+		<!--for loop-->
+	~/section`
+	<div class="spacer1" style="background-color:#CCCCCC ">&nbsp;</div>
+</div>
+</body>
+</html>

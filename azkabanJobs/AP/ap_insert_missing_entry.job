@@ -1,0 +1,2 @@
+type=command
+command=${php5} ${docRoot}/crontabs/ap_submit_online_dpp.php insertMissing

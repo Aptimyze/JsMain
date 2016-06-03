@@ -1,0 +1,157 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>Alternate Way</title>
+	<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+	<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+</head>
+~include file="head.htm"`
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table width=100% cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+<tr width=100% class="formhead">
+	<td width=20% class="formhead" border=1><font><b>Welcome : ~$user`</b></font></td>
+	<td width="25%" class="formhead" align="center"><a href="mainpage.php?cid=~$cid`">Click here to go to main page</a></td>
+	<td width="25%" class="formhead" align="center"><a href="add_edit_fields.php?cid=~$cid`">Add profiles to edit</a></td>
+	<!--td width=10% class="formhead" border=1 align='CENTER'>
+	~if $val eq 'new'`
+		<a href="admin_new.php?cid=~$cid`&name=~$name`">Alternate New</a>
+	~elseif $val eq 'edit'`
+		<a href="admin_edit.php?cid=~$cid`&name=~$name`">Alternate Edit</a>
+	~/if`
+	</td-->
+	<td width=10% class="formhead" border=1 align='CENTER'>
+	~if $val eq 'edit'`
+		<a href="view_profile_count.php?name=~$name`&cid=~$cid`&val=new">New profiles</a>
+	~elseif $val eq 'new'`
+		<a href="view_profile_count.php?name=~$name`&cid=~$cid`&val=edit">Edited profiles</a>
+	~/if`
+	</td>
+	<td width=10% class="formhead" align='CENTER'><a href="logout.php?cid=~$cid`">Logout</a>
+	</td>
+</tr>
+</table>
+
+
+<form name="master" action="master_edit.php" method="post">
+<table width="80%" border="0" cellspacing="1" cellpadding="4" align="center">
+<tbody>
+<tr>
+	<td class="formnew" valign="middle" colspan="4"><div align="left">&#8250; Master Edit</div></td>
+</tr>
+</tbody></table>
+<table width="80%" border="0" cellspacing="1" cellpadding="4" align="center">
+<tbody><tr>
+	<td width="3%" align="center" valign="middle" class="label"></td>
+	<td width="25%" valign="middle" class="label">
+	<div align="left">
+	~if $INVALID eq "Y" or $CHECK_USER eq "Y"`
+	<font color="red">Username <br>
+		~if $INVALID eq "Y"`
+			(Username is invalid)
+	        ~/if`
+	</font>
+	~else`
+		Username
+	~/if`
+	</div></td>
+	<td width="25%" align="left" valign="middle" class="label">
+		<input name="username" type="text" class="textboxes1" id="Namel" size="18" maxlength="40"value="~$username`"></td>
+	<td align="left" valign="middle" class="label">
+		<input name="Medit" type="submit" class="textboxes1" id="Medit " value="Submit">
+		~if $DELETE eq "Y"`
+		<font color="red">&nbsp;&nbsp;&nbsp;&nbsp; This user has been deleted </font> 
+		~elseif $NOT_SCREENED eq "Y"` 
+		<font color="red">&nbsp;&nbsp;&nbsp;&nbsp;This user is undergoing screening...
+		~elseif $SCREENED eq "Y"` 
+		<font color="red">&nbsp;&nbsp;&nbsp;&nbsp;This user is already screened.
+		~elseif $INCOMPLETE eq "Y"` 
+		<font color="red">&nbsp;&nbsp;&nbsp;&nbsp;This user's profile is incomplete.
+		~/if`
+	</td>
+</tr></tbody>
+</table>
+<input type="hidden" name="cid" value="~$cid`">
+<input type="hidden" name="user" value="~$user`">
+<input type="hidden" name="val" value="~$val`">
+<input type="hidden" name="totalnew" value="~$totalnew`">
+<input type="hidden" name="totalqueue" value="~$totalqueue`">
+<input type="hidden" name="flag" value="~$flag`">
+~section name=i loop=$s_user`
+	<input type="hidden" name="s_user[]" value="~$s_user[i]`">
+	<input type="hidden" name="sno[]" value="~$sno[i]`">
+~/section`
+</form>
+
+<table width=100% align="CENTER" >
+<tr>
+	<td height="23" class="formhead" align="center">
+	<h2 align="center">
+	~if $val eq 'new'`
+		New 
+	~elseif $val eq 'edit'`
+		Edit 
+	~/if` 
+		Profiles</h2>
+	</td>
+</tr>
+</table>
+<table width=100% border=0>
+<tr>
+	<td>
+	<table border=0 align="center" width=80%>
+	<tr>
+		<td class="label" align="center">
+			Total Unassigned 
+		~if $val eq 'new'`
+			New 
+		~elseif $val eq 'edit'`
+			Edit 
+		~/if` 
+		Profiles 
+		</td>
+		<td class="fieldsnew"align="center">
+		~if $totalnew eq 0`
+			~$totalnew`
+		~elseif $val eq 'new'`<a href="../mis/unassigned_zone.php?cid=~$cid`&val=new">~$totalnew`</a>
+		~elseif $val eq 'edit'`<a href="../mis/unassigned_zone.php?cid=~$cid`&val=edit">~$totalnew`</a>
+		~/if`
+		</td>
+	</tr>
+	<tr>
+		<td class="label" align="center">
+			Profiles Skipped (New+Edit) : 
+		</td>
+		<td class="fieldsnew" align="center">
+		~if $totalqueue neq '0'`
+			<a href="view_skipped_profiles.php?name=~$name`&cid=~$cid`&val=~$val`">~$totalqueue`</a>
+		~else`
+			~$totalqueue` 
+		~/if`
+		</td>
+	</tr>
+	</table>
+	</td>
+	<td>
+	<table border=0 align=center width=80%>
+	<tr class="label" align="center">
+		<td>Operator's Name</td>
+		<td align="center" class="label">Profiles screened today</td>
+	</tr>
+		<!--tr><td align="center" class="label">(New+Edit)</td>
+		</tr-->
+		 
+	~section name="uname" loop=$s_user`
+	<tr>
+		<td align="center" class="label">~$s_user[uname]`</td>
+		<td align="center" class="fieldsnew">~$sno[uname]`</td>
+	</tr>
+	~/section`
+	</tr>
+        </table>
+        </td>
+</tr>
+</table>
+~include file="foot.htm"`
+</body>
+</html>

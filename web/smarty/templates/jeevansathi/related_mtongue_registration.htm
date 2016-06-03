@@ -1,0 +1,69 @@
+<!--link rel="stylesheet" href="/P/I/styles.php" type="text/css">
+<link rel="stylesheet" href="/P/IN/styles.php" type="text/css"-->
+<script language="javascript">
+<!--
+function selectMtongue()
+{
+	var docF1=document.form1;
+
+	for(var i=0;i<docF1.elements.length;i++)
+	{
+		//if(docF1.elements[i].name=="RELATED_MTONGUE[]")
+		if(docF1.elements[i].id=="mtongue")
+			docF1.elements[i].checked=true;
+		if(docF1.elements[i].id=="mtongue_doesnt_matter")
+                        docF1.elements[i].disabled=true;
+	}
+}
+
+function clearMtongue()
+{
+        var docF1=document.form1;
+        for(var i=0;i<docF1.elements.length;i++)
+        {
+                if(docF1.elements[i].id=="mtongue")
+                        docF1.elements[i].checked=false;
+		if(docF1.elements[i].id=="mtongue_doesnt_matter")
+                        docF1.elements[i].disabled=false;
+        }
+}
+//-->
+</script>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0" class="mediumblack">
+~section name=NEWMTONGUE loop=$RELATED_MTONGUE`
+
+	~if $smarty.section.NEWMTONGUE.index eq 0`
+ 		<tr>
+	~/if`
+	~if $RELATED_MTONGUE[NEWMTONGUE].LABEL neq ''`
+	<td ><input name="RELATED_MTONGUE[]" id="mtongue" type="checkbox" value="~$RELATED_MTONGUE[NEWMTONGUE].VALUE`" ~section name=COMMUNITY_SEL loop=$community_sel` ~if $community_sel[COMMUNITY_SEL] eq $RELATED_MTONGUE[NEWMTONGUE].VALUE` checked ~/if`~/section`></td>
+	<td width="34%">~$RELATED_MTONGUE[NEWMTONGUE].LABEL`</td>
+	~else`
+	<td >&nbsp;</td>
+	<td width="34%">&nbsp;</td>
+	~/if`
+	
+	~if $smarty.section.NEWMTONGUE.index % 3 eq 2 or $smarty.section.NEWMTONGUE.last`
+ 		</tr>
+	~/if`
+
+~/section`
+<tr>         
+	<td><input name="RELATED_MTONGUE[]" id="mtongue_doesnt_matter" type="checkbox" value="All" ~section name=NEWMTONGUE loop=$RELATED_MTONGUE` ~section name=COMMUNITY_SEL loop=$community_sel` ~if $community_sel[COMMUNITY_SEL] eq 'All'` checked ~/if`~/section`~/section`></td>
+        <td width="34%">Doesn't Matter</td>
+        <td colspan="4">&nbsp;</td>
+</tr>
+ 
+ <tr>
+  <td colspan="6">   
+	<table width="100%"  border="0" cellspacing="0" cellpadding="2" class="bigblack">
+    	<tr>
+     	<td width="15%"><span class="bluelinku"><a href="" onclick="selectMtongue();return false;">Select All</a></span></td>
+     	<td width="5%">&nbsp;</td>
+     	<td width="15%"><span class="bluelinku"><a href="" onclick="clearMtongue();return false;">Clear All </a></span></td>
+     	<td width="65%">&nbsp;</td>
+    	</tr>
+   	</table>
+  </td>
+ </tr>
+</table>

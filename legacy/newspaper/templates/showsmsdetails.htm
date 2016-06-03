@@ -1,0 +1,69 @@
+<html>
+ <head>
+  <SCRIPT language="JavaScript">
+   <!--
+   function MM_openBrWindow(obj,theURL,winName,features)
+   {
+        window.open(theURL,winName,features);
+	obj.style.color='#008800';
+
+                                                                                                                             
+   }
+   //-->
+  </SCRIPT>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>JeevanSathi.com - Promotion through SMS</title>
+  <link rel="stylesheet" href="jeevansathi.css" type="text/css">
+  <link rel="stylesheet" href="styles.css" type="text/css">
+ </head>
+ <body>
+   <table border="0" cellspacing="2" cellpadding="2" align=center width=80%>
+    <tr> <td colspan=100% class=formhead align=center><a href="mainpage.php?cid=~$cid`"&name=~$name`>Main Page</a> </td></tr>
+   </table>
+   <br>
+   <table border="0" cellspacing="2" cellpadding="2" align=center width=50%>
+
+     <tr align="CENTER">
+        <td class="formhead" colspan="7" height="23">
+          <b>
+	  <font color="red">Page ~$CURRENTPAGE` of ~$NO_OF_PAGES`</font>
+          </b>
+        </td>
+    </tr>
+
+   <tr class=label align=center>
+	<td>SNO.</td>
+	<td>MOBILE NUMBER</td>
+	<td>ENTER EMAIL/ADDRESS DETAILS</td>
+
+   </tr>
+	~section  name=show  loop=$details`
+		<tr align=center class=fieldsnew>   
+			<td>~$details[show].SNO`</td>
+			<td>~$details[show].MOBILENO`</td>	
+			<td height="21" width="10%"><a href="#" color="D80101" onclick="MM_openBrWindow(this,'newsppr_promotion.php?mode=S&cid=~$cid`&mobileno=~$details[show].MOBILENO`','','width=750,height=550,screenX=150,screenY=100')">Enter details</a></td>
+	
+		</tr>
+	~/section`
+
+   <tr bgcolor="#fbfbfb">
+     <td colspan="7" height="21"> </td>
+   </tr>
+   <tr>
+    <td colspan="7" height="21">
+     &nbsp;
+    </td>
+   </tr>
+  </table>
+<center>
+<table>
+   <tr bgcolor="#fbfbfb" align=center>
+    <td colspan="7" height="21">
+    ~$PAGELINK`
+    </td>
+   </tr>
+</table>
+</center>
+</body>
+</html>

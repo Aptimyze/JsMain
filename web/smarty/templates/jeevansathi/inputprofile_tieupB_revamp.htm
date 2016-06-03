@@ -1,0 +1,495 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>JeevanSathi Matrimonials - Form for Input of Matrimonial Data</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<link rel="stylesheet" href="/profile/css/~$comm_style_css`" type="text/css">
+	<link rel="stylesheet" href="/profile/css/~$registerstyle_css`" type="text/css">
+	<style type="text/css">
+		select { font-family: verdana, Arial, Helvetica, sans-serif;font-size: 11px;color:#000;}
+		optgroup {font-family: verdana, Arial, Helvetica, sans-serif;font-size: 11px;font-style:normal;}
+	</style>
+<script>var gender_type="~$TYPE_GEN`";</script>	<script language="JavaScript" SRC="/profile/~$profile_js`"></script>
+	<script language="JavaScript">
+<!--
+		function changeCount()
+		{
+			var docF=document.form1;
+			var str=new String();
+			str=trim(docF.Information.value);
+			str=trim_newline(str);
+			docF.wordcount.value=str.length;
+		}
+		function trim_newline(string)
+		{
+			return string.replace(/^\s*|\s*$/g, "");
+		}
+		function validate_radio(arr)
+                {
+                        var sel='N';
+                        for(var i=0; i<arr.length; i++)
+                        {
+                                if(arr[i].checked==true)
+                                        sel='Y';
+                        }
+                        if(sel=='Y')
+                                return true;
+                        else
+                                return false;
+                }
+		function validate()
+		{
+			if(document.getElementById)
+			{
+				document.getElementById('relationship_span').style.color="#666666";
+				document.getElementById('gender_span').style.color="#666666";
+				//document.getElementById('mtongue_span').style.color="#666666";
+				document.getElementById('date_span').style.color="#666666";
+				document.getElementById('edu_span').style.color="#666666";
+				document.getElementById('occ_span').style.color="#666666";
+				document.getElementById('info_span').style.color="#666666";
+				document.getElementById('subcaste_span').style.color="#666666";
+				document.getElementById('gothra_span').style.color="#666666";
+			}
+			var docF=document.form1;
+			if(!validate_radio(document.form1['Gender']))
+                        {
+                                alert("Please specify Your Gender");
+                                if(document.getElementById)
+                                        document.getElementById('gender_span').style.color="red";
+                                document.form1['Gender'][0].focus();
+                                return false;
+                        }
+			if(docF.Day.value=="" || docF.Month.value=="" || docF.Year.value=="")
+			{
+				alert("Please specify Date of birth properly");
+				if(document.getElementById)
+					document.getElementById('date_span').style.color="red";
+				if(docF.Day.value=="")
+					docF.Day.focus();
+				else if(docF.Month.value=="")
+					docF.Month.focus();
+				else if(docF.Year.value=="")
+					docF.Year.focus();
+				return false;
+			}
+			if(!validate_date(docF.Day.value,docF.Month.value,docF.Year.value))
+			{
+				alert(docF.Day.value + "/" + docF.Month.value + "/" + docF.Year.value + " is not a valid date");
+				if(document.getElementById)
+					document.getElementById('date_span').style.color="red";
+				docF.Day.focus();
+				return false;
+			}
+			if(docF.Education_Level.value=="")
+			{
+				alert("Please specify Highest Degree");
+				if(document.getElementById)
+					document.getElementById('edu_span').style.color="red";
+				docF.Education_Level.focus();
+				return false;
+			}
+			if(docF.Occupation.value=="")
+			{
+				alert("Please specify Occupation/Profession");
+				if(document.getElementById)
+					document.getElementById('occ_span').style.color="red";
+				docF.Occupation.focus();
+				return false;
+			}
+			var valid_chars = /^[a-zA-Z ]+$/;
+			if(docF.Subcaste.value.length != 0 && (trim(docF.Subcaste.value)=='' || !docF.Subcaste.value.match(valid_chars)))
+			{
+				alert('Please specify valid Subcaste');
+				if(document.getElementById)
+					document.getElementById('subcaste_span').style.color="red";
+				docF.Subcaste.focus();
+				return false;
+			}
+			if(docF.Gothra.value.length != 0 && (trim(docF.Gothra.value)=='' || !docF.Gothra.value.match(valid_chars)))
+			{
+				alert('Please specify valid Gothra');
+				docF.Gothra.focus();
+				if(document.getElementById)
+					document.getElementById('gothra_span').style.color="red";
+				return false;
+			}
+			if(trim(docF.Information.value)=="" || trim_newline(docF.Information.value)=="")
+			{
+				alert("Please specify Your Summary Profile");
+				if(document.getElementById)
+					document.getElementById('info_span').style.color="red";
+				docF.Information.focus();
+				return false;
+			}
+			var iStr=docF.Information.value;
+			var after_newline_trim = trim_newline(iStr);
+			if(iStr.length < 100 || after_newline_trim.length < 100)
+			{
+				alert("Your Summary Profile should contain a minimum of 100 characters");
+				if(document.getElementById)
+					document.getElementById('info_span').style.color="red";
+				docF.Information.focus();
+				return false;
+			}
+			if(!validate_radio(document.form1['Relationship']))
+			{
+				alert("Please specify the relation with the person whose profile is being put");
+				if(document.getElementById)
+					document.getElementById('relationship_span').style.color="red";
+				document.form1['Relationship'][0].focus();
+				return false;
+			}
+			return true;
+		}
+//-->
+	</script>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body>
+<DIV id="dhtmltooltip" class="ttip"></DIV>
+<SCRIPT language=JavaScript1.2 src="~$IMG_URL`/profile/js/~$tooltip_new_js`" type=text/javascript></SCRIPT>
+<div id="container">
+	<!--HEADER STARTS-->
+	~$SMALL_HEAD`
+	<div id="tabrow" ><img src="~$IMG_URL`/profile/ser4_images/toplinks_bg.gif"></div>
+	<div id="tabrowy">&nbsp;</div>
+	<!--WRAPPER STARTS HERE-->
+	<div id="wrapper">
+		<div style="padding:10px 10px 0px 10px;">
+			<div style="font:bold 18px verdana, Arial; color:#F09329">
+				You are just one step away from entering Jeevansathi.com
+			</div>
+			~if $NO_OF_ERROR`
+				<div class="spacer15">&nbsp;</div>
+				<div style="font:normal 11px Verdana; color:#FF0000; background-color:#FFFBB8; width:99%;height:25px">
+					&nbsp;
+					<img src="~$IMG_URL`/profile/ser4_images/error_1.gif" width="21" height="21" align="absmiddle">
+					&nbsp;There are ~$NO_OF_ERROR` Error(s) in your form. They are marked in red. Please correct them and submit the form again
+				</div>
+			~/if`
+			<!--FORM STARTS-->
+			<form action="/profile/inputprofile_tieupB.php" method="post" name="form1" onsubmit="return validate();" style="margin:0px; padding:0px">
+			<input type="hidden" name="new_r_page" value="~$new_r_page`">
+			<input type="hidden" name="hit_source" value="~$HITSOURCE`">
+			<input type="hidden" name="check_subcaste1" value="~$check_subcaste1`">
+			<input type="hidden" name="tieup_source" value="~$TIEUPSOURCE`">
+			<input type="hidden" name="frommarriagebureau" value="~$frommarriagebureau`">
+			<input type="hidden" name="maritalstatus" value="~$maritalstatus`">
+			<input type="hidden" name="checksum" value="~$CHECKSUM`">
+			<input type="hidden" name="id" value="~$ID_AFF`">
+			<div style="width:100%;  margin-top:10px">
+				<div style="margin:5px 0px 6px 0px; font:normal 14px verdana,arial; color:#A8A953">
+				</div>
+				<div style="margin-top:0px; border:1px solid #DDDDDC; width:99%">
+					<div class="row1">
+						<div class="r1" >User Id:</div>
+						<div class="r2">
+							~$username`
+							<input type="hidden" name="username" value="~$username`">
+							<input type="hidden" name="Password1" value="~$Password1`">
+							<span style="color:#B4BD62; font-size:10px">
+								You can customize user id once the registration is complete.
+							</span>
+						</div>
+					</div>
+					<div class="row1">
+						<div class="r1">
+							<span id="gender_span">
+								~if $check_gender eq "Y"`
+									<font color= "red">Gender:</font>
+								~else`
+									Gender:
+								~/if`
+							</span>
+						</div>
+						<div class="r2">
+							<input type="radio" name="Gender" value="M" ~if $gender eq 'M'` checked ~/if` tabindex="1" onchange="javascript:changegender('him')">Male&nbsp;
+							<input type="radio" name="Gender" value="F" ~if $gender eq 'F'` checked ~/if` tabindex="2"  onchange="javascript:changegender('her')" >Female&nbsp;
+						</div>
+					</div>
+					<div class="row1">
+						<div class="r1" >
+							<span id="date_span">
+								~if $check_date eq "1" or $DATEOFBIRTH_LESS eq "1"`
+									<font color= "red">Date of Birth:</font>
+								~else`
+									Date of Birth:
+								~/if`
+							</span>
+						</div>
+						<div class="r2">
+							<select name="Day" class="textbox" size="1" tabindex="3">
+								<option selected value="">Day</option>
+								~section name=next loop=$ddarr`
+									<option value="~$ddarr[next]`" ~if $day eq $ddarr[next]` selected ~/if`>~$ddarr[next]`</option>
+								~/section`
+							</select>
+							<select name="Month" class="textbox" size="1" tabindex="4">
+								<option selected value="">Month</option>
+								~section name=next loop=$mmarr`
+									<option value="~$mmarr[next].VALUE`" ~if $month eq $mmarr[next].VALUE` selected ~/if`>~$mmarr[next].LABEL`</option>
+								~/section`
+							</select>
+							<select name="Year" class="textbox" size="1" tabindex="5">
+								<option selected value="">Year</option>
+								~section name=next loop=$yyarr`
+									<option value="~$yyarr[next]`" ~if $year eq $yyarr[next]` selected ~/if`>~$yyarr[next]`</option>
+								~/section`
+							</select>
+							<span style="color:#B4BD62; font-size:10px">
+								This cannot be modified after registration
+							</span>
+							~if $DATEOFBIRTH_LESS eq "1"`<BR><font color="red">
+								~if $gender eq "M"`
+									Male profiles less than 21 years of age cannot be registered
+								~elseif $gender eq "F"`
+									Female profiles less than 18 years of age cannot be registered
+								~/if`
+							</font>~/if`
+						</div>
+					</div>
+					<div class="row1">
+						<div class="r1" >Your Name:</div>
+							<div class="r2">
+								<div style="float:left ">
+									<input type="text" name="name_of_user" value="~$name_of_user`" style="width:150px" tabindex="8">
+								</div>
+								<div style="float:left; margin-left:5px; width:50%">
+								<span style="color:#B4BD62; font-size:10px">
+									Your name is for internal use only, it will not be disclosed to other members of jeevansathi.com
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="spacer1">&nbsp;</div>
+				</div>
+			</div>
+			<div style="width:100%; margin-top:10px">
+				<!--div class="lftflow0 o16">Category 2 </div-->
+				<div class="spacer15">&nbsp;</div>
+				<div class="rightflow greyele">
+					<span style="color:#EF942B ">* </span>Compulsory Fields
+				</div>
+				<div style="float:left; width:80% margin-top:15px; font:normal 14px verdana,arial; color:#5A5B20">
+					Provide some additional information to complete the registration process
+				</div>
+				<div class="spacer">&nbsp;</div>
+				<div class="spacer1 spo">&nbsp;</div>
+				<div class="row">
+					<div class="r1">
+						<span id="edu_span">
+							~if $once eq 'T'`
+								<span style="color:#EF942B ">* </span>Highest Degree:
+							~elseif $check_education_level eq "Y"`
+								<font color="red"><span style="color:#EF942B ">* </span>Highest Degree:</font>
+							~else`
+								<span style="color:#EF942B ">* </span>Highest Degree:
+							~/if`
+						</span>
+					</div>
+					<div class="r2">
+						<select name="Education_Level" size="1" class="textbox" tabindex="6">
+							<option value="" selected>[Select Highest Degree]</option>
+							~$education_level`
+						</select>
+					</div>
+				</div>
+				<div class="spacer1">&nbsp;</div>
+				<div class="row">
+					<div class="r1">
+						<span id="occ_span">
+							~if $once eq 'T'`
+								<span style="color:#EF942B ">* </span>Profession:
+							~elseif $check_occupation eq "Y"`
+								<font color="red"><span style="color:#EF942B ">* </span>Profession</font>
+							~else`
+								<span style="color:#EF942B ">* </span>Profession:
+							~/if`
+						</span>
+					</div>
+					<div class="r2">
+						<select name="Occupation" size="1" class="textbox" tabindex="7">
+							<option value="" selected>[Select your Profession]</option>
+							~$occupation`
+						</select>
+					</div>
+				</div>
+				<div class="spacer1">&nbsp;</div>
+				<div class="row">
+					<div class="r1">
+						<span id = "subcaste_span">
+							~if $check_subcaste eq "Y"`
+								<font color= "red">Subcaste</font>
+							~else`
+								Sub Caste, Surname (Optional):
+							~/if`
+						</span>
+					</div>
+					<div class="r2">
+						<input type="text" name="Subcaste" value="~$subcaste`" style="width:150px" tabindex="8">
+					</div>
+				</div>
+				<div class="spacer1">&nbsp;</div>
+				<div class="row">
+					<div class="r1" >
+						<span id = "gothra_span">
+							Gothra (Optional):
+						</span>
+					</div>
+					<div class="r2">
+						<input type="text" name="Gothra"  value="~$gothra`" style="width:150px" tabindex="9">
+						&nbsp;&nbsp;&nbsp;
+						<a tabindex="-1" href="#" onMouseover="ddrivetip('The gothra system is part of a system of classification or identification of various families. Sagothra i.e same gothra marriages are banned under some traditional matrimonial system.','#FDFBE6','200')"; onMouseout="hideddrivetip()"\><span style="text-decoration:none; color:#B4BD62;">What is this?&nbsp;</span><img src="~$IMG_URL`/profile/ser4_images/pd.gif" border="0"></a>
+					</div>
+				</div>
+
+				<div class="spacer1">&nbsp;</div>
+ 				<div class="row">
+                                        <div class="r1">
+                                                <span id="relationship_span">
+                                                        ~if $once eq 'T'`
+                                                                <span style="color:#EF942B ">* </span>Profile Posted by:
+                                                        ~else`
+                                                                <span style="color:#EF942B ">* </span>Profile Posted by:
+                                                        ~/if`
+                                                </span>
+                                        </div>
+                                
+                                        <div class="r2" >
+                                                <input type="radio" onclick="javascript:typecheck(0)" name="Relationship" value="1" ~if $relationship eq '1'` checked ~/if` tabindex="11">Self&nbsp;
+                                                <input type="radio" name="Relationship" value="2"  onclick="javascript:typecheck(1)"   ~if $relationship eq '2'` checked ~/if` tabindex="12">Parents, Guardian&nbsp;
+                                                <input type="radio" name="Relationship" value="3"  onclick="javascript:typecheck(2)"  ~if $relationship eq '3'` checked ~/if` tabindex="13">Sibling&nbsp;
+                                                <input type="radio" name="Relationship" value="4"  onclick="javascript:typecheck(3)"  ~if $relationship eq '4'` checked ~/if` tabindex="14">Friend&nbsp;
+                                                <input type="radio" name="Relationship" value="5"  onclick="javascript:typecheck(4)"  ~if $relationship eq '5'` checked ~/if` tabindex="15">Marriage Bureau&nbsp;
+                                                <input type="radio" name="Relationship" value="6"  onclick="javascript:typecheck(5)"  ~if $relationship eq '6'` checked ~/if` tabindex="16">Others&nbsp;
+                                        </div>
+	</div>
+				<div class="spacer1">&nbsp;</div>
+
+				<div class="row">
+					<div class="r1" >
+						<span id="info_span">
+							~if $once eq 'T'`
+								<span style="color:#EF942B ">* </span><span id="writebywhom">Write About yourself</span>:
+							~elseif $check_information eq "Y"`
+								<font color="red"><span style="color:#EF942B ">* </span><span id="writebywhom">Write About yourself</span>:</font>
+							~else`
+								<span style="color:#EF942B ">* </span><span id="writebywhom">Write About yourself</span>:
+							~/if`
+					</div>
+					<div class="r2">
+						<div class="lftflow0" style="width:310px ">
+							 <div>
+								<textarea name="Information" cols="60" rows="6" style="width:300px" onKeyup="changeCount();" tabindex="10">~$information`</textarea>
+							</div>
+							<div class="spacer1">&nbsp;</div>
+							<div class="lftflow0" style="width:100% ">
+								<div class="rightflow">
+									No. of Characters
+									<input name="wordcount" type="text" value="~$CHARACTERS`" disabled style="border: 1px solid #ffffff; width:30px" tabindex="-1">
+								</div>
+								<div class="lftflow" style="padding-right:10px ">
+									Min 100 Characters
+								</div>
+							</div>
+						</div>
+						<div class="leftflow" style="width:40%; color:#B4BD62;">
+							<img src="~$IMG_URL`/profile/ser4_images/tickbg_1.gif" width="10" height="10">
+								Specify your Personality, Values, Lifestyle<br>
+							<img src="~$IMG_URL`/profile/ser4_images/tickbg_1.gif" width="10" height="10">
+								Your Occupation, Income and Goals <br>
+							
+						</div>
+						<div class="spacer1">&nbsp;</div>
+					</div>
+				</div>
+				<div class="spacer1">&nbsp;</div>
+			</div>
+			<div class="spacer15">&nbsp;</div>
+			~if $frommarriagebureau neq "1"`
+			<!--ROUNDED COR BOX-->
+			<div class="top">
+				<div class="bot">
+					<div class="lft">
+						<div class="rgt">
+							<div class="b_l">
+								<div class="b_r">
+									<div class="t_l">
+										<div class="t_r">
+											<!--Content-->
+											<div class="leftflow greyele" style="width:50%;">
+												<div class="pad2">
+													~if $once eq 'T'`
+														<b>Profile visible to</b>
+													~else`
+														<b>Profile visible to</b>
+													~/if`
+												</div>
+												<div class="spacer">&nbsp;</div>
+												<div>
+													<input type="radio" name="radioprivacy" value="A" ~if $RADIOPRIVACY eq "A" || !$RADIOPRIVACY`checked~/if` tabindex="17"> 
+													All visitors (Recomended)
+												</div>
+												<div>
+													<input type="radio" name="radioprivacy" value="C" ~if $RADIOPRIVACY eq "C"`checked~/if` tabindex="18">
+													Don't show to others. I will search and contact profiles myself.
+												</div>
+												<!--div>
+													<input type="radio" name="radioprivacy" value="R" ~if $RADIOPRIVACY eq "R"`checked~/if` tabindex="18"> Registered users only
+												</div-->
+											</div>
+											<div class="leftflow greyele" style="width:40%;">
+												<div class="pad2">&nbsp;</div>
+												<div class="spacer">&nbsp;</div>
+												<div>
+													<input type="radio" name="radioprivacy" value="F" ~if $RADIOPRIVACY eq "F"`checked~/if` tabindex="19"> 
+													Registered users who pass my filters only
+												</div>
+											</div>
+											<div class="spacer1">&nbsp;</div>
+											<!--Content-->
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--ROUNDED COR BOX ENDS-->
+			~/if`
+		</div>
+		<!--BUTTON STARTS-->
+		<div style="width:100%; margin-top:5px;">
+			<div class="spacer1">&nbsp;</div>
+			<div class="row bluelink" style="background-color:#FFEAAB ">
+				<div class="r1" align="center">&nbsp;</div>
+				<div class="r2">
+					<input type="submit" name="Submit" value="Submit  Registration" class="bor" style="width:250px" tabindex="21">
+				</div>
+			</div>
+			<div class="spacer1">&nbsp;</div>
+		</div>
+		<!--BUTTON ENDS-->
+	</div>
+	<!--WRAPPER ENDS HERE-->
+	<div class="spacer15">&nbsp;</div>
+	~$SMALLFOOTER`
+</div>
+~if $groupname eq "wchutney"`
+<SCRIPT LANGUAGE="JavaScript" src="http://www.webchutney.net/chutneytrack/js/iqtracker.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript">
+var clntid = "JVNSTHI";
+trackThisPage();
+</SCRIPT>
+~/if`
+</form>
+~if $groupname  eq 'DrivePM_NRI_JFM09'`
+<img src="http://switch.atdmt.com/action/Jeevansathi_NRI_Intermediate_Feb09" height="1" width="1">
+~/if`
+~if $groupname  eq 'DrivePM_RI_JFM09'`
+<img src="http://switch.atdmt.com/action/Jeevansathi_RI_Intermediate_Feb09" height="1" width="1">
+~/if`
+</body>
+</html>

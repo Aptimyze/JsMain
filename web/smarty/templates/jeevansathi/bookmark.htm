@@ -1,0 +1,120 @@
+<html>
+<head>
+<title>JeevanSathi Matrimonials - Bookmarks</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="/P/I/styles.php" type="text/css">
+<link rel="stylesheet" href="/P/IN/styles.php" type="text/css">
+<script language="javascript">
+<!--
+
+function MM_openBrWindow(theURL,winName,features)
+{
+	window.open(theURL,winName,features);
+}
+
+//-->
+</SCRIPT>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body>
+
+~$HEAD`
+
+~$LEFTPANEL`
+<table width="78%" height="1110" border="0" cellspacing="0" cellpadding="0" align="center">
+<tr>
+<td valign="top">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+       <td height="4"></td>
+       <SPACER height="4" type="block"></SPACER> </tr>
+      <tr>
+       <td class="headbigblack"><b>My Bookmarks </b></td>
+      </tr>
+      <tr class="bgred">
+       <td height="1"></td>
+       <SPACER height="1" type="block"></SPACER> </tr>
+        <tr>
+       <td height="8"></td>
+       <SPACER height="8" type="block"></SPACER> </tr>
+     </table></td>
+</tr>
+<TR>
+<TD height=5><SPACER height="5" type="block"></TD>
+</TR>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td colspan="2"><table width="100%"  border="0" cellpadding="1" cellspacing="1" bgcolor="#FDF2DF">
+<tr>
+<td><table width="355" border="0" cellpadding="0" cellspacing="0">
+<tr>
+<td width="180" class="mediumblack"><div align="center"><span class="class5"><a href="" onClick="MM_openBrWindow('signsmean.htm','','width=425,height=225'); return false;">What do these signs mean?</a></span></div></td>
+<td width="25"><img src="~$IMG_URL`/profile/ser4_images/ac.gif" width="13" height="13"></td>
+<td width="25"><img src="~$IMG_URL`/profile/ser4_images/rj.gif" width="13" height="13"></td>
+<td width="25"><img src="~$IMG_URL`/profile/ser4_images/open.gif" width="12" height="10"></td>
+<td width="25"><img src="~$IMG_URL`/profile/ser4_images/con_ca1.gif"></td>
+<td width="25"><img src="~$IMG_URL`/profile/ser4_images/whitecam.gif" width="14" height="12"></td>
+<td width="25"><img src="~$IMG_URL`/profile/ser4_images/bm.gif" width="11" height="13"></td>
+<td width="25"><img src="~$IMG_URL`/profile/ser4_images/messanger5.gif"></td>
+</tr>
+</table></td>
+</tr>
+</table></td>
+</tr>
+<TR>
+<TD height=8><SPACER height="8" type="block"></TD>
+</TR>
+<tr>
+<td width="51%"><b class="mediumblack">You have ~$COUNT` bookmark(s) </b></td>
+<td width="49%"><div align="right"><strong class="mediumblack">Page ~$CURRENTPAGE` of ~$NO_OF_PAGES` </strong></div></td>
+</tr>
+<tr>
+<td colspan="2" height="3"></td>
+<SPACER height="3" type="block"></SPACER> </tr>
+</table>
+<table width="100%" height="20" border="0" cellpadding="0" cellspacing="0" bgcolor="BEE0C6">
+<tr>
+<td width="104" class=mediumblack><strong>User Name </strong></td>
+<td width="32" class=mediumblack><strong>Age</strong></td>
+<td width="40" class=mediumblack><strong>Height</strong></td>
+<td width="94" class=mediumblack><strong>Caste</strong></td>
+<td width="105" class=mediumblack><strong>Occupation</strong></td>
+<td width="100" class=mediumblack><strong>Residence</strong></td>
+<td width="50" class=mediumblack><strong>Remove</strong></td>
+</tr>
+</table>
+~section name=index loop=$BOOKMARKARRAY`
+~if $BOOKMARKARRAY[index].BOLDLISTING neq "1"`
+<table width="100%" height="20" border="0" cellpadding="0" cellspacing="0">
+<TR>
+<TD height=1><SPACER height="1" type="block"></TD>
+</TR>
+~/if`
+<td width="104" class=mediumblack><a href="viewprofile.php?checksum=~$CHECKSUM`&profilechecksum=~$BOOKMARKARRAY[index].PROFILEID`" target="_blank">~$BOOKMARKARRAY[index].NAME`</a> <img src="~$IMG_URL`/profile/ser4_images/bm.gif" width="11" height="13"> ~if $BOOKMARKARRAY[index].HAVEPHOTO eq "Y"`&nbsp;<img src="~$IMG_URL`/profile/ser4_images/whitecam.gif" width="14" height="12">~/if`~if $BOOKMARKARRAY[index].CONTACTSTATUS eq "I"`&nbsp;<img src="~$IMG_URL`/profile/ser4_images/open.gif" width="12" height="10">~elseif $BOOKMARKARRAY[index].CONTACTSTATUS eq "A"`&nbsp;<img src="~$IMG_URL`/profile/ser4_images/ac.gif" width="13" height="13">~elseif $BOOKMARKARRAY[index].CONTACTSTATUS eq "D"`&nbsp;<img src="~$IMG_URL`/profile/ser4_images/rj.gif" width="13" height="13">~elseif $BOOKMARKARRAY[index].CONTACTSTATUS eq "C"`&nbsp;<img src="~$IMG_URL`/profile/ser4_images/con_ca1.gif">~/if`~if $BOOKMARKARRAY[index].ONLINE eq "1"`&nbsp;<img src="~$IMG_URL`/profile/ser4_images/messanger5.gif">~/if` </td>
+<td width="32" class=mediumblack>~$BOOKMARKARRAY[index].AGE`</td>
+<td width="40" class=mediumblack>~$BOOKMARKARRAY[index].HEIGHT`</td>
+<td width="94" class=mediumblack>~$BOOKMARKARRAY[index].CASTE`</td>
+<td width="105" class=mediumblack>~$BOOKMARKARRAY[index].OCCUPATION`</td>
+<td width="100" class=mediumblack>~$BOOKMARKARRAY[index].CITY`</td>
+<td width="50" class=mediumblack><a href="bookmark.php?del=1&pid=~$BOOKMARKARRAY[index].PROFILEID`&checksum=~$CHECKSUM`"><img src="~$IMG_URL`/profile/ser4_images/bin.gif" width="11" height="14" border="0"></a></td>
+</tr>
+</table>
+~/section`
+<br>
+<table>
+<tr><td class="mediumblack">
+~$PAGELINK`
+</td></tr>
+</table>
+</td></tr>
+</table>
+
+<br>
+~$SUBFOOTER`
+<br>
+~$FOOT`
+</body>
+</html>

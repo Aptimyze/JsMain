@@ -1,0 +1,3 @@
+<?
+
+class TypeNotDefinedException extends Exception {}

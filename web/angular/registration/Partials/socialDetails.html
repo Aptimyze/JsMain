@@ -1,0 +1,22 @@
+<div id='perspective' class='perspective' style="height:{{MaxHeight+'px'}}" resize>
+  <div id='pcontainer' class='pcontainer'>
+    <!--tab-->
+    <div reg-tab  enable-back="bEnableBack" on-back="myBack" data={{tabName}}></div>
+    <!--Fields-->
+    <div class="scrollContent" style="height:{{fieldsHeight+'px'}}" >
+		<div ng-repeat="field in fields" > 
+		  <div reg-ham-field data='field' ng-show='field.show'></div>
+		</div>
+	</div>
+    <!--Next Btn-->
+    <div next-btn on-next="myNext" num-fileds='3' enable="{{bNextEnable}}"></div>
+  </div>
+  <!--HamBurgerView-->
+  <div id="hamburger" class="hamburger dn">
+    <ng-include id="myHam" src="'/angular/registration/Partials/hb.html'" scope="" onload=""></ng-include>
+    <!--<div hamburger-ang></div>-->
+  </div>
+  <div class="hamoverlay" id="hamoverlay"></div>
+   <!-- Modal window overlay- overlay_1 page-->
+  <ng-include id="modalView" ng-class={'slide-down':bModalWindow} ng-if="bModalWindow" src="'/angular/registration/Partials/errorModalWindow.html'" scope="" onload=""></ng-include>
+</div>

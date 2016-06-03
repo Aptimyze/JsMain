@@ -1,0 +1,165 @@
+/* Common Registration CSS */
+
+*{margin:0; padding:0; float:none; text-decoration:none; list-style:none;}
+*{margin:0; padding:0; float:none; text-decoration:none; list-style:none;}
+input{vertical-align:middle;}
+body{font:12px Arial, Helvetica, sans-serif;}
+textarea,select{border:1px solid #ccc; font:12px Arial, Helvetica, sans-serif;}
+.fl{float:left;}
+.fr{float:right;}
+.clr{clear:both; height:0; overflow:hidden;}
+.cl_5{height:5px;}
+.cl_10{height:10px;}
+.cl21{height:21px;}
+.cl105{height:62px;}
+
+.f_17{font-size:17px;}
+.f_11{font-size:11px;}
+.f_13{font-size:13px;}
+
+.mt_6{margin-top:6px;}
+.mr_4{margin-right:4px;}
+.mt_10{margin-top:10px;}
+.mt_21{margin-top:21px;}
+.ml_5{margin-left:5px; display:inline;}
+.ml_10{margin-left:10px; display:inline;}
+.ml_128{margin-left:128px; display:inline;}
+
+.pos_abs{position:absolute;}
+.pos_rltv{position:relative;}
+.p_tl_0{top:0; left:0;}
+.p_tr_0{top:0; right:0;}
+.p_bl_0{bottom:0; left:0;}
+.p_br_0{bottom:0; right:0;}
+
+
+.b{font-weight:bold;}
+.u{text-decoration:underline;}
+
+.orng{color:#ffaf00;}
+.drk_gry{color:#444;}
+.lt_gry{color:#8d8d8d;}
+.mar1{color:#454d00;}
+.mar{color:#C8080E;}
+
+a.blue{color:#057ec3;}
+a.mar{color:#C8080E;}
+
+h4{font-size:18px;}
+h3{font-size:19px;}
+h2{font-size:20px;}
+
+.sprte1{background:url(IMG_URL/profile/images/sugarcrm_registration/pg1_sprte1.png) no-repeat;}
+
+.reg_cont{width:775px; margin:auto;}
+.main_form_cont{border:2px solid #dadada;}
+
+ul.form{margin:0; padding:0; list-style:none; width:96%; padding:10px;}
+ul.form li{float:left; padding-bottom:19px; width:100%;}
+ul.form li label{float:left; width:170px; text-align:right; padding:2px 5px 0 0; font-weight:bold; color:#4b4b4b;}
+ul.form li input.txt1{float:left; width:214px; height:17px; border:1px solid #ccc;}
+ul.form li label u{color:#ffaf00; text-decoration:none;}
+ul.form li h2{font-size:20px;color:#ffaf00;}
+.sel_sml{width:60px;}
+.sel_mid{width:174px;}
+.sel_lng{width:225px;}
+.sel_lng1{width:63px;}
+.sel_bgst{width:285px;}
+.bot_bdr{border-bottom:2px solid #dadada}
+
+.tp_bg{height:24px; background-repeat:repeat-x; background-position:0 -268px;}
+.hlp{width:16px; height:15px; background-position:-284px -55px;}
+.logo{width:219px; height:35px; background-position:0 -465px;}
+.nkri_lgo{width:85px; height:13px; background-position:0 -14px;}
+.h_w_6{height:6px; width:6px; font-size:2px;}
+.h_w_5{height:5px; width:5px; font-size:2px;}
+.d_t_l{background-position:0 0; margin:-2px 0 0 -2px;}
+.d_t_r{background-position:-7px 0;margin:-2px -2px 0 0;}
+.d_b_l{background-position:0 -7px;margin:0 0 -2px -2px; _margin:0 0 -3px -2px;}
+.d_b_r{background-position:-7px -7px;margin:0 -2px -2px 0; _margin:0 -2px -3px 0;}
+.info_icn{width:18px; height:18px; background-position:-282px -73px;}
+.crt_prof_btn{width:177px; height:43px; background-position:0 -507px;}
+.red_tick{width:17px;height:15px;background-position:-292px -23px;position:absolute;left:5px;*left:-13px;top:2px}
+
+.gry_cont1{width:717px; padding:10px; background:#f5f5f5; border:1px solid #e8e9e9;}
+.gry_cont2{width:495px; padding:10px; background:#f5f5f5; border:1px solid #e8e9e9;}
+.fot_cop{text-align:center;padding-bottom:5px}
+.photo_left{width:159px;padding-left:30px;margin-top:10px;background:url(IMG_URL/profile/images/sugarcrm_registration/curv1.gif) left top no-repeat}
+
+.mrd{width:108px; float:left;}
+.gry_cont{width:404px; padding:10px; background:#f5f5f5; border:1px solid #e8e9e9;}
+
+/* Spirit Images */
+.spt_bx{background:url(IMG_URL/profile/images/registration_revamp_new/spt_bx.gif)}
+.t_lrc{background-position:0 0;width:211px;height:7px;overflow:hidden}
+.b_lrc{background-position:0 -7px;width:211px;height:47px;overflow:hidden}
+.t_mc{background:url(IMG_URL/profile/images/registration_revamp_new/t_mc.gif) left top repeat-y;width:211px}
+.mlr10{margin:0 10px;}
+.bults li{padding-left:20px;position:relative;padding-bottom:10px}
+
+ul.abt{width:253px; color:#4b4b4b; padding-left:2px; }
+ul.abt li{float:left;  margin:0 0 -14px 4px;}
+ul.abt li u{float:left; width:124px; text-decoration:none; padding:0 0 0 2px;}
+
+ul.abt1 {width:240px; color:#4b4b4b; padding-left:0px; }
+ul.abt1 li{float:left;  margin:0 0 -14px 6px;}
+ul.abt1 li u{float:left; width:110px; text-decoration:none; padding:0 0 0 2px;}
+
+.lf{float:left}
+.yellowbrd{border:1px #fed369 solid; padding:5px;}
+.t12{font-size:12px;}
+.ylw_background{background-color:#f7fce3}
+.member_step{float:left;}
+.member_step span{float:left; margin:15px;}
+.member_step span.label{float:left; margin:12px;}
+.t20{font:normal 20px arial;}
+.orange{color:#fe8a0d;}
+.helpbox{display:none; border:1px solid #99b1c8; left:16px; top:-7px; margin-right:25px; position:absolute;width:220px;z-index:100;background:#fff;}
+.helpimg{position: absolute; top: 5px;left:-16px;background:url(IMG_URL/profile/images/registration_revamp/arrow2.gif) no-repeat; width:16px; height:12px;}
+.pd_5{padding:5px;}
+.err{color:#c8080e;float:left;margin-top:4px}
+.coverhelp{position:relative;display:inline;}
+/* Last two curve starts from here  */
+.cur_btm_left{float:right;margin:-4px -2px -2px -2px; _margin:10px -2px -2px; position:relative; z-index:10;}
+.cur_btm_right{float:left;margin:-4px -10px -2px -2px; _margin:10px -10px -2px -2px; position:relative; z-index:10;}
+/* Ends Here */ 
+
+optgroup.lab{font-weight:bold!important};
+option.lab_nor{font-weight:normal;}
+.cvr_hlp{border:0 solid #ccc!important; width:10px;}
+.sp16{clear:both;height:16px;overflow:hidden}
+
+/*photo gallery page css start*/
+.bot_bdr1{border-bottom:1px solid #bdbdbd;  margin-top:10px; width:690px; margin-left:34px; }
+.photo_htp{font-family:Arial, Helvetica, sans-serif;color:#ffaf00; font-size:14px; text-align:center;}
+.photo_reg{width:693px; padding:10px 18px 5px;}
+.photo_reg .white_cont{background:#fff; padding:10px 15px 10px 20px;}
+.photo_reg .white_cont h2{font:bold 12px Arial, Helvetica, sans-serif; margin:0; padding:0;}
+.photo_reg .white_cont .prof_plus_thummb{width:400px; padding:5px 4px 5px 4px;}
+.photo_reg .white_cont .prof_img{width:140px; margin:6px 5px 0 10px; display:inline;}
+.photo_reg .white_cont .priv_setting{margin:auto; width:300px; padding:10px; line-height:18px; color:#5f5f5f; font-size:13px;}
+.photo_reg .white_cont .priv_setting input.rd1{border:none; width:19px; height:12px; margin:0 5px 0 0; padding:0;}
+.photo_reg .white_cont .priv_setting label.l1{float:left;}
+.photo_reg .white_cont p.photos{margin:10px 0 0 40px; padding:0px 3px 3px 2px;}
+.prof_plus_thummb1 {width:220px; background:#fbfbfb; border:1px solid #f5f5f5; padding:5px 14px 5px 4px;}
+.green_btn_new{background:url(IMG_URL/profile/images/registration_revamp_new/green_button_bg.gif) repeat-x; height:25px; border:1px solid #578d00; padding:2px; color:#fff; cursor:pointer; font-size:14px;}
+.photo_recom{font-size:12px; font-family:Arial, Helvetica, sans-serif; color:#689a10; padding-bottom:7px;}
+.photo_recom1{font-size:13px; font-family:Arial, Helvetica, sans-serif; color:#000000; padding-top:13px; font-weight:bold;}
+.photo_recom2{font-size:13px; font-family:Arial, Helvetica, sans-serif; color:#000000; padding-top:5px; font-weight:bold;}
+.photo_recombd{border: 1px solid #d5d5d5; margin-top:10px;}
+.p_down{width:695px; margin:0 auto; padding-left:2px;}
+.plwft1{float:left; width:215px; border-left:1px solid #bdbdbd; font-size:17px; color:#545454; font-size:15px; padding-left:5px;}
+.p_lst{ color:#42697d; font-size:11px; font-family:Arial;}
+.green{color:#33b300;}
+
+
+
+/*photo gallery page css end*/
+    /* tooltip css start*/
+.tooldp_topbg{background-image:url(IMG_URL/profile/images/sugarcrm_registration/ctooltip1.gif);width:352px;height:17px;background-repeat:no-repeat;}
+.tooldp_hrbg{background-image:url(IMG_URL/profile/images/sugarcrm_registration/ctooltip2.gif);width:352px; background-repeat:repeat-y;}
+.tooldp_footerbg{background-image:url(IMG_URL/profile/images/sugarcrm_registration/ctooltip3.gif); width:352px; background-repeat:no-repeat; height:59px;}
+.tooldp_style{font-family:Arial, Helvetica, sans-serif;color:#000000; font-size:11px; padding:2px 25px 2px 15px; line-height:14px;}
+.tooldp_style a {color:#3c84c1;}
+.tooldp_style a:hover {font-weight:bold;font-size:13px;}
+ /* tooltip css end*/

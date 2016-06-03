@@ -1,0 +1,112 @@
+<html>
+<head>
+<title>JeevanSathi Matrimonials - JeevanSathi Login</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="~$IMG_URL`/profile/ser4_images/styles.php" type="text/css">
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body leftmargin="5" topmargin="5">
+<table width="760" border="0" cellspacing="0" cellpadding="0" align="center">
+  <tr>
+      <td height="2"> 
+        ~$HEAD`
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr> 
+            <td><img ~if $NEWUSER eq "1" or $NEWUSER eq "2"`src="~$IMG_URL`/profile/ser4_images/login_1.gif"~else`src="~$IMG_URL`/profile/ser4_images/session_over.gif"~/if` width="760" height="36"></td>
+          </tr>
+        </table>
+        <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td class="extralargepink"><b>&nbsp;&nbsp;&nbsp;&nbsp; ~if $NEWUSER eq "1"` To Continue Please Login ~elseif $NEWUSER eq "2"` Username/Password is Wrong, please try again. ~else` Your session is over ~/if` </b></td>
+          </tr>
+        </table>
+		
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <form name="form1" action="~$SITE_URL`/profile/redirect.php" method="post">
+
+	<input type="hidden" name="MAIL" value="~$MAIL`">	
+
+		~if $METHOD eq "POST"`
+        ~section name=i loop=$DATA`
+        	~if $DATA[i].VALUE eq "ARRAY"`
+        		~section name=j loop=$DATA[i]`
+        		~if $DATA[i][j] neq ""`
+			<input type="hidden" name="~$DATA[i].NAME`[]" value="~$DATA[i][j]`">
+        		~/if`
+			~/section`
+        	~else`
+        		<input type="hidden" name="~$DATA[i].NAME`" value="~$DATA[i].VALUE`">
+        	~/if`
+        ~/section`
+        <input type="hidden" name="ACTION" value="~$ACTION`">
+		~else`
+		   <input type="hidden" name="REQUESTEDURL" value="~$REQUESTEDURL`">
+		   <INPUT type="hidden" name="checksum" value="~$CHECKSUM`">
+		~/if`
+		<input type="hidden" name="METHOD" value="~$METHOD`">
+          <tr bgcolor="cccccc">
+           <td height="1" colspan="2"></td>
+           <SPACER height="1" type="block"></SPACER> </tr>
+          <tr>
+          <td height="4" colspan="2"></td>
+          <SPACER height="4" type="block"></SPACER> </tr>
+          <tr>
+            <td width="49%" height="193" align="center"> 
+              <table width="94%" border="0" cellpadding="2" cellspacing="2" bgcolor="FFE9C2">
+                <tr>
+                  <td height="30" colspan="2" class="bigblack"><div align="center"><strong>Please login ~if $NEWUSER neq "1"`again ~/if`</strong></div></td> 
+                </tr>
+                <tr>
+                  <td width="139" height="30" class="bigblack"><div align="right"><strong>User name </strong></div></td>
+                  <td width="204"><input type="text" name="username" class="TextBox" value="~$USERNAME`"></td>
+                </tr>
+                <tr>
+                  <td height="30"><div align="center" class="bigblack">
+                    <div align="right"><strong>Password</strong></div>
+                  </div></td>
+                  <td height="30"><input type="password" name="password" class="TextBox"></td>
+                </tr>
+                <tr>
+                  <td height="25">&nbsp;</td>
+                  <td height="25"><input type="submit" name="SESSIONsubmit" value="Submit" class="TextBox"></td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                  <td height="30" class="mediumblack"><span class="class5"><a href="~$SITE_URL`/profile/forgotpassword.php">Forgot your password?</a></span></td>
+                </tr>
+                <tr>
+                  <td height="30" colspan="2" class="bigblack"><div align="center"><strong><span class="class6"><a href="inputprofile.php">New User? Register Now and contact free</a></span></strong></div></td>
+                </tr>
+              </table>
+              <div align="center">
+            </div></td>
+            <td width="47%" valign="top"><table width="98%"  border="0" cellpadding="1" cellspacing="1">
+              <tr bgcolor="B5DCBD" class="mediumblack">
+                <td colspan="2"><strong>Success Story </strong></td>
+              </tr>
+              <tr class="mediumblack">
+                <td width="25%"><a href="~$SITE_URL`/success/complete_success_stories.php?sid=13"><img src="~$IMG_URL`/profile/ser4_images/success_story_1.gif" width="85" height="57" border="0"></a></td>
+                <td width="75%"> I am thankful to you as I have got my JeevanSathi, Jyoti Saxena in Feb 2003. Her user id was "sjyoti" at your esteemed site We are attaching a photo of our marriage</td>
+              </tr>
+              <tr class="mediumblack">
+                <td height="28" colspan="2">a  which took place on 7th of Feb 2003. 
+Please attach it with our success story ..... <span class="class5"><a href="~$SITE_URL`/success/complete_success_stories.php?sid=13">more</a></span> </td>
+                </tr>
+            </table></td>
+          </tr>
+          <tr>
+          <td height="4" colspan="2"></td>
+          <SPACER height="4" type="block"></SPACER> </tr>
+          <tr bgcolor="cccccc">
+          <td height="1" colspan="2"></td>
+          <SPACER height="1" type="block"></SPACER> </tr>
+          </form>
+        </table>
+        ~$SUBFOOTER`
+        <br>
+        ~$FOOT`
+      </td>
+  </tr>
+</table>
+</form>
+</body>
+</html>

@@ -1,0 +1,334 @@
+<html>
+<head>
+	<script language="JavaScript" type="text/javascript">
+	function MM_openBrWindow(obj,theURL,winName,features)
+	{
+	        window.open(theURL,winName,features);
+	}
+                                                                                                 
+	</script>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>Jeevansathi.com</title>
+	<link rel="stylesheet" href="/billing/jeevansathi1.css" type="text/css">
+</head>
+
+<body >
+~include file="head_billing.htm"`
+<br>
+<form action="search_rev_user.php" method="post">
+<table border="0" cellspacing="4" cellpadding="4" width="70%" align="center">
+	<tr>
+		<td class="formhead" width="30%" align="center">Search</td>
+		<td class="fieldsnew" width="30%">
+			<input type="text" name="phrase">
+		</td>
+		<td class="fieldsnew" width="20%">
+			<select name="criteria">
+			~section name=next loop=$rev_cri`
+				<option value="~$rev_cri[next].value`">~$rev_cri[next].name`</option>
+			~/section`
+			</select>
+		</td>
+		<td align="center" class="fieldsnew" width="20%">
+			<input type="submit" name="submit" value="Go" class="buttons1">
+		</td>
+	</tr>
+</table>
+<input type="hidden" name="cid" value=~$CID`>
+<input type="hidden" name="user" value=~$USER`>
+</form>
+~if $flag eq '1'`
+	<br>
+	<table width=40% cellpadding="4" cellspacing="4" border=0 align="center">
+		<tr align="center">
+			<td class="formhead"><b>Client Name:</b></td>
+			<td class="fieldsnew">~$uname`</td>
+		</tr>
+		<tr align="center">
+			<td class="formhead"><b>Total Amount Paid:</b></td>
+			<td class="fieldsnew">~$currency_type`&nbsp;~if $paid` ~$paid` ~else` 0 ~/if`</td>
+		</tr>
+		<tr align="center">
+                        <td class="formhead"><b>Address:</b></td>
+                        <td class="fieldsnew">~$shipAddress` ~$shipPIN`  ~$shipCountry`</td>
+                </tr>
+		<tr align="center">
+                        <td class="formhead"><b>Contact No.:</b></td>
+                        <td class="fieldsnew">~$shipPhone`</td>
+                </tr>
+		<tr align="center">
+                        <td class="formhead"><b>Email:</b></td>
+                        <td class="fieldsnew">~$shipEmail`</td>
+                </tr>
+	</table>
+	<br>
+	<form method=post action="misc_resources_printbill.php?cid=~$CID`&user=~$USER`">
+	<table width="90%" cellpadding="4" cellspacing="4" border=0 align="center">
+	<tr>
+		<td class="formhead" align="center">Billing Details</td>
+	</tr>
+	</table>
+	~section name=mysec loop=$arr`
+	<table width="90%" cellpadding="4" cellspacing="4" border=0 align="center">
+		~if $arr[mysec].blankrow eq "Y"`
+			 ~if $smarty.section.mysec.index neq 0`
+			<tr><td>&nbsp;</td></tr>~/if`
+			<tr class="formhead_misc" align="center" border=1>
+				<td colspan="11">Sale ID:-~$arr[mysec].billid`</td>
+			</tr>
+			~if $arr[mysec].edited`
+				<tr class="formhead" align="center">
+					<td colspan="11">
+						<a href="misc_view_edit_history.php?user=~$USER`&cid=~$CID`&saleid=~$arr[mysec].saleid`" onClick="window.open('misc_view_edit_history.php?user=~$USER`&cid=~$CID`&saleid=~$arr[mysec].saleid`','','width=600,height=300');return false;">View Edit History</a>
+					</td>
+				</tr>
+			~/if`
+			<tr class="fieldsnew" align="center">
+				<td colspan="11">
+					~if $arr[mysec].cancelled`
+						This Transaction has been cancelled.
+					~else`
+						<a href="misc_cancel_transaction.php?user=~$USER`&cid=~$CID`&saleid=~$arr[mysec].saleid`">Cancel this Transaction</a>
+					~/if`
+				</td>
+			</tr>
+			<tr ~if $arr[mysec].cancelled` class="cancelledformhead" ~else` class="formhead" ~/if` align="center">
+				<td width="10%">Sale By</td>
+				<td width="20%">Sale Description</td>
+				<td width="10%">Sale Type</td>
+				<td width="5%">Sale Amount</td>
+				<td width="5%">Service Tax</td>
+				<td width="05%">Discount</td>
+				<td width="05%">Total Amount</td>
+				<td width="10%">Due Amount</td>
+				<td width="10%">Due Date</td>
+				<td width="10%">Discount Reason</td>
+				<td width="10%">Booking Date</td>
+			</tr>
+			<tr ~if $arr[mysec].cancelled` class="cancelledfieldsnew" ~else` class="fieldsnew" ~/if` align="center">
+				<td>~$arr[mysec].sale_by`</td>
+				<td>~$arr[mysec].sname`</td>
+				<td>~$arr[mysec].sale_type`</td>
+				<td>~$arr[mysec].sale_amt`</td>
+				<td>~$arr[mysec].service_tax`</td>
+				<td>~$arr[mysec].discount`</td>
+				<td>~$arr[mysec].total_amount`</td>
+				<td>
+					~if $arr[mysec].dueamount gt 0`
+						<font color="red">
+							~$arr[mysec].cur_type`&nbsp;~$arr[mysec].dueamount`
+						</font>
+					 ~else`
+						 0
+					~/if`
+				</td>
+				<td>~$arr[mysec].due_date`</td>
+				<td>~$arr[mysec].discount_reason`</td>
+				<td>~$arr[mysec].Billing_Dt`</td>
+			</tr>
+			<tr ~if $arr[mysec].cancelled` class="cancelledfieldsnew" ~else` class="fieldsnew" ~/if` align="center">
+				<td colspan="2">
+					~if $arr[mysec].cancelled` 
+						Click here to Enter Part Payment Details
+					~else`
+						<a href="misc_resources_billing.php?val=paypart&user=~$USER`&cid=~$CID`&saleid=~$arr[mysec].saleid`">Click here to Enter Part Payment Details</a>
+					~/if`
+				</td>
+				<td colspan="2">
+					~if $arr[mysec].bms_comp_id eq "" and $arr[mysec].category eq 'banners'`
+						~if $arr[mysec].cancelled` 
+							Campaign Booking
+						~else`
+							<a href="~$bmsUrl`/bmsjs/bms_booking.php?id=~$CID`&ref_id=~$arr[mysec].billid`&js_flag=Y">Campaign Booking</a>
+						~/if`
+					~else`
+						&nbsp;
+					~/if`
+				</td>
+				<td colspan="2">
+					~if $arr[mysec].bms_comp_id neq "" and $arr[mysec].category eq 'banners'`
+						~if $arr[mysec].cancelled`
+							Show Mis
+						~else`
+							<a href="#" onclick="MM_openBrWindow('Mis','~$bmsUrl`/bmsjs/bms_index.php?bms_sums=Y&company_id=~$arr[mysec].bms_comp_id`',''); return false;">Show Mis</a>
+						~/if`
+					~else`
+						&nbsp;
+					~/if`
+				</td>
+				<td colspan="2">
+					~if $write_off and $arr[mysec].dueamount gt 0`
+						~if $arr[mysec].cancelled`
+							Write Off
+						~else`
+							<a href="misc_write_off.php?user=~$USER`&cid=~$CID`&saleid=~$arr[mysec].saleid`">Write Off</a>
+						~/if`
+					~else`
+						&nbsp;
+					~/if`
+				</td>
+                                <td colspan="3">
+                                        <a href="../operations.php/invoice/pdf?cid=~$CID`&saleid=~$arr[mysec].saleid`&receiptid=~$arr[mysec].receiptid`&saleType=P&invoiceType=M">Print Proforma Invoice</a>
+                                </td>
+
+			</tr>
+		~/if`
+	</table>
+	<table width="80%" cellpadding="4" cellspacing="4" border=0 align="center">
+		~if $arr[mysec].remrows neq "Y"`
+			~if $arr[mysec].receiptid neq ''`
+				<tr ~if $arr[mysec].cancelled` class="cancelledformhead" ~else` class="formhead" ~/if` align="center">
+					<td colspan="8">Receipt ID : ~$arr[mysec].receiptid`</td>
+				</tr>
+				<tr ~if $arr[mysec].cancelled` class="cancelledformhead" ~else` class="formhead" ~/if` align="center">
+					<td width=13%>Select to Print</td>
+					<td width=13%>Mode</td>
+					<td width=13%>Amount</td>
+					<td width=13%>TDS Amount</td>
+					<td width=12%>Status</td>
+					<td width=12%>Transaction Date</td>
+					<td width=12%>Entry By</td>
+					<td width=12%>Edit</td>
+				</tr>
+				<tr ~if $arr[mysec].cancelled` class="cancelledfieldsnew" ~else` class="fieldsnew" ~/if` align="center">
+					<td width=13%>
+					<input type="radio" name="cbbill" value="~$arr[mysec].billid`i~$arr[mysec].receiptid`" ~if $arr[mysec].cancelled`disabled ~/if`></td>
+					<td width=13%>~$arr[mysec].mode`</td>
+					<td width=13%>~$arr[mysec].amt`</td>
+					<td width=12%>~$arr[mysec].tds`</td>
+					<td width=12%>~$arr[mysec].status`</td>
+					<td width=12%>~$arr[mysec].entry_dt`</td>
+					<td width=12%>~$arr[mysec].entryby`</td>
+					<td width=12%>
+					~if $ADMIN eq 'Y'`
+						~if $arr[mysec].cancelled`
+							Edit
+						~else`
+							<a href="edit_rev_payment_details.php?user=~$USER`&cid=~$CID`&receiptid=~$arr[mysec].receiptid`&uname=~$uname`&phrase=~$phrase`&criteria=~$criteria`&billid=~$arr[mysec].billid`&pid=~$PID`">Edit</a>
+						~/if`
+					~else` 
+						Edit 
+					~/if`
+					</td>
+				</tr>
+				<tr ~if $arr[mysec].cancelled` class="cancelledformhead" ~else` class="formhead" ~/if` align="center">
+                                        <td width=13%>Bill To Name</td>
+                                        <td width=13%>Bill To Address</td>
+                                        <td width=13%>Bill To Country</td>
+                                        <td width=13%>Bill To PIN</td>
+                                        <td width=12%></td>
+                                        <td width=12%></td>
+                                        <td width=12%></td>
+                                        <td width=12%></td>
+                                </tr>
+				 <tr ~if $arr[mysec].cancelled` class="cancelledfieldsnew" ~else` class="fieldsnew" ~/if` align="center">
+                                        <td width=13%>~$arr[mysec].billName`</td>
+                                        <td width=13%>~$arr[mysec].billAddress`</td>
+                                        <td width=12%>~$arr[mysec].billCountry`</td>
+                                        <td width=12%>~$arr[mysec].billPIN`</td>
+                                        <td width=12%></td>
+                                        <td width=12%></td>
+                                        <td width=12%></td>
+					<td width=12%></td>
+                                </tr>
+				<tr ~if $arr[mysec].cancelled` class="cancelledfieldsnew" ~else` class="fieldsnew" ~/if` align="center">
+					<td width=15%>Reason : </td>
+					<td colspan="3" width="30%">~$arr[mysec].reason`</td>
+					<td colspan="3" width="30%"> 
+						~if $arr[mysec].mode eq 'CHEQUE' or $arr[mysec].mode eq 'DD' or  $arr[mysec].mode eq 'TT' or $arr[mysec].mode eq 'BANK_TRSFR_ONLINE'`
+						<table width=90% border=0 align="left">
+							<tr>
+								<td align="center" class="fieldsnew">
+							~if $arr[mysec].mode eq 'CHEQUE'` 
+								<u><b>Cheque Details</b></u>
+							~elseif $arr[mysec].mode eq 'DD'` 
+								<u><b>DD Details</b></u>
+							~elseif $arr[mysec].mode eq 'TT'`
+								<u><b>TT Details</b></u>
+							~elseif $arr[mysec].mode eq 'BANK_TRSFR_ONLINE'`
+								<u><b>Bank Transfer Online Details</b></u>
+							~/if`
+								</td>
+							</tr>
+							<tr>
+								<td width=45% class="fieldsnew"><b>~if $arr[mysec].mode eq 'CHEQUE'` Cheque ~elseif $arr[mysec].mode eq 'DD'` DD ~elseif $arr[mysec].mode eq 'TT' or $arr[mysec].mode eq 'BANK_TRSFR_ONLINE'` Transaction ~/if` No. : </b>~if $arr[mysec].mode eq 'TT' or $arr[mysec].mode eq 'BANK_TRSFR_ONLINE'`~$arr[mysec].t_num`~else`~$arr[mysec].cd_num`~/if`&nbsp; 
+								~if $arr[mysec].mode neq 'TT' and $arr[mysec].mode neq 'BANK_TRSFR_ONLINE'`
+								<b>Date : </b>~$arr[mysec].cd_dt`&nbsp;<br>
+								<b>Bank : </b>~$arr[mysec].bank`&nbsp; <b>City :</b> ~$arr[mysec].cd_city`&nbsp;<br>
+								~/if`
+								</td>
+							</tr>
+						</table>
+						~elseif $arr[mysec].mode eq 'ONLINE'`
+						<table width=90% border=0 align="left">
+							<tr>
+								<td align="center" class="fieldsnew">
+								~if $arr[mysec].mode eq 'ONLINE'` 
+									<u><b> Details </b></u>
+									~if $arr[mysec].status neq 'CHARGE_BACK'` 
+										&nbsp;<a href="charge_back.php?user=~$USER`&cid=~$CID`&receiptid=~$arr[mysec].receiptid`&uname=~$uname`&phrase=~$phrase`&criteria=~$criteria`&billid=~$arr[mysec].billid`" class="lftpan">Charge Back</a>~else`<br><span class="fieldsnew">(Charge Back marked on ~$arr[mysec].bounce_dt`)</span>
+
+									~/if` 
+								~/if`
+								</td>
+							</tr>
+							<tr>
+								<td width=45%>&nbsp;</td>
+							</tr>
+						</table>
+						~/if`
+					</td>
+					<td colspan="3" width="15%">
+						<a href="../operations.php/invoice/pdf?cid=~$CID`&saleid=~$arr[mysec].saleid`&receiptid=~$arr[mysec].receiptid`&invoiceType=M">Print Sales Invoice</a>
+					</td>					
+				</tr>
+			~/if`
+		~/if`
+	</table>
+	~/section`
+	<table width="40%" cellpadding="4" cellspacing="4" border=0 align="center">
+		<tr class="fieldsnew" align="center">
+			<td>
+				<select name="billoption" size="1" class="TextBoxes1">
+				<option value="1">Print Bill</option>
+				<option value="2">Send Bill in mail</option>
+				</select>
+			</td>
+			<td>Mail To :</td>
+			<td>
+				<input type="text" name="mailto" value="~$MAILTO`" class="TextBoxes1">
+			</td>
+			<td>
+				<input type="submit" name="print" value="Go" class="buttons1">
+			</td>
+			<input type="hidden" name="cid" value=~$CID`>
+			<input type="hidden" name="user" value=~$USER`>
+		</tr>
+	</table>
+	<br>
+	<br>
+	<table width="90%" cellpadding="4" cellspacing="4" border=0 align="center">
+		<tr class="fieldsnew" align="center">
+			<td>
+				<a href="misc_resources_entry.php?cid=~$CID`&pid=~$PID`&source=~$SOURCE`&crm_id=~$CRM_ID`&comp_name=~$uname`&bureauprofileid=~$bureauprofileid`&shipEmail=~$shipEmail`&shipCountry=~$shipCountry`&shipPhone=~$shipPhone`&shipAddress=~$shipAddress`&shipPIN=~$shipPIN`">New Entry for this client</a>
+			</td>
+		</tr>
+	</table>
+~elseif $flag eq 'NO_RECORD'`
+	<br>
+	<br>
+	<table width="70%" border="0" align="center" cellpadding="4" cellspacing="4">
+		<tr class="fieldsnew" align="center">
+			<td>No Record Found</td>
+		</tr>
+		<tr class="fieldsnew" align="center">
+			<td>
+				<a href="misc_resources_entry.php?cid=~$CID`&pid=~$PID`&source=~$SOURCE`&crm_id=~$CRM_ID`&comp_name=~$uname`&bureauprofileid=~$bureauprofileid`">New Entry for this client</a>
+			</td>
+		</tr>
+	</table>
+~/if`
+	</form>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<html>
+<head>
+	<meta http-equiv="Refresh" content="1800"/>
+	<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+</head>
+<body>
+	<p align="center"><img src="../profile/images/logo_1.gif" width="209" height="63" align="center" border="0"></p>
+
+	<table cellpadding="4" cellspacing="4" border="0" width="90%" align="center">
+                <tr class="formhead" align="center">
+                        <td><b>Easy Bill Pending Receipts</b></td>
+                </tr>
+                <tr class="fieldsnew" align="center">
+                        <td><a href="mainpage.php?cid=~$cid`">Mainpage</a></td>
+                </tr>
+	</table>
+	<table cellpadding="4" cellspacing="4" border="0" width="90%" align="center">
+		<tr class="formhead" align="center">
+			<td width="7%">Reference ID</td>
+			<td width="7%">Username</td>
+			<td width="9%">Service</td>
+			<td width="7%">Mobile Number</td>
+			<td width="7%">Actual Amount</td>
+			<td width="7%">Receipt ID</td>
+			<td width="7%">Transaction Date</td>
+			<td width="7%">Receipt Amount</td>
+			<td width="7%">City</td>
+			<td width="7%">Cheque Number</td>
+			<td width="7%">Cheque Date</td>
+			<td width="7%">Cheque City</td>
+			<td width="7%">Bank</td>
+		</tr>
+		~if !$NO_RESULT`
+			~section name=next loop=$details`
+			<tr class="fieldsnew" align="center">
+				<td>~$details[next].REF_ID`</td>
+				<td>~$details[next].USERNAME`</td>
+				<td>
+					~$details[next].MAIN_SERVICE`
+					~if $details[next].ADDON_SERVICE`
+						with ~$details[next].ADDON_SERVICE`
+					~/if`
+				</td>
+				<td>~$details[next].MOB_NUM`</td>
+				<td>~$details[next].ACTUAL_AMOUNT`</td>
+				<td>~$details[next].RECT_ID`</td>
+				<td>~$details[next].TRANSACTION_DT`</td>
+				<td>~$details[next].RECT_AMOUNT`</td>
+				<td>~$details[next].CITY`</td>
+				<td>~$details[next].CD_NUM`</td>
+				<td>~$details[next].CD_DT`</td>
+				<td>~$details[next].CD_CITY`</td>
+				<td>~$details[next].BANK_NAME`</td>
+			</tr>
+			~/section`
+		~else`
+			<tr class="fieldsnew" align="center">
+				<td>No Results Found</td>
+			</tr>
+		~/if`
+	</table>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<html>
+<head>
+<title>FAQ Admin</title>
+<link rel="stylesheet" href="stylesheet.css" type="text/css">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<script language="JavaScript" type="text/javascript">
+<!--
+function PopWindow()
+{
+window.open('help.php','help','width=400,height=250,menubar=no,scrollbars=no,toolbar=no,location=yes,directories=no,resizable=no,top=200,left=300');
+}
+
+function loadForm()
+{
+	document.form1.submit();
+}
+//-->
+</script>
+</head>
+<body bgcolor="#FFFFFF" link="#000000" vlink="#000000" text="#000000" leftmargin="0" rightmargin="0" topmargin="0">
+
+<table bgcolor="#FFFFFF" width="97%" cellpadding="10" cellspacing="0" border="0" align="center">
+	<tr>
+		<td>
+<script>
+function selectAll()
+{
+  void(d=document);
+  void(el=d.getElementsByTagName('INPUT'));
+  for(i=0;i<el.length;i++)
+    void(el[i].checked=1) 
+}
+</script>
+
+<form name=form1 action="faq_edit_content.php" method=post>
+<table width="100%" border="0" cellspacing=1 cellpadding=2>
+<tr><td>
+
+<table width="100%" border="0" cellspacing=1 cellpadding=2 class="TableHeader" align="center">
+<tr>
+	<td class="TableHeaderText" colspan=100% align=center>Update Topic</td>
+</tr>
+<tr>
+	<td class="priNormal" width=10%>~if $QUES_ERR eq 'Y'` <font color=red>Category</font> ~else` Category ~/if`</td>
+	<td class="TableInfoText"><input type=text name=ques value="~$ques`" size=100></td>
+</tr>
+<tr>
+	<td class="priNormal" width=10% align=center>~if $ANS_ERR eq 'Y'` <font color=red>Answer </font> ~else` Answer ~/if`</td>
+	<td class="TableInfoText"><textarea name=answer rows=10 cols=50>~$answer`</textarea></td>
+</tr>
+<tr>
+	<td class="priNormal" width=5% align=center>Parent</td>
+	<td class="TableInfoText">
+		<select name=parent>
+		<option value=0 ~if $parent eq 0` selected ~/if`>Top (id = 0 )</option>
+		~section name=sec loop=$idarr`
+			<option value="~$idarr[sec].id`" ~if $parent eq $idarr[sec].id` selected ~/if`> ~$idarr[sec].name` ( id = ~$idarr[sec].id`) </option>
+		~/section`
+	</td>
+</tr>
+<tr>
+	<td class="priNormal" width=5% align=center>Publish</td>
+	<td class="TableInfoText" name="testtd"><input type=checkbox name=publish value="Y" ~if $publish eq 'Y'` checked ~/if`></td>
+</tr>
+<tr>
+	<td class="priNormal" width=5% align=center>Is Question?</td>
+	<td class="TableInfoText"><input type=checkbox name=is_q value="Y" ~if $is_q eq 'Y'` checked ~/if`></td>
+</tr>
+</table>
+<center><br>
+        <table>
+        <tr>
+        <td>
+        <input type="hidden" name=cid value="~$cid`">
+        <input type="hidden" name=val value="~$val`">
+        <input type="hidden" name=id value="~$id`">
+        <input class="inputsubmit" type="submit" value="   Go   " name="CMDGo">
+        </td>
+        </tr>
+        </table>
+</center>
+</td></tr>
+</form>
+</table>
+</td>
+</tr>
+</table>
+
+</body>
+</html>

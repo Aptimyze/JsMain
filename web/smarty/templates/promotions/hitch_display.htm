@@ -1,0 +1,46 @@
+<html>     
+   <head>
+           <title> Hitch Information Processing </title> 
+  </head> 
+  <body>    
+    
+     <center>  <h3> <br/>RESPONSE <h3> <br/>       
+
+     <table border="0" cellspacing="2" cellpadding="2" bgcolor="#E5E5E5">
+   	  <tr>
+           		  <th><font face="garamond">PROFILE ID</font></th>
+ 
+            		  <th><font face="garamond">NAME </font></th>
+            		  <th><font face="garamond">PROFESSION</font></th>
+        		  <th><font face="garamond">CHARACTER A</font></th>
+                                      <th><font face="garamond">CHARACTER B</font></th>
+       	                    <th><font face="garamond">CHARACTER C</font></th>
+                                      <th><font face="garamond">MOVIE DIRECTOR</font></th>
+                                      <th><font face="garamond">MUSIC DIRECTOR</font></th>
+                                      <th><font face="garamond">ENTRY TIME</font></th>
+		   
+      	 </tr>        
+    
+       ~section  name=tblSec  loop=$a`      
+           
+                         <tr>
+                                    <td><font face="garamond">~$a[tblSec].id`</font></td>
+                                    <td><font face="garamond">~$a[tblSec].pid`</font></td>
+                                    <td><font face="garamond">~$a[tblSec].name`</font></td>
+                                    <td><font face="garamond">~$a[tblSec].proff`</td>
+                                    <td><font face="garamond">~$a[tblSec].chara`</font></td>
+                                    <td><font face="garamond">~$a[tblSec].charb`</font></td>
+                                    <td><font face="garamond">~$a[tblSec].charc`</font></td>
+		<td><font face="garamond">~$a[tblSec].movdir`</font></td>
+                                    <td><font face="garamond">~$a[tblSec].musdir`</font></td>
+                                    <td><font face="garamond">~$a[tblSec].entrytime`</font></td>
+                          
+                       </tr>
+           ~/section`  
+     
+
+     </table>
+   </center>
+
+ </body>
+</html>

@@ -1,0 +1,16 @@
+<ruleset name="jeevansathi-coding-conventions">
+ <description>Jeevansathi Coding Conventions</description>
+
+<!-- Disallow Short Tag -->
+  <rule ref="Generic.PHP.DisallowShortOpenTag"/>
+
+<!-- Intendentation Rule -->
+  <rule ref="Generic.WhiteSpace.ScopeIndent">
+    <properties>
+      <!-- Rule for 2 space -->
+      <property name="indent" value="2"/>
+    </properties>
+  </rule>
+  <!-- Tab not allowed for indentation-->
+  <rule ref="Generic.WhiteSpace.DisallowTabIndent.NonIndentTabsUsed" />
+</ruleset>

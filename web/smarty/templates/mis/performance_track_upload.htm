@@ -1,0 +1,71 @@
+<html>
+	<head>
+		<title>Upload CSV file</title>
+		<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+	</head>
+	<body>
+		<table width="50%" align="center" cellpadding="4" cellspacing="4" border="0">
+			<tr>
+				<td align="center"><img src="../profile/images/logo_1.gif" width="192" height="65"></td>
+			</tr>
+                        <tr class="formhead">
+                                <td align="center"><a href="../jsadmin/mainpage.php?cid=~$cid`">Mainpage</a></td>
+                        </tr>
+		</table>
+		<br>
+		<table width="40%" border="0" align="center" cellpadding="4" cellspacing="4">
+			<tr class="formhead" align="center">
+				<td>Upload a CSV file</td>
+			</tr>
+		</table>
+		~if $UNAUTHORIZED`
+			<table width="40%" border="0" align="center" cellpadding="4" cellspacing="4">
+				<tr class="fieldsnew" align="center">
+					<td>
+						You do not have the privilage to upload CSV file.
+						<br><a href="../jsadmin/mainpage.php?cid=~$cid`">Continue&gt;&gt;</a>
+					</td>
+				</tr>
+			</table>
+		~elseif $ERROR_MSG`
+			<table width="40%" border="0" align="center" cellpadding="4" cellspacing="4">
+				<tr class="fieldsnew" align="center">
+					<td>You have already uploaded the CSV file for this month. Now, you can only edit the file you uploaded first.<br><a href="performance_track_edit.php?cid=~$cid`&edit_csv=1">Click here</a> to edit the uploaded csv</td>
+				</tr>
+			</table>
+		~elseif $SUCCESSFUL`
+			<table width="40%" border="0" align="center" cellpadding="4" cellspacing="4">
+				<tr class="fieldsnew" align="center">
+					<td>
+						You have successfully uploaded the CSV file for this month.
+						<br>
+						<a href="../jsadmin/mainpage.php?cid=~$cid`">Continue&gt;&gt;</a>
+					</td>
+				</tr>
+			</table>
+		~else`
+			~if $INVALID_FILE`
+			<table width="40%" border="0" align="center" cellpadding="4" cellspacing="4">
+				<tr class="fieldsnew" align="center">
+					<td>
+						Please select a valid file to upload.
+					</td>
+				</tr>
+			</table>
+			~/if`
+			<form name="name1" method="post" action="performance_track_upload.php" enctype="multipart/form-data">
+			<table width="40%" border="0" align="center" cellpadding="4" cellspacing="4">
+				<tr class="fieldsnew">
+					<td>
+						<input type="file" name="uploaded_csv" size="25">
+					</td>
+					<td>
+						<input type="submit" name="upload" value="Upload">
+					</td>
+				</tr>
+			</table>
+			<input type="hidden" name="cid" value="~$cid`">
+			</form>
+		~/if`
+	</body>
+</html>

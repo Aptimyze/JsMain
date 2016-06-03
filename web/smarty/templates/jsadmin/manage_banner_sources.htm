@@ -1,0 +1,202 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jeevansathi.com - Manage Banner Sources</title>
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+<script>
+function loadForm()
+{
+	document.form1.CMDGetSrc=true;
+	document.form1.submit();
+}
+</script>
+</head>
+<body>
+~include file='head.htm'`
+<br>
+<table width=570 border=0 align="center" border="0" cellspacing="0" cellpadding="0">
+<tr class=formhead>
+<td align=center><a href="mainpage.php?cid=~$cid`">Click here to go to main page</a></td>
+</tr>
+</table>
+<br>
+<br>
+<table width=570 border=0 align="center" border="0" cellspacing="0" cellpadding="0">
+<tr class=formhead>
+<td align=center><a href="manage_banner_sources.php?cid=~$cid`&val=add">Add a source</a></td>
+<td align=center><a href="manage_banner_sources.php?cid=~$cid`&val=edit">Edit a source</a></td>
+</tr>
+</table>
+<form name=form1 method=post action="manage_banner_sources.php" onSubmit="return validate_form()">
+<table width=570 border=0 align="center" border="0" cellspacing="0" cellpadding="0">
+~if $val eq 'edit'`
+	~if $flag eq '1'`
+		<tr class=label>
+		<td align=center width=40%>~if $ER_SRCGP eq 'Y'` <font color=red>Select Group</font> ~else` Select Group ~/if`</td>
+		<td class=fieldsnew align=center><input type=text name=srcgp value="~$srcgp`"></td>
+		</tr>
+		<tr class=label>
+		<td align=center>~if $ER_SRCID eq 'Y'` <font color=red>Source ID (Not to exceed 10 characters and should not start with 'af' or 'mb') </font> ~else` Source ID (Not to exceed 10 characters and should not start with 'af' or 'mb') ~/if`</td>
+		<td class=fieldsnew align=center><input type=text name=srcid value="~$srcid`"></td>
+		</tr>
+		<tr class=label>
+		<td align=center>~if $ER_SRCNAME eq 'Y'` <font color=red> Source Name </font> ~else` Source Name ~/if`</td>
+		<td class=fieldsnew align=center><input type=text name=srcname value="~$srcname`"></td>
+		</tr>
+		<tr class=label>
+		<td align=center>CPC</td>
+		<td class=fieldsnew align=center><input type=text name=cpc value="~$cpc`"></td>
+		</tr>
+		<tr class=label>
+        <td align=center>Android URL</td>
+        <td class=fieldsnew align=center><input type=text name=aurl value="~$aurl`" onblur="checkreg(this)"></td>
+        </tr>
+        <tr class=label>
+        <td align=center>IOS URL</td>
+        <td class=fieldsnew align=center><input type=text name=iurl value="~$iurl`" onblur="checkreg(this)"></td>
+        </tr>
+
+		<tr class=label>
+		<td align=center>Active</td>
+		<td class=fieldsnew align=center><input type=checkbox name=active value="Y" ~if $active eq 'Y'` checked ~/if`></td>
+		</tr>
+		<tr class=label>
+	        <td align=center>Force email validation</td>
+        	<td class=fieldsnew align=center><input type=checkbox name=force_email value="Y" ~if $force_email eq 'Y'` checked ~/if`></td>
+		</tr>
+		<tr class=label>
+	        <td align=center>No Registration page on Landing</td>
+        	<td class=fieldsnew align=center><input type=checkbox name=noreg value="Y" ~if $noreg eq 'Y'` checked ~/if`></td>
+		</tr>
+		<tr class=fieldsnew>
+		<td colspan=100% align=center>
+		<input type=hidden name="cid" value="~$cid`">
+		<input type=hidden name="val" value="~$val`">
+		<input type=hidden name="id" value="~$id`">
+		<input type=submit name=CMDGo value="  Go  ">
+		</td>
+		</tr>
+	~else`
+		<tr class=label>
+		<td align=center width=40%>~if $ER_SRCGP eq 'Y'` <font color=red>Select Group</font> ~else` Select Group ~/if`</td>
+		<td class=fieldsnew align=center>
+		<select name=srcgp>
+			<option value="">Select</option>
+		~section name=sec loop=$srcarr`
+			<option value="~$srcarr[sec]`" ~if $srcgp eq $srcarr[sec]` selected ~/if` >~$srcarr[sec]`</option>
+		~/section`
+		</select>
+		</td>
+		</tr>
+
+		<tr class=label>
+		<td align=center width=40%>~if $ER_SRCID eq 'Y'` <font color=red>Select Source ID (Not to exceed 10 characters and should not start with 'af' or 'mb') </font> ~else` Source ID1 (Not to exceed 10 characters and should not start with 'af' or 'mb') ~/if`</td>
+		<td class=fieldsnew align=center>
+		<select name=srcid>
+		~section name=sec loop=$srcidarr`
+			<option value="~$srcidarr[sec]`" ~if $srcgp eq $srcidarr[sec]` selected ~/if` >~$srcidarr[sec]`</option>
+		~/section`
+		</select>
+		</td>
+		</tr>
+		
+		<tr class=fieldsnew>
+		<td colspan=100% align=center>
+		<input type=hidden name="cid" value="~$cid`">
+		<input type=hidden name="val" value="~$val`">
+		<input type=submit name=CMDGetSrc value="  Go  ">
+		</td>
+		</tr>
+	~/if`
+~else`
+	~if $ID_EXIST eq 'Y'`
+	<tr class=formhead>
+	<td colspan=100% class=red align=center>This Source Id already Exists!</td>
+	</tr>
+	~/if`
+	<tr class=label>
+	<td align=center width=40%>~if $ER_SRCGP eq 'Y'` <font color=red>Select Group</font> ~else` Select Group ~/if`</td>
+	<td class=fieldsnew align=center>
+	<select name=srcgp>
+		<option value="">Create New</option>
+	~section name=sec loop=$srcarr`
+		<option value="~$srcarr[sec]`" ~if $srcgp eq $srcarr[sec]` selected ~/if` >~$srcarr[sec]`</option>
+	~/section`
+	</select>
+	</td>
+	</tr>
+	<tr class=label>
+	<td align=center>~if $ER_SRCGP eq 'Y'`  <font color=red>Other </font> ~else` Other ~/if`
+	<td class=fieldsnew align=center><input type=text name=srcgpo value="~$srcgpo`"> </td>
+	</td>
+	</tr>
+	<tr class=label>
+	<td align=center>~if $ER_SRCID eq 'Y'` <font color=red>Source ID (Not to exceed 10 characters and should not start with 'af' or 'mb') </font> ~else` Source ID (Not to exceed 10 characters and should not start with 'af' or 'mb') ~/if`</td>
+	<td class=fieldsnew align=center><input type=text name=srcid value="~$srcid`"></td>
+	</tr>
+	<tr class=label>
+	<td align=center>~if $ER_SRCNAME eq 'Y'` <font color=red> Source Name </font> ~else` Source Name ~/if`</td>
+	<td class=fieldsnew align=center><input type=text name=srcname value="~$srcname`"></td>
+	</tr>
+	<tr class=label>
+	<td align=center>CPC</td>
+	<td class=fieldsnew align=center><input type=text name=cpc value="~$cpc`"></td>
+	</tr>
+	<tr class=label>
+        <td align=center>Android URL</td>
+        <td class=fieldsnew align=center><input type=text name=aurl value="~$aurl`" onblur="checkreg(this)"></td>
+        </tr>
+	<tr class=label>
+        <td align=center>IOS URL</td>
+        <td class=fieldsnew align=center><input type=text name=iurl value="~$iurl`" onblur="checkreg(this)"></td>
+        </tr>
+	<tr class=label>
+                <td align=center>No Registration page on Landing</td>
+                <td class=fieldsnew align=center><input type=checkbox name=noreg value="Y" ~if $noreg eq 'Y'` checked ~/if`></td>
+                </tr>	
+	<tr class=label>
+	<td align=center>Active</td>
+	<td class=fieldsnew align=center><input type=checkbox name=active value="Y" ~if $active eq 'Y'` checked ~/if`></td>
+	</tr>
+	<tr class=label>
+        <td align=center>Force email validation</td>
+        <td class=fieldsnew align=center><input type=checkbox name=force_email value="Y" ~if $force_email eq 'Y'` checked ~/if`></td>
+        </tr>
+	
+	<tr class=fieldsnew>
+	<td colspan=100% align=center>
+	<input type=hidden name="cid" value="~$cid`">
+	<input type=hidden name="val" value="~$val`">
+	<input type=submit name=CMDGo value="  Go  ">
+	</td>
+	</tr>
+~/if`
+</table>
+</form>
+<br><br>
+~include file='foot.htm'`
+</body>
+<script>
+function validate_form()
+{
+return true;	
+}
+function checkreg(ele)
+{
+	var k=ele.value;
+	k=k.toLowerCase();
+	if(k)
+	{
+		if(k.indexOf("http")!=0)
+			alert('Please provide url in correct format eg. https://play.google.com/store/apps/details');
+	}
+	if(document.form1.aurl.value || document.form1.iurl.value)
+		document.form1.noreg.checked=true;
+	else
+		document.form1.noreg.checked=false;
+		
+
+}
+</script>
+</html>

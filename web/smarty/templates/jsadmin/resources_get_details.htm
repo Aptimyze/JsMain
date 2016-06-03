@@ -1,0 +1,84 @@
+<html>
+<head>
+<title>JeevanSathi Matrimonials - Resources</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="~$SITE_URL`/profile/images/styles.css" type="text/css">
+<link rel="stylesheet" href="~$SITE_URL`/jsadmin/jeevansathi.css" type="text/css">
+</head>
+<body>
+~$HEAD`
+<br>
+ <form name="f1" action="resources_add_info.php" method=post>
+    <input type=hidden name=cid value=~$CID`>
+    <input type=hidden name=flag value=~$FLAG`>
+    <input type=hidden name=id value=~$ID`>
+    <table>
+     <tr>
+       <td>Category </td> 
+       <td>
+       <select name="CatId">
+           ~section name=i  loop=$ROWS`
+           ~if $CAT_ID eq $ROWS[i].CAT_ID`
+                <option  value="~$ROWS[i].CAT_ID`" selected>
+                   ~$ROWS[i].CAT_NAME`
+                 </option>
+           ~else`
+           <option  value="~$ROWS[i].CAT_ID`">
+             ~$ROWS[i].CAT_NAME`
+           </option>
+           ~/if`
+           ~/section`
+       </select>
+
+       </td>
+     </tr>
+     <tr>
+      <td>TITLE</td>
+      <td><input type=text name="Title" size=50 value='~$TITLE`'> </td>
+     </tr>
+     <tr>
+      <td>NAME</td>
+      <td><input type=text name="Name" size=50 value='~$NAME`'> </td>
+     </tr>
+     <tr>
+      <td>EMAIL</td>
+      <td><input type=text name="Email" size=50 value='~$EMAIL`'> </td>
+     </tr>
+     <tr>
+      <td>URL</td>
+      <td><textarea name="Link" rows=2 cols=50 >~$LINK`</textarea></td>
+     </tr>  
+     <tr>
+       <td>Description</td>
+       <td><textarea name="Desc" rows=4 cols=50 >~$DESCR`</textarea></td>      
+     </tr> 
+   </table>
+   ~if $FLAG neq "add"` 
+   <table>
+    <tr>
+    <td> Visible </td>
+       <td><input type="radio" name="Show" value="y" ~if $VISIBLE eq 'y'` checked ~/if` >Yes </td>
+       <td><input type="radio" name="Show" value="n" ~if $VISIBLE eq 'n'` checked ~/if`> No </td>
+    </tr>
+<tr>
+	<td>If visible,show on page no.</td>
+	<td><input type='radio' name='page' value='0' ~if $PAGE eq '0'`checked~/if`>0</td>
+	<td><input type='radio' name='page' value='1' ~if $PAGE eq '1'`checked~/if`>1</td>
+        <td><input type='radio' name='page' value='2' ~if $PAGE eq '2'`checked~/if`>2</td>
+        <td><input type='radio' name='page' value='3' ~if $PAGE eq '3'`checked~/if`>3</td>
+</tr>
+ <tr>
+    <td> Show on second page </td>
+       <td><input type="radio" name="Page2" value="y" ~if $PAGE2 eq 'y'` checked ~/if` >Yes </td>
+       <td><input type="radio" name="Page2" value="n" ~if $PAGE2 eq 'n'` checked ~/if`> No </td>
+    </tr>
+
+   </table> 
+   ~/if`
+    <p align=center><input type=submit value="Submit"> <input type=reset value="Reset"> 
+ </form>
+<br>
+~$FOOT`
+<br>
+</body>
+</html>

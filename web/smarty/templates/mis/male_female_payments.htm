@@ -1,0 +1,213 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br>
+~if $flag eq '1'`
+	<form action="payments_mainpage.php" method=post>
+	<table width=80% align=center>
+	<tr class=label align=center>
+	<td width=50%>&nbsp;&nbsp;&nbsp;&nbsp;Day Wise (For a particular month)</td>
+	<td>
+	<select name="mm">
+	~section name=mon loop=$mmarr`
+		<option value=~$mmarr[mon]` ~if $mm eq $mmarr[mon]` selected ~/if`>~$mmarr[mon]`</option>
+	~/section`
+	</select> -
+	<select name="yy">
+	~section name=yr loop=$yyarr`
+	<option value=~$yyarr[yr]` ~if $yy eq $yyarr[yr]` selected ~/if`>~$yyarr[yr]`</option>
+	~/section`
+	</select>&nbsp;Month - Year
+	</td>
+	</tr>
+	<tr class=label align=center>
+	<td>&nbsp;Group</td>
+	<td align=left>
+	<select name="sourcegp">
+	<option value="">All</option>
+	~section name=grp loop=$srcgrp`
+		<option value="~$srcgrp[grp]`" ~if $sourcegp eq $srcgrp[grp]` selected ~/if`>~$srcgrp[grp]`</option>
+	~/section`
+	</select>
+	</td>
+	</tr>
+	<tr class=label align=center>
+	<td>&nbsp;Community (Will be of no use for community wise )</td>
+	<td align=left>
+	<select name="community">
+	<option value="">All</option>
+	~section name=sec loop=$commarr`
+		<option value="~$commarr[sec].VAL`" ~if $community eq $commarr[sec].VAL` selected ~/if`>~$commarr[sec].LABEL`</option>
+	~/section`
+	</select>
+	</td>
+	</tr>
+	<tr class=label align=center>
+	<td>&nbsp;Gender (Will be of no use for age-gender wise)</td>
+	<td align=left>
+	<select name="gender">
+	<option value="">All</option>
+	<option value="M" ~if $gender eq 'M'` selected ~/if`>Male</option>
+	<option value="F" ~if $gender eq 'F'` selected ~/if`>Female</option>
+	</select>
+	</td>
+	</tr>
+	<tr class=label align=center>
+	<td>&nbsp;Marital Status</td>
+	<td align=left>
+	<select name="mstatus">
+	<option value="">All</option>
+	<option value="N" ~if $mstatus eq 'N'` selected ~/if`>Never Married</option>
+	<option value="W" ~if $mstatus eq 'W'` selected ~/if`>Widowed</option>
+	<option value="D" ~if $mstatus eq 'D'` selected ~/if`>Divorced</option>
+	<option value="S" ~if $mstatus eq 'S'` selected ~/if`>Separated</option>
+	<option value="O" ~if $mstatus eq 'O'` selected ~/if`>Other</option>
+	</select>
+	</td>
+	</tr>
+	<tr class=label align=center>
+	<td>&nbsp;Country</td>
+	<td align=left>
+	<select name="country">
+	<option value="">All</option>
+	~section name=sec loop=$ctryarr`
+		<option value="~$ctryarr[sec].VAL`" ~if $country eq $ctryarr[sec].VAL` selected ~/if`>~$ctryarr[sec].LABEL`</option>
+	~/section`
+	</select>
+	</td>
+	</tr>
+	<tr class=label align=center>
+	<td>&nbsp;Subscription</td>
+	<td align=left>
+	<select name="subs">
+	<option value="">All</option>
+	<option value="P" ~if $subs eq 'P'` selected ~/if`>Paid</option>
+	<option value="F" ~if $subs eq 'F'` selected ~/if`>Free</option>
+	</td>
+	</tr>
+	<tr class=label align=center>
+	<td>Select
+		<select name=val>
+			<option value='age' ~if $select eq 'age'` selected ~/if`>Age/Gender Wise</option>
+			<option value='community' ~if $select eq 'community'` selected ~/if`>Community Wise</option>
+		</select>
+	</td>
+	<td>
+	<input type=hidden name="cid" value="~$cid`">
+	<input type=submit name="CMDGo" value="  Go  ">
+	</td>
+	</tr>
+	</table>
+	</form>
+	<br>
+
+	<table width=100% align=center>
+	<tr class=formhead align=center>
+	<td colspan=100%>~$mm` - ~$yy`</td>
+	</tr>
+	<tr class=label>
+		<td width=5% align=center>Day</td>
+		~section name=dd loop=$ddarr`
+			<td width=3% align=center>~$ddarr[dd]`</td>
+		~/section`
+		<td width=5% align=center>Total</td>
+	</tr>
+	~section name=gen loop=$genderarr`
+		<tr class=fieldsnew>
+			<td align=center class=label>~$genderarr[gen]`</td>
+			~section name=dd loop=$ddarr`
+				<td align=center>&nbsp;<span class=green>~$per[gen][dd]`</span><br><span class=blue>~$cnt[gen][dd]`</span></td>
+			~/section`
+                        <td class=label align=center>&nbsp;<span class=green>~$pertot[gen]`</span><br><span class=blue>~$tota[gen]`</span></td>
+                </tr>
+	~/section`
+	<tr class=label>
+		<td align=center>Total</td>
+		~section name=dd loop=$ddarr`
+                                <td align=center>&nbsp;~$totb[dd]`</td>
+                ~/section`
+		<td align=center>&nbsp;~$totall`</td>
+	</tr>
+	</table>
+	<br>
+	~section name=gen loop=$genderarr`
+		<table width=100% align=center>
+		<tr class=formhead align=center>
+		<td colspan=100%>~$genderarr[gen]`</td>
+		</tr>
+		<tr class=label>
+			<td width=5% align=center>Day</td>
+			~section name=dd loop=$ddarr`
+				<td width=3% align=center>~$ddarr[dd]`</td>
+			~/section`
+			<td width=5% align=center>Total</td>
+		</tr>
+		~section name=age loop=$agearr`
+			<tr class=fieldsnew>
+				<td align=center class=label>~$agearr[age]`</td>
+				~section name=dd loop=$ddarr`
+					<td align=center rowspan=1>&nbsp;<span class=green>~$per2[gen][age][dd]`</span><br><span class=blue>~$cnt2[gen][age][dd]`</span></td>
+				~/section`
+				<td class=label align=center>&nbsp;<span class=green>~$pertot2[gen][age]`</span><br><span class=blue>~$tot2a[gen][age]`</span></td>
+			</tr>
+		~/section`
+		<tr class=label>
+			<td align=center>Total</td>
+			~section name=dd loop=$ddarr`
+				<td align=center>&nbsp;~$tot2b[gen][dd]`</td>
+			~/section`
+			<td align=center>&nbsp;~$totall2[gen]`</td>
+		</tr>
+		</table>
+		<br>
+	~/section`
+~else`
+        <form method=post action="male_female_payments.php">
+        <table width=80% border=0 align="center" cellpadding=5>
+        <tr>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;Day Wise (For a particular month)</td>
+	</tr>
+	<tr>
+        <td>
+        <select name="mm">
+        ~section name=mon loop=$mmarr`
+                <option value=~$mmarr[mon]`>~$mmarr[mon]`</option>
+        ~/section`
+        </select> -
+        <select name="yy">
+        ~section name=yr loop=$yyarr`
+                <option value=~$yyarr[yr]`>~$yyarr[yr]`</option>
+        ~/section`
+        </select>&nbsp;Month - Year
+        </td>
+        </tr>
+        <tr>
+        <input type="hidden" name="cid" value=~$cid`>
+        <td><input type="submit" name="CMDGo" value="     Go     "></td>
+        </tr>
+        </table>
+        </form>
+~/if`
+
+</body>
+</html>

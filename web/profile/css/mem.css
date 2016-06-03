@@ -1,0 +1,64 @@
+body{margin:0; padding:0; font-size:12px; color:#000000; font-family:Arial,sans-serif}
+#main{width:100%; margin:0px;float:left;}
+#container{width: 778px; margin: 0px auto; }
+#divOne{height:100px;width:300px;background:#dee;}
+#divTwo{height:1000px;width:300px;background:#eed;}
+#divThree{height:100px;width:300px;background:#ede;}
+#divFour{height:100px;width:300px;background:#ded;}
+
+/* search */
+.sreach_pannal{background-image:url(../images/bg_search.gif);background-repeat:repeat-x;width:778px;}
+.pd2{padding:2px 2px 2px 5px;}
+div.row{clear:both; padding:3px 0 0px 0;color:#000;width:98%;margin:auto;}
+#d0 div div span {width:65px;text-align:right;float:left;}
+#subtab {margin: 0px}
+#subtab ul {margin: 0; padding: 0; list-style: none; }
+#subtab li {float: left; margin: 0 0 0 0; white-space: nowrap; background-image:url(../images/subtab_nav_bg.gif); background-position:bottom; background-repeat:repeat-x; font: bold 12px Arial; height:24px }
+#subtab a {float: left; padding: 0 0 1px 9px; text-decoration: none;color:#117daa;}
+#subtab a:hover {color: #000000;}
+#subtab a.current {background-position: 0 -28px; background: url(../images/subtab_nav_left.gif) no-repeat; color:#2673bb; }
+#subtab a span {float: left; padding: 4px 30px 4px 22px;}
+#subtab a:hover span{cursor: pointer; color:#2673bb; }
+#subtab a.current span {background-position: 100% -28px; background: url(../images/subtab_nav_rite.gif) no-repeat 100% 0; cursor: pointer;}
+#subtab a.current:hover span {cursor: default;}
+/* end search */
+/* start membership */
+.member_step{float:left;}
+.member_step span{float:left; margin:15px;}
+.member_step span.label{float:left; margin:12px;}
+.ylw_background{background-color:#f7fce3}
+div.row6{float:left;width:100%; margin:5px 0px}
+div.row6 span{float:left; margin:5px 40px;}
+div.row6 label{float:left;text-align:left;width:350px;padding-right:25px;}
+div.row6 label.l1{float:left;text-align:left;width:356px;padding-right:25px;}
+.remov_pz{text-decoration:line-through;color:#FF0000;}
+<!-- Start rounde curves -->
+.m{background-color:;}
+.m_b_l {background: transparent url(../images/m_b_l.gif) 0 100% no-repeat}
+.m_b_r {background: transparent url(../images/m_b_r.gif) 100% 100% no-repeat}
+.m_t_l {background: transparent url(../images/m_t_l.gif) 0 0 no-repeat}
+.m_t_r {background: transparent url(../images/m_t_r.gif) 100% 0 no-repeat; padding:3px}
+.m_top {background: url(../images/m_dot.gif) 0 0 repeat-x; width: 100%;}
+.m_bot {background: url(../images/m_dot.gif) 0 100% repeat-x}
+.m_bot_b {background: url(../images/m_dot_b.gif) 0 100% repeat-x}
+.m_dot_l {background: url(../images/m_dot_l.gif) 0 0 repeat-y}
+.m_dot_r {background: url(../images/m_dot_r.gif) 100% 0 repeat-y}
+i.lbl{float:left; width:68px; font-style:normal;}
+table.bdr_btm_lgt_grn td{border-bottom:1px solid #eaefd1; padding-bottom:5px;}
+.no_bdr{border:none!important;}
+.steal{color:#61644f!important}
+.clr{clear:both;height:0; overflow:hidden;}
+.maroon{color:#b7030e;width:100px; text-align:center; }
+.mar_clr{color:#b7030e;}
+.pd_15_m_0{padding:15px; margin:0!important;}
+.mem_sprte{background:url(../images/get_special_discount.png);}
+.get_dis{width:742px; height:49px; background-position:0 -49px;background-repeat:repeat-x; margin:10px 15px 4px;}
+.get_dis b{float:left; width:5px; height:49px;}
+.get_dis em{float:right; width:32px; height:49px; background-position:0 -99px;}
+.mem_mar{color:#d13b00; margin:7px 0 3px; width:510px;}
+.mem_sprte_cont{width:540px; padding-left:10px;}
+.f_18{font-size:18px;}
+.summary_bg{background:url(../images/bg_summary.gif) repeat-x; padding:8px 15px;background-position:bottom;}
+div.summary_bg label{width:412px; padding-right:24px; text-align:left; float:left;}
+div.summary_bg span{margin:0; padding:0; float:none;}
+.txt_wd{text-indent:18px; width:403px!important;}

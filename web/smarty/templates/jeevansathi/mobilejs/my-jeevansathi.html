@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta http-equiv="Content-Type" content="text/xhtml+xml; charset=utf-8" />
+<title>My Jeevansathi</title>
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<!-- Stylesheet start-->
+<link href="~$IMG_URL`/profile/css/~$mobilejs_css`" rel="stylesheet" type="text/css" />
+<!-- Stylesheet end-->
+<link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/apple-touch-icon-72x72-precomposed.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/apple-touch-icon-114x114-precomposed.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+~include file="../jeevansathi/google_analytics.htm"`
+</head>
+<body>
+<!-- Header start-->
+~$HEADER`
+<!-- Header end-->
+<!-- backbutton start-->
+<!-- backbutton end-->
+<!-- search for start-->
+<div class="existing1 fbld">Welcome ~$USERNAME`
+    ~if $LOGGEDIN`
+        ~$MOBILE_LOGOUT_LINK`
+        <!-- a href="~$SITE_URL`/P/logout.php?mobile_logout=1" style="font: 12px arial; float: right; font-weight: bold; color: #0046C5; margin-right: 10px;">Logout</a -->
+    ~/if`
+</div>
+<!-- search for end-->
+<!-- in ~$NEW_INBOX_CNT`acc ~$acceptanceTOTAL`awa ~$initialTOTAL`hor ~$NEW_HOROSCOPE_REQUESTS`pho ~$NEW_PHOTO_REQUEST_CNT`cha ~$chatCount`fav ~$favCount`  part ~$partnerTOTAL`vis ~$visitoralertsTOTAL`match ~$matchalertsTOTAL` -->
+<div class="myupdat fbld">My Updates</div>
+~if !$ALL_NEW_INBOX_CNT && !$MADE_A && !$RECEIVED_A && !$RECEIVED_II && !$ALL_HOROSCOPE_REQUESTS && !$ALL_PHOTO_REQUEST_CNT && $chatCount eq 0 && $favCount eq 0`
+<br/>
+<span style="font-size:14px;margin-left:12px;">No messages or requests found</span>
+<div style="padding:0px 0px 20px 0px;"></div>
+~else`
+  ~if $ALL_NEW_INBOX_CNT || $RECEIVED_A || $RECEIVED_II || $ALL_HOROSCOPE_REQUESTS || $ALL_PHOTO_REQUEST_CNT || $chatCount || $favCount || $MADE_A`
+<div class="myjs1">
+	<div>
+ ~if $RECEIVED_II`
+ <a href="~$site_url`/profile/contacts_made_received.php?checksum=~$CHECKSUM`&page=eoi&filter=R">Members awaiting my response - </a>~$RECEIVED_II` ~if $initialTOTAL`(~$initialTOTAL` new)~/if`<br />
+ ~/if`
+ ~if $MADE_A`
+ <a href="~$site_url`/profile/contacts_made_received.php?checksum=~$CHECKSUM`&page=accept&filter=R">Members who accepted me - </a>~$MADE_A`~if $acceptanceTOTAL`(~$acceptanceTOTAL` new) ~/if`<br/>
+ ~/if`
+ ~if $RECEIVED_A gt 0`
+ <a href="~$site_url`/profile/contacts_made_received.php?checksum=~$CHECKSUM`&page=accept&filter=M">Members whom I accepted - </a>~$RECEIVED_A`<br/>
+ ~/if`
+	~if $ALL_NEW_INBOX_CNT gt 0`
+	~if $ALL_NEW_INBOX_CNT`
+	<a href="~$site_url`/profile/contacts_made_received.php?checksum=~$CHECKSUM`&page=messages&filter=R">Messages Received - </a>~else`Messages Received - ~/if` ~$ALL_NEW_INBOX_CNT`~if $NEW_INBOX_CNT`(~$NEW_INBOX_CNT` new)~/if`<br />
+	~/if`
+~if $ALL_PHOTO_REQUEST_CNT && $HAVEPHOTO neq 'Y'`
+	<a href="~$site_url`/profile/contacts_made_received.php?checksum=~$CHECKSUM`&page=photo&filter=R">Photo Request Received - </a>~$ALL_PHOTO_REQUEST_CNT`~if $NEW_PHOTO_REQUEST_CNT`(~$NEW_PHOTO_REQUEST_CNT` new)~/if`<br />
+~/if`
+~if $ALL_HOROSCOPE_REQUEST && $HAVEHOROSCOPE eq 'N'`
+<a href="~$site_url`/profile/contacts_made_received.php?checksum=~$CHECKSUM`&page=horoscope&filter=R">Horoscope Request Received - </a>~$ALL_HOROSCOPE_REQUEST`~if $NEW_HOROSCOPE_REQUESTS`(~$NEW_HOROSCOPE_REQUESTS` new)~/if`<br />
+~/if`
+
+~if $chatCount`
+<a href="~$SITE_URL`/profile/contacts_made_received.php?checksum=~$CHECKSUM`&page=chat&filter=A">Chat Requests  - </a>~$chatCount`<br />
+~/if`
+~if $favCount`
+<a href="~$SITE_URL`/profile/contacts_made_received.php?checksum=~$CHECKSUM`&page=favorite&filter=M">Shortlisted Members - </a> ~$favCount`<br />
+~/if`
+</div></div>
+~/if`
+~/if`
+<div class="myupdat fbld">JS recommendations</div>
+<div class="myjs1">
+<div class="up1">
+~if $totalviewerCnt`
+<a href="~$SITE_URL`/profile/contacts_made_received.php?checksum=~$CHECKSUM`&page=visitors&filter=R">Profile Visitors - </a>~$totalviewerCnt`~if $visitoralertsTOTAL` ( ~$visitoralertsTOTAL` new )~/if`<br />
+~/if`
+~if $totalMatchalerts`
+<a href="~$SITE_URL`/profile/contacts_made_received.php?checksum=~$CHECKSUM`&page=matches&filter=R">Match Alerts - </a>~$totalMatchalerts`~if $matchalertsTOTAL` (~$matchalertsTOTAL` new )~/if`<br />
+~/if`
+<a href="~$SITE_URL`/search/twoway">Mutual Matches</a><br/>
+<a href="~$SITE_URL`/search/partnermatches">Desired partner profile matches </a>~$partnerTOTAL`<br />
+</div>
+</div>
+<p class="clr"></p>
+~if $pixelcode`
+~$pixelcode`
+~/if`
+
+
+<!-- footer start-->
+~$FOOTER`
+<!-- footer end-->
+
+</body>
+</html>

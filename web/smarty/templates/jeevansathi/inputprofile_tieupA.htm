@@ -1,0 +1,992 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+	<title>Jeevansathi Matrimonials - Form for Input of Matrimonial Data</title>
+	<link rel="stylesheet" href="/profile/css/~$registerstyle_css`" type="text/css">
+	<style>.button{~$temp_button`}</style>
+        <script language="JavaScript" SRC="/profile/~$profile_js`"></SCRIPT>
+        <script language="JavaScript" SRC="/profile/phonecodes.js"></script>
+	<script language="javascript" src="http://www.jeevansathi.com/profile/js/setclientcookies.js"></script>
+        <script language="JavaScript">
+<!--
+                function MM_openBrWindow(theURL,winName,features)
+		{
+			window.open(theURL,winName,features);
+		}
+                function activate_stateres()
+                {
+                        if(document.getElementById)
+                        {
+                                var docF=document.form1;
+                                if(docF.Country_Residence.value=="51" && docF.City_India.value=='Other')
+                                        document.getElementById("state_india_visible").style.display='block';
+                                else
+                                        document.getElementById("state_india_visible").style.display='none';
+                        }
+                }
+                function activate_cityres()
+                {
+                        if(document.getElementById)
+                        {
+                                var docF=document.form1;
+                                if(document.getElementById("Country_Residence"))
+                                        countryresidence=1;
+                                if(document.getElementById("City_India"))
+                                        cityindia=1;
+                                if(document.getElementById("City_USA"))
+                                        cityusa=1;
+                                if(docF.Country_Residence.value=="51")
+                                {
+                                        document.getElementById("city_india_visible").style.display='block';
+                                        document.getElementById("city_usa_visible").style.display='none';
+                                        docF.City_India.disabled = false;
+                                        docF.City_USA.disabled = true;
+                                        docF.City_USA.value = "";
+                                }
+                                else if(docF.Country_Residence.value=="128")
+                                {
+                                        document.getElementById("city_usa_visible").style.display='block';
+                                        document.getElementById("city_india_visible").style.display='none';
+                                        docF.City_India.disabled = true;
+                                        docF.City_India.value = "";
+                                        docF.City_USA.disabled = false;
+                                        if(docF.frommarriagebureau.value!=1)
+                                                document.form1.State_Code.value="";
+                                }
+                                else
+                                {
+                                        docF.City_India.disabled = true;
+                                        docF.City_India.value = "";
+                                        docF.City_USA.disabled = true;
+                                        docF.City_USA.value = "";
+                                }
+                                if(docF.City_USA.disabled && docF.City_India.disabled)
+                                {
+                                        if(docF.frommarriagebureau.value!=1)
+                                                document.form1.State_Code.value="";
+                                }
+                                if(docF.frommarriagebureau.value!=1)
+                                        get_code('c','~$country_isd_code`');
+                        }
+                }
+                function validate_radio(arr)
+                {
+                        var sel='N';
+                        for(var i=0; i<arr.length; i++)
+                        {
+                                if(arr[i].checked==true)
+                                        sel='Y';
+                        }
+                        if(sel=='Y')
+                                return true;
+                        else
+                                return false;
+                }
+                function validate()
+                {
+                        if(document.getElementById)
+                        {
+                                if(document.getElementById('email_span'))
+                                        document.getElementById('email_span').style.color="#666666";
+                                if(document.getElementById('pwd1_span'))
+                                        document.getElementById('pwd1_span').style.color="#666666";
+				document.getElementById('lead_source_span').style.color="#666666";
+                                document.getElementById('gender_span').style.color="#666666";
+                                document.getElementById('mstatus_span').style.color="#666666";
+                                document.getElementById('religion_span').style.color="#666666";
+                                document.getElementById('caste_span').style.color="#666666";
+                                document.getElementById('height_span').style.color="#666666";
+                                document.getElementById('date_span').style.color="#666666";
+                                document.getElementById('income_span').style.color="#666666";
+                                if(document.getElementById('phone_span'))
+                                        document.getElementById('phone_span').style.color="#666666";
+                                if(document.getElementById('mobile_span'))
+                                        document.getElementById('mobile_span').style.color="#666666";
+                                document.getElementById('country_res_span').style.color="#666666";
+                                document.getElementById('city_span').style.color="#666666";
+                                document.getElementById('term_span').style.color="#666666";
+                                document.getElementById('mtongue_span').style.color="#666666";
+                        }
+                        var docF=document.form1;
+			if(!validate_radio(document.form1['Lead_Source']))
+                        {
+                                alert("Please specify Lead Source");
+                                if(document.getElementById)
+                                        document.getElementById('lead_source_span').style.color="red";
+                                document.form1['Lead_Source'][0].focus();
+                                return false;
+                        }
+                        if(!validate_radio(document.form1['Gender']))
+                        {
+                                alert("Please specify Your Gender");
+                                if(document.getElementById)
+                                        document.getElementById('gender_span').style.color="red";
+                                document.form1['Gender'][0].focus();
+                                return false;
+                        }
+                        if(docF.Day.value=="" || docF.Month.value=="" || docF.Year.value=="")
+                        {
+                                alert("Please specify Date of birth properly");
+                                if(document.getElementById)
+                                        document.getElementById('date_span').style.color="red";
+
+                                if(docF.Day.value=="")
+                                        docF.Day.focus();
+                                else if(docF.Month.value=="")
+                                        docF.Month.focus();
+                                else if(docF.Year.value=="")
+                                        docF.Year.focus();
+                                return false;
+                        }
+                        if(!validate_date(docF.Day.value,docF.Month.value,docF.Year.value))
+                        {
+                                alert(docF.Day.value + "/" + docF.Month.value + "/" + docF.Year.value + " is not a valid date");
+                                if(document.getElementById)
+                                        document.getElementById('date_span').style.color="red";
+                                docF.Day.focus();
+                                return false;
+                        }
+                        if(docF.Height.value=="")
+                        {
+                                alert("Please specify Height");
+                                if(document.getElementById)
+                                        document.getElementById('height_span').style.color="red";
+                                docF.Height.focus();
+                                return false;
+                        }
+                        if(!validate_radio(document.form1['Marital_Status']))
+                        {
+                                alert("Please specify Marital Status");
+                                if(document.getElementById)
+                                        document.getElementById('mstatus_span').style.color="red";
+                                document.form1['Marital_Status'][0].focus();
+                                return false;
+                        }
+			if(document.form1.Marital_Status[3].checked)
+                        {
+                                if(reason==actual || reason=="")
+                                {
+                                        if(document.form1.Annulled_Reason.value!="")
+                                                alert("Please press OK to submit valid details of your annulment");
+                                        else
+                                                alert("Please provide valid details of your annulment");
+
+                                        if(document.getElementById)
+                                                document.getElementById('mstatus_span').style.color="red";
+                                        document.form1['Marital_Status'][3].focus();
+                                        return false;
+
+                                }
+                        }
+                        if(document.form1.frommarriagebureau.value!=1)
+                        {
+                                if(docF.Email&&trim(docF.Email.value)=="")
+                                {
+                                        alert("Please specify Email ID");
+                                        if(document.getElementById)
+                                                document.getElementById('email_span').style.color="red";
+                                        docF.Email.focus();
+                                        return false;
+                                }
+                                var x = docF.Email.value;
+                                var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9])+$/;
+                                if(!checkemail(docF.Email.value))
+                                {
+                                        alert(docF.Email.value + " is not a valid Email ID");
+                                        if(document.getElementById)
+                                                document.getElementById('email_span').style.color="red";
+                                        docF.Email.focus();
+                                        return false;
+                                }
+                                else if(!filter.test(x))
+                                {
+                                        alert("'"+docF.Email.value+"'" + " is not a valid Email-id");
+                                        docF.Email.focus();
+                                        return false;
+                                }
+                                if(trim(docF.Password1.value)=="")
+                                {
+                                        alert("Please specify Password");
+                                        if(document.getElementById)
+                                                document.getElementById('pwd1_span').style.color="red";
+                                        docF.Password1.focus();
+                                        return false;
+                                }
+                                else if(docF.Password1.value.length < 5 || docF.Password1.value.length > 40)
+                                {
+                                        alert("The length of Password should be 5-40 characters");
+                                        if(document.getElementById)
+                                                document.getElementById('pwd1_span').style.color="red";
+                                        docF.Password1.focus();
+                                        return false;
+                                }
+                        }
+                        if(docF.Mtongue.value=="")
+                        {
+                                alert("Please specify Mother Tongue");
+                                if(document.getElementById)
+                                        document.getElementById('mtongue_span').style.color="red";
+                                docF.Mtongue.focus();
+                                     return false;
+                        }
+                        if(docF.Religion.value=="")
+                        {
+                                alert("Please specify Religion");
+                                if(document.getElementById)
+                                        document.getElementById('religion_span').style.color="red";
+                                docF.Religion.focus();
+                                return false;
+                        }
+                        if(docF.Caste.value=="")
+                        {
+                                alert("Please specify Caste");
+                                if(document.getElementById)
+                                        document.getElementById('caste_span').style.color="red";
+                                docF.Caste.focus();
+                                return false;
+                        }
+                        if(docF.Caste.value==0)
+                        {
+                                alert("Caste and Religion Can't be Same");
+                                if(document.getElementById)
+                                                document.getElementById('caste_span').style.color="red";
+                                docF.Caste.focus();
+                                return false;
+                        }
+                        if(docF.Income.value=="")
+                        {
+                                alert("Please specify your Annual Income");
+                                if(document.getElementById)
+                                        document.getElementById('income_span').style.color="red";
+                                docF.Income.focus();
+                                return false;
+                        }
+                        if(docF.Country_Residence.value=="")
+                        {
+                                alert("Please specify Country of Residence");
+                                if(document.getElementById)
+                                        document.getElementById('country_res_span').style.color="red";
+                                docF.Country_Residence.focus();
+                                return false;
+                        }
+                        if(docF.Country_Residence.value==51 && docF.City_India.value=="")
+                        {
+                                alert("Please specify City of Current Residence");
+                                if(document.getElementById)
+                                        document.getElementById('city_span').style.color="red";
+                                docF.City_India.focus();
+                                return false;
+                        }
+                        else if(docF.Country_Residence.value==51 && docF.City_India.value=='Other')
+                        {
+                                if(docF.State_India.value=="")
+                                {
+                                        alert("Please specify City of Current Residence");
+                                        if(document.getElementById)
+                                                document.getElementById('city_span').style.color="red";
+                                        docF.State_India.focus();
+                                        return false;
+                                }
+                        }
+                        if(docF.Country_Residence.value==128 && docF.City_USA.value=="")
+                        {
+                                alert("Please specify City of Current Residence");
+                                if(document.getElementById)
+                                        document.getElementById('city_span').style.color="red";
+                                docF.City_USA.focus();
+                                return false;
+                        }
+                        ~if $check eq "N"`
+                                if(docF.City_Res.value=="")
+                                {
+                                        alert("Please specify City of current residence");
+                                        return false;
+                                }
+                        ~/if`
+                        //if(docF.Country_Residence.value==51 || docF.Country_Residence.value==128)
+                        if(docF.frommarriagebureau.value!=1&&docF.Country_Residence.value==51)
+                        {
+                                if(docF.State_Code.value=="")
+                                {       alert("Please specify State Code by selecting City from Current City of Residence field.");
+                                        if(document.getElementById)
+                                        {
+                                                document.getElementById('phone_span').style.color="red";
+                                        } 
+                                        docF.State_Code.focus();
+                                        return false;
+                                }
+                                else if(isNaN(docF.State_Code.value))
+                                {
+                                        alert('Please enter a valid State Code');
+                                        if(document.getElementById)
+                                        {
+                                                document.getElementById('phone_span').style.color="red";
+                                        }
+                                        docF.State_Code.focus();
+                                        return false;
+                                }
+                        }
+                        if(document.form1.frommarriagebureau.value!=1)
+                        {
+				var phone_mob = validate_phone_mobile(docF.Phone.value,docF.Mobile.value);
+				if(phone_mob == "OK")
+				{
+					return true;
+				}
+				else
+				{
+					if(phone_mob == "PM")
+					{
+						if(document.getElementById)
+						{
+							document.getElementById('phone_span').style.color="red";
+							document.getElementById('mobile_span').style.color="red";
+						}
+						docF.Phone.focus();
+					}
+					else if(phone_mob == "P")
+					{
+						if(document.getElementById)
+						{
+							document.getElementById('phone_span').style.color="red";
+						}
+						docF.Phone.focus();
+					}
+					else if(phone_mob == "M")
+					{
+						if(document.getElementById)
+						{
+							document.getElementById('mobile_span').style.color="red";
+						}
+						docF.Mobile.focus();
+					}
+					return false;
+				}
+                                if(trim(docF.Phone.value)!="" && docF.Country_Code.value=="")
+                                {
+                                        alert("Please specify Country Code by selecting Country from Country of Residence.");                                        if(document.getElementById)
+                                        {
+                                                document.getElementById('phone_span').style.color="red";
+                                        }
+                                        docF.Phone.focus();
+                                        return false;
+                                }
+                                if(trim(docF.Mobile.value)!="" && docF.Country_Code_Mob.value=="")
+                                {
+                                        alert("Please specify Country Code by selecting Country from Country of Residence.");                                        if(document.getElementById)
+                                        {
+                                                document.getElementById('mobile_span').style.color="red";
+                                        }
+                                        docF.Mobile.focus();
+                                        return false;
+                                }
+                        }
+                        if(!docF.termscheckbox.checked)
+                        {
+                                alert("You have to agree to the terms and conditions before continuing");
+                                if(document.getElementById)
+                                        document.getElementById('term_span').style.color="red";
+                                docF.termscheckbox.focus();
+                                return false;
+                        }
+                        return true;
+                }
+                function validate_offline()
+                {
+                        var docF=document.form1;
+                        if(docF.Email&&trim(docF.Email.value)=="")
+                        {
+                                alert("Please specify Email ID");
+                                if(document.getElementById)
+                                        document.getElementById('email_span').style.color="red";
+                                docF.Email.focus();
+                                return false;
+                        }
+                        return true;
+                }
+                function togglecheck(cb)
+                {
+                        if(cb.checked==true)
+                                cb.checked=false;
+                        else
+                                cb.checked=true;
+                }
+//-->
+        </script>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+~if $NO_OF_ERROR gt 0`
+<body onload="javascript: document.form1['Gender'][0].focus(); activate_cityres(); activate_stateres();">
+~else`
+<body style="margin:0px" onload="javascript: document.form1['Gender'][0].focus(); activate_cityres(); activate_stateres(); PopSPEC(document.form1.Religion,10,11,'Y')">
+~/if`
+<table width="100%" cellpadding="0" cellspacing="0" >
+<tr>
+	<td colspan="2"><img src="~$IMG_URL`/profile/ser4_images/landing_page_long_registrat.gif" width="252" height="61"></td>
+</tr>
+~$temp_topband`
+<tr>
+	<td width="235" valign="top">~$temp_leftimage`~$temp_successstory`</td>
+	<td width="76%" valign="top">
+        ~if $NO_OF_ERROR`
+                <div class="spacer15">&nbsp;</div>
+                <div style="font:normal 11px Verdana; color:#FF0000; background-color:#FFFBB8; height:25px; margin:0 7px 0 7px">
+                        &nbsp;
+                        <img src="~$IMG_URL`/profile/ser4_images/error_1.gif" width="21" height="21" align="absmiddle">
+                        &nbsp;There are ~$NO_OF_ERROR` Error(s) in your form. They are marked in red. Please correct them and submit the form again.
+                </div>
+        ~/if`
+		<div style="width:100%; margin-top:10px;">
+		~if $HITSOURCE neq 'O'`
+		<form action="/profile/inputprofile_tieup.php~if $operator neq ''`?source=~$TIEUPSOURCE`&operator=~$operator`~/if`" method="post" name="form1" onsubmit="return validate();">
+		~else`
+		<form action="/profile/inputprofile_tieup.php~if $operator neq ''`?source=~$TIEUPSOURCE`&operator=~$operator`~/if`" method="post" name="form1" onsubmit="return validate_offline();">
+		~/if`
+		<input type="hidden" name="name_of_user" value="~$name_of_user`">
+		<input type="hidden" name="new_r_page" value="1">
+		<input type="hidden" name="hit_source" value="~$HITSOURCE`">
+		<input type="hidden" name="tieup_source" value="~$TIEUPSOURCE`">
+		<input type="hidden" name="maritalstatus" value="~$maritalstatus`">
+		<input type="hidden" name="checksum" value="~$CHECKSUM`">
+		<input type="hidden" name="id" value="~$ID_AFF`">
+		<input type="hidden" name="frommarriagebureau" value="~$frommarriagebureau`">
+		<input type="hidden" name="adnetwork" value="~$adnetwork`">
+        <input type="hidden" name="account" value="~$account`">
+        <input type="hidden" name="campaign" value="~$campaign`">
+        <input type="hidden" name="adgroup" value="~$adgroup`">
+        <input type="hidden" name="keyword" value="~$keyword`">
+        <input type="hidden" name="match" value="~$match`">
+		<input type="hidden" name="groupname" value="~$groupname`">
+		<input type="hidden" name="lmd" value="~$lmd`">
+		<div class="lftflow0 o16">Account Details</div>
+		<div class="rightflow greyele">* Compulsory Fields </div>
+		<div class="spacer1 spo">&nbsp;</div>
+		<!--FORM STARTS-->
+		<div class="row">
+			~if $TIEUPSOURCE eq 'ofl_prof'`
+			<div class="r1" >
+				<span id="lead_source_span">
+					~if $check_lead_source eq "Y"`
+						<font color= "red">Lead Source:</font>
+					~else`
+						* Lead Source:
+					~/if`
+				</span>
+			</div>
+			<div class="r2">
+				<input type="radio" name="Lead_Source" value="A" ~if $Lead_Source eq 'A'` checked~/if`>Matri Ad&nbsp;&nbsp;
+                                <input type="radio" name="Lead_Source" value="C" ~if $Lead_Source eq 'C'` checked ~/if`>Incoming call&nbsp;&nbsp;
+                                <input type="radio" name="Lead_Source" value="M" ~if $Lead_Source eq 'M'` checked ~/if`>Mailer&nbsp;&nbsp;
+				<input type="radio" name="Lead_Source" value="O" ~if $Lead_Source eq 'O'` checked ~/if`>Ex-Online&nbsp;&nbsp;
+			</div>
+			~/if`
+			<div class="r1" > 
+				<span id="gender_span">
+				~if $check_gender eq "Y"`
+					<font color= "red">* Gender:</font>
+				~else`
+					* Gender: 
+				~/if`
+				</span> 
+			</div>
+		        <div class="radiobut" ><input name="Gender" type="radio" value="M" ~if $gender eq 'M' or $gender eq ''` checked ~/if`></div><div class="radiotext">Male</div>
+			<div class="radiobut" ><input name="Gender" type="radio" value="F" ~if $gender eq 'F'` checked ~/if`></div><div class="radiotext" >Female </div>
+		</div>
+		<div class="spacer1">&nbsp;</div>
+		<div class="row">
+			<div class="r1" > 
+				<span id="date_span"> 
+				~if $check_date eq "1" or $DATEOFBIRTH_LESS eq "1"`
+					<font color="red">* Date of Birth:</font>
+				~else`
+					* Date of Birth: 
+				~/if`
+				</span> 
+			</div>
+		        <div class="r2">
+				<select name="Day" class="textbox" size="1">
+				      <option selected value="">Day</option>
+					~section name=next loop=$ddarr`
+						<option value="~$ddarr[next]`" ~if $day eq $ddarr[next]` selected ~/if`>~$ddarr[next]`</option>
+					~/section`
+				</select>
+				<select name="Month" class="textbox" size="1">
+					<option selected value="">Month</option>
+					~section name=next loop=$mmarr`
+						<option value="~$mmarr[next].VALUE`" ~if $month eq $mmarr[next].VALUE` selected ~/if`>~$mmarr[next].LABEL`</option>
+					~/section`
+			        </select>
+			        <select name="Year" class="textbox" size="1">
+					<option selected value="">Year</option>
+					~section name=next loop=$yyarr`
+						<option value="~$yyarr[next]`" ~if $year eq $yyarr[next]` selected ~/if`>~$yyarr[next]`</option>
+					~/section`
+				</select>
+				<span style="color:#B4BD62; font-size:10px">
+				Date of Birth cannot be modified later 
+				</span>
+			</div>
+		</div>
+		~if $DATEOFBIRTH_LESS eq "1"`
+		<div class="row">
+			<div class="r1" >&nbsp;</div>
+				<div class="r2">
+					<font color="red">
+						~if $gender eq "M"`
+							Male profiles less than 21 years of age cannot be registered
+						~elseif $gender eq "F"`
+							Female profiles less than 18 years of age cannot be registered
+						~/if`
+					</font>
+				</div>
+			</div>
+		</div>
+		~/if`
+
+		<div class="spacer1">&nbsp;</div>
+		<div class="row">
+			<div class="r1" > 
+				<span id="height_span"> 
+				~if $check_height eq "Y"`
+					<font color= "red">* Height:</font>
+				~else`
+					* Height: 
+				~/if`
+				</span> 
+			</div>
+			<div class="r2">
+				<select name="Height" size="1" class="textbox">
+					<option value="">Select any one option</option>
+					~$height`
+			        </select>
+				<span style="color:#B4BD62; font-size:10px">
+					5'0" (1.52 mts) = 5 Feet & 0 Inches (1.52 Meters)
+				</span>
+			</div>
+		</div>
+<script>
+
+actual='Please provide as much details about your annulment as possible. This can include the court which annulled your marriage and date when it was annulled';
+
+reason=actual;
+button1='<input type="button" name="Annulled_Submit" value="Ok"  onclick="javascript:annulled_submit()">';
+button2=' <input type="button" name="Annulled_Submit" value="Ok" onclick="javascript:annulled_submit()"> <input type="button" name="Annulled_Cancel" value="cancel" onclick="javascript:annulled_close()">';
+function annulled_close()
+{
+        document.form1.Annulled_Reason.value=reason;
+        document.getElementById("annulled_reason").style.display='none';
+}
+function annulled_submit()
+{
+        if(document.form1.Annulled_Reason.value==actual || document.form1.Annulled_Reason.value=='')
+                alert('Please provide valid details of your annulment');
+        else
+        {
+                reason=document.form1.Annulled_Reason.value;
+                document.getElementById("annulled_reason").style.display='none';
+                document.getElementById("annulled_edit").style.display='inline';
+        }
+}
+function annulled_edit()
+{
+        document.getElementById("annulled_reason").style.display='inline';
+        document.getElementById("showbutton").innerHTML=button2;
+        return false;
+}
+function annulled_checked(sel)
+{
+        if(sel=='y')
+        {
+                //
+        
+                if(document.form1.Annulled_Reason.value==actual || document.form1.Annulled_Reason.value=='')
+                {
+                        document.getElementById("annulled_reason").style.display='inline';
+                        document.getElementById("showbutton").innerHTML=button1;
+                }
+                else
+                {
+                        document.getElementById("annulled_reason").style.display='inline';
+                        document.getElementById("annulled_edit").style.display='none';
+                        document.getElementById("showbutton").innerHTML=button1;
+			
+
+                }
+        }
+        else
+        {
+                document.getElementById("annulled_reason").style.display='none';
+                document.getElementById("annulled_edit").style.display='none';
+        }
+
+}       
+function showbutton()
+{
+        if(document.form1.Annulled_Reason.value==actual)
+        {
+                document.getElementById("showbutton").innerHTML=button1;
+        }
+        else
+                document.getElementById("showbutton").innerHTML=button2;
+}
+</script>
+<div class="spacer1">&nbsp;</div>
+				<div class="row">
+					<div class="r1" >
+						<span id="mstatus_span">
+							~if $check_marital eq "Y"`
+								<font color= "red">Marital status:</font>
+							~else`
+								* Marital Status:
+							~/if`
+						</span>
+					</div>
+					<div class="r2">
+						<input type="radio" name="Marital_Status" value="N" ~if $marital eq 'N' or $marital eq ''` checked~/if` onclick="javascript:annulled_checked('n')">Single&nbsp;&nbsp;
+                                                <input type="radio" name="Marital_Status" value="W" ~if $marital eq 'W'` checked ~/if` onclick="javascript:annulled_checked('n')">Widowed&nbsp;&nbsp;
+                                                <input type="radio" name="Marital_Status" value="D" ~if $marital eq 'D'` checked ~/if` onclick="javascript:annulled_checked('n')">Divorced&nbsp;&nbsp;
+
+                                                <span style="position:relative">
+
+<div id="annulled_reason" style="position:absolute; left:8px; top:-140px; width:281px; height:142px; z-index:1501; background-image:url(~$IMG_URL`/profile/ser4_images/annulled_mess.gif);border: 1px none #000000;display:none" >
+<div style="padding:15px 0 0 10px "><textarea  name="Annulled_Reason" rows="5" wrap="VIRTUAL" class="textbox" style="width:250px; height:60px;color:#999999" onclick="javascript:{str=this.value;if(str.search(actual)!=-1) this.value='';this.style.color='#000000';}">Please provide as much details about your annulment as possible. This can include the court which annulled your marriage and date when it was annulled</textarea>
+</div>
+<div class="pad2" style="margin-left:10px " id="showbutton"></div>
+
+</div>
+<input type="radio" name="Marital_Status" value="A" ~if $marital eq 'A'` checked ~/if` onclick="javascript:annulled_checked('y')">Annulled&nbsp;&nbsp;  <span id="annulled_edit" style="display:none"><a style="cursor:pointer;" href="return false;" onclick="return annulled_edit();">Edit Annulment Details</a></span></span>
+
+					</div>
+				</div>
+		<div class="spacer1">&nbsp;</div>
+		~if $frommarriagebureau neq "1"`
+		<div class="row">
+			<div class="r1" > 
+				<span id="email_span"> 
+				~if $check_email eq "1"`
+					<font color="red">* Email Id:</font>
+				~elseif $check_email eq "2"`
+					<font color="red">* Email Id: <br>already exists</font>
+				~else`
+					* Email Id:
+				~/if`
+				</span> 
+			</div>
+			<div class="r2">
+				<input type="text" name="Email" value= "~$email`" class="textbox" style="width:150px ">
+		        </div>
+		</div>
+		<div class="spacer1">&nbsp;</div>
+		<div class="row">
+			<div class="r1" > 
+				<span id="pwd1_span"> 
+				~if $check_password1 eq "1"`
+					<font color="red">* Create password:</font>
+				~else`
+					* Create Password:
+				~/if`
+				</span> 
+			</div>
+			<div class="r2">
+				<input type="password" name="Password1" value= "~$password1`" class="textbox" style="width:150px ">
+				<span style="color:#B4BD62; font-size:10px">
+					Set Password within 5 to 40 Characters
+				</span>
+			</div>
+			<div class="spacer1">&nbsp;</div>
+		</div>
+		~/if`
+		<div class="spacer">&nbsp;</div>
+	</div>
+	<!--FORM ENDS-->
+	<!--AGAIN FORM STARTS-->
+	<div style="width:100%; margin-top:5px">
+		<div class="lftflow0 o16">Religion And Ethnicity</div>
+		<div class="spacer1 spo">&nbsp;</div>
+		<div class="row">
+			<div class="r1" > 
+				<span id="mtongue_span"> 
+				~if $once eq 'T'`
+					* Mother Tongue, Community:
+				~elseif $check_mtongue eq "Y"`
+					<font color= "red">Mother Tongue, Community</font>
+				~else`
+					* Mother Tongue, Community:
+				~/if`
+				</span> 
+			</div>
+			<div class="r2">
+				<select name="Mtongue" class="textbox" size="1">
+					<option value="" selected>[Select your Mother Tongue]</option>
+					~$mtongue`
+				</select>
+			</div>
+		</div>
+		<div class="spacer1">&nbsp;</div>
+		<div class="row">
+			<div class="r1"> 
+				<span id="religion_span"> 
+				~if $check_religion eq "Y"`
+					<font color= "red">* Religion:</font>
+				~else`
+					* Religion:
+				~/if`
+				</span> 
+			</div>
+			<div class="r2">
+				<select name="Religion" class="textbox" size="1" onChange="PopSPEC(this,10,11,'Y')";>
+					<option value="" selected>[Select your Religion]</option>
+					~$religion`
+				</select>
+			</div>
+		</div>
+		<div class="spacer1">&nbsp;</div>
+		<div class="row">
+			<div id="caste_span_visible" style="display:block">
+			<div class="r1"> 
+				<span id="caste_span"> 
+				~if $check_caste eq "Y"`
+					<font color= "red">* Caste:</font>
+				~else`
+					* Caste:
+				~/if`
+				</span> 
+			</div>
+			<div class="r2">
+				<select name="Caste" class="textbox" size="1">
+					~if $no_religion neq 'N'`
+					<option selected>[Select your caste]</option>
+					~/if`
+					~$caste`
+				</select>
+			</div>
+			</div>
+		</div>
+		<div class="spacer1">&nbsp;</div>
+	</div>
+	<!--AGAIN FORM ENDS-->
+        <!--EDUCATION FORM STARTS-->
+        <div style="width:100%; margin-top:5px">
+		<div class="lftflow0 o16">Income and Location </div>
+		<div class="spacer1 spo">&nbsp;</div>
+		<div class="row">
+			<div class="r1" > 
+				<span id="income_span"> 
+				~if $check_income eq "Y"`
+					<font color="red">* Annual Income:</font>
+				~else`
+					* Annual Income:
+				~/if`
+				</span> 
+			</div>
+			<div class="r2">
+				<select name="Income" class="textbox">
+					<option value="" selected>[Select Annual Income Range] </option>
+					~$income`
+			        </select>
+			</div>
+		</div>
+		<div class="spacer1">&nbsp;</div>
+		<div class="row">
+			<div class="r1" > 
+				<span id="country_res_span"> 
+				~if $check_countryres eq "Y"`
+					<font color= "red">* Country of Residence:</font>
+				~else`
+					* Country of Residence:
+				~/if`
+				</span> 
+			</div>
+			<div class="r2">
+				<select name="Country_Residence" class="textbox" style="WIDTH: 170px" onchange="activate_cityres(); activate_stateres();" size="1">
+					<OPTION value="">[Select any one option]</OPTION>
+					~$top_country`
+					<optgroup label="&nbsp;"></optgroup>
+					~$country_residence`
+				</select>
+			</div>
+		</div>
+		<div class="spacer1">&nbsp;</div>
+		<div class="row">
+			<div class="r1" > 
+				<span id="city_span">
+				~if $check_city_residence eq "Y"`
+					<font color= "red">* Current City of Residence:</font>
+				~else`
+					* Current City of Residence:
+				~/if`
+				</span> 
+			</div>
+		        <div class="r2">
+				<div id="city_india_visible" style="display:none; float:left; width:150px">
+				<select name="City_India" size="1" class="textbox" ~if $CITY_INDIA neq "Y"`disabled ~/if` onchange="get_code('i','~$india_std_code`'); activate_stateres();">
+					<option value="" selected>[Select City in India]</option>
+					~$city_india`
+					<option value="Other">Other</option>
+				</select>
+				</div>
+				<div id="city_usa_visible" style="display:none; float:left; width:150px">
+				<select name="City_USA" size="1" class="textbox" ~if $CITY_USA neq "Y"`disabled ~/if`>
+					<option value="" selected>[Select State in USA]</option>
+					~$city_usa`
+				</select>
+				</div>
+				<div id="state_india_visible" style="display:none">
+				<select name="State_India" size="1" class="textbox" onchange="get_code('i','~$india_std_code`')";>
+					<option value="" selected>[Select State in India]</option>
+					~$state_india`
+				</select>
+				</div>
+			</div>
+
+		</div>
+		<div class="spacer1">&nbsp;</div>
+		<div class="row">
+			<div class="r1" > 
+				<span id="phone_span">
+				~if $check_phone_v eq "1"`
+					<font color= "red">* Telephone Number:<br>~$phone_msg`</font>                                                        ~else`
+					* Telephone Number:
+				~/if`
+	</span> 
+			</div>
+			<div class="r2">
+				<input type="text" name="Country_Code" value="~$country_code`" class="textbox" style="width:30px " maxlength="5">
+				-
+			        <input type="text" name="State_Code" value="~$state_code`" class="textbox" style="width:40px " maxlength="10">
+				-
+			        <input type="text" name="Phone" value="~$phone`" class="textbox" maxlength="15">
+			       <div><input  name="Showphone" type="radio" value="N"    ~if $showphone eq 'Y'`    checked     ~/if`  > Show to my accepted contacts / paid members
+  <input type="radio"  name="Showphone" value="Y" ~if $showphone eq 'N'` checked ~/if` > Don't show to anybody</div>
+			</div>
+		</div>
+		<div class="spacer1">&nbsp;</div>
+		<div class="row">
+			<div class="r1"> 
+				<span id="mobile_span"> 
+				~if $check_mobile_v eq "1"`
+					<font color= "red">Mobile Number:<br>~$mobile_msg`</font>
+				~else`
+					Mobile Number:
+				~/if`
+				</span> 
+			</div>
+			<div class="r2">
+				<input type="text" name="Country_Code_Mob" value="~$country_code_mob`" class="textbox" style="width:20px;" maxlength="5">
+			        -
+				<input type="text" name="Mobile" value="~$mobile`" class="textbox" maxlength="15">
+				
+             			<div> <input name="Showmobile" type="radio" value="N"  ~if $showmobile eq 'Y'`  checked  ~/if` > Show to my accepted contacts / paid members
+                                                <input type="radio"  name="Showmobile" value="Y" ~if $showmobile eq 'N'`  checked  ~/if`> Don't show to anybody</div>	
+					</div> 
+			</div>
+		</div>
+      </div>
+      <!--EDUCATION FORM ENDS-->
+      </div>
+      <div class="spacer15">&nbsp;</div>
+      ~if $frommarriagebureau neq "1"`
+      <!--ROUNDED COR BOX-->
+      <div class="top">
+	      <div class="bot">
+		      <div class="lft">
+			      <div class="rgt">
+				      <div class="b_l">
+					      <div class="b_r">
+						      <div class="t_l">
+							      <div class="t_r">
+								      <!--Content-->
+								      <div class="leftflow greyele" style="width:30%">
+									       <div><b>Would you like to receive</b></div>
+									       <div><input type="checkbox" name="checkboxalert1" value="A" ~if $CHECKBOXALERT1 eq 'A'`checked~/if`>Match Alerts </div>
+									       <div><input type="checkbox" name="checkboxalert2" value="S" ~if $CHECKBOXALERT2 eq 'S'`checked~/if`>Service Messages </div>
+								      </div>
+								      <div class="leftflow greyele" style="width:45%">
+									      <div class="spacer15">&nbsp;</div>
+									      <div><input type="checkbox" name="checkboxalert3" value="S" ~if $CHECKBOXALERT3 eq 'S'`checked~/if` checked>Promotional Offers / Mails </div>
+									      <!--div><input type="checkbox" name="GET_SMS" value="Y" ~if ($GET_SMS eq "Y" OR $GET_SMS eq "")` checked ~/if`><a href="~$SITE_URL`/profile/tncnm.php?checksum=~$CHECKSUM`&small=1" onClick="window.open('~$SITE_URL`/profile/tncnm.php?checksum=~$CHECKSUM`&small=1','','width=600,height=500,scrollbars=yes'); return false;">Jeevansathi SMS Service</span></a> </div-->
+								      </div>
+								      <div class="spacer1">&nbsp;</div>
+								      <!--Content-->
+							      </div>
+						      </div>
+					      </div>
+				      </div>
+			      </div>
+		      </div>
+	      </div>
+      </div>
+      <!--ROUNDED COR BOX ENDS-->
+      ~/if`
+      </div>
+      <!--PROFILE SUMMARY FORM ENDS-->
+      <div style="width:100%; margin-top:5px;">
+	<div class="prow">
+          <div class="pb bluelink"> <span id="term_span">
+            <input type="checkbox" name="termscheckbox" checked>
+            I agree to the <a href="/P/disclaimer.php?checksum=&mb_io=~$frommarriagebureau`&small=1" onClick="window.open('/P/disclaimer.php?checksum=&mb_io=~$frommarriagebureau`&small=1','','width=600,height=500,scrollbars=yes'); return false;">Terms and Conditions</a> and have read and understood the <a href="/P/privacy_policy.php?checksum=&mb_io=~$frommarriagebureau`&small=1" onClick="window.open('/P/privacy_policy.php?checksum=&mb_io=~$frommarriagebureau`&small=1','','width=600,height=500,scrollbars=yes'); return false;">Privacy Policy</a> </span> 
+	~if $TERMSCHECKBOX eq ""`
+	<span style="color:#B4BD62; font-size:10px">
+	<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;You have to agree to the terms and conditions before continuing 
+	</span>
+	~/if`
+	</div>
+        </div>
+        <div class="spacer1">&nbsp;</div>
+        <div class="row bluelink" style="background-color:#FFEAAB ">
+          <div class="r1" align="center">&nbsp;</div>
+          <div class="r2">
+            <input type="submit" name="Submit" value="~$temp_buttontext`" class="button">
+          </div>
+
+        </div>
+        <div class="spacer1">&nbsp;</div>
+      </div>
+      <!--PROFILE SUMMARY FORM ENDS-->
+      </div>
+      <!--WRAPPER ENDS HERE-->
+      <div class="spacer15">&nbsp;</div>
+      </div>
+      </form>
+~if $groupname eq "wchutney"`
+        <SCRIPT LANGUAGE="JavaScript" src="http://www.webchutney.net/chutneytrack/js/iqtracker.js"></SCRIPT>
+        <SCRIPT LANGUAGE="JavaScript">
+        var clntid = "JVNSTHI";
+        trackThisPage();
+        </SCRIPT>
+~/if`
+
+    </td>
+
+  </tr>
+  
+  <tr>
+    <td colspan="2" style="background-color:#efefef; border-top: 1px solid #bdb69c;">&nbsp;</td>
+  </tr>
+</table>
+~if $groupname  eq 'Tyroo_India_JFM08' or $groupname  eq 'Tyroo_NRI_JFM08'`
+<script type="text/javascript" src="http://tq.tyroo.com:8080/acquire/tyr_home.js"></script>
+~/if`
+~if $groupname  eq 'DrivePM_NRI_JFM09'`
+<img src="http://switch.atdmt.com/action/Jeevansathi_NRI_Landing_Feb09" height="1" width="1">
+~/if`
+~if $groupname  eq 'DrivePM_RI_JFM09'`
+<img src="http://switch.atdmt.com/action/Jeevansathi_RI_Landing_Feb09" height="1" width="1">
+~/if`
+~if $Annulled_Reason neq ''`
+<script>
+document.form1.Annulled_Reason.value='~$Annulled_Reason`';
+if(document.form1.Marital_Status[3].checked)
+{
+        annulled_submit();
+}
+
+</script>
+~/if`
+
+</body>
+</html>
+

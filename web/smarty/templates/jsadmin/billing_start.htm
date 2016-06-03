@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+~include file="head_billing.htm"`
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+        <link rel="stylesheet" href="jeevansathi1.css" type="text/css">
+        <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+</head>
+  <title>Jeevansathi - Billing</title>
+</head>
+<body>
+<br>
+<br>
+<table border="0" cellspacing="2" cellpadding="2" width="70%" align="center">
+<form method="post" action="search_user.php" name="srchfrm">
+<table border="0" cellspacing="2" cellpadding="2" width="70%" align="center">
+<tr>
+        <td class="formhead">Search for Paid Members</td>
+        <td class="fieldsnew"><input type="text" name="phrase" value="" /></td>
+        <td class="fieldsnew">
+                <select name="criteria">
+                ~section name=next loop=$cri`
+                        <option value="~$cri[next].value`">~$cri[next].name`</option>
+                ~/section`
+                </select>
+        </td>
+        <td align="center" class="fieldsnew"><input type="submit" name="search" value="Go" class="buttons1"></td>
+</tr>
+<input type="hidden" name="user" value="~$USER`" />
+<input type="hidden" name="cid" value="~$CID`" />
+<input type="hidden" name="offline_billing" value="~$offline_billing`" />
+</form>
+<form action="search_orderid.php" method="post">
+<tr>
+        <td class="formhead">Search Online Orders</td>
+        <td class="fieldsnew"><input type="text" name="phrase" value=""></td>
+        <td class="fieldsnew">
+                <select name="criteria">
+                        <option value="orderid">By Order ID</option>
+                        <option value="uname">By Username</option>
+                        <option value="email">By E-mail</option>
+              </select>
+        </td>
+        <td align="center" class="fieldsnew"><input type="submit" name="submit" value="Go" class="buttons1"></td>
+</tr>
+<input type="hidden" name="user" value="~$USER`" />
+<input type="hidden" name="cid" value="~$CID`" />
+<input type="hidden" name="offline_billing" value="~$offline_billing`" />
+</form>
+<form action="search_request_id.php" method="post">
+<tr>
+        <td class="formhead">Search for cheque request</td>
+        <td class="fieldsnew"><input type="text" name="phrase" value=""></td>
+        <td class="fieldsnew">
+                <select name="criteria" class="textboxes1" size="1">
+                        <option value="req_id">By Request ID</option>
+                        <option value="uname">By Username</option>
+                </select>
+        </td>
+        <td align="center" class="fieldsnew"><input type="submit" name="submit" value="Go" class="buttons1"></td>
+</tr>
+<input type="hidden" name="user" value="~$USER`" />
+<input type="hidden" name="cid" value="~$CID`" />
+<input type="hidden" name="offline_billing" value="~$offline_billing`" />
+</form>
+<form action="easy_bill.php" method="post">
+<tr>
+        <td class="formhead">Search for Easy Bill Reference Number</td>
+        <td class="fieldsnew"><input type="text" name="phrase" value=""></td>
+        <td class="fieldsnew">
+                <select name="criteria" class="textboxes1" size="1">
+                        <option value="ref_id">By Reference ID</option>
+                        <option value="uname">By Username</option>
+                </select>
+        </td>
+        <td align="center" class="fieldsnew"><input type="submit" name="submit" value="Go" class="buttons1"></td>
+</tr>
+<input type="hidden" name="user" value="~$USER`" />
+<input type="hidden" name="cid" value="~$CID`" />
+<input type="hidden" name="offline_billing" value="~$offline_billing`" />
+</form>
+
+<form action="bluedart_search.php" method="post">
+<tr>
+        <td class="formhead">Search for Blue Dart Airway Number</td>
+        <td class="fieldsnew"><input type="text" name="phrase" value=""></td>
+        <td class="fieldsnew">
+                <select name="criteria" class="textboxes1" size="1">
+                        <option value="uname">By Username</option>
+                </select>
+        </td>
+        <td align="center" class="fieldsnew"><input type="submit" name="submit" value="Go" class="buttons1"></td>
+</tr>
+<input type="hidden" name="user" value="~$USER`" />
+<input type="hidden" name="cid" value="~$CID`" />
+<input type="hidden" name="offline_billing" value="~$offline_billing`" />
+</form>
+
+<form action="ivr_search.php" method="post">
+<tr>
+        <td class="formhead">Search for IVR Booking Reference Number</td>
+        <td class="fieldsnew"><input type="text" name="phrase" value=""></td>
+        <td class="fieldsnew">
+                <select name="criteria" class="textboxes1" size="1">
+                        <option value="ivr_ref">By IVR Booking Reference No.</option>
+                        <option value="uname">By Username</option>
+                </select>
+        </td>
+        <td align="center" class="fieldsnew"><input type="submit" name="submit" value="Go" class="buttons1"></td>
+</tr>
+<input type="hidden" name="user" value="~$USER`" />
+<input type="hidden" name="cid" value="~$CID`" />
+<input type="hidden" name="offline_billing" value="~$offline_billing`" />
+</form>
+<form action="search_bill_records.php" method="post">
+<tr>
+        <td class="formhead">Search by Payment Entry Date</td>
+        <td class="fieldsnew">
+                <input type="text" name="syear" value="" size=4>
+                <input type="text" name="smonth" value="" size=2>
+                <input type="text" name="sday" value="" size=2>&nbsp;(yyyy-mm-dd)
+        </td>
+        <td class="fieldsnew">
+                <input type="text" name="eyear" value="" size=4>
+                <input type="text" name="emonth" value="" size=2>
+                <input type="text" name="eday" value="" size=2>&nbsp;(yyyy-mm-dd)
+        </td>
+        <td align="center" class="fieldsnew"><input type="submit" name="CMDsubmit" value="Go" class="buttons1"></td>
+</tr>
+<input type="hidden" name="user" value="~$USER`" />
+<input type="hidden" name="cid" value="~$CID`" />
+<input type="hidden" name="offline_billing" value="~$offline_billing`" />
+</form>
+</table>
+</body>
+</html>

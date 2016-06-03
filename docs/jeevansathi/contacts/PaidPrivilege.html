@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class PaidPrivilege</title>
+			<link rel="stylesheet" href="../../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class PaidPrivilege</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+											<a href="#sec-consts">Constants</a>
+						
+			</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">PaidPrivilege contains get, update methods to calculate individual Paid profile Privileges.</p>
+	<ul class="tags">
+				<li><span class="field">author:</span> Nitesh Sethi</li>
+				<li><span class="field">version:</span> 1.0   SVN: $Id:  Privilege 23810 2012-11-09 nitesh.s $</li>
+			</ul>
+		<p class="notes">
+			Located in <a class="field" href="_contacts---PaidPrivilege.class.php.html">/contacts/PaidPrivilege.class.php</a> (line <span class="field">11</span>)
+		</p>
+		
+				
+		<pre><a href="../../jeevansathi/contacts/Privilege.html">Privilege</a>
+   |
+   --PaidPrivilege</pre>
+	
+			</div>
+</div>
+
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-consts">Constants</a>
+							
+									<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																												
+												<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#__construct" title="details" class="method-name">__construct</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">PrivilegeArray</span>
+										<a href="#getPrivilegeArray" title="details" class="method-name">getPrivilegeArray</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#updatePrivilege" title="details" class="method-name">updatePrivilege</a>
+											(<span class="var-type"><a href="../../jeevansathi/contacts/ContactHandler.html">ContactHandler</a></span>&nbsp;<span class="var-name">$contactHandler</span>)
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																		<a href="#sec-consts">Constants</a>
+							
+										<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+
+<a name="method__construct" id="__construct"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number">26</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function used to initilaize the Paid Privilege Class object.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			__construct
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetPrivilegeArray" id="getPrivilegeArray"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getPrivilegeArray</span> (line <span class="line-number">60</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns Privilege Array of a Paid Member</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">PrivilegeArray</span>
+		<span class="method-name">
+			getPrivilegeArray
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodupdatePrivilege" id="updatePrivilege"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">updatePrivilege</span> (line <span class="line-number">38</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">calculate Privilege of a Paid Member, calls the getPrivilege function of <a href="../../jeevansathi/contacts/Privilege.html">class</a></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+				<li><span class="field">uses:</span> NEWJS_CONTACT_PRIVILEGE</li>
+				<li><span class="field">uses:</span> JSADMIN_VIEW_CONTACTS_LOG::alreadyContact()</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			updatePrivilege
+		</span>
+					(<span class="var-type"><a href="../../jeevansathi/contacts/ContactHandler.html">ContactHandler</a></span>&nbsp;<span class="var-name">$contactHandler</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"><a href="../../jeevansathi/contacts/ContactHandler.html">ContactHandler</a></span>
+				<span class="var-name">$contactHandler</span>			</li>
+				</ul>
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../../jeevansathi/contacts/Privilege.html#methodupdatePrivilege">Privilege::updatePrivilege()</a></dt>
+						<dd>abstract function every base class contains the respective definition</dd>
+					</dl>
+			
+	</div>
+							<h4>Inherited Methods</h4>
+				<a name='inherited_methods'><!-- --></a>	
+									<!-- =========== Summary =========== -->
+					<p>Inherited From <span class="classname"><a href="../../jeevansathi/contacts/Privilege.html">Privilege</a></span></p>
+					<blockquote>
+													<span class="method-name"><a href="../../jeevansathi/contacts/Privilege.html#methodgetPrivilege">Privilege::getPrivilege()</a></span><br>
+													<span class="method-name"><a href="../../jeevansathi/contacts/Privilege.html#methodupdatePrivilege">Privilege::updatePrivilege()</a></span><br>
+											</blockquote>
+										
+		</div>
+	</div>
+
+	<a name="sec-consts"></a>
+	<div class="info-box">
+		<div class="info-box-title">Class Constants</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Constants</a> (<span class="disabled">details</span>)
+						
+			
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+										<h4>Inherited Constants</h4>
+				<A NAME='inherited_vars'><!-- --></A>
+									<p>Inherited from <span class="classname"><a href="../../jeevansathi/contacts/Privilege.html">Privilege</a></span></p>
+					<blockquote>
+													<span class="const-title">
+								<span class="const-name"><a href="../../jeevansathi/contacts/Privilege.html#constA">Privilege::A</a></span><br>
+							</span>
+													<span class="const-title">
+								<span class="const-name"><a href="../../jeevansathi/contacts/Privilege.html#constC">Privilege::C</a></span><br>
+							</span>
+													<span class="const-title">
+								<span class="const-name"><a href="../../jeevansathi/contacts/Privilege.html#constCALL_DIRECT">Privilege::CALL_DIRECT</a></span><br>
+							</span>
+													<span class="const-title">
+								<span class="const-name"><a href="../../jeevansathi/contacts/Privilege.html#constCOMM">Privilege::COMM</a></span><br>
+							</span>
+													<span class="const-title">
+								<span class="const-name"><a href="../../jeevansathi/contacts/Privilege.html#constCONTACT_DETAIL">Privilege::CONTACT_DETAIL</a></span><br>
+							</span>
+													<span class="const-title">
+								<span class="const-name"><a href="../../jeevansathi/contacts/Privilege.html#constD">Privilege::D</a></span><br>
+							</span>
+													<span class="const-title">
+								<span class="const-name"><a href="../../jeevansathi/contacts/Privilege.html#constE">Privilege::E</a></span><br>
+							</span>
+													<span class="const-title">
+								<span class="const-name"><a href="../../jeevansathi/contacts/Privilege.html#constI">Privilege::I</a></span><br>
+							</span>
+													<span class="const-title">
+								<span class="const-name"><a href="../../jeevansathi/contacts/Privilege.html#constN">Privilege::N</a></span><br>
+							</span>
+													<span class="const-title">
+								<span class="const-name"><a href="../../jeevansathi/contacts/Privilege.html#constR">Privilege::R</a></span><br>
+							</span>
+											</blockquote> 
+										
+		</div>
+	</div>
+
+	<p class="notes" id="credit">
+		Documentation generated on Mon, 03 Dec 2012 19:38:00 +0530 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.4</a>
+	</p>
+	</div></body>
+</html>

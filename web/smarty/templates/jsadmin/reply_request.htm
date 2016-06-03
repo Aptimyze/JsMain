@@ -1,0 +1,363 @@
+<HTML>
+	<HEAD>
+	<TITLE>REPLY TO REQUESTS FOR PROFILE EDITING </TITLE>
+	<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+                <LINK rel="stylesheet" href="jeevansathi.css" type="text/css">
+		<LINK rel="stylesheet" href="calendar.css" type="text/css">
+                <LINK rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+                <LINK rel="stylesheet" href="stylesheet.css" type="text/css">
+		<style>
+		.tabledON
+		 {background-color :#DEFEEF; padding:4}
+		.tdstyle
+		 {border:1px solid #9F4000; padding:4}
+		.tablehead
+                 {background-color :#5C768F ; font-color=:#FFFFFF}
+		</style>
+		<SCRIPT name="javascript">
+                </SCRIPT>
+		<script language="JavaScript" SRC="~$SITE_URL`/profile/js/ajax.js"></script>
+		<script>
+		function change_city()
+		{
+        		var country_code = document.getElementById('mod_country').value;
+		        request_url = "~$SITE_URL`/profile/edit_profile.php?Only_city=1&change_request=1&Country_code="+country_code;
+        		sendRequest('GET',request_url);
+		}
+                function change_caste()
+                {
+                        document.getElementById('mod_caste_1').style.display='none';
+                        document.getElementById('mod_caste_2').style.display='none';
+                        document.getElementById('mod_caste_3').style.display='none';
+                        document.getElementById('mod_caste_4').style.display='none';
+                        document.getElementById('mod_caste_9').style.display='none';
+                        var elt= document.getElementById('mod_rel');
+                        var religion_code= elt.options[elt.selectedIndex].value;
+                        if(religion_code == 5 ||religion_code == 6 || religion_code == 7 ||religion_code == 8||religion_code == 10)
+                            document.getElementById('mod_cas').value=1;
+                        else
+                        {
+                            document.getElementById('mod_caste_'+religion_code).style.display='block';
+                            var el=document.getElementById('mod_caste_'+religion_code);
+                            var caste_co=el.options[el.selectedIndex].value;
+                            document.getElementById('mod_cas').value=caste_co;
+                        }
+                }
+                function caste_new(elid)
+                {   
+                    var elet=document.getElementById(elid);
+                    var caste_code=elet.options[elet.selectedIndex].value;
+                    document.getElementById('mod_cas').value=caste_code;
+                }
+		</script>   
+        </HEAD>
+	<BR><BR>
+	<BODY marginwidth="0" marginheight="0" link="#FFFFFF" vlink="#FFFEEF">
+	<CENTER>
+			<TABLE border=0 width="760" cellspacing="1" cellpadding="2" bordercolor="#5C768B" bgcolor="#9F4000">
+                                <TR class="tablehead">
+                                        <TD width=25% align=center ><FONT color="#FFFFFF">Welcome : ~$user`</TD>
+                                        <TD height="20" align="right">
+                                         ~if !$record_id`<A href=mainpage.php?cid=~$cid`><FONT color="#FFFFFF">Main page</a>~/if`&nbsp;&nbsp;
+                                        </TD>
+                                        <TD height="20" width=15% align="center">
+                                                <A href=logout.php?cid=~$cid`><FONT color="#FFFFFF">Logout</a>
+                                        </TD>
+                                </TR>
+                        </TABLE>
+			<BR>
+
+			<TABLE border=0 width="760" cellspacing="3" cellpadding="2" bordercolor="#5C768B" style="border-collapse: collapse" height="1" bgcolor="#DEEFEF">
+				~if $iserror neq 0`
+					<TR height="21">
+                                        <TD align=center width=20% height="21" colspan="3" bordercolor="#D6AA63" style="border:1px solid #9F4000; padding:4">
+                                                <FONT face="Verdana" size="2"><b>~$msg`~$msg_u` ~$msg_d`</b></FONT>
+                                        </TD>
+				~/if`
+				<TR height="21">
+                                        <TD align=left width=20% height="21" bordercolor="#D6AA63" style="border:1px solid #9F4000; padding:4">
+                                        	<FONT face="Verdana" size="2">REQUEST BY</FONT>
+                                        </TD>
+                                        <TD align=left  width=80% style="border:1px solid #9F4000; padding:4">
+						<FONT face="Verdana" size="2" color="#9F4000">
+							~$requestby`	
+						</FONT>
+                                        </TD>
+                                </TR>
+				<TR height="21">
+                                        <TD align=left width=20% height="21" bordercolor="#D6AA63" style="border:1px solid #9F4000; padding:4">
+                                        <FONT face="Verdana" size="2">DATE </FONT>
+                                        </TD>
+                                        <TD align=left  width=70% style="border:1px solid #9F4000; padding:4">
+						<FONT face="Verdana" size="2" color="#9F4000">
+                                                	~$request_dt`
+						</FONT>
+                                        </TD>
+                                </TR>			
+				<TR height="21">
+                                        <TD align=left width=30% height="21" bordercolor="#D6AA63" style="border:1px solid #9F4000; padding:4">
+                                        <FONT face="Verdana" size="2">Request Details </FONT>
+                                        </TD>
+                                        <TD align=left  width=70% style="border:1px solid #9F4000; padding:4">
+						<FONT face="Verdana" size="2" color="#9F4000">
+	                                                ~$change_details`
+						</FONT>
+                                        </TD>
+                                </TR>
+			</TABLE>
+			<BR>
+			<TABLE border=0 width="760" cellspacing="3" cellpadding="2" bordercolor="#5C768B" style="border-collapse: collapse" height="1" bgcolor="#DEEFEF">
+				<TR>
+					<TD class="tablehead" colspan="5"><FONT color="#FFFFFF">Request History</FONT></TD>
+                                </TR>
+				~if $request_history_cnt eq 0`
+				<TR>
+					<TD class="tdstyle" colspan="5">No History</TD>
+                                </TR>
+				~else`
+				~section name=i loop=$request_history`
+				<TR>
+					<TD class="tdstyle">~$request_history[i].ID`</TD>
+					<TD class="tdstyle">~$request_history[i].REQUEST_FOR`</TD>
+					<TD class="tdstyle">~$request_history[i].REQUEST_DT`</TD>
+					<TD class="tdstyle">~$request_history[i].REQUEST_FROM`</TD>
+					<TD class="tdstyle">~$request_history[i].ADMIN_COMMENTS`</TD>
+                                </TR>
+				~/section`
+				~/if`
+			</TABLE>
+                        <BR>
+				<FORM name=mod_form action="replyrequest.php" method="post">
+					<TABLE border=0 width="760" cellspacing="3" cellpadding="2" bordercolor="#5C768B" style="border-collapse: collapse" height="1" bgcolor="#DEEFEF">
+						<TR>
+							<TD class="tdstyle" colspan="3">
+								<SPAN>
+									Request For : <FONT color="#9f4000"><b>&nbsp;<a href="showstat.php?cid=~$cid`&profileid=~$pid`" style="color: #9f4000" target="_new">~$orig_username`</a></b></FONT><br>
+									Membership  : <FONT color="#9f4000">&nbsp;
+									~if $orig_sub eq ''` 
+										Free Member 
+									~else` 
+										~section name=i loop=$sub_arr`
+											~$sub_arr[i]`&nbsp;&nbsp;
+										~/section`
+									~/if`
+								</SPAN>
+							</TD>
+						</TR>
+					~if $is_ms eq '1'`
+						<TR>
+							<TD class="tdstyle" ><FONT color=~$dob_clr`>Marital Status</TD>
+							<TD class="tdstyle" colspan="2">~$orig_ms`</TD> 
+						</TR>
+						<TR>
+							<TD class="tdstyle" width=25%>
+								<FONT color=~$ms_clr`> Change with </FONT></td><TD><BR>
+							<input type="radio" name="Marital_Status" value="N" >Never Married&nbsp;&nbsp;
+						<input type="radio" name="Marital_Status" value="W" ~if $marital eq 'W'` checked ~/if` >Widowed&nbsp;&nbsp;
+~if $muslim eq '1'`
+						<input type="radio" name="Marital_Status" value="M" ~if $marital eq 'M'` checked ~/if` >Married&nbsp;&nbsp;
+~/if`
+						<input type="radio" name="Marital_Status" value="S" ~if $marital eq 'S'` checked ~/if` >Awaiting Divorce&nbsp;&nbsp;
+						<input type="radio" name="Marital_Status" value="D" ~if $marital eq 'D'` checked ~/if` >Divorced&nbsp;&nbsp;<br>
+						<input type="radio" name="Marital_Status" value="A" ~if $marital eq 'A'` checked ~/if` >Annulled&nbsp;&nbsp;<br> 
+						<textarea name="annulled_reason" >~if $annulled_reason eq ''`If Annulled is selected, Please specify Reason ~else` ~$annulled_reason`~/if`</textarea>
+							</TD> 							
+							
+							<TD class="tdstyle"><INPUT type="checkbox" name="MS" value="MS" ~if  $MS eq 'MS'` checked ~/if` style="background-color :#F2F2F2 ; border:1px solid #9F4000">
+						</TR>
+					~/if`
+					~if $is_dob eq '1'`
+						<TR>
+							<TD class="tdstyle" ><FONT color=~$dob_clr`>Date Of Birth</TD>
+							<TD class="tdstyle" colspan="2">~$orig_dtofbirth`</TD> 
+						</TR>
+						<TR>
+							<TD class="tdstyle" width=25%>
+								<FONT color=~$dob_clr`> Change with </FONT> 
+							</TD> 							
+							<TD class="tdstyle" width=60%>
+								<script type="text/javascript" src="calendar.js"></script>
+
+     								<input type=text name="mod_dob" value="~$mod_dob`" size=10 maxlength=99 class=textfield id="field_5_3">
+     								<script type="text/javascript">
+     								<!--
+    									document.write('<a title="Calendar" href="javascript:openCalendar(\'lang=en-iso-8859-1&amp;server=1\',\'mod_form\', \'field_5_3\', \'date\')"><img class="calendar" src="../crm/img/b_calendar.png" alt="Calendar"  border=0></a>');
+
+     								//-->
+								</script>
+								<br><br>
+								<INPUT type="checkbox" name="del_contacts" value="DEL" ~if $del_contacts eq "DEL"` checked ~/if`>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									<FONT color="#9f4000">Delete Contacts (<font color="blue">Received Contacts : ~$recvd_contact` , Contacts Initiated : ~$send_contact`</font>)</FONT>
+							</TD>
+							<TD class="tdstyle"><INPUT type="checkbox" name="dob" value="DB" ~if  $dob eq 'DB'` checked ~/if` style="background-color :#F2F2F2 ; border:1px solid #9F4000">
+						</TR>
+					~/if`
+					~if $is_gender eq '1'`
+						<TR>
+                                                        <TD class="tdstyle"><FONT color=~$gender_clr`>Gender</FONT>
+							</TD>
+                                                        <TD class="tdstyle" colspan="2">~$orig_gender`</TD>
+                                                </TR>
+						<TR>
+                                                        <TD class="tdstyle"><FONT color=~$gender_clr`>Change with </FONT></TD>
+							<TD class="tdstyle">
+								<SELECT name="mod_gender" style="border: 1px solid #D6AA63;">									<OPTION value="F" ~if $mod_gender eq 'F'`selected ~/if`>F</OPTION>
+								   <OPTION value="M" ~if $mod_gender eq 'M'`selected ~/if`>M</OPTION></SELECT>
+								<br><br>
+                                                        	<FONT color=#9F4000>
+                                                                Change of gender will delete
+                                                                <font color="blue"><br>received contacts : ~$recvd_contact` </font >and <font color="blue">contacts initiated : ~$send_contact` </font> by ~$orig_username`
+								</FONT>
+							</TD>
+							<TD class="tdstyle"><INPUT type="checkbox" name="gender" value="G" ~if $gender eq 'G'`checked ~/if`style="background-color :#F2F2F2 ; border:1px solid #9F4000">
+						</TR>
+					~/if`
+                                        ~if $is_religion eq '1'`
+						<TR>
+                                                        <TD class="tdstyle"><FONT color=~$religion_clr`>Religion</FONT>
+							</TD>
+                                                        <TD class="tdstyle" colspan="2">~$REL_ARR.$orig_religion.LABEL`</TD>
+                                                </TR>
+						<TR>
+                                                        <TD class="tdstyle"><FONT color=~$religion_clr`>Change with </FONT></TD>
+							<TD class="tdstyle">
+                                                            <input type="hidden" name="relig_mod" id="rel_mod" value="~$mod_religion`" >
+								<SELECT name="mod_religion" id="mod_rel" style="border: 1px solid #D6AA63;" onchange="change_caste();">
+                                                                ~foreach from=$REL_ARR key=k item=relitem`
+                                                                     <OPTION value="~$relitem.VALUE`"~if $mod_religion eq $relitem.VALUE`selected ~/if`>~$relitem.LABEL`</OPTION>
+                                                                ~/foreach`
+                                                                </SELECT>
+								<br><br>
+                                                        	<FONT color=#9F4000>
+                                                                Change of religion and Caste will delete
+                                                                <font color="blue"><br>received contacts : ~$recvd_contact` </font >and <font color="blue">contacts initiated : ~$send_contact` </font> by ~$orig_username`
+								</FONT>
+							</TD>
+							<TD class="tdstyle"><INPUT type="checkbox" name="religion" value="REL" ~if $religion eq 'REL'`checked ~/if`style="background-color :#F2F2F2 ; border:1px solid #9F4000">
+						</TR>
+					~/if`
+                                        ~if $is_caste eq '1'`
+						<TR>
+                                                        <TD class="tdstyle"><FONT color=~$caste_clr`>Caste</FONT>
+							</TD>
+                                                        <TD class="tdstyle" colspan="2">~$CASTE_ARR.$orig_religion.$orig_caste.LABEL`</TD>
+                                                </TR>
+						<TR>
+                                                        <TD class="tdstyle"><FONT color=~$caste_clr`>Change with </FONT></TD>
+							<TD class="tdstyle">
+                                                                <SELECT id="mod_caste_1" style="display: none; border: 1px solid #D6AA63;" onchange="caste_new('mod_caste_1');">                                                               
+                                                                ~foreach from=$CASTE_ARR[1] key=k item=citem`
+                                                                     <OPTION value="~$citem.VALUE`">~$citem.LABEL`</OPTION>
+                                                                ~/foreach`
+								</SELECT>
+                                                                <SELECT id="mod_caste_2" style="display: none; border: 1px solid #D6AA63;" onchange="caste_new('mod_caste_2');">			
+                                                                ~foreach from=$CASTE_ARR[2] key=k item=citem`
+                                                                     <OPTION value="~$citem.VALUE`">~$citem.LABEL`</OPTION>
+                                                                ~/foreach`
+								</SELECT>
+                                                                <SELECT id="mod_caste_4" style="display: none; border: 1px solid #D6AA63;" onchange="caste_new('mod_caste_4');">				
+                                                                ~foreach from=$CASTE_ARR[4] key=k item=citem`
+                                                                     <OPTION value="~$citem.VALUE`">~$citem.LABEL`</OPTION>
+                                                                ~/foreach`
+								</SELECT>
+                                                                <SELECT id="mod_caste_3" style="display: none; border: 1px solid #D6AA63;" onchange="caste_new('mod_caste_3');">					
+                                                                ~foreach from=$CASTE_ARR[3] key=k item=citem`
+                                                                     <OPTION value="~$citem.VALUE`">~$citem.LABEL`</OPTION>
+                                                                ~/foreach`
+								</SELECT>
+                                                                <SELECT id="mod_caste_9" style="display: none; border: 1px solid #D6AA63;"onchange="caste_new('mod_caste_9');">                                  
+                                                                ~foreach from=$CASTE_ARR[9] key=k item=citem`
+                                                                     <OPTION value="~$citem.VALUE`">~$citem.LABEL`</OPTION>
+                                                                ~/foreach`
+								</SELECT>
+                                                            <input type="hidden" name="mod_caste" id="mod_cas" value="" >
+								<br>
+							</TD>
+							<TD class="tdstyle"><INPUT type="checkbox" name="caste" value="CAS" ~if $caste eq 'CAS'`checked ~/if`style="background-color :#F2F2F2 ; border:1px solid #9F4000">
+						</TR>
+					~/if`
+					~if $is_user eq '1'`	<TR>
+                                                        <TD class="tdstyle"><FONT color=~$username_clr`>Username</FONT>
+							</TD>
+                                                        <TD class="tdstyle" colspan="2">~$orig_username`</TD>
+                                                </TR>
+                                                        <TD class="tdstyle"><FONT color=~$username_clr`>Change with </FONT></TD>
+							<TD class="tdstyle"><INPUT type="text" name="mod_username" value="~$mod_username`" style="border: 1px solid #D6AA63;"></TD>
+							<TD class="tdstyle" width="10%"><INPUT type="checkbox" name="username" value="U" ~if $username eq 'U'`checked ~/if` style="background-color :#F2F2F2 ; border:1px solid #9F4000">
+                                                </TR>
+					~/if`
+					~if $is_sub eq '1'`    <TR>
+                                                        <TD class="tdstyle"><FONT color=~$sub_clr`>SUBSCRIPTION STATUS</FONT>
+                                                        </TD>
+                                                        <TD class="tdstyle" colspan="2">~$orig_sub`</TD>
+                                                </TR>
+                                                        <TD class="tdstyle"><FONT color=~$sub_clr`>~if $act eq 'Y'` Activate ~elseif $act eq 'N'` Deactivate ~/if`</FONT></TD>
+                                                        <TD class="tdstyle">
+							~if $act eq Y`
+							<SPAN>
+								<INPUT type="checkbox" name = "memberarr[]" value="F" ~if $FULL_MEM eq 'Y'` checked ~/if` >Full Member
+								<INPUT type="checkbox" name = "memberarr[]" value="H" ~if $HORO eq 'Y'` checked ~/if`>Horoscope
+								<INPUT type="checkbox" name = "memberarr[]" value="K" ~if $KUNDALI eq 'Y'` checked ~/if`>Kundali
+								<INPUT type="checkbox" name = "memberarr[]" value="B" ~if $BOLD_LIST eq 'Y'` checked ~/if`>Profile Highlighting
+								<INPUT type="checkbox" name = "memberarr[]" value="D" ~if $ECLASSIFIED  eq 'Y'` checked ~/if`>e-Classified
+								<INPUT type="checkbox" name = "memberarr[]" value="A" ~if $ASTRO  eq 'Y'` checked ~/if`>Astro Compatibility
+		</SPAN>
+							~elseif $act eq N`
+                                                		<FONT color="#9F4000">&nbsp;&nbsp; </FONT>
+							~/if`
+							<input type=hidden name="act" value="~$act`">
+							</TD>
+                                                        <TD class="tdstyle" width="10%"><INPUT type="checkbox" name="sub" value="S" ~if $sub eq 'S'`checked ~/if` style="background-color :#F2F2F2 ; border:1px solid #9F4000">
+                                                </TR>
+                                        ~/if`
+					 ~if $is_country eq '1'`    
+						<TR>
+                                                        <TD class="tdstyle">Country,City</TD>
+                                                        <TD class="tdstyle" colspan="2">~$COUNTRY_RES_VAL`,~$CITY_RES_VAL`</TD>
+                                                </TR>
+						<TR>
+                                                        <TD class="tdstyle">Change with</TD>
+                                                        <TD class="tdstyle"><select style="width:185px;" name="mod_country" id="mod_country" onchange="change_city();">~$COUNTRY_RES`</select><div id="city_arr">~$CITY_ARR`</div></TD>
+                                                        <TD class="tdstyle" width="10%"><INPUT type="checkbox" name="country" value="C" ~if $country eq 'C'`checked ~/if` style="background-color :#F2F2F2 ; border:1px solid #9F4000">
+                                                </TR>
+                                        ~/if`
+						<TR>
+							<TD class="tdstyle" colspan="3" align="center">
+								<INPUT type="checkbox" name="modifyall" value="ModAll" ~if $modifyall eq "ModAll"` checked ~/if` style="background-color :#F2F2F2 ; border:1px solid #9F4000"><FONT color="#9F4000">Modify All</FONT>
+							</TD>
+						</TR>
+					
+					</TABLE>
+					<input type="hidden" name="id" value="~$id`" >
+					<input type="hidden" name="pid" value="~$pid`" >
+					<input type="hidden" name="record_id" value="~$record_id`" >
+					<input type="hidden" name="cid" value="~$cid`" >
+					<input type="hidden" name="user" value="~$user`" >
+					<input type="hidden" name="requestby" value="~$requestby`" >
+					<input type="hidden" name="is_dob" value="~$is_dob`">
+                                        <input type="hidden" name="is_religion" value="~$is_religion`">
+					<input type="hidden" name="is_gender" value="~$is_gender`">
+					<input type="hidden" name="is_sub" value="~$is_sub`">
+					<input type="hidden" name="is_user" value="~$is_user`">
+					<input type="hidden" name="is_ms" value="~$is_ms`">
+					<input type="hidden" name="is_country" value="~$is_country`">
+					<input type="hidden" name="orig_gender" value="~$orig_gender`">
+					<input type="hidden" name="orig_religion" value="~$orig_religion`">
+					
+					<BR>
+					<TABLE width="760" cellspacing="1"  cellpadding="2" bgcolor="#DEEFEF">
+						<TR><TD><FONT color=~$comments_clr`><b>Comments&nbsp;&nbsp;~$c_msg`</b></FONT></TD></TR>
+						<TR><TD class="tdstyle"><TEXTAREA  name="admin_comments" cols=20 rows=4>~$admin_comments`</TEXTAREA></TD></TR>
+					</TABLE>
+						<INPUT type="submit" value="Send and Close" name="res_submit">
+			</FORM>
+		</CENTER>
+	</BODY/>
+</HTML>
+<SCRIPT>
+    var relc= document.getElementById('rel_mod').value;
+    if(relc=="")
+        document.getElementById('mod_caste_1').style.display='block';
+    else
+        document.getElementById('mod_caste_'+relc).style.display='block';
+</SCRIPT>

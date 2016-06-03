@@ -1,0 +1,4 @@
+type=command
+command=${php5} ${docRoot}/crontabs/sugarcrm/reg_lead_to_sugarlead.php
+retries=2
+retry.backoff=10000

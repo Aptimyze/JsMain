@@ -1,0 +1,206 @@
+<html>
+  <head>
+   <title>PROMOTION  MIS AT THE SERVER END</title>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <link rel="stylesheet" href="jeevansathi.css" type="text/css">
+   <style>
+       DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+   </style>                                                                                                                   </head>
+
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+   <tbody>
+    <tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+    </tr>
+   </tbody>
+  </table>
+<br>
+
+~if $mflag eq '1'`
+  <table width="100%" align="center" border=0 cellspacing=1 cellpadding=5>
+    <tr class=formhead align=center>
+	<td width=70%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	    <u>PROMOTION MIS</u> &nbsp;&nbsp;
+	</td>
+	<td width=10% align=center>
+	     <font color=#555555>
+              <b>YEAR : ~$myear`</b>
+             </font>
+        </td>
+        <td width=20%>
+	  <span class=red align=left> 
+	      N: NEWSPAPER &nbsp; S: SMS 
+          </span>
+       </td>
+    </tr>
+        ~section name=user loop=$userarr`
+               <table width=100% align=center>
+                 <tr class=formhead align=left>
+                   <td colspan=14><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>~$userarr[user]`</td>
+                 </tr>
+		 <tr class=label>
+                   <td width=8% align=center rowspan=1><span class=black>MODE </span></td>
+                        ~section name=mon loop=$mmarr`
+                             <td width=6% align=center>~$mmarr[mon]`</td>
+                        ~/section`
+                   <td width=6% align=center>Total</td>
+                </tr>
+                ~section name=mode loop=$modearr`
+                        <tr class=fieldsnew>
+                         <td align=center class=label>~$modearr[mode]`</td>
+                           ~section name=mon loop=$mmarr`
+                              <td align=center rowspan=1>&nbsp;<span class=green>~$mmcount2[user][mode][mon]`</span></td>                          ~/section`
+                         <td class=label align=center>&nbsp;<span class=green>~$totmmcount2[user][mode]`</span></td>
+                        </tr>
+                ~/section`
+			<tr class=label>
+                         <td align=center><b>Total</b></td>
+                            ~section name=mon loop=$mmarr`
+                               <td align=center>&nbsp;~$totmodecount2[user][mon]`</td>
+                            ~/section`
+                         <td align=center>&nbsp;~$total[user]`</td>
+                        </tr>	                                                                               
+			<tr>
+                         <td align=center class=label>Registered</td>
+                            ~section name=mon loop=$mmarr`
+                                 <td align=center class=fieldsnew><span class=green>&nbsp;~$conv_totmmcount[user][mon]`</span></td>                       ~/section`
+                         <td align=center class=label><span class=green>&nbsp;~$conv_total[user]`</span></td>
+                       </tr>                                                                                                                       
+                       <tr class=fieldsnew>
+                         <td align=center class=label width=9% rowspan=1>Member</td>
+                            ~section name=mon loop=$mmarr`
+                                 <td align=center rowspan=1 width=7%>&nbsp;<span class=green>~$conv_subcount[user][1][mon]`</span></td>                  ~/section`
+                          <td class=label align=center>&nbsp;<span class=green width=6%>~$conv_totsubcount[user][1]`</span></td>                   </tr>
+		</table>
+		<br>
+        ~/section`
+                <table width=100% align=center>
+                  <tr class=label>
+                    <td align=center width=9% rowspan=1><span class=blue><br>Grand Total</span></td>
+                         ~section name=mon loop=$mmarr`
+                                <td align=center class=label width=7%><b>&nbsp;~$totmmcount[mon]` </b></td>
+                         ~/section`
+                        <td align=center>&nbsp;<b>~$grandtotal`</b></td>
+                  </tr>
+                </table>                                                                                                     
+   </table>
+
+~elseif $dflag eq '1'`
+  <table width="100%" align="center" border=0 cellspacing=1 cellpadding=5>
+    <tr class=formhead align=center>
+        <td width=60%>
+            <u>PROMOTION MIS</u>
+        </td>
+            <td width=20% align=center>
+                <font color=#555555>
+                  <b>MONTH : ~$dmonth` &nbsp;&nbsp; YEAR : ~$dyear`</b>
+                </font>
+            </td>                                                                                                                          
+       <td width=20%>
+         <span class=red align=left>
+              N: NEWSPAPER &nbsp; S: SMS
+         </span>
+       </td>
+    </tr>
+        ~section name=user loop=$userarr`
+               <table width=100% align=center>
+                  <tr class=formhead align=left>
+                     <td colspan=33><b>&nbsp;&nbsp;USER : </b>~$userarr[user]`</td>
+                  </tr>
+                  <tr class=label>
+                     <td width=5% align=center rowspan=1><span class=black>MODE </span></td>
+                       ~section name=dd loop=$ddarr`
+                                <td align=center width=3%>~$ddarr[dd]`</td>
+                       ~/section`
+                     <td width=5% align=center>Total</td>
+                  </tr>
+
+                  ~section name=mode loop=$modearr`
+                     <tr class=fieldsnew>
+                             <td align=center class=label>~$modearr[mode]`</td>
+                                ~section name=dd loop=$ddarr`
+                                   <td align=center rowspan=1>&nbsp;<span class=green>~$mmcount2[user][mode][dd]`</span></td>                                ~/section`
+                             <td class=label align=center>&nbsp;<span class=green>~$totmmcount2[user][mode]`</span></td>
+                     </tr>
+                  ~/section`  
+		  <tr class=label>
+                     <td align=center><b>Total</b></td>
+                             ~section name=dd loop=$ddarr`
+                                  <td align=center>&nbsp;~$totmodecount2[user][dd]`</td>
+                             ~/section`
+                     <td align=center>&nbsp;~$total[user]`</td>
+                  </tr>
+		  <tr>
+                     <td align=center class=label>Registered</td>
+                            ~section name=dd loop=$ddarr`
+                                   <td align=center class=fieldsnew>&nbsp;~$conv_totmmcount[user][dd]`</td>
+                             ~/section`
+                     <td align=center class=label>&nbsp;~$conv_total[user]`</td>
+                  </tr>                                                                                                                        <tr class=fieldsnew>
+                     <td align=center class=label width=5% rowspan=1>Member</td>
+                           ~section name=dd loop=$ddarr`
+                 		   <td align=center rowspan=1 width=3%>&nbsp;<span class=green>~$conv_subcount[user][1][dd]`</span></td>                ~/section`
+                     <td class=label align=center>&nbsp;<span class=green width=5%>~$conv_totsubcount[user][1]`</span></td>
+                  </tr>
+                <br>
+                                                                                                                             
+        ~/section`
+                <tr></tr>
+                <tr></tr>
+                <tr class=label>
+                          <td align=center width=5%><br><font color=blue>Grand Total</font></td>
+                          ~section name=dd loop=$ddarr`
+                                <td align=center width=3%><font color=blue>~$totmmcount[dd]`</font></td>
+                          ~/section`
+                          <td align=center width=5%><font color=blue>~$grandtotal`</font></td>
+                        </font>
+                </tr>
+               </table>
+</table>
+~else`
+<br><br>                                                                                                                     
+	<form action=serv_promotionmis.php method=POST>
+	<table width=60% cellspacing=1 cellpadding=5 align=center>
+	  <tr class=formhead><td colspan=2 align=center>SELECT THE CRITERIA </td></tr>
+	  <tr>
+		<td align=center class=label><input type=radio name=criteria value='M' checked>MONTHWISE</td>
+		<td class=fieldsnew>
+		    <select name="myear">
+       			 ~section name=yr loop=$yyarr`
+	                <option value=~$yyarr[yr]`>~$yyarr[yr]`</option>
+        		~/section`
+        	   </select>&nbsp;&nbsp;&nbsp;Year
+		</td>
+		<td>
+	</tr>
+	<tr >
+        	<td align=center class=label><input name=criteria type=radio value='D'>DAYWISE </td>
+	        <td class=fieldsnew> 
+		 <select name="dmonth">
+           		~section name=mon loop=$mmarr`
+	                <option value=~$mmarr[mon]`>~$mmarr[mon]`</option>
+        		~/section`
+       		 </select> -
+
+	         <select name="dyear">
+        	 	~section name=yr loop=$yyarr`
+                	<option value=~$yyarr[yr]`>~$yyarr[yr]`</option>
+		        ~/section`
+             	 </select>&nbsp;&nbsp;&nbsp;Month - Year
+        	</td>
+        </tr>
+	<tr>
+		<td class=label height=23><input type=hidden name=cid value=~$cid`>
+		<td class=fieldsnew height=23><input type=hidden name=name value=~$name`>
+	</tr>
+	<tr>
+		<td class=label>
+		<td class=fieldsnew><Input type=submit name=submit value=SUBMIT></td>
+	</tr>
+     </table>
+~/if`
+</html>

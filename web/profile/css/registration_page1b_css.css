@@ -1,0 +1,65 @@
+.only-india {
+ color: #000000;
+ font-size: 12px;
+ font-weight: normal;
+ left: 208px;
+ position: relative;
+ top: -1px;
+ width: 68px;
+}
+
+.box-message {
+  background: none repeat scroll 0 0 #F4F4F4;
+  border: 4px solid #E4E3E3;
+  height: auto;
+  margin-top: 20px;
+  padding: 26px 25px 35px;
+  width: 718px;
+}
+
+.box-message div > input[type="text"]
+{
+ border:1px solid #000;
+ color:#000;
+}
+.message {
+ width:342px;
+ min-height:102px;
+ height:auto;
+ background:#FFF;
+ font:20px arial;
+ border: 4px solid #ebe9e9;
+ color:#494949;
+}
+.ico-message {
+ width:130px;
+ height:110px;
+ background:url(IMG_URL/profile/images/registration_revamp_new/pg1b_sprte.png);
+}
+.pos-lt {
+ background-position:10px -514px
+}
+.pos-rt {
+ background-position:-135px -510px;
+ width:120px;
+}
+.box-message .btn-sub {
+ background:url(IMG_URL/profile/images/registration_revamp_new/pg1b_sprte.png) 0px -636px;
+ border:2px solid #81c45d; 
+}
+.fto-bot-notify {
+ border: 2px solid #ebe9e9;
+ background:#FFF;
+ padding:15px 0px 15px 25px;
+ margin-top:50px;
+ width:95%;
+}
+.ico-note {
+ background: url("IMG_URL/profile/images/registration_revamp_new/pg1b_sprte.png")   scroll -270px -112px  no-repeat;
+ float: left;
+ height: 34px;
+ width: 46px;
+}
+.fs20 {
+ font:20px arial;
+}

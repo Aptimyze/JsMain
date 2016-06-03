@@ -1,0 +1,79 @@
+<html>
+<head>
+        <title>Jeevansathi.com - Statistics</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+        <link rel="stylesheet" href="jeevansathi.css" type="text/css">
+	<style>
+	        DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+	</style>
+
+	<script>
+		function page_load(to_page)
+		{
+	        	var page="~$CUR_PAGE`&j="+to_page;
+	        	//page=page+"&date_search_submit=1&date1xx=~$date1`&&date2xx=~$date2`";
+	        	document.location=page;
+		}
+	</script>
+                                                                                                                             
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+ <br /><br />
+         <table width=760 cellspacing="1" cellpadding='0' ALIGN="CENTER" >
+           <tr width=100% border=1>
+            <td width=30% class="formhead" height="23" align="center"><font><b>Welcome </b></font></td>
+         <td width=30% class="formhead" align='CENTER' height="23">
+            <a href="mainpage.php?cid=~$cid`">Click here to go to mainpage</a>
+            </td>
+            <td width=30% class="formhead" align='CENTER' height="23">
+             <a href="/jsadmin/logout.php?cid=~$cid`">Logout</a>
+            </td>
+           </tr>
+          </table>
+<br><br>
+
+~if $pagination`
+<table width=100% align="center">
+	<tr class="formhead">
+	        <td align="right" class="label" >
+	        <select class="gray" style="z-index:10" onChange="javavscript:{if (this.value!='' )page_load(this.value);}"><option value=''> Page&nbsp;</option>~html_options values=$total_pages output=$total_pages selected="$whereis"`</select>
+	        </td>
+	</tr>
+</table>
+~/if`
+
+<table width=100% align="center">
+	<tr class="formhead">
+		~foreach from=$displayHeaders key=k item=v`
+			<td align="center">~$v`</td>
+		~/foreach`
+	</tr>
+	~assign var="sr_no" value=$start+1`
+	~foreach from=$displayData key=k item=v`
+	<tr class="fieldsnew">
+		~foreach from=$v key=l item=m`
+			<td align="center">
+			~if $l eq 'SNO'`
+				~$sr_no`		
+			~else`
+				~$m`
+			~/if`
+			</td>
+		~/foreach`
+	</tr>
+	~assign var="sr_no" value=$sr_no+1`
+	~/foreach`
+</table>
+
+</body>
+</html>

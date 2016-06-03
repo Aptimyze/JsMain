@@ -1,0 +1,33 @@
+<table width="760"  border="0" align="center" cellpadding="0" cellspacing="0">
+ <tr>
+  <td><img src="images/matrimonials.gif" width="269" height="66"><br>
+   <table width="269" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+     <td width="269"><DIV align=center>
+      <H1>&nbsp;Indian Matrimonials - Meet Your Match</H1>
+     </DIV></td>
+    </tr>
+    <tr>
+     <td height="5"></td>
+    </tr>
+   </table>
+   
+ 
+ </td>
+ </tr>
+</table>
+<table width="760"  border="0" align="center" cellpadding="0" cellspacing="0">
+ <tr class=bglgrey>
+  <td colspan="4" height="8"></td>
+ </tr>
+ <tr>
+  <td><img src="images/top_strip.gif" width="272" height="36"></td>
+  <td valign="top">~if $CURRENTUSERNAME eq ""`<a href="businesssathi_login.php"><img src="images/busi_login.gif" width="180" height="29" border="0"></a> ~else` <a href="businesssathi_logout.php?checksum=~$CHECKSUM`"><img src="images/busi_logout.gif" width="180" height="29" border="0"></a>~/if`</td>
+ ~if $NOIMAGE neq "1"` 
+<td valign="top"><a href="businesssathi_input.php"><img src="images/busi_join.gif" width="180" height="29" border="0"></a></td>
+
+~else`<td valign="top"><a href="businesssathi_mybusi_sathi.php?checksum=~$CHECKSUM`"><img src="images/my_busi_sathi.gif" width="180" height="29" border="0"></a></td>
+ ~/if`
+  <td valign="top"><a href="/P/contact.php?checksum=~$CHECKSUM`"><img src="images/contact_us.gif" width="128" height="29" border="0"></a></td>
+ </tr>
+</table>

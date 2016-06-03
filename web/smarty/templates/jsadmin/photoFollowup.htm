@@ -1,0 +1,75 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>JeevanSathi.com - Phone Search</title>
+  <link rel="stylesheet" href="/jsadmin/jeevansathi.css" type="text/css">
+  <link rel="stylesheet" href="/profile/images/styles.css" type="text/css">
+  <script>
+	function page_load(to_page)
+        {
+        	var page="~$CUR_PAGE`&j="+to_page;
+        	//page=page+"&date_search_submit=1&date1xx=~$date1`&&date2xx=~$date2`";
+                document.location=page;
+        }
+  </script>
+</head>
+
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+~include file="head.htm"`
+
+  <table width=100% cellspacing="1" cellpadding='0'>
+   <tr width=100% border=1>
+    <td width="30%" class="formhead" height="23"><font><b>Welcome : ~$name`</b></font></td>
+    <td width="25%" class="formhead" align="center"><a href="mainpage.php?cid=~$cid`">Click here to go to main page</a></td>
+     <td width="6%" class="formhead" align='RIGHT' height="23">
+        <a href="logout.php?cid=~$cid`">Logout</a>
+    </td>
+   </tr>
+<!--
+   <tr width=100% >
+        <td align="right" >
+                <select onChange="javavscript:{if (this.value!='' )page_load(this.value);}"><option value=''> Page&nbsp;</option>~html_options values=$total_pages output=$total_pages selected="$whereis"`</select>
+        </td>
+   </tr>
+-->
+  </table>
+<br>
+<br>
+
+<table cellpadding = 5 align=center width=100%>
+<tr class="formhead">
+	<td width="5%">Serial Number</td>
+	<td width="10%">Username</td>
+	<td width="30%">Phone Numbers</td>
+	<td width="5%">Photo Uploaded</td>
+	<td width="5%">Photo Live on Site</td>
+	<td width="20%">Registration Date</td>
+	<td width="5%">Gender </td>
+	<td width="20%">Posted By </td>
+</tr>
+~if $NO_RECORD eq 'Y'`
+	<tr class="fieldsnew">
+	<td class="red" colspan=2>No Record Found</td>
+	</tr>
+~else`
+	~section name=next loop=$lusers`
+	<tr class="label">
+		<td>~$lusers[next].S_NO`</td>
+		<td> <a href="showstat.php?cid=~$cid`&profileid=~$lusers[next].PROFILEID`" target=_blank>~$lusers[next].USERNAME`</a></td>
+                <td>~$lusers[next].PHONE_NUMBER`</td>
+                <td>~$lusers[next].PHOTO_UPLOAD`</td>
+                <td>~$lusers[next].PHOTO_LIVE`</td>
+                <td>~$lusers[next].ENTRY_DT`</td>
+                <td>~$lusers[next].GENDER`</td>
+                <td>~$lusers[next].RELATION`</td>
+	</tr>
+	~/section`
+~/if`
+</table>
+
+<br>
+<br>
+~include file="foot.htm"`
+</body>
+</html>

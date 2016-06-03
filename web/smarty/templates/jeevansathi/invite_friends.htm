@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<title>Jeevansathi Matrimonials-  Invite your friends</title>
+<link rel="stylesheet" href="css/~$comm_style_css`" type="text/css">
+<style type="text/css">
+.ot{float:left; width:550px;border:1px solid #898989; padding:5px;}
+.pghd{float:left; width:99% }
+.r14{font:bold 14px verdana,Arial; color:#CC0000; padding-top:5px}
+.w1{width:50%; padding:3px 0 3px 0px}
+.w2{width:50%; padding:3px 0 3px 0}
+.w3{width:30%;}
+.line{line-height:1px; background-color:#CCCCCC; width:90%}
+.bl{float:left; width:550px}
+.im{float:right; width:132px}
+</style>
+<script language="javascript">
+<!--
+function ini()
+{
+        ~if $NOREFERER eq "Y"`
+                document.form1.referer.focus();
+        ~elseif $NOEMAIL  eq "Y"`
+                document.form1.referer_email.focus();
+        ~elseif $INVALID_NAME eq 'Y'`
+                document.form1.f0.focus();
+	~elseif $INVALID_EMAIL eq 'Y'`
+		document.form1.e0.focus();
+	~else`
+		document.form1.referer.focus();
+        ~/if`
+}
+//-->
+</script>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body onload="ini();">
+<DIV id="dhtmltooltip" class="ttip"></DIV>
+<SCRIPT language=JavaScript1.2 src="~$IMG_URL`/profile/js/~$tooltip_new_js`" type=text/javascript></SCRIPT>
+<div id="container">
+	~$HEAD`
+	<div class="spacer15">&nbsp;</div>
+	<div id="wrapper">
+		~$LEFTPANEL`	
+		<div id="center">
+			<div class="pghd">
+				<div class="r14"><img src="images/icon_chpass.gif" width="14" height="14"> Invite your Friends</div>
+				<div class="spacer15" style="border-top:1px solid #000000; margin-top:5px;" >&nbsp;</div>
+				<div class="greyele bluelink">Be a helping hand for your single friends to find a life partner!! <br>Invite them to Jeevansathi.com and let them try their luck.
+				</div>
+				<div class="spacer15">&nbsp;</div>
+				~if $error neq 0`
+                                	<div class="greyele bluelink"><font color="red">Please check the entries marked in red.</font></div>
+                                	<div class="spacer15">&nbsp;</div>
+                        	~/if`
+			</div>
+			<div class="ot">
+				<div class="bl">
+				   <form name="form1" method="post" action="invitee.php" name="form1">
+					<div class="bele lftflow0 w1" style="background-color:#D3D3D3">&nbsp;~if $NOREFERER eq 'Y'` <font color="red">~/if`Your  name</font></div>
+					<div class="bele lftflow0 w2" style="background-color:#D3D3D3">&nbsp;~if $NOEMAIL eq 'Y'` <font color="red">~/if`Your email ID</font></div>
+					<div class="spacer15">&nbsp;</div>
+					<div class="lftflow0 w1"><input type="text" name="referer" value="~$referer`" class="textbox"></div>
+					<div class="lftflow0 w2"><input type="text" name="referer_email"  value="~$referer_email`" class=textbox></div>
+					
+					<div class="spacer15">&nbsp;</div>
+
+					~if $error neq 0`
+						<div class="bele lftflow0 w1" style="background-color:#D3D3D3">&nbsp;~if $INVALID_NAME eq 'Y'`<font color="red"> ~/if`Friend's name</font></div>
+						<div class="bele lftflow0 w2" style="background-color:#D3D3D3">&nbsp;~if $INVALID_EMAIL eq 'Y'`<font color="red"> ~/if`Friend's email ID</font></div>
+					~else`
+						<div class="bele lftflow0 w1" style="background-color:#D3D3D3">&nbsp;~if $error eq 1`<font color="red">~/if` Friend's name</font></div>
+                                                <div class="bele lftflow0 w2" style="background-color:#D3D3D3">&nbsp;~if $error eq 1` <font color="red">~/if`Friend's email ID</font></div>
+					~/if`
+
+
+
+						~section name=invitee loop=5`
+							<div class="spacer">&nbsp;</div>
+							<div class="lftflow0 w1"><input type="text" name="friend[]" value="~$valid[invitee].name`" class="textbox" id="f~$smarty.section.invitee.index`"></div>
+                                                	<div class="lftflow0 w2"><input type="text" name="email[]"  value="~$valid[invitee].email`" class="textbox" id="e~$smarty.section.invitee.index`"></div>
+						~/section`
+
+<!--
+<div class="spacer">&nbsp;</div>
+<div class="lftflow0 w1"><input type="text" name="textfield" class="textbox"></div>
+<div class="lftflow0 w2"><input type="text" name="textfield" class="textbox"></div>
+
+<div class="spacer">&nbsp;</div>
+<div class="lftflow0 w1"><input type="text" name="textfield" class="textbox"></div>
+<div class="lftflow0 w2"><input type="text" name="textfield" class="textbox"></div>
+
+<div class="spacer">&nbsp;</div>
+<div class="lftflow0 w1"><input type="text" name="textfield" class="textbox"></div>
+<div class="lftflow0 w2"><input type="text" name="textfield" class="textbox"></div>
+
+<div class="spacer">&nbsp;</div>
+<div class="lftflow0 w1"><input type="text" name="textfield" class="textbox"></div>
+<div class="lftflow0 w2"><input type="text" name="textfield" class="textbox"></div>
+
+
+-->
+							<div class="spacer15">&nbsp;</div>
+							<input type="hidden" name="checksum" value="~$CHECKSUM`">
+							<!--input type="hidden" name="referer_email" value="~$referer_email`"-->
+							<div class="pad2 bele lftflow"><input type="submit" name="invitation" value="Invite Friends"></div>
+							<div class="spacer">&nbsp;</div>
+						</div>
+						</form>
+					</div>
+				</div>
+<!--CENTER ENDS HERE-->
+</div>
+<!--WRAPPER ENDS HERE-->
+~$FOOT`
+</div>
+</body>
+</html>

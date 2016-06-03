@@ -1,0 +1,7 @@
+@font-face{font-family: 'WebRupee';src: url("../../fonts/WebRupee.V2.0.eot");src: local('WebRupee'), url("../../fonts/WebRupee.V2.0.ttf") format('truetype'),  url("../../fonts/WebRupee.V2.0.woff") format('woff'), url("../../fonts/WebRupee.V2.0.svg") format('svg');font-weight: normal;font-style: normal;}
+.WebRupee{font-family: 'WebRupee';}
+.fontlig{font-family:"Roboto","sans-serif"; font-weight:300;}
+.fontreg{font-family:"Roboto","sans-serif";font-weight:400;}
+.fontrobbold{font-family:"Roboto","sans-serif";font-weight:700;}
+.fontthin{font-family:"Roboto","sans-serif";font-weight:100;}
+.fontmed{font-family:"Roboto", "sans-serif";font-weight:500}

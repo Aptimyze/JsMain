@@ -1,0 +1,64 @@
+all:
+  newLoginLayer:
+    enable_login:  off
+    enable_google_analytics:  off
+  newMobLogin:
+    enable_login:  off
+    enable_google_analytics:  off
+  forgotPasswordLayer:
+    enable_login:  off
+    enable_google_analytics:  off
+  forgotPassword:
+    enable_login:  off
+    enable_google_analytics:  off
+  resetPass:
+    enable_login:  off
+    enable_google_analytics:  off
+  registrationLayer:
+    enable_login:  off
+    enable_google_analytics:  off
+  autoSelect:
+    enable_login: off
+  autoMobileSelect:
+    enable_login: off
+  page500:
+    enable_login: off
+  page404:
+    enable_login: off
+  verifyAuth:
+    enable_login: off
+  loginLayer:
+    enable_login:  off
+    enable_google_analytics:  off
+  page:
+    enable_login: off
+  pagev1:
+    enable_login: off
+  savehitsv1:
+    enable_login: off
+  compatibilitysample:
+    enable_login: off
+  appredirect:
+    enable_login: off
+  grievance:
+    enable_login: off
+  advertise:
+    enable_login: off
+  agentinfo:
+    enable_login: off
+  trackinterstitial:
+    enable_login: off
+  getfielddata:
+    enable_login: off 
+  LogoutPage:
+    enable_login: off
+  searchIdExpire:
+    enable_login: off
+  redirectToOldJsms:
+    enable_login: off 
+  settings:
+    enable_login: off
+  AppPromo:
+    enable_login: off
+  jsmsVerificationStaticPage:
+    enable_login: off

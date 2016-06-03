@@ -1,0 +1,3 @@
+<IfModule mod_rewrite.c>
+redirect 301 /mis/indicators/ http://ser6.jeevansathi.com/mis/indicators/
+</IfModule>

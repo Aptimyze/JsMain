@@ -1,0 +1,37 @@
+<html>
+<head>
+</head>
+<body>
+~if $flag neq '1'`
+<table width="400" border="1" align="center" cellspacing="1" cellpadding="0" bordercolor="#DEDDB9">
+  <tr>
+    <td bgcolor="#ECECDA" align="center"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="-1" color="#000000">Thanks for visiting jeevansathi.com<br></font></b></td></tr>
+  <tr>
+    <td bgcolor="#FFFFF7">&nbsp;</td></tr>
+  <tr>
+    <td bgcolor="#FFFFF7" align="center" valign="middle"><font face="Verdana, Arial, Helvetica, sans-serif" size="-1" color="#000000">You are requesting to unsubscribe for the following E-Mail</font></td>
+  </tr>
+   <form name="form1" method="post" action="mailer_unsubscribe.php" >
+   <tr> 
+      <td bgcolor="#FFFFF7" align="center" valign="middle">&nbsp;<b>~$mail`</b>
+	<input type="hidden" name="mail" value="~$mail`">
+	</td></tr>
+	<tr><td bgcolor="#FFFFF7" align="center" valign="middle">
+        <input type="submit" name="Submit" value="Submit">
+      </td></tr>
+    </form>
+  
+</table>
+~else`
+<table width="400" border="1" align="center" cellspacing="1" cellpadding="0" bordercolor="#DEDDB9">
+  <tr>
+    <td bgcolor="#ECECDA" align="center"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="-1" color="#000000">Thanks for visiting jeevansathi.com<br></font></b></td></tr>
+  <tr>
+    <td bgcolor="#FFFFF7">&nbsp;</td></tr>
+  <tr>
+    <td bgcolor="#FFFFF7" align="center" valign="middle"><font face="Verdana, Arial, Helvetica, sans-serif" size="-1" color="#000000">Your request to unsubscribe for the E-Mail ID ~$mail` has been taken. Kindly allow us 2 to 3 working days to complete the process.</font></td>
+  </tr>
+</table>
+~/if`
+</body>
+</html>

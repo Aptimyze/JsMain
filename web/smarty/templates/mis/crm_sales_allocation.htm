@@ -1,0 +1,186 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br><br>
+~if $flag eq '1'`
+	<table width=100% align=center>
+        <tr align="center">
+        <td align="center" colspan="33">
+                <span size="70"><b>Executive Sales Allocation MIS</b></span><br><br>
+        </td>
+        </tr> 
+        <tr class=formhead>
+                <td colspan=33 align="center">MIS for  :  ~$month` - ~$year`</td>
+        </td>
+        <tr class=formhead>
+                <td width=4% align=center>Executive</td>
+		<td width=4% align=center>Current Allocation</td>
+		~section name=dd loop=$ddarr`
+                <td width=3% align=center>~$ddarr[dd]`</td>
+		~/section`
+        </tr>
+        ~if $norecords neq '1'`
+         
+         ~section name=brn loop=$brancharr`
+                <tr class=formhead>
+                        <td class=blue align=center>~$brancharr[brn]`</td>
+                        <td colspan=100%>&nbsp;</td>
+                </tr>
+               ~section name=j loop=$operatorarr[brn]`
+                       <tr class=fieldsnew>
+                        <td class=label align=center>~$operatorarr[brn][j]`</td>
+			<td class=label align=center>~$currentAlloc_arr[brn][j]`</td>
+				~if $disableLink eq '1'`
+                                        ~section name=dd loop=$ddarr`
+                                                <td align=center><span>&nbsp;~$crmwork[brn][j][dd].callcnt`</span></td>
+                                        ~/section`
+				~else`
+	                                ~section name=dd loop=$ddarr`
+        	                                <td align=center><span>&nbsp;<a href="crm_sales_allocation_exec.php?cid=~$cid`&exec=~$operatorarr[brn][j]`&day=~$ddarr[dd]`&month=~$month`&year=~$year`">~$crmwork[brn][j][dd].callcnt`</a></span></td>
+        	                        ~/section`
+				~/if`
+                        </tr>
+               ~/section`
+
+		<!-- Total calculation added (branchwise)-->
+		<tr class=label>
+			<td class=label align=center>&nbsp;Total</td>
+			<td class=label align=center>~$currentAlloctot[brn].callcnt`</td>
+			~section name=dd loop=$ddarr`
+				<td align=center><span>&nbsp;~$grandtotal[brn][dd].callcnt`</span></td>
+</td>
+			~/section`
+		</tr>
+		<!-- Total calculation ends -->
+
+		<!-- Average calculation added (branchwise)-->
+                <tr class=label>
+                        <td class=label align=center>&nbsp;<b>Average</b></td>
+                        <td class=label align=center><b>~$currentAlloctot_avg[brn].callcnt`</b></td>
+                        ~section name=dd loop=$ddarr`
+                                <td align=center><span>&nbsp;<b>~$grandtotal_avg[brn][dd].callcnt`</b></span></td>
+</td>
+                        ~/section`
+			</b>
+                </tr>
+                <tr><td>&nbsp;<br></td></tr>
+		<!-- Average calculation ends-->
+             ~/section`
+
+		<!-- Total calculation added (all branches)-->
+                <tr class=label>
+                        <td class=label align=center>&nbsp;Total (all branches)</td>
+                        <td class=label align=center>~$currentAlloctot_allbranch.callcnt`</td>
+                        ~section name=dd loop=$ddarr`
+                                <td align=center><span>&nbsp;~$grandtotal_allbranch[dd].callcnt`</span></td>
+</td>
+                        ~/section`
+                </tr>
+		<!-- Total calculation ends-->
+
+                <!-- Average calculation added (all branches)-->
+                <tr class=label>
+                        <td class=label align=center>&nbsp;<b>Average (all Branches)</b></td>
+                        <td class=label align=center><b>~$currentAlloctot_allbranch_avg.callcnt`</b></td>
+                        ~section name=dd loop=$ddarr`
+                                <td align=center><span>&nbsp;<b>~$grandtotal_allbranch_avg[dd].callcnt`</b></span></td>
+</td>
+                        ~/section`
+			</b>
+                </tr>
+                <tr><td>&nbsp;<br></td></tr>
+                <!-- Total calculation ends (all branches)-->
+
+          ~else`
+		<tr class=label>
+		<td colspan=100% align=center>No records to show</td> 
+           ~/if`
+        </table>
+	<br>
+~else`
+        <form method=post action="crm_sales_allocation.php">
+	<input type="hidden" name="cid" value="~$cid`">
+        <table width=70% border=0 align="center" cellpadding=5>
+        <tr align="center">
+        	<td>&nbsp;&nbsp;&nbsp;
+        	        <b>Select Reporting Month and Year</b>
+        	</td>
+	</tr>
+        <tr align="center">
+        	<td>
+			<b>Allocation Report for:</b>
+        		<select name="month">
+        			~section name=mm loop=$mmarr`
+        	        		<option value=~$mmarr[mm]` ~if $mmarr[mm] eq $curMonth` selected="~$mmarr[mm]`" ~/if`>~$mmarr[mm]`</option>
+        			~/section`
+        		</select>&nbsp;-
+        		<select name="year">
+        			~section name=yr loop=$yyarr`
+        			        <option value=~$yyarr[yr]` ~if $yyarr[yr] eq $curYear` selected="~$yyarr[yr]`" ~/if` >~$yyarr[yr]`</option>
+        			~/section`
+        		</select>&nbsp;
+        	</td>
+        </tr>
+	<tr><td></td></tr><tr><td></td></tr>
+<!--      <tr>
+          <td>
+		~if $ONLYBRANCH eq 'Y'`
+                	<input type="hidden" name="branch" value=~$branch`>
+        	~/if`
+               <input type="hidden" name="cid" value="~$cid`">
+          </td>
+        </tr>
+-->
+	<tr align="center">
+		<td><b>Select Executive:</b> &nbsp;
+		<br>*If no executive is selected,then report will be generated for all executives in the team.
+		</td>
+		<td>
+			<select name="usernamesArray2[]" class="textboxes1" multiple="multiple" size="10" scrolling>
+                        	<option value="" selected>Select Agent</option>
+                                ~section name=ag loop=$usernames_array`
+                                	<option value="~$usernames_array[ag]`">~$usernames_array[ag]`</option>
+                                ~/section`
+			</select>
+		</td>
+	</tr>
+        <tr align="center">
+                <td>
+                        <b>Select Report Format</b>
+                </td>
+        </tr>
+	<tr align="center">
+		<td>&nbsp;&nbsp;&nbsp;<input name="mis_type" type="radio" value='htm' checked>&nbsp;HTML-Format</td>
+	</tr>
+	<tr align="center">
+		<td>&nbsp;&nbsp;&nbsp;<input name="mis_type" type="radio" value='XLS' >&nbsp;Excel-Format</td>
+        </tr>
+	<tr><td></td></tr><tr><td></td></tr>
+        <tr align="center">
+        <td><input type="submit" name="CMDGo" value="Submit"></td>
+        </tr>
+        </table>
+        </form>
+~/if`
+<br><br>
+</body>
+</html>

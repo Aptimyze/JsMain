@@ -1,0 +1,98 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br><br>
+~if $flag eq '1'`
+	~$NET_OFF_MSG`
+	<table width=100% align=center>
+        <tr class=label>
+                <td width=7% align=center>Zone / Day</td>
+		~section name=dd loop=$ddarr`
+                <td width=3% align=center>~$ddarr[dd]`</td>
+		~/section`
+                <td width=4% align=center>Total</td>
+                <td width=4% align=center>Total (without tax)</td>
+        </tr>
+	~section name=z loop=$zonearr`
+	<!--tr><td>&nbsp;</td></tr-->
+	~assign var="val" value="$zonearr[z]"`
+	<tr class=fieldsnew align="center">
+		<td class=label align=center>~if $val eq 'N'` (NORTH/EAST) ~elseif $val eq 'S'` (SOUTH)  ~elseif $val eq 'W-M'` (WEST-Maharashtra) ~elseif $val eq 'W-R'` (WEST-Guj/MP)  ~else` (NRI) ~/if`
+		</td>
+		  ~section name=dd loop=$ddarr`
+			<td align=center>&nbsp;~$amt[z][dd]`</td>
+		~/section`
+		<td align=center class=label>~$tota[z]`</td>
+		<td align=center class=label>~$net_off_tax_zone[z]`</td>
+	</tr>
+	~/section`
+	<tr class="label" align="center">
+		<td>Total</td>
+		~section name=dd loop=$ddarr`
+		<td>&nbsp;~$totb[dd]`</td>
+		~/section`
+		<td>&nbsp;~$totall`</td>
+		<td>&nbsp;~$net_off_tax_totall`</td>
+	</tr>
+	<tr class="label" align="center">
+		<td>Total (without tax)</td>
+		~section name=dd loop=$ddarr`
+		<td>&nbsp;~$net_off_tax_day[dd]`</td>
+		~/section`
+		<td>&nbsp;~$net_off_tax_totall`</td>
+	</tr>
+        </table>
+~else`
+        <form method=post action="crm_revenue_zonewise_new.php">
+
+        <table width=80% border=0 align="center" cellpadding=5>
+        <tr>
+        <td>&nbsp;&nbsp;&nbsp;<input name="vtype" type="radio" value='M' checked>&nbsp;Month Wise</td>
+        <td>
+        <select name="mmonth">
+        ~section name=mon loop=$mmarr`
+                <option value=~$mmarr[mon]`>~$mmarr[mon]`</option>
+        ~/section`
+        </select> -
+        <select name="myear">
+        ~section name=yr loop=$yyarr`
+                <option value=~$yyarr[yr]`>~$yyarr[yr]`</option>
+        ~/section`
+        </select>&nbsp;Month - Year
+        </td>
+        </tr>
+	 <tr>
+        <td>&nbsp;&nbsp;&nbsp;<input name="mis_type" type="radio" value='XLS' checked>&nbsp;Excel-Format</td>
+        <td>&nbsp;&nbsp;&nbsp;<input name="mis_type" type="radio" value='htm' >&nbsp;HTML-Format</td>
+        <tr>
+
+        <tr>
+        <input type="hidden" name="cid" value=~$cid`>
+        <td align="right"><input type="submit" name="CMDGo" value="     Go     "></td>
+        </tr>
+        </table>
+        </form>
+~/if`
+<br><br>
+</body>
+</html>

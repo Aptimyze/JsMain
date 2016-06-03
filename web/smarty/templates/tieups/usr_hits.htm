@@ -1,0 +1,159 @@
+<html>
+<head>
+<title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="~$SITE_URL`/profile/images/styles.css" type="text/css">
+<link rel="stylesheet" href="../jsadmin/jeevansathi.css" type="text/css">
+</head>
+~$HEAD`
+<body>
+<br>
+<table width=760 border=0 align="center">
+	<tr class="formhead">
+	<td align="center">&nbsp;~$duration`</td>
+	</tr>
+</table>
+<br>
+<table width=760 border=0 align="center">
+	<tr class="formhead">
+	<td align="center">&nbsp;
+	<span class=green>Activated</span><span class=orange> = ~$Activate`;&nbsp;&nbsp;</span>
+	<span class=green> Phone Verified</span><span class=orange> = ~$mobileVerified`;&nbsp;&nbsp;</span>
+	<span class=green>  Photo Present? </span><span class=orange>= ~$photo`;&nbsp;&nbsp;</span>
+	 <span class=green>  Mother Tongue</span><span class=orange> = ~$mTongue`;&nbsp;&nbsp;</span>
+	  <span class=green>  State</span><span class=orange> = ~$state`;&nbsp;&nbsp;</span>
+	 <span class=green>    Duplicate? </span><span class=orange>=~$duplicate`;&nbsp;&nbsp;</span>
+	</td>
+	</tr>
+</table>
+<br>
+<table width=760 border=0 align="center">
+<tr class="label">
+<td align="center" class="blue">&nbsp;Source : ~if $source neq ''` ~$source` ~else` All ~/if`</td>
+</tr>
+</table>
+~if $dflag eq '1'`
+	<table width="760" align="center" border=0 cellspacing=2 cellpadding=5>
+	<tr class=label><td></td><td></td>
+	~if $durationCheck eq 1`
+	<td colspan=~$colSpanMonth1` align="center">~$month1`</td>
+	~else`
+	<td colspan=~$colSpanMonth1` align="center" >~$month1`</td>
+		~if $between_month`
+		<td colspan=~$colSpanMonthBetween` align="center">~$month_between`</td>
+		~/if`
+	<td colspan=~$colSpanMonth2` align="center">~$month2`</td>
+	~/if`
+	<td></td>
+	</tr>
+	<tr class=label>
+	<td width=5% align=center>Source ID</td>
+	<td width=3% align=center>Category</td>
+	~section name=dd loop=$ddarr`
+		<td width=3% align=center>~$ddarr[dd].date`</td>
+	~/section`
+	<td width=5% align=center>Total</td>
+	</tr>
+	~section name=src loop=$srcarr`
+		<tr class=fieldsnew>
+			<td width=5% align=center class=label>~$srcarr[src]`</td>
+			<td width=100% align=left class=label style="white-space:nowrap;">
+				<span class=orange>Male 21 - 24</span><br>
+				<span class=green>Male 25 - 35</span><br>
+				<span class=orange>Male 36 and above</span><br>
+				<span class=green>Female 18 - 21</span><br>
+				<span class=orange>Female 22 - 35</span><br>
+				<span class=green>Female 36 and above</span><br>
+				<span style="font-family: Verdana; font-size: 11px; font-weight: bold; color: #000000; text-decoration: none;">Total valid registrations</span><br>
+				<span class=orange>Total hits</span><br>
+				~if $paidPrivilage eq 1`
+					<span class=green>Paid in first 45 days</span><br>
+					<span class=orange>Paid in first 90 days</span><br>
+				~/if`
+			</td>
+			~section name=dd loop=$ddarr`
+				<td width=3% align=center>
+				<span class=orange>~$countSourceDayCriteriaWise[src][$ddarr[dd].mon][$ddarr[dd].date].regM1`</span><br>
+				<span class=green>~$countSourceDayCriteriaWise[src][$ddarr[dd].mon][$ddarr[dd].date].regM2`</span><br>
+				<span class=orange>~$countSourceDayCriteriaWise[src][$ddarr[dd].mon][$ddarr[dd].date].regM3`</span><br>
+				<span class=green>~$countSourceDayCriteriaWise[src][$ddarr[dd].mon][$ddarr[dd].date].regF1`</span><br>
+				<span class=orange>~$countSourceDayCriteriaWise[src][$ddarr[dd].mon][$ddarr[dd].date].regF2`</span><br>
+				<span class=green>~$countSourceDayCriteriaWise[src][$ddarr[dd].mon][$ddarr[dd].date].regF3`</span><br>
+				<span style="font-family: Verdana; font-size: 11px; font-weight: bold; color: #000000; text-decoration: none;">~$countSourceDayCriteriaWise[src][$ddarr[dd].mon][$ddarr[dd].date].validReg`</span><br>
+				<span class=orange>~$countHitsSourceDayWise[src][$ddarr[dd].mon][$ddarr[dd].date].hit`</span><br>
+				~if $paidPrivilage eq 1`
+					<span class=green>~$countPaidSourceDayWise[src][$ddarr[dd].mon][$ddarr[dd].date].45`</span><br>
+					<span class=orange>~$countPaidSourceDayWise[src][$ddarr[dd].mon][$ddarr[dd].date].90`</span><br>
+				~/if`
+				</td>
+			~/section`
+			<td width=5% align=center class=label>
+				<span class=orange>~$totalSourceCriteriaWise[src].regM1`</span><br>
+				<span class=green>~$totalSourceCriteriaWise[src].regM2`</span><br>
+				<span class=orange>~$totalSourceCriteriaWise[src].regM3`</span><br>
+				<span class=green>~$totalSourceCriteriaWise[src].regF1`</span><br>
+				<span class=orange>~$totalSourceCriteriaWise[src].regF2`</span><br>
+				<span class=green>~$totalSourceCriteriaWise[src].regF3`</span><br>
+				<span style="font-family: Verdana; font-size: 11px; font-weight: bold; color: #000000; text-decoration: none;">~$totalSourceCriteriaWise[src].validReg`</span><br>
+				<span class=orange>~$totalCountHitsSourceWise[src].hit`</span><br>
+				~if $paidPrivilage eq 1`
+					<span  class=green>~$totalCountPaidSourceWise[src].45`</span><br>
+					<span  class=orange>~$totalCountPaidSourceWise[src].90`</span><br>
+				~/if`
+			</td>
+		</tr>
+	~/section`
+	<tr class=label align=center>
+	<td>Total</td>
+	<td width=100% align=left class=label style="white-space:nowrap;">
+				<span class=orange>Male 21 - 24</span><br>
+				<span class=green>Male 25 - 35</span><br>
+				<span class=orange>Male 36 and above</span><br>
+				<span class=green>Female 18 - 21</span><br>
+				<span class=orange>Female 22 - 35</span><br>
+				<span class=green>Female 36 and above</span><br>
+				<span style="font-family: Verdana; font-size: 11px; font-weight: bold; color: #000000; text-decoration: none;">Total valid registrations</span><br>
+				<span class=orange>Total hits</span><br>
+				~if $paidPrivilage eq 1`
+					<span class=green>Paid in first 45 days</span><br>
+					<span class=orange>Paid in first 90 days</span><br>
+				~/if`
+			</td>
+	~section name=dd loop=$ddarr`
+		<td width=3% align=center>
+				<span class=orange>~$totalCriteriaDateWise[$ddarr[dd].mon][$ddarr[dd].date].regM1`</span><br>
+				<span class=green>~$totalCriteriaDateWise[$ddarr[dd].mon][$ddarr[dd].date].regM2`</span><br>
+				<span class=orange>~$totalCriteriaDateWise[$ddarr[dd].mon][$ddarr[dd].date].regM3`</span><br>
+				<span class=green>~$totalCriteriaDateWise[$ddarr[dd].mon][$ddarr[dd].date].regF1`</span><br>
+				<span class=orange>~$totalCriteriaDateWise[$ddarr[dd].mon][$ddarr[dd].date].regF2`</span><br>
+				<span class=green>~$totalCriteriaDateWise[$ddarr[dd].mon][$ddarr[dd].date].regF3`</span><br>
+				<span style="font-family: Verdana; font-size: 11px; font-weight: bold; color: #000000; text-decoration: none;">~$totalCriteriaDateWise[$ddarr[dd].mon][$ddarr[dd].date].validRegTotal`</span><br>
+				<span class=orange>~$totalCountHitsDayWise[$ddarr[dd].mon][$ddarr[dd].date].hit`</span><br>
+				~if $paidPrivilage eq 1`
+					<span class=green>~$totalCountPaidDayWise[$ddarr[dd].mon][$ddarr[dd].date].45`</span><br>
+					<span class=orange>~$totalCountPaidDayWise[$ddarr[dd].mon][$ddarr[dd].date].90`</span><br>
+				~/if`
+		</td>
+   	~/section`
+	<td>
+		<span class=orange>~$totalAll.regM1`</span><br>
+		<span class=green >~$totalAll.regM2`</span><br>
+		<span class=orange>~$totalAll.regM3`</span><br>
+		<span class=green>~$totalAll.regF1`</span><br>
+		<span class=orange>~$totalAll.regF2`</span><br>
+		<span class=green>~$totalAll.regF3`</span><br>
+		<span style="font-family: Verdana; font-size: 11px; font-weight: bold; color: #000000; text-decoration: none;">~$totalAll.validReg`</span><br>
+		<span class=orange>~$totalCountHits.hit`</span><br>
+		~if $paidPrivilage eq 1`
+			<span class=green>~$totalCountPaid.45`</span><br>
+			<span class=orange>~$totalCountPaid.90`</span><br>
+		~/if`
+       
+	</td>
+	</tr>
+</table>
+~/if`
+<br><br>
+~$FOOT`
+</body>
+</html>

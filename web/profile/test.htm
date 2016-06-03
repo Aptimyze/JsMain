@@ -1,0 +1,388 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>JeevanSathi Matrimonials - My JeevanSathi</title>
+<!--LAVESH-->
+<script type="text/javascript" src="js/behaviour.js"></script>
+<link href="http://www.jeevansathi.com/min/?f=http://www.jeevansathi.com/profile/css/view_similar.css" rel="stylesheet">
+<style>
+.pop_albm{width:465px; border:1px solid #ccc; padding:5px;}
+.exp_int {
+width:270px;
+margin:30px;
+height:150px;
+display:inline;
+}
+.exp_int h2 {
+margin:0;
+padding:0;
+}
+.exp_int p {
+margin:0;
+padding:0;
+margin-top:20px;
+}
+
+.myjsbutton-create {background-image:url(http://ser4.jeevansathi.com/profile/images/button-create.gif); }
+
+
+.t22 {
+font:bold 22px Arial, Helvetica, sans-serif;
+}
+.logo_viswas {
+margin-right:21px;
+}
+.green_tp_line {
+width:100%;
+background:url(images/green_dot.gif) repeat-x;
+}
+.green_btm_line {
+width:100%;
+background:url(images/green_dot.gif) repeat-x bottom;
+}
+.green_l_line {
+background:url(images/green_dot.gif) repeat-y left;
+}
+.green_r_line {
+background:url(images/green_dot.gif) repeat-y right;
+}
+.lft_no_1 {
+background:url(images/steo_1_img.gif) no-repeat -16px -18px;
+position:relative;
+z-index:100000000000000000000;
+}
+.lft_no_2 {
+widht:59px;
+height:59px;
+background:url(images/step-1-4.jpg) no-repeat 0 -60px;
+}
+.lft_no_3 {
+widht:59px;
+height:59px;
+background:url(images/step-1-4.jpg) no-repeat 0 -120px;
+}
+.lft_no_4 {
+widht:59px;
+height:59px;
+background:url(images/step-1-4.jpg) no-repeat 0 -180px;
+}
+.green_t_r_cur {
+background:url(images/green_top_r_cur.gif) no-repeat top right;
+}
+.green_b_r_cur {
+background:url(images/green_btm_right_cur.gif)no-repeat bottom right;
+}
+.green_b_l_cur {
+background:url(images/green_btm_left-cur.gif) no-repeat bottom left;
+}
+.italic {
+font-style:italic;
+}
+.mob_arrow {
+width:132px;
+height:106px;
+background:url(images/mobile_arrow.jpg) no-repeat;
+font:11px Arial, Helvetica, sans-serif;
+color:#fff;
+}
+.mob_icon {
+background:url(images/mob_icon.jpg) no-repeat right;
+}
+input.browse {
+width:163px;
+height:18px;
+border:1px solid #7f9db9;
+}
+.mt_10 {
+margin-top:10px;
+}
+</style>
+
+<!-- for new layer hover on photo-->
+<style>
+.flnew{float:left;}
+.frnew{float:right;}
+.p_tup{width:463px; border:1px solid #ccc; font:12px Arial, Helvetica, sans-serif; float:left;}
+.p_tup *{margin:0; padding:0;}
+.p_tup h6{width:443px; height:19px; background:#ffde94; font-size:14px; padding:2px 10px;text-align:left}
+.p_tup .cmplete_info{width:453px; padding:5px; float:left;}
+.p_tup .cmplete_info .b_info{width:121px; float:left; color:#6b6b6b; font-weight:bold; margin-left:5px;text-align:left}
+.p_tup .cmplete_info p{float:left; width:221px;color:#6b6b6b; margin-left:5px;}
+.no_b{font-weight:normal!important;}
+.p_tup .clr{clear:both; height:0; overflow:hidden;}
+.p_tup .icns img{margin:0 2px 0 0;}
+</style>
+<!-- for new layer hover on photo-->
+
+
+<script>
+function setGlobalVariable()
+{
+need_to_apply_behaviour=1;
+}
+function apply_thickbox_class()
+{
+}
+
+var GDATE_TIME_TEXT='Date &amp; Time in Indian <br>Standard Time';
+var GnextLoginHistory=30;
+var j=0;
+
+function myjs_checkXmlHttpStatus_1()
+{
+if (req.readyState != 4)
+{
+return;
+}
+if (req.status == 200)
+{
+var got_responseT = req.responseText.split("$");
+if(got_responseT[1])
+var got_responseTT=got_responseT[1].split(",");
+var k,i;
+var j='<table border="0" cellpadding="1" cellspacing="2" width="300px"><tr><td width="42%" class="gray" valign="top">IP Address</td><td width="58%" class="gray">'+ GDATE_TIME_TEXT + '</td></tr>';
+//var j='';
+for(i=0;i<got_responseT[0];i++)
+{
+k=got_responseTT[i].split("#");
+j= j + '<tr><td class="gray" width="42%"> ' + k[0] + '</td><td class="gray"  width="58%">'+ k[1] + '</td></tr>';
+}
+j= j + '</table>';
+j= j + '<div class="rf" style="padding-top:10px";>';
+if(got_responseT[3]>=0)
+j= j + '<div class="" style="display:inline"><a href="#" onClick="myjs_loginhistory(\'S\',' + got_responseT[3] + ');return false;"> &lt;Previous </a></div>&nbsp;&nbsp;'
+if(got_responseT[2]>=0)
+j= j + '<div class="" style="display:inline"><a href="#" onClick="myjs_loginhistory(\'S\', ' + got_responseT[2] + ');return false;"> Next&gt;</a></div>';
+j= j + '</div>';
+document.getElementById('lll').innerHTML='';
+document.getElementById('lll').innerHTML=j;
+}
+}
+
+var matchalertsaccnextOffset=3;
+var matchalertsaccpreviousOffset=-3;
+
+var visitoralertsaccnextOffset=3;
+var visitoralertsaccpreviousOffset=-3;
+
+
+
+
+
+
+var currentClickedId;
+
+function myjs_checkXmlHttpStatus(responseText)
+{
+if(responseText)
+{
+if(responseText)
+{
+var got_responseT = responseText.split("$$$");
+if(got_responseT[0] && got_responseT[1])
+{
+var got_response;
+var idName=got_responseT[0];
+got_response=got_responseT[1].split("%%%");
+if(got_response[0])
+{
+var got_response1 = got_response[0].split("###");
+var str1=got_response1[0] + got_response1[1] + got_response1[2];
+document.getElementById(idName + 0).innerHTML="";
+document.getElementById(idName + 0).innerHTML=str1;
+
+}
+else
+document.getElementById(idName + 0).innerHTML="";
+
+if(got_response[1])
+{
+var got_response2 = got_response[1].split("###");
+var str2=got_response2[0] + got_response2[1] + got_response2[2];
+document.getElementById(idName + 1).innerHTML="";
+document.getElementById(idName + 1).innerHTML=str2;
+}
+else
+document.getElementById(idName + 1).innerHTML="";
+
+if(document.getElementById(idName + 2))
+{
+if(got_response[2])
+{
+var got_response2 = got_response[2].split("###");
+var str2=got_response2[0] + got_response2[1] + got_response2[2];
+document.getElementById(idName + 2).innerHTML="";
+document.getElementById(idName + 2).innerHTML=str2;
+}
+else
+document.getElementById(idName + 2).innerHTML="";
+}
+
+}
+else
+{
+if(document.getElementById(currentClickedId + 0))
+document.getElementById(currentClickedId + 0).innerHTML='<br><img src="http://ser4.jeevansathi.com/img_revamp/iconError_16x16.gif"><b>An error has occurred! We will be correcting this problem at the earliest. Kindly check back later.</b>';
+if(document.getElementById(currentClickedId + 1))
+document.getElementById(currentClickedId + 1).innerHTML='<br><img src="http://ser4.jeevansathi.com/img_revamp/iconError_16x16.gif"><b>An error has occurred! We will be correcting this problem at the earliest. Kindly check back later.</b>';
+if(document.getElementById(currentClickedId + 2))
+document.getElementById(currentClickedId + 2).innerHTML='<br><img src="http://ser4.jeevansathi.com/img_revamp/iconError_16x16.gif"><b>An error has occurred! We will be correcting this problem at the earliest. Kindly check back later.</b>';
+}
+}
+else
+{
+if(document.getElementById(currentClickedId + 0))
+document.getElementById(currentClickedId + 0).innerHTML='<br><img src="http://ser4.jeevansathi.com/img_revamp/iconError_16x16.gif"><b>An error has occurred! We will be correcting this problem at the earliest. Kindly check back later.</b>';
+if(document.getElementById(currentClickedId + 1))
+document.getElementById(currentClickedId + 1).innerHTML='<br><img src="http://ser4.jeevansathi.com/img_revamp/iconError_16x16.gif"><b>An error has occurred! We will be correcting this problem at the earliest. Kindly check back later.</b>';
+if(document.getElementById(currentClickedId + 2))
+document.getElementById(currentClickedId + 2).innerHTML='<br><img src="http://ser4.jeevansathi.com/img_revamp/iconError_16x16.gif"><b>An error has occurred! We will be correcting this problem at the earliest. Kindly check back later.</b>';
+}
+}
+}
+
+function lavesh_ajaxValidation(accname,checksum,NEXT_OR_PREVIOUS,loop,total)
+{
+currentClickedId=accname;
+if(NEXT_OR_PREVIOUS=='P')
+{
+var to_post = "lavesh=" + accname + "&offset=" + eval(accname+"previousOffset") + "&checksum=" + checksum + "&id=" + 15161997;
+if(accname=='acceptanceacc' || accname=='initialacc')
+{
+eval(accname+"previousOffset-=3");
+eval(accname+"nextOffset-=3");
+}
+else
+{
+eval(accname+"previousOffset-=3");
+eval(accname+"nextOffset-=3");
+}
+}
+else
+{
+var offval=eval(accname+"nextOffset");
+var to_post = "lavesh=" + accname +  "&offset=" + offval + "&checksum=" + checksum + "&id=" + 15161997;
+if(accname=='acceptanceacc' || accname=='initialacc')
+{
+eval(accname+"previousOffset+=3");
+eval(accname+"nextOffset+=3");
+}
+else
+{
+eval(accname+"previousOffset+=3");
+eval(accname+"nextOffset+=3");
+}
+}
+
+if(eval(accname+"previousOffset>=0"))
+{
+document.getElementById(accname + '_Uid2').style.display="none";
+document.getElementById(accname + '_Uid1').style.display="block";
+}
+else
+{
+document.getElementById(accname + '_Uid1').style.display="none";
+document.getElementById(accname + '_Uid2').style.display="block";
+}
+if(eval(accname+"nextOffset<" + total))
+{
+document.getElementById(accname + '_Did1').style.display="block";
+document.getElementById(accname + '_Did2').style.display="none";
+}
+else
+{
+document.getElementById(accname + '_Did2').style.display="block";
+document.getElementById(accname + '_Did1').style.display="none";
+}
+xmlreqPOST("/P/mainmenu.php",to_post);
+for(i=0;i<loop;i++)
+{
+document.getElementById(accname + i).innerHTML="";
+document.getElementById(accname + i).innerHTML="<br><br><img src='images/loader_small.gif'>";
+}
+}
+</script>
+<!--LAVESH-->
+<style>
+body{margin:0; padding:0; font-size:12px; color:#000000; font-family:Arial,sans-serif}
+#main{width:100%; margin:0px;float:left;}
+#container{width: 778px; margin: 0px auto; }
+#carousel_mjs1 a:link, #carousel_mjs1 a:visited {color:#117DAA;text-decoration:none;}
+#carousel_mjs1 a.blink:hover{text-decoration:underline!important;}
+#crsl_snapslot a:link, #crsl_snapslot a:visited {color:#fff;text-decoration:none;}
+.crsl_snapslot a,.crsl_snapslot a:link, .crsl_snapslot a:visited{color:#117daa!important;}
+.crsl_snapslot a:hover{text-decoration:underline!important;}
+#crsl_left_btn a:link, #crsl_left_btn a:visited {color:#fff;text-decoration:none;}
+#crsl_left_btn_inactive a:link, #crsl_left_btn_inactive a:visited {color:#fff;text-decoration:none;}
+#hidedot a:link, #hidedot a:visited {color:#fff;text-decoration:none;}
+/* search */
+.sreach_pannal{background-image:url(http://ser4.jeevansathi.com/img_revamp/bg_search.gif);background-repeat:repeat-x;width:778px;}
+.pd2{padding:2px 2px 2px 5px;}
+div.row{clear:both; padding:3px 0 0px 0;color:#000;width:98%;margin:auto;}
+#maintab {margin: 0px;}
+#maintab ul { margin: 0; padding: 0; list-style: none; }
+#maintab li { float: left; margin: 0 0 0 0; white-space: nowrap; background-image:url(http://ser4.jeevansathi.com/img_revamp/top-nav-bg.gif); background-position:bottom; background-repeat:repeat-x; font: 16px Arial, Helvetica, sans-serif; font-weight:bold; }
+#maintab a { float: left; padding: 0 0 0 9px; text-decoration: none;color:#117daa;}
+#maintab a:hover{ color: #000000;}
+#maintab a.current { background-position: 0 -28px; background: url(images/top-tab-left.gif) no-repeat; color:#117daa; }
+#maintab a span { float: left;  padding: 5px 9px 4px 0;}
+#maintab a:hover span{ cursor: pointer; color:#117daa; }
+#maintab a.current span {background-position: 100% -28px; background: url(images/top-tab-rite.gif) no-repeat 100% 0; cursor: pointer;}
+#maintab a.current:hover span {cursor: default;}
+#subtab {margin: 0px}
+#subtab ul {margin: 0; padding: 0; list-style: none; }
+#subtab li {float: left; margin: 0 0 0 0; white-space: nowrap; background-image:url(http://ser4.jeevansathi.com/img_revamp/subtab_nav_bg.gif); background-position:bottom; background-repeat:repeat-x; font: bold 12px Arial; height:24px }
+#subtab a {float: left; padding: 0 0 1px 9px; text-decoration: none;color:#117daa;}
+#subtab a:hover{color: #000000;}
+#subtab a.current {background-position: 0 -28px; background: url(images/subtab_nav_left.gif) no-repeat; color:#2673bb; }
+#subtab a span {float: left; padding: 4px 30px 4px 22px;}
+#subtab a:hover span{cursor: pointer; color:#2673bb; }
+#subtab a.current span {background-position: 100% -28px; background: url(images/subtab_nav_rite.gif) no-repeat 100% 0; cursor: pointer;}
+#subtab a.current:hover span {cursor: default;}
+/* end search */
+/* start myjs */
+/* curve */
+.y{background-color:;}
+.y_b_l {background: transparent url(images/y_b_l.gif) 0 100% no-repeat}
+.y_b_r {background: transparent url(images/y_b_r.gif) 100% 100% no-repeat}
+.y_t_l {background: transparent url(images/y_t_l.gif) 0 0 no-repeat}
+.y_t_r {background: transparent url(images/y_t_r.gif) 100% 0 no-repeat; padding:3px}
+.y_top {background: url(images/y_dot.gif) 0 0 repeat-x; width: 100%;}
+.y_bot {background: url(images/y_dot.gif) 0 100% repeat-x}
+.y_lft {background: url(images/y_dot.gif) 0 0 repeat-y}
+.y_rgt {background: url(images/y_dot.gif) 100% 0 repeat-y}
+/*end curve*/
+.crsl_left_btn{background-image:url(http://ser4.jeevansathi.com/img_revamp/crsl_left_button.gif); width:24px; height:98px; background-position:left ;background-repeat:no-repeat;}
+.crsl_left_btn_hover{background-image:url(http://ser4.jeevansathi.com/img_revamp/crsl_left_button_hover.gif); width:24px; height:98px; background-position:left ;background-repeat:no-repeat;cursor: pointer;} /*LAVESH RAWAT*/
+.crsl_left_btn_inactive{background-image:url(http://ser4.jeevansathi.com/img_revamp/crsl_left_button_inactive.jpg); width:24px; height:98px; background-position:left ;background-repeat:no-repeat;} /*LAVESH RAWAT*/
+.crsl_right_btn{background-image:url(http://ser4.jeevansathi.com/img_revamp/crsl_right_button.jpg); width:24px; height:98px; background-repeat:no-repeat;background-position:right}
+.crsl_right_btn_hover{background-image:url(http://ser4.jeevansathi.com/img_revamp/crsl_right_button_hover.jpg); width:24px; height:98px; background-repeat:no-repeat;background-position:right;cursor: pointer;} /*LAVESH RAWAT*/
+.crsl_right_btn_inactive{background-image:url(http://ser4.jeevansathi.com/img_revamp/crsl_right_button_inactive.jpg); width:24px; height:98px; background-repeat:no-repeat;background-position:right} /*LAVESH RAWAT*/
+
+.crsl_left_btn_hover{background-image:url(http://ser4.jeevansathi.com/img_revamp/crsl_left_button_hover.gif); width:24px; height:98px; background-position:left ;background-repeat:no-repeat;} /*REMOVE*/
+#carousel_mjs{margin:8px 0 0 5px; width:480px; float:left}
+#carousel_mjs1{margin:8px 0 0 5px; width:480px; float:left}
+.crsl_border{border:1px #777b77 solid; padding:2px}
+.crsl_snapslot{width:132px;margin-right:6px;text-align:center;float:left}
+.crsl_snapslot a:hover{cursor: pointer;}
+#hintbox {border:1px solid #000000;position:relative;top:8px;visibility:hidden;width:180px;z-index:100;}
+#hintbox1 {border:1px solid #000000;position:relative;top:8px;visibility:hidden;width:180px;z-index:100;}
+#hintbox3 {border:1px solid #000000;position:relative;top:8px;visibility:hidden;width:180px;z-index:100;}
+
+#new_ {font-family:Arial,Helvetica;font-size:11px;color:#000000; font-weight:normal;line-height:13px;padding:4px 6px;}
+.y_heading_bg{background-image:url(http://ser4.jeevansathi.com/img_revamp/y_heading_bg.gif); background-repeat:repeat-x;}
+.profile_snap{padding:2px; border:1px #c7c7c5 solid;}
+.mjsbarborder{border:1px #b1d425 solid; padding:2px;}
+.mjsbar{background-image:url(http://ser4.jeevansathi.com/img_revamp/mjspgbar.gif);background-repeat:repeat-x;height:13px;}
+.mjs_upgrd_membership{background-image:url(http://ser4.jeevansathi.com/img_revamp/mjs_upgrd_membership.jpg);background-repeat:no-repeat;width:700px;height:102px;padding:15px 15px;}
+.mjs ul{padding:0px; margin:0px;}
+.mjs ul li{padding:0px; margin-left:14px;font:normal 11px arial;}
+.mjs_renew{background-image:url(http://ser4.jeevansathi.com/img_revamp/mjs_renew.gif); background-repeat:no-repeat;width:219px;height:34px;}
+.t_curv{width:219px; height:3px; font-size:2px; background:url(http://ser4.jeevansathi.com/img_revamp/tp_btm_curvs.png);}
+.b_curv{width:219px; height:5px; font-size:2px; background:url(http://ser4.jeevansathi.com/img_revamp/tp_btm_curvs.png) bottom;}
+.bg_curv{width:210px; padding:5px 0; background:url(http://ser4.jeevansathi.com/img_revamp/bg_strp.gif) repeat-y; padding:0 5px;}
+</style>
+</head>
+<body>hello world</body></html>

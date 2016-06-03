@@ -1,0 +1,5 @@
+type=command
+dependencies=cron_inactive_sending0,cron_inactive_sending1,cron_inactive_sending2,cron_inactive_sending3
+command=echo Inactive successfully sent
+retries=3
+retry.backoff=10000

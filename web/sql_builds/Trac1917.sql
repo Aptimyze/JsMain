@@ -1,0 +1,3 @@
+use newjs;
+
+UPDATE  MTONGUE SET  REG_DISPLAY =  'N' WHERE  ID =  '1' LIMIT 1;

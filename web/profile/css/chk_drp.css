@@ -1,0 +1,56 @@
+/*Created By Vishal Kaul*/
+
+.chk_frm{float:left; width:450px;}
+.ml_5{margin-left:5px; display:inline;}
+.chk_frm select{border:1px solid #ccc!important;}
+.chk_frm div{float:left; width:99.9%; margin:8px 0 0;}
+.chk_frm u{float: right; font-size: 11px; width:295px; text-decoration:none; padding:2px;}
+.chk_frm div label{float:left; width:145px; padding:2px; text-align:right;}
+.chk_frm input.txt1,.chk_frm select.txt1,.chk_frm textarea.txt1{float:left; width:151px; border:1px solid #ccc!important;padding:2px;}
+#mem_cont .ord_dtls ul.md li span{font-size:17px;}
+
+.chk_bg{width:297px; height:131px; background:url(IMG_URL/profile/images/chk_bg.png) no-repeat; float:right; margin:15px 0; position:relative;}
+.chk_bg u{float:right; padding:10px; font:11px Arial, Helvetica, sans-serif; text-decoration:none;}
+.chk_bg h5{float:left; padding:30px 0 0 30px; font:italic 13px Arial, Helvetica, sans-serif; color:#192d46; margin:0;}
+.chk_bg b{float:left; padding:7px 0 0 46px; font:bold 11px Arial, Helvetica, sans-serif; width:60%;}
+.chk_bg em{float:right; font:bold 11px Arial, Helvetica, sans-serif; width:29%; position:absolute; bottom:39px;}
+.smple_chk{float:left; padding:0 0 0 24px;}
+
+.ord_dtls{width:756px; margin:auto; border:1px solid #f5fcdb; padding:10px;}
+.ord_dtls ul{float:left; width:621px;}
+.ord_dtls ul li{float:left; width:99.9%; padding:2px 0 8px;}
+.ord_dtls ul li b{float:left; width:438px; color:#726f6f;font-size:16px;}
+.ord_dtls ul li s{float:left; width:83px; color:#726f6f;text-decoration:none;}
+.ord_dtls ul li i{float:left; width:83px; padding:0 5px 5px 0;text-decoration:none;font-style:normal;}
+.ord_dtls ul li a{float:left; width:99px; padding:3px 0 0;}
+
+
+div #narayan{overflow:auto; float:left; height:275px; margin:0;}
+div #narayan i,div #narayan s{float:left; width:125px; padding:0 5px 5px 0; text-decoration:none; font-style:normal;}
+div #narayan s{ width:295px;}
+div #narayan b{color:#726F6F; float:left; margin:10px 0; display:inline; width:99.9%;}
+.bdr_gry_ln{border-bottom:1px solid #ccc!important; height:1px; overflow:hidden; font-size:2px; float:left; width:98%;}
+.js_i{float:left; width:125px; padding:0 5px 5px 0; text-decoration:none; font-style:normal;}
+.js_s{ width:295px;}
+.js_b{color:#726F6F; float:left; margin:10px 0; display:inline; width:99.9%;}
+
+div.row7{float:left;width:96%; margin:5px 0px}
+div.row7 label{float:left;text-align:right;width:145px;padding:2px 6px 0 0;}
+div.row7 span{float:left;text-align:left;width:230px;padding-left:5px;}
+
+.chq_err{float: left; margin-left: 148px;}
+
+.chk_pck_dtls{float:left; width:680px; border:1px solid #F5FCDB!important; padding:10px;}
+.chk_pck_dtls ul{float:left; width:98%; padding:4px; list-style:none;}
+.chk_pck_dtls ul li{float:left; width:99.9%; margin:3px 0 0;}
+.chk_pck_dtls ul li b{float:left; width:145px; text-align:right; padding:2px; font-weight:normal;}
+.chk_pck_dtls ul li i{float:left; width:230px; padding:2px; color:#726F6F; font-style:normal;}
+
+/* For location starts*/
+#d2{float:left;width:450px;}
+#d2 h3{font:18px Arial,Verdana;}
+#d2 div{margin:7px 0 0; float:left; width:99.9%}
+#d2 div label{float:left;width:125px;text-align:left;}
+#d2 div select{float:left;width:230px;border:1px solid #ccc;}
+/* For d2ation ends*/
+

@@ -1,0 +1,2 @@
+type=command
+command=${php5} ${docRoot}/crontabs/sugarcrm/registration_page1_lead_to_sugarlead.php

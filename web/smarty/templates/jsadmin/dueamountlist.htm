@@ -1,0 +1,116 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+</head>
+~include file="head.htm"`
+
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<form action="dueamountlist.php" method="post">
+<input type="hidden" name=cid value="~$cid`">
+<input type="hidden" name=user value="~$user`">
+<input type="hidden" name=PAGE value="~$PAGE`">
+<input type="hidden" name=grp_no value="~$grp_no`">
+<table width=760 cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+    <tr class="formhead">
+          <td width=55% class="formhead" border=1><font><b>Welcome : ~$user`</b></font></td>
+          <td width="35%" class="formhead" align="center"><a href="mainpage.php?name=&cid=~$cid`">Main Page</a></td>
+          <td width=10% class="formhead" border=1 align='CENTER'><a href="logout.php?cid=~$cid`">Logout</a></td>
+    </tr>
+</table>
+<br><br>
+<br>
+<table width="60%" border="0" cellspacing="1" cellpadding="4" align="center">
+          <tr>
+            <td class="formhead" valign="middle" colspan="2">&#155; Search for Members with Dueamount</td>          </tr>
+          <tr>
+
+          <tr>
+            <td width="30%" class="label" bgcolor="#F9F9F9">From</td>
+            <td width="70%" bgcolor="#F9F9F9">
+              <input type="text" name="year1" value="~$YEAR1`" size="4" maxlength="4"  class="textboxes1">
+              <input type="text" name="month1" value="~$MONTH1`" size="2" maxlength="2" class="textboxes1">
+              <input type="text" name="day1" value="~$DAY1`" size="2" maxlength="2"  class="textboxes1">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+		<font color="black">to </font>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	
+              <input type="text" name="year2" value="~$YEAR2`" size="4" maxlength="4"  class="textboxes1">
+              <input type="text" name="month2" value="~$MONTH2`" size="2" maxlength="2" class="textboxes1">
+              <input type="text" name="day2" value="~$DAY2`" size="2" maxlength="2" class="textboxes1">
+            </td>
+		
+          </tr>
+
+	<!--  New code for XLS format type Start -->
+	<tr><td colspan="2">&nbsp;</td></tr>
+	<tr>
+	        <td class="label">Report Format &nbsp;&nbsp;</td>
+	        <td class="label">
+	                <input type="radio" name="report_format" value="HTML" checked>HTML
+	                <input type="radio" name="report_format" value="XLS">XLS
+	        </td>
+	</tr>
+	<!--  New code for XLS format type Ends -->
+
+          <tr valign="middle" align="center">
+	    <td width=30% class="fieldsnew"></td>
+              <td class="fieldsnew"><input type="submit" name="Go" value="  Search  " class="textboxes1"></td></tr>
+	</table>
+<br>	
+~if $SEARCH eq "YES"`
+
+ <table width=100% align="CENTER" cellspacing="1" cellpadding="4">
+    <tr align="CENTER">
+      <td class="formhead"><font size="2" color="blue">page ~$PAGE` of ~if $PAGEREF eq "zero"`1~else`~$NUM_PAGE`~/if`</font></td>
+      <td class="formhead" colspan="7" height="23"><b><font size="4" color="blue">Search Results<font color="green"> - ~$TOTAL` </font></font></b></td>
+    </tr>
+    <tr align="CENTER" class="textbox">
+      <td class="label" width=8% height="20"><b>S.No.</b></td>
+      <td class="label" width=15% height="21"><b>User Name</b></td>
+      <td class="label" width=11% height="21"><b>Service</b></td>
+      <td class="label" width=8% height="21"><b>Billing Date</b></td>
+<!--      <td class="label" width=15% height="21"><b>Amount Paid</b></td> -->
+      <td class="label" width=15% height="21"><b>Due Amount</b></td>
+      <td class="label" width=15% height="21"><b>Due Date</b></td>
+      <td class="label" width=11% height="21"><b>Entry By</b></td>
+      </tr>
+ ~section name=index loop=$ROW`
+    <tr align="CENTER" bgcolor="#fbfbfb" class="textbox">
+      <td height="20" align="CENTER" width="8%">~$ROW[index].sno`</td>
+      <td height="21" width="15%" align="LEFT">~$ROW[index].username`</td>
+      <td height="21" width="25%" align="LEFT">~$ROW[index].service`</td>
+      <td height="21" width="15%">~$ROW[index].bill_dt`</td>
+<!--      <td height="21" width="8%" align="CENTER">~$ROW[index].amount`</td>  -->
+      <td height="21" width="15%" align="CENTER">~$ROW[index].dueamount`</td>
+      <td height="21" width="15%">~$ROW[index].duedate`</td>
+      <td height="21" width="15%" align="CENTER">~$ROW[index].entryby`</td>
+    </tr>
+    ~/section`
+    <tr bgcolor="#fbfbfb">
+      <td colspan="8" height="21">&nbsp; </td>
+   </tr>
+  </table>
+                                                                                                 
+~else`
+	
+<table width=50% cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+    <tr width=100%>
+          <td width=55% class="fieldsnew" align="center" border=1><font><b>~$message`</b></font></td>
+    </tr>
+</table>
+~/if`
+</form> 
+
+<table align="CENTER">
+ ~section name=index loop=$LINKS`
+      ~$LINKS[index].lnk`
+    ~/section`
+</table>
+ <br><br><br><br><br><br>
+~include file="foot.htm"`
+
+
+</body>
+</html>

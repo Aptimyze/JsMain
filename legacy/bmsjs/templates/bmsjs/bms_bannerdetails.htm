@@ -1,0 +1,402 @@
+<!DOCTYPE HTML PUBLIC "-//SoftQuad//DTD HoTMetaL PRO 4.0::19970714::extensions to HTML 4.0//EN"
+ "hmpro4.dtd">
+
+<HTML>
+  
+  <HEAD>
+    <TITLE>BMS : Campaign Management System</TITLE>
+    <LINK HREF="gifs/style.css" REL="stylesheet" TYPE="text/css">
+<link rel="stylesheet" href="http://www.jeevansathi.com/jsadmin/jeevansathi.css" type="text/css"><link rel="stylesheet" href="http://www.jeevansathi.com/profile/images/styles.css" type="text/css">
+	 <script language="JavaScript">
+<!--
+function ChangeCriteria(obj)
+{
+        var docF=document.bannerdetails;
+                                                                                                                            
+        if(obj.checked)
+        {
+                if (obj.name=="bannerdefault")
+                {
+                        docF.bannerfixed.checked=false;
+                }
+                if (obj.name=="bannerfixed")
+                {
+                        docF.bannerdefault.checked=false;
+                }
+	}
+}
+function checkDisable()
+{
+	var docF=document.bannerdetails;
+	var total,d;
+        d= docF;
+        total=0;
+        for (var i=0;i < d.elements.length;i++)
+        {
+                var e = d.elements[i];
+		//if (docF.bannergif.value =='')
+		{
+			document.getElementById('multipleurl').style.visibility = 'visible';
+                	if (e.type == "checkbox")
+                	{
+				if(e.name == 'bannermultiurl')
+				{
+                        		if(e.checked)
+					{
+						document.getElementById('multiurl').style.visibility = 'visible';
+					}
+					else
+						document.getElementById('multiurl').style.visibility = 'hidden';
+				}
+                	}
+		}
+		/*else
+			document.getElementById('multipleurl').style.visibility = 'hidden';*/
+        }
+}
+function openMultipleURL()
+{
+	var docF=document.bannerdetails;
+        var len_course = docF.zone.options.length;
+	for(var m1=0;m1<len_course;m1++)
+        {
+                if (docF.zone.options[m1].selected == true)
+                {
+                        zoneval = docF.zone.options[m1].text;
+		}
+        }
+        bannerval = docF.bannerid.value;
+        window.open("bms_multiple_url_parser.php?banner="+bannerval+"&zone="+zoneval,'','ScreenX=100,ScreenY=100,Left=100,Width=700,Height=175');
+ }
+function openBannerPop(){
+   window.open("bms_bannerpopup.htm",'','ScreenX=100,ScreenY=100,Left=100,Width=575,Height=200');
+ }
+function FillTheZone()
+{
+             var c,spec,regvalue;
+             var len_course = document.bannerdetails.region.options.length;
+             for(var m1=0;m1<len_course;m1++) 
+             {
+               if (document.bannerdetails.region.options[m1].selected == true){
+               regvalue = document.bannerdetails.region.options[m1].value;
+			 	}
+            } 
+			
+			
+		 document.bannerdetails.zone.options.length = 0;
+			   
+			// for first option
+			var opt = new Option();
+            opt.text="Select";
+            opt.value="select";
+             document.bannerdetails.zone.options[document.bannerdetails.zone.options.length] = opt;
+			   
+			regvaluearr=regvalue.split("|RID|");
+			if(!(regvaluearr[0]=="select")||(regvaluearr[0]==""))	
+			{			
+			 	//for other options 
+				c=regvaluearr[1];
+				var zoneandcriteria=c.split("|@X@|");
+				for(var m1=0;m1<zoneandcriteria.length;m1++) 
+				{
+			   	var zone=zoneandcriteria[m1].split("|X|");
+				if(zone[0]){
+                 var opt = new Option();
+                 var zonenamearr=zone[0].split(",");
+				 opt.text=zonenamearr[1];
+                 opt.value=(zonenamearr[0]+"|ZID|"+zone[1]);
+                 document.bannerdetails.zone.options[document.bannerdetails.zone.options.length] = opt;}
+				}
+			}
+			   
+}
+function validateForm()
+{
+	var docF=document.bannerdetails;
+    	var error="";
+	var len_course = docF.region.options.length;
+	for(var m1=0;m1<len_course;m1++)
+	{
+       		if (docF.region.options[m1].selected == true) 
+		{
+           		c = docF.region.options[m1].value;
+       		}
+       	}
+
+	//var gifff=document.getElementsByName('bannergif').value;
+	//.gif, .jpg, .jpeg, .swf, .png
+	var gifff=docF.bannergif.value;
+	if(gifff.indexOf("png")!= -1 || gifff.indexOf("jpg")!= -1 || gifff.indexOf("jpeg")!= -1 || gifff.indexOf("swf")!= -1 || gifff.indexOf("gif")!= -1)
+	{
+		if(gifff.indexOf("http://ieplads.com")!= -1 || gifff.indexOf("http://www.ieplads.com")!= -1)
+		{
+			alert("Please use static domain like static.ieplads.com.Any doubt plz mail at lavesh.rawat@jeevansathi.com ");
+			return false;
+		}
+	}
+
+
+    	if(c==""||c=="select")
+    	{
+     		alert("Please select a region");
+	 	return false;
+	}
+	var len_course = docF.zone.options.length;
+	for(var m1=0;m1<len_course;m1++)
+	{
+     		if (docF.zone.options[m1].selected == true) 
+		{
+           		c = docF.zone.options[m1].value;
+      		}
+      	}
+   	if(c==""||c=="select")
+    	{
+     		alert("Please select a zone");
+		return false;
+	}
+	
+	if(docF.startyear.value==""||docF.startmonth.value==""||docF.startday.value==""||docF.endyear.value==""||docF.endmonth.value==""||docF.endday.value=="")
+	{
+	
+		alert("Please select dates ");
+		return false;
+	}
+	if(docF.mailerid.value=="" || (!isInteger(docF.mailerid.value)))
+        {
+                alert("Please fill in correct Mailer ID");
+		return false;
+        }
+
+	else
+	{	
+		var startdate=docF.startyear.value+"-"+docF.startmonth.value+"-"+docF.startday.value;
+		var enddate=docF.endyear.value+"-"+docF.endmonth.value+"-"+docF.endday.value;
+		if(startdate>enddate)
+		{
+			alert("Please select correct duration of start and end dates. ");
+			return false;
+
+		}
+		else if(startdate<docF.campaignstartdate.value || enddate>docF.campaignenddate.value)
+		{
+			alert("Please select duration of start and end dates within the campaign duration. ");
+			return false;
+		
+		}
+	}
+	
+	return true;
+}
+function isInteger(iNumber)
+{
+        var i;
+                                                                                                                            
+        for (i=0;i<iNumber.length;i++)
+        {
+                var c = iNumber.charAt(i);
+                                                                                                                            
+                if (!isDigit(c))
+                {
+                        return false;
+                }
+        }
+                                                                                                                            
+        return true;
+}
+function isDigit (c)
+{
+                 return ((c >= "0") && (c <= "9"))
+}
+                                                                                                                            
+-->
+
+</script>   
+  </HEAD>
+  
+  <BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#000000" VLINK="#000000" 
+  ALINK="#000000" LEFTMARGIN="0" TOPMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0" onload="checkDisable();">
+    ~$bmsheader`
+	
+<DIV CLASS="text-under" STYLE="margin-left:20px;">
+  <A HREF="bms_adminindex.php?id=~$id`" TARGET="">MIS Home</A> &gt;&gt;<a href="bms_campaign.php?id=~$id`" target=""> Campaign Details</a> 
+  &gt;&gt;<a href="bms_campaigndetails.php?id=~$id`&campaignid=~$campaignid`" target="">Banner Details</a> &gt;&gt; <B>Fill Banner Properties</B></DIV>
+<br>
+<DIV CLASS="text"><TABLE WIDTH="100%" BORDER="0">
+      <TR>
+        <TD WIDTH="20%" ALIGN="RIGHT"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="250" HEIGHT="1"><IMG SRC="gifs/tick.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="13" HEIGHT="11">
+        </TD>
+        
+      <TD WIDTH="80%" CLASS="text">You can define banner properties on this page 
+        like region, zone, start &amp; end date etc.</TD>
+      </TR>
+	  ~if $errormsg`
+	  <TR> 
+    <TD WIDTH="20%" ALIGN="RIGHT"><img src="gifs/error-2.gif" alt="New Clients" border="0" hspace="0" vspace="0" width="16" height="16"></TD>
+    <TD WIDTH="80%" CLASS="error">~$errormsg`</TD>
+  </TR>
+  ~/if`
+  ~if $cnfrmmsg`
+  <TR>
+    <TD WIDTH="20%" ALIGN="RIGHT"><img src="gifs/action-performed.gif" alt="New Clients" border="0" hspace="0" vspace="0" width="16" height="16"></TD>
+    <TD WIDTH="80%" CLASS="text">~$cnfrmmsg`</TD>
+  </TR>
+  ~/if`
+    </TABLE></DIV>	
+    <FORM name="bannerdetails" action="bms_advbannerdetails.php" method="post" onSubmit="return validateForm();"><TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" 
+    ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/page-bg.gif"><IMG SRC="gifs/lt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0" HSPACE="0"></TD>
+        <TD VALIGN="MIDDLE" HEIGHT="31" WIDTH="100%"><TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" HEIGHT="31">
+          <TR>
+            <TD BACKGROUND="gifs/page-bg.gif" WIDTH="100%"><DIV CLASS="text"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="30" HEIGHT="1"></DIV></TD>
+          </TR>
+        </TABLE></TD>
+        <TD ALIGN="RIGHT" WIDTH="18" BACKGROUND="gifs/page-bg.gif"><IMG SRC="gifs/rt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+      </TR>
+    </TABLE><TABLE WIDTH="100%" BORDER="0" VSPACE="0" HSPACE="0" 
+    CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/lt-line-bg-1.gif"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></TD>
+        <TD WIDTH="100%"> <BR><DIV ALIGN="CENTER"><TABLE WIDTH="60%" BORDER="0" VSPACE="0" HSPACE="0" CELLPADDING="4" CELLSPACING="0">
+		
+		  <TR>
+            <TD CLASS="text" WIDTH="40%" HEIGHT="20" VALIGN="TOP"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="90" HEIGHT="1"><BR><B>Select Region</B></TD>
+            <TD ALIGN="LEFT" WIDTH="60%">~$regionarr`</TD>
+          </TR>
+          <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><B>Select Zone</B></TD>
+            <TD ALIGN="LEFT"> ~$zonearr`
+			<!--
+			<SELECT NAME="zone" ONCHANGE="FillTheCriteria()" CLASS="textbox">
+            <OPTION VALUE="select">Select</OPTION></SELECT> -->
+			</TD>
+          </TR>
+          <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><B>Banner Class</B></TD>
+            <TD ALIGN="LEFT"><SELECT NAME="bannerclass" CLASS="textbox">
+            ~section  name=i loop=$bannerclassarr`
+			<option value="~$bannerclassarr[i]`" ~if $bannerclassarr[i] eq $bannerdetails.bannerclass` selected ~/if`>~$bannerclassarr[i]`</option>
+                        ~/section`
+			</select></TD>
+          </TR>
+	  ~if $bannerdetails.bannerclass eq 'MailerImage' or $bannerdetails.bannerclass eq 'MailerFlash'`
+	  <TR>
+	     <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><B>Mailer ID</B></TD>
+	     <TD CLASS="text" ALIGN="LEFT"><INPUT TYPE="text" name="mailerid" size="5" value="~$bannerdetails.mailerid`"></TD>
+	  <TR>
+	  ~/if`
+		   ~if $bannerdetails.bannerclass eq 'PopUp' or $bannerdetails.bannerclass eq 'PopUnder'`
+		  <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><B>Banner Feature List</B></TD>
+            <TD ALIGN="LEFT">
+		 <input INPUT TYPE="text" NAME="bannerfeaturelist" SIZE="30" MAXLENGTH="150" VALUE="~$bannerdetails.bannerfeatures`" CLASS="textbox" Readonly ><a href="#" onClick="openBannerPop();">Click here to edit feature list</a>
+		 </TD>
+          </TR>
+	
+~/if`	
+          <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><B>Banner Start Date</B></TD>
+            <TD ALIGN="LEFT">
+			<SELECT NAME="startday" CLASS="textbox">
+            ~section  name=i loop=$daysarr`
+			 <option value="~$daysarr[i].daysvalue`" ~if $daysarr[i].daysvalue eq $bannerdetails.bannerstartday` selected ~/if` >~$daysarr[i].daysname` </option>
+              ~/section`
+			</SELECT>
+			
+            <SELECT NAME="startmonth" CLASS="textbox">
+            ~section  name=i loop=$monthsarr`
+			 <option value="~$monthsarr[i].monthvalue`" ~if $monthsarr[i].monthvalue eq $bannerdetails.bannerstartmonth` selected ~/if` >~$monthsarr[i].monthname` </option>
+             ~/section`
+			</SELECT>
+			
+            <SELECT NAME="startyear" CLASS="textbox">
+             ~section  name=i loop=$yearsarr`
+			 <option value="~$yearsarr[i].yearsvalue`" ~if $yearsarr[i].yearsvalue eq $bannerdetails.bannerstartyear` selected ~/if` >~$yearsarr[i].yearsvalue` </option>
+             ~/section`
+			</SELECT> </TD>
+          </TR>
+          <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><B>Banner End Date</B></TD>
+            <TD ALIGN="LEFT">
+			<SELECT NAME="endday" CLASS="textbox">
+             ~section  name=i loop=$daysarr`
+			<option value="~$daysarr[i].daysvalue`"  ~if $daysarr[i].daysvalue eq $bannerdetails.bannerendday` selected ~/if`>~$daysarr[i].daysname`
+             ~/section`
+			 </SELECT>
+			 
+			 <SELECT NAME="endmonth" CLASS="textbox">
+             ~section  name=i loop=$monthsarr`
+			 <option value="~$monthsarr[i].monthvalue`" ~if $monthsarr[i].monthvalue eq $bannerdetails.bannerendmonth` selected ~/if` >~$monthsarr[i].monthname` </option>
+              ~/section`
+			 </SELECT>
+			 
+            <SELECT NAME="endyear" CLASS="textbox">
+             ~section  name=i loop=$yearsarr`
+			 <option value="~$yearsarr[i].yearsvalue`" ~if $yearsarr[i].yearsvalue eq $bannerdetails.bannerendyear` selected ~/if` >~$yearsarr[i].yearsvalue` </option>
+             ~/section`
+			</SELECT></TD>
+          </TR>
+          <TR id="multipleurl">
+              <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><B>Is this a Banner with Multiple Landing URLs</B></TD>
+              <TD CLASS="text" ALIGN="LEFT"><INPUT TYPE="checkbox" NAME="bannermultiurl" VALUE="Y" ~if $bannerdetails.bannermultiurl eq 'Y'` checked ~/if` onchange="checkDisable();">&nbsp;&nbsp;<a href="#" id="multiurl" onclick="openMultipleURL()">Click Here to Enter Banner URL</a></TD>
+          </TR>
+          <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><B>Banner Gif</B></TD>
+            <TD ALIGN="LEFT"><span><input INPUT TYPE="text" NAME="bannergif" SIZE="50"  VALUE="~$bannerdetails.bannergif`" CLASS="textbox"><!--div><a href="#" onClick="openUrlParser();"><font color="red">Is this a Multiple URL Banner</font></a></div></span-->
+             </TD>
+          </TR>
+          <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><B>Banner Url</B></TD>
+            <TD ALIGN="LEFT"><INPUT TYPE="text" NAME="bannerurl" VALUE="~$bannerdetails.bannerurl`" CLASS="textbox"></TD>
+          </TR>
+          <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><B>Banner Internal Or
+            External</B></TD>
+            <TD ALIGN="LEFT"><SELECT NAME="bannerintext" CLASS="textbox">
+            ~section  name=i loop=$bannerintextarr`
+			<option value="~$bannerintextarr[i].value`" ~if $bannerintextarr[i].value eq $bannerdetails.bannerintext` selected ~/if`>~$bannerintextarr[i].name`</option>
+             ~/section`
+			 </SELECT></TD>
+          </TR>
+		  <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><B>Is Banner Static</B></TD>
+            <TD ALIGN="LEFT"><INPUT TYPE="checkbox" NAME="bannerstatic" VALUE="Y" ~if $bannerdetails.bannerstatic eq 'Y'` checked ~/if`></TD>
+          </TR>
+          <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><B>Is Banner a No-Criteria One<!-- Default --> </B></TD>
+            <TD ALIGN="LEFT"><INPUT TYPE="checkbox" NAME="bannerdefault" VALUE="Y" ~if $bannerdetails.bannerdefault eq 'Y'` checked ~/if`  onClick="ChangeCriteria(this)"></TD>
+          </TR>
+	 <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><B>Is Banner  Default</B></TD>
+            <TD ALIGN="LEFT"><INPUT TYPE="checkbox" NAME="bannerfixed" VALUE="Y" ~if $bannerdetails.bannerfixed eq 'Y'` checked ~/if`  onClick="ChangeCriteria(this)"></TD>
+          </TR>
+		  <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><B>Campaign Duration</B></TD>
+            <TD ALIGN="LEFT"><INPUT TYPE="text" NAME="campaignduration" SIZE="30" MAXLENGTH="150" VALUE="~$campaignstartdate`  to  ~$campaignenddate` " CLASS="textbox" READONLY></TD>
+          </TR>
+		  
+          
+        </TABLE></DIV><BR><CENTER><INPUT TYPE="IMAGE" NAME="showadvbannerdetails" SRC="gifs/continue-select.gif" BORDER="0"></CENTER><BR>
+        <P></P>
+        <P></P></TD>
+        <TD BACKGROUND="gifs/rt-line-bg-1.gif" WIDTH="18"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></TD>
+      </TR>
+    </TABLE><TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" 
+    ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/page-bg-1.gif"><IMG SRC="gifs/lt-low-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+        <TD VALIGN="MIDDLE" HEIGHT="31" BACKGROUND="gifs/page-bg-1.gif">&nbsp;</TD>
+        <TD ALIGN="RIGHT" WIDTH="18" BACKGROUND="gifs/page-bg-1.gif"><IMG SRC="gifs/lt-rt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+      </TR>
+    </TABLE>
+<input type="hidden" name="id" value="~$id`">
+<input type="hidden" name="site" value="~$site`">
+<input type="hidden" name="bannerid" value="~$bannerid`">
+<input type="hidden" name="campaignid" value="~$campaignid`">
+<input type="hidden" name="bannerstatus" value="~$bannerstatus`">
+<input type="hidden" name="campaignstartdate" value="~$campaignstartdate`" />
+<input type="hidden" name="campaignenddate" value="~$campaignenddate`" />
+</FORM>
+    ~$bmsfooter`
+  </BODY>
+</HTML>

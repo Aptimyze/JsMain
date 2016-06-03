@@ -1,0 +1,18 @@
+USE billing;
+
+ALTER TABLE billing.SERVICES ADD desktop_RS DOUBLE DEFAULT '0' NOT NULL AFTER PRICE_DOL ;
+ALTER TABLE billing.SERVICES ADD desktop_DOL DOUBLE DEFAULT '0' NOT NULL AFTER desktop_RS ;
+ALTER TABLE billing.SERVICES ADD iOS_app_RS DOUBLE DEFAULT '0' NOT NULL AFTER desktop_DOL ;
+ALTER TABLE billing.SERVICES ADD iOS_app_DOL DOUBLE DEFAULT '0' NOT NULL AFTER iOS_app_RS ;
+ALTER TABLE billing.SERVICES ADD mobile_website_RS DOUBLE DEFAULT '0' NOT NULL AFTER iOS_app_DOL ;
+ALTER TABLE billing.SERVICES ADD mobile_website_DOL DOUBLE DEFAULT '0' NOT NULL AFTER mobile_website_RS ;
+ALTER TABLE billing.SERVICES ADD JSAA_mobile_website_RS DOUBLE DEFAULT '0' NOT NULL AFTER mobile_website_DOL ;
+ALTER TABLE billing.SERVICES ADD JSAA_mobile_website_DOL DOUBLE DEFAULT '0' NOT NULL AFTER JSAA_mobile_website_RS ;
+ALTER TABLE billing.SERVICES ADD Android_app_RS DOUBLE DEFAULT '0' NOT NULL AFTER JSAA_mobile_website_DOL ;
+ALTER TABLE billing.SERVICES ADD Android_app_DOL DOUBLE DEFAULT '0' NOT NULL AFTER Android_app_RS ;
+ALTER TABLE billing.SERVICES ADD old_mobile_website_RS DOUBLE DEFAULT '0' NOT NULL AFTER Android_app_DOL ;
+ALTER TABLE billing.SERVICES ADD old_mobile_website_DOL DOUBLE DEFAULT '0' NOT NULL AFTER old_mobile_website_RS ;
+
+UPDATE billing.SERVICES SET desktop_RS = PRICE_RS_TAX, iOS_app_RS = PRICE_RS_TAX, mobile_website_RS = PRICE_RS_TAX, JSAA_mobile_website_RS = PRICE_RS_TAX, old_mobile_website_RS = PRICE_RS_TAX, Android_app_RS = PRICE_RS_TAX ;
+
+UPDATE billing.SERVICES SET desktop_DOL = PRICE_DOL, iOS_app_DOL = PRICE_DOL, mobile_website_DOL = PRICE_DOL, JSAA_mobile_website_DOL = PRICE_DOL, old_mobile_website_DOL = PRICE_DOL, Android_app_DOL = PRICE_DOL ;

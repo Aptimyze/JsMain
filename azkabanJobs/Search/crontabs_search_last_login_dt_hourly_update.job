@@ -1,0 +1,2 @@
+type=command
+command=${php5} ${docRoot}/crontabs/search_last_login_dt_hourly_update.php

@@ -1,0 +1,61 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+~$HEAD`
+<br>
+<table width=760 cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+    <tr class="formhead">
+          <td width=55% class="formhead" border=1><font><b>Welcome : </b></font></td>
+          <td width="35%" class="formhead" align="center"><a href="mainpage.php?name=&cid=~$CID`">Main Page</a></td>
+
+          <td width=10% class="formhead" border=1 align='CENTER'><a href="logout.php?cid=~$CID`">Logout</a></td>
+    </tr>
+</table>
+
+<br>
+<p align=center>~$USERNAME` : ~$GROUP`</p>
+<br>
+<form name=f1 action="tieups_privilege_update.php" method=post>
+<input type=hidden name=cid value=~$CID`>
+<input type=hidden name=resid value=~$RESID`>
+<table width=60% align=center border=1>
+<tr>
+<td width=50% align=center>Privilege to View</td>
+<td width=50% align=left>Grant</td>
+</tr>
+<tr>
+<td width=50% >Number of Total Hits</td>
+<td width=50% align=left><input type=checkbox name="total_hits" ~if $TH eq 1` checked ~/if`  value="1"></td>
+</tr>
+<tr>
+<td width=50%>Number of Incomplete Profiles</td>
+<td width=50% align=left><input type=checkbox name="profile_incom"  ~if $IP eq 1` checked ~/if` value="1" ></td>
+</tr>
+<tr>
+<td width=50%>Number of Completed Proifiles</td>
+<td width=50% align=left ><input type=checkbox name="profile_com" ~if $CP eq 1` checked ~/if` value="1" ></td>
+</tr>
+<tr>
+<td width=50%>Number of Deleted Proifiles</td>
+<td width=50% align=left ><input type=checkbox name="profile_del" ~if $DP eq 1` checked ~/if` value="1" ></td>
+</tr>
+<tr>
+<td width=50%>Number of Paid Proifiles</td>
+<td width=50% align=left ><input type=checkbox name="paid_profile" ~if $PAID eq 1` checked ~/if` value="1" ></td>
+</tr>
+<tr>
+<td width=50%>&nbsp;</td>
+<td width=50% align=left><input type=submit value="Submit"></td>
+</tr>
+
+</table>
+</form>
+
+</body>
+</html>
+

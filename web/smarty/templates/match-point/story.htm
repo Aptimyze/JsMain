@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Match Point - Jeevansathi.com</title>
+<link href="~$SITE_URL`/minify.php?files=/css/style.css" rel="stylesheet" type="text/css" />
+<SCRIPT type="text/javascript" language="Javascript" SRC="~$SITE_URL`/minify.php?files=/js/google_map_api.js,/js/common.js,/js/second.js"></SCRIPT>
+<style>
+/*general pagination starts here*/
+ul.pagination{margin:0; padding:0; font:11px Arial, Helvetica, sans-serif;}
+ul.pagination li{float:left; border:1px solid #929292; color:#929292; margin-left:5px; list-style:none;}
+ul.pagination li a{color:#0090da; text-decoration:none; padding:2px 10px; float:left;}
+ul.pagination li a:hover{background:#0090da; color:#fff;}
+ul.pagination li.pg_num select{width:57px; margin:0; padding:0 0 1px; font:11px Arial, Helvetica, sans-serif; border:1px solid #929292; }
+/*general pagination ends here*/
+.wed_row{border-bottom:2px solid #e3e2e3; padding:5px 5px 10px 5px; margin-top:5px;}
+.wed_row img.desc{margin-right:25px;}
+.wed_row p{margin:10px 0 4px 0; padding:0; width:380px;}
+.wed_row .no_img{width:223px; height:163px; float:left;}
+p.b{margin-bottom:10px!important;}
+</style>
+<script type="text/javascript">
+var SITE_URL='~$SITE_URL`';
+</script>
+</head>
+<body>
+~$BETWEEN`
+                <div class="mid_combine fl">
+                        <div class="left_nav">
+                                <ul class="nav b mt_10">
+                                        <li><a href="match.php?m=1">Why Jeevansathi.com Match Point?</a></li>
+                                        <li><a href="match.php?m=2">Jeevansathi.com Match Point Advantage</a></li>
+                                        <li><a href="match.php?m=3">How Jeevansathi.com Match Point  Works?</a></li>
+                                        <li><a href="match.php?m=4">Membership</a></li>
+                                        <li><a class="active">Success Stories / Testimonials</a></li>
+                                        <li><a href="image.php">Image Gallery</a></li>
+                                </ul>
+                                <div class="success_stories fl mt_15">
+                                        <div class="tp_bg"></div>
+                                        <div class="mid_bg_strip">
+                                                <h5 class="maroon">Success Story</h5>
+                                                <div class="grey_cont b mt_10"> Shyam weds Sneha</div>
+                                                <img src="images/couple_img.gif" alt="Success Stories" title="Success Stories" />
+                                                <p class="mt_10" style="text-align:left; width:85%; margin:auto; margin-bottom:0;"> I received profile of Shyam through Jeevansathi match point as highly recommended profile for me, i initiated contact to shayam and got positive reply, next we met, and found good match for each other.<br /> Our wedding is on 15th Feb 2009. We met through JeevanSaathi. Thanks.<br /></p>
+                                                <div class="clear"></div>
+                                        </div>
+                                        <div class="tp_bg" style="background-position:bottom;"></div>
+                                        <div class="clear"></div>
+                                </div>
+                        </div>
+			<div class="right_cont">
+				<h2 class="maroon f_18">Success Stories / Testimonials</h2>
+				<div class="grey_cont b mt_10" style="padding:5px;">
+					<ul class="pagination fr">
+						~if $page eq 1`
+						<li style="padding: 2px 10px;">Previous</li>
+						~else`
+						<li><a href="story.php?page=~$page-1`">Previous</a></li>
+						~/if`
+						<li class="pg_num" style="border:none;">
+							<select id="sel_u">
+								<option value='1' ~if $page eq 1`selected='selected'~/if`>1</option>
+								<option value='2' ~if $page eq 2`selected='selected'~/if`>2</option>
+								<option value='3' ~if $page eq 3`selected='selected'~/if`>3</option>
+							</select>
+						</li>
+						~if $page eq 3`
+						<li style="padding: 2px 10px;">Next</li>
+						~else`
+						<li><a href="story.php?page=~$page+1`">Next</a></li>
+						~/if`
+					</ul>
+					 <div class="clear"></div>
+				</div>
+				~$STORY`
+				<div class="grey_cont b mt_10" style="padding:5px;">
+					<ul class="pagination fr">
+						~if $page eq 1`
+						<li style="padding: 2px 10px;">Previous</li>
+						~else`
+						<li><a href="story.php?page=~$page-1`">Previous</a></li>
+						~/if`
+						<li class="pg_num" style="border:none;">
+							<select id="sel_b">
+								<option value='1' ~if $page eq 1`selected='selected'~/if`>1</option>
+								<option value='2' ~if $page eq 2`selected='selected'~/if`>2</option>
+								<option value='3' ~if $page eq 3`selected='selected'~/if`>3</option>
+							</select>
+						</li>
+						~if $page eq 3`
+						<li style="padding: 2px 10px;">Next</li>
+						~else`
+						<li><a href="story.php?page=~$page+1`">Next</a></li>
+						~/if`
+					</ul>
+					<div class="clear"></div>
+				</div>
+			</div>
+		</div>
+		<div class="top_combine_cur fl" style="background-position:bottom;"></div>
+	</div>
+</div>
+<script type="text/javascript">
+var store=0,flag=0;
+window.onload=function()
+{
+        ~if $error`
+                window.location.hash="Error";
+                shower1();
+        ~elseif $noerror`
+                window.location.hash="Success";
+                shower1();
+        ~else`
+                window.location.hash=" ";
+        ~/if`
+        document.getElementById("lynj").onchange=jnyl;
+        document.getElementById("a3").onclick=hider2;
+        document.getElementById("close2").onclick=hider2;
+        document.getElementById("a4").onclick=shower1;
+        document.getElementById("a1").onclick=hider1;
+        document.getElementById("close1").onclick=hider1;
+        document.getElementById("a2").onclick=shower2;
+
+        document.form2.onsubmit=validation;
+        document.form2.location.onchange=assign_code;
+	document.getElementById("sel_u").onchange=page_load;
+	document.getElementById("sel_b").onchange=page_load;
+        anchorji();
+        dropper();
+}
+function page_load()
+{
+     document.location="story.php?page="+this.value;
+}
+
+</script>
+~$FOOT`
+</body>
+</html>
+~$GOOG`

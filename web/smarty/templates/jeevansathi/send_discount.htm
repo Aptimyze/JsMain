@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Discount Codes</title>
+</head>
+
+<body>
+<table width="485" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td height="115" align="left" valign="top"><img  src="~$IMG_URL`/profile/ser4_images/v_logo-js.gif"></td>
+  </tr>
+  <tr>
+    <td><div style="FONT-SIZE: 11px; COLOR: #1f1f1f; LINE-HEIGHT: 17px; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif" 
+     >Dear ~$NAME`,<br>
+      <br>
+    Celebrate your marriage by helping your friends in finding the special someone they have been looking for. Share the following discount codes with your friends that will enable them to avail a <b>15% discount</b> on any membership on <a href="http://jeevansathi.com" target="_blank" style="TEXT-DECORATION: none"><font color="#bc001d"><u>jeevansathi.com</u></font></a>. </div></td>
+  </tr>
+  <tr>
+    <td height="15">&nbsp;</td>
+  </tr>
+~section name=discount loop=$DISCOUNT`
+  <tr>
+    <td>
+
+<table width="100%"  border="0" cellspacing="1" cellpadding="1">
+      <tr align="middle" valign="center">
+        <td width="20" height="25" align="left" style="FONT: 11px verdana">~$DISCOUNT[discount]+1`.</td>
+        <td width="271" height="25" align="left" style="FONT: bold 15px verdana">~$rand[discount]`</td>
+        <td height="25" align="right" style="FONT: 11px verdana"><a style="COLOR: #045aff" href="~$SITE_URL`/P/friend_discount.php?profileid=~$profileid`&NAME=~$NAME`" target="_blank" >Click here to send to a friend</a></td>
+      </tr>
+    </table></td>
+  </tr>
+~/section`
+</table>
+</body>
+</html>

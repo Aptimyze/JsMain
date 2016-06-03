@@ -1,0 +1,72 @@
+<html>
+<head>
+<title>Jeevansathi - MSMJS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="~$siteUrl`/profile/images/styles.css" type="text/css">
+
+<link rel="stylesheet" href="~$siteUrl`/jsadmin/jeevansathi.css" type="text/css">
+<script type="text/javascript" src="js/sendMessage.js"></script>
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+
+</head>
+
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+~$msmjsHeader`
+~if $sql`
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+       <td height="4"></td>
+       <SPACER height="4" type="block"></SPACER> </tr>
+      <tr>
+       <td class="headbigblack"><b>Total No Of Results : ~$count` </b></td>
+      </tr>
+      <tr class="bgred">
+       <td height="1"></td>
+       <SPACER height="1" type="block"></SPACER> </tr>
+        <tr>
+       <td height="8"></td>
+       <SPACER height="8" type="block"></SPACER> </tr>
+     </table>
+
+        <tr>
+       <td class="headbigblack"><b>Search Query : </b></td>
+      </tr>
+        <tr>
+       <td colspan="4" align="center"><h2>~$sql` <h2></td>
+        </tr>
+</table>
+~/if`
+<br><br><br>
+        <form name="sendMessageForm" method="post" action="sendMessage.php" onSubmit="return validateSendMessageForm(this);">
+	<input type="hidden" name="query" value="~$sql`">
+	<input type="hidden" name="messageId" value="~$messageId`">
+	<input type="hidden" name="fileName" value="~$fileName`">
+	<input type="hidden" name="cid" value="~$cid`">
+	~if $resend`
+	<input type="hidden" name="resend" value="1">
+	~/if`
+        <table width="49%" border="0" cellspacing="1" cellpadding="4" align="center">
+          <tr>
+            <td class="formhead" valign="middle" colspan="2">&#155; Please set to how much people you want to send the sms</td>
+          </tr>
+	~$setMessageWidget`
+          <tr valign="middle" align="LEFT">
+            <td width="49%" class="label" bgcolor="#F9F9F9">&nbsp;</td>
+              <td bgcolor="#F9F9F9"><input type="submit" name="sendMessage" value="  Send Message  " class="textboxes1"></td></tr>
+
+          <tr valign="top" align="right">
+            <td colspan="2" bgcolor="#F9F9F9" class="lftpan">&nbsp;</td>
+          </tr>
+        </table>
+      </form>
+
+
+      </td>
+  </table>
+
+</body>
+</html>

@@ -1,0 +1,82 @@
+.content{
+	overflow: auto;
+	position: relative;
+	width: 100%;
+	height: 400px;
+	-webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;
+}
+
+.CPclosepos {
+   top: 0;
+right: -40px;
+}
+
+ul.changecover li:nth-child(1) {
+    padding: 0 10px 0 0;
+}
+ul.changecover li {
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+ul.changecover li:nth-last-child(1) {
+    border-right: none;
+}
+
+ul.changecover li {
+    border-right: 1px solid rgba(255, 255, 255, 0.7);
+    opacity: 0.7;
+    
+}
+.edpdim1 {
+    display: block;
+    height: 21px;
+    width: 25px;
+}
+.disabledTab {
+    pointer-events: none;
+}
+.z1000{
+    z-index: 1000;
+}
+.z1001{
+    z-index: 1001;
+}
+.edpcross1 {
+    background-position: -73px -180px;
+    height: 25px;
+    width: 26px;
+}
+
+.mCustomScrollbar {
+}
+.content {
+    box-sizing: border-box;
+    height: 400px;
+    overflow: auto;
+    position: relative;
+    width: 100%;
+}
+//ul.coversel li {
+//    padding: 5px;
+//}
+.setCover {top: 50%;transform: translate(-50%,-50%);left: 50%;}
+.ht50{
+    height:50px;
+}
+
+ul.coversel li{margin:5px}
+
+ul.coversel li {width:182px; height:102px}
+
+.coverlisting { background-repeat:no-repeat; background-position:center center;
+
+                -webkit-background-size: cover;
+
+                -moz-background-size: cover;
+
+                -o-background-size: cover;
+
+                background-size: cover;
+
+}

@@ -1,0 +1,231 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>JeevanSathi Matrimonials - Form for Input of Matrimonial Data</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link href="/profile/images/style1.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="http://www.jeevansathi.com/P/I/styles.php" type="text/css">
+<script language="JavaScript" SRC="/profile/~$profile_js`"></SCRIPT>
+<script language="JavaScript" SRC="/profile/page4.js"></script>
+<script language="JavaScript" SRC="/profile/ajaxforms1.js"></script>
+<script language="JavaScript">
+<!--
+function goto1stpage()
+{
+        zzz="source=~$HITSOURCE`&hit_source=~$TIEUPSOURCE`";
+}
+//-->
+</script>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<br>
+~$HEAD`
+~$SUBHEADER`
+<font size="3" face="Arial"><b>&nbsp;&nbsp;&nbsp;&nbsp;</b></font><br>
+~if $NO_OF_ERROR`
+<font color="red" size="2" face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;There are ~$NO_OF_ERROR` Error(s) in your form. They are marked in red. Please correct them and submit the form again</font>
+~/if`
+
+<body leftmargin="5" topmargin="5">
+<script language="Javascript">
+goto1stpage();
+</script>
+<div id="my_div">
+<!--form action="inputprofile2.php" method="post" name= "form1" onsubmit= "return validate1(~$SOURCE`)";-->
+<form>
+<input type="hidden" name="url" value="">
+<input type="hidden" name="method" value="">
+</form>
+
+~if $hit_source eq 'O'`
+<form action="inputprofile2.php" method="post" name="form1">
+~else`
+<form action="inputprofile2.php" method="post" name="form1" onsubmit="return Submit4();">
+~/if`
+<input type="hidden" name="checksum" value="~$CHECKSUM`">
+<input type="hidden" name="id" value="~$ID_AFF`">
+<input type="hidden" name="gender" value="~$gender`">
+<input type="hidden" name="maritalstatus" value="~$maritalstatus`">
+<input type="hidden" name="hit_source" value="~$hit_source`">
+<input type="hidden" name="tieup_source" value="~$tieup_source`">
+ <table width="80%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+   <td width="5%"><img src="~$IMG_URL`/P/images/zero.gif" width="30" height="1"></td>
+   <td width="95%" height="18" class="smallblack"><FONT color=#3366cc>Note: Fields marked with * are compulsory. </FONT></td>
+  </tr>
+ </table>
+ <table width="80%"  border="0" cellspacing="0" cellpadding="0">
+  <tr class=bggrey>
+   <td width="5%"><img src="~$IMG_URL`/P/images/zero.gif" width="30" height="1"></td>
+   <td width="95%" class="mediumblack" height="18"><b style="color:#996633"> More about your Spouse </b></td>
+  </tr>
+ </table>
+ <br>
+ <table width="80%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+   <td width="5%" height="32" valign="top"><img src="~$IMG_URL`/P/images/zero.gif" width="30" height="1"></td>
+   <td width="95%" valign="top" class="mediumblack"><div id="Caste_desired1"><font color="blue">a. Are you open to marrying people outside your caste ?*</div></td>
+  </tr>
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack">
+<input type=radio value="Y" id="Caste_desired2" name="Caste_desired" ~if $caste eq 'Y'`checked ~/if` onChange="checkbox(this,'a. Are you open to marrying people outside your caste ?*');">
+Yes &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio value="N" id="Caste_desired2" name="Caste_desired" ~if $caste eq 'N'`checked ~/if` onChange="checkbox(this,'a. Are you open to marrying people outside your caste ?*');">
+No</td>
+  </tr>
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><div id="Religion1"><font color="blue">b. Are you open to marrying people outside your religion ?*</div></td>
+  </tr>
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><input type=radio value="Y" name="Religion" ~if $religion eq 'Y'` checked ~/if` onChange="checkbox(this,'b. Are you open to marrying people outside your religion ?*')">
+Yes &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio value="N" name="Religion" ~if $religion eq 'N'` checked ~/if` onChange="checkbox(this,'b. Are you open to marrying people outside your religion ?*')">
+No</td>
+  </tr>
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><div id="Community1"><font color="blue">c. Are you open to marrying people outside your community ?*</div></td>
+  </tr>
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><input type=radio value="Y" name="Community" ~if $community eq 'Y'` checked ~/if` onChange="checkbox(this,'c. Are you open to marrying people outside your community ?*')">
+Yes &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio value="N" name="Community" ~if $community eq 'N'` checked ~/if` onChange="checkbox(this,'c. Are you open to marrying people outside your community ?*')">
+No</td>
+  </tr>
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><div id="City1"><font color="blue">d. Are you interested in marrying outside your city ?*</div></td>
+  </tr>
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><input type=radio value="Y" name="City" ~if $city eq 'Y'` checked ~/if` onChange="checkbox(this,'d. Are you interested in marrying outside your city ?*')">
+Yes &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio value="N" name="City" ~if $city eq 'N'` checked ~/if` onChange="checkbox(this,'d. Are you interested in marrying outside your city ?*')">
+No</td>
+  </tr>
+~if $gender eq 'M'`
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><div id="Wife_Working1"><font color="blue">e. Will you prefer your wife to be working ?*</div></td>
+  </tr>
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><input type=radio value="Y" name="Wife_Working" ~if $working eq 'Y'` checked ~/if` onChange="checkbox(this,'e. Will you prefer your wife to be working ?*')">
+Yes &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio value="N" name="Wife_Working" ~if $working eq 'N'` checked ~/if` onChange="checkbox(this,'e. Will you prefer your wife to be working ?*')">
+No&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio value="D" name="Wife_Working" ~if $working eq 'D'` checked ~/if` onChange="checkbox(this,'e. Will you prefer your wife to be working ?*')">
+Doesn't matter </td>
+  </tr>
+~else`
+<tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><div id="Married_Working1"><font color="blue">e. Do you plan to work after your marriage ?*</div></td>  </tr>
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><input type=radio value="Y" name="Married_Working" ~if $married_working eq 'Y'` checked ~/if` onChange="checkbox(this,'e. Do you plan to work after your marriage ?*')">
+Yes &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio value="N" name="Married_Working" ~if $married_working eq 'N'` checked ~/if` onChange="checkbox(this,'e. Do you plan to work after your marriage ?*')">
+No&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio value="D" name="Married_Working" ~if $married_working eq 'D'` checked ~/if` onChange="checkbox(this,'e. Do you plan to work after your marriage ?*')">
+Doesn't matter </td>
+  </tr>
+
+~/if`
+
+~if $maritalstatus neq 'N'`
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><div id="checkbox1"><font color="blue">f.What type of people will you prefer marrying ?*</div></td>
+  </tr>
+  <tr>
+   <td height="50" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><table width="100%"  border="0" cellspacing="0" cellpadding="1">
+    <tr>
+     <td width="6%"><input type="checkbox" name="checkboxmarital1" value="A" ~if $marital1 eq 'A'` checked ~/if` onChange="checkboxm1(this,'f.What type of people will you prefer marrying ?*')"></td>
+     <td width="14%" class="mediumblack">All&nbsp;</td>
+     <td width="6%"><input type="checkbox" name="checkboxmarital2" value="N" ~if $marital2 eq 'N'` checked ~/if` onChange="checkboxm1(this,'f.What type of people will you prefer marrying ?*')"></td>
+     <td width="19%" class="mediumblack">Never&nbsp;Married </td>
+     <td width="6%"><input type="checkbox" name="checkboxmarital3" value="W" ~if $marital3 eq 'W'` checked ~/if` onChange="checkboxm1(this,'f.What type of people will you prefer marrying ?*')"></td>
+     <td width="16%" class="mediumblack">Widowed</td>
+     <td width="5%"><input type="checkbox" name="checkboxmarital4" value="D" ~if $marital4 eq 'D'` checked ~/if` onChange="checkboxm1(this,'f.What type of people will you prefer marrying ?*')"></td>
+     <td width="28%" class="mediumblack">Divorced</td>
+    </tr>
+    <tr>
+     <td><input type="checkbox" name="checkboxmarital5" value="S" ~if $marital5 eq 'S'` checked ~/if` onChange="checkboxm1(this,'f.What type of people will you prefer marrying ?*')"></td>
+     <td class="mediumblack">Separated</td>
+     <td><input type="checkbox" name="checkboxmarital6" value="O" ~if $marital6 eq 'O'` checked ~/if` onChange="checkboxm1(this,'f.What type of people will you prefer marrying ?*')"></td>
+     <td class="mediumblack">Others</td>
+     <td>&nbsp;</td>
+     <td>&nbsp;</td>
+     <td>&nbsp;</td>
+     <td>&nbsp;</td>
+    </tr>
+   </table></td>
+  </tr>
+~/if`
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><div id="checkboxedulevel11"><font color="blue"><b>g.What should be the educational qualifications of your desired spouse ?*<b></font></div></td>
+  </tr>
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><input type="checkbox" name="checkboxedulevel1" value="A" ~if $edu_level1 eq 'A'` checked ~/if`>
+All&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="checkbox" name="checkboxedulevel2" value="M" ~if $edu_level2 eq 'M'` checked ~/if` onChange="checkboxm2(this,'g.What should be the educational qualifications of your desired spouse ?*')">
+MBA/CA/CS/ICWA&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="checkbox" name="checkboxedulevel3" value="E" ~if $edu_level3 eq 'E'` checked ~/if` onChange="checkboxm2(this,'g.What should be the educational qualifications of your desired spouse ?*')">
+Eng./ MCA / Mtech&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="checkbox" name="checkboxedulevel4" value="P" ~if $edu_level4 eq 'P'` checked ~/if` onChange="checkboxm2(this,'g.What should be the educational qualifications of your desired spouse ?*')">
+MBBS / MD / Pharma</td>
+  </tr>
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack">~if $check_spouse eq "Y"`<font color="red">~/if`<b>~if $maritalstatus neq 'N'`h.~else`g. ~/if` Desired Characteristics of your spouse ?</b></td>
+  </tr>
+  <tr>
+   <td height="80" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><span class="smallred">
+    <textarea name="Spouse" cols="80" rows="5" class="testbox">~$spouse`</TEXTAREA>
+   </span></td>
+  </tr>
+  <tr>
+   <td height="25" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><b>~if $maritalstatus neq 'N'`i.~else`h. ~/if` ~if $check_aboutus eq "Y"`<font color="red">~/if`How did you come to know about us ?*~if $check_aboutus eq "Y"`</font>~/if`</b><div id="About_Us1"></div></td>
+  </tr>
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><select name="About_Us" class="testbox" onChange="checkgender(this);">
+    <option value="" >Select one option</option>
+    <option value="1" ~if $about_us eq '1'` selected ~/if`>Search Engine</option>
+    <option value="2" ~if $about_us eq '2'` selected ~/if`>Word of Mouth</option>
+    <option value="3" ~if $about_us eq '3'` selected ~/if`>Newspaper/Magazine</option>
+    <option value="4" ~if $about_us eq '4'` selected ~/if`>Television/Visual Media</option>
+    <option value="5" ~if $about_us eq '5'` selected ~/if`>Promotional Email</option>
+    <option value="6" ~if $about_us eq '6'` selected ~/if`>Referral Website</option>
+    <option value="7" ~if $about_us eq '7'` selected ~/if`>Other</option>
+   </select></td>
+  </tr>
+ </table>
+ <br>
+ <table width="80%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+   <td width="5%"><img src="~$IMG_URL`/P/images/zero.gif" width="30" height="1"><br>
+    </div></td>
+   <td width="95%" class="smallblack"><div align="center"><input type="button" name="Submit" value="Submit" class="TextBox" onClick="Submit4f();"></td>
+  </tr>
+ </table>
+
+~$FOOT`
+</td>
+</tr>
+</table>
+
+</form>
+</div>
+</body>
+</html>

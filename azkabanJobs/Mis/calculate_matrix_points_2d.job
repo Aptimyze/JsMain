@@ -1,0 +1,2 @@
+type=command
+command=${php5} ${docRoot}/crontabs/calculate_matrix_points_2d.php

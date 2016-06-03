@@ -1,0 +1,47 @@
+couponInterfaceSuccess:
+  metas:
+    title:        Coupon Code Generation Interface
+  stylesheets:    []
+  javascripts:    []
+
+couponGeneratedSuccess:
+  metas:
+    title:        Coupon Code Generation Interface
+  stylesheets:    []
+  javascripts:    []
+
+festiveOfferMappingInterfaceSuccess:
+  metas:
+    title:        Festive Offer Mapping Interface
+  stylesheets:    []
+  javascripts:    []
+
+manageCommissionsSuccess:
+  metas:
+    title:        Manage Apple/Franchisee Commissions Interface
+  stylesheets:    []
+  javascripts:    []
+
+splitSalesInterfaceSuccess:
+  metas:
+    title:        Split Sales Interface
+  stylesheets:    []
+  javascripts:    []
+  
+uploadVDLookupTableSuccess:
+  metas:
+    title:        Upload Variable Discount Lookup Table
+  stylesheets:    [jspc/commonInterface/VDUpload]
+  javascripts:    [jspc/crm/uploadVD_js,jspc/crm/loader_js]
+
+fetchMailerDataSuccess:
+  metas:
+    title:        Mailer Statistics Interface
+  stylesheets:    [jquery_dateLists]
+  javascripts:    [jquery_dateLists]                     
+
+helpBackendSuccess:
+    metas:
+        title:    Jeevansathi Help Module
+    stylesheets:  [operations/help_module]
+    javascripts:  []

@@ -1,0 +1,2 @@
+type=command
+command=${php5} ${docRoot}/crontabs/sugarcrm/autofollowup_tbl_trun.php

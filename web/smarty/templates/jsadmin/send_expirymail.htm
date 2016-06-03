@@ -1,0 +1,67 @@
+<HTML>
+     <HEAD>
+        <script language="JavaScript">
+        function check_blank()
+        {
+	        if(document.form1.uname.value == "")
+                {
+        		alert("Please Enter Username");
+                        return false;
+                }
+		if(document.date1.value == "")
+                {
+                        alert("Please Enter Username");
+                        return false;
+                }
+                return true;
+	}
+</script>
+
+ <TITLE>Send Mail</TITLE>
+                <link rel="stylesheet" href="jeevansathi.css" type="text/css">
+        </HEAD>
+        <body>
+        ~include file="head.htm"`
+         <br>
+         <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+          <table width=760 cellspacing="1" cellpadding='0' ALIGN="CENTER" >
+           <tr width=100% border=1>
+            <td width=30% class="formhead" height="23" align="center"><font><b>Welcome</b></font></td>
+            <td width=30% class="formhead" align='CENTER' height="23">
+             <a href="mainpage.php?cid=~$cid`">Click here to go to mainpage</a>
+            </td>
+            <td width=30% class="formhead" align='CENTER' height="23">
+             <a href="logout.php?cid=~$cid`">Logout</a>
+            </td>
+           </tr>
+          </table>
+
+        <br>
+<center>
+<center>
+<p style="font-family:Verdana; font-size:10pt; font-color:#FCFFCF; font-weight: bold">Send Subscription Expiry Mail</p>
+<br>
+<table width="70%" cellspacing ="2" cellpadding= "2">
+<form name="form1" method="post" action="send_expirymail.php">
+<tr class="formhead" height="23">
+	<td colspan="2" align="center">~$msg`</td>
+</tr>
+<tr>
+	<td width="50%" align="center">
+	Enter Username:
+	</td>
+	<td align="left" >
+	<input type="text" name="uname"  value="" size="30" style ="background-color:#DEEFEF">
+</tr>
+	<tr class="fieldsnew">
+	<td align="center">&nbsp;</td>
+	<td align="center">
+	<input type="submit" name="submit" value="Submit" onclick="return check_blank();"style="border:1px bordercolor:black  font-family: Times; font-size: 9pt; font-weight: bold; background-color:#DEEFEF">
+	<input type="hidden" name="cid" value="~$cid`">
+	</td>
+<tr>
+<table>
+        </center>
+        </BODY>
+</HTML>
+

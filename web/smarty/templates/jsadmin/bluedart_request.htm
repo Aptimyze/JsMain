@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title> Bluedart Final Pickup Request </title>
+<link rel="stylesheet" type="text/css" href="css/duplicate_number.css"/>
+<script>
+
+function getCheckedValue(radioObj)
+{
+	if(!radioObj)
+		return "";
+	var radioLength = radioObj.length;
+	if(radioLength == undefined)
+		if(radioObj.checked)
+			return radioObj.value;
+		else
+			return "";
+	for(var i = 0; i < radioLength; i++) {
+		if(radioObj[i].checked) {
+			return radioObj[i].value;
+		}
+	}
+	return "";
+}
+
+function validate()
+{
+	var dml=document.forms['form1'];
+	var len = dml.elements.length;
+	var i=0;
+	var count=0;
+
+	for( i=0 ; i<len ; i++)
+	{
+		if (dml.elements[i].name=='checkbox[]')
+		{
+			if(dml.elements[i].checked)
+				count++;
+		}
+	}
+	if(count==0)
+	{
+		alert("Please Select atleast 1 Entry to proceed ahead.");
+		return false;
+	}	
+
+	var value=getCheckedValue(document.forms['form1'].elements['delete']);
+	if(value=='')
+	{
+		alert("Please Select Any action which need to perform.");
+		return false;
+	}			
+	return true;
+}
+
+</script>
+</head>
+
+<body id="bd1">
+<div class="main_cont">
+  <p class="hdr fl"> <a href="~$SITE_URL`"><img src="~$IMG_URL`/jsadmin/temp_images/logo_new.gif" alt="Jeevansathi" /></a></p>
+  <div class="mid_cont">
+    <h4>Welcome ~$name` &gt;&gt;</h4>
+    <ul class="menu">
+      <li><a href="mainpage.php?cid=~$cid`">JS Admin Main Page</a></li>
+      <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+      <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+      <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+      <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+      <li><a href="logout.php?cid=~$cid`">Logout</a></li>
+    </ul>
+    <p class="clr"></p>
+    
+    <table width="760" border="0" cellspacing="1" class="dup_pro" style="float:left;" >
+      <tr>
+      	<td><b>Serial No.</b></td>
+        <td><b>User Name</b></td>
+	<td><b>Airway Number</b></td>
+        <td><b>Request Date</b></td>
+        <td><b>Mobile Number</b></td>
+        <td><b>Landline Number</b></td>
+	<td><b>City</b></td>
+	<td><b>Pincode</b></td>
+        <td>
+		<b>Services Opted</b><br></br>
+	</td>
+        <td><b>Operator</b></td>
+	<td><b>Comments (If Any)</b></td>
+        <td><b>Select Here for Final COD Request</b></td>
+      </tr>
+      <tr></tr><tr></tr><tr></tr>
+~section name=mysec loop=$USERNAME`
+
+<form name="form1" method="post" action="bludart_csv_request.php?cid=~$cid`&rid=~$REF_ID[mysec]`&username=~$USERNAME[mysec]`" onsubmit="return validate();">
+      <tr>
+        <td>~$SL[mysec]`</td>
+        <td>~$USERNAME[mysec]`</td>
+        <td>~$AIRWAY[mysec]`</td>
+        <td>~$ENTRY_DATE[mysec]`</td>
+        <td>~$MOBILE[mysec]`</td>
+	<td>~$LANDLINE[mysec]`</td>
+	<td>~$CITY[mysec]`</td>
+	<td>~$PINCODE[mysec]`</td>
+	<td>~$SERVICE[mysec]`</td>
+        <td>~$OPERATOR[mysec]`</td>
+        <td>~$COMMENTS[mysec]`</td>
+        <td><input type="checkbox" name="checkbox[]" value="~$REF_ID[mysec]`"/></td>
+      </tr>
+~/section`
+</table>
+<div style="float:left; margin-top:18px; width:62.0%">
+	<td><b>Send Final COD Request Mail </b><input type="radio" name="delete" value="send"/></td>
+</div>
+
+<div style="float:left; margin-top:18px; width:35.9%">
+	<td><b>Delete Selected Records  </b><input type="radio" name="delete" value="delete"/></td>
+</div>
+
+<div class="fl" style="float:left; margin-top:18px; width:65.9%">
+	<input type="image" src="~$IMG_URL`/jsadmin/temp_images/sub_btn.gif" class="fr"/>
+</div>
+
+</form>
+</div>
+</div>
+<div class="clr"></div><br/><br/><br/><br/>
+</body>
+</html>

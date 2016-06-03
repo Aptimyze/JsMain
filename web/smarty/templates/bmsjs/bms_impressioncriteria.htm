@@ -1,0 +1,176 @@
+<!DOCTYPE HTML PUBLIC "-//SoftQuad//DTD HoTMetaL PRO 4.0::19970714::extensions to HTML 4.0//EN"
+ "hmpro4.dtd">
+
+<HTML>
+  
+  <HEAD>
+    <TITLE>BMS : Campaign Management System</TITLE>
+    <LINK HREF="gifs/style.css" REL="stylesheet" TYPE="text/css">
+    <LINK rel="stylesheet" href="http://www.jeevansathi.com/jsadmin/jeevansathi.css" type="text/css">
+    <LINK rel="stylesheet" href="http://www.jeevansathi.com/profile/images/styles.css" type="text/css">
+	 <script language="JavaScript">
+	  function validateForm()
+	  {
+	  	var docF=document.advbannerdetails;	
+		var iserror=0;
+		if (docF.ipradio[0].checked == true && docF.bannercity.value == "")
+		{
+			alert('Please select the correct value of IP')
+			return false
+		}
+	  	if (docF.ipradio[1].checked == true && docF.bannerctry.value == "")
+		{
+	  		alert('Please select the correct value of IP')
+			return false
+		}
+		if (docF.ipradio[0].checked != true && docF.ipradio[1].checked != true )
+		{
+                        alert('Please select the correct value of IP')
+			return false
+                }
+		if (iserror!=0)
+			return false
+		else
+			return true
+	}
+	</script>   
+ </head>
+<body BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#000000" VLINK="#000000" 
+  ALINK="#000000" LEFTMARGIN="0" TOPMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+~$bmsheader`
+
+<DIV CLASS="text-under" STYLE="margin-left:20px;">
+  <A HREF="bms_adminindex.php?id=~$id`" TARGET="">MIS Home</A> &gt;&gt;<B>Impression Calculator</B> 
+  </DIV>
+<br>
+<DIV CLASS="text"><TABLE WIDTH="100%" BORDER="0">
+      <TR>
+        <TD WIDTH="20%" ALIGN="RIGHT"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="250" HEIGHT="1"><IMG SRC="gifs/tick.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="13" HEIGHT="11">
+        </TD>
+        
+      <TD WIDTH="80%" CLASS="text">You can view the impressions based on criterias like exp, location etc.</TD>
+      </TR>
+	  ~if $errormsg`
+	  <TR> 
+    <TD WIDTH="20%" ALIGN="RIGHT"><img src="gifs/error-2.gif" alt="New Clients" border="0" hspace="0" vspace="0" width="16" height="16"></TD>
+    <TD WIDTH="80%" CLASS="error">~$errormsg`</TD>
+  </TR>
+  ~/if`
+
+<form name="advbannerdetails" action="bms_impressioncalc.php" method="POST" onSubmit="return validateForm();">
+
+<TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" 
+    ALIGN="CENTER"><TR>
+        <TD WIDTH="18" BACKGROUND="gifs/page-bg.gif"><IMG SRC="gifs/lt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0" HSPACE="0"></TD>
+        <TD VALIGN="MIDDLE" HEIGHT="31" WIDTH="100%"><TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" HEIGHT="31">
+          <TR>
+            <TD BACKGROUND="gifs/page-bg.gif" WIDTH="70%"><DIV CLASS="text"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="30" HEIGHT="1"></DIV></TD>
+            <TD WIDTH="30%" BACKGROUND="gifs/page-bg.gif" ALIGN="RIGHT"><DIV CLASS="text"><!--<B><A HREF="" TARGET="">Logout</A></B>--><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="30" HEIGHT="1"></DIV></TD>
+          </TR>
+        </TABLE></TD>
+        <TD ALIGN="RIGHT" WIDTH="18" BACKGROUND="gifs/page-bg.gif"><IMG SRC="gifs/rt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+      </TR>
+    </TABLE><TABLE WIDTH="100%" BORDER="0" VSPACE="0" HSPACE="0" 
+    CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/lt-line-bg-1.gif"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></TD>
+        <TD WIDTH="100%"> <BR><DIV ALIGN="CENTER">
+<TABLE WIDTH="50%" BORDER="0" VSPACE="0" HSPACE="0" CELLPADDING="4" CELLSPACING="0">
+~if $criteria eq 'IP'`
+<tr>
+<td>Banner IP City</td><td>
+<td><input type=radio name=ipradio value=city></td>
+<td>
+	<select name="bannercity" CLASS="text-small">
+                <option value="">Select</option>
+                ~section  name=i loop=$ipcityarr`
+                <option value="~$ipcityarr[i].value`">~$ipcityarr[i].name` </option>
+             ~/section`
+	</select>
+</td>
+</tr>
+<tr>
+<td>Banner IP Country</td><td>
+<td><input type=radio name=ipradio value=country></td>
+<td>
+        <select name="bannerctry" CLASS="text-small">
+                <option value="">Select</option>
+                ~section  name=i loop=$ipctryarr`
+                <option value="~$ipctryarr[i].value`">~$ipctryarr[i].name` </option>
+             	~/section`
+        </select>
+</td>
+</tr>
+~/if`
+~if $criteria eq 'INCOME'`
+<tr>
+<td>Banner CTC </td>
+<td>
+	<select name="ctc[]" CLASS="text-small" size="4" multiple>
+   		~section  name=i loop=$ctcarr`
+    		<option value="~$ctcarr[i].value`" >~$ctcarr[i].label` </option>
+    		~/section`
+  	</select>
+</td>
+</tr>
+~/if`
+
+~if $criteria eq 'AGE'`
+<tr>
+<td>Banner Age From</td>
+<td>
+	<select name="minage" CLASS="text-small">
+                ~section  name=i loop=$agearr`
+                <option value="~$agearr[i].value`">~$agearr[i].label` </option>
+                ~/section`
+        </select>
+</td>
+<td>To</td>
+<td>
+   	<select name="maxage" CLASS="text-small">
+    		~section  name=i loop=$agearr`
+     		<option value="~$agearr[i].value`">~$agearr[i].label` </option>
+    		~/section`
+   	</select>
+</td>
+
+</tr>
+~/if`
+~if $criteria eq 'GENDER'`
+<tr>
+<td>Banner Gender</td>
+<td>
+	<select name="gender" CLASS="text-small">
+		<option value="F" >F</option>
+		<option value="M" >M </option>
+  	</select>
+</td>
+</tr>
+~/if`
+</table>
+</DIV><BR><DIV ALIGN="CENTER">
+	<TABLE WIDTH="40%" BORDER="0">
+          <TR>
+            <TD align="center"><INPUT TYPE="IMAGE" NAME="calculateimp" SRC="gifs/submit.gif" BORDER="0"></TD>
+          </TR>
+        </TABLE></DIV><BR>
+        <P></P>
+        <P></P></TD>
+        <TD BACKGROUND="gifs/rt-line-bg-1.gif" WIDTH="18"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></TD>
+      </TR>
+    </TABLE>
+    <TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/page-bg-1.gif"><IMG SRC="gifs/lt-low-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+        <TD VALIGN="MIDDLE" HEIGHT="31" BACKGROUND="gifs/page-bg-1.gif">&nbsp;</TD>
+        <TD ALIGN="RIGHT" WIDTH="18" BACKGROUND="gifs/page-bg-1.gif"><IMG SRC="gifs/lt-rt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+      </TR>
+<input type="hidden" name="id" value="~$id`" />
+<input type="hidden" name="criteria" value="~$criteria`" />
+<input type="hidden" name="days" value="~$days`" />
+<input type="hidden" name="region" value="~$region`" />
+<input type="hidden" name="zone" value="~$zone`" />
+</form>
+~$bmsfooter`
+ </BODY>
+</HTML>

@@ -1,0 +1,88 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<!--link rel="stylesheet" href="stylesheet.css" type="text/css"-->
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+</head>
+~include file="head.htm"`
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table width=760 cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+    <tr class="formhead">
+          <td width=55% class="formhead" border=1><font><b>Welcome </b></font></td>
+          <td width="35%" class="formhead" align="center"><a href="mainpage.php?cid=~$CID`">Main Page</a></td>
+          <td width=10% class="formhead" border=1 align='CENTER'><a href="logout.php?cid=~$CID`">Logout</a></td>
+    </tr>
+</table>
+<br>
+~if $voucher_sent`
+<table width="60%" border="0" cellspacing="2" cellpadding="2" align=center>
+<tr class=fieldsnew><td align="center"><font color="red" size="2"><b>Vouchers of ~$clients` have been successfully resent to the user.</b></font></td></tr>
+</table>
+<br>
+~/if`
+<form method=post action="voucher_resend.php">
+<input type="hidden" name="cid" value="~$CID`">
+<table width="60%" border="0" cellspacing="1" cellpadding="4" align="center">
+          <tr>
+            <td class="formhead" valign="middle" colspan="2">&#155; Search</td>
+          </tr>
+          <tr>
+          <tr>
+            <td width="30%" class="label" bgcolor="#F9F9F9">Username</td>
+
+            <td width="70%" bgcolor="#F9F9F9">
+              <input type="text" name="username" value="~$username`" size="18" maxlength="40" class="textboxes1">&nbsp;&nbsp;
+		<input type="submit" name="Search" value="  Search  " class="textboxes1">
+	    </td>
+	    		
+          </tr>
+</table>
+</form>
+~if $search`
+<form method=post action="voucher_resend.php">
+<input type="hidden" name="cid" value="~$CID`">
+<input type="hidden" name="profileid" value="~$profileid`">
+<table width="60%" border="0" cellspacing="2" cellpadding="2" align=center>
+~if $zero_result`
+<tr class=fieldsnew><td align="center"><font color="red">User is not eligible to avail the Gift Vouchers.</font></td></tr>
+~elseif $nouser`
+<tr class=fieldsnew><td align="center"><font color="red">User does not exist.</font></td></tr>
+~elseif $NOT_PAID`
+<tr class=fieldsnew><td align="center"><font color="red">User has never paid</font></td></tr>
+~elseif $BEFORE_VOUCHER`
+<tr class=fieldsnew><td align="center"><font color="red">User paid up before vouchers were introduced</font></td></tr>
+~elseif $NO_OPTIN_ENTRY`
+<tr class=fieldsnew><td align="center"><font color="red">User has paid up but opt-in screen has not been shown due to some error</font></td></tr>
+~elseif $NOT_OPTED_PAID`
+<tr class=fieldsnew><td align="center"><font color="red">User is paid but has not responded to the opt-in screen yet</font><td></tr>
+~elseif $NOT_OPTED_FREE`
+<tr class=fieldsnew><td align="center"><font color="red">User has paid but is now a free member and during previous subscription, did not respond to the opt-in screen</font></td></tr>
+~elseif $OPTED_OUT`
+<tr class=fieldsnew><td align="center"><font color="red">User has opted out of the voucher offer</font></td></tr>
+~elseif $OPTED_IN`
+<tr class=fieldsnew><td align="center"><font color="red">User has opted in but has not been issued any vouchers</font></td></tr>
+~else`
+<tr class=label align=center>
+        <td>Client Name</td>
+        <td>Voucher Number</td>
+        <td>Last Issue Date</td>
+        <td>Issued</td>
+</tr>
+~section name=sec loop=$voucher`
+<tr align=center class=fieldsnew>
+        <td>~$voucher[sec].CLIENT_NAME`</td>
+        <td>~$voucher[sec].VOUCHER_NO`</td>
+        <td>~$voucher[sec].ISSUE_DATE`</td>
+        <td><input type="checkbox" name="voucher_no[]" value="~$voucher[sec].VOUCHER_NO`"></td>
+</tr>
+~/section`
+</table>
+<table width="60%" border="0" cellspacing="2" cellpadding="2" align=center>
+<tr class=label align=center><td align=50%><input type="submit" name="Resend" value="  Resend  " class="textboxes1"></td><td align=50%><input type="submit" name="Cancel" value="  Cancel  " class="textboxes1"></td></tr>
+</table>
+~/if`
+</form>
+~/if`
+</body>
+</html>

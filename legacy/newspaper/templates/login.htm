@@ -1,0 +1,190 @@
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"><title>Jeevansathi.com</title>
+<link rel="stylesheet" href="jeevansathi.css" type="text/css"></head>
+
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+
+<tbody><tr>
+
+<td valign="top" width="27%" bgcolor="#efefef"><img src="../../jeevansathi/jsadmin/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+
+<td valign="top" width="29%" bgcolor="#efefef"> </td>
+
+<td valign="bottom" width="44%" bgcolor="#efefef">
+
+      <table width="70%" border="0" cellspacing="0" cellpadding="3" align="right" class="tops">
+
+<tbody><tr valign="middle">
+
+<td align="center" width="70"><a href="http://www.naukri.com/" class="tops">Home</a></td>
+
+<td width="4"><img src="images/verttop.gif" width="5" height="15"></td>
+
+<td valign="middle" align="center" width="72"><a href="http://www.naukri.com/infoedge/naukhome.htm" class="tops">About Us</a></td>
+
+<td width="5"><img src="images/verttop.gif" width="5" height="15"></td>
+
+<td align="center" width="78"><a href="http://www.naukri.com/contact/" class="tops">Contact Us</a></td>
+
+</tr>
+
+</tbody></table>
+
+</td>
+
+  </tr>
+
+  <tr>
+
+    <td valign="top" colspan="3" bgcolor="#c4bfc4"><img src="images/spacer.gif" width="1" height="2"></td>
+
+  </tr>
+
+</tbody></table>
+
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+    <tbody><tr>
+        <td bgcolor="#006699" height="55" valign="middle" class="text1" width="8%"> </td>
+
+
+    <td height="55" valign="middle" class="heading" bgcolor="#ffffff" width="92%">
+      <div align="center"><br>
+        <br>
+      </div>
+      <table width="93%" border="0" cellspacing="1" cellpadding="4" align="center">
+        <tbody><tr>
+          <form action="search_user.php" method="post">
+	
+            <td class="formhead" valign="middle" width="10%">Search for Paid Members</td>
+            <td class="label" valign="middle" width="24%">
+              <input type="text" name="phrase" class="textboxes1">
+            </td>
+            <td class="label" valign="middle" width="30%">
+              <select name="criteria" class="textboxes1" size="1">
+<!--		<option selected="selected">Select</option> -->
+		<option value="uname">By Username</option>
+		<option value="email">By E-mail</option>
+		<option value="cdnum">By Cheque/DD No.</option>
+		<option value="billid">By Billing ID</option>
+	      </select>
+            </td>
+            <td class="label" valign="middle" width="36%">
+              <input type="hidden" name="cid" value=~$CID`>
+              <input type="hidden" name="user" value=~$USER`>
+              <input type="submit" name="submit" value="Go" class="buttons1">
+            </td>
+          </form>
+        </tr>
+	<tr>
+          <form action="search_orderid.php" method="post">
+                                                                                                 
+            <td class="formhead" valign="middle" width="10%">Search Online Orders</td>
+            <td class="label" valign="middle" width="24%">
+              <input type="text" name="phrase" class="textboxes1">
+            </td>
+            <td class="label" valign="middle" width="30%">
+		<select name="criteria" class="textboxes1" size="1">
+                <option value="orderid">By Order ID</option>
+<!--            <option selected="selected">Select</option> -->
+                <option value="uname">By Username &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                <option value="email">By E-mail</option>
+                <!--<option value="cdnum">By Cheque/DD No.</option>-->
+              </select>
+
+
+            </td>
+            <td class="label" valign="middle" width="36%">
+              <input type="hidden" name="cid" value=~$CID`>
+              <input type="hidden" name="user" value=~$USER`>
+              <input type="submit" name="submit" value="Go" class="buttons1">
+            </td>
+          </form>
+        </tr>
+
+	<tr>
+	  <form action="search_bill_records.php" method="post">
+		<td class="formhead" valign="middle" width="10%">Search by Payment Entry Date</td>
+		<td class="label" valign="middle" width=27%>
+		  <input type="text" name="syear" value="~$syear`" class="textboxes1" size=4>
+		  <input type="text" name="smonth" value="~$smonth`" class="textboxes1" size=2>
+		  <input type="text" name="sday" value="~$sday`" class="textboxes1" size=2>&nbsp;(yyyy-mm-dd)
+		</td>
+		<td class="label" valign="middle" width=27%>
+		  <input type="text" name="eyear" value="~$eyear`" class="textboxes1" size=4>
+		  <input type="text" name="emonth" value="~$emonth`" class="textboxes1" size=2>
+		  <input type="text" name="eday" value="~$eday`" class="textboxes1" size=2>&nbsp;(yyyy-mm-dd)
+		</td>
+                <td class="label" valign="middle" width="36%">
+                  <input type="hidden" name="cid" value=~$CID`>
+                  <input type="hidden" name="user" value=~$USER`>
+                  <input type="submit" name="CMDsubmit" value="Go" class="buttons1">
+                </td>
+          </form>
+        </tr>
+
+	</tr>
+	        <tr>
+          <td class="formhead" valign="middle" colspan="3">Menu</td>
+	  <td width="20%" class="formhead" align="center"><a href="#"></a></td>
+        </tr>
+        <tr align="center" valign="middle">
+          <td class="label" bgcolor="#f9f9f9" height="26" colspan="2"><a href="../jsadmin/searchpage.php?cid=~$CID`&user=~$USER`">Search
+            Record</a></td> 
+          <td class="label" bgcolor="#f9f9f9" height="26" width="30%"> <!----></td>
+          <td class="label" bgcolor="#f9f9f9" height="26" width="36%"><a href="index.htm">Logout</a></td>
+        </tr>
+        <tr align="center" valign="middle">
+          <td class="label" bgcolor="#f9f9f9" height="26" colspan="2"><a href="partpayment.php?cid=~$CID`&user=~$USER`"></a></td>
+          <td class="label" bgcolor="#f9f9f9" height="26" width="30%"><font color="#333333"><a href="search_user.php?cid=~$CID`&user=~$USER`">Print Bill</a></font></td>
+          <td class="label" bgcolor="#f9f9f9" height="26" width="36%"><font color="#333333"><a href="#"></a></font></td>
+        </tr>
+      </tbody></table>
+          <table width="93%" border="0" cellspacing="1" cellpadding="4" align="center">
+        <tbody><tr>
+        <td class="label" bgcolor="#f9f9f9" height="26" colspan="3">
+        <a href="#"></a>
+        </td>
+        </tr>
+     </tbody></table>
+     <table width="93%" border="0" cellspacing="1" cellpadding="4" align="center">
+        <tbody><tr>
+        <td class="label" bgcolor="#f9f9f9" height="26" colspan="3">
+        <a href="#"></a>
+        </td>
+        </tr>
+     </tbody></table>
+           <div align="center">
+        <p><font color="#333333">Some of the link are not working as this is purposed
+          version.</font><br>
+        </p>
+    <br>
+          <br>
+          <br>
+          <br><br><br>
+
+      </div>
+    </td>
+    </tr>
+	  </tbody></table>
+</form>
+
+<br><br>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody><tr>
+<td valign="top" bgcolor="#c4bfc4"><img src="images/spacer.gif" width="1" height="2"></td>
+  </tr>
+  <tr>
+    <td valign="middle" bgcolor="#efefef" align="center" height="23" class="bottom">
+        <a href="http://www.naukri.com/infoedge/naukhome.htm" class="bottom">About
+        Us</a> - <a href="http://www.naukri.com/infoedge/clients/clients.htm" class="bottom">Our
+        Clients</a> - <a href="http://www.naukri.com/infoedge/pageview.htm" class="bottom">
+      Check Hits</a> - <a href="http://www.naukri.com/infoedge/naukri.htm" class="bottom">
+      Disclaimer</a> - <a href="http://www.naukri.com/faq" class="bottom"> F.A.Q's</a> - <a href="http://www.naukri.com/" class="bottom">
+      Home</a> - <a href="http://www.naukri.com/contact/" class="bottom">Contact
+    Us</a></td>
+ </tr>
+</tbody></table>
+
+
+</body></html>

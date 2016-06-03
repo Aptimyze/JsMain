@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>My Business Sathi</title>
+<link rel="stylesheet" href="http://www.jeevansathi.com/profile/images/styles.css" type="text/css">
+<style type="text/css">
+<!--
+body {
+	margin-left: 5px;
+	margin-top: 5px;
+}
+-->
+</style>
+</head>
+
+<body>
+<form action="custom_banner.php" method="post">
+~$HEAD`
+<table width="760" border="0" align="center" cellpadding="0" cellspacing="0">
+ <tr>
+  <td width="190" valign="top" class="bgyell">~$LEFT`</td>
+  <td width="10">&nbsp;</td>
+  <td valign="top" width="560"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td height="18" class="headbigblack"><b>Request Customized Banner </b></td>
+ </tr>
+ <tr>
+  <td height="1" class="bgred"><img src="images/zero.gif" width="1" height="1"></td>
+ </tr>
+ <tr>
+  <td height="8"></td>
+ </tr>
+</table>
+   <br>
+   <table width="85%"  border="0" cellspacing="0" cellpadding="0">
+    <tr>
+     <td valign="top"><img src="images/zero.gif" width="30" height="1"></td>
+     <td valign="top" class="mediumblack"><b><img src="images/zero.gif" width="120" height="1"><br>
+   <font color="~$nameclr`"> Username</font> </b></td>
+     <td width="100%" height="32" valign="top" class="mediumblack">~$uname`
+     </td>
+    </tr>
+    <tr>
+     <td valign="top">&nbsp;</td>
+     <td valign="top" class="mediumblack"><b><font color="~$emailclr`"> Email</font> </b></td>
+     <td height="32" valign="top" class="mediumblack">~$email`
+     </td>
+    </tr>
+
+	<tr>
+	     <td valign="top">&nbsp;</td>
+	     <td valign="top" class="mediumblack"><b><font color="~$emailclr`">Banner Details</font> </b></td>
+	     <td height="32" valign="top">
+			<textarea name="req" rows=10 cols=50></textarea>
+	     </td>
+	</tr>
+<input type="hidden" name="checksum" value="~$CHECKSUM`">
+   </table>
+  <br>
+</table>
+<center><input type="submit" name="submit" value="Submit"></center>
+</form>
+</body>
+</html>

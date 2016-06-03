@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Match Point - Jeevansathi.com</title>
+<link href="~$SITE_URL`/minify.php?files=/css/style.css" rel="stylesheet" type="text/css" />
+<SCRIPT type="text/javascript" language="Javascript" SRC="~$SITE_URL`/minify.php?files=/js/google_map_api.js,/js/common.js,/js/second.js"></SCRIPT>
+<script type="text/javascript"> var SITE_URL='~$SITE_URL`'; </script>
+</head>
+<body>
+~$BETWEEN`
+		<div class="mid_combine fl">
+			<div class="left_nav">
+				<ul class="nav b mt_10">
+					<li><a href="match.php?m=1">Why Jeevansathi.com Match Point?</a></li>
+					<li><a href="match.php?m=2">Jeevansathi.com Match Point Advantage</a></li>
+					<li><a href="match.php?m=3">How Jeevansathi.com Match Point  Works?</a></li>
+					<li><a href="match.php?m=4">Membership</a></li>
+					<li><a href="story.php">Success Stories / Testimonials</a></li>
+					<li><a href="image.php" class="active">Image Gallery</a></li>
+				</ul>
+				<div class="success_stories fl mt_15">
+					<div class="tp_bg"></div>
+					<div class="mid_bg_strip">
+						<h5 class="maroon">Success Story</h5>
+						<div class="grey_cont b mt_10"> Shyam weds Sneha</div>
+						<img src="images/couple_img.gif" alt="Success Stories" title="Success Stories" />
+						<p class="mt_10" style="text-align:left; width:85%; margin:auto; margin-bottom:0;"> I received profile of Shyam through Jeevansathi match point as highly recommended profile for me, i initiated contact to shayam and got positive reply, next we met, and found good match for each other.<br /> Our wedding is on 15th Feb 2009. We met through JeevanSaathi. Thanks.<br /> <a href="story.php" class="more fr mt_10">more</a></p>
+						<div class="clear"></div>
+					</div>
+					<div class="tp_bg" style="background-position:bottom;"></div>
+					<div class="clear"></div>
+				</div>
+			</div>
+			<div class="right_cont">
+				<h2 class="maroon f_18">Jeevansathi.com Match Point Image Gallery</h2>
+				<div class="img_gal" id="csster">
+					<a href="images/1.jpg" target="_blank"><img src="images/gal_img_1.gif" /></a>
+					<a href="images/2.jpg" target="_blank"><img src="images/gal_img_2.gif" /></a>
+					<a href="images/3.jpg" target="_blank"><img src="images/gal_img_3.gif" /></a>
+					<a href="images/4.jpg" target="_blank"><img src="images/gal_img_4.gif" /></a>
+					<a href="images/5.jpg" target="_blank"><img src="images/gal_img_5.gif" /></a>
+					<a href="images/6.jpg" target="_blank"><img src="images/gal_img_6.gif" /></a>
+				</div>
+			</div>
+		</div>
+		<div class="top_combine_cur fl" style="background-position:bottom;"></div>
+	</div>
+</div>
+<script type="text/javascript">
+var store=0,flag=0;
+window.onload=function()
+{
+        ~if $error`
+                window.location.hash="Error";
+                shower1();
+        ~elseif $noerror`
+                window.location.hash="Success";
+                shower1();
+        ~else`
+                window.location.hash=" ";
+        ~/if`
+        document.getElementById("lynj").onchange=jnyl;
+        document.getElementById("a3").onclick=hider2;
+        document.getElementById("close2").onclick=hider2;
+        document.getElementById("a4").onclick=shower1;
+        document.getElementById("a1").onclick=hider1;
+        document.getElementById("close1").onclick=hider1;
+        document.getElementById("a2").onclick=shower2;
+
+        document.form2.onsubmit=validation;
+        document.form2.location.onchange=assign_code;
+
+        anchorji();
+        dropper();
+}
+</script>
+~$FOOT`
+</body>
+</html>
+~$GOOG`
+

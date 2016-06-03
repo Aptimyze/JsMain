@@ -1,0 +1,170 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Incomplete to complete Registration MIS</title>
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+</head>
+
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<br><br>
+~if $flag eq '1'`
+<table width="90%" border="0" cellspacing="4" cellpadding="5" align="center" >
+    <tr class="formhead">
+          <td width=55% class="formhead" border=1><font><b>Welcome : ~$user`</b></font></td>
+          <td width="35%" class="formhead" align="center"><a href="mainpage.php?name=&cid=~$cid`">Main Page</a></td>
+          <td width=10% class="formhead" border=1 align='CENTER'><a href="../jsadmin/logout.php?cid=~$cid`">Logout</a></td>
+    </tr>
+</table>
+                                                                                                                             
+<br><br>
+
+<table width="90%" border="0" cellspacing="0" cellpadding="4" align="center">
+          <tr>
+            <td width="100%" colspan="2" class="formhead" align="center">Profiles converted from Incomplete to Complete for ~$month_name` ~$year`</td>
+
+<table width="70%" border="0" cellspacing="4" cellpadding="5" align="center">
+<tr class=label>
+	<td align="center">~$month_name`</td>
+	~section name=ndays loop=$dcount`
+	<td align="center">&nbsp;~$dcount[ndays]`</td>
+	~/section`
+	<td align="center">Total</td>
+</tr>
+<tr class=fieldsnew>
+	<td>&nbsp;</td>
+	~section name=dc loop=$day_count`
+        <td align="center">&nbsp;~$day_count[dc]`</td>
+        ~/section`
+	<td align="center">~$total`</td>
+</tr>
+</table>
+<br><br>
+
+<table width="90%" border="0" cellspacing="0" cellpadding="4" align="center">
+	<tr class=label>
+		<td align="right"><a href="incomplete_reg.php?name=&cid=~$cid`">Back to previous page</a></td>
+	</tr>
+</table>
+~else`
+~if $view eq '0'`
+<form action="incomplete_reg.php" method="post">
+<input type="hidden" name=cid value="~$cid`">
+
+<table width=760 cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+    <tr class="formhead">
+          <td width=55% class="formhead" border=1><font><b>Welcome : ~$user`</b></font></td>
+          <td width="35%" class="formhead" align="center"><a href="mainpage.php?name=&cid=~$cid`">Main Page</a></td>
+          <td width=10% class="formhead" border=1 align='CENTER'><a href="../jsadmin/logout.php?cid=~$cid`">Logout</a></td>
+    </tr>
+</table>
+
+<br><br>
+
+<table width="70%" border="0" cellspacing="0" cellpadding="4" align="center">
+          <tr>
+            <td width="30%" class="formhead" align="center">&nbsp;</td>
+            <td width="70%" align="left" class="formhead" valign="middle" colspan="2">&#155; View Incomplete to Complete Registrations</td>
+          </tr>
+	  
+
+          <tr>
+            <td width="30%" class="label" bgcolor="#F9F9F9" align="center">On</td>
+            <td width="70%" class="label" bgcolor="#F9F9F9" align="center">
+		<select name="Day1" class="textboxes1">
+			<option value="">Day</option>
+			<option value="01">1</option>
+			<option value="02">2</option>
+			<option value="03">3</option>
+			<option value="04">4</option>
+			<option value="05">5</option>
+			<option value="06">6</option>
+			<option value="07">7</option>
+			<option value="08">8</option>
+			<option value="09">9</option>
+			<option value="10">10</option>
+			<option value="11">11</option>
+			<option value="12">12</option>
+			<option value="13">13</option>
+			<option value="14">14</option>
+			<option value="15">15</option>
+			<option value="16">16</option>
+			<option value="17">17</option>
+			<option value="18">18</option>
+			<option value="19">19</option>
+			<option value="20">20</option>
+			<option value="21">21</option>
+			<option value="22">22</option>
+			<option value="23">23</option>
+			<option value="24">24</option>
+			<option value="25">25</option>
+			<option value="26">26</option>
+			<option value="27">27</option>
+			<option value="28">28</option>
+			<option value="29">29</option>
+			<option value="30">30</option>
+			<option value="31">31</option>
+		</select>
+              <select  name="Month1"  class="textboxes1">
+		<option SELECTED VALUE="">Month</option>
+                <option VALUE="01" >Jan</option>
+                <option VALUE="02" >Feb</option>
+                <option VALUE="03" >Mar</option>
+                <option VALUE="04" >Apr</option>
+                <option VALUE="05" >May</option>
+                <option VALUE="06" >Jun</option>
+                <option VALUE="07" >Jul</option>
+                <option VALUE="08" >Aug</option>
+                <option VALUE="09" >Sep</option>
+                <option VALUE="10" >Oct</option>
+                <option VALUE="11" >Nov</option>
+                <option VALUE="12" >Dec</option>
+	      </select>
+              <select name="Year1" class="textboxes1">
+		<option SELECTED VALUE="">Year</option>
+		~assign var=thisYear value=$smarty.now|date_format:"%Y"`
+	        ~section name=years start=2004 loop=$thisYear+1 step=1`
+        	        <option value="~$smarty.section.years.index`">~$smarty.section.years.index`</option>
+	        ~/section`
+	      </select>
+            </td>
+          </tr>
+          <tr valign="middle" align="center">
+              <td colspan=2 class="fieldsnew"><input type="submit" name="Submit" value="Submit" class="textboxes1"></td>
+	  </tr>
+	</table>
+<br>	
+</form>
+~elseif $view eq '1'`
+
+<!--case two -->
+<input type="hidden" name=cid value="~$cid`">
+
+<table width=760 cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+    <tr class="formhead">
+          <td width=55% class="formhead" border=1><font><b>Welcome : ~$user`</b></font></td>
+          <td width="35%" class="formhead" align="center"><a href="mainpage.php?name=&cid=~$cid`">Main Page</a></td>
+          <td width=10% class="formhead" border=1 align='CENTER'><a href="../jsadmin/logout.php?cid=~$cid`">Logout</a></td>
+    </tr>
+</table>
+
+<br><br>
+
+<table width="70%" border="0" cellspacing="0" cellpadding="4" align="center">
+          <tr>
+            <td width="100%" colspan="2" class="formhead" align="center">Profiles converted from Incomplete to Complete on ~$date`</td>
+          </tr>
+	  
+
+          <tr>
+            <td width="100%" class="fieldsnew" align="center">~$total`</td>
+            </td>
+          </tr>
+	</table>
+<br>	
+~/if`
+
+~/if` <!--end of else part of flag condition -->
+</body>
+</html>

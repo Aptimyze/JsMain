@@ -1,0 +1,184 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="refresh" content="500">
+<link rel="stylesheet" href="http://www.jeevansathi.com/profile/images/styles.css" type="text/css">
+<link rel="stylesheet" href="http://www.jeevansathi.com/jsadmin/jeevansathi.css" type="text/css"><style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+<title>
+MMMJS FIREMAIL MENU 
+</title>
+
+<SCRIPT language="JavaScript">
+<!--
+function MM_openBrWindow(obj,theURL,winName,features)
+{
+        window.open(theURL,winName,features);
+//        obj.onclick= null;
+//        obj.style.color='#008800';
+
+}
+                                                                                                 
+//-->
+</script>
+
+
+</head>
+
+<body>
+<input type="hidden" name="cid" value="~$cid`">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="http://www.jeevansathi.com/profile/images/logo.gif" width="269" height="82" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+                                                                                                 
+<tr><td colspan="4" align="center">
+<h2>
+MAIL FIRE MENU
+</h2>
+</td>
+</tr>
+
+<tr>
+<td colspan="4" align="center" class="label" bgcolor="#F9F9F9" ><b>~$message`</b>
+</td>
+</tr>
+</tbody>
+</table>
+
+<form name="form1" method="post" action="mmm_fire_menu.php" onsubmit="return validate()">
+<input type="hidden" name="cid" value="~$cid`">
+<table width="100%" border="0" cellspacing="5" cellpadding="0" align="left">
+<tr>
+	<td><input type=submit name="test" value="test"></td>
+	<td><input type=submit name="retest" value="retest"></td>
+	<td><input type=submit name="start" value="start"></td>
+	<td><input type=submit name="stop" value="stop"></td>
+	<td><span class=red >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><br></td>
+	<td><input type=submit name="add" value="add"></td>
+</tr>
+<tr>
+	<td colspan="6" align="center" class="label" bgcolor="#F9F9F9" ><b>~$message`</b></td>
+</tr>
+</table>
+<br>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+<tr>
+<td>
+<span class=blue >>>>&nbsp;COMPLETE &nbsp;>>>
+</td>
+<td>
+<span class=orange >>>>&nbsp;TESTED &nbsp;>>>
+</td>
+<td>
+<span class=green >>>>&nbsp;RUNNING &nbsp;>>>
+</td>
+<td>
+<span class=red >>>>&nbsp;UNDER EXECUTION &nbsp;>>>
+</td>
+<td>
+<span class=green >>>>&nbsp;RAN &nbsp;>>>
+</td>
+
+</tr>
+
+
+<tr class="bigblack">
+
+<td class="class4" valign=top>
+~section name=index loop=$comp`
+<span><input type=checkbox name="complete~$comp[index].mailer_id`" value="~$comp[index].mailer_id`"></span>
+<span ><a href="#" onclick="MM_openBrWindow(this,'mmm_view_details.php?cid=~$cid`&mailer_id=~$comp[index].mailer_id`','mywindow','width=700,height=400,scrollbars=yes')">&nbsp;~$comp[index].mailer_name` &nbsp;</a></span>
+<br>
+~/section`
+</td>
+
+<td class="class4" valign=top>
+~section name=index loop=$tested`
+<span><input type=checkbox name="tested~$tested[index].mailer_id`" value="~$tested[index].mailer_id`"></span>
+<span ><a href="#" onclick="MM_openBrWindow(this,'mmm_view_details.php?cid=~$cid`&mailer_id=~$tested[index].mailer_id`','mywindow','width=700,height=400,scrollbars=yes')">&nbsp;~$tested[index].mailer_name` &nbsp;</a></span>
+<br>
+~/section`
+</td>
+
+
+<td class="class4" valign=top>
+~section name=index loop=$run`
+<span><input type=checkbox name="running~$run[index].mailer_id`" value="~$run[index].mailer_id`"></span>
+<a href="#" onclick="MM_openBrWindow(this,'mmm_view_details.php?cid=~$cid`&mailer_id=~$run[index].mailer_id`&show_template=N','mywindow','width=700,height=400,scrollbars=yes')">&nbsp;~$run[index].mailer_name` &nbsp;</a><br>
+~/section`
+</td>
+
+
+
+<td class="class4" valign=top>
+<!--
+~section name=index loop=$incomp`
+<span><input type=checkbox name="incomplete~$incomp[index].mailer_id`" value="~$incomp[index].mailer_id`"></span>
+<a href="#">&nbsp;~$incomp[index].mailer_name` &nbsp;</a><br>
+~/section`
+-->
+<span class=red >>>>&nbsp;TEST &nbsp;>>></span><br>
+~section name=index loop=$exe_test`
+<a href="#" onclick="MM_openBrWindow(this,'mmm_view_details.php?cid=~$cid`&mailer_id=~$exe_test[index].mailer_id`&show_template=N','mywindow','width=700,height=400,scrollbars=yes')">&nbsp;~$exe_test[index].mailer_name` &nbsp;</a><br>
+~/section`
+<span class=red >>>>&nbsp;FIRE &nbsp;>>></span><br>
+~section name=index loop=$exe_fire`
+<a href="#" onclick="MM_openBrWindow(this,'mmm_view_details.php?cid=~$cid`&mailer_id=~$exe_fire[index].mailer_id`&show_template=N','mywindow','width=700,height=400,scrollbars=yes')">&nbsp;~$exe_fire[index].mailer_name` &nbsp;</a><br>
+~/section`
+<span class=red >>>>&nbsp;STOP &nbsp;>>></span><br>
+~section name=index loop=$exe_stop`
+<a href="#" onclick="MM_openBrWindow(this,'mmm_view_details.php?cid=~$cid`&mailer_id=~$exe_stop[index].mailer_id`&show_template=N','mywindow','width=700,height=400,scrollbars=yes')">&nbsp;~$exe_stop[index].mailer_name` &nbsp;</a><br>
+~/section`
+
+
+
+</td>
+
+
+<td class="class4" valign=top>
+~section name=index loop=$ran`
+<span><input type=checkbox name="add_to_complete~$ran[index].mailer_id`" value="~$ran[index].mailer_id`"></span>
+<a href="#" onclick="MM_openBrWindow(this,'mmm_view_details.php?cid=~$cid`&mailer_id=~$ran[index].mailer_id`&show_template=N','mywindow','width=700,height=400,scrollbars=yes')">&nbsp;~$ran[index].mailer_name` &nbsp;</a><br>
+~/section`
+</td>
+
+</tr>
+
+</tbody>
+</table>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+</form>
+</body>
+</html>

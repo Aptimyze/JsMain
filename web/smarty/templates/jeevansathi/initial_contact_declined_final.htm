@@ -1,0 +1,142 @@
+<html>
+<head>
+<title>JeevanSathi Matrimonials - Response to Your Profile</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<style type="text/css">
+<!--
+body {
+	background-color: #FFFFFF;
+}
+a {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #0000CC;
+}
+a:link {
+	text-decoration: none;
+}
+a:visited {
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: none;
+}
+a:active {
+	text-decoration: none;
+}
+-->
+</style>
+</head>
+
+<body>
+<table width="485" cellpadding="0" cellspacing="0">
+  <tr>
+    <td height="20"><div align="center"><font color="#999999" face="Arial, Helvetica, sans-serif" size="1">You are receiving this mail as a registered member of Jeevansathi.com <br>
+        Please add contacts@jeevansathi.com to your address book to ensure delivery into your inbox</font></div></td>
+  </tr>
+~if $MARKCC eq 'Y'`
+  <tr>
+    <td><div align="center"> <font color="#990000" face="Arial, Helvetica, sans-serif" size="1" ><b>This mail is the CC copy of the initial contact declined sent by you to ~$RECEIVERNAME`</b> </font> </div></td>
+  </tr>
+~/if`
+  <tr>
+    <td><table width="485" cellpadding="0" cellspacing="0" style="border: 1px; color:#cccccc; border-style:solid;">
+      <tr>
+        <td colspan="2" style="padding:5px;"><img src="~$IMG_URL`/profile/ser4_images/js_logo.gif" width="187" height="36"></td>
+      </tr>
+      <tr>
+        <td style="border-bottom: 1px solid #cccccc; border-top: 1px solid #cccccc;"><div align="center">
+	     <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+		<td height="59" background="~$IMG_URL`/profile/ser4_images/decline_bg.gif"><div align="center"><img src="~$IMG_URL`/profile/ser4_images/head_decline.gif" width="332" height="23"></div></td>
+              </tr>
+            </table>
+        </div></td>
+      </tr>
+      <tr>
+        <td colspan="2" style="padding:20px; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#333333; line-height:1.5;"><div align="justify"><b>Dear Member (Your Profile Id is : ~$RECEIVERNAME`)</b>
+               This is to inform you that Jeevansathi member <a href="~$SITE_URL`/profile/viewprofile.php?username=~$sender.NAME`" target=_"blank">~$sender.NAME`</a>&nbsp;has declined your initial contact offer.
+              <b><br>
+              </b>
+              <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#ffffff" style="border:1px solid #999999; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:1.3;color:#333333; ">
+                <tr>
+                  <td width="60" rowspan="2" style="padding:3px;"><table width="60" cellpadding="0" cellspacing="0" style="border:1px solid #cccccc;">
+                      <tr>
+			~if $SENDER_HAVEPHOTO eq 'Y'`
+			<!--Symfony Photo Modification -->
+			<td><strong><a href="~$SITE_URL`/profile/viewprofile.php?username=~$sender.NAME`" target=_"blank"><img src="~$thumbnailUrl`" width="60" height="60" border="0"></a></strong></td>
+			<!-- Symfony Photo Modification-->
+			~elseif $gender_sender eq 'M'`
+			   ~if $SENDER_HAVEPHOTO eq 'H'`
+                                <td><a href="~$SITE_URL`/profile/viewprofile.php?username=~$sender.NAME`" target=_"blank"><img src="~$IMG_URL`/profile/ser4_images/search_page_boy_protected.gif" width="60" height="60" border="0"></a></td>
+			    ~else`
+				<td><strong><a href="~$SITE_URL`/profile/viewprofile.php?profilechecksum=~$sender.PROFILECHECKSUM`&CALL_ME=/social/photoRequest%3Fshowtemp%3DY%26other_username%3D~$sender.NAME`%26profilechecksum%3D~$sender.PROFILECHECKSUM`" target=_"blank"><img src="~$IMG_URL`/profile/ser4_images/Request-a-photo-male_small.gif" width="60" height="60" border="0"></a></strong></td>
+			   ~/if`
+			~else`
+			  ~if $SENDER_HAVEPHOTO eq 'H'`
+                                <td><a href="~$SITE_URL`/profile/viewprofile.php?username=~$sender.NAME`" target=_"blank"><img src="~$IMG_URL`/profile/ser4_images/search_page_girl_protected.gif" width="60" height="60" border="0"></a></td>                             ~else`
+			        <td><strong><a href="~$SITE_URL`/profile/viewprofile.php?profilechecksum=~$sender.PROFILECHECKSUM`&CALL_ME=/social/photoRequest%3Fshowtemp%3DY%26other_username%3D~$sender.NAME`%26profilechecksum%3D~$sender.PROFILECHECKSUM`" target=_"blank"><img src="~$IMG_URL`/profile/ser4_images/Request-a-photo-Female_small.gif" width="60" height="60" border="0"></a></strong></td>
+			  ~/if`
+			~/if`
+                      </tr>
+                  </table></td>
+                  <td colspan="2" align="right" style="padding:2px;" ><div align="justify">&nbsp;~$sender.INFO` <a href="~$SITE_URL`/profile/viewprofile.php?username=~$sender.NAME`" target=_"blank">more...</a></div></td>
+                </tr>
+                <tr>
+		<td colspan="2" align="right" style="padding:2px;" ><div align="left"><strong>~$sender.AGE`, ~$sender.HEIGHT`, ~$sender.MTONGUE`, ~$sender.CASTE`~if $sender.SUBCASTE neq ''`, ~$sender.SUBCASTE`~/if`~if $sender.NAKSHATRA neq ''`, Nakshatra: ~$sender.NAKSHATRA`~/if`~if $sender.OCCUPATION`, ~$sender.OCCUPATION`~/if`~if $sender.RESIDENCE neq 'Others'` in ~$sender.RESIDENCE`~/if`</strong></div></td>
+                </tr>
+		~if $PAID eq 'Y' and $CUSTMESSAGE`
+                <tr bgcolor="#eaeaea">
+                  <td colspan="3" style="padding:6px;" >Message from ~$sender.NAME`<br>
+			  ~$CUSTMESSAGE`</td>
+                </tr>
+		~/if`
+                <tr>
+                  <td height="11px" colspan="3"><div align="right"></div>
+                      <div align="right"></div>
+                      <div align="right">
+                        <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#e1e1e1">
+                          <tr>
+                            <td style="padding:3px;"><div align="left"></div>                              <div align="right"><a href="~$SITE_URL`/profile/viewprofile.php?username=~$sender.NAME`" target=_"blank" style="padding: 3px;">To view Profile click here</a></div></td>
+                          </tr>
+                        </table>
+                    </div></td>
+                </tr>
+              </table>
+              <p>But don&rsquo;t lose heart as there are a lot of other jeevansathi members waiting for you to click on their profile! So give them a chance and surf through our database of over 6 lakh profiles and find your dream partner! </p>
+                <strong>Search your Dream Partner: </strong><br>
+		 <a href="~$SITE_URL`/search/perform?gender=~$gender_sender`&photobrowse=Y&havePhoto=Y&STYPE=P&submit=Go" target=_"blank"><img src="~$IMG_URL`/profile/ser4_images/decline_search.gif" width="446" height="60" border="0"></a> </p>
+                <p>We wish you luck in finding your dream match! <br>
+                    <strong><br>
+          Warm regards</strong><br>
+          The Jeevansathi Team</p> 
+      </tr>
+      <tr>
+        <td colspan="2"><table width="100%" cellpadding="0" cellspacing="0" >
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+
+  <tr>
+    <td align="center" bgcolor="#EFEFEF" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#999999; line-height:1.5; padding:3px;"><div id="textlink" align="center">~$textlink1`</div></td>
+  </tr>
+
+  <tr>
+    <td align="center" bgcolor="#EFEFEF" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#999999; line-height:1.5; padding:3px;"><div id="textlink" align="center">~$textlink2`</div></td>
+  </tr>
+  
+ <tr>
+    <td style="padding:7px;" ><div align="center"><a href="~$bmsVariable`/bmsjs/bms_display_final.php?zonestr=42&mailer=1&subzone=1&hit=1" target=_"blank"><img src="~$bmsVariable`/bmsjs/bms_display_final.php?zonestr=42&mailer=1&subzone=1" width="400" height="63" border="0"></a></div></td>
+  </tr>
+  <!--center><table--><tr><td style="padding:7px;"><map name="google_ad_map_A86FRMyICojoOI7FvNYP"><area shape="rect" href="http://pagead2.googlesyndication.com/pagead/userfeedback" coords="5,4,71,15" target="_blank"><area shape="rect" href="http://imageads.googleadservices.com/pagead/imgclick/A86FRMyICojoOI7FvNYP/20050422?pos=0" coords="1,20,232,58" target="_blank"><area shape="rect" href="http://imageads.googleadservices.com/pagead/imgclick/A86FRMyICojoOI7FvNYP/20050422?pos=1" coords="232,20,463,58" target="_blank"></map><img src="http://imageads.googleadservices.com/pagead/ads?client=ca-jeevansathi_newsletters_kw&format=468x60_abgnc_img&output=png&backfill=1&url=null&kw_type=broad&kw=~$keywords_for_adsense`&channel=contactalerts&hl=en&adsafe=high&color_bg=FFFFFF&color_border=999999&color_link=0000FF&color_text=000000&color_url=0066FF&good_ads_only=on&cuid=A86FRMyICojoOI7FvNYP&issue=20050422" usemap="#google_ad_map_A86FRMyICojoOI7FvNYP" border=0></td></tr><!--/table></center-->
+  <tr>
+    <td style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#999999; line-height:1.5;"><div align="center">THIS IS AN AUTOMATED MESSAGE. PLEASE DO NOT REPLY TO THIS MAIL.</div></td>
+  </tr>
+  <tr>
+    <td style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#999999; line-height:1.5;"><div align="center"><span><a href="http://www.jeevansathi.com/profile/unsubscribe.php?mail=Y" target=_"blank">Click here to unsubscribe</a> </span></div></td>
+    <br>
+  </tr>
+</table>
+</body>
+</html>

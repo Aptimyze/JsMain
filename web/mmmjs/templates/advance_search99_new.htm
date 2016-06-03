@@ -1,0 +1,621 @@
+<html>
+<head>
+<title>99acres.com - Form Query</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="http://www.jeevansathi.com/profile/images/styles.css" type="text/css">
+<link rel="stylesheet" href="http://www.jeevansathi.com/jsadmin/jeevansathi.css" type="text/css"><style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+
+.boldclass {
+font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 11px;
+font-weight: bold; color: #003399;
+background-color: #DDEEFF;
+}
+
+</style>
+~$ajax_javascript`
+<script language="JavaScript">
+
+function validate()
+{
+   	var docF=document.form1;
+
+	if(docF.mailer_id.value == '')
+	{
+		alert("Please select a mailer to form query for");
+		docF.mailer_id.focus();
+		return false;
+	}
+		
+	var buy = document.getElementsByName('buyer_preference_buy');
+	var rent = document.getElementsByName('buyer_preference_rent');
+	var lease = document.getElementsByName('buyer_preference_lease');
+	var pg = document.getElementsByName('buyer_preference_pg');
+	var sub_promo = document.getElementById('sub_promo');
+	var sub_partners = document.getElementById('sub_partners');
+	
+	if(sub_promo.checked == false && sub_partners.checked == false){
+		alert("You need to select either \"Susbscribed for Promotional Mails\" or \"Subscribed for Mailers From Our Partners\"");
+		return false;
+	}
+	
+	if((buy[0].checked==false) && (rent[0].checked==false) && (lease[0].checked==false) && (pg[0].checked==false))
+	{
+		alert('You need to select atlease one preference to proceed');
+		return false;
+	}
+
+	return true;	
+}
+
+function CheckDD(value,type){
+	var budget_max=parseInt(document.getElementById('buy_budget_max').value);
+	var budget_min=parseInt(document.getElementById('buy_budget_min').value);
+	if(type=='MIN'){
+		if(value==499999){
+			document.getElementById('buy_budget_max').disabled=true;
+			document.getElementById('buy_budget_max').selectedIndex=0;
+		}
+		else if(value>499999 || value==0){
+			document.getElementById('buy_budget_max').disabled=false;
+			if(budget_max>0){
+				if(budget_max<value){
+					alert('Min price should be less than Max Price');
+					document.getElementById('buy_budget_min').selectedIndex=0;
+				}
+			}
+		}
+	}
+	
+	
+	if(type=='MAX'){
+		if(value==499999){
+			document.getElementById('buy_budget_min').disabled=true;
+			document.getElementById('buy_budget_min').selectedIndex=0;
+		}
+		else if(value>499999 || value==0){
+			document.getElementById('buy_budget_min').disabled=false;
+			if(budget_min>0){
+				if(budget_min>value){
+					alert('Max price should be greater than Min Price');
+					document.getElementById('buy_budget_max').selectedIndex=0;
+				}
+			}
+		}
+	}
+	
+}
+
+function BuyerPreferenceSelected(obj)
+{
+	var docF=document.form1;
+	var buy = document.getElementsByName('buyer_preference_buy');
+
+	if(buy[0].checked==true)
+	{
+		document.getElementById('buy_budget_min').disabled=false;
+		document.getElementById('buy_budget_max').disabled=false;
+	}
+	if(buy[0].checked==false)
+	{
+		document.getElementById('buy_budget_min').disabled=true;
+		document.getElementById('buy_budget_max').disabled=true;
+		document.getElementById('buy_budget_max').selectedIndex=0;
+		document.getElementById('buy_budget_min').selectedIndex=0;
+	}
+}
+
+function SellerPreferenceSelected(obj)
+{
+	var docF=document.form1;
+	if(obj.checked)
+	{
+	        if(obj.name=="seller_preference_all")
+	        {
+	                docF.seller_preference_sell.checked=false;
+	                docF.seller_preference_rent.checked=false;
+	                docF.seller_preference_lease.checked=false;
+	                docF.seller_preference_pg.checked=false;
+	        }
+	        else
+	        {
+	                docF.seller_preference_all.checked=false;
+	        }
+	}
+	var all = document.getElementsByName('seller_preference_all');
+	var sell = document.getElementsByName('seller_preference_sell');
+	var rent = document.getElementsByName('seller_preference_rent');
+	var lease = document.getElementsByName('seller_preference_lease');
+	var pg = document.getElementsByName('seller_preference_pg');
+	
+	if(sell[0].checked==false && rent[0].checked==false && lease[0].checked==false && pg[0].checked==false)
+	{
+	        all[0].checked=true;
+	}
+}
+
+
+function RecipientsSelected()
+{
+	var docF = document.form1;
+	var val = docF.recipient_type;
+	
+	if(val[0].checked==true)	//Only sellers selected, hide buyer criteria and unhide seller criteria
+	{
+		document.getElementById('register_city').disabled=false;
+        var buyer = document.getElementById('buyer_criteria');
+        buyer_cells = buyer.getElementsByTagName('tr');
+        for(i=0;i<buyer_cells.length;i++)
+        {
+                buyer_cells[i].style.display='none';
+        }
+
+        var seller = document.getElementById('seller_criteria');
+        seller_cells = seller.getElementsByTagName('tr');
+        for(i=0;i<seller_cells.length;i++)
+        {
+                seller_cells[i].style.display='';
+        }
+		ResComSelected();
+	}
+	else				//Only buyers selected, hide seller criteria and unhide buyer criteria
+	{
+		document.getElementById('register_city').disabled=true;
+       	var buyer = document.getElementById('buyer_criteria');
+       	buyer_cells = buyer.getElementsByTagName('tr');
+       	for(i=0;i<buyer_cells.length;i++)
+       	{
+               buyer_cells[i].style.display='';
+       	}
+
+       	var seller = document.getElementById('seller_criteria');
+       	seller_cells = seller.getElementsByTagName('tr');
+       	for(i=0;i<seller_cells.length;i++)
+       	{
+               seller_cells[i].style.display='none';
+       	}
+		ResComSelected();
+	}
+}
+
+function ResComSelected()
+{
+		var docF = document.form1;
+		if(docF.recipient_type[1].checked)	//buyers
+		{
+			var res_com = document.getElementsByName('buyer_rescom');
+			var rent = docF.buyer_preference_rent;
+			var lease = docF.buyer_preference_lease;
+			var pg = docF.buyer_preference_pg;
+		}	
+		else if(docF.recipient_type[0].checked)	//sellers
+		{
+			var res_com = document.getElementsByName('seller_rescom');
+			var rent = docF.seller_preference_rent;
+			var lease = docF.seller_preference_lease;
+			var pg = docF.seller_preference_pg;
+		}
+		if(res_com[0].checked)	//both selected, display all
+		{
+			rent.disabled=false;
+			lease.disabled=false;
+			pg.disabled=false;
+
+		}
+	
+		if(res_com[1].checked)  //Residential selected
+		{
+			rent.disabled=false;
+			lease.disabled=true;
+			pg.disabled=false;
+		}
+		if(res_com[2].checked)  //Commercial selected
+		{
+			rent.disabled=true;
+			lease.disabled=false;
+			pg.disabled=true;
+	        }
+}
+
+function SellerClassSelected()
+{
+	var docF = document.form1;
+	if(docF.seller_class_agent.checked==false && docF.seller_class_builder.checked==false && docF.seller_class_owner.checked==false)
+	{
+		alert("Please select atleast one of Agents, Builders and Owners");
+		docF.seller_class_agent.checked=true;
+		docF.seller_class_builder.checked=true;
+		docF.seller_class_owner.checked=true;	
+	}
+}
+
+function SelectDefaults()
+{
+	var docF = document.form1;
+
+	docF.screening[1].checked=true;
+	docF.activated[1].checked=true;
+}
+
+</script>
+</head>
+<body leftmargin="5" topmargin="5" onLoad="BuyerPreferenceSelected(0);RecipientsSelected();SelectDefaults();">
+<form action="advance_search99_new.php" method="post" onsubmit="return validate();" onload="return ResComSelected();" name="form1">
+<table width="760" border="0" cellspacing="0" cellpadding="0" align="center">
+<tr>
+<td>
+<input type="hidden" name="checksum" value="~$CHECKSUM`">
+<input type="hidden" name="FLAG" value="~$FLAG`">
+<input type="hidden" name="cid" value="~$cid`">
+</td>
+
+<TD class=small vAlign=top width=10><B><SPACER type="block" 
+width="10"></B></TD>
+<td width="571" valign="top"> 
+
+<table width="99%" border="0" cellspacing="0" cellpadding="0">
+<br>
+<br>
+
+<tr>
+<td class=label><b>~if $check_mailerid eq 'Y'`<font color=red>~else`<font color=black>~/if`Select Mailer By Mailer Name</font></b>
+</td>
+                                                                                                 
+<td bgcolor="#ffffcc" class=fieldsnew>
+<select name="mailer_id">
+        <option value='' selected> Select a Mailername</option>
+        ~section name=index loop=$mailer_arr_mailername`
+        <option value=~$mailer_arr_mailername[index].mailer_id` ~if $mailer_id eq $mailer_arr_mailername[index].mailer_id`selected~/if`>~$mailer_arr_mailername[index].mailer_name`</option>
+        ~/section`
+</select>
+</td>
+</tr>
+      
+<tr>
+	<tr>
+       <td height="8"></td>
+       <SPACER height="8" type="block"></SPACER> </tr>
+        <tr>
+       <td height="8"></td>
+       <SPACER height="8" type="block"></SPACER> </tr>
+</tr>
+
+
+
+<tr>
+       <td class="headbigblack"><b>Compose Query </b></td>
+      </tr>
+      <tr class="bgred">
+       <td height="1"></td>
+       <SPACER height="1" type="block"></SPACER> </tr>
+        <tr>
+       <td height="8"></td>
+       <SPACER height="8" type="block"></SPACER> </tr>
+     </table></td>
+</tr>
+</table>
+
+<table width="98%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+      <td height="3" colspan="2"></td>
+</tr>
+
+<tr>
+      <td height="3" colspan="2"></td>
+<SPACER height="3" type="block"></SPACER> </tr>
+<tr>
+<td width="96%" height="2" class=mediumblack> To select multiple options press the +Ctrl key on your keyboard
+</td>
+</tr>
+<tr>
+<td width="96%" class=mediumblack> </td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td>
+<br>
+
+<!--Profile criteria starts here-->
+<table width="98%" border="0" cellspacing="4" cellpadding="2">
+<tr> 
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This mailer is meant for</td>
+<td  class=mediumblack width="60%">
+	<input type=radio name="recipient_type" value='S' checked onClick="RecipientsSelected()">Sellers&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<input type=radio name="recipient_type" value='B' ~if $recipient_type eq 'B'`checked~/if` onClick="RecipientsSelected()">Buyers&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+</tr>
+<tr>
+<td class=mediumblack width="40%" colspan=2><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Select profile details</b> </td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;City of registration</b> </td>
+<td  class=mediumblack width="60%">
+	<select name="city[]" size="6" multiple class="TextBox" id="register_city">
+	<option value="" ~if $deselect_cityall neq '1'`selected~/if`>All</option>
+	~$CITY`
+	</select>
+</td>
+</tr>
+<table width="98%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td bgcolor="cccccc" height="1"></td><SPACER height="1" type="block"></SPACER>
+</tr>
+</table>
+<br>
+<!--Profile criteria ends here-->
+
+<!--Status criteria starts here-->
+<table width="98%" border="0" cellspacing="4" cellpadding="2">
+<tr>
+<td class="mediumblack" colspan=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Status</b></td>
+</tr>
+
+<tr>
+<td class="mediumblack" width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Profile has been Screened</td>
+<td class="mediumblack">
+<input type=radio name=screening value='' disabled="true">Doesn't Matter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=screening value='Y' checked>Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=screening value='N' disabled="true" ~if $screening eq 'N'`checked~/if`>No
+</td>
+</tr>
+
+<tr>
+<td class="mediumblack" width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Profile is Active</td>
+<td class="mediumblack">
+<input type=radio name=activated value='' disabled="true">Doesn't Matter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=activated value='Y' checked>Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=activated value='N' disabled="true" ~if $activated eq 'N'`checked~/if`>No
+</td>
+</tr>
+
+<tr>
+<td class="mediumblack" width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Susbscribed for Promotional Mails </td>
+<td class="mediumblack">
+<input type=checkbox name=sub_promo id=sub_promo value='Y' ~if $sub_partners eq 'Y'`checked~/if`>Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+</tr>
+
+<tr>
+<td class="mediumblack" width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Subscribed for Mailers From Our Partners</td>
+<td class="mediumblack">
+<input type=checkbox name=sub_partners id = sub_partners value='Y' ~if $sub_service eq 'Y'`checked~/if`>Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+</tr>
+</table>
+
+<table width="98%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td bgcolor="cccccc" height="1"></td><SPACER height="1" type="block"></SPACER>
+</tr>
+</table>
+<!--Status criteria ends here-->
+<br>
+
+<!--Buyer criteria starts here-->
+<table width="98%" border="0" cellspacing="4" cellpadding="2" id="buyer_criteria">
+<tr>
+<td class="mediumblack" colspan=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Buyer Criteria</b></td>
+</tr>
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Residential or Commercial Property Buyer</b> </td>
+<td  class=mediumblack width="60%">
+<input type=radio name=buyer_rescom value='' checked onClick="ResComSelected()">Both&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=buyer_rescom value='R' ~if $buyer_rescom eq 'R'`checked~/if` onClick="ResComSelected()">Residential&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=buyer_rescom value='C' ~if $buyer_rescom eq 'C'`checked~/if` onClick="ResComSelected()">Commercial
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Preference</b> </td>
+<td  class=mediumblack width="60%">
+<input type=checkbox name=buyer_preference_buy ~if $buyer_preference_buy eq 'on'`checked~/if` onClick="BuyerPreferenceSelected(this)">Buy&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=checkbox name=buyer_preference_rent ~if $buyer_preference_rent eq 'on'`checked~/if` onClick="BuyerPreferenceSelected(this)">Rent&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=checkbox name=buyer_preference_lease ~if $buyer_preference_lease eq 'on'`checked~/if` onClick="BuyerPreferenceSelected(this)">Lease&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=checkbox name=buyer_preference_pg ~if $buyer_preference_pg eq 'on'`checked~/if` onClick="BuyerPreferenceSelected(this)">PG
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Property Cities</b> </td>
+<td  class=mediumblack width="60%">
+        <select name="buyer_prop_city[]" size="4" multiple class="TextBox" id='buyer_city'>
+        <option value="" ~if $deselect_buyercityall neq '1'`selected~/if`>Doesn't Matter</option>
+        ~$BUYER_CITY`
+        </select>
+</td>
+</tr>
+
+<tr>
+	<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Property Type</b> </td>
+		<td  class=mediumblack width="60%">
+			<select name="buyer_property_type[]" size="4" multiple class="TextBox">
+				<option value="" ~if $deselect_buyerpropertytypeall neq '1'`selected~/if`>Any</option>
+				~$PROPERTY_TYPE`
+			</select>
+	</td>
+</tr>
+
+<tr>
+	<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Buying Budget </td>
+	<td>
+			<select name="budget_min" style="float:left" id="buy_budget_min" tabindex="2" nameinerr="Min Budget" valtype="budget_min" id="buying_budget" onchange="CheckDD(this.value,'MIN');">
+				<option value="0">Min</option>
+				<option value="499999" class="">Below 5 Lacs</option>
+				<option value="500000" class="">5 Lacs</option>
+				<option value="1000000" class="">10 Lacs</option>
+				<option value="1000000" class="">15 Lacs</option>
+				<option value="2000000" class="">20 Lacs</option>
+				<option value="2500000" class="">25 Lacs</option>
+				<option value="3000000" class="">30 Lacs</option>
+				<option value="4000000" class="">40 Lacs</option>
+				<option value="5000000" class="">50 Lacs</option>
+				<option value="6000000" class="">60 Lacs</option>
+				<option value="7500000" class="">75 Lacs</option>
+				<option value="9000000" class="">90 Lacs</option>
+				<option value="10000000" class="">1 Crore</option>
+				<option value="15000000" class="">1.5 Crores</option>
+				<option value="20000000" class="">2 Crores</option>
+				<option value="30000000" class="">3 Crores</option>
+				<option value="50000000" class="">5 Crores</option>
+				<option value="100000000" class="">10 Crores</option>
+				<option value="200000000" class="">20 Crores</option>
+				<option value="300000000" class="">30 Crores</option>
+				<option value="400000000" class="">40 Crores</option>
+				<option value="500000000" class="">50 Crores</option>
+				<option value="600000000" class="">60 Crores</option>
+				<option value="700000000" class="">70 Crores</option>
+				<option value="800000000" class="">80 Crores</option>
+				<option value="900000000" class="">90 Crores</option>
+				<option value="1000000000" class="">100 Crores</option>
+				<option value="1000000000" class="">100+ Crores</option>
+			</select>
+			<span style="float:left;margin-top:8px;" name="buy_budget_to" id="buy_budget_to">&nbsp;to&nbsp;</span>
+		        <select name="budget_max" id="buy_budget_max" tabindex="2" style="float:left" nameinerr="Max Budget" valtype="budget_max" onchange="CheckDD(this.value,'MAX');">
+				<option value="0">Max</option>
+				<option value="499999" class="">Below 5 Lacs</option>
+				<option value="500000" class="">5 Lacs</option>
+				<option value="1000000" class="">10 Lacs</option>
+				<option value="1500000" class="">15 Lacs</option>
+				<option value="2000000" class="">20 Lacs</option>
+				<option value="2500000" class="">25 Lacs</option>
+				<option value="3000000" class="">30 Lacs</option>
+				<option value="4000000" class="">40 Lacs</option>
+				<option value="5000000" class="">50 Lacs</option>
+				<option value="6000000" class="">60 Lacs</option>
+				<option value="7500000" class="">75 Lacs</option>
+				<option value="9000000" class="">90 Lacs</option>
+				<option value="10000000" class="">1 Crore</option>
+				<option value="15000000" class="">1.5 Crores</option>
+				<option value="20000000" class="">2 Crores</option>
+				<option value="30000000" class="">3 Crores</option>
+				<option value="50000000" class="">5 Crores</option>
+				<option value="100000000" class="">10 Crores</option>
+				<option value="200000000" class="">20 Crores</option>
+				<option value="300000000" class="">30 Crores</option>
+				<option value="400000000" class="">40 Crores</option>
+				<option value="500000000" class="">50 Crores</option>
+				<option value="600000000" class="">60 Crores</option>
+				<option value="700000000" class="">70 Crores</option>
+				<option value="800000000" class="">80 Crores</option>
+				<option value="900000000" class="">90 Crores</option>
+				<option value="1000000000" class="">100 Crores</option>
+				<option value="9999999999" class="">100+ Crores</option>
+			</select>
+	</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Database NRI</b> </td>
+<td  class=mediumblack width="60%">
+<input type=checkbox name=buyer_country_source value=Y>Yes</input>
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Split 50:50 mails between MMM and Cheetah</b> </td>
+<td  class=mediumblack width="60%">
+<input type=checkbox name=mmm_split value=Y>Yes</input>
+</td>
+</tr>
+
+</table>
+<!--Buyer Criteria ends here-->
+
+<!--Seller Criteria starts here-->
+<table width="98%" border="0" cellspacing="4" cellpadding="2" id="seller_criteria">
+<tr>
+<td class="mediumblack" colspan=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Seller Criteria (Based on features of properties posted)</b></td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~if $check_sellerclass eq 'Y'`<font color=red>Seller Class<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Check atleast one~else`<font color=black>Seller Class~/if`</font></td>
+<td  class=mediumblack width="60%">
+        <input type="checkbox" name="seller_class_agent" class="TextBox" ~if $seller_class_agent eq 'on'`checked~/if` onClick="SellerClassSelected()">Agent&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<input type="checkbox" name="seller_class_builder" class="TextBox" ~if $seller_class_builder eq 'on'`checked~/if` onClick="SellerClassSelected()">Builder&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<input type="checkbox" name="seller_class_owner" class="TextBox" ~if $seller_class_owner eq 'on'`checked~/if` onClick="SellerClassSelected()">Owner&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Residential or Commercial Property Seller</b> </td>
+<td  class=mediumblack width="60%">
+<input type=radio name=seller_rescom value='' checked onClick="ResComSelected()">Both&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=seller_rescom value='R' ~if $seller_rescom eq 'R'`checked~/if` onClick="ResComSelected()">Residential&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio name=seller_rescom value='C' ~if $seller_rescom eq 'C'`checked~/if` onClick="ResComSelected()">Commercial
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Preference</b> </td>
+<td  class=mediumblack width="60%">
+<input type=checkbox name=seller_preference_all ~if $seller_preference_all eq 'on'`checked~/if` onClick="SellerPreferenceSelected(this)">Doesn't Matter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=checkbox name=seller_preference_sell ~if $seller_preference_sell eq 'on'`checked~/if` onClick="SellerPreferenceSelected(this)">Sell&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=checkbox name=seller_preference_rent ~if $seller_preference_rent eq 'on'`checked~/if` onClick="SellerPreferenceSelected(this)">Rent&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=checkbox name=seller_preference_lease ~if $seller_preference_lease eq 'on'`checked~/if` onClick="SellerPreferenceSelected(this)">Lease&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=checkbox name=seller_preference_pg ~if $seller_preference_pg eq 'on'`checked~/if` onClick="SellerPreferenceSelected(this)">PG
+</td>
+</tr>
+
+<tr>
+	<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Property Type(s)</b> </td>
+	<td  class=mediumblack width="60%">
+		<select name="seller_property_type[]" size="4" multiple class="TextBox">
+			<option value="" ~if $deselect_sellerpropertytypeall neq '1'`selected~/if`>Doesn't Matter</option>
+			~$SELLER_PROPERTY_TYPE`
+		</select>
+	</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The cities, seller has properties in</b> </td> <td  class=mediumblack width="60%">
+        <select name="seller_prop_city[]" size="4" multiple class="TextBox" id='seller_city'>
+        <option value="" ~if $deselect_sellerpropcityall neq '1'`selected~/if`>Doesn't Matter</option>
+        ~$SELLER_CITY`
+        </select>
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Database NRI</b> </td>
+<td  class=mediumblack width="60%">
+<input type=checkbox name=seller_country_source value=Y>Yes</input>
+</td>
+</tr>
+
+<tr>
+<td class=mediumblack width="40%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Split 50:50 mails between MMM and Cheetah</b> </td>
+<td  class=mediumblack width="60%">
+<input type=checkbox name=mmm_split value=Y>Yes</input>
+</td>
+</tr>
+
+</table>
+<!--Seller criteria ends here-->
+
+<table align="center">
+<tr>
+<td width="25%">&nbsp;</td>
+<td class="mediumblack"><br>
+<input type="hidden" name="fsubmit" value="fsubmit">
+<input type="image" name="fsubmit" value="fsubmit"  src="http://www.jeevansathi.com/profile/images/submit_button.gif" width="76" height="23"></td>
+</tr>
+
+</table>
+
+  </td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<br>
+<br>
+</form>
+</body>
+</html>

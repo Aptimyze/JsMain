@@ -1,0 +1,134 @@
+/*Search Result Carousel By Vishal Kaul*/
+
+.crsl_cnt{width:462px; background:#f7f7f7; border:1px solid #aaa; border-width:1px 0;}
+.crsl_cnt h4{font:18px Arial, Helvetica, sans-serif; margin:10px 10px 0;}
+.crsl_cnt a.gry_arw,.crsl_cnt a.orng_arw,.crsl_cnt a.gry_arw_r,.crsl_cnt a.orng_l{width:19px; height:88px; background:url(/profile/images/crsl_arw.png); margin:4px; cursor:pointer;}
+.crsl_cnt a.orng_arw{background-position:-19px 0;}
+.crsl_cnt a.orng_arw:hover{background-position:-19px -176px;}
+.crsl_cnt a.orng_l{background-position:0 -88px;}
+.crsl_cnt a.orng_l:hover{background-position:0 -176px;}
+.crsl_cnt a.gry_arw_r{background-position:-19px -88px; cursor:text;}
+.crsl_cnt a.gry_arw{cursor:text;}
+.crsl_cnt .rcmnd_cnt{width:397px; height:134px; margin:0 5px;}
+/*.crsl_cnt .rcmnd_cnt b{width:98%; padding:4px; float:left; color:#fff; background:#ff8653;}*/
+.crsl_cnt .rcmnd_cnt b{width:128px; text-align:center; font-size:11px; color:#117daa;margin-top:20px;}
+.crsl_cnt .rcmnd_cnt a{width:128px; text-align:center; font-size:11px; color:#117daa;}
+.nme_photo{width:130px; text-align:center; font-size:11px; float:left; cursor:pointer; padding:4px 2px;}
+.nme_photo .img1{border:1px solid #000;margin:0 0 3px;}
+.crsl_cnt .search_sprte{background:url(/profile/images/icons_sprite.png);}
+.crsl_cnt .e_rsta{width:43px; height:13px; background-position:0 -231px;}
+.crsl_cnt .e_vlue{width:38px; height:12px; background-position:0 -245px;}
+.f2 {font-size:2px!important;}
+/* Added in absence of hdr css starts */
+
+/*profile hover starts*/
+.p_tup {
+        width:463px;
+        border:1px solid #ccc;
+        font:12px Arial, Helvetica, sans-serif;
+        float:left;
+        background:#FFFFFF; /* added */
+}
+.p_tup * {
+        margin:0;
+        padding:0;
+}
+.p_tup h6 {
+        width:443px;
+        height:15px;
+        background:#ffde94;
+        font-size:14px;
+        padding:4px 10px;
+}
+.p_tup .cmplete_info {
+        width:453px;
+        padding:5px;
+        float:left;
+}
+.p_tup .cmplete_info .b_info {
+        width:114px;
+        float:left;
+        color:#6b6b6b;
+        font-weight:bold;
+        margin-left:5px;
+        text-align:left;/*added*/
+}
+.p_tup .cmplete_info p {
+        float:left;
+        width:221px;
+        color:#6b6b6b;
+        margin-left:5px;
+        text-align:left;/*added*/
+}
+.no_b {
+        font-weight:normal!important;
+}
+.p_tup .clr {
+        clear:both;
+        height:0;
+        overflow:hidden;
+}
+/*profile hover ends*/
+/*added*/
+.img_cont{width:68px;}
+.img_cont_big_photo{}
+.img_cont_big_photo iframe
+{
+  display:none;
+  display:block;
+  position:absolute;
+  top:0;
+  left:0;
+  z-index:-1;
+  filter:mask();
+  width:460px;
+  height:200px
+  border:0px;
+}
+/*added*/
+
+
+/*icons starts here*/
+.sprte_icon {
+
+          background:url(../images/icons_sprite.png);
+
+}
+
+.crsl_cnt .kndli_icon {
+
+          width:14px;
+
+          height:14px;
+
+          background-position:0 -133px;
+
+}
+
+.crsl_cnt .strn_unfrv_icon {
+
+          width:22px;
+
+          height:14px;
+
+          background-position:0 -193px;
+
+}
+
+.crsl_cnt .vrfid_phne_icon {
+
+          width:14px;
+
+          height:14px;
+
+          background-position:-46px -121px;
+
+}
+
+.crsl_cnt .info_icon{width:18px; height:18px; background-position:-42px -153px;}
+
+/*icons ends here*/
+.ml_6{margin-left:6px!important;}
+.mt_4 {margin-top:4px;}
+.mb_3{margin:0 0 3px;}
+/* Added in absence of hdr css ends */

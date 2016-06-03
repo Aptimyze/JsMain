@@ -1,0 +1,118 @@
+<html>
+<head>
+<title>JeevanSathi Matrimonials - ~if $EDITPROFILE`Profile Saved~else`Registration Complete~/if`</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="/P/I/styles.php" type="text/css">
+<link rel="stylesheet" href="/P/IN/styles.php" type="text/css">
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body>
+
+~$HEAD`
+
+~$LEFTPANEL`
+
+<table width="74%" height="1110"border="0" cellspacing="0" cellpadding="0" align="center">
+<tr><td valign="top">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td><img src="images/my_jeevansathi.gif" width="534" height="36"></td>
+</tr>
+<tr>
+<td class="extrabigblack"><b>&nbsp;&nbsp;&nbsp;Basic Profile Saved </b>
+<br>
+</td>
+</tr>
+<tr>
+<td><table width="100%" border="0" cellspacing="4" cellpadding="2" align="center">
+<tr>
+<td class=bigblack height="2">Thank you for ~if $EDITPROFILE`updating your profile~else`creating profile with jeevansathi. Your profile with username <b>~$USERNAME`</b> has been saved~/if`.<br>
+~if !$crmback eq "admin"` To view your profile as it appears to others <a href="viewprofile.php?checksum=~$CHECKSUM`&profilechecksum=~$MYPROFILECHECKSUM`"><strong>Click Here</strong></a>~/if` <br>
+<br>
+~if $EDITPROFILE neq "1"`
+<table width="100%"  border="0" cellpadding="2" cellspacing="0" bgcolor="FDF2DF">
+<tr>
+<td class="mediumgreen"><strong>Important!</strong></td>
+</tr>
+<tr>
+<td height="1" colspan="2"></td>
+<SPACER height="1" type="block"></SPACER> </tr>
+<tr>
+<td><span class="mediumblack">An automated email will be sent to your email id <b>~$EMAIL` </b>which will confirm the successful input of your profile. In case of non-receipt of the confirmation, there could be an error in the e-mail id entered in your profile, and your profile will therefore be deleted. </span></td>
+</tr>
+</table>
+~/if`
+</td>
+</tr>
+<tr>
+<td height="23" class=mediumblack><table width="100%"  border="0" cellspacing="0" cellpadding="4">
+<tr class="mediumblack">
+<td colspan="3"><strong>Important steps to go forward </strong></td>
+</tr>
+<tr class="mediumblack">
+  <td>&nbsp;</td>
+~if $mb_username_profile eq ""`
+  <td><a href="advance_search.php?FLAG=partner&checksum=~$CHECKSUM`"><img src="images/input_partner.gif" width="160" height="81" border="0"></a></td>
+~/if`
+  <td width="305"><a href="uploadphoto.php?checksum=~$CHECKSUM`&mbchecksum=~$mbchecksum`"><img src="images/uploadphoto.gif" width="160" height="81" border="0"></a></td>
+</tr>
+<tr class="mediumblack">
+<td width="10">&nbsp;</td>
+<td width="190">Get <font color="red">Free</font> Match Alerts &amp; more... </td>
+<td>Get upto <font color="red">10 times</font> higher response.</td>
+</tr>
+<tr class="mediumblack">
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr><td colspan="3"><table width="100%" border="0" cellspacing="2" cellpadding="2" class=bglgrey>
+  <tr>
+   <td width="87"><img src="~$IMG_URL`/P/I/confidential.gif" width="207" height="44"></td>
+   <td width="414" class=bigblack><p> <span class=class7><a href="/profile/conf_policy.php?checksum=~$CHECKSUM`&mbchecksum=~$mbchecksum`"><b>Privacy and confidentiality features at Jeevansathi.com</b></a></span></p></td>
+  </tr>
+ </table></td>
+ </tr>
+<tr class="mediumblack">
+<td>&nbsp;</td>
+<td><span class="class6"><a href="hobbies.php?checksum=~$CHECKSUM`&mbchecksum=~$mbchecksum`">Input your Hobbies & Interests</a></span> - </td>
+<td>Enhance your profile quality</td>
+</tr>
+<tr class="mediumblack">
+<td>&nbsp;</td>
+<td><span class="class6"><a href="editprofile.php?checksum=~$CHECKSUM`&mbchecksum=~$mbchecksum`">Edit your Profile</a></span> - </td>
+<td>Every time you edit your Profile, it is <font color="red">Pushed to the Top.</font> </td>
+</tr>
+~if $mb_username_profile eq ""`
+<tr class="mediumblack">
+<td valign="top">&nbsp;</td>
+<td valign="top"><span class="class6"><a href="advance_search.php?FLAG=search&checksum=~$CHECKSUM`">Advanced Search</a></span> - </td>
+<td> Do not wait for someone to contact you when you can contact the person you like. Use our Advanced Search to shortlist on detailed criteria. Remember, you need only one JeevanSathi - he or she could be hidden anywhere in our Database </td>
+</tr>
+<tr class="mediumblack">
+<td valign="top">&nbsp;</td>
+<td valign="top"><span class="class6"><a href="/membership/jspc">Become a Full Member</a></span> - </td>
+<td> Make <font color="red">Full Contact</font> by sending a personalised message with your contact details. </td>
+</tr>
+~/if`
+</table></td>
+</tr>
+</table>
+<br></td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<br>
+~$SUBFOOTER`
+<br>
+~if $SHOW_AFF_CURRY eq 'Y'`
+<img src="http://www.affiliatecurry.com/affiliate/trackingcode_lead.php?uniqueid=~$USERNAME`&url=" width="1" height="1">
+~/if`
+
+~$FOOT`
+</body>
+</html>

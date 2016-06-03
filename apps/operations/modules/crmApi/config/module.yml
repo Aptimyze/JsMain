@@ -1,0 +1,5 @@
+all:
+  ApiCrmAuthenticateV1:
+    enable_login: off
+  LogCheckinCheckoutV1:
+    enable_login: on

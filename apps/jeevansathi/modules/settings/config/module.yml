@@ -1,0 +1,13 @@
+all:
+  index:
+    enable_login: on
+    enable_google_analytics: on
+    enable_call_help: on
+  jspcSettings:
+    enable_login: on
+    enable_google_analytics: off
+    enable_call_help: off
+  alertManager:
+    enable_login: on
+    enable_google_analytics: on
+    enable_call_help: on

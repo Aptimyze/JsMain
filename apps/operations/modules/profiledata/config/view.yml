@@ -1,0 +1,64 @@
+indexSuccess:
+  metas:
+    title:        Test Page
+
+  stylesheets:    [operations_jeevansathi, operations_styles]
+
+  javascripts:    []
+
+showPhotosToScreenSuccess:
+  metas:
+    title:        Test Page
+
+  stylesheets:    [operations_jeevansathi, operations_styles]
+
+  javascripts:    [operations_validate1]
+
+markPhotosForScreeningSuccess:
+  metas:
+    title:        Test Page
+
+  stylesheets:    [operations_jeevansathi, operations_styles]
+
+  javascripts:    []
+
+deleteCommentsSuccess:
+  metas:
+    title:        Test Page
+
+  stylesheets:    [operations_jeevansathi, operations_styles]
+
+  javascripts:    []
+
+skipCommentsSuccess:
+  metas:
+    title:        Test Page
+
+  stylesheets:    [operations_jeevansathi, operations_styles]
+
+  javascripts:    []
+
+skipProfileSuccess:
+  metas:
+    title:        Test Page
+
+  stylesheets:    [operations_jeevansathi, operations_styles]
+
+  javascripts:    []
+
+outputTemplateSuccess:
+  metas:
+    title:        Test Page
+
+  stylesheets:    [operations_jeevansathi, operations_styles]
+
+  javascripts:    []
+
+albumSuccess:
+  metas:
+    title:        Import or Upload photos – Jeevansathi.com
+
+  stylesheets:    [common_css, colorbox_css]
+
+  javascripts:    []
+

@@ -1,0 +1,413 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="robots" content="noindex, nofollow">
+<title>Jeevansathi Registration</title>
+<link href="~$IMG_URL`/min/?f=profile/css/~$sugarcrm_common_css`" rel="stylesheet" type="text/css" />
+<style>
+.mt_min_19 {
+	margin-top:-19px;
+	z-index:10;
+	position:relative;
+}
+h1 {
+	font:11px verdana, Helvetica, sans-serif;
+}
+.login_bar {
+	width:772px;
+	height:41px;
+	background:#f9f9f9;
+	border:2px solid #dadada
+}
+.login_bar label {
+	float:left;
+	color:#494949;
+	margin:0 5px;
+}
+.login_bar input.txt1 {
+	float:left;
+	width:118px;
+	height:16px;
+	border:1px solid #969696;
+}
+.boy_grl {
+	width:232px;
+	height:230px;
+	background-position:0 -30px;
+}
+.grn_bg {
+	background:#f1f8cb;
+	width:210px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	padding-top:17px;
+}
+.g_t_l {
+	background-position:-289px 0;
+}
+.g_t_r {
+	background-position:-295px 0;
+}
+.g_b_l {
+	background-position:-289px -6px;
+}
+.g_b_r {
+	background-position:-295px -6px;
+}
+.grn_bg ul {
+	margin:10px auto;
+	padding:0;
+	width:180px;
+}
+.grn_bg ul li {
+	float:left;
+	width:99.9%;
+	margin-bottom:15px;
+	list-style:none;
+	font-weight:bold;
+}
+.suc_stry_img {
+	width:204px;
+	height:147px;
+	background-position:0 -303px;
+}
+</style>
+	<script language="JavaScript" SRC="/profile/js/~$autosuggest_js`"></script>
+	<script language="JavaScript" SRC="/profile/js/~$registration_ajax_new_js`"></script>
+<SCRIPT>
+
+		function showhelp()
+		{
+			document.getElementById('gotra_help').style.display="block";
+		}
+		function hidehelp()
+		{
+			document.getElementById('gotra_help').style.display="none";
+		}
+		function hidesuggest()
+		{
+			handle_mouseclick();
+              		document.getElementById('gotra_results').style.display="none";
+			document.getElementById('gotra_results_iframe').style.display="none";
+		}
+function validate(flag){
+        var docF=document.form1;
+	var err_i=0,focusSet=0;
+
+	var degree=document.getElementById("degree").value;
+	var occupation=document.getElementById("occupation").value;
+	var income=document.getElementById("income").value;
+	
+	//Compulsary field Validations
+	if(flag=='' || flag=='degree')
+	{
+	if(degree==''){
+		err_i++;
+		document.getElementById('degree_submit_err').style.display='block';
+		document.getElementById('degree_submit_err_label').style.color='red';
+		document.getElementById('occupation_submit_err_label').style.color='red';
+		if(!focusSet)
+			//document.getElementById('degree').focus();
+		focusSet=1;
+	}
+	else{
+		document.getElementById('degree_submit_err').style.display='none';
+		document.getElementById('degree_submit_err_label').style.color='#4B4B4B';
+	}
+	}
+
+
+	if(flag=='' || flag=='occupation')
+	{
+		if(occupation==''){
+			err_i++;
+			document.getElementById('occupation_submit_err').style.display='block';
+			document.getElementById('occupation_submit_err_label').style.color='red';
+			if(!focusSet)
+				//document.getElementById('occupation').focus();
+			focusSet=1;
+		}
+		else{
+			document.getElementById('occupation_submit_err').style.display='none';
+			document.getElementById('occupation_submit_err_label').style.color='#4B4B4B';
+		}
+	}
+
+	if(flag=='' || flag=='income')
+	{
+	if(income==''){
+		err_i++;
+		document.getElementById('income_submit_err').style.display='block';
+		document.getElementById('income_submit_err_label').style.color='red';
+		if(!focusSet)
+			//document.getElementById('income').focus();
+		focusSet=1;
+	}
+	else{
+		document.getElementById('income_submit_err').style.display='none';
+		document.getElementById('income_submit_err_label').style.color='#4B4B4B';
+	}
+	}
+	if(err_i>0)
+	return false;
+	return true;
+}
+~if $from_sugar_exec`
+function change_gender_req(){
+	window.location="~$SITE_URL`/jsadmin/editprofile_request.php?pid=~$PROFILEID`&cid=~$CID`&user=~$USERNAME`&record_id=~$record_id`";
+}
+~/if`
+	</SCRIPT>
+</head>
+<body>
+	<noscript>
+		<div style="position:fixed;z-index:1000;width:100%">
+			<div style="text-align:center;padding-bottom:3px;font-family:verdana,Arial;font-size:12px;font-size-adjust:none;font-stretch:normal;font-style:normal;font-variant:normal;font-weight:normal;line-height:normal;background-color:#E5E5E5;">
+				<b><img src="~$IMG_URL`/profile/images/registration_new/error.gif" width="23" height="20"> Javascript is disabled in your browser.Due  to this certain functionalities will not work. 
+					<a href="~$SITE_URL`/P/js_help.htm" target="_blank">Click Here</a> , to know how  to enable it.
+				</b>
+			</div>
+		</div>
+	</noscript>
+<p class="tp_bg sprte1"></p>
+<div class="reg_cont"><!-- <a href="#" class="fr mar b mt_min_19" onclick="javascript:window.open('http://server.iad.liveperson.net/hc/13507809/?cmd=file&file=visitorWantsToChat&offlineURL=http://www.jeevansathi.com/P/faq_redirect.php&site=13507809&imageUrl=http://www.jeevansathi.com/images_try/liveperson&referrer='+escape(document.location),'chat13507809','width=472,height=320');return false;">
+  <p class="hlp fl sprte1"></p>
+ 
+      
+    &nbsp;Live help</a>
+  <p class="clr cl_5"></p> -->
+  <div class="fl">
+		<a href="~$SITE_URL`" style="cursor:pointer;">
+			<p class="logo sprte1"></p></a>
+    <h1 class="ml_128">Indian Matrimonials - We Match Better </h1>
+  </div>
+  <div class="fr" style="width:151px;"><span class="fl">A </span> <span class="nkri_lgo sprte1 fl" style="margin:2px;"></span> <span class="fl">venture</span></div>
+  <div class="clr cl21"></div>
+
+  <div class="clr cl_5"></div>
+  <div class="fl mt_10" style="width:539px;">
+    <h3 class="drk_gry u">Complete your Registration and proceed</h3>
+    <div class="fl drk_gry mt_6"> Note: Your Username in Jeevansathi.com is <span class="mar">~$USERNAME`</span></div>
+    <div class="clr cl_5"></div>
+    <div class="main_form_cont pos_rltv" style="width:538px;"> <i class="d_t_l pos_abs h_w_6 sprte1"></i><i class="d_t_r pos_abs h_w_6 sprte1 p_tr_0"></i><i class="d_b_r pos_abs h_w_6 sprte1 p_br_0"></i><i class="d_b_l pos_abs h_w_6 sprte1 p_bl_0"></i>
+     <div class="cl_10 clr"></div>
+      <ul class="form mt_10" style="margin-top:5px;">
+       
+		  <form name="form1" action="~$SITE_URL`/P/sugarcrm_registration/registration_page2c.php" ~if $SUGAR_INCOMPLETE eq 'Y'`onsubmit="return validate(0);"~/if` method="post" > 
+			<input type="hidden" name="gender" value="~$gender`">
+		 <input type="hidden" name="record_id" value="~$record_id`" >
+		 <input type="hidden" name="from_sugar_exec" value="~$from_sugar_exec`"/>
+		 <input type="hidden" name="site_url" id="site_url" value="~$SITE_URL`" >
+			<input type="hidden" name="checksum" value="~$CHECKSUM`" />
+			<input type="hidden" name="tieup_source" value="~$TIEUP_SOURCE`" />
+			<input type="hidden" name="hit_source" value="~$HITSOURCE`" />
+			<input type="hidden" name="groupname" value="~$GROUPNAME`" />
+			<input type="hidden" name="religion" value="~$RELIGION`" />
+			<input type="hidden" name="caste" value="~$CASTE`" />
+			<input type="hidden" name="profileid" value="~$PROFILEID`" />
+			<input type="hidden" name="current_date" value="~$CURRENT_DATE`" />
+			<input type="hidden" name="country_residence" value="~$COUNTRY_RESI`" />
+			<input type="hidden" name="sugar_incomplete" value="~$SUGAR_INCOMPLETE`"/>
+			<input type="hidden" name="sugar_occ" value="~$OCCUPATION`" />
+			<input type="hidden" name="sugar_income" value="~$INCOME`" />
+			<input type="hidden" name="sugar_deg" value="~$DEGREE`" />
+			<input type="hidden" name="secondary_source" value="~$sec_source`" />
+			~if $SUGAR_INCOMPLETE eq 'Y'`
+			~if $from_sugar_exec && !$crq`
+			<div class="fr"><a href="#" onclick="javascript:change_gender_req();">Change gender/dob/marital status</a></div>
+			~/if`
+	~if $DEGREE eq '0'`
+		<li >
+		  	<label id="degree_submit_err_label" ~if $degree_err eq "1"` style="color:red"~/if`>Highest Degree<u>*</u> :</label>
+			<select name="degree" id="degree"  class="sel_lng_new">
+				  ~section name=foo loop=$degreeArray`
+					 <option ~if $DEGREE eq $degreeArray[foo]` selected ~/if` value=~$degreeArray[foo]` >~$yearArray[foo]` </option>
+				  ~/section`
+			  		<option value="">Please select</option>
+					~$degree`
+			</select>
+			<div class="clr"></div>
+			<div id="degree_submit_err" style="display:~if $degree_err`inline;~else`none~/if`" class="err">
+				<label>&nbsp;</label>
+				Please select a degree.
+			</div>
+		</li>
+	~/if`
+	~if $OCCUPATION eq '0'`
+		<li>
+		  	<label id="occupation_submit_err_label" ~if $occupation_err eq "1"`style="color:red"~/if`>Work Area<u>*</u> :</label>
+			<select name="occupation" id="occupation" class="sel_lng_new">
+		    	<option value="">Please select</option>
+					~$occupation`
+			</select>
+			<div class="clr"></div>
+			<div id="occupation_submit_err" style="display:~if $occupation_err`inline;~else`none~/if`" class="err">
+				<label>&nbsp;</label>
+					 Please select a work area.
+			</div>
+			</li>
+	~/if`
+	~if $INCOME eq '0'`
+		<li>
+		  	<label id="income_submit_err_label" ~if $income_err eq "1"` style="color:red"~/if`>Annual Income<u>*</u> :</label>
+		 	<select name="income" id="income" class="sel_lng_new" >
+		    		<option value="">Please select</option>
+					~$income`
+		  	</select>
+			<div class="clr"></div>
+			<div id="income_submit_err" style="display:~if $income_err`inline;~else`none~/if`" class="err">
+				<label>&nbsp;</label>
+				 Please select an income range.
+			</div>
+		</li>
+		~/if`
+		~/if`
+			~if $HINDU`
+			<!-- Section For Hindu Starts Here -->
+			<li>
+				  <label>Sub-Caste :</label>
+				  <input type="text" class="txt1" value="~$subcaste`" name="subcaste" />
+			</li>
+			<li style="position:relative;">
+				  <label>Gotra :</label>
+				  <input type="text" class="txt1" name="gotra" value="~$gotra`" id="gotra" onkeyup="auto_suggest(this,1,'gotra_results','gotra_results_div');showhelp();" onmouseout="hidehelp();" onblur="hidesuggest();" autocomplete="off"/>
+				  <div class="clr"></div>
+						<iframe  id="gotra_results_iframe" scrolling="no" frameborder="0" style="display: none;left:170px;width:190px;position: absolute;" src=""></iframe>
+				<div style="float:left;width:214px;z-index:100;position: absolute; top: 22px; left:175px; background:#ccc;">
+						<div id="gotra_results"></div>
+				</div>
+				<div class="coverhelp" style="width:20%;float:left;position:relative;margin-left:100px;margin-top:-15px;">
+					<div style="display: none;margin-top:2px;border:1px solid #99b1c8; left:315px; top:-7px; margin-right:25px; position:absolute; width:220px;z-index:100;background:#FFFFFF" id="gotra_help" class="helpbox">
+						<div class="helptext" style="float:left; width:200px; font-family:Arial,Helvetica;font-size:11px;color:#000000; font-weight:normal;line-height:13px;padding:4px 6px;">Type a few letters and let our auto suggest feature suggest your gothra. Otherwise you can enter a new one.
+							<div class="helpimg" style="position: absolute; top: 5px; left:-16px;background-image:url(/profile/images/registration_new/arrow2.gif); background-repeat:no-repeat; width:16px; height:12px;"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				   
+			</li>
+			~/if`
+      <li>
+          <label>Father's Occupation :</label>
+          <select name="father_occupation" class="sel_lng">
+            <option value="">Please select</option>
+					    ~$FATHER_OCCUPATION`
+          </select>
+        </li>
+     
+        <li>
+          <label>School Name:</label>
+        <input type="text" name="school_name" class="txt1" ~if $SCHOOL_NAME` value="~$SCHOOL_NAME`"  ~/if`/>
+        </li>
+       <li>
+          <label>College Name :</label>
+                  <input type="text" name="college_name" class="txt1" ~if $COLLEGE_NAME` value="~$COLLEGE_NAME`" ~/if` />
+        </li>
+        <li>
+          <label>Current Employer Name :</label>
+          <input type="text" name="current_employer" class="txt1" ~if $CURRENT_EMPLOYER` value="~$CURRENT_EMPLOYER`" ~/if`/>
+        </li>
+        <li>
+          <label>Planning to work after Marriage :</label>
+          <div class="fl">
+            <input type="radio" name="married_working" value="Y" ~if $MARRIED_WORKING eq 'Y'` checked ~/if`/>
+            Yes
+            <input type="radio" class="ml_10"  name="married_working" value="N" ~if $MARRIED_WORKING eq 'N'` checked ~/if`/>
+            No
+            </div>
+        </li>
+       
+       <li>
+          <label>Diet :</label>
+          <div class="fl">
+		  	<input name="diet" value="V" type="radio" ~if $DIET eq 'V'` checked ~/if` /> Vegetarian
+		  	<input type="radio" name="diet" value="N" class="ml_10" ~if $DIET eq 'N'` checked ~/if` /> Non Vegetarian
+			<input type="radio" name="diet" value="J" class="ml_10" ~if $DIET eq 'J'` checked ~/if` /> Jain
+            </div>
+        </li>
+       
+       <li>
+          <label>Which attribute describes 
+you the best? :</label>
+          <select name="personality_attribute" id="personality_attribute" class="sel_lng">
+            <option value="">Please select</option>
+		    <option value="1" ~if $PERSONALITY_ATTRIBUTE eq '1'` selected ~/if`>Jovial</option>
+		    <option value="2" ~if $PERSONALITY_ATTRIBUTE eq '2'` selected ~/if`>Hard Working</option>
+		    <option value="3" ~if $PERSONALITY_ATTRIBUTE eq '3'` selected ~/if`>Religious</option>
+		    <option value="4" ~if $PERSONALITY_ATTRIBUTE eq '4'` selected ~/if`>Introvert</option>
+		    <option value="5" ~if $PERSONALITY_ATTRIBUTE eq '5'` selected ~/if`>Studious</option>
+		    <option value="6" ~if $PERSONALITY_ATTRIBUTE eq '6'` selected ~/if`>Adventurous</option>
+		    <option value="7" ~if $PERSONALITY_ATTRIBUTE eq '7'` selected ~/if`>Just a comman man</option>
+          </select>
+        </li>
+        <li>
+          <label>Interests / Hobbies :</label>
+          <select name="hobbies[]" id="hobbies" class="sel_lng" multiple="multiple" size="3" >
+            <option value="">Please select</option>
+			~$HOBBIES_STR`
+			<!--
+			<option value="1" ~if $HOBBIES eq '1'` selected ~/if`> Collecting Stamps</option>
+			<option value="2" ~if $HOBBIES eq '2'` selected ~/if`> Collecting Coins</option>
+			<option value="3" ~if $HOBBIES eq '3'` selected ~/if`> Collecting antiques</option>
+			<option value="4" ~if $HOBBIES eq '4'` selected ~/if`> Art / Handicraft</option>
+			<option value="5" ~if $HOBBIES eq '5'` selected ~/if`> Painting</option>
+			<option value="6" ~if $HOBBIES eq '6'` selected ~/if`> Cooking</option>
+			<option value="7" ~if $HOBBIES eq '7'` selected ~/if`> Photography</option>
+			<option value="8" ~if $HOBBIES eq '8'` selected ~/if`> Film-making</option>
+			<option value="9" ~if $HOBBIES eq '9'` selected ~/if`> Model building</option>
+			<option value="10" ~if $HOBBIES eq '10'` selected ~/if`> Gardening / Landscaping</option>
+			<option value="11" ~if $HOBBIES eq '11'` selected ~/if`> Fishing</option>
+			<option value="12" ~if $HOBBIES eq '12'` selected ~/if`> Bird watching</option>
+			<option value="13" ~if $HOBBIES eq '13'` selected ~/if`> Taking care of pets</option>
+			<option value="14" ~if $HOBBIES eq '14'` selected ~/if`> Playing musical instruments</option>
+			<option value="15" ~if $HOBBIES eq '15'` selected ~/if`> Singing</option>
+			<option value="16" ~if $HOBBIES eq '16'` selected ~/if`> Dancing</option>
+			<option value="17" ~if $HOBBIES eq '17'` selected ~/if`> Acting</option>
+			<option value="18" ~if $HOBBIES eq '18'` selected ~/if`> Ham radio</option>
+			<option value="19" ~if $HOBBIES eq '19'` selected ~/if`> Astrology / Palmistry / Numerology</option>
+			<option value="20" ~if $HOBBIES eq '20'` selected ~/if`> Graphology</option>
+			<option value="21" ~if $HOBBIES eq '21'` selected ~/if`> Solving Crosswords; Puzzles</option> -->
+          </select>
+        </li>
+        <div class="cl_5 clr"></div>
+ </ul>
+      <div class="clr"></div>
+<div align="center">
+<input name="submit_pg2c" value="2c" type="image"  src="~$SITE_URL`/profile/images/registration_revamp_new/fin_reg.png" border="0" style="margin-bottom: 30px; margin-left: 195px; display: inline;" >
+<input name="submit_pg2c" value="2c" type="hidden">
+      </div>
+    </div>
+</form>
+<div class="cl_5 clr"></div>
+  </div>
+  <div class="fr" style="width:233px">
+     <div class="cl105"></div>
+	<div style="margin-left:10px">
+    	<div class="spt_bx t_lrc">&nbsp;</div>
+        <div class="t_mc">
+         <div style="width:180px; margin:0px 20px 10px 15px;"> <b class="mar1 u" style="font-size:15px;">By completing your 
+registration, you can:</b> </div>
+            <ul class="mlr10 bults" style="color:#707c11;">
+                <li><i class="red_tick1 sprte1 fl"></i>Get access to over 6 lakh profiles </li>
+                <li><i class="red_tick1 sprte1 fl"></i>Receive regular and relevant match alerts</li>
+                <li><i class="red_tick1 sprte1 fl"></i>Express interest in the profiles you like</li>
+                <li><i class="red_tick1 sprte1 fl"></i>Showcase your profile to prospective brides &amp; grooms.</li>
+            </ul>
+        </div>
+        <div class="spt_bx b_lrc">&nbsp;</div>
+    </div> 
+    <div class="cl21 clr"> </div>
+  
+	 <div class="suc_stry_img sprte1"><img src="~$IMG_URL`/profile/images/sugarcrm_registration/coup1.gif" style="margin:41px 0 0 50px;" /></div>
+     <div class="clr"></div>
+     <div class="photo_left mlr10">
+	     It is true that marriages are made in heaven which are solemnize on earth.We both looking for a perfect match for a long time and after a long search we found each other through jeevansathi.<img src="~$IMG_URL`/profile/images/sugarcrm_registration/curv2.gif" style="margin:0px 0 0 150px;" /><br /><strong class="b f_15">Ashish Singh</strong>
+	</div>
+    <br />
+    </div>
+</div>
+<div class="clr cl21"></div>
+<div align="center">Copyright © 2010 Jeevansathi Internet Services</div>
+<div class="clr cl21"></div>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>JeevanSathi</title>
+  <link rel="stylesheet" href="../jsadmin/jeevansathi.css" type="text/css">
+  <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+<script type="text/javascript" src = "~JsConstants::$jquery`"></script>
+  <script type="text/javascript" language="Javascript" SRC="~$SITE_URL`/min/?f=/profile/js/revampCommon_js.js"></script>
+
+<style type="text/css">
+.psts{ float:left;line-height:20px; width:65%}
+.baro{width:200px; border:1px solid #C5C5C5; line-height:20px}
+.barin{ background-color:#99CC00; background-image:url(~$PHOTO_URL`/profile/images/bar_complete.gif)}
+.space15 {line-height:15px}
+.greyele{font:normal 11px verdana,Arial; color:#666666}
+</style>
+
+<script language="JavaScript">
+function sendProfileMTRequest(checksum,SITE_URL)
+{
+        url                     = SITE_URL+"/profile/extraDetails_MT.php";
+        parameters              ="ajax_error=2&checksum="+checksum;
+        url                     =url+"?"+parameters;
+        call_after_function     ="ProfileMTRequest";
+        send_ajax_request(url,"",call_after_function);
+}
+
+function ProfileMTRequest()
+{
+        var response=result;
+        if(response =='error'){
+                msg ="Could not fetch the exact DPP match count, please try later";
+                return;
+        }else{
+                dID('exactMatch').innerHTML =response;
+                return;
+        }
+}
+</script>
+ </head>
+ ~include file="head.htm"`
+ <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width=80% align="center" cellspacing=2 cellpadding=1 border=0>
+<tr>
+<td colspan=2 align=center><br><hr></td></tr>
+<tr>
+<td colspan=2 align=center>
+
+   <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+    <td height="18" class="bgbrownL"><span class="mediumblackb">&nbsp;Profile Matches</span></td>
+   </tr>
+   </table>
+   <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+    <tr class="bggreyl">
+     <td class="mediumblack" colspan="4"><img src="/P/imagesnew/zero.gif" width="8" height="20">Best 2 "Free" profiles who have contacted you</td>
+     <td class="mediumblack" colspan="3"><img src="/P/imagesnew/zero.gif" width="8" height="20">
+	~if $max_viewed_username1 eq '' && $max_viewed_username2 eq ''`
+		N/A
+	~else`
+		<a href="/jsadmin/showstat.php?cid=~$cid`&profileid=~$profileid1`" target=_blank>~$max_viewed_username1`</a>
+		 ~if max_viewed_username1 && $max_viewed_username2`<b>and</b> ~/if` 
+		<a href="/jsadmin/showstat.php?cid=~$cid`&profileid=~$profileid2`" target=_blank>~$max_viewed_username2` </a>
+	~/if`
+     </td>
+    </tr>
+    <tr class="bggrey">
+     <td class="mediumblack" colspan="4"><img src="/P/imagesnew/zero.gif" width="8" height="20">Best Profiles which you have not yet contacted</td>
+     <td class="mediumblack" colspan="3"><img src="/P/imagesnew/zero.gif" width="8" height="20">
+   	~if $high_viewed_username|@count eq 0`       
+               N/A
+        ~else`
+		~section name=row loop=$high_viewed_username`
+			~if $high_viewed_username|@count gt 1 &&  $smarty.section.row.last`<b>and</b> ~elseif !$smarty.section.row.first`  <b>,</b> ~/if`
+
+	     <a href="/jsadmin/showstat.php?cid=~$cid`&profileid=~$high_viewed_username[row].PROFILEID`" target=_blank>~$high_viewed_username[row].USERNAME`</a>
+               
+               ~/section` 
+        ~/if`
+     </td>
+    </tr>
+    <tr class="bggreyl">
+     <td class="mediumblack" colspan="4"><img src="/P/imagesnew/zero.gif" width="8" height="20"><b>Forward Matches for DPP</b></td>
+     <td class="mediumblack" colspan="3"><img src="/P/imagesnew/zero.gif" width="8" height="20"></td>
+    </tr>
+    <tr class="bggrey">
+     <td class="mediumblack" colspan="4"><img src="/P/imagesnew/zero.gif" width="8" height="20">Exact Match</td>
+     <td class="mediumblack" colspan="3"><img src="/P/imagesnew/zero.gif" width="8" height="20"><span id="exactMatch">~$ExactMatchArrCnt`</span></td>
+    </tr>
+    <tr class="bggreyl">
+     <td class="mediumblack" colspan="4"><img src="/P/imagesnew/zero.gif" width="8" height="20">Broad Match basis only Religion + Age</td>
+     <td class="mediumblack" colspan="3"><img src="/P/imagesnew/zero.gif" width="8" height="20">~$religionAgeArrCnt`</td>
+    </tr>
+    <tr class="bggrey">
+     <td class="mediumblack" colspan="4"><img src="/P/imagesnew/zero.gif" width="8" height="20">Broad Match basis only Religion + Caste</td>
+     <td class="mediumblack" colspan="3"><img src="/P/imagesnew/zero.gif" width="8" height="20">~$religionCasteArrCnt`</td>
+    </tr>
+    <tr class="bggreyl">
+     <td class="mediumblack" colspan="4"><img src="/P/imagesnew/zero.gif" width="8" height="20">Broad Match basis only Religion + Income</td>
+     <td class="mediumblack" colspan="3"><img src="/P/imagesnew/zero.gif" width="8" height="20">~$religionIncomeArrCnt`</td>
+    </tr>
+    <tr class="bggrey">
+     <td class="mediumblack" colspan="4"><img src="/P/imagesnew/zero.gif" width="8" height="20">Broad Match basis only Religion + Education</td>
+     <td class="mediumblack" colspan="3"><img src="/P/imagesnew/zero.gif" width="8" height="20">~$religionEduArrCnt`</td>
+    </tr>
+    <tr class="bggreyl">
+     <td class="mediumblack" colspan="4"><img src="/P/imagesnew/zero.gif" width="8" height="20"></td>
+     <td class="mediumblack" colspan="3"><img src="/P/imagesnew/zero.gif" width="8" height="20"></td>
+    </tr>
+   </table>
+   <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+    <br>	
+    <tr>
+     <td align="center"> <input type="button" onclick="window.close()" name="close" value="Close"> </td>
+    </tr>
+   </table>
+	<script>
+	var SITE_URL = '~$SITE_URL`';
+	sendProfileMTRequest('~$checksum`','~$SITE_URL`');
+ 	</script>	
+</td>
+</body>
+</html>
+

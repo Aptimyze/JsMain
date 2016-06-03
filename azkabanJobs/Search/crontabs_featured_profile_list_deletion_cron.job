@@ -1,0 +1,2 @@
+type=command
+command=${php5} ${docRoot}/crontabs/featured_profile_list_deletion_cron.php

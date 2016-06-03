@@ -1,0 +1,147 @@
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title> ADDING THE MATRIMONIAL RECORDS </title>
+  <link rel="stylesheet" href="jeevansathi.css" type="text/css">
+  <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+  <script language="javascript">
+	function disab(box)
+	{
+		if(box.name=="caste")
+		{
+			document.forms[0].city.disabled=true;
+			document.forms[0].country.disabled=true;
+			document.forms[0].mtongue.disabled=true;
+		}
+		else if(box.name=="city")
+                {
+                        document.forms[0].caste.disabled=true;
+                        document.forms[0].country.disabled=true;
+                        document.forms[0].mtongue.disabled=true;
+                }
+		else if(box.name=="country")
+                {
+                        document.forms[0].caste.disabled=true;
+                        document.forms[0].city.disabled=true;
+                        document.forms[0].mtongue.disabled=true;
+                }
+		else if(box.name=="mtongue")
+                {
+                        document.forms[0].city.disabled=true;
+                        document.forms[0].country.disabled=true;
+                        document.forms[0].caste.disabled=true;
+                }
+
+	}
+  </script>
+ </head>
+<body>
+<br>
+<br>
+<form action="seo_edit_matrimonial.php" method=POST>
+<table width="100%" align=center>
+<tr  class=formhead><td align=center>ADD RECORD</td></tr>
+</table><br><br>
+<table border="0" rows=2 cellspacing="2" width="100%" cellpadding="2"  align=center>
+<tr>
+        <td class=label>FIELD</td>
+
+        <td class=fieldsnew>
+	<table >
+		<tr>
+		<td align=right><span class=fieldsnew>Caste:</span></td>
+		<td>
+			<select name="caste" class="textboxes1" onClick="javascript:disab(this)"> 
+			~section name=a loop=$REL`
+			<option value="~$REL[a].VAL`">~$REL[a].LAB`</option>
+			~/section`
+			</select>
+		</td>
+		</tr>
+
+		<tr>
+		<td align=right><span class=fieldsnew>City:</span></td>
+		<td>
+			<select name="city" class="textboxes1" onClick="javascript:disab(this)">
+			~section name=a loop=$CITY`
+			<option value="~$CITY[a].VAL`">~$CITY[a].LAB`</option>
+			~/section`
+			</select>
+		</td>
+		</tr>
+
+		<tr>
+		<td align=right><span class=fieldsnew>Country:</span></td>
+		<td>
+			<select name="country" class="textboxes1" onClick="javascript:disab(this)">
+			~section name=a loop=$CTRY`
+		        <option value="~$CTRY[a].VAL`">~$CTRY[a].LAB`</option>
+		        ~/section`
+		        </select>
+		</td>
+		</tr>
+
+		<tr>
+		<td align=right><span class=fieldsnew>Mother Tongue:</span></td>
+		<td>
+		        <select name="mtongue" class="textboxes1" onClick="javascript:disab(this)">
+		        ~section name=a loop=$MT`
+		        <option value="~$MT[a].VAL`">~$MT[a].LAB`</option>
+		        ~/section`
+		        </select>
+		</td>
+		</tr>
+	</table>
+
+	</td>
+</tr>  
+<tr>
+        <td class=label>Name</td>
+        <td class=fieldsnew>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="NAME"></td>
+</tr>
+
+<tr>
+        <td class=label>Title</td>
+        <td class=fieldsnew>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<textarea name="TITLE"></textarea></td>
+</tr>
+<tr>
+        <td class=label>Description</td>         
+	<td class=fieldsnew>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<textarea name="DESCRIPTION"></textarea></td>
+</tr>
+<tr>
+        <td class=label>Keyword</td>         
+	<td class=fieldsnew>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<textarea name="KEYWORD"></textarea></td> 
+</tr>
+<tr>
+        <td class=label>LOGO_STRING</td>
+        <td class=fieldsnew>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<textarea name="LOGO"></textarea></td>
+</tr>
+<tr>
+        <td class=label>Name Of Community</td>
+        <td class=fieldsnew>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<textarea name="NAME_OF_COM"></textarea></td>
+</tr>
+<tr>
+        <td class=label>Name Of Directory</td>
+        <td class=fieldsnew>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="NAME_OF_DIR"></td>
+</tr>
+<tr>
+        <td class=label>Source</td>
+        <td class=fieldsnew>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<textarea name="SOURCE"></textarea></td>
+</tr>
+<tr>
+        <td class=label>Caption</td>
+        <td class=fieldsnew>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<textarea name="CAPTION"></textarea></td>
+</tr>
+
+                                                                                               
+<input type="hidden" name="flag" value="ADD">
+<input type=Hidden  name=cid    value=~$cid`>
+
+</table>
+<center>
+<input type="submit" name="submit" value="Submit">
+<input type="reset" value="Reset" onClick="javascript:window.location.reload(true)">
+</center>
+</form>
+</body>
+</html>

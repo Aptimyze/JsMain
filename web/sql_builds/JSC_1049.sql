@@ -1,0 +1,22 @@
+USE newjs;
+
+UPDATE newjs.COMMUNITY_PAGES SET TITLE = 'Hindu Brides Marriage - Hindi Bride Marriage' WHERE ID = '910' LIMIT 1;
+UPDATE newjs.COMMUNITY_PAGES SET TITLE = 'Mumbai Brides Marriage - Mumbai Bride' WHERE ID = '934' LIMIT 1;
+UPDATE newjs.COMMUNITY_PAGES SET TITLE = 'Maharashtra Brides Marriage - Maharashtra Bride' WHERE ID = '996' LIMIT 1;
+UPDATE newjs.COMMUNITY_PAGES SET TITLE = 'Canada Brides Marriage - Canada Bride' WHERE ID = '990' LIMIT 1;
+UPDATE newjs.COMMUNITY_PAGES SET TITLE = 'Handicapped Brides Marriage - Handicapped Bride' WHERE ID = '1423' LIMIT 1;
+UPDATE newjs.COMMUNITY_PAGES SET TITLE = 'Divorcee Brides Marriage - Divorcee Bride' WHERE ID = '1438' LIMIT 1;
+UPDATE newjs.COMMUNITY_PAGES SET H1_TAG = 'Divorcee Brides', ALT_TAG = 'Divorcee Brides Matrimony', TITLE = 'Divorcee Brides Matrimony - Second Marriage - Second Matrimony' WHERE ID = '1436' LIMIT 1;
+UPDATE newjs.COMMUNITY_PAGES SET TITLE = 'Diabetic Brides Matrimony - Diabetic Brides', ALT_TAG = 'Diabetic Brides Matrimony' WHERE ID = '1425' LIMIT 1;
+
+UPDATE newjs.COMMUNITY_PAGES SET SMALL_LABEL=REPLACE(SMALL_LABEL,' Brides','') WHERE SMALL_LABEL LIKE '%Brides%' AND ID!=807;
+
+UPDATE newjs.COMMUNITY_PAGES SET SMALL_LABEL=REPLACE(SMALL_LABEL,' Grooms','') WHERE SMALL_LABEL LIKE '%Grooms%' AND ID!=807;
+
+UPDATE newjs.COMMUNITY_PAGES SET TITLE=CONCAT(SMALL_LABEL,' Brides Marriage - ',SMALL_LABEL,' Bride Marriage'), ALT_TAG=CONCAT(SMALL_LABEL,' Brides'), H1_TAG=CONCAT(SMALL_LABEL,' Brides') WHERE URL LIKE '%bride%' AND SMALL_LABEL!='';
+
+UPDATE newjs.COMMUNITY_PAGES SET TITLE=CONCAT(SMALL_LABEL,' Grooms Marriage - ',SMALL_LABEL,' Groom Marriage'), ALT_TAG=CONCAT(SMALL_LABEL,' Grooms'), H1_TAG=CONCAT(SMALL_LABEL,' Grooms') WHERE URL LIKE '%groom%' AND SMALL_LABEL!='';
+
+UPDATE newjs.COMMUNITY_PAGES SET LABEL_NAME=REPLACE(LABEL_NAME,' Brides',''), SMALL_LABEL=CONCAT(LABEL_NAME), TITLE=CONCAT(LABEL_NAME,' Brides Marriage - ',LABEL_NAME,' Bride Marriage'), ALT_TAG=CONCAT(LABEL_NAME,' Brides'), H1_TAG=CONCAT(LABEL_NAME,' Brides') WHERE URL LIKE '%bride%' AND SMALL_LABEL='' AND ID!=807;
+
+UPDATE newjs.COMMUNITY_PAGES SET LABEL_NAME=REPLACE(LABEL_NAME,' Grooms',''), SMALL_LABEL=CONCAT(LABEL_NAME), TITLE=CONCAT(LABEL_NAME,' Grooms Marriage - ',LABEL_NAME,' Groom Marriage'), ALT_TAG=CONCAT(LABEL_NAME,' Grooms'), H1_TAG=CONCAT(LABEL_NAME,' Grooms') WHERE URL LIKE '%groom%' AND SMALL_LABEL='' AND ID!=807;

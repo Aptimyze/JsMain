@@ -1,0 +1,253 @@
+<html>
+<head>
+<title>JeevanSathi Matrimonials - Upload Photographs</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="I/styles.php" type="text/css">
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body leftmargin="5" topmargin="5">
+<table width="760" border="0" cellspacing="0" cellpadding="0" align="center">
+  <tr>
+      <td height="702"> 
+	~$HEAD`
+	~$SUBHEADER`
+        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td colspan="3" height="5"></td><SPACER height="3" type="block"></SPACER> 
+          </tr>
+          <tr>
+            <td width="190" valign="top" class="bgyell"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td bgcolor="#FFFFFF"><div align="center">
+			~$TOPLEFT`
+		</div></td>
+              </tr>
+              <tr>
+                <td width="190">
+                        	~$LEFTPANEL`
+			</td>
+                    </tr>
+                  </table>
+                  </td>
+              </tr>
+            </table></td>
+            <TD class=small vAlign=top width=10><B>
+			<SPACER type="block" width="10"></B></TD>
+            <td width="584" valign="top">            
+			<table width="98%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><img src="~$IMG_URL`/profile/ser4_images/upload_photo.gif" width="534" height="36"></td>
+              </tr>
+              <TR>
+                <TD height=608 colSpan=15 class="mediumblack">
+                  <table width="98%"  border="0" cellspacing="2" cellpadding="0">
+                    <tr>
+                      <td width="27%" height="141" class="mediumblack"><img src="~$IMG_URL`/profile/ser4_images/photo_up_1.jpg" width="144" height="141"></td></td>
+                      <td width="73%" class="mediumblack"><img src="~$IMG_URL`/profile/ser4_images/phot_up_2.gif">
+                        <strong>Add Multiple Photos to your Profile!</font></b></strong><br>
+                        Increase <FONT color=#f35001>Response</FONT> by 10 times!, Upto 3 photographs <br>
+                        can be attached<br>
+                        <B><br>
+                        View <span class="class7"><a href="#">sample album</a></span></B></td>
+                      </tr>
+                    <tr>
+                      <td height="22" colspan="2" class="mediumblack"><table width="100%" border="0" cellpadding="0" cellspacing="0">
+                        <TR bgcolor="#cccccc">
+                          <TD height=1><SPACER height="1" type="block"></TD>
+                        </TR>
+                        <TR>
+                          <TD height=1><SPACER height="1" type="block"></TD>
+                        </TR>
+                      </table></td>
+                      </tr>
+                    <tr>
+                      <td height="97" colspan="2" class="mediumblack"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                          <td height="50%" valign="top"><table width="98%" border="0" cellpadding="3" cellspacing="3">
+                            <tr bgcolor="#6BB97B">
+                              <td colspan="2"><div align="center"><strong class="mediumblack">Current Status</strong></div></td>
+                              </tr>
+                            <tr>
+                              <td width="48%" class="mediumblack"><div align="left"><strong>Main photo </strong></div></td>
+                              <td width="52%" class="mediumblack"><div align="left">~$MAINPHOTOSTATUS`</div></td>
+                            </tr>
+                            <tr>
+                              <td class="mediumblack"><div align="left"><strong>Album photo1 </strong></div></td>
+                              <td class="mediumblack"><div align="left">~$ALBUMPHOTO1STATUS`</div></td>
+                            </tr>
+                            <tr>
+                              <td class="mediumblack"><div align="left"><strong>Album photo2</strong></div></td>
+                              <td class="mediumblack"><div align="left">~$ALBUMPHOTO2STATUS`</div></td>
+                            </tr>
+                          </table></td>
+                          <td valign="top"><table width="98%" border="0" cellpadding="2" cellspacing="2">
+                            <tr bgcolor="#999900">
+                              <td colspan="2" bgcolor="#6BB97B"><div align="center"><strong class="mediumblack">You are in control </strong></div></td>
+                              </tr>
+                            <tr>
+                              <td width="11%" class="mediumblack"><div align="center"><img src="~$IMG_URL`/profile/ser4_images/arrow_bg-white.gif" width="6" height="10"></div></td>
+                              <td width="89%" class="mediumblack">Add upto 3 photos</td>
+                            </tr>
+                            <tr>
+                              <td class="mediumblack"><div align="center"><img src="~$IMG_URL`/profile/ser4_images/arrow_bg-white.gif" width="6" height="10"></div></td>
+                              <td class="mediumblack">Decide sequence of your photos</td>
+                            </tr>
+                            <tr>
+                              <td class="mediumblack"><div align="center"><img src="~$IMG_URL`/profile/ser4_images/arrow_bg-white.gif" width="6" height="10"></div></td>
+                              <td class="mediumblack">Add/Replace Photos yourself</td>
+                            </tr>
+                            <tr>
+                              <td class="mediumblack"><div align="center"><img src="~$IMG_URL`/profile/ser4_images/arrow_bg-white.gif" width="6" height="10"></div></td>
+                              <td height="17" class="mediumblack">Delete Photo(s) instantly</td>
+                            </tr>
+                          </table></td>
+                        </tr>
+                      </table></td>
+                    </tr>
+                  </table>
+                  <br>
+                  <table width="98%"  border="0" cellspacing="2" cellpadding="0">
+                    <tr>
+                      <td height="20" bgcolor="FDF2DF" class="mediumblack"><strong>Add/Replace Photos </strong></td>
+                    </tr>
+                    <tr>
+                      <td height="17" class="mediumred">Upload Photos yourself <FONT color=#ff0000>(.jpg or .gif format only. Max size of each photo = 1 MB)</FONT></td>
+                    </tr>
+		  <form enctype="multipart/form-data" action="uploadphoto.php" method="POST">
+		~if $SHOWUPLOADPHOTO eq 'N'`
+		    <tr>
+                      <td height="102" class="mediumred"><table width="83%" border="0" align="center" cellpadding="2" cellspacing="2">
+                        <tr>
+                          <td class="mediumblack"><FONT color=#ff0000><B>Main Photo</B> is ~$MAINPHOTOSTATUS`.</FONT> 
+		~if $MAINPHOTOSTATUS eq "Under processing"`It is being screened and will be attached to your profile shortly.~/if`</td>
+                          </tr>
+                        <tr>
+                          <td class="mediumblack"><FONT color=#ff0000><B>Album Photo - 1</B> is ~$ALBUMPHOTO1STATUS`.</FONT> 
+		~if $ALBUMPHOTO1STATUS eq "Under processing"` It is being screened and will be attached to your profile shortly.~/if` </td>
+                          </tr>
+                        <tr>
+                          <td height="25" class="mediumblack"><FONT color=#ff0000><B>Album Photo - 2</B> is ~$ALBUMPHOTO2STATUS`.</FONT> 
+		~if $ALBUMPHOTO2STATUS eq "Under processing"` It is being screened and will be attached to your profile shortly.~/if` </td>
+                          </tr>
+                      </table>
+                        <br></td>
+                    </tr>
+		~else`
+                    <tr>
+                      <td height="72" class="mediumred">
+			<table width="100%" border="0" align="center" cellpadding="2" cellspacing="2">
+                        <tr>
+                          <td width="62%" class="mediumblack"><strong>~if $MAINPHOTOSTATUS eq "Attached"` Replace ~else` Add ~/if` main Photo </strong><br>
+                            (This will be visible in your profile &amp; in your album) </td>
+                          <td width="38%" colspan="2"><input name="main_photo" type="file" value= "" class="testbox"></td>
+                        </tr>
+                        <tr>
+                          <td class="mediumblack"><strong>~if $ALBUMPHOTO1STATUS eq "Attached"` Replace ~else` Add ~/if` Album photo1 </strong></td>
+                          <td><input name="album_photo_one" type="file" value= "" class="testbox"></td>
+                        </tr>
+                        <tr>
+                          <td height="25" class="mediumblack"><strong>~if $ALBUMPHOTO2STATUS eq "Attached"` Replace ~else` Add ~/if` Album photo2</strong></td>
+                          <td><input name="album_photo_two" type="file" value= "" class="testbox"></td>
+                        </tr>
+                      </table></td>
+                    </tr>
+                    <tr>
+                      <td height="20" bgcolor="FDF2DF" class="mediumblack"><strong>Choose display option</strong></td>
+                    </tr>
+                    <tr>
+                      <td height="20" class="mediumblack"><table width="100%" border="0" align="center" cellpadding="2" cellspacing="2">
+                        <tr>
+                          <td width="25"><input name="photo_display" type="radio" value="A" ~if $PHOTODISPLAY eq "A"`Checked~/if`></td>
+                          <td width="399" class="mediumblack">I want my photos to be visible to all members and to be shown in the Member's Photo Club (Recommended) </td>
+                        </tr>
+                        <tr>
+                          <td><input name="photo_display" type="radio" value="C" ~if $PHOTODISPLAY eq "C"`Checked~/if`></td>
+                          <td class="mediumblack">I want my photos to be visible only to members I contact and to members I accept.</td>
+                        </tr>
+                        <tr>
+                          <td><input name="photo_display" type="radio" value="H" ~if $PHOTODISPLAY eq "H"`Checked~/if`></td>
+                          <td class="mediumblack">I want to HIDE my photos temporarily</td>
+                        </tr>
+                        <tr>
+                          <td>&nbsp;</td>
+                          <td><input type="submit" name="Fsubmit" value="Submit" class="TextBox"></td>
+                        </tr>
+                      </table></td>
+                    </tr>
+		~/if`
+		  </form>
+	~if $SHOWALTERNATEWAY eq "Y"`
+		    <TR>
+                      <TD height=3><SPACER height="3" type="block"></TD>
+                    </TR>
+                    <tr>
+                      <td class="mediumblack"><strong>You can also post your photo to: </strong><br>
+                            JeevanSathi Internet Services <BR>
+                            B-8, Sector - 132, <BR>
+                            Noida - 201301, India. <br>
+                            <br>
+                            We will scan your photo, make a digital copy &amp; attach it with your profile. Remember to mention your username &amp; e-mail id on the reverse of your photo and clearly specify the main photo and album photos. </td>
+                      </td>
+                    </tr>
+	~/if`
+		    <TR>
+                      <TD height=3><SPACER height="3" type="block"></TD>
+                    </TR>
+                    <tr>
+                      <td height="20" class="mediumblack"><B>Delete Your Photo(s)</B></td>
+                    </tr>
+					 <TR bgcolor="#cccccc">
+                      <TD height=1><SPACER height="1" type="block"></TD>
+                    </TR>
+	~if $SHOWDELETEBUTTON eq "N"`
+                    <tr>
+                      <td height="20" class="mediumblack">
+			<table width="100%"  border="0" align="center" cellpadding="2" cellspacing="0">
+                        <tr>
+                          <td class="mediumblack">Delete Photo Option will be available only after your photo(s) are processed and attached to your profile</td>
+                        </tr>
+                        </table>
+		      </td>
+                    </tr>
+	~else`
+		    <tr>
+			<td height="20" class="mediumblack"><table width="100%" align="center" border="0" cellspacing="0" cellpadding="2">
+                        <tr>
+                      <td width="39%" class="mediumblack"><u>Delete</u> Album Photo - 1</td>
+                      <td width="61%"><input name="delete_photo" type="radio" value="1" Checked></td>
+                    </tr>
+                    <tr>
+                       <td class="mediumblack"><u>Delete</u> Album Photo - 2</td>
+                       <td><input name="delete_photo" type="radio" value="2" Checked></td>
+                    </tr>
+                    <tr>
+                       <td class="mediumblack">Delete All Photos</td>
+                       <td><input name="delete_photo" type="radio" value="All" Checked></td>
+                    </tr>
+                    <tr>
+                       <td colspan="2" class="mediumblack">Are your sure you want to <font color="#FF0000"> delete</font> your photograph(s)?</td>
+                    </tr>
+                    <tr>
+                       <td colspan="2" class="mediumblack"><table width="60%"  border="0" align="center" cellpadding="0" cellspacing="0">
+                            <tr>
+                              <td><input type="submit" name="Pdelete" value="Delete Photo" class="TextBox"></td>
+                            </tr>
+                          </table></td>
+                    </tr>
+                      </table></td>
+		   </tr>
+	
+	~/if`
+                  </table>
+            </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+  </tr>
+</table>
+<br>
+~$SUBFOOTER`
+<br>
+~$FOOT`
+</body>
+</html>

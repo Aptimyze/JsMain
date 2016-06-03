@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta http-equiv="Content-Type" content="text/xhtml+xml; charset=utf-8" />
+<title>Register free-Jeevansathi</title>
+<meta http-equiv="content-language" content="en" />
+<meta name="description" content="Register for Free in Jeevansathi.com. Create your matrimonial profile and find your dream life partner. Join Jeevansathi.com today, the leading India matrimonials website in India. Search matrimonials, matrimony profiles, NRI bride and groom from our online matrimonial and matchmaking services."/> 
+<meta name="keywords" content="Jeevansathi.com, Indian matrimony, India, matrimony, matrimonial, matrimonials, matrimony services,online matrimonials, Indian marriage, match making, matchmaking, matchmaker, match maker, marriage bureau , matchmaking services, matrimonial profiles, bride, groom, matrimony classified."/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<!-- Stylesheet start-->
+<link href="~$IMG_URL`/profile/css/~$mobilejs_css`" rel="stylesheet" type="text/css" />
+<!-- Stylesheet end-->
+<link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/apple-touch-icon-72x72-precomposed.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/apple-touch-icon-114x114-precomposed.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+<SCRIPT language="javascript">
+	function check_empty(){
+		var mobile=document.getElementById("mobile");
+		var err=0;
+		if(mobile.value=='')
+		{
+			err++;
+			document.getElementById("err").style.display="block";
+		}
+		if(!checkEmail())
+			err++;
+		if(!checkMobile())
+			err++;
+		if(!checkAge())
+			err++;
+		if(err)
+		return false;
+		else
+		return true;
+	}
+	function checkEmail(){
+		var email=document.getElementById("email");
+		var email_act=email.value;
+		var bugchars = '!#$^&*()+|}{[]?><-`%:;/,="\''; 
+		var at="@";
+		var dot=".";
+		var lat=email_act.indexOf(at);
+		var lstr=email_act.length;
+		var ldot=email_act.indexOf(dot);
+		var lastdot=email_act.lastIndexOf(dot);
+
+		function CharsInBag(s)
+		{
+		    var i;
+		    var lchar="";
+		    for (i = 0; i < s.length; i++)
+		    {
+			var c = s.charAt(i);
+				if(i>0)lchar=s.charAt(i-1);
+			if (bugchars.indexOf(c) != -1 || (lchar=="." && c=="."))
+				return false;
+		     }
+		     return true;
+		}
+
+
+			if(email_act.length!=0 &&((!(email_act.indexOf("@")!=-1 && email_act.indexOf(".")!=-1)) || CharsInBag(email_act)==false || (email_act.indexOf(at)==-1) || (email_act.indexOf(at)==-1 || email_act.indexOf(at)==0 || email_act.indexOf(at)==lstr) || (email_act.indexOf(dot)==-1 || email_act.indexOf(dot)==0 || email_act.indexOf(dot)==lstr || email_act.substring(lastdot+1)=="") || (email_act.indexOf(at,(lat+1))!=-1) || (email_act.substring(lat-1,lat)==dot || email_act.substring(lat+1,lat+2)==dot) || (email_act.indexOf(dot,(lat+2))==-1) || (email_act.indexOf(" ")!=-1))){
+			document.getElementById("err1").style.display="block";
+			return false;
+		}
+			document.getElementById("err1").style.display="none";
+			return true;
+	}
+	function checkMobile(){
+		var mobile=document.getElementById("mobile");
+		var len=mobile.value.length;
+		if(len!=0)
+			document.getElementById("err").style.display="none";
+		var numericExpression = /^[0-9]+$/;
+		if(len!=0){
+				if(!mobile.value.match(numericExpression))
+			{
+				document.getElementById("err2").style.display="block";
+				document.getElementById("err6").style.display="none";
+				return false;
+			}
+			else if(!(len>9 && len<12)){
+				document.getElementById("err2").style.display="none";
+				document.getElementById("err6").style.display="block";
+				return false;
+			}
+		}
+			document.getElementById("err2").style.display="none";
+			document.getElementById("err6").style.display="none";
+			return true;
+	}
+	function checkAge(){
+		var age=document.getElementById("age");
+		var gender_list=document.form1.gender;
+		var gender='';
+		var numericExpression = /^[0-9]+$/;
+		if(gender_list[0].checked==true)
+		   gender='M';
+		else
+			gender='F';
+		if(age.value.length!=0)
+		{
+			if(!age.value.match(numericExpression))
+			{
+				document.getElementById("err3").style.display="block";
+				document.getElementById("err4").style.display="none";
+				document.getElementById("err5").style.display="none";
+				return false;
+			}
+			else
+			{
+				if(gender=='' || gender =='F'){
+					if(age.value<18){
+						document.getElementById("err4").style.display="block";
+						document.getElementById("err3").style.display="none";
+						document.getElementById("err5").style.display="none";
+						return false;
+					}
+				}
+				else
+					if(age.value<21){
+						document.getElementById("err4").style.display="none";
+						document.getElementById("err3").style.display="none";
+						document.getElementById("err5").style.display="block";
+						return false;
+					}
+			}
+			document.getElementById("err4").style.display="none";
+			document.getElementById("err3").style.display="none";
+			document.getElementById("err5").style.display="none";
+		}
+			return true;
+	}
+</SCRIPT>
+</head>
+<body>
+<!-- Header start-->
+~$HEADER`
+<!-- Header end-->
+
+<!-- search for start-->
+<div class="existing1 fbld">Register Free</div>
+<!-- search for end-->
+
+<form name="form1" method="post" action="/jsmb/register.php" onsubmit="javascript:return check_empty();">
+	<input type="hidden" name="source" value="~$source`">
+	<ul class="formbkend" style="margin-top:5px;">
+        <li>
+          <label>Email : </label><input name="email"  id="email" type="text" ~if $EMAIL`value="~$EMAIL`"~/if`/>
+		  <div id="err1" style="~if $INVALID_EMAIL`display:block;~else`display:none;~/if`" class="rederr4"><img src="~$IMG_URL`/profile/I/mobilejs/red-error.gif"  align="absmiddle"/>Please enter email address in proper format eg: examplemail@gmail.com</div>
+        </li>
+        <li>
+		<label>Mobile<span class="fcDRed">*</span> : </label><input name="mobile" id="mobile" type="text" ~if $MOBILE`value="~$MOBILE`"~/if`  maxlength="11"/>
+		<div id="err" style="~if $BLANK_ERR`display:block;~else`display:none;~/if`" class="rederr4"><img src="~$IMG_URL`/profile/I/mobilejs/red-error.gif"  align="absmiddle"/>Please enter valid mobile number</div>
+		  <div id="err2" style="~if $INVALID_MOBILE`display:block;~else`display:none;~/if`" class="rederr4"><img src="~$IMG_URL`/profile/I/mobilejs/red-error.gif"  align="absmiddle"/>Mobile number cannot contain special characters. Only numbers are allowed</div>
+		  <div id="err6" style="~if $INVALID_MOBILE1`display:block;~else`display:none;~/if`" class="rederr4"><img src="~$IMG_URL`/profile/I/mobilejs/red-error.gif"  align="absmiddle"/>Mobile number should contain at least 10 digits.</div>
+        </li>
+         <li>
+          <label>Gender : </label><input type="radio"  ~if $GENDER eq M`checked~/if` name="gender" value='M'/>Male&nbsp;&nbsp;<input type="radio" name="gender" ~if $GENDER eq F` checked ~/if` value='F'/>Female
+        </li>
+         <li>
+          <label>Age : </label><input type="text" name="age" id="age" ~if $AGE`value="~$AGE`"~/if` style="width:30px;" maxlength="2" />&nbsp; Yrs
+		  <div id="err3" style="~if $INVALID_AGE`display:block;~else`display:none;~/if`" class="rederr4"><img src="~$IMG_URL`/profile/I/mobilejs/red-error.gif"  align="absmiddle"/>Age should be number only</div>
+		  <div id="err4" style="~if $INVALID_AGE_F`display:block;~else`display:none;~/if`" class="rederr4"><img src="~$IMG_URL`/profile/I/mobilejs/red-error.gif"  align="absmiddle"/>You must be at least 18 years old to register to this site.</div>
+		  <div id="err5" style="~if $INVALID_AGE_M`display:block;~else`display:none;~/if`" class="rederr4"><img src="~$IMG_URL`/profile/I/mobilejs/red-error.gif"  align="absmiddle"/>You must be at least 21 years old to register to this site.</div>
+        </li>
+        <li>
+		<label>Mother Tongue : </label><select name="mtongue" style="width:184px;">
+						<option value="" selected>Please Select</option>
+						<optgroup label="North">
+						<option ~if $mtongue eq '10'` selected ~/if` value="10" class="lab_nor">Hindi-Delhi</option>
+						<option ~if $mtongue eq '33'` selected ~/if` value="33">Hindi-UP</option>
+						<option ~if $mtongue eq '19'` selected ~/if` value="19">Hindi-MP</option>
+						<option ~if $mtongue eq '27'` selected ~/if` value="27">Punjabi</option>
+						<option ~if $mtongue eq '7'` selected ~/if` value="7">Bihari</option>
+						<option ~if $mtongue eq '28'` selected ~/if` value="28">Rajasthani</option>
+						<option ~if $mtongue eq '13'` selected ~/if` value="13">Haryanvi</option>
+						<option ~if $mtongue eq '14'` selected ~/if` value="14">Himachali</option>
+						<option ~if $mtongue eq '15'` selected ~/if` value="15">Kashmiri</option>
+						<option ~if $mtongue eq '30'` selected ~/if` value="30">Sindhi</option>
+						<option ~if $mtongue eq '36'` selected ~/if` value="36">Urdu</option>
+					</optgroup>
+						<optgroup label="West">
+						<option ~if $mtongue eq '20'` selected ~/if` value="20">Marathi</option>
+						<option ~if $mtongue eq '12'` selected ~/if` value="12">Gujarati / Kutchi</option>
+						<option ~if $mtongue eq '19'` selected ~/if`  value="19">Hindi-MP</option>
+						<option ~if $mtongue eq '34'` selected ~/if` value="34">Konkani</option>
+						<option ~if $mtongue eq '30'` selected ~/if` value="30">Sindhi</option>
+					</optgroup>
+						<optgroup label="South">
+						<option ~if $mtongue eq '31'` selected ~/if` value="31">Tamil</option>
+						<option ~if $mtongue eq '3'` selected ~/if` value="3">Telugu</option>
+						<option ~if $mtongue eq '16'` selected ~/if` value="16">Kannada</option>
+						<option ~if $mtongue eq '17'` selected ~/if` value="17">Malayalam</option>
+						<option ~if $mtongue eq '35'` selected ~/if` value="35">Tulu</option>
+						<option ~if $mtongue eq '36'` selected ~/if` value="36">Urdu</option>
+					</optgroup>
+						<optgroup label="East">
+						<option ~if $mtongue eq '6'` selected ~/if` value="6">Bengali</option>
+						<option ~if $mtongue eq '25'` selected ~/if` value="25">Oriya</option>
+						<option ~if $mtongue eq '5'` selected ~/if` value="5">Assamese</option>
+						<option ~if $mtongue eq '29'` selected ~/if` value="29">Sikkim/ Nepali</option>
+					</optgroup>
+						<option style="font-weight: bold;color:#000000" disabled="" value="">--------------</option>
+						<option ~if $mtongue eq '37'` selected ~/if` value="37">English</option>
+						<option ~if $mtongue eq '1'` selected ~/if` value="1">Foeign Origin</option>
+		</select>
+        </li>
+         </ul>
+		 <div class="regterms">By Clicking on register button<br />
+			 you accept <a href="~$SITE_URL`/P/disclaimer.php">terms and conditions</a></div>
+<!-- search button start-->
+<div align="left">
+<input type="submit" name="submit" value="Register" class="registerbtn fbld" style="font-size:13px;" /></div>
+<!-- search button end-->
+</form>
+<!-- Newuser/existing user starts-->
+<div class="new_exreg_btn2">
+Existing User <a href="~$SITE_URL`/P/mainmenu.php">Login</a>
+</div>
+<!-- Newuser/existing user end-->
+
+<!-- footer start-->
+~$FOOTER`
+<!-- footer end-->
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+<html>
+<head>
+<title>Jeevansathi.com - Select Branch</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+</head>
+
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+
+<br><br>
+
+<form action="admin_incentive.php" method=post>
+<table width=75% align="center">
+<tr>
+<td align="center" width=60%>Select Branch
+<select name="branch">
+	<option value="">--Select--</option>
+	~section name=brn loop=$brancharr`
+		<option value="~$brancharr[brn]`">~$brancharr[brn]`</option>
+	~/section`
+</select>
+</td>
+<td width=40% >
+<input type="submit" name="CMDSelect" value="   Go   ">
+<input type="hidden" name="name" value="~$name`">
+<input type="hidden" name="cid" value="~$cid`">
+</td>
+</tr>
+</table>
+</form>
+</body>
+</html>

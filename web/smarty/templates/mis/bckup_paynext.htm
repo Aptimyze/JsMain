@@ -1,0 +1,95 @@
+<html>
+<head>
+<title>Jeevansathi.com - MIS - Payment Wise</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br><br>
+<form name=form1 action=paynext.php method=post>
+<table width=100% align=center>
+<tr class=label align=center>
+<td>Select Financial Year
+<select name="year">
+	~section name=sec loop=$yrarr`
+		<option value="~$yrarr[sec]`" ~if $year eq $yrarr[sec]` selected ~/if`>~$yrarr[sec]`</option>
+	~/section`
+</td>
+<td>Select Group
+<select name="source">
+	<option value="">All</option>
+	~section name=sec loop=$srcarr`
+		<option value="~$srcarr[sec]`" ~if $source eq $srcarr[sec]` selected ~/if`>~$srcarr[sec]`</option>
+	~/section`
+</td>
+<td>Select City
+<select name="city">
+	<option value="">All</option>
+	~section name=sec loop=$cityarr`
+		<option value="~$cityarr[sec].VAL`" ~if $city eq $cityarr[sec].VAL` selected ~/if`>~$cityarr[sec].LABEL`</option>
+	~/section`
+</select>
+</td>
+<td>Select Community
+<select name="community">
+	<option value="">All</option>
+	~section name=sec loop=$communityarr`
+		<option value="~$communityarr[sec].VAL`" ~if $community eq $communityarr[sec].VAL` selected ~/if`>~$communityarr[sec].LABEL`</option>
+	~/section`
+</select>
+</td>
+<td width=10%>
+<input type=submit name="CMDSubmit" value="  Go  ">
+</td>
+</tr>
+</table>
+<br><br>
+<table width=100% align="center">
+<tr class="label">
+<td align="center" width=10%>Registered / Paid</td>
+<td align="center" width=10%>Registered Members</td>
+~section name=pp loop=$pmmarr`
+<td align="center" >~$pmmarr[pp]`</td>
+~/section`
+<td align="center" width=10%>Total</td>
+</tr>
+~section name=jp loop=$jmmarr`
+<tr class="fieldsnew">
+<td class="label" align="center">~$jmmarr[jp]`</td>
+<td class="blue" align="center">~$regtot[jp]`</td>
+~section name=pp loop=$pmmarr`
+	<td align="center">~$tot[jp][pp]` - ~$percent[jp][pp]`</td>
+~/section`
+<td class="label" align="center">~$jtot[jp]` - ~$jtotpercent[jp]`</td>
+</tr>
+~/section`
+<tr class=label>
+<td align=center>Total</td>
+<td align=center>~$reg_mem_tot`</td>
+~section name=pp loop=$pmmarr`
+	<td align="center">~$ptot[pp]`</td>
+~/section`
+<td align=center class=red>~$totall`</td>
+</tr>
+<input type=hidden name=checksum value="~$checksum`">
+</table>
+</form>
+<br><br>
+</body>
+</html>

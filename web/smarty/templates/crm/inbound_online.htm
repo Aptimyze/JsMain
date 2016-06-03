@@ -1,0 +1,85 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+ <head>
+<SCRIPT language="JavaScript">
+<!--
+function MM_openBrWindow(theURL,winName,features)
+{
+        window.open(theURL,winName,features);
+}
+function loadForm()
+{
+        document.form1.submit();
+}                                                                                                 
+//-->
+</script>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>JeevanSathi</title>
+  <link rel="stylesheet" href="../jsadmin/jeevansathi.css" type="text/css">
+  <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+ </head>
+ ~include file="head.htm"`
+ <br>
+ <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+  <table width=100% cellspacing="1" cellpadding='0' ALIGN="CENTER" >
+   <tr width=100% border=1>
+    <td width="30%" class="formhead" height="23"><font><b>Welcome :~$name`</b></font></td>
+    <td width="25%" class="formhead" align="center"><a href="../crm/mainpage.php?cid=~$cid`&name=~$name`">Click here to go to main page</a></td>
+    <td width="6%" class="formhead" align='RIGHT' height="23">
+        <a href="logout.php?cid=~$cid`">Logout</a>
+    </td>
+    <td width="3%" class="formhead" height="23">&nbsp;
+    </td>
+   </tr>
+  </table>
+  <table width=100% align="CENTER" >
+   <tr align="CENTER">
+    <td class="formhead" colspan="100%" height="23">
+     <b>Online Users</b>
+    </td>
+   </tr>
+   <tr align="CENTER">
+    <td class="label" width=16% height="15"><b>S.No.</b></td>
+    <td class="label" width=17% height="15"><b>Username</b></td>
+    <td class="label" width=17% height="15"><b>City</b></td>
+    <td class="label" width=17% height="15"><b>PostedBy</b></td>
+    <td class="label" width=17% height="15"><b>Status</b></td>
+    <td class="label" width=17% height="15"><b>Entry Date</b></td>
+    <td class="label" width=17% height="15"><b>Income</b></td>
+    <td class="label" width=17% height="15"><b>Family Income</b></td>
+    <td class="label" width=17% height="15"><b>Mother tongue</b></td>
+    <td class="label" width=17% height="15"><b>Phone Number</b></td>
+   </tr>
+~section name="yy" loop=$score`
+   <tr align="CENTER">
+    <td class="label" width=16% height="15"><b>~$score[yy].seq`</b></td>
+    <td class="label" width=17% height="15"><a href="#" onclick="MM_openBrWindow('~$SITE_URL`/operations.php/crmAllocation/agentAllocation?username=~$score[yy].user`&profileid=~$score[yy].pid`&cid=~$cid`&orders=Y&unfos=1','','width=800,height=600,scrollbars=yes'); return false;"><b>~$score[yy].user`</b></a></td>
+    <td class="label" width=17% height="15"><b>~$score[yy].city`</b></td>
+    <td class="label" width=17% height="15"><b>~$score[yy].relation`</b></td>
+    ~if $score[yy].status eq 1`
+    	<td class="label" width=17% height="15"><b>
+                <a href="" onClick="MM_openBrWindow('get_history.php?USERNAME=~$score[yy].user`&cid=~$cid`&GetHistory=1','','width=800,height=600,scrollbars=yes'); return false;">Viewed</a>
+    </b></td>
+    ~else`
+	<td class="label" width=23% height="15"><b>New</b></td>
+	 <td class="label" width=17% height="15"><b>~$score[yy].entry_date`</b></td>
+	 <td class="label" width=17% height="15"><b>~$score[yy].income`</b></td>
+	 <td class="label" width=17% height="15"><b>~$score[yy].family_income`</b></td>
+	 <td class="label" width=17% height="15"><b>~$score[yy].mother_tongue`</b></td>
+	<td class="label" width=17% height="15"><b>~$score[yy].mob_no`<br>~$score[yy].alternate_no` <br> ~$score[yy].res_no`  </b></td>
+    ~/if`
+   </tr>
+~/section`
+<table>
+   <tr bgcolor="#fbfbfb">
+    <td colspan="100%" height="21">
+    ~$PAGELINK`
+    </td>
+   </tr>
+</table>
+ </form>
+ <br><br>
+ ~include file="foot.htm"`
+ </body>
+</html>
+

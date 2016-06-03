@@ -1,0 +1,50 @@
+http://192.168.2.251/ruchi/advertiser/gifs/campaign-management.gif
+
+http://www.jeevansathi.com/P/topbanners/walk_generic1.gif
+
+http://192.168.2.220/bmsjs/gifs/naukri-logo.gif naukri.com
+
+http://www.webdevelopersnotes.com/tutorials/html/hat.gif
+
+http://www.jeevansathi.com/P/banners/splitwindow.gif
+
+http://www.jeevansathi.com/P/topbanners/walk_generic1.gif
+
+http://www.jeevansathi.com/profile/images/free_reg_home.gif
+
+http://www.jeevansathi.com/profile/images/free_reg_home.gif
+
+http://www.naukri.com/images/banner/gillette_trban_redhot.gif
+
+http://www.shaadi.com/wedding/images/times-logo.gif
+
+http://www.shaadi.com/wedding/images/times-logo.gif
+
+http://a1516.g.akamai.net/f/1516/1052/2h/www.1800flowers.com/800f_assets/images/flowers/images/logo2.gif
+
+http://www.jeevansathi.com/banner/naukri/shift_super.gif
+
+http://www.jeevansathi.com/P/topbanners/walk_generic.gif
+
+http://ads.webhosting.info/banners/sitebuilder-728x90-new.gif
+
+http://www.jeevansathi.com/banner/naukri/shift_super.gif
+
++
+
+	Edit 	Delete 	http://192.168.2.251/ruchi/advertiser/gifs/campaig...
+	Edit 	Delete 	http://www.jeevansathi.com/P/topbanners/walk_gener...
+	Edit 	Delete 	http://192.168.2.220/bmsjs/gifs/naukri-logo.gif
+	Edit 	Delete 	http://www.webdevelopersnotes.com/tutorials/html/h...
+	Edit 	Delete 	http://www.jeevansathi.com/P/banners/splitwindow.g...
+	Edit 	Delete 	http://www.jeevansathi.com/P/topbanners/walk_gener...
+	Edit 	Delete 	http://www.jeevansathi.com/profile/images/free_reg...
+	Edit 	Delete 	http://www.jeevansathi.com/profile/images/free_reg...
+	Edit 	Delete 	http://www.naukri.com/images/banner/gillette_trban...
+	Edit 	Delete 	http://www.shaadi.com/wedding/images/times-logo.gi...
+	Edit 	Delete 	http://a1516.g.akamai.net/f/1516/1052/2h/www.1800f...
+	Edit 	Delete 	http://www.jeevansathi.com/banner/naukri/shift_sup...
+	Edit 	Delete 	http://www.jeevansathi.com/P/topbanners/walk_gener...
+	Edit 	Delete 	http://ads.webhosting.info/banners/sitebuilder-728...
+	Edit 	Delete 	http://ads.webhosting.info/banners/sitebuilder-728...
+	Edit 	Delete 	http://www.jeevansathi.com/banner/naukri/shift_sup...

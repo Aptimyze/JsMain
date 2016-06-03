@@ -1,0 +1,82 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Admin Search : Jeevansathi.com Matrimonial Services</title>
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+<script language="javascript">
+        function MM_openBrWindow(theURL,winName,features)
+        {
+                window.open(theURL,winName,features);
+        }
+</script>
+
+</head>
+~include file="head.htm"`
+
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<form name="form1" method="post" action="del_csl_profile.php">
+<input type="hidden" name=cid value="~$cid`">
+<input type="hidden" name=name value="~$user`">
+<table width=760 cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+    <tr class="formhead">
+          <td width=55% class="formhead" border=1><font><b>Welcome : ~$user`</b></font></td>
+          <td width="35%" class="formhead" align="center"><a href="mainpage.php?name=~$user`&cid=~$cid`">Main Page</a></td>
+          <td width=10% class="formhead" border=1 align='CENTER'><a href="logout.php?cid=~$cid`">Logout</a></td>
+    </tr>
+</table>
+<br><br>
+~if $res_arr`
+<table width="80%" border="0" cellspacing="1" cellpadding="4" align="center">
+<tr class="fieldsnew">
+<td align="center">Reason: &nbsp;&nbsp;
+<select name="reason">
+<option value="duplicate">Duplicate</option>
+<option value="abuse">Abuse Issues</option>
+<option value="policy">Policy Changes</option>
+<option value="underage">Underage</option>
+<option value="unproper">Improper Username</option>
+<option value="fake">Fake</option>
+<option value="Other">Others</option>
+</td>
+</tr>
+<tr class="fieldsnew"><td>&nbsp;</td></tr>
+<tr class="fieldsnew"><td>~$err`&nbsp;</td></tr>
+<tr class="fieldsnew">
+<td align="center"><input type="submit" name="delete" value="Delete" ></td>
+</tr>
+<tr class="fieldsnew">
+<td align="center">Comments:</td>
+</tr>
+<tr class="fieldsnew">
+<td align="center"><textarea name="comments" cols="30" rows="5"></textarea></td>
+</tr>
+~section name=profiles loop=$res_arr`
+<tr class="fieldsnew">
+<td align="center"><input type="checkbox" name="users_arr[]" value="~$res_arr[profiles].pid`:~$res_arr[profiles].uname`">&nbsp;&nbsp;&nbsp;<a href="#" onclick="MM_openBrWindow('~$SITE_URL`/profile/viewprofile.php?profilechecksum=~$res_arr[profiles].checksum`&PRINT=1','','width=800,height=600,scrollbars=yes');">~$res_arr[profiles].uname`</a></td>
+</tr>
+~/section`
+<tr class="fieldsnew">
+<td align="center"><input type="submit" name="delete" value="Delete" ></td>
+</tr>
+</table>
+~else`
+<table width="70%" border="0" cellspacing="1" cellpadding="4" align="center">
+<tr class="fieldsnew"><td colspan='2' align="center"><font color="red">~$err`</font>&nbsp;</td></tr>
+<tr class="fieldsnew">
+	<td>Enter comma-seperated list of&nbsp;&nbsp;&nbsp; 
+	<select name="criteria">
+	<option value=USERNAME>Username</option>
+	<option value=PROFILEID ~if $criteria eq 'PROFILEID'` selected="selected" ~/if`>Profileid</option>
+	</select>
+	</td>
+	<td ><textarea name="list" cols="40" rows="5"></textarea></td>
+</tr>
+<tr class="fieldsnew">
+<td colspan='2' align="center"><input type="submit" name="search" value="Go" ></td>
+</tr>
+~/if`
+</table>
+</form>
+</body>
+

@@ -1,0 +1,99 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Affiliate Details : Jeevansathi.com Matrimonial Services</title>
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+</head>
+
+<body>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+<tr><td colspan=3>&nbsp;</td></tr>
+<tr><td colspan=3 class="formhead" align=center>Viewing Records for All Affiliates</td></tr>
+</table>
+<BR>
+<TABLE width=100%><TR><TD ALIGN=RIGHT class="fieldsnew"><a href="maingate.php?cid=~$cid`">Go to Main Page</a></TD></TR></TABLE>
+<br>
+<table width=100%>
+	<tr class="label">
+		<td width=6%>AFFILIATE ID</td>
+		<td width=6%>USERNAME</td>
+		<td width=6%>PAYMENT MODEL</td>
+		<td width=6%>SINCE</td>
+		<td width=6%>COST PER CLICK</td>
+		<td width=6%>CLICKS</td>
+		<td width=6% class="red">REVENUE FROM CLICKS</td>
+		<td width=6%>FREE REG.</td>
+		<td width=6%>COST PER FREE REG.</td>
+		<td width=6% class="red">REVENUE FROM FREE REG.</td>
+		<td width=6%>RATE FOR 1 TO 50 REG.</td>
+		<td width=6%>RATE FOR 51 TO 200 REG.</td>
+		<td width=6%>RATE FOR MORE THAN 200 REG.</td>
+		<td width=6%>PAID REGISTRATION</td>
+		<td width=6% class="red">REVENUE FROM PAID REG.</td>
+		<td>&nbsp;</td>
+		<td class="red">Total Amount Due</td>
+		<td class="red">Conversion%</td>
+		<td class="red">Unique IP %</td>
+	</tr>
+
+~section name=a loop=$DATA`
+<tr width=100%><td>&nbsp;</td></tr>
+~assign var="F" value=0`
+~section name=b loop=$DATA[a]`
+	<tr class="label">
+		<td width=6%>~$DATA[a][b].AFFILIATEID`</td>
+		<td width=6%> <a href="payment_mis_details.php?cid=~$cid`&id=~$DATA[a][b].AFFILIATEID`&username=~$DATA[a][b].USERNAME`&model=~$DATA[a][b].PAYMENT_MODEL`&entry_date=~$DATA[a][b].ENTRY_DT`&start_date=~$start_date`&end_date=~$end_date`">~$DATA[a][b].USERNAME`</a> </td>
+		<td width=6%>~$DATA[a][b].PAYMENT_MODEL`</td>
+		<td width=6%>~$DATA[a][b].ENTRY_DT`</td>
+
+~if $DATA[a][b].PAYMENT_MODEL eq 'C' || $DATA[a][b].PAYMENT_MODEL eq 'CP'`
+		<td width=6%>~$DATA[a][b].CLICKS_RATE`</td>
+		<td width=6%>~$DATA[a][b].COUNT_C_P`</td>
+		<td width=6% class="red">~$DATA[a][b].REV_C_P`</td>
+~else`
+		<td width=6%>&nbsp;</td>
+                <td width=6%>&nbsp;</td>
+                <td width=6%>&nbsp;</td>
+~/if`
+
+~if $DATA[a][b].PAYMENT_MODEL eq 'F' || $DATA[a][b].PAYMENT_MODEL eq 'FP'`
+		<td width=6%>~$DATA[a][b].COUNT_C_P`</td>
+		<td width=6%>~$DATA[a][b].FREE_RATE`</td>
+		<td width=6% class="red">~$DATA[a][b].REV_C_P`</td>
+~else`
+		<td width=6%>&nbsp;</td>
+                <td width=6%>&nbsp;</td>
+                <td width=6%>&nbsp;</td>
+~/if`
+		<td width=6%>~$DATA[a][b].PAID_1_TO_50`</td>
+		<td width=6%>~$DATA[a][b].PAID_51_TO_200`</td>
+		<td width=6%>~$DATA[a][b].PAID_201`</td>
+		
+		<td width=6%>~$DATA[a][b].CNT_PAID`</td>
+		<td width=6% class="red">~$DATA[a][b].REV_PAID`</td>
+~if $F eq 0`
+		<td rowspan="~$smarty.section.b.total`">&nbsp;</td>
+		<td class="red" rowspan="~$smarty.section.b.total`">~$REV[a]`</td>
+                <!--td class="red" rowspan="~$smarty.section.b.total`">~$DATA[a][b].CONVERSION`</td-->
+		~assign var="F" value=1`
+~/if`
+                <td class="red">~$DATA[a][b].CONVERSION`</td>
+                <td class="red">~$DATA[a][b].IP`</td>
+	</tr>
+~/section`
+~/section`
+</table>
+
+</body>
+</html>

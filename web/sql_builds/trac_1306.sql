@@ -1,0 +1,3 @@
+USE incentive;
+
+CREATE TABLE incentive.TEMP_CSV_FTA_TECH(PROFILEID int(11));

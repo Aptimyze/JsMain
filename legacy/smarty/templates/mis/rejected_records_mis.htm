@@ -1,0 +1,355 @@
+<html>
+<head>
+	<title>Bank Transfer Records/Confirm Client Mis</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+	<script language="javascript">
+		function enable_disable_dropdowns()
+		{
+			docF = document.form1;
+			var arr = docF['mis_type'];
+			if(arr[1].checked == true)
+			{
+				docF.agent.disabled = false;
+				docF.branch.disabled = true;
+			}
+			else if(arr[2].checked == true)
+			{
+				docF.branch.disabled = false;
+				docF.agent.disabled = true;
+			}
+			else
+			{
+				docF.agent.disabled = true;
+				docF.branch.disabled = true;
+			}
+		}
+		function validate()
+		{
+			docF = document.form1;
+			var arr = docF['mis_type'];
+			if(arr[1].checked == true)
+			{
+				if(docF.agent.value=="")
+				{
+					alert('Please select an agent');
+					return false;
+				}
+			}
+			else if(arr[2].checked == true)
+			{
+				if(docF.branch.value=="")
+				{
+					alert('Please select a city');
+					return false;
+				}
+			}
+		}
+	</script>
+</head>
+<body link="red" vlink="red" ~if !$SUBMITTED` onLoad="enable_disable_dropdowns();" ~/if`>
+	<p align="center"><img src="../profile/images/logo_1.gif" width="209" height="63" align="center" border="0"></p>
+	<table cellpadding="4" cellspacing="4" border="0" width="80%" align="center">
+		<tr class="formhead" align="center">
+			<td><b>Bank Transfer Records/Confirm Client Rejected Records MIS</b></td>
+		</tr>
+		<tr class="fieldsnew" align="center">
+			<td><a href="mainpage.php?cid=~$cid`">Mainpage</a></td>
+		</tr>
+	</table>
+	<br>
+	~if $SUBMITTED`
+		<table cellpadding="4" cellspacing="4" border="0" width="80%" align="center">
+			<tr class="formhead" align="center">
+					<td>MIS for : ~$MIS_FOR`</td>
+			</tr>
+			<tr class="formhead" align="center">
+				<td>
+					<span class="red">
+						<b>Red = Rejected</b>&nbsp;&nbsp;&nbsp;
+					</span>
+					<span class="green">
+						<b>Green = Accepted</b>&nbsp;&nbsp;&nbsp;
+					</span>
+					<span class="orange">
+						<b>Orange = Mail Sent</b>&nbsp;&nbsp;&nbsp;
+					</span>
+					<span class="blue">
+						<b>Blue = Touched</b>
+					</span>
+				</td>
+			</tr>
+		</table>
+		<br>
+		<table cellpadding="4" cellspacing="4" border="0" width="50%" align="center">
+			<tr class="formhead" align="center">
+				<td colspan="2">From Confirm Client</td>
+			</tr>
+                        ~section name=next loop=$cc_reject`
+                                <tr align="center">
+                                        <td width="80%" class="label">
+                                                ~$cc_reject[next].REASON`
+                                        </td>
+                                        <td width="20%" class="fieldsnew">
+                                                ~$cc_reject[next].COUNT`
+                                        </td>
+                                </tr>
+                        ~/section`
+                </table>
+		<table cellpadding="4" cellspacing="4" border="0" width="50%" align="center">
+			<tr class="formhead" align="center">
+				<td colspan="2">From Bank Transfer Records</td>
+			</tr>
+                        ~section name=next loop=$bt_reject`
+                                <tr align="center">
+                                        <td width="80%" class="label">
+                                                ~$bt_reject[next].REASON`
+                                        </td>
+                                        <td width="20%" class="fieldsnew">
+                                                ~$bt_reject[next].COUNT`
+                                        </td>
+                                </tr>
+                        ~/section`
+                </table>
+		<table cellpadding="4" cellspacing="4" border="0" width="100%" align="center">
+			<tr class="label">
+				<td>Day of Month</td>
+				~section name=next loop=$ddarr`
+					<td align="center" width="3%">~$ddarr[next]`</td>
+				~/section`
+				<td>Total</td>
+			</tr>
+			<tr class="label" align="center">
+				<td colspan="33">From Confirm Client</td>
+			</tr>
+			<tr>
+				<td class="label">
+					<span class="red">
+						Records Rejected
+					</span>
+				</td>
+				~section name=next loop=$ddarr`
+					<td class="fieldsnew" align="center" width="3%">
+						<span class="red">
+							<a href="rejected_records_mis.php?cid=~$cid`&Day=~$ddarr[next]`&Month=~$Month`&Year=~$Year`&mis_type=~$mis_type`&agent=~$agent`&branch=~$branch`&cc_link_clicked=1" target="_blank">~$touched_cc.REJECT[next]`</a>
+						</span>
+					</td>
+				~/section`
+				<td class="fieldsnew" align="center">
+					<span class="red">
+						~$total_cc.REJECT`
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td class="label">
+					<span class="red">
+						Records Accepted
+					</span>
+				</td>
+				~section name=next loop=$ddarr`
+					<td class="fieldsnew" align="center" width="3%">
+						<a href="accept_records.php?cid=~$cid`&Day=~$ddarr[next]`&Month=~$Month`&Year=~$Year`&mis_type=~$mis_type`&agent=~$agent`&branch=~$branch`&cc=1" target="_blank"><span class="green">~$touched_cc.ACCEPT[next]`</span></a>
+					</td>
+				~/section`
+				<td class="fieldsnew" align="center">
+					<span class="green">
+						~$total_cc.ACCEPT`
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td class="label">Total Records Touched</td>
+				~section name=next loop=$ddarr`
+					<td class="fieldsnew" align="center" width="3%">
+						<span class="blue">
+							~$touched_cc.TOTAL[next]`
+						</span>
+					</td>
+				~/section`
+				<td class="fieldsnew" align="center">
+					<span class="blue">
+						~$total_cc.TOUCHED`
+					</span>
+				</td>
+			</tr>
+			<tr class="label" align="center">
+				<td colspan="33">From Bank Transfer Record</td>
+			</tr>
+			<tr>
+				<td class="label">Records Rejected</td>
+				~section name=next loop=$ddarr`
+					<td class="fieldsnew" align="center" width="3%">
+						<span class="red">
+							<a href="rejected_records_mis.php?cid=~$cid`&Day=~$ddarr[next]`&Month=~$Month`&Year=~$Year`&mis_type=~$mis_type`&agent=~$agent`&branch=~$branch`&bt_link_clicked=1" target="_blank">~$touched_bt.REJECT[next]`</a>
+						</span>
+					</td>
+				~/section`
+				<td class="fieldsnew" align="center">
+					<span class="red">
+						~$total_bt.REJECT`
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td class="label">Records Accepted</td>
+				~section name=next loop=$ddarr`
+					<td class="fieldsnew" align="center" width="3%">
+						<a href="accept_records.php?cid=~$cid`&Day=~$ddarr[next]`&Month=~$Month`&Year=~$Year`&mis_type=~$mis_type`&agent=~$agent`&branch=~$branch`&bt=1" target="_blank"><span class="green">~$touched_bt.ACCEPT[next]`</span></a>
+					</td>
+				~/section`
+				<td class="fieldsnew" align="center">
+					<span class="green">
+						~$total_bt.ACCEPT`
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td class="label">Mail Sent Records</td>
+				~section name=next loop=$ddarr`
+					<td class="fieldsnew" align="center" width="3%">
+						<span class="orange">
+							~$touched_bt.MAIL_SENT[next]`
+						</span>
+					</td>
+				~/section`
+				<td class="fieldsnew" align="center">
+					<span class="orange">
+						~$total_bt.MAIL_SENT`
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td class="label">Total Records Touched</td>
+				~section name=next loop=$ddarr`
+					<td class="fieldsnew" align="center" width="3%">
+						<span class="blue">
+							~if $touched_bt.TOTAL[next] neq '0'`
+								~$touched_bt.TOTAL[next]`
+							~/if`
+						</span>
+					</td>
+				~/section`
+				<td class="fieldsnew" align="center">
+					~$total_bt.TOUCHED`
+				</td>
+			</tr>
+		</table>
+	~elseif $CC_LINK_CLICKED or $BT_LINK_CLICKED`
+		~if $NO_RESULT`
+			<table cellpadding="4" cellspacing="4" border="0" width="50%" align="center">
+				<tr align="center" class="fieldsnew">
+					<td>Reject Reason for records rejected before April 18th 2007 is not available.</td>
+				</tr>
+			</table>
+		~else`
+			<table cellpadding="4" cellspacing="4" border="0" width="50%" align="center">
+				~section name=next loop=$reject`
+					<tr align="center">
+						<td width="80%" class="label">
+							~$reject[next].REASON`
+						</td>
+						<td width="20%" class="fieldsnew">
+							~$reject[next].COUNT`
+						</td>
+					</tr>
+				~/section`
+			</table>
+			<table cellpadding="4" cellspacing="4" border="0" width="80%" align="center">
+				<tr class="label" align="center">
+					<td width="10%">Username</td>
+					<td width="10%">Request-ID</td>
+					<td width="10%">Rejected By</td>
+					<td width="50%">Reject Reason</td>
+					<td width="10%">Request Date</td>
+					<td width="10%">Reject Date</td>
+				</tr>
+				~section name=next loop=$details`
+					<tr class="fieldsnew" align="center">
+						<td>~$details[next].USERNAME`</td>
+						<td>~$details[next].REQUEST_ID`</td>
+						<td>~$details[next].REJECTED_BY`</td>
+						<td>~$details[next].REJECT_REASON`</td>
+						<td>~$details[next].REQ_DT`</td>
+						<td>~$details[next].REJECT_DT`</td>
+					</tr>
+				~/section`
+			</table>
+		~/if`
+	~else`
+		<form name="form1" action="rejected_records_mis.php" method="post">
+		<input type="hidden" name="cid" value="~$cid`">
+		<input type="hidden" name="user" value="~$user`">
+		<table cellpadding="4" cellspacing="4" border="0" width="30%" align="center">
+			<tr class="label" align="center">
+				<td></td>
+				<td>Month / Year</td>
+			</tr>
+			<tr class="fieldsnew" align="center">
+				<td>
+					Duration :
+				</td>
+				<td>
+					<select name="Month">
+						~section name=next loop=$mmarr`
+							<option value="~$mmarr[next].VALUE`" ~if $mmarr[next].VALUE eq $curmonth` selected ~/if`>~$mmarr[next].NAME`</option>
+						~/section`
+					</select>
+					&nbsp;/&nbsp;
+					<select name="Year">
+						~section name=next loop=$yyarr`
+							<option value="~$yyarr[next]`" ~if $yyarr[next] eq $curyear` selected ~/if`>~$yyarr[next]`</option>
+						~/section`
+					</select>
+				</td>
+			</tr>
+			<tr class="fieldsnew" align="center">
+				<td rowspan="4">Mis Type</td>
+			</tr>
+			<tr class="fieldsnew">
+				<td>
+					<label><input type="radio" name="mis_type" value="" checked onClick="enable_disable_dropdowns();">All Cases</label>
+				</td>
+			</tr>
+			<tr class="fieldsnew">
+				<td>
+					<label><input type="radio" name="mis_type" value="AGENT_WISE" onClick="enable_disable_dropdowns();">Agent Wise</label>
+				</td>
+			</tr>
+			<tr class="fieldsnew">
+				<td>
+					<label><input type="radio" name="mis_type" value="CITY_WISE" onClick="enable_disable_dropdowns();">City Wise</label>
+				</td>
+			</tr>
+			<tr class="fieldsnew" align="center">
+				<td>Agent(s):</td>
+				<td>
+					<select name="agent">
+						<option value="">Select an Agent </option>
+						~section name=next loop=$agent_arr`
+							<option value="~$agent_arr[next]`">~$agent_arr[next]`</option>
+						~/section`
+					</select>
+				</td>
+			</tr>
+			<tr class="fieldsnew" align="center">
+				<td>City:</td>
+				<td>
+					<select name="branch">
+						<option value="">Select a City</option>
+						~section name=next loop=$dep_branch_arr`
+							<option value="~$dep_branch_arr[next]`">~$dep_branch_arr[next]`</option>
+						~/section`
+					</select>
+				</td>
+			</tr>
+			<tr class="label" align="center">
+				<td colspan="2">
+					<input type="submit" name="submit" value="Go" onClick="return validate();">
+				</td>
+			</tr>
+		</table>
+		</form>
+	~/if`
+</body>
+</html>

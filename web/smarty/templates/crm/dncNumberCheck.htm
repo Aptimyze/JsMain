@@ -1,0 +1,67 @@
+<html>  
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title> ADDING NEW USER INFORMATION </title>
+	<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+	<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+</head>
+<body>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<table width=760 cellspacing="1" cellpadding='0' ALIGN="CENTER" >
+<tr width=100% border=1>
+       	<td width=30% class="formhead" height="23" align="center"><font><b>Welcome </b></font></td>
+       	<td width=30% class="formhead" align='CENTER' height="23">
+       		<a href="mainpage.php?cid=~$cid`">Mainpage</a>
+       	</td>
+       	<td width=30% class="formhead" align='CENTER' height="23">
+	       	<a href="/jsadmin/logout.php?cid=~$cid`">Logout</a>
+       	</td>
+</tr>
+</table>
+<center><h5>Check DNC Status<h5><center>
+<table width=760 ALIGN="CENTER">
+</table>
+
+<form name="insertForm" action="dncNumberCheck.php?cid=~$cid`" method=POST>
+<table border="0" cellspacing="2" cellpadding="2" width=80% align=center>
+
+~if $resultSet && $mobile`
+<tr>
+        <td class=formhead align=center>
+        ~if $dncNumberExist`
+              <font color="red"> ~$mobile` -  is a DNC Number     </font> 
+        ~else`
+                ~$mobile` - is a Non-DNC Number
+        ~/if`           
+        </td>
+</tr>
+~/if`
+</table><br>
+<table border="0" cellspacing="2" cellpadding="2" width=80% align=center>
+<tr>
+	<td class=label width=40%>
+		~if $check_mobile`<font color="red"> Phone Number</font> ~else` Phone Number ~/if`		
+	</td>
+	<td class=fieldsnew><input type=text   name=mobile  value="" maxlength='10'>  *Please enter 10 digit phone number only 
+	</td>
+</tr>
+
+<tr align=center>
+	<td class=fieldsnew colspan=100%>
+		<input type=hidden  name=cid    value=~$cid`>
+		<input type=submit  name=submit value=Submit>
+	</td>
+</tr>
+</table>
+</body>
+</html>   

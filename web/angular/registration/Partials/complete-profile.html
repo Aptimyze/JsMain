@@ -1,0 +1,118 @@
+ <div class="loader" id="pageloader"></div>
+<div class="fullwid grad_cp"   on-back="myBack" resize >
+  <div id ="outerDivIncomplete" class=" posrel">
+
+	<div class="br50p  txtc " style="height:124px;">
+		<div id ="IncompletePic" class="posabs" style="left:30%;">
+			<div class="posrel"> 
+				<div class="hold hold1">
+					<div class="pie pie1"></div>
+				</div>
+
+				<div class="hold hold2">
+					<div class="pie pie2"></div>
+				</div>
+
+				<div class="bgIncomplete"> </div>
+				<img id="profilepic" ng-src={{profilePicUrl}} class=" image_incomplete"/> </div>
+			</div>
+		</div>
+		 
+	</div>
+	 
+	<div class="txtc">	 
+	<div class="fontlig f14 color15">Hey, you look familiar</div>
+	<div class="pt7 fontlig f14 color15">Tell us a little more about yourself</div>
+  </div>
+  <!--start:div-->
+  <div id ="CompleteProfileLink" class="">
+	<div class="bg7 white lh30 fullwid dispbl txtc lh50" ng-click="onIncomplete()">Complete Profile </div>
+  </div>
+  <!--end:div-->
+  <div class="pt15 pb10 txtc white f14"  ng-click="skipIncompleteLogout()">Logout</div>
+ <!-- Modal window overlay- overlay_1 page-->
+  <ng-include id="modalView" class="" ng-class={'slide-up':bModalWindow} ng-if="bModalWindow" src="'/angular/registration/Partials/errorModalWindow.html'" scope="" onload=""></ng-include>
+</div>
+ <ng-include id="myHam" ng-show="false" src="'/angular/registration/Partials/hb.html'" scope="" onload=""></ng-include>
+<script>
+	$('body').css("background-color","#493d3f");
+	var awaitingResponseCount, visitorCount, matchalertCount, limit = "",
+	index = 0,
+            pc_temp1 = 0,
+	pc_temp2 = 0,
+	t1 = null,
+	profileCompletionCount = 0,
+	start = 0,
+	m;
+function start1() {
+	if (profileCompletionCount >= limit) {
+		clearInterval(t1);
+		return;
+	}
+	profileCompletionCount += 1;
+	pc_temp1 = pc_temp1 - 3.6;
+	if (profileCompletionCount == 50) {
+
+		clearInterval(t1);
+		t2 = setInterval("start2()", 30);
+	};
+
+
+	//$("#percent").html(profileCompletionCount + "%");
+	$(".pie2").css("-o-transform", "rotate(" + pc_temp1 + "deg)");
+	$(".pie2").css("-moz-transform", "rotate(" + pc_temp1 + "deg)");
+	$(".pie2").css("-webkit-transform", "rotate(" + pc_temp1 + "deg)");
+};
+
+
+function start2() {
+	if (profileCompletionCount >= limit) {
+		clearInterval(t2);
+		return;
+	}
+	pc_temp2 = pc_temp2 - 3.6;
+	profileCompletionCount = profileCompletionCount + 1;
+	/*if(count==300){
+		count = 0;
+		clearInterval(t2);
+		t1 = setInterval("start1()",100);
+	};*/
+	//$("#percent").html(profileCompletionCount + "%");
+	$(".pie1").css("-o-transform", "rotate(" + pc_temp2 + "deg)");
+	$(".pie1").css("-moz-transform", "rotate(" + pc_temp2 + "deg)");
+	$(".pie1").css("-webkit-transform", "rotate(" + pc_temp2 + "deg)");
+};
+
+function profile_completion(lim) {
+
+	limit = parseInt(lim);
+
+	t1 = setInterval("start1()", 30);
+
+};
+setTimeout(function(){profile_completion(limit);},300);
+if($(window).width() >$(window).height())
+{
+	$("#IncompletePic").css("left","40%");
+	$("#outerDivIncomplete").addClass("pad5Incomplete");
+	$("#outerDivIncomplete").removeClass("pad18Incomplete");
+	$("#CompleteProfileLink").removeClass("pad18Incomplete");
+	$("#CompleteProfileLink").addClass("pad5Incomplete");
+}
+else
+{
+	$("#IncompletePic").css("left","30%");
+	$("#outerDivIncomplete").addClass("pad18Incomplete");
+	$("#outerDivIncomplete").removeClass("pad5Incomplete");
+	$("#CompleteProfileLink").removeClass("pad5Incomplete");
+	$("#CompleteProfileLink").addClass("pad18Incomplete");
+}
+
+
+function setProfileCompletetion(lim)
+{
+	limit=lim;
+	
+}
+	
+</script>

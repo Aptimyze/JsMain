@@ -1,0 +1,49 @@
+<HTML>
+	<HEAD>
+	<script language="JavaScript">
+	function category_valid()
+	{
+		if(trim(document.addcategory.category.value) == "")
+		{
+        		alert("Please Enter Category");
+        		return false;
+		}
+        return true;
+	}
+                                                                                                                             
+</script>
+		<TITLE>Add a category</TITLE>
+		<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+	</HEAD>
+	<BODY>
+	<br>
+	<center>
+	<p style="font-family:Verdana; font-size:10pt; font-color:#FCFFCF; font-weight: bold">Enter New Category</p>
+	<br>
+	<table width="50%" cellspacing ="2" cellpadding= "2">
+	<form name="addcategory" method="post" action="add_wedding_category.php">
+	<tr class="formhead" height="23">
+		<td colspan="2" align="center">~$msg`</td>
+	</tr>
+	<tr class="formhead" height="23">
+		<td align="left" width="40%"><font color="grey" style="font-weight:bold">&nbsp;&nbsp;</font></td>
+		<td align="right" ><a href="javascript: history.go(-1)">Go Back</a></td>
+	</tr>
+	<tr>
+                <td class="label" align="center">
+		Enter New Category</td>
+                <td class="fieldsnew" align="left" style="border:1px solid #000080">
+                <input type = "text" name="LABEL" size="30" style ="background-color:#DEEFEF">
+        </tr>
+	<tr class="fieldsnew">
+		<td align="center">&nbsp;</td>
+		<td align="center">
+		<input type="submit" name="submit" value="Submit" onclick="return category_valid();" style="border:1px bordercolor:black  font-family: Times; font-size: 9pt; font-weight: bold; background-color:#DEEFEF">
+		<input type="hidden" name="cid" value="~$cid`">
+		</td>
+	<tr>
+	<table>
+	</center>
+	</BODY>
+</HTML>
+

@@ -1,0 +1,71 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br>
+<center>
+<h3> <font color="green"> Unique Paid Members for JeevanSathi </font> </h3>
+</center>
+<br>
+<form name="search" method="post" action="unique_paid_members.php">
+<input type="hidden" name="cid" value="~$cid`">
+<table border=0 cellspacing=0 cellpadding=0 width="50%" align='center'>
+<tr>
+	<td>
+		<select name=year>
+		~section name=sec loop=$yyarr`
+		<option value="~$yyarr[sec]`" ~if $yy eq $yyarr[sec]`selected ~/if`>~$yyarr[sec]`</option>
+		~/section`
+		</select>
+	</td>
+	<td>
+		<SELECT NAME="qtr_name">
+		<OPTION VALUE=1 ~if $qtr_name eq 1`selected ~/if`>Q1(Apr-Jun)</OPTION>
+		<OPTION VALUE=2 ~if $qtr_name eq 2`selected ~/if`>Q2(Jul-Sep)</OPTION>
+		<OPTION VALUE=3 ~if $qtr_name eq 3`selected ~/if`>Q3(Oct-Dec)</OPTION>
+		<OPTION VALUE=4 ~if $qtr_name eq 4`selected ~/if`>Q4(Jan-Mar)</OPTION>
+		<OPTION VALUE="All" ~if $qtr_name eq "All"`selected ~/if`>All(Apr-Mar)</OPTION>
+		</SELECT>
+	</td>
+	<td>
+		<input type="submit" name="CMDGo" value="Search">
+	</td>
+</tr>
+<tr><td colspan="3" height="10">&nbsp;</td></tr>
+</table>
+</form>
+<br><br>
+~if $flag eq '1'`
+	<table width=30% align=center>
+	~if $qtr_cnt neq ''`
+	<tr>
+	<tr class=formhead>
+        <td align=center>Year : &nbsp;&nbsp;~$yy` <br>Quarter  : &nbsp;&nbsp;~$qtr_name` <br>Count  : &nbsp;&nbsp;~$qtr_cnt`</td></tr>
+	~else`
+	<tr class=label>
+	<td colspan=100% align=center>&nbsp;No Records Found</td>
+	</tr>
+	~/if`
+	</table>
+~/if`
+</body>
+</html>

@@ -1,0 +1,358 @@
+<div id ="showcheckbox" style="display:none"><input type='checkbox' name='SUBMIT_SUCCESS' value='ST' ~$ST` ~if $ST eq ''` checked  ~/if` onclick="javascript:enable();change_delete_button();"> 
+<input type='checkbox' name=checkit value='dd' checked style="display:none">I want to share my success story </div>
+<div id="showstorybox" style="height:~if $ST eq 'checked'`530~else`0~/if`px;overflow:hidden"><style type="text/css">
+	
+	.wtwe{font:normal 12px verdana,Arial; color:#ffffff}
+	
+	.g22{font:normal 22px verdana,arial; color:#666666 }
+	
+	.rl{line-height:1px; background-color:#CC0000 }
+	
+	.bm{margin:0 0px 0 5px; width:97%; border:1px solid #c2c2c2}
+	
+	h2{font:bold 11px verdana,arial; color:#CC0000; margin:0 0 5px 10px}
+	
+	.blink a { color:#000000; text-decoration:none;}
+	
+	.blink a:visited{ color:#000000;text-decoration:none;}
+	
+	.wlink a { color:#ffffff; text-decoration:underline;}
+	
+	.wlink a:visited{ color:#ffffff;text-decoration:underline;}
+	
+	.sto{width:40%; padding:3px 0 10px 0}
+	
+	.w1{ width:110px}
+	
+	.w2{ width:160px}
+	
+	.bgor1{background-color:#FFE7CE; padding:5px; float:left; width:98%}
+	
+	.bgor2{background-color:#F09329; padding:4px; float:left; width:99%}
+	
+	.tc{float:right;background-color:#E7E7E7; border-bottom:1px solid #B2B2B2; width:455px;}
+	
+	.lih{background-image:url(images/livehelp_cont.gif); width:121px; height:26px; color:#FFFFFF}
+	
+	</style>
+	<div class="spacer15">&nbsp;</div>
+	<div class="btwe" style=" color:#CC0000"><b>Submit Your Success Story NOW! </b></div>
+	~if $MSG || $MSG_USR`
+	<div class="spacer15">&nbsp;</div><font color=red><b> ~if $MSG` Fields marked with * are compulsory ~/if` </b></font>
+	~/if`
+		<div class="spacer15">&nbsp;</div><font color=red>~$SUB_ERROR`</font>
+
+		~if $mix_h_error neq ''`<div class="spacer15">&nbsp;</div><font color=red>~$mix_h_error`</font>~/if`
+		~if $mix_w_error neq ''`<div class="spacer15">&nbsp;</div><font color=red>~$mix_w_error`</font>~/if`
+
+		<div class="lftflow bele" style="width:450px">
+
+			
+		<div class="lftflow w1">&nbsp;</div>
+
+		<div class="w2 lftflow"><b>Husband</b></div>
+
+		<div class="w2 lftflow"><b>Wife</b></div>
+
+		<div class="spacer">&nbsp;</div>
+
+		<div class="lftflow w1"><span id="span_name">~if $Submit neq ""` ~if ($NAME_H_ERROR neq "" ||  $NAME_W_ERROR neq "")` <font color=red> *Name</font>  ~else` *Name  ~/if` ~else` *Name ~/if`  </span></div>
+
+		<div class="lftflow w2"><input type="text" name="name_h" value="~$NAME_H`" class="textbox" >
+		~if $Submit neq ""`~if $NAME_H_ERROR neq ''`<br><font color="red">~$NAME_H_ERROR`</font>~/if`~/if`</div>
+		<div class="lftflow w2"><input type="text" name="name_w" value="~$NAME_W`" class="textbox">
+		~if $Submit neq ""`~if $NAME_W_ERROR neq ''`<br><font color="red">~$NAME_W_ERROR`</font>~/if`~/if`</div>
+		<div class="spacer">&nbsp;</div>
+
+		<div class="lftflow w1"><span id="span_username">&nbsp;~if $Submit neq ""` ~if ($USERNAME_H_ERROR neq "" ||  $USERNAME_W_ERROR neq "")`<font color=red> User Id</font> ~else`User Id ~/if` ~else` User Id ~/if`</span></div>
+
+		<div class="lftflow w2">
+		~if $GENDER eq 'M'`<input type="hidden" name="username_h" value="~$USERNAME_H`"  class="textbox">~$USERNAME_H`
+		~else`
+		<input type="text" name="username_h" value="~$USERNAME_H`"  class="textbox">~if $Submit neq ""`
+		~if $USERNAME_H_ERROR neq ''`<br><font color="red">~$USERNAME_H_ERROR`</font>~/if`~/if`
+		~/if`
+		</div>
+
+		<div class="lftflow w2">
+		~if $GENDER eq 'F'`<input type="hidden" name="username_w" value="~$USERNAME_W`">~$USERNAME_W`
+		~else`
+		<input type="text" name="username_w" value="~$USERNAME_W`"  class="textbox">~if $Submit neq ""`
+		~if $USERNAME_W_ERROR neq ''`<br><font color="red">~$USERNAME_W_ERROR`</font>~/if`~/if`
+		~/if`
+		</div>
+		<div class="spacer">&nbsp;</div>
+		<div class="lftflow w1"><span id="span_email">&nbsp;~if $Submit neq ""` ~if $EMAIL_H_ERROR neq '' || $EMAIL_W_ERROR neq ''` <font color=red>Email ID</font> ~else` Email ID ~/if` ~else` Email ID ~/if`</span></div>
+
+		<div class="lftflow w2" >
+
+		~if $GENDER eq 'M'` <input type="hidden" name="email_h" value="~$EMAIL_H`">~$EMAIL_H`
+
+		~else`
+			<input type="text" name="email_h" value="~$EMAIL_H`"  class="textbox">
+				~if $Submit neq ""`
+					~if $EMAIL_H_ERROR neq ''`<br><font color=red>~$EMAIL_H_ERROR` </font>
+					~/if`
+				~/if` 
+		~/if`
+
+		</div>
+		<div class="lftflow w2" >
+		~if $GENDER eq 'F'`<input type="hidden" name="email_w" value="~$EMAIL_W`">~$EMAIL_W`
+		~else`
+		<input type="text" name="email_w" value="~$EMAIL_W`"  class="textbox">~if $Submit neq ""`
+		~if $EMAIL_W_ERROR neq ''`<br><font color=red>~$EMAIL_W_ERROR` </font>~/if` ~/if`
+		~/if`
+		</div>
+		<div class="spacer">&nbsp;</div>
+		<div class="lftflow w1">&nbsp;</div>
+
+		<div  class="lftflow" style="width:320px " >
+			Please provide at least one of Email Id or User Id
+		
+		
+		
+		</div>
+
+
+		<div class="spacer15">&nbsp;</div><div class="spacer1" style="background-color:#E5E5E5 ">&nbsp;</div><div class="spacer15">&nbsp;</div>
+
+		<div class="spacer">&nbsp;</div>
+		
+		<div class="lftflow w1"><span id="span_address">~if $Submit neq ""` ~if $CONTACTDETAILS eq ""` <font color=red> *Contact Address</font>  ~else` *Contact Address ~/if` ~else` *Contact Address ~/if`</span></div>
+		
+		<div class="lftflow w2">
+		
+		<input type="text" name="contact_details" value="~$CONTACTDETAILS`" class="textbox" >
+		
+		</div>
+
+		<div class="spacer">&nbsp;</div>
+		
+		<div class="lftflow w1"><span id="span_date">&nbsp;~if $Submit neq ""` ~if $check_date eq "0"` <font color=red> Wedding Date</font>  ~else` Wedding Date  ~/if` ~else` Wedding Date  ~/if`</span></div>
+		
+		<div class="lftflow" style="width:320px">
+		
+		<select name="Day" class="textbox" size="1">
+		
+		<option selected value="">Day</option>
+		
+		<option value="1" >1</option>
+		
+		<option value="2" >2</option>
+		
+		<option value="3" >3</option>
+		
+		<option value="4" >4</option>
+		
+		<option value="5" >5</option>
+		
+		<option value="6" >6</option>
+		
+		<option value="7" >7</option>
+		
+		<option value="8" >8</option>
+		
+		<option value="9" >9</option>
+		
+		<option value="10" >10</option>
+		
+		<option value="11" >11</option>
+		
+		<option value="12" >12</option>
+		
+		<option value="13" >13</option>
+		
+		<option value="14" >14</option>
+		
+		<option value="15" >15</option>
+		
+		<option value="16" >16</option>
+		
+		<option value="17" >17</option>
+		
+		<option value="18" >18</option>
+		
+		<option value="19" >19</option>
+		
+		<option value="20" >20</option>
+		
+		<option value="21" >21</option>
+		
+		<option value="22" >22</option>
+		
+		<option value="23" >23</option>
+		
+		<option value="24" >24</option>
+		
+		<option value="25" >25</option>
+		
+		<option value="26" >26</option>
+		
+		<option value="27" >27</option>
+		
+		<option value="28" >28</option>
+		
+		<option value="29" >29</option>
+		
+		<option value="30" >30</option>
+		
+		<option value="31" >31</option>
+		
+		</select>
+		
+		<select name="Month" class="textbox" size="1">
+		
+		<option selected value="">Month</option>
+		
+		<option value="1" >January</option>
+		
+		<option value="2" >February</option>
+		
+		<option value="3" >March</option>
+		
+		<option value="4" >April</option>
+		
+		<option value="5" >May</option>
+		
+		<option value="6" >June</option>
+		
+		<option value="7" >July</option>
+		
+		<option value="8" >August</option>
+		
+		<option value="9" >September</option>
+		
+		<option value="10" >October</option>
+		
+		<option value="11" >November</option>
+		
+		<option value="12" >December</option>
+		
+		</select>
+		
+		<select name="Year" class="textbox" size="1">
+		
+		<option  value="">Year</option>
+		<option value="2008" selected>2008</option>
+		<option value="2007" >2007</option>
+		
+		<option value="2006" >2006</option>
+		
+		<option value="2005" >2005</option>
+		
+		<option value="2004" >2004</option>
+		
+		<option value="2003" >2003</option>
+		
+		<option value="2002" >2002</option>
+		
+		<option value="2001" >2001</option>
+		
+		<option value="2000" >2000</option>
+		
+		</select><script> 
+		if('~$Day`'!="") document.form1.Day.value='~$Day`';
+		if('~$Month`'!="") document.form1.Month.value='~$Month`';
+		if('~$Year`'!="") document.form1.Year.value='~$Year`';
+		</script>
+		
+		
+		</div>
+
+		<div class="spacer">&nbsp;</div>
+
+		<div class="lftflow w1">&nbsp;~if $PHOTO_ERROR eq 1` <font color=red>Upload Photo</font> ~else` Upload Photo ~/if` </div>
+
+		<div class="lftflow bten"  style="width:240px" >
+		
+		<input type="file" name="married_photo"><br>~if $PHOTO_ERROR eq 1`<font color="red">The photo should be in .jpg or .gif format and less than 1MB</font>~else`The photo should be in .jpg or .gif format & less than 1 MB~/if`
+		
+		</div>
+		
+		<div class="spacer15">&nbsp;</div><div class="spacer15">&nbsp;</div>
+		
+		<div class="lftflow w1">&nbsp;
+		
+		</div>
+		<div class="lftflow" style="width:320px">
+		
+		Tell us about how you met on Jeevansathi and what would be your advise for those who are still looking for their dream match on Jeevansathi</div>
+		
+		<div class="spacer1">&nbsp;</div>
+		
+		<div class="lftflow w1"><span id="span_comment">~if $Submit neq ""` ~if $STORY eq ""` <font color=red> *Your Story</font>  ~else` *Your Story  ~/if` ~else` *Your Story  ~/if`</span>
+		</div>
+		
+		<div class="lftflow" style="width:320px ">
+		
+		<textarea name="comments" cols="38" rows="5" class="textbox">~$STORY`</textarea>
+		
+		</div>
+
+		<div class="spacer">&nbsp;</div>
+		
+		<div class="lftflow w1">&nbsp;</div>
+		<span id="show_uss">
+		<div class="lftflow" style="width:320px ">
+		
+			<input type="button" name="DSSS" value="Delete and Submit Success Story" class="buttonor" onclick="javasript:{if(validate_page('D')) document.form1.submit();}" style="width:250px">
+			
+		</div>
+		</span>
+
+		<div class="spacer15">&nbsp;</div>
+</div>
+	
+</div><script>
+var i=0;
+var even=2;
+~if $ST eq 'checked'` i=530;
+~/if`
+function enable()
+{
+	var idd=document.getElementById("showstorybox");
+	if(document.form1.SUBMIT_SUCCESS.checked && document.form1.delete_reason.value=='I found my match on Jeevansathi.com')
+		even=2;
+	else
+		even=1;
+	
+	if(even==2)
+	{
+		if(i==530)
+			return false;
+		i=i+10;
+	}
+	else
+	{
+		i=i-10;
+		if(i<0)
+			return false;
+	}
+
+	if(i==-10 || i<0 ||isNaN(i))
+		i=0;
+
+	idd.style.height=i+"px";
+	
+
+setTimeout("enable()",1);
+
+}
+function disable()
+{
+	change_delete_button();
+	~if $ST neq ''`document.form1.SUBMIT_SUCCESS.checked=false;
+	~/if`
+	enable();
+	document.getElementById("showcheckbox").style.display='none';
+	
+}
+
+if("~$showstorybox`"!="")
+{
+	document.getElementById('showcheckbox').style.display='inline';
+	//document.getElementById('showstorybox').style.visibility='visible';
+}
+
+</script>

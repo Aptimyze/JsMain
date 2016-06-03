@@ -1,0 +1,9 @@
+# Find more information in http://devjs.infoedge.com/mediawiki/index.php/Social_Project#Logging
+prod:
+    enabled: on
+    level: err
+    rotate: on
+    period: 1
+    history: 10
+
+

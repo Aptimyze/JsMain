@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Untitled Document</title>
+</head>
+
+<body>
+<table width="396" cellpadding="0" cellspacing="0" style="background-image:url(~$IMG_URL`/profile/ser4_images/bgimage.gif); background-repeat:repeat-x; border:1px solid #cccccc;">
+  <tr>
+    <td><img src="~$IMG_URL`/profile/ser4_images/image1_01.gif" width="396" height="48"></td>
+  </tr>
+  <tr>
+    <td><img src="~$IMG_URL`/profile/ser4_images/image1_02.gif" width="396" height="47"></td>
+  </tr>
+  <tr>
+    <td><div align="center"></div><div align="center"><img src="~$IMG_URL`/profile/ser4_images/image1_03.gif" width="396" height="24"></div>      <div align="center"></div></td>
+  </tr>
+
+~if $mobile_error eq '1'`
+<tr><td style="padding-left:10px;padding-right:10px;"><strong>You cannot proceed since your entered mobile number has invalid characters. </strong></td></tr>
+~elseif $mobile_error eq '2'`
+<tr><td style="padding-left:10px;padding-right:10px;"><strong>You cannot proceed since your entered mobile number is invalid. </strong></td></tr>
+~elseif $edit_profile eq 'Y'`
+<tr><td style="padding-left:10px;padding-right:10px;"><strong>You cannot proceed since you have not entered your mobile number. </strong></td></tr>
+~/if`
+
+  <tr>
+    <td style="padding:10px; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:12px; line-height:1.3"><b>Jeevansathi SMS Contact:</b> It&rsquo;s now possible! A unique service for registered users of Jeevansathi.com to send initial contact through SMS to the profiles they are interested in, a specialized, fast and convenient method to send message(s) and express your interest instantly. All you need to do is follow these simple steps and SMS your way in to the hearts of your dream life-partner.</td>
+  </tr>
+  <tr>
+    <td style="padding:10px; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:12px; line-height:1.3; background-color:#fff7e3;"><b>Process to Initiate SMS Contact<br>
+    </b>sms <b>CTC ~$RECEIVER`</b> from your Mobile no.
+    ~if $edit_profile neq 'Y'`
+    ~$MOBILE` to <b>676762</b><br>
+    ~else`
+       to 676762 <br><b> Please enter your mobile no below to proceed further</b> <br>
+       <form name="form1" method="post" action="chat_by_sms.php">
+        &nbsp;<input type="text" name="mobile"  value="~$mobile`" class="testbox">
+	<input type=hidden name="recid" value=~$recid`>
+	<input type=hidden name="username" value='~$username`'>
+	<input type=hidden name="chat_form_mobile" value='1'>
+	<input type=hidden name="profileid" value='~$profileid`'>
+	<input type=hidden name="checksum" value='~$checksum`'>
+	<br><input type="submit" name="Submit" value="Submit" class="button1">
+    ~/if`
+      <p>Your initial expression of interest will be delivered on the mobile of the person you have chosen. Once the user accepts your contact invitation, you will be informed back by a return sms or an e-mail.<br>
+    </p></td>
+  </tr>
+  <tr>
+    <td style="padding:10px; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:11px; line-height:1.3"><b>SMS Contact Service Terms and Conditions</b><br>
+      1.Contacts can be initiated only by registered users of Jeevansathi.com<br>
+    2.Jeevansathi.com does not guarantee a contact or reply from the other user.</td>
+  </tr>
+  <tr>
+    <td style="padding-left:10px; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:12px; line-height:1.3"><div align="left"></div></td>
+  </tr>
+</table>
+</body>
+</html>

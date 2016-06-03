@@ -1,0 +1,39 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>JeevanSathi.com - JSADMIN</title>
+  <link rel="stylesheet" href="jeevansathi.css" type="text/css">
+  <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+</head>
+<body>
+<table border="0" cellspacing="2" cellpadding="2" align=center width=80%>
+<tr> <td colspan=100% class=formhead align=center><a href="managebackend.php?cid=~$cid`">Main Page</a> </td></tr>
+</table>
+<br>
+<table border="0" cellspacing="2" cellpadding="2" align=center width=80%>
+<tr class=label align=center>
+	<td>ID</td>
+	<td>VALUE</td>
+	<td>LABEL</td>
+	<td>ACTIVE</td>
+	<td>EDIT</td>
+	<td>ACTIVATE / DEACTIVATE</td>
+</tr>
+~section  name=show  loop=$priv`
+<tr align=center class=fieldsnew>   
+	<td>~$smarty.section.show.index_next`</td>
+	<td>~$priv[show].VALUE`</td>
+	<td align=left>~$priv[show].LABEL`</td>
+	<td>~$priv[show].ACTIVE`</td>
+	<td><a href=priv_edit.php?cid=~$cid`&ID=~$priv[show].ID`>Edit</a></td>
+	<td>
+	~if $priv[show].ACTIVE eq 'N'`
+		<a href=priv_edit.php?cid=~$cid`&ID=~$priv[show].ID`&act=Y>Activate</a>
+	~else`
+		<a href=priv_edit.php?cid=~$cid`&ID=~$priv[show].ID`&act=N>De-Activate</a></font></td>
+	~/if`
+	</td>
+</tr>
+~/section`
+</body>
+</html>

@@ -1,0 +1,183 @@
+<html>
+<head>
+    <title>Jeevansathi.com - MIS</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <link rel="stylesheet" href="jeevansathi.css" type="text/css">
+    <style>
+        DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+    </style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<!--
+<table border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+-->
+<br><br>
+
+~if $flag eq '1'`
+<table width="100%" align="center" border=0 cellspacing=4 cellpadding=5>
+    <tr class="formhead" width="100%"><td align="center" colspan=14><a href="gateway_wise.php?checksum=~$checksum`">MAIN PAGE</a></td></tr>
+    <tr class="formhead">
+        <td colspan=100% align="center">Results for Gateway ~$gateway`</td>
+    </tr>
+    <tr class="formhead">
+        <td colspan=100% align="center">&nbsp;Duration : ~$date1` to ~$date2`</td>
+    </tr>
+    <tr class="formhead">
+        <td align="center">&nbsp;Gateway</td>
+        <td align="center">&nbsp;Total Collection For Dollars($)</td>
+        <td align="center">&nbsp;Converted Rs Value </td>
+        <td align="center">&nbsp;Total Collection in Rs</td>
+    </tr>
+    ~if $gateway eq 'ALL'`
+    ~section name=co loop=$arr_gate`
+    <tr class="formhead">
+        <td align="center">&nbsp;~$gateways[co]`</td>
+        <td align="center">&nbsp;~$arr_gate[co].DOL`</td>
+        <td align="center">&nbsp;~$arr_gate[co].CON`</td>
+        <td align="center">&nbsp;~$arr_gate[co].RS`</td>
+    </tr>
+
+    ~/section`
+
+    ~section name=co loop=$total_paid_gateway`
+    <tr class="formhead">
+        <td align="center">&nbsp;~$gateways[co]`</td>
+        <td align="center">&nbsp;~$total_dollars_gateway[co]`</td>
+        <td align="center">&nbsp;~$total_dol_amount_gateway[co]`</td>
+        <td align="center">&nbsp;~$total_rs_amount_gateway[co]`</td>
+    </tr>
+    ~/section`
+    ~/if`
+
+    <tr class="formhead">
+        <td align="center">&nbsp;~$gateway`</td>
+        <td align="center">&nbsp;~$total_dollars`</td>
+        <td align="center">&nbsp;~$total_dol_amount`</td>
+        <td align="center">&nbsp;~$total_rs_amount`</td>
+    </tr>
+</table>
+<br>
+
+<table width=100% align=center>
+    <tr class=label>
+        <td align="center" width=10%>&nbsp;Date</td>
+        <!--td align=center width=75 >&nbsp;Profileid</td-->
+        <td align="center" width=15%>&nbsp;Username</td>
+        <td align="center" width=15%>&nbsp;OrderId</td>
+        <td align="center" width=15%>&nbsp;Amount</td>
+        <td align="center" width=15%>&nbsp;Gateway</td>
+        <td align="center" width=15%>&nbsp;Invoice No</td>
+    </tr>
+</table>
+~section name=sec loop=$arr`
+<table width=100% align="center">
+    <tr class=fieldsnew>
+        <td align="center" width=10%>&nbsp;~$arr[sec].entry_dt`</td>
+        <!--td align=left   width=75>&nbsp;~$arr[sec].profileid`</td-->
+        <td align="center" width=15%>&nbsp;~$arr[sec].username`</td>
+        <td align="center" width=15%>&nbsp;~$arr[sec].ordno`</td>
+        <td align="center" width=15%>&nbsp;~$arr[sec].type` &nbsp;  ~$arr[sec].amt_topay`</td>
+        <td align="center" width=15%>&nbsp;~$arr[sec].gateway`</td>
+        <td align="center" width=15%>&nbsp;~$arr[sec].invoice_no`</td>
+    </tr>
+</table>
+~/section`
+<br>
+~else`
+
+~if $flag eq '0'`
+<div style="visibility:visible; color:#FF0000; margin:0 auto !important;right:0px;left:135px;top:0px;">
+<span>Invalid Date range selected, start date should be lesser than the end date.</span>&nbsp
+<span>Select proper date range and try again !</span>
+</div>
+~/if`
+
+<h4><center> Please don't give a range more than one month</center></h4>
+<form method=post action="gateway_wise.php">
+    <table width=80% border=0 align="center" cellpadding=5>
+        <tr>
+            <td colspan=2>FROM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <select name="day">
+                    ~section name=dd loop=$ddarr`
+                    <option value=~$ddarr[dd]`>~$ddarr[dd]`</option>
+                    ~/section`
+                </select>
+                <select name="month">
+                    ~section name=mon loop=$mmarr`
+                    <option value=~$mmarr[mon]`>~$mmarr[mon]`</option>
+                    ~/section`
+                </select> - 
+                <select name="year">
+                    ~section name=yr loop=$yyarr`
+                    <option value=~$yyarr[yr]`>~$yyarr[yr]`</option>
+                    ~/section`
+                </select>&nbsp;Year
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan=2>TO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <select name="day2">
+                    ~section name=dd loop=$ddarr`
+                    <option value=~$ddarr[dd]`>~$ddarr[dd]`</option>
+                    ~/section`
+                </select>
+                <select name="month2">
+                    ~section name=mon loop=$mmarr`
+                    <option value=~$mmarr[mon]`>~$mmarr[mon]`</option>
+                    ~/section`
+                </select> -
+                <select name="year2">
+                    ~section name=yr loop=$yyarr`
+                    <option value=~$yyarr[yr]`>~$yyarr[yr]`</option>
+                    ~/section`
+                </select>&nbsp;Year
+            </td>
+        </tr>
+
+        <tr>
+            <td><br> GATEWAY <br><br>
+                <select name="gateway">
+                    <option value="ALL">All</option>
+                    <option value="TRANSECUTE">Transecute</option>
+                    <option value="CCAVENUE">CcAvenue</option>
+                    <option value="PAYU">PayU</option>
+                    <option value="PAYPAL">Paypal</option>
+                    <option value="PAYSEAL">Payseal</option>
+                    <option value="ITZ">ITZ</option>
+                    <option value="PAYMATE">Paymate</option>
+                    <option value="PAYTM">PayTM</option>
+                    <option value="APPLEPAY">Apple Pay</option>
+                </select>
+                <br></td>
+            </tr>
+
+            <!--  New code for XLS format type Start -->
+            <tr>
+                <td >Report Format &nbsp;&nbsp;
+                    <input type="radio" name="report_format" value="HTML" checked>HTML
+                    <input type="radio" name="report_format" value="XLS">XLS
+                </td>
+            </tr>
+            <!--  New code for XLS format type Ends -->
+
+            <tr>
+                <input type="hidden" name="checksum" value=~$checksum`>
+                <td align=center><br><input type="submit" name="CMDGo" value="     Go     "></td>
+            </tr>
+        </table>
+    </form>
+    ~/if`
+</body>
+</html>

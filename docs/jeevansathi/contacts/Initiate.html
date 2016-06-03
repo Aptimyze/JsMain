@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class Initiate</title>
+			<link rel="stylesheet" href="../../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class Initiate</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+													<a href="#sec-vars">Vars</a>
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Initiate action class</p>
+<p class="description"><p>The <a href="../../default/ContactFactory.html">ContactFactory</a> uses this class to instantiate it's own  and it's siblings <a href="../../jeevansathi/contacts/Accept.html">Accept</a>, <a href="../../default/Decline.html">Decline</a>,  <a href="../../default/Reminder.html">Reminder</a>, <a href="../../default/CancelContact.html">CancelContact</a>, <a href="../../default/WriteMessage.html">WriteMessage</a>  and <a href="../../jeevansathi/contacts/CancelAccept.html">CancelAccept</a> class</p><p>This class is responsible to handle initiate contact event between two users.</p></p>
+	<ul class="tags">
+				<li><span class="field">author:</span> Ankit Garg &lt;<a href="mailto:ankit.garg@jeevansathi.com">ankit.garg@jeevansathi.com</a>&gt;</li>
+				<li><span class="field">extends:</span> ContactEvent</li>
+			</ul>
+		<p class="notes">
+			Located in <a class="field" href="_contacts---Initiate.class.php.html">/contacts/Initiate.class.php</a> (line <span class="field">25</span>)
+		</p>
+		
+				
+		<pre><a href="../../default/ContactEvent.html">ContactEvent</a>
+   |
+   --Initiate</pre>
+	
+			</div>
+</div>
+
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																		<a href="#sec-vars">Vars</a>
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																				
+												<div class="method-definition">
+											<span class="method-result">Initiate</span>
+										<a href="#__construct" title="details" class="method-name">__construct</a>
+											(<span class="var-type"><a href="../../jeevansathi/contacts/ContactHandler.html">ContactHandler</a></span>&nbsp;<span class="var-name">$contactHandler</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setPostComponent" title="details" class="method-name">setPostComponent</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setPreComponent" title="details" class="method-name">setPreComponent</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#submit" title="details" class="method-name">submit</a>
+										()
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+										<h4>Inherited Variables</h4>
+				<A NAME='inherited_vars'><!-- --></A>
+									<p>Inherited from <span class="classname"><a href="../../default/ContactEvent.html">ContactEvent</a></span></p>
+					<blockquote>
+													<span class="var-title">
+								<span class="var-name"><a href="../../default/ContactEvent.html#var$component">ContactEvent::$component</a></span><br>
+							</span>
+													<span class="var-title">
+								<span class="var-name"><a href="../../default/ContactEvent.html#var$contactHandler">ContactEvent::$contactHandler</a></span><br>
+							</span>
+													<span class="var-title">
+								<span class="var-name"><a href="../../default/ContactEvent.html#var$errorHandlerObj">ContactEvent::$errorHandlerObj</a></span><br>
+							</span>
+											</blockquote> 
+										
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-vars">Vars</a>
+																	<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+
+<a name="method__construct" id="__construct"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number">49</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Constructor for this class.</p>
+<p class="description"><p>Function to initialize member variables for this class.  This also calls the parent constructor of <a href="../../default/ContactEvent.html">ContactEvent</a> class.</p><p></p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Initiate</span>
+		<span class="method-name">
+			__construct
+		</span>
+					(<span class="var-type"><a href="../../jeevansathi/contacts/ContactHandler.html">ContactHandler</a></span>&nbsp;<span class="var-name">$contactHandler</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"><a href="../../jeevansathi/contacts/ContactHandler.html">ContactHandler</a></span>
+				<span class="var-name">$contactHandler</span>			</li>
+				</ul>
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../../default/ContactEvent.html#method__construct">ContactEvent::__construct()</a></dt>
+						<dd>Constructor for this class.</dd>
+					</dl>
+			
+	</div>
+<a name="methodsetPostComponent" id="setPostComponent"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setPostComponent</span> (line <span class="line-number">83</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Sets Post-action values which will be displayed</p>
+<p class="description"><p>This function sets all the values that will be displayed after the action is done.  This instantiates the object of <a href="../../default/PostComponent.html">PostComponent</a> class.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setPostComponent
+		</span>
+				()
+			</div>
+	
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../../default/ContactEvent.html#methodsetPostComponent">ContactEvent::setPostComponent()</a></dt>
+						<dd>Sets details required to display Post Component</dd>
+					</dl>
+			
+	</div>
+<a name="methodsetPreComponent" id="setPreComponent"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setPreComponent</span> (line <span class="line-number">70</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Sets Pre-action values which will be displayed.</p>
+<p class="description"><p>This function sets all the values that will be displayed before the action is done.  This instantiates the object of <a href="../../default/PreComponent.html">PreComponent</a> class.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setPreComponent
+		</span>
+				()
+			</div>
+	
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../../default/ContactEvent.html#methodsetPreComponent">ContactEvent::setPreComponent()</a></dt>
+						<dd>Sets details required to display Pre Component</dd>
+					</dl>
+			
+	</div>
+<a name="methodsubmit" id="submit"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">submit</span> (line <span class="line-number">108</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Performs submit action related to this class.</p>
+<p class="description"><p>This performs the submit action for Initiate class. This updates various  <ol><li>stores</li><li>JsMemcache</li></ol></p><p></p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+				<li><span class="field">uses:</span> _submitTemporaryContacts() - To submit contacts into NEWJS_CONTACTS_TEMP
+                                    when the initiator profile is in underscreening state.</li>
+				<li><span class="field">uses:</span> _searchContactFlowTracking() - To update MIS_SEARCH_CONTACT_FLOW_TRACKING_NEW
+                                    to keep a track from where EOI is done.</li>
+				<li><span class="field">uses:</span> _addContactHitLimit() - To update MIS_CONTACTS_FAULT_MONITOR
+                                    when contact limit is hit.</li>
+				<li><span class="field">uses:</span> <a href="../../default/ContactEvent.html#methodsendMail">ContactEvent::sendMail()</a> - To send mail in whatever cases.</li>
+				<li><span class="field">uses:</span> <a href="../../default/ContactEvent.html#methodhandleMessage">ContactEvent::handleMessage()</a> - Handles message that is initiated by sender.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			submit
+		</span>
+				()
+			</div>
+	
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../../default/ContactEvent.html#methodsubmit">ContactEvent::submit()</a></dt>
+						<dd>perform submit action, updates memcache and contacts table</dd>
+					</dl>
+			
+	</div>
+							<h4>Inherited Methods</h4>
+				<a name='inherited_methods'><!-- --></a>	
+									<!-- =========== Summary =========== -->
+					<p>Inherited From <span class="classname"><a href="../../default/ContactEvent.html">ContactEvent</a></span></p>
+					<blockquote>
+													<span class="method-name"><a href="../../default/ContactEvent.html#method__construct">ContactEvent::__construct()</a></span><br>
+													<span class="method-name"><a href="../../default/ContactEvent.html#methodgetComponent">ContactEvent::getComponent()</a></span><br>
+													<span class="method-name"><a href="../../default/ContactEvent.html#methodhandleMessage">ContactEvent::handleMessage()</a></span><br>
+													<span class="method-name"><a href="../../default/ContactEvent.html#methodmaintainLog">ContactEvent::maintainLog()</a></span><br>
+													<span class="method-name"><a href="../../default/ContactEvent.html#methodsendMail">ContactEvent::sendMail()</a></span><br>
+													<span class="method-name"><a href="../../default/ContactEvent.html#methodsetPostComponent">ContactEvent::setPostComponent()</a></span><br>
+													<span class="method-name"><a href="../../default/ContactEvent.html#methodsetPreComponent">ContactEvent::setPreComponent()</a></span><br>
+													<span class="method-name"><a href="../../default/ContactEvent.html#methodsubmit">ContactEvent::submit()</a></span><br>
+													<span class="method-name"><a href="../../default/ContactEvent.html#methodupdateProfileSeen">ContactEvent::updateProfileSeen()</a></span><br>
+											</blockquote>
+										
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Mon, 03 Dec 2012 19:38:00 +0530 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.4</a>
+	</p>
+	</div></body>
+</html>

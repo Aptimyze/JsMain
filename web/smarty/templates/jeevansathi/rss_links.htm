@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+<title>A collection of RSS fields from Jeevansathi matrimonials</title>
+<link rel="stylesheet" href="http://www.jeevansathi.com/P/I/styles.php" type="text/css">
+<link rel="stylesheet" href="http://www.jeevansathi.com/P/IN/styles.php" type="text/css">
+~section name=co loop=$FEED_ARR`
+<link rel="alternate" type="application/rss+xml" title="~$TITLE_ARR[co]`" href="~$SITE_URL`/RSS/~$FEED_ARR[co]`">
+~/section`
+<meta name="description" content="Jeevansathi Matrimonials - Indian Matrimonial - No.1 matrimonial site with all matrimonials. Add your matrimonial profile NOW! & Contact Partners for FREE!">
+<meta name="keywords" content="matrimonial, Indian matrimonials, matrimonials for India, marriage website, partner search, matrimonials for indians, free matrimonial site, hindu matrimonial, muslim matrimonials, sikh, christians, marriage, weddings, indian matrimonial site, gujarati, marathi, punjabi, rajasthani, sindhi, bengali, kannada, malayalee, tamil, telugu, brahmin, kayastha, jain, marwari">
+~include file="../jeevansathi/google_analytics.htm"`</head>
+
+<body>
+~$HEAD`
+<br>
+<table width="80%"  border="0" cellpadding="4" cellspacing="0">
+ <tr>
+  <td class="bigblack"><p>Welcome to the whole new internet experience with <i><b>Jeevansathi.com RSS (Really Simple Syndication)</b></i> .<br>
+   <br>
+   If you were to pick between coming to Jeevansathi.com and letting Jeevansathi.com come to you, what would you choose ?<br>
+   <br>
+   For those who prefer the latter, RSS / XML channels are available free for individuals. These RSS fields can be used / added to your Yahoo, Gmail mail accounts. You can also add these channels to other RSS Readers. These selected channels will give you updated matrimonial channels daily.</p>
+  </td>
+ </tr>
+</table>
+<table width="80%"  border="0" cellspacing="0" cellpadding="4">
+ <tr>
+  <td class="bigblack"><i>Select and copy the url of the matrimonial channel links below and paste them into your RSS Reader and you are done. </i></td>
+ </tr>
+</table>
+<br>
+<table width="70%"  border="0" cellspacing="1" cellpadding="0" bgcolor="#FFDC9C">
+ <tr>
+  <td>
+   <table width="100%"  border="0" cellspacing="0" cellpadding="4"  class="bigblack" bgcolor="#FFF6E6">
+   <tr bgcolor="#FFEDCE">
+    <td><img src="~$IMG_URL`/profile/ser4_imagesnew/zero.gif" width="100" height="1"></td>
+    <td><img src="~$IMG_URL`/profile/ser4_imagesnew/zero.gif" width="200" height="1"><br><b>Name</b></td>
+    <td width="100%"><b>PageURL</b></td>
+   </tr>
+  ~section name=co loop=$FEED_ARR` 
+   <tr>
+    <td height="25"><a href="~$SITE_URL`/RSS/~$FEED_ARR[co]`"><img src="~$IMG_URL`/profile/ser4_images/xmlcode.gif" width="74" height="16" border="0"></a></td>
+    <td><b>~$NAME_ARR[co]`</b></td>
+    <td class="bluelinku"><A href="~$SITE_URL`/RSS/~$FEED_ARR[co]`">~$SITE_URL`/RSS/~$FEED_ARR[co]`</A></td>
+   </tr>
+   ~/section`
+  </table>
+  </td>
+ </tr>
+</table>
+<br>
+<br>
+<table width="80%"  border="0" cellspacing="0" cellpadding="4">
+ <tr>
+  <td class="bigblack"><i>Select and copy the url of the matrimonial channel links above and paste them into your RSS Reader and you are done. </i></td>
+ </tr>
+</table>
+<br>
+~$SUBFOOTER`
+~$FOOT`
+</body>
+</html>

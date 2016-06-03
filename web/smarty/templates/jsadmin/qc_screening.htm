@@ -1,0 +1,100 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<!--
+<table border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+-->
+<br><br>
+~if $flag eq '1'`
+ <table width="50%" align="center" border=0 cellspacing=4 cellpadding=5>
+        <tr class="formhead" width="100%"><td align="center" colspan=14><a href="qc_screening.php?checksum=~$checksum`">MAIN PAGE</a></td></tr>
+        <tr class="formhead">
+        <td colspan=100% align="center">Results for Screening&nbsp;&nbsp;(~$date1`&nbsp;&nbsp;to &nbsp;&nbsp;~$date2`)</td>
+        </tr>
+
+<tr class=label>
+	<td align=center >&nbsp;Screened By</td>
+	<td align=center >&nbsp;count</td>
+	<td align=center >&nbsp;Not-Graded</td>
+</tr>
+~section name=sec loop=$arr`
+<tr class=fieldsnew>
+	<td align=center >&nbsp;<a href='qc_details.php?date1=~$date1`&date2=~$date2`&cid=~$checksum`&screener=~$arr[sec].screened_by`'>~$arr[sec].screened_by`</a></td>
+	<td align=center>&nbsp;~$arr[sec].cnt`</td>
+	<td align=center>&nbsp;~$arr[sec].not_graded`</td>
+</tr>
+~/section`
+</table>
+<br>
+~else`
+
+<h4><center> Please select a date range for profiles screened</center></h4>
+	<form method=post action="qc_screening.php">
+	<table width=80% border=0 align="center" cellpadding=5>
+	<tr>
+	<td colspan=2>FROM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<select name="day">
+        ~section name=dd loop=$ddarr`
+                <option value=~$ddarr[dd]`>~$ddarr[dd]`</option>
+        ~/section`
+        </select>
+	<select name="month">
+        ~section name=mon loop=$mmarr`
+                <option value=~$mmarr[mon]` ~if $mm eq $mmarr[mon]` selected ~/if`>~$mmarr[mon]`</option>
+        ~/section`
+        </select> - 
+	<select name="year">
+	~section name=yr loop=$yyarr`
+        	<option value=~$yyarr[yr]` ~if $yy eq $yyarr[yr]` selected ~/if`>~$yyarr[yr]`</option>
+        ~/section`
+        </select>&nbsp;Year
+	</td>
+	</tr>
+	 
+	<tr>
+        <td colspan=2>TO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<select name="day2">
+        ~section name=dd loop=$ddarr`
+                <option value=~$ddarr[dd]` ~if $dd eq $ddarr[dd]` selected ~/if`>~$ddarr[dd]`</option>
+        ~/section`
+        </select>
+        <select name="month2">
+        ~section name=mon loop=$mmarr`
+                <option value=~$mmarr[mon]` ~if $mm eq $mmarr[mon]` selected ~/if`>~$mmarr[mon]`</option>
+        ~/section`
+        </select> -
+        <select name="year2">
+        ~section name=yr loop=$yyarr`
+                <option value=~$yyarr[yr]` ~if $yy eq $yyarr[yr]` selected ~/if`>~$yyarr[yr]`</option>
+        ~/section`
+        </select>&nbsp;Year
+        </td>
+	</tr>
+
+	<tr>
+	<input type="hidden" name="checksum" value=~$checksum`>
+	<td align=center><br><input type="submit" name="CMDGo" value="     Go     "></td>
+	</tr>
+	</table>
+	</form>
+~/if`
+</body>
+</html>

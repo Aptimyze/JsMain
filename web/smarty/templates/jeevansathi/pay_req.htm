@@ -1,0 +1,187 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	<title>Jeevansathi Matrimonials - Online Order</title>
+	<link rel="stylesheet" href="/profile/css/searchstyle.css" type="text/css">
+                <link rel="stylesheet" href="/profile/css/~$comm_style_css`" type="text/css">
+	<style type="text/css">
+		.pghd{float:left; width:99% }
+		.r14{font:bold 14px verdana,Arial; color:#CC0000; padding-top:5px}
+		.bric{ color:#CC6600}
+		.cols{width:20%; float:left; line-height:20px;font:normal 11px verdana,arial;}
+		.orhd{font:normal 14px Verdana,arial; color:#FF9900}
+		.co1{float:left; width:30%; text-align:right; margin-right:10px;}
+		.co2{float:left; width:1%}
+		.co3{float:left; width:60%}
+		.co4{float:left; width:30%; color:#8A8508}
+		.blk1{border:1px solid #FFF799; margin-top:20px}
+		.blk2{background-color:#FDFFDA; padding:20px 5px 20px 5px; color:#ABA000;}
+		.blk3{float:left;border:1px solid #FFF799; margin-top:20px 0px 0px 18px; background-color:#FDFFDA; width:75%;}
+		.blk4{background-color:#EDEFC2; width:100%; padding:3px 0 3px 0;}
+		.b4lft{float:left; width:100%; margin-left:5px}
+		.b4rt{width:20%;float:left}
+		.fldblk{ float:left; width:80%; margin:10px}
+	</style>
+	<script language="javascript">
+	<!--
+	function MM_openBrWindow(theURL,winName,features)
+	{
+		window.open(theURL,winName,features);
+	}
+	//-->
+	</script>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body>
+<DIV id="dhtmltooltip" class="ttip"></DIV>
+<SCRIPT language=JavaScript1.2 src="~$IMG_URL`/profile/js/~$tooltip_new_js`" type=text/javascript></SCRIPT>
+<div id="container">
+	<!--HEADER STARTS-->
+	~$HEAD`
+	<!--HEADER ENDS-->
+
+	<!--QUICK SEARCH STARTS-->
+	<div class="spacer15">&nbsp;</div>
+	<!--QUICK SEARCH ENDS-->
+
+	<!--WRAPPER STARTS HERE-->
+	<div id="wrapper">
+		<!--LEFT PANNEL STARTS HERE-->
+		~$LEFTPANEL`
+		<!--LEFT PANNEL ENDS HERE-->
+
+		<!--CENTER STARTS HERE-->
+		<div style="margin:10px">
+			<form method="post" action="request_courier.php" name="paymentcontact_crm">
+			<input type=hidden name=stp value="~$STP`">
+			<input type=hidden name=checksum value="~$CHECKSUM`">
+			<input type=hidden name=USERNAME value="~$USERNAME`">
+			<input type=hidden name=NAME1 value="~$NAME1`">
+			<input type=hidden name=EMAIL value="~$EMAIL`">
+			<input type=hidden name=SERVICE value="~$SERVICE`">
+			<input type=hidden name=profileid value="~$PROFILEID`">
+			<input type=hidden name=AMOUNT value="~$AMOUNT`">
+			<input type=hidden name=ADDON_SER value="~$ADDON_SER`">
+			<input type=hidden name=ADDON_SERVICES value="~$ADDON_SERVICES`">
+			<input type=hidden name=REQUESTID value="~$REQUESTID`">
+			<input type=hidden name=MAIN_SER_NAME value="~$MAIN_SER_NAME`">
+			<input type=hidden name=CUR_TYPE value="~$CUR_TYPE`">
+			<input type=hidden name=dec_ag value="~$DEC_AG`">
+			<div class="blk3" style="display:block" name="chequepickup" id="chequepickup">
+				<!--HEAD DIV-->
+				<div class="blk4">
+					<div class="greyele b4lft">
+						<b>Cheque Pickup Service <font color="#CC0000">FREE</font></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<span class="bele" style="color:#ABA000 ">To view payment details, select an option to pay through cheque</span>
+					</div>
+					<div class="spacer1">&nbsp;</div>
+				</div>
+				<!--HEAD DIV-->
+				<!--FORM DIV-->
+				<div class="bele fldblk">
+					<div class="spacer">&nbsp;</div>
+					<div class="co1">
+						~if $check_name eq 'Y'`
+							<font color="#CC0000">*</font><font color='red'>Name:</font>
+						 ~else`
+							<font color="#CC0000">*</font> Name:
+						~/if`
+					</div>
+					<div class="co3"><input type="text" name="NAME1" value="~$NAME1`"></div>
+					<div class="spacer">&nbsp;</div>
+					<div class="co1">
+						~if $check_res eq 'Y'`
+							<font color="#CC0000">*</font><font color='red'>Phone Number:</font>
+						~else`
+							<font color="#CC0000">*</font> Phone Number:
+						~/if`
+					</div>
+					<div class="co3"><input type="text" name="PHONE_RES" value="~$PHONE_RES`" maxlength="15" class="textbox"></div>
+					<div class="spacer">&nbsp;</div>
+					<div class="co1">
+						~if $check_mob eq 'Y'`
+							<font color="#CC0000">*</font><font color='red'>Mobile Number:</font>
+						~else`
+							<font color="#CC0000">*</font> Mobile Number:
+						~/if`
+					</div>
+					<div class="co3"><input type="text" name="PHONE_MOB" value="~$PHONE_MOB`" maxlength="15" class="textbox"></div>
+					<div class="spacer">&nbsp;</div>
+					<div class="co1">
+						~if $CHECK_CITY eq "Y"`
+							<font color=red> City:</font>
+						~else`
+							<font color="#CC0000">*</font> City:
+						~/if`
+					</div>
+					<div class="co3 greyele">
+						<select name="city_res" class="textbox">
+							~section name=sec loop=$NEAR_ARR`
+							<option value="~$NEAR_ARR[sec].VALUE`" ~if $NEAR_ARR[sec].VALUE eq $CITY_RES` selected ~/if`>~$NEAR_ARR[sec].LABEL`</option>
+							~/section`
+						</select>
+					</div>
+					<div class="spacer">&nbsp;</div>
+					<div class="co1">
+						~if $check_address eq 'Y'`
+							<font color="#CC0000">*</font><font color='red'> Address:</font>
+						~else`
+							<font color="#CC0000">*</font> Address:
+						~/if`
+					</div>
+					<div class="co3"><textarea name="ADDRESS" value="" cols="50" rows="3" class="textbox">~$ADDRESS`</textarea></div>
+					<div class="spacer">&nbsp;</div>
+					<div class="co1">
+						~if $CHECK_DATE eq "Y"`
+							<font color="#CC0000">*</font><font color=red> Preferred Date:</font>
+						~else`
+							<font color="#CC0000">*</font> Preferred Date:
+						~/if`
+					</div>
+					<div class="co3">
+						<select name="pref_day" class="textbox">
+							~section name=next loop=$ddarr`
+								<option value="~$ddarr[next]`" ~if $PREF_DAY eq $ddarr[next]`selected ~elseif $ddarr[next] eq $after2_date` selected ~/if`>~$ddarr[next]`</option>
+							~/section`
+						</select>
+						<select name="pref_month" class="textbox">
+						~section name=next loop=$mmarr`
+							<option value="~$mmarr[next]`" ~if $PREF_MONTH eq $mmarr[next]` selected ~elseif $mmarr[next] eq $after2_month` selected ~/if`>~$mmarr[next]`</option>
+						~/section`
+						</select>
+						<select name="pref_year" class="textbox">
+						~section name=next loop=$yyarr`
+							<option value="~$yyarr[next]`" ~if $PREF_YEAR eq $yyarr[next]` selected ~elseif $yyarr[next] eq $after2_year` selected ~/if`>~$yyarr[next]`</option>
+						~/section`
+						</select>
+					</div>
+					<div class="spacer">&nbsp;</div>
+					<div class="co1">Comments:</div>
+					<div class="co3 greyele">
+						<textarea  name="COMMENTS"  cols="50" rows="3" class="textbox">~$COMMENTS`</textarea>
+						<br>Put comments, like you want us to give you a <br>
+						call before coming to your place, any particular
+						 time to come
+					</div>
+					<div class="spacer">&nbsp;</div>
+					<div class="co1">&nbsp;</div>
+					<div class="co3">
+						<div class="spacer15">&nbsp;</div>
+						<input type="submit" name="submit" value="Submit Request for Cheque Pickup" class="buttonor" style="width:250px" onclick="document.pressed=this.value;return validate_fields();">
+						<div class="spacer15">&nbsp;</div>
+					</div>
+				</div>
+			</div>
+			</form>
+		</div>
+		<!--CENTER ENDS HERE-->
+	</div>
+	<!--WRAPPER ENDS HERE-->
+	~$FOOT`
+</div>
+</body>
+</html>
+

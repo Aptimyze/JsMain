@@ -1,0 +1,370 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<title>Manage Filters</title>
+<style>
+<link href=css/~$search_result_css` type="text/css" rel="stylesheet">
+body{margin:0; padding:0; font-size:12px; color:#000000; font-family:Arial,sans-serif}
+#main{width:100%; margin:0px;float:left;}
+#container{width: 778px; margin: 0px auto; }
+
+/* search */
+.sreach_pannal{background-image:url(images/bg_search.gif);background-repeat:repeat-x;width:778px;}
+.pd2{padding:2px 2px 2px 5px;}
+div.row{clear:both; padding:3px 0 0px 0;color:#000;width:98%;margin:auto;}
+
+/* setting */
+.st_open_tab{float:left;font:normal 12px arial;padding:3px 0 7px 1px;color:#117DAA;clear:both;width:155px;}
+.st_close_tab{ background-image:url(images/open_tab_setting.gif);background-repeat:no-repeat;width:163px;height:25px;font:bold 12px arial;padding:2px 0 0 1px;color:#117DAA;clear:both; background-position:right}
+.sub_st_tab{padding:4px 0 0 12px;}
+.success_bg{background-image:url(images/bg_success_story.gif); background-repeat:no-repeat;width:118px; height:94px;}
+.hide_delete_bg{ background-color:#ffed77;border:1px #ffe742 solid; padding:5px;}
+/* curve */
+.y{background-color:;}
+.y_b_l {background: transparent url(images/y_b_l.gif) 0 100% no-repeat}
+.y_b_r {background: transparent url(images/y_b_r.gif) 100% 100% no-repeat}
+.y_t_l {background: transparent url(images/y_t_l.gif) 0 0 no-repeat}
+.y_t_r {background: transparent url(images/y_t_r.gif) 100% 0 no-repeat; padding:3px}
+.y_top {background: url(images/y_dot.gif) 0 0 repeat-x; width: 100%;}
+.y_bot {background: url(images/y_dot.gif) 0 100% repeat-x}
+.y_lft {background: url(images/y_dot.gif) 0 0 repeat-y}
+.y_rgt {background: url(images/y_dot.gif) 100% 0 repeat-y}
+/* setting */
+#dropmenudiv{
+position:absolute;
+
+font:normal 12px arial;
+line-height:18px;
+z-index:50;
+}
+#dropmenudiv a{
+width: 154px;
+display: block;
+text-indent: 3px;
+padding: 2px 2px;
+text-decoration: none;
+color:#2573bb;
+z-index:50;
+}
+#dropmenudiv a:hover {
+background-color:#f8e6ea;color:#2573bb;font-weight:bold;
+}
+
+</style>
+<script language="JavaScript">
+var page='';
+var httprequest=false
+function createAjaxObj(url,parameters)
+{
+        httprequest=false
+        if (window.XMLHttpRequest)
+        { // if Mozilla, Safari etc
+                httprequest=new XMLHttpRequest()
+                if (httprequest.overrideMimeType)
+                        httprequest.overrideMimeType('text/html')
+        }
+        else if (window.ActiveXObject)
+        { // if IE
+                try 
+                {
+                        httprequest=new ActiveXObject("Msxml2.XMLHTTP");
+                } 
+                catch (e)
+                {
+                        try
+                        {
+                                httprequest=new ActiveXObject("Microsoft.XMLHTTP");
+                        }
+                        catch (e){}
+                }
+        }
+        if (!httprequest) 
+        {
+                 alert('Cannot create XMLHTTP instance');
+                return false;
+        }
+
+        httprequest.onreadystatechange = alertContents;
+        httprequest.open('POST', url, true);
+        httprequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        httprequest.setRequestHeader("Content-length", parameters.length);
+        httprequest.setRequestHeader("Connection", "close");
+        httprequest.send(parameters);
+
+}
+function alertContents() 
+{
+        if (httprequest.readyState == 4) 
+        {
+                if (httprequest.status == 200) 
+                {
+                        result = httprequest.responseText;
+                    //alert(result);
+                        if(result=='You have logged out or Your Session has expired')
+                        {
+                                window.location.reload();
+                        }
+			else
+			{			
+				document.getElementById('confirm').style.display = 'block';  
+				document.getElementById("PRI_SET").style.display='inline';
+				document.getElementById("SHOW_LOADER").style.display="none";
+				document.getElementById("Filterid").value=result;
+			}
+                } 
+                else 
+                {
+                        alert('There was a problem with the request.');
+                }
+         }
+}
+function obtainvalue(val)
+{
+	var vak;
+	var radios = document.getElementsByName(val);
+	for(var i=0;i<radios.length;i++)
+	{
+		if(radios[i].checked)
+		{
+			vak = radios[i].value;
+			break;
+		}
+	}
+	return vak;
+}
+function get() 
+{
+      var poststr ="age_filter=" + obtainvalue('age_filter')+"&city_filter=" + obtainvalue('city_filter')+"&country_filter=" + obtainvalue('country_filter')+"&mtongue_filter=" + obtainvalue('mtongue_filter')+"&caste_filter=" + obtainvalue('caste_filter')+"&religion_filter=" + obtainvalue('religion_filter')+"&mstatus_filter=" + obtainvalue('mstatus_filter')+"&income_filter=" + obtainvalue('income_filter') + "&checksum=" + document.myform.checksum.value +"&Filterid=" + document.myform.Filterid.value +"&Submit="+ escape(encodeURI( document.myform.Submit.value )) ;
+//alert(poststr);
+      createAjaxObj('revamp_filter.php', poststr);
+}
+
+
+function hide_confirmation()
+{
+        document.getElementById('confirm').style.display = 'none';
+}
+function validate7()
+{
+	document.location.href="#c4";
+        document.getElementById("PRI_SET").style.display='none';
+        document.getElementById('confirm').style.display = 'none';
+        document.getElementById("SHOW_LOADER").style.display="BLOCK";
+      //alert("")
+        get()
+     // alert("")
+        return true;
+
+}
+
+</script>
+<SCRIPT type="text/javascript" language="Javascript" SRC="~$IMG_URL`/min/?f=/profile/js/~$registration_js`,/profile/js/~$gadget_as_js`,/profile/js/~$advance_search_js`"></SCRIPT>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+
+<body topmargin="0" leftmargin="0" >
+<div id="main">
+	~$REVAMP_HEAD`
+	<div style="width:778px;margin:auto">
+		
+		<div id="container">
+			<div id="topSearchBand"></div>
+			<div class="clear"></div>
+			<div class="sp3"></div>
+			~$SUB_HEAD`
+			<h1 style="float:left"><a name="c4">Settings - Manage Filters</a></h1>
+			<div class="sp3"></div>
+			<!-- start middle section -->
+			~$REVAMP_LEFT_PANEL`
+			~$REVAMP_RIGHT_PANEL`
+
+			<div style="margin-right:135px;margin-left:180px;" id="loader">
+				<div style="display:none" id="confirm">
+					<div class="lf"  style="padding:5px; width:452px; background-color:#ffffbb" >
+						<div class="lf">
+							<img src="images/confirm.gif" hspace="10" vspace="0" align="left">
+						</div>
+						<div class="lf t14 b" style="width:382px;padding-top:5px;" id ="myspan">Your filters have been set.</div>
+						<div class="rf b"><a href="#" onclick ="hide_confirmation(); return false;">[x]</a></div>
+					</div>
+				</div>
+				<div id="PRI_SET" style="display:inline">
+
+					<div class="lf" style="width:100%">
+						<form  name="myform" id="myform"  >
+						      <input type="hidden" id="Filterid" name="Filterid" value="~$Filterid`">
+						      <input type="hidden" name="checksum" value="~$CHECKSUM`">
+						      <input type="hidden" name="crmback" value="~$crmback`">
+						      <input type="hidden" name="cid" value="~$cid`">
+						      <input type="hidden" name="pid" value="~$pid`">
+
+							<div style="border:1px #aaaaaa; border-top-style:solid;">
+								<div class="sp5"></div>
+								<div class="lf b">Choose who can express interest in you</div>
+								<div class="sp8"></div>
+								Jeevansathi.com gives you the power to control the kind of users who can express interest in you. Below, you can set the various parameters of your desired partner profile as filters. Setting a filter would mean that users not satisfying that filter would not be able to express interest in you.
+								<div style="border:1px #aaaaaa; border-top-style:solid; margin:10px 0px"></div>
+								<div class="lf" style="width:453px; padding:5px;">
+									<div class="lf" style="width:75%">Only prospective ~if $gli eq 'M'`brides~else`grooms~/if` in the following <strong>Age Range</strong> can express interest in me<br>
+										<a href="edit_dpp.php?width=600&FLAG=partner&checksum=~$CHECKSUM`&profilechecksum=~$PROFILECHECKSUM`&filter=age&from_filter=1&gli=~$gli`" class="blink thickbox">~$lage` to ~$hage`</a> 
+										<span class="t11 b">
+											<a href="edit_dpp.php?width=600&FLAG=partner&checksum=~$CHECKSUM`&profilechecksum=~$PROFILECHECKSUM`&filter=age&from_filter=1&gli=~$gli`" class="thickbox">Edit</a>
+										</span>
+									</div>
+									<div class="lf" style="width:25%">
+										<input type="radio" class="chbx" name="age_filter" style="border:none;vertical-align:text-bottom" value="Y"~if $age_flag eq "Y"` checked ~/if`>Yes &nbsp;&nbsp;&nbsp;
+										<input type="radio" class="chbx" name="age_filter" style="border:none;vertical-align:text-bottom" value="N" ~if $age_flag eq "N" ||$age_flag eq ""`checked ~/if`>No
+									</div>
+								</div>
+								~assign var="check_all" value=$count_check`
+								~if $check_country neq "Y"`
+								~assign var="check_all" value=$count_check-1`
+								<div class="sp12"></div>
+								<div class="grcolor lf" style="width:453px; padding:5px;">
+									<div class="lf" style="width:75%">Only prospective ~if $gli eq 'M'`brides~else`grooms~/if` residing in the following <strong>Countries</strong> can express interest in me<br>
+										<a href="edit_dpp.php?width=600&FLAG=partner&checksum=~$CHECKSUM`&profilechecksum=~$PROFILECHECKSUM`&filter=country&from_filter=1&gli=~$gli`" class="blink thickbox">~$country_res`</a> 
+										<span class="t11 b">
+											<a href="edit_dpp.php?width=600&FLAG=partner&checksum=~$CHECKSUM`&profilechecksum=~$PROFILECHECKSUM`&filter=country&from_filter=1&gli=~$gli`" class="thickbox">Edit</a>
+										</span>
+									</div>
+									<div class="lf" style="width:25%">
+										<input type="radio" class="chbx" style="border:none;vertical-align:text-bottom" name="country_filter" value="Y" ~if $country_flag eq "Y"` checked  ~/if`>Yes &nbsp;&nbsp;&nbsp;
+										<input type="radio" class="chbx" style="border:none;vertical-align:text-bottom" name="country_filter" value="N" ~if $country_flag eq "N" ||$country_flag eq ""`checked ~/if`>No
+									</div>
+								</div>
+								~else`
+									<div style="display:none"><input type="radio" name="country_filter" value="~$country_filter`" checked></div>
+								~/if`
+								~if $check_city neq "Y"`
+								<div class="sp12"></div>
+								<div class="lf ~if $check_all eq $count_check` grcolor ~/if`" style="width:453px; padding:5px;">
+									<div class="lf" style="width:75%">Only prospective ~if $gli eq 'M'`brides~else`grooms~/if` residing in the following <strong>Cities</strong> can express interest in me<br>
+										<a href="edit_dpp.php?width=600&FLAG=partner&checksum=~$CHECKSUM`&profilechecksum=~$PROFILECHECKSUM`&filter=city&from_filter=1&gli=~$gli`" class="blink thickbox">~$city`</a> 
+										<span class="t11 b">
+											<a href="edit_dpp.php?width=600&FLAG=partner&checksum=~$CHECKSUM`&profilechecksum=~$PROFILECHECKSUM`&filter=city&from_filter=1&gli=~$gli`" class="thickbox">Edit</a>
+										</span>
+									</div>
+									<div class="lf" style="width:25%">
+										<input type="radio" class="chbx" style="border:none;vertical-align:text-bottom" name="city_filter" value="Y" ~if $city_flag eq "Y"` checked  ~/if`>Yes &nbsp;&nbsp;&nbsp;
+										<input type="radio" class="chbx" style="border:none;vertical-align:text-bottom" name="city_filter" value="N" ~if $city_flag eq "N" ||$city_flag eq ""`checked ~/if`>No
+									</div>
+								</div>
+								~assign var="check_all" value=$check_all-1`
+								 ~else`
+									<div style="display:none"><input type="radio" name="city_filter" value="~$city_filter`" checked></div>
+								 ~/if`
+								~if $check_mstatus neq "Y"`
+								<div class="sp12"></div>
+								<div class="~if ($count_check-$check_all)%2 eq 0` grcolor ~/if`lf" style="width:453px; padding:5px;">
+									<div class="lf" style="width:75%">Only prospective ~if $gli eq 'M'`brides~else`grooms~/if` with the following <strong>Marital Status</strong> can express interest in me<br>
+										<a href="edit_dpp.php?width=600&FLAG=partner&checksum=~$CHECKSUM`&profilechecksum=~$PROFILECHECKSUM`&filter=mstatus&from_filter=1&gli=~$gli`" class="blink thickbox">~$mstatus`</a> 
+										<span class="t11 b">
+											<a href="edit_dpp.php?width=600&FLAG=partner&checksum=~$CHECKSUM`&profilechecksum=~$PROFILECHECKSUM`&filter=mstatus&from_filter=1&gli=~$gli`" class="thickbox">Edit</a>
+										</span>
+									</div>
+									<div class="lf" style="width:25%">
+										<input type="radio" class="chbx" style="border:none;vertical-align:text-bottom" name="mstatus_filter" value="Y" ~if $mstatus_flag eq "Y"` checked ~/if`>Yes &nbsp;&nbsp;&nbsp;
+										<input type="radio" class="chbx" style="border:none;vertical-align:text-bottom" name="mstatus_filter" value="N" ~if $mstatus_flag eq "N" ||$mstatus_flag eq ""`checked ~/if`>No
+									</div>
+								</div>
+								~assign var="check_all" value=$check_all-1`
+								 ~else`
+									 <div style="display:none"><input type="radio" name="mstatus_filter" value="~$mstatus_filter`" checked></div>
+								 ~/if`
+								~if $check_religion neq "Y"`
+								<div class="sp12"></div>
+								<div class="~if ($count_check-$check_all)%2 eq 0` grcolor ~/if`lf" style="width:453px; padding:5px;">
+									<div class="lf" style="width:75%">Only prospective ~if $gli eq 'M'`brides~else`grooms~/if` from the following <strong>Religions</strong> can express interest in me<br>
+										<a href="edit_dpp.php?width=600&FLAG=partner&checksum=~$CHECKSUM`&profilechecksum=~$PROFILECHECKSUM`&filter=religion&from_filter=1&gli=~$gli`" class="blink thickbox">~$religion`</a> 
+										<span class="t11 b">
+											<a href="edit_dpp.php?width=600&FLAG=partner&checksum=~$CHECKSUM`&profilechecksum=~$PROFILECHECKSUM`&filter=religion&from_filter=1&gli=~$gli`" class="thickbox">Edit</a>
+										</span>
+									</div>
+									<div class="lf" style="width:25%">
+										<input type="radio" class="chbx" style="border:none;vertical-align:text-bottom" name="religion_filter" value="Y" ~if $religion_flag eq "Y"` checked  ~/if`>Yes &nbsp;&nbsp;&nbsp;
+										<input type="radio" class="chbx" style="border:none;vertical-align:text-bottom" name="religion_filter" value="N" ~if $religion_flag eq "N" ||$religion_flag eq ""`checked ~/if`>No
+									</div>
+								</div>
+								~assign var="check_all" value=$check_all-1`
+								~else`
+									<div style="display:none"><input type="radio" name="religion_filter" value="~$religion_filter`" checked></div>
+								~/if`
+								~if $check_caste neq "Y"`
+								<div class="sp12"></div>
+								<div class="~if ($count_check-$check_all)%2 eq 0` grcolor ~/if` lf" style="width:453px; padding:5px;">
+									<div class="lf" style="width:75%">Only prospective ~if $gli eq 'M'`brides~else`grooms~/if` from the following<strong> Castes</strong><br> can express interest in me<br>
+										<a href="edit_dpp.php?width=600&FLAG=partner&checksum=~$CHECKSUM`&profilechecksum=~$PROFILECHECKSUM`&filter=caste&from_filter=1&gli=~$gli`" class="blink thickbox">~$caste`</a> 
+										<span class="t11 b">
+											<a href="edit_dpp.php?width=600&FLAG=partner&checksum=~$CHECKSUM`&profilechecksum=~$PROFILECHECKSUM`&filter=caste&from_filter=1&gli=~$gli`" class="thickbox">Edit</a>
+										</span>
+									</div>
+									<div class="lf" style="width:25%">
+										<input type="radio" class="chbx" style="border:none;vertical-align:text-bottom" name="caste_filter" value="Y" ~if $caste_flag eq "Y"` checked  ~/if`>Yes &nbsp;&nbsp;&nbsp;
+										<input type="radio" class="chbx" style="border:none;vertical-align:text-bottom" name="caste_filter" value="N" ~if $caste_flag eq "N" ||$caste_flag eq ""`checked ~/if`>No
+
+									</div>
+								</div>
+								~assign var="check_all" value=$check_all-1`
+								~else`
+									<div style="display:none"><input type="radio" name="caste_filter" value="~$caste_filter`" checked></div>
+								~/if`
+								~if $check_mtongue neq "Y"`
+								<div class="sp12"></div>
+								<div class="~if ($count_check-$check_all)%2 eq 0` grcolor ~/if`lf" style="width:453px; padding:5px;">
+									<div class="lf" style="width:75%">Only prospective ~if $gli eq 'M'`brides~else`grooms~/if` from the following <strong>Communities</strong> can express interest in me<br>
+										<a href="edit_dpp.php?width=600&FLAG=partner&checksum=~$CHECKSUM`&profilechecksum=~$PROFILECHECKSUM`&filter=community&from_filter=1&gli=~$gli`" class="blink thickbox">~$mtongue`</a> 
+										<span class="t11 b">
+											<a href="edit_dpp.php?width=600&FLAG=partner&checksum=~$CHECKSUM`&profilechecksum=~$PROFILECHECKSUM`&filter=community&from_filter=1&gli=~$gli`" class="thickbox">Edit</a>
+										</span>
+									</div>
+									<div class="lf" style="width:25%">
+										<input type="radio" class="chbx" style="border:none;vertical-align:text-bottom" name="mtongue_filter" value="Y" ~if $mtongue_flag eq "Y"` checked  ~/if`>Yes &nbsp;&nbsp;&nbsp;
+										<input type="radio" class="chbx" style="border:none;vertical-align:text-bottom" name="mtongue_filter" value="N" ~if $mtongue_flag eq "N" ||$mtongue_flag eq ""`checked ~/if`>No
+									</div>
+								</div>
+								~assign var="check_all" value=$check_all-1`
+								~else`
+									<div style="display:none"><input type="hidden" name="mtongue_filter" value="~$mtongue_filter`" checked></div>
+								~/if`
+                                                                ~if $check_income neq "Y"`
+                                                                <div class="sp12"></div>
+                                                                <div class="~if ($count_check-$check_all)%2 eq 0` grcolor ~/if`lf" style="width:453px; padding:5px;">
+                                                                        <div class="lf" style="width:75%">Only prospective ~if $gli eq 'M'`brides~else`grooms~/if` with the following <strong>Annual Incomes</strong> can express interest in me<br>
+                                                                                <a href="edit_dpp.php?width=600&FLAG=partner&checksum=~$CHECKSUM`&profilechecksum=~$PROFILECHECKSUM`&filter=income&from_filter=1&gli=~$gli`" class="blink thickbox">~$income`</a>
+                                                                                <span class="t11 b">
+                                                                                        <a href="edit_dpp.php?width=600&FLAG=partner&checksum=~$CHECKSUM`&profilechecksum=~$PROFILECHECKSUM`&filter=income&from_filter=1&gli=~$gli`" class="thickbox">Edit</a>
+                                                                                </span>
+                                                                        </div>
+                                                                        <div class="lf" style="width:25%">
+                                                                                <input type="radio" class="chbx" style="border:none;vertical-align:text-bottom" name="income_filter" value="Y" ~if $income_flag eq "Y"` checked  ~/if`>Yes &nbsp;&nbsp;&nbsp;
+                                                                                <input type="radio" class="chbx" style="border:none;vertical-align:text-bottom" name="income_filter" value="N" ~if $income_flag eq "N" ||$income_flag eq ""`checked ~/if`>No
+                                                                        </div>
+                                                                </div>
+                                                                ~else`
+                                                                        <div style="display:none"><input type="hidden" name="income_filter" value="~$income_filter`" checked></div>
+                                                                ~/if`
+								
+								<div class="sp12"></div>
+
+								<div class="gray t11" style="border:1px #aaaaaa; border-top-style:solid; margin:10px 0px 2px"><b>Note:</b> Setting filters can reduce the expressions of interest you receive substantially. If you have been receiving very few expressions of interest, try clearing some filters.</div>
+							</div>
+							<div class="sp16">&nbsp;</div>
+							<div style="margin:auto;width:100%; text-align:center;">
+								<input type="button" id="Submit" name="Submit" class="b green_btn" value="Set Filters" style="width:90px;" onclick="return validate7();">
+							</div>
+						</form>
+					</div>
+					<div class="sp16" style="height:30px">&nbsp;</div>
+				 </div>
+				<div id="SHOW_LOADER" style="display:none">
+					 <div class="lf" style="width:100%;margin-top:25px;text-align:center;"><img src="images/loader_big.gif" width="54" height="55"><br><br><span style="font:normal 20px Arial, Helvetica, sans-serif">Your filters are being set<span style="font-size:13px">...</span></span></div>
+				</div>
+			</div>
+		</div>
+        </div>
+</div>
+~$FOOT`
+</body>
+</html>

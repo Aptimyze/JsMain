@@ -1,0 +1,145 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+ <head>
+<SCRIPT language="JavaScript">
+<!--
+function MM_openBrWindow(theURL,winName,features)
+{
+        window.open(theURL,winName,features);
+}
+
+//-->
+</script>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>JeevanSathi.com - CRM - Get User History</title>
+  <link rel="stylesheet" href="../jsadmin/jeevansathi.css" type="text/css">
+  <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+ </head>
+ ~include file="head.htm"`
+ <br>
+ <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+  <table width=100% cellspacing="1" cellpadding='0' ALIGN="CENTER" >
+   <tr width=100% border=1>
+    <td width="30%" class="formhead" height="23"><font><b>Welcome :~$name`</b></font></td>
+    <td width="25%" class="formhead" align="center"><a href="../jsadmin/mainpage.php?cid=~$cid`&name=~$name`">Click here to go to main page</a></td>
+    <td width="6%" class="formhead" align='RIGHT' height="23">
+        <a href="logout.php?cid=~$cid`">Logout</a>
+    </td>
+    <td width="3%" class="formhead" height="23">&nbsp;
+    </td>
+   </tr>
+  </table>
+ <br><br>
+ <form action=calling_details.php method=post>
+ <table width=80% align=center>
+ <tr class=fieldsnew>
+  <td align=center> Username : 
+    <input type=text name="USERNAME">
+  </td>
+  <td align=left>
+    <input type=submit name="GetHistory" value="Get History">
+    <input type="hidden" name="cid" value="~$cid`">
+    <input type="hidden" name="name" value="~$name`">
+  </td>
+ </tr>
+ </table>
+ </form>
+ <br>
+~if $flag eq '1'`
+ ~if $wrong_username eq 'Y' or $NOTFOUND eq 'Y'`
+  <br><br>
+  <table width=80% align=center>
+  <tr>
+	<td class=label align=center>Sorry! No Record Found </td>
+  </tr>
+  <tr>
+	<td class=label align=center><a href="calling_details.php?cid=~$cid`">Click here to continue</a></td>
+  </tr>
+  </table>
+ ~else`
+  <table width=100% align="CENTER" class="fieldsnew">
+	~if $ROW.show_IM eq 'Y'`
+    <tr align="CENTER" bgcolor="#fgfgfg">
+      <td class="formhead" colspan="4" height="23"><b><font size="5" color="green">Incentive Multiplier : ~$ROW.IM`</font></b></td>
+    </tr>
+	~/if`
+    <tr align="CENTER">
+      <td class="formhead" colspan="4" height="23"><b><font size="3" color="black">History</font></b></td>
+    </tr>
+    <tr align="CENTER">
+      <td class="label" width=5% height="20"><b>S.No.</b></td>
+      <td class="label" width="15" height="20"><b>Handled By</b></td>
+      <td class="label" width=20% height="21"><b>Date</b></td>
+      <td class="label" width=15% height="21"><b>Mode</b></td>
+      </tr>
+ ~section name=index loop=$ROW`
+    <tr align="CENTER" bgcolor="#fbfbfb" >
+      <td height="20" align="CENTER" width="5%">~$ROW[index].SNO`</td>
+      <td height="20" width="15%">~$ROW[index].NAME`</td>
+      <td height="21" width="20%">~$ROW[index].DATE`</td>
+      <td height="21" width="15%" align="LEFT">~$ROW[index].MODE`</td>
+    </tr>
+  ~if $ROW[index].COMMENTS neq ''`
+    <tr bgcolor="#fgfgfg" >
+      <td height="21" align="CENTER" width="5%">&nbsp;</td>
+      <td width=20% height="21"><b>Comments</b></td>
+      <td height="21" colspan="4">~$ROW[index].COMMENTS`</td>
+    </tr>
+  ~/if`
+        <tr class="label">
+      <td height="21" align="CENTER" width="5%" colspan=7>&nbsp;</td>
+        </tr>
+    ~/section`
+ </table>
+ <br>
+  <table width=100% align="CENTER" class="fieldsnew">
+    <tr align="CENTER">
+      <td class="formhead" colspan="6" height="23"><b><font size="3" color="blue">Handling History (by different users)</font></b></td>
+    </tr>
+    <tr align="CENTER">
+      <td class="label" width=5% height="20"><b>S.No.</b></td>
+      <td class="label" width="15" height="20"><b>Handled By</b></td>
+      <td class="label" width=20% height="21"><b>Allocation Date</b></td>
+      <td class="label" width=20% height="21"><b>Expected De-allocation date</b></td>
+      <td class="label" width=20% height="21"><b>Actual De-allocation date</b></td>
+      <td class="label" width=15% height="21"><b>Extension (days)</b></td>
+      </tr>
+ ~section name=index loop=$handled_arr`
+    <tr align="CENTER" bgcolor="#fbfbfb" >
+      <td height="20" align="CENTER" width="5%">~$handled_arr[index].SNO`</td>
+      <td height="20" width="15%">~$handled_arr[index].ALLOTED_TO`</td>
+      <td height="21" width="20%">~$handled_arr[index].ALLOT_TIME`</td>
+      <td height="21" width="20%">~$handled_arr[index].DE_ALLOCATION_DT`</td>
+      <td height="21" width="20%">~if $handled_arr[index].ACTUAL_DEALLOCATION_DT` ~$handled_arr[index].ACTUAL_DEALLOCATION_DT`~else`N/A~/if`</td>
+      <td height="21" width="15%">~$handled_arr[index].RELAX_DAYS`</td>
+    </tr>
+    ~/section`
+ </table>
+<br>
+ <table width=80% align=center>
+ <tr class=label>
+~if $ALREADY_PAID eq 'Y'`
+  <td align=center class=red>&nbsp;This member is already paid.</td>
+~/if`
+ </tr>
+ </table>
+<br>
+ <table width=80% align=center>
+ <tr class=label>
+	<td align=center> This profile is alloted to <span class=blue>~$orig_alloted_to`</span></td>
+ </tr>
+ </table>
+ <br><br>
+ <table width=80% align=center>
+ <tr class=label>
+	<td align=center> Username : <span class=blue>~$USERNAME`</span></td>
+	<td align=center> Email : <span class=blue>~$EMAIL`</span></td>
+ </tr>
+ </table>
+ ~/if`
+ <br><br>
+~/if`
+  <br><br>
+ ~include file="foot.htm"`
+ </body>
+</html>

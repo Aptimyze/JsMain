@@ -1,0 +1,108 @@
+<html>
+<head>
+<title>JeevanSathi Matrimonials - Response to Your Profile</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="~$IMG_URL`/profile/ser4_images/styles.php" type="text/css">
+<style type="text/css">
+<!--
+.style7 {font-size: 16px; font-family: Arial; font-weight: bold; }
+-->
+</style>
+</head>
+<body leftmargin="5" topmargin="5">
+<table width="560" align="center">
+<tr><td>
+<font color="#999999" face="Arial, Helvetica, sans-serif" size="1"> You are receiving this mail as a registered member of Jeevansathi.com<br>
+ Please add contacts@jeevansathi.com to your address book to ensure delivery into your inbox</font>
+ </td>
+ </tr>
+ </table>
+<table width="560" border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#FF9900">
+<tr>
+<td><table width="560" border="0" align="center" cellpadding="1" cellspacing="0" bgcolor="#FFFFFF">
+  <tr>
+    <td>~$HEAD_MAILER`</td>
+  </tr>
+  <tr>
+<td class="mediumblack"><table width="100%"  border="0" cellspacing="2" cellpadding="2">
+<tr>
+<td height="5" colspan="2"></td>
+<SPACER height="5" type="block"></SPACER> </tr>
+<tr>
+<td class="mediumblack"><strong>
+Dear Member (Your Profile Id is : ~$RECEIVERNAME`)</strong></td>
+</tr>
+<tr>
+<td class="mediumblack"> This is in response to your profile with Jeevansathi.com </td>
+</tr>
+<tr>
+<td height="5" colspan="2"></td>
+<SPACER height="5" type="block"></SPACER> </tr>
+<tr>
+<td bgcolor="#FCE1B1" class="mediumblack"><strong>&nbsp;~$SUBJECT`</strong></td>
+</tr>
+<tr>
+<td class="mediumblack">~$MESSAGE`</td>
+</tr>
+~if $MARKCC eq 'N'`
+~if $COUNT_MEMBERS_WAITING neq "0"`
+<tr>
+  <td bgcolor="#FCE1B1" class="mediumblack"><strong>&nbsp;Members waiting for your response </strong></td>
+</tr>
+<tr>
+  <td class="mediumblack">The following Jeevansathi.com members are awaiting your response. </td>
+</tr>
+~section name=index loop=$MEMBERS_WAITING`
+<tr>
+  <td class="mediumblack"><a href="~$SITE_URL`/profile/viewprofile.php?username=~$MEMBERS_WAITING[index].USERNAME`">~$MEMBERS_WAITING[index].USERNAME`</a></td>
+</tr>
+~/section`
+~/if`
+~elseif $MARKCC eq "Y"`
+<br>
+~/if`
+<tr>
+<td class="mediumblack">To login to "My JeevanSathi" <span class="class6"><a href="~$SITE_URL`/profile/mainmenu.php">click here </a></span><br><br>
+We wish you the best in your Partner Search. <br><br>
+With Regards,<br>
+The JeevanSathi Team <span class="class6"> <a href="~$SITE_URL`"><br>
+www.jeevansathi.com</a></span> </td>
+</tr>
+<tr>
+<td class="mediumblack"><br>
+NOTE - e-Rishta Members can make Full Contact with ALL Members and with ALL Responses received to their profile. To become a e-Rishta Member click <a href="~$SITE_URL`/membership/jspc">here</a><br>
+</td>
+</tr>
+<tr>
+ <td>
+  <table width="468" height="60" border="0" align="center" cellpadding="0" cellspacing="2">
+    <tr align="right">
+      <td align="right"><font color="#999999" size="2">Advt.</font></td>
+    </tr>
+    <tr>
+      <td>
+        <a href="~$bmsVariable`/bmsjs/bms_display_final.php?zonestr=42&mailer=1&subzone=1&hit=1"><img src="~$bmsVariable`/bmsjs/bms_display_final.php?zonestr=42&mailer=1&subzone=1" border="0"></a>
+      </td>
+    </tr>
+  </table>
+ </td>
+</tr>
+<tr>
+<td height="17" class="mediumblack"><div align="center">THIS IS AN AUTOMATED MESSAGE. PLEASE DO NOT REPLY TO THIS MAIL. </div></td>
+</tr>
+</table></td>
+  </tr>
+</table></td>
+</tr>
+</table>
+<div align="center">
+<table width="159" border="0" align="center" cellpadding="0" cellspacing="1">
+  <tr>
+   <td width="181" class=mediumblack><span class=class7><a href="http://www.jeevansathi.com/profile/unsubscribe.php?mail=Y">Click here</a></span> to unsubscribe</td>
+  </tr>
+ </table>
+<br>
+<br>
+</div>
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Untitled Document</title>
+<link href="css/~$common_css`" type="text/css" rel="stylesheet">
+<style>
+div.row5{float:left;width:96%; margin:5px 0px}
+div.row5 label{float:left;text-align:right;width:100px;padding:2px 6px 0 0;color:#726f6f;font-weight:bold;}
+div.row5 span{float:left;text-align:left;width:250px;padding-top:2px;}
+div.row5 span.label{float:left;text-align:right;padding:2px 3px 0 0;width:95px;color:#726f6f;font-weight:bold;}
+</style>
+<script language="javascript">
+function closeLayer()
+{
+	$.colorbox.close();
+	close_window();
+	
+}
+function trim(inputString) {
+   if (typeof inputString != "string") { return inputString; }
+   var retValue = inputString;
+   var ch = retValue.substring(0, 1);
+   while (ch == " " || ch == '\n' || ch == '\t' || ch == '\r') {
+      retValue = retValue.substring(1, retValue.length);
+      ch = retValue.substring(0, 1);
+   }
+   ch = retValue.substring(retValue.length-1, retValue.length);
+   while (ch == " " || ch == '\n' || ch == '\t' || ch == '\r') {
+      retValue = retValue.substring(0, retValue.length-1);
+      ch = retValue.substring(retValue.length-1, retValue.length);
+   }
+   while (retValue.indexOf("  ") != -1) {
+      retValue = retValue.substring(0, retValue.indexOf("  ")) + retValue.substring(retValue.indexOf("  ")+1, retValue.length);
+   }
+   return retValue;
+}
+
+function check_ss()
+{
+	if(trim(eval("document.submit_ss.spouse_name.value"))=="")
+	{
+		document.getElementById("error_msg").style.visibility="visible";
+		document.getElementById("error_msg_text").innerHTML="Please enter spouse name!";
+		return false;
+	}
+	else
+	if(trim(eval("document.submit_ss.spouse_id.value"))=="")
+	{
+                document.getElementById("error_msg").style.visibility="visible";
+                document.getElementById("error_msg_text").innerHTML="Please enter spouse user id!";
+                return false;
+        }
+	else
+	if(trim(eval("document.submit_ss.spouse_email.value"))=="")
+        {
+                document.getElementById("error_msg").style.visibility="visible";
+                document.getElementById("error_msg_text").innerHTML="Please enter spouse user email!";
+                return false;
+        }
+	else
+	if(trim(eval("document.submit_ss.contact_address.value"))=="")
+        {
+                document.getElementById("error_msg").style.visibility="visible";
+                document.getElementById("error_msg_text").innerHTML="Please enter contact address!";
+                return false;
+        }
+	else
+	if(eval("document.submit_ss.w_day.value")=="" || eval("document.submit_ss.w_month.value")=="" || eval("document.submit_ss.w_year.value")=="")
+	{
+		document.getElementById("error_msg").style.visibility="visible";
+                document.getElementById("error_msg_text").innerHTML="Please enter wedding date!";
+                return false;
+
+	}
+	else
+	if(trim(eval("document.submit_ss.ss_story.value"))=="")
+	{
+		document.getElementById("error_msg").style.visibility="visible";
+                document.getElementById("error_msg_text").innerHTML="Please enter your success story!";
+		return false;
+
+	}
+	document.forms["submit_ss"].submit();
+}
+function hide_error_msg()
+{
+	document.getElementById("error_msg").style.visibility="hidden";
+}
+function display_error(doc)
+{
+	~if $MSG`
+		var message="~$MSG`";
+		if(message=="photo")
+		{
+			parent.document.getElementById("error_msg").style.visibility="visible";
+	                parent.document.getElementById("error_msg_text").innerHTML="The photo should be in .jpg or .gif format and less than 1MB!";
+		}
+		else
+		if(message=="email_invalid")
+		{
+			parent.document.getElementById("error_msg").style.visibility="visible";
+                        parent.document.getElementById("error_msg_text").innerHTML="Invalid spouse email id entered!";
+		}
+		else
+		if(message=="user_invalid")
+		{
+			parent.document.getElementById("error_msg").style.visibility="visible";
+                        parent.document.getElementById("error_msg_text").innerHTML="Invalid spouse user id entered!";
+		}
+		else
+		if(message=="same_gender")
+		{
+			parent.document.getElementById("error_msg").style.visibility="visible";
+                        parent.document.getElementById("error_msg_text").innerHTML="User id is of the same gender!";
+		}
+		else
+		if(message=="not_compatible")
+		{
+			parent.document.getElementById("error_msg").style.visibility="visible";
+                        parent.document.getElementById("error_msg_text").innerHTML="The User ID's are not compatible according to our records!";
+		}
+		else
+		if(message=="verified")
+		{
+			parent.close_window();
+		}
+		
+	~/if`
+	
+}
+function close_window()
+{
+	window.location.href="~$SITE_URL`/profile/hide_delete_revamp.php?checksum=~$CHECKSUM`&CMDdelete=1";
+}
+</script>
+</head>
+
+<body>
+<form name="submit_ss" action="submit_success_story.php" method="post" enctype="multipart/form-data" target="upload_target">
+<div class="pink" style="width:700px;height:auto;">
+<div class="topbg">
+<div class="lf pd b t12">Submit Your Success Story</div><div class="rf pd b t12"><a href="#" class="blink" onClick="closeLayer();">Close [x]</a></div>
+</div><div class="clear"></div>
+<div class="scrollbox2 t12">
+<div style="padding:10px; width:94%">
+
+<div>
+<div class="row5">
+<label>Your Name :</label> <span>~if $NAME`~$NAME`~else`~$USERNAME`~/if`</span> <span class="label">Spouse Name :</span><input type="text" name="spouse_name" style="width:100px; vertical-align:text-bottom">
+</div>
+<div class="row5">
+<label>Your ID :</label> <span>~$USERNAME`</span> <span class="label">Spouse ID :</span><input type="text" name="spouse_id" style="width:100px; vertical-align:text-bottom">
+</div>
+<div class="row5">
+<label>Your Email  :</label> <span>~$EMAIL`</span> <span class="label">Spouse Email :</span><input type="text" name="spouse_email" style="width:100px; vertical-align:text-bottom">
+</div>
+
+
+</div>
+<div class="sp5"></div>
+<div id="error_msg" style="visibility:hidden;">
+<div class="lf" style="padding:5px; width:99%; background-color:#e4e0e7"><div class="lf">
+<img src="~$IMG_URL`/img_revamp/notification1.gif" hspace="10" vspace="0" align="left"></div>
+<div class="lf t14 b gray" style="width:382px;padding-top:5px;"><div id="error_msg_text">Please provide at least one of Email Id or User Id </div></div>
+<div class="rf b"><a href="#" onClick="hide_error_msg();">[x]</a></div></div>
+</div>
+<div class="sp16"></div>
+<div class="row4">
+<label>Contact  Address :</label>
+<textarea cols="6" rows="4" name="contact_address" style="width:250px; font:normal 12px arial;height:35px; vertical-align:top"></textarea>
+</div>
+<div class="row4">
+<label>Wedding Date :</label>
+<select name="w_day" style="width:50px;">
+<option selected value="">Day</option>
+<option value="1" >1</option>
+<option value="2" >2</option>
+<option value="3" >3</option>
+<option value="4" >4</option>
+<option value="5" >5</option>
+<option value="6" >6</option>
+<option value="7" >7</option>
+<option value="8" >8</option>
+<option value="9" >9</option>
+<option value="10" >10</option>
+<option value="11" >11</option>
+<option value="12" >12</option>
+<option value="13" >13</option>
+<option value="14" >14</option>
+<option value="15" >15</option>
+<option value="16" >16</option>
+<option value="17" >17</option>
+<option value="18" >18</option>
+<option value="19" >19</option>
+<option value="20" >20</option>
+<option value="21" >21</option>
+<option value="22" >22</option>
+<option value="23" >23</option>
+<option value="24" >24</option>
+<option value="25" >25</option>
+<option value="26" >26</option>
+<option value="27" >27</option>
+<option value="28" >28</option>
+<option value="29" >29</option>
+<option value="30" >30</option>
+<option value="31" >31</option>
+</select>
+
+<select name="w_month" style="width:65px;">
+<option selected value="">Month</option>
+<option value="1" >January</option>
+<option value="2" >February</option>
+<option value="3" >March</option>
+<option value="4" >April</option>
+<option value="5" >May</option>
+<option value="6" >June</option>
+<option value="7" >July</option>
+<option value="8" >August</option>
+<option value="9" >September</option>
+<option value="10" >October</option>
+<option value="11" >November</option>
+<option value="12" >December</option>
+</select>
+<select name="w_year" style="width:60px;">
+<option selected value="">Year</option>
+<option value="2008" >2008</option>
+<option value="2007" >2007</option>
+<option value="2006" >2006</option>
+<option value="2005" >2005</option>
+<option value="2004" >2004</option>
+<option value="2003" >2003</option>
+<option value="2002" >2002</option>
+<option value="2001" >2001</option>
+<option value="2000" >2000</option>
+</select>
+</div>
+<div class="row4">
+<label>Wedding Photo :</label>
+<input type="file" class="gray_btn" name="wedding_photo">
+</div>
+<div class="row4">
+<label>Your Story :</label>
+<textarea name="ss_story" cols="6" rows="4" style="width:350px; font:normal 12px arial;height:65px; vertical-align:top"></textarea>
+</div>
+<div class="row4" style="margin-top:0px;">
+<label>&nbsp;</label>
+Tell us about how you met on Jeevansathi and what would be your advise for those 
+who are still looking for their dream match on Jeevansathi
+</div>
+
+</div>
+</div>
+<div class="sp12" style="border:1px #F0CED6; border-top-style:solid"></div>
+<div style="text-align:center;width:100%"><input type="button" class="b green_btn" value="Submit Success Story" style="width:170px;" onClick="check_ss();"></div>
+<div class="sp12"></div>
+</div>
+<iframe id="upload_target" name="upload_target" src="" style="width:0px;height:0px;border:0px" onLoad="display_error(document);"></iframe>
+<input type="hidden" name="checksum" value="~$CHECKSUM`">
+<input type="hidden" name="submit_ss_flag" value="1">
+<input type="hidden" name="my_name" ~if $NAME` value="~$NAME`" ~else` value="~$USERNAME`"~/if`>
+<input type="hidden" name="username" value="~$USERNAME`">
+<input type="hidden" name="email" value="~$EMAIL`">
+</form>
+</body>
+</html>

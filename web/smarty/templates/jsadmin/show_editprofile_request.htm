@@ -1,0 +1,80 @@
+<HTML>
+	<HEAD>
+	<TITLE>SUBMITTED REQUESTS FOR PROFILE EDITING </TITLE>
+	<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+                <LINK rel="stylesheet" href="jeevansathi.css" type="text/css">
+                <LINK rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+                <LINK rel="stylesheet" href="stylesheet.css" type="text/css">
+		<style>
+		.tableON
+		 {background-color :#DEFEEF; padding:4}
+		.tdstyle
+		 {border:1px solid #9F4000; padding:4}
+		.tableOFF
+                 {background-color :#F2F2F2; padding:4}
+		.tablehead
+		 {background-color :#5C768F ; font-color=:#FFFFFF}
+		</style>
+		<SCRIPT name="javascript">
+                </SCRIPT>
+        </HEAD>
+	<BODY marginwidth="0" marginheight="0" link="#FFFFFF" vlink="#FFFEEF">
+	<BR><BR><BR>
+		<CENTER>
+		~if $reply neq '1' || $norecords eq '1'`
+		<FORM action="show_editprofile_request.php" method="post">
+                	<TABLE border=0 width="560" cellspacing="1" cellpadding="2" bordercolor="#5C768B" bgcolor="#9F4000">
+				<TR class="tablehead"> 
+					<TD width=30% align=center ><FONT color="#FFFFFF">Welcome : ~$user`</TD>
+					<TD height="20" align="right">
+						<A href=mainpage.php?cid=~$cid`><FONT color="#FFFFFF">Main page</a>&nbsp;&nbsp;
+					</TD>
+					<TD height="20" width=20% align="center">
+						<A href=logout.php?cid=~$cid`><FONT color="#FFFFFF">Logout</a>
+					</TD>
+				</TR>
+			</TABLE>
+			<BR>
+			~if $norecords eq '1'`
+                        <TABLE border=0 width="560" cellspacing="1" cellpadding="2">
+                                <TR>
+                                        <TD  class="tablehead" align="center"><FONT color="#FFFFFF">~$msg`</FONT></TD>
+                                </TR>
+                        </TABLE>
+                        ~/if`
+
+			<TABLE border=0 width="560" cellspacing="1" cellpadding="2" bordercolor="#5C768B" bgcolor="#9F4000">
+				<TR>
+					<TD class="tablehead">&nbsp;</TD>
+					<TD class="tablehead" align="center" width="5%"><FONT color="#FFFFFF">Sno.</FONT></TD>
+					<TD class="tablehead" align="center" width="25%"><FONT color="#FFFFFF">Date</FONT></TD>
+					<TD class="tablehead" align="center" width="55%"><FONT color="#FFFFFF">Change details</TD>
+					<TD class="tablehead" align="center" width="15%"><FONT color="#FFFFFF">Request By</FONT></TD>
+				</TR>
+				~section name=requests loop=$edit_requests`
+				<TR bgcolor="#F2F2F2" onmouseover="this.className='tableON';"onmouseout="this.className='tableOFF';">
+					<TD><input type="radio" name="id"  value="~$edit_requests[requests].ID`"></TD>
+					<TD align="center">~$smarty.section.requests.index+1`</TD>	
+					<TD align="center">~$edit_requests[requests].REQUEST_DT`</TD>
+					<TD align="center">~$edit_requests[requests].CHANGE_DETAILS`</TD>
+					<TD align="center">~$edit_requests[requests].USER`</TD>
+				</TR>
+				~/section`
+			</TABLE>
+			<BR><BR>
+			<TABLE align="center">
+				<TR>
+					<TD>
+						<INPUT type="hidden" name="norecords" value=~$norecords`>
+						<INPUT type="hidden" name="cid" value=~$cid`>
+						<INPUT type="hidden" name="user" value=~$user`>
+						<INPUT type="submit" name="reply" value="Reply to Request" style="border:1px solid #9F4000 ; font-family:Times;font-size: 10pt ; font-weight:bold font-color=#9F4000" >
+					</TD>
+				</TR>
+			</TABLE>
+		</CENTER>
+		
+		</FORM>
+	~/if`
+	</BODY/>
+</HTML>

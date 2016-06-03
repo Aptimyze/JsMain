@@ -1,0 +1,104 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS - View Similar Profile Clicked Count</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br /><br />
+~if $flag eq '1'`
+ <table width=760 cellspacing="1" cellpadding='0' ALIGN="CENTER" >
+   <tr width=100% border=1>
+    <td width=30% class="formhead" height="23" align="center"><font><b>Welcome </b></font></td>
+    <td width=30% class="formhead" align='CENTER' height="23">
+     <a href="mainpage.php?cid=~$cid`">Click here to go to mainpage</a>
+    </td>
+    <td width=30% class="formhead" align='CENTER' height="23">
+     <a href="/jsadmin/logout.php?cid=~$cid`">Logout</a>
+    </td>
+   </tr>
+  </table>
+
+		<p align="center"> View <a href="~$SITE_URL`/mis/photo_screen_eff.php?cid=~$cid`&type=new&CMDGo=Y&month=~$month`&year=~$year`">New</a> | <a href="~$SITE_URL`/mis/photo_screen_eff.php?cid=~$cid`&type=edit&CMDGo=Y&year=~$year`&month=~$month`">Edit</a> | <a href="~$SITE_URL`/mis/photo_screen_eff.php?cid=~$cid`&type=mail&CMDGo=Y&year=~$year`&month=~$month`">Mail</a> | <a href="~$SITE_URL`/mis/photo_screen_eff.php?cid=~$cid`&type=appPic&CMDGo=Y&year=~$year`&month=~$month`">Mobile App</a></p>
+		<table width=100% border=0 align="center" cellspacing="4" cellpadding=5>
+		<tr class="formhead">
+		<td colspan=100% align="center">Made Live on &nbsp;&nbsp;Year-Month ~$year`-~$month`</td>
+		</tr>
+		<tr class="label">
+		<td align="center">&nbsp;Day</td>
+		~if $type eq 'mail'`
+		<td width=4% align="center">&nbsp;Total Mails
+		~/if`
+		<td width=4% align="center">&nbsp;~if $type eq 'new'`New~else`~if $type eq 'edit'`Edit~else`~if $type eq 'appPic'`Mobile App Pic~else`Screen Mails~/if`~/if`~/if`</td>
+		<td width=4% align="center">&nbsp;Total Screened</td>
+		~section name=dd loop=$ddarr1`
+			<td width=4% align="center">&nbsp;~$ddarr1[dd]`</td>
+		~/section`
+		</tr>
+
+		~section name=dd loop=$ddarr`
+			<tr class="fieldsnew"><td align="center" class="label">&nbsp;~$ddarr[dd]`</td>
+			~if $type eq 'mail'`<td align="center">~$allcnt[dd]`</td>~/if`
+			<td width=4% align="center">&nbsp;~$cnt1[dd]`&nbsp;&nbsp;<font color="red">(~$cntpercent[dd]`)</font></td>
+			<td width=4% align="center">&nbsp;~$done[dd]`</td>
+			~section name=dd1 loop=$ddarr1`
+			<td width=4% align="center">&nbsp;~$cnt2[dd][dd1]`</td>
+			~/section`
+			</tr>
+		~/section`
+		 <tr class="fieldsnew"><td class="label" align="center">Totals</td>
+		~if $type eq 'mail'`
+		<td class="label" align="center">~$allgrand`</td>
+		~/if`
+		<td class="label" align="center">~$grandtotal`</td>
+		<td class="label" align="center">~$donetotal`</td>
+		~section name=dd loop=$total`
+			<td class="label" align="center">~$total[dd]`</td>
+		~/section`
+		
+		</table>
+~else`
+	<br><br>
+	<form method=post action="photo_screen_eff.php">
+	<table width=80% border=0 align="center" cellpadding=5>
+	<tr>
+	<td>
+		<select name="month">
+	        ~section name=mm loop=$mmarr`
+	                <option value=~$mmarr[mm]`>~$mmarr[mm]`</option>
+        	~/section`
+	        </select>-
+		<select name="year">
+	        ~section name=yr loop=$yyarr`
+	                <option value=~$yyarr[yr]`>~$yyarr[yr]`</option>
+        	~/section`
+	        </select>Month-Year
+	</td>
+	</tr>
+	<tr>
+	<input type="hidden" name="cid" value=~$cid`>
+	<input type="hidden" name="type" value="~$type`">
+	<td align="left"><input type="submit" name="CMDGo" value="     Go     "></td>
+	</tr>
+	</table>
+	</form>
+~/if`
+</body>
+</html>

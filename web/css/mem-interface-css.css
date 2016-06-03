@@ -1,0 +1,751 @@
+/**** 
+
+CSS CODE FOR MEMBERSHIP MODULE 
+
+***/
+
+
+@charset "utf-8";
+/* CSS Document */
+
+.mem-tabs {
+	width:930px;
+	display:block;
+	
+}
+
+.mem-brd0 { border-left:0px; border-top:0px}
+
+.mem-blue-text {
+ color:#3490b6;
+}
+
+
+.pd7L { padding-left:7px}
+
+
+
+.sprte-mem {
+	background:url(sprite-mem-5.png);
+}
+
+.mem-btn-green {
+	background-image:none;
+	background-color:#58a62f;
+	font:18px arial;
+	color:#FFF;
+	height:39px;
+	padding: 0px 10px;
+	text-transform:capitalize;
+	margin-top:5px; vertical-align:middle;
+}
+.cont-btn-green {
+        font:18px arial;
+        color:#FFF;
+        height:50px;
+	width:150px;
+	background-color:#57a52e;
+        padding: 0px 10px;
+        text-transform:capitalize;
+        margin-top:20px; vertical-align:middle
+}
+
+
+.mem-ico-erishta {
+	background-position: -117px -158px;
+    height: 24px; width: 75px;
+	position:relative; margin:0 auto;
+}
+
+.mem-ico-eclassifieds {
+	background-position: -242px -157px; width: 120px; height: 22px;
+	position:relative; margin:0 auto;
+}
+
+.mem-ico-evalue {
+	background-position:0 -221px; width: 148px; height: 53px;
+	position:relative; margin:0 auto;
+}
+
+.mem-ico-evalue-2 {
+	background-position:-41px -221px; width: 68px; height: 28px;
+}
+
+.mem-ico-esathi {
+background-position: -163px -224px;
+    height: 50px;
+    margin: 0 auto;
+    position: relative;
+    width: 207px;
+}
+
+.mem-only-eval {background-position: -40px -221px;
+    height: 25px;
+    margin: 0 auto;
+    position: relative;
+    width: 67px;
+	}
+
+#.mem-only-evalPlus {
+#  background-position: -5px -483px;
+#  height: 25px;
+#  margin: 0 auto;
+#  position: relative;
+#  width: 100px;
+#}
+
+.mem-only-evalPlus {
+  background-position: -5px -483px;
+  height: 31px;
+  margin: 0 auto;
+  position: relative;
+  width: 130px;
+}
+
+
+.mem-only-esathi {
+	background-position: -230px -224px;
+    height: 25px;
+    margin: 0 auto;
+    position: relative;
+    width: 78px;
+    }
+.mem-ico-exclusive 
+{
+	height: 25px;
+    margin: 0 auto;
+    position: relative;
+	background-position: -595px -834px;
+	width: 131px;
+}
+
+.mem-ico-right {
+ 	background-position:-41px -157px; width: 23px; height: 23px; position:relative; margin:0 auto;}
+	
+.mem-ico-down{background-position: -13px -165px; width: 10px; height: 7px; position:relative; margin:6px 36px;}
+
+.mem-ico-popular { background-position:-17px -308px; width: 79px; height: 20px;
+}
+
+.mem-ico-grey-down {
+	background-position:-74px -189px; width: 24px; height: 17px;
+	position:absolute; top:36px; z-index:1001
+}
+.mem-ico-free { background-position:
+  -126px -304px; width: 43px; height: 28px; 
+  }
+  
+  .mem-ico-rupee-cheque {
+	  background-position:-11px -810px; width: 301px; height: 135px;
+  }
+  
+  .mem-ico-dollar-cheque {
+          background-position:-582px -643px; width: 301px; height: 135px;
+  }
+
+  
+.mem-ico-post {
+	background-position: -441px -645px; width: 129px; height: 221px;
+}
+
+.mem-btn-hover { 
+background: none repeat scroll 0% 0% rgb(255, 255, 255); position: absolute; top: -58px; width: 132px; z-index: 1018; left: 315px; height: 55px; line-height: 3.1; border-radius: 5px 5px 0px 0px; -moz-border-radius: 5px 5px 0px 0px; -webkit-border-radius: 5px 5px 0px 0px; border:3px solid #63AC1C; border-bottom:0 none} 
+ 
+ 
+ .mem-ico-whitearr {
+background-position: -6px -184px;
+    height: 15px;
+width: 17px; display:inline-block; vertical-align:middle
+ }
+ 
+ .mem-ico-greyarr-up {
+background-position: -160px -191px;
+    height: 21px;
+    left: 38px;
+    position: absolute;
+    top: -19px;
+    width: 24px; }
+
+ 
+ .mem-ico-quest {
+background-position: -115px -193px;
+    height: 19px;
+    width: 14px;
+ }
+ 
+ 
+ .mem-ico-blue-arrw {
+	 background-position: -46px -185px; width: 18px; height: 25px;
+ }
+ 
+ 
+ .mem-ico-lock {
+	 background-position:-139px -190px; width: 15px; height: 19px; 
+ }
+
+/* HORIZONTAL TABS CSS RULES DEFINED FROM HERE ****/
+			div.cont {
+				padding:10px;
+				width:930px;
+				background:#fff;
+			}
+
+			.tabs li {
+				list-style:none;
+				display:inline;
+				font:16px arial;
+				color:#797979;				
+			}
+
+			.tabs a {
+				padding:8px 28px 2px;
+				display:inline-block;				
+				background-color:#ececec;				
+				text-decoration:none;
+				border: 1px solid #d6d6d6;
+				border-bottom:none;
+				position:relative;
+				top:13px;color:#797979!important;
+			}
+
+.tabs a.active {
+ background: url("sprite-mem-4.png") repeat scroll 0 -5px transparent;
+    border: none;
+    color: #FFFFFF!important;
+    height: 37px;
+    position: relative;
+    top: 12px;
+    z-index: 5000;
+			}
+
+#tab1, #tab2, #tab3 {
+ border: 1px solid #de5400;
+ padding-top:15px;
+}
+
+#tab1 table {
+	border-collapse:collapse;
+}
+
+
+
+/*** TABS CODE FINISH **/
+
+
+
+
+
+.brd1pxbot { border-bottom:1px solid #e6e6e6 }
+
+/*.mem-js-exclusive {
+	width:930px;
+	border:3px solid #de5400;
+	display:block;
+	clear:both;
+	float:left
+}
+
+.mem-js-exclusive > .div1 {
+	width:254px;
+	background-position:0px 0px;
+	background-color:;
+	float:left;
+	background:#de5400 url("sprite-mem-4.png) 0 -422px; width: 252px; height:189px
+	}
+.mem-js-exclusive  > .div2 {
+	width:430px;
+	padding:10px 30px;
+	float:left;
+	font-size:18px;
+}
+
+.mem-js-exclusive  > .div3 {
+	float:left;
+
+}*/
+
+.strike { text-decoration:line-through}
+.fs20 { font-size:20px}
+.fs22 { font-size:22px}
+
+
+
+.mem-tab2-leftcon, .mem-tab3-leftcon{
+ float:left;
+ width:630px;
+ font:12px arial;
+ margin-right:20px;
+ margin-top:10px;
+}
+
+
+
+.mem-tab2-leftcon .tuples {
+ float:left;
+ width:195px;
+ height:240px;
+}
+
+
+.ico-image-1 {
+ background-position: -177px -314px;	
+    height: 85px;
+    margin-top: 5px;
+    width: 196px;
+	margin-bottom:5px;
+}
+
+.ico-image-2 {
+ background-position: -395px -314px;	
+    height: 85px;
+    margin-top: 5px;
+    width: 196px;
+	margin-bottom:5px;
+}
+
+
+.ico-image-3 {
+ background-position: -392px -218px;
+    height: 85px;
+    margin-top: 5px;
+    width: 196px;
+	margin-bottom:5px;
+}
+
+
+.ico-image-4 {
+ background-position:-4px -617px;
+    height: 85px;
+    margin-top: 5px;
+    width: 196px;
+	margin-bottom:5px;
+}
+
+.ico-image-5 {
+ background-position: -4px -714px;
+    height: 85px;
+    margin-top: 5px;
+    width: 196px;
+	margin-bottom:5px;
+}
+
+.ico-image-6 {
+ background-position:-218px -617px;
+    height: 85px;
+    margin-top: 5px;
+    width: 196px;
+	margin-bottom:5px;
+}
+
+.ico-image-7 {
+ background-position:-219px -713px;
+    height: 85px;
+    margin-top: 5px;
+    width: 196px;
+	margin-bottom:5px;
+}
+
+
+#mem-tab2-rightcon {
+	float:left;
+	 width:238px;
+	 border:1px solid #cfcfcf;
+	 margin-top:10px;
+ }
+
+
+#mem-tab2-rightcon > .summary {
+ background-position: 0 -55px;
+    float: left;
+    height: 38px;
+    line-height: 2.3;
+    padding-left: 10px;
+    width: 228px;
+}
+#mem-tab2-rightcon > .cont-sum {
+ padding:25px 10px 5px 10px;
+ float:left;
+ font:15px arial;
+}
+
+#mem-tab2-rightcon > .cont-sum > div {
+
+	/*height:48px;*/
+	padding:10px 0px;
+	border-top:1px solid #b6b6b6;
+	width:212px
+}
+
+#mem-tab2-rightcon > .cont-sum > div > .div-left{
+	width:150px;
+	margin-left:10px;
+	float:left
+}
+
+
+#mem-tab2-rightcon >  .tot {
+	height:30px;
+	padding:10px 0px 10px 10px ;	
+	background:#ececec;
+	float:left;
+	line-height:1.8;
+	width:228px;
+}
+
+#mem-tab2-rightcon >  .tot > .div-left {
+	width:150px;
+	margin-left:10px;
+	
+	float:left
+}
+
+
+.mem-show {
+ background:#ececec; clear:both; width:100%; height:23px
+}
+
+
+.mem-whyjs {
+ color:#0f91d0;
+ font-weight:bold;
+ font-sie:13px;
+  padding-left: 5px;
+    padding-top: 15px;
+}
+
+
+
+.mem-div-card {
+	width:150px;
+	float:left;	
+}
+
+.mem-div-card input[type="radio"] {
+margin-right: 10px;
+    margin-top: 10px;
+}
+
+.ico-visa {
+ background-position: -270px -419px;
+    height: 40px;
+    width: 71px;}
+.ico-rupay {
+ background-position: -183px -419px;
+    height: 40px;
+    width: 71px;}
+
+.ico-master {
+	background-position: -354px -418px;
+    height: 40px;
+    width: 71px; }
+
+.ico-amex { background-position: -274px -469px;
+    height: 40px;
+    width: 40px;}
+
+.ico-jcb {background-position: -283px -530px;
+    height: 40px;
+    width: 49px;}
+
+.ico-diners {  background-position: -355px -472px;
+    height: 40px;
+    width: 100px;}
+
+.ico-itz {
+    background-position: -360px -535px;
+    height: 40px;
+    width: 91px;
+}
+
+.ico-oxy {
+    background-position: -455px -414px;
+    height: 40px;
+    width: 106px;
+}
+
+.ico-icash {
+	background-position: -468px -469px;
+    height: 40px;
+    width: 105px;}
+
+.ico-done {
+	background-position: -473px -580px;
+    height: 40px;
+    width: 105px;}
+
+.ico-paymate {
+	background-position: -472px -531px;
+    height: 40px;
+    width: 105px;
+	}
+
+.ico-mobikwik {
+    background-position: -594px -531px;
+    height: 40px;
+    width: 105px;
+    }
+
+.ico-paytm {
+    background-position: -160px -528px;
+    height: 40px;
+    width: 105px;
+    }
+
+.lh18 { line-height:1.8}
+
+#mem-tab3-form {
+	display:block;
+	float:left;
+}
+
+#mem-tab3-form div {
+ margin:8px 0px;
+ display:block;
+ float:left
+}
+
+#mem-tab3-form div label {
+ font:12px arial;
+ width:90px;
+ float:left;
+ padding-top:3px;
+}
+
+#mem-tab3-form div input, textarea, select {
+	border: 1px solid #CCCCCC;
+}
+
+#mem-tab3-form div input, select {
+	width:195px;
+	height:20px;
+}
+#mem-tab3-form div textarea {
+ width:238px;
+ height:81px;
+ vertical-align:top	
+}
+#mem-tab3-form .err { color:#FF0000}
+
+#mem-tab-scroll-con
+{
+	width:365px; overflow:scroll; float:left; overflow-x:hidden
+}
+
+#mem-tab-scroll-con h3 { font-size:12px; margin:8px 0px; float:left; clear:both; width:100%}
+
+
+#mem-tab-scroll-con div.tit-label{ width:70px; float:left }
+
+ .lh25 { line-height:2.5}
+ 
+ 
+ /***Interactions Light box  ***/
+#lightbox {
+    background-clip: padding-box;
+    background-color: white;
+    border: 5px solid #9b9a9a;
+    left: 624px;
+    padding: 0;
+    position: absolute;
+    top: -35px;
+    z-index: 10001;
+}
+
+#lightbox > .container {
+border:2px solid #75c438;
+width:190px;
+padding: 8px 0px 10px 15px;
+margin-left:0px;
+	}
+
+#lightbox > .ico-indicator, #lightbox > .ico-indicator2 { 
+	  background-position: -25px -279px;
+    height: 25px;
+    left: -18px;
+    position: absolute;
+    top: 51px;
+    width: 20px;
+    z-index: 10001;
+}
+#lightbox input[type="radio"] {
+ vertical-align:bottom;
+ margin-right:2px
+}
+#lightbox .btn-close {	
+	 border: 1px solid #75C438;
+    color: #75C438;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+    height: 15px;
+    right: 8px;
+    position: absolute;
+    text-align: center;
+    top: 6px;
+    width: 15px;
+}
+
+
+
+.mem-holi {
+	border: 2px solid #b4b4b4;
+	background-color:#f7f7f7;
+	width:922px;
+	float:left;
+}
+
+
+.mem-holi2 {
+	border: 2px solid #b4b4b4;
+background: url('sprite-mem-4.png') no-repeat 0 -960px; width: 922px; height: 113px;	float:left;
+}
+
+
+.ico-occasion {
+	background-position:-458px -895px;
+	width: 427px;
+	height: 28px;
+}
+
+.ico-offer1,.ico-offer2,.ico-offer3 {
+background-position:-642px -152px;
+	width: 67px;
+	height: 45px;
+}
+
+.ico-holi-offer {
+	background-position: -625px -215px;
+	width: 182px;
+	height: 124px;
+}
+
+
+.ico-plus {
+	background-position:-443px -152px;
+	width: 48px;
+	height: 48px;
+}
+
+.ico-exclusive {
+ background-position:-322px -812px;
+	width: 102px;
+	height: 104px;
+
+}
+
+.ico-splash {
+	background-position:-631px -406px;
+	width: 83px;
+	height: 28px;
+}
+/*START VIEW SAMPLE*/
+#Raddon a #RSample{display:none;}
+/*#Raddon a:hover #RSample{display:block;position:absolute;background-color:#FFFFFF;z-index:10001;top:-1px;left:149px;}*/
+#Baddon a #BSample{display:none;}
+/*#Baddon a:hover #BSample{display:block;position:absolute;background-color:#FFFFFF;z-index:10001;top:-1px;left:149px;}*/
+#Aaddon a #ASample{display:none;}
+/*#Aaddon a:hover #ASample{display:block;position:absolute;background-color:#FFFFFF;z-index:10001;top:-1px;left:149px;}*/
+.sampleImage{display:none;}
+
+/*a #lightbox_phd{display:none;}
+#Laddon a:hover #lightbox_phd{display:block;position:absolute;background-color:#FFFFFF;z-index:10001;top:-1px;left:149px;}*/
+
+.sampleImage .ico-indicator{
+   background-position: -25px -279px;
+   height: 25px;
+   left: -18px;
+   position: absolute;
+   top: 51px;
+   width: 20px;
+   z-index: 10001;
+}
+
+.mem-btn-grey-payment{
+    background-color:#f2f2f2;
+    border: 2px solid #BCBCBC;
+    color: #7F7F7F;
+    font: 18px arial;
+    height: 39px;
+    margin-top: 5px;
+    padding: 0 10px;
+    text-transform: capitalize;
+    vertical-align: middle;
+}
+
+/*New CSS created by Shahab*/
+
+.ques-icn{background-position:-197px -190px; width:11px; height:10px; overflow:hidden; display:inline-block}
+.response-box{padding:10px 0 10px 1px; line-height:22px; position:relative}
+.padL-12{padding-left:12px}
+.pop-layer{position:absolute; left:27px; top:-90px; z-index:999}
+
+.layer-content{padding:10px; border:1px solid #aead55; background:#fff; font-size:12px; line-height:16px; width:200px; -moz-box-shadow: 1px 1px 0 #666; -webkit-box-shadow: 1px 1px 0 #666; box-shadow:1px 1px 0 #666; position:relative; color:#575757}
+.layer-content .close-layer{border:1px solid #aead55; background:#fff; width:15px; height:15px; text-align:center; font-weight:bold; color:#575757; font-size:14px; margin:0; padding:0; line-height:14px; position:absolute; top:3px; right:3px; cursor:pointer}
+.pop-layer .pointer{background-position:-54px -279px; width:26px; height:20px; top:-1px; position:relative; margin:0 auto}
+.padTB-30{padding:30px 0;}
+.back-link{font-size:20px; display:inline-block; margin:20px 15px 0 0; vertical-align:middle}
+
+.exclusive-banner-cont{background:url(../profile/membership_images/exclusive-bannerBg.jpg) 0 0 no-repeat; width:931px; height:374px; font-size:16px; color:#000}
+#exclusive-details{float:left; width:308px; padding:132px 10px 10px 80px}
+#exclusive-packages{float:left; width:195px; padding:98px 0 10px 20px}
+#exclusive-packages label input{width:auto; height:auto}
+.f25{font-size:25px}
+.callback-form{padding:10px 0}
+.callback-form li{float:left; width:100%; margin-bottom:7px}
+.callback-form li label{width:125px; float:left; text-align:right; padding:7px 8px 0 0; font-weight:bold; color:#000}
+.callback-form li div.field-box{float:left; width:200px}
+.txtfield-style{border:1px solid #aaaaaa; padding:5px; border-radius:4px; -moz-border-radius:4px; -webkit-border-radius:4px; background:#fff; width:94%}
+.err-msg{background:#ebebeb; color:#ff0000; padding:3px; margin-top:1px}
+.err-msg .icon{background-position:-217px -190px; display:inline-block; width:13px; height:13px; margin:2px 5px 0 0; vertical-align:sub}
+.date-box{float:right; font-size:11px; padding:10px 15px 0 0}
+.amt-box{float:left; font-size:11px; position:absolute; right:50px; top:81px; font-weight:bold;}
+.amt-text-box{float:left; font-size:11px; padding:32px 0 0 50px; width:245px; font-weight:bold; line-height:16px}
+.offer-btn{background:#de5400; color:#fff; font-size:11px; font-weight:bold; padding:3px 3px; margin:3px 3px 10px 0}
+.offer-price-box{padding:4px; overflow:hidden}
+.offer-price-box span{color:#505050; padding:6px 5px 0 3px}
+.offer-price-box font{display:block}
+.strikethrough{text-decoration:line-through; color:#7c7c7c}
+.pointer-arr{background-position:-248px -190px; width:12px; height:13px; display:inline-block; margin-left:12px}
+.discount-text{font-size:16px; font-weight:normal; padding:4px 10px; margin-top:31px}
+#mem-tab2-rightcon .div-right{width:50px; float:right; font-size:20px; text-align:right}
+#subscription-cont{font-size:14px; padding:20px 0 10px 10px}
+#subscription-cont strong{width:260px; margin-bottom:14px; display:block; float:left; width:284px; text-decoration:underline}
+#subscription-cont ol{width:100%; float:left}
+#subscription-cont ol li{list-style:decimal; margin:0 0 15px 20px; float:left; width:95%; border:1px solid transparent}
+#subscription-cont ol li div{width:260px; text-align:left}
+#subscription-cont ol li p{width:120px; float:right;}
+#lightbox > .ico-indicator2 {background-position: 0px -340px; height: 55px; left: -28px; width: 30px;}
+#lightbox > .container2 {border:2px solid #39900b;width:170px;padding: 8px 0px 10px 15px;}
+.ico-offer2{background-position:-718px -152px;}
+.ico-offer3 {background-position:-792px -152px;}
+
+.sprte-mem-new {
+	background:url(sprite-mem-4.png);
+}
+.mem-ico-wrong-new {
+ 	background-position:-11px -423px; width: 23px; height: 23px; position:relative; margin:0 auto;}
+.mem-ico-right-new {
+ 	background-position:-36px -423px; width: 23px; height: 23px; position:relative; margin:0 auto;}
+.pad-new{ 
+	padding:0px 0px 20px 0px;}
+.color-new{color:#333333;}
+.color-new1{color:#cc0000;}
+.color-blue{color:#117daa;}
+.brder-new-mem{border:1px solid #e6e6e6;}
+.pad1-new{padding:8px 0 8px 10px;}
+.pad2-new{padding:8px 0 8px 10px;}
+.hgt-new1{height:30px;}
+.txt-newlft{text-align:left;}
+.new-vas{background-color:#D6E8F2;border:1px solid #8AB7D8;padding:3px;width:263px;}
+.new-zind1{z-index:1;}
+
+.coup-apply-btn-orange {
+        font:18px arial;
+        color:#FFF;
+        height:50px;
+	width:150px;
+	background-color:#e15404;
+        padding: 0px 10px;
+        text-transform:capitalize;
+        margin-top:20px; vertical-align:middle
+}

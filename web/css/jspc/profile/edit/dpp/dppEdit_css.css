@@ -1,0 +1,108 @@
+.editdppcover {
+	background:url(IMG_URL/images/jspc/commonimg/header-inner1.jpg) no-repeat center center;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;
+	}
+.edbg1 {background-color:#}
+.edbrd1 {border-top:1px solid #d2d0d3}
+.edwid1 {width:830px}
+.edwid2 {width:492px}
+.edwid3 {width:290px}
+.edp1 {padding:16px 30px 0 0}
+.edp2 {padding: 30px 0 0 195px;}
+.edp3{padding:12px}
+.edic1 {background-position: -21px -248px;width: 11px;height: 12px;}
+.dpp-up-arrow{background-position: -2px -31px;width: 14px;height: 11px;}
+.edcolr1 {color:#4d4250}
+.editform label {float: left;text-align: right;width: 164px;font-size:15px;padding:5px 30px 0 0;font-family:"Roboto", "sans-serif";font-weight:400;color:#353e4f}
+.editform label{opacity: 0.9;filter: alpha(opacity=90);}
+.filter {border:0;background-color: #ebebeb;width:86px;text-align:center;color:#353e4f;font-size:13px;line-height:31px}
+.filterset {border:0;background-color: #d9475c;width:86px;text-align:center;color:#fff;font-size:13px;line-height:31px}
+.editform button {cursor:pointer}
+.dpp-sel {border: 1px solid #d9d9d9;border-radius: 2px;}
+.dpp_pos1 {right:10px;top:5px}
+.dpp-pos2{bottom:-4px}
+.dpp-pos3 {top: 47px;left: 0;}
+.dpp-pos4{top:47px; right:-5px}
+.dpp-pos5 {top: -9px;left: 40px;}
+
+.dpp-drop-down {background-position: -2px -1px;width: 17px;height: 10px;}
+.prehide {display:none}
+#Cedit .chosen-drop ul {height:200px;overflow:auto;padding:10px;}
+#Cedit .chosen-drop ul li {width: 148px;padding: 10px;height:45px}
+#Cedit .chosen-drop ul li:first-child {display:none}
+#Cedit .chosen-drop ul li.group-result {width: 100%;border-bottom: 1px solid #d9d9d9;padding: 10px 0 0 10px !important;margin-bottom: 10px;font-family:"Roboto", "sans-serif";
+	font-weight:700}
+#Cedit .chosen-drop ul li.group-result {font-size:13px}
+.dppbox {border: 1px solid #d9475c;background-color: #fff;border-radius: 2px;}
+.dppbox{display:none}
+.dppbox ul {list-style-type: none;}
+.dppbox ul.list-agemin li, .dppbox ul.list-agemax li {width: 38px;}
+.dppbox ul li {float: left;border-bottom: 1px solid #d9d9d9;line-height: 40px;}
+.dppbox ul li:hover{background-color:#d9475c;color:#fff}
+.dppbox ul li.opa50.bg-white:hover{background-color:#fff;color:#000}
+.js-selected{background-color:#d9475c;color:#fff}
+.cusorNone{cursor:default}
+ul.list-heightmin li, ul.list-heightmax li {
+    width: 158px;
+    border-bottom: 0;
+}
+.edbr1{border:1px solid #d9475c;}
+
+.filterhover{display:none}
+.filbtn:hover .filterhover{display:block}
+/*.chosen-drop ul li {width: 149px;}*/
+.chosenDropWid {width: 149px;}
+.chosen-drop ul{padding:10px !important}
+.chosen-container .chosen-results li{padding:10px 6px !important}
+.chosen-container .chosen-drop{width:492px !important}
+ul.list-incomemin li, ul.list-incomemax li,ul.list-incomedolmin li, ul.list-incomedolmax li {
+    width: 220px;
+    border-bottom: 0;
+}
+#incomeRangeDol{margin-top: 20px; margin-left: 193px}
+
+input::-ms-clear {
+     display:none;
+}
+
+@media (max-width: 1024px){
+ .edpos1{top: -20px;left: -297px;}	
+ .edpop1 {background-position: -49px -247px;width: 9px;height: 15px;left: 286px;top: 11px;}	
+	
+}
+@media (min-width: 1280px){
+	.edpos1{top:-20px; left:93px;}
+	.edpop1{background-position:-37px -247px; width:9px; height:15px; left:-8px; top:11px}
+}
+
+/* fix rtl for demo */
+    .chosen-rtl .chosen-drop {
+	left: -9000px;
+}
+.fullwidImp{width:100% !important}
+.chosen-choices li input{width:200px !important}
+.hideMore {display:none}
+.showMore {display:block}
+.height100 {height:100px}
+.height90 {height:90px}
+.w600h80 {width:600px;height:80px}
+.labelpadding {padding:15px 30px 0 0}
+.chosenfloat {float:none !important}
+.h31 {height:31px;}
+.pr10 {padding-right: 10px;}
+.dpp-pad4 {padding: 30px 0 30px 273px}
+.outl-no {outline: 0}
+.reg1bg1{background-color:#fdfdfd}
+.reg1pos1{top:40%}
+.reg1close{background-position: -145px -265px;width: 20px;height: 20px;}
+.regMsgPad{padding-bottom: 21px;padding-left: 15px;padding-right: 15px;}
+.overlaywhite {
+    position: absolute;
+    top: 16px;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 2;
+    background-color: rgba(255, 255, 255, 0.85);
+
+}
+.lnHt{line-height: 1.5}

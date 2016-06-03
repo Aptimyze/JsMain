@@ -1,0 +1,101 @@
+<html>
+	<head>
+		<title>Performance MIS</title>
+		<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+	</head>
+	<body>
+		<table width="50%" align="center" cellpadding="4" cellspacing="4" border="0">
+			<tr>
+				<td align="center"><img src="../profile/images/logo_1.gif" width="192" height="65"></td>
+			</tr>
+                        <tr class="formhead">
+                                <td align="center"><a href="../jsadmin/mainpage.php?cid=~$cid`">Mainpage</a></td>
+                        </tr>
+		</table>
+		<br>
+		~if $UNAUTHORIZED`
+			<table width="50%" align="center" cellpadding="4" cellspacing="4" border="0">
+				<tr class="fieldsnew" align="center">
+					<td>
+						You do not have the privilage to edit such details.
+						<br>
+						<a href="../jsadmin/mainpage.php?cid=~$cid`">Continue&gt;&gt;</a>
+					</td>
+				</tr>
+			</table>
+		~elseif $ERR_MSG`
+			<table width="50%" align="center" cellpadding="4" cellspacing="4" border="0">
+				<tr class="formhead" align="center">
+					<td>Edit Performance MIS</td>
+				</tr>
+				<tr class="fieldsnew" align="center">
+					<td>
+						Details for this month has not been uploaded yet.
+						<br>
+						<a href="../jsadmin/mainpage.php?cid=~$cid`">Continue&gt;&gt;</a>
+					</td>
+				</tr>
+			</table>
+		~elseif $SUCCESSFUL`
+			<table width="50%" align="center" cellpadding="4" cellspacing="4" border="0">
+				<tr class="formhead" align="center">
+					<td>Edit Performance MIS</td>
+				</tr>
+				<tr class="fieldsnew" align="center">
+					<td>
+						You have successfully edited the details.
+						<br>
+						<a href="../jsadmin/mainpage.php?cid=~$cid`">Continue&gt;&gt;</a>
+					</td>
+				</tr>
+			</table>
+		~else`
+			<table width="90%" align="center" cellpadding="4" cellspacing="4" border="0">
+				<tr class="formhead" align="center">
+					<td>
+						Edit Performance MIS
+						<br>
+						<font color="red">Please Tick the checkbox corresponding to the username&rsquo;s for changes to take effect.</font>
+					</td>
+				</tr>
+				~if $NOT_SELECTED`
+					<tr class="fieldsnew" align="center">
+						<td><font color="red">You have not selected any Username to modify</font></td>
+					</tr>
+				~/if`
+			</table>
+			<form name="form1" method="post" action="performance_track_edit.php">
+			<input type="hidden" name="cid" value="~$cid`">
+			<table width="90%" align="center" cellpadding="4" cellspacing="4" border="0">
+				<tr class="label" align="center">
+					<td>&nbsp;</td>
+					<td>Username</td>
+					<td>Jackpot Target</td>
+					<td>Leave Dates</td>
+				</tr>
+				~section name=next loop=$user_arr`
+					~assign var="username" value=$name_arr[next]`
+					<tr align="center">
+						<td class="label">
+							<input type="checkbox" name="modify[~$username`]" value="Y">
+							<input type="hidden" name="names[]" value="~$username`">
+						</td>
+						<td class="label">~$username`</td>
+						<td class="fieldsnew">
+							<input type="text" name="target[~$username`]" value="~$user_arr[$username].TARGET`" class="textboxes1">
+						</td>
+						<td class="fieldsnew">
+							<textarea name="leave_dates[~$username`]" rows="2" cols="20" class="textboxes1">~$user_arr[$username].LEAVE_DATES`</textarea>
+						</td>
+					</tr>
+				~/section`
+				<tr class="label" align="center">
+					<td colspan="100%">
+						<input type="submit" name="submit" value="Submit" class="buttons1">
+					</td>
+				</tr>
+			</table>
+			</form>
+		~/if`
+	</body>
+</html>

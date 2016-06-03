@@ -1,0 +1,651 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>UserEdit : Jeevansathi.com Matrimonial Services</title>
+		<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+		<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+		<SCRIPT language="JavaScript">
+			function sure()
+			{
+			return confirm("Are you sure to delete?");
+			}
+			function checkemail(emailadd)
+                        {
+                                var result = false;
+                                var theStr = new String(emailadd);
+                                var index = theStr.indexOf("@");
+                                if (index > 0)
+                                {
+                                        var pindex = theStr.indexOf(".",index);
+                                        if ((pindex > index+1) && (theStr.length > pindex+2))
+                                                result = true;
+                                }
+                                return result;
+                        }
+                        function validate_email()
+                        {
+                                var mid=document.getElementById('EMAIL').value;
+                                var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9])+$/;
+                                if(checkemail(mid) && filter.test(mid) && mid.charAt(0)!=".")
+                                {
+                                        document.getElementById('m_id').style.display="none";
+                                        return checkthis();
+                                }
+                                else
+                                {       
+                                        document.getElementById('m_id').style.display="block";
+                                        return false;
+                                }
+                        }
+		</script>
+	</head>
+	~include file="head.htm"`
+	<br>
+	<body bgcolor="#FFFFFF" topmargin="0" marginheight="0"   onload="populate_textarea()">
+		<table width="600" border="0" cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+			<tr width=100% class="formhead">
+				<td width=55% class="formhead" border=1><font><b>Welcome : ~$user`</b></font></td>
+				<td width="15%" class="formhead" align="center">
+				<td width=10% class="formhead" border=1 align='CENTER'><a href="logout.php?cid=~$cid`">Logout</a></td>
+			</tr>
+		</table>
+		<table width="600" border="0" cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+			<tr class=label align=center>
+				<td width=10%>&nbsp;Gender</td>
+				<td width=10%>&nbsp;Age</td>
+				<td width=10%>&nbsp;Country of Residence</td>
+				<td width=10%>&nbsp;City of Residence</td>
+				<td width=10%>&nbsp;Marital Status</td>
+				<td width=10%>&nbsp;Ethinicty (State of Origin)</td>
+				<td width=10%>&nbsp;Religion</td>
+				<td width=10%>&nbsp;Caste</td>
+				<td width=10%>&nbsp;Country of Birth</td>
+				<td width=10%>&nbsp;City of Birth</td>
+				<td width=10%>&nbsp;Posted By</td>
+			</tr>
+			<tr class=fieldsnew align=center>
+				<td>&nbsp;~$SHOW_GENDER`</td>
+				<td>&nbsp;~$SHOW_AGE`</td>
+				<td>&nbsp;~$SHOW_COUNTRY[0]`</td>
+				<td>&nbsp;~if $SHOW_CITYRES[0] neq ''` ~$SHOW_CITYRES[0]` ~else` Outside India ~/if`</td>
+				<td>&nbsp;~$SHOW_MSTATUS`</td>
+				<td>&nbsp;~$SHOW_MTONGUE[0]`</td>
+				<td>&nbsp;~$SHOW_RELIGION[0]`</td>
+				<td>&nbsp;~$SHOW_CASTE[0]`</td>
+				<td>&nbsp;~$SHOW_COUNTRY_BIRTH[0]`</td>
+				<td>&nbsp;~if $SHOW_CITY_BIRTH neq ''` ~$SHOW_CITY_BIRTH` ~else` Not Specified ~/if`</td>
+				<td>&nbsp;~$POSTED_BY`</td>
+			</tr>
+			<tr>
+				<td colspan=11>&nbsp;</td>
+			</tr>
+			<tr ~if $PAID eq 'Y'` class="fieldsnewgreen" ~else` class="fieldsnew" ~/if`>
+				<td colspan=100% align="center">~if $PAID eq 'Y'` Paid Member ~else` Free Member ~/if`</td>
+			</tr>
+		</table>
+		<form action="skipped_profile.php" method="post" name="fr1" onsubmit="return validate_email()">
+			<table width="500" border="0" cellspacing="0" cellpadding="0" align="center">
+				<tr>
+					<td width="157">&nbsp;</td>
+					<td width="343">&nbsp;</td>
+				</tr>
+				<tr  class="formhead">
+					<td align="center">Username : </td>
+					<td >~$USERNAME`</td>
+				</tr>
+				<tr>
+					<td width="157">&nbsp;</td>
+					<td width="343">&nbsp;</td>
+				</tr>
+				~if $val eq 'new'`
+					<tr class="label">
+						<td align="center">Gender : </td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr class="fieldsnew">
+						<td >&nbsp;</td>
+						<td>
+							<input type="radio" name="GENDER" value="M" ~if $SHOW_GENDER eq 'M'` checked ~/if`>Male&nbsp;
+							<input type="radio" name="GENDER" value="F" ~if $SHOW_GENDER eq 'F'` checked ~/if`>Female
+						</td>
+					</tr>
+					<tr>
+						<td width="157">&nbsp;</td>
+						<td width="343">&nbsp;</td>
+					</tr>
+				~else`
+					<input type="hidden" name="GENDER" value="~$SHOW_GENDER`">
+				~/if`
+				<tr class="label">
+					<td align="center">Marital Status : </td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr class="fieldsnew">
+					<td>&nbsp;</td>
+					<td>
+						<select name="MSTATUS">
+							<option value="">Select</option>
+							~section name=next loop=$marital_status_arr`
+								<option value="~$marital_status_arr[next].VALUE`" ~if $marital_status_arr[next].VALUE eq $MSTATUS` selected ~/if`>~$marital_status_arr[next].LABEL`</option>
+							~/section`
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td width="157">&nbsp;</td>
+					<td width="343">&nbsp;</td>
+				</tr>
+				<tr class="label">
+					<td align="center">Date of Birth : </td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr class="fieldsnew">
+					<td >&nbsp;</td>
+					<td>
+						<select name="day_of_birth">
+							~section name=next loop=$ddarr`
+								<option value="~$ddarr[next]`" ~if $ddarr[next] eq $day_of_birth` selected ~/if`>~$ddarr[next]`</option>
+							~/section`
+						</select>
+						<select name="month_of_birth">
+							~section name=next loop=$mmarr`
+								<option value="~$mmarr[next].VALUE`" ~if $mmarr[next].VALUE eq $month_of_birth` selected ~/if`>~$mmarr[next].LABEL`</option>
+							~/section`
+						</select>
+						<select name="year_of_birth">
+							~section name=next loop=$yyarr`
+								<option value="~$yyarr[next]`" ~if $yyarr[next] eq $year_of_birth` selected ~/if`>~$yyarr[next]`</option>
+							~/section`
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td width="157">&nbsp;</td>
+					<td width="343">&nbsp;</td>
+				</tr>
+				<tr class="label">
+					<td align="center">Photo Protect : </td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr class="fieldsnew">
+					<td >&nbsp;</td>
+					<td>
+						<input type="radio" name="PHOTO_DISPLAY" value="A" ~if $PHOTO_PRIVACY eq 'A'` checked ~/if`>Visible to all (recomended).
+						<br><input type="radio" name="PHOTO_DISPLAY" value="C" ~if $PHOTO_PRIVACY eq 'C'` checked ~/if`>Visible to members whom I contact and to members I accept.
+						<br><input type="radio" name="PHOTO_DISPLAY" value="H" ~if $PHOTO_PRIVACY eq 'H'` checked ~/if`>Hide photo(s) temporarily.
+					</td>
+				</tr>
+				<tr>
+					<td width="157">&nbsp;</td>
+					<td width="343">&nbsp;</td>
+				</tr>
+				~if $SHOWSUBCASTE eq "Y"`
+					<tr class="label">
+						<td align="center">Subcaste</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr class="fieldsnew">
+						<td >&nbsp;</td>
+						<td><input type="text" name="SUBCASTE" value="~$SUBCASTEvalue`" size="40" class="textboxes1"></td>
+					</tr>
+                                        ~if $OBSCENE_SUBCASTE`
+                                                ~$OBSCENE_MESSAGE`
+                                        ~/if`
+                                        ~if $EXCEED_NUMERIC_SUBCASTE`
+                                                ~$EXCEED_NUMERIC_MESSAGE`
+                                        ~/if`
+                                        ~if $INTELLIGENT_USAGE_SUBCASTE`
+                                                ~$INTELLIGENT_USAGE_MESSAGE`
+                                        ~/if`
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+				~/if`
+
+				~if $SHOWNAKSHATRA eq "Y"`
+					<tr class="label">
+						<td align="center">Nakshatra</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr class="fieldsnew">
+						<td >&nbsp;</td>
+						<td><input type="text" name="NAKSHATRA" value="~$NAKSHATRAvalue`" size="40" class="textboxes1"></td>
+					</tr>
+                                        ~if $OBSCENE_NAKSHATRA`
+                                                ~$OBSCENE_MESSAGE`
+                                        ~/if`
+                                        ~if $EXCEED_NUMERIC_SUBCASTE`
+                                                ~$EXCEED_NUMERIC_MESSAGE`
+                                        ~/if`
+                                        ~if $INTELLIGENT_USAGE_NAKSHATRA`
+                                                ~$INTELLIGENT_USAGE_MESSAGE`
+                                        ~/if`
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+				~/if`
+				~if $SHOWGOTHRA eq "Y"`
+					<tr class="label">
+						<td align="center">Gothra</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr class="fieldsnew">
+						<td >&nbsp;</td>
+						<td><input type="text" name="GOTHRA" value="~$GOTHRAvalue`" size="40" class="textboxes1"></td>
+					</tr>
+                                        ~if $OBSCENE_GOTHRA`
+                                                ~$OBSCENE_MESSAGE`
+                                        ~/if`
+                                        ~if $EXCEED_NUMERIC_GOTHRA`
+                                                ~$EXCEED_NUMERIC_MESSAGE`
+                                        ~/if`
+                                        ~if $INTELLIGENT_USAGE_GOTHRA`
+                                                ~$INTELLIGENT_USAGE_MESSAGE`
+                                        ~/if`
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+				~/if`
+				~if $SHOWPHONERES eq "Y"`
+					<tr class="label">
+						<td align="center">Phone Residence</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr class="fieldsnew">
+						<td >&nbsp;</td>
+						<td><input type="text" name="PHONE_RES" value="~$PHONE_RESvalue`" size="40" class="textboxes1"></td>
+					</tr>
+                                        ~if $OBSCENE_PHONE_RES`
+                                                ~$OBSCENE_MESSAGE`
+                                        ~/if`
+                                        ~if $INTELLIGENT_USAGE_PHONE_RES`
+                                                ~$INTELLIGENT_USAGE_MESSAGE`
+                                        ~/if`
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+				~/if`
+				~if $SHOWPHONEMOB eq "Y"`
+					<tr class="label">
+						<td align="center">Phone Mobile</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr class="fieldsnew">
+						<td >&nbsp;</td>
+						<td><input type="text" name="PHONE_MOB" value="~$PHONE_MOBvalue`" size="40" class="textboxes1"></td>
+					</tr>
+                                        ~if $OBSCENE_PHONE_MOB`
+                                                ~$OBSCENE_MESSAGE`
+                                        ~/if`
+                                        ~if $INTELLIGENT_USAGE_PHONE_MOB`
+                                                ~$INTELLIGENT_USAGE_MESSAGE`
+                                        ~/if`
+					<tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					</tr>
+				~/if`
+				~if $SHOWCITY eq "Y"`
+					<tr class="label">
+						<td align="center">City of Birth</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr class="fieldsnew">
+						<td >&nbsp;</td>
+						<td><input type="text" name="CITY_BIRTH" value="~$CITY_BIRTHvalue`" size="40" class="textboxes1"></td>
+					</tr>
+                                        ~if $OBSCENE_CITY_BIRTH`
+                                                ~$OBSCENE_MESSAGE`
+                                        ~/if`
+                                        ~if $EXCEED_NUMERIC_BIRTH`
+                                                ~$EXCEED_NUMERIC_MESSAGE`
+                                        ~/if`
+                                        ~if $INTELLIGENT_USAGE_CITY_BIRTH`
+                                                ~$INTELLIGENT_USAGE_MESSAGE`
+                                        ~/if`
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+				~/if`
+				~if $SHOWANNULLED eq "Y"`
+                                <tr class="label" style="color:red"><TD colspan=2><B>Why Marital Status is Annulled </b></td></tr>
+                                <Tr class="fieldsnew"><Td>&nbsp;</td>
+                                <td><textarea name="Annulled_Reason" rows="3" cols="40" class="textboxes1">~$Annulled_Reason`</textarea></td>
+                                </tr>
+                                ~/if`
+				~if $SHOWEDUCATION eq "Y"`
+					<tr class="label">
+						<td align="center">Education</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr class="fieldsnew">
+						<td >&nbsp;</td>
+						<td><input type="text" name="EDUCATION" value="~$EDUCATIONvalue`" size="40" class="textboxes1"></td>
+					</tr>
+                                        ~if $OBSCENE_EDUCATION`
+                                                ~$OBSCENE_MESSAGE`
+                                        ~/if`
+                                        ~if $EXCEED_NUMERIC_EDUCATION`
+                                                ~$EXCEED_NUMERIC_MESSAGE`
+                                        ~/if`
+                                        ~if $INTELLIGENT_USAGE_EDUCATION`
+                                                ~$INTELLIGENT_USAGE_MESSAGE`
+                                        ~/if`
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+				~/if`
+				~if $SHOWMESSENGER eq "Y"`
+					<tr class="label">
+						<td align="center">Messenger ID</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr class="fieldsnew">
+						<td >&nbsp;</td>
+						<td><input type="text" name="MESSENGER_ID" value="~$MESSENGER_IDvalue`" size="40" class="textboxes1"></td>
+					</tr>
+                                        ~if $OBSCENE_MESSENGER_ID`
+                                                ~$OBSCENE_MESSAGE`
+                                        ~/if`
+                                        ~if $EXCEED_NUMERIC_MESSENGER_ID`
+                                                ~$EXCEED_NUMERIC_MESSAGE`
+                                        ~/if`
+                                        ~if $INTELLIGENT_USAGE_MESSENGER_ID`
+                                                ~$INTELLIGENT_USAGE_MESSAGE`
+                                        ~/if`
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+				~/if`
+				~if $SHOWCONTACT eq "Y"`
+					<tr class="label">
+						<td align="center">Contact</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr class="fieldsnew">
+						<td >&nbsp;</td>
+						<td>
+						<textarea name="CONTACT" rows=3 cols=40>~$CONTACTvalue`</textarea>
+					</td>
+					</tr>
+                                        ~if $OBSCENE_CONTACT`
+                                                ~$OBSCENE_MESSAGE`
+                                        ~/if`
+                                        ~if $EXCEED_NUMERIC_CONTACT`
+                                                ~$EXCEED_NUMERIC_MESSAGE`
+                                        ~/if`
+                                        ~if $INTELLIGENT_USAGE_CONTACT`
+                                                ~$INTELLIGENT_USAGE_MESSAGE`
+                                        ~/if`
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+				~/if`
+				~if $SHOWEMAIL eq "Y"`
+					<tr class="label">
+						<td align="center">Email</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr class="fieldsnew">
+						<td >&nbsp;</td>
+						<td>
+						~if $BUREAU eq 'Y'` Profile Posted by Marriage Bureau
+						~else`
+						<input type="text" id="EMAIL" name="EMAIL" value="~$EMAILvalue`" size="40" class="textboxes1">
+						~/if`
+						</td>
+					</tr>
+                                                ~if $OBSCENE_EMAIL`
+                                                        ~$OBSCENE_MESSAGE`
+                                                ~/if`
+                                                ~if $EXCEED_NUMERIC_EMAIL`
+                                                        ~$EXCEED_NUMERIC_MESSAGE`
+                                                ~/if`
+						~if $email_err`
+                                                        ~$EMAIL_ERR_MSG`
+                                                ~else`
+                                                <tr class='fieldsnew'>
+                                                                <td>&nbsp;</td>
+                                                                <td id="m_id" style="display:none;"><font color='red'>Please enter a valid email address.</font></td>
+                                                </tr>
+                                                ~/if`
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+				~/if`
+				<tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
+				~if $SHOWYOURINFO eq "Y"`
+					<tr class="label">
+						<td align="center">Your Info </td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr class="fieldsnew">
+						<td>&nbsp;</td>
+						<td><textarea name="YOURINFO" cols="40" rows="8" class="textboxes1">~$YOURINFOvalue`</textarea></td>
+					</tr>
+                                        ~if $OBSCENE_YOURINFO`
+                                                ~$OBSCENE_MESSAGE`
+                                        ~/if`
+                                        ~if $EXCEED_NUMERIC_YOURINFO`
+                                                ~$EXCEED_NUMERIC_MESSAGE`
+                                        ~/if`
+                                        ~if $INTELLIGENT_USAGE_YOURINFO`
+                                                ~$INTELLIGENT_USAGE_MESSAGE`
+                                        ~/if`
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+				~/if`
+				~if $SHOWFAMILYINFO eq "Y"`
+					<tr class="label">
+						<td align="center">Family Info </td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr class="fieldsnew">
+						<td>&nbsp;</td>
+						<td><textarea name="FAMILYINFO" cols="40" rows="8" class="textboxes1">~$FAMILYINFOvalue`</textarea></td>
+					</tr>
+                                        ~if $OBSCENE_FAMILYINFO`
+                                                ~$OBSCENE_MESSAGE`
+                                        ~/if`
+                                        ~if $EXCEED_NUMERIC_FAMILYINFO`
+                                                ~$EXCEED_NUMERIC_MESSAGE`
+                                        ~/if`
+                                        ~if $INTELLIGENT_USAGE_FAMILYINFO`
+                                                ~$INTELLIGENT_USAGE_MESSAGE`
+                                        ~/if`
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+				~/if`
+				~if $SHOWSPOUSE eq "Y"`
+					<tr class="label">
+						<td align="center">Spouse </td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr class="fieldsnew">
+						<td>&nbsp;</td>
+						<td><textarea name="SPOUSE" cols="40" rows="8" class="textboxes1">~$SPOUSEvalue`</textarea></td>
+					</tr>
+                                        ~if $OBSCENE_SPOUSE`
+                                                ~$OBSCENE_MESSAGE`
+                                        ~/if`
+                                        ~if $EXCEED_NUMERIC_SPOUSE`
+                                                ~$EXCEED_NUMERIC_MESSAGE`
+                                        ~/if`
+                                        ~if $INTELLIGENT_USAGE_SPOUSE`
+                                                ~$INTELLIGENT_USAGE_MESSAGE`
+                                        ~/if`
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+				~/if`
+				~if $SHOWJOBINFO eq "Y"`
+					<tr class="label">
+						<td align="center">Job Info </td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr class="fieldsnew">
+						<td>&nbsp;</td>
+						<td><textarea name="JOB_INFO" cols="40" rows="8" class="textboxes1">~$JOB_INFOvalue`</textarea></td>
+					</tr>
+                                        ~if $OBSCENE_JOB_INFO`
+                                                ~$OBSCENE_MESSAGE`
+                                        ~/if`
+                                        ~if $EXCEED_NUMERIC_JOB_INFO`
+                                                ~$EXCEED_NUMERIC_MESSAGE`
+                                        ~/if`
+                                        ~if $INTELLIGENT_USAGE_JOB_INFO`
+                                                ~$INTELLIGENT_USAGE_MESSAGE`
+                                        ~/if`
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+				~/if`
+				~if $SHOWFATHERINFO eq "Y"`
+					<tr class="label">
+						<td align="center">Father Info </td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr class="fieldsnew">
+						<td>&nbsp;</td>
+						<td><textarea name="FATHER_INFO" cols="40" rows="8" class="textboxes1">~$FATHER_INFOvalue`</textarea></td>
+					</tr>
+                                        ~if $OBSCENE_FATHER_INFO`
+                                                ~$OBSCENE_MESSAGE`
+                                        ~/if`
+                                        ~if $EXCEED_NUMERIC_FATHER_INFO`
+                                                ~$EXCEED_NUMERIC_MESSAGE`
+                                        ~/if`
+                                        ~if $INTELLIGENT_USAGE_FATHER_INFO`
+                                                ~$INTELLIGENT_USAGE_MESSAGE`
+                                        ~/if`
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+				~/if`
+				~if $SHOWSIBLINGINFO eq "Y"`
+					<tr class="label">
+						<td align="center">Sibling Info </td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr class="fieldsnew">
+						<td>&nbsp;</td>
+						<td><textarea name="SIBLING_INFO" cols="40" rows="8" class="textboxes1">~$SIBLING_INFOvalue`</textarea></td>
+					</tr>
+                                        ~if $OBSCENE_SIBLING_INFO`
+                                                ~$OBSCENE_MESSAGE`
+                                        ~/if`
+                                        ~if $EXCEED_NUMERIC_SIBLING_INGO`
+                                                ~$EXCEED_NUMERIC_MESSAGE`
+                                        ~/if`
+                                        ~if $INTELLIGENT_USAGE_SIBLING_INFO`
+                                                ~$INTELLIGENT_USAGE_MESSAGE`
+                                        ~/if`
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+				~/if`
+				~if $SHOWPARENTSCONTACT eq "Y"`
+					<tr class="label">
+						<td align="center">Parents Contact </td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr class="fieldsnew">
+						<td>&nbsp;</td>
+						<td><textarea name="PARENTS_CONTACT" cols="40" rows="8" class="textboxes1">~$PARENTS_CONTACTvalue`</textarea></td>
+					</tr>
+                                        ~if $OBSCENE_PARENTS_CONTACT`
+                                                ~$OBSCENE_MESSAGE`
+                                        ~/if`
+                                        ~if $EXCEED_NUMERIC_PARENTS_CONTACT`
+                                                ~$EXCEED_NUMERIC_MESSAGE`
+                                        ~/if`
+                                        ~if $INTELLIGENT_USAGE_PARENTS_CONTACT`
+                                                ~$INTELLIGENT_USAGE_MESSAGE`
+                                        ~/if`
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+				~/if`
+                        </table>
+                        <table width="50%" border="0" cellspacing="4" cellpadding='4' align="center" >
+				
+				<TR class="fieldsnew">
+					<Td colspan=6><input type="checkbox" name="INCOMPLETE" value="INCOMPLETE"  onclick="javascript:{if(this.checked==true)document.getElementById('incompleted').style.display='inline';else document.getElementById('incompleted').style.display='none';}">
+					&nbsp; &nbsp;&nbsp;Mark profile as incomplete</td>
+				</tr>	
+				<TR class="fieldsnew">
+                                        <td>&nbsp;&nbsp;</td><Td colspan=5>
+                                <span id ='incompleted' style="display:none">
+                                        <textarea name='why_inc'  cols="40" rows="8" class="textboxes1"  onclick="javascript:{if(this.value=='Please provide reason why this profile is incomplete') this.value='';}">Please provide reason why this profile is incomplete</textarea>
+
+                                </span>
+                                </td></tr>	
+				<tr class="fieldsnew">
+					<input type="hidden" name=pid value="~$pid`">
+					<input type="hidden" name=screen value="~$screen`">
+					<input type="hidden" name=name value="~$names`">
+					<input type="hidden" name=cid value="~$cid`">
+					<input type="hidden" name=user value="~$user`">
+					<input type="hidden" name=val value="~$val`">
+					<td align="center">
+						<input type=submit value="Delete" name=Submit1 onclick="return sure()" class="buttons1">
+					</td>
+                                        <td align="center">
+                                                <input type="submit" value="Put on Hold" name="OnHold" class="buttons1"></td>
+                                        </td>
+					<td align="center">
+						<input type="submit" value="Save" name="Submit" class="buttons1">
+					</td> 
+				</tr>
+			</table>
+		<script>
+		var original='';
+		function populate_textarea()
+		{
+			
+			if(document.fr1.YOURINFO)
+				original=document.fr1.YOURINFO.value;
+			
+		}
+		function checkthis()
+		{
+			return true;
+			if(document.fr1.YOURINFO)
+			{
+				currentval=document.fr1.YOURINFO.value;
+				if(currentval!=original && !document.fr1.INCOMPLETE.checked)
+				{
+					alert("Please mark profile incomplete, since you have \r\nchanged Your Info field value");
+					return false;
+				}
+			}
+			return true;
+		}
+		</script>
+			<br>
+			<br>
+		</form>
+	</body>
+	~include file="foot.htm"`
+</html>

@@ -1,0 +1,115 @@
+<html>
+<head>
+<title>JeevanSathi Matrimonials - Resources</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="~$IMG_URL`/profile/ser4_images/styles.php" type="text/css">
+<link rel="stylesheet" href="~$SITE_URL`/jsadmin/jeevansathi.css" type="text/css">
+<script language="javascript">
+var t_name = "Enter the name to be displayed for resource";
+var t_link = "Enter the URL for the resource";
+var t_desc = "Enter the description for the resource";
+
+
+function initialise()
+{
+document.f1.Name.value = t_name;
+document.f1.Link.value = t_link;
+document.f1.Desc.value = t_desc;
+}
+
+function verify()
+{
+	if( document.f1.Name.value == "" || document.f1.Name.value == t_name)
+	{
+		alert("Name field is empty.");
+                document.f1.Name.focus();
+	}
+	else if (document.f1.Link.value == "" || document.f1.Link.value == t_link)
+	{
+		alert("Link field is empty.");
+		document.f1.Link.focus();
+	}
+	else if ( document.f1.Desc.value == "" || document.f1.Desc.value == t_desc)
+	{
+		alert("Description field is empty.");
+		document.f1.Desc.focus();
+	}
+        else
+        {
+		document.f1.submit();
+	}
+   
+}
+</script>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body onLoad="initialise()">
+~$HEAD`
+<br>
+<table border=0 width="730" align=center bgcolor="FFE9C2">
+<tr>
+<td valign=top height="5" colspan="3"><spacer type="block" height="5"></td>
+</tr>
+~if $CATEGORY eq y`
+<tr>
+<td align=center valign=top class="extrabigblack"><h3>~$CAT_DISPLAY`</h3></td>
+</tr>
+~else`
+<tr>
+<td align=center valign=top class="extrabigblack"><h3>Select Category to Add Resource</h3></td>
+</tr>
+~/if`
+<tr>
+<td valign=top height="5" colspan="3"><spacer type="block" height="5"></td>
+</tr>
+</table>
+<table>
+<tr>
+<td valign=top height="5" colspan="3"><spacer type="block" height="5"></td>
+</tr>
+<tr>
+<td valign=top height="5" colspan="3"><spacer type="block" height="5"></td>
+</tr>
+</table>
+
+<form name="f1" action="resources_add_info.php" method=post>
+~if $CATEGORY eq y`    
+<input type=hidden name="CatId" value=~$CATID`>
+~/if`
+<table border=0 width=730 align=center>
+<tr>
+<td class="bigblack" align=left width=25%><strong>1. Name</strong></td>
+<td width=75%><input type=text name="Name" size=51></td>
+</tr>
+<tr>
+<td class="bigblack" align=left><strong>2. Link</strong></td>
+<td><textarea name="Link" rows=2 cols=50></textarea></td>
+</tr>
+<tr>
+<td class="bigblack" align=left><strong>3. Description</strong></td>
+<td><textarea name="Desc" rows=4 cols=50></textarea></td>
+</tr>
+~if $CATEGORY eq n`
+<tr>
+<td class="bigblack" align=left><strong>4. Category</strong></td>
+<td>
+<select name="CatId">
+ ~section name=i  loop=$ROWS`
+   	<option  value="~$ROWS[i].CAT_ID`">
+      		~$ROWS[i].CAT_DISPLAY`
+       	</option>
+ ~/section`
+</select>
+
+</td>
+</tr>	
+~/if`
+
+</table>
+<p align=center><input type=button value="Submit" OnClick="verify()" class="Textbox"> <input type=button value="Reset" class="Textbox" onClick="initialise()">
+</form>
+<br>
+~$FOOT`
+<br>
+</body>
+</html>
+

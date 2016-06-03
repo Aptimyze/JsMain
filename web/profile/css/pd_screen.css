@@ -1,0 +1,67 @@
+@charset "utf-8";
+/* CSS Document */
+body { font-family:Arial, Helvetica, sans-serif ; font-size:16px}
+#wrapper { width:980px; margin:0 auto; position:relative; }
+#header { display:block; }
+
+
+.logo { background:url('../imagesnew/logo_1.gif') no-repeat; width:225px; height:62px; margin-left:20px; float:left}
+#header font{ float: left;
+    font: 11px Arial,Helvetica,sans-serif;
+    left: 113px;
+    position: relative;
+    top: 40px;_top:20px}
+.title { color: #000000;    float: left;    font: 20px Arial,Helvetica,sans-serif;    margin-left: 170px;    margin-top: 21px;}
+
+.box { background:#c25b00; width:950px; height:auto; clear:both; color:#fff; padding-left:30px; padding-top:10px; display:block}
+.heading { font-size:20px }
+
+#header div.options{ font-size:16px; margin:10px 10px}
+#header div.options2{ font-size:16px; margin-top:10px;margin-left:72px}
+
+.chk { background:url('../imagesnew/overlay-chk.jpg') no-repeat scroll 0 0; z-index:2
+; width:16px; height:16px; border:none; margin-right:5px; }
+#content { display:block; clear:both}
+div.brown-heading { background:#d4c68b url(../imagesnew/bgline.jpg) repeat-y 55% center; width:767px; height:auto; padding-left:213px; float:left  }
+
+div.white-heading2 {  background:#fff url(../imagesnew/bgline.jpg) repeat-y 60% center;padding-left:212px }
+
+.contentdivleft {width:326px; height:auto; line-height:2; float:left;}
+.contentdivright {width:326px; height:auto; line-height:2; margin-left:35px; float:left }
+.contentdivleft2 {width:326px; height:auto; float:left;}
+.contentdivright2 {width:326px; height:auto;margin-left:35px; float:left }
+.contentdivleft2 img ,.contentdivright2  img { margin-top:14px;}
+
+
+div.brown-heading2 { background:#d4c68b url(../imagesnew/bgline.jpg) repeat-y 55% center; width:980px; height:auto; clear:both; float:left}
+div.white-heading { background:#fff; width:980px; height:auto; clear:both;
+background:url(../imagesnew/bgline.jpg) repeat-y 55% center}
+
+div.grey-heading{background:#f4f4f4 url(../imagesnew/bgline.jpg) repeat-y 55% center; width:980px; height:auto; clear:both; }
+.div1 {width:45px}
+.div2 {width:168px; line-height:2}
+
+
+.box-grey {background:url('../imagesnew/bg-grey.jpg') no-repeat; width:551px; height:122px; padding-top:10px; text-align:center; margin:0 auto; position:relative}
+.box-grey textarea{border:1px solid #76839e; width:410px; height:62px;}
+
+.btn-red { background:url(../imagesnew/bg-redbtn.jpg) repeat-x; height:40px;  border:1px solid #a51212;cursor:pointer;cursor:hand}
+.btn-green {background:url(../imagesnew/bg-grnbtn.jpg) repeat-x; height:40px; border:1px solid #75a412; margin:0px 40px;cursor:pointer;cursor:hand}
+.btn-orange {background:url(../imagesnew/bg-orngbtn.jpg) repeat-x; height:40px; border:1px solid #fe940a;cursor:pointer;cursor:hand}
+
+.clr { clear:both; display:block}
+.fl { float:left}
+.fr { float:right}
+
+.fs20 { font-size:20px;}
+.fs16 { font-size:16px;}
+.orange {color:#c25b00}
+.red {color:#ff0000}
+.white { color:#fff}
+/*.brd {border-right:1px solid #636363}*/
+.b { font-weight:bold}
+
+.sp10 { line-height:10px; display:block; clear:both}
+
+
+

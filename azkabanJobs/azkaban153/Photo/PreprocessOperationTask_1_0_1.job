@@ -1,0 +1,2 @@
+type=command
+command=${php5} -q ${docRoot}/symfony  PhotoScreen:PreprocessOperation 1 0 1

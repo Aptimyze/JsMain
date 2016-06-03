@@ -1,0 +1,52 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>JeevanSathi.com - JSADMIN</title>
+  <link rel="stylesheet" href="jeevansathi.css" type="text/css">
+  <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+</head>
+<body>
+<table border="0" cellspacing="2" cellpadding="2" align=center width=80%>
+<tr> <td colspan=100% class=formhead align=center><a href="managebackend.php?cid=~$cid`&name=~$name`&mode=~$mode`">Main Page</a> </td></tr>
+</table>
+<br>
+<table border="0" cellspacing="2" cellpadding="2" align=center width=100%>
+<tr class=label align=center>
+	<td>ID</td>
+	<td>USERNAME</td>
+	<td>EMAIL</td>
+	<td>PRIVILAGE</td>
+	<td>CENTER</td>
+	<td>ACTIVE</td>
+	<td>MOD_DATE</td>
+	<td>ENTRY BY</td>
+	<td>EDIT</td>
+	<td>ACTIVATE / DEACTIVATE</td>
+</tr>
+~section  name=show  loop=$user`
+<tr align=center class=fieldsnew>   
+	<td>~%show.index_next%`</td>
+	<td>~$user[show].USERNAME`</td>
+	<td>~$user[show].EMAIL`</td>
+	<td align=left>
+	~section name=sec loop=$priv[show]`
+		~$user[show][sec].PRIVILAGE`<br>
+	~/section`
+	</td>
+	
+	<td>~$user[show].CENTER`</td>
+	<td>~$user[show].ACTIVE`</td>
+	<td>~$user[show].MOD_DT`</td>
+	<td>~$user[show].ENTRYBY`</td>
+	<td><a href=edit_userlogin.php?cid=~$cid`&RESID=~$user[show].RESID`>Edit</a></td>
+	<td>
+	~if $user[show].ACTIVE eq 'N'`
+		<a href=edit_userlogin.php?cid=~$cid`&RESID=~$user[show].RESID`&act=Y>Activate</a>
+	~else`
+		<a href=edit_userlogin.php?cid=~$cid`&RESID=~$user[show].RESID`&act=N>De-Activate</a></font></td>
+	~/if`
+	</td>
+</tr>
+~/section`
+</body>
+</html>

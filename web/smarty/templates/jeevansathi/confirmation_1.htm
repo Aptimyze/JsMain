@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>Jeevansathi Matrimonials- Login</title>
+
+	<link href="css/~$common_css`" type="text/css" rel="stylesheet">
+	<link href="css/~$search_result_css`" type="text/css" rel="stylesheet">
+	<link rel="stylesheet" href="css/colorbox_css.css" type="text/css" media="screen"/>
+
+	<script type = "text/javascript" src = "~$JQUERY_JS`"></script>
+	<script src="js/~$revampCommon_js`" type="text/javascript"></script>
+	<script src="js/~$colorbox`" type="text/javascript"></script>
+
+	<style>
+		body{margin:0; padding:0; font-size:12px; color:#000000; font-family:Arial,sans-serif}
+		#main{width:100%; margin:0px;float:left;}
+		#container{width: 778px; margin: 0px auto;}
+		.sr_top_bg{background-image:url(~$IMG_URL`/img_revamp/sr_top_bg.gif); background-repeat:repeat-x; height:20px;}
+		.sr_top_bg h4, .sr_top_bg h4 a, .sr_top_bg h4 a:visited{font:bold 12px Arial, Helvetica, sans-serif; color:#117daa; margin:3px; padding:0;}
+		.orange_border{border:1px #fed369; border-left-style:solid; border-right-style:solid;width:100%; padding:5px; width:448px;}
+		.orange_border h6{font:bold 12px Arial, Helvetica, sans-serif; color:#000; padding:4px 4px 0; margin:0;}
+		.sr_bottom_bg{background-image:url(~$IMG_URL`/img_revamp/sr_bottom_bg.gif); background-repeat:repeat-x; height:5px; font-size:2px;}
+		.sreach_pannal{background:url(images/bg_search.gif) repeat-x;}
+		/* search */
+
+		.pd2{padding:2px 2px 2px 5px;}
+		div.row{clear:both; padding:3px 0 0px 0;color:#000;width:98%;margin:auto;}
+
+		#maintab {margin: 0px;}
+		#maintab ul { margin: 0; padding: 0; list-style: none; }
+		#maintab li { float: left; margin: 0 0 0 0; white-space: nowrap; font: 16px Arial, Helvetica, sans-serif; font-weight:bold; }
+		#maintab a { float: left; padding: 0 0 0 9px; text-decoration: none;color:#117daa;}
+		#maintab a:hover{ color: #000000;}
+		#maintab a.current { background-position: 0 -28px; background: url(images/top-tab-left.gif) no-repeat; color:#117daa; }
+		#maintab a span { float: left;  padding: 5px 9px 4px 0;}
+		#maintab a:hover span{ cursor: pointer; color:#117daa; }
+		#maintab a.current span {background-position: 100% -28px; background: url(images/top-tab-rite.gif) no-repeat 100% 0; cursor: pointer;}
+		#maintab a.current:hover span {cursor: default;}
+		/* end search */
+
+		/* setting */
+		.st_open_tab{float:left;font:normal 12px arial;padding:3px 0 7px 1px;color:#117DAA;clear:both;width:155px;}
+		.st_close_tab{ background-image:url(~$IMG_URL`/img_revamp/open_tab_setting.gif);background-repeat:no-repeat;width:163px;height:25px;font:bold 12px arial;padding:2px 0 0 1px;color:#117DAA;clear:both; background-position:right}
+		.sub_st_tab{padding:4px 0 0 12px;}
+		.success_bg{background-image:url(~$IMG_URL`/img_revamp/bg_success_story.gif); background-repeat:no-repeat;width:118px; height:94px;}
+		.hide_delete_bg{ background-color:#ffed77;border:1px #ffe742 solid; padding:5px;}
+		/* curve */
+
+		.mar_top_10{margin-top:10px;}
+
+		/*category list css starts here*/
+		.orange_border ul.list{margin:0; padding:0; float:left; padding:0 8px; width:220px;}
+		.orange_border ul.list li{list-style:none;}
+		.orange_border ul.list li a{color:#117daa;}
+		.orange_border ul.list li a:hover{text-decoration:underline;}
+		/*category list css ends here*/
+
+		/*tabbed menu starts here*/
+
+		.t_menu_cont{width:778px; background:url(images/ul_tab_bot_r_cur.gif) no-repeat bottom; height:25px;}
+		ul.t_menu{margin:0; padding:0; list-style:none;}
+		ul.t_menu li{list-style:none;font:12px Arial, Helvetica, sans-serif; color:#117daa; margin:0 15px 0 0; float:left; display:inline;}
+		ul.t_menu li a span{padding:2px 2px 2px 10px;}
+		ul.t_menu li a,ul.t_menu li a:visited{color:#117daa;float:left; padding:2px 8px 2px 0; }
+		ul.t_menu li a:hover{background:#fff url(images/ul_tab_r_cur.gif) right top no-repeat;}
+		ul.t_menu li a:hover span{background:url(images/ul_tab_l_cur.gif) no-repeat top left; padding:2px 2px 2px 10px;}
+
+		ul.t_menu li.current a{background:#fff url(images/ul_tab_r_cur.gif) right top no-repeat;}
+		ul.t_menu li.current a span{background:url(images/ul_tab_l_cur.gif) no-repeat top left; padding:2px 2px 2px 10px;}
+	</style>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+
+<body topmargin="0" leftmargin="0" >
+	<div id="main">
+		<div style="width:100%;margin:auto">
+			~$REVAMP_HEAD`
+			
+			<div id="container">
+				<div id="topSearchBand"></div>
+				<div class="clear"></div>
+				<div class="sp3"></div>
+				~$SUB_HEAD`
+				<div class="sp3"></div>
+				~$REVAMP_LEFT_PANEL`
+				~$REVAMP_RIGHT_PANEL`
+	<div class="sp16">
+	</div>
+	~*if $catid`
+		~if $no_icon neq 1*`
+		<div>
+			<img src="~$IMG_URL`/img_revamp/small_tick_img.gif" alt="congrats" title="congrats" align="absmiddle">
+			<span class="t14 b"><span class="green">Congratulations !!</span></span><b class="t14">  ~$msg` </b></span><span class="t12"><a	href="~$SITE_URL`/profile/resources_form.php" class="blink">   [Add another resource]</a></span>
+		</div>
+		~*/if`
+	~else`
+	
+	<div class="mar_top_15">
+		<span class="t14 b">
+			<span class="red">Sorry,</span><b class="t14"> ~$msg` </b></span><span class="t12"><a href="~$SITE_URL`/profile/resources_form.php" class="blink"> [Please Try again]</a>
+		</span>
+
+	 ~/if*`
+
+		<br><br><br><br><br><br><br><br><br><br><br>
+	</div>
+</div>
+
+</div>
+</div>
+
+    <div class="clear">
+    </div>
+
+</div>
+	~$FOOT`
+</div>
+</body>
+</html>

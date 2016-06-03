@@ -1,0 +1,376 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>JeevanSathi Matrimonials - Form for Input of Matrimonial Data</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="/P/I/styles.php" type="text/css">
+
+<script language="JavaScript" SRC="/profile/~$profile_js`"></SCRIPT>
+<script language="JavaScript">
+<!--
+function validate_radio()
+{
+	var docF=document.form1;
+	var result = -1;
+	var radio_caste = false;
+	var radio_city = false;
+	var radio_comm = false;
+	var radio_rel = false;
+	var radio_work = false;
+	var radio_mwork = false;
+	for (counter = 0; counter < docF.Caste_desired.length; counter++)
+	{
+		if (docF.Caste_desired[counter].checked)
+		{
+			radio_caste = true;
+		}
+	}
+	for (counter = 0; counter < docF.Religion.length; counter++)
+        {
+                if (docF.Religion[counter].checked)
+                {
+                        radio_rel = true;
+                }
+        }
+	for (counter = 0; counter < docF.Community.length; counter++)
+        {
+                if (docF.Community[counter].checked)
+                {
+                        radio_comm = true;
+                }
+        }
+	for (counter = 0; counter < docF.City.length; counter++)
+        {
+                if (docF.City[counter].checked)
+                {
+                        radio_city = true;
+                }
+        }
+	if (docF.Wife_Working)
+	{
+		for (counter = 0; counter < docF.Wife_Working.length; counter++)
+        	{
+                	if (docF.Wife_Working[counter].checked)
+                	{
+                        	radio_work = true;
+                	}
+        	}
+	}
+	if (docF.Married_Working)
+	{
+		for (counter = 0; counter < docF.Married_Working.length; counter++)
+        	{
+                	if (docF.Married_Working[counter].checked)
+                	{
+                        	radio_mwork = true;
+                	}
+        	}
+	}
+	if (radio_caste == false)
+	{
+			alert("Please specify whether you are willing to marry outside your caste or not");
+			return false;
+			result = 1;
+	}
+	if (radio_rel == false)
+        {
+                        alert("Please specify whether you are willing to marry outside your religion or not");
+                        return false;
+                        result = 1;
+        }
+	if (radio_comm == false)
+        {
+                        alert("Please specify whether you are willing to marry outside your community or not");
+                        return false;
+                        result = 1;
+        }
+	if (radio_city == false)
+        {
+                        alert("Please specify whether you are willing to marry outside your city or not");
+                        return false;
+                        result = 1;
+        }
+	if (docF.Wife_Working)
+	if (radio_work == false)
+        {
+                        alert("Please specify whether you prefer your wife to be a working one or not");
+                        return false;
+                        result = 1;
+        }
+	if (docF.Married_Working)
+	if (radio_mwork == false)
+        {
+                        alert("Please specify whether you are willing to marry after your marriage or not");
+                        return false;
+                        result = 1;
+        }
+	return true;
+}
+//function validate1(source)
+function validate1(maritalstatus)
+{
+	//if(source!='O')
+	{
+		//var n='N';
+		var docF=document.form1;
+		/*var count=0,i;
+		checkboxmarital=docF.checkboxmarital;
+		for (i=0;i<checkboxmarital.length;++i)
+		{
+			if (checkboxmarital[i].checked== true)
+			{	
+				//alert(checkboxmarital[i].name);
+				//alert(checkboxmarital[i].value);
+				count++;
+			}
+		}
+		if(count==0)
+		{
+			alert("Please specify what type of people will you prefer marrying");
+			return false;		
+		}
+		var count1=0,j;
+		checkboxedulevel=docF.checkedulevel;
+		for (j=0;j<checkboxedulevel.length;++j)
+		{
+			if (checkboxedulevel[i].checked== true)
+			{
+				count1++;
+			}
+		}*/
+		var radio_val = validate_radio();
+		if (!radio_val)
+			return false;
+		
+		if(maritalstatus!='N')
+		{
+			if(docF.checkboxmarital1.checked==false && docF.checkboxmarital2.checked==false && docF.checkboxmarital3.checked==false && docF.checkboxmarital4.checked==false && docF.checkboxmarital5.checked==false && docF.checkboxmarital6.checked==false)
+			{
+				alert("Please specify what type of people will you prefer marrying");
+				return false;
+			}
+		}
+		if(docF.checkboxedulevel1.checked==false && docF.checkboxedulevel2.checked==false && docF.checkboxedulevel3.checked==false && docF.checkboxedulevel4.checked==false)
+		{
+			alert("Please specify the educational qualification of your desired spouse");
+			return false;
+		}
+		if(docF.Spouse.value == '')
+		{
+			alert("Please provide desired characterstics of your spouse");
+			return false;
+		}
+		if(docF.About_Us.value=='')
+		{
+			alert("Please specify how did you come to know about us");
+			return false;
+		}
+	}
+	return true;
+}
+//-->
+</script>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<br>
+~$HEAD`
+~$SUBHEADER`
+<font size="3" face="Arial"><b>&nbsp;&nbsp;&nbsp;&nbsp;</b></font><br>
+~if $NO_OF_ERROR`
+<font color="red" size="2" face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;आपके फार्म में~$NO_OF_ERROR` Error(s)गलती(याँ) है। वे सभी नीचे लाल रंग से दर्शायी गई है। उन्हे ठीक करें और फिर दुबारा से फार्म सबमिट करें।</font>
+~/if`
+
+<body leftmargin="5" topmargin="5">
+<!--form action="inputprofile2.php" method="post" name= "form1" onsubmit= "return validate1(~$SOURCE`)";-->
+~if $hit_source eq 'O'`
+<form action="inputprofile2.php" method="post" name="form1">
+~else`
+<form action="inputprofile2.php" method="post" name="form1" onsubmit="return validate1('~$maritalstatus`');">
+~/if`
+<input type="hidden" name="checksum" value="~$CHECKSUM`">
+<input type="hidden" name="id" value="~$ID_AFF`">
+<input type="hidden" name="gender" value="~$gender`">
+<input type="hidden" name="maritalstatus" value="~$maritalstatus`">
+<input type="hidden" name="hit_source" value="~$hit_source`">
+<input type="hidden" name="tieup_source" value="~$tieup_source`">
+ <table width="80%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+   <td width="5%"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="30" height="1"></td>
+   <td width="95%" height="18" class="smallblack"><FONT color=#3366cc>नोटः * द्रारा चिन्हित जानकारी भरनी अनिवार्य है। </FONT></td>
+  </tr>
+ </table>
+ <table width="80%"  border="0" cellspacing="0" cellpadding="0">
+  <tr class=bggrey>
+   <td width="5%"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="30" height="1"></td>
+   <td width="95%" class="mediumblack" height="18"><b style="color:#996633"> आप अपने इच्छित जीवनसाथी के बारे में और जानकारी दें</b></td>
+  </tr>
+ </table>
+ <br>
+ <table width="80%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+   <td width="5%" height="32" valign="top"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="30" height="1"></td>
+   <td width="95%" valign="top" class="mediumblack"> ~if $check_caste eq "Y"`<font color="red">~/if`<b>&#8226;  क्या आप अपने जाति के बाहर शादी करेगे ?*</b></td>
+  </tr>
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><input type=radio value="Y" name="Caste_desired" ~if $caste eq 'Y'`checked ~/if`>
+हाँ &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio value="N" name="Caste_desired" ~if $caste eq 'N'`checked ~/if`>
+नही </td>
+  </tr>
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack">~if $check_rel eq "Y"`<font color="red">~/if`<b>&#8226;  क्या आप अपने धर्म के बाहर शादी करेगे ?*</b></td>
+  </tr>
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><input type=radio value="Y" name="Religion" ~if $religion eq 'Y'` checked ~/if`>
+हाँ &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio value="N" name="Religion" ~if $religion eq 'N'` checked ~/if`>
+नही</td>
+  </tr>
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack">~if $check_comm eq "Y"`<font color="red">~/if`<b>&#8226;  क्या आप अपने समुदाय के बाहर शादी करेगे ?*</b></td>
+  </tr>
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><input type=radio value="Y" name="Community" ~if $community eq 'Y'` checked ~/if`>
+हाँ &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio value="N" name="Community" ~if $community eq 'N'` checked ~/if`>
+नही</td>
+  </tr>
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack">~if $check_city eq "Y"`<font color="red">~/if`<b>&#8226; क्या आप अपने शहर के बाहर शादी करेगे ?*</b></td>
+  </tr>
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><input type=radio value="Y" name="City" ~if $city eq 'Y'` checked ~/if`>
+हाँ &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio value="N" name="City" ~if $city eq 'N'` checked ~/if`>
+नही</td>
+  </tr>
+~if $gender eq 'M'`
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack">~if $check_wifework eq "Y"`<font color="red">~/if`<b>&#8226; क्या आप चाहते है कि शादी के बाद आपकी पत्नी नौकरी करें ?*</b></td>
+  </tr>
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><input type=radio value="Y" name="Wife_Working" ~if $working eq 'Y'` checked ~/if`>
+हाँ &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio value="N" name="Wife_Working" ~if $working eq 'N'` checked ~/if`>
+नही&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio value="D" name="Wife_Working" ~if $working eq 'D'` checked ~/if`>
+अमान्य </td>
+  </tr>
+~else`
+<tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack">~if $check_mwork eq "Y"`<font color="red">~/if`<b>&#8226;    क्या आप शादी के बाद काम/नौकरी करने की योजना बना रहे है ?*</b></td>  </tr>
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><input type=radio value="Y" name="Married_Working" ~if $married_working eq 'Y'` checked ~/if`>
+हाँ &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio value="N" name="Married_Working" ~if $married_working eq 'N'` checked ~/if`>
+नही&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=radio value="D" name="Married_Working" ~if $married_working eq 'D'` checked ~/if`>
+अमान्य  </td>
+  </tr>
+
+~/if`
+
+~if $maritalstatus neq 'N'`
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><b>&#8226;   ~if $check_checkboxmarital eq "Y"`<font color="red">~/if` अपने जीवनसाथी की इच्छित वैवाहिक स्थिति बताऐं।*~if $check_checkboxmarital eq "Y"`</font>~/if`</b></td>
+  </tr>
+  <tr>
+   <td height="50" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><table width="100%"  border="0" cellspacing="0" cellpadding="1">
+    <tr>
+     <td width="6%"><input type="checkbox" name="checkboxmarital1" value="A" ~if $marital1 eq 'A'` checked ~/if`></td>
+     <td width="14%" class="mediumblack">सभी</td>
+     <td width="6%"><input type="checkbox" name="checkboxmarital2" value="N" ~if $marital2 eq 'N'` checked ~/if`></td>
+     <td width="19%" class="mediumblack">अविवाहित </td>
+     <td width="6%"><input type="checkbox" name="checkboxmarital3" value="W" ~if $marital3 eq 'W'` checked ~/if`></td>
+     <td width="16%" class="mediumblack">विधुर/विधवा</td>
+     <td width="5%"><input type="checkbox" name="checkboxmarital4" value="D" ~if $marital4 eq 'D'` checked ~/if`></td>
+     <td width="28%" class="mediumblack">तलाकशुदा</td>
+    </tr>
+    <tr>
+     <td><input type="checkbox" name="checkboxmarital5" value="S" ~if $marital5 eq 'S'` checked ~/if`></td>
+     <td class="mediumblack">विवाहित पर अलग रहते है</td>
+     <td><input type="checkbox" name="checkboxmarital6" value="O" ~if $marital6 eq 'O'` checked ~/if`></td>
+     <td class="mediumblack">अन्य</td>
+     <td>&nbsp;</td>
+     <td>&nbsp;</td>
+     <td>&nbsp;</td>
+     <td>&nbsp;</td>
+    </tr>
+   </table></td>
+  </tr>
+~/if`
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><b>~if $maritalstatus neq 'N'`&#8226;  ~else`f. ~/if` ~if $check_checkboxedulevel eq "Y"`<font color="red">~/if`अपने जीवनसाथी की इच्छित शिक्षा बताऐं। *~if $check_checkboxedulevel eq "Y"`</font>~/if`</b></td>
+   <!--td valign="top" class="mediumblack"><b>~if $gender eq 'M'`g.~else`~if $maritalstatus neq 'N'`f.~else`e. ~/if`~/if` ~if $check_checkboxedulevel eq "Y"`<font color="red">~/if`अपने जीवनसाथी की इच्छित शिक्षा बताऐं। *~if $check_checkboxedulevel eq "Y"`</font>~/if`</b></td-->
+  </tr>
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><input type="checkbox" name="checkboxedulevel1" value="A" ~if $edu_level1 eq 'A'` checked ~/if`>
+सभी&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="checkbox" name="checkboxedulevel2" value="M" ~if $edu_level2 eq 'M'` checked ~/if`>
+एम.बी.ए / सी.ए / सी.एस / आई.सी.डब्ल्यू.ए&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="checkbox" name="checkboxedulevel3" value="E" ~if $edu_level3 eq 'E'` checked ~/if`>
+इंजीनियर / एम.सी.ए / एम.टेक&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="checkbox" name="checkboxedulevel4" value="P" ~if $edu_level4 eq 'P'` checked ~/if`>
+एम.बी.बी.एस / एम.डी / फार्मा
+</td>
+  </tr>
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack">~if $check_spouse eq "Y"`<font color="red">~/if`<b>~if $maritalstatus neq 'N'`&#8226;  ~else`g. ~/if` अपने जीवनसाथी की इच्छित विशेषताऐं बताऐं।</b></td>
+  </tr>
+  <tr>
+   <td height="80" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><span class="smallred">
+    <textarea name="Spouse" cols="80" rows="5" class="testbox">~$spouse`</TEXTAREA>
+   </span></td>
+  </tr>
+  <tr>
+   <td height="25" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><b>~if $maritalstatus neq 'N'`i.~else`&#8226;   ~/if` ~if $check_aboutus eq "Y"`<font color="red">~/if`हमारे बारे मे आपको जानकारी कैसे मिली *~if $check_aboutus eq "Y"`</font>~/if`</b></td>
+  </tr>
+  <tr>
+   <td height="32" valign="top">&nbsp;</td>
+   <td valign="top" class="mediumblack"><select name="About_Us" class="testbox">
+    <option value="" >कोई एक विकल्प चुनिए</option>
+    <option value="1" ~if $about_us eq '1'` selected ~/if`>र्सच ईन्जन</option>
+    <option value="2" ~if $about_us eq '2'` selected ~/if`>किसी ने बताया </option>
+    <option value="3" ~if $about_us eq '3'` selected ~/if`>अखबार/मैगजीन </option>
+    <option value="4" ~if $about_us eq '4'` selected ~/if`>टेलीवीजन</option>
+    <option value="5" ~if $about_us eq '5'` selected ~/if`>र्पमोशनल ईमैल</option>
+    <option value="6" ~if $about_us eq '6'` selected ~/if`>किसी वेबसाइट के द्वारा</option>
+    <option value="7" ~if $about_us eq '7'` selected ~/if`>अन्य</option>
+   </select></td>
+  </tr>
+ </table>
+ <br>
+ <table width="80%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+   <td width="5%"><img src="~$IMG_URL`/profile/ser4_images/zero.gif" width="30" height="1"><br>
+    </div></td>
+   <td width="95%" class="smallblack"><div align="center"><input type="submit" name="Submit" value="Submit" class="TextBox"></td>
+  </tr>
+ </table>
+
+~$FOOT`
+</td>
+</tr>
+</table>
+
+</form>
+</body>
+</html>

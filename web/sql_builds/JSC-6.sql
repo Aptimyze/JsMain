@@ -1,0 +1,1 @@
+UPDATE  `MIS_MAINPAGE` SET  `JUMP_URL` =  '/mis/servicesmis.php?cid=$cid&user=$user&CMDGo=1&type=D&reportType=S&profileType[0]=P&branch=' WHERE  `ID` =  '13' LIMIT 1 ;

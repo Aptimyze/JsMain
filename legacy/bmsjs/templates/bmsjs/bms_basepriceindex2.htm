@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+	<TITLE>BMS : Campaign Management System</TITLE>
+	<LINK HREF="gifs/style.css" REL="stylesheet" TYPE="text/css">
+	<LINK rel="stylesheet" href="http://www.jeevansathi.com/jsadmin/jeevansathi.css" type="text/css"><link rel="stylesheet" href="http://www.jeevansathi.com/profile/images/styles.css" type="text/css">
+        <script LANGUAGE="JavaScript">
+                function validateForm(tot)
+                {
+                        var docF=document.form1;
+			for(i=1;i<=tot;i++)
+			{
+				document.getElementById('sno'+i).style.color="#000000";
+				document.getElementById('zoneid'+i).style.color="#000000";
+			}
+			for(i=1;i<=tot;i++)
+			{
+				obj = document.getElementById('bpi'+i);
+			
+				if(obj.value=='')
+				{
+	                                alert('BPI(base price index) cannot be blank');
+					document.getElementById('sno'+i).style.color="red";
+					document.getElementById('zoneid'+i).style.color="red";
+	                            	obj.focus();
+                                	return false;
+				}
+			}
+                        return true;
+                }
+        </script>
+
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#000000" VLINK="#000000"  ALINK="#000000" LEFTMARGIN="0" TOPMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+	~$bmsheader`
+	<div CLASS="text" STYLE="margin-left:20px;">
+		<A HREF="bms_adminindex.php?id=~$id`" TARGET="">MIS Home</A> &gt;&gt;<B>Base Price Index</B>
+	</div>		
+	<br>
+	<TABLE WIDTH="100%" BORDER="0">
+	<tr> 
+		<td WIDTH="20%" ALIGN="RIGHT"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="180" HEIGHT="1"><IMG SRC="gifs/tick.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="13" HEIGHT="11"> </td>
+		<td WIDTH="80%" CLASS="text">
+		~if $confirmation` 
+				You have successfully added Base Price Index value for all zones of
+				<br><b>Region: </b>~$region` and 
+				<b>Banner Type: </b>~$bannertype`
+		 ~else` 
+			List all the zone for submitting/editing Base price Index of <br><b>Region: </b>~$region_name` and <b>Banner Type: </b>~$bannertype` .~/if`
+		</td>
+	</tr>
+	</TABLE>
+
+	~if $confirmation`
+               <br><br>                         
+		<div class="text" align="center">
+			<a href="bms_basepriceindex1.php?id=~$id`&site=~$site`">Specify Base Price Index</a><br><br>
+                        <a href="bms_adminindex.php?id=~$id`&site=~$site`">Go Back To Home</a><br><br><br><br>
+		</div>
+	~else`
+	<FORM name="form1" action="bms_basepriceindex1.php" method="post" onSubmit="return validateForm(~$tot`);">
+		<TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER">
+		<tr>
+			<td WIDTH="18" BACKGROUND="gifs/page-bg.gif"><IMG SRC="gifs/lt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0" HSPACE="0"></td>
+			<td ALIGN="RIGHT" WIDTH="18" BACKGROUND="gifs/page-bg.gif"><IMG SRC="gifs/rt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></td>
+		</tr>
+	
+		</TABLE>
+
+		<TABLE WIDTH="100%" BORDER="0" VSPACE="0" HSPACE="0" CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER">
+		<tr>
+			<td WIDTH="18" BACKGROUND="gifs/lt-line-bg-1.gif"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></td>
+			<td WIDTH="100%"> <BR>
+				<div ALIGN="CENTER">
+					<TABLE WIDTH="100%" bordercolor="#DFDFDF" border="1" cellspacing="0" cellpadding="4">
+					<tr>
+						<td CLASS="text-new" bgcolor="#E6EEF9" width="15%"><B>S.No.</B></td>
+						<td CLASS="text-new" bgcolor="#E6EEF9" width="20%"><B>Zone</B></td>
+						<td CLASS="text-new" bgcolor="#E6EEF9" width="20%"><B>BPI</B></td>
+					</tr>
+					~section name=i loop=$zones`
+					<tr>
+						<td CLASS="text-new" id="sno~$zones[i].sno`">~$zones[i].sno`</td>
+						<td CLASS="text-new" id="zoneid~$zones[i].sno`" >~$zones[i].zonename` </td>
+						<TD ALIGN="LEFT">
+							<input type="text" name="BPI[~$zones[i].zoneid`]" maxlength="5" value="~$zones[i].bpi`" SIZE="20" CLASS="textbox" id="bpi~$zones[i].sno`">
+						</TD>
+					</tr>
+	 				~/section` 
+					</TABLE>
+				</div>
+				<BR>
+				<P></P>
+				<P></P>
+			</td>
+			<td BACKGROUND="gifs/rt-line-bg-1.gif" WIDTH="18"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></td>
+		</tr>
+		</TABLE>
+                <DIV ALIGN="CENTER">
+	                <TABLE WIDTH="40%" BORDER="0">
+				<TR>
+					
+					<TD WIDTH="50%">
+						<INPUT TYPE="IMAGE" NAME="submit2" SRC="gifs/submit.gif" BORDER="0">
+					</TD>
+					<TD WIDTH="50%">
+						<INPUT TYPE="IMAGE" NAME="submit3" SRC="gifs/goback.gif" BORDER="0"> 
+					</TD>
+				</TR>
+			</TABLE>
+		</DIV>
+
+		<TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER">
+		<tr>
+			<td WIDTH="18" BACKGROUND="gifs/page-bg-1.gif"><IMG SRC="gifs/lt-low-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></td>
+			<td VALIGN="MIDDLE" HEIGHT="31" BACKGROUND="gifs/page-bg-1.gif">&nbsp;</td>
+			<td ALIGN="RIGHT" WIDTH="18" BACKGROUND="gifs/page-bg-1.gif"><IMG SRC="gifs/lt-rt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></td>
+		</tr>
+		</TABLE>
+		<input type="hidden" name="id" value="~$id`" />
+		<input type="hidden" name="submit3_submit2" value="1" />
+		<input type="hidden" name="bannertype" value="~$bannertype`" />
+		<input type="hidden" name="region" value="~$region`" />
+	</FORM>
+	~/if`
+	~$bmsfooter`
+</BODY>
+</HTML>

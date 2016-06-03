@@ -1,0 +1,248 @@
+body {
+    color: black;
+    background-color: white;
+    font-size: 8pt;
+    font-family: Arial,Helvetica,sans-serif;
+    margin: 0.5em;
+    padding: 1em;
+  }
+
+  div#header {
+    font-size: 1.0em;
+    font-weight: normal;
+    width: 100%;
+    margin: 0em 0em 1em;
+    padding: 0em 0em 1em 0em;
+		background-color: white;
+  }
+
+  div#header h1 {
+  	font-size: 1.0em;
+  	width: 100%;
+  	padding: 0.1em 0em 0.1em 0em;
+  	border-top: rgb(51, 102, 204) solid 1px;
+  	background-color: rgb(229, 236, 249);
+  }
+
+  div#navigation {
+    float: left;
+    width: 8em;
+    background-color: white;
+    margin: 0em 0em 0.5em;
+    padding: 0em;
+  }
+
+  div#navigation a {
+    font-size: 1em;
+    display: block;
+    padding: 0em 0em 0.2em 0em;
+    font-weight: bold;
+  }
+
+  div#navigation a:link {
+    display: block;
+    padding: 0em 0em 0.2em 0em;
+  }
+
+  div#navigation a:visited {
+    display: block;
+    padding: 0em 0em 0.2em 0em;
+    color: darkblue;
+  }
+
+	div#navigation a:hover {
+		text-decoration: none;
+		font-weight: bold;
+		color: black;
+	}
+
+	div#navigation a:active {
+		text-decoration: none;
+		font-weight: bold;
+		color: black;
+	}
+
+	div#navigation a:focus {
+		text-decoration: none;
+		font-weight: bold;
+		color: black;
+	}
+
+  div#weblinks {
+    float: right;
+    width: 13em;
+    background-color: white;
+    margin: 0em 0em 0.5em;
+    padding: 0em;
+  }
+
+  div#weblinks p {
+    font-size: 1em;
+    margin: 0.5em 0em;
+    text-align: justify;
+  }
+
+	div#weblinks p.box {
+		padding: 3;
+		border-color: black;
+		border-color: #ccc;
+		border-style: solid;
+		border-width: 1px;
+		background-color: #efefef;
+		font-weight: bold;
+	}
+
+  div#weblinks a {
+    padding: 0.2em;
+    font-weight: bold;
+  }
+
+  div#weblinks a:link {
+    padding: 0em 0em 0.2em 0em;
+  }
+
+  div#weblinks a:visited {
+    padding: 0em 0em 0.2em 0em;
+    color:darkblue;
+  }
+
+	div#weblinks a:hover {
+		text-decoration: none;
+		font-weight: bold;
+		color: black;
+	}
+
+	div#weblinks a:active {
+		text-decoration: none;
+		font-weight: bold;
+		color: black;
+	}
+
+	div#weblinks a:focus {
+		text-decoration: none;
+		font-weight: bold;
+		color: black;
+	}
+
+  div#content {
+    margin: 0em 14em 1em 9em;
+    padding: 0em 1em;
+    border-left: silver dashed 1px;
+    border-right: silver dashed 1px;
+    text-align: justify;
+  }
+
+  div#content h4 {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 0.5em 0em;
+    color:black;
+    background-color: rgb(229, 236, 249);
+  }
+
+  div#content pre{
+  	font-weight: bold;
+  	color: darkblue;
+  }
+
+  div#content p {
+    font-size: 1em;
+    margin: 0.5em 0em;
+    text-align: justify;
+  }
+
+	div#content p.box {
+		padding: 3;
+		border-color: black;
+		border-color: #ccc;
+		border-style: solid;
+		border-width: 1px;
+		background-color: #efefef;
+		font-weight:bold;
+	}
+
+  div#content hr {
+  	height:1px;
+  	text-align:left;
+  	margin-left:0;
+  	border: 1px solid silver;
+  }
+
+  div#content small {
+    font-size: 0.9em;
+  }
+
+  div#content a {
+    padding: 0.2em;
+    font-weight: bold;
+  }
+
+  div#content a:link {
+    padding: 0em 0em 0.2em 0em;
+  }
+
+  div#content a:visited {
+    padding: 0em 0em 0.2em 0em;
+  }
+
+	div#content a:hover {
+		text-decoration: none;
+		font-weight: bold;
+	}
+
+	div#content a:active {
+		text-decoration: none;
+		font-weight: bold;
+		color: black;
+	}
+
+	div#content a:focus {
+		text-decoration: none;
+		font-weight: bold;
+		color: black;
+	}
+
+	div#footer {
+		padding: 2em 0em 0em 0em;
+		clear: both;
+	}
+
+  div#footer p{
+    display: inline;
+    font-size: 0.8em;
+    margin: 0em;
+    padding: 0.1em;
+  	border-top: rgb(51, 102, 204) solid 1px;
+  }
+
+  div#footer a {
+    padding: 0.2em;
+    font-weight: bold;
+  }
+
+  div#footer a:link {
+    padding: 0em 0em 0.2em 0em;
+  }
+
+  div#footer a:visited {
+    padding: 0em 0em 0.2em 0em;
+    color:darkblue;
+  }
+
+	div#footer a:hover {
+		text-decoration:none;
+		font-weight:bold;
+		color:black;
+	}
+
+	div#footer a:active {
+		text-decoration: none;
+		font-weight: bold;
+		color: black;
+	}
+
+	div#footer a:focus {
+		text-decoration: none;
+		font-weight: bold;
+		color: black;
+	}

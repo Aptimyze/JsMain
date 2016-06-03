@@ -1,0 +1,192 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS - Bounced Cheques Details</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="../billing/jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br><br>
+~if $flag eq '1'`
+	~if $bflag eq 'N'`
+		<table width=100% border=0 align="center" cellspacing="4" cellpadding=5>
+		<tr class="formhead">
+			<td colspan=14 align="center">&nbsp;Financial Year ~$year`-~$yearp1`</td>
+		</tr>
+		<tr class="label">
+		<td colspan=14 align="center">&nbsp;Branch : ~$branch`</td>
+		</tr>
+		~if $lflag eq '1'`
+			<tr class="label">
+			<td width="7%" align="center">&nbsp;Month</td>
+			~section name=loc loop=$ccity`
+				<td align="center">&nbsp;~$ccity[loc]`</td>
+			~/section`
+			<td width="7%" align="center">&nbsp;Total</td>
+			</tr>
+			<tr class="fieldsnew">
+			<td align="center" class="label">&nbsp;Amount</td>
+			~section name=loc loop=$ccity`
+				<td align="center">&nbsp;~$amt[loc]`</td>
+			~/section`
+			<td align="center" class="label">&nbsp;~$tot`</td>
+			</tr>
+		~else`
+			<tr class="label">
+			<td align="center">&nbsp;Month</td>
+			~section name=mon loop=$mmarr`
+				<td width=6% align="center">&nbsp;~$mmarr[mon]`</td>
+			~/section`
+			<td align="center">&nbsp;Total</td>
+			</tr>
+			<tr class="fieldsnew">
+			<td align="center" class="label">&nbsp;Bounced/Total</td>
+			~section name=mon loop=$mmarr`
+				<td width=6% align="center">&nbsp;
+				~if $bounce_count[mon]` ~$bounce_count[mon]` ~else` 0 ~/if` / 
+				~if $total_cheque_count[mon]` ~$total_cheque_count[mon]` ~else` 0 ~/if`
+				</td>
+			~/section`
+			<td align="center" class="label">&nbsp;~$tot_bounce`/~$tot`</td>
+			</tr>
+		~/if`
+		</table>
+	~elseif $bflag eq 'A'`
+		<table width=100% border=0 align="center">
+		<tr class="formhead">
+		<td colspan=14 align="center">&nbsp;Financial Year ~$year`-~$yearp1`</td>
+		</tr>
+		</table>
+		<br>
+		<table width=100% border=0 align="center" cellspacing="4" cellpadding=5>
+		~if $lflag eq '1'`
+			<tr class="label">
+			<td align="center" width=10%>&nbsp;Cheque City</td>
+			~section name=mon loop=$mmarr`
+				<td align="center">&nbsp;~$mmarr[mon]`</td>
+			~/section`
+			<td align="center" width=10%>&nbsp;Bounced/Total</td>
+			</tr>
+			~section name=loc loop=$locarr`
+			<tr class="label">
+				<td align="center">&nbsp;~$locarr[loc]`</td>
+				~section name=mon loop=$mmarr`
+					<td align="center" class="fieldsnew">&nbsp;
+					~if $bounce_count[loc][mon]` ~$bounce_count[loc][mon]` ~else` 0 ~/if`  / 
+					~if $total[loc][mon]` ~$total[loc][mon]` ~else` 0 ~/if`</td>
+				~/section`
+				<td align="center" class="label">&nbsp; 
+					~if $total_bounce[loc]` ~$total_bounce[loc]` ~else` 0 ~/if` / 
+					~if $tota[loc]` ~$tota[loc]` ~else` 0 ~/if` </td>
+			</tr>
+			~/section`
+			<tr class="label">
+			<td align="center">Total</td>
+			~section name=mon loop=$mmarr`
+				<td align="center">&nbsp;
+					~if $total_bounce1[mon]` ~$total_bounce1[mon]` ~else` 0 ~/if` / 
+					~if $totb[mon]` ~$totb[mon]` ~else` 0 ~/if`</td>
+				~assign var="td" value=$totb[mon]`
+				~assign var="totall" value=$totall+$td`
+				~assign var="tb" value=$total_bounce1[mon]`
+				~assign var="tot_bounce" value=$tot_bounce+$tb`
+			~/section`
+			<td align="center" class="label">~$tot_bounce`/~$totall`</td>
+			</tr>
+		~else`
+			<tr class="label">
+			<td align="center" width=6%>&nbsp;Month</td>
+			~section name=mon loop=$mmarr`
+				<td align="center" class="label">&nbsp;~$mmarr[mon]`</td>
+			~/section`
+			<td width=6% align="center" class="label">Bounced/Total</td>
+			</tr>
+			~section name=brn loop=$brancharr`
+			<tr class="label">
+				<td align="center">&nbsp;~$brancharr[brn]`</td>
+				~section name=mon loop=$mmarr`
+					<td align="center" class="fieldsnew">&nbsp;
+					~if $bounce_count[brn][mon]` ~$bounce_count[brn][mon]` ~else` 0 ~/if`  / 
+					~if $total[brn][mon]` ~$total[brn][mon]` ~else` 0 ~/if`</td>
+				~/section`
+				<td align="center" class="label">&nbsp; 
+					~if $total_bounce[brn]` ~$total_bounce[brn]` ~else` 0 ~/if` / 
+					~if $tota[brn]` ~$tota[brn]` ~else` 0 ~/if` </td>
+			</tr>
+			~/section`
+			<tr class="label">
+			<td align="center">Total</td>
+			~section name=mon loop=$mmarr`
+				<td align="center">&nbsp;
+					~if $total_bounce1[mon]` ~$total_bounce1[mon]` ~else` 0 ~/if` / 
+					~if $totb[mon]` ~$totb[mon]` ~else` 0 ~/if`</td>
+				~assign var="td" value=$totb[mon]`
+				~assign var="totall" value=$totall+$td`
+				~assign var="tb" value=$total_bounce1[mon]`
+				~assign var="tot_bounce" value=$tot_bounce+$tb`
+			~/section`
+			<td align="center" class="label">~$tot_bounce`/~$totall`</td>
+			</tr>
+		~/if`
+		</table>
+	~/if`
+~else`
+	<form method=post action="bounce_cheque_mis.php">
+	<table width=80% border=0 align="center" cellpadding=5>
+	<tr>
+	<td>&nbsp;&nbsp;&nbsp;
+	~if $VIEWALL eq 'Y'`
+		Branch :
+                        <select name="branch">
+				<option value="ALL">ALL</option>
+			~section name=brn loop=$branch`
+                                <option value="~$branch[brn]`">~$branch[brn]`</option>
+			~/section`
+                        </select>
+	~/if`
+	</td>
+	</tr>
+	<tr>
+	<td width=25%>&nbsp;</td>
+	<td>Financial Year</td>
+	</tr>
+	<tr>
+	<td>&nbsp;&nbsp;&nbsp;<input name="month" type="radio" value='M' checked>&nbsp;Month Wise</td>
+	<td>
+	        <select name="year">
+	        ~section name=yr loop=$yyarr`
+	                <option value=~$yyarr[yr]`>~$yyarr[yr]`</option>
+	        ~/section`
+	        </select>
+	</td>
+	</tr>
+	<tr>
+	<td>&nbsp;&nbsp;&nbsp;<input name="location" type="checkbox" value='L'>&nbsp;Location Wise</td>
+	</tr>
+	<tr>
+	<input type="hidden" name="checksum" value=~$CHECKSUM`>
+        ~if $ONLYBRANCH eq 'Y'`
+		<input type="hidden" name="branch" value=~$branch`>
+	~/if`
+	<td align="right"><input type="submit" name="CMDGo" value="     Go     "></td>
+	</tr>
+	</table>
+	</form>
+~/if`
+</body>
+</html>

@@ -1,0 +1,207 @@
+<html>
+<head>
+   <title>Payment Collection Status</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+<script language="javascript">
+function check()
+{
+        var base=document.collection_form['mark_coll[]'];
+        var counter=0;
+                                                                                                 
+        for(i=0;i<base.length;i++)
+        {
+                if(base[i].checked)
+                        counter++;
+        }
+                                                                                                 
+        if(counter==0 && base.length>1)
+        {
+                alert("Kindly select a receipt before proceeding further")
+                return false;
+        }
+                                                                                                 
+        if(!base.length)
+                if((!base.checked))
+                {
+                        alert("Kindly select a receipt before proceeding further")
+                        return false;
+                }
+}
+function check_all()
+{
+        var cboxes=document.collection_form['mark_coll[]'];
+	for(var i=0;i<cboxes.length;i++)
+	{
+		//if(cboxes[i].type=="checkbox")
+		//{
+			cboxes[i].checked=true;
+		//}
+	}
+}
+
+function uncheck_all()
+{
+        var cboxes=document.collection_form['mark_coll[]'];
+	for(var i=0;i<cboxes.length;i++)
+	{
+		if(cboxes[i].type=="checkbox")
+		{
+			cboxes[i].checked=false;
+		}
+	}
+}
+
+</script>
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br><br>
+
+~if $flag eq '1'`
+	<table width=100% align=center>
+	<tr class=formhead>
+	<td align=center>&nbsp;~$DATE1` &nbsp; &nbsp;TO &nbsp; ~$DATE2`</td>
+	</tr>
+	<tr class=formhead>
+	<td align=center>Total(Rs)&nbsp;&nbsp;~$tot_rs`  &nbsp; &nbsp;And &nbsp;Total(DOL) &nbsp;~if $tot_dol eq ''`0 ~else` ~$tot_dol` ~/if`</td>
+	</tr>
+	<tr class="fieldsnew">
+		<td align="center">
+			<font color="red">
+				Transaction Number is the number depending on mode of payment (eg: if MODE is EB_CASH, then TRANSACTION NUMBER is Easy Bill Reference ID)
+			</font>
+		</td>
+	</tr>
+	</table>
+<center> <h3> <font color="green"> Collection Status </font> </h3> <a href="#" onclick="check_all()";>Check All</a>  &nbsp; &nbsp; / &nbsp; &nbsp;<a href="#" onclick="uncheck_all()";>Uncheck All</a></center>
+	<table width=100% align=center>
+	<tr class=label>
+		<td align=center>Change Status</td>
+		<td align=center>Entry-Dt</td>
+		<td align=center>Username</td>
+		<td align=center>User Country</td>
+		<td align=center>Bill-Id</td>
+		<td align=center>Receipt-Id</td>
+		<td align=center>Mode</td>
+		<td align=center>Amount</td>
+		<td align=center>Cheque/DD No</td>
+		<td align=center>Sale-By</td>
+		<td align=center>Entry-By</td>
+		<td align=center>Deposit-Branch</td>
+		<td align=center>Collection Status</td>
+		<td align=center>Transaction Number</td>
+		<td align=center>Invoice No</td>
+		<td align=center>Order ID</td>
+		<td align=center>Gateway</td>
+		
+	</tr>
+	~if $arr neq ''`
+	<form name="collection_form" method="post" action="collection_status.php?cid=~$cid`" onSubmit="return check();">
+	~section name=sec loop=$arr`
+	 ~if $arr[sec].new_tab eq 'Y'`<tr class=formhead colspan='17'></tr><tr class=formhead colspan='17'></tr><tr class=formhead colspan='15'>
+        <td align=center colspan='17'>~$arr[sec].last_sort`</td></tr>~/if`
+	<tr class=fieldsnew>
+		<td class="fieldsnew" align="center">~if $arr[sec].receiptid neq "" && $arr[sec].collection_status eq 'Pending'`<input type="checkbox" name="mark_coll[]" value="~$arr[sec].receiptid`" > ~/if`</td>
+		<td align=center>~$arr[sec].entry_dt`</td>
+		<td align=center>~$arr[sec].client`</td>
+		<td align=center>~$arr[sec].country`</td>
+		<td align=center>~$arr[sec].saleid`</td>
+		<td align=center>~$arr[sec].receiptid`</td>
+		<td align=center>~$arr[sec].mode`</td>
+		<td align=center>~$arr[sec].type`&nbsp;&nbsp;~$arr[sec].amt`</td>
+		<td align=center>~$arr[sec].cd_num`</td>
+		<td align=center>~$arr[sec].sale_by`</td>
+		<td align=center>~$arr[sec].entry_by`</td>
+		<td align=center>~$arr[sec].deposit_branch`</td>
+		<td align=center>~$arr[sec].collection_status`</td>
+		<td align=center>~$arr[sec].transaction_number`</td>
+		<td align=center>~$arr[sec].invoice_no`</td>
+		<td align=center>~$arr[sec].orderid`</td>
+		<td align=center>~$arr[sec].gateway`</td>
+	<tr>
+	~if $arr[sec].tot_sort_amt_rs neq '' || $arr[sec].tot_sort_amt_dol neq ''`
+	<tr class=formhead colspan='17'>
+        <td align=center colspan='17'>Total(Rs)&nbsp;&nbsp;~$arr[sec].tot_sort_amt_rs` &nbsp;&nbsp; &nbsp;&nbsp;Total(Dol)&nbsp;&nbsp;~$arr[sec].tot_sort_amt_dol`</td></tr>~/if`
+	~/section`
+
+	<tr><td colspan="15">&nbsp;</td></tr>
+<tr><td colspan="15">&nbsp;</td></tr>
+<tr>
+~if $collection_status eq "Pending" || $collection_status eq "All"`<td colspan="15" align="center"><input type=submit name="preview_received" value="Received"></td>~/if`
+                                                                                                 
+</tr>
+<tr><td colspan="15">&nbsp;</td></tr><tr><td colspan="15">&nbsp;</td></tr>
+</form>
+	~else`
+	<tr class=label>
+	<td colspan=100% align=center>&nbsp;No Records Found</td>
+	</tr>
+	~/if`
+	</table>
+	<br>
+~else`
+	<form action="collection_status.php" method=post>
+	<table width=80% align=center>
+	<tr>
+		<td>  From </td>
+		<td>
+		<select name=day>
+			~section name=sec loop=$ddarr`
+			<option value="~$ddarr[sec]`">~$ddarr[sec]`</option>
+			~/section`
+		</select> -
+		<select name=month>
+			~section name=sec loop=$mmarr`
+			<option value="~$mmarr[sec]`">~$mmarr[sec]`</option>
+			~/section`
+		</select> -  
+		<select name=year>
+			~section name=sec loop=$yyarr`
+			<option value="~$yyarr[sec]`">~$yyarr[sec]`</option>
+			~/section`
+		</select> 
+		</td>
+		<td>To </td>
+		<td>
+		<select name=day2>
+			~section name=sec loop=$ddarr`
+			<option value="~$ddarr[sec]`">~$ddarr[sec]`</option>
+			~/section`
+		</select> -
+		<select name=month2>
+			~section name=sec loop=$mmarr`
+			<option value="~$mmarr[sec]`">~$mmarr[sec]`</option>
+			~/section`
+		</select> -  
+		<select name=year2>
+			~section name=sec loop=$yyarr`
+			<option value="~$yyarr[sec]`">~$yyarr[sec]`</option>
+			~/section`
+		</select> 
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<input type=hidden name=cid value="~$cid`">
+			<input type=submit name=CMDGo value="  Go  ">
+		</td>
+	<tr>
+	</table>
+	</form>
+~/if`
+</body>
+</html>

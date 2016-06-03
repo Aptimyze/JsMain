@@ -1,0 +1,72 @@
+.myjsbutton-create {background-image:url(IMG_URL/profile/ser4_images/button-create.gif); }
+.t22 {
+        font:bold 22px Arial, Helvetica, sans-serif;
+}
+.logo_viswas {
+        margin-right:21px;
+}
+.green_tp_line {
+        width:100%;
+        background:url(IMG_URL/profile/images/green_dot.gif) repeat-x;
+}
+.green_btm_line {
+        width:100%;
+        background:url(IMG_URL/profile/images/green_dot.gif) repeat-x bottom;
+}
+.green_l_line {
+        background:url(IMG_URL/profile/images/green_dot.gif) repeat-y left;
+}
+.green_r_line {
+        background:url(IMG_URL/profile/images/green_dot.gif) repeat-y right;
+}
+.lft_no_1 {
+        background:url(IMG_URL/profile/images/steo_1_img.gif) no-repeat -16px -18px;
+        position:relative;
+        z-index:100000000000000000000;
+}
+.lft_no_2 {
+        widht:59px;
+        height:59px;
+        background:url(IMG_URL/profile/images/step-1-4.jpg) no-repeat 0 -60px;
+}
+.lft_no_3 {
+        widht:59px;
+        height:59px;
+        background:url(IMG_URL/profile/images/step-1-4.jpg) no-repeat 0 -120px;
+}
+.lft_no_4 {
+        widht:59px;
+        height:59px;
+        background:url(IMG_URL/profile/images/step-1-4.jpg) no-repeat 0 -180px;
+}
+.green_t_r_cur {
+        background:url(IMG_URL/profile/images/green_top_r_cur.gif) no-repeat top right;
+}
+.green_b_r_cur {
+        background:url(IMG_URL/profile/images/green_btm_right_cur.gif)no-repeat bottom right;
+}
+.green_b_l_cur {
+        background:url(IMG_URL/profile/images/green_btm_left-cur.gif) no-repeat bottom left;
+}
+.italic {
+        font-style:italic;
+}
+.mob_arrow {
+        width:132px;
+        height:106px;
+        background:url(IMG_URL/profile/images/mobile_arrow.jpg) no-repeat;
+        font:11px Arial, Helvetica, sans-serif;
+        color:#fff;
+}
+.mob_icon {
+        background:url(IMG_URL/profile/images/mob_icon.jpg) no-repeat right;
+}
+input.browse {
+        width:163px;
+        height:18px;
+        border:1px solid #7f9db9;
+}
+.mt_10 {
+        margin-top:10px;
+}
+

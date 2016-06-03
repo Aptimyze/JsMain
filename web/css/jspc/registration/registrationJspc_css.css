@@ -1,0 +1,377 @@
+.regn nav a {
+	margin-right:30px;
+	color:#fff;
+	font-family:"Roboto", "sans-serif";
+	font-weight:400;
+	font-size:14px;
+	
+}
+.tabone a {
+	display:block;
+	width:33.3%;
+	padding-bottom:10px;
+	color:#fff;
+	opacity: 0.5;
+	filter: alpha(opacity=50);
+}
+.tabone a.reg_active {
+	border-bottom:2px solid #fff;
+	font-size:17px;
+	opacity:1;
+}
+.sin_opt {
+	margin:0 auto;
+}
+.reg_pad1 {
+	padding:38px 80px 22px 80px
+}
+.reg_wid1 {
+	width:830px
+}
+.reg_wid2 {
+	width:480px
+}
+.reg-wid3 {
+	width:502px
+}
+.reg-wid4 {
+	width:82px;
+}
+.reg-wid5 {
+	width:83px;
+}
+
+.reg-wid6 {
+	width:330px;
+}
+
+.reg-wid7 {
+	width:167px;
+}
+.reg-wid8{
+	width:166px;
+}
+.reg-wid9{
+	width:151px;
+}
+.reg-wid10{
+	width:120px;
+}
+.reg-wid11{
+	width:87px;
+}
+.reg-wid12{
+	width:400px;
+}
+.reg-wid13 {
+	width:332px;
+}
+
+.aboutme-h {
+        height: 123px;
+        border:1px solid #d9d9d9;
+	border-radius:2px
+}
+.aboutme-t {
+        height: 82px;
+        width: 96%;
+        color: #353e4f;
+        padding: 14px 10px;
+}
+.reg-sprtie {
+	background-image:url(IMG_URL/images/jspc/registration/reg-spirite.png);
+	background-repeat:no-repeat
+}
+.icon1 {
+	background-position:1px 1px;
+	width:39px;
+	height:44px;
+}
+.icon2 {
+	background-position:1px -48px;
+	width:47px;
+	height:44px;
+}
+.icon3 {
+	background-position:1px -94px;
+	width:47px;
+	height:44px;
+}
+.icon4 {
+	background-position:1px -140px;
+	width:47px;
+	height:44px;
+}
+.inforeg {
+	background-position: -3px -230px;
+	width: 22px;
+	height: 23px;
+}
+.reg-eye {
+	background-position: -45px 1px;
+	width: 31px;
+	height: 20px;
+}
+.reg-help-arow {
+	background-position: -8px -262px;
+	width: 9px;
+	height: 17px;
+}
+.required:after {
+	content:" *";
+	color:#F00;
+	font-size:18px
+}
+.reg-pad1 {
+	padding:3px 0
+}
+.reg_rad {
+	border-radius:3px
+}
+.formreg input {
+	padding:14px 10px;background-color:white;
+}
+.formreg input::-ms-clear {
+     display:none;
+}
+input[type=password]::-ms-reveal {display: none;}
+/*.formreg input,*/ .reg-divselc, .reg-phnsel {
+	border:1px solid #d9d9d9;
+	border-radius:2px
+}
+.formreg input, label {
+	color:#353e4f;
+}
+.gridfcolor {
+        color:#353e4f;
+}
+.pos1_lbl1 {
+	left:175px;
+	top:12px
+}
+.pos1_lbl2 {
+	left:175px;
+	top:15px
+}
+.pos1_inp {
+        left:174px;
+        top:15px
+}
+.visHid {
+    visibility: hidden;
+    height: 13px;
+}
+.fontspinp {
+        color: #353e4f;
+}
+.reg-pos2 {
+	top:13px;
+	right:10px
+}
+.reg-pos3 {
+	bottom:-1px
+}
+.reg-pos4 {
+	right:0;
+	top:47px
+}
+.reg-pos5 {
+	left:160px;
+	top:47px
+}
+.reg-pos6 {
+	left:260px;
+	top:47px
+}
+.reg-pos7 {
+	top:0;
+	left: 30px;
+}
+.reg-pos8 {
+	left: -8px;
+	top: 12px;
+}
+.reg-pos9 {
+	top:18px;
+	right:13px
+}
+.reg-pos10 {
+	right:0;
+	top:47px
+}
+.reg-divselc, .reg-phnsel {
+	height:47px;
+}
+.strength-mtr {
+  margin: 37px 96px 2px 11px;
+  height: 6px;
+  background: #f5f5f5;
+}
+.strength-span {
+  display: block;
+  height: 100%;
+}
+
+.activeopt {
+	background-color: #d9475c;
+	color:#fff
+}
+.js-other, .regopt-list, .other i {
+	display:none
+}
+.reg-droparrow {
+	background-position: -6px -214px;
+	width: 16px;
+	height: 11px;
+}
+.reg-zi100 {
+	z-index:100
+}
+.reg-zi1 {
+	z-index:1
+}
+
+.reg-brdr-0 {
+	border:0 !important
+}
+.reg-brdrl-0 {
+	border-left:0 !important
+}
+.reg-marl1 {
+	margin-left:160px
+}
+.reg-btn button {
+	background-color:#d9475c;
+	border:0
+}
+.jslist-phone {
+	visibility:hidden
+}
+.err-border {
+	border:1px solid #d9475c !important;
+}
+.formreg input, select {
+    outline: none;
+}
+.outl-none {
+    outline:none;
+}
+
+
+.reg-hgt200{max-height:200px;}
+
+/***test***/
+.test-pos3 {
+	top:-10px; left:10px
+}
+.test-pos4 {
+	left:0px; top:46px
+}
+
+.optlist ul{ list-style-type:none;}
+.regpad1{ padding:5px 15px}
+.regpad2{padding:5px 0px}
+.optlist ul li{float:left;}
+.optlist ul li:hover{background-color:#d9475c;color:#fff; cursor:pointer}
+.reg-hgt1{height:47px}
+
+
+
+.t1{left:160px; top:45px}
+.t2{left:175px;	top:0px}
+
+/*  test */
+.sub-mainlist{display:none}
+.reg-mainlist ul,.sub-mainlist ul {
+	list-style-type:none;
+	margin:0;
+	padding:0
+}
+.reg-mainlist ul li,.sub-mainlist ul li {
+	float:left;
+	text-align:center;
+	padding:14px 0 15px 0;
+	cursor:pointer;
+	position:relative
+}
+.reg-mainlist ul li,.sub-mainlist ul li {
+	border-left:1px solid #d9d9d9
+}
+.reg-mainlist ul li:first-child , .sub-mainlist ul li:first-child{
+	border-top-left-radius:2px;
+	border-bottom-left-radius:2px;
+	border-left:0
+}
+.reg-mainlist ul li:last-child , .sub-mainlist ul li:last-child{
+	border-top-right-radius:2px;
+	border-bottom-right-radius:2px;
+}
+.divp3brdr {
+        border-top: 1px solid #d9d9d9;
+        margin-top: 30px;
+}
+
+ul.cpfopt li:last-child{width:77px}
+ul.dobopt li:last-child{width:168px}
+
+
+
+.helpbox{display:none}
+.helpicon:hover .helpbox,.helpbox:hover {display:block}
+
+.regdropbox{border:1px solid #d9475c;background-color:#fff;border-radius:2px}
+
+ul#datesub li, ul#monthsub li, ul#yearsub li{border-left:0; border-bottom:1px solid #d9d9d9; }
+ul#datesub li{width:40px}
+ul#monthsub li{width:82px}
+ul#yearsub li{width:78px}
+ul#datesub li:hover, ul#monthsub li:hover, ul#yearsub li:hover{background-color: #d9475c;color:#fff}
+.phone-text{display:none}
+input#isd_value{border:0;padding:16px 0 15px 0}
+
+.rarrwdob{background-position: -1px -131px;
+
+    width: 18px;
+
+    height: 12px;}
+
+.reg-pos11{ right: 10px;
+
+    top: 16px;}
+.reg-pos12 {
+    bottom: -1px;
+    left:76px;
+}
+.reg-pos13 {
+    bottom: -1px;
+    left:33px;
+}
+.hide {
+    display:none;
+}
+.buttonSub{
+    cursor:pointer;
+}
+@-moz-document url-prefix() {
+
+       input#isd_value{border:0;padding:15px 0 }        
+
+  }
+.lstNone{list-style-type:none}
+input:-ms-input-placeholder
+{
+    font-style:normal;!important;
+    color: #a7a7a7;!important;
+}
+.reg1bg1{background-color:#fdfdfd}
+.reg1pos1{top:40%}
+.reg1close{background-position: -145px -265px;width: 20px;height: 20px;}
+.regMsgPad{padding-bottom: 21px;padding-left: 15px;padding-right: 15px;}
+
+.reg-header {
+    background: url(IMG_URL/images/jspc/registration/reg-header.jpg) no-repeat center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}

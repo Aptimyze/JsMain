@@ -1,0 +1,18 @@
+use newjs;
+INSERT INTO `SMS_TYPE` ( `ID` , `SMS_KEY` , `SMS_TYPE` , `PRIORITY` , `SUBSCRIPTION` , `GENDER` , `COUNT` , `TIME_CRITERIA` , `CUSTOM_CRITERIA` , `SMS_SUBSCRIPTION` , `STATUS` , `MESSAGE` )
+VALUES (
+'', 'HOROSCOPE_REQUEST', 'I', '50', 'A' , 'A', 'SINGLE', '0', '0', 'SERVICE', 'Y', 'Hi, {OTHER_USERNAME} has requested you to add your horoscope to your JS profile. Create horoscope here {URL_EDIT_HOROSCOPE} . Its quick and easy!'
+);
+
+use jeevansathi_mailer;
+INSERT INTO `MAILER_SUBJECT` ( `MAIL_ID` , `SUBJECT_TYPE` , `SUBJECT_CODE` , `DESCRIPTION` )
+VALUES (
+'', 'D', '<var>{{USERNAME:profileid=~$otherProfile`}}</var> wants to see your horoscope. Create horoscope', 'Subject for horoscope request mailers'
+);
+INSERT INTO `LINK_MAILERS` (`LINKID`, `APP_SCREEN_ID`, `LINK_NAME`, `LINK_URL`, `OTHER_GET_PARAMS`, `REQUIRED_AUTOLOGIN`, `OUTER_LINK`) VALUES (56, '', 'HOROSCOPE_REQUEST_PAGE', 'profile/contacts_made_received.php', 'page=horoscope&filter=R', 'Y', 'N');
+INSERT INTO `LINK_MAILERS` (`LINKID`, `APP_SCREEN_ID`, `LINK_NAME`, `LINK_URL`, `OTHER_GET_PARAMS`, `REQUIRED_AUTOLOGIN`, `OUTER_LINK`) VALUES (55, NULL, 'REQUEST_HOROSCOPE', 'P/viewprofile.php', 'ownview=1&EditWhatNew=AstroData', 'Y', 'N');
+
+INSERT INTO `EMAIL_TYPE` (`MAIL_ID`, `TPL_LOCATION`, `HEADER_TPL`, `FOOTER_TPL`, `TEMPLATE_EX_LOCATION`, `MAIL_GROUP`, `CUSTOM_CRITERIA`, `SENDER_EMAILID`, `DESCRIPTION`, `MEMBERSHIP_TYPE`, `GENDER`, `PHOTO_PROFILE`, `REPLY_TO_ENABLED`, `FROM_NAME`, `REPLY_TO_ADDRESS`, `MAX_COUNT_TO_BE_SENT`, `REQUIRE_AUTOLOGIN`, `FTO_FLAG`, `PRE_HEADER`, `PARTIALS`) VALUES (1830, 'horoscope_request_mailer.tpl', NULL, NULL, NULL, 11, 1, 'contacts@jeevansathi.com', 'Horoscope Request Mailer', 'D', NULL, NULL, '', 'Jeevansathi.com', '', NULL, 'Y', 'C1', 'Please add contacts@jeevansathi.com to your address book to ensure delivery of this mail into you inbox', '');
+
+INSERT INTO `MAILER_TEMPLATE_VARIABLES_MAP` (`VARIABLE_NAME`, `VARIABLE_PROCESSING_CLASS`, `DESCRIPTION`, `MAX_LENGTH`, `MAX_LENGTH_SMS`, `DEFAULT_VALUE`, `TPL_FORMAT`) VALUES ('REQUEST_HOROSCOPE', 3, 'upload horoscope link', 1000, 100, 'NA', '');
+INSERT INTO `MAILER_TEMPLATE_VARIABLES_MAP` (`VARIABLE_NAME`, `VARIABLE_PROCESSING_CLASS`, `DESCRIPTION`, `MAX_LENGTH`, `MAX_LENGTH_SMS`, `DEFAULT_VALUE`, `TPL_FORMAT`) VALUES ('HOROSCOPE_REQUEST_PAGE', 3, 'horoscope page link', 1000, 100, 'NA', '');

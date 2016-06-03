@@ -1,0 +1,405 @@
+<html>
+<head><title>Admin@jeevansathi.com</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<SCRIPT LANGUAGE="JavaScript">
+window.history.forward(1);
+function validate_amount()
+{
+        if(document.frm.amount.value>9999)
+        {
+                alert("Amount can not exceed Rs 10000");
+                document.frm.amount.value=0
+                                                                                                                             
+        }
+}
+
+function check()
+{
+        if(document.frm.mode.value=="CASH")
+        {
+                document.frm.cdnum.value="";
+                document.frm.cd_day.value="";
+                document.frm.cd_month.value="";
+                document.frm.cd_year.value="";
+                document.frm.cd_city.value="";
+                document.frm.Bank.value="";
+                document.frm.obank.value="";
+                document.frm.cdnum.disabled=true;
+                document.frm.cd_day.disabled=true;
+                document.frm.cd_month.disabled=true;
+                document.frm.cd_year.disabled=true;
+                document.frm.cd_city.disabled=true;
+                document.frm.Bank.disabled=true;
+                document.frm.obank.disabled=true;
+        }
+        else
+        {
+                document.frm.cdnum.disabled=false;
+                document.frm.cd_day.disabled=false;
+                document.frm.cd_month.disabled=false;
+                document.frm.cd_year.disabled=false;
+                document.frm.cd_city.disabled=false;
+                document.frm.Bank.disabled=false;
+                document.frm.obank.disabled=false;
+        }
+}
+
+</SCRIPT>
+</head>
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+~include file="head.htm"`
+<br>
+<body bgcolor="#FFFFFF" topmargin="0" marginheight="0">
+                                                                                                 
+<table width="600" border="0" cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+    <tr width=100% class="formhead">
+          <td width=55% class="formhead" border=1><font><b>Welcome : ~$user`</b></font></td>
+          <td width="15%" class="formhead" align="center">
+          <td width=10% class="formhead" border=1 align='CENTER'><a href="~$SITE_URL`/jsadmin/logout.php?cid=~$cid`">Logout</a></td>
+<form method=post action="refund_paypart.php" name="frm">
+<table width="100%" border="0" cellspacing="2" cellpadding="3" align="center">
+<tbody>
+<tr>
+<td class="formhead" colspan=5 height="24" align="CENTER" bgcolor="6BB97B">
+<font size=3 color="green">
+	~if $val eq "paypart"` Enter Part Payment Details ~elseif $val eq "refund"` Enter Refund Details ~/if`
+</font>
+</td>
+</tr>
+<tr>
+	<td class="formhead" colspan="1" height="24">Total Amount:&nbsp;~$CURRENCY_TYPE`&nbsp; ~if $val eq "refund"` ~$REF_AMOUNT` ~else` ~$DUEAMOUNT_NEW` ~/if` </td>
+	<td class="formhead" colspan="1" height="24">Earlier Paid:&nbsp;~$CURRENCY_TYPE`&nbsp; ~$PAIDAMOUNT`</td>
+	<td class="formhead" colspan="3" height="24">New Service Price:&nbsp;~$CURRENCY_TYPE`&nbsp; ~$PRICENEW`</td>
+<tr>
+	<td class="formhead" colspan="3" height="24">Payment Details</td>
+	<td class="formhead" height="24" colspan="3"><b><font face="arial" size="2">Fields
+        marked by * are compulsory</font></b></td>
+</tr>
+<tr>
+	<td class="label" width="21%">Comment</td>
+	<td bgcolor="#f5f5f5" colspan="4">
+        <input type="text" name="comment" class="textboxes1" size="30" maxlength="250" value="~$COMMENT`">
+        </td>
+</tr>
+<tr>
+	<td class="label" valign="middle" width="21%" height="34">~if $CHECK_MODE eq "Y"`<font color=red> Mode of Payment* </font>~else` Mode of Payment* ~/if`<br>
+        </td>
+        <td width="26%" bgcolor="#f5f5f5" height="34">
+        <select name="mode" class="textboxes1" onchange="check()">
+		<option value="" selected="selected">Select</option>
+		<option value="CASH" ~if $MODE eq "CASH"` selected ~/if`>Cash</option>
+		<option value="CHEQUE" ~if $MODE eq "CHEQUE"` selected ~/if`>Cheque</option>
+		<option value="DD" ~if $MODE eq "DD"` selected ~/if`>Demand Draft</option>
+		<option value="ONLINE" ~if $MODE eq "ONLINE"` selected ~/if`>Online</option>
+		<option value="TT" ~if $MODE eq "TT"` selected ~/if`>TT</option>
+		<option value="CCOFFLINE" ~if $MODE eq "CCOFFLINE"` selected ~/if`>CCOFFLINE</option>
+	</select>
+        </td>
+        <td width="15%" class="label" height="34" valign="middle">~if $CHECK_CURTYPE eq "Y"`<font color=red> Type*</font> ~else` Type* ~/if`</td>
+        <td bgcolor="#f5f5f5" height="34" valign="middle" width="17%">
+        <input type="radio" name="curtype" value="0" ~if $CURTYPE eq "0" or $CURTYPE eq ""`checked~/if`>
+        <font face="Verdana" size="2" color="#333333">Rupees</font> </td>
+        <td width="21%" bgcolor="#f5f5f5" height="34" valign="middle"> <font face="Verdana" size="2" color="#333333">
+        <input type="radio" name="curtype" value="1" ~if $CURTYPE eq "1"`checked~/if`>
+        $ (US)</font> </td>
+</tr>
+<tr>
+	<td class="label" width="21%">~if $CHECK_AMOUNT eq "Y"`<font color=red>Amount*</font>~else`Amount* ~/if`  </td>
+        <td bgcolor="#f5f5f5">
+        <input type="text" name="amount" class="textboxes1" size="10" maxlength="20" value="~$AMOUNT`" onkeyup="validate_amount()">
+        </td>
+
+</tr>
+<tr>
+        <td class="label" width="21%">~if $CHECK_CDNUM eq "Y"`<font color=red> Cheque/DD Number/CC Offline Transaction No </font>~else` Cheque/DD Number/CC Offline Transaction No ~/if` </td>
+        <td bgcolor="#f5f5f5" colspan="4">
+        <input type="text" name="cdnum" class="textboxes1" size="20" maxlength="35" value="~$CDNUM`">
+        </td>
+</tr>
+<tr>
+        <td class="label" width="21%">~if $CHECK_CDDATE eq "Y"`<font color=red> Cheque/DD Date </font>~else`Cheque/DD Date ~/if` </td>
+        <td bgcolor="#f5f5f5" colspan="4">
+
+        <select name="cd_day" class="textboxes1">
+		<option value="" selected="selected">.date.</option>
+		<option value="01" ~if $CD_DAY eq "01"`selected ~/if`>1</option>
+		<option value="02" ~if $CD_DAY eq "02"`selected ~/if`>2</option>
+		<option value="03" ~if $CD_DAY eq "03"`selected ~/if`>3</option>
+		<option value="04" ~if $CD_DAY eq "04"`selected ~/if`>4</option>
+		<option value="05" ~if $CD_DAY eq "05"`selected ~/if`>5</option>
+		<option value="06" ~if $CD_DAY eq "06"`selected ~/if`>6</option>
+		<option value="07" ~if $CD_DAY eq "07"`selected ~/if`>7</option>
+		<option value="08" ~if $CD_DAY eq "08"`selected ~/if`>8</option>
+		<option value="09" ~if $CD_DAY eq "09"`selected ~/if`>9</option>
+		<option value="10" ~if $CD_DAY eq "10"`selected ~/if`>10</option>
+		<option value="11" ~if $CD_DAY eq "11"`selected ~/if`>11</option>
+		<option value="12" ~if $CD_DAY eq "12"`selected ~/if`>12</option>
+		<option value="13" ~if $CD_DAY eq "13"`selected ~/if`>13</option>
+		<option value="14" ~if $CD_DAY eq "14"`selected ~/if`>14</option>
+		<option value="15" ~if $CD_DAY eq "15"`selected ~/if`>15</option>
+		<option value="16" ~if $CD_DAY eq "16"`selected ~/if`>16</option>
+		<option value="17" ~if $CD_DAY eq "17"`selected ~/if`>17</option>
+		<option value="18" ~if $CD_DAY eq "18"`selected ~/if`>18</option>
+		<option value="19" ~if $CD_DAY eq "19"`selected ~/if`>19</option>
+		<option value="20" ~if $CD_DAY eq "20"`selected ~/if`>20</option>
+		<option value="21" ~if $CD_DAY eq "21"`selected ~/if`>21</option>
+		<option value="22" ~if $CD_DAY eq "22"`selected ~/if`>22</option>
+		<option value="23" ~if $CD_DAY eq "23"`selected ~/if`>23</option>
+		<option value="24" ~if $CD_DAY eq "24"`selected ~/if`>24</option>
+		<option value="25" ~if $CD_DAY eq "25"`selected ~/if`>25</option>
+		<option value="26" ~if $CD_DAY eq "26"`selected ~/if`>26</option>
+		<option value="27" ~if $CD_DAY eq "27"`selected ~/if`>27</option>
+		<option value="28" ~if $CD_DAY eq "28"`selected ~/if`>28</option>
+		<option value="29" ~if $CD_DAY eq "29"`selected ~/if`>29</option>
+		<option value="30" ~if $CD_DAY eq "30"`selected ~/if`>30</option>
+		<option value="31" ~if $CD_DAY eq "31"`selected ~/if`>31</option>
+	</select>
+
+        <select name="cd_month" class="textboxes1">
+		<option value="" selected="selected">.month.</option>
+		<option value="01" ~if $CD_MONTH eq "01"` selected ~/if`>Jan</option>
+		<option value="02" ~if $CD_MONTH eq "02"` selected ~/if`>Feb</option>
+		<option value="03" ~if $CD_MONTH eq "03"` selected ~/if`>Mar</option>
+		<option value="04" ~if $CD_MONTH eq "04"` selected ~/if`>Apr</option>
+		<option value="05" ~if $CD_MONTH eq "05"` selected ~/if`>May</option>
+		<option value="06" ~if $CD_MONTH eq "06"` selected ~/if`>Jun</option>
+		<option value="07" ~if $CD_MONTH eq "07"` selected ~/if`>Jul</option>
+		<option value="08" ~if $CD_MONTH eq "08"` selected ~/if`>Aug</option>
+		<option value="09" ~if $CD_MONTH eq "09"` selected ~/if`>Sep</option>
+		<option value="10" ~if $CD_MONTH eq "10"` selected ~/if`>Oct</option>
+		<option value="11" ~if $CD_MONTH eq "11"` selected ~/if`>Nov</option>
+		<option value="12" ~if $CD_MONTH eq "12"` selected ~/if`>Dec</option>
+	</select>
+        <select name="cd_year" class="textboxes1">
+		<option value="" selected="selected">.year.</option>
+		<option value="2000" ~if $CD_YEAR eq "2000"` selected ~/if`>2000</option>
+		<option value="2001" ~if $CD_YEAR eq "2001"` selected ~/if`>2001</option>
+		<option value="2002" ~if $CD_YEAR eq "2002"` selected ~/if`>2002</option>
+		<option value="2003" ~if $CD_YEAR eq "2003"` selected ~/if`>2003</option>
+		<option value="2004" ~if $CD_YEAR eq "2004"` selected ~/if`>2004</option>
+		<option value="2005" ~if $CD_YEAR eq "2005"` selected ~/if`>2005</option>
+		<option value="2006" ~if $CD_YEAR eq "2006"` selected ~/if`>2006</option>
+		<option value="2007" ~if $CD_YEAR eq "2007"` selected ~/if`>2007</option>
+		<option value="2008" ~if $CD_YEAR eq "2008"` selected ~/if`>2008</option>
+		<option value="2009" ~if $CD_YEAR eq "2009"` selected ~/if`>2009</option>
+		<option value="2010" ~if $CD_YEAR eq "2010"` selected ~/if`>2010</option>
+	</select>
+        </td>
+</tr>
+<tr>
+        <td class="label" width="21%">~if $CHECK_CDCITY eq "Y"` <font color=red>Cheque/DD City</font>~else`Cheque/DD City~/if` </td>
+        <td bgcolor="#f5f5f5" width="26%">
+        <input type="text" name="cd_city" class="textboxes1" size="20" maxlength="35" value="~$CD_CITY`">
+        </td>
+        <td bgcolor="#f5f5f5" valign="middle" width="15%">
+        <input type="checkbox" name="overseas" value="Y" ~if $OVERSEAS eq "Y"` checked ~/if`>
+        <font face="Verdana" size="2" color="#333333">Overseas</font></td>
+        <td bgcolor="#f5f5f5" colspan="2">
+	<input type="checkbox" name="separateds" value="Y" ~if $SEPARATEDS eq "Y"` checked ~/if`>
+        <font face="Verdana" size="2" color="#333333">Separate Deposit slip</font>
+        </td>
+</tr>
+<tr>
+        <td class="label" width="21%">~if $CHECK_BANK eq "Y"`<font color=red> Bank Name</font>~else` Bank Name ~/if` </td>
+        <td bgcolor="#f5f5f5" width="26%">
+        <select name="Bank" size="1" class="TextBoxes1">
+        	<option value="">Select</option>                                                                                                ~$bank`
+	        <option value="Other" ~if $BANK eq "Other"`selected ~/if`>Other</option>
+        </select>
+        </td>
+        <td class="label" valign="middle" width="15%">~if $CHECK_OBANK eq "Y"`<font color=red> If Other </font> ~else` If Other
+ ~/if`</td>
+        <td bgcolor="#f5f5f5" colspan="2">
+	<input type="text" name="obank" class="textboxes1" size="30" maxlength="35" value="~$OBANK`">
+        </td>
+</tr>
+<tr>
+        <td class="label" width="21%">~if $CHECK_DUEDATE eq "Y"`<font color=red>Due Date</font>~else` Due Date ~/if`  </td>
+        <td bgcolor="#f5f5f5">
+
+        <select name="due_day" class="textboxes1">
+		<option value="" selected="selected">.date.</option>
+		<option value="01" ~if $DUE_DAY eq "01"`selected ~/if`>1</option>
+		<option value="02" ~if $DUE_DAY eq "02"`selected ~/if`>2</option>
+		<option value="03" ~if $DUE_DAY eq "03"`selected ~/if`>3</option>
+		<option value="04" ~if $DUE_DAY eq "04"`selected ~/if`>4</option>
+		<option value="05" ~if $DUE_DAY eq "05"`selected ~/if`>5</option>
+		<option value="06" ~if $DUE_DAY eq "06"`selected ~/if`>6</option>
+		<option value="07" ~if $DUE_DAY eq "07"`selected ~/if`>7</option>
+		<option value="08" ~if $DUE_DAY eq "08"`selected ~/if`>8</option>
+		<option value="09" ~if $DUE_DAY eq "09"`selected ~/if`>9</option>
+		<option value="10" ~if $DUE_DAY eq "10"`selected ~/if`>10</option>
+		<option value="11" ~if $DUE_DAY eq "11"`selected ~/if`>11</option>
+		<option value="12" ~if $DUE_DAY eq "12"`selected ~/if`>12</option>
+		<option value="13" ~if $DUE_DAY eq "13"`selected ~/if`>13</option>
+		<option value="14" ~if $DUE_DAY eq "14"`selected ~/if`>14</option>
+		<option value="15" ~if $DUE_DAY eq "15"`selected ~/if`>15</option>
+		<option value="16" ~if $DUE_DAY eq "16"`selected ~/if`>16</option>
+		<option value="17" ~if $DUE_DAY eq "17"`selected ~/if`>17</option>
+		<option value="18" ~if $DUE_DAY eq "18"`selected ~/if`>18</option>
+		<option value="19" ~if $DUE_DAY eq "19"`selected ~/if`>19</option>
+		<option value="20" ~if $DUE_DAY eq "20"`selected ~/if`>20</option>
+		<option value="21" ~if $DUE_DAY eq "21"`selected ~/if`>21</option>
+		<option value="22" ~if $DUE_DAY eq "22"`selected ~/if`>22</option>
+		<option value="23" ~if $DUE_DAY eq "23"`selected ~/if`>23</option>
+		<option value="24" ~if $DUE_DAY eq "24"`selected ~/if`>24</option>
+		<option value="25" ~if $DUE_DAY eq "25"`selected ~/if`>25</option>
+		<option value="26" ~if $DUE_DAY eq "26"`selected ~/if`>26</option>
+		<option value="27" ~if $DUE_DAY eq "27"`selected ~/if`>27</option>
+		<option value="28" ~if $DUE_DAY eq "28"`selected ~/if`>28</option>
+		<option value="29" ~if $DUE_DAY eq "29"`selected ~/if`>29</option>
+		<option value="30" ~if $DUE_DAY eq "30"`selected ~/if`>30</option>
+		<option value="31" ~if $DUE_DAY eq "31"`selected ~/if`>31</option>
+	</select>
+
+	<select name="due_month" class="textboxes1">
+		<option value="" selected="selected">.month.</option>
+		<option value="01" ~if $DUE_MONTH eq "01"` selected ~/if`>Jan</option>
+		<option value="02" ~if $DUE_MONTH eq "02"` selected ~/if`>Feb</option>
+		<option value="03" ~if $DUE_MONTH eq "03"` selected ~/if`>Mar</option>
+		<option value="04" ~if $DUE_MONTH eq "04"` selected ~/if`>Apr</option>
+		<option value="05" ~if $DUE_MONTH eq "05"` selected ~/if`>May</option>
+		<option value="06" ~if $DUE_MONTH eq "06"` selected ~/if`>Jun</option>
+		<option value="07" ~if $DUE_MONTH eq "07"` selected ~/if`>Jul</option>
+		<option value="08" ~if $DUE_MONTH eq "08"` selected ~/if`>Aug</option>
+		<option value="09" ~if $DUE_MONTH eq "09"` selected ~/if`>Sep</option>
+		<option value="10" ~if $DUE_MONTH eq "10"` selected ~/if`>Oct</option>
+		<option value="11" ~if $DUE_MONTH eq "11"` selected ~/if`>Nov</option>
+		<option value="12" ~if $DUE_MONTH eq "12"` selected ~/if`>Dec</option>
+	</select>
+
+        <select name="due_year" class="textboxes1">
+		<option value="" selected="selected">.year.</option>
+		<option value="2000" ~if $DUE_YEAR eq "2000"` selected ~/if`>2000</option>
+		<option value="2001" ~if $DUE_YEAR eq "2001"` selected ~/if`>2001</option>
+		<option value="2002" ~if $DUE_YEAR eq "2002"` selected ~/if`>2002</option>
+		<option value="2003" ~if $DUE_YEAR eq "2003"` selected ~/if`>2003</option>
+		<option value="2004" ~if $DUE_YEAR eq "2004"` selected ~/if`>2004</option>
+		<option value="2005" ~if $DUE_YEAR eq "2005"` selected ~/if`>2005</option>
+		<option value="2006" ~if $DUE_YEAR eq "2006"` selected ~/if`>2006</option>
+		<option value="2007" ~if $DUE_YEAR eq "2007"` selected ~/if`>2007</option>
+		<option value="2008" ~if $DUE_YEAR eq "2008"` selected ~/if`>2008</option>
+		<option value="2009" ~if $DUE_YEAR eq "2009"` selected ~/if`>2009</option>
+		<option value="2010" ~if $DUE_YEAR eq "2010"` selected ~/if`>2010</option>
+	</select>
+	</td>
+</tr>
+~if $val neq 'refund'`
+<tr>
+        <td class="label" width="21%">~if $CHECK_DEPDATE eq "Y"`<font color=red>Bank-Deposit Date* </font>~else`Bank-Deposit Date* ~/if` </td>
+        <td bgcolor="#f5f5f5" colspan="4">
+                                                                                                                             
+        <select name="dep_day" class="textboxes1">
+                <option value="01" ~if $DEP_DAY eq "01"`selected ~/if`>1</option>
+                <option value="02" ~if $DEP_DAY eq "02"`selected ~/if`>2</option>
+                <option value="03" ~if $DEP_DAY eq "03"`selected ~/if`>3</option>
+                <option value="04" ~if $DEP_DAY eq "04"`selected ~/if`>4</option>
+                <option value="05" ~if $DEP_DAY eq "05"`selected ~/if`>5</option>
+                <option value="06" ~if $DEP_DAY eq "06"`selected ~/if`>6</option>
+                <option value="07" ~if $DEP_DAY eq "07"`selected ~/if`>7</option>
+                <option value="08" ~if $DEP_DAY eq "08"`selected ~/if`>8</option>
+                <option value="09" ~if $DEP_DAY eq "09"`selected ~/if`>9</option>
+                <option value="10" ~if $DEP_DAY eq "10"`selected ~/if`>10</option>
+                <option value="11" ~if $DEP_DAY eq "11"`selected ~/if`>11</option>
+                <option value="12" ~if $DEP_DAY eq "12"`selected ~/if`>12</option>
+                <option value="13" ~if $DEP_DAY eq "13"`selected ~/if`>13</option>
+                <option value="14" ~if $DEP_DAY eq "14"`selected ~/if`>14</option>
+                <option value="15" ~if $DEP_DAY eq "15"`selected ~/if`>15</option>
+                <option value="16" ~if $DEP_DAY eq "16"`selected ~/if`>16</option>
+                <option value="17" ~if $DEP_DAY eq "17"`selected ~/if`>17</option>
+                <option value="18" ~if $DEP_DAY eq "18"`selected ~/if`>18</option>
+                <option value="19" ~if $DEP_DAY eq "19"`selected ~/if`>19</option>
+                <option value="20" ~if $DEP_DAY eq "20"`selected ~/if`>20</option>
+                <option value="21" ~if $DEP_DAY eq "21"`selected ~/if`>21</option>
+                <option value="22" ~if $DEP_DAY eq "22"`selected ~/if`>22</option>
+                <option value="23" ~if $DEP_DAY eq "23"`selected ~/if`>23</option>
+                <option value="24" ~if $DEP_DAY eq "24"`selected ~/if`>24</option>
+                <option value="25" ~if $DEP_DAY eq "25"`selected ~/if`>25</option>
+                <option value="26" ~if $DEP_DAY eq "26"`selected ~/if`>26</option>
+                <option value="27" ~if $DEP_DAY eq "27"`selected ~/if`>27</option>
+                <option value="28" ~if $DEP_DAY eq "28"`selected ~/if`>28</option>
+                <option value="29" ~if $DEP_DAY eq "29"`selected ~/if`>29</option>
+                <option value="30" ~if $DEP_DAY eq "30"`selected ~/if`>30</option>
+                <option value="31" ~if $DEP_DAY eq "31"`selected ~/if`>31</option>
+</select>
+ <select name="dep_month" class="textboxes1">
+                <option value="01" ~if $DEP_MONTH eq "01"` selected ~/if`>Jan</option>
+                <option value="02" ~if $DEP_MONTH eq "02"` selected ~/if`>Feb</option>
+                <option value="03" ~if $DEP_MONTH eq "03"` selected ~/if`>Mar</option>
+                <option value="04" ~if $DEP_MONTH eq "04"` selected ~/if`>Apr</option>
+                <option value="05" ~if $DEP_MONTH eq "05"` selected ~/if`>May</option>
+                <option value="06" ~if $DEP_MONTH eq "06"` selected ~/if`>Jun</option>
+                <option value="07" ~if $DEP_MONTH eq "07"` selected ~/if`>Jul</option>
+                <option value="08" ~if $DEP_MONTH eq "08"` selected ~/if`>Aug</option>
+                <option value="09" ~if $DEP_MONTH eq "09"` selected ~/if`>Sep</option>
+                <option value="10" ~if $DEP_MONTH eq "10"` selected ~/if`>Oct</option>
+                <option value="11" ~if $DEP_MONTH eq "11"` selected ~/if`>Nov</option>
+                <option value="12" ~if $DEP_MONTH eq "12"` selected ~/if`>Dec</option>
+        </select>
+        <select name="dep_year" class="textboxes1">
+                <option value="2006" ~if $DEP_YEAR eq "2006"` selected ~/if`>2006</option>
+                <option value="2007" ~if $DEP_YEAR eq "2007"` selected ~/if`>2007</option>
+                <option value="2008" ~if $DEP_YEAR eq "2008"` selected ~/if`>2008</option>
+                <option value="2009" ~if $DEP_YEAR eq "2009"` selected ~/if`>2009</option>
+                <option value="2010" ~if $DEP_YEAR eq "2010"` selected ~/if`>2010</option>
+        </select>
+        </td>
+</tr>
+<tr>
+        <td class="label" width="21%">~if $CHECK_BRANCH eq "Y"`<font color=red> Deposit Branch*</font>~else` Deposit Branch* ~/if` </td>
+        <td bgcolor="#f5f5f5" width="26%" colspan="4">
+        <select name="dep_branch" size="1" class="TextBoxes1">
+        ~section name=sec loop=$dep_branch_arr`
+                        <option value=~$dep_branch_arr[sec]` ~if $dep_branch eq $dep_branch_arr[sec]` selected ~/if`>~$dep_branch_arr[sec]`</option>
+                ~/section`
+        </select>
+</td>
+</tr>
+~/if`
+</tbody>
+</table>
+
+<table width="100%" border="0" cellspacing="2" cellpadding="3" align="center">
+<tbody>
+<tr>
+        <td valign="middle" height="45" bgcolor="#f5f5f5" width="23%" align="center">
+	<input type="hidden" name="cid" value=~$CID`>
+	<input type="hidden" name="user" value=~$USER`>
+	<input type="hidden" name="val" value=~$val`>
+	<input type="hidden" name="username" value=~$username`> 
+	<input type="hidden" name="mtype" value=~$mtype`> 
+	<input type="hidden" name="duration" value=~$duration`> 
+	<input type="hidden" name="pid" value=~$pid`> 
+	<input type="hidden" name="serviceid" value=~$serviceid`> 
+	<input type="hidden" name="billid" value=~$billid`>
+	<input type="hidden" name="link_msg" value=~$link_msg`>
+	<input type="hidden" name="dueamount" value=~$DUEAMOUNT`>
+	<input type="hidden" name="dueamount_new" value=~$DUEAMOUNT_NEW`>
+	<input type="hidden" name="upgrade_price" value=~$UPGRADE_PRICE`>
+	<input type="hidden" name="entrydt" value=~$ENTRYDT`>
+	<input type="hidden" name="ref_amount" value=~$REF_AMOUNT`>
+	<input type="hidden" name="paidamount" value=~$PAIDAMOUNT`>
+	<input type="hidden" name="pricenew" value=~$PRICENEW`>
+	<input type="hidden" name="show" value="makepaid">
+        <input type="submit" name="CMDSubmit" value="Submit" class="buttons1">
+        </td>
+</tr>
+</tbody>
+</table>
+
+<br>
+</form>
+
+</body>
+
+~include file="foot.htm"`
+</html>
+

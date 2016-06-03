@@ -1,0 +1,89 @@
+<link rel="stylesheet" type="text/css"  href="~$IMG_URL`/min/?f=css/~$helpWidget_css`"> 
+<!--start:overlay-->
+<div class="js-requestCallBackOverlay dspN">
+    <div class="overlay"></div>
+    <div class="modal">
+    <!--start:close button-->
+    <div class="posabs Widgicon Widicon4 js-requestCallBackClose"></div>
+    <!--end:close button-->
+      <div class="formpadt2" id="requestForm">
+        <form id="Widget" action="javascript:void(0)" novalidate>
+          <!--start:name-->
+          <div class="Widgetbox1">
+            <input type="email" tabindex="1" name="email" id="rq_email" placeholder="Email" value="~$defaultEmail`" />
+          </div>
+          <span id="emailError" class="errorPad dspN"> </span> 
+          <!--end:name--> 
+          <!--start:mobile no-->
+          <div class="formpadt1">
+            <div class="Widgetbox1">
+                <input type="tel" tabindex="2" name="phone" id="rq_phone" placeholder="Mobile number" value="~$defaultPhone`" />
+            </div>
+          </div>
+          <span id="phoneError" class="errorPad dspN"> </span> 
+          <!--end:mobile no-->      
+          <!--start:product-->
+          <div class="formpadt1">
+            <dl id="sample4" class="dropdown">
+              <dt> 
+                <span  id="typeOfQuery" tabindex="3" >What type of query do you have?</span>
+                <div class="posabs pos1 sideicon"></div>          
+              </dt>
+              <dd>
+                <ul>
+                  <li value="P">Questions or feedback regarding jeevansathi profile</li>
+                  <li value="M">Query regarding jeevansathi membership plans</li>
+                </ul>
+              </dd>
+            </dl>
+              <input id="rq_query" type="hidden" name="query_type"/> 
+          </div>
+          <span id="querryError" class="errorPad dspN"> </span>
+          <!--end:product--> 
+          <!--start:button-->
+          <div class="formpadt1">
+            <button type="submit" tabindex="4">Submit Request</button>
+          </div>
+          <!--end:button-->
+        </form>
+      </div>
+      <div id="requestLoader" class="formpadt3 dspN">
+        <img src="~$IMG_URL`/images/colorbox/loader_big.gif"> </img>
+      </div> 
+      <div id="requestSuccessMsg" class="formpadt4 dspN"> </div>       
+    </div>
+</div>
+<!--end:overlay--> 
+
+
+<!--start:helpwidget-->
+<div id="js-helpWidget" class="dspN" >
+  <div class="shadow helpWidgetBox clearfix ">
+    <div class="fl Widgleft js-helpWidgetContent dspN">      
+      <!--start:option-->
+      <div class="clearfix optwidg "> <a style="cursor:default"> <i class="Widgicon Widicon1 fl"></i>
+        <div class="fl subcont">~$mobileNumber`</div>
+        </a> </div>
+      <!--end:option-->
+      <!--start:option-->
+      <div class="clearfix optwidg js-openRequestCallBack"> <a class="curspointer"><i class="Widgicon Widicon2 fl "></i>
+        <div class="fl subcont">Request callback</div>
+        </a> </div>
+      <!--end:option-->
+      <!--start:option-->
+      <div class="clearfix optwidg"> <a href="#" onclick="document.getElementById('fc_chat_title').click();return false;"> <i class="Widgicon Widicon3 fl"></i>
+        <div class="fl subcont">Live online chat</div>
+        </a> </div>
+      <!--end:option-->      
+    </div>
+    <div class="Widposabs js-helpCollapses l0">
+        <div class="vertical-text">help</div>
+    </div>
+  </div>
+</div>
+<!--end:helpwidget-->
+
+<script> 
+var showExpandMode          = "~$showExpandMode`"
+</script>
+<script type = "text/javascript" src = "/min/?f=js/~$helpWidget_js`"></script>

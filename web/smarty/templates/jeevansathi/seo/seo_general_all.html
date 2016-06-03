@@ -1,0 +1,484 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<base href="~$SITE_URL`/profile/">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+~if $SEO_PASS eq ''`
+~assign var="NAME_OF_CAT" value='Category'`
+<title>Jeevansathi.com - Browse Matrimony Profiles - Search India Matrimonial - Matrimonials Services - Search Grooms Brides - Indian Marriage - Matrimony Matchmaking services
+
+</title>
+<meta name="description" content="Browse Jeevansathi.com for Matrimonials Matrimony Profiles. Search Brides and Grooms in the leading matrimony site for Indian and NRI matrimonial Profiles. Find suitable Indian and NRI brides and grooms. Ready for Marriage ? Search matrimonials, matrimony profiles, bride and groom from our online matrimonial and matchmaking services."/>
+<meta name="keywords" content="Jeevansathi.com, matrimony, matrimonial, matrimonials, matrimony services, online matrimonials, Indian marriage, match making, matchmaking, matchmaker, match maker, marriage bureau , matchmaking services, matrimonial profiles, bride, groom, matrimony classified."/>
+~/if`
+~if $SEO_PASS eq 1111111`
+~assign var="NAME_OF_CAT" value='Gender'`
+<title>Matrimonials - By Gender -Matrimony - Marriage
+</title>
+<meta name="description" content="Find Matrimonial Profiles by Gender. Top Matrimony website, register free online and get your dream soul mate. Register Now !"/>
+<meta name="keywords" content="Matrimony by Gender, matrimonial, Indian matrimonials, matrimonials for India, marriage website, partner search, matrimonials for indians, free matrimonial website."/>
+~/if`
+~if $SEO_PASS eq 10111111`
+~assign var="NAME_OF_CAT" value='Community'`
+<title>Matrimonials - By Mother tongue -Matrimony - Marriage
+</title>
+<meta name="description" content="Find Matrimonial Profiles by Mother tongue. Top Matrimony website, register free online and get your dream soul mate. Register Now !"/>
+<meta name="keywords" content="Matrimony by Mother tongue, matrimonial, Indian matrimonials, matrimonials for India, marriage website, partner search, matrimonials for indians, free matrimonial website."/>
+
+~/if`
+~if $SEO_PASS eq 11011111`
+~assign var="NAME_OF_CAT" value='Religion'`
+<title>Matrimonials - By Religion -Matrimony - Marriage
+</title>
+<meta name="description" content="Find Matrimonial Profiles by Religion. Top Matrimony website, register free online and get your dream soul mate. Register Now !"/>
+<meta name="keywords" content="Matrimony by Religion, matrimonial, Indian matrimonials, matrimonials for India, marriage website, partner search, matrimonials for indians, free matrimonial website."/>
+~/if`
+~if $SEO_PASS eq 11101111`
+~assign var="NAME_OF_CAT" value='Caste'`
+<title>Matrimonials - By Caste -Matrimony - Marriage
+</title>
+<meta name="description" content="Find Matrimonial Profiles by Caste. Top Matrimony website, register free online and get your dream soul mate. Register Now !"/>
+<meta name="keywords" content="Matrimony by Caste, matrimonial, Indian matrimonials, matrimonials for India, marriage website, partner search, matrimonials for indians, free matrimonial website."/>
+<link rel="stylesheet" href="/profile/css/searchstyle.css" type="text/css"/>
+~/if`
+~if $SEO_PASS eq 11110111`
+~assign var="NAME_OF_CAT" value='Location'`
+<title>Matrimonials - By Location -Matrimony - Marriage
+</title>
+<meta name="description" content="Find Matrimonial Profiles by Location. Top Matrimony website, register free online and get your dream soul mate. Register Now !"/>
+<meta name="keywords" content="Matrimony by Location, matrimonial, Indian matrimonials, matrimonials for India, marriage website, partner search, matrimonials for indians, free matrimonial website."/>
+~/if`
+~if $SEO_PASS eq 11111011`
+~assign var="NAME_OF_CAT" value='Education'`
+<title>Matrimonials - By Education -Matrimony - Marriage
+</title>
+<meta name="description" content="Find Matrimonial Profiles by Education. Top Matrimony website, register free online and get your dream soul mate. Register Now !"/>
+<meta name="keywords" content="Matrimony by Education, matrimonial, Indian matrimonials, matrimonials for India, marriage website, partner search, matrimonials for indians, free matrimonial website."/>
+~/if`
+~if $SEO_PASS eq 11111101`
+~assign var="NAME_OF_CAT" value='Profession'`
+<title>Matrimonials - By Profession -Matrimony - Marriage
+</title>
+<meta name="description" content="Find Matrimonial Profiles by Profession. Top Matrimony website, register free online and get your dream soul mate. Register Now !"/>
+<meta name="keywords" content="Matrimony by Profession, matrimonial, Indian matrimonials, matrimonials for India, marriage website, partner search, matrimonials for indians, free matrimonial website."/>
+
+~/if`
+~if $SEO_PASS eq 11111110`
+~assign var="NAME_OF_CAT" value='Marital Status'`
+<title>Matrimonials - By Marital-status -Matrimony - Marriage
+</title>
+<meta name="description" content="Find Matrimonial Profiles by Marital-status. Top Matrimony website, register free online and get your dream soul mate. Register Now !"/>
+<meta name="keywords" content="Matrimony by Marital-status, matrimonial, Indian matrimonials, matrimonials for India, marriage website, partner search, matrimonials for indians, free matrimonial website."/>
+~/if`
+<link href="~$IMG_URL`/profile/css/~$common_css`" type="text/css" rel="stylesheet">
+<script type = "text/javascript" src = "~$JQUERY_JS`"></script>
+<SCRIPT type="text/javascript" language="Javascript" SRC="~$IMG_URL`/min/?f=/profile/js/~$revampCommon_js`,/profile/js/~$colorbox`"></SCRIPT>
+<style>
+
+body{margin:0; padding:0; font-size:12px; color:#000000; font-family:Arial,sans-serif}
+#main{width:100%; margin:0px;float:left;}
+#container{width: 778px; margin: 0px auto;}
+.sr_top_bg{background-image:url(images/sr_top_bg.gif); background-repeat:repeat-x; height:20px;}
+.sr_top_bg h4, .sr_top_bg h4 a{font:bold 12px Arial, Helvetica, sans-serif; color:#117daa; margin:3px; padding:0;}
+.orange_border{border:1px #fed369; border-left-style:solid; border-right-style:solid;width:100%; padding:5px; width:448px;}
+.orange_border h6{font:bold 12px Arial, Helvetica, sans-serif; color:#000; padding:4px 4px 0; margin:0;}
+.sr_bottom_bg{background-image:url(images/sr_bottom_bg.gif); background-repeat:repeat-x; height:5px; font-size:2px;}
+.sreach_pannal{background:url(images/bg_search.gif) repeat-x;}
+/* search */
+
+.pd2{padding:2px 2px 2px 5px;}
+div.row{clear:both; padding:3px 0 0px 0;color:#000;width:98%;margin:auto;}
+
+#maintab {margin: 0px;}
+#maintab ul { margin: 0; padding: 0; list-style: none; }
+#maintab li { float: left; margin: 0 0 0 0; white-space: nowrap; background-image:url(images/top-nav-bg.gif); background-position:bottom; background-repeat:repeat-x; font: 16px Arial, Helvetica, sans-serif; font-weight:bold; }
+#maintab a { float: left; padding: 0 0 0 9px; text-decoration: none;color:#117daa;}
+#maintab a:hover{ color: #000000;}
+#maintab a.current { background-position: 0 -28px; background: url(images/top-tab-left.gif) no-repeat; color:#117daa; }
+#maintab a span { float: left;  padding: 5px 9px 4px 0;}
+#maintab a:hover span{ cursor: pointer; color:#117daa; }
+#maintab a.current span {background-position: 100% -28px; background: url(images/top-tab-rite.gif) no-repeat 100% 0; cursor: pointer;}
+#maintab a.current:hover span {cursor: default;}
+/* end search */
+
+/* setting */
+.st_open_tab{float:left;font:normal 12px arial;padding:3px 0 7px 1px;color:#117DAA;clear:both;width:155px;}
+.st_close_tab{ background-image:url(images/open_tab_setting.gif);background-repeat:no-repeat;width:163px;height:25px;font:bold 12px arial;padding:2px 0 0 1px;color:#117DAA;clear:both; background-position:right}
+.sub_st_tab{padding:4px 0 0 12px;}
+.success_bg{background-image:url(images/bg_success_story.gif); background-repeat:no-repeat;width:118px; height:94px;}
+.hide_delete_bg{ background-color:#ffed77;border:1px #ffe742 solid; padding:5px;}
+/* curve */
+
+.mar_top_10{margin-top:10px;}
+
+/*category list css starts here*/
+.orange_border ul.list{margin:0; padding:0; float:left; padding:0 8px; width:220px;}
+.orange_border ul.list li{list-style:none;}
+.orange_border ul.list li a{color:#117daa;}
+.orange_border ul.list li a:hover{text-decoration:underline;}
+/*category list css ends here*/
+
+
+
+</style>
+~include file="jeevansathi/google_analytics.htm"`
+</head>
+
+<body topmargin="0" leftmargin="0">
+~$REVAMP_HEAD`
+<div style="width:778px;margin:auto">
+<!-- start header -->
+<!--end header -->
+<div id="container">
+<!-- start search-->
+<div id="topSearchBand"></div>
+<!-- end search -->
+<div class="clear"></div>
+~$SUB_HEAD`
+<div class="sp8"></div>
+<h1 class="lf" style="margin-bottom:5px;">Browse Matrimonials By ~$NAME_OF_CAT`</h1>
+<div class="rf" style="width:122px;">
+<img src="images/a.gif" align="absbottom">&nbsp;<img src="images/biga.gif" align="absbottom">&nbsp;<img src="images/biggera.gif" align="absbottom">&nbsp;<span class="gray">Font Size</span>
+</div>
+<div class="sp3"></div>
+
+<div style="float:left; position:relative; z-index:100000;">
+<!--<ul class="tm">
+<li><a href="#">Community</a></li>
+<li><a href="#">Religion</a></li>
+<li><a href="#">Caste</a></li>
+<li><a href="#">Location</a></li>
+<li><a href="#">Education</a></li>
+<li><a href="#">Profession</a></li>
+<li><a href="#">Marital status</a></li>
+</ul>-->
+
+</div>
+
+<div class="clear"></div>
+~if $SEO_PASS eq 1111111 OR $SEO_PASS eq ''`
+<div class="lf">
+<div class="lf"><img src="images/sr_top_left.gif"></div>
+<div class="lf sr_top_bg red b" style="width:768px;"><h4><a href="matrimonial-matrimony-gender-matrimonials" >Gender</a></h4>
+</div>
+<div class="lf"><img src="images/sr_top_right.gif"></div>
+<div class="clear"></div>
+<div class="lf orange_border" style="width:766px;">
+<ul class="list">
+<li><a href="~$SITE_URL`/matrimonial-matrimony-gender-bride-matrimonials" class="blink">Bride</a></li>
+</ul>
+<ul class="list">
+<li><a href="~$SITE_URL`/matrimonial-matrimony-gender-groom-matrimonials" class="blink">Groom</a></li>
+</ul>
+</div>
+<div class="clear"></div>
+<div class="lf"><img src="images/sr_bottom_left.gif"></div>
+<div class="lf sr_bottom_bg" style="width:768px;"></div>
+<div class="lf"><img src="images/sr_bottom_right.gif"></div>
+</div>
+<div class="sp16">
+</div>
+~/if`
+~if $SEO_PASS eq 10111111 OR $SEO_PASS eq ''`
+<div class="lf">
+<div class="lf"><img src="images/sr_top_left.gif"></div>
+<div class="lf sr_top_bg red b" style="width:768px;"><h4><a href="matrimonial-matrimony-community-matrimonials">Mother tongue</a></h4>
+</div>
+<div class="lf"><img src="images/sr_top_right.gif"></div>
+<div class="clear"></div>
+<div class="lf orange_border" style="width:766px;">
+~assign var="tab" value=1`
+~assign var="tot_cnt" value=$SEO_COMMUNITY|@count`
+~assign var='first_var" value=$tot_cnt%3`
+~assign var='each_row' value=$tot_cnt/3|@intval`
+
+<ul class="list">
+~section name=i loop=$SEO_COMMUNITY`
+~if $tab eq $each_row+$first_var+1 || $tab eq 2*$each_row+$first_var+1` 
+
+<ul class="list">
+~/if`
+<li><a href="~$SITE_URL`/matrimonial-matrimony-community-~$SEO_STATIC_COMMUNITY_URL[$tab]`-matrimonials"  title="~$SEO_COMMUNITY[$tab]` Matrimonials">~$SEO_COMMUNITY[$tab]`</a></li>
+~if $tab eq $each_row+$first_var || $tab eq 2*$each_row+$first_var`
+</ul>
+~/if`
+~assign var="tab" value=$tab+1`
+~/section`
+</ul>
+</div>
+<div class="clear"></div>
+<div class="lf"><img src="images/sr_bottom_left.gif"></div>
+<div class="lf sr_bottom_bg" style="width:768px;"></div>
+<div class="lf"><img src="images/sr_bottom_right.gif"></div>
+</div>
+<div class="sp16">
+</div>
+~/if`
+~if $SEO_PASS eq 11011111 OR $SEO_PASS eq ''`
+<div class="lf">
+<div class="lf"><img src="images/sr_top_left.gif"></div>
+<div class="lf sr_top_bg red b" style="width:768px;"><h4><a href="matrimonial-matrimony-religion-matrimonials">Religion</a></h4>
+</div>
+<div class="lf"><img src="images/sr_top_right.gif"></div>
+<div class="clear"></div>
+<div class="lf orange_border" style="width:766px;">
+~assign var="tab" value=1`
+~assign var="tot_cnt" value=$SEO_RELIGION|@count`
+~assign var='first_var" value=$tot_cnt%3`
+~assign var='each_row' value=$tot_cnt/3|@intval`
+<ul class="list" >
+~section name=i loop=$SEO_RELIGION`
+~if $tab eq $each_row+$first_var+1 || $tab eq 2*$each_row+$first_var+1`
+
+<ul class="list" >
+~/if`
+<li><a href="~$SITE_URL`/matrimonial-matrimony-religion-~$SEO_STATIC_RELIGION_URL[$tab]`-matrimonials"  title="~$SEO_RELIGION[$tab]` Matrimonials">~$SEO_RELIGION[$tab]`</a></li>
+~if $tab eq $each_row+$first_var || $tab eq 2*$each_row+$first_var`
+</ul>
+~/if`
+~assign var="tab" value=$tab+1`
+~/section`
+</ul>
+
+</div>
+<div class="clear"></div>
+<div class="lf"><img src="images/sr_bottom_left.gif"></div>
+<div class="lf sr_bottom_bg" style="width:768px;"></div>
+<div class="lf"><img src="images/sr_bottom_right.gif"></div>
+</div>
+<div class="sp16">
+</div>
+~/if`
+~if $SEO_PASS eq 11101111 OR $SEO_PASS eq ''`
+<div class="lf">
+<div class="lf"><img src="images/sr_top_left.gif"></div>
+<div class="lf sr_top_bg red b" style="width:768px;"><h4><a href="matrimonial-matrimony-caste-matrimonials">Caste</a></h4>
+</div>
+<div class="lf"><img src="images/sr_top_right.gif"></div>
+<div class="clear"></div>
+<div class="lf orange_border" style="width:766px;">
+~assign var="tab" value=1`
+~assign var="tot_cnt" value=$SEO_CASTE|@count`
+~assign var='first_var" value=$tot_cnt%3`
+~assign var='each_row' value=$tot_cnt/3|@intval`
+<ul class="list" >
+~section name=i loop=$SEO_CASTE`
+~if $tab eq $each_row+$first_var+1 || $tab eq 2*$each_row+$first_var+1`
+
+<ul class="list" >
+~/if`
+<li><a href="~$SITE_URL`/matrimonial-matrimony-caste-~$SEO_STATIC_CASTE_URL[$tab]`-matrimonials"  title="~$SEO_CASTE[$tab]` Matrimonials">~$SEO_CASTE[$tab]`</a></li>
+~if $tab eq $each_row+$first_var || $tab eq 2*$each_row+$first_var`
+</ul>
+~/if`
+~assign var="tab" value=$tab+1`
+~/section`
+</ul>
+
+
+</div>
+<div class="clear"></div>
+<div class="lf"><img src="images/sr_bottom_left.gif"></div>
+<div class="lf sr_bottom_bg" style="width:768px;"></div>
+<div class="lf"><img src="images/sr_bottom_right.gif"></div>
+</div>
+<div class="sp16">
+</div>
+~/if`
+~if $SEO_PASS eq 11101111 OR $SEO_PASS eq ''`
+
+<div class="lf">
+<div class="lf"><img src="images/sr_top_left.gif"></div>
+<div class="lf sr_top_bg red b" style="width:768px;"><h4><a href="matrimonial-matrimony-location-matrimonials">Location</a></h4>
+</div>
+<div class="lf"><img src="images/sr_top_right.gif"></div>
+<div class="clear"></div>
+<div class="lf orange_border" style="width:766px;">
+<h6 style="margin:10px 0;">India</h6>
+~assign var="tab" value=1`
+~assign var="tot_cnt" value=$SEO_LOCATION_INDIA|@count`
+~assign var='first_var" value=$tot_cnt%3`
+~assign var='each_row' value=$tot_cnt/3|@intval`
+<ul class="list" >
+~section name=i loop=$SEO_LOCATION_INDIA`
+~if $tab eq $each_row+$first_var+1 || $tab eq 2*$each_row+$first_var+1`
+
+<ul class="list" >
+~/if`
+<li><a href="~$SITE_URL`/matrimonial-matrimony-location-~$SEO_STATIC_LOCATION_INDIA_URL[$tab]`-matrimonials"  title="~$SEO_LOCATION_INDIA[$tab]` Matrimonials">~$SEO_LOCATION_INDIA[$tab]`</a></li>
+~if $tab eq $each_row+$first_var || $tab eq 2*$each_row+$first_var`
+</ul>
+~/if`
+~assign var="tab" value=$tab+1`
+~/section`
+</ul>
+<div class="clear">
+</div>
+<h6 style="margin:10px 0;">USA</h6>
+~assign var="tab" value=1`
+~assign var="tot_cnt" value=$SEO_LOCATION_USA|@count`
+~assign var='first_var" value=$tot_cnt%3`
+~assign var='each_row' value=$tot_cnt/3|@intval`
+<ul class="list" >
+~section name=i loop=$SEO_LOCATION_USA`
+~if $tab eq $each_row+$first_var+1 || $tab eq 2*$each_row+$first_var+1`
+
+<ul class="list" >
+~/if`
+<li><a href="~$SITE_URL`/matrimonial-matrimony-location-~$SEO_STATIC_LOCATION_USA_URL[$tab]`-matrimonials"  title="~$SEO_LOCATION_USA[$tab]` Matrimonials">~$SEO_LOCATION_USA[$tab]`</a></li>
+~if $tab eq $each_row+$first_var || $tab eq 2*$each_row+$first_var`
+</ul>
+~/if`
+~assign var="tab" value=$tab+1`
+~/section`
+</ul>
+<div class="clear">
+</div>
+<h6 style="margin:10px 0;">Other</h6>
+~assign var="tab" value=1`
+~assign var="tot_cnt" value=$SEO_LOCATION|@count`
+~assign var='first_var" value=$tot_cnt%3`
+~assign var='each_row' value=$tot_cnt/3|@intval`
+<ul class="list" >
+~section name=i loop=$SEO_LOCATION`
+~if $tab eq $each_row+$first_var+1 || $tab eq 2*$each_row+$first_var+1`
+
+<ul class="list" >
+~/if`
+<li><a href="~$SITE_URL`/matrimonial-matrimony-location-~$SEO_STATIC_LOCATION_URL[$tab]`-matrimonials"  title="~$SEO_LOCATION[$tab]` Matrimonials">~$SEO_LOCATION[$tab]`</a></li>
+~if $tab eq $each_row+$first_var || $tab eq 2*$each_row+$first_var`
+</ul>
+~/if`
+~assign var="tab" value=$tab+1`
+~/section`
+</ul>
+</div>
+<div class="clear"></div>
+<div class="lf"><img src="images/sr_bottom_left.gif"></div>
+<div class="lf sr_bottom_bg" style="width:768px;"></div>
+<div class="lf"><img src="images/sr_bottom_right.gif"></div>
+</div>
+<div class="sp16">
+</div>
+<div class="lf">
+<div class="lf"><img src="images/sr_top_left.gif"></div>
+<div class="lf sr_top_bg red b" style="width:768px;"><h4><a href="matrimonial-matrimony-education-matrimonials">Education</a></h4>
+</div>
+~/if`
+~if $SEO_PASS eq 11110111 OR $SEO_PASS eq ''`
+
+<div class="lf"><img src="images/sr_top_right.gif"></div>
+<div class="clear"></div>
+<div class="lf orange_border" style="width:766px;">
+~assign var="tab" value=1`
+~assign var="tot_cnt" value=$SEO_EDUCATION|@count`
+~assign var='first_var" value=$tot_cnt%3`
+~assign var='each_row' value=$tot_cnt/3|@intval`
+
+<ul class="list">
+~section name=i loop=$SEO_EDUCATION`
+~if $tab eq $each_row+$first_var+1 || $tab eq 2*$each_row+$first_var+1`
+
+<ul class="list">
+~/if`
+<li><a href="~$SITE_URL`/matrimonial-matrimony-education-~$SEO_STATIC_EDUCATION_URL[$tab]`-matrimonials"  title="~$SEO_EDUCATION[$tab]` Matrimonials">~$SEO_EDUCATION[$tab]`</a></li>
+~if $tab eq $each_row+$first_var || $tab eq 2*$each_row+$first_var`
+</ul>
+~/if`
+~assign var="tab" value=$tab+1`
+~/section`
+</ul>
+</div>
+<div class="clear"></div>
+<div class="lf"><img src="images/sr_bottom_left.gif"></div>
+<div class="lf sr_bottom_bg" style="width:768px;"></div>
+<div class="lf"><img src="images/sr_bottom_right.gif"></div>
+</div>
+<div class="sp16">
+</div>
+~/if`
+~if $SEO_PASS eq 11111101 OR $SEO_PASS eq ''`
+
+<div class="lf">
+<div class="lf"><img src="images/sr_top_left.gif"></div>
+<div class="lf sr_top_bg red b" style="width:768px;"><h4><a href="matrimonial-matrimony-profession-matrimonials">Profession</a></h4>
+</div>
+<div class="lf"><img src="images/sr_top_right.gif"></div>
+<div class="clear"></div>
+<div class="lf orange_border" style="width:766px;">
+~assign var="tab" value=1`
+~assign var="tot_cnt" value=$SEO_PROFESSION|@count`
+~assign var='first_var" value=$tot_cnt%3`
+~assign var='each_row' value=$tot_cnt/3|@intval`
+
+<ul class="list">
+~section name=i loop=$SEO_PROFESSION`
+~if $tab eq $each_row+$first_var+1 || $tab eq 2*$each_row+$first_var+1`
+
+<ul class="list">
+~/if`
+<li><a href="~$SITE_URL`/matrimonial-matrimony-profession-~$SEO_STATIC_PROFESSION_URL[$tab]`-matrimonials"  title="~$SEO_PROFESSION[$tab]` Matrimonials">~$SEO_PROFESSION[$tab]`</a></li>
+~if $tab eq $each_row+$first_var || $tab eq 2*$each_row+$first_var`
+</ul>
+~/if`
+~assign var="tab" value=$tab+1`
+~/section`
+</ul>
+</div>
+<div class="clear"></div>
+<div class="lf"><img src="images/sr_bottom_left.gif"></div>
+<div class="lf sr_bottom_bg" style="width:768px;"></div>
+<div class="lf"><img src="images/sr_bottom_right.gif"></div>
+</div>
+<div class="sp16">
+</div>
+~/if`
+~if $SEO_PASS eq 11111110 OR $SEO_PASS eq ''`
+
+<div class="lf">
+<div class="lf"><img src="images/sr_top_left.gif"></div>
+<div class="lf sr_top_bg red b" style="width:768px;"><h4><a href="matrimonial-matrimony-marital-status-matrimonials">Marital status</a></h4>
+</div>
+<div class="lf"><img src="images/sr_top_right.gif"></div>
+<div class="clear"></div>
+<div class="lf orange_border" style="width:766px;">
+<ul class="list">
+<li><a href="~$SITE_URL`/matrimonial-matrimony-marital-status-never married-matrimonials" class="blink">Never Married</a></li>
+</ul>
+<ul class="list">
+<li><a href="~$SITE_URL`/matrimonial-matrimony-marital-status-widowed-matrimonials" class="blink">Widowed</a></li>
+</ul>
+<ul class="list">
+<li><a href="~$SITE_URL`/matrimonial-matrimony-marital-status-divorced-matrimonials" class="blink">Divorced</a></li>
+</ul>
+<ul class="list">
+<li><a href="~$SITE_URL`/matrimonial-matrimony-marital-status-awaiting divorce-matrimonials" class="blink">Awaiting Divorce</a></li>
+</ul>
+<ul class="list">
+<li><a href="~$SITE_URL`/matrimonial-matrimony-marital-status-annulled-matrimonials" class="blink">Annulled</a></li>
+</ul>
+<ul class="list">
+<li><a href="~$SITE_URL`/matrimonial-matrimony-marital-status-others-matrimonials" class="blink">Others</a></li>
+</ul>
+</div>
+<div class="clear"></div>
+<div class="lf"><img src="images/sr_bottom_left.gif"></div>
+<div class="lf sr_bottom_bg" style="width:768px;"></div>
+<div class="lf"><img src="images/sr_bottom_right.gif"></div>
+</div>
+<div class="sp16">
+</div>
+~/if`
+<!-- start middle section -->
+</div></div>
+
+</div>
+<div class="clear"></div>
+
+
+
+~$FOOT`
+</body>
+</html>

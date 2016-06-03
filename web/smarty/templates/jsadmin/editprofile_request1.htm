@@ -1,0 +1,133 @@
+<HTML>
+	<HEAD>
+		<TITLE>REQUEST FOR PROFILE CHANGE</TITLE>
+		<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<LINK rel="stylesheet" href="~$SITE_URL`/jsadmin/jeevansathi.css" type="text/css">
+		<LINK rel="stylesheet" href="~$SITE_URL`/profile/images/styles.css" type="text/css">
+		<LINK rel="stylesheet" href="~$SITE_URL`/jsadmin/stylesheet.css" type="text/css">                                                  <SCRIPT name="javascript">
+		</SCRIPT>
+	</HEAD>
+	<BODY BGCOLOR=#FFFFFF leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" link="#FFFFFF" vlink="#FFFEEF">
+	<BR><BR><BR>
+		<CENTER>
+			<TABLE border=0 width="560" cellspacing="3" cellpadding="2" bordercolor="#5C768B" bgcolor="#DEEFEF">
+				<TR>
+					<TD height="18" width=20%><FONT face="Verdana" size="2"><B>Welcome : ~$executive`</B></FONT></TD>
+					<TD align=right><A href="searchpage.php?cid=~$cid`"><FONT COLOR=#9F4000>Go Back</FONT></A></TD>
+				</TR>
+			</TABLE>
+	<BR>
+			<TABLE border=0 width="560" cellspacing="3" cellpadding="2" bordercolor="#5C768B" style="border-collapse: collapse" height="1" bgcolor="#DEEFEF">
+			<FORM NAME="change_request" method="post" action="editprofile_request.php">
+				~if $iserror neq 0`
+                                <TR>
+                                        <TD colspan="2" style="border:1px solid #9F4000; padding:4" align="center">~$msg`</TD>
+                                <TR>
+                                ~/if`
+                                <TR>
+                                        <TD colspan="2" style="border:1px solid #9F4000; padding:4" align="center"><h2>Change request form </h2></TD>
+                                <TR>
+                                <TR>
+                                        <TD colspan="2" bgcolor="#FFFFFF">&nbsp;</TD>
+                                <TR>
+				<TR>
+					<TD align=left width=30% height="30" style="border:1px solid #9F4000; padding:4">
+                                        	<FONT face="Verdana" size="2">Member Name</FONT>
+                                        </TD>
+					<TD align=left height="30" style="border:1px solid #9F4000; padding:4">
+                                        	<FONT face="Verdana" size="3" color="#9F4000"><B>~$user`</B></FONT>
+                                        </TD>
+				</TR>
+				~if !$record_id`
+				<TR>
+					<TD align=left width=30% height="30" style="border:1px solid #9F4000; padding:4">
+                                		<FONT face="Verdana" size="2">Username</FONT>
+                        		</TD>
+					<TD align=left bordercolor="#D6AA63" style="border:1px solid #9F4000; padding:4">
+						<INPUT type="checkbox" name="username" value="U" ~if $username eq 'U'` checked  ~/if`style="border: 1px solid #D6AA63; padding-left: 4; padding-right: 4; padding-top: 1; padding-bottom: 1">
+					<TD>
+					</TR>
+					~/if`
+				<TR>
+                        		<TD align=left width=30% height="30" style="border:1px solid #9F4000; padding:4">
+          		                      	<FONT face="Verdana" size="2">Gender</FONT>
+                        		</TD>
+                        		<TD align=left style="border:1px solid #9F4000; padding:4">
+                        			<INPUT type="checkbox" name="gender" value="G" ~if $gender eq 'G'` checked ~/if` style="border: 1px solid #D6AA63; padding-left: 4; padding-right: 4; padding-top: 1; padding-bottom: 1">
+					<TD>
+				</TR>
+				<TR>
+                        		<TD align=left width=30% height="30" bordercolor="#D6AA63" style="border:1px solid #9F4000; padding:4">
+         		                       	<FONT face="Verdana" size="2">Date of Birth</FONT>
+                        		</TD>
+
+                        		<TD style="border:1px solid #9F4000; padding:4">
+                        			<INPUT type="checkbox" name="dob" value="DB" ~if $dob eq 'DB'` checked ~/if` style="border: 1px solid #D6AA63; padding-left: 4; padding-right: 4; padding-top: 1; padding-bottom: 1" >
+					</TD>
+                		</TR>
+				<TR>
+                                        <TD align=left width=30% height="30" bordercolor="#D6AA63" style="border:1px solid #9F4000; padding:4">
+                                                <FONT face="Verdana" size="2">Marital Status</FONT>
+                                        </TD>
+
+                                        <TD style="border:1px solid #9F4000; padding:4">
+                                                <INPUT type="checkbox" name="mstatus" value="MS" ~if $MS eq 'MS'` checked ~/if` style="border: 1px solid #D6AA63; padding-left: 4; padding-right: 4; padding-top: 1; padding-bottom: 1" >
+                                        </TD>
+                                </TR>
+                                <TR>
+                                        <TD align=left width=30% height="30" bordercolor="#D6AA63" style="border:1px solid #9F4000; padding:4">
+                                                <FONT face="Verdana" size="2">Religion</FONT>
+                                        </TD>
+
+                                        <TD style="border:1px solid #9F4000; padding:4">
+                                         ~if $maritalst neq 'M'`
+                                                <INPUT type="checkbox" name="religion" value="REL" ~if $religion eq 'REL'` checked ~/if` style="border: 1px solid #D6AA63; padding-left: 4; padding-right: 4; padding-top: 1; padding-bottom: 1" >
+                                         ~else`
+                                         <span style="color: red">Religion cannot be edited in case of married candidate</span>
+                                         ~/if`
+                                        </TD>
+                                </TR>
+
+				~if !$record_id`
+				<TR>
+					<TD align=left width=30% height="30" bordercolor="#D6AA63" style="border:1px solid #9F4000; padding:4">
+						<FONT face="Verdana" size="2">Subscription Status</FONT>
+					</TD>
+					<TD align=left width=70% height="30" style="border:1px solid #9F4000; padding:4">
+
+			 		<DIV>
+                	 			<INPUT type="radio" name="membership_status" value="A" ~if $membership_status eq "A"` checked ~/if`><FONT face="Arial" size="2" color="#9F4000">Activate&nbsp;&nbsp;&nbsp;</FONT>
+						<FONT color="#9F4000">&nbsp;&nbsp; </FONT>
+		                		<INPUT type="radio" name="membership_status" value="D" ~if $membership_status eq "D"` checked ~/if` ><FONT face="Arial" size="2" color="#9F4000">Deactivate</FONT>
+					<br><FONT face="Verdana" size="-1" color="red">Select Only When Change is related to membership status</FONT>
+					</DIV>
+					</TD>
+				</TR>
+				~/if`
+				<TR>
+					<TD align=left width=30% height="30" bordercolor="#D6AA63" style="border:1px solid #9F4000; padding:4">
+						<FONT color="#FF0000" face="Arial" size="2">*</FONT>
+						<FONT face="Verdana" size="2" color="~$comments_clr`">Comments</FONT>
+					</TD>
+		                	<TD align=left  width=70%  height="30"  style="border:1px solid #9F4000; padding:4">
+						<TEXTAREA rows="5" name="change_details" cols="20" style="border: 1px solid #D6AA63;">~$change_details`</TEXTAREA>
+					</TD>
+                		</TR>
+				<TR height="25">
+					<TD style="border:1px solid #9F4000; padding:4">
+						<INPUT type="hidden" name="executive" value="~$executive`">
+						<INPUT type="hidden" name="cid" value="~$cid`">
+						<INPUT type="hidden" name="pid" value="~$pid`">
+						<INPUT type="hidden" name="record_id" value="~$record_id`">
+						<INPUT type="hidden" name="user" value="~$user`">
+					</TD>
+					<TD style="border:1px solid #9F4000; padding:4" align="center">
+					<INPUT type="submit" name="req_submit" value="Submit Request" style="border:1px solid #9F4000 ; font-family:Verdana;font-size: 10pt ; background-color: #FFFFDDF" onmouseover="this.className='priLow'" onmouseout="this.className='priMedium'">
+					</TD>
+				</TR>
+		</FORM>
+	</TABLE>
+	
+	</CENTER>
+	</BODY>
+</HTML>

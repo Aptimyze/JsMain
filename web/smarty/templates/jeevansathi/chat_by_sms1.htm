@@ -1,0 +1,163 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<title>Jeevansathi Matrimonials- Search Results</title>
+<link rel="stylesheet" href="css/~$comm_style_css`" type="text/css">
+
+<style type="text/css">
+.ot{width:335px;background-color:#FFFBC8}
+.not{ float:left; width:100%; background-color:#E9E28A; border-bottom:1px solid #CCC569 }
+.w1{ width:185px; padding-left:8px}
+.w2{ width:123px; height:213px; background-image:url(~$IMG_URL`/profile/ser4_images/sms_pop_img.gif)}
+.r14{font:bold 11px verdana,Arial;}
+</style>
+
+</head>
+<body bgcolor="#FFFBC8">
+
+<div class="ot">
+	<div class="spacer15">&nbsp;</div>
+
+	~if $no_error eq 1`
+	<div class="leftflow w1 bele">
+		<font color="red">
+		~if $mobile_error eq '1'`
+			<div class="r14"><img src="~$IMG_URL`/profile/ser4_images/error_1.gif" width="21" height="21"><b>You cannot proceed since your entered mobile number has invalid characters.</b></div><br>
+		~elseif $mobile_error eq '2'`
+			<div class="r14"><img src="~$IMG_URL`/profile/ser4_images/error_1.gif" width="21" height="21"><b>You cannot proceed since your entered mobile number is invalid.</b></div><br>
+		~elseif $edit_profile eq 'Y'`
+			<div class="r14"><img src="~$IMG_URL`/profile/ser4_images/error_1.gif" width="21" height="21"><b>You cannot proceed since you have not entered your mobile number.</b></div><br>
+		~/if`
+		</font>
+
+		~if $edit_profile eq 'Y'`
+			<b>Please enter your mobile no below to proceed further</b> <br>
+		       <form name="form1" method="post" action="chat_by_sms.php">
+			&nbsp;<input type="text" name="mobile"  value="~$mobile`" class="testbox">
+			<input type=hidden name="recid" value=~$recid`>
+			<input type=hidden name="username" value='~$username`'>
+			<input type=hidden name="chat_form_mobile" value='1'>
+			<input type=hidden name="profileid" value='~$profileid`'>
+			<input type=hidden name="checksum" value='~$checksum`'>
+			<br><input type="submit" name="Submit" value="Submit" class="button1">
+		~else`
+			<b>Type on your mobile:</b><br>
+			<span style="color:#FF9900 "><b>CTC ~$RECEIVER`</b></span><br>
+			<span class="greyele">* ~$RECEIVER` is User Id</span>
+
+			<div class="space15">&nbsp;</div>
+			<div>
+				<b>SMS At:</b><br>
+				<span style="color:#FF9900 "><b>676762</b></span><br><br>
+				<b>From Your Mobile no</b><br>
+				<span style="color:#FF9900 "><b>: ~$MOBILE`</b></span>
+			</div>
+		~/if`
+		<div class="space15">&nbsp;</div>
+		<div>Your initial expression of interest will be delivered on the mobile of the person you have chosen. Once the user accepts your contact invitation, you will be informed back by a return sms or an e-mail.
+		</div>
+		<div class="space15">&nbsp;</div>
+		<div class="bluelink"><a href="javascript:window.close();">Close Window</a></div>
+	</div>
+	
+	~if $edit_profile neq 'Y'`
+		<div class="lftflow bele w2">
+		        <div style="margin:75px 0 0 25px; width:72px; word-wrap: break-word; color:#FF8A00"><b>~$RECEIVER`</b></div>
+        		<div style="position:absolute; top: 199px; left: 208px;">~$RECEIVER`</div>
+        	</div>
+
+	~/if`
+	<div class="spacer">&nbsp;</div>
+	~/if`
+
+	<!--LOGIN CONTITION STARTS-->
+	~if $login_window eq 1`
+		<form name="form1" method="post" action="chat_by_sms.php">
+		<div class="leftflow w1 bele" style=" padding-left:8px">
+			<input type=hidden name="recid" value=~$recid`>
+			<input type=hidden name="username" value='~$username`'>
+			<input type=hidden name="chat_form" value='1'>
+			~if $name_error eq '1'`
+				<div class="r14"><img src="~$IMG_URL`/profile/ser4_images/error_1.gif" width="21" height="21"><font color="red"><left><b> User Id can't be blank.</b></left></font></div><br>
+			~elseif $pass_error eq '1'`
+				<div class="r14"><img src="~$IMG_URL`/profile/ser4_images/error_1.gif" width="21" height="21"><font color="red"><left><b> Password can't be blank.</b></left></font></div><br>
+			~elseif $wrong_entry eq '1'`
+				<div class="r14"><img src="~$IMG_URL`/profile/ser4_images/error_1.gif" width="21" height="21"><font color="red"><left><b>Sorry this username does not exist, please try again.</b></left></font></div><br>
+			~/if` 
+				
+			<b>Existing User, Login Here</b><br>
+			<div class="space15">&nbsp;</div>
+
+			<div>User Id</div>
+			<div class="spacer1">&nbsp;</div>
+			<div><input type="text" name="name" value='~$name`' class="textbox"></div>
+			<div class="spacer">&nbsp;</div>
+			<div>Password</div>
+			<div class="spacer1">&nbsp;</div>
+			<div><input type="password" name="password" value='~$password`' class="textbox"></div>
+			<div class="spacer">&nbsp;</div>
+			<div><input type="submit" name="Submit" value="Submit" class="buttonor"></div>
+			<div class="spacer">&nbsp;</div>
+			<div class="bluelink"><b>New user, <a href="/profile/inputprofile.php?source=mobile" target="_blank">Register Free</a></b></div>
+			<div class="spacer15">&nbsp;</div>
+			<div class="bluelink"><a href="javascript:window.close();">Close Window</a></div>
+		</div>
+		</form>
+	~/if`
+	<!--LOGIN CONTITION ENDS-->
+
+	~if $no_error eq 'Y'`
+
+	<!--ERROR CONTITION STARTS-->
+		<div class="leftflow w1 bele" style=" padding-left:8px">
+			<font color="red">
+			~if $error eq '1'`
+				<div class="r14"><img src="~$IMG_URL`/profile/ser4_images/error_1.gif" width="21" height="21"><b>You cannot proceed since your profile is under screening.</b></div><br>
+				</font><b>Please contact once your profile is live.</b><br><font color="red">
+															     
+			~elseif $error eq '2'`
+			<div class="r14"><img src="~$IMG_URL`/profile/ser4_images/error_1.gif" width="21" height="21"><b>You cannot proceed since your profile is hidden.</b></div><br>
+			</font><b>To unhide your profile &nbsp;<a href="~$SITE_URL`/profile/deleteprofile.php?checksum=~$checksum`" target=_blank>click here</a></b><br><font color="red">
+															     
+			~elseif $error eq '3'`
+				<div class="r14"><img src="~$IMG_URL`/profile/ser4_images/error_1.gif" width="21" height="21"><b>You cannot proceed since your profile details are missing.</b></div><br>
+				</font><b>To Complete your Registration &nbsp;<a href="~$SITE_URL`/profile/viewprofile.php?checksum=~$checksum`&profilechecksum=~$MYPROFILECHECKSUM`" target=_blank>click here</a></b><br><font color="red">
+															     
+			~elseif $error eq '4'`
+				  <div class="r14"><img src="~$IMG_URL`/profile/ser4_images/error_1.gif" width="21" height="21"><b>You can not proceed since your gender is the same as the other member.</b></div><br>
+															     
+			~elseif $error eq '5'`
+				 <div class="r14"><img src="~$IMG_URL`/profile/ser4_images/error_1.gif" width="21" height="21"> <b>Your Profile does not match the partner profile of other member.</b></div><br>
+															     
+			~elseif $error eq '6'`
+				 <div class="r14"><img src="~$IMG_URL`/profile/ser4_images/error_1.gif" width="21" height="21"><b>You cannot proceed since the user profile is hidden.</b></div><br>
+			~elseif $error eq '7'`
+				  <div class="r14"><img src="~$IMG_URL`/profile/ser4_images/error_1.gif" width="21" height="21"><b>You cannot proceed since the user profile is deleted.</b></div><br>
+			~elseif $error eq '8'`
+				  <div class="r14"><img src="~$IMG_URL`/profile/ser4_images/error_1.gif" width="21" height="21"><b>You cannot proceed since the user profile is under screening.</b></div><br>
+			~elseif $error eq '0'`
+				  <div class="r14"><img src="~$IMG_URL`/profile/ser4_images/error_1.gif" width="21" height="21"><b>You cannot proceed since this facility is available only in India.</b></div><br>
+			~/if`
+			</font>
+
+			~if $error gt '3'`
+				<br><b>Select another user profile to contact.</b><br>
+			~/if`
+			
+			<!--2 lines Added ny me-->
+			<div class="spacer15">&nbsp;</div>
+			<div class="bluelink"><a href="javascript:window.close();">Close Window</a></div>
+		</div>
+	<!--ERROR CONTITION ENDS-->
+	~/if`
+</div>
+<!--/div>
+
+</div-->
+</body>
+</html>
+

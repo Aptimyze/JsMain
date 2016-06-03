@@ -1,0 +1,162 @@
+<html>
+<head>
+
+<script language="javascript">
+<!--
+~if $NODRAFT neq "1"`
+function changeDraft()
+{
+	var mydraft=new Array(~section name=javadraft loop=$DRAFTS`"~$DRAFTS[javadraft].MESSAGE`"~if $smarty.section.javadraft.last`~else`,~/if`~/section`);
+
+	var strText=new String();
+	var strText1=new String();
+
+	strText=mydraft[document.form1.SELdraft.selectedIndex-1];
+
+	if(document.form1.SELdraft.value!="")
+	{
+		strText1=strText.replace("#n#","\n");
+		while(strText1.length!=strText.length)
+		{
+			strText=strText1;
+			strText1=strText.replace("#n#","\n");
+		}
+
+		document.form1.custmessage.value=strText1;
+	}
+	else
+		document.form1.custmessage.value="";
+}
+~/if`
+//-->
+</script>
+
+<title>JeevanSathi Matrimonials - Filter</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="/P/I/styles.php" type="text/css">
+<link rel="stylesheet" href="/P/IN/styles.php" type="text/css">
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body leftmargin="5" topmargin="5">
+
+
+~$HEAD`
+~$LEFTPANEL`
+
+<form name="form1" action="~$RETURN_TO`">  
+<table width="78%" height="1110"  border="0" cellspacing="0" cellpadding="0" align="center">
+<tr>
+<td valign=top>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0" align="center">
+<tr>
+<td><div align="center"><br>
+
+<table width="77%"  border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td class="extralargepink"><div align="center"><strong>Personalised Message<br>If you do not wish to write any message, simply press ~if $FLAG_RESPONSE eq "A"`"Accept"~elseif $FLAG_RESPONSE eq "D"`"Decline"~else`"Contact"~/if`</strong></div></td>
+</tr>
+</table>
+<strong><br>
+</strong></div>
+</td>
+</tr>
+<tr>
+<td class="mediumblack"><table width="94%"  border="0" align="center" cellpadding="0" cellspacing="0">
+~if $NODRAFT neq "1"`
+<tr class="mediumblack">
+<td>Select a draft</td>
+<td><select name="SELdraft" class="testbox" onclick="changeDraft();">
+<option value="" selected>select one message</option>
+~section name=draft loop=$DRAFTS`
+	<option value="~$DRAFTS[draft].DRAFTID`">~$DRAFTS[draft].DRAFTNAME`</option>
+~/section`
+</select>
+</td>
+</tr>
+~/if`
+<tr>
+        <td height="5" colspan="2"></td>
+<SPACER height="5" type="block"></SPACER> </tr>
+<tr bgcolor="cccccc">
+<td height="1" colspan="2"></td>
+<SPACER height="1" type="block"></SPACER> </tr>
+<tr>
+<td height="5" colspan="2"></td>
+<SPACER height="5" type="block"></SPACER> </tr>
+<tr class="mediumblack">
+<td height="18"><strong>Message</strong></td>
+<td height="18"><textarea name="custmessage" cols="70" rows="3" class="testbox"> </textarea></td>
+</tr>
+   <tr>
+<td height="5" colspan="2"></td>
+<SPACER height="5" type="block"></SPACER> </tr>
+<tr bgcolor="cccccc">
+<td height="1" colspan="2"></td>
+<SPACER height="1" type="block"></SPACER> </tr>
+<tr>
+<td height="5" colspan="2"></td>
+<SPACER height="5" type="block"></SPACER> </tr>
+<tr class="mediumblack">
+<td height="18"><strong>Save this message as a draft</strong></td>
+<td height="18"><input name="savedraft" type="text" class="testbox"></td>
+</tr>
+   <tr>
+<td height="5" colspan="2"></td>
+<SPACER height="5" type="block"></SPACER> </tr>
+<tr bgcolor="cccccc">
+<td height="1" colspan="2"></td>
+<SPACER height="1" type="block"></SPACER> </tr>
+<tr>
+<td height="5" colspan="2"></td>
+<SPACER height="5" type="block"></SPACER> </tr>
+<tr>
+<td>&nbsp;</td>
+</tr>
+<input type="hidden" name="checksum" value="~$CHECKSUM`">
+<input type="hidden" name="profilechecksum" value="~$PROFILECHECKSUM`">
+  <input type="hidden" name="searchchecksum" value="~$SEARCHCHECKSUM`">
+  <input type="hidden" name="check_str" value="~$CHECK_STR`">
+  <input type="hidden" name="SELaction1" value="~$ACTION`">
+  <input type="hidden" name="flag_response" value="~$FLAG_RESPONSE`">
+  <input type="hidden" name="scriptname" value="~$SCRIPTNAME`">
+  <input type="hidden" name="pageno" value="~$PAGENO`">
+  <input type="hidden" name="cust_message_page_shown" value="1">
+  <input type="hidden" name="BACKLINK" value="~$BACKLINK`">
+  <input type="hidden" name="BACK_TO_SEARCH_PAGE" value="~$BACK_TO_SEARCH_PAGE`">
+  <input type="hidden" name="SCRIPTNAME" value="~$SCRIPTNAME`">
+  <input type="hidden" name="newsearch" value="~$newsearch`">
+  <input type="hidden" name="suggest_profile" value="~$suggest_profile`">
+</table></td>
+<tr>
+<td class=mediumblack>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="markcc">
+<strong>Mark a copy to yourself</strong>
+</td>
+</tr>
+<tr>
+<td ALIGN="center">
+~if $FLAG_RESPONSE eq "A"`
+<input type="submit" value="Accept">
+~elseif $FLAG_RESPONSE eq "D"`
+<input type="submit" value="Decline">
+~else`
+<!--input type="submit" value="Contact" name="Contact"-->
+<input type="submit" value="Contact">
+~/if`
+~ if $RETURN_TO eq "searchaction_aj.php"`
+<br><br>
+<a href="~$RETURN_TO`?searchchecksum=~$SEARCHCHECKSUM`&checksum=~$CHECKSUM`&PAGENO=~$pageno`&check_str=~$CHECK_STR`&SELaction=~$ACTION`"
+~/if`
+</td>
+</tr>
+</tr>
+</table>
+</form>
+</td>
+</tr>
+</table>
+<br>
+~$SUBFOOTER`
+<br>
+~$FOOT`
+</body>
+</html>

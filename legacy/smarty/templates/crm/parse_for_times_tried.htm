@@ -1,0 +1,62 @@
+<html>
+<head>
+<title>Jeevansathi.com - CRM - CSV List Generation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="../mis/jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+<SCRIPT language="JavaScript">
+<!--
+function MM_openBrWindow(theURL,winName,features)
+{
+        window.open(theURL,winName,features);
+}
+//-->
+</script>
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br><br>
+<table width=60% cellspacing="1" cellpadding='0' ALIGN="CENTER" >
+   <tr width=100% border=1>
+    <td width="30%" class="formhead" height="23"><font><b>Welcome :~$name`</b></font></td>
+    <td width="25%" class="formhead" align="center"><a href="mainpage.php?cid=~$cid`&name=~$name`">Click here to go to main page</a></td>
+    <td width="6%" class="formhead" align='RIGHT' height="23">
+        <a href="logout.php?cid=~$cid`">Logout</a>
+    </td>
+    <td width="3%" class="formhead" height="23">&nbsp;
+    </td>
+   </tr>
+  </table>
+<br><br>
+<table align=center width="560">
+<form action="parse_for_times_tried.php" method="post">
+<tr class=formhead>
+<td align="center" colspan="3">Enter the name of the File</td>
+</tr>
+<tr class=formhead>
+<td align=center>File Name</td>
+<td align=center><input type="text" name="file">&nbsp;&nbsp;
+<input type="hidden" name="cid" value="~$cid`">
+<input type="hidden" name="name" value="~$name`"></td>
+<td align="center"><input type="submit" name="submit" value="Submit"></td>
+</form>
+</tr>
+</table>
+<br><br>
+
+</body>
+</html>

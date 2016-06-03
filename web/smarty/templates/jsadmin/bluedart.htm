@@ -1,0 +1,163 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 1.1.1  (Linux)">
+	<META NAME="CREATED" CONTENT="20050913;16421200">
+	<META NAME="CHANGED" CONTENT="20050913;16474500">
+	<STYLE>
+	<!--
+		H6 { margin-top: 0in; margin-bottom: 0in; text-align: center; text-decoration: underline }
+		H6.western { font-family: "Verdana", sans-serif; font-size: 12pt }
+		H6.cjk { font-family: "Bitstream Vera Sans"; font-size: 12pt }
+		H6.ctl { font-family: "Tahoma", "Lucidasans", "Lucida Sans", "Arial Unicode MS"; font-size: 12pt }
+		H5 { margin-top: 0in; margin-bottom: 0in; text-align: center }
+		H5.western { font-family: "Garamond", serif; font-size: 11pt }
+		H5.cjk { font-family: "Bitstream Vera Sans"; font-size: 11pt }
+		H5.ctl { font-family: "Tahoma", "Lucidasans", "Lucida Sans", "Arial Unicode MS"; font-size: 12pt; font-weight: medium }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US" DIR="LTR">
+<P STYLE="margin-bottom: 0in"></P>
+<CENTER>
+	<TABLE WIDTH=868 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=2 CELLSPACING=2 style="border-collapse:collapse;">
+		<COL WIDTH=65>
+		<COL WIDTH=78>
+		<COL WIDTH=78>
+		<COL WIDTH=82>
+		<COL WIDTH=41>
+		<COL WIDTH=33>
+		<COL WIDTH=51>
+		<COL WIDTH=70>
+		<COL WIDTH=79>
+		<COL WIDTH=84>
+		<COL WIDTH=127>
+		<COL WIDTH=77>
+		<TR>
+			<TD COLSPAN=13 WIDTH=866 VALIGN=TOP>
+				<P ALIGN=JUSTIFY STYLE="margin-bottom: 0in"><FONT FACE="Verdana, sans-serif"><B>DATE:
+				~$TODAY`</B></FONT></P>
+				<H6 CLASS="western">Jeevansathi.Com</H6>
+				<P ALIGN=CENTER STYLE="margin-bottom: 0in"><BR>
+				</P>
+				<OL>
+									<H5 CLASS="western"><FONT FACE="Verdana, sans-serif"><FONT
+									SIZE=2>Consolidated Report for Bluedart COD pickups</FONT></FONT></H5>
+				</OL>
+			</TD>
+		</TR>
+		<TR>
+			<TD ROWSPAN=2 WIDTH=78>
+				<P ALIGN=CENTER><FONT FACE="Verdana, sans-serif">Airway Number</FONT></P>
+			</TD>
+			<TD ROWSPAN=2 WIDTH=65>
+				<P ALIGN=CENTER><FONT FACE="Verdana, sans-serif">Request Date</FONT></P>
+			</TD>
+			<TD ROWSPAN=2 WIDTH=65>
+				<P ALIGN=CENTER><FONT FACE="Verdana, sans-serif">City</FONT></P>
+			</TD>
+			<TD ROWSPAN=2 WIDTH=65>
+				<P ALIGN=CENTER><FONT FACE="Verdana, sans-serif">Pincode</FONT></P>
+			</TD>
+			<TD ROWSPAN=2 WIDTH=65>
+				<P ALIGN=CENTER><FONT FACE="Verdana, sans-serif">Bludart Center</FONT></P>
+			</TD>
+			<TD ROWSPAN=2 WIDTH=78>
+				<P ALIGN=CENTER><FONT FACE="Verdana, sans-serif">Unique Jeevansathi Request ID</FONT></P>
+			</TD>
+			<TD ROWSPAN=2 WIDTH=78>
+				<P ALIGN=CENTER><FONT FACE="Verdana, sans-serif">Name of
+				Subscriber(User Name)</FONT></P>
+			</TD>
+			<TD ROWSPAN=2 WIDTH=82>
+				<P ALIGN=CENTER><FONT FACE="Verdana, sans-serif">Complete Address
+				</FONT>
+				</P>
+			</TD>
+			<TD COLSPAN=2 WIDTH=126 HEIGHT=76>
+				<P ALIGN=CENTER><FONT FACE="Verdana, sans-serif">Phone Numbers</FONT></P>
+			</TD>
+			<TD WIDTH=70 rowspan=2>
+				<P ALIGN=CENTER><FONT FACE="Verdana, sans-serif">Amt. To be
+				collected</FONT></P>
+			</TD>
+			<TD WIDTH=84 rowspan=2>
+				<P ALIGN=CENTER><FONT COLOR="#000000"><FONT FACE="Verdana, sans-serif">Sales
+				Executive Name</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=77 rowspan=2>
+				<P ALIGN=CENTER><FONT FACE="Verdana, sans-serif">Comments (If Any)</FONT></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=41 HEIGHT=30>
+				<P ALIGN=CENTER><FONT FACE="Verdana, sans-serif">Landline</FONT></P>
+			</TD>
+			<TD WIDTH=51>
+				<P ALIGN=CENTER><FONT FACE="Verdana, sans-serif">Mobile</FONT></P>
+			</TD>
+		</TR>
+ ~section name=index loop=$ROW`	
+	<TR VALIGN=TOP>
+			<TD WIDTH=65>
+				<P ALIGN=JUSTIFY><BR>~$ROW[index].airway`
+				</P>
+			</TD>
+			<TD WIDTH=65>
+				<P ALIGN=JUSTIFY><BR>~$ROW[index].entry_date`
+				</P>
+			</TD>
+			<TD WIDTH=78>
+				<P ALIGN=JUSTIFY><BR>~$ROW[index].city`
+				</P>
+			</TD>
+			<TD WIDTH=78>
+				<P ALIGN=JUSTIFY><BR>~$ROW[index].pincode`
+				</P>
+			</TD>
+			<TD WIDTH=78>
+				<P ALIGN=JUSTIFY><BR>~$ROW[index].area`
+				</P>
+			</TD>
+			<TD WIDTH=78>
+				<P ALIGN=JUSTIFY><BR> &nbsp; JSBD~$ROW[index].ref_id`
+				</P>
+			</TD>
+			<TD WIDTH=78>
+				<P ALIGN=JUSTIFY><BR>~$ROW[index].name`   (~$ROW[index].username`)
+				</P>
+			</TD>
+			<TD WIDTH=82>
+				<P ALIGN=JUSTIFY><BR>~$ROW[index].address`
+				</P>
+			</TD>
+			<TD WIDTH=41>
+				<P ALIGN=JUSTIFY><BR>~$ROW[index].phone_res`
+				</P>
+			</TD>
+			<TD WIDTH=51>
+				<P ALIGN=JUSTIFY><BR>~$ROW[index].phone_mob`
+				</P>
+			</TD>
+			<TD WIDTH=70>
+				<P ALIGN=JUSTIFY><BR>Rs.&nbsp;~$ROW[index].amount`
+				</P>
+			</TD>
+			<TD WIDTH=84>
+				<P ALIGN=JUSTIFY><BR>~$ROW[index].operator`
+				</P>
+			</TD>
+			<TD WIDTH=84>
+				<P ALIGN=JUSTIFY><BR>~$ROW[index].comments`
+				</P>
+			</TD>
+		</TR>
+~/section`
+	</TABLE>
+</CENTER>
+<P STYLE="margin-bottom: 0in"><BR>
+</P>
+</BODY>
+</HTML>

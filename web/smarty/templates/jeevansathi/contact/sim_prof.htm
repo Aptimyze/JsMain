@@ -1,0 +1,50 @@
+<div style="clear:both"></div> 
+
+<div class="t12" style="border:1px #cad890; padding:10px 0px 0px 20px;width:603px;border-bottom-style:solid;border-left-style:solid;border-right-style:solid; background-color:#f3fbd1;">
+
+  <div class="scrollbox4 t12" id="set_scroll">
+
+   <div class="lf">
+
+~assign var="tab" value=0`
+~assign var ="actual_found" value=0`
+~section name="tr1" start=0 loop=$length`
+~assign var="finalval" value=$tab`
+~assign var="enter" value=$tab+1`
+~if $RESULTS_ARRAY[$finalval].PROFILEID neq ''`
+~assign var="cur_pid" value=$RESULTS_ARRAY[$finalval].PROFILEID`
+~assign var ="actual_found" value=$actual_found+1`
+<div class="lf">
+<div class="lf similar_bg">
+<div class="lf" style="margin:6px 0 6px 6px;"> <a href="~$SITE_URL`/profile/viewprofile.php?username=~$RESULTS_ARRAY[$finalval].USERNAME`&FROM=VIEW_PROFILE&TYPE=SIMILAR&stype=~$STYPE`&~$NAVIGATOR`" >~$RESULTS_ARRAY[$finalval].MY_PHOTO`</a></div>
+<div class="lf pd5" style="overflow:hidden"><a href="~$SITE_URL`/profile/viewprofile.php?username=~$RESULTS_ARRAY[$finalval].USERNAME`&FROM=VIEW_PROFILE&TYPE=SIMILAR&stype=~$STYPE`&~$NAVIGATOR`" class="blink">~$RESULTS_ARRAY[$finalval].AGE`, ~$RESULTS_ARRAY[$finalval].HEIGHT`<br>
+~$RESULTS_ARRAY[$finalval].RELIGION`<br>
+~$RESULTS_ARRAY[$finalval].MTONGUE`</a></div>
+</div>
+</div>
+~if $enter % 3 eq 0`
+<div class="sp12"></div>	
+~else`
+<div class="lf"><img src="images/spacer.gif" width="18" height="1"></div>
+~/if`
+~/if`
+~assign var="tab" value=$tab+1`
+~/section`
+~if $actual_found eq 0`
+<div style="padding: 5px 10px;" class="t12"><br/>
+Sorry, no profiles similar to ~$SIM_USERNAME` found.
+</div>
+~/if`
+   </div>
+
+    <div class="clear"></div>
+~if $actual_found ge 9`<div class="b" style="text-align:right;padding:3px 27px;"><a href="~$SITE_URL`/profile/simprofile_search.php?searchid=-1&stype=~$STYPE`&j=2&contact=~$CONTACT_ID`&SIM_USERNAME=~$SIM_USERNAME`&~$NAVIGATOR`&overwrite=1&~$MORE_URL`" class="blink b">More Similar Profiles</a></div>
+~/if`
+
+</div>
+
+  <div style="border:1px #dbdbdb;border-bottom-style:solid;width:590px;">&nbsp;</div><div class="lf" style="width:600px; padding-top:4px">
+
+  <div style="float:left;"></div><div class="rf" style="text-align:right;cursor:pointer;" onclick="javascript:close_tab()"><img src="images/icon_hide.gif"></div></div>
+
+<div class="sp3"></div></div>

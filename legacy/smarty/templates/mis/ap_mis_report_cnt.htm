@@ -1,0 +1,196 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tr>
+        <td valign="top" width="40%" align="center"><img src="../profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+</tr>
+<tr>
+        <td align="center" class="label"><a href="mainpage.php?cid=~$cid`">Mainpage</a></td>
+</tr>
+</table>
+<br><br>
+~if $RESULT`
+  <table width="100%" border="0" cellpadding="4" cellspacing="4" align="center">
+	<tr class="formhead" align="center">
+		<td colspan="100%">~$head_label`</td>
+	</tr>
+  ~if $date_range eq '1'`
+        <tr class="label" align="center">
+        	<td>~$top_label`</td>
+                ~section name=aa loop=$arr_d`
+                	<td>~$arr_d[aa]`</td>
+                ~/section`
+       </tr>
+	~section name=yr loop=$arr_y`
+		<tr align="left" class="formhead">
+			<td colspan="100%">Year &nbsp; ~$arr_y[yr]`</td>
+			 ~assign var="year" value=$arr_y[yr]`
+		</tr>   
+        	~section name=op loop=$arr_m`
+        	        <tr align="left" class="formhead">
+        	                <td colspan="100%">Month &nbsp; ~$arr_m[op]`</td>
+				~assign var="month" value=$arr_m[op]`
+        	        </tr>
+        	        <tr align="center">
+				~if $role eq 'TC'`
+        	                	<td class="label">Total number of calls made </td>
+				~elseif $role eq 'DIS'`
+					<td class="label">Total dispatches</td>
+				~elseif $role eq 'QA'`
+					<td class="label">Total profiles processed</td>	
+				~/if`
+        	                ~section name=aa loop=$arr_d`
+        	                        <td class="fieldsnew">~$rec_count[$year][$month][aa]`</td>
+        	                ~/section`
+        	        </tr>
+        	~/section`
+	~/section`
+  ~else`
+	<tr class="label" align="center">
+		<td>~$top_label`</td>
+		~section name=aa loop=$arr`
+			<td>~$arr[aa]`</td>
+		~/section`
+	</tr>
+	<tr align="center">
+		~if $role eq 'TC'`
+			<td class="label">Total number of calls made</td>
+		~elseif $role eq 'DIS'`
+			<td class="label">Total dispatches</td>
+                ~elseif $role eq 'QA'`
+	                <td class="label">Total profiles processed</td>
+                ~/if`
+		~section name=aa loop=$arr`
+			<td class="fieldsnew">~$rec_count[aa]`</td>
+		~/section`
+	</tr>
+  ~/if`
+  </table>
+~else`
+	<form name="form1" method="post" action="ap_mis_report_cnt.php">
+	<input type="hidden" name="cid" value="~$cid`">
+	<input type="hidden" name="role" value="~$role`">
+	<input type="hidden" name="MGR" value="~$MGR`">
+	<table border="0" align="center" width="60%" cellpadding="4" cellspacing="4" border="0">
+		<tr class="formhead" align="center">
+			<td colspan="2">Select Duration</td>
+		</tr>
+		<tr align="center">
+			<td class="label">
+				<input type="radio" name="day_month_wise" value="D" checked>Day-wise
+			</td>
+			<td class="fieldsnew">
+				<select name="month" class="textboxes1">
+					<option value="">Month</option>
+					~section name=mm loop=$mmarr`
+						<option value="~$mmarr[mm]`" ~if $mmarr[mm] eq $curmonth` selected ~/if`>~$mmarr[mm]`</option>
+					~/section`
+				</select>
+				&nbsp;
+				<select name="year_d" class="textboxes1">
+					<option value="">Year</option>
+					~section name=yy loop=$yyarr`
+						<option value="~$yyarr[yy]`" ~if $yyarr[yy] eq $curyear` selected ~/if`>~$yyarr[yy]`</option>
+					~/section`
+				</select>
+			</td>
+		</tr>
+		<tr align="center">
+			<td class="label">
+				<input type="radio" name="day_month_wise" value="M">Month-wise
+			</td>
+			<td class="fieldsnew">
+				<select name="year_m" class="textboxes1">
+					<option value="">Year</option>
+					~section name=yy loop=$yyarr`
+						<option value="~$yyarr[yy]`" ~if $yyarr[yy] eq $curyear` selected ~/if`>~$yyarr[yy]`</option>
+					~/section`
+				</select>
+			</td>
+		</tr>
+                <tr align="center">
+                        <td class="label">
+                                <input type="radio" name="day_month_wise" value="R">Date-range
+                        </td>
+                       <td class="fieldsnew">
+                                <select name="day_r1" class="textboxes1">
+                                        <option value="">Day</option>
+                                        ~section name=dd loop=$ddarr`
+                                                <option value="~$ddarr[dd]`" ~if $ddarr[dd] eq $curday` selected ~/if`>~$ddarr[dd]`</option>
+                                        ~/section`
+                                </select>
+                                &nbsp;
+                                <select name="month_r1" class="textboxes1">
+                                        <option value="">Month</option>
+                                        ~section name=mm loop=$mmarr`
+                                                <option value="~$mmarr[mm]`" ~if $mmarr[mm] eq $curmonth` selected ~/if`>~$mmarr[mm]`</option>
+                                        ~/section`
+                                </select>
+                                &nbsp;
+                                <select name="year_r1" class="textboxes1">
+                                        <option value="">Year</option>
+                                        ~section name=yy loop=$yyarr`
+                                                <option value="~$yyarr[yy]`" ~if $yyarr[yy] eq $curyear` selected ~/if`>~$yyarr[yy]`</option>
+                                        ~/section`
+                                </select>
+				To
+                                <select name="day_r2" class="textboxes1">
+                                        <option value="">Day</option>
+                                        ~section name=dd loop=$ddarr`
+                                                <option value="~$ddarr[dd]`" ~if $ddarr[dd] eq $curday` selected ~/if`>~$ddarr[dd]`</option>
+                                        ~/section`
+                                </select>
+                                &nbsp;
+                                <select name="month_r2" class="textboxes1">
+                                        <option value="">Month</option>
+                                        ~section name=mm loop=$mmarr`
+                                                <option value="~$mmarr[mm]`" ~if $mmarr[mm] eq $curmonth` selected ~/if`>~$mmarr[mm]`</option>
+                                        ~/section`
+                                </select>
+                                &nbsp;
+                                <select name="year_r2" class="textboxes1">
+                                        <option value="">Year</option>
+                                        ~section name=yy loop=$yyarr`
+                                                <option value="~$yyarr[yy]`" ~if $yyarr[yy] eq $curyear` selected ~/if`>~$yyarr[yy]`</option>
+                                        ~/section`
+                                </select>
+                        </td>
+                </tr>
+
+		<!--  List of the usernames of the Manager-->	
+		~if $MGR`
+                <tr class="formhead" align="center">
+                        <td colspan="2">Select Employees</td>
+                </tr>
+		~section name=username loop=$namesArr`
+		<tr align="center">
+                	<td class="label">
+	                	<input type="checkbox" name="namesArr[]" value="~$namesArr[username]`">
+        	        </td>
+                       	<td class="fieldsnew" align="left">
+				~$namesArr[username]`	
+			</td>
+		</tr>
+		~/section`
+		~/if`
+		<!--  List Ends -->
+	
+		<tr align="center">
+			<td class="label" colspan="2">
+				<input type="submit" name="submit" value="Go" class="buttons1">
+			</td>
+		</tr>
+	</table>
+	</form>
+~/if`
+</body>
+</html>

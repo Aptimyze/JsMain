@@ -1,0 +1,44 @@
+/* Logout CSS created by Vishal Kaul */
+
+#lgout_cnt{width:776px; margin:auto;padding:12px 0 0;}
+#lgout_cnt .msg{background:#e5eaf0; padding:5px; width:766px; font:bold 18px Arial, Helvetica, sans-serif; float:left; margin:10px 0 15px;}
+#lgout_cnt .info_icon{width:31px; height:31px; float:left; background:url(IMG_URL/profile/images/logout_sprite.png) -223px 0;}
+#lgout_cnt .info_icon_txt{float:left; width:610px; margin:4px 8px; display:inline;} 
+#lgout_cnt .lft_bnr{float:left; width:424px;padding:0 0 0 10px;}
+.no_b{font-weight:normal;}
+.sprte-hdr-foot {
+  background:url(IMG_URL/images/sprite-header-footer.png) transparent;
+}
+.hdr-logo-small {
+background-position: 0 -84px !important;
+height: 33px;
+margin-top: 4px;
+width: 172px;
+}
+.reg_h1{float:right}
+.mar30left{margin-left:30px}
+
+/*gtalk starts*/
+s{display:block;}
+.c,.c1,c2,c3,c4{height:1px; overflow:hidden; border:1px solid #fed369;border-width:0 3px;}
+.c1{margin:0 4px;}
+.c2{margin:0 3px;}
+.c3{margin:0 2px;}
+.c4{margin:0 1px;}
+a.blink{color:#1581a7; text-decoration:none;}
+.clr{clear:both; height:0; overflow:hidden;}
+.gtlk_cont{width:300px; margin-left:30px;}
+.gtlk_arw{width:18px; height:22px; background-position:-101px -139px;}
+.gtlk_mid{border:solid #fed369; border-width: 0pt 2px; padding:0; width:98%; margin:0 0 0 1px;}
+
+.gtlk_mid_txt{margin:5px; width:283px;}
+.gtlk_mid_txt h5{font:16px Arial, Helvetica, sans-serif; color:#ffd263;}
+.gtlk_txt{margin: 5px 0pt 0pt 12px; width:99%;}
+.gtlk_btm_cur{border-width: 2px 0pt 0pt; margin: -1px 5px 0pt; background:#F8FFD5;}
+
+.gtlk_mid_txt ul{float:left; width:281px; list-style:none; margin:10px 0 0;}
+.gtlk_mid_txt ul li{float:left; width:99.9%; padding:0 0 8px;}
+.gtlk_mid_txt ul li label{float:left; width:104px; padding:0 5px 0 0; font:bold 12px Arial, Helvetica, sans-serif; text-align:right; color:#726f6f;}
+.gtlk_mid_txt ul li input.txt_1{float:left; width:164px; height:18px; border:1px solid #969696;}
+/*gtalk ends*/
+#lgout_cnt .lgn_btn{float:left; width:58px; height:23px; background:url(IMG_URL/profile/images/lgout_btn_bg.png) repeat-x; border:1px solid #578d00; font:bold 14px Arial, Helvetica, sans-serif; color:#fff;}

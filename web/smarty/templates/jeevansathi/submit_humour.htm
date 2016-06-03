@@ -1,0 +1,146 @@
+<html>
+<head>
+<title>JeevanSathi Matrimonials - Jeevansathi Keyword Searches</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="I/styles.php" type="text/css">
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body leftmargin="5" topmargin="5">
+<table width="760" border="0" cellspacing="0" cellpadding="0" align="center">
+  <tr>
+      <td> 
+	~$HEAD`
+	~$SUBHEADER`	
+
+<form method="post" action="humour.php">
+        <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td colspan="3" height="3" valign="top"></td><SPACER height="3" type="block"></SPACER> 
+          </tr>
+          <tr>
+            <td width="190" valign="top" class="bgyell"><div align="center">
+                <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td bgcolor="#FFFFFF">
+
+~$TOPLEFT`           
+			<tr>
+                    <td width="190">
+~$LEFTPANEL`
+                    </table>
+                    <br></td>
+                  </tr>
+                </table>
+    </div></td>
+            <TD width=10 vAlign=top class=small><B><SPACER type="block" 
+            width="10"></B></TD>
+            <td width="571" valign="top"> 
+              <table width="99%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td><img src="~$IMG_URL`/profile/ser4_images/submit_humour.gif" width="534" height="36"></td>
+                </tr>
+                <tr>
+                <td valign=top colspan="4" height="14"><spacer type="block" height="14"></td>
+                </tr>
+                <tr>
+                  <td height="42">
+                    <table width="560"  border="0" cellspacing="3" cellpadding="3">
+                      <tr class="mediumblack">
+                        <td width="3%" valign="top">1.</td>
+                        <td width="97%">You may submit humour for posting on our <span class= class6><A href="~$SITE_URL`/profile/humour.php?opt=1&H1=1"><B>Humour Archives</B></A></span> for the next month or for being put up on our <span class= class6><A 
+href="~$SITE_URL`/index.htm"><B>home page</B></A></span><B> </B>as Today's Humour. Either way, credit will be given to you by display of your name and location (city + country) as the contributor</td>
+                      </tr>
+                      <tr class="mediumblack">
+                        <td valign="top">2.</td>
+                        <td>Please keep in mind that your contribution should not exceed 100 characters (including in-between spaces and punctuation) to be considered for Today's Humour on our home page. Further, we reserve the right to classify your contribution (under <span class= class6><A href="~$SITE_URL`/profile/humour.php?opt=1&H1=1"><B>Humour Archives</B></A></span> or <span class= class6><A 
+href="~$SITE_URL`/index.htm"><B>Today's Humour</B></A></span>) as we deem fit. </td>
+                      </tr>
+                      <tr class="mediumblack">
+                        <td valign="top">3.</td>
+                        <td>Please fill in <FONT color=#00773c size=2><STRONG>all</STRONG></FONT> the following information and click on the Send button to complete your submission:-</td>
+                      </tr>
+                    </table>
+                    <table width="554" align="center" cellspacing="0" cellpadding="o">
+                      <tr>
+                        <td valign=top  height="14"><spacer type="block" height="14"></td>
+                      </tr>
+                      <tr>
+                        <td  bgcolor="#cccccc" height="1" ><spacer type="block" height="1"></td>
+                      </tr>
+                      <tr>
+                        <td valign=top  height="8"><spacer type="block" height="8"></td>
+                      </tr>
+                    </table>
+                    <table width="537" border="0" align="center" cellpadding="3" cellspacing="3">
+                      <tr class="mediumblack">
+                        <td width="14" class="mediumblack">1.</td>
+                        <td width="158" class="bigblack">
+
+~if $check_hname eq 'Y'`<font color="red">Your Name</font> ~else` Your Name ~/if`</td>
+                        <td width="335"><input name="hname" value="~$HNAME`" type="text" class="TextBox" size="50"></td>
+                      </tr>
+                      <tr class="mediumblack">
+                        <td class="mediumblack">2.</td>
+                        <td class="bigblack">
+~if $check_hemail1 eq 'Y'`<font color="red">Your email id</font> ~else`Your email id ~/if` </td>
+                        <td><input name="hemail" value="~$HEMAIL`" type="text" class="TextBox" size="50"></td>
+                      </tr>
+                      <tr class="mediumblack">
+                        <td valign="top" class="mediumblack">4.</td>
+                        <td class="bigblack">
+~if $check_hresidence eq 'Y'`<font color="red">Your Location (City+ Country)</font> ~else`Your Location (City+ Country) ~/if` </td>
+                        <td><input name="hresidence" value="~$HRESIDENCE`" type="text" class="TextBox" size="50"></td>
+                      </tr>
+                      <tr class="mediumblack">
+                        <td class="mediumblack">5.</td>
+                        <td class="bigblack">Perferred Category </td>
+                        <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td width="7%"><input name="hcat" type="radio" value="HA" ~if $HCAT eq 'HA'`checked ~/if`></td>
+                            <td width="53%" class="bigblack">Humour Archives (<EM>monthly</EM>) </td>
+                            <td width="7%"><input name="hcat" type="radio" value="TH" ~if $HCAT eq 'TH' || $HCAT eq ''` checked ~/if`></td>
+                            <td width="33%" class="bigblack"  >Today's Humour</td>
+                          </tr>
+                        </table></td>
+                      </tr>
+                      <tr class="mediumblack">
+                        <td valign="top" class="mediumblack">6.</td>
+                        <td valign="top" class="bigblack">
+~if $check_hjoke eq 'Y'`<font color="red">Your Contribution </font> ~else`Your Contribution~/if`</td>
+                        <td><textarea name="hjoke"  cols="50" rows="3" class="TextBox">~$HJOKE`</textarea></td>
+                      </tr>
+                    </table>
+                    <table width="554" align="center" cellspacing="0" cellpadding="o">
+                      <tr>
+                        <td  height="8" colspan="2" valign=top><spacer type="block" height="8"></td>
+                      </tr>
+                      <tr>
+                        <td height="1" colspan="2"  bgcolor="#cccccc" ><spacer type="block" height="1"></td>
+                      </tr>
+                      <tr>
+                        <td  height="14" colspan="2" valign=top><spacer type="block" height="14"></td>
+                      </tr>
+                      <tr>
+                        <td width="201"  height="14" valign=top>&nbsp;</td>
+                        <td width="351" valign=top>
+<input type="image" name="hsend" value="hsend"  src="images/submit_button.gif" width="76" height="23">
+</td>
+                      </tr>
+                    </table>
+                  <br>                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+   
+      </td>
+  </tr>
+</table>
+
+</form>
+<br>
+~$SUBFOOTER`
+<br>
+~$FOOT`
+</body>
+</html>

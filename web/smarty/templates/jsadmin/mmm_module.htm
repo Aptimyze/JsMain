@@ -1,0 +1,533 @@
+<html>
+<head>
+ <title>Manage MMMJS Branch Details</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<!--link rel="stylesheet" href="stylesheet.css" type="text/css"-->
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+</head>
+<script language="javascript">
+function assignvalidate(var1)
+{
+	for(i=0;i<document.assignform.elements.length;i++)
+	{
+		if(document.assignform.elements[i].name==var1)
+		obj1=document.assignform.elements[i];
+	}
+	if(obj1.options.selectedIndex==-1)
+	{
+		alert("Please select atleast one city!");
+		return false;
+	}
+	else
+	return true;
+}
+function morevenuevalidate(formname)
+{
+	~if $morevenues`  
+        var vnum=~$morevenues`;
+        ~/if`
+        var i=0;
+        var nadd='',nid='',numbers='';
+        for(i=1;i<=vnum;i++)
+        {
+                nadd="mvnadd"+i;
+                nid="mvnid"+i;
+                numbers="mvnumbers"+i;
+                if((trim(eval("document."+formname+"."+nadd+".value"))=="") && (trim(eval("document."+formname+"."+nid+".value"))=="") && (trim(eval("document."+formname+"."+numbers+".value"))==""))
+                		;
+                else
+                {
+                        if(trim(eval("document."+formname+"."+nadd+".value"))=="")
+                        {
+                                alert("Address & Timing details of row "+i+" is blank!");
+                                eval("document."+formname+"."+nadd+".focus()");
+                                return false;
+                        }
+                        if(trim(eval("document."+formname+"."+nid+".value"))=="")
+                        {
+                                alert("Contact person & email id details of row "+i+" is blank!");
+                                eval("document."+formname+"."+nid+".focus()");
+                                return false;
+                        }
+			if(trim(eval("document."+formname+"."+numbers+".value"))=="")
+                        {
+                                alert("Contact number details of row "+i+" is blank!");
+                                eval("document."+formname+"."+numbers+".focus()");
+                                return false;
+                        }
+		}
+	}
+	return true;
+}
+function editvalidate()
+{
+	var formname='editvenue';
+	if(trim(eval("document."+formname+".fromid2.value"))=="")
+        {
+                alert("From email id can't be empty!");
+                eval("document."+formname+".fromid2.focus()");
+                return false;
+        }
+        if(trim(eval("document."+formname+".subject2.value"))=="")
+        {
+                alert("Subject can't be empty!");
+                eval("document."+formname+".subject2.focus()");
+                return false;
+        }
+        
+        if(trim(eval("document."+formname+".signature2.value"))=="")
+        {
+                alert("Signature can't be empty!");
+                eval("document."+formname+".signature2.focus()");
+                return false;
+        }
+        var num=trim(eval("document."+formname+".morevenues.value"));
+        if(isNaN(num))
+        {
+                alert("This is not a number!");
+                eval("document."+formname+".morevenues.focus()");
+                return false;
+        }
+	 ~if $venuenum`  
+        var vnum=~$venuenum`;
+        ~/if`
+	~if $vidarr`
+	var vidarray="~$vidarr`".split("#");
+	~/if`
+        var i=0;
+        var k=0;
+        var nadd='',nid='',numbers='';
+        for(i=1;i<=vnum;i++)
+        {
+                nadd="nadd2"+i;
+                nid="nid2"+i;
+                numbers="numbers2"+i;
+		var vid="check"+vidarray[i-1];
+                if(eval("document."+formname+"."+vid+".checked")==true)
+                {
+                        k=k+1;          
+                }
+                else
+                {
+                        if(trim(eval("document."+formname+"."+nadd+".value"))=="")
+                        {
+                                alert("Address & Timing details of row "+i+" is blank!");
+                                eval("document."+formname+"."+nadd+".focus()");
+                                return false;
+                        }
+                        if(trim(eval("document."+formname+"."+nid+".value"))=="")
+                        {
+                                alert("Contact person & email id details of row "+i+" is blank!");
+                                eval("document."+formname+"."+nid+".focus()");
+                                return false;
+                        }
+			if(trim(eval("document."+formname+"."+numbers+".value"))=="")
+                        {
+                                alert("Contact number details of row "+i+" is blank!");
+                                eval("document."+formname+"."+numbers+".focus()");
+                                return false;
+                        }
+                }
+        }
+        if(k==vnum)
+        {
+                alert("Each branch must have atleast one venue!");
+                return false;
+        }
+        else
+        return true;
+}
+
+function venuevalidate(formname)
+{
+ 	~if $venuenum`	
+	var vnum=~$venuenum`;
+	~/if`
+	var i=0;
+	var k=0;
+	var nadd='',nid='',numbers='';
+	for(i=1;i<=vnum;i++)
+	{
+		nadd="nadd"+i;
+		nid="nid"+i;
+		numbers="numbers"+i;
+		if((trim(eval("document."+formname+"."+nadd+".value"))=="") && (trim(eval("document."+formname+"."+nid+".value"))=="") && (trim(eval("document."+formname+"."+numbers+".value"))==""))
+		{
+			k=k+1;		
+		}
+		else
+		{
+			if(trim(eval("document."+formname+"."+nadd+".value"))=="")
+			{
+				alert("Address & Timing details of row "+i+" is blank!");
+				eval("document."+formname+"."+nadd+".focus()");
+				return false;
+			}
+			if(trim(eval("document."+formname+"."+nid+".value"))=="")
+			{
+				alert("Contact person & email id details of row "+i+" is blank!");
+				eval("document."+formname+"."+nid+".focus()");
+				return false;
+			}
+			if(trim(eval("document."+formname+"."+numbers+".value"))=="")
+			{
+				alert("Contact number details of row "+i+" is blank!");
+				eval("document."+formname+"."+numbers+".focus()");
+				return false;
+			}
+		}
+	}
+	if(k==vnum)
+	{
+		alert("Each branch must have atleast one venue!");
+		return false;
+	}
+	else
+	return true;
+}
+function validate(formname)
+{
+	if(trim(eval("document."+formname+".fromid.value"))=="")
+	{
+		alert("From email id can't be empty!");
+		eval("document."+formname+".fromid.focus()");
+		return false;
+	}
+	if(trim(eval("document."+formname+".subject.value"))=="")
+	{
+		alert("Subject can't be empty!");
+		eval("document."+formname+".subject.focus()");
+		return false;
+	}
+	
+	if(trim(eval("document."+formname+".signature.value"))=="")
+	{
+		alert("Signature can't be empty!");
+		eval("document."+formname+".signature.focus()");
+		return false;
+	}
+	if(trim(eval("document."+formname+".venuenum.value"))=="")
+	{
+		alert("There has to be atleast one venue!");
+		eval("document."+formname+".venuenum.focus()");
+		return false;
+	}
+	var num=trim(eval("document."+formname+".venuenum.value"));
+	if(isNaN(num))
+	{
+		alert("This is not a number!");
+		eval("document."+formname+".venuenum.focus()");
+		return false;
+	}
+	return true;
+	
+}
+function trim(inputString) {
+   if (typeof inputString != "string") { return inputString; }
+   var retValue = inputString;
+   var ch = retValue.substring(0, 1);
+   while (ch == " " || ch == '\n' || ch == '\t' || ch == '\r') {
+      retValue = retValue.substring(1, retValue.length);
+      ch = retValue.substring(0, 1);
+   }
+   ch = retValue.substring(retValue.length-1, retValue.length);
+   while (ch == " " || ch == '\n' || ch == '\t' || ch == '\r') {
+      retValue = retValue.substring(0, retValue.length-1);
+      ch = retValue.substring(retValue.length-1, retValue.length);
+   }
+   while (retValue.indexOf("  ") != -1) {
+      retValue = retValue.substring(0, retValue.indexOf("  ")) + retValue.substring(retValue.indexOf("  ")+1, retValue.length);
+   }
+   return retValue;
+}
+</script>
+~include file="head.htm"`
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table width=760 cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+    <tr class="formhead">
+          <td width=33% class="formhead" border=1 align="center"><font><b>Welcome ~$user`</b></font></td>
+          <td width="33%" class="formhead" align="center"><a href="mainpage.php?cid=~$cid`">Main Page</a></td>
+          <td width=33% class="formhead" border=1 align='CENTER'><a href="logout.php?cid=~$cid`">Logout</a></td>
+    </tr>
+</table>
+<br>
+<table width=760 cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+    <tr class="fieldsnew">
+          <td width="33%" class="label" align="center"><a href="mmm_module.php?cid=~$cid`&edit=1`">Edit branch details</a></td>
+          <td width="33%" class="label" border=1 align='CENTER'><a href="mmm_module.php?cid=~$cid`&new=1">Enter new branch details</a></td>
+	  <td width="33%" class="label" border=1 align="CENTER"><a href="mmm_module.php?cid=~$cid`&assign=1">Assign branch to city</a></td>
+    </tr>
+</table>
+<br>
+~if $assign`
+~if $assigned`
+<p align="center">The selected cities were successfully mapped to the branch</p>
+~/if`
+<p align="center">The branches to which cities are mapped presently are in () next to city's name</p>
+<form name="assignform" action="mmm_module.php" method="post">
+<table width="600" align="center" cellspacing="5" cellpadding="2">
+<tr align="center" class="formhead">
+<td align="center" colspan="2">Choose cities to be mapped to a branch</td>
+</tr>
+<tr align="center" class="fieldsnew">
+<td align="center" class="label">Cities</td>
+<td align="center" class="label">Branches</td>
+</tr>
+<tr align="center" class="fieldsnew">
+<td align="center">
+<select name=city[] multiple>
+~$cities`
+</select>
+</td>
+<td align="center">
+<select name="branch">
+~$branches`
+</select>
+</td>
+</tr>
+<tr align="center" class="fieldsnew">
+<td align="center" class="label" colspan="2"><input type="submit" name="assignsubmit" value="Assign" onClick="return assignvalidate('city[]');"></input></td>
+</tr>
+</table>
+<input type="hidden" name="assign" value="~$assign`">
+<input type="hidden" name="cid" value="~$cid`">
+<br><br>
+</form>
+~else`
+~if $new`
+~if $newdone`
+<br><p align="center">You have successfully entered details for branch ~$branchlabel`</p>
+<br><p align="center"><a href="~$SITE_URL`/jsadmin/mmm_module.php?cid=~$cid`&new=1">Click Here to Continue</a></p>
+~else`
+~if $venueform`
+<form name="newvenue" action="mmm_module.php" method="post">
+<table align="center" width="600" cellspacing="3" cellpadding="5">
+<tr class="formhead" align="center">
+        <td align="center" colspan="2">Branch Details</td>
+</tr>
+<tr align="center" class="fieldsnew">
+        <td align="center" class="label">Branch Name</td>
+        <td align="center">~$branchlabel`</td>
+</tr>
+<tr align="center" class="fieldsnew">
+        <td align="center" class="label">From Email-id</td>
+        <td align="center">~$fromid`</td>
+</tr>
+<tr align="center" class="fieldsnew">
+        <td align="center" class="label">Subject</td>
+        <td align="center">~$subject`</td>
+</tr>
+<tr align="center" class="fieldsnew">
+        <td align="center" class="label">Signature</td>
+        <td align="center">~$signature`</td>
+</tr>
+<tr align="center" class="fieldsnew">
+        <td align="center" class="label">Number of Venues</td>
+        <td align="center">~$venuenum`</td>
+</tr>
+</table>
+<br>
+<table align="center" width="760" cellspacing="3" cellpadding="5">
+<tr align="center" class="formhead">
+	<td align="center" colspan="3">Please enter venue details</td>
+</tr>
+<tr align="center" class="fieldsnew">
+	<td class="label" align="center">Address & Timing details</td>
+	<td class="label" align="center">Contact person & email</td>
+	<td class="label" align="center">Contact Number</td>
+</tr>
+~section name=loop loop=$idarr`
+<tr align="center" class="fieldsnew">
+	<td align="center" align="center"><textarea name="nadd~$idarr[loop].id`" cols="20" rows="5"></textarea></td>
+	<td align="center" align="center"><textarea name="nid~$idarr[loop].id`" cols="20" rows="3"></textarea></td>
+	<td align="center" align="center"><textarea name="numbers~$idarr[loop].id`" cols="20" rows="3"></textarea></td>
+</tr>
+~/section`
+<tr align="center" class="fieldsnew">
+	<td align="center" class="label" colspan="4"><input type="submit" name="venuesubmit" value="Submit Branch & Venue Details" onClick="return venuevalidate('newvenue');"></input></td>
+</tr>
+</table>
+<input type="hidden" name="branchname" value="~$branchname`">
+<input type="hidden" name="fromid" value="~$fromid`">
+<input type="hidden" name="signature" value="~$signature`">
+<input type="hidden" name="subject" value="~$subject`">
+<input type="hidden" name="branchlabel" value="~$branchlabel`">
+<input type="hidden" name="venuenum" value="~$venuenum`">
+~else`
+<form name="newbranch" action="mmm_module.php" method="post">
+<table align="center" width="600" cellspacing="3" cellpadding="5">
+<tr class="formhead" align="center">
+	<td align="center" colspan="2">Please enter the branch details</td>
+</tr>
+~if $error`
+<tr align="center" class="fieldsnew">
+	<td align="center" colspan="2"><font color="red">Please check the entries in red</font></td>
+</tr>
+~/if`
+<tr align="center" class="fieldsnew">
+	<td align="center" class="label">Branch Name</td>
+	<td align="center"><select name="branchname">~$citylist`</select></td>
+</tr>
+<tr align="center" class="fieldsnew">
+	<td align="center" class="label">~if $fromid_err`<font color="red">From Email-id</font>~else`From Email-id~/if`</td>
+	<td align="center"><input type="text" name="fromid" value="~$fromid`"></input></td>
+</tr>
+<tr align="center" class="fieldsnew">
+	<td align="center" class="label">~if $sub_err`<font color="red">Subject</font>~else`Subject~/if`</td>
+	<td align="center"><input type="text" name="subject" value="~$subject`"></input></td>
+</tr>
+<tr align="center" class="fieldsnew">
+	<td align="center" class="label">~if $sig_err`<font color="red">Signature</font>~else`Signature~/if`</td>
+	<td align="center"><textarea name="signature" cols="25" rows="5">~$signature`</textarea></td>
+</tr>
+<tr align="center" class="fieldsnew">
+	<td align="center" class="label">~if $vnum_err`<font color="red">Number of Venues</font>~else`Number of Venues~/if`</td>
+	<td align="center"><input type="text" name="venuenum" value="~$venuenum`"></input></td>
+</tr>
+<tr align="center" class="fieldsnew">
+	<td align="center" class="label" colspan="2"><input type="submit" name="submit" value="Proceed to update venue details" onClick="return validate('newbranch');"></td>
+</tr>
+</table>
+~/if`
+<input type="hidden" name="cid" value="~$cid`">
+<input type="hidden" name="new" value="~$new`">
+</form>
+~/if`
+~else`
+~if $editdone`
+<br><p align="center">You have successfully edited details for branch ~$branchlabel`</p>
+<br><p align="center"><a href="~$SITE_URL`/jsadmin/mmm_module.php?cid=~$cid`&edit=1">Click Here to Continue</a></p>
+~else`
+~if $morevenues`
+<form name="morevenueform" action="mmm_module.php" method="post">
+<table align="center" width="600" cellspacing="3" cellpadding="5">
+<tr class="formhead" align="center">
+        <td align="center" colspan="2">Branch Details</td>
+</tr>
+<tr align="center" class="fieldsnew">
+        <td align="center" class="label">Branch Name</td>
+        <td align="center">~$branchlabel`</td>
+</tr>
+</table>
+<br>
+<table align="center" width="760" cellspacing="3" cellpadding="5">
+<tr align="center" class="formhead">
+        <td align="center" colspan="3">Please enter venue details</td>
+</tr>
+<tr align="center" class="fieldsnew">
+        <td class="label" align="center">Address & Timing details</td>
+        <td class="label" align="center">Contact person & email</td>
+        <td class="label" align="center">Contact Number</td>
+</tr>
+~section name=loop loop=$mvidarr`
+<tr align="center" class="fieldsnew">
+        <td align="center" align="center"><textarea name="mvnadd~$mvidarr[loop].id`" cols="20" rows="5"></textarea></td>
+        <td align="center" align="center"><textarea name="mvnid~$mvidarr[loop].id`" cols="20" rows="3"></textarea></td>
+        <td align="center" align="center"><textarea name="mvnumbers~$mvidarr[loop].id`" cols="20" rows="3"></textarea></td>
+</tr>
+~/section`
+<tr align="center" class="fieldsnew">
+        <td align="center" class="label" colspan="2"><input type="submit" name="morevenuesubmit" value="Submit Venue Details" onClick="return morevenuevalidate('morevenueform');"></input></td>
+	<td align="center" class="label" colspan="2"><input type="submit" name="morevenueignore" value="Cancel"></input></td>
+</tr>
+</table>
+<input type="hidden" name="city" value="~$city`">
+<input type="hidden" name="branchlabel" value="~$branchlabel`">
+~else`
+~if $editform`
+<form name="editvenue" action="mmm_module.php" method="post">
+<table align="center" width="600" cellspacing="3" cellpadding="5">
+<tr class="formhead" align="center">
+        <td align="center" colspan="2">Branch Details</td>
+</tr>
+<tr align="center" class="fieldsnew">
+        <td align="center" class="label">Branch Name</td>
+        <td align="center">~$branchlabel`</td>
+</tr>
+<tr align="center" class="fieldsnew">
+        <td align="center" class="label">From Email-id</td>
+        <td align="center"><input type="text" name="fromid2" value="~$fromid`"></input></td>
+</tr>
+<tr align="center" class="fieldsnew">
+        <td align="center" class="label">Subject</td>
+        <td align="center"><input type="text" name="subject2" value="~$subject`"></input></td>
+</tr>
+<tr align="center" class="fieldsnew">
+        <td align="center" class="label">Signature</td>
+        <td align="center"><textarea name="signature2" rows="5" cols="20">~$signature`</textarea></td>
+</tr>
+<tr align="center" class="fieldsnew">
+        <td align="center" class="label">Number of Venues</td>
+        <td align="center">~$venuenum`</td>
+</tr>
+<tr align="center" class="fieldsnew">
+	<td align="center" class="label">Add More Venues</td>
+	<td align="center"><input type="text" name="morevenues" value="~$morevenues`"></input></td>
+</tr>
+<tr align="center" class="fieldsnew">
+	~if $disablebranch`
+	<td align="center" class="label">Enable branch</td>
+        <td align="center"><input type="checkbox" name="enablebranch"></input></td>
+	~else`
+	<td align="center" class="label">Disable branch</td>
+	<td align="center"><input type="checkbox" name="disablebranch"></input></td>
+	~/if`		
+</tr>
+</table>
+
+<br>
+<table align="center" width="760" cellspacing="3" cellpadding="5">
+<tr align="center" class="formhead">
+        <td align="center" colspan="4">Venue details</td>
+</tr>
+<tr align="center" class="fieldsnew">
+        <td class="label" align="center">Address & Timing details</td>
+        <td class="label" align="center">Contact person & email</td>
+        <td class="label" align="center">Contact Number</td>
+	<td class="label" align="center">Delete Venue</td>
+</tr>
+~section name=loop loop=$venue`
+<tr align="center" class="fieldsnew">
+        <td align="center"><textarea name="nadd2~$venue[loop].id`" cols="20" rows="5">~$venue[loop].nadd`</textarea></td>
+        <td align="center"><textarea name="nid2~$venue[loop].id`" cols="20" rows="3">~$venue[loop].nid`</textarea></td>
+        <td align="center"><textarea name="numbers2~$venue[loop].id`" cols="20" rows="3">~$venue[loop].numbers`</textarea></td>
+	<td align="center"><input type="checkbox" name="~$venue[loop].checkid`"></input></td> 
+	<input type="hidden" name="arrayid~$venue[loop].id`" value="~$venue[loop].checkid`">
+</tr>
+~/section`
+</table>
+<input type="hidden" name="city" value="~$city`">
+<input type="hidden" name="fromid" value="~$fromid`">
+<input type="hidden" name="signature" value="~$signature`">
+<input type="hidden" name="subject" value="~$subject`">
+<input type="hidden" name="branchlabel" value="~$branchlabel`">
+<input type="hidden" name="venuenum" value="~$venuenum`">
+<br>
+<table width="600" align="center" cellspacing="2" cellpadding="5">
+<tr align="center" class="formhead">
+<td align="center"><input type="submit" name="editbranch" value="Submit Branch Details" onClick="return editvalidate();"></input>
+</tr>
+</table>
+~else`
+<form action="mmm_module.php" method="post">
+<table align="center" width="600" cellspacing="5" cellpadding="2">
+<tr align="center" class="formhead">
+<td align="center">Select Branch details to be edited</td>
+</tr>
+<tr align="center" class="fieldsnew">
+<td align="center"><select name="city">~$cityindia`</td>
+</tr>
+<tr align="center" class="fieldsnew">
+<td align="center"><input type="submit" name="editsubmit" value="Edit Details"></input></td>
+</tr>
+</table>
+~/if`
+~/if`
+<input type="hidden" name="edit" value="~$edit`">
+<input type="hidden" name="cid" value="~$cid`">
+</form>
+~/if`
+~/if`
+~/if`
+</body>
+</html>

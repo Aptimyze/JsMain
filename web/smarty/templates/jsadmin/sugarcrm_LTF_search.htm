@@ -1,0 +1,79 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Admin Search : Jeevansathi.com Matrimonial Services</title>
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+<script language="JavaScript">
+</script>
+</head>
+~include file="head.htm"`
+
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<form action="sugarcrm_LTF_search.php" method="post">
+<input type="hidden" name=cid value="~$cid`">
+<table width=760 cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+    <tr class="formhead">
+          <td width=55% class="formhead" border=1><font><b>Welcome : ~$user`</b></font></td>
+          <td width="35%" class="formhead" align="center"><a href="mainpage.php?name=&cid=~$cid`">Main Page</a></td>
+          <td width=10% class="formhead" border=1 align='CENTER'><a href="logout.php?cid=~$cid`">Logout</a></td>
+    </tr>
+</table>
+<br><br>
+
+<table width="60%" border="0" cellspacing="1" cellpadding="4" align="center">
+          <tr>
+            <td class="formhead" valign="middle" colspan="2">&#155; Search</td>
+          </tr>
+          <tr>
+
+          <tr>
+            <td width="30%" class="label" bgcolor="#F9F9F9">Select</td>
+            <td width="70%" bgcolor="#F9F9F9" >
+		<select name="phrase" class="textboxes1" >
+			<option value="U" ~if $phrase eq 'U'`selected~/if`>By Username</option>
+			<option value="E" ~if $phrase eq 'E'`selected~/if`>By Email</option>
+		</select>
+            </td>
+          </tr>
+          <tr>
+            <td width="30%" class="label" bgcolor="#F9F9F9">Username/Email</td>
+            <td width="70%" bgcolor="#F9F9F9">
+              <input type="text" name="username" value="~$USER_NAME`" size="18" maxlength="40" class="textboxes1">
+            </td>
+          </tr>
+          <tr valign="middle" align="center">
+	    <td width=30% class="fieldsnew"></td>
+              <td class="fieldsnew"><input type="submit" name="Go" value="  Search  " class="textboxes1"></td>
+	  </tr>
+</table>
+<br>
+	
+~if $SEARCH eq "YES"`
+	<table width=100% align="CENTER" >
+		<tr align="CENTER">
+			~if $RESULT eq 'N'`
+				<td class="formhead" colspan="8" height="23"><b><font size="3" color="red">LTF Agent record does not exist </font></td>	
+			~else`
+		        	<td class="formhead" colspan="8" height="23"><b><font size="3" color="blue">LTF Agent Search Result </font></td>
+			~/if`
+	    	</tr>
+	    	<tr align="CENTER" class="label">
+	      		<td width=10% height="21"><b>User Name</b></td>
+	      		<td width=11% height="21"><b>Alloted To </b></td>
+	      		<td width=8% height="21"><b>Registration Date</b></td>
+	      		<td width=10% height="21"><b>Photo Upload Date</b></td>
+	      	</tr>
+	    	<tr align="CENTER" bgcolor="#fbfbfb" class="label">
+	      		<td height="21" width="15%">~$username`</td>
+      			<td height="21" width="15%">~$exec`</td>
+			<td height="21" width="15%">~$dataSet.REG`</td>
+			<td height="21" width="15%">~$dataSet.PHOTO`</td>
+    		</tr> 
+
+	</table>
+~/if`
+</form> 
+
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>JeevanSathi</title>
+  <link rel="stylesheet" href="../jsadmin/jeevansathi.css" type="text/css">
+  <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+ </head>
+        ~JsTrackingHelper::getHeadTrackJs()`
+
+ ~include file="head.htm"`
+ <br>
+ <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+  <table width=100% cellspacing="1" cellpadding='0' ALIGN="CENTER" >
+   <tr width=100% border=1>
+    <td width="25%" class="formhead" height="23"><font><b>Welcome :~$name`</b></font></td>
+    <td width="25%" class="formhead" align="center"><a href="../jsadmin/mainpage.php?cid=~$cid`&name=~$name`">Click here to go to main page</a></td>
+    <td width="25%" class="formhead" align='RIGHT' height="23">
+        <a href="logout.php?cid=~$cid`">Logout</a>
+    </td>
+    <td width="3%" class="formhead" height="23">&nbsp;
+    </td>
+   </tr>
+  </table>
+<table width=100% align="CENTER" >
+   <tr align="CENTER">
+    <td class="formhead" colspan="100%" height="23">
+    <a href="~$SITE_URL`/operations.php/crmAllocation/outboundProcessList?cid=~$cid`&name=~$name`">Go Back</a> 
+    </td>
+   </tr>
+   <tr align="CENTER">
+    <td class="formhead" colspan="100%" height="23">
+     <b>Follow Up Details</b>
+    </td>
+   </tr>
+  <tr align="CENTER">
+    <td class="label" width=20% height="20"><b>S.No.</b></td>
+    <td class="label" width=40% height="20"><b>Date</b></td>
+    <td class="label" width=40% align="CENTER" height="20"><b>Follow Up Count</b></td>
+  </tr>
+  ~if $follow`
+	~section name=index loop=$follow`
+	<tr class="fieldsnew">
+	<td height="21" width="20%" align="CENTER">
+		~$smarty.section.index.index_next`
+	</td>
+        <td height="21" width="40%" align="CENTER">
+        	~$follow[index].DATE`        
+	</td>
+        <td height="21" width="20%" align="CENTER">
+                ~$follow[index].FOLLOWUP`
+        </td>
+        </tr>
+	~/section`
+  ~else`
+	<tr>
+	<td  align="center" colspan=100% class=fieldsnew>
+		<font color="red">
+                        There are no records to show
+                </font>
+	</td>
+	</tr>
+
+  ~/if`
+   <tr bgcolor="#fbfbfb">
+    <td colspan="100%" height="21">
+    </td>
+   </tr>
+   <tr>
+    <td colspan="100%" height="21">
+     &nbsp;
+    </td>
+   </tr>
+</table>
+ <br><br>
+ ~include file="foot.htm"`
+              ~JsTrackingHelper::setJsLoadFlag(1)`
+ </body>
+<script src="~$IMG_URL`/min/?f=/js/timetracker_js.js"></script>
+                ~JsTrackingHelper::getTailTrackJs(0,true,2,"http://track.99acres.com/images/zero.gif","JSCRMOUBFFSUMMARYURL")`
+<script>
+var objtnm = new tnm();
+objtnm.tnmPageId="JSCRMOUBFFSUMMARYURL";
+$(document).ready(function(){
+window.onload = function () {objtnm.init();}
+ window.onunload = function() { objtnm.LogCatch.call(objtnm);}
+});
+</script>
+</html>

@@ -1,0 +1,378 @@
+<!--Error message-->
+
+~if $ERROR_MESSAGE`
+<div class="lyr">
+        <div class="lyr_tp_cur"></div>
+        <div class="cnt">
+                <h4 class="dark_orange t14 b">~$ERROR_MESSAGE`<br><br><br><br><br><br><br><br><br><br><br><br></h4>
+                ~if !$FROM_VIEW`<a class="fr crs b" onclick="return hide_exp_layer()" href="#">[x]</a>~/if`
+                <div class="clr"></div>
+                <div class="sp5"></div>
+        </div>
+        <div class="clr"></div>
+        <div class="lyr_btm_cur"></div>
+</div>
+
+~else`
+        ~if $INVOKE_LAYER`
+        <form id='contact_engine_~$INDEX`' name=fr1 style="margin:0px;padding:0px">
+        ~else`
+        <form id='contact_engine' name=fr1 style="margin:0px;padding:0px">
+        ~/if`
+        <input type="hidden" name="countlogic" value="1">
+        <input type="hidden" name="clicksource" value="~$CLICKSOURCE`">
+        <input type="hidden" name="matchalert_mis_variable" value="~$matchalert_mis_variable`">
+        <input type="hidden" name="CURRENTUSERNAME" value="~$CURRENTUSERNAME`">
+        <input type="hidden" name="crmback" value="~$crmback`">
+        <input type="hidden" name="inf_checksum" value="~$inf_checksum`">
+        <input type="hidden" name="cid" value="~$cid`">
+        <input type="hidden" name="suggest_profile" value="~$suggest_profile`">
+        <input type="hidden" name="pr_view" value="~$pr_view`">
+        <input type="hidden" name="stype" value="~$STYPE`">
+        <input type="hidden" name="checksum" value="~$CHECKSUM`">
+        <input type="hidden" name="profilechecksum" value="~$PROFILECHECKSUM`">
+        <input type="hidden" name="viewed_profile" id="viewed_profile" value="~$viewed_profile`">
+        <input type="hidden" name="index" value="~$INDEX`">
+        <input type="hidden" name="layer_action" value="~$ACTION`">
+        <input type="hidden" name="multiple" value="~$MULTIPLE`">
+        <input type="hidden" name="who" value="~$WHO`">
+        ~if $NUDGE_STATUS neq ''`
+                ~if $NUDGE_STATUS eq 'N' OR $NUDGE_STATUS eq 'NACC' OR $NUDGE_STATUS eq 'NNOW' OR $NUDGE_STATUS eq 'NNREJ' OR $NUDGE_STATUS eq 'NREJ' OR $NUDGE_STATUS eq 'ACC'`
+                <input type='hidden' name='status' value='N'>
+                <input type='hidden' name='nudge_type' value='~$NUDGE_STATUS`'>
+                ~elseif $NUDGE_STATUS eq 'NI' OR  $NUDGE_STATUS eq 'NIA'`
+                <input type='hidden' name='status' value='I'>
+                <input type='hidden' name=nudge_type value='NI'>
+                ~/if`
+        ~else`
+                ~if $TYPE eq 'I'`
+		<input type='hidden' name="status" value="~$updatedStatus`">
+		~/if`
+                ~if $TYPE eq ''`
+                <input type='hidden' name="status" value='I'>
+                ~/if`
+                ~if $TYPE eq 'D'`
+                <input type='hidden' name="status" value='A'>
+                ~/if`
+                ~if $TYPE eq 'C'`
+                <input type='hidden' name="status" value='A'>
+                ~/if`
+		
+        ~/if`
+
+
+
+
+
+<!--Contact action layer-->
+<div class="lyr" style="display:~if $SHOW_CONTACT eq '' and $SHOW_SHORT_CONTACT eq ''`block~else`none~/if`" id="show_express">
+	<div class="lyr_tp_cur"></div>
+	<div class="cnt">
+		<h4>~$CONTACT_HEADLINE`</h4>
+		<a class="fr crs b" href="#" onclick="return hide_exp_layer()">[x]</a>
+		<div class="clr"></div>
+		<div class="fl f_11 mt_15">~$CONTACT_MESSAGE`</div>
+
+                <div class="sp5"></div>
+
+		<!--Not in use>
+                ~if $ALLOW_ACCEPT_DECLINE`
+                <div class="t12 b">
+                        <input type="radio" name="status" value="A" style="border:none;" onclick="javascript:check_dropdown('accept','~$INDEX`','~$UPDATE_DECLINE`')" ~if $ACTION neq 'decline'`checked="checked"~/if`>Accept &nbsp;&nbsp;&nbsp;&nbsp;</input>
+                        <input type="radio" name="status" value="D" style="border:none;" onclick="javascript:check_dropdown('reject','~$INDEX`','~$UPDATE_DECLINE`')" ~if $ACTION eq 'decline'`checked~/if`>Not Interested</input>
+                </div>
+                ~/if`
+		Ends here-->
+
+
+                <div class="rf">
+                <select name="draft_name" id="message_id" onChange="javavscript:change_message('~$INDEX`')" ~if $cntDrafts le 1` style="display:none" ~/if`>
+                ~foreach from=$DRAFTS key=k item=v`
+                <option value="~$k`">~$v`</option>
+                ~/foreach`
+                </select>
+                </div>
+		<div class="sp5"></div>
+
+		<div class="fl mt_15">
+		<textarea id='text_id' name="custom_message" ~if $NUDGE_STATUS`style="display:none"~/if` class="txt_area1" rows="2" cols="2" ~if $PAID eq 0 AND $ALLOW_MES_WRITE eq 0` disabled ~/if`>~$DEFAULT_MESSAGE`</textarea>
+		</div>
+		<input type="hidden" name="custmessage" id="test_id" value="">
+		<input type="hidden" name="enableButton" id="enableButton" value="~$ENABLE_BUTTON`">
+
+		~if $BOTTOM_LINE`
+		<div class="sp5"></div>
+		<div class="fl mt_15 f_11">~$BOTTOM_LINE`</div>
+		~/if`
+
+                ~if $TYPE eq 'A'`
+                        <div class="sp5"></div>
+                        <div class="fl mt_15 f_11"><span id="errorSpan" style=color:red></span></div>
+                ~/if`
+
+		<div class="sp5"></div>
+
+		~if $NUDGE_STATUS`
+                <div style="text-align:center; margin-top: 90px;" >
+                ~$N_BUTTON`
+                </div>
+                ~else`
+		<div align="center">
+			<input name="Submit" id="multi_button" style="width:auto" type="button" class="b ~if $ENABLE_BUTTON` gray_btn ~else` green_btn en_btn_clr_alb~/if`" value="~$BUTTON_NAME`"  ~if $ENABLE_BUTTON eq '1'` disabled ~/if` ~if !$FROM_PROF_ALB` ~if !$LOGIN` onclick="$.colorbox({href:'login.php?SHOW_LOGIN_WINDOW=1'});" ~else` ~if $TYPE eq 'A' and !$ENABLE_BUTTON`onclick="javascript:if(trim(dID('text_id').value)==''){dID('errorSpan').innerHTML='Please write a message to be sent';return false;}else{dID('test_id').value=dID('text_id').value;hide_exp_layer();submit_form('Submit','~$INDEX`');}"~else`onclick="javascript:dID('test_id').value=dID('text_id').value;hide_exp_layer();submit_form('Submit','~$INDEX`')"~/if`~/if`~/if` >
+		</div>
+		~/if`
+
+		<!--Removed PROMPT_TO_PAY condition-->
+                ~if $LOGIN && $NUDGE_STATUS eq ''`
+		~if $BUY_MESSAGE_EOI`
+		<div class="sp5"></div>
+		<div class="fl mt_15 f_11">
+		~$BUY_MESSAGE_EOI`
+		</div>
+		<div class="sp5"></div>
+		<div align="center">
+			<a href="~$SITE_URL`/profile/mem_comparison.php" class="paid_mem f_16 b">Become a Paid Member Now</a>
+		</div>
+		~/if`
+		~/if`
+
+		~if $TYPE eq 'A'`
+			<div class="sp5"></div>
+			<div class="fl mt_15 f_11"><a  class="blink" onclick="javascript:hide_exp_layer();for_confirmation('DECLINE','~$WHO`','~$PROFILENAME`', '~$INDEX`')">Not Interested</a> in this member?</div>
+		~/if`
+
+	</div>	
+	<div class="clr"></div>
+	<div class="lyr_btm_cur"></div>
+</div>
+</form>
+<!--Ends here-->
+
+
+<!--Contact detail layer-->
+<div class="lyr" style="display:~if $SHOW_CONTACT`block~else`none~/if`">
+	<div class="lyr_tp_cur"></div>
+	<div class="cnt" id="call_directly">
+                ~if $shift_mes`
+                        ~$shift_mes`
+                ~else`
+		~if $CONTACT_LOCKED eq 1`
+		<h4>Contact details</h4>
+		<a class="fr crs b" onclick="return ~if $close_func`~$close_func`~else`hide_exp_layer()~/if`" href="#">[x]</a>
+		<div class="clr"></div>
+		<div class="fl mt_15 shw_info" >
+			<ul class="con_list_tuple" ~if $LATEST_ACC_DEC` style="height:152px"~/if`>
+				~if $SHOW_MOBILE`
+			      <li>Mobile no.~if $MOB_PROFILENAME` of  ~$MOB_PROFILENAME` (~$MOB_RELATION_NAME`)~/if`<br>
+				<b>~$SHOW_MOBILE`</b> ~if $VERIFIED_MOB`(Verified)~/if`</li>
+				~/if`
+                                ~if $ALT_MOBILE`
+                              <li>Alternative Mobile no.~if $ALT_MOBILE_LABEL`~$ALT_MOBILE_LABEL`~/if`<br>
+                                <b>~$ALT_MOBILE`</b></li>
+                                ~/if`
+				~if $PHONE_NO`
+			      <li>Landline no.~if $PHONE_PROFILENAME` of  ~$PHONE_PROFILENAME` (~$PHONE_RELATION_NAME`)~/if`<br>
+				<b>~$PHONE_NO`</b> ~if $VERIFIED_LANDLINE`(Verified)~/if`</li>
+				~/if`
+				<!----------Call now---------->
+				~$SHOW_CALLNOW_LINK`
+				<!--------------Ends here----------->
+				~if $TIME_TO_CALL_START`
+			      <li>Suitable time to call<br>
+				<b>~$TIME_TO_CALL_START` to ~$TIME_TO_CALL_END`</b></li>
+				~/if`
+				~if $SHOW_ADDRESS`
+			      <li>Address<br>
+				<b>~$SHOW_ADDRESS`</b></li>
+				~/if`
+			       ~if $SHOW_PARENTS_ADDRESS`
+			      <li>Parent's address<br>
+				<b>~$SHOW_PARENTS_ADDRESS`</b></li>
+				~/if`
+				~if $EMAIL_ID`
+				<li>Email ID<br>
+				<b>~$EMAIL_ID`</b>
+				</li>
+				~/if`
+				~if $SHOW_MESSENGER`
+			      <li>Messenger ID<br>
+				<b>~$SHOW_MESSENGER`</b></li>
+				~/if`
+			    </ul>
+		</div>
+		~if $PHONE_NO || $SHOW_MOBILE`
+                <div class="fl mt_15 f_11"><a class=thickbox" href="" onclick="javascript:{hide_exp_layer();$.colorbox({href:'report_invalid_phone.php?checksum=~$CHECKSUM`&profilechecksum=~$PROFILECHECKSUM`'});return false;}">Report Invalid telephone number</a></div>
+                ~/if`
+		~else`
+                <h4>Contact details are locked</h4>
+                <a class="fr crs b" onclick="return ~if $close_func`~$close_func`~else`hide_exp_layer()~/if`" href="#">[x]</a>
+                <div class="clr"></div>
+                <div class="fl f_11 mt_15">~if $CON_DET_MES`~$CON_DET_MES`~/if`</div>
+                <div class="fl mt_15 shw_info" ~if $BOTTOM_LINE`style="height:150px!important"~/if`>
+                        <ul>
+			      <li>Mobile no.</li>
+			      <li>Landline no.</li>
+			      <li>Suitable time to call</li>
+			      <li>Address</li>
+			      <li>Parent's address</li>
+			      <li>Email ID</li>
+                        </ul>
+			<div class="fl" style="margin: -100px 0pt 0pt 128px; display:inline;">
+				<img src="images/locked.gif" />
+			</div>
+                </div>
+                ~if $BOTTOM_LINE`
+                <div class="sp5"></div>
+                <div class="fl mt_15 f_11">~$BOTTOM_LINE`</div>
+                ~/if`
+		~/if`
+		~if $CONTACT_HEADLINE`
+		<!--div class="sp5"></div>
+		<div class="fl mt_15 f_11">~$CONTACT_HEADLINE`</div-->
+		~/if`
+		~/if`
+		
+	</div>
+	<div class="clr"></div>
+	<div class="lyr_btm_cur"></div>
+</div>
+<!--Ends here-->
+
+
+<!--Short Contact detail layer-->
+<div class="lyr" style="display:~if $SHOW_SHORT_CONTACT`block~else`none~/if`">
+	<div class="lyr_tp_cur"></div>
+	<div class="cnt">
+		<div id="contact_accept_layer">
+		<div class="fl"><img src="images/grn_tck.gif"></div>
+		<h4 class="lgt_grn">~$CONTACT_HEADLINE`</h4>
+		<a class="fr crs b" onclick="return hide_exp_layer()" href="#">[x]</a>
+		<div class="clr"></div>
+		<div class="sp5"></div>
+		<div class="fl f_11 mt_15">
+			~$CONTACT_MESSAGE`
+		</div>
+		<div class="sp5"></div>
+		~if $CONTACT_LOCKED eq 1`
+		<div class="fl mt_15 shw_info" style="height:90px!important">
+		<ul class="con_list_tuple">
+			~if $SHOW_MOBILE`
+			
+			<li>Phone<BR> <b> ~$SHOW_MOBILE`</b></li>
+			~/if`
+			~if $EMAIL_ID`
+			<li>Email<BR> <b> ~$EMAIL_ID`</b></li>
+			~/if`
+                                <!----------Call now---------->
+                                ~$SHOW_CALLNOW_LINK`
+                                <!--------------Ends here----------->
+
+			~if $SHOW_ADDRESS`
+			<li>Address<BR><B>~$SHOW_ADDRESS`</b></li>
+			~/if`
+		</ul>
+		</div>
+		~else`
+		<div class="fl mt_15 shw_info" style="height:75px!important">
+		<ul>
+			<li><label>Phone</label></li>
+			<li><label>Email</label></li>
+			<li><label>Address</label></li>
+		</ul>
+		<div class="fl" style="margin: -65px 0pt 0pt 79px; display:inline;">
+			<img src="images/locked.gif" />
+		</div>
+		</div>
+		~/if`
+		<div class="sp5"></div>
+		~if $BUY_MESSAGE_EOI`
+		<div class="fl mt_15 f_11">&nbsp;~$BUY_MESSAGE_EOI`</div>
+		<div class="sp5"></div>
+		<div align="center"><a href="~$SITE_URL`/profile/mem_comparison.php" class="paid_mem f_16 b">Become a Paid Member Now</a></div>
+		~/if`
+		</div>
+	</div>
+	<div class="clr"></div>
+	<div class="lyr_btm_cur"></div>
+</div>
+~/if`
+~if $FROM_PROF_ALB`
+<script id='script_of_dp'>
+	
+	var selid=dID("message_id");
+	var textid=dID("text_id");
+	var buttonid=dID("multi_button");
+	
+	
+	var stype="";
+	if(dID("STYPE"))
+		stype=dID("STYPE").value;
+	var MES = new Array(); 
+	var DEC=new Array();
+	var temp="";
+	var result;
+	var pattern1 = /\#n\#/g;
+	dp_login='~$LOGIN`';
+	~foreach from=$DRA_MES item=message key=id`
+	temp="~$message`";
+	MES['~$id`']=temp.replace(pattern1,"\n");
+	~/foreach`
+	var decline=new Array();
+	var accept=new Array();
+	var declineSel="";
+        var acceptSel="";
+	~foreach from=$DECLINE_OPTION item=message key=id`
+	decline['~$id`']="~$message`";
+	declineSel+="<option value='~$id`'>"+check_special_chars("~$message`")+"</option>";
+	~/foreach`
+	
+	~foreach from=$ACCEPT_OPTION item=message key=id`
+	accept['~$id`']="~$message`";
+	acceptSel+="<option value='~$id`'>"+check_special_chars("~$message`")+"</option>";
+	~/foreach`
+	
+	~if $TYPE eq 'I' && $WHO eq ''`
+		dp_accept=1;
+	~else`
+		dp_accept=0;
+	~/if`
+	
+	~if $ALLOW_ACCEPT_DECLINE && $PAID eq 0 && $ALLOW_MES_WRITE eq 0`
+		dp_selid=1;
+	~else`
+		dp_selid=0;
+	~/if`
+	dp_status="~$STATUS`";
+	
+	dp_removeText="~$REMOVE_TEXTAREA`";
+	dp_removeText="";
+	
+	dp_disableAll="~$DISABLE_ALL`";
+	
+	dp_type="~$TYPE`";
+	dp_viewprofile="~$VIEWPROFILE`";
+	
+	dp_allowAcceptDecline="~$ALLOW_ACCEPT_DECLINE`";
+	
+	dp_who="~$WHO`";
+	
+	dp_navigator="~$NAVIGATOR_LINK`";
+	
+	dp_imgurl="~$IMG_URL`";
+	
+	dp_tempContact="~$TEMP_CONTACT`";
+	
+	dp_searchDecline="~$search_decline`";
+	
+	dp_login="~$LOGIN`";
+	
+	~if $ERROR_MESSAGE`
+	dpContactEngineError=1;
+~else`
+	dpContactEngineError=0;
+~/if`
+</script>
+
+<script src="~$IMG_URL`/min/?f=/js/~$contact_engine_js`"></script>
+~/if`
+<!--Ends here-->

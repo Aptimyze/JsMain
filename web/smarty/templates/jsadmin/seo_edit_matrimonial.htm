@@ -1,0 +1,67 @@
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title> EDITING THE MATRIMONIAL RECORDS </title>
+  <link rel="stylesheet" href="jeevansathi.css" type="text/css">
+  <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+ </head>
+<body>
+<br>
+<br>
+<form action="seo_edit_matrimonial.php" method=POST>
+<table border="0" cellspacing="2" cellpadding="2" width=60% align=center>
+<tr colspan="2" class=formhead><td colspan=2 align=center>EDIT RECORD</td></tr>
+<tr>
+        <td class=label>FIELD</td>
+        <td class=fieldsnew>~$FLD`</font></td>
+</tr>                                                                                                                        <tr>
+        <td class=label>COMMUNITY</td>
+        <td class=fieldsnew>~$COMMUNITY`</font></td>
+</tr>
+<tr>
+        <td class=label>TITLE</td>
+        <td class=fieldsnew><textarea  name=MOD_TITLE  class=testbox cols=30 rows=2 >~$TITLE`</textarea></td>
+</tr>
+<tr>
+        <td class=label>DESCRIPTION </td>
+        <td class=fieldsnew><textarea   name=MOD_DESCRIPTION  class=testbox cols=30 rows=3>~$DESCRIPTION`</textarea></td>
+</tr>
+<tr>
+        <td class=label>KEYWORD</td>
+        <td class=fieldsnew><textarea   name=MOD_KEYWORD  class=testbox cols=30 rows=3>~$KEYWORD`</textarea></td>
+</tr>
+<tr>
+        <td class=label>NAME</td>
+        <td class=fieldsnew><input type=text   name=MOD_NAME  value="~$NAME`"></td>
+</tr>
+<tr>
+        <td class=label>LOGO_STRING</td>
+        <td class=fieldsnew><input type=text   name=MOD_LOGO_STRING  value="~$LOGO_STRING`"></td>
+</tr>
+<tr>
+        <td class=label>NAME OF COMMUNITY</td>
+        <td class=fieldsnew><input type=text   name=MOD_NAME_OF_COMMUNITY  value="~$NAME_OF_COM`"></td>
+</tr>
+<tr>
+        <td class=label>SOURCE</td>
+        <td class=fieldsnew><input type=text   name=MOD_SOURCE  value="~$SOURCE`"></td>
+</tr>
+<tr>
+        <td class=label>CAPTION</td>
+        <td class=fieldsnew><input type=text   name=MOD_CAPTION  value="~$CAPTION`"></td>
+</tr>
+
+
+
+<tr align=center>
+<td class=label></td>
+<td class=fieldsnew >
+        <input type=Hidden  name=ID    value=~$ID`>
+	<input type=Hidden  name=cid    value=~$cid`>
+        <input type=submit  name=submit value=MODIFY>
+</td>
+</tr>
+</table>
+</body>
+</html>
+

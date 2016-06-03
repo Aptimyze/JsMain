@@ -1,0 +1,3 @@
+use newjs;
+
+UPDATE `COMMUNITY_PAGES` SET `VALUE` = '95' WHERE `ID` = '747';

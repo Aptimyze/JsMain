@@ -1,0 +1,291 @@
+# You can find more information about this file on the symfony website:
+# http://www.symfony-project.org/reference/1_4/en/10-Routing
+
+# default rules
+homepage:
+  url:   /
+  param: { module: homepage, action: index }
+
+student_rule:
+  url: /student/*
+  param: {module: student, action: show}
+
+myjs_rule2:
+ url:  /myjs/appV1
+ param:  { module: myjs, action: appV1 }
+
+myjs_rule1:
+ url:  /myjs/:infoTypeId/:pageNo
+ param:  { module: myjs, action: index }
+
+inbox_rule2:
+ url:  /inbox/performV1/:infoTypeId/:pageNo
+ param:  { module: inbox, action: performV1 }
+
+inbox_rule1:
+ url:  /inbox/:infoTypeId/:pageNo
+ param:  { module: inbox, action: index }
+
+search_rule:
+  url:  /profile/search.php/*
+  param:  { module: search, action: perform }
+
+search_rule_P:
+  url:  /P/search.php/*
+  param:  { module: search, action: perform }
+
+viewprofile_rule:
+  url:  /profile/viewprofile.php/*
+  param:  { module: profile, action: view }
+edit_profile_rule:
+  url:  /profile/edit_profile.php/*
+  param:  { module: profile, action: editProfile }
+edit_profile_P_rule:
+  url:  /P/edit_profile.php/*
+  param:  { module: profile, action: editProfile }
+edit_dpp_rule:
+  url:  /profile/edit_dpp.php/*
+  param:  { module: profile, action: editDpp }
+edit_dpp_P_rule:
+  url:  /P/edit_dpp.php/*
+  param:  { module: profile, action: editDpp }
+viewprofile_P_rule:
+  url:  /P/viewprofile.php/*
+  param:  { module: profile, action: view }
+
+viewprofile_rule_album:
+  url:  /profile/albumpage/*
+  param:  { module: profile, action: view, subject: viewphotos }
+
+jsms_horoscope_rule:
+  url:	/profile/mobhoroscope
+  param: {module: profile, action:mobHoroscope }
+
+rule1:
+  url:   /social/import/:importSite/:notRegistered
+  param: {module: social, action:import }
+
+rule2:
+  url:   /social/import/:importSite
+  param: {module: social, action:import }
+
+rule3:
+  url:	/social/profileLayer/:displayImage
+  param: {module: social, action:profileLayer }
+
+rule4:
+  url:   /social/importPermission/:importSite
+  param: { module: social, action: importPermission }
+
+rule5:
+  url:	/social/saveProfilePic/:dimensionParams
+  param: {module: social, action:saveProfilePic }
+
+rule6:
+  url:  /social/compUploadAction/:ifFlash/:echecksum
+  param: {module: social, action:compUploadAction }
+
+rule7:
+  url:  /social/deletePic/:picId/:pic_id
+  param: {module: social, action:deletePic }
+
+rule8:
+  url:	/social/viewAllPhotos/:mainImageId
+  param: {module: social, action:viewAllPhotos }
+
+rule9:
+  url:	/social/deleteLayer/:picId/:delId/:ifProf/:origProf
+  param: {module: social, action:deleteLayer }
+
+rule10:
+  url:	/social/loadingLayer/:importSite
+  param: {module: social, action:loadingLayer }
+
+rule11:
+  url:	/social/importFailed/:importSite
+  param: {module: social, action:importFailed }
+
+social_rule12:
+  url:	/social/mobileUploadAction/:uploadType
+  param: {module: social, action:mobileUploadAction }
+
+rule12:
+  url: /e/:link_id/:mail_group/:echecksum/:checksum
+  param: {module:e, action:redirect }
+
+rule12_2:
+  url: /e/:app_screen_id/:link_id/:mail_group/:echecksum/:checksum
+  param: {module:e, action:redirect }
+
+rule12_3:
+  url: /e/:app_screen_id/:link_id/
+  param: {module:e, action:redirect }
+
+rule12_4:
+  url: /e/:link_id/
+  param: {module:e, action:redirect }
+
+rule12_5:
+  url: /e/:link_id/:mail_group/:echecksum
+  param: {module:e, action:redirect }
+
+ruleTracking_e:
+  url: /e/tracking/:trackingClass
+  param: {module:e, action:tracking }
+
+rule13:
+  url: /register/customreg/:p
+  param: {module:register,action:customreg}
+
+search_rule1_sorting1:
+  url:  /search/perform/sort/:searchId/:sort_logic/:reverseDpp
+  param: {module: search, action:perform }
+
+search_rule1_sorting2:
+  url:	/search/perform/sort/:searchId/:sort_logic/:reverseDpp/:searchBasedParam
+  param: {module: search, action:perform }
+
+search_rule2_relaxation:
+  url:	/search/perform/noAutoRelax/:searchId/:noRelaxation
+  param: {module: search, action:perform }
+
+search_rule3_castemapping:
+  url:	/search/perform/addEthnicities/:searchId
+  param: {module: search, action:perform }
+
+search_rule4_specialCriteria:
+  url:	/search/perform/:searchId/:specialCriteria
+  param: {module: search, action:perform }
+
+search_rule4_specialCriteria:
+  url:	/search/perform/relaxRefinement/:relaxRefinementCluster/:searchId
+  param: {module: search, action:perform }
+
+search_rule5_dpp:
+  url:	/search/partnermatches
+  param: {module: search, action:perform,searchBasedParam:partnermatches}
+
+search_rule5_vm:
+  url:	/search/verifiedMatches
+  param: {module: search, action:perform,searchBasedParam:verifiedMatches,verifiedMatches:1}
+
+search_rule5_quick:
+  url:	/search/quick
+  param: {module: search, action:MobSearch,QuickSearchBand:1}
+
+search_rule5_dashboard:
+  url:	/search/index
+  param: {module: search, action:MobSearch,dashboard:1}
+
+search_rule6_rDpp:
+  url:	/search/reverseDpp
+  param: {module: search, action:perform,searchBasedParam:reverseDpp}
+
+search_rule7_savesearch:
+  url:	/search/savedsearch/:mySaveSearchId
+  param: {module: search, action:perform }
+
+search_rule8:
+  url:	/search/featuredAction/:actionType/:profileChecksum/:searchId/:featuredResultNo
+  param: {module: search, action:featuredAction }
+
+search_rule9_advance:
+  url:	/search/advanceSearch
+  param: {module: search, action:MobSearch,type:AS}
+
+search_rule10_searchBand:
+  url:	/search/topSearchBand/:bigBand/:searchId
+  param: {module: search, action:topSearchBand }
+
+search_rule_just_joined:
+  url:  /search/justjoined
+  param: {module: search, action:perform,searchBasedParam:justJoinedMatches}
+
+search_rule11_twoway:
+  url:  /search/twoway
+  param: {module: search, action:perform,searchBasedParam:twowaymatch}
+
+search_rule12_malerts:
+  url:  /search/matchalerts
+  param: {module: search, action:perform,searchBasedParam:matchalerts}
+
+search_rule12_view_attempts:
+  url:  /search/contactViewAttempts
+  param: {module: search, action:perform,searchBasedParam:contactViewAttempts}
+
+search_rule13_valerts:
+  url:  /search/kundlialerts
+  param: {module: search, action:perform,searchBasedParam:kundlialerts}
+
+search_rule14_shortlisted:
+  url:  /search/shortlisted
+  param: {module: search, action:MobSearch,searchBasedParam:shortlisted,searchId:8,currentPage:1}
+
+search_rule15_visitors:
+  url:  /search/visitors
+  param: {module: search, action:MobSearch,searchBasedParam:visitors,searchId:5,currentPage:1}
+
+search_rule5_dpp_all_0:
+  url:	/search/quick/:searchId/:currentPage
+  param: {module: search, action:MobSearch,QuickSearchBand:1}
+
+search_rule16_advance_all_0:
+  url:	/search/advanceSearch/:searchId/:currentPage
+  param: {module: search, action:MobSearch,type:AS}
+
+search_rule5_dpp_all_1:
+  url:	/search/:searchBasedParam/:searchId/:currentPage
+  param: {module: search, action:MobSearch}
+
+search_rule5_dpp_all_2:
+  url:	/search/:searchBasedParam/:searchId
+  param: {module: search, action:MobSearch}
+
+ignoreProf:
+  url:	/common/ignoreProfile/:ignoredProfileid/:searchId
+  param: {module: common, action:ignoreProfile }
+
+undoIgnoreProf:
+  url:	/common/undoIgnoreProfile/:ignoredProfileid/:searchId
+  param: {module: common, action:undoIgnoreProfile }
+
+addBookmark1:
+  url:	/common/addBookmark/:bookmarkee/:bookmarknote
+  param: {module: common, action:addBookmark }
+
+addBookmark2:
+  url:	/common/addBookmark/:bookmarkee
+  param: {module: common, action:addBookmark }
+
+forwardProfile:
+  url:	/common/forwardProfileLayer/:forwardedProfileChecksum
+  param: {module: common, action:forwardProfileLayer }
+
+blankSearchUrl:
+  url:  /search/
+  param: {module: search, action:perform }
+
+api_rule:
+  url:  /api/:version/:moduleName/:actionName
+  param: {module: api, action:apiRequest}
+
+api_rule_alarm:
+  url:  /api/:version/:moduleName/:actionName/repeatAlarm
+  param: {module: api, action:apiRequest}
+
+static_page:
+  url: /static/page/:type
+  param: {module: static, action: page }
+
+settings:
+  url:   /settings/
+  param: { module: settings, action: index }
+
+# generic rules
+# please, remove them by adding more specific rules
+default_index:
+  url:   /:module
+  param: { action: index }
+
+default:
+  url:   /:module/:action/*

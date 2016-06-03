@@ -1,0 +1,240 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Add/Remove Spammers : Jeevansathi.com Matrimonial Services</title>
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="~$SITE_URL`/profile/images/styles.css" type="text/css">
+<script language="JavaScript">
+<!--
+var httprequest=false
+var confirmm,PRI_SET,SHOW_LOADER,list,value
+function createAjaxObj(url,parameters)
+{
+        httprequest=false
+        if (window.XMLHttpRequest)
+        { // if Mozilla, Safari etc
+                httprequest=new XMLHttpRequest()
+                if (httprequest.overrideMimeType)
+                        httprequest.overrideMimeType('text/html')
+        }
+        else if (window.ActiveXObject)
+        { // if IE
+                try 
+                {
+                        httprequest=new ActiveXObject("Msxml2.XMLHTTP");
+                } 
+                catch (e)
+                {
+                        try
+                        {
+                                httprequest=new ActiveXObject("Microsoft.XMLHTTP");
+                        }
+                        catch (e){}
+                }
+        }
+        if (!httprequest) 
+        {
+                 alert('Cannot create XMLHTTP instance');
+                return false;
+        }
+
+        httprequest.onreadystatechange = alertContents;
+        httprequest.open('POST', url, true);
+        httprequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        httprequest.setRequestHeader("Content-length", parameters.length);
+        httprequest.setRequestHeader("Connection", "close");
+        httprequest.send(parameters);
+
+}
+function alertContents() 
+{
+        if (httprequest.readyState == 4) 
+        {
+                if (httprequest.status == 200) 
+                {
+                        result = httprequest.responseText;
+                      //alert(result);
+                        document.getElementById(confirmm.id).style.display = 'block';  
+                        document.getElementById(SHOW_LOADER.id).style.display="none";
+			if(result=="Spammer Added....")
+				document.getElementById("myspan").innerHTML=" marked as spammer"
+                } 
+                else 
+                {
+                        alert('There was a problem with the request.');
+                }
+         }
+}
+function get(obj) 
+{//alert(obj.list.value);
+//alert(obj.checksum.value);
+//alert(obj);
+      var poststr ="list=" + list + "&checksum=" + obj.checksum.value +"&Submit="+ value  ;
+//alert(poststr);
+      createAjaxObj('non_spammers.php', poststr);
+}
+
+function setF()
+{
+        var docF=document.myform;       
+        docF.currPwd.focus();
+}
+var ankit;
+function hide_rejection()
+{
+        document.getElementById('reject').style.display = 'none';
+}
+
+function hide_confirmation(ank)
+{
+        document.getElementById(ank.id).style.display = 'none';
+}
+function validate(confirmm1,PRI_SET1,SHOW_LOADER1,list1,val)
+{
+//	alert("confirmm");
+	value=val
+        confirmm=confirmm1
+        PRI_SET=PRI_SET1
+        SHOW_LOADER=SHOW_LOADER1
+	list=list1
+//alert("confirmm1");
+//alert(list);
+//alert(PRI_SET.id);
+        document.getElementById(PRI_SET.id).style.display='none';
+        document.getElementById(SHOW_LOADER.id).style.display="BLOCK";
+//alert("confimm");
+        get(document.myform)
+        return false;
+
+}
+function MM_openBrWindow(theURL,winName,features)
+{
+        window.open(theURL,winName,features);
+}
+function loadForm()
+{
+        document.form1.submit();
+}
+-->
+</script>
+</head>
+~include file="head.htm"`
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+	<form action="non_spammers.php" method="post">
+		<input type="hidden" name=cid value="~$cid`">
+		<table width=760 cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+    			<tr class="formhead">          
+          			<td width="30%" class="formhead" align="center"><a href="~$SITE_URL`/jsadmin/mainpage.php?cid=~$cid`">Main Page</a></td>
+          			<td width=30% class="formhead" border=1 align='CENTER'><a href="~$SITE_URL`/jsadmin/logout.php?cid=~$cid`">Logout</a></td>
+				<td width=40% class="formhead" border=1 align='CENTER'><a href="~$SITE_URL`/jsadmin/non_spammers.php?cid=~$cid`&zxz=~$SITE_URL`">Show list</a></td>
+    			</tr>
+		</table>
+		<br><br>
+		<table width="60%" border="0" cellspacing="1" cellpadding="4" align="center">
+          		<tr>
+		            <td class="formhead" valign="middle" colspan="2">&#155; Search</td>
+		          </tr>
+		          <tr>
+		            <td width="40%" class="formhead" bgcolor="#F9F9F9">Enter Usernames<br> (using ',' as separator between two names)</td>
+
+		            <td width="60%" bgcolor="#F9F9F9">
+				<textarea name="userlist" class=textboxes1 rows="4" cols="68" ></textarea> 
+            		    </td>
+          		  </tr>
+          		  <tr valign="middle" align="center">
+	  			<td class="fieldsnew" colspan="2"><input type="submit" name="Go" value="Search" class="textboxes1"></td>
+	  		  </tr>
+		</table>
+	</form>
+	<br>	
+	~if $SEARCH eq "YES"`
+		<div align="center">
+		~foreach from=$JUNKLIST item=k`
+                	<div>
+                        	<div  style="color:silver">~$k`</div><div>Not a valid entry</div>
+                	</div>
+                ~/foreach`
+
+		<form name="myform" id="myform" action="non_spammers.php" method="post">
+			 <input type="hidden" name="checksum" value="~$cid`">
+			 <input type="hidden" name="pnslist" value="~$LIST`">
+			<input type="Submit"  name="Submit"  value="Mark all as Permanent Non-Spammer" style="width:370px;">
+
+			~assign var="bat" value=0`
+                		~section name=tr1 loop=$NONSPAMIDLIST`
+					~assign var="tab1" value="confirm$bat"`
+					~assign var="tab2" value="PRI_SET$bat"`
+					~assign var="tab3" value="SHOW_LOADER$bat"`
+	                <br><div style="display:none" id="~$tab1`"> <div class="lf"  style="padding:5px; width:452px; background-color:#ffffbb" ><div class="lf"><img src="../profile/images/confirm.gif" hspace="10" vspace="0" align="left"></div><div class="lf t14 b" style="width:382px;padding-top:5px;">~$NONSPAMLIST[tr1]`<span id="myspan"> marked as permanent non-spammer</span></div><div class="rf b"><a href="#" onclick ="hide_confirmation(~$tab1`)">[x]</a></div></div></div>
+				<div id="~$tab2`">
+					 <!--div  style="color:cyan">~$NONSPAMLIST[tr1]`</div-->
+					<span style="color:cyan">~$NONSPAMLIST[tr1]`</span>
+					 <input type="hidden" name="list" value="~$NONSPAMIDLIST[tr1]`">
+					<input type="submit"  name="submit"  value="Mark as Spammer" style="width:170px;"  onClick="return validate(~$tab1`,~$tab2`,~$tab3`,~$NONSPAMIDLIST[tr1]`,this.value)">
+					<input type="submit"  name="submit"  value="Mark as Permanent Non-Spammer" style="width:270px;" onClick="return validate(~$tab1`,~$tab2`,~$tab3`,~$NONSPAMIDLIST[tr1]`,this.value)">
+				</div>
+				~assign var="bat" value=$bat+1` 
+			<div id="~$tab3`" style="display:none"><div class="lf" style="width:100%;margin-top:25px;text-align:center;"><img src="../profile/images/loader_small.gif" width="54" height="55"><br><br><span style="font:normal 20px Arial, Helvetica, sans-serif">Please Wait<span style="font-size:13px">...</span></span></div></div>
+ 	        		~/section`               
+
+                		~section name=tr2 loop=$PNS`
+					~assign var="tab1" value="confirm$bat"`
+					~assign var="tab2" value="PRI_SET$bat"`
+					~assign var="tab3" value="SHOW_LOADER$bat"`
+	              <br><div style="display:none" id="~$tab1`"> <div class="lf"  style="padding:5px; width:452px; background-color:#ffffbb" ><div class="lf"><img src="../profile/images/confirm.gif" hspace="10" vspace="0" align="left"></div><div class="lf t14 b" style="width:382px;padding-top:5px;">~$PNS[tr2]` Removed from Permanent Non-Spammer status</div><div class="rf b"><a href="#" onclick ="hide_confirmation(~$tab1`)">[x]</a></div></div></div>
+		              <br>  <div id="~$tab2`" style="display:inline">
+					 <span  style="color:yellow">~$PNS[tr2]`</span>
+						<input type="hidden" name="list" value="~$PNSID[tr2]`">
+                                        	<input type="submit"  name="submit"  value="Remove from Permanent Non-Spammer status" style="width:340px;" onClick="return validate(~$tab1`,~$tab2`,~$tab3`,~$PNSID[tr2]`,this.value)">
+				</div>
+				~assign var="bat" value=$bat+1` 
+			  <div id="~$tab3`" style="display:none"><div class="lf" style="width:100%;margin-top:25px;text-align:center;"><img src="../profile/images/loader_small.gif" width="54" height="55"><br><br><span style="font:normal 20px Arial, Helvetica, sans-serif">Please Wait<span style="font-size:13px">...</span></span></div></div>
+	        		~/section`      
+
+                		~section name=tr3 loop=$SPAMLIST`
+					~assign var="tab1" value="confirm$bat"`
+					~assign var="tab2" value="PRI_SET$bat"`
+					~assign var="tab3" value="SHOW_LOADER$bat"`
+	               <br><div style="display:none" id="~$tab1`"> <div class="lf"  style="padding:5px; width:452px; background-color:#ffffbb" ><div class="lf"><img src="../profile/images/confirm.gif" hspace="10" vspace="0" align="left"></div><div class="lf t14 b" style="width:382px;padding-top:5px;">~$SPAMLIST[tr3]` marked as permanent non-spammer</div><div class="rf b"><a href="#" onclick ="hide_confirmation(~$tab1`)">[x]</a></div></div></div>
+		           <br>      <div id="~$tab2`" style="display:inline">
+			                  <span  style="color:red">~$SPAMLIST[tr3]`</span>
+						<input type="hidden" name="list" value="~$SPAMIDLIST[tr3]`">
+	                                        <input type="submit"  name="submit"  value="Mark as Permanent Non-Spammer" style="width:270px;" onClick="return validate(~$tab1`,~$tab2`,~$tab3`,~$SPAMIDLIST[tr3]`,this.value)">
+          			</div>
+				~assign var="bat" value=$bat+1` 
+			<div id="~$tab3`" style="display:none"><div class="lf" style="width:100%;margin-top:25px;text-align:center;"><img src="../profile/images/loader_small.gif" width="54" height="55"><br><br><span style="font:normal 20px Arial, Helvetica, sans-serif">Please Wait<span style="font-size:13px">...</span></span></div></div>
+ 		        ~/section`                
+
+		~*assign var="tab" value="myform1[$bat]"`
+		<div><div style="display:none" id="~$tab1`"> <div class="lf"  style="padding:5px; width:452px; background-color:#ffffbb" ><div class="lf"><img src="../profile/images/confirm.gif" hspace="10" vspace="0" align="left"></div><div class="lf t14 b" style="width:382px;padding-top:5px;" id ="myspan">~$NONSPAMLIST[tr1]` marked as spammer</div><div class="rf b"><a href="#" onclick ="hide_confirmation()">[x]</a></div></div></div></div>	
+		~assign var="tab" value="myform2[$bat]"`
+                <div>
+                        <form name="~$tab`" onClick="return validate(~$tab`);">
+                                 <input type="hidden" name="checksum" value="~$CHECKSUM`">
+                                 <input type="hidden" name="list" value="~$PNSID[tr2]`">
+			</form>
+                </div>                
+		~assign var="bat" value=$bat+1`
+		~assign var="bat" value=0`
+		~assign var="tab" value="myform3[$bat]"`
+                <div>
+                        <form name="~$tab`" onClick="return validate(~$tab`);">
+                                 <input type="hidden" name="checksum" value="~$CHECKSUM`">
+                                 <input type="hidden" name="list" value="~$SPAMIDLIST[tr3]`">
+			</form>
+                </div>                
+		~assign var="bat" value=$bat+1*`
+</form>              
+
+</div>                                            
+~/if`
+~if $SEARCH eq "BLANK"`
+<table width=50% cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+    <tr width=100%>
+          <div width=55% align="center" border=1><font><b>~$message`</b></font></div>
+    </div>
+</table>
+~/if`
+</form> 
+</body>
+</html>

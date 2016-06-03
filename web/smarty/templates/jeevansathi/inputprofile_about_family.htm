@@ -1,0 +1,432 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	<title>Jeevansathi Matrimonials - Form for Input of Family Information</title>
+	<link rel="stylesheet" href="/profile/css/~$comm_style_css`" type="text/css">
+	<link rel="stylesheet" href="/profile/css/~$registerstyle_css`" type="text/css">
+	<script language="JavaScript" SRC="/profile/~$profile_js`"></SCRIPT>
+        <script language="JavaScript">
+<!--
+	function check_m(a,b)
+	{
+		if(a==0)
+		{
+			 eval("document.form1."+b+".value=0");
+			eval("document.form1."+b+".disabled=true");
+		}
+		else
+			eval("document.form1."+b+".disabled=false");
+	}
+	function clearbox()
+	{
+		if(document.form1.Family.value=='Click here to write about ~$Your` parents, brothers & sisters and ~$Your` extended family.')
+		{
+			document.form1.Family.value='';
+		}
+	}
+	function validate_radio(arr)
+	{
+		var sel = 'N';
+		for(var i=0;i<arr.length;i++)
+		{
+			if(arr[i].checked==true)
+				sel='Y'
+		}
+		if(sel=='Y')
+			return true;
+		else
+			return false;
+	}
+        function validate1()
+        {
+                if(document.form1.Rstatus.value=="")
+                {
+                        alert("Please specify Residency Status");
+			document.getElementById("check_Rstatus").style.color='red';
+			document.form1.Rstatus.focus();
+                        return false;
+                }
+		else
+			document.getElementById("check_Rstatus").style.color='#2D2D2D';
+
+		 if(!validate_radio(document.form1['Family_Values']))
+                {
+                        alert("Please specify ~$Your` Family Values");
+                        document.getElementById("check_fvalue").style.color="red";
+                        document.form1.Family_Values[0].focus();
+                        return false;
+                }
+                else
+                        document.getElementById("check_fvalue").style.color="#2D2D2D";
+
+		 if(!validate_radio(document.form1['ftype']))
+                {
+                        alert("Please specify ~$Your` Family Type ");
+                        document.getElementById("check_ftype").style.color='red';
+                        document.form1.ftype[0].focus();
+                        return false;
+                }
+                else
+                        document.getElementById("check_ftype").style.color='#2D2D2D';
+                                                                                                                             
+                                                                                                                             
+                if(!validate_radio(document.form1['fstatus']))
+                {
+                        alert("Please specify ~$Your` Family Status");
+                        document.getElementById("check_fstatus").style.color='red';
+                        document.form1.fstatus[0].focus();
+                        return false;
+                }
+                else
+                        document.getElementById("check_fstatus").style.color='#2D2D2D';
+
+			
+                if(document.form1.father_occ.value=="")
+                {
+                        alert("Please specify ~$Your` Father Occupation");
+			document.getElementById("check_father").style.color='red';
+			document.form1.father_occ.focus();
+                        return false;
+                }
+		else
+                        document.getElementById("check_father").style.color='#2D2D2D';
+	
+	        if(document.form1.mother_occ.value=="")
+                {
+                        alert("Please specify ~$Your` Mother Occupation");
+                        document.getElementById("check_mother").style.color='red';
+                        document.form1.mother_occ.focus();
+                        return false;
+                }                 
+		else
+                       document.getElementById("check_mother").style.color='#2D2D2D';
+		if(document.form1.mbrother.value>document.form1.tbrother.value)
+		{
+			alert("~$First_Your` married brothers should be lesser than or equal to ~$Your` total brothers");
+			document.getElementById("check_mbrother").style.color='red';
+			document.form1.mbrother.focus();
+			return false;
+		}
+		else
+			document.getElementById("check_mbrother").style.color='#2D2D2D';
+
+                if(document.form1.msister.value>document.form1.tsister.value)
+                {
+                        alert("~$First_Your` married sisters should be lesser than or equal to ~$Your` total sisters");
+                        document.getElementById("check_msister").style.color="red";
+                        document.form1.msister.focus();
+			return false;
+                }
+                else
+                        document.getElementById("check_msister").style.color='#2D2D2D';
+		 
+                if(document.form1.Family.value=='Click here to write about ~$Your` parents, brothers & sisters and ~$Your` extended family.')
+		{	
+			document.form1.Family.value='';
+		}
+                return true;
+        }
+//-->
+        </script>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body>
+<div id="container">
+	<!--HEADER STARTS-->
+	~$SMALL_HEAD`
+	<!--HEADER ENDS-->
+	<!--WRAPPER STARTS HERE-->
+	<div id="wrapper">
+		<div style="padding:10px;">
+			<div class="roundcont">
+				<div class="roundtop">
+					<img src="~$IMG_URL`/profile/ser4_images/tl.gif" alt="" width="4" height="4" class="corner" style="display: none" />
+				</div>
+				<p>
+					Your Desired Partner Profile is created. Enter details about your Family.
+				</p>
+				<div class="roundbottom">
+					<img src="~$IMG_URL`/profile/ser4_images/bl.gif" alt="" width="4" height="4" class="corner" style="display: none" />
+				</div>
+			</div>
+			<div class="space15">&nbsp;</div>
+			<div class="pghd">
+				<div id="artab">
+					<ul>
+						<li>
+							<a>
+							<div class="lftflow g30">01</div>
+							<div class="pd">
+								Details About<br>
+								Yourself
+							</div>
+							</a>
+						</li>
+						<li>
+							<a class="previous">
+							<div class="lftflow g30">02</div>
+							<div class="pd">
+								Desired Partner<br>
+								Profile
+							</div>
+							</a>
+						</li>
+						<li>
+							<a  class="current"  title="About Family">
+							<div class="lftflow g30">03</div>
+							<div class="pd pd1">
+								Details About<br>
+								Family
+							</div>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<br clear="all">
+				<div class="hline"> &bull;
+					More than 1 million profiles &nbsp;&nbsp;&nbsp;&nbsp;&bull; 100% profile screening &nbsp;&nbsp;&nbsp;&nbsp; &bull; Exclusive privacy features
+				</div>
+			</div>
+			~if $hit_source neq 'O'`
+                                <form action="/profile/inputprofile3.php" method="post" name="form1" onsubmit="return validate1();">
+                        ~else`
+                                <form action="/profile/inputprofile3.php" method="post" name="form1">
+                        ~/if`
+			<input type="hidden" name="gender" value="~$gender`">
+                        <input type="hidden" name="hit_source" value="~$hit_source`">
+                        <input type="hidden" name="checksum" value="~$CHECKSUM`">
+                        <input type="hidden" name="id" value="~$ID_AFF`">
+                        <input type="hidden" name="tieup_source" value="~$tieup_source`">
+                        <input type="hidden" name="maritalstatus" value="~$maritalstatus`">
+                        <input type="hidden" name="js_UniqueID" value="~$js_UniqueID`">
+			<div style="width:100%; margin-top:10px">
+				<div class="lftflow0 o16">~$First_Your` Family Details </div>
+				<div class="rightflow greyele">* Compulsory Fields </div>
+				<div class="spacer1 spo">&nbsp;</div>
+				<!--EDUCATION FORM STARTS-->
+				<div class="row">
+					<div class="r1">
+					<span id ="check_Rstatus">
+						~if $check_rstatus eq "Y"`
+							<font color="red">* Residency Status:</font>
+						~else`
+							* Residency Status:
+						~/if`
+					</span>
+					</div>
+					<div class="r2">
+						<select  name="Rstatus" size="1" class="textbox">
+							<option value="" selected>[Select ~$Your` Resident Status]</option>
+							<option value="1" ~if $rstatus eq '1'` selected ~/if`>Citizen</option>
+							<option value="2" ~if $rstatus eq '2'` selected ~/if`>Permanent Resident</option>
+							<option value="3" ~if $rstatus eq '3'` selected ~/if`>Work Permit</option>
+							<option value="4" ~if $rstatus eq '4'` selected ~/if`>Student Visa</option>
+							<option value="5" ~if $rstatus eq '5'` selected ~/if`>Temporary Visa</option>
+						</select>
+					</div>
+				</div>
+				<div class="spacer1">&nbsp;</div>
+				 <div class="row">
+                                        <div class="r1" >
+                                        <span id="check_fvalue">
+                                                ~if $check_familyvalues eq "Y"`
+                                                        <font color= "red">* Family Values:</font>
+                                                ~else`
+                                                        * Family Values:
+                                                ~/if`
+                                        </span>
+                                        </div>
+                                        <div class="r2">
+                                               <input type="radio" name="Family_Values" value="4" ~if $familyvalues eq '4'` checked ~/if`>Orthodox&nbsp;
+                                                                                                                             
+                                                <input type="radio" name="Family_Values" value="1" ~if $familyvalues eq '1'` checked ~/if`>Conservative&nbsp;
+                                                <input type="radio" name="Family_Values" value="2" ~if $familyvalues eq '2'` checked ~/if`>Moderate&nbsp;
+                                                <input type="radio" name="Family_Values" value="3" ~if $familyvalues eq '3'` checked ~/if`>Liberal&nbsp;
+                                        </div>
+                                </div>
+                                <div class="spacer1">&nbsp;</div>
+				<div class="row">
+					<div class="r1">
+					<span id="check_ftype" style="color:~$check_ftype`">
+					* Family Type:
+					</span>
+					</div>
+					<div class="r2">
+					<input name="ftype" value=1 ~$ftype1` type="radio">Joint Family&nbsp;
+					<input name="ftype" value=2 ~$ftype2` type="radio">Nuclear Family&nbsp;
+					<input name="ftype" value=3 ~$ftype3` type="radio">Others&nbsp;
+					</div>
+				</div>
+				<div class="spacer1">&nbsp;</div>
+
+				<div class="row">
+					<div class="r1">
+					<span id="check_fstatus" style="color:~$check_fstatus`">* Family Status:</span>
+					</div>
+					<div class="r2">
+					<input name="fstatus" value="3" ~$fstatus3` type="radio">Rich / Affluent&nbsp;
+					<input name="fstatus" value="2" ~$fstatus2` type="radio">Upper Middle Class&nbsp;
+					<input name="fstatus" value="1" ~$fstatus1` type="radio">Middle Class&nbsp;
+					</div>
+				</div>
+				<div class="spacer1">&nbsp;</div>
+				<div class="row">
+					<div class="r1">
+					<span id="check_father" style="color:~$check_father`">
+					* Father:
+					</span>
+					</div>
+					<div class="r2">
+						<select name="father_occ" size="1" class="textbox">
+							<option selected value="">[Select]</option>
+							~$father_occ`
+						</select>
+					</div>
+				</div>
+				
+				<div class="spacer1">&nbsp;</div>
+                                <div class="row">
+                                        <div class="r1">
+					<span id="check_mother" style="color:~$check_mother`">
+                                            * Mother:
+                                        </span>
+                                        </div>
+                                        <div class="r2">
+                                                <select name="mother_occ" size="1" class="textbox">
+                                                        <option selected value="">[Select]</option>
+                                                        ~$mother_occ`
+                                                </select>
+                                        </div>
+                                </div>
+				<div class="spacer1">&nbsp;</div>
+				 <div class="row">
+                                        <div class="r1">
+
+                                                * Brother(s):
+                           		 </div>
+                                        <div class="r2">
+                                        <select name="tbrother" class="textbox" style="width: 54px;" onchange="javascript:check_m(document.form1.tbrother.value,'mbrother')">
+					<option value="0" ~$tbrother0`>0</option>
+					<option value="1" ~$tbrother1`>1</option>
+					<option value="2" ~$tbrother2`>2</option>
+					<option value="3" ~$tbrother3`>3</option>
+					<option value="4" ~$tbrother4`>3+</option>
+					</select>
+			  <font color="#2D2D2D"><span id ="check_mbrother" style="color:~$check_mbrother`; padding:4px 10px 4px 0;">
+                                            of which Married :
+					   	
+					  </span>	</font>
+	 				        <select name="mbrother" class="textbox" style="width: 54px;" >                                          		     	     <option value="0" ~$mbrother0`>0</option>
+	                                    	        <option value="1" ~$mbrother1`>1</option>
+                                                	<option value="2" ~$mbrother2`>2</option>
+							<option value="3" ~$mbrother3`>3</option>
+	                                                <option value="4" ~$mbrother3`>3+</option>
+                                                </select>
+                                     </div> 
+                                </div> 
+ 
+                               <div class="spacer1">&nbsp;</div>
+                                 <div class="row">
+                                        <div class="r1">
+                                                * Sister(s):
+                                         </div>
+                                        <div class="r2">      
+					 <select name="tsister" class="textbox" style="width: 54px;"  onchange="javascript:check_m(document.form1.tsister.value,'msister')">
+        				 <option value="0" ~$tsister0`>0</option>
+                                        <option value="1" ~$tsister1`>1</option>
+                                        <option value="2" ~$tsister2`>2</option>
+                                        <option value="3" ~$tsister3`>3</option>
+                                        <option value="4" ~$tsister4`>3+</option>
+                                        </select>
+                                  <font color="#2D2D2D"> <span id ="check_msister" style="color:~$check_msister`; padding:4px 10px 4px 0;">
+                                            of which Married : 
+                                          </span></font>
+                                                <select name="msister" class="textbox" style="width: 54px;"  >                                                 		     <option value="0" ~$msister0`>0</option>
+                                                <option value="1" ~$msister1`>1</option>
+                                                <option value="2" ~$msister2`>2</option>
+                                                <option value="3" ~$msister3`>3</option>
+                                                <option value="4" ~$msister4`>3+</option>
+                                                </select>
+                                                                                                                             
+                                        </div>
+                                </div>
+				<script>
+			/*This script is called to disable married brother and sister dropdown
+			  when the total sister and brother value is Zero*/
+	
+				if(document.form1.tsister.value==0)
+					document.form1.msister.disabled=true;
+				if(document.form1.tbrother.value==0)
+					document.form1.mbrother.disabled=true;
+				</script>
+                                                                                                                             
+                               <div class="spacer1">&nbsp;</div>
+				<div class="row">
+					<div class="r1" >* ~$Do` ~$you` live with ~$Your` parents:</div>
+					<div class="r2">
+						<input type=radio value="Y" name="Parent_City_Same" ~if ($parent_city_same eq 'Y' || !$parent_city_same)` checked ~/if`>Yes&nbsp;
+						<input type=radio value="N" name="Parent_City_Same" ~if ($parent_city_same eq 'N')` checked ~/if`>No&nbsp;
+						<input type=radio value="D" name="Parent_City_Same" ~if ($parent_city_same eq 'D')` checked ~/if`>Not Applicable&nbsp;
+					</div>
+				</div>
+				~if $maritalstatus neq 'N'`
+				<div class="spacer1">&nbsp;</div>
+				<div class="row">
+					<div class="r1" >* ~$Do` ~$you` have children:</div>
+					<div class="r2">
+						<input type="radio" name="Has_Children" value="N"  ~if ($Has_Children eq 'N' || !$Has_Children)` checked ~/if`>No&nbsp;
+						<input type="radio" name="Has_Children" value="YT" ~if $Has_Children eq 'YT'` checked ~/if`>Yes, Living Together&nbsp;
+						<input type="radio" name="Has_Children" value="YS" ~if $Has_Children eq 'YS'` checked ~/if`>Yes, Living Separately&nbsp;
+					</div>
+				</div>
+				~/if`
+				<div class="spacer1">&nbsp;</div>
+				<div class="row">
+					<div class="r1" >More About ~$Your` Family:</div>
+					<div class="r2">
+						<textarea name="Family" cols="60" rows="4" style="width:300px" onClick="clearbox();">Click here to write about ~$Your` parents, brothers & sisters and ~$Your` extended family.</textarea>
+					</div>
+				</div>
+				<div class="spacer1">&nbsp;</div>
+			</div>
+			<div style="width:100%; margin-top:10px">
+				<div class="lftflow0 o16">Contact Details</div>
+				<div class="spacer1 spo">&nbsp;</div>
+				<div class="row">
+					<div class="r1" >Contact Address of ~$your` Parents:</div>
+					<div class="r2">
+						<textarea name="Parents_Contact" rows="3" style="width:300px ">~$parents_contact`</textarea>
+					&nbsp;&nbsp;
+						<div> 
+							<input name="showParentsContact" type="radio" value="Y"  ~if $SHOWPARENTSCONTACT neq 'N'` checked  ~/if` > Show to my accepted contacts / paid members
+                            <input type="radio"  name="showParentsContact" value="N" ~if $SHOWPARENTSCONTACT eq 'N'` checked  ~/if`> Don't show to anybody</div>	
+						</div>					
+					</div>
+				</div>
+			</div>
+		</div>
+		<div style="width:100%; margin-top:10px;">
+			<div class="spacer1">&nbsp;</div>
+			<div class="row bluelink" style="background-color:#FFEAAB ">
+				<div class="r1" align="center">&nbsp;</div>
+				<div style="float:left; width:30%; padding-top:6px">
+					<input type="submit" name="Submit" value="Save My Family Details" class="redb" style="width:200px ">
+				</div>
+				<div class="bele bluelink" style="float:left; width:40%; padding:10px 0 10px 0" align="right">
+					<a href="~$SITE_URL`/profile/inputprofile3.php?checksum=~$CHECKSUM`&skip_to_upload_photo=1&Submit=1&id=~$ID_AFF`&hit_source=~$hit_source`&tieup_source=~$tieup_source`">Skip to Upload Photo</a>
+				</div>
+			</div>
+			<div class="spacer1">&nbsp;</div>
+		</div>
+	</div>
+	</form>
+	<!--WRAPPER ENDS HERE-->
+	<div class="spacer15">&nbsp;</div>
+	~$SMALLFOOTER`
+</div>
+
+</body>
+</html>

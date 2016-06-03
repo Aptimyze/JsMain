@@ -1,0 +1,80 @@
+<html>
+<head>
+<title>JeevanSathi Matrimonials - JeevanSathi Forgot Password</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="I/styles.php" type="text/css">
+<form action="forgotpassword.php" method="post">
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body leftmargin="5" topmargin="5">
+
+~$HEAD`
+<table width="760" border="0" cellspacing="0" cellpadding="0" align="center">
+  <tr>
+<td height="2">
+<font size="3" face="Arial"><b>&nbsp;&nbsp;&nbsp;&nbsp;</b></font><span class="extralargepink">Forgot your Password? </span><br>
+<table width="100%" border="0" cellspacing="2" cellpadding="0">
+  <tr bgcolor="cccccc">
+<td height="1" colspan="2"></td>
+<SPACER height="1" type="block"></SPACER> </tr>
+  <tr>
+<td height="4" colspan="2"></td>
+  <SPACER height="4" type="block"></SPACER> </tr>
+  <tr>
+    <td width="40%" height="131">
+<table width="96%" border="0" align="center" cellspacing="2" bgcolor="FFE9C2">
+<tr>
+  <td height="30" colspan="2" class="mediumblack">~if $errorflag eq "Y"`<font color="red">~$Error`</font> Enter your email id or username which you have provided to JeevanSathi and we will send you your password ~elseif $errorflag eq "YES"`<font color="red">~$Error`</font> ~else`Enter your email id or username which you have provided to JeevanSathi and we will send your password ~/if`</td>
+</tr>
+<tr>
+  <td width="146" height="30" class="bigblack"><div align="right"><strong>Email Id </strong></div></td>
+  <td width="236"><input type="text" name="email" class="TextBox"></td>
+</tr>
+<tr>
+  <td height="21">&nbsp;</td>
+  <td height="21"><strong>or</strong></td>
+</tr>
+<tr>
+  <td height="25"><div align="right" class="bigblack"><strong>User Name </strong></div></td>
+  <td height="25"><input type="text" name="username" class="TextBox"></td>
+</tr>
+<tr>
+  <td height="25">&nbsp;</td>
+  <td height="25"><input type="submit" name="submit" value="Get Password" class="TextBox"></td>
+</tr>
+<tr>
+  <td height="30" colspan="2" class="bigblack"><div align="center"><strong><span class="class6"><a href="inputprofile.php?source=js_forgot">New User? Register Now and contact free</a></span></strong></div></td>
+</tr>
+</table>
+      <div align="center">
+    </div></td>
+    <td width="30%" valign="top"><table width="98%"  border="0" cellpadding="1" cellspacing="1">
+      <tr bgcolor="B5DCBD" class="mediumblack">
+        <td colspan="2"><strong>Success Story </strong></td>
+      </tr>
+      <tr class="mediumblack">
+        <td width="28%"><a href="~$SITE_URL`/success/complete_success_stories.php?sid=13"><img src="~$IMG_URL`/profile/ser4_images/success_story_1.gif" width="85" height="57" border="0"></a></td>
+        <td width="72%"> am thankful to you as I have got my JeevanSathi, Jyoti Saxena in Feb 2003. Her user id was "sjyoti" at your esteemed site We are attaching a </td>
+      </tr>
+      <tr class="mediumblack">
+        <td height="28" colspan="2"> photo of our marriage which took place on 7th of Feb 2003.
+Please attach it with our success story ..... <span class="class5"><a href="~$SITE_URL`/success/complete_success_stories.php?sid=13">more</a></span> </td>
+        </tr>
+    </table></td>
+  </tr>
+  <tr>
+  <td height="4" colspan="2"></td>
+  <SPACER height="4" type="block"></SPACER> </tr>
+  <tr bgcolor="cccccc">
+  <td height="1" colspan="2"></td>
+  <SPACER height="1" type="block"></SPACER> </tr>
+</table>
+</td>
+  </tr>
+</table>
+~$SUBFOOTER`
+<br>
+~$FOOT`
+
+</form>
+</body>
+</html>

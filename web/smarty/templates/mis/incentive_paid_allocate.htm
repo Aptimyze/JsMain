@@ -1,0 +1,114 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+<script>
+function checkDuration()
+{
+	var c=0;
+	var d=document.rel_score;
+	if (d.month.options[d.month.selectedIndex].value != 'ALL' && d.year.options[d.year.selectedIndex].value=='ALL')
+        {
+		alert('Please select year as well');
+		return false;
+	}
+	else if (d.month.options[d.month.selectedIndex].value == 'ALL' && d.year.options[d.year.selectedIndex].value !='ALL')
+	{
+		alert('Please select month as well');
+		return false;
+        }
+	else
+		return true;
+}
+</script>                                                                                                                      
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+                                                                                                                             
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="/profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br>
+<center>
+This MIS gives us scorewise breakup of users registered in a particular month and and he is of which country and city(in case of india).<br>
+<font color=red>Profiles which are paid and allocated</font><br>
+<font color=blue>Profiles which are paid and not alloacted</font><br>
+<font color=green>Profiles which are not paid but alloacted</font><br>
+<font color=purple>Profiles which are neither paid nor alloacted</font>
+</center>
+<br>
+
+<table width=100% border=0 align="center" cellspacing="2" cellpadding=2>
+	
+	~if $INDIA eq 'Y'`
+        <tr class="label">
+        <td align="center" width=10%>&nbsp;Indian city/Score</td>
+        ~section name=ind loop=$scorearr`
+                <td width=6% align="center">&nbsp;~$scorearr[ind]`</td>
+        ~/section`
+        <td align="center" width=12%>&nbsp;Total</td>
+        </tr>
+	~section name=src loop=$all_city`
+	<tr class="fieldsnew">
+	<td align="center" class=label>&nbsp;~$all_city[src]`</td>
+		 ~section name=ss loop=$scorearr`
+		<td align="center"><span class="red">~if $paid_and_allocated[0][src][ss] eq ''`0~else`~$paid_and_allocated[0][src][ss]`~/if`</span><br><span class="blue">~if $paid_but_not_allocated[0][src][ss] eq ''`0~else`~$paid_but_not_allocated[0][src][ss]`~/if`</span><br><span class="green">~if $notpaid_but_allocate[0][src][ss] eq ''`0~else`~$notpaid_but_allocate[0][src][ss]`~/if`</span><br><span class="purple">~if $notpaid_and_not_allocated[0][src][ss] eq ''`0~else`~$notpaid_and_not_allocated[0][src][ss]`~/if`</span></td>
+		~/section`
+	<td align="center" class=label><span class="red">~if $total_paid_allocated[0][src] eq ''`0~else`~$total_paid_allocated[0][src]`~/if`</span><br><span class="blue">~if $total_paid_not_allocated[0][src] eq ''`0~else`~$total_paid_not_allocated[0][src]`~/if`</span><br><span class="green">~if $total_not_paid_allocated[0][src] eq ''`0~else`~$total_not_paid_allocated[0][src]`~/if`</span><br><span class="purple">~if $total_nothing[0][src] eq ''`0~else`~$total_nothing[0][src]`~/if`</span></td>
+	</tr>
+	~/section`
+	<tr class="fieldsnew">
+        <td align="center" class=label>&nbsp;TOTAL</td>
+		~section name=ss1 loop=$scorearr`
+		<td class=label align="center"><span class="red">~$total_india_paid_and_allocated[ss1]`</span><br><span class="blue">~$total_india_paid_but_not_allocated[ss1]`</span><br><span class="green">~$total_india_notpaid_but_allocate[ss1]`</span><br><span class="purple">~$total_india_notpaid_notallocated[ss1]`</span></td>	
+		~/section`
+	<td class=label align="center"><span class="red">~$total[0]`</span><br><span class="blue">~$total[1]`</span><br><span class="green">~$total[2]`</span><br><span class="purple">~$total[3]`</span></td>
+	<tr>
+          <td colspan=100%>&nbsp;</td>
+        </tr>
+	~/if`	
+
+	~if $Others eq 'Y'`
+	<tr class="label">
+        <td align="center" width=10%>&nbsp;Country/Score</td>
+        ~section name=oth loop=$scorearr`
+                <td width=6% align="center">&nbsp;~$scorearr[oth]`</td>
+        ~/section`
+        <td align="center" width=12%>&nbsp;Total</td>
+        </tr>
+	~section name=brn loop=$other_country`
+		<tr class="fieldsnew">
+                <td align="center" class=label>&nbsp;~$other_country[brn]`</td>
+		~section name=ss loop=$scorearr`
+                <td align="center"><span class="red">~if $paid_and_allocated[1][brn][ss] eq ''`0~else`~$paid_and_allocated[1][brn][ss]`~/if`</span><br><span class="blue">~if $paid_but_not_allocated[1][brn][ss]  eq ''`0~else`~$paid_but_not_allocated[1][brn][ss]`~/if`</span><br><span class="green">~if $notpaid_but_allocate[1][brn][ss] eq ''`0~else`~$notpaid_but_allocate[1][brn][ss]`~/if`</span><br><span class="purple">~if $notpaid_and_not_allocated[1][brn][ss]eq ''`0~else`~$notpaid_and_not_allocated[1][brn][ss]`~/if`</span></td>
+                ~/section`
+
+		<td align="center" class=label><span class="red">~if $total_paid_allocated[1][brn] eq ''`0~else`~$total_paid_allocated[1][brn]`~/if`</span><br><span class="blue">~if $total_paid_not_allocated[1][brn]  eq ''`0~else`~$total_paid_not_allocated[1][brn]`~/if`</span><br><span class="green">~if $total_not_paid_allocated[1][brn] eq ''`0~else`~$total_not_paid_allocated[1][brn]`~/if`</span><br><span class="purple">~if $total_nothing[1][brn] eq ''`0~else`~$total_nothing[1][brn]`~/if`</span></td>
+        	</tr>
+        ~/section`
+
+	<tr class="fieldsnew">
+        <td align="center" class=label>&nbsp;TOTAL</td>
+                ~section name=ss1 loop=$scorearr`
+                <td class=label align="center"><span class="red">~$total_other_paid_and_allocated[ss1]`</span><br><span class="blue">~$total_other_paid_but_not_allocated[ss1]`</span><br><span class="green">~$total_other_notpaid_but_allocate[ss1]`</span><br><span class="purple">~$total_other_notpaid_notallocated[ss1]`</span></td>
+                ~/section`
+        <td class=label align="center"><span class="red">~$total[4]`</span><br><span class="blue">~$total[5]`</span><br><span class="green">~$total[6]`</span><br><span class="purple">~$total[7]`</span></td>
+
+         ~elseif $no_record eq '1'`
+                <tr class=label>
+                <td colspan=100% class=red align=center>No records to show</td>
+                </tr>
+        ~/if`
+</table>
+</body>
+</html>                      

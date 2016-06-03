@@ -1,0 +1,379 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>JeevanSathi.com</title>
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" rel="stylesheet" />
+<style>
+.ul {
+background: none repeat scroll 0 0 #C9E9F9;
+height: auto;
+        list-style: none outside none;
+        margin-left: 120px;
+        margin-top: 0;
+        padding-left: 0;
+width: 234px;
+}
+.hover {
+  background-color: #D8C8F8;
+cursor: pointer;
+}
+.ui-autocomplete-result {
+padding: 0;
+border: 1px solid WindowFrame;
+        background-color: ButtonHighlight;
+        z-index:101;
+        list-style: none;
+position: relative;
+width: 200px;
+}
+
+.ui-autocomplete-result li {
+font: menu;
+cursor: pointer;
+        font-size: 12px;
+        background-color:#ffffff;
+        padding-left: 0;
+height: auto;
+        margin-left: 0;
+overflow: hidden;
+}
+</style>
+<script type = "text/javascript" src = "~$JQUERY_JS`"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<script src="~$SITE_URL`/jsadmin/add_update_subcastes.php"></script>
+<script type="text/javascript">
+var source = []
+var spellings = []
+var r_c_id = []
+var data = ~$subcaste_array`;
+
+$.each(data, function (i, el) {
+    source.push({ label: el.l, value: el.l });
+    $.each(el.v, function (j, spelling) {
+      source.push({ label: el.l, value: spelling });
+      spellings.push({ label: el.l, value: spelling });
+      $.each(el.r, function (j, related_caste_id) {
+        source.push({ label: el.l, value: related_caste_id });
+        r_c_id.push({ label: el.l, value: related_caste_id });
+        /*$.each(el.o, function(j, order) {
+          source.push({ label: el.l, value: order });
+          });*/
+        });
+      });
+    source.push({ label: el.l, value: el.o });
+    });
+
+$(function () {
+    $("#link1").click(function () {
+      $("#div1").toggle();
+      return false;
+      });
+    $("#link2").click(function () {
+      $("#div2").toggle();
+      return false;
+      });
+    $("#link3").click(function () {
+      $("#div3").toggle();
+      return false;
+      });
+    $("#link4").click(function () {
+      $("#div4").toggle();
+      return false;
+      });
+    $("#text1").autocomplete({
+minLength: 2,
+source: function (request, response) {
+if($.trim(request.term).length >= 2) {
+var matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i")
+, results = [];
+$.each(source, function (i, value) {
+  if (matcher.test(value.value) && $.inArray(value.label, results) < 0) {
+  results.push(value.label);
+  }
+  });
+response(results);
+}
+},
+focus: function(event, ui) {
+$(this).val(ui.item.label); 
+}
+});
+
+$("#text2").autocomplete({
+minLength: 2,
+source: function(request, response) {
+if($.trim(request.term).length >= 2) {
+var matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i"),
+results = [];
+$.each(source, function(ul, item) {
+  if (matcher.test(item.value) && $.inArray(item.label, results) < 0) {
+  results.push(item.label);
+  }
+  });
+response(results);
+}
+},
+select: function(event, ui) {
+$(this).val(ui.item.label);
+$.each(data, function(i, j) {
+  if ($.trim($("#text2").val()) == j.l) {
+  $("#textarea1").val(j.v);
+  return false;}
+  });
+        }
+});
+
+$("#text4").autocomplete({
+minLength: 2,
+source: function(request, response) {
+if ($.trim(request.term).length >= 2) {
+var matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i"),
+results = [];
+$.each(source, function(ul, item) {
+  if (matcher.test(item.value) && $.inArray(item.label, results) < 0) {
+  results.push(item.label);
+  }
+  });
+response(results);
+}
+},
+select: function(event, ui) {
+$(this).val(ui.item.label);
+$.each(data, function(i, j) {
+  if ($.trim($("#text4").val()) == j.l) {
+  $("#textarea2").val(j.r);
+  return false;
+  }
+  });
+        }
+});
+
+$("#text6").autocomplete({
+minLength: 2,
+source: function(request, response) {
+  if ($.trim(request.term).length >= 2) {
+    var matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i"),
+    results = [];
+    $.each(source, function(ul, item) {
+      if (matcher.test(item.value) && $.inArray(item.label, results) < 0) {
+        results.push(item.label);
+      }
+      });
+    response(results);
+  }
+},
+select: function(event, ui) {
+  $(this).val(ui.item.label);
+  $.each(data, function(i, j) {
+    if ($.trim($("#text6").val()) == j.l) {
+      $("#textarea3").val(j.o);
+      return false;
+    }
+    });
+}
+    });
+
+$.ui.autocomplete.prototype._renderMenu = function(ul, items) {
+  var self = this;
+  $.each(items, function(index, item) {
+      if (index < 10)
+      {$.ui.autocomplete.prototype._renderItem(ul, item)} 
+
+      });
+};
+$.ui.autocomplete.prototype._renderItem = function(ul, item) {
+  listItems = [];
+  var re = new RegExp("^" + $.trim(this.term), "i");
+  var t = item.label.replace(re, "<span style='font-style: italic;color: Blue;'>" + "$&" + "</span>");
+  var listItem = $("<li></li>")
+    .data("item.autocomplete", item)
+    .append("<a style='font: menu; font-size: 12;'>" + t + "</a>")
+    .appendTo(ul);
+  return listItem;
+};
+
+$("#div1_add").click(function (e) {
+    e.preventDefault();
+    var text1_val = $("#text1").val();
+    if ($.trim(text1_val).length !== 0) {
+    $.ajax ({
+type: 'GET',
+url: 'subcastes.php',
+data: 'new_subcaste=' + text1_val + '&div1=1',
+success: function(response) {
+alert("RESPONSE: " + response);
+    window.location.reload();
+},
+error: function(request, error) {
+alert(request + "  " + error);
+}
+});
+    }
+    return false;
+    }); //completed
+
+$("#div2_add").click(function (e) {
+    //Not working $("#text3").val().appendTo($("#textarea1"));
+    e.preventDefault();
+    var text3_val = $("#text3").val();
+    if ($.trim(text3_val).length !== 0) {
+    $.ajax ({
+type: 'GET',
+url: 'subcastes.php',
+data: 'for_subcaste=' + $.trim($("#text2").val()) + '&' + 'new_spelling=' + text3_val + '&div2=1',
+success: function (response) {
+alert("RESPONSE: " + response);
+    window.location.reload();
+},
+error: function (request, error) {
+alert(request + "  " + error);
+}
+});
+    }
+    return false;
+    });
+
+$("#div3_add").click(function (e) {
+    e.preventDefault();
+    var text5_val = $("#text5").val();
+    if ($.trim(text5_val).length !== 0) {
+      if (text5_val.match(/^\d+$/)) {
+    $.ajax ({
+type: 'GET',
+url: 'subcastes.php',
+data: 'for_subcaste=' + $.trim($("#text4").val()) + '&' + 'add_related_caste_id=' + text5_val + '&div3_a=1',
+success: function (response) {
+alert("RESPONSE: " + response);
+    window.location.reload();
+},
+error: function (request, error) {
+alert(request + "  " + error);
+}
+});
+    } 
+    }
+    return false;
+    });
+
+$("#div3_remove").click(function (e) {
+    e.preventDefault();
+    var text5_val = $("#text5").val();
+    if ($.trim(text5_val).length !== 0) {
+      if (text5_val.match(/^\d+$/)) {
+    $.ajax ({
+type: 'GET',
+url: 'subcastes.php',
+data: 'for_subcaste=' + $.trim($("#text4").val()) + '&' + 'rm_related_caste_id=' + text5_val + '&div3_r=1',
+success: function (response) {
+alert("RESPONSE: " + response);
+    window.location.reload();
+},
+error: function (request, error) {
+alert(request + "  " + error);
+}
+});
+    }
+    }
+    return false;
+    });
+
+$("#div4_update").click(function (e) {
+    e.preventDefault();
+    var text7_val = $("#text7").val();
+    if ($.trim(text7_val).length !== 0) {
+      if (text7_val.match(/^\d+$/)) {
+        $.ajax ({
+type: 'GET',
+url: 'subcastes.php',
+data: 'for_subcaste=' + $.trim($("#text6").val()) + '&' + 'update_order=' + text7_val + '&div4=1',
+  success: function (response) {
+    alert("RESPONSE: " + response);
+    window.location.reload();
+  },
+error: function (request, error) {
+  alert(request + "  " + error);
+}
+          });
+      }
+    }
+    return false;
+    });
+});
+</script>
+</head>
+~include file="head.htm"`
+<br>
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table width=100% cellspacing="1" cellpadding='0' ALIGN="CENTER" >
+<tr width=100% border=1>
+<td width="25%" class="formhead" height="23"><font><b>Welcome :~$operator_name`</b></font></td>
+<td width="30%" class="formhead" align="center"><a href="mainpage.php?cid=~$cid`">Click here to go to main page</a></td>
+<td width="30%" class="formhead" align="center"><a href="showhoroscopetoassign.php?user=n&cid=~$cid`">Back</a></td>
+<td width="6%" class="formhead" align='RIGHT' height="23">
+<a href="logout.php?cid=~$cid`">Logout</a>
+</td>
+<td width="3%" class="formhead" height="23">&nbsp;
+</td>
+</tr>
+</table>
+<br>
+<input type="hidden" name="form1_submit" value="TRUE" />
+<a href="#add_subcastes" id="link1">Add Subcastes</a>
+<div id="div1" style="display: none;">
+<label>Add Subcaste: </label>
+<input type="text" id="text1" style="width: 200;">
+<button id="div1_add">Add</button>
+<div id="results" class="div_results">
+</div>
+</div>
+<br /> <br />
+<a href="#update_spelling" id="link2">Update Spelling List</a>
+<div id="div2" style="display: none;">
+<label>For Subcaste: </label>
+<input type="text" id="text2" style="width:200;">
+<br /> <br />
+<label>Already Existing Spellings: </label>
+<br />
+<textarea rows="5" cols="30" readonly="readonly" id="textarea1">
+</textarea>
+<br /> <br />
+<label>New Spelling: </label>
+<input type="text" id="text3" style="width: 200;">
+<button id="div2_add">Add</button>
+</div>
+<br /> <br />
+<a href="#related_Castes" id="link3">Add/Update Related Caste-IDs</a>
+<div id="div3" style="display: none;">
+<label>For Subcaste: </label>
+<input type="text" id="text4" style="width: 200;">
+<br /> <br />
+<label>Related Caste IDs</label>
+<br />
+<textarea rows="5" cols="30" readonly="readonly" id="textarea2">
+</textarea>
+<br /> <br />
+<label>Add or Remove<br />Related Caste ID: </label>
+<input type="text" id="text5" style="width: 200;">
+<button id="div3_add">Add</button>
+<button id="div3_remove">Remove</button>
+</div>
+<br /> <br />
+<a href="#update_ranking" id="link4">Update Rank of Suggested Subcaste</a>
+<div id="div4" style="display: none;">
+<label>For Subcaste: </label>
+<input type="text" id="text6" style="width: 200;">
+<br /> <br />
+<label>Current Rank: (This rank specifies the order of suggestion. If rank increases, the suggested subcaste will also come down in the list. Vice versa is applicable)</label>
+<br />
+<textarea rows="1" cols="10" readonly="readonly" id="textarea3">
+</textarea>
+<br /> <br />
+<label>New Rank: </label>
+<input type="text" id="text7" style="width: 200;">
+<button id="div4_update">Update</button>
+</div>
+<br /> <br />
+</body>
+</html>

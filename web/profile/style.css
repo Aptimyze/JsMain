@@ -1,0 +1,13 @@
+/* CSS Document */
+body {margin-left: 0px;margin-top: 0px;}
+.g11 {font-family: Verdana;font-size: 11px;color: #C04D00; font-weight:bold}
+.glink a{ color:#629000;text-decoration:underline;}
+glink a:hover{ color:#000000;text-decoration:underline;}
+glink a:visited{ color:#629000;text-decoration:underline;}
+.blink a{ color:#000000;text-decoration:underline;}
+blink a:visited{ color:#000000;text-decoration:underline;}
+.b11 {font-size: 11px;font-family: Verdana;}
+.mar11 {color: #CC0000; font:bold 12px verdana,arial; line-height:22px}
+.hd {font-family: Verdana, Arial, Helvetica, sans-serif;font-size: 18px;font-weight: bold;}
+.bllink a:hover{ color:#0000ff;text-decoration:underline;}
+.bllink a:visited{ color:#0000ff;text-decoration:underline;}

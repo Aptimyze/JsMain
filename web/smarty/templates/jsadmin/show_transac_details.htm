@@ -1,0 +1,92 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+	</head>
+	<body>
+		<table width="50%" align="center" cellpadding="4" cellspacing="4" border="0">
+			<tr>
+				<td align="center"><img src="../profile/images/logo_1.gif" width="192" height="65"></td>
+			</tr>
+		</table>
+		<table width="50%" align="center" cellpadding="4" cellspacing="4" border="0">
+			<tr class="formhead" align="center">
+				<td colspan="2">Transaction details</td>
+			</tr>
+			<tr align="center">
+				<td class="label">Username</td>
+				<td class="fieldsnew">~$transac_details.USERNAME`</td>
+			</tr>
+			<tr align="center">
+				<td class="label">Profileid</td>
+				<td class="fieldsnew">~$transac_details.PROFILEID`</td>
+			</tr>
+			<tr align="center">
+				<td class="label">Billid</td>
+				<td class="fieldsnew">~$transac_details.BILLID`</td>
+			</tr>
+			<tr align="center">
+				<td class="label">Service</td>
+				<td class="fieldsnew">~$transac_details.SERVICE` ~$transac_details.DURATION`</td>
+			</tr>
+			<tr align="center">
+				<td class="label">Addon Service</td>
+				<td class="fieldsnew">~$transac_details.ADDON_SERVICE`</td>
+			</tr>
+			<tr align="center">
+				<td class="label">Total Amount</td>
+				<td class="fieldsnew">~$transac_details.TOTAL_AMOUNT`</td>
+			</tr>
+			<tr align="center">
+				<td class="label">Due amount</td>
+				<td class="fieldsnew">~$transac_details.DUEAMOUNT`</td>
+			</tr>
+			~section name=next loop=$pay_det`
+				<tr class="formhead" align="center">
+					<td colspan="2">Receiptid : ~$pay_det[next].RECEIPTID`</td>
+				</tr>
+				<tr align="center">
+					<td class="label">Mode</td>
+					<td class="fieldsnew">~$pay_det[next].MODE`</td>
+				</tr>
+				<tr align="center">
+					<td class="label">Amount</td>
+					<td class="fieldsnew">~$pay_det[next].TYPE` ~$pay_det[next].AMOUNT`</td>
+				</tr>
+				~if ~$pay_det[next].CD_NUM`
+					<tr align="center">
+						<td class="label">Cheque Number</td>
+						<td class="fieldsnew">~$pay_det[next].CD_NUM`</td>
+					</tr>
+					<tr align="center">
+						<td class="label">City</td>
+						<td class="fieldsnew">~$pay_det[next].CD_CITY`</td>
+					</tr>
+					<tr align="center">
+						<td class="label">Cheque Date</td>
+						<td class="fieldsnew">~$pay_det[next].CD_DT`</td>
+					</tr>
+				~/if`
+			~/section`
+		</table>
+		<br>
+		<table width="80%" align="center" cellpadding="4" cellspacing="4" border="0">
+			<tr class="formhead" align="center">
+				<td colspan="4">Comments</td>
+			</tr>
+			<tr class="label" align="center">
+				<td>S.No.</td>
+				<td>Comments</td>
+				<td>Comment by</td>
+				<td>Comment date</td>
+			</tr>
+			~section name=next loop=$comments`
+				<tr class="fieldsnew" align="center">
+					<td>~$comments[next].SNO`</td>
+					<td>~$comments[next].COMMENT`</td>
+					<td>~$comments[next].COMMENT_BY`</td>
+					<td>~$comments[next].COMMENT_DT`</td>
+				</tr>
+			~/section`
+		</table>
+	</body>
+</html>

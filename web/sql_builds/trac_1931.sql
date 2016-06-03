@@ -1,0 +1,3 @@
+use billing;
+
+ALTER TABLE billing.REV_MASTER ADD `SERVICE_TAX_CONTENT` varchar(250) NOT NULL

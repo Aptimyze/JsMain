@@ -1,0 +1,636 @@
+/**
+* This function will replace string with mapping present in object(mapObj)
+* @param str {string}
+* @param mapObj {object}
+* example of  mapbj
+	var mapObj = {
+	search1:replace1,
+	search2:replace2
+	};
+*/
+$.ReplaceJsVars = function(str,mapObj){
+	var re = new RegExp(Object.keys(mapObj).join("|"),"gi");
+	str = str.replace(re, function(matched){
+	  return mapObj[matched];
+	});
+	return str;
+}
+
+/**
+* This function will add paramter to existing string and if that name exits it removes
+* @param str {string} 
+* @param param {string}
+* @param value {string}
+* @return updated string {string}
+*/
+$.addReplaceParam = function(str,param,value){
+	str = str.replace(param,'noUseVarHahH');
+	str = str+"&"+param+"="+value;
+	return str;
+}
+
+/**
+* This fucntion will replace null by blank values
+*/
+function removeNull(msg)
+{
+        if(msg)
+                return msg;
+        return '';
+}
+
+/**
+* This function will show slider with validation message {e} at a particular height {divhgt}
+* @param className {string} 
+* @param e {string}
+* @param addClass {string}
+*/
+function showSlider(className, e, addClass,ifVisible,timeDuration) {
+
+        var divhgt = 0;
+        if(typeof(timeDuration)==='undefined') timeDuration = 3000;
+	if(ifVisible)
+	{
+		if(!$(className).is(":visible"))
+			className='';
+	}
+        if(className != "null")
+                divhgt = $(className).height();
+
+	//-10px and 110% added for android browser on search band.
+        var divstr = '<div id="page-wrap" style="position:fixed;top:'+divhgt+'px;width:100%;z-index:20000;left:0px">' + '<div id="note" class="'+addClass+'" style="color:#fff;font-size:14px;text-align:center;font-family: "Roboto Light, Arial, sans-serif, Helvetica Neue",Helvetica;">' + e + '</div>' + '</div>';
+        $("body").prepend(divstr);
+
+        $("#page-wrap").slideDown( "slow", function() {
+                setTimeout(function()
+                {
+                       $("#page-wrap").slideUp();
+                       $("#page-wrap").remove();		
+                },timeDuration);
+        });
+}
+
+/**
+* This function will add error message at the bottom of the page
+* @param msg {string }message to be displayed
+* @param action {string} href
+*/
+function bottomErrorMsg(msg,action,addclass)
+{
+	var msg1 = '<div class="fullwid srp_bgmsg pad5 color2 fontlig txtc '+addclass+'">'+msg+'</div>';
+	if(action)
+		msg1 = '<a href="'+action+'">'+msg1+'</a>';
+	$( "body" ).append(msg1);
+}
+
+function topErrorMsg(msg,action,addclass)
+{
+	$(".loaderTopDiv").addClass("fullwid srp_bgmsg pad5 color2 fontlig txtc");
+	$("."+addclass).html(msg);
+}
+var clickEventType=((document.ontouchstart!==null)?'click':'touchstart');
+clickEventType="click";
+function showCenterLoader(){
+ 
+        $("body").prepend("<div class='overlay'><table style='width: 100%;height: 100%;align-content: center;text-align: center;'><TR><TD><img src='/profile/images/ajax-loader.gif'/></td></tr></table></div>");
+        disable_scroll();
+}
+
+function capitalise(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
+var checkEmpty=function(label,val)
+	{
+		if(typeof(val)=='undefined' || val=="" || val==null || val=="-")
+		{
+			
+			return {0:"<g>"+label+"</g>",1:1};
+		}
+		return {0:label,1:0} ;
+	}
+	
+var changeHash=0;
+var browserback=0;
+var HistoryStore={};
+
+
+function UpdateHtml(str,json)
+{
+	
+	$.each(json, function(key,val){
+		var re = new RegExp("\{\{"+key+"\}\}", "g");
+			str=str.replace(re,val);
+		});
+		str=str.replace(/\{\{\w+\}\}/g,"");
+		return str;
+}
+
+
+function fetchEditDetails(key,to_search,json)
+{
+	var store="";
+	$.each(json["OnClick"],function(key,val){
+			if(val.key==to_search)
+				store=val.value;
+		});
+		return store;
+}
+function removeOthersFieldValue(json1,json2)
+{
+	var othersRemove=1;
+	var output=json2;
+	var objLength2=Object.keys(json2).length;
+	var objLength1=Object.keys(json1).length;
+	if(Object.keys(json1).length<=0)
+		othersRemove=0;
+	if(othersRemove)
+	{	
+		$.each(json2,function(key,value){
+				$.each(value,function(k,v){
+					if(v=="Others")
+						delete output[key][k];
+			});
+		});
+	}
+	if(objLength1)
+	for(var i=0;i<objLength1;i++)
+		output[objLength2+i]=json1[i];
+	
+	
+	return output;
+}
+
+
+
+
+
+function jsTimedOut()
+{
+	window.location.href = "/static/LogoutPage?prev_url=";
+}
+$(document).ready(
+function(){
+	BindNextPage();
+}
+);
+
+
+function BindNextPage(){
+	
+	$("[bind-slide]").each(function(key,val){
+		
+		var url=$(val).attr("href");
+		
+		var bindSlide=parseInt($(val).attr("bind-slide"));
+		
+		//$(val).attr("href","#");
+		$(val).unbind("click");
+		$(val).bind("click",function(){
+			
+			if(url && typeof(url) == "string" && url.indexOf("search/topSearchBand")!=-1)
+			{
+				var d = new Date();
+				url = url+"&stime="+d.getTime();
+				
+			}	
+			if(bindSlide==2)
+				ShowNextPage(url,0,1);
+			else	
+				ShowNextPage(url,0);
+			return false;
+		});
+	});
+}
+function ShowNextPage(url,nottostore,transition)
+{
+	if(typeof(history.pushState)=='undefined')
+	{
+		document.location.href=url; 
+		return;
+	}
+	stopTouchEvents(1);
+        var timer=0;
+        if(!$("#hamburger").hasClass("dn"))
+        {
+            $("#wrapper").trigger("click");
+            timer=animationtimer;
+        }
+        setTimeout(function(){
+                if(typeof(transition)=="undefined")
+                        transition=0;
+
+                $("#urldiv").addClass('dn').removeClass('urldivleft').removeClass("urldivright");
+                if(transition)
+                        $("#urldiv").addClass("urldivleft");
+                else
+                        $("#urldiv").addClass("urldivright");
+
+                $("#urldiv").removeClass("dn");
+		if(ISBrowser("UC"))
+			$("#urldiv").css("height",$(window).height()+80);
+		if(ISBrowser("safari"))
+			$("#urldiv").css("height",window.innerHeight);
+		else
+			$("#urldiv").css("height",$(window).height());
+			
+                setTimeout(function(){
+		$("#urldiv").css("z-index",100000);
+                        $("#urldiv").addClass("showurldiv");
+                        setTimeout(function(){
+                                //document.location.href=url;
+                                //return;
+                                SingleTonNextPage(data,nottostore,url,transition);
+                        },300);
+                        },100);
+                    },timer);
+	return false;
+}
+var Single=0;
+var cancelUrl={};
+var xhrReq={}
+var timer=300;
+function SingleTonNextPage(data,nottostore,url,transition)
+{
+   var random=Math.random();
+   $.each(cancelUrl,function(key,value)
+   {
+       if(xhrReq.hasOwnProperty(key))
+            xhrReq[key].abort();
+        
+       cancelUrl[key]=2;
+   });
+   cancelUrl[random]=1;
+   
+   xhrReq[random]=$.ajax({url: url}).done(function(data){
+       
+                    if(cancelUrl[random]==1)
+			ShowNextPageTrue(data,nottostore,url,transition);
+        startTouchEvents(timer);
+                    
+		})
+		.fail(function(){
+                    if(cancelUrl[random]==1)
+			StopNextPage();
+		startTouchEvents(timer);
+		});
+   
+}
+function StopNextPage(transition)
+{
+	$("#urldiv").removeClass("showurldiv");
+	setTimeout(function(){
+		$("#urldiv").addClass('dn').removeClass("urldivright").removeClass("urldivleft");
+		ShowTopDownError(Array("Something went wrong"));
+		},animationtimer);
+	//historyStoreObj.pop();
+}
+
+function ShowNextPageTrue(data,nottostore,url,transition)
+{
+       
+	try{
+	if(!nottostore)
+		{
+			var dlh=document.location.href;
+			
+			historyStoreObj.push(function(){ShowNextPage(dlh,1,!transition);return true;},url);
+		}
+		else
+			if(typeof(history.pushState)!=='undefined')
+				history.pushState(null,"",url);
+	}catch(e)
+	{}
+	
+	
+	//actualD=actualD.replace('<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>',"");
+	//Fetching Head text
+	
+	//$("body").html('<div class="urldiv urldivright showurldiv" id="urldiv" style="height: 480px;"></div>');
+	
+	
+	
+	UpdateWholeHtml(data);
+	
+	
+}
+var data;
+function UpdateWholeHtml(htmlContent)
+{
+	var height=$(window).height();
+	document.title="Loading...";
+	$("html").html("");
+	$("html").children().remove();
+	$("html").append(document.createElement("head"));
+	$("html").append(document.createElement("body"));
+	$("head").html('<style>#urldiv{width: 100%;background: white;position: fixed;top: 0px;z-index: 10;background-image: url(\'IMG_URL/images/jsms/commonImg/loader.gif\');background-repeat: no-repeat;background-position: center;}</style>');
+	$("body").html('<div id="urldiv" style="height: '+height+'px"></div></body>');
+	
+	var filledHtml=document.createElement("html");
+	filledHtml.innerHTML=htmlContent;
+data=filledHtml;
+//return;
+	UpdateScriptsInIframe(filledHtml,htmlContent);	
+	//UpdateHeadHtml(filledHtml,htmlContent);
+	
+	
+}
+var filledHtml_load;
+var htmlContent_load;
+function UpdateScriptsInIframe(filledHtml,htmlContent)
+{
+	filledHtml_load=filledHtml;
+	htmlContent_load=htmlContent;
+	if($("#dumpIframe").length)
+		$("#dumpIframe").remove();
+	try{
+		var scripts=$(filledHtml).find("script[src]");
+	var scripts_str="";
+	$.each(scripts,function(key,value){
+		var str=$(value)[0].outerHTML;
+		//str=str.replace("src=","onerror='parent.geterror()' src=");
+		scripts_str=scripts_str+str;
+});
+	var css_str="";
+	var css=$(filledHtml).find("link[href]");
+	$.each(css,function(key,value){
+                css_str=css_str+$(value)[0].outerHTML;
+});
+
+		var iframe_html="<html><head><script>var alreadyPhotoCount=0,selectFile=0,picCount=0,getBackLink=0,firstResponse=0,_SEARCH_RESULTS_PER_PAGE=0,imageLoadComplete=0</script>"+scripts_str+css_str+"</head><body onload='parent.UpdateFrameHeadHtml()'></body></html>";
+		$("body").append("<iframe id='dumpIframe' style='display:none'></iframe>");
+		var doc=$("#dumpIframe")[0].contentDocument;
+		doc.open();
+		doc.write(iframe_html);
+		doc.close();
+	}
+	catch(e)
+	{
+		UpdateHeadHtml(filledHtml,htmlContent);
+	}
+}
+function geterror()
+{
+	
+	try{
+		}
+		catch(e)
+		{}
+}
+function UpdateFrameHeadHtml()
+{
+
+	UpdateHeadHtml(filledHtml_load,htmlContent_load);
+}
+var loadingUrl=0;
+function UpdateHeadHtml(htmlPart,htmlContent)
+{
+	
+	$("#dumpIframe").remove();
+	document.open();
+	document.write(htmlContent);
+	document.close();
+	return;
+}
+
+/**
+* This function will ab used for no results page
+*/
+function addNoResDivs(noresultmessage,id,skipHeader)
+{
+	var len=0;
+	if(skipHeader)
+		len = $(skipHeader).height();
+	var height = $(window).height()-len;
+        var str = '<div id="noResultListingDiv" class="disptbl fullwid bg4 pad5" style="height:'+height+'px;"><div class="dispcell txtc vertmid" target="_blank"><div><img src="IMG_URL/images/jsms/commonImg/face.png"></div><div class="pt10"></div><div class="f14 fontlig">'+noresultmessage+'</div></div></div>';
+	disable_touch();
+	$(id).append(str);
+}
+function ShowTopDownError(jsonError,timeToHide)
+{
+        if(typeof timeToHide=="undefined")
+            timeToHide = 3000;
+        if($(".errClass").length)
+		return;
+	var tempHtml='<div class="pad12_e white f15 op1">{{VALIDATORTEXT}}</div>';
+	var errArr=[];
+	
+	for(var i=0;i<jsonError.length;i++)
+		errArr[i]=UpdateHtml(tempHtml,{"VALIDATORTEXT":jsonError[i]});
+	jsonError=[];
+	var correctHtml="<div class='errClass'>"+errArr.join("")+"</div>";
+	$("body").prepend(correctHtml);
+	if($('#privacyoptionshow').is(':visible'))
+	setTimeout(function(){$(".errClass").addClass("showErr")},10);
+	else
+	setTimeout(function(){
+            if($("#overlayHead").is(':visible'))
+                $(".errClass").addClass("showErr").css("top",$("#overlayHead").outerHeight());
+            else {
+                $(".errClass").addClass("showErr").css("top","0px").css("position","fixed");
+            }
+        },10);
+	setTimeout(function(){$(".errClass").removeClass("showErr");
+		setTimeout(function(){$(".errClass").remove();},timeToHide);
+		startTouchEvents(1);
+		},timeToHide);
+	
+}
+function CommonErrorHandling(json,toAppend)
+{
+	var output;
+	if((typeof(json)).toLowerCase()=="string")
+	{
+		try
+		{
+			output=JSON.parse(json);
+		}
+		catch(e)
+		{
+            startTouchEvents(1);
+			return false;
+		}
+	}
+	else
+		output=json;
+		
+	if(typeof(output)!='object')
+	{
+		ShowTopDownError(['Something went wrong']);
+        startTouchEvents(1);
+		return false;
+	}
+	try{
+			if(json.responseStatusCode==0)
+				return true;
+			var statusCode=json.responseStatusCode;	
+			if(json.responseStatusCode==9){
+			if (toAppend === undefined || toAppend === null)		
+						ShowNextPage("/",0);
+					else ShowNextPage("/"+toAppend,0);
+			}
+			if(json.responseStatusCode==7)
+				ShowNextPage("/register/newJsmsReg?incompleteUser=1",0);	
+			if(json.responseStatusCode==8)
+				ShowNextPage("/phone/jsmsDisplay",0);
+			if(statusCode)
+				if($.inArray(parseInt(statusCode),[0,9,8,7])!=-1)
+					throw new Error("Redirecting you");
+            startTouchEvents(1);	
+            return false;		
+	}
+	catch(e)
+	{
+		if(e.message=="Redirecting you")
+		{
+				//throw new Error("Redirecting you");
+                                
+		}		
+		
+	}
+    startTouchEvents(1);
+    return false;
+}
+
+function ISBrowser(type)
+{
+	if(type=="UC")
+	{
+		if(navigator.userAgent.match(/UCBrowser/i))
+			return true;
+	}
+	if(type=="safari")
+	{
+		if (navigator.userAgent.search("Safari") >= 0 && navigator.userAgent.search("Chrome") < 0) 
+			return true;
+	}
+	if(type=="AndroidNative")
+	{
+		if (navigator.userAgent.match(/Android/i) && navigator.userAgent.match(/Version/i))
+                        return true;
+	}
+	return false;
+	
+}
+
+function popBrowserStack()
+{
+    history.back();
+}
+
+/*
+ * Look for Key Search Query of Location.search and return its value else false
+ */
+function getSearchQureyParameter(key){
+  var value = false;
+  if(location.search.indexOf(key)!=-1){
+    value = location.search.substr(location.search.indexOf(key)).split('&')[0].split('=')[1];
+  }
+  return value;
+}
+
+function hostReachable() {
+    var xhr = new ( window.ActiveXObject || XMLHttpRequest )( "Microsoft.XMLHTTP" );
+    var status;
+    xhr.open( "HEAD", "//" + window.location.hostname + "/?rand=" + Math.floor((1 + Math.random()) * 0x10000), false );
+    try {
+        xhr.send();
+        return ( xhr.status >= 200 && (xhr.status < 300 || xhr.status === 304) );
+    } catch (error) {
+        return false;
+    }
+}
+
+(function(){
+  $(document).ready(function() {
+    if(navigator.userAgent.indexOf("UCBrowser") != -1) {
+        setInterval(function(){
+            var online = hostReachable();
+            if(online) {
+                var offlineData = localStorage.getItem("offline")
+                // var offlineTime = localStorage.getItem("offline_timestamp");
+                // var onlineTime = Math.floor(Date.now() / 1000);
+                // var totalTime = (onlineTime-offlineTime);
+                if(offlineData != null) {
+                    ShowTopDownError(["You are now online."]);
+                    localStorage.removeItem("offline");
+                    // localStorage.removeItem("offline_timestamp");
+                    setTimeout(function(){ 
+                        var startTime, endTime, download = new Image();
+                        var currentLocation = window.location.href;
+                        download.onload = function () {
+                          
+                          endTime = (new Date()).getTime();
+                          setTimeout(function(){
+                              var duration = (endTime - startTime) / 1000;
+                              var kbitsLoaded = 21.04;
+                              var speedKbps = (kbitsLoaded / duration);
+                              if(speedKbps < 20){
+                                //track event 
+                                trackJsEventGA("jsms","2Gdata", offlineData, currentLocation);
+                              }
+                              //alert(offlineData+currentLocation+ speedKbps);
+                          }, 1000);
+                        }
+                        startTime = (new Date()).getTime();
+                        download.src = "http://www.jeevansathi.com/images/mrevamp/logo.png?v="+new Date().getTime(); 
+                    }, 2000);
+                    // if(totalTime <= 1800){
+                        // trackJsEventGA("jsms","offline_to_online", offlineData, totalTime);
+                        // alert("logging user : "+offlineData+", totalTime : "+totalTime);
+                    //}
+                }
+            }
+            else if(!online){
+                var offlineData = localStorage.getItem("offline");
+                //alert("checking for offlineData : "+offlineData);
+                if(offlineData == null) {
+                    ShowTopDownError(["Your are offline."]);
+                    localStorage.setItem("offline",trackingProfile);
+                    // localStorage.setItem("offline_timestamp", Math.floor(Date.now() / 1000));
+                }
+            }
+        }, 5000);
+    } else {
+      $(window).on("offline", function() {
+          ShowTopDownError(["Your are offline."]);
+          localStorage.setItem("offline",trackingProfile);
+          // localStorage.setItem("offline_timestamp", Math.floor(Date.now() / 1000));         
+      });
+      $(window).on("online", function() {
+          ShowTopDownError(["You are now online."]);
+          var offlineData = localStorage.getItem("offline");
+          // var offlineTime = localStorage.getItem("offline_timestamp");
+          // var onlineTime = Math.floor(Date.now() / 1000);
+          // var totalTime = (onlineTime-offlineTime);
+          if(offlineData != null) {
+              localStorage.removeItem("offline");
+              setTimeout(function(){ 
+                  var startTime, endTime, download = new Image();
+                  var currentLocation = window.location.href;
+                  download.onload = function () {
+                  
+                    endTime = (new Date()).getTime();
+                    setTimeout(function(){
+                        var duration = (endTime - startTime) / 1000;
+                        var kbitsLoaded = 21.04;
+                        var speedKbps = (kbitsLoaded / duration);
+                        if(speedKbps < 20){
+                          //track event 
+                          trackJsEventGA("jsms","2Gdata", offlineData, currentLocation); 
+                        }
+                        //alert(offlineData+ currentLocation+ speedKbps);
+                    }, 1000);
+                  }
+                  startTime = (new Date()).getTime();
+                  download.src = "http://www.jeevansathi.com/images/mrevamp/logo.png?v="+new Date().getTime(); 
+              }, 2000);
+              // localStorage.removeItem("offline_timestamp");
+              // if(totalTime <= 1800){
+                  // trackJsEventGA("jsms","offline_to_online", offlineData, totalTime);
+                  // alert("logging user : "+offlineData+", totalTime : "+totalTime);
+              // }
+          }
+      });
+    }
+  });
+})();

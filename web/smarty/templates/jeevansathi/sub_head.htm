@@ -1,0 +1,54 @@
+
+~$TRACK_HEAD`
+~$TRACK_JSFLAG`
+<div id="advancedSearch" class="fr" style="width:776px; font-size:12px!important;">
+<p class="clr_4"></p>
+	<span>
+	<a class="fr undr_hver" href="/P/advance_search.php?page_name=advance_search_page"  ~if $newHomePage`onMouseDown="javascript:trackClicks('AS');"~/if`> Advanced Search</a><i class="fr blue_arw ml_17"></i>	
+	</span>
+
+	<span id="search_by_id" style="width:200px;z-index:100;position:relative" onclick="javascript:check_window('search_by_id(\'hide\')');"> 
+		<a class="fr undr_hver" href="#" onclick="search_by_id('show');return false;"> Search by profile id</a><i class="fr blue_arw ml_17"></i>
+	</span>
+        ~if $LOGIN`
+                <span id="save_search_option" style="position:relative" onclick="javascript:check_window('save_search_options(\'hide\',~$profileid`)')">
+                        <a class="fr undr_hver" href="#" onclick="save_search_options('show',~$profileid`);return false;"> My saved searches </a><i class="fr blue_arw ml_17"></i>
+                </span>
+        ~else`
+        ~if !$newHomePage`
+		<!--Not to show in case of homepage-->
+                <span id="save_search_option" style="z-index:100;">
+                        <a class="fr thickbox" href="/profile/login.php?SHOW_LOGIN_WINDOW=1&l_source=L_MSS"> My saved searches </a><i class="fr blue_arw ml_17"></i>
+                </span>
+          ~/if`      
+        ~/if`
+	~if !$newHomePage`
+	<br />
+	~/if`
+	<br />
+</div>
+<div class="clr"></div>
+    <div id="closeBand" style="background-image: url('~$IMG_URL`/images/qtopc-grey-new.jpg'); background-repeat: repeat-x;display:none" >
+        <div align="center">
+            <a class="pc_close_band">&nbsp;</a>
+        </div>    
+         <p class="clr_4"></p>
+         <p class="clr_4"></p>
+    </div>
+~if !$newHomePage`
+<div class="clr"></div>
+~/if`
+    <div id="openBand" style="background-image: url('~$IMG_URL`/images/qtopo-new-grey.jpg'); background-repeat: repeat-x;display:none" >
+        <div align="center">
+            <a class="pc_open_band">&nbsp;</a>
+        </div>
+	<p class="clr_4"></p>
+<p class="clr_4"></p>
+<p class="clr_4"></p>
+<p class="clr_4"></p>
+    </div>    
+
+<script>
+	logged_in_username="~$USERNAME|encodehtml`";
+	document.body.onclick=check_window
+</script>

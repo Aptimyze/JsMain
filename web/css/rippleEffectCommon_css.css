@@ -1,0 +1,67 @@
+.ink {
+	display: block; position: absolute;
+	background: #cc3b51;
+	border-radius: 100%;
+	transform: scale(0);
+  -webkit-transform: scale(0);
+  -moz-transform: scale(0);
+  -o-transform: scale(0);
+}
+.blueInk {
+
+                display: block; position: absolute;
+
+                background: #273748;
+
+                border-radius: 100%;
+
+                transform: scale(0);
+
+                -webkit-transform: scale(0);
+
+                -moz-transform: scale(0);
+
+                -o-transform: scale(0);
+
+}
+
+.blueInk.animate {animation: ripple 0.65s linear;}
+
+.hoverBlue:hover {
+  background-color: #435870 ;
+}
+
+.hoverPink:hover {
+  background-color: #e15065;
+}
+
+.ink.animate {animation: ripple 0.65s linear;}
+
+@keyframes ripple {
+	100% {opacity: 0;
+   transform: scale(2.5);
+   -webkit-transform: scale(2.5);
+   -moz-transform: scale(2.5);
+   -o-transform: scale(2.5);}
+ }
+ 
+ @keyframes ripple2 {
+  100% {opacity: 0;
+   transform: scale(2.5);
+   -webkit-transform: scale(2.5);
+   -moz-transform: scale(2.5);
+   -o-transform: scale(2.5);}
+ }
+ .greyInk {
+   display: block; position: absolute;
+   background: #7c7c7c;
+   border-radius: 100%;
+   transform: scale(0);
+   -webkit-transform: scale(0);
+   -moz-transform: scale(0);
+   -o-transform: scale(0);
+ }
+ .greyInk.animate {animation: ripple 0.65s linear;}
+ .greyHover:hover {
+   background-color: #a6a6a6;
+}

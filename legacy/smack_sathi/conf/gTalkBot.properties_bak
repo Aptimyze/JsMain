@@ -1,0 +1,10 @@
+XMPP_SERVER_NAME=federategtalk.infoedge.com
+XMPP_PORT=5222
+BOT_NAME=jeevansathichat@xmpp.jeevansathi.com
+BOT_PASSWORD=js
+NEWJS_URL=jdbc:mysql://devjs.infoedge.com:3306/newjs
+NEWJS_USERNAME=localuser
+NEWJS_PASSWORD=Km7Iv80l
+BOT_JS_URL=jdbc:mysql://devjs.infoedge.com:3306/bot_jeevansathi
+BOT_JS_URL_USERNAME=localuser
+BOT_JS_URL_PASSWORD=Km7Iv80l

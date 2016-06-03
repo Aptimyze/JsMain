@@ -1,0 +1,313 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	<title>Jeevansathi Matrimonials- Registration Page</title>
+	<link rel="stylesheet" href="/profile/css/~$comm_style_css`" type="text/css">
+	<SCRIPT language=JavaScript src="http://www.jeevansathi.com/profile/~$profile_js`"></SCRIPT>
+	<SCRIPT language=JavaScript src="http://www.jeevansathi.com/profile/phonecodes.js"></SCRIPT>
+	<SCRIPT language=javascript src="http://www.jeevansathi.com/profile/newip_1.js"></SCRIPT>
+	<SCRIPT language=javascript>
+<!--
+		function setcitycode()
+		{
+			if(document.form1.frommarriagebureau.value!=1)
+				get_code('c','~$country_isd_code`');
+		}
+//-->
+	</SCRIPT>
+	<noscript>
+		Some of the options in this page may not work properly. This happens when your browser doesn't support javascript.
+        </noscript>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body onload="javascript: document.form1['Gender'][0].focus(); activate_cityres();">
+<table width="100%"  border="0" cellspacing="0" cellpadding="2">
+	<tr>
+		<td>
+			<img src="~$IMG_URL`/profile/ser4_images/Matrimonial.gif" width="219" height="35"><br>
+			Indian Matrimonials - We Match Better
+		</td>
+	</tr>
+	<tr>
+		<td height="5"></td>
+	</tr>
+	<tr>
+		<td bgcolor="#BB0221" align="center">
+			<B><FONT face=Verdana,arial color=#ffffff size=2>A naukri.com Group Company &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 35 Offices Across India &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1000s of Success Stories</FONT> </B>
+		</td>
+	</tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td width="31%">
+			<table width="211"  border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<td><img src="~$IMG_URL`/profile/ser4_images/reg_img.jpg" width="211" height="158"></td>
+			</tr>
+			<tr>
+				<td height="1"></td>
+			</tr>
+			</table>
+			<table width="211"  border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<td>
+					<table width="211"  border="0" cellpadding="2" cellspacing="0" class="bele">
+					<tr>
+						<td bgcolor="#E0D79E"><b>Services</b></td>
+					</tr>
+					<tr>
+						<td>Create Profile <font size="1" color="#FF0000">Free</font> </td>
+					</tr>
+					<tr>
+						<td><img src="~$IMG_URL`/profile/ser4_images/dotline.gif" width="200" height="3"></td>
+					</tr>
+					<tr>
+						<td>Create Album <font size="1" color="#FF0000">Free</font> </td>
+					</tr>
+					<tr>
+						<td><img src="~$IMG_URL`/profile/ser4_images/dotline.gif" width="200" height="3"></td>
+					</tr>
+					<tr>
+						<td>Define Partner Profile <font size="1" color="#FF0000">Free</font></td>
+					</tr>
+					<tr>
+						<td><img src="~$IMG_URL`/profile/ser4_images/dotline.gif" width="200" height="3"></td>
+					</tr>
+					<tr>
+						<td>Search and contact members <font size="1" color="#FF0000">Free</font> </td>
+					</tr>
+					<tr>
+						<td height="5"></td>
+					</tr>
+					</table>
+				</td>
+			</tr>
+			</table>
+		</td>
+		<td width="69%">
+			<form name="form1" action="/profile/inputprofile_tieup_new_revamp.php" method="post">
+			<INPUT type="hidden" name="showlogin">
+			<INPUT type="hidden" name="hit_source" value="~$HITSOURCE`">
+			<INPUT type="hidden" name="tieup_source" value="~$TIEUPSOURCE`">
+			<INPUT type="hidden" name="maritalstatus" value="~$maritalstatus`">
+			<INPUT type="hidden" name="checksum" value="~$CHECKSUM`">
+			<INPUT type="hidden" name="id">
+			<INPUT type="hidden" name="frommarriagebureau">
+			<INPUT type="hidden" name="newip" value="1">
+			<INPUT type="hidden" name="State_Code" value="">
+			<input type="hidden" name="adnetwork" value="~$adnetwork`">
+        	<input type="hidden" name="account" value="~$account`">
+        	<input type="hidden" name="campaign" value="~$campaign`">
+        	<input type="hidden" name="adgroup" value="~$adgroup`">
+        	<input type="hidden" name="keyword" value="~$keyword`">
+        	<input type="hidden" name="match" value="~$match`">
+        	<input type="hidden" name="lmd" value="~$lmd`">
+			<table width="100%"  border="0" cellspacing="0" cellpadding="4" class="bele">
+			<tr>
+				<td colspan="2">
+					<B><FONT style="FONT-SIZE: 14px">Register yourself in few minutes to enjoy the benefits of free services </FONT></B>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" height="8"></td>
+			</tr>
+			<tr>
+				<td width="28%">Gender</td>
+				<td width="72%">
+					<INPUT type="radio" value="M" name="Gender" ~if $gender eq 'M' or $gender eq ''` checked ~/if`>Male &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<INPUT type="radio" value="F" name="Gender" ~if $gender eq 'F'` checked ~/if`>Female </td>
+			</tr>
+			<tr>
+				<td>Email Id </td>
+				<td><SPAN class=sblack><INPUT type="text" name="Email" value="~$email`" class=textbox  style="WIDTH: 165px"></SPAN></td>
+			</tr>
+			<tr>
+				<td>Date of Birth</td>
+				<td><span class="sblack">
+					<select name="Day" class="textbox" size="1">
+						<option value="1" ~if $day eq "1"` selected ~/if`>01</option>
+						<option value="2" ~if $day eq "2"` selected ~/if`>02</option>
+						<option value="3" ~if $day eq "3"` selected ~/if`>03</option>
+						<option value="4" ~if $day eq "4"` selected ~/if`>04</option>
+						<option value="5" ~if $day eq "5"` selected ~/if`>05</option>
+						<option value="6" ~if $day eq "6"` selected ~/if`>06</option>
+						<option value="7" ~if $day eq "7"` selected ~/if`>07</option>
+						<option value="8" ~if $day eq "8"` selected ~/if`>08</option>
+						<option value="9" ~if $day eq "9"` selected ~/if`>09</option>
+						<option value="10" ~if $day eq "10"` selected ~/if`>10</option>
+						<option value="11" ~if $day eq "11"` selected ~/if`>11</option>
+						<option value="12" ~if $day eq "12"` selected ~/if`>12</option>
+						<option value="13" ~if $day eq "13"` selected ~/if`>13</option>
+						<option value="14" ~if $day eq "14"` selected ~/if`>14</option>
+						<option value="15" ~if $day eq "15"` selected ~/if`>15</option>
+						<option value="16" ~if $day eq "16"` selected ~/if`>16</option>
+						<option value="17" ~if $day eq "17"` selected ~/if`>17</option>
+						<option value="18" ~if $day eq "18"` selected ~/if`>18</option>
+						<option value="19" ~if $day eq "19"` selected ~/if`>19</option>
+						<option value="20" ~if $day eq "20"` selected ~/if`>20</option>
+						<option value="21" ~if $day eq "21"` selected ~/if`>21</option>
+						<option value="22" ~if $day eq "22"` selected ~/if`>22</option>
+						<option value="23" ~if $day eq "23"` selected ~/if`>23</option>
+						<option value="24" ~if $day eq "24"` selected ~/if`>24</option>
+						<option value="25" ~if $day eq "25"` selected ~/if`>25</option>
+						<option value="26" ~if $day eq "26"` selected ~/if`>26</option>
+						<option value="27" ~if $day eq "27"` selected ~/if`>27</option>
+						<option value="28" ~if $day eq "28"` selected ~/if`>28</option>
+						<option value="29" ~if $day eq "29"` selected ~/if`>29</option>
+						<option value="30" ~if $day eq "30"` selected ~/if`>30</option>
+						<option value="31" ~if $day eq "31"` selected ~/if`>31</option>
+					</select>
+					<select name="Month" class="textbox" size="1">
+						<option selected value="">Month</option>
+						<option VALUE="1" ~if $month eq "01"` selected ~/if`>Jan</option>
+						<option VALUE="2" ~if $month eq "02"` selected ~/if`>Feb</option>
+						<option VALUE="3" ~if $month eq "03"` selected ~/if`>Mar</option>
+						<option VALUE="4" ~if $month eq "04"` selected ~/if`>Apr</option>
+						<option VALUE="5" ~if $month eq "05"` selected ~/if`>May</option>
+						<option VALUE="6" ~if $month eq "06"` selected ~/if`>Jun</option>
+						<option VALUE="7" ~if $month eq "07"` selected ~/if`>Jul</option>
+						<option VALUE="8" ~if $month eq "08"` selected ~/if`>Aug</option>
+						<option VALUE="9" ~if $month eq "09"` selected ~/if`>Sep</option>
+						<option VALUE="10" ~if $month eq "10"` selected ~/if`>Oct</option>
+						<option VALUE="11" ~if $month eq "11"` selected ~/if`>Nov</option>
+						<option VALUE="12" ~if $month eq "12"` selected ~/if`>Dec</option>
+					</select>
+					<select name="Year" class="textbox" size="1">
+						<option value="1988" ~if $year eq "1988"` selected ~/if`>1988</option>
+						<option value="1987" ~if $year eq "1987"` selected ~/if`>1987</option>
+						<option value="1986" ~if $year eq "1986"` selected ~/if`>1986</option>
+						<option value="1985" ~if $year eq "1985"` selected ~/if`>1985</option>
+						<option value="1984" ~if $year eq "1984"` selected ~/if`>1984</option>
+						<option value="1983" ~if $year eq "1983"` selected ~/if`>1983</option>
+						<option value="1982" ~if $year eq "1982"` selected ~/if`>1982</option>
+						<option value="1981" ~if $year eq "1981"` selected ~/if`>1981</option>
+						<option value="1980" ~if $year eq "1980"` selected ~/if`>1980</option>
+						<option value="1979" ~if $year eq "1979"` selected ~/if`>1979</option>
+						<option value="1978" ~if $year eq "1978"` selected ~/if`>1978</option>
+						<option value="1977" ~if $year eq "1977"` selected ~/if`>1977</option>
+						<option value="1976" ~if $year eq "1976"` selected ~/if`>1976</option>
+						<option value="1975" ~if $year eq "1975" OR $year eq ""` selected ~/if`>1975</option>
+						<option value="1974" ~if $year eq "1974"` selected ~/if`>1974</option>
+						<option value="1973" ~if $year eq "1973"` selected ~/if`>1973</option>
+						<option value="1972" ~if $year eq "1972"` selected ~/if`>1972</option>
+						<option value="1971" ~if $year eq "1971"` selected ~/if`>1971</option>
+						<option value="1970" ~if $year eq "1970"` selected ~/if`>1970</option>
+						<option value="1969" ~if $year eq "1969"` selected ~/if`>1969</option>
+						<option value="1968" ~if $year eq "1968"` selected ~/if`>1968</option>
+						<option value="1967" ~if $year eq "1967"` selected ~/if`>1967</option>
+						<option value="1966" ~if $year eq "1966"` selected ~/if`>1966</option>
+						<option value="1965" ~if $year eq "1965"` selected ~/if`>1965</option>
+						<option value="1964" ~if $year eq "1964"` selected ~/if`>1964</option>
+						<option value="1963" ~if $year eq "1963"` selected ~/if`>1963</option>
+						<option value="1962" ~if $year eq "1962"` selected ~/if`>1962</option>
+						<option value="1961" ~if $year eq "1961"` selected ~/if`>1961</option>
+						<option value="1960" ~if $year eq "1960"` selected ~/if`>1960</option>
+						<option value="1959" ~if $year eq "1959"` selected ~/if`>1959</option>
+						<option value="1958" ~if $year eq "1958"` selected ~/if`>1958</option>
+						<option value="1957" ~if $year eq "1957"` selected ~/if`>1957</option>
+						<option value="1956" ~if $year eq "1956"` selected ~/if`>1956</option>
+						<option value="1955" ~if $year eq "1955"` selected ~/if`>1955</option>
+						<option value="1954" ~if $year eq "1954"` selected ~/if`>1954</option>
+						<option value="1953" ~if $year eq "1953"` selected ~/if`>1953</option>
+						<option value="1952" ~if $year eq "1952"` selected ~/if`>1952</option>
+						<option value="1951" ~if $year eq "1951"` selected ~/if`>1951</option>
+						<option value="1950" ~if $year eq "1950"` selected ~/if`>1950</option>
+						<option value="1949" ~if $year eq "1949"` selected ~/if`>1949</option>
+						<option value="1948" ~if $year eq "1948"` selected ~/if`>1948</option>
+						<option value="1947" ~if $year eq "1947"` selected ~/if`>1947</option>
+						<option value="1946" ~if $year eq "1946"` selected ~/if`>1946</option>
+						<option value="1945" ~if $year eq "1945"` selected ~/if`>1945</option>
+						<option value="1944" ~if $year eq "1944"` selected ~/if`>1944</option>
+						<option value="1943" ~if $year eq "1943"` selected ~/if`>1943</option>
+						<option value="1942" ~if $year eq "1942"` selected ~/if`>1942</option>
+						<option value="1941" ~if $year eq "1941"` selected ~/if`>1941</option>
+						<option value="1940" ~if $year eq "1940"` selected ~/if`>1940</option>
+						<option value="1939" ~if $year eq "1939"` selected ~/if`>1939</option>
+						<option value="1938" ~if $year eq "1938"` selected ~/if`>1938</option>
+						<option value="1937" ~if $year eq "1937"` selected ~/if`>1937</option>
+						<option value="1936" ~if $year eq "1936"` selected ~/if`>1936</option>
+						<option value="1935" ~if $year eq "1935"` selected ~/if`>1935</option>
+					</select>
+					<FONT face=Verdana color=#999999 size=1>This cannot be changed later </FONT></span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				~if $check_countryres eq "Y"`
+					<font color= "red">Country of Residence</font>
+				~else`
+					Country of Residence
+				~/if`
+				</td>
+				<td>
+					<select name="Country_Residence" size="1" class="textbox"  style="WIDTH: 170px" onchange="activate_cityres()";>
+						<OPTION value="">Select any one option</OPTION>
+						~$top_country`
+						<OPTION value="">&nbsp;</OPTION>
+						~$country_residence`
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					~if $check_city_residence eq "Y"`
+						<font color="red">Current City of Residence</font>
+					~else`
+						Current City of Residence 
+					~/if`
+				</td>
+				<td>
+					<select name="City_India" size="1" class="textbox" ~if $CITY_USA eq "Y"`disabled ~/if`  onchange="get_code('i','~$india_std_code`')">
+						<option value="" selected>[Select city in India]</option>
+						~$city_india`
+					</select>
+					&nbsp;
+					<select name="City_USA" size="1" class="textbox" ~if $CITY_INDIA eq "Y"`disabled ~/if`>
+						<option value="" selected>[Select state in USA]</option>
+						~$city_usa`
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" height="8"></td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td>
+					<!--<input type="submit" name="from_google" value="Continue to Register" style="font:bold 12px verdana, Arial; background-color:#CC0033; color:#ffffff; cursor:pointer">&nbsp;<font color="#FF0000">Free</font>-->
+					<input type="submit" name="from_google" value="Continue to Register" class="buttonor">&nbsp;<font color="#FF0000">Free</font>
+				</td>
+			</tr>
+			</table>
+			</form>
+		</td>
+	</tr>
+	</table>
+</td>
+</tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td height="8" bgcolor="#BB0221"></td>
+	</tr>
+	<tr>
+		<td height="1" ></td>
+	</tr>
+	<tr>
+		<td height="15" bgcolor="#EF9429"></td>
+	</tr>
+</table>
+<script src="http://www.google-analytics.com/urchin.js" [^] type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-179986-1";
+urchinTracker();
+</script>
+
+</body>
+</html>

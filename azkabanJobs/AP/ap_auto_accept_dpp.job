@@ -1,0 +1,2 @@
+type=command
+command=${php5} ${docRoot}/crontabs/ap_auto_accept_dpp.php

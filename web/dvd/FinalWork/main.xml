@@ -1,0 +1,15 @@
+<subpictures>
+<stream>
+<spu
+     force="yes"
+     start="00:00:00.00"
+     image="1_home_boy.png"
+     select="1_home_boy.png"
+     highlight="1_home_boy.png"
+     autooutline="infer"
+     outlinewidth="6"
+     autoorder="rows" >
+</spu>
+</stream>
+</subpictures>
+

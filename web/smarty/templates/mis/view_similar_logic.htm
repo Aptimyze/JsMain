@@ -1,0 +1,115 @@
+<html>
+<head>
+        <title>Jeevansathi.com - MIS</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+        <link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+        DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+                                                                                                                             
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+~if $search`
+	<br>
+	<table width=760 cellspacing="1" cellpadding='0' ALIGN="CENTER" >
+                <tr width=60% border=1>
+                        <td width=50% class="formhead" align='CENTER' height="23">
+                                <a href="mainpage.php?cid=~$cid`">Click here to go to mainpage</a>
+                        </td>
+                        <td width=50% class="formhead" align='CENTER' height="23">
+                                <a href="logout.php?cid=~$cid`">Logout</a>
+                        </td>
+                </tr>
+        </table>
+        <br>
+        <table width=100% border=0 align="center">
+        <tr class="formhead">
+        <td colspan=100% align="center">&nbsp;Month : ~$searchMonth`  Year : ~$searchYear`</td>
+        </tr>
+        </table>
+        <br>
+         <table width="150%" align="center" border=0 cellspacing=2 cellpadding=5>
+        <tr class="label" align="center">
+        <td align="center" width=6%>&nbsp;Day</td>
+        ~foreach from=$monthDaysArray item=v`
+        <td align="center">&nbsp;~$v`</td>
+        ~/foreach`
+         <td align="center">&nbsp;Total</td>
+        </tr>
+	~foreach from=$searchTypeArray key=k item=v`
+	<tr class="fieldsnew" align="center">
+		<td class="label" align="center">~$v`</td>
+		~foreach from=$monthDaysArray item=l`
+		<td align="center">~$table[$k][$l]`</td>
+		~/foreach`
+		<td align="center">~$table[$k].monthtotal`</td>
+	</tr>
+	~/foreach`
+	<tr class="label" align="center">
+	<td align="center">Day Wise Total</td>
+		~foreach from=$monthDaysArray item=k`
+		<td align="center">~$table[$k].daytotal`</td>
+		~/foreach`
+		<td align="center">~$table.grandtotal`</td>
+	</tr>
+	</table>
+	<br><br>
+
+~else`
+<form action="view_similar_logic.php" method="post">
+         <table width=50% border=0 align="center" cellpadding=5>
+        <tr align="center">
+        <td align="center">
+        Month:
+        </td>
+        <td align="center">
+                <select name="monthEntered">
+                        ~foreach from=$monthArray key=k item=v`
+                        ~if $k!=$todMonth`
+                        <option value=~$k`>~$v`</option>
+                        ~else`
+                        <option value=~$k` selected="selected">~$v`</option>
+                        ~/if`
+                        ~/foreach`
+                </select>
+        </td>
+	</tr>
+        <tr align="center">
+        <td align="center">
+        Year:
+        </td>
+        <td align="center">
+                <select name="yearEntered">
+                        ~section name=formYearLoop loop=$yearArray`
+                        ~if $yearArray[formYearLoop]!=$todYear`
+                        <option value=~$yearArray[formYearLoop]`>~$yearArray[formYearLoop]`</option>
+                        ~else`
+                        <option value=~$yearArray[formYearLoop]` selected="selected">~$yearArray[formYearLoop]`</option>
+                        ~/if`
+                        ~/section`
+                </select>
+        </td>
+        </tr>
+
+
+        <tr align="center">
+        <td colspan="2" align="center">
+       <input type="hidden" name="cid" value=~$cid`></input>
+        <input type="submit" name="CMDGo" value="GO!"></input>
+        </td>
+        </tr>
+        </table>
+</form>
+~/if`
+</body>
+</html>

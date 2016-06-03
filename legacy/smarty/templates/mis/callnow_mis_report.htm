@@ -1,0 +1,136 @@
+<html>
+	<title>Matri Profile MIS</title>
+	<head>
+		<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+	</head>
+	<body>
+		<table width="50%" align="center" cellpadding="4" cellspacing="4" border="0">
+			<tr>
+				<td align="center"><img src="../profile/images/logo_1.gif" width="192" height="65"></td>
+			</tr>
+		</table>
+		<br>
+
+	       	<table width=760 cellspacing="1" cellpadding='0' ALIGN="CENTER" >
+	           <tr width=100% border=1>
+	            <td width=30% class="formhead" height="23" align="center"><font><b>Welcome </b></font></td>
+	         <td width=30% class="formhead" align='CENTER' height="23">
+	            <a href="mainpage.php?cid=~$cid`">Click here to go to mainpage</a>
+	            </td>
+	            <td width=30% class="formhead" align='CENTER' height="23">
+	             <a href="/jsadmin/logout.php?cid=~$cid`">Logout</a>
+	            </td>
+	           </tr>
+	          </table>
+
+		~if $RESULT`
+			<table width="50%" align="center" cellpadding="4" cellspacing="4" border="0">
+				<tr class="formhead" align="center">
+					<td>Callnow MIS for the month of ~$month`/~$year`</td>
+				</tr>
+			</table>
+			<table width="100%" cellpadding="4" cellspacing="4" border="0" align="center">
+
+                                <tr class="label" align="center">
+                                        <td>
+					<a href="callnow_mis_report.php?gender=M&year=~$year`&month=~$month`&cid=~$cid`&submit=1">Male Call Initiators</a>
+					&nbsp;&nbsp;
+					<a href="callnow_mis_report.php?gender=F&year=~$year`&month=~$month`&cid=~$cid`&submit=1"> Female Call Initiators </a>
+					&nbsp;&nbsp;
+					<a href="callnow_mis_report.php?gender=&year=~$year`&month=~$month`&cid=~$cid`&submit=1">All</a>
+					</td>
+                                </tr>
+				<tr class="label" align="center">
+					<td>Day</td>
+					~section name=dd loop=$ddarr`
+						<td>~$ddarr[dd]`</td>
+					~/section`
+					<td>Total</td>
+				</tr>
+				~if $NO_DATA`
+					<tr align="center">
+						<td class="fieldsnew" colspan="100%">No data available</td>
+					</tr>
+				~else`
+					<tr align="center">
+						<td class="label">Unique Call Initiators
+						~if $gender eq 'M'`
+							(Male)
+						~elseif $gender eq 'F'`	
+							(Female)
+						~else`
+							(All)			
+						~/if`
+						</td>
+						~section name=dd loop=$ddarr`
+							<td class="fieldsnew">~$caller[dd]`</td>
+						~/section`
+						<td class="fieldsnew">~$total.CALLER`</td>
+					</tr>
+                                        <tr align="center">
+                                                <td class="label">Unique Call Receivers(Received calls)</td>
+                                                ~section name=dd loop=$ddarr`
+                                                        <td class="fieldsnew">~$receiver_success[dd]`</td>
+                                                ~/section`
+                                                <td class="fieldsnew">~$total.RECEIVER_SUCCESS`</td>
+                                        </tr>
+                                        <tr align="center">
+                                                <td class="label">Unique Call Receivers(Missed/Canceled/Unpatched Calls)</td>
+                                                ~section name=dd loop=$ddarr`
+                                                        <td class="fieldsnew">~$receiver_missed[dd]`</td>
+                                                ~/section`
+                                                <td class="fieldsnew">~$total.RECEIVER_MISSED`</td>
+                                        </tr>
+                                        <tr align="center">
+                                                <td class="label">Unique Phone Numbers(Caller) </td>
+                                                ~section name=dd loop=$ddarr`
+                                                        <td class="fieldsnew">~$caller_phone_number[dd]`</td>
+                                                ~/section`
+                                                <td class="fieldsnew">~$total.CALLER_PHONE_NUMBER`</td>
+                                        </tr>
+				~/if`
+			</table>
+			<br>
+			<p align="center"><font size="1">Note : These numbers are taken from the calls made using IVR Callnow feature .</font>
+		~else`
+			<table width="50%" align="center" cellpadding="4" cellspacing="4" border="0">
+				<tr class="formhead" align="center">
+					<td>Callnow MIS</td>
+				</tr>
+			</table>
+			<form name="form1" method="post" action="callnow_mis_report.php">
+			<input type="hidden" name="cid" value="~$cid`">
+			<table width="30%" cellpadding="4" cellspacing="4" border="0" align="center">
+				<tr class="formhead" align="center">
+					<td colspan="2">Select Month/Year</td>
+				</tr>
+				<tr class="label" align="center">
+					<td>Month</td>
+					<td>Year</td>
+				</tr>
+				<tr class="fieldsnew" align="center">
+					<td>
+						<select name="month" class="textboxes1">
+							~section name=next loop=$mmarr`
+								<option value="~$mmarr[next]`" ~if $mmarr[next] eq $curmonth` selected ~/if`>~$mmarr[next]`</option>
+							~/section`
+						</select>
+					</td>
+					<td>
+						<select name="year" class="textboxes1">
+							~section name=next loop=$yyarr`
+								<option value="~$yyarr[next]`" ~if $yyarr[next] eq $curyear` selected ~/if`>~$yyarr[next]`</option>
+							~/section`
+						</select>
+					</td>
+				</tr>
+				<tr class="fieldsnew" align="center">
+					<td colspan="2">
+						<input type="submit" name="submit" value="Go" class="buttons1">
+					</td>
+				</tr>
+			</table>
+			</form>
+		~/if`
+	</body>
+</html>

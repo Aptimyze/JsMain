@@ -1,0 +1,15 @@
+<subpictures>
+<stream>
+<spu
+     force="yes"
+     start="00:00:00.00"
+     select="png/help.png"
+     highlight="png/help.png"
+     autooutline="infer"
+     outlinewidth="6"
+     autoorder="rows" >
+</spu>
+</stream>
+</subpictures>
+
+

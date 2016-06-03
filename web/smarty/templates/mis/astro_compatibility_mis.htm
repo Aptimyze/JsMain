@@ -1,0 +1,138 @@
+<html>
+	<head>
+		<title>Astro Compatibility Revenue MIS</title>
+		<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+	</head>
+	<body>
+		<table width="80%" cellpadding="4" cellspacing="4" border="0" align="center">
+		<tr align="center">
+			<td><img src="../profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+		</tr>
+		~if $RESULT`
+			<table width="80%" cellpadding="4" cellspacing="4" border="0" align="center">
+				<tr class="formhead" align="center">
+					<td>
+						Astro Compatibility Revenue MIS for 
+						~if $type eq 'D'`
+							~$month` / 
+						~/if`
+						~$year`
+					</td>
+				</tr>
+				<tr class="fieldsnew" align="center">
+					<td colspan="33">Total Amount (Total Count)</td>
+				</tr>
+			</table>
+			<br>
+			<table width="100%" cellpadding="4" cellspacing="4" border="0" align="center">
+				<tr class="label" align="center">
+					<td>Day</td>
+					~section name=dd loop=$arr`
+						<td>~$arr[dd]`</td>
+					~/section`
+					<td>Total</td>
+				</tr>
+				~section name=duration loop=$service_durations`
+					<tr align="center">
+						<td class="label">~$service_durations[duration]`</td>
+						~section name=dd loop=$arr`
+							<td class="fieldsnew">
+								~if $astro_amount[duration][dd]`
+									~$astro_amount[duration][dd]`
+									(~$astro_count[duration][dd]`)
+								~/if`
+							</td>
+						~/section`
+						<td class="label">
+							~if $astro_amount_total[duration]`
+								~$astro_amount_total[duration]`
+								(~$astro_count_total[duration]`)
+							~/if`
+						</td>
+					</tr>
+				~/section`
+				<tr align="center">
+					<td class="label">Total</td>
+					~section name=dd loop=$arr`
+						<td class="label">
+							~if $total_astro_amount[dd]`
+								~$total_astro_amount[dd]`
+								(~$total_astro_count[dd]`)
+							~/if`
+						</td>
+					~/section`
+					<td class="label">
+						~if $total_astro_amount_overall`
+							~$total_astro_amount_overall`
+							(~$total_astro_count_overall`)
+						~/if`
+					</td>
+				</tr>
+				<tr align="center">
+					<td class="label">Total (without tax)</td>
+					~section name=dd loop=$arr`
+						<td class="label">~$total_astro_amount_net_off_tax[dd]`</td>
+					~/section`
+					<td class="label">~$total_astro_amount_overall_net_off_tax`</td>
+				</tr>
+				<tr align="center">
+					<td class="label">Match-astro Share</td>
+					~section name=dd loop=$arr`
+						<td class="label">~$match_astro_share[dd]`</td>
+					~/section`
+					<td class="label">~$match_astro_share_overall`</td>
+				</tr>
+			</table>
+		~else`
+			<form method="post" action="astro_compatibility_mis.php">
+			<input type="hidden" name="cid" value="~$cid`">
+			<table width="30%" cellpadding="4" cellspacing="4" border="0" align="center">
+				<tr class="formhead" align="center">
+					<td colspan="3">Astro Compatibility MIS</td>
+				</tr>
+				<tr class="formhead" align="center">
+					<td>&nbsp;</td>
+					<td>Month</td>
+					<td>Year</td>
+				</tr>
+				<tr class="fieldsnew" align="center">
+					<td>
+						<input type="radio" name="type" value="D"checked>Daywise
+					</td>
+					<td>
+						<select name="month">
+							~section name=next loop=$mmarr`
+								<option value="~$mmarr[next]`">~$mmarr[next]`</option>
+							~/section`
+						</select>
+					</td>
+					<td>
+						<select name="dyear">
+							~section name=next loop=$yyarr`
+								<option value="~$yyarr[next]`">~$yyarr[next]`</option>
+							~/section`
+						</select>
+					</td>
+				</tr>
+				<tr class="fieldsnew" align="center">
+					<td>
+						<input type="radio" name="type" value="M">Month-wise
+					</td>
+					<td colspan="2">
+						<select name="myear">
+							~section name=next loop=$yyarr`
+								<option value="~$yyarr[next]`">~$yyarr[next]`</option>
+							~/section`
+						</select>
+					</td>
+				</tr>
+				<tr class="fieldsnew" align="center">
+					<td colspan="3">
+						<input type="submit" name="submit" value="Go" class="buttons1">
+					</td>
+				</tr>
+			</table>
+			</form>
+		~/if`
+	</body>
+</html>

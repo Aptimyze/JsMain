@@ -1,0 +1,3 @@
+all:
+  kidProfileReport:
+    enable_login:  off

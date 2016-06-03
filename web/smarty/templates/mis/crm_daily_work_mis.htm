@@ -1,0 +1,154 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br><br>
+~if $flag eq '1'`
+<table align=center width=20%>
+<tr>
+<td class=fieldsnew>
+<span class=red>Color Red - Hot</span><br>
+<span class=orange>Color Orange - Warm</span><br>
+<span class=blue>Color Blue - Cold</span><br>
+<span class=green>Color Green - Could Not Contact</span><br>
+Color Black - Not Handled<br>
+<span class=red1>Color Red1 - Assigned</span><br>
+<span class=gray1>Color Gray - Follow</span><br>
+<span class=blue1>Color Blue1 - Payment Failed</span><br>
+<span class=purple>Color Purple - Carry Forward</span>
+</td>
+</tr>
+</table>
+<br>
+	<table width=100% align=center cellpadding=4 cellspacing=3>
+        <tr class=formhead>
+                <td width=4% align=center>Branch/Executive</td>
+		~section name=dd loop=$ddarr`
+			<td width=3% align=center>~$ddarr[dd]`</td>
+		~/section`
+                <td width=4% align=center>Total</td>
+        </tr>
+	~if $BRANCH eq 'Y'`
+        ~section name=brn loop=$brancharr`
+                <tr class=formhead>
+                        <td class=blue align=center>~$brancharr[brn]`</td>
+                        <td colspan=100%>&nbsp;</td>
+                </tr>
+                ~section name=op loop=$operatorarr[brn]`
+                        <tr class=fieldsnew>
+                                <td class=label align=center>~$operatorarr[brn][op]`</td>
+                                ~section name=dd loop=$ddarr`
+                                        <td align=center><span class=red>~$hcnt[brn][op][dd]`</span><br><span class=orange>~$wcnt[brn][op][dd]`</span><br><span class=blue>~$ccnt[brn][op][dd]`</span><br><span class=green>~$ncnt[brn][op][dd]`</span><br>~$ecnt[brn][op][dd]`<br><span class=red1>~$assign_cnt[brn][op][dd]`</span><br><span class=gray1>~$follow_cnt[brn][op][dd]`</span><br><span class=blue1>~$payment_cnt[brn][op][dd]`</span><br><span class=purple>~$carry_cnt[brn][op][dd]`</span></td>
+                                ~/section`
+<!--				<td align=center class=label>&nbsp;~$tota[brn][op]`</td> -->
+				<td align=center class=label>&nbsp;</td>
+                        </tr>
+		<tr class=label>
+			<td class=label align=center>&nbsp;</td>
+			~section name=dd loop=$ddarr`
+				<td align=center>~$totb[brn][op][dd]`</td>
+			~/section`
+			<td align=center class=red>&nbsp;</td>
+		</tr>
+                ~/section`
+<!--		<tr class=label>
+			<td class=label align=center>&nbsp;</td>
+			~section name=dd loop=$ddarr`
+				<td align=center>~$totb[brn][dd]`</td>
+			~/section`
+			<td align=center class=red>~$totall[brn]`</td>
+		</tr>-->
+        ~/section`
+	~else`
+		<tr class=label>
+		<td colspan=100% class=red align=center>No records to show</td> 
+		</tr>
+	~/if`
+        </table>
+~else`
+        <form method=post action="crm_daily_work_mis.php">
+        <table width=80% border=0 align="center" cellpadding=5>
+<!--
+        <tr>
+        <td>&nbsp;&nbsp;&nbsp;
+        ~if $VIEWALL eq 'Y'`
+                Branch :
+                <select name="branch">
+                        <option value="ALL">ALL</option>
+                ~section name=brn loop=$brancharr`
+                        <option value="~$brancharr[brn]`">~$brancharr[brn]`</option>
+                ~/section`
+                </select>
+        ~/if`
+        </td>
+        </tr>
+-->
+        <tr>
+        <td>&nbsp;&nbsp;&nbsp;<input name="vtype" type="radio" value='M' checked>&nbsp;Month Wise</td>
+        <td>
+        <select name="mm">
+        ~section name=mon loop=$mmarr`
+                <option value=~$mmarr[mon]`>~$mmarr[mon]`</option>
+        ~/section`
+        </select> -
+        <select name="yy">
+        ~section name=yr loop=$yyarr`
+                <option value=~$yyarr[yr]`>~$yyarr[yr]`</option>
+        ~/section`
+        </select>&nbsp;Month - Year
+        </td>
+        </tr>
+<!--
+        <tr>
+        <td><br><br>&nbsp;&nbsp;&nbsp;<input name="vtype" type="radio" value='D'> Day Wise <br><br></td>
+        <td>
+        <select name="day">
+        ~section name=dd loop=$ddarr`
+                <option value=~$ddarr[dd]`>~$ddarr[dd]`</option>
+        ~/section`
+        </select> -
+        <select name="dmonth">
+        ~section name=mon loop=$mmarr`
+                <option value=~$mmarr[mon]`>~$mmarr[mon]`</option>
+        ~/section`
+        </select> -
+        <select name="dyear">
+        ~section name=yr loop=$yyarr`
+                <option value=~$yyarr[yr]`>~$yyarr[yr]`</option>
+        ~/section`
+        </select>&nbsp;Day - Month - Year
+        </td>
+        </tr>
+-->
+        <tr>
+        <input type="hidden" name="cid" value=~$cid`>
+        ~if $ONLYBRANCH eq 'Y'`
+                <input type="hidden" name="branch" value=~$branch`>
+        ~/if`
+        <td align="right"><input type="submit" name="CMDGo" value="     Go     "></td>
+        </tr>
+        </table>
+        </form>
+~/if`
+<br><br>
+</body>
+</html>

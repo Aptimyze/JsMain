@@ -1,0 +1,272 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br><br>
+~if $flag eq '1'`
+	~$NET_OFF_MSG`
+	<table width="100%" align="center" border=0 cellspacing=4 cellpadding=5>
+	<tr class="formhead">
+	<td colspan=100% align="center">&nbsp;~if $day` Day - ~/if`Month - Year : ~if $day`~$day`-~/if`~$month`-~$year`</td>
+	</tr>
+	</table>
+	<br>
+	<table width="100%" align="center" border=0 cellspacing=4 cellpadding=5>
+	<tr class="label">
+	<td width=10% align="center" class=green>&nbsp;Total Count</td>
+	<td width=10% align="center" class=green>&nbsp;Male</td>
+	<td width=10% align="center" class=green>&nbsp;Female</td>
+	<td width=10% align="center" class=green>&nbsp;Male Percentage</td>
+	<td width=10% align="center" class=green>&nbsp;Female Percentage</td>
+	<td width=10% align="center" class=blue>&nbsp;Total Amount</td>
+	<td width=10% align="center" class=blue>&nbsp;Total Amount (without tax)</td>
+	<td width=10% align="center" class=blue>&nbsp;Male</td>
+	<td width=10% align="center" class=blue>&nbsp;Male (without tax)</td>
+	<td width=10% align="center" class=blue>&nbsp;Female</td>
+	<td width=10% align="center" class=blue>&nbsp;Female (without tax)</td>
+	<td width=10% align="center" class=blue>&nbsp;Male Percentage</td>
+	<td width=10% align="center" class=blue>&nbsp;Female Percentage</td>
+	</tr>
+	<tr class="fieldsnew">
+	<td width=10% align="center">&nbsp;~$totcnt`</td>
+	<td width=10% align="center">&nbsp;~$totcntm`</td>
+	<td width=10% align="center">&nbsp;~$totcntf`</td>
+	<td width=10% align="center">&nbsp;~$percntm`</td>
+	<td width=10% align="center">&nbsp;~$percntf`</td>
+	<td width=10% align="center">&nbsp;~$totamt`</td>
+	<td width=10% align="center">&nbsp;~$totamt_net_off_tax_amount`</td>
+	<td width=10% align="center">&nbsp;~$totamtm`</td>
+	<td width=10% align="center">&nbsp;~$totamtm_net_off_tax_amount`</td>
+	<td width=10% align="center">&nbsp;~$totamtf`</td>
+	<td width=10% align="center">&nbsp;~$totamtf_net_off_tax_amount`</td>
+	<td width=10% align="center">&nbsp;~$peramtm`</td>
+	<td width=10% align="center">&nbsp;~$peramtf`</td>
+	</tr>
+	</table>
+
+	<br>
+	<table width="100%" align="center" border=0 cellspacing=4 cellpadding=5>
+	<tr class="label">
+	<td width=10% align="center" class=blue>&nbsp;Referred by</td>
+	<td width=10% align="center" class=green>&nbsp;Total Male Count</td>
+	<td width=10% align="center" class=green>&nbsp;Total Female Count</td>
+	<td width=10% align="center" class=green>&nbsp;Male Count Percentage</td>
+	<td width=10% align="center" class=green>&nbsp;Female Count Percentage</td>
+	<td width=10% align="center" class=blue>&nbsp;Total Male Amount</td>
+	<td width=10% align="center" class=blue>&nbsp;Total Male Amount (without tax)</td>
+	<td width=10% align="center" class=blue>&nbsp;Total Female Amount</td>
+	<td width=10% align="center" class=blue>&nbsp;Total Female Amount (without tax)</td>
+	<td width=10% align="center" class=blue>&nbsp;Male Amount Percentage</td>
+	<td width=10% align="center" class=blue>&nbsp;Female Amount Percentage</td>
+	</tr>
+	~section name=gr loop=$RELATIONARR`
+	<tr class="fieldsnew">
+	<td width=10% align=center>&nbsp;~$RELATIONARR[gr]`</td>
+	<td width=10% align="center">&nbsp;~$relcntm[gr]`</td>
+	<td width=10% align="center">&nbsp;~$relcntf[gr]`</td>
+	<td width=10% align="center">&nbsp;~$relpercntm[gr]`</td>
+	<td width=10% align="center">&nbsp;~$relpercntf[gr]`</td>
+	<td width=10% align="center">&nbsp;~$relamtm[gr]`</td>
+	<td width=10% align="center">&nbsp;~$relamtm_net_off_tax_amount[gr]`</td>
+	<td width=10% align="center">&nbsp;~$relamtf[gr]`</td>
+	<td width=10% align="center">&nbsp;~$relamtf_net_off_tax_amount[gr]`</td>
+	<td width=10% align="center">&nbsp;~$relperamtm[gr]`</td>
+	<td width=10% align="center">&nbsp;~$relperamtf[gr]`</td>
+	</tr>
+	~/section`
+	<tr class="label">
+	<td width=10% align="center">&nbsp;Total</td>
+	<td width=10% align="center">&nbsp;~$totcntm`</td>
+	<td width=10% align="center">&nbsp;~$totcntf`</td>
+	<td width=10% align="center">&nbsp;</td>
+	<td width=10% align="center">&nbsp;</td>
+	<td width=10% align="center">&nbsp;~$totamtm`</td>
+	<td width=10% align="center">&nbsp;~$totamtm_net_off_tax_amount`</td>
+	<td width=10% align="center">&nbsp;~$totamtf`</td>
+	<td width=10% align="center">&nbsp;~$totamtf_net_off_tax_amount`</td>
+	<td width=10% align="center">&nbsp;</td>
+	<td width=10% align="center">&nbsp;</td>
+	</tr>
+	</table>
+
+	<br>
+	<table width="100%" align="center" border=0 cellspacing=4 cellpadding=5>
+	<tr class="formhead">
+	<td align="center" colspan=100% class=blue>&nbsp;DOL - RS Payments</td>
+	</tr>
+	<tr class="label">
+	<td align="center" class=green>&nbsp;RS Count</td>
+	<td align="center" class=green>&nbsp;DOL Count</td>
+	<td align="center" class=green>&nbsp;RS Count Percentage</td>
+	<td align="center" class=green>&nbsp;DOL Count Percentage</td>
+	<td align="center" class=blue>&nbsp;RS Amount</td>
+	<td align="center" class=blue>&nbsp;RS Amount (without tax)</td>
+	<td align="center" class=blue>&nbsp;DOL Amount</td>
+	<td align="center" class=blue>&nbsp;DOL Amount (without tax)</td>
+	<td align="center" class=blue>&nbsp;RS Amount Percentage</td>
+	<td align="center" class=blue>&nbsp;DOL Amount Percentage</td>
+	</tr>
+	<tr class="fieldsnew">
+	<td align="center" >&nbsp;~$totcnti`</td>
+	<td align="center" >&nbsp;~$totcntn`</td>
+	<td align="center" >&nbsp;~$percnti`</td>
+	<td align="center" >&nbsp;~$percntn`</td>
+	<td align="center" >&nbsp;~$totamti`</td>
+	<td align="center" >&nbsp;~$totamti_net_off_tax_amount`</td>
+	<td align="center" >&nbsp;~$totamtn`</td>
+	<td align="center" >&nbsp;~$totamtn_net_off_tax_amount`</td>
+	<td align="center" >&nbsp;~$peramti`</td>
+	<td align="center" >&nbsp;~$peramtn`</td>
+	</tr>
+	</table>
+
+	<br>
+	<table width="100%" align="center" border=0 cellspacing=4 cellpadding=5>
+	<tr class="formhead">
+	<td align=center colspan=100% class=blue>&nbsp;Top 40 Indian Cities</td>
+	</tr>
+	<tr class="label">
+	<td align=center width=20%>&nbsp;Indian Cities</td>
+	<td align=center width=20%>&nbsp;Total Count</td>
+	<td align=center width=20%>&nbsp;Total Amount</td>
+	<td align=center width=20%>&nbsp;Total Amount (without tax)</td>
+	<td align=center width=20%>&nbsp;Count Percentage</td>
+	<td align=center width=20%>&nbsp;Amount Percentage</td>
+	</tr>
+	~section name=ind loop=$icityarr`
+	<tr class="fieldsnew">
+	<td align=center class=label>&nbsp;~$icityarr[ind]`</td>
+	<td align=center>&nbsp;~$ind[ind].totcnt`</td>
+	<td align=center>&nbsp;~$ind[ind].totamt`</td>
+	<td align=center>&nbsp;~$ind[ind].totamt_net_off_tax_amount`</td>
+	<td align=center>&nbsp;~$ind[ind].percnt`</td>
+	<td align=center>&nbsp;~$ind[ind].peramt`</td>
+	</tr>
+	~/section`
+	<tr class="label">
+	<td align=center>&nbsp;Total</td>
+	<td align=center>&nbsp;~$indtotcnt`</td>
+	<td align=center>&nbsp;~$indtotamt`</td>
+	<td align=center>&nbsp;~$indtotamt_net_off_tax_amount`</td>
+	<td align=center>&nbsp;~$indpercnt`</td>
+	<td align=center>&nbsp;~$indperamt`</td>
+	</tr>
+	</table>
+
+	<br>
+	<table width="100%" align="center" border=0 cellspacing=4 cellpadding=5>
+	<tr class="formhead">
+	<td align=center colspan=100% class=blue>&nbsp;Top 10 Countries (Apart from India)</td>
+	</tr>
+	<tr class="label">
+	<td align=center width=20%>&nbsp;Countries</td>
+	<td align=center width=20%>&nbsp;Total Count</td>
+	<td align=center width=20%>&nbsp;Total Amount</td>
+	<td align=center width=20%>&nbsp;Total Amount (without tax)</td>
+	<td align=center width=20%>&nbsp;Count Percentage</td>
+	<td align=center width=20%>&nbsp;Amount Percentage</td>
+	</tr>
+	~section name=ctry loop=$ctryarr`
+	<tr class="fieldsnew">
+	<td align=center class=label>&nbsp;~$ctryarr[ctry]`</td>
+	<td align=center>&nbsp;~$ctry[ctry].totcnt`</td>
+	<td align=center>&nbsp;~$ctry[ctry].totamt`</td>
+	<td align=center>&nbsp;~$ctry[ctry].totamt_net_off_tax_amount`</td>
+	<td align=center>&nbsp;~$ctry[ctry].percnt`</td>
+	<td align=center>&nbsp;~$ctry[ctry].peramt`</td>
+	</tr>
+	~/section`
+	<tr class="label">
+	<td align=center>&nbsp;Total</td>
+	<td align=center>&nbsp;~$ctrtotcnt`</td>
+	<td align=center>&nbsp;~$ctrtotamt`</td>
+	<td align=center>&nbsp;~$ctrtotamt_net_off_tax_amount`</td>
+	<td align=center>&nbsp;~$ctrpercnt`</td>
+	<td align=center>&nbsp;~$ctrperamt`</td>
+	</tr>
+	</table>
+
+	<br>
+	<table width="100%" align="center" border=0 cellspacing=4 cellpadding=5>
+	<tr class="formhead">
+	<td align=center colspan=100% class=blue>&nbsp;Top 10 Communities</td>
+	</tr>
+	<tr class="label">
+	<td align=center width=20%>&nbsp;Communities</td>
+	<td align=center width=20%>&nbsp;Total Count</td>
+	<td align=center width=20%>&nbsp;Total Amount</td>
+	<td align=center width=20%>&nbsp;Total Amount (without tax)</td>
+	<td align=center width=20%>&nbsp;Count Percentage</td>
+	<td align=center width=20%>&nbsp;Amount Percentage</td>
+	</tr>
+      ~foreach from=$communityArr item=cc key=k`
+	<tr class="fieldsnew">
+	<td align=center class=label>&nbsp;~$cc.MTONGUE`</td>
+	<td align=center>&nbsp;~$cc.cnt`</td>
+	<td align=center>&nbsp;~$cc.amt`</td>
+	<td align=center>&nbsp;~$cc.net_off_tax_amt`</td>
+	<td align=center>&nbsp;~$cc.percnt`</td>
+	<td align=center>&nbsp;~$cc.peramt`</td>
+	</tr>
+	~/foreach`
+	<tr class="label">
+	<td align=center>&nbsp;Total</td>
+	<td align=center>&nbsp;~$totcommArr.totcnt`</td>
+	<td align=center>&nbsp;~$totcommArr.totamt`</td>
+	<td align=center>&nbsp;~$totcommArr.net_off_tax_totamt`</td>
+	<td align=center>&nbsp;~$totcommArr.totpercnt`</td>
+	<td align=center>&nbsp;~$totcommArr.totperamt`</td>
+	</tr>
+	</table>
+
+~else`
+	<form method=post action="paid_n_percentages.php">
+	<table width=80% border=0 align="center" cellpadding=5>
+	<tr>
+	<td >
+	<select name="day">
+                <option value="">--Select--</option>
+        ~section name=dd loop=$ddarr`
+                <option value=~$ddarr[dd]`>~$ddarr[dd]`</option>
+        ~/section`
+        </select> - 
+	<select name="month">
+        ~section name=mon loop=$mmarr`
+                <option value=~$mmarr[mon]`>~$mmarr[mon]`</option>
+        ~/section`
+        </select> - 
+	<select name="year">
+        ~section name=yr loop=$yyarr`
+                <option value=~$yyarr[yr]`>~$yyarr[yr]`</option>
+        ~/section`
+        </select>&nbsp;Month - Year
+	</td>
+	</tr>
+	<tr>
+	<input type="hidden" name="cid" value=~$cid`>
+	<td ><input type="submit" name="CMDGo" value="     Go     "></td>
+	</tr>
+	</table>
+	</form>
+~/if`
+</body>
+</html>

@@ -1,0 +1,22 @@
+.fl{float:left;}
+.fr{float:right;}
+.pos_abs1{position:absolute;}
+.pos_rltv1{position:relative;}
+.p_tl_01{top:0; left:0;}
+.p_tr_01{top:0; right:0;}
+.p_bl_01{bottom:0; left:0;}
+.p_br_01{bottom:0; right:0;}
+.sprte_callhelp{background:url(IMG_URL/profile/images/call_help_sprte.png) no-repeat;}
+.main_form_cont{border:2px solid #f15e18; color:#ffffff;}
+.h_w_61{height:6px; width:6px; font-size:2px;}
+.h_w_51{height:5px; width:5px; font-size:2px;}
+.d_t_l1{background-position:0 0; margin:-2px 0 0 -2px;}
+.d_t_r1{background-position:-7px 0;margin:-2px -2px 0 0;}
+.d_b_l1{background-position:0 -7px;margin:0 0 -2px -2px; _margin:0 0 -3px -2px;}
+.d_b_r1{background-position:-7px -7px;margin:0 -2px -2px 0; _margin:0 -2px -3px 0;}
+.b{font-weight:bold;}
+.fst{ font-family:Arial, Helvetica, sans-serif;}
+.call-left{ float:left;}
+.call-left1{ font-size:14px; color:#666666;padding:15px 2px 3px 8px;width:209px;}
+.call-left1a{ font-size:13px; color:#666666;padding:15px 5px 3px 8px;}
+.call-left3{font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#cd3705;padding:12px 5px 3px 8px; font-weight:bold; line-height:20px; background-image:url(IMG_URL/profile/images/back.gif); background-repeat:no-repeat;}

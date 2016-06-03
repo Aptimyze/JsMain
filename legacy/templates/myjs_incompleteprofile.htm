@@ -1,0 +1,731 @@
+<link href="css/~$common_css`" type="text/css" rel="stylesheet">
+<div class="pink" style="width:700px; height:auto;">
+	<div class="topbg"> 
+  		<div class="lf pd b t12">Complete your profile</div>
+    		<div class="rf pd b t12"><a href="#" onClick="$.colorbox.close();return false;" class="blink">Close [x]</a></div>
+  	</div>
+ 
+ 	<div class="clear"></div>
+  	<div style="padding:6px 5px 10px 10px;width:682px;position:relative;" class="scrollbox2_new"> 
+		<div class="b"><img src="~$IMG_URL`/img_revamp/notification_small.gif" hspace="3" align="absbottom"> Please fill these fields in order to make your profile complete</div>
+		<form  method="post" action="~$SITE_URL`/P/myjs_incompleteprofile.php?checksum=~$checksum`" name="form1">
+			~if !$relation`
+			<div class="spacer1" style="height:10px;"></div>
+			<div class="orange b">Looking for a match for</div>
+			<div id="relationship" class="fl" style="margin:5px 0px">
+				<input type="radio" checked="checked" value="1" name="relationship" style="border:0px"/>Self  
+				<input type="radio" value="4" name="relationship" style="border:0px"/>Relative/Friend 
+				~if $gender eq 'M'`
+				<input type="radio" value="2" name="relationship" style="border:0px"/>Son  
+				<input type="radio" value="3" name="relationship" style="border:0px"/>Brother
+				~else`
+				<input type="radio" value="2" name="relationship" style="border:0px"/>Daughter
+				<input type="radio" value="3" name="relationship" style="border:0px"/>Sister
+				~/if`
+				<input type="radio" value="5" name="relationship" style="border:0px"/>Client-Marriage Bureau
+			</div>
+			~/if`
+
+			<!--
+			~if !$fullname || !$displayname || !$mstatus || !$child || !$country || !$contactNo || !$CITY_RES || !$cityzenship` 
+			~/if` 
+			-->
+
+			<div class="spacer1" style="height:10px;"></div>			
+			<div style="background-image:url(~$IMG_URL`/img_revamp/bg_hr.gif); background-repeat:repeat-x;">&nbsp;</div>
+			<div class="orange b">Basic Information</div>
+
+			~if !$fullname`
+			<div class="spacer1">&nbsp;</div>
+			<div class="row">
+				<div class="r1">Full Name :</div>
+				<div class="r2">
+					<input class="textbox" type="textbox" style="width: 97px;" value="" id="fname_user" name="fname_user" maxlength="127" style="width: 97px;"/>
+					<input class="textbox" type="textbox" style="width: 98px;" value="" id="lname_user" name="lname_user" maxlength="127" style="width: 98px;"/> 
+					<div id="fname_lname_submit_err" style="display:none">
+						<div class="spacer1"> </div>
+						<div class="suberrmsg">
+							<img src="~$IMG_URL`/profile/images/registration_new/alert.gif" style="vertical-align:bottom;"> 
+							<div id="fname_error1" style="display:none">Please type the full name.</div>
+							<div id="fname_error2" style="display:none">Full name cannot contain special characters.</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			~else`
+				 <input type="hidden" value="PRESENT" id="fname_user" name="fname_user">
+				 <input type="hidden" value="PRESENT" id="lname_user" name="lname_user">
+			~/if`
+
+			~if !$displayname`
+			<div class="spacer1">&nbsp;</div>
+			<div class="row">
+				<div class="r1">Display Name :</div>
+				<div class="r2">
+					<input class="textbox" style="width: 204px;" type="textbox" name="username" id="username" maxlength="16"> 
+					<div class="coverhelp">
+						<div id="username_message_ok" style="display: none; width: 100px; position: absolute; left: 2px; top: -12px;">
+							<img src="~$IMG_URL`/img_revamp/registration_new/ajax-loader.gif">
+						</div>
+					</div>
+
+					<div style="display:none;" id="username_message_er" class="suberr">
+					</div>
+
+					<div id="username_submit_err" style="display:none">
+						<div class="spacer1"> </div>
+						<div class="suberrmsg">
+							<img src="~$IMG_URL`/profile/images/registration_new/alert.gif" style="vertical-align:bottom;"> Please enter a display name.
+						</div>
+					</div>
+				</div>
+			</div>
+			~else`
+				<input type="hidden" value="PRESENT" id="username" id="username">
+			~/if`
+
+
+			~if !$mstatus`
+			<div class="spacer1">&nbsp;</div>
+			<div class="row">
+				<div class="r1">Marital Status :</div>
+				<div class="r2" id="mstatus">
+					<!--TEMP-->
+					<input type="hidden" value="" name="mstatus_focus" style="border:0px"/>
+					<!--TEMP-->
+					<input type="radio" value="N" name="mstatus" style="border:0px"/>Never Married  
+					<input type="radio" value="M" name="mstatus" style="border:0px"/>Married  
+					<input type="radio" value="I" name="mstatus" style="border:0px"/>Awating Divorce
+					<input type="radio" value="D" name="mstatus" style="border:0px"/>Divorced
+					<input type="radio" value="W" name="mstatus" style="border:0px"/>Widowed
+					<input type="radio" value="A" name="mstatus" style="border:0px"/>Annulled
+				</div>
+				<div class="clear"></div>
+				<div style="padding-left: 130px; display: block;display:none" class="fl" id="married_down_arrow">
+					<img src="~$IMG_URL`/img_revamp/registration_new/icon_down_errow.gif">
+				</div>
+
+				<div id="mstatus_submit_err" style="display:none">
+					<div class="spacer1"></div>
+					<div class="suberrmsg">
+						<div id="mstatus_error1" style="display:inline;padding-left:157px;">
+							<img src="~$IMG_URL`/profile/images/registration_new/alert.gif" style="vertical-align:bottom;"> Please choose marital status.
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+                        <div class="row" id="married_reason" style="display:none">
+                                <div class="r1"></div>
+                                <div class="r2">
+                                        <div style="width: 500px; font-weight: bold; color: rgb(0, 0, 0);" class="graybox" id="married_reason_text">
+						
+                                        </div>
+                                </div>
+                        </div>
+
+
+			<div class="row" style="display:none" id="mstatus_reason">
+				<div class="r1"></div>
+				<div class="r2">
+					<div style="width:500px;" class="graybox" id="mstatus_details_box">
+						<div id="mstatus_details_error_img" style="display:none;">
+							<img src="~$IMG_URL`/profile/images/registration_new/alert.gif" hspace="3" align="absbottom">
+						</div>
+
+						<span style="font-weight:bold;display:none" id="annueled_reason_label" >
+							Please provide as much details about your annulment as possible
+						</span>
+						<span style="font-weight:bold;display:none" id="awaiting_reason_label" >
+							Please provide status
+						</span>
+						<span style="font-weight:bold;display:none" id="married_reason_label" >
+							Consent
+						</span>
+						<div style="margin:8px 2px 5px 2px; padding:5px; background-color:#FFFFFF;">
+							<div class="row1" id="mstatus_reason_annueled1" style="display:none">
+								<label><span style="color:#ff0000;">*</span> Court which annulled your marriage </label>: 
+								<input type="text" style="width: 100px; height: 14px;" id="court" name="court"/>
+							</div>
+
+							<div class="row1" id="mstatus_reason_annueled2" style="display:none">
+								<label><span style="color:#ff0000;">*</span> Date when it was annulled </label>: 
+								<select class="textbox" size="1" name="mstatus_day">
+									<option value="" selected="">Day</option>
+									~section name=i loop=$loopdate`
+									<option value="~$loopdate[i]`">~$loopdate[i]`</option>
+									~/section`
+								</select>
+		
+								<select class="textbox" size="1" name="mstatus_month">
+									<option value="" selected="">Month</option>
+									<option value="1">Jan</option>
+									<option value="2">Feb</option>
+									<option value="3">Mar</option>
+									<option value="4">Apr</option>
+									<option value="5">May</option>
+									<option value="6">Jun</option>
+									<option value="7">Jul</option>
+									<option value="8">Aug</option>
+									<option value="9">Sept</option>
+									<option value="10">Oct</option>
+									<option value="11">Nov</option>
+									<option value="12">Dec</option>
+								</select>
+	
+								<select class="textbox" size="1" name="mstatus_year">
+									<option value="" selected="">Year</option>
+									~section name=i loop=$loopyear`
+									<option value="~$loopyear[i]`">~$loopyear[i]`</option>
+									~/section`
+								</select>
+							</div>
+
+							<div class="row1" id="mstatus_reason_annueled3" style="display:none">
+								<label>Please mention the reason on which the annulment was pronounced </label>
+								<div style="vertical-align:top;">: 
+									<textarea rows="5" cols="10" style="width:250px; height:40px;"></textarea>
+								</div>
+							</div>
+
+							<div class="row1" id="mstatus_reason_annueled3" style="display:none">
+								<label>Please mention the reason on which the annulment was pronounced </label>
+								<div style="vertical-align:top;">: 
+									<textarea rows="5" cols="10" style="width:250px; height:40px;"></textarea>
+								</div>
+							</div>
+
+							<div class="row1" id="mstatus_reason_awaiting1" style="display:none">
+								<label>Please mention the status </label>
+								<div style="vertical-align:top;">: 
+									<textarea name="mstatus_reason_awaiting" id="mstatus_reason_awaiting" rows="5" cols="10" style="width:250px; height:40px;">Please enter the status of the suit and likely dates for the ruling.</textarea>
+								</div>
+							</div>
+							<div class="row1" id="mstatus_reason_married1" style="display:none">
+								<label>Consent </label>
+								<div style="vertical-align:top;">: 
+									<textarea name="mstatus_reason_married" id="mstatus_reason_married" rows="5" cols="10" style="width:250px; height:40px;">Please let other users know about the consent of your current spouse.</textarea>
+								</div>
+							</div>
+	
+							<div class="sp2"></div>
+						</div>
+						<div class="fl" style="padding-left:180px;">
+							<input type="button" id="mstatus_details_submit" name="mstatus_details_submit" class="gray_btn" value="Submit" />
+						</div>
+						<div class="fr">
+							<span style="color:#ff0000; font-weight:bold">* mandatory fields</span>
+						</div>
+						<div class="sp2"></div>
+					</div>
+
+
+				</div>
+			</div>
+			~else`
+				<input type="hidden" value="PRESENT" name="mstatus" id="mstatus">
+			~/if`
+
+			~if !$child`
+			<div id="have_child_section" style="display:none">
+			<div class="spacer1">&nbsp;</div>
+			<div class="row">
+				<div class="r1">Have Children :</div>
+				<div class="r2">
+					<input type="radio" name="has_children" value="N" checked="checked" style="border:0px"/>No 
+					<input type="radio"  name="has_children" value="YT" style="border:0px"/>Yes, living together
+					<input type="radio"  name="has_children" value="YS" style="border:0px"/>Yes, living separately
+
+					<div style="display:none;" id="has_children_submit_err">
+						<div class="spacer1">&nbsp;</div>
+						<div class="suberrmsg">
+							<img src="~$IMG_URL`/profile/images/registration_new/alert.gif" style="vertical-align: bottom;">&nbsp;Please select have children.
+						</div>
+					</div>
+				</div>
+			</div>
+			</div>
+			~else`
+				<input type="hidden" value="PRESENT" name="has_children" id="has_children">
+			~/if`
+
+			~if !$country || !$contactNo || !$CITY_RES`
+			<div class="spacer1">&nbsp;</div>
+			<div class="row">
+				<div class="r1">Present Location :</div>
+				<div class="r2">
+					<select class="textbox" size="1" style="width:204px;" name="country_residence" id="country_residence">
+						<option value="">Please Select</option>
+						~$COUNTRY_RES`
+					</select>
+
+					<div id="country_residence_submit_err" style="display:none">
+						<div class="spacer1"> </div>
+						<div class="suberrmsg">
+							<img src="~$IMG_URL`/profile/images/registration_new/alert.gif" style="vertical-align:bottom;">Please select a location.
+						</div>
+					</div>
+				</div>
+			</div>
+			~else`
+				<input type="hidden" value="PRESENT" name="country_residence" id="country_residence">
+			~/if`
+
+			~if !$cityzenship`
+			<div id="citizenship_show_hide">
+			<div class="spacer1">&nbsp;</div>
+			<div class="row">
+				<div class="r1">Citizenship  :</div>
+				<div class="r2">
+					<select class="textbox" size="1" name="citizenship" id="citizenship" style="width:204px;">
+						<option value="">Please Select</option>
+						~$CITIZEN`
+					</select> 
+
+					<div id="citizenship_submit_err" style="display:none">
+						<div class="spacer1"> </div>
+						<div class="suberrmsg">
+						      <img src="~$IMG_URL`/profile/images/registration_new/alert.gif" style="vertical-align:bottom;">Please select a citizenship.
+						</div>
+					</div>
+				</div>
+			</div>
+			</div>
+			~else`
+				<input type="hidden" value="PRESENT" name="citizenship" id="citizenship">
+			~/if`
+
+			~if !$country || !$contactNo || !$CITY_RES`
+			<div id="city_res_show_hide">
+				<div class="spacer1"> </div>
+				<div class="row">
+					<div class="r1">City :</div>
+					<div class="r2">
+						<input type="hidden" name="city_residence_selected" value="">
+						<div id="city_arr" style="display:block">
+							<select class="textbox" size="1" name="city_residence" id="city_residence" style="width:204px;">
+								<option value="">Please Select</option>
+							</select>
+						</div>
+
+						<div id="city_residence_submit_err" style="display:none">
+							<div class="spacer1"> </div>
+							<div class="suberrmsg">
+								<img src="~$IMG_URL`/profile/images/registration_new/alert.gif" style="vertical-align:bottom;">Please select a city.
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			~else`
+				<input type="hidden" value="PRESENT" name="city_residence" id="city_residence">
+			~/if`
+
+
+			~if !$country || !$contactNo || !$CITY_RES`
+			<div class="spacer1">&nbsp;</div>
+			<div class="row">
+				<div class="r1">Contact Number :</div>
+				~if $CONTACTNO neq 1`
+					<div class="r2" style="color:#E3373B; display:none" id="contact_number_error">Required atleast one of the below</div>
+					<div class="r2" id="contact_number_noerror">Required atleast one of the below</div>
+			</div>
+				~else`
+					<div style="display:none" id="contact_number_noerror">Required atleast one of the below</div>
+					<div style="display:none" id="contact_number_error">Required atleast one of the below</div>
+
+				~/if`
+			
+			<!--TEST C-->
+			~if $CONTACTNO eq 1 && !$PHONE_RES` 
+			<div style="display:none">
+			<div>
+			~/if`
+
+			~if $CONTACTNO neq 1`
+			<div class="spacer1">&nbsp;</div>
+			<div class="row">
+				<div class="r1"></div>
+			~/if`
+			<!--TEST C-->
+				<div class="r2">Phone No.
+					<input class="textbox disableinput" type="text" maxlength="5" style="width: 30px;" value="" name="country_code" id="country_code" readonly >
+					<input class="ele_gray textbox disableinput" type="text" maxlength="10" style="width: 40px;" value="~if $STD`~$STD`~else`STD~/if`" name="state_code" id="state_code" readonly >
+					<input class="ele_gray textbox" type="text" maxlength="15" style="width:113px;" value="~if $PHONE_RES`~$PHONE_RES`~else`Phone No.~/if`" name="phone"  id="phone"> Of 
+					<select class="ele_gray textbox" size="1" name="phone_number_owner" id="phone_number_owner" style="width:90px;">
+						~if $gender eq 'F'`
+						<option value="1">Bride</option>
+						<option value="3">Parent</option>
+						<option value="4">Daughter</option>
+						<option value="6">Sibling</option>
+						<option value="7">Other</option>
+						~else`
+						<option value="2">Groom</option>
+						<option value="3">Parent</option>
+						<option value="4">Son</option>
+						<option value="6">Sibling</option>
+						<option value="7">Other</option>
+						~/if`
+					</select>
+
+				</div>
+			</div>
+			
+
+			<div class="row">
+				<div class="r1"></div>
+				<div class="r2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; whose name is <input class="ele_gray textbox" type="text" maxlength="15" style="width:100px;" name="phone_owner_name" id="phone_owner_name" value=~$phone_owner_name`>
+				 </div>
+			</div>
+
+			<div class="row">
+				<div class="r1"></div>
+				<div class="r2">
+					<select name="showphone" id="showphone" class="ele_gray textbox" size="1" style="width:280px; margin-left:61px">
+						<option value="" >Select Viewing Option</option>
+						<option value="Y" selected>Show to my accepted contacts/paid members</option>
+						<option value="N">Don't show to anybody</option>
+					</select>
+				</div>
+				<div id="showphone_submit_err" style="display:none">
+					<div class="spacer1"></div>
+					<div class="suberrmsg" style="padding-left:150px">
+						<img src="~$IMG_URL`/profile/images/registration_new/alert.gif" style="vertical-align:bottom;">Please select your phone no. viewing option.
+					</div>
+				</div>
+			</div>
+
+			<!--error-->
+			<div id="country_code_submit_err" style="display:none">
+				<div class="spacer1"> </div>
+				<div class="suberrmsg">
+					<img src="~$IMG_URL`/profile/images/registration_new/alert.gif" style="vertical-align:bottom;">  Please enter country code.
+				</div>
+			</div>
+
+			<div id="state_code_submit_err" style="display:none">
+				<div class="spacer1"> </div>
+				<div class="suberrmsg">
+					<img src="~$IMG_URL`/profile/images/registration_new/alert.gif" style="vertical-align:bottom;"> Please enter state code.
+				</div>
+			</div>
+
+			<div id="phone_submit_err" style="display:none">
+				<div class="spacer1"> </div>
+				<div class="suberrmsg">
+					<div style="padding-left: 150px;">
+						<img src="~$IMG_URL`/profile/images/registration_new/alert.gif" style="vertical-align:bottom;"> 
+						<div id="phone_error1" style="display:inline">Please type in a valid phone number.</div>
+						<div id="phone_error2" style="display:none">Phone number cannot contain special characters. Only numbers are allowed</div>
+						<div id="phone_error3" style="display:none">Phone number should contain atleast 6 digits.</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="phone_owner_name_submit_err" style="display:none">
+				<div class="spacer1"> </div>
+				<div class="suberrmsg">
+					<div style="padding-left: 150px;">
+						<img src="~$IMG_URL`/profile/images/registration_new/alert.gif" style="vertical-align:bottom;"> 
+						<div id="phone_owner_name_error1" style="display:inline">Please enter the phone number owner's name.</div>
+						<div id="phone_owner_name_error2" style="display:none">Phone number owner's name cannot contain special characters.</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="showphone_submit_err" style="display:none">
+				<div class="spacer1"> </div>
+				<div class="suberrmsg">
+					<img src="~$IMG_URL`/profile/images/registration_new/alert.gif" style="vertical-align:bottom;"> Please select your phone no. viewing option.
+				</div>
+			</div>
+			<!--TEST C-->
+			~if $CONTACTNO eq 1 && !$PHONE_RES` 
+			</div>
+			~/if`
+			<!--TEST C-->
+			<!--error-->
+
+
+			<!--TEST CC-->
+			~if $CONTACTNO eq 1 && !$PHONE_MOB` 
+			<div style="display:none">
+			<div>
+			~/if`
+
+			~if $CONTACTNO neq 1`
+			<div class="spacer1">&nbsp;</div>
+			<div class="row">
+				<div class="r1"></div>
+			~/if`
+			<!--TEST CC-->
+				<div class="r2">Mobile No.
+					<input class="textbox disableinput" type="text" maxlength="5" style="width: 30px;" value="" name="country_code_mob" id="country_code_mob" readonly>
+					<input class="ele_gray textbox" type="text" maxlength="11" style="width:160px;" value="~if $PHONE_MOB`~$PHONE_MOB`~else`Mobile No.~/if`" name="mobile" id="mobile"> Of 
+					<select class="ele_gray textbox" size="1" style="width:90px;" name="mobile_number_owner" id="mobile_number_owner">
+						~if $gender eq 'F'`
+						<option value="1">Bride</option>
+						<option value="3">Parent</option>
+						<option value="4">Daughter</option>
+						<option value="6">Sibling</option>
+						<option value="7">Other</option>
+						~else`
+						<option value="2">Groom</option>
+						<option value="3">Parent</option>
+						<option value="4">Son</option>
+						<option value="6">Sibling</option>
+						<option value="7">Other</option>
+						~/if`
+					</select> 
+				</div>
+			</div>
+			<div class="row">
+				<div class="r1"></div>
+				<div class="r2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;whose name is 
+					<input class="ele_gray textbox" type="text" maxlength="15" style="width:100px;" value="~$mobile_owner_name`" name="mobile_owner_name" id="mobile_owner_name">
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="r1"></div>
+				<div class="r2">
+					<select class="ele_gray textbox" size="1" style="width:280px; margin-left:61px" name="showmobile" id="showmobile">
+					<option value="" >Select Viewing Option</option>
+					<option value="Y" selected>Show to my accepted contacts/paid members</option>
+					<option value="N">Don't show to anybody</option></select>
+				</div>
+
+				<div id="showmobile_submit_err" style="display:none">
+					<div class="spacer1"></div>
+					<div class="suberrmsg" style="padding-left:150px">
+						<img src="~$IMG_URL`/profile/images/registration_new/alert.gif" style="vertical-align:bottom;">Please select your mobile no. viewing option.
+					</div>
+				</div>
+			</div>
+
+
+			<!--error-->
+			<div id="country_code_mobile_submit_err" style="display:none">
+				<div class="spacer1"> </div>
+				<div class="suberrmsg">
+					<img src="~$IMG_URL`/profile/images/registration_new/alert.gif" style="vertical-align:bottom;">Country code for mobile cannot contain special characters.
+				</div>
+			</div>
+
+			<div id="mobile_submit_err" style="display:none">
+				<div class="spacer1"></div>
+				<div class="suberrmsg">
+					<div style="padding-left: 150px;">
+						<img src="~$IMG_URL`/profile/images/registration_new/alert.gif" style="vertical-align:bottom;">
+						<div id="mobile_error1" style="display:inline">Please type in a valid mobile number.</div>
+						<div id="mobile_error2" style="display:none">Mobile number cannot contain special characters. Only numbers are allowed
+					</div>
+					<div id="mobile_error3" style="display:none">Mobile number should contain atleast 10 digits.</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="mobile_owner_name_submit_err" style="display:none">
+				<div class="spacer1"> </div>
+				<div class="suberrmsg">
+					<div style="padding-left: 150px;">
+						<img src="~$IMG_URL`/profile/images/registration_new/alert.gif" style="vertical-align:bottom;">
+						<div id="mobile_owner_name_error1" style="display:inline">Please enter the mobile number owner's name.
+						</div>
+						<div id="mobile_owner_name_error2" style="display:none">Mobile number owner's name cannot contain special characters.
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="showmobile_submit_err" style="display:none">
+				<div class="spacer1"> </div>
+				<div class="suberrmsg">
+					<img src="~$IMG_URL`/profile/images/registration_new/alert.gif" style="vertical-align:bottom;">Please select your mobile no. viewing option.
+				</div>
+			</div>
+			<!--TEST CC-->
+			~if $CONTACTNO eq 1 && !$PHONE_MOB` 
+			</div>
+			~/if`
+			<!--TEST CC-->
+			<!-- error -->
+			~else`
+				<input type="hidden" value="PRESENT" name="phone" id="phone">
+				<input type="hidden" value="PRESENT" name="mobile" id="mobile">
+				<input type="hidden" value="PRESENT" name="phone_owner_name" id="phone_owner_name">
+				<input type="hidden" value="PRESENT" name="mobile_owner_name" id=mobile_owner_name"">
+				<input type="hidden" value="PRESENT" name="showmobile" id="showmobile">
+				<input type="hidden" value="PRESENT" name="showphone" id="showphone">
+			~/if`
+
+			~if !$timeOfCall`
+			<div class="spacer1"></div>
+			<div class="row">
+				<div class="r1">Suitable time to call :</div>
+				<div class="r2">
+					<select id="time_to_call_start" name="time_to_call_start" size="1" class="textbox">
+						<option value="12">12</option>
+						~section name=i loop=$looptime`
+						~assign var="tab" value=$looptime[i]`
+						<option value="~$tab`" ~if $tab eq "9"`selected~/if`>~$tab`</option>
+						~/section`
+					</select>
+					 <select id="start_am_pm" name="start_am_pm" size="1" class="textbox">
+						<option value="AM" selected>AM</option>
+						<option value="PM">PM</option>
+					</select> 
+					to 
+
+					<select id="time_to_call_end" name="time_to_call_end" size="1" class="textbox">
+						<option value="12">12</option>
+						~section name=i loop=$looptime`
+						~assign var="tab" value=$looptime[i]`
+						<option value="~$tab`" ~if $tab eq "9"`selected~/if`>~$tab`</option>
+						~/section`
+					</select> 
+					<select id="end_am_pm" name="end_am_pm" size="1" class="textbox">
+						<option value="AM">AM</option>
+						<option value="PM" selected>PM</option>
+					</select>
+
+					<div id="time_to_call_submit_err" style="display:none">
+						<div class="spacer1"> </div>
+						<div class="suberrmsg">
+							<img src="~$IMG_URL`/profile/images/registration_new/alert.gif" style="vertical-align:bottom;"> Please select a valid suitable time to call. Begin time should be before end time.
+						</div>
+					</div>
+
+				</div>
+			</div>
+			~else`
+				<input type="hidden" value="PRESENT" name="time_to_call_start" id="time_to_call_start">
+				<input type="hidden" value="PRESENT" name="time_to_call_end" id="time_to_call_end">
+				<input type="hidden" value="PRESENT" name="start_am_pm" id="start_am_pm">
+				<input type="hidden" value="PRESENT" name="end_am_pm" id="end_am_pm">
+			~/if`
+
+			~if $mtongueDropDown`
+			<div class="spacer1" style="height:10px;"></div>
+			<div style="background-image:url(~$IMG_URL`/img_revamp/bg_hr.gif); background-repeat:repeat-x;">&nbsp;</div>
+			<div class="orange b">Religion & Ethnicity</div>
+			<div class="spacer1">&nbsp;</div>
+			<div class="row">
+				<div class="r1">Community :</div>
+				<div class="r2">
+					<select class="ele_gray textbox" size="1" name="mtongue" id="mtongue" style="width:204px;">
+						<option value="" selected="">Please Select</option>
+						~$mtongueDropDown`
+					</select> 
+					<div id="mtongue_submit_err" style="display:none">
+						<div class="spacer1"> </div>
+						<div class="suberrmsg">
+							<img src="~$IMG_URL`/profile/images/registration_new/alert.gif" style="vertical-align:bottom;">Please select a community.
+						</div>
+					</div>
+				</div>
+			</div>
+			~else`
+				<input type="hidden" value="PRESENT" name="mtongue" id="mtongue">
+			~/if`
+
+			~if !$edu OR !$work OR !$income`
+			<div class="spacer1" style="height:10px;"></div>
+			<div style="background-image:url(~$IMG_URL`/img_revamp/bg_hr.gif); background-repeat:repeat-x;">&nbsp;</div>
+			<div class="orange b">Education & Career</div>
+			~/if`
+
+			~if !$edu`
+			<div class="spacer1">&nbsp;</div>
+			<div class="row">
+				<div class="r1">Highest Degree :</div>
+				<div class="r2">
+					<select class="ele_gray textbox" size="1" id="degree" name="degree" style="width:204px;">
+						<option value="" selected="">Please Select</option>
+						~$education_level`
+					</select> 
+					<div id="degree_submit_err" style="display:none">
+						<div class="spacer1"> </div>
+						<div class="suberrmsg">
+							<img src="~$IMG_URL`/profile/images/registration_new/alert.gif" style="vertical-align:bottom;"> Please select a highest degree.
+						</div>
+					</div>
+				</div>
+			</div>
+			~else`
+				<input type="hidden" value="PRESENT" name="degree" id="degree">
+			~/if`
+
+			~if !$work`
+			<div class="spacer1">&nbsp;</div>
+			<div class="row">
+				<div class="r1">Work Area :</div>
+				<div class="r2">
+					<select class="ele_gray textbox" size="1" name="occupation" id="occupation" style="width:204px;">
+						<option value="" selected="">Please Select</option>
+						~$occupation`
+					</select> 
+					<div id="occupation_submit_err" style="display:none">
+						<div class="spacer1"> </div>
+						<div class="suberrmsg">
+							<img src="~$IMG_URL`/profile/images/registration_new/alert.gif" style="vertical-align:bottom;">Please select an work area.
+						</div>
+					</div>
+				</div>
+			</div>
+			~else`
+				<input type="hidden" value="PRESENT" name="occupation" id="occupation">
+			~/if`
+
+			~if !$income`
+			<div class="spacer1">&nbsp;</div>
+			<div class="row">
+				<div class="r1">Annual Income :</div>
+				<div class="r2">
+					<select class="ele_gray textbox" size="1" name="income" id="income" style="width:204px;">
+						<option value="" selected="">Please Select</option>
+						~$INCOME`
+					</select> 
+					<div id="income_submit_err" style="display:none">
+						<div class="spacer1"> </div>
+						<div class="suberrmsg">
+							<img src="~$IMG_URL`/profile/images/registration_new/alert.gif" style="vertical-align:bottom;">Please select an annual income.
+						</div>
+					</div>
+				</div>
+			</div>
+			~else`
+				<input type="hidden" value="PRESENT" name="income" id="income">
+			~/if`
+
+			<div class="spacer1" style="height:10px;"></div>
+			<div style="background-image:url(~$IMG_URL`/img_revamp/bg_hr.gif); background-repeat:repeat-x;">&nbsp;</div>Would you like to receive
+			<div class="fl" style="margin:5px 0px">
+				<input type="checkbox" checked="checked" name="match_alerts" value="A" style="border:0px"/>Match Alerts
+				<input type="checkbox" checked="checked" value="S" name="promo" style="border:0px"/>Promotional Offers & Mails 
+				<input type="checkbox" checked="checked" name="service_messages" value="S" style="border:0px"/>Service Messages <br>
+				<input type="checkbox" checked="checked" id="termsandconditions" name="termsandconditions" value="Y" style="border:0px"/>I have agreed to the <a href="disclaimer.php" class="redlink" target="_blank">Terms & Conditions</a> and have read and understood the <a href="privacy_policy.php" class="redlink" target="_blank">Privacy Policy</a>
+				<div id="termsandconditions_submit_err" style="display:none">
+					<div class="spacer1"> </div>
+					<div class="suberrmsg" style="padding-left:0px">
+						<img src="~$IMG_URL`/profile/images/registration_new/alert.gif" style="vertical-align:bottom;"> You have to agree to the terms and conditions to proceed.
+					</div>
+				</div>
+
+
+			</div>
+			<input type="hidden" value="~$checksum`" name="checksum">
+			<div class="spacer1" style="height:10px;"></div>
+			<div  style="text-align:center;">
+				<input name='fsubmit' id="fsubmit" type="submit" class="b green_btn" value="Submit" style="width:70px;font-size:14px;">
+			</div>
+		</form>
+	</div>
+	<div class="clear"> </div>
+</div>
+<script>
+~if !$country || !$contactNo || !$CITY_RES`
+change_city('~$CITY_RES`');
+~/if`
+</script>

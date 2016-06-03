@@ -1,0 +1,22 @@
+jsmsDisplaySuccess:
+  metas:
+    title: Phone Verification - Jeevansathi.com
+  stylesheets:    [-*,jsms/phone/phoneVerification_css]
+  javascripts: [-*,jsms/phone/phone_js]
+  layout: jsmsMobLayout
+
+phoneVerificationPcDisplaySuccess:
+  metas:
+    title: Phone Verification - Jeevansathi.com
+  stylesheets: [jspc/phone/phoneVerification_css,jspc/common/NProgress]
+  javascripts: [jsms/common/history_js@bottom,jspc/phone/phone_js@bottom,jspc/common/phoneVeriLayers_js@bottom,jspc/common/nano@bottom]
+
+mobileConsentMessageSuccess:
+  stylesheets: [-*]
+  javascripts: [-*]
+  layout: jsmsMobLayout
+
+desktopOTPSuccess:
+  stylesheets: [-*]
+  javascripts: [-*]
+

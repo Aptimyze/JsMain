@@ -1,0 +1,78 @@
+<!-- Your Membership Status -->
+			<div class="benf">
+				
+				<div class="lftflow amem" style="width:48%;">
+					<div>
+      My Contact Statistics
+    </div>
+					<div class="bele mbg">
+						<div class="beppic"><img src="~$IMG_URL`/profile/ser4_images/baricn.gif" width="43" height="44"></div>
+						<div class="bedis bluelink">
+							<div>
+								<b>Members Who Contacted Me</b>
+								<div class="spacer1">&nbsp;</div>
+								<div class="w1">~if $RECEIVED_A neq "0"`<a href="contacts_made_received.php?checksum=~$CHECKSUM`&flag=A&type=R">Members Accepted by Me</a>~else`Members Accepted by Me~/if`</div>
+								<div class="w2">~if $RECEIVED_A neq "0"`<a href="contacts_made_received.php?checksum=~$CHECKSUM`&flag=A&type=R">~$RECEIVED_A`</a>~else`0~/if`</div>
+								<div class="spacer1">&nbsp;</div>
+								<div class="w1">~if $RECEIVED_I neq "0"`<a href="contacts_made_received.php?checksum=~$CHECKSUM`&flag=I&type=R">Members Awaiting My Response </a>~else`Members Awaiting My Response~/if`</div>
+								<div class="w2">~if $RECEIVED_I neq "0"`<a href="contacts_made_received.php?checksum=~$CHECKSUM`&flag=I&type=R">~$RECEIVED_I`</a>~else`0~/if`</div>
+								<div class="spacer1">&nbsp;</div>
+								~if $RECEIVED_I_ARCHIVE neq "0"`<div class="w1"><a href="contacts_made_received.php?checksum=~$CHECKSUM`&flag=I&type=RC">Awaiting Response Archive</a></div>~/if`
+								~if $RECEIVED_I_ARCHIVE neq "0"`<div class="w2"><a href="contacts_made_received.php?checksum=~$CHECKSUM`&flag=I&type=RC">~$RECEIVED_I_ARCHIVE`</a></div>~/if`
+								<div class="spacer15">&nbsp;</div>
+								<b>Members Whom I Contacted</b>
+								<div class="spacer1">&nbsp;</div>
+								<div class="w1">~if $MADE_A neq "0"`<a href="contacts_made_received.php?checksum=~$CHECKSUM`&flag=A&type=M">Members Who Accepted Me</a>~else`Members Who Accepted Me~/if`</div>
+								<div class="w2">~if $MADE_A neq "0"`<a href="contacts_made_received.php?checksum=~$CHECKSUM`&flag=A&type=M">~$MADE_A`</a>~else`0~/if`</div>
+								<div class="spacer1">&nbsp;</div>
+								<div class="w1">~if $MADE_I  neq "0"`<a href="contacts_made_received.php?checksum=~$CHECKSUM`&flag=I&type=M">Responses pending</a>~else`Responses pending~/if`</div>
+								<div class="w2">~if $MADE_I  neq "0"`<a href="contacts_made_received.php?checksum=~$CHECKSUM`&flag=I&type=M">~$MADE_I`</a>~else`0~/if`</div>
+								<div class="spacer1">&nbsp;</div>
+								    Viewed: ~$MADE_D_R`; Not Viewed: ~$MADE_I-$MADE_D_R`
+								<div class="spacer15">&nbsp;</div>
+								<b><a href="profile_stats.php?checksum=~$CHECKSUM`">View all Statistics &rsaquo;&rsaquo;</a></b><br>
+							</div>
+					      </div>
+					</div>
+				</div>
+				<div class="leftflow amem" style="width:47%;">
+					<div>Your Membership Status</div>
+					<div class="bele mbg">
+						<div class="beppic">
+							<img src="~$IMG_URL`/profile/ser4_images/memicn.gif" width="43" height="35">
+						</div>
+						<div class="bedis">
+							~if $SUBSCRIPTION eq 'no'`
+							<div class="r14 lh">Free Member</div>
+							<div class="spacer">&nbsp;</div>
+							<b>Benefits you get on memberships</b><br>
+							<div class="spacer">&nbsp;</div>
+							1- Send Your Personalized message<br>
+							2- Send Contact Details along with your message<br>
+							3- Initiate online chat with Jeevansathi members<br>
+							<div class="spacer">&nbsp;</div>
+							<div class="bb wlink"><a href="mem_comparison.php?checksum=~$CHECKSUM`">Upgrade Membership</a></div>
+							<div class="greyele pad2">Membership starts at ~$PRICE`</div>
+							~else`
+							<div class="r14 lh">~if $MEMBERSHIP` ~$MEMBERSHIP` ~/if` ~if $ADDON_MEMBERSHIP` with ~$ADDON_MEMBERSHIP` ~/if`</div>
+							<div class="spacer">&nbsp;</div>
+								~if $MEMBERSHIP eq 'e-Rishta'`
+								<img src="~$IMG_URL`/profile/ser4_images/logo_erishta.gif">
+								~elseif $MEMBERSHIP eq 'e-Classified'`
+								<img src="~$IMG_URL`/profile/ser4_images/logo_eclassifieds.gif">
+								~elseif $MEMBERSHIP eq 'e-Value Pack'`
+								<img src="~$IMG_URL`/profile/ser4_images/logo_evaluepack.gif">
+								~/if`
+							<br>
+							<u style="cursor:default;" onMouseover="tool_tip('~$MEMBERSHIP`');" onMouseout="hideddrivetip();">View Benefits</u><br>
+							<div class="spacer15">&nbsp;</div>
+								~if $SSEXPIRYDT` Membership Expires on: ~$SSEXPIRYDT` ~/if`
+							<div class="spacer15">&nbsp;</div>
+							~if $DAYS_TO_EXPIRE && $DAYS_TO_EXPIRE lt 11`
+							<div class="bb wlink"><a href="mem_comparison.php?checksum=~$CHECKSUM`">Renew Memberships</a></div>
+							~/if`
+							~/if`
+						</div>
+					</div>
+				</div></div>
+			<!-- View All Statistics -->

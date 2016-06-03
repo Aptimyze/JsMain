@@ -1,0 +1,60 @@
+<div id="leftpannelh">
+	<!--REGISTRATION STARTS-->
+	<div class="joinbgss" onClick="JoinUser();" style="cursor:pointer;">
+		<div class="jjss"><b>New User </b></div>
+		<div class="spacer15">&nbsp;</div>
+		<div style="font:normal 16px verdana,arial; color:#FFFFFF; margin-left:20px"><b>Join Jeevansathi</b></div>
+		<div class="spacer">&nbsp;</div>
+		<div class="wele" style="margin-left:20px"><b>Direct Benefits of Joining !!</b></div>
+		<div style="clear: both; line-height:8px">&nbsp;</div>
+		<div class="wele" style="margin-left:20px; line-height:15px">&bull; Create Matrimonial Profile<br>&bull; Receive Marriage Proposals <br>&bull; Search and Express Interest <br>&bull; Chat with Online Members </div>
+		<div class="spacer">&nbsp;</div>
+		<form action="/P/inputprofile.php?source=hpblack" method="post" style="margin:0px">
+		<div style="margin-left:20px" class="wele"> 
+                       	<input type="submit" name="register" value="Join Free" style="cursor:pointer ">
+		</div>
+		</form>
+	</div>
+	<!--REGISTRATION ENDS-->
+	<div style="clear: both; line-height:10px">&nbsp;</div>
+
+	<!--LOGIN STARTS-->
+	<div class="bluelink lbo">
+		<form name="login" action="/profile/login.php" method="post" style="margin:0px">
+		<div style="float:left "><img src="~$IMG_URL`/profile/ser4_images/exlogin.gif" width="71" height="49"></div>
+		<div class="leftflow" style="padding-top:5px; font:bold 12px verdana,arial"><b>Login to Jeevansathi</b></div>
+		<div class="spacer">&nbsp;</div>
+		<div class="leftflow bele" style="width:90px ">User Id / Email</div>
+
+		<div class="lftflow">
+			<input type="text" name="username" class="textbox" style="width:110px ">
+		</div>
+
+		<div class="spacer1">&nbsp;</div>
+
+		<div class="leftflow bele" style="width:90px ">Password</div>
+		<div class="lftflow">
+			<input type="password" name="password" class="textbox" style="width:110px ">
+		</div>
+
+		<div class="spacer15">&nbsp;</div>
+
+		<div class="leftflow bele" style="width:20px ">
+			<input type="checkbox" name="rememberme" value="Y">
+		</div>
+
+		<div class="lftflow bele">Remember me on this computer</div>
+		<div class="spacer">&nbsp;</div>
+
+		<div style="width:200px " align="right">
+			<input type="hidden" name="submit" value="Go">
+		        <input type="hidden" name="login_from" value="H">
+			<input type="submit" name="submit" value="Login" style="cursor:pointer;width:60px">
+		</div>
+		</form>
+
+		<div class="spacer">&nbsp;</div>
+		<div align="center" class="bele"><a href="/P/forgotpassword.php">Forgot your user Id or password?</a></div> 
+		<div class="spacer">&nbsp;</div>
+	</div>
+</div>

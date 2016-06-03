@@ -1,0 +1,98 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jeevansathi.com</title>
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+~include file='head.htm'`
+<br>
+    <table width="90%" border="0" cellspacing="1" cellpadding="4" align="center">
+      <tbody>
+      <tr>
+        <form action="search_orderid.php" method="post">
+        <td class="formhead" valign="middle" width="10%">Search Online Orders</td>
+        <td class="label" valign="middle" width="24%">
+        <input type="text" name="phrase" class="textboxes1">
+        </td>
+        <td class="label" valign="middle" width="30%">
+	<select name="criteria" class="textboxes1" size="1">
+                <option value="orderid">By Order ID</option>
+<!--            <option selected="selected">Select</option> -->
+                <option value="uname">By Username &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                <option value="email">By E-mail</option>
+                <!--<option value="cdnum">By Cheque/DD No.</option>-->
+              </select>
+
+        </td>
+        <td class="label" valign="middle" width="12%">
+        <input type="hidden" name="offline_billing" value="~$offline_billing`">
+        <input type="hidden" name="cid" value=~$CID`>
+        <input type="hidden" name="user" value=~$USER`>
+        <input type="submit" name="submit" value="Go" class="buttons1">
+        </td>
+        <td class="label" valign="middle" width="24%">
+	<a href="../jsadmin/mainpage.php?user=~$USER`&cid=~$CID`">Main page</a>
+        </td>
+        </form>
+      </tr>
+      </tbody>
+    </table>
+<br><br>
+~if $ONLINE_TRYING_OFFLINE`
+<table border="0" cellpadding="4" cellspacing="4" align="center">
+	<tr class="label">
+		<td>This is an offline profile please do the billing from offline billing link
+	</tr>
+</table>
+~elseif $OFFLINE_TRYING_ONLINE`
+<table border="0" cellpadding="4" cellspacing="4" align="center">
+	<tr class="label">
+		<td>This is an online profile please do the billing from online billing link
+	</tr>
+</table>
+~elseif $flag eq 1`
+~section name=mysec loop=$arr`
+<table width=90% border=0 align="center">
+<tr><td colspan=8 bgcolor="orange">&nbsp;</td></tr>
+<tr class="label" align="center">
+	<td><b>Username:&nbsp;</b>~$arr[mysec].USERNAME`</td>
+	<td><b>OrderID:&nbsp;</b> ~$arr[mysec].ORDERID`</td>
+	<td><b>Amount:&nbsp;</b>~$arr[mysec].AMOUNT`</td>
+	<td><b>Services:&nbsp;</b>~$arr[mysec].SERVEFOR`</td>
+</tr>
+</table>
+<table width=90% border=0 align="center">
+<tr class="label" align="center">
+	<td colspan=18%><b>Gateway:&nbsp;</b>~$arr[mysec].GATEWAY`</td>
+	<td colspan=34%><b>Entry Date:&nbsp;</b>~$arr[mysec].ENTRY_DT`</td>
+	<td colspan=18%><b>Status:&nbsp;</b>~$arr[mysec].STATUS`</td>
+	<td colspan=18%><b>Payment Recd. Date:&nbsp;</b>~$arr[mysec].PMTRECVD`</td>
+</tr>
+</table>
+<table width=90% border=0 align="center">
+<tr class="fieldsnew" align="center">
+	<td class="formhead" colspan=2 rowspan=2>Contact Details</td>
+	<td  colspan=3 rowspan=2 align="left">Name : ~$arr[mysec].DLVR_CUST_NAME`<br>
+		Address : ~$arr[mysec].BILL_ADDRESS`<br>
+		City: ~$arr[mysec].BILL_COUNTRY`&nbsp;
+		Pin : ~$arr[mysec].PINCODE` <br>
+		Email : ~$arr[mysec].BILL_EMAIL` <br>
+		Phone : ~$arr[mysec].BILL_PHONE`<br> 
+	</td>
+</tr>
+</table>
+~/section`
+
+~elseif $flag eq 0`
+<br><br>
+<table width=90% border=0 align="center">
+<tr class="fieldsnew" align="center">
+<td>No Record Found</td>
+</tr>
+</table>
+~/if`
+<br>
+</body>
+</html>

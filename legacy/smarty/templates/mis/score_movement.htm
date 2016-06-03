@@ -1,0 +1,141 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS - View Similar Profile Clicked Count</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+
+<center>
+This MIS gives us band-wise break of profiles that are shifted from one band to other over a period of day/week.<br>
+<font color=red>Female Profiles</font><br>
+<font color=blue>Male Profiles</font><br>
+</center>
+<br>
+
+<center>
+Different Band are designed as follow:<font color=brown>[band name]=[TOTAL_POINTS][FRESHNESS_POINTS]</font><br><br>
+<font color=blue>[1]=[600][300]&nbsp;&nbsp;&nbsp;&nbsp;[2]=[450][150]&nbsp;&nbsp;&nbsp;&nbsp;[3]=[400][100]&nbsp;&nbsp;&nbsp;&nbsp;[4]=[450][300]&nbsp;&nbsp;&nbsp;&nbsp;[5]=[300][150]&nbsp;&nbsp;&nbsp;&nbsp;[6]=[250][100]&nbsp;&nbsp;&nbsp;&nbsp;[7]=[250][300]&nbsp;&nbsp;&nbsp;&nbsp;[8]=[100][150]&nbsp;&nbsp;&nbsp;&nbsp;</font>
+
+<br><font color=blue>[9]=[50][100]&nbsp;&nbsp;&nbsp;&nbsp;[10]=[49][*]&nbsp;&nbsp;&nbsp;&nbsp;[11]=[48][*]&nbsp;&nbsp;&nbsp;&nbsp;[12]=[47][*]&nbsp;&nbsp;&nbsp;&nbsp;[13]=[46][*]&nbsp;&nbsp;&nbsp;&nbsp;[14]=[45][*]&nbsp;&nbsp;&nbsp;&nbsp;[15]=[44][*]&nbsp;&nbsp;&nbsp;&nbsp;[16]=[43][*]&nbsp;&nbsp;&nbsp;&nbsp;
+
+<br>BAND 0 IMPLIES PROFILE ABSENT ON SEARCH TABLE</font>
+
+</center>
+
+~if $flag eq '1'`
+		<table width=100% border=0 align="center" cellspacing="4" cellpadding=5>
+		<tr class="formhead">
+		<td colspan=100% align="center">~$day`--~$month`--~$year`</td>
+		</tr>
+		<tr class="label">
+		<td align="center">BAND</td>
+		~section name=dd loop=$ddarr`
+			<td width=8% align="center">&nbsp;~$ddarr[dd]`</td>
+		~/section`
+		</tr>
+
+		~section name=dd loop=$ddarr1`
+			<tr class="fieldsnew"><td align="center" class="label">&nbsp;~$ddarr1[dd]`</td>
+			~section name=dd1 loop=$ddarr1`
+			<td  width=4% align="center"><span class="red">~$cnt[0][dd][dd1]`</span><br><span class="blue">~$cnt[1][dd][dd1]`</span></td>
+			~/section`
+			<td  width=4% align="center"><span class="red">~$total[0][dd]`</span><br><span class="blue">~$total[1][dd]`</span></td>
+			</tr>
+		~/section`
+
+		<tr class="fieldsnew">
+	        <td align="center" class=label>&nbsp;TOTAL</td>
+		~section name=dd1 loop=$ddarr1`
+                <td class=label align="center"><span class="red">~$total1[0][dd1]`</span><br><span class="blue">~$total1[1][dd1]`</span></td>
+                ~/section`
+		<td  class=label align="center"><span class="red">~$total1[3]`</span><br><span class="blue">~$total1[4]`</span></td></tr>
+		
+		</table>
+~else`
+	<br><br>
+	<font color=brown>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Band change After One Day</font>
+	<form method=post action="score_movement.php">
+	<table width=80% border=0 align="center" cellpadding=5>
+	<tr>
+	<td>
+
+		<select name="day">
+                ~section name=dd loop=$ddarr`
+                        <option value=~$ddarr[dd]`>~$ddarr[dd]`</option>
+                ~/section`
+                </select>-
+
+		<select name="month">
+	        ~section name=mm loop=$mmarr`
+	                <option value=~$mmarr[mm]`>~$mmarr[mm]`</option>
+        	~/section`
+	        </select>-
+
+		<select name="year">
+	        ~section name=yr loop=$yyarr`
+	                <option value=~$yyarr[yr]`>~$yyarr[yr]`</option>
+        	~/section`
+	        </select>Day-Month-Year
+	</td>
+	</tr>
+	<tr>
+	<input type="hidden" name="cid" value=~$cid`>
+	<td align="left"><input type="submit" name="CMDGo" value="Go"></td>
+	</tr>
+	</table>
+	</form>
+
+<br><br>
+
+	 <font color=brown>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Band change After One Week</font>
+        <form method=post action="score_movement.php">
+        <table width=80% border=0 align="center" cellpadding=5>
+        <tr>
+        <td>
+                <select name="day">
+                ~section name=dd loop=$ddarr`
+                        <option value=~$ddarr[dd]`>~$ddarr[dd]`</option>
+                ~/section`
+                </select>-
+                                                                                                                             
+                <select name="month">
+                ~section name=mm loop=$mmarr`
+                        <option value=~$mmarr[mm]`>~$mmarr[mm]`</option>
+                ~/section`
+                </select>-
+                                                                                                                             
+                <select name="year">
+                ~section name=yr loop=$yyarr`
+                        <option value=~$yyarr[yr]`>~$yyarr[yr]`</option>
+                ~/section`
+                </select>Day-Month-Year
+        </td>
+        </tr>
+        <tr>
+        <input type="hidden" name="cid" value=~$cid`>
+        <td align="left"><input type="submit" name="CMDGo1" value="Go"></td>
+        </tr>
+        </table>
+        </form>
+
+~/if`
+</body>
+</html>

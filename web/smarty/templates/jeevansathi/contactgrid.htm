@@ -1,0 +1,76 @@
+~if $SELF neq "1"`
+~if $CONTACTSUMMARY1`
+<tr>
+      <td height="18" bgcolor="#FFFFFF" class="mediumblack">&nbsp;<span class="mediumred">~$CONTACTSUMMARY1`</span></td>
+    </tr>
+~/if`
+~if $FILTERED eq "1"`
+<tr>
+      <td  height="18" bgcolor="#FFFFFF" class="mediumblack">&nbsp;<span class="mediumred">You are Filtered</span></td>
+    </tr>
+~elseif $CONTACT`
+    <tr>
+      <td  height="18" bgcolor="#FFFFFF" class="mediumblack">&nbsp;<span class= "class8">~if $PERSON_LOGGED_IN eq "1"`<a href="#contactprofile">Contact Now</a>~else`<a href="single_contact_aj.php?checksum=~$CHECKSUM`&profilechecksum=~$PROFILECHECKSUM`&status=I">Login to Contact</a>~/if`</span></td>
+    </tr>
+~elseif $CONTACTAGAIN`
+    <tr>
+      <td  height="18" bgcolor="#FFFFFF" class="mediumblack">&nbsp;<span class= "class8"><a href="#contactprofile">Contact Again</a></span></td>
+    </tr>
+~elseif $ACCEPT and $DECLINE`
+    <tr>
+      <td  height="18" bgcolor="#FFFFFF" class="mediumblack">&nbsp;<span class= "class8"><a href="#contactprofile">Accept or Decline</a></span></td>
+    </tr>
+~elseif $ACCEPT`
+    <tr>
+      <td  height="18" bgcolor="#FFFFFF" class="mediumblack">&nbsp;<span class= "class8"><a href="#contactprofile">Accept</a></span></td>
+    </tr>
+~elseif $DECLINE`
+    <tr>
+      <td  height="18" bgcolor="#FFFFFF" class="mediumblack">&nbsp;<span class= "class8"><a href="#contactprofile">Decline</a></span></td>
+    </tr>
+~elseif $SENDCUSTOMISED`
+    <tr>
+      <td  height="18" bgcolor="#FFFFFF" class="mediumblack">&nbsp;<span class= "class8"><a href="#contactprofile">Send Message</a></span></td>
+    </tr>
+~elseif $UPGRADE`
+<tr>
+      <td  height="18" bgcolor="#FFFFFF" class="mediumblack">&nbsp;<span class= "class8"><a href="#contactprofile">Initiate Full Contact</a></span></td>
+    </tr>
+~/if`
+<tr>
+    ~if $PERSON_LOGGED_IN eq "1"`
+      <td  height="18" bgcolor="#FFFFFF" class="mediumblack"><span class="class8">&nbsp;~if $BOOKMARKED neq "1"`<a href="add_bookmark.php?checksum=~$CHECKSUM`&profilechecksum=~$PROFILECHECKSUM`">Bookmark this profile </a>~else`<span class="mediumred">Bookmarked by You</span>~/if`</span></td>
+    ~else`
+    <td  height="18" bgcolor="#FFFFFF" class="mediumblack"><span class="class8">&nbsp;<a href="inputprofile.php?source=profilepg">Register Now</a></span></td>
+    ~/if`
+    </tr>
+~else`
+	<tr>
+      <td  height="18" bgcolor="#FFFFFF" class="mediumblack">&nbsp;<span class="class8">~if $PERSON_LOGGED_IN eq "1"`Contact Now~else`Login to Contact~/if`</span></td>
+    </tr>
+    <td  height="18" bgcolor="#FFFFFF" class="mediumblack"><span class="class8">&nbsp;Bookmark this profile </span></td>
+~/if`
+~if $NO_FORWARD_OPTION neq "1"`
+    <tr>
+      <td  height="18" bgcolor="#FFFFFF" class="mediumblack"><span class="class8">&nbsp;<a href="forward_profile.php?checksum=~$CHECKSUM`&profilechecksum=~$PROFILECHECKSUM`">Forward to a Friend</a> </span></td>
+    </tr>
+~/if`
+    <tr>
+      <td height="18" bgcolor="#FFFFFF" class="mediumblack"><span class="class8">&nbsp;<a href="#" onclick="MM_openBrWindow('print_version.php?checksum=~$CHECKSUM`&profilechecksum=~$PROFILECHECKSUM`','','width=600,height=400,scrollbars=yes');">See Print Version</a></span></td>
+    </tr>
+~if $HOROSCOPE eq "Y"`
+                        <tr>
+                      <td  height="18" bgcolor="#FFFFFF" class="mediumblack"><span class="class8">&nbsp;<a href="call_horoscope.php?checksum=~$CHECKSUM`&profilechecksum=~$PROFILECHECKSUM`">View
+Horoscope</a> </span><img src="~$IMG_URL`/profile/ser4_images/home_new.gif"</td>
+                    </tr>
+~/if`
+~if $KUNDALI eq "Y"`
+                        <tr>
+                      <td  height="18" bgcolor="#FFFFFF" class="mediumblack"><span class="class8">&nbsp;<a href="match_kundali_data.php?checksum=~$CHECKSUM`&profilechecksum=~$PROFILECHECKSUM`">Match Kundali</a> </span><img src="~$IMG_URL`/profile/ser4_images/home_new.gif"</td>
+                    </tr>
+~/if`
+~if $REQUESTKUNDALI eq "Y"`
+                        <tr>
+                      <td  height="18" bgcolor="#FFFFFF" class="mediumblack"><span class="class8">&nbsp;<a href="request_kundali_data.php?checksum=~$CHECKSUM`&profilechecksum=~$PROFILECHECKSUM`">Match Kundali</a> </span><img src="~$IMG_URL`/profile/ser4_images/home_new.gif"</td>
+                    </tr>
+~/if`

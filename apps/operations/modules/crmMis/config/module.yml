@@ -1,0 +1,3 @@
+all:
+  crmHandledRevenueCsvGenerate:
+    enable_login:  off

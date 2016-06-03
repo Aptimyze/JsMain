@@ -1,0 +1,122 @@
+<html>
+<head>
+	<title>Jeevansathi.com - MIS - Profile Screening Efficiency</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+	<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+	<style>
+		DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+	</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+	<tr>
+		<td valign="top" width="30%" bgcolor="#efefef"></td>
+		<td valign="top" width="40%" bgcolor="#efefef" align="center">
+			<img src="../profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0">
+		</td>
+		<td valign="bottom" width="30%" bgcolor="#efefef"></td>
+	</tr>
+	</table>
+	<br><br>
+	~if $flag eq '1'`
+		<table width="80%" border="0" align="center" cellspacing="4" cellpadding="4">
+			<tr class="formhead" align="center">
+				<td>Profile Screening Efficiency MIS for ~$month` / ~$year`</td>
+			</tr>
+			<tr class="fieldsnew" align="center">
+				<td>
+					~if $type eq 'new'`
+						New&nbsp;|
+						<a href="live_profile_count.php?cid=~$cid`&CMDGo=1&year=~$year`&month=~$month`&type=edit">Edit</a>
+					~elseif $type eq 'edit'`
+						<a href="live_profile_count.php?cid=~$cid`&CMDGo=1&year=~$year`&month=~$month`&type=new">New</a>&nbsp;|
+						Edit
+					~/if`
+				</td>
+			</tr>
+		</table>
+		<br><br>
+		<table width="80%" border="0" align="center" cellspacing="4" cellpadding="4">
+			<tr class="formhead" align="center">
+				<td colspan="5">Zonewise Unassigned Profiles</td>
+			</tr>
+			<tr class="formhead" align="center">
+				<td><font color="blue">Comfort</font></td>
+				<td><font color="orange">Rush</font></td>
+				<td><font color="red">Red Alert</font></td>
+				<td><font color="purple">Expired</font></td>
+				<td><font color="green">Total</font></td>
+			</tr>
+			<tr class="fieldsnew" align="center">
+				<td><font color="blue">~if $count.COMFORT` ~$count.COMFORT` ~else` 0 ~/if`</font></td>
+				<td><font color="orange">~if $count.RUSH` ~$count.RUSH` ~else` 0 ~/if`</font></td>
+				<td><font color="red">~if $count.RED_ALERT` ~$count.RED_ALERT`~else` 0 ~/if`</font></td>
+				<td><font color="purple">~if $count.EXPIRED` ~$count.EXPIRED` ~else` 0 ~/if`</font></td>
+				<td><font color="green">~if $count.TOTAL` ~$count.TOTAL` ~else` 0 ~/if`</font></td>
+			</tr>
+		</table>
+		<br><br>
+		<table width="100%" border="0" align="center" cellspacing="4" cellpadding="4">
+			<tr class="label">
+				<td align="center">Day</td>
+				<td width="10%" align="center">Total Profiles to Screen</td>
+				<td width="10%" align="center">Profiles Screened</td>
+				~section name=dd loop=$ddarr1`
+					<td width="3%" align="center">~$ddarr1[dd]`</td>
+				~/section`
+			</tr>
+			~section name=dd loop=$ddarr`
+				<tr class="fieldsnew">
+					<td align="center" class="label">~$ddarr[dd]`</td>
+					<td align="center">
+						~if $total_to_screen[dd]`
+							~$total_to_screen[dd]` 
+							~if $total_to_screen_perc[dd]`
+								(<font ~if $total_to_screen_perc[dd] eq '100'` color="green" ~else` color="red" ~/if`>~$total_to_screen_perc[dd]`%</font>)
+							~else`
+								(<font color="red"`>0%</font>)
+							~/if`
+						~/if`
+					</td>
+					<td align="center">&nbsp;~$total_screened[dd]`</td>
+					~section name=dd1 loop=$ddarr1`
+						<td align="center">&nbsp;~$total_screened_day[dd][dd1]`</td>
+					~/section`
+				</tr>
+			~/section`
+		</table>
+	~else`
+		<form method=post action="live_profile_count.php">
+		<table width="20%" border="0" align="center" cellpadding="4" cellspacing="4">
+			<tr class="formhead" align="center">
+				<td>Month</td>
+				<td>Year</td>
+			</tr>
+			<tr class="fieldsnew" align="center">
+				<td>
+					<select name="month">
+					~section name=mm loop=$mmarr`
+						<option value=~$mmarr[mm]`>~$mmarr[mm]`</option>
+					~/section`
+					</select>
+				</td>
+				<td>
+					<select name="year">
+					~section name=yr loop=$yyarr`
+						<option value=~$yyarr[yr]`>~$yyarr[yr]`</option>
+					~/section`
+					</select>
+				</td>
+			</tr>
+			<tr class="fieldsnew" align="center">
+				<input type="hidden" name="cid" value=~$cid`>
+				<input type="hidden" name="type" value=~$type`>
+				<td colspan="2"><input type="submit" name="CMDGo" value="Go" class="buttons1"></td>
+			</tr>
+		</table>
+		</form>
+	~/if`
+</body>
+</html>

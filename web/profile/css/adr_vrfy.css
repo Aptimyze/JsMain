@@ -1,0 +1,32 @@
+@charset "utf-8";
+/* Address Verification CSS Created By Vishal Kaul */
+
+.adr_vrfy{float:left; width:752px; padding:0 0 0 24px;}
+.adr_vrfy h5{font:normal 18px Arial, Helvetica, sans-serif; color:#ff8400;}
+.adr_vrfy .ur_adr{float:left; width:145px; line-height:18px;}
+.adr_vrfy u{float:left; width:99.9%; margin:0 0 4px; font:14px Arial, Helvetica, sans-serif; text-decoration:underline;}
+
+.adr_vrfy .fill_adr{float:left; width:458px; margin:0 0 0 95px; display:inline;}
+.adr_vrfy .fill_adr div{float:left; width:99.9%; margin:4px 0 2px;}
+.adr_vrfy .fill_adr div label{float:left; width:67px; text-align:right; padding:2px;}
+.adr_vrfy .fill_adr div input,.adr_vrfy .fill_adr div select{float:left; width:152px; height:19px; border:1px solid #ccc;}
+.adr_vrfy .fill_adr div p{float:left; width:210px; padding:5px 0 5px 88px; color:#e74747; background:url(IMG_URL/profile/images/err_img_adr.png) no-repeat 69px 5px;}
+button,input.btn{width:auto; padding:2px 7px; color:#fff; border:1px solid #578d00; background:#8cc502 url(IMG_URL/profile/images/button_bg.png) repeat-x; font-size:11px; cursor:pointer;}
+
+.res_prf{float:left; width:446px;}
+.res_prf label{float:left; width:145px; padding:0 2px 0 0;}
+/*adr bnfts starts*/
+.adr_bnfts{float:right; width:278px; margin:15px 0 0;}
+s{display:block;}
+.c,.c1,c2,c3,c4{height:1px; overflow:hidden; border:1px solid #f8ee46;border-width:0 1px;}
+.c1{margin:0 4px;}
+.c2{margin:0 3px;}
+.c3{margin:0 2px;}
+.c4{margin:0 1px;}
+.gtlk_mid{border:solid #f8ee46; border-width: 0pt 1px; background:#fdf899; width: 99.2%; margin:0 0 0 1px; font:bold 16px Arial, Helvetica, sans-serif; width:99.6%;}
+.gtlk_mid ul{float:left; width:254px; padding:10px; list-style:none;}
+.gtlk_mid ul li{float:left; width:238px; padding:3px 0 7px 14px; background:url(IMG_URL/profile/images/ben_li_arw.gif) no-repeat 0 5px;}
+.gtlk_btm_cur{border-width: 1px 0pt 0pt; margin: -1px 5px 0pt; background:#F8FFD5;}
+/*adr bnfts ends*/
+
+.scn_doc{float:left; width:485px; padding:5px; border:1px solid #ccc; background:#f8f9f9;}

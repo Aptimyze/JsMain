@@ -1,0 +1,113 @@
+html, body{margin:0; padding:0;}
+#container{width: 100%; margin: 0px auto;}
+#wrapper {float: left; width: 100%;}
+#footer{clear: both;margin: 0;padding: 2px;}
+#top{ padding:5px 10px 5px 10px}
+
+
+.bluelink a { color:#003498; text-decoration:underline;}
+.bluelink a:visited{ color:#003498;text-decoration:underline;} 
+
+.bten{font:normal 10px verdana,Arial;}
+.bele{font:normal 11px verdana,Arial;}
+.greyele{font:normal 11px verdana,Arial; color:#666666}
+.greytwe{font:normal 12px verdana,Arial; color:#666666}
+.textbox {FONT-SIZE: 11px; FONT-FAMILY: verdana,Arial}
+
+div.spacer1 {clear: both; line-height:1px}
+div.spacer2 {line-height:1px}
+div.spacer {clear: both; line-height:5px}
+div.spacer15 {clear: both; line-height:15px}
+div.spacerg{ background-color:#e7e7e7; border-bottom:1px solid #c2c2c2; clear: both; line-height:5px}
+
+.pad2{ padding:2px}
+.pad4{ padding:4px}
+
+div.lftflow0{ float:left;}
+div.lftflow{ float:left; margin-left:1px;}
+div.leftflow1{ float:left; margin-left:2px;}
+div.leftflow{ float:left; margin-left:5px;}
+div.rightflow{ float:right; margin-right:5px;}
+.radiobut{width:3%;  float:left; font:normal 11px verdana,arial; color:#666666; padding:0px; text-align:right}
+.radiotext{width:5%;  float:left; font:normal 11px verdana,arial; color:#666666; padding:2px 10px 5px 4px; text-align:left}
+.radiotext2{width:8%;  float:left; font:normal 11px verdana,arial; color:#666666; padding:2px 10px 5px 4px; text-align:left}
+
+select {font:normal 11px verdana,Arial;}
+input {font:normal 11px verdana,Arial;}
+textarea {font:normal 11px verdana,Arial;}
+
+/*color:#D9A60C;*/
+
+.row{float:left; width:100%;background-color:#f8f8f8;}
+.r1{float:left; width:22%; font:normal 11px verdana,arial; color:#2D2D2D; padding:4px 10px 4px 0;  text-align:right}
+.r2{float:left; width:76%; font:normal 11px verdana,arial; color:#666666; padding:4px 0 4px 0;}
+#tabrow{width:100%; float:left; background-color:#BC001D}
+#tabrowy{width:100%; float:left; height:20px; margin-top:1px;background-image:url("IMG_URL/profile/ser4_images/ybg.gif")} 
+.row1{float:left; width:100%;clear:both; padding:0px 0 0px 0}
+/*.o16{ font:bold 16px verdana,arial; color:#FF6600}*/
+.o16{ font:bold 16px verdana,arial; color:#858714}
+
+/*.o12{font:normal 12px verdana,arial; color:#FF6600}*/
+.o12{font:normal 12px verdana,arial; color:#858714}
+
+/*.spo{border-bottom:2px solid #FF6600;}*/
+.spo{border-bottom:2px solid #BDBE84;}
+
+.yrow{float:left; width:100%; background-color:#F8F8F8;background-color:#F8F5DB}
+.redb{font:bold 12px verdana, Arial; background-color:#CC0033; color:#ffffff}
+.bor { font-family:verdana,Arial; color:#ffffff; font-weight:bold ; font-size:16px; cursor:pointer; border:1px solid #874201; background-image:url(IMG_URL/profile/ser4_images/bor.gif)}
+
+.pghd{width:100% }
+.hline{background-color:#FFEAAB; padding:5px; border-bottom:1px solid #F8D464; font:normal 11px verdana,arial; color:#76632A}
+.prow{float:left; width:100%;}
+.pb{float:left;font:normal 11px verdana,arial; color:#666666; padding:7px 0 7px 40px}
+.pd{ float:left; padding:5px 0 0 4px; margin: 0 0 0 6px; }
+.pd1{ color:#E98D00; font: bold 13px verdana,arial;}
+.g30{ font:normal 30px arial narrow; color:#cccccc; margin: 3px 0 0 0;}
+div.ptr{background-color:#f8f8f8;}
+div.ptr ul{ list-style-type:none;margin:0px; padding:4px;font:normal 11px verdana,Arial; }
+div.ptr li{width:28%; list-style-type:none; margin:0px; padding:0px; float:left;}
+.bt{width:100%; margin-top:20px}
+
+#artab { margin-left: 0px; }
+#artab ul { margin: 0; padding: 0; list-style: none;  }
+#artab li { float: left; width:22%; margin:0; white-space: nowrap; background:#ffffff; font:normal 12px Verdana,arial;}
+#artab a { float: left; padding: 0; background:url("IMG_URL/profile/ser4_images/reg_arroww.gif");background-repeat:no-repeat;text-decoration: none;color: #423001; width:100%;height:42px;background-position:right;}
+#artab a.current {background-image:url("IMG_URL/profile/ser4_images/reg_arrowc.gif"); height:42px;background-color:#FFEAAB; background-repeat:no-repeat; background-position:right; color: #423001; width:100%;}
+#artab a.previous{background-image:url("IMG_URL/profile/ser4_images/reg_arrowcbg.gif"); height:42px; background-color:#ffffff;background-repeat:no-repeat;background-position:right; color: #423001; width:100%;}
+
+.roundcont { width:100%; height:37px; background: url(IMG_URL/profile/ser4_images/new-user-bg.gif) repeat-x center;;color: #53541A; font:normal 14px verdana,Arial;}
+.roundcont p {margin: 0 20px; padding:5px}
+.roundtop { background: url(IMG_URL/profile/ser4_images/new-user-tr.gif) no-repeat top right; }
+.roundbottom {background: url(IMG_URL/profile/ser4_images/new-user-br.gif) no-repeat bottom right; }
+img.corner {width: 5px;height: 5px;border: none;display: block !important;}
+
+.b_l {background: url(IMG_URL/profile/ser4_images/b_l.gif) 0 100% no-repeat}
+.b_r {background: url(IMG_URL/profile/ser4_images/b_r.gif) 100% 100% no-repeat}
+.t_l {background: url(IMG_URL/profile/ser4_images/t_l.gif) 0 0 no-repeat}
+.t_r {background: url(IMG_URL/profile/ser4_images/t_r.gif) 100% 0 no-repeat; padding:3px} 
+.top {background: url(IMG_URL/profile/ser4_images/dot.gif) 0 0 repeat-x; width: 100%;}
+.bot {background: url(IMG_URL/profile/ser4_images/dot.gif) 0 100% repeat-x}
+.lft {background: url(IMG_URL/profile/ser4_images/dot.gif) 0 0 repeat-y}
+.rgt {background: url(IMG_URL/profile/ser4_images/dot.gif) 100% 0 repeat-y} 
+
+
+div.ttip{
+width:200px; background:#FDFBE6; border:1px solid #757575; color:#857E33; padding:4px; position:absolute; left:120px; top:330px; Z-INDEX: 1500; VISIBILITY: hidden; font:normal 11px verdana,Arial
+                                                                                                                             
+}
+#leftpannel2{float:left; width:175px; margin:0; height:2000px}
+
+/* photo trail css*/
+#trailimageid
+{
+font-size: 0.75em;
+position: absolute;
+display: none;
+left: 0px;
+top: 0px;
+width: 170px;
+height: 220px;
+z-index: 200;
+}
+

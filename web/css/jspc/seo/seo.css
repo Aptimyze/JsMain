@@ -1,0 +1,192 @@
+.com-cover1 {
+    background: url(IMG_URL/images/jspc/commonimg/comncover.jpg) no-repeat center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.compinkbg {
+    background: rgb(217, 71, 92);
+    /* The Fallback */
+    background: rgba(217, 71, 92, 1.00);
+    color: #fff;
+}
+
+.combg1 {
+    background-color: #f2f1f1
+}
+
+.combg2 {
+    background-color: #e7e6e6
+}
+
+.combg3 {
+    background-color: #f2f1f1
+}
+
+.combdr1 {
+    border-bottom: 1px solid #bec2c7
+}
+
+h1, h2, h3, h4 {
+    margin: 0;
+    padding: 0;
+    font-weight: 300;
+    font-size: 26px;
+    color: #34495e;
+}
+
+.comp1 {
+    padding: 15px
+}
+
+.comp2 {
+    margin-left: 6px
+}
+
+ul.bcrumb li a, ul.bcrumb li span {
+    font-size: 15px;
+    color: #999999
+}
+
+ul.bcrumb li {
+    padding: 0 15px 0 24px
+}
+
+ul.bcrumb li:nth-child(1) {
+    padding: 0 15px 0 0
+}
+
+ul.comopts {
+    padding: 0 10px
+}
+
+ul.comopts li {
+    width: 50%;
+    font-size: 20px;
+    color: #34495e;
+}
+
+ul.comopts li span {
+    display: inline-block;
+    padding: 0 10px 6px 10px;
+    cursor: pointer
+}
+
+ul.comopts li.active span {
+    color: #d9475c;
+}
+
+ul.comnfil li {
+    background-color: #cdd3da;
+    margin-left: 6px;
+    margin-top: 6px
+}
+
+ul.comnfil li a {
+    display: inline-block;
+    font-size: 15px;
+    color: #666666;
+    padding: 6px 15px
+}
+
+ul.comnfil li.currPage {
+    background-color: #d9475c;
+}
+
+ul.comnfil li.currPage a {
+    color: #fff;
+    padding: 6px 6px 6px 15px
+}
+
+ul.comlist li {
+    padding-left: 10px;
+    padding-top: 25px;
+    width: 235px
+}
+
+ul.comlist li:nth-child(3n+1) {
+    padding-left: 0;
+    clear: both;
+}
+
+.comic1 {
+    background-position: -5px -244px
+}
+
+.comwid1 {
+    width: 732px
+}
+
+.comwid2 {
+    width: 23%
+}
+
+.comwid2 {
+    width: 235px
+}
+
+.comhgt1 {
+    height: 2px
+}
+
+.comdim1 {
+    width: 235px;
+    height: 235px
+}
+
+.comnPrev {
+    background-position: 0px -146px;
+    width: 37px;
+    height: 30px;
+}
+
+.comnNext {
+    background-position: -38px -146px;
+    width: 37px;
+    height: 30px;
+}
+
+ul.pagination li:nth-child(1) {
+    padding-left: 0
+}
+
+ul.pagination li {
+    font-size: 14px;
+    color: #2c2c2c;
+    padding-left: 27px;
+}
+
+ul.pagination li.active {
+    font-size: 20px;
+    margin-top: -6px;
+}
+
+.comnCross {
+    background-position: -3px -267px;
+    width: 6px;
+    height: 11px;
+}
+
+.vicons.comic1 > span {
+    position: relative;
+    top: 1px;
+}
+
+.profileContent a {
+    text-decoration: none;
+    color: #34495e;
+}
+
+.txtshadow {
+    text-shadow: 1px 1px 8px #000;
+}
+
+.comp3 {
+    padding-top: 190px
+}
+
+.compinkbg.txtc {
+    margin-top: -8px;
+}

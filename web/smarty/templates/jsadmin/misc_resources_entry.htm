@@ -1,0 +1,569 @@
+<html>
+<head>
+	<title>Admin@jeevansathi.com</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<link rel="stylesheet" href="jeevansathi1.css" type="text/css">
+	<link rel="stylesheet" href="jeevansathi1.css" type="text/css">
+	<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+	<style>
+		DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+	</style>
+
+	<script type="text/javascript">
+		var tax_rate = parseFloat(~$TAX_RATE`)/100;
+		function init(){
+			document.frm.sale_amt.value=0
+			document.frm.service_tax.value=0
+			document.frm.service_tax1.value=0
+			document.frm.discount.value=0
+			document.frm.tot_amount.value=0
+		}
+		function displaymessage()
+		{
+			if(isNaN(document.frm.sale_amt.value) || document.frm.sale_amt.value ==='')
+			{
+				alert("please enter only digits")
+				document.frm.sale_amt.value=0
+				document.frm.service_tax.value=0
+				document.frm.service_tax1.value=document.frm.service_tax.value
+			}
+			else
+			{
+				if(document.frm.curtype.value==0)
+				{
+					document.frm.service_tax.value=round_decimals(document.frm.sale_amt.value*tax_rate,2)
+					document.frm.service_tax1.value=document.frm.service_tax.value
+				}
+				else
+				{
+					document.frm.service_tax.value=0
+					document.frm.service_tax1.value=document.frm.service_tax.value
+				}
+			}
+			if(isNaN(document.frm.discount.value) || document.frm.discount.value==='')
+			{
+				alert("please enter only digits")
+				document.frm.discount.value=0
+			}
+			if(isNaN(document.frm.tot_amount.value) || document.frm.tot_amount.value===''){
+				alert("please enter only digits")
+				document.frm.tot_amount.value=0
+			}
+
+		}
+		function round_decimals(original_number, decimals) 
+		{
+		    var result1 = original_number * Math.pow(10, decimals)
+		    var result2 = Math.round(result1)
+		    var result3 = result2 / Math.pow(10, decimals)
+		    return pad_with_zeros(result3, decimals)
+		}
+																	     
+		function pad_with_zeros(rounded_value, decimal_places) 
+		{
+															     
+			// Convert the number to a string
+			var value_string = rounded_value.toString()
+																     
+			// Locate the decimal point
+			var decimal_location = value_string.indexOf(".")
+															     
+			// Is there a decimal point?
+			if (decimal_location == -1) 
+			{
+				// If no, then all decimal places will be padded with 0s
+				decimal_part_length = 0
+																	     
+				// If decimal_places is greater than zero, tack on a decimal point
+				value_string += decimal_places > 0 ? "." : ""
+			}
+			else 
+			{
+				// If yes, then only the extra decimal places will be padded with 0s
+				decimal_part_length = value_string.length - decimal_location - 1
+			}
+			// Calculate the number of decimal places that need to be padded with 0s
+			var pad_total = decimal_places - decimal_part_length
+			if (pad_total > 0)
+			{
+				// Pad the string with 0s
+				for (var counter = 1; counter <= pad_total; counter++)
+				value_string += "0"
+			}
+			return value_string
+		}
+		function adjust()
+		{
+			var deduct_tax_rate = 1 + tax_rate;
+			document.frm.sale_amt.value=round_decimals(((document.frm.tot_amount.value)/deduct_tax_rate),2)
+			document.frm.service_tax.value=round_decimals(((document.frm.sale_amt.value)*tax_rate),2)
+			document.frm.service_tax1.value=document.frm.service_tax.value
+		}
+		function add()
+		{
+			document.frm.tot_amount.value=parseFloat(document.frm.sale_amt.value)+parseFloat(document.frm.service_tax.value)-parseFloat(document.frm.discount.value);
+			document.frm.tot_amount.value = round_decimals(document.frm.tot_amount.value,2);
+		}
+		function discount_deduct()
+		{
+			if(document.frm.discount.value.length==0)
+				document.frm.discount.value=0;
+			document.frm.tot_amount.value = parseFloat(document.frm.sale_amt.value)+parseFloat(document.frm.service_tax.value)-parseFloat(document.frm.discount.value);
+			document.frm.tot_amount.value = round_decimals(document.frm.tot_amount.value,2);
+
+			if(isNaN(document.frm.tot_amount.value))
+				document.frm.tot_amount.value=0;
+		}
+		function removeNew()
+		{
+			if(document.frm.curtype.value==0)
+			{
+				if(document.frm.chk.checked==true)
+				{
+					document.frm.service_tax.value=0
+					document.frm.no_tax_res.disabled=false
+				}
+				else
+				{
+					document.frm.service_tax.value=round_decimals(((document.frm.sale_amt.value)*tax_rate),2)
+					document.frm.no_tax_res.value=''
+					document.frm.no_tax_res.disabled=true
+				}
+				document.frm.service_tax1.value=document.frm.service_tax.value;
+				add();
+			}
+		}
+		function trim(string)
+                {
+                        return string.replace(/^\s*|\s*$/g, "");
+                }
+		function validate()
+		{
+			docF = document.frm;
+			if(trim(docF.comp_name.value).length==0)
+			{
+				alert("Please enter Company/Client Name");
+				docF.comp_name.focus();
+				return false;
+			}
+			if(trim(docF.sale_des.value).length==0)
+			{
+				alert("Please enter Description of Sale");
+				docF.sale_des.focus();
+				return false;
+			}
+			if(trim(docF.sale_amt.value).length==0)
+			{
+				alert("Please enter Amount of Sale");
+				docF.sale_amt.focus();
+				return false;
+			}
+			if((trim(docF.discount.value).length != 0) && (trim(docF.discreason.value).length==0) && trim(docF.discount.value) != 0)
+			{
+				alert("Please enter Discount Reason");
+				docF.discreason.focus();
+				return false;
+			}
+			if(trim(docF.tot_amount.value).length==0)
+			{
+				alert("Please enter Total Amount");
+				docF.tot_amount.focus();
+				return false;
+			}
+			if(docF.chk.checked==true && trim(docF.no_tax_res.value).length==0)
+			{
+				alert("Please enter Reason for no Tax");
+				docF.no_tax_res.focus();
+				return false;
+			}
+			if(docF.end_day.value=="" || docF.end_month.value=="" || docF.end_year.value=="")
+			{
+				alert("Please enter the Service End Date");
+				docF.end_day.focus();
+				return false;
+			}
+		}
+	</script>
+</head>
+<body onload="init();">
+~include file="head_billing.htm"`
+~if $successful_entry`
+	<table width="70%" border="0" cellspacing="1" cellpadding='3' align="center">
+		<tr class="formhead" align="center">
+			<td>You have successfully entered the details and the Sale ID for this client is ~$phrase`</td>
+		</tr>
+		<tr class="fieldsnew" align="center">
+			<td>
+				<a href="search_rev_user.php?cid=~$cid`&phrase=~$phrase`&criteria=~$criteria`">Continue&gt;&gt;</a>
+			</td>
+		</tr>
+	</table>
+~else`
+	<form method="post" action="misc_resources_entry.php" name="frm" onSubmit="return validate();">
+	<table width="70%" border="0" cellspacing="4" cellpadding='4' align="center">
+		<tr class="formhead">
+			<td><font><b>Welcome : ~$user`</b></font></td>
+			<td><a href="~$SITE_URL`/jsadmin/logout.php?cid=~$cid`">Logout</a></td>
+		</tr>
+		<tr>
+			<td class="label">
+				~if $CHECK_COMPANY eq "Y"`
+					<font color=red>Ship To Company/Client Name*</font>
+				~else`
+					Ship To Company/Client Name* 
+				~/if`  
+			</td>
+			<td class="fieldsnew">
+				~if $bureauprofileid neq ''`
+					~$comp_name`
+					<input type="hidden" name="comp_name" value="~$comp_name`">
+				~else`
+					<input type="text" name="comp_name" class="textboxes1" size="40" maxlength="60" value="~$comp_name`">
+				~/if`
+			</td>							
+		</tr>
+		 <tr>
+                        <td class="label">
+			 ~if $CHECK_ADDRESS eq "Y"`
+                                        <font color=red>Ship To Company/Client Address*</font>
+			~else`
+				Ship To Company/Client Address*
+			~/if`
+                        </td>
+                        <td class="fieldsnew">
+                                ~if $bureauprofileid neq ''`
+                                        ~$comp_name`
+                                        <input type="hidden" name="shipAddress" value="~$comp_name`">
+                                ~else`
+                                        <textarea name="shipAddress" class="textboxes1" rows="4" cols="35" >~$shipAddress`</textarea>
+                                ~/if`
+                        </td>
+                </tr>
+		<tr>
+                        <td class="label">
+			 ~if $CHECK_COUNTRY eq "Y"`
+                                        <font color=red>Ship To Company/Client Country*</font>
+			~else`
+				Ship To Client Country*
+			~/if`
+                        </td>
+                        <td class="fieldsnew">
+                                ~if $bureauprofileid neq ''`
+                                        ~$comp_name`
+                                        <input type="hidden" name="shipCountry" value="~$shipCountry`">
+                                ~else`
+                                        <input type="text" name="shipCountry" class="textboxes1" size="40" maxlength="60" value="~$shipCountry`">
+                                ~/if`
+                        </td>
+                </tr>
+		<tr>
+                        <td class="label">
+			 ~if $CHECK_PIN eq "Y"`
+                                        <font color=red>Ship To Company/Client PINCODE*</font>
+			~else`
+				Ship To Client PINCODE*
+			~/if`
+                        </td>
+                        <td class="fieldsnew">
+                                ~if $bureauprofileid neq ''`
+                                        ~$comp_name`
+                                        <input type="hidden" name="shipPIN" value="~$shipPIN`">
+                                ~else`
+                                        <input type="text" name="shipPIN" class="textboxes1" size="40" maxlength="60" value="~$shipPIN`">
+                                ~/if`
+                        </td>
+                </tr>
+		<tr>
+                        <td class="label">
+			 ~if $CHECK_PHONE eq "Y"`
+                                        <font color=red>Ship To Company/Client Contact No.*</font>
+			~else`
+				Ship To Client Contact No.*
+			~/if`
+                        </td>
+                        <td class="fieldsnew">
+                                ~if $bureauprofileid neq ''`
+                                        ~$comp_name`
+                                        <input type="hidden" name="shipPhone" value="~$shipPhone`">
+                                ~else`
+                                        <input type="text" name="shipPhone" class="textboxes1" size="40" maxlength="60" value="~$shipPhone`">
+                                ~/if`
+                        </td>
+                </tr>
+		<tr>
+                        <td class="label">
+			 ~if $CHECK_EMAIL eq "Y"`
+				<font color=red>Ship To Company/Client Email*</font>
+			~else`
+				Ship To Client Email*
+			~/if`
+                        </td>
+                        <td class="fieldsnew">
+                                ~if $bureauprofileid neq ''`
+                                        ~$comp_name`
+                                        <input type="hidden" name="shipEmail" value="~$shipEmail`">
+                                ~else`
+                                        <input type="text" name="shipEmail" class="textboxes1" size="40" maxlength="60" value="~$shipEmail`">
+                                ~/if`
+                        </td>
+                </tr>
+		<tr>
+			<td class="label">
+				~if $CHECK_SALE_DES eq "Y"`
+					<font color=red>Description of Sale*</font>
+				~else`
+					Description of Sale*
+				~/if`
+			</td>
+			<td class="fieldsnew">
+				<textarea name="sale_des"  rows="4" cols="33" maxlength="20"   ~$sale_des`>~$sale_des`</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="label">
+				~if $CHECK_CATEGORY eq "Y"`
+					<font color=red>Category*</font>
+				~else`
+					Category*
+				~/if`
+			</td>
+			<td class="fieldsnew">
+				~if $bureauprofileid neq ''`
+					Marriage Bureau <input type="hidden" name="category" value="~$category`">
+				~else`
+				<select name="category">
+					~section name=next loop=$misc_category`
+						<option value="~$misc_category[next].value`" ~if $category eq $misc_category[next].value`selected ~/if`>~$misc_category[next].name`</option>
+					~/section`
+				</select>
+				~/if`
+			</td>
+		</tr>
+		<tr>
+			<td class="label">
+				~if $CHECK_SALE_BY eq "Y"`
+					<font color=red>Sale By*</font>
+				~else`
+					Sale By* 
+				~/if`
+			</td>
+			<td class="fieldsnew">
+				<select name="sale_by">
+				~section name=sec loop=$employee` 
+					<option value="~$employee[sec]`" ~if $sale_by eq $employee[sec]`selected ~/if`>~$employee[sec]`</option>
+				~/section`
+				</select>
+			</td>
+		</tr>
+                <tr>
+                        <td class="label">
+                                        <font>Sale Type*</font>
+                        </td>
+                        <td class="fieldsnew">
+                                <select name="sale_type_sel">
+                                ~section name=sec loop=$sale_type`
+                                        <option value="~$sale_type[sec].value`" ~if $sale_type eq $sale_type[sec].value`selected ~/if`>~$sale_type[sec].name`</option>
+                                ~/section`
+                                </select>
+                        </td>
+                </tr>
+		<tr>
+			<td class="label">
+				~if $CHECK_CURTYPE eq "Y"`
+					<font color=red>Currency Type*</font>
+				~else`
+					Currency Type*
+				~/if`
+			</td>
+			<td class="fieldsnew">
+				<select name="curtype">
+					<option value="0" ~if $CURTYPE eq "0" or $CURTYPE eq ""`selected~/if`>Rupees</option>
+					<option value="1" ~if $CURTYPE eq "1"`selected~/if`>US($)</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="label">
+				~if $CHECK_SALE_AMT eq "Y"`
+						<font color=red>Amount Of Sale*</font>
+					~else`
+						Amount Of Sale*
+				~/if`
+			</td>
+			<td class="fieldsnew">
+					<input type="text" name="sale_amt" class="textboxes1" size="10" maxlength="20" value="~$sale_amt`" AUTOCOMPLETE="OFF" onKeyUp="displaymessage(); add();" >
+			</td>
+		</tr>
+		<tr>
+			<td class="label">
+				~if $CHECK_SERVICE_TAX eq "Y"`
+					<font color=red>Service Tax*</font>
+				~else`
+					Service Tax*
+				~/if`
+			</td>
+			<td class="fieldsnew">
+				<input type="text" name="service_tax" class="textboxes1" size="10" maxlength="20" ~if $service_tax eq ''` value=0 ~else`  value=~$service_tax`  ~/if` disabled  >
+			</td>
+		</tr>
+		<tr>
+			<td class="label">Discount</td>
+			<td class="fieldsnew">
+				<input type="text" name="discount" class="textboxes1" ~if $discount` value="~$discount`" ~else` value="0" ~/if` size="10" maxlength="20" AUTOCOMPLETE="OFF" onKeyUp="displaymessage(); discount_deduct();">
+			</td>
+										     
+		</tr>
+		<tr>
+			<td class="label">
+				~if $CHECK_DISC_REASON eq "Y"`
+					<font color=red>Discount REason</font>
+				~else`
+					Discount Reason
+				~/if`
+			</td>
+			<td class="fieldsnew">
+				<input type="text" name="discreason" value="~$discreason`" class="textboxes1" />
+			</td>
+		</tr>
+		<tr>
+			<td class="label">
+				~if $CHECK_TOTAL eq "Y"`
+					<font color=red>Total Amount*</font>
+				~else`
+					Total Amount*
+				~/if`
+			</td>
+			<td class="fieldsnew">
+				<input type="text" name="tot_amount" class="textboxes1" size="10" maxlength="20" AUTOCOMPLETE="OFF" value="~$tot_amount`" onFocus="add();"  onChange="displaymessage(); adjust();">
+				<font class ="label" style="display:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Remove tax</font>
+				<input style="display:none;" type="checkbox" name="chk" onClick="removeNew();">
+				<!--
+				<font class ="label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Remove tax</font>
+				<input type="checkbox" name="chk" onClick="removeNew();">
+				-->
+			</td>
+		</tr>
+		<tr style="display:none;">
+		<!-- <tr> -->
+			<td class="label">
+				~if $CHECK_TAX_RES eq "Y"`
+					<font color=red>Reason for no Tax*</font>
+				~else`
+					Reason for no Tax*
+				~/if`
+			</td>
+			<td class="fieldsnew">
+				<input type="text" name="no_tax_res" class="textboxes1" size="40" maxlength="60" value="~$no_tax_res`" ~if $CHECK_TAX_RES neq "Y"` disabled ~/if`>
+			</td>
+		</tr>
+		<tr>
+			<td class="label">
+				~if $CHECK_START_DT eq "Y"`
+					<font color=red>Service Start Date*</font>
+				~else`
+					Service Start Date*
+				~/if`
+			</td>
+			<td class="fieldsnew">
+				<select name="start_day">
+				~section name=sec loop=$ddarr`
+					<option value="~$ddarr[sec]`" ~if $cur_day eq $ddarr[sec]`selected ~/if`>~$ddarr[sec]`</option>
+				~/section`
+				</select> -
+				<select name="start_month">
+				~section name=sec loop=$mmarr`
+					<option value="~$mmarr[sec]`"~if $cur_month eq $mmarr[sec]`selected ~/if`>~$mmarr[sec]`</option>
+				~/section`
+				</select> -
+				<select name="start_year">
+				~section name=sec loop=$yyarr`
+					<option value="~$yyarr[sec]`"~if $cur_year eq $yyarr[sec]`selected ~/if`>~$yyarr[sec]`</option>
+				~/section`
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="label">
+				~if $CHECK_END_DT eq "Y"`
+					<font color=red>Service End Date*</font>
+				~else`
+					Service End Date*
+				~/if`
+			</td>
+			<td class="fieldsnew">
+				<select name="end_day">
+				<option value="">dd</option>
+				~section name=sec loop=$ddarr`
+					<option value="~$ddarr[sec]`">~$ddarr[sec]`</option>
+				~/section`
+				</select> -
+				<select name="end_month">
+				<option value="">mm</option>
+				~section name=sec loop=$mmarr`
+					<option value="~$mmarr[sec]`">~$mmarr[sec]`</option>
+				~/section`
+				</select> -
+				<select name="end_year">
+				<option value="">yy</option>
+				~section name=sec loop=$yyarr`
+					<option value="~$yyarr[sec]`">~$yyarr[sec]`</option>
+				~/section`
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="label">
+				~if $CHECK_DUE_DT eq "Y"`
+					<font color=red>Due Date*</font>
+				~else`
+					Due Date*
+				~/if`
+			</td>
+			<td class="fieldsnew">
+				<select name="dt">
+				~section name=sec loop=$ddarr`
+					<option value="~$ddarr[sec]`" ~if $cur_day eq $ddarr[sec]`selected ~/if`>~$ddarr[sec]`</option>
+				~/section`
+				</select> -
+				<select name="mm">
+				~section name=sec loop=$mmarr`
+					<option value="~$mmarr[sec]`"~if $cur_month eq $mmarr[sec]`selected ~/if`>~$mmarr[sec]`</option>
+				~/section`
+				</select> -
+				<select name="yy">
+				~section name=sec loop=$yyarr`
+					<option value="~$yyarr[sec]`"~if $cur_year eq $yyarr[sec]`selected ~/if`>~$yyarr[sec]`</option>
+				~/section`
+				</select>
+			</td>
+		</tr>
+	</table>
+	<table width="600" border="0" cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+		<tr>
+			<td align="center">
+				<input type="hidden" name="cid" value=~$cid`>
+				<input type="hidden" name="user" value=~$user`>
+				<input type="hidden" name="val" value=~$val`>
+				<input type="hidden" name="username" value=~$username`> 
+				<input type="hidden" name="pid" value=~$pid`> 
+				<input type="hidden" name="billid" value=~$billid`>
+				<input type="hidden" name="link_msg" value=~$link_msg`>
+				<input type="hidden" name="dueamount" value=~$DUEAMOUNT`>
+				<input type="hidden" name="dueamount_new" value=~$DUEAMOUNT_NEW`>
+				<input type="hidden" name="upgrade_price" value=~$UPGRADE_PRICE`>
+				<input type="hidden" name="entrydt" value=~$ENTRYDT`>
+				<input type="hidden" name="ref_amount" value=~$REF_AMOUNT`>
+				<input type="hidden" name="paidamount" value=~$PAIDAMOUNT`>
+				<input type="hidden" name="pricenew" value=~$PRICENEW`>
+				<input type="hidden" name="show" value="makepaid">
+				<input type="hidden" name="service_tax1">
+				<input type="hidden" name="bureauprofileid" value=~$bureauprofileid`>
+				<input type="submit" name="CMDSubmit" value="Submit" class="buttons1">
+			</td>
+		</tr>
+	</table>
+	</form>
+~/if`
+</body>
+</html>
+

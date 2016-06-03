@@ -1,0 +1,116 @@
+<html>
+<head>
+<title>JeevanSathi Matrimonials - Faq's</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="http://www.jeevansathi.com/P/I/styles.php" type="text/css">
+<script language="JavaScript">
+<!--
+function newWindow(url, height, width) {
+    nameW='feature'
+ if (navigator.appVersion.indexOf('4') != -1) {
+ // Vars for centering the new window on Version 4 Browsers
+ xTop = screen.width/2 - (width/2);
+ yTop = screen.height/2 - (height/2);
+ window.open(url, nameW, 'height='+height+',width='+width+',scrollbars=1,resizable=0,menubar=0,toolbar=0,status=0,location=0,directories=0,left=' + xTop + ',top=' + yTop + '');
+ } else {
+ window.open(url, nameW, 'height='+height+',width='+width+',scrollbars=1,resizable=0,menubar=0,toolbar=0,status=0,location=0,directories=0,left=150,top=200');
+ }
+}
+//-->
+</SCRIPT>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body leftmargin="5" topmargin="5">
+
+~$HEAD`
+~$SUBHEADER`
+~$LEFTPANEL`
+
+<table width="78%" border="0" cellspacing="0" cellpadding="0" align="center" height="800">
+<tr>
+<td valign="top">
+<table width="100%"  border="0" align="center" cellpadding="2" cellspacing="2">
+<tr class="bgsgrey" name=top>
+<td colspan="6" class="mediumblack"><span class=class5>
+        <a href="faq_main.php?checksum=~$CHECKSUM`&tracepath=0">Top--&gt;</a>
+        ~section name=sec loop=$linkarr`
+        <a href="faq_main.php?checksum=~$CHECKSUM`&tracepath=~$linkarr[sec].id`">~$linkarr[sec].name`--&gt;</a>
+        ~/section`
+</span>
+</td>
+</tr>
+~if $show_main_flag eq 'Y'`
+~section name=sec loop=$arr`
+<tr>
+  <td width="3%" class="extrabigblack"><img src="~$IMG_URL`/profile/ser4_images/arrow_bg-white.gif" width="6" height="10"></td>
+  <td width="97%" class="extrabigblack"><span class=class6><a href="#~$arr[sec].id`"><b>~$arr[sec].ques`</b></a></span></td>
+</tr>
+~/section`
+<tr>
+<td colspan=2><br><br></td>
+</tr>
+<tr>
+  <td width="3%" class="extrabigblack"><img src="~$IMG_URL`/profile/ser4_images/arrow_bg-white.gif" width="6" height="10"></td>
+  <td width="97%" class="extrabigblack"><span class=class6><a href="faq_other.php?checksum=~$CHECKSUM`&tracepath=~$tracepath`"><b>For service related issues click here</b></a></span></td>
+</tr>
+<tr>
+<td colspan=100%>&nbsp;
+<br><br><br><br><br><br>
+</td>
+</tr>
+~/if`
+~section name=sec loop=$arr`
+<tr>
+<td colspan=100%>&nbsp;
+<a name=~$arr[sec].id`>
+</td>
+</tr>
+ ~if $arr[sec].is_q eq 'N'`
+<tr>
+  <td width="3%" class="extrabigblack"><img src="~$IMG_URL`/profile/ser4_images/arrow_bg-white.gif" width="6" height="10"></td>
+  <td width="97%" class="extrabigblack"><span class=class6><b>~$arr[sec].ques`</b></span></td>
+</tr>
+~section name=sec1 loop=$ansarr[sec]`
+ <tr>
+  <td class="extrabigblack">&nbsp;</a></td>
+  <td class="bigblack"><span class= class5><a href="faq_main.php?checksum=~$CHECKSUM`&tracepath=~$tracepath`.~$arr[sec].id`#~$ansarr[sec][sec1].id`">~$ansarr[sec][sec1].ans`</a></span></td>
+ </tr>
+~/section`
+<tr>
+<td colspan=100% class=bigblack><span class=class6>&nbsp;<a href="#Top">Top</a></span></td>
+</tr>
+<tr>
+<td colspan=100%>&nbsp;
+<br><br><br><br><br>
+</td></tr>
+ ~elseif $arr[sec].is_q eq 'Y'`
+ <tr>
+  <td class="extrabigblack" width=3%>&nbsp;</td>
+ <td class="bigblack" width=97%><span class= class5><a name="~$arr[sec].id`"></a><b>~$arr[sec].ques`</b></span></td>
+</tr>
+ <tr>
+  <td class="extrabigblack">&nbsp;</td>
+  <td class="bigblack"><span class= class5>~$arr[sec].ans`</span></td>
+ </tr>
+ <tr>
+  <td class="bigblack" align=left>&nbsp;<span class= class6><a href="#top">Top</a></span></td>
+  <td class="bigblack" align=right><span class=class6><a href="faq_other.php?checksum=~$CHECKSUM`&tracepath=~$tracepath`">Need to know more?</a></span></td>
+ </tr>
+ ~/if`
+~/section`
+<tr>
+<td colspan=2><br><br></td>
+</tr>
+<tr>
+  <td width="3%" class="extrabigblack"><img src="~$IMG_URL`/profile/ser4_images/arrow_bg-white.gif" width="6" height="10"></td>
+  <td width="97%" class="extrabigblack"><span class=class6><a href="faq_other.php?checksum=~$CHECKSUM`&tracepath=~$tracepath`"><b>For service related issues click here</b></a></span></td>
+</tr>
+</table></td>
+</tr>
+</table>
+
+<br>
+~$SUBFOOTER`
+<br>
+~$FOOT`
+</body>
+</html>

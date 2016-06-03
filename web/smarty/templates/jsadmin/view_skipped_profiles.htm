@@ -1,0 +1,97 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Skipped Profiles : Jeevansathi.com Matrimonial Services</title>
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+</head>
+~include file="head.htm"`
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table width=90% cellspacing="1" cellpadding="3" ALIGN="CENTER" >
+<tr class="formhead">
+	<td width=33% class="formhead" border=1 align="center"><font><b>Welcome : ~$user`</b></font></td>
+	~if $FROM eq "P"`
+	 <td width=33% class="formhead" border=1 align='CENTER'><a href="view_photo_profile_count.php?cid=~$cid`&user=~$user`&val=~$val`">Click here to go to back</a></td>
+	~else`
+		~if $FROM eq 'MP'`
+		<td width=33% class="formhead" border=1 align='CENTER'><a href="view_photo_profile_count.php?cid=~$cid`&user=~$user`&val=~$val`">Click here to go to back</a></td>
+		~else`
+	 <td width=33% class="formhead" border=1 align='CENTER'><a href="view_profile_count.php?cid=~$cid`&val=~$val`">Click here to go to back</a></td>
+		~/if`
+	~/if`
+	<td width=33% class="formhead" border=1 align='CENTER'><a href="logout.php?cid=~$cid`">Logout</a></td>
+</tr>
+</table>
+<br>
+<table width=100% align="CENTER">
+<tr align="CENTER">
+	<td class="formhead" colspan="9" height="23"><b><font size="4" color="blue">Skipped Profiles </font></b></td>
+</tr>
+~if $FROM eq 'MP'`
+<tr align="CENTER">
+        <td class="label" width=2% height="20"><b>S.No.</b></td>
+        <td class="label" width=10% height="21"><b>Sender</b></td>
+        <td class="label" width=20% height="21"><b>Subject</b></td>
+        <td class="label" width=12% height="21"><b>Alloted time(IST)</b></td>
+        <td class="label" width=10% height="21"><b>Alloted to</b></td>
+        <td class="label" width=12% height="21"><b>Comments</b></td>
+        <td class="label" width=10% height="21"><b>View </b></td>       
+</tr>
+~else`
+<tr align="CENTER">
+	<td class="label" width=2% height="20"><b>S.No.</b></td>
+	<td class="label" width=10% height="21"><b>Profile ID</b></td>
+	<td class="label" width=20% height="21"><b>User Name</b></td>
+	<td class="label" width=12% height="21"><b>Alloted Time(IST)</b></td>
+	<td class="label" width=12% height="21"><b>Submit Time(IST)</b></td>      
+	<td class="label" width=10% height="21"><b>Alloted to</b></td>      
+	<td class="label" width=12% height="21"><b>Comments</b></td>      
+	<td class="label" width=10% height="21"><b>View </b></td>	
+	<td class="label" width=12% height="21"><b>Remaining Time </b></td>	
+</tr>
+~/if`
+~section name=index loop=$ROW`
+~if $FROM eq 'MP'`
+<tr align="CENTER" bgcolor="#fbfbfb" class="~$ROW[index].bandcolor`">
+        <td height="20" align="CENTER">~$ROW[index].sno`</td>
+        <td height="21">~$ROW[index].sender`</td>
+        <td height="21" align="CENTER">~$ROW[index].subject`</td>
+        <td height="21">~$ROW[index].alloted_date`</td>
+        <td height="21">~$ROW[index].alloted_to`</td>
+        <td height="21">~$ROW[index].comments`</td>
+        <td height="21"><b> <a href="/operations.php/photoScreening/skippedProfileScreen?sender=~$ROW[index].sender`&cid=~$cid`&user=~$user`&mailid=~$ROW[index].mailid`&val=~$val`&pid=~$ROW[index].profileid`&from=~$FROM`">view</a></td> </b></td>
+</tr>
+
+~else`
+<tr align="CENTER" bgcolor="#fbfbfb" class="~$ROW[index].bandcolor`">
+	<td height="20" align="CENTER">~$ROW[index].sno`</td>
+	<td height="21">~$ROW[index].profileid`</td>
+	<td height="21" align="LEFT">~$ROW[index].username`</td>
+	<td height="21">~$ROW[index].receive_time`</td>
+	<td height="21">~$ROW[index].submit_time`</td>
+	<td height="21">~$ROW[index].alloted_to`</td>
+	<td height="21">~$ROW[index].comments`</td>
+	~if $FROM eq "P"`
+	   <td height="21"><b> <a href="/operations.php/photoScreening/skippedProfileScreen?pid=~$ROW[index].profileid`&cid=~$cid`&user=~$user`&val=~$val`&from=~$FROM`">view</a></td> </b></td>
+	~else`
+	<td height="21"><b> <a href="screen_new.php?profileid=~$ROW[index].profileid`&cid=~$cid`&user=~$user`&val=~$val`&from_skipped=1">view</a></td> </b></td>	
+	~/if`
+	<td height="20" width="13%" class="~$ROW[index].status_color`" >~$ROW[index].remaining_time`</td>
+</tr>
+~/if`
+~/section`
+<tr bgcolor="#fbfbfb">
+	<td colspan="9" height="21">&nbsp; </td>
+</tr>
+<tr>
+	<td colspan="9" height="21">&nbsp; </td>
+</tr>
+<tr >
+	<td width="8%" height="21">&nbsp; </td>
+</tr>
+</table>
+</form>
+<br><br><br><br>
+~include file="foot.htm"`
+</body>
+</html>

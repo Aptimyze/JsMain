@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Address Verification</title>
+<link href="~$IMG_URL`/min/?f=/profile/css/adr_vrfy.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+	function disp_box(){
+		document.getElementById('scan_doc').style.display="block";	
+	}	
+	function page_location(type,SITE_URL){
+		location.href=SITE_URL+"/profile/addr_confrm.php?addrStatus="+type;
+	}	
+</script>
+
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body>
+<!--Header starts here-->
+~$REVAMP_HEAD`
+<!--Header starts here-->
+
+<div class="container">
+<p class="clr_15"></p>
+<!--Top search band starts here-->
+<div id="topSearchBand"></div>
+<!--Top search band ends here-->
+
+<!--Sub Header starts here-->
+<div style="width: 740px; font-size: 12px ! important;" class="fr">
+~$SUB_HEAD`
+</div>
+<!--Sub header ends here-->
+<p class="clr_15"></p>
+<!--Address Verification Container Starts here-->
+
+<!-- Address Update Section -->
+~if $contentDisplay eq 'updation'`
+<div class="adr_vrfy">
+<h5>Thank you for providing us with your correct address.</h5>
+<p class="clr_15"></p>
+<p>Now, get it verified to give your profile a Vishwas Seal. This not only helps your profile look more authentic but also reflects your sincerity in finding a life partner. Hence, your chances of meeting the perfect match increase manifold.<br /><br /></p>
+<p>To get your address verified, you just need to allow one of our associates to collect a photocopy of  your Residence Proof from your place. </p>
+<p class="clr_15"></p>
+<div class="res_prf">
+<u>Residence Proof Documents</u><br />
+
+<span class="gray">( Photocopy of any 1 of the following will do )<br /></span>
+<br />
+<label>1. Passport</label><label>5. Credit Card statement</label><br />
+<label>2. Driving licence</label><label>6. Electricity bill</label><br />
+<label>3. Bank statement</label><label>7. Mobile/Landline bill</label><br />
+<label>4. Election ID card</label><label>8. Insurance policy (Any)</label>
+<br /><br />
+<p>Once the address verification has been done, you would be counted among 
+the most sincere and genuine members on Jeevansathi.com.
+
+<br /><br />Regards,<br />
+Jeevansathi.com Team </p>
+</div>
+  <!--Adress Benefits starts here-->
+  <div class="adr_bnfts fl d_inl">
+      <div style="height: 5px; background:#fdf899;">
+            <div class="c" style="border-width: 1px 0pt 0pt; margin: 0pt 5px -2px;"></div>
+                  <s class="c c1"></s> <s class="c c2"></s> <s class="c c3"></s> <s class="c c4"></s> </div>
+
+    <div class="gtlk_mid">
+          <div class="fl gtlk_mid_txt d_inl"><i class="gtlk_arw btn_sprte fl"></i>
+                  <div class="gtlk_txt fl">
+                          <ul>
+                                  <li>Allow Verification</li>
+                                          <li>Get Special Vishwas Seal</li>
+                                                  <li>Appear on top for other users</li>
+
+        </ul>
+                </div>
+                      </div>
+                            <p class="clr"></p>
+                                </div>
+                                    <div style="height: 5px; margin-top: -1px; background:#fdf899;"> <s class="c c4"></s> <s class="c c3"></s> <s class="c c2"></s> <s class="c c1"></s>
+                                          <div class="c gtlk_btm_cur"></div>
+
+    </div>
+      </div>
+        <!--Adress Benefits ends here-->
+<p class="clr_15"></p>
+<div align="center"><br /><br />
+<button style="font:bold 14px Arial, Helvetica, sans-serif; width:210px; padding:6px 8px;" onclick="javascript:page_location('3','~$SITE_URL`');"><b>Allow Address Verification</b></button>
+<button class="ml_17 d_inl" style="background:url(~$IMG_URL`/profile/images/gry_btn_bg_2.gif) repeat-x 0 -3px; padding:6px 8px; font:bold 14px Arial, Helvetica, sans-serif;" onclick="javascript:page_location('4','~$SITE_URL`');">Don’t Allow</button>
+</div>
+</div>
+~/if`
+<!-- Address Update Section Ends -->
+
+
+<!-- Address Confirm Section Starts -->
+~if $contentDisplay eq 'confirmation'`
+<div class="adr_vrfy">
+<h5>Thank you for confirming your address.</h5>
+<p class="clr_15"></p>
+<p>Now, get it verified to give your profile a Vishwas Seal. This not only helps your profile look more authentic but also reflects your sincerity in finding a life partner. Hence, your chances of meeting the perfect match increase manifold.<br /><br /></p>
+<p>To get your address verified, you just need to allow one of our associates to collect a photocopy of  your Residence Proof from your place. </p>
+<p class="clr_15"></p>
+<div class="res_prf">
+<u>Residence Proof Documents</u><br />
+
+<span class="gray">( Photocopy of any 1 of the following will do )<br /></span>
+<br />
+<label>1. Passport</label><label>5. Credit Card statement</label><br />
+<label>2. Driving licence</label><label>6. Electricity bill</label><br />
+<label>3. Bank statement</label><label>7. Mobile/Landline bill</label><br />
+<label>4. Election ID card</label><label>8. Insurance policy (Any)</label>
+<br /><br />
+<p>Once the address verification has been done, you would be counted among 
+the most sincere and genuine members on Jeevansathi.com.
+
+<br /><br />Regards,<br />
+Jeevansathi.com Team </p>
+</div>
+  <!--Adress Benefits starts here-->
+  <div class="adr_bnfts fl d_inl">
+      <div style="height: 5px; background:#fdf899;">
+            <div class="c" style="border-width: 1px 0pt 0pt; margin: 0pt 5px -2px;"></div>
+                  <s class="c c1"></s> <s class="c c2"></s> <s class="c c3"></s> <s class="c c4"></s> </div>
+
+    <div class="gtlk_mid">
+          <div class="fl gtlk_mid_txt d_inl"><i class="gtlk_arw btn_sprte fl"></i>
+                  <p class="gtlk_txt fl">
+                          <ul>
+                                  <li>Allow Verification</li>
+                                          <li>Get Special Vishwas Seal</li>
+                                                  <li>Appear on top for other users</li>
+
+        </ul>
+                </p>
+                      </div>
+                            <p class="clr"></p>
+                                </div>
+                                    <div style="height: 5px; margin-top: -1px; background:#fdf899;"> <s class="c c4"></s> <s class="c c3"></s> <s class="c c2"></s> <s class="c c1"></s>
+                                          <div class="c gtlk_btm_cur"></div>
+
+    </div>
+      </div>
+        <!--Adress Benefits ends here-->
+<p class="clr_15"></p>
+<div align="center"><br /><br />
+<button style="font:bold 14px Arial, Helvetica, sans-serif; width:210px; padding:6px 8px" onclick="javascript:page_location('3','~$SITE_URL`');"><b>Allow Address Verification</b></button>
+<button class="ml_17 d_inl" style="background:url(images/gry_btn_bg_2.gif) repeat-x 0 -3px; padding:6px 8px; font:bold 14px Arial, Helvetica, sans-serif;" onclick="javascript:page_location('4','~$SITE_URL`');">Don’t Allow</button>
+</div>
+</div>
+~/if`	
+<!-- Address Confirm Section Ends -->
+
+
+<!-- Address Verification Section Starts -->
+~if $contentDisplay eq 'verification'`
+<div class="adr_vrfy">
+<h5>Thanks for accepting address verification request.</h5>
+<p class="clr_15"></p>
+<p>Soon, a Jeevansathi.com associate will call you to fix up an appropriate time to collect your verification documents.<br />
+Please keep a photocopy of any one of the following documents at your residence.</p>
+<p class="clr_15"></p>
+<div class="res_prf">
+<label>1. Passport</label><label>5. Credit Card statement</label><br />
+
+<label>2. Driving licence</label><label>6. Electricity bill</label><br />
+<label>3. Bank statement</label><label>7. Mobile/Landline bill</label><br />
+<label>4. Election ID card</label><label>8. Insurance policy (Any)</label>
+<br /><br /><br />Regards,<br />
+Jeevansathi.com Team </p>
+</div>
+</div>
+~/if`
+<!-- Address Verify Section Ends -->
+
+
+<!-- Address Deny Section Starts -->
+~if $contentDisplay eq 'denial'`
+<div class="adr_vrfy">
+<h5>We regret to inform that you are not eligible for Vishwas Seal as you did not select address 
+verification. This might lower the number of people who contact you.
+</h5>
+<p class="clr_15"></p>
+<button style="width:214px;" onclick="javascript:page_location('2','~$SITE_URL`');"><b>Go back to  Address Verification</b></button><br /><br />
+<b class="f16 gray">Or</b><br /><br />
+<button style="width:214px;" onclick="javascript:disp_box();"><b>Email / Post Scanned Documents</b></button>
+<p class="clr_15"></p>
+
+<div id="scan_doc" class="scn_doc" style="display:none">
+	<b class="f16">Scan your documents (only 1) and email to :</b>
+	<br />
+	<a href="mailto:photos@jeevansathi.com" class="f16" >photos@jeevansathi.com</a>
+	<p class="clr_8"></p>
+	<span class="gray">Please mention your User ID in the email</span><br /><br />
+	<b class="f16">Or</b><br /><br />
+	<b class="f16">Photocopy your documents (only 1) and post to :<br />
+	Jeevansathi.com<br />
+	B-55 sector-2 Noida (UP)</b>
+	<p class="clr_8"></p>
+	<span class="gray">Please write your User ID on both back and front of the photocopy</span>
+</div>
+</div>
+~/if`
+<!-- Address Deny Section Ends -->
+
+
+<!--Address Verification Container Ends here-->
+</div>
+
+<p class="clr_15"></p>
+~$FOOT`
+<!--Footer Ends here-->
+</ body>
+</html>
+

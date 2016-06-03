@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Client Feedback Form</title>
+<script type="text/javascript" >
+function chk_alert(fail,pass)
+{
+	if(fail)
+		alert("Incorrect Username");
+	else if(pass==1)
+		alert("Your data has been submitted");
+	else if(pass==2)
+		alert("Your data has been updated");
+}
+
+function chk_user()
+{
+	if(document.getElementById("username").value=="")
+	{
+		alert("Please enter a username");
+		return false;
+	}
+return true;
+}
+</script>
+</head>
+<body onload="return chk_alert(~$COND`,~$DONC`)">
+<form action="client_feedback.php?cid=~$cid`&check=0"  method="get" id="cff" name="cff" onsubmit="return chk_user()">
+<input type ="hidden" name="cid" value=~$cid`>
+<input type ="hidden" name="check" value=0>
+Please enter username:<input type ="text" id ="username" name ="username" value="" />
+<input type ="submit" name="submit" value="Add Info" id="submit"/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="mainpage.php?cid=~$cid`">Mainpage</a>
+~if $DONC eq 2`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=# onclick="javascript:window.close();">Close the Window</a>
+~/if`
+</form>
+</body>
+</html>

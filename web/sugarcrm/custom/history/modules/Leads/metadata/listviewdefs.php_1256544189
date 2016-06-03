@@ -1,0 +1,216 @@
+<?php
+$listViewDefs ['Leads'] = 
+array (
+  'FULL_NAME' => 
+  array (
+    'name' => 'full_name',
+    'rname' => 'full_name',
+    'vname' => 'LBL_NAME',
+    'type' => 'name',
+    'fields' => 
+    array (
+      0 => 'first_name',
+      1 => 'last_name',
+    ),
+    'sort_on' => 'last_name',
+    'source' => 'non-db',
+    'group' => 'last_name',
+    'len' => '510',
+    'db_concat_fields' => 
+    array (
+      0 => 'first_name',
+      1 => 'last_name',
+    ),
+    'width' => '10%',
+    'link' => true,
+    'label' => 'LBL_NAME',
+    'related_fields' => 
+    array (
+      0 => 'first_name',
+      1 => 'last_name',
+    ),
+    'orderBy' => 'last_name',
+    'default' => true,
+  ),
+  'ASSISTANT' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_ASSISTANT',
+    'default' => true,
+  ),
+  'PHONE_MOBILE' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_MOBILE_PHONE',
+    'default' => true,
+  ),
+  'PHONE_HOME' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_HOME_PHONE',
+    'default' => true,
+  ),
+  'LEAD_SOURCE' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_LEAD_SOURCE',
+    'default' => true,
+  ),
+  'CASTE_C' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_CASTE',
+    'default' => true,
+  ),
+  'USERNAME_C' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_USERNAME',
+    'default' => true,
+  ),
+  'MARITAL_STATUS_C' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_MARITAL_STATUS',
+    'default' => true,
+  ),
+  'CAMPAIGN_NAME' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_CAMPAIGN',
+    'default' => true,
+  ),
+  'ASSIGNED_USER_NAME' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_LIST_ASSIGNED_USER',
+    'default' => true,
+  ),
+  'MOTHER_TONGUE_C' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_MOTHER_TONGUE',
+    'default' => false,
+  ),
+  'PHONE_WORK' => 
+  array (
+    'width' => '15%',
+    'label' => 'LBL_LIST_PHONE',
+    'default' => false,
+  ),
+  'TITLE' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_TITLE',
+    'default' => false,
+  ),
+  'REFERED_BY' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_REFERED_BY',
+    'default' => false,
+  ),
+  'DEPARTMENT' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_DEPARTMENT',
+    'default' => false,
+  ),
+  'DO_NOT_CALL' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_DO_NOT_CALL',
+    'default' => false,
+  ),
+  'PHONE_OTHER' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_OTHER_PHONE',
+    'default' => false,
+  ),
+  'PHONE_FAX' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_FAX_PHONE',
+    'default' => false,
+  ),
+  'PRIMARY_ADDRESS_COUNTRY' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_PRIMARY_ADDRESS_COUNTRY',
+    'default' => false,
+  ),
+  'PRIMARY_ADDRESS_STREET' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_PRIMARY_ADDRESS_STREET',
+    'default' => false,
+  ),
+  'PRIMARY_ADDRESS_CITY' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_PRIMARY_ADDRESS_CITY',
+    'default' => false,
+  ),
+  'PRIMARY_ADDRESS_STATE' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_PRIMARY_ADDRESS_STATE',
+    'default' => false,
+  ),
+  'PRIMARY_ADDRESS_POSTALCODE' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_PRIMARY_ADDRESS_POSTALCODE',
+    'default' => false,
+  ),
+  'ALT_ADDRESS_COUNTRY' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_ALT_ADDRESS_COUNTRY',
+    'default' => false,
+  ),
+  'ALT_ADDRESS_STREET' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_ALT_ADDRESS_STREET',
+    'default' => false,
+  ),
+  'ALT_ADDRESS_CITY' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_ALT_ADDRESS_CITY',
+    'default' => false,
+  ),
+  'ALT_ADDRESS_STATE' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_ALT_ADDRESS_STATE',
+    'default' => false,
+  ),
+  'ALT_ADDRESS_POSTALCODE' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_ALT_ADDRESS_POSTALCODE',
+    'default' => false,
+  ),
+  'DATE_ENTERED' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_DATE_ENTERED',
+    'default' => false,
+  ),
+  'CREATED_BY' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_CREATED',
+    'default' => false,
+  ),
+  'MODIFIED_BY_NAME' => 
+  array (
+    'width' => '10%',
+    'label' => 'LBL_MODIFIED',
+    'default' => false,
+  ),
+);
+?>

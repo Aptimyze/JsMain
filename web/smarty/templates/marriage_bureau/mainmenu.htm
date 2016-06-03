@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<!-- saved from url=(0054)file://I:\personal\shweta1\marriageBu\MB_Interface.htm -->
+<HTML><HEAD><TITLE>Marriage Bureau Interface</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1"><LINK 
+href="Marriage Bureau Interface2_files/styles.css" type=text/css 
+rel=stylesheet><LINK 
+href="C:\Documents and Settings\TOSHIBA\Desktop\Marriage Bureau Interface2_files\styles(1).css" 
+type=text/css rel=stylesheet>
+<link rel="stylesheet" href="http://www.jeevansathi.com/P/I/styles.php" type="text/css">
+<link rel="stylesheet" href="http://www.jeevansathi.com/P/IN/styles.php" type="text/css">
+<STYLE type=text/css>BODY {
+	MARGIN-TOP: 25px
+}
+</STYLE>
+
+<META content="MSHTML 6.00.2900.2802" name=GENERATOR></HEAD>
+<BODY bgColor=#ffffff>
+~$HEAD`
+<TABLE 
+style="BORDER-RIGHT: #000000 1px solid; BORDER-TOP: #000000 1px solid; BORDER-LEFT: #000000 1px solid; BORDER-BOTTOM: #000000 1px solid" 
+width=775 align=center bgColor=#ffffff>
+  <TBODY>
+    <TD>
+      <TABLE class=mediumblack 
+      style="BORDER-RIGHT: #999999 1px solid; BORDER-TOP: #999999 1px solid; BORDER-LEFT: #999999 1px solid; BORDER-BOTTOM: #999999 1px solid" 
+      cellSpacing=0 cellPadding=3 width=770 align=center>
+        <TBODY>
+        <TR>
+          <TD colSpan=2>&nbsp;</TD></TR>
+        <TR bgColor=#ffe8c5>
+          <TD 
+          style="BORDER-TOP: #999999 1px dashed; PADDING-LEFT: 10px; BORDER-BOTTOM: #999999 1px dashed" 
+          colSpan=2><B>My Account </B></TD></TR>
+        <TR bgColor=#ffffff>
+          <TD style="PADDING-LEFT: 10px; BORDER-BOTTOM: #999999 1px dashed" 
+          colSpan=2>You have logged in as <B>~$username`</B> </TD></TR>
+        <TR bgColor=#ffffff>
+          <TD style="PADDING-LEFT: 10px; BORDER-BOTTOM: #999999 1px dashed" 
+          width=343>Your current balance is: <B>Rs. ~$money` </B></TD>
+          <TD style="PADDING-LEFT: 10px; BORDER-BOTTOM: #999999 1px dashed" 
+          width=430>To change contact details: <A class=link 
+            href="/marriage_bureau/change_contact_details.php?mbchecksum=~$cid`">click 
+            here </A></TD></TR>
+        <TR>
+          <TD colSpan=2>&nbsp;</TD></TR>
+        <TR bgColor=#ffe8c5>
+          <TD 
+          style="BORDER-TOP: #999999 1px dashed; PADDING-LEFT: 10px; BORDER-BOTTOM: #999999 1px dashed" 
+          colSpan=1><B>Post a Profile</B> <A class=link 
+            href="/profile/inputprofile.php?source=~$source`&mbchecksum=~$cid`">click 
+            here </A></TD>
+	<TD
+          style="BORDER-TOP: #999999 1px dashed; PADDING-LEFT: 10px; BORDER-BOTTOM: #999999 1px dashed"
+          colSpan=1><B>Change Password</B> <A class=link
+            href="/marriage_bureau/change_password.php?source=~$source`&mbchecksum=~$cid`">click
+            here </A></TD>
+	</TR>
+        <TR>
+          <TD colSpan=2>&nbsp;</TD></TR>
+        <TR bgColor=#ffe8c5>
+          <TD 
+          style="BORDER-TOP: #999999 1px dashed; PADDING-LEFT: 10px; BORDER-BOTTOM: #999999 1px dashed" 
+          colSpan=2><B>Profiles posted by you</B></TD></TR>
+        <TR bgColor=#ffffff>
+          <TD 
+            style="PADDING-LEFT: 10px; BORDER-BOTTOM: #999999 1px dashed">Profiles 
+            posted on Jeevansathi: </TD>
+          <TD style="PADDING-LEFT: 10px; BORDER-BOTTOM: #999999 1px dashed">~$profilesposted`</TD></TR>
+        <TR>
+          <TD colSpan=2>&nbsp;</TD></TR>
+~if $showing_contacts eq "0"`
+        <TR bgColor=#ffffff>
+          <TD 
+          style="PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; PADDING-TOP: 10px" 
+          colSpan=2>
+            <TABLE class=mediumblack border="1" 
+            style="BORDER-RIGHT: #999999 1px solid; BORDER-TOP: #999999 1px solid; BORDER-LEFT: #999999 1px solid; BORDER-BOTTOM: #999999 1px solid" 
+            cellSpacing=0 cellPadding=3 width=750 align=center>
+              <TBODY>
+              <TR bgColor=#feceb3>
+                <TD align=center><B>Member</B></TD>
+		<TD align=center><B>Profile Status</B></TD>
+                <TD align=center><B>New Response Received</B></TD>
+                <TD align=center><B>Response Viewed </B></TD>
+		<TD align=center><B>Response Viewed(declined later) </B></TD>
+		<TD align=center><B>Contact details Viewed</B></TD>
+		<TD align=center><B>Contact details Viewed(declined later)</B></TD></TR>
+
+~section name=a loop=$mb_profile`
+              <TR bgColor=#ffffff>
+                <TD style="BORDER-BOTTOM: #999999 1px solid" align=center><a href="~$SITE_URL`/profile/viewprofile.php?username=~$mb_profile[a].USERNAME`&mbchecksum=~$cid`&source=~$source`&pid=~$mb_profile[a].PROFILEID`&mbureau=bureau">~$mb_profile[a].USERNAME`</a></TD>
+		<TD style="BORDER-BOTTOM: #999999 1px solid" align=center><a href="~$SITE_URL`/profile/viewprofile.php?username=~$mb_profile[a].USERNAME`&mbchecksum=~$cid`&source=~$source`&pid=~$mb_profile[a].PROFILEID`&mbureau=bureau">~$mb_profile[a].ACTIVATED`</a></TD>
+                <TD style="BORDER-BOTTOM: #999999 1px solid" align=center>~if $mb_profile[a].newcontacts neq "0"`<a href="~$SITE_URL`/profile/mb_results_new.php?pid=~$mb_profile[a].PROFILEID`&curcount=0&mbchecksum=~$cid`&whatsthat=newcontact">~$mb_profile[a].newcontacts`</a>~else` ~$mb_profile[a].newcontacts` ~/if`</TD>
+		<TD style="BORDER-BOTTOM: #999999 1px solid" align=center>~if $mb_profile[a].contacts neq "0"`<a href="~$SITE_URL`/profile/mb_results_seen.php?pid=~$mb_profile[a].PROFILEID`&curcount=0&mbchecksum=~$cid`&whatsthat=viewed"> ~$mb_profile[a].contacts`</a>~else` ~$mb_profile[a].contacts` ~/if`</TD>
+		<TD style="BORDER-BOTTOM: #999999 1px solid" align=center>~if $mb_profile[a].deletedcontacts neq ''`<a href="~$SITE_URL`/profile/mb_results_seen.php?pid=~$mb_profile[a].PROFILEID`&trick_bybureau=1&curcount=0&mbchecksum=~$cid`&whatsthat=viewed"> ~$mb_profile[a].deletedcontacts`</a>~else`0~/if`</TD>
+		<TD style="BORDER-BOTTOM: #999999 1px solid" align=center>~if $mb_profile[a].viewed neq "0"`<a href="~$SITE_URL`/profile/mb_results_contactdetails_seen.php?pid=~$mb_profile[a].PROFILEID`&curcount=0&mbchecksum=~$cid`&whatsthat=viewed"> ~$mb_profile[a].viewed`</a>~else` ~$mb_profile[a].viewed` ~/if`</TD>
+		 <TD style="BORDER-BOTTOM: #999999 1px solid" align=center>~if $mb_profile[a].declined_viewed neq ''`<a href="~$SITE_URL`/profile/mb_results_contactdetails_seen.php?pid=~$mb_profile[a].PROFILEID`&curcount=0&trick_bybureau=1&mbchecksum=~$cid`&whatsthat=viewed"> ~$mb_profile[a].declined_viewed`</a>~else`0 ~/if`</TD>
+              <TR>
+~/section`
+
+~if $delete_contact gt 0`
+        <TR bgColor=#ffffff>
+                <TD style="BORDER-BOTTOM: #999999 1px solid" align=center>All Deleted Members</TD>
+                <TD style="BORDER-BOTTOM: #999999 1px solid" align=center>Deleted</TD>
+                <TD></TD>
+                <TD></TD>
+                <TD></TD>
+                <TD style="BORDER-BOTTOM: #999999 1px solid" align=center>~$delete_contact`</TD>
+        </TR>
+~/if`
+
+~/if`
+</TBODY></TABLE></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE>
+<table>
+<tr><td class="mediumblack">
+~$PAGELINK`
+</td></tr>
+</table>
+</BODY></HTML>

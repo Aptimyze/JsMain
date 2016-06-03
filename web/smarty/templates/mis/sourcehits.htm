@@ -1,0 +1,439 @@
+<html>
+<head>
+   <title>Jeevansathi.com - MIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+
+
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+</body>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br>
+<center>
+<font color=green>C = Conversion Ratio</font>&nbsp;&nbsp;
+<font color=red>R = Registered Profiles</font>&nbsp;&nbsp;
+<font color=orange>A = Average Profiles</font>&nbsp;&nbsp;
+<font color=blue>H = Total Hits</font>
+</center>
+<br>
+<table width=100% border=0 align="center">
+~if $dflag eq '1'`
+	<tr class="formhead">
+	<td colspan=100% align="center">&nbsp;Month : ~$dt`</td>
+	</tr>
+~elseif $hflag eq '1'`
+	<tr class="formhead">
+	<td colspan=14 align="center">&nbsp;Day : ~$dt`</td>
+	</tr>
+~elseif $mflag eq '1'`
+	<tr class="formhead">
+	<td colspan=14 align="center">&nbsp;Financial Year ~$dt`-~$dt1`</td>
+	</tr>
+~/if`
+
+<tr class="formhead">
+<td colspan=100% align="right">~if $level neq "1" and $flag_b neq "1"` <a href="sourcehits.php?CMDGo=Go&checksum=~$checksum`&sourcegp=~$sourcegp`&profile_type=~$profile_type`&community=~$community`&gender=~$gender`&mstatus=~$mstatus`&country=~$country`&subs=~$subs`&incomplete=~$incomplete`&activated=~$activated`&show_all_record=~$show_all_record`&ddate_mon=~$ddate_mon`&ddate_yyyy=~$ddate_yyyy`&mdate_yyyy=~$mdate_yyyy`&get_today=~$get_today`&dflag=~$dflag`&mflag=~$mflag`&dt_type=~$dt_type`&prop_mis=Y">Property wise MIS</a>&nbsp;&nbsp;&nbsp;~/if`<a href="sourcehits.php?download=1&checksum=~$checksum`&sourcegp=~$sourcegp`&profile_type=~$profile_type`&community=~$community`&gender=~$gender`&mstatus=~$mstatus`&country=~$country`&subs=~$subs`&incomplete=~$incomplete`&activated=~$activated`&show_all_record=~$show_all_record`&ddate_mon=~$ddate_mon`&ddate_yyyy=~$ddate_yyyy`&mdate_yyyy=~$mdate_yyyy`&get_today=~$get_today`&dflag=~$dflag`&$mflag=~$mflag`&dt_type=~$dt_type`">Download CSV</a></td>
+<!--
+<td colspan=100% align="center"><a href="sourcehits.php?download=1&querynotrun=0&checksum=~$checksum`&srcarr=~$srcarr`&cnt=~$cnt`&tota=~$tota`&avgtota=~$avgtota`&totb=~$totb`&toallp=~$totallp`&totallm=~$toallm`&avgtotallm=~$avgtotallm`&totallh=~$totallh`&b_count=~$b_count`&b_tota=~$b_tota`">Download</a></td>
+-->
+</table>
+<br>
+<table width=100% border=0 align="center" cellspacing="4" cellpadding=5>
+<tr class="label">
+<td width=10% align="center">&nbsp;Source : ~if $source neq ''` ~$source` ~else` All ~/if`</td>
+<td width=10% align="center">&nbsp;Community : ~if $community[0] neq ''` ~$community[0]` ~else` All ~/if`</td>
+<td width=10% align="center">&nbsp;Gender : ~if $gender neq ''` ~$gender` ~else` All ~/if`</td>
+<td width=10% align="center">&nbsp;Marital Status : ~if $mstatus neq ''` ~$mstatus` ~else` All ~/if`</td>
+<td width=10% align="center">&nbsp;Country : ~if $country[0] neq ''` ~$country[0]` ~else` All ~/if`</td>
+<td width=10% align="center">&nbsp;Subscription : ~if $subs neq ''` ~$subs` ~else` All ~/if`</td>
+<td width=10% align="center">&nbsp;Activated : ~if $activated neq ''` ~$activated` ~else` All ~/if`</td>
+<td width=10% align="center">&nbsp;Incomplete : ~if $incomplete neq ''` ~$incomplete` ~else` All ~/if`</td>
+<td width=10% align="center">&nbsp;Secondary Source : ~if $sec_sources neq ''` ~$sec_sources` ~else` All ~/if`</td>
+</tr>
+</table>
+<table width=100% border=0 align="center" cellspacing="4" cellpadding=5>
+~if $mflag eq '1'`
+	<table width="150%" align="center" border=0 cellspacing=4 cellpadding=5>
+	<tr class="label">
+	<td align="center">&nbsp;Month</td>
+	<td align="center">&nbsp;Color</td>
+	~section name=mon loop=$mmarr`
+		<td width=6% align="center">&nbsp;~$mmarr[mon]`</td>
+	~/section`
+	<td align="center">&nbsp;total</td>
+	<td align="center">&nbsp;Color</td>
+	<td align="center">&nbsp;Month</td>
+	</tr>
+<!--code added by sriram -->
+	~section name=src loop=$srcarr`
+		<tr class="fieldsnew">
+		<td align="center" class="label" rowspan="4">&nbsp;~if $level eq "1"`<a href="sourcehits.php?CMDGo=Go&checksum=~$checksum`&sourcegp=~$srcarr[src]`&profile_type=~$profile_type`&community=~$community`&gender=~$gender`&mstatus=~$mstatus`&country=~$country`&subs=~$subs`&incomplete=~$incomplete`&activated=~$activated`&dt_type=~$dt_type`&ddate_mon=~$ddate_mon`&ddate_yyyy=~$ddate_yyyy`&mdate_yyyy=~$mdate_yyyy`&get_today=~$get_today`">~/if`~$srcarr[src]`</a><p>~if $src_namearr neq ''`  (~$src_namearr[src]`) ~else`  ~/if` ~if $level neq "1"`<!--IFRAME src="serve_banner_source.php?source=~$srcarr[src]`&image_type=~$src_imagearr[src]`" align="middle" width="100" height="50" MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no BORDERCOLOR="#000000"></IFRAME-->~if $src_proparr[src]`<br>(~$src_proparr[src]`) ~else`<br>( NO_PROPERTY )~/if`~/if`</p></td>
+
+		<td align="center" class="label"><span class="green" valign=top>C</span></td>
+		~section name=mon loop=$mmarr`
+			<td width=6% align="center"><span class="green" valign=top>~$cnt[src][mon].p`</span></td>
+		~/section`
+		<td align="center" class="label"><span class="green" valign=top>~$tota[src].p`</span></td>
+		<td align="center" class="label"><span class="green" valign=top>C</span></td>
+		<td align="center" class="label" rowspan="4">&nbsp;~$srcarr[src]`<p>~if $src_namearr neq ''` (~$src_namearr[src]`) ~else`  ~/if`</p></td>
+		</tr>
+
+		<tr class="fieldsnew">
+		<td align="center" class="label"><span class="red" valign=top>R</span></td>
+		~section name=mon loop=$mmarr`
+			<td width=6% align="center"><span class="red" valign=top>~$cnt[src][mon].m`</span></td>
+		~/section`
+		<td align="center" class="label"><span class="red" valign=top>~$tota[src].m`</span></td>
+		<td align="center" class="label"><span class="red" valign=top>R</span></td>
+
+
+		<tr class="fieldsnew">
+                <td align="center" class="label"><span class="orange" valign=center>A</span></td>
+		~section name=mon loop=$mmarr`
+			<td width=6% align="center"><span class="orange" valign=center>~$cnt[src][mon].e`</span></td>
+		~/section`
+		<td align="center" class="label"><span class="orange" valign=center>~$tota[src].e`</span></td>
+		<td align="center" class="label"><span class="orange" valign=center>A</span></td>
+
+		<tr class="fieldsnew">
+                <td align="center" class="label"><span class="blue" valign=bottom>H</span></td>
+		~section name=mon loop=$mmarr`
+			<td width=6% align="center"><span class="blue" valign=bottom>~$cnt[src][mon].h`</span></td>
+		~/section`
+		<td align="center" class="label"><span class="blue" valign=bottom>~$tota[src].h`</span></td>
+		<td align="center" class="label"><span class="blue" valign=bottom>H</span></td>
+	~/section`
+
+<!--		~section name=src loop=$srcarr`
+				<tr class="fieldsnew">
+				<td align="center" class="label">&nbsp;~$srcarr[src]`</td>
+				~section name=mon loop=$mmarr`
+					<td width=6% align="center"><span class="green" valign=top>~$cnt[src][mon].p`</span><br><span class="red" valign=top>~$cnt[src][mon].m`</span><br><span class="orange" valign=center>~$cnt[src][mon].e`</span><br><span class="blue" valign=bottom>~$cnt[src][mon].h`</span></td>
+				~/section`
+				<td align="center" class="label"><span class="green" valign=top>~$tota[src].p`</span><br><span class="red" valign=top>~$tota[src].m`</span><br><span class="orange" valign=center>~$tota[src].e`</span><br><span class="blue" valign=bottom>~$tota[src].h`</span></td>
+				</tr>
+		~/section`
+-->
+
+                <tr><td>&nbsp;</td></tr>
+<!--code added by sriram -->
+		<tr class="label">
+		<td align="center" rowspan="4">&nbsp;Total</td>
+		<td width=6% align="center" class="label"><span class="green" valign=top>C</span></td>
+		~section name=mon loop=$mmarr`
+			<td width=6% align="center"><span class="green" valign=top>~$totb[mon].p`</span></td>
+		~/section`
+		<td align="center"><span class="green" valign=top>~$totallp`</span></td>
+		<td width=6% align="center" class="label"><span class="green" valign=top>C</span></td>
+		<td align="center" rowspan="4">&nbsp;Total</td>
+		</tr>
+
+		<tr class="label">
+		<td width=6% align="center" class="label"><span class="red" valign=top>R</span></td>
+		~section name=mon loop=$mmarr`
+			<td width=6% align="center"><span class="red" valign=top>~$totb[mon].m`</span></td>
+		~/section`
+		<td align="center"><span class="red" valign=top>~$totallm`</span></td>
+		<td width=6% align="center" class="label"><span class="red" valign=top>R</span></td>
+		</tr>
+
+		<tr class="label">
+		<td width=6% align="center" class="label"><span class="orange" valign=center>A</span></td>
+		~section name=mon loop=$mmarr`
+			<td width=6% align="center"><span class="orange" valign=center>~$totb[mon].e`</span></td>
+		~/section`
+		<td width=6% align="center" class="label"><span class="orange" valign=center>~$totalle`</span></td>
+		<td width=6% align="center" class="label"><span class="orange" valign=center>A</span></td>
+		</tr>
+
+		<tr class="label">
+                <td width=6% align="center" class="label"><span class="blue" valign=bottom>H</span></td>
+		~section name=mon loop=$mmarr`
+			<td width=6% align="center"><span class="blue" valign=bottom>~$totb[mon].h`</span></td>
+		~/section`
+		<td width=6% align="center" class="label"><span class="blue" valign=bottom>~$totallh`</span></td>
+		<td width=6% align="center" class="label"><span class="blue" valign=bottom>H</span></td>
+		</tr>
+
+		
+<!--end of code added by sriram -->
+		
+<!--
+		~section name=mon loop=$mmarr`
+			<td width=6% align="center"><span class="green" valign=top>~$totb[mon].p`</span><br><span class="red" valign=top>~$totb[mon].m`</span><br><span class="orange" valign=center>~$totb[mon].e`</span><br><span class="blue" valign=bottom>~$totb[mon].h`</span></td>
+		~/section`
+
+		<td align="center"><span class="green" valign=top>~$totallp`</span><br><span class="red" valign=top>~$totallm`</span><br><span class="orange" valign=center>~$totalle`</span><br><span class="blue" valign=bottom>~$totallh`</span></td>
+		</tr>
+-->
+
+		~if $flag_bs eq '1'`
+		<tr class="label">
+                <td align="center" rowspan="4">&nbsp;Business Sathi</td>
+		<td width=6% align="center" class="label"><span class="green" valign=top>C</span></td>
+		~section name=dd loop=$mmarr`
+			<td width=6% align="center"><span class="green" valign=top>~$b_count[dd].p`</span></td>
+		~/section`
+		<td align="center"><span class="green" valign=top>~$b_tota.p`</span></td>
+		<td width=6% align="center" class="label"><span class="green" valign=top>C</span></td>
+		<td align="center" rowspan="4">&nbsp;Business Sathi</td>
+
+		<tr class="label">
+		<td width=6% align="center" class="label"><span class="red" valign=top>R</span></td>
+		~section name=dd loop=$mmarr`
+			<td width=6% align="center"><span class="red" valign=top>~$b_count[dd].m`</span></td>
+		~/section`
+		<td width=6% align="center" class="label"><span class="red" valign=top>~$b_tota.m`</span></td>
+		<td width=6% align="center" class="label"><span class="red" valign=top>R</span></td>
+
+		<tr class="label">
+		<td width=6% align="center" class="label"><span class="orange" valign=center>A</span></td>
+		~section name=dd loop=$mmarr`
+			<td width=6% align="center"><span class="orange" valign=center></span></td>
+		~/section`
+		<td width=6% align="center" class="label"><span class="orange" valign=center>~$b_tota.e`</span></td>
+		<td width=6% align="center" class="label"><span class="orange" valign=center>A</span></td>
+
+		<tr class="label">
+		<td width=6% align="center" class="label"><span class="blue" valign=bottom>H</span></td>
+		~section name=dd loop=$mmarr`
+			<td width=6% align="center"><span class="blue" valign=bottom>~$b_count[dd].h`</span></td>
+		~/section`
+		<td width=6% align="center" class="label"><span class="blue" valign=bottom>~$b_tota.h`</span></td>
+		<td width=6% align="center" class="label"><span class="blue" valign=bottom>H</span></td>
+		~/if`
+
+<!--		~if $flag_bs eq '1'`
+		<tr class="label">
+		<td align="center">&nbsp;Business Sathi</td>
+		~section name=dd loop=$mmarr`
+			<td width=6% align="center"><span class="green" valign=top>~$b_count[dd].p`</span><br><span class="red" valign=top>~$b_count[dd].m`</span><br><span class="orange" valign=center></span><br><span class="blue" valign=bottom>~$b_count[dd].h`</span></td>
+		~/section`
+		<td align="center"><span class="green" valign=top>~$b_tota.p`</span><br><span class="red" valign=top>~$b_tota.m`</span><br><span class="orange" valign=center>~$b_tota.e`</span><br><span class="blue" valign=bottom>~$b_tota.h`</span></td>
+		</tr>
+		~/if`
+-->
+	</table>
+~elseif $hflag eq '1'`
+	<table width="100%" align="center" border=0 cellspacing=4 cellpadding=5>
+	<tr class="label">
+	<td align="center" width=15%>&nbsp;Month</td>
+	~section name=hh loop=$hharr`
+		<td width=6% align="center">&nbsp;~$hharr[hh]`</td>
+	~/section`
+	<td align="center" width="15%">&nbsp;Total</td>
+	</tr>
+	~section name=src loop=$srcarr`
+			<tr class="fieldsnew">
+			<td align="center" class="label">&nbsp;~$srcarr[src]`</td>
+			~section name=hh loop=$hharr`
+				<td width=6% align="center">&nbsp;~$cnt[src][hh]`</td>
+			~/section`
+			<td align="center" class="label">&nbsp;~$tota[src]`</td>
+			</tr>
+	~/section`
+	<tr class="label">
+	<td align="center">&nbsp;total</td>
+	~section name=hh loop=$hharr`
+		<td width=6% align="center">&nbsp;~$totb[hh]`</td>
+		~assign var="td" value=$totb[hh]`
+		~assign var="totall" value=$totall+$td`
+	~/section`
+	<td align="center">~$totall`</td>
+	</tr>
+	</table>
+~elseif $dflag eq '1'`
+	<table width="150%" align="center" border=0 cellspacing=2 cellpadding=5>
+	<tr class="label">
+	<td align="center" width=6%>&nbsp;Day</td>
+	<td align="center" width=6%>&nbsp;Color</td>
+	~section name=dd loop=$ddarr`
+		<td align="center">&nbsp;~$ddarr[dd]`</td>
+	~/section`
+	<td align="center" width="6%">&nbsp;total</td>
+	<td align="center" width=6%>&nbsp;Color</td>
+	<td align="center" width=6%>&nbsp;Day</td>
+	</tr>
+<!--code added by sriram -->
+	~section name=src loop=$srcarr`
+		<tr class="fieldsnew">
+		<td align="center" class="label" rowspan="4">&nbsp;~if $level eq "1"`<a href=sourcehits.php?CMDGo=Go&checksum=~$checksum`&sourcegp=~$srcarr[src]`&profile_type=~$profile_type`&community=~$community`&gender=~$gender`&mstatus=~$mstatus`&country=~$country`&subs=~$subs`&incomplete=~$incomplete`&activated=~$activated`&dt_type=~$dt_type`&ddate_mon=~$ddate_mon`&ddate_yyyy=~$ddate_yyyy`&mdate_yyyy=~$mdate_yyyy`&get_today=~$get_today`>~/if`~$srcarr[src]`</a><p>~if $src_namearr neq ''` (~$src_namearr[src]`) ~else`  ~/if`~if $level neq "1"`<!--IFRAME src="serve_banner_source.php?source=~$srcarr[src]`&image_type=~$src_imagearr[src]`" align="middle" width="100" height="50" MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no BORDERCOLOR="#000000"></IFRAME-->~if $src_proparr[src]`<br>(~$src_proparr[src]`) ~else`<br>( NO_PROPERTY ) ~/if`~/if`</p></td>
+		<td width=6% align="center" class="label"><span class="green" valign=top>C</span></td>
+		~section name=dd loop=$ddarr`
+			<td width=6% align="center"><span class="green" valign=top>~$cnt[src][dd].p`</span></td>
+		~/section`
+			<td align="center" class="label"><span class="green" valign=top>~$tota[src].p`</span></td>
+			<td width=6% align="center" class="label"><span class="green" valign=top>C</span></td>
+			<td align="center" class="label" rowspan="4">&nbsp;~$srcarr[src]`<p>~if $src_namearr neq ''` (~$src_namearr[src]`) ~else`  ~/if`</p></td>
+		</tr>
+
+		<tr class="fieldsnew">
+
+		<td width=6% align="center" class="label"><span class="red" valign=top>R</span></td>
+		~section name=dd loop=$ddarr`
+			<td width=6% align="center"><span class="red" valign=top>~if $IS_GROUP eq 'N'`<a href="get_source_members_list.php?cid=~$checksum`&activated=~$activated`&day=~$smarty.section.dd.index_next`&month=~$dt`&sourceid=~$srcarr[src]`">~$cnt[src][dd].m`</a>~else`~$cnt[src][dd].m`~/if`</span></td>
+		~/section`
+			<td align="center" class="label"><span class="red" valign=top>~$tota[src].m`</span></td>
+			<td width=6% align="center" class="label"><span class="red" valign=top>R</span></td>
+		</tr>
+
+		<tr class="fieldsnew">
+		<td width=6% align="center" class="label"><span class="orange" valign=center>A</span></td>
+		~section name=dd loop=$ddarr`
+                        <td width=6% align="center"><span class="orange" valign=center>~$cnt[src][dd].e`</span></td>
+		~/section`
+			<td align="center" class="label"><span class="orange" valign=center>~$avgtota[src]`</span></td>
+			<td width=6% align="center" class="label"><span class="orange" valign=center>A</span></td>
+		</tr>
+
+		<tr class="fieldsnew">
+		<td width=6% align="center" class="label"><span class="blue" valign=bottom>H</span></td>
+		~section name=dd loop=$ddarr`
+			<td width=6% align="center"><span class="blue" valign=bottom>~$cnt[src][dd].h`</span></td>
+		~/section`
+			<td align="center" class="label"><span class="blue" valign=bottom>~$tota[src].h`</span></td>
+			<td width=6% align="center" class="label"><span class="blue" valign=bottom>H</span></td>
+		</tr>
+	~/section`
+<!--end of code by sriram -->
+
+<!--	~section name=src loop=$srcarr`
+			<tr class="fieldsnew">
+			<td align="center" class="label">&nbsp;~$srcarr[src]`</td>
+			~section name=dd loop=$ddarr`
+			<td width=6% align="center"><span class="green" valign=top>~$cnt[src][dd].p`</span><br><span class="red" valign=top>~if $IS_GROUP eq 'N'`<a href="get_source_members_list.php?cid=~$checksum`&activated=~$activated`&day=~$smarty.section.dd.index_next`&month=~$dt`&sourceid=~$srcarr[src]`">~$cnt[src][dd].m`</a>~else`~$cnt[src][dd].m`~/if`</span><br><span class="orange" valign=center>~$cnt[src][dd].e`</span><br><span class="blue" valign=bottom>~$cnt[src][dd].h`</span></td>
+	
+			~/section`
+			<td align="center" class="label"><span class="green" valign=top>~$tota[src].p`</span><br><span class="red" valign=top>~$tota[src].m`</span><br><span class="orange" valign=center>~$avgtota[src]`</span><br><span class="blue" valign=bottom>~$tota[src].h`</span></td>
+			</tr>
+	~/section`
+-->
+
+<!--code added by sriram-->
+	~if $flag_b eq '0'`
+	<tr class="label">
+        <td align="center" rowspan="4">&nbsp;Total</td>
+	<td width=6% align="center" class="label"><span class="green" valign=top>C</span></td>
+
+		~section name=dd loop=$ddarr`
+		<td width=6% align="center"><span class="green" valign=top>~$totb[dd].p`</span></td>
+		~/section`
+		<td align="center"><span class="green" valign=top>~$totallp`</span></td>
+		<td width=6% align="center" class="label"><span class="green" valign=top>C</span></td>
+		<td align="center" rowspan="4">&nbsp;Total</td>
+	</tr>
+
+	 <tr class="label">
+		<td width=6% align="center" class="label"><span class="red" valign=top>R</span></td>
+                ~section name=dd loop=$ddarr`
+                <td width=6% align="center"><span class="red" valign=top>~$totb[dd].m`</span></td>
+                ~/section`
+		<td align="center"><span class="red" valign=top>~$totallm`</span></td>
+			<td width=6% align="center" class="label"><span class="red" valign=top>R</span></td>
+        </tr>
+
+	<tr class="label">
+		<td width=6% align="center" class="label"><span class="orange" valign=center>A</span></td>
+                ~section name=dd loop=$ddarr`
+                <td width=6% align="center"><span class="orange" valign=center>~$totb[dd].e`</span></td>
+                ~/section`
+		<td align="center"><span class="orange" valign=center>~$avgtotallm`</span></td>
+		<td width=6% align="center" class="label"><span class="orange" valign=center>A</span></td>
+        </tr>
+
+	<tr class="label">
+		<td width=6% align="center" class="label"><span class="blue" valign=bottom>H</span></td>
+                ~section name=dd loop=$ddarr`
+                <td width=6% align="center"><span class="blue" valign=bottom>~$totb[dd].h`</span></td>
+                ~/section`
+		<td align="center"><span class="blue" valign=bottom>~$totallh`</span></td>
+		<td width=6% align="center" class="label"><span class="blue" valign=bottom>H</span></td>
+        </tr>
+	~/if`
+<!--end of code added by sriram-->
+
+<!--	~if $flag_b eq '0'`
+	<tr class="label">
+	<td align="center">&nbsp;Total</td>
+	~section name=dd loop=$ddarr`
+		<td width=6% align="center"><span class="green" valign=top>~$totb[dd].p`</span><br><span class="red" valign=top>~$totb[dd].m`</span><br><span class="orange" valign=center>~$totb[dd].e`</span><br><span class="blue" valign=bottom>~$totb[dd].h`</span></td>
+	~/section`
+	<td align="center"><span class="green" valign=top>~$totallp`</span><br><span class="red" valign=top>~$totallm`</span><br><span class="orange" valign=center>~$avgtotallm`</span><br><span class="blue" valign=bottom>~$totallh`</span></td>
+	</tr>
+	~/if`
+-->
+
+<!--code added by sriram-->
+	~if $flag_bs eq '1'`
+	<tr class="label">
+        <td align="center" rowspan="4">&nbsp;Business Sathi</td>
+	<td width=6% align="center" class="label"><span class="green" valign=top>C</span></td>
+
+	~section name=dd loop=$ddarr`
+	<td width=6% align="center"><span class="green" valign=top>~$b_count[dd].p`</span></td>
+	~/section`
+
+	<td align="center"><span class="green" valign=top>~$b_tota.p`</span></td>
+	<td width=6% align="center" class="label"><span class="green" valign=top>C</span></td>
+	<td align="center" rowspan="4">&nbsp;Business Sathi</td>
+	</tr>
+
+	<tr class="label">
+	<td width=6% align="center" class="label"><span class="red" valign=top>R</span></td>
+	~section name=dd loop=$ddarr`
+        <td width=6% align="center"><span class="red" valign=top>~$b_count[dd].m`</span></td>
+        ~/section`
+	<td align="center"><span class="red" valign=top>~$b_tota.m`</span></td>
+	<td width=6% align="center" class="label"><span class="red" valign=top>R</span></td>
+	</tr>
+
+	<tr class="label">
+	<td width=6% align="center" class="label"><span class="orange" valign=center>A</span></td>
+        ~section name=dd loop=$ddarr`
+        <td width=6% align="center"><span class="orange" valign=center></span></td>
+        ~/section`
+        <td align="center"><span class="orange" valign=center>~$b_tota.e`</span></td>
+	<td width=6% align="center" class="label"><span class="orange" valign=center>A</span></td>
+        </tr>
+
+	<tr class="label">
+	<td width=6% align="center" class="label"><span class="blue" valign=bottom>H</span></td>
+        ~section name=dd loop=$ddarr`
+        <td width=6% align="center"><span class="blue" valign=bottom>~$b_count[dd].h`</span></td>
+        ~/section`
+        <td align="center"><span class="blue" valign=bottom>~$b_tota.h`</span></td>
+	<td width=6% align="center" class="label"><span class="blue" valign=bottom>H</span></td>
+        </tr>
+
+	~/if`
+
+<!--end of code added by sriram-->
+
+<!--	~if $flag_bs eq '1'`
+	<tr class="label">
+        <td align="center">&nbsp;Business Sathi</td>
+        ~section name=dd loop=$ddarr`
+                <td width=6% align="center"><span class="green" valign=top>~$b_count[dd].p`</span><br><span class="red" valign=top>~$b_count[dd].m`</span><br><span class="orange" valign=center></span><br><span class="blue" valign=bottom>~$b_count[dd].h`</span></td>
+        ~/section`
+        <td align="center"><span class="green" valign=top>~$b_tota.p`</span><br><span class="red" valign=top>~$b_tota.m`</span><br><span class="orange" valign=center>~$b_tota.e`</span><br><span class="blue" valign=bottom>~$b_tota.h`</span></td>
+        </tr>
+	~/if`
+-->
+	</table>
+~/if`
+</body>
+</html>

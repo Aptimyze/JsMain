@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jeevansathi.com - Login</title>
+<link rel="stylesheet" href="http://www.jeevansathi.com/profile/images/styles.php" type="text/css">
+</head>
+<body topmargin=0 leftmargin=0>
+
+  <table width="342" height="274" border="0" cellspacing="0" cellpadding="0">
+   <tr>
+    <td><div align="center"><img src="http://www.jeevansathi.com/profile/images/logo_1.gif"></div></td>
+   </tr>
+
+   <tr>
+    <td>
+	 <table cellpadding="0" border="0" cellspacing="1" class="bggrey" width="250" align="center" ><tr><td>
+     <table width="300" border="0" align="center" cellpadding="2" cellspacing="2">
+     <form name="form1" method="post" action="/profile/gtalk_chatlogin.php">
+      <tr class="bgsgrey">
+       <td colspan="2" class="bigblack" align="center"><b>~if $ERROR`<font color="red">~$ERROR`</font>~else`You are not logged in, please fill in your username and password~/if`
+
+       </b></td>
+       </tr>
+      <tr>
+       <td width="70"><b class="bigblack">Username</b></td>
+       <td width="230"><input type="text" name="username"></td>
+      </tr>
+      <tr>
+       <td class="bigblack"><b>Password</b></td>
+       <td><input type="password" name="password"></td>
+      </tr>
+      <tr>
+       <td>&nbsp;</td>
+       <td class="mediumblack"><input type="hidden" name="sendersid" value="~$sendersid`">
+		<input type="submit" name="Submit" value="Submit"><span class="class7">&nbsp;&nbsp;<a href="~$SITE_URL`/profile/forgotpassword.php" target="_blank">Forgot password?</a></span></td>
+      </tr>
+      </form>
+     </table></td></tr></table>
+	 <table align="center" cellpadding="0" cellspacing="0" border="0">
+	  <tr><td>
+     <div align="center" class="bigblack">
+      If you are not registered click below<br>
+      <br>
+      <a href="http://www.jeevansathi.com/profile/inputprofile.php?source=gchatinput" target="_blank"><img src="http://www.jeevansathi.com/profile/images/free_reg1.gif" width="128" height="21" border="0"></a>
+     </div></td>
+   </tr>
+   <tr height="5"><td></td></tr>
+  </table>
+  </td>
+ </tr>
+</table>
+</body>
+</html>

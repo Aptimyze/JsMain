@@ -1,0 +1,382 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<title>Jeevansathi Matrimonials- Search Results</title>
+<link rel="stylesheet" href="css/~$comm_style_css`" type="text/css">
+<style type="text/css">
+.pghd{float:left; width:99% }
+.r14{font:bold 14px verdana,Arial; color:#CC0000; padding-top:5px}
+.otbox{float:left; width:99% }
+.hd1{padding:15px; background-color:#FFFBB8; border:1PX SOLID #CCC889;}
+.hd2{padding:15px; height:20px; background-color:#EDEDEB; border:1PX SOLID #D5D5CE;}
+.or{float:left; width:80px; margin-top:80px}
+.or1{ padding-top:50px;padding-bottom:50px; background-image:url(~$IMG_URL`/profile/ser4_images/custbg.gif)}
+.or2{padding:5px;width:15px; height:15px;background-color:#FFFBB8;}
+.w1{float:left; width:40%;}
+.w2{float:left; width:40%; margin-left:10px}
+.bu{width:90%; float:left; margin-top:50px}
+.note{margin-top:20px; border-bottom:1px dotted #999999;border-top:1px dotted #999999}
+.g10{ font:normal 10px verdana,arial; color:#999999}
+.co1{float:left; width:130px;padding:2px; margin-left:10px;}
+.co3{float:left; width:1px;padding:2px;}
+.co2{float:left; width:300px; padding:2px}
+</style>
+
+<script language="JavaScript" SRC="/profile/phonecodes.js"></script>
+<script language="JavaScript" SRC="/profile/~$profile_js`"></SCRIPT>
+<script language="javascript">
+function make_confirm()
+{
+	if(confirm("Are you sure you want to opt out of redeeming gift vouchers?"))
+		return true;
+	else
+		return false;
+}
+function AddressField(obj1)
+{
+	var docF=document.form1;
+	if(obj1=='N')
+	{
+		//modified by sadaf to escape line feed to avoid javascript error. 
+		var val="~$contact`";
+		var contactval=new String();
+		var contactval1=new String();
+		contactval=val;
+		contactval1=contactval.replace("#n#","\n");
+		 while(contactval1.length!=contactval.length)
+        	{
+                           contactval=contactval1;
+                           contactval1=contactval.replace("#n#","\n");
+                }
+
+		docF.contact.value=contactval1;
+		//end of code modified by sadaf
+		docF.Phone.value="~$phone_res`";
+		docF.Mobile.value="~$phone_mob`";
+		docF.Pin.value="~$Pin`";
+		docF.City_India.value="~$City_Res`";
+		docF.State_Code.value="~$state_code`";
+	}
+	else
+	{
+		docF.contact.value='';
+		docF.Phone.value='';
+		docF.Mobile.value='';
+		docF.Pin.value='';
+		docF.City_India.value='';
+		docF.State_Code.value='';
+		document.getElementById("span_name").style.color="black";
+		document.getElementById("span_contact").style.color="black";
+		document.getElementById("span_city").style.color="black";
+		document.getElementById("span_phone").style.color="black";
+		document.getElementById("span_mobile").style.color="black";
+		document.getElementById("span_pin").style.color="black";
+		document.getElementById("terms").style.color="black";
+
+	}
+}
+function validate()
+{
+	var obj1=document.getElementById("conditions");
+	var obj2=document.getElementById("phone");
+	var obj3=document.getElementById("mobile");
+	var obj4=document.getElementById("pin");
+	var obj5=document.getElementById("name");
+	var obj6=document.getElementById("contact");
+	var obj7=document.getElementById("state_code");
+	var obj8=document.getElementById("City_India");
+	document.getElementById("span_name").style.color="black";
+	document.getElementById("span_contact").style.color="black";
+	document.getElementById("span_city").style.color="black";
+	document.getElementById("span_phone").style.color="black";
+	document.getElementById("span_mobile").style.color="black";
+	document.getElementById("span_pin").style.color="black";
+	document.getElementById("terms").style.color="black";
+	var n=trim(obj6.value);
+	var i;
+	for(i=0; i<obj5.value.length; i++)
+	{
+		ch = obj5.value.charAt(i);
+		if ( ((ch < "a" || "z" < ch) && (ch < "A" || "Z" < ch)) && ch != " " )
+		{
+			alert("No number or special character(s) are allowed in Name");
+			document.getElementById("span_name").style.color="red";
+			obj5.focus();
+			return false;
+		}
+	}
+	if(trim(obj5.value)=='')
+	{
+		alert("Please specify your Name");
+		document.getElementById("span_name").style.color="red";
+		obj5.focus();
+		return false;
+	}
+	else if(trim(obj6.value)=='')
+		{
+			alert("Please specify your address");
+			document.getElementById("span_contact").style.color="red";
+			obj6.focus();
+			return false;
+		}
+	
+	else if(trim(obj8.value)=='')
+	{
+		alert("Please specify the City");
+		document.getElementById("span_city").style.color="red";
+		obj8.focus();
+		return false;
+	}
+	else if(trim(obj2.value)=='' && trim(obj3.value)=='')
+	{
+		alert("Please specify either your Phone Number or Mobile No.");
+		document.getElementById("span_phone").style.color="red";
+		document.getElementById("span_mobile").style.color="red";
+		obj2.focus();
+		return false;
+	}
+	else if(trim(obj7.value)=='' && trim(obj2.value)!='')
+	{
+		alert("Please specify a valid State Code");
+		document.getElementById("span_phone").style.color="red";
+		obj7.focus();
+		return false;
+	}
+	else if(isNaN(obj7.value) && trim(obj2.value)!='')
+	{
+		alert("Please specify a valid State Code");
+		document.getElementById('span_phone').style.color="red";
+		obj7.focus();
+		return false;
+	}
+	else if(isNaN(obj2.value))
+	{
+		alert("Please specify a valid Phone number");
+		document.getElementById('span_phone').style.color="red";
+		obj2.focus();
+		return false;
+	}
+	else if(trim(obj2.value)!="" && trim(obj2.value).length < 6)
+	{
+		alert("The length of Phone number should be atleast 6 digits");
+		document.getElementById('span_phone').style.color="red";
+		obj2.focus();
+		return false;
+	}
+	else if(isNaN(obj3.value))
+	{
+		alert("Please specify a valid Mobile number");
+		document.getElementById('span_mobile').style.color="red";
+		obj3.focus();
+		return false;
+	}
+	else if(trim(obj3.value)!="" && trim(obj3.value).length < 10)
+	{
+		alert("The length of Mobile number should be atleast 10 digits");
+		document.getElementById('span_mobile').style.color="red";
+		obj3.focus();
+		return false;
+	}
+	else if(trim(obj4.value)=='')
+	{
+		alert("Please specify the Pin Code");
+		document.getElementById("span_pin").style.color="red";
+		obj4.focus();
+		return false;
+	}
+	else if(isNaN(obj4.value))
+	{
+		alert("Please specify a valid Pin number");
+		document.getElementById('span_pin').style.color="red";
+		obj4.focus();
+		return false;
+	}
+	else if(trim(obj4.value).length < 6)
+	{
+		alert("The length of Pin code should be of 6 digits");
+		document.getElementById('span_pin').style.color="red";
+		obj4.focus();
+		return false;
+	}
+	else if (obj1.checked==false)
+	{
+		alert("Please Accept the Terms and Conditions to avail these free coupons");	
+		document.getElementById("terms").style.color="red";
+		return false;
+	}
+	else
+		return true;
+}
+</script>
+~include file="../jeevansathi/google_analytics.htm"`</head>
+<body >
+<DIV id="dhtmltooltip" class="ttip"></DIV>
+<SCRIPT language=JavaScript1.2 src="~$IMG_URL`/profile/js/~$tooltip_new_js`" type=text/javascript></SCRIPT>
+<div id="container">
+<!--HEADER STARTS-->
+~$HEAD`
+<!--HEADER ENDS-->
+<!--QUICK SEARCH STARTS-->
+<div class="spacer15">&nbsp;</div>
+<!--QUICK SEARCH ENDS-->
+
+<!--WRAPPER STARTS HERE-->
+<div id="wrapper">
+<!--LEFT PANNEL STARTS HERE-->
+~$LEFTPANEL`
+<!--LEFT PANNEL ENDS HERE-->
+<!--CENTER STARTS HERE-->
+<div id="center">
+~if $NODISP eq "1"`
+<div class="pghd">
+<div class="r14"> <font color="#cc0000">~$MSG`</font></div>
+</div>
+</div>                                     
+~else`
+<form name=form1 method="post" action="promo_optin.php">
+		<!--Addedd-->
+<div class="pghd">
+	<div class="r14 lftflow" style="width:100%; font:bold 18px verdana,arial; color:#EF9429 " >Congratulations! <br>
+  You are entitled to  free coupons from our partners </div>
+	<div class="r14 " style="width:100%; font:normal 11px verdana,arial; color:#898989 " >Please accept the terms and conditions &amp; update your address to get the vouchers delivered at your doorstep.</div>
+	<div class="spacer15">&nbsp;</div>
+	<div class="spacer15">&nbsp;</div>
+</div>
+<div class="pghd">
+	<div class="r14">Accept the Terms and Conditions to avail these free coupons </div>
+	<div class="spacer1">&nbsp;</div>
+	<div class="spacer15" style="border-top:1px solid #464646; margin-top:5px;" >&nbsp;</div>
+	<div class="greyele bluelink">As a Paid Member of Jeevansathi.com, You are eligible for  free gifts from our partners. Please read and accept the terms and conditions to avail the offers.</div>
+</div> 
+<div class="leftflow" style="width:98% ">
+<div class="spacer15">&nbsp;</div>
+~section name=loop loop=$client`
+<table width="520" border="0" cellspacing="0" cellpadding="0" style="margin-left:40px ">
+  <tr>
+~foreach from=$client[loop] key=k item=v`
+~if $v.clientid` 
+~if $v.conditions`
+     <td width="130" valign="top"><img src="~$IMG_URL`/jsadmin/voucher_backend_display.php?clientid=~$v.clientid`&file=VLOGO" width="108" height="39">
+      <table width="130" border="0" cellspacing="0" cellpadding="0">
+         <tr>
+          <td class="g10">* Conditions Apply </td>
+        </tr>
+      </table></td>
+~else`
+        <td width="130" valign="top"><img src="~$IMG_URL`/jsadmin/voucher_backend_display.php?clientid=~$v.clientid`&file=VLOGO" width="108" height="39"></td>
+~/if`~else`
+ <td width="130" valign="top">&nbsp;</td>
+~/if`
+~/foreach`
+  </tr>
+  <tr>
+    <td colspan="4" valign="top">&nbsp;</td>
+    </tr>
+</table>
+~/section`
+<div class="spacer15">&nbsp;</div><div class="spacer15">&nbsp;</div>
+<div><textarea name="textarea" cols="95" rows="5" class="textbox" readonly>Terms and Conditions of Gifts Vouchers/ Discount Coupon Campaign on www.jeevansathi.com
+	1. The Gift Voucher / Discount coupon are non- transferable.
+	2. Gift Voucher / Discount coupon recipients cannot redeem the same for cash.
+	3. The offer under this campaign cannot be clubbed with any other offer announced by www.jeevansathi.com
+	4. Your contact details will be shared with select Jeevansathi partners- Leading brands, merchants, banks, etc to facilitate the best of offers in the future
+	5. Employees and business associates of Info Edge India Limited and associated partners and their family members are not eligible to participate.
+	6. The campaign is open from the 15 Feb 2007 and is open for all users opting for/renewing paid subscription of www.jeevansathi.com during this period.
+	7. www.jeevanstahi.com will not undertake any responsible for any delay in delivery and/or non-delivery, etc.
+	8. Unclaimed offers will stand nullified if not claimed within validity period by the paid subscribers. www.jeevansathi.com reserves the right to change/modify/terminate the campaign at any time at its own discretion without any liability and with a prior notice of 15 days or less to any person (including the subscriber) and without assigning reasons whatsoever.
+	9. Subscriber understands that the offer under the contest is provided by associated partner. The acceptance of the offer/s by subscriber shall be deemed to be an independent transaction between subscriber and associated partner.
+	10. www.jeevansathi.com shall not be responsible for any non-performance or breach of any contract between the subscriber and associated partner (including but not limited to any non-delivery or shortfall or deficiency of services/defect in products or delay in delivery, non-receipt of goods or receipt of defective goods by the subscriber, fraud etc); and all the legal remedies in such cases available to the subscriber shall lie solely against associated partner. www.jeevansathi.com shall not and is not expected or required to mediate or resolve any dispute or disagreement between subscriber and associated partner.
+	11. www.jeevansathi.com does not make any representation or warranty to the subscriber in connection with the campaign (including with respect to the quality, completeness, fitness, performance or any other attributes of the offer awarded under the campaign) and hereby disclaims any and all liability in respect of any errors or omissions or defect/deficiency in the goods or services, whatsoever and the acceptance and use of the offer by the subscriber shall be at the subscriber&rsquo;s own risk, costs and consequences. www.jeevansathi.com does not implicitly or explicitly support or endorse the sale or purchase of any items or services offered, sold or provided by associated partner under the contest. 12. All taxes/charges/levies in connection with the offer under the campaign shall be borne by the subscriber and www.jeevansathi.com hereby disclaims any and all liabilities in this respect. The subscriber shall be personally liable for making any and all other payments due in respect of the goods and services provided by associated partner in a manner as specified by them. www.jeevansathi.com hereby expressly excludes any and all responsibility to all person(s) in this connection. 13. In case of any dispute or difference in respect of or in connection with the contest and entitlement to offers, the decision of www.jeevansathi.com shall be final and binding on all concerned and the same shall be subject to the exclusive jurisdiction of competent court/s at New Delhi.
+	</textarea>
+	</div>
+	<div class="spacer">&nbsp;</div>
+        <div class="bele"><input name="conditions" type="checkbox" value="Y" id="conditions" ~if $conditions eq Y`checked ~/if`>~if $error_condition`<font color="red">~else`<font color="black">~/if`<span id="terms">I accept Terms and Conditions of the  Jeevansathi.com promotion offer</span></font></div>
+	<div class="spacer15">&nbsp;</div>
+	<div class="spacer15">&nbsp;</div>
+</div>
+		<!--Ends-->
+<div class="pghd">
+	<div class="greyele rightflow" style="width:20% " align="right"><font color="#CC0000">*</font> compulsory fields</div>
+	<div class="r14 lftflow" style="width:50% " >Update your address</div>
+	<div class="spacer15" style="border-top:1px solid #000000; margin-top:5px;" >&nbsp;</div>
+	<div class="greyele bluelink lh">Mentioned below is your current address as registered with us. You can edit the fields to make any changes to this address. Coupons will be shipped only to an address in India</div>
+</div>
+<div style="float:left; width:98%; margin-top:20px">
+	<div class="lftflow" style="width:80%; background-color:#f4f4f4; padding:1px">
+		<div class="leftflow bele"><input name="ship_address" type="radio" value="1" ~if !$NRI or $ship_address eq 1`checked~/if` onClick="AddressField('N');"></div>
+		<div class="lftflow bele" style="padding-top:3px">Edit and ship to the same address</div>
+		<div class="leftflow bele" style="margin-left:20px "><input name="ship_address" type="radio" value="2" name=diff_address onClick="AddressField('Y');" ~if $NRI or $ship_address eq 2`checked~/if`></div>
+		<div class="lftflow bele"  style="padding-top:3px">Ship to a different address</div>
+	</div>
+	<div class="spacer15">&nbsp;</div>
+	<div class="bele co1">~if $error_name`<font color="red">~else`<font color="black">~/if`<span id="span_name">Your Name</span></font><font color="#CC0000">*</font> </div>
+	<div class="bele co3">:</div>
+	<div class="co2"><input type="text" name="Name" class="textbox" style="width:200px " id="name" value="~$Name`" maxlength="50"></div>
+	<div class="spacer1">&nbsp;</div>
+	<!-- viewcontact inserted by sadaf to use actual data instead of contact in which new line replaced by #n# to avoid 
+javascript run time error-->
+	<div class="bele co1">~if $error_contact`<font color="red">~else`<font color="black">~/if`<span id=span_contact>Contact Address</span></font><font color="#CC0000">*</font></div>
+	<div class="bele co3">:</div>
+	<div class="co2"><textarea name="contact" cols="40" rows="5" class="textbox" id="contact">~if !$NRI`~$viewcontact`~/if`</textarea></div>
+	<div class="spacer1">&nbsp;</div>
+	<div class="bele co1"> Country of Residence</div>
+	<div class="bele co3">:</div>
+	<div class="co2">
+		<select name="Country_Residence" class="textbox" disabled>
+			<option value="51" selected>India</option>
+		</select>
+	</div>
+	<div class="spacer1">&nbsp;</div>
+	<div class="bele co1">~if $error_city`<font color="red">~else`<font color="black">~/if`<span id=span_city>City of Residence</span></font><font color="#CC0000">*</font></div>
+	<div class="bele co3">:</div>
+	<div class="co2">
+	 <select name="City_India" class="textbox" onchange="get_code('i','~$india_std_code`');" id="City_India">
+	  <option value="" selected>[Select City in India]</option>
+	  ~$city_india`
+	 </select>
+	</div>
+	<div class="spacer1">&nbsp;</div>
+	<div class="bele co1">~if $error_phone`<font color="red">~else`<font color="black">~/if`<span id=span_phone>Phone Number</span></font><font color="#CC0000">*</font></div>
+	<div class="bele co3">:</div>
+	<div class="co2">
+	 <input name="Country_Code" type="text" class="textbox" size="4" value="~$country_code`" disabled>
+	 <input name="State_Code" type="text" class="textbox" size="5" value="~$state_code`" maxlength=5 id="state_code"> 
+	 <input type="text" name="Phone" class="textbox" style="width:120px " value="~$phone_res`" id="phone" maxlength=10>
+	</div>
+	<div class="spacer1">&nbsp;</div>
+	<div class="bele co1">~if $error_mobile`<font color="red">~else`<font color="black">~/if`<span id=span_mobile>Mobile Number</span></font></div>
+	<div class="bele co3">:</div>
+	<div class="co2 bele">
+	 <input type="text" name="Mobile" class="textbox" style="width:200px " value="~$phone_mob`" id="mobile" maxlength=15>
+	 </div>
+	 <div class="spacer1">&nbsp;</div>
+	<div class="bele co1">~if $error_pin`<font color="red">~else`<font color="black">~/if`<span id=span_pin>Pin code</span></font><font color="#CC0000">*</font></div>
+	<div class="bele co3">:</div>
+	<div class="co2 bele">
+	 <input type="text" name="Pin" class="textbox" style="width:200px " id="pin" value="~$Pin`" maxlength=6>
+	</div>
+	<div class="spacer15">&nbsp;</div>
+	<div class="bele co2" align="center"><input type="submit" name="Submit" value="Save & Continue"  style="width:130px" onClick="return validate();"></div>
+	<div class="greyele" style="float:left; width:150px; padding:2px"><input type="submit" name="NotInterested" value="Not Interested"  style="width:130px " onClick="return make_confirm()"><br>Not interested in getting <br>any gift vouchers</div>
+	<div class="spacer15">&nbsp;</div>
+	<div class="spacer15">&nbsp;</div>
+	<div class="spacerg">&nbsp;</div>
+</div>
+~if $mail`
+<input type="hidden" name="MAIL" value="~$mail`">
+~/if`
+<input type="hidden" name="id" value="~$ID`">
+</form>
+~/if`
+<!--CENTER ENDS HERE-->
+</div>
+<!--WRAPPER ENDS HERE-->
+~$FOOT`
+</div>
+</div>
+</body>
+</html>

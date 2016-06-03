@@ -1,0 +1,64 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>Matri-profile</title>
+		<link rel="stylesheet" href="../jsadmin/jeevansathi.css" type="text/css">
+		<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+		<script>
+		function validate()
+		{
+			if(document.form1.reason.value.length=="")
+			{
+				alert("Please specify a reason");
+				document.form1.reason.focus();
+				return false;
+			}
+		}
+		</script>
+	</head>
+	<body>
+		~if $hold_done or $unhold_done`
+			<table width="80%" align="center" cellpadding="4" cellspacing="4">
+				<tr class="formhead" align="center">
+					<td>~$username` successfully ~if $hold_done` put on hold ~else` unholded ~/if`</td>
+				</tr>
+				<tr class="formhead" align="center">
+					<td><a href="" onClick="parent.opener.location='~$script_name`?checksum=~$checksum`&allotted_to=~$allotted_to`'; window.close(); return false">Close</a></td>
+				</tr>
+			</td>
+		~else`
+		<form method="post" action="matri_onhold.php" name="form1" onSubmit="return validate();">
+			<input type="hidden" name="profileid" value="~$profileid`">
+			<input type="hidden" name="checksum" value="~$checksum`">
+			<input type="hidden" name="username" value="~$username`">
+			<input type="hidden" name="from_unhold" value="~$from_unhold`">
+			<input type="hidden" name="script_name" value="~$script_name`">
+			<input type="hidden" name="allotted_to" value="~$allotted_to`">
+			<table width="80%" align="center" cellpadding="4" cellspacing="4">
+				<tr class="formhead" align="center">
+					~if $from_unhold`
+						<td colspan="2">Unhold ~$username`</td>
+					~else`
+						<td colspan="2">Put ~$username` on hold</td>
+					~/if`
+				</tr>
+				<tr align="center">
+					<td class="label">
+						~if $error`
+							<font color="red">Reason:</font>
+						~else`
+							Reason:
+						~/if`
+					</td>
+					<td class="fieldsnew">
+						<textarea name="reason"  class="textbox" cols="65" rows="3"></textarea>
+					</td>
+				</tr>
+				<tr align="center" class="fieldsnew">
+					<td colspan="2"><input type="submit" name="~$submit_name`" value="Submit" class="buttons1"></td>
+				</tr>
+			</table>
+		</form>
+		~/if`
+	</body>
+</html>

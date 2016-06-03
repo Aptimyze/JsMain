@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jeevansathi.com - Gtalk Messenger</title>
+<link rel="stylesheet" href="http://www.jeevansathi.com/profile/images/styles.php" type="text/css">
+</head>
+
+<script>
+function resize_page()
+{
+	~if $RESIZE eq 1`
+	window.resizeTo(500,400);
+~/if`
+	window.resizeTo(480,270);
+}
+</script>
+<body onload="javascript:resize_page()">
+
+<table width="450" border="0" cellpadding="0" cellspacing="2" style="border:1px solid #BC001D" align="center">
+  <tr>
+    <td colspan="2"><img src="~$IMG_URL2`/profile/images/small_logo.gif"  hspace="2" vspace="2" /></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center" style="font-family:verdana; font-size:11px; color:#000000; line-height:18px"><img src="~$IMG_URL2`/profile/images/popup_table_seperator.gif" width="440" height="6" /></td>
+  
+~if $no_gmailid eq '1'`
+  <tr>
+    <td colspan="2" style="font-family:verdana; font-size:11px; color:#000000; line-height:18px"><strong>&nbsp;Kindly follow these steps to chat:</strong></TD>
+  </tr>
+  <tr>
+    <td width="22">&nbsp;</td>
+    <td width="420" style="font-family:verdana; font-size:11px; color:#000000; line-height:18px">
+      <li>Edit your profile to give us a <strong>Gmail id</strong> as your Email ID. <a href="~$SITE_URL`/P/edit_profile.php?EditWhat=ContactDetails" target="_blank" style="color:#117daa">Click here to edit</a></li>
+      <li>The jeevansathi chat assistant (jeevansathichat@gmail.com) will add you  as a friend on google talk. Kindly accept the friend request.</li>
+    <li>After you've added the chat assistant in your friend list, click on the  'Chat on google talk' link in the desired person's profile to start chat.</li>    </td>
+  </tr>
+~else`
+</tr>
+	<tr><TD colspan="2" style="font-family:verdan;font-size:11px;color:#00000;line-height:18px">
+	<strong>&nbsp;~$CHATMSG`</strong>
+	</TD></tr>	
+~/if`
+  <tr>
+    <td colspan="2" align="center" style="font-family:verdana; font-size:11px; color:#000000; line-height:18px"><a href="javascript:window.close()" style="color:#117daa">Close[x]</a></td>
+  </tr>
+</table>
+</body>
+</html>

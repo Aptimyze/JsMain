@@ -1,0 +1,23 @@
+<div class="fullwid bg4" id="createfor" style="height:{{MaxHeight+'px'}}" resize> 
+  <!--start:div-->
+  <!--start:div-->
+  <div class="regbgHead">
+    <div class="pad1">
+      <div class="rem_pad1">
+        <div class="txtc white fontthin f14 ">Sign up for Free on Jeevansathi 
+          </div>
+        <div class="txtc pt10 white fontthin f14 ">Connect with lakhs of Verified Profiles
+          </div>
+        
+        <div class="clr"></div>
+      </div>
+    </div>
+  </div>
+  <!--end:div--> 
+  <div reg-tab enable-back="bEnableBack" on-back="myBack" data="Create profile for"></div>
+  <div id="relationShip" class="scrollContent" style="height:{{fieldsHeight+'px'}}" >
+    <div relation-ship-widget class="pt20" selected-val={{selectedVal}} on-btn-click="onRelation" order-by='fieldsOrderBy' relationship-data="relationWidget"></div>
+  </div>
+  <ng-include id="modalView" ng-class={'slide-down':bModalWindow} ng-show="bModalWindow" src="'/angular/registration/Partials/errorModalWindow.html'" scope="" onload=""></ng-include>
+</div> 
+<ng-include id="myHam" ng-show="false" src="'/angular/registration/Partials/hb.html'" scope="" onload=""></ng-include>

@@ -1,0 +1,73 @@
+.bg1 {
+	background-color: #FF6600;
+}
+.biggrey {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #666666;
+	}
+.bgred { background-color: #ff8b72; }
+.bgred2 { background-color: #ffa58a; }
+.bgred3 { background-color: #ffc3b2; }
+.bg1 { background-color: #ffbf90; }
+.bg2 { background-color: #ffa090; }
+
+.orange {
+	background-color: #ED8442;
+}
+.greylight {
+	background-color: #e6e7e8;
+}
+
+.mediumblackb { font-family: Arial, Helvetica, sans-serif; font-size: 11px; font-weight: bold; color: #000000;}
+
+.topbgcolor { background-color: #ffd6c1; }
+
+body { 
+margin-left: 0px; 
+margin-top: 0px; 
+margin-right: 0px; 
+}
+
+.mediumblack { font-family: Arial; font-size: 11px; color: #000000;}
+.bigblack { font-family: Arial; font-size: 13px; color: #000000;}
+
+.textbox {FONT-SIZE: 10px; FONT-FAMILY: arial}
+
+.blacklink A:link {text-decoration: none; color: #000000;}
+.blacklink A:visited {text-decoration: none; color: #000000;}
+.blacklink A:active {text-decoration: none; color: #000000;}
+.blacklink A:hover {text-decoration: none; color: #000000;}
+
+.bluelink A:link {text-decoration: underline; color: blue;}
+.bluelink A:visited {text-decoration: underline; color: blue;}
+.bluelink A:active {text-decoration: underline; color: blue;}
+.bluelink A:hover {text-decoration: underline; color: blue;}
+
+.blacklink1 A:link {text-decoration: none; color: #000000;}
+.blacklink1 A:visited {text-decoration: none; color: #000000;}
+.blacklink1 A:active {text-decoration: none; color: #000000;}
+.blacklink1 A:hover {text-decoration: none; color: #ffffff;}
+
+.redlink {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: normal;
+	color: #FF0000;
+	text-decoration: underline;
+}
+
+.class6 A:link {text-decoration: underline; color: green;}
+.class6 A:visited {text-decoration: underline; color: green;}
+.class6 A:active {text-decoration: none color: none;}
+.class6 A:hover {text-decoration: underline; color: black;}
+
+.class4 A:link {text-decoration: none; color: black;}
+.class4 A:visited {text-decoration: none; color: black;}
+.class4 A:active {text-decoration: none color: none;} 
+.class4 A:hover {text-decoration: underline; color: green;}
+
+body {
+        margin-left: 0px; margin-top: 0px; margin-right: 0px;
+}
+

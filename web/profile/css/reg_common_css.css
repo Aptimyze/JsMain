@@ -1,0 +1,450 @@
+*{margin:0; padding:0; float:none; text-decoration:none; list-style:none;}
+input{vertical-align:middle;}
+body{font:12px Arial, Helvetica, sans-serif;}
+textarea,select{border:1px solid #ccc; font:12px Arial, Helvetica, sans-serif;}
+.fl{float:left;}
+.fr{float:right;}
+.clr{clear:both; height:0; overflow:hidden;}
+.cl_5{height:5px;}
+.cl_10{height:10px;}
+.cl21{height:21px;}
+
+.f_17{font-size:17px;}
+.f_11{font-size:11px;}
+.f_13{font-size:13px;}
+
+.mt_6{margin-top:6px;}
+.mr_4{margin-right:4px;}
+.mt_10{margin-top:10px;}
+.mt_21{margin-top:21px;}
+.ml_5{margin-left:5px; display:inline;}
+.ml_10{margin-left:10px; display:inline;}
+
+.pos_abs{position:absolute;}
+.pos_rltv{position:relative;}
+.p_tl_0{top:0; left:0;}
+.p_tr_0{top:0; right:0;}
+.p_bl_0{bottom:0; left:0;}
+.p_br_0{bottom:0; right:0;}
+
+
+.b{font-weight:bold;}
+.u{text-decoration:underline;}
+
+.orng{color:#ffaf00;}
+.drk_gry{color:#444;}
+.lt_gry{color:#8d8d8d;}
+.mar{color:#C8080E;}
+
+a.blue{color:#057ec3;}
+a.mar{color:#C8080E;}
+
+h4{font-size:18px;}
+h3{font-size:18px;}
+h2{font-size:20px;}
+.sprte{background:url(IMG_URL/profile/images/registration_revamp_new/pg1_sprte_new.png) no-repeat;}
+.reg_cont{width:775px; margin:auto;}
+.main_form_cont{border:2px solid #dadada;}
+
+ul.form{margin:0; padding:10px; list-style:none; width:96%; padding-left:0px;}
+ul.form li{float:left; padding-bottom:19px; width:100%;}
+ul.form li label{float:left; width:170px; text-align:right; padding-right:5px; font-weight:bold; color:#4b4b4b;}
+ul.form li input.txt1{float:left; width:214px; height:17px; border:1px solid #ccc;}
+ul.form li label u{color:#ffaf00; text-decoration:none;}
+ul.form li h2{font-size:20px;color:#ffaf00;padding-left:10px;}
+.sel_sml{width:60px;}
+.sel_mid{width:174px;}
+.sel_lng{width:225px;}
+.sel_bgst{width:285px;}
+.bot_bdr{border-bottom:2px solid #dadada;}
+
+.tp_bg{height:24px; background-repeat:repeat-x; background-position:0 -272px;}
+.hlp{width:16px; height:15px; background-position:-284px -55px;}
+/*.logo{width:219px; height:35px; background-position:0 -465px;}*/
+.logo{ background-position:0 -53px; width: 219px; height: 35px;}
+
+.nkri_lgo{width:85px; height:13px; background-position:0 -14px;}
+.h_w_6{height:6px; width:6px; font-size:2px;}
+.h_w_5{height:5px; width:5px; font-size:2px;}
+.info_icn{width:18px; height:18px; background-position:-282px -73px;}
+.crt_prof_btn{width:177px; height:43px; background-position:0 -507px;}
+.red_tick{width:16px; height:15px; background-position:-284px -21px;}
+
+.mrd{width:108px; float:left;}
+.gry_cont{width:404px; padding:10px; background:#f5f5f5; border:1px solid #e8e9e9;}
+
+.err{color:#c8080e;float:left;margin-top:4px}
+.coverhelp{position:relative;display:inline;}
+
+.helpbox{display:none; border:1px solid #99b1c8; left:16px; top:-7px; margin-right:25px; position:absolute;width:220px;z-index:100;background:#fff;}
+.helpimg{position: absolute; top: 5px;left:-16px;background:url(IMG_URL/profile/images/registration_revamp/arrow2.gif) no-repeat; width:16px; height:12px;}
+.pd_5{padding:5px;}
+
+/* Last two curve starts from here  */
+.cur_btm_left{float:right;margin:-4px -2px -2px -2px; _margin:10px -2px -2px; position:relative; z-index:10;}
+.cur_btm_right{float:left;margin:-4px -10px -2px -2px; _margin:10px -10px -2px -2px; position:relative; z-index:10;}
+/* Ends Here */ 
+
+optgroup.lab{font-weight:bold!important};
+option.lab_nor{font-weight:normal;}
+.cvr_hlp{border:0 solid #ccc!important; width:10px;}
+ul.formnew li label{float:left; font-size:11px; width:140px; text-align:left; padding-right:5px; color:#231f20;}
+
+
+
+
+
+
+.fto-notification-box {
+ border:3px solid #fec928;
+ height:auto;
+ clear:both;
+ background:#f8f8f8;
+ font:20px Arial, Helvetica, sans-serif;
+ margin: 0 auto;
+ margin-top:7px;
+ position:relative;
+ font-variant:normal
+}
+.box1 {
+	width:490px;
+	padding:25px 15px;
+}
+.box2 {
+	width:734px;
+	padding:15px;
+}
+
+.box3 {
+	width:720px;
+	padding:15px;
+}
+
+
+
+.fto-arrow-down  {
+ width:80px;
+ height:35px;
+ float:left;
+ background-position:-213px -306px;
+ margin-left:20px;
+}
+
+.fto-btn-fill-form {
+ background: url(IMG_URL/profile/images/registration_revamp_new/pg1_sprte_new.png) repeat-x scroll  -121px -783px  transparent;
+ height:30px;
+ margin:18px 0px;
+ font:18px arial;
+ color:#fff;
+ border: 2px solid #7dc258;
+ width:100px;
+}
+
+.fto-close-arrow {
+ background-position: -245px -156px;
+    background-repeat: no-repeat;
+    height: 51px;
+    left: 604px;
+    position: absolute;
+    top: -26px;
+    width: 55px;
+    z-index: 1001;
+
+}
+
+
+.olive {
+ color:#a38600;
+}
+
+.fs20 {
+ font-size: 20px;
+}
+
+.fs18 {
+ font-size:18px;
+}
+
+.pos-lt {
+    background-position:8px -119px;
+}
+
+
+.pos-rt {
+    background-position: -144px -119px;
+    width: 120px;
+}
+
+
+.box-message .btn-sub {
+  background: url(IMG_URL/profile/images/registration_revamp_new/pg1_sprte_new.png) no-repeat 0 -229px;
+  border: 2px solid #81C45D;
+}
+
+.logo{width:219px; height:35px; background-position:0 -53px;}
+
+.password-strength p {
+  margin: 0;
+  }
+  .password-strength .meter {
+  margin: 4px 0;
+  height: 5px;
+  background: #f5f5f5;
+  }
+  .password-strength .meter #strength-bar {
+  display: block;
+  height: 100%;
+  width: 0px;
+  }
+  .password-strength .meter .short {
+  background: #a03;
+  }
+  .password-strength .meter .weak {
+  background: #a03;
+  }
+  .password-strength .meter .fair {
+  background: #fc3;
+  }
+  .password-strength .meter .good {
+  background: #2d98f3;
+  }
+  .password-strength .meter .strong {
+  background: #76c261;
+  }
+  .password-strength .meter .notRated {
+  background: #666;
+  }
+
+/* ----------------------------------------------------------------------------------------------------------------*/
+/* ---------->>> global settings needed for thickbox <<<-----------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------------------------------------*/
+
+/*LAVESH NIKHIL*/
+/*{padding: 0; margin: 0;}*/
+/*LAVESH NIKHIL*/
+
+
+/* ----------------------------------------------------------------------------------------------------------------*/
+/* ---------->>> thickbox specific link and font settings <<<------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------------------------------------*/
+#TB_window {
+	font: 12px Arial, Helvetica, sans-serif;
+	color: #333333;
+}
+
+#TB_secondLine {
+	font: 10px Arial, Helvetica, sans-serif;
+	color:#666666;
+}
+
+#TB_window a:link {color: #117daa;}
+#TB_window a:visited {color: #117daa;}
+#TB_window a:hover {color:#117daa;text-decoration:underline;}
+#TB_window a:active {color: #117daa;}
+#TB_window a:focus {color:#117daa;text-decoration:underline;}
+
+/* ----------------------------------------------------------------------------------------------------------------*/
+/* ---------->>> thickbox settings <<<-----------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------------------------------------*/
+#TB_overlay {
+	position: fixed;
+	z-index:100;
+	top: 0px;
+	left: 0px;
+	height:100%;
+	width:100%;
+}
+
+.TB_overlayMacFFBGHack {background: url(IMG_URL/images/macFFBgHack.png) repeat;}
+.TB_overlayBG {
+	background-color:#000;
+	filter:alpha(opacity=35); /* 75 to 35 */
+	-moz-opacity: 0.35;
+	opacity: 0.35;
+}
+
+* html #TB_overlay { /* ie6 hack */
+     position: absolute;
+     height: expression(document.body.scrollHeight > document.body.offsetHeight ? document.body.scrollHeight : document.body.offsetHeight + 'px');
+}
+
+#TB_window {
+	position: fixed;
+	background: #ffffff;
+	z-index: 102;
+	color:#000000;
+	display:none;
+	/*border: 4px solid #525252;*/
+	text-align:left;
+	top:50%;
+	left:50%;
+}
+
+* html #TB_window { /* ie6 hack */
+position: absolute;
+margin-top: expression(0 - parseInt(this.offsetHeight / 2) + (TBWindowMargin = document.documentElement && document.documentElement.scrollTop || document.body.scrollTop) + 'px');
+}
+
+#TB_window img#TB_Image {
+	display:block;
+	margin: 15px 0 0 15px;
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	border-top: 1px solid #666;
+	border-left: 1px solid #666;
+}
+
+#TB_caption{
+	height:25px;
+	padding:7px 30px 10px 25px;
+	float:left;
+}
+
+#TB_closeWindow{
+	height:25px;
+	padding:11px 25px 10px 0;
+	float:right;
+}
+
+#TB_closeAjaxWindow{
+	padding:7px 10px 5px 0;
+	margin-bottom:1px;
+	text-align:right;
+	float:right;
+}
+
+#TB_ajaxWindowTitle{
+	float:left;
+	padding:7px 0 5px 10px;
+	margin-bottom:1px;
+}
+
+#TB_title{
+	/*background-color:#e8e8e8;*/
+	background-image: url(IMG_URL/images/top_bg.gif);
+	height:27px;
+}
+
+#TB_ajaxContent{
+	clear:both;
+	/*padding:2px 15px 15px 15px;*/
+	/*overflow:auto;*/
+	text-align:left;
+	line-height:1.4em;
+}
+
+#TB_ajaxContent.TB_modal{
+	padding:15px;
+}
+
+#TB_ajaxContent p{
+	padding:5px 0px 5px 0px;
+}
+
+#TB_load{
+	position: fixed;
+	display:none;
+	height:13px;
+	width:208px;
+	z-index:103;
+	top: 50%;
+	left: 50%;
+	margin: -6px 0 0 -104px; /* -height/2 0 0 -width/2 */
+}
+
+* html #TB_load { /* ie6 hack */
+position: absolute;
+margin-top: expression(0 - parseInt(this.offsetHeight / 2) + (TBWindowMargin = document.documentElement && document.documentElement.scrollTop || document.body.scrollTop) + 'px');
+}
+
+#TB_HideSelect{
+	z-index:99;
+	position:fixed;
+	top: 0;
+	left: 0;
+	background-color:#fff;
+	border:none;
+	filter:alpha(opacity=0);
+	-moz-opacity: 0;
+	opacity: 0;
+	height:100%;
+	width:100%;
+}
+
+* html #TB_HideSelect { /* ie6 hack */
+     position: absolute;
+     height: expression(document.body.scrollHeight > document.body.offsetHeight ? document.body.scrollHeight : document.body.offsetHeight + 'px');
+}
+
+#TB_iframeContent{
+	clear:both;
+	border:none;
+	margin-bottom:-1px;
+	margin-top:-3px;
+	_margin-bottom:1px;
+	overflow: hidden;  /* ADDED BY ANAND TO AVAOID SCROLL BARS IN IFRAME */
+}
+
+/* added new css for common use (temporary) */
+.pink{width:420px;border:1px #f0ced6;border-style:solid; background-color:#fdf4f5;}
+.pink1{width:770px;border:1px #f0ced6;border-style:solid; background-color:#fdf4f5;}
+
+
+
+.fto-notification-box1 {
+ width:490px;
+ border:3px solid #fec928;
+ height:auto;
+ padding:25px 15px; 
+ clear:both;
+ background:#f8f8f8;
+ font:20px Arial, Helvetica, sans-serif;
+ margin: 0 auto;
+ margin-top:7px;
+ position:relative;
+ font-variant:normal
+}
+
+.fto-arrow-down  {
+ width:80px;
+ height:35px;
+ float:left;
+ background-position:-213px -306px;
+ margin-left:20px;
+}
+
+.fto-btn-fill-form {
+ background: url("IMG_URL/profile/images/registration_revamp_new/pg1_sprte2.png") repeat-x scroll  -121px -783px  transparent;
+ height:30px;
+ margin:18px 0px;
+ font:18px arial;
+ color:#fff;
+ border: 2px solid #7dc258;
+ width:100px;
+ cursor:pointer;
+}
+
+.fto-close-arrow-sprte {
+	background:url("IMG_URL/profile/images/registration_revamp_new/close_x_icn.png") 0% 0% no-repeat;
+	height: 49px;
+	left: 608px;
+	position: absolute;
+	top: -26px;
+	width: 49px;
+	z-index: 1001;
+	cursor:pointer;
+	}
+
+
+
+.olive {
+ color:#a38600;
+}
+
+.fs20 {
+ font-size: 20px;
+}
+
+.fs18 {
+ font-size:18px;
+}

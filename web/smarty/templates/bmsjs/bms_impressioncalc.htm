@@ -1,0 +1,294 @@
+<!DOCTYPE HTML PUBLIC "-//SoftQuad//DTD HoTMetaL PRO 4.0::19970714::extensions to HTML 4.0//EN"
+ "hmpro4.dtd">
+
+<HTML>
+  
+  <HEAD>
+    <TITLE>BMS : Campaign Management System</TITLE>
+    <LINK HREF="gifs/style.css" REL="stylesheet" TYPE="text/css">
+    <LINK rel="stylesheet" href="http://www.jeevansathi.com/jsadmin/jeevansathi.css" type="text/css">
+    <LINK rel="stylesheet" href="http://www.jeevansathi.com/profile/images/styles.css" type="text/css">
+
+	 <script language="JavaScript">
+<!--
+function FillTheZone()
+{
+             var c,spec,regvalue;
+             var len_course = document.impressioncalc.region.options.length;
+             for(var m1=0;m1<len_course;m1++) 
+             {
+               if (document.impressioncalc.region.options[m1].selected == true)
+	       {
+                 regvalue = document.impressioncalc.region.options[m1].value;
+	       }
+             } 
+	     document.impressioncalc.zone.options.length = 0;
+	     // for first option
+	     var opt = new Option();
+             opt.text="Select";
+             opt.value="select";
+             document.impressioncalc.zone.options[document.impressioncalc.zone.options.length] = opt;
+	     regvaluearr=regvalue.split("|RID|");
+	     if(!(regvaluearr[0]=="select")||(regvaluearr[0]==""))	
+	     {			
+			//for other options 
+			c=regvaluearr[1];
+			var zoneandcriteria=c.split("|@X@|");
+			for(var m1=0;m1<zoneandcriteria.length;m1++) 
+			{
+				var zone=zoneandcriteria[m1].split("|X|");
+				if(zone[0])
+				{
+			                 var opt = new Option();
+			                 var zonenamearr=zone[0].split(",");
+					 opt.text=zonenamearr[1];
+			                 opt.value=(zonenamearr[0]+"|ZID|"+zone[1]);
+			                 document.impressioncalc.zone.options[document.impressioncalc.zone.options.length] = opt;				 //alert(zonenamearr[0]+"|ZID|"+zone[1]);
+				 }
+			}
+		}		   
+
+}
+ 
+function FillTheCriteria()
+{
+		
+               var c,spec;
+			   var doccriteria = document.getElementById('criteria');
+               var len_course = document.impressioncalc.zone.options.length;
+               for(var m1=0;m1<len_course;m1++) 
+               {
+                	if (document.impressioncalc.zone.options[m1].selected == true)
+			{
+                 		zonevalue = document.impressioncalc.zone.options[m1].value;
+                	}
+               } 
+	       doccriteria.options.length = 0;
+	       if(zonevalue=="select")
+	       {
+			var opt = new Option();
+               		opt.text="Select";
+               		opt.value="select";
+			doccriteria.options[doccriteria.options.length] = opt;	
+		}
+		else
+		{
+			var zonearr=zonevalue.split("|ZID|");
+			var c=zonearr[1];
+			if(zonearr[1])
+			{
+				var criteria=c.split(",");
+				for(var m1=0;m1<criteria.length;m1++) 
+				{
+					var opt = new Option();
+					opt.text=criteria[m1];
+					opt.value=criteria[m1];
+					doccriteria.options[doccriteria.options.length] = opt;		
+				}
+			}
+			else
+			{
+				var opt = new Option();
+                 		opt.text="No Criteria";
+                 		opt.value="nocriteria";
+					//document.impressioncalc.criteria[].options[document.impressioncalc.criteria[].options.length] = opt;
+				doccriteria.options[doccriteria.options.length] = opt;	
+			}
+		 }
+}
+
+function validateForm()
+{
+    var c,spec;
+    var len_course = document.impressioncalc.criteria.options.length;
+    for(var m1=0;m1<len_course;m1++) 
+    {
+         if (document.impressioncalc.criteria.options[m1].selected == true)
+	 {
+           c = document.impressioncalc.criteria.options[m1].value;
+         }
+    } 
+    if(c=="IP"||c=="AGE"||c=="GENDER"||c=="LOCATION"||c=="INCOME")
+	return true;
+    else
+    {
+		alert("impressions are not available on this criteria");	
+		return false;
+    }
+
+}
+-->
+
+</script>   
+  </HEAD>
+  
+  <BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#000000" VLINK="#000000" 
+  ALINK="#000000" LEFTMARGIN="0" TOPMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0" onRefresh="FillTheZone(); FillTheCriteria();"  onLoad="FillTheZone(); FillTheCriteria();" >
+    ~$bmsheader`
+	<DIV CLASS="text-under" STYLE="margin-left:20px;">
+  <A HREF="bms_adminindex.php?id=~$id`" TARGET="">MIS Home</A> &gt;&gt;<B>Impression Calculator</B> 
+  </DIV>
+<br>
+<DIV CLASS="text"><TABLE WIDTH="100%" BORDER="0">
+      <TR>
+        <TD WIDTH="20%" ALIGN="RIGHT"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="250" HEIGHT="1"><IMG SRC="gifs/tick.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="13" HEIGHT="11">
+        </TD>
+        
+      <TD WIDTH="80%" CLASS="text">You can view the impressions based on criterias like IP, GENDER etc.</TD>
+      </TR>
+	  ~if $errormsg`
+	  <TR> 
+    <TD WIDTH="20%" ALIGN="RIGHT"><img src="gifs/error-2.gif" alt="New Clients" border="0" hspace="0" vspace="0" width="16" height="16"></TD>
+    <TD WIDTH="80%" CLASS="error">~$errormsg`</TD>
+  </TR>
+  ~/if`
+  ~if $resultarr`
+   <DIV CLASS="text"><TABLE WIDTH="100%" BORDER="0">
+      <TR>
+        <TD WIDTH="20%" ALIGN="RIGHT"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="250" HEIGHT="1"><IMG SRC="gifs/tick.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="13" HEIGHT="11">
+        </TD>
+      <TD WIDTH="80%" CLASS="text">The Result for your criteria is shown below.</TD>
+      </TR>
+     </DIV>	
+     <FORM name="impressioncalc" method="POST" action="bms_impressioncalc.php"><TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/page-bg.gif"><IMG SRC="gifs/lt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0" HSPACE="0"></TD>
+        <TD VALIGN="MIDDLE" HEIGHT="31" WIDTH="100%"><TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" HEIGHT="31">
+          <TR>
+            <TD BACKGROUND="gifs/page-bg.gif" WIDTH="70%"><DIV CLASS="text"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="30" HEIGHT="1"><!--<B><A HREF="" TARGET="">Click
+              here to go back to region </A></B>--></DIV></TD>
+            <TD WIDTH="30%" BACKGROUND="gifs/page-bg.gif" ALIGN="RIGHT"><DIV CLASS="text"><!--<B><A HREF="" TARGET="">Logout</A></B>--><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="30" HEIGHT="1"></DIV></TD>
+
+          </TR>
+        </TABLE></TD>
+        <TD ALIGN="RIGHT" WIDTH="18" BACKGROUND="gifs/page-bg.gif"><IMG SRC="gifs/rt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+      </TR>
+    </TABLE><TABLE WIDTH="100%" BORDER="0" VSPACE="0" HSPACE="0" 
+    CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/lt-line-bg-1.gif"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></TD>
+        
+      <TD WIDTH="100%"> 
+        <DIV ALIGN="CENTER">
+
+          <table width="50%" border="0" cellspacing="0" cellpadding="2">
+            <tr> 
+              <td width="35%"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="2">Impression 
+                inventory for :</font></b></td>
+              <td width="65%"><font face="Verdana, Arial, Helvetica, sans-serif" size="2">~$resultarr.Region` 
+                (region),~$resultarr.Zone` (zone) </font></td>
+            </tr>
+            <tr> 
+              <td width="35%"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="2">Criteria 
+                : </font></b></td>
+              <td width="65%"><font face="Verdana, Arial, Helvetica, sans-serif" size="2">~$resultarr.Criteria`
+                for last ~$days` days</font></td>
+            </tr>
+            <tr> 
+              <td width="35%"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="2">Total 
+                Result(s) Found :</font></b></td>
+              <td width="65%"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"><b>~$resultarr.Count`.</b></font></td>
+            </tr>
+          </table>
+          <br>
+          <br>
+          <TABLE WIDTH="40%" BORDER="0" cellspacing="0">
+            <TR>
+            <TD WIDTH="50%">
+                <INPUT TYPE="submit" NAME="continue" value="Go Back to Search Inventory" BORDER="0">
+              </TD>
+      
+          </TR>
+
+        </TABLE></DIV>
+	<P></P>
+        <P></P></TD>
+        <TD BACKGROUND="gifs/rt-line-bg-1.gif" WIDTH="18"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></TD>
+      </TR>
+    </TABLE>
+    <TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" 
+    ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/page-bg-1.gif"><IMG SRC="gifs/lt-low-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+        <TD VALIGN="MIDDLE" HEIGHT="31" BACKGROUND="gifs/page-bg-1.gif">&nbsp;</TD>
+
+        <TD ALIGN="RIGHT" WIDTH="18" BACKGROUND="gifs/page-bg-1.gif"><IMG SRC="gifs/lt-rt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+      </TR>
+    </TABLE>
+	<input type="hidden" name="id" value="~$id`" />
+	</FORM>
+    <P></P>
+    <P></P>
+  ~else`
+    </TABLE></DIV>	
+    <FORM name="impressioncalc" method="POST" action="bms_impressioncalc.php" onSubmit="return validateForm();"><TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" 
+    ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/page-bg.gif"><IMG SRC="gifs/lt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0" HSPACE="0"></TD>
+        <TD VALIGN="MIDDLE" HEIGHT="31" WIDTH="100%"><TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" HEIGHT="31">
+          <TR>
+            <TD BACKGROUND="gifs/page-bg.gif" WIDTH="70%"><DIV CLASS="text"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="30" HEIGHT="1"><!--<B><A HREF="" TARGET="">Click
+              here to go back to region </A></B>--></DIV></TD>
+            <TD WIDTH="30%" BACKGROUND="gifs/page-bg.gif" ALIGN="RIGHT"><DIV CLASS="text"><!--<B><A HREF="" TARGET="">Logout</A></B>--><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="30" HEIGHT="1"></DIV></TD>
+          </TR>
+        </TABLE></TD>
+        <TD ALIGN="RIGHT" WIDTH="18" BACKGROUND="gifs/page-bg.gif"><IMG SRC="gifs/rt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+      </TR>
+    </TABLE><TABLE WIDTH="100%" BORDER="0" VSPACE="0" HSPACE="0" 
+    CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/lt-line-bg-1.gif"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></TD>
+        <TD WIDTH="100%"> <BR><DIV ALIGN="CENTER"><TABLE WIDTH="60%" BORDER="0" VSPACE="0" HSPACE="0" CELLPADDING="4" CELLSPACING="0">
+          <TR>
+            <TD CLASS="text" WIDTH="40%" HEIGHT="20" VALIGN="TOP"><IMG SRC="gifs/zero.gif" ALT="New Clients" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="90" HEIGHT="1"><BR><B>Select
+            Region</B></TD>
+            <TD ALIGN="LEFT" WIDTH="60%">~$regionarr` </TD>
+          </TR>
+          <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><B>Select Zone</B></TD>
+            <TD ALIGN="LEFT"> ~$zonearr`</TD>
+          </TR>
+          <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><B>Select Criteria</B></TD>
+            <TD ALIGN="LEFT"><select name="criteria" id="criteria">
+				<option value="select" >Select</option>
+			</select></TD>
+          </TR>
+	  <TR>
+            <TD CLASS="text" HEIGHT="20" VALIGN="TOP"><B>View for Last</B></TD>
+            <TD ALIGN="LEFT"><select name="days" id="days">
+				<option value="1" >1</option>
+				<option value="2" >2</option>
+				<option value="3" >3</option>
+				<option value="4" >4</option>
+				<option value="5" >5</option>
+				<option value="6" >6</option>
+				<option value="7" >7</option>
+			    </select> <b>days</b></TD>
+	   </TR>
+        </TABLE></DIV><BR><DIV ALIGN="CENTER"><TABLE WIDTH="40%" BORDER="0">
+          <TR>
+            <TD WIDTH="50%"><INPUT TYPE="IMAGE" NAME="Image3" SRC="gifs/reset.gif" BORDER="0"></TD>
+            <TD WIDTH="50%"><INPUT TYPE="IMAGE" NAME="showcriteria" SRC="gifs/submit.gif" BORDER="0"></TD>
+          </TR>
+        </TABLE></DIV><BR>
+        <P></P>
+        <P></P></TD>
+        <TD BACKGROUND="gifs/rt-line-bg-1.gif" WIDTH="18"><IMG SRC="gifs/zero.gif" ALT="Account Information" BORDER="0" HSPACE="0" VSPACE="0" WIDTH="18" HEIGHT="1"></TD>
+      </TR>
+    </TABLE><TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0" 
+    ALIGN="CENTER">
+      <TR>
+        <TD WIDTH="18" BACKGROUND="gifs/page-bg-1.gif"><IMG SRC="gifs/lt-low-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+        <TD VALIGN="MIDDLE" HEIGHT="31" BACKGROUND="gifs/page-bg-1.gif">&nbsp;</TD>
+        <TD ALIGN="RIGHT" WIDTH="18" BACKGROUND="gifs/page-bg-1.gif"><IMG SRC="gifs/lt-rt-curve.gif" ALT="Resdex - naukri.com" WIDTH="18" HEIGHT="31" BORDER="0"></TD>
+      </TR>
+    </TABLE>
+	<input type="hidden" name="id" value="~$id`" />
+	<!--<input type="hidden" name="days" value="~$days`" />
+	<input type="hidden" name="region" value="~$region`" />-->
+	</FORM>
+~/if`
+    ~$bmsfooter`
+  </BODY>
+</HTML>

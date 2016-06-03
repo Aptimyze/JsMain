@@ -1,0 +1,2 @@
+type=command
+command=${php5} ${docRoot}/crontabs/crm/sugarcrm_scoring_logic.php

@@ -1,0 +1,116 @@
+# You can find more information about this file on the symfony website:
+# http://www.symfony-project.org/reference/1_4/en/13-View
+# For javascripts at bottom of the page: http://devjs.infoedge.com/mediawiki/index.php/Social_Project#Javascript_at_the_end
+
+#Common configurations for JSPC jeevansathi app
+default:
+  http_metas:
+    content-type: text/html
+  metas:
+    #title:        symfony project
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+  stylesheets:    [jspc/common/commonJspc_css@common,jspc/common/fontsJspc_css@common,jspc/common/headerFooterJspc_css@common,helpWidget_css@common,jspc/common/mCustomScrollBar_css@common,rippleEffectCommon_css@common]
+  javascripts:    [tracking_js@commonTop,helpWidget_js@commonBottom,jspc/common/commonJspc_js@commonBottom,jspc/login/loginLayer_js@commonBottom,jspc/common/AjaxWrapper@commonTop,jspc/common/urlHandling@commonBottom,jspc/common/jquery_mCustomScrollbar@commonBottom,jspc/common/jquery_mousewheel@commonBottom,commonExpiration_js@commonBottom,rippleEffectCommon_js@commonBottom,common_comscore_js@commonBottom]
+
+  has_layout:     true
+  layout:         jspcLayout
+#Ends here
+
+compUploadFrameSuccess:
+  http_metas:
+    content-type: text/html
+
+  metas:
+    #title:        symfony project
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    []
+
+  javascripts:    []
+
+  has_layout:     true
+  layout:         layoutModule
+
+profileLayerSuccess:
+  http_metas:
+    content-type: text/html
+
+  metas:
+    #title:        symfony project
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    [common_css, hdr_css_new]
+
+  javascripts:    []
+
+  has_layout:     true
+  layout:         layoutLayer
+
+printSuccess:
+  http_metas:
+    content-type: text/html
+
+  metas:
+    #title:        symfony project
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    []
+
+  javascripts:    []
+
+  has_layout:     true
+  layout:         layoutPrint
+cancerStory1:
+  http_metas:
+    content-type: text/html
+
+  metas:
+    #title:        symfony project
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    []
+
+  javascripts:    []
+cancerStory2:
+  http_metas:
+    content-type: text/html
+
+  metas:
+    #title:        symfony project
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    []
+
+  javascripts:    []
+cancerStory3:
+  http_metas:
+    content-type: text/html
+
+  metas:
+    #title:        symfony project
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    []
+
+  javascripts:    []

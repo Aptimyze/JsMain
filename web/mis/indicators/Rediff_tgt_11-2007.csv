@@ -1,0 +1,9 @@
+Day,clicks,Total Profiles,conv,Activated profiles,Activated profiles %,inactivated profiles,paid,Male>25,Female,Delhi,Maharashtra,Mumbai,Bangalore,NRI,irrelavant profiles(age wise),irrelavant profiles(age wise %),irrelavant profiles(location wise),irrelavant profiles(location wise)%
+2007-11-01,,1,,1,100,0,,1,,,,,,,,,0,
+2007-11-02,,0,,0,,0,,,,,,,,,,0,1,100
+2007-11-03,,0,,0,,0,,,,,,,,,,0,2,100
+2007-11-04,,0,,0,,0,,,,,,,,,,0,5,100
+2007-11-05,,2,,0,0,2,,,,,,,,,,0,2,100
+2007-11-06,,0,,0,,0,,,,,,,,,,,0,
+2007-11-07,,1,,1,100,0,,,1,,1,1,,,,0,2,100
+2007-11-08,,0,,0,,0,,,,,,,,,,0,1,100

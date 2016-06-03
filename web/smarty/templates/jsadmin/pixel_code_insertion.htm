@@ -1,0 +1,164 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jeevansathi.com - Pixel Code Insertion</title>
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+</head>
+<body>
+~include file='head.htm'`
+<br>
+<table width=570 border=0 align="center" border="0" cellspacing="0" cellpadding="0">
+<tr class=formhead>
+<td align=center><a href="mainpage.php?cid=~$cid`">Click here to go to main page</a></td>
+</tr>
+<tr></tr>
+<tr class=formhead>
+<td align=center>
+~$msg`
+</td>
+</tr>
+</table>
+<br>
+<br>
+<form name=form1 method=post action="pixel_code_insertion.php">
+<input type=hidden name="cid" value="~$cid`">
+<input type=hidden name="val" id='val' value="~$val`">
+<input type=hidden name="id" value="~$id`">
+<table width=570 border=0 align="center" border="0" cellspacing="0" cellpadding="0">
+	<tr class=label>
+                <td align=center width=40%>Select Group</td>
+                <td class=fieldsnew align=center colspan="2">
+                <select name=srcgp id="lynj">
+                        <option value="">Select</option>
+			~section name=sec loop=$srcarr`
+				<option value="~$srcarr[sec]`" ~if $srcgp eq $srcarr[sec]` selected ~/if` >~$srcarr[sec]`</option>
+			~/section`
+                </select>
+                </td>
+	</tr>
+        <tr class=label>
+                <td align=center width=40%>Pixel Code</td>
+                <td class=fieldsnew align=center colspan="2">
+		<textarea  cols="50" rows="10" name="pixelcode" value='' id="pixelcode"></textarea>
+		</td>
+	</tr>
+	<tr class=label>
+		<td></td>
+		<td  align=center width=50%><input type=submit name=submit id=submit value="Submit"></form></td>
+		<td  width=50%><form name=form2 method=post action="pixel_code_insertion.php?cid=~$cid`"><input type=hidden name="srcgp" value='' id='s1'><input type=submit name=submit id="delete" value="Delete"></td>
+
+	</tr>
+</table>
+</form>
+
+
+
+<br><br>
+~include file='foot.htm'`
+</body>
+<script type="text/javascript">
+window.onload=function()
+{
+
+document.getElementById("lynj").onchange=jnyl;
+document.form1.onsubmit=lynj;
+document.getElementById("delete").onclick=dlee;
+}
+function dlee()
+{
+//alert(document.getElementById("lynj").value);
+	document.getElementById("s1").value=document.form1.srcgp.value;
+	if((document.getElementById("val").value==1)||(document.getElementById("lynj").value==''))
+	{
+		alert("No pixelcode to delete");
+                return false;
+        }    		
+	else
+	{
+		return true;
+	}
+}
+function lynj()
+{
+	if(document.getElementById("pixelcode").value=='')
+	{
+		alert("You can not submit with Pixel Code blank");
+		return false;
+	}
+	else if(document.getElementById("lynj").value=='')
+	{
+		alert("Please select a group");
+		return false;
+	}	
+
+}
+function jnyl()
+{
+         var poststr =  "cid=" + document.form1.cid.value + "&source=" + document.form1.srcgp.value + "&submit=populate";
+        //alert(poststr);
+        createAjaxObj('pixel_code_insertion.php', poststr);       
+}
+function createAjaxObj(url,parameters)
+{
+        httprequest=false
+        if (window.XMLHttpRequest)
+        { // if Mozilla, Safari etc
+                httprequest=new XMLHttpRequest()
+                if (httprequest.overrideMimeType)
+                        httprequest.overrideMimeType('text/html')
+        }
+        else if (window.ActiveXObject)
+        { // if IE
+                try
+                {
+                        httprequest=new ActiveXObject("Msxml2.XMLHTTP");
+                }
+                catch (e)
+                {
+                        try
+                        {
+                                httprequest=new ActiveXObject("Microsoft.XMLHTTP");
+                        }
+                        catch (e){}
+                }
+        }
+        if (!httprequest)
+        {
+                 alert('Cannot create XMLHTTP instance');
+                return false;
+        }
+
+        httprequest.onreadystatechange = alertContents;
+        httprequest.open('POST', url, true);
+        httprequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        httprequest.setRequestHeader("Content-length", parameters.length);
+        httprequest.setRequestHeader("Connection", "close");
+        httprequest.send(parameters);
+}
+function alertContents()
+{//alert(httprequest.readyState)
+        if (httprequest.readyState == 4)
+        {
+                if (httprequest.status == 200)
+                {
+                     // alert(httprequest.responseText);
+			var result=httprequest.responseText;
+			if(result=='no entry')
+			{
+				document.getElementById("val").value=1;		
+				document.getElementById("pixelcode").value='';
+			}
+			else
+			{
+				document.getElementById("pixelcode").value=result;
+				document.getElementById("val").value=2;
+			}
+			
+		}
+	}
+}
+</script>
+</html>
+
+

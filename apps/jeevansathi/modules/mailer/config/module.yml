@@ -1,0 +1,3 @@
+all:
+  openrate:
+    enable_login:  off

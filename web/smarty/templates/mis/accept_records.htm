@@ -1,0 +1,39 @@
+<html>
+<head>
+<title>User Details</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br><br>
+<table width="100%" align="center" border=0 cellspacing=4 cellpadding=5>
+<tr class="formhead">
+<td align="center">&nbsp;Username</td>
+<td align="center">&nbsp;Accepted By</td>
+</tr>
+~section name=next loop=$user_arr`
+<tr class="label">
+	~section name=subnext loop=$user_arr[next]`
+	<td width=6% align="center">&nbsp;~$user_arr[next][subnext]`</td>
+	~/section`
+</tr>
+~/section`
+</table>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<html>
+<head>
+<title>Jeevansathi.com - CRM - Operator Record</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="../mis/jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+        <td valign="top" width="30%" bgcolor="#efefef"></td>
+        <td valign="top" width="40%" bgcolor="#efefef" align="center"><img src="../profile/images/logo_1.gif" width="209" hei
+ght="63" usemap="#Map" border="0"></td>
+        <td valign="bottom" width="30%" bgcolor="#efefef">
+        </td>
+</tr>
+</tbody>
+</table>
+<br><br>
+<table align=center>
+<tr class=formhead>
+<td align=center><a href="mainpage.php?cid=~$cid`">Click here to go to main page</a></td>
+</tr>
+</table>
+<br><br>
+
+<table width=90% align="center">
+<tr class="label">
+<td align=center colspan=100% class=green>These records are for the current month sales</td>
+</tr>
+
+<tr class=label>
+<td align=center>S. No</td>
+<td align=left>Profileid</td>
+<td align=left>Username</td>
+<td align=center>Registered Date</td>
+<td align=center>Paid Date</td>
+<td align=center>Handling Date</td>
+<td align=center>Status</td>
+<td align=center>Amount Paid</td>
+<!--<td align=center>Your Amount*</td>-->
+</tr>
+~section name=pid loop=$profilearr`
+<!--<tr class=fieldsnew>-->
+<tr class=fieldsnewgreen>
+<td align=center class=label>~$smarty.section.pid.index_next`</td>
+<td align=left>~$profilearr[pid]`</td>
+<td align=left>~$username[pid]`</td>
+<td align=center>~$entry_dt[pid]`</td>
+<td align=center>~if $paid_date[pid] neq ''` ~$paid_date[pid]` ~else` Yet to Pay ~/if`</td>
+<td align=center>~if $convince_date[pid] neq '0000-00-00'` ~$convince_date[pid]` ~else` Not Handled ~/if`</td>
+<td align=center class=red>~$will_pay[pid]`</td>
+<td align=center>~if $amt[pid] neq ''` ~$amt[pid]` ~else` 0 ~/if`</td>
+<!--<td align=center>~if $amt_each_ops[pid] neq ''` ~$amt_each_ops[pid]` ~else` 0 ~/if`</td>-->
+</tr>
+~/section`
+<tr class=label>
+<td align=center>&nbsp;Total</td>
+<td align=center>&nbsp;</td>
+<td align=center>&nbsp;</td>
+<td align=center>&nbsp;</td>
+<td align=center>&nbsp;</td>
+<td align=center>&nbsp;</td>
+<td align=center>&nbsp;</td>
+<td align=center>&nbsp;~if $total_amt neq ''` ~$total_amt` ~else` 0 ~/if`</td>
+<!--<td align=center>&nbsp;~if $total_amt_ops neq ''` ~$total_amt_ops` ~else` 0 ~/if`</td>-->
+</table>
+<!--
+<br>
+<center><h2>* The zero amount in case of paid member indicates that this user had paid before he/she was claimed.</h2></center>
+-->
+<br><br>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<html>
+<head>
+   <title>Add USERNAMES</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="~$SITE_URL`/jsadmin/jeevansathi.css" type="text/css">
+
+<style>
+DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+</style>
+
+</head>
+<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<br>
+<table width=60% border=0 align="center" cellspacing="4" cellpadding=5>
+<tr class="formhead">
+~if $noprofileid_flag eq 1` 
+You have entered ~$count`~if $count gt 1` ~if $option eq '2'`Profileids~else`Usernames~/if` ~else`~if $option eq '2'`Profileid~else` Username~/if` ~/if`(~$invalid_usrname`) that doesnot exist
+~/if`
+	<td align="center" width=80%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~if $flag eq'2'` Record(s) updated  ~else` Enter Usernames  ~/if`</td>
+	<td><a href="/jsadmin/mainpage.php?user=~$USER`&cid=~$cid`">Mainpage</a></td>
+
+</tr>
+</table>
+
+<form action="invalid_phone_list.php" method="post">
+<table width=60% border=0 cellspacing=4 cellpadding=5 align="center">
+<tr class="label">
+<td align="center" width="200">Usernames or Profileids</td>
+<td class="fieldsnew" width="600" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="option" value="1" checked>Username<input type="radio" name="option" value="2">Profileid<textarea name="usernames" rows=10 cols=50></textarea><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Enter comma seperated Usernames or Profileids (without space).</td>
+</tr>
+<tr class="label">
+<td align="center" width="200">Mark Invalid Now</td>
+<td class="fieldsnew" width="600" ><input type="checkbox" name="marknow" value="Y"></td>
+</tr>
+</table>
+<input type="hidden" name="cid" value="~$cid`">
+<center><input type="submit" name="submit" value="submit"></center>
+</form>
+</body>
+</html>
