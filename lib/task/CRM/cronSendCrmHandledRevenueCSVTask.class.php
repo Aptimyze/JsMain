@@ -51,15 +51,20 @@ EOF;
 			if($fortnight=="H1")
 			{
 				$month = date('M');
+				$year = date('Y');
 			}
 			else
 			{
 				$month = date('M',strtotime("- 1 month"));
+				if($month=="Dec")
+					$year = date('Y',strtotime("-1 year"));
+				else
+					$year = date('Y');
 			}	
 			
 			//send curl request to mis action to generate csv
 			$tuCurl = curl_init();
-	        curl_setopt($tuCurl, CURLOPT_URL, JsConstants::$siteUrl."/operations.php/crmMis/crmHandledRevenueCsvGenerate?fromMisCron=1&monthValue=".$month."&yearValue=".date('Y')."&fortnightValue=".$fortnightValue."&report_type=TEAM&report_content=REVENUE&report_format=XLS&dialer_check=1");
+	        curl_setopt($tuCurl, CURLOPT_URL, JsConstants::$siteUrl."/operations.php/crmMis/crmHandledRevenueCsvGenerate?fromMisCron=1&monthValue=".$month."&yearValue=".$year."&fortnightValue=".$fortnightValue."&report_type=TEAM&report_content=REVENUE&report_format=XLS&dialer_check=1");
 	        //curl_setopt($tuCurl, CURLOPT_RETURNTRANSFER, 1);
 	        curl_setopt($tuCurl, CURLOPT_FILE, $fp);
 			curl_setopt($tuCurl, CURLOPT_TIMEOUT, 20);
@@ -76,12 +81,13 @@ EOF;
 	        {
 		        //send csv as mail
 		        $to = "ankita.g@jeevansathi.com,jitesh.bhugra@naukri.com,rohan.mathur@jeevansathi.com,anamika.singh@jeevansathi.com,rajeev.joshi@jeevansathi.com,Amit.Malhotra@jeevansathi.com";
-		       // $to = "ankita.g@jeevansathi.com";
+		       //$to = "ankita.g@jeevansathi.com";
 		        $message = "PFA";
 		        $subject = "Crm revenue mis csv";
 		        $csvAttachment = file_get_contents($file_path);
 		        //print_r($csvAttachment);
-		        SendMail::send_email($to,$message,$subject,"","","",$csvAttachment,"","crmHandledRevenue.csv");
+		        $fileName = "crmHandledRevenue_".$month."_".$year."_".$fortnight.".csv";
+		        SendMail::send_email($to,$message,$subject,"","","",$csvAttachment,"",$fileName);
 		        unset($csvAttachment);
 	    	}
 	    }
