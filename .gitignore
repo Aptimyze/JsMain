@@ -1,1 +1,5 @@
 *.svn
+.phpintel/
+/cache
+/web/smarty/templates_c
+/log
