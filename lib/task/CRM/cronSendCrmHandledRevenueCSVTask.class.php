@@ -80,7 +80,7 @@ EOF;
 	        else
 	        {
 		        //send csv as mail
-		        $to = "ankita.g@jeevansathi.com,jitesh.bhugra@naukri.com,rohan.mathur@jeevansathi.com,anamika.singh@jeevansathi.com,rajeev.joshi@jeevansathi.com,Amit.Malhotra@jeevansathi.com";
+		        $to = "ankita.g@jeevansathi.com,shyam@naukri.com,jitesh.bhugra@naukri.com,rohan.mathur@jeevansathi.com,anamika.singh@jeevansathi.com,rajeev.joshi@jeevansathi.com,Amit.Malhotra@jeevansathi.com";
 		       //$to = "ankita.g@jeevansathi.com";
 		        $message = "PFA";
 		        $subject = "Crm revenue mis csv";
