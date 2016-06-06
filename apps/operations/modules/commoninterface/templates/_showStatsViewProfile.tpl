@@ -687,11 +687,11 @@ function MM_openBrWindow(theURL,winName,features)
        <tr>
         <td colspan="3" valign="top" class="mediumblack"><img src="/P/imagesnew/zero.gif" width="1" height="3"></td>
         </tr>
-	~if $profileDetailArr['Kundli']['ASTRO_DOB']['label_val']`
+	~if $profileDetailArr['Details']['DTOFBIRTH']['label_val']`
        <tr>
         <td valign="top" class="mediumblack">Date of Birth </td>
         <td valign="top" class="mediumblack">:</td>
-        <td valign="top" class="mediumblack">&nbsp;~$profileDetailArr['Kundli']['ASTRO_DOB']['label_val']`</td>
+        <td valign="top" class="mediumblack">&nbsp;~$profileDetailArr['Details']['DTOFBIRTH']['label_val']`</td>
        </tr>
        <tr>
 	~/if`
