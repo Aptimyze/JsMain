@@ -287,7 +287,7 @@ class CommonUtility
         public static function sendCurlPostRequest($urlToHit,$postParams,$timeout='')
         {
 	        if(!$timeout)
-		        $timeout = 50;
+		        $timeout = 50000;
 /*
 $postParams1=str_replace("&wt=phps","",$postParams);
 $x = explode("sort=",$postParams1);
@@ -304,10 +304,12 @@ die;
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		if($postParams)
                 	curl_setopt($ch, CURLOPT_POSTFIELDS, $postParams);
-                curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+	        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
+	        curl_setopt($ch,CURLOPT_NOSIGNAL,1);
+                curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout*10);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
                 $output = curl_exec($ch);
-		return $output;
+	    return $output;
                 /*
                 header('Content-Type: text/xml');
                 echo $api_output;
@@ -322,12 +324,14 @@ die;
         public static function sendCurlGetRequest($urlToHit,$timeout='')
         {
 	        if(!$timeout)
-		        $timeout = 500;
+		        $timeout = 50000;
                 $ch = curl_init($urlToHit);
                 curl_setopt($ch, CURLOPT_HEADER, 0);
                 curl_setopt($ch, CURLOPT_POST, 0);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+	        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
+	        curl_setopt($ch,CURLOPT_NOSIGNAL,1);
+	        curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout*10);
 		curl_setopt($ch,CURLOPT_FOLLOWLOCATION,true);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
                 $output = curl_exec($ch);
@@ -485,7 +489,7 @@ die;
 
 			//  echo $filepath;die;
 			$file = fopen($filepath,"w");
-			//var_dump($file);die;
+				//var_dump($file);die;
 			//$photoContent="";
 			fwrite($file,$photoContent);
 			fclose($file);
@@ -750,13 +754,15 @@ die;
 	function sendCurlDeleteRequest($url,$timeout)
 	{
 		if(!$timeout)
-			$timeout = 10;
+			$timeout = 10000;
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL,$url);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
-		curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+		curl_setopt($ch,CURLOPT_NOSIGNAL,1);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
+		curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout*10);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION,true);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 
@@ -770,8 +776,11 @@ die;
 
 
 
-	public static function webServiceRequestHandler($url,$params="",$type="GET",$timeout='')
+	public static function webServiceRequestHandler($url,$params="",
+	                                                $type="GET",$timeout='',
+	                                                $doinvalidate=0)
 	{
+		//echo $timeout;die;
 		if(!$timeout)
 			$timeout = 5;
 		$result = null;
@@ -807,27 +816,45 @@ die;
 		}
 
 		$response = json_decode($response,true);
-		if($response['_meta']['status'] == "SUCCESS" && $response['_meta']['count'])
+		if($response['_meta']['status'] == "SUCCESS" )
 		{
-			$result = $response['records'];
-
+			if($response['_meta']['count'])
+			{
+				$result = $response['records'];
+			}
+			else{
+				$result = null;
+			}
 		}
 		else
 		{
+			if(is_array($doinvalidate))
+			{
+				self::sendtoRabbitMq($doinvalidate[0],1);
+				self::sendtoRabbitMq($doinvalidate[1],1);
+			}
 			$result = false;
 		}
 		return $result;
 	}
 
 
-	public static function sendtoRabbitMq($profileid){
-		$producerObj=new Producer();
-		if($producerObj->getRabbitMQServerConnected())
+	public static function sendtoRabbitMq($profileid,$invalidate=0){
+		if(JsConstants::$webServiceFlag == 1)
 		{
-			$sendCacheData = array('process' =>'CACHE','data'=>$profileid, 'redeliveryCount'=>0 );
-			$producerObj->sendMessage($sendCacheData);
+			if($invalidate == 1)
+				$process = "INVALIDATE";
+			else
+				$process = "CACHE";
+			$producerObj=new Producer();
+			if($producerObj->getRabbitMQServerConnected())
+			{
+				$sendCacheData = array('process' =>$process,'data'=>$profileid, 'redeliveryCount'=>0 );
+				$producerObj->sendMessage($sendCacheData);
+			}
 		}
 		return;
 	}
+
 }
 ?>
