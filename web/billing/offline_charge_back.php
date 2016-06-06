@@ -107,8 +107,12 @@ if(isset($data))
 	//			$bcc = "alok@jeevansathi.com";
 				send_email($cemail,$msg,$subject,$from,$cc);
 
-				$sql="UPDATE newjs.JPROFILE SET PREACTIVATED=ACTIVATED,ACTIVATED='D',SUBSCRIPTION='',ACTIVATE_ON=now(),activatedKey=0 WHERE PROFILEID='$profileid'";
-				mysql_query_decide($sql) or die(mysql_error_js());
+				/*$sql="UPDATE newjs.JPROFILE SET PREACTIVATED=ACTIVATED,ACTIVATED='D',SUBSCRIPTION='',ACTIVATE_ON=now(),activatedKey=0 WHERE PROFILEID='$profileid'";
+				mysql_query_decide($sql) or die(mysql_error_js());*/
+				$jprofileObj    =JProfileUpdateLib::getInstance();
+	                        $updateStr      ="PREACTIVATED=ACTIVATED,ACTIVATED='D',SUBSCRIPTION='',ACTIVATE_ON=now(),activatedKey=0";
+	                        $paramArr       =$jprofileObj->convertUpdateStrToArray($updateStr);
+	                        $jprofileObj->editJPROFILE($paramArr,$profileid,'PROFILEID');
 
 				$smarty->assign("CID",$cid);
 				$smarty->display("offline_charge_back.htm");

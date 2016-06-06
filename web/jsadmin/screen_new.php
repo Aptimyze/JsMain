@@ -22,6 +22,7 @@ include ("../profile/functions.inc");
 include ("../billing/comfunc_sums.php");
 include_once ($_SERVER['DOCUMENT_ROOT'] . "/classes/authentication.class.php");
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
 $protect_obj = new protect;
 global $screen_time;
@@ -306,38 +307,82 @@ if (authenticated($cid)) {
 						mysql_query_decide($sqlbill) or die("$sqlbill" . mysql_error_js());
 					}
 				}
-				if ($str) $sql = " UPDATE newjs.JPROFILE set $str, SCREENING='$screen'";
-				else $sql = " UPDATE newjs.JPROFILE set SCREENING='$screen'";
-				if ($str_edu) {
-					$sql_ed = "UPDATE newjs.JPROFILE_EDUCATION set $str_edu where PROFILEID=$pid";
-					mysql_query_decide($sql_ed) or die("$sql_ed" . mysql_error_js()."at line 278");
+//				if ($str) $sql = " UPDATE newjs.JPROFILE set $str, SCREENING='$screen'";
+//				else $sql = " UPDATE newjs.JPROFILE set SCREENING='$screen'";
+        
+        $objUpdate = JProfileUpdateLib::getInstance();
+        //JPROFILE Columns
+        $arrProfileUpdateParams = array();
+        if($str) {
+          $arrProfileUpdateParams = CommonFunction::convertUpdateStrToArray($str);
+        }
+        $arrProfileUpdateParams['SCREENING']= $screen;
+        
+				if ($str_edu) {         
+					//$sql_ed = "UPDATE newjs.JPROFILE_EDUCATION set $str_edu where PROFILEID=$pid";
+					//mysql_query_decide($sql_ed) or die("$sql_ed" . mysql_error_js()."at line 278");
+          $arrEducationUpdateParams = array();
+          $arrEducationUpdateParams = CommonFunction::convertUpdateStrToArray($str_edu);
+          $result = $objUpdate->updateJPROFILE_EDUCATION($pid,$arrEducationUpdateParams);
+          if(false === $result) {
+            die('Mysql error while updating JPROFILE_EDUCATION at line 328');
+          }
+          unset($arrEducationUpdateParams);
 				}
 				if ($str_contact) {
           
           $memObject=new UserMemcache;
           $memObject->delete("JPROFILE_CONTACT_".$profileid);
           unset($memObject);
-					$sql_contact = "UPDATE newjs.JPROFILE_CONTACT set $str_contact where PROFILEID=$pid";
-					mysql_query_decide($sql_contact) or die("$sql_contact" . mysql_error_js()."at line 282");
+					//$sql_contact = "UPDATE newjs.JPROFILE_CONTACT set $str_contact where PROFILEID=$pid";
+          //mysql_query_decide($sql_contact) or die("$sql_contact" . mysql_error_js()."at line 282");
+          
+          $arrContactUpdateParams = array();
+          $arrContactUpdateParams = CommonFunction::convertUpdateStrToArray($str_contact);
+          $result = $objUpdate->updateJPROFILE_CONTACT($pid,$arrContactUpdateParams);
+          if(false === $result) {
+            die('Mysql error while updating JPROFILE_CONTACT at line 342');
+          }
+          unset($arrContactUpdateParams);
 				}
+        
 				if ($str_hob) {
-					$sql_hob = "UPDATE newjs.JHOBBY set $str_hob where PROFILEID=$pid";
-					mysql_query_decide($sql_hob) or die("$sql_hob" . mysql_error_js()."at line 286");
+//					$sql_hob = "UPDATE newjs.JHOBBY set $str_hob where PROFILEID=$pid";
+//					mysql_query_decide($sql_hob) or die("$sql_hob" . mysql_error_js()."at line 286");
+          
+          $arrHobbyUpdateParams = array();
+          $arrHobbyUpdateParams = CommonFunction::convertUpdateStrToArray($str_hob);
+          $result = $objUpdate->updateJHOBBY($pid,$arrHobbyUpdateParams);
+          if(false === $result) {
+            die('Mysql error while updating JHOBBY at line 357');
+          }
+          unset($arrHobbyUpdateParams);
 				}
+        
 				if ($fullname) {
 					$fname = addslashes(stripslashes($_POST[$fullname]));
 					$sql_name = "UPDATE incentive.NAME_OF_USER set NAME='$fname' where PROFILEID=$pid";
 					mysql_query_decide($sql_name) or die("$sql_name" . mysql_error_js());
 				}
-				if ($verify_email) $sql.= ", VERIFY_EMAIL='$verify_email'";
+        if ($verify_email) {
+          //$sql.= ", VERIFY_EMAIL='$verify_email'";
+          $arrProfileUpdateParams['VERIFY_EMAIL'] = $verify_email;
+        }
 				if ($INCOMPLETE != "")
 				{
-					$sql.= ",SCREENING=0,PREACTIVATED='$activated',ACTIVATED='N' , INCOMPLETE='Y'";
+					//$sql.= ",SCREENING=0,PREACTIVATED='$activated',ACTIVATED='N' , INCOMPLETE='Y'";
+          $arrProfileUpdateParams['SCREENING'] = 0;
+          $arrProfileUpdateParams['PREACTIVATED'] = $activated;
+          $arrProfileUpdateParams['ACTIVATED'] = 'N';
+          $arrProfileUpdateParams['INCOMPLETE'] = 'Y';
+          
 					$sql_incomplete = "insert ignore into MIS.INCOMPLETE_SCREENING(`PROFILEID`,`DATE`) values($pid,now())";
 					mysql_query_decide($sql_incomplete) or die("$sql_incomplete" . mysql_error_js());
 				}
 				else if ($activated == 'U' || ($activated == 'H' && ($preactivated == 'U' || $preactivated == 'N'))) {
-					$sql.= ", PREACTIVATED='$activated',ACTIVATED='Y'";
+					//$sql.= ", PREACTIVATED='$activated',ACTIVATED='Y'";
+          $arrProfileUpdateParams['PREACTIVATED'] = $activated;
+          $arrProfileUpdateParams['ACTIVATED'] = 'Y';
           if ($val == "new") {
             $updateFTOState = 1;
           }
@@ -361,9 +406,13 @@ if (authenticated($cid)) {
 				 $sql.= "ACTIVATED = 'N' AND INCOMPLETE ='Y' ";*/
 				/*else
 				 $sql.= "ACTIVATED = 'Y' ";*/
-				$sql.= " where PROFILEID = '$pid' and activatedKey=1 ";
-				mysql_query_decide($sql) or die("$sql" . mysql_error_js());
-
+				//$sql.= " where PROFILEID = '$pid' and activatedKey=1 ";
+				//mysql_query_decide($sql) or die("$sql" . mysql_error_js());
+        //Update JPROFILE Store
+        $result = $objUpdate->editJPROFILE($arrProfileUpdateParams,$pid,'PROFILEID','activatedKey=1');
+        if(false === $result) {
+          die('Mysql error while updating JPROFILE at line 385');
+        }
 				/* duplication_fields_insertion() call inserted by Reshu Rajput, here "invalid_dup_fields" is any dummy string
                                 * to be passed to use the older version of the function with least modifications
                                 * This call is made to do the insertion in duplicates_check_fields table when new account is there
@@ -715,8 +764,9 @@ if (authenticated($cid)) {
 							mysql_query_decide($sql_u) or die("$sql_u" . mysql_error_js());
 							if (mysql_affected_rows_js()) {
 								if ($val == "new") {
-									$sql_u = "UPDATE newjs.JPROFILE SET ACTIVATED='U' WHERE PROFILEID='$profileid'";
-									mysql_query_decide($sql_u) or die("$sql_u" . mysql_error_js());
+//									$sql_u = "UPDATE newjs.JPROFILE SET ACTIVATED='U' WHERE PROFILEID='$profileid'";
+//									mysql_query_decide($sql_u) or die("$sql_u" . mysql_error_js());
+                    markProfileUnderScreening($profileid);
 								}
 								$stop = 1;
 								break;
@@ -741,8 +791,9 @@ if (authenticated($cid)) {
 						mysql_query_decide($sql_i) or die("$sql_i" . mysql_error_js());
 						if (mysql_affected_rows_js()) {
 							if ($val == "new") {
-								$sql_u = "UPDATE newjs.JPROFILE SET ACTIVATED='U' WHERE PROFILEID='$profileid'";
-								mysql_query_decide($sql_u) or die("$sql_u" . mysql_error_js());
+//								$sql_u = "UPDATE newjs.JPROFILE SET ACTIVATED='U' WHERE PROFILEID='$profileid'";
+//								mysql_query_decide($sql_u) or die("$sql_u" . mysql_error_js());
+                markProfileUnderScreening($profileid);
 							}
 							$stop = 1;
 							break;
@@ -766,8 +817,9 @@ if (authenticated($cid)) {
 							mysql_query_decide($sql_i) or die("$sql_i" . mysql_error_js());
 							if (mysql_affected_rows_js()) {
 								if ($val == "new") {
-									$sql_u = "UPDATE newjs.JPROFILE SET ACTIVATED='U' WHERE PROFILEID='$profileid'";
-									mysql_query_decide($sql_u) or die("$sql_u" . mysql_error_js());
+//									$sql_u = "UPDATE newjs.JPROFILE SET ACTIVATED='U' WHERE PROFILEID='$profileid'";
+//									mysql_query_decide($sql_u) or die("$sql_u" . mysql_error_js());
+                  markProfileUnderScreening($profileid);
 								}
 								$stop = 1;
 								break;
@@ -1374,5 +1426,18 @@ function getAge($newDob) {
    		$resultstr=implode(',',array_values($result));
    		return $resultstr;
 	}
-
+  
+  /**
+   * markProfileUnderScreening
+   * @param type $iProfileID
+   */
+  function markProfileUnderScreening($iProfileID)
+  {
+    $objUpdate = JProfileUpdateLib::getInstance();
+    $arrFields = array('ACTIVATED'=>'U');
+    $result = $objUpdate->editJPROFILE($arrFields,$profileid,"PROFILEID");
+    if(false === $result) {
+      die('Mysql error while marking profile under screening at line 1410');
+    }
+  }
 ?>

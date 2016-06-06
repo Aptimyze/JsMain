@@ -205,6 +205,7 @@ if(authenticated($cid))
 			$membership_details["ip"] = $ip;
 			$membership_details["source"] = $from_source;
 			$membership_details["transaction_number"] = $transaction_number;
+			$jprofileObj =JProfileUpdateLib::getInstance();
 
 			if($val=="paypart")
 			{
@@ -214,7 +215,7 @@ if(authenticated($cid))
 				if($revoke=="yes")
 				{
 					//added by sriram to prevent the query on CONTACTS table being run several times on page reload.
-					$sql="SELECT ACTIVATED FROM newjs.JPROFILE WHERE PROFILEID='$profileid'";
+					$sql="SELECT ACTIVATED,PREACTIVATED FROM newjs.JPROFILE WHERE PROFILEID='$profileid'";
 					$res=mysql_query_decide($sql) or logError_sums($sql,0);
 					$row=mysql_fetch_array($res);
                                         if($row['ACTIVATED']=='D')
@@ -225,8 +226,16 @@ if(authenticated($cid))
                                                                                                                              
                                         }
                                         //end of - added by sriram to prevent the query on CONTACTS table being run several times on page reload.
-					$sql="UPDATE newjs.JPROFILE SET ACTIVATED=IF(PREACTIVATED<>'D',PREACTIVATED,ACTIVATED), PREACTIVATED='', SUBSCRIPTION='$servefor', ACTIVATE_ON=now(),activatedKey=1 where PROFILEID='$profileid'";
-				        mysql_query_decide($sql) or logError_sums($sql,1);
+					/*$sql="UPDATE newjs.JPROFILE SET ACTIVATED=IF(PREACTIVATED<>'D',PREACTIVATED,ACTIVATED), PREACTIVATED='', SUBSCRIPTION='$servefor', ACTIVATE_ON=now(),activatedKey=1 where PROFILEID='$profileid'";
+				        mysql_query_decide($sql) or logError_sums($sql,1);*/
+		                        if($row['ACTIVATED']!='D')
+		                                $preActivated =$row['ACTIVATED'];
+		                        else
+		                                $preActivated =$row['PREACTIVATED'];
+
+                                        $paramArr =array('PREACTIVATED'=>$preActivated,'SUBSCRIPTION'=>$servefor,'ACTIVATE_ON'=>'now()','activatedKey'=>1);
+                                        $jprofileObj->editJPROFILE($paramArr,$profileid,'PROFILEID');
+
 					
 					$sql="INSERT INTO jsadmin.DELETED_PROFILES(PROFILEID,RETRIEVED_BY,TIME,REASON) values ('$profileid','$user','".date('Y-M-d')."','Service Revoked through billing')";
 				        mysql_query_decide($sql) or logError_sums($sql,1);
@@ -245,8 +254,11 @@ if(authenticated($cid))
 					$servefor_arr[] = $row_ss["SERVEFOR"];
 				}
 				$servefor=@implode(",",$servefor_arr);
-				$sql_upd = "UPDATE newjs.JPROFILE SET SUBSCRIPTION = '$servefor' WHERE PROFILEID='$profileid'";
-				mysql_query_decide($sql_upd) or logError_sums($sql_upd,1);
+				/*$sql_upd = "UPDATE newjs.JPROFILE SET SUBSCRIPTION = '$servefor' WHERE PROFILEID='$profileid'";
+				mysql_query_decide($sql_upd) or logError_sums($sql_upd,1);*/
+                                $paramArr =array("SUBSCRIPTION"=>$servefor);
+                                $jprofileObj->editJPROFILE($paramArr,$profileid,'PROFILEID');
+	
 			}
 			elseif($val=="refund")
 			{
@@ -256,7 +268,7 @@ if(authenticated($cid))
 				$marked_for_deletion = check_marked_for_deletion($profileid);
 				if($marked_for_deletion)
 				{
-					$sql_act = "SELECT ACTIVATED FROM newjs.JPROFILE WHERE PROFILEID = '$profileid'";
+					$sql_act = "SELECT ACTIVATED,PREACTIVATED FROM newjs.JPROFILE WHERE PROFILEID = '$profileid'";
 					$res_act = mysql_query_decide($sql_act) or die($sql_act);
 					$row_act = mysql_fetch_array($res_act);
 					if($row_act['ACTIVATED']!='D' && !$offline_billing)
@@ -265,8 +277,16 @@ if(authenticated($cid))
 						$cmd = JsConstants::$php5path." -q ".$path;
 						passthru($cmd);
 					}
-					$sql="UPDATE newjs.JPROFILE SET PREACTIVATED=IF(ACTIVATED<>'D',ACTIVATED,PREACTIVATED), ACTIVATED='D',SUBSCRIPTION='', ACTIVATE_ON=now(),activatedKey=0 where PROFILEID='$profileid'";
-					mysql_query_decide($sql) or die(mysql_error_js());
+					/*$sql="UPDATE newjs.JPROFILE SET PREACTIVATED=IF(ACTIVATED<>'D',ACTIVATED,PREACTIVATED), ACTIVATED='D',SUBSCRIPTION='', ACTIVATE_ON=now(),activatedKey=0 where PROFILEID='$profileid'";
+					mysql_query_decide($sql) or die(mysql_error_js());*/
+		                        if($row_act['ACTIVATED']!='D')
+        		                        $preActivated =$row_act['ACTIVATED'];
+                		        else
+                		                $preActivated =$row_act['PREACTIVATED'];
+
+                                        $updateStr ="PREACTIVATED='$preActivated', ACTIVATED='D',SUBSCRIPTION='', ACTIVATE_ON=now(),activatedKey=0";
+                                        $paramArr =$jprofileObj->convertUpdateStrToArray($updateStr);
+                                        $jprofileObj->editJPROFILE($paramArr,$profileid,'PROFILEID');
 				}
 				
 			}

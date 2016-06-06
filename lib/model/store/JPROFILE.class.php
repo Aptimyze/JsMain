@@ -361,7 +361,7 @@ class JPROFILE extends TABLE{
          * @exception jsException for blank criteria
          * @exception PDOException for database level error handling
          */
-        public function edit($paramArr=array(), $value, $criteria="PROFILEID"){
+        public function edit($paramArr=array(), $value, $criteria="PROFILEID",$extraWhereCnd=""){
 			if($this->dbName=="newjs_bmsSlave")
 				$this->setConnection("newjs_master");
                 if(!$value)
@@ -372,11 +372,21 @@ class JPROFILE extends TABLE{
 			}
 			$setValues = implode(",",$set);
                         $sqlEditProfile = "UPDATE JPROFILE SET $setValues WHERE $criteria = :$criteria";
+                        if(0 !== strlen($extraWhereCnd)){
+                          $sqlEditProfile .= " AND ".$extraWhereCnd;
+                        }
+
                         $resEditProfile = $this->db->prepare($sqlEditProfile);
 			foreach($paramArr as $key=>$val){
 	                        $resEditProfile->bindValue(":".$key, $val);
 			}
-                        $resEditProfile->bindValue(":$criteria", $value);
+      
+                        $paramType = PDO::PARAM_STR;
+                        if(is_numeric(intval($value))){
+                          $paramType = PDO::PARAM_INT;
+                        }
+                          
+                        $resEditProfile->bindValue(":$criteria", $value,$paramType);
                         $resEditProfile->execute();
                         return true;
                 }
@@ -1169,6 +1179,27 @@ public function duplicateEmail($email)
             throw new jsException($e);
         }
         return $res;
+    }
+    
+    /**
+     * updateProfileForArchive
+     * Update Profile Columns for archive i.e. setting 
+     * PREACTIVATED,ACTIVATED,activatedKey,JsArchived,MOD_DT column
+     * @param type $iProfileID
+     * @throws jsException
+     * @return rowCount
+     */
+    public function updateProfileForArchive($iProfileID)
+    {
+      try{
+        $sql="update newjs.JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D', activatedKey=0,JSARCHIVED=1, MOD_DT=now() where PROFILEID=:PROFILEID";
+        $prep = $this->db->prepare($sql);
+        $prep->bindValue(":PROFILEID",$iProfileID,PDO::PARAM_INT);
+        $prep->execute();
+        return $prep->rowCount();
+      } catch (Exception $ex) {
+        throw new jsException($ex);
+      }
     }
 }
 ?>
