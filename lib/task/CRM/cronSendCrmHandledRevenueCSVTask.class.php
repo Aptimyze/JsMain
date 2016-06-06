@@ -51,7 +51,7 @@ EOF;
 
 			//send curl request to mis action to generate csv
 			$tuCurl = curl_init();
-	        curl_setopt($tuCurl, CURLOPT_URL, JsConstants::$siteUrl."/operations.php/crmMis/crmHandledRevenueCsvGenerate?fromMisCron=1&monthValue="."May"."&yearValue=".date('Y')."&fortnightValue=".$fortnight."&report_type=TEAM&report_content=REVENUE&report_format=XLS&cid=c4ca4238a0b923820dcc509a6f75849bi1&dialer_check=1");
+	        curl_setopt($tuCurl, CURLOPT_URL, JsConstants::$siteUrl."/operations.php/crmMis/crmHandledRevenueCsvGenerate?fromMisCron=1&monthValue="."May"."&yearValue=".date('Y')."&fortnightValue=".$fortnight."&report_type=TEAM&report_content=REVENUE&report_format=XLS&dialer_check=1");
 	        //curl_setopt($tuCurl, CURLOPT_RETURNTRANSFER, 1);
 	        curl_setopt($tuCurl, CURLOPT_FILE, $fp);
 			curl_setopt($tuCurl, CURLOPT_TIMEOUT, 20);
@@ -71,6 +71,7 @@ EOF;
 		        $message = "PFA";
 		        $subject = "Crm revenue mis csv";
 		        $csvAttachment = file_get_contents($file_path);
+		        print_r($csvAttachment);
 		        SendMail::send_email($to,$message,$subject,"","","",$csvAttachment,"","crmHandledRevenue.csv");
 		        unset($csvAttachment);
 	    	}
