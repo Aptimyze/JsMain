@@ -538,7 +538,7 @@ class ShowProfileStats
 		$lastMonth = date('Y-m-d', strtotime('-30 days'));
 		$loginTrackingobj = new MIS_LOGIN_TRACKING();
 			$data = $loginTrackingobj->getLoginChannel($this->profileid,$lastMonth);
-		if(is_array($data) && in_array('A',$data))
+		if(is_array($data) && (in_array('A',$data) || in_array('I',$data)))
 			$mobile_usage = "Uses Mobile App";
 		else if(is_array($data) && (in_array('M',$data) || in_array('N',$data)))
 			$mobile_usage = "Uses Mobile site but no mobile app - inform about app download";
