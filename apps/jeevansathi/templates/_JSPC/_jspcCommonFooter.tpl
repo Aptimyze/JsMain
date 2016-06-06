@@ -196,6 +196,10 @@
                 ~if $module eq 'membership' || $fromSideLink eq '1'`
                     popupFreshDeskGlobal(userDetails['username'], userDetails['email']);
                 ~/if`
+            ~else`
+                ~if $fromSideLink eq '1'`
+                    popupFreshDeskGlobal("", "");
+                ~/if`
             ~/if`
         ~/if`
         slider();
