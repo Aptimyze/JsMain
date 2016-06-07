@@ -1,6 +1,6 @@
 USE billing;
 
-INSERT INTO billing.SERVICES ('', 'NCP2', 'eAdvantage - 2 months', '', '2', '0', '4000', '89.99', '4000', '89.99', '4000', '89.99', '4000', '89.99', '4000', '89.99', '4000', '89.99', '4000', '89.99', 'Y', NULL , 'PNCP2', 'N', '149', 'N', 'Y', 'Y', 'N', '');
+INSERT INTO billing.SERVICES VALUES (NULL, 'NCP2', 'eAdvantage - 2 months', '', '2', '0', '4000', '89.99', '4000', '89.99', '4000', '89.99', '4000', '89.99', '4000', '89.99', '4000', '89.99', '4000', '89.99', 'Y', NULL , 'PNCP2', 'N', '149', 'N', 'Y', 'Y', 'N', '');
 INSERT INTO billing.PACK_COMPONENTS VALUES (NULL, 'PNCP2', 'C2');
 INSERT INTO billing.PACK_COMPONENTS VALUES (NULL, 'PNCP2', 'T2');
 INSERT INTO billing.PACK_COMPONENTS VALUES (NULL, 'PNCP2', 'R2');
