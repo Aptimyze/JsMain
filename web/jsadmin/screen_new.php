@@ -558,7 +558,7 @@ if (authenticated($cid)) {
 			$smarty->assign("myprofilechecksum", $myprofilechecksum);
 			$checksum = $protect_obj->js_encrypt($myprofilechecksum, $to);
 			$smarty->assign("CHECKSUM", $checksum);
-			
+		
 			if ($val == 'edit') {
 				
 				$cScoreObject = ProfileCompletionFactory::getInstance(null,null,$pid);
@@ -566,6 +566,7 @@ if (authenticated($cid)) {
 				$arrMsgDetails= $cScoreObject->GetIncompleteDetails();
 				$arrLinkDetails = array(
 				'ME'=>"ABOUT_ME",
+                                'BASIC'=>"BASIC_DETAILS",
 				'CAREER'=>"EDU_OCC",
 				'RELIGION'=>"PROFILE_RELIGION",
 				'ASTRO'=>"UPLOAD_HOROSCOPE",
