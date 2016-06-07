@@ -26,7 +26,7 @@ EOF;
 
         if($currentMonth == 1){
         	$currentMonth = 12;
-        	$currentYear = $currentYear -1;
+        	$currentYear = $currentYear - 1;
         } else {
         	$currentMonth = $currentMonth - 1;
         }
@@ -45,7 +45,7 @@ EOF;
         	$serviceArr = @explode(",", $val['SERVICEID']);
         	foreach($serviceArr as $k=>$sid){
         		$ssid = preg_split('/(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)/i', $sid);
-        		if($ssid[0] == "A"){
+        		if($ssid[0] == "A" || $ssid[0] == "ESP" || $ssid[0] == "ES" || $ssid[0] == "ESJA" || $ssid[0] == "ESPL" || $ssid[0] == "ESL"){
         			$relevantBillings[] = $val['BILLID'];
         		}
         		unset($ssid);
@@ -71,14 +71,14 @@ EOF;
         foreach($finalBillings as $key=>$val){
         	$sid = $val['SERVICEID'];
         	$ssid = preg_split('/(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)/i', $sid);
-        	if($ssid[0] == "A"){
+        	if($ssid[0] == "A" && $val['NET_AMOUNT']>0){
         		$countAstroSold++;
         		if($val['CUR_TYPE'] == "RS") {
-	        		$totalRevenue += $val['PRICE'];
-	        		$totalServiceTax += $val['PRICE']*(1-(1/(1+(billingVariables::TAX_RATE/100))));
+	        		$totalRevenue += $val['NET_AMOUNT'];
+	        		$totalServiceTax += $val['NET_AMOUNT']*($totalBillings[$val['BILLID']]['TAX_RATE']/100);
 	        	} else {
-	        		$totalRevenue += $val['PRICE']*(VariableParams::$DOL_CONV_RATE);
-	        		$totalServiceTax += $val['PRICE']*(VariableParams::$DOL_CONV_RATE)*(1-(1/(1+(billingVariables::TAX_RATE/100))));
+	        		$totalRevenue += $val['NET_AMOUNT']*(VariableParams::$DOL_CONV_RATE);
+	        		$totalServiceTax += $val['NET_AMOUNT']*(VariableParams::$DOL_CONV_RATE)*($totalBillings[$val['BILLID']]['TAX_RATE']/100);
 	        	}
         	}
         	unset($sid, $ssid);
@@ -89,7 +89,7 @@ EOF;
         $netRevenue = $totalRevenue - $totalServiceTax;
         $revenueShareForMatchAstro = $netRevenue*(50/100);
 
-        $to = "jsprod@jeevansathi.com";
+        $to = "jsprod@jeevansathi.com,avneet.bindra@jeevansathi.com";
         $from = "js-sums@jeevansathi.com";
         $subject = "Monthly MatchAstro Report : {$startDt} - {$endDt}";
         $msgBody .= "<br><strong>Number of Astro Compatibility Tickets Sold</strong> :: {$countAstroSold}";
