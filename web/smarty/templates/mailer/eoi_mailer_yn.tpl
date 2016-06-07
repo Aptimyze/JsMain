@@ -18,7 +18,7 @@
                 <table cellspacing="0" cellpadding="0" border="0" width="100%">
                     <tr>
                         <td width="373" height="52" style="padding-left:10px;">
-                            <div style="width:100%"><img border="0" align="left" vspace="0" hspace="0" style="max-width:204px; width:inherit;" alt="Jeevansathi.com" src="~$IMG_URL`/images/mailer/ADRM/logo.gif"> </div>
+                            <div style="width:100%"><img border="0" align="left" vspace="0" hspace="0" style="max-width:204px; width:inherit;" alt="Jeevansathi.com" src="~$IMG_URL`/images/jspc/commonimg/logo1.png"> </div>
                         </td>
                         <td width="189" valign="middle" style="padding-right:10px;">
                             <table cellspacing="0" cellpadding="0" border="0" align="right" width="189">
