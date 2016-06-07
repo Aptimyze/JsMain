@@ -1272,6 +1272,8 @@ function fetchProfileDetails($profilesArr,$subMethod='',$fields='')
 				if($setProfileArr[$pid]["ALTERNATE_NO"] && $isdNo)
 					$setProfileArr[$pid]["ALTERNATE_NO"] =$isdNo."-".$setProfileArr[$pid]["ALTERNATE_NO"];
 			}
+			
+			$setProfileArr[$pid]["CHECKSUM"]         =md5($pid)."i".$pid;
 
 		}
 	}
