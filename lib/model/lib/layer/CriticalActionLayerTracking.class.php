@@ -190,7 +190,7 @@ return 0;
                     
                     break;
 
-          case '7': if(MobileCommon::isApp()!='A')
+          case '7': if(!MobileCommon::isAndroidApp())
                       {  
                       
                       $entryDate=$profileObj->getENTRY_DT();
