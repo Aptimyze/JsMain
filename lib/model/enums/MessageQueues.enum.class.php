@@ -36,6 +36,7 @@ class MessageQueues
   CONST REDELIVERY_LIMIT = 3; //This limit is used to set the redelivery limit of messages at the consumer end.
   CONST AGENT_NOTIFICATIONSQUEUE = "AgentsNotificationsQueue"; //Queue for storing agent notifications(notify for FP online users to agents)
   CONST BUFFER_INSTANT_NOTIFICATION_QUEUE = "BufferInstantNotificationsQueue"; //Queue for storing buffer instant notifications(JSPC/JSMS/FSO)
+  CONST DELETE_RETRIEVE_QUEUE = "DeleteRetrieveQueue"; //Queue that contains profileId's for those profiles that are deleted.
 
   /*----------------JS notification(scheduled/instant) queues configuration details--------------------------*/
 

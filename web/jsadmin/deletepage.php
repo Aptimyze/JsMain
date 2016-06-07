@@ -162,9 +162,18 @@ if(authenticated($cid))
 				//added by sriram to prevent the query being run several times on page reload.
 			if($row_act['ACTIVATED']!='D')
 			{
-				$path = $_SERVER['DOCUMENT_ROOT']."/profile/deleteprofile_bg.php $pid > /dev/null &";
-				$cmd = "/usr/bin/php -q ".$path;
-				passthru($cmd);
+				$producerObj=new Producer();
+	        	if($producerObj->getRabbitMQServerConnected())
+				{
+					$sendMailData = array('process' =>'DELETE_RETRIEVE','data'=>array('type' => 'DELETING','body'=>array('profileId'=>$pid)), 'redeliveryCount'=>0 );
+					$producerObj->sendMessage($sendMailData);
+				}
+				else
+				{
+					$path = $_SERVER['DOCUMENT_ROOT']."/profile/deleteprofile_bg.php $pid > /dev/null &";
+					$cmd = "/usr/bin/php -q ".$path;
+					passthru($cmd);
+				}
 	
 				//if user is a paid member, then send a mail to anil rawat.
 				if($row_act["SUBSCRIPTION"])
