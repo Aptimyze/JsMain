@@ -17,7 +17,7 @@ class REGISTER_TRACK_REUSAGE_EMAIL_DELETED extends TABLE
         {
           try{
             $date=date("Y-m-d H:i:s");
-            $sql1="INSERT IGNORE INTO REGISTER.TRACK_REUSAGE_EMAIL_DELETED(EMAIL,CHANNEL,TIME) VALUES (:EMAIL,:CHANNEL,:DATE)";
+            $sql1="INSERT INTO REGISTER.TRACK_REUSAGE_EMAIL_DELETED(EMAIL,CHANNEL,TIME) VALUES (:EMAIL,:CHANNEL,:DATE)";
             $res1=$this->db->prepare($sql1);
             $res1->bindValue(":EMAIL", $email, PDO::PARAM_STR);
             $res1->bindValue(":DATE", $date, PDO::PARAM_STR);

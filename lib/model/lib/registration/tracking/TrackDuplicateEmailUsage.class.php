@@ -12,7 +12,7 @@ class TrackDuplicateEmailUsage
   */
 	public static function insertEmailEntry($email)
 	{
-                //$channel=CommonFunction::getChannel();
+                $channel=CommonFunction::getChannel();
                 if(!$channel)
                     $channel = "Offline";
 		$duplicateEmailTrack = new REGISTER_TRACK_REUSAGE_EMAIL_DELETED();

@@ -5,7 +5,6 @@ CREATE TABLE `TRACK_REUSAGE_EMAIL_DELETED` (
  `EMAIL` varchar(100) NOT NULL,
  `CHANNEL` enum('Desktop','MS','NewMS','Android','Ios','Offline') DEFAULT NULL,
  `TIME` datetime DEFAULT NULL,
- PRIMARY KEY (`S_NO`),
- UNIQUE KEY `EMAIL` (`EMAIL`)
+ PRIMARY KEY (`S_NO`)
 );
 
