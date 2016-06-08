@@ -1,5 +1,6 @@
 *.svn
-.phpintel/
-/cache
-/web/smarty/templates_c
-/log
+cache/jeevansathi/*
+cache/operations/*
+web/smarty/templates_c/*
+web/uploads/SearchLogs/*
+log/*

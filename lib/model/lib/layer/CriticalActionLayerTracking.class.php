@@ -162,12 +162,10 @@ return 0;
           case '3': if ($interestsPending > 0)
                       $show=1;
                     break;  
-          case '5': if(MobileCommon::isApp()!='I')
+          case '5': 
                     $show=1;
                     break;
           case '6': 
-
-                  
                   if(!MobileCommon::isApp())
                     {
                       
@@ -190,9 +188,7 @@ return 0;
                     
                     break;
 
-          case '7': if(!MobileCommon::isApp())
-                      {  
-                      
+          case '7': 
                       $entryDate=$profileObj->getENTRY_DT();
                       if((time()-strtotime($entryDate))>7*24*60*60)
                       {
@@ -206,7 +202,7 @@ return 0;
                           if((time()-$lastInterest)>15*24*60*60) $show=1;
                         }
                       }
-                    }
+                    
                     break;            
                               
           default : return false;
