@@ -77,7 +77,7 @@ class jsValidatorMail extends sfValidatorBase
     
     if ($this->_emailDeleted($value,$activatedFlag))
     {
-	  $this->_trackDuplicateEmail($value,'Y');
+	  $this->_trackDuplicateEmail($value,'Y',1);
       throw new sfValidatorError($this, 'err_email_del', array('value' => $value, 'err_email_del' => $this->getOption('err_email_del')));
     }
 	$this->_trackDuplicateEmail($value,'N');
@@ -153,11 +153,16 @@ class jsValidatorMail extends sfValidatorBase
 	  return 0;
   }
   
-  private function _trackDuplicateEmail($email,$flag)
+  private function _trackDuplicateEmail($email,$flag,$emailDeletedProfile='')
   {
-	  $dupObj = new MIS_TRACK_DUPLICATE_EMAIL();
-	  $ip = CommonFunction::getIP();
-	  $page = JsRegistrationCommon::getSourcePage();
-	  $dupObj->insert($email, $page, $ip, $flag);
+          //track deleted email reusage
+          if($emailDeletedProfile){
+            $duplicateEmailTrack = new TrackDuplicateEmailUsage();
+            $duplicateEmailTrack->insertEmailEntry($email);
+          }
+            $dupObj = new MIS_TRACK_DUPLICATE_EMAIL();
+            $ip = CommonFunction::getIP();
+            $page = JsRegistrationCommon::getSourcePage();
+            $dupObj->insert($email, $page, $ip, $flag); 
   } 
 }
