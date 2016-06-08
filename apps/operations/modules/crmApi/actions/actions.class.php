@@ -271,7 +271,7 @@ class crmApiActions extends sfActions
   public function executeLogCheckinCheckoutV1(sfWebRequest $request)
   {
     $apiObj = ApiResponseHandler::getInstance();
-    if(!$request->getParameter("logType") || !$request->getParameter("latitude") || !$request->getParameter("longitude") || !$request->getParameter("timestamp") || !$request->getAttribute('operatorName') || !$request->getAttribute('clientName') || !$request->getAttribute('agentLocation'))
+    if(!$request->getParameter("logType") || !$request->getParameter("latitude") || !$request->getParameter("longitude") || !$request->getParameter("timestamp") || !$request->getAttribute('operatorName') || !$request->getParameter('clientName') || !$request->getParameter('agentLocation'))
     {
       	$successFlag = false;
       	$apiObj->setHttpArray(CrmResponseHandlerConfig::$MISSING_PARAM);
