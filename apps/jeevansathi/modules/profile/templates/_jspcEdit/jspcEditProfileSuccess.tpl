@@ -467,6 +467,27 @@
                 </div>
             </div>
             <!--end:gunna layer-->
+             <!--start:gunna layer-->
+            <div class="pos_fix layerMidset layersZ disp-none" id="removeHoroscopeLayer">
+                <div class="edpwid18 upHoroClr pos-rel">
+                    <i id="removeClosebtnHL" class="sprite2 edpcross1 pos-abs  CPclosepos cursp"></i>
+                    <!--start:layer add your horoscope-->
+                    <div>
+                        <!--start:heading-->
+                        <div class="upperCase f16 fontreg colrw lh61 bg5 pl30">REMOVE HOROSCOPE</div>
+                        <!--end:heading-->
+                        <div id="removeHoroscopeDiv">
+                            <div class="txtc pt10">This will delete your horoscope, time of birth and city of birth. Would you like to proceeed?</div>
+                            <div class="fontreg  txtc pt10 pb30">
+                                <button id="Rbt_yes" class="lh41 bg_pink txtc colrw brdr-0 wid33p_1 f15 cursp">Yes</button>
+                                <button id="Rbt_no" class="lh41 bg_pink txtc colrw brdr-0 wid33p_1 ml10 f15 cursp">No</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end:layer add your horoscope-->
+                </div>
+            </div>
+            <!--end:gunna layer-->
             
             <!--end:Horoscope Details--> 
             <!--start:verifcation id-->

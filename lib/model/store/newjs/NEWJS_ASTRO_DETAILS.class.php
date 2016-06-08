@@ -149,5 +149,22 @@ class NEWJS_ASTRO extends TABLE {
         	}
 		
 	}
+    public function deleteEntry($pid)
+	{
+		try{
+
+			if($pid)
+			{
+				$sql="delete from newjs.ASTRO_DETAILS WHERE PROFILEID=:pid";
+				$res = $this->db->prepare($sql);
+		                $res->bindValue(":pid", $pid, PDO::PARAM_INT);
+				$res->execute();
+			}
+		}
+		catch(PDOException $e) {
+			throw new jsException($e);
+        	}
+		
+	}
 }
 ?>

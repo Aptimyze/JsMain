@@ -123,6 +123,9 @@
                             <div id="viewHoroBlockParent" class="mt25">
                                 ~if ($apiData['about']['othersHoroscope'] eq 'Y' && ($apiData['about']['toShowHoroscope'] eq 'Y' || $apiData['about']['toShowHoroscope'] eq '') ) || ($bEditView && $apiData['about']['horo_available'] eq 'Y')`
                                     <button id="viewHoroBlock" class="bg5 colrw f14 fontlig brdr-0 lh40 txtc fullwid outl1 cursp js-viewHoro">View horoscope</button>
+                                    ~if $bEditView && ($apiData['about']['city_country'] !='' || $apiData['about']['astro_time_check'])`
+                                    <button id="deleteHoroBlock" class="bg5 mt25 colrw f14 fontlig brdr-0 lh40 txtc fullwid outl1 cursp js-deleteHoro">Remove horoscope</button>
+                                    ~/if`
                                 ~elseif $apiData['about']['othersHoroscope'] eq 'N' && !$bEditView`
                                    ~if $apiData['about']['requestedHoroscope'] eq '1'`
                                    <button class="bgDisButton color2 f14 fontlig brdr-0 lh40 txtc fullwid outl1">Horoscope request sent</button>
