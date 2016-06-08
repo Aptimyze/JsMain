@@ -61,6 +61,14 @@ EOF;
         } else {
         	$finalBillings = NULL;
         }
+
+        //Fetch Details for $relevantBillings from PURCHASE_DETAIL
+        $billingPaymentDetObj = new BILLING_PAYMENT_DETAIL('newjs_slave');
+        if(!empty($relevantBillings)){
+        	$payDetArr = $billingPaymentDetObj->getAllDetailsForBillidArr($relevantBillings);
+        } else {
+        	$payDetArr = NULL;
+        }
         
         $countAstroSold = 0;
         $totalRevenue = 0;
@@ -75,10 +83,10 @@ EOF;
         		$countAstroSold++;
         		if($val['CUR_TYPE'] == "RS") {
 	        		$totalRevenue += $val['NET_AMOUNT'];
-	        		$totalServiceTax += $val['NET_AMOUNT']*($totalBillings[$val['BILLID']]['TAX_RATE']/100);
+	        		$totalServiceTax += $val['NET_AMOUNT']*(1-(1/(1+($totalBillings[$val['BILLID']]['TAX_RATE']/100))));
 	        	} else {
-	        		$totalRevenue += $val['NET_AMOUNT']*(VariableParams::$DOL_CONV_RATE);
-	        		$totalServiceTax += $val['NET_AMOUNT']*(VariableParams::$DOL_CONV_RATE)*($totalBillings[$val['BILLID']]['TAX_RATE']/100);
+	        		$totalRevenue += $val['NET_AMOUNT']*$payDetArr[$val['BILLID']]['DOL_CONV_RATE'];
+	        		$totalServiceTax += $val['NET_AMOUNT']*$payDetArr[$val['BILLID']]['DOL_CONV_RATE']*(1-(1/(1+($totalBillings[$val['BILLID']]['TAX_RATE']/100))));
 	        	}
         	}
         	unset($sid, $ssid);
@@ -89,7 +97,7 @@ EOF;
         $netRevenue = $totalRevenue - $totalServiceTax;
         $revenueShareForMatchAstro = $netRevenue*(50/100);
 
-        $to = "jsprod@jeevansathi.com,avneet.bindra@jeevansathi.com";
+        $to = "avneet.bindra@jeevansathi.com";
         $from = "js-sums@jeevansathi.com";
         $subject = "Monthly MatchAstro Report : {$startDt} - {$endDt}";
         $msgBody .= "<br><strong>Number of Astro Compatibility Tickets Sold</strong> :: {$countAstroSold}";
