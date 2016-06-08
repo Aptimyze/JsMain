@@ -24,8 +24,10 @@ class viewSimilarProfileAction extends sfActions
 		if($this->isMobile)
 		{
 			$profileChecksum=$request->getParameter("profilechecksum");
-			$url=JsConstants::$siteUrl.'/search/MobSimilarProfiles?page=idd1&profilechecksum='.$profileChecksum.'';
-			header('Location: '.$url);
+			$url=JsConstants::$siteUrl.'/search/MobSimilarProfiles?fromViewSimilarActionMobile=1&page=idd1&profilechecksum='.$profileChecksum.'';
+                        header('Location: '.$url);
+                        die;
+
 		}
 		//Contains login credentials
 		$this->loginData = $request->getAttribute("loginData");
