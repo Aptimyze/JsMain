@@ -1,3 +1,8 @@
+~assign var=module value= $sf_request->getParameter('module')`
+~assign var=loggedIn value= $sf_request->getAttribute('login')`
+~if $loggedIn && $module neq "membership"`
+    ~assign var=showChat value= "1"`
+~/if`
 <!DOCTYPE html>
 <head>
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
@@ -60,7 +65,16 @@
         You have not enabled Javascript on your browser, please enable it to use the website
     </div>
 </noscript>
-<body >
+~if $showChat`
+    <body style="width:80%">
+    <!--start:chat panel-->
+        <div id="chatOpenPanel"> 
+        </div>
+    <!--end:chat panel-->
+~else if`
+    <body>
+~/if`
+
     <div id="clickHolderCE" onclick="javascript:updateClickHolderCE(false,event)" style="height:0px;width:0px">&nbsp;</div>
     <div id="clickHolder" onclick="javascript:updateClickHolder(false,event)" style="height:0px;width:0px" >&nbsp;</div><div id="commonOverlay" class="jspcOverlay js-overlay overlayZ disp-none"></div>
     <!--start:error layer-->
@@ -107,4 +121,8 @@ window._fbq = window._fbq || [];
 window._fbq.push(['track', 'PixelInitialized', {}]);
 </script>
 <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=569447716516417&amp;ev=PixelInitialized" /></noscript>
+    ~if $showChat`
+        <script src="js/jquery.mCustomScrollbar.js" language="javascript" type="text/javascript"></script>
+        <script type="text/javascript" language="javascript" src="jspc/chat/chat_js.js"></script>
+    ~/if`
 ~/if`
