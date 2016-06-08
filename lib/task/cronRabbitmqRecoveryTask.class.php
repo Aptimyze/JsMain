@@ -83,9 +83,16 @@ EOF;
             $str="\nRabbitmq Error Alert: Number of unacknowledged messages pending in {$queue_data->name} is  {$queue_data->messages_unacknowledged} on first server. Restarting the consumers";
             exec("ps aux | grep \"".MessageQueues::CRONCONSUMER_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $out);
             exec("ps aux | grep \"".MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $notificationConsumerOut);
-         
+            exec("ps aux | grep \"".MessageQueues::CRONDELETERETRIEVE_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $deleteRetrieveConsumerOut);
             if(!empty($out) && is_array($out))
               foreach ($out as $key => $value) 
+              {
+                $count1 = shell_exec("ps -p ".$value." | wc -l") -1;
+                if($count1 >0)
+                  exec("kill -9 ".$value);
+              }
+              if(!empty($deleteRetrieveConsumerOut) && is_array($deleteRetrieveConsumerOut))
+              foreach ($deleteRetrieveConsumerOut as $key => $value) 
               {
                 $count1 = shell_exec("ps -p ".$value." | wc -l") -1;
                 if($count1 >0)
@@ -101,7 +108,9 @@ EOF;
             for($i=1;$i<=MessageQueues::CONSUMERCOUNT ;$i++)
               passthru(JsConstants::$php5path." ".MessageQueues::CRONCONSUMER_STARTCOMMAND." > /dev/null &"); 
             for($i=1;$i<=MessageQueues::NOTIFICATIONCONSUMERCOUNT ;$i++)
-              passthru(JsConstants::$php5path." ".MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND." > /dev/null &"); 
+              passthru(JsConstants::$php5path." ".MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND." > /dev/null &");
+              for($i=1;$i<=MessageQueues::CONSUMER_COUNT_SINGLE ;$i++)
+              passthru(JsConstants::$php5path." ".MessageQueues::CRONDELETERETRIEVE_STARTCOMMAND." > /dev/null &");  
             RabbitmqHelper::sendAlert($str,"default");
           }
         }
@@ -210,6 +219,7 @@ EOF;
 
     //restart inactive notification consumer for queues bound to InstantNotificationExchange exchange
     $this->restartInactiveConsumer(MessageQueues::NOTIFICATIONCONSUMERCOUNT,MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND,"browserNotification");
+    $this->restartInactiveConsumer(MessageQueues::CONSUMER_COUNT_SINGLE,MessageQueues::CRONDELETERETRIEVE_STARTCOMMAND,"DeleteRetrieve");
 
     //runs consumer to consume accumulated messages in queues on the second server if fallback status flag is set.
     if(MessageQueues::FALLBACK_STATUS==true)
@@ -219,7 +229,9 @@ EOF;
         $consumerObj=new Consumer('SECOND_SERVER',$messageCount);
         $consumerObj->receiveMessage(); 
         $notificationConsumerObj=new JsNotificationsConsume('SECOND_SERVER',$messageCount);
-        $notificationConsumerObj->receiveMessage();   
+        $notificationConsumerObj->receiveMessage();
+        $delRetrieveConsumerObj=new deleteRetrieveConsumer('FIRST_SERVER',$messageCount);  //If $serverid='FIRST_SERVER', then 2nd param in Consumer constructor is not taken into account.
+        $delRetrieveConsumerObj->receiveMessage();   
       }
     }    
   }
