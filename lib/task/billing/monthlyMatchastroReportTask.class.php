@@ -95,9 +95,9 @@ EOF;
         $totalRevenue = round($totalRevenue, 2);
         $totalServiceTax = round($totalServiceTax, 2);
         $netRevenue = $totalRevenue - $totalServiceTax;
-        $revenueShareForMatchAstro = $netRevenue*(50/100);
+        $revenueShareForMatchAstro = round($netRevenue*(50/100), 2);
 
-        $to = "avneet.bindra@jeevansathi.com";
+        $to = "jsprod@jeevansathi.com,avneet.bindra@jeevansathi.com";
         $from = "js-sums@jeevansathi.com";
         $subject = "Monthly MatchAstro Report : {$startDt} - {$endDt}";
         $msgBody .= "<br><strong>Number of Astro Compatibility Tickets Sold</strong> :: {$countAstroSold}";
