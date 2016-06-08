@@ -73,6 +73,9 @@ class ContactDetailsV1Action extends sfAction
 			$thumbNail = PictureService::getRequestOrNoPhotoUrl('noPhoto','ThumbailUrl',$this->Profile->getGENDER());
 		$thumbNail = PictureFunctions::mapUrlToMessageInfoArr($thumbNail,'ThumbailUrl',1);
 		$priArr = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
+		$memHandlerObj = new MembershipHandler();
+		$data2 = $memHandlerObj->fetchHamburgerMessage($request);
+		$MembershipMessage = $data2['hamburger_message']['top']; 
 		if ($priArr[0]["CONTACT_DETAIL"]["VISIBILITY"] == "Y" && !$this->contactEngineObj->errorHandlerObj->getErrorMessage()) {
 			$responseArray                       = $this->getContactDetailsInArray($this->contactEngineObj);
 			$source=CommonFunction::getViewContactDetailFlag($this->contactEngineObj->contactHandler);
@@ -85,6 +88,7 @@ class ContactDetailsV1Action extends sfAction
 					$responseArray["footerbutton"]["label"]  = "View Membership Plans";
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
+					$responseArray["footerbutton"]["text"] = $MembershipMessage;
 					$responseArray["contact1"]["value"]      = "***********";
 					$responseArray["contact1"]["label"]      = "Phone No.";
 					$responseArray["contact1"]["action"]     = null;
@@ -111,6 +115,7 @@ class ContactDetailsV1Action extends sfAction
 						$responseArray["footerbutton"]["label"]  = "View Membership Plans";
 						$responseArray["footerbutton"]["value"] = "";
 						$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
+						$responseArray["footerbutton"]["text"] = $MembershipMessage;
 						$responseArray["contactdetailmsg"] = $this->contactHandlerObj->getViewed()->getUSERNAME()." has an eValue plan and has made contact details visible. Upgrade to eValue to make your phone/email visible to all matching profiles";
 						VCDTracking::insertYesNoTracking($this->contactHandlerObj,'Y');
 						
@@ -258,6 +263,7 @@ class ContactDetailsV1Action extends sfAction
 						$responseArray["footerbutton"]["label"]  = "Buy paid membership";
 						$responseArray["footerbutton"]["value"] = "";
 						$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
+						$responseArray["footerbutton"]["text"] = $MembershipMessage;
 					}
 					else
 					{
@@ -297,6 +303,7 @@ class ContactDetailsV1Action extends sfAction
 					$responseArray["footerbutton"]["label"]  = "View Membership Plans";
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
+					$responseArray["footerbutton"]["text"] = $MembershipMessage;
 				}
 				else
 				{
