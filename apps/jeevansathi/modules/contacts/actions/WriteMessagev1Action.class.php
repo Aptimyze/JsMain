@@ -100,12 +100,16 @@ class WriteMessagev1Action extends sfAction
 			$arr["cansend"] = "true";
 		elseif($privilegeArray["0"]["COMMUNICATION"]["MESSAGE"] == "N")
 		{
+			$memHandlerObj = new MembershipHandler();
+			$data2 = $memHandlerObj->fetchHamburgerMessage($request);
+			$MembershipMessage = $data2['hamburger_message']['top']; 
 			$arr["cansend"] = "false";
 			if(strpos($request->getParameter("newActions"), "MEMBERSHIP")!== false )
 			{
 				$arr["button"]["label"]  = "To Write messages, Buy paid membership";
 				$arr["button"]["value"] = "";
 				$arr["button"]["action"] = "MEMBERSHIP";
+				$arr["button"]["text"] = $MembershipMessage;
 			}
 			else
 			{
