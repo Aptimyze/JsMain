@@ -159,6 +159,7 @@ class crmAllocationActions extends sfActions
 	$this->profileid	=$request->getParameter("profileid");
 	$this->subMethod	=$request->getParameter("subMethod");
 	$this->orders		=$request->getParameter("orders");		
+	$pchecksum		=$request->getParameter("pchecksum");
 	$submit			=$request->getParameter("submit");
 	if(!$this->profileid){
 		$this->forward('commoninterface','CrmLogin');
@@ -171,6 +172,8 @@ class crmAllocationActions extends sfActions
 
 
         $checksum               =md5($this->profileid)."i".$this->profileid;
+	if($checksum != $pchecksum && $pchecksum != '')
+		die('SORRY !!! YOU CANNOT PROCEED FURTHER.');
         $this->agentName        =$agentAllocDetailsObj->fetchAgentName($this->cid);
         $privilege              =$agentAllocDetailsObj->getprivilage($this->cid);
 
