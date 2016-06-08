@@ -445,6 +445,7 @@ class crmMisActions extends sfActions
 			$incentiveSalesTargetObj = new incentive_SALES_TARGET();
 			$incentiveMonthlyObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY();
 			$misGenerationhandlerObj = new misGenerationhandler();
+			$this->agentName = $misGenerationhandlerObj->get_SLHDO();
 
 			$allCenters = $jsadminPswrdsObj->fetchAllDistinctCenters();
 			$targetMonth = $this->monthName."-".$this->yearName;
@@ -468,7 +469,7 @@ class crmMisActions extends sfActions
             $this->ddarr = range($stFortDate,$endFortDate);
 			$ddarr_cnt = count($this->ddarr);
 			$this->empDetailArr = $jsadminPswrdsObj->fetchAllUsernamesAndEmpID();
-			$hierarchyObj = new hierarchy($misGenerationhandlerObj->get_SLHDO());
+			$hierarchyObj = new hierarchy($this->agentName);
 			$allReporters = $hierarchyObj->getAllReporters();
 			$res = $jsadminPswrdsObj->fetchAgentInfo($allReporters);
 			
