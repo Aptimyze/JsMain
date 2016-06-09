@@ -1,4 +1,7 @@
 *.svn
+.phpintel/
+/cache
+/log
 cache/jeevansathi/*
 cache/operations/*
 web/smarty/templates_c/*
