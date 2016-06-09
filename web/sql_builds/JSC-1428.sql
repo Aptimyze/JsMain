@@ -1,6 +1,6 @@
 use MOBILE_API;
 
-CREATE TABLE `DIGEST_NOTIFICATIONS` (
+CREATE TABLE MOBILE_API.DIGEST_NOTIFICATIONS (
   `ID` int(12) NOT NULL AUTO_INCREMENT,
   `PROFILEID` int(12) NOT NULL,
   `OTHER_PROFILEID` int(12),
@@ -14,5 +14,3 @@ CREATE TABLE `DIGEST_NOTIFICATIONS` (
 
 INSERT INTO MOBILE_API.APP_NOTIFICATIONS VALUES (40, 'EOI_DIGEST', "You received {EOI_COUNT} more interests. Respond to them with an 'Accept' or 'Decline'", 4, 'ALL', 'Y', 'I', 0, 0, 'MULTIPLE', 'Y', 604800, 'A', 'A', 'Interests Received
 ', 'D');
-
-
