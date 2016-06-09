@@ -54,6 +54,63 @@ class MOBILE_API_DIGEST_NOTIFICATIONS extends TABLE{
 		        throw new jsException($e);
 		}
     }
+
+    /*func getRowsCount
+    *get count of rows with matched scheduled date
+    *@param : $SCHEDULED_DATE
+    * @return : $result
+    */
+    public function getRowsCount($SCHEDULED_DATE)
+    {
+		try
+		{
+
+			$sql = "SELECT count(1) AS COUNT FROM MOBILE_API.DIGEST_NOTIFICATIONS WHERE SCHEDULED_DATE=:SCHEDULED_DATE";
+			$res=$this->db->prepare($sql);
+			$res->bindValue(":SCHEDULED_DATE",$SCHEDULED_DATE,PDO::PARAM_STR);
+			$res->execute();
+			if($row=$res->fetch(PDO::FETCH_ASSOC))
+			{
+				$result = $row['COUNT'];
+			}
+			else
+				$result = 0;
+			return $result;
+		}
+		catch(PDOException $e)
+		{
+		        throw new jsException($e);
+		}
+    }
+
+    /*function to get digest notification rows with matched conditions
+    * @params :$fields="*",$limit="",$offset=""
+    * @return : $result
+    */
+    public function getRows($fields="*",$limit="",$offset="")
+    {
+        try{
+            $sql = "SELECT $fields FROM MOBILE_API.DIGEST_NOTIFICATIONS";
+            
+            if($limit){
+                $sql.= " LIMIT $limit";
+            }
+            if($limit && $offset)
+            {
+                $sql=$sql." OFFSET $offset";
+            }          
+            $prep = $this->db->prepare($sql);
+            $prep->execute();
+            while($row = $prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $result[] = $row;
+            }
+            return $result;
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
+
     
     /*func truncateEntries
     *truncate table
@@ -63,7 +120,6 @@ class MOBILE_API_DIGEST_NOTIFICATIONS extends TABLE{
     {
 		try
 		{
-			
 			$sql = "TRUNCATE MOBILE_API.DIGEST_NOTIFICATIONS";
 			$res=$this->db->prepare($sql);
 			$res->execute();
