@@ -266,13 +266,13 @@ class DialerHandler
 		else
 			return "ignore";
 	}
-        public function getProfilesForCampaign($tableName, $csvEntryDate='',$campaignName='',$startDt='',$endDate='')
+        public function getProfilesForCampaign($tableName, $csvEntryDate='',$campaignName='',$startDt='',$endDt='')
         {
 		$tableName =trim($tableName);
 		if($campaignName=='OB_JS_PAID')
 			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE='$csvEntryDate'";
 		elseif($campaignName=='OB_JS_RCB')
-			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE>='$startDt' AND CSV_ENTRY_DATE<'$endDate'";
+			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE>='$startDt' AND CSV_ENTRY_DATE<'$endDt'";
 		else
 			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE='$csvEntryDate' ORDER BY PRIORITY DESC,ANALYTIC_SCORE DESC,LAST_LOGIN_DATE DESC";
                 $res = mysql_query($sql,$this->db_master) or die("$sql".mysql_error($this->db_master));
@@ -314,7 +314,7 @@ class DialerHandler
 		}
 		else if($campaignName=='OB_JS_RCB'){
 			unset($fieldNameArr['EXPIRY_DT']);
-			$fieldNameArr1 =array('USERNAME'=>'USERNAME','ONLINE_STATUS'=>'ONLINE_STATUS','COUNTRY'=>'COUNTRY');
+			$fieldNameArr1 =array('USERNAME'=>'USERNAME','COUNTRY'=>'COUNTRY');
 			$fieldNameArr =array_merge($fieldNameArr,$fieldNameArr1);	
 		}
 		if($campaignName=='OB_JS_PAID')
@@ -379,13 +379,14 @@ class DialerHandler
         }
 	public function getLastHandledDate($processId)
 	{
-			
+		$sql="SELECT DATE from incentive.LAST_HANDLED_DATE WHERE SOURCE_ID='$processId'";
+		mysql_query($sql,$this->db_master) or die("$sql".mysql_error($this->db_master));			
 
 	}
 	public function updateLastHandledDate($processId, $dateSet)
 	{
-
-
+		$sql="update incentive.LAST_HANDLED_DATE SET DATE='$dateSet' WHERE SOURCE_ID='$processId'";
+		mysql_query($sql,$this->db_master) or die("$sql".mysql_error($this->db_master));
 	}
         public function fetchIST($time)
         {

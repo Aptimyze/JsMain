@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************************************
-* FILE NAME   	: salesRegularProcess.php 
-* DESCRIPTION 	: 
+* FILE NAME   	: rcbCampaignProcess.php 
+* DESCRIPTION 	: RCM Campaign process
 *********************************************************************************************/
 $to     ="manoj.rana@naukri.com";
 $from   ="From:JeevansathiCrm@jeevansathi.com";
@@ -32,8 +32,8 @@ foreach($campaignArr as $key=>$campaignName)
 			$totalRecord	=count($profilesArr);
 			if($totalRecord>0){
 				foreach($profilesArr as $key=>$dataArr){
-					$dataArr =$dialerHandlerObj->formatDataSet($campaignName,$dataArr,$csvEntryDate);		
-					$dialerHandlerObj->addProfileinCampaign($dataArr);
+					$dataArr =$dialerHandlerObj->formatDataSet($campaignName,$dataArr,$startDate);		
+					$dialerHandlerObj->addProfileinCampaign($dataArr, $campaignName);
 					unset($dataArr);
 				}
 			}
@@ -42,11 +42,10 @@ foreach($campaignArr as $key=>$campaignName)
 		$dialerCampaignReords =$dialerHandlerObj->getCampaignRecordsForDuration($campaignName, $startDate, $endDate);
 		if($totalRecord !=$dialerCampaignReords){
 			$sub	="FAILED: Dialer insert for $campaignName";
-			$msg	="Campaign Records:".$totalRecord."# Dialer Records:".$dialerCampaignReords;	
+			$msg	="Campaign Records:".$totalRecord."# Dialer Records Inserted:".$dialerCampaignReords;	
 			mail($to,$sub,$msg,$from);
 		}
-		else
-			$dialerHandlerObj->updateLastHandledDate($processId,$endDate);
+		$dialerHandlerObj->updateLastHandledDate($processId,$endDate);
 
 		unset($campaignRecord);
 		unset($dialerCampaignReords);
