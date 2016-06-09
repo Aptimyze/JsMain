@@ -28,17 +28,18 @@ $this->addOptions(array(
         if(!sfContext::hasInstance())
             sfContext::createInstance($this->configuration);
         $notificationKey = $arguments["notificationKey"];
-
-        $digestNotObj = new MOBILE_API_DIGEST_NOTIFICATIONS();
-        $data = $digestNotObj->getRows("*",$notificationKey);
-        
-        foreach ($data as $key => $value) 
+        if(in_array($notificationKey,NotificationEnums::$digestNotificationKeys))
         {
-            $instantNotObj = new DigestNotification($value['NOTIFICATION_KEY']);
-            $notificationDetails = $instantNotObj->fetchNotificationData($value['PROFILEID'],$value['COUNT']);
-            print_r($notificationDetails);
-            $instantNotObj->sendNotification($value['PROFILEID'],$notificationDetails);
-
+            $digestNotObj = new MOBILE_API_DIGEST_NOTIFICATIONS();
+            $data = $digestNotObj->getRows("*",$notificationKey); 
+            foreach ($data as $key => $value) 
+            {
+                $instantNotObj = new DigestNotification($value['NOTIFICATION_KEY']);
+                $notificationDetails = $instantNotObj->fetchNotificationData($value['PROFILEID'],$value['COUNT']);
+                print_r($notificationDetails);
+                $instantNotObj->sendNotification($value['PROFILEID'],$notificationDetails);
+                unset($instantNotObj);
+            }
         }
     }
 }

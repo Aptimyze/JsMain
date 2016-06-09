@@ -67,8 +67,9 @@ class DigestNotification
 		if($notificationData['OTHER_PROFILE_CHECKSUM'])
 			$profileDetails[$selfProfile]['PROFILE_CHECKSUM']=$notificationData['OTHER_PROFILE_CHECKSUM'];
         print_r($profileDetails);die;
-		//$notificationSenderObj = new NotificationSender;
-		//$notificationSenderObj->sendNotifications($profileDetails);
+		$notificationSenderObj = new NotificationSender;
+		$notificationSenderObj->sendNotifications($profileDetails);
+        unset($notificationSenderObj);
 	}
   }
 }
