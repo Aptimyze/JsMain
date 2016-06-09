@@ -36,6 +36,7 @@ $this->addOptions(array(
         {
             $instantNotObj = new DigestNotification($value['NOTIFICATION_KEY']);
             $notificationDetails = $instantNotObj->fetchNotificationData($value['PROFILEID'],$value['COUNT']);
+            print_r($notificationDetails);
             $instantNotObj->sendNotification($value['PROFILEID'],$notificationDetails);
 
         }
