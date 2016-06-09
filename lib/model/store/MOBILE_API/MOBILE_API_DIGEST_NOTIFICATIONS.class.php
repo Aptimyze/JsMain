@@ -84,14 +84,15 @@ class MOBILE_API_DIGEST_NOTIFICATIONS extends TABLE{
     }
 
     /*function to get digest notification rows with matched conditions
-    * @params :$fields="*",$limit="",$offset=""
+    * @params :$fields="*",$notificationkey="",$limit="",$offset=""
     * @return : $result
     */
-    public function getRows($fields="*",$limit="",$offset="")
+    public function getRows($fields="*",$notificationkey="",$limit="",$offset="")
     {
         try{
             $sql = "SELECT $fields FROM MOBILE_API.DIGEST_NOTIFICATIONS";
-            
+            if($notificationkey)
+            	$sql.= " WHERE NOTIFICATION_KEY = :NOTIFICATION_KEY";
             if($limit){
                 $sql.= " LIMIT $limit";
             }
@@ -100,6 +101,9 @@ class MOBILE_API_DIGEST_NOTIFICATIONS extends TABLE{
                 $sql=$sql." OFFSET $offset";
             }          
             $prep = $this->db->prepare($sql);
+            if($notificationkey)
+            	$prep->bindValue(":NOTIFICATION_KEY", $notificationkey, PDO::PARAM_STR);
+           
             $prep->execute();
             while($row = $prep->fetch(PDO::FETCH_ASSOC))
             {
