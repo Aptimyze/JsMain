@@ -123,10 +123,12 @@ window.onload=function(){
                                 ~/if`
                                 <li><a class="disp_b" href="/search/shortlisted">Shortlisted members</a></li>
                                 <li><a class="disp_b" href="/search/visitors">Recent Profile Visitors</a></li>
+                                <!--
                                 ~if CommonFunction::getMainMembership($subscription) eq mainMem::EVALUE || CommonFunction::getMainMembership($subscription) eq mainMem::EADVANTAGE`
                                 ~else`
                                 <li><a class="disp_b" href="/search/contactViewAttempts">Contact View Attempts<div class="fr"><div class="bg_pink mr15 mt10"><div style="line-height:10px;" class="colrw disp_b padall-6">New</div></div></div></a></li>
                                 ~/if`
+                                -->
                             </ul>
                         </li>
                         <li tabindex="1" class="ml37"> <a class="drop" href="/inbox/1/1">INBOX</a>
