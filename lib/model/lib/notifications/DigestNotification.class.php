@@ -19,20 +19,20 @@ class DigestNotification
   }
 
   /*function to fetch digest notification data
-  * @params: $selfProfile,$count=""
+  * @params: $selfProfile,$otherProfile="",$count=""
   *@return : $notificationDetails
   */
-  public function fetchNotificationData($selfProfile,$count="")
+  public function fetchNotificationData($selfProfile,$otherProfile="",$count="")
   {
-    $notificationDetails = $this->notificationObj->getNotificationData(array("SELF"=>$selfProfile,"OTHER"=>''),$this->notificationKey,'',$count);
+    $notificationDetails = $this->notificationObj->getNotificationData(array("SELF"=>$selfProfile,"OTHER"=>$otherProfile),$this->notificationKey,'',$count);
     return $notificationDetails[0];
   }
 
   /*function to send digest notifications
-  * @params: $selfProfile,$notificationData
+  * @params: $selfProfile,$otherProfile="",$notificationData
   *@return : none
   */
-  public function sendNotification($selfProfile,$notificationData)
+  public function sendNotification($selfProfile,$otherProfile="",$notificationData)
   {
 	if(is_array($notificationData))
 	{

@@ -312,7 +312,7 @@ public function microtime_float()
                         if($message)
                                 $dataAccumulated[0]['MESSAGE_RECEIVED'] = $message;
                         break;
-           case "EOI_DIGEST":
+           case "EOI_DIGEST": //eoi digest notification
 				$details = $this->getProfilesData($appProfiles,"JPROFILE");
 				$poolObj = new NotificationDataPool();
 				$dataAccumulated = $poolObj->getProfileDigestNotificationData($notificationKey,$appProfiles,$details,$count);

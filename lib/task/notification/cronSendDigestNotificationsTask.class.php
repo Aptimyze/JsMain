@@ -27,8 +27,8 @@ $this->addOptions(array(
         //ini_set('memory_limit',-1);
         if(!sfContext::hasInstance())
             sfContext::createInstance($this->configuration);
-        $notificationKey = $arguments["notificationKey"];
 
+        $notificationKey = $arguments["notificationKey"];
         if(in_array($notificationKey,NotificationEnums::$digestNotificationKeys))
         {
             $digestNotObj = new MOBILE_API_DIGEST_NOTIFICATIONS();
@@ -40,11 +40,11 @@ $this->addOptions(array(
                 {
                     //get notification data for each profile
                     $instantNotObj = new DigestNotification($value['NOTIFICATION_KEY']);
-                    $notificationDetails = $instantNotObj->fetchNotificationData($value['PROFILEID'],$value['COUNT']);
+                    $notificationDetails = $instantNotObj->fetchNotificationData($value['PROFILEID'],$value['OTHER_PROFILEID'],$value['COUNT']);
                     print_r($notificationDetails);die;
                     //send digest notification
                     if($notificationDetails)
-                        $instantNotObj->sendNotification($value['PROFILEID'],$notificationDetails);
+                        $instantNotObj->sendNotification($value['PROFILEID'],$value['OTHER_PROFILEID'],$notificationDetails);
                     unset($instantNotObj);
                 }
             }
@@ -52,3 +52,4 @@ $this->addOptions(array(
         }
     }
 }
+?>

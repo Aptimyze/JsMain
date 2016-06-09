@@ -268,7 +268,7 @@ class NotificationDataPool
     }
 
     /*function to get notification data pool for digest notifications
-    @inputs: $notificationKey,$profilesArr,$details,$message
+    @inputs: $notificationKey,$profilesArr,$details,$count=""
     @output : $dataAccumulated
     */
     public function getProfileDigestNotificationData($notificationKey,$profilesArr,$details,$count="")
@@ -284,8 +284,8 @@ class NotificationDataPool
         
         if($count)
             $dataAccumulated[0]['EOI_COUNT'] = $count;
-
-        //$dataAccumulated[0]['ICON_PROFILEID']=$profilesArr["OTHER"];
+        if($profilesArr["OTHER"])
+            $dataAccumulated[0]['ICON_PROFILEID']=$profilesArr["OTHER"];
         unset($profilesArr);
         unset($details);
         return $dataAccumulated;

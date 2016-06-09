@@ -88,7 +88,7 @@ class InstantAppNotification
 		{
 			//schedule digest notification
 			$digestNotObj = new MOBILE_API_DIGEST_NOTIFICATIONS();
-			$digestNotObj->insertDigestNotification($selfProfile,$digestMappingkey);
+			$digestNotObj->insertDigestNotification($selfProfile,$otherProfile,$digestMappingkey);
 			unset($digestNotObj);
 		}
 	}
