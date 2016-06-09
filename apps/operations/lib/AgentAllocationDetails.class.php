@@ -480,13 +480,21 @@ public function fetchProfiles($processObj)
 		$startDt	=$processObj->getStartDate();
 		$endDt		=$processObj->getEndDate();
                 $profiles	=$this->fetchNewFailedPaymentEligibleProfiles($processName,$startDt,$endDt);
+		/*
 		$profilesWebMaster	=$this->fetchWebmasterLeadsEligibleProfiles();
 		if(count($profilesWebMaster)>0){
 			foreach($profilesWebMaster as $key=>$profileid){					
 				$profilesWebMaster1[] =array('PROFILEID'=>$profileid,'WEB_LEAD'=>'rcb');
 			}
 			$profiles =array_merge($profiles,$profilesWebMaster1);
-		}
+		}*/
+	}
+	elseif($processObj->getProcessName()=="rcbCampaignInDialer"){
+                $processName    =$processObj->getProcessName();
+                $subMethod      =$processObj->getSubMethod();
+                $startDt        =$processObj->getStartDate();
+                $endDt          =$processObj->getEndDate();
+                $profiles       =$this->fetchWebmasterLeadsEligibleProfiles($subMethod, $startDt, $endDt);
 	}
         elseif($processObj->getProcessName()=="upsellProcessInDialer")
         {
@@ -1446,11 +1454,13 @@ public function fetchNewFailedPaymentEligibleProfiles($processName='',$startDt='
 	return $profilesFinalArr;
 }
 
-public function fetchWebmasterLeadsEligibleProfiles($subMethod='')
+public function fetchWebmasterLeadsEligibleProfiles($subMethod='', $startDt='', $endDt='')
 {
         $execCallbackObj      =new billing_EXC_CALLBACK();
-	$startDt        =date("Y-m-d H:i:s", time()-2*60*60);
-        $endDt          =date("Y-m-d H:i:s", time());
+	if($subMethod!='RCB_WEBMASTER_LEADS'){
+		$startDt        =date("Y-m-d H:i:s", time()-2*60*60);
+        	$endDt          =date("Y-m-d H:i:s", time());
+	}
         if($subMethod == "WEBMASTER_LEADS_EXCLUSIVE"){
             $profiles = $execCallbackObj->getWebmasterLeadsForExclusive($startDt, $endDt);
         }
