@@ -43,7 +43,8 @@ class LoginV1Action extends sfActions
         	//print_r($count);die;
         	if($count>2)
         	{
-        		setcookie('loginAttempt','1',time()+86400000,"/");
+        		//setcookie('loginAttempt','1',time()+86400000,"/");
+        		setcookie("loginAttemptNew", '1', time() + 86400,"/");
         		if($captcha!=1)
         		{
         			if(MobileCommon::isDesktop())
