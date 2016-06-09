@@ -86,11 +86,11 @@ class InstantAppNotification
 		$digestMappingkey = NotificationEnums::$digestNotificationKeys[$this->notificationKey];
 		if($digestMappingkey)
 		{
-			//schedule instant digest notification
+			//schedule digest notification
 			$digestNotObj = new MOBILE_API_DIGEST_NOTIFICATIONS();
 			$digestNotObj->insertDigestNotification($selfProfile,$digestMappingkey);
+			unset($digestNotObj);
 		}
-		unset($digestNotObj);
 	}
   }
   private function getNotificationSentCount($profileid)

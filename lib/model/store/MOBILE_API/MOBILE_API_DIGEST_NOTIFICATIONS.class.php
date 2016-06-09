@@ -6,7 +6,7 @@ class MOBILE_API_DIGEST_NOTIFICATIONS extends TABLE{
         }
 
     /*func insertDigestNotification
-    *insert entry for notification in table
+    *insert new entry for notification in table if not exists, otherwise updates count
     *@param : $profileid,$notificationkey
     */
     public function insertDigestNotification($profileid,$notificationkey)
