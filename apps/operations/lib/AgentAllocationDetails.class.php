@@ -42,7 +42,7 @@ class AgentAllocationDetails
 		}
 		else
 		{
-			$mainAdminObj=new incentive_MAIN_ADMIN();
+			$mainAdminObj=new incentive_MAIN_ADMIN('newjs_slave');
 			$agents=$mainAdminObj->fetchAgentsForDisp($processObj);
 			$subMethod=$processObj->getSubMethod();
 			if($subMethod=="LIMIT_EXCEED")
@@ -177,7 +177,7 @@ public function fetchProfiles($processObj)
 {	
 	if($processObj->getProcessName()=="DeAllocation")
 	{
-		$mainAdminObj=new incentive_MAIN_ADMIN();
+		$mainAdminObj=new incentive_MAIN_ADMIN('newjs_slave');
 		$subMethod=$processObj->getSubMethod();
 		if($subMethod=="NEGATIVE_LIST")
 		{
@@ -597,7 +597,7 @@ public function fetchPremiumOutSourcingProfiles()
 }
 public function fetchEverPaidProfiles()
 {
-	$serviceStatusObj = new billing_SERVICE_STATUS();	//TRANSFER_TO_SLAVE
+	$serviceStatusObj = new billing_SERVICE_STATUS('newjs_slave');
 	$profiles = $serviceStatusObj->fetchEverPaidProfiles();
         return $profiles;
 }
@@ -748,7 +748,7 @@ public function filterProfilesForAllocation($profiles,$method,$processObj='')
 }
 public function filterProfilesForPreAllocation($profiles,$level,$profilesRequiredCount, $discount_status=0, $everPaidPool)
 {
-	$jprofileObj		=new JPROFILE('newjs_bmsSlave');		//TRANSFER_TO_SLAVE
+	$jprofileObj		=new JPROFILE('newjs_slave');
 	$historyObj		=new incentive_HISTORY('newjs_slave');		
 	$jprofileAlertsObj	=new newjs_JPROFILE_ALERTS('newjs_slave');		
 	$jprofileContactObj	=new NEWJS_JPROFILE_CONTACT('newjs_slave');		
@@ -1007,7 +1007,7 @@ public function filterProfilesForPreAllocation($profiles,$level,$profilesRequire
 }
 public function fetchProfilesCda($processObj)
 {	
-	$crmDailyAllotObj=new CRM_DAILY_ALLOT();
+	$crmDailyAllotObj=new CRM_DAILY_ALLOT('newjs_slave');
 	if($processObj->getSubMethod()=="NO_LONGER_WORKING")
 	{
 		$id_arr=Array();
@@ -1035,7 +1035,7 @@ public function fetchProfilesCda($processObj)
 }
 public function fetchHistoryOfProfiles($profiles)
 {
-	$historyObj=new incentive_HISTORY();
+	$historyObj=new incentive_HISTORY('newjs_slave');
 	for($i=0;$i<count($profiles);$i++)
 	{
 		$entryDt=$historyObj->fetchHistoryLastEntryDt($profiles[$i]['PROFILEID']);
@@ -1396,10 +1396,18 @@ public function fetchNewFailedPaymentDetals($profileidArr=array(),$profileDetail
 public function fetchNewFailedPaymentEligibleProfiles($processName='',$startDt='',$endDt='')
 {
 	//$jprofileObj		=new JPROFILE();
-	$purchasesObj		=new billing_PURCHASES();
-	$paymentCollectObj	=new incentive_PAYMENT_COLLECT();
-	$trackFailedPayObj	=new billing_TRACKING_FAILED_PAYMENT();
-	$trackFailedPayLogObj   =new billing_TRACKING_FAILED_PAYMENT_LOG();
+	if($processName=='SALES_REGULAR'){
+	$purchasesObj		=new billing_PURCHASES('newjs_slave');
+	$paymentCollectObj	=new incentive_PAYMENT_COLLECT('newjs_slave');
+	$trackFailedPayObj	=new billing_TRACKING_FAILED_PAYMENT('newjs_slave');
+	$trackFailedPayLogObj   =new billing_TRACKING_FAILED_PAYMENT_LOG('newjs_slave');
+	}
+	else{
+	$purchasesObj           =new billing_PURCHASES();
+        $paymentCollectObj      =new incentive_PAYMENT_COLLECT();
+        $trackFailedPayObj      =new billing_TRACKING_FAILED_PAYMENT();
+        $trackFailedPayLogObj   =new billing_TRACKING_FAILED_PAYMENT_LOG();
+	}
 	if($processName=='SALES_REGULAR'){
 		$startDt	=date("Y-m-d H:i:s", time()-25*60*60);			
 		$endDt 		=date("Y-m-d H:i:s", time());
@@ -1833,7 +1841,7 @@ public function phoneNumberCheck($phoneNumber, $isdNo='')
 }
 public function getOtherPhoneNums($profileid)
 {
-	$alternateNumberObj=new PROFILE_ALTERNATE_NUMBER();
+	$alternateNumberObj=new PROFILE_ALTERNATE_NUMBER('newjs_slave');
 	$AL_NUMBER=$alternateNumberObj->getAlternateNumber($profileid);
 	return $AL_NUMBER;
 }
@@ -2227,7 +2235,7 @@ public function fetchLastAllocationDetails($profileid='',$username='')
 }
 public function getAllotedAgent($profileid)
 {
-	$mainAdminObj	=new incentive_MAIN_ADMIN();
+	$mainAdminObj	=new incentive_MAIN_ADMIN('newjs_slave');
 	$allotedAgent	=$mainAdminObj->get($profileid,"PROFILEID","ALLOTED_TO");
 	$agentName 	=$allotedAgent['ALLOTED_TO'];	
 	if($agentName)
@@ -2243,7 +2251,7 @@ public function fetchFieldSalesCity()
 }
 public function getLocalityLimit($method)
 {
-	$agentAllotedObj        =new AGENT_ALLOTED();
+	$agentAllotedObj        =new AGENT_ALLOTED('newjs_slave');
 	$localityArr =$agentAllotedObj->getLocalityLimit($method);
 	return $localityArr;
 }
