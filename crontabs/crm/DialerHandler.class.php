@@ -380,8 +380,10 @@ class DialerHandler
 	public function getLastHandledDate($processId)
 	{
 		$sql="SELECT DATE from incentive.LAST_HANDLED_DATE WHERE SOURCE_ID='$processId'";
-		mysql_query($sql,$this->db_master) or die("$sql".mysql_error($this->db_master));			
-
+		$res =mysql_query($sql,$this->db_master) or die("$sql".mysql_error($this->db_master));			
+                if($row = mysql_fetch_assoc($res))
+                        $date =$row['DATE'];
+                return $date;
 	}
 	public function updateLastHandledDate($processId, $dateSet)
 	{

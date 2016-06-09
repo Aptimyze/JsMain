@@ -24,7 +24,7 @@ foreach($campaignArr as $key=>$campaignName)
 {
 		$processId	=$campaignIdArr[$campaignName];
 		$startDate 	=$dialerHandlerObj->getLastHandledDate($processId);
-		$endDate 	=date("Y-m-d",time()-9.30*60*60);
+		$endDate 	=date("Y-m-d H:i:s",time()-9.30*60*60);
 
 		$tableArr	=$campaignTableArr[$campaignName];
 		foreach($tableArr as $key=>$tableName){
