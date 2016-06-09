@@ -15,7 +15,7 @@
 	<!-- loader -->
 	<div class="container mainwid pt35" id="vspMainDiv">
 		 ~if $contactedProfileDetails eq "show"`
-		 ~if $dontShowBreadcrumb eq 1`
+		 ~if $dontShowBreadcrumb eq 0`
 		<p class="pb10 mtn24 color11 f15 fontlig js-limitW cursp" id="vspBackLink">Back to Profile of ~$Username`</p>
 		~/if`
 		<!--start:div 1-->
