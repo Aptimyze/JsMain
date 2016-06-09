@@ -6,6 +6,7 @@ class cronSendDigestNotificationsTask extends sfBaseTask
 {
   protected function configure()
   {
+    $this->addArguments(array(new sfCommandArgument('notificationKey', sfCommandArgument::REQUIRED, 'My argument')));
     $this->namespace        = 'notification';
     $this->name             = 'cronSendDigestNotifications';
     $this->briefDescription = 'send digest notifications at end of day';
@@ -26,22 +27,17 @@ $this->addOptions(array(
         //ini_set('memory_limit',-1);
         if(!sfContext::hasInstance())
             sfContext::createInstance($this->configuration);
+        $notificationKey = $arguments["notificationKey"];
 
         $digestNotObj = new MOBILE_API_DIGEST_NOTIFICATIONS();
-        $count = $digestNotObj->getRowsCount(date("Y-m-d"));
-        echo "count---".$count;
-        $limit = 1000;
-        for($i=0;$i<=$count;$i+=$limit)
+        $data = $digestNotObj->getRows("*",$notificationKey);
+        
+        foreach ($data as $key => $value) 
         {
-            $data = $digestNotObj->getRows("*",$limit,$i);
-            print_r($data);
-            foreach ($data as $key => $value) 
-            {
-                $instantNotObj = new DigestNotification($value['NOTIFICATION_KEY']);
-                $instantNotObj->sendNotification($value['PROFILEID']);
-            }
-           
-            die;
-        }  
+            $instantNotObj = new DigestNotification($value['NOTIFICATION_KEY']);
+            $notificationDetails = $instantNotObj->fetchNotificationData($value['PROFILEID'],$value['COUNT']);
+            $instantNotObj->sendNotification($value['PROFILEID'],$notificationDetails);
+
+        }
     }
 }

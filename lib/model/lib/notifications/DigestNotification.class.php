@@ -17,49 +17,51 @@ class DigestNotification
     $valueArray['NOTIFICATION_KEY']=$this->notificationKey;
     $this->notificationObj->setNotifications($this->notificationObj->getNotificationSettings($valueArray));
   }
-  public function sendNotification($selfProfile,$otherProfile='')
+
+  public function fetchNotificationData($selfProfile,$count="")
   {
-    if($selfProfile)
-    {
-    	$notificationDetails = $this->notificationObj->getNotificationData(array("SELF"=>$selfProfile,"OTHER"=>$otherProfile),$this->notificationKey);
-    	$notificationData = $notificationDetails[0];
-    	if(is_array($notificationData))
-    	{
-    		$profileDetails[$selfProfile]['FREQUENCY']=$notificationData['FREQUENCY'];
-    		$profileDetails[$selfProfile]['NOTIFICATION_KEY']=$notificationData['NOTIFICATION_KEY'];
-    		$profileDetails[$selfProfile]['MESSAGE']=$notificationData['NOTIFICATION_MESSAGE'];
-    		$profileDetails[$selfProfile]['LANDING_SCREEN']=$notificationData['LANDING_SCREEN'];
-    		$profileDetails[$selfProfile]['OS_TYPE']=$notificationData['OS_TYPE'];
-    		$profileDetails[$selfProfile]['COLLAPSE_STATUS']=$notificationData['COLLAPSE_STATUS'];
-    		$profileDetails[$selfProfile]['TTL']=$notificationData['TTL'];
-    		$profileDetails[$selfProfile]['TITLE']=$notificationData['TITLE'];
-    		$profileDetails[$selfProfile]['USERNAME']=$notificationData['SELF']['USERNAME'];
-    		$profileDetails[$selfProfile]['MSG_ID']=$notificationData['MSG_ID'];
+    $notificationDetails = $this->notificationObj->getNotificationData(array("SELF"=>$selfProfile,"OTHER"=>''),$this->notificationKey,'',$count);
+    return $notificationDetails[0];
+  }
 
-            if($notificationData['PHOTO_URL']=="O")
+  public function sendNotification($selfProfile,$notificationData)
+  {
+	if(is_array($notificationData))
+	{
+		$profileDetails[$selfProfile]['FREQUENCY']=$notificationData['FREQUENCY'];
+		$profileDetails[$selfProfile]['NOTIFICATION_KEY']=$notificationData['NOTIFICATION_KEY'];
+		$profileDetails[$selfProfile]['MESSAGE']=$notificationData['NOTIFICATION_MESSAGE'];
+		$profileDetails[$selfProfile]['LANDING_SCREEN']=$notificationData['LANDING_SCREEN'];
+		$profileDetails[$selfProfile]['OS_TYPE']=$notificationData['OS_TYPE'];
+		$profileDetails[$selfProfile]['COLLAPSE_STATUS']=$notificationData['COLLAPSE_STATUS'];
+		$profileDetails[$selfProfile]['TTL']=$notificationData['TTL'];
+		$profileDetails[$selfProfile]['TITLE']=$notificationData['TITLE'];
+		$profileDetails[$selfProfile]['USERNAME']=$notificationData['SELF']['USERNAME'];
+		$profileDetails[$selfProfile]['MSG_ID']=$notificationData['MSG_ID'];
+
+        if($notificationData['PHOTO_URL']=="O")
+        {
+                           	$profileObj = new Profile('',$otherProfile);
+                           	$profileObj->getDetail("","","HAVEPHOTO,PHOTO_DISPLAY");
+            $havePhoto =$profileObj->getHAVEPHOTO();
+            if($havePhoto=='Y')
             {
-                               	$profileObj = new Profile('',$otherProfile);
-                               	$profileObj->getDetail("","","HAVEPHOTO,PHOTO_DISPLAY");
-                $havePhoto =$profileObj->getHAVEPHOTO();
-                if($havePhoto=='Y')
-                {
-                	$pictureServiceObj=new PictureService($profileObj);
-                	$profilePicObj = $pictureServiceObj->getProfilePic();
-                	if($profilePicObj)
-                		$thumbNail = $profilePicObj->getThumbailUrl();
-                }
+            	$pictureServiceObj=new PictureService($profileObj);
+            	$profilePicObj = $pictureServiceObj->getProfilePic();
+            	if($profilePicObj)
+            		$thumbNail = $profilePicObj->getThumbailUrl();
             }
-            if($thumbNail)
-    			$profileDetails[$selfProfile]['PHOTO_URL']=$thumbNail;
-            else  
-    			$profileDetails[$selfProfile]['PHOTO_URL']="D";
-    		if($notificationData['OTHER_PROFILE_CHECKSUM'])
-    			$profileDetails[$selfProfile]['PROFILE_CHECKSUM']=$notificationData['OTHER_PROFILE_CHECKSUM'];
-
-    		//$notificationSenderObj = new NotificationSender;
-    		//$notificationSenderObj->sendNotifications($profileDetails);
-    	}
-    }
+        }
+        if($thumbNail)
+			$profileDetails[$selfProfile]['PHOTO_URL']=$thumbNail;
+        else  
+			$profileDetails[$selfProfile]['PHOTO_URL']="D";
+		if($notificationData['OTHER_PROFILE_CHECKSUM'])
+			$profileDetails[$selfProfile]['PROFILE_CHECKSUM']=$notificationData['OTHER_PROFILE_CHECKSUM'];
+        print_r($profileDetails);die;
+		//$notificationSenderObj = new NotificationSender;
+		//$notificationSenderObj->sendNotifications($profileDetails);
+	}
   }
 }
 ?>
