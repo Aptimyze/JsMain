@@ -30,8 +30,8 @@ class CriticalActionLayerTracking
      $your_date = strtotime(self::RCB_LAYER_REF_DATE);
      $datediff = $now - $your_date;
      $dayDiff=floor($datediff/(60*60*24));  
-     $remainder=$dayDiff=$dayDiff%10;
-     if($remainder==$profileId%10)return true;
+     $remainder=$dayDiff=$dayDiff%5;
+     if($remainder==$profileId%5)return true;
      else return false;
   }
 
