@@ -28,22 +28,27 @@ $this->addOptions(array(
         if(!sfContext::hasInstance())
             sfContext::createInstance($this->configuration);
         $notificationKey = $arguments["notificationKey"];
+
         if(in_array($notificationKey,NotificationEnums::$digestNotificationKeys))
         {
             $digestNotObj = new MOBILE_API_DIGEST_NOTIFICATIONS();
+            //get profileids eligible for this digest notification
             $data = $digestNotObj->getRows("*",$notificationKey); 
             if(is_array($data))
             {
                 foreach ($data as $key => $value) 
                 {
+                    //get notification data for each profile
                     $instantNotObj = new DigestNotification($value['NOTIFICATION_KEY']);
                     $notificationDetails = $instantNotObj->fetchNotificationData($value['PROFILEID'],$value['COUNT']);
                     print_r($notificationDetails);die;
+                    //send digest notification
                     if($notificationDetails)
                         $instantNotObj->sendNotification($value['PROFILEID'],$notificationDetails);
                     unset($instantNotObj);
                 }
             }
+            unset($digestNotObj);
         }
     }
 }
