@@ -242,15 +242,22 @@ class NotificationDataPool
     */
     public function getProfileInstantNotificationData($notificationKey,$profilesArr,$details,$message="")
     {
-        foreach($profilesArr as $k=>$v)
+        switch($notificationKey)
         {
-            if($k=="OTHER")
-                $dataAccumulated[0][$k][0] = $details[$v];
-            else
-                $dataAccumulated[0][$k] = $details[$v]; 
+            case "EOI" :
+            case "MESSAGE_RECEIVED" :
+            case "EOI_REMINDER":
+                        foreach($profilesArr as $k=>$v)
+                        {
+                            if($k=="OTHER")
+                                $dataAccumulated[0][$k][0] = $details[$v];
+                            else
+                                $dataAccumulated[0][$k] = $details[$v]; 
+                        }
+                        $dataAccumulated[0]['COUNT'] = "SINGLE";
+                        break;
+                        
         }
-        $dataAccumulated[0]['COUNT'] = "SINGLE";           
-        
         if($message)
             $dataAccumulated[0]['MESSAGE_RECEIVED'] = $message;
 
