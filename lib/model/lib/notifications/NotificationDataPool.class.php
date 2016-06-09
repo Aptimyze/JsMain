@@ -266,6 +266,30 @@ class NotificationDataPool
         unset($details);
         return $dataAccumulated;
     }
+
+    /*function to get notification data pool for digest notifications
+    @inputs: $notificationKey,$profilesArr,$details,$message
+    @output : $dataAccumulated
+    */
+    public function getProfileDigestNotificationData($notificationKey,$profilesArr,$details,$count="")
+    {
+        foreach($profilesArr as $k=>$v)
+        {
+            if($k=="OTHER")
+                $dataAccumulated[0][$k][0] = $details[$v];
+            else
+                $dataAccumulated[0][$k] = $details[$v]; 
+        }
+        $dataAccumulated[0]['COUNT'] = "MULTIPLE";
+        
+        if($count)
+            $dataAccumulated[0]['EOI_COUNT'] = $count;
+
+        //$dataAccumulated[0]['ICON_PROFILEID']=$profilesArr["OTHER"];
+        unset($profilesArr);
+        unset($details);
+        return $dataAccumulated;
+    }
   
   public function getRenewalReminderData($applicableProfiles)
   {

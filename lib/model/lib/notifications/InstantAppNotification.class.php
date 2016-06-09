@@ -21,7 +21,6 @@ class InstantAppNotification
   public function sendNotification($selfProfile,$otherProfile='', $message='', $exUrl='')
   {
 	$notificationSentCount = $this->getNotificationSentCount($selfProfile);
-
 	$notificationlimit = $this->notificationObj->notifications['TIME_CRITERIA'][$this->notificationKey];
 	if(in_array($this->notificationKey, $this->unlimitedTimeCriteriaKeyArr) || $notificationlimit>$notificationSentCount)
 	{
@@ -85,10 +84,10 @@ class InstantAppNotification
 	else if($notificationSentCount>=$notificationlimit)
 	{
 		$digestMappingkey = NotificationEnums::$digestNotificationKeys[$this->notificationKey];
-		$digestNotObj = new MOBILE_API_DIGEST_NOTIFICATIONS();
-		if($digestMappingkey && is_array($digestNotObj->isEntryExists($selfProfile))==false)
+		if($digestMappingkey)
 		{
 			//schedule instant digest notification
+			$digestNotObj = new MOBILE_API_DIGEST_NOTIFICATIONS();
 			$digestNotObj->insertDigestNotification($selfProfile,$digestMappingkey);
 		}
 		unset($digestNotObj);

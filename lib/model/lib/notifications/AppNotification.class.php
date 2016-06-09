@@ -32,7 +32,7 @@ public function microtime_float()
     list($usec, $sec) = explode(" ", microtime());
     return ((float)$usec + (float)$sec);
 }
-  public function getNotificationData($appProfiles,$notificationKey, $message='')
+  public function getNotificationData($appProfiles,$notificationKey, $message='',$count='')
   {
 	  switch($notificationKey)
 	  {
@@ -312,6 +312,13 @@ public function microtime_float()
                         if($message)
                                 $dataAccumulated[0]['MESSAGE_RECEIVED'] = $message;
                         break;
+           case "EOI_DIGEST":
+				$details = $this->getProfilesData($appProfiles,$className="JPROFILE");
+				$poolObj = new NotificationDataPool();
+				$dataAccumulated = $poolObj->getProfileDigestNotificationData($notificationKey,$appProfiles,$details,$count);
+				unset($poolObj);
+            break;
+
 		  case "PROFILE_VISITOR":
 			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
 			$details = $this->getProfilesData($applicableProfiles,$className="newjs_SMS_TEMP_TABLE");
