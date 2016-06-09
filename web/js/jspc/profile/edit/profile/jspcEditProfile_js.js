@@ -5652,6 +5652,11 @@ $(document).ready(function() {
             $("#commonOverlay").fadeOut("fast"); 
         });
     });
+    $("#removeClosebtnHL").on('click',function(){
+        $("#removeHoroscopeLayer").fadeOut("fast",function(){
+            $("#commonOverlay").fadeOut("fast"); 
+        });
+    });
   
   $('body').on('focus', '.js-boxField', function(event) {
     var myId = $(this).attr('id');

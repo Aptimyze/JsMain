@@ -15,7 +15,8 @@ class deleteHoroscopeV1Action extends sfAction{
                 $deleteAstroDetailsObj->deleteEntry($profileid);
                 //DELETE TIME ,PLACE OF BIRTH
                 $deleteTimePlaceOfBirthObj = new JPROFILE();
-                $deleteTimePlaceOfBirthObj->removePlaceAndDateOfBirth($profileid);
+                $fieldsArr = array('BTIME'=>'','COUNTRY_BIRTH'=>'','CITY_BIRTH'=>'');
+                $deleteTimePlaceOfBirthObj->edit($fieldsArr,$profileid);
                     $msg["Success"] = "Successfull";
                     $apiResponseHandlerObj->setResponseBody($msg);
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);

@@ -1170,20 +1170,5 @@ public function duplicateEmail($email)
         }
         return $res;
     }
-    /*
-     * this function is used to remove place of birth-country,city and time of birth
-     * $profileid - profileid for which entry is to be deleted
-     */
-    public function removePlaceAndDateOfBirth($profileid) {
-        try {
-            $sql = "UPDATE newjs.JPROFILE SET BTIME = '',COUNTRY_BIRTH='',CITY_BIRTH='' WHERE PROFILEID = :PROFILEID";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
-            $prep->execute();
-        }
-        catch(Exception $e) {
-            throw new jsException($e);
-        }
-    }
 }
 ?>

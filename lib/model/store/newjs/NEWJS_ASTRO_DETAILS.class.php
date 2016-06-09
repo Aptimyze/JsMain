@@ -149,6 +149,9 @@ class NEWJS_ASTRO extends TABLE {
         	}
 		
 	}
+        /*
+         * this function deletes entry for a given profileid
+         */
     public function deleteEntry($pid)
 	{
 		try{
