@@ -1201,5 +1201,38 @@ public function duplicateEmail($email)
         throw new jsException($ex);
       }
     }
+
+	/**
+	 * updateProfileSeriousnessCount
+	 * This query is in use at SugarCRM
+	 * @param $profileArr
+	 * @return bool
+	 */
+	function updateProfileSeriousnessCount($profileArr)
+	{
+		if(!is_array($profileArr) || !count($profileArr)) {
+			throw new jsException("Param is not array or an empty is provided");
+		}
+
+		try{
+			$now=date('Y-m-d h:i:s');
+			$szINs = implode(',',array_fill(0,count($profileArr),'?'));
+
+			$sql="UPDATE newjs.JPROFILE SET SERIOUSNESS_COUNT=SERIOUSNESS_COUNT+1,SORT_DT=:NOW WHERE PROFILEID IN ($szINs)";
+			$pdoStatement = $this->db->prepare($sql);
+			$pdoStatement->bindValue(':NOW', $now,PDO::PARAM_STR);
+			//Bind Value
+			$count =0;
+			foreach ($profileArr as $k => $value)
+			{
+				++$count;
+				$pdoStatement->bindValue(($count), $value,PDO::PARAM_INT);
+			}
+			$pdoStatement->execute();
+			return true;
+		} catch (Exception $ex){
+			throw new jsException($ex);
+		}
+	}
 }
 ?>

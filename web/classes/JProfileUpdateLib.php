@@ -220,6 +220,20 @@ class JProfileUpdateLib
       return false;
     }
   }
-  
+
+  /**
+   * updateProfileSeriousnessCount
+   * @param $profileArr
+   * @return bool
+   */
+  public function updateProfileSeriousnessCount($profileArr)
+  {
+    try {
+      return $this->objJProfileStore->updateProfileSeriousnessCount($profileArr);
+    } catch (Exception $ex) {
+      jsException::log($ex);
+      return false;
+    }
+  }
 }
 ?>
