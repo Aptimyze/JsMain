@@ -509,8 +509,14 @@ public function fetchProfiles($processObj)
 		$date 		=date('Y-m-d',time()-86400);
 		$startDate 	=$date." 00:00:00";
 		$endDate   	=$date." 23:59:59";
-		$profiles       =$purchasesObj->getFreshPaidProfiles($startDate, $endDate);
-		//print_r($profiles);
+		$profiles1      =$purchasesObj->getFreshPaidProfiles();
+		foreach($profiles1 as $dataSet){
+			$entryDt =$dataSet['ENTRY_DT'];
+			if((strtotime($entryDt)>=strtotime($startDate)) && (strtotime($entryDt)<=strtotime($endDate))){
+				$profiles[] =$dataSet;	
+			}	
+		}
+		//print_r($profiles);die;
 	}
 	return $profiles;
 }

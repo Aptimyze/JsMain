@@ -401,14 +401,15 @@ class BILLING_PURCHASES extends TABLE{
         }
         return $profiles;
     }
-    public function getFreshPaidProfiles($startDate, $endDate)
+    public function getFreshPaidProfiles()
     {
         try
         {
-            $sql ="SELECT count(PROFILEID) cnt, PROFILEID, SERVICEID,ENTRY_DT FROM billing.PURCHASES p WHERE p.STATUS = 'DONE' AND p.MEMBERSHIP='Y' AND p.ENTRY_DT >=:START_DATE AND p.ENTRY_DT <=:END_DATE AND SERVICEID NOT LIKE '%X%' GROUP BY PROFILEID HAVING cnt=1";
+            //$sql ="SELECT count(PROFILEID) cnt, PROFILEID, SERVICEID,ENTRY_DT FROM billing.PURCHASES p WHERE p.STATUS = 'DONE' AND p.MEMBERSHIP='Y' AND p.ENTRY_DT >=:START_DATE AND p.ENTRY_DT <=:END_DATE AND SERVICEID NOT LIKE '%X%' GROUP BY PROFILEID";
+	    $sql ="SELECT count(PROFILEID) cnt, PROFILEID, SERVICEID,ENTRY_DT FROM billing.PURCHASES p WHERE p.STATUS = 'DONE' AND p.MEMBERSHIP='Y' AND SERVICEID NOT LIKE '%X%' GROUP BY PROFILEID HAVING cnt=1";	
             $prep = $this->db->prepare($sql);
-            $prep->bindValue(":START_DATE",$startDate,PDO::PARAM_STR);
-            $prep->bindValue(":END_DATE",$endDate,PDO::PARAM_STR);
+            //$prep->bindValue(":START_DATE",$startDate,PDO::PARAM_STR);
+            //$prep->bindValue(":END_DATE",$endDate,PDO::PARAM_STR);
             $prep->execute();
             while($result=$prep->fetch(PDO::FETCH_ASSOC))
                 $profiles[]=$result;
