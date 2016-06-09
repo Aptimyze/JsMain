@@ -32,13 +32,17 @@ $this->addOptions(array(
         {
             $digestNotObj = new MOBILE_API_DIGEST_NOTIFICATIONS();
             $data = $digestNotObj->getRows("*",$notificationKey); 
-            foreach ($data as $key => $value) 
+            if(is_array($data))
             {
-                $instantNotObj = new DigestNotification($value['NOTIFICATION_KEY']);
-                $notificationDetails = $instantNotObj->fetchNotificationData($value['PROFILEID'],$value['COUNT']);
-                print_r($notificationDetails);
-                $instantNotObj->sendNotification($value['PROFILEID'],$notificationDetails);
-                unset($instantNotObj);
+                foreach ($data as $key => $value) 
+                {
+                    $instantNotObj = new DigestNotification($value['NOTIFICATION_KEY']);
+                    $notificationDetails = $instantNotObj->fetchNotificationData($value['PROFILEID'],$value['COUNT']);
+                    print_r($notificationDetails);die;
+                    if($notificationDetails)
+                        $instantNotObj->sendNotification($value['PROFILEID'],$notificationDetails);
+                    unset($instantNotObj);
+                }
             }
         }
     }
