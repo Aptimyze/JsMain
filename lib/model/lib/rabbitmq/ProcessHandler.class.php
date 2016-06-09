@@ -121,5 +121,29 @@ class ProcessHandler
         }
     }
   }
+
+  
+  /**
+   * 
+   * Function to delete/retrieve user
+   * 
+   * @access public
+   * @param $type,$body
+   */
+  public function deleteRetrieveProfileId($type,$body)
+  {
+    switch($type)
+    {
+      case "RETRIEVE" : 
+                      passthru(JsConstants::$php5path." $_SERVER[DOCUMENT_ROOT]/profile/retrieveprofile_bg.php " . $body['profileId'] . " > /dev/null");  
+                      break;
+      case "DELETING" :
+                      passthru(JsConstants::$php5path." $_SERVER[DOCUMENT_ROOT]/profile/deleteprofile_bg.php " . $body['profileId'] . " > /dev/null");
+                      break;
+
+    }
+
+ }
+
 }
 ?>

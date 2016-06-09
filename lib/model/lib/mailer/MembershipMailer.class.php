@@ -332,8 +332,8 @@ class MembershipMailer {
     
     function filterProfiles($profileArray=array())
     {
-        $smsSentProfileIDArr = array("newjs_slave");
-        $filterObj = new billing_SMS_REQUEST_CALLBACK();
+        $smsSentProfileIDArr = array();
+        $filterObj = new billing_SMS_REQUEST_CALLBACK("newjs_slave");
         $smsDate = date('Y-m-d',strtotime($row["SMS_DATE"] . '- 3 month'));
         $smsSentProfileIDArr = $filterObj->getFilterdProfiles($profileArray,$smsDate);
         return $smsSentProfileIDArr;
