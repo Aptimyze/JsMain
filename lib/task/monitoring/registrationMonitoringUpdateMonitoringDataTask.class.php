@@ -52,8 +52,8 @@ EOF;
    */
   private function getMonitorData(){
     try{
-      $slaveConnection = new REG_TRACK_CHANNEL('newjs_slave');
-      return $slaveConnection->getRegistrationMonitoringData();
+      $masterConnection = new REG_TRACK_CHANNEL('newjs_master');
+      return $masterConnection->getRegistrationMonitoringData();
     } catch (Exception $ex) {
       //Log this error 
       return false;

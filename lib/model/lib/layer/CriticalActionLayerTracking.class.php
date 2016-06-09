@@ -162,12 +162,10 @@ return 0;
           case '3': if ($interestsPending > 0)
                       $show=1;
                     break;  
-          case '5': if(MobileCommon::isApp()!='I')
+          case '5': 
                     $show=1;
                     break;
           case '6': 
-
-                  
                   if(!MobileCommon::isApp())
                     {
                       
@@ -190,7 +188,7 @@ return 0;
                     
                     break;
 
-          case '7': if(!MobileCommon::isApp())
+          case '7': if(!MobileCommon::isAndroidApp())
                       {  
                       
                       $entryDate=$profileObj->getENTRY_DT();

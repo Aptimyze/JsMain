@@ -284,7 +284,7 @@ class CommonUtility
         /**
         * General Utility function to send post curl request.
         */
-        public static function sendCurlPostRequest($urlToHit,$postParams,$timeout='')
+        public static function sendCurlPostRequest($urlToHit,$postParams,$timeout='',$headerArr="")
         {
 	        if(!$timeout)
 		        $timeout = 50;
@@ -298,7 +298,10 @@ die;
 */
 //echo "<br><br><br>".$urlToHit."?".$postParams;echo "<br><br>\n\n";//die;
                 $ch = curl_init($urlToHit);
-                curl_setopt($ch, CURLOPT_HEADER, 0);
+		if($headerArr)
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArr);
+		else
+                	curl_setopt($ch, CURLOPT_HEADER, 0);
 		if($postParams)
 	                curl_setopt($ch, CURLOPT_POST, 1);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
