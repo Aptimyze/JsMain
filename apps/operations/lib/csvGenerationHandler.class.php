@@ -158,6 +158,8 @@ class csvGenerationHandler
 			$fields ="PROFILEID,USERNAME,ISD,COUNTRY_RES,MTONGUE,FAMILY_INCOME,ENTRY_DT,PHONE_WITH_STD,DTOFBIRTH,STD,PHONE_MOB,CITY_RES,GENDER,RELATION,AGE,INCOME,SEC_SOURCE,HAVEPHOTO,MSTATUS,PHONE_FLAG,INCOMPLETE,LAST_LOGIN_DT";
 			if($processName=='paidCampaignProcess'){
 				$fields .=",YOURINFO,FAMILYINFO,FATHER_INFO,SPOUSE,SIBLING_INFO,JOB_INFO";	
+			}
+			if($processName=='paidCampaignProcess' || $processName=='renewalProcessInDialer' || $processName=='SALES_REGULAR'){
 				$jprofileObj  	=new JPROFILE('newjs_slave');
 			}
 			else
@@ -350,7 +352,7 @@ class csvGenerationHandler
 		}
 		else if($processName=="SUGARCRM_LTF")
 		{
-			$sugarcrmLeadsObj = new sugarcrm_leads('newjs_bmsSlave');		//TRANSFER_TO_SLAVE
+			$sugarcrmLeadsObj = new sugarcrm_leads('newjs_slave');
 			$subMethod = $processObj->getSubMethod();
 
 			if($subMethod == "LTF_MOBILE_LEADS")
@@ -534,7 +536,7 @@ class csvGenerationHandler
 			}
 
 			if($processName=='renewalProcessInDialer'){
-				$renewalInDialerObj =new incentive_RENEWAL_IN_DIALER();	
+				$renewalInDialerObj =new incentive_RENEWAL_IN_DIALER('newjs_slave');	
 	                        $profilesRenewalDialer =$renewalInDialerObj->fetchRenewalDialerProfiles();
 	                        if(count($profilesRenewalDialer)>0){
 					$profileArr =array_diff($profileArr,$profilesRenewalDialer);
@@ -549,7 +551,7 @@ class csvGenerationHandler
 					$profileArr =array_values($profileArr);	
 				}
 	                        if(count($profileArr)>0){
-        	                        $obj =new incentive_MAIN_ADMIN();
+        	                        $obj =new incentive_MAIN_ADMIN('newjs_slave');
         	                        $profilesAllocated =$obj->getProfilesDetails($profileArr);
         	                        if(count($profilesAllocated)>0){
         	                                foreach($profilesAllocated as $key=>$value){
@@ -1684,7 +1686,7 @@ class csvGenerationHandler
 		$excl_cf_dt	=JSstrToTime(date('Y-m-d',time()-(7-1)*86400));
 		$excl_ni_dt	=JSstrToTime(date('Y-m-d',time()-(7-1)*86400));
 
-		$historyObj	=new incentive_HISTORY();
+		$historyObj	=new incentive_HISTORY('newjs_slave');
 		$details 	=$historyObj->getLastDispositionDetails($profileid,'ENTRY_DT,DISPOSITION');
 		$entryDt 	=JSstrToTime($details['ENTRY_DT']);			
 		$disposition 	=$details['DISPOSITION'];
@@ -1754,7 +1756,7 @@ class csvGenerationHandler
 	}
 	public function profileAlertsCheck($profileid,$username)
 	{
-		$jprofileAlertsObj =new newjs_JPROFILE_ALERTS();
+		$jprofileAlertsObj =new newjs_JPROFILE_ALERTS('newjs_slave');
 		$alerts 	=$jprofileAlertsObj->fetchMembershipStatus($profileid);
 		$memCall 	=$alerts['MEMB_CALLS'];
 		$offerCall 	=$alerts['OFFER_CALLS'];
@@ -1772,7 +1774,7 @@ class csvGenerationHandler
 	public function getDetailedValues($pid)  // pid = profileid
 	{
 		global $app_list_strings;
-		$sugarcrmLeadsCstmObj = new sugarcrm_leads_cstm('newjs_bmsSlave');	//TRANSFER_TO_SLAVE
+		$sugarcrmLeadsCstmObj = new sugarcrm_leads_cstm('newjs_slave');
 		$res = $sugarcrmLeadsCstmObj->getDetails($pid);
 				
 		if(!$res['age_c'])
@@ -1946,7 +1948,7 @@ class csvGenerationHandler
 	}
 	public function getLeadScore()
 	{
-		$sugarcrmLeadsCstmObj = new sugarcrm_leads_cstm('newjs_bmsSlave');	//TRANSFER_TO_SLAVE
+		$sugarcrmLeadsCstmObj = new sugarcrm_leads_cstm('newjs_slave');
 		$mm_score = $sugarcrmLeadsCstmObj->getMaxMinScore();
 		return $mm_score;
 	}

@@ -319,12 +319,12 @@ class AgentBucketHandler
 	}
 	public function removeProfiles($processObj,$agentAllocDetailsObj,$agentDeAllocObj) 		
 	{
-		$jprofileObj=new JPROFILE('newjs_masterRep');
+		$jprofileObj=new JPROFILE('newjs_slave');
 		$profiles=$processObj->getProfiles();
 		$deletedProfiles=array();
 		$subMethod=$processObj->getSubMethod();
 		$profilesForDeletion=array();
-		$serviceStatusObj=new BILLING_SERVICE_STATUS();
+		$serviceStatusObj=new BILLING_SERVICE_STATUS('newjs_slave');
 		$mainAdminObj=new incentive_MAIN_ADMIN('newjs_slave');
 		if($subMethod=="SALES_OTHERS" || $subMethod=="NEGATIVE_LIST")
 		{
@@ -386,14 +386,14 @@ class AgentBucketHandler
 	}
         public function deAllocateDisp($processObj,$agentAllocDetailsObj,$agentDeAllocObj)	
         {
-		$jprofileObj=new JPROFILE('newjs_masterRep');
+		$jprofileObj=new JPROFILE('newjs_slave');
                 $limit=$processObj->getLimit();
 		$subMethod=$processObj->getSubMethod();
                 $disp_order_arr=$agentAllocDetailsObj->fetchDispositionOrder();
                 $tot_disp=count($disp_order_arr);
                 $executives=$agentAllocDetailsObj->fetchExecutives($processObj);
                 $tempAllocBucketObj=new TEMP_ALLOCATION_BUCKET();
-		$mainAdminObj=new incentive_MAIN_ADMIN();
+		$mainAdminObj=new incentive_MAIN_ADMIN('newjs_slave');
                 $tempAllocBucketObj->truncate();
 		for($i=0;$i<count($executives);$i++)
                 {
