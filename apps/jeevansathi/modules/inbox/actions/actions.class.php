@@ -161,6 +161,16 @@ class inboxActions extends sfActions
 						$profileMemcacheObj->updateMemcache();
 					}
 					break;
+				case "12":
+					$contactsObj = new ContactsRecords();
+					$currentCount =  $profileMemcacheObj->get("FILTERED_NEW");
+					if($currentCount)
+					{
+						$contactsObj->makeAllContactSeen($pid,ContactHandler::FILTERED);
+						$profileMemcacheObj->update("FILTERED_NEW",-$currentCount);
+						$profileMemcacheObj->updateMemcache();
+					}
+					break;
 				case "4":
 					$currentCount =  $profileMemcacheObj->get("MESSAGE_NEW");
 					if($currentCount)
