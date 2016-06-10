@@ -305,7 +305,43 @@ class registerMisActions extends sfActions {
       {
         $this->displayDate = $formArr['dmonth']."-".$formArr['dyear'];
       }
+      $this->memcacheKey = $this->range_format."_".$this->displayDate."_".$formArr['report_type'];
+      //echo($this->memcacheKey);die;
+      // $memcacheObj = JsMemcache::getInstance();
+      // $memKeySet = $memcacheObj->get($this->memcacheKey);
+      
+      // if($memKeySet == 'C')
+      // {
+      //   $this->computing = true;
+      //   $this->setTemplate('computingRegistrationMis');
+      //   die;
+      // }
+      // elseif(is_array($memKeySet))
+      // {
+      //   $this->computing = false;
+      //   passthru(JsConstants::$php5path." $_SERVER[DOCUMENT_ROOT]/profile/retrieveprofile_bg.php " . $body['profileId'] . " > /dev/null");  
+
+      // }
+      // elseif($memKeySet == '')
+      // {
+      //   $this->computing = true;
+      //   $memcacheObj->set($this->memcacheKey,"C");
+      //   $this->setTemplate('computingRegistrationMis');
+      //   die;
+      // }
       $params = array('range_format' => $formArr["range_format"], 'quarter_year' => $formArr['qyear'],'month_year' =>$formArr['myear'], 'day_month'=>$formArr['dmonth'],'day_year'=>$formArr['dyear'],'report_type'=>$formArr['report_type'],'report_format'=>$formArr['report_format'] );
+      if($params['report_type'] == 'CITY_RES')
+      {
+        $this->displayName = "By City";
+      }
+      elseif($params['report_type'] == 'MTONGUE')
+      {
+        $this->displayName = "By Community";
+      }
+      else
+      {
+        $this->displayName = "By Age & Gender";
+      }
       $this->monthNames = RegistrationMisEnums::$monthNames;
       $this->quarterNames = RegistrationMisEnums::$quarterNames;
       $registrationMisObj = new cityAgeRegistrationMis();

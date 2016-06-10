@@ -48,7 +48,7 @@
     <tr align="center">
 			<td class="label">
 				<input type="radio" name="range_format" value="Q" checked="yes" />
-				<font size=2>Quarterly</font>
+				<font size=2>Quarter Wise</font>
 			</td>
 			<td>
 			<select name="qyear">
@@ -62,7 +62,7 @@
 		<tr align="center">
 			<td class="label">
 				<input type="radio" name="range_format" value="M" />
-				<font size=2>Monthly</font>
+				<font size=2>Month Wise</font>
 			</td>
 			<td>
 				<select name="myear">

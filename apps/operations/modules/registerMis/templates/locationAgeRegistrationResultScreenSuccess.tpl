@@ -15,10 +15,16 @@
 	        <td valign="top" width="40%" align="center"><img src="/profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
 	</tr>
   <tr class="formhead" align="center">
-    <td colspan="2" style="background-color:lightblue"><font size=3><a href="qualityRegistration?cid=~$cid`">Main Page</a></font></td>
+    <td colspan="2" style="background-color:lightblue"><font size=3><a href="LocationAgeRegistration?cid=~$cid`">Back</a></font></td>
+  </tr>
+  <tr class="formhead" align="center">
+    <td colspan="2" style="background-color:lightblue"><font size=3><a href="~sfConfig::get('app_site_url')`/mis/mainpage.php?name=~$agentName`&cid=~$cid`">Main Page</a></font></td>
   </tr>
   <tr class="formhead" align="center">
           <td colspan="2" style="background-color:lightblue"><font size=3>Registration MIS</font></td>
+  </tr>
+  <tr class="formhead" align="center">
+          <td colspan="2" style="background-color:lightblue"><font size=3>Result Screen - ~$displayName`</font></td>
   </tr>
   <tr class="formhead" align="center">
           <td colspan="2" style="background-color:PeachPuff"><font size=2>For the ~if $range_format eq 'Q' || $range_format eq 'M'`year of~else`month of~/if` ~$displayDate`</font></td>
