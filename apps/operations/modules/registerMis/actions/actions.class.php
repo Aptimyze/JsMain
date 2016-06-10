@@ -284,19 +284,20 @@ class registerMisActions extends sfActions {
     elseif(ceil((strtotime($end_date)-strtotime($start_date))/(24*60*60))>=100)
             $this->errorMsg = "More than 100 days selected in range";
   }
+
+  //This action calls the LocationAgeRegistrationSuccess.tpl
   public function executeLocationAgeRegistration(sfWebRequest $request)
   {
     $formArr = $request->getParameterHolder()->getAll();
-    //$name = $request->getAttribute('name');
     $this->cid = $formArr['cid'];
     if ($formArr['submit']) 
-    {//print_r($formArr);die; 
+    {
       $this->range_format = $formArr['range_format'];
       if($this->range_format == 'Q')
       {
         $this->displayDate = $formArr['qyear'];
       }
-      else if($this->range_format == 'M')
+      elseif($this->range_format == 'M')
       {
         $this->displayDate = $formArr['myear'];
       }
@@ -309,7 +310,7 @@ class registerMisActions extends sfActions {
       $this->quarterNames = RegistrationMisEnums::$quarterNames;
       $registrationMisObj = new cityAgeRegistrationMis();
       $this->groupData = $registrationMisObj->getRegistrationMisData($params);
-      //print_r($this->groupData);die;
+      
       if($formArr['report_format'] == 'CSV')
       {
         $csvData = $registrationMisObj->createCSVFromatData($params,$this->groupData,$this->displayDate);

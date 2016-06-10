@@ -1171,24 +1171,29 @@ public function duplicateEmail($email)
         return $res;
     }
 
+    //This function gets data for CITY_RES/MTONGUE/(AGE/GENDER) grouped by the same along with month/day as per the condition
     public function getRegistrationMisGroupedData($fromDate,$toDate,$month='',$groupType)
     {
     	try
     	{
-    		if($month == "")
+    		if($groupType != "")
     		{
-    			$sql = "SELECT COUNT(*) AS COUNT,$groupType,EXTRACT(MONTH FROM ENTRY_DT) AS MONTH FROM newjs.JPROFILE WHERE ENTRY_DT BETWEEN :FROMDATE AND :TODATE GROUP BY $groupType,MONTH";
-    			//echo($sql);die;
+    			if($month == "")
+    			{
+    				$sql = "SELECT COUNT(*) AS COUNT,$groupType,EXTRACT(MONTH FROM ENTRY_DT) AS MONTH FROM newjs.JPROFILE WHERE ENTRY_DT BETWEEN :FROMDATE AND :TODATE GROUP BY $groupType,MONTH";
+    			}
+    			else
+    			{
+    				$sql = "SELECT COUNT(*) AS COUNT, $groupType,EXTRACT(DAY FROM ENTRY_DT) AS DAY FROM newjs.JPROFILE WHERE ENTRY_DT BETWEEN :FROMDATE AND :TODATE GROUP BY $groupType,DAY";
+    			}
     		}
     		else
     		{
-    			$sql = "SELECT COUNT(*) AS COUNT, $groupType,EXTRACT(DAY FROM ENTRY_DT) AS DAY FROM newjs.JPROFILE WHERE ENTRY_DT BETWEEN :FROMDATE AND :TODATE GROUP BY $groupType,DAY";
-    			//echo($sql);die;
+    			return;
     		}
     		$prep = $this->db->prepare($sql);
-            $prep->bindValue(":FROMDATE",$fromDate,PDO::PARAM_INT);
-            $prep->bindValue(":TODATE",$toDate,PDO::PARAM_INT);
-            //$prep->bindValue(":MONTH",$month,PDO::PARAM_INT);
+            $prep->bindValue(":FROMDATE",$fromDate,PDO::PARAM_STR);
+            $prep->bindValue(":TODATE",$toDate,PDO::PARAM_STR);
             $prep->execute();
             while($result = $prep->fetch(PDO::FETCH_ASSOC))
 			{

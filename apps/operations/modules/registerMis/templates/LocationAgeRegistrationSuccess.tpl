@@ -3,22 +3,6 @@
    <title>Jeevansathi.com - MIS</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 	<link rel="stylesheet" href="~sfConfig::get('app_img_url')`/jsadmin/jeevansathi.css" type="text/css">
- 	<script type="text/javascript">
-//     $(function () {
-//         var count = 0;
-//         $('#date1').dateDropDowns({ dateFormat: 'DD-mm-yy',yearStart: "2004", yearEnd: "~$rangeYear`"});
-//         $('#date2').dateDropDowns({ dateFormat: 'DD-mm-yy',yearStart: "2004", yearEnd: "~$rangeYear`"});
-//         $('#date1_dateLists_day_list option:selected').prop('selected', false);
-//         $('#date1_dateLists_day_list').on('click', function(){
-//         	count = 1;
-//         });
-//         $('#date1_dateLists_month_list').on('click', function(){
-//         	if(count != 1){
-//         		$('#date1_dateLists_day_list option:selected').prop('selected', false);
-//         	}
-//         });
-//     });    
- </script>
 </head>
 <body>
 <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
@@ -56,9 +40,6 @@
 		</table>
   ~/if`
 		<table border="0" align="center" width="60%" cellpadding="4" cellspacing="4" border="0">
-		<!--<tr align="center" style="background-color:SeaShell"><td colspan="2"><font size=2>
-			Channel-wise data is valid since 1st Jan 2015 and default channel before 1st Jan 2015 is Desktop.
-		</td></tr>-->
 
 		<tr></tr>
 		<tr></tr>
@@ -116,7 +97,7 @@
 			<td class="fieldsnew">
 				<input type="radio" name="report_type" value="CITY_RES" checked><font size=2>&nbsp;By City </font></input><br />
 				<input type="radio" name="report_type" value="MTONGUE"><font size=2>&nbsp;By Community </font></input><br>
-				<input type="radio" name="report_type" value="Age_Gender"><font size=2>&nbsp;By Age/Gender </font></input><br>
+				<input type="radio" name="report_type" value="Age_Gender"><font size=2>&nbsp;By Age & Gender </font></input><br>
 				&nbsp;
 			</td>
 		</tr>

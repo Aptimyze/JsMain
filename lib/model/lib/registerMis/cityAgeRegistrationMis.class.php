@@ -1,45 +1,52 @@
 <?php
 class cityAgeRegistrationMis
 {
+	//This function gets the MIS Data based on the grouping selected
 	public function getRegistrationMisData($params)
 	{
 		if($params['report_type'] == 'Age_Gender')
 		{
 			$params['report_type'] = 'GENDER,AGE';
 		}
+		//create object of JPROFILE
 		$jprofileObj = JPROFILE::getInstance();
+		
+		$dayMonth = "";
 		if($params['range_format']=="Q")
 		{
-			$nextYear = $params['quarter_year']+1;
-			$fromDate = $params['quarter_year']."-04-01";
-			$toDate = $nextYear."-03-31";
-			$resultArr = $jprofileObj->getRegistrationMisGroupedData($fromDate,$toDate,'',$params['report_type']);
-			//print_r($resultArr);die;
-			$finalArr = $this->organiseRegistrationData($params['range_format'],$params['report_type'],$params['report_format'],$resultArr);
-			//print_r($finalArr);die;
-			return ($finalArr);
+			$year = $params['quarter_year'];
 		}
-		else if($params['range_format']=="M")
+		elseif($params['range_format']=="M")
 		{
-			$nextYear = $params['month_year']+1;
-			$fromDate = $params['month_year']."-04-01";
-			$toDate = $nextYear."-03-31";
-			$resultArr = $jprofileObj->getRegistrationMisGroupedData($fromDate,$toDate,'',$params['report_type']);
-			//print_r($resultArr);die;
-			$finalArr = $this->organiseRegistrationData($params['range_format'],$params['report_type'],$params['report_format'],$resultArr);
-			return($finalArr);
+			$year = $params['month_year'];
 		}
+		
+		//If Quarterly or Monthly Grouping is Required
+		if($params['range_format']=="Q" || $params['range_format']=="M")
+		{
+			$nextYear = $year+1;
+			$fromDate = $year."-04-01";
+			$toDate = $nextYear."-03-31";
+		}
+          //If day wise data is required
 		else
 		{
-			$fromDate = $params['day_year']."-".$params['day_month']."-01";
-			$toDate = $params['day_year']."-".$params['day_month']."-31";
-			$resultArr = $jprofileObj->getRegistrationMisGroupedData($fromDate,$toDate,$params['day_month'],$params['report_type']);
-			//print_r($resultArr);die;
-			$finalArr = $this->organiseRegistrationData($params['range_format'],$params['report_type'],$params['report_format'],$resultArr);
-			return($finalArr);
+			$dayMonth = $params['day_month'];
+			$fromDate = $params['day_year']."-".$day_month."-01";
+			$toDate = $params['day_year']."-".$day_month."-31";
 		}
+
+		if($params['report_type'] == 'GENDER,AGE')
+		{
+			$params['report_type'] = 'Age_Gender';
+		}
+
+		$resultArr = $jprofileObj->getRegistrationMisGroupedData($fromDate,$toDate,$dayMonth,$params['report_type']);
+		$finalArr = $this->organiseRegistrationData($params['range_format'],$params['report_type'],$params['report_format'],$resultArr);
+		return ($finalArr);
 	}
 
+	//This function organises the data in the required format based on the report_type and range_format
 	public function organiseRegistrationData($range_format,$report_type,$report_format,$dataArr)
 	{
 		$alteredArr = array();
@@ -48,26 +55,37 @@ class cityAgeRegistrationMis
 		$finalArr = array();
 		$top50cityArr = array();
 
+		//Looping on the data fetched from database to convert into required format
 		foreach($dataArr as $key=>$value)
-		{
+		{	
+			//To convert Jan, feb, March to month 13,14,15 as they give data of the next year
 			if($value['MONTH']<=3)
 			{
 				$value['MONTH'] = $value['MONTH']+12;
 			}
-			if($report_type !="GENDER,AGE")
+
+			if($range_format == "M" || $range_format == 'D')
+			{
+				if($range_format == "M")
+				{
+					$keyType = "MONTH";
+				}
+				elseif($range_format == 'D')
+				{
+					$keyType = "DAY";
+				}
+			}
+			// for report_type CITY_RES and MTONGUE
+			if($report_type !="Age_Gender")
 			{
 				if($value[$report_type]!= " " || $value[$report_type]!="-1")
 				{
-					if($range_format == "M")
+					if($range_format == "M" || $range_format == "D")
 					{
-						$alteredArr[$value['MONTH']][$value[$report_type]] = $value['COUNT'];
-					}
-					else if($range_format == "D")
-					{
-						$alteredArr[$value['DAY']][$value[$report_type]] = $value['COUNT'];
+						$alteredArr[$value[$keyType]][$value[$report_type]] = $value['COUNT'];
 					}
 					else
-					{
+					{	//clubbing data for quaters together
 						switch($value['MONTH'])
 						{
 							case '4':
@@ -95,26 +113,17 @@ class cityAgeRegistrationMis
 					}
 				}
 			}
-			//change this else part to make 2-D array of AGE_GENDER as well. As per the buckets and den apply the total count array accordingly
+			
+			// for range_type = Age_Gender
 			else
 			{
-				if($range_format == "M")
+				if($range_format == "M" || $range_format == 'D')
 				{
 					foreach(RegistrationMisEnums::$ageBucket as $k=>$v)
 					{
 						if($value['GENDER'] == $v['GENDER'] && $value['AGE']>=$v['LOW'] && $value['AGE']<=$v['HIGH'])
 						{
-							$alteredArr[$value['MONTH']][$k] += $value['COUNT'];
-						}
-					}
-				}
-				else if($range_format == 'D')
-				{
-					foreach(RegistrationMisEnums::$ageBucket as $k=>$v)
-					{
-						if($value['GENDER'] == $v['GENDER'] && $value['AGE']>=$v['LOW'] && $value['AGE']<=$v['HIGH'])
-						{
-							$alteredArr[$value['DAY']][$k] += $value['COUNT'];
+							$alteredArr[$value[$keyType]][$k] += $value['COUNT'];
 						}
 					}
 				}
@@ -129,30 +138,30 @@ class cityAgeRegistrationMis
 								case '4':
 								case '5':
 								case '6':
-								$alteredArr['Q1'][$k] += $value['COUNT'];
-								break;
+										$alteredArr['Q1'][$k] += $value['COUNT'];
+										break;
 								case '7':
 								case '8':
 								case '9':
-								$alteredArr['Q2'][$k] += $value['COUNT'];
-								break;
+										$alteredArr['Q2'][$k] += $value['COUNT'];
+										break;
 								case '10':
 								case '11':
 								case '12':
-								$alteredArr['Q3'][$k] += $value['COUNT'];
-								break;
+										$alteredArr['Q3'][$k] += $value['COUNT'];
+										break;
 								case '13':
 								case '14':
 								case '15':
-								$alteredArr['Q4'][$k] += $value['COUNT'];
-								break;
+										$alteredArr['Q4'][$k] += $value['COUNT'];
+										break;
 							}
 						}
 					}
 				}
 			}
 		}
-		// print_r($alteredArr);die;
+
 		foreach($alteredArr as $key => $value)
 		{
 			foreach($value as $k1 => $v1)
@@ -163,16 +172,13 @@ class cityAgeRegistrationMis
 				}
 			}	
 		}
-		//print_r($totalCountArr);die;
+
 		$alteredArr['totalCount'] = $totalCountArr;
-		//print_r($alteredArr);die;
-		
 
 		if($report_type == "CITY_RES")
-		{//print_r($totalCountArr);die;
+		{
 			$sortedArr = $totalCountArr;
 			rsort($sortedArr);
-			// print_r($sortedArr);die;
 			foreach($sortedArr as $key=>$value)
 			{
 				if($key<'50')
@@ -221,12 +227,10 @@ class cityAgeRegistrationMis
 					$finalArr['loopOn']['0'] = 'Others';
 				}
 			}
-			
-			//print_r($finalArr);die;
 		}
-		//print_r($finalArr);die;
-		else if($report_type == 'MTONGUE')
-		{	//print_r($alteredArr);die;
+		
+		elseif($report_type == 'MTONGUE')
+		{	
 			$finalArr = $alteredArr;
 			$communityArr = FieldMap::getFieldLabel('community','',1);
 			$finalArr['loopOn'] = $communityArr;
@@ -243,7 +247,7 @@ class cityAgeRegistrationMis
 		{
 			$finalArr['iterate'] = RegistrationMisEnums::$quaterIterate;
 		}
-		else if($range_format == 'M')
+		elseif($range_format == 'M')
 		{
 			$finalArr['iterate'] = RegistrationMisEnums::$monthIterate;
 		}
@@ -258,26 +262,25 @@ class cityAgeRegistrationMis
 	public function createCSVFromatData($params,$groupedData,$displayDate)
 	{
 		$csvData = 'Registration MIS'."\n";
-		if($params['range_format']=="M")
+		if($params['range_format']=="M" || $params['range_format']=="Q")
 		{
 			$csvData .= "For the Year of " .$displayDate."\n";
 			$csvData .="Month".",";
-			foreach(RegistrationMisEnums::$monthNames as $key=>$value)
+			if($params['range_format']=="M")
 			{
-				$csvData .=$value.",";
+				$iterationArr = RegistrationMisEnums::$monthNames;
 			}
-			$csvData .= "Total"."\n";
+			elseif($params['range_format']=="Q")
+			{
+				$iterationArr = RegistrationMisEnums::$quarterNames;
+			}
 		}
-		else if($params['range_format']=="Q")
+		if($params['range_format']=="M" || $params['range_format']=="Q")
 		{
-			$csvData .= "For the Year of " .$displayDate."\n";
-			$csvData .="Month".",";
-			foreach(RegistrationMisEnums::$quarterNames as $key=>$value)
+			foreach($iterationArr as $key=>$value)
 			{
 				$csvData .=$value.",";
 			}
-			$csvData .= "Total"."\n";
-			//echo($csvData);die;
 		}
 		else
 		{
@@ -287,9 +290,9 @@ class cityAgeRegistrationMis
 			{
 				$csvData .=$i.",";
 			}
-			$csvData .= "Total"."\n";
-			//echo($csvData);die;
 		}
+
+		$csvData .= "Total"."\n";
 
 		foreach($groupedData['loopOn'] as $key=>$value)
 		{
