@@ -31,7 +31,7 @@ $this->addOptions(array(
         $notificationKey = $arguments["notificationKey"];
         if(in_array($notificationKey,NotificationEnums::$digestNotificationKeys))
         {
-            $digestNotObj = new MOBILE_API_DIGEST_NOTIFICATIONS();
+            $digestNotObj = new MOBILE_API_DIGEST_NOTIFICATIONS("newjs_slave");
             //get profileids eligible for this digest notification
             $data = $digestNotObj->getRows("*",$notificationKey); 
             if(is_array($data))
