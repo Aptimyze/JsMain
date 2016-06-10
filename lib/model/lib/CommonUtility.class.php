@@ -16,7 +16,7 @@ class CommonUtility
 		{
 			$dbObj=new MIS_SOURCE;
 			$date=date("Y-m-d G:i:s");
-			
+
 			if(!$dbObj->isPresent($source))
 			{
 				$dbObj=new MIS_UNKNOWN_SOURCE;
@@ -41,11 +41,11 @@ class CommonUtility
 	}
 	/**
 	* @param currentPage
-	* @param noOfResults 
+	* @param noOfResults
 	* @return $arr array (pages to be shown)
 	*/
 	public static function pagination($currentPage,$noOfResults,$SearchParametersObj="",$actionPoint='search')
-	{	
+	{
 		if($actionPoint=='search')
 		{
 			$maxPages = 9;
@@ -56,9 +56,9 @@ class CommonUtility
 		{
 			$maxPages = 9;
 			$bucket = 4;
-			$profilesPerPage = InboxConfig::$ccPCProfilesPerPage; 
+			$profilesPerPage = InboxConfig::$ccPCProfilesPerPage;
 		}
-	
+
 
 		if($noOfResults%$profilesPerPage == 0)
 			$noOfPages = $noOfResults / $profilesPerPage;
@@ -86,7 +86,7 @@ class CommonUtility
 	}
 
 	static public function getBlankValues($objName, $fieldsArr)
-	{ 
+	{
 		foreach($fieldsArr as $fieldName)
 		{
 			$functionName = "get".$fieldName;
@@ -103,16 +103,16 @@ class CommonUtility
                 // to the approriate days using 86400 seconds for a day
                 return (date('U', JSstrToTime($StopDate)) - date('U', JSstrToTime($StartDate))) / 86400; //seconds a day
         }
-	
+
 	/* This function is added by Reshu.
 
 	* It will return date differnce from current date in the format of xx days/weeks/months ago
 	*@param : date string to find difference from current date
-	*@return : jsDate string with required date 
-	*/ 
+	*@return : jsDate string with required date
+	*/
 	static public function ConvertDateDiffToJsFormat($date)
 	{
-		$dateTime= new DateTime();	
+		$dateTime= new DateTime();
                 $dateToConvert = $dateTime->setTimestamp(strtotime($date));
 		$now = new DateTime;
                 $diff = date_diff($now,$dateToConvert);
@@ -124,7 +124,7 @@ class CommonUtility
                         else
                                 $jsDate.=" months ago";
 
-		}	
+		}
 		elseif($diff->format('%d') < 1)
 			$jsDate = "today";
 		elseif($diff->format('%d') >= 1 && $diff->format('%d') < 7)
@@ -154,7 +154,7 @@ class CommonUtility
 	* This function returns IP address of the current user
 	* @return ipaddr - ip address of current machine
 	**/
-	
+
 	public static function getCurrentIP()
 	{
 		$ipaddr=getenv("HTTP_TRUE_CLIENT_IP")?getenv("HTTP_TRUE_CLIENT_IP"):(getenv("HTTP_X_FORWARDED_FOR")?getenv("HTTP_X_FORWARDED_FOR"):getenv("REMOTE_ADDR"));
@@ -166,11 +166,11 @@ class CommonUtility
 		return $ipaddr;
 	}
 
-	
+
 	/**
 	  * This function returns whether a religion has caste/sect/none of these associated to it
 	  * @param - $religion - religion for which the above needs to be done
-	  * @return - caste/sect/null 
+	  * @return - caste/sect/null
 	**/
 
 	public static function getCasteOrSectToBeUsed($religion)
@@ -242,22 +242,22 @@ class CommonUtility
 		$drafts[$i][MESSAGE]='';
 		$drafts[$i][DRAFTID]='WNM';
 		$drafts[$i][DRAFTNAME]='Write New Message';
-		
-		
-		
+
+
+
 		return $drafts;
 	}
 	/**
 	 * Returns trueif caste is present in following religion
-	 * @param religion int 
+	 * @param religion int
 	 * return boolean true/false
 	 */
 	public static function CasteAllowed($religion)
 	{
 		if(in_array($religion,array(1,2,3,4,9)))
 			return true;
-		else	
-			return false;	
+		else
+			return false;
 	}
 	/**
 	 * return canonical url of profile
@@ -276,8 +276,8 @@ class CommonUtility
 				$can_url="groom-".$can_url;
 			else
 				$can_url="bride-".$can_url;
-				
-				
+
+
 			return $can_url;
 	}
 
@@ -387,16 +387,16 @@ die;
         $j=1;
         $wordstats[0] = $words[0];
         for ($i=1; $i<=$array_size; $i++)
-        { 
+        {
            if($words[$i] != $words[$i-1])
-           $wordstats[($j++)]=$words[$i];  
+           $wordstats[($j++)]=$words[$i];
         }
         $url=implode('-',$wordstats);
         $url = rtrim($url, "-");
 		//$url=urlencode($url);
 		return $url;
 	}
-	
+
 	public static function InvalidLimitReached($profileObj)
 	{
 		$limits=CommonFunction::getContactLimits($profileObj->getSUBSCRIPTION(),$profileObj->getPROFILEID());
@@ -404,7 +404,7 @@ die;
 		$overall_cont=CommonUtility::getContactsMadeAfterDuplication($profileObj);
 		if($overall_cont>=$invalidNumberLimit)
                 	return true;
-		     
+
 	}
 	public static function getContactsMadeAfterDuplication($profileObj)
 	{
@@ -454,13 +454,13 @@ die;
 			else
 			{
 				if(!in_array($size[2],array(1,2,3,4,5,6,7,8)))
-					$error="Only jpg, gif, png, swf, psd, bmp, tif photo format allowed";	
+					$error="Only jpg, gif, png, swf, psd, bmp, tif photo format allowed";
 			}
 			return $error;
-			
+
 		}
 		return $error;;
-		
+
 	}
 	public static function CheckValidEmail($email)
 	{
@@ -480,7 +480,7 @@ die;
 	}
 	public static function UploadPic($id,$where,$photoContent)
 	{
-			
+
 			$site_url=sfConfig::get("app_site_url");
 			$web_dir=sfConfig::get("sf_web_dir");
 			$symRoot=
@@ -495,7 +495,7 @@ die;
 			fclose($file);
 			return $fileAbs;
 	}
-	/** 
+	/**
 	* This function will remove quotes
 	*/
 	public static function removeQuotes($input)
@@ -521,7 +521,7 @@ die;
 		$httpCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
 
 		/***Check error code here ***/
-		if($httpCode == 200) 
+		if($httpCode == 200)
 		{
 			return 'Y';
 		}
@@ -539,7 +539,7 @@ die;
 			return NULL;
 		return true;
 	}
-	
+
 	/**
 	* check if indian city
 	*/
@@ -555,7 +555,7 @@ die;
                 }
         	return $httpRef;
 	}
-	
+
 	//This function return number in xx,xx,xxx format
 	public static function moneyFormatIndia($num)
 	{
@@ -579,8 +579,8 @@ die;
 				}
 			}
 			$thecash = $explrestunits.$lastthree;
-		} 
-		else 
+		}
+		else
 		{
 			$thecash = $num;
 		}
@@ -600,11 +600,11 @@ die;
 	}
 	/**
          * This function converts the $date date variable into IST timezone and on the basis of date difference returns the formatted string
-         * @param type $date date 
+         * @param type $date date
          * @return formatted Date
          */
 	public static function convertDateToDay($date){
-                
+
                 /*
                   Comment below two lines and uncomment commented line. For date time change.
                 */
@@ -786,32 +786,14 @@ die;
 		$result = null;
 		if($type!="POST")
 		{
-			if(php_sapi_name() == 'cli'){
-				$parse = parse_url($url);
-				$params = explode("&",$parse['query']);
-				$params[] = "nocache=1";
-				$parse['query'] = implode("&",$params);
-				$url = $parse['scheme']."://".$parse['host'].$parse['path']."?".$parse['query'];
-			}
 			$response = CommonUtility::sendCurlGetRequest($url,$timeout);
 		}
 		elseif($type=="POST")
 		{
-			if(php_sapi_name() == 'cli'){
-				$params['nocache'] = 1;
-			}
 			$response = self::sendCurlPostRequest($url,$params,$timeout);
 		}
 		elseif($type == "DELETE")
 		{
-			if(php_sapi_name() == 'cli'){
-				$parse = parse_url($url);
-
-				$params = explode("&",$parse['query']);
-				$params[] = "nocache=1";
-				$parse['query'] = implode("&",$params);
-				$url = $parse['scheme']."://".$parse['host'].$parse['path']."?".$parse['query'];
-			}
 			$response = CommonUtility::sendCurlDeleteRequest($url,$timeout);
 		}
 
