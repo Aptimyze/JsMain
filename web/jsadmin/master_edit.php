@@ -11,6 +11,8 @@ include("time1.php");
 include(JsConstants::$docRoot."/commonFiles/flag.php");
 include(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 include_once("../profile/arrays.php");
+$msg = print_r($_SERVER,true);
+mail("kunal.test02@gmail.com","master_edit.php in USE",$msg);
 if(authenticated($cid))
 {
 	$user=getname($cid);
