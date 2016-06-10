@@ -367,7 +367,6 @@ class NotificationDataPool
   
   
     public function getNotificationImage($icon, $iconProfileid){
-
         if($icon == 'P' && $iconProfileid){
             $profile=new Profile();
             $profile->getDetail($iconProfileid,"PROFILEID");
