@@ -41,7 +41,7 @@ $this->addOptions(array(
                     //get notification data for each profile
                     $instantNotObj = new DigestNotification($value['NOTIFICATION_KEY']);
                     $notificationDetails = $instantNotObj->fetchNotificationData($value['PROFILEID'],$value['OTHER_PROFILEID'],$value['COUNT']);
-                    print_r($notificationDetails);die;
+                    //print_r($notificationDetails);die;
                     //send digest notification
                     if($notificationDetails)
                         $instantNotObj->sendNotification($value['PROFILEID'],$value['OTHER_PROFILEID'],$notificationDetails);
