@@ -3,6 +3,7 @@
 include("../jsadmin/connect.inc");
 include(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 include("bounced_mail.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
 $data=authenticated($cid);
 $flag=0;

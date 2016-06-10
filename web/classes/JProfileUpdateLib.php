@@ -152,7 +152,25 @@ class JProfileUpdateLib
       return false;
     }
   }
-  
+
+  /**
+  * updateProfileForBilling
+  * Update newjs.JPROFILE Columns for archive i.e. setting 
+  * PREACTIVATED,ACTIVATED,activatedKey column
+  * @param type $iProfileID
+  * @throws jsException
+  */
+  public function updateJProfileForBilling($paramArr=array(), $value, $criteria="PROFILEID", $extrStr='')
+  {
+    try{	
+      return $this->objJProfileStore->updateProfileForBilling($paramArr, $value, $criteria,$extrStr);
+    } catch(Exception $ex) {
+      //Log this error
+      jsException::log($ex);
+      return false;
+    }
+  }
+
   /**
    * convertUpdateStrToArray : A utility Function
    * Convert string in any of following formats

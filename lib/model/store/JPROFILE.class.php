@@ -1202,6 +1202,49 @@ public function duplicateEmail($email)
       }
     }
 
+    /**
+     * updateProfileForBilling
+     * Update Profile Columns for archive i.e. setting 
+     * PREACTIVATED,ACTIVATED,activatedKey,column
+     * @param type $iProfileID
+     * @throws jsException
+     * @return rowCount
+     */
+    public function updateProfileForBilling($paramArr=array(), $value, $criteria="PROFILEID",$extraStr='')
+    {
+                if(!$value)
+                        throw new jsException("","$criteria IS BLANK");
+                try {
+			if(is_array($paramArr)){
+	                        foreach($paramArr as $key=>$val){
+	                                $set[] = $key." = :".$key;
+	                        }
+				if(is_array($set))
+		                        $setValues = implode(",",$set);
+			}
+			if($setValues)
+	                        $sqlEditProfile = "UPDATE JPROFILE SET $setValues,$extraStr WHERE $criteria = :$criteria";
+			else
+				$sqlEditProfile = "UPDATE JPROFILE SET $extraStr WHERE $criteria = :$criteria";
+
+                        $resEditProfile = $this->db->prepare($sqlEditProfile);
+			if(is_array($paramArr)){
+	                        foreach($paramArr as $key=>$val){
+	                                $resEditProfile->bindValue(":".$key, $val);
+	                        }
+			}
+                        $paramType = PDO::PARAM_INT;
+
+                        $resEditProfile->bindValue(":$criteria", $value,$paramType);
+                        $resEditProfile->execute();
+                        return true;
+                }
+                catch(PDOException $e)
+                    {
+                        throw new jsException($e);
+                    }
+    }
+
 	/**
 	 * updateProfileSeriousnessCount
 	 * This query is in use at SugarCRM
