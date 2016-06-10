@@ -238,7 +238,7 @@ class UserMemcache extends Memcache
 			}
 		}
 		else
-			parent::remove($key);
+			parent::delete($key);
 	}
 }
 ?>
