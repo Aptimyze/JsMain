@@ -32,16 +32,15 @@ class cityAgeRegistrationMis
 		else
 		{
 			$dayMonth = $params['day_month'];
-			$fromDate = $params['day_year']."-".$day_month."-01";
-			$toDate = $params['day_year']."-".$day_month."-31";
+			$fromDate = $params['day_year']."-".$dayMonth."-01";
+			$toDate = $params['day_year']."-".$dayMonth."-31";
 		}
 
+		$resultArr = $jprofileObj->getRegistrationMisGroupedData($fromDate,$toDate,$dayMonth,$params['report_type']);
 		if($params['report_type'] == 'GENDER,AGE')
 		{
 			$params['report_type'] = 'Age_Gender';
 		}
-
-		$resultArr = $jprofileObj->getRegistrationMisGroupedData($fromDate,$toDate,$dayMonth,$params['report_type']);
 		$finalArr = $this->organiseRegistrationData($params['range_format'],$params['report_type'],$params['report_format'],$resultArr);
 		return ($finalArr);
 	}
@@ -57,7 +56,7 @@ class cityAgeRegistrationMis
 
 		//Looping on the data fetched from database to convert into required format
 		foreach($dataArr as $key=>$value)
-		{	
+		{	//print_r($value);
 			//To convert Jan, feb, March to month 13,14,15 as they give data of the next year
 			if($value['MONTH']<=3)
 			{
@@ -70,7 +69,7 @@ class cityAgeRegistrationMis
 				{
 					$keyType = "MONTH";
 				}
-				elseif($range_format == 'D')
+				elseif($range_format == "D")
 				{
 					$keyType = "DAY";
 				}
@@ -116,8 +115,8 @@ class cityAgeRegistrationMis
 			
 			// for range_type = Age_Gender
 			else
-			{
-				if($range_format == "M" || $range_format == 'D')
+			{//print_r($value);die;
+				if($range_format == "M" || $range_format == "D")
 				{
 					foreach(RegistrationMisEnums::$ageBucket as $k=>$v)
 					{
@@ -161,7 +160,6 @@ class cityAgeRegistrationMis
 				}
 			}
 		}
-
 		foreach($alteredArr as $key => $value)
 		{
 			foreach($value as $k1 => $v1)
