@@ -8525,8 +8525,6 @@ function updatememcache($array_to_merge,$profileid,$not_mand=0)
 				}
 			}
 			$str_merge=rtrim($str_merge,",");
-			$sql="update newjs.CONTACTS_STATUS set $str_merge where PROFILEID=$profileid";
-			mysql_query_decide($sql) or logError2($sql);
 			if($memcacheObj)
 				$memcacheObj->releaselock($lock);
 			return 1;
@@ -8566,8 +8564,7 @@ function updatememcache($array_to_merge,$profileid,$not_mand=0)
 				$$lowerkey=$val;
 				
 			}
-			$sql_ins = "REPLACE INTO CONTACTS_STATUS (PROFILEID, OPEN_CONTACTS, ACC_BY_ME, ACC_ME,NOT_REP,DEC_ME,DEC_BY_ME,PHOTO_REQUESTS,HOROSCOPE_REQUESTS,SAVE_SEARCH,EXPIRY_DT,NEW_MES,LAST_30_OPEN_CONTACTS,LAST_30_90_OPEN_CONTACTS,TODAY_INI_BY_ME,WEEK_INI_BY_ME,MONTH_INI_BY_ME,TOTAL_CONTACTS_MADE) VALUES('$profileid', '$open_contacts','$acc_by_me','$acc_me','$not_rep','$dec_me','$dec_by_me','','','$save_search','$expiry_dt','','','','$today_ini_by_me','$week_ini_by_me','$month_ini_by_me','$total_contacts_made')";
-			mysql_query_optimizer($sql_ins) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_ins,"ShowErrTemplate");
+			
 		}
 			
 		$eventObj->updateMemcache();	

@@ -351,6 +351,18 @@ foreach($myDbarr as $key=>$value)
 		}
 	}
 }
+
+if(JsConstants::$webServiceFlag == 1)
+{
+	$process = "INVALIDATE";
+	$producerObj=new Producer();
+	if($producerObj->getRabbitMQServerConnected())
+	{
+		$sendCacheData = array('process' =>$process,'data'=>$profileid, 'redeliveryCount'=>0 );
+		$producerObj->sendMessage($sendCacheData);
+	}
+}
+
 /*** For CONATCT_STATUS TABLE numbers. ***/
 
 /**
