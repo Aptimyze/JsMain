@@ -83,6 +83,7 @@ class InstantAppNotification
 	}
 	else if($notificationSentCount>=$notificationlimit)
 	{
+		//check if this notification is eligible for digest notification
 		$digestMappingkey = NotificationEnums::$digestNotificationKeys[$this->notificationKey];
 		if($digestMappingkey)
 		{
