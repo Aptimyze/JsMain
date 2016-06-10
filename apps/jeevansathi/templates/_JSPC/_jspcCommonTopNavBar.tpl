@@ -149,6 +149,7 @@ window.onload=function(){
                             </ul>
                         </li>
                         <li id="upgrade" tabindex="1" class="ml37"><a class="disp_b cursp" onclick="javascript:logOutCheck('/profile/mem_comparison.php',1); return true;">UPGRADE</a></li>
+                        <li id="help" tabindex="1" class="ml27"><a class="disp_b cursp" onclick="javascript:logOutCheck('/help/index',1); return true;">HELP</a></li>
                     </ul>
                     <!--end:left-->
                     <!--start:right-->
@@ -671,6 +672,7 @@ window.onload=function(){
                                 <li><a class="disp_b cursp js-srchbyid">Search by Profile ID</a></li>
                             </ul>
                         </li>
+                        <li id="help" tabindex="1" class="ml27"><a class="disp_b cursp" onclick="javascript:logOutCheck('/help/index',1); return true;">HELP</a></li>
                     </ul>
                     <!--end:left-->
                     <!--start:right-->

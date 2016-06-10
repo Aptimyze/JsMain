@@ -11,7 +11,9 @@ var defaultPhone            = "";
 
 var closeHelpWidgetIntervalId = "";
 $(document).ready(function(){
-    
+    if(hideHelpMenu == "true"){
+        $("#js-helpWidget").addClass('disp-none');
+    }
     if( window.location.href.indexOf("/register/") != -1                    || 
        (window.location.href.indexOf("profile/registration_pg1.php")!=-1 )  || 
        (window.location.href.indexOf("profile/registration_new.php")!=-1 )  ||

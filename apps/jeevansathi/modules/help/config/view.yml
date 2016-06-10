@@ -7,4 +7,13 @@ indexSuccess:
     title:        
     description:  
   stylesheets:    
-  javascripts:    
+  javascripts: 
+      
+JSPCHelpSuccess:
+    
+    metas:
+        title:
+        description:
+    stylesheets: [jspc/help/JSPCHelp_css]
+    javascripts: [jspc/help/JSPCHelp_js@bottom]
+    layout: jspcLayout
