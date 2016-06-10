@@ -477,7 +477,7 @@
                         <div class="upperCase f16 fontreg colrw lh61 bg5 pl30">REMOVE HOROSCOPE</div>
                         <!--end:heading-->
                         <div id="removeHoroscopeDiv">
-                            <div class="txtc pt10">This will delete your horoscope, time of birth and city of birth. Would you like to proceeed?</div>
+                            <div class="txtc pt10">This will delete your Horoscope, Time of Birth and Place of Birth. Would you like to proceeed?</div>
                             <div class="fontreg  txtc pt10 pb30">
                                 <button id="Rbt_yes" class="lh41 bg_pink txtc colrw brdr-0 wid33p_1 f15 cursp">Yes</button>
                                 <button id="Rbt_no" class="lh41 bg_pink txtc colrw brdr-0 wid33p_1 ml10 f15 cursp">No</button>

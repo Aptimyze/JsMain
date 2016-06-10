@@ -22,7 +22,7 @@
                         ~if !$bEditView && $apiData['about']['toShowHoroscope'] eq 'D'`
                         <p class="color11">This user has chosen to hide horoscope details.</p>
                         ~else`
-                            ~if $bEditView`
+                            ~if $bEditView && (!$apiData['about']['city_country'] !='' || !$apiData['about']['astro_time_check'])`
                                 <div class="">
                                     <button id="crUpHoroBtn" class="fullwid bg_pink lh44 f14 colrw txtc brdr-0 cursp editableSections" data-section-id="uploadhoroscope">Create Horoscope</button>
                                 </div>
