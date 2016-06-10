@@ -23,8 +23,8 @@ $this->addOptions(array(
 
     protected function execute($arguments = array(), $options = array())
     {
-        //ini_set('max_execution_time',0);
-        //ini_set('memory_limit',-1);
+        ini_set('max_execution_time',0);
+        ini_set('memory_limit',-1);
         if(!sfContext::hasInstance())
             sfContext::createInstance($this->configuration);
 
@@ -36,17 +36,17 @@ $this->addOptions(array(
             $data = $digestNotObj->getRows("*",$notificationKey); 
             if(is_array($data))
             {
+                $instantNotObj = new DigestNotification($notificationKey);
                 foreach ($data as $key => $value) 
                 {
                     //get notification data for each profile
-                    $instantNotObj = new DigestNotification($value['NOTIFICATION_KEY']);
                     $notificationDetails = $instantNotObj->fetchNotificationData($value['PROFILEID'],$value['OTHER_PROFILEID'],$value['COUNT']);
                     //print_r($notificationDetails);die;
                     //send digest notification
                     if($notificationDetails)
                         $instantNotObj->sendNotification($value['PROFILEID'],$value['OTHER_PROFILEID'],$notificationDetails);
-                    unset($instantNotObj);
                 }
+                unset($instantNotObj);
             }
             unset($digestNotObj);
         }

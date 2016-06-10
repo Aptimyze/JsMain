@@ -34,7 +34,7 @@ $this->addOptions(array(
 
     //remove all digest notification entries
     $digestNotificationObj = new MOBILE_API_DIGEST_NOTIFICATIONS();
-    $digestNotificationObj->truncateEntries();
+    $digestNotificationObj->removeEntries(date("Y-m-d"));
     unset($digestNotificationObj);
   }
 }

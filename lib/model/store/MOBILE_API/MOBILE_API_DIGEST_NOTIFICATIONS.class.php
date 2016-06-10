@@ -117,21 +117,26 @@ class MOBILE_API_DIGEST_NOTIFICATIONS extends TABLE{
     }
 
     
-    /*func truncateEntries
-    *truncate table
-    *@param : none
+    /*func removeEntries
+    *delete some entries from table if date specified otherwise truncate table
+    *@param : $scheduledDate=""
     */
-    public function truncateEntries()
+    public function removeEntries($scheduledDate="")
     {
 		try
 		{
-			$sql = "TRUNCATE MOBILE_API.DIGEST_NOTIFICATIONS";
+            if($scheduledDate)
+                $sql = "DELETE FROM MOBILE_API.DIGEST_NOTIFICATIONS WHERE SCHEDULED_DATE=:SCHEDULED_DATE";
+            else
+			    $sql = "TRUNCATE TABLE MOBILE_API.DIGEST_NOTIFICATIONS";
 			$res=$this->db->prepare($sql);
+            if($scheduledDate)
+                $res->bindValue(":SCHEDULED_DATE", $scheduledDate, PDO::PARAM_STR);
 			$res->execute();
 		}
 		catch(PDOException $e)
 		{
-		        throw new jsException($e);
+		    throw new jsException($e);
 		}
     }
 

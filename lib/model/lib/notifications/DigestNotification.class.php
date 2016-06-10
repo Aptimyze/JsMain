@@ -53,7 +53,7 @@ class DigestNotification
         $profileDetails[$selfProfile]['PHOTO_URL'] = $notificationData['PHOTO_URL'];
 		if($notificationData['OTHER_PROFILE_CHECKSUM'])
 			$profileDetails[$selfProfile]['PROFILE_CHECKSUM']=$notificationData['OTHER_PROFILE_CHECKSUM'];
-        print_r($profileDetails);die;
+        //print_r($profileDetails);
         //send notification
 		$notificationSenderObj = new NotificationSender;
 		$notificationSenderObj->sendNotifications($profileDetails);
