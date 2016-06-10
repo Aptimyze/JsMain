@@ -17,6 +17,9 @@ class helpActions extends sfActions
   */
   public function executeIndex(sfWebRequest $request)
   {
+      $loginData=$request->getAttribute("loginData");
+      $this->username = $loginData["USERNAME"];
+      $this->email = $loginData["EMAIL"];
     $this->setTemplate('JSPCHelp');
   }
   

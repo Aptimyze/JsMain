@@ -51,11 +51,11 @@
                         <tr>
                             <td class="vertM"><span class="color5">*</span> Email</td>
                             <td>
-                                <input type="text" class="colr2 f14 searchInp2 email"></input>
+                                <input type="text" class="colr2 f14 searchInp2 email" value="~$email`"></input>
                             </td>
                         </tr>
                         <tr>
-                            <td class="vertM">Catogary</td>
+                            <td class="vertM">Category</td>
                             <td>
                                 <div id="catDropDown" class="hgt34 wid326 pos-abs colr2 catDropDown"><span class="selectedDrop"> Please Select an option</span> <i class="chosen-container"></i>
                                     <ul class="dropOption disp-none">
@@ -66,11 +66,11 @@
                         <tr>
                             <td class="vertM">Username</td>
                             <td>
-                                <input type="text" class="colr2 f14 searchInp2"></input>
+                                <input type="text" class="colr2 f14 searchInp2" value="~$username`"></input>
                             </td>
                         </tr>
                         <tr>
-                            <td class="vertM"><span class="color5">*</span> Question</td>
+                            <td class="vertM"><span class="color5">*</span> Your Query</td>
                             <td>
                                 <textarea class="hgt100 colr2 f14 searchInp2 question"></textarea>
                             </td>
