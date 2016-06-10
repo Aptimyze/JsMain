@@ -5,7 +5,8 @@
 This file verify the user who requires double opt-in 
 	
 ******************************************************/
-
+$msg = print_r($_SERVER,true);
+mail("kunal.test02@gmail.com","validate_email.php in USE",$msg);
 $path = $_SERVER['DOCUMENT_ROOT'];
 include_once($path."/profile/connect.inc");
 $db = connect_db();

@@ -4,7 +4,8 @@ include("connect.inc");
 
 $db_slave = connect_slave();
 $db_master = connect_db();
-
+$msg = print_r($_SERVER,true);
+mail("kunal.test02@gmail.com","duplicate_profile_delete.php in USE",$msg);
 if(authenticated($cid))
 {
 	if($del=='true')
