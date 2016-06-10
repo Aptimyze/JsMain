@@ -61,7 +61,7 @@ class NotificationConfigurationFunc
                 $registeredUser = 1;
             }
         }
-        else{
+        elseif($browserCheck){
             $browserNotificationLayerMasterObj = new MOBILE_API_BROWSER_NOTIFICATION_LAYER();
             unset($paramsArr);
             $paramsArr['PROFILEID'] = $profileid;

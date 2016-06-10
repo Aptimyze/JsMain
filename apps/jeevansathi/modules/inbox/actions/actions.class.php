@@ -511,7 +511,7 @@ public function executePerformV2(sfWebRequest $request)
                                         $response2["headingTotalCount"]=count($response2['profiles']);
                                         $response2["loggedin_subscription"] = '';
                                         if(CommonFunction::getMainMembership($profileObj->getSUBSCRIPTION()) == mainMem::EVALUE){
-                                                $response2["loggedin_subscription"]=  mainMem::ERISHTA_LABEL;
+                                                $response2["loggedin_subscription"]=  mainMem::EVALUE_LABEL;
                                         }elseif(CommonFunction::getMainMembership($profileObj->getSUBSCRIPTION()) == mainMem::EADVANTAGE){
                                                 $response2["loggedin_subscription"]=  mainMem::EADVANTAGE_LABEL;
                                         }
