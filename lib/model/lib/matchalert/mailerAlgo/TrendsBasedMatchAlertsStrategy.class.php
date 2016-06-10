@@ -55,7 +55,7 @@ class TrendsBasedMatchAlertsStrategy extends MatchAlertsStrategy
 	* @param type $SearchUtilityObj object of Search Utility Class
 	* @return type array, array of user profile Ids 
 	*/
-	private function getSearchResult($SearchServiceObj,$SearchUtilityObj,$returnTotalCount)
+	private function getSearchResult($SearchServiceObj,$SearchUtilityObj,$returnTotalCount='')
 	{
 		$SearchServiceObj->setSearchSortLogic($this->TrendsProfileObj,$this->loggedInProfileObj,"","");
 		$SearchUtilityObj->removeProfileFromSearch($this->TrendsProfileObj,'spaceSeperator',$this->loggedInProfileObj,'',"",$this->removeMatchAlerts);

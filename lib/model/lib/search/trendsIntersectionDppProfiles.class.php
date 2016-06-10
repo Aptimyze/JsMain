@@ -8,7 +8,7 @@ class trendsIntersectionDppProfiles extends PartnerProfile {
    */
   public function __construct($loggedInProfileObj) {
     parent::__construct($loggedInProfileObj);
-    $this->valuesForTrends = array("MSTATUS","MANGLIK","COUNTRYRES","INCOME","EDU_LEVEL_NEW","OCCUPATION","CITY_RES","MTONGUE","COUNTRYRES","CASTE");
+    $this->valuesForTrends = array("MSTATUS","MANGLIK","COUNTRY_RES","INCOME","EDU_LEVEL_NEW","OCCUPATION","CITY_RES","MTONGUE","CASTE");
   }
   
 
@@ -29,26 +29,34 @@ class trendsIntersectionDppProfiles extends PartnerProfile {
         $this->LHEIGHT = $trendsObj->LHEIGHT;
     if($trendsObj->HHEIGHT <= $this->HHEIGHT)
         $this->HHEIGHT = $trendsObj->HHEIGHT;
-    $getFromTrends = $this->getIntersectionDpp($trendsObj, $this);
+    $getFromTrends = $this->getIntersectionDpp($trendsObj);
+    //print_r($this);die;
     return $getFromTrends;
   }
   
   
-  private function getIntersectionDpp($trendsObj,$dppObj) {
+  private function getIntersectionDpp($trendsObj) {
+      $dppObj = $this;
       foreach($this->valuesForTrends as $value => $key){
         $matched=0;
-        $dppArr = explode(",",$dppObj->$key);
-        $trendsVar = explode(" ",$trendsObj->$key);
-        if(count($trendsVar) > 0){
+        $dppArr = '';
+        $trendsVar='';
+        $newDppArr = '';
+        if($dppObj->$key)
+            $dppArr = explode(",",$dppObj->$key);
+        if($trendsObj->$key)
+            $trendsVar = explode(" ",$trendsObj->$key);
+        if($trendsVar){
             foreach($trendsVar as $key1=>$val){
-                if(in_array($val, $dppArr) || count($dppArr) == 0){
-                  $dppArr[] = $val;
-                  $matched = 1;
+                if(in_array($val, $dppArr) || !$dppArr){
+                  $newDppArr[] = $val;
                 }
             }
-        $dppObj->$key = implode(",", $dppArr);
-        if($matched = 0)
-          return false;
+            if($newDppArr)
+                $dppObj->$key = implode(",", $newDppArr);
+            else {
+                return false;     
+            }
         }
       }
       return true;

@@ -46,7 +46,7 @@ EOF;
 			*/
 			$matchalerts_MATCHALERTS_TO_BE_SENT = new matchalerts_MATCHALERTS_TO_BE_SENT;
 			$arr = $matchalerts_MATCHALERTS_TO_BE_SENT->fetch($totalScripts,$currentScript,$this->limit);
-                        $arr = array(7043932=>1,658=>1);
+                        //$arr = array(7043932=>1);
 			if(is_array($arr))
 			{
 				foreach($arr as $profileid=>$v)
@@ -76,7 +76,8 @@ EOF;
 							$totalResults = $StrategyReceiversNT->getMatches($includeDppCnt);
                                                         $profileId = $loggedInProfileObj->getPROFILEID();
                                                         $isProfileEligible = logAndFetchProfilesForZeroMatches::checkIfProfileIsEligible($profileId);
-                                                        if($totalResults >= $this->$minDppIntersectionCnt && $isProfileEligible){
+                                                        if($totalResults >= $this->minDppIntersectionCnt && $isProfileEligible)
+                                                         {
                                                             $StrategyReceiversT = new TrendsBasedMatchAlertsStrategy($loggedInProfileObj, $this->limitTRec);   
                                                             $toSendFromIntersection = $StrategyReceiversT->getMatches($sendIntersectionMatches);
                                                             if(!$toSendFromIntersection){
