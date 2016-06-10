@@ -9,14 +9,15 @@ class MOBILE_API_DIGEST_NOTIFICATIONS extends TABLE{
     *insert new entry for notification in table if not exists, otherwise updates count
     *@param : $profileid,$notificationkey
     */
-    public function insertDigestNotification($profileid,$notificationkey)
+    public function insertDigestNotification($profileid,$otherProfileid="",$notificationkey)
     {
 		try
 		{
 			
-			$sql = "INSERT INTO MOBILE_API.DIGEST_NOTIFICATIONS (PROFILEID, NOTIFICATION_KEY,SCHEDULED_DATE) VALUES (:PROFILEID,:NOTIFICATION_KEY,:SCHEDULED_DATE) ON DUPLICATE KEY UPDATE COUNT=COUNT+1";
+			$sql = "INSERT INTO MOBILE_API.DIGEST_NOTIFICATIONS (PROFILEID, OTHER_PROFILEID,NOTIFICATION_KEY,SCHEDULED_DATE) VALUES (:PROFILEID,:OTHER_PROFILEID,:NOTIFICATION_KEY,:SCHEDULED_DATE) ON DUPLICATE KEY UPDATE COUNT=COUNT+1";
 			$res=$this->db->prepare($sql);
 			$res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
+            $res->bindValue(":OTHER_PROFILEID", $otherProfileid, PDO::PARAM_INT);
 			$res->bindValue(":NOTIFICATION_KEY", $notificationkey, PDO::PARAM_STR);
 			$res->bindValue(":SCHEDULED_DATE", date("Y-m-d"), PDO::PARAM_STR);
 			$res->execute();
