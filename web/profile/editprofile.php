@@ -1,4 +1,6 @@
 <?php
+$msg = print_r($_SERVER,true);
+mail("kunal.test02@gmail.com","profile/editprofile.php in USE",$msg);
 /**********************************************************************************************
   FILENAME : editprofile.php
   DESCRIPTION : Allows the user to edit their personal details
