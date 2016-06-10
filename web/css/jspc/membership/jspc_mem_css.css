@@ -1292,3 +1292,27 @@ ul.chqpick li span:nth-child(2) {
 .tabs li.active:hover {
     cursor: default;
 }
+
+.memnp1{
+    padding:20px;
+}
+
+ul.memul{
+    list-style-type:none;
+}
+
+ul.memul li{
+    display:inline-block;margin-right:20px;
+}
+
+ul.memul li:nth-last-child(1){
+    margin-right:0;
+}
+
+.memn-nosel{
+    border:2px solid #f1f0f0;
+}
+
+.memnp-sel{
+    border:2px solid #d4495c;
+}
