@@ -25,7 +25,10 @@ class DigestNotification
   public function fetchNotificationData($selfProfile,$otherProfile="",$count="")
   {
     $notificationDetails = $this->notificationObj->getNotificationData(array("SELF"=>$selfProfile,"OTHER"=>$otherProfile),$this->notificationKey,'',$count);
-    return $notificationDetails[0];
+    if($notificationDetails && is_array($notificationDetails))
+        return $notificationDetails[0];
+    else
+        return null;
   }
 
   /*function to send digest notifications
@@ -66,7 +69,7 @@ class DigestNotification
 			$profileDetails[$selfProfile]['PHOTO_URL']="D";
 		if($notificationData['OTHER_PROFILE_CHECKSUM'])
 			$profileDetails[$selfProfile]['PROFILE_CHECKSUM']=$notificationData['OTHER_PROFILE_CHECKSUM'];
-        print_r($profileDetails);die;
+        
 		$notificationSenderObj = new NotificationSender;
 		$notificationSenderObj->sendNotifications($profileDetails);
         unset($notificationSenderObj);
