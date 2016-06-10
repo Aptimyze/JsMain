@@ -672,7 +672,7 @@ window.onload=function(){
                                 <li><a class="disp_b cursp js-srchbyid">Search by Profile ID</a></li>
                             </ul>
                         </li>
-                        <li id="help" tabindex="1" class="ml27"><a class="disp_b cursp" onclick="javascript:logOutCheck('/help/index',1); return true;">HELP</a></li>
+                        <li id="help" tabindex="1" class="ml50"><a class="disp_b cursp" onclick="javascript:logOutCheck('/help/index',1); return true;">HELP</a></li>
                     </ul>
                     <!--end:left-->
                     <!--start:right-->
