@@ -576,7 +576,7 @@
         $("select.custom").each(function() {
             sb[$(this).attr('name')] = new SelectBox({
                 selectbox: $(this),
-                height: 300,
+                height: 250,
                 width: '100%',
                 customScrollbar: true,
                 changeCallback: function(e) {
