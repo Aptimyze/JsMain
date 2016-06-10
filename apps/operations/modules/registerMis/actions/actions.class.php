@@ -284,4 +284,53 @@ class registerMisActions extends sfActions {
     elseif(ceil((strtotime($end_date)-strtotime($start_date))/(24*60*60))>=100)
             $this->errorMsg = "More than 100 days selected in range";
   }
+  public function executeLocationAgeRegistration(sfWebRequest $request)
+  {
+    $formArr = $request->getParameterHolder()->getAll();
+    //$name = $request->getAttribute('name');
+    $this->cid = $formArr['cid'];
+    if ($formArr['submit']) 
+    {//print_r($formArr);die; 
+      $this->range_format = $formArr['range_format'];
+      if($this->range_format == 'Q')
+      {
+        $this->displayDate = $formArr['qyear'];
+      }
+      else if($this->range_format == 'M')
+      {
+        $this->displayDate = $formArr['myear'];
+      }
+      else
+      {
+        $this->displayDate = $formArr['dmonth']."-".$formArr['dyear'];
+      }
+      $params = array('range_format' => $formArr["range_format"], 'quarter_year' => $formArr['qyear'],'month_year' =>$formArr['myear'], 'day_month'=>$formArr['dmonth'],'day_year'=>$formArr['dyear'],'report_type'=>$formArr['report_type'],'report_format'=>$formArr['report_format'] );
+      $this->monthNames = RegistrationMisEnums::$monthNames;
+      $this->quarterNames = RegistrationMisEnums::$quarterNames;
+      $registrationMisObj = new cityAgeRegistrationMis();
+      $this->groupData = $registrationMisObj->getRegistrationMisData($params);
+      //print_r($this->groupData);die;
+      if($formArr['report_format'] == 'CSV')
+      {
+        $csvData = $registrationMisObj->createCSVFromatData($params,$this->groupData,$this->displayDate);
+        header("Content-Type: application/vnd.csv");
+        header("Content-Disposition: attachment; filename=Location_Age_Community_RegistrationMIS.csv");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+        echo($csvData);
+        die;
+      }
+      $this->setTemplate('locationAgeRegistrationResultScreen');
+    }
+    else
+    {
+      $this->mmarr = GetDateArrays::getMonthArray();
+      $this->yyarr = array();
+      for ($i = 2004; $i <= date("Y"); $i++) 
+      {
+        $this->yyarr[$i - 2004] = $i;
+      }
+    }
+    
+  }
 }
