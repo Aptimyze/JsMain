@@ -3,6 +3,8 @@
 include("connect.inc");
 include ("display_result.inc");
 include_once($_SERVER["DOCUMENT_ROOT"]."/classes/Services.class.php");
+include_once(JsConstants::$docRoot."/classes/JProileUpdateLib.php");
+
 $PAGELEN=10;
 $LINKNO=10;
 $START=1;

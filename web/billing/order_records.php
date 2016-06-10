@@ -4,7 +4,8 @@ include("../jsadmin/connect.inc");
 include("../profile/pg/functions.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Services.class.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Membership.class.php");
-        $serObj = new Services;
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
+$serObj = new Services;
 $membershipObj = new Membership;
 
 $data=authenticated($cid);

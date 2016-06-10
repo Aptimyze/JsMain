@@ -5,6 +5,7 @@ include(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 include("comfunc_sums.php");
 include("bounced_mail.php");
 include_once($_SERVER["DOCUMENT_ROOT"]."/classes/Membership.class.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
 $data=authenticated($cid);
 $flag=0;
