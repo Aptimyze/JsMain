@@ -53,6 +53,7 @@ class cityAgeRegistrationMis
 		$sortedArr = array();
 		$finalArr = array();
 		$top50cityArr = array();
+		$percentArr = array();
 
 		//Looping on the data fetched from database to convert into required format
 		foreach($dataArr as $key=>$value)
@@ -170,9 +171,13 @@ class cityAgeRegistrationMis
 				}
 			}	
 		}
-
+		$totalCount = array_sum($totalCountArr);
+		foreach($totalCountArr as $key => $val)
+		{
+			$percentArr[$key] = round(($val)/($totalCount),4);
+		}
 		$alteredArr['totalCount'] = $totalCountArr;
-
+		$alteredArr['percent'] = $percentArr;
 		if($report_type == "CITY_RES")
 		{
 			$sortedArr = $totalCountArr;
@@ -253,7 +258,6 @@ class cityAgeRegistrationMis
 		{
 			$finalArr['iterate'] = RegistrationMisEnums::$dayIterate;
 		}
-
 		return($finalArr);
 	}
 
@@ -291,7 +295,7 @@ class cityAgeRegistrationMis
 			}
 		}
 
-		$csvData .= "Total"."\n";
+		$csvData .= "Total,Percentage"."\n";
 
 		foreach($groupedData['loopOn'] as $key=>$value)
 		{

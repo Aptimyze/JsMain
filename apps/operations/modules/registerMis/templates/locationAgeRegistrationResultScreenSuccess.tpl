@@ -54,6 +54,7 @@
         ~/for`
   ~/if`
   <td width='40px' align=center>Total</td>
+  <td width='60px' align=center>Percentage</td>
 </tr>
 
 

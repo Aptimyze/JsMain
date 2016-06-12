@@ -4,9 +4,9 @@ class RegistrationMisEnums {
   public static $columnDates = array('04', '05', '06', '07', '08', '09', '10', '11', '12','13','14','15');
   public static $monthNames = array('4' => 'April','5' => 'May','6' => 'June','7' => 'July','8' => 'August','9' => 'September','10' => 'October', '11' => 'November', '12' => 'December', '13' =>'January','14' => 'Feburary','15' => 'March');
   public static $quarterNames = array('Q1' => 'April-June','Q2' => 'July-September','Q3' => 'October-December','Q4' => 'January-March');
-  public static $quaterIterate  = array("Q1","Q2","Q3","Q4","totalCount");
-  public static $monthIterate = array('4', '5', '6', '7', '8', '9', '10', '11', '12','13','14','15','totalCount');
-  public static $dayIterate = array('1','2','3','4', '5', '6', '7', '8', '9', '10', '11', '12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','totalCount');
+  public static $quaterIterate  = array("Q1","Q2","Q3","Q4","totalCount","percent");
+  public static $monthIterate = array('4', '5', '6', '7', '8', '9', '10', '11', '12','13','14','15','totalCount',"percent");
+  public static $dayIterate = array('1','2','3','4', '5', '6', '7', '8', '9', '10', '11', '12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','totalCount',"percent");
   public static $ageBucket = array(
   	"F_18_20" => array("LOW"=>18,"HIGH"=>20,"GENDER"=>"F"),
   	"F_21_24" => array("LOW"=>21,"HIGH"=>24,"GENDER"=>"F"),
