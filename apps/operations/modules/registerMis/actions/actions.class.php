@@ -346,6 +346,7 @@ class registerMisActions extends sfActions {
         $this->quarterNames = RegistrationMisEnums::$quarterNames;
         if($formArr['report_format'] == 'CSV')
         { //check parameters to be sent
+          $registrationMisObj = new cityAgeRegistrationMis();
           $csvData = $registrationMisObj->createCSVFromatData($params,$this->groupData,$this->displayDate,$this->displayName);
           header("Content-Type: application/vnd.csv");
           header("Content-Disposition: attachment; filename=Location_Age_Community_RegistrationMIS.csv");
