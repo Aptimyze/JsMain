@@ -257,9 +257,10 @@ class cityAgeRegistrationMis
 		return($finalArr);
 	}
 
-	public function createCSVFromatData($params,$groupedData,$displayDate)
+	public function createCSVFromatData($params,$groupedData,$displayDate,$displayName)
 	{
 		$csvData = 'Registration MIS'."\n";
+		$csvData .= 'Result Screen -'.$displayName."\n";
 		if($params['range_format']=="M" || $params['range_format']=="Q")
 		{
 			$csvData .= "For the Year of " .$displayDate."\n";

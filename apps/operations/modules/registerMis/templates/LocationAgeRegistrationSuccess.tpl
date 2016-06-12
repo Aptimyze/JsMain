@@ -10,7 +10,7 @@
 	        <td valign="top" width="40%" align="center"><img src="~sfConfig::get('app_img_url')`/profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
 	</tr>
 </table>
-        <form name="form1" action="~sfConfig::get('app_site_url')`/operations.php/registerMis/LocationAgeRegistration?cid=~$cid`" method="post">
+        <form name="form1" action="~sfConfig::get('app_site_url')`/operations.php/registerMis/LocationAgeRegistration?cid=~$cid`" method="get">
         <input type="hidden" name="cid" value="~$cid`">
 
 	<table border="0" align="center" width="60%" cellpadding="4" cellspacing="4" border="0">

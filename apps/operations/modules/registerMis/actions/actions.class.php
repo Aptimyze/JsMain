@@ -291,45 +291,26 @@ class registerMisActions extends sfActions {
     $formArr = $request->getParameterHolder()->getAll();
     $this->cid = $formArr['cid'];
     if ($formArr['submit']) 
-    {
-      $this->range_format = $formArr['range_format'];
+    { 
+      //An array of the required Form Data
+      $params = array('range_format'=>$formArr["range_format"],'quarter_year'=>$formArr['qyear'],'month_year'=>$formArr['myear'],'day_month'=>$formArr['dmonth'],'day_year'=>$formArr['dyear'],'report_type'=>$formArr['report_type'],'report_format'=>$formArr['report_format']);
+      
+      $this->range_format = $params['range_format'];
+      
+      //displayDate to be shown in the Results Page
       if($this->range_format == 'Q')
       {
-        $this->displayDate = $formArr['qyear'];
+        $this->displayDate = $params['quarter_year'];
       }
       elseif($this->range_format == 'M')
       {
-        $this->displayDate = $formArr['myear'];
+        $this->displayDate = $params['month_year'];
       }
       else
       {
-        $this->displayDate = $formArr['dmonth']."-".$formArr['dyear'];
+        $this->displayDate = $params['day_month']."-".$params['day_year'];
       }
-      $this->memcacheKey = $this->range_format."_".$this->displayDate."_".$formArr['report_type'];
-      //echo($this->memcacheKey);die;
-      // $memcacheObj = JsMemcache::getInstance();
-      // $memKeySet = $memcacheObj->get($this->memcacheKey);
-      
-      // if($memKeySet == 'C')
-      // {
-      //   $this->computing = true;
-      //   $this->setTemplate('computingRegistrationMis');
-      //   die;
-      // }
-      // elseif(is_array($memKeySet))
-      // {
-      //   $this->computing = false;
-      //   passthru(JsConstants::$php5path." $_SERVER[DOCUMENT_ROOT]/profile/retrieveprofile_bg.php " . $body['profileId'] . " > /dev/null");  
 
-      // }
-      // elseif($memKeySet == '')
-      // {
-      //   $this->computing = true;
-      //   $memcacheObj->set($this->memcacheKey,"C");
-      //   $this->setTemplate('computingRegistrationMis');
-      //   die;
-      // }
-      $params = array('range_format' => $formArr["range_format"], 'quarter_year' => $formArr['qyear'],'month_year' =>$formArr['myear'], 'day_month'=>$formArr['dmonth'],'day_year'=>$formArr['dyear'],'report_type'=>$formArr['report_type'],'report_format'=>$formArr['report_format'] );
       if($params['report_type'] == 'CITY_RES')
       {
         $this->displayName = "By City";
@@ -342,22 +323,48 @@ class registerMisActions extends sfActions {
       {
         $this->displayName = "By Age & Gender";
       }
-      $this->monthNames = RegistrationMisEnums::$monthNames;
-      $this->quarterNames = RegistrationMisEnums::$quarterNames;
-      $registrationMisObj = new cityAgeRegistrationMis();
-      $this->groupData = $registrationMisObj->getRegistrationMisData($params);
+
+
+      //creating memcacheObj
+      $memcacheObj = JsMemcache::getInstance();
+      //Memcache Key based on Form inputs
+      $this->memcacheKey = $this->range_format."_".$this->displayDate."_".$params['report_type'];
       
-      if($formArr['report_format'] == 'CSV')
+      $memKeySet = $memcacheObj->get($this->memcacheKey);
+      $params['memKeySet'] = $this->memcacheKey;
+      
+      if($memKeySet == 'C')
       {
-        $csvData = $registrationMisObj->createCSVFromatData($params,$this->groupData,$this->displayDate);
-        header("Content-Type: application/vnd.csv");
-        header("Content-Disposition: attachment; filename=Location_Age_Community_RegistrationMIS.csv");
-        header("Pragma: no-cache");
-        header("Expires: 0");
-        echo($csvData);
-        die;
+        $this->computing = true;
+        $this->setTemplate('computingRegistrationMis');
       }
-      $this->setTemplate('locationAgeRegistrationResultScreen');
+      elseif(is_array($memKeySet))
+      { 
+        $this->groupData = $memKeySet;
+        $this->computing = false;
+        $this->monthNames = RegistrationMisEnums::$monthNames;
+        $this->quarterNames = RegistrationMisEnums::$quarterNames;
+        if($formArr['report_format'] == 'CSV')
+        { //check parameters to be sent
+          $csvData = $registrationMisObj->createCSVFromatData($params,$this->groupData,$this->displayDate,$this->displayName);
+          header("Content-Type: application/vnd.csv");
+          header("Content-Disposition: attachment; filename=Location_Age_Community_RegistrationMIS.csv");
+          header("Pragma: no-cache");
+          header("Expires: 0");
+          echo($csvData);
+          die;
+        }
+        $this->setTemplate('locationAgeRegistrationResultScreen');
+      }
+      elseif($memKeySet == '')
+      {
+        $this->computing = true;
+        $memcacheObj->set($this->memcacheKey,"C");
+        $memcacheObj->set("MIS_PARAMS_KEY",$params);
+        $command = JsConstants::$php5path." /var/www/html/branches/branch2/symfony cron:cronLocationAgeRegistrationMis  > /dev/null &";
+        passthru($command);
+        $this->setTemplate('computingRegistrationMis');
+      }
     }
     else
     {
