@@ -89,8 +89,6 @@ EOF;
                                                             $StrategyReceiversT = new TrendsBasedMatchAlertsStrategy($loggedInProfileObj, $this->limitTRec);   
                                                             $StrategyReceiversT->getMatches();
                                                         }
-                                                        if(!$toSendFromIntersection) 
-                                                            $StrategyReceiversT->getMatches();
                                                             
 						}
 						else

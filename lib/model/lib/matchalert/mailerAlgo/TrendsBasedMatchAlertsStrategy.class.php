@@ -25,7 +25,7 @@ class TrendsBasedMatchAlertsStrategy extends MatchAlertsStrategy
 	public function getMatches($intersection = '')
 	{
                 if($intersection){
-                    $this->TrendsProfileObj = new trendsIntersectionDppProfiles($this->loggedInProfileObj);
+                    $this->TrendsProfileObj = new TrendsIntersectionDppProfiles($this->loggedInProfileObj);
                     $toSendFromIntersection = $this->TrendsProfileObj->getDppTrendsCriteria($this->sort, $this->limit);
                     if(!$toSendFromIntersection)
                         return false;
@@ -37,7 +37,7 @@ class TrendsBasedMatchAlertsStrategy extends MatchAlertsStrategy
 		$SearchServiceObj = new SearchService($this->searchEngine,$this->outputFormat,0);
 		$SearchUtilityObj =  new SearchUtility;
                 if($intersection){
-                    $pidsAndCount =  $this->getSearchResult($SearchServiceObj,$SearchUtilityObj,1);
+                    $pidsAndCount =  $this->getSearchResult($SearchServiceObj,$SearchUtilityObj,$intersection);
                     $pids = $pidsAndCount['PIDS'];
                     $totalCount = $pidsAndCount['CNT'];
                 }
