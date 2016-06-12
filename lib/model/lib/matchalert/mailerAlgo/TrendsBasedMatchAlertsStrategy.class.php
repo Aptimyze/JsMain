@@ -64,6 +64,7 @@ class TrendsBasedMatchAlertsStrategy extends MatchAlertsStrategy
                 if($returnTotalCount){
                     $PidsAndCount['PIDS'] = $PIDS;
                     $PidsAndCount['CNT'] = $responseObj->getTotalResults();
+                    return $PidsAndCount;
                 }
 		return $PIDS;
 	}
