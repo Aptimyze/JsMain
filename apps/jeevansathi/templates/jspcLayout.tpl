@@ -10,6 +10,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <link rel="shortcut icon" href="/favicon1.ico" />
     <link rel="stylesheet" async=true type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700">
+    <link rel="stylesheet" type="text/css" href="~JsConstants::$siteUrl`/css/jspc/chat/chat_css.css">
     ~include_http_metas`
     ~include_canurl`
     ~include_title`
@@ -121,8 +122,7 @@ window._fbq = window._fbq || [];
 window._fbq.push(['track', 'PixelInitialized', {}]);
 </script>
 <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=569447716516417&amp;ev=PixelInitialized" /></noscript>
-    ~if $showChat`
-        <script src="js/jquery.mCustomScrollbar.js" language="javascript" type="text/javascript"></script>
-        <script type="text/javascript" language="javascript" src="jspc/chat/chat_js.js"></script>
+    ~if $showChat eq 1`
+        <script type="text/javascript" language="javascript" src="~JsConstants::$siteUrl`/js/jspc/chat/chat_js.js"></script>
     ~/if`
 ~/if`

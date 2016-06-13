@@ -205,6 +205,7 @@ $css_arr[]=array("jsms/common/disableRightClick_css"        => "2");
 $css_arr[]=array("jsms/profile/horoscope/horoscope_css"  => "1");
 $css_arr[]=array("operations/showStatViewProfile_css"  => "1");
 $css_arr[]=array("operations/help_module"   => "1");
+$css_arr[]=array("jspc/chat/chat_css"   => "1");
 return $css_arr;
 }
 /* JavaScript File */
