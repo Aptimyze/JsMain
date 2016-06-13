@@ -8,7 +8,7 @@ class TrendsIntersectionDppProfiles extends PartnerProfile {
    */
   public function __construct($loggedInProfileObj) {
     parent::__construct($loggedInProfileObj);
-    $this->valuesForTrends = array("MSTATUS","MANGLIK","COUNTRY_RES","INCOME","EDU_LEVEL_NEW","OCCUPATION","CITY_RES","MTONGUE","CASTE");
+    $this->valuesForTrends = array("MSTATUS","MANGLIK","COUNTRY_RES","INCOME_SORTBY","EDU_LEVEL_NEW","OCCUPATION","CITY_RES","MTONGUE","CASTE","INDIA_NRI","MANGLIK_IGNORE");
   }
   
 
@@ -31,6 +31,8 @@ class TrendsIntersectionDppProfiles extends PartnerProfile {
         $this->HHEIGHT = $trendsObj->HHEIGHT;
     $this->showFilteredProfiles = 'N';
     $getFromTrends = $this->getIntersectionDpp($trendsObj);
+    if(($this->COUNTRY_RES != '' && $this->INDIA_NRI != '') || ($this->MANGLIK != '' && $this->MANGLIK_IGNORE != ''))
+       $getFromTrends = false;
     return $getFromTrends;
   }
   
