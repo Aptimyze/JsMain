@@ -1,5 +1,5 @@
 .mem-sprite {
-    background-image: url(IMG_URL/images/jspc/membership_img/mem-sprite2.png);
+    background-image: url(IMG_URL/images/jspc/membership_img/mem-sprite3.png);
     background-repeat: no-repeat;
 }
 
@@ -1315,4 +1315,16 @@ ul.memul li:nth-last-child(1){
 
 .memnp-sel{
     border:2px solid #d4495c;
+}
+
+.mem-mastreo{    
+    width: 45px; 
+    height: 28px; 
+    background-position: -275px -183px;
+}
+
+.mem-sbi{ 
+    width: 45px; 
+    height: 28px; 
+    background-position: -275px -220px; 
 }
