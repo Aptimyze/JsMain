@@ -13,7 +13,7 @@ default:
     #language:     en
     #robots:       index, follow
   stylesheets:    [jspc/common/commonJspc_css@common,jspc/common/fontsJspc_css@common,jspc/common/headerFooterJspc_css@common,helpWidget_css@common,jspc/common/mCustomScrollBar_css@common,rippleEffectCommon_css@common]
-  javascripts:    [tracking_js@commonTop,helpWidget_js@commonBottom,jspc/common/commonJspc_js@commonBottom,jspc/login/loginLayer_js@commonBottom,jspc/common/AjaxWrapper@commonTop,jspc/common/urlHandling@commonBottom,jspc/common/jquery_mCustomScrollbar@commonBottom,jspc/common/jquery_mousewheel@commonBottom,commonExpiration_js@commonBottom,rippleEffectCommon_js@commonBottom,common_comscore_js@commonBottom]
+  javascripts:    [tracking_js@commonTop,helpWidget_js@commonBottom,jspc/common/commonJspc_js@commonBottom,jspc/login/loginLayer_js@commonBottom,jspc/common/AjaxWrapper@commonTop,jspc/common/urlHandling@commonBottom,jspc/common/jquery_mCustomScrollbar@commonBottom,jspc/common/jquery_mousewheel@commonBottom,commonExpiration_js@commonBottom,rippleEffectCommon_js@commonBottom,common_comscore_js@commonBottom,jspc/chat/chat_js]
 
   has_layout:     true
   layout:         jspcLayout

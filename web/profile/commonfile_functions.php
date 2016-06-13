@@ -594,6 +594,7 @@ $js_arr[]=array("jsms/utility/offlineTracking_js"   => "1");
 $js_arr[]=array("jsms/common/disableRightClick_js"    => "2");
 $js_arr[]=array("jsms/profile/horoscope/horoscope_js"  => "1");
 $js_arr[]=array("common_comscore_js"   => "2");
+$js_arr[]=array("jspc/chat/chat_js"   => "1");
 return $js_arr;
 }
 function getJavascript(){
