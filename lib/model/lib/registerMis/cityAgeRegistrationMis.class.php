@@ -9,7 +9,7 @@ class cityAgeRegistrationMis
 			$params['report_type'] = 'GENDER,AGE';
 		}
 		//create object of JPROFILE
-		$jprofileObj = JPROFILE::getInstance();
+		$jprofileObj = JPROFILE::getInstance("newjs_slave");
 		
 		$dayMonth = "";
 		if($params['range_format']=="Q")
