@@ -52,12 +52,12 @@ class cityAgeRegistrationMis
 		$totalCountArr = array();
 		$sortedArr = array();
 		$finalArr = array();
-		$top50cityArr = array();
+		$top50CityArr = array();
 		$percentArr = array();
 
 		//Looping on the data fetched from database to convert into required format
 		foreach($dataArr as $key=>$value)
-		{	//print_r($value);
+		{
 			//To convert Jan, feb, March to month 13,14,15 as they give data of the next year
 			if($value['MONTH']<=3)
 			{
@@ -81,7 +81,7 @@ class cityAgeRegistrationMis
 				if($value[$report_type]!= " " || $value[$report_type]!="-1")
 				{
 					if($range_format == "M" || $range_format == "D")
-					{
+					{echo("!!");
 						$alteredArr[$value[$keyType]][$value[$report_type]] = $value['COUNT'];
 					}
 					else
@@ -116,7 +116,7 @@ class cityAgeRegistrationMis
 			
 			// for range_type = Age_Gender
 			else
-			{//print_r($value);die;
+			{
 				if($range_format == "M" || $range_format == "D")
 				{
 					foreach(RegistrationMisEnums::$ageBucket as $k=>$v)
@@ -181,39 +181,22 @@ class cityAgeRegistrationMis
 		if($report_type == "CITY_RES")
 		{
 			$sortedArr = $totalCountArr;
-			rsort($sortedArr);
-			foreach($sortedArr as $key=>$value)
-			{
-				if($key<'50')
-				{
-					foreach($totalCountArr as $k => $v)
-					{
-						if($value == $v)
-						{
-							$top50CityArr[$k]=$v;
-						}
-					}
-				}
-				else
-				{
-					break;
-				}
-			}
-			
+			arsort($sortedArr);
+			$top50CityArr = array_slice($sortedArr,0,50,true);
+			$citiesArr = array_keys($top50CityArr);
 			foreach($alteredArr as $key => $value)
 			{
-				foreach($value as $k1 => $v1)
+				foreach($top50CityArr as $k1=>$v1)
 				{
-					foreach($top50CityArr as $k2 => $v2)
-					{
-						if($k2 == $k1)
+						if(array_key_exists($k1, $value))
 						{
-							$finalArr[$key][$k2]=$v1;
+							$finalArr[$key][$k1]=$value[$k1];
 						}
-					}
+						else
+							$finalArr[$key][$k1]=0;
+
 				}
 			}
-			$citiesArr = array_keys($top50CityArr);
 			$cityArr = FieldMap::getFieldLabel('city','',1);
 			$stateIndiaArr = FieldMap::getFieldLabel('state_india','',1);
 			foreach($citiesArr as $key => $val)
