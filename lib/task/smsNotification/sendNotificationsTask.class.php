@@ -47,7 +47,6 @@ $this->addOptions(array(
 			foreach($details as $k=>$v)
 			{
 				$profileDetails[$v['PROFILEID']]=$v;
-				$profileDetails[$v['PROFILEID']]['PHOTO_URL']="D";
 				$idArr[] = $v['ID'];
 			}
 			
