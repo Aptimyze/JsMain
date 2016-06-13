@@ -164,7 +164,7 @@ class csvGenerationHandler
 			if($processName=='paidCampaignProcess'){
 				$fields .=",YOURINFO,FAMILYINFO,FATHER_INFO,SPOUSE,SIBLING_INFO,JOB_INFO";	
 			}
-			if($processName=='paidCampaignProcess' || $processName=='renewalProcessInDialer' || $processName=='SALES_REGULAR'){
+			if($processName=='paidCampaignProcess' || $processName=='renewalProcessInDialer' || $processName=='SALES_REGULAR' || $processName=='upsellProcessInDialer'){
 				$jprofileObj  	=new JPROFILE('newjs_slave');
 			}
 			else
@@ -185,7 +185,7 @@ class csvGenerationHandler
 					$details['ANALYTIC_SCORE']	=$analyticScore;
 				}
 				if($processName=='upsellProcessInDialer'){
-					$paymentDetailsObj =new BILLING_PAYMENT_DETAIL();
+					$paymentDetailsObj =new BILLING_PAYMENT_DETAIL('newjs_slave');
 					$paymentDetails =$paymentDetailsObj->getDetails($extraParam);		
 					$details['AMOUNT'] =$paymentDetails[0]['AMOUNT'];
 				}	

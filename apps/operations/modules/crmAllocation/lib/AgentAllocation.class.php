@@ -220,7 +220,7 @@ class AgentAllocation
 		$totalExecutives        =count($executives);
 //$executives =array("amuda");
 		if($method=='FIELD_SALES'){
-			$mainAdminObj   =new incentive_MAIN_ADMIN();
+			$mainAdminObj   =new incentive_MAIN_ADMIN('newjs_slave');
 			$center		=$processObj->getCenter();
 			$allocationLimit=$processObj->getLimit();
 			if($totalExecutives>0)
