@@ -64,10 +64,13 @@
         </div>
         <div class="fr js-helpWidgetContent" style="width:171px">
             <div class="clearfix padalls wid80p brdrb-8 pt20 pb20"> <i class="sprite2 helpic1 fl"></i>
-                <div class="fl color11 f14 pl9">~$mobileNumber`</div>
+                <div class="fl color11 f14 pl10">~$mobileNumber`</div>
             </div>
             <div class="clearfix padalls wid80p brdrb-8 pt20 pb20 js-openRequestCallBack"> <a href="#"><i class="sprite2 helpic2 fl"></i>
                 <div class="fl color11 f14 pl10">Request callback</div>
+            </a> </div>
+            <div class="clearfix optwidg f14"> <a href="/contactus/index?fromSideLink=1"> <i class="Widgicon Widicon3 fl"></i>
+            <div class="fl pl10 f14">Live Help</div>
             </a> </div>
         </div>
     </div>

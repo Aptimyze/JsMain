@@ -113,9 +113,19 @@ elseif($confirm)
 	        	$username=$row1['USERNAME'];
 	        	$sql = "INSERT into jsadmin.DELETED_PROFILES(PROFILEID,USERNAME,REASON,COMMENTS,USER,TIME)  values($profile,'$username','Immediate deletion','$comments','$name','$tm')";
 	        	mysql_query_decide($sql) or die(logError($sql,$db));
-	        	$path = $_SERVER['DOCUMENT_ROOT']."/profile/deleteprofile_bg.php $profile > /dev/null &";
-	        	$cmd = JsConstants::$php5path." -q ".$path;
-	        	passthru($cmd);
+	        	$producerObj=new Producer();
+	        	if($producerObj->getRabbitMQServerConnected())
+				{
+					$sendMailData = array('process' =>'DELETE_RETRIEVE','data'=>array('type' => 'DELETING','body'=>array('profileId'=>$profile)), 'redeliveryCount'=>0 );
+					$producerObj->sendMessage($sendMailData);
+				}
+				else
+				{
+					$path = $_SERVER['DOCUMENT_ROOT']."/profile/deleteprofile_bg.php $profile > /dev/null &";
+	        		$cmd = JsConstants::$php5path." -q ".$path;
+	        		passthru($cmd);
+				}
+	        	
 			$j++;
 		}
 		$msg="Selected Profiles are deleted Immediately.<br>";

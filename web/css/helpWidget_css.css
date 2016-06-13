@@ -24,7 +24,7 @@
     -moz-transform: rotate(-90deg);
     -webkit-transform: rotate(-90deg);
     transform: rotate(-90deg);
-    margin-top: 52px
+    margin-top: 83px
 }
 
 .widclr {
@@ -69,7 +69,7 @@ i, em {
 
 .Widposabs {
     position: absolute;
-    height: 120px;
+    height: 171px;
 }
 
 .r0 {

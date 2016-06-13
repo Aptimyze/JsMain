@@ -74,6 +74,11 @@ class csvGenerationHandler
                         $paidCampaignObj =new incentive_SALES_CSV_DATA_PAID_CAMPAIGN();
                         $paidCampaignObj->updateDialStatus($dateTime);
 		}
+                elseif($processName=="rcbCampaignInDialer"){
+                        $dateTime =date("Y-m-d",time()-2*24*60*60);
+                        $paidCampaignObj =new incentive_SALES_CSV_DATA_RCB();
+                        $paidCampaignObj->updateDialStatus($dateTime);
+                }
 	}
 	public function storeTemporaryProfiles($processObj,$profiles)
 	{
@@ -158,6 +163,8 @@ class csvGenerationHandler
 			$fields ="PROFILEID,USERNAME,ISD,COUNTRY_RES,MTONGUE,FAMILY_INCOME,ENTRY_DT,PHONE_WITH_STD,DTOFBIRTH,STD,PHONE_MOB,CITY_RES,GENDER,RELATION,AGE,INCOME,SEC_SOURCE,HAVEPHOTO,MSTATUS,PHONE_FLAG,INCOMPLETE,LAST_LOGIN_DT";
 			if($processName=='paidCampaignProcess'){
 				$fields .=",YOURINFO,FAMILYINFO,FATHER_INFO,SPOUSE,SIBLING_INFO,JOB_INFO";	
+			}
+			if($processName=='paidCampaignProcess' || $processName=='renewalProcessInDialer' || $processName=='SALES_REGULAR'){
 				$jprofileObj  	=new JPROFILE('newjs_slave');
 			}
 			else
@@ -173,7 +180,7 @@ class csvGenerationHandler
 				$details['PHONE_ALTERNATE']  	=$AgentDetailsObj->phoneNumberCheck($AgentDetailsObj->getOtherPhoneNums($profileid));
 				$details['ENTRY_DT']  	        =date("Y-m-d",JSstrToTime($details['ENTRY_DT']));
 	
-				if($processName=='failedPaymentInDialer' || $processName=='upsellProcessInDialer' || $processName=='renewalProcessInDialer'){
+				if($processName=='failedPaymentInDialer' || $processName=='upsellProcessInDialer' || $processName=='renewalProcessInDialer' || $processName=='rcbCampaignInDialer'){
 					$analyticScore 	=$mainAdminPoolObj->getAnalyticScore($profileid);
 					$details['ANALYTIC_SCORE']	=$analyticScore;
 				}
@@ -228,11 +235,10 @@ class csvGenerationHandler
                         }
                         $profiles =array("N"=>$newProfileArr,"R"=>$repeatProfileArr);
                 }
-                else if($processName=="failedPaymentInDialer" || $processName=="upsellProcessInDialer")
+                else if($processName=="failedPaymentInDialer" || $processName=="upsellProcessInDialer" || $processName=='rcbCampaignInDialer')
                 {
 			$agentAllocDetailsObj   =new AgentAllocationDetails();
 			$profiles=$agentAllocDetailsObj->fetchProfiles($processObj);
-			
                 }
 		elseif($processName=='renewalProcessInDialer'){
 			$agentAllocDetailsObj   =new AgentAllocationDetails();
@@ -350,7 +356,7 @@ class csvGenerationHandler
 		}
 		else if($processName=="SUGARCRM_LTF")
 		{
-			$sugarcrmLeadsObj = new sugarcrm_leads('newjs_bmsSlave');		//TRANSFER_TO_SLAVE
+			$sugarcrmLeadsObj = new sugarcrm_leads('newjs_slave');
 			$subMethod = $processObj->getSubMethod();
 
 			if($subMethod == "LTF_MOBILE_LEADS")
@@ -534,7 +540,7 @@ class csvGenerationHandler
 			}
 
 			if($processName=='renewalProcessInDialer'){
-				$renewalInDialerObj =new incentive_RENEWAL_IN_DIALER();	
+				$renewalInDialerObj =new incentive_RENEWAL_IN_DIALER('newjs_slave');	
 	                        $profilesRenewalDialer =$renewalInDialerObj->fetchRenewalDialerProfiles();
 	                        if(count($profilesRenewalDialer)>0){
 					$profileArr =array_diff($profileArr,$profilesRenewalDialer);
@@ -549,7 +555,7 @@ class csvGenerationHandler
 					$profileArr =array_values($profileArr);	
 				}
 	                        if(count($profileArr)>0){
-        	                        $obj =new incentive_MAIN_ADMIN();
+        	                        $obj =new incentive_MAIN_ADMIN('newjs_slave');
         	                        $profilesAllocated =$obj->getProfilesDetails($profileArr);
         	                        if(count($profilesAllocated)>0){
         	                                foreach($profilesAllocated as $key=>$value){
@@ -833,18 +839,19 @@ class csvGenerationHandler
 				$filteredProfiles[] =$dataArr;
 			}
 		}
-		else if($processName=='failedPaymentInDialer' || $processName=='upsellProcessInDialer' || $processName=='renewalProcessInDialer' || $processName=='paidCampaignProcess'){
+		else if($processName=='failedPaymentInDialer' || $processName=='upsellProcessInDialer' || $processName=='renewalProcessInDialer' || $processName=='paidCampaignProcess' || $processName=='rcbCampaignInDialer'){
 			$method 		=$processObj->getMethod();	
                         $AgentAllocDetailsObj   =new AgentAllocationDetails();
 			$southIndianCommunity	=crmParams::$southIndianCommunity;
                         foreach($profiles as $profileid=>$dataArr){
 				if(!$profileid)
 					continue;
-                                if($dataArr["ACTIVATED"]!='Y')
-                                        continue;
-                                if($dataArr["PHONE_FLAG"]=="I")
-                                        continue;
-
+				if($processName!='rcbCampaignInDialer'){
+	                                if($dataArr["ACTIVATED"]!='Y')
+	                                        continue;
+	                                if($dataArr["PHONE_FLAG"]=="I")
+	                                        continue;
+				}
 				if($method=='NEW_FAILED_PAYMENT'){
 	                                if($dataArr['GENDER']=="M" && $dataArr["AGE"]<24)
         	                                continue;
@@ -1105,7 +1112,7 @@ class csvGenerationHandler
                                 $salesCsvDataObj->insertProfile($profileid,$dialerDialStatus,$dataArr['USERNAME'],$dataArr['PHONE1'],$dataArr['PHONE2'],$gender,$membership,$addon,$paymentDate,$leadId);
 			}
 		}
-		elseif($processName=="SALES_REGULAR" || $processName=='failedPaymentInDialer' || $processName=='upsellProcessInDialer' || $processName=='renewalProcessInDialer')
+		elseif($processName=="SALES_REGULAR" || $processName=='failedPaymentInDialer' || $processName=='upsellProcessInDialer' || $processName=='renewalProcessInDialer' || $processName=='rcbCampaignInDialer')
 		{
 			if($processName=="SALES_REGULAR"){
 				$salesRegularCampaignTables  =crmParams::$salesRegularCampaignTables;
@@ -1113,7 +1120,7 @@ class csvGenerationHandler
 				$salesCsvDataTempObj 	=new incentive_SALES_CSV_DATA_TEMP();
 				$inDialerObj            =new incentive_IN_DIALER();
 			}
-			else if($processName=='failedPaymentInDialer' || $processName=='upsellProcessInDialer' || $processName=='renewalProcessInDialer'){
+			else if($processName=='failedPaymentInDialer' || $processName=='upsellProcessInDialer' || $processName=='renewalProcessInDialer' || $processName=='rcbCampaignInDialer'){
 				$servicesObj 		=new billing_SERVICES();
 				$userplaneObj 		=new userplane_recentusers();
 				$salesCampaignTables	=crmParams::$salesCampaignTables;
@@ -1124,8 +1131,8 @@ class csvGenerationHandler
 			}
 			$method			=$processObj->getMethod();
 			$leadIdSuffix           =$processObj->getLeadIdSuffix();		
-			$vdDiscountObj    	=new billing_VARIABLE_DISCOUNT();
-			$renewalDiscountObj	=new billing_RENEWAL_DISCOUNT();
+			$vdDiscountObj    	=new billing_VARIABLE_DISCOUNT('newjs_slave');
+			$renewalDiscountObj	=new billing_RENEWAL_DISCOUNT('newjs_slave');
 			$purchaseObj            =new BILLING_PURCHASES();
 			$profilesCount		=count($profiles);
 			for($i=0;$i<$profilesCount;$i++)
@@ -1174,6 +1181,16 @@ class csvGenerationHandler
                                         $leadId         =$campaignName.$leadIdSuffix;
 					$salesCsvDataObj->insertProfile($profileid,$dialerPriority,$score,$dialerDialStatus,$dataArr['ALLOTED_TO'],$vdDiscount,$dataArr['LAST_LOGIN_DT'],$dataArr['PHONE1'],$dataArr['PHONE2'],$havePhoto,$dataArr['DTOFBIRTH'],$mstatus,$everPaid,$gender,$relation,$leadId,$expiryDate);
 				}
+				else if($processName=="rcbCampaignInDialer"){
+					$country        =FieldMap::getFieldLabel('country',$dataArr['COUNTRY_RES']);
+					$leadId =$campaignName.$leadIdSuffix;
+					$source =$campaignName;
+                                        $csvDateTime =$processObj->getStartDate();
+                                        if($profileid>0)
+                                                $salesCsvDataObj->insertProfile($profileid,$dialerPriority,$score,$dialerDialStatus,$dataArr['ALLOTED_TO'],$vdDiscount,$dataArr['LAST_LOGIN_DT'],$dataArr['PHONE1'],$dataArr['PHONE2'],$havePhoto,$dataArr['DTOFBIRTH'],$mstatus,$everPaid,$gender,$relation,$leadId,$csvDateTime,$username,$country,$source);
+                                         $rcbInDialerLog =new incentive_RCB_LOG();
+                                         $rcbInDialerLog->insertData($profileid, $csvDateTime);
+				}
 				else if($processName=="failedPaymentInDialer" || $processName=="upsellProcessInDialer"){
 					$country	=FieldMap::getFieldLabel('country',$dataArr['COUNTRY_RES']);
 					$onlineStatus   =$userplaneObj->isOnline($profileid);
@@ -1198,12 +1215,12 @@ class csvGenerationHandler
 					else
 						$onlineStatus ='N';
 
-					if($webLead && $processName=="failedPaymentInDialer"){
-						$leadId         =$webLead.$leadIdSuffix;
-						$source		=$webLead;
-					}
-					else
-						$leadId         =$campaignName.$leadIdSuffix;
+                                        /*if($webLead && $processName=="failedPaymentInDialer"){
+                                                $leadId         =$webLead.$leadIdSuffix;
+                                                $source         =$webLead;
+                                        }
+                                        else*/
+                                        $leadId         =$campaignName.$leadIdSuffix;
 		
 					$csvDateTime	=$processObj->getStartDate();				
 					if($profileid>0)
@@ -1684,7 +1701,7 @@ class csvGenerationHandler
 		$excl_cf_dt	=JSstrToTime(date('Y-m-d',time()-(7-1)*86400));
 		$excl_ni_dt	=JSstrToTime(date('Y-m-d',time()-(7-1)*86400));
 
-		$historyObj	=new incentive_HISTORY();
+		$historyObj	=new incentive_HISTORY('newjs_slave');
 		$details 	=$historyObj->getLastDispositionDetails($profileid,'ENTRY_DT,DISPOSITION');
 		$entryDt 	=JSstrToTime($details['ENTRY_DT']);			
 		$disposition 	=$details['DISPOSITION'];
@@ -1738,7 +1755,7 @@ class csvGenerationHandler
 	}
 	public function fetchDialerStatus($allotedTo,$vdDiscount,$score,$processName)
 	{
-		if($processName=='failedPaymentInDialer' || $processName=='upsellProcessInDialer' || $processName=='renewalProcessInDialer')
+		if($processName=='failedPaymentInDialer' || $processName=='upsellProcessInDialer' || $processName=='renewalProcessInDialer' || $processName=='rcbCampaignInDialer')
 			$dial_status=1;
 		else{
 			if($allotedTo=='' && $vdDiscount && $score>=1 && $score<=100)
@@ -1754,7 +1771,7 @@ class csvGenerationHandler
 	}
 	public function profileAlertsCheck($profileid,$username)
 	{
-		$jprofileAlertsObj =new newjs_JPROFILE_ALERTS();
+		$jprofileAlertsObj =new newjs_JPROFILE_ALERTS('newjs_slave');
 		$alerts 	=$jprofileAlertsObj->fetchMembershipStatus($profileid);
 		$memCall 	=$alerts['MEMB_CALLS'];
 		$offerCall 	=$alerts['OFFER_CALLS'];
@@ -1772,7 +1789,7 @@ class csvGenerationHandler
 	public function getDetailedValues($pid)  // pid = profileid
 	{
 		global $app_list_strings;
-		$sugarcrmLeadsCstmObj = new sugarcrm_leads_cstm('newjs_bmsSlave');	//TRANSFER_TO_SLAVE
+		$sugarcrmLeadsCstmObj = new sugarcrm_leads_cstm('newjs_slave');
 		$res = $sugarcrmLeadsCstmObj->getDetails($pid);
 				
 		if(!$res['age_c'])
@@ -1946,7 +1963,7 @@ class csvGenerationHandler
 	}
 	public function getLeadScore()
 	{
-		$sugarcrmLeadsCstmObj = new sugarcrm_leads_cstm('newjs_bmsSlave');	//TRANSFER_TO_SLAVE
+		$sugarcrmLeadsCstmObj = new sugarcrm_leads_cstm('newjs_slave');
 		$mm_score = $sugarcrmLeadsCstmObj->getMaxMinScore();
 		return $mm_score;
 	}

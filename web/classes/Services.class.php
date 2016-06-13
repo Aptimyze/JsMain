@@ -398,12 +398,12 @@ class Services
             if ($fest) {
                 $festiveDiscountPercent = $festiveDetailsArr[$serviceid]['DISCOUNT_PERCENT'];
                 if ($festiveDiscountPercent > 0) {
-                	$services[$serviceid]['FESTIVE_PRICE'] = round($services[$serviceid]['PRICE'] - ceil(($services[$serviceid]['PRICE'] * $festiveDiscountPercent) / 100) , 2);
+                	$services[$serviceid]['FESTIVE_PRICE'] = $services[$serviceid]['PRICE'] - ceil(($services[$serviceid]['PRICE'] * $festiveDiscountPercent) / 100);
                 }
             }
             
             $discountSrvc = $cashDiscountArr[$serviceid];
-            $services[$serviceid]['DISCOUNT_PRICE'] = round($services[$serviceid]['PRICE'] - ceil(($services[$serviceid]['PRICE'] * $discountSrvc) / 100), 2);
+            $services[$serviceid]['DISCOUNT_PRICE'] = $services[$serviceid]['PRICE'] - ceil(($services[$serviceid]['PRICE'] * $discountSrvc) / 100);
             
             $services[$serviceid]['DURATION'] = $componentsDurArr[$serviceid];
             unset($festiveDuration);
@@ -420,7 +420,7 @@ class Services
                 $memHandlerObj = new MembershipHandler();
                 $renew_discount_rate = $memHandlerObj->getVariableRenewalDiscount($profileid);
             }
-            return ceil(($renew_discount_rate / 100) * $service_price);
+            return round(($renew_discount_rate / 100) * $service_price, 2);
         } 
         else if ($discount_type == 6) {
         	// when having internal call within this file
