@@ -12,9 +12,18 @@ indexSuccess:
 JSPCHelpSuccess:
     
     metas:
-        title:
+        title: Help
         description:
     stylesheets: [jspc/help/JSPCHelp_css]
     javascripts: [jspc/help/JSPCHelp_js@bottom]
     layout: jspcLayout
+    
+JSMSHelpSuccess:
+    
+    metas:
+        title: Help
+        description:
+    stylesheets: [-*,jsms/hamburger/ham_css,jsms/profile/ep/mp_css,jsms/profile/ep/revamp_edit_profile_css,jsms/common/commoncss,jsms/common/mediaquery,jsms/photo/photoup,jsms/common/errorBar,jsms/settings/settings_css,jsms/help/JSMSHelp_css]
+    javascripts: [jsms/help/JSMSHelp_js@bottom,]
+    layout: jsmsMobLayout
     
