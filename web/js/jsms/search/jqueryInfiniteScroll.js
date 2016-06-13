@@ -799,7 +799,7 @@ function dataForSearchTuple(response,forcePage,idToJump,ifPrePend,searchTuple){
               url: url,
               cache: false,
               timeout: 5000, 
-              data: {rcbResponse:'N'},
+              data: {rcbResponse:'N','device':'mobile_website','channel':'JSMS','callbackSource':'Accepted_Members_List'},
               success: function (result) {
                 $("#callDiv1").remove();
                 $("<div class='rel_c bg4 js-rcbMsg' id='callDiv2'><div class='f14 fontlig mainDiv2'>Never mind. You still can reach out to us later whenever you want. We will remind you about this after two weeks.</div></div>").insertAfter("#idd3");
