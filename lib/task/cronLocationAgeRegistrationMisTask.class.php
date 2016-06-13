@@ -28,6 +28,6 @@ $this->addOptions(array(
    $memObject->delete("MIS_PARAMS_KEY");
    $registrationMisObj = new cityAgeRegistrationMis();
    $groupData = $registrationMisObj->getRegistrationMisData($params);
-   $memObject->set($params['memKeySet'],$groupData);
+   $memObject->set($params['memKeySet'],$groupData,'43200');
  }
 }
