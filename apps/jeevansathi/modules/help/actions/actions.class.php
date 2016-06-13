@@ -20,7 +20,14 @@ class helpActions extends sfActions
       $loginData=$request->getAttribute("loginData");
       $this->username = $loginData["USERNAME"];
       $this->email = $loginData["EMAIL"];
-    $this->setTemplate('JSPCHelp');
+      if(MobileCommon::isNewMobileSite())
+        {
+            $this->setTemplate("JSMSHelp");
+        }
+        else
+        {
+            $this->setTemplate("JSPCHelp");
+        }
   }
   
   /*
@@ -35,7 +42,26 @@ class helpActions extends sfActions
       $helpQuestionSlaveObj = new jsadmin_HELP_QUESTIONS("newjs_slave");
       list($allQuestions) = $helpQuestionSlaveObj->getAll();
       $result =array("Response"=>$allQuestions);      
-      $apiObj->setHttpArray(CrmResponseHandlerConfig::$INVALID_USERNAME);
+      $apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+      $apiObj->setResponseBody($result);
+      $apiObj->generateResponse();
+      die;
+  }
+  
+  public function executeSubmitQueryV1(sfWebRequest $request){
+      $apiObj = ApiResponseHandler::getInstance();
+      $apiObj->setAuthChecksum($request->getAttribute("AUTHCHECKSUM"));
+      unset($paramsArr);
+      $paramsArr['email'] = $request->getParameter("email");
+      $paramsArr['username'] = $request->getParameter("username");
+      $paramsArr['query'] = $request->getParameter("query");
+      $paramsArr['category'] = $request->getParameter("category");
+      $paramsArr['channel'] = MobileCommon::isMobile()?"M":"D";
+      
+      $helpQueries = new jsadmin_HELP_USER_QUERIES();
+      $helpQueries->insert($paramsArr);
+      
+      $apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
       $apiObj->setResponseBody($result);
       $apiObj->generateResponse();
       die;

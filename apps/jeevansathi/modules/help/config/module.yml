@@ -10,3 +10,6 @@ all:
     
   HelpQuestionsV1:
     enable_login:  off 
+    
+  SubmitQueryV1:
+    enable_login:  off 

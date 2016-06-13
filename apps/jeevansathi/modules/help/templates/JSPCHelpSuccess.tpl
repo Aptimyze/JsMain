@@ -57,7 +57,7 @@
                         <tr>
                             <td class="vertM">Category</td>
                             <td>
-                                <div id="catDropDown" class="hgt34 wid326 pos-abs colr2 catDropDown"><span class="selectedDrop"> Please Select an option</span> <i class="chosen-container"></i>
+                                <div id="catDropDown" class="hgt34 wid326 pos-abs colr2 catDropDown"><span class="selectedDrop">Please Select an option</span> <i class="chosen-container"></i>
                                     <ul class="dropOption disp-none">
                                     </ul>
                                 </div>
@@ -66,7 +66,7 @@
                         <tr>
                             <td class="vertM">Username</td>
                             <td>
-                                <input type="text" class="colr2 f14 searchInp2" value="~$username`"></input>
+                                <input id="username" type="text" class="colr2 f14 searchInp2" value="~$username`"></input>
                             </td>
                         </tr>
                         <tr>

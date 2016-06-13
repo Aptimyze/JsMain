@@ -55,7 +55,26 @@ $(document).ready(function(e) {
         }
         if (validData == true) {
             console.log("Fire Query");
-            //TODO: send query
+            var username = $("#username").val(),
+                query = $(".question").val(),
+                category = $(".selectedDrop").text();
+                if(category == "Please Select an option"){
+                    category="";
+                }
+                console.log(username+category);
+            $.ajax({
+                type: "POST",
+                url: '/api/v1/help/helpQuery',
+                cache: false,
+                timeout: 5000, 
+                data: {email:email,username:username,query:query,category:category},
+                success: function(result){
+                    console.log("S");
+                },
+                error: function(result){
+                    console.log("S");
+                }
+            });
         }
     });
     $(".email, .question").keypress(function(e) {
@@ -103,6 +122,7 @@ function applySearchAlgo() {
         }
         //check for enter, comma, space, question, full stop and semicolon key pressed
         else if (e.keyCode == 32 || e.keyCode == 13 || e.keyCode == 188 || e.keyCode == 186 || e.keyCode == 190 || e.keyCode == 191 || e.keyCode == 8 && lastChar == " " || lastChar == "?" || lastChar == "," || lastChar == ";" || lastChar == ".") {
+            idArray = [];
             str = $(this).val();
             keyWordArray = str.replace("?", " ").replace(";", " ").replace(",", " ").replace(".", " ").split(" ");
             finalKeyWord = [];
@@ -215,4 +235,8 @@ function bindSectionClick() {
             $("#mainDiv").hide(), $("#sectionDiv").show();
         });
     });
+}
+
+function submitHelpForm(){
+    console.log("Test");
 }

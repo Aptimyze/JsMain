@@ -17,3 +17,4 @@ JSPCHelpSuccess:
     stylesheets: [jspc/help/JSPCHelp_css]
     javascripts: [jspc/help/JSPCHelp_js@bottom]
     layout: jspcLayout
+    
