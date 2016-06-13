@@ -1,4 +1,6 @@
 <?php
+	header("Location: $SITE_URL/profile/viewprofile.php?ownview=1",true,301);
+	die;
 /**********************************************************************************************
   FILENAME : editprofile.php
   DESCRIPTION : Allows the user to edit their personal details

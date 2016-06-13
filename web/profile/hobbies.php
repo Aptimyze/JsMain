@@ -1,5 +1,6 @@
 <?php
-
+	header("Location: $SITE_URL/profile/viewprofile.php?ownview=1&EditWhatNew=Interests",true,301);
+	die;
 	//to zip the file before sending it
 	$zipIt = 0;
 	if (strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip'))
