@@ -1,20 +1,37 @@
 <?php
 class CommunicationHistory
 {
+	private static $RESULTS_PER_PAGE_APP=30;
 	private $loginProfile;
 	private $otherProfile;
+	private $nextPage;
+	private $pageNo;
 	public function __construct($loginProfile, $otherProfile)
 	{
 		$this->loginProfile = $loginProfile;
 		$this->otherProfile = $otherProfile;
 	}
-	public function getHistory()
+
+	public function getNextPage(){
+		return $this->nextPage;
+	}
+	public function getHistory($page)
 	{
 		$gender        = $this->loginProfile->getGENDER();
 		$heshe         = "They";
 		$himher        = "them";
+
+
+		if($page)
+		{
+			$this->pageNo=$page;
+			$offset=(intval($page)-1)*self::$RESULTS_PER_PAGE_APP;
+			$limit=self::$RESULTS_PER_PAGE_APP +1;
+			$limitArray=array('limit'=>$limit,'offset'=>$offset);
+		}
+		else $this->nextPage="";
 		$messagelogObj = new MessageLog();
-		$messagelog    = $messagelogObj->getCommunicationHistory($this->loginProfile->getPROFILEID(), $this->otherProfile->getPROFILEID());
+		$messagelog    = $messagelogObj->getCommunicationHistory($this->loginProfile->getPROFILEID(), $this->otherProfile->getPROFILEID(),$limitArray);
 		if (!empty($messagelog))
 			foreach ($messagelog as $key => $value) {
 				$ids = $value["ID"];
@@ -151,6 +168,19 @@ class CommunicationHistory
 	
 	public function getResultSetApi($history,$myGender='',$otherGender='')
 	{
+
+
+		if($this->pageNo)
+		{
+			if(count($history)>self::$RESULTS_PER_PAGE_APP)
+			{
+			$this->nextPage='true';
+
+			$history=array_slice($history,0,self::$RESULTS_PER_PAGE_APP);
+
+			}
+			else $this->nextPage="false";
+		}
 		$count = 0;
 		if($otherGender)
 		{

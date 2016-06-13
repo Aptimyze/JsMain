@@ -728,7 +728,7 @@ public function updateMessageLogDetails($msgCommObj)
 			return $count;
 		}
 		
-		public function getCommunicationHistory($viewer,$viewed)
+		public function getCommunicationHistory($viewer,$viewed,$limit)
 		{	
 			try
 			{
@@ -739,6 +739,11 @@ public function updateMessageLogDetails($msgCommObj)
 				else
 				{
 					$sql = "SELECT MESSAGE_LOG.ID as ID, SENDER,TYPE,`DATE`,OBSCENE,MESSAGE FROM  `MESSAGE_LOG` LEFT JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER ))  ORDER BY DATE";
+					if(is_array($limit))
+					{
+						$limit=" LIMIT ".$limit['limit']." OFFSET ".$limit['offset'];
+						$sql.=$limit;
+					}
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);
