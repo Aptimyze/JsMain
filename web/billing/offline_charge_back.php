@@ -111,7 +111,8 @@ if(isset($data))
 				/*$sql="UPDATE newjs.JPROFILE SET PREACTIVATED=ACTIVATED,ACTIVATED='D',SUBSCRIPTION='',ACTIVATE_ON=now(),activatedKey=0 WHERE PROFILEID='$profileid'";
 				mysql_query_decide($sql) or die(mysql_error_js());*/
 				$jprofileObj    =JProfileUpdateLib::getInstance();
-	                        $updateStr      ="PREACTIVATED=ACTIVATED,ACTIVATED='D',SUBSCRIPTION='',ACTIVATE_ON=now(),activatedKey=0";
+				$dateNew        =date("Y-m-d");
+	                        $updateStr      ="PREACTIVATED=ACTIVATED,ACTIVATED='D',SUBSCRIPTION='',ACTIVATE_ON='$dateNew',activatedKey=0";
 	                        $paramArr       =$jprofileObj->convertUpdateStrToArray($updateStr);
 	                        $jprofileObj->editJPROFILE($paramArr,$profileid,'PROFILEID');
 

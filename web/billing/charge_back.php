@@ -96,7 +96,8 @@ if(isset($data))
 				$preActivated =$row_act['PREACTIVATED'];
 
                         $jprofileObj    =JProfileUpdateLib::getInstance();
-                        $updateStr      ="PREACTIVATED='$preActivated', ACTIVATED='D',activatedKey=0, SUBSCRIPTION='', ACTIVATE_ON=now()";
+			$dateNew	=date("Y-m-d");
+                        $updateStr      ="PREACTIVATED='$preActivated', ACTIVATED='D',activatedKey=0, SUBSCRIPTION='', ACTIVATE_ON='$dateNew'";
                         $paramArr       =$jprofileObj->convertUpdateStrToArray($updateStr);
                         $jprofileObj->editJPROFILE($paramArr,$profileid,'PROFILEID');
 
