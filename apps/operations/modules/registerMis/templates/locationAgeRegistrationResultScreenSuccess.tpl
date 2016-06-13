@@ -54,8 +54,8 @@
         ~/for`
   ~/if`
   <td width='40px' align=center>Total</td>
-  <td width='60px' align=center>Percentage</td>
-</tr>
+  <td width='60px' align=center>Percentage (%)</td>
+</tr> 
 
 
 ~foreach from=$groupData['loopOn'] key=key1 item=value`
@@ -64,7 +64,7 @@
                 ~$value`
                 </td>
                 ~foreach from=$groupData['iterate'] key=k2 item=iterVal`
-                <td>
+                <td align=center>
                 ~if $groupData[$iterVal][$key1] neq ""` ~$groupData[$iterVal][$key1]`
                 ~else`
                 0

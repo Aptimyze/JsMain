@@ -174,7 +174,7 @@ class cityAgeRegistrationMis
 		$totalCount = array_sum($totalCountArr);
 		foreach($totalCountArr as $key => $val)
 		{
-			$percentArr[$key] = round(($val)/($totalCount),4);
+			$percentArr[$key] = round(($val)/($totalCount)*100,2);
 		}
 		$alteredArr['totalCount'] = $totalCountArr;
 		$alteredArr['percent'] = $percentArr;
