@@ -237,13 +237,6 @@
                                                         </div>
                                                     </li>
                                                     ~/foreach`
-                                                    <!-- <li id="CSH-PayTM">
-                                                        <div class="mem-boxdim mem-bdr13 disp-tbl">
-                                                            <div class="disp-cell vmid">
-                                                                <div class="mem-sprite mobikwiklogo mauto"></div>
-                                                            </div>
-                                                        </div>
-                                                    </li> -->
                                                 </ul>
                                             </div>
                                         </div>

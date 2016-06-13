@@ -500,6 +500,8 @@ function manageSelectedItem() {
                             createCookie("cardType", selectedCardType);
                             clearSelectedIcons(paymentOption);
                             $("#"+paymentOption+"-"+index).find('.cursp').removeClass('memn-nosel').addClass('memnp-sel');
+                        } else if (index == 0){
+                          clearSelectedIcons(paymentOption);
                         }
                     } else {
                         index++;
@@ -517,6 +519,8 @@ function manageSelectedItem() {
                             createCookie("cardType", selectedCardType);
                             clearSelectedIcons(paymentOption);
                             $("#"+paymentOption+"-"+index).find('.cursp').removeClass('memn-nosel').addClass('memnp-sel');
+                        } else if (index == 0){
+                          clearSelectedIcons(paymentOption);
                         }
                     } else {
                         index++;

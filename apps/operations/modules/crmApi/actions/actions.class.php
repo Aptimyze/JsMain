@@ -284,10 +284,17 @@ class crmApiActions extends sfActions
     	$timestamp = date("Y-m-d H:i:s", $tempTime);
     	$clientName = $request->getParameter('clientName');
     	$agentLocation = $request->getParameter('agentLocation');
-    	$incCrmChkObj = new incentive_CRM_AGENT_CHECKIN_CHECKOUT_LOG();
-    	$incCrmChkObj->insert($operatorName, $clientName, $logType, $agentLocation, $latitude, $longitude, $timestamp);
-    	$successFlag = true;
-    	$apiObj->setHttpArray(CrmResponseHandlerConfig::$CRM_SYNC_SUCCESS);
+    	$jprofileObj = new JPROFILE();
+    	$check = $jprofileObj->checkUsername($clientName);
+    	if($check){
+    		$incCrmChkObj = new incentive_CRM_AGENT_CHECKIN_CHECKOUT_LOG();
+	    	$incCrmChkObj->insert($operatorName, $clientName, $logType, $agentLocation, $latitude, $longitude, $timestamp);
+	    	$successFlag = true;
+	    	$apiObj->setHttpArray(CrmResponseHandlerConfig::$CRM_SYNC_SUCCESS);	
+    	} else {	
+	    	$successFlag = false;
+    		$apiObj->setHttpArray(CrmResponseHandlerConfig::$INVALID_USERNAME);
+    	}
     }
     $output['syncDone'] = $successFlag;
     $apiObj->setAuthChecksum($request->getAttribute("AUTHCHECKSUM"));
