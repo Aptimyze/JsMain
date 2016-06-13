@@ -150,7 +150,7 @@ $css_arr[]=array("operanew"   => "1");
 $css_arr[]=array("fonts_css"   => "1");
 $css_arr[]=array("fonts"   => "1");
 $css_arr[]=array("jsexclusive_style"   => "2");
-$css_arr[]=array("helpWidget_css"      => "4");
+$css_arr[]=array("helpWidget_css"      => "5");
 $css_arr[]=array("jsms/search/savesearchcss"      => "5");
 $css_arr[]=array("iosprmo"  => "2");
 $css_arr[]=array("jspc/registration/registrationJspc_css"   => "1");
