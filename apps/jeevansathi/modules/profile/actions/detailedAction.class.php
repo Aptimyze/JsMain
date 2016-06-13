@@ -115,9 +115,8 @@ class detailedAction extends sfAction
     //Showing contact engine
     if (MobileCommon::isOldMobileSite()) {
       $this->horoscopeAvailable(); 
-      $this->showContactEngine();
-    }	
-		
+    }
+	 $this->showContactEngine();
 		//appPromotion
 		if($request->getParameter("from_mailer"))
 			$this->from_mailer=1;
