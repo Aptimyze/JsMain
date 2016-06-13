@@ -10,7 +10,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <link rel="shortcut icon" href="/favicon1.ico" />
     <link rel="stylesheet" async=true type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700">
-    <link rel="stylesheet" type="text/css" href="~JsConstants::$siteUrl`/css/jspc/chat/chat_css.css">
+    ~if $showChat eq 1`
+        <link rel="stylesheet" type="text/css" href="~JsConstants::$siteUrl`/css/jspc/chat/chat_css.css">
+    ~/if`
     ~include_http_metas`
     ~include_canurl`
     ~include_title`
@@ -103,7 +105,6 @@
 <script>var SSL_SITE_URL='~JsConstants::$ssl_siteUrl`';
 if (window.location.protocol == "https:")
 	    window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
-
 </script>
 ~if !get_slot('disableFbRemarketing')`
 <script>(function() {
@@ -122,7 +123,7 @@ window._fbq = window._fbq || [];
 window._fbq.push(['track', 'PixelInitialized', {}]);
 </script>
 <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=569447716516417&amp;ev=PixelInitialized" /></noscript>
-    ~if $showChat eq 1`
-        <script type="text/javascript" language="javascript" src="~JsConstants::$siteUrl`/js/jspc/chat/chat_js.js"></script>
-    ~/if`
+~if $showChat eq 1`
+    <script type="text/javascript" language="javascript" src="~JsConstants::$siteUrl`/js/jspc/chat/chat_js.js"></script>
+~/if`
 ~/if`
