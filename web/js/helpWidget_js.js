@@ -204,7 +204,7 @@ function requestCallBackCall(){
        url: url,
        cache: false,
        timeout: 5000, 
-       data: {email:email.trim(),phone:phone.trim(),query_type:query,rcbResponse:rcbResponse},
+       data: {email:email.trim(),phone:phone.trim(),query_type:query,rcbResponse:rcbResponse,'device':'desktop','channel':'JSPC','callbackSource':'Help_Widget'},
        success: function(result){
            if(result.trim() == "Y"){
                $("#requestLoader").addClass("dspN");

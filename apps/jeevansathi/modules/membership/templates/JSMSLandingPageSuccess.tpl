@@ -1,3 +1,8 @@
+~if $passedKey eq 'REQUEST_CALLBACK'`
+	~assign var=callbackSource value='SMS'`
+~else`
+	~assign var=callbackSource value='Membership_Page'`
+~/if`
 <meta name="format-detection" content="telephone=no">
 <div class="fullwid">
 	<!--start:header-->
@@ -10,7 +15,7 @@
 			</div>
 		</div>
 	</div>
-	~include_component('common', 'jsmsReqCallback',['pageType'=>'membership'])`
+	~include_component('common', 'jsmsReqCallback',['pageType'=>'membership','from_source'=>$callbackSource])`
 	<!--start:overlay1
 	<div id="callOvrOne" style="display:none;">
 		<div class="tapoverlay posfix"></div>
@@ -483,22 +488,22 @@
 			$("#callButton").show();
 			historyStoreObj.pop(clearOverlay);
 		});
-		$("#reqCallBack").click(function(e){
-			e.preventDefault();
-			$("#callOvrOne").hide();
-			var paramStr = '~$data.topHelp.params`';
-			paramStr = paramStr.replace(/amp;/g,'');
-			url ="~sfConfig::get('app_site_url')`/api/v3/membership/membershipDetails?" + paramStr;
-			$.ajax({
-				type: 'POST',
-				url: url,
-				success:function(data){
-					response = data;
-					$("#reqCallBackMessage").text(data.message);
-				}
-			});
-			$("#callOvrTwo").show();
-		});
+		// $("#reqCallBack").click(function(e){
+		// 	e.preventDefault();
+		// 	$("#callOvrOne").hide();
+		// 	var paramStr = '~$data.topHelp.params`';
+		// 	paramStr = paramStr.replace(/amp;/g,'');
+		// 	url ="~sfConfig::get('app_site_url')`/api/v3/membership/membershipDetails?" + paramStr;
+		// 	$.ajax({
+		// 		type: 'POST',
+		// 		url: url,
+		// 		success:function(data){
+		// 			response = data;
+		// 			$("#reqCallBackMessage").text(data.message);
+		// 		}
+		// 	});
+		// 	$("#callOvrTwo").show();
+		// });
 		$("#jsExCallback").click(function(e){
 			e.preventDefault();
 			historyStoreObj.push(clearOverlay,"#overlay");
