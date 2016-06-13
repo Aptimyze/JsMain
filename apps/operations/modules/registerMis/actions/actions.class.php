@@ -362,7 +362,8 @@ class registerMisActions extends sfActions {
         $this->computing = true;
         $memcacheObj->set($this->memcacheKey,"C");
         $memcacheObj->set("MIS_PARAMS_KEY",$params);
-        $command = JsConstants::$php5path." /var/www/html/branches/branch2/symfony cron:cronLocationAgeRegistrationMis  > /dev/null &";
+        $filePath = JsConstants::$cronDocRoot."/symfony cron:cronLocationAgeRegistrationMis  > /dev/null &";
+        $command = JsConstants::$php5path." ".$filePath;
         passthru($command);
         $this->setTemplate('computingRegistrationMis');
       }

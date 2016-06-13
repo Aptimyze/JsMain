@@ -29,6 +29,5 @@ $this->addOptions(array(
    $registrationMisObj = new cityAgeRegistrationMis();
    $groupData = $registrationMisObj->getRegistrationMisData($params);
    $memObject->set($params['memKeySet'],$groupData);
-   sleep(5);
  }
 }
