@@ -14,6 +14,6 @@ function initiateChat()
             //rid:1,
             authentication:'prebind',
             show_controlbox_by_default: true,
-            prebind_url: 'http://localhost/api/v1/c/getNotification?jid=a1@localhost',  
+            prebind_url: 'http://localhost/api/v1/notification/getNotification?jid=a1@localhost',  
       });
 }
