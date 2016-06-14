@@ -284,9 +284,9 @@ class crmApiActions extends sfActions
     	$timestamp = date("Y-m-d H:i:s", $tempTime);
     	$clientName = $request->getParameter('clientName');
     	$agentLocation = $request->getParameter('agentLocation');
-    	$jprofileObj = new JPROFILE();
-    	$check = $jprofileObj->checkUsername($clientName);
-    	if($check){
+    	$jprofileObj = new JPROFILE('newjs_slave');
+    	$check = $jprofileObj->checkUsername(strtoupper($clientName));
+    	if($check == 1){
     		$incCrmChkObj = new incentive_CRM_AGENT_CHECKIN_CHECKOUT_LOG();
 	    	$incCrmChkObj->insert($operatorName, $clientName, $logType, $agentLocation, $latitude, $longitude, $timestamp);
 	    	$successFlag = true;
