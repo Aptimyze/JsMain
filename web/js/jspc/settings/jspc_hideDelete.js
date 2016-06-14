@@ -1,6 +1,8 @@
-var hideDays = 7;
+var hideDays = 7,deleteReasonSelected=0, offerConsent=1;
 $(document).ready(function() {
-$( "#sevenDayHide").bind('click',function() {
+bindOfferConsentBox();
+
+  $( "#sevenDayHide").bind('click',function() {
   hideDays = 7;
   $("#sevenDayHide").addClass("setactive").removeClass("setbtn1");
   $("#tenDayHide").removeClass("setactive").addClass("setbtn1");
@@ -31,46 +33,71 @@ $('#mainContainerID').bind('click', function(e)
 });
 $("#delOptionID").bind('click', function()
 {
-  $("specifiedID").addClass("disp-none");
-  $("#specifyReasonID").addClass("disp-none");
-  $("#specifyLinkID").addClass("disp-none");
-  $("#specifyOtherReasonID").addClass("disp-none");
-  $("#specifyOtherReason2ID").addClass("disp-none");
-  $("#deleteOptionListID").show();
+    $("#deleteOptionListID").show();
 });
 
 $(".sltOption").bind('click', function()
 {
+  
+  deleteReasonSelected=1;
+  $('.reasonDivCommon').hide();
   var optionVal=$(this).html();
   $('#delOptionSetID').html(optionVal);
-  if(optionVal=="I found my match elsewhere")
+  if($(this).hasClass('sltOption2') )
+  {
+    
+    $("#offerCheckBox").show();
+    $("#DeleteTextID").html("Delete my Profile");
+    $("#offerSpacer").hide();
+    $("#specifiedID").show();
+    $("#deleteReasonPrompt").hide();
+    $("#deleteReasonBox").removeClass('errbrd');
+    $("#specifyLinkID").show();
+  }
+  else if ($(this).hasClass('sltOption3')){
+
+    $("#DeleteTextID").html("Delete my Profile");
+    $("#offerSpacer").hide();
+    $("#deleteReasonPrompt").hide();
+    $("#deleteReasonBox").removeClass('errbrd');
+    $("#offerCheckBox").show();
+    $("#specifiedID").show();
+    $("#specifyReasonID").show();
+  
+
+  }
+
+  else if ($(this).hasClass('sltOption4')){
+
+    $("#DeleteTextID").html("Delete my Profile");
+    $("#offerCheckBox").hide();
+    $("#deleteReasonPrompt").hide();
+    $("#deleteReasonBox").removeClass('errbrd');
+
+    $("#offerSpacer").hide();
+    $("#specifiedID").show();
+    $("#specifyOtherReasonID").show();
+  }
+
+  else if ($(this).hasClass('sltOption5'))
   {
     $("#DeleteTextID").html("Delete my Profile");
-    $("#specifiedID").removeClass("disp-none");
-    $("#specifyReasonID").removeClass("disp-none");
+    $("#offerCheckBox").hide();
+    $("#offerSpacer").hide();
+    $("#deleteReasonPrompt").hide();
+    $("#deleteReasonBox").removeClass('errbrd');
+
+    $("#specifiedID").show();
+    $("#specifyOtherReason2ID").show();
   }
-  else if(optionVal=="I am unhappy about services")
+  else if($(this).hasClass('sltOption1'))
   {
-    $("#DeleteTextID").html("Delete my Profile");
-    $("#specifiedID").removeClass("disp-none");
-    $("#specifyOtherReasonID").removeClass("disp-none");
-  }
-  else if(optionVal=="I found my match from other website")
-  {
-    $("#DeleteTextID").html("Delete my Profile");
-    $("#specifiedID").removeClass("disp-none");
-    $("#specifyLinkID").removeClass("disp-none");
-  }
-  else if(optionVal=="I found my match on Jeevansathi.com")
-  {
+    $("#offerCheckBox").show();
     $("#DeleteTextID").html("Submit");
-    $("#specifiedID").addClass("disp-none");
-  }
-  else
-  {
-    $("#DeleteTextID").html("Delete my Profile");
-    $("#specifiedID").removeClass("disp-none");
-    $("#specifyOtherReason2ID").removeClass("disp-none");
+    $("#deleteReasonPrompt").hide();
+    $("#deleteReasonBox").removeClass('errbrd');
+    $("#specifiedID").hide();
+    $("#offerSpacer").hide();
   }
   $("#deleteOptionListID").hide();
 });
@@ -83,20 +110,51 @@ $('#HideID').bind("click",function()
     var password = $('#HidePassID').val(); 
     var hideAction=ajaxPassword(profilechecksum,password,'1');
     $('#HidePassID').val('');
-    });
+  });
 
 
 $('#DeleteID').bind("click",function() 
   {
-     $("#passID").addClass("vishid");
-     $("#passBorderID").removeClass("errbrd");
+    if(!deleteReasonSelected)
+    {
+      $("#deleteReasonPrompt").show();
+      $("#deleteReasonBox").addClass("errbrd");
+      return;
+    }
+    $("#passID").addClass("vishid");
+    $("#passBorderID").removeClass("errbrd");
     var password = $('#DeletePassID').val(); 
     var hideAction=ajaxPassword(profilechecksum,password);
     $('#DeletePassID').val('');
-    });
+  });
 
 });
 
+
+function bindOfferConsentBox(){
+
+  var element=$('input[name="js-offerConsentCheckBox"]');
+    //element.wrap("<span class='custom-checkbox'></span>");
+    element.parent().addClass('custom-checkbox');
+      
+        element.closest('li').addClass("selected");
+      
+    element.click(function() {
+      var liElement=$(this).closest('li');
+      if(liElement.hasClass('selected')){
+        offerConsent=0;
+        liElement.removeClass('selected');
+
+      }
+      else{ 
+        offerConsent=1;
+        liElement.addClass("selected");
+      }
+    });
+
+offerConsent=1;
+
+}
 function ajaxHide(hideDelete)
 {
   $.ajax(
@@ -210,6 +268,7 @@ function ajaxPassword(checksum,pswrd,hideAction)
 
 function ajaxDelete(optionVal,specifyReason)
 {
+
  //console.log(specifyReason);
   $.ajax(
                 {   
@@ -218,7 +277,7 @@ function ajaxDelete(optionVal,specifyReason)
                       $("#deletePartID").addClass("settings-blur");
                        },              
                         url: '/settings/jspcSettings?hideDelete=1',
-                        data: "deleteReason="+optionVal+"&specifyReason="+specifyReason+"&option=Delete",
+                        data: "deleteReason="+optionVal+"&specifyReason="+specifyReason+"&option=Delete&offerConsent="+offerConsent,
                         //timeout: 5000,
                         success: function(response) 
                         {

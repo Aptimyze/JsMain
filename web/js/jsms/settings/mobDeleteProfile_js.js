@@ -40,9 +40,11 @@ function ajaxPassword(checksum,pswrd)
 
 function ajaxDelete(specifyReason,deleteReason)
 {
+  if($("#offerCheckBox input").is(':checked')) offerConsent='Y';
+  else offerConsent='N';
   $.ajax({                 
     url: '/api/v1/settings/deleteProfile',
-    data: {"deleteReason":deleteReason,"specifyReason":specifyReason},
+    data: {"deleteReason":deleteReason,"specifyReason":specifyReason,'offerConsent':offerConsent},
     success: function(response) 
     {
       if(response.output=="Deleted Successfully"){
