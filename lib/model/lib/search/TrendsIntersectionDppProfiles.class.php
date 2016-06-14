@@ -8,7 +8,7 @@ class TrendsIntersectionDppProfiles extends PartnerProfile {
    */
   public function __construct($loggedInProfileObj) {
     parent::__construct($loggedInProfileObj);
-    $this->valuesForTrends = array("MSTATUS","MANGLIK","COUNTRY_RES","INCOME_SORTBY","EDU_LEVEL_NEW","OCCUPATION","CITY_RES","MTONGUE","CASTE","INDIA_NRI","MANGLIK_IGNORE");
+    $this->valuesForTrends = array("MSTATUS","MANGLIK","COUNTRY_RES","INCOME","EDU_LEVEL_NEW","OCCUPATION","CITY_RES","MTONGUE","CASTE","INDIA_NRI","MANGLIK_IGNORE");
   }
   
 
@@ -21,18 +21,28 @@ class TrendsIntersectionDppProfiles extends PartnerProfile {
     $this->setSortParam($sort,$limit);
     $trendsObj = new TrendsPartnerProfiles($this->loggedInProfileObj);
     $trendsObj->getDppCriteria($sort, $limit);
-    if($trendsObj->LAGE >= $this->LAGE)
+    if($this->LAGE && $trendsObj->LAGE >= $this->LAGE)
         $this->LAGE = $trendsObj->LAGE;
-    if($trendsObj->HAGE <= $this->HAGE)
+    if($trendsObj->HAGE && $trendsObj->HAGE <= $this->HAGE)
         $this->HAGE = $trendsObj->HAGE;
-    if($trendsObj->LHEIGHT >= $this->LHEIGHT)
+    if($this->LHEIGHT && $trendsObj->LHEIGHT >= $this->LHEIGHT)
         $this->LHEIGHT = $trendsObj->LHEIGHT;
-    if($trendsObj->HHEIGHT <= $this->HHEIGHT)
+    if($trendsObj->HHEIGHT && $trendsObj->HHEIGHT <= $this->HHEIGHT)
         $this->HHEIGHT = $trendsObj->HHEIGHT;
+    
     $this->showFilteredProfiles = 'N';
+    
+    //get all fields from intersection
     $getFromTrends = $this->getIntersectionDpp($trendsObj);
-    if(($this->COUNTRY_RES != '' && $this->INDIA_NRI != '') || ($this->MANGLIK != '' && $this->MANGLIK_IGNORE != ''))
-       $getFromTrends = false;
+    
+    //check for special cases
+    if(($this->COUNTRY_RES == '51' && $this->INDIA_NRI != '') || ($this->MANGLIK != '' && $this->MANGLIK_IGNORE != '') || ($this->LAGE > $this->HAGE || $this->LHEIGHT > $this->HHEIGHT))
+        $getFromTrends = false;
+    
+    //check for income sortby
+    if($this->INCOME == '' && $trendsObj->INCOME_SORTBY)
+        $this->INCOME_SORTBY = $trendsObj->INCOME_SORTBY;
+    //print_r($this);die;
     return $getFromTrends;
   }
   
