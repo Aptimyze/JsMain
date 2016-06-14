@@ -126,7 +126,6 @@
         <!--right panel end-->
     </div>
 </div>
-~include_component('common', 'helpWidget',['hideHelpMenu'=>'true'])`
 <!--start:footer-->
 ~include_partial('global/JSPC/_jspcCommonFooter',["fromSideLink"=>$fromSideLink])`
 <!--end:footer--> 
