@@ -40,10 +40,11 @@
 		showRCBLayer(e);
 	});
 	
-
+  var rcbForCAL = '~$from_source`';
   ~if sfContext::getInstance()->getRequest()->getParameter('showRCBForCAL') eq '1'`
+      rcbForCAL = 'RCB_CAL';
       $("#jsmsReqCallbackBtn").trigger('click');
-    ~/if`
+  ~/if`
 
 
   $('.tapoverlay').on('click',popBrowserStack);
@@ -55,7 +56,7 @@
 		$("#callOvrOne").hide();
 		var paramStr = '~$data.topHelp.params`';
 		paramStr = paramStr.replace(/amp;/g,'');
-		url ="~sfConfig::get('app_site_url')`/api/v3/membership/membershipDetails?" + paramStr + "~$from_source`";
+		url ="~sfConfig::get('app_site_url')`/api/v3/membership/membershipDetails?" + paramStr + rcbForCAL;
     var rcbResponse = $('#reqCallBack').attr('data-rcbResponse');
     if(typeof rcbResponse != "undefined"){
       url += '&rcbResponse='+ rcbResponse;
