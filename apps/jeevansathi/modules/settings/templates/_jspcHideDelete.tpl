@@ -45,7 +45,7 @@
           <!--end:left--> 
           <!--start:right-->
           <div id="deletePartID" class="fr setwid9">
-            <div class="bg-white setp3 color11 mCustomScrollbar" style="height:429px;">
+            <div class="bg-white setp3 color11" style="height:429px;">
               <p class="f16 fontreg txtc">Delete your Profile</p>
               <p class="f15 txtc fontlig pt20 color2">Please use this feature when you are engaged or have found your life partner. This feature deletes your profile 
                 permanently from the site. We would appreciate your feedback on Jeevansathi.com.</p>
@@ -78,7 +78,7 @@
                 <!--end:field 1--> 
                 <!--start:field 2-->
                 <div id="specifiedID" class="setbdr1 mt30 disp-none">
-    <textarea id="specifyReasonID" type="text" class="reasonDivCommon specifyReason color12 fullwid brdr-0 outwhi setp7 wid90p f15 brnone fontlig disp-none" placeholder="Kindly specify the source"></textarea>
+    <input id="specifyReasonID" type="text" class="reasonDivCommon specifyReason color12 fullwid brdr-0 outwhi lh40 pl13 hgt30IE wid90p f15 fontlig disp-none" placeholder="Kindly specify the source"></input>
 		<textarea id="specifyOtherReasonID" type="text" class="reasonDivCommon specifyReason color12 fullwid brdr-0 outwhi setp7 wid90p f15 brnone fontlig disp-none" placeholder="Specify reason(s) for your dissatisfaction"></textarea>
     <textarea id="specifyOtherReason2ID" type="text" class="reasonDivCommon specifyReason color12 fullwid brdr-0 outwhi setp7 wid90p f15 brnone fontlig disp-none" placeholder="Kindly specify your reason"></textarea>
     <input id="specifyLinkID" class="reasonDivCommon color12 fullwid brdr-0 outwhi lh40 pl13 wid90p f15 hgt30IE fontlig disp-none" placeholder="Write name of website" type="text">
@@ -98,17 +98,15 @@
                 <!--end:field 3--> 
 
 
-		<div class="clearfix f15 fontlig pt30 setp6">
-                </div>
 
               </div>
     <div id="offerSpacer"  style="height:60px"></div>
-    <div id="offerCheckBox" class="disp-none">              
+    <div id="offerCheckBox" class="disp-none" style="margin-left: 36px;">              
     <div class="fl">
 
     <li>    <input type="checkbox"  name="js-offerConsentCheckBox" checked="checked"></li>
     </div>
-    <div class="fontlig pl20 f15 grey5  mt20 pr10">I authorize Jeevansathi to send Emails containing attractive offers related to the wedding</div>
+    <div class="fontlig pl20 f13 grey5  mt20 pr10">I authorize Jeevansathi to send Emails containing attractive offers related to the wedding</div>
     </div>          
             </div>
             <div id="DeleteID" class="bg_pink lh51 colrw txtc cursp">

@@ -49,7 +49,6 @@ $(".sltOption").bind('click', function()
     $('input[name="js-offerConsentCheckBox"]').closest('li').addClass("selected");
     $("#offerCheckBox").show();
     $("#DeleteTextID").html("Delete my Profile");
-    $("#offerSpacer").hide();
     $("#specifiedID").show();
     $("#deleteReasonPrompt").hide();
     $("#deleteReasonBox").removeClass('errbrd');
@@ -59,7 +58,6 @@ $(".sltOption").bind('click', function()
     $('input[name="js-offerConsentCheckBox"]').closest('li').addClass("selected");
     offerConsent=1;
     $("#DeleteTextID").html("Delete my Profile");
-    $("#offerSpacer").hide();
     $("#deleteReasonPrompt").hide();
     $("#deleteReasonBox").removeClass('errbrd');
     $("#offerCheckBox").show();
@@ -76,7 +74,6 @@ $(".sltOption").bind('click', function()
     $("#deleteReasonPrompt").hide();
     $("#deleteReasonBox").removeClass('errbrd');
 
-    $("#offerSpacer").hide();
     $("#specifiedID").show();
     $("#specifyOtherReasonID").show();
   }
@@ -86,13 +83,13 @@ $(".sltOption").bind('click', function()
     offerConsent=0;
     $("#DeleteTextID").html("Delete my Profile");
     $("#offerCheckBox").hide();
-    $("#offerSpacer").hide();
     $("#deleteReasonPrompt").hide();
     $("#deleteReasonBox").removeClass('errbrd');
 
     $("#specifiedID").show();
     $("#specifyOtherReason2ID").show();
   }
+
   else if($(this).hasClass('sltOption1'))
   {
     $('input[name="js-offerConsentCheckBox"]').closest('li').addClass("selected");
@@ -102,7 +99,6 @@ $(".sltOption").bind('click', function()
     $("#deleteReasonPrompt").hide();
     $("#deleteReasonBox").removeClass('errbrd');
     $("#specifiedID").hide();
-    $("#offerSpacer").hide();
   }
   $("#deleteOptionListID").hide();
 });
