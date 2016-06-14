@@ -14,7 +14,7 @@ class AgentAllocation
 			// Special condition for CENTRAL_RENEWAL
 			if($subMethod == 'CENTRAL_RENEWAL' || $subMethod=='CENTRAL_RENEWAL_MONTHLY'){
 				// This is done to remove those profiles which are already allocated 
-               	$mainAdminObj=new incentive_MAIN_ADMIN();
+               	$mainAdminObj=new incentive_MAIN_ADMIN('newjs_slave');
                	$profiles = $processObj->getProfiles();
                	$newProfiles = array();
                	// This condition checks if profile is already Allocated in MAIN ADMIN, 
