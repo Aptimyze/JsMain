@@ -11,7 +11,7 @@ $(document).ready(function(e) {
 function getData() {
     $.ajax({
         type: "GET",
-        url: "/api/v1/help/questions",
+        url: "/api/v1/help/publicQuestions",
         success: function(a) {
             jsonData = a.Response;
             catogaries = Object.keys(jsonData);
