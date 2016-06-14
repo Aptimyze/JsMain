@@ -57,7 +57,7 @@
   <td width='60px' align=center>Percentage (%)</td>
 </tr> 
 
-
+~if $totalCountValue neq 0`
 ~foreach from=$groupData['loopOn'] key=key1 item=value`
 <tr>
                   <td width="120px" align=center>
@@ -73,6 +73,7 @@
                 ~/foreach`
 </tr>
 ~/foreach`
+~/if`
 </table>
 </body>
 </html>

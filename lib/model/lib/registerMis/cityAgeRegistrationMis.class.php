@@ -241,6 +241,8 @@ class cityAgeRegistrationMis
 		{
 			$finalArr['iterate'] = RegistrationMisEnums::$dayIterate;
 		}
+		
+		$finalArr["totalCountValue"] = $totalCount;
 		return($finalArr);
 	}
 

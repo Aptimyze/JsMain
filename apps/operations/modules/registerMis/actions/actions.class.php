@@ -341,6 +341,7 @@ class registerMisActions extends sfActions {
       elseif(is_array($memKeySet))
       { 
         $this->groupData = $memKeySet;
+        $this->totalCountValue = $this->groupData['totalCountValue'];
         $this->computing = false;
         $this->monthNames = RegistrationMisEnums::$monthNames;
         $this->quarterNames = RegistrationMisEnums::$quarterNames;
