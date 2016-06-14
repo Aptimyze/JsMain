@@ -206,12 +206,17 @@ function appendSectionList() {
             valueEven = value;
         } else {
             $("#catogaryTable").append("<tr><td><div>" + valueEven + "</div><div class='viewBtn' id='view_" + valueEven.split(" ")[0] + "'>View all questions</div></td><td><div>" + value + "</div><div class='viewBtn' id='view_" + value.split(" ")[0] + "'>View all questions</div></td></tr>");
+            valueEven = "";
         }
         catQuesList = jsonData[value];
         $.each(Object.keys(jsonData[value]), function(index2, value2) {
             quesAnsList.push(catQuesList[value2]);
         });
     });
+    
+    if(valueEven !== ""){
+        $("#catogaryTable").append("<tr><td><div>" + valueEven + "</div><div class='viewBtn' id='view_" + valueEven.split(" ")[0] + "'>View all questions</div></td></tr>");
+    }
 }
 
 function bindSectionClick() {
@@ -221,7 +226,7 @@ function bindSectionClick() {
         $(this).on("click", function() {
             that = $(this);
             $.each(catogaries, function(index, value) {
-                if ($(that).attr("id").split("_")[1] == value.split(" ")[0]) {
+                if ((that).prev().text() == value) {
                     selectedCat = value;
                 }
             });
