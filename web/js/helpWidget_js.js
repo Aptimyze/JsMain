@@ -10,6 +10,7 @@ var defaultEmail            = "";
 var defaultPhone            = "";
 
 var closeHelpWidgetIntervalId = "";
+var callbackSource = "";
 $(document).ready(function(){
     
     if( window.location.href.indexOf("/register/") != -1                    || 
@@ -85,7 +86,8 @@ $(document).ready(function(){
  * @Param : show : if show = 0 provide then hide or close the overlay
  *                  else display the overlay         
  */
-function toggleRequestCallBackOverlay(show){
+function toggleRequestCallBackOverlay(show, cbSource=''){
+    callbackSource = cbSource;
     if ($(requestCallBackOverlay).hasClass('dspN') && show){
         $(requestCallBackOverlay).removeClass('dspN');
         if($('#rcbResponse').length){
@@ -199,12 +201,16 @@ function requestCallBackCall(){
     $("#requestForm").addClass("dspN");
     $("#requestLoader").removeClass("dspN");
     
+    if(callbackSource == ''){
+      callbackSource = 'Help_Widget';
+    }
+
     $.ajax({
        type: "POST",
        url: url,
        cache: false,
        timeout: 5000, 
-       data: {email:email.trim(),phone:phone.trim(),query_type:query,rcbResponse:rcbResponse,'device':'desktop','channel':'JSPC','callbackSource':'Help_Widget'},
+       data: {email:email.trim(),phone:phone.trim(),query_type:query,rcbResponse:rcbResponse,'device':'desktop','channel':'JSPC','callbackSource':callbackSource},
        success: function(result){
            if(result.trim() == "Y"){
                $("#requestLoader").addClass("dspN");
