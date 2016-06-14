@@ -8,7 +8,7 @@ class TrendsIntersectionDppProfiles extends PartnerProfile {
    */
   public function __construct($loggedInProfileObj) {
     parent::__construct($loggedInProfileObj);
-    $this->valuesForTrends = array("MSTATUS","MANGLIK","COUNTRY_RES","INCOME","EDU_LEVEL_NEW","OCCUPATION","CITY_RES","MTONGUE","CASTE","INDIA_NRI","MANGLIK_IGNORE");
+    $this->valuesForTrends = array("MSTATUS","MANGLIK","INCOME","EDU_LEVEL_NEW","OCCUPATION","CITY_RES","MTONGUE","CASTE","MANGLIK_IGNORE");
   }
   
 
@@ -34,10 +34,17 @@ class TrendsIntersectionDppProfiles extends PartnerProfile {
     
     //get all fields from intersection
     $getFromTrends = $this->getIntersectionDpp($trendsObj);
-    
     //check for special cases
-    if(($this->COUNTRY_RES == '51' && $this->INDIA_NRI != '') || ($this->MANGLIK != '' && $this->MANGLIK_IGNORE != '') || ($this->LAGE > $this->HAGE || $this->LHEIGHT > $this->HHEIGHT))
+    if(($this->MANGLIK != '' && $this->MANGLIK_IGNORE != '') || ($this->LAGE > $this->HAGE || $this->LHEIGHT > $this->HHEIGHT))
         $getFromTrends = false;
+    
+    if($this->COUNTRY_RES == ''){
+        if($trendsObj->INDIA_NRI != '')
+            $this->INDIA_NRI = $trendsObj->INDIA_NRI;
+        else
+            $this->COUNTRY_RES = $trendsObj->COUNTRY_RES;
+    }
+         
     
     //check for income sortby
     if($this->INCOME == '' && $trendsObj->INCOME_SORTBY)
