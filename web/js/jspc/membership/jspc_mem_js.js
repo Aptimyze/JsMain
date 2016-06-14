@@ -384,6 +384,7 @@ function managePriceStrike(m, d) {
     } else {
         $('#' + m + "_savings_container").hide();
         $('.overflowPinkRipple').css('margin-top', '20px');
+        $('#tab_X .overflowPinkRipple').css('margin-top', '20px');
     }
     $('#' + m + "_final_price").html(removeZeroInDecimal(commaSeparateNumber(actualPrice)));
 }
