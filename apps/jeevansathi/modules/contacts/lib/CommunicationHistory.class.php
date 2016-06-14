@@ -163,7 +163,12 @@ class CommunicationHistory
 		    
 			$this->pageNo=$page;
 			$offset=(intval($page)-1)*self::$RESULTS_PER_PAGE_APP;
-			$limit=self::$RESULTS_PER_PAGE_APP +1;
+			$limit=self::$RESULTS_PER_PAGE_APP;
+			if(count($CON_HISTORY)>$page*self::$RESULTS_PER_PAGE_APP)
+				$this->nextPage='true';
+			else 
+				$this->nextPage='false';
+	
 			$CON_HISTORY = array_slice($CON_HISTORY, $offset,$limit);
 		}
 		else $this->nextPage="";
@@ -187,18 +192,6 @@ class CommunicationHistory
 	public function getResultSetApi($history,$myGender='',$otherGender='')
 	{
 
-
-		if($this->pageNo)
-		{
-			if(count($history)>self::$RESULTS_PER_PAGE_APP)
-			{
-			$this->nextPage='true';
-
-			$history=array_slice($history,0,self::$RESULTS_PER_PAGE_APP);
-
-			}
-			else $this->nextPage="false";
-		}
 		$count = 0;
 		if($otherGender)
 		{
