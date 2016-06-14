@@ -154,7 +154,7 @@ $css_arr[]=array("helpWidget_css"      => "5");
 $css_arr[]=array("jsms/search/savesearchcss"      => "5");
 $css_arr[]=array("iosprmo"  => "2");
 $css_arr[]=array("jspc/registration/registrationJspc_css"   => "1");
-$css_arr[]=array("jspc/common/commonJspc_css"      => "4");
+$css_arr[]=array("jspc/common/commonJspc_css"      => "5");
 $css_arr[]=array("jspc/myjs/myjs"         => "7");
 $css_arr[]=array("jspc/common/fontsJspc_css"   => "1");
 $css_arr[]=array("jspc/common/headerFooterJspc_css"       => "5");
