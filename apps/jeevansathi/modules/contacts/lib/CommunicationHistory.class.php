@@ -153,13 +153,14 @@ class CommunicationHistory
 			return false;
 		}
 		$CON_HISTORY = array_reverse($CON_HISTORY);
+		if($page)$memObject->set('commHistory_'.$this->otherProfile->getPROFILEID(),$CON_HISTORY);
 	}
 
 //// trimming result if page asked for API
 
 		if($page)
 		{
-		    $memObject->set('commHistory_'.$this->otherProfile->getPROFILEID(),$CON_HISTORY);
+		    
 			$this->pageNo=$page;
 			$offset=(intval($page)-1)*self::$RESULTS_PER_PAGE_APP;
 			$limit=self::$RESULTS_PER_PAGE_APP +1;
