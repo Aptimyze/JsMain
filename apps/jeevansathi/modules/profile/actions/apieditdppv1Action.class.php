@@ -17,6 +17,7 @@ class apieditdppv1Action extends sfAction
 	private $m_szQuery;
 	private $m_bEditSpouse = false;
 	private $m_bDppUpdate = false;
+	private $dppUpdateArray ;
 	public function execute($request)	
 	{
 		//Contains login credentials
@@ -135,9 +136,10 @@ class apieditdppv1Action extends sfAction
 				$arrDppUpdate[$key] = DPPConstants::FormatInputStr($key,$val);
 		}
 		$arrUpdateQuery = array();
-		
+	
 		foreach($arrDppUpdate as $key=>$val)
 		{
+			$this->dppUpdateArray[DPPConstants::getDppFieldMapping($key)] = $val;
 			$arrUpdateQuery[] = DPPConstants::BakeQuery($key,$val);
 		}
 		
@@ -149,6 +151,7 @@ class apieditdppv1Action extends sfAction
 	{
 		$this->UpdateQuery();
 		$arrEditDppFieldIDs = sfContext::getInstance()->getRequest()->getParameter("editFieldArr");
+		$fromBackend = sfContext::getInstance()->getRequest()->getParameter("fromBackend");
 		if(!($this->m_objLoginProfile))
 			return ;
 			
@@ -236,8 +239,11 @@ class apieditdppv1Action extends sfAction
 					$partner_gender='M';
 				$jpartnerObj->setGENDER($partner_gender);
 			}
-			
+		
 			$jpartnerObj->updatePartnerDetails($this->myDb, $this->mysqlObj, $scase);
+			$jpartnerEditLog = new JpartnerEditLog();
+			$param["fromBackend"] = $fromBackend;
+			$jpartnerEditLog->logDppEdit($jpartnerObj,$this->dppUpdateArray,$param);
 		}
 		
 		//If profile's Source is ofl_prof Then do following

@@ -370,7 +370,8 @@ function fillTextAreaValues(sectionId){
 
 //to save fields in a particular section with api call
 function saveSectionsFields(sectionId){
-  
+	alert("1121");
+ 
   var editFieldArr = {};
   $('.'+sectionId+" .prehide").each(function(){  
   });
@@ -381,13 +382,15 @@ function saveSectionsFields(sectionId){
     if(sectionId.indexOf("editedu") != -1){
      toggleIncomeRangeDol('incomeRangeDol_save');
     }
+    ifBackend = getSearchQureyParameter("fromBackend");
+    console.log(ifBackend);
     $.myObj.ajax({
             url: "/api/v1/profile/dppsubmit",
             type: 'POST',
             datatype: 'json',
             cache: true,
             async: true,
-            data: {editFieldArr : editFieldArr,getData : "dpp"},
+            data: {editFieldArr : editFieldArr,getData : "dpp",fromBackend:ifBackend},
             success: function(data) { 
               if(typeof data == "string")
                 data = JSON.parse(data);

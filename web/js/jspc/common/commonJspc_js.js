@@ -20,7 +20,7 @@ $(document).keydown(function(e) {
 $(document).ready(function(e) {
     top.document.title = document.title;
     $("#liveChatLinkFooter,#liveChatLinkHeader").click(function() {
-        $("#lc_chat_header").click();
+        $("#fc_chat_header").click();
     });
     $(".contentHeader").each(function() {
         $(this).mCustomScrollbar();
@@ -61,6 +61,16 @@ function closeOverlayOnClick() {
     $("#titleErr").html("Search by profile ID").removeClass("errcolr").addClass("grey5");
     $("#SearchProId").val("");
 }
+
+
+function getSearchQureyParameter(key){
+  var value = false;
+  if(location.search.indexOf(key)!=-1){
+    value = location.search.substr(location.search.indexOf(key)).split('&')[0].split('=')[1];
+  }
+  return value;
+}
+
 
 //function to make an ajax for search by profile id
 function callApiForProfile() {
@@ -463,7 +473,7 @@ function initializeTopNavBar(loggedIn, profileid, moduleName, actionName) {
             $("#topNavigationBar").parent().addClass("pt35");
         }
         if (profileid) {
-            if (moduleName != 'homepage' && moduleName != 'myjs' && moduleName != 'register' && moduleName != 'membership' && actionName != 'phoneVerificationPcDisplay' && actionName != 'logoutPage' && actionName != 'alertManager' && $("#viewBellCountHeader").length) {
+            if (moduleName != 'homepage' && moduleName != 'myjs' && moduleName != 'register' && moduleName != 'membership' && actionName != 'phoneVerificationPcDisplay' && actionName != 'logoutPage' && $("#viewBellCountHeader").length) {
                 getBellCountData(profileid, 1);
             }
         }
@@ -472,19 +482,19 @@ function initializeTopNavBar(loggedIn, profileid, moduleName, actionName) {
 
 function popupFreshDeskGlobal(username, email) {
     setTimeout(function() {
-        var len = $("#lc_chat_layout").length;
+        var len = $("#fc_chat_layout").length;
         if (len) {
-            $("#lc_chat_layout").click();
-            if ($("#lc_chat_layout input[id*='name']").length) {
-                $("#lc_chat_layout input[id*='name']").val(username);
+            $("#fc_chat_layout").click();
+            if ($("#fc_chat_layout input[id*='name']").length) {
+                $("#fc_chat_layout input[id*='name']").val(username);
             }
-            if ($("#lc_chat_layout input[id*='email']").length) {
-                $("#lc_chat_layout input[id*='email']").val(email);
+            if ($("#fc_chat_layout input[id*='email']").length) {
+                $("#fc_chat_layout input[id*='email']").val(email);
             }
-            $("#lc_chat_header").click();
-            // var buttonLen = $("#lc_chat_start").length;
-            // if(buttonLen && $("#lc_chat_start").is(":visible")){
-            //     $("#lc_chat_start").click();
+            $("#fc_chat_header").click();
+            // var buttonLen = $("#fc_chat_start").length;
+            // if(buttonLen && $("#fc_chat_start").is(":visible")){
+            //     $("#fc_chat_start").click();
             // }
         }
     }, 10000);
@@ -492,18 +502,18 @@ function popupFreshDeskGlobal(username, email) {
 
 function populateFreshDeskGlobal(username, email) {
     setInterval(function() {
-        var len = $("#lc_chat_layout").length;
+        var len = $("#fc_chat_layout").length;
         if (len) {
-            if ($("#lc_chat_layout input[id*='name']").length) {
-                $("#lc_chat_layout input[id*='name']").val(username);
+            if ($("#fc_chat_layout input[id*='name']").length) {
+                $("#fc_chat_layout input[id*='name']").val(username);
             }
-            if ($("#lc_chat_layout input[id*='email']").length) {
-                $("#lc_chat_layout input[id*='email']").val(email);
+            if ($("#fc_chat_layout input[id*='email']").length) {
+                $("#fc_chat_layout input[id*='email']").val(email);
             }
         }
-        // var buttonLen = $("#lc_chat_start").length;
-        // if(buttonLen && $("#lc_chat_start").is(":visible")){
-        //     $("#lc_chat_start").click();
+        // var buttonLen = $("#fc_chat_start").length;
+        // if(buttonLen && $("#fc_chat_start").is(":visible")){
+        //     $("#fc_chat_start").click();
         // }
     }, 500);
 }
