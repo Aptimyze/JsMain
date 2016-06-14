@@ -9,7 +9,7 @@ var catogaries = [],
 $(document).ready(function(e) {
     //fetching data from API
     getData();
-    setDropDownData();
+  
     
     //post query button click
     $("#postQuery").on("click", function() {
@@ -93,6 +93,7 @@ $.ajax({
     success: function(a) {
             jsonData = a.Response;
             catogaries = Object.keys(jsonData);
+            setDropDownData();
             //appending catogary on main page
             appendSectionList();
             //binding click on View All of each catogary
