@@ -53,10 +53,10 @@ EditApp = function(){
                               "LANDLINE_INVALID":"Invalid",
                               "MOBILE_INVALID":"Invalid",
                               "PINCODE_ERROR":"Invalid Pincode",
-                              "ADDR_PROOF_VAL":"Required",
+                              "ADDR_PROOF_VAL":"Please attach document",
                               "ID_PROOF_VAL":"Please attach document",
                               "ADDR_PROOF_TYPE":"Required",
-                              "ID_PROOF_TYPE":"Upload one document",
+                              "ID_PROOF_TYPE":"Required",
                                       
                             };
     //Section List
@@ -515,21 +515,7 @@ EditApp = function(){
         
         bindOpenTextCommonEvents(fieldObject);
       }
-      //Add FILE_TYPE Fields
-      if(fieldObject.type === FILE_TYPE ){
-        
-        var parentAttr = {class:"edpbrd3 fullwid edpbrad1 clearfix f15 edpp9 pos-rel",id:fieldObject.key.toLowerCase()+'Parent'};
-        var inputAttr     = {class:"f15 color11 inpset1 fontlig",type:"file",value:fieldObject.decValue,placeholder:fieldObject.label,id:fieldObject.key.toLowerCase(),autocomplete:"off"}
-        var errorLabelAttr = {class:"pos-abs js-errorLabel pt20 f13 colr5 errorRightPad disp-none right0",text:""}
-        
       
-        var parentDOM = $("<div />",parentAttr);
-        parentDOM.append($("<input />",inputAttr));
-        parentDOM.append($("<p />",errorLabelAttr))
-        fieldDOM.append(parentDOM);
-        
-        //bindOpenTextCommonEvents(fieldObject);
-      }
       
       //Chosen field without top padding and label
       if(fieldObject.type === SINGLE_SELECT_TYPE && rightAlignWithoutPadding.indexOf(fieldObject.key) !== -1){
@@ -666,7 +652,7 @@ EditApp = function(){
                 var labelDOM  = $("<label />",labelAttr);
                 parentDiv.append(labelDOM);
                 domElement.append(parentDiv);
-                /*if(sectionTopLabelRequired.indexOf(sectionId) !== -1){
+                if(sectionTopLabelRequired.indexOf(sectionId) !== -1){
                         var field = new fieldObject;
                         field.key             = 'uploadone';
                         field.label           = '';
@@ -678,7 +664,7 @@ EditApp = function(){
                         field.type            = NON_EDITABLE_TYPE;/*Single Select Type*/
                         
                         editAppObject[sectionId][field.key] = field;
-              }*/
+              }
         }
     }
     /*
@@ -1131,7 +1117,7 @@ EditApp = function(){
      */
     cookFileField = function(domElement,fieldObject,configObject){
       
-      var parentAttr    = {class:"clearfix fontlig",id:fieldObject.key.toLowerCase()+'Parent'};
+      var parentAttr    = {class:"clearfix fontlig pt10",id:fieldObject.key.toLowerCase()+'Parent'};
       var labelAttr     = {class:"f17 fontlig color12",text:fieldObject.label};
       var fieldDivAttr  = {class:"js-fileBox pos-rel"}
       var textAreaAttr     = {class:"color11 fontlig f15 fullwid brdr-0 hgt40 bgnone outline-none wh0",type:"file",text:fieldObject.value,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off",value:fieldObject.value}
@@ -1156,7 +1142,7 @@ EditApp = function(){
       var fieldDivDom = $("<div />",fieldDivAttr);
       
       var errorText   = errorMap.hasOwnProperty(fieldObject.key) ? errorMap[fieldObject.key] : "Please provide valid value for " + fieldObject.label;
-      fieldDivDom.append($("<p />",{class:"pos-abs js-errorLabel f13 colr5 disp-none right0",text:errorText}));
+      fieldDivDom.append($("<p />",{class:"pos-abs js-errorLabel f13 colr5 disp-none",text:errorText}));
       
       fieldDivDom.append($("<div />",btnAttr));
       fieldDivDom.append($("<div />",labelAttr2));
@@ -4685,7 +4671,9 @@ EditApp = function(){
         //For File Field
         if(fieldObject.type === FILE_TYPE){
           //cannot set file type value
-          
+                $(fieldParentId).find('.js-errorLabel').addClass(dispNone); 
+                var errorText   = errorMap.hasOwnProperty(fieldObject.key) ? errorMap[fieldObject.key] : "Please provide valid value for " + fieldObject.label;
+                $(fieldParentId).find('.js-errorLabel').html(errorText); 
         }
         
         //For Box Type Field

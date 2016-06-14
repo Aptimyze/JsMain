@@ -110,17 +110,6 @@ class ValidatorsFactory{
 				return new jsValidatorNativePlace(array('required'=>false,'FieldMapLabel'=>@$szMapLabel,'Value'=>@$InputValues,'FieldName'=>@$szName));
 				break;
 			}
-		case 'proof_type':
-			{
-				$szName = $field->getName();
-				$szMapLabel = ObjectiveFieldMap::getFieldMapKey($szName);
-				if($form_values)
-				{
-					$InputValues = $form_values[strtolower($field->getName())];
-				}
-				return new jsValidatorNativePlace(array('required'=>false,'FieldMapLabel'=>@$szMapLabel,'Value'=>@$InputValues,'FieldName'=>@$szName));
-				break;
-			}
 		}
 	}
 	

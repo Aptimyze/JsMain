@@ -7,7 +7,6 @@
 class ApiProfileSectionsApp extends ApiProfileSections {
 	protected $profile;
 	protected $Hobbies;
-	protected $Docs;
 	protected $isEdit;
 	public $underScreening;
 	public $screeningFieldArr;

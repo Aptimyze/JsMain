@@ -1053,11 +1053,13 @@ class desktopView extends DetailedViewApi
     if($objProfile->getID_PROOF_TYP() && $objProfile->getID_PROOF_TYP()!=ApiViewConstants::getNullValueMarker() && $objProfile->getID_PROOF_NO() && $objProfile->getID_PROOF_NO()!=ApiViewConstants::getNullValueMarker()){
       $this->m_arrOut['my_verification_id'] = $objProfile->getDecoratedID_PROOF_TYP() .' - ' . $objProfile->getID_PROOF_NO();
     }
-    $verifyDocsObj = new ProfileDocumentVerificationByUserService();
-    $this->Docs = $verifyDocsObj->getDocumentsList($objProfile->getPROFILEID()); 
-    if($this->Docs){
-        $this->m_arrOut['addr_proof_type'] = $verifyDocsObj->getDecoratedProof('addr_proof_type', $this->Docs['ADDR']['PROOF_TYPE']);
-        $this->m_arrOut['id_proof_type'] = $verifyDocsObj->getDecoratedProof('id_proof_type', $this->Docs['ID']['PROOF_TYPE']);
+    if($this->bResponseForEditView){
+        $verifyDocsObj = new ProfileDocumentVerificationByUserService();
+        $this->Docs = $verifyDocsObj->getDocumentsList($objProfile->getPROFILEID()); 
+        if($this->Docs){
+            $this->m_arrOut['addr_proof_type'] = $verifyDocsObj->getDecoratedProof('addr_proof_type', $this->Docs['ADDR']['PROOF_TYPE']);
+            $this->m_arrOut['id_proof_type'] = $verifyDocsObj->getDecoratedProof('id_proof_type', $this->Docs['ID']['PROOF_TYPE']);
+        }
     }
   }
   

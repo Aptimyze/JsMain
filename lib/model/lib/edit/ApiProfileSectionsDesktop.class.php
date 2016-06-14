@@ -11,7 +11,7 @@
 
 
 class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
-  
+	protected $Docs;
   /*
    * Declaring and Defining Member Function
    */
