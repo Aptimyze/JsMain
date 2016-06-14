@@ -221,7 +221,6 @@
                     <li><a href="/search/topSearchBand?isMobile=Y" bind-slide=1 class="white">Search</a></li>
                     <li><a href="/search/searchByProfileId" bind-slide=1 class="white">Search by Profile ID</a></li>
                      <li><a href="/browse-matrimony-profiles-by-community-jeevansathi" bind-slide=1 class="white">Browse by Community</a></li>
-                    <li><a href="/help/index" bind-slide=1 class="white">Help</a></li> 
                     <li><a href="/contactus/index" bind-slide=1 class="white">Contact Us</a></li>
                     <li><a href="/static/settings" bind-slide=1 class="white">Settings</a></li>
                   </ul>
