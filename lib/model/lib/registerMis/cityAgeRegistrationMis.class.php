@@ -81,7 +81,7 @@ class cityAgeRegistrationMis
 				if($value[$report_type]!= " " || $value[$report_type]!="-1")
 				{
 					if($range_format == "M" || $range_format == "D")
-					{echo("!!");
+					{
 						$alteredArr[$value[$keyType]][$value[$report_type]] = $value['COUNT'];
 					}
 					else
