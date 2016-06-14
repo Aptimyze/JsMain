@@ -225,7 +225,8 @@ if(isset($data))
                                 $preActivated =$row_act['PREACTIVATED'];
 
                         $jprofileObj    =JProfileUpdateLib::getInstance();
-                        $updateStr      ="PREACTIVATED='$preActivated', ACTIVATED='D', ACTIVATE_ON=now(),activatedKey=0";
+			$dateNew        =date("Y-m-d");
+                        $updateStr      ="PREACTIVATED='$preActivated', ACTIVATED='D', ACTIVATE_ON='$dateNew',activatedKey=0";
                         $paramArr       =$jprofileObj->convertUpdateStrToArray($updateStr);
                         $jprofileObj->editJPROFILE($paramArr,$profileid,'PROFILEID');
 			

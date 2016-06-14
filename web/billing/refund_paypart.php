@@ -208,7 +208,7 @@ if(authenticated($cid))
 			$membership_details["source"] = $from_source;
 			$membership_details["transaction_number"] = $transaction_number;
 			$jprofileObj =JProfileUpdateLib::getInstance();
-
+			$dateNew =date("Y-m-d");
 			if($val=="paypart")
 			{
 				//new receipt for part payment
@@ -235,7 +235,7 @@ if(authenticated($cid))
 		                        else
 		                                $preActivated =$row['PREACTIVATED'];
 
-                                        $paramArr =array('PREACTIVATED'=>$preActivated,'SUBSCRIPTION'=>$servefor,'ACTIVATE_ON'=>'now()','activatedKey'=>1);
+                                        $paramArr =array('PREACTIVATED'=>$preActivated,'SUBSCRIPTION'=>$servefor,'ACTIVATE_ON'=>$dateNew,'activatedKey'=>1);
                                         $jprofileObj->editJPROFILE($paramArr,$profileid,'PROFILEID');
 
 					
@@ -286,7 +286,7 @@ if(authenticated($cid))
                 		        else
                 		                $preActivated =$row_act['PREACTIVATED'];
 
-                                        $updateStr ="PREACTIVATED='$preActivated', ACTIVATED='D',SUBSCRIPTION='', ACTIVATE_ON=now(),activatedKey=0";
+                                        $updateStr ="PREACTIVATED='$preActivated', ACTIVATED='D',SUBSCRIPTION='', ACTIVATE_ON='$dateNew',activatedKey=0";
                                         $paramArr =$jprofileObj->convertUpdateStrToArray($updateStr);
                                         $jprofileObj->editJPROFILE($paramArr,$profileid,'PROFILEID');
 				}
