@@ -1156,6 +1156,30 @@ case 'ID_PROOF_NO':
 					$field->setConstraintClass("string");
 					$field->setTableName("JPROFILE:ID_PROOF_NO");
 				break;
+case 'ID_PROOF_TYPE':
+                    $field=new Field('','ID_PROOF_TYPE');
+					$field->setFieldType("dropdown");
+					$field->setConstraintClass("proof_type");
+					$field->setTableName("VERIFICATION_DOCUMENT:PROOF_TYPE");
+				break;
+case 'ID_PROOF_VAL':
+                    $field=new Field('','ID_PROOF_VAL');
+					$field->setFieldType("text");
+					$field->setConstraintClass("proof_val");
+					$field->setTableName("VERIFICATION_DOCUMENT:PROOF_VAL");
+				break;
+case 'ADDR_PROOF_TYPE':
+                    $field=new Field('','ADDR_PROOF_TYPE');
+					$field->setFieldType("dropdown");
+					$field->setConstraintClass("proof_type");
+					$field->setTableName("VERIFICATION_DOCUMENT:PROOF_TYPE");
+				break;
+case 'ADDR_PROOF_VAL':
+                    $field=new Field('','ADDR_PROOF_VAL');
+					$field->setFieldType("text");
+					$field->setConstraintClass("proof_val");
+					$field->setTableName("VERIFICATION_DOCUMENT:PROOF_VAL");
+				break;
                 
 }
 

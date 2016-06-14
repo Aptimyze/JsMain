@@ -110,6 +110,17 @@ class ValidatorsFactory{
 				return new jsValidatorNativePlace(array('required'=>false,'FieldMapLabel'=>@$szMapLabel,'Value'=>@$InputValues,'FieldName'=>@$szName));
 				break;
 			}
+		case 'proof_type':
+			{
+				$szName = $field->getName();
+				$szMapLabel = ObjectiveFieldMap::getFieldMapKey($szName);
+				if($form_values)
+				{
+					$InputValues = $form_values[strtolower($field->getName())];
+				}
+				return new jsValidatorNativePlace(array('required'=>false,'FieldMapLabel'=>@$szMapLabel,'Value'=>@$InputValues,'FieldName'=>@$szName));
+				break;
+			}
 		}
 	}
 	
@@ -296,6 +307,23 @@ class ValidatorsFactory{
 					$InputValues = $form_values[$field->getName()];
 				}
 				return new jsValidatorNativePlace(array('required'=>false,'FieldMapLabel'=>@$szMapLabel,'Value'=>@$InputValues,'FieldName'=>@$szName));
+				break;
+			}
+    case 'proof_type':
+			{
+				$szName = $field->getName();
+				$szMapLabel = ObjectiveEditFieldMap::getFieldMapKey($szName);
+				if($form_values)
+				{
+					$InputValues = $form_values[$field->getName()];
+				}
+				return new jsValidatorProofVal(array('required'=>false,'FieldMapLabel'=>@$szMapLabel,'Value'=>@$InputValues,'FieldName'=>@$szName));
+				break;
+			}
+    case 'proof_val':
+			{
+                $szName = $field->getName();
+				return new jsValidatorProof(array('required'=>false,'file'=>@$form_values[$szName],'type'=>@$form_values[$szName]['type'],'size'=>@$form_values[$szName]['size']));
 				break;
 			}
 		}
