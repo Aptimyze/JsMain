@@ -1,5 +1,11 @@
-<body class="bg4">
-    <div id="mainContent">
+<div class="bg4">
+    <div class="perspective" id="perspective">
+        <div class="" id="pcontainer">
+        </div>
+        <div id="hamburger" class="hamburgerCommon dn fullwid">	
+            ~include_component('static', 'newMobileSiteHamburger')`	
+        </div>
+    </div>
         <!--heading:start-->
         <div id="overlayHead" class="bg1">
             <div class="txtc pad15">
@@ -65,5 +71,4 @@
             </div>
         </div>
         <!--question answer div:start-->
-   </div>
-</body>
+</div>
