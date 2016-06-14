@@ -29687,7 +29687,7 @@ return Backbone.BrowserStorage;
                     var $el = $('#conversejs');
                     if (!$el.length) {
                         $el = $('<div id="conversejs">');
-                        $('body').append($el);
+                        //$('body').append($el);
                     }
                     $el.html(converse.templates.chats_panel());
                     this.setElement($el, false);

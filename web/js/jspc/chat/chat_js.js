@@ -565,6 +565,7 @@ $(function(){
 	
 	//on clicking login to chat
 	$('#js-chatLogin').click(function(){
+		//use converse client to connect to openfire to create chat session
 		require(['converse'], function (converse) {	
 			initiateChat();	
 		});
