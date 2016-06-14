@@ -1,4 +1,4 @@
-var hideDays = 7,deleteReasonSelected=0, offerConsent=1;
+var hideDays = 7,deleteReasonSelected=0, offerConsent=0;
 $(document).ready(function() {
 bindOfferConsentBox();
 
@@ -45,7 +45,8 @@ $(".sltOption").bind('click', function()
   $('#delOptionSetID').html(optionVal);
   if($(this).hasClass('sltOption2') )
   {
-    
+    offerConsent=1;
+    $('input[name="js-offerConsentCheckBox"]').closest('li').addClass("selected");
     $("#offerCheckBox").show();
     $("#DeleteTextID").html("Delete my Profile");
     $("#offerSpacer").hide();
@@ -55,7 +56,8 @@ $(".sltOption").bind('click', function()
     $("#specifyLinkID").show();
   }
   else if ($(this).hasClass('sltOption3')){
-
+    $('input[name="js-offerConsentCheckBox"]').closest('li').addClass("selected");
+    offerConsent=1;
     $("#DeleteTextID").html("Delete my Profile");
     $("#offerSpacer").hide();
     $("#deleteReasonPrompt").hide();
@@ -68,7 +70,7 @@ $(".sltOption").bind('click', function()
   }
 
   else if ($(this).hasClass('sltOption4')){
-
+    offerConsent=0;
     $("#DeleteTextID").html("Delete my Profile");
     $("#offerCheckBox").hide();
     $("#deleteReasonPrompt").hide();
@@ -81,6 +83,7 @@ $(".sltOption").bind('click', function()
 
   else if ($(this).hasClass('sltOption5'))
   {
+    offerConsent=0;
     $("#DeleteTextID").html("Delete my Profile");
     $("#offerCheckBox").hide();
     $("#offerSpacer").hide();
@@ -92,6 +95,8 @@ $(".sltOption").bind('click', function()
   }
   else if($(this).hasClass('sltOption1'))
   {
+    $('input[name="js-offerConsentCheckBox"]').closest('li').addClass("selected");
+    offerConsent=1;
     $("#offerCheckBox").show();
     $("#DeleteTextID").html("Submit");
     $("#deleteReasonPrompt").hide();
@@ -277,7 +282,7 @@ function ajaxDelete(optionVal,specifyReason)
                       $("#deletePartID").addClass("settings-blur");
                        },              
                         url: '/settings/jspcSettings?hideDelete=1',
-                        data: "deleteReason="+optionVal+"&specifyReason="+specifyReason+"&option=Delete&offerConsent="+offerConsent,
+                        data: "deleteReason="+optionVal+"&specifyReason="+specifyReason+"&option=Delete&offerConsent="+(offerConsent?'Y':'N'),
                         //timeout: 5000,
                         success: function(response) 
                         {
