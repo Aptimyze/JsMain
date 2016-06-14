@@ -25913,9 +25913,13 @@ define("converse-templates", [
              */
             if ($.browser.webkit) {
                 var conversejs = document.getElementById('conversejs');
-                conversejs.style.display = 'none';
-                var tmp = conversejs.offsetHeight; // jshint ignore:line
-                conversejs.style.display = 'block';
+               
+                if(typeof conversejs=="undefined")
+                {
+                    conversejs.style.display = 'none';
+                    var tmp = conversejs.offsetHeight; // jshint ignore:line
+                    conversejs.style.display = 'block';
+                }
             }
         },
 
