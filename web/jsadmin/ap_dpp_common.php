@@ -634,12 +634,13 @@ function makeDPPLive($profileid,$dppID,$madeLiveBy,$dppCreatedBy,$online,$presen
 	$sql="SELECT * FROM Assisted_Product.AP_DPP_FILTER_ARCHIVE WHERE PROFILEID='$profileid' AND CREATED_BY='$dppCreatedBy' AND DPP_ID='$dppID'";
 	$res=mysql_query_decide($sql) or die("Error while making dpp live   ".mysql_error_js());
 	$row=mysql_fetch_assoc($res);
-	echo "m in"; die;
+	
 	$mysqlObj=new Mysql;
 	$jpartnerObj=new Jpartner;
 	
 	$dbName=getProfileDatabaseConnectionName($profileid,'',$mysqlObj);
 	$myDb=$mysqlObj->connect("$dbName");
+	$jpartnerObj->setPartnerDetails($profileid,$myDb,$mysqlObj);
 	$sql="UPDATE newjs.JPARTNER SET CHILDREN=\"$row[CHILDREN]\",LAGE=\"$row[LAGE]\",HAGE=\"$row[HAGE]\",LHEIGHT=\"$row[LHEIGHT]\",HHEIGHT=\"$row[HHEIGHT]\",HANDICAPPED=\"$row[HANDICAPPED]\",PARTNER_BTYPE=\"$row[PARTNER_BTYPE]\",PARTNER_CASTE=\"$row[PARTNER_CASTE]\",PARTNER_CITYRES=\"$row[PARTNER_CITYRES]\",PARTNER_COUNTRYRES=\"$row[PARTNER_COUNTRYRES]\",PARTNER_DIET=\"$row[PARTNER_DIET]\",PARTNER_DRINK=\"$row[PARTNER_DRINK]\",PARTNER_ELEVEL_NEW=\"$row[PARTNER_ELEVEL_NEW]\",PARTNER_INCOME=\"$row[PARTNER_INCOME]\",PARTNER_MANGLIK=\"$row[PARTNER_MANGLIK]\",PARTNER_MSTATUS=\"$row[PARTNER_MSTATUS]\",PARTNER_MTONGUE=\"$row[PARTNER_MTONGUE]\",PARTNER_NRI_COSMO=\"$row[PARTNER_NRI_COSMO]\",PARTNER_OCC=\"$row[PARTNER_OCC]\",PARTNER_RELATION=\"$row[PARTNER_RELATION]\",PARTNER_RES_STATUS=\"$row[PARTNER_RES_STATUS]\",PARTNER_SMOKE=\"$row[PARTNER_SMOKE]\",PARTNER_COMP=\"$row[PARTNER_COMP]\",PARTNER_RELIGION=\"$row[PARTNER_RELIGION]\",PARTNER_NAKSHATRA=\"$row[PARTNER_NAKSHATRA]\",NHANDICAPPED=\"$row[NHANDICAPPED]\",DATE=NOW(),DPP='E',LINCOME=\"$row[LINCOME]\",HINCOME=\"$row[HINCOME]\",LINCOME_DOL=\"$row[LINCOME_DOL]\",HINCOME_DOL=\"$row[HINCOME_DOL]\" WHERE PROFILEID='$profileid'";
 	$res=$mysqlObj->executeQuery($sql,$myDb);
 	if($mysqlObj->affectedRows()==0)
