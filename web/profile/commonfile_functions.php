@@ -598,6 +598,7 @@ $js_arr[]=array("jsms/profile/horoscope/horoscope_js"  => "1");
 $js_arr[]=array("common_comscore_js"   => "2");
 $js_arr[]=array("jspc/help/JSPCHelp_js"   => "1");
 $js_arr[]=array("jsms/help/JSMSHelp_js"   => "1");
+$js_arr[]=array("jsms/help/jsmsPostQuery_js"   => "1");
 return $js_arr;
 }
 function getJavascript(){

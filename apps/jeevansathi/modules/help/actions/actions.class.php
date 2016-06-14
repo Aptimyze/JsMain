@@ -78,4 +78,10 @@ class helpActions extends sfActions
       $apiObj->generateResponse();
       die;
   }
+  
+  public function executeJSMSPostQuery(sfWebRequest $request){
+      $loginData=$request->getAttribute("loginData");
+      $this->username = $loginData["USERNAME"];
+      $this->email = $loginData["EMAIL"];
+  }
 }

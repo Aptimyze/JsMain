@@ -9,8 +9,10 @@ var catogaries = [],
 $(document).ready(function(e) {
     //fetching data from API
     getData();
-  
-    
+    var validInfo = true;
+    $("#phoneInp, #quesInp").find("input").keydown(function(e) {
+        $(this).parent().removeClass("errorDiv");
+    });
     //post query button click
     $("#postQuery").on("click", function() {
         $(this).removeClass("color5 cursp"), $(".formTable").show();

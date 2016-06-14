@@ -15,4 +15,7 @@ all:
     enable_login:  off 
 
   GetPublicQuestionsV1:
-    enable_login:  off 
+    enable_login:  off
+    
+  JSMSPostQuery:
+    enable_login:  off

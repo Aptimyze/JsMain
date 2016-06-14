@@ -26,7 +26,7 @@
                 <div id="noResultDiv" class="dispnone">
                     <div class="posrel pad16 wid70p txtc">
                         <div class="fontlig mt30 f16">No Result Found</div>
-                        <div class="color2 mt60 f16">Post Your Query</div>
+                        <div class="color2 mt60 f16"><a class="color2" href="/help/JSMSPostQuery">Post Your Query</a></div>
                     </div>
                 </div>
 				<!--no result found :end-->
@@ -47,7 +47,7 @@
                         <div class="txtc pad24 f21 color2">1-800-419-6299</div>
                         <div class="txtc pad24 greyColor f13">Daily in between 7AM - 11PM</div>
                     </div>
-                    <div class="posfix btmo dispib bg7 white f18 fontthin txtc pad1510 mt15 fullwid" id="postQueryBtn">Post Your Query</div>
+                    <div class="posfix btmo dispib bg7 white f18 fontthin txtc pad1510 mt15 fullwid" id="postQueryBtn"><a class="white" href="/help/JSMSPostQuery">Post Your Query</a></div>
                 </div>
                 <!--section listing:end-->
             </div>
