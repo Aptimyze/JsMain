@@ -62,6 +62,7 @@ class AppNotificationScheduler extends NotificationScheduler
 			  $insertData[$k]['COUNT']=$v['COUNT'];
 			  $insertData[$k]['MSG_ID']=$v['MSG_ID'];
 			  $insertData[$k]['SENT']='N';	
+              $insertData[$k]['PHOTO_URL']=$v['PHOTO_URL'];
 			  if($v['NOTIFICATION_KEY']=='VD')
 				  $insertData[$k]['TITLE']=$v['NOTIFICATION_MESSAGE_TITLE'];		
 			  else

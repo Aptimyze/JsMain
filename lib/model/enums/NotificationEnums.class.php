@@ -54,4 +54,6 @@ class NotificationEnums
 
       //profile registration offset for notification schedule
       public static $registrationOffsetForNotification = array("CONTACT_VIEWS"=>35);
+
+      public static $digestNotificationKeys = array("EOI"=>"EOI_DIGEST");
 }
