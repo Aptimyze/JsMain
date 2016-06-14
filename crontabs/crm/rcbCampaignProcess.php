@@ -24,8 +24,8 @@ foreach($campaignArr as $key=>$campaignName)
 {
 		$processId	=$campaignIdArr[$campaignName];
 		$startDate 	=$dialerHandlerObj->getLastHandledDate($processId);
-		if($startDate=='0000-00-00 00:00:00')
-			break;
+                if($startDate=='0000-00-00 00:00:00')
+                        break;
 
 		$tableArr	=$campaignTableArr[$campaignName];
 		foreach($tableArr as $key=>$tableName){
@@ -47,7 +47,9 @@ foreach($campaignArr as $key=>$campaignName)
 			$msg	="Campaign Records:".$totalRecord."# Dialer Records Inserted:".$dialerCampaignReords;	
 			mail($to,$sub,$msg,$from);
 		}
-		$dialerHandlerObj->updateLastHandledDate($processId,$endDate);
+		if($endDate=='0000-00-00 00:00:00' || !$endDate){}
+		else	
+			$dialerHandlerObj->updateLastHandledDate($processId,$endDate);
 
 		unset($campaignRecord);
 		unset($dialerCampaignReords);
