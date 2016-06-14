@@ -14,7 +14,7 @@ $campaignName	='OB_JS_RCB';
 $action		='OB_JS_RCB';
 $date2DayBefore =date("Y-m-d",time()-58*60*60);
 
-$profilesArr    =fetchProfiles($db_master);
+$profilesArr    =fetchProfiles($db_js);
 $profileStr     =implode(",",$profilesArr);
 
 if($profileStr!=''){
