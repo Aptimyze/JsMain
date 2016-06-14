@@ -24,14 +24,14 @@ class CommunicationHistory
 
 		if($page)
 		{
-			$this->pageNo=$page;
-			$offset=(intval($page)-1)*self::$RESULTS_PER_PAGE_APP;
-			$limit=self::$RESULTS_PER_PAGE_APP +1;
-			$limitArray=array('limit'=>$limit,'offset'=>$offset);
+			$memObject=JsMemcache::getInstance();
+			$CON_HISTORY=$memObject->get('commHistory_'.$this->otherProfile->getPROFILEID());
 		}
-		else $this->nextPage="";
+
+	if(!$CON_HISTORY || !$page)
+	{
 		$messagelogObj = new MessageLog();
-		$messagelog    = $messagelogObj->getCommunicationHistory($this->loginProfile->getPROFILEID(), $this->otherProfile->getPROFILEID(),$limitArray);
+		$messagelog    = $messagelogObj->getCommunicationHistory($this->loginProfile->getPROFILEID(), $this->otherProfile->getPROFILEID());
 		if (!empty($messagelog))
 			foreach ($messagelog as $key => $value) {
 				$ids = $value["ID"];
@@ -153,6 +153,23 @@ class CommunicationHistory
 			return false;
 		}
 		$CON_HISTORY = array_reverse($CON_HISTORY);
+	}
+
+//// trimming result if page asked for API
+
+		if($page)
+		{
+		    $memObject->set('commHistory_'.$this->otherProfile->getPROFILEID(),$CON_HISTORY);
+			$this->pageNo=$page;
+			$offset=(intval($page)-1)*self::$RESULTS_PER_PAGE_APP;
+			$limit=self::$RESULTS_PER_PAGE_APP;
+			$CON_HISTORY = array_slice($CON_HISTORY, $offset,$limit);
+		}
+		else $this->nextPage="";
+
+/////////////////////////////////////
+
+
 		return $CON_HISTORY;
 	}
 	public function temporaryInterestSuccess($incomplete, $activated)

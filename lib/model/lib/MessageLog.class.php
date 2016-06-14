@@ -126,12 +126,12 @@ class MessageLog
 		return $array;
 	}
 	
-	public function getCommunicationHistory($viewer,$viewed,$limitArray)
+	public function getCommunicationHistory($viewer,$viewed)
 	{
 		
 		$dbName = JsDbSharding::getShardNo($viewer);
 		$messageLogObj = new NEWJS_MESSAGE_LOG($dbName);
-		$messageArray = $messageLogObj->getCommunicationHistory($viewer,$viewed,$limitArray);
+		$messageArray = $messageLogObj->getCommunicationHistory($viewer,$viewed);
 		return $messageArray;
 	}
 
