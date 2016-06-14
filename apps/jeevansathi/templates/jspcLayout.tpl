@@ -11,7 +11,9 @@
     <link rel="shortcut icon" href="/favicon1.ico" />
     <link rel="stylesheet" async=true type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700">
     ~if $showChat eq 1`
+  
         <link rel="stylesheet" type="text/css" href="~JsConstants::$siteUrl`/css/jspc/chat/chat_css.css">
+        <link rel="stylesheet" type="text/css" href="~JsConstants::$siteUrl`/css/jspc/chat/converse_css.css">
     ~/if`
     ~include_http_metas`
     ~include_canurl`
@@ -125,5 +127,8 @@ window._fbq.push(['track', 'PixelInitialized', {}]);
 <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=569447716516417&amp;ev=PixelInitialized" /></noscript>
 ~if $showChat eq 1`
     <script type="text/javascript" language="javascript" src="~JsConstants::$siteUrl`/js/jspc/chat/chat_js.js"></script>
+    <script type="text/javascript" language="javascript" src="~JsConstants::$siteUrl`/js/jspc/chat/chatHelper_js.js"></script>
+    <script type="text/javascript" language="javascript" src="~JsConstants::$siteUrl`/converse.js-1.0.2/dist/converse.js"></script>
+  <script>jQuery.noConflict();</script>
 ~/if`
 ~/if`

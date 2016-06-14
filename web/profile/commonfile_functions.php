@@ -206,6 +206,7 @@ $css_arr[]=array("jsms/profile/horoscope/horoscope_css"  => "1");
 $css_arr[]=array("operations/showStatViewProfile_css"  => "1");
 $css_arr[]=array("operations/help_module"   => "1");
 $css_arr[]=array("jspc/chat/chat_css"   => "1");
+$css_arr[]=array("jspc/chat/converse_css"   => "1");
 return $css_arr;
 }
 /* JavaScript File */
@@ -596,6 +597,8 @@ $js_arr[]=array("jsms/common/disableRightClick_js"    => "2");
 $js_arr[]=array("jsms/profile/horoscope/horoscope_js"  => "1");
 $js_arr[]=array("common_comscore_js"   => "2");
 $js_arr[]=array("jspc/chat/chat_js"   => "1");
+$js_arr[]=array("jspc/chat/converse_js"   => "1");
+$js_arr[]=array("jspc/chat/chatHelper_js"   => "1");
 return $js_arr;
 }
 function getJavascript(){

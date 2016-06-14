@@ -564,7 +564,10 @@ $(function(){
 	$('.js-ncdwn1').click(function(){chatAppPc.cmfunc.closeDrop();});
 	
 	//on clicking login to chat
-	$('#js-chatLogin').click(function(){		
+	$('#js-chatLogin').click(function(){
+		require(['converse'], function (converse) {	
+			initiateChat();	
+		});
 		$('#js-loginPanel').fadeOut('fast',function(){ $('#js-lsitingPanel').css('display','block'); chatAppPc.cmfunc.afterLoginPanel();   });		
 	});
 	
