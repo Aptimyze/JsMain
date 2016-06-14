@@ -41,6 +41,9 @@ $(document).ready(function(e) {
         $(this).find("i").toggleClass("chosen-container-active");
         $(".dropOption").toggleClass("disp-none");
     });
+    $("#goBack").on("click", function() {
+        location.reload();
+    });
     //posting form
     $("#postBtn").on("click", function() {
         //check for email and question
@@ -55,6 +58,7 @@ $(document).ready(function(e) {
         }
         if (validData == true) {
             console.log("Fire Query");
+            $("#postSubmitDiv").removeClass("disp-none"),$("#formDiv").hide();
             var username = $("#username").val(),
                 query = $(".question").val(),
                 category = $(".selectedDrop").text();

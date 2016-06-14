@@ -9,7 +9,7 @@
 <!--end:header-->
 
 
-<div class="bg-4 padalln pos-rel minhgt470">
+<div class="bg-4 padalln pos-rel minhgt360">
     <div class="bg-white scrollhid mainwid pos-abs leftCenter pos-rel">
         <div class="fullhgt wid65p disp_ib rgtGreyBrd minhgt394">
             <!--first page:start-->
@@ -43,7 +43,18 @@
                         <div class=" f20 disp_ib alignDiv fontreg colr2">No Result Found</div>
                     </div>
                     <div class="mt56"></div>
-                    <div class="fullwid txtc f20 colr2">
+
+                        <div class="mt100 mb30 disp-none" id="postSubmitDiv">
+
+                             <div class="fontreg f20 colr_grey_new txtc">We have taken your request, we will get back to you soon</div>        
+
+                            <div id="goBack" class="fontlig f20 color5 cursp pt10 txtc">Go Back Home</div>
+
+                        </div>
+
+                        <div id="formDiv">
+
+                        <div class="fullwid txtc f20 colr2">
                         <div id="postQuery" class="disp_ib cursp fontreg color5">Post your query</div>
                         <div class="disp_ib fontreg">and we will get back to you</div>
                     </div>
@@ -82,6 +93,7 @@
                             </td>
                         </tr>
                     </table>
+                    </div>
                 </div>
                 <!--no result found div:end-->
             </div>

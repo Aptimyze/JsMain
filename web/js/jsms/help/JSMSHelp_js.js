@@ -13,7 +13,7 @@ function getData() {
         type: "GET",
         url: "/api/v1/help/questions",
         success: function(a) {
-            jsonData = a.Response;*/
+            jsonData = a.Response;
             catogaries = Object.keys(jsonData);
             //append list of sections
             appendSectionList();
