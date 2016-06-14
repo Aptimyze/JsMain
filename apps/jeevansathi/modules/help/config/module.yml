@@ -13,3 +13,6 @@ all:
     
   SubmitQueryV1:
     enable_login:  off 
+
+  GetPublicQuestionsV1:
+    enable_login:  off 

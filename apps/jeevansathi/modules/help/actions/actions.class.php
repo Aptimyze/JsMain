@@ -66,4 +66,16 @@ class helpActions extends sfActions
       $apiObj->generateResponse();
       die;
   }
+  
+  public function executeGetPublicQuestionsV1(sfWebRequest $request){
+      $apiObj = ApiResponseHandler::getInstance();
+      $apiObj->setAuthChecksum($request->getAttribute("AUTHCHECKSUM"));
+      $helpQuestionSlaveObj = new jsadmin_HELP_QUESTIONS("newjs_slave");
+      list($allQuestions) = $helpQuestionSlaveObj->getAll("","1");
+      $result =array("Response"=>$allQuestions);      
+      $apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+      $apiObj->setResponseBody($result);
+      $apiObj->generateResponse();
+      die;
+  }
 }
