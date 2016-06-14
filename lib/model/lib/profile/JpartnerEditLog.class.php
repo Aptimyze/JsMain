@@ -44,6 +44,20 @@ class JpartnerEditLog
 			$PROFILE_JPARTNER_EDIT_LOG = new PROFILE_JPARTNER_EDIT_LOG();
 			$PROFILE_JPARTNER_EDIT_LOG->addRecords($updateLog);
   }
+  
+  
+  /* Function to log for normal profiles from save search as dpp*/
+  public function logDppEditFromSave($oldDpp,$updatedArr,$params=''){
+		$updateLog["PROFILEID"] = $oldDpp["PROFILEID"];
+		$updateLog["CHANNEL"]= MobileCommon::getChannel();
+		foreach ($oldDpp as $k=>$v)
+		{
+				$updateLog[$k]=$v;
+		}
+			$PROFILE_JPARTNER_EDIT_LOG = new PROFILE_JPARTNER_EDIT_LOG();
+			
+			$PROFILE_JPARTNER_EDIT_LOG->addRecords($updateLog);
+  }
 	        
 }
 ?>

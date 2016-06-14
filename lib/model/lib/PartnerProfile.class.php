@@ -306,6 +306,12 @@ class PartnerProfile extends SearchParamters
 			$key="MAPPED_TO_DPP";
 			$updateArr[$key] = "'".implode(",",$mappedArr)."'";
 		}
+								$oldDpp = $JPARTNERobj->get(array("PROFILEID"=>$this->pid));
+								if(is_array($oldDpp))
+								{
+									$jpartnerEditLog = new JpartnerEditLog();
+									$jpartnerEditLog->logDppEditFromSave($oldDpp[0],$updateArr,$param);
+								}
                 $JPARTNERobj->addRecords($updateArr);
                 return true;
         }
