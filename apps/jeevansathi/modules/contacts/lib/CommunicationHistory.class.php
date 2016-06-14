@@ -162,7 +162,7 @@ class CommunicationHistory
 		    $memObject->set('commHistory_'.$this->otherProfile->getPROFILEID(),$CON_HISTORY);
 			$this->pageNo=$page;
 			$offset=(intval($page)-1)*self::$RESULTS_PER_PAGE_APP;
-			$limit=self::$RESULTS_PER_PAGE_APP;
+			$limit=self::$RESULTS_PER_PAGE_APP +1;
 			$CON_HISTORY = array_slice($CON_HISTORY, $offset,$limit);
 		}
 		else $this->nextPage="";
