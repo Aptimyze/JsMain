@@ -373,6 +373,8 @@ class registerMisActions extends sfActions {
     {
       $this->mmarr = GetDateArrays::getMonthArray();
       $this->yyarr = array();
+      $this->currentYear = date("Y");
+      $this->currentMonth = date("m");
       for ($i = 2014; $i <= date("Y"); $i++) 
       {
         $this->yyarr[$i - 2014] = $i;

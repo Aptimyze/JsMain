@@ -53,7 +53,11 @@
 			<td>
 			<select name="qyear">
 				~foreach from=$yyarr item=yearVal`
+				~if $yearVal eq $currentYear`
+				<option value=~$yearVal` selected>~$yearVal`</option>
+				~else`
 				<option value=~$yearVal`>~$yearVal`</option>
+				~/if`
 				~/foreach`
 			</select>&nbsp;Year
 			<br><br>
@@ -67,7 +71,11 @@
 			<td>
 				<select name="myear">
 					~foreach from=$yyarr item=yearVal`
+					~if $yearVal eq $currentYear`
+					<option value=~$yearVal` selected>~$yearVal`</option>
+					~else`
 					<option value=~$yearVal`>~$yearVal`</option>
+					~/if`
 					~/foreach`
 				</select>&nbsp;Year
 			</td>
@@ -80,12 +88,20 @@
 			<td colspan=2>
 				<select name="dmonth">
 					~foreach from=$mmarr key=monthNum item=monthVal`
+					~if $monthVal.VALUE eq $currentMonth`
+					<option value=~$monthVal.VALUE` selected>~$monthVal.NAME`</option>
+					~else`
 					<option value=~$monthVal.VALUE`>~$monthVal.NAME`</option>
+					~/if`
 					~/foreach`
 				</select> -
 				<select name="dyear">
 					~foreach from=$yyarr item=yearVal`
+					~if $yearVal eq $currentYear`
+					<option value=~$yearVal` selected>~$yearVal`</option>
+					~else`
 					<option value=~$yearVal`>~$yearVal`</option>
+					~/if`
 					~/foreach`
 				</select>&nbsp;Month - Year
 			</td>
