@@ -253,7 +253,9 @@ class BrowserNotification{
                 if($notificationId)
                 {
                     $completeNotificationInfo[$counter] = $this->generateNotification($notificationId, $notificationKey,$dataPerNotification);
-                    $completeNotificationInfo[$counter]["ICON"] = $this->getNotificationImage($completeNotificationInfo[$counter]["ICON"],$dataPerNotification['ICON_PROFILEID']);
+                    $notificationDataPoolObj = new NotificationDataPool();
+                    $completeNotificationInfo[$counter]["ICON"] = $notificationDataPoolObj->getNotificationImage($completeNotificationInfo[$counter]["ICON"],$dataPerNotification['ICON_PROFILEID']);
+                    unset($notificationDataPoolObj);
                     $completeNotificationInfo[$counter]['SELF'] = $dataPerNotification['SELF'];
                     $completeNotificationInfo[$counter]['MSG_ID']=rand(0,99).time().rand(0,99).rand(0,99).rand(0,9);
                     $completeNotificationInfo[$counter]['OTHER_PROFILE_CHECKSUM'] = JsCommon::createChecksumForProfile($dataPerNotification['OTHER'][0]['PROFILEID']);
@@ -648,39 +650,6 @@ class BrowserNotification{
         return $browserProfilesData;
     }
     
-    public function getNotificationImage($icon, $iconProfileid){
-      
-        if($icon == 'P' && $iconProfileid){
-            $profile=new Profile();
-            $profile->getDetail($iconProfileid,"PROFILEID");
-            $profilePic = $profile->getHAVEPHOTO();
-            if (empty($profilePic) || $profilePic == 'U')
-                $profilePic="N";
-            if($profilePic!="N"){
-                $pictureServiceObj=new PictureService($profile);
-                $profilePicObj = $pictureServiceObj->getProfilePic();
-                if($profilePicObj){
-                    $photoArray = PictureFunctions::mapUrlToMessageInfoArr($profilePicObj->getProfilePic120Url(),'ThumbailUrl','',$this->gender);
-                    if($photoArray[label] != '')
-                       $icon = 'D';
-                    else
-                       $icon = $photoArray['url'];
-                    //$this->ThumbailUrl=$profilePicObj->getThumbailUrl();
-                }
-                else{
-                    $icon = 'D';
-                }
-            }
-            else{
-                $icon = 'D';
-            }
-        }
-        else{
-            $icon = 'D';
-        }
-        return $icon;
-    }
-
     private function mapNotificationLandingID($landingid,$channelArr,$notificationKey,$profileChecksum)
     {
         if(in_array("CRM_AND", $channelArr))
