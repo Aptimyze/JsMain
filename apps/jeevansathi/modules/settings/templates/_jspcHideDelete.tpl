@@ -100,7 +100,6 @@
 
 
               </div>
-    <div id="offerSpacer"  style="height:60px"></div>
     <div id="offerCheckBox" class="disp-none" style="margin-left: 36px;">              
     <div class="fl">
 
