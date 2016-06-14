@@ -1,3 +1,7 @@
+/*function initiateChat
+* request sent to openfire to initiate chat and maintain session
+* @params:none
+*/
 function initiateChat()
 {
       converse.initialize({
