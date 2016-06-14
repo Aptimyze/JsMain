@@ -3,7 +3,7 @@
         <div class="clearfix"> 
           <!--start:left-->
           <div id="hidePartID" class="fl setwid9">
-            <div class="bg-white setp3 color11" style="height:425px">
+            <div class="bg-white setp3 color11" style="height:429px">
 		~if $UNHIDE eq 0`
               <p id="headingID" class="f16 fontreg txtc">Hide your Profile</p>
 		
@@ -45,7 +45,7 @@
           <!--end:left--> 
           <!--start:right-->
           <div id="deletePartID" class="fr setwid9">
-            <div class="bg-white setp3 color11 mCustomScrollbar" style="height:425px;">
+            <div class="bg-white setp3 color11 mCustomScrollbar" style="height:429px;">
               <p class="f16 fontreg txtc">Delete your Profile</p>
               <p class="f15 txtc fontlig pt20 color2">Please use this feature when you are engaged or have found your life partner. This feature deletes your profile 
                 permanently from the site. We would appreciate your feedback on Jeevansathi.com.</p>
