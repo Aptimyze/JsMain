@@ -271,7 +271,8 @@ if(typeof response.searchid!="undefined")
       $("#callUser").off("click");
       $("#callUser").on("click", function () {
         $('<input>').attr({type: 'hidden',id:'rcbResponse', name: 'rcbResponse',value:'Y'}).appendTo('#Widget');
-        $(".js-openRequestCallBack").click();
+        toggleRequestCallBackOverlay(1, 'Accepted_Members_List');
+        //$(".js-openRequestCallBack").click();
       });
       
       //On Not Now Button
