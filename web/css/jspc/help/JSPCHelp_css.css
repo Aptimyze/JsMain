@@ -78,3 +78,7 @@ ul li{margin-left:20px;}
 .wid70p{width:70%}
 .mt100{margin-top:100px;}
 .colr_grey_new{color:#333333}
+.quesTable i, em {
+    display: inline !important;
+    font-style: italic !important;
+}
