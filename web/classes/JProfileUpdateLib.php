@@ -235,5 +235,20 @@ class JProfileUpdateLib
       return false;
     }
   }
+  
+  /**
+   * update sort date in Jprofile
+   * @param $profileId 
+   * @return bool
+   */
+  public function updateSortDateForAPLogin($profileId)
+  {
+    try {
+      return $this->objJProfileStore->updateSortDate($profileId);
+    } catch (Exception $ex) {
+      jsException::log($ex);
+      return false;
+    }
+  }
 }
 ?>
