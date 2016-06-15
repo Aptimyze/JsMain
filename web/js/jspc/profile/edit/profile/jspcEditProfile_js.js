@@ -4206,11 +4206,11 @@ EditApp = function(){
         requiredFieldStore.add(idProofTypeField);
         if(typeof uploaded != 'undefined' && uploaded == '1'){
                 requiredFieldStore.add(idProofValField);
-                onProofTypeChangeError('id_proof_val',idProofValField,'Please enter a valid format',1);
+                onProofTypeChangeError('id_proof_val',idProofValField,'Please attach a valid format',1);
         }else{
                 if(typeof uploaded != 'undefined' && uploaded == '2'){
                         requiredFieldStore.add(idProofValField);
-                        onProofTypeChangeError('id_proof_val',idProofValField,'Please enter document with size less then 5MB',1);
+                        onProofTypeChangeError('id_proof_val',idProofValField,'File size exceeds 5MB',1);
                 }else{
                         storeFieldChangeValue(idProofValField,uploaded);
                         if(idProofTypeField.value != '' && typeof editedFields[VERIFICATION]['ID_PROOF_TYPE'] == 'undefined'){
@@ -4237,8 +4237,11 @@ EditApp = function(){
         
         var idProofTypeField = editAppObject["verification"]["ID_PROOF_TYPE"];
         var idProofValField = editAppObject["verification"]["ID_PROOF_VAL"];
+        if(typeof editedFields[VERIFICATION]['ID_PROOF_VAL'] != 'undefined'){
+                requiredFieldStore.remove(idProofValField);
+        }
         requiredFieldStore.remove(idProofTypeField);
-        requiredFieldStore.remove(idProofValField);
+        
     }
     onAddrProofValChange = function(){
         var addrProofValField = editAppObject["verification"]["ADDR_PROOF_VAL"];
@@ -4247,11 +4250,11 @@ EditApp = function(){
         var uploaded = validateImage('addr_proof_val');
         if(typeof uploaded != 'undefined' && uploaded == '1'){
                 requiredFieldStore.add(addrProofValField);
-                onProofTypeChangeError('addr_proof_val',addrProofValField,'Please enter a valid format',1);
+                onProofTypeChangeError('addr_proof_val',addrProofValField,'Please attach a valid format',1);
         }else{
                 if(typeof uploaded != 'undefined' && uploaded == '2'){
                         requiredFieldStore.add(addrProofValField);      
-                        onProofTypeChangeError('addr_proof_val',addrProofValField,'Please enter document with size less then 5MB',1);
+                        onProofTypeChangeError('addr_proof_val',addrProofValField,'File size exceeds 5MB',1);
                 }else{
                         storeFieldChangeValue(addrProofValField,uploaded);
                         if(addrProofTypeField.value != '' && typeof editedFields[VERIFICATION]['ADDR_PROOF_TYPE'] == 'undefined'){
@@ -4546,12 +4549,14 @@ EditApp = function(){
       $('.js-timeClick').on('timeBlur',onTimeFieldBlur);
       
       //ID Proof Change
+      $('.js-proofType').on('change',onIdProofTypeChange);
       
       $('.js-proofVal').on('change',onIdProofValChange);
-      $('.js-proofType').on('change',onIdProofTypeChange);
-      $('#idBtn_id_proof_val').on('click',function(event){
+      $('#idBtn_id_proof_val').unbind('click').on('click',function(event){
         $('.js-proofVal').click();
       });
+      
+      
       $('#idBtn_addr_proof_val').on('click',function(event){
         $('.js-addrProofVal').click();
       });

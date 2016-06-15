@@ -9,7 +9,7 @@ class jsValidatorProof extends sfValidatorBase
 	{
                 foreach(ErrorHelp::getErrorArrayByField('FILEVAL') as $key=>$msg)
                         $this->addMessage($key,$msg);  	
-		$this->addOption('type',$arrOptions[type]);
+		$this->addOption('name',$arrOptions[type]);
 		$this->addOption('size',$arrOptions[size]);
 		$this->addOption('file',$arrOptions[file]);
 	}
@@ -17,12 +17,12 @@ class jsValidatorProof extends sfValidatorBase
 	protected function doClean($value)
 	{
 		
-		$type = $this->getOption("type");
+		$name = $this->getOption("name");
 		$size = $this->getOption("size");
 		$file = $this->getOption("file");
-                $type = explode('/',$type);
-                if (!in_array($type[1],$this->fileType)) {
-                  throw new sfValidatorError($this,'err_file_type', array('value' => $type[1]));
+                $name = explode('.',$name);
+                if (!in_array($name[1],$this->fileType)) {
+                  throw new sfValidatorError($this,'err_file_type', array('value' => $name[1]));
                 }
 
 		if($size > self::FILE_SIZE )

@@ -312,7 +312,7 @@ class ValidatorsFactory{
     case 'proof_val':
 			{
                 $szName = $field->getName();
-				return new jsValidatorProof(array('required'=>false,'file'=>@$form_values[$szName],'type'=>@$form_values[$szName]['type'],'size'=>@$form_values[$szName]['size']));
+				return new jsValidatorProof(array('required'=>false,'file'=>@$form_values[$szName],'name'=>@$form_values[$szName]['name'],'size'=>@$form_values[$szName]['size']));
 				break;
 			}
 		}
