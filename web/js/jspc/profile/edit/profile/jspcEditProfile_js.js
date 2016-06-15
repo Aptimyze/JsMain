@@ -4172,119 +4172,135 @@ EditApp = function(){
         $('#time_to_callParent').find('.js-errorLabel').addClass(dispNone);
       }
     }
-    validateImage = function(fieldId){
+    validateImage = function(fieldId,fieldKey){
         var file = $('#'+fieldId)[0].files[0];
-        reader = new FileReader();
         if (file && file.name.split(".")[1] == "jpg" || file.name.split(".")[1] == "JPG" || file.name.split(".")[1] == "jpeg" || file.name.split(".")[1] == "JPEG" || file.name.split(".")[1] == "PDF" || file.name.split(".")[1] == "pdf") {
-            reader.readAsDataURL(file);
         } else {
-                $("#idlabel_" + fieldId).html('jpg/pdf only');
-            return '1';
+            $("#idlabel_" + fieldId).html('jpg/pdf only');
+            setError(fieldKey,'Invalid file format',1);
+            return false;
         }
         if(file.size > 5242880) {
                 $("#idlabel_" + fieldId).html('jpg/pdf only');
-                return '2';
+                setError(fieldKey,'File size exceeds limit (5MB)',1);
+                return false;
         } else {
                 $("#idlabel_" + fieldId).html(file.name);
-                return(file);
+                storeFieldChangeValue(fieldKey,file);
+                unsetError(fieldKey,'');
+                return file;
         }
     }
     onIdProofTypeChange = function(){
-        var idProofTypeField = editAppObject["verification"]["ID_PROOF_TYPE"];
-        var idProofValField = editAppObject["verification"]["ID_PROOF_VAL"];
-        if(typeof editedFields[VERIFICATION]['ID_PROOF_VAL'] != 'undefined'){
-                requiredFieldStore.remove(idProofValField);
-        }else{
-                requiredFieldStore.add(idProofValField);
-        }
-        requiredFieldStore.remove(idProofTypeField);
+        var t1 = geteditedValue("ID_PROOF_TYPE");
+        var v1 = geteditedValue("ID_PROOF_VAL","VALUE");
+        var t2 = geteditedValue("ADDR_PROOF_TYPE","VALUE");
+        var v2 = geteditedValue("ADDR_PROOF_VAL","VALUE");
+        onvaluechange(t1,v1,t2,v2,editAppObject["verification"]["ID_PROOF_ADDR"]);
     }
     onIdProofValChange = function(){
-        var idProofTypeField = editAppObject["verification"]["ID_PROOF_TYPE"];
-        var idProofValField = editAppObject["verification"]["ID_PROOF_VAL"];
-        var uploaded = validateImage('id_proof_val');
-        requiredFieldStore.add(idProofTypeField);
-        if(typeof uploaded != 'undefined' && uploaded == '1'){
-                requiredFieldStore.add(idProofValField);
-                onProofTypeChangeError('id_proof_val',idProofValField,'Invalid file format',1);
-        }else{
-                if(typeof uploaded != 'undefined' && uploaded == '2'){
-                        requiredFieldStore.add(idProofValField);
-                        onProofTypeChangeError('id_proof_val',idProofValField,'File size exceeds 5MB',1);
-                }else{
-                        storeFieldChangeValue(idProofValField,uploaded);
-                        if(idProofTypeField.value != '' && typeof editedFields[VERIFICATION]['ID_PROOF_TYPE'] == 'undefined'){
-                                editedFields["verification"]["ID_PROOF_TYPE"] = idProofTypeField.value;
-                        }
-                        if(typeof editedFields[VERIFICATION]['ID_PROOF_TYPE'] != 'undefined'){
-                                requiredFieldStore.remove(idProofTypeField);
-                        }
-                        requiredFieldStore.remove(idProofValField);
-                        onProofTypeChangeError('id_proof_val',idProofValField,'',0);
-                }
-        }
+        var t1 = geteditedValue("ID_PROOF_TYPE");
+        var v1 = 1;
+        var t2 = geteditedValue("ADDR_PROOF_TYPE","VALUE");
+        var v2 = geteditedValue("ADDR_PROOF_VAL","VALUE");
+        onvaluechange(t1,v1,t2,v2,editAppObject["verification"]["ID_PROOF_VAL"]);
     }
     
     onAddrProofTypeChange = function(){
-        var addrProofTypeField = editAppObject["verification"]["ADDR_PROOF_TYPE"];
-        var addrProofValField = editAppObject["verification"]["ADDR_PROOF_VAL"];
-        if(typeof editedFields[VERIFICATION]['ADDR_PROOF_VAL'] != 'undefined'){
-                requiredFieldStore.remove(addrProofValField);
-        }else{
-                requiredFieldStore.add(addrProofValField);
-        }
-        requiredFieldStore.remove(addrProofTypeField);
-        
-        var idProofTypeField = editAppObject["verification"]["ID_PROOF_TYPE"];
-        var idProofValField = editAppObject["verification"]["ID_PROOF_VAL"];
-        if(typeof editedFields[VERIFICATION]['ID_PROOF_VAL'] != 'undefined'){
-                requiredFieldStore.remove(idProofValField);
-        }
-        if(typeof editedFields[VERIFICATION]['ID_PROOF_TYPE'] != 'undefined'){
-                requiredFieldStore.remove(idProofTypeField);
-        }
+        var t1 = geteditedValue("ID_PROOF_TYPE","VALUE");
+        var v1 = geteditedValue("ID_PROOF_VAL","VALUE");
+        var t2 = geteditedValue("ADDR_PROOF_TYPE");
+        var v2 = geteditedValue("ADDR_PROOF_VAL","VALUE");
+        onvaluechange(t1,v1,t2,v2,editAppObject["verification"]["ADDR_PROOF_TYPE"]);
         
     }
     onAddrProofValChange = function(){
-        var addrProofValField = editAppObject["verification"]["ADDR_PROOF_VAL"];
-        var addrProofTypeField = editAppObject["verification"]["ADDR_PROOF_TYPE"];
-        requiredFieldStore.add(addrProofTypeField);
-        var uploaded = validateImage('addr_proof_val');
-        if(typeof uploaded != 'undefined' && uploaded == '1'){
-                requiredFieldStore.add(addrProofValField);
-                onProofTypeChangeError('addr_proof_val',addrProofValField,'Invalid file format',1);
-        }else{
-                if(typeof uploaded != 'undefined' && uploaded == '2'){
-                        requiredFieldStore.add(addrProofValField);      
-                        onProofTypeChangeError('addr_proof_val',addrProofValField,'File size exceeds 5MB',1);
-                }else{
-                        storeFieldChangeValue(addrProofValField,uploaded);
-                        if(addrProofTypeField.value != '' && typeof editedFields[VERIFICATION]['ADDR_PROOF_TYPE'] == 'undefined'){
-                                editedFields["verification"]["ADDR_PROOF_TYPE"] = addrProofTypeField.value;
-                        }
-                        if(typeof editedFields[VERIFICATION]['ADDR_PROOF_TYPE'] != 'undefined'){
-                                requiredFieldStore.remove(addrProofTypeField);
-                        }
-                        requiredFieldStore.remove(addrProofValField);
-                        onProofTypeChangeError('addr_proof_val',addrProofValField,'',0);
-                }
-        }
-        var idProofTypeField = editAppObject["verification"]["ID_PROOF_TYPE"];
-        var idProofValField = editAppObject["verification"]["ID_PROOF_VAL"];
-        requiredFieldStore.remove(idProofValField);
-        requiredFieldStore.remove(idProofTypeField);
+        var t1 = geteditedValue("ID_PROOF_TYPE","VALUE");
+        var v1 = geteditedValue("ID_PROOF_VAL","VALUE");
+        var t2 = geteditedValue("ADDR_PROOF_TYPE");
+        var v2 = 1;
+        onvaluechange(t1,v1,t2,v2,editAppObject["verification"]["ADDR_PROOF_VAL"]);
     }
-    onProofTypeChangeError = function(fieldKey,idProofField,errorMsg,showHideError){
+    geteditedValue = function(fieldKey,fieldtype){
+        var fieldObj = editAppObject["verification"][fieldKey];
+        if(fieldtype != "VALUE" && fieldObj.value != '' && typeof editedFields[VERIFICATION][fieldKey] == 'undefined'){
+                editedFields["verification"][fieldKey] = fieldObj.value;
+        }
+        return editedFields["verification"][fieldKey];
+    }
+    onProofTypeChangeError = function(fieldKey,errorMsg,showHideError){
         if(showHideError === 1){
-                $('#'+fieldKey+'Parent').find('.js-errorLabel').text(errorMsg);
+                if(errorMsg != ''){
+                        $('#'+fieldKey+'Parent').find('.js-errorLabel').text(errorMsg);
+                }
                 $('#'+fieldKey+'Parent').find('.js-errorLabel').removeClass(dispNone);
-                requiredFieldStore.add(idProofField);
         }else{
                 $('#'+fieldKey+'Parent').find('.js-errorLabel').addClass(dispNone);
-                requiredFieldStore.remove(idProofField);
         } 
     }
-    
+    onvaluechange = function(t1,v1,t2,v2,calledBy){
+        var idProofTypeField = editAppObject["verification"]["ID_PROOF_TYPE"];
+        var idProofValField = editAppObject["verification"]["ID_PROOF_VAL"];
+        var addrProofValField = editAppObject["verification"]["ADDR_PROOF_VAL"];
+        var addrProofTypeField = editAppObject["verification"]["ADDR_PROOF_TYPE"];
+        if(v1){
+                v1 = validateImage('id_proof_val',idProofValField);
+                if(v1 === false)
+                        return false;
+        }
+        if(v2){
+                v2 = validateImage('addr_proof_val',addrProofValField);
+                if(v2 === false)
+                        return false;
+        }
+            if(!t1 && v1){
+                    var showMsg = 1;
+                    if(calledBy !=  idProofTypeField){
+                       showMsg = 0;
+                    }
+                    setError(idProofTypeField,'',showMsg);
+                    unsetError(idProofValField);
+            }
+            if(t1 && !v1){
+                    var showMsg = 1;
+                    if(calledBy !=  idProofValField){
+                       showMsg = 0;
+                    }
+                    setError(idProofValField,'',showMsg);
+                    unsetError(idProofTypeField);
+            }
+            if(!t2 && v2){
+                    var showMsg = 1;
+                    if(calledBy !=  addrProofTypeField){
+                       showMsg = 0;
+                    }
+                    setError(addrProofTypeField,'',showMsg);
+                    unsetError(addrProofValField);
+            }
+            if(t2 && !v2){
+                    var showMsg = 1;
+                    if(calledBy !=  addrProofValField){
+                       showMsg = 0;
+                    }
+                    setError(addrProofValField,'',showMsg);
+                    unsetError(addrProofTypeField);
+            }
+            if(t2 || v2){
+                 if(!t1 && !v1){
+                    unsetError(idProofTypeField);
+                    unsetError(idProofValField);
+                } 
+            }
+    }
+    setError = function(fieldKey,msg,showMsg){
+            requiredFieldStore.add(fieldKey);
+            if(showMsg == 1)
+                onProofTypeChangeError(fieldKey.key.toLowerCase(),msg,showMsg);
+    }
+    unsetError = function(fieldKey){
+            requiredFieldStore.remove(fieldKey);
+            onProofTypeChangeError(fieldKey.key.toLowerCase(),'',0);
+    }
     onIdProofNumberChange = function(event){
         var fieldKey = event.target.id;
         var idTypeNum = $(event.target).val();
