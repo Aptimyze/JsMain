@@ -94,7 +94,6 @@ class RequestHandlerConfig
 			"matchOTP"=>array("v1"=>"MatchOtp","v2"=>"MatchOtp","v3"=>"MatchOtp")),
 	"static"=>array("page"=>array("v1"=>"pagev1","v2"=>"pagev1","v3"=>"pagev1"),"pagehits"=>array("v1"=>"savehitsv1","v2"=>"savehitsv1","v3"=>"savehitsv1")),	
     "help"=>array(
-        "questions"=>array("v1"=>"HelpQuestionsV1"),
         "helpQuery"=>array("v1"=>"SubmitQueryV1"),
         "publicQuestions"=>array("v1"=>"GetPublicQuestionsV1")
         )

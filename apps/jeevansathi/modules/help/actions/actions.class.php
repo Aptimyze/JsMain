@@ -30,24 +30,6 @@ class helpActions extends sfActions
         }
   }
   
-  /*
-   * @desc: API to get all questions
-   * @param $request
-   * @return none
-   */
-  public function executeHelpQuestionsV1(sfWebRequest $request)
-  {
-      $apiObj = ApiResponseHandler::getInstance();
-      $apiObj->setAuthChecksum($request->getAttribute("AUTHCHECKSUM"));
-      $helpQuestionSlaveObj = new jsadmin_HELP_QUESTIONS("newjs_slave");
-      list($allQuestions) = $helpQuestionSlaveObj->getAll();
-      $result =array("Response"=>$allQuestions);      
-      $apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-      $apiObj->setResponseBody($result);
-      $apiObj->generateResponse();
-      die;
-  }
-  
   public function executeSubmitQueryV1(sfWebRequest $request){
       $apiObj = ApiResponseHandler::getInstance();
       $apiObj->setAuthChecksum($request->getAttribute("AUTHCHECKSUM"));
