@@ -35,6 +35,16 @@ class registerMisActions extends sfActions {
       } else {
         $formArr["date1_dateLists_month_list"] ++;
         $formArr["date2_dateLists_month_list"] ++;
+
+	if(strlen($formArr["date1_dateLists_day_list"])==1)
+                $formArr["date1_dateLists_day_list"] = "0".$formArr["date1_dateLists_day_list"];
+        if(strlen($formArr["date2_dateLists_day_list"])==1)
+                $formArr["date2_dateLists_day_list"] = "0".$formArr["date2_dateLists_day_list"];
+	if(strlen($formArr["date1_dateLists_month_list"])==1)
+                $formArr["date1_dateLists_month_list"] = "0".$formArr["date1_dateLists_month_list"];
+        if(strlen($formArr["date2_dateLists_month_list"])==1)
+                $formArr["date2_dateLists_month_list"] = "0".$formArr["date2_dateLists_month_list"];
+
         $start_date = $formArr["date1_dateLists_year_list"] . "-" . $formArr["date1_dateLists_month_list"] . "-" . $formArr["date1_dateLists_day_list"];
         $end_date = $formArr["date2_dateLists_year_list"] . "-" . $formArr["date2_dateLists_month_list"] . "-" . $formArr["date2_dateLists_day_list"];
         $this->verifyDates($start_date,$end_date);

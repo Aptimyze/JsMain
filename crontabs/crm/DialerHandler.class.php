@@ -272,7 +272,7 @@ class DialerHandler
 		if($campaignName=='OB_JS_PAID')
 			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE='$csvEntryDate'";
 		elseif($campaignName=='OB_JS_RCB')
-			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE>='$startDt' AND CSV_ENTRY_DATE<'$endDt'";
+			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE>'$startDt'";
 		else
 			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE='$csvEntryDate' ORDER BY PRIORITY DESC,ANALYTIC_SCORE DESC,LAST_LOGIN_DATE DESC";
                 $res = mysql_query($sql,$this->db_master) or die("$sql".mysql_error($this->db_master));
@@ -368,9 +368,9 @@ class DialerHandler
 		}
 		return $cnt;
         }
-        public function getCampaignRecordsForDuration($campaignName,$startDate,$endDate)
+        public function getCampaignRecordsForDuration($campaignName,$startDate,$endDate='')
         {
-                $squery = "select count(1) cnt from easy.dbo.tbl_lead_table_OB_JS_RCB WHERE Campaign='$campaignName' AND CSV_ENTRY_DATE>='$startDate' AND CSV_ENTRY_DATE<'$endDate'";
+                $squery = "select count(1) cnt from easy.dbo.tbl_lead_table_OB_JS_RCB WHERE Campaign='$campaignName' AND CSV_ENTRY_DATE>'$startDate'";
                 $sresult =mssql_query($squery,$this->db_dialer) or $this->logerror($squery,$this->db_dialer);
                 if($srow = mssql_fetch_array($sresult)){
                         $cnt =$srow['cnt'];
