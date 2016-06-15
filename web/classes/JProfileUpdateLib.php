@@ -10,7 +10,7 @@
  */
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
-/**
+/**NEWJS_PHOTO_PRIVACY
  * JProfileUpdateLib Wrapper Library
  */
 class JProfileUpdateLib
@@ -98,7 +98,7 @@ class JProfileUpdateLib
    */
   public static function getInstance($dbname="")
   {
-    if (null === self::$instance) {
+		if (null === self::$instance) {
       self::$instance = new JProfileUpdateLib($dbname);
     }
     
@@ -143,24 +143,6 @@ class JProfileUpdateLib
   * @throws jsException
   */
   public function updateJProfileForArchive($iProfileID)
-  {
-    try {
-      return $this->objJProfileStore->updateLoginSortDate($iProfileID);
-    } catch(Exception $ex) {
-      //Log this error
-      jsException::log($ex);
-      return false;
-    }
-  }
-  
-  /**
-  * updateProfileForArchive
-  * Update newjs.JPROFILE Columns for archive i.e. setting 
-  * PREACTIVATED,ACTIVATED,activatedKey,JsArchived,MOD_DT column
-  * @param type $iProfileID
-  * @throws jsException
-  */
-  public function updateJProfileLoginSortDate($iProfileID)
   {
     try {
       return $this->objJProfileStore->updateProfileForArchive($iProfileID);
@@ -272,15 +254,16 @@ class JProfileUpdateLib
     }
   }
   
+  
   /**
-   * update sort date in Jprofile
-   * @param $profileId 
+   * update Photo settings for mutiple profiles
+   * @param $profileArr
    * @return bool
    */
-  public function updateSortDateForAPLogin($profileId)
+  public function updateForMutipleProfiles($params,$profileArr)
   {
-    try {
-      return $this->objJProfileStore->updateSortDate($profileId);
+		try {
+      return $this->objJProfileStore->updateForMutipleProfiles($params,$profileArr);
     } catch (Exception $ex) {
       jsException::log($ex);
       return false;

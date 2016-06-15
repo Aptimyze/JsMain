@@ -1180,6 +1180,7 @@ public function duplicateEmail($email)
         }
         return $res;
     }
+<<<<<<< HEAD
     
     /**
      * updateProfileForArchive
@@ -1277,24 +1278,69 @@ public function duplicateEmail($email)
 			throw new jsException($ex);
 		}
 	}
-        /**
-	 * update sort date in Jprofile
-	 * @param $profileId
+	
+	
+	/**
+	 * updateForMutipleProfiles
+	 * This query is in use to edit values for mutiple profiles
+	 * @param $paramArr
+	 * @param $profileArr
 	 * @return bool
 	 */
-	function updateSortDate($profileId)
+	function updateForMutipleProfiles($paramArr,$profileArr)
 	{
+		if(!is_array($paramArr) || !count($paramArr) || !is_array($profileArr) || !count($profileArr)) {
+			throw new jsException("Param is not array or an empty is provided");
+		}
+	
 		try{
-
-			$sql="update newjs.JPROFILE set SORT_DT=if(DATE_SUB(NOW(),INTERVAL 7 DAY)>=SORT_DT,DATE_ADD(SORT_DT,INTERVAL 7 DAY),SORT_DT) where PROFILEID=:PROFILEID";
+			foreach($paramArr as $key=>$val){
+				$set[] = $key." = :".$key;
+			}
+			$setValues = implode(",",$set);
+			
+			foreach ($profileArr as $k => $value)
+			{
+				$pString[]=":".$k;
+			}
+			$szINs = implode(",",$pString);
+			$sql="UPDATE newjs.JPROFILE SET $setValues WHERE PROFILEID IN ($szINs)";
 			$pdoStatement = $this->db->prepare($sql);
-			$pdoStatement->bindValue(':PROFILEID', $profileId,PDO::PARAM_INT);
+			
+			//Bind Value
+			$count =0;
+			foreach ($profileArr as $k => $value)
+			{
+				$pdoStatement->bindValue(":".$k, $value,PDO::PARAM_INT);
+			}
+			foreach($paramArr as $key=>$val){
+	      $pdoStatement->bindValue(":".$key, $val);
+			}
+			
 			$pdoStatement->execute();
-                        return $pdoStatement->rowCount();
-		} 
-                catch (Exception $ex){
+			return true;
+		} catch (Exception $ex){
 			throw new jsException($ex);
 		}
 	}
+=======
+
+    public function checkUsername($username)
+    {
+    	try
+            {
+                    $sql="SELECT COUNT(1) AS CNT FROM newjs.JPROFILE WHERE USERNAME=:USERNAME";
+                    $prep=$this->db->prepare($sql);
+                    $prep->bindValue(":USERNAME", $username, PDO::PARAM_INT);
+                    $prep->execute();
+                    $row = $prep->fetch(PDO::FETCH_ASSOC);
+        			return $row['CNT'];
+            }
+            catch(PDOException $e)
+            {
+                    throw new jsException($e);
+            }
+    }
+>>>>>>> 52221e27c07c0bb59070e2a4a60e16f3c9495154
 }
 ?>
