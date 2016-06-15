@@ -4206,7 +4206,7 @@ EditApp = function(){
         requiredFieldStore.add(idProofTypeField);
         if(typeof uploaded != 'undefined' && uploaded == '1'){
                 requiredFieldStore.add(idProofValField);
-                onProofTypeChangeError('id_proof_val',idProofValField,'Please attach a valid format',1);
+                onProofTypeChangeError('id_proof_val',idProofValField,'Invalid file format',1);
         }else{
                 if(typeof uploaded != 'undefined' && uploaded == '2'){
                         requiredFieldStore.add(idProofValField);
@@ -4240,7 +4240,9 @@ EditApp = function(){
         if(typeof editedFields[VERIFICATION]['ID_PROOF_VAL'] != 'undefined'){
                 requiredFieldStore.remove(idProofValField);
         }
-        requiredFieldStore.remove(idProofTypeField);
+        if(typeof editedFields[VERIFICATION]['ID_PROOF_TYPE'] != 'undefined'){
+                requiredFieldStore.remove(idProofTypeField);
+        }
         
     }
     onAddrProofValChange = function(){
@@ -4250,7 +4252,7 @@ EditApp = function(){
         var uploaded = validateImage('addr_proof_val');
         if(typeof uploaded != 'undefined' && uploaded == '1'){
                 requiredFieldStore.add(addrProofValField);
-                onProofTypeChangeError('addr_proof_val',addrProofValField,'Please attach a valid format',1);
+                onProofTypeChangeError('addr_proof_val',addrProofValField,'Invalid file format',1);
         }else{
                 if(typeof uploaded != 'undefined' && uploaded == '2'){
                         requiredFieldStore.add(addrProofValField);      
@@ -4267,6 +4269,10 @@ EditApp = function(){
                         onProofTypeChangeError('addr_proof_val',addrProofValField,'',0);
                 }
         }
+        var idProofTypeField = editAppObject["verification"]["ID_PROOF_TYPE"];
+        var idProofValField = editAppObject["verification"]["ID_PROOF_VAL"];
+        requiredFieldStore.remove(idProofValField);
+        requiredFieldStore.remove(idProofTypeField);
     }
     onProofTypeChangeError = function(fieldKey,idProofField,errorMsg,showHideError){
         if(showHideError === 1){
