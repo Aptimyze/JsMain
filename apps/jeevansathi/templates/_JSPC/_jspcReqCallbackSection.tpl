@@ -57,12 +57,6 @@
     
     var module = "~$sf_request->getParameter('module')`";
     var callbackSource = "";
-    
-    if(module=='membership'){
-        callbackSource = 'Membership_Page';
-    } else {
-        callbackSource = 'Header';
-    }
 
     $(window).load(function(){
         var reqCallbackError = true;
@@ -116,6 +110,12 @@
                 reqCallbackError = false;
             }
         });
+
+        if(module=='membership'){
+            callbackSource = 'Membership_Page';
+        } else {
+            callbackSource = 'Header';
+        }
 
         $("#headerSubmitCallbackRequest").click(function(e){
             var phNo = $("#headerReqMob input").val();
@@ -265,12 +265,6 @@
     var module = "~$sf_request->getParameter('module')`";
     var callbackSource = "";
     
-    if(module=='membership'){
-        callbackSource = 'Membership_Page';
-    } else {
-        callbackSource = 'Footer';
-    }
-    
     $(window).load(function(){
         var reqCallbackError = true;
         var regExEmail=/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
@@ -324,6 +318,12 @@
                 reqCallbackError = false;
             }
         });
+
+        if(module=='membership'){
+            callbackSource = 'Membership_Page';
+        } else {
+            callbackSource = 'Footer';
+        }
 
         $("#footerSubmitCallbackRequest").click(function(e){
             var phNo = $("#footerReqMob input").val();
