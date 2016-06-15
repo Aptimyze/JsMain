@@ -49,14 +49,14 @@ function bindQuesClick(elem, quesAns2) {
 
 //search algorithm - detect key pressed
 function applySearchAlgo() {
-    $("#searchPId").keydown(function(e) {
+    $("#searchPId").on( "keyup", function(e) {
         lastChar = $(this).val().substr($(this).val().length - 1);
-        //check for back button and other keys
-        if (e.keyCode == 8 && $(this).val().length == 1) {
+        var currentChar =  $(this).val().substr($(this).val().length);
+        if ($(this).val().length == 0) {
             $("#sectionListing,#hamburgerIcon").removeClass("dispnone"), $("#questionListing,#backBtnSection,#noResultDiv").addClass("dispnone");
         }
-        //check for enter, comma, space, question, full stop and semicolon key pressed
-        else if (e.keyCode == 32 || e.keyCode == 13 || e.keyCode == 188 || e.keyCode == 186 || e.keyCode == 190 || e.keyCode == 191 || e.keyCode == 8 && lastChar == " " || lastChar == "?" || lastChar == "," || lastChar == ";" || lastChar == ".") {
+        else if (lastChar == " " || lastChar == "?" || lastChar == "," || lastChar == ";" || lastChar == "." || e.keyCode == 8 || e.keyCode == 13) {
+            
             str = $(this).val();
             keyWordArray = str.replace("?", " ").replace(";", " ").replace(",", " ").replace(".", " ").split(" ");
             finalKeyWord = [];
@@ -66,6 +66,7 @@ function applySearchAlgo() {
             //searching final list
             searchFinalList(finalKeyWord);
             //showing no result found on enter key pressed if there is no question selected
+            
             if (e.keyCode == 13 && $("#quesList2 li").length == 0) {
                 $("#backBtnSection,#noResultDiv").removeClass("dispnone"), $("#hamburgerIcon,#sectionListing").addClass("dispnone");
                 bindBackButton("search");
