@@ -128,7 +128,7 @@ function bindSectionClick() {
         $(this).on("click", function() {
             that = $(this);
             $.each(catogaries, function(index, value) {
-                if ($(that).attr("id").split("_")[1] == value.split(" ")[0]) {
+                if ($(that).text() == value) {
                     selectedCat = value;
                     $(".sectionHeading").html(value);
                     quesAns = jsonData[selectedCat], noOfQues = Object.keys(jsonData[selectedCat]).length, quesIdArr = Object.keys(jsonData[selectedCat]);
