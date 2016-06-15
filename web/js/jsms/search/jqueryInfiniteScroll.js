@@ -147,7 +147,7 @@ function noPhotoDivFn(photoLabel,profilechecksum,idd,action)
 			<span id="loader" style="width: 180px;;display: NONE"><img src="'+loaderUrl+'" align="top"></span>\
 			<div class="disptbl">\
 				<div class="dispcell txtc">\
-				<a id="label'+idd+'" href="javascript:void(0);" class="white fontthin f18 lh30 dispbl txtc trans1 srp_pad1">'+photoLabel+'</a>\
+				<a id="label'+idd+'" href="javalscript:void(0);" class="white fontthin f18 lh30 dispbl txtc trans1 srp_pad1">'+photoLabel+'</a>\
 			    </div>\
 			</div>\
 	</div>';
@@ -830,7 +830,7 @@ function dataForSearchTuple(response,forcePage,idToJump,ifPrePend,searchTuple){
         $("#callUser").off("click");
         $("#callUser").on("click", function (e) {
           $('#reqCallBack').attr('data-rcbResponse','Y');
-          showRCBLayer(e);
+          showRCBLayer(e, 'Accepted_Members_List');
         });
       },(2*timedOut)+300);
     

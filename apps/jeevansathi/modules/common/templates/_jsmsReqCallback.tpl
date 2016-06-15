@@ -33,6 +33,7 @@
 </div>
 <!--end:overlay2-->
 <script type="text/javascript">
+  var rcbForCAL = '';
   $(document).ready(function(){
 
     
@@ -40,7 +41,9 @@
 		showRCBLayer(e);
 	});
 	
-  var rcbForCAL = '~$from_source`';
+  if(rcbForCAL == ''){
+      rcbForCAL = '~$from_source`';
+  }
   ~if sfContext::getInstance()->getRequest()->getParameter('showRCBForCAL') eq '1'`
       rcbForCAL = 'RCB_CAL';
       $("#jsmsReqCallbackBtn").trigger('click');
@@ -89,7 +92,8 @@
       });
     });
   });
-  function showRCBLayer (e) {
+  function showRCBLayer (e, callbackSource='') {
+      rcbForCAL = callbackSource;
       e.preventDefault();
       $("#callOvrOne").show();
       $("#callOvrTwo").hide();
