@@ -5,7 +5,7 @@ var catogaries = [],
 $(document).ready(function(e) {
     getData();
     applySearchAlgo();
-	preventDefaultBackBtnClick();
+	//preventDefaultBackBtnClick();
 });
 
 function getData() {
