@@ -19,10 +19,10 @@
                     <div class="reqCalbck-bdr12 colr2 f17 pb5 pt10 cursp pos-rel js-drop" id="headerDatefld"> <span class="headerDatefld-val f15 fontlig js-fill">~if $module neq 'membership'`What type of query do you have ?~else`Questions regarding Jeevansathi Membership Plans~/if`</span>
                         <div class="pos-abs reqCalbck-leftcorner_trianle1 reqCalbck-pos6 z2"></div>
                         <div class="pos-abs fullwid reqCalbck-pos7">
-                            <div id="reqCalbck-content-1" class="reqCalbck-content z1 reqCalbck-drop1 headerDatefld-drop disp-none" >
+                            <div id="reqCalbck-content-1" class="reqCalbck-content z1 reqCalbck-drop1 reqCalbck-dropSec headerDatefld-drop disp-none" >
                                 <ul data-attr="headerDatefld-list">
-                                    <li selectedid="M" class="fontlig f14 ~if $module eq 'membership'`active~/if`">Questions regarding Jeevansathi Membership Plans</li>
-                                    <li selectedid="P" class="fontlig f14">Questions or feedback regarding Jeevansathi Profile</li>
+                                    <li secSelectedid="M" class="fontlig f14 ~if $module eq 'membership'`active~/if`">Questions regarding Jeevansathi Membership Plans</li>
+                                    <li secSelectedid="P" class="fontlig f14">Questions or feedback regarding Jeevansathi Profile</li>
                                 </ul>
                             </div>
                         </div>
@@ -56,7 +56,7 @@
     ~/if`
     
     var module = "~$sf_request->getParameter('module')`";
-    var callbackSource = "";
+    var secsecCallbackSource = "";
 
     $(window).load(function(){
         var reqCallbackError = true;
@@ -112,25 +112,25 @@
         });
 
         if(module=='membership'){
-            callbackSource = 'Membership_Page';
+            secsecCallbackSource = 'Membership_Page';
         } else {
-            callbackSource = 'Header';
+            secsecCallbackSource = 'Header';
         }
 
         $("#headerSubmitCallbackRequest").click(function(e){
             var phNo = $("#headerReqMob input").val();
             var email = $("#headerReqEmail input").val().toLowerCase();
-            var selectedid = $("#headerDatefld ul li.active").attr('selectedid');
-            if((regExIndian.test(phNo) || regExInternational.test(phNo) || regExIndianLandline.test(phNo)) && regExEmail.test(email) && selectedid != 'Q') {
-                if(selectedid == 'M') {
-                    $.post("/membership/addCallBck",{'phNo':phNo.trim(),'email':email.trim(),'jsSelectd':'P3','execCallbackType':'JS_ALL','tabVal':1,'device':'desktop','channel':'JSPC','callbackSource':callbackSource},function(response){
+            var secSelectedid = $("#headerDatefld ul li.active").attr('secSelectedid');
+            if((regExIndian.test(phNo) || regExInternational.test(phNo) || regExIndianLandline.test(phNo)) && regExEmail.test(email) && secSelectedid != 'Q') {
+                if(secSelectedid == 'M') {
+                    $.post("/membership/addCallBck",{'phNo':phNo.trim(),'email':email.trim(),'jsSelectd':'P3','execCallbackType':'JS_ALL','tabVal':1,'device':'desktop','channel':'JSPC','callbackSource':secsecCallbackSource},function(response){
                         $("#headerReqCallBackMessage").text(response);
                         $("#headerRequestCallbackLogout").hide();
                         $("#headerRequestCallbackLogin").show();
                         $("#headerReqQueryError,#headerReqEmailError,#headerReqMobError").hide();
                     });
                 } else {
-                    $.post("/common/requestCallBack",{'email':email.trim(),'phone':phNo.trim(),'query_type':'P','device':'desktop','channel':'JSPC','callbackSource':callbackSource},function(response){
+                    $.post("/common/requestCallBack",{'email':email.trim(),'phone':phNo.trim(),'query_type':'P','device':'desktop','channel':'JSPC','callbackSource':secsecCallbackSource},function(response){
                         if(response == "Y") {
                             $("#headerReqCallBackMessage").text('We shall call you at the earliest');
                         } else {
@@ -148,7 +148,7 @@
                 if(!regExEmail.test(email)){
                     $("#headerReqEmailError").show();
                 }
-                if(selectedid == "Q"){
+                if(secSelectedid == "Q"){
                     $("#headerReqQueryError").show();
                 }
             }
@@ -188,18 +188,23 @@
     $(function() {
         // check pick up drop down
         $('.js-drop').click(function() {
-            $('.js-drop .reqCalbck-drop1').slideUp(300);
+            $('.js-drop .reqCalbck-dropSec').slideUp(300);
             var getElemId = $(this).attr('id');
             var DropDownName = getElemId;
             $('.' + DropDownName + '-drop').slideToggle(300);
         });
-        $('.reqCalbck-drop1 ul li').click(function(event) {
+        $('.reqCalbck-dropSec ul li').click(function(event) {
             event.stopPropagation();
-            var OptSel = $(this).text(),getlistName = $(this).parent().attr('data-attr');
+            $('.reqCalbck-dropSec ul li').each(function(){
+                $(this).removeClass('active');    
+            });
+            $(this).addClass('active');
+            var OptSel = $(this).text();
+            var getlistName = $(this).parent().attr('data-attr');
             var b = getlistName.split('-');
             var temp = b[0];
             $('span.' + temp + '-val').text(OptSel);
-            $('.js-drop .reqCalbck-drop1').slideUp(300);
+            $('.js-drop .reqCalbck-dropSec').slideUp(300);
         });
         $('.js-fill').on('keydown', function(e) {
             var s = String.fromCharCode(e.which);
@@ -226,10 +231,10 @@
                     <div class="reqCalbck-bdr12 colr2 f17 pb5 pt10 cursp pos-rel js-drop" id="footerDatefld"> <span class="footerDatefld-val f15 fontlig js-fill">~if $module neq 'membership'`What type of query do you have ?~else`Questions regarding Jeevansathi Membership Plans~/if`</span>
                         <div class="pos-abs reqCalbck-leftcorner_trianle1 reqCalbck-pos6 z2"></div>
                         <div class="pos-abs fullwid reqCalbck-pos7">
-                            <div id="reqCalbck-content-1" class="reqCalbck-content z1 reqCalbck-drop1 footerDatefld-drop disp-none" >
+                            <div id="reqCalbck-content-1" class="reqCalbck-content z1 reqCalbck-drop1 reqCalbck-dropSec footerDatefld-drop disp-none" >
                                 <ul data-attr="footerDatefld-list">
-                                    <li selectedid="M" class="fontlig f14 ~if $module eq 'membership'`active~/if`">Questions regarding Jeevansathi Membership Plans</li>                                    
-                                    <li selectedid="P" class="fontlig f14">Questions or feedback regarding Jeevansathi Profile</li>
+                                    <li secSelectedid="M" class="fontlig f14 ~if $module eq 'membership'`active~/if`">Questions regarding Jeevansathi Membership Plans</li>                                    
+                                    <li secSelectedid="P" class="fontlig f14">Questions or feedback regarding Jeevansathi Profile</li>
                                 </ul>
                             </div>
                         </div>
@@ -263,7 +268,7 @@
     ~/if`
 
     var module = "~$sf_request->getParameter('module')`";
-    var callbackSource = "";
+    var secCallbackSource = "";
     
     $(window).load(function(){
         var reqCallbackError = true;
@@ -320,18 +325,18 @@
         });
 
         if(module=='membership'){
-            callbackSource = 'Membership_Page';
+            secCallbackSource = 'Membership_Page';
         } else {
-            callbackSource = 'Footer';
+            secCallbackSource = 'Footer';
         }
 
         $("#footerSubmitCallbackRequest").click(function(e){
             var phNo = $("#footerReqMob input").val();
             var email = $("#footerReqEmail input").val().toLowerCase();
-            var selectedid = $("#footerDatefld ul li.active").attr('selectedid');
-            if((regExIndian.test(phNo) || regExInternational.test(phNo) || regExIndianLandline.test(phNo)) && regExEmail.test(email) && selectedid != 'Q') {
-                if(selectedid == 'M') {
-                    $.post("/membership/addCallBck",{'phNo':phNo.trim(),'email':email.trim(),'jsSelectd':'P3','execCallbackType':'JS_ALL','tabVal':1,'device':'desktop','channel':'JSPC','callbackSource':callbackSource},function(response){
+            var secSelectedid = $("#footerDatefld ul li.active").attr('secSelectedid');
+            if((regExIndian.test(phNo) || regExInternational.test(phNo) || regExIndianLandline.test(phNo)) && regExEmail.test(email) && secSelectedid != 'Q') {
+                if(secSelectedid == 'M') {
+                    $.post("/membership/addCallBck",{'phNo':phNo.trim(),'email':email.trim(),'jsSelectd':'P3','execCallbackType':'JS_ALL','tabVal':1,'device':'desktop','channel':'JSPC','callbackSource':secCallbackSource},function(response){
                         $("#footerReqCallBackMessage").text(response);
                         $("#footerRequestCallbackLogout").hide();
                         $("#footerRequestCallbackLogin").show();
@@ -340,7 +345,7 @@
                         $("#footerReqMobError").hide();
                     });
                 } else {
-                    $.post("/common/requestCallBack",{'email':email.trim(),'phone':phNo.trim(),'query_type':'P','device':'desktop','channel':'JSPC','callbackSource':callbackSource},function(response){
+                    $.post("/common/requestCallBack",{'email':email.trim(),'phone':phNo.trim(),'query_type':'P','device':'desktop','channel':'JSPC','callbackSource':secCallbackSource},function(response){
                         if(response == "Y") {
                             $("#footerReqCallBackMessage").text('We shall call you at the earliest');
                         } else {
@@ -358,7 +363,7 @@
                 if(!regExEmail.test(email)){
                     $("#footerReqEmailError").show();
                 }
-                if(selectedid == "Q"){
+                if(secSelectedid == "Q"){
                     $("#footerReqQueryError").show();
                 }
             }
@@ -392,19 +397,22 @@
     });
     $(function() {
         $('.js-drop').click(function() {
-            $('.js-drop .reqCalbck-drop1').slideDown(300);
+            $('.js-drop .reqCalbck-dropSec').slideDown(300);
             var getElemId = $(this).attr('id');
             var DropDownName = getElemId;
         });
-        $('.reqCalbck-drop1 ul li').click(function(event) {
+        $('.reqCalbck-dropSec ul li').click(function(event) {
             event.stopPropagation();
+            $('.reqCalbck-dropSec ul li').each(function(){
+                $(this).removeClass('active');    
+            });
             $(this).addClass('active');
             var OptSel = $(this).text();
             var getlistName = $(this).parent().attr('data-attr');
             var b = getlistName.split('-');
             var temp = b[0];
             $('span.' + temp + '-val').text(OptSel);
-            $('.js-drop .reqCalbck-drop1').slideUp(300);
+            $('.js-drop .reqCalbck-dropSec').slideUp(300);
         });
         $('.js-fill').on('keydown', function(e) {
             var s = String.fromCharCode(e.which);
