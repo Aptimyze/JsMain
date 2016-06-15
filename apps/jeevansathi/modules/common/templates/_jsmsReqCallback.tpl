@@ -40,15 +40,6 @@
     $("#jsmsReqCallbackBtn").on("click",function(e){
 		showRCBLayer(e);
 	});
-	
-  if(rcbForCAL == ''){
-      rcbForCAL = '~$from_source`';
-  }
-  ~if sfContext::getInstance()->getRequest()->getParameter('showRCBForCAL') eq '1'`
-      rcbForCAL = 'RCB_CAL';
-      $("#jsmsReqCallbackBtn").trigger('click');
-  ~/if`
-
 
   $('.tapoverlay').on('click',popBrowserStack);
 	$("#closeOvr2").on('click',popBrowserStack);
@@ -59,6 +50,13 @@
 		$("#callOvrOne").hide();
 		var paramStr = '~$data.topHelp.params`';
 		paramStr = paramStr.replace(/amp;/g,'');
+    if(rcbForCAL == ''){
+        rcbForCAL = '~$from_source`';
+    }
+    ~if sfContext::getInstance()->getRequest()->getParameter('showRCBForCAL') eq '1'`
+        rcbForCAL = 'RCB_CAL';
+        $("#jsmsReqCallbackBtn").trigger('click');
+    ~/if`
 		url ="~sfConfig::get('app_site_url')`/api/v3/membership/membershipDetails?" + paramStr + rcbForCAL;
     var rcbResponse = $('#reqCallBack').attr('data-rcbResponse');
     if(typeof rcbResponse != "undefined"){
