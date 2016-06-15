@@ -79,9 +79,9 @@
                 <!--start:field 2-->
                 <div id="specifiedID" class="setbdr1 mt30 disp-none">
     <input id="specifyReasonID" type="text" class="reasonDivCommon specifyReason color12 fullwid brdr-0 outwhi lh40 pl13 hgt30IE wid90p f15 fontlig disp-none" placeholder="Kindly specify the source"></input>
-		<textarea id="specifyOtherReasonID" type="text" class="reasonDivCommon specifyReason color12 fullwid brdr-0 outwhi setp7 wid90p f15 brnone fontlig disp-none" placeholder="Specify reason(s) for your dissatisfaction"></textarea>
+		<textarea id="specifyOtherReasonID" type="text" class="reasonDivCommon specifyReason color12 fullwid brdr-0 outwhi setp7 wid90p f15 brnone fontlig disp-none" placeholder="Kindly specify reason for your dissatisfaction"></textarea>
     <textarea id="specifyOtherReason2ID" type="text" class="reasonDivCommon specifyReason color12 fullwid brdr-0 outwhi setp7 wid90p f15 brnone fontlig disp-none" placeholder="Kindly specify your reason"></textarea>
-    <input id="specifyLinkID" class="reasonDivCommon color12 fullwid brdr-0 outwhi lh40 pl13 wid90p f15 hgt30IE fontlig disp-none" placeholder="Write name of website" type="text">
+    <input id="specifyLinkID" class="reasonDivCommon color12 fullwid brdr-0 outwhi lh40 pl13 wid90p f15 hgt30IE fontlig disp-none" placeholder="Please write name of website" type="text">
                 </div>
                 <!--end:field 2--> 
                 <!--start:field 3-->
