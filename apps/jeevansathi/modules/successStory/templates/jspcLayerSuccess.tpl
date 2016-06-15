@@ -378,7 +378,7 @@
             e.preventDefault();
             $.ajax({
                 type: "POST",
-                url: '/settings/jspcSettings?hideDelete=1&option=Delete',
+                url: '/settings/jspcSettings?hideDelete=1&option=Delete?offerConsent='+(offerConsent?'Y':'N'),
                 async: false,
                 success: function(data)
                 {

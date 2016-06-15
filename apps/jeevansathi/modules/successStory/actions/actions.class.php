@@ -777,6 +777,7 @@ class successStoryActions extends sfActions
         }
         $this->FetchProfile($request);
         $this->error = $request->getParameter("error");
+        $this->offerConsent = $request->getParameter("offerConsent");
 
         if (is_numeric($this->profileid)) {
             $jprofile = new JPROFILE();
