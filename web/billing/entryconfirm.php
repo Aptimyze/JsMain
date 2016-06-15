@@ -10,8 +10,8 @@
 * Copyright 2005, InfoEdge India Pvt Ltd
 ***********************************************************************************************/
 
-include("../jsadmin/connect.inc");
-include_once("../profile/pg/functions.php"); //puneet
+include_once(JsConstants::$docRoot."/jsadmin/connect.inc");
+include_once(JsConstants::$docRoot."/profile/pg/functions.php");
 include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 
 $ip=FetchClientIP();

@@ -4,7 +4,7 @@
 *    DESCRIPTION        : Include all intermediate pages after user logins
 *    CREATED BY         : lavesh
 ***********************************************************************************************************************/
-
+ include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 function intermediate_page($return_url=0)
 {
 	global $data,$checksum;
@@ -26,9 +26,15 @@ function intermediate_page($return_url=0)
 		$after_login=is_incomplete($profileid);
 		if($after_login)
 		{
-			$sql_in="UPDATE JPROFILE SET INCOMPLETE='Y',ACTIVATED ='N', PREACTIVATED='$activated' WHERE PROFILEID='$profileid'";
+			$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
+	
+			$profileid=$profileid;
+			$arrFields = array('INCOMPLETE'=>'Y','ACTIVATED'=>'N','PREACTIVATED'=>'$activated');
+			$jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID");
+			
+			//$sql_in="UPDATE JPROFILE SET INCOMPLETE='Y',ACTIVATED ='N', PREACTIVATED='$activated' WHERE PROFILEID='$profileid'";
 
-			$result_in=mysql_query_decide($sql_in) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_in,"ShowErrTemplate");
+			//$result_in=mysql_query_decide($sql_in) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_in,"ShowErrTemplate");
 			
 			$profilechecksum = md5($profileid)."i".$profileid;
 	                if($return_url==1)

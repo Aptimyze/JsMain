@@ -4,6 +4,7 @@ include("connect.inc");
 include(JsConstants::$docRoot."/commonFiles/flag.php");
 include("../sugarcrm/custom/crons/housekeepingConfig.php");
 include("../sugarcrm/include/utils/systemProcessUsersConfig.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 global $partitionsArray;
 global $process_user_mapping;
 
@@ -71,16 +72,23 @@ if(authenticated($cid))
 					
 					if(mysql_affected_rows_js())
 						$jsarch_user=", MOB_STATUS='N',LANDL_STATUS='N',PHONE_FLAG='' ";
+					$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
 					
 					if($screening==$sum)
 					{
-						$sql="UPDATE newjs.JPROFILE set ACTIVATED=PREACTIVATED,activatedKey=1,JSARCHIVED=0, ACTIVATE_ON='".date("Y-m-d H:i")."'$jsarch_user  where PROFILEID='$profileid'";
-						mysql_query_decide($sql) or die(mysql_error_js());
+						$arrFields = array('ACTIVATED'=>'PREACTIVATED','activatedKey'=>1,'JSARCHIVED'=>0,'ACTIVATE_ON'=>date("Y-m-d H:i").$jsarch_user);
+						$exrtaWhereCond = "";
+						$jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID",$exrtaWhereCond);
+						//$sql="UPDATE newjs.JPROFILE set ACTIVATED=PREACTIVATED,activatedKey=1,JSARCHIVED=0, ACTIVATE_ON='".date("Y-m-d H:i")."'$jsarch_user  where PROFILEID='$profileid'";
+						//mysql_query_decide($sql) or die(mysql_error_js());
 					}
 					else
 					{
-						$sql1="UPDATE newjs.JPROFILE set ACTIVATED=PREACTIVATED,activatedKey=1,JSARCHIVED=0,ACTIVATE_ON='0'$jsarch_user where PROFILEID='$profileid'"; 
-						mysql_query_decide($sql1) or die(mysql_error_js());
+						$arrFields = array('ACTIVATED'=>'PREACTIVATED','activatedKey'=>1,'JSARCHIVED'=>0,'ACTIVATE_ON'=>'0'.$jsarch_user);
+						$exrtaWhereCond = "";
+						$jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID",$exrtaWhereCond);
+						//$sql1="UPDATE newjs.JPROFILE set ACTIVATED=PREACTIVATED,activatedKey=1,JSARCHIVED=0,ACTIVATE_ON='0'$jsarch_user where PROFILEID='$profileid'"; 
+						//mysql_query_decide($sql1) or die(mysql_error_js());
 					}
 
 					//added by sriram to prevent the query on CONTACTS table being run several times on page reload.

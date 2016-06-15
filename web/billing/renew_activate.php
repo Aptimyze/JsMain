@@ -3,6 +3,7 @@ chdir(dirname(__FILE__));
 include_once "../jsadmin/connect.inc";
 $tt  = mktime(0, 0, 0, date("m")  , date("d")-1, date("Y"));
 $curdate=date("Y-m-d",$tt);
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
 $db = connect_db();
 //$db_slave = connect_slave();
@@ -54,16 +55,16 @@ if($profileids_arr)
 		{
 			$sql_off="UPDATE jsadmin.OFFLINE_BILLING SET ACTIVE='Y' WHERE PROFILEID=$profile AND BILLID=$offline_bill";
                         mysql_query_decide($sql_off,$db) or die($sql_off.mysql_error_js());
-			/*$sql1 = "UPDATE newjs.JPROFILE SET SUBSCRIPTION ='$servefor_str' , PREACTIVATED = IF(PREACTIVATED <> ACTIVATED, ACTIVATED, PREACTIVATED), ACTIVATED = 'Y',activatedKey=1 where PROFILEID =$profile";*/
-			$paramArr =array("SUBSCRIPTION"=>$servefor_str , "PREACTIVATED"=>'Y',"ACTIVATED"=>'Y',"activatedKey"=>1); 	
+
+			$paramArr =array("SUBSCRIPTION"=>$servefor_str);
+			$extraStr ="PREACTIVATED=IF(PREACTIVATED <> ACTIVATED, ACTIVATED,PREACTIVATED),ACTIVATED='Y',activatedKey=1";
+			$jprofileObj->updateJProfileForBilling($paramArr,$profile,'PROFILEID',$extraStr);
 		}
                 else{
 			$paramArr =array("SUBSCRIPTION"=>$servefor_str);
-                	/*$sql1="UPDATE newjs.JPROFILE set SUBSCRIPTION='$servefor_str' where PROFILEID='$profile' ";*/
+			$jprofileObj->editJPROFILE($paramArr,$profile,'PROFILEID');
  
 		}
-		/*mysql_query_decide($sql1,$db) or die($sql1.mysql_error_js());*/
-                $jprofileObj->editJPROFILE($paramArr,$profile,'PROFILEID');
 
 		// CLEAR MEMCACHE FOR CURRENT USER
     	$memCacheObject = JsMemcache::getInstance();

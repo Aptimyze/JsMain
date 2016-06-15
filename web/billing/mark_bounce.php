@@ -5,6 +5,7 @@ include(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 include("comfunc_sums.php");
 include("bounced_mail.php");
 include_once($_SERVER["DOCUMENT_ROOT"]."/classes/Membership.class.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
 $data=authenticated($cid);
 $flag=0;
@@ -224,7 +225,8 @@ if(isset($data))
                                 $preActivated =$row_act['PREACTIVATED'];
 
                         $jprofileObj    =JProfileUpdateLib::getInstance();
-                        $updateStr      ="PREACTIVATED='$preActivated', ACTIVATED='D', ACTIVATE_ON=now(),activatedKey=0";
+			$dateNew        =date("Y-m-d");
+                        $updateStr      ="PREACTIVATED='$preActivated', ACTIVATED='D', ACTIVATE_ON='$dateNew',activatedKey=0";
                         $paramArr       =$jprofileObj->convertUpdateStrToArray($updateStr);
                         $jprofileObj->editJPROFILE($paramArr,$profileid,'PROFILEID');
 			

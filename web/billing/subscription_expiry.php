@@ -7,6 +7,7 @@ include_once ("../jsadmin/connect.inc");
 include_once ("functions.php");
 include_once("comfunc_sums.php");
 include_once("../jsadmin/ap_common.php");
+include_once(JsConstants::$docRoot."/classes/JProileUpdateLib.php");
 
 $ts=time();
 //current date
