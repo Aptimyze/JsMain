@@ -1,4 +1,6 @@
 <?php
+include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+header("Location:".$SITE_URL."/settings/jspcSettings?hideDelete=1");die;
 	//to zip the file before sending it
 	$zipIt = 0;
 	if (strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip'))

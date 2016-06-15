@@ -145,6 +145,24 @@ class JProfileUpdateLib
   public function updateJProfileForArchive($iProfileID)
   {
     try {
+      return $this->objJProfileStore->updateLoginSortDate($iProfileID);
+    } catch(Exception $ex) {
+      //Log this error
+      jsException::log($ex);
+      return false;
+    }
+  }
+  
+  /**
+  * updateProfileForArchive
+  * Update newjs.JPROFILE Columns for archive i.e. setting 
+  * PREACTIVATED,ACTIVATED,activatedKey,JsArchived,MOD_DT column
+  * @param type $iProfileID
+  * @throws jsException
+  */
+  public function updateJProfileLoginSortDate($iProfileID)
+  {
+    try {
       return $this->objJProfileStore->updateProfileForArchive($iProfileID);
     } catch(Exception $ex) {
       //Log this error
