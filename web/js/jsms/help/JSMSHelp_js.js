@@ -49,14 +49,19 @@ function bindQuesClick(elem, quesAns2) {
 
 //search algorithm - detect key pressed
 function applySearchAlgo() {
+    
     $("#searchPId").on( "keyup", function(e) {
         lastChar = $(this).val().substr($(this).val().length - 1);
         var currentChar =  $(this).val().substr($(this).val().length);
+        if($(this).val().length == 1 && e.keyCode != 8 ){
+           $("#questionListing,#backBtnSection").removeClass("dispnone"), $("#sectionListing,#hamburgerIcon").addClass("dispnone");
+           bindBackButton("search");
+           
+        }
         if ($(this).val().length == 0) {
             $("#sectionListing,#hamburgerIcon").removeClass("dispnone"), $("#questionListing,#backBtnSection,#noResultDiv").addClass("dispnone");
         }
         else if (lastChar == " " || lastChar == "?" || lastChar == "," || lastChar == ";" || lastChar == "." || e.keyCode == 8 || e.keyCode == 13) {
-            
             str = $(this).val();
             keyWordArray = str.replace("?", " ").replace(";", " ").replace(",", " ").replace(".", " ").split(" ");
             finalKeyWord = [];
