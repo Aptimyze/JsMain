@@ -31,7 +31,7 @@
 ~if ($deleteOption eq '1') || ($deleteOption eq '2') || ($deleteOption eq '3')`
     <div id="offerCheckBox" class="disp-none" style="padding: 25px 10% 0px 10%;">       
       <div class="fl">
-        <li style="list-style: none;"><input type="checkbox" name="js-offerConsentCheckBox" checked="checked"></li>
+        <li style="list-style: none;"><input id='offerConsentCB' type="checkbox" name="js-offerConsentCheckBox" checked="checked"></li>
       </div>
     <div class="fontlig pl20 f15 grey5  mt20 pr10" style="margin-left: 20px;">I authorize Jeevansathi to send Emails containing attractive offers related to the wedding</div>
     </div>
