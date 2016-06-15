@@ -36,10 +36,13 @@
   var rcbForCAL = '';
   $(document).ready(function(){
 
-    
-    $("#jsmsReqCallbackBtn").on("click",function(e){
+  $("#jsmsReqCallbackBtn").on("click",function(e){
 		showRCBLayer(e);
 	});
+
+  ~if sfContext::getInstance()->getRequest()->getParameter('showRCBForCAL') eq '1'`
+      $("#jsmsReqCallbackBtn").trigger('click');
+  ~/if`
 
   $('.tapoverlay').on('click',popBrowserStack);
 	$("#closeOvr2").on('click',popBrowserStack);
@@ -55,7 +58,6 @@
     }
     ~if sfContext::getInstance()->getRequest()->getParameter('showRCBForCAL') eq '1'`
         rcbForCAL = 'RCB_CAL';
-        $("#jsmsReqCallbackBtn").trigger('click');
     ~/if`
 		url ="~sfConfig::get('app_site_url')`/api/v3/membership/membershipDetails?" + paramStr + rcbForCAL;
     var rcbResponse = $('#reqCallBack').attr('data-rcbResponse');
