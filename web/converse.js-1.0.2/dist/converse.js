@@ -28444,7 +28444,7 @@ return Backbone.BrowserStorage;
 
     converse.initialize = function (settings, callback) {
         "use strict";
-        console.log("here2");
+        //console.log("here2");
         var converse = this;
         var unloadevent;
         if ('onpagehide' in window) {
@@ -29697,7 +29697,7 @@ return Backbone.BrowserStorage;
                         $el = $('<div id="conversejs">');
                         //console.log($el);
                         //console.log("ankita");
-                        $('body').append($el); //comment to remove converse templates
+                        $('body').append($el);
                     }
                     //console.log(converse.templates.chats_panel());
                     $el.html(converse.templates.chats_panel());
@@ -29999,8 +29999,10 @@ return Backbone.BrowserStorage;
                 this.password = credentials.password;
             }
             if (this.authentication === converse.ANONYMOUS) {
+                //console.log("me.....");
                 this.connection.connect(this.jid.toLowerCase(), null, this.onConnectStatusChanged);
             } else if (this.authentication === converse.LOGIN) {
+                //console.log("here............");
                 if (!this.password) {
                     throw new Error("initConnection: If you use auto_login and "+
                         "authentication='login' then you also need to provide a password.");
@@ -30011,7 +30013,7 @@ return Backbone.BrowserStorage;
                 } else {
                     this.jid = Strophe.getBareJidFromJid(this.jid).toLowerCase()+'/'+resource;
                 }
-            
+                console.log("logged in......");
                 this.connection.connect(this.jid, this.password, this.onConnectStatusChanged);
             }
         };
@@ -30068,6 +30070,7 @@ return Backbone.BrowserStorage;
 
         this.initConnection = function () {
             if (this.connection) {
+                console.log("connected............");
                 return;
             }
             if (!this.bosh_service_url && ! this.websocket_url) {
@@ -30076,6 +30079,7 @@ return Backbone.BrowserStorage;
             if (('WebSocket' in window || 'MozWebSocket' in window) && this.websocket_url) {
                 this.connection = new Strophe.Connection(this.websocket_url);
             } else if (this.bosh_service_url) {
+                console.log("connected............");
                 this.connection = new Strophe.Connection(this.bosh_service_url, {'keepalive': this.keepalive});
             } else {
                 throw new Error("initConnection: this browser does not support websockets and bosh_service_url wasn't specified.");
@@ -30247,7 +30251,7 @@ return Backbone.BrowserStorage;
     var Strophe = strophe.Strophe;
     return {
         'initialize': function (settings, callback) {
-            //console.log("here1");
+            console.log("here1");
             converse.initialize(settings, callback);
         },
         'connection': {
@@ -30263,7 +30267,7 @@ return Backbone.BrowserStorage;
                 return converse.connection.jid;
             },
             'login': function (credentials) {
-                //console.log(credentials);
+                console.log(credentials);
                 converse.initConnection();
                 converse.logIn(credentials);
             },
@@ -34058,6 +34062,13 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                         ));
                         converse.controlboxtoggle.showControlBox();
                     } else if (subscription === 'both' || subscription === 'to') {
+                        //console.log("here6_roster_items");
+                        //console.log(item.toJSON());
+                    
+                        var roster_data = item.toJSON();
+                        var group = roster_data.groups[0];
+                        var userid = roster_data.id;
+                        chatAppPc.Tab1JsonData[group][userid] = roster_data;
                         this.$el.addClass('current-xmpp-contact');
                         this.$el.removeClass(_.without(['both', 'to'], subscription)[0]).addClass(subscription);
                         this.$el.html(converse.templates.roster_item(
@@ -34198,8 +34209,10 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                     //console.log("here5_groups");
                     //console.log(this.model.get('name'));
                     var group_name = this.model.get('name');
-                    chatAppPc.Tab1Data = chatAppPc.Tab1Data + '<div id="'+group_name+'"><div class="f12 fontreg nchatbdr2"><p class="nchatt1 fontreg pl15">'+group_name+'</p></div>';
-                    //console.log(chatAppPc.Tab1Data);
+                    if(typeof chatAppPc.Tab1JsonData.group_name === "undefined")
+                    {  
+                        chatAppPc.Tab1JsonData[group_name] = {};
+                    }
                     this.$el.html(
                         $(converse.templates.group_header({
                             label_group: this.model.get('name'),
@@ -35751,6 +35764,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
 
                 submitPassword: function (ev) {
                     ev.preventDefault();
+                    //console.log("her11233");
                     var password = this.$el.find('.chatroom-form').find('input[type=password]').val();
                     this.$el.find('.chatroom-form-container').replaceWith('<span class="spinner centered"/>');
                     this.join(password);
