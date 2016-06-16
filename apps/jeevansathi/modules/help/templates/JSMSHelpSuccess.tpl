@@ -1,4 +1,4 @@
-<div class="bg4 minhgt600">
+<div class="bg4">
     <div class="perspective" id="perspective">
         <div class="" id="pcontainer">
         </div>
