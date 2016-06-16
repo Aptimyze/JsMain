@@ -34064,11 +34064,13 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                     } else if (subscription === 'both' || subscription === 'to') {
                         //console.log("here6_roster_items");
                         //console.log(item.toJSON());
-                    
                         var roster_data = item.toJSON();
                         var group = roster_data.groups[0];
-                        var userid = roster_data.id;
-                        chatAppPc.Tab1JsonData[group][userid] = roster_data;
+                        var userid = roster_data.id;        
+                        if(typeof chatAppPc.Tab1JsonData[group] !== "undefined")
+                        {
+                            chatAppPc.Tab1JsonData[group][userid] = roster_data;
+                        }
                         this.$el.addClass('current-xmpp-contact');
                         this.$el.removeClass(_.without(['both', 'to'], subscription)[0]).addClass(subscription);
                         this.$el.html(converse.templates.roster_item(
@@ -34209,7 +34211,8 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                     //console.log("here5_groups");
                     //console.log(this.model.get('name'));
                     var group_name = this.model.get('name');
-                    if(typeof chatAppPc.Tab1JsonData.group_name === "undefined")
+                    //console.log(group_name=="Shortlisted Members");
+                    if(typeof chatAppPc.Tab1JsonData.group_name === "undefined" && (group_name=="Shortlisted Members"||group_name=="Desired Partner Matches"||group_name=="Interest Received"))
                     {  
                         chatAppPc.Tab1JsonData[group_name] = {};
                     }

@@ -24,6 +24,7 @@ function initiateChat()
       });
 }
 
+
 /*function mapListingJsonToHTML
 * map json data for listing to html
 * @params:jsonData
