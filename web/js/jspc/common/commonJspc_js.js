@@ -20,7 +20,7 @@ $(document).keydown(function(e) {
 $(document).ready(function(e) {
     top.document.title = document.title;
     $("#liveChatLinkFooter,#liveChatLinkHeader").click(function() {
-        $("#fc_chat_header").click();
+        $("#lc_chat_header").click();
     });
     $(".contentHeader").each(function() {
         $(this).mCustomScrollbar();
@@ -473,7 +473,7 @@ function initializeTopNavBar(loggedIn, profileid, moduleName, actionName) {
             $("#topNavigationBar").parent().addClass("pt35");
         }
         if (profileid) {
-            if (moduleName != 'homepage' && moduleName != 'myjs' && moduleName != 'register' && moduleName != 'membership' && actionName != 'phoneVerificationPcDisplay' && actionName != 'logoutPage' && $("#viewBellCountHeader").length) {
+            if (moduleName != 'homepage' && moduleName != 'myjs' && moduleName != 'register' && moduleName != 'membership' && actionName != 'phoneVerificationPcDisplay' && actionName != 'logoutPage' && actionName != 'alertManager' && $("#viewBellCountHeader").length) {
                 getBellCountData(profileid, 1);
             }
         }
@@ -482,19 +482,19 @@ function initializeTopNavBar(loggedIn, profileid, moduleName, actionName) {
 
 function popupFreshDeskGlobal(username, email) {
     setTimeout(function() {
-        var len = $("#fc_chat_layout").length;
+        var len = $("#lc_chat_layout").length;
         if (len) {
-            $("#fc_chat_layout").click();
-            if ($("#fc_chat_layout input[id*='name']").length) {
-                $("#fc_chat_layout input[id*='name']").val(username);
+            $("#lc_chat_layout").click();
+            if ($("#lc_chat_layout input[id*='name']").length) {
+                $("#lc_chat_layout input[id*='name']").val(username);
             }
-            if ($("#fc_chat_layout input[id*='email']").length) {
-                $("#fc_chat_layout input[id*='email']").val(email);
+            if ($("#lc_chat_layout input[id*='email']").length) {
+                $("#lc_chat_layout input[id*='email']").val(email);
             }
-            $("#fc_chat_header").click();
-            // var buttonLen = $("#fc_chat_start").length;
-            // if(buttonLen && $("#fc_chat_start").is(":visible")){
-            //     $("#fc_chat_start").click();
+            $("#lc_chat_header").click();
+            // var buttonLen = $("#lc_chat_start").length;
+            // if(buttonLen && $("#lc_chat_start").is(":visible")){
+            //     $("#lc_chat_start").click();
             // }
         }
     }, 10000);
@@ -502,18 +502,18 @@ function popupFreshDeskGlobal(username, email) {
 
 function populateFreshDeskGlobal(username, email) {
     setInterval(function() {
-        var len = $("#fc_chat_layout").length;
+        var len = $("#lc_chat_layout").length;
         if (len) {
-            if ($("#fc_chat_layout input[id*='name']").length) {
-                $("#fc_chat_layout input[id*='name']").val(username);
+            if ($("#lc_chat_layout input[id*='name']").length) {
+                $("#lc_chat_layout input[id*='name']").val(username);
             }
-            if ($("#fc_chat_layout input[id*='email']").length) {
-                $("#fc_chat_layout input[id*='email']").val(email);
+            if ($("#lc_chat_layout input[id*='email']").length) {
+                $("#lc_chat_layout input[id*='email']").val(email);
             }
         }
-        // var buttonLen = $("#fc_chat_start").length;
-        // if(buttonLen && $("#fc_chat_start").is(":visible")){
-        //     $("#fc_chat_start").click();
+        // var buttonLen = $("#lc_chat_start").length;
+        // if(buttonLen && $("#lc_chat_start").is(":visible")){
+        //     $("#lc_chat_start").click();
         // }
     }, 500);
 }
