@@ -22,8 +22,8 @@
             </div>
             ~/if`
 	    ~if $arrOutDisplay['pic']['photo_display'] eq 'C'`
-            <div id="photoPrivacyText"  class="pos-abs srppos4 propos6 fullwid js-noaction">
-              <div class=" txtc colrw opa80 mauto fullwid" style="line-height:30px;">Visible on Accept</div>
+            <div id="photoPrivacyText"  class="pos-abs srppos4 propos6 fullwid js-noaction bgColorG">
+              <div class=" txtc colrw opa80 mauto fullwidi fontlig" style="line-height:45px;">Visible on Accept</div>
             </div>
 	    ~/if`
            </div>
