@@ -18,6 +18,9 @@ $("#submitRequest").click(function() {
     }
     if (validInfo == true) {
         $("#nextDiv").removeClass("dispnone"), $("#requestForm").addClass("dispnone");
+        $("body").animate({
+            scrollTop: "-30px"
+        }, 100);
         var username = $("#usernameInp").find("input").val(),
             email = $("#emailInp").find("input").val(),
             query = $("#quesInp").find("input").val();
