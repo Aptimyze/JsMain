@@ -17,7 +17,7 @@ class TrendsIntersectionDppProfiles extends PartnerProfile {
    * @return type
    */
   public function getDppTrendsCriteria($sort, $limit) {
-    Parent::getDppCriteria();
+    parent::getDppCriteria();
     $this->setSortParam($sort,$limit);
     $trendsObj = new TrendsPartnerProfiles($this->loggedInProfileObj);
     $trendsObj->getDppCriteria($sort, $limit);
