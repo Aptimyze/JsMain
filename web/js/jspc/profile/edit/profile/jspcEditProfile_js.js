@@ -1120,7 +1120,7 @@ EditApp = function(){
       var parentAttr    = {class:"clearfix fontlig pt10",id:fieldObject.key.toLowerCase()+'Parent'};
       var labelAttr     = {class:"f17 fontlig color12",text:fieldObject.label};
       var fieldDivAttr  = {class:"js-fileBox pos-rel"}
-      var textAreaAttr     = {class:"color11 fontlig f15 fullwid brdr-0 hgt40 bgnone outline-none wh0",type:"file",text:fieldObject.value,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off",value:fieldObject.value}
+      var textAreaAttr     = {class:"color11 fontlig f15 brdr-0 bgnone outline-none wh0 disp-none",type:"file",text:fieldObject.value,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off",value:fieldObject.value}
        var btnAttr     = {class:"bg_pink mt20 lh30 f14 colrw txtc brdr-0 cursp disp_ib fullwid pos-rel wid50p dispib",type:"file",text:fieldObject.value,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off",text:'Attach',id:'idBtn_'+fieldObject.key.toLowerCase()}
        var labelAttr2     = {class:"f14 disp_ib color5 padl15 vertM dispib textTru wid40p",id:fieldObject.key.toLowerCase(),text:'jpg/pdf only',id:'idlabel_'+fieldObject.key.toLowerCase()}
       
@@ -4579,7 +4579,7 @@ EditApp = function(){
       });
       
       
-      $('#idBtn_addr_proof_val').on('click',function(event){
+      $('#idBtn_addr_proof_val').unbind('click').on('click',function(event){
         $('.js-addrProofVal').click();
       });
       
