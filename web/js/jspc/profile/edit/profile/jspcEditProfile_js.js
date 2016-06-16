@@ -4248,13 +4248,12 @@ EditApp = function(){
         var addrProofTypeField = editAppObject["verification"]["ADDR_PROOF_TYPE"];
         if(v1){
                 v1 = validateImage('id_proof_val',idProofValField);
-                if(v1 === false)
-                        return false;
         }
         if(v2){
                 v2 = validateImage('addr_proof_val',addrProofValField);
-                if(v2 === false)
-                        return false;
+        }
+        if(v1 === false || v2 === false){
+                return false;
         }
             if(!t1 && v1){
                     var showMsg = 1;
