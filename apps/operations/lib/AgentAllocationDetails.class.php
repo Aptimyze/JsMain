@@ -494,7 +494,19 @@ public function fetchProfiles($processObj)
                 $subMethod      =$processObj->getSubMethod();
                 $startDt        =$processObj->getStartDate();
                 $endDt          =$processObj->getEndDate();
-                $profiles       =$this->fetchWebmasterLeadsEligibleProfiles($subMethod, $startDt, $endDt);
+                $profiles      	=$this->fetchWebmasterLeadsEligibleProfiles($subMethod, $startDt, $endDt);
+		if(count($profiles)>0){
+			$obj =new incentive_MAIN_ADMIN('newjs_slave');
+			$profilesAllocated =$obj->getProfilesDetails($profiles);
+			if(count($profilesAllocated)>0){
+				foreach($profilesAllocated as $key=>$value){
+					$allocated[] =$value['PROFILEID'];
+				}
+				$profiles =array_diff($profiles,$allocated);
+				$profiles =array_values($profiles);
+				unset($allocated);
+			}
+		}
 	}
         elseif($processObj->getProcessName()=="upsellProcessInDialer")
         {
