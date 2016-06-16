@@ -29274,6 +29274,7 @@ return Backbone.BrowserStorage;
                  * Parameters:
                  *    (XMLElement) IQ - The IQ stanza received from the XMPP server.
                  */
+                 console.log("onrosterpush");
                 var id = iq.getAttribute('id');
                 var from = iq.getAttribute('from');
                 if (from && from !== "" && Strophe.getBareJidFromJid(from) !== converse.bare_jid) {
@@ -29331,6 +29332,7 @@ return Backbone.BrowserStorage;
                     groups.push(Strophe.getText(group));
                 });
                 if (!contact) {
+                    console.log("here---1");
                     if ((subscription === "none" && ask === null) || (subscription === "remove")) {
                         return; // We're lazy when adding contacts.
                     }
@@ -29342,6 +29344,7 @@ return Backbone.BrowserStorage;
                         subscription: subscription
                     }, {sort: false});
                 } else {
+                     console.log("here---2");
                     if (subscription === "remove") {
                         return contact.destroy(); // will trigger removeFromRoster
                     }
@@ -34008,6 +34011,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                 },
 
                 render: function () {
+                    console.log("in render");
                     if (!this.mayBeShown()) {
                         this.$el.hide();
                         return this;
@@ -34066,10 +34070,20 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                         //console.log(item.toJSON());
                         var roster_data = item.toJSON();
                         var group = roster_data.groups[0];
-                        var userid = roster_data.id;        
-                        if(typeof chatAppPc.Tab1JsonData[group] !== "undefined")
+                        var userid = roster_data.id; 
+                        //set json data for first time listing display
+                        if($("#listing_tab1").length===0)       
                         {
-                            chatAppPc.Tab1JsonData[group][userid] = roster_data;
+                            console.log("new roster");
+                            if(typeof chatAppPc.Tab1JsonData[group] !== "undefined")
+                            {
+                                chatAppPc.Tab1JsonData[group][userid] = roster_data;
+                            }
+                        }
+                        else   //update existing listing
+                        {
+                            console.log("old roster");
+                            updateChatPCRoster(roster_data);
                         }
                         this.$el.addClass('current-xmpp-contact');
                         this.$el.removeClass(_.without(['both', 'to'], subscription)[0]).addClass(subscription);
@@ -34207,6 +34221,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                 },
 
                 render: function () {
+                    console.log("here.................");
                     this.$el.attr('data-group', this.model.get('name'));
                     //console.log("here5_groups");
                     //console.log(this.model.get('name'));

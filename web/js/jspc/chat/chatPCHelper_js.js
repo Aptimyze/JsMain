@@ -51,7 +51,6 @@ function mapListingJsonToHTML(jsonData)
 */
 function updateChatPCRoster(rosterData)
 {
-      console.log("roster data");
       console.log(rosterData);
-      
+
 }
