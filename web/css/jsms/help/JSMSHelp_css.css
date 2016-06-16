@@ -30,3 +30,7 @@
 .errorDiv {border: 1px solid #d9475c}
 .mt10{margin-top:10px}
 .minhgt600 {min-height:600px}
+#questionAnswerDiv table{width:100% !important}
+#questionAnswerDiv {overflow-x:auto;}
+
+ 

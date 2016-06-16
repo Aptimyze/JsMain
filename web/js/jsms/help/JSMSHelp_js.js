@@ -46,10 +46,10 @@ function bindQuesClick(elem, quesAns2) {
         });
     });
 }
-
+var idArray = [];
 //search algorithm - detect key pressed
 function applySearchAlgo() {
-    
+     
     $("#searchPId").on( "keyup", function(e) {
         lastChar = $(this).val().substr($(this).val().length - 1);
         var currentChar =  $(this).val().substr($(this).val().length);
@@ -61,7 +61,7 @@ function applySearchAlgo() {
         if ($(this).val().length == 0) {
             $("#sectionListing,#hamburgerIcon").removeClass("dispnone"), $("#questionListing,#backBtnSection,#noResultDiv").addClass("dispnone");
         }
-        else if (lastChar == " " || lastChar == "?" || lastChar == "," || lastChar == ";" || lastChar == "." || e.keyCode == 8 || e.keyCode == 13) {
+        else if (lastChar == " " || lastChar == "?" || lastChar == "," || lastChar == ";" || lastChar == "." || e.keyCode == 8 || e.keyCode == 13) {         
             str = $(this).val();
             keyWordArray = str.replace("?", " ").replace(";", " ").replace(",", " ").replace(".", " ").split(" ");
             finalKeyWord = [];
@@ -148,17 +148,29 @@ function bindSectionClick() {
 function searchFinalList(elem) {
     var quesStr = "",
         quesKeyWords = [];
+    idArray = [];
     $.each(elem, function(index, value) {
         $.each(quesAnsList, function(index2, value2) {
             //getting keywords of each ques
             quesStr = value2.QUESTION;
             quesKeyWords = quesStr.replace("?", " ").replace(";", " ").replace(",", " ").replace(".", " ").split(" ");
+            
             //searching each keyword of question with search input
             $.each(quesKeyWords, function(index3, value3) {
+                
                 if (value3.toLowerCase().indexOf(value.toLowerCase()) != -1) {
-                    $("#questionListing,#backBtnSection").removeClass("dispnone"), $("#sectionListing,#hamburgerIcon").addClass("dispnone");
-                    bindBackButton("search");
-                    $("#quesList2").append("<li id='ques_" + value2.ID + "'>" + value2.QUESTION + "</li>");
+                     var idPresent = false;
+                            $.each(idArray, function(index4,value4){
+                                if(value4==value2.ID){
+                                    idPresent = true;
+                                }
+                            })
+                    if(idPresent == false){
+                        $("#questionListing,#backBtnSection").removeClass("dispnone"), $("#sectionListing,#hamburgerIcon").addClass("dispnone");
+                        bindBackButton("search");
+                        $("#quesList2").append("<li id='ques_" + value2.ID + "'>" + value2.QUESTION + "</li>");
+                        idArray.push(value2.ID);
+                    }
                 }
             });
         });
