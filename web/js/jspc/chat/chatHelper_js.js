@@ -1,3 +1,4 @@
+
 /*function initiateChat
 * request sent to openfire to initiate chat and maintain session
 * @params:none
@@ -36,7 +37,7 @@ function mapListingJsonToHTML(jsonData)
       $.each(jsonData,function( index, val ){
             listingHTML = listingHTML+ '<div id="'+index+'"><div class="f12 fontreg nchatbdr2"><p class="nchatt1 fontreg pl15">'+index+'</p></div><ul class="chatlist">';
             $.each(val,function( key, details ){
-                  listingHTML = listingHTML+'<li class="clearfix profileIcon" id="profile_'+key+'"><img id="pic_'+key+'" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">'+key+'</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li>';
+                  listingHTML = listingHTML+'<li class="clearfix profileIcon" id="profile_'+key+'"><img id="pic_'+key+'" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">'+details.fullname+'</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li>';
             });
             listingHTML = listingHTML+'</ul></div>';
       });

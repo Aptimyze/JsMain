@@ -34211,8 +34211,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                     //console.log("here5_groups");
                     //console.log(this.model.get('name'));
                     var group_name = this.model.get('name');
-                    //console.log(group_name=="Shortlisted Members");
-                    if(typeof chatAppPc.Tab1JsonData.group_name === "undefined" && (group_name=="Shortlisted Members"||group_name=="Desired Partner Matches"||group_name=="Interest Received"))
+                    if(typeof chatAppPc.Tab1JsonData.group_name === "undefined" && ($.inArray(group_name,chatAppPc.rosterGroups))!==-1)
                     {  
                         chatAppPc.Tab1JsonData[group_name] = {};
                     }

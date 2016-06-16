@@ -30,9 +30,7 @@ chatAppPc.Tab2Data ='<div><div class="f12 fontreg nchatbdr2"><p class="nchatt1 f
 
 chatAppPc.HoverBoxDiv = '<div class="pos_fix info-hover fontlig vishid nz21"><div class="nchatbdr3 f13"> <img src="images/chathover.jpg" class="vtop"/><div class="nchatgrad padall-10"><ul class="listnone lh22"><li>34 Years, 5\' 9\" Sikh</li><li>Sikh: Arora Punjabi</li><li>MBA/PGDM, B.Com</li><li>Advertising Professional</li><li>Rs. 15 - 20lac, New Delhi</li></ul><p class="txtc nc-color2 pt10 hgt18"><span class="disp-none">You accepted her interest</span></p></div><button class="bg_pink fullwid lh50 brdr-0 txtc colrw cursp">Send Interest</button></div></div>';
 
-
-
-
+chatAppPc.rosterGroups = ["Desired Partner Matches","Interest Received","Shortlisted Members"];
 
 chatAppPc.cmfunc = {
 	getHeight: function(){		
