@@ -5555,6 +5555,9 @@ function onViewHoroscope(){
 
 function onClickOfHoroscopeOverlay(){
     $("#commonOverlay").on('click',function(){
+        $("#removeHoroscopeLayer").fadeOut("fast",function(){
+            $("#commonOverlay").fadeOut("fast"); 
+        });
         if(! ($("#commonOverlay").hasClass("js-dClose")) ){
             $("#closebtnHL").trigger("click");
             $("#cls-view-horo").trigger("click");
@@ -5614,6 +5617,46 @@ $(document).ready(function() {
     $('.js-boxField').trigger('boxBlur');
     $('.js-timeClick').trigger('timeBlur');
   });
+  $("#Rbt_yes").click(function(){
+      	showCommonLoader();
+        $.ajax({
+          method: "POST",
+          url : "/api/v2/profile/deleteHoroscope",
+          async:true,
+          data : {profilechecksum:ProCheckSum},
+          timeout:20000,
+          success:function(response){
+          		hideCommonLoader();
+              $("#removeHoroscopeLayer").fadeOut("fast",function(){
+                $("#commonOverlay").fadeOut("fast"); 
+              });
+              location.reload();
+          }
+        });  
+      });
+    $(".js-deleteHoro").on('click', function(){
+                $("#removeHoroscopeDiv").removeClass('disp-none');
+                $("#Rbt_yes, #Rbt_no").addClass("cursp").removeClass("bg6");
+                $("#commonOverlay").fadeIn("fast",function(){
+                    $("#commonOverlay").on('click',function(){
+                        $("#removeHoroscopeLayer").fadeOut("fast",function(){
+                            $("#commonOverlay").fadeOut("fast"); 
+                        });
+                    }); 
+                    $("#removeHoroscopeLayer").fadeIn("fast"); 
+                });
+                ajaxInsertAstroPull(0);
+    });
+    $("#Rbt_no").on('click',function(){
+        $("#removeHoroscopeLayer").fadeOut("fast",function(){
+            $("#commonOverlay").fadeOut("fast"); 
+        });
+    });
+    $("#removeClosebtnHL").on('click',function(){
+        $("#removeHoroscopeLayer").fadeOut("fast",function(){
+            $("#commonOverlay").fadeOut("fast"); 
+        });
+    });
   
   $('body').on('focus', '.js-boxField', function(event) {
     var myId = $(this).attr('id');
