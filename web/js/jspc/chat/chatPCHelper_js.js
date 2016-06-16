@@ -37,7 +37,7 @@ function mapListingJsonToHTML(jsonData)
 
             listingHTML = listingHTML+ '<div id="'+chatAppPc.rosterGroupsIDMapping[index]+'"><div class="f12 fontreg nchatbdr2"><p class="nchatt1 fontreg pl15">'+index+'</p></div><ul class="chatlist">';
             $.each(val,function( key, details ){
-                  listingHTML = listingHTML+'<li class="clearfix profileIcon" id="profile_'+key+'"><img id="pic_'+key+'" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">'+details.fullname+'</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li>';
+                  listingHTML = listingHTML+'<li class="clearfix profileIcon" id="profile_'+details.fullname+'"><img id="pic_'+key.fullname+'" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">'+details.fullname+'</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li>';
             });
             listingHTML = listingHTML+'</ul></div>';
       });
@@ -54,14 +54,17 @@ function updateChatPCRoster(rosterData)
 {
       try
       {
-            //console.log("new roster");
+            console.log("roster update");
             console.log(rosterData);
             var newRosterHTML = "",groupid;
             groupid = chatAppPc.rosterGroupsIDMapping[rosterData.groups[0]];
-            newRosterHTML = '<li class="clearfix profileIcon" id="profile_'+rosterData.id+'"> <img id="pic_'+rosterData.id+'" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">'+rosterData.fullname+'</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li>';
-            console.log(groupid);
-            if($("#"+groupid).length != 0)
-                  $("#"+groupid).find(".chatlist").append(newRosterHTML);
+            
+             //console.log($("#"+groupid).find("ul.chatlist").find("li#profile_"+rosterData.fullname).length);
+            if($("#"+groupid).find("ul.chatlist").find("li#profile_"+rosterData.fullname).length === 0)
+            {
+                  newRosterHTML = '<li class="clearfix profileIcon" id="profile_'+rosterData.fullname+'"> <img id="pic_'+rosterData.fullname+'" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">'+rosterData.fullname+'</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li>';
+                  $("#"+groupid).find("ul.chatlist").append(newRosterHTML);
+            }     
       }
       catch(e)
       {

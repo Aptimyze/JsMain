@@ -574,8 +574,8 @@ $(function(){
 		});
 		$('#js-loginPanel').fadeOut('fast',function(){ $('#js-lsitingPanel').css('display','block');    });		
 		setTimeout(function(){
-			alert("done");
-			console.log("tab1 data generated");
+			alert("tab1 data generated");
+			$("#listing_tab1").html("");
 			console.log(chatAppPc.Tab1JsonData);
 			chatAppPc.Tab1Data = mapListingJsonToHTML(chatAppPc.Tab1JsonData);
 			chatAppPc.cmfunc.afterLoginPanel();

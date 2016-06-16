@@ -29322,7 +29322,9 @@ return Backbone.BrowserStorage;
                 /* Update or create RosterContact models based on items
                  * received in the IQ from the server.
                  */
+
                 var jid = item.getAttribute('jid');
+                console.log("updateContact"+jid);
                 if (this.isSelf(jid)) { return; }
                 var groups = [],
                     contact = this.get(jid),
@@ -34011,7 +34013,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                 },
 
                 render: function () {
-                    console.log("in render");
+                    console.log("in render123");
                     if (!this.mayBeShown()) {
                         this.$el.hide();
                         return this;
