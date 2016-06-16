@@ -62,6 +62,16 @@ function closeOverlayOnClick() {
     $("#SearchProId").val("");
 }
 
+
+function getSearchQureyParameter(key){
+  var value = false;
+  if(location.search.indexOf(key)!=-1){
+    value = location.search.substr(location.search.indexOf(key)).split('&')[0].split('=')[1];
+  }
+  return value;
+}
+
+
 //function to make an ajax for search by profile id
 function callApiForProfile() {
     userPro = $.trim($("#SearchProId").val());

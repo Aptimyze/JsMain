@@ -122,6 +122,15 @@
 		 return $szOut;
 	 }
 	 
+	 public static function getDppFieldMapping($key='',$all='')
+	 {
+		 if($all =='')
+			$szOut = self::$arrCOLUMN_NAME[$key];
+		 else
+			$szOut = self::$arrCOLUMN_NAME;
+		 return $szOut;
+	 }
+	 
 	 public static function getEditValues($arrInput)
 	 {
 		if(!is_array($arrInput))
