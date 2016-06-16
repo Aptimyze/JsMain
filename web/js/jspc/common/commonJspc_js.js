@@ -424,6 +424,15 @@ function setBellCountHTML(data) {
                 $("#membersDailyMatchesCount").text("9+");
             }
         }
+	if (parseInt(data.FILTERED_NEW)) {
+            $("#membersFilteredInterestCountParent").css('display', 'block');
+            if (data.FILTERED_NEW < 10) {
+                $("#FilteredInterstsCount").text(data.FILTERED_NEW);
+            } else {
+                $("#FilteredInterstsCount").text("9+");
+            }
+        }
+
     }
 }
 

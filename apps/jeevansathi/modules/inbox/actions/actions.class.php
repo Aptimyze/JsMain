@@ -161,6 +161,16 @@ class inboxActions extends sfActions
 						$profileMemcacheObj->updateMemcache();
 					}
 					break;
+				case "12":
+					$contactsObj = new ContactsRecords();
+					$currentCount =  $profileMemcacheObj->get("FILTERED_NEW");
+					if($currentCount)
+					{
+						$contactsObj->makeAllContactSeen($pid,ContactHandler::FILTERED);
+						$profileMemcacheObj->update("FILTERED_NEW",-$currentCount);
+						$profileMemcacheObj->updateMemcache();
+					}
+					break;
 				case "4":
 					$currentCount =  $profileMemcacheObj->get("MESSAGE_NEW");
 					if($currentCount)
@@ -481,6 +491,15 @@ public function executePerformV2(sfWebRequest $request)
 					case 'FILTERED_INTEREST': 
 					$response2["subtitle"]='Filtered Interests '.$response2['total'];
 					$response2["title2"]=null;
+						$contactsObj = new ContactsRecords();
+						$profileMemcacheObj = new ProfileMemcacheService($profileObj);
+						$currentCount =  $profileMemcacheObj->get("FILTERED_NEW");
+						if($currentCount)
+						{
+							$contactsObj->makeAllContactSeen($pid,ContactHandler::FILTERED);
+							$profileMemcacheObj->update("FILTERED_NEW",-$currentCount);
+							$profileMemcacheObj->updateMemcache();
+						}
 					break;
 
 					case 'PEOPLE_WHO_VIEWED_MY_CONTACTS': 

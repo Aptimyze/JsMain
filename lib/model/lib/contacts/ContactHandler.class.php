@@ -42,6 +42,7 @@ class ContactHandler
   const INITIATED="I";
 
   const REMINDER = "R";  
+  const FILTERED = "F"; 
   const CANCEL_CONTACT="E";
   const ACCEPT="A";
   const DECLINE="D";

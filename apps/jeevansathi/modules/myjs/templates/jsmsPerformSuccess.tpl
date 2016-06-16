@@ -137,6 +137,20 @@
 		<div class="clr"></div>
 	</div>
                 </a>
+           
+           <a href="~$SITE_URL`/inbox/12/1">
+	<div class="fullwid fontthin f14 color3 pad18 brdr1">
+		<div class="fl wid92p">
+			<div class="fullwid txtc">Filtered Interests</div>
+		</div>
+		~if $apiData.BELL_COUNT.FILTERED_NEW>0`
+		<div class="fr wid8p">
+			<div class="bg7 brdr50p white f12 wid25 hgt25 pt4 txtc">~$apiData.BELL_COUNT.FILTERED_NEW`</div>
+		</div>
+		~/if`
+		<div class="clr"></div>
+	</div>
+                </a>
 
 </div>
 
