@@ -7,9 +7,12 @@ class jsadmin_HELP_QUESTIONS extends TABLE{
         parent::__construct($dbname);
     }
     
-    public function getAll($id=""){
+    public function getAll($id="",$active=""){
         try{
             $sql = "SELECT * FROM jsadmin.HELP_QUESTIONS";
+            if($active){
+                $sql.=" WHERE ACTIVE = 'Y'";
+            }
             $prep = $this->db->prepare($sql);
             $prep->execute();
             while($row = $prep->fetch(PDO::FETCH_ASSOC)){
