@@ -2334,3 +2334,13 @@ line-height:25px;
   color:white;
   display:none;
   }
+  .wh0{
+          width: 0px;
+          height: 0px;
+  }
+  .padl15 {
+    padding-left: 15px;
+}
+.vertM {
+    vertical-align: middle;
+}
