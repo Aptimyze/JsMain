@@ -25,8 +25,8 @@ class ErrorHelp{
 									2=>array('id'=>"caste_error_christian",'msg'=>'Please provide a sect.'),
 									3=>array('id'=>"caste_error_hindu",'msg'=>'Please provide a caste.'));
 		public static $ERR_MSTATUS=array(2=>array('id'=>"mstatus_error_muslim",'msg'=>"Please choose married only if you are muslim."),3=>array('id'=>"mstatus_error_muslim_male",'msg'=>'Please choose married only if you are muslim male.'),4=>array('id'=>"mstatus_error_gender",'msg'=>'please provide the gender for marital status.'),5=>array('id'=>"mstatus_error_religion",'msg'=>'Please provide religion for marital status'));		
+		public static $ERR_FILEVAL=array(1=>array('id'=>"err_file_type",'msg'=>'Please enter a valid format'),2=>array('id'=>"err_file_size",'msg'=>'Please enter document with size less then 5MB'));
 		
-
 									
 		public static $ERR_REQUIRED = array('email'=>'Please provide an email.','password'=>'Please provide a password.','relationship'=>'Please choose the person for whom you are looking for.','gender'=>'Please provide a gender.','mtongue'=>'Please provide a mother tongue.','height'=>'Please provide a height.','mstatus'=>'Please provide your marital status.','religion'=>'Please provide a Religion.','city_res'=>'Please provide a city.','havechild'=>'Please provide Have Children.','dtofbirth'=>'Please provide Date of Birth.','caste'=>'Please provide a caste.','edu_level_new'=>' Please provide a degree.','occupation'=>'Please provide a work area.','income'=>'Please provide a income range.','yourinfo'=>'For the benefit of your matches, please write about yourself in at least 100 letters','P_LHEIGHT'=>'Please provide a low height.','P_HHEIGHT'=>'Please provide a high height.');
 		

@@ -32,7 +32,7 @@ public function microtime_float()
     list($usec, $sec) = explode(" ", microtime());
     return ((float)$usec + (float)$sec);
 }
-  public function getNotificationData($appProfiles,$notificationKey, $message='')
+  public function getNotificationData($appProfiles,$notificationKey, $message='',$count='')
   {
 	  switch($notificationKey)
 	  {
@@ -312,6 +312,18 @@ public function microtime_float()
                         if($message)
                                 $dataAccumulated[0]['MESSAGE_RECEIVED'] = $message;
                         break;
+           case "EOI_DIGEST": //eoi digest notification
+           		if($count)
+				{
+					$details = $this->getProfilesData($appProfiles,"JPROFILE");
+					$poolObj = new NotificationDataPool();
+					$dataAccumulated = $poolObj->getProfileDigestNotificationData($notificationKey,$appProfiles,$details,$count);
+					unset($poolObj);
+				}
+				else
+					$dataAccumulated = null;
+            break;
+
 		  case "PROFILE_VISITOR":
 			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
 			$details = $this->getProfilesData($applicableProfiles,$className="newjs_SMS_TEMP_TABLE");
@@ -593,7 +605,8 @@ public function microtime_float()
 			  if($notificationId)
 			  {
 				  $completeNotificationInfo[$counter] = $this->generateNotification($notificationId, $notificationKey,$dataPerNotification);
-				  
+				  $notificationDataPoolObj = new NotificationDataPool();
+                  $completeNotificationInfo[$counter]["PHOTO_URL"] = $notificationDataPoolObj->getNotificationImage($completeNotificationInfo[$counter]["PHOTO_URL"],$dataPerNotification['ICON_PROFILEID']);
 				  $completeNotificationInfo[$counter]['SELF'] = $dataPerNotification['SELF'];
 				  //$completeNotificationInfo[$counter]['MSG_ID']=time().rand(0,99);
 				  $completeNotificationInfo[$counter]['MSG_ID']=rand(0,99).time().rand(0,99).rand(0,99).rand(0,9);

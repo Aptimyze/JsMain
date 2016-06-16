@@ -21,12 +21,12 @@ function dropdown() {
 function jsMemExpandAnimate(closeView)
 {
     $('.js-expand').animate({
-                    height: "toggle"
-                }, 1000, function() {
-                    changeclass();
-                    if(closeView==true)
-                        $('.js-closeview ').css('display', 'block');
-                });
+        height: "toggle"
+    }, 1000, function() {
+        changeclass();
+        if(closeView==true)
+            $('.js-closeview ').css('display', 'block');
+    });
 }
 
 function changeclass() {
@@ -384,6 +384,7 @@ function managePriceStrike(m, d) {
     } else {
         $('#' + m + "_savings_container").hide();
         $('.overflowPinkRipple').css('margin-top', '20px');
+        $('#tab_X .overflowPinkRipple').css('margin-top', '20px');
     }
     $('#' + m + "_final_price").html(removeZeroInDecimal(commaSeparateNumber(actualPrice)));
 }
@@ -498,6 +499,10 @@ function manageSelectedItem() {
                             } 
                             createCookie("paymentMode", paymentOption);
                             createCookie("cardType", selectedCardType);
+                            clearSelectedIcons(paymentOption);
+                            $("#"+paymentOption+"-"+index).find('.cursp').removeClass('memn-nosel').addClass('memnp-sel');
+                        } else if (index == 0){
+                          clearSelectedIcons(paymentOption);
                         }
                     } else {
                         index++;
@@ -513,6 +518,10 @@ function manageSelectedItem() {
                             }
                             createCookie("paymentMode", paymentOption);
                             createCookie("cardType", selectedCardType);
+                            clearSelectedIcons(paymentOption);
+                            $("#"+paymentOption+"-"+index).find('.cursp').removeClass('memn-nosel').addClass('memnp-sel');
+                        } else if (index == 0){
+                          clearSelectedIcons(paymentOption);
                         }
                     } else {
                         index++;
@@ -530,6 +539,12 @@ function manageSelectedItem() {
     } else {
         return false;
     }
+}
+
+function clearSelectedIcons(paymentOption){
+    $("#"+paymentOption+"-iconList li").find('.cursp').each(function(){
+        $(this).removeClass('memnp-sel').addClass('memn-nosel');
+    });
 }
 
 function payAtBranchesTransition() {

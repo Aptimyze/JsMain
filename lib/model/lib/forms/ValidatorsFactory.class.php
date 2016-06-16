@@ -298,6 +298,23 @@ class ValidatorsFactory{
 				return new jsValidatorNativePlace(array('required'=>false,'FieldMapLabel'=>@$szMapLabel,'Value'=>@$InputValues,'FieldName'=>@$szName));
 				break;
 			}
+    case 'proof_type':
+			{
+				$szName = $field->getName();
+				$szMapLabel = ObjectiveEditFieldMap::getFieldMapKey($szName);
+				if($form_values)
+				{
+					$InputValues = $form_values[$field->getName()];
+				}
+				return new jsValidatorProofVal(array('required'=>false,'FieldMapLabel'=>@$szMapLabel,'Value'=>@$InputValues,'FieldName'=>@$szName));
+				break;
+			}
+    case 'proof_val':
+			{
+                $szName = $field->getName();
+				return new jsValidatorProof(array('required'=>false,'file'=>@$form_values[$szName],'name'=>@$form_values[$szName]['name'],'size'=>@$form_values[$szName]['size']));
+				break;
+			}
 		}
 	}
 

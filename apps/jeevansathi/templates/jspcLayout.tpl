@@ -41,11 +41,15 @@
                         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
                 })();
         }
-        function trackJsEventGA(category, action, label){
-            if(ucode){
-                    _gaq.push(['_trackEvent', category, action, label]);
+        function trackJsEventGA(category, action, label, value){
+            if (ucode){
+                if (value) {
+                       _gaq.push(['_trackEvent', category, action, label, value]);
+                } else {
+                       _gaq.push(['_trackEvent', category, action, label]);
+                }
             } else {
-            return false;
+               return false;
             }
         }
         var loggedInJspcUser="~$sf_request->getAttribute('profileid')`";

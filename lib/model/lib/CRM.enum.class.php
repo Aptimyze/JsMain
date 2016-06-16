@@ -33,8 +33,8 @@ class crmParams
         public static $salesRegularCampaignTables	=array("noida"=>"incentive_SALES_CSV_DATA_NOIDA","mumbai"=>"incentive_SALES_CSV_DATA_MUMBAI","pune"=>"incentive_SALES_CSV_DATA_PUNE","nri"=>"incentive_SALES_CSV_DATA_NRI","delhi"=>"incentive_SALES_CSV_DATA_DELHI");
 
 	// Other Sales Campaign Tables for Processes
-	public static $salesCampaignTables		=array("failedPaymentInDialer"=>"incentive_SALES_CSV_DATA_FAILED_PAYMENT","upsellProcessInDialer"=>"incentive_SALES_CSV_DATA_UPSELL","renewalProcessInDialer"=>"incentive_SALES_CSV_DATA_RENEWAL","paidCampaignProcess"=>"incentive_SALES_CSV_DATA_PAID_CAMPAIGN");
-	public static $salesCampaign			=array("failedPaymentInDialer"=>"fp","upsellProcessInDialer"=>"upsell","renewalProcessInDialer"=>"renewal","paidCampaignProcess"=>"paid");
+	public static $salesCampaignTables		=array("failedPaymentInDialer"=>"incentive_SALES_CSV_DATA_FAILED_PAYMENT","upsellProcessInDialer"=>"incentive_SALES_CSV_DATA_UPSELL","renewalProcessInDialer"=>"incentive_SALES_CSV_DATA_RENEWAL","paidCampaignProcess"=>"incentive_SALES_CSV_DATA_PAID_CAMPAIGN","rcbCampaignInDialer"=>"incentive_SALES_CSV_DATA_RCB");
+	public static $salesCampaign			=array("failedPaymentInDialer"=>"fp","upsellProcessInDialer"=>"upsell","renewalProcessInDialer"=>"renewal","paidCampaignProcess"=>"paid","rcbCampaignInDialer"=>"rcb");
 	public static $crmCsvTables                     =array("DAILY_GHARPAY"=>"incentive_GHARPAY_CSV_DATA","QA_ONLINE"=>"incentive_QA_ONLINE_CSV_DATA");
 
 	// Field Sales Process	

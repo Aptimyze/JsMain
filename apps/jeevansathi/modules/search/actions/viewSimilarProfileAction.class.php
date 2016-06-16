@@ -24,8 +24,10 @@ class viewSimilarProfileAction extends sfActions
 		if($this->isMobile)
 		{
 			$profileChecksum=$request->getParameter("profilechecksum");
-			$url=JsConstants::$siteUrl.'/search/MobSimilarProfiles?page=idd1&profilechecksum='.$profileChecksum.'';
-			header('Location: '.$url);
+			$url=JsConstants::$siteUrl.'/search/MobSimilarProfiles?fromViewSimilarActionMobile=1&page=idd1&profilechecksum='.$profileChecksum.'';
+                        header('Location: '.$url);
+                        die;
+
 		}
 		//Contains login credentials
 		$this->loginData = $request->getAttribute("loginData");
@@ -65,8 +67,14 @@ class viewSimilarProfileAction extends sfActions
 			header("Location: $SITE_URL/search/partnermatches");
 			die;
 		}
-
-		$contactedUsername=$request->getParameter("SIM_USERNAME");
+		if($request->getParameter("SIM_USERNAME"))
+			$contactedUsername=$request->getParameter("SIM_USERNAME");
+		else
+		{
+			$contactedProfileObj= new Profile('',$contactedProfileId);
+			$contactedProfileObj->getDetail($contactedProfileId,'','USERNAME');
+			$contactedUsername=$contactedProfileObj->getUSERNAME();
+		}
 		$this->arrOutDisplay = $this->getContactedProfileData($contactedUsername,$request);
 		//handling of no profile case
 		if($request->getAttribute("ERROR"))
@@ -317,7 +325,11 @@ class viewSimilarProfileAction extends sfActions
 				$this->viewProfileBackParams = $request->getParameter("queryStringParams");
 			else
 				$this->viewProfileBackParams="noParams=1";
-			$this->setTemplate("JSPC/jspcViewSimilarProfile");
+			if($request->getParameter("from_mailer")==1)
+				$this->dontShowBreadcrumb=1;
+			else
+				$this->dontShowBreadcrumb=0;
+						$this->setTemplate("JSPC/jspcViewSimilarProfile");
 		}		
 	}
 	

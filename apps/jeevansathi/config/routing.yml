@@ -209,9 +209,9 @@ search_rule12_malerts:
   url:  /search/matchalerts
   param: {module: search, action:perform,searchBasedParam:matchalerts}
 
-search_rule12_view_attempts:
-  url:  /search/contactViewAttempts
-  param: {module: search, action:perform,searchBasedParam:contactViewAttempts}
+#search_rule12_view_attempts:
+#  url:  /search/contactViewAttempts
+#  param: {module: search, action:perform,searchBasedParam:contactViewAttempts}
 
 search_rule13_valerts:
   url:  /search/kundlialerts

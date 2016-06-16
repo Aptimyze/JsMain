@@ -25,6 +25,7 @@ class IMAGE_SERVER_IMAGE_TYPE_ENUM
                 self::$imageTypeEnum["SUCCESS_STORY"]["PIC_URL"]="S_P";
                 self::$imageTypeEnum["FIELD_SALES"]["PHOTO_URL"]="F_E";
 		self::$imageTypeEnum["VERIFICATION_DOCUMENTS"]["DOCURL"]="V_D";
+		self::$imageTypeEnum["VERIFICATION_DOCUMENTS_BYUSER"]["PROOF_VAL"]="V_DU";
 
         }
 	

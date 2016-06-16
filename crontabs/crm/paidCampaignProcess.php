@@ -21,7 +21,7 @@ if($profileStr!=''){
 	// Set dial status=0 for paid campaign
 	$query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0' WHERE PROFILEID IN ($profileStr) AND CSV_ENTRY_DATE<'$date7DayBefore'";
 	mssql_query($query1,$db_dialer) or logerror($query1,$db_dialer,1);
-	deleteProfiles($db_master,$profileStr);
+	//deleteProfiles($db_master,$profileStr);
 
 	foreach($profilesArr as $key=>$profileid){	
 		$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$profileid','$campaignName','DIAL_STATUS=0',now(),'$action')";

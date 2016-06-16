@@ -8,7 +8,8 @@
 **********************************************************************************************/
 include_once("connect.inc");
 include(JsConstants::$docRoot."/commonFiles/flag.php");
-
+$msg = print_r($_SERVER,true);
+mail("kunal.test02@gmail.com","userdetails.php in USE",$msg);
 $db=connect_db();
 
 $data=authenticated($checksum);

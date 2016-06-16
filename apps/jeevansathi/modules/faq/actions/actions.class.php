@@ -65,13 +65,7 @@ class faqActions extends sfActions
             $loginProfile->getDetail($loginData['PROFILEID'],"PROFILEID");
             $this->USERNAME=$loginData[USERNAME];
         }
-
-        else {
-            $respObj = ApiResponseHandler::getInstance();
-            $respObj->setHttpArray(ResponseHandlerConfig::$LOGOUT_PROFILE);
-            $respObj->generateResponse();
-            die;
-            }
+        
         $success=false;
         if($feedBackObj->ProcessData($request)){
             $success=true;

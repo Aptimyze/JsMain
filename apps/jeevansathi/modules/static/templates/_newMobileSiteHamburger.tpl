@@ -150,6 +150,7 @@
                   <ul class="fontlig">
                     <li class="white fb1 ham_opa fontrobbold">More</li>
 
+                    <li><a href="/help/index" bind-slide=1 class="white">Help</a></li>
                     <li><a href="/contactus/index" bind-slide=1 class="white">Contact Us</a></li>
                     
                     <li><a href="/static/settings" bind-slide=1 class="white">Settings</a></li>
