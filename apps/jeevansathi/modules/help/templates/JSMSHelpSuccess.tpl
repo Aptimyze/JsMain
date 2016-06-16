@@ -42,7 +42,7 @@
                     <ul class="pad18 btmBrdGrey sectionList">
                     </ul>
                     <div class="pad16 btmBrdGrey darkGreyColor f14 txtc">Other ways to get help</div>
-                    <div class="pad2515">
+                    <div class="pad2515 mb40">
                         <div class="txtc pad24 greyColor f13">Call toll free number</div>
                         <div class="txtc pad24 f21 color2">1-800-419-6299</div>
                         <div class="txtc pad24 greyColor f13">Daily in between 7AM - 11PM</div>
