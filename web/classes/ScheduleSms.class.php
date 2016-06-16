@@ -1562,11 +1562,6 @@ class ScheduleSms
             	$negTreatObj 		=new INCENTIVE_NEGATIVE_TREATMENT_LIST('newjs_slave');
             	$vdDiscObj 		=new billing_VARIABLE_DISCOUNT();
             	$vdDiscountSmsLog 	=new billing_VARIABLE_DISCOUNT_SMS_LOG();
-		/*$vdDurationObj 	=new billing_VARIABLE_DISCOUNT_DURATION('newjs_slave');
-		$vdOfferDetails 	=$vdDurationObj->getVdOfferDates();
-		$logStartDt 		=$vdOfferDetails['SDATE'];
-		$logEndDt 		=$vdOfferDetails['EDATE'];
-		$logEntryDt 		=$vdOfferDetails['ENTRY_DT'];*/					
 
 		$smsLogDetails	=$vdDiscountSmsLog->getFrequencyAndTimes($entry_dt);		
             	list($frequency, $noOfTimes) =$smsLogDetails;
@@ -1670,7 +1665,7 @@ class ScheduleSms
                         $this->smsDetail = $finalSms;
                         $this->getSmsContent($key);
                         $this->insertInSmsLog();
-			$this->updateVDSmsSent($row_pool);
+			//$this->updateVDSmsSent($row_pool); // Removed as part of requirement
                         unset($this->smsDetail);
                     }
                 }
