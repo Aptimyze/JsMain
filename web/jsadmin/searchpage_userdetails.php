@@ -52,7 +52,7 @@ if(authenticated($cid))
 	$myCaste = $row['CASTE'];
 
 	//Getting connection on sharded server.
-	$myDbname=getProfileDatabaseConnectionName($profileid,'',$mysql);
+	$myDbname=getProfileDatabaseConnectionName($profileid,'slave',$mysql);
 	$myDb=$mysql->connect($myDbname);
 
 	$sql="SELECT OLD_EMAIL FROM newjs.OLDEMAIL WHERE PROFILEID='$profileid'";

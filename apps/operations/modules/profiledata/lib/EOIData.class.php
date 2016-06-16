@@ -7,7 +7,7 @@ class EOIData
 	
 	function __construct($pid)
 	{
-		$this->dbName = JsDbSharding::getShardNo($pid);
+		$this->dbName = JsDbSharding::getShardNo($pid,true);
 	}
 	
 	function getEOIData($profileID)
