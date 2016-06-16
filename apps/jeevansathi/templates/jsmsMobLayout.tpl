@@ -125,7 +125,7 @@ var domainCode={};
         	<img src="~sfConfig::get('app_img_url')`/images/jsms/commonImg/2d-slider-left.png" border="0">
         
         </div>
-  ~if $sf_request->getParameter('module') eq 'membership'`
+  ~if $sf_request->getParameter('module') eq 'membership' || $sf_request->getParameter('module') eq 'help'`
     ~if !($trackProfileId eq '8298074' || $trackProfileId eq '13038359' || $trackProfileId eq '12970375')`
         ~include_partial('global/freshDesk')`
      ~/if`

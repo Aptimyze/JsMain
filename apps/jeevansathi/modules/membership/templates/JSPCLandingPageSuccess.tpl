@@ -196,7 +196,7 @@
                 <ul class="tabs">
                     ~foreach from=$data.serviceContent key=k item=v name=servicesLoop`
                     ~if $v.subscription_id neq 'X'`
-                    <li id="main_~$v.subscription_id`" mainMemTab="~$v.subscription_id`" class="fontrobbold ~if $smarty.foreach.servicesLoop.total gt 4`planwidth~/if`"> <span>~$k+1`.</span> <span>~$v.subscription_name`</span> <span class="fontlig">~$v.starting_price` <span>~$data.currency`&nbsp;</span>~$v.starting_price_string`</span> </li>
+                    <li id="main_~$v.subscription_id`" mainMemTab="~$v.subscription_id`" class="fontrobbold ~if $smarty.foreach.servicesLoop.total gt 4`planwidth~/if` trackJsEventGA"> <span>~$k+1`.</span> <span class="trackJsEventGAName">~$v.subscription_name`</span> <span class="fontlig">~$v.starting_price` <span>~$data.currency`&nbsp;</span>~$v.starting_price_string`</span> </li>
                     ~/if`
                     ~/foreach`
                 </ul>
@@ -587,6 +587,14 @@
         var ScreenHgt = $(window).height(),ScreenWid = $(window).width(),leftval = (ScreenWid / 2) - 450;
         $("#sliderContainer").css('width',containerWidth);
         $('#cmpplan').css('left', leftval);
+        $(".trackJsEventGA").on('click', function(){
+            var tabName = $(this).find("span.trackJsEventGAName").html();
+            if(profileid == ''){
+                trackJsEventGA("jspc","MembershipTabChange", tabName, 0);
+            } else {
+                trackJsEventGA("jspc","MembershipTabChange", tabName, profileid);
+            }
+        });
         $('#js-panelbtn').click(function(e) {
             if (!$("#js-panelbtn").hasClass("mem-down")) 
             {

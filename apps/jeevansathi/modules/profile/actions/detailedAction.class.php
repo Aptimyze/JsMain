@@ -115,9 +115,8 @@ class detailedAction extends sfAction
     //Showing contact engine
     if (MobileCommon::isOldMobileSite()) {
       $this->horoscopeAvailable(); 
-      $this->showContactEngine();
-    }	
-		
+    }
+	 $this->showContactEngine();
 		//appPromotion
 		if($request->getParameter("from_mailer"))
 			$this->from_mailer=1;
@@ -926,8 +925,12 @@ class detailedAction extends sfAction
 				switch($currentFlag)
 				{
 					case ContactHandler::INITIATED:
-						if($who==ContactHandler::RECEIVER)
-							$profileMemcacheServiceViewerObj->update("AWAITING_RESPONSE_NEW",-1);
+						if($who==ContactHandler::RECEIVER){
+							if($this->contactEngineObj->contactHandler->getContactObj()->getFILTERED() =="Y")
+								$profileMemcacheServiceViewerObj->update("FILTERED_NEW",-1);
+							else
+								$profileMemcacheServiceViewerObj->update("AWAITING_RESPONSE_NEW",-1);
+						}
 						break;
 					case ContactHandler::ACCEPT:
 						if($who==ContactHandler::SENDER)

@@ -18,7 +18,7 @@
                     closeCurrentLayerCommon();
                     if(clickAction=='RCB')
                     {
-                        toggleRequestCallBackOverlay(1);
+                        toggleRequestCallBackOverlay(1, 'RCB_CAL');
                         $('.js-dd ul li[value="M"]').trigger('click');
                     }
                 

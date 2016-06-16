@@ -451,7 +451,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
     $("#totalRequestsReceived").removeClass("disp-none");
    }
    bellCountStatus++;
-   createTotalBellCounts(parseInt(this.data.PHOTO_REQUEST_NEW) +this.data.MESSAGE_NEW+this.data.ACC_ME_NEW+this.data.AWAITING_RESPONSE_NEW);
+   createTotalBellCounts(parseInt(this.data.PHOTO_REQUEST_NEW) +this.data.MESSAGE_NEW+this.data.ACC_ME_NEW+this.data.AWAITING_RESPONSE_NEW + this.data.FILTERED_NEW);
    setBellCountHTML(this.data);
  }
 engagementCounts.prototype.noResultCase = function() {

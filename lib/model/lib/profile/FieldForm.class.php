@@ -73,7 +73,7 @@ class FieldForm extends sfForm
 			  //Normal case - only one column to be updated for one form field
 			  $column_name=$column_name_arr[0];
 			  switch($table_name){
-				 case "JPROFILE":
+				case "JPROFILE":
 					if(array_key_exists($column_name,$this->lengthArr)  && $value)
 					{
 						$value=htmlentities($value);
@@ -87,43 +87,46 @@ class FieldForm extends sfForm
 						$bExecuteNative_PlaceUpdate = true;
 					}
 					 break;
-				 case  "JPROFILE_EDUCATION":
+				case  "JPROFILE_EDUCATION":
 					 $jprofileEducationArr[$column_name]=$value;
 					 break;
-				  case "JPROFILE_CONTACT":
+				case "JPROFILE_CONTACT":
 					  $jprofileContactArr[$column_name]=$value;
 					  break;
-				  case "JHOBBY":
+				case "JHOBBY":
 					if($column_name=="HOBBY")
 						$hobbyArr[$column_name][$field_name]=$value;
 					else
 					  $hobbyArr[$column_name]=$value;
 					  break;
-				  case "JP_CHRISTIAN":
+				case "JP_CHRISTIAN":
 						 $jpChristArr[$column_name]=$value;
 					  break;
-					case "JP_MUSLIM":
-						 $jpMuslimArr[$column_name]=$value;
-					  break;
-					 case "JP_SIKH":
-						 $jpSikhArr[$column_name]=$value;
-					  break;
-					  case "JP_PARSI":
-						 $jpParsiArr[$column_name]=$value;
-					  break;
-					   case "JP_JAIN":
-						 $jpJainArr[$column_name]=$value;
-					  break;
-					 case "NAME_OF_USER":
-						 $incentiveUsernameArr[$column_name]=$value;
-					  break;
-           case "NATIVE_PLACE":
+                                case "JP_MUSLIM":
+                                         $jpMuslimArr[$column_name]=$value;
+                                  break;
+                                case "JP_SIKH":
+                                         $jpSikhArr[$column_name]=$value;
+                                  break;
+                                case "JP_PARSI":
+                                         $jpParsiArr[$column_name]=$value;
+                                  break;
+                                case "JP_JAIN":
+                                         $jpJainArr[$column_name]=$value;
+                                  break;
+                                case "NAME_OF_USER":
+                                         $incentiveUsernameArr[$column_name]=$value;
+                                  break;
+                                case "NATIVE_PLACE":
 						$nativePlaceArr[$column_name] = $value;
 						if($column_name=="NATIVE_COUNTRY"&&$value!='51')
 						{
 							$nativePlaceArr['NATIVE_CITY']='';
 							$nativePlaceArr['NATIVE_STATE']='';
 						}
+					  break;
+                                case "VERIFICATION_DOCUMENT":
+						$verificationArr[$field_name] = $value;
 					  break;
 			  }
 			  //Need to ask ?
@@ -159,7 +162,6 @@ class FieldForm extends sfForm
 				  }
 		  }
 	  }
-	  
 		//Native Place Update
     if(count($nativePlaceArr)){
 			$nativePlaceArr[PROFILEID]=$this->loggedInObj->getPROFILEID();
@@ -170,6 +172,7 @@ class FieldForm extends sfForm
         unset($nativePlaceArr[PROFILEID]);
         $nativePlaceObj->UpdateRecord($this->loggedInObj->getPROFILEID(), $nativePlaceArr);
       }
+                        
 
       //Log this update
       $nativePlaceArr['PROFILEID'] = $this->loggedInObj->getPROFILEID();
@@ -177,6 +180,10 @@ class FieldForm extends sfForm
       $nativePlaceObj = new JProfile_NativePlace($this->loggedInObj);
       $nativePlaceObj->LogUpdate($nativePlaceArr);
 	  }
+          if(count($verificationArr)){
+                $serviceObj = new ProfileDocumentVerificationByUserService();
+                $serviceObj->performDbInsert($this->loggedInObj->getPROFILEID(), $verificationArr);
+          }
 //		if($bExecuteNative_PlaceUpdate)
 //		{
 //			$objNativePlace = new JProfile_NativePlace;

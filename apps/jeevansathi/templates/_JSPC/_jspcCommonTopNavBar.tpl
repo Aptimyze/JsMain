@@ -149,6 +149,7 @@ window.onload=function(){
                             </ul>
                         </li>
                         <li id="upgrade" tabindex="1" class="ml37"><a class="disp_b cursp" onclick="javascript:logOutCheck('/profile/mem_comparison.php',1); return true;">UPGRADE</a></li>
+                        <li id="help" tabindex="1" class="ml27"><a class="disp_b cursp" onclick="javascript:logOutCheck('/help/index',1); return true;">HELP</a></li>
                     </ul>
                     <!--end:left-->
                     <!--start:right-->
@@ -235,6 +236,29 @@ window.onload=function(){
                                     </div>
                                     </a>
                                 </li>
+				 <li>
+                                    <a href="/inbox/12/1">
+                                    <div class="clearfix topnavp1">
+                                        <div class="fl">Filtered Interests</div>
+                                        
+                                        <div class="fl ml10">
+											<div class="bg_pink">
+												<div style="line-height:8px;" class="colrw disp_b padall-6">
+													New
+												</div>
+											</div>
+										</div>
+                                        
+                                        <div class="fr">
+                                            <div id="membersFilteredInterestCountParent" class="disp-tbl  txtc" style="display:none">
+                                                <div id="FilteredInterstsCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    </a>
+                                </li>
+
                             </ul>
                             <!--end:submenu-->
                         </li>
@@ -671,6 +695,7 @@ window.onload=function(){
                                 <li><a class="disp_b cursp js-srchbyid">Search by Profile ID</a></li>
                             </ul>
                         </li>
+                        <li id="help" tabindex="1" class="ml50"><a class="disp_b cursp" onclick="javascript:logOutCheck('/help/index',1); return true;">HELP</a></li>
                     </ul>
                     <!--end:left-->
                     <!--start:right-->

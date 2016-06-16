@@ -18,6 +18,8 @@ class UpdateModuleTableFactory
                         $obj = new FieldSales;
 		elseif($module == IMAGE_SERVER_MODULE_NAME_ENUM::getEnum("VERIFICATION_DOCUMENTS"))
                         $obj = new ProfileDocumentVerificationService;
+		elseif($module == IMAGE_SERVER_MODULE_NAME_ENUM::getEnum("VERIFICATION_DOCUMENTS_BYUSER"))
+                        $obj = new ProfileDocumentVerificationByUserService;
 		return $obj;
 	}
 }

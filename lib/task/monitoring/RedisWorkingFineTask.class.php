@@ -61,7 +61,7 @@ EOF;
 				$this->sendSMS();
 				unset($issues);
 			}
-			sleep($this->m_sleep);
+			//sleep($this->m_sleep);
 		}
 	}
 
