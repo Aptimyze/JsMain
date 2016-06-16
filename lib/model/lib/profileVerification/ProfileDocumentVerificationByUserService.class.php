@@ -74,8 +74,8 @@ class ProfileDocumentVerificationByUserService
 	*/
 	public function performUpload($docs,$profileId)
 	{
-                $saveUrl = $this->getSaveUrlDoc($profileId,$docs["type"]);
-                $displayUrl = $this->getDisplayUrlDoc($profileId,$docs["type"]);
+                $saveUrl = $this->getSaveUrlDoc($profileId,$docs["name"]);
+                $displayUrl = $this->getDisplayUrlDoc($profileId,$docs["name"]);
                 $pictureFunctionsObj = new PictureFunctions();
                 $result = $pictureFunctionsObj->moveImage($docs["tmp_name"],$saveUrl);
                 chmod($saveUrl,0777);
@@ -99,7 +99,7 @@ class ProfileDocumentVerificationByUserService
                     mkdir($uploadDir);
                 }
                 $displayUrl = "";
-                $type = explode('/',$type);
+                $type = explode('.',$type);
                 if(!$type)
                         $type=".jpg";
                 else
@@ -121,7 +121,7 @@ class ProfileDocumentVerificationByUserService
 	public function getDisplayUrlDoc($profileId,$type="")
         {
                 $displayUrl = "";
-                $type = explode('/',$type);
+                $type = explode('.',$type);
                 if(!$type)
                         $type=".jpg";
                 else

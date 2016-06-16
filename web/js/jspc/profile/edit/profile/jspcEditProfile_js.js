@@ -3133,7 +3133,6 @@ EditApp = function(){
       if(editFieldArr.hasOwnProperty('WEIGHT') === true){
         editFieldArr['WEIGHT'] = editFieldArr['WEIGHT'].toString().toLowerCase().split('kg')[0].trim(); 
       }
-      
       //Check for valid changes, if same value then delete that key
       var arrIgnore = ['M_BROTHER','M_SISTER','ALT_MOBILE','PHONE_RES','PHONE_MOB','TIME_TO_CALL_START','TIME_TO_CALL_END'];
       for(var fieldKey in editFieldArr){
@@ -3141,8 +3140,12 @@ EditApp = function(){
         if (false === sectionObject.hasOwnProperty(fieldKey)) {
           continue;
         }
-        if(arrIgnore.indexOf(fieldKey) === -1 && editFieldArr[fieldKey] == sectionObject[fieldKey].value){
-          delete editFieldArr[fieldKey];  
+        if(sectionId == 'verification'){
+                
+        }else{
+                if(arrIgnore.indexOf(fieldKey) === -1 && editFieldArr[fieldKey] == sectionObject[fieldKey].value){
+                  delete editFieldArr[fieldKey];  
+                }
         }
         
         if(arrIgnore.indexOf(fieldKey) === -1){
@@ -3273,7 +3276,6 @@ EditApp = function(){
       {
             editData.append('editFieldArr['+key+']', value);
       });
-
       $.myObj.ajax({
         url: "/api/v1/profile/editsubmit",
         type: 'POST',
@@ -4224,7 +4226,8 @@ EditApp = function(){
     geteditedValue = function(fieldKey,fieldtype){
         var fieldObj = editAppObject["verification"][fieldKey];
         if(fieldtype != "VALUE" && fieldObj.value != '' && typeof editedFields[VERIFICATION][fieldKey] == 'undefined'){
-                editedFields["verification"][fieldKey] = fieldObj.value;
+               // editedFields["verification"][fieldKey] = fieldObj.value;
+                storeFieldChangeValue(fieldObj,fieldObj.value);
         }
         return editedFields["verification"][fieldKey];
     }
