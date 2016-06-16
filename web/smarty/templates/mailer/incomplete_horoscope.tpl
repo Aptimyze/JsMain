@@ -8,7 +8,7 @@
   <td colspan="3" style="font-family:Arial; font-size:11px; color:#000000;">~$PREHEADER`</td>
   <tr>
     <td></td>
-    <td><img src="~$IMG_URL`/images/mailer/complete_horoscope/jsLogo.gif" width="204" height="53" vspace="0" hspace="0" align="left" border="0" alt="Jeevansathi.com" />
+    <td><img src="~$IMG_URL`/images/jspc/commonimg/logo1.png" width="144" height="36" vspace="0" hspace="0" align="left" border="0" alt="Jeevansathi.com" />
       <table border="0" cellpadding="0" cellspacing="0" align="right" width="240">
         <tr>
           <td width="184" height="66" style="font-family:Arial; font-size:12px; color:#474646;"><img src="~$IMG_URL`/images/mailer/complete_horoscope/icon1.gif" width="26" height="21"s vspace="0" hspace="0" align="absmiddle" /><font style="font-size:13px;" color="#474646"><strong>Call us at:</strong></font> <var>{{TOLLNO}}</var> (Toll free)</td>
