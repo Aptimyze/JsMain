@@ -54,7 +54,7 @@ EOF;
 				
 				JsMemcache::getInstance()->set("memUpdateDate",$currentDate);
 				//set memcache key for array of active agents
-				$pswrdsObj = new jsadmin_PSWRDS();
+				$pswrdsObj = new jsadmin_PSWRDS('newjs_slave');
 				$agentsArr = $pswrdsObj->getAllExecutivesDetails("USERNAME");		
 				unset($pswrdsObj);
 				JsMemcache::getInstance()->set("CRMNotificationEligibleAgents",serialize($agentsArr));				

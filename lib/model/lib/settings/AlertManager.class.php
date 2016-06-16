@@ -101,6 +101,10 @@ class AlertManager
                     
                     $jprofileAlertObj = new newjs_JPROFILE_ALERTS();
                     $row2 = $jprofileAlertObj->getAllSubscriptions($this->profileid);
+                    if(empty($row2)){
+                    	$jprofileAlertObj->insertNewRow($this->profileid);
+                    	$row2 = $jprofileAlertObj->getAllSubscriptions($this->profileid);
+                    }
                     if (is_array($row2) && !empty($row2)) {
                         $this->objVars['settingArray']["MC"][2] = $row2['MEMB_CALLS'];
                         $this->objVars['settingArray']["OC"][2] = $row2['OFFER_CALLS'];

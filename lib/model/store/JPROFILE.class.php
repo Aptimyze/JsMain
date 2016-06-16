@@ -1170,5 +1170,22 @@ public function duplicateEmail($email)
         }
         return $res;
     }
+
+    public function checkUsername($username)
+    {
+    	try
+            {
+                    $sql="SELECT COUNT(1) AS CNT FROM newjs.JPROFILE WHERE USERNAME=:USERNAME";
+                    $prep=$this->db->prepare($sql);
+                    $prep->bindValue(":USERNAME", $username, PDO::PARAM_INT);
+                    $prep->execute();
+                    $row = $prep->fetch(PDO::FETCH_ASSOC);
+        			return $row['CNT'];
+            }
+            catch(PDOException $e)
+            {
+                    throw new jsException($e);
+            }
+    }
 }
 ?>

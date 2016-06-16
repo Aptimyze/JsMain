@@ -354,13 +354,13 @@ class VariableDiscount
         $VDLogObj->insertDataFromVariableDiscountOfferDuration();
         unset($VDLogObj);
 
-        $VDObj = new billing_VARIABLE_DISCOUNT();
+        /*$VDObj = new billing_VARIABLE_DISCOUNT();
         $VDObj->deleteVariableDiscountEndingYesterday();
-        unset($VDObj);
+        unset($VDObj);*/
 
-        $VDDurationObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
+        /*$VDDurationObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
         $VDDurationObj->deleteDiscountRecord();
-        unset($VDDurationObj);
+        unset($VDDurationObj);*/
     }
 
     public function populateRecordsFromVDTemp($entryDate,$limit,$sendAlert=false)
@@ -369,57 +369,110 @@ class VariableDiscount
         $VDDuartionObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
         $VDObj = new billing_VARIABLE_DISCOUNT();
         $profileArr =array();
+        $vdDurationArr =uploadVD::$vdDurationArr;
+        $variable ='disc';
 
-        $count = $VDTempObj->getCountOfRecords();
+        $count = $VDTempObj->getCountOfRecords($entryDate);
         for($i=0;$i<$count;$i+=$limit)
         {
-           
-            $rows = $VDTempObj->fetchAllRecords("*",$limit,$i);
+            $rows = $VDTempObj->fetchAllRecords("*",$limit,$i, $entryDate);
             if(is_array($rows))
             foreach ($rows as $key => $details) 
             {
-                
                 $pid =$details['PROFILEID'];
-                if($pid)
-                {
+                if($pid){
+		    $isPaid =$this->checkPaidProfile($pid);	
+		    if($isPaid)
+			continue; 	
                     $service  =explode(",",$details['SERVICE']);
-                    $discL    =$details['12'];
-		    $disc2 = $details['2'];	
-                    $disc3 = $details['3'];
-                    $disc6 = $details['6'];
-                    $disc12 = $details['12'];
+                    foreach($vdDurationArr as $key=>$val){
+                        if($val=='L')
+				$netVal ='12';
+			else
+				$netVal=$val;
+			${$variable.$val} =$details[$netVal];
+                    }
                     if(!isset($dateArr)){
                       $sdate  =$details['SDATE'];
                       $edate  =$details['EDATE'];
                       $dateArr=array("$sdate","$edate");
                     }
                     $discMax  =max($disc2,$disc3,$disc6,$disc12,$discL);
-                    if(!isset($profileArr[$pid]))
-                    {
+                    if(!isset($profileArr[$pid])){
                         $profileArr[$pid] = 0;
                     }
-                    
-                    if($discMax>$profileArr[$pid])
-                    {        
+                    if($discMax>$profileArr[$pid]){
                         $profileArr[$pid] =$discMax;
                     }
-                  
-                    //add entry into VD Offer Duration table
                     $params = array("PROFILEID"=>$pid,"SERVICE"=>$service,"DISC2"=>$disc2,"DISC3"=>$disc3,"DISC6"=>$disc6,"DISC12"=>$disc12,"DISCL"=>$discL);
                     $VDDuartionObj->addVDOfferDurationServiceWise($params,$sendAlert);
                 }
             }
             unset($rows); 
         }
-        
         if(count($dateArr)>0){
           $sdate =$dateArr[0];
           $edate =$dateArr[1];
         }
-        
         if(is_array($profileArr)) 
         foreach($profileArr as $profileid=>$discount){
             $VDObj->addVDProfile($profileid,$discount,$sdate,$edate,$entryDate,"","",$sendAlert); 
+        }
+        unset($VDObj);
+        unset($VDDurationObj);
+        unset($VDTempObj);
+    }
+    public function populateRemainingRecordsFromVDTemp($entryDate,$sendAlert=false)
+    {
+        $VDTempObj = new billing_VARIABLE_DISCOUNT_TEMP('newjs_slave');
+        $VDDuartionObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
+        $VDObj = new billing_VARIABLE_DISCOUNT();
+        $profileArr =array();
+	$vdDurationArr =uploadVD::$vdDurationArr;
+        $variable ='disc';
+
+            $rows = $VDTempObj->fetchActiveRecords($entryDate);
+            if(is_array($rows))
+            foreach ($rows as $key => $details)
+            {
+                $pid =$details['PROFILEID'];
+                if($pid){
+                    $isPaid =$this->checkPaidProfile($pid);
+                    if($isPaid) 
+                        continue;
+                    $service  =explode(",",$details['SERVICE']);
+		    foreach($vdDurationArr as $key=>$val){
+                        if($val=='L')
+                                $netVal ='12';
+                        else    
+                                $netVal=$val;
+                        ${$variable.$val} =$details[$netVal];
+		    }
+                    if(!isset($dateArr)){
+                      $sdate  =$details['SDATE'];
+                      $edate  =$details['EDATE'];
+                      $dateArr=array("$sdate","$edate");
+                    }
+                    $discMax  =max($disc2,$disc3,$disc6,$disc12,$discL);
+                    if(!isset($profileArr[$pid])){
+                        $profileArr[$pid] = 0;
+                    }
+                    if($discMax>$profileArr[$pid]){
+                        $profileArr[$pid] =$discMax;
+                    }
+                    $params = array("PROFILEID"=>$pid,"SERVICE"=>$service,"DISC2"=>$disc2,"DISC3"=>$disc3,"DISC6"=>$disc6,"DISC12"=>$disc12,"DISCL"=>$discL);
+                    $VDDuartionObj->addVDOfferDurationServiceWise($params,$sendAlert);
+                }
+            }
+            unset($rows);
+
+        if(count($dateArr)>0){
+          $sdate =$dateArr[0];
+          $edate =$dateArr[1];
+        }
+        if(is_array($profileArr))
+        foreach($profileArr as $profileid=>$discount){
+            $VDObj->addVDProfile($profileid,$discount,$sdate,$edate,$entryDate,"","",$sendAlert);
         }
         unset($VDObj);
         unset($VDDurationObj);
@@ -435,21 +488,34 @@ class VariableDiscount
         $tempObj = new billing_VARIABLE_DISCOUNT_TEMP();
         $uploadObj = new test_VD_UPLOAD_TEMP('newjs_local111');
         $count = $uploadObj->getCountOfRecords();
+        unset($uploadObj);
         if($count==0)
            return uploadVD::EMPTY_SOURCE; 
-        //fetch rows from start of user table or from last inserted row onwards
+
         for($i=$offset;$i<$count;$i+=$limit)
         {
+	    $uploadObj = new test_VD_UPLOAD_TEMP('newjs_local111');	
             $rows = $uploadObj->fetchSelectedRecords("*",$limit,$i);
-            foreach ($rows as $key => $value) 
-            {
+	    unset($uploadObj);
+            foreach ($rows as $key => $value){ 
                 $tempObj->addVDRecordsInTemp($value);
             }
         }
-     
         unset($tempObj);
-        unset($uploadObj);
         return uploadVD::COMPLETE_UPLOAD;
+    }
+
+    // Check Paid Condition
+    public function checkPaidProfile($profileid)
+    {
+        $jprofileObj = new JPROFILE('newjs_slave');
+	$subscription =$jprofileObj->getProfileSubscription($profileid);	
+        if((strstr($subscription,"F")!="")||(strstr($subscription,"D")!=""))
+		$paid =true;
+	else
+		$paid =false;
+	unset($jprofileObj);
+	return $paid;	
     }
 }
 ?>

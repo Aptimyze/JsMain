@@ -174,7 +174,7 @@
 	   	<td height="21" width="5%" align=center> ~$num++` </td>
 	     	<td height="21" width="5%" align=left>~if $profiles.NAME eq ''` --NA-- ~else` ~$profiles.NAME` ~/if` </td>
 	     	<td height="21" width="10%" align="left">
-			<a href="#" onclick="MM_openBrWindow('~sfConfig::get('app_site_url')`/operations.php/crmAllocation/agentAllocation?name=~$agentName`&username=~$profiles.USERNAME`&profileid=~$profiles.PROFILEID`&cid=~$cid`&subMethod=~$subMethod`&orders=~$orders`','','width=800,height=600,scrollbars=yes'); return false;">~$profiles.USERNAME`<br>~$profiles.EMAIL`</a> 
+			<a href="#" onclick="MM_openBrWindow('~sfConfig::get('app_site_url')`/operations.php/crmAllocation/agentAllocation?name=~$agentName`&username=~$profiles.USERNAME`&profileid=~$profiles.PROFILEID`&cid=~$cid`&subMethod=~$subMethod`&orders=~$orders`&pchecksum=~$profiles.CHECKSUM`','','width=800,height=600,scrollbars=yes'); return false;">~$profiles.USERNAME`<br>~$profiles.EMAIL`</a> 
 			~if $profiles.ACTIVATED eq 'D'` <font color=red> D </font> ~/if`
 		</td>
 		~if $subMethod eq 'RENEWAL_NOT_DUE'`

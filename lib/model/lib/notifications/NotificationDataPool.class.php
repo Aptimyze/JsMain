@@ -242,26 +242,43 @@ class NotificationDataPool
     */
     public function getProfileInstantNotificationData($notificationKey,$profilesArr,$details,$message="")
     {
-        switch($notificationKey)
+        foreach($profilesArr as $k=>$v)
         {
-            case "EOI" :
-            case "MESSAGE_RECEIVED" :
-            case "EOI_REMINDER":
-                        foreach($profilesArr as $k=>$v)
-                        {
-                            if($k=="OTHER")
-                                $dataAccumulated[0][$k][0] = $details[$v];
-                            else
-                                $dataAccumulated[0][$k] = $details[$v]; 
-                        }
-                        $dataAccumulated[0]['COUNT'] = "SINGLE";
-                        break;
-                        
+            if($k=="OTHER")
+                $dataAccumulated[0][$k][0] = $details[$v];
+            else
+                $dataAccumulated[0][$k] = $details[$v]; 
         }
+        $dataAccumulated[0]['COUNT'] = "SINGLE";           
+        
         if($message)
             $dataAccumulated[0]['MESSAGE_RECEIVED'] = $message;
 
         $dataAccumulated[0]['ICON_PROFILEID']=$profilesArr["OTHER"];
+        unset($profilesArr);
+        unset($details);
+        return $dataAccumulated;
+    }
+
+    /*function to get notification data pool for digest notifications
+    @inputs: $notificationKey,$profilesArr,$details,$count=""
+    @output : $dataAccumulated
+    */
+    public function getProfileDigestNotificationData($notificationKey,$profilesArr,$details,$count="")
+    {
+        foreach($profilesArr as $k=>$v)
+        {
+            if($k=="OTHER")
+                $dataAccumulated[0][$k][0] = $details[$v];
+            else
+                $dataAccumulated[0][$k] = $details[$v]; 
+        }
+        $dataAccumulated[0]['COUNT'] = "MULTIPLE";
+        
+        if($count)
+            $dataAccumulated[0]['EOI_COUNT'] = $count;
+        if($profilesArr["OTHER"])
+            $dataAccumulated[0]['ICON_PROFILEID']=$profilesArr["OTHER"];
         unset($profilesArr);
         unset($details);
         return $dataAccumulated;
@@ -340,6 +357,38 @@ class NotificationDataPool
         return $applicableProfiles;
     return false;
   }
-
+  
+  
+    public function getNotificationImage($icon, $iconProfileid){
+        if($icon == 'P' && $iconProfileid){
+            $profile=new Profile();
+            $profile->getDetail($iconProfileid,"PROFILEID");
+            $profilePic = $profile->getHAVEPHOTO();
+            if (empty($profilePic) || $profilePic == 'U')
+                $profilePic="N";
+            if($profilePic!="N"){
+                $pictureServiceObj=new PictureService($profile);
+                $profilePicObj = $pictureServiceObj->getProfilePic();
+                if($profilePicObj){
+                    $photoArray = PictureFunctions::mapUrlToMessageInfoArr($profilePicObj->getProfilePic120Url(),'ThumbailUrl','',$this->gender);
+                    if($photoArray[label] != '')
+                       $icon = 'D';
+                    else
+                       $icon = $photoArray['url'];
+                    //$this->ThumbailUrl=$profilePicObj->getThumbailUrl();
+                }
+                else{
+                    $icon = 'D';
+                }
+            }
+            else{
+                $icon = 'D';
+            }
+        }
+        else{
+            $icon = 'D';
+        }
+        return $icon;
+    }
 }
 ?>

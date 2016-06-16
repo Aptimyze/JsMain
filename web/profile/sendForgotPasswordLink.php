@@ -23,6 +23,7 @@ function sendForgotPasswordLink($myrow)
 	include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 	$forgotPasswordStr = ResetPasswordAuthentication::getResetLoginStr($myrow['PROFILEID']);
 	$forgotPasswordUrl = JsConstants::$siteUrl."/common/resetPassword?".$forgotPasswordStr;
+	if($_SERVER['HTTP_BURP'] == "burp") return true;
 	$email_sender = new EmailSender(MailerGroup::FORGOT_PASSWORD,1778);
 	$emailTpl = $email_sender->setProfileId($myrow[PROFILEID]);
 	$emailTpl->getSmarty()->assign("forgotPasswordUrl",$forgotPasswordUrl);

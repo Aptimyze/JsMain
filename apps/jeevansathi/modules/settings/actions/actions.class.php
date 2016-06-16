@@ -34,7 +34,7 @@ class settingsActions extends sfActions
     		{
     			$privacyObj = new JPROFILE;
     				if($request->getParameter("privacy"))
-    				{
+    	   			{
     					$privacyValue = $loggedInProfileObj->getPRIVACY();
     					if($privacyValue=="")
     						$privacyValue="A";
@@ -132,6 +132,7 @@ class settingsActions extends sfActions
         {
         	$delete_reason=$request->getParameter("deleteReason");
         	$specify_reason=$request->getParameter("specifyReason");
+            $offerConsent=$request->getParameter("offerConsent");
         	if($delete_reason=="I found my match on other website")
         		$specify_reason="www.".trim($specify_reason).".com";
         	
@@ -153,6 +154,12 @@ class settingsActions extends sfActions
         	}
         	$DeleteProfileObj->delete_profile($profileid,$delete_reason,$specify_reason,$username);
         	$DeleteProfileObj->callDeleteCronBasedOnId($profileid);
+        
+            //// tracking of offer consent  added by Palash Chordia
+            if($offerConsent=='Y')
+            (new NEWJS_OFFER_CONSENT())->insertConsent($profileid);
+            ////////////////
+
         	sfContext::getInstance()->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMyJSPageUrl);
         	print_r("skipDelete");die;
         }
