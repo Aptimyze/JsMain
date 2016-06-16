@@ -59,6 +59,9 @@ EOF;
         // Delete records from VARIABLE_DISCOUNT_OFFER_DURATION for the expired discounts
         $vdOfferDurationObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
         $vdOfferDurationObj->deleteExpiredDiscount($todayDate);
+
+	$vdDiscountTemp =new billing_VARIABLE_DISCOUNT_TEMP();
+	$vdDiscountTemp->deleteExpiredMiniVdDiscount($todayDate);	
         
         unset($vdBackupOneDayObj);
         unset($vdObj);
