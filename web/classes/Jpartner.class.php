@@ -46,6 +46,7 @@ class Jpartner
 	private $HINCOME;
 	private $LINCOME_DOL;
 	private $HINCOME_DOL;
+    private $STATE;
 
         public function __construct($table='')
         {
@@ -399,6 +400,14 @@ class Jpartner
         {
                 $this->PARTNER_COUNTRY_RES_IGNORE=$country_res;
         }
+        public function getSTATE()
+        {
+                return $this->STATE;
+        }
+        public function setSTATE($state)
+        {
+                $this->STATE=$state;
+        }
 		public function getJpartnerArray()
 		{
 			$paramArray["GENDER"]=$this->GENDER;
@@ -435,6 +444,7 @@ class Jpartner
 			$paramArray["HINCOME"]=$this->HINCOME;
 			$paramArray["LINCOME_DOL"]=$this->LINCOME_DOL;
 			$paramArray["HINCOME_DOL"]=$this->HINCOME_DOL;
+            $paramArray["STATE"]=$this->STATE;
 			return $paramArray;
 		}
 		public function setJpartnerUsingArray($paramArray)

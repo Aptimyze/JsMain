@@ -33,7 +33,8 @@
 										'P_OCCUPATION'=>'PARTNER_OCC',
 										'P_INCOME'=>'PARTNER_INCOME',
 										'P_GENDER'=>'GENDER',
-                                                                                'P_HAVECHILD'=>'CHILDREN'
+                                        'P_HAVECHILD'=>'CHILDREN',
+                                        'P_STATE'=>'STATE'
 										);
 	public static $FormatColums = array(
 									'P_RELIGION',
@@ -52,7 +53,8 @@
 									'P_COMPLEXION',
 									'P_COUNTRY',
 									'P_CITY',
-                                                                        'P_HAVECHILD',
+                                    'P_HAVECHILD',
+                                    'P_STATE',
 									);									
 	public static $arrAP_DPP_TEMP_FIELDS = array(
 										'GENDER',
@@ -105,7 +107,7 @@
 	 public static function BakeQuery($szKey,$InputVal)
 	 {
 		 $szInput = $InputVal;
-		 if($szkey == 'P_CITY' || $szkey =='P_MTONGUE' )
+		 if($szkey == 'P_CITY' || $szkey =='P_MTONGUE' || $szkey=='P_STATE')
 		 {
 			 if(is_array($InputVal))
 					$InputVal = array_unique($InputVal);

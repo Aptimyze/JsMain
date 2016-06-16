@@ -40,7 +40,6 @@ class apieditdppv1Action extends sfAction
 		
 		//Get symfony form object related to Edit Fields coming.
 		$arrEditDppFieldIDs = $request->getParameter("editFieldArr");
-		
 		if($arrEditDppFieldIDs && is_array($arrEditDppFieldIDs))
 		{
 			$this->form = new FieldForm($arrEditDppFieldIDs,$this->m_objLoginProfile);			       
@@ -304,6 +303,32 @@ class apieditdppv1Action extends sfAction
 			{
 				$this->m_bEditSpouse = true;
 				$arrOut[$key] = ($val == -1)? "" : $val ;
+			}
+			else if($key == 'P_CITY')
+			{
+				$cityStateArr = explode(",",$val);
+				$stateIndiaArr = FieldMap::getFieldLabel("state_india",'',1);
+				foreach($cityStateArr as $k=>$v)
+				{
+					if(array_key_exists($v, $stateIndiaArr))
+					{
+						$stateArr[] =$v;
+					}
+					else
+					{
+						$cityArr[]= $v;
+					}
+					
+				}
+				foreach($cityArr as $key=>$value)
+				{	
+					if(!in_array(substr($value,0,2),$stateArr))
+					{
+						$cityString .= $value.",";
+					}
+				}
+				$arrOut["P_CITY"] = rtrim($cityString,",");
+				$arrOut['P_STATE'] = implode(",",$stateArr);
 			}
 			else
 			{

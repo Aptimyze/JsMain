@@ -1156,6 +1156,12 @@ case 'ID_PROOF_NO':
 					$field->setConstraintClass("string");
 					$field->setTableName("JPROFILE:ID_PROOF_NO");
 				break;
+case 'P_STATE':
+					$field=new Field('','P_STATE');
+					$field->setFieldType("dropdown");
+					$field->setConstraintClass("partner_state");
+					$field->setTableName("JPARTNER:STATE");
+				break;
                 
 }
 

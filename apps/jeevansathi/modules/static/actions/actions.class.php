@@ -1352,65 +1352,76 @@ public function executeAppredirect(sfWebRequest $request)
   private function getJSPCDppCity($partnerCity="")
   {
     $tempArray=FieldMap::getFieldLabel("topindia_city",'',1);
-    
     $state = FieldMap::getFieldLabel("state_india",'',1);
-    $Arr[0]=Array();
+    $Arr['topCityIndia']=Array();
     $cityIndia=FieldMap::getFieldLabel("city_india",'',1);
     foreach($state as $key=>$value)
     {
       unset($cityIndia[$key]);
     }
-    
-    unset($state);
     if(!$partnerCity)
     {
       foreach($tempArray as $key=>$val)
       {
         $temp=explode(",",$val);
-        foreach($temp as $key=>$val){
+        foreach($temp as $key=>$val)
+        {
           $topIndia[$val]=$cityIndia[$val];
           unset($cityIndia[$val]);
         }
-        
       }
       $delhiNcrCities = implode(",",FieldMap::getFieldLabel("delhiNcrCities",1,1));
-	 
-		  $topIndia[$delhiNcrCities]=TopSearchBandConfig::$ncrLabel;
-		  $topIndia[TopSearchBandConfig::$mumbaiRegion]=TopSearchBandConfig::$mumbaiRegionLabel;
-      $Arr[0] = array_merge($topIndia,array("-1 "=>"startAlpha"));
+
+      $topIndia[$delhiNcrCities]=TopSearchBandConfig::$ncrLabel;
+      $topIndia[TopSearchBandConfig::$mumbaiRegion]=TopSearchBandConfig::$mumbaiRegionLabel;
+      $Arr['topCityIndia'] = array_merge($topIndia,array("-1 "=>"startAlpha"));
     }
     else
     {
       unset($Arr);
-      $Arr[0]=$cityIndia;
+      $Arr['topCityIndia']=$cityIndia;
     }
-    
-    $Arr[2]=$cityIndia;
+    $Arr['state']=$state;
+    array_unshift($Arr['state'],"statesIndia");
+    $Arr['city']=$cityIndia;
     $i=0;
     $arrAlpha = array();
     $sym = "";
     $bStartAplha = false;
+    $bStateIndia = false;
     foreach($Arr as $key=>$val)
     {
       foreach($val as $k=>$v){
+        if($v == "statesIndia"){
+          $bStateIndia = true;
+          continue;
+        }
         if($v == "startAlpha"){
           $bStartAplha = true;
           continue;
         }
-
-        $sym = strtoupper(substr($v, 0,1));
-        if($bStartAplha && !in_array($sym, $arrAlpha)){
-          $arrAlpha[] = $sym;
-          $output[0][]=array("-1"=>$sym);  
-          $i++;  
+        if($key!='state')
+        {
+          $sym = strtoupper(substr($v, 0,1));
+          if($bStartAplha && !in_array($sym, $arrAlpha)){
+            $arrAlpha[] = $sym;
+            $output[0][]=array("-1"=>$sym);  
+            $i++;  
+          }
+        }
+        if($bStateIndia)
+        {
+          $output[0][]=array("-1"=>"States");
+          $bStateIndia= false;
         }
         $output[0][]=array($k=>$v);
         $i++;   
       }
     }
-
+   //print_r($output);die;
     return $output;   
   }
+
   private function getJSPCDppCountry($partnerCountry="")
   {
     $tempArray=FieldMap::getFieldLabel("impcountry",'',1);

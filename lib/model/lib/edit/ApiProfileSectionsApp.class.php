@@ -478,9 +478,11 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		//Country
 		$szCountry = $this->getDecorateDPP_Response($jpartnerObj->getPARTNER_COUNTRYRES());
 		$arrOut[] = $this->getApiFormatArray("P_COUNTRY","Country",trim($jpartnerObj->getDecoratedPARTNER_COUNTRYRES()),$szCountry,$this->getApiScreeningField("PARTNER_COUNTRYRES"));
-		//City
+		//State/City
 		$szCity = $this->getDecorateDPP_Response($jpartnerObj->getPARTNER_CITYRES());
-		$arrOut[] = $this->getApiFormatArray("P_CITY","City",trim($jpartnerObj->getDecoratedPARTNER_CITYRES()),$szCity,$this->getApiScreeningField("PARTNER_CITYRES"));
+		$szState = $this->getDecorateDPP_Response($jpartnerObj->getSTATE());
+		$arrOut[] = $this->handleStateCityData($szState,$szCity);
+		//print_r($arrOut);die;
 		return $arrOut;
 	}
 
@@ -849,6 +851,34 @@ class ApiProfileSectionsApp extends ApiProfileSections {
     
     protected function addSunSign(&$astro,$AstroKundali){
      //Not exist for APP
+    }
+
+    public function handleStateCityData($stateVal,$cityVal)
+    {	$jpartnerObj=$this->profile->getJpartner();
+    	if($stateVal == "DM" && $cityVal == "DM")
+    	{
+    		$szStateCity = "DM";
+    		$stateCityNames = "Doesn't Matter";
+    	}
+    	elseif($stateVal == "DM")
+    	{
+    		$szStateCity = $cityVal;
+    		$stateCityNames = trim($jpartnerObj->getDecoratedPARTNER_CITYRES());
+    	}
+    	elseif($cityVal == "DM")
+    	{
+    		$szStateCity = $stateVal;
+    		$stateCityNames = trim($jpartnerObj->getDecoratedSTATE());	
+    	}
+    	else
+    	{
+    		$szStateCity = $stateVal.",".$cityVal;
+    		$stateNames = trim($jpartnerObj->getDecoratedSTATE());
+    		$cityNames = trim($jpartnerObj->getDecoratedPARTNER_CITYRES());
+    		$stateCityNames = $stateNames.",".$cityNames;
+    	}
+    	$stateCityArr = $this->getApiFormatArray("P_CITY","City",$stateCityNames,$szStateCity,$this->getApiScreeningField("PARTNER_CITYRES"));
+    	return($stateCityArr);
     }
     
 }
