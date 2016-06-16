@@ -287,15 +287,15 @@ class staticActions extends sfActions
             $this->deleteOption=$request->getParameter("delete_option");
            // print_r($this->deleteOption);die;
             if($this->deleteOption=="2")
-            	$this->deleteText = "Name website";
+            	$this->deleteText = "Please write name of website";
             elseif ($this->deleteOption=="4") {
-            	$this->deleteText = "Please provide your reason for dissatisfaction";
+            	$this->deleteText = "Kindly specify reason for your dissatisfaction";
             }
             elseif ($this->deleteOption=="5") {
-            	$this->deleteText = "Please specify the reason";
+            	$this->deleteText = "Kindly specify your reason";
             }
             else
-            	$this->deleteText = "Specify the source";
+            	$this->deleteText = "Kindly specify the source";
         }
         public function executePassCheck(sfWebRequest $request) {
             $loginData = $request->getAttribute("loginData");
