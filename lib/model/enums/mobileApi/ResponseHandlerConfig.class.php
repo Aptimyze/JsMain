@@ -110,5 +110,7 @@ class ResponseHandlerConfig
 
     //Guna Score
     public static $ZERO_GUNA_MATCHES = array("message"=>"No Guna Score Matches","statusCode"=>'1');
+    public static $NO_COMMUNICATION_HISTORY = array("message"=>"No Communication History","statusCode"=>'1');
+
 }
 ?>

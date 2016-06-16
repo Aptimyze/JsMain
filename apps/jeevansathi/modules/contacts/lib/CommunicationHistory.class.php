@@ -1,18 +1,35 @@
 <?php
 class CommunicationHistory
 {
+	private static $RESULTS_PER_PAGE_APP=30;
 	private $loginProfile;
 	private $otherProfile;
+	private $nextPage;
+	private $pageNo;
 	public function __construct($loginProfile, $otherProfile)
 	{
 		$this->loginProfile = $loginProfile;
 		$this->otherProfile = $otherProfile;
 	}
-	public function getHistory()
+
+	public function getNextPage(){
+		return $this->nextPage;
+	}
+	public function getHistory($page)
 	{
 		$gender        = $this->loginProfile->getGENDER();
 		$heshe         = "They";
 		$himher        = "them";
+
+
+		if($page)
+		{
+			$memObject=JsMemcache::getInstance();
+			$CON_HISTORY=$memObject->get('commHistory_'.$this->otherProfile->getPROFILEID());
+		}
+
+	if(!$CON_HISTORY || !$page)
+	{
 		$messagelogObj = new MessageLog();
 		$messagelog    = $messagelogObj->getCommunicationHistory($this->loginProfile->getPROFILEID(), $this->otherProfile->getPROFILEID());
 		if (!empty($messagelog))
@@ -136,6 +153,29 @@ class CommunicationHistory
 			return false;
 		}
 		$CON_HISTORY = array_reverse($CON_HISTORY);
+		if($page)$memObject->set('commHistory_'.$this->otherProfile->getPROFILEID(),$CON_HISTORY);
+	}
+
+//// trimming result if page asked for API
+
+		if($page)
+		{
+		    
+			$this->pageNo=$page;
+			$offset=(intval($page)-1)*self::$RESULTS_PER_PAGE_APP;
+			$limit=self::$RESULTS_PER_PAGE_APP;
+			if(count($CON_HISTORY)>$page*self::$RESULTS_PER_PAGE_APP)
+				$this->nextPage='true';
+			else 
+				$this->nextPage='false';
+	
+			$CON_HISTORY = array_slice($CON_HISTORY, $offset,$limit);
+		}
+		else $this->nextPage="";
+
+/////////////////////////////////////
+
+
 		return $CON_HISTORY;
 	}
 	public function temporaryInterestSuccess($incomplete, $activated)
@@ -151,6 +191,7 @@ class CommunicationHistory
 	
 	public function getResultSetApi($history,$myGender='',$otherGender='')
 	{
+
 		$count = 0;
 		if($otherGender)
 		{
