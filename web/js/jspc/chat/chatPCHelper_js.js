@@ -34,7 +34,8 @@ function mapListingJsonToHTML(jsonData)
 {
       var listingHTML = '<div id="listing_tab1">';
       $.each(jsonData,function( index, val ){
-            listingHTML = listingHTML+ '<div id="'+index+'"><div class="f12 fontreg nchatbdr2"><p class="nchatt1 fontreg pl15">'+index+'</p></div><ul class="chatlist">';
+
+            listingHTML = listingHTML+ '<div id="'+chatAppPc.rosterGroupsIDMapping[index]+'"><div class="f12 fontreg nchatbdr2"><p class="nchatt1 fontreg pl15">'+index+'</p></div><ul class="chatlist">';
             $.each(val,function( key, details ){
                   listingHTML = listingHTML+'<li class="clearfix profileIcon" id="profile_'+key+'"><img id="pic_'+key+'" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">'+details.fullname+'</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li>';
             });
@@ -51,6 +52,19 @@ function mapListingJsonToHTML(jsonData)
 */
 function updateChatPCRoster(rosterData)
 {
-      console.log(rosterData);
-
+      try
+      {
+            //console.log("new roster");
+            console.log(rosterData);
+            var newRosterHTML = "",groupid;
+            groupid = chatAppPc.rosterGroupsIDMapping[rosterData.groups[0]];
+            newRosterHTML = '<li class="clearfix profileIcon" id="profile_'+rosterData.id+'"> <img id="pic_'+rosterData.id+'" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">'+rosterData.fullname+'</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li>';
+            console.log(groupid);
+            if($("#"+groupid).length != 0)
+                  $("#"+groupid).find(".chatlist").append(newRosterHTML);
+      }
+      catch(e)
+      {
+            console.log(e);
+      }
 }

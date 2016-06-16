@@ -32,6 +32,11 @@ chatAppPc.HoverBoxDiv = '<div class="pos_fix info-hover fontlig vishid nz21"><di
 
 chatAppPc.rosterGroups = ["Desired Partner Matches","Interest Received","Shortlisted Members"];
 
+chatAppPc.rosterGroupsIDMapping = [];
+chatAppPc.rosterGroupsIDMapping["Desired Partner Matches"] = "dpp";
+chatAppPc.rosterGroupsIDMapping["Interest Received"] = "eoi_R";
+chatAppPc.rosterGroupsIDMapping["Shortlisted Members"] = "shortlisted";
+
 chatAppPc.cmfunc = {
 	getHeight: function(){		
 		return ($(window).height());
