@@ -275,7 +275,7 @@ class editAction extends sfAction {
     $objDetailedDisplay->setResponseForEditView('Y');
     $this->arrOutDisplay = array();
     $this->arrOutDisplay =  $objDetailedDisplay->getResponse();
-
+    $this->arrOutDisplay['pic']['photo_display']=$this->profile->getPHOTO_DISPLAY();
     ApiViewConstants::setUserDefinedNullValueMarker(null);
     $this->loginProfile->setNullValueMarker("-");
 
