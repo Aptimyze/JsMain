@@ -152,7 +152,24 @@ class JProfileUpdateLib
       return false;
     }
   }
-
+	/**
+  * updateJProfileLoginSortDate
+  * Update newjs.JPROFILE Columns for login date in authentication i.e. setting 
+  * @param type $iProfileID
+  * @throws jsException
+  */
+	public function updateJProfileLoginSortDate($iProfileID)
+	{
+		try {
+		  return $this->objJProfileStore->updateLoginSortDate($iProfileID);
+		} catch(Exception $ex) {
+		  //Log this error
+		  jsException::log($ex);
+		  return false;
+		}
+	}
+	
+	
   /**
   * updateProfileForBilling
   * Update newjs.JPROFILE Columns for archive i.e. setting 
