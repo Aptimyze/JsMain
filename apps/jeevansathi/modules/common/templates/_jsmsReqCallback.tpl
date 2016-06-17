@@ -92,8 +92,12 @@
       });
     });
   });
-  function showRCBLayer (e, callbackSource='') {
-      rcbForCAL = callbackSource;
+  function showRCBLayer (e, callbackSource) {
+      if(callbackSource){
+        rcbForCAL = callbackSource;
+      } else {
+        rcbForCAL = '';
+      }
       e.preventDefault();
       $("#callOvrOne").show();
       $("#callOvrTwo").hide();
