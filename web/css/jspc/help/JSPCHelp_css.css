@@ -16,7 +16,7 @@
 .bdrBtmGrey {border-bottom:1px solid #D3D3D3}
 .padbtm5{padding-bottom:5px;}
 .mb{padding-bottom:2px !important;}
-.quesTable,.quesTable2 {font-size:14px;font-family:"Roboto","sans-serif";font-weight:400;}
+.quesTable,.quesTable2 {font-size:14px;font-family:"Roboto","sans-serif";font-weight:400;overflow-x: auto;display: block;}
 .quesTable tr:nth-child(even) {display:none;}
 .quesTable tr:nth-child(odd) {color: #666; cursor:pointer;}
 .quesTable td:first-child {padding-right:5px; vertical-align:top}
@@ -73,7 +73,7 @@
 .dropOption li:hover{background-color:#d9475c; color:#fff}
 .mt50{margin-top:50px}
 
-ul li{margin-left:20px;}
+.quesTable ul li{margin-left:20px;}
 .minhgt360{min-height: 360px;}
 .wid70p{width:70%}
 .mt100{margin-top:100px;}
@@ -82,3 +82,5 @@ ul li{margin-left:20px;}
     display: inline !important;
     font-style: italic !important;
 }
+.quesTable table {width:100% !important;}
+.quesTable2 table {width:100% !important;}
