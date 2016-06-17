@@ -25,7 +25,7 @@ class CommunicationHistory
 		if($page)
 		{
 			$memObject=JsMemcache::getInstance();
-			$CON_HISTORY=$memObject->get('commHistory_'.$this->otherProfile->getPROFILEID());
+			$CON_HISTORY=$memObject->get('commHistory_'.$this->otherProfile->getPROFILEID().'_'.$this->loginProfile->getPROFILEID());
 		}
 
 	if(!$CON_HISTORY || !$page)
@@ -153,7 +153,7 @@ class CommunicationHistory
 			return false;
 		}
 		$CON_HISTORY = array_reverse($CON_HISTORY);
-		if($page)$memObject->set('commHistory_'.$this->otherProfile->getPROFILEID(),$CON_HISTORY);
+		if($page)$memObject->set('commHistory_'.$this->otherProfile->getPROFILEID().'_'.$this->loginProfile->getPROFILEID(),$CON_HISTORY);
 	}
 
 //// trimming result if page asked for API
