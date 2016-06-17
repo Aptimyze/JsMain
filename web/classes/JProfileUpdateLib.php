@@ -10,7 +10,7 @@
  */
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
-/**
+/**NEWJS_PHOTO_PRIVACY
  * JProfileUpdateLib Wrapper Library
  */
 class JProfileUpdateLib
@@ -98,7 +98,7 @@ class JProfileUpdateLib
    */
   public static function getInstance($dbname="")
   {
-    if (null === self::$instance) {
+		if (null === self::$instance) {
       self::$instance = new JProfileUpdateLib($dbname);
     }
     
@@ -152,7 +152,24 @@ class JProfileUpdateLib
       return false;
     }
   }
-
+	/**
+  * updateJProfileLoginSortDate
+  * Update newjs.JPROFILE Columns for login date in authentication i.e. setting 
+  * @param type $iProfileID
+  * @throws jsException
+  */
+	public function updateJProfileLoginSortDate($iProfileID)
+	{
+		try {
+		  return $this->objJProfileStore->updateLoginSortDate($iProfileID);
+		} catch(Exception $ex) {
+		  //Log this error
+		  jsException::log($ex);
+		  return false;
+		}
+	}
+	
+	
   /**
   * updateProfileForBilling
   * Update newjs.JPROFILE Columns for archive i.e. setting 
@@ -248,6 +265,22 @@ class JProfileUpdateLib
   {
     try {
       return $this->objJProfileStore->updateProfileSeriousnessCount($profileArr);
+    } catch (Exception $ex) {
+      jsException::log($ex);
+      return false;
+    }
+  }
+  
+  
+  /**
+   * update Photo settings for mutiple profiles
+   * @param $profileArr
+   * @return bool
+   */
+  public function updateForMutipleProfiles($params,$profileArr)
+  {
+		try {
+      return $this->objJProfileStore->updateForMutipleProfiles($params,$profileArr);
     } catch (Exception $ex) {
       jsException::log($ex);
       return false;
