@@ -859,7 +859,7 @@ class protect
                         }
                 }
                 $jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
-                $jprofileUpdateObj->updateLoginSortDate($profileid);
+                $jprofileUpdateObj->updateJProfileLoginSortDate($profileid);
 		//$sql="update JPROFILE set LAST_LOGIN_DT=now(),SORT_DT=if(DATE_SUB(NOW(),INTERVAL 7 DAY)>SORT_DT,DATE_SUB(NOW(),INTERVAL 7 DAY),SORT_DT) where PROFILEID='" . $profileid . "'";
           //      $mysql->executeQuery($sql,$db);
 		}

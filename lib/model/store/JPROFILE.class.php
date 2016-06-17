@@ -1180,7 +1180,6 @@ public function duplicateEmail($email)
         }
         return $res;
     }
-<<<<<<< HEAD
     
     /**
      * updateProfileForArchive
@@ -1323,7 +1322,7 @@ public function duplicateEmail($email)
 			throw new jsException($ex);
 		}
 	}
-=======
+
 
     public function checkUsername($username)
     {
@@ -1341,6 +1340,5 @@ public function duplicateEmail($email)
                     throw new jsException($e);
             }
     }
->>>>>>> 52221e27c07c0bb59070e2a4a60e16f3c9495154
 }
 ?>
