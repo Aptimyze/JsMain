@@ -14,6 +14,7 @@ include(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 include_once("../profile/arrays.php");
 include("../profile/functions.inc");
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 if(authenticated($cid))
 {
 	if($Submit)
@@ -93,15 +94,24 @@ if(authenticated($cid))
 			$sql_up= " UPDATE jsadmin.SCREENING_LOG set REF_ID='$ref_id' where ID='$ref_id' ";
 			mysql_query_decide($sql_up) or die(mysql_error_js());
 			$str = rtrim($str,","); 
-			$sql = " UPDATE newjs.JPROFILE set $str, SCREENING='$screen'";
-			if($verify_email)
-				$sql.=", VERIFY_EMAIL='$verify_email'";
+			$jprofileUpdateObj = JProfileUpdateLib::getInstance();
+			$arrFields = $jprofileUpdateObj->convertUpdateStrToArray($str);
+			$arrFields['SCREENING']='$screen';
+			//$sql = " UPDATE newjs.JPROFILE set $str, SCREENING='$screen'";
+			if($verify_email){
+				//$sql.=", VERIFY_EMAIL='$verify_email'";
+				$arrFields['VERIFY_EMAIL']='$verify_email';
+			}
 
-			if($INCOMPLETE!="")
-				$sql.=",SCREENING=0, PREACTIVATED='$activated',ACTIVATED='N' , INCOMPLETE='Y'";
+
+			if($INCOMPLETE!=""){
+				$arrFields1 = array('SCREENING'=>'0', 'PREACTIVATED'=>'$activated','ACTIVATED'=>'N' , 'INCOMPLETE'=>'Y');
+				//$sql.=",SCREENING=0, PREACTIVATED='$activated',ACTIVATED='N' , INCOMPLETE='Y'";
+			}
 			else if($activated=='U' || ($activated=='H' && ($preactivated=='U' || $preactivated=='N')))
 			{
-				$sql.=", PREACTIVATED='$activated',ACTIVATED='Y'";
+				$arrFields2 = array('PREACTIVATED'='$activated','ACTIVATED'='Y');
+				//$sql.=", PREACTIVATED='$activated',ACTIVATED='Y'";
 				if($Annulled_Reason)
 				{
 					$areason=htmlspecialchars($Annulled_Reason,ENT_QUOTES);
@@ -116,8 +126,11 @@ if(authenticated($cid))
                         else
                                 $sql.= "ACTIVATED = 'Y' ";*/
 
-                        $sql.= " where PROFILEID = '$pid' ";
-			mysql_query_decide($sql) or die("$sql".mysql_error_js());
+                $arrFields = array_merge($arrFields,$arrFields1);
+                $arrFields = array_merge($arrFields,$arrFields2);
+                $jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID");
+                        //$sql.= " where PROFILEID = '$pid' ";
+			//mysql_query_decide($sql) or die("$sql".mysql_error_js());
 			$sql_mod="INSERT into jsadmin.SCREENING_LOG(REF_ID,PROFILEID,USERNAME,$name,SCREENED_BY,SCREENED_TIME,ENTRY_TYPE,FIELDS_SCREENED) select '$ref_id',PROFILEID,USERNAME,$name,'$user',now(),'M','$count_screen' from newjs.JPROFILE where PROFILEID = '$pid' ";
 			mysql_query_decide($sql_mod) or die(mysql_error_js());
 			/*ADD START 10.07.2006 (Tripti) Adding an entry into NEW_EDIT_COUNT*/
