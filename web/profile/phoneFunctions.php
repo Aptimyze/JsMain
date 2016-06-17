@@ -10,13 +10,13 @@ function hideNumbers($profileid,$flag)
 		return;
 		$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
 		$profileid=$profileid;
-		$arrFields = array('SHOWPHONE_RES'=>'$flag','SHOWPHONE_MOB'=>'$flag');
+		$arrFields = array('SHOWPHONE_RES'=>$flag,'SHOWPHONE_MOB'=>$flag);
 		$exrtaWhereCond = "";
 		$jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID",$exrtaWhereCond);
       // $sql="UPDATE newjs.JPROFILE SET `SHOWPHONE_RES` = '".$flag."',`SHOWPHONE_MOB` = '".$flag."' WHERE `PROFILEID` = '".$profileid."'";
  //       $res=mysql_query_decide($sql);
         deleteCachedJprofile_ContactDetails($profileid);
-        $arrParams = array('SHOWALT_MOBILE'=>'$flag');
+        $arrParams = array('SHOWALT_MOBILE'=>$flag);
 		$jprofileUpdateObj->updateJPROFILE_CONTACT($profileid, $arrParams);
         //$sqlAlt="UPDATE newjs.JPROFILE_CONTACT SET `SHOWALT_MOBILE` = '".$flag."' WHERE `PROFILEID` = '".$profileid."'";
         //$resAlt=mysql_query_decide($sqlAlt);
@@ -150,7 +150,7 @@ function savePhone($profileid,$phoneType,$phoneNo,$std='',$isd='',$screenflag=''
 		contact_archive($profileid,'PHONE_MOB',$val);
 		$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
 		$profileid=$profileid;
-		$arrFields = array('PHONE_MOB'=>'$phoneNo','PHONE_FLAG'=>'','MOB_STATUS'=>'N','MOD_DT'=>'now()');
+		$arrFields = array('PHONE_MOB'=>$phoneNo,'PHONE_FLAG'=>'','MOB_STATUS'=>'N','MOD_DT'=>'now()');
 		
 		//$sql ="update newjs.JPROFILE SET `PHONE_MOB`='".$phoneNo."',`PHONE_FLAG`='',`MOB_STATUS`='N',`MOD_DT`=now() ";
 		if($isd!=''){
@@ -170,7 +170,7 @@ function savePhone($profileid,$phoneType,$phoneNo,$std='',$isd='',$screenflag=''
 		if($isdFlag=="DIFF" &&$isd!='')
 		{
       deleteCachedJprofile_ContactDetails($profileid);
-       $arrParams = array('ALT_MOBILE_ISD'=>'$isd','ALT_MOB_STATUS'=>'N');
+       $arrParams = array('ALT_MOBILE_ISD'=>$isd,'ALT_MOB_STATUS'=>'N');
 		$jprofileUpdateObj->updateJPROFILE_CONTACT($profileid, $arrParams);
 	            //    $sql ="update newjs.JPROFILE_CONTACT SET `ALT_MOBILE_ISD`='".$isd."',`ALT_MOB_STATUS`='N' where `PROFILEID`='".$profileid."'";
 			//$res=mysql_query_decide($sql);
@@ -188,7 +188,7 @@ function savePhone($profileid,$phoneType,$phoneNo,$std='',$isd='',$screenflag=''
 		
 		$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
 		$profileid=$profileid;
-		$arrFields = array('PHONE_RES'=>'$phoneNo','STD'=>'$std','PHONE_FLAG'=>'','LANDL_STATUS'=>'N','PHONE_WITH_STD'=>$phone_std,'MOD_DT'=>'now()');
+		$arrFields = array('PHONE_RES'=>$phoneNo,'STD'=>$std,'PHONE_FLAG'=>'','LANDL_STATUS'=>'N','PHONE_WITH_STD'=>$phone_std,'MOD_DT'=>'now()');
 		
 		
 		//$sql ="update newjs.JPROFILE SET `PHONE_RES`='".$phoneNo."',`STD`='".$std."',`PHONE_FLAG`='',`LANDL_STATUS`='N',PHONE_WITH_STD='".$phone_std."',`MOD_DT`=now() ";
@@ -209,7 +209,7 @@ function savePhone($profileid,$phoneType,$phoneNo,$std='',$isd='',$screenflag=''
 		{
       deleteCachedJprofile_ContactDetails($profileid);
       
-		 $arrParams = array('ALT_MOBILE_ISD'=>'$isd');
+		 $arrParams = array('ALT_MOBILE_ISD'=>$isd);
 		$jprofileUpdateObj->updateJPROFILE_CONTACT($profileid, $arrParams);
 			$sql ="update newjs.JPROFILE_CONTACT SET `ALT_MOBILE_ISD`='".$isd."' where `PROFILEID`='".$profileid."'";
 			$res=mysql_query_decide($sql);
@@ -223,7 +223,7 @@ function savePhone($profileid,$phoneType,$phoneNo,$std='',$isd='',$screenflag=''
 		contact_archive($profileid,'PHONE_ALT',$val);
 		$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
 		$profileid=$profileid;
-		$arrParams = array('ALT_MOBILE'=>'$phoneNo','ALT_MOB_STATUS'=>'N');
+		$arrParams = array('ALT_MOBILE'=>$phoneNo,'ALT_MOB_STATUS'=>'N');
 		
               //  $sql ="update newjs.JPROFILE_CONTACT SET `ALT_MOBILE`='".$phoneNo."',`ALT_MOB_STATUS`='N' ";
 		if($isd!=''){
