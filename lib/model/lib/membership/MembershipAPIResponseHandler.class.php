@@ -806,7 +806,7 @@ class MembershipAPIResponseHandler {
                     $v['service_duration'] = $vasID[1] . ' Profiles';
                 } 
                 else {
-                    $v['service_duration'] = $vasID[1] . ' Profiles';
+                    $v['service_duration'] = $vasID[1] . ' Months';
                 }
                 if (is_array($this->custVAS)) {
                     foreach ($this->custVAS as $kk => $vv) {
