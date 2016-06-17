@@ -153,7 +153,8 @@ class CommunicationHistory
 			return false;
 		}
 		$CON_HISTORY = array_reverse($CON_HISTORY);
-		if($page)$memObject->set('commHistory_'.$this->otherProfile->getPROFILEID().'_'.$this->loginProfile->getPROFILEID(),$CON_HISTORY);
+		if($page && (count($CON_HISTORY)>self::$RESULTS_PER_PAGE_APP))
+			$memObject->set('commHistory_'.$this->otherProfile->getPROFILEID().'_'.$this->loginProfile->getPROFILEID(),$CON_HISTORY);
 	}
 
 //// trimming result if page asked for API
