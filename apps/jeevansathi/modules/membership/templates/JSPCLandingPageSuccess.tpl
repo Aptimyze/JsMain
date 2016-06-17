@@ -99,7 +99,7 @@
                                     <td class="bg5 colrw cmp-lh1 vmid fontreg f17 txtc">~$v.subscription_name`</td>
                                 </tr>
                                 ~foreach from=$v.benefits key=kk item=vv name=benefitsLoop`
-                                ~if $smarty.foreach.benefitsLoop.index eq 4`
+                                ~if $smarty.foreach.benefitsLoop.index eq 5`
                                 <tr>
                                     <td class="bdrb1 bdrb2 vmid txtc cmp-lh2"><i class="mem-sprite mem-chk3"></i></td>
                                 </tr>
@@ -148,6 +148,9 @@
                                 </tr> -->
                                 <tr>
                                     <td class="bg5 colrw cmp-lh1 vmid fontreg f17 txtc">Free</td>
+                                </tr>
+                                <tr>
+                                    <td class="bdrb2 vmid txtc cmp-lh2"><i class="mem-sprite mem-cross1"></i></td>
                                 </tr>
                                 <tr>
                                     <td class="bdrb2 vmid txtc cmp-lh2"><i class="mem-sprite mem-cross1"></i></td>
@@ -341,6 +344,7 @@
                     <li>Understand qualities you are looking in your desired partner</li>
                     <li>Hand-picking of profiles by Jeevansathi that match your expectations</li>
                     <li>Contact shortlisted profiles & arrange meetings on your behalf</li>
+                    <li>Priority Customer service</li>
                 </ul>
                 <div id="jsxKnowMoreLink" class="pl19 pt10"><a href="~sfConfig::get('app_site_url')`/membership/jsexclusiveDetail" class="fontreg f16 colr5">Know More</a></div>
                 <!--start:value-->

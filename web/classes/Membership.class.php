@@ -283,6 +283,7 @@ class Membership
         //different mail function called to send html mail along with pdf attachment.
 		$canSendObj= canSendFactory::initiateClass(CanSendEnums::$channelEnums[EMAIL],array("EMAIL"=>$this->email,"EMAIL_TYPE"=>"29"),$myrow['PROFILEID']);
         $canSend = $canSendObj->canSendIt();
+
         if($canSend)
         {
         	$ordrDeviceObj = new billing_ORDERS_DEVICE();
@@ -291,7 +292,9 @@ class Membership
             	// Disable sending bills to iOS Customers
             	unset($bill);
             }
-	        send_email($this->email, $msg, $subject, 'membership@jeevansathi.com', '', 'payments@jeevansathi.com', $bill, '', '', '', "1", '', 'Jeevansathi Membership');
+            $membershipMailer = new MembershipMailer();
+            $membershipMailer->sendWelcomeMailerToPaidUser(1835, $this->profileid, $bill, $this->serviceid);
+	        //send_email($this->email, $msg, $subject, 'membership@jeevansathi.com', '', 'payments@jeevansathi.com', $bill, '', '', '', "1", '', 'Jeevansathi Membership');
 		}
         
         if (strstr($this->serviceid, 'M')) {
@@ -391,31 +394,37 @@ class Membership
     }
 
     function order_mail_content($USERNAME, $type, $amount, $entry_dt, $ORDERID, $ID) {
-        global $payment_gateway;
-        //header
-        $msg = "Please add membership@jeevansathi.com to your address book to ensure delivery of this mail into you inbox.<br><br>";
+        $membershipMailer = new MembershipMailer();
+        $receiptid = $this->receiptid;
+        $billid = $this->billid;
+        include_once ($_SERVER["DOCUMENT_ROOT"] . "/billing/invoiceGenerate.php");
+        $membershipMailer->sendWelcomeMailerToPaidUser(1835, $this->profileid, $bill, $this->serviceid);
+
+        // global $payment_gateway;
+        // //header
+        // $msg = "Please add membership@jeevansathi.com to your address book to ensure delivery of this mail into you inbox.<br><br>";
         
-        $msg.= "Dear $USERNAME,\n\nThank you for subscribing to Jeevansathi.com.\n\nWe have received your payment of $type $amount on $entry_dt. Please use your ORDER ID. No. - $ORDERID-$ID in all your future communication with us in order for us to serve you better.\n\nCopy of your bill (BILL.pdf) has been attached with this mail. Kindly revert back for any discrepancies in the bill.";
+        // $msg.= "Dear $USERNAME,\n\nThank you for subscribing to Jeevansathi.com.\n\nWe have received your payment of $type $amount on $entry_dt. Please use your ORDER ID. No. - $ORDERID-$ID in all your future communication with us in order for us to serve you better.\n\nCopy of your bill (BILL.pdf) has been attached with this mail. Kindly revert back for any discrepancies in the bill.";
         
-        if ($payment_gateway == 'CCAVENUE') {
-            $msg.= "\n\nPlease Note :- The charge will appear on your credit card as 'ccavenue.com/charge'";
-        } 
-        elseif ($payment_gateway == 'TRANSECUTE') {
-            $msg.= "\n\nPlease Note :- The charge that will be appearing on your Credit Card Statement will display pay.transecute.com";
-        } 
-        elseif ($payment_gateway == 'PAYPAL') {
-            $msg.= "\n\nPlease Note :- The credit card transaction will appear on your bill as \"PAYPAL *JEEVANSATHI\".";
-        }
+        // if ($payment_gateway == 'CCAVENUE') {
+        //     $msg.= "\n\nPlease Note :- The charge will appear on your credit card as 'ccavenue.com/charge'";
+        // } 
+        // elseif ($payment_gateway == 'TRANSECUTE') {
+        //     $msg.= "\n\nPlease Note :- The charge that will be appearing on your Credit Card Statement will display pay.transecute.com";
+        // } 
+        // elseif ($payment_gateway == 'PAYPAL') {
+        //     $msg.= "\n\nPlease Note :- The credit card transaction will appear on your bill as \"PAYPAL *JEEVANSATHI\".";
+        // }
         
-        $msg.= "\n\nRegards,\nJeevansathi.com Team";
+        // $msg.= "\n\nRegards,\nJeevansathi.com Team";
         
         //Footer
-        $mailerServiceObj = new MailerService();
-        $mailerLinks = $mailerServiceObj->getLinks();
-        $unsubscribeLink = $mailerLinks['UNSUBSCRIBE'];        
-        $msg.="<br><br>You have received this mail because your e-mail ID is registered with Jeevansathi.com. This is a system-generated e-mail, please don't reply to this message. To stop receiving these mails <a href='$unsubscribeLink/0/0' target='_blank'>Unsubscribe</a>.";
+        // $mailerServiceObj = new MailerService();
+        // $mailerLinks = $mailerServiceObj->getLinks();
+        // $unsubscribeLink = $mailerLinks['UNSUBSCRIBE'];        
+        // $msg.="<br><br>You have received this mail because your e-mail ID is registered with Jeevansathi.com. This is a system-generated e-mail, please don't reply to this message. To stop receiving these mails <a href='$unsubscribeLink/0/0' target='_blank'>Unsubscribe</a>.";
 
-        return $msg;
+        // return $msg;
     }
 
     function isRenewable($profileid) {
@@ -932,14 +941,20 @@ class Membership
     }
 
     function membership_mail() {
-        $serviceid_arr = @explode(",", $this->serviceid);
-        for ($i = 0; $i < count($serviceid_arr); $i++) $service_type[] = get_service_type($this->serviceid);
+    	$membershipMailer = new MembershipMailer();
+    	$receiptid = $this->receiptid;
+        $billid = $this->billid;
+        include_once ($_SERVER["DOCUMENT_ROOT"] . "/billing/invoiceGenerate.php");
+        $membershipMailer->sendWelcomeMailerToPaidUser(1835, $this->profileid, $bill, $this->serviceid);
 
-            $msg = "Dear $this->username,\n\nThank you for subscribing to Jeevansathi.com.\n\nWe have received your payment of $this->curtype $this->amount . \n\nCopy of your bill (BILL.pdf) has been attached with this mail. Kindly revert back for any discrepancies in the bill.";
+        // $serviceid_arr = @explode(",", $this->serviceid);
+        // for ($i = 0; $i < count($serviceid_arr); $i++) $service_type[] = get_service_type($this->serviceid);
 
-        $msg.= "\n\n\nWarm Regards,\nThe Jeevansathi Team\n";
+        //     $msg = "Dear $this->username,\n\nThank you for subscribing to Jeevansathi.com.\n\nWe have received your payment of $this->curtype $this->amount . \n\nCopy of your bill (BILL.pdf) has been attached with this mail. Kindly revert back for any discrepancies in the bill.";
+
+        // $msg.= "\n\n\nWarm Regards,\nThe Jeevansathi Team\n";
         
-        return $msg;
+        // return $msg;
     }
     
     function membership_details($serviceid = "") {
