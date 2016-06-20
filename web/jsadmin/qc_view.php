@@ -64,7 +64,6 @@ if(authenticated($cid))
                     //wrapping update query
                     $jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
                     $arrFields = array('SCREENING'=>$screen);
-                    //print_r($arrFields);die;
                     $jprofileUpdateObj->editJPROFILE($arrFields,$pid,"PROFILEID");
                     // $sql_update="update newjs.JPROFILE set SCREENING='$screen' where PROFILEID='$pid'";
                     // mysql_query_decide($sql_update) or die("$sql_update".mysql_error_js());
