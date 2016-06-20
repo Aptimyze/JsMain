@@ -210,9 +210,11 @@ class AgentAllocation
 	public function allocateProfiles($processObj)
         {
 		$jprofileObj            =new JPROFILE('newjs_slave');
+
+		// Queries cannot be moved to slave- due to slave lag spike arises in FS allocation
 		$lastAgentAllotedObj    =new AGENT_ALLOTED();
-		$lastAgentAllotedGetObj =new AGENT_ALLOTED('newjs_slave');
-		$manualAllotObj 	=new MANUAL_ALLOT('newjs_slave');
+		$manualAllotObj 	=new MANUAL_ALLOT();
+		// End
 
 		$currentExec		=0;
 		$method			=$processObj->getMethod();
@@ -227,9 +229,9 @@ class AgentAllocation
 				$agentTotalAllocArr =$manualAllotObj->getTotalAllocationCntForFieldSales($executives);
 		}
 		if($subMethod=='CENTRAL_RENEWAL' || $subMethod=='CENTRAL_RENEWAL_MONTHLY'){
-			$lastAllotedAgent	=$lastAgentAllotedGetObj->getLastAgentAlloted('REALLOCATION',$center);	
+			$lastAllotedAgent	=$lastAgentAllotedObj->getLastAgentAlloted('REALLOCATION',$center);	
 		} else {
-			$lastAllotedAgent	=$lastAgentAllotedGetObj->getLastAgentAlloted($method,$center);
+			$lastAllotedAgent	=$lastAgentAllotedObj->getLastAgentAlloted($method,$center);
 		}
 		$lastExecutive		=$totalExecutives-1;
 		if($lastAllotedAgent && $totalExecutives)
