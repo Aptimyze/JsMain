@@ -11,7 +11,11 @@ var defaultPhone            = "";
 
 var closeHelpWidgetIntervalId = "";
 var callbackSource = "";
+
 $(document).ready(function(){
+    if(typeof(hideHelpMenu)=="undefined"){
+      var hideHelpMenu = "false";
+    } 
     if(hideHelpMenu == "true"){
         $("#js-helpWidget").addClass('disp-none');
     }
