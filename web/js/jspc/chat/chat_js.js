@@ -1,74 +1,52 @@
-"use strict";
-//namespace for chat application
-var chatAppPc = chatAppPc || {};
-chatAppPc.screenHeight = $(window).height();
-
-//default values
-chatAppPc.defaultv = {
-				container: "#chatOpenPanel",
-				incontainer: '.js-openOutPanel',
-				minPanelclass : '.js-minpanel',
-				listPanelId: '#js-lsitingPanel',
-				tab1class: '.showtab1',
-				tab2class: '.showtab2',
-				listPanelInnerId : '#nchatDivs',
-};
-
-//html for login screen
-chatAppPc.loginChatPanel = '<div class="pos_fix chatbg wid20p chatpos1 nz20 js-openOutPanel"><div class="fullwid txtc fontlig pos-rel" id="js-loginPanel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBar"></i> </div><div> <img src="../../../images/jspc/chat/chat-profile-pic.jpg" class="chatmt1"/> </div><button id="js-chatLogin" class="chatbtnbg1 mauto chatw1 colrw f14 brdr-0 lh40 cursp nchatm5">Login to Chat</button></div></div>';
-
-//html for mimimize chat
-chatAppPc.minChatPanel = '<div class="nchatbg1 nchatw2 nchatp6 pos_fix colrw nchatmax js-minpanel cursp"><ul class="nchatHor clearfix f13 fontreg"> <li>      <div class="pt5 pr10">ONLINE MATCHES</div></li><li><div class="bg_pink disp-tbl txtc nchatb"><div class="vmid disp-cell">2</div></div></li><li class="pl10"> <i class="nchatspr nchatopen"></i> </li></ul></div>';
-
-chatAppPc.chatLoginHeader = '<div class="nchatbg1 nchatp2 clearfix pos-rel nchathgt1"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBar"></i> </div><div class="fl"> <img src="images/chat-profile-small.jpg" class="nchatp4"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7 jschk1"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp">Logout</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>';
-
-chatAppPc.TabsOpt = '<div class="clearfix"><ul class="nchattab1 clearfix fontreg"><li id="tab1" class="active pos-rel" style="width:53%"><p>ONLINE MATCHES</p><div class="showlinec"></div></li><li id="tab2" class="pos-rel" style="width:46%"><p>ACCEPTED</p><div class="showlinec"></div></li></ul></div>  <div id="nchatDivs" class="nchatscrollDiv" style="height:300px"><div class="showtab1 js-htab"> </div><div class="showtab2 js-htab disp-none"></div></div>';
-
-chatAppPc.Tab1Data = '';
-chatAppPc.Tab1JsonData = {};
-chatAppPc.Tab2Data ='<div><div class="f12 fontreg nchatbdr2"><p class="nchatt1 fontreg pl15">Desired Partner Matches</p></div><ul class="chatlist"><li class="clearfix profileIcon" id="profile_XXYT5777"> <img id="pic_XXYT5777" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5777</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5778"> <img id="pic_XXYT5778" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5778</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5779"> <img id="pic_XXYT5779" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5779</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div> </li><li class="clearfix profileIcon" id="profile_XXYT5780"> <img id="pic_XXYT5780" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5780</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5781"> <img id="pic_XXYT5781" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5781</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5782"> <img id="pic_XXYT5782" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5782</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5783"> <img id="pic_XXYT5783" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5783</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5784"> <img id="pic_XXYT5784" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5784</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5785"> <img id="pic_XXYT5785" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5785</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5786"> <img id="pic_XXYT5786" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5786</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5787"> <img id="pic_XXYT5787" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5787</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5788"> <img id="pic_XXYT5788" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5788 -last</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li></ul></div>';
-
-chatAppPc.HoverBoxDiv = '<div class="pos_fix info-hover fontlig vishid nz21"><div class="nchatbdr3 f13"> <img src="images/chathover.jpg" class="vtop"/><div class="nchatgrad padall-10"><ul class="listnone lh22"><li>34 Years, 5\' 9\" Sikh</li><li>Sikh: Arora Punjabi</li><li>MBA/PGDM, B.Com</li><li>Advertising Professional</li><li>Rs. 15 - 20lac, New Delhi</li></ul><p class="txtc nc-color2 pt10 hgt18"><span class="disp-none">You accepted her interest</span></p></div><button class="bg_pink fullwid lh50 brdr-0 txtc colrw cursp">Send Interest</button></div></div>';
-
-//chatAppPc.rosterGroups = ["Desired Partner Matches","Interest Received","Shortlisted Members"];
-
-//chatAppPc.rosterGroupsIDMapping = [];
-//chatAppPc.rosterGroupsIDMapping["Desired Partner Matches"] = "dpp";
-//chatAppPc.rosterGroupsIDMapping["Interest Received"] = "eoi_R";
-//chatAppPc.rosterGroupsIDMapping["Shortlisted Members"] = "shortlisted";
-
-chatAppPc.cmfunc = {
-	getHeight: function(){		
-		return ($(window).height());
-	},
-	
-	
-	appendLoginHTML : function(){
-		try
-		{
-			$(chatAppPc.defaultv.container).append(chatAppPc.loginChatPanel);			
-		}
-		catch(e)
-		{
-			console.log('the append html error:'+ e);	
-		}
-	},
-	
-	
-	checkWidth:function(){
-		if($(window).width()<1254)
-		{
-			return true
-		}
-		else
-		{
-			return false
-		}		
-	},
-	minimizeChat:function(){
-		try
-		{
-			if(chatAppPc.cmfunc.checkWidth())
+;
+(function($) {
+    "use strict";
+    try 
+	{
+        function ChatPlugin(elem, options) {
+         
+			 var self = this;
+			 self.$elem = $(elem);
+			  var defaults = {
+                container: ".js-openOutPanel",
+                minimizeButtonOut: ".js-minChatBarOut",
+                minimizeButtonIn: '.js-minChatBarIn',
+                maximizeButton: ".js-minpanel",
+                logoutPanelToggle: '.js-LogoutPanel',
+                loginChatButton: '#js-chatLogin',
+                logoutChat: '.jschatLogOut',
+                chatTab1: 'ul.nchattab1 li',
+                profileIcon: '.profileIcon',
+                loginPanelId: '#js-loginPanel',
+                listingPanelId: '#js-lsitingPanel',
+                toggelPanelId: '#js-chattopH',
+                tab1class: '.showtab1',
+                tab2class: '.showtab2',
+                listPanelInnerId: '#nchatDivs',
+                listingLiClass: 'ul.chatlist',
+                hoverBoxClass: '.info-hover',
+                commonHoverClass: '.profileIcon',
+                chatPanelBtmId: '#chatBottomPanel',
+                loginChatPanel: '<div class="pos_fix chatbg chatpos1 nz20 js-openOutPanel"><div class="fullwid txtc fontlig pos-rel" id="js-loginPanel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarOut"></i> </div><div> <img src="images/chat-profile-pic.jpg" class="chatmt1"/> </div><button id="js-chatLogin" class="chatbtnbg1 mauto chatw1 colrw f14 brdr-0 lh40 cursp nchatm5">Login to Chat</button></div></div>',
+                minChatPanelHTML: '<div class="nchatbg1 nchatw2 nchatp6 pos_fix colrw nchatmax js-minpanel cursp"><ul class="nchatHor clearfix f13 fontreg"> <li>      <div class="pt5 pr10">ONLINE MATCHES</div></li><li><div class="bg_pink disp-tbl txtc nchatb"><div class="vmid disp-cell">2</div></div></li><li class="pl10"> <i class="nchatspr nchatopen"></i> </li></ul></div>',
+                chatHeaderHTML: '<div class="nchatbg1 nchatp2 clearfix pos-rel nchathgt1"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarIn"></i> </div><div class="fl"> <img src="images/chat-profile-small.jpg" class="nchatp4"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp">Logout</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>',
+                TabsOpt: '<div class="clearfix"><ul class="nchattab1 clearfix fontreg"><li id="tab1" class="active pos-rel" style="width:53%"><p>ONLINE MATCHES</p><div class="showlinec"></div></li><li id="tab2" class="pos-rel" style="width:46%"><p>ACCEPTED</p><div class="showlinec"></div></li></ul></div>  <div id="nchatDivs" class="nchatscrollDiv" style="height:300px"><div class="showtab1 js-htab"> </div><div class="showtab2 js-htab disp-none"></div></div>',
+                Tab1Data: '',
+                Tab2Data: '<div><div class="f12 fontreg nchatbdr2"><p class="nchatt1 fontreg pl15">Desired Partner Matches</p></div><ul class="chatlist"><li class="clearfix profileIcon" id="profile_XXYT5777"> <img id="pic_XXYT5777" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5777</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5778"> <img id="pic_XXYT5778" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5778</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5779"> <img id="pic_XXYT5779" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5779</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div> </li><li class="clearfix profileIcon" id="profile_XXYT5780"> <img id="pic_XXYT5780" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5780</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5781"> <img id="pic_XXYT5781" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5781</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5782"> <img id="pic_XXYT5782" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5782</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5783"> <img id="pic_XXYT5783" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5783</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5784"> <img id="pic_XXYT5784" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5784</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5785"> <img id="pic_XXYT5785" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5785</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5786"> <img id="pic_XXYT5786" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5786</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5787"> <img id="pic_XXYT5787" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5787</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5788"> <img id="pic_XXYT5788" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5788 -last</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li></ul></div>',
+                HoverBoxHTML: '<div class="pos_fix info-hover fontlig vishid nz21"><div class="nchatbdr3 f13"> <img src="images/chathover.jpg" class="vtop"/><div class="nchatgrad padall-10"><ul class="listnone lh22"><li>34 Years, 5\' 9\" Sikh</li><li>Sikh: Arora Punjabi</li><li>MBA/PGDM, B.Com</li><li>Advertising Professional</li><li>Rs. 15 - 20lac, New Delhi</li></ul><p class="txtc nc-color2 pt10 hgt18"><span class="disp-none">You accepted her interest</span></p></div><button class="bg_pink fullwid lh50 brdr-0 txtc colrw cursp">Send Interest</button></div></div>',
+            };
+			
+			// mix in the passed-in options with the default options
+            self.options = $.extend({}, defaults, options);
+			//console.log(self.options);
+			init();
+			
+			//binding of all click event on the DOM of login screen			
+            $(self.options.minimizeButtonOut).on('click', minChatPanel);
+            $(self.options.loginChatButton).on('click', loginChat);
+			
+			//start:this function the screen size
+            function checkWidth() 
 			{
 				$(chatAppPc.defaultv.incontainer).fadeOut('slow',function(){   $(chatAppPc.defaultv.container).append(chatAppPc.minChatPanel).fadeIn('slow');    });
 			}
