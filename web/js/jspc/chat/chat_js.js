@@ -24,18 +24,18 @@ chatAppPc.chatLoginHeader = '<div class="nchatbg1 nchatp2 clearfix pos-rel nchat
 
 chatAppPc.TabsOpt = '<div class="clearfix"><ul class="nchattab1 clearfix fontreg"><li id="tab1" class="active pos-rel" style="width:53%"><p>ONLINE MATCHES</p><div class="showlinec"></div></li><li id="tab2" class="pos-rel" style="width:46%"><p>ACCEPTED</p><div class="showlinec"></div></li></ul></div>  <div id="nchatDivs" class="nchatscrollDiv" style="height:300px"><div class="showtab1 js-htab"> </div><div class="showtab2 js-htab disp-none"></div></div>';
 
-chatAppPc.Tab2Data = '';
+chatAppPc.Tab1Data = '';
 chatAppPc.Tab1JsonData = {};
 chatAppPc.Tab2Data ='<div><div class="f12 fontreg nchatbdr2"><p class="nchatt1 fontreg pl15">Desired Partner Matches</p></div><ul class="chatlist"><li class="clearfix profileIcon" id="profile_XXYT5777"> <img id="pic_XXYT5777" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5777</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5778"> <img id="pic_XXYT5778" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5778</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5779"> <img id="pic_XXYT5779" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5779</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div> </li><li class="clearfix profileIcon" id="profile_XXYT5780"> <img id="pic_XXYT5780" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5780</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5781"> <img id="pic_XXYT5781" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5781</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5782"> <img id="pic_XXYT5782" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5782</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5783"> <img id="pic_XXYT5783" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5783</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5784"> <img id="pic_XXYT5784" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5784</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5785"> <img id="pic_XXYT5785" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5785</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5786"> <img id="pic_XXYT5786" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5786</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5787"> <img id="pic_XXYT5787" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5787</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li><li class="clearfix profileIcon" id="profile_XXYT5788"> <img id="pic_XXYT5788" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">XXYT5788 -last</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li></ul></div>';
 
 chatAppPc.HoverBoxDiv = '<div class="pos_fix info-hover fontlig vishid nz21"><div class="nchatbdr3 f13"> <img src="images/chathover.jpg" class="vtop"/><div class="nchatgrad padall-10"><ul class="listnone lh22"><li>34 Years, 5\' 9\" Sikh</li><li>Sikh: Arora Punjabi</li><li>MBA/PGDM, B.Com</li><li>Advertising Professional</li><li>Rs. 15 - 20lac, New Delhi</li></ul><p class="txtc nc-color2 pt10 hgt18"><span class="disp-none">You accepted her interest</span></p></div><button class="bg_pink fullwid lh50 brdr-0 txtc colrw cursp">Send Interest</button></div></div>';
 
-chatAppPc.rosterGroups = ["Desired Partner Matches","Interest Received","Shortlisted Members"];
+//chatAppPc.rosterGroups = ["Desired Partner Matches","Interest Received","Shortlisted Members"];
 
-chatAppPc.rosterGroupsIDMapping = [];
-chatAppPc.rosterGroupsIDMapping["Desired Partner Matches"] = "dpp";
-chatAppPc.rosterGroupsIDMapping["Interest Received"] = "eoi_R";
-chatAppPc.rosterGroupsIDMapping["Shortlisted Members"] = "shortlisted";
+//chatAppPc.rosterGroupsIDMapping = [];
+//chatAppPc.rosterGroupsIDMapping["Desired Partner Matches"] = "dpp";
+//chatAppPc.rosterGroupsIDMapping["Interest Received"] = "eoi_R";
+//chatAppPc.rosterGroupsIDMapping["Shortlisted Members"] = "shortlisted";
 
 chatAppPc.cmfunc = {
 	getHeight: function(){		
@@ -569,15 +569,21 @@ $(function(){
 	//on clicking login to chat
 	$('#js-chatLogin').click(function(){
 		//use converse client to connect to openfire to create chat session
-		require(['converse'], function (converse) {	
-			initiateChat();	
-		});
+		initiateChat();	
+		
 		$('#js-loginPanel').fadeOut('fast',function(){ $('#js-lsitingPanel').css('display','block');    });		
+		
+		//fetch listing data and display listing panel
 		setTimeout(function(){
 			alert("tab1 data generated");
 			$("#listing_tab1").html("");
+			//get json data for listing
+			chatAppPc.Tab1JsonData = fetchConverseSettings("listing_data");
+			console.log("fetching data");
 			console.log(chatAppPc.Tab1JsonData);
+			//map json data to listing html
 			chatAppPc.Tab1Data = mapListingJsonToHTML(chatAppPc.Tab1JsonData);
+			//show listing panel
 			chatAppPc.cmfunc.afterLoginPanel();
 		},2000);
 	});

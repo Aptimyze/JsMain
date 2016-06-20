@@ -28604,6 +28604,8 @@ return Backbone.BrowserStorage;
             websocket_url: undefined,
             xhr_custom_status: false,
             xhr_custom_status_url: '',
+            listing_data:{},
+            rosterDisplayGroups:{}
         };
 
         _.extend(this, this.default_settings);
@@ -34068,7 +34070,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                         ));
                         converse.controlboxtoggle.showControlBox();
                     } else if (subscription === 'both' || subscription === 'to') {
-                        //console.log("here6_roster_items");
+                        console.log("here6_roster_items");
                         //console.log(item.toJSON());
                         var roster_data = item.toJSON();
                         var group = roster_data.groups[0];
@@ -34076,16 +34078,16 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                         //set json data for first time listing display
                         if($("#listing_tab1").length===0)       
                         {
-                            console.log("new roster");
-                            if(typeof chatAppPc.Tab1JsonData[group] !== "undefined")
+                            //console.log("new roster");
+                            if(typeof converse.listing_data[group] !== "undefined")
                             {
-                                chatAppPc.Tab1JsonData[group][userid] = roster_data;
+                                converse.listing_data[group][userid] = roster_data;
                             }
                         }
                         else   //update existing listing
                         {
-                            console.log("old roster");
-                            updateChatPCRoster(roster_data);
+                            //console.log("old roster");
+                            updateListing(roster_data);
                         }
                         this.$el.addClass('current-xmpp-contact');
                         this.$el.removeClass(_.without(['both', 'to'], subscription)[0]).addClass(subscription);
@@ -34223,15 +34225,18 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                 },
 
                 render: function () {
-                    console.log("here.................");
+                    
                     this.$el.attr('data-group', this.model.get('name'));
-                    //console.log("here5_groups");
+                    console.log("here5_groups");
+                    console.log(converse.listing_data);
                     //console.log(this.model.get('name'));
                     var group_name = this.model.get('name');
-                    if(typeof chatAppPc.Tab1JsonData.group_name === "undefined" && ($.inArray(group_name,chatAppPc.rosterGroups))!==-1)
+                    //stores groups name
+                    if(typeof converse.listing_data[group_name] === "undefined" && typeof converse.rosterDisplayGroups[group_name]!=="undefined")
                     {  
-                        chatAppPc.Tab1JsonData[group_name] = {};
+                        converse.listing_data[group_name] = {};
                     }
+                    console.log("setting");
                     this.$el.html(
                         $(converse.templates.group_header({
                             label_group: this.model.get('name'),
@@ -34634,8 +34639,10 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                         }))
                     );
                     if (!converse.connection.connected || !converse.connection.authenticated || converse.connection.disconnecting) {
+                       console.log("failed in login_converse.js");
                         this.renderLoginPanel();
                     } else if (!this.contactspanel || !this.contactspanel.$el.is(':visible')) {
+                        console.log("successfully logged in_converse.js");
                         this.renderContactsPanel();
                     }
                     return this;

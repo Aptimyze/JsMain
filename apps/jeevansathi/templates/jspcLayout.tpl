@@ -126,6 +126,7 @@ window._fbq.push(['track', 'PixelInitialized', {}]);
 </script>
 <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=569447716516417&amp;ev=PixelInitialized" /></noscript>
 ~if $showChat eq 1`
+    <script type="text/javascript" language="javascript" src="~JsConstants::$siteUrl`/js/jspc/chat/chatCommonConfig_js.js"></script>
     <script type="text/javascript" language="javascript" src="~JsConstants::$siteUrl`/js/jspc/chat/chat_js.js"></script>
     <script type="text/javascript" language="javascript" src="~JsConstants::$siteUrl`/js/jspc/chat/chatPCHelper_js.js"></script>
     <script type="text/javascript" language="javascript" src="~JsConstants::$siteUrl`/converse.js-1.0.2/dist/converse.js"></script>
