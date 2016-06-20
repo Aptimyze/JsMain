@@ -1340,5 +1340,25 @@ public function duplicateEmail($email)
                     throw new jsException($e);
             }
     }
+    
+    /**
+	 * update sort date in Jprofile
+	 * @param $profileId
+	 * @return bool
+	 */
+	function updateSortDate($profileId)
+	{
+		try{
+
+			$sql="update newjs.JPROFILE set SORT_DT=if(DATE_SUB(NOW(),INTERVAL 7 DAY)>=SORT_DT,DATE_ADD(SORT_DT,INTERVAL 7 DAY),SORT_DT) where PROFILEID=:PROFILEID";
+			$pdoStatement = $this->db->prepare($sql);
+			$pdoStatement->bindValue(':PROFILEID', $profileId,PDO::PARAM_INT);
+			$pdoStatement->execute();
+                        return $pdoStatement->rowCount();
+		} 
+                catch (Exception $ex){
+			throw new jsException($ex);
+		}
+	}
 }
 ?>

@@ -29,7 +29,7 @@ function intermediate_page($return_url=0)
 			$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
 	
 			$profileid=$profileid;
-			$arrFields = array('INCOMPLETE'=>'Y','ACTIVATED'=>'N','PREACTIVATED'=>'$activated');
+			$arrFields = array('INCOMPLETE'=>'Y','ACTIVATED'=>'N','PREACTIVATED'=>$activated);
 			$jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID");
 			
 			//$sql_in="UPDATE JPROFILE SET INCOMPLETE='Y',ACTIVATED ='N', PREACTIVATED='$activated' WHERE PROFILEID='$profileid'";

@@ -91,7 +91,7 @@ if(authenticated($cid))
                                 
 				$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
 				$profileid=$row[PROFILEID];
-				$arrFields = array('SCREENING'=>'$screening');
+				$arrFields = array('SCREENING'=>$screening);
 				$exrtaWhereCond = "";
 				$jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID",$exrtaWhereCond);
 				//$sqlup="UPDATE newjs.JPROFILE SET SCREENING='$screening' WHERE PROFILEID='$row[PROFILEID]'";

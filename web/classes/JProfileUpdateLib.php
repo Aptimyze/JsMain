@@ -10,7 +10,7 @@
  */
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
-/**NEWJS_PHOTO_PRIVACY
+/**
  * JProfileUpdateLib Wrapper Library
  */
 class JProfileUpdateLib
@@ -46,6 +46,17 @@ class JProfileUpdateLib
   private $objProfileHobbyStore = null;
 
   /**
+   * JP_NTIME Store Object
+   * @var Object
+   */
+  private $objProfileNTimesStore = null;
+
+  /**
+   * JP_CHRISTIAN Store Object
+   * @var Object
+   */
+  private $objProfileChristianStore = null;
+  /**
    *
    * @var String 
    */
@@ -61,6 +72,8 @@ class JProfileUpdateLib
     $this->objProfileEducationStore = new NEWJS_JPROFILE_EDUCATION($dbname);
     $this->objProfileContactStore = new NEWJS_JPROFILE_CONTACT($dbname);
     $this->objProfileHobbyStore = new NEWJS_HOBBIES($dbname);
+    $this->objProfileNTimesStore = new NEWJS_JP_NTIMES($dbname);
+    $this->objProfileChristianStore = new NEWJS_JP_CHRISTIAN($dbname);
   }
   /**
    * __destruct
@@ -70,7 +83,8 @@ class JProfileUpdateLib
     unset($this->objProfileContactStore);
     unset($this->objProfileEducationStore);
     unset($this->objProfileHobbyStore);
-    
+    unset($this->objProfileNTimesStore);
+    unset($this->objProfileChristianStore);
     self::$instance = null;
   }
   /**
@@ -110,6 +124,8 @@ class JProfileUpdateLib
       self::$instance->objProfileEducationStore->setConnection($dbName);
       self::$instance->objProfileContactStore->setConnection($dbName);
       self::$instance->objProfileHobbyStore->setConnection($dbName);
+      self::$instance->objProfileNTimesStore->setConnection($dbName);
+      self::$instance->objProfileChristianStore->setConnection($dbName);
     }
     
     return self::$instance;
@@ -281,6 +297,51 @@ class JProfileUpdateLib
   {
 		try {
       return $this->objJProfileStore->updateForMutipleProfiles($params,$profileArr);
+    } catch (Exception $ex) {
+      jsException::log($ex);
+      return false;
+    }
+  }
+
+  /**
+   * Funciton to Update Profile View Count in JP_NTIME Table
+   * @param $iProfileID
+   * @return bool|void
+   */
+  private function updateProfileViews($iProfileID)
+  {
+    try{
+      return $this->objProfileNTimesStore->updateProfileViews($iProfileID);
+    } catch (Exception $ex) {
+      jsException::log($ex);
+      return false;
+    }
+  }
+
+  /**
+   * Funciton to Update JP_CHRISTIAN Table
+   * @param $iProfileID
+   * @return bool|void
+   */
+  private function updateJP_CHRISTIAN($iProfileID,$paramArray=array())
+  {
+    try{
+      return $this->objProfileChristianStore->update($iProfileID,$paramArray);
+    } catch (Exception $ex) {
+      jsException::log($ex);
+      return false;
+    }
+  }
+  
+  /**
+   * update sort date in Jprofile
+   * @param $profileId 
+   * @return bool
+   */
+  public function updateSortDateForAPLogin($profileId)
+  {
+    try {
+      return $this->objJProfileStore->updateSortDate($profileId);
     } catch (Exception $ex) {
       jsException::log($ex);
       return false;
