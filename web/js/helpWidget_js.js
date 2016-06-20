@@ -88,8 +88,12 @@ $(document).ready(function(){
  * @Param : show : if show = 0 provide then hide or close the overlay
  *                  else display the overlay         
  */
-function toggleRequestCallBackOverlay(show, cbSource=''){
-    callbackSource = cbSource;
+function toggleRequestCallBackOverlay(show, cbSource){
+    if(cbSource){
+      callbackSource = cbSource;
+    } else {
+      callbackSource = '';
+    }
     if ($(requestCallBackOverlay).hasClass('dspN') && show){
         $(requestCallBackOverlay).removeClass('dspN');
         if($('#rcbResponse').length){
