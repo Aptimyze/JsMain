@@ -34070,7 +34070,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                         ));
                         converse.controlboxtoggle.showControlBox();
                     } else if (subscription === 'both' || subscription === 'to') {
-                        console.log("here6_roster_items");
+                        console.log("ankita_roster_items");
                         //console.log(item.toJSON());
                         var roster_data = item.toJSON();
                         var group = roster_data.groups[0];
@@ -34227,7 +34227,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                 render: function () {
                     
                     this.$el.attr('data-group', this.model.get('name'));
-                    console.log("here5_groups");
+                    console.log("ankita_groups");
                     console.log(converse.listing_data);
                     //console.log(this.model.get('name'));
                     var group_name = this.model.get('name');
