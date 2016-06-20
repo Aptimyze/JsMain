@@ -10,7 +10,7 @@
  */
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
-/**NEWJS_PHOTO_PRIVACY
+/**
  * JProfileUpdateLib Wrapper Library
  */
 class JProfileUpdateLib
