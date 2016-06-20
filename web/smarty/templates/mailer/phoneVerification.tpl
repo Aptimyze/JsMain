@@ -21,7 +21,7 @@
     <td background="~$IMG_URL`/images/mailer/phoneVerification/bg.gif" bgcolor="#dddddd" style="background-repeat:no-repeat;">
         <table border="0" cellspacing="0" cellpadding="0" vspace="0" hspace="0">
           <tbody><tr>
-            <td width="559"><a href="(LINK)HOME_PAGE:profileid=~$profileid`(/LINK)" target="_blank"><img src="~$IMG_URL`/images/mailer/phoneVerification/logo.gif" width="221" height="75" hspace="0" vspace="0" border="0" align="left"></a>
+            <td width="559"><a href="(LINK)HOME_PAGE:profileid=~$profileid`(/LINK)" target="_blank"><img src="~$IMG_URL`/images/jspc/commonimg/logo1.png" hspace="0" vspace="0" border="0" align="left"></a>
             </td>
           </tr>
           <tr>

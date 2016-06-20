@@ -39,67 +39,64 @@
                                 <div class="mem_pad25"> <a class="accordion-section-title disp_ib icons memacc-notsel pl30" href="#accordion-~$v.mode_id`" paymentSel="~$v.mode_id`">~$v.name`</a> </div>
                                 <div id="accordion-~$v.mode_id`" class="accordion-section-content">
                                     <div class="fullwid clearfix pos-rel">
+                                        <div class="color12 fontlig f15 lh20 pos-abs" style="top:-40px; left:120px"> Yes, we have a 100% safe & secure payment gateway.</div>
                                         <!--start:left-->
-                                        <div class="fl wid50p">
-                                            <div class="color12 fontlig f15 lh20"> Yes, we have a 100% safe & secure payment gateway because your worry is our concern too. </div>
-                                            <div class="pt40 pos-rel ~$v.mode_id`_width">
-                                                <div class="pos-rel fontlig">
-                                                    <select name="paymentOption_~$v.mode_id`" class="custom">
-                                                        <option>Select ~$v.name`</option>
-                                                        ~foreach from=$v.payment_options key=kk item=vv name=cardLoop`
-                                                        <option paymentMode="~$v.mode_id`" cardType="~$vv.mode_option_id`" id="~$v.mode_id`~$vv.ic_id`" value="~$k`">~$vv.name`</option>
-                                                        ~/foreach`
-                                                    </select>
-                                                </div>
-                                                <!--end:city-->
-                                                <div class="clr"></div>
-                                            </div>
-                                            <div class="hgt55"></div>
-                                        </div>
-                                        <!--end:left-->
                                         ~if $v.mode_id eq "CR"`
-                                        <div class="pos-abs mem-pos8">
-                                            <div class="mem_pad26 wid280 acc_list_box">
-                                                <ul class="hor_list pl17 clearfix">
-                                                    <li class="mr10">
-                                                        <div class="mem-boxdim mem-bdr13 disp-tbl">
-                                                            <div class="disp-cell vmid">
-                                                                <div class="mem-sprite mem-ame-exp mauto"></div>
+                                        <div id="CR-iconList">
+                                            <div class="fullwid acc_list_box">
+                                                <p class="txtc fontlig f12 pt15">Top Credit Cards</p>
+                                                <ul class="memul clearfix memnp1 txtc">
+                                                    <li id="CR-1">
+                                                        <div class="memn-nosel cursp">
+                                                            <div class="mem-boxdim mem-bdr13 disp-tbl">
+                                                                <div class="disp-cell vmid">
+                                                                    <div class="mem-sprite mem-ame-exp mauto"></div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li class="mr10">
-                                                        <div class="mem-boxdim mem-bdr13 disp-tbl">
-                                                            <div class="disp-cell vmid">
-                                                                <div class="mem-sprite mem-mstr-card mauto"></div>
+                                                    <li id="CR-2">
+                                                        <div class="memn-nosel cursp">
+                                                            <div class="mem-boxdim mem-bdr13 disp-tbl">
+                                                                <div class="disp-cell vmid">
+                                                                    <div class="mem-sprite mem-mstr-card mauto"></div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li>
-                                                        <div class="mem-boxdim mem-bdr13 disp-tbl">
-                                                            <div class="disp-cell vmid">
-                                                                <div class="mem-sprite mem-visa mauto"></div>
+                                                    <li id="CR-3">
+                                                        <div class="memn-nosel cursp">
+                                                            <div class="mem-boxdim mem-bdr13 disp-tbl">
+                                                                <div class="disp-cell vmid">
+                                                                    <div class="mem-sprite mem-visa mauto"></div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li class="mr10 mt20">
-                                                        <div class="mem-boxdim mem-bdr13 disp-tbl">
-                                                            <div class="disp-cell vmid">
-                                                                <div class="mem-sprite mem-dinersclub mauto"></div>
+                                                    <li id="CR-4">
+                                                        <div class="memn-nosel cursp">
+                                                            <div class="mem-boxdim mem-bdr13 disp-tbl">
+                                                                <div class="disp-cell vmid">
+                                                                    <div class="mem-sprite mem-dinersclub mauto"></div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li class="mr10 mt20">
-                                                        <div class="mem-boxdim mem-bdr13 disp-tbl">
-                                                            <div class="disp-cell vmid">
-                                                                <div class="mem-sprite mem-united mauto"></div>
+                                                    <li id="CR-5">
+                                                        <div class="memn-nosel cursp">
+                                                            <div class="mem-boxdim mem-bdr13 disp-tbl">
+                                                                <div class="disp-cell vmid">
+                                                                    <div class="mem-sprite mem-united mauto"></div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li class="mt20">
-                                                        <div class="mem-boxdim mem-bdr13 disp-tbl">
-                                                            <div class="disp-cell vmid">
-                                                                <div class="mem-sprite mem-rupay mauto"></div>
+                                                    <li id="CR-6">
+                                                        <div class="memn-nosel cursp">
+                                                            <div class="mem-boxdim mem-bdr13 disp-tbl">
+                                                                <div class="disp-cell vmid">
+                                                                    <div class="mem-sprite mem-rupay mauto"></div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </li>
@@ -108,34 +105,52 @@
                                         </div>
                                         ~/if`
                                         ~if $v.mode_id eq "DR"`
-                                        <div class="pos-abs mem-pos8">
-                                            <div class="mem_pad26 wid280 acc_list_box">
-                                                <ul class="hor_list pl17 clearfix">
-                                                    <li class="mr10">
-                                                        <div class="mem-boxdim mem-bdr13 disp-tbl">
-                                                            <div class="disp-cell vmid">
-                                                                <div class="mem-sprite mem-ame-exp mauto"></div>
+                                        <div id="DR-iconList">
+                                            <div class="fullwid acc_list_box">
+                                                <p class="txtc fontlig f12 pt15">Top Debit Cards</p>
+                                                <ul class="memul clearfix memnp1 txtc">
+                                                    <li id="DR-1">
+                                                        <div class="memn-nosel cursp">
+                                                            <div class="mem-boxdim mem-bdr13 disp-tbl">
+                                                                <div class="disp-cell vmid">
+                                                                    <div class="mem-sprite mem-ame-exp mauto"></div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li class="mr10">
-                                                        <div class="mem-boxdim mem-bdr13 disp-tbl">
-                                                            <div class="disp-cell vmid">
-                                                                <div class="mem-sprite mem-mstr-card mauto"></div>
+                                                    <li id="DR-2">
+                                                        <div class="memn-nosel cursp">
+                                                            <div class="mem-boxdim mem-bdr13 disp-tbl">
+                                                                <div class="disp-cell vmid">
+                                                                    <div class="mem-sprite mem-mstr-card mauto"></div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li>
-                                                        <div class="mem-boxdim mem-bdr13 disp-tbl">
-                                                            <div class="disp-cell vmid">
-                                                                <div class="mem-sprite mem-visa mauto"></div>
+                                                    <li id="DR-3">
+                                                        <div class="memn-nosel cursp">
+                                                            <div class="mem-boxdim mem-bdr13 disp-tbl">
+                                                                <div class="disp-cell vmid">
+                                                                    <div class="mem-sprite mem-visa mauto"></div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li class="mt20">
-                                                        <div class="mem-boxdim mem-bdr13 disp-tbl">
-                                                            <div class="disp-cell vmid">
-                                                                <div class="mem-sprite mem-rupay mauto"></div>
+                                                    <li id="DR-4">
+                                                        <div class="memn-nosel cursp">
+                                                            <div class="mem-boxdim mem-bdr13 disp-tbl">
+                                                                <div class="disp-cell vmid">
+                                                                    <div class="mem-sprite mem-mastreo mauto"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li id="DR-5">
+                                                        <div class="memn-nosel cursp">
+                                                            <div class="mem-boxdim mem-bdr13 disp-tbl">
+                                                                <div class="disp-cell vmid">
+                                                                    <div class="mem-sprite mem-rupay mauto"></div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </li>
@@ -144,41 +159,61 @@
                                         </div>
                                         ~/if`
                                         ~if $v.mode_id eq "NB"`
-                                        <div class="pos-abs mem-pos8">
-                                            <div class="mem_pad26 wid280 acc_list_box">
-                                                <ul class="hor_list pl17 clearfix">
-                                                    <li class="mr10">
-                                                        <div class="mem-boxdim mem-bdr13 disp-tbl">
-                                                            <div class="disp-cell vmid">
-                                                                <div class="mem-sprite icicilogo mauto"></div>
+                                        <div id="NB-iconList">
+                                            <div class="fullwid acc_list_box">
+                                                <p class="txtc fontlig f12 pt15">Top Banks</p>
+                                                <ul class="memul clearfix memnp1 txtc">
+                                                    <li id="NB-1">
+                                                        <div class="memn-nosel cursp">
+                                                            <div class="mem-boxdim mem-bdr13 disp-tbl">
+                                                                <div class="disp-cell vmid">
+                                                                    <div class="mem-sprite mem-sbi mauto"></div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li class="mr10">
-                                                        <div class="mem-boxdim mem-bdr13 disp-tbl">
-                                                            <div class="disp-cell vmid">
-                                                                <div class="mem-sprite hdfclogo mauto"></div>
+                                                    <li id="NB-2">
+                                                        <div class="memn-nosel cursp">
+                                                            <div class="mem-boxdim mem-bdr13 disp-tbl">
+                                                                <div class="disp-cell vmid">
+                                                                    <div class="mem-sprite icicilogo mauto"></div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li>
-                                                        <div class="mem-boxdim mem-bdr13 disp-tbl">
-                                                            <div class="disp-cell vmid">
-                                                                <div class="mem-sprite axislogo mauto"></div>
+                                                    <li id="NB-3">
+                                                        <div class="memn-nosel cursp">
+                                                            <div class="mem-boxdim mem-bdr13 disp-tbl">
+                                                                <div class="disp-cell vmid">
+                                                                    <div class="mem-sprite hdfclogo mauto"></div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li class="mr10 mt20">
-                                                        <div class="mem-boxdim mem-bdr13 disp-tbl">
-                                                            <div class="disp-cell vmid">
-                                                                <div class="mem-sprite citilogo mauto"></div>
+                                                    <li id="NB-4">
+                                                        <div class="memn-nosel cursp">
+                                                            <div class="mem-boxdim mem-bdr13 disp-tbl">
+                                                                <div class="disp-cell vmid">
+                                                                    <div class="mem-sprite axislogo mauto"></div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li class="mr10 mt20">
-                                                        <div class="mem-boxdim mem-bdr13 disp-tbl">
-                                                            <div class="disp-cell vmid">
-                                                                <div class="mem-sprite kotaklogo mauto"></div>
+                                                    <li id="NB-5">
+                                                        <div class="memn-nosel cursp">
+                                                            <div class="mem-boxdim mem-bdr13 disp-tbl">
+                                                                <div class="disp-cell vmid">
+                                                                    <div class="mem-sprite citilogo mauto"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li id="NB-6">
+                                                        <div class="memn-nosel cursp">
+                                                            <div class="mem-boxdim mem-bdr13 disp-tbl">
+                                                                <div class="disp-cell vmid">
+                                                                    <div class="mem-sprite kotaklogo mauto"></div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </li>
@@ -187,23 +222,21 @@
                                         </div>
                                         ~/if`
                                         ~if $v.mode_id eq "CSH"`
-                                        <div class="pos-abs mem-pos8">
-                                            <div class="mem_pad26 wid280 acc_list_box">
-                                                <ul class="hor_list pl17 clearfix">
-                                                    <li class="mr10">
-                                                        <div class="mem-boxdim mem-bdr13 disp-tbl">
-                                                            <div class="disp-cell vmid">
-                                                                <div class="mem-sprite paytmlogo mauto"></div>
+                                        <div id="CSH-iconList">
+                                            <div class="fullwid acc_list_box">
+                                                <p class="txtc fontlig f12 pt15">Top Wallets</p>
+                                                <ul class="memul clearfix memnp1 txtc">
+                                                    ~foreach from=$v.payment_options key=kk item=vv name=cardLoop`
+                                                    <li id="CSH-~$kk+1`">
+                                                        <div class="memn-nosel cursp">
+                                                            <div class="mem-boxdim mem-bdr13 disp-tbl">
+                                                                <div class="disp-cell vmid">
+                                                                    <div class="mem-sprite ~if $vv.ic_id eq 'rv2_mobiwik'`mobikwiklogo~else`paytmlogo~/if` mauto"></div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li class="mr10">
-                                                        <div class="mem-boxdim mem-bdr13 disp-tbl">
-                                                            <div class="disp-cell vmid">
-                                                                <div class="mem-sprite mobikwiklogo mauto"></div>
-                                                            </div>
-                                                        </div>
-                                                    </li>
+                                                    ~/foreach`
                                                 </ul>
                                             </div>
                                         </div>
@@ -223,6 +256,22 @@
                                             </div>
                                         </div>
                                         ~/if`
+                                        <div class="wid50p">
+                                            <div class="pt40 pos-rel ~$v.mode_id`_width">
+                                                <div class="pos-rel fontlig">
+                                                    <select name="paymentOption_~$v.mode_id`" class="custom">
+                                                        <option>Select ~$v.name`</option>
+                                                        ~foreach from=$v.payment_options key=kk item=vv name=cardLoop`
+                                                        <option paymentMode="~$v.mode_id`" cardType="~$vv.mode_option_id`" id="~$v.mode_id`~$vv.ic_id`" value="~$k`">~$vv.name`</option>
+                                                        ~/foreach`
+                                                    </select>
+                                                </div>
+                                                <!--end:city-->
+                                                <div class="clr"></div>
+                                            </div>
+                                            <div class="hgt55"></div>
+                                        </div>
+                                        <!--end:left-->
                                     </div>
                                 </div>
                                 <!--end accordion-section-content-->
@@ -534,10 +583,11 @@
         var amount = parseFloat("~$data.cart_price`".replace(',', ''));
         displayChequeAmount(amount);
         displayChequeDate();
+        var sb = new Array();
         $("select.custom").each(function() {
-            var sb = new SelectBox({
+            sb[$(this).attr('name')] = new SelectBox({
                 selectbox: $(this),
-                height: 150,
+                height: 250,
                 width: '100%',
                 customScrollbar: true,
                 changeCallback: function(e) {
@@ -559,6 +609,7 @@
             var currentAttrValue = $(this).attr('href');
             var currentTabName = $(this).html();
             var paymentOpt = $(this).attr('paymentSel');
+            clearSelectedIcons(paymentOpt);
             if ($(e.target).is('.active')) {
                 if ($(this).attr('id') == 'cashPickUp') {
                     eraseCookie('paymentMode');
@@ -582,6 +633,15 @@
             }
             e.preventDefault();
             manageCartPaymentButtonTextChange();
+        });
+        $("div[id*=-iconList] li").on('click', function(e){
+            var paymentOpt = $(this).attr('id');
+            paymentOpt = paymentOpt.split("-");
+            var thisAccordion = sb["paymentOption_"+paymentOpt[0]];
+            thisAccordion.open();
+            thisAccordion.jumpToIndex(paymentOpt[1]);
+            $("#accordion-" + paymentOpt[0] + " .jspScrollable dd.itm-"+paymentOpt[1]).trigger('click');
+            $("#accordion-" + paymentOpt[0] + " .defaultScrollbar dd.itm-"+paymentOpt[1]).trigger('click');
         });
         var scrollPos;
         ~if $data.payAtBranchesData.userCityRes`

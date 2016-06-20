@@ -9,7 +9,11 @@
 
 ~if !($profileid eq '8298074' || $profileid eq '13038359' || $profileid eq '12970375')`
     <!--start:help widget-->
-    ~include_component('common', 'helpWidget')`
+    ~if $module eq 'help'`
+        ~include_component('common', 'helpWidget', ['hideHelpMenu'=>'true'])`
+    ~else`
+        ~include_component('common', 'helpWidget')`
+    ~/if`
     <!--end:help widget-->
 ~/if`
 <!--start:banner-->

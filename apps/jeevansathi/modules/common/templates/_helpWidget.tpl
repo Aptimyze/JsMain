@@ -76,5 +76,6 @@
     </div>
 </div>
 <!--end:helpwidget-->
-<script> var showExpandMode = "~$showExpandMode`"
+<script> var showExpandMode = "~$showExpandMode`";
+         var hideHelpMenu = "~$hideHelpMenu`";
 </script>

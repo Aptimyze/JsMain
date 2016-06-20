@@ -7,6 +7,8 @@ class MatchAlertCalculationTask extends sfBaseTask
 	private $limit = 5000;
 	private $limitNtRec = 16;
 	private $limitTRec = 10;
+        private $minDppIntersectionCnt = 50;
+        
 	protected function configure()
   	{
 		$this->addArguments(array(
@@ -44,6 +46,7 @@ EOF;
 			*/
 			$matchalerts_MATCHALERTS_TO_BE_SENT = new matchalerts_MATCHALERTS_TO_BE_SENT;
 			$arr = $matchalerts_MATCHALERTS_TO_BE_SENT->fetch($totalScripts,$currentScript,$this->limit);
+                        //$arr = array(7043932=>1);
 			if(is_array($arr))
 			{
 				foreach($arr as $profileid=>$v)
@@ -63,14 +66,30 @@ EOF;
 					{
 						if($trends)
 						{
+                                                        $includeDppCnt = 1;
+                                                        $sendIntersectionMatches=1;
+                                                        $toSendFromIntersection = 1;
 							/*
 							* Two mails willl be snet to user if has trends
 							*/
-							$StrategyReceiversT = new TrendsBasedMatchAlertsStrategy($loggedInProfileObj, $this->limitTRec);   
-							$StrategyReceiversT->getMatches();
-
                                                         $StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitTRec,MailerConfigVariables::$strategyReceiversTVsNT);
-							$StrategyReceiversNT->getMatches();
+							$totalResults = $StrategyReceiversNT->getMatches($includeDppCnt);
+                                                        $profileId = $loggedInProfileObj->getPROFILEID();
+                                                        $isProfileEligible = logAndFetchProfilesForZeroMatches::checkIfProfileIsEligible($profileId);
+                                                        if($totalResults >= $this->minDppIntersectionCnt && $isProfileEligible)
+                                                         {
+                                                            $StrategyReceiversT = new TrendsBasedMatchAlertsStrategy($loggedInProfileObj, $this->limitTRec);   
+                                                            $toSendFromIntersection = $StrategyReceiversT->getMatches($sendIntersectionMatches);
+                                                            if(!$toSendFromIntersection){
+                                                                $StrategyReceiversT->getMatches();
+                                                                logAndFetchProfilesForZeroMatches::insertEntry($profileId);
+                                                            }
+                                                        }
+                                                        else{
+                                                            $StrategyReceiversT = new TrendsBasedMatchAlertsStrategy($loggedInProfileObj, $this->limitTRec);   
+                                                            $StrategyReceiversT->getMatches();
+                                                        }
+                                                            
 						}
 						else
 						{

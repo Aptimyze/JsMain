@@ -25,7 +25,7 @@
         <div class="mauto wid80p txtc f28 pt40 pb40">Dear ~if $NAME`~$NAME`~else`~$USERNAME`~/if`, thanks for sharing your success story with us. <br>Please upload your wedding photo too to publish the story on Jeevansathi</div>
         ~/if`
         <!--start:form-->
-        <form id="submit_ss" name="submit_ss" action="/successStory/submitlayer" method="post" enctype="multipart/form-data" target="_self">
+        <form id="submit_ss" name="submit_ss" action="/successStory/submitlayer~if $offerConsent eq 'Y'`?offerConsent=Y~/if`" method="post" enctype="multipart/form-data" target="_self">
             <div class="clearfix ssp6 pb30 ssbrd3">
                 <div class="fl f15 pt10">Your story</div>
                 <div class="fl pl15 ssfwid6">
@@ -229,6 +229,7 @@
 ~include_partial('global/JSPC/_jspcCommonFooter')`
 <!--end:footer-->
 <script type="text/javascript">
+
     function validateFields(useCase){
         var userId = $.trim($("#userId").val());
         var userName = $.trim($("#userName").val());
@@ -377,7 +378,7 @@
             e.preventDefault();
             $.ajax({
                 type: "POST",
-                url: '/settings/jspcSettings?hideDelete=1&option=Delete',
+                url: '/settings/jspcSettings?hideDelete=1&option=Delete&offerConsent='+(offerConsent=='Y'?'Y':'N'),
                 async: false,
                 success: function(data)
                 {
@@ -390,4 +391,5 @@
         return false; // avoid to execute the actual submit of the form.
         });
     });
+    var offerConsent='~$offerConsent`';
 </script>

@@ -289,9 +289,9 @@ class MembershipHandler
         return $servicePrice;
     }
     
-    public function addCallBack($phoneNo, $email, $jsSelectd,$profileid='') {
+    public function addCallBack($phoneNo, $email, $jsSelectd,$profileid='', $device=NULL, $channel=NULL, $callbackSource=NULL) {
     	$billingExcCallbackObj = new billing_EXC_CALLBACK();
-        $added = $billingExcCallbackObj->insertCallbackWithSelectedService($phoneNo, $email, $jsSelectd,$profileid);
+        $added = $billingExcCallbackObj->insertCallbackWithSelectedService($phoneNo, $email, $jsSelectd,$profileid,$device,$channel, $callbackSource);
         return $added;
     }
     
@@ -319,9 +319,9 @@ class MembershipHandler
         }
     }
     
-    public function memCallbackTracking($profileid, $phoneNo, $email) {
+    public function memCallbackTracking($profileid, $phoneNo, $email, $device=NULL, $channel=NULL, $callbackSource=NULL) {
         $excCallbackObj = new billing_EXC_CALLBACK();
-        $excCallbackObj->addRecord($profileid, $phoneNo, $email);
+        $excCallbackObj->addRecord($profileid, $phoneNo, $email, $device, $channel, $callbackSource);
     }
     
     public function checkEmailSendForDay($profileid, $email) {
@@ -1358,8 +1358,9 @@ class MembershipHandler
         $vdObj 			= new billing_VARIABLE_DISCOUNT();
         $vdOfferDurationObj 	= new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
 	$vdDurationPoolTechObj 	= new billing_VARIABLE_DISCOUNT_DURATION_POOL_TECH("newjs_slave");
+	$jprofileObj 		= new JPROFILE('newjs_slave');
         $vdProfilesArr 		= array();
-        
+
         $vdDatesArr 	= $vdDurationObj->getVdOfferDates();
         $startDate 	= $vdDatesArr['SDATE'];
         $endDate 	= $vdDatesArr['EDATE'];
@@ -1369,11 +1370,18 @@ class MembershipHandler
         if(strtotime($endDate) >= strtotime($todayDate)){
             $vdProfilesArr = $vdPoolTechObj->fetchVdPoolTechProfiles();
             foreach ($vdProfilesArr as $key => $profileid){
+		
+		// paid condition check
+		$subscription =$jprofileObj->getProfileSubscription($profileid);
+		if((strstr($subscription,"F")!="")||(strstr($subscription,"D")!=""))
+			continue;
 
+		// get discount details
 		$discountArr =$vdDurationPoolTechObj->getDiscountArr($profileid);	
 		if(is_array($discountArr))
 			$discount = max($discountArr);
 		unset($discountArr);
+		// add discount
 		if($discount){
 	                $vdObj->addVDProfile($profileid, $discount, $startDate, $endDate, $activationDt);
 	                $vdOfferDurationObj->addVdOfferDuration($profileid);

@@ -40,7 +40,7 @@ EOF;
 
 	$processId =16;
 	$processObj->setIdAllot($processId);
-	$lastHandledDtObj =new incentive_LAST_HANDLED_DATE();
+	$lastHandledDtObj =new incentive_LAST_HANDLED_DATE('newjs_slave');
 	$startDt =$lastHandledDtObj->getHandledDate($processId);
         $endDt 	 =date("Y-m-d H:i:s", time());
 	$processObj->setStartDate($startDt);
