@@ -128,6 +128,7 @@ class MessageLog
 	
 	public function getCommunicationHistory($viewer,$viewed)
 	{
+		
 		$dbName = JsDbSharding::getShardNo($viewer);
 		$messageLogObj = new NEWJS_MESSAGE_LOG($dbName);
 		$messageArray = $messageLogObj->getCommunicationHistory($viewer,$viewed);

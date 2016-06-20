@@ -28,7 +28,8 @@ class CommunicationHistoryV1Action extends sfAction
 			$profileid = JsCommon::getProfileFromChecksum($request->getParameter('profilechecksum'));
 			$this->Profile->getDetail($profileid,"PROFILEID");
 			$communicationObj = new CommunicationHistory($this->loginProfile,$this->Profile);
-			$history = $communicationObj->getHistory();
+			$pageNo=$request->getParameter('pageNo');
+			$history = $communicationObj->getHistory($pageNo);
 			$gender = $this->loginProfile->getGENDER();
 			$otherGender = $this->Profile->getGENDER();
 			$communicationHistory["history"] = $communicationObj->getResultSetApi($history,$gender,$otherGender);
@@ -76,9 +77,14 @@ class CommunicationHistoryV1Action extends sfAction
 			$communicationHistory["viewer"] = $ownthumbNail;
 			$communicationHistory["viewed"] = $thumbNail;
 			$communicationHistory["label"] = $this->Profile->getUSERNAME();
+			$communicationHistory["nextPage"] = $communicationObj->getNextPage();
+
 		}	
 		$apiObj                  = ApiResponseHandler::getInstance();
-		$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+		if($communicationHistory['history'])	
+			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+		else
+			$apiObj->setHttpArray(ResponseHandlerConfig::$NO_COMMUNICATION_HISTORY);
 		$apiObj->setResponseBody($communicationHistory);
 		$apiObj->generateResponse();
 		if($request->getParameter('INTERNAL')==1){

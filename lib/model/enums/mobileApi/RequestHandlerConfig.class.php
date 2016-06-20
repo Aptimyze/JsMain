@@ -41,6 +41,7 @@ class RequestHandlerConfig
 		"alterseen"=>array("v1"=>"AlterSeenV1","v2"=>"","v3"=>"AlterSeenV1"),
         "coverphoto"=>array("v1"=>"CoverPhotoV1"),
         "horoscope"=>array("v1"=>"HoroscopeV1"),
+        "deleteHoroscope"=>array("v2"=>"deleteHoroscopeV1"),
         "deepLinking"=>array("v1"=>"apiDeepLinkingTrackingV1","v2"=>"apiDeepLinkingTrackingV1","v3"=>"apiDeepLinkingTrackingV1")),
     "settings"=>array(
 		"alertManager"=>array("v1"=>"AlertManagerV1","v2"=>"","v3"=>"AlertManagerV1"),
@@ -94,7 +95,8 @@ class RequestHandlerConfig
 			"matchOTP"=>array("v1"=>"MatchOtp","v2"=>"MatchOtp","v3"=>"MatchOtp")),
 	"static"=>array("page"=>array("v1"=>"pagev1","v2"=>"pagev1","v3"=>"pagev1"),"pagehits"=>array("v1"=>"savehitsv1","v2"=>"savehitsv1","v3"=>"savehitsv1")),	
     "help"=>array(
-        "questions"=>array("v1"=>"HelpQuestionsV1")
+        "helpQuery"=>array("v1"=>"SubmitQueryV1"),
+        "publicQuestions"=>array("v1"=>"GetPublicQuestionsV1")
         )
 );
 

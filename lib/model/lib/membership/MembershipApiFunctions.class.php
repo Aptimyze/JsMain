@@ -599,13 +599,13 @@ class MembershipApiFunctions
 	                     'label' => 'Call us now for more details',
 	                     'labelLink' => 'tel:180030106299',
 	                     'linkText' => 'Request Callback',
-	                     'params' => 'processCallback=1&INTERNAL=1&execCallbackType=JS_EXC&tabVal=1profileid=' . $apiObj->profileid . "&device=" . $apiObj->device
+	                     'params' => 'processCallback=1&INTERNAL=1&execCallbackType=JS_EXC&tabVal=1&profileid=' . $apiObj->profileid . "&device=" . $apiObj->device . "&channel=" . $apiObj->channel . "&callbackSource=" . $apiObj->callbackSource
 	                 );
             	 } else {
             		$requestCallback = array(
 	                    'label' => 'Need more details?',
 	                    'linkText' => 'Request Callback',
-	                    'params' => 'processCallback=1&INTERNAL=1&execCallbackType=JS_EXC&tabVal=1profileid=' . $apiObj->profileid . "&device=" . $apiObj->device
+	                    'params' => 'processCallback=1&INTERNAL=1&execCallbackType=JS_EXC&tabVal=1&profileid=' . $apiObj->profileid . "&device=" . $apiObj->device . "&channel=" . $apiObj->channel . "&callbackSource=" . $apiObj->callbackSource
 	                );
             	}
             } 

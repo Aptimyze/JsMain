@@ -37,6 +37,7 @@ class NotificationSender
 				if(is_array($regIds[$profileid]["IOS"]))
                                 {
 					$osType = "IOS";
+                    $details['PHOTO_URL'] = 'D'; //Added here so that any image url generated is sent to android and not to IOS
 					$notificationLogObj->insert($profileid,$details['NOTIFICATION_KEY'],$details['MSG_ID'],NotificationEnums::$PENDING,$osType);
 					$engineObject =NotificationEngineFactory::geNotificationEngineObject($osType);
 					$engineObject->sendNotification($regIds[$profileid]['IOS'], $details,$profileid);

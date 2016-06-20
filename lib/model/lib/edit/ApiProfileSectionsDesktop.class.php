@@ -11,7 +11,7 @@
 
 
 class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
-  
+	protected $Docs;
   /*
    * Declaring and Defining Member Function
    */
@@ -20,6 +20,8 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
    */
   public function __construct($profile,$isEdit='') {
     parent::__construct($profile,$isEdit);
+        $this->verifyDocsObj = new ProfileDocumentVerificationByUserService();
+        $this->Docs = $this->verifyDocsObj->getDocumentsList($profile->getPROFILEID());       
   }
   
   public function getApiBasicInfo(){
@@ -104,7 +106,6 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
   
   public function getApiContactInfo() {
     $contactArr = parent::getApiContactInfo();
-    
     $extendedContactArray = $this->profile->getExtendedContacts("onlyValues");
     $extendedContactObj   = $this->profile->getExtendedContacts();
     
@@ -162,13 +163,18 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
       $contactArr[]=$this->getApiFormatArray("PARENT_PINCODE","Pin Code" ,"","",$this->getApiScreeningField("PARENT_PINCODE"));
     }
     
-    $contactArr[]=$this->getApiFormatArray("ID_PROOF_TYP","ID type" ,$this->profile->getDecoratedID_PROOF_TYP(),$this->profile->getID_PROOF_TYP(),$this->getApiScreeningField("ID_PROOF_TYP"));
+    //$contactArr[]=$this->getApiFormatArray("ID_PROOF_TYP","ID type" ,$this->profile->getDecoratedID_PROOF_TYP(),$this->profile->getID_PROOF_TYP(),$this->getApiScreeningField("ID_PROOF_TYP"));
     
-    $contactArr[]=$this->getApiFormatArray("ID_PROOF_NO","ID Number" ,$this->profile->getID_PROOF_NO(),$this->profile->getID_PROOF_NO(),$this->getApiScreeningField("ID_PROOF_NO"));
+    //$contactArr[]=$this->getApiFormatArray("ID_PROOF_NO","ID Number" ,$this->profile->getID_PROOF_NO(),$this->profile->getID_PROOF_NO(),$this->getApiScreeningField("ID_PROOF_NO"));
+    
+    $contactArr[]=$this->getApiFormatArray("ID_PROOF_TYPE","ID Proof",$this->verifyDocsObj->getDecoratedProof("id_proof_type",$this->Docs['ID']['PROOF_TYPE']),$this->Docs['ID']['PROOF_TYPE'],$this->getApiScreeningField("ID_PROOF_TYP"));
+    
+    $contactArr[]=$this->getApiFormatArray("ADDR_PROOF_TYPE","Address Proof",$this->verifyDocsObj->getDecoratedProof("addr_proof_type",$this->Docs['ADDR']['PROOF_TYPE']),$this->Docs['ADDR']['PROOF_TYPE'],$this->getApiScreeningField("ADDR_PROOF_TYPE"));
+    $contactArr[]=$this->getApiFormatArray("ID_PROOF_VAL","" ,$this->Docs['ID']['PROOF_VAL'],$this->Docs['ID']['PROOF_VAL'],$this->getApiScreeningField("ADDR_PROOF_TYPE"));
+    $contactArr[]=$this->getApiFormatArray("ADDR_PROOF_VAL","" ,$this->Docs['ADDR']['PROOF_VAL'],$this->Docs['ADDR']['PROOF_VAL'],$this->getApiScreeningField("ADDR_PROOF_TYPE"));
     
     return $contactArr;
   }
-  
   protected  function getAncestralOrigin(&$basicArr){	
 		//native or Family based out of
       $basicArr[] =$this->getApiFormatArray("ANCESTRAL_ORIGIN"," Please specify" ,$this->profile->getDecoratedAncestralOrigin(),$this->profile->getANCESTRAL_ORIGIN(),$this->getApiScreeningField("ANCESTRAL_ORIGIN"));

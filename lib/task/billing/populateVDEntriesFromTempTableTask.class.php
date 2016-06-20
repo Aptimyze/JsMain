@@ -45,9 +45,9 @@ EOF;
 
     //update previous VD records
     $VDObj = new VariableDiscount();
-    $VDObj->updatePreviousVDRecords($entryDate);
+    //$VDObj->updatePreviousVDRecords($entryDate);  Not Required 
 
-    //populate records from temp table to main VD tables
+    //populate new records from temp table to main VD tables
     $VDObj->populateRecordsFromVDTemp($entryDate,$limit,$sendMailAlert);
     unset($VDObj);
 

@@ -21,6 +21,11 @@ function ajaxPassword(checksum,pswrd)
     {
       if(response=="true")
       {
+          if($("#offerConsentCB").is(":checked"))
+            sessionStorage.setItem('offerConsent',1);
+          else 
+            sessionStorage.setItem('offerConsent',0);
+
         if(successFlow == 1){
           url = "/successStory/jsmsInputStory";
           parent.location.href = url;
@@ -40,9 +45,12 @@ function ajaxPassword(checksum,pswrd)
 
 function ajaxDelete(specifyReason,deleteReason)
 {
+            
+  if(sessionStorage.getItem('offerConsent')) offerConsent='Y';
+  else offerConsent='N';
   $.ajax({                 
     url: '/api/v1/settings/deleteProfile',
-    data: {"deleteReason":deleteReason,"specifyReason":specifyReason},
+    data: {"deleteReason":deleteReason,"specifyReason":specifyReason,'offerConsent':offerConsent},
     success: function(response) 
     {
       if(response.output=="Deleted Successfully"){

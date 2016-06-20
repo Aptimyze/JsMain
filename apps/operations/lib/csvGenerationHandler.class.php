@@ -164,11 +164,7 @@ class csvGenerationHandler
 			if($processName=='paidCampaignProcess'){
 				$fields .=",YOURINFO,FAMILYINFO,FATHER_INFO,SPOUSE,SIBLING_INFO,JOB_INFO";	
 			}
-			if($processName=='paidCampaignProcess' || $processName=='renewalProcessInDialer' || $processName=='SALES_REGULAR'){
-				$jprofileObj  	=new JPROFILE('newjs_slave');
-			}
-			else
-				$jprofileObj	=new JPROFILE();
+			$jprofileObj  	=new JPROFILE('newjs_slave');
 			$AgentDetailsObj   	=new AgentAllocationDetails();
                         $mainAdminPoolObj       =new incentive_MAIN_ADMIN_POOL('newjs_slave');	
 
@@ -185,7 +181,7 @@ class csvGenerationHandler
 					$details['ANALYTIC_SCORE']	=$analyticScore;
 				}
 				if($processName=='upsellProcessInDialer'){
-					$paymentDetailsObj =new BILLING_PAYMENT_DETAIL();
+					$paymentDetailsObj =new BILLING_PAYMENT_DETAIL('newjs_slave');
 					$paymentDetails =$paymentDetailsObj->getDetails($extraParam);		
 					$details['AMOUNT'] =$paymentDetails[0]['AMOUNT'];
 				}	
@@ -1488,40 +1484,40 @@ class csvGenerationHandler
 		else if($processName!="failedPaymentInDialer")
 			successfullDie("No Data Available For This Date !!!");
 	}
-	public function getDataObj($processName)		//TRANSFER_TO_SLAVE
+	public function getDataObj($processName)		
 	{
 		if($processName=="ftaRegular")
-			$csvDataObj=new incentive_FTA_CSV_DATA();
+			$csvDataObj=new incentive_FTA_CSV_DATA('newjs_slave');
 		elseif($processName=="PHONE_DIALER")
-			$csvDataObj = new incentive_PHONE_OPS_DIALER_DATA();
+			$csvDataObj = new incentive_PHONE_OPS_DIALER_DATA('newjs_slave');
 		elseif($processName=="salesRegularNoida")
-			$csvDataObj=new incentive_SALES_CSV_DATA_NOIDA();
+			$csvDataObj=new incentive_SALES_CSV_DATA_NOIDA('newjs_slave');
 		elseif($processName=="salesRegularDelhi")
-			$csvDataObj=new incentive_SALES_CSV_DATA_DELHI();
+			$csvDataObj=new incentive_SALES_CSV_DATA_DELHI('newjs_slave');
 		elseif($processName=="salesRegularMumbai")
-			$csvDataObj=new incentive_SALES_CSV_DATA_MUMBAI();
+			$csvDataObj=new incentive_SALES_CSV_DATA_MUMBAI('newjs_slave');
 		elseif($processName=="salesRegularPune")
-			$csvDataObj=new incentive_SALES_CSV_DATA_PUNE();
+			$csvDataObj=new incentive_SALES_CSV_DATA_PUNE('newjs_slave');
 		elseif($processName=="salesRegularNri")	
-			$csvDataObj=new incentive_SALES_CSV_DATA_NRI();
+			$csvDataObj=new incentive_SALES_CSV_DATA_NRI('newjs_slave');
 		elseif($processName=="salesRegistration")
-			$csvDataObj=new incentive_SALES_REGISTRATION_CSV_DATA();
+			$csvDataObj=new incentive_SALES_REGISTRATION_CSV_DATA('newjs_slave');
 		elseif($processName=="sugarcrmLtf")
-			$csvDataObj=new incentive_SUGARCRM_LTF_CSV_DATA();
+			$csvDataObj=new incentive_SUGARCRM_LTF_CSV_DATA('newjs_slave');
 		elseif($processName=="MOBILE_APP_REGISTRATIONS")
-			$csvDataObj=new incentive_SALES_CSV_DATA_MOBILE_APP_REGISTRATIONS();
+			$csvDataObj=new incentive_SALES_CSV_DATA_MOBILE_APP_REGISTRATIONS('newjs_slave');
                 elseif($processName=="failedPaymentInDialer")
                         $csvDataObj=new incentive_SALES_CSV_DATA_FAILED_PAYMENT();
                 elseif($processName=="upsellProcessInDialer")
-                        $csvDataObj=new incentive_SALES_CSV_DATA_UPSELL();
+                        $csvDataObj=new incentive_SALES_CSV_DATA_UPSELL('newjs_slave');
 		elseif($processName=="renewalProcessInDialer")
-			$csvDataObj=new incentive_SALES_CSV_DATA_RENEWAL();
+			$csvDataObj=new incentive_SALES_CSV_DATA_RENEWAL('newjs_slave');
                 elseif($processName=="DAILY_GHARPAY")
-                        $csvDataObj=new incentive_GHARPAY_CSV_DATA();
+                        $csvDataObj=new incentive_GHARPAY_CSV_DATA('newjs_slave');
                 elseif($processName=="QA_ONLINE")
-                        $csvDataObj=new incentive_QA_ONLINE_CSV_DATA();
+                        $csvDataObj=new incentive_QA_ONLINE_CSV_DATA('newjs_slave');
                 elseif($processName == "VDImpactReport")
-                        $csvDataObj = new billing_VARIABLE_DISCOUNT_REPORT();
+                        $csvDataObj = new billing_VARIABLE_DISCOUNT_REPORT('newjs_slave');
                 else
 			die("Not a Process !!");
 		return $csvDataObj;

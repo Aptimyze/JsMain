@@ -37,7 +37,7 @@ class test_VD_UPLOAD_TEMP extends TABLE{
     {
         try
         {
-            $sql = "SELECT COUNT(*) AS CNT FROM test.VD_UPLOAD_TEMP";
+            $sql = "SELECT COUNT(1) AS CNT FROM test.VD_UPLOAD_TEMP";
             $res = $this->db->prepare($sql);
             $res->execute();
             $result = $res->fetch(PDO::FETCH_ASSOC);
