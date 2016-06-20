@@ -20,7 +20,7 @@ function initiateChat() //pass callback function -listing panel show in converse
                 //play_sounds: true,
                 roster_groups: chatConfig.Params.PC.roster_groups,
                 hide_offline_users: chatConfig.Params.PC.hide_offline_users,
-                debug:true,
+                debug:false,
                 //prebind:true,
                 auto_login:true,
                 jid:"a1@localhost",
@@ -93,7 +93,7 @@ function updateListing(rosterData) //use partial if possible - ankita
     }     
 }
 
-/*function afterLogin()
+function afterLogin()
 {
     $("#chatOpenPanel").setAfterLoginCallback();
-}*/
+}

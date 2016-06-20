@@ -128,12 +128,13 @@
 			 //start:on click og login button this function is called from $(self.options.loginChatButton).on('click', loginChat);
             function loginChat() 
 			{
-					initiateChat();	
+				initiateChat();	
 				alert("connected");
                 if ($(self.options.listingPanelId).length == 0) 
 				{
                     $(self.options.loginPanelId).fadeOut('slow', function() {
                         $(self.options.container).append('<div class="fullwid fontlig nchatcolor" id="js-lsitingPanel"/> ');
+                        
                         //fetch listing data and display listing panel
 						setTimeout(function(){
 							
@@ -167,16 +168,7 @@
             };
 			//start: this function add HTML structure once user has looged in chat			
             function addListingBody() 
-			{
-				/*if("function" !== typeof self.options.onLogin) {
-					console.log('Please provide me on login callback function');
-				}
-				self.options.Tab1Data =	self.options.onLogin;*/	
-                //apending the structure
-
-                //console.log($(elem).getChatPluginOption("Tab1Data"));
-                //console.log(self.options);
-                
+			{    
                 $(self.options.listingPanelId).append(self.options.chatHeaderHTML);
                 $(self.options.listingPanelId).append(self.options.TabsOpt);
                 $(self.options.tab1class).append(self.options.Tab1Data);
@@ -200,7 +192,6 @@
                 });
                 $(self.options.listingLiClass).on('mouseenter mouseleave', 'li', setHoverPosition);
                 $(elem).on('click','.profileIcon', chatPanelsBox);
-                self.options.listingBodyAdded = true;
             }
 			//start:function to calculate the position of hover box
 			function setHoverPosition(event) 
