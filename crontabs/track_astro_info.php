@@ -71,12 +71,9 @@ function update_astro_details($profileid,$astrodata="",$horoscope="",$db,$mysqlO
 
 		if($updateArr)
 		{
-			//$updateStr=implode(",",$updateArr);
-                        foreach ($updateArr as $val){
-                          $arr = explode('=',$val);
-                          $arrFields[$arr[0]] =  $arr[1];
-                        }
+			$updateStr=implode(",",$updateArr);
                         $objUpdate = JProfileUpdateLib::getInstance();
+                        $arrFields = $objUpdate->convertUpdateStrToArray($updateStr);
 			//$statement = "update newjs.JPROFILE SET ".$updateStr." where PROFILEID = '$profileid'";
 			//$mysqlObj->executeQuery($statement,$db) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$statement,"ShowErrTemplate");
                         $objUpdate->editJPROFILE($arrFields,$row[PROFILEID],"PROFILEID");
