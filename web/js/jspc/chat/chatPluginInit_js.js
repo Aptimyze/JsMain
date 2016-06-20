@@ -5,7 +5,7 @@ var ChatPc = ChatPc || {};
 			$(document).ready(function () {				
 				  $('#chatOpenPanel').chatplugin({
                    device: 'PC',
-                   Tab1JsonData: {}
+                   listingJsonData: {}
                });
 			});
 		}

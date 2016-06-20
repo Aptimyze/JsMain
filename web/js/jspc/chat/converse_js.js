@@ -11444,7 +11444,7 @@ return jQuery;
 }));
 
 define('jquery-private',['jquery'], function (jq) {
-    return jq.noConflict( false );
+    return jq.noConflict( true );
 });
 
 //     Underscore.js 1.8.3

@@ -6,7 +6,7 @@ chatConfig.Params = {
 				PC:{
 					roster_groups:true, //show categories in listing
 					hide_offline_users:false, //hide offline users from list
-					rosterDisplayGroups:{"Desired Partner Matches":"dpp","Interest Received":"eoi_R","Shortlisted Members":"shortlisted"}
+					rosterDisplayGroups:{"Desired Partner Matches":"dpp","Interest Received":"eoi_R","Shortlisted Members":"shortlisted","Accepted Members":"accepted_by_me"}
 					//categories in listing to be shown with mapping to their div ids
 				}
 			};
