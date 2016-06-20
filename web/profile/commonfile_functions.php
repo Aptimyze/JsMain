@@ -487,7 +487,7 @@ $js_arr[]=array("timetracker_js"   => "1");
 $js_arr[]=array("hamburger_js"   => "1");
 $js_arr[]=array("resetPass_js"   => "1");
 $js_arr[]=array("jsms/search/viewSimilarMax"     => "4");
-$js_arr[]=array("helpWidget_js"           => "8");
+$js_arr[]=array("helpWidget_js"           => "9");
 $js_arr[]=array("advance_search"   => "1");
 $js_arr[]=array("jsms/search/overlayLayerJsms"      => "3");
 $js_arr[]=array("jsms/search/savesearch_js"     => "2");
