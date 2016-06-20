@@ -6,7 +6,7 @@
 * @copyright Copyright 2008, Infoedge India Ltd.
 */
 
-include_once(JsConstants::$cronDocRoot.'/plugins/predis-1.0/autoload.php');
+include_once(JsConstants::$cronDocRoot.'/plugins/predis-1.1/autoload.php');
 class UserMemcache extends Memcache 
 {
 	private $memConns = array();
@@ -17,9 +17,22 @@ class UserMemcache extends Memcache
 		{
 			try
 			{
-				$cluster = JsConstants::$redisCluster;
-				$options = ['cluster' => 'redis'];
-				$this->client = new Predis\Client($cluster, $options);
+				if(JsConstants::$memoryCachingSystem=='redis')
+				{
+					$this->client = new Predis\Client(JsConstants::$ifSingleRedis);
+				}
+				if(JsConstants::$memoryCachingSystem=='redisSentinel')
+				{
+					$sentinels = JsConstants::$redisSentinel;
+					$options   = ['replication' => 'sentinel', 'service' => 'mymaster'];
+					$this->client = new Predis\Client($sentinels, $options);
+				}
+				else
+				{
+					$cluster = JsConstants::$redisCluster;
+					$options = ['cluster' => 'redis'];
+					$this->client = new Predis\Client($cluster, $options);
+				}
 			}
 			catch (Exception $e) {	
 				$this->client = NULL;
@@ -40,8 +53,8 @@ class UserMemcache extends Memcache
         */
         private static function isRedis()
         {
-            if(JsConstants::$memoryCachingSystem=='redis')
-                return true;
+		if(in_array(JsConstants::$memoryCachingSystem,array('redis','redisCluster','redisSentinel')))
+                	return true;
         }
 
 
