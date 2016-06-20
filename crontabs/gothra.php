@@ -6,6 +6,15 @@
 	include("connect.inc");
 	$db=connect_db();
 
+		//adding mailing to gmail account to check if file is being used
+	include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
+               $cc='eshajain88@gmail.com';
+               $to='sanyam1204@gmail.com';
+               $msg1='gothra.php is being hit. We can wrap this to JProfileUpdateLib';
+               $subject="gothra.php";
+               $msg=$msg1.print_r($_SERVER,true);
+               send_email($to,$msg,$subject,"",$cc);
+ 	//ending mail part
 	$sql="select max(PROFILEID) as MAX1 from JPROFILE";
 	$result=mysql_query($sql) or die(mysql_error());
 

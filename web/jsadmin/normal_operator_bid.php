@@ -4,7 +4,15 @@ include("connect.inc");
 include("time.php");
 include(JsConstants::$docRoot."/commonFiles/flag.php");
 global $screen_time;
-
+//adding mailing to gmail account to check if file is being used
+include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
+               $cc='eshajain88@gmail.com';
+               $to='sanyam1204@gmail.com';
+               $msg1='qc_view is being hit. We can wrap this to JProfileUpdateLib';
+               $subject="qc_view";
+               $msg=$msg1.print_r($_SERVER,true);
+               send_email($to,$msg,$subject,"",$cc);
+ //ending mail part
 if(authenticated($cid))
 {
 	if($CMDBid)
