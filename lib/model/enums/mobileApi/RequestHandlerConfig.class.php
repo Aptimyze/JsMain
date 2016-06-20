@@ -97,6 +97,9 @@ class RequestHandlerConfig
     "help"=>array(
         "helpQuery"=>array("v1"=>"SubmitQueryV1"),
         "publicQuestions"=>array("v1"=>"GetPublicQuestionsV1")
+        ),
+    "chat"=>array(
+        "authenticateChatSession"=>array("v1"=>"authenticateChatSessionV1")
         )
 );
 

@@ -1,3 +1,8 @@
+~assign var=module value= $sf_request->getParameter('module')`
+~assign var=loggedIn value= $sf_request->getAttribute('login')`
+~if $loggedIn && $module neq "membership"`
+    ~assign var=showChat value= "1"`
+~/if`
 <!DOCTYPE html>
 <head>
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
@@ -5,6 +10,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <link rel="shortcut icon" href="/favicon1.ico" />
     <link rel="stylesheet" async=true type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700">
+    ~if $showChat eq 1`
+  
+        <link rel="stylesheet" type="text/css" href="~JsConstants::$siteUrl`/css/jspc/chat/chat_css.css">
+        <link rel="stylesheet" type="text/css" href="~JsConstants::$siteUrl`/css/jspc/chat/converse_css.css">
+    ~/if`
     ~include_http_metas`
     ~include_canurl`
     ~include_title`
@@ -64,7 +74,16 @@
         You have not enabled Javascript on your browser, please enable it to use the website
     </div>
 </noscript>
-<body >
+~if $showChat`
+    <body style="width:80%">
+    <!--start:chat panel-->
+        <div id="chatOpenPanel"> 
+        </div>
+    <!--end:chat panel-->
+~else if`
+    <body>
+~/if`
+
     <div id="clickHolderCE" onclick="javascript:updateClickHolderCE(false,event)" style="height:0px;width:0px">&nbsp;</div>
     <div id="clickHolder" onclick="javascript:updateClickHolder(false,event)" style="height:0px;width:0px" >&nbsp;</div><div id="commonOverlay" class="jspcOverlay js-overlay overlayZ disp-none"></div>
     <!--start:error layer-->
@@ -92,7 +111,6 @@
 <script>var SSL_SITE_URL='~JsConstants::$ssl_siteUrl`';
 if (window.location.protocol == "https:")
 	    window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
-
 </script>
 ~if !get_slot('disableFbRemarketing')`
 <script>(function() {
@@ -111,4 +129,12 @@ window._fbq = window._fbq || [];
 window._fbq.push(['track', 'PixelInitialized', {}]);
 </script>
 <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=569447716516417&amp;ev=PixelInitialized" /></noscript>
+~if $showChat eq 1`
+    <script type="text/javascript" language="javascript" src="~JsConstants::$siteUrl`/js/jspc/chat/chatCommonConfig_js.js"></script>
+    <script type="text/javascript" language="javascript" src="~JsConstants::$siteUrl`/js/jspc/chat/chatPluginInit_js.js"></script>
+    <script type="text/javascript" language="javascript" src="~JsConstants::$siteUrl`/js/jspc/chat/chat_js.js"></script>
+    <script type="text/javascript" language="javascript" src="~JsConstants::$siteUrl`/js/jspc/chat/chatPCHelper_js.js"></script>
+    <script type="text/javascript" language="javascript" src="~JsConstants::$siteUrl`/converse.js-1.0.2/dist/converse.js"></script>
+  <script>jQuery.noConflict();</script>
+~/if`
 ~/if`

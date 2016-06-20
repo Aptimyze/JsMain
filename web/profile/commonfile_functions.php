@@ -207,6 +207,8 @@ $css_arr[]=array("operations/showStatViewProfile_css"  => "1");
 $css_arr[]=array("operations/help_module"   => "1");
 $css_arr[]=array("jspc/help/JSPCHelp_css"    => "2");
 $css_arr[]=array("jsms/help/JSMSHelp_css"    => "2");
+$css_arr[]=array("jspc/chat/chat_css"   => "1");
+$css_arr[]=array("jspc/chat/converse_css"   => "1");
 return $css_arr;
 }
 /* JavaScript File */
@@ -600,6 +602,9 @@ $js_arr[]=array("jspc/help/JSPCHelp_js"    => "2");
 $js_arr[]=array("jsms/help/JSMSHelp_js"    => "2");
 $js_arr[]=array("jsms/help/jsmsPostQuery_js"    => "2");
 $js_arr[]=array("jsms/help/autoPopulateFreshdesk_js"    => "2");
+$js_arr[]=array("jspc/chat/chat_js"   => "1");
+$js_arr[]=array("jspc/chat/converse_js"   => "1");
+$js_arr[]=array("jspc/chat/chatHelper_js"   => "1");
 return $js_arr;
 }
 function getJavascript(){
