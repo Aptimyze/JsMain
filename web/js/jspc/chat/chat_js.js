@@ -141,17 +141,17 @@
 							//$("#listing_tab1").html("");
 							//get json data for listing
 							var data = fetchConverseSettings("listing_data");
-							console.log("listing_data");
-							console.log(data);
+							//console.log("listing_data");
+							//console.log(data);
 							$(elem).setChatPluginOption("Tab1JsonData",data);
-							console.log("fetching data");
-							console.log($(elem).getChatPluginOption("Tab1JsonData"));
+							//console.log("fetching data");
+							//console.log($(elem).getChatPluginOption("Tab1JsonData"));
 							//console.log(self.options.Tab1JsonData);
 							//map json data to listing html
 							$(elem).setChatPluginOption("Tab1Data" ,mapListingJsonToHTML($(elem).getChatPluginOption("Tab1JsonData")));
 							//show listing panel
-							console.log("fetching tab1 data");
-							console.log($(elem).getChatPluginOption("Tab1Data"));
+							//console.log("fetching tab1 data");
+							//console.log($(elem).getChatPluginOption("Tab1Data"));
 							alert("adding body");
 							addListingBody();
 						},2000);
@@ -599,9 +599,26 @@
 			return $(this).data('chatplugin').options[key];
 		}
 		$.fn.setChatPluginOption = function(key,value) {
-			//console.log(key);
-//console.log(value);
 			$(this).data('chatplugin').options[key] = value;
+		}
+		$.fn.setAfterLoginCallback = function() {
+			alert("tab1 data generated");
+							//$("#listing_tab1").html("");
+							//get json data for listing
+							var data = fetchConverseSettings("listing_data");
+							console.log("listing_data");
+							console.log(data);
+							$(this).setChatPluginOption("Tab1JsonData",data);
+							console.log("fetching data");
+							console.log($(this).getChatPluginOption("Tab1JsonData"));
+							//console.log(self.options.Tab1JsonData);
+							//map json data to listing html
+							$(this).setChatPluginOption("Tab1Data" ,mapListingJsonToHTML($(this).getChatPluginOption("Tab1JsonData")));
+							//show listing panel
+							console.log("fetching tab1 data");
+							console.log($(this).getChatPluginOption("Tab1Data"));
+							alert("adding body");
+							this.addListingBody();	
 		}
     } 
 	catch (e) 
