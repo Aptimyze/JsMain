@@ -21,7 +21,7 @@ class UserMemcache extends Memcache
 				{
 					$this->client = new Predis\Client(JsConstants::$ifSingleRedis);
 				}
-				if(JsConstants::$memoryCachingSystem=='redisSentinel')
+				elseif(JsConstants::$memoryCachingSystem=='redisSentinel')
 				{
 					$sentinels = JsConstants::$redisSentinel;
 					$options   = ['replication' => 'sentinel', 'service' => 'mymaster'];
