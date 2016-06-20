@@ -311,7 +311,6 @@ class JProfileUpdateLib
   private function updateProfileViews($iProfileID)
   {
     try{
-      die('Y');
       return $this->objProfileNTimesStore->updateProfileViews($iProfileID);
     } catch (Exception $ex) {
       jsException::log($ex);
