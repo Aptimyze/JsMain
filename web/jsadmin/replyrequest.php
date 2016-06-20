@@ -490,7 +490,6 @@ if(authenticated($cid))
 			if ($modifyall)
 			{
 				$msgarr			= array();
-				$jprofileUpdateObj = JProfileUpdateLib::getInstance();
 				//$mod_profile_sql	= array();
 				$mod_jsadmintbl_sql   	= "UPDATE jsadmin.PROFILE_CHANGE_REQUEST SET RESPONSE_DT=NOW()";
 				//$edit_profile_sql	= "UPDATE newjs.JPROFILE SET ";
@@ -507,7 +506,7 @@ if(authenticated($cid))
 					$mod_jsadmintbl_sql.=" ,NEW_DTOFBIRTH 	= '$mod_dob'";
 					//$mod_profile_sql[]=" DTOFBIRTH  = '$mod_dob' , AGE = '$age'";
 					$arrFields['DTOFBIRTH'] = $mod_dob;
-					$arrFields['AGE'] = '$age';
+					$arrFields['AGE'] = $age;
 					$msgarr[] = " Date of Birth  updated successfully. ";
 					$dup_value=Flag::setFlag('dtofbirth',$dup_value,'duplicationFieldsVal');
 					$update_dup=true;
@@ -603,6 +602,7 @@ if(authenticated($cid))
 				if (count($arrFields))
 				{
 					//$sql1 = implode(",",$mod_profile_sql);
+					$jprofileUpdateObj = JProfileUpdateLib::getInstance();
 					$jprofileUpdateObj->editJPROFILE($arrFields,$pid,"PROFILEID");
 					//$sql= $edit_profile_sql.$sql1." where PROFILEID='$pid'";
 					//mysql_query_decide($sql) or die(mysql_error_js());
@@ -629,6 +629,7 @@ if(authenticated($cid))
 					$mod_jsadmintbl_sql.=" , NEW_DTOFBIRTH   = '$mod_dob'";
 					//$mod_profile_sql[]=" DTOFBIRTH  = '$mod_dob' , AGE = '$age'";
 					$arrFields['DTOFBIRTH'] = $mod_dob;
+					$arrFields['AGE'] = $age;
 					$msgarr[] = " Date of Birth  updated successfully. ";
 					$dup_value=Flag::setFlag('dtofbirth',$dup_value,'duplicationFieldsVal');
 					$update_dup=true;
@@ -722,6 +723,7 @@ if(authenticated($cid))
 				$mod_jsadmintbl_sql.= ", ADMIN_COMMENTS = '".addslashes(stripslashes($admin_comments))."' ,CHANGE_STATUS='Y' where ID='$id'";
 				if (count($arrFields))
 				{
+					$jprofileUpdateObj = JProfileUpdateLib::getInstance();
 					$jprofileUpdateObj->editJPROFILE($arrFields,$pid,"PROFILEID");	
 					//$sql1 = implode(",",$mod_profile_sql);
 					//$sql= $edit_profile_sql.$sql1." where PROFILEID='$pid'";
