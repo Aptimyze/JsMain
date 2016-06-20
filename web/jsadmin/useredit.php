@@ -96,21 +96,25 @@ if(authenticated($cid))
 			$str = rtrim($str,","); 
 			$jprofileUpdateObj = JProfileUpdateLib::getInstance();
 			$arrFields = $jprofileUpdateObj->convertUpdateStrToArray($str);
-			$arrFields['SCREENING']='$screen';
+			$arrFields['SCREENING']=$screen;
 			//$sql = " UPDATE newjs.JPROFILE set $str, SCREENING='$screen'";
 			if($verify_email){
 				//$sql.=", VERIFY_EMAIL='$verify_email'";
-				$arrFields['VERIFY_EMAIL']='$verify_email';
+				$arrFields['VERIFY_EMAIL']=$verify_email;
 			}
 
 
 			if($INCOMPLETE!=""){
-				$arrFields1 = array('SCREENING'=>'0', 'PREACTIVATED'=>'$activated','ACTIVATED'=>'N' , 'INCOMPLETE'=>'Y');
+				$arrFields['SCREENING'] =0;
+				$arrFields['PREACTIVATED'] =$activated;
+				$arrFields['ACTIVATED']=N;
+				$arrFields['INCOMPLETE']=Y;
 				//$sql.=",SCREENING=0, PREACTIVATED='$activated',ACTIVATED='N' , INCOMPLETE='Y'";
 			}
 			else if($activated=='U' || ($activated=='H' && ($preactivated=='U' || $preactivated=='N')))
 			{
-				$arrFields2 = array('PREACTIVATED'='$activated','ACTIVATED'='Y');
+				$arrFields['PREACTIVATED'] = $activated;
+				$arrFields['ACTIVATED']=Y;
 				//$sql.=", PREACTIVATED='$activated',ACTIVATED='Y'";
 				if($Annulled_Reason)
 				{
@@ -124,11 +128,8 @@ if(authenticated($cid))
                         /*if (0)
                                 $sql.= "ACTIVATED = 'N' AND INCOMPLETE ='Y' ";
                         else
-                                $sql.= "ACTIVATED = 'Y' ";*/
-
-                $arrFields = array_merge($arrFields,$arrFields1);
-                $arrFields = array_merge($arrFields,$arrFields2);
-                $jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID");
+                                $sql.= "ACTIVATED = 'Y' ";*/             
+                $jprofileUpdateObj->editJPROFILE($arrFields,$pid,"PROFILEID");
                         //$sql.= " where PROFILEID = '$pid' ";
 			//mysql_query_decide($sql) or die("$sql".mysql_error_js());
 			$sql_mod="INSERT into jsadmin.SCREENING_LOG(REF_ID,PROFILEID,USERNAME,$name,SCREENED_BY,SCREENED_TIME,ENTRY_TYPE,FIELDS_SCREENED) select '$ref_id',PROFILEID,USERNAME,$name,'$user',now(),'M','$count_screen' from newjs.JPROFILE where PROFILEID = '$pid' ";

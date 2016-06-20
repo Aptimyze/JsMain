@@ -12,17 +12,18 @@
 	$today=date("Y-m-d");
 	$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
 	
-	//$sql="SELECT PROFILEID FROM JPROFILE WHERE ACTIVATED='H'";
+	$sql="SELECT PROFILEID,PREACTIVATED FROM JPROFILE WHERE ACTIVATED='H'";
 	if($res=mysql_query($sql))
 	{
 		while($row=mysql_fetch_assoc($res))
 		{
 			$profileid=$row['PROFILEID'];
-			$arrFields = array('ACTIVATED'=>'PREACTIVATED');
+			$preactivated = $row['PREACTIVATED'];
+			$arrFields = array('ACTIVATED'=>$preactivated);
 			$exrtaWhereCond = "ACTIVATE_ON<='$today'";
 			$jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID",$exrtaWhereCond);
 			// $sql="UPDATE JPROFILE SET ACTIVATED=PREACTIVATED WHERE PROFILEID='$profileid' AND ACTIVATE_ON<='$today'";
-			// mysql_query($sql) or logError($sql);
+			//mysql_query($sql) or logError($sql);
 		}
 	}
 	else

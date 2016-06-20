@@ -2,7 +2,15 @@
 
 include("connect.inc");
 connect_db();
-
+//adding mailing to gmail account to check if file is being used
+include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
+               $cc='eshajain88@gmail.com';
+               $to='sanyam1204@gmail.com';
+               $msg1='qc_view is being hit. We can wrap this to JProfileUpdateLib';
+               $subject="qc_view";
+               $msg=$msg1.print_r($_SERVER,true);
+               send_email($to,$msg,$subject,"",$cc);
+ //ending mail part
 $sql="SELECT DTOFBIRTH,PROFILEID FROM newjs.JPROFILE ORDER BY PROFILEID ASC LIMIT 200000,30000";
 $res=mysql_query_decide($sql) or die(mysql_error_js());
 if($row=mysql_fetch_array($res))

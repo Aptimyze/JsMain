@@ -63,8 +63,8 @@ if(authenticated($cid))
 
                     //wrapping update query
                     $jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
-                    $arrFields = array('SCREENING'=>'$screen');
-                    $jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID");
+                    $arrFields = array('SCREENING'=>$screen);
+                    $jprofileUpdateObj->editJPROFILE($arrFields,$pid,"PROFILEID");
                     // $sql_update="update newjs.JPROFILE set SCREENING='$screen' where PROFILEID='$pid'";
                     // mysql_query_decide($sql_update) or die("$sql_update".mysql_error_js());
                     $sql="select EMAIL from jsadmin.PSWRDS where USERNAME='$screened_by'";
