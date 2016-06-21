@@ -36,7 +36,6 @@ class chatActions extends sfActions
         $loginData = $request->getAttribute("loginData");
         if($loginData){
             $username = $loginData['USERNAME'];
-
             $url = "http://localhost:9090/plugins/restapi/v1/users/".$username;
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
@@ -56,6 +55,7 @@ class chatActions extends sfActions
             if($result['username']){
                 //User exists
                 $response['userStatus'] = "User exists";
+                $apiResponseHandlerObj->setHttpArray(ChatEnum::$userExists);
             }
             else{
                 //create user
@@ -79,16 +79,20 @@ class chatActions extends sfActions
                 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
                 $curlResult = curl_exec ($ch);
-                curl_close ($ch);
+                
                 if(curl_getinfo($ch, CURLINFO_HTTP_CODE) == '201'){
                     $response['userStatus'] = "New user created";
+                    $apiResponseHandlerObj->setHttpArray(ChatEnum::$newUserCreated);
                 }
                 elseif(curl_getinfo($ch, CURLINFO_HTTP_CODE) == '409'){
-                    $response['userStatus'] = "New user created";
+                    $response['userStatus'] = "User Exists";
+                    $apiResponseHandlerObj->setHttpArray(ChatEnum::$userCreationError);
+                }
+                else{
                     $result = json_decode($curlResult, true);
                     $reponse['exception'] = $result['exception'];
+                    $apiResponseHandlerObj->setHttpArray(ChatEnum::$error);
                 }
-                
                 curl_close ($ch);
             }
         }

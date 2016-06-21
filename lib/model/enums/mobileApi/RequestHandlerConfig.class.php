@@ -100,7 +100,7 @@ class RequestHandlerConfig
         ),
     "chat"=>array(
         "authenticateChatSession"=>array("v1"=>"authenticateChatSessionV1"),
-        "chatLogin"=>array("v1"=>"chatUserAuthenticationV1")
+        "chatUserAuthentication"=>array("v1"=>"chatUserAuthenticationV1")
         )
 );
 
