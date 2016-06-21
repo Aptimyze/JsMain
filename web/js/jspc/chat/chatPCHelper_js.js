@@ -34,7 +34,7 @@ function initiateChatConnection() //pass callback function -listing panel show i
                 rosterDisplayGroups:chatConfig.Params.PC.rosterDisplayGroups,
                 //prebind_url: 'http://localhost/api/v1/chat/authenticateChatSession?jid=a1@localhost',  
             }),function(){
-                console.log("callback funct to converse.initialize called");
+                console.log("calling callback");
             }
         });
     }

@@ -28953,9 +28953,6 @@ return Backbone.BrowserStorage;
                     // so we're sure that this is just for tests.
                     this.callback(this);
                 } else  {
-                    alert("calling callback");
-                    console.log("callback");
-                    console.log(converse.listing_data);
                     createListingPanel();
                     this.callback();
                 }
