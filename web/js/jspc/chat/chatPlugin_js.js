@@ -41,9 +41,25 @@
 			//console.log(self.options);
 			init();
 			
+            function checkAuthentication(){
+                $.ajax({
+                    url: "/api/v1/chat/chatUserAuthentication",
+                    success: function(data){
+                        console.log(data.statusCode);
+                        if(data.responseStatusCode == "0"){
+                            console.log("Login done");
+                            loginChat();
+                        }
+                        else{
+                            console.log(data.responseMessage);
+                        }
+                    }
+                });
+            }
+            
 			//binding of all click event on the DOM of login screen			
             $(self.options.minimizeButtonOut).on('click', minChatPanel);
-            $(self.options.loginChatButton).on('click', loginChat);
+            $(self.options.loginChatButton).on('click', checkAuthentication);
 			
 			//start:this function the screen size
             function checkWidth() 
