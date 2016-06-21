@@ -100,7 +100,6 @@ function updateListing(rosterData) //use partial if possible - ankita
 */ 
 function createListingPanel()
 {
-    alert("tab1 data generated");
     //get json data for listing
     var listingData = fetchConverseSettings("listing_data");
     $(pluginId).setChatPluginOption("listingJsonData",listingData);
