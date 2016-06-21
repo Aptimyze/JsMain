@@ -103,15 +103,35 @@ if(authenticated($cid))
 					//added by sriram to prevent the query on CONTACTS table being run several times on page reload.
 					if($myrow['ACTIVATED']=='D')
 					{
-						$path = $_SERVER['DOCUMENT_ROOT']."/profile/retrieveprofile_bg.php $profileid > /dev/null ";
-						$cmd_1 = JsConstants::$php5path." -q ".$path;
+						$producerObj=new Producer();
+                       	if($producerObj->getRabbitMQServerConnected())
+                       	{
+                           $sendMailData = array('process' =>'DELETE_RETRIEVE','data'=>array('type' => 'RETRIEVE','body'=>array('profileId'=>$profileid)), 'redeliveryCount'=>0 );
+                           $producerObj->sendMessage($sendMailData);
+                       	}
+                       	else
+                       	{
+                           $path = $_SERVER['DOCUMENT_ROOT']."/profile/retrieveprofile_bg.php $profileid > /dev/null ";
+                           $cmd_1 = JsConstants::$php5path." -q ".$path;
+                       	}
 						$path_2 = $_SERVER['DOCUMENT_ROOT']."/profile/send_mail_sms.php ".$profileid." > /dev/null ";
                                                 $cmd_2= "cd ../profile/ ; ".JsConstants::$php5path." -q ".$path_2;
 						if($jsarch_user)
-							$cmd="$cmd_1 ; $cmd_2";
-						else
+						{
+							if($cmd_1!="")
+								$cmd="$cmd_1 ; $cmd_2";
+							else
+								$cmd="$cmd_2";
+						}
+						else if($cmd_1!="")
+						{
 							$cmd="$cmd_1 &";
-						passthru($cmd);
+						}
+
+						if($cmd!="")
+						{
+							passthru($cmd);
+						}
 
 					}
 					//end of - added by sriram to prevent the query on CONTACTS table being run several times on page reload.

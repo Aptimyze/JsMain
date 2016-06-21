@@ -179,7 +179,7 @@
 </div>
 <!--end:middle part-->
 <!--start:footer-->
-~include_partial('global/JSPC/_jspcCommonFooter')`
+~include_partial('global/JSPC/_jspcCommonFooter',["fromSideLink"=>$fromSideLink])`
 <!--end:footer--> 
 
 <script type="text/javascript">

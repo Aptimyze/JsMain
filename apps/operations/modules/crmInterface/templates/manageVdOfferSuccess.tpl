@@ -31,6 +31,10 @@
                 <div>
                         ~$num++`.&nbsp;&nbsp;<a href="/operations.php/crmInterface/scheduleVdSms?name=~$name`&cid=~$cid`">Schedule Variable Discount Offer SMS </a>
                 </div>
+		 <br>
+                <div>
+                        ~$num++`.&nbsp;&nbsp;<a href="/operations.php/crmInterface/scheduleVdMailer?name=~$name`&cid=~$cid`">Schedule Variable Discount Offer Mailer </a>
+                </div>
 		<br>
 		<div>
 			~$num++`.&nbsp;&nbsp;<a href="/operations.php/crmInterface/extendVdOffer?name=~$name`&cid=~$cid`">Extend Variable Discount Offer Date</a>

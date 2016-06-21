@@ -271,7 +271,8 @@ if(typeof response.searchid!="undefined")
       $("#callUser").off("click");
       $("#callUser").on("click", function () {
         $('<input>').attr({type: 'hidden',id:'rcbResponse', name: 'rcbResponse',value:'Y'}).appendTo('#Widget');
-        $(".js-openRequestCallBack").click();
+        toggleRequestCallBackOverlay(1, 'Accepted_Members_List');
+        //$(".js-openRequestCallBack").click();
       });
       
       //On Not Now Button
@@ -284,7 +285,7 @@ if(typeof response.searchid!="undefined")
           url: url,
           cache: false,
           timeout: 5000, 
-          data: {rcbResponse:'N'},
+          data: {rcbResponse:'N','device':'desktop','channel':'JSPC','callbackSource':'Accepted_Members_List'},
           success:function(result){
             $("#callDiv1").remove();
             $("<div class='rel_c js-rcbMessage' id='callDiv2'><div class='ccp11 pb20 fontlig color11'><div class='mainBrdr2'><div class='f14 fontlig'>Never mind. You still can reach out to us later whenever you want. We will remind you about this after two weeks.</div></div></div></div>").insertAfter("#outerCCTupleDiv3");        

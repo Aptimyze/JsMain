@@ -271,7 +271,7 @@ class crmApiActions extends sfActions
   public function executeLogCheckinCheckoutV1(sfWebRequest $request)
   {
     $apiObj = ApiResponseHandler::getInstance();
-    if(!$request->getParameter("logType") || !$request->getParameter("latitude") || !$request->getParameter("longitude") || !$request->getParameter("timestamp") || !$request->getAttribute('operatorName') || !$request->getAttribute('clientName') || !$request->getAttribute('agentLocation'))
+    if(!$request->getParameter("logType") || !$request->getParameter("latitude") || !$request->getParameter("longitude") || !$request->getParameter("timestamp") || !$request->getAttribute('operatorName') || !$request->getParameter('clientName') || !$request->getParameter('agentLocation'))
     {
       	$successFlag = false;
       	$apiObj->setHttpArray(CrmResponseHandlerConfig::$MISSING_PARAM);
@@ -284,10 +284,17 @@ class crmApiActions extends sfActions
     	$timestamp = date("Y-m-d H:i:s", $tempTime);
     	$clientName = $request->getParameter('clientName');
     	$agentLocation = $request->getParameter('agentLocation');
-    	$incCrmChkObj = new incentive_CRM_AGENT_CHECKIN_CHECKOUT_LOG();
-    	$incCrmChkObj->insert($operatorName, $clientName, $logType, $agentLocation, $latitude, $longitude, $timestamp);
-    	$successFlag = true;
-    	$apiObj->setHttpArray(CrmResponseHandlerConfig::$CRM_SYNC_SUCCESS);
+    	$jprofileObj = new JPROFILE('newjs_slave');
+    	$check = $jprofileObj->checkUsername(strtoupper($clientName));
+    	if($check == 1){
+    		$incCrmChkObj = new incentive_CRM_AGENT_CHECKIN_CHECKOUT_LOG();
+	    	$incCrmChkObj->insert($operatorName, $clientName, $logType, $agentLocation, $latitude, $longitude, $timestamp);
+	    	$successFlag = true;
+	    	$apiObj->setHttpArray(CrmResponseHandlerConfig::$CRM_SYNC_SUCCESS);	
+    	} else {	
+	    	$successFlag = false;
+    		$apiObj->setHttpArray(CrmResponseHandlerConfig::$INVALID_USERNAME);
+    	}
     }
     $output['syncDone'] = $successFlag;
     $apiObj->setAuthChecksum($request->getAttribute("AUTHCHECKSUM"));

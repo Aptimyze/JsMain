@@ -4,7 +4,8 @@ class uploadVD
     const EMPTY_SOURCE = 1;  //not used
     const INCOMPLETE_UPLOAD = 2;  //not used
     const COMPLETE_UPLOAD = 3;   //not used
-    public static $RECORDS_SELECTED_PER_TRANSFER = 5000;
+    public static $RECORDS_SELECTED_PER_TRANSFER = 10000;
+    public static $vdDurationArr =array('2','3','6','12','L');
 }
 
 class exclusiveMemberList
@@ -49,6 +50,7 @@ class fsoInterfaceDisplay
     									array("linkid"=>0,"linkname"=>"Upload profile verification documents"),
     									array("linkid"=>1,"linkname"=>"Sync profile verification documents"),
     									array("linkid"=>2,"linkname"=>"Edit address of profile"),
+    									array("linkid"=>4,"linkname"=>"Agent Checkin/Checkout"),
     									array("linkid"=>3,"linkname"=>"Logout")
 										);
 
