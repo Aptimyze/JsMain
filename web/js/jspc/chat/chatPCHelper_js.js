@@ -2,7 +2,7 @@
 * converse client(converse.js) to chat plugin(chat_js.js)
 */
 
-var pluginId = '#chatOpenPanel';
+var pluginId = '#chatOpenPanel',device = 'PC';
 
 /*function initiateChat
 * request sent to openfire to initiate chat and maintain session
@@ -15,12 +15,12 @@ function initiateChatConnection() //pass callback function -listing panel show i
         //initialise converse settings and fetch data and then execute callback function
         require(['converse'], function (converse) {
             converse.initialize({
-                bosh_service_url: 'ws://localhost:7070/ws/',
-                keepalive: true,
+                bosh_service_url: chatConfig.Params[device].bosh_service_url,
+                keepalive: chatConfig.Params[device].keepalive,
                 message_carbons: true, //why req?? - ankita
                 //play_sounds: true,
-                roster_groups: chatConfig.Params.PC.roster_groups,
-                hide_offline_users: chatConfig.Params.PC.hide_offline_users,
+                roster_groups: chatConfig.Params[device].roster_groups,
+                hide_offline_users: chatConfig.Params[device].hide_offline_users,
                 debug:false,
                 //prebind:true,
                 auto_login:true,
@@ -29,12 +29,11 @@ function initiateChatConnection() //pass callback function -listing panel show i
                 //sid:sid,
                 //rid:1,
                 authentication:'login',
-                show_controlbox_by_default: true, //why req--ankita
                 listing_data:{},
-                rosterDisplayGroups:chatConfig.Params.PC.rosterDisplayGroups,
+                rosterDisplayGroups:chatConfig.Params[device].rosterDisplayGroups,
                 //prebind_url: 'http://localhost/api/v1/chat/authenticateChatSession?jid=a1@localhost',  
             }),function(){
-                console.log("callback funct to converse.initialize called");
+                console.log("calling callback");
             }
         });
     }
@@ -64,7 +63,7 @@ function mapListingJsonToHTML(jsonData)  //use partial if possible - ankita
 {
     var listingHTML = '<div id="listing_tab1">';
     $.each(jsonData,function( index, val ){
-        listingHTML = listingHTML+ '<div id="'+chatConfig.Params.PC.rosterDisplayGroups[index]+'"><div class="f12 fontreg nchatbdr2"><p class="nchatt1 fontreg pl15">'+index+'</p></div><ul class="chatlist">';
+        listingHTML = listingHTML+ '<div id="'+chatConfig.Params[device].rosterDisplayGroups[index]+'"><div class="f12 fontreg nchatbdr2"><p class="nchatt1 fontreg pl15">'+index+'</p></div><ul class="chatlist">';
         $.each(val,function( key, details ){
               listingHTML = listingHTML+'<li class="clearfix profileIcon" id="profile_'+details.fullname+'"><img id="pic_'+key.fullname+'" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">'+details.fullname+'</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li>';
         });
@@ -83,7 +82,7 @@ function updateListing(rosterData) //use partial if possible - ankita
     console.log("roster update");
     console.log(rosterData);
     var newRosterHTML = "",groupid;
-    groupid = chatConfig.Params.PC.rosterDisplayGroups[rosterData.groups[0]]; //group id mapping
+    groupid = chatConfig.Params[device].rosterDisplayGroups[rosterData.groups[0]]; //group id mapping
     //handle if no user in group - case ankita
     //if this new user doesn't exist already
     if($("#"+groupid).find("ul.chatlist").find("li#profile_"+rosterData.fullname).length === 0)
