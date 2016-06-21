@@ -522,11 +522,11 @@ include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 				mysql_query_decide($sql_update) or logError($sql_update,"ShowErrTemplate");
 			}
 		}
-		else
+		
 		{
 //			$sql = "UPDATE newjs.JPROFILE SET SHOW_HOROSCOPE='N' WHERE PROFILEID='$profileid'";
 //			mysql_query_decide($sql) or logError($sql,"ShowErrTemplate");
-                        $arrFields = array('SHOW_HOROSCOPE'=>N);
+                        $arrFields = array('SHOW_HOROSCOPE'=>'N');
                         $objUpdate->editJPROFILE($arrFields,$profileid,"PROFILEID");
 			$sql_update = "UPDATE newjs.ASTRO_PULLING_REQUEST SET COUNTER=COUNTER+1 , PENDING='U' WHERE PROFILEID='$profileid'";
 			mysql_query_decide($sql_update) or logError($sql_update,"ShowErrTemplate");
