@@ -187,7 +187,7 @@
 	  		"MARITAL_STATUS" =>"Marital Status",
 	  		"HAVE_CHILDREN" => "Have Children",
 	  		"COUNTRY" => "Country",
-	  		"CITY" => "City living in",),
+	  		"CITY" => "State/City living in",),
 	  	"RELIGION_ETHINICITY" => array(
 	  		"RELIGION" => "Religion",
 	  		"CASTE" => "Caste",
@@ -337,7 +337,7 @@
                                 "FILTER_MAP" => 'CITY_RES',
 	  			"FILTER" => self::VALUE_YES,
 	  			"FILTER_VALUE" => self::VALUE_NO,
-	  			"FILTER_HINT_TEXT" => "Interests from people outside specified cities will go to your Filtered Inbox, and they will also not be able to see your Phone/EmailID.",),),
+	  			"FILTER_HINT_TEXT" => "Interests from people outside specified states/cities will go to your Filtered Inbox, and they will also not be able to see your Phone/EmailID.",),),
 	  	"RELIGION_ETHINICITY" => array(
 	  		"RELIGION" => array(
                                 "FILTER_MAP" => 'RELIGION',
