@@ -4,7 +4,7 @@ var ChatPc = ChatPc || {};
 		init : function(){
 			$(document).ready(function () {				
 				  $('#chatOpenPanel').chatplugin({
-                   device: 'PC',
+                   device: device,
                    listingJsonData: {}
                });
 			});
