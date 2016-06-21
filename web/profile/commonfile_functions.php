@@ -207,6 +207,7 @@ $css_arr[]=array("operations/showStatViewProfile_css"  => "1");
 $css_arr[]=array("operations/help_module"   => "1");
 $css_arr[]=array("jspc/help/JSPCHelp_css"    => "2");
 $css_arr[]=array("jsms/help/JSMSHelp_css"    => "2");
+$css_arr[]=array("jsms/oldMobileSite/oldMobileSitePage"     => "1");
 return $css_arr;
 }
 /* JavaScript File */

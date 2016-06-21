@@ -62,3 +62,5 @@ all:
     enable_login: off
   jsmsVerificationStaticPage:
     enable_login: off
+  oldMobileSite:
+    enable_login: off

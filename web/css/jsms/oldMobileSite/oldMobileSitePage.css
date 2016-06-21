@@ -1,0 +1,29 @@
+#notsup_img1 {
+    background: url(IMG_URL/images/oldMobileSite/loginbg.jpg) no-repeat ;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.bnsmauto{margin:0 auto}
+.bnscolor1{color:#fbfbfb}
+.bnsLogo{background: url(IMG_URL/images/oldMobileSite/bnslogo.png) no-repeat;}
+.bnslisti{background-image:url(IMG_URL/images/oldMobileSite/bnslist.png); background-repeat:no-repeat}
+
+ul.listnot{list-style-type:none; margin:0; padding:0}
+ul.listnot li{float:left; width:33%}
+.chrome{background-position:1px 1px; width:66px; height:69px}
+.safari{background-position:1px -69px; width:66px; height:69px}
+.uc{background-position:1px -137px; width:66px; height:69px}
+
+@media (min-width: 280px) and (max-width: 320px) {
+ 	 .bnsf1{font-size:24px}
+	 .bns_p1{padding-top:15%}
+.bns_p2{padding-top:10%}
+ }
+ @media (min-width: 321px) {
+	 .bnsf1{font-size:24px}
+	 .bns_p1{padding-top:20%}
+.bns_p2{padding-top:15%}
+ }
