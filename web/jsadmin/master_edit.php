@@ -384,7 +384,7 @@ if(authenticated($cid))
 			die('Issue while updating JPROFILE at line 132');
 		}
 
-		mysql_query_decide($sql) or die("$sql".mysql_error_js());
+		//mysql_query_decide($sql) or die("$sql".mysql_error_js());
 		/*$sql_mod="INSERT into jsadmin.SCREENING_LOG(REF_ID,PROFILEID,USERNAME,$name,SCREENED_BY,SCREENED_TIME,ENTRY_TYPE,FIELDS_SCREENED) select '$ref_id',PROFILEID,USERNAME,$name,'$user',now(),'M','$count_screen' from newjs.JPROFILE where PROFILEID = '$pid' ";
 		mysql_query_decide($sql_mod) or die(mysql_error_js());
 		$sql= "INSERT into jsadmin.MAIN_ADMIN_LOG (PROFILEID, USERNAME, SCREENING_TYPE, RECEIVE_TIME, SUBMIT_TIME, ALLOT_TIME, SUBMITED_TIME, ALLOTED_TO, STATUS, SUBSCRIPTION_TYPE, SCREENING_VAL) SELECT PROFILEID, USERNAME, SCREENING_TYPE, RECEIVE_TIME, SUBMIT_TIME, ALLOT_TIME, now(), ALLOTED_TO, 'APPROVED', SUBSCRIPTION_TYPE, SCREENING_VAL from jsadmin.MAIN_ADMIN where PROFILEID='$pid' and SCREENING_TYPE='O'";  

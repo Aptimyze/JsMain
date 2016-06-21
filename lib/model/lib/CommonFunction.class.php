@@ -591,11 +591,17 @@ class CommonFunction
     
     $arrayColumns = explode(",",$uptStr);
     $arrOut = array();
+    $lastToken = '';
     foreach($arrayColumns as $params) {
       $arrTokens = explode("=",$params);
+      if(count($arrTokens) === 1) {
+        $arrOut[$lastToken] .= $params;
+        continue;
+      }
       $szVal = $arrTokens[1];
       $szVal = str_replace(array('\'','"',"\\"), "", $szVal);
       $arrOut[trim($arrTokens[0])] = trim($szVal);
+      $lastToken = trim($arrTokens[0]);
     }
     return $arrOut;
   }
