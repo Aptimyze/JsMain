@@ -1435,7 +1435,7 @@ function getAge($newDob) {
   {
     $objUpdate = JProfileUpdateLib::getInstance();
     $arrFields = array('ACTIVATED'=>'U');
-    $result = $objUpdate->editJPROFILE($arrFields,$profileid,"PROFILEID");
+    $result = $objUpdate->editJPROFILE($arrFields,$iProfileID,"PROFILEID");
     if(false === $result) {
       die('Mysql error while marking profile under screening at line 1410');
     }
