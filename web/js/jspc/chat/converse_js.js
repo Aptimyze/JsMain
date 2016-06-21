@@ -28956,7 +28956,7 @@ return Backbone.BrowserStorage;
                     alert("calling callback");
                     console.log("callback");
                     console.log(converse.listing_data);
-                    //afterLogin();
+                    createListingPanel();
                     this.callback();
                 }
             }
@@ -29330,7 +29330,7 @@ return Backbone.BrowserStorage;
                  */
 
                 var jid = item.getAttribute('jid');
-                console.log("updateContact"+jid);
+                //console.log("updateContact"+jid);
                 if (this.isSelf(jid)) { return; }
                 var groups = [],
                     contact = this.get(jid),
@@ -29708,7 +29708,7 @@ return Backbone.BrowserStorage;
                         $el = $('<div id="conversejs">');
                         //console.log($el);
                         //console.log("ankita");
-                        $('body').append($el);
+                        //$('body').append($el);
                     }
                     //console.log(converse.templates.chats_panel());
                     $el.html(converse.templates.chats_panel());
@@ -34019,7 +34019,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                 },
 
                 render: function () {
-                    console.log("in render123");
+                    //console.log("in render123");
                     if (!this.mayBeShown()) {
                         this.$el.hide();
                         return this;

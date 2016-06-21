@@ -605,7 +605,7 @@ $js_arr[]=array("jsms/help/autoPopulateFreshdesk_js"    => "2");
 $js_arr[]=array("jspc/chat/chatCommonConfig_js"   => "1");
 $js_arr[]=array("jspc/chat/chatPluginInit_js"   => "1");
 $js_arr[]=array("jspc/chat/chatPCHelper_js"   => "1");
-$js_arr[]=array("jspc/chat/chat_js"   => "1");
+$js_arr[]=array("jspc/chat/chatPlugin_js"   => "1");
 $js_arr[]=array("jspc/chat/converse_js"   => "1");
 return $js_arr;
 }

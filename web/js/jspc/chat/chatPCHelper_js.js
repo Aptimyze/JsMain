@@ -2,12 +2,13 @@
 * converse client(converse.js) to chat plugin(chat_js.js)
 */
 
+var pluginId = '#chatOpenPanel';
 
 /*function initiateChat
 * request sent to openfire to initiate chat and maintain session
 * @params:none
 */     
-function initiateChat() //pass callback function -listing panel show in converse.initialize-ankita
+function initiateChatConnection() //pass callback function -listing panel show in converse.initialize-ankita
 {
     try
     {
@@ -93,7 +94,19 @@ function updateListing(rosterData) //use partial if possible - ankita
     }     
 }
 
-function afterLogin()
+/*function createListingPanel
+* creates listing panel after login and json data generation
+* @params:none
+*/ 
+function createListingPanel()
 {
-    $("#chatOpenPanel").setAfterLoginCallback();
+    alert("tab1 data generated");
+    //get json data for listing
+    var listingData = fetchConverseSettings("listing_data");
+    $(pluginId).setChatPluginOption("listingJsonData",listingData);
+    //map json data to listing html
+    $(pluginId).setChatPluginOption("Tab1Data" ,mapListingJsonToHTML($(pluginId).getChatPluginOption("listingJsonData")));
+    //show listing panel by appending html
+    var ChatPluginObj = $(pluginId).chatplugin();
+    ChatPluginObj.addListingBody();
 }
