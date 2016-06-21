@@ -128,70 +128,49 @@
 			 //start:on click og login button this function is called from $(self.options.loginChatButton).on('click', loginChat);
             function loginChat() 
 			{
-				initiateChat();	
+				initiateChatConnection();	
 				alert("connected");
+            };
+			//start: this function add HTML structure once user has logged in chat,invoked when data for listing has been generated			
+            self.addListingBody = function()
+			{    
                 if ($(self.options.listingPanelId).length == 0) 
-				{
+                {
                     $(self.options.loginPanelId).fadeOut('slow', function() {
                         $(self.options.container).append('<div class="fullwid fontlig nchatcolor" id="js-lsitingPanel"/> ');
-                        
-                        //fetch listing data and display listing panel
-						setTimeout(function(){
-							
-							alert("tab1 data generated");
-							//$("#listing_tab1").html("");
-							//get json data for listing
-							var listingData = fetchConverseSettings("listing_data");
-							//console.log("listing_data");
-							//console.log(listingData);
-							$(elem).setChatPluginOption("listingJsonData",listingData);
-							//console.log("fetching data");
-							//console.log($(elem).getChatPluginOption("listingJsonData"));
-							//console.log(self.options.listingJsonData);
-							//map json data to listing html
-							$(elem).setChatPluginOption("Tab1Data" ,mapListingJsonToHTML($(elem).getChatPluginOption("listingJsonData")));
-							//show listing panel
-							//console.log("fetching tab1 data");
-							//console.log($(elem).getChatPluginOption("Tab1Data"));
-							alert("adding body");
-							addListingBody();
-						},2000);
-                 
+                        alert("in addListingBody....");
+                        $('#js-lsitingPanel').append('<div class="nchatbg1 nchatp2 clearfix pos-rel nchathgt1"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarIn"></i> </div><div class="fl"> <img src="images/chat-profile-small.jpg" class="nchatp4"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp">Logout</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>');
+                        $(self.options.listingPanelId).append(self.options.TabsOpt);
+                        $(self.options.tab1class).append(self.options.Tab1Data);
+                        $(self.options.tab2class).append(self.options.Tab2Data);
+                        //add hover box HTML
+                        $(elem).append(self.options.HoverBoxHTML);
+                        //calling height function for calculating the height of listing panel
+                        chatScrollHght();
+                        //rebind the min chat window again as new dom has been added
+                        $(self.options.minimizeButtonIn).on('click', minChatPanel);
+                        //on click of name show the panel with logout option
+                        $(self.options.logoutPanelToggle).on('click', togglePanel);
+                        //logoutChat
+                        $(self.options.logoutChat).on('click', logOutChat);
+                        //tabs clicked: passing the id of the tab to the function
+                        $(self.options.chatTab1).on('click', function() {
+                            TabClick($(this));
+                        });
+                        $(self.options.listPanelInnerId).mCustomScrollbar({
+                            theme: "light"
+                        });
+                        $(self.options.listingLiClass).on('mouseenter mouseleave', 'li', setHoverPosition);
+                        $(elem).on('click','.profileIcon', chatPanelsBox);
                     });
                 } 
-				else 
-				{
+                else 
+                {
                     $(self.options.loginPanelId).fadeOut('slow', function() {
                         $(self.options.listingPanelId).fadeIn('slow');
                     })
                 }
-            };
-			//start: this function add HTML structure once user has looged in chat			
-            function addListingBody() 
-			{    
-                $(self.options.listingPanelId).append(self.options.chatHeaderHTML);
-                $(self.options.listingPanelId).append(self.options.TabsOpt);
-                $(self.options.tab1class).append(self.options.Tab1Data);
-                $(self.options.tab2class).append(self.options.Tab2Data);
-                //add hover box HTML
-                $(elem).append(self.options.HoverBoxHTML);
-                //calling height function for calculating the height of listing panel
-                chatScrollHght();
-                //rebind the min chat window again as new dom has been added
-                $(self.options.minimizeButtonIn).on('click', minChatPanel);
-                //on click of name show the panel with logout option
-                $(self.options.logoutPanelToggle).on('click', togglePanel);
-                //logoutChat
-                $(self.options.logoutChat).on('click', logOutChat);
-                //tabs clicked: passing the id of the tab to the function
-                $(self.options.chatTab1).on('click', function() {
-                    TabClick($(this));
-                });
-                $(self.options.listPanelInnerId).mCustomScrollbar({
-                    theme: "light"
-                });
-                $(self.options.listingLiClass).on('mouseenter mouseleave', 'li', setHoverPosition);
-                $(elem).on('click','.profileIcon', chatPanelsBox);
+				
             }
 			//start:function to calculate the position of hover box
 			function setHoverPosition(event) 
@@ -573,11 +552,16 @@
 
         // attach the plugin to jquery namespace
         $.fn.chatplugin = function(options) {
-            return this.each(function() {
+			var PubObj = $(this).data('chatplugin');
+            this.each(function() {
                 // prevent multiple instantiation
-                if (!$(this).data('chatplugin'))
-                    $(this).data('chatplugin', new ChatPlugin(this, options));
+                if (!$(this).data('chatplugin')) {
+					 PubObj = new ChatPlugin(this, options);
+                    $(this).data('chatplugin', PubObj);
+				}
             });
+			
+			return PubObj;
         };
 		
 		$.fn.setLoginCallback = function(callback) {
@@ -591,25 +575,6 @@
 		}
 		$.fn.setChatPluginOption = function(key,value) {
 			$(this).data('chatplugin').options[key] = value;
-		}
-		$.fn.setAfterLoginCallback = function() {
-			alert("tab1 data generated");
-							//$("#listing_tab1").html("");
-							//get json data for listing
-							var data = fetchConverseSettings("listing_data");
-							//console.log("listing_data");
-							//console.log(data);
-							$(this).setChatPluginOption("Tab1JsonData",data);
-							//console.log("fetching data");
-							//console.log($(this).getChatPluginOption("Tab1JsonData"));
-							//console.log(self.options.Tab1JsonData);
-							//map json data to listing html
-							$(this).setChatPluginOption("Tab1Data" ,mapListingJsonToHTML($(this).getChatPluginOption("Tab1JsonData")));
-							//show listing panel
-							//console.log("fetching tab1 data");
-							//console.log($(this).getChatPluginOption("Tab1Data"));
-							alert("adding body");
-							this.addListingBody();	
 		}
     } 
 	catch (e) 
