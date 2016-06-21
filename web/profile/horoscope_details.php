@@ -504,7 +504,6 @@ include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 				if ($COUNTRY_BIRTH_EXIST){
 					//$sql = "UPDATE newjs.JPROFILE SET  COUNTRY_BIRTH='$COUNTRY_BIRTH_EXIST', CITY_BIRTH='".addslashes(stripslashes($CITY_BIRTH))."',BTIME='$BTIME', SHOW_HOROSCOPE='Y' WHERE PROFILEID='$profileid'";
                                     $arrFields = array('COUNTRY_BIRTH'=>$COUNTRY_BIRTH_EXIST,'CITY_BIRTH'=>addslashes(stripslashes($CITY_BIRTH)),'BTIME'=>$BTIME,'SHOW_HOROSCOPE'=>Y);
-                                    $objUpdate->editJPROFILE($arrFields,$row[PROFILEID],"PROFILEID");
                                 }
 				else{
 					//$sql = "UPDATE newjs.JPROFILE SET CITY_BIRTH='".addslashes(stripslashes($CITY_BIRTH))."',BTIME='$BTIME' , SHOW_HOROSCOPE='Y' WHERE PROFILEID='$profileid'";
