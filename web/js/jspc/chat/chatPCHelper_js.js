@@ -15,8 +15,8 @@ function initiateChatConnection() //pass callback function -listing panel show i
         //initialise converse settings and fetch data and then execute callback function
         require(['converse'], function (converse) {
             converse.initialize({
-                bosh_service_url: 'ws://localhost:7070/ws/',
-                keepalive: true,
+                bosh_service_url: chatConfig.Params[device].bosh_service_url,
+                keepalive: chatConfig.Params[device].keepalive,
                 message_carbons: true, //why req?? - ankita
                 //play_sounds: true,
                 roster_groups: chatConfig.Params[device].roster_groups,
@@ -29,7 +29,6 @@ function initiateChatConnection() //pass callback function -listing panel show i
                 //sid:sid,
                 //rid:1,
                 authentication:'login',
-                show_controlbox_by_default: true, //why req--ankita
                 listing_data:{},
                 rosterDisplayGroups:chatConfig.Params[device].rosterDisplayGroups,
                 //prebind_url: 'http://localhost/api/v1/chat/authenticateChatSession?jid=a1@localhost',  
