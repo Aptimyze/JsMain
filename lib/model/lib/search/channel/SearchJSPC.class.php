@@ -161,21 +161,13 @@ class SearchJSPC extends SearchJS
                 $actionObject->subscriptionType = $subscriptionType;
 		if($request->getParameter("showKundliList")==1)
 		{
-                        if(CommonFunction::getMainMembership($subscriptionType) == mainMem::EVALUE || CommonFunction::getMainMembership($subscriptionType) == mainMem::EADVANTAGE){
-                                $actionObject->setGap = 810;
-                        }else{
-                                $actionObject->setGap = 1010;
-                        }
+                        $actionObject->setGap = 810;
 			$actionObject->showKundliList=1;
 		}
 		else
 		{
 			$actionObject->showKundliList=0;
-			if(CommonFunction::getMainMembership($subscriptionType) == mainMem::EVALUE || CommonFunction::getMainMembership($subscriptionType) == mainMem::EADVANTAGE){
-                                $actionObject->setGap = 610;
-                        }else{
-                                $actionObject->setGap = 810;
-                        }
+			$actionObject->setGap = 610;
 			if($clickOn>6)
 				$clickOn--;
 		}

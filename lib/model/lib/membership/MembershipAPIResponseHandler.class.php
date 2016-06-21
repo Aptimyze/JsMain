@@ -79,11 +79,14 @@ class MembershipAPIResponseHandler {
         $this->address = $request->getParameter('address');
         $this->date = $request->getParameter('date');
         $this->comment = $request->getParameter('comment');
+        $this->channel = $request->getParameter('channel');
         
         $this->internalParamCheck = $request->getParameter('INTERNAL');
         $this->getMembershipMessage = $request->getParameter('getMembershipMessage');
         $this->getHamburgerMessage = $request->getParameter('getHamburgerMessage');
         $this->appVersion = $request->getParameter('API_APP_VERSION');
+
+        $this->callbackSource = $request->getParameter('callbackSource');
         
         $this->rcbResponse = $request->getParameter('rcbResponse');//For Rcb tracking
         
@@ -165,6 +168,30 @@ class MembershipAPIResponseHandler {
                 unset($this->curActServices[$key]);
             }
         }
+
+        // Fixing Channel based on device
+        if (empty($this->channel)) {
+	        if ($this->device == 'JSAA_mobile_website' || $this->device == 'Android_app'){
+	        	$this->channel = 'JSAA';
+	        } else if ($this->device == 'iOS_app'){
+	        	$this->channel = 'JSIA';
+	        } else if ($this->device == 'mobile_website'){
+	        	$this->channel = 'JSMS';
+	        } else {
+	        	$this->channel = 'JSPC';
+	        }
+	    }
+
+	    // CallbackSource for recording inbound link
+	    if (empty($this->callbackSource)) {
+		    if($fromBackend == 'REQUEST_CALLBACK'){
+		    	$this->callbackSource = "SMS";
+		    } else if(!empty($fromBackend)){
+		    	$this->callbackSource = $fromBackend;
+		    } else {
+		    	$this->callbackSource = "Membership_Page";
+		    }
+		}
         
         $this->service_data = $this->memApiFuncs->getMembershipData($this);
         $this->vas_data = $this->memHandlerObj->getAllVASData($this->userObj, $this->device);
@@ -300,7 +327,7 @@ class MembershipAPIResponseHandler {
                 "value" => "18004196299",
                 "or_text" => "OR",
                 "request_callback" => "Request Callback",
-                "params" => "processCallback=1&INTERNAL=1&execCallbackType=JS_ALL&tabVal=1&profileid=" . $this->profileid . "&device=" . $this->device
+                "params" => "processCallback=1&INTERNAL=1&execCallbackType=JS_ALL&tabVal=1&profileid=" . $this->profileid . "&device=" . $this->device . "&channel=" . $this->channel . "&callbackSource=" . $this->callbackSource
             );
         } 
         else {
@@ -311,7 +338,7 @@ class MembershipAPIResponseHandler {
                 "value" => "+911204393500",
                 "or_text" => "OR",
                 "request_callback" => "Request Callback",
-                "params" => "processCallback=1&INTERNAL=1&execCallbackType=JS_ALL&tabVal=1&profileid=" . $this->profileid . "&device=" . $this->device
+                "params" => "processCallback=1&INTERNAL=1&execCallbackType=JS_ALL&tabVal=1&profileid=" . $this->profileid . "&device=" . $this->device . "&channel=" . $this->channel . "&callbackSource=" . $this->callbackSource
             );
         }
         
@@ -806,7 +833,7 @@ class MembershipAPIResponseHandler {
                     $v['service_duration'] = $vasID[1] . ' Profiles';
                 } 
                 else {
-                    $v['service_duration'] = $vasID[1] . ' Profiles';
+                    $v['service_duration'] = $vasID[1] . ' Months';
                 }
                 if (is_array($this->custVAS)) {
                     foreach ($this->custVAS as $kk => $vv) {
@@ -1132,7 +1159,7 @@ class MembershipAPIResponseHandler {
                 "value" => "18004196299",
                 "or_text" => "OR",
                 "request_callback" => "Request Callback",
-                "params" => "processCallback=1&INTERNAL=1&execCallbackType=JS_ALL&tabVal=1&profileid=" . $this->profileid . "&device=" . $this->device
+                "params" => "processCallback=1&INTERNAL=1&execCallbackType=JS_ALL&tabVal=1&profileid=" . $this->profileid . "&device=" . $this->device . "&channel=" . $this->channel . "&callbackSource=" . $this->callbackSource
             );
         } 
         else {
@@ -1143,7 +1170,7 @@ class MembershipAPIResponseHandler {
                 "value" => "+911204393500",
                 "or_text" => "OR",
                 "request_callback" => "Request Callback",
-                "params" => "processCallback=1&INTERNAL=1&execCallbackType=JS_ALL&tabVal=1&profileid=" . $this->profileid . "&device=" . $this->device
+                "params" => "processCallback=1&INTERNAL=1&execCallbackType=JS_ALL&tabVal=1&profileid=" . $this->profileid . "&device=" . $this->device . "&channel=" . $this->channel . "&callbackSource=" . $this->callbackSource
             );
         }
         
@@ -1675,6 +1702,9 @@ class MembershipAPIResponseHandler {
         $request->setParameter("execCallbackType", $this->callType);
         $request->setParameter("INTERNAL", 1);
         $request->setParameter("rcbResponse", $this->rcbResponse);
+        $request->setParameter("device", $this->device);
+        $request->setParameter("channel", $this->channel);
+        $request->setParameter("callbackSource", $this->callbackSource);
         ob_start();
         $data = sfContext::getInstance()->getController()->getPresentationFor('membership', 'addCallBck');
         $output = ob_get_contents();

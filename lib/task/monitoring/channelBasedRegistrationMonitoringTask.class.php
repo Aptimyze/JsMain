@@ -104,8 +104,8 @@ EOF;
    
   private function getMonitorData(){
     try{
-      $slaveConnection = new REG_TRACK_CHANNEL('newjs_slave');
-      return $slaveConnection->getHourlyRegistrationData();
+      $masterConnection = new REG_TRACK_CHANNEL('newjs_master');
+      return $masterConnection->getHourlyRegistrationData();
     } catch (Exception $ex) {
       //Log this error 
       return false;

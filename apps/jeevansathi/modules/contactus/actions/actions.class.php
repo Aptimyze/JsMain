@@ -51,6 +51,7 @@ class contactusActions extends sfActions
     }
     $request->setParameter('INTERNAL', 1);
     $this->data = $this->fetchAPIData($request);
+    $this->fromSideLink = $request->getParameter("fromSideLink");
     //var_dump($this->data);
     if(MobileCommon::isNewMobileSite())
     {

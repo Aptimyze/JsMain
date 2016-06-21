@@ -148,5 +148,17 @@ class newjs_JPROFILE_ALERTS extends TABLE
             throw new jsException($e);
         }
     }
+
+    public function insertNewRow($profileid) {
+        try {
+            $sql = "INSERT INTO newjs.JPROFILE_ALERTS VALUES(:PROFILEID,'S','S','S','S','S','S','S','S','S','S','S','S','S','S','S')";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_STR);
+            $prep->execute();
+        }
+        catch(PDOException $e) {
+            throw new jsException($e);
+        }
+    }
 }
 ?>

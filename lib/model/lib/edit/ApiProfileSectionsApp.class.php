@@ -15,7 +15,7 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		$this->profile = $profile;
 		$dbHobbies = new NEWJS_HOBBIES();
 		$this->Hobbies=$dbHobbies->getUserHobbiesApi($this->profile->getPROFILEID());
-		$this->isEdit=$isEdit;
+                $this->isEdit=$isEdit;
 		$this->underScreening="under Screening";
 		$this->setApiScreeningFields();
 	}

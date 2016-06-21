@@ -33,8 +33,7 @@ class JPROFILE extends TABLE{
          */
 
         public function __construct($dbname="")
-        {
-				//$this->setActivatedKey(1); //Set default activatedKey to false i.e. disable archiving
+        {		//$this->setActivatedKey(1); //Set default activatedKey to false i.e. disable archiving
                 parent::__construct($dbname); //To connect to the database
         }
 
@@ -49,7 +48,7 @@ class JPROFILE extends TABLE{
         {
                 if(!$dbName)
 					$dbName="newjs_master";
-                if(isset(self::$instance))
+				if(isset(self::$instance))
                 {
 						//If different instance is required
                         if($dbName != self::$instance->dbName){
@@ -1178,6 +1177,7 @@ public function duplicateEmail($email)
         catch(Exception $e) {
             throw new jsException($e);
         }
+        
         return $res;
     }
     
@@ -1324,6 +1324,45 @@ public function duplicateEmail($email)
 	}
 
 
+
+    //This function gets data for CITY_RES/MTONGUE/(AGE/GENDER) grouped by the same along with month/day as per the condition
+    public function getRegistrationMisGroupedData($fromDate,$toDate,$month='',$groupType)
+    {
+    	try
+    	{
+    		if($groupType != "")
+    		{
+    			if($month == "")
+    			{
+    				$sql = "SELECT COUNT(*) AS COUNT,$groupType,EXTRACT(MONTH FROM ENTRY_DT) AS MONTH FROM newjs.JPROFILE WHERE ENTRY_DT BETWEEN :FROMDATE AND :TODATE AND DATEDIFF(VERIFY_ACTIVATED_DT,ENTRY_DT)<'3' GROUP BY $groupType,MONTH";
+    			}
+    			else
+    			{
+    				$sql = "SELECT COUNT(*) AS COUNT, $groupType,EXTRACT(DAY FROM ENTRY_DT) AS DAY FROM newjs.JPROFILE  WHERE  ENTRY_DT BETWEEN :FROMDATE AND :TODATE AND DATEDIFF(VERIFY_ACTIVATED_DT,ENTRY_DT)<'3' GROUP BY $groupType,DAY";
+    			}
+    		}
+    		else
+    		{
+    			return;
+    		}
+    		$prep = $this->db->prepare($sql);
+            $prep->bindValue(":FROMDATE",$fromDate,PDO::PARAM_STR);
+            $prep->bindValue(":TODATE",$toDate,PDO::PARAM_STR);
+            $prep->execute();
+            while($result = $prep->fetch(PDO::FETCH_ASSOC))
+			{
+				$detailArr[] = $result;
+			}
+			return $detailArr;
+            
+
+
+    	}
+    	catch(Exception $e) {
+            throw new jsException($e);
+        }
+    }
+    	
     public function checkUsername($username)
     {
     	try
@@ -1341,7 +1380,7 @@ public function duplicateEmail($email)
             }
     }
     
-    /**
+	/**
 	 * update sort date in Jprofile
 	 * @param $profileId
 	 * @return bool
@@ -1360,5 +1399,6 @@ public function duplicateEmail($email)
 			throw new jsException($ex);
 		}
 	}
+
 }
 ?>

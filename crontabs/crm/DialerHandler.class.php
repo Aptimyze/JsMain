@@ -266,11 +266,13 @@ class DialerHandler
 		else
 			return "ignore";
 	}
-        public function getProfilesForCampaign($tableName, $csvEntryDate,$campaignName='')
+        public function getProfilesForCampaign($tableName, $csvEntryDate='',$campaignName='',$startDt='',$endDt='')
         {
 		$tableName =trim($tableName);
 		if($campaignName=='OB_JS_PAID')
 			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE='$csvEntryDate'";
+		elseif($campaignName=='OB_JS_RCB')
+			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE>'$startDt'";
 		else
 			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE='$csvEntryDate' ORDER BY PRIORITY DESC,ANALYTIC_SCORE DESC,LAST_LOGIN_DATE DESC";
                 $res = mysql_query($sql,$this->db_master) or die("$sql".mysql_error($this->db_master));
@@ -279,7 +281,7 @@ class DialerHandler
 		}
                 return $dataArr;
         }
-        public function addProfileinCampaign($dataArr)
+        public function addProfileinCampaign($dataArr,$campaignName='')
         {
 		if(count($dataArr)>0){
 			foreach($dataArr as $key=>$value){
@@ -287,8 +289,13 @@ class DialerHandler
 				$valuesArr[] ="'".$value."'";
 			} 
 			$fieldsStr =implode(",",$fieldsArr);
-			$valuesStr =implode(",",$valuesArr);	
-                	$squery ="insert into easy.dbo.tbl_lead_table_JS($fieldsStr) VALUES($valuesStr)";
+			$valuesStr =implode(",",$valuesArr);
+			if($campaignName=='OB_JS_RCB')
+				$table ='easy.dbo.tbl_lead_table_OB_JS_RCB';
+			else
+				$table ='easy.dbo.tbl_lead_table_JS';
+			$squery ="insert into ".$table."(".$fieldsStr.") VALUES($valuesStr)";
+                	//$squery ="insert into easy.dbo.tbl_lead_table_JS($fieldsStr) VALUES($valuesStr)";
 			$result =mssql_query($squery,$this->db_dialer) or $this->logerror($squery,$this->db_dialer);
 			//die;
 		}
@@ -304,11 +311,17 @@ class DialerHandler
 		if($campaignName=='OB_JS_PAID'){
 			$fieldNameArr1 =array('USERNAME'=>'USERNAME','MEMBERSHIP'=>'MEMBERSHIP','ADDON'=>'ADDON','PAYMENT_DATE'=>'PAYMENT_DT');
 			$fieldNameArr =array_merge($fieldNameArr,$fieldNameArr1);
-			$dateFieldsArr =array();
 		}
+		else if($campaignName=='OB_JS_RCB'){
+			unset($fieldNameArr['EXPIRY_DT']);
+			$fieldNameArr1 =array('USERNAME'=>'USERNAME','COUNTRY'=>'COUNTRY');
+			$fieldNameArr =array_merge($fieldNameArr,$fieldNameArr1);	
+		}
+		if($campaignName=='OB_JS_PAID')
+			$dateFieldsArr =array();
 		else
-			$dateFieldsArr		=array("LAST_LOGIN_DATE","DOB");
-		$phoneFieldsArr			=array("PHONE_NO1","PHONE_NO2","PHONE_NO3","PHONE_NO4");
+			$dateFieldsArr =array("LAST_LOGIN_DATE","DOB");
+		$phoneFieldsArr	=array("PHONE_NO1","PHONE_NO2","PHONE_NO3","PHONE_NO4");
 
 		$dataArr['DataID'] 		=$campaignName."-".$csvEntryDate;
 		$dataArr['Campaign'] 		=$campaignName;
@@ -355,6 +368,28 @@ class DialerHandler
 		}
 		return $cnt;
         }
+        public function getCampaignRecordsForDuration($campaignName,$startDate,$endDate='')
+        {
+                $squery = "select count(1) cnt from easy.dbo.tbl_lead_table_OB_JS_RCB WHERE Campaign='$campaignName' AND CSV_ENTRY_DATE>'$startDate'";
+                $sresult =mssql_query($squery,$this->db_dialer) or $this->logerror($squery,$this->db_dialer);
+                if($srow = mssql_fetch_array($sresult)){
+                        $cnt =$srow['cnt'];
+                }
+                return $cnt;
+        }
+	public function getLastHandledDate($processId)
+	{
+		$sql="SELECT DATE from incentive.LAST_HANDLED_DATE WHERE SOURCE_ID='$processId'";
+		$res =mysql_query($sql,$this->db_master) or die("$sql".mysql_error($this->db_master));			
+                if($row = mysql_fetch_assoc($res))
+                        $date =$row['DATE'];
+                return $date;
+	}
+	public function updateLastHandledDate($processId, $dateSet)
+	{
+		$sql="update incentive.LAST_HANDLED_DATE SET DATE='$dateSet' WHERE SOURCE_ID='$processId'";
+		mysql_query($sql,$this->db_master) or die("$sql".mysql_error($this->db_master));
+	}
         public function fetchIST($time)
         {
                 $ISTtime=strftime("%Y-%m-%d %H:%M",strtotime("$time + 10 hours 30 minutes"));

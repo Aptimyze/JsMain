@@ -62,6 +62,16 @@ function closeOverlayOnClick() {
     $("#SearchProId").val("");
 }
 
+
+function getSearchQureyParameter(key){
+  var value = false;
+  if(location.search.indexOf(key)!=-1){
+    value = location.search.substr(location.search.indexOf(key)).split('&')[0].split('=')[1];
+  }
+  return value;
+}
+
+
 //function to make an ajax for search by profile id
 function callApiForProfile() {
     userPro = $.trim($("#SearchProId").val());
@@ -414,6 +424,15 @@ function setBellCountHTML(data) {
                 $("#membersDailyMatchesCount").text("9+");
             }
         }
+	if (parseInt(data.FILTERED_NEW)) {
+            $("#membersFilteredInterestCountParent").css('display', 'block');
+            if (data.FILTERED_NEW < 10) {
+                $("#FilteredInterstsCount").text(data.FILTERED_NEW);
+            } else {
+                $("#FilteredInterstsCount").text("9+");
+            }
+        }
+
     }
 }
 

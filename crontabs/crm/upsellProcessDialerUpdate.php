@@ -26,7 +26,7 @@ $profileStr     =implode(",",$profilesArr);
 if($profileStr!='')
 {
 	// Set dial status=0 for upsell campaign
-	$query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0' WHERE PROFILEID IN ($profileStr)";
+	$query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0' WHERE PROFILEID IN ($profileStr) AND Dial_Status=1";
 	mssql_query($query1,$db_dialer) or logerror($query1,$db_dialer,1);
 
 	// delete profiles

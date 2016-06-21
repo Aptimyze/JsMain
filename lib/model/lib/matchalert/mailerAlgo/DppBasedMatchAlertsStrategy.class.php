@@ -23,11 +23,13 @@ class DppBasedMatchAlertsStrategy extends MatchAlertsStrategy
 	* This function will fetch the matches to be send in matchalerts
 	* @return array 
 	*/
-	public function getMatches()
+	public function getMatches($returnTotalCount = '')
 	{
 		$arr = SearchCommonFunctions::getMyDppMatches($this->sort,$this->loggedInProfileObj,$this->limit,'','',$this->removeMatchAlerts,$this->dontShowFilteredProfiles);
                 if(is_array($arr["PIDS"]))
                 	$this->logRecords($this->loggedInProfileObj->getPROFILEID(), $arr["PIDS"], $this->logicLevel,$this->limit);
+                if($returnTotalCount)
+                    return $arr['CNT'];
 	}
 }
 ?>

@@ -129,7 +129,7 @@ function onFrameLoginResponseReceived(message)
 				response= message.data.body;
 		if(response==1)
 		{
-		  if(document.cookie.indexOf("loginAttempt")!=-1 && captchaShow!=1)
+		  if(document.cookie.indexOf("loginAttemptNew")!=-1 && captchaShow!=1)
 		  {
 			  createCaptcha("logoutPage");
 				captchaShow=1;

@@ -30,8 +30,8 @@ class CriticalActionLayerTracking
      $your_date = strtotime(self::RCB_LAYER_REF_DATE);
      $datediff = $now - $your_date;
      $dayDiff=floor($datediff/(60*60*24));  
-     $remainder=$dayDiff=$dayDiff%10;
-     if($remainder==$profileId%10)return true;
+     $remainder=$dayDiff=$dayDiff%5;
+     if($remainder==$profileId%5)return true;
      else return false;
   }
 
@@ -162,12 +162,10 @@ return 0;
           case '3': if ($interestsPending > 0)
                       $show=1;
                     break;  
-          case '5': if(MobileCommon::isApp()!='I')
+          case '5': 
                     $show=1;
                     break;
           case '6': 
-
-                  
                   if(!MobileCommon::isApp())
                     {
                       
@@ -190,7 +188,7 @@ return 0;
                     
                     break;
 
-          case '7': if(!MobileCommon::isApp())
+          case '7': if(!MobileCommon::isAndroidApp())
                       {  
                       
                       $entryDate=$profileObj->getENTRY_DT();

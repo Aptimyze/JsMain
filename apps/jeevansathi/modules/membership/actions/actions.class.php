@@ -149,7 +149,7 @@ class membershipActions extends sfActions
             case '1':
                 $loginData = $request->getAttribute('loginData');
                 $this->profileid = $loginData['PROFILEID'];
-                $apiParams = $pageURL . $authChecksum . "&device=" . $device;
+                $apiParams = $pageURL . $authChecksum . "&device=" . $device . "&from_source=" . $fromBackend;
                 $template = 'JSMSLandingPage';
                 $this->passedKey = $fromBackend;
                 $data = $this->fetchApiData($apiParams, $request, 3);
@@ -159,7 +159,7 @@ class membershipActions extends sfActions
                 break;
 
             case '2':
-                $apiParams = $pageURL . $authChecksum . $device;
+                $apiParams = $pageURL . $authChecksum . $device  . "&from_source=" . $fromBackend;
                 $template = 'JSMSVasPage';
                 $data = $this->fetchApiData($apiParams, $request, 3);
                 $data = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
@@ -349,6 +349,9 @@ class membershipActions extends sfActions
             $request->setParameter("profileid", $this->profileid);
             $request->setParameter("tabVal", "1");
             $request->setParameter("execCallbackType", "JS_EXC");
+            $request->setParameter("device", "desktop");
+            $request->setParameter("channel", "JSPC");
+            $request->setParameter("callbackSource", "JS_Exclusive");
             $request->setParameter("INTERNAL", 1);
             ob_start();
             $data = sfContext::getInstance()->getController()->getPresentationFor('membership', 'addCallBck');
@@ -1065,8 +1068,12 @@ class membershipActions extends sfActions
     // Old JSMS
     public function executeAddCallBck(sfWebRequest $request) {
         $memHandlerObj = new MembershipHandler();
+        
         $this->profileid = $request->getAttribute('profileid');
         $this->device = $request->getParameter('device');
+        $this->channel = $request->getParameter('channel');
+        $this->callbackSource = $request->getParameter('callbackSource');
+
         $profileObj = new PROFILE();
 
         //validate inputs if passed to prevent cross site scripting
@@ -1117,7 +1124,7 @@ class membershipActions extends sfActions
                     if (!$profileAllotedExecEmail) $profileAllotedExecEmail = 'inbound@jeevansathi.com';
                     $memHandlerObj->sendEmailForCallback($subject, $msgBody, $profileAllotedExecEmail);
                 }
-                $memHandlerObj->memCallbackTracking($this->profileid, $contact_str, $email);
+                $memHandlerObj->memCallbackTracking($this->profileid, $contact_str, $email, $this->device, $this->channel, $this->callbackSource);
                 $this->referer = $request->getReferer();
                 $this->setTemplate('mem_addCallBack');
             } 
@@ -1152,7 +1159,7 @@ class membershipActions extends sfActions
                             $msgBody = "JS Exclusive";
                             $msgBody = "<html><body>Someone is interested in knowing more about $msgBody. Please contact at " . $email . " or " . $phoneNo . ".</body></html>";
                         }
-                        $memHandlerObj->addCallBack($phoneNo, $email, $jsSelectd);
+                        $memHandlerObj->addCallBack($phoneNo, $email, $jsSelectd, 0, $this->device, $this->channel, $this->callbackSource);
                     }
                 } 
                 else {
@@ -1188,7 +1195,7 @@ class membershipActions extends sfActions
                         if(empty($phoneNo)){
                         	$phoneNo = $mobile1;
                         }
-                        $memHandlerObj->addCallBack($phoneNo, $email, $jsSelectd,$this->profileid);
+                        $memHandlerObj->addCallBack($phoneNo, $email, $jsSelectd, $this->profileid, $this->device, $this->channel, $this->callbackSource);
                     }
                 }
                 if ($memCallback) {
@@ -1201,7 +1208,7 @@ class membershipActions extends sfActions
                     if(empty($phoneNo)){
                     	$phoneNo = $mobile1;
                     }
-                    $memHandlerObj->memCallbackTracking($this->profileid, $phoneNo, $email);
+                    $memHandlerObj->memCallbackTracking($this->profileid, $phoneNo, $email, $this->device, $this->channel, $this->callbackSource);
                 } 
                 else {
                 	//if (!$this->profileid) {

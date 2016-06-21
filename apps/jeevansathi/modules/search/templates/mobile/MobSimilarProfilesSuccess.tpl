@@ -64,6 +64,7 @@ var SITE_URL = "~$SITE_URL`";
 var NAVIGATOR = "~$NAVIGATOR`";
 var ecpBackLocation = "~$BREADCRUMB|decodevar`";
 var showECPPage ="&toShowECP=1";
+var historyBackStop="~$historyBackStop`";
 getEcpBackLocation = function()
 {
   return ecpBackLocation;
@@ -89,7 +90,11 @@ initEcpBackBtn = function()
   else//History Back
   {
     var closeBtn = document.getElementById('closeButton');
-    closeBtn.href = 'javascript:history.back()';
+	if(historyBackStop=="1")
+            closeBtn.href = '/myjs/jsmsPerform';
+        else
+            closeBtn.href = 'javascript:history.back()';
+
   }
 }
 

@@ -35,6 +35,16 @@ class registerMisActions extends sfActions {
       } else {
         $formArr["date1_dateLists_month_list"] ++;
         $formArr["date2_dateLists_month_list"] ++;
+
+	if(strlen($formArr["date1_dateLists_day_list"])==1)
+                $formArr["date1_dateLists_day_list"] = "0".$formArr["date1_dateLists_day_list"];
+        if(strlen($formArr["date2_dateLists_day_list"])==1)
+                $formArr["date2_dateLists_day_list"] = "0".$formArr["date2_dateLists_day_list"];
+	if(strlen($formArr["date1_dateLists_month_list"])==1)
+                $formArr["date1_dateLists_month_list"] = "0".$formArr["date1_dateLists_month_list"];
+        if(strlen($formArr["date2_dateLists_month_list"])==1)
+                $formArr["date2_dateLists_month_list"] = "0".$formArr["date2_dateLists_month_list"];
+
         $start_date = $formArr["date1_dateLists_year_list"] . "-" . $formArr["date1_dateLists_month_list"] . "-" . $formArr["date1_dateLists_day_list"];
         $end_date = $formArr["date2_dateLists_year_list"] . "-" . $formArr["date2_dateLists_month_list"] . "-" . $formArr["date2_dateLists_day_list"];
         $this->verifyDates($start_date,$end_date);
@@ -283,5 +293,103 @@ class registerMisActions extends sfActions {
             $this->errorMsg = "Invalid Date Selected";
     elseif(ceil((strtotime($end_date)-strtotime($start_date))/(24*60*60))>=100)
             $this->errorMsg = "More than 100 days selected in range";
+  }
+
+  //This action calls the LocationAgeRegistrationSuccess.tpl
+  public function executeLocationAgeRegistration(sfWebRequest $request)
+  {
+    $formArr = $request->getParameterHolder()->getAll();
+    $this->cid = $formArr['cid'];
+    if ($formArr['submit']) 
+    { 
+      //An array of the required Form Data
+      $params = array('range_format'=>$formArr["range_format"],'quarter_year'=>$formArr['qyear'],'month_year'=>$formArr['myear'],'day_month'=>$formArr['dmonth'],'day_year'=>$formArr['dyear'],'report_type'=>$formArr['report_type'],'report_format'=>$formArr['report_format']);
+      
+      $this->range_format = $params['range_format'];
+      
+      //displayDate to be shown in the Results Page
+      if($this->range_format == 'Q')
+      {
+        $this->displayDate = $params['quarter_year'];
+      }
+      elseif($this->range_format == 'M')
+      {
+        $this->displayDate = $params['month_year'];
+      }
+      else
+      {
+        $this->displayDate = $params['day_month']."-".$params['day_year'];
+      }
+
+      if($params['report_type'] == 'CITY_RES')
+      {
+        $this->displayName = "By City";
+      }
+      elseif($params['report_type'] == 'MTONGUE')
+      {
+        $this->displayName = "By Community";
+      }
+      else
+      {
+        $this->displayName = "By Age & Gender";
+      }
+
+
+      //creating memcacheObj
+      $memcacheObj = JsMemcache::getInstance();
+      //Memcache Key based on Form inputs
+      $this->memcacheKey = $this->range_format."_".$this->displayDate."_".$params['report_type'];
+      
+      $memKeySet = $memcacheObj->get($this->memcacheKey);
+      $params['memKeySet'] = $this->memcacheKey;
+      
+      if($memKeySet == 'C')
+      {
+        $this->computing = true;
+        $this->setTemplate('computingRegistrationMis');
+      }
+      elseif(is_array($memKeySet))
+      { 
+        $this->groupData = $memKeySet;
+        $this->totalCountValue = $this->groupData['totalCountValue'];
+        $this->computing = false;
+        $this->monthNames = RegistrationMisEnums::$monthNames;
+        $this->quarterNames = RegistrationMisEnums::$quarterNames;
+        if($formArr['report_format'] == 'CSV')
+        { //check parameters to be sent
+          $registrationMisObj = new cityAgeRegistrationMis();
+          $csvData = $registrationMisObj->createCSVFromatData($params,$this->groupData,$this->displayDate,$this->displayName);
+          header("Content-Type: application/vnd.csv");
+          header("Content-Disposition: attachment; filename=Location_Age_Community_RegistrationMIS.csv");
+          header("Pragma: no-cache");
+          header("Expires: 0");
+          echo($csvData);
+          die;
+        }
+        $this->setTemplate('locationAgeRegistrationResultScreen');
+      }
+      elseif($memKeySet == '')
+      {
+        $this->computing = true;
+        $memcacheObj->set($this->memcacheKey,"C");
+        $memcacheObj->set("MIS_PARAMS_KEY",$params);
+        $filePath = JsConstants::$cronDocRoot."/symfony cron:cronLocationAgeRegistrationMis  > /dev/null &";
+        $command = JsConstants::$php5path." ".$filePath;
+        passthru($command);
+        $this->setTemplate('computingRegistrationMis');
+      }
+    }
+    else
+    {
+      $this->mmarr = GetDateArrays::getMonthArray();
+      $this->yyarr = array();
+      $this->currentYear = date("Y");
+      $this->currentMonth = date("m");
+      for ($i = 2014; $i <= date("Y"); $i++) 
+      {
+        $this->yyarr[$i - 2014] = $i;
+      }
+    }
+    
   }
 }

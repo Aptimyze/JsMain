@@ -21,19 +21,22 @@ class requestedPhotoUploadedMail{
             
             $values = array("SNO"=>0,"USER1"=>$uploaderId,"RECEIVER"=>$profileId);
             $data = $mailerServiceObj->getRecieverDetails($profileId,$values,self::mailerName,$widgetArray);
-            $data["stypeMatch"] = "PURM";
-            
-            //get username for uploader
-            $uploaderUserName= $data[USERS][$uploaderId]->USERNAME;
-            
-            $subject= "$uploaderUserName has uploaded photo following your request";
-            $data["body"]= "$uploaderUserName has uploaded photo following your request. You may now send an interest to $uploaderUserName, if you haven't already sent one.";
-            $subject ='=?UTF-8?B?' . base64_encode($subject) . '?='; 
-            $smarty->assign('data',$data);
-            //print_r($data);die;
-            
-            $msg = $smarty->fetch(MAILER_COMMON_ENUM::getTemplate(self::mailerName).".tpl");
-            $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,self::mailerName,$pid);
+            if(is_array($data))
+            {
+                $data["stypeMatch"] = "PURM";
+
+                //get username for uploader
+                $uploaderUserName= $data[USERS][$uploaderId]->USERNAME;
+
+                $subject= "$uploaderUserName has uploaded photo following your request";
+                $data["body"]= "$uploaderUserName has uploaded photo following your request. You may now send an interest to $uploaderUserName, if you haven't already sent one.";
+                $subject ='=?UTF-8?B?' . base64_encode($subject) . '?='; 
+                $smarty->assign('data',$data);
+                //print_r($data);die;
+
+                $msg = $smarty->fetch(MAILER_COMMON_ENUM::getTemplate(self::mailerName).".tpl");
+                $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,self::mailerName,$pid);
+            }
         }
      
     

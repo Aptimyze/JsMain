@@ -6,7 +6,7 @@ class billing_EXC_CALLBACK extends TABLE {
         parent::__construct($dbname);
     }
 
-    public function addRecord($profileid='',$phoneNo='',$email='')
+    public function addRecord($profileid='',$phoneNo='',$email='', $device=NULL, $channel=NULL, $callbackSource=NULL)
     {
         try
         {
@@ -18,12 +18,15 @@ class billing_EXC_CALLBACK extends TABLE {
             else
                 $profileid='';
             
-            $sql="INSERT INTO billing.EXC_CALLBACK(PROFILEID,EMAIL,PHONE_NUMBER,ENTRY_DT) VALUES(:PROFILEID,:EMAIL,:PHONE_NUMBER,:ENTRY_DT)";
+            $sql="INSERT INTO billing.EXC_CALLBACK(PROFILEID,EMAIL,PHONE_NUMBER,ENTRY_DT,DEVICE,CHANNEL,CALLBACK_SOURCE) VALUES(:PROFILEID,:EMAIL,:PHONE_NUMBER,:ENTRY_DT,:DEVICE,:CHANNEL,:CALLBACK_SOURCE)";
             $row = $this->db->prepare($sql);
             $row->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             $row->bindValue(":EMAIL",$email, PDO::PARAM_STR);
             $row->bindValue(":PHONE_NUMBER",$phoneNo, PDO::PARAM_INT);
             $row->bindValue(":ENTRY_DT",$entryDt, PDO::PARAM_STR);
+            $row->bindValue(":DEVICE",$device, PDO::PARAM_STR);
+            $row->bindValue(":CHANNEL",$channel, PDO::PARAM_STR);
+            $row->bindValue(":CALLBACK_SOURCE",$callbackSource, PDO::PARAM_STR);
             $row->execute();
         }
         catch(Exception $e)
@@ -78,17 +81,20 @@ class billing_EXC_CALLBACK extends TABLE {
         }
     }
 
-    public function insertCallbackWithSelectedService($phoneNo, $email, $jsSelectd, $profileid='')
+    public function insertCallbackWithSelectedService($phoneNo, $email, $jsSelectd, $profileid='', $device=NULL, $channel=NULL, $callbackSource=NULL)
     {
         $date = DATE("Y-m-d H:i:s");
         try{
-            $sql ="INSERT INTO billing.EXC_CALLBACK (PHONE_NUMBER,EMAIL,ENTRY_DT,SERVICEID,PROFILEID) VALUES (:PHONE_NUMBER,:EMAIL,:ENTRY_DT,:JSSEL,:PROFILEID)";
+            $sql ="INSERT INTO billing.EXC_CALLBACK (PHONE_NUMBER,EMAIL,ENTRY_DT,SERVICEID,PROFILEID,DEVICE,CHANNEL,CALLBACK_SOURCE) VALUES (:PHONE_NUMBER,:EMAIL,:ENTRY_DT,:JSSEL,:PROFILEID,:DEVICE,:CHANNEL,:CALLBACK_SOURCE)";
             $row = $this->db->prepare($sql);
             $row->bindValue(":ENTRY_DT",$date, PDO::PARAM_STR);
             $row->bindValue(":EMAIL",$email, PDO::PARAM_STR);
             $row->bindValue(":JSSEL",$jsSelectd, PDO::PARAM_STR);
             $row->bindValue(":PHONE_NUMBER",$phoneNo, PDO::PARAM_STR);
             $row->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
+            $row->bindValue(":DEVICE",$device, PDO::PARAM_STR);
+            $row->bindValue(":CHANNEL",$channel, PDO::PARAM_STR);
+            $row->bindValue(":CALLBACK_SOURCE",$callbackSource, PDO::PARAM_STR);
             $row->execute();
         }
         catch(Exception $e)
