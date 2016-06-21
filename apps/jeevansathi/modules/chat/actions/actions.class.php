@@ -29,5 +29,76 @@ class chatActions extends sfActions
 		$apiResponseHandlerObj->generateResponse();
 		die;
  	}
+    
+    public function executeChatUserAuthenticationV1(sfWebRequest $request)
+    {
+        $apiResponseHandlerObj = ApiResponseHandler::getInstance();
+        $loginData = $request->getAttribute("loginData");
+        if($loginData){
+            $username = $loginData['USERNAME'];
+
+            $url = "http://localhost:9090/plugins/restapi/v1/users/".$username;
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 4);
+            curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+
+            $headers = array();
+            $headers[] = 'Authorization: '.ChatEnum::$openFireAuthorizationKey;
+            $headers[] = 'Accept: application/json';
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+            $curlResult = curl_exec ($ch);
+            curl_close ($ch);
+            $result = json_decode($curlResult, true);
+            if($result['username']){
+                //User exists
+                $response['userStatus'] = "User exists";
+            }
+            else{
+                //create user
+                $response['userStatus'] = "New user created";
+                $url = "http://localhost:9090/plugins/restapi/v1/users/";
+                $data = array("username" => "$username", "password" => "123");
+                $jsonData = json_encode($data);
+                
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 4);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+
+                $headers = array();
+                $headers[] = 'Authorization: '.ChatEnum::$openFireAuthorizationKey;
+                $headers[] = 'Accept: application/json';
+                $headers[] = 'Content-Type: application/json';
+
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+                $curlResult = curl_exec ($ch);
+                curl_close ($ch);
+                if(curl_getinfo($ch, CURLINFO_HTTP_CODE) == '201'){
+                    $response['userStatus'] = "New user created";
+                }
+                elseif(curl_getinfo($ch, CURLINFO_HTTP_CODE) == '409'){
+                    $response['userStatus'] = "New user created";
+                    $result = json_decode($curlResult, true);
+                    $reponse['exception'] = $result['exception'];
+                }
+                
+                curl_close ($ch);
+            }
+        }
+        else{
+            $response = "Logged Out Profile";
+            $apiResponseHandlerObj->setHttpArray(ChatEnum::$loggedOutProfile);
+        }
+        $apiResponseHandlerObj->setResponseBody($response);
+        $apiResponseHandlerObj->generateResponse();
+        die;
+    }
 }
 ?>

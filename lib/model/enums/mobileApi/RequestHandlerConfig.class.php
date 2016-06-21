@@ -99,7 +99,8 @@ class RequestHandlerConfig
         "publicQuestions"=>array("v1"=>"GetPublicQuestionsV1")
         ),
     "chat"=>array(
-        "authenticateChatSession"=>array("v1"=>"authenticateChatSessionV1")
+        "authenticateChatSession"=>array("v1"=>"authenticateChatSessionV1"),
+        "chatLogin"=>array("v1"=>"chatUserAuthenticationV1")
         )
 );
 
