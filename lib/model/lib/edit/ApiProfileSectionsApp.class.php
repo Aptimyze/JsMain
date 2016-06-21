@@ -482,7 +482,6 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		$szCity = $this->getDecorateDPP_Response($jpartnerObj->getPARTNER_CITYRES());
 		$szState = $this->getDecorateDPP_Response($jpartnerObj->getSTATE());
 		$arrOut[] = $this->handleStateCityData($szState,$szCity);
-		//print_r($arrOut);die;
 		return $arrOut;
 	}
 
@@ -853,6 +852,11 @@ class ApiProfileSectionsApp extends ApiProfileSections {
      //Not exist for APP
     }
 
+    /** @function
+	 * @returns state and city array
+	 * @param $stateVal String
+	 * @param $cityVal String
+	 * */
     public function handleStateCityData($stateVal,$cityVal)
     {	$jpartnerObj=$this->profile->getJpartner();
     	if($stateVal == "DM" && $cityVal == "DM")
