@@ -179,6 +179,7 @@ while($row=mysql_fetch_row($res))
 									 $sqlUpdate = "UPDATE `SWAP` SET `EDUCATION_GROUPING` = '".$roweduGroup[0]."' WHERE PROFILEID=".$profileid;
                   mysql_query($sqlUpdate,$db) or die("edu query2".mysql_error1($db));
                 } 
+		/*
                 $myDbName = getProfileDatabaseConnectionName($profileid, 'slave', $mysqlObj);
                 
                 $sqlLoginDateTime = "SELECT PROFILEID,TIME as last_login_time FROM LOG_LOGIN_HISTORY WHERE PROFILEID =" . $profileid . " ORDER BY TIME DESC LIMIT 1"; 
@@ -189,6 +190,7 @@ while($row=mysql_fetch_row($res))
                   $sqlUpdate = "UPDATE `SWAP` SET `LAST_LOGIN_DT` = '".$rowDateTime[1]."' WHERE PROFILEID=$profileid";
                   mysql_query($sqlUpdate,$db) or die("3 5".mysql_error1($db));
                 } 
+		*/
         }
         /**
          * Verification Seal creation

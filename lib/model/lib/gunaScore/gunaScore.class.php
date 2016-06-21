@@ -122,24 +122,29 @@ class gunaScore
         {	
         	$compstring = implode(",",$compstring);
         	$url = "http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?".$logged_astro_details."&".$compstring;
-        	$fresult = CommonUtility::sendCurlGetRequest($url);
-        	$fresult = explode(",",substr($fresult,(strpos($fresult,"<br/>")+5)));
-        	foreach($fresult as $key=>$val)
-        	{
-        		$subject = $val;
-        		$guna_pid = strstr($val,':',true);
-        		$pattern = gunaScoreConstants::PATTERN;
-        		preg_match($pattern, $subject, $matches, PREG_OFFSET_CAPTURE);
-        		$matches[1][0]=intval($matches[1][0]);
-        		foreach($this->flippedSearchIdArr as $pid=>$profchecksum)
-        		{
-        			if($guna_pid == $pid)
-        			{
-        				$gunaData[$key][$profchecksum]=$matches[1][0];
-        			}
-        		}
-        	}
-        	curl_close ($ch);
+        	$fresult = CommonUtility::sendCurlGetRequest($url,1000);
+		if($fresult)
+		{
+	        	$fresult = explode(",",substr($fresult,(strpos($fresult,"<br/>")+5)));
+		}
+		if(is_array($fresult))
+		{
+			foreach($fresult as $key=>$val)
+			{
+				$subject = $val;
+				$guna_pid = strstr($val,':',true);
+				$pattern = gunaScoreConstants::PATTERN;
+				preg_match($pattern, $subject, $matches, PREG_OFFSET_CAPTURE);
+				$matches[1][0]=intval($matches[1][0]);
+				foreach($this->flippedSearchIdArr as $pid=>$profchecksum)
+				{
+					if($guna_pid == $pid)
+					{
+						$gunaData[$key][$profchecksum]=$matches[1][0];
+					}
+				}
+			}
+		}
         	return($gunaData);
         }
 }
