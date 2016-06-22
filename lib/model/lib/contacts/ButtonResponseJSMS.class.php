@@ -515,16 +515,31 @@ Class ButtonResponseJSMS
 			//echo "source=>".$source." channel=> ".$this->channel." viewer=> ".$viewer." type=>".$type;die;
 			//var_dump($viewer);
 			//var_dump($type);die;
+
+			//print()
+
+			if(MobileCommon::isNewMobileSite() && $params["IGNORED"] == 1)
+			{	
+				$type='B';
+			}
 			$buttons = ButtonResponseFinal::getListingButtons($infoKey, "M", $viewer,$type,$params,$count);
-			if($params["IGNORED"] == 1)
-			{//echo "string";die;
+
+			if($params["IGNORED"] == 1){
+			
+			
+			if(!MobileCommon::isNewMobileSite())
+			
+			{
 				$buttons["buttons"]["3"]["label"]="Unblock";
 			}
-			//print_r($buttons);die;
+				//print_r($buttons);die;
 			//$button[] = self::getShortListButton($this->loginProfile, $this->otherProfile,$params["BOOKMARKED"]);
 			//$button[] = self::getIgnoreButton($this->loginProfile, $this->otherProfile,$params["IGNORED"]);
-			$responseArray = $buttons;
 			//print_r($responseArray);die;
+
+			}
+
+			$responseArray = $buttons;
 
 		}
 		else
@@ -537,6 +552,7 @@ Class ButtonResponseJSMS
         $responseArray["photo"]=$restResponseArray["photo"];
         $responseArray["topmsg"]=$restResponseArray["topmsg"];
         $responseArray["infobtnlabel"]=$restResponseArray["infobtnlabel"];
+//        print_r($responseArray); die;
 		//$finalResponse = self::buttonDetailsMerge($responseArray);
 		//print_r($finalResponse);die;
 		return $responseArray;
@@ -847,7 +863,11 @@ Class ButtonResponseJSMS
 					break;
 				case ContactHandler::CANCEL:
 					//echo "CANCEL";
+					$button                 = self::getCustomButton("You cancelled interest","","","","",false);
+					$responseArray["button"] = $button;
 					$responseArray["infobtnlabel"] = "You Cancelled your interest on " . $date;
+					$responseArray["confirmLabelHead"] = "$username"."'s profile did not match your expectations.";
+					$responseArray["confirmLabelMsg"] = "Profile moved to Cancelled list";
 					break;
                                 case ContactHandler::ACCEPT:
                                                 $button                      = $this->getSendMessageButton();
