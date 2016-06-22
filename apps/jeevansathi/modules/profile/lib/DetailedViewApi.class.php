@@ -1014,11 +1014,20 @@ class DetailedViewApi
 				$this->m_arrOut[strtolower($key)] = $value;
 			}
 		}
-		
+
 		if($this->m_arrOut['dpp_state']!="")
 		{
-			$this->m_arrOut['dpp_city'] = $this->m_arrOut['dpp_state'].", ".$this->m_arrOut['dpp_city'];
+			if($this->m_arrOut['dpp_city']!="")
+			{
+				$this->m_arrOut['dpp_city'] = $this->m_arrOut['dpp_state'].", ".$this->m_arrOut['dpp_city'];
+			}
+			else
+			{
+				$this->m_arrOut['dpp_city'] = $this->m_arrOut['dpp_state'];
+			}
+			
 		}
+		
 		//Small Community Labels for DPP Mtongue
         if($this->m_arrOut['dpp_mtongue'] && strlen($jPartnerObj->getPARTNER_MTONGUE()))
         {

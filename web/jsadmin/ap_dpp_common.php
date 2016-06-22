@@ -504,6 +504,34 @@ include(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 				}
 				mysql_free_result($dropresult);
 				$partner_city_str=substr($partner_city_str,0,strlen($partner_city_str)-2);
+				//$partner["CITYRES"]=$partner_city_str;
+			}
+			$STATE = display_format($value["STATE"]);
+			if(is_array($STATE))
+			{
+				$str=implode("','",$STATE);
+				$sql="select SQL_CACHE LABEL from newjs.STATE_NEW where VALUE in ('$str')";
+				$dropresult=mysql_query_decide($sql) or die("Error while fetching state name   ".mysql_error_js());
+				while($droprow=mysql_fetch_array($dropresult))
+				{
+					$partner_state_str.=$droprow["LABEL"] . ", ";
+				}
+				mysql_free_result($dropresult);
+				$partner_state_str=substr($partner_state_str,0,strlen($partner_state_str)-2);
+			}
+			if($partner_state_str!="")
+			{
+				if($partner_city_str!="")
+				{
+					$partner["CITYRES"] = $partner_state_str.", ".$partner_city_str;
+				}
+				else
+				{
+					$partner["CITYRES"] = $partner_state_str;
+				}
+			}
+			else
+			{
 				$partner["CITYRES"]=$partner_city_str;
 			}
 			if($partner["CITYRES"])
@@ -564,6 +592,7 @@ include(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 			unset($manglik_data1);
 			unset($partner_city_str);
 			unset($PARTNER_CITYRES);
+			unset($partner_state_str);
 		}
 		$smarty->assign("displayDPP",$displayDPP);
 	}
