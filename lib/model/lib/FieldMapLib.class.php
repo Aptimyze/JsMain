@@ -9723,14 +9723,29 @@ case "children_ascii_array":
 
 		break;
 
-	case "id_proof_typ":
+	case "id_proof_type":
 
 		$arr=array(
-"V" => "Voter ID",
-"D" => "Drivers licence",
-"U" => "UID",
+"N" => "PAN Card",
+"D" => "Driving License",
 "P" => "Passport",
-"N" => "PAN No",
+"V" => "Voter ID Card",
+"A" => "Aadhar Card",
+"O" => "Any Other",
+);
+
+		break;
+	case "addr_proof_type":
+
+		$arr=array(
+"V" => "Voter ID Card",
+"R" => "Ration Card",
+"P" => "Property Tax Receipt",
+"G" => "Rent Agreement",
+"A" => "Aadhar Card",
+"T" => "Telephone Bill",
+"E" => "Electricity Bill",
+"O" => "Any Other",
 );
 
 		break;

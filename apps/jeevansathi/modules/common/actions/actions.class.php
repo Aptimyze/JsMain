@@ -502,6 +502,9 @@ class commonActions extends sfActions
             $email = $arrRequest['email'];
             $phone = $arrRequest['phone'];
             $query = $arrRequest['query_type'];
+            $device = $arrRequest['device'];
+            $channel = $arrRequest['channel'];
+            $callbackSource = $arrRequest['callbackSource'];
             $rcbResponse = $arrRequest['rcbResponse'];
             if(in_array($query, $arrValidQuery)){
                 if($query == "P"){//Send Email
@@ -518,7 +521,7 @@ class commonActions extends sfActions
                     
                     $objExecCallBack = new billing_EXC_CALLBACK;
                     $memHandlerObj = new MembershipHandler();
-                    $objExecCallBack->addRecord($iProfileId,$phone,$email);
+                    $objExecCallBack->addRecord($iProfileId,$phone,$email,$device,$channel,$callbackSource);
                     unset($objExecCallBack);
                     
                     $from = "webmaster@jeevansathi.com";

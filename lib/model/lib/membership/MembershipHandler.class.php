@@ -289,9 +289,9 @@ class MembershipHandler
         return $servicePrice;
     }
     
-    public function addCallBack($phoneNo, $email, $jsSelectd,$profileid='') {
+    public function addCallBack($phoneNo, $email, $jsSelectd,$profileid='', $device=NULL, $channel=NULL, $callbackSource=NULL) {
     	$billingExcCallbackObj = new billing_EXC_CALLBACK();
-        $added = $billingExcCallbackObj->insertCallbackWithSelectedService($phoneNo, $email, $jsSelectd,$profileid);
+        $added = $billingExcCallbackObj->insertCallbackWithSelectedService($phoneNo, $email, $jsSelectd,$profileid,$device,$channel, $callbackSource);
         return $added;
     }
     
@@ -319,9 +319,9 @@ class MembershipHandler
         }
     }
     
-    public function memCallbackTracking($profileid, $phoneNo, $email) {
+    public function memCallbackTracking($profileid, $phoneNo, $email, $device=NULL, $channel=NULL, $callbackSource=NULL) {
         $excCallbackObj = new billing_EXC_CALLBACK();
-        $excCallbackObj->addRecord($profileid, $phoneNo, $email);
+        $excCallbackObj->addRecord($profileid, $phoneNo, $email, $device, $channel, $callbackSource);
     }
     
     public function checkEmailSendForDay($profileid, $email) {

@@ -53,8 +53,10 @@ EditApp = function(){
                               "LANDLINE_INVALID":"Invalid",
                               "MOBILE_INVALID":"Invalid",
                               "PINCODE_ERROR":"Invalid Pincode",
-                              "ID_PROOF_NO":"Required",
-                              "ID_PROOF_TYP":"Required",
+                              "ADDR_PROOF_VAL":"Please attach document",
+                              "ID_PROOF_VAL":"Please attach document",
+                              "ADDR_PROOF_TYPE":"Required",
+                              "ID_PROOF_TYPE":"Required",
                                       
                             };
     //Section List
@@ -76,7 +78,7 @@ EditApp = function(){
     var horoscopeSectionArray = ["HOROSCOPE_MATCH","SUNSIGN","RASHI","NAKSHATRA","MANGLIK","ASTRO_PRIVACY"];
     var aboutSectionArray = ["YOURINFO","FAMILYINFO","EDUCATION","JOB_INFO"];
     var contactSectionArray = ["EMAIL","PHONE_MOB","MOBILE_OWNER_NAME","MOBILE_NUMBER_OWNER","ALT_MOBILE","ALT_MOBILE_OWNER_NAME","ALT_MOBILE_NUMBER_OWNER","PHONE_RES","PHONE_OWNER_NAME","PHONE_NUMBER_OWNER","TIME_TO_CALL_START","SHOWPHONE_MOB","SHOWPHONE_RES","SHOWALT_MOBILE","CONTACT","SHOWADDRESS","PINCODE","PARENTS_CONTACT","SHOW_PARENTS_CONTACT","PARENT_PINCODE"];
-    var verificationSectionArray = ["ID_PROOF_TYP", "ID_PROOF_NO"];
+    var verificationSectionArray = ["ID_PROOF_TYPE","ID_PROOF_VAL", "ADDR_PROOF_TYPE", "ADDR_PROOF_VAL"];
    
     var listStaticTables    = {
                                 "basic" : 'height_jspc,city_res_jspc,country_res_jspc,mtongue,caste_jspc,sect_jspc,edu_level_new,mstatus,occupation,relationship,income,degree_pg,degree_ug',
@@ -86,7 +88,7 @@ EditApp = function(){
                                 "career":"edu_level_new,degree_ug,degree_pg,work_status,occupation,income,working_marriage,going_abroad",
                                 "horoscope":"horoscope_match,rashi,nakshatra,manglik,astro_dob,astro_btime,astro_country_birth,astro_place_birth,sunsign,astro_privacy",
                                 "contact":"isd,mobile_number_owner,alt_mobile_number_owner,phone_number_owner,stdcodes",
-                                "verification": "id_proof_typ"
+                                "verification": "id_proof_type,addr_proof_type" //,id_proof_val,address_proof_val
                               }; 
     
     
@@ -94,18 +96,18 @@ EditApp = function(){
     var depDataFields         = {"CITY_RES":"COUNTRY_RES","INCOME":"COUNTRY_RES","CASTE":"RELIGION","SECT":"RELIGION","NATURE_HANDICAP":"HANDICAPPED","NATIVE_CITY":"NATIVE_STATE","CUT_HAIR":"AMRITDHARI","TRIM_BEARD":"AMRITDHARI","WEAR_TURBAN":"AMRITDHARI","CLEAN_SHAVEN":"AMRITDHARI","MATHTHAB":"CASTE","FAMILY_INCOME":"COUNTRY_RES","MOBILE_NUMBER_OWNER":"GENDER","ALT_MOBILE_NUMBER_OWNER":"GENDER","PHONE_NUMBER_OWNER":"GENDER"};
     var depFieldSectionID     = {"FAMILY_INCOME":BASIC,"MATHTHAB":BASIC,"INCOME":BASIC}
     
-    var fieldMapList        = {"HEIGHT":"height_jspc","COUNTRY_RES":"country_res_jspc","CITY_RES":"city_res_jspc","RELATION":"relationship","CASTE":"caste_jspc","SECT":"sect_jspc","RES_STATUS":"rstatus","HIV":"hiv_edit","NATIVE_STATE":"state_india","NATIVE_COUNTRY":"native_country","MATHTHAB":"maththab_jspc","MARRIED_WORKING":"working_marriage", "ID_PROOF_TYP":"id_proof_typ","HAVECHILD":"children"};
+    var fieldMapList        = {"HEIGHT":"height_jspc","COUNTRY_RES":"country_res_jspc","CITY_RES":"city_res_jspc","RELATION":"relationship","CASTE":"caste_jspc","SECT":"sect_jspc","RES_STATUS":"rstatus","HIV":"hiv_edit","NATIVE_STATE":"state_india","NATIVE_COUNTRY":"native_country","MATHTHAB":"maththab_jspc","MARRIED_WORKING":"working_marriage", "ID_PROOF_TYPE":"id_proof_type","HAVECHILD":"children","ADDR_PROOF_TYPE":"addr_proof_type"};
     
     var maxLengthMap              = {"NAME":"40","FAV_BOOK":"300","FAV_FOOD":"300","FAV_MOVIE":"300","FAV_VAC_DEST":"300","FAV_TVSHOW":"300","ANCESTRAL_ORIGIN":"100","YOURINFO":"5000","FAMILYINFO":"1000","EDUCATION":"1000","JOB_INFO":"1000","OTHER_UG_DEGREE":"250","OTHER_PG_DEGREE":"250","COLLEGE":"150","PG_COLLEGE":"150","SCHOOL":"150","PHONE_OWNER_NAME":"40","MOBILE_OWNER_NAME":"40","ALT_MOBILE_OWNER_NAME":"40",'EMAIL':'100',"SUBCASTE":"250","GOTHRA":"250","GOTHRA_MATERNAL":"250","PROFILE_HANDLER_NAME":"40","DIOCESE":"100","PINCODE":"6","PINCODE":"6","PARENT_PINCODE":"6","WEIGHT":"3","ID_PROOF_NO":30};
     
     //Type of Fields By Default All are 'S' Type means single select
     
     var SINGLE_SELECT_TYPE        = "S";
-    var singleSelectWithSearch    = ["CASTE","COUNTRY_RES","CITY_RES","EDU_LEVEL_NEW","OCCUPATION","NATIVE_STATE","NATIVE_COUNTRY","NATIVE_CITY","DEGREE_UG","DEGREE_PG"];
+    var singleSelectWithSearch    = ["CASTE","COUNTRY_RES","CITY_RES","EDU_LEVEL_NEW","OCCUPATION","NATIVE_STATE","NATIVE_COUNTRY","NATIVE_CITY","DEGREE_UG","DEGREE_PG","ID_PROOF_TYPE","ADDR_PROOF_TYPE"];
     var NON_EDITABLE_TYPE         = "N";
     
     var OPEN_TEXT_TYPE            = "O";
-    var openTextTypeFields        = ["NAME","FAV_BOOK","FAV_FOOD","FAV_MOVIE","FAV_VAC_DEST","FAV_TVSHOW","WEIGHT","PROFILE_HANDLER_NAME","SUBCASTE","GOTHRA","GOTHRA_MATERNAL","DIOCESE","ANCESTRAL_ORIGIN","SCHOOL","COLLEGE","PG_COLLEGE","OTHER_UG_DEGREE","OTHER_PG_DEGREE","COMPANY_NAME","EMAIL","PHONE_OWNER_NAME","MOBILE_OWNER_NAME","ALT_MOBILE_OWNER_NAME","PINCODE","PARENT_PINCODE","ID_PROOF_NO"];
+    var openTextTypeFields        = ["NAME","FAV_BOOK","FAV_FOOD","FAV_MOVIE","FAV_VAC_DEST","FAV_TVSHOW","WEIGHT","PROFILE_HANDLER_NAME","SUBCASTE","GOTHRA","GOTHRA_MATERNAL","DIOCESE","ANCESTRAL_ORIGIN","SCHOOL","COLLEGE","PG_COLLEGE","OTHER_UG_DEGREE","OTHER_PG_DEGREE","COMPANY_NAME","EMAIL","PHONE_OWNER_NAME","MOBILE_OWNER_NAME","ALT_MOBILE_OWNER_NAME","PINCODE","PARENT_PINCODE"];
     var autoSuggestFields         = ["SUBCASTE","GOTHRA","GOTHRA_MATERNAL","SCHOOL","COLLEGE","PG_COLLEGE","COMPANY_NAME"]; 
     
     var BOX_TYPE                  = "B";
@@ -122,13 +124,16 @@ EditApp = function(){
     var textAreaTypeFields        = ["YOURINFO","FAMILYINFO","EDUCATION","JOB_INFO","CONTACT","PARENTS_CONTACT"];
     
     var PHONE_TYPE                = "P";
-    var phoneTypeFields           = ["PHONE_MOB","ALT_MOBILE","PHONE_RES"]
+    var phoneTypeFields           = ["PHONE_MOB","ALT_MOBILE","PHONE_RES"];
+    
+    var FILE_TYPE            = "FT";
+    var fileTypeFields        = ["ID_PROOF_VAL","ADDR_PROOF_VAL"];
     
     var PRIVACY_TYPE              = "PR";
     var privacyTypeFields          = ["SHOWPHONE_MOB","SHOWPHONE_RES","SHOWALT_MOBILE","SHOWADDRESS","SHOW_PARENTS_CONTACT"]
     
-    var rightAlignedFields        = ["SUNSIGN","RASHI","NAKSHATRA","MANGLIK","HOROSCOPE_MATCH","ASTRO_PRIVACY","EMAIL","CONTACT","PARENTS_CONTACT","ID_PROOF_NO","ID_PROOF_TYP"];
-    var rightAlignWithoutPadding  = ["PHONE_OWNER_NAME","PHONE_NUMBER_OWNER","MOBILE_OWNER_NAME","MOBILE_NUMBER_OWNER","ALT_MOBILE_OWNER_NAME","ALT_MOBILE_NUMBER_OWNER","PINCODE","PARENT_PINCODE"];
+    var rightAlignedFields        = ["SUNSIGN","RASHI","NAKSHATRA","MANGLIK","HOROSCOPE_MATCH","ASTRO_PRIVACY","EMAIL","CONTACT","PARENTS_CONTACT","ID_PROOF_NO","ID_PROOF_TYPE","ADDR_PROOF_TYPE","ID_PROOF_VAL","ADDR_PROOF_VAL"];
+    var rightAlignWithoutPadding  = ["PHONE_OWNER_NAME","PHONE_NUMBER_OWNER","MOBILE_OWNER_NAME","MOBILE_NUMBER_OWNER","ALT_MOBILE_OWNER_NAME","ALT_MOBILE_NUMBER_OWNER","PINCODE","PARENT_PINCODE","ID_PROOF_TYPE","ADDR_PROOF_TYPE","ID_PROOF_VAL","ADDR_PROOF_VAL"];
     
     var rightAlignedSections      = [HOROSCOPE,CONTACT,VERIFICATION];
     
@@ -138,9 +143,9 @@ EditApp = function(){
     var isInitialized             = false;
     var notFilledText             = "Not filled in";
     //////////////////////////// Behaviour Map
-    var behaviourMap              = {"NAME":"js-onlyChar","COUNTRY_RES":"js-country","HANDICAPPED":"js-handicapped","NATIVE_STATE":"js-nativeState","WEIGHT":"js-onlyNumber","DIOCESE":"js-onlyChar","AMRITDHARI":"js-amritdhari","NATIVE_CITY":"js-nativeCity","PROFILE_HANDLER_NAME":"js-onlyChar","EDU_LEVEL_NEW":'js-educationChange',"ANCESTRAL_ORIGIN":'js-forAbout',"FAMILYINFO":"js-forAbout","EDUCATION":"js-forAbout","JOB_INFO":"js-forAbout","YOURINFO":"js-aboutMe","OTHER_UG_DEGREE":"js-forAbout","OTHER_PG_DEGREE":"js-forAbout","FAV_BOOK":"js-forAbout","FAV_FOOD":"js-forAbout","FAV_MOVIE":"js-forAbout","FAV_VAC_DEST":"js-forAbout","FAV_TVSHOW":"js-forAbout","PHONE_OWNER_NAME":"js-onlyChar","MOBILE_OWNER_NAME":"js-onlyChar","ALT_MOBILE_OWNER_NAME":"js-onlyChar","EMAIL":"js-email","PINCODE":"js-pincode","PARENT_PINCODE":"js-pincode","ID_PROOF_TYP":"js-proofType","ID_PROOF_NO":"js-proofTypeNo"};
+    var behaviourMap              = {"NAME":"js-onlyChar","COUNTRY_RES":"js-country","HANDICAPPED":"js-handicapped","NATIVE_STATE":"js-nativeState","WEIGHT":"js-onlyNumber","DIOCESE":"js-onlyChar","AMRITDHARI":"js-amritdhari","NATIVE_CITY":"js-nativeCity","PROFILE_HANDLER_NAME":"js-onlyChar","EDU_LEVEL_NEW":'js-educationChange',"ANCESTRAL_ORIGIN":'js-forAbout',"FAMILYINFO":"js-forAbout","EDUCATION":"js-forAbout","JOB_INFO":"js-forAbout","YOURINFO":"js-aboutMe","OTHER_UG_DEGREE":"js-forAbout","OTHER_PG_DEGREE":"js-forAbout","FAV_BOOK":"js-forAbout","FAV_FOOD":"js-forAbout","FAV_MOVIE":"js-forAbout","FAV_VAC_DEST":"js-forAbout","FAV_TVSHOW":"js-forAbout","PHONE_OWNER_NAME":"js-onlyChar","MOBILE_OWNER_NAME":"js-onlyChar","ALT_MOBILE_OWNER_NAME":"js-onlyChar","EMAIL":"js-email","PINCODE":"js-pincode","PARENT_PINCODE":"js-pincode","ID_PROOF_TYPE":"js-proofType","ID_PROOF_NO":"js-proofTypeNo","ADDR_PROOF_TYPE":"js-addrProofType","ID_PROOF_VAL":"js-proofVal","ADDR_PROOF_VAL":"js-addrProofVal"};
     
-    var sidesUIMap                = ["NATIVE_STATE","NATIVE_COUNTRY","T_BROTHER","T_SISTER","YOURINFO","PHONE_OWNER_NAME","MOBILE_OWNER_NAME","ALT_MOBILE_OWNER_NAME","MOBILE_NUMBER_OWNER","PHONE_NUMBER_OWNER","ALT_MOBILE_NUMBER_OWNER","SHOWPHONE_MOB","SHOWPHONE_RES","SHOWALT_MOBILE","PINCODE","PARENT_PINCODE","SHOWADDRESS","SHOW_PARENTS_CONTACT","TIME_TO_CALL_START","ID_PROOF_NO"];
+    var sidesUIMap                = ["NATIVE_STATE","NATIVE_COUNTRY","T_BROTHER","T_SISTER","YOURINFO","PHONE_OWNER_NAME","MOBILE_OWNER_NAME","ALT_MOBILE_OWNER_NAME","MOBILE_NUMBER_OWNER","PHONE_NUMBER_OWNER","ALT_MOBILE_NUMBER_OWNER","SHOWPHONE_MOB","SHOWPHONE_RES","SHOWALT_MOBILE","PINCODE","PARENT_PINCODE","SHOWADDRESS","SHOW_PARENTS_CONTACT","TIME_TO_CALL_START"];
     
     var requiredArray             = {};
     var previousSectionValue      = {};
@@ -152,6 +157,10 @@ EditApp = function(){
     
     var autoSuggestRequest        = {}; 
     var hintMap                   = {"YOURINFO":"Introduce yourself. Write about your values, beliefs/goals, aspirations/interests and hobbies.","FAMILYINFO":"Write about your parents and brothers or sisters. Where do they live? What are they doing?","EDUCATION":"Which institutions have you attended? What courses/specializations have you studied?","JOB_INFO":"Where are you working currently? You may mention your current job and future career aspirations."};
+    
+	// array to show top label for a section
+    var sectionTopLabelMap        = {"verification":"Upload at least one document"};
+    var sectionTopLabelRequired   = ["verification"];
     var duplicateFieldMap         = ['education','income','occupation'];
     
     var duplicateEditFieldMap     = {};
@@ -308,6 +317,9 @@ EditApp = function(){
 
               if(openTextTypeFields.indexOf(field.key) !== -1){
                 field.type          = OPEN_TEXT_TYPE;/*Open Text Type*/
+              }
+              if(fileTypeFields.indexOf(field.key) !== -1){
+                field.type          = FILE_TYPE;/*File Type*/
               }
 
               if(boxTypeFields.indexOf(field.key) !== -1){
@@ -504,6 +516,7 @@ EditApp = function(){
         bindOpenTextCommonEvents(fieldObject);
       }
       
+      
       //Chosen field without top padding and label
       if(fieldObject.type === SINGLE_SELECT_TYPE && rightAlignWithoutPadding.indexOf(fieldObject.key) !== -1){
         var parentAttr = {class:"mt10 clearfix f15 js-rightAlign",id:fieldObject.key.toLowerCase()+'Parent'};
@@ -625,7 +638,35 @@ EditApp = function(){
       
       domElement.append(parentDiv);
     }
-    
+	/**
+	* cookSectionTopHeading
+	* @param {type} domElement form domElement
+    * @param {type} sectionId section Id
+    * @returns {undefined}
+	*/
+    cookSectionTopHeading = function(domElement,sectionId){
+            if(sectionTopLabelMap.hasOwnProperty(sectionId) === true){
+                var parentAttr    = {class:"clearfix",id:sectionId+'section-heading'};
+                var labelAttr     = {class:"fl pt11 edpcolr3 uploadone",text:'Upload at least one document'};
+                var parentDiv = $("<div />",parentAttr);
+                var labelDOM  = $("<label />",labelAttr);
+                parentDiv.append(labelDOM);
+                domElement.append(parentDiv);
+                if(sectionTopLabelRequired.indexOf(sectionId) !== -1){
+                        var field = new fieldObject;
+                        field.key             = 'uploadone';
+                        field.label           = '';
+                        field.value           = '';
+                        field.decValue        = "";
+                        field.isEditable      = false;
+                        field.isUnderScreen   = false;
+                        field.sectionId   = sectionId;
+                        field.type            = NON_EDITABLE_TYPE;/*Single Select Type*/
+                        
+                        editAppObject[sectionId][field.key] = field;
+              }
+        }
+    }
     /*
      * cookOpenTextField
      * @param {type} domElement
@@ -1066,6 +1107,61 @@ EditApp = function(){
       domElement.append(parentDiv);
       
       bindTextAreaCommonEvents(fieldObject);
+    }
+    /*
+     * cookTextAreaField
+     * @param {type} domElement
+     * @param {type} fieldObject
+     * @param {type} configObject
+     * @returns {undefined}
+     */
+    cookFileField = function(domElement,fieldObject,configObject){
+      
+      var parentAttr    = {class:"clearfix fontlig pt10",id:fieldObject.key.toLowerCase()+'Parent'};
+      var labelAttr     = {class:"f17 fontlig color12",text:fieldObject.label};
+      var fieldDivAttr  = {class:"js-fileBox pos-rel"}
+      var textAreaAttr     = {class:"color11 fontlig f15 brdr-0 bgnone outline-none wh0 disp-none",type:"file",text:fieldObject.value,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off",value:fieldObject.value}
+       var btnAttr     = {class:"bg_pink mt20 lh30 f14 colrw txtc brdr-0 cursp disp_ib fullwid pos-rel wid50p dispib",type:"file",text:fieldObject.value,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off",text:'Attach',id:'idBtn_'+fieldObject.key.toLowerCase()}
+       var labelAttr2     = {class:"f14 disp_ib color5 padl15 vertM dispib textTru wid40p",id:fieldObject.key.toLowerCase(),text:'jpg/pdf only',id:'idlabel_'+fieldObject.key.toLowerCase()}
+      
+      if(debugInfo){
+        var underScreenAttr = {class:"f13 pos-abs js-undSecMsg",text:"Under screening"};
+      }
+      
+      if(hintMap.hasOwnProperty(fieldObject.key) == true){
+        textAreaAttr.placeholder = hintMap[fieldObject.key];
+      }
+      
+      var parentDiv = $("<div />",parentAttr);
+      
+      if(labelAttr.text.length){
+        var labelDOM  = $("<label />",labelAttr);
+        parentDiv.append(labelDOM);
+      }
+            
+      var fieldDivDom = $("<div />",fieldDivAttr);
+      
+      var errorText   = errorMap.hasOwnProperty(fieldObject.key) ? errorMap[fieldObject.key] : "Please provide valid value for " + fieldObject.label;
+      fieldDivDom.append($("<p />",{class:"pos-abs js-errorLabel f13 colr5 disp-none",text:errorText}));
+      
+      fieldDivDom.append($("<div />",btnAttr));
+      fieldDivDom.append($("<div />",labelAttr2));
+      fieldDivDom.append($("<input />",textAreaAttr));
+      
+      //Add underscreening in debug case only
+      if(debugInfo){
+        if(fieldObject.isUnderScreen === false){
+          underScreenAttr.class += " disp-none";
+        }   
+        fieldDivDom.append($("<p />",underScreenAttr));
+      }
+      
+      parentDiv.append(fieldDivDom);
+      
+      
+      domElement.append(parentDiv);
+      
+      //bindTextAreaCommonEvents(fieldObject);
     }
     
     /*
@@ -2581,7 +2677,7 @@ EditApp = function(){
       //Add Form Tag
       $(editSectionDOM).append("<form id=\"" +editSectionFormName+ "\"></form>");
       var editSectionFormDOM = $('#'+editSectionFormName);
-      
+      cookSectionTopHeading(editSectionFormDOM,sectionId);
       //Add Fields as per FieldType
       var firstElementId = ""; 
       for(var i=0;i<sectionArray.length;i++){
@@ -2614,6 +2710,10 @@ EditApp = function(){
           )
         {
           cookOpenTextField(editSectionFormDOM,fieldObject);
+        }
+        if( fieldObject.type === FILE_TYPE)
+        {
+          cookFileField(editSectionFormDOM,fieldObject);
         }
         
         if(fieldObject.type === OPEN_TEXT_TYPE && rightAlignedFields.indexOf(fieldObject.key) !== -1){
@@ -3020,8 +3120,8 @@ EditApp = function(){
       }
       
       //Check Any Error Lable is visible or not
-      var validationCheck = '#'+sectionId +'EditForm' +' .js-errorLabel:not(.disp-none)'
-      if($(validationCheck).length !== 0){
+      var validationCheck = '#'+sectionId +'EditForm' +' .js-errorLabel:not(.disp-none)';   
+      if($(validationCheck).length !== 0 && $(validationCheck).length !== "0"){
         $(document).scrollTop($(validationCheck).offset().top);
         return;
       }
@@ -3033,7 +3133,6 @@ EditApp = function(){
       if(editFieldArr.hasOwnProperty('WEIGHT') === true){
         editFieldArr['WEIGHT'] = editFieldArr['WEIGHT'].toString().toLowerCase().split('kg')[0].trim(); 
       }
-      
       //Check for valid changes, if same value then delete that key
       var arrIgnore = ['M_BROTHER','M_SISTER','ALT_MOBILE','PHONE_RES','PHONE_MOB','TIME_TO_CALL_START','TIME_TO_CALL_END'];
       for(var fieldKey in editFieldArr){
@@ -3041,8 +3140,12 @@ EditApp = function(){
         if (false === sectionObject.hasOwnProperty(fieldKey)) {
           continue;
         }
-        if(arrIgnore.indexOf(fieldKey) === -1 && editFieldArr[fieldKey] == sectionObject[fieldKey].value){
-          delete editFieldArr[fieldKey];  
+        if(sectionId == 'verification'){
+                
+        }else{
+                if(arrIgnore.indexOf(fieldKey) === -1 && editFieldArr[fieldKey] == sectionObject[fieldKey].value){
+                  delete editFieldArr[fieldKey];  
+                }
         }
         
         if(arrIgnore.indexOf(fieldKey) === -1){
@@ -3168,7 +3271,57 @@ EditApp = function(){
       }else{
         toggleLoader(true);
       }
-      $.myObj.ajax({
+      var editData = new FormData();
+      $.each(editFieldArr, function(key, value)
+      {
+            editData.append('editFieldArr['+key+']', value);
+      });
+      if(sectionId == 'verification'){
+          $.myObj.ajax({
+        url: "/api/v1/profile/editsubmit",
+        type: 'POST',
+        datatype: 'json',
+        cache: false,
+        async: true,
+        contentType: false,
+        data: editData,
+        processData: false,
+        success: function (result) {
+                if(typeof showLoader != "undefined" && showLoader === false){
+                }else{
+                  toggleLoader(false);
+                }
+          var statusCode = parseInt(result.responseStatusCode);
+          if (statusCode === 0) {
+            showHideEditSection(sectionId,"hide");
+            editAppObject.needToUpdate = true;
+            storeData(JSON.stringify(result.editApi));
+            updateView(result.viewApi);
+            delete editedFields[sectionId];
+          }
+          else if(statusCode === 1 &&  result.hasOwnProperty('error'))
+          {
+            for(var key in result.error){
+              var parentId = '#'+key.toLowerCase()+'Parent';
+              
+              if($(parentId).length == 0)
+                continue;
+              var errorMsg = getDecoratedServerError(key,result['error'][key]);
+              $(parentId).find('.js-errorLabel').text(errorMsg).removeClass(dispNone);
+            }
+            var validationCheck = '#'+sectionId +'EditForm' +' .js-errorLabel:not(.disp-none)'
+            $(document).scrollTop($(validationCheck).offset().top);
+          }
+        },
+        error:function(result){
+                if(typeof showLoader != "undefined" && showLoader === false){
+                }else{
+                  toggleLoader(false);
+                }
+        }
+      });    
+      }else{
+              $.myObj.ajax({
         url: "/api/v1/profile/editsubmit",
         type: 'POST',
         datatype: 'json',
@@ -3208,7 +3361,8 @@ EditApp = function(){
                   toggleLoader(false);
                 }
         }
-      });
+        });
+      }
     }
     
     /*
@@ -4064,25 +4218,140 @@ EditApp = function(){
         $('#time_to_callParent').find('.js-errorLabel').addClass(dispNone);
       }
     }
-    
-    onIdProofTypeChange = function(){
-        $("#id_proof_no").val("");
-        var idProofNumField = editAppObject["verification"]["ID_PROOF_NO"];
-        storeFieldChangeValue(idProofNumField,"");
-        var idProofTypeField = editAppObject[VERIFICATION]["ID_PROOF_TYP"];
-        if( $("#id_proof_noParent").find('.js-errorLabel').text() == "Invalid"){
-            $("#id_proof_noParent").find('.js-errorLabel').text("Required");
+    validateImage = function(fieldId,fieldKey){
+        var file = $('#'+fieldId)[0].files[0];
+        if (file && file.name.split(".")[1] == "jpg" || file.name.split(".")[1] == "JPG" || file.name.split(".")[1] == "jpeg" || file.name.split(".")[1] == "JPEG" || file.name.split(".")[1] == "PDF" || file.name.split(".")[1] == "pdf") {
+        } else {
+            $("#idlabel_" + fieldId).html('jpg/pdf only');
+            setError(fieldKey,'Invalid file format',1);
+            return false;
         }
-        requiredFieldStore.add(idProofNumField);
-        requiredFieldStore.remove(idProofTypeField);
+        if(file.size > 5242880) {
+                $("#idlabel_" + fieldId).html('jpg/pdf only');
+                setError(fieldKey,'File size exceeds limit (5MB)',1);
+                return false;
+        } else {
+                $("#idlabel_" + fieldId).html(file.name);
+                storeFieldChangeValue(fieldKey,file);
+                unsetError(fieldKey,'');
+                return file;
+        }
+    }
+    onIdProofTypeChange = function(){
+        var t1 = geteditedValue("ID_PROOF_TYPE");
+        var v1 = geteditedValue("ID_PROOF_VAL","VALUE");
+        var t2 = geteditedValue("ADDR_PROOF_TYPE","VALUE");
+        var v2 = geteditedValue("ADDR_PROOF_VAL","VALUE");
+        onvaluechange(t1,v1,t2,v2,editAppObject["verification"]["ID_PROOF_ADDR"]);
+    }
+    onIdProofValChange = function(){
+        var t1 = geteditedValue("ID_PROOF_TYPE");
+        var v1 = 1;
+        var t2 = geteditedValue("ADDR_PROOF_TYPE","VALUE");
+        var v2 = geteditedValue("ADDR_PROOF_VAL","VALUE");
+        onvaluechange(t1,v1,t2,v2,editAppObject["verification"]["ID_PROOF_VAL"]);
     }
     
-    
+    onAddrProofTypeChange = function(){
+        var t1 = geteditedValue("ID_PROOF_TYPE","VALUE");
+        var v1 = geteditedValue("ID_PROOF_VAL","VALUE");
+        var t2 = geteditedValue("ADDR_PROOF_TYPE");
+        var v2 = geteditedValue("ADDR_PROOF_VAL","VALUE");
+        onvaluechange(t1,v1,t2,v2,editAppObject["verification"]["ADDR_PROOF_TYPE"]);
+        
+    }
+    onAddrProofValChange = function(){
+        var t1 = geteditedValue("ID_PROOF_TYPE","VALUE");
+        var v1 = geteditedValue("ID_PROOF_VAL","VALUE");
+        var t2 = geteditedValue("ADDR_PROOF_TYPE");
+        var v2 = 1;
+        onvaluechange(t1,v1,t2,v2,editAppObject["verification"]["ADDR_PROOF_VAL"]);
+    }
+    geteditedValue = function(fieldKey,fieldtype){
+        var fieldObj = editAppObject["verification"][fieldKey];
+        if(fieldtype != "VALUE" && fieldObj.value != '' && typeof editedFields[VERIFICATION][fieldKey] == 'undefined'){
+               // editedFields["verification"][fieldKey] = fieldObj.value;
+                storeFieldChangeValue(fieldObj,fieldObj.value);
+        }
+        return editedFields["verification"][fieldKey];
+    }
+    onProofTypeChangeError = function(fieldKey,errorMsg,showHideError){
+        if(showHideError === 1){
+                if(errorMsg != ''){
+                        $('#'+fieldKey+'Parent').find('.js-errorLabel').text(errorMsg);
+                }
+                $('#'+fieldKey+'Parent').find('.js-errorLabel').removeClass(dispNone);
+        }else{
+                $('#'+fieldKey+'Parent').find('.js-errorLabel').addClass(dispNone);
+        } 
+    }
+    onvaluechange = function(t1,v1,t2,v2,calledBy){
+        var idProofTypeField = editAppObject["verification"]["ID_PROOF_TYPE"];
+        var idProofValField = editAppObject["verification"]["ID_PROOF_VAL"];
+        var addrProofValField = editAppObject["verification"]["ADDR_PROOF_VAL"];
+        var addrProofTypeField = editAppObject["verification"]["ADDR_PROOF_TYPE"];
+        if(v1){
+                v1 = validateImage('id_proof_val',idProofValField);
+        }
+        if(v2){
+                v2 = validateImage('addr_proof_val',addrProofValField);
+        }
+        if(v1 === false || v2 === false){
+                return false;
+        }
+            if(!t1 && v1){
+                    var showMsg = 1;
+                    if(calledBy !=  idProofTypeField){
+                       showMsg = 0;
+                    }
+                    setError(idProofTypeField,'',showMsg);
+                    unsetError(idProofValField);
+            }
+            if(t1 && !v1){
+                    var showMsg = 1;
+                    if(calledBy !=  idProofValField){
+                       showMsg = 0;
+                    }
+                    setError(idProofValField,'',showMsg);
+                    unsetError(idProofTypeField);
+            }
+            if(!t2 && v2){
+                    var showMsg = 1;
+                    if(calledBy !=  addrProofTypeField){
+                       showMsg = 0;
+                    }
+                    setError(addrProofTypeField,'',showMsg);
+                    unsetError(addrProofValField);
+            }
+            if(t2 && !v2){
+                    var showMsg = 1;
+                    if(calledBy !=  addrProofValField){
+                       showMsg = 0;
+                    }
+                    setError(addrProofValField,'',showMsg);
+                    unsetError(addrProofTypeField);
+            }
+            if(t2 || v2){
+                 if(!t1 && !v1){
+                    unsetError(idProofTypeField);
+                    unsetError(idProofValField);
+                } 
+            }
+    }
+    setError = function(fieldKey,msg,showMsg){
+            requiredFieldStore.add(fieldKey);
+            if(showMsg == 1)
+                onProofTypeChangeError(fieldKey.key.toLowerCase(),msg,showMsg);
+    }
+    unsetError = function(fieldKey){
+            requiredFieldStore.remove(fieldKey);
+            onProofTypeChangeError(fieldKey.key.toLowerCase(),'',0);
+    }
     onIdProofNumberChange = function(event){
         var fieldKey = event.target.id;
         var idTypeNum = $(event.target).val();
-        var idType = $("#id_proof_typ").val();
-        var idProofTypeField = editAppObject[VERIFICATION]["ID_PROOF_TYP"];
+        var idType = $("#id_proof_type").val();
+        var idProofTypeField = editAppObject[VERIFICATION]["ID_PROOF_TYPE"];
        
         if(idType == "" || idType == null)
             requiredFieldStore.add(idProofTypeField);
@@ -4348,8 +4617,20 @@ EditApp = function(){
       $('.js-timeClick').on('timeBlur',onTimeFieldBlur);
       
       //ID Proof Change
-      
       $('.js-proofType').on('change',onIdProofTypeChange);
+      
+      $('.js-proofVal').on('change',onIdProofValChange);
+      $('#idBtn_id_proof_val').unbind('click').on('click',function(event){
+        $('.js-proofVal').click();
+      });
+      
+      
+      $('#idBtn_addr_proof_val').unbind('click').on('click',function(event){
+        $('.js-addrProofVal').click();
+      });
+      
+      $('.js-addrProofVal').on('change',onAddrProofValChange);
+      $('.js-addrProofType').on('change',onAddrProofTypeChange);
       
       $('.js-proofTypeNo').on('keydown',function(event){
             setTimeout(function(){
@@ -4459,6 +4740,13 @@ EditApp = function(){
             if(debugInfo) $(fieldParentId).find('.js-undSecMsg').addClass(dispNone);
             $(fieldParentLabel).find('.js-undSecMsg').addClass(dispNone);
           }
+        }
+        //For File Field
+        if(fieldObject.type === FILE_TYPE){
+          //cannot set file type value
+                $(fieldParentId).find('.js-errorLabel').addClass(dispNone); 
+                var errorText   = errorMap.hasOwnProperty(fieldObject.key) ? errorMap[fieldObject.key] : "Please provide valid value for " + fieldObject.label;
+                $(fieldParentId).find('.js-errorLabel').html(errorText); 
         }
         
         //For Box Type Field
@@ -5125,12 +5413,16 @@ EditApp = function(){
      */
     initVerificationFields = function(){
         editedFields[VERIFICATION] = {};
-        var idProofNumberField = editAppObject[VERIFICATION]["ID_PROOF_NO"];
-        if(idProofNumberField.value.length == 0 )
-            requiredFieldStore.add(idProofNumberField);
-        var idProofTypeField = editAppObject[VERIFICATION]["ID_PROOF_TYP"];
+        var idProofTypeField = editAppObject[VERIFICATION]["ID_PROOF_TYPE"];
         if(idProofTypeField.value.length == 0 )
             requiredFieldStore.add(idProofTypeField);
+    
+        var idProofValField = editAppObject[VERIFICATION]["ID_PROOF_VAL"];
+        if(idProofValField.value.length == 0 )
+            requiredFieldStore.add(idProofValField);
+    
+        $("#idlabel_id_proof_val").html('jpg/pdf only');
+        $("#idlabel_addr_proof_val").html('jpg/pdf only');
     }
     
     /*
@@ -5279,7 +5571,7 @@ EditApp = function(){
 function updateLastUpdated(data){
     $("#lastModified").text("Last Edited on "+data.about.last_mod);
     $("#profileViews").text("Profile Views "+data.about.profileViews);
-    if(data.contact.my_verification_id != "Not filled in"){
+    if(data.contact.id_proof_type != "" || data.contact.addr_proof_type != ""){
         $("#section-verification .js-editBtn").text("Edit");
     }else{
         $("#section-verification .js-editBtn").text("Add");
@@ -5555,6 +5847,9 @@ function onViewHoroscope(){
 
 function onClickOfHoroscopeOverlay(){
     $("#commonOverlay").on('click',function(){
+        $("#removeHoroscopeLayer").fadeOut("fast",function(){
+            $("#commonOverlay").fadeOut("fast"); 
+        });
         if(! ($("#commonOverlay").hasClass("js-dClose")) ){
             $("#closebtnHL").trigger("click");
             $("#cls-view-horo").trigger("click");
@@ -5614,6 +5909,46 @@ $(document).ready(function() {
     $('.js-boxField').trigger('boxBlur');
     $('.js-timeClick').trigger('timeBlur');
   });
+  $("#Rbt_yes").click(function(){
+      	showCommonLoader();
+        $.ajax({
+          method: "POST",
+          url : "/api/v2/profile/deleteHoroscope",
+          async:true,
+          data : {profilechecksum:ProCheckSum},
+          timeout:20000,
+          success:function(response){
+          		hideCommonLoader();
+              $("#removeHoroscopeLayer").fadeOut("fast",function(){
+                $("#commonOverlay").fadeOut("fast"); 
+              });
+              location.reload();
+          }
+        });  
+      });
+    $(".js-deleteHoro").on('click', function(){
+                $("#removeHoroscopeDiv").removeClass('disp-none');
+                $("#Rbt_yes, #Rbt_no").addClass("cursp").removeClass("bg6");
+                $("#commonOverlay").fadeIn("fast",function(){
+                    $("#commonOverlay").on('click',function(){
+                        $("#removeHoroscopeLayer").fadeOut("fast",function(){
+                            $("#commonOverlay").fadeOut("fast"); 
+                        });
+                    }); 
+                    $("#removeHoroscopeLayer").fadeIn("fast"); 
+                });
+                ajaxInsertAstroPull(0);
+    });
+    $("#Rbt_no").on('click',function(){
+        $("#removeHoroscopeLayer").fadeOut("fast",function(){
+            $("#commonOverlay").fadeOut("fast"); 
+        });
+    });
+    $("#removeClosebtnHL").on('click',function(){
+        $("#removeHoroscopeLayer").fadeOut("fast",function(){
+            $("#commonOverlay").fadeOut("fast"); 
+        });
+    });
   
   $('body').on('focus', '.js-boxField', function(event) {
     var myId = $(this).attr('id');

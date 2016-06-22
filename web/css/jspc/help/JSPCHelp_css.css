@@ -1,0 +1,86 @@
+.hgt610 {height:610px}
+.leftCenter {left:50%;transform:translate(-50%,0%)}
+.hgt615 {height:615px}
+.wid65p{width:65%}
+.wid34p{width:34%}
+.rgtGreyBrd{border-right:1px solid #D3D3D3}
+.mt70{margin-top:70px}
+.centerBtn {width: 145px;margin-left: auto;margin-right: auto;}
+.f21{font-size:21px;}
+.mln5{margin-left:-5px;}
+.searchInp{height: 38px;vertical-align: top; margin-left:5px;border:1px solid #D3D3D3;padding: 0px 5px 0px 10px;}
+.searchInp2{vertical-align: top; border:1px solid #e0e0e0;border-radius: 2px;font-family: "Roboto","sans-serif"; font-weight: 300;height: 44px;padding: 0px 0px 0px 10px;width: 325px;}
+.p4{padding:4px;}
+.catogaryTable tr{width:50%}
+.catogaryTable td{padding: 10px 10px 30px 0px;}
+.bdrBtmGrey {border-bottom:1px solid #D3D3D3}
+.padbtm5{padding-bottom:5px;}
+.mb{padding-bottom:2px !important;}
+.quesTable,.quesTable2 {font-size:14px;font-family:"Roboto","sans-serif";font-weight:400;overflow-x: auto;display: block;}
+.quesTable tr:nth-child(even) {display:none;}
+.quesTable tr:nth-child(odd) {color: #666; cursor:pointer;}
+.quesTable td:first-child {padding-right:5px; vertical-align:top}
+.quesTable td:nth-child(2){padding-bottom:20px}
+.quesTable2 tr:nth-child(even) {display:none;}
+.quesTable2 tr:nth-child(odd) {color: #666; cursor:pointer;}
+.quesTable2 td:first-child {padding-right:5px; vertical-align:top}
+.quesTable2 td:nth-child(2){padding-bottom:20px}
+.alignDiv{vertical-align: middle;margin-top: -24px;}
+.p10{padding:10px}
+.vertM{vertical-align: -webkit-baseline-middle;}
+.hgt30{height:30px}
+.formTable td:first-child { text-align: right;padding:10px 20px 10px 10px; font-size:15px;line-height: 44px;font-family: "Roboto","sans-serif";font-weight: 300; }
+.formTable td:nth-child(2){vertical-align:top}
+.wid326{width:326px}
+.catDropDown {background:transparent; border:1px solid #e0e0e0;padding:14px 0px 0px 10px;}
+.catogaryTable td div:first-child{color:#666}
+.catogaryTable td div:nth-child(2){color:#d9475c;margin-top:4px;cursor:pointer;}
+.errorTr td:first-child{color:#e15065}
+.errorTr td:nth-child(2) input, .errorTr td:nth-child(2) textarea{border:1px solid #e15065}
+.minhgt394{min-height: 394px;}
+.hgt100{height:100px}
+.hgt34{height:34px}
+.chosen-container-active{
+    background-position: -18px 2px !important;
+}
+.chosen-container {
+    width: 20px;
+    height: 20px;
+	float:right;
+    background: url('http://static.jeevansathi.com/css/jspc/utility/chosen/chosen-sprite.png') no-repeat;
+}
+.dropOption{
+	    position: absolute;
+    margin-top: 14px;
+    border: 1px solid #d9475c;
+	background-color:#fff;
+    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15);
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+	    left: -1px;
+    width: 338px;
+    box-sizing: border-box;
+    zoom: 1;
+    -webkit-user-select: none;
+    font-size: 15px;
+    font-family: "Roboto","sans-serif";
+    font-weight: 300;}
+
+.dropOption li{    margin: 1px;
+    padding: 5px 6px;
+    list-style: none;
+    line-height: 15px;}
+.dropOption li:hover{background-color:#d9475c; color:#fff}
+.mt50{margin-top:50px}
+
+.quesTable ul li{margin-left:20px;}
+.minhgt360{min-height: 360px;}
+.wid70p{width:70%}
+.mt100{margin-top:100px;}
+.colr_grey_new{color:#333333}
+.quesTable i, em {
+    display: inline !important;
+    font-style: italic !important;
+}
+.quesTable table {width:100% !important;}
+.quesTable2 table {width:100% !important;}

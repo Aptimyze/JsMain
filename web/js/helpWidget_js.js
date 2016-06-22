@@ -10,8 +10,15 @@ var defaultEmail            = "";
 var defaultPhone            = "";
 
 var closeHelpWidgetIntervalId = "";
+var callbackSource = "";
+
 $(document).ready(function(){
-    
+    if(typeof(hideHelpMenu)=="undefined"){
+      var hideHelpMenu = "false";
+    } 
+    if(hideHelpMenu == "true"){
+        $("#js-helpWidget").addClass('disp-none');
+    }
     if( window.location.href.indexOf("/register/") != -1                    || 
        (window.location.href.indexOf("profile/registration_pg1.php")!=-1 )  || 
        (window.location.href.indexOf("profile/registration_new.php")!=-1 )  ||
@@ -85,7 +92,12 @@ $(document).ready(function(){
  * @Param : show : if show = 0 provide then hide or close the overlay
  *                  else display the overlay         
  */
-function toggleRequestCallBackOverlay(show){
+function toggleRequestCallBackOverlay(show, cbSource){
+    if(cbSource){
+      callbackSource = cbSource;
+    } else {
+      callbackSource = '';
+    }
     if ($(requestCallBackOverlay).hasClass('dspN') && show){
         $(requestCallBackOverlay).removeClass('dspN');
         if($('#rcbResponse').length){
@@ -199,12 +211,16 @@ function requestCallBackCall(){
     $("#requestForm").addClass("dspN");
     $("#requestLoader").removeClass("dspN");
     
+    if(callbackSource == ''){
+      callbackSource = 'Help_Widget';
+    }
+
     $.ajax({
        type: "POST",
        url: url,
        cache: false,
        timeout: 5000, 
-       data: {email:email.trim(),phone:phone.trim(),query_type:query,rcbResponse:rcbResponse},
+       data: {email:email.trim(),phone:phone.trim(),query_type:query,rcbResponse:rcbResponse,'device':'desktop','channel':'JSPC','callbackSource':callbackSource},
        success: function(result){
            if(result.trim() == "Y"){
                $("#requestLoader").addClass("dspN");
