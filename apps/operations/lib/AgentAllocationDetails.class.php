@@ -145,16 +145,16 @@ class AgentAllocationDetails
 			$agents=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges("%ExcFP%");
 		elseif($method=="WEBMASTER_LEADS" || $subMethod=='WEBMASTER_LEADS')
 		{
-            if($subMethod == 'WEBMASTER_LEADS_EXCLUSIVE'){
-                $agents=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges("%ExcPrm%");
-            }
-            else{
-                $agents=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges("%ExcWL%");
-            }
-            if($agents){
-                shuffle($agents);
-            }
-        }
+            		if($subMethod == 'WEBMASTER_LEADS_EXCLUSIVE'){
+                		$agents=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges("%ExcPrm%");
+            		}
+            		else{
+                		$agents=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges("%ExcWL%");
+            		}
+            		if($agents){
+                		shuffle($agents);
+            		}
+        	}
 		elseif($method=="MANUAL"){
 			$headAgent	=$processObj->getExecutive();
 			$agents 	=$this->fetchAgentsByHierarchy($headAgent);
@@ -427,7 +427,7 @@ public function fetchProfiles($processObj)
 			elseif($method=="NEW_FAILED_PAYMENT")
 				$profiles=$this->fetchNewFailedPaymentEligibleProfiles();
 			elseif($method=="WEBMASTER_LEADS")
-                $profiles=$this->fetchWebmasterLeadsEligibleProfiles($subMethod);
+		                $profiles=$this->fetchWebmasterLeadsEligibleProfiles($subMethod);
 			elseif($method=='FIELD_SALES'){
 				$processId 		=$processObj->getIdAllot();
 				$lastHandledDtObj 	=new incentive_LAST_HANDLED_DATE();
@@ -480,14 +480,6 @@ public function fetchProfiles($processObj)
 		$startDt	=$processObj->getStartDate();
 		$endDt		=$processObj->getEndDate();
                 $profiles	=$this->fetchNewFailedPaymentEligibleProfiles($processName,$startDt,$endDt);
-		/*
-		$profilesWebMaster	=$this->fetchWebmasterLeadsEligibleProfiles();
-		if(count($profilesWebMaster)>0){
-			foreach($profilesWebMaster as $key=>$profileid){					
-				$profilesWebMaster1[] =array('PROFILEID'=>$profileid,'WEB_LEAD'=>'rcb');
-			}
-			$profiles =array_merge($profiles,$profilesWebMaster1);
-		}*/
 	}
 	elseif($processObj->getProcessName()=="rcbCampaignInDialer"){
                 $processName    =$processObj->getProcessName();
@@ -1912,6 +1904,7 @@ public function applyGenericFilters($profileArr, $method='',$subMethod='')
 		unset($profileDetails);
 	}
         // Do not call check
+	if($method!='WEBMASTER_LEADS'){
 	if(count($profileArr)>0){
 	        $DNCObj=new incentive_DO_NOT_CALL('newjs_slave');
 	        $profileArrNew =$DNCObj->getDoNotCallProfiles($profileArr);
@@ -1929,7 +1922,8 @@ public function applyGenericFilters($profileArr, $method='',$subMethod='')
 			$profileArr =array_diff($profileArr,$profileArrNew);
 		$profileArr =array_values($profileArr);
 		unset($profileArrNew);
-	}
+	}}
+
         // Pre-Allocation Check
         if($method=='FIELD_SALES' || $method=='PRE_ALLOCATION'){
                 if(count($profileArr)>0){
@@ -1951,12 +1945,18 @@ public function applyGenericFilters($profileArr, $method='',$subMethod='')
 
 		foreach($resDetails as $key=>$data){
 			$profileid =$data['PROFILEID'];
-	                if($data['PHONE_FLAG']=='I' || $data['ACTIVATED']!='Y' || ($data['GENDER']=='M' && $data['AGE'] <24))
-				$profileArrNew[] =$profileid; 
-			else{
+			$phoneFlag =$data['PHONE_FLAG'];
+			$flag =1;
+	                if($phoneFlag=='I' || $data['ACTIVATED']!='Y' || ($data['GENDER']=='M' && $data['AGE'] <24)){
+				if($subMethod!='WEBMASTER_LEADS'){
+					$profileArrNew[] =$profileid;
+					$flag=0;
+				}
+			}
+			if($flag==1){
 				$indianNo =$this->isIndianNo($data['ISD']);
-				if( ($method=='NEW_FAILED_PAYMENT' || $method=='WEBMASTER_LEADS') && $subMethod != 'WEBMASTER_LEADS_EXCLUSIVE' ){
-					if($indianNo)
+				if($method=='NEW_FAILED_PAYMENT' || $subMethod=='WEBMASTER_LEADS'){
+					if($indianNo || $phoneFlag=='I')
 						$profileArrNew[] =$profileid;
 				}
 				else if($method=='FIELD_SALES'){
