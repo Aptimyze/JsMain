@@ -41,6 +41,7 @@ class AgentAllocation
 			$serviceStatusObj		=new BILLING_SERVICE_STATUS();
 			$profileid      		=$processObj->getProfiles();
 			$agentName			=$processObj->getExecutive();
+			$agentPrivilege = $paramsArr['PRIVILEGE'];
 
 			if(!$profileid)
 				$profileid		=$paramsArr['PROFILEID'];	
@@ -123,8 +124,11 @@ class AgentAllocation
                         if($paramsArr['ORDERS'])
                                 $this->updateOrderStatus($profileid,$paramsArr['WILL_PAY']);    
 
-			if($method!='MANUAL_EXT_DAYS' || ($method=='MANUAL_EXT' && !$alreadyAlloted))
+			if($method!='MANUAL_EXT_DAYS' || ($method=='MANUAL_EXT' && !$alreadyAlloted)){
+				// Code added for tracking process of executive while disposition
+				$paramsArr['MODE'] .= $this->getModeProcess($paramsArr['PRIVILEGE']);
 				$historyObj->addAllocationHistory($paramsArr);
+			}
 		}
 	}
 	public function fetchAllotedBucketDays($subMethod='',$bucketType='AP',$profileid='',$method='')
@@ -539,5 +543,32 @@ class AgentAllocation
         {
 	        SendMail::send_email($to, $mailerMsg, $subject, $from,"","","","","","","1","",$from_name);
 	}
+    }
+
+    public function getModeProcess($priv){
+    	if(strpos($priv, 'ExcDIb') !== false){
+            return crmParams::$processFlag['INBOUND_TELE'];
+        }
+        else if(strpos($priv, 'ExcBSD') !== false || strpos($priv, 'ExcBID') !== false){
+           	return crmParams::$processFlag['CENTER_SALES'];
+        }
+        else if(strpos($priv, 'ExcFP') !== false){
+        	return crmParams::$processFlag['FP_TELE'];
+        }
+        else if(strpos($priv, 'ExcRnw') !== false){
+        	return crmParams::$processFlag['CENTRAL_RENEW_TELE'];
+        }
+        else if(strpos($priv, 'ExcFld') !== false){
+        	return crmParams::$processFlag['FIELD_SALES'];
+        }
+        else if(strpos($priv, 'ExcFSD') !== false || strpos($priv, 'ExcFID') !== false){
+        	return crmParams::$processFlag['FRANCHISEE_SALES'];
+        }
+        else if(strpos($priv, 'ExcDOb') !== false || strpos($priv, 'ExcPrm') !== false || strpos($priv, 'PreNri') !== false){
+        	return crmParams::$processFlag['OUTBOUND_TELE'];
+        }
+        else{
+        	return crmParams::$processFlag['UNASSISTED_SALES'];
+        }
     }
 }
