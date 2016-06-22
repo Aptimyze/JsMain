@@ -352,28 +352,27 @@ class commoninterfaceActions extends sfActions
 
   public function executeWebServiceMonitoring(sfWebRequest $request)
   {
-  	$date = date("Ymd");
-  	if($request->getParameter("ajax") == 1)
-  	{	
-  		$data['sql_query'] =  sfRedis::getClient()->hgetall($date."_SQL_QUERY");
-  		$data['cache_connection'] = sfRedis::getClient()->get($date."_CACHE_CONNECTION");
-  		$data['cache_problem_sql'] = sfRedis::getClient()->get($date."_SQL_REQUEST");
-  		$data['cache_inprocess'] = sfRedis::getClient()->get($date."_INPROCESS_CACHE_REQUEST");
-  		$data['cache_not_set'] = sfRedis::getClient()->get($date."_CACHE_NOT_SET");
-  		$data['create_cache_process'] = sfRedis::getClient()->get($date."_CREATE_CACHE_INPROCESS");
-  		$data['total'] = sfRedis::getClient()->get($date."_Total");
-  		$data['execption'] = sfRedis::getClient()->get($date."_EXECPTION");
-  		echo json_encode($data);
-  		die;
-  	}
-  	$this->sql_query =  sfRedis::getClient()->hgetall($date."_SQL_QUERY");
-	$this->cache_connection = sfRedis::getClient()->get($date."_CACHE_CONNECTION");
-	$this->cache_problem_sql = sfRedis::getClient()->get($date."_SQL_REQUEST");
-	$this->cache_inprocess = sfRedis::getClient()->get($date."_INPROCESS_CACHE_REQUEST");
-	$this->cache_not_set = sfRedis::getClient()->get($date."_CACHE_NOT_SET");
-	$this->create_cache_process = sfRedis::getClient()->get($date."_CREATE_CACHE_INPROCESS");
-	$this->total = sfRedis::getClient()->get($date."_Total");
-	$this->execption = sfRedis::getClient()->get($date."_EXECPTION");
+
+	  $url = JsConstants::$contactUrl . "/v1/contacts";
+	 $url = $url . "/getloggingdata";
+	  $result = CommonUtility::webServiceRequestHandler($url);
+	  $date = date("Ymd");
+	  if(is_array($result[$date."_CACHE_NOT_SET"])) {
+		  foreach ($result[$date . "_CACHE_NOT_SET"] as $key => $value) {
+			  $this->cache_not_set += $value;
+		  }
+	  }
+	  if(is_array($result[$date."_SQL_QUERY"])) {
+		  foreach ($result[$date . "_SQL_QUERY"] as $key => $value) {
+			  $this->sql_query += $value;
+		  }
+	  }
+	$this->cache_connection =  $result[$date."_CACHE_CONNECTION"];
+	$this->cache_problem_sql =  $result[$date."_SQL_REQUEST"];
+	$this->cache_inprocess = $result[$date."_INPROCESS_CACHE_REQUEST"];
+	$this->create_cache_process =  $result[$date."_CREATE_CACHE_INPROCESS"];
+	$this->total =  $result[$date."_Total"];
+	$this->execption = $result[$date."_EXECPTION"];
 	$this->setTemplate('webservicemonitor');
   }
   
