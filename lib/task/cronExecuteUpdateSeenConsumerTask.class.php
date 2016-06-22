@@ -15,11 +15,11 @@ class cronExecuteUpdateSeenConsumerTask extends sfBaseTask
   protected function configure()
   {
     $this->namespace           = 'cron';
-    $this->name                = 'cronExecuteSingleConsumer';
+    $this->name                = 'cronExecuteUpdateSeenConsumer';
     $this->briefDescription    = 'reads no. of instances of rabbitmq consumer from MessageQueues.enum.class.php to be run and executes that many instances of cronConsumeQueueMessage.';
     $this->detailedDescription = <<<EOF
      The [cronExecuteSingleConsumer|INFO] reads no. of instances of rabbitmq consumer from MessageQueues.enum.class.php to be run and executes that many instances of cronConsumeQueueMessage:
-     [php symfony cron:cronExecuteSingleConsumer] 
+     [php symfony cron:cronExecuteUpdateSeenConsumer] 
 EOF;
     $this->addOptions(array(
         new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', 'jeevansathi')
