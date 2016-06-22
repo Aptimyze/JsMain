@@ -120,12 +120,12 @@ class JProfileUpdateLib
     //and set new connection with desired dbname
     if(self::$instance->currentDBName !== $dbname) {
       self::$instance->currentDBName = $dbname;
-      self::$instance->objJProfileStore->setConnection($dbName);
-      self::$instance->objProfileEducationStore->setConnection($dbName);
-      self::$instance->objProfileContactStore->setConnection($dbName);
-      self::$instance->objProfileHobbyStore->setConnection($dbName);
-      self::$instance->objProfileNTimesStore->setConnection($dbName);
-      self::$instance->objProfileChristianStore->setConnection($dbName);
+      self::$instance->objJProfileStore->setConnection($dbname);
+      self::$instance->objProfileEducationStore->setConnection($dbname);
+      self::$instance->objProfileContactStore->setConnection($dbname);
+      self::$instance->objProfileHobbyStore->setConnection($dbname);
+      self::$instance->objProfileNTimesStore->setConnection($dbname);
+      self::$instance->objProfileChristianStore->setConnection($dbname);
     }
     
     return self::$instance;
