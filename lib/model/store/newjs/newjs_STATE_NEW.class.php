@@ -6,7 +6,7 @@ class newjs_STATE_NEW extends TABLE
 	public function __construct($dbname = "") 
 	{
    parent::__construct($dbname);
- }
+  }
 
  public function getStatesIndia()
  {

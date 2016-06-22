@@ -17,7 +17,7 @@ class ApiCommon
 	*/
 	public function getStaticTablesData($param)
 	{
-		$tableMapping =array("religion"=>"RELIGION","caste"=>"CASTE","country"=>"COUNTRY_NEW","city"=>"CITY_NEW","mtongue"=>"MTONGUE","education"=>"EDUCATION_LEVEL_NEW","education_grouping"=>"EDUCATION_GROUPING","occupation"=>"OCCUPATION","occupation_grouping"=>"OCCUPATION_GROUPING","height"=>"HEIGHT","income"=>"INCOME","hobby"=>"HOBBIES","sect"=>"SECT","state"=>"STATE_NEW");
+		$tableMapping =array("religion"=>"RELIGION","caste"=>"CASTE","country"=>"COUNTRY_NEW","city"=>"CITY_NEW","mtongue"=>"MTONGUE","education"=>"EDUCATION_LEVEL_NEW","education_grouping"=>"EDUCATION_GROUPING","occupation"=>"OCCUPATION","occupation_grouping"=>"OCCUPATION_GROUPING","height"=>"HEIGHT","income"=>"INCOME","hobby"=>"HOBBIES","sect"=>"SECT","state"=>"STATE_NEW","topCityIndia"=>"TOP_CITY_INDIA_NEW");
 		$gsObj = new GeneralStore;
 		$tableInfo = $gsObj->getTablesInformation("newjs",$tableMapping,1);
 		unset($gsObj);
@@ -450,34 +450,12 @@ class ApiCommon
 
             elseif($k="topCityIndia")
             {
-            	$today = date("Y-m-d h:m:s");
-            	if($v==$this->noTime || strtotime($v)<strtotime($today))
+            	if($v==$this->noTime || strtotime($v)<strtotime($tableInfo[$tableMapping[$k]]))
             	{
             		$output[$k]["result"] = "yes";
-					$output[$k]["uptime"] = $today;
-					$tempArray=FieldMap::getFieldLabel("topindia_city",'',1);
-					$cityIndia=FieldMap::getFieldLabel("city_india",'',1);
-					foreach($tempArray as $key=>$val)
-					{
-						$temp=explode(",",$val);
-						foreach($temp as $key=>$val)
-						{
-							$topIndia[$val]=$cityIndia[$val];
-							unset($cityIndia[$val]);
-						}
-					}
-					$delhiNcrCities = implode(",",FieldMap::getFieldLabel("delhiNcrCities",1,1));
-					$topIndia[$delhiNcrCities]=TopSearchBandConfig::$ncrLabel;
-					$topIndia[TopSearchBandConfig::$mumbaiRegion]=TopSearchBandConfig::$mumbaiRegionLabel;
-					$i=0;
-					foreach($topIndia as $key => $val)
-					{
-						$tempArr[$i]["VALUE"] = $key;
-						$tempArr[$i]["LABEL"] = $val;
-						$tempArr[$i]["SORTBY"] = $i;
-						$i++;
-					}
-					$output[$k]["data"] = $tempArr;
+					$output[$k]["uptime"] = $tableInfo[$tableMapping[$k]];
+					$topCityIndiaObj = new newjs_TOP_CITY_INDIA_NEW;
+					$output[$k]["data"] = $topCityIndiaObj->getTopCitiesIndia();
 				}
             	else
             	{
@@ -494,23 +472,20 @@ class ApiCommon
 
 		foreach($output as $k=>$v)
 		{
-			if($k !="topCityIndia")
+			
+			foreach($v as $kk=>$vv)
 			{
-				foreach($v as $kk=>$vv)
+				if($kk=="data")
 				{
-					if($kk=="data")
+					$i=1;
+					foreach($vv as $kkk=>$vvv)
 					{
-						$i=1;
-						foreach($vv as $kkk=>$vvv)
-						{
-							$output[$k][$kk][$kkk]["SORTBY"] = $i;
-							$i++;
-						}
+						$output[$k][$kk][$kkk]["SORTBY"] = $i;
+						$i++;
 					}
 				}
 			}
 		}
-		print_r($output);die;
 		return $output;
 	}
 
