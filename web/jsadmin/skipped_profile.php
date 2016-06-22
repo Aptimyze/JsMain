@@ -22,8 +22,8 @@ include("../profile/functions.inc");
 include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
                $cc='eshajain88@gmail.com';
                $to='sanyam1204@gmail.com';
-               $msg1='qc_view is being hit. We can wrap this to JProfileUpdateLib';
-               $subject="qc_view";
+               $msg1='skipped_profile is being hit. We can wrap this to JProfileUpdateLib';
+               $subject="skipped_profile";
                $msg=$msg1.print_r($_SERVER,true);
                send_email($to,$msg,$subject,"",$cc);
  //ending mail part

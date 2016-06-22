@@ -23,8 +23,8 @@ $db=connect_db();
 include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
                $cc='eshajain88@gmail.com';
                $to='sanyam1204@gmail.com';
-               $msg1='qc_view is being hit. We can wrap this to JProfileUpdateLib';
-               $subject="qc_view";
+               $msg1='page1_complete is being hit. We can wrap this to JProfileUpdateLib';
+               $subject="page1_complete";
                $msg=$msg1.print_r($_SERVER,true);
                send_email($to,$msg,$subject,"",$cc);
  //ending mail part

@@ -463,8 +463,8 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 				include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
                $cc='eshajain88@gmail.com';
                $to='sanyam1204@gmail.com';
-               $msg1='qc_view is being hit. We can wrap this to JProfileUpdateLib';
-               $subject="qc_view";
+               $msg1='registration_functions is being hit. We can wrap this to JProfileUpdateLib';
+               $subject="registration_functions";
                $msg=$msg1.print_r($_SERVER,true);
                send_email($to,$msg,$subject,"",$cc);
  				//ending mail part
