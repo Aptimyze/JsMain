@@ -140,10 +140,12 @@ class Producer
       $this->channel->queue_declare(MQ::MAILQUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
       $this->channel->queue_declare(MQ::SMSQUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
       $this->channel->queue_declare(MQ::CONTACTCACHEINITIATE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
-      $this->channel->queue_declare(MQ::CONTACTCACHEINITIATE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+      $this->channel->queue_declare(MQ::INVALIDATECACHE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
       $this->channel->queue_declare(MQ::AGENT_NOTIFICATIONSQUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
-    }
-    catch (Exception $exception)
+      $this->channel->queue_declare(MQ::BUFFER_INSTANT_NOTIFICATION_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE); 
+       $this->channel->queue_declare(MQ::DELETE_RETRIEVE_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+    } 
+    catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in producer, Unable to". " declare queues : " . $exception->getMessage()."\tLine:".__LINE__;
       RabbitmqHelper::sendAlert($str,"default");
@@ -171,15 +173,21 @@ class Producer
           $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::AGENT_NOTIFICATIONSQUEUE,MQ::MANDATORY,MQ::IMMEDIATE);
           break;
         case "CACHE":
-          $data=$msgdata['data'];
-          $msg = new AMQPMessage($data,array('delivery_mode' =>MQ::DELIVERYMODE));
-          $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::CONTACTCACHEINITIATE,MQ::MANDATORY,MQ::IMMEDIATE);
-          break;
-        case "INVALIDATE":
-          $data=$msgdata['data'];
-          $msg = new AMQPMessage($data,array('delivery_mode' =>MQ::DELIVERYMODE));
-          $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::INVALIDATECACHE,MQ::MANDATORY,MQ::IMMEDIATE);
-          break;
+            $data=$msgdata['data'];
+            $msg = new AMQPMessage($data,array('delivery_mode' =>MQ::DELIVERYMODE));
+            $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::CONTACTCACHEINITIATE,MQ::MANDATORY,MQ::IMMEDIATE);
+            break;
+          case "INVALIDATE":
+              $data=$msgdata['data'];
+              $msg = new AMQPMessage($data,array('delivery_mode' =>MQ::DELIVERYMODE));
+              $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::INVALIDATECACHE,MQ::MANDATORY,MQ::IMMEDIATE);
+              break;
+        case "BUFFER_INSTANT_NOTIFICATIONS" :
+                    $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::BUFFER_INSTANT_NOTIFICATION_QUEUE,MQ::MANDATORY,MQ::IMMEDIATE);
+                    break;
+        case "DELETE_RETRIEVE":
+                    $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::DELETE_RETRIEVE_QUEUE,MQ::MANDATORY,MQ::IMMEDIATE);
+                    break;
       }
     }
     catch (Exception $exception)
