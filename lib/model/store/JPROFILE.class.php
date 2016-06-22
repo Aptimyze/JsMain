@@ -1261,11 +1261,12 @@ public function duplicateEmail($email)
 			$now=date('Y-m-d h:i:s');
 			$szINs = implode(',',array_fill(0,count($profileArr),'?'));
 
-			$sql="UPDATE newjs.JPROFILE SET SERIOUSNESS_COUNT=SERIOUSNESS_COUNT+1,SORT_DT=:NOW WHERE PROFILEID IN ($szINs)";
+			$sql="UPDATE newjs.JPROFILE SET SERIOUSNESS_COUNT=SERIOUSNESS_COUNT+1,SORT_DT=? WHERE PROFILEID IN ($szINs)";
 			$pdoStatement = $this->db->prepare($sql);
-			$pdoStatement->bindValue(':NOW', $now,PDO::PARAM_STR);
+      $count =1;
+			$pdoStatement->bindValue($count, $now,PDO::PARAM_STR);
 			//Bind Value
-			$count =0;
+			
 			foreach ($profileArr as $k => $value)
 			{
 				++$count;
