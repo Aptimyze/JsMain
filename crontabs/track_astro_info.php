@@ -71,12 +71,15 @@ function update_astro_details($profileid,$astrodata="",$horoscope="",$db,$mysqlO
 
 		if($updateArr)
 		{
-			$updateStr=implode(",",$updateArr);
+			//$updateStr = implode(",",$updateArr);
+                        foreach ($updateArr as $val){
+                          $arr = explode('=',$val);
+                          $arrFields[trim($arr[0])] =  trim(str_replace(array(" ","'"),'',$arr[1]),',');
+                        }
                         $objUpdate = JProfileUpdateLib::getInstance();
-                        $arrFields = $objUpdate->convertUpdateStrToArray($updateStr);
 			//$statement = "update newjs.JPROFILE SET ".$updateStr." where PROFILEID = '$profileid'";
 			//$mysqlObj->executeQuery($statement,$db) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$statement,"ShowErrTemplate");
-                        $objUpdate->editJPROFILE($arrFields,$row[PROFILEID],"PROFILEID");
+                        $objUpdate->editJPROFILE($arrFields,$profileid,"PROFILEID");
 			if(!$to_not_update_dup && $dup_flag_value && $dup_change){
 				$sql="INSERT IGNORE INTO duplicates.DUPLICATE_CHECKS_FIELDS SET PROFILEID='$profileid',TYPE='edit',FIELDS_TO_BE_CHECKED='$dup_flag_value'";
 				$mysqlObj->executeQuery($sql,$db) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$statement,"ShowErrTemplate");	

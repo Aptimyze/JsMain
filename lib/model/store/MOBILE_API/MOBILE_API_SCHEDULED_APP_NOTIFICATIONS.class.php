@@ -17,6 +17,7 @@ class MOBILE_API_SCHEDULED_APP_NOTIFICATIONS extends TABLE{
 			$this->TITLE_BIND_TYPE = "STR";
 			$this->COUNT_BIND_TYPE = "INT";
 			$this->MSG_ID_BIND_TYPE = "INT";
+            $this->PHOTO_URL_BIND_TYPE = "STR";
 			$this->tableName = "MOBILE_API.SCHEDULED_APP_NOTIFICATIONS";
         }
 	public function truncate()
@@ -29,12 +30,12 @@ class MOBILE_API_SCHEDULED_APP_NOTIFICATIONS extends TABLE{
 	{
 		if(!is_array($insertData))
 			return;
-		$sqlInsert = "INSERT IGNORE INTO  MOBILE_API.SCHEDULED_APP_NOTIFICATIONS (`PROFILEID`,`NOTIFICATION_KEY`,`MESSAGE`,`LANDING_SCREEN`,`OS_TYPE`,`COLLAPSE_STATUS`,`TTL`,SCHEDULED_DATE,SENT,`TITLE`,`COUNT`,`PRIORITY`,`MSG_ID`) VALUES ";
+		$sqlInsert = "INSERT IGNORE INTO  MOBILE_API.SCHEDULED_APP_NOTIFICATIONS (`PROFILEID`,`NOTIFICATION_KEY`,`MESSAGE`,`LANDING_SCREEN`,`OS_TYPE`,`COLLAPSE_STATUS`,`TTL`,SCHEDULED_DATE,SENT,`TITLE`,`COUNT`,`PRIORITY`,`MSG_ID`,`PHOTO_URL`) VALUES ";
 		foreach($insertData as $k=>$v)
 		{
 			if($sqlPart!='')
 				$sqlPart.=",";
-			$sqlPart.= "(:PROFILEID".$k.",:NOTIFICATION_KEY".$k.",:MESSAGE".$k.",:LANDING_SCREEN".$k.",:OS_TYPE".$k.",:COLLAPSE_STATUS".$k.",:TTL".$k.",now(),:SENT".$k.",:TITLE".$k.",:COUNT".$k.",:PRIORITY".$k.",:MSG_ID".$k.")";
+			$sqlPart.= "(:PROFILEID".$k.",:NOTIFICATION_KEY".$k.",:MESSAGE".$k.",:LANDING_SCREEN".$k.",:OS_TYPE".$k.",:COLLAPSE_STATUS".$k.",:TTL".$k.",now(),:SENT".$k.",:TITLE".$k.",:COUNT".$k.",:PRIORITY".$k.",:MSG_ID".$k.",:PHOTO_URL".$k.")";
 		}
 		$sqlInsert.=$sqlPart;
 		$resInsert = $this->db->prepare($sqlInsert);
@@ -52,6 +53,7 @@ class MOBILE_API_SCHEDULED_APP_NOTIFICATIONS extends TABLE{
 			$resInsert->bindValue(":MSG_ID".$k,$v['MSG_ID'],constant('PDO::PARAM_'.$this->{'MSG_ID_BIND_TYPE'}));
 			$resInsert->bindValue(":PRIORITY".$k,$v['PRIORITY'],constant('PDO::PARAM_'.$this->{'PRIORITY_BIND_TYPE'}));
 			$resInsert->bindValue(":SENT".$k,$v['SENT'],constant('PDO::PARAM_'.$this->{'SENT_BIND_TYPE'}));
+            $resInsert->bindValue(":PHOTO_URL".$k,$v['PHOTO_URL'],constant('PDO::PARAM_'.$this->{'SENT_BIND_TYPE'}));
 		}
 		//$resInsert->bindValue(":SENT","N",constant('PDO::PARAM_'.$this->{'SENT_BIND_TYPE'}));
 		$resInsert->execute();

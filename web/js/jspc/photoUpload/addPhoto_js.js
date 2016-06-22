@@ -88,6 +88,10 @@ function showPrivacySetting(res)
 {
   var text = $("#privacy"+res).html();
   $(".js-arrow").hide();
+                if(res == "C")
+                        $("#note").css('visibility','visible');
+                else
+                        $("#note").css('visibility','hidden');
   $(".pudropdown dt span").attr("data-selected",res);
   $(".pudropdown dt span").html(text);
   $(".pudropdown dd ul").hide();                

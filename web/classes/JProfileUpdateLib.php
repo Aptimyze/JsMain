@@ -120,12 +120,12 @@ class JProfileUpdateLib
     //and set new connection with desired dbname
     if(self::$instance->currentDBName !== $dbname) {
       self::$instance->currentDBName = $dbname;
-      self::$instance->objJProfileStore->setConnection($dbName);
-      self::$instance->objProfileEducationStore->setConnection($dbName);
-      self::$instance->objProfileContactStore->setConnection($dbName);
-      self::$instance->objProfileHobbyStore->setConnection($dbName);
-      self::$instance->objProfileNTimesStore->setConnection($dbName);
-      self::$instance->objProfileChristianStore->setConnection($dbName);
+      self::$instance->objJProfileStore->setConnection($dbname);
+      self::$instance->objProfileEducationStore->setConnection($dbname);
+      self::$instance->objProfileContactStore->setConnection($dbname);
+      self::$instance->objProfileHobbyStore->setConnection($dbname);
+      self::$instance->objProfileNTimesStore->setConnection($dbname);
+      self::$instance->objProfileChristianStore->setConnection($dbname);
     }
     
     return self::$instance;
@@ -146,7 +146,7 @@ class JProfileUpdateLib
       return $this->objJProfileStore->edit($paramArr, $value, $criteria,$extraWhereCnd);
     } catch(Exception $ex) {
       //Log this error
-      jsException::log($ex);
+      jsCacheWrapperException::logThis($ex);
       return false;
     }
   }
@@ -164,7 +164,7 @@ class JProfileUpdateLib
       return $this->objJProfileStore->updateProfileForArchive($iProfileID);
     } catch(Exception $ex) {
       //Log this error
-      jsException::log($ex);
+      jsCacheWrapperException::logThis($ex);
       return false;
     }
   }
@@ -180,7 +180,7 @@ class JProfileUpdateLib
 		  return $this->objJProfileStore->updateLoginSortDate($iProfileID);
 		} catch(Exception $ex) {
 		  //Log this error
-		  jsException::log($ex);
+          jsCacheWrapperException::logThis($ex);
 		  return false;
 		}
 	}
@@ -199,7 +199,7 @@ class JProfileUpdateLib
       return $this->objJProfileStore->updateProfileForBilling($paramArr, $value, $criteria,$extrStr);
     } catch(Exception $ex) {
       //Log this error
-      jsException::log($ex);
+      jsCacheWrapperException::logThis($ex);
       return false;
     }
   }
@@ -233,7 +233,7 @@ class JProfileUpdateLib
     try {
       return $this->objProfileEducationStore->update($iProfileID, $arrParams);
     } catch (Exception $ex) {
-      jsException::log($ex);
+      jsCacheWrapperException::logThis($ex);
       return false;
     }
   }
@@ -250,7 +250,7 @@ class JProfileUpdateLib
     try {
       return $this->objProfileContactStore->update($iProfileID, $arrParams);
     } catch (Exception $ex) {
-      jsException::log($ex);
+      jsCacheWrapperException::logThis($ex);
       return false;
     }
   }
@@ -267,7 +267,7 @@ class JProfileUpdateLib
     try {
       return $this->objProfileHobbyStore->update($iProfileID, $arrParams);
     } catch (Exception $ex) {
-      jsException::log($ex);
+      jsCacheWrapperException::logThis($ex);
       return false;
     }
   }
@@ -282,7 +282,7 @@ class JProfileUpdateLib
     try {
       return $this->objJProfileStore->updateProfileSeriousnessCount($profileArr);
     } catch (Exception $ex) {
-      jsException::log($ex);
+      jsCacheWrapperException::logThis($ex);
       return false;
     }
   }
@@ -298,7 +298,7 @@ class JProfileUpdateLib
 		try {
       return $this->objJProfileStore->updateForMutipleProfiles($params,$profileArr);
     } catch (Exception $ex) {
-      jsException::log($ex);
+      jsCacheWrapperException::logThis($ex);
       return false;
     }
   }
@@ -313,7 +313,7 @@ class JProfileUpdateLib
     try{
       return $this->objProfileNTimesStore->updateProfileViews($iProfileID);
     } catch (Exception $ex) {
-      jsException::log($ex);
+      jsCacheWrapperException::logThis($ex);
       return false;
     }
   }
@@ -328,7 +328,7 @@ class JProfileUpdateLib
     try{
       return $this->objProfileChristianStore->update($iProfileID,$paramArray);
     } catch (Exception $ex) {
-      jsException::log($ex);
+      jsCacheWrapperException::logThis($ex);
       return false;
     }
   }
@@ -343,7 +343,7 @@ class JProfileUpdateLib
     try {
       return $this->objJProfileStore->updateSortDate($profileId);
     } catch (Exception $ex) {
-      jsException::log($ex);
+      jsCacheWrapperException::logThis($ex);
       return false;
     }
   }

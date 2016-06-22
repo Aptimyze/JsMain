@@ -1151,8 +1151,8 @@ class Profile{
 			return $astroDetails;
 		if($astroDetails[CITY_BIRTH])
 		{
-				$cityOfBirth = $astro_details['CITY_BIRTH'];
-				$countryOfBirth=$astro_details['COUNTRY_BIRTH'];
+				$cityOfBirth = $astroDetails['CITY_BIRTH'];
+				$countryOfBirth=$astroDetails['COUNTRY_BIRTH'];
 		}
 		else{
 				$countryOfBirth=$this->DecoratedBirthCountry;

@@ -166,6 +166,31 @@ class crmInterfaceActions extends sfActions
 			unset($vdSmsLogObj);
 		}
 
+		// Schedule VD Mailer
+		public function executeScheduleVdMailer(sfWebRequest $request){
+			$formArr = $request->getParameterHolder()->getAll();
+			$this->cid = $formArr['cid'];
+			$dd =$formArr['selectedDate'];
+
+			$vdMailerLogObj = new billing_VARIABLE_DISCOUNT_MAILER_LOG();
+	                if($vdMailerLogObj->sendMailerToday($dd))
+			{
+				$this->errorMsg0 = "Mailer is already scheduled.";
+			}
+			else {
+				$this->dateArr = array();
+				for($i=0; $i<9; $i++) {
+					$this->dateArr[] = date('Y-m-d', strtotime('+'.$i.' days'));
+				}
+				if($formArr['isDone']) {
+					$selectedDate = date('Y-m-d', strtotime($dd));
+					$vdMailerLogObj->insertVdMailerSchedule($selectedDate);
+					$this->successMsg = "Updated successfully ...";			
+				}
+			}
+			unset($vdMailerLogObj);
+		}
+
 		// Manage Cash Discount Offer 
 		public function executeManageCashDiscountOffer(sfWebRequest $request){
 				$this->cid      =$request->getParameter('cid');

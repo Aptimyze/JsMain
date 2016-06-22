@@ -265,34 +265,28 @@ class commoninterfaceActions extends sfActions
     	return false;
   }
   /*transfer VD entries from test.VD_UPLOAD_TEMP to billing.VARIABLE_DISCOUNT_TEMP table
-    * @param: $params
-    */
+  * @param: $params
+  * MINI-VD 
+  */
   private function transferVDRecords($params)
   {
   	$uploadIncomplete = false;
 	$tempObj = new billing_VARIABLE_DISCOUNT_TEMP();
-	if($uploadIncomplete==false)
-	{
+	if($uploadIncomplete==false){
 		$tempObj->truncateTable();
 	}
 	unset($tempObj);
-  	//uploadIncomplete -- whether upload was complete last time and offset--index of first row to be inserted in temp
   	$offset = 0;
 	$limit = $params["limit"];    
-
-	if($uploadIncomplete==true && $lastUploadedId>=0)
-		$offset = $lastUploadedId;
-
 	//get uploaded records(with limit and offset at a time)
 	$vdObj = new VariableDiscount();
 	$status = $vdObj->transferVDRecordsToTemp($limit,$offset);
-   	if($status==uploadVD::EMPTY_SOURCE)
-    	{
+
+   	if($status==uploadVD::EMPTY_SOURCE){
     		//show error message
 		$this->forwardTo("commoninterface","uploadVD?NODATA=1&cid=".$this->cid);
     	}
-    	if($status==uploadVD::INCOMPLETE_UPLOAD)
-    	{
+    	if($status==uploadVD::INCOMPLETE_UPLOAD){
     		//show error message
 		$this->forwardTo("commoninterface","uploadVD?INCOMPLETEUPLOAD=1&cid=".$this->cid);
     	}
@@ -300,19 +294,28 @@ class commoninterfaceActions extends sfActions
 
   /* function executeUploadVD
   * @param: request Object
+  * MINI-VD STEP-1 
   */
   public function executeUploadVD(sfWebRequest $request)
   {
-  		if($request->getParameter("SUCCESSFUL"))
+  		if($request->getParameter("SUCCESSFUL")){
+			// successfully upoaded
   			$this->SUCCESSFUL = 1;
-  		else if($request->getParameter("UNAUTHORIZED"))
+		}
+  		else if($request->getParameter("UNAUTHORIZED")){
+			// privilege based
   			$this->UNAUTHORIZED = 1;
-  		else if($request->getParameter("INCOMPLETEUPLOAD"))
+		}
+                else if($request->getParameter("NODATA")){
+			// No data in temp table(test.VD_UPLOAD_TEMP)
+                        $this->NODATA=1;
+		}
+  		else if($request->getParameter("INCOMPLETEUPLOAD")){
+			//incomplete upload in temp table(billing.VARIABLE_DISCOUNT_TEMP)
   			$this->ERROR = 1;
-  		else if($request->getParameter("BACKGROUND_FAILURE"))
+		}
+  		else if($request->getParameter("BACKGROUND_SCRIPT_FAILURE"))
   			$this->BACKGROUND_FAILURE=1;
-  		else if($request->getParameter("NODATA"))
-  			$this->NODATA=1;
   		else
   			$this->UPLOAD = 1;
   }
@@ -320,6 +323,7 @@ class commoninterfaceActions extends sfActions
   /* function executeUpdateVDRecords
   * uploads data from table to VD tables
   * @param: request Object
+  * MINI-VD STEP-2
   */
   public function executeUpdateVDRecords(sfWebRequest $request)
   {
@@ -327,25 +331,21 @@ class commoninterfaceActions extends sfActions
 	$privilage = explode("+",getprivilage($this->cid));
 	if(in_array("IA",$privilage))
 	{
-		//transfer records from client table to temp table
+		//Start -transfer records from client table to temp table
 		$params["limit"] = uploadVD::$RECORDS_SELECTED_PER_TRANSFER; //no of records picked at a time
-		$params["INCOMPLETEUPLOAD"] = $request->getParameter("INCOMPLETEUPLOAD");
 		$this->transferVDRecords($params);
-        
-		//run script to populate entries to VD main tables in background
+		//End -transfer records        
+
+		// Background script execute to populate entries to Main VD tables
 		passthru(JsConstants::$php5path." ".JsConstants::$alertSymfonyRoot."/symfony billing:populateVDEntriesFromTempTable > /dev/null &");
-		/*if($out!=0)
-		{
-			$message = "Error in running populateVDEntriesFromTempTable cron in apps/operations/modules/commoninterface/actions/actions.class.php";
-			CRMAlertManager::sendMailAlert($message,"VDUploadFromTable");
-			//show error message
-			$this->forwardTo("commoninterface","uploadVD?BACKGROUND_FAILURE=1&cid=".$this->cid);
+		/*if($out!=0){
+			$message = "Error in running populateVDEntriesFromTempTable cron";
+			$this->forwardTo("commoninterface","uploadVD?BACKGROUND_SCRIPT_FAILURE=1&cid=".$this->cid);
 		}*/
 		//show success message
 		$this->forwardTo("commoninterface","uploadVD?SUCCESSFUL=1&cid=".$this->cid);
 	}
-	else
-	{
+	else{
 		$this->forwardTo("commoninterface","uploadVD?UNAUTHORIZED=1&cid=".$this->cid);
 	}	
   }

@@ -17,7 +17,7 @@
   </tr>
   <tr>
     <td colspan="2" align="left" valign="top" style="padding:0px 15px 30px 23px;"><div style="font-family:Verdana, Arial; font-size:12px; color:#000000; line-height:17px;"><b>Dear <var>{{NAME_PROFILE:profileid=~$profileid`}},</b><br /><br />
-      The changes made by you in your profile are active now.</div></td>
+      The changes made by you in your profile are live now.</div></td>
   </tr>
   <tr>
     <td colspan="2" style="padding:0px 15px 22px 23px;"><table width="552" border="0" cellspacing="0" cellpadding="0">

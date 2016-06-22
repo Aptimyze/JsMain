@@ -45,6 +45,9 @@ if($Submit)
 			self_astro_details($profileid);
 			$flag_show_template=photo_req_common($profileid,$chkprofilechecksum[1],$dt);
 			$error=$flag_show_template;
+			$memObject=new UserMemcache;
+			$memObject->setDataToMem('','commHistory_'.$profileid.'_'.$chkprofilechecksum[1]);
+			$memObject->setDataToMem('','commHistory_'.$chkprofilechecksum[1].'_'.$profileid);
 		}
 		echo $error;die;
 	}echo 'ye';die;	

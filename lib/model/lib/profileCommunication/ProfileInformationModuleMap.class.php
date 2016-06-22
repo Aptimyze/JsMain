@@ -56,7 +56,6 @@ class ProfileInformationModuleMap
                                    return $k;
                         }
                 }
-               
                 throw new JsException("","Wrong module or infoType is given in profileInformationModuleMap.class.php");
         }
         
@@ -79,7 +78,7 @@ class ProfileInformationModuleMap
 			"TUPLE_ORDER"=> "TIME",
 			"ACTIVE_FLAG"=> "Y",
 			"AJAX_FLAG"=> "N",
-			"VIEW_FLAG"=> "NEW",
+			"VIEW_FLAG"=> "ALL",
 			"CALLOUT_MESSAGES"=> "",
 			"VIEW_ALL_LINK"=> "",
 			"TITLE"=> "People to Respond to",

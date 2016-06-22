@@ -9,7 +9,11 @@
 
 ~if !($profileid eq '8298074' || $profileid eq '13038359' || $profileid eq '12970375')`
     <!--start:help widget-->
-    ~include_component('common', 'helpWidget')`
+    ~if $module eq 'help'`
+        ~include_component('common', 'helpWidget', ['hideHelpMenu'=>'true'])`
+    ~else`
+        ~include_component('common', 'helpWidget')`
+    ~/if`
     <!--end:help widget-->
 ~/if`
 <!--start:banner-->
@@ -188,13 +192,17 @@
 <!--end:footer-->
 <script type="text/javascript">
     $(window).load(function(){
-        ~if $module eq 'register' || $module eq 'membership' || $action eq 'phoneVerificationPcDisplay'`
+        ~if $module eq 'register' || $module eq 'membership' || $action eq 'phoneVerificationPcDisplay' || ($module eq 'contactus' && $action eq 'index')`
             ~if $profileid`
                 var udObj = '~CommonUtility::getFreshDeskDetails($profileid)`';
                 var userDetails = $.parseJSON(udObj);
                 populateFreshDeskGlobal(userDetails['username'], userDetails['email']);
-                ~if $module eq 'membership'`
+                ~if $module eq 'membership' || $fromSideLink eq '1'`
                     popupFreshDeskGlobal(userDetails['username'], userDetails['email']);
+                ~/if`
+            ~else`
+                ~if $fromSideLink eq '1'`
+                    popupFreshDeskGlobal("", "");
                 ~/if`
             ~/if`
         ~/if`
@@ -204,7 +212,7 @@
         ~/if`
     });
 </script>
-~if $module eq 'register' || $module eq 'membership' || $action eq 'phoneVerificationPcDisplay'`
+~if $module eq 'register' || $module eq 'membership' || $action eq 'phoneVerificationPcDisplay' || ($module eq 'contactus' && $action eq 'index')`
     ~if !($profileid eq '8298074' || $profileid eq '13038359' || $profileid eq '12970375')`
         ~include_partial('global/freshDesk')`
     ~/if`

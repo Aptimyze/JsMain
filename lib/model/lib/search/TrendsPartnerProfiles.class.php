@@ -113,7 +113,7 @@ class TrendsPartnerProfiles extends SearchParamters {
     }
     $this->showFilteredProfiles = 'N';
   }
-
+        
   /**
    * This fucntion sets user forward criteria to be used
    * @param type $myrow user trends data
