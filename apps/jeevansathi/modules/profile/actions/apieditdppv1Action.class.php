@@ -98,7 +98,6 @@ class apieditdppv1Action extends sfAction
 	{
 		$request = sfContext::getInstance()->getRequest();
 		$arrEditDppFieldIDs = $request->getParameter("editFieldArr");
-		
 		//
 		//Update Partner Income Also if Income is updated
 		//if(stristr($scase,"LINCOME") || stristr($scase,"HINCOME") || stristr($scase,"LINCOME_DOL") ||stristr($scase,"HINCOME_DOL"))
@@ -329,6 +328,17 @@ class apieditdppv1Action extends sfAction
 				}
 				$arrOut["P_CITY"] = rtrim($cityString,",");
 				$arrOut['P_STATE'] = implode(",",$stateArr);
+				$arrOut['CITY_INDIA'] = NULL;
+				$this->m_bDppUpdate = true;
+			}
+			else if($key == "P_COUNTRY")
+			{
+				if(strpos($val,'51') !== false)
+				{
+					$arrOut['CITY_INDIA'] = NULL;
+				}
+				$arrOut["P_COUNTRY"] = $val;
+				$this->m_bDppUpdate = true;
 			}
 			else
 			{
@@ -336,7 +346,6 @@ class apieditdppv1Action extends sfAction
 				$this->m_bDppUpdate = true;
 			}
 		}//End of For loop
-		
 		$request->setParameter("editFieldArr",$arrOut);
 	}
 }

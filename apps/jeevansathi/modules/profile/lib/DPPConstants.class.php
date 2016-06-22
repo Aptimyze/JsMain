@@ -34,7 +34,8 @@
 										'P_INCOME'=>'PARTNER_INCOME',
 										'P_GENDER'=>'GENDER',
                                         'P_HAVECHILD'=>'CHILDREN',
-                                        'P_STATE'=>'STATE'
+                                        'P_STATE'=>'STATE',
+                                        'CITY_INDIA'=>'CITY_INDIA'
 										);
 	public static $FormatColums = array(
 									'P_RELIGION',
@@ -55,6 +56,7 @@
 									'P_CITY',
                                     'P_HAVECHILD',
                                     'P_STATE',
+                                    'CITY_INDIA'
 									);									
 	public static $arrAP_DPP_TEMP_FIELDS = array(
 										'GENDER',

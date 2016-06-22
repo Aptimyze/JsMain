@@ -280,6 +280,7 @@ class ValidatorsFactory{
 		case 'partner_education':
 		case 'partner_occupation':
 		case 'partner_state':
+		case 'partner_city_india':
 			{
 				$szName = $field->getName();
 				$szMapLabel = ObjectiveEditFieldMap::getFieldMapKey($szName);
