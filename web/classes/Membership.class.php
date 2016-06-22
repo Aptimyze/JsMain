@@ -272,9 +272,9 @@ class Membership
         
         if ($suspected_check) send_email('vikas@jeevansathi.com', $this->profileid, "Payment Profileid of suspected email-id", "payment@jeevansathi.com");
         
-        $subject = "Bill for your online subscription";
+        // $subject = "Bill for your online subscription";
         
-        $msg = $this->order_mail_content($this->username, $this->type, $this->amount, $this->entry_dt, $myrow['ORDERID'], $myrow['ID']);
+        // $msg = $this->order_mail_content($this->username, $this->type, $this->amount, $this->entry_dt, $myrow['ORDERID'], $myrow['ID']);
         
         $receiptid = $this->receiptid;
         $billid = $this->billid;
