@@ -59,6 +59,7 @@ class MembershipMailer {
                         $mailerLinks = $mailerServiceObj->getLinks();
                         $unsubscribeLink = $mailerLinks['UNSUBSCRIBE'];
                         $smartyObj->assign("profileid",$dataArr['profileid']);
+                        $smartyObj->assign("PROFILEID",$dataArr['profileid']);
                         $smartyObj->assign("fromEmailId","membership@jeevansathi.com");
                         $smartyObj->assign("unsubscribeLink",$unsubscribeLink);
                         $smartyObj->assign("benefits",$dataArr['benefits']);
@@ -457,6 +458,7 @@ class MembershipMailer {
         $dataArr['servMain'] = $memHandlerObj->getUserServiceName($servMain);
         $profileDetails = $memHandlerObj->getUserData($profileid);
         $dataArr['username'] = $profileDetails['USERNAME'];
+        $dataArr['profileid'] = $profileid;
         
         if(!empty($servMain)){
         	$subject = "Congratulations! We welcome you as an " . $memHandlerObj->getUserServiceName($servMain) . " member on Jeevansathi";
