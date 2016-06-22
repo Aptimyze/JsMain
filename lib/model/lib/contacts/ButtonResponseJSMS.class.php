@@ -516,27 +516,13 @@ Class ButtonResponseJSMS
 			//var_dump($viewer);
 			//var_dump($type);die;
 
-			//print()
-
-			if(MobileCommon::isNewMobileSite() && $params["IGNORED"] == 1)
-			{	
-				$type='B';
-			}
+			
 			$buttons = ButtonResponseFinal::getListingButtons($infoKey, "M", $viewer,$type,$params,$count);
 
 			if($params["IGNORED"] == 1){
 			
+			$buttons["buttons"]["3"]["label"]="Unblock";
 			
-			if(!MobileCommon::isNewMobileSite())
-			
-			{
-				$buttons["buttons"]["3"]["label"]="Unblock";
-			}
-				//print_r($buttons);die;
-			//$button[] = self::getShortListButton($this->loginProfile, $this->otherProfile,$params["BOOKMARKED"]);
-			//$button[] = self::getIgnoreButton($this->loginProfile, $this->otherProfile,$params["IGNORED"]);
-			//print_r($responseArray);die;
-
 			}
 
 			$responseArray = $buttons;
