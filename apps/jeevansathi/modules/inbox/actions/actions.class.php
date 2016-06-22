@@ -147,7 +147,7 @@ class inboxActions extends sfActions
 							}
 							else
 							{
-						//		$this->sendMail();
+								$this->sendMail();
 							}
 						}
 						else
@@ -172,7 +172,7 @@ class inboxActions extends sfActions
                                                         }
                                                         else
                                                         {
-                                                //              $this->sendMail();
+                                                              $this->sendMail();
                                                         }
                                                 }
                                                 else
@@ -197,7 +197,7 @@ class inboxActions extends sfActions
                                                         }
                                                         else
                                                         {
-                                                //              $this->sendMail();
+                                                              $this->sendMail();
                                                         }
                                                 }
                                                 else
@@ -223,7 +223,7 @@ class inboxActions extends sfActions
                                                         }
                                                         else
                                                         {
-                                                //              $this->sendMail();
+                                                              $this->sendMail();
                                                         }
                                                 }
                                                 else
@@ -249,7 +249,7 @@ class inboxActions extends sfActions
                                                         }
                                                         else
                                                         {
-                                                //              $this->sendMail();
+                                                              $this->sendMail();
                                                         }
                                                 }
                                                 else
@@ -456,7 +456,7 @@ public function executePerformV2(sfWebRequest $request)
                                                         }
                                                         else
                                                         {
-                                                //              $this->sendMail();
+                                                              $this->sendMail();
                                                         }
                                                 }
                                                 else
@@ -505,7 +505,7 @@ public function executePerformV2(sfWebRequest $request)
                                                         }
                                                         else
                                                         {
-                                                //              $this->sendMail();
+                                                              $this->sendMail();
                                                         }
                                                 }
                                                 else
@@ -560,7 +560,7 @@ public function executePerformV2(sfWebRequest $request)
 									}
 									else
 									{
-								//              $this->sendMail();
+								              $this->sendMail();
 									}
 								}
 								else
@@ -595,7 +595,7 @@ public function executePerformV2(sfWebRequest $request)
                                                                         }
                                                                         else
                                                                         {
-                                                                //              $this->sendMail();
+                                                                              $this->sendMail();
                                                                         }
                                                                 }
                                                                 else
@@ -649,7 +649,7 @@ public function executePerformV2(sfWebRequest $request)
 								}
 								else
 								{
-							//              $this->sendMail();
+							              $this->sendMail();
 								}
 							}
 							else
@@ -680,7 +680,7 @@ public function executePerformV2(sfWebRequest $request)
                                                         }
                                                         else
                                                         {
-                                                //              $this->sendMail();
+                                                              $this->sendMail();
                                                         }
                                                 }
                                                 else
@@ -891,5 +891,10 @@ public function executePerformV2(sfWebRequest $request)
       $profileCacheObj->unsetKey("MATCHALERT");
       $request->setAttribute("resetMatchAlertCount",1);
     }
+  }
+  private function sendMail()
+  {
+	$http_msg=print_r($_SERVER,true);
+	mail("eshajain88@gmail.com,lavesh.rawat@gmail.com","rabbit mq server issue","rabbit mq server issue");
   }
 }
