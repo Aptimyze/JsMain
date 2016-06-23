@@ -293,7 +293,7 @@ include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 				$appendUrl='#Family';
 				return $this->getShortURL ($longURL, $messageValue["RECEIVER"]["PROFILEID"],$messageValue["EMAIL"],'',$appendUrl);
 				case "PHOTO_UPLOAD_URL":
-				$longURL = $this->SITE_URL."/social/addPhotos";
+				$longURL = $this->SITE_URL."/social/addPhotos?noUseVar=1";
 				return $this->getShortURL ($longURL, $messageValue["RECEIVER"]["PROFILEID"],$messageValue["EMAIL"]);
 				case "URL_EDUCATION":
 				$longURL = $this->SITE_URL."/profile/viewprofile.php?ownview=1";
