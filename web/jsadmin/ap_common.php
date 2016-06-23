@@ -45,6 +45,7 @@ function startAutoApply($profileid,$operator='',$status='BILLED')
 		$parameters["PARTNER_BTYPE"]=$jpartnerObj->getPARTNER_BTYPE();
 		$parameters["PARTNER_CASTE"]=$jpartnerObj->getPARTNER_CASTE();
 		$parameters["PARTNER_CITYRES"]=$jpartnerObj->getPARTNER_CITYRES();
+                $parameters["STATE"]=$jpartnerObj->getSTATE();
 		$parameters["PARTNER_COUNTRYRES"]=$jpartnerObj->getPARTNER_COUNTRYRES();
 		$parameters["PARTNER_DIET"]=$jpartnerObj->getPARTNER_DIET();
 		$parameters["PARTNER_DRINK"]=$jpartnerObj->getPARTNER_DRINK();
