@@ -177,7 +177,7 @@ class staticActions extends sfActions
 		$this->nextAction = "/search/perform?searchId=$searchId&currentPage=$currentPage";*/
 		
 		$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
-		if($request->getcookie('loginAttempt'))
+		if($request->getcookie('loginAttemptNew'))
     {
     	
         		$this->captchaDiv=1;
@@ -390,7 +390,7 @@ public function executeCALRedirection($request){
     //Logout page
   public function executeLogoutPage(sfWebRequest $request)
   {
-    if($request->getcookie('loginAttempt'))
+    if($request->getcookie('loginAttemptNew'))
     {
     	
         		$this->captchaDiv=1;

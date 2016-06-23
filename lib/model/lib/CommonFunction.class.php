@@ -570,5 +570,40 @@ class CommonFunction
                 }
                 return trim($returnStr,',');
         }
+  
+  /**
+   * convertUpdateStrToArray : A utility Function
+   * Convert string in any of following formats
+   *  a) AGE=\"N\", MSTATUS=\"N\", RELIGION=\"N\", COUNTRY_RES=\"N\"
+   *  b) AGE='N', MSTATUS='N', RELIGION='N', COUNTRY_RES='N'
+   *  
+   * to array in which column name are key and value is value specified in string 
+   * i.e.
+   *    array( "AGE"=>'N',"MSTATUS"=>'N', "RELIGION"=>'N', "COUNTRY_RES"='N');
+   * @param type $uptStr
+   * @return array
+   */
+  public static function convertUpdateStrToArray($uptStr)
+  {
+    if(0===strlen($uptStr)) {
+      return array();
+    }
+    
+    $arrayColumns = explode(",",$uptStr);
+    $arrOut = array();
+    $lastToken = '';
+    foreach($arrayColumns as $params) {
+      $arrTokens = explode("=",$params);
+      if(count($arrTokens) === 1) {
+        $arrOut[$lastToken] .= $params;
+        continue;
+      }
+      $szVal = $arrTokens[1];
+      $szVal = str_replace(array('\'','"',"\\"), "", $szVal);
+      $arrOut[trim($arrTokens[0])] = trim($szVal);
+      $lastToken = trim($arrTokens[0]);
+    }
+    return $arrOut;
+  }
 }
 ?>

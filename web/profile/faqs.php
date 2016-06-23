@@ -1,4 +1,6 @@
 <?php
+	header("Location: $SITE_URL/profile/faqs.php?checksum=$checksum",true,301);
+	die;
 	//to zip the file before sending it
 	$zipIt = 0;
 	if (strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip'))
