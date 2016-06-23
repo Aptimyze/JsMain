@@ -311,6 +311,7 @@ class apieditdppv1Action extends sfAction
 			}
 			else if($key == 'P_CITY')
 			{
+				$this->m_bDppUpdate = true;
 				$cityStateArr = explode(",",$val);
 				$stateIndiaArr = FieldMap::getFieldLabel("state_india",'',1);
 				foreach($cityStateArr as $k=>$v)
@@ -325,26 +326,48 @@ class apieditdppv1Action extends sfAction
 					}
 					
 				}
-				foreach($cityArr as $key=>$value)
-				{	
-					if(!in_array(substr($value,0,2),$stateArr))
-					{
-						$cityString .= $value.",";
+				if(is_array($cityArr))
+				{
+					foreach($cityArr as $key=>$value)
+					{	
+						if(!in_array(substr($value,0,2),$stateArr))
+						{
+							$cityString .= $value.",";
+						}
 					}
+					$arrOut["P_CITY"] = rtrim($cityString,",");
 				}
-				$arrOut["P_CITY"] = rtrim($cityString,",");
-				$arrOut['P_STATE'] = implode(",",$stateArr);
-				$arrOut['CITY_INDIA'] = NULL;
-				$this->m_bDppUpdate = true;
+				else
+				{
+					$arrOut["P_CITY"] = "";
+				}
+				if(is_array($stateArr))
+				{
+					$arrOut['P_STATE'] = implode(",",$stateArr);	
+				}
+				else
+				{
+					$arrOut["P_STATE"] = "";
+				}
+
+				//For AP Users. CITY_INDIA should not be set to null in case of AP users
+				if(!in_array("T", explode(",", $this->m_objLoginProfile->getSUBSCRIPTION())))
+				{
+					$arrOut['CITY_INDIA'] = NULL;	
+				}
 			}
 			else if($key == "P_COUNTRY")
 			{
+				$this->m_bDppUpdate = true;
 				if(strpos($val,'51') !== false)
 				{
-					$arrOut['CITY_INDIA'] = NULL;
+					//For AP Users. CITY_INDIA should not be set to null in case of AP users
+					if(!in_array("T", explode(",", $this->m_objLoginProfile->getSUBSCRIPTION())))
+					{
+						$arrOut['CITY_INDIA'] = NULL;	
+					}
 				}
 				$arrOut["P_COUNTRY"] = $val;
-				$this->m_bDppUpdate = true;
 			}
 			else
 			{
