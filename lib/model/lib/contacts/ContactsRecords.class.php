@@ -443,7 +443,7 @@ class ContactsRecords
 			$result = true;
 			$url = JsConstants::$contactUrl . "/v1/contacts/updateseen/" . $profileid;
 			$params['TYPE'] = $type;
-			if ($type == ContactHandler::INITIATED)
+			if ($type == ContactHandler::INITIATED ||$type == ContactHandler::FILTERED )
 				$params["VIEWEDTYPE"] = "RECEIVER";
 			elseif ($type == ContactHandler::ACCEPT)
 				$params["VIEWEDTYPE"] = "SENDER";
