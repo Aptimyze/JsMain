@@ -152,7 +152,7 @@ if($data)
 			for($k=0; $k<$agentCnt;$k++)
 			{
 				$agent_name =$agentArray[$k];
-                                $sql ="select PROFILEID, DISPOSITION, VALIDATION, CONVERT_TZ(ENTRY_DT,'EST','IST') as ENTRY_DT,COMMENT, MODE from incentive.HISTORY where ENTRY_DT >='$start_dt 00:00:00' AND ENTRY_DT <='$end_dt 23:59:59' AND ENTRYBY='$agent_name' ORDER BY PROFILEID ASC";
+                                $sql ="select PROFILEID, DISPOSITION, VALIDATION, ENTRY_DT, COMMENT, MODE from incentive.HISTORY where ENTRY_DT >='$start_dt 00:00:00' AND ENTRY_DT <='$end_dt 23:59:59' AND ENTRYBY='$agent_name' ORDER BY PROFILEID ASC,ENTRY_DT DESC";
                                 $res_disp =mysql_query_decide($sql,$db) or die("$sql".mysql_error_js());
 				$i= 0;
                                 while($row_disp =mysql_fetch_array($res_disp))
