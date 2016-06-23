@@ -378,7 +378,7 @@ class SearchApiStrategyV1
                                                 elseif($fieldName=='size'){
                                                         $this->output[$profileKey][$i][$fieldName] = $value;
                                                 }
-                                                elseif($fieldName=='college' || $fieldName=='company_name'){
+                                                elseif(in_array($fieldName,array('college','company_name'))){
                                                         if(!$v[$vv]){
                                                                 $value = null;
                                                         }

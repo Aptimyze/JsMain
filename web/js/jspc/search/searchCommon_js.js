@@ -102,19 +102,17 @@ function searchResultMaping(val, noPhotoDiv, val1, profileNoId, defaultImage, fe
    * Verification seal  display handling LATER 
    */
 var verificationDocumentsList;
-console.log(val1.username+" == "+val1.verification_seal);
   if (val1.verification_seal) {
     verificationSeal = ""; //val1.verification_seal;
     if(val1.verification_seal instanceof Array){
       verificationDocumentsList = val1.verification_seal.join(",</li><li>");
-      console.log(verificationDocumentsList);
       verificationDocumentsList = "<li>"+verificationDocumentsList+"</li>";
     }
   } else {
     verificationSeal = "disp-none";
     verificationDocumentsList = null;
   }
-console.log(verificationDocumentsList);
+
   if (val1.photo.label != null) val1.photo.label = 1;
   else val1.photo.label = 0;
   if (typeof val1.religion == 'undefined') val1.religion = '';
