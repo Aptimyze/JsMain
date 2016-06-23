@@ -305,6 +305,7 @@ class apieditdppv1Action extends sfAction
 			}
 			else if($key == 'P_CITY')
 			{
+				$this->m_bDppUpdate = true;
 				$cityStateArr = explode(",",$val);
 				$stateIndiaArr = FieldMap::getFieldLabel("state_india",'',1);
 				foreach($cityStateArr as $k=>$v)
@@ -328,17 +329,22 @@ class apieditdppv1Action extends sfAction
 				}
 				$arrOut["P_CITY"] = rtrim($cityString,",");
 				$arrOut['P_STATE'] = implode(",",$stateArr);
-				$arrOut['CITY_INDIA'] = NULL;
-				$this->m_bDppUpdate = true;
+				if(!in_array("T", explode(",", $this->m_objLoginProfile->getSUBSCRIPTION())))
+				{
+					$arrOut['CITY_INDIA'] = NULL;	
+				}
 			}
 			else if($key == "P_COUNTRY")
 			{
+				$this->m_bDppUpdate = true;
 				if(strpos($val,'51') !== false)
 				{
-					$arrOut['CITY_INDIA'] = NULL;
+					if(!in_array("T", explode(",", $this->m_objLoginProfile->getSUBSCRIPTION())))
+					{
+						$arrOut['CITY_INDIA'] = NULL;	
+					}
 				}
 				$arrOut["P_COUNTRY"] = $val;
-				$this->m_bDppUpdate = true;
 			}
 			else
 			{
