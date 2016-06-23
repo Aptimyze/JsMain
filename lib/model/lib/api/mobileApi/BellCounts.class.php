@@ -21,7 +21,7 @@ class BellCounts
 				if(!$bellCounts["FILTERED_NEW"]){
 					$bellCounts["FILTERED_NEW"] = 0;
 				}
-			if(MobileCommon::isApp()=="I" ||( MobileCommon::isApp()=="A" && sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")  && sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")<47))
+			if(MobileCommon::isApp()=="I" ||( MobileCommon::isApp()=="A" && sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")  && sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")<48))
 			{
 				$bellCounts["FILTERED_NEW"] = 0;
 			}
