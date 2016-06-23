@@ -75,7 +75,7 @@ class csvGenerationHandler
                         $paidCampaignObj->updateDialStatus($dateTime);
 		}
                 elseif($processName=="rcbCampaignInDialer"){
-                        $dateTime =date("Y-m-d",time()-2*24*60*60);
+                        $dateTime =date("Y-m-d H:i:s",time()-2*24*60*60);
                         $paidCampaignObj =new incentive_SALES_CSV_DATA_RCB();
                         $paidCampaignObj->updateDialStatus($dateTime);
                 }

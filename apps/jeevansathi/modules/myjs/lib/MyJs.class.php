@@ -475,6 +475,8 @@ class MyJs implements Module
                         $limitStart = 0;
                 }
                 $condition = "$limitStart , $limit";
+                if($infoType == "INTEREST_RECEIVED")
+                	$condition = $limit;
 		return $condition;
 	}
 

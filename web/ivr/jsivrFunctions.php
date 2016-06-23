@@ -743,10 +743,16 @@ return $returnArray;
 		}
 		else if($actionStatus == 'D') // Denied marked status (profile is marked as Unverified state if user denies the request)
 		{
-			if($phoneType=='M')
+			if($phoneType=='M'){
+				$arrFields['MOB_STATUS']='N';
+				$arrFields['PHONE_FLAG']='';
 				$query_param = "MOB_STATUS='N',PHONE_FLAG=''";
-			elseif ($phoneType=='L')
+			}
+			elseif ($phoneType=='L'){
+				$arrFields['LANDL_STATUS']='N';
+				$arrFields['PHONE_FLAG']='';
 				$query_param = "LANDL_STATUS='N',PHONE_FLAG=''";
+			}
 			else 
 			{
 				deleteCachedJprofile_Contact($profileid);
