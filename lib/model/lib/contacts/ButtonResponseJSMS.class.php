@@ -728,7 +728,7 @@ Class ButtonResponseJSMS
 	public static function getDeclineButton($page='',$declineAfterAccept = false,$enable=true)
 	{
 		$button["iconid"] = IdToAppImagesMapping::DECLINE;
-		$button["label"]  = $declineAfterAccept?"Delete Interest":"Decline";
+		$button["label"]  = $declineAfterAccept?"Decline Interest":"Decline";
 		$button["action"] = "DECLINE";
 		if (isset($page["responseTracking"]))
 			$button["params"] = "&responseTracking=" . $page["responseTracking"];
