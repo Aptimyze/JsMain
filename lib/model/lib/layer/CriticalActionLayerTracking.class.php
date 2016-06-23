@@ -5,7 +5,7 @@
 class CriticalActionLayerTracking
 {
 
-  const ANALYTIC_SCORE_THRESHOLD=90;
+  const ANALYTIC_SCORE_THRESHOLD=70;
   const RCB_LAYER_REF_DATE='2011-01-01';
 
   /* this function will select entries for today
