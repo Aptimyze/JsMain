@@ -28444,7 +28444,6 @@ return Backbone.BrowserStorage;
 
     converse.initialize = function (settings, callback) {
         "use strict";
-        //console.log("here2");
         var converse = this;
         var unloadevent;
         if ('onpagehide' in window) {
@@ -28934,12 +28933,10 @@ return Backbone.BrowserStorage;
         this.onStatusInitialized = function (deferred) {
             this.registerIntervalHandler();				
             this.roster = new this.RosterContacts();
-            //console.log("here3");
             //console.log(this.roster);
             
             this.roster.browserStorage = new Backbone.BrowserStorage[this.storage](
                 b64_sha1('converse.contacts-'+this.bare_jid));
-            //console.log(this.roster.browserStorage);
             this.chatboxes.onConnected();
             this.giveFeedback(__('Contacts'));
             if (typeof this.callback === 'function') {
@@ -29705,7 +29702,7 @@ return Backbone.BrowserStorage;
                         $el = $('<div id="conversejs">');
                         //console.log($el);
                         //console.log("ankita");
-                        //$('body').append($el);
+                        $('body').append($el);
                     }
                     //console.log(converse.templates.chats_panel());
                     $el.html(converse.templates.chats_panel());
@@ -34021,6 +34018,20 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                         this.$el.hide();
                         return this;
                     }
+                    /*var myid = this.model.id;
+                    if(myid=="a4@localhost")
+                    {
+                            converse.getVCard(myid,function (iq, jid, fullname, image, image_type, url) {
+                            console.log(iq);
+                            console.log(iq.getAttribute('EMAIL'));
+                            var email = $(iq).find("EMAIL").text();
+                            console.log(email);
+                            console.log(this.model);
+                            
+                        });
+                             
+                    }*/
+
                     var item = this.model,
                         ask = item.get('ask'),
                         chat_status = item.get('chat_status'),
@@ -34071,11 +34082,13 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                         ));
                         converse.controlboxtoggle.showControlBox();
                     } else if (subscription === 'both' || subscription === 'to') {
-                        //console.log("ankita_roster_items");
+                        console.log("ankita_roster_items");
                         //console.log(item.toJSON());
                         var roster_data = item.toJSON();
+                        console.log(roster_data);
                         var group = roster_data.groups[0];
-                        var userid = roster_data.id; 
+                        var userid = roster_data.id;
+                        //converse.getVCard(userid);
                         //set json data for first time listing display
                         if($("#listing_tab1").length===0)       
                         {
@@ -37063,6 +37076,7 @@ Strophe.RSM.prototype = {
             });
 
             converse.createRequestingContactFromVCard = function (presence, iq, jid, fullname, img, img_type, url) {
+                console.log("createRequestingContactFromVCard");
                 var bare_jid = Strophe.getBareJidFromJid(jid);
                 var nick = $(presence).children('nick[xmlns="'+Strophe.NS.NICK+'"]').text();
                 var user_data = {
@@ -37160,10 +37174,17 @@ Strophe.RSM.prototype = {
 
 
             var onContactAdd = function (contact) {
-                if (!contact.get('vcard_updated')) {
+                console.log(contact.get('vcard_updated')+"ankita");
+                if (!contact.get('vcard_updated')) {  //ankita
                     // This will update the vcard, which triggers a change
                     // request which will rerender the roster contact.
-                    converse.getVCard(contact.get('jid'));
+                    console.log("vcard on first load...");
+                    converse.getVCard(contact.get('jid'),function (iq,jid, fullname, image, image_type, url) {
+                            console.log("using vcard234");
+                            console.log(xmlToJson($(iq).children('vCard')[0]));
+    
+                           
+                        });
                 }
             };
             converse.on('initialized', function () {
