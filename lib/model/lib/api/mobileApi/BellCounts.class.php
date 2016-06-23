@@ -16,11 +16,15 @@ class BellCounts
 			$bellCounts['NEW_MATCHES']=JsCommon::convert99($justJoinedMemcacheCount);
             //            $justJoinMatchArr = SearchCommonFunctions::getJustJoinedMatches($profileObj); 
                         //$bellCounts['NEW_MATCHES']=JsCommon::convert99($justJoinMatchArr['CNT']);
-                        
+            
 			$bellCounts["FILTERED_NEW"] = $profileMemcacheObj->get("FILTERED_NEW");
 				if(!$bellCounts["FILTERED_NEW"]){
 					$bellCounts["FILTERED_NEW"] = 0;
 				}
+			if(MobileCommon::isApp()=="I" ||( MobileCommon::isApp()=="A" && sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")  && sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")<47))
+			{
+				$bellCounts["FILTERED_NEW"] = 0;
+			}
 			$bellCounts['TOTAL_NEW']=JsCommon::convert99($profileMemcacheObj->get("AWAITING_RESPONSE_NEW") + $profileMemcacheObj->get("ACC_ME_NEW") + $bellCounts['MESSAGE_NEW'] + $profileMemcacheObj->get("PHOTO_REQUEST_NEW") + $justJoinedMemcacheCount + $bellCounts["FILTERED_NEW"]);
 			return $bellCounts;
 		}
