@@ -99,6 +99,7 @@ Class ButtonResponseApi
 							$responseArray["infobtnlabel"] = "They declined your interest on " . $date;
 							break;
 						case ContactHandler::CANCEL:
+							$button[] = self::getAcceptButton("Accept Again");
 							$responseArray["infobtnlabel"] = "You cancelled your interest on " . $date;
 							break;
 					}
@@ -363,6 +364,7 @@ Class ButtonResponseApi
 					break;
 				case ContactHandler::CANCEL:
 					//echo "CANCEL";
+					$button[] = self::getAcceptButton("Accept Again");
 					$responseArray["infobtnlabel"] = "You cancelled your interest on " . $date;
 					break;
 			}
@@ -552,6 +554,7 @@ Class ButtonResponseApi
 					$responseArray["infobtnlabel"] = "They declined interest on " . $date;
 					break;
 				case ContactHandler::CANCEL:
+					$button[]                      = self::getAcceptButton("Accept Again");
 					$responseArray["infobtnlabel"] = "You cancelled your interest on " . $date;
 					break;
 			}
