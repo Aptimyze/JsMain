@@ -713,6 +713,22 @@ function declineInterest(result,action, index){
                 $("#errorMsgHead").html(errorMsgLabel);
   }*/
     $("#closeLayer").show();
+   
+   
+    var address_url=window.location.href;
+   if(address_url.indexOf("?") >= 0){
+		var hash;
+		var pageSource='';
+		var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+		for(var i = 0; i < hashes.length; i++)
+		{
+			hash = hashes[i].split('=');
+			if(hash[0]=="contact_id")
+				pageSource=hash[1];
+		}
+		if(pageSource!='' && (pageSource.indexOf("INTEREST_RECEIVED") >= 0 ||pageSource.indexOf("FILTERED_INTEREST") >= 0))
+				handleSwipe('swipeleft','left','','','');
+	}
 }
 function writeMessage(result, action, index){
                if ($("#lastMsgId_"+index).length) $("#lastMsgId_"+index).css("font-weight",'300').css('font-family','Roboto');

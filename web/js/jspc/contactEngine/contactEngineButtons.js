@@ -104,6 +104,11 @@ ajaxData=this.makePostDataForAjax(this.profileChecksum);
            {
 				data.data = response;
 				data.post();
+				if(data.name=="DECLINE" && data.pageName=="VDP")
+				{
+					if($("#show_nextListingProfile").length && $("#show_nextListingProfile")[0]!=undefined)
+						$("#show_nextListingProfile")[0].click();
+				}
 			}
           },
           error: function(response,data){
