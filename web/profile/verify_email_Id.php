@@ -10,6 +10,7 @@
 ***********************************************************************************************************************/
 
 include_once("connect.inc");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 $db=connect_db();
 
 $data = authenticated($checksum);
@@ -136,13 +137,21 @@ if ($data)
 	                         }
 			}
 			//end of code added by neha.
+			$objUpdate = JProfileUpdateLib::getInstance();
+			$arrParams = array("EMAIL"=>$newemail);
 			$sql = "UPDATE newjs.JPROFILE SET EMAIL = '$newemail'";  // updating emailId
 
-			if ($verifyemail == 'Y')   	// in case verification of email was required.
-				$sql.= " , VERIFY_EMAIL ='N'";
-			$sql.=" WHERE PROFILEID = '$profileid'";
-		
-			$res = mysql_query_decide($sql) or logError("Error in updating email",$sql);
+			if ($verifyemail == 'Y') {    // in case verification of email was required.
+				$sql .= " , VERIFY_EMAIL ='N'";
+				$arrParams["VERIFY_EMAIL "] = 'N';
+			}
+//			$sql.=" WHERE PROFILEID = '$profileid'";
+//			$res = mysql_query_decide($sql) or logError("Error in updating email",$sql);
+			$result = $objUpdate->editJPROFILE($arrParams,$profileid,'PROFILEID');
+			if (false === $result) {
+				logError("Error in updating email",$sql." WHERE PROFILEID = '$profileid'");
+			}
+
 			$smarty->assign("emailmod","1");
 			$smarty->assign("newemail",$newemail);
 			//$smarty->display("verify_email_Id.htm");
@@ -175,9 +184,13 @@ if ($data)
 					$sql = "DELETE FROM bounces.BOUNCED_MAILS WHERE EMAIL = '$email'";
 					$res = mysql_query_decide($sql) or logError("Error in updating email",$sql);
 
-
-					$sql = "UPDATE newjs.JPROFILE SET VERIFY_EMAIL = 'N' WHERE PROFILEID = '$profileid'";
-                        		$res = mysql_query_decide($sql) or logError("Error in updating email",$sql);
+//					$sql = "UPDATE newjs.JPROFILE SET VERIFY_EMAIL = 'N' WHERE PROFILEID = '$profileid'";
+//               		$res = mysql_query_decide($sql) or logError("Error in updating email",$sql);
+					$objUpdate = JProfileUpdateLib::getInstance();
+					$result = $objUpdate->editJPROFILE(array('EMAIL'=>$email),$profileid,'PROFILEID');
+					if(false === $result) {
+						logError("Error in updating email");
+					}
 					break;
 
 				// in case emails sent to emailID have bounced back
@@ -190,8 +203,14 @@ if ($data)
 
 				// in case verification of email is desired.
 
-				case 3:$sql = "UPDATE newjs.JPROFILE SET VERIFY_EMAIL = 'N' WHERE PROFILEID = '$profileid'";
-                                       $res = mysql_query_decide($sql) or logError("Error in updating email",$sql);
+				case 3:
+//					$sql = "UPDATE newjs.JPROFILE SET VERIFY_EMAIL = 'N' WHERE PROFILEID = '$profileid'";
+//                                       $res = mysql_query_decide($sql) or logError("Error in updating email",$sql);
+					$objUpdate = JProfileUpdateLib::getInstance();
+					$result = $objUpdate->editJPROFILE(array('VERIFY_EMAIL'=>'N'),$profileid,'PROFILEID');
+					if(false === $result) {
+						logError("Error in updating verify_email");
+					}
 					break;
 			}
 			echo "<html><body><META HTTP-EQUIV=\"refresh\" CONTENT=\"0;URL=$SITE_URL/profile/mainmenu.php?checksum=$checksum&profilechecksum=$profilechecksum&username=$username&email=$email\"></body></html>";

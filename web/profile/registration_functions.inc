@@ -459,6 +459,15 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
      *
      */	 
 	function update_about_yourself($about_yourself,$profileid,$db,$record_id="",$partitionLeads="sugarcrm.leads",$partitionLeadsCstm="sugarcrm.leads_cstm",$process='1'){
+				//adding mailing to gmail account to check if file is being used
+				include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
+               $cc='eshajain88@gmail.com';
+               $to='sanyam1204@gmail.com';
+               $msg1='registration_functions is being hit. We can wrap this to JProfileUpdateLib';
+               $subject="registration_functions";
+               $msg=$msg1.print_r($_SERVER,true);
+               send_email($to,$msg,$subject,"",$cc);
+ 				//ending mail part
 			$length=strlen($about_yourself);
 			$now = date("Y-m-d G:i:s");
 				if($length <= '99')

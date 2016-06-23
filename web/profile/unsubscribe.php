@@ -1,6 +1,7 @@
 <?php
 header("Location: http://www.jeevansathi.com/settings/alertManager");
 die();
+
 //to zip the file before sending it
 $zipIt = 0;
 if (strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) $zipIt = 1;

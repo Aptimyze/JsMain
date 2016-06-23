@@ -12,6 +12,7 @@ include("connect.inc");
 include(JsConstants::$docRoot."/commonFiles/flag.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/ivr/jsivrFunctions.php");
 include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
 $db = connect_db();
 $name = getname($cid);
@@ -87,8 +88,14 @@ if(authenticated($cid))
 					$phoneType ='A';
 					phoneUpdateProcess($profileid,$phone_num_alt,$phoneType,$actionStatus,$message,$name);//updates status in JPROFILE_CONTACTS table in newjs
                                 }//trac 745 ends
-				$sqlup="UPDATE newjs.JPROFILE SET SCREENING='$screening' WHERE PROFILEID='$row[PROFILEID]'";
-				mysql_query_decide($sqlup) or die("$sqlup".mysql_error_js());
+                                
+				$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
+				$profileid=$row[PROFILEID];
+				$arrFields = array('SCREENING'=>$screening);
+				$exrtaWhereCond = "";
+				$jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID",$exrtaWhereCond);
+				//$sqlup="UPDATE newjs.JPROFILE SET SCREENING='$screening' WHERE PROFILEID='$row[PROFILEID]'";
+				//mysql_query_decide($sqlup) or die("$sqlup".mysql_error_js());
 				//echo "update query".$sqlup."<br>";
 
 			}
