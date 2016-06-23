@@ -62,7 +62,8 @@ class TupleService
 					"ENTRY_DT",
 					"LAST_LOGIN_DT",
 					"YOURINFO",
-					"SCREENING"
+					"SCREENING",
+                                        "COMPANY_NAME"
 					
 				),
 				"LOGIC" => Array(
@@ -85,7 +86,7 @@ class TupleService
 				)
 			),
 			"EDUCATION_LOGIC" => Array(
-				"FIELDS" => Array(),
+				"FIELDS" => Array("COLLEGE"),
 				"LOGIC" => Array(
 					"edu_level_new"
 				)
@@ -359,9 +360,10 @@ class TupleService
 								$edu[]=FieldMap::getFieldLabel('education',$row["UG_DEGREE"]);
 				if($row["OTHER_PG_DEGREE"] && Flag::isFlagSet("other_pg_degree", $row["SCREENING"]))
 								$edu[]=substr($row["OTHER_UG_DEGREE"],0,30);
+				if($row["COLLEGE"])
+								$result[$row["PROFILEID"]]["COLLEGE"]=$row["COLLEGE"];
 				$result[$row["PROFILEID"]]["edu_level_new"]= $edu?implode(", ",array_unique($edu)):"";
 			}
-		
 		      return $result;
 		}
 		
@@ -789,6 +791,7 @@ else {
 				$result[$profileid]["ENTRY_DT"]        = $profileObj->getENTRY_DT();
 				$result[$profileid]["SUBSCRIPTION"]    = $profileObj->getSUBSCRIPTION();
 				$result[$profileid]["LAST_LOGIN_DT"]    = $profileObj->getLAST_LOGIN_DT();
+				$result[$profileid]["COMPANY_NAME"]          = $profileObj->getCOMPANY_NAME();
 				if(Flag::isFlagSet("yourinfo",$profileObj->getSCREENING()))
 					$result[$profileid]["YOURINFO"]    = $profileObj->getYOURINFO();
 				$result[$profileid]["PROFILECHECKSUM"] = JsAuthentication::jsEncryptProfilechecksum($profileid);

@@ -70,6 +70,8 @@ class Tuple {
     public $MOBPHOTOSIZE;
     public $INTEREST_VIEWED_DATE;
 		public $VERIFICATIONSEAL;
+		public $COMPANY_NAME;
+		public $COLLEGE;
 
     //Getters and setter of all the base class as well as child class fields
         
@@ -84,6 +86,12 @@ class Tuple {
     }
     public function getGENDER() {
         return $this->GENDER;
+    }
+    public function getCOMPANY_NAME() {
+        return $this->COMPANY_NAME;
+    }
+    public function getCOLLEGE(){
+        return $this->COLLEGE;
     }
     public function getAGE() {
         return $this->AGE;
@@ -146,6 +154,12 @@ class Tuple {
     }
     public function setPROFILEID($x) {
         $this->PROFILEID = $x;
+    }
+    public function setCOMPANY_NAME($x) {
+        $this->COMPANY_NAME = $x;
+    }
+    public function setCOLLEGE($x) {
+        $this->COLLEGE = $x;
     }
     public function setUSERNAME($x) {
         $this->USERNAME = $x;

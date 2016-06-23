@@ -17,7 +17,7 @@ class SearchApiStrategyV1
 	private $searchCat;
 	private $version;
 	private $channel;
-	private $profileTupleInfoArr = array('PROFILECHECKSUM','userLoginStatus','SUBSCRIPTION','AGE','USERNAME','DECORATED_HEIGHT','DECORATED_OCCUPATION','DECORATED_CASTE','DECORATED_INCOME','DECORATED_MTONGUE','DECORATED_EDU_LEVEL_NEW','DECORATED_CITY_RES','PHOTO','SIZE','ALBUM_COUNT','CONTACT_STATUS','BOOKMARKED','VERIFY_ACTIVATED_DT','NEW_FLAG','DECORATED_RELIGION','GENDER','FEATURED','FILTER_SCORE','FILTER_REASON','HIGHLIGHTED','VERIFICATION_SEAL','VERIFICATION_STATUS','stype','MSTATUS');
+	private $profileTupleInfoArr = array('PROFILECHECKSUM','userLoginStatus','SUBSCRIPTION','AGE','USERNAME','DECORATED_HEIGHT','DECORATED_OCCUPATION','DECORATED_CASTE','DECORATED_INCOME','DECORATED_MTONGUE','DECORATED_EDU_LEVEL_NEW','DECORATED_CITY_RES','PHOTO','SIZE','ALBUM_COUNT','CONTACT_STATUS','BOOKMARKED','VERIFY_ACTIVATED_DT','NEW_FLAG','DECORATED_RELIGION','GENDER','FEATURED','FILTER_SCORE','FILTER_REASON','HIGHLIGHTED','VERIFICATION_SEAL','VERIFICATION_STATUS','stype','MSTATUS','COLLEGE','COMPANY_NAME');
         private $profileInfoMappingArr = array("subscription"=>"subscription_icon","decorated_city_res"=>"decorated_location","contact_status"=>"eoi_label","verify_activated_dt"=>"timetext","new_flag"=>"seen","VERIFICATION_SEAL"=>"verification_seal");
 
 	const caste_relaxation_text1  = 'To get $casteMappingCnt more matching profiles, include castes $casteMappingCastes';
@@ -378,6 +378,12 @@ class SearchApiStrategyV1
                                                 elseif($fieldName=='size'){
                                                         $this->output[$profileKey][$i][$fieldName] = $value;
                                                 }
+                                                elseif($fieldName=='college' || $fieldName=='company_name'){
+                                                        if(!$v[$vv]){
+                                                                $value = null;
+                                                        }
+                                                        $this->output[$profileKey][$i][$fieldName] = $value;
+                                                }
                                                 elseif($fieldName=="filter_score"){
                                                         $searchDisplayObj = new SearchDisplay();
                                                         //if($i<3){$value="";}else{$value=64;}  // Testing Purpose
@@ -650,6 +656,12 @@ class SearchApiStrategyV1
 						break;
 				}
 				break;
+                        case "college":
+                                $value = "Studied at ".$value;
+                                break;
+                        case "company_name":
+                                $value = "Works at ".$value;
+                                break;
 			default:
 				break;
 		}

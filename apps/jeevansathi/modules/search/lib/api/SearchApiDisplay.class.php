@@ -218,7 +218,6 @@ class SearchApiDisplay
 		//user's detail fields to be displayed in the search tuple: username, age, height, etc
 		$fieldStr = SearchConfig::$searchDisplayFields;
 		$fieldsArr = explode(",",$fieldStr);
-	
 		if(is_array($this->searchResultsData))
 		{
 			$offsetVal=1;
@@ -242,6 +241,8 @@ class SearchApiDisplay
 				$this->profileObjArr[$key]->setMTONGUE($this->searchResultsData[$key]['MTONGUE']);
 				$this->profileObjArr[$key]->setCASTE($this->searchResultsData[$key]['CASTE']);
 				$this->profileObjArr[$key]->setMSTATUS($this->searchResultsData[$key]['MSTATUS']);
+				$this->profileObjArr[$key]->setCOMPANY_NAME($this->searchResultsData[$key]['COMPANY_NAME']);
+				$this->profileObjArr[$key]->setCOLLEGE($this->searchResultsData[$key]['COLLEGE']);
 				
 				//get DPP values for profiles with privacy as 'F'
 				if($this->searchResultsData[$key]['PRIVACY']=='F')
