@@ -21,13 +21,15 @@ function initiateChatConnection() //pass callback function -listing panel show i
                 //play_sounds: true,
                 roster_groups: chatConfig.Params[device].roster_groups,
                 hide_offline_users: chatConfig.Params[device].hide_offline_users,
-                debug:false,
+                debug:true,
                 //prebind:true,
                 auto_login:true,
                 jid:"a1@localhost",
                 password:"123",
                 //sid:sid,
                 //rid:1,
+                show_controlbox_by_default:true,
+                use_vcards:true,
                 authentication:'login',
                 listing_data:{},
                 rosterDisplayGroups:chatConfig.Params[device].rosterDisplayGroups,
@@ -61,6 +63,8 @@ function fetchConverseSettings(key)
 */
 function mapListingJsonToHTML(jsonData)  //use partial if possible - ankita
 {
+    console.log(jsonData);
+    //console.log(chatConfig.Params);
     var listingHTML = '<div id="listing_tab1">';
     $.each(jsonData,function( index, val ){
         listingHTML = listingHTML+ '<div id="'+chatConfig.Params[device].rosterDisplayGroups[index]+'"><div class="f12 fontreg nchatbdr2"><p class="nchatt1 fontreg pl15">'+index+'</p></div><ul class="chatlist">';
@@ -107,4 +111,42 @@ function createListingPanel()
     //show listing panel by appending html
     var ChatPluginObj = $(pluginId).chatplugin();
     ChatPluginObj.addListingBody();
+}
+// Changes XML to JSON
+function xmlToJson(xml) {
+    
+    // Create the return object
+    var obj = {};
+
+    /*if (xml.nodeType == 1) { // element
+        // do attributes
+        if (xml.attributes.length > 0) {
+        obj["attributes"] = {};
+            for (var j = 0; j < xml.attributes.length; j++) {
+                var attribute = xml.attributes.item(j);
+                obj["attributes"][attribute.nodeName] = attribute.nodeValue;
+            }
+        }
+        } else if (xml.nodeType == 3) { // text
+        obj = xml.nodeValue;
+    }*/
+
+    // do children
+    if (xml.hasChildNodes()) {
+        for(var i = 0; i < xml.childNodes.length; i++) {
+            var item = xml.childNodes.item(i);
+            var nodeName = item.nodeName;
+            if (typeof(obj[nodeName]) == "undefined") {
+                obj[nodeName] = xmlToJson(item);
+            } else {
+                if (typeof(obj[nodeName].push) == "undefined") {
+                    var old = obj[nodeName];
+                    obj[nodeName] = [];
+                    obj[nodeName].push(old);
+                }
+                obj[nodeName].push(xmlToJson(item));
+            }
+        }
+    }
+    return obj;
 }
