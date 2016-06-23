@@ -16,6 +16,7 @@ include_once($_SERVER['DOCUMENT_ROOT']."/profile/functions_edit_profile.php");
 $symfonyFilePath=realpath($_SERVER['DOCUMENT_ROOT']."/../");
 include_once($symfonyFilePath."/lib/model/lib/Flag.class.php");
 include_once($symfonyFilePath."/lib/model/lib/FieldMapLib.class.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
 function track_astro_details($profileid,$db,$mysqlObj="")
 {
@@ -70,9 +71,15 @@ function update_astro_details($profileid,$astrodata="",$horoscope="",$db,$mysqlO
 
 		if($updateArr)
 		{
-			$updateStr=implode(",",$updateArr);
-			$statement = "update newjs.JPROFILE SET ".$updateStr." where PROFILEID = '$profileid'";
-			$mysqlObj->executeQuery($statement,$db) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$statement,"ShowErrTemplate");	
+			//$updateStr = implode(",",$updateArr);
+                        foreach ($updateArr as $val){
+                          $arr = explode('=',$val);
+                          $arrFields[trim($arr[0])] =  trim(str_replace(array(" ","'"),'',$arr[1]),',');
+                        }
+                        $objUpdate = JProfileUpdateLib::getInstance();
+			//$statement = "update newjs.JPROFILE SET ".$updateStr." where PROFILEID = '$profileid'";
+			//$mysqlObj->executeQuery($statement,$db) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$statement,"ShowErrTemplate");
+                        $objUpdate->editJPROFILE($arrFields,$profileid,"PROFILEID");
 			if(!$to_not_update_dup && $dup_flag_value && $dup_change){
 				$sql="INSERT IGNORE INTO duplicates.DUPLICATE_CHECKS_FIELDS SET PROFILEID='$profileid',TYPE='edit',FIELDS_TO_BE_CHECKED='$dup_flag_value'";
 				$mysqlObj->executeQuery($sql,$db) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$statement,"ShowErrTemplate");	

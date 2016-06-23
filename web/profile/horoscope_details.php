@@ -11,6 +11,7 @@
 include_once(JsConstants::$docRoot."/commonFiles/flag.php");
 	include_once("search.inc");
 include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
 	$db=connect_db();
 
@@ -292,6 +293,7 @@ include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 //this functions adds/updates the user's astro details in ASTRO_DETAILS table.
 	function update_astrodetails($profileid,$ms_data="",$mtongue="")
 	{
+                $objUpdate = JProfileUpdateLib::getInstance();
 		if(!$ms_data)
 		{
 			//$fp[0] ="$profileid;1976-07-17;00:11:00;Noida, Uttar Pradesh;India;28N35'00;077E20'00;-5:30;0;175.823489;90.788770;333.367421;132.414220;92.151259;31.476198;98.666959;101.372354;195.261664;15.261664;0;0;1;0;1;1;5;3";
@@ -468,7 +470,7 @@ include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 					'".addslashes(stripslashes($VARA))."',
 					'".addslashes(stripslashes($MASA))."',
 					'Y')";
-															     
+				
 				mysql_query_decide($sql1) or logError($sql1,"ShowErrTemplate");
 				//Code added by Vibhor as discussed with Lavesh
 				include_once($_SERVER['DOCUMENT_ROOT']."/classes/Mysql.class.php");
@@ -478,7 +480,7 @@ include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
                                 $sql_pr="UPDATE HOROSCOPE_REQUEST SET UPLOAD_SEEN='U' WHERE PROFILEID_REQ_BY='$profileid'";
                                 $mysqlObj->executeQuery($sql_pr,$myDb);
                                 //end
-															     
+                                
 				$sql_type = "SELECT TYPE FROM newjs.ASTRO_PULLING_REQUEST WHERE PROFILEID='$profileid' ORDER BY ENTRY_DT DESC LIMIT 1";
 				$res_type = mysql_query_decide($sql_type) or logError("Due to some temporary problem your request could not be processed. Please try after some time.",$sql_type,"ShowErrTemplate");
 				$row_type = mysql_fetch_array($res_type);
@@ -487,14 +489,29 @@ include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 				//inserted in ASTRO_DATA_COUNT to track, total horoscope generated.
 				$sql2 = "INSERT INTO MIS.ASTRO_DATA_COUNT(PROFILEID,TYPE,ENTRY_DT,MTONGUE) VALUES ('$profileid','$type',NOW(),'$mtongue')";
 				mysql_query_decide($sql2) or logError($sql2,"ShowErrTemplate");
-
+                                
+                                //adding mailing to gmail account to check if file is being used
+                               include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
+                               $cc='eshajain88@gmail.com';
+                               $to='ankitshukla125@gmail.com';
+                               $msg1='horoscope_details is being hit. We can wrap this to JProfileUpdateLib';
+                               $subject="qc_view";
+                               $msg=$msg1.print_r($_SERVER,true);
+                               send_email($to,$msg,$subject,"",$cc);
+                                //ending mail part
+                                
 				//update JPROFILE.
-				if ($COUNTRY_BIRTH_EXIST)
-					$sql = "UPDATE newjs.JPROFILE SET  COUNTRY_BIRTH='$COUNTRY_BIRTH_EXIST', CITY_BIRTH='".addslashes(stripslashes($CITY_BIRTH))."',BTIME='$BTIME', SHOW_HOROSCOPE='Y' WHERE PROFILEID='$profileid'";
-				else
-					$sql = "UPDATE newjs.JPROFILE SET CITY_BIRTH='".addslashes(stripslashes($CITY_BIRTH))."',BTIME='$BTIME' , SHOW_HOROSCOPE='Y' WHERE PROFILEID='$profileid'";
-															     
-				mysql_query_decide($sql) or logError($sql,"ShowErrTemplate");
+				if ($COUNTRY_BIRTH_EXIST){
+					//$sql = "UPDATE newjs.JPROFILE SET  COUNTRY_BIRTH='$COUNTRY_BIRTH_EXIST', CITY_BIRTH='".addslashes(stripslashes($CITY_BIRTH))."',BTIME='$BTIME', SHOW_HOROSCOPE='Y' WHERE PROFILEID='$profileid'";
+                                    $arrFields = array('COUNTRY_BIRTH'=>$COUNTRY_BIRTH_EXIST,'CITY_BIRTH'=>addslashes(stripslashes($CITY_BIRTH)),'BTIME'=>$BTIME,'SHOW_HOROSCOPE'=>Y);
+                                }
+				else{
+					//$sql = "UPDATE newjs.JPROFILE SET CITY_BIRTH='".addslashes(stripslashes($CITY_BIRTH))."',BTIME='$BTIME' , SHOW_HOROSCOPE='Y' WHERE PROFILEID='$profileid'";
+                                    $arrFields = array('CITY_BIRTH'=>addslashes(stripslashes($CITY_BIRTH)),'BTIME'=>$BTIME,'SHOW_HOROSCOPE'=>Y);
+                                }	
+                                
+				//mysql_query_decide($sql) or logError($sql,"ShowErrTemplate");
+                                $objUpdate->editJPROFILE($arrFields,$row[PROFILEID],"PROFILEID");
 															     
 				$sql_update = "UPDATE newjs.ASTRO_PULLING_REQUEST SET PENDING='N' WHERE PROFILEID='$profileid'";
 				mysql_query_decide($sql_update) or logError($sql_update,"ShowErrTemplate");
@@ -505,11 +522,12 @@ include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 				mysql_query_decide($sql_update) or logError($sql_update,"ShowErrTemplate");
 			}
 		}
-		else
+		
 		{
-			$sql = "UPDATE newjs.JPROFILE SET SHOW_HOROSCOPE='N' WHERE PROFILEID='$profileid'";
-			mysql_query_decide($sql) or logError($sql,"ShowErrTemplate");
-
+//			$sql = "UPDATE newjs.JPROFILE SET SHOW_HOROSCOPE='N' WHERE PROFILEID='$profileid'";
+//			mysql_query_decide($sql) or logError($sql,"ShowErrTemplate");
+                        $arrFields = array('SHOW_HOROSCOPE'=>'N');
+                        $objUpdate->editJPROFILE($arrFields,$profileid,"PROFILEID");
 			$sql_update = "UPDATE newjs.ASTRO_PULLING_REQUEST SET COUNTER=COUNTER+1 , PENDING='U' WHERE PROFILEID='$profileid'";
 			mysql_query_decide($sql_update) or logError($sql_update,"ShowErrTemplate");
 		}
