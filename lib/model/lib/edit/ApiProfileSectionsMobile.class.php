@@ -716,7 +716,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 			$showCity=1;
 		$szCity = $this->getDecorateDPP_Response($jpartnerObj->getPARTNER_CITYRES());
 		$szState = $this->getDecorateDPP_Response($jpartnerObj->getSTATE());
-		$DppBasicArr["BasicDetails"][OnClick][]= $this->handleStateCityData($szState,$szCity);
+		$DppBasicArr["BasicDetails"][OnClick][]= $this->handleStateCityData($szState,$szCity,$showCity);
 		return $DppBasicArr;
 	}
 
@@ -1094,7 +1094,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 	 * @param $stateVal String
 	 * @param $cityVal String
 	 * */
-	public function handleStateCityData($stateVal,$cityVal)
+	public function handleStateCityData($stateVal,$cityVal,$showCity='')
     {	$jpartnerObj=$this->profile->getJpartner();
     	if($stateVal == "DM" && $cityVal == "DM")
     	{
