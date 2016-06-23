@@ -58,6 +58,33 @@ class NEWJS_HOROSCOPE_FOR_SCREEN extends TABLE{
 				throw new jsException($e);
 			}
 		}
-		
+
+	/**
+	 * replaceRecord
+	 * @param $pid
+	 * @param array $paramArr
+	 * @return bool
+	 */
+	public function replaceRecord($pid, $paramArr = array()) {
+		try {
+			$keys = "PROFILEID,";
+			$values = ":PROFILEID ,";
+			foreach ($paramArr as $key => $value) {
+				$keys.= $key . ",";
+				$values.= ":" . $key . ",";
+			}
+			$keys = substr($keys, 0, -1);
+			$values = substr($values, 0, -1);
+			$sqlEditHobby = "REPLACE INTO HOROSCOPE_FOR_SCREEN ($keys) VALUES ($values)";
+			$resEditHobby = $this->db->prepare($sqlEditHobby);
+			foreach ($paramArr as $key => $val) $resEditHobby->bindValue(":" . $key, $val);
+			$resEditHobby->bindValue(":PROFILEID", $pid);
+			$resEditHobby->execute();
+			return true;
+		}
+		catch(PDOException $e) {
+			throw new jsException($e);
+		}
+	}
 }
 ?>
