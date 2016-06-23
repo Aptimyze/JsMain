@@ -10,7 +10,7 @@ class EditDppBasicInfo extends EditDppComponent {
 		$this->action->minheight = create_dd($this->jpartner->getLHEIGHT(), "Height");
 		$this->action->partner_mstatus_str = $this->jpartner->getPARTNER_MSTATUS();
 		include_once (sfConfig::get("sf_web_dir") . "/profile/advance_search_functions.php");
-		fill_MSgadget("Country_Residence", $this->jpartner->getPARTNER_COUNTRYRES(), '', 1);
+		fill_MSgadget("Country_ResidenceState", $this->jpartner->getPARTNER_COUNTRYRES(), '', 1);
 		$this->action->MSTATUS = FieldMap::getFieldLabel('mstatus', '', 1);
 		//Trac 482. Give Married option only to muslinm women
 		if (!($this->action->loginProfile->getRELIGION() == 2 && $this->action->loginProfile->getGENDER() == 'F')) unset($this->action->MSTATUS[M]);

@@ -780,8 +780,8 @@ public function executeAppredirect(sfWebRequest $request)
 		{
 		$output=$this->getJspcCity_Edit();
 		}
-		if($k=="p_city")
-		$output=$this->getCity(1);
+                if($k=="p_city")
+                $output=$this->getCityState();
     if($k=="dpp_city")
     {
     $output=$this->getJSPCDppCity(0);
@@ -1219,6 +1219,36 @@ public function executeAppredirect(sfWebRequest $request)
 				$output[128][]=array($i=>array($k=>$v));
 		$i++;		
 	  } 
+	  return $output;		
+  }
+  private function getCityState()
+  {
+	  $tempArray=FieldMap::getFieldLabel("topindia_city",'',1);
+	  
+	  $state = FieldMap::getFieldLabel("state_india",'',1);
+	  $Arr[51][0]=Array();
+	  $cityIndia=FieldMap::getFieldLabel("city_india",'',1);
+	  foreach($state as $key=>$value)
+	  {
+		  unset($cityIndia[$key]);
+	  }
+            foreach($tempArray as $key=>$val)
+            {
+                    $temp=explode(",",$val);
+                    foreach($temp as $key=>$val)
+                          $topIndia[$val]=$cityIndia[$val];
+
+            }
+            $Arr[51][0] = array_merge($topIndia,array("-1 "=>"--States"));
+	    $Arr[51][1] = array_merge($state,array("-1 "=>"--Cities"));
+            $Arr[51][2]=$cityIndia;
+            $i=0;
+	  foreach($Arr[51] as $key=>$val)
+	  {
+			foreach($val as $k=>$v)
+				$output[51][]=array($i=>array($k=>$v));
+		$i++;		
+	  }
 	  return $output;		
   }
 
