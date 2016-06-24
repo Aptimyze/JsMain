@@ -22,7 +22,7 @@ if(authenticated($cid))
 		$sql="select PROFILEID,DTOFBIRTH from newjs.JPROFILE where USERNAME='$username'";
 		$result=mysql_query_decide($sql) or die("$sql".mysql_error_js());
 
-		$objReplace = ProfleReplaceLib::getInstance();
+		$objReplace = ProfileReplaceLib::getInstance();
 
 		if(mysql_num_rows($result)>0)
 		{
@@ -49,7 +49,10 @@ if(authenticated($cid))
 				{
 					//Update Astro Detail
 					$objUpdateLib = JProfileUpdateLib::getInstance();
-					$objUpdateLib->updateASTRO_DETAILS($profileid,array('TYPE'=>'U','HOROSCOPE_SCREENING'=>'0'));
+					$result = $objUpdateLib->updateASTRO_DETAILS($profileid,array('TYPE1'=>'U','HOROSCOPE_SCREENING'=>'0'));
+					if(false === $result) {
+						die('Issue while updating Astro Details at line 54');
+					}
 
 //					$sql_update="update newjs.ASTRO_DETAILS set TYPE='U',HOROSCOPE_SCREENING='0' where PROFILEID='$profileid';";
 //					mysql_query_decide($sql_update) or die(mysql_error_js());

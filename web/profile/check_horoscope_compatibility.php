@@ -172,7 +172,7 @@
         //function to save values in HOROSCOPE_COMPATIBILITY table
         function horoscope_compatibility_log($profileid,$profileid_other)
 	{
-		$objReplaceLib = ProfileReplaceLib::getInstance()
+		$objReplaceLib = ProfileReplaceLib::getInstance();
 		$result = $objReplaceLib->replaceHOROSCOPE_COMPATIBILITY($profileid, $profileid_other);
 		if (false === $result) {
 			die('Due to a temporary problem your request could not be processed. Please try after a couple of minutes');
