@@ -12,7 +12,7 @@ include_once(JsConstants::$docRoot."/commonFiles/flag.php");
 	include_once("search.inc");
 include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
-
+include_once(JsConstants::$docRoot."/classes/ProfileReplaceLib.php");
 	$db=connect_db();
 
 	$data=authenticated($checksum);
@@ -293,7 +293,8 @@ include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 //this functions adds/updates the user's astro details in ASTRO_DETAILS table.
 	function update_astrodetails($profileid,$ms_data="",$mtongue="")
 	{
-                $objUpdate = JProfileUpdateLib::getInstance();
+		$objUpdate = JProfileUpdateLib::getInstance();
+		$objReplace = JProfileUpdateLib::getInstance();
 		if(!$ms_data)
 		{
 			//$fp[0] ="$profileid;1976-07-17;00:11:00;Noida, Uttar Pradesh;India;28N35'00;077E20'00;-5:30;0;175.823489;90.788770;333.367421;132.414220;92.151259;31.476198;98.666959;101.372354;195.261664;15.261664;0;0;1;0;1;1;5;3";
@@ -409,7 +410,7 @@ include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 				}
 
 				//store the astro details.
-				$sql1 = "REPLACE INTO newjs.ASTRO_DETAILS(
+				/*$sql1 = "REPLACE INTO newjs.ASTRO_DETAILS(
 					PROFILEID,
 					CITY_BIRTH,
 					DTOFBIRTH,
@@ -471,7 +472,40 @@ include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 					'".addslashes(stripslashes($MASA))."',
 					'Y')";
 				
-				mysql_query_decide($sql1) or logError($sql1,"ShowErrTemplate");
+				mysql_query_decide($sql1) or logError($sql1,"ShowErrTemplate");*/
+				$arrParams = array(
+					"CITY_BIRTH" => addslashes(stripslashes($CITY_BIRTH)) ,
+					"DTOFBIRTH" => $DTOFBIRTH,
+					"BTIME" => $BTIME,
+					"COUNTRY_BIRTH" => addslashes(stripslashes($COUNTRY_BIRTH)),
+					"PLACE_BIRTH" => addslashes(stripslashes($CITY_BIRTH)),
+					"LATITUDE" => addslashes(stripslashes($LATITUDE)),
+					"LONGITUDE" => addslashes(stripslashes($LONGITUDE)),
+					"TIMEZONE" => addslashes(stripslashes($TIMEZONE)),
+					"DST" => addslashes(stripslashes($DST)),
+					"LAGNA_DEGREES_FULL" => addslashes(stripslashes($LAGNA_DEGREES_FULL)),
+					"SUN_DEGREES_FULL" => addslashes(stripslashes($SUN_DEGREES_FULL)),
+					"MOON_DEGREES_FULL" => addslashes(stripslashes($MOON_DEGREES_FULL)),
+					"MARS_DEGREES_FULL" => addslashes(stripslashes($MARS_DEGREES_FULL)),
+					"MERCURY_DEGREES_FULL" => addslashes(stripslashes($MERCURY_DEGREES_FULL)),
+					"JUPITER_DEGREES_FULL" => addslashes(stripslashes($JUPITER_DEGREES_FULL)),
+					"VENUS_DEGREES_FULL" => addslashes(stripslashes($VENUS_DEGREES_FULL)),
+					"SATURN_DEGREES_FULL" => addslashes(stripslashes($SATURN_DEGREES_FULL)),
+					"RAHU_DEGREES_FULL" => addslashes(stripslashes($RAHU_DEGREES_FULL)),
+					"KETU_DEGREES_FULL" => addslashes(stripslashes($KETU_DEGREES_FULL)),
+					"MOON_RETRO_COMBUST" => addslashes(stripslashes($MOON_RETRO_COMBUST)),
+					"MARS_RETRO_COMBUST" => addslashes(stripslashes($MARS_RETRO_COMBUST)),
+					"MERCURY_RETRO_COMBUST" => addslashes(stripslashes($MERCURY_RETRO_COMBUST)),
+					"JUPITER_RETRO_COMBUST" => addslashes(stripslashes($JUPITER_RETRO_COMBUST)),
+					"VENUS_RETRO_COMBUST" => addslashes(stripslashes($VENUS_RETRO_COMBUST)),
+					"SATURN_RETRO_COMBUST" => addslashes(stripslashes($SATURN_RETRO_COMBUST)),
+					"VARA" => addslashes(stripslashes($VARA)),
+					"MASA" => addslashes(stripslashes($MASA)),
+					"SHOW_HOROSCOPE" => 'Y'
+
+				);
+				$objReplace->replaceASTRO_DETAILS($profileid, $arrParams);
+
 				//Code added by Vibhor as discussed with Lavesh
 				include_once($_SERVER['DOCUMENT_ROOT']."/classes/Mysql.class.php");
 				$mysqlObj=new Mysql;

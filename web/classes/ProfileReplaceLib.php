@@ -4,7 +4,10 @@
  * This is a wrapper library on store classes
  * To Execute REPLACE INTO... Statments  on JPROFILE* Stores (like JPROFILE,JPROFILE_CONTACT,JPROFILE_ALERTS etc),
  * It will be used in Non-symfony code for warpping all Queries which are Updating JPROFILE* Tables
- *
+ * <code>
+ * include_once(JsConstants::$docRoot."/classes/ProfileReplaceLib.php");
+ * 
+ * </code>
  * @author Kunal Verma
  * @created 22nd June 2016
  */
@@ -22,49 +25,7 @@ class ProfileReplaceLib
     private static $instance = null;
 
     /**
-     * JPROFILE Store Object
-     * @var Object
-     */
-    private $objJProfileStore = null;
-
-    /**
-     * JPROFILE_EDUCATION Store Object
-     * @var Object
-     */
-    private $objProfileEducationStore = null;
-
-    /**
-     * JPROFILE_CONTACT Store Object
-     * @var Object
-     */
-    private $objProfileContactStore = null;
-
-    /**
-     * JPROFILE_CONTACT Store Object
-     * @var Object
-     */
-    private $objProfileHobbyStore = null;
-
-    /**
-     * JP_NTIME Store Object
-     * @var Object
-     */
-    private $objProfileNTimesStore = null;
-
-    /**
-     * JP_CHRISTIAN Store Object
-     * @var Object
-     */
-    private $objProfileChristianStore = null;
-
-    /**
-     * JPROFILE_ALERTS Store Object
-     * @var Object
-     */
-    private $objProfileAlertsStore = null;
-
-    /**
-     * JPROFILE_ALERTS Store Object
+     * HOROSCOPE_FOR_SCREEN Store Object
      * @var Object
      */
     private $objProfileHoroscopeForScreenStore = null;
@@ -75,7 +36,17 @@ class ProfileReplaceLib
      */
     private $objProfileAstroDetailsStore = null;
 
+    /**
+     * HOROSCOPE Store Object
+     * @var Object
+     */
+    private $objProfileHoroscopeStore = null;
 
+    /**
+     * HOROSCOPE_COMPATIBILITY Store Object
+     * @var Object
+     */
+    private $objProfileHoroscopeCompatibilityStore = null;
 
     /**
      *
@@ -89,32 +60,19 @@ class ProfileReplaceLib
     private function __construct($dbname="")
     {
         $this->currentDBName = $dbname;
-        $this->objJProfileStore = new JPROFILE($dbname);
-        $this->objProfileEducationStore = new NEWJS_JPROFILE_EDUCATION($dbname);
-        $this->objProfileContactStore = new NEWJS_JPROFILE_CONTACT($dbname);
-        $this->objProfileHobbyStore = new NEWJS_HOBBIES($dbname);
-        $this->objProfileNTimesStore = new NEWJS_JP_NTIMES($dbname);
-        $this->objProfileChristianStore = new NEWJS_JP_CHRISTIAN($dbname);
-        $this->objProfileAlertsStore = new newjs_JPROFILE_ALERTS($dbname);
-
         $this->objProfileHoroscopeForScreenStore = new NEWJS_HOROSCOPE_FOR_SCREEN($dbname);
         $this->objProfileAstroDetailsStore = new NEWJS_ASTRO($dbname);
+        $this->objProfileHoroscopeStore = new newjs_HOROSCOPE($dbname);
+        $this->objProfileHoroscopeCompatibilityStore = new NEWJS_HOROSCOPE_COMPATIBILITY($dbname);
     }
     /**
      * __destruct
      */
     public function __destruct() {
-        unset($this->objJProfileStore);
-        unset($this->objProfileContactStore);
-        unset($this->objProfileEducationStore);
-        unset($this->objProfileHobbyStore);
-        unset($this->objProfileNTimesStore);
-        unset($this->objProfileChristianStore);
-        unset($this->objProfileAlertsStore);
-
         unset($this->objProfileHoroscopeForScreenStore);
         unset($this->objProfileAstroDetailsStore);
-
+        unset($this->objProfileHoroscopeStore);
+        unset($this->objProfileHoroscopeCompatibilityStore);
         self::$instance = null;
     }
     /**
@@ -143,23 +101,17 @@ class ProfileReplaceLib
     public static function getInstance($dbname="")
     {
         if (null === self::$instance) {
-            self::$instance = new JProfileUpdateLib($dbname);
+            self::$instance = new ProfileReplaceLib($dbname);
         }
 
         //Compare Current DB Name and if its different changeConnection
         //and set new connection with desired dbname
         if(self::$instance->currentDBName !== $dbname) {
             self::$instance->currentDBName = $dbname;
-            self::$instance->objJProfileStore->setConnection($dbname);
-            self::$instance->objProfileEducationStore->setConnection($dbname);
-            self::$instance->objProfileContactStore->setConnection($dbname);
-            self::$instance->objProfileHobbyStore->setConnection($dbname);
-            self::$instance->objProfileNTimesStore->setConnection($dbname);
-            self::$instance->objProfileChristianStore->setConnection($dbname);
-            self::$instance->objProfileAlertsStore->setConnection($dbname);
-
             self::$instance->objProfileHoroscopeForScreenStore->setConnection($dbname);
             self::$instance->objProfileAstroDetailsStore->setConnection($dbname);
+            self::$instance->objProfileHoroscopeStore->setConnection($dbname);
+            self::$instance->objProfileHoroscopeCompatibilityStore->setConnection($dbname);
         }
 
         return self::$instance;
@@ -176,13 +128,13 @@ class ProfileReplaceLib
         try{
             $this->objProfileAstroDetailsStore->update($iProfileID,$arrParams);
         } catch (Exception $ex) {
-            jsException::log($ex);
+            jsCacheWrapperException::logThis($ex);
             return false;
         }
     }
 
     /**
-     * replaceASTRO_DETAILS
+     * replaceHOROSCOPE_FOR_SCREEN
      * @param $iProfileID
      * @param $arrParams
      * @return bool
@@ -192,7 +144,53 @@ class ProfileReplaceLib
         try{
             $this->objProfileHoroscopeForScreenStore->replaceRecord($iProfileID,$arrParams);
         } catch (Exception $ex) {
-            jsException::log($ex);
+            jsCacheWrapperException::logThis($ex);
+            return false;
+        }
+    }
+
+    /**
+     * replaceHOROSCOPE_FOR_SCREEN
+     * @param $iProfileID
+     * @param $arrParams
+     * @return bool
+     */
+    public function replaceHOROSCOPE($iProfileID,$arrParams=array())
+    {
+        try{
+            $this->objProfileHoroscopeStore->replaceRecord($iProfileID,$arrParams);
+        } catch (Exception $ex) {
+            jsCacheWrapperException::logThis($ex);
+            return false;
+        }
+    }
+
+    /**
+     * copyAllHoroscopFromScreen
+     * @return bool
+     */
+    public function copyAllHoroscopFromScreen()
+    {
+        try{
+            $this->objProfileHoroscopeStore->copyAllHoroscopFromScreen();
+        } catch (Exception $ex) {
+            jsCacheWrapperException::logThis($ex);
+            return false;
+        }
+    }
+
+    /**
+     * replaceHOROSCOPE_COMPATIBILITY
+     * @param $iProfileID
+     * @param $arrParams
+     * @return bool
+     */
+    public function replaceHOROSCOPE_COMPATIBILITY($iProfileID,$iOtherProfileID)
+    {
+        try{
+            $this->objProfileHoroscopeCompatibilityStore->replaceRecord($iProfileID,$iOtherProfileID);
+        } catch (Exception $ex) {
+            jsCacheWrapperException::logThis($ex);
             return false;
         }
     }

@@ -75,11 +75,15 @@ class NEWJS_HOROSCOPE_FOR_SCREEN extends TABLE{
 			}
 			$keys = substr($keys, 0, -1);
 			$values = substr($values, 0, -1);
-			$sqlEditHobby = "REPLACE INTO HOROSCOPE_FOR_SCREEN ($keys) VALUES ($values)";
-			$resEditHobby = $this->db->prepare($sqlEditHobby);
-			foreach ($paramArr as $key => $val) $resEditHobby->bindValue(":" . $key, $val);
-			$resEditHobby->bindValue(":PROFILEID", $pid);
-			$resEditHobby->execute();
+			$sql = "REPLACE INTO HOROSCOPE_FOR_SCREEN ($keys) VALUES ($values)";
+			$res = $this->db->prepare($sql);
+
+			foreach ($paramArr as $key => $val) {
+				$res->bindValue(":" . $key, $val);
+			}
+
+			$res->bindValue(":PROFILEID", $pid);
+			$res->execute();
 			return true;
 		}
 		catch(PDOException $e) {

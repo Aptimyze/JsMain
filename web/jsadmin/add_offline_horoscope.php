@@ -12,6 +12,7 @@ include ("connect.inc");
 //include(JsConstants::$docRoot."/commonFiles/flag.php");
 include ("time.php");
 include_once(JsConstants::$docRoot."/classes/ProfileReplaceLib.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 if(authenticated($cid))
 {	
 	if($login)
@@ -46,8 +47,12 @@ if(authenticated($cid))
 				}
 				else
 				{
-					$sql_update="update newjs.ASTRO_DETAILS set TYPE='U',HOROSCOPE_SCREENING='0' where PROFILEID='$profileid';";
-					mysql_query_decide($sql_update) or die(mysql_error_js());
+					//Update Astro Detail
+					$objUpdateLib = JProfileUpdateLib::getInstance();
+					$objUpdateLib->updateASTRO_DETAILS($profileid,array('TYPE'=>'U','HOROSCOPE_SCREENING'=>'0'));
+
+//					$sql_update="update newjs.ASTRO_DETAILS set TYPE='U',HOROSCOPE_SCREENING='0' where PROFILEID='$profileid';";
+//					mysql_query_decide($sql_update) or die(mysql_error_js());
 					//$sql_assign="REPLACE INTO jsadmin.MAIN_ADMIN(PROFILEID,USERNAME,SCREENING_TYPE,RECEIVE_TIME,SUBMIT_TIME,ALLOT_TIME,ALLOTED_TO,SUBSCRIPTION_TYPE) VALUES('$profileid','$username','H','$RECV_DT','$SUBMIT_DT',NOW(),'$operator_name','$subs')";
 					/*$sql_assign="REPLACE INTO newjs.HOROSCOPE_FOR_SCREEN (PROFILEID) VALUES('$profileid')";
 					mysql_query_decide($sql_assign) or die(mysql_error_js());*/
@@ -67,7 +72,7 @@ if(authenticated($cid))
 			else
 			{
 				//REPLACE ASTRO_DETAILS
-				$result = $objReplace->replaceASTRO_DETAILS($profileid,array('TYPE'=>'U','HOROSCOPE_SCREENING'=>'0'));
+				$result = $objReplace->replaceASTRO_DETAILS($profileid,array('TYPE'=>'U','HOROSCOPE_SCREENING'=>'0','DTOFBIRTH'=>$dtofbirth));
 				if(false === $result) {
 					die('Error while updating ASTRO_DETAILS at line 48');
 				}
