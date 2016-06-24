@@ -301,11 +301,13 @@ class SearchParamters
 		}
 	}
 	public function getCOUNTRY_RES() { return $this->COUNTRY_RES; }
-	public function setCITY_RES($CITY_RES) 
+	public function setCITY_RES($CITY_RES,$fromCityForStateFunction = '') 
 	{ 
 		$validInput = SearchInputValidation::validateInput("CITY_RES",$CITY_RES);
                 if($validInput)
 			$this->CITY_RES = $CITY_RES; 
+                if($this->getSTATE() && !$fromCityForStateFunction)
+                    $this->setCityForState();
 	}
 	public function getCITY_RES() { return $this->CITY_RES; }
 	public function setCITY_RES_SELECTED($CITY_RES) 
@@ -816,11 +818,13 @@ class SearchParamters
 	}
 	public function getCITY_INDIA() { return $this->CITY_INDIA; }
         public function getCITY_INDIA_SELECTED() { return $this->CITY_INDIA_SELECTED; }
-	public function setSTATE($STATE) 
+	public function setSTATE($STATE,$fromCityForStateFunction = '') 
 	{ 
 		$validInput = SearchInputValidation::validateInput("STATE",$STATE);
                 if($validInput)
 			$this->STATE = $STATE; 
+                if($this->getCITY_RES() && !$fromCityForStateFunction)
+                    $this->setCityForState();
 	}
 	public function getSTATE() { return $this->STATE; }
 	public function setSTATE_SELECTED($STATE) 
@@ -828,7 +832,7 @@ class SearchParamters
 		$validInput = SearchInputValidation::validateInput("STATE",$STATE);
                 if($validInput)
 			$this->STATE_SELECTED = $STATE; 
-	}
+                }    
 	public function getSTATE_SELECTED() { return $this->STATE_SELECTED; }
 	public function setOCCUPATION_GROUPING($OCCUPATION_GROUPING) 
 	{ 
@@ -1046,4 +1050,64 @@ class SearchParamters
         public function getAttemptConditionArr(){return $this->attemptConditionArr;}
 	public function setAttemptConditionArr($x){$this->attemptConditionArr = $x;}
 	/* Getter and Setter public functions*/
+        
+        public function setCityForState(){
+            $city_arr = explode(",",$this->getCITY_RES());
+            $state_arr = explode(",",$this->getSTATE());
+            if($state_arr){
+                foreach ($state_arr as $k=>$stateVal){
+
+                    if(FieldMap::getFieldLabel("state_CITY","",1)[$stateVal]){
+
+                        $city_from_state =  $this->cityStateConversion("",$stateVal); 
+                        $city_arr = array_merge($city_arr,$city_from_state);
+                        $city_arr = array_unique($city_arr);
+                    }
+
+                }
+            }
+            
+
+            if($city_arr)
+            {
+                foreach ($city_arr as $k=>$cityVal){
+                    if(FieldMap::getFieldLabel("city_india","",1)[$cityVal]){
+                        $state_from_city =  $this->cityStateConversion($cityVal);
+                        $state_arr = array_merge($state_arr,$state_from_city);
+                        $state_arr = array_unique($state_arr);
+                    }
+                }
+
+            }
+            
+            if(is_array($state_arr))
+                    $this->setSTATE(implode(",",$state_arr),1);
+            else
+                    $this->setSTATE($state_arr,1);
+            if(is_array($city_arr))
+            {
+                    $this->setCITY_INDIA(implode(",",array_unique($city_arr)));
+                    $this->setCITY_RES(implode(",",array_unique($city_arr)),1);
+            }
+            else
+            {
+                    $this->setCITY_INDIA($city_arr);
+                    $this->setCITY_RES($city_arr,1);
+            }
+        }
+        private function cityStateConversion($city = '', $state = '') {
+                if ($city) {
+                        $city = explode(",", $city);
+                        foreach ($city as $key => $value) {
+                                $state[$key] = substr($value, 0, 2);
+                        }
+                        $state = array_unique($state);
+                        return $state;
+                } elseif ($state) {
+                        $cityList = FieldMap::getFieldLabel("state_CITY", $state);
+                        $cityList=explode(",",$cityList);
+                        return $cityList;
+                }
+                return NULL;
+        }
 }
