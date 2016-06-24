@@ -291,6 +291,23 @@ class billing_VARIABLE_DISCOUNT extends TABLE{
             throw new jsException($ex);
         }
     }
+
+    public function selectToBeDeletedProfilesWhoseVariableDiscountIsEndingYesterday()
+    {
+        try{
+            $todayDate = date("Y-m-d");
+            $sql ="SELECT PROFILEID FROM billing.VARIABLE_DISCOUNT WHERE EDATE<:EDATE";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":EDATE", $todayDate, PDO::PARAM_STR);
+            $res->execute();
+            while($row = $res->fetch(PDO::FETCH_ASSOC)){
+            	$output[$row['PROFILEID']] = $row['PROFILEID'];
+            }
+            return $output;
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
     
     public function getVariableDiscountProfilesEndingYesterday()
     {
