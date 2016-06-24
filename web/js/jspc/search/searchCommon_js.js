@@ -357,7 +357,10 @@ function setImageSrc(ele,next) {
 
 }
 $('body').on('click','.js-verificationPage', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        window.location.href = "/static/agentinfo";
+        if(typeof(loggedInJspcUser)!="undefined" && loggedInJspcUser=="" ){
+        }else{
+                e.preventDefault();
+                e.stopPropagation();
+                window.location.href = "/static/agentinfo";
+        }
 });
