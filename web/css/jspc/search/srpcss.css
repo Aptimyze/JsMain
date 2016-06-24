@@ -782,6 +782,8 @@ ul.matchtabs li.active{border-bottom:0px solid #34495e}
 }
 .highl .verIcon{
         background-image: url(IMG_URL/images/jspc/searchImg/verifyRev.png);
+        background-repeat: no-repeat;
+        height:26px;
 } 
 .verIcon {
         background-image: url(IMG_URL/images/jspc/searchImg/verified.png);
