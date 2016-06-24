@@ -21,7 +21,7 @@ include_once(JsConstants::$docRoot."/classes/ProfileReplaceLib.php");
 $db=connect_db();
 $sql = "SELECT MAX( ENTRY_DT )  AS ENTRY_DT , PROFILEID,TYPE FROM newjs.ASTRO_PULLING_REQUEST WHERE PENDING IN ('Y','U') AND COUNTER < 3 GROUP BY PROFILEID";
 $res = mysql_query($sql,$db) or logError($sql,"ShowErrTemplate");
-$objReplace = JProfileUpdateLib::getInstance();
+$objReplace = ProfileReplaceLib::getInstance();
 while($row = mysql_fetch_array($res))
 {
 	$profileid = $row['PROFILEID'];
