@@ -264,7 +264,7 @@
  <field name="SUBSCRIPTION" type="commaDelimited" indexed="true" multivalued="true" stored="true" />
  <field name="COMPANY_NAME" type="text_general" indexed="true" stored="false" />
  <field name="COLLEGE" type="text_general" indexed="true" stored="false" />
- <field name="PG_COLLEGE" type="text_general" indexed="true" stored="false" />
+ <field name="PG_COLLEGE" type="text_general" indexed="true" stored="true" />
  <field name="SCHOOL" type="text_general" indexed="true" stored="false" />
  <field name="KEYWORDS" type="text_general" indexed="true" stored="false" />
  <field name="NAKSHATRA" type="text_general" indexed="true" stored="false" />
