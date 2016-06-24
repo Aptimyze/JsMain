@@ -165,7 +165,8 @@ class InboxMobileAppV2
 				"VERIFICATION_SEAL",
                                 "VERIFICATION_STATUS",
                                 "COMPANY_NAME",
-                                "COLLEGE"
+                                "COLLEGE",
+                                "PG_COLLEGE"
                                 ),
 				"VISITORS"=>Array(
 				"PROFILECHECKSUM",
@@ -190,7 +191,8 @@ class InboxMobileAppV2
 				"VERIFICATION_SEAL",
                                 "VERIFICATION_STATUS",
                                 "COMPANY_NAME",
-                                "COLLEGE"
+                                "COLLEGE",
+                                "PG_COLLEGE"
 				),
 				"SHORTLIST"=>Array(
 				"PROFILECHECKSUM",
@@ -215,7 +217,8 @@ class InboxMobileAppV2
 				"VERIFICATION_SEAL",
                                 "VERIFICATION_STATUS",
                                 "COMPANY_NAME",
-                                "COLLEGE"
+                                "COLLEGE",
+                                "PG_COLLEGE"
 				),
 				"NOT_INTERESTED"=>Array(
 				"PROFILECHECKSUM",
@@ -658,10 +661,13 @@ class InboxMobileAppV2
                                         $value = null;
                                 }
                                 if($profile[$count]["college"] != ""){
-                                        $profile[$count]["college"] = "Studied at ".$profile[$count]["college"];
+                                        $profile[$count]["college"] = $profile[$count]["college"];
+                                }
+                                if($profile[$count]["pg_college"] != ""){
+                                        $profile[$count]["pg_college"] = $profile[$count]["pg_college"];
                                 }
                                 if($profile[$count]["company_name"] != ""){
-                                        $profile[$count]["company_name"] = "Works at ".$profile[$count]["company_name"];
+                                        $profile[$count]["company_name"] = $profile[$count]["company_name"];
                                 }
                                 //echo'<pre>';print_r($infoKey);die;
 				

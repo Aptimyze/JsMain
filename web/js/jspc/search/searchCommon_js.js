@@ -104,12 +104,16 @@ function searchResultMaping(val, noPhotoDiv, val1, profileNoId, defaultImage, fe
 var verificationDocumentsList;
   if (val1.verification_seal) {
     verificationSeal = ""; //val1.verification_seal;
+    verificationSealDoc = "";
     if(val1.verification_seal instanceof Array){
       verificationDocumentsList = val1.verification_seal.join(",</li><li>");
       verificationDocumentsList = "<li>"+verificationDocumentsList+"</li>";
+    }else{
+        verificationSealDoc = "disp-none";    
     }
   } else {
     verificationSeal = "disp-none";
+    verificationSealDoc = "disp-none";
     verificationDocumentsList = null;
   }
 
@@ -150,8 +154,25 @@ var verificationDocumentsList;
                 val1.username = val1.username.substring(0, val1.username.length - 4);
                 val1.username += "****";
         }
+  var collegeTxt = "";
+  var a = [];
+  if(val1.pg_college != '' && val1.pg_college != null){
+          a.push(val1.pg_college);
+  }
+  if(val1.college != '' && val1.college != null){
+        if(val1.pg_college.toLowerCase() != val1.college.toLowerCase()){
+             a.push(val1.college);
+        }
+  }
+  var s = a.join(', ');
+  if(s){
+        collegeTxt =  "Studied at "+s;
+  }
+  if(val1.company_name){
+          val1.company_name = "Works at "+val1.company_name;
+  }
   var mapping = {
-    '{StudiedAtDiv}': removeNull(val1.college),
+    '{StudiedAtDiv}': removeNull(collegeTxt),
     '{WorksAtDiv}': removeNull(val1.company_name),
     '{noPhotoDiv}': removeNull(noPhotoDiv),
     '{searchTupleImage}': removeNull(searchTupleImage),
@@ -180,6 +201,7 @@ var verificationDocumentsList;
     '{profileNoId}': profileNoId,
     '{profilechecksum}': removeNull(val1.profilechecksum),
     '{verificationSeal}': removeNull(verificationSeal),
+    '{verificationSealDoc}': removeNull(verificationSealDoc),
     '{verificationDocumentsList}': removeNull(verificationDocumentsList),
     '{featuredProfile}': removeNull(featuredProfile),
     '{featureProfileCount}': removeNull(featureProfileCount),

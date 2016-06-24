@@ -369,7 +369,8 @@ class DetailedViewApi
 			$arrUGOut = null;
 		}
                 
-                $this->m_arrOut['college'] = $objProfile->getCOLLEGE() ?"Studied at ".$objProfile->getCOLLEGE():"";
+                $this->m_arrOut['college'] = $objProfile->getCOLLEGE();
+                $this->m_arrOut['pg_college'] = $objProfile->getPG_COLLEGE();
 		$this->m_arrOut['under_grad'] = $arrUGOut;
 		
 		//School

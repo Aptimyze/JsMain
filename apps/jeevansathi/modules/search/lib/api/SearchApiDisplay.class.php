@@ -243,6 +243,7 @@ class SearchApiDisplay
 				$this->profileObjArr[$key]->setMSTATUS($this->searchResultsData[$key]['MSTATUS']);
 				$this->profileObjArr[$key]->setCOMPANY_NAME($this->searchResultsData[$key]['COMPANY_NAME']);
 				$this->profileObjArr[$key]->setCOLLEGE($this->searchResultsData[$key]['COLLEGE']);
+				$this->profileObjArr[$key]->setPG_COLLEGE($this->searchResultsData[$key]['PG_COLLEGE']);
 				
 				//get DPP values for profiles with privacy as 'F'
 				if($this->searchResultsData[$key]['PRIVACY']=='F')

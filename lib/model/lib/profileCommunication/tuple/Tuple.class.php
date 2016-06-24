@@ -72,6 +72,7 @@ class Tuple {
 		public $VERIFICATIONSEAL;
 		public $COMPANY_NAME;
 		public $COLLEGE;
+		public $PG_COLLEGE;
 
     //Getters and setter of all the base class as well as child class fields
         
@@ -92,6 +93,9 @@ class Tuple {
     }
     public function getCOLLEGE(){
         return $this->COLLEGE;
+    }
+    public function getPG_COLLEGE(){
+        return $this->PG_COLLEGE;
     }
     public function getAGE() {
         return $this->AGE;
@@ -160,6 +164,9 @@ class Tuple {
     }
     public function setCOLLEGE($x) {
         $this->COLLEGE = $x;
+    }
+    public function setPG_COLLEGE($x) {
+        $this->PG_COLLEGE = $x;
     }
     public function setUSERNAME($x) {
         $this->USERNAME = $x;

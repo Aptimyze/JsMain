@@ -26,13 +26,13 @@
                 <span class="sprtxt1 f24 usernameOfTuple">{username}</span>
                 <span class="verified {verificationSeal}">
                         <i class="verIcon js-verificationPage {verificationSeal}"></i>
-                        <span class="hoverDiv">
+                        <span class="hoverDiv js-verificationPage">
                             <div class="f14 fontreg blueColor">Verified by visit</div>
-                            <div class="f12 pt10 fontreg lightgrey">Documents provided:</div>
-                            <ul id="appendDocs" class="f12 fontreg lightgrey">
+                            <div class="f12 pt10 fontreg lightgrey {verificationSealDoc}">Documents provided:</div>
+                            <ul id="appendDocs" class="f12 fontreg lightgrey {verificationSealDoc}">
                                     {verificationDocumentsList}
                             </ul>
-                            <div class="f11 fontreg blueColor z999 cursp pt10 verKnowMore js-verificationPage">Know More</div>
+                            <div class="f11 fontreg blueColor z999 cursp pt10 verKnowMore">Know More</div>
                         </span>
                 </span>  
                 <span id = "idG{profileNoId}" class="gunaScore-{profilechecksum} f17 fontreg sprtxt1 pt6 padl15 js-gunaScore"></span>
@@ -54,8 +54,8 @@
                   <div class="fr f12 colr5" style="position: absolute; float: right; right: 72px;">{subscription_icon}</div>
                 </div>
                 <div class="pt15">
-                  <div id="studyAt" class="f15 colr_grey fontreg"> {StudiedAtDiv}</div>
-                  <div id="workAt" class="f15 mt5 colr_grey fontreg"> {WorksAtDiv}</div>
+                  <div id="studyAt" class="f15 colr_grey fontreg textTru"> {StudiedAtDiv}</div>
+                  <div id="workAt" class="f15 mt5 colr_grey fontreg textTru"> {WorksAtDiv}</div>
                 </div>
             </a>
             <!--end:listing--> 

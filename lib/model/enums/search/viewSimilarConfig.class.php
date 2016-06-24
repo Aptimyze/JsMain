@@ -33,6 +33,7 @@ class viewSimilarConfig
     													"verification_seal"=>"VERIFICATION_SEAL",
     													"mstatus"=>"MSTATUS",
     													"college"=>"COLLEGE",
+    													"pg_college"=>"PG_COLLEGE",
     													"company_name"=>"COMPANY_NAME"
     													); 
 
