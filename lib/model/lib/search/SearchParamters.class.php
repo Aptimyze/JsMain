@@ -306,7 +306,7 @@ class SearchParamters
 		$validInput = SearchInputValidation::validateInput("CITY_RES",$CITY_RES);
                 if($validInput)
 			$this->CITY_RES = $CITY_RES; 
-                if($this->getSTATE() && !$fromCityForStateFunction)
+                if($this->getSTATE() && $this->CITY_RES && !$fromCityForStateFunction)
                     $this->setCityForState();
 	}
 	public function getCITY_RES() { return $this->CITY_RES; }
@@ -823,7 +823,7 @@ class SearchParamters
 		$validInput = SearchInputValidation::validateInput("STATE",$STATE);
                 if($validInput)
 			$this->STATE = $STATE; 
-                if($this->getCITY_RES() && !$fromCityForStateFunction)
+                if($this->getCITY_RES() && $this->STATE && !$fromCityForStateFunction)
                     $this->setCityForState();
 	}
 	public function getSTATE() { return $this->STATE; }
@@ -1052,8 +1052,10 @@ class SearchParamters
 	/* Getter and Setter public functions*/
         
         public function setCityForState(){
+            
             $city_arr = explode(",",$this->getCITY_RES());
             $state_arr = explode(",",$this->getSTATE());
+            
             if($state_arr){
                 foreach ($state_arr as $k=>$stateVal){
 
@@ -1073,7 +1075,7 @@ class SearchParamters
                 foreach ($city_arr as $k=>$cityVal){
                     if(FieldMap::getFieldLabel("city_india","",1)[$cityVal]){
                         $state_from_city =  $this->cityStateConversion($cityVal);
-                        $state_arr = array_merge($state_arr,$state_from_city);
+                            $state_arr = array_merge($state_arr,$state_from_city);
                         $state_arr = array_unique($state_arr);
                     }
                 }
