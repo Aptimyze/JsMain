@@ -496,28 +496,22 @@ include(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 			$PARTNER_CITYRES=display_format($value["PARTNER_CITYRES"]);
 			if(is_array($PARTNER_CITYRES))
 			{
-				$str=implode("','",$PARTNER_CITYRES);
-				$sql="select SQL_CACHE LABEL from newjs.CITY_NEW where VALUE in ('$str')";
-				$dropresult=mysql_query_decide($sql) or die("Error while fetching city name   ".mysql_error_js());
-				while($droprow=mysql_fetch_array($dropresult))
+				$cityLabelArr = FieldMap::getFieldLabel("city_india",'',1);
+				foreach($PARTNER_CITYRES as $key=>$val)
 				{
-					$partner_city_str.=$droprow["LABEL"] . ", ";
+					$partner_city_str.=$cityLabelArr[$val] . ", ";
 				}
-				mysql_free_result($dropresult);
 				$partner_city_str=substr($partner_city_str,0,strlen($partner_city_str)-2);
 				//$partner["CITYRES"]=$partner_city_str;
 			}
 			$STATE = display_format($value["STATE"]);
 			if(is_array($STATE))
 			{
-				$str=implode("','",$STATE);
-				$sql="select SQL_CACHE LABEL from newjs.STATE_NEW where VALUE in ('$str')";
-				$dropresult=mysql_query_decide($sql) or die("Error while fetching state name   ".mysql_error_js());
-				while($droprow=mysql_fetch_array($dropresult))
+                                $stateLabelArr = FieldMap::getFieldLabel("state_india",'',1);
+				foreach($STATE as $key=>$val)
 				{
-					$partner_state_str.=$droprow["LABEL"] . ", ";
+					$partner_state_str.=$stateLabelArr[$val] . ", ";
 				}
-				mysql_free_result($dropresult);
 				$partner_state_str=substr($partner_state_str,0,strlen($partner_state_str)-2);
 			}
 			if($partner_state_str!="")

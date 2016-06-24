@@ -14,7 +14,13 @@ class EditDppBasicInfo extends EditDppComponent {
 		$this->action->MSTATUS = FieldMap::getFieldLabel('mstatus', '', 1);
 		//Trac 482. Give Married option only to muslinm women
 		if (!($this->action->loginProfile->getRELIGION() == 2 && $this->action->loginProfile->getGENDER() == 'F')) unset($this->action->MSTATUS[M]);
-                $checkedCityStr = $this->jpartner->getPARTNER_CITYRES().",".$this->jpartner->getState();
+                $checkedCityStr = '';
+                if($this->jpartner->getPARTNER_CITYRES() && $this->jpartner->getState())
+                    $checkedCityStr = $this->jpartner->getPARTNER_CITYRES().",".$this->jpartner->getState();
+                else if($this->jpartner->getPARTNER_CITYRES())
+                    $checkedCityStr = $this->jpartner->getPARTNER_CITYRES();
+                else if($this->jpartner->getState())
+                    $checkedCityStr = $this->jpartner->getState();
 		$this->action->checked_city = $checkedCityStr;
 		$this->action->partner_children = $this->jpartner->getCHILDREN();
 		$this->action->setTemplate("profile_edit_partner_basic");
@@ -67,6 +73,7 @@ class EditDppBasicInfo extends EditDppComponent {
                                 }
 
                         }
+                        if(is_array($cityArr))
                         foreach($cityArr as $key=>$value)
                         {	
                                 if(!in_array(substr($value,0,2),$stateArr))
@@ -74,8 +81,10 @@ class EditDppBasicInfo extends EditDppComponent {
                                         $cityString .= $value."','";
                                 }
                         }
-                        $this->cistr = "'".rtrim($cityString,"','")."'";
-                        $this->state = "'".implode("','",$stateArr)."'";
+                        if($cityString)
+                            $this->cistr = "'".rtrim($cityString,"','")."'";
+                        if($stateArr)
+                            $this->state = "'".implode("','",$stateArr)."'";
 		}
 	}
 	public function getEditedValues() {
