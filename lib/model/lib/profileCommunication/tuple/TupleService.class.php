@@ -360,10 +360,16 @@ class TupleService
 								$edu[]=FieldMap::getFieldLabel('education',$row["UG_DEGREE"]);
 				if($row["OTHER_PG_DEGREE"] && Flag::isFlagSet("other_pg_degree", $row["SCREENING"]))
 								$edu[]=substr($row["OTHER_UG_DEGREE"],0,30);
-				if($row["COLLEGE"])
+				if($row["COLLEGE"]){
 								$result[$row["PROFILEID"]]["COLLEGE"]=$row["COLLEGE"];
-				if($row["PG_COLLEGE"])
+                                }else{
+                                      $result[$row["PROFILEID"]]["COLLEGE"] = '';  
+                                }
+				if($row["PG_COLLEGE"]){
 								$result[$row["PROFILEID"]]["PG_COLLEGE"]=$row["PG_COLLEGE"];
+                                }else{
+                                        $result[$row["PROFILEID"]]["PG_COLLEGE"] = '';
+                                }
 				$result[$row["PROFILEID"]]["edu_level_new"]= $edu?implode(", ",array_unique($edu)):"";
 			}
 		      return $result;

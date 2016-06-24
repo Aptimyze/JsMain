@@ -156,11 +156,13 @@ var verificationDocumentsList;
         }
   var collegeTxt = "";
   var a = [];
-  if(val1.pg_college != '' && val1.pg_college != null){
+  var pgCol = '';
+  if(typeof val1.pg_college != 'undefined' && val1.pg_college != '' && val1.pg_college != null){
           a.push(val1.pg_college);
+          pgCol = '';
   }
-  if(val1.college != '' && val1.college != null){
-        if(val1.pg_college.toLowerCase() != val1.college.toLowerCase()){
+  if(typeof val1.college != 'undefined' && val1.college != '' && val1.college != null){
+        if(pgCol.toLowerCase() != val1.college.toLowerCase()){
              a.push(val1.college);
         }
   }

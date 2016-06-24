@@ -451,7 +451,7 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
                         $jspcVSPArray["profiles"][$key][$searchField]= PictureFunctions::mapUrlToMessageInfoArr($detailsArray[$vspField],ViewSimilarProfile::$defaultPicSize["PC"],$detailsArray["PHOTO_REQUESTED"],$gender);
                     else if($searchField == "subscription_icon")
                     {
-  			            $searchApiObj = new SearchApiStrategyV1();
+  			$searchApiObj = new SearchApiStrategyV1();
                         $jspcVSPArray["profiles"][$key][$searchField]= $searchApiObj->handlingSpecialCasesForSearch($searchField,$detailsArray[$vspField],$detailsArray["PHOTO_REQUESTED"],$gender);                        
                         unset($searchApiObj);
                     }  
@@ -460,6 +460,8 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
                          if($detailsArray[$vspField]!= ''){
                               $searchApiObj = new SearchApiStrategyV1();
                               $jspcVSPArray["profiles"][$key][$searchField]= $detailsArray[$vspField];      
+                         }else{
+                              $jspcVSPArray["profiles"][$key][$searchField]= '';       
                          }
                     }else
                         $jspcVSPArray["profiles"][$key][$searchField] = $detailsArray[$vspField];
