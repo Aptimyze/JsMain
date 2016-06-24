@@ -12,14 +12,14 @@ $db_master = mysql_connect("master.js.jsb9.net","user","CLDLRTa9") or die("Unabl
 
 $campaignName	='OB_JS_RCB';
 $action		='OB_JS_RCB';
-$date2DayBefore =date("Y-m-d",time()-58*60*60);
+$date2DayBefore =date("Y-m-d H:i:s",time()-58*60*60);
 
-$profilesArr    =fetchProfiles($db_js);
+$profilesArr    =fetchProfiles($db_master);
 $profileStr     =implode(",",$profilesArr);
 
 if($profileStr!=''){
 	// Set dial status=0 for paid campaign
-	$query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0' WHERE PROFILEID IN ($profileStr) AND CSV_ENTRY_DATE<'$date2DayBefore'";
+	$query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0' WHERE CSV_ENTRY_DATE<'$date2DayBefore'";
 	mssql_query($query1,$db_dialer) or logerror($query1,$db_dialer,1);
 	deleteProfiles($db_master,$profileStr);
 
