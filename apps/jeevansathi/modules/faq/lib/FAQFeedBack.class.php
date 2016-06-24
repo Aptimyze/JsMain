@@ -43,11 +43,12 @@ class FAQFeedBack
 			$feed=$this->webRequest->getParameter('feed');
 			$reason=$feed['message'];
 			$arr=split('reason:',$reason);
-			$reasonNew=$arr[1];
+			$reasonNew=trim($arr[1]);
 			$arr2=split(' ',$reason);
 			$otherUsername=trim($arr2[0]);
 			$this->otherProfile->getDetail($otherUsername,"USERNAME");
 			$otherProfileId=$this->otherProfile->getPROFILEID();
+			
 		}
 
 		
