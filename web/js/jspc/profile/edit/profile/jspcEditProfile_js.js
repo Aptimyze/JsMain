@@ -6147,9 +6147,6 @@ $('.js-previewAlbum').click(function(){
     var username = photoData[1];
     var profilechecksum = photoData[2];
     var albumCount = photoData[0];
-    console.log(username);
-    console.log(albumCount);
-    console.log(profilechecksum);
     if((typeof(loggedInJspcUser)!="undefined" && loggedInJspcUser=="") || !profilechecksum){
                 return true;
      }
