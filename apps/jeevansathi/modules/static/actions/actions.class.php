@@ -1239,8 +1239,13 @@ public function executeAppredirect(sfWebRequest $request)
                           $topIndia[$val]=$cityIndia[$val];
 
             }
-            $Arr[51][0] = array_merge($topIndia,array("-1 "=>"--States"));
-	    $Arr[51][1] = array_merge($state,array("-1 "=>"--Cities"));
+            
+            $delhiNcrCities = implode(",",FieldMap::getFieldLabel("delhiNcrCities",1,1));
+            $topIndia[$delhiNcrCities]=TopSearchBandConfig::$ncrLabel;
+            $topIndia[TopSearchBandConfig::$mumbaiRegion]=TopSearchBandConfig::$mumbaiRegionLabel;
+            
+            $Arr[51][0] = array_merge($topIndia,array("-1 "=>"States"));
+	    $Arr[51][1] = array_merge($state,array("-1 "=>"Cities"));
             $Arr[51][2]=$cityIndia;
             $i=0;
 	  foreach($Arr[51] as $key=>$val)
