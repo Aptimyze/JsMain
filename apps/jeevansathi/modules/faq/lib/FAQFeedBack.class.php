@@ -31,18 +31,37 @@ class FAQFeedBack
 
 	private function insertReportAbuseLog(){
 
-		$selfUsername=$this->m_szUserName;
-		$reason=$this->webRequest->getParameter('reason');
-		
+		$reasonNew=$this->webRequest->getParameter('reason');
+
 		$this->otherProfile=new Profile();
-		$profileid = JsCommon::getProfileFromChecksum($this->webRequest->getParameter('profilechecksum'));
-		$this->otherProfile->getDetail($profileid,"PROFILEID");
+		if($this->webRequest->getParameter('profilechecksum') && $reasonNew)
+		{ 
+			$otherProfileId = JsCommon::getProfileFromChecksum($this->webRequest->getParameter('profilechecksum'));
+		}
+		
+		else{
+			$feed=$this->webRequest->getParameter('feed');
+			$reason=$feed['message'];
+			$arr=split('reason:',$reason);
+			$reasonNew=$arr[1];
+			$arr2=split(' ',$reason);
+			$otherUsername=trim($arr2[0]);
+			$this->otherProfile->getDetail($otherUsername,"USERNAME");
+			$otherProfileId=$this->otherProfile->getPROFILEID();
+		}
 
-		$otherUsername=$this->otherProfile->getUSERNAME();
-		//if($sel)
-		if(!$reason || !$otherUsername || !$selfUsername)return;
+		
 
-		(new REPORT_ABUSE_LOG())->insertReport($selfUsername,$otherUsername,$reason);
+		$loginProfile=LoggedInProfile::getInstance();
+		if(!$reasonNew || !$loginProfile->getPROFILEID() || !$otherProfileId) return;
+		(new REPORT_ABUSE_LOG())->insertReport($loginProfile->getPROFILEID(),$otherProfileId,$reasonNew);
+
+				// block for blocking the reported abuse added by Palash
+
+				$ignore_Store_Obj = new NEWJS_IGNORE;
+				$ignore_Store_Obj->ignoreProfile($loginProfile->getPROFILEID(),$otherProfileId);
+				//////////////////////////////////////////////////
+
 
 	}
 	private function extractInfo(sfWebRequest $request)
@@ -189,18 +208,6 @@ class FAQFeedBack
 			if($this->m_szCategory==FeedbackEnum::CAT_ABUSE)
 			{	
 
-				
-				// block for blocking the reported abuse added by Palash
-
-				$this->webRequest->setParameter('ignore','1');
-				$this->webRequest->setParameter('channel','pc');
-				$this->webRequest->setParameter('pageSource','VDP');
-				$this->webRequest->setParameter('INTERNAL','1');
-				ob_start();
-    			sfContext::getInstance()->getController()->getPresentationFor("common", "ApiIgnoreProfileV1");
-    			$layerData = ob_get_contents();
-    			ob_end_clean();			
-    			//////////////////////////////////////////////////
     			$this->insertReportAbuseLog();
     		}	
 		}
