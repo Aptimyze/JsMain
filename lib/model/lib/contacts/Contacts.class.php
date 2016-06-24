@@ -12,17 +12,17 @@
  * @author Rohit Khandelwal
  */
 class Contacts {
-	
-	
+
+
 	/**
-	 * 
+	 *
 	 * This variable holds the contactid value of the Contacts table.
 	 * @access private
 	 * @var integer
 	 */
 	private $CONTACTID;
 	/**
-	 * 
+	 *
 	 * Holds the type of contact b/w sender and receiver.
 	 * @access private
 	 * @var string
@@ -30,112 +30,112 @@ class Contacts {
 	private $TYPE;
 	/**
 	 * holds the time of contact.
-	 * 
+	 *
 	 * @access private
 	 * @var TimeDate
 	 */
 	private $TIME;
 	/**
-	 * 
+	 *
 	 * This is used to store the frequency of the contact between sender and reciever.
 	 * @access private
 	 * @var int
 	 */
 	private $COUNT;
 	/**
-	 * 
+	 *
 	 * Not in use now.
 	 * @access private
 	 * @var string
 	 */
 	private $MSG_DEL;
 	/**
-	 * 
+	 *
 	 * Value is Y if EOI has been viewed by Reciver.
 	 * @access private
 	 * @var string
 	 */
 	private $SEEN;
 	/**
-	 * 
+	 *
 	 * value is Y if the EOI goes into filtered folder.
 	 * @access private
 	 * @var string
 	 */
 	private $FILTERED;
 	/**
-	 * 
+	 *
 	 * This variable is used to store the folder name.
 	 * @access private
 	 * @var unknown_type
 	 */
 	private $FOLDER;
 	/**
-	 * 
+	 *
 	 * Profile Object for Sender.
 	 * @access private
 	 * @var Profile
 	 */
 	private $senderObj;
 	/**
-	 * 
+	 *
 	 * Profile Object for Receiver
 	 * @access private
 	 * @var Profile
 	 */
-    private $receiverObj;
-    /**
-     * 
-     * This holds the contact records for sender and reciever if exists in Contacts table.
-     * @access private
-     * @var array
-     */
-    private $contactRecord;
-    /**
-     * 
-     * Shard db for Sender.
-     * @access private
-     * @var string
-     */
-    private $dbSender;
-    /**
-     * 
-     * Database object of Contacts table for Sender.
-     * @access private
-     * @var Object
-     */
-    private $dbObjSender;
-    /**
-     * 
-     * Shard db for Receiver.
-     * @access private
-     * @var string
-     */
-    private $dbReceiver;
-    /**
-     * 
-     * Database object of Contacts table for Receiver.
-     * @access private
-     * @var Object
-     */
-    private $dbObjReceiver;
-    const SEEN = 'Y';
-    const NOTSEEN = 'N';
-    const NOTSEEN_BLANK = '';
-    const FILTERED = 'Y';
-    const NOTFILTERED = 'N';
-    const NOTFILTERED_BLANK = '';
-    const TYPEDEFAULT="N";
-    const CONTACTID_ERROR = "ContactId is not correct in contacts obj";
+	private $receiverObj;
+	/**
+	 *
+	 * This holds the contact records for sender and reciever if exists in Contacts table.
+	 * @access private
+	 * @var array
+	 */
+	private $contactRecord;
+	/**
+	 *
+	 * Shard db for Sender.
+	 * @access private
+	 * @var string
+	 */
+	private $dbSender;
+	/**
+	 *
+	 * Database object of Contacts table for Sender.
+	 * @access private
+	 * @var Object
+	 */
+	private $dbObjSender;
+	/**
+	 *
+	 * Shard db for Receiver.
+	 * @access private
+	 * @var string
+	 */
+	private $dbReceiver;
+	/**
+	 *
+	 * Database object of Contacts table for Receiver.
+	 * @access private
+	 * @var Object
+	 */
+	private $dbObjReceiver;
+	const SEEN = 'Y';
+	const NOTSEEN = 'N';
+	const NOTSEEN_BLANK = '';
+	const FILTERED = 'Y';
+	const NOTFILTERED = 'N';
+	const NOTFILTERED_BLANK = '';
+	const TYPEDEFAULT="N";
+	const CONTACTID_ERROR = "ContactId is not correct in contacts obj";
 	const SENDER_ERROR = "Sender is not correct in contacts obj";
 	const RECEIVER_ERROR = "Receiver is not correct in contacts obj";
 	const TYPE_ERROR = "Type is not correct in contacts obj";
 	const PROFILE_ERROR = "Object is not profile obj";
 	const FILTER_ERROR = "Filter value in not correct in contacts obj";
 	const SEEN_ERROR = "Seen value is not correct in contacts obj";
-	
+
 	/**
-	 * 
+	 *
 	 * Constructor for initializing object of Contacts class
 	 * @param Profile $profileObj1
 	 * @param Profile $profileObj2
@@ -145,140 +145,140 @@ class Contacts {
 	{
 		if(!($profileObj1 instanceof Profile) || !($profileObj2 instanceof Profile))
 			throw new jsException("",Contacts::PROFILE_ERROR);
-			
-		$this->_setDefault($profileObj1,$profileObj2);			
-	}	
+
+		$this->_setDefault($profileObj1,$profileObj2);
+	}
 	/*************************************Getter/Setter*****************************************************/
 	/**
-    * 
-    *
-    * @param int $CONTACTID
-    * @return void
-    * @access public
-    */
+	 *
+	 *
+	 * @param int $CONTACTID
+	 * @return void
+	 * @access public
+	 */
 	public function setCONTACTID($CONTACTID)
 	{
 		if($CONTACTID)
 			$this->CONTACTID = $CONTACTID;
 		else
-		 	throw new jsException("",Contacts::CONTACTID_ERROR);
+			throw new jsException("",Contacts::CONTACTID_ERROR);
 	}
 	/**
-    *
-    * @return int
-    * @access public
-    */
+	 *
+	 * @return int
+	 * @access public
+	 */
 	public function getCONTACTID()
 	{
 		return $this->CONTACTID;
 	}
 	/**
-    * 
-    * @param string TYPE
-    * @return void
-    * @access public
-    */	
+	 *
+	 * @param string TYPE
+	 * @return void
+	 * @access public
+	 */
 	public function setTYPE($TYPE)
 	{
 		if(in_array($TYPE,array('A','I','E','C','D','N')))
 			$this->TYPE = $TYPE;
 		else
-			throw new jsException("",Contacts::TYPE_ERROR);	
+			throw new jsException("",Contacts::TYPE_ERROR);
 	}
 	/**
-    * returns the type of contact between Sender and Reciever.
-    * @return string
-    * @access public
-    */
+	 * returns the type of contact between Sender and Reciever.
+	 * @return string
+	 * @access public
+	 */
 	public function getTYPE()
 	{
 		return $this->TYPE;
 	}
 	/**
-    *
-    * @param datetime TIME
-    * @return void
-    * @access public
-    */
+	 *
+	 * @param datetime TIME
+	 * @return void
+	 * @access public
+	 */
 	public function setTIME($TIME)
 	{
 		$this->TIME = $TIME;
 	}
 	/**
-    *
-    * @return datetime 
-    * @access public
-    */	
+	 *
+	 * @return datetime
+	 * @access public
+	 */
 	public function getTIME()
 	{
 		return $this->TIME;
 	}
 	/**
-    *
-    * @param integer COUNT
-    * @return void
-    * @access public
-    */	
+	 *
+	 * @param integer COUNT
+	 * @return void
+	 * @access public
+	 */
 	public function setCOUNT($COUNT)
 	{
 		$this->COUNT = $COUNT;
 	}
 	/**
-    *returns the count of contacts between Sender and Reciever.
-    * @return int
-    * @access public
-    */	
+	 *returns the count of contacts between Sender and Reciever.
+	 * @return int
+	 * @access public
+	 */
 	public function getCOUNT()
 	{
 		return $this->COUNT;
 	}
 	/**
-    *
-    * @param string $MSG_DEL
-    * @return void
-    * @access public
-    */	
+	 *
+	 * @param string $MSG_DEL
+	 * @return void
+	 * @access public
+	 */
 	public function setMSG_DEL($MSG_DEL)
 	{
 		$this->MSG_DEL = $MSG_DEL;
 	}
 	/**
-    *
-    * @return string
-    * @access public
-    */
+	 *
+	 * @return string
+	 * @access public
+	 */
 	public function getMSG_DEL()
 	{
 		return $this->MSG_DEL;
 	}
 	/**
-    *
-    * @param string SEEN
-    * @return void
-    * @access public
-    */	
+	 *
+	 * @param string SEEN
+	 * @return void
+	 * @access public
+	 */
 	public function setSEEN($SEEN)
 	{
 		if(in_array($SEEN, array(Contacts::SEEN,Contacts::NOTSEEN,Contacts::NOTSEEN_BLANK)))
 			$this->SEEN = $SEEN;
 		else
-			throw new jsException("",Contacts::SEEN_ERROR);		
+			throw new jsException("",Contacts::SEEN_ERROR);
 	}
 	/**
-    *
-    * @return string
-    * @access public
-    */	
+	 *
+	 * @return string
+	 * @access public
+	 */
 	public function getSEEN()
 	{
 		return $this->SEEN;
 	}
 	/**
-    *
-    * @param string FILTERED
-    * @return void
-    * @access public
-    */	
+	 *
+	 * @param string FILTERED
+	 * @return void
+	 * @access public
+	 */
 	public function setFILTERED($FILTERED)
 	{
 		if(in_array($FILTERED,array(Contacts::FILTERED,Contacts::NOTFILTERED,Contacts::NOTFILTERED_BLANK)))
@@ -287,88 +287,88 @@ class Contacts {
 			throw new jsException("",Contacts::FILTER_ERROR);
 	}
 	/**
-    * returns the value of FILTERED,Y if contact is filtered otherwise 'N' or ''.
-    * @return string
-    * @access public
-    */	
+	 * returns the value of FILTERED,Y if contact is filtered otherwise 'N' or ''.
+	 * @return string
+	 * @access public
+	 */
 	public function getFILTERED()
 	{
 		return $this->FILTERED;
 	}
 	/**
-    * set the FOLDER.
-    * @param string $FOLDER
-    * @return void
-    * @access public
-    */	
+	 * set the FOLDER.
+	 * @param string $FOLDER
+	 * @return void
+	 * @access public
+	 */
 	public function setFOLDER($FOLDER)
 	{
 		$this->FOLDER = $FOLDER;
 	}
 	/**
-    * returns the Folder.
-    * @return string
-    * @access public
-    */	
+	 * returns the Folder.
+	 * @return string
+	 * @access public
+	 */
 	public function getFOLDER()
 	{
 		return $this->FOLDER;
 	}
 	/**
-    * set the senderObj
-    * @param Profile profileObj
-    * @return void
-    * @access public
-    */	
-	public function setSenderObj( $profileObj ) 
+	 * set the senderObj
+	 * @param Profile profileObj
+	 * @return void
+	 * @access public
+	 */
+	public function setSenderObj( $profileObj )
 	{
 		$this->senderObj=$profileObj;
 	}
 	/**
-    * set the receiverObj
-    * @param Profile profileObj
-    * @return void
-    * @access public
-    */	
+	 * set the receiverObj
+	 * @param Profile profileObj
+	 * @return void
+	 * @access public
+	 */
 	public function setReceiverObj( $profileObj )
 	{
 		$this->receiverObj=$profileObj;
 	}
 	/**
-    * returns the sender object
-    * @return Profile senderObj
-    * @access public
-    */	
-	public function getSenderObj() 
+	 * returns the sender object
+	 * @return Profile senderObj
+	 * @access public
+	 */
+	public function getSenderObj()
 	{
 		return $this->senderObj;
 	}
 	/**
-    * returns the recieverObj
-    * @return Profile
-    * @access public
-    */
+	 * returns the recieverObj
+	 * @return Profile
+	 * @access public
+	 */
 	public function getReceiverObj()
 	{
 		return $this->receiverObj;
 	}
 	/**
-    *Set default values for all the setter.
-    *
-    * @param Profile profileObj1 
-    * @param Profile profileObj2
-    * @return void
-    * @access private
-    * @uses setSenderObj()
-    * @uses setReciverObj()
-    * @uses $contactRecord
-    * @uses setContactID()
-    * @uses setTYPE()
-    * @uses setCOUNT()
-    * @uses setMSG_DEL()
-    * @uses setFILTERED()
-    * @uses setSEEN()
-    */	
+	 *Set default values for all the setter.
+	 *
+	 * @param Profile profileObj1
+	 * @param Profile profileObj2
+	 * @return void
+	 * @access private
+	 * @uses setSenderObj()
+	 * @uses setReciverObj()
+	 * @uses $contactRecord
+	 * @uses setContactID()
+	 * @uses setTYPE()
+	 * @uses setCOUNT()
+	 * @uses setMSG_DEL()
+	 * @uses setFILTERED()
+	 * @uses setSEEN()
+	 */
 	private function _setDefault($profileObj1,$profileObj2)
 	{
 		$this->setSenderObj($profileObj1);
@@ -387,7 +387,7 @@ class Contacts {
 			$this->setTYPE($this->contactRecord['TYPE']);
 			$this->setCOUNT($this->contactRecord['COUNT']);
 			$this->setTIME($this->contactRecord['TIME']);
-			$this->setMSG_DEL($this->contactRecord['MSG_DEL']);		
+			$this->setMSG_DEL($this->contactRecord['MSG_DEL']);
 			$this->setFILTERED($this->contactRecord['FILTERED']);
 			$this->setFOLDER($this->contactRecord['FOLDER']);
 			if($this->contactRecord['SEEN'])
@@ -397,21 +397,21 @@ class Contacts {
 		}
 		else
 			$this->setTYPE(Contacts::TYPEDEFAULT);
-		
+
 	}
-	
+
 	/****************************************************************************************************/
-	
+
 	/**
-	* Make the shard connection and create db object for Sender and Receiver
-	* @return void
-	* @uses $dbSender
-	* @uses $dbReciever
-	* @uses $dbObjSender
-	* @uses $dbObjReciver
-	* 
-	*/
-    public function getShardConnection()
+	 * Make the shard connection and create db object for Sender and Receiver
+	 * @return void
+	 * @uses $dbSender
+	 * @uses $dbReciever
+	 * @uses $dbObjSender
+	 * @uses $dbObjReciver
+	 *
+	 */
+	public function getShardConnection()
 	{
 		$this->dbSender = JsDbSharding::getShardNo($this->getSenderObj()->getPROFILEID(),'');
 		$this->dbObjSender = new newjs_CONTACTS($this->dbSender);
@@ -428,14 +428,14 @@ class Contacts {
 	 * @uses setTIME()
 	 * @uses getShardConnection()
 	 * @access public
-	 * 
-	*/
+	 *
+	 */
 	public function updateContact()
-	{				
+	{
 		$this->setTIME(date("Y-m-d H:i:s"));
 		$this->setFOLDER($this->GetFolderId());
 		$result = false;
-		if((JsConstants::$webServiceFlag == 1 && php_sapi_name() != 'cli') && $checkdb != 1) {
+		if(JsConstants::$webServiceFlag == 1) {
 			$result = true;
 			$contactRecordsObj = new ContactsRecords();
 			$result = $contactRecordsObj->update($this);
@@ -461,28 +461,28 @@ class Contacts {
 	 * @uses getShardConnection()
 	 * @uses newjs_CONTACTS_GET_ID::generateId()
 	 * @access public
-	 * 
-	 */	
+	 *
+	 */
 	public function insertContact()
 	{
 		$dbContactGetId = new newjs_CONTACTS_GET_ID();
 		$this->setCONTACTID($dbContactGetId->generateId());
 		$dbContactGetId->delete();
 		$this->setFOLDER($this->GetFolderId());
-		
+
 		$this->setTIME(date("Y-m-d H:i:s"));
-		
+
 		$this->setSEEN('N');
 		$this->setCOUNT(1);
 		$result = false;
-		if((JsConstants::$webServiceFlag == 1 && php_sapi_name() != 'cli') && $checkdb != 1) {
+		if(JsConstants::$webServiceFlag == 1 ){
 			$result = true;
 			$contactRecordsObj = new ContactsRecords();
 			$result = $contactRecordsObj->insert($this);
 		}
 		if($result == false) {
 			$this->getShardConnection();
-			$success=$this->dbObjSender->insert($this);				
+			$success=$this->dbObjSender->insert($this);
 			if(!$success)
 				$success=$this->dbObjSender->insert($this);
 			if($this->dbSender!=$this->dbReceiver && $success)
@@ -492,10 +492,10 @@ class Contacts {
 					if(!$this->dbObjReceiver->insert($this))
 						$this->dbObjSender->delete($this);
 				}
-				
+
 			}
 		}
-			
+
 	}
 	/**
 	 * Delete Contact b/w Sender and Receiver from Contacts Table.
@@ -505,11 +505,11 @@ class Contacts {
 	 * @uses $dbReceiver
 	 * @uses $dbObjReceiver
 	 * @access public
-	 */	
+	 */
 	public function deleteContact()
 	{
 		$result = false;
-		if((JsConstants::$webServiceFlag == 1 && php_sapi_name() != 'cli') && $checkdb != 1) {
+		if(JsConstants::$webServiceFlag == 1 ) {
 			$result = true;
 			$contactRecordsObj = new ContactsRecords();
 			$result = $contactRecordsObj->delete($this);
@@ -521,79 +521,55 @@ class Contacts {
 				$success = $this->dbObjSender->delete($this);
 			if ($this->dbSender != $this->dbReceiver && $success)
 				$this->dbObjReceiver->delete($this);
-		}	
+		}
 	}
-	
+
 	/*
 	 * Update folder, required by ap users
 	 */
 	public function GetFolderId()
 	{
-	
-	$sender_profileid=$this->senderObj->getPROFILEID();
-	$receiver_profileid=$this->receiverObj->getPROFILEID();
-	$type=$this->getTYPE();
-	$filtered=$this->getFILTERED();
-	$recSub=$this->receiverObj->getSUBSCRIPTION();
-	$senSub=$this->senderObj->getSUBSCRIPTION();
-	
-	$recSubArr=array();
-	$senSubArr=array();
-	if($recSub)
-		$recSubArr=explode(",",$recSub);
-	if($senSub)
-		$senSubArr=explode(",",$senSub);
 
-	//Only for Profile dispatcher
-        if(in_array("L",$senSubArr) )
-                $senderAA=1;
-        if(in_array("L",$recSubArr))
-                $recAA=1;
-	
-	if($senderAA || $recAA)
-	{
-		if($type=='I')
+		$sender_profileid=$this->senderObj->getPROFILEID();
+		$receiver_profileid=$this->receiverObj->getPROFILEID();
+		$type=$this->getTYPE();
+		$filtered=$this->getFILTERED();
+		$recSub=$this->receiverObj->getSUBSCRIPTION();
+		$senSub=$this->senderObj->getSUBSCRIPTION();
+
+		$recSubArr=array();
+		$senSubArr=array();
+		if($recSub)
+			$recSubArr=explode(",",$recSub);
+		if($senSub)
+			$senSubArr=explode(",",$senSub);
+
+		//Only for Profile dispatcher
+		if(in_array("L",$senSubArr) )
+			$senderAA=1;
+		if(in_array("L",$recSubArr))
+			$recAA=1;
+
+		if($senderAA || $recAA)
 		{
-			if($recAA)
+			if($type=='I')
 			{
-				if($filtered)
-					$folder='FIL';
-				else
-					$check='SL';
-			}
-			else
-			{
-				if($recSub)
+				if($recAA)
 				{
-					if(in_array("D",$recSubArr))
+					if($filtered)
+						$folder='FIL';
+					else
 						$check='SL';
 				}
-			}
-			if($check=='SL')
-			{
-				$rowCall=$this->getIntroCallHistory1();
-				if($rowCall)
+				else
 				{
-					if($rowCall["CALL_STATUS"]=="Y")
-									$folder='';
-					else
-									$folder='SL';
+					if($recSub)
+					{
+						if(in_array("D",$recSubArr))
+							$check='SL';
+					}
 				}
-				else
-					$folder='SL';
-			}
-		}
-		elseif($type=='A')
-		{
-
-			if($this->getFOLDER())
-				$folder='';
-			else
-			{
-
-				if($this->getFOLDER())
-					$folder='';
-				else
+				if($check=='SL')
 				{
 					$rowCall=$this->getIntroCallHistory1();
 					if($rowCall)
@@ -607,30 +583,36 @@ class Contacts {
 						$folder='SL';
 				}
 			}
-		}
-		elseif($type=='D' || $type=='C' || $type=="E")
-		{
-			$check=0;
-			
-			if($this->getFOLDER()=='TBD')
+			elseif($type=='A')
 			{
-				$rowCall=$this->getIntroCallHistory1();
-				if($rowCall)
+
+				if($this->getFOLDER())
+					$folder='';
+				else
 				{
-					if($rowCall["CALL_STATUS"]=="Y")
+
+					if($this->getFOLDER())
 						$folder='';
 					else
-						$folder='blank';
+					{
+						$rowCall=$this->getIntroCallHistory1();
+						if($rowCall)
+						{
+							if($rowCall["CALL_STATUS"]=="Y")
+								$folder='';
+							else
+								$folder='SL';
+						}
+						else
+							$folder='SL';
+					}
 				}
-				else
-					$folder='blank';
 			}
-			elseif($this->getFOLDER()=="DIS")
-				$folder='';
-			else
+			elseif($type=='D' || $type=='C' || $type=="E")
 			{
-				
-				if($this->getFOLDER())
+				$check=0;
+
+				if($this->getFOLDER()=='TBD')
 				{
 					$rowCall=$this->getIntroCallHistory1();
 					if($rowCall)
@@ -646,34 +628,52 @@ class Contacts {
 				elseif($this->getFOLDER()=="DIS")
 					$folder='';
 				else
-					$folder='blank';
-			}
-		}
-		return $folder;
-		
-	}
-	else
-		return '';
-
-	}
-/*
- * returns intro ap_call_hitory log
- */
-		
-		public function getIntroCallHistory1()
-		{
-				$sender_profileid=$this->senderObj->getPROFILEID();
-				$receiver_profileid=$this->receiverObj->getPROFILEID();
-				$fields="*";
-				if($sender_profileid && $receiver_profileid)
 				{
-						$apCallObj=new ASSISTED_PRODUCT_AP_CALL_HISTORY;
 
-						return $apCallObj->Fetch($sender_profileid,$receiver_profileid);
-
+					if($this->getFOLDER())
+					{
+						$rowCall=$this->getIntroCallHistory1();
+						if($rowCall)
+						{
+							if($rowCall["CALL_STATUS"]=="Y")
+								$folder='';
+							else
+								$folder='blank';
+						}
+						else
+							$folder='blank';
+					}
+					elseif($this->getFOLDER()=="DIS")
+						$folder='';
+					else
+						$folder='blank';
 				}
-				else
-						return '';
+			}
+			return $folder;
+
 		}
+		else
+			return '';
+
+	}
+	/*
+	 * returns intro ap_call_hitory log
+	 */
+
+	public function getIntroCallHistory1()
+	{
+		$sender_profileid=$this->senderObj->getPROFILEID();
+		$receiver_profileid=$this->receiverObj->getPROFILEID();
+		$fields="*";
+		if($sender_profileid && $receiver_profileid)
+		{
+			$apCallObj=new ASSISTED_PRODUCT_AP_CALL_HISTORY;
+
+			return $apCallObj->Fetch($sender_profileid,$receiver_profileid);
+
+		}
+		else
+			return '';
+	}
 }
 ?>

@@ -213,8 +213,11 @@ if(authenticated($cid))
 			}
 			if(is_array($subscription_ar))
 					$subscription = implode(",",$subscription_ar);
-			$sql_update = "UPDATE newjs.JPROFILE SET SUBSCRIPTION = '$subscription' WHERE PROFILEID = '$pid'";
-			mysql_query_decide($sql_update) or logError_sums($sql_update,1);
+			/*$sql_update = "UPDATE newjs.JPROFILE SET SUBSCRIPTION = '$subscription' WHERE PROFILEID = '$pid'";
+			mysql_query_decide($sql_update) or logError_sums($sql_update,1);*/
+			$jprofileObj =JProfileUpdateLib::getInstance();
+			$paramArr    =array("SUBSCRIPTION"=>$subscription);
+			$jprofileObj->editJPROFILE($paramArr,$pid,'PROFILEID');
 
 			if($curtype==0)
 				$curtype="RS";

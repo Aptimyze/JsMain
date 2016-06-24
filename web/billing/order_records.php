@@ -4,7 +4,8 @@ include("../jsadmin/connect.inc");
 include("../profile/pg/functions.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Services.class.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Membership.class.php");
-        $serObj = new Services;
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
+$serObj = new Services;
 $membershipObj = new Membership;
 
 $data=authenticated($cid);
@@ -175,8 +176,13 @@ if(isset($data))
 		while($row=mysql_fetch_array($res))
 		{
 			$profileid=$row['PROFILEID'];
-			$sql="UPDATE newjs.JPROFILE SET SUBSCRIPTION='' WHERE PROFILEID='$profileid'";
-			mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());			
+			/*$sql="UPDATE newjs.JPROFILE SET SUBSCRIPTION='' WHERE PROFILEID='$profileid'";
+			mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());*/
+			$jprofileObj    =JProfileUpdateLib::getInstance();
+                        $updateStr      ="SUBSCRIPTION=''";
+                        $paramArr       =$jprofileObj->convertUpdateStrToArray($updateStr);
+                        $jprofileObj->editJPROFILE($paramArr,$profileid,'PROFILEID');
+			
 			$sql_c="UPDATE billing.PURCHASES SET STATUS='STOPPED' WHERE PROFILEID='$profileid'";
 			mysql_query_decide($sql_c) or die(mysql_error_js());
 		}

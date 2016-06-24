@@ -3,6 +3,7 @@
 include("connect.inc");
 include ("time.php");
 include(JsConstants::$docRoot."/commonFiles/flag.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 global $screen_time;
 if(authenticated($cid))
 {
@@ -60,8 +61,12 @@ if(authenticated($cid))
                     $sql_assign="REPLACE INTO jsadmin.MAIN_ADMIN(PROFILEID,USERNAME,SCREENING_TYPE,RECEIVE_TIME,SUBMIT_TIME,ALLOT_TIME,ALLOTED_TO,SUBSCRIPTION_TYPE) VALUES('$pid','$username','O','$RECV_DT','$SUBMIT_DT',NOW(),'$screened_by','$subs')";
                     mysql_query_decide($sql_assign) or die("$sql_assign".mysql_error_js());
 
-                    $sql_update="update newjs.JPROFILE set SCREENING='$screen' where PROFILEID='$pid'";
-                    mysql_query_decide($sql_update) or die("$sql_update".mysql_error_js());
+                    //wrapping update query
+                    $jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
+                    $arrFields = array('SCREENING'=>$screen);
+                    $jprofileUpdateObj->editJPROFILE($arrFields,$pid,"PROFILEID");
+                    // $sql_update="update newjs.JPROFILE set SCREENING='$screen' where PROFILEID='$pid'";
+                    // mysql_query_decide($sql_update) or die("$sql_update".mysql_error_js());
                     $sql="select EMAIL from jsadmin.PSWRDS where USERNAME='$screened_by'";
                     $result=mysql_query_decide($sql) or die("$sql".mysql_error_js());
                     $row=mysql_fetch_array($result);
