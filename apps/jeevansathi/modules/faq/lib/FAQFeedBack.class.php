@@ -12,6 +12,7 @@ class FAQFeedBack
 	private $m_bValidForm;
 	private $m_iTracePath;
 	private $errorReq;
+	private $webRequest;
 	
 	public function __construct($api=0)
 	{
@@ -24,6 +25,25 @@ class FAQFeedBack
 	public function getTracePath()
 	{
 		return $this->m_iTracePath;
+	}
+
+
+
+	private function insertReportAbuseLog(){
+
+		$selfUsername=$this->m_szUserName;
+		$reason=$this->webRequest->getParameter('reason');
+		
+		$this->otherProfile=new Profile();
+		$profileid = JsCommon::getProfileFromChecksum($this->webRequest->getParameter('profilechecksum'));
+		$this->otherProfile->getDetail($profileid,"PROFILEID");
+
+		$otherUsername=$this->otherProfile->getUSERNAME();
+		//if($sel)
+		if(!$reason || !$otherUsername || !$selfUsername)return;
+
+		(new REPORT_ABUSE_LOG())->insertReport($selfUsername,$otherUsername,$reason);
+
 	}
 	private function extractInfo(sfWebRequest $request)
 	{
@@ -61,7 +81,7 @@ class FAQFeedBack
 	public function ProcessData(sfWebRequest $request)
 	{
 		$this->extractInfo($request);
-		
+		$this->webRequest=$request;
 		$this->m_objForm = new FeedBackForm($this->api);
 		$arrDeafults = array('name'=>$this->m_szName,'username'=>$this->m_szUserName,'email'=>$this->m_szEmail);
 		$this->m_objForm->setDefaults($arrDeafults);
@@ -130,7 +150,6 @@ class FAQFeedBack
 		$objTicket_Message_STORE 	= new FEEDBACK_TICKET_MESSAGES;
 		$objMIS_FeedBack_Result		= new MIS_FEEDBACK_RESULT;
 		
-		
 		$arrResult = array();
 		$objTicketStore->fetch_IDs($arrResult,$this->m_szUserName,$this->m_szEmail,$this->m_iTracePath);
 		
@@ -166,7 +185,24 @@ class FAQFeedBack
 			
 			//Insert in MIS_FEEDBACK_RESULT Store
 			$objMIS_FeedBack_Result->Insert($this->m_szCategory,$iTicketID);
-			
+
+			if($this->m_szCategory==FeedbackEnum::CAT_ABUSE)
+			{	
+
+				
+				// block for blocking the reported abuse added by Palash
+
+				$this->webRequest->setParameter('ignore','1');
+				$this->webRequest->setParameter('channel','pc');
+				$this->webRequest->setParameter('pageSource','VDP');
+				$this->webRequest->setParameter('INTERNAL','1');
+				ob_start();
+    			sfContext::getInstance()->getController()->getPresentationFor("common", "ApiIgnoreProfileV1");
+    			$layerData = ob_get_contents();
+    			ob_end_clean();			
+    			//////////////////////////////////////////////////
+    			$this->insertReportAbuseLog();
+    		}	
 		}
 		
 	}

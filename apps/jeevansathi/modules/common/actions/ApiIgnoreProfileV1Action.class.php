@@ -32,7 +32,12 @@ class ApiIgnoreProfileV1Action extends sfActions
 		$apiResponseHandlerObj->setHttpArray($this->m_iResponseStatus);
 		$apiResponseHandlerObj->setResponseBody($this->m_arrOut);	
 		$apiResponseHandlerObj->generateResponse();
-		die;
+		
+		if($request->getParameter('INTERNAL')==1){
+			return sfView::NONE;
+		} else {
+			die;
+		}
 	}
 	
 	/**
