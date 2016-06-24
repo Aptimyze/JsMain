@@ -6140,3 +6140,19 @@ function updateProfileCompletionScore(score){
 
         });
 }
+
+$('.js-previewAlbum').click(function(){
+    var photoData = $(this).attr("data");
+    photoData = photoData.split(",");
+    var username = photoData[1];
+    var profilechecksum = photoData[2];
+    var albumCount = photoData[0];
+    console.log(username);
+    console.log(albumCount);
+    console.log(profilechecksum);
+    if((typeof(loggedInJspcUser)!="undefined" && loggedInJspcUser=="") || !profilechecksum){
+                return true;
+     }
+    openPhotoAlbum(username,profilechecksum,albumCount);
+
+})
