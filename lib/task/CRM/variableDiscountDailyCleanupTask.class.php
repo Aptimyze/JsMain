@@ -51,7 +51,6 @@ EOF;
         $vdLogObj->insertDataFromVariableDiscountBackup1Day($todayDate);
         
         $toBeDeletedProfiles = $vdObjSelSlave->selectToBeDeletedProfilesWhoseVariableDiscountIsEndingYesterday();
-        print_r($toBeDeletedProfiles);
         $newjsTempSMSDetObj = new newjs_TEMP_SMS_DETAIL();
         $newjsTempSMSDetObj->deletePreviousVdEntries($toBeDeletedProfiles);
         $vdObj->deleteVariableDiscountEndingYesterday();
