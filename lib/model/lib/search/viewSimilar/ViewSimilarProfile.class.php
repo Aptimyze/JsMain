@@ -455,7 +455,7 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
                         $jspcVSPArray["profiles"][$key][$searchField]= $searchApiObj->handlingSpecialCasesForSearch($searchField,$detailsArray[$vspField],$detailsArray["PHOTO_REQUESTED"],$gender);                        
                         unset($searchApiObj);
                     }  
-                    elseif($searchField == "college" || $searchField == "company_name")
+                    elseif(in_array($searchField,array("college","company_name")))
                     {
                          if($detailsArray[$vspField]!= ''){
                               $searchApiObj = new SearchApiStrategyV1();
