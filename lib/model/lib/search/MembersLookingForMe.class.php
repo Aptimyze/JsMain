@@ -91,7 +91,9 @@ class MembersLookingForMe extends SearchParamters
 					$value = $this->loggedInProfileObj->getHEIGHT();
 				elseif($v=="PARTNER_INCOME"){
                                         eval('$value = $this->loggedInProfileObj->get'.substr($v,8).'();');
-                                        $incomeArray = CommonFunction::getLowerIncomes($value);
+                                        $imObj = new IncomeMapping;
+                                        $incomeArray = $imObj->getLowerIncomes($value);
+                                        unset($imObj);
                                         $value = implode(" ",$incomeArray);
                                 }else
 					eval('$value = $this->loggedInProfileObj->get'.substr($v,8).'();');

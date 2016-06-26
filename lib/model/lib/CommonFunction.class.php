@@ -570,20 +570,5 @@ class CommonFunction
                 }
                 return trim($returnStr,',');
         }
-        /**
-         * This function finds incomes lower than a particular value on the basis of income sort by
-         * @param type $currentValue current income index
-         * @return array of incomes
-         */
-        public static function getLowerIncomes($currentValue){
-                $incomeSortByArr=FieldMap::getFieldLabel("income_sortby",'',1);
-                $currentOrder = $incomeSortByArr[$currentValue];
-                $lowerArray = array();
-                foreach($incomeSortByArr as $key=>$inc){
-                        if($inc <= $currentOrder)
-                                $lowerArray[] = $key;
-                }
-                return($lowerArray);
-        }
 }
 ?>
