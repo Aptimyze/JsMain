@@ -133,10 +133,8 @@ function createListingPanel()   //used for old plugin--ankita
 }
 // Changes XML to JSON
 function xmlToJson(xml) {
-    
     // Create the return object
     var obj = {};
-
     if (xml.nodeType == 1) { // element
         // do attributes
         if (xml.attributes.length > 0) {
@@ -149,7 +147,6 @@ function xmlToJson(xml) {
         } else if (xml.nodeType == 3) { // text
         obj = xml.nodeValue;
     }
-
     // do children
     if (xml.hasChildNodes()) {
         for(var i = 0; i < xml.childNodes.length; i++) {
