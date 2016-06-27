@@ -3276,16 +3276,17 @@ EditApp = function(){
       {
             editData.append('editFieldArr['+key+']', value);
       });
-      if(sectionId == 'verification'){
-          $.myObj.ajax({
+      var eData = {};
+      eData.editFieldArr = editFieldArr;
+      $.myObj.ajax({
         url: "/api/v1/profile/editsubmit",
         type: 'POST',
-        datatype: 'json',
+        datatype: 'json',       
         cache: false,
         async: true,
-        contentType: false,
-        data: editData,
-        processData: false,
+        contentType: sectionId == 'verification'?false:"application/x-www-form-urlencoded",
+        data: sectionId == 'verification'?editData:eData,
+        processData: sectionId == 'verification'?false:true,
         success: function (result) {
                 if(typeof showLoader != "undefined" && showLoader === false){
                 }else{
@@ -3319,50 +3320,7 @@ EditApp = function(){
                   toggleLoader(false);
                 }
         }
-      });    
-      }else{
-              $.myObj.ajax({
-        url: "/api/v1/profile/editsubmit",
-        type: 'POST',
-        datatype: 'json',
-        cache: false,
-        async: true,
-        data: {editFieldArr: editFieldArr},
-        success: function (result) {
-                if(typeof showLoader != "undefined" && showLoader === false){
-                }else{
-                  toggleLoader(false);
-                }
-          var statusCode = parseInt(result.responseStatusCode);
-          if (statusCode === 0) {
-            showHideEditSection(sectionId,"hide");
-            editAppObject.needToUpdate = true;
-            storeData(JSON.stringify(result.editApi));
-            updateView(result.viewApi);
-            delete editedFields[sectionId];
-          }
-          else if(statusCode === 1 &&  result.hasOwnProperty('error'))
-          {
-            for(var key in result.error){
-              var parentId = '#'+key.toLowerCase()+'Parent';
-              
-              if($(parentId).length == 0)
-                continue;
-              var errorMsg = getDecoratedServerError(key,result['error'][key]);
-              $(parentId).find('.js-errorLabel').text(errorMsg).removeClass(dispNone);
-            }
-            var validationCheck = '#'+sectionId +'EditForm' +' .js-errorLabel:not(.disp-none)'
-            $(document).scrollTop($(validationCheck).offset().top);
-          }
-        },
-        error:function(result){
-                if(typeof showLoader != "undefined" && showLoader === false){
-                }else{
-                  toggleLoader(false);
-                }
-        }
-        });
-      }
+      }); 
     }
     
     /*
