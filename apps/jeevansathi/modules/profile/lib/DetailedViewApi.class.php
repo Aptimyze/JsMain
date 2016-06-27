@@ -223,7 +223,9 @@ class DetailedViewApi
 		elseif($this->getMembershipType() == 'eadvantage')
 		{
 			$this->m_arrOut['subscription_text'] = mainMem::EADVANTAGE_LABEL;
-		}
+		}else{
+                        $this->m_arrOut['subscription_text'] = '';
+                }
 	}
 
 	
