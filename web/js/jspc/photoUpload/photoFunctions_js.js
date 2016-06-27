@@ -26,7 +26,7 @@ function sendAjaxRequest(count,filename)
     if (typeof imageCopyServer === 'undefined')
         pUrl = "/api/v3/social/uploadPhoto";
     else
-        pUrl = "/api/v3/social/uploadPhoto/"+imageCopyServer;
+        pUrl = "/"+imageCopyServer+"/api/v3/social/uploadPhoto";
     alert(pUrl);
     currentEvent = count;
     dataToBeSent = formDataArray[count];
