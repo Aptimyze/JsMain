@@ -552,7 +552,7 @@ $js_arr[]=array("jspc/photoUpload/addPhoto_js"        => "6");
 $js_arr[]=array("jspc/photoUpload/importPhotoAlbum_js"    => "1");
 $js_arr[]=array("jspc/photoUpload/compUpload_js"    => "1");
 $js_arr[]=array("jspc/photoUpload/cropper"    => "1");
-$js_arr[]=array("jspc/photoUpload/main"     => "2");
+$js_arr[]=array("jspc/photoUpload/main"      => "3");
 $js_arr[]=array("jspc/photoUpload/bootstrap"    => "1");
 $js_arr[]=array("jspc/photoUpload/tooltip"    => "1");
 $js_arr[]=array("jspc/photoUpload/photoFunctions_js"    => "1");
