@@ -4250,6 +4250,8 @@ EditApp = function(){
         var t2 = geteditedValue("ADDR_PROOF_TYPE","VALUE");
         var v2 = geteditedValue("ADDR_PROOF_VAL","VALUE");
         onvaluechange(t1,v1,t2,v2,editAppObject["verification"]["ID_PROOF_VAL"]);
+        $('#id_proof_val').attr("value",'');
+        $('#id_proof_val').val("");
     }
     
     onAddrProofTypeChange = function(){
@@ -4266,6 +4268,8 @@ EditApp = function(){
         var t2 = geteditedValue("ADDR_PROOF_TYPE");
         var v2 = 1;
         onvaluechange(t1,v1,t2,v2,editAppObject["verification"]["ADDR_PROOF_VAL"]);
+        $('#addr_proof_val').attr("value",'');
+        $('#addr_proof_val').val("");
     }
     geteditedValue = function(fieldKey,fieldtype){
         var fieldObj = editAppObject["verification"][fieldKey];
