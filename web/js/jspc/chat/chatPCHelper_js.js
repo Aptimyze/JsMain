@@ -22,9 +22,9 @@ function initiateChatConnection()
 {
     //only for dev env--------------------start:ankita
     var username = "a1@localhost";
-    if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
+    if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
         username = "a2@localhost";
-    else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
+    else if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
         username = "a1@localhost";
     //only for dev env--------------------end:ankita
     try
@@ -124,8 +124,11 @@ function createListingPanel()   //used for old plugin--ankita
     console.log(listingData);
     $(pluginId).setChatPluginOption("listingJsonData",listingData);
     //map json data to listing html
-    $(pluginId).setChatPluginOption("Tab1Data" ,mapListingJsonToHTML($(pluginId).getChatPluginOption("listingJsonData")));
+    var listingHTML = mapListingJsonToHTML($(pluginId).getChatPluginOption("listingJsonData"));
+    console.log(listingHTML);
+    $(pluginId).setChatPluginOption("Tab1Data" ,listingHTML);
     //show listing panel by appending html
+    console.log($(pluginId).getChatPluginOption("Tab1Data"));
     var ChatPluginObj = $(pluginId).chatplugin();
     ChatPluginObj.addListingBody();
 }
