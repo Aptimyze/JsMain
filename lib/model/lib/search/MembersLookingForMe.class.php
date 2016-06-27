@@ -93,6 +93,7 @@ class MembersLookingForMe extends SearchParamters
                                         eval('$value = $this->loggedInProfileObj->get'.substr($v,8).'();');
                                         $imObj = new IncomeMapping;
                                         $incomeArray = $imObj->getLowerIncomes($value);
+                                        $incomeArray = $imObj->removeNoIncome($incomeArray);
                                         unset($imObj);
                                         $value = implode(" ",$incomeArray);
                                 }else

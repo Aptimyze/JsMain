@@ -523,7 +523,7 @@ public static function insertConsentMessageFlag($profileid) {
 			}
 			$ARR=array_filter(explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_INCOME())));
                         $incomeObj = new IncomeMapping;
-                        //$ARR = $incomeObj->removeNoIncome($ARR);
+                        $ARR = $incomeObj->removeNoIncome($ARR);
                         $incomeArray = $incomeObj->getLowerIncomes($profile->getINCOME());
                         $result = array_intersect($ARR, $incomeArray);
                         
