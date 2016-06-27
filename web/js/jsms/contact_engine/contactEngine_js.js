@@ -129,6 +129,7 @@ if(!reason){ShowTopDownError(["Please select the reason"],3000);return;}
 }
 
 var feed={};
+reason=$.trim(reason);
 //feed.message:as sdf sd f
 feed.category='Abuse';
 feed.message=userName+' has been reported abuse by '+selfUsername+' with the following reason:'+reason;

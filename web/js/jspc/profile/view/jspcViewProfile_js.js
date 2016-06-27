@@ -570,7 +570,7 @@ if(!reason) reason=layerObj.find(".selected").eq(0).text().trim();
 if(!reason||!selfUname || !otherUser) return;
 
 var feed={};
-
+reason=$.trim(reason);
 //feed.message:as sdf sd f
 feed.category='Abuse';
 feed.message=otherUser+' has been reported abuse by '+selfUname+' with the following reason:'+reason;

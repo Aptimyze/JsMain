@@ -42,8 +42,8 @@ class FAQFeedBack
 		else{
 			$feed=$this->webRequest->getParameter('feed');
 			$reason=$feed['message'];
-			$arr=split('reason:',$reason);
-			$reasonNew=trim($arr[1]);
+			$pos=strpos($reason,':');
+			$reasonNew=trim(substr($reason,$pos+1));
 			$arr2=split(' ',$reason);
 			$otherUsername=trim($arr2[0]);
 			$this->otherProfile->getDetail($otherUsername,"USERNAME");
@@ -61,8 +61,10 @@ class FAQFeedBack
 
 				$ignore_Store_Obj = new NEWJS_IGNORE;
 				$ignore_Store_Obj->ignoreProfile($loginProfile->getPROFILEID(),$otherProfileId);
-				//////////////////////////////////////////////////
+				JsMemcache::getInstance()->remove($loginProfile->getPROFILEID());
+				JsMemcache::getInstance()->remove($otherProfileId);
 
+				//////////////////////////////////////////////////
 
 	}
 	private function extractInfo(sfWebRequest $request)
