@@ -780,6 +780,9 @@ ul.matchtabs li.active{border-bottom:0px solid #34495e}
 .hoverDiv:hover {
         display: block;
 }
+.highl .colr_wht{
+       color: #fff !important;
+}
 .highl .verIcon{
         background-image: url(IMG_URL/images/jspc/searchImg/verifyRev.png);
         background-repeat: no-repeat;

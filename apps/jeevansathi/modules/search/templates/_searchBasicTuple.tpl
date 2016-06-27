@@ -54,8 +54,8 @@
                   <div class="fr f12 colr5" style="position: absolute; float: right; right: 72px;">{subscription_icon}</div>
                 </div>
                 <div class="pt15">
-                  <div id="studyAt" class="f15 colr_grey fontreg textTru"> {StudiedAtDiv}</div>
-                  <div id="workAt" class="f15 mt5 colr_grey fontreg textTru"> {WorksAtDiv}</div>
+                  <div id="studyAt" class="f15 colr_grey fontreg textTru colr_wht"> {StudiedAtDiv}</div>
+                  <div id="workAt" class="f15 mt5 colr_grey fontreg textTru colr_wht"> {WorksAtDiv}</div>
                 </div>
             </a>
             <!--end:listing--> 
