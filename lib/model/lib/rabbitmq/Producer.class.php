@@ -144,6 +144,7 @@ class Producer
       $this->channel->queue_declare(MQ::AGENT_NOTIFICATIONSQUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
       $this->channel->queue_declare(MQ::BUFFER_INSTANT_NOTIFICATION_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE); 
        $this->channel->queue_declare(MQ::DELETE_RETRIEVE_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+       $this->channel->queue_declare(MQ::UPDATE_SEEN_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
     } 
     catch (Exception $exception) 
     {
@@ -187,6 +188,9 @@ class Producer
                     break;
         case "DELETE_RETRIEVE":
                     $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::DELETE_RETRIEVE_QUEUE,MQ::MANDATORY,MQ::IMMEDIATE);
+                    break;
+        case "UPDATE_SEEN":
+                    $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::UPDATE_SEEN_QUEUE,MQ::MANDATORY,MQ::IMMEDIATE);
                     break;
       }
     }

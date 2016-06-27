@@ -11,8 +11,8 @@ if(authenticated($cid))
 		$priv=explode("+",$prev);
                 if(in_array('MA',$priv) || in_array('MC',$priv))
                         $smarty->assign("SHOW","Y");
-                if(in_array('A',$priv))
-                        $smarty->assign("ADMIN","Y");
+                //if(in_array('A',$priv))
+                //        $smarty->assign("ADMIN","Y");
 
 		//mysql_close($db);
 		//$db=connect_slave();
