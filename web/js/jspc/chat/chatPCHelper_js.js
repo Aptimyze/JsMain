@@ -38,7 +38,7 @@ function initiateChatConnection()
                 //play_sounds: true,
                 roster_groups: chatConfig.Params[device].roster_groups,
                 hide_offline_users: chatConfig.Params[device].hide_offline_users,
-                debug:true,
+                debug:false,
                 //prebind:true,
                 auto_login:true,
                 jid:username,
@@ -124,11 +124,10 @@ function createListingPanel()   //used for old plugin--ankita
     console.log(listingData);
     $(pluginId).setChatPluginOption("listingJsonData",listingData);
     //map json data to listing html
-    var listingHTML = mapListingJsonToHTML($(pluginId).getChatPluginOption("listingJsonData"));
+    var listingHTML = mapListingJsonToHTML(listingData);
     console.log(listingHTML);
     $(pluginId).setChatPluginOption("Tab1Data" ,listingHTML);
     //show listing panel by appending html
-    console.log($(pluginId).getChatPluginOption("Tab1Data"));
     var ChatPluginObj = $(pluginId).chatplugin();
     ChatPluginObj.addListingBody();
 }

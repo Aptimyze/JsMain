@@ -34082,27 +34082,36 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                         ));
                         converse.controlboxtoggle.showControlBox();
                     } else if (subscription === 'both' || subscription === 'to') {
+                        var vcardObj={};
                         console.log("ankita_roster_items");
-                        //console.log(item.toJSON());
-                        var roster_data = item.toJSON();
-                        console.log(roster_data);
-                        var group = roster_data.groups[0];
-                        var userid = roster_data.id;
-                        //converse.getVCard(userid);
+                        var rosterObj = item.toJSON();
+                        console.log(rosterObj);
+                        //get vcard of this user
+                        /*converse.getVCard(rosterObj.jid,function (iq) {
+                            console.log("ankita_fetching vcard");
+                            vcardObj = xmlToJson($(iq).children('vCard')[0]);
+                            console.log(vcardObj);      
+                        });*/
+                        //add this node in listing--new plugin function
+                        //invokePluginAddlisting(rosterObj,vcardObj);
+                        //rest for old plugin---------------
+                        var group = rosterObj.groups[0];
+                        var userid = rosterObj.id;
                         //set json data for first time listing display
                         if($("#listing_tab1").length===0)       
                         {
                             //console.log("new roster");
                             if(typeof converse.listing_data[group] !== "undefined")
                             {
-                                converse.listing_data[group][userid] = roster_data;
+                                converse.listing_data[group][userid] = rosterObj;
                             }
                         }
                         else   //update existing listing
                         {
                             //console.log("old roster");
-                            updateListing(roster_data);
+                            updateListing(rosterObj);
                         }
+                        //rest for old plugin---------------
                         this.$el.addClass('current-xmpp-contact');
                         this.$el.removeClass(_.without(['both', 'to'], subscription)[0]).addClass(subscription);
                         this.$el.html(converse.templates.roster_item(
@@ -34243,14 +34252,14 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                     this.$el.attr('data-group', this.model.get('name'));
                     //console.log("ankita_groups");
                     //console.log(converse.listing_data);
-                    //console.log(this.model.get('name'));
+                    //rest for old plugin-------
                     var group_name = this.model.get('name');
                     //stores groups name
                     if(typeof converse.listing_data[group_name] === "undefined" && typeof converse.rosterDisplayGroups[group_name]!=="undefined")
                     {  
                         converse.listing_data[group_name] = {};
                     }
-                    //console.log("setting");
+                    //rest for old plugin-------
                     this.$el.html(
                         $(converse.templates.group_header({
                             label_group: this.model.get('name'),
@@ -37174,17 +37183,10 @@ Strophe.RSM.prototype = {
 
 
             var onContactAdd = function (contact) {
-                console.log(contact.get('vcard_updated')+"ankita");
-                if (!contact.get('vcard_updated')) {  //ankita
+                if (!contact.get('vcard_updated')) {  //ankita-vcard after listing
                     // This will update the vcard, which triggers a change
                     // request which will rerender the roster contact.
-                    console.log("vcard on first load...");
-                    converse.getVCard(contact.get('jid'),function (iq,jid, fullname, image, image_type, url) {
-                            console.log("using vcard234");
-                            console.log(xmlToJson($(iq).children('vCard')[0]));
-    
-                           
-                        });
+                    converse.getVCard(contact.get('jid'));
                 }
             };
             converse.on('initialized', function () {
