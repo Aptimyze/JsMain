@@ -8,6 +8,7 @@ chatConfig.Params = {
 					keepalive:true, //keep logged in session alive
 					roster_groups:true, //show categories in listing
 					hide_offline_users:false, //hide offline users from list
+					use_vcards:true, //fetch vcards of users
 					rosterDisplayGroups:{"Desired Partner Matches":"dpp","Interest Received":"eoi_R","Shortlisted Members":"shortlisted","Accepted Members":"accepted_by_me"},
 					//categories in listing to be shown with mapping to their div ids---not required in new plugin ankita
 					//tab id to tab names mapping

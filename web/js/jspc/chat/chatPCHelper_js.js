@@ -2,14 +2,31 @@
 * converse client(converse.js) to chat plugin(chat_js.js)
 */
 
+function readSiteCookie(name) {
+    var nameEQ = escape(name) + "=",ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return unescape(c.substring(nameEQ.length, c.length));
+    }
+    return null;
+}
+
 var pluginId = '#chatOpenPanel',device = 'PC';
 
-/*function initiateChat
+/*function initiateChatConnection
 * request sent to openfire to initiate chat and maintain session
 * @params:none
 */     
-function initiateChatConnection() //pass callback function -listing panel show in converse.initialize-ankita
+function initiateChatConnection()
 {
+    //only for dev env--------------------start:ankita
+    var username = "a1@localhost";
+    if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
+        username = "a2@localhost";
+    else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
+        username = "a1@localhost";
+    //only for dev env--------------------end:ankita
     try
     {
         //initialise converse settings and fetch data and then execute callback function
@@ -24,12 +41,12 @@ function initiateChatConnection() //pass callback function -listing panel show i
                 debug:true,
                 //prebind:true,
                 auto_login:true,
-                jid:"a1@localhost",
+                jid:username,
                 password:"123",
                 //sid:sid,
                 //rid:1,
                 show_controlbox_by_default:true,
-                use_vcards:true,
+                use_vcards:chatConfig.Params[device].use_vcards,
                 authentication:'login',
                 listing_data:{},
                 rosterDisplayGroups:chatConfig.Params[device].rosterDisplayGroups,
@@ -41,7 +58,7 @@ function initiateChatConnection() //pass callback function -listing panel show i
     }
     catch(e)
     {
-        console.log("Exception thrown in initatechat function - "+e);
+        console.log("Exception thrown in initiateChatConnection function - "+e);
     }
 }
 
@@ -52,7 +69,7 @@ function initiateChatConnection() //pass callback function -listing panel show i
 */
 function fetchConverseSettings(key)
 {
-    var value = converse.settings.get(key);  //if not works then use require like initatechat
+    var value = converse.settings.get(key);
     return value;
 }
 
@@ -61,10 +78,8 @@ function fetchConverseSettings(key)
 * @params:jsonData
 * @return:listingHTML
 */
-function mapListingJsonToHTML(jsonData)  //use partial if possible - ankita
+function mapListingJsonToHTML(jsonData)  //used for old plugin - ankita
 {
-    console.log(jsonData);
-    //console.log(chatConfig.Params);
     var listingHTML = '<div id="listing_tab1">';
     $.each(jsonData,function( index, val ){
         listingHTML = listingHTML+ '<div id="'+chatConfig.Params[device].rosterDisplayGroups[index]+'"><div class="f12 fontreg nchatbdr2"><p class="nchatt1 fontreg pl15">'+index+'</p></div><ul class="chatlist">';
@@ -81,7 +96,7 @@ function mapListingJsonToHTML(jsonData)  //use partial if possible - ankita
 * update listing
 * @params:rosterData
 */
-function updateListing(rosterData) //use partial if possible - ankita
+function updateListing(rosterData) //used for old plugin - ankita
 {
     console.log("roster update");
     console.log(rosterData);
@@ -101,12 +116,12 @@ function updateListing(rosterData) //use partial if possible - ankita
 * creates listing panel after login and json data generation
 * @params:none
 */ 
-function createListingPanel()
+function createListingPanel()   //used for old plugin--ankita
 {
     //get json data for listing
     var listingData = fetchConverseSettings("listing_data");
-    //console.log("createListingPanel");
-    //console.log(listingData);
+    console.log("createListingPanel");
+    console.log(listingData);
     $(pluginId).setChatPluginOption("listingJsonData",listingData);
     //map json data to listing html
     $(pluginId).setChatPluginOption("Tab1Data" ,mapListingJsonToHTML($(pluginId).getChatPluginOption("listingJsonData")));
