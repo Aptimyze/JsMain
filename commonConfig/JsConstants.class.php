@@ -155,6 +155,6 @@ class JsConstants
 						"HOROSCOPE_REQUEST"=>true
                                                 );
 	 public static $usePhotoDistributed = 1;
-  
-	public static $photoServerShardingEnums = array("JS1","JS2","JS3");
+  public static $photoServerName='JSPIC1';
+	public static $photoServerShardingEnums = array("JSPIC1","JSPIC2","JSPIC3");
 }

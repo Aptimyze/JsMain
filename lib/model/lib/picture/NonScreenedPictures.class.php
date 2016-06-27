@@ -331,7 +331,8 @@ class NonScreenedPicture extends Picture
 		$paramArr=Array(
 				"CURRENTSCRIPT"=>$currentScript,
 				"TOTALSCRIPT"=>$totalScripts,
-				"LIMIT"=>$limit,			
+				"LIMIT"=>$limit,		
+				"MainPicUrl"=>'%'.JsConstants::$photoServerName.'%'	
 				);
 		$paramArr['SCREEN_BIT'] = explode("#",$screenBit);
 		$paramArr['ORDERING'] = '0';
@@ -377,12 +378,14 @@ class NonScreenedPicture extends Picture
 	*/
 	public function getFreshUploadePictures($totalScripts,$currentScript,$limit="")
 	{
+		
 		$photoObj=new PICTURE_FOR_SCREEN_NEW;
 		$paramArr=Array(
 		"CURRENTSCRIPT"=>$currentScript,
 		"TOTALSCRIPT"=>$totalScripts,
 		"LIMIT"=>$limit,
-		"OriginalPicUrl"=>2,			
+		"OriginalPicUrl"=>2,		
+		"MainPicUrl"=>'%'.JsConstants::$photoServerName.'%'
 		);
 		
 		$result =$photoObj->get($paramArr);
