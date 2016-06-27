@@ -34013,8 +34013,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                 },
 
                 render: function () {
-                    //console.log("in render123");
-                    if (!this.mayBeShown()) {
+                    if (!this.mayBeShown()) {  //ankita - use maybeshown with group name
                         this.$el.hide();
                         return this;
                     }
@@ -34069,19 +34068,19 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                         ));
                         converse.controlboxtoggle.showControlBox();
                     } else if (subscription === 'both' || subscription === 'to') {
-                        var vcardObj={};
-                        console.log("ankita_roster_items");
+                        /*var vcardObj={};*/
                         var rosterObj = item.toJSON();
                         //console.log(rosterObj);
                         var userid = rosterObj.id;
                         //get vcard of this user
-                        converse.getVCard(userid,function (iq) {
-                            //console.log("ankita_fetching vcard"+userid);
+                         //console.log("ankita_roster_items"+userid);
+                        /*converse.getVCard(userid,function (iq) {
+                            console.log("ankita_fetching vcard"+userid);
                             vcardObj = xmlToJson($(iq).children('vCard')[0]);
-                            //console.log(vcardObj);      
+                            console.log(vcardObj);      
                         });
                         //add this node in listing--new plugin function
-                        invokePluginAddlisting(rosterObj,vcardObj);
+                        invokePluginAddlisting(rosterObj,vcardObj);*/
                         //rest for old plugin---------------
                         var group = rosterObj.groups[0];
                         //set json data for first time listing display
@@ -34226,7 +34225,8 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                     this.model.contacts.on("change:chat_status", function (contact) {
                         // This might be optimized by instead of first sorting,
                         // finding the correct position in positionContact
-                        this.model.contacts.sort();
+                        console.log("changing status 2....."); //ankita-status change
+                        this.model.contacts.sort(); //sort-ankita
                         this.positionContact(contact).render();
                     }, this);
                     this.model.contacts.on("destroy", this.onRemove, this);
@@ -34258,7 +34258,21 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                 },
 
                 addContact: function (contact) {
+                    console.log("adding contact....."+contact.get('id'));//ankita-check whether hide-offline users set to true hides offline users in our listing or not
                     var view = new converse.RosterContactView({model: contact});
+                    var vcardObj={};
+                    var rosterObj = contact;
+                    //console.log(rosterObj);
+                    var userid = rosterObj.attributes.id;
+                    //get vcard of this user
+                    converse.getVCard(userid,function (iq) {
+                        console.log("ankita_fetching vcard...."+userid);
+                        vcardObj = xmlToJson($(iq).children('vCard')[0]);
+                        invokePluginAddlisting(rosterObj,vcardObj);  
+                        //console.log(rosterObj);
+                        //console.log(vcardObj);    
+                    });
+                  
                     this.add(contact.get('id'), view);
                     view = this.positionContact(contact).render();
                     if (view.mayBeShown()) {
@@ -37173,12 +37187,13 @@ Strophe.RSM.prototype = {
                 if (!contact.get('vcard_updated')) {  //ankita-vcard after listing
                     // This will update the vcard, which triggers a change
                     // request which will rerender the roster contact.
+                    console.log("vcard_ankita");
                     converse.getVCard(contact.get('jid'));
                 }
             };
-            converse.on('initialized', function () {
+            /*converse.on('initialized', function () {
                 converse.roster.on("add", onContactAdd);
-            });
+            });*/ //ankita- need vcard earlier at time of addinlist
 
             var fetchOwnVCard = function () {
                 if (converse.xmppstatus.get('fullname') === undefined) {

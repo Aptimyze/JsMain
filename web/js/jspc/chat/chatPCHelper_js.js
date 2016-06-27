@@ -121,11 +121,11 @@ function createListingPanel()   //used for old plugin--ankita
     //get json data for listing
     var listingData = fetchConverseSettings("listing_data");
     console.log("createListingPanel");
-    console.log(listingData);
+    //console.log(listingData);
     $(pluginId).setChatPluginOption("listingJsonData",listingData);
     //map json data to listing html
     var listingHTML = mapListingJsonToHTML(listingData);
-    console.log(listingHTML);
+    //console.log(listingHTML);
     $(pluginId).setChatPluginOption("Tab1Data" ,listingHTML);
     //show listing panel by appending html
     var ChatPluginObj = $(pluginId).chatplugin();
@@ -175,8 +175,10 @@ function to add roster item with vcard details in listing
 */
 function invokePluginAddlisting(listObject,vcardObj)
 {
-    console.log("invokePluginAddlisting....");
+    console.log("invokePluginAddlisting...."+listObject.id);
     console.log(listObject);
     console.log(vcardObj); //to be cached---ankita
-    //plugin.addInList(listObject,vcardObj);  //call plugin addlist function
+    var listNodeObj = [{"rosterDetails":listObject.attributes,"vcardDetails":vcardObj}];
+    console.log(listNodeObj);
+    //plugin.addInList(listNodeObj);  //call plugin addlist function
 }
