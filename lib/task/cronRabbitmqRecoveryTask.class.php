@@ -230,8 +230,11 @@ EOF;
         $consumerObj->receiveMessage(); 
         $notificationConsumerObj=new JsNotificationsConsume('SECOND_SERVER',$messageCount);
         $notificationConsumerObj->receiveMessage();
-        $delRetrieveConsumerObj=new deleteRetrieveConsumer('FIRST_SERVER',$messageCount);  //If $serverid='FIRST_SERVER', then 2nd param in Consumer constructor is not taken into account.
+        $delRetrieveConsumerObj=new deleteRetrieveConsumer('SECOND_SERVER',$messageCount);  //If $serverid='FIRST_SERVER', then 2nd param in Consumer constructor is not taken into account.
         $delRetrieveConsumerObj->receiveMessage();   
+        $updateSeenConsumerObj=new updateSeenConsumer('SECOND_SERVER',$messageCount);  //If $serverid='FIRST_SERVER', then 2nd param in Consumer constructor is not taken into account.
+        $updateSeenConsumerObj->receiveMessage();
+
       }
     }    
   }

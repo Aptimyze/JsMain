@@ -329,7 +329,7 @@ class ScheduleSms
 
             case "PHOTO_REQUEST":
                 foreach ($this->dbShards as $k => $conn) {
-                    $sql = "SELECT PROFILEID_REQ_BY AS REQ_RECEIVER,PROFILEID AS REQUESTEE FROM newjs.PHOTO_REQUEST where DATE BETWEEN '" . $back_day_format . "' AND '" . $today_date_format . "'  AND SEEN!='Y'";
+                    $sql = "SELECT PROFILEID_REQ_BY AS REQ_RECEIVER,PROFILEID AS REQUESTEE FROM newjs.PHOTO_REQUEST where DATE BETWEEN '" . $back_day_format . "' AND '" . $today_date_format . "'  AND SEEN!='Y' ORDER BY  `DATE` DESC ";
                     //$sql = "SELECT PROFILEID_REQ_BY AS REQ_RECEIVER,PROFILEID AS REQUESTEE FROM PHOTO_REQUEST where DATE BETWEEN '2012-01-01 00:00:00' AND '".$back_day_format." 23:59:59'";
                     $res = mysql_query($sql, $conn) or $this->SMSLib->errormail($sql, mysql_errno() . ":" . mysql_error(), "Error occured while fetching details for SMS Key: " . $key . " in processData() function");
                     $count       = mysql_num_rows($res);
@@ -357,25 +357,14 @@ class ScheduleSms
                             $sender       = implode(",", $req_sender);
                             $details2     = $this->getReceiverDetail($sender);
                             foreach ($temp as $k => $v) {
-                                if ($details1[$k]["FTO_SUB_STATE"] == 'C1' || $details1[$k]["FTO_SUB_STATE"] == 'C2') {
-                                    if ($details1[$k]) {
-                                        $finalSms[$key][$k]["RECEIVER"]                    = $details1[$k];
-                                        $finalSms[$key][$k]["RECEIVER"]["COUNT"]           = count($v);
-                                        $finalSms[$key][$k]["DATA_TYPE"]                   = "SELF";
-                                        $finalSms[$key][$k]["DATA"]                        = $details1[$k];
-                                        $finalSms[$key][$k]["DATA"]["PHOTO_REQUEST_COUNT"] = count($v);
-                                        if (count($v) == 1) {
-                                            $finalSms[$key][$k]["DATA"]      = $details2[$v[0]];
-                                            $finalSms[$key][$k]["DATA_TYPE"] = "OTHER";
-                                        }
-                                    }
-                                } else {
                                     if ($details1[$k] && $details2[$v[0]]) {
                                         $finalSms[$key][$k]["RECEIVER"]  = $details1[$k];
+                                        $finalSms[$key][$k]["RECEIVER"]["COUNT"]           = count($v);
+					
                                         $finalSms[$key][$k]["DATA_TYPE"] = "OTHER";
                                         $finalSms[$key][$k]["DATA"]      = $details2[$v[0]];
+                                        $finalSms[$key][$k]["DATA"]["PHOTO_REQUEST_COUNT"] = count($v)-1;
                                     }
-                                }
                             }
                         }
                         $this->smsDetail = $finalSms;
