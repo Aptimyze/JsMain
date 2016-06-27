@@ -31,11 +31,7 @@ class PictureFunctions
 	*/
 	public static function getPictureDocUrl($imageUrl)
 	{ 
-		if(strpos($imageUrl,JsConstants::$applicationPhotoUrl)!=1)
-		{  
-                	$imageUrl=str_replace(JsConstants::$applicationPhotoUrl,JsConstants::$docRoot,$imageUrl);
-                        
-                }
+		$imageUrl = self::getCloudOrApplicationCompleteUrl($imageUrl,true);
 		return $imageUrl;
 	}
 	
