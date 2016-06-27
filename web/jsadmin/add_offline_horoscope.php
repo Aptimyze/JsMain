@@ -49,7 +49,7 @@ if(authenticated($cid))
 				{
 					//Update Astro Detail
 					$objUpdateLib = JProfileUpdateLib::getInstance();
-					$result = $objUpdateLib->updateASTRO_DETAILS($profileid,array('TYPE1'=>'U','HOROSCOPE_SCREENING'=>'0'));
+					$result = $objUpdateLib->updateASTRO_DETAILS($profileid,array('TYPE'=>'U','HOROSCOPE_SCREENING'=>'0'));
 					if(false === $result) {
 						die('Issue while updating Astro Details at line 54');
 					}
