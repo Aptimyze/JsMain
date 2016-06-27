@@ -331,9 +331,11 @@ class NonScreenedPicture extends Picture
 		$paramArr=Array(
 				"CURRENTSCRIPT"=>$currentScript,
 				"TOTALSCRIPT"=>$totalScripts,
-				"LIMIT"=>$limit,		
-				"MainPicUrl"=>'%'.JsConstants::$photoServerName.'%'	
+				"LIMIT"=>$limit	
+	
 				);
+		if(JsConstants::$usePhotoDistributed)
+			$paramArr['MainPicUrl'] ='%'.JsConstants::$photoServerName.'%';
 		$paramArr['SCREEN_BIT'] = explode("#",$screenBit);
 		$paramArr['ORDERING'] = '0';
 		$paramArr['OriginalPicUrl'] = 1;
@@ -383,11 +385,11 @@ class NonScreenedPicture extends Picture
 		$paramArr=Array(
 		"CURRENTSCRIPT"=>$currentScript,
 		"TOTALSCRIPT"=>$totalScripts,
-		"LIMIT"=>$limit,
 		"OriginalPicUrl"=>2,		
-		"MainPicUrl"=>'%'.JsConstants::$photoServerName.'%'
+			"LIMIT"=>$limit	
 		);
-		
+		if(JsConstants::$usePhotoDistributed)
+			$paramArr['MainPicUrl'] ='%'.JsConstants::$photoServerName.'%';
 		$result =$photoObj->get($paramArr);
 		unset($photoObj);
 		if(is_array($result))
