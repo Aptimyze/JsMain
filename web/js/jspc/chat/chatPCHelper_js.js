@@ -105,6 +105,8 @@ function createListingPanel()
 {
     //get json data for listing
     var listingData = fetchConverseSettings("listing_data");
+    //console.log("createListingPanel");
+    //console.log(listingData);
     $(pluginId).setChatPluginOption("listingJsonData",listingData);
     //map json data to listing html
     $(pluginId).setChatPluginOption("Tab1Data" ,mapListingJsonToHTML($(pluginId).getChatPluginOption("listingJsonData")));
