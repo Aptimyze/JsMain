@@ -34018,19 +34018,6 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                         this.$el.hide();
                         return this;
                     }
-                    /*var myid = this.model.id;
-                    if(myid=="a4@localhost")
-                    {
-                            converse.getVCard(myid,function (iq, jid, fullname, image, image_type, url) {
-                            console.log(iq);
-                            console.log(iq.getAttribute('EMAIL'));
-                            var email = $(iq).find("EMAIL").text();
-                            console.log(email);
-                            console.log(this.model);
-                            
-                        });
-                             
-                    }*/
 
                     var item = this.model,
                         ask = item.get('ask'),
@@ -34085,18 +34072,18 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                         var vcardObj={};
                         console.log("ankita_roster_items");
                         var rosterObj = item.toJSON();
-                        console.log(rosterObj);
+                        //console.log(rosterObj);
+                        var userid = rosterObj.id;
                         //get vcard of this user
-                        /*converse.getVCard(rosterObj.jid,function (iq) {
-                            console.log("ankita_fetching vcard");
+                        converse.getVCard(userid,function (iq) {
+                            //console.log("ankita_fetching vcard"+userid);
                             vcardObj = xmlToJson($(iq).children('vCard')[0]);
-                            console.log(vcardObj);      
-                        });*/
+                            //console.log(vcardObj);      
+                        });
                         //add this node in listing--new plugin function
-                        //invokePluginAddlisting(rosterObj,vcardObj);
+                        invokePluginAddlisting(rosterObj,vcardObj);
                         //rest for old plugin---------------
                         var group = rosterObj.groups[0];
-                        var userid = rosterObj.id;
                         //set json data for first time listing display
                         if($("#listing_tab1").length===0)       
                         {

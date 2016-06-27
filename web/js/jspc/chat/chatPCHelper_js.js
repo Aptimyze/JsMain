@@ -137,7 +137,7 @@ function xmlToJson(xml) {
     // Create the return object
     var obj = {};
 
-    /*if (xml.nodeType == 1) { // element
+    if (xml.nodeType == 1) { // element
         // do attributes
         if (xml.attributes.length > 0) {
         obj["attributes"] = {};
@@ -148,7 +148,7 @@ function xmlToJson(xml) {
         }
         } else if (xml.nodeType == 3) { // text
         obj = xml.nodeValue;
-    }*/
+    }
 
     // do children
     if (xml.hasChildNodes()) {
@@ -168,4 +168,15 @@ function xmlToJson(xml) {
         }
     }
     return obj;
+}
+/*invokePluginAddlisting
+function to add roster item with vcard details in listing
+* @inputs:listObject,vcardObj
+*/
+function invokePluginAddlisting(listObject,vcardObj)
+{
+    console.log("invokePluginAddlisting....");
+    console.log(listObject);
+    console.log(vcardObj); //to be cached---ankita
+    //plugin.addInList(listObject,vcardObj);  //call plugin addlist function
 }
