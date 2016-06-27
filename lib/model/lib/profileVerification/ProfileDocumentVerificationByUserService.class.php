@@ -21,7 +21,7 @@ class ProfileDocumentVerificationByUserService
                 foreach($docprefix as $i=>$pre){
                         if(isset($docsData[$pre.'_PROOF_TYPE']) && $docsData[$pre.'_PROOF_TYPE'] != '' && isset($docsData[$pre.'_PROOF_VAL']) && !empty($docsData[$pre.'_PROOF_VAL'])){
                                 $dataArray[$i]['PROOF_KEY'] = $pre;
-                                $dataArray[$i]['PROOF_VAL'] = $this->performUpload($docsData[$pre.'_PROOF_VAL'], $profileId);
+                                $dataArray[$i]['PROOF_VAL'] = $this->performUpload($docsData[$pre.'_PROOF_VAL'], $profileId,$pre);
                                 $dataArray[$i]['PROOF_TYPE'] = $docsData[$pre.'_PROOF_TYPE'];
                         }
                         
@@ -72,10 +72,10 @@ class ProfileDocumentVerificationByUserService
 	* @param profileId : profile for which documents are uploaded
 	* @return docs : array of documents with document id ,url and type
 	*/
-	public function performUpload($docs,$profileId)
+	public function performUpload($docs,$profileId,$pre)
 	{
-                $saveUrl = $this->getSaveUrlDoc($profileId,$docs["name"]);
-                $displayUrl = $this->getDisplayUrlDoc($profileId,$docs["name"]);
+                $saveUrl = $this->getSaveUrlDoc($profileId,$docs["name"],$pre);
+                $displayUrl = $this->getDisplayUrlDoc($profileId,$docs["name"],$pre);
                 $pictureFunctionsObj = new PictureFunctions();
                 $result = $pictureFunctionsObj->moveImage($docs["tmp_name"],$saveUrl);
                 chmod($saveUrl,0777);
@@ -92,7 +92,7 @@ class ProfileDocumentVerificationByUserService
 	* @return saveUrl : url where image need to be saved
 	*/
 
-	public function getSaveUrlDoc($profileId,$type="")
+	public function getSaveUrlDoc($profileId,$type="",$pre)
         {
                 $uploadDir = sfConfig::get("sf_upload_dir")."/VerificationDocumentByUser/";
                 if(!is_dir($uploadDir)){
@@ -105,7 +105,7 @@ class ProfileDocumentVerificationByUserService
                 else
                         $type=".".$type[1];
 
-                $docUrlId=$this->docEncyption($profileId);
+                $docUrlId=$this->docEncyption($profileId,$pre);
                 $saveUrl=sfConfig::get("sf_upload_dir")."/VerificationDocumentByUser/".$docUrlId.$type;
                 return $saveUrl;
         }
@@ -118,7 +118,7 @@ class ProfileDocumentVerificationByUserService
         * @return displayUrl : url need to be stored
         */
 
-	public function getDisplayUrlDoc($profileId,$type="")
+	public function getDisplayUrlDoc($profileId,$type="",$pre)
         {
                 $displayUrl = "";
                 $type = explode('.',$type);
@@ -127,7 +127,7 @@ class ProfileDocumentVerificationByUserService
                 else
                         $type=".".$type[1];
 
-                $docUrlId=$this->docEncyption($profileId);
+                $docUrlId=$this->docEncyption($profileId,$pre);
                 $displayUrl="JS/uploads/VerificationDocumentByUser/".$docUrlId.$type;
                 return $displayUrl;
         }
@@ -137,9 +137,9 @@ class ProfileDocumentVerificationByUserService
 	* @param profileId : profileId
 	* @return docUrlId : doc name 	
 	*/
-	public function docEncyption($profileId)
+	public function docEncyption($profileId,$pre)
         {
-                $docCrypt= rand(0,100000);
+                $docCrypt= $pre;
                 $profileIdCrypt=md5($profileId);
                 $docUrlId=$docCrypt."ii".$profileIdCrypt;
                 return $docUrlId;
