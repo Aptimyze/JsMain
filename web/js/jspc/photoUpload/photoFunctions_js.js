@@ -22,11 +22,17 @@ function displayConfirmationMessage(message,showErrorBox,pictureid)
 
 function sendAjaxRequest(count,filename) 
 {
+    var pUrl;
+    if (typeof imageCopyServer === 'undefined')
+        pUrl = "/api/v3/social/uploadPhoto";
+    else
+        pUrl = "/api/v3/social/uploadPhoto/"+imageCopyServer;
+    alert(pUrl);
     currentEvent = count;
     dataToBeSent = formDataArray[count];
     statusArr[completed + 1] = 2;
     ajaxCurrentRequest = $.myObj.ajax({
-        url: "/api/v3/social/uploadPhoto", // Url to which the request is send
+        url: pUrl,
         type: "POST", // Type of request to be send, called as method
         timeout: 600000,
         data: dataToBeSent, // Data sent to server, a set of key/value pairs representing form fields and values 
