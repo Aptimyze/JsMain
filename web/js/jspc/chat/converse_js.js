@@ -34050,6 +34050,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                          *
                          *  So in both cases the user is a "pending" contact.
                          */
+                        this.model.save({validRoster:false});
                         this.$el.addClass('pending-xmpp-contact');
                         this.$el.html(converse.templates.pending_contact(
                             _.extend(item.toJSON(), {
@@ -34058,6 +34059,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                             })
                         ));
                     } else if (requesting === true) {
+                        this.model.save({validRoster:false});
                         this.$el.addClass('requesting-xmpp-contact');
                         this.$el.html(converse.templates.requesting_contact(
                             _.extend(item.toJSON(), {
@@ -34068,19 +34070,10 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                         ));
                         converse.controlboxtoggle.showControlBox();
                     } else if (subscription === 'both' || subscription === 'to') {
-                        /*var vcardObj={};*/
+                        this.model.save({validRoster:true});  
                         var rosterObj = item.toJSON();
                         //console.log(rosterObj);
                         var userid = rosterObj.id;
-                        //get vcard of this user
-                         //console.log("ankita_roster_items"+userid);
-                        /*converse.getVCard(userid,function (iq) {
-                            console.log("ankita_fetching vcard"+userid);
-                            vcardObj = xmlToJson($(iq).children('vCard')[0]);
-                            console.log(vcardObj);      
-                        });
-                        //add this node in listing--new plugin function
-                        invokePluginAddlisting(rosterObj,vcardObj);*/
                         //rest for old plugin---------------
                         var group = rosterObj.groups[0];
                         //set json data for first time listing display
@@ -34258,20 +34251,23 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                 },
 
                 addContact: function (contact) {
-                    console.log("adding contact....."+contact.get('id'));//ankita-check whether hide-offline users set to true hides offline users in our listing or not
-                    var view = new converse.RosterContactView({model: contact});
-                    var vcardObj={};
-                    var rosterObj = contact;
-                    //console.log(rosterObj);
-                    var userid = rosterObj.attributes.id;
-                    //get vcard of this user
-                    converse.getVCard(userid,function (iq) {
-                        console.log("ankita_fetching vcard...."+userid);
-                        vcardObj = xmlToJson($(iq).children('vCard')[0]);
-                        invokePluginAddlisting(rosterObj,vcardObj);  
-                        //console.log(rosterObj);
-                        //console.log(vcardObj);    
-                    });
+                    console.log("adding new contact....."+contact.get('id'));//ankita-check whether hide-offline users set to true hides offline users in our listing or not
+                    var view = new converse.RosterContactView({model: contact}),validRoster = view.model.get('validRoster');
+                    
+                    console.log(validRoster);
+                    //if subscription is either "to"/"both", then add in list
+                    if(validRoster == true)
+                    {
+                        var vcardObj={},userid = contact.attributes.id;
+                        //get vcard of this user
+                        converse.getVCard(userid,function (iq) {
+                            console.log("ankita_fetching vcard...."+userid);
+                            vcardObj = xmlToJson($(iq).children('vCard')[0]);
+                            invokePluginAddlisting(contact,vcardObj);  
+                            //console.log(contact);
+                            //console.log(vcardObj);    
+                        });
+                    }
                   
                     this.add(contact.get('id'), view);
                     view = this.positionContact(contact).render();
