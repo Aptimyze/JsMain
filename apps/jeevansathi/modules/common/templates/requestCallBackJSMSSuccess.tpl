@@ -138,9 +138,9 @@
         </div>
     </div>
     <div id="nextDiv" class="posrel fullheight fullwid dispnone">
-        <div class="posrel pad23 wid70p txtc">
-            <div class="fontlig f16" id="successMsg">We have taken your request and will get back to you soon</div>
-            <div class="color2 mt30 f16"><a class="color2" href="~$referer`">Go to Home</a></div>
+        <div class="posrel pad40 wid70p txtc">
+            <div class="fontlig f16" id="successMsg"></div>
+            <div class="color2 pt20 f16"><a class="color2" href="~$referer`">Go to Home</a></div>
         </div>
     </div>
     <!--end:Next-->
@@ -219,7 +219,7 @@ function submitRequest(){
                 ShowTopDownError(["Please select a Query"]);
             } else if (data.status == 'success') {
                 $("#nextDiv").removeClass("dispnone");
-                $("successMsg").html(data.successMsg);
+                $("#successMsg").text(data.successMsg);
                 $("#requestCallbackLayerDiv").addClass("dispnone");
             }
         }
