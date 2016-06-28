@@ -198,11 +198,11 @@ function submitRequest(){
             } else if (data.status == 'invalidPhoneNo') {
                 ShowTopDownError(["Please enter a valid Phone No"]);
                 $("input[name=userPhone]").val('');
-                $("#contP").removeClass('color2').addClass('color8');
+                $("#contP").removeClass('color8').addClass('color2');
             } else if (data.status == 'invalidEmail') {
                 ShowTopDownError(["Please enter a valid e-mail"]);
                 $("input[name=userEmail]").val('');
-                $("#contE").removeClass('color2').addClass('color8');
+                $("#contE").removeClass('color8').addClass('color2');
             } else if (data.status == 'invalidDevice') {
                 ShowTopDownError(["Invalid Device"]);
             } else if (data.status == 'invalidChannel') {
