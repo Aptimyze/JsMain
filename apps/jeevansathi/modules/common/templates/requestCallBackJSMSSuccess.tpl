@@ -167,7 +167,7 @@ function manageQueryType(el){
     $(el).parent().parent().find('selected_d').each(function(){
         $(this).removeClass('selected_d');
     });
-    $(el).addClass('.selected_d');
+    $(el).addClass('selected_d');
     $("input[name=qtype]").val(queryType);
     $("#queryDescription").html($("#name"+queryType).text());
 }
@@ -175,11 +175,11 @@ function submitRequest(){
     var queryType = $("input[name=qtype]").val();
     var email = $("input[name=userEmail]").val();
     if (email == ''){
-        email = "asd";
+        email = "1";
     }
     var phone = $("input[name=userPhone]").val();
     if (phone == ''){
-        phone = "0";
+        phone = "1";
     }
     var paramStr = 'processQuery=1&device=mobile_website&channel=JSMS&callbackSource=JSMSHelpModule' + '&email=' + email + '&phone=' + phone + '&query_type=' + queryType;
     paramStr = paramStr.replace(/amp;/g, '');

@@ -61,12 +61,12 @@ class ApiRequestCallbackV1Action extends sfActions
             $responseData['rcbResponse'] = $rcbResponse;
             // end assignment
             if (!empty($email) && !empty($phone) && !empty($query) && !empty($device) && !empty($channel) && !empty($callbackSource)) {
-                if (!CommonUtility::validatePhoneNo($phone)) { // Validating Phone No
-                    $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
-                    $responseData['status'] = 'invalidPhoneNo';
-                } elseif (!CommonUtility::validateEmail($email)) { // Validating Email
+                if (!CommonUtility::validateEmail($email)) { // Validating Email
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
                     $responseData['status'] = 'invalidEmail';
+                } elseif (!CommonUtility::validatePhoneNo($phone)) { // Validating Phone No
+                    $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+                    $responseData['status'] = 'invalidPhoneNo';
                 } elseif (!in_array($device, $arrValidDevice)) { // Validating Email
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
                     $responseData['status'] = 'invalidDevice';
