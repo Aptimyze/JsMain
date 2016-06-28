@@ -41,6 +41,8 @@ class ApiRequestCallbackV1Action extends sfActions
         if ($arrRequest['processQuery'] == 1) {
             // Parsing Request Parameters
             $arrValidQuery = array("P","M");
+            $arrValidDevice = array("desktop","mobile_website","Android_app","iOS_app");
+            $arrValidChannel = array("JSMS","JSPC","JSAA","JSIA");
             $email = $arrRequest['email'];
             $phone = $arrRequest['phone'];
             $query = $arrRequest['query_type'];
@@ -60,10 +62,16 @@ class ApiRequestCallbackV1Action extends sfActions
             if (!empty($email) && !empty($phone) && !empty($query) && !empty($device) && !empty($channel) && !empty($callbackSource)) {
                 if (!CommonUtility::validatePhoneNo($phone)) { // Validating Phone No
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
-                    $responseData = array('status'=>'invalidPhoneNo');
+                    $responseData['status'] = 'invalidPhoneNo';
                 } elseif (!CommonUtility::validateEmail($email)) { // Validating Email
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
-                    $responseData = array('status'=>'invalidEmail');
+                    $responseData['status'] = 'invalidEmail';
+                } elseif (!in_array($device, $arrValidDevice)) { // Validating Email
+                    $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+                    $responseData['status'] = 'invalidDevice';
+                } elseif (!in_array($channel, $arrValidChannel)) { // Validating Email
+                    $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+                    $responseData['status'] = 'invalidChannel';
                 } elseif (in_array($query, $arrValidQuery)) { // Validating Query Type
                     if ($query == "P") {
                         //Send Email
