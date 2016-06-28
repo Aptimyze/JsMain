@@ -85,7 +85,7 @@
         <div class="brdr1">
             <div class="pad18">
                 <div class="wid94p fl">
-                    <div class="color8 f12 fontlig ng-binding">
+                    <div id="contE" class="color8 f12 fontlig ng-binding">
                         ~$data.email_text`
                     </div>
                     <div class="pt10">
@@ -100,7 +100,7 @@
         <div class="brdr1">
             <div class="pad18">
                 <div class="wid94p fl">
-                    <div class="color8 f12 fontlig ng-binding">
+                    <div id="contP" class="color8 f12 fontlig ng-binding">
                         ~$data.phone_text`
                     </div>
                     <div class="pt10">
@@ -174,7 +174,13 @@ function manageQueryType(el){
 function submitRequest(){
     var queryType = $("input[name=qtype]").val();
     var email = $("input[name=userEmail]").val();
+    if (email == ''){
+        email = "asd";
+    }
     var phone = $("input[name=userPhone]").val();
+    if (phone == ''){
+        phone = "0";
+    }
     var paramStr = 'processQuery=1&device=mobile_website&channel=JSMS&callbackSource=JSMSHelpModule' + '&email=' + email + '&phone=' + phone + '&query_type=' + queryType;
     paramStr = paramStr.replace(/amp;/g, '');
     url = "/api/v3/common/requestCallbackLayer?" + paramStr;
@@ -184,19 +190,19 @@ function submitRequest(){
         success: function(data) {
             response = data;
             // Set Default Colors
-            $("input[name=userPhone]").parent().find('.ng-binding').removeClass('color2').addClass('color8');
-            $("input[name=userEmail]").parent().find('.ng-binding').removeClass('color2').addClass('color8');
+            $("#contP").removeClass('color2').addClass('color8');
+            $("#contE").removeClass('color2').addClass('color8');
             // Handle status responses
             if (data.status == 'missingParameters') {
                 ShowTopDownError(["Missing Parameters"]);
             } else if (data.status == 'invalidPhoneNo') {
                 ShowTopDownError(["Please enter a valid Phone No"]);
                 $("input[name=userPhone]").val('');
-                $("input[name=userPhone]").parent().find('.ng-binding').removeClass('color8').addClass('color2');
+                $("#contP").removeClass('color2').addClass('color8');
             } else if (data.status == 'invalidEmail') {
                 ShowTopDownError(["Please enter a valid e-mail"]);
                 $("input[name=userEmail]").val('');
-                $("input[name=userEmail]").parent().find('.ng-binding').removeClass('color8').addClass('color2');
+                $("#contE").removeClass('color2').addClass('color8');
             } else if (data.status == 'invalidDevice') {
                 ShowTopDownError(["Invalid Device"]);
             } else if (data.status == 'invalidChannel') {
