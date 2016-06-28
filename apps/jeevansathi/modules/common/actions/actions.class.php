@@ -682,6 +682,7 @@ class commonActions extends sfActions
         ob_end_clean();
         $data = json_decode($output, true);
         $this->data = $data;
+        $this->callbackSource = $request->getParameter('callbackSource');
 		$this->referer = $request->getReferer();
 		$this->setTemplate('requestCallBackJSMS');
 	}

@@ -180,6 +180,7 @@ function manageQueryType(el){
     $("#queryDescription").html($("#name"+queryType).text());
 }
 function submitRequest(){
+    var callbackSource = "~$callbackSource`";
     var queryType = $("input[name=qtype]").val();
     var email = $("input[name=userEmail]").val();
     if (email == ''){
@@ -189,7 +190,7 @@ function submitRequest(){
     if (phone == ''){
         phone = "1";
     }
-    var paramStr = 'processQuery=1&device=mobile_website&channel=JSMS&callbackSource=JSMSHelpModule' + '&email=' + email + '&phone=' + phone + '&query_type=' + queryType;
+    var paramStr = 'processQuery=1&device=mobile_website&channel=JSMS&callbackSource=' + callbackSource + '&email=' + email + '&phone=' + phone + '&query_type=' + queryType;
     paramStr = paramStr.replace(/amp;/g, '');
     url = "/api/v3/common/requestCallbackLayer?" + paramStr;
     $.ajax({
