@@ -126,7 +126,7 @@
                             <span class="label wid70p color8 f17" id="queryDescription">~$data.query_options.N`</span>
                         </div>
                     </div>
-                    <div class="fr wid6p pt8">
+                    <div class="fr wid6p pt8" style="padding-top: 38px;">
                         <div class="dispcell rv2_wid6 pt20 rv2_vb"> <div class="rv2_rec1"></div></div>
                     </div>
                     <div class="clr"></div>
