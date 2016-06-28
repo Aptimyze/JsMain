@@ -5,13 +5,16 @@
 .rv2_pad9 {
     padding: 21px 0;
 }
+.rv2_wid9 {
+    width: 40px;
+}
 </style>
 <div class="fullwid bg4 fontlig reqmain">
     <!--start:div header-->
     <div class="bg1 reqTopDiv">
         <div class="pad1">
             <div class="rem_pad1 posrel fullwid ">
-                <div class="white fontthin f19 txtc">Request Call Back</div>
+                <div class="white fontthin f19 txtc">~$data.title`</div>
                 <div class="posabs" style="left:0;top:16px;">
                     <a href="~$referer`"><i class="mainsp arow2 cursp"></i></a>
                 </div>
@@ -38,9 +41,9 @@
                 <div class="rv2_pad17" id="ContentDiv">
                     <!--start:query type card option-->
                     <div class="pt10">
-                        <div class="rv2_brdr1 color8 rv2_brrad1 fontlig selectedOption" qtype="P" onclick="manageQueryType(this);">
+                        <div class="rv2_brdr1 color8 rv2_brrad1 fontlig" qtype="P" onclick="manageQueryType(this);">
                             <div class="disptbl fullwid">
-                                <div class="dispcell vertmid pname padl10" id="name">~$data.query_options.P`</div>
+                                <div class="pad15 dispcell vertmid pname padl10" id="name">~$data.query_options.P`</div>
                                 <div class="dispcell vertmid rv2_wid9">
                                     <div class="rv2_sprtie1 options"></div>
                                 </div>
@@ -48,9 +51,9 @@
                         </div>
                     </div>
                     <div class="pt10">
-                        <div class="rv2_brdr1 color8 rv2_brrad1 fontlig selectedOption" qtype="M" onclick="manageQueryType(this);">
+                        <div class="rv2_brdr1 color8 rv2_brrad1 fontlig" qtype="M" onclick="manageQueryType(this);">
                             <div class="disptbl fullwid">
-                                <div class="dispcell vertmid pname padl10" id="name">~$data.query_options.M`</div>
+                                <div class="pad15 dispcell vertmid pname padl10" id="name">~$data.query_options.M`</div>
                                 <div class="dispcell vertmid rv2_wid9">
                                     <div class="rv2_sprtie1 options"></div>
                                 </div>
@@ -61,8 +64,8 @@
                 </div>
                 <!--end:content-->
             </div>
-            <div class="posabs btmo fullwid">
-                <input type="hidden" name="paymentMode" id="paymentMode"/>
+            <div class="posabs btmo fullwid" id="continueBtn">
+                <input type="hidden" name="qtype" id="qtype" value="N"/>
                 <div style="overflow:hidden;position:relative;height: 61px;" class="disp_b btmo">
                     <div class="fullwid ~if $data.device eq 'Android_app'`~$data.device`_bg7~else`bg7~/if` txtc white f16 rv2_pad9 cursp pinkRipple" id="contPaymentBtn">Continue</div>
                 </div>
@@ -86,7 +89,7 @@
                         ~$data.email_text`
                     </div>
                     <div class="pt10">
-                        <input type="text" value="~$data.email_autofill`" class="color3o f17 fontlig wid80p"/>
+                        <input type="text" name='userEmail' value="~$data.email_autofill`" class="color3o f17 fontlig wid80p"/>
                     </div>
                 </div>
                 <div class="clr"></div>
@@ -101,7 +104,7 @@
                         ~$data.phone_text`
                     </div>
                     <div class="pt10">
-                        <input type="text" value="~$data.phone_autofill`" class="color8 f17 fontlig wid80p"/>
+                        <input type="text" name='userPhone' value="~$data.phone_autofill`" class="color8 f17 fontlig wid80p"/>
                     </div>
                 </div>
                 <div class="clr"></div>
@@ -129,7 +132,7 @@
     </div>
     <!--end:content box-->
     <!--start:Next-->
-    <div class="btmo posabs fullwid" id="footer_btn cursp">
+    <div class="btmo posabs fullwid" id="submitBtn">
         <div id="submit" class="cursp bg7 white lh30 fullwid dispbl txtc lh50">~$data.submit_placeholder`</div>
     </div>
     <!--end:Next-->
@@ -139,7 +142,6 @@ $(function() {
     var winHeight = $(window).height(); // total height of the device
     $('.reqmain').css("height", winHeight); // aaply the height of device to main div
 });
-
 function showOverlay() {
     var vwid = $(window).width();
     var vhgt = $(window).height();
@@ -160,11 +162,57 @@ function showOverlay() {
     $("#tapOverlayHead").show();
     $("#tapOverlayContent").show();
 }
+function manageQyeryType(el){
+    var queryType = $(el).attr('qtype');
+    $(el).parent().parent().find('.selected_d').each(function(){
+        $(this).removeClass('.selected_d');
+    });
+    $(el).addClass('.selected_d');
+    $("input[name=qtype]").val(queryType);
+}
+function submitRequest(){
+    var queryType = $("input[name=qtype]").val();
+    var email = $("input[name=userEmail]").val();
+    var phone = $("input[name=userPhone]").val();
+    var paramStr = 'processRequest=1&device=mobile_website&channel=JSMS&callbackSource=JSMSHelpModule' + '&email=' + email + '&phone=' + phone + '&query_type=' + queryType;
+    paramStr = paramStr.replace(/amp;/g, '');
+    url = "/api/v3/common/requestCallbackLayer?" + paramStr;
+    $.ajax({
+        type: 'POST',
+        url: url,
+        success: function(data) {
+            response = data;
+            // Set Default Colors
+            $("input[name=userPhone]").parent().find('.ng-binding').removeClass('color2').addClass('color8');
+            $("input[name=userEmail]").parent().find('.ng-binding').removeClass('color2').addClass('color8');
+            // Handle status responses
+            if (data.status == 'missingParameters') {
+                ShowTopDownError(["Missing Parameters"]);
+            } else if (data.status == 'invalidPhoneNo') {
+                ShowTopDownError(["Please enter a valid Phone No"]);
+                $("input[name=userPhone]").val('');
+                $("input[name=userPhone]").parent().find('.ng-binding').removeClass('color8').addClass('color2');
+            } else if (data.status == 'invalidEmail') {
+                ShowTopDownError(["Please enter a valid e-mail"]);
+                $("input[name=userEmail]").val('');
+                $("input[name=userEmail]").parent().find('.ng-binding').removeClass('color8').addClass('color2');
+            } else if (data.status == 'invalidDevice') {
+                ShowTopDownError(["Invalid Device"]);
+            } else if (data.status == 'invalidChannel') {
+                ShowTopDownError(["Invalid Channel"]);
+            } else if (data.status == 'invalidQueryType') {
+                ShowTopDownError(["Please select a Query"]);
+            } else if (data.status == 'success') {
+                
+            }
+        }
+    });
+}
 $(document).ready(function() {
     $("#querySelectBtn").click(function(e) {
         showOverlay();
     })
-    $('.tapoverlay').click(function(e) {
+    $('.tapoverlay, #continueBtn').click(function(e) {
         if ($('#backOnCard').length) {
             $("#backOnCard").trigger('click');
         }
@@ -181,6 +229,10 @@ $(document).ready(function() {
             'overflow': 'auto',
             'height': 'auto'
         });
+    });
+    $("#submitBtn").click(function(e){
+        e.preventDefault();
+        submitRequest();
     })
 })
 

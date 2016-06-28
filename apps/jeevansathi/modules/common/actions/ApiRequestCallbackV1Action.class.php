@@ -26,7 +26,8 @@ class ApiRequestCallbackV1Action extends sfActions
             $email = $loginData["EMAIL"];
         }
         // Base response with pre-filled data for layout
-        $responseData = array('top_placeholder'=>'We will call you at the earliest after you submit the request',
+        $responseData = array('title'=>'Request Call Back',
+        		'top_placeholder'=>'We will call you at the earliest after you submit the request',
         		'phone_text'=>"Your Phone no",
                 'phone_autofill'=>$phone,
                 'email_text'=>"Your email id",
@@ -53,7 +54,7 @@ class ApiRequestCallbackV1Action extends sfActions
             // assigning respose data with recieved params and returning to sender
             $responseData['phone_autofill'] = $phone;
             $responseData['email_autofill'] = $email;
-            $responseData['query_type'] = $query_type;
+            $responseData['query_type'] = $query;
             $responseData['device'] = $device;
             $responseData['channel'] = $channel;
             $responseData['callbackSource'] = $callbackSource;
