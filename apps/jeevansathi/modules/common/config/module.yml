@@ -18,6 +18,8 @@ all:
     enable_login:  off
   requestCallBack:
    enable_login:  off
+  requestCallBackJSMS:
+   enable_login:  off
   LogOut:
    enable_login:  off
   SendAppLink :

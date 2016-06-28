@@ -1,3 +1,4 @@
+~assign var=currency value= $sf_request->getAttribute('currency')`
 <div class="bg4">
     <div class="perspective" id="perspective">
         <div class="" id="pcontainer">
@@ -44,7 +45,7 @@
                     <div class="pad16 btmBrdGrey darkGreyColor f14 txtc">Other ways to get help</div>
                     <div class="posrel pad2515">
                         <div class="txtc pad24 greyColor f13">Call toll free number</div>
-                        <div class="txtc pad24 f21 color2">1-800-419-6299</div>
+                        <div class="txtc pad24 f21 color2">~if $currency eq 'RS'`1-800-419-6299~else`+91-120-4393500~/if`</div>
                         <div class="txtc pad24 greyColor f13">Daily in between 9AM - 9PM</div>
                     </div>
                     <div class="posfix btmo dispib bg7 white f18 fontthin txtc pad1510 mt15 fullwid" id="postQueryBtn"><a class="white" href="/help/JSMSPostQuery">Post Your Query</a></div>

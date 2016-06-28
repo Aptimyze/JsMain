@@ -1,3 +1,4 @@
+~assign var=currency value= $sf_request->getAttribute('currency')`
 <!--start:header-->
 <div class="cover1">
 	<div id="top0" class="container mainwid pt35 pb30">
@@ -113,7 +114,7 @@
         <div class="fullhgt wid34p disp_ib vtop">
             <div class="padalln txtc fontlig">
                 <div class="f16 colr2">Toll Free number</div>
-                <div class="f20 color5">1-800-419-6299</div>
+                <div class="f20 color5">~if $currency eq 'RS'`1-800-419-6299~else`+91-120-4393500~/if`</div>
                 <div class="f14 colr2">Daily between 9AM-9PM</div>
                 <div class="mt70"></div>
                 <div class="bg_pink lh40 f16 colrw centerBtn cursp hoverPink"><a class ="colrw fullhgt fullwid pos_rel disp_b" href="/contactus/index?fromSideLink=1">Live Help Chat</a></div>

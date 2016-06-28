@@ -16,7 +16,8 @@ class ApiRequestCallbackV1Action extends sfActions
         $iProfileId = isset($loginData['PROFILEID']) ? $loginData['PROFILEID'] : '';
         $userName = " "; 
         // Query options
-        $query_options = array("P"=>'Questions or feedback regarding jeevansathi profile',
+        $query_options = array("N"=>"Not filled in",
+        	"P"=>'Questions or feedback regarding jeevansathi profile',
             "M"=>'Query regarding jeevansathi membership plans');    
         if($iProfileId){
             // Assign defaults if user is logged in
@@ -25,14 +26,17 @@ class ApiRequestCallbackV1Action extends sfActions
             $email = $loginData["EMAIL"];
         }
         // Base response with pre-filled data for layout
-        $responseData = array('phone_text'=>"Your Phone no",
+        $responseData = array('top_placeholder'=>'We will call you at the earliest after you submit the request',
+        		'phone_text'=>"Your Phone no",
                 'phone_autofill'=>$phone,
                 'email_text'=>"Your email id",
                 'email_autofill'=>$email,
                 'query_question'=>"What type of query do you have?",
-                'query_options'=>$query_options);
+                'query_options'=>$query_options,
+                'submit_placeholder'=>"Submit Request");
         // Request Parameter Holder
         $arrRequest = $request->getParameterHolder()->getAll();
+        $internal = $arrRequest['INTERNAL'];
         // Request Processing
         if ($arrRequest['processQuery'] == 1) {
             // Parsing Request Parameters
@@ -114,6 +118,10 @@ class ApiRequestCallbackV1Action extends sfActions
         // Sending API Response
         $apiResponseHandlerObj->setResponseBody($responseData);
         $apiResponseHandlerObj->generateResponse();
-        die;
+        if($internal == 1){
+        	return sfView::NONE;
+        } else {
+			die;
+        }
     }
 }

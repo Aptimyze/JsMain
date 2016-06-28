@@ -672,6 +672,19 @@ class commonActions extends sfActions
 		$this->setTemplate('CALJSMS');	
 
 	}
+
+	public function executeRequestCallBackJSMS($request)
+	{
+		$request->setParameter('INTERNAL', 1);
+		ob_start();
+        $data = sfContext::getInstance()->getController()->getPresentationFor('common', 'ApiRequestCallbackV1');
+        $output = ob_get_contents();
+        ob_end_clean();
+        $data = json_decode($output, true);
+        $this->data = $data;
+		$this->referer = $request->getReferer();
+		$this->setTemplate('requestCallBackJSMS');
+	}
   
   /**
    * updateRCBResponse
