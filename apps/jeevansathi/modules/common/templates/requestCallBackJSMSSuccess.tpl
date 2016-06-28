@@ -138,7 +138,7 @@
         </div>
     </div>
     <div id="nextDiv" class="posrel fullheight fullwid dispnone">
-        <div class="posrel pad40 wid70p txtc">
+        <div class="posrel pt40 wid70p txtc">
             <div class="fontlig f16" id="successMsg"></div>
             <div class="color2 pt20 f16"><a class="color2" href="~$referer`">Go to Home</a></div>
         </div>
