@@ -547,6 +547,10 @@ class FieldForm extends sfForm
 					$autoExObj->replace($profileid,'E',date("Y-m-d H:i:s"));
 					//end
 					insert_in_old_email($profileid, $this->loggedInObj->getEMAIL());
+					(new emailVerification())->sendVerificationMail($profileid);
+					(new NEWJS_EMAIL_CHANGE_LOG())->insertEmailChange($profileid,$jprofileFieldArr['EMAIL']);
+
+
 				}
 				$this->checkForChange($jprofileFieldArr);
 				//update in jprofile

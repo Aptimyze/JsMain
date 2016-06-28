@@ -68,7 +68,9 @@
 '60'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'HOROSCOPE_REQUEST_PAGE','URL'=>'profile/contacts_made_received.php','OTHER_GET_PARAMS'=>'page=horoscope&filter=R','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 
 '61'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'SHORTLISTED','URL'=>'search/shortlisted','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
-'62'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'BASIC_DETAILS','URL'=>'profile/viewprofile.php','OTHER_GET_PARAMS'=>'ownview=1&EditWhatNew=Basic','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N')
+'62'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'BASIC_DETAILS','URL'=>'profile/viewprofile.php','OTHER_GET_PARAMS'=>'ownview=1&EditWhatNew=Basic','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
+'63'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'EMAIL_VER_SUCCESS','URL'=>'common/verifyEmail','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N')
+
 
 
 );
@@ -134,7 +136,9 @@ private static $linkNameArray=array(
 'REQUEST_HOROSCOPE'=>'59',
 'HOROSCOPE_REQUEST_PAGE'=>'60',
 'SHORTLISTED'=>'61',
-'BASIC_DETAILS'=>'62'
+'BASIC_DETAILS'=>'62',
+'EMAIL_VER_SUCCESS'=>'63',
+
 
 
 );

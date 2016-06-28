@@ -675,6 +675,36 @@ public function executeAppredirect(sfWebRequest $request)
 	die;
   }
 
+
+
+
+
+  public function executeVerifyEmailAction($request)
+  {
+
+
+  $loggedInProfile=LoggedInProfile::getInstance();
+  $profileid=$loggedInProfile->getPROFILEID();
+  $sourceEmail=$request->getParameter('emailId');
+  if(trim($sourceEmail)!=$loggedInProfile->getEMAIL())
+    $this->wrongEmail=1;
+  else 
+    {   
+      $this->wrongEmail=0;
+      $paramArr=array('VERIFY_EMAIL'=>'Y');
+      JPROFILE::getInstance('')->edit($paramArr, $profileid, 'PROFILEID');
+      (new NEWJS_EMAIL_CHANGE_LOG())->markAsVerified($profileid)
+  
+    }
+    if(MobileCommon::isMobile())
+      $this->setTemplate('jsmsEmailVerified');
+    else
+      $this->setTemplate('jspcEmailVerified'); 
+  } 
+
+
+
+
   public function executeAppPromo($request)
   {
   	$mobile = $request->getParameter("mobile");
