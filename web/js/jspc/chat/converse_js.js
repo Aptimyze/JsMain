@@ -34218,8 +34218,10 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                     this.model.contacts.on("change:chat_status", function (contact) {
                         // This might be optimized by instead of first sorting,
                         // finding the correct position in positionContact
-                        console.log("changing status 2....."); //ankita-status change
-                        this.model.contacts.sort(); //sort-ankita
+                        console.log("ankita_changing_status"); //ankita-status change
+                        console.log(contact);
+                        invokePluginAddlisting(contact,{},"update_status");  
+                        this.model.contacts.sort();
                         this.positionContact(contact).render();
                     }, this);
                     this.model.contacts.on("destroy", this.onRemove, this);
@@ -34251,7 +34253,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                 },
 
                 addContact: function (contact) {
-                    console.log("adding new contact....."+contact.get('id'));//ankita-check whether hide-offline users set to true hides offline users in our listing or not
+                    console.log("adding new contact....."+contact.get('id'));
                     var view = new converse.RosterContactView({model: contact}),validRoster = view.model.get('validRoster');
                     
                     console.log(validRoster);
@@ -34263,7 +34265,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                         converse.getVCard(userid,function (iq) {
                             console.log("ankita_fetching vcard...."+userid);
                             vcardObj = xmlToJson($(iq).children('vCard')[0]);
-                            invokePluginAddlisting(contact,vcardObj);  
+                            invokePluginAddlisting(contact,vcardObj,"add_node");  
                             //console.log(contact);
                             //console.log(vcardObj);    
                         });

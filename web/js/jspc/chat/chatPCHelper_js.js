@@ -168,14 +168,14 @@ function xmlToJson(xml) {
 }
 /*invokePluginAddlisting
 function to add roster item with vcard details in listing
-* @inputs:listObject,vcardObj
+* @inputs:listObject,vcardObj,key(add node/update status)
 */
-function invokePluginAddlisting(listObject,vcardObj)
+function invokePluginAddlisting(listObject,vcardObj,key)
 {
     console.log("invokePluginAddlisting...."+listObject.id);
     console.log(listObject);
     console.log(vcardObj); //to be cached---ankita
     var listNodeObj = [{"rosterDetails":listObject.attributes,"vcardDetails":vcardObj}];
     console.log(listNodeObj);
-    //plugin.addInList(listNodeObj);  //call plugin addlist function
+    //plugin.addInList(listNodeObj,key);  //call plugin addlist function
 }
