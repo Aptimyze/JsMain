@@ -106,6 +106,7 @@ ajaxData=this.makePostDataForAjax(this.profileChecksum);
 				data.post();
 				if(data.name=="DECLINE" && data.pageName=="VDP")
 				{
+					var address_url=window.location.href;
 					 if(address_url.indexOf("?") >= 0){
 						var hash;
 						var pageSource='';
