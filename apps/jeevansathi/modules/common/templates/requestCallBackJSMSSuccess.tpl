@@ -8,9 +8,13 @@
 .rv2_wid9 {
     width: 40px;
 }
+.wid6p {
+    width: 6%;
+}
 </style>
 <div class="fullwid bg4 fontlig reqmain">
     <!--start:div header-->
+    <div class="tapoverlay posabs" style="display:none;" id="tapOverlayHead"></div>
     <div class="bg1 reqTopDiv">
         <div class="pad1">
             <div class="rem_pad1 posrel fullwid ">
@@ -22,7 +26,6 @@
         </div>
     </div>
     <!--end:div header-->
-    <div class="tapoverlay posabs" style="display:none;" id="tapOverlayHead"></div>
     <div class="posabs rv2_pos5" style="display:none;" id="tapOverlayContent">
         <div class="posrel bg4"  id="ContLayer">
             <!--start:top div-->
@@ -119,12 +122,12 @@
                         <div class="color8 f12 fontlig ng-binding">
                             ~$data.query_question`
                         </div>
-                        <div class="pt10">
+                        <div class="rv2_brdrbtm2 pt20" style="height: 63px;">
                             <span class="label wid70p color8 f17" id="queryDescription">~$data.query_options.N`</span>
                         </div>
                     </div>
-                    <div class="fr wid4p pt8">
-                        <i class="mainsp arow1"></i>
+                    <div class="fr wid6p pt8">
+                        <div class="dispcell rv2_wid6 pt20 rv2_vb"> <div class="rv2_rec1"></div></div>
                     </div>
                     <div class="clr"></div>
                 </div>
@@ -140,7 +143,7 @@
     <div id="nextDiv" class="posrel fullheight fullwid dispnone">
         <div class="posrel pt40 wid70p txtc">
             <div class="fontlig f16" id="successMsg"></div>
-            <div class="color2 pt20 f16"><a class="color2" href="~$referer`">Go to Home</a></div>
+            <div class="color2 pt20 f16"><a class="color2" href="~$referer`">Go Back</a></div>
         </div>
     </div>
     <!--end:Next-->
