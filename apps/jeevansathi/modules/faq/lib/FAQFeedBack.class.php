@@ -40,12 +40,17 @@ class FAQFeedBack
 		}
 		
 		else{
+			
 			$feed=$this->webRequest->getParameter('feed');
 			$reason=$feed['message'];
+
 			$pos=strpos($reason,':');
 			$reasonNew=trim(substr($reason,$pos+1));
-			$arr2=split(' ',$reason);
+
+			$pos2=strpos($reason,'by');
+			$arr2=split(' ',trim(substr($reason,$pos2+1)));
 			$otherUsername=trim($arr2[0]);
+
 			$this->otherProfile->getDetail($otherUsername,"USERNAME");
 			$otherProfileId=$this->otherProfile->getPROFILEID();
 			
