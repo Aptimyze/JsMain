@@ -43,7 +43,7 @@
                     <div class="pt10">
                         <div class="rv2_brdr1 color8 rv2_brrad1 fontlig" qtype="P" onclick="manageQueryType(this);">
                             <div class="disptbl fullwid">
-                                <div class="pad15 dispcell vertmid pname padl10" id="name">~$data.query_options.P`</div>
+                                <div class="pad15 dispcell vertmid pname padl10" id="nameP">~$data.query_options.P`</div>
                                 <div class="dispcell vertmid rv2_wid9">
                                     <div class="rv2_sprtie1 options"></div>
                                 </div>
@@ -53,7 +53,7 @@
                     <div class="pt10">
                         <div class="rv2_brdr1 color8 rv2_brrad1 fontlig" qtype="M" onclick="manageQueryType(this);">
                             <div class="disptbl fullwid">
-                                <div class="pad15 dispcell vertmid pname padl10" id="name">~$data.query_options.M`</div>
+                                <div class="pad15 dispcell vertmid pname padl10" id="nameM">~$data.query_options.M`</div>
                                 <div class="dispcell vertmid rv2_wid9">
                                     <div class="rv2_sprtie1 options"></div>
                                 </div>
@@ -119,7 +119,7 @@
                         ~$data.query_question`
                     </div>
                     <div class="pt10">
-                        <span class="label wid70p color8 f17">~$data.query_options.N`</span>
+                        <span class="label wid70p color8 f17" id="queryDescription">~$data.query_options.N`</span>
                     </div>
                 </div>
                 <div class="fr wid4p pt8">
@@ -164,11 +164,12 @@ function showOverlay() {
 }
 function manageQueryType(el){
     var queryType = $(el).attr('qtype');
-    $(el).parent().parent().find('.selected_d').each(function(){
-        $(this).removeClass('.selected_d');
+    $(el).parent().parent().find('selected_d').each(function(){
+        $(this).removeClass('selected_d');
     });
     $(el).addClass('.selected_d');
     $("input[name=qtype]").val(queryType);
+    $("#queryDescription").html($("#name"+queryType).text());
 }
 function submitRequest(){
     var queryType = $("input[name=qtype]").val();
