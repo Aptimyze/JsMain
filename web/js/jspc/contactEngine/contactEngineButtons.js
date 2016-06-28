@@ -117,8 +117,7 @@ ajaxData=this.makePostDataForAjax(this.profileChecksum);
 								pageSource=hash[1];
 						}
 						if(pageSource!='' && (pageSource.indexOf("INTEREST_RECEIVED") >= 0 ||pageSource.indexOf("FILTERED_INTEREST") >= 0) && $("#show_nextListingProfile").length && $("#show_nextListingProfile")[0]!=undefined)
-							$("#show_nextListingProfile")[0].click();)
-								
+							$("#show_nextListingProfile")[0].click();
 					}
 					
 				}
