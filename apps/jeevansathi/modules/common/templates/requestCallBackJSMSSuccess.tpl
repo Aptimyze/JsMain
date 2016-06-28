@@ -162,7 +162,7 @@ function showOverlay() {
     $("#tapOverlayHead").show();
     $("#tapOverlayContent").show();
 }
-function manageQyeryType(el){
+function manageQueryType(el){
     var queryType = $(el).attr('qtype');
     $(el).parent().parent().find('.selected_d').each(function(){
         $(this).removeClass('.selected_d');
@@ -174,7 +174,7 @@ function submitRequest(){
     var queryType = $("input[name=qtype]").val();
     var email = $("input[name=userEmail]").val();
     var phone = $("input[name=userPhone]").val();
-    var paramStr = 'processRequest=1&device=mobile_website&channel=JSMS&callbackSource=JSMSHelpModule' + '&email=' + email + '&phone=' + phone + '&query_type=' + queryType;
+    var paramStr = 'processQuery=1&device=mobile_website&channel=JSMS&callbackSource=JSMSHelpModule' + '&email=' + email + '&phone=' + phone + '&query_type=' + queryType;
     paramStr = paramStr.replace(/amp;/g, '');
     url = "/api/v3/common/requestCallbackLayer?" + paramStr;
     $.ajax({
