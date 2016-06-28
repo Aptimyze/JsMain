@@ -48,9 +48,8 @@ class FAQFeedBack
 			$reasonNew=trim(substr($reason,$pos+1));
 
 			$pos2=strpos($reason,'by');
-			$arr2=split(' ',trim(substr($reason,$pos2+1)));
+			$arr2=split(' ',trim(substr($reason,$pos2+2)));
 			$otherUsername=trim($arr2[0]);
-
 			$this->otherProfile->getDetail($otherUsername,"USERNAME");
 			$otherProfileId=$this->otherProfile->getPROFILEID();
 			
