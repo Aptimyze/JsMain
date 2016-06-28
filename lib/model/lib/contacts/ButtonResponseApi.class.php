@@ -150,7 +150,9 @@ Class ButtonResponseApi
 							break;
 						case ContactHandler::CANCEL:
 							//echo "CANCEL";
-							$responseArray["infobtnlabel"] = "They cancelled interest on " . $date;
+							$button[] = self::getAcceptButton("Accept Again");
+							$responseArray["infobtnlabel"] = "You cancelled your interest on " . $date;
+							$responseArray["buttons"] = $button;
 							break;
 					}
 				}
@@ -369,6 +371,31 @@ Class ButtonResponseApi
 					$responseArray["infobtnlabel"] = "You cancelled your interest on " . $date;
 					$responseArray["buttons"] = $button;
 					break;
+
+				case ContactHandler::ACCEPT:
+					if ($privilageArray["0"]["COMMUNICATION"]["MESSAGE"] == "Y") {
+						$button[]                      = $this->getSendMessageButton();
+						$button[]                      = self::getContactDetailsButton();
+						$button[]                 	   = self::getCancelInterestButton();
+						$responseArray["buttons"]      = $button;
+						$responseArray["infomsglabel"] = "You are now connected with " . $this->contactHandlerObj->getViewed()->getUSERNAME();
+						$responseArray["infomsgiconid"] = '023';
+					} else {
+						if(strpos(sfContext::getInstance()->getRequest()->getParameter("newActions"), "MEMBERSHIP")!== false )
+						{
+							$responseArray["infobtnlabel"]  = "Buy paid membership to Write messages or view contact details";
+							$responseArray["infobtnvalue"]  = "";
+							$responseArray["infobtnaction"] = "MEMBERSHIP";
+						}
+						else{
+							$responseArray["infobtnlabel"]  = "Call us to Buy paid membership to Write messages or view contact details";
+							$responseArray["infobtnvalue"]  = "18004196299";
+							$responseArray["infobtnaction"] = "CALL";		
+						}
+						$responseArray["infomsglabel"]  = "You are now connected with " . $this->contactHandlerObj->getViewed()->getUSERNAME();
+						$responseArray["infomsgiconid"] = '023';
+					}
+					break;
 			}
 		} else {
 			//echo "receiver";
@@ -405,7 +432,9 @@ Class ButtonResponseApi
 					break;
 				case ContactHandler::CANCEL:
 					//echo "CANCEL";
-					$responseArray["infobtnlabel"] = "They cancelled interest on " . $date;
+					$button[] = self::getAcceptButton("Accept Again");
+					$responseArray["infobtnlabel"] = "You cancelled your interest on " . $date;
+					$responseArray["buttons"] = $button;
 					break;
 			}
 		}
@@ -590,7 +619,9 @@ Class ButtonResponseApi
 					break;
 				case ContactHandler::CANCEL:
 					//echo "CANCEL";
-					$responseArray["infobtnlabel"] = "They cancelled interest on " . $date;
+					$button[] = self::getAcceptButton("Accept Again");
+					$responseArray["infobtnlabel"] = "You cancelled your interest on " . $date;
+					$responseArray["buttons"] = $button;	
 					break;
 			}
 		}
