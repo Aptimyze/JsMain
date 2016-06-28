@@ -73,67 +73,75 @@
         </div>
     </div>
     <!--start:content box-->
-    <div>
-        <!--start:div-->
-        <div class="brdr1">
-            <div class="pad18">
-                <p class="color8 f15">~$data.top_placeholder`</p>
-            </div>
-        </div>
-        <!--end:div-->
-        <!--start:div-->
-        <div class="brdr1">
-            <div class="pad18">
-                <div class="wid94p fl">
-                    <div id="contE" class="color8 f12 fontlig ng-binding">
-                        ~$data.email_text`
-                    </div>
-                    <div class="pt10">
-                        <input type="text" name='userEmail' value="~$data.email_autofill`" class="color3o f17 fontlig wid80p"/>
-                    </div>
+    <div id="requestCallbackLayerDiv">
+        <div>
+            <!--start:div-->
+            <div class="brdr1">
+                <div class="pad18">
+                    <p class="color8 f15">~$data.top_placeholder`</p>
                 </div>
-                <div class="clr"></div>
             </div>
-        </div>
-        <!--end:div-->
-        <!--start:div-->
-        <div class="brdr1">
-            <div class="pad18">
-                <div class="wid94p fl">
-                    <div id="contP" class="color8 f12 fontlig ng-binding">
-                        ~$data.phone_text`
+            <!--end:div-->
+            <!--start:div-->
+            <div class="brdr1">
+                <div class="pad18">
+                    <div class="wid94p fl">
+                        <div id="contE" class="color8 f12 fontlig ng-binding">
+                            ~$data.email_text`
+                        </div>
+                        <div class="pt10">
+                            <input type="text" name='userEmail' value="~$data.email_autofill`" class="color3o f17 fontlig wid80p"/>
+                        </div>
                     </div>
-                    <div class="pt10">
-                        <input type="text" name='userPhone' value="~$data.phone_autofill`" class="color8 f17 fontlig wid80p"/>
-                    </div>
+                    <div class="clr"></div>
                 </div>
-                <div class="clr"></div>
             </div>
-        </div>
-        <!--end:div-->
-        <!--start:div-->
-        <div class="brdr1 cursp" id="querySelectBtn">
-            <div class="pad18">
-                <div class="wid94p fl">
-                    <div class="color8 f12 fontlig ng-binding">
-                        ~$data.query_question`
+            <!--end:div-->
+            <!--start:div-->
+            <div class="brdr1">
+                <div class="pad18">
+                    <div class="wid94p fl">
+                        <div id="contP" class="color8 f12 fontlig ng-binding">
+                            ~$data.phone_text`
+                        </div>
+                        <div class="pt10">
+                            <input type="text" name='userPhone' value="~$data.phone_autofill`" class="color8 f17 fontlig wid80p"/>
+                        </div>
                     </div>
-                    <div class="pt10">
-                        <span class="label wid70p color8 f17" id="queryDescription">~$data.query_options.N`</span>
-                    </div>
+                    <div class="clr"></div>
                 </div>
-                <div class="fr wid4p pt8">
-                    <i class="mainsp arow1"></i>
-                </div>
-                <div class="clr"></div>
             </div>
+            <!--end:div-->
+            <!--start:div-->
+            <div class="brdr1 cursp" id="querySelectBtn">
+                <div class="pad18">
+                    <div class="wid94p fl">
+                        <div class="color8 f12 fontlig ng-binding">
+                            ~$data.query_question`
+                        </div>
+                        <div class="pt10">
+                            <span class="label wid70p color8 f17" id="queryDescription">~$data.query_options.N`</span>
+                        </div>
+                    </div>
+                    <div class="fr wid4p pt8">
+                        <i class="mainsp arow1"></i>
+                    </div>
+                    <div class="clr"></div>
+                </div>
+            </div>
+            <!--end:div-->
         </div>
-        <!--end:div-->
+        <!--end:content box-->
+        <!--start:Next-->
+        <div class="btmo posabs fullwid" id="submitBtn">
+            <div id="submit" class="cursp bg7 white lh30 fullwid dispbl txtc lh50">~$data.submit_placeholder`</div>
+        </div>
     </div>
-    <!--end:content box-->
-    <!--start:Next-->
-    <div class="btmo posabs fullwid" id="submitBtn">
-        <div id="submit" class="cursp bg7 white lh30 fullwid dispbl txtc lh50">~$data.submit_placeholder`</div>
+    <div id="nextDiv" class="posrel fullheight fullwid dispnone">
+        <div class="posrel pad23 wid70p txtc">
+            <div class="fontlig f16" id="successMsg">We have taken your request and will get back to you soon</div>
+            <div class="color2 mt30 f16"><a class="color2" href="~$referer`">Go to Home</a></div>
+        </div>
     </div>
     <!--end:Next-->
 </div>
@@ -164,7 +172,7 @@ function showOverlay() {
 }
 function manageQueryType(el){
     var queryType = $(el).attr('qtype');
-    $(el).parent().parent().find('selected_d').each(function(){
+    $("#ContentDiv").find('.selected_d').each(function(){
         $(this).removeClass('selected_d');
     });
     $(el).addClass('selected_d');
@@ -210,7 +218,9 @@ function submitRequest(){
             } else if (data.status == 'invalidQueryType') {
                 ShowTopDownError(["Please select a Query"]);
             } else if (data.status == 'success') {
-                
+                $("#nextDiv").removeClass("dispnone");
+                $("successMsg").html(data.successMsg);
+                $("#requestCallbackLayerDiv").addClass("dispnone");
             }
         }
     });

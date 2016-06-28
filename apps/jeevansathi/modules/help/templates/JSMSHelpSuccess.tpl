@@ -48,7 +48,8 @@
                         <div class="txtc pad24 f21 color2">~if $currency eq 'RS'`1-800-419-6299~else`+91-120-4393500~/if`</div>
                         <div class="txtc pad24 greyColor f13">Daily in between 9AM - 9PM</div>
                     </div>
-                    <div class="posfix btmo dispib bg7 white f18 fontthin txtc pad1510 mt15 fullwid" id="postQueryBtn"><a class="white" href="/help/JSMSPostQuery">Post Your Query</a></div>
+                    <div class="posfix btmo dispib bg7 white f18 fontthin txtc pad1510 mt15 wid498p" id="postQueryBtn"><a class="white" href="/help/JSMSPostQuery">Post Your Query</a></div>
+                    <div class="posfix btmo dispib bg7 white f18 fontthin txtc pad1510 mt15 wid50p r0" id="commReqCallbackLyr"><a class="white" href="/common/requestCallBackJSMS">Request Callback</a></div>
                 </div>
                 <!--section listing:end-->
             </div>
