@@ -42,29 +42,19 @@ class NEWJS_EMAIL_CHANGE_LOG extends TABLE {
 			throw new jsException($e);
 			return false;
 		}
-		return true;	
+		return $this->db->lastInsertId();	
 	}
-        public function getOptinProfileArr($profileIdArr)
+        public function getLastId($profileid)
         {
                 try{
-                        if(is_array($profileIdArr))
-                        {
-                                foreach($profileIdArr as $key=>$pid){
-                                        if($key == 0)
-                                                $str = ":PROFILEID".$key;
-                                        else
-                                                $str .= ",:PROFILEID".$key;
-                                }
-                                $sql = "SELECT PROFILEID FROM newjs.CONSENT_DNC WHERE PROFILEID IN ($str) ";
+                        
+                                $sql = "SELECT ID FROM newjs.EMAIL_CHANGE_LOG WHERE PROFILEID = :PROFILEID ORDER BY ID DESC LIMIT 1";
                                 $res=$this->db->prepare($sql);
-                                unset($pid);
-                                foreach($profileIdArr as $key=>$pid)
-                                        $res->bindValue(":PROFILEID$key", $pid, PDO::PARAM_INT);
+                                $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
                                 $res->execute();
-                                while($row = $res->fetch(PDO::FETCH_ASSOC))
-                                        $result[] = $row['PROFILEID'];
-                                return $result;
-                        }
+                                if($result = $res->fetch(PDO::FETCH_ASSOC))
+                                    return $result['ID'];
+    							else return false;                    
                 }
                 catch(Exception $e)
                 {

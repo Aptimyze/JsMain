@@ -50,7 +50,7 @@
                 
                 <tr>
                         <td>
-                         <td height="27"><a href="(LINK)EMAIL_VER_SUCCESS:profileid=~$profileid`(/LINK)" target="_blank" style="font-size:12px; font-family:Arial, Helvetica, sans-serif;word-break: keep-all;">Click here to verify your email address</a></td>   
+                         <td height="27"><a href="(LINK)EMAIL_VER_SUCCESS:profileid=~$profileid`,EmailUID=~$uniqueId`(/LINK)" target="_blank" style="font-size:12px; font-family:Arial, Helvetica, sans-serif;word-break: keep-all;">Click here to verify your email address</a></td>   
                         </td>
 
                         <td width="20" height="25"></td>

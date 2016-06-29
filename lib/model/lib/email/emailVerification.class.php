@@ -9,12 +9,11 @@ class emailVerification
 	
 
 
-	public static function sendVerificationMail($profileId) 
+	public static function sendVerificationMail($profileId,$uniqueId) 
 	{
 
 		$emailSender = new EmailSender('4', '1834');
         $tpl = $emailSender->setProfileId($profileId);
-        
 		$memObject=JsMemcache::getInstance();
 		$instanceID=$memObject->get('emailVerInstanceId');	
 
@@ -24,9 +23,10 @@ class emailVerification
 			$instanceID = $countObj->getID('EMAIL_VER_MAILER');
 			$memObject->set('emailVerInstanceId',$instanceID);
 		}
-        
+//        die($emailSender->getProfile()->getEMAIL());
         $tpl->getSmarty()->assign("profileid", $profileId);
-        $tpl->getSmarty()->assign("email", $emailSender->getProfile()->getEMAIL());
+        $tpl->getSmarty()->assign("uniqueId", $uniqueId);
+        $tpl->getSmarty()->assign("instanceID", $instanceID);
 		$partialObj = new PartialList();
         $partialObj->addPartial("jeevansathi_contact_address", "jeevansathi_contact_address");
         $tpl->setPartials($partialObj);
@@ -48,14 +48,6 @@ class emailVerification
 
 		
 		(new NEWJS_EMAIL_CHANGE_LOG())->markAsVerified($profileid,$email);
-
-
-
-
-
-
-
-
 
 
 	}

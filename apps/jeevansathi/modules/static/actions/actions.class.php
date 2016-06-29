@@ -683,15 +683,19 @@ public function executeAppredirect(sfWebRequest $request)
   {
   $loggedInProfile=LoggedInProfile::getInstance();
   $profileid=$loggedInProfile->getPROFILEID();
-  $sourceEmail=$request->getParameter('emailId');
-  if(trim($sourceEmail)!=$loggedInProfile->getEMAIL())
-    $this->wrongEmail=1;
+  $UIDParam=$request->getParameter('EmailUID');
+  $changeLog=new NEWJS_EMAIL_CHANGE_LOG();
+  $emailUID=$changeLog->getLastId($profileid);
+  if($emailUID!=$UIDParam){
+  $request->setParameter('showEmailVerError',1);
+  sfContext::getInstance()->getController()->forward("static", "logoutPage");
+  }
+    
   else 
     {   
-      $this->wrongEmail=0;
       $paramArr=array('VERIFY_EMAIL'=>'Y');
       JPROFILE::getInstance('')->edit($paramArr, $profileid, 'PROFILEID');
-      (new NEWJS_EMAIL_CHANGE_LOG())->markAsVerified($profileid,$loggedInProfile->getEMAIL());
+      $changeLog->markAsVerified($profileid,$loggedInProfile->getEMAIL());
   
     }
     if(MobileCommon::isMobile())
