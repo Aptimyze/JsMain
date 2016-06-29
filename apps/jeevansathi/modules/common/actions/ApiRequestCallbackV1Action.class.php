@@ -44,7 +44,7 @@ class ApiRequestCallbackV1Action extends sfActions
             $arrValidQuery = array("P","M");
             $arrValidDevice = array("desktop","mobile_website","Android_app","iOS_app");
             $arrValidChannel = array("JSMS","JSPC","JSAA","JSIA");
-            $email = $arrRequest['email'];
+            $email = strtolower($arrRequest['email']);
             $phone = $arrRequest['phone'];
             $query = $arrRequest['query_type'];
             $device = $arrRequest['device'];
