@@ -1,6 +1,7 @@
 /*This file includes functions used for intermediate data transfer for JSPC chat from 
 * converse client(converse.js) to chat plugin(chat_js.js)
 */
+var listingInputData = [],listCreationDone=false;  //listing data sent to plugin-array of objects
 
 function readSiteCookie(name) {
     var nameEQ = escape(name) + "=",ca = document.cookie.split(';');
@@ -172,10 +173,35 @@ function to add roster item with vcard details in listing
 */
 function invokePluginAddlisting(listObject,vcardObj,key)
 {
-    console.log("invokePluginAddlisting...."+listObject.id+"---"+key);
-    console.log(listObject);
-    console.log(vcardObj); //to be cached---ankita
-    var listNodeObj = [{"rosterDetails":listObject.attributes,"vcardDetails":vcardObj}];
-    console.log(listNodeObj);
-    //plugin.addInList(listNodeObj,key);  //call plugin addlist function
+    //console.log(listObject);
+    //console.log(vcardObj); //to be cached---ankita
+    var listNodeObj = {"rosterDetails":listObject.attributes,"vcardDetails":vcardObj};
+    if(key=="add_node")
+    {
+        if(listCreationDone == false)
+        {
+            console.log("creating list initially-"+listCreationDone);
+            listingInputData.push(listNodeObj);
+            console.log(listingInputData);
+            if(listingInputData.length == chatConfig.Params[device].initialRosterLimit)
+            {
+                key = "create_list";
+                console.log("list created"+listingInputData.length);
+               //plugin.addInList(listingInputData,key); 
+               listCreationDone = true;
+            }
+        }
+        else
+        {
+            console.log("adding nodes later");
+            console.log([listNodeObj]);
+            //plugin.addInList([listNodeObj],key);
+        }
+    }
+    else if(key=="update_status")
+    {
+        console.log("updating status");
+        console.log([listNodeObj]);
+        //plugin.addInList([listNodeObj],key);
+    }
 }

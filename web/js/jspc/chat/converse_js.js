@@ -34253,14 +34253,14 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                 },
 
                 addContact: function (contact) {
-                    console.log("adding new contact....."+contact.get('id'));
+                   // console.log("adding new contact....."+contact.get('id'));
                     var view = new converse.RosterContactView({model: contact});
                     var validRoster = view.model.get('validRoster'); 
                   
                     this.add(contact.get('id'), view);
                     view = this.positionContact(contact).render();
                     validRoster = view.model.get('validRoster');
-                    console.log(validRoster);
+                    //console.log(validRoster);
                     //if subscription is either "to"/"both", then add in list
                     if(validRoster == true)
                     {
@@ -34269,9 +34269,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                         converse.getVCard(userid,function (iq) {
                             console.log("ankita_fetching vcard...."+userid);
                             vcardObj = xmlToJson($(iq).children('vCard')[0]);
-                            invokePluginAddlisting(contact,vcardObj,"add_node");  
-                            //console.log(contact);
-                            //console.log(vcardObj);    
+                            invokePluginAddlisting(contact,vcardObj,"add_node");     
                         });
                     }
                     if (view.mayBeShown()) {
