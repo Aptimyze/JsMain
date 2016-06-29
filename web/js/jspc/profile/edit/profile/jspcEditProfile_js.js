@@ -4177,6 +4177,9 @@ EditApp = function(){
       }
     }
     validateImage = function(fieldId,fieldKey){
+        if(typeof $('#' + fieldId)[0].files[0] == 'undefined'){
+                return true;
+        }
         var file = $('#'+fieldId)[0].files[0];
         if (file && file.name.split(".")[1] == "jpg" || file.name.split(".")[1] == "JPG" || file.name.split(".")[1] == "jpeg" || file.name.split(".")[1] == "JPEG" || file.name.split(".")[1] == "PDF" || file.name.split(".")[1] == "pdf") {
         } else {
