@@ -9,7 +9,6 @@ include_once($path."/profile/hits.php");
 include_once($path."/profile/registration_functions.inc");
 include_once(JsConstants::$docRoot."/commonFiles/sms_inc.php");
 //include_once($path."/sugarcrm/custom/crons/JsSuccessAutoRegEmail.php");
-mail("kunal.test02@gmail.com","auto_reg_function.php in USE",$msg = print_r($_SERVER,true));
 include_once($path."/classes/Jpartner.class.php");
 include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 $db=connect_db();
