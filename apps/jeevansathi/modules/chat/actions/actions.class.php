@@ -95,6 +95,27 @@ class chatActions extends sfActions
                 }
                 curl_close ($ch);
             }
+            //Encrypt Password
+            $hash = "123";
+            $response['hash'] = $hash;
+        }
+        else{
+            $response = "Logged Out Profile";
+            $apiResponseHandlerObj->setHttpArray(ChatEnum::$loggedOutProfile);
+        }
+        $apiResponseHandlerObj->setResponseBody($response);
+        $apiResponseHandlerObj->generateResponse();
+        die;
+    }
+    
+    public function executeFetchCredentialsV1(sfWebRequest $request)
+    {
+        $apiResponseHandlerObj = ApiResponseHandler::getInstance();
+        $loginData = $request->getAttribute("loginData");
+        if($loginData){
+            $response['jid'] = 'a1@localhost';
+            $response['password'] = '123';
+            $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
         }
         else{
             $response = "Logged Out Profile";
