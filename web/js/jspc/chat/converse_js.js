@@ -21190,8 +21190,10 @@ Strophe.Connection.prototype = {
         console.log("changing status");
         // notify all plugins listening for status changes
         for (var k in Strophe._connectionPlugins) {
+            console.log('in for');
             if (Strophe._connectionPlugins.hasOwnProperty(k)) {
                 var plugin = this[k];
+                console.log('in if');
                 if (plugin.statusChanged) {
                     try {
                         plugin.statusChanged(status, condition);
@@ -28931,6 +28933,7 @@ return Backbone.BrowserStorage;
 
 
         this.onStatusInitialized = function (deferred) {
+            console.log("in status initailized");
             this.registerIntervalHandler();				
             this.roster = new this.RosterContacts();
             //console.log(this.roster);
@@ -28950,6 +28953,7 @@ return Backbone.BrowserStorage;
                     // so we're sure that this is just for tests.
                     this.callback(this);
                 } else  {
+                    console.log("in else of stat");
                     createListingPanel();  //ankita-create listing for old plugin
                     this.callback();
                 }
