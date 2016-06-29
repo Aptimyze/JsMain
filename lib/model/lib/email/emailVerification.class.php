@@ -9,7 +9,7 @@ class emailVerification
 	
 
 
-	public static function sendVerificationMail($profileId,$uniqueId) 
+	public function sendVerificationMail($profileId,$uniqueId) 
 	{
 
 		$emailSender = new EmailSender('4', '1834');
