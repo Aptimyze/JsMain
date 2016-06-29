@@ -4177,7 +4177,7 @@ EditApp = function(){
       }
     }
     validateImage = function(fieldId,fieldKey){
-        if(typeof $('#' + fieldId)[0].files[0] == 'undefined'){
+        if(typeof $('#' + fieldId)[0].files[0] == 'undefined' || $('#' + fieldId)[0].files[0] == null){
                 return true;
         }
         var file = $('#'+fieldId)[0].files[0];
