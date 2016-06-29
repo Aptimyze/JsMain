@@ -1,6 +1,7 @@
 /*This file includes functions used for intermediate data transfer for JSPC chat from 
 * converse client(converse.js) to chat plugin(chat_js.js)
 */
+var listingInputData = [],listCreationDone=false;  //listing data sent to plugin-array of objects
 
 function readSiteCookie(name) {
     var nameEQ = escape(name) + "=",ca = document.cookie.split(';');
@@ -166,18 +167,40 @@ function xmlToJson(xml) {
     }
     return obj;
 }
+
 /*invokePluginAddlisting
-function to add roster item with vcard details in listing
-* @inputs:listObject,vcardObj,key(add node/update status)
+function to add roster item with vcard details or update roster item details in listing
+* @inputs:listObject,vcardObj,key(create_list/add_node/update_status)
 */
-function invokePluginAddlisting(listObject,vcardObj,key)
-{
-    console.log("invokePluginAddlisting...."+listObject.id+"---"+key);
-    console.log(listObject);
-    console.log(vcardObj); //to be cached---ankita
-    var listNodeObj = [{"rosterDetails":listObject.attributes,"vcardDetails":vcardObj}];
-    console.log(listNodeObj);
-    //plugin.addInList(listNodeObj,key);  //call plugin addlist function
+
+function invokePluginAddlisting(listObject,vcardObj,key){
+    //console.log(listObject);
+    //console.log(vcardObj); //to be cached---ankita
+    var listNodeObj = {"rosterDetails":listObject.attributes,"vcardDetails":vcardObj};
+    if(key=="add_node"){
+        if(listCreationDone == false){   //create list with n nodes
+            listingInputData.push(listNodeObj);
+            if(listingInputData.length == chatConfig.Params[device].initialRosterLimit){
+                key = "create_list";
+                console.log("list created after adding "+listingInputData.length+" nodes");
+                //plugin.addInList(listingInputData,key); 
+                console.log(listingInputData);
+                listCreationDone = true;
+            }
+        }else{
+            var nodeArr = [];   //add single node after list creation
+            nodeArr.push(listNodeObj);
+            console.log("adding single node");
+            console.log(nodeArr);
+            //plugin.addInList(nodeArr,key);
+        }
+    }else if(key=="update_status"){
+        var nodeArr = [];              //update existing user status in listing
+        nodeArr.push(listNodeObj);
+        console.log("updating status");
+        console.log(nodeArr);
+        //plugin.addInList(nodeArr,key);
+    }
 }
 
 
@@ -207,3 +230,6 @@ function eraseCookie(name) {
     createCookie(name, "", -1);
     console.log("erasing cookie");
 }
+
+
+

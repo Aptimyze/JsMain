@@ -15,6 +15,7 @@ chatConfig.Params = {
 					listingTabs:{
                         "tab1":{"tab_name":"Online Matches","groups":[{"id":"dpp","group_name":"Desired Partner Matches"},{"id":"eoi_R","group_name":"Interest Received"},{"id":"shortlisted","group_name":"Shortlisted Members"},{"id": "accepted_by_me","group_name":"Accepted Members"}]},
                         "tab2":{"tab_name":"Accepted","groups":[]}
-                    }				
+                    },
+                    initialRosterLimit:3    //no of nodes to be sent to plugin to create list initially				
 				}
 			};
