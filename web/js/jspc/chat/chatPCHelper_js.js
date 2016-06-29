@@ -167,6 +167,7 @@ function xmlToJson(xml) {
     }
     return obj;
 }
+
 /*invokePluginAddlisting
 function to add roster item with vcard details or update roster item details in listing
 * @inputs:listObject,vcardObj,key(create_list/add_node/update_status)
