@@ -25,34 +25,43 @@ class ApiMembershipDetailsV3Action extends sfAction
                 $this->apiParams->device = "JSAA_mobile_website";
             }
             if ($this->apiParams->processPayment) {
-                switch ($this->apiParams->pageRedirectTo) { 
-                    case 'ccavenue':
-                        JeevansathiGatewayManager::setCCAVENUEParams($this,$this->apiParams);
-                        break;
+                try {
+                	switch ($this->apiParams->pageRedirectTo) { 
+	                    case 'ccavenue':
+	                        JeevansathiGatewayManager::setCCAVENUEParams($this,$this->apiParams);
+	                        break;
 
-                    case 'payu':
-                        JeevansathiGatewayManager::setPayUParams($this,$this->apiParams);
-                        break;
+	                    case 'payu':
+	                        JeevansathiGatewayManager::setPayUParams($this,$this->apiParams);
+	                        break;
 
-                    case 'paytm':
-                        JeevansathiGatewayManager::setPayTMParams($this,$this->apiParams);
-                        break;
+	                    case 'paytm':
+	                        JeevansathiGatewayManager::setPayTMParams($this,$this->apiParams);
+	                        break;
 
-                    case 'paypal':
-                        JeevansathiGatewayManager::setPaypalParams($this,$this->apiParams);
-                        break;
+	                    case 'paypal':
+	                        JeevansathiGatewayManager::setPaypalParams($this,$this->apiParams);
+	                        break;
 
-                    default:
-                        $this->setTemplate("apiPaymentRedirect");
-                        break;
-                }
-                JeevansathiGatewayManager::reAuthenticateUser($this);
+	                    default:
+	                        $this->setTemplate("apiPaymentRedirect");
+	                        break;
+	                
+	                }
+	            } catch (Exception $e) {
+	            	SendMail::send_email('avneet.bindra@jeevansathi.com, vibhor.garg@jeevansathi.com', $e, 'Failure in Setting Gateway Parameters', 'js-sums@jeevansathi.com', 'avneetbindra180691@gmail.com', '', '', '', '', '', '', '', 'Membership Alerts');
+	            }
+	            try {
+                	JeevansathiGatewayManager::reAuthenticateUser($this);
+	            } catch (Exception $e) {
+	            	SendMail::send_email('avneet.bindra@jeevansathi.com, vibhor.garg@jeevansathi.com', $e, 'Failure in User Re-Authentication Function', 'js-sums@jeevansathi.com', 'avneetbindra180691@gmail.com', '', '', '', '', '', '', '', 'Membership Alerts');
+	            }
+	            return;
             } 
             elseif ($this->apiResponse == "logout_case") {
                 $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$LOGOUT_PROFILE);
             } 
             else {
-                
                 $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
                 $apiResponseHandlerObj->setResponseBody($this->apiResponse);
             }
@@ -69,6 +78,12 @@ class ApiMembershipDetailsV3Action extends sfAction
         else {
             if ($this->apiResponse) {
                 die;
+            } else {
+            	$allParams = $request->getParameterHolder()->getAll();
+            	$stringParams = json_encode($allParams);
+            	SendMail::send_email('avneet.bindra@jeevansathi.com, vibhor.garg@jeevansathi.com', $stringParams, 'Failure in Unknown Case', 'js-sums@jeevansathi.com', 'avneetbindra180691@gmail.com', '', '', '', '', '', '', '', 'Membership Alerts');
+            	return sfView::NONE;
+            	die;
             }
         }
     }
