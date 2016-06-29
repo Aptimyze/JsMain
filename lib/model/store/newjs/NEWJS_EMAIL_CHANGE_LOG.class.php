@@ -11,7 +11,7 @@ class NEWJS_EMAIL_CHANGE_LOG extends TABLE {
 	{
 		try	 	
 		{	
-			$sql="UPDATE newjs.EMAIL_CHANGE_LOG SET STATUS = 'Y' WHERE PROFILEID = :PROFILEID AND EMAIL= :EMAIL ORDER BY CHANGE_DATE DESC LIMIT 1";
+			$sql="UPDATE newjs.EMAIL_CHANGE_LOG SET STATUS = 'Y' WHERE PROFILEID = :PROFILEID AND EMAIL=':EMAIL' ORDER BY CHANGE_DATE DESC LIMIT 1";
 			$prep=$this->db->prepare($sql);
 			$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
 			$prep->bindValue(":EMAIL",$email,PDO::PARAM_STR);
@@ -24,19 +24,15 @@ class NEWJS_EMAIL_CHANGE_LOG extends TABLE {
 	}
         
         public function insertEmailChange($profileid,$email)
-	{
+	{  
 		try
 		{
 			
-			$profileObj=new Profile();
-			$profileObj->getDetail($profileid,"PROFILEID");
 			$timeNow=(new DateTime)->format('Y-m-j H:i:s');
-			$sql = "INSERT INTO newjs.EMAIL_CHANGE_LOG (PROFILEID,CHANGE_DATE,EMAIL,STATUS) VALUES (:PROFILEID,$timeNow,:EMAIL,'N')";
+			$sql = "INSERT INTO newjs.EMAIL_CHANGE_LOG(PROFILEID,CHANGE_DATE,EMAIL,STATUS) VALUES (:PROFILEID,'$timeNow',:EMAIL,'N')";
 			$prep = $this->db->prepare($sql);
 			$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
-			$prep->bindValue(":CHANGE_DATE",$profileid,PDO::PARAM_INT);
-			$prep->bindValue(":EMAIL",$email,PDO::PARAM_INT);
-			$prep->bindValue(":STATUS",$profileid,PDO::PARAM_INT);
+			$prep->bindValue(":EMAIL",$email,PDO::PARAM_STR);
 			$prep->execute();
             
         

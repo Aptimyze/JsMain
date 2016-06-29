@@ -1,9 +1,8 @@
 <?php
 class MAIL_EMAIL_VER_MAILER extends TABLE
 {
-        public function __construct($dbname="")
+        public function __construct($dbname="newjs_master")
         {
-		$dbname=$dbname?$dbname:"211_connect";
 		parent::__construct($dbname);
         }
 
@@ -18,7 +17,7 @@ class MAIL_EMAIL_VER_MAILER extends TABLE
 
 							$sql = "INSERT INTO  MAIL.EMAIL_VER_MAILER (RECEIVER,TIME,SENT) VALUES(:PROFILEID,now(),:SENT)";
 							$res = $this->db->prepare($sql);
-				            $res->bindValue(":PROFILEID", $info['profileId'], PDO::PARAM_INT);
+				            $res->bindValue(":PROFILEID", $receiver, PDO::PARAM_INT);
 				            $res->bindValue(":SENT", $sent, PDO::PARAM_INT);
 	                		$res->execute();    
 	                }

@@ -34,12 +34,12 @@ EOF;
 		passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring EMAIL_VER_MAILER#INSERT");	
 		$instanceID = $countObj->getID('EMAIL_VER_MAILER');
 		$memObject=JsMemcache::getInstance();
-		$memObject->set('emailVerInstanceId',$instanceID)
+		$memObject->set('emailVerInstanceId',$instanceID);
 
 		passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring EMAIL_VER_MAILER");
 		(new MAIL_EMAIL_VER_MAILER())->EmptyMailer();
 		
-			}
+	}
 
 
 }

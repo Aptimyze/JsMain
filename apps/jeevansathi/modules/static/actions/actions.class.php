@@ -691,7 +691,7 @@ public function executeAppredirect(sfWebRequest $request)
       $this->wrongEmail=0;
       $paramArr=array('VERIFY_EMAIL'=>'Y');
       JPROFILE::getInstance('')->edit($paramArr, $profileid, 'PROFILEID');
-      (new NEWJS_EMAIL_CHANGE_LOG())->markAsVerified($profileid);
+      (new NEWJS_EMAIL_CHANGE_LOG())->markAsVerified($profileid,$loggedInProfile->getEMAIL());
   
     }
     if(MobileCommon::isMobile())
