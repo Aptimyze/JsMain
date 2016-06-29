@@ -136,7 +136,7 @@
         </div>
         <!--end:content box-->
         <!--start:Next-->
-        <div class="btmo posabs fullwid" id="submitBtn">
+        <div class="btmo posfix fullwid" id="submitBtn">
             <div id="submit" class="cursp bg7 white lh30 fullwid dispbl txtc lh50">~$data.submit_placeholder`</div>
         </div>
     </div>
@@ -151,7 +151,11 @@
 <script type="text/javascript">
 $(function() {
     var winHeight = $(window).height(); // total height of the device
-    $('.reqmain').css("height", winHeight); // aaply the height of device to main div
+    if (winHeight <= 480){
+        $('.reqmain').css("height", 480);
+    } else {
+        $('.reqmain').css("height", winHeight);
+    }
 });
 function showOverlay() {
     var vwid = $(window).width();
