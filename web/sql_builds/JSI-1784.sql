@@ -18,3 +18,12 @@ CREATE TABLE  `EMAIL_VER_MAILER` (
 PRIMARY KEY (  `ID` ) ,
 INDEX (  `RECEIVER` ) 
 ) ENGINE=MYISAM;
+
+
+use jeevansathi_mailer;
+
+INSERT INTO  `EMAIL_TYPE` (  `ID` ,  `MAIL_ID` ,  `TPL_LOCATION` ,  `HEADER_TPL` ,  `FOOTER_TPL` ,  `TEMPLATE_EX_LOCATION` ,  `MAIL_GROUP` ,  `CUSTOM_CRITERIA` ,  `SENDER_EMAILID` ,  `DESCRIPTION` ,  `MEMBERSHIP_TYPE` ,  `GENDER` , `PHOTO_PROFILE` ,  `REPLY_TO_ENABLED` ,  `FROM_NAME` ,  `REPLY_TO_ADDRESS` ,  `MAX_COUNT_TO_BE_SENT` ,  `REQUIRE_AUTOLOGIN` ,  `FTO_FLAG` ,  `PRE_HEADER` ,  `PARTIALS` ) 
+VALUES (
+
+'1834',  '1834',  'emailVerificationMailer.tpl',  'header.tpl',  'footer.tpl', NULL ,  '4',  '1',  'info@jeevansathi.com', NULL ,  'D',  '',  '', NULL ,  'Jeevansathi Info', NULL , NULL ,  'Y',  '',  '',  ''
+)
