@@ -34255,8 +34255,11 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                 addContact: function (contact) {
                     console.log("adding new contact....."+contact.get('id'));
                     var view = new converse.RosterContactView({model: contact});
-                    var validRoster = view.model.get('validRoster');
-                    
+                    var validRoster = view.model.get('validRoster'); 
+                  
+                    this.add(contact.get('id'), view);
+                    view = this.positionContact(contact).render();
+                    validRoster = view.model.get('validRoster');
                     console.log(validRoster);
                     //if subscription is either "to"/"both", then add in list
                     if(validRoster == true)
@@ -34271,9 +34274,6 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                             //console.log(vcardObj);    
                         });
                     }
-                  
-                    this.add(contact.get('id'), view);
-                    view = this.positionContact(contact).render();
                     if (view.mayBeShown()) {
                         if (this.model.get('state') === converse.CLOSED) {
                             if (view.$el[0].style.display !== "none") { view.$el.hide(); }
