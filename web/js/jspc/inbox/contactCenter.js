@@ -868,14 +868,14 @@ $(document).ready(function() {
 					if(data.match(emailReg) != null){
 						matchedStr = data.match(emailReg);
 						$.each(matchedStr, function(index, value){
-							data = data.replace(value, "<span class='f13 fontreg color11 showText'>&lt;Email visibile on accept&gt;</span><span class='disp-none hiddenStr'>"+value+"</span>");
+							data = data.replace(value, "<span class='f13 fontreg color11 showText'>&lt;Email visible on accept&gt;</span><span class='disp-none hiddenStr'>"+value+"</span>");
 						});
 						$(element).html(data);
 					}
 					if(data.match(phoneReg) != null){
 						matchedStr = data.match(phoneReg);
 						$.each(matchedStr, function(index, value){
-							data = data.replace(value, "<span class='f13 fontreg color11 showText'>&lt;Phone number visibile on accept&gt;</span><span class='disp-none hiddenStr'>"+value+"</span>");
+							data = data.replace(value, "<span class='f13 fontreg color11 showText'>&lt;Phone number visible on accept&gt;</span><span class='disp-none hiddenStr'>"+value+"</span>");
 						});
 						$(element).html(data);
 					}
