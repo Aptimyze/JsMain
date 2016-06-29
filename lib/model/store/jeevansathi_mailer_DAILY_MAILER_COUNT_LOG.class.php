@@ -23,29 +23,6 @@ class jeevansathi_mailer_DAILY_MAILER_COUNT_LOG extends TABLE{
                 }
 	}
 
-	public function getIDBasedOnTodayDate($mailerKey){
-
- try{
-
-			$sqlSelect ="SELECT ID FROM jeevansathi_mailer.DAILY_MAILER_COUNT_LOG WHERE MAILER_KEY=:MAILER_KEY AND DATE(ENTRY_DT)=CURDATE()";
-                        $resSelect = $this->db->prepare($sqlSelect);
-                        $resSelect->bindValue(":MAILER_KEY",$mailerKey, PDO::PARAM_STR);
-                        $resSelect->execute();
-				if($result = $resSelect->fetch(PDO::FETCH_ASSOC))
-				return $result['ID'];
-                }
-                catch(PDOException $e)
-                {
-                        throw new jsException($e);
-      			}
-
-
-
-
-
-
-
-	}
 	public function getID($mailerKey)
         {
                 try{

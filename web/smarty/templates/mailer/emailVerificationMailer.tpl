@@ -33,7 +33,7 @@
         </tr>
         <tr>
             <td>
-                <table style="border-spacing:3px 10px; max-width:600px; min-width:240px; font-family:Arial, Helvetica, sans-serif; font-size:12px" border="0" cellspacing="0" cellpadding="0">
+                <table style="border-spacing:0px 10px; max-width:600px; min-width:240px; font-family:Arial, Helvetica, sans-serif; font-size:12px" border="0" cellspacing="0" cellpadding="0">
                     <tr>
                         <td width="20"></td>
                         <td valign="middle" height="35"> Dear <var>{{NAME_PROFILE:profileid=~$profileid`}}</var>, </td>
@@ -47,19 +47,10 @@
 
                         <td width="20"></td>
                     </tr>
+                
                 <tr>
-                        <td width="20"></td>
                         <td>
-                Please verify your Email address by clicking on the following link:
-            </td>
-
-                        <td width="20" height="25"></td>
-                </tr>
-
-                <tr>
-                        <td width="20"></td>
-                        <td>
-                         <td bgcolor="#ad160d" height="27" align="center" width="167"><a href="(LINK)EMAIL_VER_SUCCESS:profileid=~$profileid`,receiver_id=~$userProfileId`,emailId=~$email`(/LINK)" target="_blank" style="font-size:12px; color:#fff; font-family:Arial, Helvetica, sans-serif;word-break: keep-all;text-decoration: none;"><strong>View Profile</strong></a></td>   
+                         <td height="27"><a href="(LINK)EMAIL_VER_SUCCESS:profileid=~$profileid`(/LINK)" target="_blank" style="font-size:12px; font-family:Arial, Helvetica, sans-serif;word-break: keep-all;">Click here to verify your email address</a></td>   
                         </td>
 
                         <td width="20" height="25"></td>
@@ -106,9 +97,7 @@
                     
                     
                     <tr>
-                        <tr>
-                            <td height="20"></td>
-                        </tr>
+                       
                         <tr>
                             <td valign="top" height="30">
                                 <table style="max-width:600px; min-width:240px" border="0" cellspacing="0" cellpadding="0">

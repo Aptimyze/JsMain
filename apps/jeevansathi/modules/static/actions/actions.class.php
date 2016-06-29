@@ -679,10 +679,8 @@ public function executeAppredirect(sfWebRequest $request)
 
 
 
-  public function executeVerifyEmailAction($request)
+  public function executeVerifyEmail($request)
   {
-
-
   $loggedInProfile=LoggedInProfile::getInstance();
   $profileid=$loggedInProfile->getPROFILEID();
   $sourceEmail=$request->getParameter('emailId');
@@ -693,13 +691,14 @@ public function executeAppredirect(sfWebRequest $request)
       $this->wrongEmail=0;
       $paramArr=array('VERIFY_EMAIL'=>'Y');
       JPROFILE::getInstance('')->edit($paramArr, $profileid, 'PROFILEID');
-      (new NEWJS_EMAIL_CHANGE_LOG())->markAsVerified($profileid)
+      (new NEWJS_EMAIL_CHANGE_LOG())->markAsVerified($profileid);
   
     }
     if(MobileCommon::isMobile())
       $this->setTemplate('jsmsEmailVerified');
-    else
-      $this->setTemplate('jspcEmailVerified'); 
+    else{
+       $this->setTemplate('jspcEmailVerified'); 
+    }
   } 
 
 

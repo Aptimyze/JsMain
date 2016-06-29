@@ -1,5 +1,5 @@
 <?php
-class EMAIL_VER_MAILER extends TABLE
+class MAIL_EMAIL_VER_MAILER extends TABLE
 {
         public function __construct($dbname="")
         {
@@ -10,17 +10,16 @@ class EMAIL_VER_MAILER extends TABLE
 	/**
 	  * 
 	**/
-	public function makeEntry($info)
+	public function makeEntry($receiver,$sent)
 	        {
 	                try
 	                {//print_r($pid);die;
 
 
-							$sql = "INSERT IGNORE INTO  MAIL.SHORTLISTED_PROFILES (RECEIVER,COUNTS,DATE) VALUES(:PROFILEID,:USERSENDER,:COUNT,now())";
+							$sql = "INSERT INTO  MAIL.EMAIL_VER_MAILER (RECEIVER,TIME,SENT) VALUES(:PROFILEID,now(),:SENT)";
 							$res = $this->db->prepare($sql);
 				            $res->bindValue(":PROFILEID", $info['profileId'], PDO::PARAM_INT);
-				            $res->bindValue(":USERSENDER",implode(',',$info['users']), PDO::PARAM_STR);
-				            $res->bindValue(":COUNT", count($info['users']), PDO::PARAM_INT);
+				            $res->bindValue(":SENT", $sent, PDO::PARAM_INT);
 	                		$res->execute();    
 	                }
 	                catch(PDOException $e)
@@ -45,29 +44,6 @@ class EMAIL_VER_MAILER extends TABLE
 	                        throw new jsException($e);
 	                }
 	        }
-	public function SelectMailerData($totalScript,$currentScript)
-	        {
-	                try
-	                {
-							$sql = "SELECT ID,RECEIVER,USERS,COUNTS,DATE FROM MAIL.SHORTLISTED_PROFILES WHERE SENT IS NULL AND RECEIVER%:totalScript=:currentScript";
-							$res = $this->db->prepare($sql);
-				           // $res->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
-							$res->bindValue(":currentScript", $currentScript, PDO::PARAM_INT);
-                			$res->bindValue(":totalScript", $totalScript, PDO::PARAM_INT);
-	                		$res->execute();    
-	                		while($row = $res->fetch(PDO::FETCH_ASSOC))
-	                		{
-								$profileMailData[$row['RECEIVER']][] =$row['USERS'];
-								$profileMailData['COUNT'][]=$row['COUNTS'];
-							}
-							return $profileMailData;
-	                }
-	                catch(PDOException $e)
-	                {
-	                        throw new jsException($e);
-	                }
-	        }
-
 	        public function EmptyMailer()
 	        {
 	                try

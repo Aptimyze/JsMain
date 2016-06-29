@@ -212,10 +212,10 @@ EOF;
                         unset($countArr);
         		}
 
-         if($mailer_key[0]=='SHORTLISTED_PROFILES_MAILER')
+         if($mailer_key[0]=='EMAIL_VER_MAILER')
                 {
-                        $dppMailerLogObj = new MAIL_SHORTLISTED_PROFILES();
-                        $countArr = $dppMailerLogObj->getMailCountForRange();
+                        $mailVerOb = new MAIL_EMAIL_VER_MAILER();
+                        $countArr = $mailVerOb->getMailCountForRange();
                         $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
                         unset($countArr);
                 }        

@@ -216,6 +216,17 @@ jspcStaticPageSuccess:
   javascripts:    [jspc/static/static_js]
   layout: jspcLayout
 
+jspcEmailVerifiedSuccess:
+  http_metas:
+    X-UA-Compatible:    IE=edge
+  stylesheets:    []
+  javascripts:    []
+  layout: jspcLayout
+
+jsmsEmailVerifiedSuccess:
+  stylesheets:    []
+  javascripts:    []
+  layout: jsmsMobLayout
 deleteOptionSuccess:
    stylesheets: [-*,jsms/settings/settings_css]
    javascripts: []

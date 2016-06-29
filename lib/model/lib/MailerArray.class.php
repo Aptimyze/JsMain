@@ -69,7 +69,7 @@
 
 '61'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'SHORTLISTED','URL'=>'search/shortlisted','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '62'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'BASIC_DETAILS','URL'=>'profile/viewprofile.php','OTHER_GET_PARAMS'=>'ownview=1&EditWhatNew=Basic','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
-'63'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'EMAIL_VER_SUCCESS','URL'=>'common/verifyEmail','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N')
+'63'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'EMAIL_VER_SUCCESS','URL'=>'static/verifyEmail','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N')
 
 
 
@@ -289,6 +289,7 @@ private static $variableArray=array(
 
 'SHORTLISTED'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'1000','MAX_LENGTH_SMS'=>'255','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'NA'),
 'BASIC_DETAILS'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'255','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'about basic details layer on my profile page'),
+'EMAIL_VER_SUCCESS'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'255','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'Email Verification'),
 
 
 );
