@@ -34262,8 +34262,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                     validRoster = view.model.get('validRoster');
                     //console.log(validRoster);
                     //if subscription is either "to"/"both", then add in list
-                    if(validRoster == true)
-                    {
+                    if(validRoster == true){
                         var vcardObj={},userid = contact.attributes.id;
                         //get vcard of this user
                         converse.getVCard(userid,function (iq) {

@@ -168,39 +168,35 @@ function xmlToJson(xml) {
     return obj;
 }
 /*invokePluginAddlisting
-function to add roster item with vcard details in listing
-* @inputs:listObject,vcardObj,key(add node/update status)
+function to add roster item with vcard details or update roster item details in listing
+* @inputs:listObject,vcardObj,key(create_list/add_node/update_status)
 */
-function invokePluginAddlisting(listObject,vcardObj,key)
-{
+function invokePluginAddlisting(listObject,vcardObj,key){
     //console.log(listObject);
     //console.log(vcardObj); //to be cached---ankita
     var listNodeObj = {"rosterDetails":listObject.attributes,"vcardDetails":vcardObj};
-    if(key=="add_node")
-    {
-        if(listCreationDone == false)
-        {
+    if(key=="add_node"){
+        if(listCreationDone == false){   //create list with n nodes
             listingInputData.push(listNodeObj);
-            if(listingInputData.length == chatConfig.Params[device].initialRosterLimit)
-            {
+            if(listingInputData.length == chatConfig.Params[device].initialRosterLimit){
                 key = "create_list";
                 console.log("list created after adding "+listingInputData.length+" nodes");
                //plugin.addInList(listingInputData,key); 
                console.log(listingInputData);
                listCreationDone = true;
             }
-        }
-        else
-        {
+        }else{
+            var nodeArr = [];   //add single node after list creation
+            nodeArr.push(listNodeObj);
             console.log("adding single node");
-            console.log([listNodeObj]);
-            //plugin.addInList([listNodeObj],key);
+            console.log(nodeArr);
+            //plugin.addInList(nodeArr,key);
         }
-    }
-    else if(key=="update_status")
-    {
+    }else if(key=="update_status"){
+        var nodeArr = [];              //update existing user status in listing
+        nodeArr.push(listNodeObj);
         console.log("updating status");
-        console.log([listNodeObj]);
-        //plugin.addInList([listNodeObj],key);
+        console.log(nodeArr);
+        //plugin.addInList(nodeArr,key);
     }
 }
