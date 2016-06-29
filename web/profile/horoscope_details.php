@@ -294,7 +294,7 @@ include_once(JsConstants::$docRoot."/classes/ProfileReplaceLib.php");
 	function update_astrodetails($profileid,$ms_data="",$mtongue="")
 	{
 		$objUpdate = JProfileUpdateLib::getInstance();
-		$objReplace = JProfileUpdateLib::getInstance();
+		$objReplace = ProfileReplaceLib::getInstance();
 		if(!$ms_data)
 		{
 			//$fp[0] ="$profileid;1976-07-17;00:11:00;Noida, Uttar Pradesh;India;28N35'00;077E20'00;-5:30;0;175.823489;90.788770;333.367421;132.414220;92.151259;31.476198;98.666959;101.372354;195.261664;15.261664;0;0;1;0;1;1;5;3";
