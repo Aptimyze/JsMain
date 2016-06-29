@@ -34237,7 +34237,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                         // finding the correct position in positionContact
                         console.log("ankita_changing_status"); //ankita-status change
                         console.log(contact);
-                        invokePluginAddlisting(contact,{},"update_status");  
+                        invokePluginManagelisting(contact,{},"update_status");  
                         this.model.contacts.sort();
                         this.positionContact(contact).render();
                     }, this);
@@ -34285,7 +34285,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                         converse.getVCard(userid,function (iq) {
                             console.log("ankita_fetching vcard...."+userid);
                             vcardObj = xmlToJson($(iq).children('vCard')[0]);
-                            invokePluginAddlisting(contact,vcardObj,"add_node");     
+                            invokePluginManagelisting(contact,vcardObj,"add_node");     
                         });
                     }
                     if (view.mayBeShown()) {

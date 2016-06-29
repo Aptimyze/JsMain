@@ -174,14 +174,15 @@ function to add roster item with vcard details or update roster item details in 
 * @inputs:listObject,vcardObj,key(create_list/add_node/update_status)
 */
 
-function invokePluginAddlisting(listObject,vcardObj,key){
+function invokePluginManagelisting(listObject,vcardObj,key){
     //console.log(listObject);
     //console.log(vcardObj); //to be cached---ankita
     var listNodeObj = {"rosterDetails":listObject.attributes,"vcardDetails":vcardObj};
     if(key=="add_node"){
         if(listCreationDone == false){   //create list with n nodes
             listingInputData.push(listNodeObj);
-            if(listingInputData.length == chatConfig.Params[device].initialRosterLimit){
+            console.log(chatConfig.Params[device].initialRosterLimit["nodesCount"]);
+            if(listingInputData.length == chatConfig.Params[device].initialRosterLimit["nodesCount"]){
                 key = "create_list";
                 console.log("list created after adding "+listingInputData.length+" nodes");
                 //plugin.addInList(listingInputData,key); 
@@ -232,5 +233,23 @@ function eraseCookie(name) {
     console.log("erasing cookie");
 }
 
+$(document).ready(function(){
+ setCreateListingInterval();   //to be decided where to call - ankita
+});
 
-
+/*setCreateListingInterval
+* sets time interval after which json data will be sent to plugin to create list if not created
+* @params: none
+*/
+function setCreateListingInterval()
+{
+    setTimeout(function(){
+        if(listCreationDone==false)
+        {
+            console.log("triggering list creation as time interval exceeded");
+            listCreationDone = true;
+            console.log(listingInputData);
+            //plugin.addInList(listingInputData,"create_list");    
+        }
+    },chatConfig.Params[device].initialRosterLimit["timeInterval"]);
+}
