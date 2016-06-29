@@ -113,7 +113,10 @@ class chatActions extends sfActions
         $apiResponseHandlerObj = ApiResponseHandler::getInstance();
         $loginData = $request->getAttribute("loginData");
         if($loginData){
-            $response['jid'] = 'a1@localhost';
+            //$username = $loginData['USERNAME'];
+            //$jid = $username."@localhost";
+            $jid = $request->getParameter('jid'); //Will be commented later nitish
+            $response['jid'] = $jid;
             $response['password'] = '123';
             $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
         }
