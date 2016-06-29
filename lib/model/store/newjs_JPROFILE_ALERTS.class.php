@@ -160,5 +160,43 @@ class newjs_JPROFILE_ALERTS extends TABLE
             throw new jsException($e);
         }
     }
+
+    /**
+     * @param $arrRecordData
+     * @return mixed
+     */
+    public function insertRecord($arrRecordData)
+    {
+        if(!is_array($arrRecordData))
+            throw new jsException("","Array is not passed in InsertRecord OF newjs_JPROFILE_ALERTS.class.php");
+
+        try{
+            $szINs = implode(',',array_fill(0,count($arrRecordData),'?'));
+
+            $arrFields = array();
+            foreach($arrRecordData as $key=>$val)
+            {
+                $arrFields[] = strtoupper($key);
+            }
+            $szFields = implode(",",$arrFields);
+
+            $sql = "INSERT IGNORE INTO newjs.JPROFILE_ALERTS ($szFields) VALUES ($szINs)";
+            $pdoStatement = $this->db->prepare($sql);
+
+            //Bind Value
+            $count =0;
+            foreach ($arrRecordData as $k => $value)
+            {
+                ++$count;
+                $pdoStatement->bindValue(($count), $value);
+            }
+            $pdoStatement->execute();
+            return true;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    }
 }
 ?>

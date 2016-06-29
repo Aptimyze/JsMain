@@ -90,5 +90,25 @@ class NEWJS_HOROSCOPE_FOR_SCREEN extends TABLE{
 			throw new jsException($e);
 		}
 	}
+
+	/**
+	 * @param $iProfileID
+	 * @param $blobHoroscope
+	 * @param $cHoroscope
+	 */
+	public function insertRecord($iProfileID,$blobHoroscope,$cHoroscope='')
+	{
+		try{
+			$sql = "INSERT INTO HOROSCOPE_FOR_SCREEN (`PROFILEID`,`HOROSCOPE`,`UPLOADED`) VALUE (:PID,:HORO,:UPLOADED)";
+			$pdoStatement = $this->db->prepare($sql);
+			$pdoStatement->bindValue(":PID", $iProfileID, PDO::PARAM_INT);
+			$pdoStatement->bindValue(":HORO", $blobHoroscope);
+			$pdoStatement->bindValue(":UPLOADED", $cHoroscope);
+			$pdoStatement->execute();
+			return true;
+		} catch (PDOException $ex) {
+			throw new jsException($ex);
+		}
+	}
 }
 ?>
