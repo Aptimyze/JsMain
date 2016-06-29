@@ -34255,7 +34255,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                 addContact: function (contact) {
                    // console.log("adding new contact....."+contact.get('id'));
                     var view = new converse.RosterContactView({model: contact});
-                    var validRoster = view.model.get('validRoster'); 
+                    var validRoster = view.model.get('validRoster'); //remove-ankita if not req
                   
                     this.add(contact.get('id'), view);
                     view = this.positionContact(contact).render();

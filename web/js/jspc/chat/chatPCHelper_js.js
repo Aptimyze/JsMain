@@ -180,20 +180,19 @@ function invokePluginAddlisting(listObject,vcardObj,key)
     {
         if(listCreationDone == false)
         {
-            console.log("creating list initially-"+listCreationDone);
             listingInputData.push(listNodeObj);
-            console.log(listingInputData);
             if(listingInputData.length == chatConfig.Params[device].initialRosterLimit)
             {
                 key = "create_list";
-                console.log("list created"+listingInputData.length);
+                console.log("list created after adding "+listingInputData.length+" nodes");
                //plugin.addInList(listingInputData,key); 
+               console.log(listingInputData);
                listCreationDone = true;
             }
         }
         else
         {
-            console.log("adding nodes later");
+            console.log("adding single node");
             console.log([listNodeObj]);
             //plugin.addInList([listNodeObj],key);
         }
