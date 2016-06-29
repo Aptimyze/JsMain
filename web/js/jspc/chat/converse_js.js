@@ -29701,8 +29701,8 @@ return Backbone.BrowserStorage;
                     if (!$el.length) {
                         $el = $('<div id="conversejs">');
                         //console.log($el);
-                        //console.log("ankita");
-                        $('body').append($el);
+                        //console.log("ankita_append custom converse templates");
+                        //$('body').append($el);
                     }
                     //console.log(converse.templates.chats_panel());
                     $el.html(converse.templates.chats_panel());
@@ -34254,7 +34254,8 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
 
                 addContact: function (contact) {
                     console.log("adding new contact....."+contact.get('id'));
-                    var view = new converse.RosterContactView({model: contact}),validRoster = view.model.get('validRoster');
+                    var view = new converse.RosterContactView({model: contact});
+                    var validRoster = view.model.get('validRoster');
                     
                     console.log(validRoster);
                     //if subscription is either "to"/"both", then add in list

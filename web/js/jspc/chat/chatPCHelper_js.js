@@ -98,8 +98,8 @@ function mapListingJsonToHTML(jsonData)  //used for old plugin - ankita
 */
 function updateListing(rosterData) //used for old plugin - ankita
 {
-    console.log("roster update");
-    console.log(rosterData);
+    //console.log("roster update");
+    //console.log(rosterData);
     var newRosterHTML = "",groupid;
     groupid = chatConfig.Params[device].rosterDisplayGroups[rosterData.groups[0]]; //group id mapping
     //handle if no user in group - case ankita
@@ -172,7 +172,7 @@ function to add roster item with vcard details in listing
 */
 function invokePluginAddlisting(listObject,vcardObj,key)
 {
-    console.log("invokePluginAddlisting...."+listObject.id);
+    console.log("invokePluginAddlisting...."+listObject.id+"---"+key);
     console.log(listObject);
     console.log(vcardObj); //to be cached---ankita
     var listNodeObj = [{"rosterDetails":listObject.attributes,"vcardDetails":vcardObj}];
