@@ -21545,6 +21545,14 @@ Strophe.Connection.prototype = {
     },
 
     _sasl_challenge_cb: function(elem) {
+        console.log("Elem**");
+        console.log(elem);
+        console.log("##");
+        console.log("Node value:");
+        //var x = elem.getElementsByTagName("challenge");
+        //var x = e.getElementsByTagName("challenge");
+//        console.log(x);
+        console.log("%%");
       var challenge = Base64.decode(Strophe.getText(elem));
       var response = this._sasl_mechanism.onChallenge(this, challenge);
 
@@ -21554,6 +21562,9 @@ Strophe.Connection.prototype = {
       if (response !== "") {
         stanza.t(Base64.encode(response));
       }
+      console.log("Response&&&");
+      console.log(response);
+      console.log("&&&");
       this.send(stanza.tree());
       return true;
     },
@@ -22213,7 +22224,9 @@ Strophe.SASLSHA1.prototype.onChallenge = function(connection, challenge, test_cn
     responseText += ",p=" + Base64.encode(SHA1.binb2str(clientKey));
     return responseText;
   }.bind(this);
-
+console.log("AUTHSTR");
+console.log(auth_str);
+console.log("**");
   return auth_str;
 };
 

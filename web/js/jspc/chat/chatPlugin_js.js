@@ -27,7 +27,8 @@
                 hoverBoxClass: '.info-hover',
                 commonHoverClass: '.profileIcon',
                 chatPanelBtmId: '#chatBottomPanel',
-                loginChatPanel: '<div class="pos_fix chatbg chatpos1 nz20 js-openOutPanel"><div class="fullwid txtc fontlig pos-rel" id="js-loginPanel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarOut"></i> </div><div> <img src="images/chat-profile-pic.jpg" class="chatmt1"/> </div><button id="js-chatLogin" class="chatbtnbg1 mauto chatw1 colrw f14 brdr-0 lh40 cursp nchatm5">Login to Chat</button></div></div>',
+                outerEle:'<div class="pos_fix chatbg chatpos1 nz20 js-openOutPanel"></div>',
+                loginChatPanel: '<div class="fullwid txtc fontlig pos-rel" id="js-loginPanel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarOut"></i> </div><div> <img src="images/chat-profile-pic.jpg" class="chatmt1"/> </div><button id="js-chatLogin" class="chatbtnbg1 mauto chatw1 colrw f14 brdr-0 lh40 cursp nchatm5">Login to Chat</button></div>',
                 minChatPanelHTML: '<div class="nchatbg1 nchatw2 nchatp6 pos_fix colrw nchatmax js-minpanel cursp"><ul class="nchatHor clearfix f13 fontreg"> <li>      <div class="pt5 pr10">ONLINE MATCHES</div></li><li><div class="bg_pink disp-tbl txtc nchatb"><div class="vmid disp-cell">2</div></div></li><li class="pl10"> <i class="nchatspr nchatopen"></i> </li></ul></div>',
                 chatHeaderHTML: '<div class="nchatbg1 nchatp2 clearfix pos-rel nchathgt1"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarIn"></i> </div><div class="fl"> <img src="images/chat-profile-small.jpg" class="nchatp4"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp">Logout</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>',
                 TabsOpt: '<div class="clearfix"><ul class="nchattab1 clearfix fontreg"><li id="tab1" class="active pos-rel" style="width:53%"><p>ONLINE MATCHES</p><div class="showlinec"></div></li><li id="tab2" class="pos-rel" style="width:46%"><p>ACCEPTED</p><div class="showlinec"></div></li></ul></div>  <div id="nchatDivs" class="nchatscrollDiv" style="height:300px"><div class="showtab1 js-htab"> </div><div class="showtab2 js-htab disp-none"></div></div>',
@@ -48,10 +49,12 @@
                         console.log(data.statusCode);
                         if(data.responseStatusCode == "0"){
                             console.log("Login done");
+                            createCookie("chatAuth","true");
                             loginChat();
                         }
                         else{
                             console.log(data.responseMessage);
+                            eraseCookie("chatAuth");
                         }
                     }
                 });
@@ -141,42 +144,66 @@
                     });
                 }
             };
+			//function to add divs
+            function addListingDivs(){
+                $(self.options.container).append('<div class="fullwid fontlig nchatcolor" id="js-lsitingPanel"/> ');
+                $('#js-lsitingPanel').append('<div class="nchatbg1 nchatp2 clearfix pos-rel nchathgt1"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarIn"></i> </div><div class="fl"> <img src="images/chat-profile-small.jpg" class="nchatp4"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp">Logout</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>');
+                $(self.options.listingPanelId).append(self.options.TabsOpt);
+                $(self.options.tab1class).append(self.options.Tab1Data);
+                $(self.options.tab2class).append(self.options.Tab2Data);
+                //add hover box HTML
+                $(elem).append(self.options.HoverBoxHTML);
+                //calling height function for calculating the height of listing panel
+                chatScrollHght();
+                //rebind the min chat window again as new dom has been added
+                $(self.options.minimizeButtonIn).on('click', minChatPanel);
+                //on click of name show the panel with logout option
+                $(self.options.logoutPanelToggle).on('click', togglePanel);
+                //logoutChat
+                $(self.options.logoutChat).on('click', logOutChat);
+                //tabs clicked: passing the id of the tab to the function
+                $(self.options.chatTab1).on('click', function() {
+                    TabClick($(this));
+                });
+                $(self.options.listPanelInnerId).mCustomScrollbar({
+                    theme: "light"
+                });
+                $(self.options.listingLiClass).on('mouseenter mouseleave', 'li', setHoverPosition);
+                $(elem).on('click','.profileIcon', chatPanelsBox);
+            }
+
 			 //start:on click og login button this function is called from $(self.options.loginChatButton).on('click', loginChat);
             function loginChat() 
 			{
+                console.log("in login chat");
 				initiateChatConnection();	
             };
 			//start: this function add HTML structure once user has logged in chat,invoked when data for listing has been generated			
             self.addListingBody = function()
-			{    
+			{    console.log("add listing body");
+                console.log($(self.options.listingPanelId).length);
+                console.log("***");
                 if ($(self.options.listingPanelId).length == 0) 
                 {
-                    $(self.options.loginPanelId).fadeOut('slow', function() {
-                        $(self.options.container).append('<div class="fullwid fontlig nchatcolor" id="js-lsitingPanel"/> ');
-                        $('#js-lsitingPanel').append('<div class="nchatbg1 nchatp2 clearfix pos-rel nchathgt1"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarIn"></i> </div><div class="fl"> <img src="images/chat-profile-small.jpg" class="nchatp4"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp">Logout</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>');
-                        $(self.options.listingPanelId).append(self.options.TabsOpt);
-                        $(self.options.tab1class).append(self.options.Tab1Data);
-                        $(self.options.tab2class).append(self.options.Tab2Data);
-                        //add hover box HTML
-                        $(elem).append(self.options.HoverBoxHTML);
-                        //calling height function for calculating the height of listing panel
-                        chatScrollHght();
-                        //rebind the min chat window again as new dom has been added
-                        $(self.options.minimizeButtonIn).on('click', minChatPanel);
-                        //on click of name show the panel with logout option
-                        $(self.options.logoutPanelToggle).on('click', togglePanel);
-                        //logoutChat
-                        $(self.options.logoutChat).on('click', logOutChat);
-                        //tabs clicked: passing the id of the tab to the function
-                        $(self.options.chatTab1).on('click', function() {
-                            TabClick($(this));
+                    console.log("inside if");
+                    if(readCookie('chatAuth') == 'true'){
+                        console.log($(self.options.loginPanelId).css('display'));
+                        if($(self.options.loginPanelId).css('display') == 'block'){
+                            $(self.options.loginPanelId).fadeOut('slow', function() {
+                                addListingDivs();
+                            });
+                        }
+                        else{
+                            addListingDivs();
+                        }
+                         
+                    }
+                    else{
+                        
+                        $(self.options.loginPanelId).fadeOut('slow', function() {
+                            addListingDivs();
                         });
-                        $(self.options.listPanelInnerId).mCustomScrollbar({
-                            theme: "light"
-                        });
-                        $(self.options.listingLiClass).on('mouseenter mouseleave', 'li', setHoverPosition);
-                        $(elem).on('click','.profileIcon', chatPanelsBox);
-                    });
+                    }
                 } 
                 else 
                 {
@@ -252,6 +279,7 @@
 			function logOutChat() 
 			{
                 togglePanel();
+                eraseCookie('chatAuth');
                 $(self.options.listingPanelId).fadeOut('slow', function() {
                     $(self.options.loginPanelId).fadeIn('slow');
                 })
@@ -542,7 +570,10 @@
 			{
 				try
 				{
-					$(elem).append(self.options.loginChatPanel);
+                    $(elem).append(self.options.outerEle);
+                    if(!(readCookie("chatAuth") == "true")){
+                        $(self.options.container).append(self.options.loginChatPanel);
+                    }
 					//check for width
 					if(checkWidth())
 					{
@@ -556,6 +587,10 @@
 						$(self.options.container).addClass('wid20p');
 					}
 					$(self.options.container).css('height', getHeight());
+                    if(readCookie("chatAuth") == "true"){
+                        console.log("checking cookie");
+                        loginChat();
+                    }
 				}
 				catch(e)
 				{
