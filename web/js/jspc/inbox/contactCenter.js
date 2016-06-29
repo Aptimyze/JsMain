@@ -1,6 +1,11 @@
 /**
 * This file is contactCenter.js for loading contact center tuples
 */
+
+var emailReg = /([\w\_]+@([\w]+\.)+[\w]{2,4})/g;
+var phoneReg = /([0-9]{10,}|[0-9]{3}-[0-9]{6,}|[0-9]{4}-[0-9]{6,}|[0-9]{4}-[0-9]{3}-[0-9]{4,}|[0-9]{3}-[0-9]{3}-[0-9]{4,}|[0-9]{3}\s[0-9]{3}\s[0-9]{4,}|[0-9]{4}\s[0-9]{3}\s[0-9]{4,}|[0-9]{3}\s[0-9]{3}\s[0-9]{3}\s[0-9]{3,}|[0-9]{4}\s[0-9]{6,}|[0-9]{3}\s[0-9]{7,})/g;
+var matchedStr,data,newData;
+
 /** 
 * This function will set horizontal line below active horizontal tab
 * 
@@ -856,5 +861,25 @@ $(document).ready(function() {
 			var vspRedirectUrl = "/search/viewSimilarProfile?profilechecksum="+profilechecksum+"&stype="+stype+"&SIM_USERNAME="+username+"&contactedProfileDetails="+showContactedUsernameDetails;
 			window.location.href = vspRedirectUrl;
 		});
+
+			$(".js-hideDetail").each(function(index, element) {
+				data = $(element).html();
+				if(data != ""){
+					if(data.match(emailReg) != null){
+						matchedStr = data.match(emailReg);
+						$.each(matchedStr, function(index, value){
+							data = data.replace(value, "<span class='f13 fontreg color11 showText'>&lt;Email visibile on accept&gt;</span><span class='disp-none hiddenStr'>"+value+"</span>");
+						});
+						$(element).html(data);
+					}
+					if(data.match(phoneReg) != null){
+						matchedStr = data.match(phoneReg);
+						$.each(matchedStr, function(index, value){
+							data = data.replace(value, "<span class='f13 fontreg color11 showText'>&lt;Phone number visibile on accept&gt;</span><span class='disp-none hiddenStr'>"+value+"</span>");
+						});
+						$(element).html(data);
+					}
+				}
+        	});
 	});
 

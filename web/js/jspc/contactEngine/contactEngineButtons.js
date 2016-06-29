@@ -65,6 +65,12 @@ ajaxData=this.makePostDataForAjax(this.profileChecksum);
           data:ajaxData,
           context: this,
           success: function(response,data) {
+		if(data.name=="ACCEPT")
+		{
+			$('.js-showDetail'+data.profileChecksum).find(".showText").each(function(index, element) {
+				$(this).next().show(),$(this).remove();
+			});
+		}
           	if(data.name =="MESSAGE_WRITE")
 			{
 				var messageKeyName="MESSAGE_WRITE-"+data.profileChecksum+"-"+data.pageSource;
