@@ -24,7 +24,7 @@ class SolrRequest implements RequestHandleInterface
                         $profileObj = LoggedInProfile::getInstance('newjs_master');
                         if($profileObj->getPROFILEID())
                 	{ 
-                        	if($profileObj->getPROFILEID()%2==0)
+                        	if($profileObj->getPROFILEID()%7>2)
 	                                $this->solrServerUrl = JsConstants::$solrServerUrl1."/select";
         	                else
                 	                $this->solrServerUrl = JsConstants::$solrServerUrl."/select";
