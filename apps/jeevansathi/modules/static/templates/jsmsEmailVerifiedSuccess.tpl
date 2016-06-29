@@ -49,7 +49,7 @@ $(function(){
         <!--start:content box-->
         <div class="dnd_pad1" id="dnd_cnt">
           <div class="disptbl">
-              <div class="pad16 txtc white f14 fontlig dispcell vertmid">
+              <div class="pad16 txtc white f16 fontlig dispcell vertmid">
                   <div>
 Your email has been verified.</div>
                 </div>
