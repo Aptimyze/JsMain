@@ -50,7 +50,7 @@ function initiateChatConnection()
                 use_vcards:chatConfig.Params[device].use_vcards,
                 authentication:'login',
                 listing_data:{},
-                credentials_url: 'http://localhost/api/v1/chat/fetchCredentials',
+                credentials_url: 'http://localhost/api/v1/chat/fetchCredentials?jid='+username,
                 rosterDisplayGroups:chatConfig.Params[device].rosterDisplayGroups,
                 //prebind_url: 'http://localhost/api/v1/chat/authenticateChatSession?jid=a1@localhost',  
             }),function(){
