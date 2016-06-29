@@ -21,7 +21,7 @@ class ProfileDocumentVerificationByUserService
                 foreach($docprefix as $i=>$pre){
                         if(isset($docsData[$pre.'_PROOF_TYPE']) && $docsData[$pre.'_PROOF_TYPE'] != '' && isset($docsData[$pre.'_PROOF_VAL']) && !empty($docsData[$pre.'_PROOF_VAL'])){
                                 $dataArray[$i]['PROOF_KEY'] = $pre;
-                                $dataArray[$i]['PROOF_VAL'] = $this->performUpload($docsData[$pre.'_PROOF_VAL'], $profileId,$pre);
+                                $dataArray[$i]['PROOF_VAL'] = $this->performUpload($docsData[$pre.'_PROOF_VAL'], $profileId);
                                 $dataArray[$i]['PROOF_TYPE'] = $docsData[$pre.'_PROOF_TYPE'];
                         }
                         
@@ -72,10 +72,11 @@ class ProfileDocumentVerificationByUserService
 	* @param profileId : profile for which documents are uploaded
 	* @return docs : array of documents with document id ,url and type
 	*/
-	public function performUpload($docs,$profileId,$pre)
+	public function performUpload($docs,$profileId)
 	{
-                $saveUrl = $this->getSaveUrlDoc($profileId,$docs["name"],$pre);
-                $displayUrl = $this->getDisplayUrlDoc($profileId,$docs["name"],$pre);
+                $prefix = rand(0,100000);
+                $saveUrl = $this->getSaveUrlDoc($profileId,$docs["name"],$prefix);
+                $displayUrl = $this->getDisplayUrlDoc($profileId,$docs["name"],$prefix);
                 $pictureFunctionsObj = new PictureFunctions();
                 $result = $pictureFunctionsObj->moveImage($docs["tmp_name"],$saveUrl);
                 chmod($saveUrl,0777);
