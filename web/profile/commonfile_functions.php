@@ -512,7 +512,7 @@ $js_arr[]=array("jspc/search/scrollBar"    => "1");
 $js_arr[]=array("jspc/common/searchDropdown_js"     => "2");
 $js_arr[]=array("jspc/search/searchTuples"     => "2");
 $js_arr[]=array("jspc/search/jspcSuccessStory_js"    => "1");
-$js_arr[]=array("jspc/inbox/contactCenter"              => "11");
+$js_arr[]=array("jspc/inbox/contactCenter"               => "12");
 $js_arr[]=array("jspc/common/jqueryRangeSlider"     => "2");
 $js_arr[]=array("jspc/search/inview"   => "1");
 $js_arr[]=array("jspc/photo/photoRequest_js"    => "1");
@@ -565,7 +565,7 @@ $js_arr[]=array("jspc/profile/edit/profile/jspcEditProfile_js"             => "1
 $js_arr[]=array("jspc/success_story/foggy"  => "1");
 $js_arr[]=array("jspc/success_story/resizeIe"  => "1");
 $js_arr[]=array("jspc/contactEngine/contactEngine"       => "6");
-$js_arr[]=array("jspc/contactEngine/contactEngineButtons"       => "6");
+$js_arr[]=array("jspc/contactEngine/contactEngineButtons"        => "7");
 $js_arr[]=array("jspc/search/advancedSearch"     => "2");
 $js_arr[]=array("jspc/common/jquery_mCustomScrollbar"  => "1");
 $js_arr[]=array("jspc/success_story/jqueryFilestyle" => "1");
