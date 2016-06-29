@@ -11,7 +11,8 @@ class NEWJS_EMAIL_CHANGE_LOG extends TABLE {
 	{
 		try	 	
 		{	
-			$sql="UPDATE newjs.EMAIL_CHANGE_LOG SET STATUS = 'Y' WHERE PROFILEID = :PROFILEID AND EMAIL=':EMAIL' ORDER BY CHANGE_DATE DESC LIMIT 1";
+			$timeNow=(new DateTime)->format('Y-m-j H:i:s');
+			$sql="UPDATE newjs.EMAIL_CHANGE_LOG SET STATUS = 'Y', VERIFY_DATE='$timeNow' WHERE PROFILEID = :PROFILEID AND EMAIL=:EMAIL ORDER BY CHANGE_DATE DESC LIMIT 1";
 			$prep=$this->db->prepare($sql);
 			$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
 			$prep->bindValue(":EMAIL",$email,PDO::PARAM_STR);
