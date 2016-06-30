@@ -458,7 +458,7 @@ public function fetchProfiles($processObj)
 						}
 					}
 					// get profiles from field sales allocation log
-					$fieldSalesAllocLog =new incentive_FIELD_SALES_LOG('newjs_slave');
+					$fieldSalesAllocLog =new incentive_FIELD_SALES_LOG();
 					$preDate 	=date("Y-m-d",time()-9*24*60*60);
 					$logProfiles 	=$fieldSalesAllocLog->getProfiles($preDate);
 					if(count($logProfiles)>0){
