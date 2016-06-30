@@ -137,7 +137,7 @@ valid=validateNum(mobileNum,isdNew);
 	}
 
 if (updatedIsd==isdNew && updatedNum==mobileNum){
-	showVerifyLayer();return;
+	//showVerifyLayer();return;
 
 	if(landLineFlag) 
 	{
