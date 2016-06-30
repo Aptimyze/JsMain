@@ -143,6 +143,7 @@ class newjs_JPROFILE_ALERTS extends TABLE
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_STR);
             $prep->bindValue(":VAL", $val, PDO::PARAM_STR);
             $prep->execute();
+            return true;
         }
         catch(PDOException $e) {
             throw new jsException($e);

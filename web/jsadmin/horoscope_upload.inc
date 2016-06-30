@@ -5,6 +5,7 @@
 *       Description     :       Inserts or Update the User's picture information
 **/
 include_once(JsConstants::$docRoot."/classes/ProfileReplaceLib.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 function horoscope_save($profileid,$horoscope_content)
 {
 	//echo "here";
@@ -35,8 +36,13 @@ function horoscope_save($profileid,$horoscope_content)
 	mysql_query_decide($sql) or die("$sql".mysql_error_js());
 
 	//update HOROSCOPE_FOR_SCREEN to set UPLOADED='Y'
-        $sql="UPDATE newjs.HOROSCOPE_FOR_SCREEN SET HOROSCOPE='$horoscope_content',UPLOADED='Y' WHERE PROFILEID='$profileid'";
-        mysql_query_decide($sql) or die("$sql".mysql_error_js()); 
+	$objUpdate = JProfileUpdateLib::getInstance();
+	$result = $objUpdate->updateHOROSCOPE_FOR_SCREEN($profileid,array('HOROSCOPE'=>$horoscope_content,'UPLOADED'=>'Y'));
+	if(false === $result) {
+		die('Issue while updating horoscope at line 42');
+	}
+//        $sql="UPDATE newjs.HOROSCOPE_FOR_SCREEN SET HOROSCOPE='$horoscope_content',UPLOADED='Y' WHERE PROFILEID='$profileid'";
+//        mysql_query_decide($sql) or die("$sql".mysql_error_js());
 
 
 	/********************** CRON PART STARTS ****************************/	
@@ -50,8 +56,12 @@ function horoscope_save($profileid,$horoscope_content)
 	mysql_query_decide($sql) or die("$sql".mysql_error_js());*/
 
 	//query to update the HOROSCOPE_SCREENING='1' in ASTRO_DETAILS table
-	$sql_update="update newjs.ASTRO_DETAILS set HOROSCOPE_SCREENING='1' where PROFILEID='$profileid'";
-	mysql_query_decide($sql_update) or die("$sql_update".mysql_error_js());
+	$result = $objUpdate->updateASTRO_DETAILS($profileid,array('HOROSCOPE_SCREENING'=>'1'));
+	if(false === $result) {
+		die('Issue while updating horoscope at line 61');
+	}
+//	$sql_update="update newjs.ASTRO_DETAILS set HOROSCOPE_SCREENING='1' where PROFILEID='$profileid'";
+//	mysql_query_decide($sql_update) or die("$sql_update".mysql_error_js());
 
 	//query to insert record into newjs.SWAP_JPROFILE
 	$sql_sj="INSERT IGNORE INTO newjs.SWAP_JPROFILE (PROFILEID) VALUES ($profileid)";
