@@ -681,6 +681,7 @@ public function executeAppredirect(sfWebRequest $request)
 
   public function executeVerifyEmail($request)
   {
+
   $loggedInProfile=LoggedInProfile::getInstance();
   $profileid=$loggedInProfile->getPROFILEID();
   $UIDParam=$request->getParameter('EmailUID');
@@ -691,7 +692,7 @@ public function executeAppredirect(sfWebRequest $request)
   sfContext::getInstance()->getController()->forward("static", "logoutPage");
   }
     
-  else 
+  else if($loggedInProfile->getVERIFY_EMAIL()!='Y')
     {   
       $paramArr=array('VERIFY_EMAIL'=>'Y');
       JPROFILE::getInstance('')->edit($paramArr, $profileid, 'PROFILEID');
