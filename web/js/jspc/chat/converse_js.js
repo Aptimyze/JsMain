@@ -29026,8 +29026,14 @@ return Backbone.BrowserStorage;
                     'status': ''
                 }, attributes));
 
-                this.on('destroy', function () { this.removeFromRoster(); }.bind(this));
+                this.on('destroy', function () { 
+                    console.log("ankita_delete contact"+jid);
+                    invokePluginManagelisting(attributes,{},"delete_node");
+                    this.removeFromRoster(); 
+                }.bind(this));
                 this.on('change:chat_status', function (item) {
+                    console.log("changing status 2......444");
+                    console.log(item);
                     converse.emit('contactStatusChanged', item.attributes);
                 });
             },

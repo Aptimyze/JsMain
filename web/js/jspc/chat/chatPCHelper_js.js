@@ -24,7 +24,7 @@ function initiateChatConnection()
     //only for dev env--------------------start:ankita
     var username = "a1@localhost";
     if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
-        username = "a2@localhost";
+        username = "a8@localhost";
     else if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
         username = "a1@localhost";
     //only for dev env--------------------end:ankita
@@ -177,9 +177,14 @@ function to add roster item with vcard details or update roster item details in 
 function invokePluginManagelisting(listObject,vcardObj,key){
     //console.log(listObject);
     //console.log(vcardObj); //to be cached---ankita
-    var listNodeObj = {"rosterDetails":listObject.attributes,"vcardDetails":vcardObj};
+    var listNodeObj = {"rosterDetails":{},"vcardDetails":vcardObj},nodeArr = [];
+    if(typeof listObject.attributes == "undefined")
+        listNodeObj["rosterDetails"] = listObject;
+    else
+        listNodeObj["rosterDetails"] = listObject.attributes;
     if(key=="add_node"){
-        if(listCreationDone == false){   //create list with n nodes
+        if(listCreationDone == false){   
+            //create list with n nodes
             listingInputData.push(listNodeObj);
             console.log(chatConfig.Params[device].initialRosterLimit["nodesCount"]);
             if(listingInputData.length == chatConfig.Params[device].initialRosterLimit["nodesCount"]){
@@ -190,16 +195,23 @@ function invokePluginManagelisting(listObject,vcardObj,key){
                 listCreationDone = true;
             }
         }else{
-            var nodeArr = [];   //add single node after list creation
+           //add single node after list creation
             nodeArr.push(listNodeObj);
             console.log("adding single node");
             console.log(nodeArr);
             //plugin.addInList(nodeArr,key);
         }
-    }else if(key=="update_status"){
-        var nodeArr = [];              //update existing user status in listing
+    }else if(key=="update_status"){             
+        //update existing user status in listing
         nodeArr.push(listNodeObj);
         console.log("updating status");
+        console.log(nodeArr);
+        //plugin.addInList(nodeArr,key);
+    }else if(key=="delete_node")
+    {
+        //remove user from roster in listing
+        nodeArr.push(listNodeObj);
+        console.log("deleting node from roster");
         console.log(nodeArr);
         //plugin.addInList(nodeArr,key);
     }
