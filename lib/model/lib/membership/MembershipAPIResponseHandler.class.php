@@ -1223,6 +1223,7 @@ class MembershipAPIResponseHandler {
             'couponID' => $this->couponCode,
             'device' => $this->device,
             'tracking_params' => $tracking_params,
+            'userProfile' => $this->profileid,
             'backendLink' => array(
                 'fromBackend' => $this->fromBackend,
                 'checksum' => $this->profilechecksum,
