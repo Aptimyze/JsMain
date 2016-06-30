@@ -52,6 +52,7 @@ function initiateChatConnection()
                 listing_data:{},
                 credentials_url: '/api/v1/chat/fetchCredentials?jid='+username,
                 rosterDisplayGroups:chatConfig.Params[device].rosterDisplayGroups,
+                listCreationDone:false,
                 //prebind_url: 'http://localhost/api/v1/chat/authenticateChatSession?jid=a1@localhost',  
             }),function(){
                 console.log("calling callback");
@@ -73,6 +74,16 @@ function fetchConverseSettings(key)
 {
     var value = converse.settings.get(key);
     return value;
+}
+
+/*function setConverseSettings
+* set value of converse settings' key
+* @params:key,value
+* @return:none
+*/
+function setConverseSettings(key,value)
+{
+    converse.settings.set(key,value);
 }
 
 /*function mapListingJsonToHTML
@@ -193,6 +204,7 @@ function invokePluginManagelisting(listObject,vcardObj,key){
                 //plugin.addInList(listingInputData,key); 
                 console.log(listingInputData);
                 listCreationDone = true;
+                setConverseSettings("listCreationDone",true);
             }
         }else{
            //add single node after list creation
@@ -260,6 +272,7 @@ function setCreateListingInterval()
         {
             console.log("triggering list creation as time interval exceeded");
             listCreationDone = true;
+            setConverseSettings("listCreationDone",true);
             console.log(listingInputData);
             //plugin.addInList(listingInputData,"create_list");    
         }
