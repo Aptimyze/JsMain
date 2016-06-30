@@ -56,4 +56,6 @@ class NotificationEnums
       public static $registrationOffsetForNotification = array("CONTACT_VIEWS"=>35);
 
       public static $digestNotificationKeys = array("EOI"=>"EOI_DIGEST");
+      public static $channelArr = array("A_I"=>"Android - Ios","D"=>"Desktop","M"=>"Mobile");	
+
 }
