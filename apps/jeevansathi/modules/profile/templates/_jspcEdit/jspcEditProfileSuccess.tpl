@@ -521,7 +521,7 @@
                                                 ~if $editApiResponse.Contact.ID_PROOF_TYPE.value`
                                                         ~$editApiResponse.Contact.ID_PROOF_TYPE.label_val`
                                                 ~else`
-                                                        Not Filled in
+                                                        Not filled in
                                                 ~/if`
                                         </span>
                                 </p>
@@ -533,7 +533,7 @@
                                                 ~if $editApiResponse.Contact.ADDR_PROOF_TYPE.value`
                                                         ~$editApiResponse.Contact.ADDR_PROOF_TYPE.label_val`
                                                 ~else`
-                                                        Not Filled in
+                                                        Not filled in
                                                 ~/if`
                                         </span>
                                 </p>
