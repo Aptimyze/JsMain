@@ -5,6 +5,7 @@ include(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 include("comfunc_sums.php");
 include("bounced_mail.php");
 include_once($_SERVER["DOCUMENT_ROOT"]."/classes/Membership.class.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
 $data=authenticated($cid);
 $flag=0;
@@ -204,7 +205,7 @@ if(isset($data))
 		{
 			$flag=1;
 
-			$sql_act = "SELECT ACTIVATED FROM newjs.JPROFILE WHERE PROFILEID = '$profileid'";
+			$sql_act = "SELECT ACTIVATED,PREACTIVATED FROM newjs.JPROFILE WHERE PROFILEID = '$profileid'";
 			$res_act = mysql_query_decide($sql_act) or die($sql_act);	
 			$row_act = mysql_fetch_array($res_act);
 			
@@ -216,8 +217,18 @@ if(isset($data))
                                 passthru($cmd);
                         }
 
-			$sql="UPDATE newjs.JPROFILE SET PREACTIVATED=IF(ACTIVATED<>'D',ACTIVATED,PREACTIVATED), ACTIVATED='D', ACTIVATE_ON=now(),activatedKey=0 where PROFILEID='$profileid'";
-                        mysql_query_decide($sql) or die(mysql_error_js());
+			/*$sql="UPDATE newjs.JPROFILE SET PREACTIVATED=IF(ACTIVATED<>'D',ACTIVATED,PREACTIVATED), ACTIVATED='D', ACTIVATE_ON=now(),activatedKey=0 where PROFILEID='$profileid'";
+                        mysql_query_decide($sql) or die(mysql_error_js());*/
+                        if($row_act['ACTIVATED']!='D')
+                                $preActivated =$row_act['ACTIVATED'];
+                        else
+                                $preActivated =$row_act['PREACTIVATED'];
+
+                        $jprofileObj    =JProfileUpdateLib::getInstance();
+			$dateNew        =date("Y-m-d");
+                        $updateStr      ="PREACTIVATED='$preActivated', ACTIVATED='D', ACTIVATE_ON='$dateNew',activatedKey=0";
+                        $paramArr       =$jprofileObj->convertUpdateStrToArray($updateStr);
+                        $jprofileObj->editJPROFILE($paramArr,$profileid,'PROFILEID');
 			
 			$sql="INSERT into jsadmin.DELETED_PROFILES(PROFILEID,USERNAME,REASON,COMMENTS,USER,TIME) values('$profileid','$username','Cheque Bounce','$reason','$user',now())";
 			mysql_query_decide($sql) or die(mysql_error_js());

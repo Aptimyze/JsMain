@@ -83,6 +83,7 @@ DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
 		<td>Validation</td>
 		<td>Comments</td>
 		<td>Currently Allotted To</td>
+		<td>Process</td>
         </tr>
         <tr align="center">
                         <td class="fieldsnew"><font color="red"><b>~$name`</b></font></td>
@@ -99,6 +100,7 @@ DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
                 ~assign var="validation" value=$data_val.VALIDATION`
 		~assign var="comment" value=$data_val.COMMENT`
                 ~assign var="alloted_to" value=$data_val.ALLOTED_TO`
+                ~assign var="process" value=$data_val.PROCESS`
 
 		~foreach from=$entry_dt item=data_val2 key=k2`
 		<tr align="center">
@@ -111,6 +113,7 @@ DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
 			<td class="fieldsnew">~$validation.$k2`	</td>
 			<td class="fieldsnew">~$comment.$k2` </td>
 			<td class="fieldsnew">~$alloted_to.$k2`	</td>
+			<td class="fieldsnew">~$process.$k2`	</td>
                 </tr>
 		~/foreach`
         ~/foreach`

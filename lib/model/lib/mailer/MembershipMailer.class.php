@@ -54,15 +54,27 @@ class MembershipMailer {
                         $smartyObj->assign("fromEmailId","membership@jeevansathi.com");
                         $smartyObj->assign("unsubscribeLink",$unsubscribeLink);
                         $smartyObj->assign("instanceID",$dataArr['instanceID']);
-			break;
-		case 'JS_EXCLUSIVE_FEEDBACK':
-			$currency =$dataArr['currency'];
-		        if(!empty($currency)){
-        			$smartyObj->assign('currency',$currency);
-        		}
-			break;
+						break;
+				case 'NEW_MEMBERSHIP_PAYMENT':
+                        $mailerLinks = $mailerServiceObj->getLinks();
+                        $unsubscribeLink = $mailerLinks['UNSUBSCRIBE'];
+                        $smartyObj->assign("profileid",$dataArr['profileid']);
+                        $smartyObj->assign("PROFILEID",$dataArr['profileid']);
+                        $smartyObj->assign("fromEmailId","membership@jeevansathi.com");
+                        $smartyObj->assign("unsubscribeLink",$unsubscribeLink);
+                        $smartyObj->assign("benefits",$dataArr['benefits']);
+                        $smartyObj->assign("servMain",$dataArr['servMain']);
+                        $smartyObj->assign("username",$dataArr['username']);
+                        $smartyObj->assign("dppLink",$mailerLinks['MY_DPP']);
+						break;
+				case 'JS_EXCLUSIVE_FEEDBACK':
+						$currency =$dataArr['currency'];
+					        if(!empty($currency)){
+			        			$smartyObj->assign('currency',$currency);
+			        		}
+						break;
                 default:
-			break;
+						break;
         }
         return $smartyObj;
     }
@@ -397,6 +409,83 @@ class MembershipMailer {
         }
         $email_sender->send();
     }   		
+
+    public function sendWelcomeMailerToPaidUser($mailid, $profileid, $attachment, $services){
+
+        $mailerServiceObj = new MailerService();
+        sfProjectConfiguration::getActive()->loadHelpers("Partial","global/mailerfooter");
+		$mailerLinks = $mailerServiceObj->getLinks();
+		$memHandlerObj = new MembershipHandler();
+		$services = explode(",",$services);
+		$servMain = NULL;
+		$vasNames = array();
+		
+		foreach($services as $keyMain=>$valMain){
+			$tempId = $memHandlerObj->retrieveCorrectMemID($valMain);
+			$benefitMsg = VariableParams::$newApiPageOneBenefits;
+        	$benefitArr = VariableParams::$newApiPageOneBenefitsVisibility;
+			$vasArr = VariableParams::$newApiVasNamesAndDescription;			
+			if ($tempId == "X") {
+				$servMain = $tempId;
+            	$benefits = VariableParams::$newApiPageOneBenefitsJSX;
+        	} else {
+        		if ($tempId == "P" || $tempId == "C" || $tempId == "D" || strstr($tempId, "ES") || strstr($tempId, "NCP")){
+        			$servMain = $tempId;
+        		}
+        		foreach ($benefitArr as $key => $value) {
+	                if ($key == $tempId) {
+	                    foreach ($value as $kk => $vv) {
+	                        if ($vv == 1) {
+	                            $benefits[$kk] = $benefitMsg[$kk];
+	                        }
+	                    }
+	                }
+				}
+        	}
+        	if(in_array($tempId,array_keys($vasArr))){
+				$vasNames[] = $vasArr[$tempId]['name'];
+			}
+			unset($tempId);
+		}
+		if (empty($benefits)) {
+			$benefits = array();
+		}
+		if (empty($vasNames)) {
+			$vasNames = array();
+		}
+		$currentBenefitsMessages = array_values(array_merge($benefits , $vasNames));
+        $dataArr['benefits'] = $currentBenefitsMessages;
+        $dataArr['servMain'] = $memHandlerObj->getUserServiceName($servMain);
+        $profileDetails = $memHandlerObj->getUserData($profileid);
+        $dataArr['username'] = $profileDetails['USERNAME'];
+        $dataArr['profileid'] = $profileid;
+        
+        if(!empty($servMain)){
+        	$subject = "Congratulations! We welcome you as an " . $memHandlerObj->getUserServiceName($servMain) . " member on Jeevansathi";
+        } else {
+        	$subject = implode(', ', $vasNames) . " activated on your account";
+        }
+        
+        $email_sender = new EmailSender(MailerGroup::MEMBERSHIP_MAILER, $mailid);
+        $emailTpl = $email_sender->setProfileId($profileid);
+        $smartyObj = $emailTpl->getSmarty();
+        $emailTpl->setSubject($subject);
+        $smartyObj->assign("mailerLinks",$mailerLinks);
+        
+        if (is_array($dataArr)) {
+            $smartyObj =$this->setSmartyParams($mailid,$smartyObj,$mailerServiceObj,$dataArr);
+        }
+        if ($attachment) {
+        	$email_sender->setAttachment($attachment);
+        	$email_sender->setAttachmentName("Jeevansathi-Invoice.pdf");
+        	$email_sender->setAttachmentType('application/pdf');
+        }
+        
+        $email_sender->send();
+        $deliveryStatus =$email_sender->getEmailDeliveryStatus();
+        return $deliveryStatus;
+
+    }
 
 }
 

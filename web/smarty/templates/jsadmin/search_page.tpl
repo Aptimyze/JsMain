@@ -195,7 +195,7 @@ function loadForm()
     </tr>
 </table>
 ~/if`
-~if $ADMIN eq 'Y'`
+<!--~if $ADMIN eq 'Y'`
 <table width=50% cellspacing="1" cellpadding='3' ALIGN="CENTER" >
 	<tr class="fieldsnew">
 		<td colspan="7" height="21" align="CENTER">&nbsp;</td>
@@ -205,7 +205,7 @@ function loadForm()
 		</td>
 	</tr>
 </table>
-~/if`
+~/if`-->
 </form> 
 
 <table align="CENTER">

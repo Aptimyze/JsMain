@@ -257,7 +257,7 @@
                 <!--end:listing7--> 
             </div>
 				<!--start:login-->
-				<div class="posfix ham_pos1 fullwid">
+				<div class="posfix ham_pos1 fullwid js-loginBtn">
 					<div class="pad1">
 						<div class="ham_bdr1">
 							<div id= "loggedOutHamFoot" class="pt10 fontlig f17">
@@ -266,7 +266,7 @@
 								</div>
 								<div class="fl wid49p txtc">
 									<a bind-slide=1 href="/register/page1?source=mobreg5" class="white lh30">Register</a>
-								</div>                        
+								</div>
 							</div>
 						</div>
 					</div>

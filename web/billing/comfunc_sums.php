@@ -3,6 +3,7 @@ include_once(JsConstants::$docRoot."/commonFiles/flag.php");
 include_once(JsConstants::$docRoot."/crm/func_sky.php");
 include_once(JsConstants::$docRoot."/profile/contacts_functions.php");
 include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
 function get_services_amount($serid,$addonid)
 {
@@ -1107,8 +1108,9 @@ function stop_offline_service($profileid)
 
                 if($profileid_str)
                 {
-                        $sql_jp_upd = "UPDATE newjs.JPROFILE SET PREACTIVATED=IF(ACTIVATED<>'D',ACTIVATED,PREACTIVATED), ACTIVATED='D',activatedKey=0 WHERE PROFILEID IN ('$profileid_str')";
-                        mysql_query_decide($sql_jp_upd) or logError_sums($sql_jp_upd,1);
+                        /*$sql_jp_upd = "UPDATE newjs.JPROFILE SET PREACTIVATED=IF(ACTIVATED<>'D',ACTIVATED,PREACTIVATED), ACTIVATED='D',activatedKey=0 WHERE PROFILEID IN ('$profileid_str')";
+                        mysql_query_decide($sql_jp_upd) or logError_sums($sql_jp_upd,1);*/
+
                 }
 
                 $sql_upd = "UPDATE jsadmin.OFFLINE_BILLING SET ACTIVE='N' WHERE PROFILEID IN ('$profileid')";
@@ -1206,7 +1208,12 @@ function evalue_privacy($profileid,$subscription='')
         {
 		if($row["SHOWPHONE_RES"]=="N" || $row["SHOWPHONE_MOB"]=="N" || $row["SHOWMESSENGER"]=="N")
 		{
-			$sqlup="UPDATE newjs.JPROFILE SET SHOWPHONE_RES='Y',SHOWPHONE_MOB='Y',SHOWMESSENGER='Y'";
+			$jprofileObj    =JProfileUpdateLib::getInstance();
+			$updateStr 	="SHOWPHONE_RES='Y',SHOWPHONE_MOB='Y',SHOWMESSENGER='Y'";
+			$paramArr 	=$jprofileObj->convertUpdateStrToArray($updateStr);
+			$jprofileObj->editJPROFILE($paramArr,$profileid,'PROFILEID');
+			//$sqlup="UPDATE newjs.JPROFILE SET SHOWPHONE_RES='Y',SHOWPHONE_MOB='Y',SHOWMESSENGER='Y'";
+
 			if($subscription)
 			{
 				if(strstr($subscription,"S"))
@@ -1237,8 +1244,12 @@ function evalue_privacy($profileid,$subscription='')
                         {
                                 if(strstr($subscription,"S"))
                                 $sub1=substr($subscription,0,strlen($subscription)-2);
-                                $sqlup="UPDATE newjs.JPROFILE SET SUBSCRIPTION='$sub1' WHERE PROFILEID='$profileid'";
-				mysql_query_decide($sqlup) or logError_sums($sqlup,1);
+                                /*$sqlup="UPDATE newjs.JPROFILE SET SUBSCRIPTION='$sub1' WHERE PROFILEID='$profileid'";
+				mysql_query_decide($sqlup) or logError_sums($sqlup,1);*/
+				$jprofileObj    =JProfileUpdateLib::getInstance();	
+	                        $paramArr      	=array("SUBSCRIPTION"=>$sub1);
+	                        $jprofileObj->editJPROFILE($paramArr,$profileid,'PROFILEID');
+
                         } 
 
 		}

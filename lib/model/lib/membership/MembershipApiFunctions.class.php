@@ -196,7 +196,7 @@ class MembershipApiFunctions
             if ($mainMem == "E") {
                 $mainMem = "ESP";
             }
-            $remainingServices = array_splice($memArray, -1, 1);
+            $remainingServices = array_splice($memArray, 1);
             $apiObj->mainMembership = $mainMem . $mainMemDur;
             $apiObj->vasImpression = implode(",", $remainingServices);
             foreach ($remainingServices as $key => $val) {

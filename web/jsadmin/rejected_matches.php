@@ -3,6 +3,7 @@
 include("connect.inc");
 include("matches_display_results.inc");
 include("../crm/func_sky.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
 $db=connect_db();
 
@@ -18,6 +19,7 @@ if(authenticated($cid))
 	$row=mysql_fetch_assoc($res);
 	$oc_id=$row["USERNAME"];
 	$smarty->assign("oc_id",$oc_id);
+	$jprofileObj    =JProfileUpdateLib::getInstance();
         if($searchid)
         {
 		$sql="SELECT PROFILEID FROM newjs.JPROFILE WHERE USERNAME='$searchid' AND ACTIVATED='Y'";
@@ -60,8 +62,11 @@ if(authenticated($cid))
 		{
 			$sql= "UPDATE jsadmin.OFFLINE_BILLING SET ACTIVE= 'N',ACC_MADE='$acc_made' WHERE PROFILEID= '$profileid' AND BILLID='$billid'";
 			mysql_query_decide($sql) or logError($sql);
-			$sql= "UPDATE newjs.JPROFILE SET ACTIVATED= 'D',activatedKey=0 WHERE PROFILEID= '$profileid'";
-			mysql_query_decide($sql) or logError($sql);
+			/*$sql= "UPDATE newjs.JPROFILE SET ACTIVATED= 'D',activatedKey=0 WHERE PROFILEID= '$profileid'";
+			mysql_query_decide($sql) or logError($sql);*/
+                        $paramArr =array("ACTIVATED"=>'D',"activatedKey"=>0);
+                        $jprofileObj->editJPROFILE($paramArr,$profileid,'PROFILEID');
+
 			comp_info($profileid);
 		}
 		else
@@ -93,8 +98,11 @@ if(authenticated($cid))
                  {
                            $sql= "UPDATE jsadmin.OFFLINE_BILLING SET ACTIVE= 'N',ACC_MADE='$acc_made' WHERE PROFILEID= '$profileid' AND BILLID='$billid'";
                                 mysql_query_decide($sql) or logError($sql);
-                                $sql= "UPDATE newjs.JPROFILE SET ACTIVATED= 'D',activatedKey=0 WHERE PROFILEID= '$profileid'";
-                                mysql_query_decide($sql) or logError($sql);
+                                /*$sql= "UPDATE newjs.JPROFILE SET ACTIVATED= 'D',activatedKey=0 WHERE PROFILEID= '$profileid'";
+                                mysql_query_decide($sql) or logError($sql);*/
+	                        $paramArr =array("ACTIVATED"=>'D',"activatedKey"=>0);
+	                        $jprofileObj->editJPROFILE($paramArr,$profileid,'PROFILEID');
+
                                 comp_info($profileid);
                   }
                   else
