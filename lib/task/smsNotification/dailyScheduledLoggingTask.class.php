@@ -23,8 +23,8 @@ $this->addOptions(array(
         if(!sfContext::hasInstance())
                 sfContext::createInstance($this->configuration);
 
-		$startDate 	=date('Y-m-d',time()-86400)." 18.30:00:00";
-		$endDate 	=date("Y-m-d")." 18.30:00:00";
+		$startDate 	=date('Y-m-d',time()-86400)." 19.30:00:00";
+		$endDate 	=date("Y-m-d")." 19.30:00:00";
 		$datePrev6day	=date("Y-m-d",time()-6*24*60*60)." 00:00:00";
 		$entryDate	=date("Y-m-d");
 
