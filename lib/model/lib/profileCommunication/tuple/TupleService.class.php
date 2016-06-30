@@ -360,12 +360,12 @@ class TupleService
 								$edu[]=FieldMap::getFieldLabel('education',$row["UG_DEGREE"]);
 				if($row["OTHER_PG_DEGREE"] && Flag::isFlagSet("other_pg_degree", $row["SCREENING"]))
 								$edu[]=substr($row["OTHER_UG_DEGREE"],0,30);
-				if($row["COLLEGE"]){
+				if($row["COLLEGE"] && Flag::isFlagSet("college", $row["SCREENING"])){
 								$result[$row["PROFILEID"]]["COLLEGE"]=$row["COLLEGE"];
                                 }else{
                                       $result[$row["PROFILEID"]]["COLLEGE"] = '';  
                                 }
-				if($row["PG_COLLEGE"]){
+				if($row["PG_COLLEGE"] && Flag::isFlagSet("pg_college", $row["SCREENING"])){
 								$result[$row["PROFILEID"]]["PG_COLLEGE"]=$row["PG_COLLEGE"];
                                 }else{
                                         $result[$row["PROFILEID"]]["PG_COLLEGE"] = '';
@@ -799,7 +799,11 @@ else {
 				$result[$profileid]["ENTRY_DT"]        = $profileObj->getENTRY_DT();
 				$result[$profileid]["SUBSCRIPTION"]    = $profileObj->getSUBSCRIPTION();
 				$result[$profileid]["LAST_LOGIN_DT"]    = $profileObj->getLAST_LOGIN_DT();
-				$result[$profileid]["COMPANY_NAME"]          = $profileObj->getCOMPANY_NAME();
+                                if(Flag::isFlagSet("company_name",$profileObj->getSCREENING()))
+                                        $result[$profileid]["COMPANY_NAME"]          = $profileObj->getCOMPANY_NAME();
+                                else
+                                        $result[$profileid]["COMPANY_NAME"]          = "";
+                                
 				if(Flag::isFlagSet("yourinfo",$profileObj->getSCREENING()))
 					$result[$profileid]["YOURINFO"]    = $profileObj->getYOURINFO();
 				$result[$profileid]["PROFILECHECKSUM"] = JsAuthentication::jsEncryptProfilechecksum($profileid);
