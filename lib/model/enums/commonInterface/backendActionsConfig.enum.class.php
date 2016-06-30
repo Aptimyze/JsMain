@@ -13,7 +13,8 @@ class exclusiveMemberList
 	public static $TYPE_TABID_MAPPING = array("ASSIGNED"=>array("TABID"=>0,"ACTION"=>"UNASSIGN","NAME"=>"Assigned customers"),
 											"PENDING"=>array("TABID"=>1,"ACTION"=>"ASSIGN","NAME"=>"Pending customers")
 											);
-	public static $displayColumnsNames = array("Client Name","Username","Age","Gender","Marital Status","Height","Religion/Caste","Annual Income","Matches","Contact No","Email","Billing Date","Service Duration","Service Expiry Date","Sales Person","Executive","Action");
+	//public static $displayColumnsNames = array("Client Name","Username","Age","Gender","Marital Status","Height","Religion/Caste","Annual Income","Matches","Contact No","Email","Billing Date","Service Duration","Service Expiry Date","Sales Person","Executive","Action");
+	public static $displayColumnsNames = array("Client Name","Username","Age","Gender","Marital Status","Height","Religion/Caste","Annual Income","Contact No","Email","Billing Date","Service Duration","Service Expiry Date","Sales Person","Executive","Action");
 
 	public static $specificColumnMapping = array("HEIGHT"=>"height_without_meters","RELIGION"=>"religion","CASTE"=>"caste_without_religion","INCOME"=>"income_map","SERVICEID"=>"SERVICE_DURATION");
 
