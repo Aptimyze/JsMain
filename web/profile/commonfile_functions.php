@@ -121,7 +121,7 @@ $css_arr[]=array("jsms/photo/photoswipe"    => "1");
 $css_arr[]=array("jsms/common/fonts"     => "2");
 $css_arr[]=array("jsms/common/commoncss"             => "10");
 $css_arr[]=array("jsms/common/mediaquery"      => "3");
-$css_arr[]=array("jsms/search/srpcss"       => "4");
+$css_arr[]=array("jsms/search/srpcss"       => "5");
 $css_arr[]=array("jsms/photo/photoup"    => "1");
 $css_arr[]=array("jsms/membership/revamp_membership_css"   => "3");
 $css_arr[]=array("jsms/membership/new_revamp_membership_css"        => "6");
