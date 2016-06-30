@@ -6,7 +6,6 @@ include_once("../profile/pg/functions.php");
 include("../profile/arrays.php");
 
 $db=connect_misdb();
-$db2=connect_master();
 
 if(authenticated($cid) || $JSIndicator)
 {
@@ -41,13 +40,27 @@ if(authenticated($cid) || $JSIndicator)
 		}
 
 		// total amount of all paid members
-		$sql="SELECT sum(if(TYPE='DOL',AMOUNT*DOL_CONV_RATE,AMOUNT)) as amt FROM billing.PAYMENT_DETAIL WHERE STATUS='DONE' AND ENTRY_DT BETWEEN '$st_date' AND '$end_date' AND AMOUNT!=0";
+		$sql="SELECT if(TYPE='DOL',AMOUNT*DOL_CONV_RATE,AMOUNT) as amt,BILLID,PROFILEID FROM billing.PAYMENT_DETAIL WHERE STATUS='DONE' AND ENTRY_DT BETWEEN '$st_date' AND '$end_date' AND AMOUNT!=0";
 		$res=mysql_query_decide($sql,$db) or die(mysql_error_js());
 		while($row=mysql_fetch_array($res))
 		{
 			$totamt+=$row['amt'];
+			$amtArr[$row['BILLID']] = $row['amt']; 
+			$amtArrPid[$row['PROFILEID']] = $row['amt'];
+			$pidArr[] = $row['PROFILEID'];
 		}
-
+		
+		$pidStr = implode(',',$pidArr);
+		/*$sqljap="SELECT COUNTRY_RES,GENDER,RELATION,MTONGUE,PROFILEID,CITY_RES from newjs.JPROFILE WHERE PROFILEID IN ($pidStr)";
+                $resjap=mysql_query_decide($sqljap,$db) or die(mysql_error_js());
+                while($rowjap=mysql_fetch_array($resjap))
+                {
+			$jpArr[$rowjap['PROFILEID']]['MTONGUE']= $rowjap['MTONGUE'];
+			$jpArr[$rowjap['PROFILEID']]['COUNTRY_RES']= $rowjap['COUNTRY_RES'];
+			$jpArr[$rowjap['PROFILEID']]['GENDER']= $rowjap['GENDER'];
+			$jpArr[$rowjap['PROFILEID']]['RELATION']= $rowjap['RELATION'];
+			$jpArr[$rowjap['PROFILEID']]['CITY_RES']= $rowjap['CITY_RES'];
+		}*/
 
 		// count of all paid members
 		// total amount of all paid members payment-wise (NRI or INDIAN)
@@ -69,30 +82,22 @@ if(authenticated($cid) || $JSIndicator)
 		{
 			$pid = $row["PROFILEID"];
 			$bid = $row["BILLID"];
+			$amt = $amtArr[$bid];
 
-			$sqlamt="SELECT sum(if(TYPE='DOL',AMOUNT*DOL_CONV_RATE,AMOUNT)) as amt,TYPE from billing.PAYMENT_DETAIL WHERE STATUS='DONE' AND billing.PAYMENT_DETAIL.ENTRY_DT BETWEEN '$st_date' AND '$end_date' AND BILLID='$bid' AND AMOUNT!=0";
-			$resamt=mysql_query_decide($sqlamt,$db) or die(mysql_error_js());
-	               	if($rowamt=mysql_fetch_array($resamt))
-				$amt = $rowamt['amt'];
-			else
-				$amt = 0;
-		
 			if($amt)
 			{
 			$totcnt++;
-			$sqljap="SELECT COUNTRY_RES,GENDER,RELATION,MTONGUE from newjs.JPROFILE WHERE PROFILEID='$pid'";
-			$resjap=mysql_query_decide($sqljap,$db) or die(mysql_error_js());
-                        if($rowjap=mysql_fetch_array($resjap))
+			if(in_array($pid,$pidArr))
 			{
-				if($amt && $rowjap['MTONGUE']) 
+				if($amt && $jpArr[$pid]['MTONGUE']) 
 				{
-					$communityArr[$rowjap['MTONGUE']]['cnt']++; 
-					$communityArr[$rowjap['MTONGUE']]['amt'] += $amt; 
+					$communityArr[$jpArr[$pid]['MTONGUE']]['cnt']++; 
+					$communityArr[$jpArr[$pid]['MTONGUE']]['amt'] += $amt; 
 				}
 
-				if($rowjap['COUNTRY_RES']=='51' && !in_array($pid,$ind_proarr))
+				if($jpArr[$pid]['COUNTRY_RES']=='51' && !in_array($pid,$ind_proarr))
                                         $ind_proarr[]=$pid;
-                                if($rowjap['COUNTRY_RES']!='51' && !in_array($pid,$nri_proarr))
+                                if($jpArr[$pid]['COUNTRY_RES']!='51' && !in_array($pid,$nri_proarr))
                                         $nri_proarr[]=$pid;
 
                 	        if($rowamt['TYPE']=='RS')
@@ -105,8 +110,8 @@ if(authenticated($cid) || $JSIndicator)
         	                	$totamtn+=$amt;
 					$totcntn++;
 				}
-				$j=$rowjap['RELATION']-1;
-	                        if($rowjap['GENDER']=='M')
+				$j=$jpArr[$pid]['RELATION']-1;
+	                        if($jpArr[$pid]['GENDER']=='M')
         	                {
                 	                $totamtm+=$amt;
                         	        $relamtm[$j]+=round($amt,0);
@@ -114,7 +119,7 @@ if(authenticated($cid) || $JSIndicator)
 					$totcntm++;
 					$relcntm[$j]++;
         	                }
-                	        if($rowjap['GENDER']=='F')
+                	        if($jpArr[$pid]['GENDER']=='F')
                         	{
                                 	$totamtf+=$amt;
 	                                $relamtf[$j]+=round($amt,0);
@@ -125,7 +130,7 @@ if(authenticated($cid) || $JSIndicator)
                 	}
 			}
 		}
-
+		
                 if($JSIndicator==1)
                 {
                         return;
@@ -185,119 +190,58 @@ if(authenticated($cid) || $JSIndicator)
 			}
 		}
 
-
-
-		// amount of indian cities : top 40
-		$ind_prostr = implode(",",$ind_proarr);
-		if($ind_prostr)
-		{
-			$sql="SELECT sum(if(TYPE='DOL',AMOUNT*DOL_CONV_RATE,AMOUNT)) as amt,CITY_RES FROM billing.PAYMENT_DETAIL,newjs.JPROFILE WHERE STATUS='DONE' AND billing.PAYMENT_DETAIL.ENTRY_DT BETWEEN '$st_date' AND '$end_date' AND billing.PAYMENT_DETAIL.PROFILEID=newjs.JPROFILE.PROFILEID AND COUNTRY_RES=51 AND newjs.JPROFILE.PROFILEID IN ($ind_prostr) AND AMOUNT!=0 GROUP BY CITY_RES ORDER BY amt DESC LIMIT 40";
-			$res=mysql_query_decide($sql,$db) or die(mysql_error_js());
-			while($row=mysql_fetch_array($res))
-			{
-				if(is_array($icityarr))
-				{
-					if(!in_array($row['CITY_RES'],$icityarr))
-					{
-						$icityarr[]=$row['CITY_RES'];
-					}
-				}
-				else
-				{
-					$icityarr[]=$row['CITY_RES'];
-				}	
-
-				$i=array_search($row['CITY_RES'],$icityarr);
-				$ind[$i]["totamt"]=round($row['amt'],0);
-				//added by sriram.
-				$ind[$i]["totamt_net_off_tax_amount"] = round(net_off_tax_calculation($row['amt'],$end_date),0);
-				$indtotamt+=$row['amt'];
-			}
-		}
-	
-		if($icityarr)
-			$icitystr="'".implode("','",$icityarr)."'";
-
-		// count of indian cities : top 40
-		if($icitystr && $ind_prostr)
-		{
-			$sql="SELECT count(DISTINCT billing.PAYMENT_DETAIL.BILLID) as cnt,CITY_RES FROM billing.PAYMENT_DETAIL,newjs.JPROFILE WHERE STATUS='DONE' AND billing.PAYMENT_DETAIL.ENTRY_DT BETWEEN '$st_date' AND '$end_date' AND billing.PAYMENT_DETAIL.PROFILEID=newjs.JPROFILE.PROFILEID AND COUNTRY_RES=51 AND CITY_RES IN ($icitystr) AND newjs.JPROFILE.PROFILEID IN ($ind_prostr) AND AMOUNT!=0 GROUP BY CITY_RES ORDER BY cnt DESC";
-			$res=mysql_query_decide($sql,$db) or die(mysql_error_js());
-			while($row=mysql_fetch_array($res))
-			{
-				if(is_array($icityarr))
-	                        {
-        	                        if(!in_array($row['CITY_RES'],$icityarr))
-                	                {
-                        	                $icityarr[]=$row['CITY_RES'];
-                                	}
-	                        }
-        	                else
-                	        {
-                        	        $icityarr[]=$row['CITY_RES'];
-                        	}
-
-	                        $i=array_search($row['CITY_RES'],$icityarr);
-        	                $ind[$i]["totcnt"]=$row['cnt'];
-				$indtotcnt+=$row['cnt'];
-			}
-		}
+		 // amount of indian cities : top 40
+                $ind_prostr = implode(",",$ind_proarr);
+                $icityarr = array();
+                if($ind_prostr)
+                {
+                        for($i=0;$i<count($ind_proarr);$i++)
+                        {
+                                $pid = $ind_proarr[$i];
+                                $city_res = $jpArr[$pid]['CITY_RES'];
+                                $amt = $amtArrPid[$pid];
+                                if(!in_array($city_res,$icityarr))
+                                {
+                                        $icityarr[$i]=$city_res;
+                                        $a = $i;
+                                }
+                                else
+                                        $a=array_search($city_res,$icityarr);
+                                //$a=array_search($city_res,$icityarr);
+                                $ind[$a]["totamt"]+=round($amt,0);
+                                //added by sriram.
+                                $ind[$a]["totamt_net_off_tax_amount"] += round(net_off_tax_calculation($amt,$end_date),0);
+                                $indtotamt+=$amt;
+                                $ind[$a]["totcnt"]+=1;
+                                $indtotcnt+=1;
+                        }
+                }
 
 		// amount of all countries apart from india : top 10
-		$nri_prostr = implode(",",$nri_proarr);
-		if($nri_prostr)
-		{
-			$sql="SELECT sum(if(TYPE='DOL',AMOUNT*DOL_CONV_RATE,AMOUNT)) as amt,COUNTRY_RES FROM billing.PAYMENT_DETAIL,newjs.JPROFILE WHERE STATUS='DONE' AND billing.PAYMENT_DETAIL.ENTRY_DT BETWEEN '$st_date' AND '$end_date' AND billing.PAYMENT_DETAIL.PROFILEID=newjs.JPROFILE.PROFILEID AND COUNTRY_RES<>51 AND newjs.JPROFILE.PROFILEID IN ($nri_prostr) AND AMOUNT!=0 GROUP BY COUNTRY_RES ORDER BY amt DESC LIMIT 10";
-			$res=mysql_query_decide($sql,$db) or die(mysql_error_js());
-			while($row=mysql_fetch_array($res))
-			{
-				if(is_array($ctryarr))
-                	        {
-                        	        if(!in_array($row['COUNTRY_RES'],$ctryarr))
-                                	{
-                                        	$ctryarr[]=$row['COUNTRY_RES'];
-	                                }
-        	                }
-                	        else
-                        	{
-                                	$ctryarr[]=$row['COUNTRY_RES'];
-	                        }
-
-        	                $i=array_search($row['COUNTRY_RES'],$ctryarr);
-				$ctry[$i]["totamt"]+=round($row['amt'],0);
-				//added by sriram
-		                $ctry[$i]["totamt_net_off_tax_amount"] += round(net_off_tax_calculation($row['amt'],$end_date),0);
-				$ctrtotamt+=$row['amt'];
-			}
-		}
-
-		if($ctryarr)
-			$ctrystr="'".implode("','",$ctryarr)."'";
-
-		// count of all countries apart from india : top 10
-		if($ctrystr && $nri_prostr)
-		{
-			$sql="SELECT count(DISTINCT billing.PAYMENT_DETAIL.BILLID) as cnt,COUNTRY_RES FROM billing.PAYMENT_DETAIL,newjs.JPROFILE WHERE STATUS='DONE' AND billing.PAYMENT_DETAIL.ENTRY_DT BETWEEN '$st_date' AND '$end_date' AND billing.PAYMENT_DETAIL.PROFILEID=newjs.JPROFILE.PROFILEID AND COUNTRY_RES<>51 AND COUNTRY_RES IN ($ctrystr) AND newjs.JPROFILE.PROFILEID IN ($nri_prostr) AND AMOUNT!=0 GROUP BY COUNTRY_RES ORDER BY cnt DESC";
-			$res=mysql_query_decide($sql,$db) or die("$sql".mysql_error_js());
-			while($row=mysql_fetch_array($res))
-			{
-				if(is_array($ctryarr))
-                	        {
-                        	        if(!in_array($row['COUNTRY_RES'],$ctryarr))
-                                	{
-                                        	$ctryarr[]=$row['COUNTRY_RES'];
-	                                }
-        	                }
-                	        else
-                        	{
-                                	$ctryarr[]=$row['COUNTRY_RES'];
-	                        }
-
-        	                $i=array_search($row['COUNTRY_RES'],$ctryarr);
-                	        $ctry[$i]["totcnt"]+=$row['cnt'];
-				$ctrtotcnt+=$row['cnt'];
-			}
-		}	
+                $nri_prostr = implode(",",$nri_proarr);
+                $ctryarr = array();
+                if($nri_prostr)
+                {
+                        for($i=0;$i<count($nri_proarr);$i++)
+                        {
+                                $pid = $nri_proarr[$i];
+                                $country_res = $jpArr[$pid]['COUNTRY_RES'];
+                                $amt = $amtArrPid[$pid];
+                                if(!in_array($country_res,$ctryarr))
+                                {
+                                        $ctryarr[$i]=$country_res;
+                                        $a = $i;
+                                }
+                                else
+                                        $a=array_search($country_res,$ctryarr);
+                                $ctry[$a]["totamt"]+=round($amt,0);
+                                //added by sriram
+                                $ctry[$a]["totamt_net_off_tax_amount"] += round(net_off_tax_calculation($amt,$end_date),0);
+                                $ctrtotamt+=$amt;
+                                $ctry[$a]["totcnt"]+=1;
+                                $ctrtotcnt+=1;
+                        }
+                }
 
 		for($j=0;$j<count($icityarr);$j++)
 		{
