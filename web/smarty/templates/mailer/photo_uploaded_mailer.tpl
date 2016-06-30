@@ -50,7 +50,7 @@
                                     <td style="font-size:15px; color:#000000;text-align:left; font-family:Tahoma;text-size-adjust: none; -webkit-text-size-adjust: none; line-height:18px;" height="15" colspan="2">
 Dear <var>{{NAME_PROFILE:profileid=~$profileid`}}</var>,<br /><br />
 Your photo has been uploaded successfully!<br />
-Please <a target="_blank" href="(LINK)HOME_PAGE_MYJS:profileid=~$profileid`(/LINK)">Login</a> to Jeevansathi and start sending interests
+Please <a target="_blank" href="(LINK)HOME_PAGE_MYJS:profileid=~$profileid`(/LINK)">Login</a> to Jeevansathi and start sending interests.
 					</td>
                                   </tr>
                                 </table>
@@ -64,16 +64,13 @@ Please <a target="_blank" href="(LINK)HOME_PAGE_MYJS:profileid=~$profileid`(/LIN
           <td width="22"><img src="~$IMG_URL`/images/mailer/revampMailer/spacer.gif" width="6" height="1" vspace="0" hspace="0" align="left" /></td>
         </tr>
         <tr>
-          <td colspan="3" height="27"></td>
-        </tr>
-        <tr>
           <td></td>
-          <td><table style="font-family:Arial" border="0" cellpadding="0" cellspacing="0" width="100%">
+          <td><table style="font-size:15px;text-align:left; font-family:Tahoma;text-size-adjust: none; -webkit-text-size-adjust: none; line-height:18px;" border="0" cellpadding="0" cellspacing="0" width="100%">
               <tr>
-                <td><table style="font-family:Arial,Times New Roman,Times,serif;font-size:11px;line-height:17px; color:#000000; -webkit-text-size-adjust: none;" width="100%" border="0" cellpadding="0" cellspacing="0">
+                <td><table style="font-family:Tahoma;font-size:15px;line-height:17px; color:#000000; -webkit-text-size-adjust: none;" width="100%" border="0" cellpadding="0" cellspacing="0">
                     <tbody>
                       <tr>
-                        <td style="font-size:12px; padding-bottom:10px;" valign="top">Warm Regards,<br>
+                        <td style=" padding-bottom:10px;" valign="top">Warm Regards,<br>
                           <b style="color:#c4161c;">Jeevansathi<span style="font-size:1px;"> </span><font color="#00000">.com Team</font></b></td>
                       </tr>
                     </tbody>
