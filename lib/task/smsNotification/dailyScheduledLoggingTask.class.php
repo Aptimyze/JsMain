@@ -66,9 +66,15 @@ $this->addOptions(array(
 		
 		// object of Daily Scheduled Log
 		$dailyScheduledLog =new MOBILE_API_DAILY_NOTIFICATION_COUNT_LOG;
+
+		// Browser notification Data
+		$browserNotificationObj =new MOBILE_API_BROWSER_NOTIFICATION('newjs_slave');
+		$browserNotificationData =$browserNotificationObj->getDataCountForRange($startDate, $endDate);
+
 		foreach($notificationArr as $key=>$notificationKeyArr){
 
 			$notificationKey	=$notificationKeyArr['NOTIFICATION_KEY'];
+			$browserData		=$browserNotificationData[$notificationKey];
 
 			// PUSH
 			$recordCount 		=$logData[$notificationKey];
@@ -96,9 +102,19 @@ $this->addOptions(array(
 			
 			$active7DaysCount=$activeProfileCount7Day[$notificationKey];
 			$active1DaysCount=$activeProfileCountDay[$notificationKey];	
-		
+	
 			// Add record in daily log table	
-			$dailyScheduledLog->insertData($notificationKey,$totalCount, $gcmPush,$gcmAccepted,$pushAcknowledged ,$localApiHit, $localDelivered,$localAcknowledged, $active7DaysCount, $active1DaysCount,$totalIosPushed, $totalIosReceived, $entryDate);
+			$dailyScheduledLog->insertData($notificationKey,$totalCount, $gcmPush,$gcmAccepted,$pushAcknowledged ,$localApiHit, $localDelivered,$localAcknowledged, $active7DaysCount, $active1DaysCount,$totalIosPushed, $totalIosReceived, $entryDate,'A_I');
+
+                        // Browser Notification Records 
+                        $desktopAcknowledged    =$browserData['D']['Y']['Y'];
+                        $desktopPushedTGcm      =$desktopAcknowledged+$browserData['D']['N']['Y'];
+
+                        $mobileAcknowledged    	=$browserData['M']['Y']['Y'];
+                        $mobilePushedTGcm      	=$mobileAcknowledged+$browserData['M']['N']['Y'];
+
+                        $dailyScheduledLog->insertData($notificationKey,$desktopPushedTGcm, $desktopPushedTGcm,'',$desktopAcknowledged ,'','','','','','', '', $entryDate,'D');
+                        $dailyScheduledLog->insertData($notificationKey,$mobilePushedTGcm, $mobilePushedTGcm,'',$mobileAcknowledged ,'','','','','','', '', $entryDate,'M');
                         unset($gcmPush);
                         unset($gcmAccepted);
 			unset($gcmLogDataArr);
