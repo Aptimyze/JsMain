@@ -129,10 +129,11 @@ if(!reason){ShowTopDownError(["Please select the reason"],3000);return;}
 }
 
 var feed={};
+reason=$.trim(reason);
 //feed.message:as sdf sd f
 feed.category='Abuse';
-feed.message=userName+' has been reported abuse by '+selfUsername+' with the following reason:\n'+reason;
-ajaxData={'feed':feed,'CMDSubmit':'1'};
+feed.message=userName+' has been reported abuse by '+selfUsername+' with the following reason:'+reason;
+ajaxData={'feed':feed,'CMDSubmit':'1','profilechecksum':profileChkSum,'reason':reason};
 var url='/api/v1/faq/feedbackAbuse';
 loaderTop();
 $("#contactLoader").show();
