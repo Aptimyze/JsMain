@@ -28976,6 +28976,7 @@ return Backbone.BrowserStorage;
         };
 
         this.onConnected = function (callback) {
+            console.log("On connected A");
             // When reconnecting, there might be some open chat boxes. We don't
             // know whether these boxes are of the same account or not, so we
             // close them now.
@@ -29591,6 +29592,7 @@ return Backbone.BrowserStorage;
             },
 
             onConnected: function () {
+                console.log("On connected G");
                 //console.log("here4");
                 this.browserStorage = new Backbone.BrowserStorage[converse.storage](
                     b64_sha1('converse.chatboxes-'+converse.bare_jid));
@@ -34694,6 +34696,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                 },
 
                 onConnected: function () {
+                    console.log("On connected B");
                     if (this.model.get('connected')) {
                         this.render().initRoster();
                     }
@@ -35295,6 +35298,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                 },
 
                 onConnected: function () {
+                    console.log("On connected C");
                     // TODO: This can probably be refactored to be an event
                     // handler (and therefore removed from overrides)
                     var converse = this._super.converse;
@@ -36528,6 +36532,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
             converse.on('chatBoxesFetched', autoJoinRooms);
 
             var onConnected = function () {
+                console.log("On connected D");
                 converse.connection.addHandler(
                     function (message) {
                         converse.onDirectMUCInvitation(message);
@@ -46064,6 +46069,7 @@ Strophe.addConnectionPlugin('ping', {
             });
 
             var onConnected = function () {
+                console.log("On connected E");
                 // Wrapper so that we can spy on registerPingHandler in tests
                 converse.registerPingHandler();
             };
@@ -46367,6 +46373,7 @@ Strophe.addConnectionPlugin('ping', {
             },
 
             onConnected: function () {
+                console.log("On connected F");
                 converse.minimized_chats = new converse.MinimizedChats({
                     model: converse.chatboxes
                 });
