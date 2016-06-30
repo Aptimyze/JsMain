@@ -6,6 +6,7 @@
 **/
 include_once(JsConstants::$docRoot."/classes/ProfileReplaceLib.php");
 include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
+include_once(JsConstants::$docRoot."/classes/ProfileDeleteLib.php");
 function horoscope_save($profileid,$horoscope_content)
 {
 	//echo "here";
@@ -68,8 +69,14 @@ function horoscope_save($profileid,$horoscope_content)
 	mysql_query_decide($sql_sj) or die("$sql_sj".mysql_error_js());
 
 	//query to remove the entries from HOROSCOPE_FOR_SCREEN table which have UPLOADED field as 'Y' or 'D'
-	$sql_del="delete from newjs.HOROSCOPE_FOR_SCREEN where UPLOADED='Y' or UPLOADED='D'";
-	mysql_query_decide($sql_del) or die("$sql_del".mysql_error_js());
+	$objDelete = ProfileDeleteLib::getInstance();
+	$result = $objDelete->deleteAllScreenedRecords();
+
+	if(false === $result) {
+		die('Issue while updating Horoscope for screen at line 75');
+	}
+//	$sql_del="delete from newjs.HOROSCOPE_FOR_SCREEN where UPLOADED='Y' or UPLOADED='D'";
+//	mysql_query_decide($sql_del) or die("$sql_del".mysql_error_js());
 	/********************** CRON PART ENDS ****************************/	
 	//Code added by Vibhor as discussed with Lavesh
 	global $mysqlObj;

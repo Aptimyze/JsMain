@@ -1,19 +1,19 @@
 <?php
 /**
- * Description of ProfileInsertLib
+ * Description of ProfileDeleteLib
  * This is a wrapper library on store classes 
  * To Insert JPROFILE* Stores (like JPROFILE,JPROFILE_CONTACT,JPROFILE_ALERTS erc),
  * It will be used in Non-symfony code for warpping all Queries which are Updating JPROFILE* Tables
  * 
  * @author Kunal Verma
- * @created 27th June 2016
+ * @created 30th June 2016
  */
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
 /**
  * JProfileUpdateLib Wrapper Library
  */
-class ProfileInsertLib
+class ProfileDeleteLib
 {
   /**
    *
@@ -22,28 +22,16 @@ class ProfileInsertLib
   private static $instance = null;
   
   /**
-   * JPROFILE Store Object
-   * @var Object 
-   */
-  private $objJProfileStore = null;
-
-  /**
-   * JP_NTIME Store Object
-   * @var Object
-   */
-  private $objProfileNTimesStore = null;
-
-  /**
    * HOROSCOPE_FOR_SCREEN Store Object
    * @var Object
    */
   private $objProfileHoroscopeForScreenStore = null;
 
   /**
-   * JPROFILE_ALERTS Store Object
+   * HOROSCOPE Store Object
    * @var Object
    */
-  private $objProfileAlertsStore = null;
+  private $objProfileHoroscopeStore = null;
 
   /**
    *
@@ -57,19 +45,15 @@ class ProfileInsertLib
   private function __construct($dbname="") 
   {
     $this->currentDBName = $dbname;
-    $this->objJProfileStore = new JPROFILE($dbname);
-    $this->objProfileNTimesStore = new NEWJS_JP_NTIMES($dbname);
+    $this->objProfileHoroscopeStore = new newjs_HOROSCOPE($dbname);
     $this->objProfileHoroscopeForScreenStore = new NEWJS_HOROSCOPE_FOR_SCREEN($dbname);
-    $this->objProfileAlertsStore = new newjs_JPROFILE_ALERTS($dbname);
   }
   /**
    * __destruct
    */
   public function __destruct() {
-    unset($this->objJProfileStore);
-    unset($this->objProfileNTimesStore);
+    unset($this->objProfileHoroscopeStore);
     unset($this->objProfileHoroscopeForScreenStore);
-    unset($this->objProfileAlertsStore);
     self::$instance = null;
   }
   /**
@@ -98,49 +82,30 @@ class ProfileInsertLib
   public static function getInstance($dbname="")
   {
 		if (null === self::$instance) {
-      self::$instance = new ProfileInsertLib($dbname);
+      self::$instance = new ProfileDeleteLib($dbname);
     }
 
     //Compare Current DB Name and if its different changeConnection
     //and set new connection with desired dbname
     if(self::$instance->currentDBName !== $dbname) {
       self::$instance->currentDBName = $dbname;
-      self::$instance->objJProfileStore->setConnection($dbname);
-      self::$instance->objProfileNTimesStore->setConnection($dbname);
+      self::$instance->objProfileHoroscopeStore->setConnection($dbname);
       self::$instance->objProfileHoroscopeForScreenStore->setConnection($dbname);
-      self::$instance->objProfileAlertsStore->setConnection($dbname);
-
     }
 
     return self::$instance;
   }
 
   /**
-   * Funciton to Update Profile View Count in JP_NTIME Table
-   * @param $iProfileID
-   * @return bool|void
-   */
-  public function insertNTimeCount($iProfileID, $iCount)
-  {
-    try{
-      return $this->objProfileNTimesStore->insertRecord($iProfileID, $iCount);
-    } catch (Exception $ex) {
-      jsCacheWrapperException::logThis($ex);
-      return false;
-    }
-  }
-
-  /**
-   * insertHOROSCOPE_FOR_SCREEN
-   * @param $iProfileID
-   * @param $blobHoroscope
-   * @param $cHoroscope
+   * deleteAllScreenedRecords
+   * query to remove the entries from HOROSCOPE_FOR_SCREEN table
+   * which have UPLOADED field as 'Y' or 'D'
    * @return bool
    */
-  public function insertHOROSCOPE_FOR_SCREEN($iProfileID,$blobHoroscope,$cHoroscope='')
+  public function deleteAllScreenedRecords()
   {
     try{
-      return $this->objProfileHoroscopeForScreenStore->insertRecord($iProfileID,$blobHoroscope,$cHoroscope);
+      return $this->objProfileHoroscopeForScreenStore->deleteAllScreenedRecords();
     } catch (Exception $ex) {
       jsCacheWrapperException::logThis($ex);
       return false;
@@ -148,13 +113,14 @@ class ProfileInsertLib
   }
 
   /**
-   * @param $paramArr
-   * @return bool|mixed
+   * deleteRecordHOROSCOPE_FOR_SCREEN
+   * @param $iID
+   * @return bool
    */
-  public function insertJPROFILE($arrParams)
+  public function deleteRecordHOROSCOPE_FOR_SCREEN($iID)
   {
     try{
-      return $this->objJProfileStore->insert($arrParams);
+      return $this->objProfileHoroscopeForScreenStore->deleteRecord($iID);
     } catch (Exception $ex) {
       jsCacheWrapperException::logThis($ex);
       return false;
@@ -162,14 +128,14 @@ class ProfileInsertLib
   }
 
   /**
-   * insertJPROFILE_ALERTS
-   * @param $arrRecordData
-   * @return bool|mixed
+   * deleteRecordHOROSCOPE
+   * @param $iProfileID
+   * @return bool
    */
-  public function insertJPROFILE_ALERTS($arrRecordData)
+  public function deleteRecordHOROSCOPE($iProfileID)
   {
     try{
-      return $this->objProfileAlertsStore->insertRecord($arrRecordData);
+      return $this->objProfileHoroscopeStore->deleteRecord($iProfileID);
     } catch (Exception $ex) {
       jsCacheWrapperException::logThis($ex);
       return false;
