@@ -137,12 +137,13 @@ valid=validateNum(mobileNum,isdNew);
 	}
 
 if (updatedIsd==isdNew && updatedNum==mobileNum){
+	showVerifyLayer();return;
+
 	if(landLineFlag) 
 	{
 	showVerifyLayer();
 	return;
 	}
-
 $("#phoneVerifyErr").hide();
 var ajaxData={'phoneType':phoneType,'PCLayer':'Y'};
 var ajaxConfig={};

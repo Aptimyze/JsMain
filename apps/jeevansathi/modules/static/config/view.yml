@@ -220,7 +220,7 @@ jspcEmailVerifiedSuccess:
   http_metas:
     X-UA-Compatible:    IE=edge
   stylesheets:    []
-  javascripts:    [-*]
+  javascripts:    []
   layout: jspcLayout
 
 jsmsEmailVerifiedSuccess:

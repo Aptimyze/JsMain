@@ -357,7 +357,7 @@ class registerActions extends sfActions
                     }
 					
                     // email for verification
-                    $emailUID=(new NEWJS_EMAIL_CHANGE_LOG())->insertEmailChange($this->loggedInProfile->getPROFILEID(),$this->loggedInProfile->EMAIL());
+                    $emailUID=(new NEWJS_EMAIL_CHANGE_LOG())->insertEmailChange($this->loggedInProfile->getPROFILEID(),$this->loggedInProfile->getEMAIL());
 					(new emailVerification())->sendVerificationMail($this->loggedInProfile->getPROFILEID(),$emailUID);
 					////////
                     //Lead conversion update

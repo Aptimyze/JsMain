@@ -1,3 +1,4 @@
+ <script type="text/javascript">var verifyEmailPage='1';</script>
  <div class="cover1">
         <div class="container mainwid pt35 pb48">
             ~include_partial("global/JSPC/_jspcCommonTopNavBar")`
