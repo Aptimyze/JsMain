@@ -309,6 +309,10 @@ class billing_VARIABLE_DISCOUNT extends TABLE{
         }
     }
     
+    /*Used earlier to generate VD Impact Report
+     * Now removed the join with VARIABLE_DISCOUNT_POOL_TECH
+     * 2016-06-30
+     */
     public function getVariableDiscountProfilesEndingYesterday()
     {
         try{
@@ -326,6 +330,23 @@ class billing_VARIABLE_DISCOUNT extends TABLE{
         catch(Exception $e)
         {
             throw new jsException($e);
+        }
+    }
+    
+    public function getVDProfilesEndingYesterday(){
+        try{
+            $yesterdayDate = date("Y-m-d", strtotime("-1 day"));
+            $sql = "SELECT vd.PROFILEID, vd.DISCOUNT, vd.SDATE, vd.EDATE FROM billing.VARIABLE_DISCOUNT as vd WHERE vd.EDATE = :EDATE";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":EDATE",$yesterdayDate,PDO::PARAM_STR);
+            $prep->execute();
+            while($result = $prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $vdData[] = $result;
+            }
+            return $vdData;
+        } catch (Exception $ex) {
+            throw new jsException($ex);
         }
     }
 }
