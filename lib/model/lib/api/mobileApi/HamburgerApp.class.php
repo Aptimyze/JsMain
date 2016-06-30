@@ -32,6 +32,10 @@ class HamburgerApp
 			$hamburgerDetails['AWAITING_RESPONSE_NEW']=$profileMemcacheObj->get("AWAITING_RESPONSE_NEW");
 			$hamburgerDetails['AWAITING_RESPONSE']=$profileMemcacheObj->get("AWAITING_RESPONSE");
 			$hamburgerDetails['FILTERED']=$profileMemcacheObj->get("FILTERED");
+			$hamburgerDetails["FILTERED_NEW"] = $profileMemcacheObj->get("FILTERED_NEW");
+				if(!$hamburgerDetails["FILTERED_NEW"]){
+					$hamburgerDetails["FILTERED_NEW"] = 0;
+				}
 			$hamburgerDetails['ACC_ME_NEW']=$profileMemcacheObj->get("ACC_ME_NEW");
 	                $hamburgerDetails['MESSAGE_NEW']=0;
 	                //$profileMemcacheObj->get("MESSAGE_NEW");
