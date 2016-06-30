@@ -29027,8 +29027,14 @@ return Backbone.BrowserStorage;
                     'status': ''
                 }, attributes));
 
-                this.on('destroy', function () { this.removeFromRoster(); }.bind(this));
+                this.on('destroy', function () { 
+                    console.log("ankita_delete contact"+jid);
+                    invokePluginManagelisting(attributes,{},"delete_node");
+                    this.removeFromRoster(); 
+                }.bind(this));
                 this.on('change:chat_status', function (item) {
+                    console.log("changing status 2......444");
+                    console.log(item);
                     converse.emit('contactStatusChanged', item.attributes);
                 });
             },
@@ -34239,7 +34245,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                         // finding the correct position in positionContact
                         console.log("ankita_changing_status"); //ankita-status change
                         console.log(contact);
-                        invokePluginAddlisting(contact,{},"update_status");  
+                        invokePluginManagelisting(contact,{},"update_status");  
                         this.model.contacts.sort();
                         this.positionContact(contact).render();
                     }, this);
@@ -34287,7 +34293,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                         converse.getVCard(userid,function (iq) {
                             console.log("ankita_fetching vcard...."+userid);
                             vcardObj = xmlToJson($(iq).children('vCard')[0]);
-                            invokePluginAddlisting(contact,vcardObj,"add_node");     
+                            invokePluginManagelisting(contact,vcardObj,"add_node");     
                         });
                     }
                     if (view.mayBeShown()) {
