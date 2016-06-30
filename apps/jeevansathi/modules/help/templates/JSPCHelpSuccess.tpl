@@ -114,7 +114,7 @@
             <div class="padalln txtc fontlig">
                 <div class="f16 colr2">Toll Free number</div>
                 <div class="f20 color5">1-800-419-6299</div>
-                <div class="f14 colr2">Daily between 9AM-9PM</div>
+                <div class="f14 colr2">Daily between 9AM-9PM (IST)</div>
                 <div class="mt70"></div>
                 <div class="bg_pink lh40 f16 colrw centerBtn cursp hoverPink"><a class ="colrw fullhgt fullwid pos_rel disp_b" href="/contactus/index?fromSideLink=1">Live Help Chat</a></div>
                 <div class="f14 colr2 mt10">Chat with our Customer Care</div>
