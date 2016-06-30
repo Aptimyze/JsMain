@@ -34040,7 +34040,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                 },
 
                 render: function () {
-                    if (!this.mayBeShown()) {  //ankita - use maybeshown with group name
+                    if (!this.mayBeShown()) {  
                         this.$el.hide();
                         return this;
                     }
