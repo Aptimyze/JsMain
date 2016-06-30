@@ -79,7 +79,8 @@ Please <a target="_blank" href="(LINK)HOME_PAGE_MYJS:profileid=~$profileid`(/LIN
             </table></td>
           <td></td>
         </tr>
-      </table></td>
+      </td>
+ </tr>
   </tr>
   ~$FOOTER`
 </table>
