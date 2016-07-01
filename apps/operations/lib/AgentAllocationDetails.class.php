@@ -430,7 +430,7 @@ public function fetchProfiles($processObj)
 		                $profiles=$this->fetchWebmasterLeadsEligibleProfiles($subMethod);
 			elseif($method=='FIELD_SALES'){
 				$processId 		=$processObj->getIdAllot();
-				$lastHandledDtObj 	=new incentive_LAST_HANDLED_DATE('newjs_slave');
+				$lastHandledDtObj 	=new incentive_LAST_HANDLED_DATE();
 				$screenedTimeStart 	=$lastHandledDtObj->getHandledDate($processId);
 				$processObj->setStartDate($screenedTimeStart);
 
