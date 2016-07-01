@@ -65,7 +65,14 @@ class page1v1Action extends sfAction {
 			$apiObj->setHttpArray(ResponseHandlerConfig::$APP_REG_VERIFIED);
 			$registrationid=$request->getParameter("registrationid");
 			$done = NotificationFunctions::manageGcmRegistrationid($registrationid,$id)?"1":"0";
-                        $loginData=array("GENDER"=>$result[GENDER],"USERNAME"=>$result[USERNAME],"LANDINGPAGE"=>'1',"GCM_REGISTER"=>$done);
+            $loginData=array("GENDER"=>$result[GENDER],"USERNAME"=>$result[USERNAME],"LANDINGPAGE"=>'1',"GCM_REGISTER"=>$done);
+
+
+               // email for verification
+                    $emailUID=(new NEWJS_EMAIL_CHANGE_LOG())->insertEmailChange($this->loggedInProfile->getPROFILEID(),$this->loggedInProfile->getEMAIL());
+					(new emailVerification())->sendVerificationMail($this->loggedInProfile->getPROFILEID(),$emailUID);
+					////////
+                 
 			$apiObj->setResponseBody($loginData);
                         
 			$apiObj->generateResponse();
