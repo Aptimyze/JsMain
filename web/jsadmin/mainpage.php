@@ -33,7 +33,7 @@ if(isset($data))//successful login
 			$linkarr[]="<a href=\"#\" onClick=\"MM_openBrWindow(this,'/crm/ncr_individual_operator_record_new.php?user=$name&cid=$cid','mywindow','width=700,height=600,scrollbars=yes');return false;\">Your Track Record</a>";
 		
 
-		if(in_array("UpSSup",$priv) || in_array("FPSUP",$priv) || in_array("INBSUP",$priv) || in_array("ExcFSD",$priv) || in_array("ExcFID",$priv) || in_array("ExcPrm",$priv) || in_array("SLMNTR",$priv) || in_array("SLSUP",$priv) || in_array("SLHD",$priv) || in_array("P",$priv) || in_array("MG",$priv) || in_array("TRNG",$priv) || in_array("ExcFld",$priv) || in_array("SupFld",$priv) || in_array("RSP",$priv)){
+		if(in_array("UpSSup",$priv) || in_array("FPSUP",$priv) || in_array("INBSUP",$priv) || in_array("ExcPrm",$priv) || in_array("SLMNTR",$priv) || in_array("SLSUP",$priv) || in_array("SLHD",$priv) || in_array("P",$priv) || in_array("MG",$priv) || in_array("TRNG",$priv) || in_array("ExcFld",$priv) || in_array("SupFld",$priv) || in_array("RSP",$priv)){
 			$linkarr[]="<a href=\"$SITE_URL/operations.php/crmDeallocation/ReleaseProfile\">Release Single Profile</a>";
 		}
 
@@ -481,7 +481,7 @@ if(isset($data))//successful login
 	{
 		$linkarr[]="<a href=\"#\" onClick=\"MM_openBrWindow(this,'/crm/ncr_individual_operator_record_new.php?user=$name&cid=$cid','mywindow','width=700,height=600,scrollbars=yes');return false;\">Your Track Record</a>";
 	}
-	if(in_array("UpSSup",$priv) || in_array("FPSUP",$priv) || in_array("INBSUP",$priv) || in_array("ExcFSD",$priv) || in_array("ExcFID",$priv) || in_array("ExcPrm",$priv) || in_array("SLMNTR",$priv) || in_array("SLSUP",$priv) || in_array("SLHD",$priv) || in_array("P",$priv) || in_array("MG",$priv) || in_array("TRNG",$priv) || in_array("ExcFld",$priv) || in_array("SupFld",$priv) || in_array("RSP",$priv)){
+	if(in_array("UpSSup",$priv) || in_array("FPSUP",$priv) || in_array("INBSUP",$priv) || in_array("ExcPrm",$priv) || in_array("SLMNTR",$priv) || in_array("SLSUP",$priv) || in_array("SLHD",$priv) || in_array("P",$priv) || in_array("MG",$priv) || in_array("TRNG",$priv) || in_array("ExcFld",$priv) || in_array("SupFld",$priv) || in_array("RSP",$priv)){
 		$user=$name;//getname($cid);
 		$linkarr[]="<a href=\"$SITE_URL/operations.php/crmDeallocation/ReleaseProfile\">Release Single Profile</a>";
 	}
