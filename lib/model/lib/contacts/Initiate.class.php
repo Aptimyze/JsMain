@@ -285,6 +285,8 @@ if ($this->contactHandler->getContactObj()->getFILTERED() != Contacts::FILTERED 
       {
         $notificationData = array("notificationKey"=>"EOI","selfUserId" => $this->contactHandler->getViewed()->getPROFILEID(),"otherUserId" => $this->contactHandler->getViewer()->getPROFILEID()); 
         $producerObj->sendMessage(formatCRMNotification::mapBufferInstantNotification($notificationData));
+	$chatData = array('process' =>'CHATROSTERS','data'=>array('type' => 'CONTACT_INITIATED','body'=>array('senderid'=>$this->contactHandler->getViewed()->getPROFILEID(),'receiverid'=>$this->contactHandler->getViewer()->getPROFILEID() ) ), 'redeliveryCount'=>0 );
+        $producerObj->sendMessage($chatData);
       }
       unset($producerObj);
     }

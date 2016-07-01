@@ -28619,7 +28619,8 @@ return Backbone.BrowserStorage;
             xhr_custom_status: false,
             xhr_custom_status_url: '',
             listing_data:{},
-            rosterDisplayGroups:{}
+            rosterDisplayGroups:{},
+            listCreationDone:false
         };
 
         _.extend(this, this.default_settings);
@@ -29028,8 +29029,11 @@ return Backbone.BrowserStorage;
                 }, attributes));
 
                 this.on('destroy', function () { 
-                    console.log("ankita_delete contact"+jid);
-                    invokePluginManagelisting(attributes,{},"delete_node");
+                    if(converse.listCreationDone == true)
+                    {
+                        console.log("ankita_delete contact"+jid);
+                        invokePluginManagelisting(attributes,{},"delete_node");
+                    }
                     this.removeFromRoster(); 
                 }.bind(this));
                 this.on('change:chat_status', function (item) {
@@ -34038,7 +34042,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                 },
 
                 render: function () {
-                    if (!this.mayBeShown()) {  //ankita - use maybeshown with group name
+                    if (!this.mayBeShown()) {  
                         this.$el.hide();
                         return this;
                     }
@@ -34243,9 +34247,12 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                     this.model.contacts.on("change:chat_status", function (contact) {
                         // This might be optimized by instead of first sorting,
                         // finding the correct position in positionContact
-                        console.log("ankita_changing_status"); //ankita-status change
-                        console.log(contact);
-                        invokePluginManagelisting(contact,{},"update_status");  
+                        if(converse.listCreationDone == true)
+                        {
+                            console.log("ankita_changing_status"); //ankita-status change
+                            console.log(contact);
+                            invokePluginManagelisting(contact,{},"update_status"); 
+                        } 
                         this.model.contacts.sort();
                         this.positionContact(contact).render();
                     }, this);
