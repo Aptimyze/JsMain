@@ -48,7 +48,7 @@ class Dialer
                         }
                         // Pre-Allocation Filter
                         $filter ='PRE_ALLOCATED';
-                        $profiles =$indialerTempPool->fetchPreAllocatedProfiles();
+                        $profiles =$indialerTempPoolRemove->fetchPreAllocatedProfiles();
                         if(count($profiles)>0){
                                 $this->dialerProfileLog($profiles,'N',$filter,'Y');
                                 $indialerTempPoolRemove->removePreAllocatedProfiles();
