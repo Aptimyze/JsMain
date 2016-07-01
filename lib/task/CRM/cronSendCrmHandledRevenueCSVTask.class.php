@@ -47,7 +47,7 @@ EOF;
          */
         if ($fortnight == "H1" || $fortnight == "H2") {
             $fortnightValue = substr($fortnight, 1);
-            $file_path = JsConstants::$docRoot . "/uploads/crmRevenue.csv";
+            $file_path = "/var/www/html_public/web/uploads/crmRevenue.csv";
             $fp = fopen($file_path, "w");
 
             if ($fortnight == "H1") {
@@ -66,8 +66,13 @@ EOF;
             /**
              * send curl request to mis action to generate csv
              */
+            // $jsadminConnectObj = new jsadmin_CONNECT('newjs_master');
+            // $params = array('USER'=>'jstech','IPADDR'=>'127.0.0.1');
+            // $last_inserted_id = $jsadminConnectObj->createLoginSessionForAgent($params);
+            // $cid = Encrypt_Decrypt::encryptIDUsingMD5($last_inserted_id);
             $tuCurl = curl_init();
-            $curlURL = JsConstants::$siteUrl . "/operations.php/crmMis/crmHandledRevenueCsvGenerate?fromMisCron=1&monthValue=" . $month . "&yearValue=" . $year . "&fortnightValue=" . $fortnightValue . "&report_type=TEAM&report_content=REVENUE&report_format=XLS&dialer_check=1";
+            $curlURL = "http://crm.jeevansathi.com/operations.php/crmMis/crmHandledRevenueCsvGenerate?fromMisCron=1&monthValue=" . $month . "&yearValue=" . $year . "&fortnightValue=" . $fortnightValue . "&report_type=TEAM&report_content=REVENUE&report_format=XLS&dialer_check=1&cid=eba0dc302bcd9a273f8bbb72be3a687bi484";
+            print_r($curlURL);
             curl_setopt($tuCurl, CURLOPT_URL, $curlURL);
             /**
              * curl_setopt($tuCurl, CURLOPT_RETURNTRANSFER, 1);
@@ -88,9 +93,7 @@ EOF;
                  */
                 $to = "shyam@naukri.com,jitesh.bhugra@naukri.com,rohan.mathur@jeevansathi.com,anamika.singh@jeevansathi.com,rajeev.joshi@jeevansathi.com,Amit.Malhotra@jeevansathi.com";
                 $cc = "vibhor.garg@jeevansathi.com,ankita.g@jeevansathi.com";
-                /**
-                 * $to = "avneet.bindra@jeevansathi.com";
-                 */
+                // $to = "avneet.bindra@jeevansathi.com";
                 $message = "Please find attached excel sheet containing requested data";
                 $subject = "Crm Handled Revenue MIS Report";
                 $csvAttachment = file_get_contents($file_path);
