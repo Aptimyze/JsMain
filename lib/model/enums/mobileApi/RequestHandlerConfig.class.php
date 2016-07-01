@@ -101,7 +101,8 @@ class RequestHandlerConfig
     "chat"=>array(
         "authenticateChatSession"=>array("v1"=>"authenticateChatSessionV1"),
         "chatUserAuthentication"=>array("v1"=>"chatUserAuthenticationV1"),
-        "fetchCredentials"=>array("v1"=>"fetchCredentialsV1")
+        "fetchCredentials"=>array("v1"=>"fetchCredentialsV1"),
+        "fetchVCard"=>array("v1"=>"fetchVCardV1")
         )
 );
 

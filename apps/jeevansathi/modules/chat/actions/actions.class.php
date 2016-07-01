@@ -128,5 +128,35 @@ class chatActions extends sfActions
         $apiResponseHandlerObj->generateResponse();
         die;
     }
+    
+    public function executeFetchVCardV1(sfwebrequest $request){
+            $apiResponseHandlerObj = ApiResponseHandler::getInstance();
+        $loginData = $request->getAttribute("loginData");
+        if($loginData){
+            $jid = $request->getParameter('jid');
+            if(is_array($jid)){
+                foreach($jid as $key => $val){
+                    $username.=$val.",";
+                }
+                $username = rtrim($username,",");
+                
+                $vcardDetailsObj = new chat_ofVcard();
+                $result = $vcardDetailsObj->getVCardDetails($username);
+                
+                $response = array("vCard"=>$result);
+                $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+            }
+            else{
+                $apiResponseHandlerObj->setHttpArray(ChatEnum::$invalidFormat);
+            }
+        }
+        else{
+            $response = "Logged Out Profile";
+            $apiResponseHandlerObj->setHttpArray(ChatEnum::$loggedOutProfile);
+        }
+        $apiResponseHandlerObj->setResponseBody($response);
+        $apiResponseHandlerObj->generateResponse();
+        die;
+    }
 }
 ?>

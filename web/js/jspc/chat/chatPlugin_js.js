@@ -280,6 +280,9 @@
 			{
                 togglePanel();
                 eraseCookie('chatAuth');
+                if($(self.options.loginPanelId).length == 0){
+                    $(self.options.container).append(self.options.loginChatPanel);
+                }
                 $(self.options.listingPanelId).fadeOut('slow', function() {
                     $(self.options.loginPanelId).fadeIn('slow');
                 })
