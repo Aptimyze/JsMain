@@ -69,8 +69,8 @@ class page1v1Action extends sfAction {
 
 
                // email for verification
-                    $emailUID=(new NEWJS_EMAIL_CHANGE_LOG())->insertEmailChange($this->loggedInProfile->getPROFILEID(),$this->loggedInProfile->getEMAIL());
-					(new emailVerification())->sendVerificationMail($this->loggedInProfile->getPROFILEID(),$emailUID);
+                    $emailUID=(new NEWJS_EMAIL_CHANGE_LOG())->insertEmailChange($this->loginProfile->getPROFILEID(),$this->loginProfile->getEMAIL());
+					(new emailVerification())->sendVerificationMail($this->loginProfile->getPROFILEID(),$emailUID);
 					////////
                  
 			$apiObj->setResponseBody($loginData);
