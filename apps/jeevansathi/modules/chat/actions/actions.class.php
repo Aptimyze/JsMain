@@ -158,5 +158,18 @@ class chatActions extends sfActions
         $apiResponseHandlerObj->generateResponse();
         die;
     }
+
+
+    public function executeGetRosterDataV1(sfwebrequest $request){
+	    $profileid = $request->getParameter("profileid");
+	    $type = $request->getParameter("type");
+	    $limit = $request->getParameter("limit");
+	    $getRosterDataObj = new GetRosterData($profileid);
+
+	    $getData = $getRosterDataObj->getRosterDataByType($type,$limit);
+
+	    
+	    
+    }
 }
 ?>
