@@ -297,7 +297,6 @@ class DetailedViewApi
 			$szAboutMyEdu = null;
 			
 		$this->m_arrOut['myedu'] = $szAboutMyEdu;
-		
 		//PG Degree
 		$objEducation = $this->m_objProfile->getEducationDetail();
 		
@@ -371,7 +370,9 @@ class DetailedViewApi
 		{
 			$arrUGOut = null;
 		}
-				
+                
+                $this->m_arrOut['college'] = $objProfile->getCOLLEGE();
+                $this->m_arrOut['pg_college'] = $objProfile->getPG_COLLEGE();
 		$this->m_arrOut['under_grad'] = $arrUGOut;
 		
 		//School
@@ -426,7 +427,7 @@ class DetailedViewApi
 			$arrWorkInfo = null;
 			
 		$this->m_arrOut['work_status'] = $arrWorkInfo;
-		
+		$this->m_arrOut['company_name'] = $objProfile->getCOMPANY_NAME() ?"Works at ".$objProfile->getCOMPANY_NAME():"";
 		//Earnings
 		$this->m_arrOut['earning'] = null;
 		if(($szInc_Lvl = $objProfile->getDecoratedIncomeLevel()) != ApiViewConstants::getNullValueMarker())

@@ -841,5 +841,25 @@ die;
 		return;
 	}
 
+	public static function validatePhoneNo($phone){
+		$regExIndian = "/^((\+){0,1}91(\s){0,1}(\-){0,1}(\s){0,1})?([0-9]{10})$/";
+        $regExIndianLandline = "/^[0-9]\d{2,4}[-. ]?\d{6,8}$/";
+        $regExInternational = "/^\+(?:[0-9][-. ]? ?){7,14}[0-9]$/";
+		if (preg_match($regExIndian, $phone) || preg_match($regExInternational, $phone) || preg_match($regExIndianLandline, $phone)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public static function validateEmail($email){
+		$regExEmail = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/";
+		if (preg_match($regExEmail, $email)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 }
 ?>
