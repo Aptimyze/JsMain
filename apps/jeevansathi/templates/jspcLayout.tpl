@@ -58,6 +58,7 @@
             }
         }
         var loggedInJspcUser="~$sf_request->getAttribute('profileid')`";
+        var showChat = "~$showChat`";
     </script>
     ~/if`
 </head>
