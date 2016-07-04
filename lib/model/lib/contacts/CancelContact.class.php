@@ -91,6 +91,9 @@ class CancelContact extends ContactEvent{
         $receiver = $this->contactHandler->getViewed();
         $sendMailData = array('process' =>'MAIL','data'=>array('type' => 'CANCELCONTACT','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID() ) ), 'redeliveryCount'=>0 );
         $producerObj->sendMessage($sendMailData);
+	//Remove from contact roster
+        $chatData = array('process' =>'CHATROSTERS','data'=>array('type' => 'CONTACT_REMOVE','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID() ) ), 'redeliveryCount'=>0 );
+        $producerObj->sendMessage($chatData);
     }
     else
     {
