@@ -13,7 +13,7 @@
 /** 
 * auto load of predis(plugin to connect redis from php.
 */
-include_once(JsConstants::$cronDocRoot.'/plugins/predis-1.0/autoload.php');
+include_once(JsConstants::$cronDocRoot.'/plugins/predis-1.1/autoload.php');
 
 class JsMemcache extends sfMemcacheCache{
 		
@@ -31,7 +31,7 @@ class JsMemcache extends sfMemcacheCache{
 	*/
 	private static function isRedis()
 	{
-	    if(JsConstants::$memoryCachingSystem=='redis')
+	    if(in_array(JsConstants::$memoryCachingSystem,array('redis','redisCluster','redisSentinel')))
 		return true;
 	}
 		
@@ -58,9 +58,22 @@ class JsMemcache extends sfMemcacheCache{
 	    {
 		try
 		{
-			$cluster = JsConstants::$redisCluster;
-			$options = ['cluster' => 'redis'];
-			$this->client = new Predis\Client($cluster, $options);
+	    		if(JsConstants::$memoryCachingSystem=='redis')
+			{
+				$this->client = new Predis\Client(JsConstants::$ifSingleRedis);
+			}
+	    		elseif(JsConstants::$memoryCachingSystem=='redisSentinel')
+			{
+				$sentinels = JsConstants::$redisSentinel;
+				$options   = ['replication' => 'sentinel', 'service' => 'mymaster'];
+				$this->client = new Predis\Client($sentinels, $options);
+			}
+			else
+			{
+				$cluster = JsConstants::$redisCluster;
+				$options = ['cluster' => 'redis'];
+				$this->client = new Predis\Client($cluster, $options);
+			}
 		}
 		catch (Exception $e) {  
 			$this->client = NULL;

@@ -360,7 +360,7 @@ class JPROFILE extends TABLE{
          * @exception jsException for blank criteria
          * @exception PDOException for database level error handling
          */
-        public function edit($paramArr=array(), $value, $criteria="PROFILEID"){
+        public function edit($paramArr=array(), $value, $criteria="PROFILEID",$extraWhereCnd=""){
 			if($this->dbName=="newjs_bmsSlave")
 				$this->setConnection("newjs_master");
                 if(!$value)
@@ -371,11 +371,21 @@ class JPROFILE extends TABLE{
 			}
 			$setValues = implode(",",$set);
                         $sqlEditProfile = "UPDATE JPROFILE SET $setValues WHERE $criteria = :$criteria";
+                        if(0 !== strlen($extraWhereCnd)){
+                          $sqlEditProfile .= " AND ".$extraWhereCnd;
+                        }
+
                         $resEditProfile = $this->db->prepare($sqlEditProfile);
 			foreach($paramArr as $key=>$val){
 	                        $resEditProfile->bindValue(":".$key, $val);
 			}
-                        $resEditProfile->bindValue(":$criteria", $value);
+      
+                        $paramType = PDO::PARAM_STR;
+                        if(is_numeric(intval($value))){
+                          $paramType = PDO::PARAM_INT;
+                        }
+                          
+                        $resEditProfile->bindValue(":$criteria", $value,$paramType);
                         $resEditProfile->execute();
                         return true;
                 }
@@ -1170,6 +1180,151 @@ public function duplicateEmail($email)
         
         return $res;
     }
+    
+    /**
+     * updateProfileForArchive
+     * Update Profile Columns for archive i.e. setting 
+     * PREACTIVATED,ACTIVATED,activatedKey,JsArchived,MOD_DT column
+     * @param type $iProfileID
+     * @throws jsException
+     * @return rowCount
+     */
+    public function updateProfileForArchive($iProfileID)
+    {
+      try{
+        $sql="update newjs.JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D', activatedKey=0,JSARCHIVED=1, MOD_DT=now() where PROFILEID=:PROFILEID";
+        $prep = $this->db->prepare($sql);
+        $prep->bindValue(":PROFILEID",$iProfileID,PDO::PARAM_INT);
+        $prep->execute();
+        return $prep->rowCount();
+      } catch (Exception $ex) {
+        throw new jsException($ex);
+      }
+    }
+
+    /**
+     * updateProfileForBilling
+     * Update Profile Columns for archive i.e. setting 
+     * PREACTIVATED,ACTIVATED,activatedKey,column
+     * @param type $iProfileID
+     * @throws jsException
+     * @return rowCount
+     */
+    public function updateProfileForBilling($paramArr=array(), $value, $criteria="PROFILEID",$extraStr='')
+    {
+                if(!$value)
+                        throw new jsException("","$criteria IS BLANK");
+                try {
+			if(is_array($paramArr)){
+	                        foreach($paramArr as $key=>$val){
+	                                $set[] = $key." = :".$key;
+	                        }
+				if(is_array($set))
+		                        $setValues = implode(",",$set);
+			}
+			if($setValues)
+	                        $sqlEditProfile = "UPDATE JPROFILE SET $setValues,$extraStr WHERE $criteria = :$criteria";
+			else
+				$sqlEditProfile = "UPDATE JPROFILE SET $extraStr WHERE $criteria = :$criteria";
+
+                        $resEditProfile = $this->db->prepare($sqlEditProfile);
+			if(is_array($paramArr)){
+	                        foreach($paramArr as $key=>$val){
+	                                $resEditProfile->bindValue(":".$key, $val);
+	                        }
+			}
+                        $paramType = PDO::PARAM_INT;
+
+                        $resEditProfile->bindValue(":$criteria", $value,$paramType);
+                        $resEditProfile->execute();
+                        return true;
+                }
+                catch(PDOException $e)
+                    {
+                        throw new jsException($e);
+                    }
+    }
+
+	/**
+	 * updateProfileSeriousnessCount
+	 * This query is in use at SugarCRM
+	 * @param $profileArr
+	 * @return bool
+	 */
+	function updateProfileSeriousnessCount($profileArr)
+	{
+		if(!is_array($profileArr) || !count($profileArr)) {
+			throw new jsException("Param is not array or an empty is provided");
+		}
+
+		try{
+			$now=date('Y-m-d h:i:s');
+			$szINs = implode(',',array_fill(0,count($profileArr),'?'));
+
+			$sql="UPDATE newjs.JPROFILE SET SERIOUSNESS_COUNT=SERIOUSNESS_COUNT+1,SORT_DT=? WHERE PROFILEID IN ($szINs)";
+			$pdoStatement = $this->db->prepare($sql);
+      $count =1;
+			$pdoStatement->bindValue($count, $now,PDO::PARAM_STR);
+			//Bind Value
+			
+			foreach ($profileArr as $k => $value)
+			{
+				++$count;
+				$pdoStatement->bindValue(($count), $value,PDO::PARAM_INT);
+			}
+			$pdoStatement->execute();
+			return true;
+		} catch (Exception $ex){
+			throw new jsException($ex);
+		}
+	}
+	
+	
+	/**
+	 * updateForMutipleProfiles
+	 * This query is in use to edit values for mutiple profiles
+	 * @param $paramArr
+	 * @param $profileArr
+	 * @return bool
+	 */
+	function updateForMutipleProfiles($paramArr,$profileArr)
+	{
+		if(!is_array($paramArr) || !count($paramArr) || !is_array($profileArr) || !count($profileArr)) {
+			throw new jsException("Param is not array or an empty is provided");
+		}
+	
+		try{
+			foreach($paramArr as $key=>$val){
+				$set[] = $key." = :".$key;
+			}
+			$setValues = implode(",",$set);
+			
+			foreach ($profileArr as $k => $value)
+			{
+				$pString[]=":".$k;
+			}
+			$szINs = implode(",",$pString);
+			$sql="UPDATE newjs.JPROFILE SET $setValues WHERE PROFILEID IN ($szINs)";
+			$pdoStatement = $this->db->prepare($sql);
+			
+			//Bind Value
+			$count =0;
+			foreach ($profileArr as $k => $value)
+			{
+				$pdoStatement->bindValue(":".$k, $value,PDO::PARAM_INT);
+			}
+			foreach($paramArr as $key=>$val){
+	      $pdoStatement->bindValue(":".$key, $val);
+			}
+			
+			$pdoStatement->execute();
+			return true;
+		} catch (Exception $ex){
+			throw new jsException($ex);
+		}
+	}
+
+
 
     //This function gets data for CITY_RES/MTONGUE/(AGE/GENDER) grouped by the same along with month/day as per the condition
     public function getRegistrationMisGroupedData($fromDate,$toDate,$month='',$groupType)
@@ -1225,5 +1380,26 @@ public function duplicateEmail($email)
                     throw new jsException($e);
             }
     }
+    
+	/**
+	 * update sort date in Jprofile
+	 * @param $profileId
+	 * @return bool
+	 */
+	function updateSortDate($profileId)
+	{
+		try{
+
+			$sql="update newjs.JPROFILE set SORT_DT=if(DATE_SUB(NOW(),INTERVAL 7 DAY)>=SORT_DT,DATE_ADD(SORT_DT,INTERVAL 7 DAY),SORT_DT) where PROFILEID=:PROFILEID";
+			$pdoStatement = $this->db->prepare($sql);
+			$pdoStatement->bindValue(':PROFILEID', $profileId,PDO::PARAM_INT);
+			$pdoStatement->execute();
+                        return $pdoStatement->rowCount();
+		} 
+                catch (Exception $ex){
+			throw new jsException($ex);
+		}
+	}
+
 }
 ?>

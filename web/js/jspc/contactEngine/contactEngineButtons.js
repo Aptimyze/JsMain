@@ -65,6 +65,12 @@ ajaxData=this.makePostDataForAjax(this.profileChecksum);
           data:ajaxData,
           context: this,
           success: function(response,data) {
+		if(data.name=="ACCEPT")
+		{
+			$('.js-showDetail'+data.profileChecksum).find(".showText").each(function(index, element) {
+				$(this).next().show(),$(this).remove();
+			});
+		}
           	if(data.name =="MESSAGE_WRITE")
 			{
 				var messageKeyName="MESSAGE_WRITE-"+data.profileChecksum+"-"+data.pageSource;
@@ -104,6 +110,24 @@ ajaxData=this.makePostDataForAjax(this.profileChecksum);
            {
 				data.data = response;
 				data.post();
+				if(data.name=="DECLINE" && data.pageName=="VDP")
+				{
+					var address_url=window.location.href;
+					 if(address_url.indexOf("?") >= 0){
+						var hash;
+						var pageSource='';
+						var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+						for(var i = 0; i < hashes.length; i++)
+						{
+							hash = hashes[i].split('=');
+							if(hash[0]=="contact_id")
+								pageSource=hash[1];
+						}
+						if(pageSource!='' && (pageSource.indexOf("INTEREST_RECEIVED") >= 0 ||pageSource.indexOf("FILTERED_INTEREST") >= 0) && $("#show_nextListingProfile").length && $("#show_nextListingProfile")[0]!=undefined)
+							$("#show_nextListingProfile")[0].click();
+					}
+					
+				}
 			}
           },
           error: function(response,data){

@@ -141,7 +141,7 @@ jspcEditProfileSuccess:
     #language:     en
     #robots:       index, follow
   stylesheets: [jspc/utility/chosen/chosen_css,jspc/profile/view/jspcViewProfile_css,jspc/profile/edit/dpp/dppEdit_css,jspc/profile/edit/profile/jspcEditProfile_css,jspc/profile/edit/profile/jspcCoverPhoto_css,jspc/profile/edit/profile/jspcEditProfileCompletion_css,jspc/phone/phoneVerification_css]
-  javascripts: [jspc/search/hslider@bottom,jspc/utility/chosen/chosen_jquery@bottom,jspc/utility/chosen/docsupport/prism@bottom,jsms/utility/sessionStorage_js@bottom,jspc/profile/edit/profile/jspcEditProfile_js@bottom,jspc/profile/edit/profile/jspcCoverPhoto_js@bottom,jspc/profile/edit/profile/jspcEditProfileCompletion_js@bottom,jspc/profile/edit/profile/jspcPhoneVerifyBinding_js@bottom,jspc/common/phoneVeriLayers_js@bottom,jspc/common/nano@bottom]
+  javascripts: [jspc/search/hslider@bottom,jspc/utility/chosen/chosen_jquery@bottom,jspc/utility/chosen/docsupport/prism@bottom,jsms/utility/sessionStorage_js@bottom,jspc/profile/edit/profile/jspcEditProfile_js@bottom,jspc/profile/edit/profile/jspcCoverPhoto_js@bottom,jspc/profile/edit/profile/jspcEditProfileCompletion_js@bottom,jspc/profile/edit/profile/jspcPhoneVerifyBinding_js@bottom,jspc/common/phoneVeriLayers_js@bottom,jspc/common/nano@bottom,jspc/common/photoAlbum@bottom]
   layout: jspcLayout
   
 jspcNoProfileSuccess:

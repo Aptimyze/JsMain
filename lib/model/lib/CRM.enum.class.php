@@ -54,5 +54,10 @@ class crmParams
         
         //Sales process wise tracking
         public static $processNames = array("INBOUND_TELE" => "Inbound Telesales", "CENTER_SALES" => "Center Sales", "FP_TELE" => "Failed Payment Telesales", "CENTRAL_RENEW_TELE" => "Central Renewal Telesales", "FIELD_SALES" => "Field Sales", "FRANCHISEE_SALES" => "Franchisee Sales", "OUTBOUND_TELE" => "Outbound Telesales", "UNASSISTED_SALES" => "Unassisted Sales");
+
+    // Tracking Flag for various processes
+    
+    public static $processFlag = array("INBOUND_TELE" => "0", "CENTER_SALES" => "1", "FP_TELE" => "2", "CENTRAL_RENEW_TELE" => "3", "FIELD_SALES" => "4", "FRANCHISEE_SALES" => "5", "OUTBOUND_TELE" => "6", "UNASSISTED_SALES" => "7");
+    public static $processFlagReverse = array(0=>"INBOUND_TELE", 1=>"CENTER_SALES", 2=>"FP_TELE", 3=>"CENTRAL_RENEW_TELE", 4=>"FIELD_SALES", 5=>"FRANCHISEE_SALES", 6=>"OUTBOUND_TELE", 7=>"UNASSISTED_SALES");
 }
 ?>

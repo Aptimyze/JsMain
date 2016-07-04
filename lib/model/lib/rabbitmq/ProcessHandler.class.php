@@ -144,6 +144,24 @@ class ProcessHandler
     }
 
  }
-
+ public function updateSeen($type,$body)
+ {
+	switch($type)
+	{
+		case "ALL_CONTACTS":
+			$contactsObj = new ContactsRecords();
+			$contactsObj->makeAllContactSeen($body['profileid'],$body['contactType']);
+			break;
+		case "ALL_MESSAGES":
+			MessageLog::makeAllMessagesSeen($body['profileid']);
+			break;
+		case "PHOTO_REQUEST":
+			Inbox::setAllPhotoRequestsSeen($body['profileid']);
+			break;
+		case "HOROSCOPE_REQUEST":
+			Inbox::setAllHoroscopeRequestsSeen($body['profileid']);
+			break;
+	}
+ }
 }
 ?>

@@ -2,6 +2,13 @@
 ini_set('max_execution_time','0');
 include('connect.inc');
 $db = connect_db();
+include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
+               $cc='eshajain88@gmail.com';
+               $to='bhavanakadwal@gmail.com';
+               $msg1='subcaste to caste is being hit. We can wrap this to JProfileUpdateLib';
+               $subject="subcaste to caste";
+               $msg=$msg1.print_r($_SERVER,true);
+               send_email($to,$msg,$subject,"",$cc);
 $castearr = array('14','2','149','154');
 $castecnt = count($castearr);
 

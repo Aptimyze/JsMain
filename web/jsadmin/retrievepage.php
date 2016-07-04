@@ -4,6 +4,7 @@ include("connect.inc");
 include(JsConstants::$docRoot."/commonFiles/flag.php");
 include("../sugarcrm/custom/crons/housekeepingConfig.php");
 include("../sugarcrm/include/utils/systemProcessUsersConfig.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 global $partitionsArray;
 global $process_user_mapping;
 
@@ -44,7 +45,7 @@ if(authenticated($cid))
                 if(count($proid)>0)
 		{
 			$pid="'".implode($proid,"','")."'";*/
-			$sql="SELECT PROFILEID,SCREENING,ACTIVATED,INCOMPLETE,USERNAME from newjs.JPROFILE where PROFILEID=$Profileid";
+			$sql="SELECT PROFILEID,SCREENING,ACTIVATED,PREACTIVATED,INCOMPLETE,USERNAME from newjs.JPROFILE where PROFILEID=$Profileid";
 			$result=mysql_query_decide($sql) or die("$sql".mysql_error_js());
 			while($myrow=mysql_fetch_array($result))
 			{
@@ -68,19 +69,35 @@ if(authenticated($cid))
 					$date=date("Y-m-d");
 					$sqljs="update newjs.JSARCHIVED set STATUS='N',ACT_DATE='$date' where PROFILEID='$profileid' and STATUS='Y'";
 					mysql_query_decide($sqljs) or die(mysql_error_js());
-					
-					if(mysql_affected_rows_js())
+					$arrFields = array();
+					$arrFields['ACTIVATED']=$myrow['PREACTIVATED'];
+					if(mysql_affected_rows_js()){
+						$arrFields['MOB_STATUS']='N';
+						$arrFields['LANDL_STATUS']='N';
+						$arrFields['PHONE_FLAG']='';
 						$jsarch_user=", MOB_STATUS='N',LANDL_STATUS='N',PHONE_FLAG='' ";
+					}
+					$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
 					
 					if($screening==$sum)
 					{
-						$sql="UPDATE newjs.JPROFILE set ACTIVATED=PREACTIVATED,activatedKey=1,JSARCHIVED=0, ACTIVATE_ON='".date("Y-m-d H:i")."'$jsarch_user  where PROFILEID='$profileid'";
-						mysql_query_decide($sql) or die(mysql_error_js());
+						$arrFields['activatedKey']=1;
+						$arrFields['JSARCHIVED']=0;
+						$arrFields['ACTIVATE_ON']=date("Y-m-d H:i");
+						$exrtaWhereCond = "";
+						$jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID",$exrtaWhereCond);
+						//$sql="UPDATE newjs.JPROFILE set ACTIVATED=PREACTIVATED,activatedKey=1,JSARCHIVED=0, ACTIVATE_ON='".date("Y-m-d H:i")."'$jsarch_user  where PROFILEID='$profileid'";
+						//mysql_query_decide($sql) or die(mysql_error_js());
 					}
 					else
 					{
-						$sql1="UPDATE newjs.JPROFILE set ACTIVATED=PREACTIVATED,activatedKey=1,JSARCHIVED=0,ACTIVATE_ON='0'$jsarch_user where PROFILEID='$profileid'"; 
-						mysql_query_decide($sql1) or die(mysql_error_js());
+						$arrFields['activatedKey']=1;
+						$arrFields['JSARCHIVED']=0;
+						$arrFields['ACTIVATE_ON']='0';
+						$exrtaWhereCond = "";
+						$jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID",$exrtaWhereCond);
+						//$sql1="UPDATE newjs.JPROFILE set ACTIVATED=PREACTIVATED,activatedKey=1,JSARCHIVED=0,ACTIVATE_ON='0'$jsarch_user where PROFILEID='$profileid'"; 
+						//mysql_query_decide($sql1) or die(mysql_error_js());
 					}
 
 					//added by sriram to prevent the query on CONTACTS table being run several times on page reload.
