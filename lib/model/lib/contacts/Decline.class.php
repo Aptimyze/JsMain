@@ -92,6 +92,9 @@ class Decline extends ContactEvent{
         $sender = $this->contactHandler->getViewer();
         $sendMailData = array('process' =>'MAIL','data'=>array('type' => 'DECLINECONTACT','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID()) ), 'redeliveryCount'=>0 );
         $producerObj->sendMessage($sendMailData);
+        //Remove from contact roster
+        $chatData = array('process' =>'CHATROSTERS','data'=>array('type' => 'CONTACT_REMOVE','body'=>array('senderid'=>$receiver->getPROFILEID(),'receiverid'=>$sender->getPROFILEID() ) ), 'redeliveryCount'=>0 );
+        $producerObj->sendMessage($chatData);
     }
     else
     {

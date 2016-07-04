@@ -102,7 +102,8 @@ class RequestHandlerConfig
         "authenticateChatSession"=>array("v1"=>"authenticateChatSessionV1"),
         "chatUserAuthentication"=>array("v1"=>"chatUserAuthenticationV1"),
         "fetchCredentials"=>array("v1"=>"fetchCredentialsV1"),
-        "fetchVCard"=>array("v1"=>"fetchVCardV1")
+        "fetchVCard"=>array("v1"=>"fetchVCardV1"),
+	    "getRoasterData"=>array("v1"=>"getRosterDataV1"),
         )
 );
 
