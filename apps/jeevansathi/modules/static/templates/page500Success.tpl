@@ -29,5 +29,7 @@ $(document).ready(function() {
 	$("#refreshPage").on("click",function(){
 		location.reload();
 	});
+    if(typeof trackJsEventGA != 'undefined')
+    trackJsEventGA('jspc','500-error','-');
 });
 </script>

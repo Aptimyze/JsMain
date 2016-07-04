@@ -42,5 +42,9 @@
         $(".sreen404").height(h);
         $("#retryBtn").addClass('btmo').addClass('posfix ');
     }
-  
-    </script>
+$(document).ready(function() {
+    if(typeof trackJsEventGA != 'undefined')
+    trackJsEventGA('jsms','500-error','-');
+});
+
+   </script>
