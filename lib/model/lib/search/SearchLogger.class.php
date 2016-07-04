@@ -142,7 +142,12 @@ class SearchLogger extends SearchParamters
                         foreach($arr as $field=>$value)
                         {
                                 if(strstr($this->possibleSearchParamters,$field))
-                                        eval ('$this->set'.$field.'($value);');
+				{
+					if($field=='STATE' || $field=='CITY_RES')
+                                        	eval ('$this->set'.$field.'($value,"",1);');
+					else
+	                                        eval ('$this->set'.$field.'($value);');
+				}
                         }
                         unset($arr);
                         return 1;

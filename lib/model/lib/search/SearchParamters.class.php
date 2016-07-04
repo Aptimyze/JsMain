@@ -301,13 +301,16 @@ class SearchParamters
 		}
 	}
 	public function getCOUNTRY_RES() { return $this->COUNTRY_RES; }
-	public function setCITY_RES($CITY_RES,$fromCityForStateFunction = '') 
+	public function setCITY_RES($CITY_RES,$fromCityForStateFunction = '',$noMapping="") 
 	{ 
 		$validInput = SearchInputValidation::validateInput("CITY_RES",$CITY_RES);
                 if($validInput)
 			$this->CITY_RES = $CITY_RES; 
-                if($this->getSTATE() && $this->CITY_RES && !$fromCityForStateFunction)
-                    $this->setCityForState();
+		if(!$noMapping)
+		{
+                	if($this->getSTATE() && $this->CITY_RES && !$fromCityForStateFunction)
+		 	       $this->setCityForState();
+		}
 	}
 	public function getCITY_RES() { return $this->CITY_RES; }
 	public function setCITY_RES_SELECTED($CITY_RES) 
@@ -818,13 +821,17 @@ class SearchParamters
 	}
 	public function getCITY_INDIA() { return $this->CITY_INDIA; }
         public function getCITY_INDIA_SELECTED() { return $this->CITY_INDIA_SELECTED; }
-	public function setSTATE($STATE,$fromCityForStateFunction = '') 
+	public function setSTATE($STATE,$fromCityForStateFunction = '',$noMapping="") 
 	{ 
 		$validInput = SearchInputValidation::validateInput("STATE",$STATE);
                 if($validInput)
 			$this->STATE = $STATE; 
-                if($this->getCITY_RES() && $this->STATE && !$fromCityForStateFunction)
-                    $this->setCityForState();
+			
+		if(!$noMapping)
+		{
+	                if($this->getCITY_RES() && $this->STATE && !$fromCityForStateFunction)
+        	            $this->setCityForState();
+		}
 	}
 	public function getSTATE() { return $this->STATE; }
 	public function setSTATE_SELECTED($STATE) 
