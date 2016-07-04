@@ -1,3 +1,4 @@
+/*
 var ChatPc = ChatPc || {};
 (function(){	
 	ChatPc.CallPlugin = {
@@ -12,3 +13,5 @@ var ChatPc = ChatPc || {};
 	};
 	ChatPc.CallPlugin.init();
 })();
+
+*/

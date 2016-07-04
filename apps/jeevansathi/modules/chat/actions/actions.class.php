@@ -130,7 +130,7 @@ class chatActions extends sfActions
     }
     
     public function executeFetchVCardV1(sfwebrequest $request){
-            $apiResponseHandlerObj = ApiResponseHandler::getInstance();
+        $apiResponseHandlerObj = ApiResponseHandler::getInstance();
         $loginData = $request->getAttribute("loginData");
         if($loginData){
             $jid = $request->getParameter('jid');
@@ -141,7 +141,12 @@ class chatActions extends sfActions
                 $username = rtrim($username,",");
                 
                 $vcardDetailsObj = new chat_ofVcard();
-                $result = $vcardDetailsObj->getVCardDetails($username);
+                $storeResult = $vcardDetailsObj->getVCardDetails($username);
+                unset($vcardDetailsObj);
+                
+                $chatObj = new Chat();
+                $result = $chatObj->convertXml($storeResult);
+                unset($chatObj);
                 
                 $response = array("vCard"=>$result);
                 $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
