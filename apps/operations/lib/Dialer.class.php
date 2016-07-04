@@ -71,7 +71,7 @@ class Dialer
 
 		$method =$processObj->getMethod();
 		if($method=='IN_DIALER_ELIGIBILITY'){
-			$indialerObj    =new incentive_IN_DIALER_TEMP_POOL('newjs_slave');
+			$indialerObj    =new incentive_IN_DIALER_TEMP_POOL();
 			$profiles       =$indialerObj->getDialerProfileBasedOnJoins('incentive.MAIN_ADMIN_POOL', 'PROFILEID,ANALYTIC_SCORE');
 		}
 		return $profiles;	
