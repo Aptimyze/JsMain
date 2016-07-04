@@ -484,7 +484,7 @@ public static function insertConsentMessageFlag($profileid) {
                         $ugPg = $profile->getEducationDetail(1);
                         $pg = 0;
                         $ug = 0;
-                        if(!empty($ugPg)){
+                        if(!empty($ugPg) && is_array($ugPg)){
                                 if($ugPg["PG_DEGREE"])
                                       $pg = $ugPg["PG_DEGREE"];
                                 if($ugPg["UG_DEGREE"])
