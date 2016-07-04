@@ -16,7 +16,7 @@ class GetRosterData
 		$this->profileid = $profileid;
 	}
 
-	public function getRosterDataByType($type,$limit)
+	public function getRosterDataByType($type,$limit="")
 	{
 		$infoTypeAdapter = new InformationTypeAdapter($type, $this->profileid);
 		$skipArray = $this->getSkipProfiles($type);
@@ -35,12 +35,12 @@ class GetRosterData
 
 				case 'SHORTLIST':
 					$skipConditionArray = SkipArrayCondition::$SkippedAll;
-					$skipProfileObj     = SkipProfile::getInstance($this->profileObj->getPROFILEID());
+					$skipProfileObj     = SkipProfile::getInstance($this->profileid);
 					$this->skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
 					break;
 				default:
 					$skipConditionArray = SkipArrayCondition::$default;
-					$skipProfileObj     = SkipProfile::getInstance($this->profileObj->getPROFILEID());
+					$skipProfileObj     = SkipProfile::getInstance($this->profileid);
 					$this->skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
 
 					break;
@@ -57,7 +57,7 @@ class GetRosterData
 			$back_90_days                                     = date("Y-m-d", $yday);
 			$condition["WHERE"]["GREATER_THAN_EQUAL"]["TIME"] = "$back_90_days 00:00:00";
 		}
-		$condition["LIMIT"] = "$limit";
+		if ($limit) $condition["LIMIT"] = "$limit";
 		return $condition;
 	}
 
