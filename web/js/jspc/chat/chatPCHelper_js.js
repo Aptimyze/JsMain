@@ -254,6 +254,7 @@ function readCookie(name) {
 
 function eraseCookie(name) {
     createCookie(name, "", -1);
+    console.log("in erase cookie function");
     console.log("erasing cookie");
 }
 
@@ -278,3 +279,69 @@ function setCreateListingInterval()
         }
     },chatConfig.Params[device].initialRosterLimit["timeInterval"]);
 }
+
+function checkAuthentication(){
+    var auth;
+    $.ajax({
+        url: "/api/v1/chat/chatUserAuthentication",
+        async: false,
+        success: function(data){
+            console.log(data.statusCode);
+            if(data.responseStatusCode == "0"){
+                console.log("In chatUserAuthentication Login Done");
+                createCookie("chatAuth","true");
+                //loginChat();
+                auth = 'true';
+            }
+            else{
+                console.log(data.responseMessage);
+                console.log("In checkAuthentication failure");
+                eraseCookie("chatAuth");
+                auth = 'false';
+            }
+        }
+    });
+    return auth;
+}
+
+
+$(document).ready(function(){
+    var checkDiv = $("#chatOpenPanel").length;
+    if(showChat && (checkDiv != 0)){
+
+        var chatLoggedIn = readCookie('chatAuth');
+        var loginStatus;
+        if(chatLoggedIn == 'true'){
+            loginStatus = "Y";
+        }
+        else{
+            loginStatus = "N";
+        }
+
+        var objJsChat = new JsChat({
+        loginStatus: loginStatus,
+        mainID:"#chatOpenPanel",
+        //profilePhoto: "<path>",
+        profileName: "bassi"
+    });
+
+    objJsChat.onEnterToChatPreClick = function(){
+        //objJsChat._loginStatus = 'N';
+        console.log("Checking variable");
+        console.log(chatLoggedIn);
+        if(chatLoggedIn != 'true'){
+            var auth = checkAuthentication();
+            if(auth != "true"){
+                console.log("Before return");
+                return ;
+            }
+            else{
+                objJsChat._loginStatus = 'Y';
+            }
+        }
+        console.log("In callback");
+    }
+
+    objJsChat.start();
+   }
+});
