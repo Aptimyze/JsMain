@@ -47,4 +47,9 @@ $(document).ready(function() {
     trackJsEventGA('jsms','500-error','-');
 });
 
+
+$(document).ready(function() {
+    if(typeof trackJsEventGA != 'undefined')
+    trackJsEventGA('500-error','JSMS','-');
+});
    </script>

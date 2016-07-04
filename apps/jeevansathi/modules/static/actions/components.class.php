@@ -126,9 +126,12 @@ class staticComponents extends sfComponents{
 	}
 	
 	public function executeNewMobileSiteHamburger($request)
-	{
-		$this->getProfileObj();
-		$this->translateURL = JsConstants::$hindiTranslateURL;
+	{	
+
+		if($request->getParameter('blockOldConnection500'))
+			$this->loggedIn=0;
+		else
+			$this->getProfileObj();$this->translateURL = JsConstants::$hindiTranslateURL;
 		if($this->loggedIn)
 		{
 			$this->loginProfile=LoggedInProfile::getInstance();

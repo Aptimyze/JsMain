@@ -30,6 +30,6 @@ $(document).ready(function() {
 		location.reload();
 	});
     if(typeof trackJsEventGA != 'undefined')
-    trackJsEventGA('jspc','500-error','-');
+    trackJsEventGA('500-error','jspc','-');
 });
 </script>
