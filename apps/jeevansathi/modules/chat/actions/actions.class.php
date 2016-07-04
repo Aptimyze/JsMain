@@ -170,7 +170,6 @@ class chatActions extends sfActions
 	    $type = $request->getParameter("type");
 	    $limit = $request->getParameter("limit");
 	    $getRosterDataObj = new GetRosterData($profileid);
-
 	    $getData["profiles"] = $getRosterDataObj->getRosterDataByType($type,$limit);
 	    $apiResponseHandlerObj = ApiResponseHandler::getInstance();
 	    $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);

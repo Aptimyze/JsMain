@@ -59,7 +59,6 @@ class GetRosterData
 
 					break;
 			}
-
 		return $this->skipProfiles;
 	}
 
