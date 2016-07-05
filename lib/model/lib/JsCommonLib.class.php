@@ -481,15 +481,23 @@ public static function insertConsentMessageFlag($profileid) {
 			}
 			
 			$ARR=explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_ELEVEL_NEW()));
+                        $ugPg = $profile->getEducationDetail(1);
+                        $pg = 0;
+                        $ug = 0;
+                        if(!empty($ugPg) && is_array($ugPg)){
+                                if($ugPg["PG_DEGREE"])
+                                      $pg = $ugPg["PG_DEGREE"];
+                                if($ugPg["UG_DEGREE"])
+                                      $ug = $ugPg["UG_DEGREE"];
+                        }
 			if(is_array($ARR))
-			if(in_array($profile->getEDU_LEVEL_NEW(),$ARR))
+			if(in_array($profile->getEDU_LEVEL_NEW(),$ARR) || in_array($pg,$ARR) || in_array($ug,$ARR))
 			{
 				$CODE['ELEVEL_NEW']='gnf';
 				$CODE['Highest Degree']='gnf';
 				$CODE['Education']='gnf';
 				
 			}
-			
 			$ARR=explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_MTONGUE()));
 			if(is_array($ARR))
 			if(in_array($profile->getMTONGUE(),$ARR))
@@ -513,14 +521,24 @@ public static function insertConsentMessageFlag($profileid) {
 				$CODE['COUNTRYRES']='gnf';
 				$CODE['COUNTRYRES']='gnf';
 			}
-			$ARR=explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_INCOME()));
-			if(is_array($ARR))
-			if(in_array($profile->getINCOME(),$ARR))
-			{
-				$CODE['INCOME']='gnf';
-				$CODE['Income']='gnf';
-				$CODE['Annual Income']='gnf';
-			}
+			$ARR=array_filter(explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_INCOME())));
+                        $incomeObj = new IncomeMapping;
+                        $ARR = $incomeObj->removeNoIncome($ARR);
+                        $incomeArray = $incomeObj->getLowerIncomes($profile->getINCOME());
+                        $result = array_intersect($ARR, $incomeArray);
+                        
+			if(is_array($ARR) && !empty($ARR)){
+                                if(in_array($profile->getINCOME(),$ARR) || !empty($result))
+                                {
+                                        $CODE['INCOME']='gnf';
+                                        $CODE['Income']='gnf';
+                                        $CODE['Annual Income']='gnf';
+                                }
+                        }else{
+                                $CODE['INCOME']='gnf';
+                                $CODE['Income']='gnf';
+                                $CODE['Annual Income']='gnf';
+                        }
 			$ARR=explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_CITYRES()));
 			if(is_array($ARR))
 			if(in_array($profile->getCITY_RES(),$ARR))

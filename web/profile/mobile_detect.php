@@ -5,7 +5,7 @@ if(!$_SERVER["DOCUMENT_ROOT"])
 if(!$mob_det_already_called){
 require_once($_SERVER["DOCUMENT_ROOT"]."/jsmb/mb_comfunc.php");
 if(isset($_COOKIE['JS_MOBILE'])){
-	$JS_MOBILE_ARR=explode(",",$_COOKIE['JS_MOBILE']);
+	$JS_MOBILE_ARR=explode(",",preg_replace('/[^A-Za-z0-9\. -]/', '', $_COOKIE['JS_MOBILE']));
 	if($JS_MOBILE_ARR[0]=='Y')
 		$is_mob=1;
 }

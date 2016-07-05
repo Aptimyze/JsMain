@@ -5872,24 +5872,24 @@ function get_variables_for_3d_old($profileid,$neglect_cookies='')
 					setcookie('JS_'.$get_values[$k],$myrow_get_value[$get_values[$k]],0,"/",$domain);
 			}
 			if(!(in_array('CASTE',$get_values)) && !$neglect_cookies)
-				$my_caste=$_COOKIE["JS_CASTE"];
+				$my_caste=preg_replace('/[^A-Za-z0-9\. -]/', '', $_COOKIE["JS_CASTE"]);
 			if(!(in_array('MTONGUE',$get_values)) && !$neglect_cookies)
-				$my_mtongue=$_COOKIE["JS_MTONGUE"];
+				$my_mtongue=preg_replace('/[^A-Za-z0-9\. -]/', '', $_COOKIE["JS_MTONGUE"]);
 			if(!(in_array('INCOME',$get_values)) && !$neglect_cookies)
-				$my_income=$_COOKIE["JS_INCOME"];
+				$my_income=preg_replace('/[^A-Za-z0-9\. -]/', '', $_COOKIE["JS_INCOME"]);
 			if(!(in_array('RELIGION',$get_values)) && !$neglect_cookies)
-				$my_religion=$_COOKIE["JS_RELIGION"];
+				$my_religion=preg_replace('/[^A-Za-z0-9\. -]/', '', $_COOKIE["JS_RELIGION"]);;
 			if(!(in_array('AGE',$get_values)) && !$neglect_cookies)
-				$my_age=$_COOKIE["JS_AGE"];
+				$my_age=preg_replace('/[^A-Za-z0-9\. -]/', '', $_COOKIE["JS_AGE"]);
 		}
 	}
 	else
 	{
-		$my_caste=$_COOKIE["JS_CASTE"];
-		$my_mtongue=$_COOKIE["JS_MTONGUE"];
-		$my_income=$_COOKIE["JS_INCOME"];
-		$my_religion=$_COOKIE["JS_RELIGION"];
-		$my_age=$_COOKIE["JS_AGE"];
+		$my_caste=preg_replace('/[^A-Za-z0-9\. -]/', '', $_COOKIE["JS_CASTE"]);
+		$my_mtongue=preg_replace('/[^A-Za-z0-9\. -]/', '', $_COOKIE["JS_MTONGUE"]);
+		$my_income=preg_replace('/[^A-Za-z0-9\. -]/', '', $_COOKIE["JS_INCOME"]);
+		$my_religion=preg_replace('/[^A-Za-z0-9\. -]/', '', $_COOKIE["JS_RELIGION"]);
+		$my_age=preg_replace('/[^A-Za-z0-9\. -]/', '', $_COOKIE["JS_AGE"]);
 	}
 	$arr_3d['CASTE']=$my_caste;
 	$arr_3d['MTONGUE']=$my_mtongue;
