@@ -34,7 +34,7 @@
 	
 				</ul>
 				<div class="fullwid clearfix">
-					<div class="fr txtl ccnb1 pt10 pb17 f12 lh22 {personalizedmessageClass}" >
+					<div class="fr txtl ccnb1 pt10 pb17 f12 lh22 {personalizedmessageClass} js-hideDetail js-showDetail{profilechecksum}" >
 							<p class="pt10 ccww">{personalizedmessage}</p>
 					</div>                    
 	       </div> 

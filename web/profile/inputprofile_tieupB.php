@@ -11,6 +11,15 @@
 $http_msg=print_r($_SERVER,true);
 //to zip the file before sending it
 $zipIt = 0;
+//adding mailing to gmail account to check if file is being used
+include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
+               $cc='eshajain88@gmail.com';
+               $to='sanyam1204@gmail.com';
+               $msg1='inputprofile_tieupB is being hit. We can wrap this to JProfileUpdateLib';
+               $subject="inputprofile_tieupB";
+               $msg=$msg1.print_r($_SERVER,true);
+               send_email($to,$msg,$subject,"",$cc);
+ //ending mail part
 if (strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip'))
 $zipIt = 1;
 if($zipIt)

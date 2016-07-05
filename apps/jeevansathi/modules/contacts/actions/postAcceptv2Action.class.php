@@ -163,7 +163,12 @@ class postAcceptv2Action extends sfAction
 		$finalresponseArray["buttondetails"] = buttonResponse::buttondetailsMerge($responseButtonArray);
 		if(MobileCommon::isNewMobileSite())
 		{
+
+			if($this->contactObj->getsenderObj()->getPROFILEID() == $this->contactHandlerObj->getViewer()->getPROFILEID())
+			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","A");
+			else
 			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","R","A");
+
 			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
 			$finalresponseArray["button_after_action"]["photo"]=$thumbNail;
             $finalresponseArray["button_after_action"]["topmsg"]=$restResponseArray["topmsg"];

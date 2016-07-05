@@ -14,7 +14,7 @@
 include ("connect.inc");
 include(JsConstants::$docRoot."/commonFiles/flag.php");
 include ("time.php");
-
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 global $screen_time;
 
 if(authenticated($cid))
@@ -108,9 +108,16 @@ if(authenticated($cid))
 				if($$key)
 					$screen=removeflag($key,$screen);
 			}
-			$sql_update="update newjs.JPROFILE set SCREENING='$screen' where PROFILEID='$profileid'";
-			mysql_query_decide($sql_update) or die("2".mysql_error_js());
+      //$sql_update="update newjs.JPROFILE set SCREENING='$screen' where PROFILEID='$profileid'";
+			//mysql_query_decide($sql_update) or die("2".mysql_error_js());
 
+      $objUpdate = JProfileUpdateLib::getInstance();
+      $result = $objUpdate->editJPROFILE(array('SCREENING'=>$screen),$profileid,"PROFILEID");
+      if(false === $result) {
+        die('Mysql error while updating JPROFILE at line 114');
+      }
+      unset($objUpdate);
+      
 			$message="This user's profile has been marked for screening successfully.<br>";
 			$message.="<a href=\"add_edit_fields.php?cid=$cid&username=$operator_name\">Master Edit another profile</a>";
 			$smarty->assign("MSG",$message);

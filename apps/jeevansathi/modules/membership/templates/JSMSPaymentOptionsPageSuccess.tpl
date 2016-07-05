@@ -79,6 +79,7 @@
          <input type="hidden" name="couponCodeVal" value="~$data.couponID`">
          <input type="hidden" name="couponID" value="~$data.couponID`">
          <input type="hidden" name="mainMembership" value="~$data.tracking_params.mainMembership`">
+         <input type="hidden" name="userProfile" value="~$data.userProfile`">
         ~if $data.eSathiFlag eq '1' and $data.backendLink.fromBackend neq '1'`
           <input id="vasImpression" type="hidden" name="vasImpression" value="">
         ~else`

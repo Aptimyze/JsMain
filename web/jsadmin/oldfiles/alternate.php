@@ -2,7 +2,7 @@
 include("connect.inc");
 include("time.php");
 include(JsConstants::$docRoot."/commonFiles/flag.php");
-
+mail("kunal.test02@gmail.com","jsadmin/oldfile/alternate.php in USE",print_r($_SERVER,true));
 global $screen_time;
 $tdate=date("Y-m-d");
 $lastweek_date=strftime("%Y-%m-%d",JSstrToTime("$tdate-7days "));

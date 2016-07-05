@@ -5,6 +5,7 @@ This file provides the duplicate entries.
 It is used for finding the duplicate entries for leads and jeevansathi records.
 ********************************************************************************/
 require_once ('include/entryPoint.php');
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 class Duplicate {
     var $db;
     var $partitionsArray = array('connected', 'inactive');
@@ -948,10 +949,7 @@ class Duplicate {
 					}
 					if(count($idsArr))
 					{
-						$idString="\"".implode("\",\"",$idsArr)."\"";
-						$now=date('Y-m-d h:i:s');
-						$sql="UPDATE newjs.JPROFILE SET SERIOUSNESS_COUNT=SERIOUSNESS_COUNT+1,SORT_DT='$now' WHERE PROFILEID IN ($idString)";
-						$this->db->query($sql);
+						$this->updateProfileSeriousnessCount($idsArr);
 					}
 				}
 			}
@@ -961,10 +959,16 @@ class Duplicate {
 	{
 		if(is_array($profileArr) && count($profileArr))
 		{
-			$now=date('Y-m-d h:i:s');
-			$profileString="\"".implode("\",\"",$profileArr)."\"";
-			$sql="UPDATE newjs.JPROFILE SET SERIOUSNESS_COUNT=SERIOUSNESS_COUNT+1,SORT_DT='$now' WHERE PROFILEID IN ($profileString)";
-			$this->db->query($sql);
+//			$now=date('Y-m-d h:i:s');
+//			$profileString="\"".implode("\",\"",$profileArr)."\"";
+//			$sql="UPDATE newjs.JPROFILE SET SERIOUSNESS_COUNT=SERIOUSNESS_COUNT+1,SORT_DT='$now' WHERE PROFILEID IN ($profileString)";
+//			$this->db->query($sql);
+
+            $objUpdate = JProfileUpdateLib::getInstance();
+            $result = $objUpdate->updateProfileSeriousnessCount($profileArr);
+            if($result === false){
+                //handle any update failure
+            }
 		}
 	}
 }

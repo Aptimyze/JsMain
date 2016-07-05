@@ -255,30 +255,30 @@ d in the result
                                 throw new jsException($e);
                         }
                 }
-                /**
-	   			* Function to reset JPROFILE_EDUCATION PG and UG data based on inputs provided
-	   			* @param $dataArr- it is the array of profile id's for which the changes are to be made
-	   			* @param $codeFlag- this has value 0 or 1 and help's decide which query is to be build to be executed.
-	  			 */ 
-                public function resetEducationData($profileID,$codeFlag){
-                	try{
-                		if($codeFlag=='0') {
-                			$sql="UPDATE newjs.JPROFILE_EDUCATION SET PG_COLLEGE=NULL,PG_DEGREE=NULL,OTHER_PG_DEGREE=NULL,OTHER_PG_COLLEGE=NULL WHERE PROFILEID=:PROFILEID";
-                		}
-                		else {
-                			$sql="UPDATE newjs.JPROFILE_EDUCATION SET PG_COLLEGE=NULL,PG_DEGREE=NULL,OTHER_PG_DEGREE=NULL,OTHER_PG_COLLEGE=NULL,UG_DEGREE=NULL,OTHER_UG_DEGREE=NULL,OTHER_UG_COLLEGE=NULL,COLLEGE=NULL WHERE PROFILEID=:PROFILEID";
-                		}
+       //          /**
+	   			// * Function to reset JPROFILE_EDUCATION PG and UG data based on inputs provided
+	   			// * @param $dataArr- it is the array of profile id's for which the changes are to be made
+	   			// * @param $codeFlag- this has value 0 or 1 and help's decide which query is to be build to be executed.
+	  			 // */ 
+       //          public function resetEducationData($profileID,$codeFlag){
+       //          	try{
+       //          		if($codeFlag=='0') {
+       //          			$sql="UPDATE newjs.JPROFILE_EDUCATION SET PG_COLLEGE=NULL,PG_DEGREE=NULL,OTHER_PG_DEGREE=NULL,OTHER_PG_COLLEGE=NULL WHERE PROFILEID=:PROFILEID";
+       //          		}
+       //          		else {
+       //          			$sql="UPDATE newjs.JPROFILE_EDUCATION SET PG_COLLEGE=NULL,PG_DEGREE=NULL,OTHER_PG_DEGREE=NULL,OTHER_PG_COLLEGE=NULL,UG_DEGREE=NULL,OTHER_UG_DEGREE=NULL,OTHER_UG_COLLEGE=NULL,COLLEGE=NULL WHERE PROFILEID=:PROFILEID";
+       //          		}
 
-                		$prep=$this->db->prepare($sql);
-                		$prep->bindValue(":PROFILEID", $profileID, PDO::PARAM_INT);
-                		$prep->execute();	
-                	}
-                	catch(PDOException $e)
-                	{
-                		/*** echo the sql statement and error message ***/
-                		throw new jsException($e);
-                	}
-                }
+       //          		$prep=$this->db->prepare($sql);
+       //          		$prep->bindValue(":PROFILEID", $profileID, PDO::PARAM_INT);
+       //          		$prep->execute();	
+       //          	}
+       //          	catch(PDOException $e)
+       //          	{
+       //          		/*** echo the sql statement and error message ***/
+       //          		throw new jsException($e);
+       //          	}
+       //          }
                  /**
 	   			* Function to fetch PROFILEID of profiles in JPROFILE whose EDU_LEVEL_NEW is a particular set of values and where PG_DEGREE or PG_COLLEGE is not NULL
 	   			* @param $educationCodes- it is the array of codes of EDU_LEVEL_NEW

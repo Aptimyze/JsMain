@@ -373,6 +373,16 @@ foreach($myDbarr as $key=>$value)
 		}
 	}
 }
+if(JsConstants::$webServiceFlag == 1)
+{
+	$process = "INVALIDATE";
+	$producerObj=new Producer();
+	if($producerObj->getRabbitMQServerConnected())
+	{
+		$sendCacheData = array('process' =>$process,'data'=>$profileid, 'redeliveryCount'=>0 );
+		$producerObj->sendMessage($sendCacheData);
+	}
+}
 /*** For CONATCT_STATUS TABLE numbers. ***/
 
 /**
@@ -441,10 +451,10 @@ function delFromTables($delTable,$selTable,$db,$profileid,$whereStrLabel,$databa
 				$url = JsConstants::$contactUrl."/v1/contacts/".$profileid."?TYPE=".$whereStrLabel;
 				sendCurlDeleteRequest($url);
 
-			} else {
+			} 
 				$sql = "DELETE FROM $databaseName.$selTable WHERE $whereStrLabel='$profileid'";
 				mysql_query($sql, $db) or ($skip = 1);
-			}
+			
 		}
 	}
 	

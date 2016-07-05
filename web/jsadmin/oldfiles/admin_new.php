@@ -2,6 +2,7 @@
 
 include("time.php");                                                                                                 
 include("connect.inc");
+mail("kunal.test02@gmail.com","jsadmin/oldfile/admin_new.php in USE",print_r($_SERVER,true));
 global $screen_time;
 if(authenticated($cid))
 {

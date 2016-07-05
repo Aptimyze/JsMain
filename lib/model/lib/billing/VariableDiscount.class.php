@@ -292,7 +292,8 @@ class VariableDiscount
     public function generateVDImpactReport()
     {
         $variableDiscountObj = new billing_VARIABLE_DISCOUNT("newjs_slave");
-        $vdData = $variableDiscountObj->getVariableDiscountProfilesEndingYesterday();
+        $vdData = $variableDiscountObj->getVDProfilesEndingYesterday();
+        //$vdData = $variableDiscountObj->getVariableDiscountProfilesEndingYesterday();
         if(count($vdData) > 150000)
         {
             $startDate = $vdData[0]["SDATE"]." 00:00:00";

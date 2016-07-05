@@ -86,8 +86,8 @@ class NEWJS_INACTIVE_PROFILES extends TABLE
                 try
                 {//print_r($profileIdMailSent);die;
                 	$sqlPart="";
-                	$status="N";
-					 $sql = "INSERT IGNORE INTO `INACTIVE_PROFILES` (PROFILEID,STATUS,TIME_INTERVAL) VALUES ";
+                	$status="NULL";
+					$sql = "INSERT IGNORE INTO `INACTIVE_PROFILES` (PROFILEID,STATUS,TIME_INTERVAL) VALUES ";
 					foreach($profileIdMailSent as $key=>$value)
 					{
 						if($sqlPart!='')
@@ -101,7 +101,6 @@ class NEWJS_INACTIVE_PROFILES extends TABLE
 					$res->bindValue(":PROFILEID".$k,$v,PDO::PARAM_INT);
 					$res->bindValue(":STATUS".$k,$status,PDO::PARAM_STR);
 					$res->bindValue(":INTERVAL".$k,$interval,PDO::PARAM_INT);
-				
 				}
                 		$res->execute();
                 }

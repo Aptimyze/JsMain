@@ -165,59 +165,39 @@ disableLoader = function()
 	$('#mainContent').unbind('click');
 	$('#mainContent').unbind('touchmove');
 }
-
-handlePreviousNext = function()
-{
-    var swipeInProgress = false;
-	//Handle Next And Previous on swipe action
-	$(mainContent).swipe({swipe:function(event, direction, distance, duration, fingerCount){
-		
+var swipeInProgress = false;
+function handleSwipe(event, direction, distance, duration, fingerCount){
 		if(direction === 'left' || direction === 'right')
 		{
 			var nextUrl = getNextLink();
 			var preUrl = getPreviousLink();
 			if(direction === 'left' )
 			{
-                if(nextUrl && nextUrl.length && !swipeInProgress)
-                {
-                    swipeInProgress = true;
-                    ShowNextPage(nextLink,0,0);
-                }
-//                else
-//                {
-//                    $(mainContent).addClass('bounceLeft');
-//                    $(profilePic).css('margin-top','0px !important');
-//                    UnBindOnScrollEvents();
-//                    setTimeout(function(){
-//                        $(mainContent).removeClass('bounceLeft');
-//                        bindOnScrollEvents();
-//                    },300);
-//                }
+				if(nextUrl && nextUrl.length && !swipeInProgress)
+				{
+				swipeInProgress = true;
+				ShowNextPage(nextLink,0,0);
+				}
 			}
 			if(direction === 'right')
 			{
-                if(preUrl && preUrl.length && !swipeInProgress)
-                {
-                    swipeInProgress = true;
-                    ShowNextPage(previousLink,0,1);
-                }
-//                else
-//                {
-//                    $(mainContent).addClass('bounceRight');
-//                    $(profilePic).css('margin-top','0px !important');
-//                    UnBindOnScrollEvents();
-//                    setTimeout(function(){
-//                        $(mainContent).removeClass('bounceRight');
-//                        bindOnScrollEvents();
-//                    },300);
-//                }
+				if(preUrl && preUrl.length && !swipeInProgress)
+				{
+				swipeInProgress = true;
+				ShowNextPage(previousLink,0,1);
+				}
 			}
-            
+	
 		}
-	},allowPageScroll:"vertical", threshold:($(window).width()/3)});
-
 }
 
+handlePreviousNext = function()
+{
+
+//Handle Next And Previous on swipe action
+$(mainContent).swipe({swipe:handleSwipe,allowPageScroll:"vertical", threshold:($(window).width()/3)});
+
+}
 calcTabPos = function()
 {
 	if(!($(profilePic).length && $(tab).length))

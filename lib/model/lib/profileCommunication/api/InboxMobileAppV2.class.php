@@ -163,7 +163,10 @@ class InboxMobileAppV2
 				"ProfilePic450Url",
 				"IS_BOOKMARKED",
 				"VERIFICATION_SEAL",
-                                "VERIFICATION_STATUS"
+                                "VERIFICATION_STATUS",
+                                "COMPANY_NAME",
+                                "COLLEGE",
+                                "PG_COLLEGE"
                                 ),
 				"VISITORS"=>Array(
 				"PROFILECHECKSUM",
@@ -186,7 +189,10 @@ class InboxMobileAppV2
 				"ProfilePic450Url",
 				"userloginstatus",
 				"VERIFICATION_SEAL",
-                                "VERIFICATION_STATUS"
+                                "VERIFICATION_STATUS",
+                                "COMPANY_NAME",
+                                "COLLEGE",
+                                "PG_COLLEGE"
 				),
 				"SHORTLIST"=>Array(
 				"PROFILECHECKSUM",
@@ -209,7 +215,10 @@ class InboxMobileAppV2
 				"ProfilePic450Url",
 				"userloginstatus",
 				"VERIFICATION_SEAL",
-                                "VERIFICATION_STATUS"
+                                "VERIFICATION_STATUS",
+                                "COMPANY_NAME",
+                                "COLLEGE",
+                                "PG_COLLEGE"
 				),
 				"NOT_INTERESTED"=>Array(
 				"PROFILECHECKSUM",
@@ -648,7 +657,18 @@ class InboxMobileAppV2
                                 }
                                   $profile[$count]["photo"] = PictureFunctions::mapUrlToMessageInfoArr($tupleObj->getMobileAppPicUrl(),'MobileAppPicUrl',$tupleObj->getIS_PHOTO_REQUESTED(),$tupleObj->getGENDER());
 				
-                                          
+                                if(!$v[$vv]){
+                                        $value = null;
+                                }
+                                if($profile[$count]["college"] != ""){
+                                        $profile[$count]["college"] = $profile[$count]["college"];
+                                }
+                                if($profile[$count]["pg_college"] != ""){
+                                        $profile[$count]["pg_college"] = $profile[$count]["pg_college"];
+                                }
+                                if($profile[$count]["company_name"] != ""){
+                                        $profile[$count]["company_name"] = $profile[$count]["company_name"];
+                                }
                                 //echo'<pre>';print_r($infoKey);die;
 				
 				$profile[$count]['edu_level_new']=$tupleObj->getedu_level_new();

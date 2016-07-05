@@ -9,18 +9,21 @@ class BellCounts
 			$profileMemcacheObj = new ProfileMemcacheService($profileObj);
 			$bellCounts['AWAITING_RESPONSE_NEW']=JsCommon::convert99($profileMemcacheObj->get("AWAITING_RESPONSE_NEW"));
 			$bellCounts['ACC_ME_NEW']=JsCommon::convert99($profileMemcacheObj->get("ACC_ME_NEW"));
-	                $bellCounts['MESSAGE_NEW']=0;
-	                //JsCommon::convert99($profileMemcacheObj->get("MESSAGE_NEW"));
+	                $bellCounts['MESSAGE_NEW']=JsCommon::convert99($profileMemcacheObj->get("MESSAGE_NEW"));
 	                $bellCounts['PHOTO_REQUEST_NEW']=JsCommon::convert99($profileMemcacheObj->get("PHOTO_REQUEST_NEW"));
 	        $justJoinedMemcacheCount=$profileMemcacheObj->get('JUST_JOINED_MATCHES_NEW');
 			$bellCounts['NEW_MATCHES']=JsCommon::convert99($justJoinedMemcacheCount);
             //            $justJoinMatchArr = SearchCommonFunctions::getJustJoinedMatches($profileObj); 
                         //$bellCounts['NEW_MATCHES']=JsCommon::convert99($justJoinMatchArr['CNT']);
-                        
+            
 			$bellCounts["FILTERED_NEW"] = $profileMemcacheObj->get("FILTERED_NEW");
 				if(!$bellCounts["FILTERED_NEW"]){
 					$bellCounts["FILTERED_NEW"] = 0;
 				}
+			if(MobileCommon::isApp()=="I" ||( MobileCommon::isApp()=="A" && sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")  && sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")<48))
+			{
+				$bellCounts["FILTERED_NEW"] = 0;
+			}
 			$bellCounts['TOTAL_NEW']=JsCommon::convert99($profileMemcacheObj->get("AWAITING_RESPONSE_NEW") + $profileMemcacheObj->get("ACC_ME_NEW") + $bellCounts['MESSAGE_NEW'] + $profileMemcacheObj->get("PHOTO_REQUEST_NEW") + $justJoinedMemcacheCount + $bellCounts["FILTERED_NEW"]);
 			return $bellCounts;
 		}

@@ -100,9 +100,10 @@ class MembershipAPIResponseHandler {
             $this->lowPriorityBannerDisplayCheck = false;
         }
         
-        $this->PayUOrderProcess = $request->getParameter('PayUOrderProcess');
+        // $this->PayUOrderProcess = $request->getParameter('PayUOrderProcess');
         $this->generateNewIosOrder = $request->getParameter('generateNewIosOrder');
         $this->AppleOrderProcess = $request->getParameter('AppleOrderProcess');
+        $this->testBilling = $request->getParameter('testBilling');
         
         $this->memHandlerObj = new MembershipHandler();
         $this->userObj = new memUser($this->profileid);
@@ -242,9 +243,9 @@ class MembershipAPIResponseHandler {
                 $this->memHandlerObj->trackMembershipProgress($this->userObj, $this->source, $this->tab, $this->pgNo, $this->device, $this->user_agent, $this->allMemberships, $this->mainMembership, $this->vasImpression, 0, 0, $pTab, $this->trackType, $this->specialActive, $this->discPerc, $this->discountActive);
             }
         } 
-        elseif ($this->PayUOrderProcess == 1) {
-            $output = $this->handlePayUOrderProcessing($request);
-        } 
+        // elseif ($this->PayUOrderProcess == 1) {
+        //     $output = $this->handlePayUOrderProcessing($request);
+        // } 
         elseif ($this->getMembershipMessage == 1) {
             $output = $this->generateOCBMessageResponse();
         } 
@@ -268,6 +269,9 @@ class MembershipAPIResponseHandler {
         elseif ($this->AppleOrderProcess == 1) {
             $output = $this->generateAppleOrderProcessingResponse($request);
         } 
+        elseif ($this->testBilling == 1) {
+            $output = $this->doTestBilling($request);
+        }
         else {
             if ($this->displayPage == 1) {
                 $output = $this->generateLandingPageResponse($request);
@@ -1223,6 +1227,7 @@ class MembershipAPIResponseHandler {
             'couponID' => $this->couponCode,
             'device' => $this->device,
             'tracking_params' => $tracking_params,
+            'userProfile' => $this->profileid,
             'backendLink' => array(
                 'fromBackend' => $this->fromBackend,
                 'checksum' => $this->profilechecksum,
@@ -2161,6 +2166,61 @@ class MembershipAPIResponseHandler {
             $apiObj->memHandlerObj->trackMembershipProgress($apiObj->userObj, '504', '54', '4', 'backend_link', $apiObj->user_agent, $apiObj->allMemberships, $apiObj->mainMembership, $apiObj->vasImpression, $apiObj->totalCartPrice, $apiObj->discountCartPrice, 53, "F");
         }
 	return $apiObj;
+    }
+
+    public function doTestBilling($request) {
+    	if(JsConstants::$whichMachine == 'test'){
+    		include_once (JsConstants::$docRoot . "/commonFiles/connect_dd.inc");
+	        include_once ($_SERVER['DOCUMENT_ROOT'] . "/profile/pg/functions.php");
+	        include_once ($_SERVER['DOCUMENT_ROOT'] . "/classes/Services.class.php");
+	        include_once ($_SERVER['DOCUMENT_ROOT'] . "/classes/Membership.class.php");
+	        
+	        $pCur = $request->getParameter('pCur');
+	        
+	        if ($pCur == "DOL") {
+	            $this->currency = 'DOL';
+	        } 
+	        else {
+	            $this->currency = 'RS';
+	        }
+	        
+	        $memObj = new Membership;
+	        $memObj->setProfileid($this->profileid);
+	        if (!empty($this->mainMembership) && !empty($this->vasImpression)) {
+	        	$allMemberships = $this->mainMembership.",".$this->vasImpression;
+	        } elseif (empty($this->mainMembership) && !empty($this->vasImpression)) {
+	        	$allMemberships = $this->vasImpression;
+	        } elseif (!empty($this->mainMembership) && empty($this->vasImpression)) {
+	        	$allMemberships = $this->mainMembership;
+	        }
+	        $payment = $memObj->forOnline($allMemberships, $this->currency, $this->mainMembership, $this->discSel, 'card2', $this->device, $this->couponCode);
+	        $total = $payment['total'];
+	        $service_main = $payment['service_str'];
+	        $service_str = "";
+	        $discount = $payment['discount'];
+	        $discount_type = $payment['discount_type'];
+	        $ORDER = newOrder($this->profileid, 'card2', $this->currency, $total, $service_str, $service_main, $discount, $setactivate, 'TEST', $discount_type, $this->device, $this->couponCode);
+	        $nameOfUserObj = new incentive_NAME_OF_USER();
+	        $userName = $nameOfUserObj->getName($this->profileid);
+	        $Order_Id = $ORDER['ORDERID'];
+	        $memHandlerObj = new MembershipHandler();
+	        $billingPaymentStatusLogObj = new billing_PAYMENT_STATUS_LOG();
+	       	$memObj->log_payment_status($Order_Id, "S", 'TEST', 'billing done on test server');
+            $dup = false;
+            $ret = $memObj->updtOrder($Order_Id, $dup, "Y");
+            if (!$dup && $ret) {
+                $memObj->startServiceOrder($Order_Id);
+                $output = array('orderId' => $Order_Id,
+                    'processingStatus' => 'successful',
+                    'incomingIp' => $this->ipAddress);
+            } 
+    	} 
+    	else {
+    		$output = array('orderId' => 'invalid order',
+	            'processingStatus' => 'invalid access',
+	            'incomingIp' => $this->ipAddress);
+    	}
+    	return $output;
     }
     
 }

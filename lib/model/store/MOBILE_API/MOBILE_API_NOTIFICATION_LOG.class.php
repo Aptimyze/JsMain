@@ -46,7 +46,7 @@ class MOBILE_API_NOTIFICATION_LOG extends TABLE{
                 if(!$messageId || !$status || !$osType)
                      throw new jsException("","pid/notificationKey/status not provided to updatestatus in MOBILE_API.SCHEDULED_APP_NOTIFICATIONS");
                 try{
-			$sql = "UPDATE MOBILE_API.NOTIFICATION_LOG SET SENT =:SENT,`UPDATE_DATE`=now() WHERE MESSAGE_ID=:MESSAGE_ID AND OS_TYPE=:OS_TYPE AND SENT NOT IN('Y')";
+			$sql = "UPDATE MOBILE_API.NOTIFICATION_LOG SET SENT =:SENT,`UPDATE_DATE`=now() WHERE MESSAGE_ID=:MESSAGE_ID AND OS_TYPE=:OS_TYPE AND SENT IN('I','N','P','L')";
                         $res=$this->db->prepare($sql);
                         $res->bindValue(":MESSAGE_ID",$messageId,constant('PDO::PARAM_'.$this->{'MESSAGE_ID_BIND_TYPE'}));
                         $res->bindValue(":SENT",$status,constant('PDO::PARAM_'.$this->{'SENT_BIND_TYPE'}));
@@ -63,7 +63,7 @@ class MOBILE_API_NOTIFICATION_LOG extends TABLE{
                 if(!$messageId || !$osType)
                      throw new jsException("","pid/notificationKey/status not provided to updatestatus in MOBILE_API.SCHEDULED_APP_NOTIFICATIONS");
                 try{
-                        $sql = "DELETE FROM MOBILE_API.NOTIFICATION_LOG WHERE MESSAGE_ID=:MESSAGE_ID AND OS_TYPE=:OS_TYPE AND SENT NOT IN('Y')";
+			$sql = "DELETE FROM MOBILE_API.NOTIFICATION_LOG WHERE MESSAGE_ID=:MESSAGE_ID AND OS_TYPE=:OS_TYPE AND SENT IN('I','N','P','L')";
                         $res=$this->db->prepare($sql);
                         $res->bindValue(":MESSAGE_ID",$messageId,constant('PDO::PARAM_'.$this->{'MESSAGE_ID_BIND_TYPE'}));
                         $res->bindValue(":OS_TYPE",$osType,constant('PDO::PARAM_'.$this->{'OS_TYPE_BIND_TYPE'}));

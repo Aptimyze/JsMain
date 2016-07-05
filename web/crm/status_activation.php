@@ -3,6 +3,8 @@
 include("connect.inc");
 include ("display_result.inc");
 include_once($_SERVER["DOCUMENT_ROOT"]."/classes/Services.class.php");
+include_once(JsConstants::$docRoot."/classes/JProileUpdateLib.php");
+
 $PAGELEN=10;
 $LINKNO=10;
 $START=1;
@@ -79,43 +81,15 @@ if(authenticated($cid))
 					$sid=$myrow['SERVICE'];
 					if($myrow['ADDON_SERVICEID'])
 						$sid.=",".$myrow['ADDON_SERVICEID'];
-					/*if($myrow["SERVICE"] == 'S1' or $myrow["SERVICE"] == 'S2' or  $myrow["SERVICE"] == 'S3')
-						$subscription = "F";
-					elseif($myrow["SERVICE"] == 'S4' or $myrow["SERVICE"] == 'S5' or  $myrow["SERVICE"] == 'S6')
-						$subscription = "F,B";
-					else
-					{
-						$sql = "Select c.RIGHTS from billing.SERVICES a, billing.PACK_COMPONENTS b, billing.COMPONENTS c where a.SERVICEID = '$myrow[SERVICE]' AND a.PACKID = b.PACKID AND b.COMPID = c.COMPID";
-						$res_servid = mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
-					//	$myrow_servid = mysql_fetch_array($res_servid);
-					while($myrow_servid = mysql_fetch_array($res_servid))
-					{
-						$servid_ar[] = $myrow_servid["RIGHTS"];
-					}	
-						if($myrow['ADDON_SERVICEID'])
-						{
-							$addon_service = $myrow['ADDON_SERVICEID'];
-							$addon_service_ar = explode(",",$addon_service);
-							for($j=0;$j<count($addon_service_ar);$j++)
-								$addon_service_ar[$j] = "'".$addon_service_ar[$j]."'";
-							$addon_service_str = implode(",",$addon_service_ar);
-							$sql = "Select RIGHTS from billing.SERVICES a, billing.COMPONENTS b where a.SERVICEID IN ($addon_service_str) AND a.SERVICEID = b.COMPID";
-							$res_servid = mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
-							while($myrow_servid=mysql_fetch_array($res_servid))
-							{
-								$servid_ar[] = $myrow_servid['RIGHTS'];
-							}	
-						}
-						if(is_array($servid_ar))
-							$subscription = implode(",",$servid_ar);
-						else
-							$subscription = "N";
-						unset($servid_ar);
-					}*/
+
 					$rights_arr=$serviceObj->getRights($sid);
 					$rights=implode(",",$rights_arr);
-					$sql = "update newjs.JPROFILE set SUBSCRIPTION = '$rights' where PROFILEID = '$proid[$i]'";
-					mysql_query_decide($sql) or die("Service not activated. because of : ".mysql_error_js());
+					/*$sql = "update newjs.JPROFILE set SUBSCRIPTION = '$rights' where PROFILEID = '$proid[$i]'";
+					mysql_query_decide($sql) or die("Service not activated. because of : ".mysql_error_js());*/
+					$jprofileObj    =JProfileUpdateLib::getInstance();
+					$paramArr =array("SUBSCRIPTION"=>$rights);
+					$jprofileObj->editJPROFILE($paramArr,$proid[$i],'PROFILEID');
+
 				}
 				/*Added by Alok on 19th Feb 2005 end*/
 			}

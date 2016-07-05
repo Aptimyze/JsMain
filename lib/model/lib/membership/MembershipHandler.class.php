@@ -542,8 +542,8 @@ class MembershipHandler
     
     public function getServiceMessages($services) {
         $message = array();
-        $serviceFeatures = VariableParams::$serviceFeatues;
-        $serviceMessages = VariableParams::$serviceMessages;
+        $serviceFeatures = VariableParams::$apiPageOnePerMembershipBenefitsVisibility;
+        $serviceMessages = VariableParams::$apiPageOnePerMembershipBenefits;
         foreach ($services as $key => $val) {
             if ($val == 'P') {
                 foreach (array_intersect_key($serviceMessages[$val], $serviceFeatures) as $k => $v) {
@@ -616,7 +616,7 @@ class MembershipHandler
         unset($fieldSalesObj);
     }
     
-    public function retrieveCorrectMemID($memID, $userObj) {
+    public function retrieveCorrectMemID($memID) {
         if ($memID != "FREE") {
             $memID = @explode(",", $memID);
             $memID = $memID[0];
@@ -1642,8 +1642,8 @@ class MembershipHandler
         //get dpp matches count for profile
         $loggedInProfileObj = Operator::getInstance();
         $loggedInProfileObj->getDetail($profileid,'PROFILEID','*');
-        $dppDetails = SearchCommonFunctions::getMyDppMatches("",$loggedInProfileObj,"","","","","","","","onlyCount");
-        $profileDetails['MATCHES'] = $dppDetails['CNT'];
+        // $dppDetails = SearchCommonFunctions::getMyDppMatches("",$loggedInProfileObj,"","","","","","","","onlyCount");
+        // $profileDetails['MATCHES'] = $dppDetails['CNT'];
         unset($dppDetails);
         unset($loggedInProfileObj);
 
