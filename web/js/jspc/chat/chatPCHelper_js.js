@@ -306,7 +306,7 @@ function checkAuthentication(){
 
 function logoutChat(){
     console.log("In logout chat function")
-    //converse.user.logout();
+    converse.user.logout();
     eraseCookie("chatAuth");
 }
 
@@ -318,7 +318,7 @@ $(document).ready(function(){
         var loginStatus;
         if(chatLoggedIn == 'true'){
             loginStatus = "Y";
-            //initiateChatConnection();
+            initiateChatConnection();
         }
         else{
             loginStatus = "N";
@@ -342,7 +342,7 @@ $(document).ready(function(){
                 return ;
             }
             else{
-                //initiateChatConnection();
+                initiateChatConnection();
                 objJsChat._loginStatus = 'Y';
             }
         }
