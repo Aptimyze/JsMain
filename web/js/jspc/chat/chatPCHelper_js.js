@@ -304,6 +304,11 @@ function checkAuthentication(){
     return auth;
 }
 
+function logoutChat(){
+    console.log("In logout chat function")
+    //converse.user.logout();
+    eraseCookie("chatAuth");
+}
 
 $(document).ready(function(){
     var checkDiv = $("#chatOpenPanel").length;
@@ -313,6 +318,7 @@ $(document).ready(function(){
         var loginStatus;
         if(chatLoggedIn == 'true'){
             loginStatus = "Y";
+            //initiateChatConnection();
         }
         else{
             loginStatus = "N";
@@ -336,10 +342,17 @@ $(document).ready(function(){
                 return ;
             }
             else{
+                //initiateChatConnection();
                 objJsChat._loginStatus = 'Y';
             }
         }
         console.log("In callback");
+    }
+    
+    objJsChat.onLogoutPreClick = function(){
+        console.log("In Logout preclick");
+        objJsChat._loginStatus = 'N';
+        logoutChat();
     }
 
     objJsChat.start();

@@ -30306,6 +30306,7 @@ return Backbone.BrowserStorage;
                 converse.logIn(credentials);
             },
             'logout': function () {
+                console.log("In converse logout function");
                 converse.logOut();
             },
             'status': {

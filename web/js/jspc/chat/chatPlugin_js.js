@@ -142,10 +142,15 @@ JsChat.prototype = {
             $('.show' + param).fadeIn('slow')
         });
     },
+    
+    onLogoutPreClick: null,
+    
     //start:log out from chat
     logOutChat: function() {
         var curEleRef = this;
         $(curEleRef._toggleID).toggleClass('disp-none');
+        console.log("In logout Chat");
+        console.log(curEleRef._loginStatus);
         if (curEleRef._loginStatus == 'N') {
             $(curEleRef._listingPanelID).fadeOut('slow', function() {
                 $(curEleRef._loginPanelID).fadeIn('slow');
@@ -163,11 +168,16 @@ JsChat.prototype = {
         $(curEleRef._listingPanelID).append(chatHeaderHTML);
 
 
-        $(curEleRef._toggleLogoutDiv).click(function() {
+        $(curEleRef._toggleLogoutDiv).off("click").on("click",function() {
+            console.log($(this));
             $(curEleRef._toggleID).toggleClass('disp-none');
         });
 
         $(curEleRef._logoutChat).click(function() {
+            if( curEleRef.onLogoutPreClick  && typeof (curEleRef.onLogoutPreClick) == "function" ){
+                console.log("in if");
+                curEleRef.onLogoutPreClick();
+            }
             curEleRef.logOutChat();
         });
 
@@ -683,6 +693,7 @@ JsChat.prototype = {
             this._startLoginHTML();
         } else {
             this.addLoginHTML();
+            console.log("in start function");
         }
 
 
