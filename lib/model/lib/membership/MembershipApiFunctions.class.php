@@ -970,7 +970,7 @@ class MembershipApiFunctions
                 $arr = VariableParams::$eValuePlusAddOns;
             }
             foreach ($arr as $key => $val) {
-                if ($apiObj->mainMemDur == '1188') {
+                if ($apiObj->mainMemDur == '1188' || $apiObj->mainMemDur == 'L') {
                     $dur = '12';
                 } 
                 else {
