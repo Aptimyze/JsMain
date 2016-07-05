@@ -486,7 +486,7 @@ class MembershipAPIResponseHandler {
                 $arr = VariableParams::$eValuePlusAddOns;
             }
             foreach ($arr as $key => $val) {
-                if ($this->mainMemDur == '1188') {
+                if ($this->mainMemDur == '1188' || $this->mainMemDur == 'L') {
                     $dur = '12';
                 } 
                 else {
@@ -572,7 +572,7 @@ class MembershipAPIResponseHandler {
         if (count($this->vasServices) == 1 && empty($this->mainMem))
             $this->vasServices[0]['remove_text'] = NULL;
         
-        if (isset($this->mainServices) && ! empty($this->mainServices)) {
+        if (isset($this->mainServices) && !empty($this->mainServices)) {
             $finalCartPrice = $this->mainServices['price'] + $this->totalVASPrice;
             $finalCartDiscount = $this->mainServices['discount_given'] + $this->totalVASDiscount;
             $this->mainServices['price'] = $this->mainServices['display_price'];
