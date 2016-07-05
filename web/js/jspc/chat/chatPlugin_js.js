@@ -631,11 +631,13 @@ JsChat.prototype = {
         }
         console.log("Login status value");
         console.log(this._loginStatus);
+        /*
         if((this._loginStatus == "Y")){
              $(curEle._loginPanelID).fadeOut('slow', function() {
                 curEle._appendLoggedHTML();
             });
         }
+        */
 
     },
     //start:append Chat Logged in Panel
