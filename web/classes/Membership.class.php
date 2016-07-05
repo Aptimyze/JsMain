@@ -1794,156 +1794,94 @@ class Membership
         return $PRICE;
     }
 
-    function forOnline($service_str, $type, $mainServiceId, $link_discount = '', $paymentOptionSel = '', $device = 'desktop', $couponCodeVal = '') {
-        include_once (JsConstants::$cronDocRoot . "/apps/jeevansathi/lib/MembershipHandler.class.php");
-        include_once (JsConstants::$cronDocRoot . "/apps/jeevansathi/lib/memUser.class.php");
+    public function forOnline($allMemberships, $type, $mainServiceId, $link_discount = NULL, $paymentOptionSel = NULL, $device = 'desktop', $couponCodeVal = NULL)
+    {
+        $profileid = $this->profileid;
+        $userObj = new memUser($profileid);
+        $userObj->setCurrency($type);
         $memHandlerObj = new MembershipHandler();
-        $userObj = new memUser($this->profileid);
-        $serObj = new Services;
-        $disc = $this->isRenewable($this->profileid);
-        if ($disc && $disc == "1") $disc = '';
+        $memApiFuncs = new MembershipApiFunctions();
+        $memApiRespHandlerObj = new MembershipAPIResponseHandler();
+        $servObj = new Services();
 
-        $Fest = $serObj->getFestive();
-        if ($link_discount) {
-            global $renew_discount_rate;
-            $id_arr = explode("i", $link_discount);
-            if (md5($id_arr[1]) == $id_arr[0]) {
-                $renew_discount_rate = $this->getLinkDiscount($id_arr[1], $this->profileid);
-                $discount_type = 10;
-                if ($renew_discount_rate) $disc = 1;
-            } 
-            else $disc = 0;
-
-            //$Fest ='';
-
-        } 
-        elseif ($disc) {
-
-            // Renewal Discount
-            global $renew_discount_rate;
-            $discount_type = 1;
-            $renew_discount_rate = $memHandlerObj->getVariableRenewalDiscount($this->profileid);
-        } 
-        else {
-
-            // Special Discount (VD)
-            $Spec = $this->getDiscountDetailsForProfile($this->profileid, $mainServiceId);
-            if ($Spec) {
-                global $renew_discount_rate;
-                $renew_discount_rate = $Spec;
-                $disc = 1;
-                $discount_type = 5;
-            } 
-            else if ($Fest) {
-
-                // Festive Discount
-                $discount_type = 6;
-            } 
-            else {
-
-                // Cash Discount
-                global $renew_discount_rate;
-                $otherDis = $this->getOtherDiscount($mainServiceId);
-                if ($otherDis) {
-                    $renew_discount_rate = $otherDis;
-                    $disc = 1;
-                    $discount_type = 11;
-                } 
-                else {
-
-                    // Others
-                    $discount_type = 12;
-                }
-            }
-        }
-        $service_str_arr = @explode(",", $service_str);
-
-        $service_str_new = $service_str;
-
-        // get total amount
-        $total = $serObj->getTotalPrice($service_str_new, $type, $device);
-        $main_service = $mainServiceId;
-
-        // main service check added
-        if ($main_service) {
-            $service_str_off = $serObj->OfferMapping($service_str_new);
-            $total_off = $serObj->getTotalPrice($service_str_off, $type, $device);
-        }
-
-        // renewal/special/Offer discount
-        if ($disc) {
-            if ($discount_type == 11) {
-                $totalMainPrice = $serObj->getTotalPrice($main_service, $type, $device);
-                $discount = $serObj->getDiscountedPrice($discount_type, $totalMainPrice, '', $this->profileid);
-            } 
-            else $discount = $serObj->getDiscountedPrice($discount_type, $total, '', $this->profileid);
-            $totalNew = $total - $discount;
-        }
-
-        //Unlimited festive offer
-        //if($Fest && ($main_service=='PL' || $main_service=='CL' || $main_service=='ESPL' || $main_service=='DL')){
-        $festiveOfferLookupObj = new billing_FESTIVE_OFFER_LOOKUP();
-        $festiveDiscountPercent = $festiveOfferLookupObj->getPercDiscountOnService($main_service);
-        if ($Fest && $festiveDiscountPercent > 0) {
-            $discount = $serObj->getDiscountedPrice($discount_type, $total, $main_service, $this->profileid);
-            $totalNew = $total - $discount;
-            if ($discount_type == '5') $discount_type = 9;
-            else $discount_type = 6;
-        }
-
-        // only festive duration
-        else if ($Fest && $main_service) {
-            if ($total_off > $total) $discount+= $total_off - $total;
-            if ($discount_type == '1') $discount_type = 7;
-            else if ($discount_type == '5') $discount_type = 9;
-            else if ($discount_type == '10') {
-            } 
-            else $discount_type = 6;
-        }
-        if (!$main_service) $service_str_off = $service_str;
-        if ($totalNew) $total = $totalNew;
-
-        // Code added to compute Discount via Coupon Code additively after calculating other applicable discounts if any.
-        if ($couponCodeVal != '' && $main_service) {
-            $discount_type = 14;
-            $memHandlerObj = new MembershipHandler();
-            $discountVal = $memHandlerObj->validateCouponCode($main_service, $couponCodeVal);
-            if (is_numeric($discountVal) && $discountVal > 0) {
-                $coupDisc = round($total * ($discountVal / 100), 2);
-                $total-= $coupDisc;
-                $discount+= $coupDisc;
-            }
-        }
-
-        // Setting defaults for IOS since we cannot show any offers !!
-        $profileObj= LoggedInProfile::getInstance();
-        $profileDetail = $profileObj->getDetail();
-        $screeningStatus = $profileDetail['ACTIVATED'];
+        $profileObj = LoggedInProfile::getInstance('newjs_slave',$profileid);
+        $screeningStatus = $profileObj->getACTIVATED();
 
         if ($device == "iOS_app" || $screeningStatus == "N") {
-            $total = $serObj->getTotalPrice($service_str_new, $type, $device);
             $main_service = $mainServiceId;
-            $service_str_off = $service_str_new;
+            $service_str_off = $allMemberships;
             $discount = 0;
             $discount_type = 12;
+            $total = $servObj->getTotalPrice($allMemberships, $type, $device);
+        } else {
+            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code) = $memHandlerObj->getUserDiscountDetailsArray($userObj, "L");
+        
+            // Existing codes for setting discount type in billing.ORDERS
+            // 10 - Backend Discount Link
+            // 1 - Renewal Discount
+            // 7 - Renewal + Festive Discount
+            // 6 - Festive Discount
+            // 11 - Cash Discount
+            // 5 - Special Discount
+            // 9 - Special + Festive Discount
+            // 12 - Others / Default
+            // 14 - Coupon Code was applied 
+
+            if ($link_discount) {
+                $id_arr = explode("i", $link_discount);
+                if (md5($id_arr[1]) == $id_arr[0]) {
+                    $discount_type = 10;
+                    $backendRedirect = 1;
+                    $profileCheckSum = md5($profileid)."i".$profileid;
+                    $reqid = $link_discount;
+                }
+            } else if ($renewalActive){
+                $dicount_type = 10;
+                if ($fest) {
+                    $dicount_type = 7;
+                }
+            } else if ($fest) {
+                $discount_type = 6;
+            } else if ($discountActive) {
+                $discount_type = 11;
+            } else if ($specialActive) {
+                $discount_type = 5;
+                if ($fest) {
+                    $discount_type = 9;
+                }
+            } else if ($couponCodeVal && $mainServiceId) {
+                $discountVal = $memHandlerObj->validateCouponCode($mainServiceId, $couponCodeVal);
+                if (is_numeric($discountVal) && $discountVal > 0) {
+                    $discount_type = 14;
+                }
+            } else {
+                $discount_type = 12;
+            }
+
+            $allMembershipsNew = $allMemberships;
+            if ($fest && $mainServiceId) { // Get reverse Offer Mapping in case of festive 
+                $allMembershipsNew = $servObj->OfferMapping($allMembershipsNew);
+            }
+
+            if (!$mainServiceId) {
+                $allMembershipsNew = $allMemberships;
+            }
+            
+            list($total, $discount) = $memHandlerObj->setTrackingPriceAndDiscount($userObj, $profileid, $mainServiceId, $allMemberships, $type, $device, $couponCode, $backendRedirect, $profileCheckSum, $reqid);
         }
 
         $payment['total'] = $total;
-        $payment['service_str'] = $service_str_off;
+        $payment['service_str'] = $allMembershipsNew;
         $payment['discount'] = $discount;
         $payment['discount_type'] = $discount_type;
 
-        // Tracking for failed payment is added irrespective of Main membership/VAS is selected
-        //if($mainServiceId){
-        $userObj->setCurrency($type);
-        $service_str_off = rtrim($service_str_off, ",");
+        $service_str_off = rtrim($allMembershipsNew, ",");
+
         if ($device == "JSAA_mobile_website") {
             $device = 'Android_app';
         }
-        $memHandlerObj->trackMembership($userObj, '', '', $service_str_off, '', $discount, $total, $paymentOptionSel, 'F', $device);
 
-        //}
-        // Tracking ends
+        $memHandlerObj->trackMembership($userObj, '', '', $service_str_off, '', $discount, $total, $paymentOptionSel, 'F', $device);
         return $payment;
     }
 
