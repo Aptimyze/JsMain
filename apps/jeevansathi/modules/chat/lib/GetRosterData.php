@@ -22,6 +22,20 @@ class GetRosterData
 		$skipArray = $this->getSkipProfiles($type);
 		$conditions = $this->getConditions($type,$limit);
 		$profilelists = $infoTypeAdapter->getProfiles($conditions,$skipArray);
+		if(is_array($profilelists))
+		{
+			$profArrObj                = new ProfileArray();
+			foreach($profilelists as $key=>$value)
+			{
+				$profiles[] = $key;
+			}
+			$profileIdArr["PROFILEID"] = implode(",",$profiles);
+			$usernameArray = $profArrObj->getResultsBasedOnJprofileFields($profileIdArr, '', '', implode(',',Array("PROFILEID", "USERNAME")),'JPROFILE',"newjs_bmsSlave");
+			foreach($usernameArray as $key=>$value)
+			{
+				$profilelists[$value->getPROFILEID()]["USERNAME"] = $value->getUSERNAME();
+			}
+		}
 		return $profilelists;
 	}
 
@@ -45,7 +59,6 @@ class GetRosterData
 
 					break;
 			}
-
 		return $this->skipProfiles;
 	}
 
