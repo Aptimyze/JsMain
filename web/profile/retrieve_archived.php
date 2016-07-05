@@ -152,7 +152,7 @@ function retrieve_profile($profileid)
 		$arrFields['ACTIVATED']=$row_act['PREACTIVATED'];
 		
 	$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
-	$profileid=$row[PROFILEID];
+	
 	$arrFields['MOB_STATUS']='N';
 	$arrFields['LANDL_STATUS']='N';
 	$arrFields['PHONE_FLAG']='';
