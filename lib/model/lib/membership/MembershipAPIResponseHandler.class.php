@@ -1257,7 +1257,7 @@ class MembershipAPIResponseHandler {
     
     public function generateChequePickupResponse($request) {
         $payHandlerObj = new PaymentHandler();
-        $prefCities = $payHandlerObj->getNearByCities();
+        $prefCities = $payHandlerObj->getNearByCities('Y');
         $pickupParams = VariableParams::$apiPageSixParams;
         
         $startDate = date('Y-m-d', time() + 1 * 86400);
