@@ -19,7 +19,7 @@
     
         </div>
     <div style="border-top:1px solid #df6576" id='retryBtn' class="fullwid txtc">
-    	<a href="#" class="fullwid  white f16 " style="display:block;padding:15px 0" onclick="document.location.reload();return false">Retry</a>
+    	<a class="fullwid  white f16 " style="display:block;padding:15px 0" onclick="javascript:document.location.reload();return false">Retry</a>
     
     </div>
 </div>
@@ -42,11 +42,6 @@
         $(".sreen404").height(h);
         $("#retryBtn").addClass('btmo').addClass('posfix ');
     }
-$(document).ready(function() {
-    if(typeof trackJsEventGA != 'undefined')
-    trackJsEventGA('jsms','500-error','-');
-});
-
 
 $(document).ready(function() {
     if(typeof trackJsEventGA != 'undefined')
