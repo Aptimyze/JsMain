@@ -258,7 +258,7 @@ JsChat.prototype = {
             var res = runID.split("@");
             runID = res[0];
             $.each(data[key]["rosterDetails"]["Groups"], function(index, val) {
-                var List = '';
+                var List = '',status = data[key]["rosterDetails"]["chat_status"],username = data[key]["rosterDetails"]["fullname"];
                 List += '<li class=\"clearfix profileIcon\"';
                 List += "id=\"" + (runID + val) + "\" >";
                 List += "<img id=\"pic_" + runID + "_" +val + "\" src=\"images/pic1.jpg\" class=\"fl\">";
@@ -267,10 +267,9 @@ JsChat.prototype = {
                 List += '</div>';
                 List += '</li>';
                 $('div.' + val + ' ul').append(List);
-				//bind click on listing
-                var username = data[key]["rosterDetails"]["fullname"];
+				//bind click on listing]
                 $("#" + username + val).on("click", function() {
-                    elem._chatPanelsBox(username);
+                    elem._chatPanelsBox(username,status);
                 });
             });
         }
@@ -290,8 +289,10 @@ JsChat.prototype = {
             }, function() {
                 $(elem.find(".nchatic_2")[0]).hide();
                 $(elem.find(".nchatic_3")[0]).hide();
-                elem.find(".onlinePerson").hide();
-                elem.find(".pinkBubble2").show();
+                elem.find(".onlineStatus").hide();
+				if(elem.find(".pinkBubble2 span").html() != 0) {
+					elem.find(".pinkBubble2").show();
+				}
                 elem.find(".chatBoxBar").addClass("cursp");
                 elem.find(".downBarPic").addClass("downBarPicMin");
                 elem.find(".downBarUserName").addClass("downBarUserNameMin");
@@ -318,8 +319,9 @@ JsChat.prototype = {
         }, function() {
             $(elem.find(".nchatic_2")[0]).show();
             $(elem.find(".nchatic_3")[0]).show();
-            elem.find(".onlinePerson").show();
+            elem.find(".onlineStatus").show();
             elem.find(".pinkBubble2").hide();
+			elem.find(".pinkBubble2 span").html("0");
             elem.find(".chatBoxBar").removeClass("cursp");
             elem.find(".downBarPic").removeClass("downBarPicMin");
             elem.find(".downBarUserName").removeClass("downBarUserNameMin");
@@ -391,10 +393,10 @@ JsChat.prototype = {
                 $(this).val("").css("height", "24px");
                 if (text.length > 1) {
                     var superParent = $(this).parent().parent();
-                    $(superParent).find(".chatMessage").css("height", "250px").append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div class="talkText">' + text + '</div><i class="nchatspr nchatic_8 fr vertM"></i></div>');
-                    var len = $(superParent).find(".talkText").length;
-                    var height = $($(superParent).find(".talkText")[len - 1]).height();
-                    $($(superParent).find(".nchatic_8")[len - 1]).css("margin-top", height);
+					console.log($(superParent).find(".talkText").length);
+                    $(superParent).find(".chatMessage").css("height", "250px").append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_'+userId+'_'+($(superParent).find(".talkText").length+1)+'" class="talkText">' + text + '</div><i class="nchatspr nchatic_8 fr vertM"></i></div>');
+                    var len = $(superParent).find(".talkText").length,height = $($(superParent).find(".talkText")[len - 1]).height();
+                    $($(superParent).find(".talkText")[len - 1]).next().css("margin-top", height);
                     var scrollBox = $('chat-box[user-id="' + userId + '"] .chatMessage');
                     var height = ($(".rightBubble").length + $(".leftBubble").length) * 40;
                     $(scrollBox).animate({
@@ -413,10 +415,10 @@ JsChat.prototype = {
             setTimeout(function() {
                 $(".extraChats").css("padding-top", "0px");
             }, 100);
-            var username = $(this).closest(".extraChatList").attr("id").split("_")[1];
-            var originalElem = $('chat-box[user-id="' + username + '"]');
-            curElem._appendChatBox(username);
+            var username = $(this).closest(".extraChatList").attr("id").split("_")[1],originalElem = $('chat-box[user-id="' + username + '"]'),status = $("chat-box[user-id='" + username + "'] .chatBoxBar .onlineStatus").html(),chatHtml = $(originalElem).find(".chatMessage").html();
+            curElem._appendChatBox(username,status);
             $(originalElem).remove();
+			$("chat-box[user-id='" + username + "'] .chatMessage").html(chatHtml);
             $(this).closest(".extraChatList").remove();
             setTimeout(function() {
                 curElem._scrollUp($('chat-box[user-id="' + username + '"]'));
@@ -458,12 +460,16 @@ JsChat.prototype = {
 
     //adding data in extra popup
     _addDataExtraPopup: function(data) {
-        $(".extraPopup").append('<div id="extra_' + data + '" class="extraChatList pad8_new"><div class="extraUsername cursp colrw disp_ib pad8_new fontlig f14">' + data + '</div><div class="pinkBubble vertM scir disp_ib padall-10"><span class="noOfMessg f13 pos-abs">1</span></div><i class="nchatspr nchatic_4 cursp disp_ib mt6 ml10"></i></div>');
+        $(".extraPopup").append('<div id="extra_' + data + '" class="extraChatList pad8_new"><div class="extraUsername cursp colrw minWid65 disp_ib pad8_new fontlig f14">' + data + '</div><div class="pinkBubble vertM scir disp_ib padall-10"><span class="noOfMessg f13 pos-abs">1</span></div><i class="nchatspr nchatic_4 cursp disp_ib mt6 ml10"></i></div>');
+		$("#extra_"+data+" .pinkBubble span").html($('chat-box[user-id="' + data + '"] .chatBoxBar .pinkBubble2 span').html());	
+		if($("#extra_"+data+" .pinkBubble span").html() ==0) {
+			$("#extra_"+data+" .pinkBubble").hide();
+		}
     },
 
     //append chat box on page
-    _appendChatBox: function(userId) {
-        $("#chatBottomPanel").prepend('<chat-box user-id="' + userId + '"></chat-box>');
+    _appendChatBox: function(userId,status) {
+        $("#chatBottomPanel").prepend('<chat-box status-user="'+status+'" user-id="' + userId + '"></chat-box>');
     },
 
     //create side panel of extra chat
@@ -492,7 +498,7 @@ JsChat.prototype = {
     },
 
     //appending chat box
-    _chatPanelsBox: function(userId) {
+    _chatPanelsBox: function(userId,status) {
         var curElem = this,
             heightPlus = false,
             bodyWidth = $("body").width();
@@ -521,7 +527,7 @@ JsChat.prototype = {
                 curElem._bindExtraPopupUserClose($(".nchatic_4"));
                 curElem._bindExtraUserNameBox();
             }
-            curElem._appendChatBox(userId);
+            curElem._appendChatBox(userId,status);
 
         } else {
             $(".extraChatList").each(function(index, element) {
@@ -535,9 +541,10 @@ JsChat.prototype = {
                         originalElem = $('chat-box[user-id="' + username + '"]'),
                         len = $("chat-box").length,
                         value = parseInt($(".extraNumber").text().split("+")[1]),
-                        data = $($("chat-box")[len - 1 - value]).attr("user-id");
-                    curElem._appendChatBox(username);
+                        data = $($("chat-box")[len - 1 - value]).attr("user-id"),chatHtml = $(originalElem).find(".chatMessage").html();
+                    curElem._appendChatBox(username,status);
                     originalElem.remove();
+					$("chat-box[user-id='" + username + "'] .chatMessage").html(chatHtml);
                     $(this).closest(".extraChatList").remove();
                     curElem._addDataExtraPopup(data);
                     curElem._bindExtraPopupUserClose($("#extra_" + data + " .nchatic_4"));
@@ -556,12 +563,13 @@ JsChat.prototype = {
     _createPrototypeChatBox: function() {
         var elem = this,
             chatBoxProto = Object.create(HTMLElement.prototype),
-            userId;
+            userId,status;
         chatBoxProto.attachedCallback = function() {
             this.innerHTML = '<div class="chatBoxBar fullwid hgt57 bg5 pos-rel fullwid"></div><div class="chatArea fullwid fullhgt"><div class="messageArea f13 bg13 fullhgt"><div class="chatMessage scrolla pos_abs fullwid" style="height: 250px;"></div></div><div class="chatInput brdrbtm_new fullwid btm0 pos-abs bg-white"><textarea cols="23" style="width: 220px;" id="txtArea"  class="inputText lh20 brdr-0 padall-10 colorGrey hgt18 fontlig" placeholder="Write message"></textarea></div></div>';
             $(this).addClass("z1000 btm0 brd_new fr mr7 fullhgt wid240 pos-rel disp_ib");
             userId = $(this).attr("user-id");
-            elem._bindChatBoxInner(userId);
+			status = $(this).attr("status-user");
+            elem._bindChatBoxInner(userId,status);
         };
         document.registerElement("chat-box", {
             prototype: chatBoxProto
@@ -570,7 +578,7 @@ JsChat.prototype = {
     },
 
     //binding after creating chatbox
-    _bindChatBoxInner: function(userId) {
+    _bindChatBoxInner: function(userId,status) {
         var curElem = this,
             imgId;
         $("#nchatDivs img").each(function(index, element) {
@@ -584,18 +592,52 @@ JsChat.prototype = {
             curElem._textAreaAdjust(this);
         });
         $('chat-box[user-id="' + userId + '"] #pic_' + userId).addClass("downBarPic cursp");
-        $('chat-box[user-id="' + userId + '"] .chatBoxBar').append('<div class="downBarText fullhgt"><div class="downBarUserName disp_ib pos-rel f14 colrw wid44p fontlig">' + userId + '<div class="onlinePerson f11 opa50 mt4">Father is online</div></div></div>');
-        $('chat-box[user-id="' + userId + '"] .chatBoxBar .downBarText').append('<div class="iconBar cursp fr padallf_2 disp_ib opa40"><i class="nchatspr nchatic_3"></i><i class="nchatspr nchatic_2 ml10 mr10"></i><i class="nchatspr nchatic_1 mr10"></i></div><div class="pinkBubble2 fr vertM scir disp_ib padall-10 m11"><span class="noOfMessg f13 pos-abs">1</span></div>');
-        //animation on chatbox slideup
+        $('chat-box[user-id="' + userId + '"] .chatBoxBar').append('<div class="downBarText fullhgt"><div class="downBarUserName disp_ib pos-rel f14 colrw wid44p fontlig">' + userId + '<div class="onlineStatus f11 opa50 mt4"></div></div></div>');
+        $('chat-box[user-id="' + userId + '"] .chatBoxBar .downBarText').append('<div class="iconBar cursp fr padallf_2 disp_ib opa40"><i class="nchatspr nchatic_3"></i><i class="nchatspr nchatic_2 ml10 mr10"></i><i class="nchatspr nchatic_1 mr10"></i></div><div class="pinkBubble2 fr vertM scir disp_ib padall-10 m11"><span class="noOfMessg f13 pos-abs">0</span></div>');
         $('chat-box[user-id="' + userId + '"] .pinkBubble2').hide();
+		$('chat-box[user-id="' + userId + '"] .pinkBubble2 span').html("0");
+		$("chat-box[user-id='" + userId + "'] .chatBoxBar .onlineStatus").html(status);
         curElem._bindMaximize($('chat-box[user-id="' + userId + '"] .chatBoxBar'), userId);
         curElem._bindMinimize($('chat-box[user-id="' + userId + '"] .nchatic_2'));
         curElem._bindClose($('chat-box[user-id="' + userId + '"] .nchatic_1'));
         curElem._bindBlock($('chat-box[user-id="' + userId + '"] .nchatic_3'));
         curElem._bindSendChat(userId);
+		/*setTimeout(function(){  curElem._appendRecievedMessage("hi this is recieved",userId);
+		setTimeout(function(){  curElem._changeStatusOfMessg(1,userId,"recieved"); 
+		setTimeout(function(){  curElem._changeStatusOfMessg(1,userId,"recievedRead"); 
+		}, 2000);
+		}, 2000);
+		 }, 7000);*/
     },
-
-    onEnterToChatPreClick:null,
+	
+	//add meesage recieved from another user
+	_appendRecievedMessage: function(message, userId){
+		var val,len = $('chat-box[user-id="' + userId + '"] .talkText').length+1;
+		//adding message in chat area
+		$('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_'+userId+'_'+len+'" class="talkText">'+message+'</div></div>');
+		//adding bubble for minimized tab
+		if($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
+			val = parseInt($('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html())+1;
+			$('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html(val);
+			$('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2').show();
+		}
+		//adding bubble for side tab
+		if($("#extra_"+userId+" .pinkBubble").length != 0){
+				val =  parseInt($("#extra_"+userId+" .pinkBubble span").html());
+				$("#extra_"+userId+" .pinkBubble span").html(val+1);
+				$("#extra_"+userId+" .pinkBubble").show();
+		}
+	},
+	
+	_changeStatusOfMessg:function(messgNo, userId, newStatus){
+		if(newStatus == "recieved"){
+			$("#text_"+userId+"_"+messgNo).next().removeClass("nchatic_8").addClass("nchatic_10");
+		} else if(newStatus == "recievedRead"){
+			$("#text_"+userId+"_"+messgNo).next().removeClass("nchatic_10").addClass("nchatic_9");
+		}
+	},
+	
+	onEnterToChatPreClick:null,
 
     //start:login screen
     _startLoginHTML: function() {
@@ -730,7 +772,7 @@ var objJsChat = new JsChat({
             }
         }, {
             "rosterDetails": {
-                "chat_status": "offline",
+                "chat_status": "online",
                 "fullname": "b1",
                 "Groups": ["shortlisted", "accepted_by_me"],
                 "id": "b1@localhost",
@@ -762,7 +804,7 @@ var objJsChat = new JsChat({
             }
         }, {
             "rosterDetails": {
-                "chat_status": "offline",
+                "chat_status": "online",
                 "fullname": "d1",
                 "Groups": ["dpp"],
                 "id": "d1@localhost",
