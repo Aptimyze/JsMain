@@ -49,7 +49,7 @@ class ContactsRecords
 			foreach ($ridArr as $k => $v)
 				$ridSqlArr[] = ":u$k";
 
-			$profilelist['PROFILE'] = array_unique(array_merge($idArr, $ridArr));
+			$profilelist['PROFILE'] = array_values(array_unique(array_merge($idArr, $ridArr)));
 
 			$query = http_build_query($profilelist);
 			$url = $url . "?" . $query;

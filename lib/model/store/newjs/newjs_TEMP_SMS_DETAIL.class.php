@@ -155,5 +155,19 @@ class newjs_TEMP_SMS_DETAIL extends TABLE{
 		$resUpdate->bindValue(":SMS_KEY",$notificationKey, constant('PDO::PARAM_'.$smsKeyBindType));
                 $resUpdate->execute();
         }
+
+    public function deletePreviousVdEntries($pidArr)
+    {
+		if(empty($pidArr) || !is_array($pidArr)){
+			throw new jsException("newjs_TEMP_SMS_DETAIL::deletePreviousVdEntries - Profile Array is either empty or not an array");
+		} else {
+			foreach ($pidArr as $key=>$profileid) {
+				$sqlUpdate="DELETE FROM newjs.TEMP_SMS_DETAIL WHERE PROFILEID=:PROFILEID AND SMS_KEY IN ('VD1','VD2')";	
+				$resUpdate = $this->db->prepare($sqlUpdate);
+				$resUpdate->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
+				$resUpdate->execute();
+			}
+		}
+    }
 }
 ?>

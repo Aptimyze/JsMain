@@ -12,7 +12,7 @@ include("connect.inc");
 include(JsConstants::$docRoot."/commonFiles/flag.php");
 include(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 include_once("../profile/arrays.php");
-
+mail("kunal.test02@gmail.com","jsadmin/oldfile/useredit.php in USE",print_r($_SERVER,true));
 if(authenticated($cid))
 {
 

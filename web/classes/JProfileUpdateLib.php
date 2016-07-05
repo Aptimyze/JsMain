@@ -56,6 +56,13 @@ class JProfileUpdateLib
    * @var Object
    */
   private $objProfileChristianStore = null;
+
+  /**
+   * ASTRO_DETAILS Store Object
+   * @var Object
+   */
+  private $objProfileAstroDetailsStore = null;
+
   /**
    *
    * @var String 
@@ -74,6 +81,7 @@ class JProfileUpdateLib
     $this->objProfileHobbyStore = new NEWJS_HOBBIES($dbname);
     $this->objProfileNTimesStore = new NEWJS_JP_NTIMES($dbname);
     $this->objProfileChristianStore = new NEWJS_JP_CHRISTIAN($dbname);
+    $this->objProfileAstroDetailsStore = new NEWJS_ASTRO($dbname);
   }
   /**
    * __destruct
@@ -85,6 +93,7 @@ class JProfileUpdateLib
     unset($this->objProfileHobbyStore);
     unset($this->objProfileNTimesStore);
     unset($this->objProfileChristianStore);
+    unset($this->objProfileAstroDetailsStore);
     self::$instance = null;
   }
   /**
@@ -126,6 +135,7 @@ class JProfileUpdateLib
       self::$instance->objProfileHobbyStore->setConnection($dbname);
       self::$instance->objProfileNTimesStore->setConnection($dbname);
       self::$instance->objProfileChristianStore->setConnection($dbname);
+      self::$instance->objProfileAstroDetailsStore->setConnection($dbname);
     }
     
     return self::$instance;
@@ -342,6 +352,21 @@ class JProfileUpdateLib
   {
     try {
       return $this->objJProfileStore->updateSortDate($profileId);
+    } catch (Exception $ex) {
+      jsCacheWrapperException::logThis($ex);
+      return false;
+    }
+  }
+
+  /**
+   * update sort date in Jprofile
+   * @param $profileId
+   * @return bool
+   */
+  public function updateASTRO_DETAILS($profileId,$paramArr)
+  {
+    try {
+      return $this->objProfileAstroDetailsStore->updateRecord($profileId,$paramArr);
     } catch (Exception $ex) {
       jsCacheWrapperException::logThis($ex);
       return false;

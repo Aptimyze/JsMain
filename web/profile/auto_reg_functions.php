@@ -9,7 +9,6 @@ include_once($path."/profile/hits.php");
 include_once($path."/profile/registration_functions.inc");
 include_once(JsConstants::$docRoot."/commonFiles/sms_inc.php");
 //include_once($path."/sugarcrm/custom/crons/JsSuccessAutoRegEmail.php");
-
 include_once($path."/classes/Jpartner.class.php");
 include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 $db=connect_db();
@@ -355,6 +354,8 @@ function if_blank($values){
 		return 1;
 }
 function register_user($post_values)	{
+//function not in use
+        mail("kunal.test02@gmail.com","auto_reg_functions.php :: register_user() in USE",print_r($_SERVER,true));
 	global $smarty;
 	global $protect_obj;
 	$cookie=array();

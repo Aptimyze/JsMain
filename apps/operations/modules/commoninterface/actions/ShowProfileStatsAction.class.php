@@ -59,10 +59,20 @@ class ShowProfileStatsAction extends sfActions
 	$crmUtilityObj          =new crmUtility();
         $privilege              =$agentAllocDetailsObj->getprivilage($this->cid);
 	$this->linkArr          =$crmUtilityObj->fetchPrivilegeLinks($privilege);
+	$privArr		=explode("+",$privilege);
+
+	$show_score=0;
+	$an_show_score=0;	
+	if(in_array('OPS',$privArr)||in_array('OPM',$privArr)||in_array('OSM',$privArr)||in_array('OFSM',$privArr))
+		$show_score=1;
+	if(in_array('SLHD',$privArr))
+		$an_show_score=1;
 
         // Profile Stats
         $showCrmStatsObj                =new ShowProfileStats($this->loginProfile);
         $this->detailedProfileStatsData =$showCrmStatsObj->getDetailedProfileStats();
+	$this->detailedProfileStatsData['show_score'] 	=$show_score;
+	$this->detailedProfileStatsData['an_show_score']=$an_show_score;
 
         $this->mainProfileStatsData     =$showCrmStatsObj->geMainProfileStats($this->profileDetailArr);
 
