@@ -1005,14 +1005,30 @@ class DetailedViewApi
 			$this->m_arrOut[strtolower($key)] = null;
                         if($key == "DPP_MANGLIK")
                             $value = CommonFunction::setManglikWithoutDontKnow($jPartnerObj->$val());
-                        else
+                        else{
+
                             $value = $jPartnerObj->$val();
+                        }
 			
 			if($value && $value != ApiViewConstants::getNullValueMarker())
 			{
 				$this->m_arrOut[strtolower($key)] = $value;
 			}
 		}
+
+		if($this->m_arrOut['dpp_state']!="")
+		{
+			if($this->m_arrOut['dpp_city']!="")
+			{
+				$this->m_arrOut['dpp_city'] = $this->m_arrOut['dpp_state'].", ".$this->m_arrOut['dpp_city'];
+			}
+			else
+			{
+				$this->m_arrOut['dpp_city'] = $this->m_arrOut['dpp_state'];
+			}
+			
+		}
+		
 		//Small Community Labels for DPP Mtongue
         if($this->m_arrOut['dpp_mtongue'] && strlen($jPartnerObj->getPARTNER_MTONGUE()))
         {

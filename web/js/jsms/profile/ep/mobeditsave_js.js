@@ -59,17 +59,21 @@ function dppCountry(json,realJson,indexPos)
 	var ele=$(this).find("div[data=1]");
 	var arr=new Array();;
 	var i=0;
-	
+	var retainCity = 0;
 		$("#P_CITY_TOP").addClass("dn");
 	$.each(json['p_country'],function(key,value){
 		arr[i]=value;
-		
+
 		if(parseInt(value)==51 || parseInt(value)==128)
 		{
 				$("#P_CITY_TOP").removeClass("dn");
+                                if(parseInt(value)==51)
+                                    retainCity = 1;
 		}
 		i++;	
 	});
+        if(!retainCity)
+           CommonOverlayEditUpdate("","P_CITY");
 	storeJson['p_city']=arr.join(",");
 	UpdateSection.call(this,json,realJson,indexPos);
 }
