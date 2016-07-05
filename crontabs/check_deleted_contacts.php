@@ -1,6 +1,7 @@
 <?php 
   $curFilePath = dirname(__FILE__)."/"; 
  include_once("/usr/local/scripts/DocRoot.php");
+ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
 /****************************************************************************************************************
 Filename    : check_deleted_contacts.php
@@ -68,31 +69,61 @@ if(mysql_num_rows($res))
 			$myDb=$mysqlObj->connect("$myDbName");
 			mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$myDb);
 			
+			$messageShard=$serverId+1;
+			$dbMessageLogObj=new NEWJS_MESSAGE_LOG("shard".$messageShard."_master");
+			$dbDeletedMessageLogObj=new NEWJS_DELETED_MESSAGE_LOG("shard".$messageShard."_master");
+			
 			foreach($TABLES_SHARDED as $table)
 			{
-				if(is_array($table["COLUMNS"]) && count($table["COLUMNS"])>0)
+				if($table[TABLE_NAME]=='newjs.MESSAGE_LOG')
 				{
-					foreach($table["COLUMNS"] as $column)
+					if(is_array($table["COLUMNS"]) && count($table["COLUMNS"])>0)
 					{
-						if($table["DEL_TABLE_NAME"])
+						foreach($table["COLUMNS"] as $column)
 						{
-							$sqldel="INSERT INTO $table[DEL_TABLE_NAME] SELECT * FROM $table[TABLE_NAME] WHERE $column='$profileid'";
-							//echo "\n".$sqldel;
-							$resdel=$mysqlObj->executeQuery($sqldel,$myDb);
-							if($resdel)
+							if($table["DEL_TABLE_NAME"])
+							{
+								$resdel=$dbDeletedMessageLogObj->insert($profileid,$column);
+								//$sqldel="INSERT INTO $table[DEL_TABLE_NAME] SELECT * FROM $table[TABLE_NAME] WHERE $column='$profileid'";
+								//echo "\n".$sqldel;
+								//$resdel=$mysqlObj->executeQuery($sqldel,$myDb);
+								if($resdel)
+								{
+									$dbMessageLogObj->deleteFromMessageLog($profileid,$column);
+									//$sqldel="DELETE FROM $table[TABLE_NAME] WHERE $column='$profileid'";
+									//echo "\n".$sqldel;
+									//$mysqlObj->executeQuery($sqldel,$myDb);
+								}
+							}
+						}		
+					}
+				}
+				else
+				{
+					if(is_array($table["COLUMNS"]) && count($table["COLUMNS"])>0)
+					{
+						foreach($table["COLUMNS"] as $column)
+						{
+							if($table["DEL_TABLE_NAME"])
+							{
+								$sqldel="INSERT INTO $table[DEL_TABLE_NAME] SELECT * FROM $table[TABLE_NAME] WHERE $column='$profileid'";
+								//echo "\n".$sqldel;
+								$resdel=$mysqlObj->executeQuery($sqldel,$myDb);
+								if($resdel)
+								{
+									$sqldel="DELETE FROM $table[TABLE_NAME] WHERE $column='$profileid'";
+									//echo "\n".$sqldel;
+									$mysqlObj->executeQuery($sqldel,$myDb);
+								}
+							}
+							else
 							{
 								$sqldel="DELETE FROM $table[TABLE_NAME] WHERE $column='$profileid'";
 								//echo "\n".$sqldel;
-								$mysqlObj->executeQuery($sqldel,$myDb);
+															$mysqlObj->executeQuery($sqldel,$myDb);		
 							}
-						}
-						else
-						{
-							$sqldel="DELETE FROM $table[TABLE_NAME] WHERE $column='$profileid'";
-							//echo "\n".$sqldel;
-                                                        $mysqlObj->executeQuery($sqldel,$myDb);		
-						}
-					}		
+						}		
+					}
 				}
 			}
 			unset($myDb);

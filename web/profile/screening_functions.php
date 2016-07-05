@@ -364,7 +364,9 @@ function delete_record($pid)
 	include_once("$path/classes/Mysql.class.php");
 	include_once("$path/classes/Memcache.class.php");
 	include_once($_SERVER['DOCUMENT_ROOT']."/profile/contacts_functions.php");
-
+	include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+	
+	
 	global $mysqlObj;
 	global $noOfActiveServers;
 	$mysqlObj=new Mysql;
@@ -376,6 +378,14 @@ function delete_record($pid)
 		$mysqlObj->executeQuery("set session wait_timeout=1000",$myDbarr[$myDbName]);
 
 	}
+	
+	$messageShardCount=0;
+	$dbMessageLogObj1=new NEWJS_MESSAGE_LOG("shard1_master");
+	$dbMessageLogObj2=new NEWJS_MESSAGE_LOG("shard2_master");
+	$dbMessageLogObj3=new NEWJS_MESSAGE_LOG("shard3_master");
+	$dbDeletedMessageLogObj1=new NEWJS_DELETED_MESSAGE_LOG("shard1_master");
+	$dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG("shard2_master");
+	$dbDeletedMessageLogObj3=new NEWJS_DELETED_MESSAGE_LOG("shard3_master");
 //	$myDb=$mysqlObj->connect("$myDbName");
 	
 	//Sharding of CONTACTS done by Sadaf
@@ -447,6 +457,7 @@ function delete_record($pid)
 	if(count($myDbarr))
         foreach($myDbarr as $key=>$val)
 	{
+		$messageShardCount++;
 		$mysqlObj->ping($myDbarr[$key]);
 		$myDb=$myDbarr[$key];
 
@@ -469,41 +480,60 @@ function delete_record($pid)
 		$mysqlObj->ping($myDbarr[$key]);
 		$myDb=$myDbarr[$key];	
 		//Deleting contacts from newjs.MESSAGE_LOG
-		$sql  = "SELECT ID FROM newjs.MESSAGE_LOG WHERE SENDER='$pid'";
-        	$res=$mysqlObj->executeQuery($sql,$myDb) or die(mysql_error_js($myDb));
-	        while($row=$mysqlObj->fetchArray($res))
-        	{
-                	$id=$row['ID'];
-	                $sql1="DELETE FROM newjs.MESSAGE_LOG WHERE ID='$id'";
-                	$mysqlObj->executeQuery($sql1,$myDb) or die(mysql_error_js($myDb));
-        	}
-
-	        $sql  = "SELECT ID FROM newjs.MESSAGE_LOG WHERE RECEIVER='$pid'";
-        	$res=$mysqlObj->executeQuery($sql,$myDb) or die(mysql_error_js($myDb));
-	        while($row=$mysqlObj->fetchArray($res))
-        	{
-                	$id=$row['ID'];
-	                $sql1="DELETE FROM newjs.MESSAGE_LOG WHERE ID='$id'";
-        	        $mysqlObj->executeQuery($sql1,$myDb) or die(mysql_error_js($myDb));
-        	}	
+		
+		$result=$dbMessageLogObj.$messageShardCount->getAllMessageIdLog($pid,'SENDER');
+		//$sql  = "SELECT ID FROM newjs.MESSAGE_LOG WHERE SENDER='$pid'";
+        	//$res=$mysqlObj->executeQuery($sql,$myDb) or die(mysql_error_js($myDb));
+	        //while($row=$mysqlObj->fetchArray($res))
+	        if(is_array($result)){
+				foreach($result as $key=>$row)
+				{
+						$id=$row['ID'];
+						$dbMessageLogObj.$messageShardCount->deleteMessageLogById($id);
+						//$sql1="DELETE FROM newjs.MESSAGE_LOG WHERE ID='$id'";
+						//$mysqlObj->executeQuery($sql1,$myDb) or die(mysql_error_js($myDb));
+				}
+			}
+		$res=$dbMessageLogObj.$messageShardCount->getAllMessageIdLog($pid,'RECEIVER');
+	       // $sql  = "SELECT ID FROM newjs.MESSAGE_LOG WHERE RECEIVER='$pid'";
+        	//$res=$mysqlObj->executeQuery($sql,$myDb) or die(mysql_error_js($myDb));
+	        //while($row=$mysqlObj->fetchArray($res))
+	        if(is_array($res)){
+				foreach($res as $key=>$row)
+				{
+						$id=$row['ID'];
+						$dbMessageLogObj.$messageShardCount->deleteMessageLogById($id);
+						//$sql1="DELETE FROM newjs.MESSAGE_LOG WHERE ID='$id'";
+						//$mysqlObj->executeQuery($sql1,$myDb) or die(mysql_error_js($myDb));
+				}
+			}
 	
 		//Deleting contacts from newjs.DELETED_MESSAGE_LOG
-		$sql  = "SELECT ID FROM newjs.DELETED_MESSAGE_LOG WHERE SENDER='$pid'";
-	        $res=$mysqlObj->executeQuery($sql,$myDb) or die("$sql".mysql_error_js());
-        	while($row=$mysqlObj->fetchArray($res))
-	        {
-        	        $id=$row['ID'];
-                	$sql1="DELETE FROM newjs.DELETED_MESSAGE_LOG WHERE ID='$id'";
-	                $mysqlObj->executeQuery($sql1,$myDb)  or die("$sql1".mysql_error_js());
-        	}			
-	
-		$sql  = "SELECT ID FROM newjs.DELETED_MESSAGE_LOG WHERE RECEIVER='$pid'";
-        	$res=$mysqlObj->executeQuery($sql,$myDb)  or die("$sql".mysql_error_js());
-	        while($row=$mysqlObj->fetchArray($res))
-        	{
-                	$id=$row['ID'];
-	                $sql1="DELETE FROM newjs.DELETED_MESSAGE_LOG WHERE ID='$id'";
-        	        $mysqlObj->executeQuery($sql1,$myDb)  or die("$sql1".mysql_error_js());
-        	}	
+		$resp=$dbDeletedMessageLogObj.$messageShardCount->getAllMessageIdLog($pid,'SENDER');
+		//$sql  = "SELECT ID FROM newjs.DELETED_MESSAGE_LOG WHERE SENDER='$pid'";
+	      //  $res=$mysqlObj->executeQuery($sql,$myDb) or die("$sql".mysql_error_js());
+        	//while($row=$mysqlObj->fetchArray($res))
+        	if(is_array($resp)){
+				foreach($resp as $key=>$row)
+				{
+						$id=$row['ID'];
+						$dbDeletedMessageLogObj.$messageShardCount->deleteMessageLogById($id);
+						//$sql1="DELETE FROM newjs.DELETED_MESSAGE_LOG WHERE ID='$id'";
+						//$mysqlObj->executeQuery($sql1,$myDb)  or die("$sql1".mysql_error_js());
+				}
+			}
+			$response=$dbDeletedMessageLogObj.$messageShardCount->getAllMessageIdLog($pid,'RECEIVER');
+		//$sql  = "SELECT ID FROM newjs.DELETED_MESSAGE_LOG WHERE RECEIVER='$pid'";
+        	//$res=$mysqlObj->executeQuery($sql,$myDb)  or die("$sql".mysql_error_js());
+	        //while($row=$mysqlObj->fetchArray($res))
+	        if(is_array($response)){
+				foreach($response as $key=>$row)
+				{
+						$id=$row['ID'];
+						$dbDeletedMessageLogObj.$messageShardCount->deleteMessageLogById($id);
+						//$sql1="DELETE FROM newjs.DELETED_MESSAGE_LOG WHERE ID='$id'";
+						//$mysqlObj->executeQuery($sql1,$myDb)  or die("$sql1".mysql_error_js());
+				}
+			}
 	}
 }?>

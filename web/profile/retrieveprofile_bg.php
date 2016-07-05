@@ -10,6 +10,7 @@ $dirname=dirname(__FILE__);
 chdir($dirname);
 include('connect.inc');
 include($_SERVER["DOCUMENT_ROOT"].'/../crontabs/housekeeping/housekeepingConfig.php');
+include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
 /** invalid or no profileid is passed **/
 if(!$argv[1])
@@ -65,6 +66,22 @@ for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
 	mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$myDbarr[$myDbName]);
 }
 
+
+$messageShardCount=0;
+$dbMessageLogObj1=new NEWJS_MESSAGE_LOG("shard1_master");
+$dbMessageLogObj2=new NEWJS_MESSAGE_LOG("shard2_master");
+$dbMessageLogObj3=new NEWJS_MESSAGE_LOG("shard3_master");
+$dbDeletedMessagesObj1=new NEWJS_DELETED_MESSAGES("shard1_master");
+$dbDeletedMessagesObj2=new NEWJS_DELETED_MESSAGES("shard2_master");
+$dbDeletedMessagesObj3=new NEWJS_DELETED_MESSAGES("shard3_master");
+$dbMessageObj1=new NEWJS_MESSAGES("shard1_master");
+$dbMessageObj2=new NEWJS_MESSAGES("shard2_master");
+$dbMessageObj3=new NEWJS_MESSAGES("shard3_master");
+$dbDeletedMessageLogObj1=new NEWJS_DELETED_MESSAGE_LOG("shard1_master");
+$dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG("shard2_master");
+$dbDeletedMessageLogObj3=new NEWJS_DELETED_MESSAGE_LOG("shard3_master");
+
+
 /*** executing quries on associated shards of user to make sure only active profile is retreived ***/
 $myDbname=getProfileDatabaseConnectionName($profileid,'',$mysqlObj);
 $horoscopeStr=retreiveOnlyActiveProfiles('DELETED_HOROSCOPE_REQUEST',"PROFILEID","PROFILEID_REQUEST_BY",$myDbarr[$myDbname],$mainDb,$profileid);
@@ -76,12 +93,14 @@ $eoiviewlogStr=$contactsStr;
 /*** executing quries on associated shards of user to make sure only active profile is retreived ***/
 
 /****  Transaction for all 3 shards started here.We will commit all three shards together. ****/
+$i=1;
 if(count($myDbarr))
 {
         foreach($myDbarr as $key=>$value)
         {
                 $myDb=$myDbarr[$key];
-
+				$dbMessageLogObj.$i->startTransaction();
+				$i++;
                 $sql="BEGIN";
                 mysql_query($sql,$myDb) or mysql_error_with_mail(mysql_error($myDb).$sql);
 
@@ -119,6 +138,7 @@ retreiveFromTables('DELETED_OFFLINE_NUDGE_LOG','OFFLINE_NUDGE_LOG',"SENDER","REC
 $iii=1;
 foreach($myDbarr as $key=>$value)
 {
+		$dbMessageLogObj.$iii->commitTransaction();
         $myDb=$myDbarr[$key];
         $sql="COMMIT";
         mysql_query($sql,$myDb) or mysql_error_with_mail(mysql_error($myDb).$sql);
@@ -144,6 +164,7 @@ mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
 
 /*** Update contact status table ***/
 $affectedId=array();
+$k=1;
 foreach($myDbarr as $key=>$value)
 {
 	$myDb=$myDbarr[$key];
@@ -245,9 +266,11 @@ foreach($myDbarr as $key=>$value)
 			
 		}
 	}
-	$sql = "SELECT RECEIVER, SEEN FROM DELETED_MESSAGE_LOG WHERE SENDER = '$profileid' AND TYPE = 'R' AND IS_MSG = 'Y'";
-	$result=mysql_query($sql,$myDb) or mysql_error_with_mail(mysql_error($myDb).$sql);
-	while($myrow=mysql_fetch_array($result))
+	$result=$dbDeletedMessagesObj.$k->getSenderMessages($profileid);
+	$k++;
+	//$sql = "SELECT RECEIVER, SEEN FROM DELETED_MESSAGE_LOG WHERE SENDER = '$profileid' AND TYPE = 'R' AND IS_MSG = 'Y'";
+	//$result=mysql_query($sql,$myDb) or mysql_error_with_mail(mysql_error($myDb).$sql);
+	foreach($result as $key=>$myrow)
 	{
 		if($myrow["SEEN"]!= 'Y')
 			$CONTACT_STATUS_FIELD['MESSAGE_NEW']=+1;
@@ -289,32 +312,58 @@ function retreiveFromTables($delTable,$selTable,$whereStrLabel1,$whereStrLabel2,
 
 		if($selTable=='MESSAGE_LOG')
 		{
-			$sql="select ID FROM $database.$delTable WHERE ($whereStrLabel1='$profileid' OR $whereStrLabel2='$profileid') AND ($whereStrLabel1 IN ($listOfActiveProfile) OR $whereStrLabel2 IN ($listOfActiveProfile))";
-			$result=mysql_query($sql,$db) or mysql_error_with_mail(mysql_error($db).$sql);
+			$messageShardCount++;
+			//retreiveFromTables('DELETED_MESSAGE_LOG','MESSAGE_LOG',"RECEIVER","SENDER",$myDb,$profileid,$messagelogStr);
+			$idsArr=$dbDeletedMessageLogObj.$messageShardCount->selectActiveDeletedData($profileid,$listOfActiveProfile,$whereStrLabel1,$whereStrLabel2);
+			
+			//$sql="select ID FROM $database.$delTable WHERE ($whereStrLabel1='$profileid' OR $whereStrLabel2='$profileid') AND ($whereStrLabel1 IN ($listOfActiveProfile) OR $whereStrLabel2 IN ($listOfActiveProfile))";
+			//$result=mysql_query($sql,$db) or mysql_error_with_mail(mysql_error($db).$sql);
 //echo $sql."\n";
-			while($myrow=mysql_fetch_array($result))
+			/*while($myrow=mysql_fetch_array($result))
 			{
 				$idsArr[]=$myrow["ID"];
-			}
-			if($idsArr)
+			}*/
+			if(is_array($idsArr))
 			{
-				$idStr=implode(",",$idsArr);
-				$sql="INSERT IGNORE INTO $database.MESSAGES SELECT * FROM $database.DELETED_MESSAGES WHERE ID IN ($idStr)";
-				mysql_query($sql,$db) or ($skip=1);
+				//$idStr=implode(",",$idsArr);
+				$result=$dbMessageObj.$messageShardCount->insertIntoDeletedMessages($idsArr);
+				//$sql="INSERT IGNORE INTO $database.MESSAGES SELECT * FROM $database.DELETED_MESSAGES WHERE ID IN ($idStr)";
+				//mysql_query($sql,$db) or ($skip=1);
 //echo $sql."\n";
-				if(!$skip)
+				if($result)
 				{
-					$sql="DELETE FROM $database.DELETED_MESSAGES WHERE ID IN ($idStr)";
-					mysql_query($sql,$db) or ($skip=1);
+					$res=$dbMessageLogObj.$messageShardCount->deleteMessages($idsArr);
+					//$sql="DELETE FROM $database.DELETED_MESSAGES WHERE ID IN ($idStr)";
+					//mysql_query($sql,$db) or ($skip=1);
+					if(!$res)
+						mysql_error_with_mail(mysql_error($db)."deleteMessages");
 				}
-				if($skip)
+				else
 				{
 					mysql_error_with_mail(mysql_error($db).$sql);
 					/* no need to rollback as it is defaulted*/
 				}
 
 			}
-	        }
+			$res=$dbMessageLogObj.$messageShardCount->insert($profileid,$listOfActiveProfile,$whereStrLabel1,$whereStrLabel2);
+			//$sql="INSERT IGNORE INTO $database.$selTable SELECT * FROM $database.$delTable WHERE ($whereStrLabel1='$profileid' OR $whereStrLabel2='$profileid') AND ($whereStrLabel1 IN ($listOfActiveProfile) OR $whereStrLabel2 IN ($listOfActiveProfile))";
+        	//mysql_query($sql,$db) or ($skip=1);
+//echo $sql."\n";
+	        if($res)
+        	{
+				$response=$dbDeletedMessageLogObj.$messageShardCount->deleteMessages($profileid,$listOfActiveProfile,$whereStrLabel1,$whereStrLabel2);
+                //	$sql="DELETE FROM $database.$delTable WHERE ($whereStrLabel1='$profileid' OR $whereStrLabel2='$profileid') AND ($whereStrLabel1 IN ($listOfActiveProfile) OR $whereStrLabel2 IN ($listOfActiveProfile))";
+	              //  mysql_query($sql,$db) or ($skip=1);
+//echo $sql."\n";
+				if(!$response)
+					mysql_error_with_mail(mysql_error($db)."deleteMessages");
+        	}
+        	else
+				mysql_error_with_mail(mysql_error($db)."insert");
+	       
+		}
+		else
+		{
 	        $sql="INSERT IGNORE INTO $database.$selTable SELECT * FROM $database.$delTable WHERE ($whereStrLabel1='$profileid' OR $whereStrLabel2='$profileid') AND ($whereStrLabel1 IN ($listOfActiveProfile) OR $whereStrLabel2 IN ($listOfActiveProfile))";
         	mysql_query($sql,$db) or ($skip=1);
 //echo $sql."\n";
@@ -326,6 +375,7 @@ function retreiveFromTables($delTable,$selTable,$whereStrLabel1,$whereStrLabel2,
         	}
 	        if($skip)
         	        mysql_error_with_mail(mysql_error($db).$sql);
+		}
 	}
 }
 

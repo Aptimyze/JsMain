@@ -223,14 +223,16 @@ function get_dup_overall_cnt($profileid)
 	$profArray=array();
 	if($profileid)
 	{
-		$mysqlObj=new Mysql;
-
-		$myDbName=getProfileDatabaseConnectionName($profileid,'',$mysqlObj);
-		$myDb=$mysqlObj->connect("$myDbName");
-		$sql="select RECEIVER, DATEDIFF(now(),`DATE`) as `TIME` from newjs.MESSAGE_LOG where SENDER='$profileid' and `TYPE`='I' order by `DATE` DESC";
-		$res=$mysqlObj->executeQuery($sql,$myDb);
+//		$mysqlObj=new Mysql;
+		$senderShard=JsDbSharding::getShardNo($profileid);
+		$dbMessageLogObj=new NEWJS_MESSAGE_LOG($senderShard);
+		//$myDbName=getProfileDatabaseConnectionName($profileid,'',$mysqlObj);
+		//$myDb=$mysqlObj->connect("$myDbName");
+		$res=$dbMessageLogObj->getMessagesBasedOnType($profileid,"I");
+		//$sql="select RECEIVER, DATEDIFF(now(),`DATE`) as `TIME` from newjs.MESSAGE_LOG where SENDER='$profileid' and `TYPE`='I' order by `DATE` DESC";
+		//$res=$mysqlObj->executeQuery($sql,$myDb);
 			
-		while($row=mysql_fetch_assoc($res))
+		foreach($res as $key=>$row)
 		{
 			if($row['TIME']<=$dup_live_diff)
 				$profArray[$row[RECEIVER]]=1;

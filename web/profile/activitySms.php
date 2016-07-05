@@ -91,7 +91,7 @@ for($i = 0; $i<$totalChunks; $i++)
 		$trans++;
 		$profilesLoggedIn[$row["PROFILEID"]]["PROFILEID"] = $row["PROFILEID"];
 		$profilesLoggedIn[$row["PROFILEID"]]["LAST_LOGIN_DATE"] = $row["LAST_LOGIN_DT"];
-
+		
 		$myDbName=getProfileDatabaseConnectionName($row["PROFILEID"],'slave',$mysqlObj);
 		$myDbSlave=$myDbarr[$myDbName];
 
@@ -159,13 +159,16 @@ for($i = 0; $i<$totalChunks; $i++)
 				{
 					if($sms["A_MSG"])
 					{
-						$sqlG = "SELECT COUNT(SENDER) MSG_COUNT FROM MESSAGE_LOG WHERE RECEIVER = '$row[PROFILEID]' AND IS_MSG='Y' AND TYPE='R' AND `DATE`>='$row[LAST_LOGIN_DT]'";
+						$Shard=JsDbSharding::getShardNo($row["PROFILEID"],'slave');
+						$dbMessageLogObj=new NEWJS_MESSAGE_LOG($Shard);
+						$rowG=$dbMessageLogObj->getMessageCountSmsActivity($row['PROFILEID'],$row['LAST_LOGIN_DT']);
+						//$sqlG = "SELECT COUNT(SENDER) MSG_COUNT FROM MESSAGE_LOG WHERE RECEIVER = '$row[PROFILEID]' AND IS_MSG='Y' AND TYPE='R' AND `DATE`>='$row[LAST_LOGIN_DT]'";
 						//echo $sqlG."\n";
-						$resG=mysql_query($sqlG,$myDbSlave) or die(trackSmsError($sqlG, $myDbSlave, "A_MSG")); 
-						$rowG = mysql_fetch_assoc($resG);
-						if($rowG["MSG_COUNT"])
+						//$resG=mysql_query($sqlG,$myDbSlave) or die(trackSmsError($sqlG, $myDbSlave, "A_MSG")); 
+						//$rowG = mysql_fetch_assoc($resG);
+						if($rowG)
 						{
-							$data[$row["PROFILEID"]]["DATA"] = $rowG["MSG_COUNT"];
+							$data[$row["PROFILEID"]]["DATA"] = $rowG;
 							$data[$row["PROFILEID"]]["KEY"] = "A_MSG";
 							$data[$row["PROFILEID"]]["PROFILEID"] = $row["PROFILEID"];
 							$data[$row["PROFILEID"]]["SUBSCRIPTION"] = $row["SUBSCRIPTION"];
