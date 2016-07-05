@@ -881,7 +881,7 @@ class ApiProfileSectionsApp extends ApiProfileSections {
     		$cityNames = trim($jpartnerObj->getDecoratedPARTNER_CITYRES());
     		$stateCityNames = $stateNames.",".$cityNames;
     	}
-    	$stateCityArr = $this->getApiFormatArray("P_CITY","City",$stateCityNames,$szStateCity,$this->getApiScreeningField("PARTNER_CITYRES"));
+    	$stateCityArr = $this->getApiFormatArray("P_CITY","City/State",$stateCityNames,$szStateCity,$this->getApiScreeningField("PARTNER_CITYRES"));
     	return($stateCityArr);
     }
     
