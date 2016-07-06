@@ -1789,7 +1789,7 @@ function change_criteria($lage,$hage,$lheight,$hheight,$Gender)
 		{
 			$myage=$_COOKIE['JS_AGE'];
 			settype($myage,"integer");
-			$myheight=$_COOKIE['JS_HEIGHT'];
+			$myheight=preg_replace('/[^A-Za-z0-9\. -]/', '', $_COOKIE['JS_HEIGHT']);
 			settype($myheight,"integer");
 		}
 		else

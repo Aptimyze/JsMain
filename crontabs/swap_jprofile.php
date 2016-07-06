@@ -169,7 +169,23 @@ while($row=mysql_fetch_row($res))
                         $sql_insert.="SUBSTRING(JE.OTHER_PG_DEGREE,1,30),";
                 else
                         $sql_insert.="'',";
-                $sql_insert.="J.COMPANY_NAME,JE.COLLEGE,JE.PG_COLLEGE,JE.SCHOOL,J.KEYWORDS,J.NAKSHATRA,'',J.MOD_DT,IF(J.VERIFY_ACTIVATED_DT!= '0000-00-00 00:00:00',J.VERIFY_ACTIVATED_DT,J.ENTRY_DT) AS VERIFY_ACTIVATED_DT FROM (((((((JPROFILE J LEFT JOIN EDUCATION_LEVEL_NEW E ON J.EDU_LEVEL_NEW=E.VALUE) LEFT JOIN OCCUPATION O ON J.OCCUPATION = O.VALUE) LEFT JOIN JPROFILE_CONTACT JC ON JC.PROFILEID = J.PROFILEID) LEFT JOIN ASTRO_DETAILS A ON J.PROFILEID = A.PROFILEID) LEFT JOIN HOROSCOPE H ON J.PROFILEID = H.PROFILEID) LEFT JOIN FEATURED_PROFILE_LIST F ON J.PROFILEID = F.PROFILEID) LEFT JOIN JPROFILE_EDUCATION JE ON J.PROFILEID=JE.PROFILEID) WHERE J.PROFILEID=$profileid";
+                
+                if(Flag::isFlagSet("company_name", $row[1]))
+                        $sql_insert.="J.COMPANY_NAME,";
+                else
+                        $sql_insert.="'',";
+                
+                if(Flag::isFlagSet("college", $row[1]))
+                        $sql_insert.="JE.COLLEGE,";
+                else
+                        $sql_insert.="'',";
+                
+                if(Flag::isFlagSet("pg_college", $row[1]))
+                        $sql_insert.="JE.PG_COLLEGE,";
+                else
+                        $sql_insert.="'',";
+                
+                $sql_insert.="JE.SCHOOL,J.KEYWORDS,J.NAKSHATRA,'',J.MOD_DT,IF(J.VERIFY_ACTIVATED_DT!= '0000-00-00 00:00:00',J.VERIFY_ACTIVATED_DT,J.ENTRY_DT) AS VERIFY_ACTIVATED_DT FROM (((((((JPROFILE J LEFT JOIN EDUCATION_LEVEL_NEW E ON J.EDU_LEVEL_NEW=E.VALUE) LEFT JOIN OCCUPATION O ON J.OCCUPATION = O.VALUE) LEFT JOIN JPROFILE_CONTACT JC ON JC.PROFILEID = J.PROFILEID) LEFT JOIN ASTRO_DETAILS A ON J.PROFILEID = A.PROFILEID) LEFT JOIN HOROSCOPE H ON J.PROFILEID = H.PROFILEID) LEFT JOIN FEATURED_PROFILE_LIST F ON J.PROFILEID = F.PROFILEID) LEFT JOIN JPROFILE_EDUCATION JE ON J.PROFILEID=JE.PROFILEID) WHERE J.PROFILEID=$profileid";
                 mysql_query($sql_insert,$db) or die("3 1".mysql_error1($db));
                 $sqlEduGrouping = "SELECT group_concat(DISTINCT(GROUPING)) AS GROUPING FROM SWAP J JOIN EDUCATION_LEVEL_NEW E WHERE J.PROFILEID =".$profileid." AND (J.EDU_LEVEL_NEW = E.VALUE OR J.PG_DEGREE = E.VALUE OR J.UG_DEGREE = E.VALUE ) ";
 								

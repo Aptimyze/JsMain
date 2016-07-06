@@ -129,10 +129,11 @@ if(!reason){ShowTopDownError(["Please select the reason"],3000);return;}
 }
 
 var feed={};
+reason=$.trim(reason);
 //feed.message:as sdf sd f
 feed.category='Abuse';
-feed.message=userName+' has been reported abuse by '+selfUsername+' with the following reason:\n'+reason;
-ajaxData={'feed':feed,'CMDSubmit':'1'};
+feed.message=userName+' has been reported abuse by '+selfUsername+' with the following reason:'+reason;
+ajaxData={'feed':feed,'CMDSubmit':'1','profilechecksum':profileChkSum,'reason':reason};
 var url='/api/v1/faq/feedbackAbuse';
 loaderTop();
 $("#contactLoader").show();
@@ -713,6 +714,22 @@ function declineInterest(result,action, index){
                 $("#errorMsgHead").html(errorMsgLabel);
   }*/
     $("#closeLayer").show();
+   
+   
+    var address_url=window.location.href;
+   if(address_url.indexOf("?") >= 0){
+		var hash;
+		var pageSource='';
+		var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+		for(var i = 0; i < hashes.length; i++)
+		{
+			hash = hashes[i].split('=');
+			if(hash[0]=="contact_id")
+				pageSource=hash[1];
+		}
+		if(pageSource!='' && (pageSource.indexOf("INTEREST_RECEIVED") >= 0 ||pageSource.indexOf("FILTERED_INTEREST") >= 0))
+				handleSwipe('swipeleft','left','','','');
+	}
 }
 function writeMessage(result, action, index){
                if ($("#lastMsgId_"+index).length) $("#lastMsgId_"+index).css("font-weight",'300').css('font-family','Roboto');

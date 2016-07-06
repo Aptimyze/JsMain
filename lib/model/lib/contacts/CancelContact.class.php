@@ -137,7 +137,10 @@ class CancelContact extends ContactEvent{
         $profileMemcacheServiceViewerObj->update("TOTAL_CONTACTS_MADE",-1);
         $profileMemcacheServiceViewerObj->update("DEC_BY_ME",1);
         $profileMemcacheServiceViewerObj->update("NOT_REP",-1);
-        $profileMemcacheServiceViewedObj->update("AWAITING_RESPONSE",-1);
+        if($this->contactHandler->getContactObj()->getFILTERED() === Contacts::FILTERED)
+			$profileMemcacheServiceViewedObj->update("FILTERED_NEW",-1);
+        else        
+			$profileMemcacheServiceViewedObj->update("AWAITING_RESPONSE",-1);
         if($this->contactHandler->getContactObj()->getSEEN() == Contacts::NOTSEEN)
 		$profileMemcacheServiceViewedObj->update("AWAITING_RESPONSE_NEW",-1);
         $profileMemcacheServiceViewedObj->update("DEC_ME",1);
