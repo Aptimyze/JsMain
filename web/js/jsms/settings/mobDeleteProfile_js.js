@@ -21,17 +21,8 @@ function ajaxPassword(checksum,pswrd)
     {
       if(response=="true")
       {
-          if($("#offerConsentCB").is(":checked"))
-            sessionStorage.setItem('offerConsent',1);
-          else 
-            sessionStorage.setItem('offerConsent',0);
-
-        if(successFlow == 1){
-          url = "/successStory/jsmsInputStory";
-          parent.location.href = url;
-        } else {
-          ajaxDelete(delete_reason,delete_option);
-        }
+          $("#deleteConfirmation-Layer").removeClass("dn").css('height',$(window).height());
+          $("#deleteProfilePasswordPage").addClass('dn');
       }
       else
       {
@@ -64,4 +55,23 @@ function ajaxDelete(specifyReason,deleteReason)
       }
     }
   });
+}
+
+function deleteConfirmation(action)
+{
+	if(action=="Y"){
+		if($("#offerConsentCB").is(":checked"))
+				sessionStorage.setItem('offerConsent',1);
+			  else 
+				sessionStorage.setItem('offerConsent',0);
+
+			if(successFlow == 1){
+			  url = "/successStory/jsmsInputStory";
+			  parent.location.href = url;
+			} else {
+			  ajaxDelete(delete_reason,delete_option);
+			}
+	}
+	else
+		window.location.href=action;
 }

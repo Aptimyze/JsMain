@@ -1,6 +1,6 @@
 <div id="mainContent">
   <div class="loader" id="pageloader"></div>
-  <div> 
+  <div id="deleteProfilePasswordPage"> 
     <!--start:top-->
     <div id="overlayHead" class="bg1 txtc pad15">
       <div class="posrel lh30">
@@ -40,6 +40,27 @@
    
   </div>
 </div>
+<div id="deleteConfirmation-Layer" class ='dn' style="background-color: #09090b;">
+  <div  class="posrel " style="padding:5% 0 8% 0;">
+
+	<div class="br50p txtc" style='height:80px;'>
+			
+		</div>
+		 
+	</div>
+		 
+	<div class="txtc">	 
+	<div class="fontlig white f18 pb10 color16">Delete Profile Permanently</div>
+	<div class="pad1 lh25 fontlig f14" style='color:#cccccc;'>This will completely delete your profile information and contact history and active paid membership(s), if any. Are you sure of deleting profile?</div>
+  </div>
+  <!--start:div-->
+  <div style='padding: 25px 0 8% 0;'>
+	<div id='deleteYesConfirmation' class="bg7 f18 white lh30 fullwid dispbl txtc lh50" onclick="deleteConfirmation('Y');">Yes, Delete Profile Permanently</div>
+  </div>
+  <!--end:div-->
+  <div id='deleteNoConfirmation' onclick="deleteConfirmation('/static/deleteOption');" style='color:#cccccc; padding-top: 12%;' class="pdt15 pb10 txtc white f14" style="padding-top:15%;">Dismiss</div>
+  </div>
+
 <script>
     var delete_reason='~$deleteReason`';
     var delete_option='~$deleteOption`';

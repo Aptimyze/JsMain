@@ -228,21 +228,8 @@ function ajaxPassword(checksum,pswrd,hideAction)
                         }
                         else
                             {
-                             
-                              var optionVal=$('#delOptionSetID').html();
-                              if(optionVal=="I am unhappy about services")
-                                specifyReason=$('#specifyOtherReasonID').val();
-                              else if(optionVal=="I found my match from other website")
-                                specifyReason=$('#specifyLinkID').val();
-                              else if(optionVal=="I found my match elsewhere")
-                                specifyReason=$('#specifyReasonID').val();
-                              else if(optionVal=="Other reasons")
-                                specifyReason=$('#specifyOtherReason2ID').val();
-                              else
-                                specifyReason="";
-                              //console.log(optionVal);
-                              //console.log(specifyReason);
-                              ajaxDelete(optionVal,specifyReason);
+							showLayerCommon('deleteConfirmation-layer');
+                              
                             }
                           }
                           else
@@ -290,4 +277,27 @@ function ajaxDelete(optionVal,specifyReason)
                         }
                         
                       });
+}
+
+function deleteConfirmation(action)
+{
+		if(action=="Y"){
+		var optionVal=$('#delOptionSetID').html();
+                              if(optionVal=="I am unhappy about services")
+                                specifyReason=$('#specifyOtherReasonID').val();
+                              else if(optionVal=="I found my match from other website")
+                                specifyReason=$('#specifyLinkID').val();
+                              else if(optionVal=="I found my match elsewhere")
+                                specifyReason=$('#specifyReasonID').val();
+                              else if(optionVal=="Other reasons")
+                                specifyReason=$('#specifyOtherReason2ID').val();
+                              else
+                                specifyReason="";
+                              //console.log(optionVal);
+                              //console.log(specifyReason);
+                              closeCurrentLayerCommon();
+                              ajaxDelete(optionVal,specifyReason);
+		}
+		else
+			closeCurrentLayerCommon();
 }

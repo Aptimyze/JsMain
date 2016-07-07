@@ -114,6 +114,20 @@
           <!--end:right--> 
         </div>
       </div>
+      <div id='deleteConfirmation-layer' class="layerMidset setshare layersZ pos_fix calwid1 disp-none">
+        <div class="calhgt1 calbg1 fullwid disp-tbl txtc">
+            <div class="disp-cell vmid fontlig color11">
+                <div class="wid470 mauto">
+                    <p class="f28">Delete Profile Permanently</p>
+                    <p class="f14 pt25 lh22">This will completely delete your profile information and contact history and active paid membership(s), if any. Are you sure of deleting profile?</p>
+                </div>            
+            </div>
+        </div>
+        <div class="clearfix">
+            <button id='deleteYesConfirmation'  onclick="deleteConfirmation('Y');" class="cursp bg_pink f18 colrw txtc fontreg lh61 brdr-0 calwid2 fl">Yes, Delete Profile Permanently</button>
+            <button id='deleteYesConfirmation' onclick="deleteConfirmation('N');" class="cursp bg6 f18 colrw txtc fontreg lh61 brdr-0 calwid2 fl">Dismiss</button>
+        </div>
+    </div>
 <script type="text/javascript">
 var hideUnhide = '~$UNHIDE`';
 </script>
