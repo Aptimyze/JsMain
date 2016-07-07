@@ -70,6 +70,9 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 	}	
 		
 	private function isWhitelistedProfile() {
+
+		if($this->smsKey=='OTP') return true;
+
 		if(!$this->SMSLib->getMobileCorrectFormat($this->profileDetails["PHONE_MOB"],$this->profileDetails["ISD"]))
 			return false;
 		switch ($this->smsKey) {
