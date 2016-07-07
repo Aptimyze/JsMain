@@ -88,6 +88,7 @@ class NEWJS_MESSAGES extends TABLE{
 					$sql="DELETE FROM newjs.MESSAGES WHERE ID IN ($idStr)";
 					$prep=$this->db->prepare($sql);
 					$prep->execute();
+					return true;
 				}
 				else
 				{
