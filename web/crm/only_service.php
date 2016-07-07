@@ -1,4 +1,6 @@
 <?php
+require_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+include(JsConstants::$docRoot."/../apps/operations/lib/crmUtility.class.php");
 include("connect.inc");
 include("mainmenunew.php");
 include("viewprofilenew.php");
@@ -46,11 +48,16 @@ if(authenticated($cid))
 					$smarty->assign("USERNAME",stripslashes($USERNAME));
 					$user_values=gethistory($USERNAME,$limit);
 					$smarty->assign("ROW",$user_values);
-					$pmsg=viewprofile($USERNAME,"internal");
+					/*$pmsg=viewprofile($USERNAME,"internal");
 					$smarty->assign("pmsg",$pmsg);
 					$checksum=md5($profileid)."i".$profileid;
 					$msg=profileview($profileid,$checksum);
-					$smarty->assign("msg",$msg);
+					$smarty->assign("msg",$msg);*/
+	
+					// New show stats page			
+					$crmUtilityObj =new crmUtility();
+					$msg =$crmUtilityObj->getCurlData($profileid,'',$cid);
+					$smarty->assign("pmsg",$msg);
 				}
 			}	
 			$willpay_val = populate_will_pay('');
