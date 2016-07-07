@@ -219,7 +219,7 @@ class TupleService
                 elseif($tupleObject->NATIVE_STATE && ($citySubstr != $tupleObject->NATIVE_STATE_ID || $tupleObject->ANCESTRAL_ORIGIN != '')){
                         $nativeState = $tupleObject->NATIVE_STATE;
                         if($tupleObject->ANCESTRAL_ORIGIN){
-                             $nativeLabel = $tupleObject->ANCESTRAL_ORIGIN.',';   
+                             $nativeLabel = $tupleObject->ANCESTRAL_ORIGIN.', ';   
                         }
                         $nativeLabel .= $nativeState;
                 }
