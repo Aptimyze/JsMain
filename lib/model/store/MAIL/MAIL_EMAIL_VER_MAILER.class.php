@@ -23,7 +23,7 @@ class MAIL_EMAIL_VER_MAILER extends TABLE
 	                }
 	                catch(PDOException $e)
 	                {
-	                        throw new jsException($e);
+	                        return false;
 	                }
 	        }
 
@@ -40,7 +40,7 @@ class MAIL_EMAIL_VER_MAILER extends TABLE
 	                }
 	                catch(PDOException $e)
 	                {
-	                        throw new jsException($e);
+	                       return false;
 	                }
 	        }
 	        public function EmptyMailer()
@@ -54,7 +54,7 @@ class MAIL_EMAIL_VER_MAILER extends TABLE
 	                }
 	                catch(PDOException $e)
 	                {
-	                        throw new jsException($e);
+	                        return false;
 	                }
 	        }
 
@@ -81,7 +81,7 @@ class MAIL_EMAIL_VER_MAILER extends TABLE
                 }
                 catch(PDOException $e)
                 {  
-                   throw new jsException($e);
+                   return false;
                 }
 
                 return $output;

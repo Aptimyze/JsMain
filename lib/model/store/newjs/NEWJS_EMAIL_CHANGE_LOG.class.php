@@ -20,7 +20,7 @@ class NEWJS_EMAIL_CHANGE_LOG extends TABLE {
 		}
 		catch(Exception $e)
 		{
-			throw new jsException($e);
+		return false;
 		}
 	}
         
@@ -40,7 +40,6 @@ class NEWJS_EMAIL_CHANGE_LOG extends TABLE {
 		}
 		catch(Exception $e)
 		{
-			throw new jsException($e);
 			return false;
 		}
 		return $this->db->lastInsertId();	
@@ -59,7 +58,7 @@ class NEWJS_EMAIL_CHANGE_LOG extends TABLE {
                 }
                 catch(Exception $e)
                 {
-                        throw new jsException($e);
+                        return false;
                 }
         }
 	
