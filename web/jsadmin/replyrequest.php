@@ -10,6 +10,7 @@ include_once($_SERVER['DOCUMENT_ROOT']."/profile/functions_edit_profile.php");
 $symfonyFilePath=realpath($_SERVER['DOCUMENT_ROOT']."/../");
 include_once($symfonyFilePath."/lib/model/lib/FieldMapLib.class.php");
 include_once($symfonyFilePath."/lib/model/lib/Flag.class.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 $mysqlObj=new Mysql;
 
 //$db2=connect_737();
