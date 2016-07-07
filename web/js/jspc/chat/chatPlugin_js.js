@@ -22,33 +22,7 @@ JsChat.prototype = {
     _minChatBarIn: '.js-minChatBarIn',
     _scrollDivId: '#nchatDivs',
     _listingClass: 'ul.chatlist',
-
-    _listingTabs: {
-        "tab1": {
-            "tab_name": "Online Matches",
-            "groups": [{
-                "id": "eoi_R",
-                "group_name": "Interest Received"
-            }, {
-                "id": "shortlisted",
-                "group_name": "Shortlisted Members"
-            }, {
-                "id": "dpp",
-                "group_name": "Desired Partner Matches"
-            }],
-
-        },
-        "tab2": {
-            "tab_name": "Accepted",
-            "groups": [
-
-                {
-                    "id": "accepted_by_me",
-                    "group_name": "Accepted Members"
-                }
-            ],
-        }
-    },
+    _listingTabs:{},
 
     _construct: function() {
 
@@ -59,6 +33,8 @@ JsChat.prototype = {
             this._mainID = arguments[1][0].mainID;
         if (arguments[1][0].listData)
             this._listData = arguments[1][0].listData;
+        if (arguments[1][0].listingTabs)
+            this._listingTabs = arguments[1][0].listingTabs;
     },
     //start:get screen height
     _getHeight: function() {

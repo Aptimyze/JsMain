@@ -328,13 +328,16 @@ $(document).ready(function(){
         loginStatus: loginStatus,
         mainID:"#chatOpenPanel",
         //profilePhoto: "<path>",
-        profileName: "bassi"
+        profileName: "bassi",
+        listingTabs:chatConfig.Params[device].listingTabs
     });
-
+    
     objJsChat.onEnterToChatPreClick = function(){
         //objJsChat._loginStatus = 'N';
         console.log("Checking variable");
         console.log(chatLoggedIn);
+
+    
         if(chatLoggedIn != 'true'){
             var auth = checkAuthentication();
             if(auth != "true"){
