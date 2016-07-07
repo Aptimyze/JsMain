@@ -1194,7 +1194,7 @@ class MembershipHandler
                         else {
                             $discountCartPrice+= 0;
                         }
-                        $totalCartPrice+= $price - $price * ($discPerc / 100);
+                        $totalCartPrice+= $price - round($price * ($discPerc / 100), 2);
                     }
                 }
             } 
@@ -1212,7 +1212,7 @@ class MembershipHandler
                 else {
                     $discountCartPrice+= 0;
                 }
-                $totalCartPrice+= $price - $price * ($discPerc / 100);
+                $totalCartPrice+= $price - round($price * ($discPerc / 100), 2);
             }
         } 
         else {
@@ -1234,7 +1234,7 @@ class MembershipHandler
                     else {
                         $discountCartPrice+= 0;
                     }
-                    $totalCartPrice+= $price - $price * ($discPerc / 100);
+                    $totalCartPrice+= $price - round($price * ($discPerc / 100), 2);
                 }
             } 
             else {
@@ -1251,7 +1251,7 @@ class MembershipHandler
                 else {
                     $discountCartPrice+= 0;
                 }
-                $totalCartPrice+= $price - $price * ($discPerc / 100);
+                $totalCartPrice+= $price - round($price * ($discPerc / 100), 2);
             }
         }
         
