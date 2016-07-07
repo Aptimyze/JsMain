@@ -446,15 +446,13 @@ class billing_SERVICES extends TABLE
             throw new jsException($e);
         }
     }
-    public function getServiceDetailsArr($fields='') {
+    public function getOnlineActiveDurations() {
         try {
-	    if(!$fields)
-		$fields ="*";
-            $sql = "SELECT SQL_CACHE $fields from billing.SERVICES";
+            $sql = "SELECT SQL_CACHE distinct DURATION from billing.SERVICES WHERE SHOW_ONLINE='Y' AND ACTIVE='Y' AND ADDON!='Y' AND SERVICEID!='P1'";
             $resSelectDetail = $this->db->prepare($sql);
             $resSelectDetail->execute();
-            while($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){
-                $output[$rowSelectDetail['SERVICEID']] = $rowSelectDetail;
+            while($row = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){
+                $output[$row['DURATION']] = $row['DURATION'];
             }
             return $output;
         }

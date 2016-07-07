@@ -39,8 +39,8 @@ class ScheduleSms
         $this->dbMatch  = $match_slave;
         $this->dbShards = $myDbarr;
         include_once(JsConstants::$docRoot."/classes/SMSLib.class.php");
-		include_once(JsConstants::$docRoot."/profile/connect_functions.inc");
-		include_once(JsConstants::$docRoot."/profile/horoscope_upload.inc");
+	include_once(JsConstants::$docRoot."/profile/connect_functions.inc");
+	include_once(JsConstants::$docRoot."/profile/horoscope_upload.inc");
         $this->SMSLib                  = new SMSLib("S");
         $this->scheduleSettings        = $this->getScheduleSmsSettings();
         $this->helplineContacts        = $this->getHelplineContacts();
@@ -1552,6 +1552,9 @@ class ScheduleSms
             	$vdDiscObj 		=new billing_VARIABLE_DISCOUNT();
             	$vdDiscountSmsLog 	=new billing_VARIABLE_DISCOUNT_SMS_LOG();
 
+                $variableDiscountObj 	=new VariableDiscount();
+                $durationArr =$variableDiscountObj->getActiveDurations();
+
 		$smsLogDetails	=$vdDiscountSmsLog->getFrequencyAndTimes($entry_dt);		
             	list($frequency, $noOfTimes) =$smsLogDetails;
             	if($key == "VD1"){
@@ -1590,7 +1593,7 @@ class ScheduleSms
                     	$sdate = $row['SDATE'];
                     	$edate = $row["EDATE"];
                     	$discountEndDate = date("d-M",strtotime($edate));
-			$flatVdDiscount =$this->checkFlatVdDiscount($profileid);
+			$flatVdDiscount =$this->checkFlatVdDiscount($profileid, $durationArr);
 			if($flatVdDiscount)
 				$tempKey = "VD2";
 			else
@@ -2391,7 +2394,7 @@ class ScheduleSms
     }
 
     // check Flat VD Discount
-    function checkFlatVdDiscount($profileid)
+    function checkFlatVdDiscount($profileid,$durationArr)
     {
                 $vdOfferDurationObj =new billing_VARIABLE_DISCOUNT_OFFER_DURATION('newjs_slave');
                 $discountDetails =$vdOfferDurationObj->getDiscountDetailsForProfile($profileid);
@@ -2400,8 +2403,10 @@ class ScheduleSms
                         $discountArr =$val;
                         unset($discountArr['PROFILEID']);
                         unset($discountArr['SERVICE']);
-                        foreach($discountArr as $key1=>$val1)
-                                $discountNewArr[] =$val1;
+                        foreach($discountArr as $key1=>$val1){
+				if(in_array($key1, $durationArr))
+	                                $discountNewArr[] =$val1;
+			}
                 }
                 $discountUniqueArr =array_values(array_unique($discountNewArr));
                 $totCount =count($discountUniqueArr);
