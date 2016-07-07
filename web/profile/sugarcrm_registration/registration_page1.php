@@ -1079,6 +1079,13 @@ if(!empty($record_id)){
 			 //Field for identifying the team to which profile belong
 			 if($record_id)
 				 $crm_team='online';
+
+			$arrCheck = array('drink','speak_urdu','smoke','city_residence','pincode');
+			foreach ( $arrCheck as $item) {
+				if(!$$item) {
+					$$item = '';
+				}
+			}
 			include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 			$passwordEncrypted=PasswordHashFunctions::createHash($password);
 			$objInsert = ProfileInsertLib::getInstance();
