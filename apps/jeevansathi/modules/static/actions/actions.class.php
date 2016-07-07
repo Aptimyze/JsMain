@@ -690,7 +690,7 @@ public function executeAppredirect(sfWebRequest $request)
   $changeLog=new NEWJS_EMAIL_CHANGE_LOG();
   $emailUID=$changeLog->getLastId($profileid);
   if($emailUID!=$UIDParam){
-  header("Location: /static/logoutPage?showEmailVerError=1");
+  header("Location: $SITE_URL/static/logoutPage?fromSignout=1");
   die;
   }
     
