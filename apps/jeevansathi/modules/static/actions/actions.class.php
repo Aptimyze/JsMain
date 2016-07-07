@@ -690,8 +690,8 @@ public function executeAppredirect(sfWebRequest $request)
   $changeLog=new NEWJS_EMAIL_CHANGE_LOG();
   $emailUID=$changeLog->getLastId($profileid);
   if($emailUID!=$UIDParam){
-  $request->setParameter('showEmailVerError',1);
-  sfContext::getInstance()->getController()->forward("static", "logoutPage");
+  header("Location: /static/logoutPage?showEmailVerError=1");
+  die;
   }
     
   else if($loggedInProfile->getVERIFY_EMAIL()!='Y')
