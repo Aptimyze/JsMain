@@ -1184,8 +1184,8 @@ class MembershipHandler
                     foreach ($mems as $key => $val) {
                         $price = $servDetails[$val]['PRICE'];
                         if ($discountActive == 1 && $backendRedirect != 1) {
-                            if ($memHandlerObj->getDiscountOffer($mainMembership)) {
-                                $discPerc = $memHandlerObj->getDiscountOffer($val);
+                            if ($this->getDiscountOffer($mainMembership)) {
+                                $discPerc = $this->getDiscountOffer($val);
                             }
                         }
                         if (!empty($discPerc) && $discPerc != 0) {
@@ -1202,8 +1202,8 @@ class MembershipHandler
                 $servDetails = $servObj->fetchServiceDetailForRupeesTrxn($mainMembership, $device);
                 $price = $servDetails['PRICE'];
                 if ($discountActive == 1 && $backendRedirect != 1) {
-                    if ($memHandlerObj->getDiscountOffer($mainMembership)) {
-                        $discPerc = $memHandlerObj->getDiscountOffer($mainMembership);
+                    if ($this->getDiscountOffer($mainMembership)) {
+                        $discPerc = $this->getDiscountOffer($mainMembership);
                     }
                 }
                 if (!empty($discPerc) && $discPerc != 0) {
@@ -1224,8 +1224,8 @@ class MembershipHandler
                 foreach ($mems as $key => $val) {
                     $price = $servDetails[$val]['PRICE'];
                     if ($discountActive == 1 && $backendRedirect != 1) {
-                        if ($memHandlerObj->getDiscountOffer($mainMembership)) {
-                            $discPerc = $memHandlerObj->getDiscountOffer($val);
+                        if ($this->getDiscountOffer($mainMembership)) {
+                            $discPerc = $this->getDiscountOffer($val);
                         }
                     }
                     if (!empty($discPerc) && $discPerc != 0) {
@@ -1241,8 +1241,8 @@ class MembershipHandler
                 $servDetails = $servObj->fetchServiceDetailForDollarTrxn($mainMembership, $device);
                 $price = $servDetails['PRICE'];
                 if ($discountActive == 1 && $backendRedirect != 1) {
-                    if ($memHandlerObj->getDiscountOffer($mainMembership)) {
-                        $discPerc = $memHandlerObj->getDiscountOffer($mainMembership);
+                    if ($this->getDiscountOffer($mainMembership)) {
+                        $discPerc = $this->getDiscountOffer($mainMembership);
                     }
                 }
                 if (!empty($discPerc) && $discPerc != 0) {
