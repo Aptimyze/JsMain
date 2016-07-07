@@ -6,6 +6,7 @@ class JsConstants
 {
 	public static $whichMachine       = 'local';
 	public static $localHostIp	  = "127.0.0.1";
+	public static $crmUrl             = 'http://crm.jeevansathi.com';
 	public static $siteUrl            = 'http://milestoneconfig.jeevansathi.com';
 	public static $ssl_siteUrl        = 'https://milestoneconfig.jeevansathi.com';
 	public static $ser6Url            = 'http://ser6.jeevansathi.com';

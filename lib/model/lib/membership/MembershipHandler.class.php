@@ -1642,8 +1642,8 @@ class MembershipHandler
         //get dpp matches count for profile
         $loggedInProfileObj = Operator::getInstance();
         $loggedInProfileObj->getDetail($profileid,'PROFILEID','*');
-        $dppDetails = SearchCommonFunctions::getMyDppMatches("",$loggedInProfileObj,"","","","","","","","onlyCount");
-        $profileDetails['MATCHES'] = $dppDetails['CNT'];
+        // $dppDetails = SearchCommonFunctions::getMyDppMatches("",$loggedInProfileObj,"","","","","","","","onlyCount");
+        // $profileDetails['MATCHES'] = $dppDetails['CNT'];
         unset($dppDetails);
         unset($loggedInProfileObj);
 
