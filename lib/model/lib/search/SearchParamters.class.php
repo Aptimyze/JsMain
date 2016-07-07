@@ -1056,12 +1056,20 @@ class SearchParamters
         public function getKUNDLI_DATE_CLUSTER(){return $this->KUNDLI_DATE_CLUSTER;}
         public function getAttemptConditionArr(){return $this->attemptConditionArr;}
 	public function setAttemptConditionArr($x){$this->attemptConditionArr = $x;}
+
+        public function getDisplayCity(){return $this->displayCity;}
+        public function getDisplayState(){return $this->displayState;}
 	/* Getter and Setter public functions*/
         
         public function setCityForState(){
             
             $city_arr = explode(",",$this->getCITY_RES());
             $state_arr = explode(",",$this->getSTATE());
+
+		if(!$this->displayCity)
+			$this->displayCity = $this->getCITY_RES();
+		if(!$this->displayState)
+			$this->displayState = $this->getSTATE();
             
             if($state_arr){
                 foreach ($state_arr as $k=>$stateVal){

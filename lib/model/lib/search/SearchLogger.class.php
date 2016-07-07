@@ -36,6 +36,10 @@ class SearchLogger extends SearchParamters
                         {
                                 $getter = "get".$v;
                                 $vv = $SearchParamtersObj->$getter();
+				if($v=='CITY_RES')
+                                	$vv = $SearchParamtersObj->getDisplayCity();
+				elseif($v=='STATE')
+                                	$vv = $SearchParamtersObj->getDisplayState();
                                 if(isset($vv))
                                 {
         	                	$updateArr[$v]="'".$vv."'";
