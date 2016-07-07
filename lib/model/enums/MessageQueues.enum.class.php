@@ -3,8 +3,8 @@
 
 class MessageQueues
 {
-  CONST CONSUMERCOUNT = 2;  //Number of instances of Consumer class run at a time.
-  CONST NOTIFICATIONCONSUMERCOUNT = 1;  //Number of instances of JsNotificationsConsume class run at a time.
+  CONST CONSUMERCOUNT = 4;  //Number of instances of Consumer class run at a time.
+  CONST NOTIFICATIONCONSUMERCOUNT = 2;  //Number of instances of JsNotificationsConsume class run at a time.
   CONST MAILQUEUE = "MailQueue";  //Queue for storing mails
   CONST SMSQUEUE = "SmsGcmQueue"; //Queue for storing sms
   CONST CONTACTCACHEINITIATE = "ContactCacheInitiate"; //Queue for sending data to webservice to create cache
@@ -12,7 +12,7 @@ class MessageQueues
   CONST CONSUMER_COUNT_SINGLE = 1; //This is to ensure that only 1 consumer instance runs at a time.
   CONST INVALIDATECACHE = "invalidateCache";
   //per queue msg limit mapping
-  public static $upperMessageLimitPerQueue = array("default"=>1000,"INSTANT_NOTIFICATION_QUEUE"=>50000);
+  public static $upperMessageLimitPerQueue = array("default"=>1000,"INSTANT_NOTIFICATION_QUEUE"=>10000);
   public static $queuesWithoutMsgCountLimit = array("SCHEDULED_NOTIFICATION_QUEUE1","SCHEDULED_NOTIFICATION_QUEUE2", "SCHEDULED_NOTIFICATION_QUEUE3"); //queues not to be considered for msg upper limit alert
   CONST SAFE_LIMIT = 200000000;     //Limit in MB's for the difference between memory allowed and memory used by rabbitmq.
   CONST MSGBODYLIMIT = NULL;  //to prevent truncation of message. NULL specify that a message of any length can be sent over the queue.
@@ -59,7 +59,7 @@ class MessageQueues
   public static $notificationDelayMultiplier = 3600; //1 hr multiple delay
   public static $notificationQueueExpiryTime = 7; //queue will expire if unused for 7 hrs,not used currently
   public static $INSTANT_NOTIFICATION_QUEUE = "INSTANT_NOTIFICATION_QUEUE"; //Queue for sending instant notification data from notification queue to GCM
-  public static $notificationArr = array("JUST_JOIN" => "JS_NOTIFICATION1", "PENDING_EOI" => "JS_NOTIFICATION2", "MEM_EXPIRE_A5" => "JS_NOTIFICATION3", "MEM_EXPIRE_A10" => "JS_NOTIFICATION3", "MEM_EXPIRE_A15" => "JS_NOTIFICATION3", "MEM_EXPIRE_B1" => "JS_NOTIFICATION3", "MEM_EXPIRE_B5" => "JS_NOTIFICATION3",  "AGENT_ONLINE_PROFILE"=>"JS_INSTANT_NOTIFICATION","AGENT_FP_PROFILE"=>"JS_INSTANT_NOTIFICATION", "PROFILE_VISITOR" => "JS_INSTANT_NOTIFICATION");
+  public static $notificationArr = array("JUST_JOIN" => "JS_NOTIFICATION1", "PENDING_EOI" => "JS_NOTIFICATION2", "MEM_EXPIRE_A5" => "JS_NOTIFICATION3", "MEM_EXPIRE_A10" => "JS_NOTIFICATION3", "MEM_EXPIRE_A15" => "JS_NOTIFICATION3", "MEM_EXPIRE_B1" => "JS_NOTIFICATION3", "MEM_EXPIRE_B5" => "JS_NOTIFICATION3",  "AGENT_ONLINE_PROFILE"=>"JS_INSTANT_NOTIFICATION","AGENT_FP_PROFILE"=>"JS_INSTANT_NOTIFICATION", "PROFILE_VISITOR" => "JS_INSTANT_NOTIFICATION","EOI"=>"JS_INSTANT_NOTIFICATION","MESSAGE_RECEIVED"=>"JS_INSTANT_NOTIFICATION","EOI_REMINDER"=>"JS_INSTANT_NOTIFICATION");
 
   /*----------------JS notification(scheduled/instant) queues configuration details-------------------------*/
 }
