@@ -12,6 +12,7 @@ class emailVerification
 	public function sendVerificationMail($profileId,$uniqueId) 
 	{
 
+		if(!$profileId || !$uniqueId)return false;
 		$emailSender = new EmailSender('4', '1834');
         $tpl = $emailSender->setProfileId($profileId);
 		$memObject=JsMemcache::getInstance();
