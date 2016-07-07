@@ -110,6 +110,8 @@ class SearchParamters
         protected $CITY_INDIA_SELECTED;
         protected $FSO_VERIFIED;
         protected $INCOME_SORTBY;
+        protected $NATIVE_STATE;
+        protected $NATIVE_CITY;
 
         public function __construct()
 	{
@@ -143,6 +145,15 @@ class SearchParamters
 			$this->NATIVE_STATE = $NATIVE_STATE;
 	}
 	public function getNATIVE_STATE() { return $this->NATIVE_STATE; }
+        
+        public function setNATIVE_CITY($NATIVE_CITY) 
+	{ 
+		$validInput = SearchInputValidation::validateInput("NATIVE_CITY",$NATIVE_CITY);
+		if($validInput)
+			$this->NATIVE_CITY = $NATIVE_CITY;
+	}
+	public function getNATIVE_CITY() { return $this->NATIVE_CITY; }
+        
         
 	public function setCASTE($CASTE,$setCaste='') 
 	{
@@ -1065,10 +1076,10 @@ class SearchParamters
             
             if($state_arr){
                 foreach ($state_arr as $k=>$stateVal){
-
                     if(FieldMap::getFieldLabel("state_CITY","",1)[$stateVal]){
 
                         $city_from_state =  $this->cityStateConversion("",$stateVal); 
+                        array_push($city_from_state, $stateVal.'000'); // 00 for native place native city field if not filled and only native state is present
                         $city_arr = array_merge($city_arr,$city_from_state);
                         $city_arr = array_unique($city_arr);
                     }

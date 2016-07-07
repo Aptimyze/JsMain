@@ -286,12 +286,14 @@ class SearchApiDisplay
 						}
 						else if($fieldName == 'CITY_RES')
 						{
-							if(FieldMap::getFieldLabel($decoratedFieldName,$fieldValue) == '')
-							{
-								$this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = html_entity_decode(FieldMap::getFieldLabel('country',$this->searchResultsData[$key]['COUNTRY_RES']));
-							}
-							else
-								$this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = html_entity_decode(FieldMap::getFieldLabel($decoratedFieldName,$fieldValue));
+                                                        $this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = $this->getResLabel($this->searchResultsData[$key]['COUNTRY_RES'],$this->searchResultsData[$key]['STATE'],$fieldValue,$this->searchResultsData[$key]['ANCESTRAL_ORIGIN'],$decoratedFieldName);
+//							if(FieldMap::getFieldLabel($decoratedFieldName,$fieldValue) == '')
+//							{
+//								$this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = html_entity_decode(FieldMap::getFieldLabel('country',$this->searchResultsData[$key]['COUNTRY_RES']));
+//							}
+//							else
+//								$this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = html_entity_decode(FieldMap::getFieldLabel($decoratedFieldName,$fieldValue));
+                                                        //echo '<pre>';print_r($this->finalResultsArray);die;
 						}
 						else
 							$this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = html_entity_decode(FieldMap::getFieldLabel($decoratedFieldName,$fieldValue));
@@ -854,6 +856,32 @@ class SearchApiDisplay
 							
 		
 	}
-        
-	
+	protected function getResLabel($country,$state,$cityVal,$nativeCityOpenText,$decoredVal){
+                $label = '';
+                $city = explode(',',$cityVal);
+                $citySubstr = substr($city[0], 0,2);
+                if(FieldMap::getFieldLabel($decoredVal,$city[0]) == '')
+                {
+                        $label = html_entity_decode(FieldMap::getFieldLabel('country',$country));
+                }
+                else{
+                        $label = FieldMap::getFieldLabel($decoredVal,$city[0]);
+                }
+                if($city[1] != '0' && FieldMap::getFieldLabel($decoredVal,$city[1]) != ''){
+                     $nativePlace =  FieldMap::getFieldLabel($decoredVal,$city[1]);    
+                }else{
+                     $states = explode(',',$state);
+                     if($states[1] != '' && ($states[1] != $citySubstr || $nativeCityOpenText != '')){
+                        $nativeState = FieldMap::getFieldLabel('state_india',$states[1]);
+                        if($nativeCityOpenText != '' && $nativeState != '')
+                           $nativePlace = $nativeCityOpenText.', ';
+                        
+                        $nativePlace .= $nativeState;
+                     }
+                }
+                if($nativePlace != '' && $nativePlace != $label)
+                        $label .= ' & '.$nativePlace;
+                
+                return $label;
+        }
 }
