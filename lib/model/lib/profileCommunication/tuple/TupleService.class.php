@@ -369,7 +369,7 @@ class TupleService
 	{
 		if(!empty($profileIds))
 		{
-			$jprofArrObj                = new NEWJS_JPROFILE_EDUCATION();
+			$jprofArrObj                = new NEWJS_JPROFILE_EDUCATION("newjs_bmsSlave");
 			$profileDetailsArray = $jprofArrObj->getProfileEducation($profileIds,'mailer');
 				
 			foreach($profileDetailsArray as $k=>$row)
@@ -848,7 +848,7 @@ else {
 	{
 		if(!empty($profileIds))
 		{
-			$jprofArrObj                = new NEWJS_NATIVE_PLACE();
+			$jprofArrObj                = new NEWJS_NATIVE_PLACE("newjs_bmsSlave");
                          if(!is_array($profileIds)){
                             $profileIds = array($profileIds);
                         }
