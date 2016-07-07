@@ -110,7 +110,7 @@ class BellCounts
 			{
 				$profileObj = LoggedInProfile::getInstance('newjs_master');
 				$profileMemcacheObj = new ProfileMemcacheService($profileObj);
-				$justJoinedMemcacheCount = $profileMemcacheObj->get('JUST_JOINED_MATCHES_NEW');
+				/*$justJoinedMemcacheCount = $profileMemcacheObj->get('JUST_JOINED_MATCHES_NEW');
 				if($justJoinedMemcacheCount){
 					$countDetails['NEW_MATCHES']=JsCommon::convert99($justJoinedMemcacheCount);
 				}
@@ -121,7 +121,7 @@ class BellCounts
 				$countDetails['DAILY_MATCHES_NEW']=JsCommon::convert99($dailyMatchesMemcacheCount);
 				if(!$countDetails['DAILY_MATCHES_NEW']){
 					$countDetails['DAILY_MATCHES_NEW']=0;
-				}
+				}*/
 				$countDetails["AWAITING_RESPONSE_NEW"] = $profileMemcacheObj->get("AWAITING_RESPONSE_NEW");
 				if(!$countDetails["AWAITING_RESPONSE_NEW"]){
 					$countDetails["AWAITING_RESPONSE_NEW"] = 0;
