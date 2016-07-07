@@ -164,7 +164,7 @@ window.onload=function(){
                             <!--end:number-->
                             <!--start:submenu-->
                             <ul class="submenu topnavbg pos-abs navbell menushadowGNB navBarZ">
-                                <li>
+                           <!--     <li>
                                     <a href="/search/justjoined">
                                     <div class="clearfix topnavp1">
                                         <div class="fl">Just Joined Matches</div>
@@ -175,7 +175,7 @@ window.onload=function(){
                                         </div>
                                     </div>
                                     </a>
-                                </li>
+                                </li>-->
                                 <li>
                                     <a href="/inbox/4/1">
                                     <div class="clearfix topnavp1">
@@ -224,7 +224,7 @@ window.onload=function(){
                                     </div>
                                     </a>
                                 </li>
-                                <li>
+                              <!--  <li>
                                     <a href="/search/matchalerts">
                                     <div class="clearfix topnavp1">
                                         <div class="fl">Match Alerts</div>
@@ -235,7 +235,7 @@ window.onload=function(){
                                         </div>
                                     </div>
                                     </a>
-                                </li>
+                                </li>-->
 				 <li>
                                     <a href="/inbox/12/1">
                                     <div class="clearfix topnavp1">
