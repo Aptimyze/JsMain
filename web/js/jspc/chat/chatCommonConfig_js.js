@@ -50,6 +50,6 @@ chatConfig.Params = {
 							"hide_offline_users":false
 						}
 					},
-                    initialRosterLimit:{"nodesCount":3,"timeInterval":60000} //config for initial roster to be sent to plugin to create list initially				
+                    initialRosterLimit:{"nodesCount":3,"timeInterval":50000} //config for initial roster to be sent to plugin to create list initially				
 				}
 			};
