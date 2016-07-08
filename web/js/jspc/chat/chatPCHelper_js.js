@@ -24,13 +24,13 @@ function initiateChatConnection()
     //only for dev env--------------------start:ankita
     var username = "a1@localhost";
     if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
-        username = "a1@localhost";
-    else if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
         username = "a2@localhost";
+    else if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
+        username = "a1@localhost";
     //only for dev env--------------------end:ankita
     try
     {
-        //initialise converse settings and fetch data and then execute callback function
+        //initialise converse settings
         require(['converse'], function (converse) {
             converse.initialize({
                 bosh_service_url: chatConfig.Params[device].bosh_service_url,
@@ -54,9 +54,9 @@ function initiateChatConnection()
                 rosterDisplayGroups:chatConfig.Params[device].rosterDisplayGroups,
                 listCreationDone:false,
                 //prebind_url: 'http://localhost/api/v1/chat/authenticateChatSession?jid=a1@localhost',  
-            }),function(){
+            })/*,function(){
                 console.log("calling callback");
-            }
+            }*/
         });
     }
     catch(e)
