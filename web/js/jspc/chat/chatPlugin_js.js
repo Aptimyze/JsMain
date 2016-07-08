@@ -215,7 +215,7 @@ JsChat.prototype = {
             TabsOpt += "<div class=\"" + obj["tab2"]["groups"][i]["id"] + "\">";
             TabsOpt += "<div class=\"f12 fontreg nchatbdr2";
             if(obj["tab2"]["groups"][i]["show_group_name"]==false)
-                TabsOpt += "disp-none";
+                TabsOpt += " disp-none";
             TabsOpt +="\"><p class=\"nchatt1 fontreg pl15\">" + obj["tab2"]["groups"][i]["group_name"] + "</p></div>";
             TabsOpt += "<ul class=\"chatlist\"></ul></div>";
 
