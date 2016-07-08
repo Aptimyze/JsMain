@@ -51,7 +51,7 @@
 		 
 	<div class="txtc">	 
 	<div class="fontlig white f18 pb10 color16">Delete Profile Permanently</div>
-	<div class="pad1 lh25 fontlig f14" style='color:#cccccc;'>This will completely delete your profile information and contact history and active paid membership(s), if any. Are you sure of deleting profile?</div>
+	<div class="pad1 lh25 fontlig f14" style='color:#cccccc;'>This will completely delete your profile information, contact history and active paid membership(s), if any. Are you sure about deleting your profile?</div>
   </div>
   <!--start:div-->
   <div style='padding: 25px 0 8% 0;'>

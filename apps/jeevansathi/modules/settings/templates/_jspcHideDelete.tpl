@@ -119,7 +119,7 @@
             <div class="disp-cell vmid fontlig color11">
                 <div class="wid470 mauto">
                     <p class="f28">Delete Profile Permanently</p>
-                    <p class="f14 pt25 lh22">This will completely delete your profile information and contact history and active paid membership(s), if any. Are you sure of deleting profile?</p>
+                    <p class="f14 pt25 lh22">This will completely delete your profile information, contact history and active paid membership(s), if any. Are you sure about deleting your profile?</p>
                 </div>            
             </div>
         </div>
