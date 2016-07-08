@@ -213,7 +213,7 @@ JsChat.prototype = {
         TabsOpt += '<div class="showtab2 js-htab disp-none">';
         for (var i = 0; i < obj["tab2"]["groups"].length; i++) {
             TabsOpt += "<div class=\"" + obj["tab2"]["groups"][i]["id"] + "\">";
-            TabsOpt += "<div class=\"f12 fontreg nchatbdr2\"><p class=\"nchatt1 fontreg pl15\">" + obj["tab1"]["groups"][i]["group_name"] + "</p></div>";
+            TabsOpt += "<div class=\"f12 fontreg nchatbdr2\"><p class=\"nchatt1 fontreg pl15\">" + obj["tab2"]["groups"][i]["group_name"] + "</p></div>";
             TabsOpt += "<ul class=\"chatlist\"></ul></div>";
 
         }

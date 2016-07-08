@@ -9,7 +9,7 @@ chatConfig.Params = {
 					roster_groups:true, //show categories in listing
 					hide_offline_users:false, //hide offline users from list
 					use_vcards:true, //fetch vcards of users
-					rosterDisplayGroups:{"Desired Partner Matches":"dpp","Interest Received":"eoi_R","Shortlisted Members":"shortlisted","Accepted Members":"accepted_by_me"},
+					//rosterDisplayGroups:{"Desired Partner Matches":"dpp","Interest Received":"eoi_R","Shortlisted Members":"shortlisted","Accepted Members":"accepted_by_me"},
 					//categories in listing to be shown with mapping to their div ids---not required in new plugin ankita
 					//tab id to tab names mapping
 					listingTabs:{
@@ -37,6 +37,11 @@ chatConfig.Params = {
 						"tab2":{
 							"tab_name":"Accepted",
 							"groups":[
+								{
+									"id":"accepted_by_me",
+									"group_name":"Accepted By Me",
+									"order_id":0
+								}
 							],
 							"hide_offline_users":false
 						}

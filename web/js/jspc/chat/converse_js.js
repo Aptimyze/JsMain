@@ -34268,12 +34268,12 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                     //console.log("ankita_groups");
                     //console.log(converse.listing_data);
                     //rest for old plugin-------
-                    var group_name = this.model.get('name');
+                    /*var group_name = this.model.get('name');
                     //stores groups name
                     if(typeof converse.listing_data[group_name] === "undefined" && typeof converse.rosterDisplayGroups[group_name]!=="undefined")
                     {  
                         converse.listing_data[group_name] = {};
-                    }
+                    }*/
                     //rest for old plugin-------
                     this.$el.html(
                         $(converse.templates.group_header({

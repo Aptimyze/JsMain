@@ -630,3 +630,19 @@ wid165 {
 }
 .hgt43 {height:43px;}
 
+.nchttog1{
+    top: 0;
+    width: 147px;
+}
+.extraUsername {    
+	width: 65px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    height: 8px;
+}
+.downBarUserName {   
+	width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
