@@ -395,4 +395,55 @@ class registerMisActions extends sfActions {
     }
     
   }
+  public function executeScreeningCountMis(sfWebRequest $request) 
+  {
+    $formArr = $request->getParameterHolder()->getAll();
+    $name = $request->getAttribute('name');
+    $this->cid = $formArr['cid'];
+    if ($formArr['submit']) {
+        if(strlen($formArr["date1_dateLists_day_list"])==1)
+                $formArr["date1_dateLists_day_list"] = "0".$formArr["date1_dateLists_day_list"];
+        if(strlen($formArr["date1_dateLists_month_list"])==1)
+                $formArr["date1_dateLists_month_list"] = "0".$formArr["date1_dateLists_month_list"];
+	$fromDate = $formArr['date1_dateLists_year_list']."-".$formArr['date1_dateLists_month_list'].$formArr['date1_dateLists_day_list'];
+	$screeningQueueCountObj = new MIS_SCREENING_QUEUE_COUNTS;
+	$records = $screeningQueueCountObj->getRecords($fromDate);
+	foreach($records as $k=>$v)
+	{
+		$finalRec[$v['DATE']][$v['AT_HOUR']]=$v;
+	}
+	$this->hrArr = range(0,23);
+	$blankArr = array(
+                    "PROFILE_NEW" => "","PROFILE_EDIT" => "", "PHOTO_ACCEPT_REJ_NEW" =>"", "PHOTO_ACCEPT_REJ_EDIT" =>"", "PHOTO_PROCESS_NEW" =>"","PHOTO_PROCESS_EDIT" => "");
+	foreach($finalRec as $x=>$y)
+	{
+		$hrsAvailable = array_keys($y);
+		unset($missingHrs);
+		$missingHrs = array_diff($this->hrArr,$hrsAvailable);
+		foreach($missingHrs as $n=>$m)
+		{
+			$finalRec[$x][$m]=$blankArr;
+			$finalRec[$x][$m]['DATE']=$x;
+			$finalRec[$x][$m]['AT_HOUR']=$m;
+		}
+		ksort($finalRec[$x]);
+	}
+	$this->finalRec = $finalRec;
+        $this->setTemplate('ScreeningCountMisScreen');
+    }
+    else
+    {
+      $this->startMonthDate = "01";
+      $this->todayDate = date("d");
+      $this->todayMonth = date("m");
+      $this->todayYear = date("Y");
+      $this->rangeYear = date("Y");
+      $this->dateArr = GetDateArrays::getDayArray();
+      $this->yearArr = array();
+      $dateArr = GetDateArrays::generateDateDataForRange('2016', ($this->todayYear));
+      foreach (array_keys($dateArr) as $key => $value) {
+        $this->yearArr[] = array('NAME' => $value, 'VALUE' => $value);
+	}
+    }
+  }
 }
