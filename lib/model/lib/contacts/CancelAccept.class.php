@@ -81,7 +81,7 @@ class CancelAccept extends ContactEvent{
     $producerObj=new Producer();
     if($producerObj->getRabbitMQServerConnected())
     {
-        $chatData = array('process' =>'CHATROSTERS','data'=>array('type' => 'ACCEPTANCE_REMOVE','body'=>array('senderid'=>$this->contactHandler->getViewer(),'receiverid'=>$this->contactHandler->getViewed() ) ), 'redeliveryCount'=>0 );
+        $chatData = array('process' =>'CHATROSTERS','data'=>array('type' => 'CANCEL','body'=>array('senderid'=>$this->contactHandler->getViewer(),'receiverid'=>$this->contactHandler->getViewed(),'senderusername'=>$this->contactHandler->getViewed()->getUSERNAME(),'receiverusername'=>$this->contactHandler->getViewed()->getUSERNAME() ) ), 'redeliveryCount'=>0 );
         $producerObj->sendMessage($chatData);
     }
 

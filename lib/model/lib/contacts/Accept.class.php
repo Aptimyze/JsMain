@@ -112,11 +112,9 @@ class Accept extends ContactEvent
         $gcmData=array('process'=>'GCM','data'=>array('type'=>'ACCEPTANCE','body'=>array('receiverid'=>$receiver->getPROFILEID(),'senderid'=>$sender->getPROFILEID() ) ), 'redeliveryCount'=>0 );
         $producerObj->sendMessage($gcmData);
 	//Add to acceptance roster
-        $chatData = array('process' =>'CHATROSTERS','data'=>array('type' => 'ACCEPTANCE','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID() ) ), 'redeliveryCount'=>0 );
+        $chatData = array('process' =>'CHATROSTERS','data'=>array('type' => 'ACCEPTANCE','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID(),'senderusername'=>$this->contactHandler->getViewed()->getUSERNAME(),'receiverusername'=>$this->contactHandler->getViewed()->getUSERNAME() ) ), 'redeliveryCount'=>0 );
         $producerObj->sendMessage($chatData);
-        //Remove from contact roster
-        $chatData = array('process' =>'CHATROSTERS','data'=>array('type' => 'CONTACT_REMOVE','body'=>array('senderid'=>$receiver->getPROFILEID(),'receiverid'=>$sender->getPROFILEID() ) ), 'redeliveryCount'=>0 );
-        $producerObj->sendMessage($chatData);
+        
     }
     else
     {
