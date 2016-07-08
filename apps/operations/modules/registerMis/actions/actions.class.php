@@ -69,6 +69,9 @@ class registerMisActions extends sfActions {
               }else{
                 $keyVal = $i;
               }
+              if($i == 12){
+                      $keyVal = $i = 16;
+              }
               $sArray[$keyVal] = $groupData['GROUPNAME'];
               $i++;
             }
