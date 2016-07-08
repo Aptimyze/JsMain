@@ -259,9 +259,6 @@ function eraseCookie(name) {
     console.log("erasing cookie");
 }
 
-$(document).ready(function(){
- setCreateListingInterval();   //to be decided where to call - ankita
-});
 
 /*setCreateListingInterval
 * sets time interval after which json data will be sent to plugin to create list if not created
@@ -353,6 +350,11 @@ $(document).ready(function(){
             }
         }
         console.log("In callback");
+    }
+
+    objJsChat.onEnterToChatPostClick = function(){
+        //trigger list creation if nodes in roster lesser than limit
+        setCreateListingInterval();
     }
     
     objJsChat.onLogoutPreClick = function(){

@@ -249,6 +249,7 @@ JsChat.prototype = {
                 List += data[key]["rosterDetails"]["fullname"];
                 List += '</div>';
                 List += '</li>';
+                console.log(List);
                 $('div.' + val + ' ul').append(List);
 				//bind click on listing]
                 $("#" + username + val).on("click", function() {
@@ -627,6 +628,8 @@ JsChat.prototype = {
 	
 	onEnterToChatPreClick:null,
 
+    onEnterToChatPostClick:null,  //function triggered after enter to chat button click
+
     //start:login screen
     _startLoginHTML: function() {
         
@@ -677,6 +680,7 @@ JsChat.prototype = {
         $(curEle._parendID).append('<div class="fullwid fontlig nchatcolor" id="js-lsitingPanel"/> ').promise().done(function() {
             curEle._addChatTop();
             curEle.addTab();
+            onEnterToChatPostClick();
             //first time intialization passing tab1 as param
             //curEle.addListingInit(curEle._listData);
         });
