@@ -169,5 +169,54 @@ class NEWJS_ASTRO extends TABLE {
         	}
 		
 	}
+
+    /**
+     * updateRecord
+     * @param $iProfileID
+     * @param $arrRecordData
+     */
+    public function updateRecord($iProfileID, $arrRecordData) {
+        if(!is_numeric(intval($iProfileID)) || !$iProfileID)
+        {
+            throw new jsException("","iProfileID is not numeric in UpdateRecord OF NEWJS_ASTRO_DETAILS.class.php");
+        }
+
+        if(!is_array($arrRecordData))
+            throw new jsException("","Array is not passed in UpdateRecord OF NEWJS_ASTRO_DETAILS.class.php");
+
+        if(isset($arrRecordData['PROFILEID']) && strlen($arrRecordData['PROFILEID'])>0)
+            throw new jsException("","Trying to update PROFILEID in  in UpdateRecord OF NEWJS_ASTRO_DETAILS.class.php");
+
+        try
+        {
+            $arrFields = array();
+            foreach($arrRecordData as $key=>$val)
+            {
+                $columnName = strtoupper($key);
+
+                $arrFields[] = "$columnName = ?";
+            }
+            $szFields = implode(",",$arrFields);
+
+            $sql = "UPDATE newjs.ASTRO_DETAILS SET $szFields WHERE PROFILEID = ?";
+            $pdoStatement = $this->db->prepare($sql);
+
+            //Bind Value
+            $count =0;
+            foreach ($arrRecordData as $k => $value)
+            {
+                ++$count;
+                $pdoStatement->bindValue(($count), $value);
+            }
+            ++$count;
+            $pdoStatement->bindValue($count,$iProfileID);
+
+            $pdoStatement->execute();
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    }
 }
 ?>

@@ -6,6 +6,7 @@ class JsConstants
 {
 	public static $whichMachine       = 'local';
 	public static $localHostIp	  = "127.0.0.1";
+	public static $crmUrl             = 'http://crm.jeevansathi.com';
 	public static $siteUrl            = 'http://milestoneconfig.jeevansathi.com';
 	public static $ssl_siteUrl        = 'https://milestoneconfig.jeevansathi.com';
 	public static $ser6Url            = 'http://ser6.jeevansathi.com';
@@ -146,8 +147,14 @@ class JsConstants
         public static $useMongoDb = false;
 
 	/* redis */
-	public static $memoryCachingSystem = 'redis';
-        public static $redisCachingUrl = 'http://www.jeevansathi.com/api/v1/search/perform'; // --- api later ---
-        public static $redisCluster = ['tcp://127.0.0.1:7000','tcp://127.0.0.1:7001','tcp://127.0.0.1:7002','tcp://127.0.0.1:7003','tcp://127.0.0.1:7004','tcp://127.0.0.1:7005'];
-
+        public static $updateSeenQueueConfig = array("ALL_CONTACTS"=>true,
+                                                "ALL_MESSAGES"=>true,
+                                                "PHOTO_REQUEST"=>true,
+						"HOROSCOPE_REQUEST"=>true
+                                                );
+	public static $memoryCachingSystem = 'redis1'; // redis,redisCluster,redisSentinel(needed new library),memcache 
+        public static $redisCachingUrl = 'apitoCaching';
+        public static $redisCluster = ['tcp://172.10.18.61:7000','tcp://172.10.18.62:7000','tcp://172.10.18.63:7000','tcp://172.10.18.64:7000','tcp://172.10.18.65:7000','tcp://172.10.18.64:7005'];
+        public static $redisSentinel = ['tcp://172.10.18.65:26379', 'tcp://172.10.18.64:26379','tcp://172.10.18.70:26379'];
+        public static $ifSingleRedis = 'tcp://172.10.18.65:6379';
 }

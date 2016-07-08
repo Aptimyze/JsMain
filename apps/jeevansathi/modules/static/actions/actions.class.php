@@ -108,6 +108,8 @@ class staticActions extends sfActions
   //Find more information in http://devjs.infoedge.com/mediawiki/index.php/Social_Project#500_Internal_Server_Error_page
   public function executePage500(sfWebRequest $request)
   {
+
+  $request->setParameter("blockOldConnection500",1);
 	if(MobileCommon::isNewMobileSite()){
 		if(MobileCommon::isAppWebView()){
 			// Hide hamburger when 500 page opened within App WebView
@@ -177,7 +179,7 @@ class staticActions extends sfActions
 		$this->nextAction = "/search/perform?searchId=$searchId&currentPage=$currentPage";*/
 		
 		$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
-		if($request->getcookie('loginAttempt'))
+		if($request->getcookie('loginAttemptNew'))
     {
     	
         		$this->captchaDiv=1;
@@ -390,7 +392,7 @@ public function executeCALRedirection($request){
     //Logout page
   public function executeLogoutPage(sfWebRequest $request)
   {
-    if($request->getcookie('loginAttempt'))
+    if($request->getcookie('loginAttemptNew'))
     {
     	
         		$this->captchaDiv=1;

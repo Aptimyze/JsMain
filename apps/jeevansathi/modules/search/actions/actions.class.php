@@ -1221,6 +1221,8 @@ class searchActions extends sfActions
 			$searchResultscache = new SearchResultscache;
 			if(is_array($responseObj->getSearchResultsPidArr()) && is_array($responseObj->getFeturedProfileArr()))
                         	$searchPidArr = array_diff($responseObj->getSearchResultsPidArr(),$responseObj->getFeturedProfileArr());
+			else
+                                $searchPidArr = $responseObj->getSearchResultsPidArr();
 			$searchResultscache->add($searchId,$responseObj->getUrlToSave(),$searchPidArr);	
 		}
 		return $searchId;

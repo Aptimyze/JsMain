@@ -660,7 +660,7 @@ public function microtime_float()
 	  {
 		  $varArray['PROFILEID'] = implode(",",$profiles);
 		  $smsTempTableObj = new $className;
-		  $profiledetails = $smsTempTableObj->getArray($varArray,'',"",$fields="*");
+		  $profiledetails = $smsTempTableObj->getArray($varArray,'',"",$fields="PROFILEID,USERNAME,SUBSCRIPTION,GENDER,AGE,CASTE,CITY_RES,COUNTRY_RES");
 	  }
 	  if(is_array($profiledetails))
 	  {

@@ -2,7 +2,8 @@
 $curFilePath = dirname(__FILE__)."/";
 include_once("/usr/local/scripts/DocRoot.php");
 include ("$docRoot/crontabs/connect.inc");
-include($_SERVER['DOCUMENT_ROOT']."/classes/VariableDiscountHandler.class.php");
+include_once(JsConstants::$docRoot."/classes/VariableDiscountHandler.class.php");
+
 ini_set('max_execution_time',0);
 ini_set('memory_limit',-1);
 

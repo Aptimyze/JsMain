@@ -124,9 +124,15 @@ function makes_username_changes($profileid,$newusername)
 {
 	//echo $profileid." = >  ".$newusername."<br>";
 	global $db;
-	
-	$sql="UPDATE newjs.JPROFILE SET USERNAME='$newusername' where PROFILEID='$profileid'";
-	$row=mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate"); 
+	include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
+	$objUpdate = JProfileUpdateLib::getInstance();
+	$result = $objUpdate->editJPROFILE(array("USERNAME"=>$newusername),$profileid,'PROFILEID');
+	if(false === $result) {
+		$sql="UPDATE newjs.JPROFILE SET USERNAME='$newusername' where PROFILEID='$profileid'";
+		logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+	}
+	//$row=mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+
 	$sql="INSERT into newjs.NAMES VALUES('$newusername')";
 	$row=mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 	$sql="UPDATE newjs.CONNECT SET USERNAME='$newusername' WHERE PROFILEID='$profileid'";

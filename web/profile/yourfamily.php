@@ -22,7 +22,15 @@ require_once(JsConstants::$docRoot."/commonFiles/flag.php");
 	
 	$db=connect_db();	
 	$data=authenticated($checksum);
-
+//adding mailing to gmail account to check if file is being used
+include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
+               $cc='eshajain88@gmail.com';
+               $to='sanyam1204@gmail.com';
+               $msg1='yourfamily is being hit. We can wrap this to JProfileUpdateLib';
+               $subject="yourfamily";
+               $msg=$msg1.print_r($_SERVER,true);
+               send_email($to,$msg,$subject,"",$cc);
+ //ending mail part
 	/*************************************Portion of Code added for display of Banners*******************************/
         $smarty->assign("data",$data["PROFILEID"]);
         $smarty->assign("bms_topright",18);

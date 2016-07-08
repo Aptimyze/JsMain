@@ -4,6 +4,7 @@
 	//also update the HOROSCOPE_COMPATIBILITY table with profileid's, date and MTONGUE of other person
 
         include_once("connect.inc");
+		include_once(JsConstants::$docRoot."/classes/ProfileReplaceLib.php");
         $db=connect_db();
 	//Added by Vibhor for Astro Service of Offline Module
 	if(!$via_ofm)
@@ -171,8 +172,14 @@
         //function to save values in HOROSCOPE_COMPATIBILITY table
         function horoscope_compatibility_log($profileid,$profileid_other)
 	{
-		$sql="REPLACE into HOROSCOPE_COMPATIBILITY(PROFILEID,PROFILEID_OTHER,DATE) values ('$profileid','$profileid_other',now()) ";
-                mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+		$objReplaceLib = ProfileReplaceLib::getInstance();
+		$result = $objReplaceLib->replaceHOROSCOPE_COMPATIBILITY($profileid, $profileid_other);
+		if (false === $result) {
+			die('Due to a temporary problem your request could not be processed. Please try after a couple of minutes');
+		}
+		/*$sql="REPLACE into HOROSCOPE_COMPATIBILITY(PROFILEID,PROFILEID_OTHER,DATE) values ('$profileid','$profileid_other',now()) ";
+                mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");*/
+		
 	}
 
 ?>

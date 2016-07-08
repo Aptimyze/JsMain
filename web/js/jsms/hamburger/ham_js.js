@@ -170,6 +170,9 @@ function onClickExploreEnable()
 			historyStoreObj.push(function(){return HideHamburger(ele)},"#mham");
 			
 			$("#mainHamDiv").css("overflow","auto");
+
+			$('#mainHamDiv').css('height',heightPage - $('.js-loginBtn').height() - 20);
+
 			//startTouchEvents(10);
             setTimeout(function(){
 				stopTouchEvents(1);

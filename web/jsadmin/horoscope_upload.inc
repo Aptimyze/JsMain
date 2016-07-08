@@ -4,7 +4,7 @@
 *       Function        :       horoscope_save
 *       Description     :       Inserts or Update the User's picture information
 **/
-
+include_once(JsConstants::$docRoot."/classes/ProfileReplaceLib.php");
 function horoscope_save($profileid,$horoscope_content)
 {
 	//echo "here";
@@ -14,6 +14,8 @@ function horoscope_save($profileid,$horoscope_content)
         mysql_query_decide($sql_insert) or die("$sql_insert".mysql_error_js());//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_insert,"ShowErrTemplate");*/
 
 	//make an entry in the log
+	$objReplace = ProfileReplaceLib::getInstance();
+	
 	$sql="SELECT RECEIVE_TIME FROM jsadmin.MAIN_ADMIN WHERE PROFILEID='$profileid' and SCREENING_TYPE='H'";
 	$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
 	$resf=mysql_fetch_array($res);
@@ -39,9 +41,13 @@ function horoscope_save($profileid,$horoscope_content)
 
 	/********************** CRON PART STARTS ****************************/	
 	//now a cron to shift all entries with UPLOADED='Y' from HOROSCOPE_FOR_SCREEN to HOROSCOPE table and update the HOROSCOPE_SCREENING='1' in ASTRO_DETAILS table
-	
-	$sql="REPLACE into newjs.HOROSCOPE (PROFILEID,HOROSCOPE) select PROFILEID,HOROSCOPE from newjs.HOROSCOPE_FOR_SCREEN where UPLOADED='Y'";
-	mysql_query_decide($sql) or die("$sql".mysql_error_js());
+
+	$result = $objReplace->copyAllHoroscopFromScreen();
+	if($result === false) {
+		die('Error While copying horoscope at line 47.');
+	}
+	/*$sql="REPLACE into newjs.HOROSCOPE (PROFILEID,HOROSCOPE) select PROFILEID,HOROSCOPE from newjs.HOROSCOPE_FOR_SCREEN where UPLOADED='Y'";
+	mysql_query_decide($sql) or die("$sql".mysql_error_js());*/
 
 	//query to update the HOROSCOPE_SCREENING='1' in ASTRO_DETAILS table
 	$sql_update="update newjs.ASTRO_DETAILS set HOROSCOPE_SCREENING='1' where PROFILEID='$profileid'";

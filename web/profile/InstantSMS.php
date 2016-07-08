@@ -70,6 +70,9 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 	}	
 		
 	private function isWhitelistedProfile() {
+
+		if($this->smsKey=='OTP') return true;
+
 		if(!$this->SMSLib->getMobileCorrectFormat($this->profileDetails["PHONE_MOB"],$this->profileDetails["ISD"]))
 			return false;
 		switch ($this->smsKey) {
@@ -284,15 +287,6 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 				$smsVendorObj = SmsVendorFactory::getSmsVendor("air2web");
 				$xmlResponse = $smsVendorObj->generateXml($this->profileid,$this->profileDetails["PHONE_MOB"],$message,$this->smsSettings["SEND_TIME"]);
 				$smsVendorObj->send($xmlResponse,$acc);
-				//$xmlResponse = generateReceiverXmlData($this->profileid, $message, $from="", $this->profileDetails["PHONE_MOB"], $this->smsSettings["SEND_TIME"]);	
-				//sendSMS($xmlResponse, "priority");
-                                //pankaj trac #918 starts here
-				//Commented as hide functionality is not required
-				/*if(in_array($this->smsKey,$this->unverified_key)){
-					$sql = "UPDATE newjs.JPROFILE SET ACTIVATED = 'H' WHERE PROFILEID = '".$this->profileid."'";
-					$res = mysql_query_decide($sql) or die("$res".mysql_error_js());
-				}*/
-				//ends here 
 			}
 			//Insert in sms log
 			$this->insertInSmsLog($message,$sent);

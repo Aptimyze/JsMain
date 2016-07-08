@@ -34,7 +34,7 @@
 '25'=>array('APP_SCREEN_ID'=>'a12','LINK_NAME'=>'COMPLETE_PROFILE','URL'=>'P/viewprofile.php','OTHER_GET_PARAMS'=>'ownview=1&EditWhatNew=incompletProfile&mailer=1','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '26'=>array('APP_SCREEN_ID'=>'a12','LINK_NAME'=>'COMPLETE_PROFILE_LIFESTYLE','URL'=>'P/viewprofile.php','OTHER_GET_PARAMS'=>'ownview=1&EditWhatNew=LifeStyle','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '27'=>array('APP_SCREEN_ID'=>'a7','LINK_NAME'=>'PROFILE_VISITORS','URL'=>'profile/contacts_made_received.php','OTHER_GET_PARAMS'=>'page=visitors&filter=R','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
-'28'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'PROFILE_DELETION_URL','URL'=>'profile/hide_delete_revamp.php','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
+'28'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'PROFILE_DELETION_URL','URL'=>'settings/jspcSettings?hideDelete=1','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '29'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'FAQS_LAYER','URL'=>'profile/faqs_layer.php','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '30'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'KYC_PAGE','URL'=>'/static/agentinfo','OTHER_GET_PARAMS'=>'source=M','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '31'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'HELP_EMAILID','URL'=>'help@jeevansathi.com','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'Y'),

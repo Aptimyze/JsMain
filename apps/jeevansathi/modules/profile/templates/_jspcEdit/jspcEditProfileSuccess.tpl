@@ -83,6 +83,10 @@
             <li class="pl10"><a href="/social/addPhotos?uploadType=F" class="color11">Facebook</a></li>
           </ul>
           <p class="f13 edpcolr1 txtc pt20">You can set Photo Privacy</p>
+          ~if $arrOutDisplay['pic']['pic_count'] neq "0"`
+          
+          <div class="fl pos-rel imgSize photoClick js-previewAlbum cursp" data="~$arrOutDisplay['pic']['pic_count']`,~$arrOutDisplay['about']['username']`,~$arrOutDisplay['page_info']['profilechecksum']`"><p class="f13 colr5 txtc pt10 pl47 txtl">Preview Album</p></div>
+          ~/if`
         </div>
         <!--end:upload div--> 
         <!--start:make your profile-->
@@ -517,7 +521,7 @@
                                                 ~if $editApiResponse.Contact.ID_PROOF_TYPE.value`
                                                         ~$editApiResponse.Contact.ID_PROOF_TYPE.label_val`
                                                 ~else`
-                                                        Not Filled in
+                                                        Not filled in
                                                 ~/if`
                                         </span>
                                 </p>
@@ -529,7 +533,7 @@
                                                 ~if $editApiResponse.Contact.ADDR_PROOF_TYPE.value`
                                                         ~$editApiResponse.Contact.ADDR_PROOF_TYPE.label_val`
                                                 ~else`
-                                                        Not Filled in
+                                                        Not filled in
                                                 ~/if`
                                         </span>
                                 </p>

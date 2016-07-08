@@ -75,14 +75,18 @@ if(authenticated($cid))
 		$count=count($users_arr);
 		if($count)
 		{
+			$jprofileObj =JProfileUpdateLib::getInstance();
 			while($count)
 			{
 				$count--;
 				$details=explode(":",$users_arr[$count]);
 				$profile=$details[0];
 				$username=$details[1];
-				$sql2="UPDATE newjs.JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D',activatedKey=0 where PROFILEID=$profile";
-				mysql_query_decide($sql2) or die(logError($sql2,$db));
+				/*$sql2="UPDATE newjs.JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D',activatedKey=0 where PROFILEID=$profile";
+				mysql_query_decide($sql2) or die(logError($sql2,$db));*/
+	                        $extraStr ="PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D',activatedKey=0";
+        	                $jprofileObj->updateJProfileForBilling('',$profile,'PROFILEID',$extraStr);
+
 				$tm = date("Y-M-d");
 				$sql = "INSERT into jsadmin.DELETED_PROFILES(PROFILEID,USERNAME,REASON,COMMENTS,USER,TIME)  values($profile,'$username','$reason','$comments','$name','$tm')";
 				mysql_query_decide($sql) or die(logError($sql,$db));
