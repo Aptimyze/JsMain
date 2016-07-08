@@ -27,7 +27,7 @@ EOF;
         if(!sfContext::hasInstance())
                 sfContext::createInstance($this->configuration);
          //open rate tracking by nitesh as per vibhor        
-          $jprofileObj   = new JPROFILE;
+          $jprofileObj   = new JPROFILE("newjs_slave");
 	  $final['PROFILE_NEW'] = $jprofileObj->getNewScreenProfileCount();
 	  $final['PROFILE_EDIT'] = $jprofileObj->getEditScreenProfileCount();
 	$acceptCounts= 	$jprofileObj->getPhotoScreenAcceptQueueCount();
