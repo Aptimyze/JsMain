@@ -276,7 +276,8 @@ function setCreateListingInterval()
             listCreationDone = true;
             setConverseSettings("listCreationDone",true);
             console.log(listingInputData);
-            //plugin.addInList(listingInputData,"create_list");    
+            //plugin.addInList(listingInputData,"create_list"); 
+            objJsChat.addListingInit(listingInputData);   
         }
     },chatConfig.Params[device].initialRosterLimit["timeInterval"]);
 }
