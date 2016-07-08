@@ -337,7 +337,6 @@ $(document).ready(function(){
         console.log("Checking variable");
         console.log(chatLoggedIn);
 
-    
         if(chatLoggedIn != 'true'){
             var auth = checkAuthentication();
             if(auth != "true"){
