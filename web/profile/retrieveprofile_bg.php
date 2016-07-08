@@ -143,6 +143,7 @@ $bookmarkStr=retreiveOnlyActiveProfiles('DELETED_BOOKMARKS',"BOOKMARKER","BOOKMA
 $ignoreStr=retreiveOnlyActiveProfiles('DELETED_IGNORE_PROFILE',"PROFILEID","IGNORED_PROFILEID",$mainDb,$mainDb,$profileid);
 $matcheStr=retreiveOnlyActiveProfiles('DELETED_OFFLINE_MATCHES',"MATCH_ID","PROFILEID",$mainDb,$mainDb,$profileid,'jsadmin');
 $nudgeStr=retreiveOnlyActiveProfiles('DELETED_OFFLINE_NUDGE_LOG',"SENDER","RECEIVER",$mainDb,$mainDb,$profileid,'jsadmin');
+$viewContactStr=retreiveOnlyActiveProfiles('DELETED_VIEW_CONTACTS_LOG',"VIEWER","VIEWED",$mainDb,$mainDb,$profileid,'jsadmin');
 /*** executing quries on masterdb to make sure only active profile is retreived ***/
 
 /****  Transaction for master tables(innodb ones only) started here . ****/
@@ -152,6 +153,7 @@ retreiveFromTables('DELETED_BOOKMARKS','BOOKMARKS',"BOOKMARKER","BOOKMARKEE",$ma
 retreiveFromTables('DELETED_IGNORE_PROFILE','IGNORE_PROFILE',"PROFILEID","IGNORED_PROFILEID",$mainDb,$profileid,$ignoreStr);
 retreiveFromTables('DELETED_OFFLINE_MATCHES','OFFLINE_MATCHES',"MATCH_ID","PROFILEID",$mainDb,$profileid,$matcheStr,'jsadmin');
 retreiveFromTables('DELETED_OFFLINE_NUDGE_LOG','OFFLINE_NUDGE_LOG',"SENDER","RECEIVER",$mainDb,$profileid,$nudgeStr,'jsadmin');
+retreiveFromTables('DELETED_VIEW_CONTACTS_LOG','VIEW_CONTACTS_LOG',"VIEWER","VIEWED",$mainDb,$profileid,$viewContactStr,'jsadmin');
 /****  Transaction for master tables(innodb ones only) started here . ****/
 
 /****** Commit Starts here ******/
