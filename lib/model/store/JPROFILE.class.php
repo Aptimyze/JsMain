@@ -1404,7 +1404,7 @@ public function duplicateEmail($email)
 	{
 		try
 		{
-			$sql = "SELECT count(J.PROFILEID) AS COUNT FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID WHERE ACTIVATED='N' AND INCOMPLETE = 'N' AND MSTATUS != '' AND SCREENING<1099511627775 and SUBSCRIPTION<>'' and activatedKey=1  and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y') ORDER BY ENTRY_DT ASC";
+			$sql = "SELECT count(J.PROFILEID) AS COUNT FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID WHERE ACTIVATED='N' AND INCOMPLETE = 'N' AND MSTATUS != '' AND SCREENING<1099511627775 and SUBSCRIPTION<>'' and activatedKey=1  and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y')";
 			$pdoStatement = $this->db->prepare($sql);
 			$pdoStatement->execute();
                         $result  = $pdoStatement->fetch(PDO::FETCH_ASSOC);
@@ -1418,7 +1418,7 @@ public function duplicateEmail($email)
 	{
 		try
 		{
-			$sql = "SELECT count(jp.PROFILEID) AS COUNT FROM newjs.JPROFILE jp LEFT JOIN jsadmin.MAIN_ADMIN mad ON jp.PROFILEID=mad.PROFILEID WHERE mad.PROFILEID IS NULL AND jp.ACTIVATED='Y' AND jp.INCOMPLETE <> 'Y' AND jp.SUBSCRIPTION<>'' AND jp.SCREENING<1099511627775 and jp.activatedKey=1 and jp.MOD_DT < date_sub(now(), interval 10 minute) ORDER BY jp.MOD_DT ASC";
+			$sql = "SELECT count(jp.PROFILEID) AS COUNT FROM newjs.JPROFILE jp LEFT JOIN jsadmin.MAIN_ADMIN mad ON jp.PROFILEID=mad.PROFILEID WHERE mad.PROFILEID IS NULL AND jp.ACTIVATED='Y' AND jp.INCOMPLETE <> 'Y' AND jp.SUBSCRIPTION<>'' AND jp.SCREENING<1099511627775 and jp.activatedKey=1 and jp.MOD_DT < date_sub(now(), interval 10 minute)";
 			$pdoStatement = $this->db->prepare($sql);
 			$pdoStatement->execute();
                         $result  = $pdoStatement->fetch(PDO::FETCH_ASSOC);
