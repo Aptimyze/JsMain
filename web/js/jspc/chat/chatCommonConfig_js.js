@@ -19,19 +19,19 @@ chatConfig.Params = {
 								{
 									"id":"dpp",
 									"group_name":"Desired Partner Matches",
-									"order_id":0,
+									//"order_id":0,
 									"show_group_name":true
 								},
 								{
 									"id":"eoi_R",
 									"group_name":"Interest Received",
-									"order_id":1,
+									//"order_id":1,
 									"show_group_name":true
 								},
 								{
 									"id":"shortlisted",
 									"group_name":"Shortlisted Members",
-									"order_id":2,
+									//"order_id":2,
 									"show_group_name":true
 								}
 							],
@@ -43,7 +43,7 @@ chatConfig.Params = {
 								{
 									"id":"accepted_by_me",
 									"group_name":"Accepted By Me",
-									"order_id":0,
+									//"order_id":0,
 									"show_group_name":false
 								}
 							],

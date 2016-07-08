@@ -28968,6 +28968,7 @@ return Backbone.BrowserStorage;
                     this.callback(this);
                 } else  {
                     console.log("in else of stat");
+                    console.log("calling converse callback");
                     //createListingPanel();  //ankita-create listing for old plugin
                     this.callback();
                 }
