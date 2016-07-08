@@ -693,7 +693,7 @@ if(authenticated($cid))
 
 					$mod_jsadmintbl_sql.=" , NEW_SUBSCRIPTION = '$subscription'";
 					//$mod_profile_sql[]=" SUBSCRIPTION = '$subscription'";
-					$arrFields['USERNAME'] = $subscription;
+					$arrFields['SUBSCRIPTION'] = $subscription;
 					$msgarr[] = " Subscription status  updated successfully. ";
 				}
 				if ($gender)
