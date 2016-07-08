@@ -24,9 +24,9 @@ function initiateChatConnection()
     //only for dev env--------------------start:ankita
     var username = "a1@localhost";
     if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
-        username = "a2@localhost";
-    else if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
         username = "a1@localhost";
+    else if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
+        username = "a2@localhost";
     //only for dev env--------------------end:ankita
     try
     {
@@ -133,7 +133,6 @@ function createListingPanel()   //used for old plugin--ankita
 {
     //get json data for listing
     var listingData = fetchConverseSettings("listing_data");
-    console.log("createListingPanel");
     //console.log(listingData);
     $(pluginId).setChatPluginOption("listingJsonData",listingData);
     //map json data to listing html
@@ -194,7 +193,7 @@ function invokePluginManagelisting(listObject,vcardObj,key){
     else
         listNodeObj["rosterDetails"] = listObject.attributes;
     if(key=="add_node"){
-        console.log(listCreationDone);
+        
         if(listCreationDone == false){   
             //create list with n nodes
             listingInputData.push(listNodeObj);

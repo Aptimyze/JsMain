@@ -228,20 +228,13 @@ JsChat.prototype = {
     },
     //start:addlisting
     addListingInit: function(data) {
- var elem = this;
- console.log("in addListingInit");
-        console.log(data);
+        var elem = this;
         for (var key in data) {
-console.log(data);
             var runID = '';
             var res = '';
-
-
             runID = data[key]["rosterDetails"]["jid"];
-            console.log(runID);
             var res = runID.split("@");
             runID = res[0];
-            console.log("ankita");
             $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
                 var List = '',status = data[key]["rosterDetails"]["chat_status"],username = data[key]["rosterDetails"]["fullname"];
                 List += '<li class=\"clearfix profileIcon\"';
@@ -251,7 +244,6 @@ console.log(data);
                 List += data[key]["rosterDetails"]["fullname"];
                 List += '</div>';
                 List += '</li>';
-                console.log(List);
                 $('div.' + val + ' ul').append(List);
 				//bind click on listing]
                 $("#" + username + val).on("click", function() {
@@ -259,6 +251,10 @@ console.log(data);
                 });
             });
         }
+        elem._chatScrollHght();
+        $(elem._scrollDivId).mCustomScrollbar({
+            theme: "light"
+        });
     },
 
     //scrolling down chat box
@@ -676,12 +672,9 @@ console.log(data);
             curEle._addChatTop();
             curEle.addTab();
             //first time intialization passing tab1 as param
-            curEle.addListingInit(curEle._listData);
+            //curEle.addListingInit(curEle._listData);
         });
-        curEle._chatScrollHght();
-        $(curEle._scrollDivId).mCustomScrollbar({
-            theme: "light"
-        });
+        
         //call hover functionality
        // $(curEle._listingClass).
 

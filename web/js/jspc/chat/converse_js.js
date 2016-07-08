@@ -28968,7 +28968,7 @@ return Backbone.BrowserStorage;
                     this.callback(this);
                 } else  {
                     console.log("in else of stat");
-                    createListingPanel();  //ankita-create listing for old plugin
+                    //createListingPanel();  //ankita-create listing for old plugin
                     this.callback();
                 }
             }
@@ -34101,7 +34101,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                         converse.controlboxtoggle.showControlBox();
                     } else if (subscription === 'both' || subscription === 'to') {
                         this.model.save({validRoster:true});  
-                        var rosterObj = item.toJSON();
+                        /*var rosterObj = item.toJSON();
                         //console.log(rosterObj);
                         var userid = rosterObj.id;
                         //rest for old plugin---------------
@@ -34119,7 +34119,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                         {
                             //console.log("old roster");
                             updateListing(rosterObj);
-                        }
+                        }*/
                         //rest for old plugin---------------
                         this.$el.addClass('current-xmpp-contact');
                         this.$el.removeClass(_.without(['both', 'to'], subscription)[0]).addClass(subscription);
@@ -34297,12 +34297,13 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                     //if subscription is either "to"/"both", then add in list
                     if(validRoster == true){
                         var vcardObj={},userid = contact.attributes.id;
-                        //get vcard of this user
-                        converse.getVCard(userid,function (iq) {
+                        //get vcard of this user-not req initially ankita
+                        /*converse.getVCard(userid,function (iq) {
                             console.log("ankita_fetching vcard...."+userid);
                             vcardObj = xmlToJson($(iq).children('vCard')[0]);
                             invokePluginManagelisting(contact,vcardObj,"add_node");     
-                        });
+                        });*/
+                        invokePluginManagelisting(contact,vcardObj,"add_node");  
                     }
                     if (view.mayBeShown()) {
                         if (this.model.get('state') === converse.CLOSED) {

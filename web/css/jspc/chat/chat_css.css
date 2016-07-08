@@ -138,6 +138,8 @@
 .nchatp9 {
 	padding:16px 7px 10px 0px
 }
+
+.nchatp11{padding:10px 7px}
 .chatbdr1 {
 	border:1px solid #999999
 }
@@ -206,12 +208,17 @@ ul.nchattab1 {
 	border-bottom:1px solid #9f9f9e
 }
 ul.nchattab1 li:nth-child(1) {
-border-right:1px solid #9f9f9e
+border-right:1px solid #9f9f9e;
+width:53%;
+}
+ul.nchattab1 li:nth-child(2){
+	width:46%
 }
 ul.nchattab1 li {
 	float:left;
 	font-size:13px;
 	text-align:center;
+	text-transform:uppercase
 }
 ul.nchattab1 li {
 	cursor:pointer
