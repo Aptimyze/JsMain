@@ -259,7 +259,7 @@
  <field name="FAMILYINFO" type="text_general" indexed="true" stored="false" />
  <field name="EDUCATION" type="text_general" indexed="true" stored="false" />
  <field name="JOB_INFO" type="text_general" indexed="true" stored="false" />
- <field name="ANCESTRAL_ORIGIN" type="text_general" indexed="true" stored="false" />
+ <field name="ANCESTRAL_ORIGIN" type="text_general" indexed="true" stored="true" />
  <field name="LIVE_PARENTS" type="string" indexed="true" stored="false" />
  <field name="SUBSCRIPTION" type="commaDelimited" indexed="true" multivalued="true" stored="true" />
  <field name="COMPANY_NAME" type="text_general" indexed="true" stored="true" />
@@ -284,6 +284,7 @@
  <field name="OCCUPATION_GROUPING" type="int" indexed="true" stored="false" />
  <field name="STATE" indexed="true" stored="true" type="commaDelimited" multivalued="true"/>
  <field name="NATIVE_STATE" type="string" indexed="true" stored="false" />
+<field name="NATIVE_CITY" type="string" indexed="true" stored="false" />
  <field name="CITY_INDIA" indexed="true" stored="false" type="commaDelimited" multivalued="true"/>
  <field name="CITY_METRO" type="int" indexed="true" stored="false" />
  <field name="CASTE_GROUP" type="commaDelimited" indexed="true" multivalued="true" stored="false" />
