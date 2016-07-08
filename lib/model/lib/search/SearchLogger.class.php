@@ -36,10 +36,6 @@ class SearchLogger extends SearchParamters
                         {
                                 $getter = "get".$v;
                                 $vv = $SearchParamtersObj->$getter();
-				if($v=='CITY_RES')
-                                	$vv = $SearchParamtersObj->getDisplayCity();
-				elseif($v=='STATE')
-                                	$vv = $SearchParamtersObj->getDisplayState();
                                 if(isset($vv))
                                 {
         	                	$updateArr[$v]="'".$vv."'";
@@ -75,6 +71,14 @@ class SearchLogger extends SearchParamters
                 
                 /* Addition Things need to be stored */
                 $searchId = $SEARCHQUERYObj->addRecords($updateArr);
+                
+                //setting state and city in memcache which user has selected without mapping to use while inserting in table 
+                $memObject=JsMemcache::getInstance();
+                if($displayState = $SearchParamtersObj->getDisplayState())
+                    $memObject->set('stateToSet-'.$searchId,$displayState);
+                if($displayCity = $SearchParamtersObj->getDisplayCity())
+                    $memObject->set('cityToSet-'.$searchId,$displayCity);
+                
                 if($this->pid && in_array(trim($updateArr["SEARCH_TYPE"],"/'"),$this->LastSearchRequiredFor))
 		{
                         $search_LATEST_SEARCHQUERYObj = new search_LATEST_SEARCHQUERY;

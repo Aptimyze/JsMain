@@ -1040,6 +1040,13 @@ class searchActions extends sfActions
 					}
 				}
 			}
+                        
+                        //setting state and city from memcache which user has selected
+                        $memObject=JsMemcache::getInstance();
+                        if($stateToSet = $memObject->get('stateToSet-'.$searchId))
+                            $SearchParamtersObj->setSTATE($stateToSet,'',1);
+                        if($cityToSet = $memObject->get('cityToSet-'.$searchId))
+                            $SearchParamtersObj->setCITY_RES($cityToSet,'',1);
 			/* mapping groups to individual values*/
 			
 			if(strstr($loggedInProfileObj->getSUBSCRIPTION(),"T"))
