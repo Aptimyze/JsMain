@@ -180,9 +180,24 @@ while($row_jp = mysql_fetch_array($res_jp))
 			{
 				$contactid=$val;
 				$messageShardCount = ($row_jp['PROFILEID']%3) + 1;
+				if($messageShardCount==1)
+				{
+					$dbOtherMessageLogObj=$dbOtherMessageLogObj1;
+					$dbOtherDeletedMessageLogObj=$dbOtherDeletedMessageLogObj1;
+				}
+				if($messageShardCount==2)
+				{
+					$dbOtherMessageLogObj=$dbOtherMessageLogObj2;
+					$dbOtherDeletedMessageLogObj=$dbOtherDeletedMessageLogObj2;
+				}
+				if($messageShardCount==3)
+				{
+					$dbOtherMessageLogObj=$dbOtherMessageLogObj3;
+					$dbOtherDeletedMessageLogObj=$dbOtherDeletedMessageLogObj3;
+				}
 				$otherProfileIdShard=JsDbSharding::getShardNo($row_jp['PROFILEID']);
 				//inserting the messages back to message_log from delete_message_log table
-				$res=$dbOtherMessageLogObj.$messageShardCount->insertMessageLogFromDeletedLogContact($contactid);
+				$res=$dbOtherMessageLogObj->insertMessageLogFromDeletedLogContact($contactid);
 				//$sql="insert ignore into newjs.MESSAGE_LOG select * from newjs.DELETED_MESSAGE_LOG where ID='$contactid'";
 				//Query to run on both sharded servers
 				//$myDbothername=getProfileDatabaseConnectionName($row_jp['PROFILEID'],'',$mysql);
@@ -192,7 +207,7 @@ while($row_jp = mysql_fetch_array($res_jp))
 				//$res=$mysql->ExecuteQuery($sql,$myDbother) or die(mysql_error_js());
 				if($res)
 				{    
-					   $dbOtherDeletedMessageLogObj.$messageShardCount->deleteMessageLogById($contactid);
+					   $dbOtherDeletedMessageLogObj->deleteMessageLogById($contactid);
 				//	$sql="delete from newjs.DELETED_MESSAGE_LOG where ID='$contactid'";
 				//	$mysql->ExecuteQuery($sql,$myDbother) or die(mysql_error_js());
 				}
@@ -203,7 +218,7 @@ while($row_jp = mysql_fetch_array($res_jp))
 				       // $res=$mysql->ExecuteQuery($sql,$myDb) or die(mysql_error_js());
                 			if($response)
 	                		{	
-								$dbMyDeletedMessageLogObj.$messageShardCount->deleteMessageLogById($contactid);
+								$dbMyDeletedMessageLogObj->deleteMessageLogById($contactid);
         	                		//$sql="delete from newjs.DELETED_MESSAGE_LOG where ID='$contactid'";
 						//$mysql->ExecuteQuery($sql,$myDb) or die(mysql_error_js());
         			    	}
