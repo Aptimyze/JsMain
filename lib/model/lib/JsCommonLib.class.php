@@ -539,7 +539,7 @@ public static function insertConsentMessageFlag($profileid) {
                                 $CODE['Income']='gnf';
                                 $CODE['Annual Income']='gnf';
                         }
-			$ARR=explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_CITYRES()));
+			$cityArr=explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_CITYRES()));
 			if($jpartnerObj->getSTATE())
 			{
 				$stateArr=explode(",",JsCommon::remove_quot($jpartnerObj->getSTATE()));
