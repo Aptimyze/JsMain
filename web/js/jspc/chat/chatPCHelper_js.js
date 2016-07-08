@@ -1,7 +1,7 @@
 /*This file includes functions used for intermediate data transfer for JSPC chat from 
 * converse client(converse.js) to chat plugin(chat_js.js)
 */
-var listingInputData = [],listCreationDone=false;  //listing data sent to plugin-array of objects
+var listingInputData = [],listCreationDone=false,objJsChat;  //listing data sent to plugin-array of objects
 
 function readSiteCookie(name) {
     var nameEQ = escape(name) + "=",ca = document.cookie.split(';');
@@ -194,33 +194,35 @@ function invokePluginManagelisting(listObject,vcardObj,key){
     else
         listNodeObj["rosterDetails"] = listObject.attributes;
     if(key=="add_node"){
+        console.log(listCreationDone);
         if(listCreationDone == false){   
             //create list with n nodes
             listingInputData.push(listNodeObj);
-            console.log(chatConfig.Params[device].initialRosterLimit["nodesCount"]);
+            console.log("adding node before list creation");
             if(listingInputData.length == chatConfig.Params[device].initialRosterLimit["nodesCount"]){
                 key = "create_list";
                 console.log("list created after adding "+listingInputData.length+" nodes");
                 //plugin.addInList(listingInputData,key); 
-                console.log(listingInputData);
                 listCreationDone = true;
+                objJsChat.addListingInit(listingInputData);
+                console.log(listingInputData);
                 setConverseSettings("listCreationDone",true);
             }
-        }else{
+        } else{
            //add single node after list creation
             nodeArr.push(listNodeObj);
             console.log("adding single node");
             console.log(nodeArr);
             //plugin.addInList(nodeArr,key);
+            objJsChat.addListingInit(nodeArr);
         }
-    }else if(key=="update_status"){             
+    } else if(key=="update_status"){             
         //update existing user status in listing
         nodeArr.push(listNodeObj);
         console.log("updating status");
         console.log(nodeArr);
         //plugin.addInList(nodeArr,key);
-    }else if(key=="delete_node")
-    {
+    } else if(key=="delete_node"){
         //remove user from roster in listing
         nodeArr.push(listNodeObj);
         console.log("deleting node from roster");
@@ -324,14 +326,15 @@ $(document).ready(function(){
             loginStatus = "N";
         }
 
-        var objJsChat = new JsChat({
+        objJsChat = new JsChat({
         loginStatus: loginStatus,
         mainID:"#chatOpenPanel",
         //profilePhoto: "<path>",
         profileName: "bassi",
         listingTabs:chatConfig.Params[device].listingTabs
     });
-    
+
+
     objJsChat.onEnterToChatPreClick = function(){
         //objJsChat._loginStatus = 'N';
         console.log("Checking variable");

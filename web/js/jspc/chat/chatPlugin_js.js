@@ -229,17 +229,20 @@ JsChat.prototype = {
     //start:addlisting
     addListingInit: function(data) {
  var elem = this;
+ console.log("in addListingInit");
         console.log(data);
         for (var key in data) {
-
+console.log(data);
             var runID = '';
             var res = '';
 
 
             runID = data[key]["rosterDetails"]["jid"];
+            console.log(runID);
             var res = runID.split("@");
             runID = res[0];
-            $.each(data[key]["rosterDetails"]["Groups"], function(index, val) {
+            console.log("ankita");
+            $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
                 var List = '',status = data[key]["rosterDetails"]["chat_status"],username = data[key]["rosterDetails"]["fullname"];
                 List += '<li class=\"clearfix profileIcon\"';
                 List += "id=\"" + (runID + val) + "\" >";
@@ -248,6 +251,7 @@ JsChat.prototype = {
                 List += data[key]["rosterDetails"]["fullname"];
                 List += '</div>';
                 List += '</li>';
+                console.log(List);
                 $('div.' + val + ' ul').append(List);
 				//bind click on listing]
                 $("#" + username + val).on("click", function() {
