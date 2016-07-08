@@ -64,7 +64,7 @@ class registerMisActions extends sfActions {
           foreach ($registrationData['source_data'] as $key => $groupData) {
             if ($keyVal = array_search($groupData['GROUPNAME'], $sArray)) {
             } else {
-              if($i <=3){ //if key value is jan,feb or march then replace there numeric value 1,2,3 by 13,14,15
+              if($i <=3 && $formArr['range_format'] == 'Y'){ //if key value is jan,feb or march then replace there numeric value 1,2,3 by 13,14,15
                 $keyVal = $i + 12;
               }else{
                 $keyVal = $i;
@@ -72,7 +72,7 @@ class registerMisActions extends sfActions {
               $sArray[$keyVal] = $groupData['GROUPNAME'];
               $i++;
             }
-            if($groupData['REG_DATE'] <=3){ //if Registration month is jan,feb or march then replace there numeric value 1,2,3 by 13,14,15
+            if($groupData['REG_DATE'] <=3 && $formArr['range_format'] == 'Y'){ //if Registration month is jan,feb or march then replace there numeric value 1,2,3 by 13,14,15
               $groupData['REG_DATE'] = $groupData['REG_DATE'] + 12;
             }
             
