@@ -228,8 +228,11 @@ while($row=mysql_fetch_row($res))
         $nativePlace    =mysql_fetch_array($dataNativePlace);
         if(!empty($nativePlace)){
                 
-                if($nativePlace["NATIVE_CITY"] == "" || $nativePlace["NATIVE_CITY"] == null || $nativePlace["NATIVE_CITY"] == '0')
+                if(($nativePlace["NATIVE_CITY"] == "" || is_null($nativePlace["NATIVE_CITY"]) || $nativePlace["NATIVE_CITY"] == '0') && $nativePlace["NATIVE_STATE"] != ''){
                         $nativePlace["NATIVE_CITY"] = $nativePlace["NATIVE_STATE"]."000";
+                }elseif($nativePlace["NATIVE_STATE"] == '' || $nativePlace["NATIVE_STATE"] == "0"){
+                        $nativePlace["NATIVE_CITY"] = '';
+                }
                 
                 $sql_update="UPDATE SWAP SET NATIVE_STATE = '".$nativePlace["NATIVE_STATE"]."', NATIVE_CITY = '".$nativePlace["NATIVE_CITY"]."' WHERE PROFILEID=$profileid";
 
