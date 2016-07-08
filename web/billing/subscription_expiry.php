@@ -7,6 +7,7 @@ include_once ("../jsadmin/connect.inc");
 include_once ("functions.php");
 include_once("comfunc_sums.php");
 include_once("../jsadmin/ap_common.php");
+include_once(JsConstants::$docRoot."/classes/JProileUpdateLib.php");
 
 $ts=time();
 //current date
@@ -22,9 +23,9 @@ while($row=mysql_fetch_array($res))
 	$id=$row['ID'];
 	$pid=$row['PROFILEID'];
 	$profileids_arr1[]=$pid;
-	if(strstr($row['SERVEFOR'],'O'))
-		$offline_arr[$pid]=$pid;
-	elseif(($row['SERVEFOR']=='L')|| ($row['SERVEFOR']=='T'))
+	//if(strstr($row['SERVEFOR'],'O'))
+	//	$offline_arr[$pid]=$pid;
+	if(($row['SERVEFOR']=='L')|| ($row['SERVEFOR']=='T'))
 		$assisted_arr[$pid][]=$row['SERVEFOR'];
 	$sql1="UPDATE billing.SERVICE_STATUS SET ACTIVE='E' WHERE ID=$id";
 	$res1=mysql_query_decide($sql1) or die($sql.mysql_error_js());
@@ -78,18 +79,22 @@ if(count($profileids_arr)>0)
 		        $res1=mysql_query_decide($sql1) or die($sql.mysql_error_js());
 			endIntroCalls($profile);
 		}*/
-		$sql1="UPDATE newjs.JPROFILE set SUBSCRIPTION='$servefor_str' where PROFILEID='$profile' ";
-		mysql_query_decide($sql1) or die($sql1.mysql_error_js());
+		/*$sql1="UPDATE newjs.JPROFILE set SUBSCRIPTION='$servefor_str' where PROFILEID='$profile' ";
+		mysql_query_decide($sql1) or die($sql1.mysql_error_js());*/
+                $jprofileObj    =JProfileUpdateLib::getInstance();
+                $paramArr     	=array("SUBSCRIPTION"=>$servefor_str);
+                $jprofileObj->editJPROFILE($paramArr,$profile,'PROFILEID');
+
 		$count_expire_today++;
 
 		// CLEAR MEMCACHE FOR CURRENT USER
-    	$memCacheObject = JsMemcache::getInstance();
-    	if($memCacheObject){
-	        $memCacheObject->remove($profile . '_MEM_NAME');
-	        $memCacheObject->remove($profile . "_MEM_OCB_MESSAGE_API17");
-	        $memCacheObject->remove($profile . "_MEM_HAMB_MESSAGE");
-	        $memCacheObject->remove($profile . "_MEM_SUBSTATUS_ARRAY");
-	    }
+    		$memCacheObject = JsMemcache::getInstance();
+    		if($memCacheObject){
+	        	$memCacheObject->remove($profile . '_MEM_NAME');
+	        	$memCacheObject->remove($profile . "_MEM_OCB_MESSAGE_API17");
+	        	$memCacheObject->remove($profile . "_MEM_HAMB_MESSAGE");
+	        	$memCacheObject->remove($profile . "_MEM_SUBSTATUS_ARRAY");
+	    	}
 	}
 	if(count($profileids_arr)>0)
 		$proid_str=implode("','",$profileids_arr);

@@ -228,6 +228,8 @@ JsChat.prototype = {
     },
     //start:addlisting
     addListingInit: function(data) {
+        console.log("in addListingInit");
+        console.log(data);
         var elem = this;
         for (var key in data) {
             var runID = '';
@@ -251,6 +253,7 @@ JsChat.prototype = {
                 });
             });
         }
+        console.log("setting mCustomScrollbar");
         elem._chatScrollHght();
         $(elem._scrollDivId).mCustomScrollbar({
             theme: "light"

@@ -11,7 +11,7 @@ class NotificationDataPool
         {
             $varArray['PROFILEID'] = implode(",",$profiles);
             $smsTempTableObj = new $className($db);
-            $profiledetails = $smsTempTableObj->getArray($varArray,'',"",$fields="*");
+            $profiledetails = $smsTempTableObj->getArray($varArray,'',"",$fields="PROFILEID,USERNAME,SUBSCRIPTION,GENDER");
         }
         if(is_array($profiledetails))
         {

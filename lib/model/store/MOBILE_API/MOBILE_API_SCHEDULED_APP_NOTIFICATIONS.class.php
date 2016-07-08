@@ -205,7 +205,7 @@ class MOBILE_API_SCHEDULED_APP_NOTIFICATIONS extends TABLE{
                      throw new jsException("","status or messageId not provided to updatestatus in MOBILE_API.SCHEDULED_APP_NOTIFICATIONS");
                 try
                 {
-                        $sql = "UPDATE MOBILE_API.SCHEDULED_APP_NOTIFICATIONS SET SENT =:SENT WHERE MSG_ID=:MSG_ID AND SENT NOT IN('Y','L')";
+			$sql = "UPDATE MOBILE_API.SCHEDULED_APP_NOTIFICATIONS SET SENT =:SENT WHERE MSG_ID=:MSG_ID AND SENT IN('I','N','P')";
                         $res=$this->db->prepare($sql);
                         $res->bindValue(":MSG_ID",$messageId,constant('PDO::PARAM_'.$this->{'MSG_ID_BIND_TYPE'}));
                         $res->bindValue(":SENT",$status,constant('PDO::PARAM_'.$this->{'SENT_BIND_TYPE'}));

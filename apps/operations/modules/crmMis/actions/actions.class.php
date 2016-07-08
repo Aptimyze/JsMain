@@ -2058,6 +2058,7 @@ class crmMisActions extends sfActions
 	    // Submit State	
             if($formArr['submit'])
             {
+		 $this->channelKey	=$formArr['channelKey'];
 		 $notificationKey 	=$formArr['notificationKey'];
 		 $this->notificationType=$notificationKey;
                  $start_date 		=$formArr["yearValue"]."-".$formArr["monthValue"]."-01";
@@ -2070,11 +2071,11 @@ class crmMisActions extends sfActions
 		 $scheduledNotificaionArr =$appNotificationsObj->getScheduledNotifications();
 		 $scheduledNotificaionStr ="'".implode("','", $scheduledNotificaionArr)."'";
 	
-		 $dataArr =$dailyScheduledLog->getData($start_date, $end_date, $notificationKey);
+		 $dataArr =$dailyScheduledLog->getData($start_date, $end_date, $notificationKey,'',$this->channelKey);
 		 if($notificationKey)
 			$dataArrForScheduled =$dataArr;
 		 else
-			$dataArrForScheduled =$dailyScheduledLog->getData($start_date, $end_date, '', $scheduledNotificaionStr);
+			$dataArrForScheduled =$dailyScheduledLog->getData($start_date, $end_date, '', $scheduledNotificaionStr,$this->channelKey);
 		 if(count($dataArr)>0){
 			foreach($dataArr as $key=>$val){
 
@@ -2096,21 +2097,27 @@ class crmMisActions extends sfActions
 				$dataArr[$key]['TOTAL_ACKNOWLEDGED']    =$overallAcknowledged;
 
 				// push success rate%
-				$pushSuccess  				=($pushAcknowledged/$totalPushed)*100;
-				$dataArr[$key]['PUSH_SUCCESS_RATE'] 	=round($pushSuccess,0)."%";
-
+				if($pushAcknowledged){	
+					$pushSuccess  				=($pushAcknowledged/$totalPushed)*100;
+					$dataArr[$key]['PUSH_SUCCESS_RATE'] 	=round($pushSuccess,0)."%";
+				}
 				// local success rate%
-                                $localSuccess    			=($localAcknowledged/$totalLocalEligibleScheduled)*100;
-                                $dataArr[$key]['LOCAL_SUCCESS_RATE'] 	=round($localSuccess,0)."%";
-
+				if($localAcknowledged){
+	                                $localSuccess    			=($localAcknowledged/$totalLocalEligibleScheduled)*100;
+	                                $dataArr[$key]['LOCAL_SUCCESS_RATE'] 	=round($localSuccess,0)."%";
+				}
 				// overall success rate%
-                                $overallSuccess    			=($overallAcknowledged/$total)*100;
-                                $dataArr[$key]['OVERALL_SUCCESS_RATE']	=round($overallSuccess,0)."%";
-
+				if($overallAcknowledged){
+	                                $overallSuccess    			=($overallAcknowledged/$total)*100;
+        	                        $dataArr[$key]['OVERALL_SUCCESS_RATE']	=round($overallSuccess,0)."%";
+				}
 				$newData[$val['DAY']] =$dataArr[$key];					
 			}
 			unset($countTypeArr);
-                        $countTypeArr =array('TOTAL_COUNT','','','','PUSHED_TO_GCM','PUSHED_TO_IOS','TOTAL_PUSHED','ACCEPTED_BY_GCM','ACCEPTED_BY_IOS','TOTAL_ACCEPTED','PUSH_ACKNOWLEDGED','PUSH_SUCCESS_RATE','','','','TOTAL_LOCAL_ELIGIBLE','LOCAL_API_HIT_BY_DEVICE','LOCAL_SENT_TO_DEVICE','LOCAL_ACKNOWLEDGED','LOCAL_SUCCESS_RATE','','','','TOTAL_ACKNOWLEDGED','OVERALL_SUCCESS_RATE','','','','ACTIVE_LOGIN_7DAY','ACTIVE_LOGIN_1DAY');
+			if($this->channelKey=='A_I')	
+	                        $countTypeArr =array('TOTAL_COUNT','','','','PUSHED_TO_GCM','PUSHED_TO_IOS','TOTAL_PUSHED','ACCEPTED_BY_GCM','ACCEPTED_BY_IOS','TOTAL_ACCEPTED','PUSH_ACKNOWLEDGED','PUSH_SUCCESS_RATE','','','','TOTAL_LOCAL_ELIGIBLE','LOCAL_API_HIT_BY_DEVICE','LOCAL_SENT_TO_DEVICE','LOCAL_ACKNOWLEDGED','LOCAL_SUCCESS_RATE','','','','TOTAL_ACKNOWLEDGED','OVERALL_SUCCESS_RATE','','','','ACTIVE_LOGIN_7DAY','ACTIVE_LOGIN_1DAY');
+			else
+				$countTypeArr =array('TOTAL_COUNT','','','','PUSHED_TO_GCM','','','','','','PUSH_ACKNOWLEDGED','PUSH_SUCCESS_RATE');
 
 			if(!$notificationKey)
 				$this->notificationType ='All Notification';
@@ -2127,6 +2134,8 @@ class crmMisActions extends sfActions
                   $this->monthArr 	= GetDateArrays::getMonthArray();
                   $this->yearArr 	= array();
                   $dateArr 		= GetDateArrays::generateDateDataForRange('2016',($this->todayYear));
+
+		  $this->channelArr	=NotificationEnums::$channelArr;			
                   foreach(array_keys($dateArr) as $key=>$value)
                           $this->yearArr[] = array('NAME'=>$value, 'VALUE'=>$value);
 

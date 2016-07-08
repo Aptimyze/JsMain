@@ -2,6 +2,7 @@
 include_once("connect.inc");
 include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 require_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 if(authenticated($cid))
 {
 	$pid = stripslashes($pid);
@@ -40,9 +41,12 @@ if(authenticated($cid))
 				$res_act = mysql_query_decide($sql_act) or die(mysql_error_js());
 				$row_act = mysql_fetch_array($res_act);
 				//added by sriram.
-
-			 	$sql="UPDATE newjs.JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D',activatedKey=0 where PROFILEID in ($pid)";
-        	                mysql_query_decide($sql) or die("$sql".mysql_error_js());
+				
+				$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
+				$jprofileUpdateObj->updateJProfileForArchive($pid);
+						
+			 	//$sql="UPDATE newjs.JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D',activatedKey=0 where PROFILEID in ($pid)";
+        	      //          mysql_query_decide($sql) or die("$sql".mysql_error_js());
 	
 				$sql="UPDATE jsadmin.MARK_DELETE SET STATUS='D', DATE='$now' WHERE PROFILEID IN ($pid)";
 				mysql_query_decide($sql) or die("$sql".mysql_error_js());

@@ -36,7 +36,8 @@ class VariableParams
 		'1786'=> 'REGISTRATION_BASED',
 		'1804' => 'VD',
 		'1797' => 'JS_EXCLUSIVE_FEEDBACK',
-		'1795' => 'MEMBERSHIP_PROMOTIONAL'
+		'1795' => 'MEMBERSHIP_PROMOTIONAL',
+		'1835' => 'NEW_MEMBERSHIP_PAYMENT'
 	);
 	public static $discountLimitText =array("flatCap"=>"Flat","flatSmall"=>"flat","uptoCap"=>"Upto","uptoSmall"=>"upto");
     public static $mainMembershipsArr = array(
@@ -84,7 +85,7 @@ class VariableParams
     );
     public static $mainMostpopularSrvc = "P,C,NCP,ESP";
     public static $matriProfilePriceRS = "550";
-    public static $matriProfilePriceDOL = "39.99";
+    public static $matriProfilePriceDOL = "12.99";
     public static $paymentOptions = array(
         "card" => "Credit Card",
         "card2" => "Credit Card",
@@ -131,6 +132,7 @@ class VariableParams
         "Send/Receive Interests",
         "Instantly see Phone/Email",
         "Initiate Messages and Chat",
+        "Priority Customer service",
         "Show your Phone/Email to other members",
         "Four additional services"
     );
@@ -138,20 +140,23 @@ class VariableParams
         "P" => array(
             0,
             1,
-            2
+            2,
+            3
         ) ,
         "C" => array(
             0,
             1,
             2,
-            3
+            3,
+            4
         ) ,
         "ESP" => array(
             0,
             1,
             2,
             3,
-            4
+            4,
+            5
         )
     );
     public static $memTabContent = array(
@@ -376,6 +381,7 @@ class VariableParams
     public static $apiPageOnePerMembershipBenefits = array(
         'Instantly see Phone/Email of members',
         'Initiate Chat and Send Messages',
+        'Priority Customer service',
         'Publish your contacts to other members',
         'Response Booster',
         'Astro Compatibility',
@@ -385,6 +391,7 @@ class VariableParams
     );
     public static $apiPageOnePerMembershipBenefitsVisibility = array(
         "P" => array(
+            1,
             1,
             1,
             0,
@@ -399,12 +406,14 @@ class VariableParams
             1,
             1,
             1,
+            1,
             0,
             0,
             0,
             0
         ) ,
         "ESP" => array(
+            1,
             1,
             1,
             1,
@@ -417,6 +426,7 @@ class VariableParams
         "X" => array(
             1,
             1,
+            1,
             0,
             0,
             0,
@@ -427,7 +437,8 @@ class VariableParams
         "NCP" => array(
             1,
             1,
-            0,
+            1,
+            1,
             1,
             0,
             0,
@@ -438,14 +449,20 @@ class VariableParams
     public static $newApiPageOneBenefits = array(
         "Send Personalized Messages & Chat",
         "View contacts of members you like",
+        "Priority Customer service",
         "Make your contacts visible to others",
         "Response Booster",
-        "Featured Profile"
+        "Featured Profile",
+        "Astro Compatibility",
+        "We Talk For You"
     );
     public static $newApiPageOneBenefitsVisibility = array(
         "P" => array(
             1,
             1,
+            1,
+            0,
+            0,
             0,
             0,
             0
@@ -454,10 +471,16 @@ class VariableParams
             1,
             1,
             1,
+            1,
+            0,
+            0,
             0,
             0
         ) ,
         "ESP" => array(
+            1,
+            1,
+            1,
             1,
             1,
             1,
@@ -469,12 +492,28 @@ class VariableParams
             1,
             1,
             1,
-            1
+            1,
+            1,
+            0,
+            0
+        ) ,
+        "D" => array(
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0
         ) ,
         "FREE" => array(
             1,
             1,
+            0,
             1,
+            0,
+            0,
             0,
             0
         )
@@ -485,7 +524,8 @@ class VariableParams
         "Your advisor interacts with you to know your expectations",
         "Then utilizes his expertise to shortlist potential matches for you",
         "Connects with you to find the most suitable matches for you",
-        "Introduces you to the chosen matches & arranges meetings"
+        "Introduces you to the chosen matches & arranges meetings",
+        "Priority Customer service"
     );
     public static $DOL_CONV_RATE = 60;
     

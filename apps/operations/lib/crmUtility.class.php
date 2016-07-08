@@ -336,15 +336,15 @@ class crmUtility
                         $flag=0;
                 return $flag;
         }
-	public function getCurlData($profileid,$username,$cid)
+	public function getCurlData($profileid,$username='',$cid)
 	{	
-       		$SITE_URL               ='http://crm.jeevansathi.com';//sfConfig::get("app_site_url");
+		$SITE_URL   =JsConstants::$crmUrl;
 	       
 	       	$tuCurl = curl_init();
-		$uname=urlencode($username);
-        	curl_setopt($tuCurl, CURLOPT_URL, "$SITE_URL/crm/show_profile.php?profileid=$profileid&username=$uname&cid=$cid");
+		//$uname=urlencode($username);
+        	//curl_setopt($tuCurl, CURLOPT_URL, "$SITE_URL/crm/show_profile.php?profileid=$profileid&username=$uname&cid=$cid");
+		curl_setopt($tuCurl, CURLOPT_URL,"$SITE_URL/operations.php/commoninterface/ShowProfileStats?cid=$cid&profileid=$profileid&curlReq=1");
         	curl_setopt($tuCurl, CURLOPT_RETURNTRANSFER, 1);
-        	//curl_setopt($tuCurl, CURLOPT_GET, 1);
         	$tuData = curl_exec($tuCurl);
         	curl_close($tuCurl);
         	return $tuData;
