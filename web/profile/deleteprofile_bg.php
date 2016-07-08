@@ -92,8 +92,6 @@ if(count($myDbarr))
 	foreach($myDbarr as $key=>$value)
 	{
 		$myDb=$myDbarr[$key];
-		$sql="select NITESH 1 START;";
-		mysql_query($sql,$myDb);
 		
 		if($i==1)
 		{
@@ -118,8 +116,6 @@ if(count($myDbarr))
 		}
 		
 		$dbMessageLogObj->startTransaction();
-		$sql="select NITESH 1  END;";
-		mysql_query($sql,$myDb);
 		$sql="BEGIN"; 
 		mysql_query($sql,$myDb) or mysql_error_with_mail(mysql_error($myDb).$sql);
 
@@ -159,6 +155,9 @@ delFromTables('DELETED_OFFLINE_MATCHES','OFFLINE_MATCHES',$mainDb,$profileid,"PR
 
 delFromTables('DELETED_OFFLINE_NUDGE_LOG','OFFLINE_NUDGE_LOG',$mainDb,$profileid,"SENDER",'jsadmin');
 delFromTables('DELETED_OFFLINE_NUDGE_LOG','OFFLINE_NUDGE_LOG',$mainDb,$profileid,"RECEIVER",'jsadmin');
+
+delFromTables('DELETED_VIEW_CONTACTS_LOG','VIEW_CONTACTS_LOG',$mainDb,$profileid,"VIEWER",'jsadmin');
+delFromTables('DELETED_VIEW_CONTACTS_LOG','VIEW_CONTACTS_LOG',$mainDb,$profileid,"VIEWED",'jsadmin');
 /****  Transaction for master tables started here . ****/
 
 
@@ -177,11 +176,7 @@ foreach($myDbarr as $key=>$value)
 	if($iii==3)
 		$dbMessageLogObj=$dbMessageLogObj3;
 		
-	$sql="select NITESH 2 START;";
-	mysql_query($sql,$myDb);
 	$dbMessageLogObj->commitTransaction();
-	$sql="select NITESH 2 END;";
-	mysql_query($sql,$myDb);
 	$sql="COMMIT";
 	mysql_query($sql,$myDb) or mysql_error_with_mail(mysql_error($myDb).$sql);
 
@@ -391,8 +386,6 @@ foreach($myDbarr as $key=>$value)
 			
 		}
 	}
-	$sql="select NITESH 3 START;";
-	mysql_query($sql,$myDb);
 	if($k==1)
 		$dbDeletedMessagesObj=$dbDeletedMessagesObj1;
 	if($k==2)
@@ -401,8 +394,6 @@ foreach($myDbarr as $key=>$value)
 		$dbDeletedMessagesObj=$dbDeletedMessagesObj3;
 	
 	$result=$dbDeletedMessagesObj->getSenderMessages($profileid);
-	$sql="select NITESH 3 END;";
-	mysql_query($sql,$myDb);
 	$k++;
 	//$sql = "SELECT RECEIVER, SEEN FROM DELETED_MESSAGE_LOG WHERE SENDER = '$profileid' AND TYPE = 'R' AND IS_MSG = 'Y'";
 	//$result=mysql_query($sql,$myDb) or mysql_error_with_mail(mysql_error($myDb).$sql);
@@ -457,33 +448,21 @@ function delFromTables($delTable,$selTable,$db,$profileid,$whereStrLabel,$databa
 		{
 			$idsArr[]=$myrow["ID"];
 		}*/
-		$sql="select NITESH 4 START;";
-		mysql_query($sql,$db);
 		$idsArr=$dbMessageLogObj->getAllMessageIdLog($profileid,$whereStrLabel);
-		$sql="select NITESH 4 END;";
-		mysql_query($sql,$db);
 		
 		if(is_array($idsArr))
 		{
 			//$idStr=implode(",",$idsArr);
-			$sql="select NITESH 5 START;";
-			mysql_query($sql,$db);
 			$result=$dbDeletedMessagesObj->insertIntoDeletedMessages($idsArr);
-			$sql="select NITESH 5 END;";
-			mysql_query($sql,$db);
 		
 			//$sql="INSERT IGNORE INTO $databaseName.DELETED_MESSAGES SELECT * FROM $databaseName.MESSAGES WHERE ID IN ($idStr)";
 			//mysql_query($sql,$db) or ($skip=1);
 			
 			if($result)
 			{
-				$sql="select NITESH 6 START;";
-				mysql_query($sql,$db);
 		
 				$res=$dbMessageObj->deleteMessages($idsArr);
 				
-				$sql="select NITESH 6 END;";
-				mysql_query($sql,$db);
 		
 				if(!$res)
 						mysql_error_with_mail(mysql_error($db)."deleteMessages");
@@ -497,23 +476,15 @@ function delFromTables($delTable,$selTable,$db,$profileid,$whereStrLabel,$databa
 			}
 
 		}
-		$sql="select NITESH 7 START;";
-		mysql_query($sql,$db);
 		
 		$res=$dbDeletedMessageLogObj->insert($profileid,$whereStrLabel);
-		$sql="select NITESH 7 END;";
-		mysql_query($sql,$db);
 		
 		//$sql="INSERT IGNORE INTO $databaseName.$delTable SELECT * FROM $databaseName.$selTable WHERE $whereStrLabel='$profileid'";
 		//mysql_query($sql,$db) or ($skip=1);
 		if ($res) {
 			
-			$sql="select NITESH 8 START;";
-			mysql_query($sql,$db);
 		
 				$response=$dbMessageLogObj->deleteMessageLog($profileid,$whereStrLabel);
-				$sql="select NITESH 8 END;";
-				mysql_query($sql,$db);
 		
 				if(!$response)
 					$skip=1;
@@ -532,7 +503,6 @@ function delFromTables($delTable,$selTable,$db,$profileid,$whereStrLabel,$databa
 			} 
 				$sql = "DELETE FROM $databaseName.$selTable WHERE $whereStrLabel='$profileid'";
 				mysql_query($sql, $db) or ($skip = 1);
-			
 		}
 	}
 	
