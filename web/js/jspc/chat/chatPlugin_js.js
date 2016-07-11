@@ -252,7 +252,10 @@ JsChat.prototype = {
                 List += data[key]["rosterDetails"]["fullname"];
                 List += '</div>';
                 console.log(runID+" is "+status);
-                List += '<div class="fr">'+status+'</div>';
+                if(status == "online")
+                {
+                    List += '<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>';
+                }
                 List += '</li>';
                 //console.log(List);
                 $('div.' + val + ' ul').append(List);
