@@ -25,6 +25,7 @@
 		$("#RAMainTable").hide();
 		$("#dateError").show();
 		$("#dateError2").hide();
+		$("#dateError3").hide();
 
 			return;
 		}
@@ -34,6 +35,7 @@
 		$("#RAMainTable").hide();
 		$("#dateError2").show();
 		$("#dateError").hide();
+		$("#dateError3").hide();
 
 		return;
 		}
@@ -41,6 +43,7 @@
 		$("#RAMainTable").show();
 		$("#dateError2").hide();
 		$("#dateError").hide();
+		$("#dateError3").hide();
 
 
 		$("#timePeriodText").text('Selected Time Period '+startDate+' To '+ endDate);
@@ -54,6 +57,11 @@
 				{	
 					var mainDiv=$("#RAMainTable");
 					mainDiv.find('.RARowHtml').remove();
+					if(response=='null'){
+							$("#dateError3").show();
+							return;
+
+					}
 					var jObject=JSON.parse(response);
 					if(response)
 					{
@@ -64,7 +72,10 @@
 							mainDiv.find('tr:last').after(htmlString);
 						}
 
-					}
+					} 
+					
+					
+
 				}	
 				catch(e)
 				{
@@ -133,6 +144,9 @@
 </tr>
 
 </table>
+
+<div id="dateError3"  style="display:none;color:red;text-align: center;">No records found for the given duration.</div>
+
 </br>
 </br>
 
