@@ -205,7 +205,10 @@ JsChat.prototype = {
         TabsOpt += '<div class="showtab1 js-htab"> ';
         for (var i = 0; i < obj["tab1"]["groups"].length; i++) {
             TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + "\">";
-            TabsOpt += "<div class=\"f12 fontreg nchatbdr2\"><p class=\"nchatt1 fontreg pl15\">" + obj["tab1"]["groups"][i]["group_name"] + "</p></div>";
+            TabsOpt += "<div class=\"f12 fontreg nchatbdr2";
+            if(obj["tab1"]["groups"][i]["show_group_name"]==false)
+                TabsOpt += " disp-none";
+            TabsOpt +="\"><p class=\"nchatt1 fontreg pl15\">" + obj["tab1"]["groups"][i]["group_name"] + "</p></div>";
             TabsOpt += "<ul class=\"chatlist\"></ul></div>";
 
         }
@@ -235,13 +238,13 @@ JsChat.prototype = {
         //console.log(data);
         var elem = this;
         for (var key in data) {
-            var runID = '';
-            var res = '';
+            var runID = '',res = '';
             runID = data[key]["rosterDetails"]["jid"];
-            var res = runID.split("@");
+            res = runID.split("@");
             runID = res[0];
             $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
-                var List = '',status = data[key]["rosterDetails"]["chat_status"],username = data[key]["rosterDetails"]["fullname"];
+                var List = '',status = "",username = data[key]["rosterDetails"]["fullname"];
+                status = data[key]["rosterDetails"]["chat_status"];
                 List += '<li class=\"clearfix profileIcon\"';
                 List += "id=\"" + (runID + val) + "\" >";
                 List += "<img id=\"pic_" + runID + "_" +val + "\" src=\"images/pic1.jpg\" class=\"fl\">";

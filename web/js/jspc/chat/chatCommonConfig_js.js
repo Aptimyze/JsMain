@@ -20,22 +20,24 @@ chatConfig.Params = {
 									"id":"dpp",
 									"group_name":"Desired Partner Matches",
 									//"order_id":0,
-									"show_group_name":true
+									"show_group_name":true,
+									"hide_offline_users":true
 								},
 								{
 									"id":"eoi_R",
 									"group_name":"Interest Received",
 									//"order_id":1,
-									"show_group_name":true
+									"show_group_name":true,
+									"hide_offline_users":true
 								},
 								{
 									"id":"shortlisted",
 									"group_name":"Shortlisted Members",
 									//"order_id":2,
-									"show_group_name":true
+									"show_group_name":true,
+									"hide_offline_users":true
 								}
-							],
-							"hide_offline_users":true
+							]
 						},
 						"tab2":{
 							"tab_name":"Accepted",
@@ -44,10 +46,10 @@ chatConfig.Params = {
 									"id":"accepted_by_me",
 									"group_name":"Accepted By Me",
 									//"order_id":0,
-									"show_group_name":false
+									"show_group_name":false,
+									"hide_offline_users":false
 								}
-							],
-							"hide_offline_users":false
+							]
 						}
 					},
                     initialRosterLimit:{"nodesCount":3,"timeInterval":45000} //config for initial roster to be sent to plugin to create list initially				
