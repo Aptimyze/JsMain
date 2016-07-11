@@ -100,7 +100,7 @@ class MembershipAPIResponseHandler {
             $this->lowPriorityBannerDisplayCheck = false;
         }
         
-        $this->PayUOrderProcess = $request->getParameter('PayUOrderProcess');
+        // $this->PayUOrderProcess = $request->getParameter('PayUOrderProcess');
         $this->generateNewIosOrder = $request->getParameter('generateNewIosOrder');
         $this->AppleOrderProcess = $request->getParameter('AppleOrderProcess');
         $this->testBilling = $request->getParameter('testBilling');
@@ -243,9 +243,9 @@ class MembershipAPIResponseHandler {
                 $this->memHandlerObj->trackMembershipProgress($this->userObj, $this->source, $this->tab, $this->pgNo, $this->device, $this->user_agent, $this->allMemberships, $this->mainMembership, $this->vasImpression, 0, 0, $pTab, $this->trackType, $this->specialActive, $this->discPerc, $this->discountActive);
             }
         } 
-        elseif ($this->PayUOrderProcess == 1) {
-            $output = $this->handlePayUOrderProcessing($request);
-        } 
+        // elseif ($this->PayUOrderProcess == 1) {
+        //     $output = $this->handlePayUOrderProcessing($request);
+        // } 
         elseif ($this->getMembershipMessage == 1) {
             $output = $this->generateOCBMessageResponse();
         } 
@@ -486,7 +486,7 @@ class MembershipAPIResponseHandler {
                 $arr = VariableParams::$eValuePlusAddOns;
             }
             foreach ($arr as $key => $val) {
-                if ($this->mainMemDur == '1188') {
+                if ($this->mainMemDur == '1188' || $this->mainMemDur == 'L') {
                     $dur = '12';
                 } 
                 else {
@@ -572,7 +572,7 @@ class MembershipAPIResponseHandler {
         if (count($this->vasServices) == 1 && empty($this->mainMem))
             $this->vasServices[0]['remove_text'] = NULL;
         
-        if (isset($this->mainServices) && ! empty($this->mainServices)) {
+        if (isset($this->mainServices) && !empty($this->mainServices)) {
             $finalCartPrice = $this->mainServices['price'] + $this->totalVASPrice;
             $finalCartDiscount = $this->mainServices['discount_given'] + $this->totalVASDiscount;
             $this->mainServices['price'] = $this->mainServices['display_price'];
@@ -1227,6 +1227,7 @@ class MembershipAPIResponseHandler {
             'couponID' => $this->couponCode,
             'device' => $this->device,
             'tracking_params' => $tracking_params,
+            'userProfile' => $this->profileid,
             'backendLink' => array(
                 'fromBackend' => $this->fromBackend,
                 'checksum' => $this->profilechecksum,
@@ -1257,7 +1258,7 @@ class MembershipAPIResponseHandler {
     
     public function generateChequePickupResponse($request) {
         $payHandlerObj = new PaymentHandler();
-        $prefCities = $payHandlerObj->getNearByCities();
+        $prefCities = $payHandlerObj->getNearByCities('Y');
         $pickupParams = VariableParams::$apiPageSixParams;
         
         $startDate = date('Y-m-d', time() + 1 * 86400);

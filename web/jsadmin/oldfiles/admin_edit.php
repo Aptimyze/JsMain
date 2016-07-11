@@ -3,6 +3,7 @@
 include("connect.inc");
 include(JsConstants::$docRoot."/commonFiles/flag.php");
 include("time.php");
+mail("kunal.test02@gmail.com","jsadmin/oldfile/admin_edit.php in USE",print_r($_SERVER,true));
 global $screen_time;                                    
 if(authenticated($cid))
 {

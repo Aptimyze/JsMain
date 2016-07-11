@@ -1066,135 +1066,210 @@ class MembershipHandler
         }
     }
     
-    public function setTrackingPriceAndDiscount($userObj, $profileid, $mainMembership, $allMemberships, $currency, $device='desktop') {
+    public function setTrackingPriceAndDiscount($userObj, $profileid, $mainMembership, $allMemberships, $currency, $device='desktop', $couponCode, $backendRedirect= NULL, $profileCheckSum = NULL, $reqid = NULL) {
         $servObj = new billing_SERVICES();
-        $mems = explode(',', $allMemberships);
-        $tempMem = @preg_split('/(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)/i', $mainMembership);
-        $mainMem = $tempMem[0];
-        
-        if (strpos($mainMem, "L")) {
-            $mainMemDur = "L";
-            $mainMem = substr($mainMem, 0, -1);
-        } 
-        else {
-            $mainMemDur = $tempMem[1];
+        // Get vasImpression from diff of allMemberships and mainMembership
+        if (empty($mainMembership)) {
+            $vasImpression = implode(",", array_diff(explode(",", $allMemberships), array()));
+        } else {
+            $vasImpression = implode(",", array_diff(explode(",", $allMemberships), explode(",", $mainMembership)));
         }
-        list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code) = $this->getUserDiscountDetailsArray($userObj);
-        if ($specialActive == 1 || $discountActive == 1 || $renewalActive == 1 || $fest == 1) {
-            if ($renewalActive == 1) {
+        if (isset($mainMembership) && !empty($mainMembership)) {
+            $tempMem = @preg_split('/(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)/i', $mainMembership);
+            $mainMem = $tempMem[0];
+            if (strpos($mainMem, "L")) {
+                $mainMemDur = "L";
+                $mainMem = substr($mainMem, 0, -1);
+            } 
+            else {
+                $mainMemDur = $tempMem[1];
+            }
+            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code) = $this->getUserDiscountDetailsArray($userObj, "L");
+            if ($specialActive == 1 || $discountActive == 1 || $renewalActive == 1 || $fest == 1) {
                 if ($userObj->userType == 4 || $userObj->userType == 6) {
                     $discPerc = $renewalPercent;
-                }
-            } 
-            else if ($specialActive == 1) {
-                $vdDiscArr = $this->getSpecialDiscountForAllDurations($profileid);
-                $vdDisc = $vdDiscArr[$mainMem];
-                if (in_array($mainMemDur, array_keys($vdDisc))) {
-                    $discPerc = $vdDisc[$mainMemDur];
                 } 
-                else {
+                else if ($specialActive == 1) {
+                    $vdDiscArr = $this->getSpecialDiscountForAllDurations($profileid);
+                    $vdDisc = $vdDiscArr[$mainMem]; 
+                    if (in_array($mainMemDur, array_keys($vdDisc))) {
+                        $discPerc = $vdDisc[$mainMemDur];
+                    } 
+                    else if ($fest == 1) {
+                        $discPerc = $vdDisc[$mainMemDur];
+                    } 
+                    else {
+                        $discPerc = 0;
+                    }
+                } 
+                else if ($discountActive == 1) {
+                    $discPerc = $this->getDiscountOffer($mainMembership);
+                } 
+                else if ($fest == 1 && $mainMem != "X") {
+                    $festOffrLookup = new billing_FESTIVE_OFFER_LOOKUP();
+                    $perc = $festOffrLookup->getPercDiscountOnService($mainMembership);
+                    unset($festOffrLookup);
+                    if ($renewalActive == 1) {
+                        $discPerc = $renewalPercent;
+                    } 
+                    else {
+                        $discPerc = $perc;
+                    }
+                }
+                if ($fest == 1 && $mainMem == "X" && $specialActive != 1 && $renewalActive != 1) {
                     $discPerc = 0;
                 }
-            } 
-            else if ($discountActive == 1) {
-                $discPerc = $this->getDiscountOffer($mainMem . $mainMemDur);
-            } 
-            else if ($fest == 1 && $mainMem != "X") {
-                $festOffrLookup = new billing_FESTIVE_OFFER_LOOKUP();
-                $perc = $festOffrLookup->getPercDiscountOnService($mainMem . $mainMemDur);
-                unset($festOffrLookup);
-                if (!empty($perc) && $perc > 0) {
-                    $discPerc = $perc;
-                }
-            } 
-            else if ($fest == 1 && $mainMem == "X") {
-                $discPerc = 0;
             }
+            $mems = explode(",", $allMemberships);
+        } 
+        else if (isset($vasImpression) && !empty($vasImpression)) {
+            $allMemberships = $vasImpression;
+            $mems = explode(",", $allMemberships);
         }
         
+        if (!empty($backendRedirect) && $backendRedirect == 1) {
+            $profileCheckSumArray = explode("i", $profileCheckSum);
+            $profileid = $profileCheckSumArray[1];
+            $idCheckSum = $reqid;
+            $idCheckSumArray = explode("i", $idCheckSum);
+            $idBackend = $idCheckSumArray[1];
+            if (md5($idBackend) == $idCheckSumArray[0]) {
+                list($allMemberships, $discountBackend, $profileid) = $this->handleBackendCase($idBackend, $profileid);
+            }
+            $discPerc = $discountBackend;
+            if ($allMemberships) {
+                $memArray = explode(",", $allMemberships);
+                for ($p = 0; $p < count($memArray); $p++) {
+                    if (strpos($memArray[$p], "main") !== false) {
+                        $subMem = substr($memArray[$p], 4);
+                        $tempMem = @preg_split('/(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)/i', $subMem);
+                        $mainMem = $tempMem[0];
+                        if (strpos($mainMem, "L")) {
+                            $mainMemDur = "L";
+                            $mainMem = substr($mainMem, 0, -1);
+                        } 
+                        else {
+                            $mainMemDur = $tempMem[1];
+                        }
+                    }
+                }
+            }
+            if ($mainMem == "E") {
+                $mainMem = "ESP";
+            }
+            $remainingServices = array_splice($memArray, 1);
+            $mainMembership = $mainMem . $mainMemDur;
+            $vasImpression = implode(",", $remainingServices);
+            foreach ($remainingServices as $key => $val) {
+                if (empty($val) || $val == NULL) {
+                    $emptyRemainingServicesFlag = 1;
+                }
+            }
+            if (!$emptyRemainingServicesFlag) {
+                $allMemberships = $mainMem . $mainMemDur . "," . implode(",", $remainingServices);
+            } 
+            else {
+                $allMemberships = $mainMem . $mainMemDur;
+            }
+            $mems = explode(',', $allMemberships);
+        }
+        $allMemberships = $allMemberships;
         if ($currency == 'RS') {
             $price = 0;
             $totalCartPrice = 0;
             $discountCartPrice = 0;
-            if (strpos($mainMembership, 'ESP') === FALSE && strpos($mainMembership, 'NCP') === FALSE) {
-                $servDetails = $servObj->fetchServiceDetailForRupeesTrxn($mems, $device);
-                foreach ($mems as $key => $val) {
-                    $price = $servDetails[$val]['PRICE'];
-                    if ($discountActive == 1) {
-                        if ($this->getDiscountOffer($mainMem . $mainMemDur)) {
-                            $discPerc = $this->getDiscountOffer($val);
+            if (strpos($mainMembership, 'ESP') === FALSE) {
+                if (is_array($mems)) {
+                    $servDetails = $servObj->fetchServiceDetailForRupeesTrxn($mems, $device);
+                    foreach ($mems as $key => $val) {
+                        $price = $servDetails[$val]['PRICE'];
+                        if ($discountActive == 1 && $backendRedirect != 1) {
+                            if ($this->getDiscountOffer($mainMembership)) {
+                                $discPerc = $this->getDiscountOffer($val);
+                            }
                         }
+                        if (!empty($discPerc) && $discPerc != 0) {
+                            $discountCartPrice+= round($price * ($discPerc / 100) , 2);
+                        } 
+                        else {
+                            $discountCartPrice+= 0;
+                        }
+                        $totalCartPrice+= $price - round($price * ($discPerc / 100), 2);
                     }
-                    if (!empty($discPerc) && $discPerc != 0) {
-                        $discountCartPrice+= ceil($price * ($discPerc / 100));
-                    } 
-                    else {
-                        $discountCartPrice+= 0;
-                    }
-                    $totalCartPrice+= $price - $price * ($discPerc / 100);
                 }
             } 
             else {
                 $servDetails = $servObj->fetchServiceDetailForRupeesTrxn($mainMembership, $device);
                 $price = $servDetails['PRICE'];
-                if ($discountActive == 1) {
+                if ($discountActive == 1 && $backendRedirect != 1) {
                     if ($this->getDiscountOffer($mainMembership)) {
                         $discPerc = $this->getDiscountOffer($mainMembership);
                     }
                 }
                 if (!empty($discPerc) && $discPerc != 0) {
-                    $discountCartPrice+= ceil($price * ($discPerc / 100));
+                    $discountCartPrice+= round($price * ($discPerc / 100) , 2);
                 } 
                 else {
                     $discountCartPrice+= 0;
                 }
-                $totalCartPrice+= $price - $price * ($discPerc / 100);
+                $totalCartPrice+= $price - round($price * ($discPerc / 100), 2);
             }
         } 
         else {
             $price = 0;
             $totalCartPrice = 0;
             $discountCartPrice = 0;
-            if (strpos($mainMembership, 'ESP') === FALSE && strpos($mainMembership, 'NCP') === FALSE) {
+            if (strpos($mainMembership, 'ESP') === FALSE) {
                 $servDetails = $servObj->fetchServiceDetailForDollarTrxn($mems, $device);
                 foreach ($mems as $key => $val) {
                     $price = $servDetails[$val]['PRICE'];
-                    if ($discountActive == 1) {
-                        if ($this->getDiscountOffer($mainMem . $mainMemDur)) {
+                    if ($discountActive == 1 && $backendRedirect != 1) {
+                        if ($this->getDiscountOffer($mainMembership)) {
                             $discPerc = $this->getDiscountOffer($val);
                         }
                     }
                     if (!empty($discPerc) && $discPerc != 0) {
-                        $discountCartPrice+= ceil($price * ($discPerc / 100));
+                        $discountCartPrice+= round($price * ($discPerc / 100) , 2);
                     } 
                     else {
                         $discountCartPrice+= 0;
                     }
-                    $totalCartPrice+= $price - $price * ($discPerc / 100);
+                    $totalCartPrice+= $price - round($price * ($discPerc / 100), 2);
                 }
             } 
             else {
                 $servDetails = $servObj->fetchServiceDetailForDollarTrxn($mainMembership, $device);
                 $price = $servDetails['PRICE'];
-                if ($discountActive == 1) {
+                if ($discountActive == 1 && $backendRedirect != 1) {
                     if ($this->getDiscountOffer($mainMembership)) {
                         $discPerc = $this->getDiscountOffer($mainMembership);
                     }
                 }
                 if (!empty($discPerc) && $discPerc != 0) {
-                    $discountCartPrice+= ceil($price * ($discPerc / 100));
+                    $discountCartPrice+= round($price * ($discPerc / 100) , 2);
                 } 
                 else {
                     $discountCartPrice+= 0;
                 }
-                $totalCartPrice+= $price - $price * ($discPerc / 100);
+                $totalCartPrice+= $price - round($price * ($discPerc / 100), 2);
             }
         }
+        
+        if (!empty($couponCode)) {
+            $validation = $this->validateCouponCode($mainMembership, $couponCode);
+            if (is_numeric($validation) && !empty($validation) && $validation > 0) {
+                $additionalDiscount = round($totalCartPrice * ($validation / 100) , 2);
+                $totalCartPrice-= $additionalDiscount;
+                $discountCartPrice+= $additionalDiscount;
+            }
+        }
+
         return array(
             $totalCartPrice,
             $discountCartPrice
         );
     }
+    
     // Get OCB Message
     public function getOCBTextMessage($profileid, $discountType, $discPerc='',$expiry_date='', $festiveActive='') {
         $vdodObj = new VariableDiscount();
@@ -1642,8 +1717,8 @@ class MembershipHandler
         //get dpp matches count for profile
         $loggedInProfileObj = Operator::getInstance();
         $loggedInProfileObj->getDetail($profileid,'PROFILEID','*');
-        $dppDetails = SearchCommonFunctions::getMyDppMatches("",$loggedInProfileObj,"","","","","","","","onlyCount");
-        $profileDetails['MATCHES'] = $dppDetails['CNT'];
+        // $dppDetails = SearchCommonFunctions::getMyDppMatches("",$loggedInProfileObj,"","","","","","","","onlyCount");
+        // $profileDetails['MATCHES'] = $dppDetails['CNT'];
         unset($dppDetails);
         unset($loggedInProfileObj);
 

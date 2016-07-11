@@ -36,7 +36,7 @@
 	<!--start:slider box-->
         <div class="srpbg1 color11 clusterView cursp">
 			<div class="showedu srppad8 disp-tbl">
-				<div class="disp-cell vmid"><i class="fl sprite2 srpimg1"></i></div>
+				<div class="disp-cell vmid"><i id="{clusterName}" class="fl sprite2 srpimg1"></i></div>
 				<div class="disp-cell vmid f13 uppercase bold pl15 srpwid6">{clusterName}</div>
 			</div>
         </div>
