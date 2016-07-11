@@ -52,6 +52,6 @@ chatConfig.Params = {
 							]
 						}
 					},
-                    initialRosterLimit:{"nodesCount":3,"timeInterval":45000} //config for initial roster to be sent to plugin to create list initially				
+                    initialRosterLimit:{"nodesCount":3,"timeInterval":40000} //config for initial roster to be sent to plugin to create list initially				
 				}
 			};

@@ -309,6 +309,14 @@ function logoutChat(){
     eraseCookie("chatAuth");
 }
 
+function invokePluginReceivedMsgHandler(msgObj)
+{
+    console.log("invokePluginReceivedMsgHandler");
+    console.log(msgObj);
+    if(msgObj["message"] != "")
+        objJsChat._appendRecievedMessage(msgObj["message"],msgObj["fullname"],msgObj["msgid"]); 
+}
+
 $(document).ready(function(){
     var checkDiv = $("#chatOpenPanel").length;
     if(showChat && (checkDiv != 0)){

@@ -734,6 +734,8 @@ JsChat.prototype = {
     },
     //add meesage recieved from another user
     _appendRecievedMessage: function(message, userId, uniqueId) {
+        console.log("in _appendRecievedMessage");
+        console.log("to "+userId);
         //if chat box is not opened
         if ($('chat-box[user-id="' + userId + '"]').length == 0) {
             $(".profileIcon[id^='" + userId + "']")[0].click();
