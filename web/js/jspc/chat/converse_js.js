@@ -29732,7 +29732,7 @@ return Backbone.BrowserStorage;
                         $el = $('<div id="conversejs">');
                         //console.log($el);
                         //console.log("ankita_append custom converse templates");
-                        $('body').append($el);
+                        //$('body').append($el);
                     }
                     //console.log(converse.templates.chats_panel());
                     $el.html(converse.templates.chats_panel());
