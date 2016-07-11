@@ -100,6 +100,19 @@ class ApiIgnoreProfileV1Action extends sfActions
 						$this->m_arrOut["buttondetails"] = $button;
 					$this->m_iResponseStatus = ResponseHandlerConfig::$SUCCESS;
 					$this->m_arrOut=array_merge($this->m_arrOut,array('status'=>"0",'message'=>null,'button_after_action'=>$button));
+					//Entry in Chat Roster
+					try {
+						$producerObj = new Producer();
+						if ($producerObj->getRabbitMQServerConnected()) {
+							$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'UNBLOCK', 'body' => array('senderid' => $this->loginProfile->getPROFILEID(), 'receiverid' => $this->ignoreProfile->getPROFILEID(), 'senderusername' => $this->loginProfile->getUSERNAME(), 'receiverusername' => $this->ignoreProfile->getUSERNAME())), 'redeliveryCount' => 0);
+							$producerObj->sendMessage($chatData);
+						}
+						unset($producerObj);
+					} catch (Exception $e) {
+						throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
+					}
+
+					//End
 					break;
 
 				}
@@ -132,6 +145,19 @@ class ApiIgnoreProfileV1Action extends sfActions
 					$buttonDetails = ButtonResponse::buttonDetailsMerge($responseArray);
 					$actionDetails = ButtonResponse::actionDetailsMerge(array("notused"=>1));
 					$this->m_arrOut=array('status'=>"1",'message'=>$this->getIgnoreMessage(),'button_after_action'=>$button,'buttondetails'=>$buttonDetails);
+					//Entry in Chat Roster
+					try {
+						$producerObj = new Producer();
+						if ($producerObj->getRabbitMQServerConnected()) {
+							$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'BLOCK', 'body' => array('senderid' => $this->loginProfile->getPROFILEID(), 'receiverid' => $this->ignoreProfile->getPROFILEID(), 'senderusername' => $this->loginProfile->getUSERNAME(), 'receiverusername' => $this->ignoreProfile->getUSERNAME())), 'redeliveryCount' => 0);
+							$producerObj->sendMessage($chatData);
+						}
+						unset($producerObj);
+					} catch (Exception $e) {
+						throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
+					}
+
+					//End
 					break;
 				}
 				case self::STATUS : 
