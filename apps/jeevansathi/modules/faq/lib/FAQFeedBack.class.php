@@ -153,8 +153,16 @@ class FAQFeedBack
 				$this->m_bValidForm = true;
 				
 				$this->InsertFeedBack();
-			//	$this->FwdMail();
-				return true;
+				
+
+			if($this->m_szCategory!=FeedbackEnum::CAT_ABUSE)
+			{	
+				$this->FwdMail();
+				
+			}
+
+			return true;
+
 
 			}
 			else
