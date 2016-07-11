@@ -72,7 +72,7 @@ class FAQFeedBack
 
 		$loginProfile=LoggedInProfile::getInstance();
 		if(!$reasonNew || !$loginProfile->getPROFILEID() || !$otherProfileId) return;
-		(new REPORT_ABUSE_LOG())->insertReport($loginProfile->getPROFILEID(),$otherProfileId,$categoryNew,$reasonNew);
+		(new REPORT_ABUSE_LOG())->insertReport($loginProfile->getPROFILEID(),$otherProfileId,$categoryNew,$otherReason);
 
 				// block for blocking the reported abuse added by Palash
 
