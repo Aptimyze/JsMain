@@ -248,7 +248,7 @@ JsChat.prototype = {
                 List += '<div class="fl f14 fontlig pt15 pl18">';
                 List += data[key]["rosterDetails"]["fullname"];
                 List += '</div>';
-                console.log(runID+status);
+                console.log(runID+" is "+status);
                 List += '<div class="fr">'+status+'</div>';
                 List += '</li>';
                 //console.log(List);
