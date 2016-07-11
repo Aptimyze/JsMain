@@ -13,7 +13,7 @@ class REPORT_ABUSE_LOG extends TABLE
 	{
 		try
 		{
-			if(!$reporter || !$reportee || !$reason)
+			if(!$reporter || !$reportee || !$category)
 				return;
 			$timeNow=(new DateTime)->format('Y-m-j H:i:s');
 			$sql="INSERT INTO feedback.REPORT_ABUSE_LOG(REPORTER,REPORTEE,OTHER_REASON,DATE,CATEGORY) VALUES(:REPORTER,:REPORTEE,:REASON,:DATE,:CATEGORY)";
