@@ -362,6 +362,11 @@ $(document).ready(function(){
         logoutChat();
     }
 
+    objJsChat.onSendingMessage = function(){
+        console.log("Helper file onSendingMessage");
+        converse.ChatBoxView.onMessageSubmitted("hi");
+    }
+
     objJsChat.start();
    }
 });

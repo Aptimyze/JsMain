@@ -362,40 +362,64 @@ JsChat.prototype = {
     },
 
     //bind clicking block icon
-    _bindBlock: function(elem) {
+    _bindBlock: function(elem, userId) {
         var curElem = this;
         $(elem).off("click").on("click", function() {
-            curElem._scrollDown($(this).closest("chat-box"), true);
-            if ($(".extraNumber")) {
-                var value = parseInt($(".extraNumber").text().split("+")[1]);
-                var bodyWidth = $("body").width();
-                var divWidth = ($("chat-box").length - 1) * 250;
-                if (value == 1 && divWidth < bodyWidth) {
-                    $(".extraChats, .extraPopup").remove();
-                } else if (value > 1) {
-                    $(".extraNumber").text("+" + (value - 1));
-                }
-            }
+            //TODO: fire block query
+            //TODO:atul, add function here
+            //curElem._removeFromListing(userId);
+            sessionStorage.setItem("htmlStr_" + userId, $('chat-box[user-id="' + userId + '"] .chatMessage').html());
+            $('chat-box[user-id="' + userId + '"] .chatMessage').html('<div id="blockText" class="pos-rel wid90p txtc colorGrey padall-10">You have blocked this user</div><div class="pos-rel fullwid txtc mt20"><div id="undoBlock" class="padall-10 color5 disp_ib cursp">Undo</div></div>');
+            $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+            curElem._bindUnblock(userId);
         });
     },
 
+    _bindUnblock: function(userId) {
+        $('chat-box[user-id="' + userId + '"] #undoBlock').off("click").on("click", function() {
+            $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+            var htmlStr = sessionStorage.getItem("htmlStr_" + userId);
+            $('chat-box[user-id="' + userId + '"] .chatMessage').html(htmlStr);
+            //TODO: fire query for unblock
+        });
+    },
+
+    onSendingMessage: null,
+
     //sending chat
     _bindSendChat: function(userId) {
+        var _this = this;
         $('chat-box[user-id="' + userId + '"] textarea').keyup(function(e) {
+            var curElem = this;
             if (e.keyCode == 13 && !e.shiftKey) {
-                var text = $(this).val();
-                $(this).val("").css("height", "24px");
+                var text = $(this).val(),
+                    textAreamElem = this;
+                $(textAreamElem).val("").css("height", "24px");
                 if (text.length > 1) {
-                    var superParent = $(this).parent().parent();
-					console.log($(superParent).find(".talkText").length);
-                    $(superParent).find(".chatMessage").css("height", "250px").append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_'+userId+'_'+($(superParent).find(".talkText").length+1)+'" class="talkText">' + text + '</div><i class="nchatspr nchatic_8 fr vertM"></i></div>');
-                    var len = $(superParent).find(".talkText").length,height = $($(superParent).find(".talkText")[len - 1]).height();
-                    $($(superParent).find(".talkText")[len - 1]).next().css("margin-top", height);
-                    var scrollBox = $('chat-box[user-id="' + userId + '"] .chatMessage');
-                    var height = ($(".rightBubble").length + $(".leftBubble").length) * 40;
-                    $(scrollBox).animate({
-                        scrollTop: height
+                    var superParent = $(this).parent().parent(),
+                        timeLog = new Date().getTime();
+                    $(superParent).find("#sendInt,#initChatText,#sentDiv").remove();
+                    $(superParent).find(".chatMessage").css("height", "250px").append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id ="tempText_' + userId + '_' + timeLog + '" class="talkText">' + text + '</div><i class="nchatspr nchatic_8 fr vertM"></i></div>');
+                    var height = $($(superParent).find(".talkText")[$(superParent).find(".talkText").length - 1]).height();
+                    $($(superParent).find(".talkText")[$(superParent).find(".talkText").length - 1]).next().css("margin-top", height);
+                    $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
+                        scrollTop: $(".rightBubble").length + $(".leftBubble").length * 50
                     }, 500);
+                    if( _this.onSendingMessage  && typeof (_this.onSendingMessage) == "function" ){
+                        console.log("in plugin send message");
+                        _this.onSendingMessage();
+                    }
+                    //TODO: fire send chat query and return unique id, also check for 3 messages
+                    setTimeout(function() {
+                        //on recieving data with uniqueID
+                        $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + "ueiuh");
+                        //scenario if 3 messages have been sent
+                        var threeSent = false;
+                        if (threeSent == true) {
+                            $(curElem).prop("disabled", true);
+                            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">You can send more message only if she replies</div>').addClass("restrictMessg2");
+                        }
+                    }, 2000);
                 }
             }
         });
@@ -409,10 +433,13 @@ JsChat.prototype = {
             setTimeout(function() {
                 $(".extraChats").css("padding-top", "0px");
             }, 100);
-            var username = $(this).closest(".extraChatList").attr("id").split("_")[1],originalElem = $('chat-box[user-id="' + username + '"]'),status = $("chat-box[user-id='" + username + "'] .chatBoxBar .onlineStatus").html(),chatHtml = $(originalElem).find(".chatMessage").html();
-            curElem._appendChatBox(username,status);
+            var username = $(this).closest(".extraChatList").attr("id").split("_")[1],
+                originalElem = $('chat-box[user-id="' + username + '"]'),
+                status = $("chat-box[user-id='" + username + "'] .chatBoxBar .onlineStatus").html(),
+                chatHtml = $(originalElem).find(".chatMessage").html();
+            curElem._appendChatBox(username, status);
             $(originalElem).remove();
-			$("chat-box[user-id='" + username + "'] .chatMessage").html(chatHtml);
+            $("chat-box[user-id='" + username + "'] .chatMessage").html(chatHtml);
             $(this).closest(".extraChatList").remove();
             setTimeout(function() {
                 curElem._scrollUp($('chat-box[user-id="' + username + '"]'));
@@ -455,19 +482,19 @@ JsChat.prototype = {
     //adding data in extra popup
     _addDataExtraPopup: function(data) {
         $(".extraPopup").append('<div id="extra_' + data + '" class="extraChatList pad8_new"><div class="extraUsername cursp colrw minWid65 disp_ib pad8_new fontlig f14">' + data + '</div><div class="pinkBubble vertM scir disp_ib padall-10"><span class="noOfMessg f13 pos-abs">1</span></div><i class="nchatspr nchatic_4 cursp disp_ib mt6 ml10"></i></div>');
-		$("#extra_"+data+" .pinkBubble span").html($('chat-box[user-id="' + data + '"] .chatBoxBar .pinkBubble2 span').html());	
-		if($("#extra_"+data+" .pinkBubble span").html() ==0) {
-			$("#extra_"+data+" .pinkBubble").hide();
-		}
+        $("#extra_" + data + " .pinkBubble span").html($('chat-box[user-id="' + data + '"] .chatBoxBar .pinkBubble2 span').html());
+        if ($("#extra_" + data + " .pinkBubble span").html() == 0) {
+            $("#extra_" + data + " .pinkBubble").hide();
+        }
     },
 
     //append chat box on page
-    _appendChatBox: function(userId,status) {
-        $("#chatBottomPanel").prepend('<chat-box status-user="'+status+'" user-id="' + userId + '"></chat-box>');
+    _appendChatBox: function(userId, status) {
+        $("#chatBottomPanel").prepend('<chat-box status-user="' + status + '" user-id="' + userId + '"></chat-box>');
     },
 
     //create side panel of extra chat
-    _createChatBox: function() {
+    _createSideChatBox: function() {
         var curElem = this;
         $(curElem._chatBottomPanelID).append('<div class="extraChats pos_abs nchatbtmNegtaive wid30 hgt43 bg5"><div class="extraNumber cursp colrw opa50">+1</div><div><div class="extraPopup pos_abs l0 nchatbtmNegtaive wid153 bg5"><div>');
         $(".extraChats").css("left", $(curElem._chatBottomPanelID).width() - $('chat-box').length * 250 - 32);
@@ -491,8 +518,84 @@ JsChat.prototype = {
         });
     },
 
+    _postChatPanelsBox: function(userId) {
+        var curElem = this;
+        // TODO: fire query to get scenario and get message(if any)
+        var response = "";
+        // var response = "free_interest_pending";
+        // var response = "free_interest_sent";
+        // var response = "paid_interest_pending";
+        // var response = "paid_interest_sent";
+        //  var response = "pog_interest_pending";
+        // var response = "pog_interest_accepted";
+        // var response = "pog_interest_declined";	
+
+        setTimeout(function() {
+            switch (response) {
+                case "free_interest_pending":
+                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="sendInterest cursp sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_6 "></i><span class="vertTexBtm"> Send Interest</span></div><div id="sentDiv" class="sendDiv disp-none pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div><div class="pos-abs fullwid txtc colorGrey top120">Only paid members can start chat<div id="becomePaidMember" class="color5 cursp">Become a Paid Member</div></div>');
+                    $('chat-box[user-id="' + userId + '"] #sendInt').on("click", function() {
+                        curElem._sendInterest(userId);
+                        $(this).parent().find("#sentDiv").removeClass("disp-none");
+                        $(this).remove();
+                    });
+                    break;
+                case "free_interest_sent":
+                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div><div class="pos-abs fullwid txtc colorGrey top120">Only paid members can start chat<div id="becomePaidMember" class="color5 cursp">Become a Paid Member</div></div>');
+                    break;
+                case "paid_interest_pending":
+                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="sendDiv cursp pos-abs wid140 color5"><i class="nchatspr nchatic_6 "></i><span clas="vertTexBtm"> Send Interest</span></div><div id="sentDiv" class="txtc fullwid disp-none mt10 color5"> Your interest has been sent</div><div id="initChatText" class="pos-abs color5 txtc top120 left10">Initiating chat will also send your interest </div>');
+                    $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                    $('chat-box[user-id="' + userId + '"] #sendInt').on("click", function() {
+                        curElem._sendInterest(userId);
+                        $(this).parent().find("#sentDiv").removeClass("disp-none")
+                        $(this).parent().find("#initChatText").remove();
+                        $(this).remove();
+                    });
+                    break;
+                case "paid_interest_sent":
+                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="txtc fullwid mt10 color5"> Your interest has been sent</div>');
+                    $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                    break;
+                case "pog_interest_pending":
+                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="pos-rel wid90p txtc colorGrey padall-10">The member wants to chat</div><div class="pos-rel fullwid txtc colorGrey mt20"><div id="accept" class="acceptInterest padall-10 color5 disp_ib cursp">Accept</div><div id="decline" class="acceptInterest padall-10 color5 disp_ib cursp">Decline</div></div><div id="acceptTxt" class="pos-rel fullwid txtc color5 mt25">Accept interest to continue chat</div><div id="sentDiv" class="fullwid pos-rel disp-none mt10 color5 txtc">Interest Accepted continue chat</div><div id="declineDiv" class="sendDiv txtc disp-none pos-abs wid80p mt10 color5">Interest Declined, you can\'t chat with this user anymore</div>');
+                    $('chat-box[user-id="' + userId + '"] #accept').on("click", function() {
+                        $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                        $(this).closest(".chatMessage").find("#sentDiv").removeClass("disp-none");
+                        $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
+                        $(this).remove();
+                        //TODO: fire query for accepting request
+                    });
+                    $('chat-box[user-id="' + userId + '"] #decline').on("click", function() {
+                        $(this).closest(".chatMessage").find("#declineDiv").removeClass("disp-none");
+                        $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt").remove();
+                        $(this).remove();
+                        //TODO: fire query for declining request
+                    });
+                    break;
+                case "pog_interest_accepted":
+                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="fullwid pos-rel mt10 color5 txtc">Interest Accepted continue chat</div>');
+                    $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                    break;
+                case "pog_interest_declined":
+                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="sendDiv txtc pos-abs wid80p mt10 color5">Interest Declined, you can\'t chat with this user anymore</div>');
+            		break;
+				default:
+					$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+			}
+            $('chat-box[user-id="' + userId + '"] .spinner').hide();
+            //TODO: fire query to get message list	
+
+        }, 2000);
+
+    },
+    _sendInterest: function(userId) {
+        console.log("fire send interest query");
+        //TODO: fire query to send interest	
+    },
+
     //appending chat box
-    _chatPanelsBox: function(userId,status) {
+    _chatPanelsBox: function(userId, status) {
         var curElem = this,
             heightPlus = false,
             bodyWidth = $("body").width();
@@ -510,18 +613,14 @@ JsChat.prototype = {
                 divWidth = ($("chat-box").length + 1) * 250;
             if (divWidth > bodyWidth) {
                 if ($(".extraChats").length == 0) {
-                    curElem._createChatBox();
+                    curElem._createSideChatBox();
                 } else {
-                    var value = parseInt($(".extraNumber").text().split("+")[1]) + 1,
-                        len = $("chat-box").length + 1,
-                        data = $($("chat-box")[len - value - 1]).attr("user-id");
-                    curElem._addDataExtraPopup(data);
-                    $(".extraNumber").text("+" + value);
+                    curElem._updateSideChatBox();
                 }
                 curElem._bindExtraPopupUserClose($(".nchatic_4"));
                 curElem._bindExtraUserNameBox();
             }
-            curElem._appendChatBox(userId,status);
+            curElem._appendChatBox(userId, status);
 
         } else {
             $(".extraChatList").each(function(index, element) {
@@ -535,10 +634,11 @@ JsChat.prototype = {
                         originalElem = $('chat-box[user-id="' + username + '"]'),
                         len = $("chat-box").length,
                         value = parseInt($(".extraNumber").text().split("+")[1]),
-                        data = $($("chat-box")[len - 1 - value]).attr("user-id"),chatHtml = $(originalElem).find(".chatMessage").html();
-                    curElem._appendChatBox(username,status);
+                        data = $($("chat-box")[len - 1 - value]).attr("user-id"),
+                        chatHtml = $(originalElem).find(".chatMessage").html();
+                    curElem._appendChatBox(username, status);
                     originalElem.remove();
-					$("chat-box[user-id='" + username + "'] .chatMessage").html(chatHtml);
+                    $("chat-box[user-id='" + username + "'] .chatMessage").html(chatHtml);
                     $(this).closest(".extraChatList").remove();
                     curElem._addDataExtraPopup(data);
                     curElem._bindExtraPopupUserClose($("#extra_" + data + " .nchatic_4"));
@@ -553,17 +653,26 @@ JsChat.prototype = {
         }
     },
 
+    //add data in side panel and update number
+    _updateSideChatBox: function() {
+        var value = parseInt($(".extraNumber").text().split("+")[1]) + 1,
+            len = $("chat-box").length + 1,
+            data = $($("chat-box")[len - value - 1]).attr("user-id");
+        curElem._addDataExtraPopup(data);
+        $(".extraNumber").text("+" + value);
+    },
+
     //creating prototype for chat-box custom element
     _createPrototypeChatBox: function() {
         var elem = this,
             chatBoxProto = Object.create(HTMLElement.prototype),
-            userId,status;
+            userId, status, response;
         chatBoxProto.attachedCallback = function() {
-            this.innerHTML = '<div class="chatBoxBar fullwid hgt57 bg5 pos-rel fullwid"></div><div class="chatArea fullwid fullhgt"><div class="messageArea f13 bg13 fullhgt"><div class="chatMessage scrolla pos_abs fullwid" style="height: 250px;"></div></div><div class="chatInput brdrbtm_new fullwid btm0 pos-abs bg-white"><textarea cols="23" style="width: 220px;" id="txtArea"  class="inputText lh20 brdr-0 padall-10 colorGrey hgt18 fontlig" placeholder="Write message"></textarea></div></div>';
+            this.innerHTML = '<div class="chatBoxBar fullwid hgt57 bg5 pos-rel fullwid"></div><div class="chatArea fullwid fullhgt"><div class="messageArea f13 bg13 fullhgt"><div class="chatMessage scrolla pos_abs fullwid" style="height: 250px;"><div class="spinner"></div></div></div><div class="chatInput brdrbtm_new fullwid btm0 pos-abs bg-white"><textarea cols="23" style="width: 220px;" id="txtArea"  class="inputText lh20 brdr-0 padall-10 colorGrey hgt18 fontlig" placeholder="Write message"></textarea></div></div>';
             $(this).addClass("z1000 btm0 brd_new fr mr7 fullhgt wid240 pos-rel disp_ib");
             userId = $(this).attr("user-id");
-			status = $(this).attr("status-user");
-            elem._bindChatBoxInner(userId,status);
+            status = $(this).attr("status-user");
+            elem._appendInnerHtml(userId, status);
         };
         document.registerElement("chat-box", {
             prototype: chatBoxProto
@@ -571,8 +680,8 @@ JsChat.prototype = {
         document.createElement("chat-box");
     },
 
-    //binding after creating chatbox
-    _bindChatBoxInner: function(userId,status) {
+    //adding innerDiv after creating chatbox
+    _appendInnerHtml: function(userId, status) {
         var curElem = this,
             imgId;
         $("#nchatDivs img").each(function(index, element) {
@@ -586,54 +695,85 @@ JsChat.prototype = {
             curElem._textAreaAdjust(this);
         });
         $('chat-box[user-id="' + userId + '"] #pic_' + userId).addClass("downBarPic cursp");
-        $('chat-box[user-id="' + userId + '"] .chatBoxBar').append('<div class="downBarText fullhgt"><div class="downBarUserName disp_ib pos-rel f14 colrw wid44p fontlig">' + userId + '<div class="onlineStatus f11 opa50 mt4"></div></div></div>');
-        $('chat-box[user-id="' + userId + '"] .chatBoxBar .downBarText').append('<div class="iconBar cursp fr padallf_2 disp_ib opa40"><i class="nchatspr nchatic_3"></i><i class="nchatspr nchatic_2 ml10 mr10"></i><i class="nchatspr nchatic_1 mr10"></i></div><div class="pinkBubble2 fr vertM scir disp_ib padall-10 m11"><span class="noOfMessg f13 pos-abs">0</span></div>');
-        $('chat-box[user-id="' + userId + '"] .pinkBubble2').hide();
-		$('chat-box[user-id="' + userId + '"] .pinkBubble2 span').html("0");
-		$("chat-box[user-id='" + userId + "'] .chatBoxBar .onlineStatus").html(status);
-        curElem._bindMaximize($('chat-box[user-id="' + userId + '"] .chatBoxBar'), userId);
-        curElem._bindMinimize($('chat-box[user-id="' + userId + '"] .nchatic_2'));
-        curElem._bindClose($('chat-box[user-id="' + userId + '"] .nchatic_1'));
-        curElem._bindBlock($('chat-box[user-id="' + userId + '"] .nchatic_3'));
-        curElem._bindSendChat(userId);
-		/*setTimeout(function(){  curElem._appendRecievedMessage("hi this is recieved",userId);
-		setTimeout(function(){  curElem._changeStatusOfMessg(1,userId,"recieved"); 
-		setTimeout(function(){  curElem._changeStatusOfMessg(1,userId,"recievedRead"); 
-		}, 2000);
-		}, 2000);
-		 }, 7000);*/
+        $('chat-box[user-id="' + userId + '"] .chatBoxBar').append('<div class="downBarText fullhgt"><div class="downBarUserName disp_ib pos-rel f14 colrw wid44p fontlig">' + userId + '<div class="onlineStatus f11 opa50 mt4"></div></div><div class="iconBar cursp fr padallf_2 disp_ib opa40"><i class="nchatspr nchatic_3"></i><i class="nchatspr nchatic_2 ml10 mr10"></i><i class="nchatspr nchatic_1 mr10"></i></div><div class="pinkBubble2 fr vertM scir disp_ib padall-10 m11"><span class="noOfMessg f13 pos-abs">0</span></div></div>');
+        curElem._bindInnerHtml(userId, status);
     },
-	
-	//add meesage recieved from another user
-	_appendRecievedMessage: function(message, userId){
-		var val,len = $('chat-box[user-id="' + userId + '"] .talkText').length+1;
-		//adding message in chat area
-		$('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_'+userId+'_'+len+'" class="talkText">'+message+'</div></div>');
-		//adding bubble for minimized tab
-		if($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
-			val = parseInt($('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html())+1;
-			$('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html(val);
-			$('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2').show();
-		}
-		//adding bubble for side tab
-		if($("#extra_"+userId+" .pinkBubble").length != 0){
-				val =  parseInt($("#extra_"+userId+" .pinkBubble span").html());
-				$("#extra_"+userId+" .pinkBubble span").html(val+1);
-				$("#extra_"+userId+" .pinkBubble").show();
-		}
-	},
-	
-	_changeStatusOfMessg:function(messgNo, userId, newStatus){
-		if(newStatus == "recieved"){
-			$("#text_"+userId+"_"+messgNo).next().removeClass("nchatic_8").addClass("nchatic_10");
-		} else if(newStatus == "recievedRead"){
-			$("#text_"+userId+"_"+messgNo).next().removeClass("nchatic_10").addClass("nchatic_9");
-		}
-	},
-	
-	onEnterToChatPreClick:null,
+
+    //binding innerDiv after creating chatbox
+    _bindInnerHtml: function(userId, status) {
+        var curElem = this;
+        $('chat-box[user-id="' + userId + '"] .pinkBubble2').hide();
+        $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+        $('chat-box[user-id="' + userId + '"] .pinkBubble2 span').html("0");
+        $("chat-box[user-id='" + userId + "'] .chatBoxBar .onlineStatus").html(status);
+        this._bindMaximize($('chat-box[user-id="' + userId + '"] .chatBoxBar'), userId);
+        this._bindMinimize($('chat-box[user-id="' + userId + '"] .nchatic_2'));
+        this._bindClose($('chat-box[user-id="' + userId + '"] .nchatic_1'));
+        this._bindBlock($('chat-box[user-id="' + userId + '"] .nchatic_3'), userId);
+        this._bindSendChat(userId);
+        //setTimeout(function(){  curElem._appendRecievedMessage("hi this is amacjrheabf erhfbjahberf aerb",userId,"ueiuh");
+        /*setTimeout(function(){  this._changeStatusOfMessg("ueiuh",userId,"recieved"); 
+        setTimeout(function(){  this._changeStatusOfMessg("ueiuh",userId,"recievedRead"); 
+        }, 2000);
+        }, 2000);*/
+        //}, 8000);
+        this._postChatPanelsBox(userId);
+
+    },
+
+    //append self sent message on opening window again
+    _appendSelfMessage: function(message, userId, uniqueId, status) {
+        var curElem = this;
+        $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText">' + message + '</div><i class="nchatspr nchatic_8 fr vertM"></i></div>');
+        var len = $('chat-box[user-id="' + userId + '"] .talkText').length - 1,
+            height = $($('chat-box[user-id="' + userId + '"] .talkText')[len]).height();
+        $($('chat-box[user-id="' + userId + '"] .talkText')[len]).next().css("margin-top", height);
+        if (status != "sending") {
+            curElem._changeStatusOfMessg(uniqueId, userId, status);
+        }
+    },
+    //add meesage recieved from another user
+    _appendRecievedMessage: function(message, userId, uniqueId) {
+        //if chat box is not opened
+        if ($('chat-box[user-id="' + userId + '"]').length == 0) {
+            $(".profileIcon[id^='" + userId + "']")[0].click();
+        }
+
+        var val;
+        //adding message in chat area
+        $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText">' + message + '</div></div>');
+        //check for 3 messages and remove binding
+        if ($('chat-box[user-id="' + userId + '"] .chatMessage').hasClass("restrictMessg2")) {
+            $('chat-box[user-id="' + userId + '"] .chatMessage').find("#restrictMessgTxt").remove();
+            $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+        }
+        //adding bubble for minimized tab
+        if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
+            val = parseInt($('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html()) + 1;
+            $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html(val);
+            $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2').show();
+        }
+        //adding bubble for side tab
+        if ($("#extra_" + userId + " .pinkBubble").length != 0) {
+            val = parseInt($("#extra_" + userId + " .pinkBubble span").html());
+            $("#extra_" + userId + " .pinkBubble span").html(val + 1);
+            $("#extra_" + userId + " .pinkBubble").show();
+        }
+    },
+
+    //change from sending status to sent / sent and read
+    _changeStatusOfMessg: function(messgId, userId, newStatus) {
+        if (newStatus == "recieved") {
+            $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_8").addClass("nchatic_10");
+        } else if (newStatus == "recievedRead") {
+            $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_10, nchatic_8").addClass("nchatic_9");
+        }
+    },
+
+    onEnterToChatPreClick: null,
 
     onChatLoginSuccess:null,  //function triggered after successful chat login
+
 
     //start:login screen
     _startLoginHTML: function() {
