@@ -28,6 +28,8 @@ function initiateChatConnection()
     else if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
         username = "a1@localhost";
     //only for dev env--------------------end:ankita
+    console.log("Username:");
+    console.log(username);
     try
     {
         //initialise converse settings
@@ -35,7 +37,7 @@ function initiateChatConnection()
             converse.initialize({
                 bosh_service_url: chatConfig.Params[device].bosh_service_url,
                 keepalive: chatConfig.Params[device].keepalive,
-                message_carbons: true, //why req?? - ankita
+                message_carbons: true,
                 //play_sounds: true,
                 roster_groups: chatConfig.Params[device].roster_groups,
                 hide_offline_users: chatConfig.Params[device].hide_offline_users,
@@ -54,9 +56,9 @@ function initiateChatConnection()
                 rosterDisplayGroups:chatConfig.Params[device].rosterDisplayGroups,
                 listCreationDone:false,
                 //prebind_url: 'http://localhost/api/v1/chat/authenticateChatSession?jid=a1@localhost',  
-            })/*,function(){
+            }),function(){
                 console.log("calling callback");
-            }*/
+            }
         });
     }
     catch(e)
@@ -259,9 +261,28 @@ function eraseCookie(name) {
     console.log("erasing cookie");
 }
 
-$(document).ready(function(){
- setCreateListingInterval();   //to be decided where to call - ankita
-});
+function checkEmptyOrNull(item) {
+    if (item != undefined && item != null && item != "") {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function checkNewLogin(profileid) {
+    var computedChatEncrypt = CryptoJS.MD5(profileid);
+    if (checkEmptyOrNull(readCookie('chatEncrypt'))) {
+        var existingChatEncrypt = readCookie('chatEncrypt');
+        if (existingChatEncrypt != computedChatEncrypt) {
+            eraseCookie('chatAuth');
+            eraseCookie('chatEncrypt');
+            createCookie('chatEncrypt', computedChatEncrypt);
+        }
+    } else {
+        createCookie('chatEncrypt', computedChatEncrypt);
+    }
+}
+
 
 /*setCreateListingInterval
 * sets time interval after which json data will be sent to plugin to create list if not created
@@ -276,7 +297,8 @@ function setCreateListingInterval()
             listCreationDone = true;
             setConverseSettings("listCreationDone",true);
             console.log(listingInputData);
-            //plugin.addInList(listingInputData,"create_list");    
+            //plugin.addInList(listingInputData,"create_list"); 
+            objJsChat.addListingInit(listingInputData);   
         }
     },chatConfig.Params[device].initialRosterLimit["timeInterval"]);
 }
@@ -311,7 +333,18 @@ function logoutChat(){
     eraseCookie("chatAuth");
 }
 
+function invokePluginReceivedMsgHandler(msgObj)
+{
+    console.log("invokePluginReceivedMsgHandler");
+    console.log(msgObj);
+    if(msgObj["message"] != "")
+        objJsChat._appendRecievedMessage(msgObj["message"],msgObj["fullname"],msgObj["msgid"]); 
+}
+
 $(document).ready(function(){
+    console.log("User");
+    console.log(loggedInJspcUser);
+    checkNewLogin(loggedInJspcUser);
     var checkDiv = $("#chatOpenPanel").length;
     if(showChat && (checkDiv != 0)){
 
@@ -339,7 +372,6 @@ $(document).ready(function(){
         console.log("Checking variable");
         console.log(chatLoggedIn);
 
-    
         if(chatLoggedIn != 'true'){
             var auth = checkAuthentication();
             if(auth != "true"){
@@ -353,11 +385,25 @@ $(document).ready(function(){
         }
         console.log("In callback");
     }
+
+    objJsChat.onChatLoginSuccess = function(){
+        //trigger list creation if nodes in roster lesser than limit
+        setCreateListingInterval();
+    }
     
     objJsChat.onLogoutPreClick = function(){
         console.log("In Logout preclick");
         objJsChat._loginStatus = 'N';
         logoutChat();
+    }
+
+    objJsChat.onSendingMessage = function(){
+        /*
+        console.log("Converse");
+        //converse.emit('showSentOTRMessage',"msg");
+        //console.log("Helper file onSendingMessage"+converse.ChatBoxView());
+        converse.ChatBoxView().sendMessage("hi");
+        */
     }
 
     objJsChat.start();

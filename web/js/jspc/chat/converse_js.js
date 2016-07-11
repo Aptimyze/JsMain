@@ -28968,6 +28968,7 @@ return Backbone.BrowserStorage;
                     this.callback(this);
                 } else  {
                     console.log("in else of stat");
+                    console.log("calling converse callback");
                     //createListingPanel();  //ankita-create listing for old plugin
                     this.callback();
                 }
@@ -31777,6 +31778,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                 },
 
                 appendMessage: function (attrs) {
+                    console.log("appendMessage");
                     /* Helper method which appends a message to the end of the chat
                      * box's content area.
                      *
@@ -31790,6 +31792,8 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                 },
 
                 showMessage: function (attrs) {
+                    console.log("showMessage");
+                    console.log(attrs);
                     /* Inserts a chat message into the content area of the chat box.
                      * Will also insert a new day indicator if the message is on a
                      * different day.
@@ -31907,6 +31911,15 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                         // are mentioned.
                         extra_classes += ' mentioned';
                     }
+                    if(attrs.sender === 'them')
+                    {
+                        if(converse.listCreationDone == true)
+                        {
+                            console.log("ankita_renderMessage_received_msg");
+                            //handle received message in plugin
+                            invokePluginReceivedMsgHandler(attrs);
+                        }
+                    }
                     return $(template({
                             msgid: attrs.msgid,
                             'sender': attrs.sender,
@@ -31934,6 +31947,8 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                 },
 
                 handleChatStateMessage: function (message) {
+                    console.log("handleChatStateMessage");
+                    console.log(message);
                     if (message.get('chat_state') === converse.COMPOSING) {
                         this.showStatusNotification(message.get('fullname')+' '+__('is typing'));
                         this.clear_status_timeout = window.setTimeout(this.clearStatusNotification.bind(this), 10000);
@@ -31973,6 +31988,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                     if (!message.get('message')) {
                         this.handleChatStateMessage(message);
                     } else {
+                        console.log("handling text msgs");
                         this.handleTextMessage(message);
                     }
                 },
@@ -31988,6 +32004,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                 },
 
                 sendMessage: function (message) {
+                    console.log("sendMessage");
                     /* Responsible for sending off a text message.
                      *
                      *  Parameters:
@@ -34268,12 +34285,12 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                     //console.log("ankita_groups");
                     //console.log(converse.listing_data);
                     //rest for old plugin-------
-                    var group_name = this.model.get('name');
+                    /*var group_name = this.model.get('name');
                     //stores groups name
                     if(typeof converse.listing_data[group_name] === "undefined" && typeof converse.rosterDisplayGroups[group_name]!=="undefined")
                     {  
                         converse.listing_data[group_name] = {};
-                    }
+                    }*/
                     //rest for old plugin-------
                     this.$el.html(
                         $(converse.templates.group_header({
