@@ -184,7 +184,7 @@ JsChat.prototype = {
     addTab: function() {
 
         //this script is same as old one shared eariler need to be reworked as discussed
-        console.log('in tab');
+        console.log('in addTab');
         var obj = this._listingTabs;
         var curEle = this;
         var TabID;
@@ -248,6 +248,8 @@ JsChat.prototype = {
                 List += '<div class="fl f14 fontlig pt15 pl18">';
                 List += data[key]["rosterDetails"]["fullname"];
                 List += '</div>';
+                console.log(runID+status);
+                List += '<div class="fr">'+status+'</div>';
                 List += '</li>';
                 //console.log(List);
                 $('div.' + val + ' ul').append(List);
