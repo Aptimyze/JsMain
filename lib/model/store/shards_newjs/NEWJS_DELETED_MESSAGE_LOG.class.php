@@ -34,7 +34,7 @@ class NEWJS_DELETED_MESSAGE_LOG extends TABLE{
                         throw new jsException("","VALUE OR TYPE IS BLANK IN selectActiveDeletedData() of NEWJS_DELETED_MESSAGE_LOG.class.php");
 			try 
 			{ 
-					$sql="select ID FROM newjs.DELETED_MESSAGE_LOG WHERE (".$whereStrLabel."=:PROFILEID OR ". $whereStrLabel2."=:PROFILEID) AND (".$whereStrLabel1." IN (".$listOfActiveProfile.") OR ".$whereStrLabel2." IN (".$listOfActiveProfile."))";
+					$sql="select ID FROM newjs.DELETED_MESSAGE_LOG WHERE (".$whereStrLabel1."=:PROFILEID OR ". $whereStrLabel2."=:PROFILEID) AND (".$whereStrLabel1." IN (".$listOfActiveProfile.") OR ".$whereStrLabel2." IN (".$listOfActiveProfile."))";
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":PROFILEID",$pid,PDO::PARAM_INT);
 					$prep->execute();
