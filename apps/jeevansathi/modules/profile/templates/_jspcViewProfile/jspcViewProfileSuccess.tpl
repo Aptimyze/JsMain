@@ -101,31 +101,22 @@
                     </div>
                 </div>
                 <div class="pl12 pt20">
-                  <p class="color12 f13">Select reason</p>
+                  <p id='RAReasonHead' class="color12 f13">Select reason</p>
                     <ul class="listnone reportlist fontlig f15 pt10 color2">
                       <li>
-                          <input type="radio"  name="report_profile">
-                        Profile is obscene/fraud</li>
+                          <input type="radio"  name="report_profile">Looks like fake profile</li>
                           <li>
-                          <input type="radio"   name="report_profile">
-                        Incorrect profile details</li>
+                          <input type="radio"   name="report_profile">Inappropriate content</li>
                            <li>
-                          <input type="radio"   name="report_profile">
-                        Duplicate profile</li>
+                          <input type="radio"   name="report_profile">Spam</li>
                             <li>
-                          <input type="radio"  name="report_profile">
-                        Fake photo</li>
+                          <input type="radio"  name="report_profile">Duplicate profile</li>
                             <li>
-                          <input type="radio"  name="report_profile">
-                          Member sends unsolicited and illicit emails/ads
-                        </li>
+                          <input type="radio"  name="report_profile">Already married/engaged</li>
                              <li>
-                          <input type="radio"  name="report_profile">
-                        Member is already married/engaged</li>
+                          <input type="radio"  name="report_profile">Incorrect details/photo</li>
                              <li>
-                          <input id='otherOptionBtn' type="radio"  name="report_profile">
-
-                        Other reasons
+                          <input id='otherOptionBtn' type="radio"  name="report_profile">Others
                         <div id='otherOptionMsgBox' class='disp-none' >
                         <div id='errorText' class="disp-none"><br><div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div></div>
                         <textarea rows='4' type="radio" style='width:95%;outline:none;' class='brdr-0 bgnone reportAbuse  mt10 fontlig' placeholder='Add Comments'></textarea></div>

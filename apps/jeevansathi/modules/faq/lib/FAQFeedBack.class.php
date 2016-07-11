@@ -55,11 +55,24 @@ class FAQFeedBack
 			
 		}
 
-		
+		$reasonsCategory=array('duplicate profile','incorrect details/photo','already married/engaged','looks like fake profile','inappropriate content','spam','looks like a fake profile');
+
+		if(in_array(strtolower($reasonNew),$reasonsCategory))
+		{
+			$categoryNew=$reasonNew;
+			$otherReason=''; 
+
+		}
+		else
+		{
+			$categoryNew='other';
+			$otherReason=$reasonNew; 
+
+		}
 
 		$loginProfile=LoggedInProfile::getInstance();
 		if(!$reasonNew || !$loginProfile->getPROFILEID() || !$otherProfileId) return;
-		(new REPORT_ABUSE_LOG())->insertReport($loginProfile->getPROFILEID(),$otherProfileId,$reasonNew);
+		(new REPORT_ABUSE_LOG())->insertReport($loginProfile->getPROFILEID(),$otherProfileId,$categoryNew,$reasonNew);
 
 				// block for blocking the reported abuse added by Palash
 
@@ -140,7 +153,7 @@ class FAQFeedBack
 				$this->m_bValidForm = true;
 				
 				$this->InsertFeedBack();
-				$this->FwdMail();
+			//	$this->FwdMail();
 				return true;
 
 			}
