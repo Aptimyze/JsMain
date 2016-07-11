@@ -158,6 +158,21 @@ Abstract class ApiAuthentication
 			$this->loginData=$this->IsAlive($loginData,$gcm);
 			if($this->loginData)
 			{
+
+				//Entry in Chat Roster
+				try {
+					$producerObj = new Producer();
+					if ($producerObj->getRabbitMQServerConnected()) {
+						$chatData = array('process' => 'USERLOGIN', 'data' => ($this->loginData["PROFILEID"]), 'redeliveryCount' => 0);
+						$producerObj->sendMessage($chatData);
+					}
+					unset($producerObj);
+				} catch (Exception $e) {
+					throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
+				}
+
+				//End
+
 				
 				if($this->trackLogin)
 				{
