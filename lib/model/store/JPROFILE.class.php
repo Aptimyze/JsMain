@@ -1400,6 +1400,26 @@ public function duplicateEmail($email)
 			throw new jsException($ex);
 		}
 	}
+        public function DeactiveProfiles($profileArr)
+        {
+                try{
+			foreach($profileArr as $k=>$v)
+				$keyArr[] = ":PROFILEID".$k;
+			$keyStr = implode(",",$keyArr);
+                        $sql="update JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D', activatedKey=0 where PROFILEID IN (".$keyStr.")";
+                        $prep = $this->db->prepare($sql);
+                        foreach($profileArr as $k=>$v)
+				$prep->bindValue(":PROFILEID".$k,$v,PDO::PARAM_INT);
+                        $prep->execute();
+                }
+                catch(PDOException $e)
+                {
+                        /*** echo the sql statement and error message ***/
+                        throw new jsException($e);
+                }
+        }
+
+
 	function getNewScreenProfileCount()
 	{
 		try

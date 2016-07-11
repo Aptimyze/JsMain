@@ -357,6 +357,15 @@ class JProfileUpdateLib
       return false;
     }
   }
+  public function deactivateProfiles($profileArr)
+  {
+    try {
+      return $this->objJProfileStore->DeactiveProfiles($profileArr);
+    } catch (Exception $ex) {
+      jsCacheWrapperException::logThis($ex);
+      return false;
+    }
+  }
 
   /**
    * update sort date in Jprofile
