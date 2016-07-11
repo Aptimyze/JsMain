@@ -35,7 +35,7 @@ function initiateChatConnection()
             converse.initialize({
                 bosh_service_url: chatConfig.Params[device].bosh_service_url,
                 keepalive: chatConfig.Params[device].keepalive,
-                message_carbons: true, //why req?? - ankita
+                message_carbons: true,
                 //play_sounds: true,
                 roster_groups: chatConfig.Params[device].roster_groups,
                 hide_offline_users: chatConfig.Params[device].hide_offline_users,
@@ -54,9 +54,9 @@ function initiateChatConnection()
                 rosterDisplayGroups:chatConfig.Params[device].rosterDisplayGroups,
                 listCreationDone:false,
                 //prebind_url: 'http://localhost/api/v1/chat/authenticateChatSession?jid=a1@localhost',  
-            })/*,function(){
+            }),function(){
                 console.log("calling callback");
-            }*/
+            }
         });
     }
     catch(e)
@@ -259,9 +259,6 @@ function eraseCookie(name) {
     console.log("erasing cookie");
 }
 
-$(document).ready(function(){
- setCreateListingInterval();   //to be decided where to call - ankita
-});
 
 /*setCreateListingInterval
 * sets time interval after which json data will be sent to plugin to create list if not created
@@ -340,7 +337,6 @@ $(document).ready(function(){
         console.log("Checking variable");
         console.log(chatLoggedIn);
 
-    
         if(chatLoggedIn != 'true'){
             var auth = checkAuthentication();
             if(auth != "true"){
@@ -353,6 +349,11 @@ $(document).ready(function(){
             }
         }
         console.log("In callback");
+    }
+
+    objJsChat.onChatLoginSuccess = function(){
+        //trigger list creation if nodes in roster lesser than limit
+        setCreateListingInterval();
     }
     
     objJsChat.onLogoutPreClick = function(){

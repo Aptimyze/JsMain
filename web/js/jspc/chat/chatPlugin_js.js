@@ -184,7 +184,7 @@ JsChat.prototype = {
     addTab: function() {
 
         //this script is same as old one shared eariler need to be reworked as discussed
-        console.log('in tab');
+        console.log('in addTab');
         var obj = this._listingTabs;
         var curEle = this;
         var TabID;
@@ -232,7 +232,7 @@ JsChat.prototype = {
     //start:addlisting
     addListingInit: function(data) {
         console.log("in addListingInit");
-        console.log(data);
+        //console.log(data);
         var elem = this;
         for (var key in data) {
             var runID = '';
@@ -248,7 +248,10 @@ JsChat.prototype = {
                 List += '<div class="fl f14 fontlig pt15 pl18">';
                 List += data[key]["rosterDetails"]["fullname"];
                 List += '</div>';
+                console.log(runID+" is "+status);
+                List += '<div class="fr">'+status+'</div>';
                 List += '</li>';
+                //console.log(List);
                 $('div.' + val + ' ul').append(List);
 				//bind click on listing]
                 $("#" + username + val).on("click", function() {
@@ -256,7 +259,7 @@ JsChat.prototype = {
                 });
             });
         }
-        console.log("setting mCustomScrollbar");
+        //console.log("setting mCustomScrollbar");
         elem._chatScrollHght();
         $(elem._scrollDivId).mCustomScrollbar({
             theme: "light"
@@ -765,13 +768,15 @@ JsChat.prototype = {
     },
 
     onEnterToChatPreClick: null,
+
+    onChatLoginSuccess:null,  //function triggered after successful chat login
+
+
     //start:login screen
     _startLoginHTML: function() {
-        
-
         console.log('_startLoginHTML call');
         var curEle = this;
-        //user not logged in and coming for first time
+        //user not logged in and coming for first time dhuila is wrong
         if (($(this._listingPanelID).length == 0) && (this._loginStatus == "N")) {
             console.log('case 1');
             $(curEle._loginPanelID).fadeOut('slow', function() {
@@ -782,10 +787,12 @@ JsChat.prototype = {
         else if (($(this._listingPanelID).length == 0) && (this._loginStatus == "Y")) {
             console.log('case 2');
             if($(curEle._loginPanelID).length == 0 ){
+                console.log("ankita_1");
                 curEle._appendLoggedHTML();    
             }
             else{
-                $(curEle._loginPanelID).fadeOut('slow', function() {
+                console.log("ankita_2");
+                $(curEle._loginPanelID).fadeOut('fast',function() {
                     curEle._appendLoggedHTML();
                 });
             }
@@ -815,6 +822,7 @@ JsChat.prototype = {
         $(curEle._parendID).append('<div class="fullwid fontlig nchatcolor" id="js-lsitingPanel"/> ').promise().done(function() {
             curEle._addChatTop();
             curEle.addTab();
+            curEle.onChatLoginSuccess();
             //first time intialization passing tab1 as param
             //curEle.addListingInit(curEle._listData);
         });
@@ -837,10 +845,11 @@ JsChat.prototype = {
         //start login button capture
         $(this._loginbtnID).click(function() {
             if( curEle.onEnterToChatPreClick  && typeof (curEle.onEnterToChatPreClick) == "function" ){
-                console.log("in if");
+                console.log("in onEnterToChatPreClick");
                 curEle.onEnterToChatPreClick();
             }
             if(curEle._loginStatus == "Y"){
+                console.log("ankita_logged in");
                 curEle._startLoginHTML();    
             } 
         });
@@ -857,10 +866,11 @@ JsChat.prototype = {
             $(this._parendID).addClass('wid20p').css('height', this._getHeight());
         }
         if (this.checkLoginStatus()) {
+            console.log("checking login status");
             this._startLoginHTML();
         } else {
-            this.addLoginHTML();
             console.log("in start function");
+            this.addLoginHTML();
         }
 
 
