@@ -29732,7 +29732,7 @@ return Backbone.BrowserStorage;
                         $el = $('<div id="conversejs">');
                         //console.log($el);
                         //console.log("ankita_append custom converse templates");
-                        //$('body').append($el);
+                        $('body').append($el);
                     }
                     //console.log(converse.templates.chats_panel());
                     $el.html(converse.templates.chats_panel());
@@ -31808,6 +31808,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                         first_msg_date = $first_msg.data('isodate'),
                         last_msg_date, current_msg_date, day_date, $msgs, msg_dates, idx;
                     if (!first_msg_date) {
+                        console.log("1..............");
                         this.appendMessage(attrs);
                         return;
                     }
@@ -31815,8 +31816,10 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                     last_msg_date = this.$content.children('.chat-message:last').data('isodate');
 
                     if (typeof last_msg_date !== "undefined" && (current_msg_date.isAfter(last_msg_date) || current_msg_date.isSame(last_msg_date))) {
+                       console.log("2...............");
                         // The new message is after the last message
                         if (current_msg_date.isAfter(last_msg_date, 'day')) {
+                            console.log("3.................");
                             // Append a new day indicator
                             day_date = moment(current_msg_date).startOf('day');
                             this.$content.append(converse.templates.new_day({
@@ -31832,7 +31835,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                             (current_msg_date.isBefore(first_msg_date) ||
                                 (current_msg_date.isSame(first_msg_date) && !current_msg_date.isSame(last_msg_date)))) {
                         // The new message is before the first message
-
+                        console.log("4..................");
                         if ($first_msg.prev().length === 0) {
                             // There's no day indicator before the first message, so we prepend one.
                             this.prependDayIndicator(first_msg_date);
@@ -31911,7 +31914,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                         // are mentioned.
                         extra_classes += ' mentioned';
                     }
-                    if(attrs.sender === 'them')
+                    /*if(attrs.sender === 'them')
                     {
                         if(converse.listCreationDone == true)
                         {
@@ -31919,7 +31922,7 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                             //handle received message in plugin
                             invokePluginReceivedMsgHandler(attrs);
                         }
-                    }
+                    }*/
                     return $(template({
                             msgid: attrs.msgid,
                             'sender': attrs.sender,
@@ -31976,6 +31979,8 @@ define('text!zh',[],function () { return '{\n   "domain": "converse",\n   "local
                 },
 
                 onMessageAdded: function (message) {
+                    console.log("onMessageAdded");
+                    console.log(message);
                     /* Handler that gets called when a new message object is created.
                      *
                      * Parameters:
@@ -46231,6 +46236,8 @@ Strophe.addConnectionPlugin('ping', {
                 /* Shows an HTML5 Notification to indicate that a new chat
                  * message was received.
                  */
+                 console.log("ankita_msg");
+                 console.log($message);
                 var n, title, contact_jid, roster_item,
                     from_jid = $message.attr('from');
                 if ($message.attr('type') === 'headline' || from_jid.indexOf('@') === -1) {
@@ -46320,10 +46327,14 @@ Strophe.addConnectionPlugin('ping', {
                 /* Event handler for the on('message') event. Will call methods
                  * to play sounds and show HTML5 notifications.
                  */
+                 console.log("handleContactRequestNotification.........ankita");
+
                 var $message = $(message);
+                console.log($message);
                 if (!converse.shouldNotifyOfMessage(message)) {
                     return false;
                 }
+                invokePluginReceivedMsgHandler({"message":$message.children('body').text(),"from":$message.attr('from'),"msgid":$message.attr('id')});
                 converse.playSoundNotification($message);
                 if (converse.areDesktopNotificationsEnabled()) {
                     converse.showMessageNotification($message);

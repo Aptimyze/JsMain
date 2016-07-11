@@ -338,7 +338,7 @@ function invokePluginReceivedMsgHandler(msgObj)
     console.log("invokePluginReceivedMsgHandler");
     console.log(msgObj);
     if(msgObj["message"] != "")
-        objJsChat._appendRecievedMessage(msgObj["message"],msgObj["fullname"],msgObj["msgid"]); 
+        objJsChat._appendRecievedMessage(msgObj["message"],(msgObj["from"]).split("@"),msgObj["msgid"]); 
 }
 
 $(document).ready(function(){
