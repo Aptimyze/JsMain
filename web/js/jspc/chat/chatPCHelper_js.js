@@ -28,6 +28,8 @@ function initiateChatConnection()
     else if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
         username = "a1@localhost";
     //only for dev env--------------------end:ankita
+    console.log("Username:");
+    console.log(username);
     try
     {
         //initialise converse settings
@@ -259,6 +261,28 @@ function eraseCookie(name) {
     console.log("erasing cookie");
 }
 
+function checkEmptyOrNull(item) {
+    if (item != undefined && item != null && item != "") {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function checkNewLogin(profileid) {
+    var computedChatEncrypt = CryptoJS.MD5(profileid);
+    if (checkEmptyOrNull(readCookie('chatEncrypt'))) {
+        var existingChatEncrypt = readCookie('chatEncrypt');
+        if (existingChatEncrypt != computedChatEncrypt) {
+            eraseCookie('chatAuth');
+            eraseCookie('chatEncrypt');
+            createCookie('chatEncrypt', computedChatEncrypt);
+        }
+    } else {
+        createCookie('chatEncrypt', computedChatEncrypt);
+    }
+}
+
 
 /*setCreateListingInterval
 * sets time interval after which json data will be sent to plugin to create list if not created
@@ -318,6 +342,9 @@ function invokePluginReceivedMsgHandler(msgObj)
 }
 
 $(document).ready(function(){
+    console.log("User");
+    console.log(loggedInJspcUser);
+    checkNewLogin(loggedInJspcUser);
     var checkDiv = $("#chatOpenPanel").length;
     if(showChat && (checkDiv != 0)){
 
@@ -371,8 +398,12 @@ $(document).ready(function(){
     }
 
     objJsChat.onSendingMessage = function(){
-        console.log("Helper file onSendingMessage");
-        converse.ChatBoxView.onMessageSubmitted("hi");
+        /*
+        console.log("Converse");
+        //converse.emit('showSentOTRMessage',"msg");
+        //console.log("Helper file onSendingMessage"+converse.ChatBoxView());
+        converse.ChatBoxView().sendMessage("hi");
+        */
     }
 
     objJsChat.start();
