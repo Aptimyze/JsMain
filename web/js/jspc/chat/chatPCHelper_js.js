@@ -236,10 +236,11 @@ function invokePluginManagelisting(listObject,vcardObj,key){
         }
     } else if(key=="delete_node"){
         //remove user from roster in listing
-        nodeArr.push(listNodeObj);
-        console.log("deleting node from roster");
-        console.log(nodeArr);
-        objJsChat._removeFromListing("removeCall1",nodeArr);
+        //nodeArr.push(listNodeObj);
+        var userId = (listNodeObj["rosterDetails"]["jid"]).split("@");
+        console.log("deleting node from roster-"+userId[0]);
+        //console.log(nodeArr);
+        objJsChat._removeFromListing("removeCall2",userId[0]);
     }
 }
 
@@ -418,12 +419,14 @@ $(document).ready(function(){
         */
     }
 
-    objJsChat.start();
-    /*objJsChat.onPostBlockCallback= function(param){
+    objJsChat.onPostBlockCallback= function(param){
 
        console.log('the user id to be blocked:'+ param);
        //the function goes here which will send user id to the backend
-   }*/
+    }
+
+    objJsChat.start();
+    
    /*var i =0;
        setInterval(function(){ 
            i++;
