@@ -197,7 +197,7 @@ class SearchCommonFunctions
 	/**
 	* This section will show the dpp matches.
 	*/
-	public static function getMyDppMatches($sort="",$loggedInProfileObj='',$limit='',$currentPage="",$paramArr='',$removeMatchAlerts="",$dontShowFilteredProfiles="",$twoWayMatches='',$clustersToShow='',$results_orAnd_cluster='',$notInProfiles='')
+	public static function getMyDppMatches($sort="",$loggedInProfileObj='',$limit='',$currentPage="",$paramArr='',$removeMatchAlerts="",$dontShowFilteredProfiles="",$twoWayMatches='',$clustersToShow='',$results_orAnd_cluster='',$notInProfiles='',$verifiedProfilesDate = '')
 	{
                 $searchEngine = 'solr';
                 $outputFormat = 'array';
@@ -216,6 +216,10 @@ class SearchCommonFunctions
                     $SearchParamtersObj->getSearchCriteria();
                 else
                     $SearchParamtersObj->getDppCriteria();
+                if($verifiedProfilesDate){
+                    $SearchParamtersObj->setHVERIFY_ACTIVATED_DT($verifiedProfilesDate);
+                    $SearchParamtersObj->setLVERIFY_ACTIVATED_DT('2001-01-01 00:00:00');
+                }
 		if($paramArr && is_array($paramArr))
 		{
 			foreach($paramArr as $k=>$v)

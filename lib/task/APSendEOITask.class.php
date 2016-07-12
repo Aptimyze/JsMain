@@ -13,6 +13,10 @@ class APSendEOITask extends sfBaseTask
         private $clusterForMutualMatches = array(0=>'LAST_ACTIVITY');
         private $removeFilteredProfiles = true;
         private $maxEoiReceiver = 5;
+        private $lastLoginDateCondition = 15;
+        private $lastLoginDays = 17;
+        private $verifyActiveDays = 7;
+        private $isOneTime = 0;
 	public function Showtime($mes)
 	{
 		$time=time();
@@ -43,6 +47,8 @@ EOF;
     */	
 	protected function execute($arguments = array(), $options = array())
 	{
+                $whereCondtion = 0;
+                include_once(sfConfig::get("sf_web_dir")."/classes/SmsAir2Web.class.php");
 		sfContext::createInstance($this->configuration);	
 		$detailArr="PROFILEID,USERNAME,PASSWORD,GENDER,RELIGION,CASTE,SECT,MANGLIK,MTONGUE,MSTATUS,DTOFBIRTH,OCCUPATION,COUNTRY_RES,CITY_RES,HEIGHT, EDU_LEVEL,EMAIL,IPADD,ENTRY_DT,MOD_DT,RELATION,COUNTRY_BIRTH,SOURCE,INCOMPLETE,PROMO,DRINK,SMOKE,HAVECHILD,RES_STATUS,BTYPE,COMPLEXION,DIET,HEARD,INCOME,CITY_BIRTH,BTIME,HANDICAPPED,NTIMES,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,ACTIVATED,ACTIVATE_ON,AGE,GOTHRA,GOTHRA_MATERNAL,NAKSHATRA,MESSENGER_ID,MESSENGER_CHANNEL,PHONE_RES,PHONE_MOB,FAMILY_BACK,SCREENING,CONTACT,SUBCASTE,YOURINFO,FAMILYINFO,SPOUSE,EDUCATION,LAST_LOGIN_DT,SHOWPHONE_RES,SHOWPHONE_MOB, HAVEPHOTO,PHOTO_DISPLAY,PHOTOSCREEN,PREACTIVATED,KEYWORDS,PHOTODATE,PHOTOGRADE,TIMESTAMP,PROMO_MAILS,SERVICE_MESSAGES,PERSONAL_MATCHES,SHOWADDRESS,UDATE,SHOWMESSENGER,PINCODE,PARENT_PINCODE,PRIVACY,EDU_LEVEL_NEW,FATHER_INFO,SIBLING_INFO,WIFE_WORKING,JOB_INFO,MARRIED_WORKING,PARENT_CITY_SAME,PARENTS_CONTACT,SHOW_PARENTS_CONTACT,FAMILY_VALUES,SORT_DT,VERIFY_EMAIL,SHOW_HOROSCOPE,GET_SMS,STD,ISD,MOTHER_OCC,T_BROTHER,T_SISTER,M_BROTHER,M_SISTER,FAMILY_TYPE,FAMILY_STATUS,FAMILY_INCOME,CITIZENSHIP,BLOOD_GROUP,HIV,THALASSEMIA,WEIGHT,NATURE_HANDICAP,ORKUT_USERNAME,WORK_STATUS,ANCESTRAL_ORIGIN,HOROSCOPE_MATCH,SPEAK_URDU,PHONE_NUMBER_OWNER,PHONE_OWNER_NAME,MOBILE_NUMBER_OWNER,MOBILE_OWNER_NAME,RASHI,TIME_TO_CALL_START,TIME_TO_CALL_END,PHONE_WITH_STD,MOB_STATUS,LANDL_STATUS,PHONE_FLAG,CRM_TEAM,activatedKey,PROFILE_HANDLER_NAME,GOING_ABROAD,OPEN_TO_PET,HAVE_CAR,OWN_HOUSE,COMPANY_NAME,HAVE_JCONTACT,HAVE_JEDUCATION,SUNSIGN";
 		
@@ -50,7 +56,9 @@ EOF;
                 $tempProfileRecords = new ASSISTED_PRODUCT_AP_PROFILE_INFO_LOG();
 		$autoContObj = new ASSISTED_PRODUCT_AUTOMATED_CONTACTS_TRACKING();
                 $receiverEoiObj = new receiverEoiCount();
-		$profileArr = $profileInfoObj->getAPProfilesResumed();
+                if(!$this->isOneTime)
+                    $whereCondition = date('Y-m-d',strtotime('-'.($this->lastLoginDays).' days'));
+		$profileArr = $profileInfoObj->getAPProfilesResumed($whereCondition);
 		//$profileArr=array(1=>array("PROFILEID"=>144111));
 		$totalContactsMade = 0;
 		$totalSenders = 0;
@@ -63,6 +71,15 @@ EOF;
 			try
 			{
 				$senderId = $val['PROFILEID'];
+                                $lastLoginDate = $val['LAST_LOGIN_DT'];
+                                
+                                //check last login date if login date is greater than 15 days stop RB for them
+                                if(strtotime($date) - strtotime($lastLoginDate)  > $this->lastLoginDateCondition*24*60*60)
+                                {
+                                    $this->sendSmsForPausingRB($senderId);
+                                    $tempProfileRecords->insert($senderId);
+                                    continue;
+                                }
 				//$senderId=3186764;	
 				$dbName = JsDbSharding::getShardNo($senderId);
 				$dbObj = new newjs_CONTACTS($dbName);
@@ -115,7 +132,10 @@ EOF;
                                 if(1){
                                     $searchMutualMatches= false;
                                     //get dpp matches with not in param
-                                     $partnerMatchesArr = $partnerObj->getMyDppMatches('',$profileObj,$limit,'','','',$this->removeFilteredProfiles,$searchMutualMatches,'','',$notInProfiles);
+                                    
+                                    //profiles registered 7 days before
+                                     $verifiedProfilesDate = date('Y-m-d hh:mm:ss', strtotime('-'.$this->verifyActiveDays.' days'));
+                                     $partnerMatchesArr = $partnerObj->getMyDppMatches('',$profileObj,$limit,'','','',$this->removeFilteredProfiles,$searchMutualMatches,'','',$notInProfiles,$verifiedProfilesDate);
                                      $resultArr = $partnerMatchesArr;
                                      $dppLoop++; 
                                 }
@@ -286,5 +306,16 @@ EOF;
             $daysRemaining = floor(($expiryDate - $today)/(60*60*24))+1;
             $eoiToBeSent = min(max(floor(2*($durationOfPack/90)*(($mutualMatchesCount*0.84)/$daysRemaining)),$minEois),$maxEois);
             return $eoiToBeSent;
+        }
+        
+        public function sendSmsForPausingRB($profileId){
+            $sendSmsObj= new SmsAir2Web();
+            $jProfileObj=JPROFILE::getInstance();
+            $profileData = $jProfileObj->get($profileId,"PROFILEID","PHONE_MOB,USERNAME");
+            $username = $profileData['USERNAME'];
+            $messageTxt = "Dear ".$username.", we have temporarily suspended sending response booster interests on your behalf. We will start sending them as soon as you login to the website.";
+            $mobPhone= $profileData[PHONE_MOB];
+            $generatedXml=$sendSmsObj->generateXml($profileId, $mobPhone, $messageTxt); 
+            $sendSmsObj->send($generatedXml,'');
         }
 }
