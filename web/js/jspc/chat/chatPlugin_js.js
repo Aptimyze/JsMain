@@ -239,7 +239,7 @@ JsChat.prototype = {
         var elem = this;
         for (var key in data) {
             var runID = data[key]["rosterDetails"]["jid"],res = '',status = data[key]["rosterDetails"]["chat_status"];
-            console.log("addlisting for "+runID);
+            console.log("addlisting for "+runID+"--"+data[key]["rosterDetails"]["chat_status"]);
             console.log(data);
             res = runID.split("@");
             runID = res[0];
