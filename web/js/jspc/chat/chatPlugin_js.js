@@ -236,12 +236,12 @@ JsChat.prototype = {
     },
     //start:addlisting
     addListingInit: function(data) {
-        console.log("in addListingInit");
-        //console.log(data);
         var elem = this;
         for (var key in data) {
             var runID = '',res = '';
             runID = data[key]["rosterDetails"]["jid"];
+            console.log("addlisting for "+runID);
+            console.log(data);
             res = runID.split("@");
             runID = res[0];
             $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
@@ -259,7 +259,7 @@ JsChat.prototype = {
                     List += '<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>';
                 }
                 List += '</li>';
-                if(tabShowStatus=='false')
+                if(tabShowStatus == 'false')
                 {
                     console.log(status+"2222");
                     $('div.' + val + ' ul').append(List);
