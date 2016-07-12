@@ -409,5 +409,29 @@ $(document).ready(function(){
     }
 
     objJsChat.start();
+    /*objJsChat.onPostBlockCallback= function(param){
+
+       console.log('the user id to be blocked:'+ param);
+       //the function goes here which will send user id to the backend
+   }*/
+   /*var i =0;
+       setInterval(function(){ 
+           i++;
+           var data= [
+                       {
+                           "rosterDetails": {
+                               "chat_status": "offline",
+                               "fullname": "a12",
+                               "Groups": ["dpp"],
+                               "id": "a12@localhost",
+                               "jid": "a12@localhost"
+                           }
+                       }
+                   ];
+                   console.log("removing");
+       objJsChat._removeFromListing('removeCall1',data); 
+
+
+       }, 30000);*/
    }
 });

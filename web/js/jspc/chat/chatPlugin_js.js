@@ -241,12 +241,13 @@ JsChat.prototype = {
             var runID = data[key]["rosterDetails"]["jid"],res = '',status = data[key]["rosterDetails"]["chat_status"];
             console.log("addlisting for "+runID+"--"+data[key]["rosterDetails"]["chat_status"]);
             console.log(data);
+            console.log(runID+" is now "+status);
             res = runID.split("@");
             runID = res[0];
             $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
                 var List = '',username = data[key]["rosterDetails"]["fullname"],tabShowStatus = $('div.' + val).attr('data-showuser');
                 List += '<li class=\"clearfix profileIcon\"';
-                List += "id=\"" + (runID + val) + "\" >";
+                List += "id=\"" + runID + "_"+val + "\" >";
                 List += "<img id=\"pic_" + runID + "_" +val + "\" src=\"images/pic1.jpg\" class=\"fl\">";
                 List += '<div class="fl f14 fontlig pt15 pl18">';
                 List += data[key]["rosterDetails"]["fullname"];
@@ -276,13 +277,6 @@ JsChat.prototype = {
                        elem._chatPanelsBox(username,status);
                     });
                 }
-
-                //console.log(List);
-                /*$('div.' + val + ' ul').append(List);
-				//bind click on listing]
-                $("#" + username + val).on("click", function() {
-                    elem._chatPanelsBox(username,status);
-                });*/
             });
         }
         //console.log("setting mCustomScrollbar");
@@ -384,13 +378,52 @@ JsChat.prototype = {
         });
     },
 
+    onPostBlockCallback:null,
+    
+    //remove from list
+    _removeFromListing:function(param1,data){
+          console.log('remove element 11');
+          //removeCall1 if user is removed from backend
+          if(param1=='removeCall1')
+           {
+               for (var key in data)
+               {
+                       var runID = '';
+                       runID = data[key]["rosterDetails"]["jid"].split("@")[0];
+                       $.each(data[key]["rosterDetails"]["Groups"], function(index, val) {
+                           var tabShowStatus='';
+                           var listElements = '';
+                           //this check the sub header status in the list
+                           var tabShowStatus = $('div.' + val).attr('data-showuser');
+                           listElements = $('#'+runID+'_'+val);
+                           if(tabShowStatus=='false')
+                           {
+                               $(listElements).find('.nchatspr').detach();
+                           }
+                           else
+                           {
+                               $('div').find(listElements).detach();
+                           }
+                       });
+               }
+           }
+           //removeCall2 if user is removed from block click on chatbox
+           else if(param1=='removeCall2')
+           {
+               $(this._mainID).find('*[id*="'+data+'"]').detach();               
+               //$('*[id*="'+data+'"]').remove();
+               if( this.onPostBlockCallback && typeof this.onPostBlockCallback == 'function' )
+               {
+                   this.onPostBlockCallback(data);  
+               }
+           }
+       },
+
     //bind clicking block icon
     _bindBlock: function(elem, userId) {
         var curElem = this;
         $(elem).off("click").on("click", function() {
-            //TODO: fire block query
-            //TODO:atul, add function here
-            //curElem._removeFromListing(userId);
+            curElem._removeFromListing('removeCall2',userId);
             sessionStorage.setItem("htmlStr_" + userId, $('chat-box[user-id="' + userId + '"] .chatMessage').html());
             $('chat-box[user-id="' + userId + '"] .chatMessage').html('<div id="blockText" class="pos-rel wid90p txtc colorGrey padall-10">You have blocked this user</div><div class="pos-rel fullwid txtc mt20"><div id="undoBlock" class="padall-10 color5 disp_ib cursp">Undo</div></div>');
             $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
