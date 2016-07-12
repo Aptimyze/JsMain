@@ -227,5 +227,95 @@ class JsMemcache extends sfMemcacheCache{
 			parent::remove($key);
 		}
 	}
+
+	/**
+	 * @param $key
+	 * @param $arrValue
+	 */
+	public function setHashObject($key,$arrValue)
+	{
+		if(self::isRedis())
+		{
+			if($this->client)
+			{
+				try
+				{
+					$this->client->hmset($key, $arrValue);
+				}
+				catch (Exception $e)
+				{
+					jsException::log("HS-redisClusters".$e->getMessage());
+				}
+			}
+		}
+	}
+
+	/**
+	 * @param $key
+	 * @param $subKey
+	 * @return mixed
+	 */
+	public function getHashOneValue($key,$subKey)
+	{
+		if(self::isRedis())
+		{
+			if($this->client)
+			{
+				try
+				{
+					return $this->client->hget($key, $subKey);
+				}
+				catch (Exception $e)
+				{
+					jsException::log("HG-redisClusters".$e->getMessage());
+				}
+			}
+		}
+	}
+
+	/**
+	 * @param $key
+	 * @param $arrSubKey
+	 * @return mixed
+	 */
+	public function getHashManyValue($key,$arrSubKey)
+	{
+		if(self::isRedis())
+		{
+			if($this->client)
+			{
+				try
+				{
+					return $this->client->hmget($key, $arrSubKey);
+				}
+				catch (Exception $e)
+				{
+					jsException::log("HGM-redisClusters".$e->getMessage());
+				}
+			}
+		}
+	}
+
+	/**
+	 * @param $key
+	 * @return mixed
+	 */
+	public function getHashAllValue($key)
+	{
+		if(self::isRedis())
+		{
+			if($this->client)
+			{
+				try
+				{
+					return $this->client->hgetall($key);
+				}
+				catch (Exception $e)
+				{
+					jsException::log("HG-redisClusters".$e->getMessage());
+				}
+			}
+		}
+	}
 }
 ?>
