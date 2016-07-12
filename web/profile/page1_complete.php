@@ -27,6 +27,7 @@ include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
                $subject="page1_complete";
                $msg=$msg1.print_r($_SERVER,true);
                send_email($to,$msg,$subject,"",$cc);
+		header("Location:".$SITE_URL);
  //ending mail part
 // authenticate only if this file has not been included in login.php because in that case authenticated function will fail as the cookie will not be available in the same script. $data already comes from login.php
 if($logindone!="Y")

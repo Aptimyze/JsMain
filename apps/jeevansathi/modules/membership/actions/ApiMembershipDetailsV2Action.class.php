@@ -1503,7 +1503,7 @@ class ApiMembershipDetailsV2Action extends sfAction
 				/*$vdodObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
 				$discountVD = $vdodObj->getDiscountDetailsForProfile($this->profileid);*/
                                 $vdodObj =new VariableDiscount();
-                                $discountVD =$vdodObj->getAllDiscountForProfile($this->profileid)
+                                $discountVD =$vdodObj->getAllDiscountForProfile($this->profileid);
 
 				$maxVDDisc = max(array_values($discountVD));
 				unset($vdodObj);
@@ -1653,7 +1653,7 @@ class ApiMembershipDetailsV2Action extends sfAction
 				/*$vdodObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
 				$discountVD = $vdodObj->getDiscountDetailsForProfile($this->profileid);*/
                                 $vdodObj =new VariableDiscount();
-                                $discountVD =$vdodObj->getAllDiscountForProfile($this->profileid)
+                                $discountVD =$vdodObj->getAllDiscountForProfile($this->profileid);
 
 				$maxVDDisc = max(array_values($discountVD));
 				unset($vdodObj);
