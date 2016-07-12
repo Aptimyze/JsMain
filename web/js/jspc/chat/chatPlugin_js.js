@@ -258,28 +258,36 @@ JsChat.prototype = {
                     List += '<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>';
                 }
                 List += '</li>';
+                var addNode = false;
                 if(tabShowStatus == 'false')
                 {
                     console.log(status+"2222");
-                    $('div.' + val + ' ul').append(List);
-                    $("#" + username+"_" + val).on("click", function() {
-                       elem._chatPanelsBox(username,status);
-                    });
+                    addNode = true;
                 }
                 else
                 {
                     console.log(status+"1111");
                     if(status=='online')
                     {
-                       $('div.' + val + ' ul').append(List);
+                       addNode = true;
                     }
-                    $("#" + username+"_" + val).on("click", function() {
-                       elem._chatPanelsBox(username,status);
-                    });
+                }
+                if(addNode == true)
+                {
+                    if($('#'+runID + "_" + val).find('.nchatspr').length==0)
+                    {
+                        $('div.' + val + ' ul').append(List);
+                        $("#" + username+"_" + val).on("click", function() {
+                           elem._chatPanelsBox(username,status);
+                        }); 
+                    }
+                    else
+                    {
+                        $(elem._mainID).find($('#'+runID + "_" + val)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
+                    }
                 }
             });
         }
-        //console.log("setting mCustomScrollbar");
         elem._chatScrollHght();
         $(elem._scrollDivId).mCustomScrollbar({
             theme: "light"
@@ -386,22 +394,25 @@ JsChat.prototype = {
           //removeCall1 if user is removed from backend
           if(param1=='removeCall1')
            {
+               console.log("calllign _removeFromListing");
                for (var key in data)
                {
                        var runID = '';
                        runID = data[key]["rosterDetails"]["jid"].split("@")[0];
-                       $.each(data[key]["rosterDetails"]["Groups"], function(index, val) {
+                       $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
                            var tabShowStatus='';
                            var listElements = '';
                            //this check the sub header status in the list
                            var tabShowStatus = $('div.' + val).attr('data-showuser');
                            listElements = $('#'+runID+'_'+val);
-                           if(tabShowStatus=='false')
+                           if(tabShowStatus=='true')
                            {
+                            console.log("here1"+tabShowStatus);
                                $(listElements).find('.nchatspr').detach();
                            }
                            else
                            {
+                            console.log("here2"+tabShowStatus);
                                $('div').find(listElements).detach();
                            }
                        });

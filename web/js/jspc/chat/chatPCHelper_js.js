@@ -29,6 +29,8 @@ function initiateChatConnection()
         username = "a1@localhost";
     else if(readSiteCookie("CHATUSERNAME")=="bassi")
         username = "a8@localhost";
+    else if(readSiteCookie("CHATUSERNAME")=="ZZRS3292")
+        username = "a11@localhost";
     //only for dev env--------------------end:ankita
     console.log("Username:");
     console.log(username);
@@ -205,7 +207,6 @@ function invokePluginManagelisting(listObject,vcardObj,key){
             if(listingInputData.length == chatConfig.Params[device].initialRosterLimit["nodesCount"]){
                 key = "create_list";
                 console.log("list created after adding "+listingInputData.length+" nodes");
-                //plugin.addInList(listingInputData,key); 
                 listCreationDone = true;
                 objJsChat.addListingInit(listingInputData);
                 console.log(listingInputData);
@@ -216,7 +217,6 @@ function invokePluginManagelisting(listObject,vcardObj,key){
             nodeArr.push(listNodeObj);
             console.log("adding single node");
             console.log(nodeArr);
-            //plugin.addInList(nodeArr,key);
             objJsChat.addListingInit(nodeArr);
         }
     } else if(key=="update_status"){             
@@ -224,13 +224,22 @@ function invokePluginManagelisting(listObject,vcardObj,key){
         nodeArr.push(listNodeObj);
         console.log("updating status");
         console.log(nodeArr);
-        //plugin.addInList(nodeArr,key);
+        if(listNodeObj["rosterDetails"]["chat_status"] == "offline")  //from online to offline
+        {
+            console.log("removing from listing");
+            objJsChat._removeFromListing("removeCall1",nodeArr);
+        }
+        else if(listNodeObj["rosterDetails"]["chat_status"] == "online") //from offline to online
+        {
+            console.log("adding in list");
+            objJsChat.addListingInit(nodeArr);
+        }
     } else if(key=="delete_node"){
         //remove user from roster in listing
         nodeArr.push(listNodeObj);
         console.log("deleting node from roster");
         console.log(nodeArr);
-        //plugin.addInList(nodeArr,key);
+        objJsChat._removeFromListing("removeCall1",nodeArr);
     }
 }
 
@@ -342,6 +351,7 @@ function invokePluginReceivedMsgHandler(msgObj)
     if(msgObj["message"] != "") 
         objJsChat._appendRecievedMessage(msgObj["message"],msgObj["from"].substr(0, msgObj["from"].indexOf('@')),msgObj["msgid"]); 
 }
+
 
 $(document).ready(function(){
     console.log("User");
