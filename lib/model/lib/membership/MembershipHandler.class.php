@@ -345,8 +345,8 @@ class MembershipHandler
     }
 
     public function getAllotedExecSupervisor($profileid) {
-        $mainAdminObj = new incentive_MAIN_ADMIN();
-        $jsadminPswrdsObj = new jsadmin_PSWRDS();
+        $mainAdminObj = new incentive_MAIN_ADMIN('newjs_slave');
+        $jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
         $execName = $mainAdminObj->getAllotedExecForProfile($profileid);
         $execSup = $jsadminPswrdsObj->fetchAgentSupervisor($execName);
         return $execSup;

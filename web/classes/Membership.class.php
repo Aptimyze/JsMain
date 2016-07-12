@@ -632,12 +632,17 @@ class Membership
         $finAmt = round($iniAmt - $this->discount, 2);
         $discPerc = round((($iniAmt - $finAmt)/$iniAmt) * 100, 2);
         $transObj->insert($this->billid, $this->profileid, $this->discount_type, $supervisor, $discPerc, $iniAmt, $finAmt, $this->serviceid);
-        $jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
-        $execEmail = $jsadminPswrdsObj->getEmail($supervisor);
-        $subject = "Bill with discount of {$discPerc}% offered by {$this->entryby}; Final Bill Amount: {$finAmt}";
-        $msg = "Bill Details ({$serName})";
-        SendMail::send_email($execEmail,$msg,$subject,$from="js-sums@jeevansathi.com",$cc="avneet.bindra@jeevansathi.com");
-
+        if ($supervisor != 'rohan.m') {
+            $jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
+            $execEmail = $jsadminPswrdsObj->getEmail($supervisor);
+            $subject = "Bill with discount of {$discPerc}% offered by {$this->entryby}; Final Bill Amount: {$finAmt}";
+            $msg = "Bill Details ({$serName})";
+            SendMail::send_email($execEmail,$msg,$subject,$from="js-sums@jeevansathi.com",$cc="avneet.bindra@jeevansathi.com");
+        }
+        /**
+         * End Code
+         */
+        
         try {
             $ordrDeviceObj = new billing_ORDERS_DEVICE();
             $ordrDeviceObj->updateBillingDetails($this->orderid,$this->orderid_part1,$this->billid);
