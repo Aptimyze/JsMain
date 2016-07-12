@@ -47,7 +47,7 @@ chatConfig.Params = {
 									"group_name":"Accepted By Me",
 									//"order_id":0,
 									"show_group_name":false,
-									"hide_offline_users":false
+									"hide_offline_users":true
 								}
 							]
 						}

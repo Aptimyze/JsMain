@@ -204,7 +204,8 @@ JsChat.prototype = {
         TabsOpt += '</ul></div><div id="nchatDivs" class="nchatscrollDiv">';
         TabsOpt += '<div class="showtab1 js-htab"> ';
         for (var i = 0; i < obj["tab1"]["groups"].length; i++) {
-            TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + "\">";
+            TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + "\" data-showuser=\""+ obj["tab1"]["groups"][i]["hide_offline_users"]   +"\">";
+            //TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + "\">";
             TabsOpt += "<div class=\"f12 fontreg nchatbdr2";
             if(obj["tab1"]["groups"][i]["show_group_name"]==false)
                 TabsOpt += " disp-none";
@@ -215,7 +216,8 @@ JsChat.prototype = {
         TabsOpt += '</div>';
         TabsOpt += '<div class="showtab2 js-htab disp-none">';
         for (var i = 0; i < obj["tab2"]["groups"].length; i++) {
-            TabsOpt += "<div class=\"" + obj["tab2"]["groups"][i]["id"] + "\">";
+            TabsOpt += "<div class=\"" + obj["tab2"]["groups"][i]["id"] + "\" data-showuser=\""+ obj["tab2"]["groups"][i]["hide_offline_users"]   +"\">";
+            //TabsOpt += "<div class=\"" + obj["tab2"]["groups"][i]["id"] + "\">";
             TabsOpt += "<div class=\"f12 fontreg nchatbdr2";
             if(obj["tab2"]["groups"][i]["show_group_name"]==false)
                 TabsOpt += " disp-none";
@@ -243,7 +245,7 @@ JsChat.prototype = {
             res = runID.split("@");
             runID = res[0];
             $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
-                var List = '',status = "",username = data[key]["rosterDetails"]["fullname"];
+                var List = '',status = "",username = data[key]["rosterDetails"]["fullname"],tabShowStatus = $('div.' + val).attr('data-showuser');
                 status = data[key]["rosterDetails"]["chat_status"];
                 List += '<li class=\"clearfix profileIcon\"';
                 List += "id=\"" + (runID + val) + "\" >";
@@ -257,12 +259,32 @@ JsChat.prototype = {
                     List += '<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>';
                 }
                 List += '</li>';
+                if(tabShowStatus=='false')
+                {
+                    console.log(status+"2222");
+                    $('div.' + val + ' ul').append(List);
+                    $("#" + username+"_" + val).on("click", function() {
+                       elem._chatPanelsBox(username,status);
+                    });
+                }
+                else
+                {
+                    console.log(status+"1111");
+                    if(status=='online')
+                    {
+                       $('div.' + val + ' ul').append(List);
+                    }
+                    $("#" + username+"_" + val).on("click", function() {
+                       elem._chatPanelsBox(username,status);
+                    });
+                }
+
                 //console.log(List);
-                $('div.' + val + ' ul').append(List);
+                /*$('div.' + val + ' ul').append(List);
 				//bind click on listing]
                 $("#" + username + val).on("click", function() {
                     elem._chatPanelsBox(username,status);
-                });
+                });*/
             });
         }
         //console.log("setting mCustomScrollbar");
