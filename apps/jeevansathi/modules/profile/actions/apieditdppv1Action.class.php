@@ -349,23 +349,14 @@ class apieditdppv1Action extends sfAction
 				{
 					$arrOut["P_STATE"] = "";
 				}
-
-				//For AP Users. CITY_INDIA should not be set to null in case of AP users
-				if(!in_array("T", explode(",", $this->m_objLoginProfile->getSUBSCRIPTION())))
-				{
-					$arrOut['CITY_INDIA'] = NULL;	
-				}
+					$arrOut['CITY_INDIA'] = NULL;
 			}
 			else if($key == "P_COUNTRY")
 			{
 				$this->m_bDppUpdate = true;
 				if(strpos($val,'51') !== false)
 				{
-					//For AP Users. CITY_INDIA should not be set to null in case of AP users
-					if(!in_array("T", explode(",", $this->m_objLoginProfile->getSUBSCRIPTION())))
-					{
-						$arrOut['CITY_INDIA'] = NULL;	
-					}
+						$arrOut['CITY_INDIA'] = NULL;
 				}
 				$arrOut["P_COUNTRY"] = $val;
 			}
