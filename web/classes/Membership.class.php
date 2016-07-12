@@ -596,28 +596,6 @@ class Membership
         }
         
         $this->service_tax_content = billingVariables::SERVICE_TAX_CONTENT;
-        /*
-        if($this->curtype=='RS')
-        {
-            if(strtotime(date("Y-m-d H:i:s")) > strtotime(date("2016-05-31 23:59:59"))){
-                $this->service_tax_content ="(Inclusive of Swachh Bharat Cess and Krishi Kalyan Cess)";
-            }  elseif(strtotime(date("Y-m-d H:i:s")) > strtotime(date("2015-11-14 23:59:59"))){
-                $this->service_tax_content ="(Inclusive of Swachh Bharat Cess)";
-            }  elseif(strtotime(date("Y-m-d H:i:s")) > strtotime(date("2015-05-31 23:59:59"))){
-                $this->service_tax_content = NULL;
-            } else {
-                $this->service_tax_content ="(Including 2% Education Cess and 1% Secondary Higher Education Cess on Service Tax)";
-            }
-        }
-        elseif ($this->curtype == 'DOL') {
-            if(strtotime(date("Y-m-d H:i:s")) > strtotime(date("2016-05-25 23:59:59"))){
-                $this->service_tax_content = "(Inclusive of Swachh Bharat Cess and Krishi Kalyan Cess)";
-            }
-            else{
-                $this->service_tax_content = "(Inclusive of Swachh Bharat Cess)";
-            }
-        }
-         */
         
         //Field for identifying the team to which sales belong
         $jprofileObj = new JPROFILE();
@@ -634,7 +612,18 @@ class Membership
         $valuesStr .= ",'$this->tax_rate'";
 
         $this->billid = $billingPurObj->genericPurchaseInsert($paramsStr, $valuesStr);
-
+        $memHandlerObj = new MembershipHandler();
+        $supervisor = $memHandlerObj->getAllotedExecSupervisor($this->profileid);
+        if(empty($supervisor)){
+            $supervisor = 'rohan.m';
+        }
+        $servicesObj = new Services();
+        $transObj = new billing_TRACK_TRANSACTION_DISCOUNT_APPROVAL();
+        $iniAmt = $servicesObj->getTotalPrice($this->serviceid);
+        $finAmt = round($iniAmt - $this->discount, 2);
+        $discPerc = round((($iniAmt - $finAmt)/$iniAmt) * 100, 2);
+        $transObj->insert($this->billid, $this->profileid, $this->discount_type, $supervisor, $discPerc, $iniAmt, $finAmt, $this->serviceid);
+        
         try {
             $ordrDeviceObj = new billing_ORDERS_DEVICE();
             $ordrDeviceObj->updateBillingDetails($this->orderid,$this->orderid_part1,$this->billid);

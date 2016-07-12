@@ -145,6 +145,10 @@ if(isset($data))
 			unset($orderid);
 			$billid = $row_purchases["BILLID"];
 			
+			$transObj = new billing_TRACK_TRANSACTION_DISCOUNT_APPROVAL('newjs_slave');
+            $approvedByArr = $transObj->fetchApprovedBy($billid);
+            $user_details[$billid]["APPROVED_BY"] = $approvedByArr[$billid];
+            
 			$user_details[$billid]["BILLID"] = $billid;
 			
 			$sql_order = "SELECT ID, ORDERID FROM billing.ORDERS WHERE ID = '$row_purchases[ORDERID]'";
@@ -273,6 +277,7 @@ if(isset($data))
 				$receipt_details[$receiptid]["BOUNCE_DT"] = $row_payment['BOUNCE_DT'];
 				$receipt_details[$receiptid]["ENTRY_DT"] = $row_payment['ENTRY_DT'];
 				$receipt_details[$receiptid]["ENTRYBY"] = $row_payment['ENTRYBY'];
+				$receipt_details[$receiptid]["INVOICE_NO"] = $row_payment['INVOICE_NO'];
 				$receipt_details[$receiptid]["DEPOSIT_DT"] = $row_payment['DEPOSIT_DT'];
                                 $receipt_details[$receiptid]["DEPOSIT_BRANCH"] = $row_payment['DEPOSIT_BRANCH'];
 				$receipt_details[$receiptid]["DEL_REASON"] = $row_payment['DEL_REASON'];

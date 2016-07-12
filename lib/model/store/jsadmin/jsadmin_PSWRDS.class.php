@@ -798,5 +798,33 @@ class jsadmin_PSWRDS extends TABLE
         }
         return NULL;
     }
+
+    public function fetchAgentSupervisor($username)
+    {
+        try
+        {
+            $sql="SELECT HEAD_ID FROM jsadmin.PSWRDS WHERE USERNAME=:USERNAME";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":USERNAME",$username,PDO::PARAM_STR);
+            $prep->execute();
+            if ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
+                $sql2="SELECT USERNAME FROM jsadmin.PSWRDS WHERE EMP_ID=:EMP_ID";
+                $prep2 = $this->db->prepare($sql2);
+                $prep2->bindValue(":EMP_ID",$result['HEAD_ID'],PDO::PARAM_INT);
+                $prep2->execute();
+                if ($result2 = $prep2->fetch(PDO::FETCH_ASSOC)) {
+                    return $result2['USERNAME'];
+                } else {
+                    return NULL;
+                }
+            }
+            else {
+                return NULL;
+            }
+        }
+        catch(Exception $e){
+            throw new jsException($e);
+        }
+    }
 }
 ?>

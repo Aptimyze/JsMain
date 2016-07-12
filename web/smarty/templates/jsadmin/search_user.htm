@@ -222,7 +222,7 @@
 					Due Amount : ~$bill_item.DUEAMOUNT`
 				~/if`
 			</td>
-			<td>&nbsp;</td>
+			<td><span style="float:left">Approved By : ~$bill_item.APPROVED_BY`</span></td>
 			<td>&nbsp;</td>
 			<td>
 				~if $bill_item.DISCOUNT_TYPE`
@@ -299,19 +299,22 @@
 			&nbsp;~$receipt_item.SOURCE`
 		</td>
 		~if $receipt_item.TRANSACTION_NUMBER`
-			<td ~if $bill_item.CANCELLED` class="cancelledfieldsnew" ~else` class="fieldsnew" ~/if` colspan="2">Transaction Number : 
+			<td ~if $bill_item.CANCELLED` class="cancelledfieldsnew" ~else` class="fieldsnew" ~/if`>
+				Invoice No : ~$receipt_item.INVOICE_NO`
+			</td>
+			<td ~if $bill_item.CANCELLED` class="cancelledfieldsnew" ~else` class="fieldsnew" ~/if`>Transaction Number : 
 				&nbsp;~$receipt_item.TRANSACTION_NUMBER`
 			</td>
 		~elseif $receipt_item.TRANSFER_DATE`
 			<td ~if $bill_item.CANCELLED` class="cancelledfieldsnew" ~else` class="fieldsnew" ~/if`>
-				Bank Transfer Date : ~$receipt_item.TRANSFER_DATE`
+				Invoice No : ~$receipt_item.INVOICE_NO`
 			</td>
 			<td ~if $bill_item.CANCELLED` class="cancelledfieldsnew" ~else` class="fieldsnew" ~/if`>
-				Bank  : ~$receipt_item.TRANSFER_BANK`, ~$receipt_item.TRANSFER_CITY`
+				Bank Transfer Date : ~$receipt_item.TRANSFER_DATE`&nbsp;&nbsp;Bank  : ~$receipt_item.TRANSFER_BANK`, ~$receipt_item.TRANSFER_CITY`
 			</td>
 		~else`
-			<td ~if $bill_item.CANCELLED` class="cancelledfieldsnew" ~else` class="fieldsnew" ~/if` colspan="2">
-				&nbsp;
+			<td ~if $bill_item.CANCELLED` class="cancelledfieldsnew" ~else` class="fieldsnew" ~/if`>
+				Invoice No : ~$receipt_item.INVOICE_NO`
 			</td>
 		~/if`
 	</tr>
