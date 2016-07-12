@@ -132,7 +132,10 @@
 						<TR>
 							<TD class="tdstyle" colspan="3">
 								<SPAN>
-									Request For : <FONT color="#9f4000"><b>&nbsp;<a href="showstat.php?cid=~$cid`&profileid=~$pid`" style="color: #9f4000" target="_new">~$orig_username`</a></b></FONT><br>
+									Request For : <FONT color="#9f4000"><b>&nbsp;
+									<!--<a href="showstat.php?cid=~$cid`&profileid=~$pid`" style="color: #9f4000" target="_new">~$orig_username`</a>-->
+									<a href="../operations.php/commoninterface/ShowProfileStats?cid=~$cid`&profileid=~$pid`" style="color: #9f4000" target="_new">~$orig_username`</a>
+									</b></FONT><br>
 									Membership  : <FONT color="#9f4000">&nbsp;
 									~if $orig_sub eq ''` 
 										Free Member 

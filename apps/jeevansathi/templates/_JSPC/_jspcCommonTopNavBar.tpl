@@ -164,13 +164,37 @@ window.onload=function(){
                             <!--end:number-->
                             <!--start:submenu-->
                             <ul class="submenu topnavbg pos-abs navbell menushadowGNB navBarZ">
-                                <li>
+                           <!--     <li>
                                     <a href="/search/justjoined">
                                     <div class="clearfix topnavp1">
                                         <div class="fl">Just Joined Matches</div>
                                         <div class="fr">
                                             <div id="justJoinedCountParent" class="disp-tbl  txtc" style="display:none">
                                                 <div id="justJoinedCount" class="disp-cell vmid colrw bg_pink f12 fontlig tdim2 count">0</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </li>-->
+                                <li>
+                                    <a href="/inbox/1/1">
+                                    <div class="clearfix topnavp1">
+                                        <div class="fl">Interests Received</div>
+                                        <div class="fr">
+                                            <div id="interestsReceivedCountParent" class="disp-tbl  txtc" style="display:none">
+                                                <div id="interestsReceivedCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/inbox/2/1">
+                                    <div class="clearfix topnavp1">
+                                        <div class="fl">Members who Accepted me</div>
+                                        <div class="fr">
+                                            <div id="membersAcceptedMeCountParent" class="disp-tbl countBell txtc" style="display:none">
+                                                <div id="membersAcceptedMeCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
                                             </div>
                                         </div>
                                     </div>
@@ -199,32 +223,8 @@ window.onload=function(){
                                         </div>
                                     </div>
                                     </a>
-                                </li>
-                                <li>
-                                    <a href="/inbox/1/1">
-                                    <div class="clearfix topnavp1">
-                                        <div class="fl">Interests Received</div>
-                                        <div class="fr">
-                                            <div id="interestsReceivedCountParent" class="disp-tbl  txtc" style="display:none">
-                                                <div id="interestsReceivedCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="/inbox/2/1">
-                                    <div class="clearfix topnavp1">
-                                        <div class="fl">Members who Accepted me</div>
-                                        <div class="fr">
-                                            <div id="membersAcceptedMeCountParent" class="disp-tbl countBell txtc" style="display:none">
-                                                <div id="membersAcceptedMeCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    </a>
-                                </li>
-                                <li>
+                                </li>                                
+                              <!--  <li>
                                     <a href="/search/matchalerts">
                                     <div class="clearfix topnavp1">
                                         <div class="fl">Match Alerts</div>
@@ -235,7 +235,7 @@ window.onload=function(){
                                         </div>
                                     </div>
                                     </a>
-                                </li>
+                                </li>-->
 				 <li>
                                     <a href="/inbox/12/1">
                                     <div class="clearfix topnavp1">

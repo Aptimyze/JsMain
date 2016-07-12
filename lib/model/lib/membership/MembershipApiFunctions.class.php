@@ -233,7 +233,7 @@ class MembershipApiFunctions
                         else {
                             $discountCartPrice+= 0;
                         }
-                        $totalCartPrice+= $price - $price * ($discPerc / 100);
+                        $totalCartPrice+= $price - round($price * ($discPerc / 100), 2);
                     }
                 }
             } 
@@ -251,7 +251,7 @@ class MembershipApiFunctions
                 else {
                     $discountCartPrice+= 0;
                 }
-                $totalCartPrice+= $price - $price * ($discPerc / 100);
+                $totalCartPrice+= $price - round($price * ($discPerc / 100), 2);
             }
         } 
         else {
@@ -273,7 +273,7 @@ class MembershipApiFunctions
                     else {
                         $discountCartPrice+= 0;
                     }
-                    $totalCartPrice+= $price - $price * ($discPerc / 100);
+                    $totalCartPrice+= $price - round($price * ($discPerc / 100), 2);
                 }
             } 
             else {
@@ -290,7 +290,7 @@ class MembershipApiFunctions
                 else {
                     $discountCartPrice+= 0;
                 }
-                $totalCartPrice+= $price - $price * ($discPerc / 100);
+                $totalCartPrice+= $price - round($price * ($discPerc / 100), 2);
             }
         }
         

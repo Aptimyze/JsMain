@@ -659,8 +659,8 @@ public function microtime_float()
 	  if(is_array($profiles))
 	  {
 		  $varArray['PROFILEID'] = implode(",",$profiles);
-		  $smsTempTableObj = new $className('newjs_slave');
-		  $profiledetails = $smsTempTableObj->getArray($varArray,'',"",$fields="*");
+		  $smsTempTableObj = new $className;
+		  $profiledetails = $smsTempTableObj->getArray($varArray,'',"",$fields="PROFILEID,USERNAME,SUBSCRIPTION,GENDER,AGE,CASTE,CITY_RES,COUNTRY_RES");
 	  }
 	  if(is_array($profiledetails))
 	  {

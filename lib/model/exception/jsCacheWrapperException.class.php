@@ -30,7 +30,6 @@ class jsCacheWrapperException extends RuntimeException
     
     $currDate = Date('Y-m-d');
     $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH.'-'.$currDate.".log";
-    var_dump($errorString);
     //Add in log file
     $fileResource = fopen($filePath,"a");
     fwrite($fileResource,$errorString);

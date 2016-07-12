@@ -100,7 +100,7 @@ class MembershipAPIResponseHandler {
             $this->lowPriorityBannerDisplayCheck = false;
         }
         
-        $this->PayUOrderProcess = $request->getParameter('PayUOrderProcess');
+        // $this->PayUOrderProcess = $request->getParameter('PayUOrderProcess');
         $this->generateNewIosOrder = $request->getParameter('generateNewIosOrder');
         $this->AppleOrderProcess = $request->getParameter('AppleOrderProcess');
         $this->testBilling = $request->getParameter('testBilling');
@@ -243,9 +243,9 @@ class MembershipAPIResponseHandler {
                 $this->memHandlerObj->trackMembershipProgress($this->userObj, $this->source, $this->tab, $this->pgNo, $this->device, $this->user_agent, $this->allMemberships, $this->mainMembership, $this->vasImpression, 0, 0, $pTab, $this->trackType, $this->specialActive, $this->discPerc, $this->discountActive);
             }
         } 
-        elseif ($this->PayUOrderProcess == 1) {
-            $output = $this->handlePayUOrderProcessing($request);
-        } 
+        // elseif ($this->PayUOrderProcess == 1) {
+        //     $output = $this->handlePayUOrderProcessing($request);
+        // } 
         elseif ($this->getMembershipMessage == 1) {
             $output = $this->generateOCBMessageResponse();
         } 
@@ -1227,6 +1227,7 @@ class MembershipAPIResponseHandler {
             'couponID' => $this->couponCode,
             'device' => $this->device,
             'tracking_params' => $tracking_params,
+            'userProfile' => $this->profileid,
             'backendLink' => array(
                 'fromBackend' => $this->fromBackend,
                 'checksum' => $this->profilechecksum,

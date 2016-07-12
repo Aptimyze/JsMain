@@ -172,21 +172,22 @@
 
 <!-- New data records Ends -->
 
-~if $show_score eq 1`
+~if $details["show_score"] eq 1`
     <tr class="bggreyl">
      <td class="mediumblack" colspan="4"><img src="/P/imagesnew/zero.gif" width="8" height="20">Profile source</td>
      <td class="mediumblackb" colspan="3"><img src="/P/imagesnew/zero.gif" width="8" height="20">~$SOURCE`</td>
     </tr>
-      ~/if`
     <tr class="bggrey">
      <td class="mediumblack" colspan="4"><img src="/P/imagesnew/zero.gif" width="8" height="20">User Score</td>
      <td class="mediumblackb" colspan="3"><img src="/P/imagesnew/zero.gif" width="8" height="20">~$details["SCORE"]`</td>
     </tr>
-
+~/if`
+~if $details["an_show_score"] eq 1`
     <tr class="bggreyl">
      <td class="mediumblack" colspan="4"><img src="/P/imagesnew/zero.gif" width="8" height="20">Analytics Score</td>
      <td class="mediumblackb" colspan="3"><img src="/P/imagesnew/zero.gif" width="8" height="20">~$details["ANALYTIC_SCORE"]`</td>
     </tr>
+~/if`
      <tr class="bggrey" width="100%">
       <td class="mediumblack" colspan="4"><img src="/P/imagesnew/zero.gif" width="8" height="20"/>Eligible for Free Response Booster</td>
       <td class="mediumblackb" colspan="3"><img src="/P/imagesnew/zero.gif" width="8" height="20"/><font color="red" >~$details["RB_ELIGIBILITY_FLAG"]`</font></td>
