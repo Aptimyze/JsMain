@@ -238,15 +238,13 @@ JsChat.prototype = {
     addListingInit: function(data) {
         var elem = this;
         for (var key in data) {
-            var runID = '',res = '';
-            runID = data[key]["rosterDetails"]["jid"];
+            var runID = data[key]["rosterDetails"]["jid"],res = '',status = data[key]["rosterDetails"]["chat_status"];
             console.log("addlisting for "+runID);
             console.log(data);
             res = runID.split("@");
             runID = res[0];
             $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
-                var List = '',status = "",username = data[key]["rosterDetails"]["fullname"],tabShowStatus = $('div.' + val).attr('data-showuser');
-                status = data[key]["rosterDetails"]["chat_status"];
+                var List = '',username = data[key]["rosterDetails"]["fullname"],tabShowStatus = $('div.' + val).attr('data-showuser');
                 List += '<li class=\"clearfix profileIcon\"';
                 List += "id=\"" + (runID + val) + "\" >";
                 List += "<img id=\"pic_" + runID + "_" +val + "\" src=\"images/pic1.jpg\" class=\"fl\">";
