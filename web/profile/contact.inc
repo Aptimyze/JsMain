@@ -842,7 +842,7 @@ function calc_last_30_90_open_contacts($profileid)
 		
 		//$generated_msg_log_id = generate_id_from_table("MESSAGE_LOG");
 		$dbObj = new newjs_MESSAGE_LOG_GET_ID();
-		$generated_msg_log_id = $dbObj->generateID();
+		$generated_msg_log_id = $dbObj->getAutoIncrementMessageId();
 
 		//$sql="insert into MESSAGE_LOG (ID,SENDER,RECEIVER,DATE,IP,IS_MSG,OBSCENE,MSG_OBS_ID,TYPE) values ('$generated_msg_log_id','$sender_profileid','$receiver_profileid','$date',INET_ATON('$ip'),'$is_msg','$obscene','$id_obscene','$type')";
 		if($senderShard==$receiverShard)
