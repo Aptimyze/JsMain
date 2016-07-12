@@ -157,7 +157,7 @@ class apieditdppv1Action extends sfAction
 		$request = sfContext::getInstance()->getRequest();		
 		$this->m_objLoginProfile->getDetail($this->profileId,"","*","RAW");
 		
-		if(in_array("T", explode(",", $this->m_objLoginProfile->getSUBSCRIPTION()))) 
+		/*if(in_array("T", explode(",", $this->m_objLoginProfile->getSUBSCRIPTION()))) 
 			$userType = UserType::AP_USER;
 		
 		if ($userType == UserType::AP_EXECUTIVE) 
@@ -223,7 +223,7 @@ class apieditdppv1Action extends sfAction
 			}
 		} 
 		else
-		{
+		{*/
 			if($scase)
 				$scase.= ",DPP='E',DATE=now()";
 			
@@ -242,7 +242,7 @@ class apieditdppv1Action extends sfAction
 			$jpartnerEditLog = new JpartnerEditLog();
 			$param["fromBackend"] = $fromBackend;
 			$jpartnerEditLog->logDppEdit($jpartnerObj,$this->dppUpdateArray,$param);
-		}
+		//}
 		
 		//If profile's Source is ofl_prof Then do following
 		if (strtolower($this->m_objLoginProfile->getSOURCE()) == "ofl_prof") 

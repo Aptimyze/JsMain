@@ -12,12 +12,13 @@ $profileTypeArray=array("IAD"=>"Profile Ad Response",
 
 function startAutoApply($profileid,$operator='',$status='BILLED')
 {
+        $status = 'LIVE';
 	$operator=getSEBilling($profileid,$operator);
 
-	$sql="REPLACE INTO Assisted_Product.AP_PROFILE_INFO(PROFILEID,SE,STATUS) VALUES('$profileid','$operator','$status')";
+	$sql="REPLACE INTO Assisted_Product.AP_PROFILE_INFO(PROFILEID,SE,STATUS,SEND) VALUES('$profileid','$operator','$status','Y')";
 	mysql_query_decide($sql) or die("Error while inserting info in AP_PROFILE_INFO  ".mysql_error_js());
 
-	$sql="INSERT INTO Assisted_Product.AP_ASSIGN_LOG(PROFILEID,USER,DATE) VALUES('$profileid','$operator',NOW())";
+/*	$sql="INSERT INTO Assisted_Product.AP_ASSIGN_LOG(PROFILEID,USER,DATE) VALUES('$profileid','$operator',NOW())";
 	mysql_query_decide($sql) or die("Error while inserting into AP_ASSIGN_LOG  ".mysql_error_js());
 
 	$status='NQA';
@@ -98,7 +99,7 @@ function startAutoApply($profileid,$operator='',$status='BILLED')
 	}
 
 	include_once($_SERVER['DOCUMENT_ROOT']."/jsadmin/ap_dpp_common.php");
-	createDPP($parameters,$profileid,$operator,'SE',$status);
+	createDPP($parameters,$profileid,$operator,'SE',$status);*/
 
 }
 
@@ -136,13 +137,13 @@ function endAutoApply($profileid)
 	$sql="DELETE FROM Assisted_Product.AP_PROFILE_INFO WHERE PROFILEID='$profileid'";
 	mysql_query_decide($sql) or die("Error while updating AP_PROFLE_INFO  ".mysql_error_js());
 
-	$sql="SELECT DPP_ID,STATUS,CREATED_BY,ONLINE FROM Assisted_Product.AP_DPP_FILTER_ARCHIVE WHERE STATUS!='OBS' AND PROFILEID='$profileid'";
+	/*$sql="SELECT DPP_ID,STATUS,CREATED_BY,ONLINE FROM Assisted_Product.AP_DPP_FILTER_ARCHIVE WHERE STATUS!='OBS' AND PROFILEID='$profileid'";
 	$res=mysql_query_decide($sql) or die("Error while selecting dpp   ".mysql_error_js());
 	while($row=mysql_fetch_assoc($res))
 	{
 		include_once($_SERVER['DOCUMENT_ROOT']."/jsadmin/ap_dpp_common.php");
 		changeDPPStatus($profileid,'END_OF_SERVICE',$row["DPP_ID"],$row["STATUS"],'OBS',$row["ONLINE"],$row["CREATED_BY"]);
-	}
+	}*/
 }
 
 function endHomeDelivery($profileid)
