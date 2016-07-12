@@ -10,10 +10,8 @@ class GetMultiUserPhotoV1Action extends sfActions
 { 
 	public function execute($request)
 	{
-		/*
 		$pidArr["PROFILEID"] ='5547372,8914646,8953994,1,2,3,4';
 		$photoType = 'MainPicUrl';
-		*/
 		$profileObj=LoggedInProfile::getInstance('newjs_master');
 	        $multipleProfileObj = new ProfileArray();
 
