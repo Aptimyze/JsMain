@@ -612,6 +612,10 @@ class Membership
         $valuesStr .= ",'$this->tax_rate'";
 
         $this->billid = $billingPurObj->genericPurchaseInsert($paramsStr, $valuesStr);
+        
+        /**
+         * Code added for tracking discount given per transaction
+         */
         $memHandlerObj = new MembershipHandler();
         $supervisor = $memHandlerObj->getAllotedExecSupervisor($this->profileid);
         if(empty($supervisor)){
@@ -619,11 +623,21 @@ class Membership
         }
         $servicesObj = new Services();
         $transObj = new billing_TRACK_TRANSACTION_DISCOUNT_APPROVAL();
+        $serArr = $servicesObj->getServiceName($this->serviceid);
+        foreach($serArr as $key=>$val){
+            $services_names[] = $val['NAME'];
+        }
+        $serName = implode(",", $services_names);
         $iniAmt = $servicesObj->getTotalPrice($this->serviceid);
         $finAmt = round($iniAmt - $this->discount, 2);
         $discPerc = round((($iniAmt - $finAmt)/$iniAmt) * 100, 2);
         $transObj->insert($this->billid, $this->profileid, $this->discount_type, $supervisor, $discPerc, $iniAmt, $finAmt, $this->serviceid);
-        
+        $jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
+        $execEmail = $jsadminPswrdsObj->getEmail($supervisor);
+        $subject = "Bill with discount of {$discPerc}% offered by {$this->entryby}; Final Bill Amount: {$finAmt}";
+        $msg = "Bill Details ({$serName})";
+        SendMail::send_email($execEmail,$msg,$subject,$from="js-sums@jeevansathi.com",$cc="avneet.bindra@jeevansathi.com");
+
         try {
             $ordrDeviceObj = new billing_ORDERS_DEVICE();
             $ordrDeviceObj->updateBillingDetails($this->orderid,$this->orderid_part1,$this->billid);

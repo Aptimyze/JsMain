@@ -666,7 +666,7 @@ class jsadmin_PSWRDS extends TABLE
     {
         try
         {
-            $sql="SELECT EMAIL AS SUB_CENTER from jsadmin.PSWRDS where USERNAME=:USERNAME";
+            $sql="SELECT EMAIL from jsadmin.PSWRDS where USERNAME=:USERNAME";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":USERNAME",$username,PDO::PARAM_STR);
             $prep->execute();
