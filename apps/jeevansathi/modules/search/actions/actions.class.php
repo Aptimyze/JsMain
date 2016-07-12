@@ -1049,17 +1049,17 @@ class searchActions extends sfActions
                             $SearchParamtersObj->setCITY_RES($cityToSet,'',1);
 			/* mapping groups to individual values*/
 			
-			if(strstr($loggedInProfileObj->getSUBSCRIPTION(),"T"))
+			/*if(strstr($loggedInProfileObj->getSUBSCRIPTION(),"T"))
 			{
 				$apObj = new SaveDppForAP;
 				$success = $apObj->SaveDppFromSearch($SearchParamtersObj,$loggedInProfileObj->getPROFILEID());
 				unset($apObj);
 			}
 			else
-			{			
+			{*/			
 				$UserSavedSearches = new PartnerProfile($loggedInProfileObj);
 				$success = $UserSavedSearches->saveSearchAsDpp($SearchParamtersObj,$mapped);
-			}
+			//}
 			if(MobileCommon::isDesktop())
 			{
 				if($success)
