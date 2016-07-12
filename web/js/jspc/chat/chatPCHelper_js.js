@@ -27,6 +27,8 @@ function initiateChatConnection()
         username = "a12@localhost";
     else if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
         username = "a1@localhost";
+    else if(readSiteCookie("CHATUSERNAME")=="bassi")
+        username = "a8@localhost";
     //only for dev env--------------------end:ankita
     console.log("Username:");
     console.log(username);
