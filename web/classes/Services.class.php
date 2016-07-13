@@ -6,8 +6,8 @@
  */
 
 if (JsConstants::$whichMachine != 'matchAlert') {
-	include_once ($_SERVER["DOCUMENT_ROOT"] . "/billing/comfunc_sums.php");
-	include_once ($_SERVER["DOCUMENT_ROOT"] . "/P/pg/functions.php");
+	include_once (JsConstants::$docRoot . "/billing/comfunc_sums.php");
+	include_once (JsConstants::$docRoot . "/P/pg/functions.php");
 }
 
 class Services

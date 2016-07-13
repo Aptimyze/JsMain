@@ -249,5 +249,26 @@ class BILLING_ORDERS extends TABLE{
             throw new jsException($e);
         }       
     }
+
+    public function getOrderDetailsForId($id){
+        try     
+        {       
+            $sql="SELECT * FROM billing.ORDERS WHERE ID=:ID";
+            $prep=$this->db->prepare($sql);
+            $prep->bindValue(":ID", $id, PDO::PARAM_INT);
+            $prep->execute();
+            if($result = $prep->fetch(PDO::FETCH_ASSOC))
+            {       
+                $res = $result;
+            }       
+            return $res;
+
+        }       
+        catch(PDOException $e)
+        {       
+            /*** echo the sql statement and error message ***/
+            throw new jsException($e);
+        }       
+    }
 }
 ?>
