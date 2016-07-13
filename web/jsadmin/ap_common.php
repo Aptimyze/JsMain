@@ -263,8 +263,9 @@ function getNumberInList($profileArray,$listArray)
 		}
 
 		//Fetching lead counts
+		$db = connect_slave();
 		$sql="SELECT PROFILEID,USERNAME FROM newjs.JPROFILE WHERE PROFILEID IN('$profiles')";
-		$res=mysql_query_decide($sql) or die("Error while fetching usernames  ".mysql_error_js());
+		$res=mysql_query_decide($sql,$db) or die("Error while fetching usernames  ".mysql_error_js());
 		while($row=mysql_fetch_assoc($res))
 		{
 			$usernamePIDArray[$row["USERNAME"]]=$row["PROFILEID"];
@@ -272,7 +273,7 @@ function getNumberInList($profileArray,$listArray)
 		}
 		$usernames=trim($usernames,",");
 		$sql="SELECT COUNT(*) AS COUNT,campaigns_cstm.username_c AS USERNAME,leads_cstm.folder_c AS FOLDER FROM sugarcrm.campaigns_cstm JOIN sugarcrm.leads ON campaigns_cstm.id_c = sugarcrm.leads.campaign_id JOIN sugarcrm.leads_cstm ON id = leads_cstm.id_c WHERE campaigns_cstm.username_c IN($usernames) AND leads.deleted!=1 AND leads_cstm.jsprofileid_c='' GROUP BY campaigns_cstm.username_c,leads_cstm.folder_c";
-		$res=mysql_query_decide($sql) or die("Error while fetching lead counts   ".mysql_error_js());
+		$res=mysql_query_decide($sql,$db) or die("Error while fetching lead counts   ".mysql_error_js());
 		while($row=mysql_fetch_assoc($res))
 		{
 			$PID=$usernamePIDArray[$row["USERNAME"]];
@@ -281,7 +282,7 @@ function getNumberInList($profileArray,$listArray)
 		}
 		//Fetch called profiles
 		$sql="SELECT COUNT(*) AS COUNT,PROFILEID,FOLDER FROM Assisted_Product.AP_CALL_HISTORY WHERE PROFILEID IN('$profiles') AND FOLDER IN('$lists') AND CALL_STATUS!='C' GROUP BY PROFILEID,FOLDER";
-		$res=mysql_query_decide($sql) or die("Error while fetching call counts  ".mysql_error_js());
+		$res=mysql_query_decide($sql,$db) or die("Error while fetching call counts  ".mysql_error_js());
 		while($row=mysql_fetch_assoc($res))
 		{
 			if(in_array("TBC",$listArray))
@@ -383,10 +384,11 @@ function getList($profileid,$list,$contactArray='',$leadArray='',$username='',$p
 	{
 		if($list=='SL' || $list=='TBD' || $list=='DIS')
 		{
+			$db = connect_slave();
 			$sql="SELECT $profileid AS PROFILEID,leads_cstm.id_c AS MATCH_ID,NOW() AS TIME,'' AS TYPE,'' AS FILTERED,3 AS DIR FROM sugarcrm.campaigns_cstm JOIN sugarcrm.leads ON sugarcrm.campaigns_cstm.id_c = sugarcrm.leads.campaign_id JOIN sugarcrm.leads_cstm ON id = leads_cstm.id_c WHERE campaigns_cstm.username_c = '$username' AND leads_cstm.folder_c = '$list' AND leads.deleted!='1' AND leads_cstm.jsprofileid_c=''";
 			if($pagination)
 				$sql.="	LIMIT $newProfileStart,$newPAGELEN";
-			$res=mysql_query_decide($sql) or die("Error while fetching leads   ".mysql_error_js());
+			$res=mysql_query_decide($sql,$db) or die("Error while fetching leads   ".mysql_error_js());
 			while($row=mysql_fetch_assoc($res))
 			{
 				$valueArray[]=array("LEAD_ID"=>$row["MATCH_ID"],
@@ -1686,9 +1688,10 @@ function getFolder($profileid,$profilesArr,$callsArr,$leadsArr)
 	}
 	if(is_array($leadsArr))
 	{
+		$db = connect_slave();
 		$leads=implode("','",$leadsArr);
 		$sql="SELECT id_c,folder_c,deleted,converted FROM sugarcrm.leads_cstm JOIN sugarcrm.leads ON id_c=id WHERE id_c IN('$leads')";
-		$res=mysql_query_decide($sql) or die("error while fetching leads info  ".$sql."  ".mysql_error_js());
+		$res=mysql_query_decide($sql,$db) or die("error while fetching leads info  ".$sql."  ".mysql_error_js());
 		while($row=mysql_fetch_assoc($res))
 		{
 			$folderArr[$row["id_c"]]=$row["folder_c"];
