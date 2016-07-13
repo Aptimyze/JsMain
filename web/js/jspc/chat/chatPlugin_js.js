@@ -129,7 +129,7 @@ JsChat.prototype = {
         console.log(curEleRef._loginStatus);
         if (curEleRef._loginStatus == 'N') {
             $(curEleRef._listingPanelID).fadeOut('slow', function() {
-                if($(this._loginPanelID).length == 0){
+                if($(curEleRef._loginPanelID).length == 0){
                     console.log("Length is 0 of login panel");
                     curEleRef.addLoginHTML();
                 }
