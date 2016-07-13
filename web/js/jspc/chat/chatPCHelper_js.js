@@ -72,79 +72,18 @@ function initiateChatConnection()
         console.log("Exception thrown in initiateChatConnection function - "+e);
     }
     */
+    var username = 'a1@localhost';
+    if(readSiteCookie("CHATUSERNAME")=="bassi")
+        username = 'a8@localhost';
     console.log(chatConfig.Params[device].bosh_service_url);
-    connection = new Strophe.Connection(chatConfig.Params[device].bosh_service_url);
-    connection.connect('a6@localhost','123',onConnect);
-    console.log(connection);
-}
-/*
-function initiateStropheConnection(){
-    console.log(chatConfig.Params[device].bosh_service_url);
-    connection = new Strophe.Connection(chatConfig.Params[device].bosh_service_url);
-    connection.connect('a6@localhost','123',onConnect);
-    console.log(connection);
-    //connection.rawInput = rawInput;
-    //connection.rawOutput = rawOutput;
-}
-*/
-function onConnect(status)
-{
-    console.log("AIn onConnect function");
-    if (status == Strophe.Status.CONNECTING) {
-	console.log("BIn onConnect function");
-    } else if (status == Strophe.Status.CONNFAIL) {
-        console.log("CIn onConnect function");
-	$('#connect').get(0).value = 'connect';
-    } else if (status == Strophe.Status.DISCONNECTING) {
-        console.log("DIn onConnect function");
-	} else if (status == Strophe.Status.DISCONNECTED) {
-        console.log("EIn onConnect function");
-	$('#connect').get(0).value = 'connect';
-    } else if (status == Strophe.Status.CONNECTED) {
-        console.log("FIn onConnect function");
-        console.log("Presence");
-    console.log($pres().tree());
-	connection.send($pres().tree());
-	
-    
-        var iq = $iq({type: 'get'}).c('query', {xmlns: 'jabber:iq:roster'});
-        connection.sendIQ(iq, on_roster);
-        
-    connection.addHandler(onMessage, null, 'message', null, null,  null); 
-    
-    }
+    strophieWrapper.connect(chatConfig.Params[device].bosh_service_url,username,"123");
+    console.log(strophieWrapper.connectionObj);
 }
 
-function on_roster(data){
-    console.log(data);
-    sendMessage();
-    
-}
-
-function onMessage(msg) {
-    var to = msg.getAttribute('to');
-    var from = msg.getAttribute('from');
-    var type = msg.getAttribute('type');
-    var elems = msg.getElementsByTagName('body');
-    if (type == "chat" && elems.length > 0) {
-	var body = elems[0];
-	console.log('ECHOBOT: I got a message from ' + from + ': ' + 
-	    Strophe.getText(body));
-	var text = Strophe.getText(body) + " (this is echo)";
-    
-	//var reply = $msg({to: from, from: to, type: 'chat', id: 'purple4dac25e4'}).c('active', {xmlns: "http://jabber.org/protocol/chatstates"}).up().cnode(body);
-            //.cnode(Strophe.copyElement(body)); 
-	//connection.send(reply.tree());
-	console.log('ECHOBOT: I sent ' + from + ': ' + Strophe.getText(body));
-    }
-    // we must return true to keep the handler alive.  
-    // returning false would remove it after it finishes.
-    return true;
-}
 
 function sendMessage() {
     var message = "$('#message').get(0).value";
-    var to = 'a1@localhost';
+    var to = 'a2@localhost';
     if(message && to){
 	var reply = $msg({
 	    to: to,
@@ -180,65 +119,7 @@ function setConverseSettings(key,value)
     converse.settings.set(key,value);
 }
 */
-/*function mapListingJsonToHTML
-* map json data for listing to html
-* @params:jsonData
-* @return:listingHTML
-*/
-function mapListingJsonToHTML(jsonData)  //used for old plugin - ankita
-{
-    var listingHTML = '<div id="listing_tab1">';
-    $.each(jsonData,function( index, val ){
-        listingHTML = listingHTML+ '<div id="'+chatConfig.Params[device].rosterDisplayGroups[index]+'"><div class="f12 fontreg nchatbdr2"><p class="nchatt1 fontreg pl15">'+index+'</p></div><ul class="chatlist">';
-        $.each(val,function( key, details ){
-              listingHTML = listingHTML+'<li class="clearfix profileIcon" id="profile_'+details.fullname+'"><img id="pic_'+key.fullname+'" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">'+details.fullname+'</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li>';
-        });
-        listingHTML = listingHTML+'</ul></div>';
-    });
-    listingHTML = listingHTML + '</div>';
-    return listingHTML;   
-}
 
-/*function updateListing
-* update listing
-* @params:rosterData
-*/
-function updateListing(rosterData) //used for old plugin - ankita
-{
-    //console.log("roster update");
-    //console.log(rosterData);
-    var newRosterHTML = "",groupid;
-    groupid = chatConfig.Params[device].rosterDisplayGroups[rosterData.groups[0]]; //group id mapping
-    //handle if no user in group - case ankita
-    //if this new user doesn't exist already
-    if($("#"+groupid).find("ul.chatlist").find("li#profile_"+rosterData.fullname).length === 0)
-    {
-        newRosterHTML = '<li class="clearfix profileIcon" id="profile_'+rosterData.fullname+'"> <img id="pic_'+rosterData.fullname+'" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">'+rosterData.fullname+'</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li>';
-        //append newRosterHTML
-        $("#"+groupid).find("ul.chatlist").append(newRosterHTML);
-    }     
-}
-
-/*function createListingPanel
-* creates listing panel after login and json data generation
-* @params:none
-*/ 
-/*
-function createListingPanel()   //used for old plugin--ankita
-{
-    //get json data for listing
-    var listingData = fetchConverseSettings("listing_data");
-    //console.log(listingData);
-    $(pluginId).setChatPluginOption("listingJsonData",listingData);
-    //map json data to listing html
-    var listingHTML = mapListingJsonToHTML(listingData);
-    //console.log(listingHTML);
-    $(pluginId).setChatPluginOption("Tab1Data" ,listingHTML);
-    //show listing panel by appending html
-    var ChatPluginObj = $(pluginId).chatplugin();
-    ChatPluginObj.addListingBody();
-}
-*/
 // Changes XML to JSON
 function xmlToJson(xml) {
     // Create the return object
@@ -276,39 +157,42 @@ function xmlToJson(xml) {
 }
 
 /*invokePluginAddlisting
-function to add roster item with vcard details or update roster item details in listing
-* @inputs:listObject,vcardObj,key(create_list/add_node/update_status)
+function to add roster item or update roster item details in listing
+* @inputs:listObject,key(create_list/add_node/update_status)
 */
 
-function invokePluginManagelisting(listObject,vcardObj,key){
-    //console.log(listObject);
-    //console.log(vcardObj); //to be cached---ankita
-    var listNodeObj = {"rosterDetails":{},"vcardDetails":vcardObj},nodeArr = [];
+function invokePluginManagelisting(listObject,key){
+    console.log("calling invokePluginAddlisting");
+    /*var listNodeObj = {"rosterDetails":{},"vcardDetails":vcardObj},nodeArr = [];
+    listNodeObj["rosterDetails"] = listObject;
     if(typeof listObject.attributes == "undefined")
         listNodeObj["rosterDetails"] = listObject;
     else
-        listNodeObj["rosterDetails"] = listObject.attributes;
+        listNodeObj["rosterDetails"] = listObject.attributes;*/
+
     if(key=="add_node"){
-        
-        if(listCreationDone == false){   
+        //if(listCreationDone == false){   
             //create list with n nodes
-            listingInputData.push(listNodeObj);
-            console.log("adding node before list creation");
-            if(listingInputData.length == chatConfig.Params[device].initialRosterLimit["nodesCount"]){
-                key = "create_list";
-                console.log("list created after adding "+listingInputData.length+" nodes");
-                listCreationDone = true;
-                objJsChat.addListingInit(listingInputData);
-                console.log(listingInputData);
+            //nodeArr = listObject.splice(0,chatConfig.Params[device].initialRosterLimit["nodesCount"]);
+            //console.log(nodeArr);
+            //listingInputData.push(listNodeObj);
+            //console.log("adding node before list creation");
+            //if(nodeArr.length == chatConfig.Params[device].initialRosterLimit["nodesCount"]){
+               // key = "create_list";
+                //console.log("list created after adding "+listingInputData.length+" nodes");
+                //listCreationDone = true;
+                console.log("adding "+listObject.length+" nodes in invokePluginAddlisting");
+                //objJsChat.addListingInit(listObject);
+                console.log(listObject);
                 //setConverseSettings("listCreationDone",true);
-            }
-        } else{
+            //}
+        /*} else{
            //add single node after list creation
             nodeArr.push(listNodeObj);
             console.log("adding single node");
             console.log(nodeArr);
             objJsChat.addListingInit(nodeArr);
-        }
+        }*/   //add node case
     } else if(key=="update_status"){             
         //update existing user status in listing
         nodeArr.push(listNodeObj);
@@ -493,7 +377,7 @@ $(document).ready(function(){
 
     objJsChat.onChatLoginSuccess = function(){
         //trigger list creation if nodes in roster lesser than limit
-        setCreateListingInterval();
+        //setCreateListingInterval();
     }
     
     objJsChat.onLogoutPreClick = function(){
