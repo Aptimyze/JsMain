@@ -105,6 +105,7 @@ class JPROFILE
      */
     public function get($value = "", $criteria = "PROFILEID", $fields = "", $extraWhereClause = null, $cache = false)
     {
+
         $fields = $this->getRelevantFields($fields);
 
         if(ProfileCacheLib::getInstance()->isCached($criteria, $value, $fields)) {
@@ -141,15 +142,17 @@ class JPROFILE
         if(true === $bResult) {
             ProfileCacheLib::getInstance()->updateCache($paramArr, $criteria, $value, $extraWhereCnd);
         }
+        return $bResult;
     }
 
     public function insert($paramArr = array())
     {
         $bResult = self::$objProfileMysql->insertRecord($paramArr);
 
-        if(true === $bResult) {
-            ProfileCacheLib::getInstance()->insertInCache($paramArr);
+        if(false !== $bResult) {
+            ProfileCacheLib::getInstance()->insertInCache($bResult, $paramArr);
         }
+        return $bResult;
     }
 
     /**

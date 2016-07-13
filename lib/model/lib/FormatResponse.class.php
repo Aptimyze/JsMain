@@ -69,15 +69,15 @@ class FormatResponse
                 $output = $this->convertRedisToMysql($Var);
                 break;
             default :
-                throw jsException::log("Invalid FormatResponse Type");
+                throw jsException::log("","Invalid FormatResponse Type");
         }
 
         return $output;
     }
 
     /**
-     * convertRedisToMysql
      * @param $Var
+     * @return mixed
      */
     private function convertRedisToMysql($Var)
     {

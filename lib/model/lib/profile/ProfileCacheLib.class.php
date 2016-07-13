@@ -78,7 +78,7 @@ class ProfileCacheLib
             return false;
         }
 
-        if (isset($this->arrRecords[intval($key)])) {
+        if (isset($this->arrRecords[intval($key)]) && $this->checkFieldsAvailability($key, $fields)) {
             return true;
         }
 
@@ -90,6 +90,12 @@ class ProfileCacheLib
             unset($this->arrRecords[intval($key)]);
             return false;
         }
+
+        //TODO : Check all fields specified in param fields is present in cache also, right now we are assuming all fields are cached together
+        if (false === $this->checkFieldsAvailability($key, $fields)) {
+           return false;
+        }
+
         return true;
     }
 
@@ -100,7 +106,7 @@ class ProfileCacheLib
      * @param $result
      * @return bool
      */
-    public function cacheThis($szCriteria, $key, $result)
+    public function cacheThis($szCriteria, $key, $arrParams)
     {
         //If Criteria is other then PROFILEID then return false
         if (false === $this->validateCriteria($szCriteria)) {
@@ -109,27 +115,42 @@ class ProfileCacheLib
 
         //Prepend Prefix on key
         $szKey = $this->getDecoratedKey($key);
-        $result = $this->getRelevantParams($result);
+        $arrParams = $this->getRelevantParams($arrParams);
 
-        if (0 === count($result)) {
+        if (0 === count($arrParams)) {
             return false;
         }
         //Set Hash Object
-        JsMemcache::getInstance()->setHashObject($szKey, $result);
+        JsMemcache::getInstance()->setHashObject($szKey, $arrParams);
         //TODO : Update Local Cache also
+        $this->updateInLocalCache($key, $arrParams);
         return true;
     }
 
-    public function updateCache($paramArr, $szCriteria, $value, $extraWhereCnd)
-    {
-        if (false === $this->validateCriteria($szCriteria)) {
-            return false;
+    /**
+     * @param $paramArr
+     * @param $szCriteria
+     * @param $key
+     * @param $extraWhereCnd
+     * @return bool|void
+     */
+    public function updateCache($paramArr, $szCriteria, $key, $extraWhereCnd)
+    {              
+        if(false === $this->isCached($szCriteria, $key, array_keys($paramArr))) {
+            return ;
         }
+        return $this->cacheThis($szCriteria, $key, $paramArr);
     }
 
-    public function insertInCache($paramArr)
+    /**
+     * @param $iProfileID
+     * @param $paramArr
+     */
+    public function insertInCache($iProfileID, $paramArr)
     {
-
+        $paramArr[ProfileCacheConstants::CACHE_HASH_KEY] = $iProfileID;
+        $paramArr[ProfileCacheConstants::ACTIVATED_KEY] = 1;
+        return $this->cacheThis(ProfileCacheConstants::CACHE_HASH_KEY, $iProfileID, $paramArr);
     }
 
     /**
@@ -160,9 +181,6 @@ class ProfileCacheLib
         foreach ($arrFields as $k) {
             $arrOut[$k] = $arrData[$k];
         }
-
-
-
 
         return $arrOut;
     }
@@ -235,12 +253,12 @@ class ProfileCacheLib
         } else if (is_string($arrFields) && $arrFields != ProfileCacheConstants::ALL_FIELDS_SYM) {
             $arrFields = explode(',',$arrFields);
         }
-
+        //TODO: If $arrFields is not an array, handle this case  
         return array_intersect(ProfileCacheConstants::$arrHashSubKeys, $arrFields);
     }
 
     /**
-     * @param $arrOut
+     * @param $arrData
      * @param $arrExtraWhereClause
      */
     private function processArrayWhereClause(&$arrData,$arrExtraWhereClause)
@@ -257,6 +275,49 @@ class ProfileCacheLib
             }
         }
         return;
+    }
+
+    /**
+     * @param $key
+     * @param $fields
+     * @return bool
+     */
+    private function checkFieldsAvailability($key, $fields)
+    {
+        $arrAllowableFields = $this->getRelevantFields($fields);
+
+        if ($fields == ProfileCacheConstants::ALL_FIELDS_SYM &&
+            count($this->getFromLocalCache($key))  !== count($arrAllowableFields)
+        ) {
+            return false;
+        } else if ($fields !== ProfileCacheConstants::ALL_FIELDS_SYM) {
+            $arrFields = $fields;
+            if(is_string($fields)) {
+                $arrFields = explode(",", $fields);
+            }
+            foreach ($arrFields as $szColName) {
+                if(!in_array($szColName, $arrAllowableFields)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @param $key
+     * @param $arrFields
+     * @return bool
+     */
+    private function updateInLocalCache($key, $arrFields)
+    {
+        if(!is_array($arrFields)) {
+            return false;
+        }
+        foreach($arrFields as $col => $val) {
+            $this->arrRecords[intval($key)][$col] = $val;
+        }
+        return true;
     }
 }
 ?>

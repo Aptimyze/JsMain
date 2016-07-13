@@ -13,6 +13,8 @@ class ProfileCacheConstants
     const CACHE_CRITERIA = 'PROFILEID';
     const ALL_FIELDS_SYM = '*';
     const PROFILE_CACHE_PREFIX = '_p_';
+    const CACHE_HASH_KEY = 'PROFILEID';
+    const ACTIVATED_KEY = 'activatedKey';
     //Acceptable or Relevant Fields which will be allowed as a subkeys in Hash
     //public static $arrHashSubKeys = array('USERNAME', 'AGE', 'CITY_RES', 'COUNTRY_RES', 'CAST', 'RELIGION');
 
