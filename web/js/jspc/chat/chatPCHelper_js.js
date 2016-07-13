@@ -26,6 +26,8 @@ function initiateChatConnection()
     var username = 'a1@localhost';
     if(readSiteCookie("CHATUSERNAME")=="bassi")
         username = 'a8@localhost';
+    else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
+        username = 'a2@localhost';
     console.log(chatConfig.Params[device].bosh_service_url);
     strophieWrapper.connect(chatConfig.Params[device].bosh_service_url,username,"123");
     console.log(strophieWrapper.connectionObj);

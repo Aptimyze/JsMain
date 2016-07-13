@@ -258,7 +258,7 @@ statusObj[username]=data[key]["chat_status"];
                List += '<div class="fl f14 fontlig pt15 pl18">';
                List += data[key]["attributes"]["name"];
                List += '</div>';
-               console.log(runID + " is in list " + val);
+               //console.log(runID + " is in list " + val);
                if (status == "online") {
                    List += '<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>';
                }
