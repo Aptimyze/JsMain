@@ -12,19 +12,21 @@ var strophieWrapper = {
 	//executed after connection done
 	onConnect: function(status)
 	{
-	    console.log("AIn onConnect function");
+	    console.log("In onConnect function");
 	    if (status == Strophe.Status.CONNECTING) {
-		console.log("BIn onConnect function");
+		console.log("Connecting");
 	    } else if (status == Strophe.Status.CONNFAIL) {
-	        console.log("CIn onConnect function");
+	        console.log("CONNFAIL");
 		$('#connect').get(0).value = 'connect';
 	    } else if (status == Strophe.Status.DISCONNECTING) {
-	        console.log("DIn onConnect function");
+	        console.log("DISCONNECTING");
 		} else if (status == Strophe.Status.DISCONNECTED) {
-	        console.log("EIn onConnect function");
+	        console.log("DISCONNECTED");
 		$('#connect').get(0).value = 'connect';
-	    } else if (status == Strophe.Status.CONNECTED) {
-	        console.log("FIn onConnect function");
+	    } else if(status == Strophe.Status.AUTHFAIL){
+            console.log("AUTHFAIL");
+        } else if (status == Strophe.Status.CONNECTED) {
+	        console.log("CONNECTED");
 	        console.log("Presence");
 	        /*console.log($pres().tree());
 	        strophieWrapper.connectionObj.send($pres().tree());*/
