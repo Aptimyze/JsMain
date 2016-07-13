@@ -23,6 +23,7 @@ class sugarcrm_leads extends TABLE{
                         if($str)
                         {
                                 $sql="SELECT id,phone_mobile FROM sugarcrm.leads WHERE phone_mobile IN (".$str.")";
+				$this->db = connect_slave();
                                 $prep=$this->db->prepare($sql);
                                 if($numberArray)
                                 {
@@ -118,7 +119,7 @@ class sugarcrm_leads extends TABLE{
                 {
 					$now = date("Y-m-d G:i:s");
 					$sql = "SELECT user_name FROM sugarcrm.leads l, sugarcrm.users as u where l.assigned_user_id=u.id  and l.id=:lead";
-					
+					$this->db = connect_slave();	
 					$prep = $this->db->prepare($sql);
 					
 				  	$prep->bindValue(":lead", $lead, PDO::PARAM_STR);	
@@ -140,7 +141,7 @@ class sugarcrm_leads extends TABLE{
                 try
                 {
 					$sql_cstm = "SELECT * FROM sugarcrm.leads_cstm l where l.id_c=:leadid";
-					
+					$this->db = connect_slave();	
 					$prep = $this->db->prepare($sql_cstm);
 					
 				  	$prep->bindValue(":leadid", $leadid, PDO::PARAM_STR);	
@@ -162,7 +163,7 @@ class sugarcrm_leads extends TABLE{
                 try
                 {
 					$sql = "SELECT * FROM sugarcrm.leads l where l.id=:leadid";
-					
+					$this->db = connect_slave();	
 					$prep = $this->db->prepare($sql);
 					
 				  	$prep->bindValue(":leadid", $leadid, PDO::PARAM_STR);	
@@ -185,6 +186,7 @@ class sugarcrm_leads extends TABLE{
                 try
                 {
                         $sql = "SELECT assistant,campaign_id,last_name,lead_source,phone_home,phone_mobile,date_entered,status FROM sugarcrm.leads WHERE id =:LEADID";
+			$this->db = connect_slave();
                         $prep = $this->db->prepare($sql);
                         $prep->bindValue(":LEADID", $leadid, PDO::PARAM_INT);   
                         $prep->execute();
@@ -205,6 +207,7 @@ class sugarcrm_leads extends TABLE{
                 	//$todayStartTime = date("Y-m-d")." 00:00:00";
                 	$todayEndTime = date("Y-m-d")." 23:59:59";
                         $sql = "SELECT l.id,l.phone_home,l.phone_mobile,c.enquirer_mobile_no_c,c.enquirer_landline_c FROM sugarcrm.leads as l JOIN sugarcrm.leads_cstm as c ON l.id=c.id_c WHERE l.assigned_user_id='' AND l.date_entered<=:TODAY_END_TIME AND l.deleted=0 and l.status IN ('13','24') and c.source_c='12'";
+			$this->db = connect_slave();
             		$prep = $this->db->prepare($sql);
            	 	//$prep->bindValue(":TODAY_START_TIME",$todayStartTime,PDO::PARAM_STR);
             		$prep->bindValue(":TODAY_END_TIME",$todayEndTime,PDO::PARAM_STR);
@@ -228,6 +231,7 @@ class sugarcrm_leads extends TABLE{
                 {
         	        $dt_6day = date("Y-m-d",time()-6*86400)." 23:59:59";
                         $sql = "SELECT l.id,l.phone_home,l.phone_mobile,c.enquirer_mobile_no_c,c.enquirer_landline_c FROM sugarcrm.leads as l JOIN sugarcrm.leads_cstm as c ON l.id=c.id_c WHERE l.assigned_user_id='' AND l.date_entered<=:DT_6DAY AND l.deleted=0 and l.status IN ('13','24') and c.source_c!='12'";
+			$this->db = connect_slave();
             		$prep = $this->db->prepare($sql);
             		$prep->bindValue(":DT_6DAY",$dt_6day,PDO::PARAM_STR);
             		$prep->execute();

@@ -14,7 +14,8 @@ require_once("custom/include/language/en_us.lang.php");
  */
 function jscreate_lead($data,$errors=array()){
 	global $SUGARCRMDBCOLUMNS;
-	$duplicate=new Duplicate();
+	$db_slave = connect_slave();
+	$duplicate=new Duplicate($db_slave);
 	global $current_user;
 		$current_user=new User();
 	$current_user->getSystemUser();
