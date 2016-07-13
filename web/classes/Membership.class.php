@@ -1850,9 +1850,9 @@ class Membership
                     $reqid = $link_discount;
                 }
             } else if ($renewalActive){
-                $dicount_type = 10;
+                $discount_type = 10;
                 if ($fest) {
-                    $dicount_type = 7;
+                    $discount_type = 7;
                 }
             } else if ($fest) {
                 $discount_type = 6;
