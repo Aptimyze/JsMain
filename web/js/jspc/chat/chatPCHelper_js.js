@@ -18,9 +18,11 @@ var pluginId = '#chatOpenPanel',device = 'PC';
 /*function initiateChatConnection
 * request sent to openfire to initiate chat and maintain session
 * @params:none
-*/     
+*/ 
+    
 function initiateChatConnection()
 {
+    /*
     //only for dev env--------------------start:ankita
     var username = "a1@localhost";
     if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
@@ -65,6 +67,90 @@ function initiateChatConnection()
     {
         console.log("Exception thrown in initiateChatConnection function - "+e);
     }
+    */
+    console.log(chatConfig.Params[device].bosh_service_url);
+    connection = new Strophe.Connection(chatConfig.Params[device].bosh_service_url);
+    connection.connect('a6@localhost','123',onConnect);
+    console.log(connection);
+}
+/*
+function initiateStropheConnection(){
+    console.log(chatConfig.Params[device].bosh_service_url);
+    connection = new Strophe.Connection(chatConfig.Params[device].bosh_service_url);
+    connection.connect('a6@localhost','123',onConnect);
+    console.log(connection);
+    //connection.rawInput = rawInput;
+    //connection.rawOutput = rawOutput;
+}
+*/
+function onConnect(status)
+{
+    console.log("AIn onConnect function");
+    if (status == Strophe.Status.CONNECTING) {
+	console.log("BIn onConnect function");
+    } else if (status == Strophe.Status.CONNFAIL) {
+        console.log("CIn onConnect function");
+	$('#connect').get(0).value = 'connect';
+    } else if (status == Strophe.Status.DISCONNECTING) {
+        console.log("DIn onConnect function");
+	} else if (status == Strophe.Status.DISCONNECTED) {
+        console.log("EIn onConnect function");
+	$('#connect').get(0).value = 'connect';
+    } else if (status == Strophe.Status.CONNECTED) {
+        console.log("FIn onConnect function");
+        console.log("Presence");
+    console.log($pres().tree());
+	connection.send($pres().tree());
+	
+    
+        var iq = $iq({type: 'get'}).c('query', {xmlns: 'jabber:iq:roster'});
+        connection.sendIQ(iq, on_roster);
+        
+    connection.addHandler(onMessage, null, 'message', null, null,  null); 
+    
+    }
+}
+
+function on_roster(data){
+    console.log(data);
+    sendMessage();
+    
+}
+
+function onMessage(msg) {
+    var to = msg.getAttribute('to');
+    var from = msg.getAttribute('from');
+    var type = msg.getAttribute('type');
+    var elems = msg.getElementsByTagName('body');
+    if (type == "chat" && elems.length > 0) {
+	var body = elems[0];
+	console.log('ECHOBOT: I got a message from ' + from + ': ' + 
+	    Strophe.getText(body));
+	var text = Strophe.getText(body) + " (this is echo)";
+    
+	//var reply = $msg({to: from, from: to, type: 'chat', id: 'purple4dac25e4'}).c('active', {xmlns: "http://jabber.org/protocol/chatstates"}).up().cnode(body);
+            //.cnode(Strophe.copyElement(body)); 
+	//connection.send(reply.tree());
+	console.log('ECHOBOT: I sent ' + from + ': ' + Strophe.getText(body));
+    }
+    // we must return true to keep the handler alive.  
+    // returning false would remove it after it finishes.
+    return true;
+}
+
+function sendMessage() {
+    var message = "$('#message').get(0).value";
+    var to = 'a1@localhost';
+    if(message && to){
+	var reply = $msg({
+	    to: to,
+	    type: 'chat'
+	})
+	.cnode(Strophe.xmlElement('body', message)).up()
+	.c('active', {xmlns: "http://jabber.org/protocol/chatstates"});
+	connection.send(reply);
+	log('I sent ' + to + ': ' + message);
+    }
 }
 
 /*function fetchConverseSettings
@@ -72,22 +158,24 @@ function initiateChatConnection()
 * @params:key
 * @return:value
 */
+/*
 function fetchConverseSettings(key)
 {
     var value = converse.settings.get(key);
     return value;
 }
-
+*/
 /*function setConverseSettings
 * set value of converse settings' key
 * @params:key,value
 * @return:none
 */
+/*
 function setConverseSettings(key,value)
 {
     converse.settings.set(key,value);
 }
-
+*/
 /*function mapListingJsonToHTML
 * map json data for listing to html
 * @params:jsonData
@@ -131,6 +219,7 @@ function updateListing(rosterData) //used for old plugin - ankita
 * creates listing panel after login and json data generation
 * @params:none
 */ 
+/*
 function createListingPanel()   //used for old plugin--ankita
 {
     //get json data for listing
@@ -145,6 +234,7 @@ function createListingPanel()   //used for old plugin--ankita
     var ChatPluginObj = $(pluginId).chatplugin();
     ChatPluginObj.addListingBody();
 }
+*/
 // Changes XML to JSON
 function xmlToJson(xml) {
     // Create the return object
@@ -207,7 +297,7 @@ function invokePluginManagelisting(listObject,vcardObj,key){
                 listCreationDone = true;
                 objJsChat.addListingInit(listingInputData);
                 console.log(listingInputData);
-                setConverseSettings("listCreationDone",true);
+                //setConverseSettings("listCreationDone",true);
             }
         } else{
            //add single node after list creation
@@ -295,7 +385,7 @@ function setCreateListingInterval()
         {
             console.log("triggering list creation as time interval exceeded");
             listCreationDone = true;
-            setConverseSettings("listCreationDone",true);
+            //setConverseSettings("listCreationDone",true);
             console.log(listingInputData);
             //plugin.addInList(listingInputData,"create_list"); 
             objJsChat.addListingInit(listingInputData);   
@@ -326,12 +416,13 @@ function checkAuthentication(){
     });
     return auth;
 }
-
+/*
 function logoutChat(){
     console.log("In logout chat function")
     converse.user.logout();
     eraseCookie("chatAuth");
 }
+*/
 
 function invokePluginReceivedMsgHandler(msgObj)
 {
@@ -379,6 +470,7 @@ $(document).ready(function(){
                 return ;
             }
             else{
+                console.log("Initiate strophe connection in preclick");
                 initiateChatConnection();
                 objJsChat._loginStatus = 'Y';
             }
@@ -398,12 +490,27 @@ $(document).ready(function(){
     }
 
     objJsChat.onSendingMessage = function(){
+        //var x = converse.listen.on('messageSend',"MEssagesend");
+        //console.log(x);
         /*
         console.log("Converse");
         //converse.emit('showSentOTRMessage',"msg");
         //console.log("Helper file onSendingMessage"+converse.ChatBoxView());
         converse.ChatBoxView().sendMessage("hi");
         */
+       //console.log(converse.initialize.ChatBoxView);
+       //console.log(converse.initialize.ChatBoxView());
+       //converse.initialize.ChatBoxView.sendMessage("Hihello");
+       
+       /*
+       var msg = converse.env.$msg({
+          from: 'a1@localhost',
+          to: 'a6@localhost',
+          type: 'chat',
+          body: "from INtermediate file"
+       });
+       converse.send(msg);
+       */
     }
 
     objJsChat.start();
