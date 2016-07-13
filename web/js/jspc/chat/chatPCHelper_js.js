@@ -2,6 +2,7 @@
 * converse client(converse.js) to chat plugin(chat_js.js)
 */
 var listingInputData = [],listCreationDone=false,objJsChat;  //listing data sent to plugin-array of objects
+//var decrypted = JSON.parse(CryptoJS.AES.decrypt(api response, "chat", {format: CryptoJSAesJson}).toString(CryptoJS.enc.Utf8));
 
 function readSiteCookie(name) {
     var nameEQ = escape(name) + "=",ca = document.cookie.split(';');
@@ -435,6 +436,22 @@ function invokePluginReceivedMsgHandler(msgObj)
         objJsChat._appendRecievedMessage(msgObj["message"],msgObj["from"].substr(0, msgObj["from"].indexOf('@')),msgObj["msgid"]); 
 }
 
+
+var CryptoJSAesJson = {
+    stringify: function (cipherParams) {
+        var j = {ct: cipherParams.ciphertext.toString(CryptoJS.enc.Base64)};
+        if (cipherParams.iv) j.iv = cipherParams.iv.toString();
+        if (cipherParams.salt) j.s = cipherParams.salt.toString();
+        return JSON.stringify(j);
+    },
+    parse: function (jsonStr) {
+        var j = JSON.parse(jsonStr);
+        var cipherParams = CryptoJS.lib.CipherParams.create({ciphertext: CryptoJS.enc.Base64.parse(j.ct)});
+        if (j.iv) cipherParams.iv = CryptoJS.enc.Hex.parse(j.iv)
+        if (j.s) cipherParams.salt = CryptoJS.enc.Hex.parse(j.s)
+        return cipherParams;
+    }
+}
 
 $(document).ready(function(){
     console.log("User");
