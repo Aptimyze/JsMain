@@ -602,6 +602,10 @@ class Membership
         $myrow_sales = $jprofileObj->get($this->profileid,'PROFILEID');
         $this->sales_type = $myrow_sales['CRM_TEAM'];
 
+        if(empty($this->discount_type) || $this->discount_type == 0){
+            $this->discount_type = 12;
+        }
+
         //Generating Bill ID.
         $billingPurObj = new BILLING_PURCHASES();
         $paramsStr = "SERVICEID, PROFILEID, USERNAME, NAME, ADDRESS, GENDER, CITY, PIN, EMAIL, RPHONE, OPHONE, MPHONE, COMMENT, OVERSEAS, DISCOUNT, DISCOUNT_TYPE, DISCOUNT_REASON, WALKIN, CENTER, ENTRYBY, DUEAMOUNT, DUEDATE, ENTRY_DT, STATUS, SERVEFOR, VERIFY_SERVICE, ORDERID, DEPOSIT_DT, DEPOSIT_BRANCH, IPADD, CUR_TYPE, ENTRY_FROM, MEMBERSHIP, DOL_CONV_BILL, SALES_TYPE, SERVICE_TAX_CONTENT";
@@ -631,10 +635,7 @@ class Membership
         $iniAmt = $servicesObj->getTotalPrice($this->serviceid);
         $finAmt = round($iniAmt - $this->discount, 2);
         $discPerc = round((($iniAmt - $finAmt)/$iniAmt) * 100, 2);
-        if(empty($this->discount_type) || $this->discount_type == 0){
-            $discount_type = 12;
-        }
-        $transObj->insert($this->billid, $this->profileid, $discount_type, $supervisor, $discPerc, $iniAmt, $finAmt, $this->serviceid);
+        $transObj->insert($this->billid, $this->profileid, $this->discount_type, $supervisor, $discPerc, $iniAmt, $finAmt, $this->serviceid);
         if ($supervisor != 'rohan.m') {
             $jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
             $execEmail = $jsadminPswrdsObj->getEmail($supervisor);
