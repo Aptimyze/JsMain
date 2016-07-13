@@ -63,7 +63,7 @@
     ~/if`
     ~if $showChat`
         <script>
-            var openfireUrl= "~JsConstants::$openfireConfig['HOST']`:~JsConstants::$openfireConfig['PORT']`";
+            var openfireUrl= "~JsConstants::$openfireConfig['HOST']`:~JsConstants::$openfireConfig['WSPORT']`";
         </script>
     ~/if`
 </head>
