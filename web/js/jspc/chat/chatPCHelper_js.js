@@ -275,7 +275,7 @@ function checkNewLogin(profileid) {
 * sets time interval after which json data will be sent to plugin to create list if not created
 * @params: none
 */
-function setCreateListingInterval()
+/*function setCreateListingInterval()
 {
     setTimeout(function(){
         if(listCreationDone==false)
@@ -288,7 +288,7 @@ function setCreateListingInterval()
             objJsChat.addListingInit(listingInputData);   
         }
     },chatConfig.Params[device].initialRosterLimit["timeInterval"]);
-}
+}*/
 
 function checkAuthentication(){
     var auth;
@@ -418,25 +418,5 @@ $(document).ready(function(){
     }
 
     objJsChat.start();
-    
-   /*var i =0;
-       setInterval(function(){ 
-           i++;
-           var data= [
-                       {
-                           "rosterDetails": {
-                               "chat_status": "offline",
-                               "fullname": "a12",
-                               "Groups": ["dpp"],
-                               "id": "a12@localhost",
-                               "jid": "a12@localhost"
-                           }
-                       }
-                   ];
-                   console.log("removing");
-       objJsChat._removeFromListing('removeCall1',data); 
-
-
-       }, 30000);*/
    }
 });
