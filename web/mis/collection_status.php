@@ -151,7 +151,7 @@ if(isset($data))
 
 		$i=0;
 
-		$sql="SELECT a.USERNAME,a.BILLID,a.WALKIN,b.COLLECTED,b.RECEIPTID,b.INVOICE_NO,b.SOURCE,b.AMOUNT,b.TYPE,b.CD_DT,b.CD_NUM,b.CD_CITY,b.BANK,b.ENTRY_DT,b.DEPOSIT_DT,b.DEPOSIT_BRANCH,b.ENTRYBY, b.TRANS_NUM from billing.PAYMENT_DETAIL as b,billing.PURCHASES as a WHERE b.ENTRY_DT BETWEEN '$start_dt' AND '$end_dt' AND a.BILLID=b.BILLID and b.STATUS='DONE' AND b.AMOUNT>0 ";
+		$sql="SELECT a.USERNAME,a.BILLID,a.WALKIN,b.COLLECTED,b.RECEIPTID,b.INVOICE_NO,b.SOURCE,b.AMOUNT,b.TYPE,b.CD_DT,b.CD_NUM,b.CD_CITY,b.BANK,b.ENTRY_DT,b.DEPOSIT_DT,b.DEPOSIT_BRANCH,b.ENTRYBY, b.TRANS_NUM, a.DISCOUNT_TYPE from billing.PAYMENT_DETAIL as b,billing.PURCHASES as a WHERE b.ENTRY_DT BETWEEN '$start_dt' AND '$end_dt' AND a.BILLID=b.BILLID and b.STATUS='DONE' AND b.AMOUNT>0 ";
 
 		if($currency=='inr')
 			$sql.=" AND b.TYPE='RS' ";
@@ -352,7 +352,7 @@ if(isset($data))
 				$arr[$i]['collection_status']="Collected";
 
 			$arr[$i]['invoice_no']=$row['INVOICE_NO'];
-
+			$arr[$i]['discount_type'] = memDiscountTypes::$discountArr[$row['DISCOUNT_TYPE']];
 			$i++;
 		}
 
@@ -396,7 +396,7 @@ if(isset($data))
                         $dataSet3 ="Transaction Number is the number depending on mode of payment (eg: if MODE is EB_CASH then TRANSACTION NUMBER is Easy Bill Reference ID)";
                         $dataSet4 ="Collection-Status";
 		
-			$dataHeader =array("entry_dt"=>"Entry-Dt","client"=>"Username","country"=>"User Country","saleid"=>"Bill-Id","receiptid"=>"Receipt-Id","mode"=>"Mode","type"=>"Type","amt"=>"Amount","cd_num"=>"Cheque/DD-No","sale_by"=>"Sale-By","entry_by"=>"Entry-By","deposit_branch"=>"Deposit-Branch","collection_status"=>"Collection-Status","transaction_number"=>"Transaction-Number","invoice_no"=>"Invoice-No","orderid"=>"Order-ID","gateway"=>"Gateway","approved_by"=>"Approved By");
+			$dataHeader =array("entry_dt"=>"Entry-Dt","client"=>"Username","country"=>"User Country","saleid"=>"Bill-Id","receiptid"=>"Receipt-Id","mode"=>"Mode","type"=>"Type","amt"=>"Amount","cd_num"=>"Cheque/DD-No","sale_by"=>"Sale-By","entry_by"=>"Entry-By","deposit_branch"=>"Deposit-Branch","collection_status"=>"Collection-Status","transaction_number"=>"Transaction-Number","invoice_no"=>"Invoice-No","orderid"=>"Order-ID","gateway"=>"Gateway","approved_by"=>"Approved By","discount_type"=>"Discount Type");
 
 			$totrec =count($arr);
 			for($i=0; $i<$totrec; $i++)

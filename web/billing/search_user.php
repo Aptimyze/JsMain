@@ -178,7 +178,7 @@ if(isset($data))
 			$user_details[$billid]["COMMENT"]=$row_purchases['COMMENT'];
 			$user_details[$billid]["TAX_RATE"] = $row_purchases["TAX_RATE"];
 			
-			$user_details[$billid]["DISCOUNT_TYPE"] = get_discount_type($row_purchases["DISCOUNT_TYPE"]);
+			$user_details[$billid]["DISCOUNT_TYPE"] = memDiscountTypes::$discountArr[$row_purchases["DISCOUNT_TYPE"]];
 			if(strtotime($row_purchases['ENTRY_DT']) > strtotime(date("2015-05-10 00:00:00"))){
 				$user_details[$billid]["DISCOUNT"] = round($row_purchases["DISCOUNT"],2);
 			} else {
@@ -362,7 +362,7 @@ if(isset($data))
 		$last_active["PIN"] = $row_purchases["PIN"];
 		$last_active["STATUS"] = $row_purchases["STATUS"];
 		$last_active["WALKIN"] = $row_purchases["WALKIN"];
-		$last_active["DISCOUNT_TYPE"] = get_discount_type($row_purchases["DISCOUNT_TYPE"]);
+		$last_active["DISCOUNT_TYPE"] = memDiscountTypes::$discountArr[$row_purchases["DISCOUNT_TYPE"]];
 		$last_active["DISCOUNT"] = $row_purchases["DISCOUNT"];
 		$last_active["DISCOUNT_REASON"] = ereg_replace("\r\n|\n","<br>",$row_purchases["DISCOUNT_REASON"]);
 		$last_active["CURTYPE"] = $row_purchases["CUR_TYPE"];
