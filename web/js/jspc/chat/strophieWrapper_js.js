@@ -25,13 +25,14 @@ var strophieWrapper = {
 		$('#connect').get(0).value = 'connect';
 	    } else if (status == Strophe.Status.CONNECTED) {
 	        console.log("FIn onConnect function");
-	        /*console.log($pres().tree());
-	        strophieWrapper.connectionObj.send($pres().tree());*/
+	        console.log($pres());
+	        /*strophieWrapper.connectionObj.send($pres().tree());*/
 
 	        //send own presence
 	        strophieWrapper.sendPresence();
 	        //get roster
 	        strophieWrapper.getRoster();
+	        console.log("after getRoster");
 	        strophieWrapper.connectionObj.addHandler(strophieWrapper.onMessage, null, 'message', null, null,  null); 
 	    }
 	},
@@ -50,20 +51,19 @@ var strophieWrapper = {
 
 	//executed after presence has been fetched
 	onPresenceReceived : function(presence){
-		console.log("ankita in onPresenceReceived");
 		var presence_type = $(presence).attr('type'); // unavailable, subscribed, etc...
 		var from = $(presence).attr('from'); // the jabber_id of the contact
-
 		if (presence_type != 'error'){
-			if (presence_type === 'unavailable'){
-				alert('offline');
+		if (presence_type === 'unavailable'){
+			// Mark contact as offline
+			console.log(from+" is offline");
+			}else{
+				var show = $(presence).find("show").text(); // this is what gives away, dnd, etc.
+				if (show === 'chat' || show === ''){
+				// Mark contact as online
+				console.log(from+" is online");
 				}else{
-					var show = $(presence).find("show").text(); // this is what gives away, dnd, etc.
-					if (show === 'chat' || show === ''){
-					 alert('online');
-				}else{
-					// etc...
-					alert('etc');
+				// etc...
 				}
 			}
 		}
@@ -79,12 +79,16 @@ var strophieWrapper = {
 		$(iq).find("item").each(function() {
 			strophieWrapper.Roster.push(xmlToJson(this));
 		});
-		console.log("strophieWrapper roster");
+		console.log("end of strophieWrapper roster");
 		console.log(strophieWrapper.Roster);
-        //strophieWrapper.connection.addHandler(strophieWrapper.onPresenceReceived.bind(this),null,"presence");
-	    //strophieWrapper.sendPresence();
+        strophieWrapper.connectionObj.addHandler(
+                        function (presence) {
+                            strophieWrapper.Roster.onPresenceReceived(presence);
+                            return true;
+                        }.bind(this), null, 'presence', null);
+        strophieWrapper.sendPresence();
 	    //console.log(data["query"]["item"]);
-	    invokePluginManagelisting(strophieWrapper.Roster,"add_node");
+	    //invokePluginManagelisting(strophieWrapper.Roster,"add_node");
 	},
 
 	onMessage :function(msg) {
@@ -106,10 +110,5 @@ var strophieWrapper = {
 	    // we must return true to keep the handler alive.  
 	    // returning false would remove it after it finishes.
 	    return true;
-	},
-    
-    disconnect: function(){
-        console.log("In wrapper disconnect");
-        strophieWrapper.connectionObj.disconnect();
-    }
+	}
 }
