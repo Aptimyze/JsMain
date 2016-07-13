@@ -235,69 +235,63 @@ JsChat.prototype = {
         })
     },
     //start:addlisting
-    addListingInit: function(data) {
-        var elem = this;
-        for (var key in data) {
-            var runID = data[key]["rosterDetails"]["jid"],res = '',status = data[key]["rosterDetails"]["chat_status"];
-            console.log("addlisting for "+runID+"--"+data[key]["rosterDetails"]["chat_status"]);
-            console.log(data);
-            console.log(runID+" is now "+status);
-            res = runID.split("@");
-            runID = res[0];
-            $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
-                var List = '',username = data[key]["rosterDetails"]["fullname"],tabShowStatus = $('div.' + val).attr('data-showuser');
-                List += '<li class=\"clearfix profileIcon\"';
-                List += "id=\"" + runID + "_"+val + "\" >";
-                List += "<img id=\"pic_" + runID + "_" +val + "\" src=\"images/pic1.jpg\" class=\"fl\">";
-                List += '<div class="fl f14 fontlig pt15 pl18">';
-                List += data[key]["rosterDetails"]["fullname"];
-                List += '</div>';
-                console.log(runID+" is "+status);
-                if(status == "online")
-                {
-                    List += '<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>';
-                }
-                List += '</li>';
-                var addNode = false;
-                if(tabShowStatus == 'false')
-                {
-                    console.log(status+"2222");
-                    addNode = true;
-                }
-                else
-                {
-                    console.log(status+"1111");
-                    if(status=='online')
-                    {
+   addListingInit: function(data) {
+    console.log("in addListingInit");
+       var elem = this;
+var mainIndex = 0;
+var statusObj = [];
+       for (var key in data) {
+           var runID = data[key]["attributes"]["jid"],
+               res = '',
+               status = data[key]["chat_status"],
+username = data[key]["attributes"]["name"];
+statusObj[username]=data[key]["chat_status"];
+           console.log(runID + " is now " + status);
+           res = runID.split("@");
+           runID = res[0];
+           $.each(data[key]["group"], function(index, val) {
+               var List = '',
+                   tabShowStatus = $('div.' + val).attr('data-showuser');
+               List += '<li class=\"clearfix profileIcon\"';
+               List += "id=\"" + runID + "_" + val + "\" >";
+               List += "<img id=\"pic_" + runID + "_" + val + "\" src=\"images/pic1.jpg\" class=\"fl\">";
+               List += '<div class="fl f14 fontlig pt15 pl18">';
+               List += data[key]["attributes"]["name"];
+               List += '</div>';
+               console.log(runID + " is in list " + val);
+               if (status == "online") {
+                   List += '<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>';
+               }
+               List += '</li>';
+               var addNode = false;
+               if (tabShowStatus == 'false') {
+                   addNode = true;
+               } else {
+                   if (status == 'online') {
                        addNode = true;
-                    }
-                }
-                console.log("chexcking");
-                console.log(addNode);
-                if(addNode == true)
-                {
-                    if($('#'+runID + "_" + val).length==0)
-                    {
-                        if($('#'+runID + "_" + val).find('.nchatspr').length==0)
-                        {
-                            $('div.' + val + ' ul').append(List);
-                            $("#" + username+"_" + val).on("click", function() {
-                               elem._chatPanelsBox(username,status);
-                            }); 
-                        }
-                    }
-                    else
-                    {
-                        $(elem._mainID).find($('#'+runID + "_" + val)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
-                    }
-                }
-            });
-        }
-        elem._chatScrollHght();
-        $(elem._scrollDivId).mCustomScrollbar({
-            theme: "light"
-        });
-    },
+                   }
+               }
+               if (addNode == true) {
+                   if ($('#' + runID + "_" + val).length == 0) {
+                       if ($('#' + runID + "_" + val).find('.nchatspr').length == 0) {
+                           $('div.' + val + ' ul').append(List);
+                           $("#" + username + "_" + val).on("click", function() {
+var id = $(this).attr("id").split("_")[0];
+                               elem._chatPanelsBox(id, statusObj[id]);
+                           });
+                       }
+                   } else {
+                       $(elem._mainID).find($('#' + runID + "_" + val)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
+                   }
+               }
+           });
+mainIndex++;
+       }
+       elem._chatScrollHght();
+       $(elem._scrollDivId).mCustomScrollbar({
+           theme: "light"
+       });
+   },
 
     //scrolling down chat box
     _scrollDown: function(elem, removeBorder) {

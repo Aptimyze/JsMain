@@ -141,9 +141,9 @@ function invokePluginManagelisting(listObject,key){
            //add single node after list creation
             nodeArr.push(listNodeObj);
             console.log("adding single node");
-            console.log(nodeArr);
-            objJsChat.addListingInit(nodeArr);
-        }*/   //add node case
+            console.log(nodeArr);*/
+            objJsChat.addListingInit(listObject);
+        //}   //add node case
     } else if(key=="update_status"){             
         //update existing user status in listing
         nodeArr.push(listNodeObj);

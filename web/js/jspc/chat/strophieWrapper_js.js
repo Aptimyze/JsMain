@@ -41,6 +41,7 @@ var strophieWrapper = {
 
 	//send presence
 	sendPresence : function(){
+		console.log("Presence");
         strophieWrapper.connectionObj.send($pres());
     },
 
@@ -52,43 +53,41 @@ var strophieWrapper = {
 
 	//executed after presence has been fetched
 	onPresenceReceived : function(presence){
-        var presence_type = $(presence).attr('type'); // unavailable, subscribed, etc...
-        var from = $(presence).attr('from'); // the jabber_id of the contact...
-        if(!strophieWrapper.presenceMessage[from])
-            console.log(presence);
-        if (presence_type != 'error'){
-            if (presence_type === 'unavailable'){
-                console.log("Contact: ", $(presence).attr('from'), " is offline");
-                strophieWrapper.presenceMessage[from] = "offline";
-            }else{
-                var show = $(presence).find("show").text(); // this is what gives away, dnd, etc.
-                if ( (show === 'chat' || show === '') && (!strophieWrapper.presenceMessage[from])){
-                    // Mark contact as online
-                    console.log("Contact: ", $(presence).attr('from'), " is online");
-                    strophieWrapper.presenceMessage[from] = "online";
-                    strophieWrapper.sendPresence();
-                } else if (show === 'away'){
-                    console.log("Contact: ", $(presence).attr('from'), " is offline");
-                    strophieWrapper.presenceMessage[from] = "offline";
-                }
-            }
-        }
-        return true;
+		console.log("ankita in onPresenceReceived");
+		var presence_type = $(presence).attr('type'); // unavailable, subscribed, etc...
+		var from = $(presence).attr('from'); // the jabber_id of the contact
+
+		if (presence_type != 'error'){
+			if (presence_type === 'unavailable'){
+				alert('offline');
+				}else{
+					var show = $(presence).find("show").text(); // this is what gives away, dnd, etc.
+					if (show === 'chat' || show === ''){
+					 alert('online');
+				}else{
+					// etc...
+					alert('etc');
+				}
+			}
+		}
+		return true;
     },
 	
 	//executed after roster has been fetched
 	onRosterReceived :function(iq){
-	    console.log("in callbackOnRosterData ankita2...");
+	    console.log("in onRosterReceived ankita3...");
 	    console.log(iq);
-	    console.log(xmlToJson(iq));
+	    var data = xmlToJson(iq);
+	    console.log(data);
 		$(iq).find("item").each(function() {
 			strophieWrapper.Roster.push(xmlToJson(this));
 		});
+		console.log("strophieWrapper roster");
 		console.log(strophieWrapper.Roster);
-        strophieWrapper.connection.addHandler(strophieWrapper.onPresenceReceived,null,"presence");
-	    //connection.send($pres());
+        //strophieWrapper.connection.addHandler(strophieWrapper.onPresenceReceived.bind(this),null,"presence");
+	    //strophieWrapper.sendPresence();
 	    //console.log(data["query"]["item"]);
-	    //invokePluginManagelisting(data["query"]["item"],"add_node");
+	    invokePluginManagelisting(strophieWrapper.Roster,"add_node");
 	},
 
 	onMessage :function(msg) {
