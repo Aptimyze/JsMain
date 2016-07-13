@@ -96,5 +96,10 @@ var strophieWrapper = {
 	    // we must return true to keep the handler alive.  
 	    // returning false would remove it after it finishes.
 	    return true;
-	}
+	},
+    
+    disconnect: function(){
+        console.log("In wrapper disconnect");
+        strophieWrapper.connectionObj.disconnect();
+    }
 }

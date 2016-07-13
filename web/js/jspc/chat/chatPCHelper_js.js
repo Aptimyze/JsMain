@@ -313,13 +313,14 @@ function checkAuthentication(){
     });
     return auth;
 }
-/*
+
 function logoutChat(){
     console.log("In logout chat function")
-    converse.user.logout();
+    //converse.user.logout();
+    strophieWrapper.disconnect();
     eraseCookie("chatAuth");
 }
-*/
+
 
 function invokePluginReceivedMsgHandler(msgObj)
 {
