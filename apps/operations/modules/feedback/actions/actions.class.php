@@ -55,7 +55,7 @@ class feedbackActions extends sfActions
       {
 			$tempArray['reportee_id']=$profileDetails[$value['REPORTEE']]['USERNAME'];
      		$tempArray['reporter_id']=$profileDetails[$value['REPORTER']]['USERNAME'];;
-      		$tempArray['reason']=$value['CATEGORY'];
+      		$tempArray['reason']=$value['REASON'];
       		$tempArray['timestamp']=$value['DATE'];
 			$tempArray['comments']=$value['OTHER_REASON'];
 			$tempArray['reporter_email']=$profileDetails[$value['REPORTER']]['EMAIL'];
