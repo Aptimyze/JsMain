@@ -631,7 +631,10 @@ class Membership
         $iniAmt = $servicesObj->getTotalPrice($this->serviceid);
         $finAmt = round($iniAmt - $this->discount, 2);
         $discPerc = round((($iniAmt - $finAmt)/$iniAmt) * 100, 2);
-        $transObj->insert($this->billid, $this->profileid, $this->discount_type, $supervisor, $discPerc, $iniAmt, $finAmt, $this->serviceid);
+        if(empty($this->discount_type) || $this->discount_type == 0){
+            $discount_type = 12;
+        }
+        $transObj->insert($this->billid, $this->profileid, $discount_type, $supervisor, $discPerc, $iniAmt, $finAmt, $this->serviceid);
         if ($supervisor != 'rohan.m') {
             $jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
             $execEmail = $jsadminPswrdsObj->getEmail($supervisor);
