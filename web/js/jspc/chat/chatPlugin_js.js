@@ -204,7 +204,8 @@ JsChat.prototype = {
         TabsOpt += '</ul></div><div id="nchatDivs" class="nchatscrollDiv">';
         TabsOpt += '<div class="showtab1 js-htab"> ';
         for (var i = 0; i < obj["tab1"]["groups"].length; i++) {
-            TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + "\">";
+            TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + "\" data-showuser=\""+ obj["tab1"]["groups"][i]["hide_offline_users"]   +"\">";
+            //TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + "\">";
             TabsOpt += "<div class=\"f12 fontreg nchatbdr2";
             if(obj["tab1"]["groups"][i]["show_group_name"]==false)
                 TabsOpt += " disp-none";
@@ -215,7 +216,8 @@ JsChat.prototype = {
         TabsOpt += '</div>';
         TabsOpt += '<div class="showtab2 js-htab disp-none">';
         for (var i = 0; i < obj["tab2"]["groups"].length; i++) {
-            TabsOpt += "<div class=\"" + obj["tab2"]["groups"][i]["id"] + "\">";
+            TabsOpt += "<div class=\"" + obj["tab2"]["groups"][i]["id"] + "\" data-showuser=\""+ obj["tab2"]["groups"][i]["hide_offline_users"]   +"\">";
+            //TabsOpt += "<div class=\"" + obj["tab2"]["groups"][i]["id"] + "\">";
             TabsOpt += "<div class=\"f12 fontreg nchatbdr2";
             if(obj["tab2"]["groups"][i]["show_group_name"]==false)
                 TabsOpt += " disp-none";
@@ -234,19 +236,18 @@ JsChat.prototype = {
     },
     //start:addlisting
     addListingInit: function(data) {
-        console.log("in addListingInit");
-        //console.log(data);
         var elem = this;
         for (var key in data) {
-            var runID = '',res = '';
-            runID = data[key]["rosterDetails"]["jid"];
+            var runID = data[key]["rosterDetails"]["jid"],res = '',status = data[key]["rosterDetails"]["chat_status"];
+            console.log("addlisting for "+runID+"--"+data[key]["rosterDetails"]["chat_status"]);
+            console.log(data);
+            console.log(runID+" is now "+status);
             res = runID.split("@");
             runID = res[0];
             $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
-                var List = '',status = "",username = data[key]["rosterDetails"]["fullname"];
-                status = data[key]["rosterDetails"]["chat_status"];
+                var List = '',username = data[key]["rosterDetails"]["fullname"],tabShowStatus = $('div.' + val).attr('data-showuser');
                 List += '<li class=\"clearfix profileIcon\"';
-                List += "id=\"" + (runID + val) + "\" >";
+                List += "id=\"" + runID + "_"+val + "\" >";
                 List += "<img id=\"pic_" + runID + "_" +val + "\" src=\"images/pic1.jpg\" class=\"fl\">";
                 List += '<div class="fl f14 fontlig pt15 pl18">';
                 List += data[key]["rosterDetails"]["fullname"];
@@ -257,15 +258,41 @@ JsChat.prototype = {
                     List += '<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>';
                 }
                 List += '</li>';
-                //console.log(List);
-                $('div.' + val + ' ul').append(List);
-				//bind click on listing]
-                $("#" + username + val).on("click", function() {
-                    elem._chatPanelsBox(username,status);
-                });
+                var addNode = false;
+                if(tabShowStatus == 'false')
+                {
+                    console.log(status+"2222");
+                    addNode = true;
+                }
+                else
+                {
+                    console.log(status+"1111");
+                    if(status=='online')
+                    {
+                       addNode = true;
+                    }
+                }
+                console.log("chexcking");
+                console.log(addNode);
+                if(addNode == true)
+                {
+                    if($('#'+runID + "_" + val).length==0)
+                    {
+                        if($('#'+runID + "_" + val).find('.nchatspr').length==0)
+                        {
+                            $('div.' + val + ' ul').append(List);
+                            $("#" + username+"_" + val).on("click", function() {
+                               elem._chatPanelsBox(username,status);
+                            }); 
+                        }
+                    }
+                    else
+                    {
+                        $(elem._mainID).find($('#'+runID + "_" + val)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
+                    }
+                }
             });
         }
-        //console.log("setting mCustomScrollbar");
         elem._chatScrollHght();
         $(elem._scrollDivId).mCustomScrollbar({
             theme: "light"
@@ -364,13 +391,55 @@ JsChat.prototype = {
         });
     },
 
+    onPostBlockCallback:null,
+    
+    //remove from list
+    _removeFromListing:function(param1,data){
+          console.log('remove element 11');
+          //removeCall1 if user is removed from backend
+          if(param1=='removeCall1')
+           {
+               console.log("calllign _removeFromListing");
+               for (var key in data)
+               {
+                       var runID = '';
+                       runID = data[key]["rosterDetails"]["jid"].split("@")[0];
+                       $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
+                           var tabShowStatus='';
+                           var listElements = '';
+                           //this check the sub header status in the list
+                           var tabShowStatus = $('div.' + val).attr('data-showuser');
+                           listElements = $('#'+runID+'_'+val);
+                           if(tabShowStatus=='false')
+                           {
+                            console.log("here1"+tabShowStatus);
+                               $(listElements).find('.nchatspr').detach();
+                           }
+                           else
+                           {
+                            console.log("here2"+tabShowStatus);
+                               $('div').find(listElements).detach();
+                           }
+                       });
+               }
+           }
+           //removeCall2 if user is removed from block click on chatbox
+           else if(param1=='removeCall2')
+           {
+               $(this._mainID).find('*[id*="'+data+'"]').detach();               
+               //$('*[id*="'+data+'"]').remove();
+               if( this.onPostBlockCallback && typeof this.onPostBlockCallback == 'function' )
+               {
+                   this.onPostBlockCallback(data);  
+               }
+           }
+       },
+
     //bind clicking block icon
     _bindBlock: function(elem, userId) {
         var curElem = this;
         $(elem).off("click").on("click", function() {
-            //TODO: fire block query
-            //TODO:atul, add function here
-            //curElem._removeFromListing(userId);
+            curElem._removeFromListing('removeCall2',userId);
             sessionStorage.setItem("htmlStr_" + userId, $('chat-box[user-id="' + userId + '"] .chatMessage').html());
             $('chat-box[user-id="' + userId + '"] .chatMessage').html('<div id="blockText" class="pos-rel wid90p txtc colorGrey padall-10">You have blocked this user</div><div class="pos-rel fullwid txtc mt20"><div id="undoBlock" class="padall-10 color5 disp_ib cursp">Undo</div></div>');
             $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
