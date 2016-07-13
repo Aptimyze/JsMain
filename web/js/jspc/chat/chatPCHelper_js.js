@@ -78,7 +78,9 @@ function initiateChatConnection()
     console.log(chatConfig.Params[device].bosh_service_url);
     strophieWrapper.connect(chatConfig.Params[device].bosh_service_url,username,"123");
     console.log(strophieWrapper.connectionObj);
+    console.log(connection);
 }
+
 
 
 function sendMessage() {

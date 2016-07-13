@@ -344,6 +344,9 @@ jQuery.fn.shake = function(interval, distance, times) {
 }
 
 function getBellCountData(profileid, setHeader) {
+
+    if (typeof(verifyEmailPage) != "undefined" && verifyEmailPage == "1") return;
+
     if (typeof(PageSource) != "undefined" && PageSource == "MyjsPc") {
         setHeader = 0;
     }
@@ -594,7 +597,7 @@ function sendAjaxHtmlDisplay(ajaxConfig, fun) {
     jQuery.myObj.ajax(ajaxConfig);
 }
 
-function logOutCheck(param,upgradeFromTopNavBar){ 
+function logOutCheck(param,upgradeFromTopNavBar){
     if(top.logOut) 
         top.logOut(); 
     if(top.profileId) 

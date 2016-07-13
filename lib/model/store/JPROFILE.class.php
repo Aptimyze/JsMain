@@ -1400,6 +1400,93 @@ public function duplicateEmail($email)
 			throw new jsException($ex);
 		}
 	}
+        public function DeactiveProfiles($profileArr)
+        {
+                try{
+			foreach($profileArr as $k=>$v)
+				$keyArr[] = ":PROFILEID".$k;
+			$keyStr = implode(",",$keyArr);
+                        $sql="update JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D', activatedKey=0 where PROFILEID IN (".$keyStr.")";
+                        $prep = $this->db->prepare($sql);
+                        foreach($profileArr as $k=>$v)
+				$prep->bindValue(":PROFILEID".$k,$v,PDO::PARAM_INT);
+                        $prep->execute();
+                }
+                catch(PDOException $e)
+                {
+                        /*** echo the sql statement and error message ***/
+                        throw new jsException($e);
+                }
+        }
 
+
+	function getNewScreenProfileCount()
+	{
+		try
+		{
+			$sql = "SELECT count(J.PROFILEID) AS COUNT FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID WHERE ACTIVATED='N' AND INCOMPLETE = 'N' AND MSTATUS != '' and activatedKey=1  and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y')";
+			$pdoStatement = $this->db->prepare($sql);
+			$pdoStatement->execute();
+                        $result  = $pdoStatement->fetch(PDO::FETCH_ASSOC);
+			return $result['COUNT'];
+		}
+		catch (Exception $ex){
+			throw new jsException($ex);
+		}
+	}
+	function getEditScreenProfileCount()
+	{
+		try
+		{
+			$sql = "SELECT count(jp.PROFILEID) AS COUNT FROM newjs.JPROFILE jp LEFT JOIN jsadmin.MAIN_ADMIN mad ON jp.PROFILEID=mad.PROFILEID WHERE mad.PROFILEID IS NULL AND jp.ACTIVATED='Y' AND jp.INCOMPLETE <> 'Y' AND jp.SCREENING<1099511627775 and jp.activatedKey=1 and jp.MOD_DT < date_sub(now(), interval 10 minute)";
+			$pdoStatement = $this->db->prepare($sql);
+			$pdoStatement->execute();
+                        $result  = $pdoStatement->fetch(PDO::FETCH_ASSOC);
+			return $result['COUNT'];
+		}
+		catch(Exception $ex){
+                        throw new jsException($ex);
+                }
+	}
+	public function getPhotoScreenAcceptQueueCount()
+	{
+		try
+		{
+			$sql= "SELECT count(DISTINCT J.PROFILEID) as count,J.HAVEPHOTO AS HAVEPHOTO FROM ((newjs.JPROFILE J INNER JOIN (SELECT PROFILEID, ORDERING, UPDATED_TIMESTAMP, SCREEN_BIT, GROUP_CONCAT( IF (ORDERING =  '0', IF ((CHAR_LENGTH(SCREEN_BIT) >2 AND SCREEN_BIT NOT LIKE  '1%' ) OR OriginalPicUrl =  '', 0, IF (CHAR_LENGTH(SCREEN_BIT) =1,  '1144444', SCREEN_BIT)), IF (OriginalPicUrl =  '', 0, IF (CHAR_LENGTH(SCREEN_BIT) >2, SUBSTRING( SCREEN_BIT, 2, 1 ) , SCREEN_BIT))) ORDER BY ORDERING ASC SEPARATOR ' ') AS BITS FROM PICTURE_FOR_SCREEN_NEW GROUP BY PROFILEID HAVING (SCREEN_BIT NOT IN ('0000000',  '0100000') AND BITS NOT LIKE  '%0%' AND ((BITS LIKE  '1%1%' AND ORDERING =0) OR (BITS LIKE  '%1%' AND ORDERING !=0)))) AS P ON J.PROFILEID = P.PROFILEID) LEFT JOIN jsadmin.MAIN_ADMIN M ON J.PROFILEID = M.PROFILEID AND M.SCREENING_TYPE =  'P') WHERE M.PROFILEID IS NULL AND J.PHOTOSCREEN =0 AND J.HAVEPHOTO IN ('U','Y') AND P.SCREEN_BIT NOT IN ( '0000000',  '0100000') AND J.PHOTODATE <  now() GROUP BY J.HAVEPHOTO";
+			$pdoStatement = $this->db->prepare($sql);
+			$pdoStatement->execute();
+                        while($result  = $pdoStatement->fetch(PDO::FETCH_ASSOC))
+			{
+				if($result['HAVEPHOTO']=="U")
+					$return['NEW_PHOTO_ACCEPT']=$result['count'];
+				if($result['HAVEPHOTO']=="Y")
+					$return['EDIT_PHOTO_ACCEPT']=$result['count'];
+			}
+			return $return;
+		}
+		catch(Exception $ex){
+                        throw new jsException($ex);
+                }
+	}
+	public function getPhotoScreenProcessQueueCount()
+	{
+		try
+		{
+			$sql = "SELECT count(DISTINCT J.PROFILEID) AS count, J.HAVEPHOTO AS HAVEPHOTO FROM ((newjs.JPROFILE J INNER JOIN (SELECT PROFILEID, UPDATED_TIMESTAMP,SCREEN_BIT, GROUP_CONCAT(IF(ORDERING='0',IF(SCREEN_BIT NOT LIKE '1%' OR SCREEN_BIT LIKE '1%1%' OR OriginalPicUrl='', 0, SCREEN_BIT), IF(OriginalPicUrl='' OR SCREEN_BIT LIKE '%0%',0,IF(CHAR_LENGTH(SCREEN_BIT)>2, SUBSTRING( SCREEN_BIT, 2, 1 ), SCREEN_BIT)) ) ORDER BY ORDERING ASC SEPARATOR ' ') AS BITS FROM PICTURE_FOR_SCREEN_NEW GROUP BY PROFILEID HAVING (BITS NOT LIKE '%0%' AND BITS LIKE '%4%')) AS P ON J.PROFILEID = P.PROFILEID) LEFT JOIN jsadmin.MAIN_ADMIN M ON J.PROFILEID = M.PROFILEID AND M.SCREENING_TYPE =  'P') WHERE M.PROFILEID IS NULL AND J.PHOTOSCREEN =0 AND J.HAVEPHOTO IN  ('U','Y') AND P.SCREEN_BIT NOT IN ('0000000','0100000')  AND J.PHOTODATE < now() GROUP BY J.HAVEPHOTO";
+			$pdoStatement = $this->db->prepare($sql);
+			$pdoStatement->execute();
+                        while($result  = $pdoStatement->fetch(PDO::FETCH_ASSOC))
+			{
+				if($result['HAVEPHOTO']=="U")
+					$return['NEW_PHOTO_PROCESS']=$result['count'];
+				if($result['HAVEPHOTO']=="Y")
+					$return['EDIT_PHOTO_PROCESS']=$result['count'];
+			}
+			return $return;
+		}
+		catch(Exception $ex){
+                        throw new jsException($ex);
+                }
+	}
 }
 ?>

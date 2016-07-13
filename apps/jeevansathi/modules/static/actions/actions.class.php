@@ -677,6 +677,40 @@ public function executeAppredirect(sfWebRequest $request)
 	die;
   }
 
+
+
+
+
+  public function executeVerifyEmail($request)
+  {
+
+  $loggedInProfile=LoggedInProfile::getInstance();
+  $profileid=$loggedInProfile->getPROFILEID();
+  $UIDParam=$request->getParameter('EmailUID');
+  $changeLog=new NEWJS_EMAIL_CHANGE_LOG();
+  $emailUID=$changeLog->getLastId($profileid);
+  if($emailUID!=$UIDParam){
+  header("Location: $SITE_URL/static/logoutPage?fromSignout=1");
+  die;
+  }
+    
+  else if($loggedInProfile->getVERIFY_EMAIL()!='Y')
+    {   
+      $paramArr=array('VERIFY_EMAIL'=>'Y');
+      JPROFILE::getInstance('')->edit($paramArr, $profileid, 'PROFILEID');
+      $changeLog->markAsVerified($profileid,$loggedInProfile->getEMAIL());
+  
+    }
+    if(MobileCommon::isMobile())
+      $this->setTemplate('jsmsEmailVerified');
+    else{
+       $this->setTemplate('jspcEmailVerified'); 
+    }
+  } 
+
+
+
+
   public function executeAppPromo($request)
   {
   	$mobile = $request->getParameter("mobile");
