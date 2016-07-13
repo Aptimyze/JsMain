@@ -272,14 +272,19 @@ JsChat.prototype = {
                        addNode = true;
                     }
                 }
+                console.log("chexcking");
+                console.log(addNode);
                 if(addNode == true)
                 {
-                    if($('#'+runID + "_" + val).find('.nchatspr').length==0)
+                    if($('#'+runID + "_" + val).length==0)
                     {
-                        $('div.' + val + ' ul').append(List);
-                        $("#" + username+"_" + val).on("click", function() {
-                           elem._chatPanelsBox(username,status);
-                        }); 
+                        if($('#'+runID + "_" + val).find('.nchatspr').length==0)
+                        {
+                            $('div.' + val + ' ul').append(List);
+                            $("#" + username+"_" + val).on("click", function() {
+                               elem._chatPanelsBox(username,status);
+                            }); 
+                        }
                     }
                     else
                     {
@@ -405,7 +410,7 @@ JsChat.prototype = {
                            //this check the sub header status in the list
                            var tabShowStatus = $('div.' + val).attr('data-showuser');
                            listElements = $('#'+runID+'_'+val);
-                           if(tabShowStatus=='true')
+                           if(tabShowStatus=='false')
                            {
                             console.log("here1"+tabShowStatus);
                                $(listElements).find('.nchatspr').detach();
