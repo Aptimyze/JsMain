@@ -3,10 +3,13 @@ var strophieWrapper = {
 	Roster: [],
 	presenceMessage: null,
 
+	//connect to openfire
 	connect: function(bosh_service_url,username,password){
 		strophieWrapper.connectionObj = new Strophe.Connection(chatConfig.Params[device].bosh_service_url);
     	strophieWrapper.connectionObj.connect(username,'123',strophieWrapper.onConnect);
 	},
+
+	//executed after connection done
 	onConnect: function(status)
 	{
 	    console.log("AIn onConnect function");
