@@ -621,7 +621,7 @@ class Membership
          * Code added for tracking discount given per transaction
          */
         $memHandlerObj = new MembershipHandler();
-        $supervisor = $memHandlerObj->getAllotedExecSupervisor($this->profileid);
+        list($execName, $supervisor) = $memHandlerObj->getAllotedExecSupervisor($this->profileid);
         if(empty($supervisor)){
             $supervisor = 'rohan.m';
         }
@@ -639,7 +639,7 @@ class Membership
         if ($supervisor != 'rohan.m') {
             $jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
             $execEmail = $jsadminPswrdsObj->getEmail($supervisor);
-            $subject = "Bill with discount of {$discPerc}% offered by {$this->entryby}; Final Bill Amount: {$finAmt}";
+            $subject = "Bill with discount of {$discPerc}% offered by {$execName}; Final Bill Amount: {$finAmt}";
             $msg = "Bill Details ({$serName})";
             SendMail::send_email($execEmail,$msg,$subject,$from="js-sums@jeevansathi.com",$cc="avneet.bindra@jeevansathi.com");
         }

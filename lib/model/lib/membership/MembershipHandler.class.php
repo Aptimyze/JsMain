@@ -349,7 +349,7 @@ class MembershipHandler
         $jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
         $execName = $mainAdminObj->getAllotedExecForProfile($profileid);
         $execSup = $jsadminPswrdsObj->fetchAgentSupervisor($execName);
-        return $execSup;
+        return array($execName, $execSup);
     }
     
     public function getDiscountOffer($subMem) {
