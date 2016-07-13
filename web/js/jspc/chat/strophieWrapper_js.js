@@ -36,6 +36,7 @@ var strophieWrapper = {
 	        //get roster
 	        strophieWrapper.getRoster();
 	        console.log("after getRoster");
+	        strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
 	        strophieWrapper.connectionObj.addHandler(strophieWrapper.onMessage, null, 'message', null, null,  null); 
 	    }
 	},
@@ -43,12 +44,13 @@ var strophieWrapper = {
 	//send presence
 	sendPresence : function(){
 		console.log("Presence");
-        strophieWrapper.connectionObj.send($pres());
+        strophieWrapper.connectionObj.send($pres().tree());
     },
 
     //fetch roster
 	getRoster: function(){
-	    var iq = $iq({type: 'get'}).c('query', {xmlns: 'jabber:iq:roster'});
+		var iq = $iq({type: 'get', 'id': strophieWrapper.getUniqueId('roster')})
+                        .c('query', {xmlns: 'jabber:iq:roster'});
 	    strophieWrapper.connectionObj.sendIQ(iq,strophieWrapper.onRosterReceived);
 	},
 
@@ -81,14 +83,13 @@ var strophieWrapper = {
 	    console.log(data);
 		$(iq).find("item").each(function() {
 			strophieWrapper.Roster.push(xmlToJson(this));
+			//var pres = $pres({to: this.attr('jid'), type: "subscribe"});
+			//console.log($pres);
+			//strophieWrapper.connectionObj.send(pres);
 		});
 		console.log("end of strophieWrapper roster");
 		console.log(strophieWrapper.Roster);
-        strophieWrapper.connectionObj.addHandler(
-                        function (presence) {
-                            strophieWrapper.Roster.onPresenceReceived(presence);
-                            return true;
-                        }.bind(this), null, 'presence', null);
+        //strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
         strophieWrapper.sendPresence();
 	    //console.log(data["query"]["item"]);
 	    //invokePluginManagelisting(strophieWrapper.Roster,"add_node");
@@ -113,5 +114,17 @@ var strophieWrapper = {
 	    // we must return true to keep the handler alive.  
 	    // returning false would remove it after it finishes.
 	    return true;
-	}
+	},
+	getUniqueId: function(suffix) {
+        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0,
+                v = c == 'x' ? r : r & 0x3 | 0x8;
+            return v.toString(16);
+        });
+        if (typeof(suffix) == "string" || typeof(suffix) == "number") {
+            return uuid + ":" + suffix;
+        } else {
+            return uuid + "";
+        }
+    }
 }
