@@ -23,12 +23,15 @@ var strophieWrapper = {
 	        console.log("Presence");
 	        console.log($pres().tree());
 	        strophieWrapper.connectionObj.send($pres().tree());
-
-	        //fetch roster for initial listing
-	        var iq = $iq({type: 'get'}).c('query', {xmlns: 'jabber:iq:roster'});
-	        strophieWrapper.connectionObj.sendIQ(iq,strophieWrapper.onRosterReceived);
+	        strophieWrapper.getRoster();
 	        strophieWrapper.connectionObj.addHandler(strophieWrapper.onMessage, null, 'message', null, null,  null); 
 	    }
+	},
+
+	getRoster: function(){
+		//fetch roster for initial listing
+	    var iq = $iq({type: 'get'}).c('query', {xmlns: 'jabber:iq:roster'});
+	    strophieWrapper.connectionObj.sendIQ(iq,strophieWrapper.onRosterReceived);
 	},
 
 	on_presence : function(presence){
