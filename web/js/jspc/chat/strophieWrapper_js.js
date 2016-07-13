@@ -1,10 +1,15 @@
 var strophieWrapper = {
-	connectionObj: {},
+	connectionObj: null,
+	Roster: [],
+	presenceMessage: null,
 
+	//connect to openfire
 	connect: function(bosh_service_url,username,password){
 		strophieWrapper.connectionObj = new Strophe.Connection(chatConfig.Params[device].bosh_service_url);
     	strophieWrapper.connectionObj.connect(username,'123',strophieWrapper.onConnect);
 	},
+
+	//executed after connection done
 	onConnect: function(status)
 	{
 	    console.log("AIn onConnect function");
@@ -21,60 +26,67 @@ var strophieWrapper = {
 	    } else if (status == Strophe.Status.CONNECTED) {
 	        console.log("FIn onConnect function");
 	        console.log("Presence");
-	        console.log($pres().tree());
-	        strophieWrapper.connectionObj.send($pres().tree());
+	        /*console.log($pres().tree());
+	        strophieWrapper.connectionObj.send($pres().tree());*/
+
+	        //send own presence
+	        strophieWrapper.sendPresence();
+	        //get roster
 	        strophieWrapper.getRoster();
 	        strophieWrapper.connectionObj.addHandler(strophieWrapper.onMessage, null, 'message', null, null,  null); 
 	    }
 	},
 
+	//send presence
+	sendPresence : function(){
+        strophieWrapper.connectionObj.send($pres());
+    },
+
+    //fetch roster
 	getRoster: function(){
-		//fetch roster for initial listing
 	    var iq = $iq({type: 'get'}).c('query', {xmlns: 'jabber:iq:roster'});
 	    strophieWrapper.connectionObj.sendIQ(iq,strophieWrapper.onRosterReceived);
 	},
 
-	on_presence : function(presence){
-		console.log(presence);
-		var presence_type = $(presence).attr('type'),chat_status="offline"; // unavailable, subscribed, etc...
-		var from = $(presence).attr('from'); // the jabber_id of the contact
-		if (presence_type != 'error'){
-			if (presence_type === 'unavailable'){
-				// Mark contact as offline
-				chat_status = "offline";
-			}
-			else{
-				var show = $(presence).find("show").text(); // this is what gives away, dnd, etc.
-				if (show === 'chat' || show === ''){
-				// Mark contact as online
-				chat_status = "online";
-				}
-				else{
-				// etc...
-				}
-			}
-		}
-		console.log(from+" ----- "+chat_status);
-		return true;
-	},
+	//executed after presence has been fetched
+	onPresenceReceived : function(presence){
+        var presence_type = $(presence).attr('type'); // unavailable, subscribed, etc...
+        var from = $(presence).attr('from'); // the jabber_id of the contact...
+        if(!strophieWrapper.presenceMessage[from])
+            console.log(presence);
+        if (presence_type != 'error'){
+            if (presence_type === 'unavailable'){
+                console.log("Contact: ", $(presence).attr('from'), " is offline");
+                strophieWrapper.presenceMessage[from] = "offline";
+            }else{
+                var show = $(presence).find("show").text(); // this is what gives away, dnd, etc.
+                if ( (show === 'chat' || show === '') && (!strophieWrapper.presenceMessage[from])){
+                    // Mark contact as online
+                    console.log("Contact: ", $(presence).attr('from'), " is online");
+                    strophieWrapper.presenceMessage[from] = "online";
+                    strophieWrapper.sendPresence();
+                } else if (show === 'away'){
+                    console.log("Contact: ", $(presence).attr('from'), " is offline");
+                    strophieWrapper.presenceMessage[from] = "offline";
+                }
+            }
+        }
+        return true;
+    },
 	
-	/*function callbackOnRosterData
-	* executed after roster data has been fetched
-	* @inputs: data
-	*/
-	onRosterReceived :function(data){
-	    console.log("in callbackOnRosterData ankita1...");
-	    console.log(data);
-	    console.log(xmlToJson(data));
-	    $(data).find('item').each(function(){
-	        var jid = $(this).attr('jid'); 
-	    // You can probably put them in a unordered list and and use their jids as ids.
-	    });
-	    strophieWrapper.connectionObj.addHandler(strophieWrapper.on_presence, null, 'presence');
+	//executed after roster has been fetched
+	onRosterReceived :function(iq){
+	    console.log("in callbackOnRosterData ankita2...");
+	    console.log(iq);
+	    console.log(xmlToJson(iq));
+		$(iq).find("item").each(function() {
+			strophieWrapper.Roster.push(xmlToJson(this));
+		});
+		console.log(strophieWrapper.Roster);
+        strophieWrapper.connection.addHandler(strophieWrapper.onPresenceReceived,null,"presence");
 	    //connection.send($pres());
 	    //console.log(data["query"]["item"]);
 	    //invokePluginManagelisting(data["query"]["item"],"add_node");
-	    //sendMessage();
 	},
 
 	onMessage :function(msg) {
