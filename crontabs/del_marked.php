@@ -1,16 +1,8 @@
 <?php 
   $curFilePath = dirname(__FILE__)."/"; 
  include_once("/usr/local/scripts/DocRoot.php");
-//adding mailing to gmail account to check if file is being used
-include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
-               $cc='eshajain88@gmail.com';
-               $to='sanyam1204@gmail.com';
-               $msg1='del_marked is being hit. We can wrap this to JProfileUpdateLib';
-               $subject="del_marked";
-               $msg=$msg1.print_r($_SERVER,true);
-               send_email($to,$msg,$subject,"",$cc);
- //ending mail part
 	include("connect.inc");
+	include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 	$db= connect_db();
 
 	$sql="set session wait_timeout=10000";
@@ -31,9 +23,11 @@ include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 	}
 	if(count($profiles)>0)
 	{
+		$jprofileUpdateObj = JProfileUpdateLib::getInstance();
 		$pid= implode(",",$profiles);
-		$sql2="UPDATE newjs.JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D',activatedKey=0 where PROFILEID IN ($pid)";
-		mysql_query_decide($sql2) or die(logError($sql2,$db));
+		//$sql2="UPDATE newjs.JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D',activatedKey=0 where PROFILEID IN ($pid)";
+		//mysql_query_decide($sql2) or die(logError($sql2,$db));
+		$jprofileUpdateObj->deactivateProfiles($profiles);
 		$sql3="UPDATE jsadmin.MARK_DELETE SET STATUS='D',DATE='$today' where PROFILEID IN ($pid)";
                 mysql_query_decide($sql3) or die(logError($sql3,$db));
 		$sql="SELECT REASON,ENTRY_BY,PROFILEID,COMMENTS FROM jsadmin.MARK_DELETE WHERE PROFILEID IN ($pid)";
