@@ -20,23 +20,24 @@ $mysqlObj=new Mysql;
 
 $db=connect_db();
 mysql_query("set session wait_timeout=1000",$db);
-	$sql="SELECT PROFILEID FROM MAIL.INACTIVE_PROFILES_TEMP WHERE STATUS!='Y'";
+	$sql="SELECT PROFILEID,EMAIL FROM MAIL.INACTIVE_PROFILES_TEMP WHERE STATUS!='Y'";
 	$res=mysql_query($sql,$db) or die(mysql_error($db));
 	if(mysql_num_rows($res))
 	{
-		$row=mysql_fetch_assoc($res);
         $emailVerObj=new emailVerification();
         $emailDbObj=new NEWJS_EMAIL_CHANGE_LOG();
-        foreach ($row as $key => $value) 
-        {
-            $result=$emailDbObj->getLastEntry($value['PROFILEID']);
+
+		while($row=mysql_fetch_assoc($res))
+        {   
+            $result=$emailDbObj->getLastEntry($row['PROFILEID']);
             if($result['ID']) continue;
-            $emailUID=$emailDbObj->insertEmailChange($value['PROFILEID'],$value['EMAIL']);
-            $emailVerObj->sendVerificationMail($value['PROFILEID'],$emailUID);
-            $sql2="UPDATE MAIL.INACTIVE_PROFILES_TEMP SET STATUS='Y' WHERE PROFILEID=".$value['PROFILEID'];
+            $emailUID=$emailDbObj->insertEmailChange($row['PROFILEID'],$row['EMAIL']);
+            $emailVerObj->sendVerificationMail($row['PROFILEID'],$emailUID);
+            $sql2="UPDATE MAIL.INACTIVE_PROFILES_TEMP SET STATUS='Y' WHERE PROFILEID=".$row['PROFILEID'];
             mysql_query($sql2,$db) or die(mysql_error($db));
 
-        }
+        
 	}
+}
 
 ?>
