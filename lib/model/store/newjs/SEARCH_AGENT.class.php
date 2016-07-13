@@ -153,5 +153,25 @@ class SEARCH_AGENT extends TABLE
                 }
                 return NULL;
 	}
+
+        /* This function gets the receivers of mail along with there saved search names and the corresponding id's and inserts them in send_saved_search_mail
+        */
+        public function insertSavedSearchMailerData($count,$totalInstances)
+        {
+                try
+                {
+                        $sql="INSERT IGNORE INTO search.send_saved_search_mail (RECEIVER,SEARCH_ID,SEARCH_NAME) SELECT S.PROFILEID, ID, SEARCH_NAME FROM `SEARCH_AGENT` S LEFT JOIN JPROFILE J USING ( PROFILEID ) WHERE J.ACTIVATED IN ('Y', 'U') AND S.PROFILEID%:TOTALINSTANCE=:REMAINDER AND J.activatedKey=1 ORDER BY PROFILEID DESC";
+                        $res = $this->db->prepare($sql);
+                        $res->bindValue(":TOTALINSTANCE", $totalInstances, PDO::PARAM_INT);
+                        $res->bindValue(":REMAINDER", $count, PDO::PARAM_INT);
+                        $res->execute();
+                }
+                catch(PDOException $e)
+                {
+                        //throw new jsException($e);
+                        jsException::nonCriticalError("newjs/SEARCH_AGENT.class.php(1)-->.$sql".$e);
+                        return '';
+                }
+        }
 }
 ?>

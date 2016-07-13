@@ -1501,7 +1501,10 @@ if(!empty($record_id)){
 
 		// Mailer on Registration
     if ('C' == $secondary_source) {
-		  first_time_registration_mail($id);
+
+    	$emailUID=(new NEWJS_EMAIL_CHANGE_LOG())->insertEmailChange($id,$email);
+		(new emailVerification())->sendVerificationMail($id,$emailUID);
+		first_time_registration_mail($id);
     }
 
 		// Mailer Intergrated for the duplicate contact number holders.

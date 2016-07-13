@@ -120,7 +120,7 @@
 								<td>&nbsp;~$unallotted_onhold[sec].SNO`</td>
 								<td>&nbsp;~$unallotted_onhold[sec].PROFILEID`</td>
 								<td>
-									<a href='/jsadmin/showstat.php?cid=~$checksum`&profileid=~$unallotted_onhold[sec].PROFILEID`'>&nbsp;~$unallotted_onhold[sec].USERNAME`</a>
+									<a href='/operations.php/commoninterface/ShowProfileStats?cid=~$checksum`&profileid=~$unallotted_onhold[sec].PROFILEID`'>&nbsp;~$unallotted_onhold[sec].USERNAME`</a>
 								</td>
 								<td align=center >&nbsp;~$unallotted_onhold[sec].ENTRY_DT`</td>
 								<td align=center >&nbsp;~$unallotted_onhold[sec].ALLOTTED_TO`</td>
@@ -177,7 +177,7 @@
 							<tr class=fieldsnew>
 								<td align=center >&nbsp;~$unallotted[sec].SNO`</td>
 								<td align=center >&nbsp;~$unallotted[sec].PROFILEID`</td>
-								<td align=center ><a href='/jsadmin/showstat.php?cid=~$checksum`&profileid=~$unallotted[sec].PROFILEID`'>&nbsp;~$unallotted[sec].USERNAME`</a></td>
+								<td align=center ><a href='/operations.php/commoninterface/ShowProfileStats?cid=~$checksum`&profileid=~$unallotted[sec].PROFILEID`'>&nbsp;~$unallotted[sec].USERNAME`</a></td>
 								<td align=center >&nbsp;~$unallotted[sec].ENTRY_DT`</td>
 								<td align=center >&nbsp;~$unallotted[sec].SCHEDULED_TIME`</td>
 								<td align=center>&nbsp;<input type=checkbox name=allot[] value=~$unallotted[sec].PROFILEID` ~if $allot[sec] eq $allot_msg[sec]` selected ~/if` onClick="return enable_disable_button('form1','submit','allot','5');"><input type=hidden name=pid[] value=~$unallotted[sec].PROFILEID`></td>

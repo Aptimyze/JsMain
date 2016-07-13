@@ -122,8 +122,11 @@ class VariableDiscount
     }
 
     // get All discount values          
-    public function getAllDiscountForProfile($profileid)
+    public function getAllDiscountForProfile($profileid, $durationArr='')
     {
+	if(!is_array($durationArr)){
+		$durationArr =$this->getActiveDurations();
+	}
         $vdOfferDurationObj =new billing_VARIABLE_DISCOUNT_OFFER_DURATION('newjs_slave');
         $discountDetails =$vdOfferDurationObj->getDiscountDetailsForProfile($profileid);
 	if(is_array($discountDetails)){
@@ -131,8 +134,10 @@ class VariableDiscount
             $discountArr =$val;
             unset($discountArr['PROFILEID']);
             unset($discountArr['SERVICE']);
-            foreach($discountArr as $key1=>$val1)
-                $discountNewArr[] =$val1;
+            foreach($discountArr as $key1=>$val1){
+		if(in_array($key1, $durationArr))
+	                $discountNewArr[] =$val1;
+	    }	
         }
 	}
         return $discountNewArr;
@@ -355,13 +360,6 @@ class VariableDiscount
         $VDLogObj->insertDataFromVariableDiscountOfferDuration();
         unset($VDLogObj);
 
-        /*$VDObj = new billing_VARIABLE_DISCOUNT();
-        $VDObj->deleteVariableDiscountEndingYesterday();
-        unset($VDObj);*/
-
-        /*$VDDurationObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
-        $VDDurationObj->deleteDiscountRecord();
-        unset($VDDurationObj);*/
     }
 
     public function populateRecordsFromVDTemp($entryDate,$limit,$sendAlert=false)
@@ -518,5 +516,49 @@ class VariableDiscount
 	unset($jprofileObj);
 	return $paid;	
     }
+    public function getActiveDurations()
+    {
+	$keyMain='MAIN_MEM_DURATION';
+	$memCacheObject = JsMemcache::getInstance();
+        if($memCacheObject->get($keyMain)){
+        	$durationsArr =unserialize($memCacheObject->get($keyMain));
+        }
+	 else{
+        	$serviceObj = new billing_SERVICES('newjs_slave'); 
+		$durationsArr =$serviceObj->getOnlineActiveDurations();
+		foreach($durationsArr as $key=>$val){
+			if($val=='1188'){
+				unset($durationsArr[$val]);
+				$val='L';
+				$durationsArr[$val] =$val;
+			}
+		}
+		$memCacheObject->set($keyMain, serialize($durationsArr));
+	}
+	return $durationsArr;	
+    }
+    // get All discount values          
+    public function getDiscountArrFromPoolTech($profileid, $durationArr='')
+    {
+        if(!is_array($durationArr)){
+                $durationArr =$this->getActiveDurations();
+        }
+        $vdOfferDurationObj =new billing_VARIABLE_DISCOUNT_DURATION_POOL_TECH('newjs_slave');
+        $discountDetails =$vdOfferDurationObj->getDiscountArr($profileid);
+        if(is_array($discountDetails)){
+        foreach($discountDetails as $key=>$val){
+            $discountArr =$val;
+            unset($discountArr['PROFILEID']);
+            unset($discountArr['SERVICE']);
+            foreach($discountArr as $key1=>$val1){
+		$key1 =strstr("_DISCOUNT","",$key1);
+                if(in_array($key1, $durationArr))
+                        $discountNewArr[] =$val1;
+            }
+        }
+        }
+        return $discountNewArr;
+    }
+
 }
 ?>

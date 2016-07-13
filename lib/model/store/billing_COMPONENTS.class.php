@@ -53,9 +53,9 @@ class billing_COMPONENTS extends TABLE{
         {
         	if(is_array($serviceid)){
         		$serviceIdArr = "'".implode("','",$serviceid)."'";
-        		$sql="SELECT SQL_CACHE c.DURATION as DURATION, s.SERVICEID AS SERVICEID FROM billing.SERVICES s, billing.COMPONENTS c, billing.PACK_COMPONENTS pc WHERE s.PACKID = pc.PACKID AND pc.COMPID=c.COMPID AND s.SERVICEID IN ($serviceIdArr)";
+        		$sql="SELECT SQL_CACHE MAX(c.DURATION) as DURATION, s.SERVICEID AS SERVICEID FROM billing.SERVICES s, billing.COMPONENTS c, billing.PACK_COMPONENTS pc WHERE s.PACKID = pc.PACKID AND pc.COMPID=c.COMPID AND s.SERVICEID IN ($serviceIdArr) GROUP BY s.SERVICEID";
         	} else {
-            	$sql="SELECT SQL_CACHE c.DURATION as DURATION, s.SERVICEID AS SERVICEID FROM billing.SERVICES s, billing.COMPONENTS c, billing.PACK_COMPONENTS pc WHERE s.PACKID = pc.PACKID AND pc.COMPID=c.COMPID AND s.SERVICEID = :SERVICEID";
+            	$sql="SELECT SQL_CACHE MAX(c.DURATION) as DURATION, s.SERVICEID AS SERVICEID FROM billing.SERVICES s, billing.COMPONENTS c, billing.PACK_COMPONENTS pc WHERE s.PACKID = pc.PACKID AND pc.COMPID=c.COMPID AND s.SERVICEID = :SERVICEID GROUP BY s.SERVICEID";
         	}
             $prep=$this->db->prepare($sql);
             if(!is_array($serviceid)) {

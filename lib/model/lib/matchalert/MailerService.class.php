@@ -343,6 +343,7 @@ class MailerService
                         throw  new jsException("No values or pattern in setUsersToSend() function in RegularMatchAlerts.class.php");
 		$userList = Array();
 		$pattern = "/".$pattern."\d/";
+      
 		foreach($values as $key=>$v)
 		{
 			if(preg_match($pattern,$key) && $v!=0)
@@ -350,6 +351,10 @@ class MailerService
 				$this->userList["MATCH_ALERT"][$v]=Array("PROFILEID"=>$v);
 				$this->userIds[]=$v;
 			}
+		}
+		if(count($this->userList)==0)
+		{
+			unset($this->userList);
 		}
 	}
 
@@ -361,47 +366,54 @@ class MailerService
 	*/	
 	public function getUsersListToSend($profileObj,$filterGenderFlag=false)
 	{
-		if(!is_array($this->userList) && !$profileObj)
-			throw  new jsException("No userList or profile in getUsersListToSend() function in RegularMatchAlerts.class.php");
-
-		if($profileObj->getGENDER()=='F')
-			$requiredGender= "M";
-		else
-			$requiredGender= "F";
-		$tupleService = new TupleService();
-		$tupleService->setLoginProfileObj($profileObj);
-		$tupleFields            = $tupleService->getFields($this->tupleName);
-		$tupleService->setProfileInfo($this->userList,$tupleFields);
-		unset($this->userList);
-		$tuplesValues = $tupleService->getMATCH_ALERT();
-		if(is_array($tuplesValues))
+			
+		if(!is_array($this->userList) || !$profileObj)
 		{
-			foreach($tuplesValues as $tuples=>$tupleObj)
-			{	
-				if(($filterGenderFlag && $tupleObj->getGENDER()!=$requiredGender) || $tupleObj->getACTIVATED()!="Y")
-					unset($tuplesValues[$tuples]);
-				else
-				{
-					$yourInfo = $tupleObj->getYOURINFO();
-					if($yourInfo!='')
-					{
-						$yourInfoTemp=strlen($yourInfo);
-						if($yourInfoTemp>160)
-						{
-							$newInfo=substr($yourInfo,0,strrpos(substr($yourInfo,0,161)," "));
-						}
-						else
-						{
-							$newInfo=$yourInfo;
-						}
-						$tupleObj->setYOURINFO(strip_tags($newInfo));
-					}					
-				}
-			}
-			return $tuplesValues;
+			jsException::log("No userList or profile in getUsersListToSend() function in RegularMatchAlerts.class.php");
+			return null;
 		}
 		else
-			return null;				
+		{
+			if($profileObj->getGENDER()=='F')
+				$requiredGender= "M";
+			else
+				$requiredGender= "F";
+			$tupleService = new TupleService();
+			$tupleService->setLoginProfileObj($profileObj);
+			$tupleFields            = $tupleService->getFields($this->tupleName);
+			$tupleService->setProfileInfo($this->userList,$tupleFields);
+			unset($this->userList);
+			$tuplesValues = $tupleService->getMATCH_ALERT();
+			if(is_array($tuplesValues))
+			{
+				foreach($tuplesValues as $tuples=>$tupleObj)
+				{	
+					if(($filterGenderFlag && $tupleObj->getGENDER()!=$requiredGender) || $tupleObj->getACTIVATED()!="Y")
+						unset($tuplesValues[$tuples]);
+					else
+					{
+						$yourInfo = $tupleObj->getYOURINFO();
+						if($yourInfo!='')
+						{
+							$yourInfoTemp=strlen($yourInfo);
+							if($yourInfoTemp>160)
+							{
+								$newInfo=substr($yourInfo,0,strrpos(substr($yourInfo,0,161)," "));
+							}
+							else
+							{
+								$newInfo=$yourInfo;
+							}
+							$tupleObj->setYOURINFO(strip_tags($newInfo));
+						}					
+					}
+				}
+				return $tuplesValues;
+			}
+			else
+				return null;
+		}
+						
 	}
 	
 	/*This function is used to set users logical level based on type NEW_MATCHES or matchalert
@@ -677,6 +689,7 @@ return $edu;
 		$userFieldLabel = MAILER_COMMON_ENUM::getUserFieldLabel($mailerName);
 		$this->setUsersToSend($values,$userFieldLabel);
 		$users = $this->getUsersListToSend($operatorProfileObj,$widgetArray["filterGenderFlag"]);
+		
 		$usersCount = sizeof($users);
                 if($usersCount >0)
                 {
@@ -744,11 +757,11 @@ return $edu;
 			$data["COUNT"] = $usersCount;
                         
                         foreach($users as $profileID=>$ProfileData){
-                                $Education = $this->getEducationDetails($ProfileData->getPROFILEID());
+                                $Education = $ProfileData->getedu_level_new();
                                 if($Education!="")
                                         $ProfileData->setEDUCATION($Education);
                         }
-                        
+          
 			if($widgetArray["googleAppTrackingFlag"])
 			{
 				
@@ -764,8 +777,35 @@ return $edu;
 			return $data;
 			
 		}
-		else
+		else{
 			return null;		
+		}
+	}
+
+	/* This function is used to get saved search receivers to sent mail 
+	*@param totalScript : total scripts executing for mailer cron
+	*@param script : current script
+	* @param limit : limit of receivers to send mail at a cron execution
+	* @return recievers : array of receivers
+	*/
+	public function getSavedSearchMailerReceivers($totalScript="",$script="",$limit='')
+	{
+		$savedSearchObj = new send_saved_search_mail();
+		$recievers = $savedSearchObj->getMailerProfiles("",$totalScript,$script,$limit);
+		return $recievers;
+	}
+
+	/* This funxtion is used update the sent flag(Y for sent and F for fail) for each savedSearch mail receiver
+	*@param sno : serial number of mail
+	*@param flag : sent status of the mail
+	*/
+	public function updateSentForSavedSearchUsers($sno,$flag,$searchId)
+	{
+		if(!$sno || !$flag)
+			throw  new jsException("No sno/flag in updateSentForSavedSearchUsers() in savedSearchesMailerTask.class.php");
+		$matchalertMailerObj = new send_saved_search_mail();
+                $matchalertMailerObj->update($sno,$flag,$searchId);
+
 	}
 
 }

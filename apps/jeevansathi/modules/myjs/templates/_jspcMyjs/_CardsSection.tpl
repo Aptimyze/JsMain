@@ -5,7 +5,7 @@
 <div class="bg-white" >
 	<a href ={{DETAILED_PROFILE_LINK}}>
 	<div id={{PROFILE_FACE_CARD_ID}} class="pos-rel">
-  <div class="pos-abs myjs-pos10 cursp  {{albumHide}}">
+  <div class="pos-abs fontlig myjs-pos10 cursp  {{albumHide}}">
 <div class="disp-tbl opaclr1 myjs-br3 colrw txtc" style="height:30px;width:30px;">
 <div class="vmid disp-cell disp-none js-albumCount">{{js-AlbumCount}}</div>
 </div>

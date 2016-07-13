@@ -140,6 +140,12 @@ class newJsmsPage1Action extends sfAction
 			if('C' == $this->secondary_source) 
                         	RegistrationCommunicate::sendEmailAfterRegistrationIncomplete($this->loginProfile);
 
+            // email for verification
+						$emailUID=(new NEWJS_EMAIL_CHANGE_LOG())->insertEmailChange($this->loginProfile->getPROFILEID(),$this->loginProfile->getEMAIL());
+					
+						(new emailVerification())->sendVerificationMail($this->loginProfile->getPROFILEID(),$emailUID);
+					////////
+                                
 			//$registrationid=$request->getParameter("registrationid");
 			//$done = NotificationFunctions::manageGcmRegistrationid($registrationid,$id)?"1":"0";
 			//$loginData=array("GENDER"=>$result[GENDER],"USERNAME"=>$result[USERNAME],"LANDINGPAGE"=>'1',"GCM_REGISTER"=>$done);

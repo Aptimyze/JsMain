@@ -129,6 +129,13 @@ class desktopRegister1 extends registrationBaseClass {
 
     RegistrationFunctions::unsetCampaignCookies($this->request->getParameter("domain"));
 
+// email for verification
+          $emailUID=(new NEWJS_EMAIL_CHANGE_LOG())->insertEmailChange($this->loginProfile->getPROFILEID(),$this->loginProfile->getEMAIL());
+          
+          (new emailVerification())->sendVerificationMail($this->id,$emailUID);
+          ////////
+                    
+
     if ('C' == $this->pageVar['secondary_source'])
       RegistrationCommunicate::sendEmailAfterRegistrationIncomplete($this->loginProfile);
     $this->regLead();
