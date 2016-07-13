@@ -77,16 +77,7 @@ function initiateChatConnection()
     connection.connect('a6@localhost','123',onConnect);
     console.log(connection);
 }
-/*
-function initiateStropheConnection(){
-    console.log(chatConfig.Params[device].bosh_service_url);
-    connection = new Strophe.Connection(chatConfig.Params[device].bosh_service_url);
-    connection.connect('a6@localhost','123',onConnect);
-    console.log(connection);
-    //connection.rawInput = rawInput;
-    //connection.rawOutput = rawOutput;
-}
-*/
+
 function onConnect(status)
 {
     console.log("AIn onConnect function");

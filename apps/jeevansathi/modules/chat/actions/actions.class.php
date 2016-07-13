@@ -36,7 +36,8 @@ class chatActions extends sfActions
         $loginData = $request->getAttribute("loginData");
         if($loginData){
             $username = $loginData['USERNAME'];
-            $url = "http://localhost:9090/plugins/restapi/v1/users/".$username;
+            $url = JsConstants::$openfireConfig['HOST'].":".JsConstants::$openfireConfig['PORT']."/plugins/restapi/v1/users/".$username;
+            //$url = "http://localhost:9090/plugins/restapi/v1/users/".$username;
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
@@ -60,7 +61,8 @@ class chatActions extends sfActions
             else{
                 //create user
                 $response['userStatus'] = "New user created";
-                $url = "http://localhost:9090/plugins/restapi/v1/users/";
+                $url = JsConstants::$openfireConfig['HOST'].":".JsConstants::$openfireConfig['PORT']."/plugins/restapi/v1/users/";
+                //$url = "http://localhost:9090/plugins/restapi/v1/users/";
                 $data = array("username" => "$username", "password" => "123");
                 $jsonData = json_encode($data);
                 
