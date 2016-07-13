@@ -2,6 +2,7 @@
 * converse client(converse.js) to chat plugin(chat_js.js)
 */
 var listingInputData = [],listCreationDone=false,objJsChat;  //listing data sent to plugin-array of objects
+//var decrypted = JSON.parse(CryptoJS.AES.decrypt(api response, "chat", {format: CryptoJSAesJson}).toString(CryptoJS.enc.Utf8));
 
 function readSiteCookie(name) {
     var nameEQ = escape(name) + "=",ca = document.cookie.split(';');
@@ -22,56 +23,6 @@ var pluginId = '#chatOpenPanel',device = 'PC';
     
 function initiateChatConnection()
 {
-    /*
-    //only for dev env--------------------start:ankita
-    var username = "a1@localhost";
-    if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
-        username = "a12@localhost";
-    else if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
-        username = "a1@localhost";
-    else if(readSiteCookie("CHATUSERNAME")=="bassi")
-        username = "a8@localhost";
-    else if(readSiteCookie("CHATUSERNAME")=="ZZRS3292")
-        username = "a11@localhost";
-    //only for dev env--------------------end:ankita
-    console.log("Username:");
-    console.log(username);
-    try
-    {
-        //initialise converse settings
-        require(['converse'], function (converse) {
-            converse.initialize({
-                bosh_service_url: chatConfig.Params[device].bosh_service_url,
-                keepalive: chatConfig.Params[device].keepalive,
-                message_carbons: true,
-                //play_sounds: true,
-                roster_groups: chatConfig.Params[device].roster_groups,
-                hide_offline_users: chatConfig.Params[device].hide_offline_users,
-                debug:false,
-                //prebind:true,
-                auto_login:true,
-                //jid:username,
-                //password:"123",
-                //sid:sid,
-                //rid:1,
-                show_controlbox_by_default:true,
-                use_vcards:chatConfig.Params[device].use_vcards,
-                authentication:'login',
-                listing_data:{},
-                credentials_url: '/api/v1/chat/fetchCredentials?jid='+username,
-                rosterDisplayGroups:chatConfig.Params[device].rosterDisplayGroups,
-                listCreationDone:false,
-                //prebind_url: 'http://localhost/api/v1/chat/authenticateChatSession?jid=a1@localhost',  
-            }),function(){
-                console.log("calling callback");
-            }
-        });
-    }
-    catch(e)
-    {
-        console.log("Exception thrown in initiateChatConnection function - "+e);
-    }
-    */
     var username = 'a1@localhost';
     if(readSiteCookie("CHATUSERNAME")=="bassi")
         username = 'a8@localhost';
@@ -330,6 +281,22 @@ function invokePluginReceivedMsgHandler(msgObj)
         objJsChat._appendRecievedMessage(msgObj["message"],msgObj["from"].substr(0, msgObj["from"].indexOf('@')),msgObj["msgid"]); 
 }
 
+
+var CryptoJSAesJson = {
+    stringify: function (cipherParams) {
+        var j = {ct: cipherParams.ciphertext.toString(CryptoJS.enc.Base64)};
+        if (cipherParams.iv) j.iv = cipherParams.iv.toString();
+        if (cipherParams.salt) j.s = cipherParams.salt.toString();
+        return JSON.stringify(j);
+    },
+    parse: function (jsonStr) {
+        var j = JSON.parse(jsonStr);
+        var cipherParams = CryptoJS.lib.CipherParams.create({ciphertext: CryptoJS.enc.Base64.parse(j.ct)});
+        if (j.iv) cipherParams.iv = CryptoJS.enc.Hex.parse(j.iv)
+        if (j.s) cipherParams.salt = CryptoJS.enc.Hex.parse(j.s)
+        return cipherParams;
+    }
+}
 
 $(document).ready(function(){
     console.log("User");
