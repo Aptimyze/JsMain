@@ -688,7 +688,8 @@ public function executeAppredirect(sfWebRequest $request)
   $profileid=$loggedInProfile->getPROFILEID();
   $UIDParam=$request->getParameter('EmailUID');
   $changeLog=new NEWJS_EMAIL_CHANGE_LOG();
-  $emailUID=$changeLog->getLastId($profileid);
+  $row=$changeLog->getLastEntry($profileid);
+  $emailUID=$row['ID'];
   if($emailUID!=$UIDParam){
   header("Location: $SITE_URL/static/logoutPage?fromSignout=1");
   die;
