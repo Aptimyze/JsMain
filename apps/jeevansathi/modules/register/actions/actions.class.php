@@ -355,7 +355,7 @@ class registerActions extends sfActions
                     if ('C' == $secondary_source) {
 						RegistrationCommunicate::sendEmailAfterRegistrationIncomplete($this->loggedInProfile);
                     }
-					
+			$this->loggedInProfile=$this->loginProfile;	
                     // email for verification
                     $emailUID=(new NEWJS_EMAIL_CHANGE_LOG())->insertEmailChange($this->loggedInProfile->getPROFILEID(),$this->loggedInProfile->getEMAIL());
 					(new emailVerification())->sendVerificationMail($this->loggedInProfile->getPROFILEID(),$emailUID);
