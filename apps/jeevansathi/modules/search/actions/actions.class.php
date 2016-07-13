@@ -1004,15 +1004,10 @@ class searchActions extends sfActions
 				$mapped[] = 'COUNTRY_RES';
 			}
 
-			if(($state || $city_india) && !$SearchParamtersObj->getCITY_RES())
+			if($city_india && !$SearchParamtersObj->getCITY_RES())
 			{
 				$mapped[] = 'CITY_RES';
 				$append='';
-				if($state)
-				{
-					$city_res = $state;
-					$append.=",";
-				}
 				if($city_india)
 					$city_res.=$append.$city_india;
 				$SearchParamtersObj->setCITY_RES($city_res);
