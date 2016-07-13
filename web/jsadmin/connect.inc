@@ -1720,8 +1720,8 @@ function update_astro_dob($pid,$mod_dob)
 //        $sql_ast_upd = "UPDATE newjs.ASTRO_DETAILS SET DTOFBIRTH='$mod_dob' WHERE PROFILEID='$pid'";
 //        mysql_query_decide($sql_ast_upd) or die($sql_ast_upd.mysql_error_js());
 
-        if(mysql_affected_rows_js() > 0)
-                mail("kunal.verma@jeevansathi.com","Astro DOB changed through connect.inc","Dob of $pid changed to $mod_dob");
+       // if(mysql_affected_rows_js() > 0)
+               // mail("kunal.verma@jeevansathi.com","Astro DOB changed through connect.inc","Dob of $pid changed to $mod_dob");
 }
 function comp_info($profile,$redirect=1)
 {
