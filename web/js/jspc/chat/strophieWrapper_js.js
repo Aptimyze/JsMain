@@ -76,12 +76,13 @@ var strophieWrapper = {
 	
 	//executed after roster has been fetched
 	onRosterReceived :function(iq){
-	    console.log("in callbackOnRosterData ankita1...");
+	    console.log("in callbackOnRosterData ankita2...");
 	    console.log(iq);
 	    console.log(xmlToJson(iq));
 		$(iq).find("item").each(function() {
-			strophieWrapper.Roster.push(item);
+			strophieWrapper.Roster.push(xmlToJson(this));
 		});
+		console.log(strophieWrapper.Roster);
         strophieWrapper.connection.addHandler(strophieWrapper.onPresenceReceived,null,"presence");
 	    //connection.send($pres());
 	    //console.log(data["query"]["item"]);
