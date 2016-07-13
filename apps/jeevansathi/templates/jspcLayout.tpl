@@ -61,6 +61,11 @@
         var showChat = "~$showChat`";
     </script>
     ~/if`
+    ~if $showChat`
+        <script>
+            var openfireUrl= "~JsConstants::$openfireConfig['HOST']`:~JsConstants::$openfireConfig['PORT']`";
+        </script>
+    ~/if`
 </head>
 ~if get_slot('optionaljsb9Key')|count_characters neq 0`
 ~JsTrackingHelper::getHeadTrackJs()`
