@@ -362,13 +362,14 @@ function retreiveFromTables($delTable,$selTable,$whereStrLabel1,$whereStrLabel2,
 			if(is_array($idsArr))
 			{
 				//$idStr=implode(",",$idsArr);
-				$result=$dbMessageObj->insertIntoDeletedMessages($idsArr);
+				mysql_query($sql,$db);
+				$result=$dbMessageObj->insertIntoMessages($idsArr);
 				//$sql="INSERT IGNORE INTO $database.MESSAGES SELECT * FROM $database.DELETED_MESSAGES WHERE ID IN ($idStr)";
 				//mysql_query($sql,$db) or ($skip=1);
 //echo $sql."\n";
 				if($result)
 				{
-					$res=$dbMessageLogObj->deleteMessages($idsArr);
+					$res=$dbDeletedMessagesObj->deleteMessages($idsArr);
 					//$sql="DELETE FROM $database.DELETED_MESSAGES WHERE ID IN ($idStr)";
 					//mysql_query($sql,$db) or ($skip=1);
 					if(!$res)
@@ -376,12 +377,13 @@ function retreiveFromTables($delTable,$selTable,$whereStrLabel1,$whereStrLabel2,
 				}
 				else
 				{
+					
 					mysql_error_with_mail(mysql_error($db).$sql);
 					/* no need to rollback as it is defaulted*/
 				}
 
 			}
-			$res=$dbMessageLogObj->insert($profileid,$listOfActiveProfile,$whereStrLabel1,$whereStrLabel2);
+			$res=$dbMessageLogObj->insertMessageLogData($profileid,$listOfActiveProfile,$whereStrLabel1,$whereStrLabel2);
 			//$sql="INSERT IGNORE INTO $database.$selTable SELECT * FROM $database.$delTable WHERE ($whereStrLabel1='$profileid' OR $whereStrLabel2='$profileid') AND ($whereStrLabel1 IN ($listOfActiveProfile) OR $whereStrLabel2 IN ($listOfActiveProfile))";
         	//mysql_query($sql,$db) or ($skip=1);
 //echo $sql."\n";
@@ -391,12 +393,12 @@ function retreiveFromTables($delTable,$selTable,$whereStrLabel1,$whereStrLabel2,
                 //	$sql="DELETE FROM $database.$delTable WHERE ($whereStrLabel1='$profileid' OR $whereStrLabel2='$profileid') AND ($whereStrLabel1 IN ($listOfActiveProfile) OR $whereStrLabel2 IN ($listOfActiveProfile))";
 	              //  mysql_query($sql,$db) or ($skip=1);
 //echo $sql."\n";
-				if(!$response)
+				if(!$response){
 					mysql_error_with_mail(mysql_error($db)."deleteMessages");
+				}
         	}
         	else
-				mysql_error_with_mail(mysql_error($db)."insert");
-	       
+				mysql_error_with_mail(mysql_error($db)."insert");	       
 		}
 		else
 		{

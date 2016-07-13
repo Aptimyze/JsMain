@@ -109,7 +109,7 @@ class NEWJS_MESSAGES extends TABLE{
 				if(is_array($idsArr))
 				{ 
 					$idStr=implode(",",$idsArr);
-					$sql="INSERT IGNORE INTO newjs.MESSAGES SELECT * FROM newjs.DELETED_MESSAGES WHERE ID IN ($idStr)";
+					$sql="INSERT IGNORE INTO newjs.MESSAGES SELECT * FROM newjs.DELETED_MESSAGES WHERE ID IN (".$idStr.")";
 					$prep=$this->db->prepare($sql);
 					$prep->execute();
 					return true;

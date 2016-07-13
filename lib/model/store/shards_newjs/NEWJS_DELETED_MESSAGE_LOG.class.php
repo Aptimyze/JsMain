@@ -59,7 +59,7 @@ class NEWJS_DELETED_MESSAGE_LOG extends TABLE{
 				if($listOfActiveProfile && $profileid)
 				{ 
 					
-					$sql="DELETE FROM newjs.DELETED_MESSAGE WHERE (".$whereStrLabel1."=:PROFILEID OR ".$whereStrLabel2."=:PROFILEID) AND (".$whereStrLabel1." IN (".$listOfActiveProfile.") OR ".$whereStrLabel2." IN (".$listOfActiveProfile."))";
+					$sql="DELETE FROM newjs.DELETED_MESSAGE_LOG WHERE (".$whereStrLabel1."=:PROFILEID OR ".$whereStrLabel2."=:PROFILEID) AND (".$whereStrLabel1." IN (".$listOfActiveProfile.") OR ".$whereStrLabel2." IN (".$listOfActiveProfile."))";
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
 					$prep->execute();
@@ -175,7 +175,7 @@ class NEWJS_DELETED_MESSAGE_LOG extends TABLE{
 				else
 				{
 					$idStr=implode(",",$arrProfileId);
-					$sql="REPLACE INTO newjs.DELETED_MESSAGE_LOG SELECT * FROM newjs.MESSAGE_LOG WHERE ID IN ($idStr)";
+					$sql="REPLACE INTO newjs.DELETED_MESSAGE_LOG SELECT * FROM newjs.MESSAGE_LOG WHERE ID IN (".$idStr.")";
 					$prep=$this->db->prepare($sql);
 					$prep->execute();
 					return true;
@@ -199,7 +199,7 @@ class NEWJS_DELETED_MESSAGE_LOG extends TABLE{
 				else
 				{
 					$idStr=implode(",",$profileArray);
-					$sql="DELETE FROM newjs.DELETED_MESSAGE_LOG WHERE ID IN ('$idStr')";
+					$sql="DELETE FROM newjs.DELETED_MESSAGE_LOG WHERE ID IN (".$idStr.")";
 					$prep=$this->db->prepare($sql);
 					$prep->execute();
 					while($row = $prep->fetch(PDO::FETCH_ASSOC))

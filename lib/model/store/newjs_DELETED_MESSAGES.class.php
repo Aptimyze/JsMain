@@ -18,7 +18,7 @@ class NEWJS_DELETED_MESSAGES extends TABLE{
 			{
 				if($Id)
 				{ 
-					$sql="SELECT ID,MESSAGE FROM newjs.DELETED_MESSAGES WHERE ID IN('$Id')";
+					$sql="SELECT ID,MESSAGE FROM newjs.DELETED_MESSAGES WHERE ID IN(:ID)";
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":ID",$Id,PDO::PARAM_INT);
 					$prep->execute();
@@ -44,11 +44,11 @@ class NEWJS_DELETED_MESSAGES extends TABLE{
 				if(is_array($idsArr))
 				{ 
 					$idStr=implode(",",$idsArr);
-					$sql="INSERT IGNORE INTO newjs.DELETED_MESSAGES SELECT * FROM newjs.MESSAGES WHERE ID IN ($idStr)";
+					$sql="INSERT IGNORE INTO newjs.DELETED_MESSAGES SELECT * FROM newjs.MESSAGES WHERE ID IN (".$idStr.")";
 					$prep=$this->db->prepare($sql);
 					$prep->execute();
-					return true;
-				}	
+				}
+				return true;
 			}
 			catch(PDOException $e)
 			{
@@ -90,9 +90,10 @@ class NEWJS_DELETED_MESSAGES extends TABLE{
 				if(is_array($idsArr))
 				{ 
 					$idStr=implode(",",$idsArr);
-					$sql="DELETE FROM newjs.DELETED_MESSAGES WHERE ID IN ($idStr)";
+					$sql="DELETE FROM newjs.DELETED_MESSAGES WHERE ID IN (".$idStr.")";
 					$prep=$this->db->prepare($sql);
 					$prep->execute();
+					return true;
 				}
 				else
 				{
@@ -117,7 +118,7 @@ class NEWJS_DELETED_MESSAGES extends TABLE{
 				else
 				{
 					$idStr=implode(",",$arrProfileId);
-					$sql="REPLACE INTO newjs.DELETED_MESSAGES SELECT * FROM newjs.MESSAGES WHERE ID IN ($idStr)";
+					$sql="REPLACE INTO newjs.DELETED_MESSAGES SELECT * FROM newjs.MESSAGES WHERE ID IN (".$idStr.")";
 					$prep=$this->db->prepare($sql);
 					$prep->execute();
 					return true;
