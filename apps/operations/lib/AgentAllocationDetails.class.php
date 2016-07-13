@@ -1504,12 +1504,16 @@ public function fetchOutboundProfiles($processObj)
 	}
 	else if($subMethod=="ONLINE_NEW_PROFILES"){
                 $profileAllocTechObj    =new incentive_PROFILE_ALLOCATION_TECH();
-                $recentusersObj         =new userplane_recentusers();
+                //$recentusersObj       =new userplane_recentusers();
+		$onlineProfiles		=$this->getOnlineProfiles();
                 $preallocateArr         =$profileAllocTechObj->getPreAllocatedProfiles($agentName);
-		for($i=0; $i<count($preallocateArr); $i++)
-			$idArr[] = $preallocateArr[$i]['PROFILEID'];
-		if(count($idArr)>0)
-	                $profileArr = $recentusersObj->fetchOnlineProfiles($idArr);
+		for($i=0; $i<count($preallocateArr); $i++){
+			$profileid =$preallocateArr[$i]['PROFILEID'];
+			if(in_array($profileid, $onlineProfiles))
+				$profileArr[] = $profileid;
+		}
+		/*if(count($idArr)>0)
+	                $profileArr = $recentusersObj->fetchOnlineProfiles($idArr);*/
 	}
 	else if($subMethod=="FTA"){
 		$ftaAllocTechObj        =new incentive_FTA_ALLOCATION_TECH();
@@ -2539,6 +2543,13 @@ public function fetchPincodesOfCities($cities)
 		$agentInfoArr =$pswrdsObj->fetchAgentInfo();
 		return $agentInfoArr;
 	}
+        public function getOnlineProfiles()
+        {
+        	$jsCommonObj =new JsCommon();
+                $profilesArr =$jsCommonObj->getOnlineUsetList();
+		return $profilesArr;
+        }
+	
 
 }
 ?>

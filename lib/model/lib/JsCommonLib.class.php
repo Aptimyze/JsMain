@@ -994,7 +994,7 @@ public static function insertConsentMessageFlag($profileid) {
 			return $num;
 	}
 
-		public static function checkIosPromoValid($ua)
+	public static function checkIosPromoValid($ua)
         {
                 $ua = $_SERVER['HTTP_USER_AGENT'];
                 $pm = preg_match('/iPhone\s*([0-9\.]*)/',$ua,$matches);
@@ -1004,8 +1004,64 @@ public static function insertConsentMessageFlag($profileid) {
                 if($av>=7)
                 	return true;
                 return false;
+	}
+        public static function setOnlineUser($pid)
+        {
+        	$JsMemcacheObj =JsMemcache::getInstance();
+                $expiryTime =CommonConstants::ONLINE_USER_EXPIRY;
+                $listName =CommonConstants::ONLINE_USER_LIST;
+		$onlineUserKey =CommonConstants::ONLINE_USER_KEY;
+		$key =$onlineUserKey.$pid;
+                $JsMemcacheObj->set($key, time(), $expiryTime);
+                $JsMemcacheObj->zAdd($listName,time(),$pid);
+        }
+        public static function getOnlineUsetList($score1='',$score2='')
+        {
+                $JsMemcacheObj  =JsMemcache::getInstance();
+                $listName       =CommonConstants::ONLINE_USER_LIST;
+                if($score1 && $score2)
+                        $onlineProfilesArr =$JsMemcacheObj->zRangeByScore($listName, $score1, $score2);
+                else
+                        $onlineProfilesArr =$JsMemcacheObj->zRange($listName, 0, -1);
+                return $onlineProfilesArr;
+        }
+        public static function removeOnlineUser($pid)
+        {
+        	// Remove Online-User 
+		$onlineUserKey =CommonConstants::ONLINE_USER_KEY;
+		$key=$onlineUserKey.$pid;
+                $JsMemcacheObj =JsMemcache::getInstance();
+                $JsMemcacheObj->delete($key);
+                $listName =CommonConstants::ONLINE_USER_LIST;
+                $JsMemcacheObj->zRem($listName, $pid);
+        }
+        public static function getOnlineStatus($pid)
+        {
+                // Check Online-User 
+		$onlineUserKey =CommonConstants::ONLINE_USER_KEY;
+		$key =$onlineUserKey.$pid;
+                $JsMemcacheObj =JsMemcache::getInstance();
+                $online =$JsMemcacheObj->get($key);
+		if($online)
+			return true;
+		return false;
+        }
+        public static function removeOfflineProfiles($score1='',$score2='')
+        {
+                // Remove Online-User list
+		$score1 =0;
+		if($score2=''){
+			$expiryTime =CommonConstants::ONLINE_USER_EXPIRY;
+			$start  =date("Y-m-d H:i:s", time()-$expiryTime);
+			$score2 =strtotime($start);
 		}
+		$listName =CommonConstants::ONLINE_USER_LIST;
+                $JsMemcacheObj =JsMemcache::getInstance();
+                $JsMemcacheObj->zRemRangeByScore($listName, $score1, $score2);
+        }
 
-		
+
+
+
 }
 ?>

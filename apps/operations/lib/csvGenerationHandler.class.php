@@ -1118,7 +1118,8 @@ class csvGenerationHandler
 			}
 			else if($processName=='failedPaymentInDialer' || $processName=='upsellProcessInDialer' || $processName=='renewalProcessInDialer' || $processName=='rcbCampaignInDialer'){
 				$servicesObj 		=new billing_SERVICES();
-				$userplaneObj 		=new userplane_recentusers();
+				//$userplaneObj		=new userplane_recentusers();
+		                $jsCommonObj 		=new JsCommon();
 				$salesCampaignTables	=crmParams::$salesCampaignTables;
 	                        $salesCampaign          =crmParams::$salesCampaign;
         	                $campaignName           =$salesCampaign[$processName];
@@ -1189,7 +1190,8 @@ class csvGenerationHandler
 				}
 				else if($processName=="failedPaymentInDialer" || $processName=="upsellProcessInDialer"){
 					$country	=FieldMap::getFieldLabel('country',$dataArr['COUNTRY_RES']);
-					$onlineStatus   =$userplaneObj->isOnline($profileid);
+					//$onlineStatus =$userplaneObj->isOnline($profileid);
+			                $onlineStatus 	=$jsCommonObj->getOnlineStatus($profileid);
 					$services	=$dataArr['SERVICE_SELECTED'];
 					$discount	=$dataArr['DISCOUNT'];
 					if($processName=="failedPaymentInDialer"){
