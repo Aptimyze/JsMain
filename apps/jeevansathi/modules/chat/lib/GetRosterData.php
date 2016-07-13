@@ -34,6 +34,7 @@ class GetRosterData
 			foreach($usernameArray as $key=>$value)
 			{
 				$profilelists[$value->getPROFILEID()]["USERNAME"] = $value->getUSERNAME();
+				$profilelists[$value->getPROFILEID()]["PROFILECHECKSUM"] = md5($value->getPROFILEID())."i".$value->getPROFILEID();
 			}
 
 
