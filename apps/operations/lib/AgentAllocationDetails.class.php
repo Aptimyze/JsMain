@@ -1474,7 +1474,7 @@ public function fetchNewFailedPaymentEligibleProfiles($processName='',$startDt='
 
 public function fetchWebmasterLeadsEligibleProfiles($subMethod='', $startDt='', $endDt='')
 {
-        $execCallbackObj      =new billing_EXC_CALLBACK('newjs_slave');
+        $execCallbackObj      =new billing_EXC_CALLBACK();
 	if($subMethod!='RCB_WEBMASTER_LEADS'){
 		$startDt        =date("Y-m-d H:i:s", time()-2*60*60);
         	$endDt          =date("Y-m-d H:i:s", time());
