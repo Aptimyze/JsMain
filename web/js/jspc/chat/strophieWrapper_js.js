@@ -118,7 +118,7 @@ var strophieWrapper = {
 			console.log("presence before list 123");
 			console.log(strophieWrapper.Roster[user_id]);
 			console.log(chat_status+" 123");
-			strophieWrapper.Roster[user_id] = strophieWrapper.mergeRosterObj(strophieWrapper.Roster[user_id],{"rosterDetails":{"chat_status":chat_status}});
+			strophieWrapper.Roster[user_id] = strophieWrapper.mergeRosterObj(strophieWrapper.Roster[user_id],strophieWrapper.mapRosterObj({"chat_status":chat_status}));
 			console.log(strophieWrapper.Roster[user_id]);
 			console.log("end of updatePresence");
 		}
