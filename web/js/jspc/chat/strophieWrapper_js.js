@@ -110,28 +110,19 @@ var strophieWrapper = {
 	
 	//update chat_status of roster items
 	updatePresence: function(user_id,chat_status){
-		console.log("in updatePresence");
+		console.log("start of updatePresence");
 		console.log(strophieWrapper.Roster[user_id]);
-		if(typeof strophieWrapper.Roster[user_id] == "undefined"){
+		//if(typeof strophieWrapper.Roster[user_id] == "undefined")
+		{
 			console.log("presence before list 123");
 			console.log(strophieWrapper.Roster[user_id]);
-			console.log(chat_status);
-			var obj = {};
-			obj["rosterDetails"]["chat_status"] = chat_status;
-			strophieWrapper.Roster[user_id] = {};
-			//strophieWrapper.Roster.splice(user_id);
-			console.log("new obj");
-			console.log(obj);
-			console.log(strophieWrapper.Roster);
-			strophieWrapper.Roster[user_id] = obj;
-			console.log("done "+user_id);
-			console.log(strophieWrapper.Roster[user_id]);
-		}else{
-			console.log("updating list");
+			console.log(chat_status+" 123");
 			strophieWrapper.Roster[user_id] = strophieWrapper.mergeRosterObj(strophieWrapper.Roster[user_id],{"rosterDetails":{"chat_status":chat_status}});
+			console.log(strophieWrapper.Roster[user_id]);
+			console.log("end of updatePresence");
 		}
-
-		if(strophieWrapper.initialRosterFetched == true){
+		console.log("end of updatePresence for "+user_id);
+		/*if(strophieWrapper.initialRosterFetched == true){
 			console.log("change in status after initialRosterFetched done");
 			var nodeArr = [];
 			nodeArr[user_id].push(strophieWrapper.Roster[user_id]);
@@ -139,7 +130,7 @@ var strophieWrapper = {
 		}else{
 			console.log("received presence for initial roster items 123");
 			console.log(strophieWrapper.Roster);
-		}
+		}*/
 	},
 
 	//executed after roster has been fetched
@@ -156,10 +147,10 @@ var strophieWrapper = {
 			{
 				console.log("true");
 				var jid = $(this).attr("jid"),user_id = jid.split("@")[0],listObj = strophieWrapper.formatRosterObj(xmlToJson(this));
-				console.log("received formated roster for "+user_id);
-				console.log(listObj);
+				console.log("change roster for "+user_id);
 				console.log(strophieWrapper.Roster[user_id]);
-				if(typeof strophieWrapper.Roster[user_id] == "undefined"){
+				console.log(listObj);
+				/*if(typeof strophieWrapper.Roster[user_id] == "undefined"){
 					console.log("ankita1");
 					console.log("pushing obj 123for "+user_id);
 					strophieWrapper.Roster[user_id] = listObj;
@@ -168,7 +159,13 @@ var strophieWrapper = {
 					//var chat_status = strophieWrapper.Roster[user_id]["rosterDetails"]["chat_status"] || "offline";
 					strophieWrapper.Roster[user_id] = strophieWrapper.mergeRosterObj(strophieWrapper.Roster[user_id],listObj);
 					//strophieWrapper.Roster[user_id] = {"rosterDetails":{"jid":jid,"chat_status":chat_status,"fullname":this.attr("name"),"groups":["dpp"],"subscription":this.attr("subscription")}};
-				}
+				}*/
+				var status = "offline";
+				if(typeof strophieWrapper.Roster[user_id] !== "undefined")
+					status = strophieWrapper.Roster[user_id]["rosterDetails"]["chat_status"];
+				console.log("rahul" + status);
+				listObj["rosterDetails"]["chat_status"] = status;
+				strophieWrapper.Roster[user_id] = strophieWrapper.mergeRosterObj(strophieWrapper.Roster[user_id],listObj);
 				//var pres = $pres({to: this.attr('jid'), type: "subscribe"});
 				//console.log($pres);
 				//strophieWrapper.connectionObj.send(pres);
@@ -236,7 +233,25 @@ var strophieWrapper = {
 
     //merge second roster obj to first one
     mergeRosterObj:function(obj1,obj2){
-    	$.extend( obj1, obj2 );
+    	var roster  = "rosterDetails";
+    	if(typeof obj1 == "undefined")
+    	{
+    		obj1 = {"rosterDetails":{}};
+    	}
+    	console.log("mergeRosterObj for");
+    	console.log(obj1);
+    	console.log(obj2);
+    	if(typeof obj2 !== "undefined")
+	    {
+	    	console.log("here");
+	    	$.each(obj2["rosterDetails"],function(key,val){
+	    		console.log(key+"-"+val);
+	    		obj1[roster][key] = val;
+	    		console.log(obj1);
+	    	});
+	    }
+	    console.log("final obj for");
+	    console.log(obj1);
     	return obj1;
     }
 }
