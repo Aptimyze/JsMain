@@ -35,10 +35,9 @@ class chatActions extends sfActions
         $apiResponseHandlerObj = ApiResponseHandler::getInstance();
         $loginData = $request->getAttribute("loginData");
         if($loginData){
-       	    $p = LoggedInProfile::getInstance("newjs_master");
-	    $pass = $p->getPASSWORD();
 
             $username = $loginData['USERNAME'];
+	    $pass = EncryptPassword::generatePassword($username);
             $url = JsConstants::$openfireConfig['HOST'].":".JsConstants::$openfireConfig['PORT']."/plugins/restapi/v1/users/".$username;
             //$url = "http://localhost:9090/plugins/restapi/v1/users/".$username;
             $ch = curl_init();
