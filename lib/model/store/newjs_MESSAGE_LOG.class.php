@@ -1464,7 +1464,7 @@ return $result;
 		
 		try 
 			{
-				if(!$profileId)
+				if(!$profileid)
 				{
 					throw new jsException("","profileId is not specified in function getMessageLogBilling of newjs_MESSAGE_LOG.class.php");
 				}
