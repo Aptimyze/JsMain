@@ -19,7 +19,7 @@ class NEWJS_MESSAGE_LOG_ARCHIVE extends TABLE{
 					else
 					{
 						$idStr=implode(",",$arrProfileId);
-						$sql="INSERT INTO newjs.MESSAGE_LOG_ARCHIVE SELECT * FROM newjs.DELETED_MESSAGE_LOG WHERE ID IN ($idStr)";
+						$sql="INSERT INTO newjs.MESSAGE_LOG_ARCHIVE SELECT * FROM newjs.DELETED_MESSAGE_LOG WHERE ID IN (".$idStr.")";
 						$prep=$this->db->prepare($sql);
 						$prep->execute();
 						return true;
