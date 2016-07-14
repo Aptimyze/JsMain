@@ -1,4 +1,5 @@
 var hideDays = 7,deleteReasonSelected=0, offerConsent=0;
+
 $(document).ready(function() {
 bindOfferConsentBox();
 

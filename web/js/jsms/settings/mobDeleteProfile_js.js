@@ -1,4 +1,5 @@
 var checksum;
+
 $(document).ready(function(){
   $("#deleteButtonID").bind('click',function() {
     var delete_reason=$("#DeleteReasonID").val();
