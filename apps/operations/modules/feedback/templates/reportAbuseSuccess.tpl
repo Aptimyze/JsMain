@@ -15,6 +15,21 @@
 		return tempHtml;
 
 	}
+
+
+	function parseDate(str) 
+	{
+    var mdy = str.split('-');
+    return new Date(mdy[0], mdy[1], mdy[2]);
+	}
+
+	
+	function daydiff(first, second) 
+	{
+    return Math.round((second-first)/(1000*60*60*24));
+	}
+
+
 	function sendAjax()
 	{	
 		startDate=$('#startDate').val();
@@ -33,7 +48,19 @@
 		if(startDate>endDate){
 
 		$("#RAMainTable").hide();
-		$("#dateError2").show();
+		$("#dateError2").text("*Start date cannot be greater than End date.").show();
+		$("#dateError").hide();
+		$("#dateError3").hide();
+
+		return;
+		}
+
+
+		if( daydiff( parseDate( $('#startDate').val()), parseDate($('#endDate').val() ) ) >30) 
+		{
+
+		$("#RAMainTable").hide();
+		$("#dateError2").text("The maximum day difference is of 30 days. Please search for a narrow date duration.").show();
 		$("#dateError").hide();
 		$("#dateError3").hide();
 
