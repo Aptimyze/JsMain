@@ -1488,5 +1488,94 @@ public function duplicateEmail($email)
                         throw new jsException($ex);
                 }
 	}
+
+
+	//This function executes a select query on join of jprofile and incentives.name_of_user to fetch PROFILEID,EMAIL,USERNAME for the profiles that match the criteria
+	public function getDataForLegal($nameArr,$age,$addressArr)
+	{
+		$parentAddressCondition .=" OR ("; 
+
+		//if both name and address are not array	
+		if(!is_array($nameArr) && !is_array($addressArr))
+		{
+			throw new jsException("Both usernameArr and AddressArr are empty");
+		}
+		try
+		{
+			$sql .= "SELECT J.PROFILEID, J.USERNAME, J.EMAIL, N.NAME, J.AGE, J.CONTACT, J.PARENTS_CONTACT FROM newjs.JPROFILE as J LEFT JOIN incentive.NAME_OF_USER as N ON N.PROFILEID = J.PROFILEID	 WHERE "; //N.NAME LIKE '%vikas%' AND N.NAME LIKE '%jyana%'";
+			if(is_array($nameArr))
+			{
+				foreach($nameArr as $key=>$value)
+				{
+					$nameCondition .="N.NAME LIKE :NAMEARR$key AND ";
+				}
+				$nameCondition = rtrim($nameCondition," AND");
+				$sql .=$nameCondition;
+			}
+			if($age)
+			{
+				if(is_array($nameArr))
+					$ageCondition = " AND J.AGE = :AGE";
+				else
+					$ageCondition = "J.AGE = :AGE";
+				$sql .=$ageCondition;
+			}
+			if(is_array($addressArr))
+			{	
+				if($ageCondition != "" || $nameCondition != "")
+				{
+					$addressCondition .= " AND ((";
+				}
+				else
+				{
+					$addressCondition .= " ((";
+				}
+				foreach($addressArr as $key=>$value)
+				{
+					$addressCondition .= " J.CONTACT LIKE :CONTACTARR$key AND ";
+					$parentAddressCondition .=" J.PARENTS_CONTACT LIKE :PCONTACTARR$key AND ";
+				}
+				$addressCondition = rtrim($addressCondition,"AND ");
+				$addressCondition = $addressCondition." )";
+				$parentAddressCondition = rtrim($parentAddressCondition,"AND ");
+				$parentAddressCondition = $parentAddressCondition." )";
+
+				$sql .= $addressCondition.$parentAddressCondition.")"; 
+			}
+			
+			//$sql = $sql." AND J.EMAIL LIKE 'vikkujain%'"; //REMOVE THIS
+			$pdoStatement = $this->db->prepare($sql);
+			if(is_array($nameArr))
+			{
+				foreach($nameArr as $key=>$value)
+				{			
+					$pdoStatement->bindValue(":NAMEARR".$key,'%'.$value.'%',PDO::PARAM_STR);				
+				}
+			}
+			if($age)
+			{				
+				$pdoStatement->bindValue(":AGE",$age,PDO::PARAM_INT);
+			}
+			if(is_array($addressArr))
+			{
+				foreach($addressArr as $key=>$value)
+				{			
+					$pdoStatement->bindValue(":CONTACTARR".$key,'%'.$value.'%',PDO::PARAM_STR);				
+					$pdoStatement->bindValue(":PCONTACTARR".$key,'%'.$value.'%',PDO::PARAM_STR);				
+				}
+			}
+			
+			$pdoStatement->execute();
+            while($result  = $pdoStatement->fetch(PDO::FETCH_ASSOC))
+			{
+				$finalArr[]  = $result;
+			}
+			return $finalArr;
+		}
+		catch(Exception $ex)
+		{
+            throw new jsException($ex);
+        }
+	}
 }
 ?>

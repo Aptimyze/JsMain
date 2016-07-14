@@ -701,6 +701,7 @@ if(isset($data))//successful login
 		{
 			$linkarr[]="<a href=\"$SITE_URL/operations.php/profiledata/index\">User backend Information[For Legal].</a>";
 			$linkarr[]="<a href=\"$SITE_URL/jsadmin/mobcheckuser.php?user=$name&cid=$cid\">Search user based on Phone Number</a>";
+			$linkarr[]="<a href=\"$SITE_URL/operations.php/legal/NameLocationAgeSearch\">Name Age Location Search[For Legal].</a>";
 		}
 		if(in_array('LTFVnd',$priv) || in_array('LTFHD',$priv) || in_array('P',$priv) || in_array('MG',$priv))
 			$linkarr[]="<a href=\"$SITE_URL/jsadmin/register_lead.php?name=$username&cid=$cid\">Register a Lead</a>";
