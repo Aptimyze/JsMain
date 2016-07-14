@@ -1472,7 +1472,7 @@ return $result;
 				{
 					$sql="DELETE FROM newjs.MESSAGE_LOG WHERE ".$senderRecevierStr."=:PROFILEID" ;
 					$prep=$this->db->prepare($sql);
-					$prep->bindValue(":PROFILEID1",$profileid,PDO::PARAM_INT);					
+					$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);					
 					$prep->execute();
 				
 					return $output;
