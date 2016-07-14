@@ -7,9 +7,6 @@
  */
 class reportAbuseCsvMailerTask extends sfBaseTask
 {
-    private $smarty;
-    private $mailerName = "MATCHALERT";
-    private $limit = 1000;
   
   protected function configure()
   {
