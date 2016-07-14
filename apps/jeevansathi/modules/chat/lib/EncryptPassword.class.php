@@ -46,5 +46,25 @@ static function cryptoJsAesEncrypt($passphrase, $value){
     $data = array("ct" => base64_encode($encrypted_data), "iv" => bin2hex($iv), "s" => bin2hex($salt));
     return json_encode($data);
 }
+
+static function generatePassword($string) {
+   $ans = array();
+   $string = str_split($string);
+   #go through every character, changing it to its ASCII value
+   for ($i = 0; $i < count($string); $i++) {
+   
+       #ord turns a character into its ASCII values
+       $ascii = (string) ord($string[$i]);
+
+       #make sure it's 3 characters long
+       if (strlen($ascii) < 3)
+           $ascii = '0'.$ascii;
+       $ans[] = $ascii;
+   }
+
+   #turn it into a string
+   return implode('', $ans);
+}
+
 }
 ?>
