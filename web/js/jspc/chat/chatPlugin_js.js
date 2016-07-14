@@ -300,7 +300,7 @@ JsChat.prototype = {
             var runID = data[key]["rosterDetails"]["jid"],res = '',status = data[key]["rosterDetails"]["chat_status"];
             console.log("addlisting for "+runID+"--"+data[key]["rosterDetails"]["chat_status"]);
             console.log(data[key]);
-            console.log(runID+" is now "+status);
+            //console.log(runID+" is now "+status);
             res = runID.split("@");
             runID = res[0];
             $.each(data[key]["rosterDetails"]["groups"], function(index, val) {

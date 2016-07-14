@@ -31,17 +31,21 @@ var strophieWrapper = {
 	        strophieWrapper.connectionObj.send($pres().tree());*/
 	        //send own presence
 	        strophieWrapper.sendPresence();
-	        //get roster
-	        strophieWrapper.getRoster();
-	        //binding event for presence update in roster
-	        strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
-	        //binding event for message receive event
-	        strophieWrapper.connectionObj.addHandler(strophieWrapper.onMessage, null, 'message', null, null,  null); 
-	   		//binding event for new node push in roster
-	   		//strophieWrapper.connectionObj.addHandler(strophieWrapper.onRosterPush,Strophe.NS.ROSTER,'iq','set');
 	    }
 	},
 
+	triggerBindings: function(){
+		strophieWrapper.Roster = [];
+        //get roster
+        strophieWrapper.getRoster();
+        //binding event for presence update in roster
+        strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
+        //binding event for message receive event
+        strophieWrapper.connectionObj.addHandler(strophieWrapper.onMessage, null, 'message', null, null,  null); 
+   		//binding event for new node push in roster
+   		//strophieWrapper.connectionObj.addHandler(strophieWrapper.onRosterPush,Strophe.NS.ROSTER,'iq','set');
+	},
+	
 	//send presence
 	sendPresence : function(){
 		console.log("in sendPresence");
@@ -79,7 +83,7 @@ var strophieWrapper = {
 	//executed after presence has been fetched
 	onPresenceReceived : function(presence){
 		var presence_type = $(presence).attr('type'),chat_status="offline"; // unavailable, subscribed, etc...
-		var from = $(presence).attr('from'),user_id = from.split("/")[0]; // the jabber_id of the contact
+		var from = $(presence).attr('from'),user_id = from.split("@")[0]; // the jabber_id of the contact
 		console.log("start of onPresenceReceived for "+user_id);
 		if (presence_type != 'error'){
 		if (presence_type === 'unavailable'){
@@ -103,19 +107,33 @@ var strophieWrapper = {
 	
 	//update chat_status of roster items
 	updatePresence: function(user_id,chat_status){
+		console.log(strophieWrapper.Roster[user_id]);
 		if(typeof strophieWrapper.Roster[user_id] === "undefined"){
-			strophieWrapper.Roster[user_id] = {"rosterDetails":{"chat_status":chat_status}};
+			console.log("presence before list 123");
+			console.log(strophieWrapper.Roster);
+			console.log(chat_status);
+			var obj = {};
+			obj["rosterDetails"]["chat_status"] = chat_status;
+			//strophieWrapper.Roster.splice(user_id);
+			console.log("new obj");
+			console.log(obj);
+			console.log(strophieWrapper.Roster);
+			strophieWrapper.Roster[user_id] = obj;
+			console.log("done "+user_id);
+			console.log(strophieWrapper.Roster[user_id]);
 		}else{
+			console.log("updating list");
 			strophieWrapper.Roster[user_id] = strophieWrapper.mergeRosterObj(strophieWrapper.Roster[user_id],{"rosterDetails":{"chat_status":chat_status}});
 		}
 
 		if(strophieWrapper.initialRosterFetched == true){
 			console.log("change in status after initialRosterFetched done");
 			var nodeArr = [];
-			nodeArr.push(strophieWrapper.Roster[user_id]);
-			invokePluginManagelisting(nodeArr,"update_status");
+			nodeArr[user_id].push(strophieWrapper.Roster[user_id]);
+			//invokePluginManagelisting(nodeArr,"update_status");
 		}else{
-			console.log("received presence for initial roster items");
+			console.log("received presence for initial roster items 123");
+			console.log(strophieWrapper.Roster);
 		}
 	},
 

@@ -348,6 +348,8 @@ $(document).ready(function(){
 
     objJsChat.onChatLoginSuccess = function(){
         //trigger list creation if nodes in roster lesser than limit
+        console.log("in triggerBindings");
+        strophieWrapper.triggerBindings();
         //setCreateListingInterval();
     }
     
