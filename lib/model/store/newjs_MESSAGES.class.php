@@ -85,7 +85,7 @@ class NEWJS_MESSAGES extends TABLE{
 				if(is_array($idsArr))
 				{ 
 					$idStr=implode(",",$idsArr);
-					$sql="DELETE FROM newjs.MESSAGES WHERE ID IN ($idStr)";
+					$sql="DELETE FROM newjs.MESSAGES WHERE ID IN (".$idStr.")";
 					$prep=$this->db->prepare($sql);
 					$prep->execute();
 					return true;

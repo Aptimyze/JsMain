@@ -192,7 +192,7 @@ class NEWJS_DELETED_MESSAGE_LOG extends TABLE{
 	{
 		try 
 			{
-				if(is_arary($profileArray))
+				if(!is_array($profileArray))
 				{
 					throw new jsException("","profile id is not specified in function deleteMultipleLogForSingleProfile of DELETED_MESSAGE_LOG.class.php");
 				}

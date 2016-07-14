@@ -1300,20 +1300,26 @@ return $result;
 			}
 	}
 	
-	public function getMessageLogBilling($profileid,$senderRecevierStr='SENDER')
+	public function getMessageLogBilling($profileid,$senderRecevierStr='SENDER',$type='')
 	{
 		
 		try 
 			{
-				if(!$profileId)
+				if(!$profileid)
 				{
 					throw new jsException("","profileId is not specified in function getMessageLogBilling of newjs_MESSAGE_LOG.class.php");
 				}
 				else
 				{
-					$sql="SELECT RECEIVER,DATE,IP from newjs.MESSAGE_LOG where ".$senderRecevierStr."=:PROFILEID order by ID desc limit 20";
+					if($type)
+						$typeStr=" TYPE=:TYPE";
+					else
+						$typeStr=" ";
+					$sql="SELECT RECEIVER,DATE,IP from newjs.MESSAGE_LOG where ".$senderRecevierStr."=:PROFILEID ".$typeStr." order by ID desc limit 20";
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+					if($type)
+						$prep->bindValue(":TYPE",$type,PDO::PARAM_STR);
 					$prep->execute();
 					while($row = $prep->fetch(PDO::FETCH_ASSOC))
 					{
@@ -1335,7 +1341,7 @@ return $result;
 		
 		try 
 			{
-				if(!$profileId)
+				if(!$profileid)
 				{
 					throw new jsException("","profileId is not specified in function getMessageLogBilling of newjs_MESSAGE_LOG.class.php");
 				}
@@ -1366,7 +1372,7 @@ return $result;
 		
 		try 
 			{
-				if(!$profileId)
+				if(!$profileid)
 				{
 					throw new jsException("","profileId is not specified in function getMessageLogBilling of newjs_MESSAGE_LOG.class.php");
 				}
@@ -1397,7 +1403,7 @@ return $result;
 		
 		try 
 			{
-				if(!$profileId)
+				if(!$profileid)
 				{
 					throw new jsException("","profileId is not specified in function getMessageLogBilling of newjs_MESSAGE_LOG.class.php");
 				}
@@ -1429,7 +1435,7 @@ return $result;
 		
 		try 
 			{
-				if(!$profileId)
+				if(!$sender || !$receiver)
 				{
 					throw new jsException("","profileId is not specified in function getMessageLogBilling of newjs_MESSAGE_LOG.class.php");
 				}

@@ -63,7 +63,7 @@ class NEWJS_DELETED_MESSAGES extends TABLE{
 			
 			try 
 			{
-				if($Id)
+				if($profileId)
 				{ 
 					$sql="SELECT RECEIVER, SEEN FROM DELETED_MESSAGE_LOG WHERE SENDER = :PROFILEID AND TYPE = 'R' AND IS_MSG = 'Y'";
 					$prep=$this->db->prepare($sql);

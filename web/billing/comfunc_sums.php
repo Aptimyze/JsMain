@@ -733,7 +733,7 @@ function charge_back_stats_log($profileid,$receiptid,$noChargeLog='')
         }
 		$pidShard=JsDbSharding::getShardNo($profileid,'slave');
 		$dbMessageLogObj=new NEWJS_MESSAGE_LOG($pidShard);
-		$res=$dbMessageLogObj->getMessageLogBilling($profileid,'SENDER');
+		$res=$dbMessageLogObj->getMessageLogBilling($profileid,'SENDER','');
 	//$sql_con_made=" SELECT RECEIVER,DATE,IP from newjs.MESSAGE_LOG where SENDER='$profileid' order by ID desc limit 20";
       //  $res_con_made=$mysql->executeQuery($sql_con_made,$myDb) or logError_sums($sql_con_made,1);
         //while($row_con_made=$mysql->fetchArray($res_con_made))
@@ -747,7 +747,7 @@ function charge_back_stats_log($profileid,$receiptid,$noChargeLog='')
                 $con_made.=$row["USERNAME"]."           ".$row_con_made["DATE"]." EST           ".$row_con_made["IP"]."\n";
         }
         addslashes(stripslashes($con_made));
-		$res=$dbMessageLogObj->getMessageLogBilling($profileid,'SENDER');
+		$res=$dbMessageLogObj->getMessageLogBilling($profileid,'RECEIVER','A');
 	//$sql_con_acc=" SELECT SENDER,DATE,IP from newjs.MESSAGE_LOG where RECEIVER='$profileid' and TYPE='A' order by ID desc limit 20";
       //  $res_con_acc=$mysql->executeQuery($sql_con_acc,$myDb) or logError_sums($sql_con_acc,1);
         //while($row_con_acc=$mysql->fetchArray($res_con_acc))
