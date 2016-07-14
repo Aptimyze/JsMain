@@ -8,7 +8,7 @@
 <br/>
         <div class="f14 pt4 opa80 lh25">Learn more & manage Privacy Settings by visiting Jeevansathi.com on your PC</div>
       </div>
-      <a class="bg7 txtc f18 fontlig white posfix btmo fullwid lh50" onClick="verifiedOk();return false">Continue</a>
+      <a id='js-phoneverButton' class="bg7 txtc f18 fontlig white posfix btmo fullwid lh50" onClick="verifiedOk();return false">Continue</a>
 
     </div>
   </div>
