@@ -27,7 +27,7 @@ mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_t
 $mysqlObj=new Mysql;
 
 $today=date("Y-m-d");
-$sql="SELECT PROFILEID FROM newjs.DELETED_PROFILE_LOG WHERE DATA_CHECK='' AND DATE BETWEEN '$today 00:00:00' AND '$today 23:59:59'";
+$sql="SELECT PROFILEID FROM newjs.NEW_DELETED_PROFILE_LOG WHERE DATA_CHECK='' AND DATE BETWEEN '$today 00:00:00' AND '$today 23:59:59'";
 //echo $sql;
 $res=mysql_query($sql,$db) or logError($sql);
 if(mysql_num_rows($res))
