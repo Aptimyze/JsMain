@@ -145,6 +145,10 @@ class JPROFILE
         return $bResult;
     }
 
+    /**
+     * @param array $paramArr
+     * @return mixed
+     */
     public function insert($paramArr = array())
     {
         $bResult = self::$objProfileMysql->insertRecord($paramArr);
@@ -498,6 +502,47 @@ class JPROFILE
             }
         }
         return $fields;
+    }
+
+    /**
+     * @param $profileArr
+     * @return mixed
+     */
+    public function DeactiveProfiles($profileArr)
+    {
+        return self::$objProfileMysql->DeactiveProfiles($profileArr);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNewScreenProfileCount()
+    {
+        return self::$objProfileMysql->getNewScreenProfileCount();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEditScreenProfileCount()
+    {
+        return self::$objProfileMysql->getEditScreenProfileCount();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPhotoScreenAcceptQueueCount()
+    {
+        return self::$objProfileMysql->getPhotoScreenAcceptQueueCount();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPhotoScreenProcessQueueCount()
+    {
+        return self::$objProfileMysql->getPhotoScreenAcceptQueueCount();
     }
 }
 

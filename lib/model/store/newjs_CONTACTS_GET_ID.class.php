@@ -10,7 +10,7 @@ class newjs_CONTACTS_GET_ID extends TABLE {
 	{
 		try
 		{
-			$sql = "INSERT INTO newjs.CONTACTS_GET_ID VALUES('')";
+			$sql = "INSERT INTO newjs.CONTACTS_GET_ID(ID) VALUES('')";
 			$prep = $this->db->prepare($sql);
 			$prep->execute();
 			return $this->db->lastInsertId();

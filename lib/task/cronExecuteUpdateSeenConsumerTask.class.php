@@ -41,7 +41,7 @@ EOF;
     JsMemcache::getInstance()->set("mqMemoryAlarmSECOND_SERVER",false);
     JsMemcache::getInstance()->set("mqDiskAlarmFIRST_SERVER",false);
     JsMemcache::getInstance()->set("mqDiskAlarmSECOND_SERVER",false);
-    $instancesNum=MessageQueues::CONSUMER_COUNT_SINGLE;
+    $instancesNum=MessageQueues::UPDATE_SEEN_CONSUMER_COUNT;
     for($i=1;$i<=$instancesNum;$i++)
     {
       passthru(JsConstants::$php5path." ".MessageQueues::UPDATESEEN_STARTCOMMAND." > /dev/null &");

@@ -233,7 +233,7 @@ class MembershipApiFunctions
                         else {
                             $discountCartPrice+= 0;
                         }
-                        $totalCartPrice+= $price - $price * ($discPerc / 100);
+                        $totalCartPrice+= $price - round($price * ($discPerc / 100), 2);
                     }
                 }
             } 
@@ -251,7 +251,7 @@ class MembershipApiFunctions
                 else {
                     $discountCartPrice+= 0;
                 }
-                $totalCartPrice+= $price - $price * ($discPerc / 100);
+                $totalCartPrice+= $price - round($price * ($discPerc / 100), 2);
             }
         } 
         else {
@@ -273,7 +273,7 @@ class MembershipApiFunctions
                     else {
                         $discountCartPrice+= 0;
                     }
-                    $totalCartPrice+= $price - $price * ($discPerc / 100);
+                    $totalCartPrice+= $price - round($price * ($discPerc / 100), 2);
                 }
             } 
             else {
@@ -290,7 +290,7 @@ class MembershipApiFunctions
                 else {
                     $discountCartPrice+= 0;
                 }
-                $totalCartPrice+= $price - $price * ($discPerc / 100);
+                $totalCartPrice+= $price - round($price * ($discPerc / 100), 2);
             }
         }
         
@@ -970,7 +970,7 @@ class MembershipApiFunctions
                 $arr = VariableParams::$eValuePlusAddOns;
             }
             foreach ($arr as $key => $val) {
-                if ($apiObj->mainMemDur == '1188') {
+                if ($apiObj->mainMemDur == '1188' || $apiObj->mainMemDur == 'L') {
                     $dur = '12';
                 } 
                 else {

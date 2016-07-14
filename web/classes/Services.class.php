@@ -398,12 +398,12 @@ class Services
             if ($fest) {
                 $festiveDiscountPercent = $festiveDetailsArr[$serviceid]['DISCOUNT_PERCENT'];
                 if ($festiveDiscountPercent > 0) {
-                	$services[$serviceid]['FESTIVE_PRICE'] = $services[$serviceid]['PRICE'] - ceil(($services[$serviceid]['PRICE'] * $festiveDiscountPercent) / 100);
+                	$services[$serviceid]['FESTIVE_PRICE'] = $services[$serviceid]['PRICE'] - round(($services[$serviceid]['PRICE'] * $festiveDiscountPercent) / 100, 2);
                 }
             }
             
             $discountSrvc = $cashDiscountArr[$serviceid];
-            $services[$serviceid]['DISCOUNT_PRICE'] = $services[$serviceid]['PRICE'] - ceil(($services[$serviceid]['PRICE'] * $discountSrvc) / 100);
+            $services[$serviceid]['DISCOUNT_PRICE'] = $services[$serviceid]['PRICE'] - round(($services[$serviceid]['PRICE'] * $discountSrvc) / 100, 2);
             
             $services[$serviceid]['DURATION'] = $componentsDurArr[$serviceid];
             unset($festiveDuration);

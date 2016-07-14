@@ -66,7 +66,7 @@ class ProfileCacheLib
 
     /**
      * @param $criteria
-     * @param $value
+     * @param $key
      * @param $fields
      * @return bool
      */
@@ -91,7 +91,7 @@ class ProfileCacheLib
             return false;
         }
 
-        //TODO : Check all fields specified in param fields is present in cache also, right now we are assuming all fields are cached together
+        //Check all fields specified in param fields is present in cache also, right now we are assuming all fields are cached together
         if (false === $this->checkFieldsAvailability($key, $fields)) {
            return false;
         }
@@ -100,10 +100,9 @@ class ProfileCacheLib
     }
 
     /**
-     * cacheThis
      * @param $szCriteria
      * @param $key
-     * @param $result
+     * @param $arrParams
      * @return bool
      */
     public function cacheThis($szCriteria, $key, $arrParams)
@@ -134,17 +133,22 @@ class ProfileCacheLib
      * @param $extraWhereCnd
      * @return bool|void
      */
-    public function updateCache($paramArr, $szCriteria, $key, $extraWhereCnd)
+    public function updateCache($paramArr, $szCriteria, $key, $extraWhereCnd = "")
     {              
         if(false === $this->isCached($szCriteria, $key, array_keys($paramArr))) {
             return ;
         }
-        return $this->cacheThis($szCriteria, $key, $paramArr);
+        $arrData = $this->cacheThis($szCriteria, $key, $paramArr);
+
+        //Now Process extraWhereCnd
+
+        return $arrData;
     }
 
     /**
      * @param $iProfileID
      * @param $paramArr
+     * @return bool
      */
     public function insertInCache($iProfileID, $paramArr)
     {
@@ -154,9 +158,10 @@ class ProfileCacheLib
     }
 
     /**
-     * @param $criteria
+     * @param $szCriteria
      * @param $key
      * @param $fields
+     * @param null $arrExtraWhereClause
      * @return array|bool
      */
     public function get($szCriteria, $key, $fields, $arrExtraWhereClause = null)
