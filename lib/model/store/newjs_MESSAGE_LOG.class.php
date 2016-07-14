@@ -1254,7 +1254,7 @@ return $result;
 				else
 				{
 					$idStr=implode(",",$profileArray);
-					$sql="DELETE FROM newjs.MESSAGE_LOG WHERE ID IN ('$idStr')";
+					$sql="DELETE FROM newjs.MESSAGE_LOG WHERE ID IN (".$idStr.")";
 					$prep=$this->db->prepare($sql);
 					$prep->execute();
 					while($row = $prep->fetch(PDO::FETCH_ASSOC))
