@@ -59,8 +59,6 @@ var strophieWrapper = {
     //fetch roster
 	getRoster: function(){
 		console.log("in getRoster");
-		/*var iq = $iq({type: 'get', 'id': strophieWrapper.getUniqueId('roster')})
-                        .c('query', {xmlns: 'jabber:iq:roster'});*/
         var iq = $iq({type: 'get'}).c('query', {xmlns: Strophe.NS.ROSTER});
 	    strophieWrapper.connectionObj.sendIQ(iq,strophieWrapper.onRosterReceived);
 	},
@@ -123,15 +121,12 @@ var strophieWrapper = {
 			console.log("end of updatePresence");
 		}
 		console.log("end of updatePresence for "+user_id);
-		/*if(strophieWrapper.initialRosterFetched == true){
-			console.log("change in status after initialRosterFetched done");
+		if(strophieWrapper.initialRosterFetched == true){
+			console.log("change in status after initialRosterFetched done for "+user_id);
 			var nodeArr = [];
 			nodeArr[user_id].push(strophieWrapper.Roster[user_id]);
-			//invokePluginManagelisting(nodeArr,"update_status");
-		}else{
-			console.log("received presence for initial roster items 123");
-			console.log(strophieWrapper.Roster);
-		}*/
+			invokePluginManagelisting(nodeArr,"update_status");
+		}
 	},
 
 	//executed after roster has been fetched
@@ -145,10 +140,11 @@ var strophieWrapper = {
 			var subscription = $(this).attr("subscription");
 			console.log("here"+subscription + $(this).attr("jid"));
 			console.log($.inArray(subscription,strophieWrapper.rosterSubscriptionAllowed));
-			if(subscription == "to" || subscription=="both" ||$.inArray(subscription,strophieWrapper.rosterSubscriptionAllowed))
+			var jid = $(this).attr("jid"),user_id = jid.split("@")[0];
+			if((subscription == "to" || subscription == "both" ||$.inArray(subscription,strophieWrapper.rosterSubscriptionAllowed)) && user_id != strophieWrapper.getSelfJID().split("@")[0])
 			{
 				console.log("true");
-				var jid = $(this).attr("jid"),user_id = jid.split("@")[0],listObj = strophieWrapper.formatRosterObj(xmlToJson(this));
+				var listObj = strophieWrapper.formatRosterObj(xmlToJson(this));
 				console.log("change roster for "+user_id);
 				console.log(strophieWrapper.Roster[user_id]);
 				console.log(listObj);
@@ -254,5 +250,9 @@ var strophieWrapper = {
 	    	});
    		}
    		return outputObj;
+    },
+
+    getSelfJID: function(){
+    	return strophieWrapper.connectionObj.jid;
     }
 }
