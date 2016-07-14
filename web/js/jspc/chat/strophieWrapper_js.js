@@ -28,6 +28,7 @@ var strophieWrapper = {
             console.log("AUTHFAIL");
         } else if (status == Strophe.Status.CONNECTED) {
 	        console.log("CONNECTED");
+	        //append listing panel
 	        objJsChat._appendLoggedHTML();
 	    }
 	},
