@@ -27,24 +27,27 @@ var strophieWrapper = {
             console.log("AUTHFAIL");
         } else if (status == Strophe.Status.CONNECTED) {
 	        console.log("CONNECTED");
+	        strophieWrapper.Roster = [];
+	        strophieWrapper.sendPresence();
 	        /*console.log($pres().tree());
 	        strophieWrapper.connectionObj.send($pres().tree());*/
+	        strophieWrapper.getRoster();
 	        //send own presence
-	        strophieWrapper.sendPresence();
+	        //binding event for presence update in roster
+	        strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
+	        //binding event for message receive event
+	        strophieWrapper.connectionObj.addHandler(strophieWrapper.onMessage, null, 'message', null, null,  null); 
+	   		//binding event for new node push in roster
+	   		//strophieWrapper.connectionObj.addHandler(strophieWrapper.onRosterPush,Strophe.NS.ROSTER,'iq','set');
+			//strophieWrapper.getRoster();
+	       
 	    }
 	},
 
 	triggerBindings: function(){
-		strophieWrapper.Roster = [];
         //get roster
-        strophieWrapper.getRoster();
-        //binding event for presence update in roster
-        strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
-        //binding event for message receive event
-        strophieWrapper.connectionObj.addHandler(strophieWrapper.onMessage, null, 'message', null, null,  null); 
-   		//binding event for new node push in roster
-   		//strophieWrapper.connectionObj.addHandler(strophieWrapper.onRosterPush,Strophe.NS.ROSTER,'iq','set');
-	},
+        //strophieWrapper.getRoster();
+    },
 	
 	//send presence
 	sendPresence : function(){
@@ -107,13 +110,15 @@ var strophieWrapper = {
 	
 	//update chat_status of roster items
 	updatePresence: function(user_id,chat_status){
+		console.log("in updatePresence");
 		console.log(strophieWrapper.Roster[user_id]);
-		if(typeof strophieWrapper.Roster[user_id] === "undefined"){
+		if(typeof strophieWrapper.Roster[user_id] == "undefined"){
 			console.log("presence before list 123");
-			console.log(strophieWrapper.Roster);
+			console.log(strophieWrapper.Roster[user_id]);
 			console.log(chat_status);
 			var obj = {};
 			obj["rosterDetails"]["chat_status"] = chat_status;
+			strophieWrapper.Roster[user_id] = {};
 			//strophieWrapper.Roster.splice(user_id);
 			console.log("new obj");
 			console.log(obj);
