@@ -101,8 +101,9 @@ class chatActions extends sfActions
                 curl_close ($ch);
             }
             //Encrypt Password
-            $hash = EncryptPassword::cryptoJsAesEncrypt("chat", $pass);
-            $response['hash'] = $hash;
+            //$hash = EncryptPassword::cryptoJsAesEncrypt("chat", $pass);
+            //$response['hash'] = $hash;
+            $response['hash'] = $pass;
         }
         else{
             $response = "Logged Out Profile";
