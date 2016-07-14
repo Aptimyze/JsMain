@@ -28,26 +28,24 @@ var strophieWrapper = {
             console.log("AUTHFAIL");
         } else if (status == Strophe.Status.CONNECTED) {
 	        console.log("CONNECTED");
-	        strophieWrapper.Roster = [];
-	        strophieWrapper.sendPresence();
-	        /*console.log($pres().tree());
-	        strophieWrapper.connectionObj.send($pres().tree());*/
-	        strophieWrapper.getRoster();
-	        //send own presence
-	        //binding event for presence update in roster
-	        strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
-	        //binding event for message receive event
-	        strophieWrapper.connectionObj.addHandler(strophieWrapper.onMessage, null, 'message', null, null,  null); 
-	   		//binding event for new node push in roster
-	   		//strophieWrapper.connectionObj.addHandler(strophieWrapper.onRosterPush,Strophe.NS.ROSTER,'iq','set');
-			//strophieWrapper.getRoster();
-	       
+	        objJsChat._appendLoggedHTML();
 	    }
 	},
 
 	triggerBindings: function(){
-        //get roster
-        //strophieWrapper.getRoster();
+        strophieWrapper.Roster = [];
+        strophieWrapper.sendPresence();
+        /*console.log($pres().tree());
+        strophieWrapper.connectionObj.send($pres().tree());*/
+        strophieWrapper.getRoster();
+        //send own presence
+        //binding event for presence update in roster
+        strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
+        //binding event for message receive event
+        strophieWrapper.connectionObj.addHandler(strophieWrapper.onMessage, null, 'message', null, null,  null); 
+   		//binding event for new node push in roster
+   		//strophieWrapper.connectionObj.addHandler(strophieWrapper.onRosterPush,Strophe.NS.ROSTER,'iq','set');
+		//strophieWrapper.getRoster();
     },
 	
 	//send presence

@@ -927,19 +927,19 @@ JsChat.prototype = {
             console.log('case 2');
             if($(curEle._loginPanelID).length == 0 ){
                 console.log("ankita_1");
-                curEle._appendLoggedHTML();    
+                //curEle._appendLoggedHTML();    
             }
             else{
                 console.log("ankita_2");
                 $(curEle._loginPanelID).fadeOut('fast',function() {
-                    curEle._appendLoggedHTML();
+                    //curEle._appendLoggedHTML();
                 });
             }
         }
         //user logged out from chat in the same session
         else {
             console.log('case 3');
-            $(curEle._loginPanelID).fadeOut('slow', function() {
+            $(curEle._loginPanelID).fadeOut('fast', function() {
                 $(curEle._listingPanelID).fadeIn('slow');
             });
         }
