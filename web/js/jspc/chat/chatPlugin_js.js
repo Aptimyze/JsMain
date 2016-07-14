@@ -305,15 +305,14 @@ JsChat.prototype = {
             runID = res[0];
             $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
                 console.log("groups "+val);
-                var List = '',fullname = data[key]["rosterDetails"]["fullname"].split("|"),tabShowStatus = $('div.' + val).attr('data-showuser');
-                var username = fullname[0],tuplePhoto="";  //ankita for image
-                if(fullname[1] !== "undefined")
-                    tuplePhoto = fullname[1];
+                var List = '',fullname = data[key]["rosterDetails"]["fullname"],tabShowStatus = $('div.' + val).attr('data-showuser');
+                var username = fullname,tuplePhoto=data[key]["rosterDetails"]["listing_tuple_photo"],profileChecksum=data[key]["rosterDetails"]["profile_checksum"];  //ankita for image
+
                 List += '<li class=\"clearfix profileIcon\"';
                 List += "id=\"" + runID + "_"+val + "\" >";
                 List += "<img id=\"pic_" + runID + "_" +val + "\" src=\""+tuplePhoto+"\" class=\"fl\">";
                 List += '<div class="fl f14 fontlig pt15 pl18">';
-                List += data[key]["rosterDetails"]["fullname"];
+                List += username;
                 List += '</div>';
                 console.log(runID+" is "+status);
                 if(status == "online")
@@ -928,19 +927,19 @@ JsChat.prototype = {
             console.log('case 2');
             if($(curEle._loginPanelID).length == 0 ){
                 console.log("ankita_1");
-                curEle._appendLoggedHTML();    
+                //curEle._appendLoggedHTML();    
             }
             else{
                 console.log("ankita_2");
                 $(curEle._loginPanelID).fadeOut('fast',function() {
-                    curEle._appendLoggedHTML();
+                    //curEle._appendLoggedHTML();
                 });
             }
         }
         //user logged out from chat in the same session
         else {
             console.log('case 3');
-            $(curEle._loginPanelID).fadeOut('slow', function() {
+            $(curEle._loginPanelID).fadeOut('fast', function() {
                 $(curEle._listingPanelID).fadeIn('slow');
             });
         }

@@ -120,36 +120,10 @@ function to add roster item or update roster item details in listing
 
 function invokePluginManagelisting(listObject,key){
     console.log("calling invokePluginAddlisting");
-    /*var listNodeObj = {"rosterDetails":{},"vcardDetails":vcardObj},nodeArr = [];
-    listNodeObj["rosterDetails"] = listObject;
-    if(typeof listObject.attributes == "undefined")
-        listNodeObj["rosterDetails"] = listObject;
-    else
-        listNodeObj["rosterDetails"] = listObject.attributes;*/
-
     if(key=="add_node"){
-        //if(listCreationDone == false){   
-            //create list with n nodes
-            //nodeArr = listObject.splice(0,chatConfig.Params[device].initialRosterLimit["nodesCount"]);
-            //console.log(nodeArr);
-            //listingInputData.push(listNodeObj);
-            //console.log("adding node before list creation");
-            //if(nodeArr.length == chatConfig.Params[device].initialRosterLimit["nodesCount"]){
-               // key = "create_list";
-                //console.log("list created after adding "+listingInputData.length+" nodes");
-                //listCreationDone = true;
-                console.log("adding "+listObject.length+" nodes in invokePluginAddlisting");
-                //objJsChat.addListingInit(listObject);
-                console.log(listObject);
-                //setConverseSettings("listCreationDone",true);
-            //}
-        /*} else{
-           //add single node after list creation
-            nodeArr.push(listNodeObj);
-            console.log("adding single node");
-            console.log(nodeArr);*/
-            objJsChat.addListingInit(listObject);
-        //}   //add node case
+        console.log("adding "+listObject.length+" nodes in invokePluginAddlisting");
+        console.log(listObject);
+        objJsChat.addListingInit(listObject);
     } else if(key=="update_status"){             
         //update existing user status in listing
         nodeArr.push(listNodeObj);
