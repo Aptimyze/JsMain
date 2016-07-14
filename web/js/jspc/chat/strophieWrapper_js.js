@@ -151,16 +151,6 @@ var strophieWrapper = {
 				console.log("change roster for "+user_id);
 				console.log(strophieWrapper.Roster[user_id]);
 				console.log(listObj);
-				/*if(typeof strophieWrapper.Roster[user_id] == "undefined"){
-					console.log("ankita1");
-					console.log("pushing obj 123for "+user_id);
-					strophieWrapper.Roster[user_id] = listObj;
-					console.log(strophieWrapper.Roster);
-				}else{
-					//var chat_status = strophieWrapper.Roster[user_id]["rosterDetails"]["chat_status"] || "offline";
-					strophieWrapper.Roster[user_id] = strophieWrapper.mergeRosterObj(strophieWrapper.Roster[user_id],listObj);
-					//strophieWrapper.Roster[user_id] = {""rosterDetails"":{"jid":jid,"chat_status":chat_status,"fullname":this.attr("name"),"groups":["dpp"],"subscription":this.attr("subscription")}};
-				}*/
 				var status = "offline";
 				if(typeof strophieWrapper.Roster[user_id] !== "undefined")
 					status = strophieWrapper.Roster[user_id]["rosterDetails"]["chat_status"];
@@ -219,16 +209,15 @@ var strophieWrapper = {
     //parser for roster object
     formatRosterObj: function(obj){
     	var chat_status = obj["attributes"]["chat_status"] || "offline";
-		var newObj = {"rosterDetails":
-							{ 
+    	var newObj = {};
+		newObj[strophieWrapper.rosterDetailsKey] = { 
 								"jid":obj["attributes"]["jid"],
 								"chat_status":chat_status,
 								"fullname":obj["attributes"]["name"],
 								"groups":[],
 								"subscription":obj["attributes"]["subscription"]
-							}
-					  };
-		newObj["rosterDetails"]["groups"].push(obj["group"]["#text"]);
+							};
+		newObj[strophieWrapper.rosterDetailsKey]["groups"].push(obj["group"]["#text"]);
 		return newObj;
     },
 
@@ -236,14 +225,15 @@ var strophieWrapper = {
     mergeRosterObj:function(obj1,obj2){
     	if(typeof obj1 == "undefined")
     	{
-    		obj1 = {"rosterDetails":{}};
+    		obj1 = {};
+    		obj1[strophieWrapper.rosterDetailsKey] = {};
     	}
     	if(typeof obj2 !== "undefined")
 	    {
 	    	console.log("here");
-	    	$.each(obj2["rosterDetails"],function(key,val){
+	    	$.each(obj2[strophieWrapper.rosterDetailsKey],function(key,val){
 	    		console.log(key+"-"+val);
-	    		obj1["rosterDetails"][key] = val;
+	    		obj1[strophieWrapper.rosterDetailsKey][key] = val;
 	    		console.log(obj1);
 	    	});
 	    }
@@ -252,11 +242,12 @@ var strophieWrapper = {
 
     //map input object to roster object
     mapRosterObj: function(inputObj){
-    	var outputObj = {"rosterDetails":{}};
+    	var outputObj = {};
+    	outputObj[strophieWrapper.rosterDetailsKey] = {};
     	if(typeof inputObj !== "undefined")
     	{
 	    	$.each(inputObj,function(key,val){
-	    		outputObj["rosterDetails"][key] = val;
+	    		outputObj[strophieWrapper.rosterDetailsKey][key] = val;
 	    	});
    		}
    		return outputObj;
