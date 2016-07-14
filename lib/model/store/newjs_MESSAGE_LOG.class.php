@@ -1272,7 +1272,7 @@ return $result;
 			}
 	}
 	
-	public function sugarcrmCronSelectSender($regDate,$regDurDate)
+	public function sugarcrmCronSelectSender($profileId,$regDate,$regDurDate)
 	{
 		
 		try 
@@ -1283,7 +1283,7 @@ return $result;
 				}
 				else
 				{
-					$sql="select DATE from newjs.MESSAGE_LOG WHERE SENDER=:PROFILEID1 AND TYPE='I' AND DATE>=:REGDATE AND DATE<:REGDATE ORDER BY DATE ASC LIMIT 1";
+					$sql="select DATE from newjs.MESSAGE_LOG WHERE SENDER=:PROFILEID1 AND TYPE='I' AND DATE>=:REGDATE AND DATE<:REGULARDATE ORDER BY DATE ASC LIMIT 1";
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":PROFILEID1",$profileId,PDO::PARAM_INT);
 					$prep->bindValue(":REGDATE",$regDate,PDO::PARAM_STR);

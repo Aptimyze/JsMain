@@ -5,6 +5,7 @@ chdir(dirname(__FILE__));
 include_once($_SERVER['DOCUMENT_ROOT']."/profile/connect.inc");
 include_once("housekeepingConfig.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Mysql.class.php");
+include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
 $db=connect_db();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db);

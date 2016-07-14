@@ -4,11 +4,14 @@ $curFilePath = dirname(__FILE__)."/";
 include_once("/usr/local/scripts/DocRoot.php");
 
 include("$docRoot/crontabs/connect.inc");
+include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
 $db=connect_db();
 $db_slave=connect_slave();
 $mysqlObj=new Mysql;
 	//************************************    Condition after submit state  ***************************************
+	
+	
 		$todayDate      =date("Y-m-d H:i:s");
 		$duration1	=$todayDate;
 		$lastDuration   =date("Y-m-d",strtotime("$todayDate -3 days"));
