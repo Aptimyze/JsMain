@@ -45,7 +45,7 @@ EOF;
         $newPayDetBillings = $billPayDetObj->getAllDetailsForBillidArr(array_keys($newPurBillings));
         
         foreach ($newPurBillings as $key => $val) {
-            if ($val['ORDERID'] != 0) {
+            if (!empty($val['ORDERID']) && is_numeric($val['ORDERID']) && $val['ORDERID'] != 0) {
                 /**
                  * Consider only order which have a valid value i.e. front-end transactions
                  * Fetching Details based on order generated on the front-end and 
