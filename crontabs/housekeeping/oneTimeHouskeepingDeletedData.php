@@ -289,13 +289,13 @@ $dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG($ProfileId2shard);
 				}
 				for($ll=0;$ll<count($affectedDb);$ll++)
 				{
-					$sharding=$ll+1;
-					if($sharding==1)
-						$dbMessageLogObj=$dbMessageLogObj1;
-					if($sharding==2)
-						$dbMessageLogObj=$dbMessageLogObj2;
-					if($sharding==3)
-						$dbMessageLogObj=$dbMessageLogObj3;
+					$k=$ll+1;
+					 if($k==1)
+							$dbMessageLogObj_main=$dbMessageLogObj_main1;
+					if($k==2)
+							$dbMessageLogObj_main=$dbMessageLogObj_main2;
+					if($k==3)
+							$dbMessageLogObj_main=$dbMessageLogObj_main3;
 						
 						$dbMShard=$affectedDb[$ll];
 						//echo $sql."\n\n";
