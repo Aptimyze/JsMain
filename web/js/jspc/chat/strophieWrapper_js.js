@@ -138,13 +138,14 @@ var strophieWrapper = {
 	onRosterReceived :function(iq){
 	    console.log("in onRosterReceived");
 	    console.log(iq);
+
 	 	console.log("start of onRosterReceived 246....");
 	    console.log(strophieWrapper.Roster);
 		$(iq).find("item").each(function() {
 			var subscription = $(this).attr("subscription");
-			console.log("here"+subscription);
+			console.log("here"+subscription + $(this).attr("jid"));
 			console.log($.inArray(subscription,strophieWrapper.rosterSubscriptionAllowed));
-			if($.inArray(subscription,strophieWrapper.rosterSubscriptionAllowed))
+			if(subscription == "to" || subscription=="both" ||$.inArray(subscription,strophieWrapper.rosterSubscriptionAllowed))
 			{
 				console.log("true");
 				var jid = $(this).attr("jid"),user_id = jid.split("@")[0],listObj = strophieWrapper.formatRosterObj(xmlToJson(this));
