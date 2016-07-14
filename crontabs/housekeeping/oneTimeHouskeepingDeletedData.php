@@ -300,7 +300,7 @@ $dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG($ProfileId2shard);
 						$dbMShard=$affectedDb[$ll];
 						//echo $sql."\n\n";
 						$sql_1="COMMIT";
-						$dbMessageLogObj->commitTransaction();
+						$dbMessageLogObj_main->commitTransaction();
 						mysql_query($sql_1,$dbMShard) or die(mysql_error($dbMShard).$sql_1);
 				}
 			}
