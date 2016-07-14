@@ -1247,7 +1247,7 @@ return $result;
 	{
 		try 
 			{
-				if(is_arary($profileArray))
+				if(!is_array($profileArray))
 				{
 					throw new jsException("","profile id is not specified in function getMessageLogHousekeeping of newjs_MESSAGE_LOG.class.php");
 				}
@@ -1257,10 +1257,6 @@ return $result;
 					$sql="DELETE FROM newjs.MESSAGE_LOG WHERE ID IN (".$idStr.")";
 					$prep=$this->db->prepare($sql);
 					$prep->execute();
-					while($row = $prep->fetch(PDO::FETCH_ASSOC))
-					{
-						$output[] = $row;
-					}
 				
 					return $output;
 				}	
