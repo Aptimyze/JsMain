@@ -31,6 +31,7 @@ class NEWJS_DELETED_MESSAGES extends TABLE{
 			}
 			catch(PDOException $e)
 			{
+				jsCacheWrapperException::logThis($e);
 				/*** echo the sql statement and error message ***/
 				throw new jsException($e);
 			}
@@ -52,6 +53,7 @@ class NEWJS_DELETED_MESSAGES extends TABLE{
 			}
 			catch(PDOException $e)
 			{
+				jsCacheWrapperException::logThis($e);
 				return false;
 				/*** echo the sql statement and error message ***/
 				//throw new jsException($e);
@@ -78,6 +80,7 @@ class NEWJS_DELETED_MESSAGES extends TABLE{
 			}
 			catch(PDOException $e)
 			{
+				jsCacheWrapperException::logThis($e);
 				/*** echo the sql statement and error message ***/
 				throw new jsException($e);
 			}
@@ -102,6 +105,7 @@ class NEWJS_DELETED_MESSAGES extends TABLE{
 			}
 			catch(PDOException $e)
 			{
+				jsCacheWrapperException::logThis($e);
 				/*** echo the sql statement and error message ***/
 				throw new jsException($e);
 			}
@@ -126,6 +130,7 @@ class NEWJS_DELETED_MESSAGES extends TABLE{
 		}
 		catch(PDOException $e)
 		{
+			jsCacheWrapperException::logThis($e);
 			/*** echo the sql statement and error message ***/
 			throw new jsException($e);
 		}

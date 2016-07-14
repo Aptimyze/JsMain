@@ -1027,6 +1027,7 @@ return $result;
 		}
 		catch(PDOException $e)
 		{
+			jsCacheWrapperException::logThis($e);
 			/*** echo the sql statement and error message ***/
 			throw new jsException($e);
 		}
@@ -1051,6 +1052,7 @@ return $result;
 		}
 		catch(PDOException $e)
 		{
+			jsCacheWrapperException::logThis($e);
 			return false;
 			/*** echo the sql statement and error message ***/
 			throw new jsException($e);
@@ -1094,6 +1096,7 @@ return $result;
 		}
 		catch(PDOException $e)
 		{
+			jsCacheWrapperException::logThis($e);
 			return false;
 			/*** echo the sql statement and error message ***/
 			throw new jsException($e);
@@ -1124,6 +1127,7 @@ return $result;
 		}
 		catch(PDOException $e)
 		{
+			jsCacheWrapperException::logThis($e);
 			/*** echo the sql statement and error message ***/
 			throw new jsException($e);
 		}
@@ -1150,6 +1154,7 @@ return $result;
 		}
 		catch(PDOException $e)
 		{
+			jsCacheWrapperException::logThis($e);
 			/*** echo the sql statement and error message ***/
 			throw new jsException($e);
 		}
@@ -1176,6 +1181,7 @@ return $result;
 		}
 		catch(PDOException $e)
 		{
+			jsCacheWrapperException::logThis($e);
 			return false;
 			/*** echo the sql statement and error message ***/
 			throw new jsException($e);
@@ -1206,6 +1212,7 @@ return $result;
 			}
 			catch(PDOException $e)
 			{
+				jsCacheWrapperException::logThis($e);
 				/*** echo the sql statement and error message ***/
 				throw new jsException($e);
 			}
@@ -1238,6 +1245,7 @@ return $result;
 			}
 			catch(PDOException $e)
 			{
+				jsCacheWrapperException::logThis($e);
 				/*** echo the sql statement and error message ***/
 				throw new jsException($e);
 			}
@@ -1263,6 +1271,7 @@ return $result;
 			}
 			catch(PDOException $e)
 			{
+				jsCacheWrapperException::logThis($e);
 				/*** echo the sql statement and error message ***/
 				throw new jsException($e);
 			}
@@ -1295,6 +1304,7 @@ return $result;
 			}
 			catch(PDOException $e)
 			{
+				jsCacheWrapperException::logThis($e);
 				/*** echo the sql statement and error message ***/
 				throw new jsException($e);
 			}
@@ -1331,6 +1341,7 @@ return $result;
 			}
 			catch(PDOException $e)
 			{
+				jsCacheWrapperException::logThis($e);
 				/*** echo the sql statement and error message ***/
 				throw new jsException($e);
 			}
@@ -1362,6 +1373,7 @@ return $result;
 			}
 			catch(PDOException $e)
 			{
+				jsCacheWrapperException::logThis($e);
 				/*** echo the sql statement and error message ***/
 				throw new jsException($e);
 			}
@@ -1393,6 +1405,7 @@ return $result;
 			}
 			catch(PDOException $e)
 			{
+				jsCacheWrapperException::logThis($e);
 				/*** echo the sql statement and error message ***/
 				throw new jsException($e);
 			}
@@ -1425,6 +1438,7 @@ return $result;
 			}
 			catch(PDOException $e)
 			{
+				jsCacheWrapperException::logThis($e);
 				/*** echo the sql statement and error message ***/
 				throw new jsException($e);
 			}
@@ -1456,6 +1470,7 @@ return $result;
 			}
 			catch(PDOException $e)
 			{
+				jsCacheWrapperException::logThis($e);
 				/*** echo the sql statement and error message ***/
 				throw new jsException($e);
 			}
@@ -1482,6 +1497,7 @@ return $result;
 			}
 			catch(PDOException $e)
 			{
+				jsCacheWrapperException::logThis($e);
 				/*** echo the sql statement and error message ***/
 				throw new jsException($e);
 			}
@@ -1511,6 +1527,7 @@ return $result;
 			}
             catch(PDOException $e)
             {
+				jsCacheWrapperException::logThis($e);
                         /*** echo the sql statement and error message ***/
                         throw new jsException($e);
             }
@@ -1531,6 +1548,7 @@ return $result;
 			}
 			catch(PDOException $e)
 			{
+				jsCacheWrapperException::logThis($e);
 				return false;
 				throw new jsException($e);
 			}

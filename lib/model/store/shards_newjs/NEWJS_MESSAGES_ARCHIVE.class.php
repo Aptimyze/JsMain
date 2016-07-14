@@ -27,6 +27,7 @@ class NEWJS_MESSAGES_ARCHIVE extends TABLE{
 			}
 			catch(PDOException $e)
 			{
+				jsCacheWrapperException::logThis($e);
 				/*** echo the sql statement and error message ***/
 				throw new jsException($e);
 			}

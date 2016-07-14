@@ -31,6 +31,7 @@ class NEWJS_MESSAGES extends TABLE{
 			}
 			catch(PDOException $e)
 			{
+				jsCacheWrapperException::logThis($e);
 				/*** echo the sql statement and error message ***/
 				throw new jsException($e);
 			}
@@ -52,6 +53,7 @@ class NEWJS_MESSAGES extends TABLE{
 			}
 			catch(PDOException $e)
 			{
+				jsCacheWrapperException::logThis($e);
 				/*** echo the sql statement and error message ***/
 				throw new jsException($e);
 			}
@@ -73,6 +75,7 @@ class NEWJS_MESSAGES extends TABLE{
 			}
 			catch(PDOException $e)
 			{
+				jsCacheWrapperException::logThis($e);
 				/*** echo the sql statement and error message ***/
 				throw new jsException($e);
 			}
@@ -97,6 +100,7 @@ class NEWJS_MESSAGES extends TABLE{
 			}
 			catch(PDOException $e)
 			{
+				jsCacheWrapperException::logThis($e);
 				/*** echo the sql statement and error message ***/
 				throw new jsException($e);
 			}
@@ -117,6 +121,7 @@ class NEWJS_MESSAGES extends TABLE{
 			}
 			catch(PDOException $e)
 			{
+				jsCacheWrapperException::logThis($e);
 				return false;
 				/*** echo the sql statement and error message ***/
 				//throw new jsException($e);
@@ -125,8 +130,9 @@ class NEWJS_MESSAGES extends TABLE{
 		
 		public function insertMessageData($pid,$listOfActiveProfile,$whereStrLabel1='RECEIVER',$whereStrLabel2='SENDER')
         {
-			if(!$pid || !$listOfActiveProfile)
+			if(!$pid || !$listOfActiveProfile){
                         throw new jsException("","VALUE OR TYPE IS BLANK IN selectActiveDeletedData() of NEWJS_MESSAGES.class.php");
+					}
 			try 
 			{ 
 					$sql="INSERT IGNORE INTO newjs.MESSAGES SELECT * FROM newjs.DELETED_MESSAGES WHERE (".$whereStrLabel1."=:PROFILEID OR ".$whereStrLabel2."=:PROFILEID) AND (".$whereStrLabel1." IN (".$listOfActiveProfile.") OR ".$whereStrLabel2." IN (".$listOfActiveProfile."))";
@@ -142,6 +148,7 @@ class NEWJS_MESSAGES extends TABLE{
 			}
 			catch(PDOException $e)
 			{
+				jsCacheWrapperException::logThis($e);
 				return false;
 				throw new jsException($e);
 			}
@@ -160,11 +167,13 @@ class NEWJS_MESSAGES extends TABLE{
 					$prep->execute();
 					
 				}
-				else
+				else{
 					throw new jsException("","VALUE OR TYPE IS BLANK IN insertSingleMessage() of NEWJS_MESSAGES.class.php");
+				}
 			}
 			catch(PDOException $e)
 			{
+				jsCacheWrapperException::logThis($e);
 				/*** echo the sql statement and error message ***/
 				throw new jsException($e);
 			}
