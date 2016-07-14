@@ -60,11 +60,11 @@ class billing_ORDERS_DEVICE extends TABLE{
 		{
 			$sql="SELECT SOURCE FROM billing.ORDERS_DEVICE WHERE BILLID=:BILLID";
 			$prep=$this->db->prepare($sql);
-			$prep->bindValue(":BILLID", $id, PDO::PARAM_INT);
+			$prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
 			$prep->execute();
-			while($result = $prep->fetch(PDO::FETCH_ASSOC))
+			if ($result = $prep->fetch(PDO::FETCH_ASSOC))
 			{
-				$device= $result['SOURCE'];
+				$device = $result['SOURCE'];
 			}
 			return $device;
 		}
