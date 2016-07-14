@@ -478,7 +478,10 @@ Abstract class ApiAuthentication
 		{
 			$dbObj=new userplane_recentusers;
 			$dbObj->replacedata($pid);
+		}
 
+		if($pid)
+		{
 			// Online-User Tracking in Cache 
 			$jsCommonObj =new JsCommon();
 			$jsCommonObj->setOnlineUser($pid);
