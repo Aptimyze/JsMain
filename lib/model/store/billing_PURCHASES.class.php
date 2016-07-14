@@ -534,7 +534,7 @@ class BILLING_PURCHASES extends TABLE{
         {
             if($time)
             {
-                $sql="SELECT * from billing.PURCHASES WHERE STATUS='DONE' AND ENTRY_DT>=:ENTRY_DT GROUP BY PROFILEID ORDER BY ENTRY_DT DESC";
+                $sql="SELECT * from billing.PURCHASES WHERE STATUS='DONE' AND ENTRY_DT>=:ENTRY_DT ORDER BY ENTRY_DT DESC LIMIT 1";
                 $prep=$this->db->prepare($sql);
                 $prep->bindValue(":ENTRY_DT",$time,PDO::PARAM_INT);
                 $prep->execute();
