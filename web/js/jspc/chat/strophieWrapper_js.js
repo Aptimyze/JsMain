@@ -209,13 +209,15 @@ var strophieWrapper = {
     //parser for roster object
     formatRosterObj: function(obj){
     	var chat_status = obj["attributes"]["chat_status"] || "offline";
-    	var newObj = {};
+    	var newObj = {},fullname = obj["attributes"]["name"].split("|");
 		newObj[strophieWrapper.rosterDetailsKey] = { 
 								"jid":obj["attributes"]["jid"],
 								"chat_status":chat_status,
-								"fullname":obj["attributes"]["name"],
+								"fullname":fullname[0],
 								"groups":[],
-								"subscription":obj["attributes"]["subscription"]
+								"subscription":obj["attributes"]["subscription"],
+								"profile_checksum":fullname[2],
+								"listing_tuple_photo":fullname[1]
 							};
 		newObj[strophieWrapper.rosterDetailsKey]["groups"].push(obj["group"]["#text"]);
 		return newObj;
