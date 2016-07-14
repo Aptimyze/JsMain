@@ -40,18 +40,18 @@ date_default_timezone_set('Asia/Calcutta');
 for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
 {       $myDbName=getActiveServerName($activeServerId);       $myDbArr[$myDbName]=$mysqlObj->connect("$myDbName");       mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$myDbArr[$myDbName]);
 }
-$dbMessageLogObj1=new NEWJS_MESSAGE_LOG("shard1_slave");
-$dbMessageLogObj2=new NEWJS_MESSAGE_LOG("shard2_slave");
-$dbMessageLogObj3=new NEWJS_MESSAGE_LOG("shard3_slave");
+$dbMessageLogObj_main1=new NEWJS_MESSAGE_LOG("shard1_slave");
+$dbMessageLogObj_main2=new NEWJS_MESSAGE_LOG("shard2_slave");
+$dbMessageLogObj_main3=new NEWJS_MESSAGE_LOG("shard3_slave");
 for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
 {
 	$k=$activeServerId+1;
 	if($k==1)
-		$dbMessageLogObj=$dbMessageLogObj1;
+		$dbMessageLogObj_main=$dbMessageLogObj_main1;
 	if($k==2)
-		$dbMessageLogObj=$dbMessageLogObj2;
+		$dbMessageLogObj_main=$dbMessageLogObj_main2;
 	if($k==3)
-		$dbMessageLogObj=$dbMessageLogObj3;
+		$dbMessageLogObj_main=$dbMessageLogObj_main3;
 	$dbNameS=getActiveServerName($activeServerId,"master");
 	$dbM=$mysqlObj->connect($dbNameS);
 	mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$dbS);
@@ -202,7 +202,7 @@ for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
 			if($cntAdded>0)
 			{
 				//echo $sql."\n\n";
-				$res=$dbMessageLogObj->getMessageLogHousekeeping($col1,$col2);
+				$res=$dbMessageLogObj_main->getMessageLogHousekeeping($col1,$col2);
 				//$sql_1="SELECT ID FROM newjs.DELETED_MESSAGE_LOG WHERE SENDER IN ('$col1','$col2') AND RECEIVER IN ('$col1','$col2')";
 				//$res_1=mysql_query($sql_1,$dbS) or die(mysql_error($dbS).$sql_1);
 				//while($row_1=mysql_fetch_array($res_1))
@@ -250,7 +250,7 @@ $dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG($ProfileId2shard);
 					$dbMShard=$affectedDb[$ll];	
 					//echo $sql."\n\n";
 					$sql_1="BEGIN";
-					$dbMessageLogObj->startTransaction();
+					$dbMessageLogObj_main->startTransaction();
 					mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
 	
 					if(is_array($col_id))
