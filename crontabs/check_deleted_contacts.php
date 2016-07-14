@@ -19,7 +19,8 @@ $TABLES_SHARDED=array(array("TABLE_NAME"=>"newjs.CONTACTS","DEL_TABLE_NAME"=>"ne
 
 
 $TABLES=array(array("TABLE_NAME"=>"newjs.BOOKMARKS","DEL_TABLE_NAME"=>"newjs.DELETED_BOOKMARKS","COLUMNS"=>array("BOOKMARKER","BOOKMARKEE")),
-	array("TABLE_NAME"=>"newjs.IGNORE_PROFILE","DEL_TABLE_NAME"=>"newjs.DELETED_IGNORE_PROFILE","COLUMNS"=>array("PROFILEID","IGNORED_PROFILEID")));
+	array("TABLE_NAME"=>"newjs.IGNORE_PROFILE","DEL_TABLE_NAME"=>"newjs.DELETED_IGNORE_PROFILE","COLUMNS"=>array("PROFILEID","IGNORED_PROFILEID")),
+	array("TABLE_NAME"=>"jsadmin.VIEW_CONTACTS_LOG","DEL_TABLE_NAME"=>"jsadmin.DELETED_VIEW_CONTACTS_LOG","COLUMNS"=>array("VIEWER","VIEWED")));
 
 $db=connect_db();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db);
