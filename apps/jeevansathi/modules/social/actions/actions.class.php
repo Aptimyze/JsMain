@@ -1808,8 +1808,11 @@ CloseMySelf(this);</script>';
         $profileObj=LoggedInProfile::getInstance('newjs_master');
         $profileObj->getDetail("","","HAVEPHOTO,PHOTO_DISPLAY");
         $photoUrl = $request->getParameter("urlToSave");
+	$importSite = $request->getParameter("importSite");
+	if(!$importSite)
+		$importSite = "facebook";
         $pictureServiceObj=new PictureService($profileObj);
-        $pictureidArr=$pictureServiceObj->saveAlbum($photoUrl,"import",$profileObj->getPROFILEID(),$importSite="facebook");
+        $pictureidArr=$pictureServiceObj->saveAlbum($photoUrl,"import",$profileObj->getPROFILEID(),$importSite);
 
 	if(is_array($pictureidArr))
 		$uploaded = true;
