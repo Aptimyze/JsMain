@@ -3,6 +3,7 @@ var strophieWrapper = {
 	Roster: [],
 	initialRosterFetched: false,
 	rosterSubscriptionAllowed : ["to","both"],
+	rosterDetailsKey:"rosterDetails",
 
 	//connect to openfire
 	connect: function(bosh_service_url,username,password){
@@ -158,7 +159,7 @@ var strophieWrapper = {
 				}else{
 					//var chat_status = strophieWrapper.Roster[user_id]["rosterDetails"]["chat_status"] || "offline";
 					strophieWrapper.Roster[user_id] = strophieWrapper.mergeRosterObj(strophieWrapper.Roster[user_id],listObj);
-					//strophieWrapper.Roster[user_id] = {"rosterDetails":{"jid":jid,"chat_status":chat_status,"fullname":this.attr("name"),"groups":["dpp"],"subscription":this.attr("subscription")}};
+					//strophieWrapper.Roster[user_id] = {""rosterDetails"":{"jid":jid,"chat_status":chat_status,"fullname":this.attr("name"),"groups":["dpp"],"subscription":this.attr("subscription")}};
 				}*/
 				var status = "offline";
 				if(typeof strophieWrapper.Roster[user_id] !== "undefined")
@@ -233,25 +234,31 @@ var strophieWrapper = {
 
     //merge second roster obj to first one
     mergeRosterObj:function(obj1,obj2){
-    	var roster  = "rosterDetails";
     	if(typeof obj1 == "undefined")
     	{
     		obj1 = {"rosterDetails":{}};
     	}
-    	console.log("mergeRosterObj for");
-    	console.log(obj1);
-    	console.log(obj2);
     	if(typeof obj2 !== "undefined")
 	    {
 	    	console.log("here");
 	    	$.each(obj2["rosterDetails"],function(key,val){
 	    		console.log(key+"-"+val);
-	    		obj1[roster][key] = val;
+	    		obj1["rosterDetails"][key] = val;
 	    		console.log(obj1);
 	    	});
 	    }
-	    console.log("final obj for");
-	    console.log(obj1);
     	return obj1;
+    },
+
+    //map input object to roster object
+    mapRosterObj: function(inputObj){
+    	var outputObj = {"rosterDetails":{}};
+    	if(typeof inputObj !== "undefined")
+    	{
+	    	$.each(inputObj,function(key,val){
+	    		outputObj["rosterDetails"][key] = val;
+	    	});
+   		}
+   		return outputObj;
     }
 }
