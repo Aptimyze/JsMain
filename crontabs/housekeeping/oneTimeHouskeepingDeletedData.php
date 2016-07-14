@@ -250,7 +250,7 @@ $dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG($ProfileId2shard);
 					$dbMShard=$affectedDb[$ll];	
 					//echo $sql."\n\n";
 					$sql_1="BEGIN";
-					$dbMessageLogObj_main->startTransaction();
+					$dbMessageLogObj->startTransaction();
 					mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
 	
 					if(is_array($col_id))
@@ -289,18 +289,20 @@ $dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG($ProfileId2shard);
 				}
 				for($ll=0;$ll<count($affectedDb);$ll++)
 				{
-					$k=$ll+1;
-					 if($k==1)
-							$dbMessageLogObj_main=$dbMessageLogObj_main1;
-					if($k==2)
-							$dbMessageLogObj_main=$dbMessageLogObj_main2;
-					if($k==3)
-							$dbMessageLogObj_main=$dbMessageLogObj_main3;
+					$shard=$ll+1;
+					if($shard==1)
+					{
+						$dbMessageLogObj=$dbMessageLogObj1;
+					}
+					if($shard==2)
+					{
+						$dbMessageLogObj=$dbMessageLogObj2;
+					}
 						
 						$dbMShard=$affectedDb[$ll];
 						//echo $sql."\n\n";
 						$sql_1="COMMIT";
-						$dbMessageLogObj_main->commitTransaction();
+						$dbMessageLogObj->commitTransaction();
 						mysql_query($sql_1,$dbMShard) or die(mysql_error($dbMShard).$sql_1);
 				}
 			}
