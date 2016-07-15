@@ -426,7 +426,7 @@ $js_arr[]=array("jsms/membership/shimmer_js"  => "1");
 $js_arr[]=array("jsms/utility/vSlider_js"   => "2");
 $js_arr[]=array("jsms/utility/hamSearch_js"  => "1");
 $js_arr[]=array("jsms/membership/revamp_mobile_membership"      => "5");
-$js_arr[]=array("jsms/membership/new_revamp_mobile_membership"                 => "12");
+$js_arr[]=array("jsms/membership/new_revamp_mobile_membership"                  => "13");
 $js_arr[]=array("jsms/membership/new_revamp_mobile_payment"        => "7");
 $js_arr[]=array("jsms/profile/ep/mobeditsave_js"    => "4");
 $js_arr[]=array("jsms/phone/phone_js"        => "7");
