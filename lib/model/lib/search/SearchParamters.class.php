@@ -978,6 +978,35 @@ class SearchParamters
 		}
 	}
         public function getLAST_LOGIN_DT(){return $this->LAST_LOGIN_DT;}
+        
+        public function setLLAST_LOGIN_DT($x)
+	{
+		if(!$x)
+			;
+		elseif(substr($x,0,10)=='0000-00-00')
+			$x ='';
+		else
+		{
+			if($x!="0000-00-00" && !strpos($x,"Z"))
+				$x = str_replace(" ","T",$x)."Z";
+		}
+		$this->LLAST_LOGIN_DT = $x;
+	}
+        public function getLLAST_LOGIN_DT(){return $this->LLAST_LOGIN_DT;}
+        public function setHLAST_LOGIN_DT($x)
+	{
+		if(!$x)
+			;
+		elseif(substr($x,0,10)=='0000-00-00')
+			$x ='';
+		else
+		{
+			if($x!="0000-00-00" && !strpos($x,"Z"))
+				$x = str_replace(" ","T",$x)."Z";
+		}
+		$this->HLAST_LOGIN_DT = $x;
+	}
+        public function getHLAST_LOGIN_DT(){return $this->HLAST_LOGIN_DT;}
 
 	public function setNoOfResults($x)
 	{

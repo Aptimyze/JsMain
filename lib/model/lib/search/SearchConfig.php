@@ -58,6 +58,7 @@ class SearchConfig
 
 	public static $membersLookingForMeWhereParameters = 'PARTNER_MTONGUE,PARTNER_CASTE,PARTNER_RELIGION,PARTNER_COUNTRYRES,PARTNER_BTYPE,PARTNER_COMP,PARTNER_ELEVEL_NEW,PARTNER_INCOME,PARTNER_OCC,PARTNER_MSTATUS,PARTNER_CITYRES,PARTNER_DRINK,PARTNER_SMOKE,PARTNER_DIET,PARTNER_HANDICAPPED,PARTNER_MANGLIK';
 	public static $membersLookingForMeRangeParameters = 'PARTNER_LAGE,PARTNER_HAGE,PARTNER_LHEIGHT,PARTNER_HHEIGHT';
+        public static $featuredProfileParams = 'LAST_LOGIN_DT';
 	public static $textBasedSearchParameters = "KEYWORD_SEARCH_FIELD";
 	public static $featureProfileWhereParameters = "FEATURE_PROFILE";
 	//For Solr
