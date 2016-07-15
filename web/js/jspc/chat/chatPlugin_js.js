@@ -302,72 +302,74 @@ JsChat.prototype = {
         var elem = this;
         console.log("addListing");
         for (var key in data) {
+            if(typeof data[key]["rosterDetails"]["jid"] != "undefined")
+            {
+                var runID = data[key]["rosterDetails"]["jid"],res = '',status = data[key]["rosterDetails"]["chat_status"];
+                console.log("addlisting for "+runID+"--"+data[key]["rosterDetails"]["chat_status"]);
+                console.log(data[key]);
+                //console.log(runID+" is now "+status);
+                res = runID.split("@");
+                runID = res[0];
+                $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
+                    console.log("groups "+val);
+                    var List = '',fullname = data[key]["rosterDetails"]["fullname"],tabShowStatus = $('div.' + val).attr('data-showuser');
+                    var getNamelbl = fullname,picurl=data[key]["rosterDetails"]["listing_tuple_photo"],prfCheckSum=data[key]["rosterDetails"]["profile_checksum"];  //ankita for image
 
-            var runID = data[key]["rosterDetails"]["jid"],res = '',status = data[key]["rosterDetails"]["chat_status"];
-            console.log("addlisting for "+runID+"--"+data[key]["rosterDetails"]["chat_status"]);
-            console.log(data[key]);
-            //console.log(runID+" is now "+status);
-            res = runID.split("@");
-            runID = res[0];
-            $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
-                console.log("groups "+val);
-                var List = '',fullname = data[key]["rosterDetails"]["fullname"],tabShowStatus = $('div.' + val).attr('data-showuser');
-                var getNamelbl = fullname,picurl=data[key]["rosterDetails"]["listing_tuple_photo"],prfCheckSum=data[key]["rosterDetails"]["profile_checksum"];  //ankita for image
 
+                    List += '<li class=\"clearfix profileIcon\"';
+                    List += "id=\"" + runID + "_"+val + "\" data-checks=\""+ prfCheckSum +"\">";
+                    List += "<img id=\"pic_" + runID + "_" +val + "\" src=\""+picurl+"\" class=\"fl\">";
+                    List += '<div class="fl f14 fontlig pt15 pl18">';
 
-                List += '<li class=\"clearfix profileIcon\"';
-                List += "id=\"" + runID + "_"+val + "\" data-checks=\""+ prfCheckSum +"\">";
-                List += "<img id=\"pic_" + runID + "_" +val + "\" src=\""+picurl+"\" class=\"fl\">";
-                List += '<div class="fl f14 fontlig pt15 pl18">';
+                    List += getNamelbl;
 
-                List += getNamelbl;
-
-                List += '</div>';
-                console.log(runID+" is "+status);
-                if(status == "online")
-                {
-                    List += '<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>';
-                }
-                List += '</li>';
-                var addNode = false;
-                console.log("Nitish"+tabShowStatus);
-                if(tabShowStatus == 'false')
-                {
-                    console.log(status+"2222");
-                    addNode = true;
-                }
-                else
-                {
-                    console.log(status+"1111");
-                    if(status=='online')
+                    List += '</div>';
+                    console.log(runID+" is "+status);
+                    if(status == "online")
                     {
-                       addNode = true;
+                        List += '<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>';
                     }
-                }
-                console.log("chexcking");
-                console.log(addNode);
-                if(addNode == true)
-                {
-                    if($('#'+runID + "_" + val).length==0)
+                    List += '</li>';
+                    var addNode = false;
+                    console.log("Nitish"+tabShowStatus);
+                    if(tabShowStatus == 'false')
                     {
-                        if($('#'+runID + "_" + val).find('.nchatspr').length==0)
-                        {
-                            $('div.' + val + ' ul').append(List);
-                            if($('div.' + val + ' ul').parent().hasClass("disp-none")){
-                                $('div.' + val + ' ul').parent().removeClass("disp-none");
-                            }
-                            $("#" + runID+"_" + val).on("click", function() {
-                               elem._chatPanelsBox(runID,status);
-
-                            }); 
-                        }
+                        console.log(status+"2222");
+                        addNode = true;
                     }
                     else
                     {
-                        $(elem._mainID).find($('#'+runID + "_" + val)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
+                        console.log(status+"1111");
+                        if(status=='online')
+                        {
+                           addNode = true;
+                        }
                     }
-                }
-            });
+                    console.log("chexcking");
+                    console.log(addNode);
+                    if(addNode == true)
+                    {
+                        if($('#'+runID + "_" + val).length==0)
+                        {
+                            if($('#'+runID + "_" + val).find('.nchatspr').length==0)
+                            {
+                                $('div.' + val + ' ul').append(List);
+                                if($('div.' + val + ' ul').parent().hasClass("disp-none")){
+                                    $('div.' + val + ' ul').parent().removeClass("disp-none");
+                                }
+                                $("#" + runID+"_" + val).on("click", function() {
+                                   elem._chatPanelsBox(runID,status);
+
+                                }); 
+                            }
+                        }
+                        else
+                        {
+                            $(elem._mainID).find($('#'+runID + "_" + val)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
+                        }
+                    }
+                });
+            }
         }
         elem._chatScrollHght();
         $(elem._scrollDivId).mCustomScrollbar({

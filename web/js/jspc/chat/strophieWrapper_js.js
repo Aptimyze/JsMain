@@ -9,7 +9,7 @@ var strophieWrapper = {
 	//connect to openfire
 	connect: function(bosh_service_url,username,password){
 		strophieWrapper.connectionObj = new Strophe.Connection(chatConfig.Params[device].bosh_service_url);
-    	strophieWrapper.connectionObj.connect(username,password,strophieWrapper.onConnect);
+    	strophieWrapper.connectionObj.connect(username,'123',strophieWrapper.onConnect);
         console.log("OPenfire wrapper");
         console.log(username);
         console.log(password);
@@ -41,9 +41,7 @@ var strophieWrapper = {
 
 	triggerBindings: function(){
         strophieWrapper.Roster = [];
-        strophieWrapper.sendPresence();
-        /*console.log($pres().tree());
-        strophieWrapper.connectionObj.send($pres().tree());*/
+        strophieWrapper.sendPresence();   
         strophieWrapper.getRoster();
         //send own presence
         //binding event for presence update in roster
@@ -52,7 +50,6 @@ var strophieWrapper = {
         strophieWrapper.connectionObj.addHandler(strophieWrapper.onMessage, null, 'message', null, null,  null); 
    		//binding event for new node push in roster
    		//strophieWrapper.connectionObj.addHandler(strophieWrapper.onRosterPush,Strophe.NS.ROSTER,'iq','set');
-		//strophieWrapper.getRoster();
     },
 	
 	//send presence
@@ -71,19 +68,13 @@ var strophieWrapper = {
 	//executed on new push event in roster
 	onRosterPush: function(iq){
 		console.log("in onRosterPush");
-		var user_id=$(iq).attr("jid"),listObj = {},subscription = $(iq).get("subscription");
-		console.log("subscription "+subscription);
-		if($.inArray(subscription,strophieWrapper.rosterSubscriptionAllowed))
+		var user_id=$(iq).attr("jid"),listObj = [],subscription = $(iq).get("subscription");
+		console.log(iq);
+		if(strophieWrapper.checkForSubscription(subscription) == true)
 		{
 			listObj[user_id] = strophieWrapper.formatRosterObj(xmlToJson(iq));
-			console.log("adding 1 node");
-			console.log(listObj);
-			if(typeof strophieWrapper.Roster[user_id] !== "undefined")
-				strophieWrapper.Roster.splice(user_id);
-			strophieWrapper.Roster.push(listObj);
-			var nodeArr = [];
-			nodeArr.push(listObj);
-			invokePluginManagelisting(nodeArr,"add_node");
+			strophieWrapper.Roster[user_id] = listObj;
+			invokePluginManagelisting(listObj,"add_node");
 		}
 	},
 
@@ -138,23 +129,16 @@ var strophieWrapper = {
 	onRosterReceived :function(iq){
 	    console.log("in onRosterReceived");
 	    console.log(iq);
-
-	 	console.log("start of onRosterReceived 246....");
-	    console.log(strophieWrapper.Roster);
 		$(iq).find("item").each(function() {
 			var subscription = $(this).attr("subscription");
 			console.log("here "+subscription + $(this).attr("jid"));
 			console.log(typeof subscription);
 			console.log($.inArray(subscription,strophieWrapper.rosterSubscriptionAllowed));
 			var jid = $(this).attr("jid"),user_id = jid.split("@")[0];
-			if((subscription == "to" || subscription == "both" ||$.inArray(subscription,strophieWrapper.rosterSubscriptionAllowed)) && user_id != strophieWrapper.getSelfJID().split("@")[0])
-			{
-				console.log("true");
-				var listObj = strophieWrapper.formatRosterObj(xmlToJson(this));
-				console.log("change roster for "+user_id);
-				console.log(strophieWrapper.Roster[user_id]);
-				console.log(listObj);
-				var status = "offline";
+			console.log("ankita_roster");
+			console.log(strophieWrapper.Roster[user_id]);
+			if(strophieWrapper.checkForSubscription(subscription) == true && user_id != strophieWrapper.getSelfJID().split("@")[0]){
+				var listObj = strophieWrapper.formatRosterObj(xmlToJson(this)),status = "offline";
 				if(typeof strophieWrapper.Roster[user_id] !== "undefined")
 					status = strophieWrapper.Roster[user_id]["rosterDetails"]["chat_status"];
 				
@@ -273,6 +257,7 @@ var strophieWrapper = {
     	}
     },
 
+    //fetch roster data from localstorage
     getRosterStorage: function(){
     	var data;
     	if(strophieWrapper.useLocalStorage == true){
@@ -281,5 +266,14 @@ var strophieWrapper = {
     	else
     		data = null;
     	return data;
+    },
+
+    //check for subscription of user
+    checkForSubscription :function(subscription){
+    	if(subscription == "to" || subscription == "both"){
+    		return true;
+    	}else{
+    		return false;
+    	}
     }
 }
