@@ -120,7 +120,10 @@ function xmlToJson(xml) {
 function invokePluginLoginHandler(state)
 {
     if(state == "success")
+    {
+        createCookie("chatAuth","true");
         objJsChat._appendLoggedHTML();
+    }
     else
         objJsChat.addLoginHTML(true);
 }
@@ -241,7 +244,7 @@ function checkAuthentication(){
             console.log(data.statusCode);
             if(data.responseStatusCode == "0"){
                 console.log("In chatUserAuthentication Login Done");
-                createCookie("chatAuth","true");
+                //createCookie("chatAuth","true");
                 //loginChat();
                 auth = 'true';
 		pass = JSON.parse(CryptoJS.AES.decrypt(data.hash, "chat", {format: CryptoJSAesJson}).toString(CryptoJS.enc.Utf8));

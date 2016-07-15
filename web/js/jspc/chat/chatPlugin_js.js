@@ -982,15 +982,15 @@ JsChat.prototype = {
         var errorHTML = '';
         if(failed == true)
         {
-            errorHTML += '<div class="txtc color5" id="loginErr">'+curEle._loginFailueMsg+'</div>';
+            errorHTML += '<div class="txtc color5 f13 mt10" id="loginErr">'+curEle._loginFailueMsg+'</div>';
         }
         if(failed == false || typeof failed == "undefined")
             $(this._parendID).append(LoginHTML);
         else
         {
             console.log("removing");
-            $("#"+curEle._loginPanelID).removeClass("disp-none");
-            $("#"+curEle._loginPanelID).append(errorHTML);
+            $(curEle._loginPanelID).fadeIn('fast');
+            $(curEle._loginPanelID).append(errorHTML);
         }
         $('.js-minChatBarOut').click(function() {
 

@@ -28,7 +28,7 @@ var strophieWrapper = {
 			//invokePluginLoginFailureHandler("failure");
 	    } else if(status == Strophe.Status.AUTHFAIL){
             console.log("AUTHFAIL");
-            //invokePluginLoginHandler("failure");
+            invokePluginLoginHandler("failure");
         } else if (status == Strophe.Status.CONNECTED) {
 	        console.log("CONNECTED");
 	        //append listing panel
