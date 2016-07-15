@@ -45,7 +45,6 @@ function initiateChatConnection()
 
 
 function sendMessage(message,to) {
-    var to = 'a2@localhost';
     if(message && to){
 	var reply = $msg({
 	    to: to,
@@ -53,8 +52,9 @@ function sendMessage(message,to) {
 	})
 	.cnode(Strophe.xmlElement('body', message)).up()
 	.c('active', {xmlns: "http://jabber.org/protocol/chatstates"});
-	connection.send(reply);
-	log('I sent ' + to + ': ' + message);
+	var messageResponse = strophieWrapper.connectionObj.send(reply);
+    console.log(messageResponse);
+	console.log('I sent to' + to + ': ' + message);
     }
 }
 
@@ -407,6 +407,7 @@ $(document).ready(function(){
     objJsChat.onSendingMessage = function(){
         
         console.log("In helper file onSendingMessage");
+        sendMessage(message,to);
         //var x = converse.listen.on('messageSend',"MEssagesend");
         //console.log(x);
         /*
