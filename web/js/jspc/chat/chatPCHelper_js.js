@@ -25,9 +25,9 @@ var pluginId = '#chatOpenPanel',device = 'PC';
     
 function initiateChatConnection()
 {
-    var username = loggedInJspcUser+'@localhost';
-    /*
-    if(readSiteCookie("CHATUSERNAME")=="bassi")
+    var username = /*'a1@localhost';*/loggedInJspcUser+'@localhost';
+    
+    /*if(readSiteCookie("CHATUSERNAME")=="bassi")
         username = 'a8@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
         username = 'a2@localhost';
@@ -134,10 +134,10 @@ function invokePluginLoginHandler(state)
 
 /*invokePluginAddlisting
 function to add roster item or update roster item details in listing
-* @inputs:listObject,key(create_list/add_node/update_status)
+* @inputs:listObject,key(create_list/add_node/update_status),user_id(optional)
 */
 
-function invokePluginManagelisting(listObject,key){
+function invokePluginManagelisting(listObject,key,user_id){
     console.log("calling invokePluginAddlisting");
     if(key=="add_node" || key=="create_list"){
         if(key=="create_list")
@@ -151,25 +151,26 @@ function invokePluginManagelisting(listObject,key){
         {
             objJsChat.noResultError();
         }
-    } else if(key=="update_status"){             
+    }else if(key=="update_status"){             
         //update existing user status in listing
-        nodeArr.push(listNodeObj);
-        console.log("updating status");
-        console.log(nodeArr);
-        if(listNodeObj["rosterDetails"]["chat_status"] == "offline")  //from online to offline
+        if(typeof user_id != "undefined")
         {
-            console.log("removing from listing");
-            objJsChat._removeFromListing("removeCall1",nodeArr);
-        }
-        else if(listNodeObj["rosterDetails"]["chat_status"] == "online") //from offline to online
-        {
-            console.log("adding in list");
-            objJsChat.addListingInit(nodeArr);
+            console.log("entered for user_id"+user_id);
+            if(listObject[user_id]["rosterDetails"]["chat_status"] == "offline")  //from online to offline
+            {
+                console.log("removing from listing");
+                objJsChat._removeFromListing("removeCall1",listObject);
+            }
+            else if(listObject[user_id]["rosterDetails"]["chat_status"] == "online") //from offline to online
+            {
+                console.log("adding in list");
+                objJsChat.addListingInit(listObject);
+            }
         }
     } else if(key=="delete_node"){
         //remove user from roster in listing
         //nodeArr.push(listNodeObj);
-        var userId = (listNodeObj["rosterDetails"]["jid"]).split("@");
+        var userId = (listObject["rosterDetails"]["jid"]).split("@");
         console.log("deleting node from roster-"+userId[0]);
         //console.log(nodeArr);
         objJsChat._removeFromListing("removeCall2",userId[0]);
