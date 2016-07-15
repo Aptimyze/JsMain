@@ -25,12 +25,14 @@ var pluginId = '#chatOpenPanel',device = 'PC';
     
 function initiateChatConnection()
 {
-    var username = 'a1@localhost';//loggedInJspcUser+'@localhost';
+    var username = loggedInJspcUser+'@localhost';
+    /*
     if(readSiteCookie("CHATUSERNAME")=="bassi")
         username = 'a8@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
         username = 'a2@localhost';
-    
+    */
+    console.log("Nitish"+username);
 
     console.log(chatConfig.Params[device].bosh_service_url);
     console.log("user:"+username+" pass:"+pass);
