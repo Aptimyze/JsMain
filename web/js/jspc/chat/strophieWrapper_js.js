@@ -283,6 +283,7 @@ var strophieWrapper = {
             console.log(messageResponse);
             console.log('I sent to' + to + ': ' + message);
         }
+    },
 
 
     /*format msg object*/
