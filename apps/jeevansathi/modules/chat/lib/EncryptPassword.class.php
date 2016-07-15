@@ -32,7 +32,21 @@ static function cryptoJsAesDecrypt($passphrase, $jsonString){
 * @param mixed $value
 * @return string
 */
-static function cryptoJsAesEncrypt($passphrase, $value){
+/*static function cryptoJsAesEncrypt($passphrase, $value){
+    $salt = openssl_random_pseudo_bytes(8);
+    $salted = '';
+    $dx = '';
+    while (strlen($salted) < 48) {
+        $dx = md5($dx.$passphrase.$salt, true);
+        $salted .= $dx;
+    }
+    $key = substr($salted, 0, 32);
+    $iv  = substr($salted, 32,16);
+    $encrypted_data = openssl_encrypt(json_encode($value), 'aes-256-cbc', $key, true, $iv);
+    $data = array("ct" => base64_encode($encrypted_data), "iv" => bin2hex($iv), "s" => bin2hex($salt));
+    return json_encode($data);
+}*/
+function cryptoJsAesEncrypt($passphrase, $value){
     $salt = openssl_random_pseudo_bytes(8);
     $salted = '';
     $dx = '';
@@ -47,24 +61,42 @@ static function cryptoJsAesEncrypt($passphrase, $value){
     return json_encode($data);
 }
 
+
 static function generatePassword($string) {
-   $ans = array();
-   $string = str_split($string);
-   #go through every character, changing it to its ASCII value
-   for ($i = 0; $i < count($string); $i++) {
-   
-       #ord turns a character into its ASCII values
-       $ascii = (string) ord($string[$i]);
+    $ans = array();
+    $string = str_split($string);
+    #go through every character, changing it to its ASCII value
+    for ($i = 0; $i < count($string); $i++) {
 
-       #make sure it's 3 characters long
-       if (strlen($ascii) < 3)
-           $ascii = '0'.$ascii;
-       $ans[] = $ascii;
-   }
+        #ord turns a character into its ASCII values
+        $ascii = (string) ord($string[$i]);
 
-   #turn it into a string
-   return implode('', $ans);
+        #make sure it's 3 characters long
+        if (strlen($ascii) < 3)
+            $ascii = '0'.$ascii;
+        $ans[] = $ascii;
+    }
+
+    #turn it into a string
+    return implode('', $ans);
 }
+
+/*static function decode($string) {
+    $ans = '';
+    $string = str_split($string);
+    $chars = array();
+
+    #construct the characters by going over the three numbers
+    for ($i = 0; $i < count($string); $i+=3)
+        $chars[] = $string[$i] . $string[$i+1] . $string[$i+2];
+
+    #chr turns a single integer into its ASCII value
+    for ($i = 0; $i < count($chars); $i++)
+        $ans .= chr($chars[$i]);
+
+    return $ans;
+}*/
+
 
 }
 ?>

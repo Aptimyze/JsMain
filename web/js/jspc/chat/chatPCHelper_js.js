@@ -1,7 +1,9 @@
 /*This file includes functions used for intermediate data transfer for JSPC chat from 
 * converse client(converse.js) to chat plugin(chat_js.js)
 */
+
 var listingInputData = [],listCreationDone=false,objJsChat,pass;  //listing data sent to plugin-array of objects
+
 //var decrypted = JSON.parse(CryptoJS.AES.decrypt(api response, "chat", {format: CryptoJSAesJson}).toString(CryptoJS.enc.Utf8));
 
 function readSiteCookie(name) {
@@ -30,10 +32,10 @@ function initiateChatConnection()
     else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
         username = 'a2@localhost';
     */
+
     console.log(chatConfig.Params[device].bosh_service_url);
-    console.log(username);
-    console.log("Password!!@");
-    console.log(pass);
+    console.log("user:"+username+" pass:"+pass);
+
     strophieWrapper.connect(chatConfig.Params[device].bosh_service_url,username,pass);
     console.log(strophieWrapper.connectionObj);
 }
@@ -115,6 +117,21 @@ function xmlToJson(xml) {
     return obj;
 }
 
+/*invokePluginLoginHandler
+*handles login success/failure cases
+* @param: state
+*/
+function invokePluginLoginHandler(state)
+{
+    if(state == "success")
+    {
+        createCookie("chatAuth","true");
+        objJsChat._appendLoggedHTML();
+    }
+    else
+        objJsChat.addLoginHTML(true);
+}
+
 /*invokePluginAddlisting
 function to add roster item or update roster item details in listing
 * @inputs:listObject,key(create_list/add_node/update_status)
@@ -122,36 +139,14 @@ function to add roster item or update roster item details in listing
 
 function invokePluginManagelisting(listObject,key){
     console.log("calling invokePluginAddlisting");
-    /*var listNodeObj = {"rosterDetails":{},"vcardDetails":vcardObj},nodeArr = [];
-    listNodeObj["rosterDetails"] = listObject;
-    if(typeof listObject.attributes == "undefined")
-        listNodeObj["rosterDetails"] = listObject;
-    else
-        listNodeObj["rosterDetails"] = listObject.attributes;*/
-
-    if(key=="add_node"){
-        //if(listCreationDone == false){   
-            //create list with n nodes
-            //nodeArr = listObject.splice(0,chatConfig.Params[device].initialRosterLimit["nodesCount"]);
-            //console.log(nodeArr);
-            //listingInputData.push(listNodeObj);
-            //console.log("adding node before list creation");
-            //if(nodeArr.length == chatConfig.Params[device].initialRosterLimit["nodesCount"]){
-               // key = "create_list";
-                //console.log("list created after adding "+listingInputData.length+" nodes");
-                //listCreationDone = true;
-                console.log("adding "+listObject.length+" nodes in invokePluginAddlisting");
-                //objJsChat.addListingInit(listObject);
-                console.log(listObject);
-                //setConverseSettings("listCreationDone",true);
-            //}
-        /*} else{
-           //add single node after list creation
-            nodeArr.push(listNodeObj);
-            console.log("adding single node");
-            console.log(nodeArr);*/
-            objJsChat.addListingInit(listObject);
-        //}   //add node case
+    if(key=="add_node" || key=="create_list"){
+        if(key=="create_list")
+        {
+            objJsChat.hideChatLoader();
+        }
+        console.log("adding "+listObject.length+" nodes in invokePluginAddlisting");
+        console.log(listObject);
+        objJsChat.addListingInit(listObject);
     } else if(key=="update_status"){             
         //update existing user status in listing
         nodeArr.push(listNodeObj);
@@ -257,12 +252,11 @@ function checkAuthentication(){
             console.log(data.statusCode);
             if(data.responseStatusCode == "0"){
                 console.log("In chatUserAuthentication Login Done");
-                createCookie("chatAuth","true");
+                //createCookie("chatAuth","true");
                 //loginChat();
                 auth = 'true';
-                console.log("In success");
-                console.log(data);
-                pass = data.hash;
+		pass = JSON.parse(CryptoJS.AES.decrypt(data.hash, "chat", {format: CryptoJSAesJson}).toString(CryptoJS.enc.Utf8));
+
             }
             else{
                 console.log(data.responseMessage);
@@ -292,7 +286,7 @@ function invokePluginReceivedMsgHandler(msgObj)
 }
 
 
-var CryptoJSAesJson = {
+/*var CryptoJSAesJson = {
     stringify: function (cipherParams) {
         var j = {ct: cipherParams.ciphertext.toString(CryptoJS.enc.Base64)};
         if (cipherParams.iv) j.iv = cipherParams.iv.toString();
@@ -306,7 +300,23 @@ var CryptoJSAesJson = {
         if (j.s) cipherParams.salt = CryptoJS.enc.Hex.parse(j.s)
         return cipherParams;
     }
+}*/
+var CryptoJSAesJson = {
+    stringify: function (cipherParams) {
+        var j = {ct: cipherParams.ciphertext.toString(CryptoJS.enc.Base64)};
+        if (cipherParams.iv) j.iv = cipherParams.iv.toString();
+        if (cipherParams.salt) j.s = cipherParams.salt.toString();
+        return JSON.stringify(j);
+    },
+    parse: function (jsonStr) {
+        var j = JSON.parse(jsonStr);
+        var cipherParams = CryptoJS.lib.CipherParams.create({ciphertext: CryptoJS.enc.Base64.parse(j.ct)});
+        if (j.iv) cipherParams.iv = CryptoJS.enc.Hex.parse(j.iv);
+        if (j.s) cipherParams.salt = CryptoJS.enc.Hex.parse(j.s);
+        return cipherParams;
+    }
 }
+
 
 $(document).ready(function(){
     console.log("User");
@@ -355,7 +365,10 @@ $(document).ready(function(){
     }
 
     objJsChat.onChatLoginSuccess = function(){
-        //trigger list creation if nodes in roster lesser than limit
+        console.log("show loader---manvi");
+        //trigger list creation
+        console.log("in triggerBindings");
+        strophieWrapper.triggerBindings();
         //setCreateListingInterval();
     }
     

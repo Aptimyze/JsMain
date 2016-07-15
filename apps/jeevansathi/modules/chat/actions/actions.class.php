@@ -37,8 +37,10 @@ class chatActions extends sfActions
         if($loginData){
 
             $username = $loginData['PROFILEID'];
-            $uname = $loginData['USERNAME'];
-            $pass = EncryptPassword::generatePassword($uname);
+
+		$uname = $loginData['USERNAME'];
+	    $pass = EncryptPassword::generatePassword($uname);
+
             $url = JsConstants::$openfireConfig['HOST'].":".JsConstants::$openfireConfig['PORT']."/plugins/restapi/v1/users/".$username;
             //$url = "http://localhost:9090/plugins/restapi/v1/users/".$username;
             $ch = curl_init();
@@ -101,9 +103,9 @@ class chatActions extends sfActions
                 curl_close ($ch);
             }
             //Encrypt Password
-            //$hash = EncryptPassword::cryptoJsAesEncrypt("chat", $pass);
-            //$response['hash'] = $hash;
-            $response['hash'] = $pass;
+            $hash = EncryptPassword::cryptoJsAesEncrypt("chat", $pass);
+            $response['hash'] = $hash;
+            //$response['hash'] = $pass;
         }
         else{
             $response = "Logged Out Profile";
