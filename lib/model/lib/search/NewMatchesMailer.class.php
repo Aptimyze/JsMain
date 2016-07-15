@@ -148,7 +148,9 @@ class NewMatchesMailer extends SearchParamters
                             $dateString = date("Y-m-d",strtotime("-".$this->daysOldProfiles_3." days"));
                 }
 
-		$this->setLAST_LOGIN_DT($dateString);
+		$this->setLVERIFY_ACTIVATED_DT($dateString."T00:00:00Z");
+		$this->setHVERIFY_ACTIVATED_DT(date("Y-m-d")."T00:00:00Z");
+                
 		$this->setSORT_LOGIC(SearchSortTypesEnums::newMatchesMailer);
 		$this->setSEARCH_TYPE(SearchTypesEnums::NewMatchesMailer);
 
