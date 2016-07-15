@@ -68,15 +68,16 @@ var strophieWrapper = {
 	//executed on new push event in roster
 	onRosterPush: function(iq){
 		console.log("in onRosterPush");
-		var user_id=$(iq).attr("jid"),listObj = [],subscription = $(iq).get("subscription");
 		console.log(iq);
-		console.log(xmlToJson(iq));
-		/*if(strophieWrapper.checkForSubscription(subscription) == true)
+		var nodeObj= xmlToJson(iq),rosterObj = strophieWrapper.formatRosterObj(nodeObj["query"]["item"]);
+		var user_id = rosterObj[strophieWrapper.rosterDetailsKey]["jid"].split("@")[0],subscription = rosterObj[strophieWrapper.rosterDetailsKey]["subscription"];
+		if(strophieWrapper.checkForSubscription(subscription) == true)
 		{
-			listObj[user_id] = strophieWrapper.formatRosterObj(xmlToJson(iq));
-			strophieWrapper.Roster[user_id] = listObj;
-			invokePluginManagelisting(listObj,"add_node");
-		}*/
+			var nodeArr = [];
+			nodeArr[user_id] = strophieWrapper.Roster[user_id] = rosterObj;
+			console.log(strophieWrapper.Roster[user_id]);
+			invokePluginManagelisting(nodeArr,"add_node");
+		}
 	},
 
 	//executed after presence has been fetched
@@ -181,6 +182,7 @@ var strophieWrapper = {
 	
     //parser for roster object
     formatRosterObj: function(obj){
+    	console.log("in formatRosterObj");
     	var chat_status = obj["attributes"]["chat_status"] || "offline";
     	var newObj = {},fullname = obj["attributes"]["name"].split("|");
 		newObj[strophieWrapper.rosterDetailsKey] = { 

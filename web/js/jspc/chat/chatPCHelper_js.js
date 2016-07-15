@@ -31,8 +31,8 @@ function initiateChatConnection()
     if(readSiteCookie("CHATUSERNAME")=="bassi")
         username = 'a8@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
-        username = 'a2@localhost';
-    */
+        username = 'a2@localhost';*/
+    
     console.log("Nitish"+username);
 
     console.log(chatConfig.Params[device].bosh_service_url);
@@ -115,7 +115,10 @@ function invokePluginLoginHandler(state)
         objJsChat._appendLoggedHTML();
     }
     else
+    {
+        eraseCookie("chatAuth");
         objJsChat.addLoginHTML(true);
+    }
 }
 
 /*invokePluginAddlisting
@@ -130,7 +133,7 @@ function invokePluginManagelisting(listObject,key,user_id){
         {
             objJsChat.hideChatLoader();
         }
-        console.log("adding "+listObject.length+" nodes in invokePluginAddlisting");
+        console.log("adding nodes in invokePluginAddlisting");
         console.log(listObject);
         objJsChat.addListingInit(listObject);
         if(key == "create_list")
