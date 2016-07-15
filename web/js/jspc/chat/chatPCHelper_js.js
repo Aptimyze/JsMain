@@ -32,7 +32,7 @@ function initiateChatConnection()
         username = 'a8@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
         username = 'a2@localhost';*
-    
+    */
     console.log("Nitish"+username);
 
     console.log(chatConfig.Params[device].bosh_service_url);
@@ -65,6 +65,7 @@ function setConverseSettings(key,value)
     converse.settings.set(key,value);
 }
 */
+
 
 // Changes XML to JSON
 function xmlToJson(xml) {
@@ -388,8 +389,7 @@ $(document).ready(function(){
         logoutChat();
     }
 
-    objJsChat.onSendingMessage = function(){
-        
+    objJsChat.onSendingMessage = function(message,to){
         console.log("In helper file onSendingMessage");
         strophieWrapper.sendMessage(message,to);
         //sendMessage(message,to);
