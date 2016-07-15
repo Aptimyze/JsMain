@@ -49,7 +49,7 @@ var strophieWrapper = {
         //binding event for message receive event
         strophieWrapper.connectionObj.addHandler(strophieWrapper.onMessage, null, 'message', null, null,  null); 
    		//binding event for new node push in roster
-   		//strophieWrapper.connectionObj.addHandler(strophieWrapper.onRosterPush,Strophe.NS.ROSTER,'iq','set');
+   		strophieWrapper.connectionObj.addHandler(strophieWrapper.onRosterPush,Strophe.NS.ROSTER,'iq','set');
     },
 	
 	//send presence
@@ -70,12 +70,13 @@ var strophieWrapper = {
 		console.log("in onRosterPush");
 		var user_id=$(iq).attr("jid"),listObj = [],subscription = $(iq).get("subscription");
 		console.log(iq);
-		if(strophieWrapper.checkForSubscription(subscription) == true)
+		console.log(xmlToJson(iq));
+		/*if(strophieWrapper.checkForSubscription(subscription) == true)
 		{
 			listObj[user_id] = strophieWrapper.formatRosterObj(xmlToJson(iq));
 			strophieWrapper.Roster[user_id] = listObj;
 			invokePluginManagelisting(listObj,"add_node");
-		}
+		}*/
 	},
 
 	//executed after presence has been fetched

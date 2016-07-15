@@ -206,9 +206,9 @@ JsChat.prototype = {
             TabsOpt += "<p>" + objin["tab_name"] + "</p><div class=\"showlinec\"></div></li>";
         }
         TabsOpt += '</ul></div><div id="nchatDivs" class="nchatscrollDiv"><div id="scrollDivLoader" class="spinner"></div>';
-        TabsOpt += '<div class="showtab1 js-htab"> ';
+        TabsOpt += '<div class="showtab1 js-htab"> <div id="showtab1NoResult" class="noResult f13 fontreg disp-none">There are no matching members online. Please relax your partner preference to see more matches.</div>';
         for (var i = 0; i < obj["tab1"]["groups"].length; i++) {
-            TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + " disp-none\" data-showuser=\""+ obj["tab1"]["groups"][i]["hide_offline_users"]   +"\">";
+            TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + " disp-none chatListing\" data-showuser=\""+ obj["tab1"]["groups"][i]["hide_offline_users"]   +"\">";
             //TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + "\">";
             TabsOpt += "<div class=\"f12 fontreg nchatbdr2";
             if(obj["tab1"]["groups"][i]["show_group_name"]==false)
@@ -218,7 +218,7 @@ JsChat.prototype = {
 
         }
         TabsOpt += '</div>';
-        TabsOpt += '<div class="showtab2 js-htab disp-none">';
+        TabsOpt += '<div class="showtab2 js-htab disp-none"> <div id="showtab2NoResult" class="noResult f13 fontreg disp-none">You currently dont have any accepted members, get started by sending interests or initiating chat with your matches</div>';
         for (var i = 0; i < obj["tab2"]["groups"].length; i++) {
             TabsOpt += "<div class=\"" + obj["tab2"]["groups"][i]["id"] + "\" data-showuser=\""+ obj["tab2"]["groups"][i]["hide_offline_users"]   +"\">";
             //TabsOpt += "<div class=\"" + obj["tab2"]["groups"][i]["id"] + "\">";
@@ -237,6 +237,23 @@ JsChat.prototype = {
 
             curEle._chatTabs($(this).attr('id'));
         })
+    },
+    noResultError:function(){
+        var dataLength;
+        $(".js-htab").each(function(index, element) {
+        dataLength = 0;
+        $(this).find(".chatlist").each(function(index2, element2) {
+           console.log($(this).find("li").length);
+            dataLength = dataLength + $(this).find("li").length;
+        });
+        if(dataLength == 0){
+        console.log(element);
+        $(element).find(".noResult").removeClass("disp-none").addClass("disp_ib");
+        $(element).find(".chatListing").each(function(index, element) {
+               $(this).addClass("disp-none");
+           });
+        }
+        }); 
     },
     //start:addlisting
    /*addListingInit: function(data) {

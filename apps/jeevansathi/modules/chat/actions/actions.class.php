@@ -201,9 +201,73 @@ class chatActions extends sfActions
 	    $getData["profiles"] = $getRosterDataObj->getRosterDataByType($type,$limit);
 	    $apiResponseHandlerObj = ApiResponseHandler::getInstance();
 	    $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-	    $apiResponseHandlerObj->setResponseBody($getData);
+	    
+$apiResponseHandlerObj->setResponseBody($getData);
 	    $apiResponseHandlerObj->generateResponse();
 	    die;
     }
+
+	public function executeGetDppDataV1(sfwebrequest $request)
+	{
+		$profileid = $request->getParameter("profileid");
+		$photoType = $request->getParameter("photoType");
+		$limit = $request->getParameter("limit");
+		$currentPage = $request->getParameter("currentPage");
+		$dontShowFilteredProfiles = $request->getParameter("dontShowFilteredProfiles");
+
+		/***/
+		if(!$photoType)
+			$photoType = 'MainPicUrl';
+		if(!$dontShowFilteredProfiles)
+			$dontShowFilteredProfiles = 1;
+		if(!$limit)
+			$limit = 10;
+		if(!$currentPage)
+			$currentPage = 1;
+		$completeResponse = 1;
+		/***/
+
+		$profileObj = LoggedInProfile::getInstance('',$profileid);
+		$profileObj->getDetail('','','*');
+		$partnerObj = new SearchCommonFunctions();
+
+
+		$obj = $partnerObj->getMyDppMatches(sort,$profileObj,$limit,$currentPage,$paramArr,$removeMatchAlerts,$dontShowFilteredProfiles,$twoWayMatches,$clustersToShow,$results_orAnd_cluster,$notInProfiles,$completeResponse);
+		$arr = $obj->getResultsArr();
+		if($arr)
+		{
+			$pidArr["PROFILEID"] = implode(",",$obj->getSearchResultsPidArr());
+			$profileObj=LoggedInProfile::getInstance('newjs_master');
+			$multipleProfileObj = new ProfileArray();
+
+			$profileDetails = $multipleProfileObj->getResultsBasedOnJprofileFields($pidArr);
+			$multiplePictureObj = new PictureArray($profileDetails);
+			$photosArr = $multiplePictureObj->getProfilePhoto();
+			foreach($arr as $k=>$v)
+			{
+				$pid = $v["id"];
+				$cArr[$pid]["USERNAME"] = $v["USERNAME"];
+				$cArr[$pid]["PROFILECHECKSUM"] = jsAuthentication::jsEncryptProfilechecksum($pid);
+				$photoObj = $photosArr[$pid];
+				if($photoObj)
+				{
+					eval('$temp =$photoObj->get'.$photoType.'();');
+					$cArr[$pid]["PHOTO"] = $temp;
+					unset($temp);
+				}
+				else
+				{
+					$cArr[$pid]["PHOTO"] = NULL;
+				}
+
+			}
+		}
+		$getData["profiles"] = $cArr;
+		$apiResponseHandlerObj = ApiResponseHandler::getInstance();
+		$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+		$apiResponseHandlerObj->setResponseBody($getData);
+		$apiResponseHandlerObj->generateResponse();
+		die;
+	}
 }
 ?>

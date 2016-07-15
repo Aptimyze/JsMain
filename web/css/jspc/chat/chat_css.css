@@ -655,3 +655,13 @@ wid165 {
     border-right-color: transparent;
     border-radius: 50%;
 }
+@keyframes rotate {
+ 0%    { transform: rotate(0deg); }
+ 100%  { transform: rotate(360deg); }
+}
+.noResult{position: relative;
+   text-align: center;
+   width: 90%;    
+line-height: 17px;    
+margin-top: 220px;
+   padding:10px}
