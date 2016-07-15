@@ -272,10 +272,11 @@ var strophieWrapper = {
                 type: 'chat'
             })
             .cnode(Strophe.xmlElement('body', message)).up()
+            .cnode(Strophe.xmlElement('request', {'xmlns': Strophe.NS.RECEIPTS})).up()
             .c('active', {xmlns: "http://jabber.org/protocol/chatstates"});
             console.log(reply);
             console.log(typeof(reply));
-            var request = Strophe.xmlElement('request', {'xmlns': Strophe.NS.RECEIPTS});
+            //var request = Strophe.xmlElement('request', {'xmlns': Strophe.NS.RECEIPTS});
             //reply.append(request);
             console.log("***");
             console.log(reply);
@@ -305,5 +306,12 @@ var strophieWrapper = {
     	}
     	return outputObj;
 
+    },
+    
+    /*
+     * Disconnect strophe connection
+     */
+    disconnect: function(){
+        strophieWrapper.connectionObj.disconnect();
     }
 }
