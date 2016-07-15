@@ -1,7 +1,7 @@
 /*This file includes functions used for intermediate data transfer for JSPC chat from 
 * converse client(converse.js) to chat plugin(chat_js.js)
 */
-var listingInputData = [],listCreationDone=false,objJsChat;  //listing data sent to plugin-array of objects
+var listingInputData = [],listCreationDone=false,objJsChat,pass;  //listing data sent to plugin-array of objects
 //var decrypted = JSON.parse(CryptoJS.AES.decrypt(api response, "chat", {format: CryptoJSAesJson}).toString(CryptoJS.enc.Utf8));
 
 function readSiteCookie(name) {
@@ -23,13 +23,18 @@ var pluginId = '#chatOpenPanel',device = 'PC';
     
 function initiateChatConnection()
 {
-    var username = 'a1@localhost';
+    var username = loggedInJspcUser+'@localhost';
+    /*
     if(readSiteCookie("CHATUSERNAME")=="bassi")
         username = 'a8@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
         username = 'a2@localhost';
+    */
     console.log(chatConfig.Params[device].bosh_service_url);
-    strophieWrapper.connect(chatConfig.Params[device].bosh_service_url,username,"123");
+    console.log(username);
+    console.log("Password!!@");
+    console.log(pass);
+    strophieWrapper.connect(chatConfig.Params[device].bosh_service_url,username,pass);
     console.log(strophieWrapper.connectionObj);
 }
 
@@ -255,6 +260,9 @@ function checkAuthentication(){
                 createCookie("chatAuth","true");
                 //loginChat();
                 auth = 'true';
+                console.log("In success");
+                console.log(data);
+                pass = data.hash;
             }
             else{
                 console.log(data.responseMessage);
@@ -351,6 +359,26 @@ $(document).ready(function(){
         //setCreateListingInterval();
     }
     
+    objJsChat.onHoverContactButtonClick = function(params){
+        console.log(params);
+        checkSum = $("#"+params.id).attr('data-pchecksum');
+        params = $("#"+params.id).attr('data-params');
+        checkSum = "7619da4377fbf2a405ede0d0535a716ei9513636";
+        
+        url = "/api/v2/contacts/postEOI";
+        $.ajax({
+            type: 'POST',
+            data: {profilechecksum: checkSum,params: params,source: "chat"},
+            url: url,
+            success: function(data) {
+                console.log(data);
+                console.log(data.actiondetails.errmsglabel);
+                $("#"+params.id).val(data.actiondetails.errmsglabel);
+            }
+        });
+        
+    }
+    
     objJsChat.onLogoutPreClick = function(){
         console.log("In Logout preclick");
         objJsChat._loginStatus = 'N';
@@ -385,6 +413,89 @@ $(document).ready(function(){
 
        console.log('the user id to be blocked:'+ param);
        //the function goes here which will send user id to the backend
+    }
+    
+    objJsChat.onPreHoverCallback = function(pCheckSum,username,hoverNewTop,shiftright){
+        console.log("In Helper preHoverCB");
+        console.log(pCheckSum);
+        jid = [];
+        jid[0] = "'"+pCheckSum+"'";
+        url = "/api/v1/chat/fetchVCard";
+        $.ajax({
+            type: 'POST',
+            data: {jid: jid,username: username},
+            url: url,
+            success: function(data) {
+                console.log(data);
+                objJsChat.updateVCard(data,pCheckSum,function(){
+                    $('#'+username+'_hover').css({ 
+                        'top':  hoverNewTop,                     
+                        'visibility': 'visible',
+                        'right':shiftright
+                    });
+                    console.log("Callback done");
+                });
+            }
+        });
+        /*
+        var res = 
+            {
+                "vCard": 
+                {
+                    "a6": 
+                    {
+                        "NAME": "nitish",
+                        "EMAIL": "nitish@gmail.com",
+                        "PHOTO": "url",
+                        "AGE":"3",
+                        "HEIGHT":"5 9",
+                        "COMMUNITY":"Sikh: Arora Punjabi",
+                        "EDUCATION":"MBA/PGDM, B.Com",
+                        "PROFFESION":"Software",
+                        "SALARY":"Rs. 15 - 20lac",
+                        "CITY":"New Delhi",
+                        "buttonDetails":
+                        {
+                            "buttons":
+                            [
+                                {
+                                "action":"INITIATE",
+                                "label":"Send Interest",
+                                "iconid":null,
+                                "primary":"true",
+                                "secondary":"true",
+                                "params":"&stype=P17",
+                                "enable":true,
+                                "id":"INITIATE"
+                                },
+                                 {
+                                "action":"INITIATE",
+                                "label":"Send Interest",
+                                "iconid":null,
+                                "primary":"true",
+                                "secondary":"true",
+                                "params":"&stype=P17",
+                                "enable":true,
+                                "id":"INITIATE"
+                                }
+                            ],
+                            "button":null,
+                            "infomsgiconid":null,
+                            "infomsglabel":null,
+                            "infobtnlabel":null,
+                            "infobtnvalue":null,
+                            "infobtnaction":null
+                        },
+                        "responseStatusCode": "0",
+                        "responseMessage": "Successful",
+                        "AUTHCHECKSUM": null,
+                        "hamburgerDetails": null,
+                        "phoneDetails": null
+                    }  
+                }
+            }
+        ;
+        */
     }
 
     objJsChat.start();
