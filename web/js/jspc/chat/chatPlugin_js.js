@@ -299,7 +299,7 @@ JsChat.prototype = {
 
    //start:addlisting
     addListingInit: function(data) {
-        var elem = this;
+        var elem = this,statusArr=[],currentID;
         console.log("addListing");
         for (var key in data) {
 
@@ -309,6 +309,7 @@ JsChat.prototype = {
             //console.log(runID+" is now "+status);
             res = runID.split("@");
             runID = res[0];
+            statusArr[runID] = status;
             $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
                 console.log("groups "+val);
                 var List = '',fullname = data[key]["rosterDetails"]["fullname"],tabShowStatus = $('div.' + val).attr('data-showuser');
@@ -357,7 +358,9 @@ JsChat.prototype = {
                                 $('div.' + val + ' ul').parent().removeClass("disp-none");
                             }
                             $("#" + runID+"_" + val).on("click", function() {
-                               elem._chatPanelsBox(runID,status);
+                                currentID = $(this).attr("id").split("_")[0];
+                                console.log(statusArr[currentID]);
+                               elem._chatPanelsBox(currentID,statusArr[currentID]);
 
                             }); 
                         }

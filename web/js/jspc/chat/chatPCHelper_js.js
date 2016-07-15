@@ -328,6 +328,7 @@ $(document).ready(function(){
         var chatLoggedIn = readCookie('chatAuth');
         var loginStatus;
         if(chatLoggedIn == 'true'){
+            checkAuthentication();
             loginStatus = "Y";
             initiateChatConnection();
         }
