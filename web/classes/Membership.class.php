@@ -596,33 +596,15 @@ class Membership
         }
         
         $this->service_tax_content = billingVariables::SERVICE_TAX_CONTENT;
-        /*
-        if($this->curtype=='RS')
-        {
-            if(strtotime(date("Y-m-d H:i:s")) > strtotime(date("2016-05-31 23:59:59"))){
-                $this->service_tax_content ="(Inclusive of Swachh Bharat Cess and Krishi Kalyan Cess)";
-            }  elseif(strtotime(date("Y-m-d H:i:s")) > strtotime(date("2015-11-14 23:59:59"))){
-                $this->service_tax_content ="(Inclusive of Swachh Bharat Cess)";
-            }  elseif(strtotime(date("Y-m-d H:i:s")) > strtotime(date("2015-05-31 23:59:59"))){
-                $this->service_tax_content = NULL;
-            } else {
-                $this->service_tax_content ="(Including 2% Education Cess and 1% Secondary Higher Education Cess on Service Tax)";
-            }
-        }
-        elseif ($this->curtype == 'DOL') {
-            if(strtotime(date("Y-m-d H:i:s")) > strtotime(date("2016-05-25 23:59:59"))){
-                $this->service_tax_content = "(Inclusive of Swachh Bharat Cess and Krishi Kalyan Cess)";
-            }
-            else{
-                $this->service_tax_content = "(Inclusive of Swachh Bharat Cess)";
-            }
-        }
-         */
         
         //Field for identifying the team to which sales belong
         $jprofileObj = new JPROFILE();
         $myrow_sales = $jprofileObj->get($this->profileid,'PROFILEID');
         $this->sales_type = $myrow_sales['CRM_TEAM'];
+
+        if(empty($this->discount_type) || $this->discount_type == 0){
+            $this->discount_type = 12;
+        }
 
         //Generating Bill ID.
         $billingPurObj = new BILLING_PURCHASES();
@@ -634,7 +616,37 @@ class Membership
         $valuesStr .= ",'$this->tax_rate'";
 
         $this->billid = $billingPurObj->genericPurchaseInsert($paramsStr, $valuesStr);
-
+        
+        /**
+         * Code added for tracking discount given per transaction
+         */
+        $memHandlerObj = new MembershipHandler();
+        list($execName, $supervisor) = $memHandlerObj->getAllotedExecSupervisor($this->profileid);
+        if(empty($supervisor)){
+            $supervisor = 'rohan.m';
+        }
+        $servicesObj = new Services();
+        $transObj = new billing_TRACK_TRANSACTION_DISCOUNT_APPROVAL();
+        $serArr = $servicesObj->getServiceName($this->serviceid);
+        foreach($serArr as $key=>$val){
+            $services_names[] = $val['NAME'];
+        }
+        $serName = implode(",", $services_names);
+        $iniAmt = $servicesObj->getTotalPrice($this->serviceid);
+        $finAmt = round($iniAmt - $this->discount, 2);
+        $discPerc = round((($iniAmt - $finAmt)/$iniAmt) * 100, 2);
+        $transObj->insert($this->billid, $this->profileid, $this->discount_type, $supervisor, $discPerc, $iniAmt, $finAmt, $this->serviceid);
+        if ($supervisor != 'rohan.m') {
+            $jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
+            $execEmail = $jsadminPswrdsObj->getEmail($supervisor);
+            $subject = "Bill with discount of {$discPerc}% offered by {$execName}; Final Bill Amount: {$finAmt}";
+            $msg = "Bill Details ({$serName})";
+            SendMail::send_email($execEmail,$msg,$subject,$from="js-sums@jeevansathi.com",$cc="avneet.bindra@jeevansathi.com");
+        }
+        /**
+         * End Code
+         */
+        
         try {
             $ordrDeviceObj = new billing_ORDERS_DEVICE();
             $ordrDeviceObj->updateBillingDetails($this->orderid,$this->orderid_part1,$this->billid);
@@ -1838,9 +1850,9 @@ class Membership
                     $reqid = $link_discount;
                 }
             } else if ($renewalActive){
-                $dicount_type = 10;
+                $discount_type = 1;
                 if ($fest) {
-                    $dicount_type = 7;
+                    $discount_type = 7;
                 }
             } else if ($fest) {
                 $discount_type = 6;

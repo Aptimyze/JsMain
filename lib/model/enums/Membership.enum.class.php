@@ -28,6 +28,25 @@ class billingVariables
     //const NET_OFF_TAX_RATE = "0.12664";
     const SERVICE_TAX_CONTENT = "(Inclusive of Swachh Bharat Cess and Krishi Kalyan Cess)";
 }
+
+class memDiscountTypes 
+{
+    public static $discountArr = array('1' => 'Renewal Discount',
+        2 => 'General Discount',
+        3 => 'Complementary Discount',
+        4 => 'Referral Discount',
+        5 => 'Variable Discount',
+        6 => 'Festive Discount',
+        7 => 'Renewal + Festive Discount',
+        8 => 'Voucher Code Discount',
+        9 => 'Variable + Festive Discount',
+        10 => 'Backend Discount Link',
+        11 => 'Cash Discount',
+        12 => 'No Discount',
+        14 => 'Coupon Code Discount'
+    );
+}
+
 class VariableParams
 {
 	public static $membershipMailerArr =array(

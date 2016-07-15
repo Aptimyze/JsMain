@@ -343,6 +343,14 @@ class MembershipHandler
         $execEmail = $execDetails['EMAIL'];
         return $execEmail;
     }
+
+    public function getAllotedExecSupervisor($profileid) {
+        $mainAdminObj = new incentive_MAIN_ADMIN('newjs_slave');
+        $jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
+        $execName = $mainAdminObj->getAllotedExecForProfile($profileid);
+        $execSup = $jsadminPswrdsObj->fetchAgentSupervisor($execName);
+        return array($execName, $execSup);
+    }
     
     public function getDiscountOffer($subMem) {
         $discountOfferObj = new billing_DISCOUNT_OFFER();
