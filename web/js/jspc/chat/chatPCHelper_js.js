@@ -25,13 +25,14 @@ var pluginId = '#chatOpenPanel',device = 'PC';
     
 function initiateChatConnection()
 {
-    var username = /*'a1@localhost';*/loggedInJspcUser+'@localhost';
+    var username = loggedInJspcUser+'@localhost';
     
-    /*if(readSiteCookie("CHATUSERNAME")=="bassi")
+    /* var username = 'a1@localhost';
+    if(readSiteCookie("CHATUSERNAME")=="bassi")
         username = 'a8@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
-        username = 'a2@localhost';
-    */
+        username = 'a2@localhost';*
+    
     console.log("Nitish"+username);
 
     console.log(chatConfig.Params[device].bosh_service_url);
@@ -286,8 +287,7 @@ function invokePluginReceivedMsgHandler(msgObj)
 {
     console.log("invokePluginReceivedMsgHandler");
     console.log(msgObj);
-    if(msgObj["message"] != "") 
-        objJsChat._appendRecievedMessage(msgObj["message"],msgObj["from"].substr(0, msgObj["from"].indexOf('@')),msgObj["msgid"]); 
+    objJsChat._appendRecievedMessage(msgObj["body"],msgObj["from"],msgObj["msg_id"]); 
 }
 
 
@@ -380,20 +380,18 @@ $(document).ready(function(){
     
     objJsChat.onHoverContactButtonClick = function(params){
         console.log(params);
-        
         checkSum = $("#"+params.id).attr('data-pchecksum');
-        apiParams = $("#"+params.id).attr('data-params');
+        params = $("#"+params.id).attr('data-params');
         checkSum = "7619da4377fbf2a405ede0d0535a716ei9513636";
         
         url = "/api/v2/contacts/postEOI";
         $.ajax({
             type: 'POST',
-            data: {profilechecksum: checkSum,params: apiParams,source: "chat"},
+            data: {profilechecksum: checkSum,params: params,source: "chat"},
             url: url,
             success: function(data) {
                 console.log(data);
-                console.log(params);
-                console.log(params.id);
+                console.log(data.actiondetails.errmsglabel);
                 $("#"+params.id).html(data.actiondetails.errmsglabel);
             }
         });
@@ -406,11 +404,9 @@ $(document).ready(function(){
         logoutChat();
     }
 
-    objJsChat.onSendingMessage = function(message,to){
+    objJsChat.onSendingMessage = function(){
+        
         console.log("In helper file onSendingMessage");
-        console.log(message);
-        console.log("***");
-        console.log(to);
         //var x = converse.listen.on('messageSend',"MEssagesend");
         //console.log(x);
         /*
