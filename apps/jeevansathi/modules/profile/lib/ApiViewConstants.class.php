@@ -151,6 +151,7 @@ abstract class ApiViewConstants
 								'DPP_COUNTRY'=>'getDecoratedPARTNER_COUNTRYRES',
 								'DPP_EDU_LEVEL'=>'getDecoratedPARTNER_ELEVEL_NEW',
 								'DPP_OCCUPATION'=>'getDecoratedPARTNER_OCC',
+								'DPP_STATE'=>'getDecoratedSTATE',
 								);
 	
 	public static $arrDPP_LifeStyle = array('getDecoratedPARTNER_DIET'=>null,'getPARTNER_SMOKE'=>'arrSmokeLabel','getPARTNER_DRINK'=>'arrDrinkLabel');								

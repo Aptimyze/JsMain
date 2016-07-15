@@ -539,7 +539,28 @@ public static function insertConsentMessageFlag($profileid) {
                                 $CODE['Income']='gnf';
                                 $CODE['Annual Income']='gnf';
                         }
-			$ARR=explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_CITYRES()));
+			$cityArr=explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_CITYRES()));
+			if($jpartnerObj->getSTATE())
+			{
+				$stateArr=explode(",",JsCommon::remove_quot($jpartnerObj->getSTATE()));
+			}	
+			$stateCityMapping = FieldMap::getFieldLabel('state_CITY','',1);
+			if(count($stateArr))
+			{
+				foreach($stateArr as $key=>$val)
+				{
+					if(array_key_exists($val, $stateCityMapping))
+					{
+						$cityString .= $stateCityMapping[$val];
+						$cityString .= ",";
+					}
+				}
+				$ARR = array_merge($cityArr,explode(",",rtrim($cityString,",")));
+			}
+			else
+			{
+				$ARR = $cityArr;
+			}
 			if(is_array($ARR))
 			if(in_array($profile->getCITY_RES(),$ARR))
 			{
