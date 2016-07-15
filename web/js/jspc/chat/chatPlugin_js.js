@@ -174,6 +174,7 @@ JsChat.prototype = {
 
 
     },
+
     //start:set height for the listing scroll div
     _chatScrollHght: function() {
         console.log('cal scroll div');
@@ -204,10 +205,10 @@ JsChat.prototype = {
             }
             TabsOpt += "<p>" + objin["tab_name"] + "</p><div class=\"showlinec\"></div></li>";
         }
-        TabsOpt += '</ul></div><div id="nchatDivs" class="nchatscrollDiv">';
+        TabsOpt += '</ul></div><div id="nchatDivs" class="nchatscrollDiv"><div id="scrollDivLoader" class="spinner"></div>';
         TabsOpt += '<div class="showtab1 js-htab"> ';
         for (var i = 0; i < obj["tab1"]["groups"].length; i++) {
-            TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + "\" data-showuser=\""+ obj["tab1"]["groups"][i]["hide_offline_users"]   +"\">";
+            TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + " disp-none\" data-showuser=\""+ obj["tab1"]["groups"][i]["hide_offline_users"]   +"\">";
             //TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + "\">";
             TabsOpt += "<div class=\"f12 fontreg nchatbdr2";
             if(obj["tab1"]["groups"][i]["show_group_name"]==false)
@@ -346,6 +347,9 @@ JsChat.prototype = {
                         if($('#'+runID + "_" + val).find('.nchatspr').length==0)
                         {
                             $('div.' + val + ' ul').append(List);
+                            if($('div.' + val + ' ul').parent().hasClass("disp-none")){
+                                $('div.' + val + ' ul').parent().removeClass("disp-none");
+                            }
                             $("#" + username+"_" + val).on("click", function() {
                                elem._chatPanelsBox(username,status);
                             }); 
@@ -1008,6 +1012,12 @@ JsChat.prototype = {
             } 
         });
     },
+
+    hideChatLoader: function(){
+        console.log("hiding loader_ankita");
+        $("#scrollDivLoader").hide();
+    },
+
     //start:this function is that init forthe chat
     start: function() {
         var divElement = document.createElement("Div");

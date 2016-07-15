@@ -135,7 +135,11 @@ function to add roster item or update roster item details in listing
 
 function invokePluginManagelisting(listObject,key){
     console.log("calling invokePluginAddlisting");
-    if(key=="add_node"){
+    if(key=="add_node" || key=="create_list"){
+        if(key=="create_list")
+        {
+            objJsChat.hideChatLoader();
+        }
         console.log("adding "+listObject.length+" nodes in invokePluginAddlisting");
         console.log(listObject);
         objJsChat.addListingInit(listObject);

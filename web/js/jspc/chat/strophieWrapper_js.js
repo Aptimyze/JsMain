@@ -170,7 +170,7 @@ var strophieWrapper = {
 	    console.log("hide loader-manvi");
 	    console.log("calling invokePluginManagelisting");
 	    console.log(strophieWrapper.Roster);
-	    invokePluginManagelisting(strophieWrapper.Roster,"add_node");
+	    invokePluginManagelisting(strophieWrapper.Roster,"create_list");
 	    strophieWrapper.initialRosterFetched = true;
 	    strophieWrapper.setRosterStorage(strophieWrapper.Roster);
 	},

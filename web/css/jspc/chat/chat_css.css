@@ -646,3 +646,12 @@ wid165 {
     text-overflow: ellipsis;
     display: inline-block;
 }
+.spinner {
+    margin: 100px;
+    height: 28px;
+    width: 28px;
+    animation: rotate 0.8s infinite linear;
+    border: 4px solid #34495e;
+    border-right-color: transparent;
+    border-radius: 50%;
+}
