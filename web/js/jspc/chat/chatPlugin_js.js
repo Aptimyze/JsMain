@@ -558,11 +558,14 @@ JsChat.prototype = {
                     $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
                         scrollTop: $(".rightBubble").length + $(".leftBubble").length * 50
                     }, 500);
+                    
+                    //TODO: fire send chat query and return unique id, also check for 3 messages
                     if( _this.onSendingMessage  && typeof (_this.onSendingMessage) == "function" ){
                         console.log("in plugin send message");
-                        _this.onSendingMessage();
+                        console.log(userId);
+                        _this.onSendingMessage(text);
                     }
-                    //TODO: fire send chat query and return unique id, also check for 3 messages
+                    console.log("after");
                     setTimeout(function() {
                         //on recieving data with uniqueID
                         $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + "ueiuh");

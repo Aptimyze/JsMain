@@ -42,8 +42,7 @@ function initiateChatConnection()
 
 
 
-function sendMessage() {
-    var message = "$('#message').get(0).value";
+function sendMessage(message,to) {
     var to = 'a2@localhost';
     if(message && to){
 	var reply = $msg({
@@ -400,6 +399,8 @@ $(document).ready(function(){
     }
 
     objJsChat.onSendingMessage = function(){
+        
+        console.log("In helper file onSendingMessage");
         //var x = converse.listen.on('messageSend',"MEssagesend");
         //console.log(x);
         /*
@@ -422,7 +423,8 @@ $(document).ready(function(){
        converse.send(msg);
        */
     }
-
+    
+    
     objJsChat.onPostBlockCallback= function(param){
 
        console.log('the user id to be blocked:'+ param);
