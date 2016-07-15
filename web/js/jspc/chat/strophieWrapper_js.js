@@ -4,6 +4,7 @@ var strophieWrapper = {
 	initialRosterFetched: false,
 	rosterSubscriptionAllowed : ["to","both"],
 	rosterDetailsKey:"rosterDetails",
+	useLocalStorage:false,
 
 	//connect to openfire
 	connect: function(bosh_service_url,username,password){
@@ -23,13 +24,15 @@ var strophieWrapper = {
 	        console.log("DISCONNECTING");
 		} else if (status == Strophe.Status.DISCONNECTED) {
 	        console.log("DISCONNECTED");
-		$('#connect').get(0).value = 'connect';
+			$('#connect').get(0).value = 'connect';
+			//invokePluginLoginFailureHandler("failure");
 	    } else if(status == Strophe.Status.AUTHFAIL){
             console.log("AUTHFAIL");
+            //invokePluginLoginHandler("failure");
         } else if (status == Strophe.Status.CONNECTED) {
 	        console.log("CONNECTED");
 	        //append listing panel
-	        objJsChat._appendLoggedHTML();
+	        invokePluginLoginHandler("success");
 	    }
 	},
 
@@ -137,7 +140,8 @@ var strophieWrapper = {
 	    console.log(strophieWrapper.Roster);
 		$(iq).find("item").each(function() {
 			var subscription = $(this).attr("subscription");
-			console.log("here"+subscription + $(this).attr("jid"));
+			console.log("here "+subscription + $(this).attr("jid"));
+			console.log(typeof subscription);
 			console.log($.inArray(subscription,strophieWrapper.rosterSubscriptionAllowed));
 			var jid = $(this).attr("jid"),user_id = jid.split("@")[0];
 			if((subscription == "to" || subscription == "both" ||$.inArray(subscription,strophieWrapper.rosterSubscriptionAllowed)) && user_id != strophieWrapper.getSelfJID().split("@")[0])
@@ -150,7 +154,7 @@ var strophieWrapper = {
 				var status = "offline";
 				if(typeof strophieWrapper.Roster[user_id] !== "undefined")
 					status = strophieWrapper.Roster[user_id]["rosterDetails"]["chat_status"];
-				console.log("rahul" + status);
+				
 				listObj["rosterDetails"]["chat_status"] = status;
 				strophieWrapper.Roster[user_id] = strophieWrapper.mergeRosterObj(strophieWrapper.Roster[user_id],listObj);
 				//var pres = $pres({to: this.attr('jid'), type: "subscribe"});
@@ -163,10 +167,12 @@ var strophieWrapper = {
         //strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
         //strophieWrapper.sendPresence();
 	    //console.log(data["query"]["item"]);
+	    console.log("hide loader-manvi");
 	    console.log("calling invokePluginManagelisting");
 	    console.log(strophieWrapper.Roster);
 	    invokePluginManagelisting(strophieWrapper.Roster,"add_node");
 	    strophieWrapper.initialRosterFetched = true;
+	    strophieWrapper.setRosterStorage(strophieWrapper.Roster);
 	},
 
 	onMessage :function(msg) {
@@ -251,7 +257,26 @@ var strophieWrapper = {
    		return outputObj;
     },
 
+    //get self jid of connected user
     getSelfJID: function(){
     	return strophieWrapper.connectionObj.jid;
+    },
+
+    //set listing data in roster
+    setRosterStorage: function(rosterData){
+    	if(strophieWrapper.useLocalStorage == true)
+    	{
+    		localStorage.setItem('chatListing', JSON.stringify(rosterData));
+    	}
+    },
+
+    getRosterStorage: function(){
+    	var data;
+    	if(strophieWrapper.useLocalStorage == true){
+    		data = JSON.parse(localStorage.getItem('chatListing'));
+    	}
+    	else
+    		data = null;
+    	return data;
     }
 }

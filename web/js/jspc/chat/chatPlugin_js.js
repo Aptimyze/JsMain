@@ -23,6 +23,7 @@ JsChat.prototype = {
     _scrollDivId: '#nchatDivs',
     _listingClass: 'ul.chatlist',
     _listingTabs:{},
+    _loginFailueMsg:"Login Failed,Try later",
 
     _construct: function() {
 
@@ -35,6 +36,8 @@ JsChat.prototype = {
             this._listData = arguments[1][0].listData;
         if (arguments[1][0].listingTabs)
             this._listingTabs = arguments[1][0].listingTabs;
+        if (arguments[1][0]._loginFailueMsg)
+            this._loginFailueMsg = arguments[1][0].loginFailueMsg;
     },
     //start:get screen height
     _getHeight: function() {
@@ -972,11 +975,23 @@ JsChat.prototype = {
     },
     
    //start:this function image,name in top chat logged in scenario
-    addLoginHTML: function() {
+    addLoginHTML: function(failed) {
         console.log('in addLoginHTML');
         var curEle = this;
         var LoginHTML = '<div class="fullwid txtc fontlig pos-rel" id="js-loginPanel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarOut"></i> </div><div> <img src="images/chat-profile-pic.jpg" class="chatmt1"/> </div><button id="js-chatLogin" class="chatbtnbg1 mauto chatw1 colrw f14 brdr-0 lh40 cursp nchatm5">Login to Chat</button></div>';
-        $(this._parendID).append(LoginHTML);
+        var errorHTML = '';
+        if(failed == true)
+        {
+            errorHTML += '<div class="txtc color5" id="loginErr">'+curEle._loginFailueMsg+'</div>';
+        }
+        if(failed == false || typeof failed == "undefined")
+            $(this._parendID).append(LoginHTML);
+        else
+        {
+            console.log("removing");
+            $("#"+curEle._loginPanelID).removeClass("disp-none");
+            $("#"+curEle._loginPanelID).append(errorHTML);
+        }
         $('.js-minChatBarOut').click(function() {
 
             curEle._minimizeChatOutPanel();

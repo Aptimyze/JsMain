@@ -24,14 +24,14 @@ var pluginId = '#chatOpenPanel',device = 'PC';
     
 function initiateChatConnection()
 {
-    /*var username = 'a1@localhost';
+    var username = 'a1@localhost';
     if(readSiteCookie("CHATUSERNAME")=="bassi")
         username = 'a8@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
-        username = 'a2@localhost';*/
-username = loggedInJspcUser+'@localhost';
+        username = 'a2@localhost';
+//username = loggedInJspcUser+'@localhost';
     console.log(chatConfig.Params[device].bosh_service_url);
-console.log("user:"+username+" pass:"+pass);
+    console.log("user:"+username+" pass:"+pass);
     strophieWrapper.connect(chatConfig.Params[device].bosh_service_url,username,pass);
     console.log(strophieWrapper.connectionObj);
 }
@@ -111,6 +111,18 @@ function xmlToJson(xml) {
         }
     }
     return obj;
+}
+
+/*invokePluginLoginHandler
+*handles login success/failure cases
+* @param: state
+*/
+function invokePluginLoginHandler(state)
+{
+    if(state == "success")
+        objJsChat._appendLoggedHTML();
+    else
+        objJsChat.addLoginHTML(true);
 }
 
 /*invokePluginAddlisting
@@ -341,7 +353,8 @@ $(document).ready(function(){
     }
 
     objJsChat.onChatLoginSuccess = function(){
-        //trigger list creation if nodes in roster lesser than limit
+        console.log("show loader---manvi");
+        //trigger list creation
         console.log("in triggerBindings");
         strophieWrapper.triggerBindings();
         //setCreateListingInterval();
