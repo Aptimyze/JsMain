@@ -299,7 +299,7 @@ JsChat.prototype = {
 
    //start:addlisting
     addListingInit: function(data) {
-        var elem = this;
+        var elem = this,statusArr=[],currentID;
         console.log("addListing");
         for (var key in data) {
             if(typeof data[key]["rosterDetails"]["jid"] != "undefined")
@@ -343,6 +343,16 @@ JsChat.prototype = {
                         if(status=='online')
                         {
                            addNode = true;
+                            $('div.' + val + ' ul').append(List);
+                            if($('div.' + val + ' ul').parent().hasClass("disp-none")){
+                                $('div.' + val + ' ul').parent().removeClass("disp-none");
+                            }
+                            $("#" + runID+"_" + val).on("click", function() {
+                                currentID = $(this).attr("id").split("_")[0];
+                                console.log(statusArr[currentID]);
+                               elem._chatPanelsBox(currentID,statusArr[currentID]);
+
+                            }); 
                         }
                     }
                     console.log("chexcking");
