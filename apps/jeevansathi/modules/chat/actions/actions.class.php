@@ -50,7 +50,7 @@ class chatActions extends sfActions
             curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
 
             $headers = array();
-            $headers[] = 'Authorization: '.ChatEnum::$openFireAuthorizationKey;
+            $headers[] = 'Authorization: '.JsConstants::$openfireRestAPIKey;
             $headers[] = 'Accept: application/json';
 
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -79,7 +79,7 @@ class chatActions extends sfActions
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
 
                 $headers = array();
-                $headers[] = 'Authorization: '.ChatEnum::$openFireAuthorizationKey;
+                $headers[] = 'Authorization: '.JsConstants::$openfireRestAPIKey;
                 $headers[] = 'Accept: application/json';
                 $headers[] = 'Content-Type: application/json';
 

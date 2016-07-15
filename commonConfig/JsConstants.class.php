@@ -157,4 +157,8 @@ class JsConstants
         public static $redisCluster = ['tcp://172.10.18.61:7000','tcp://172.10.18.62:7000','tcp://172.10.18.63:7000','tcp://172.10.18.64:7000','tcp://172.10.18.65:7000','tcp://172.10.18.64:7005'];
         public static $redisSentinel = ['tcp://172.10.18.65:26379', 'tcp://172.10.18.64:26379','tcp://172.10.18.70:26379'];
         public static $ifSingleRedis = 'tcp://172.10.18.65:6379';
+        
+    /***openfire config for chat**/
+    public static $openfireConfig = array('HOST'=>'localhost','PORT'=>'9090','WSPORT'=>'7070');
+    public static $openfireRestAPIKey = "MhXPRu3f4Aw07EbR";
 }
