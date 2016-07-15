@@ -18,7 +18,7 @@ class NEWJS_MESSAGE_LOG_GET_ID extends TABLE{
         {
 			try 
 			{
-				$sql="INSERT INTO MESSAGE_LOG_GET_ID VALUES ('')  ";
+				$sql="INSERT INTO MESSAGE_LOG_GET_ID(ID) VALUES ('')  ";
 				$prep=$this->db->prepare($sql);
 				$prep->execute();
 				return  $this->db->lastInsertId(); 

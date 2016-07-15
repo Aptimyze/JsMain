@@ -9,7 +9,10 @@ var strophieWrapper = {
 	//connect to openfire
 	connect: function(bosh_service_url,username,password){
 		strophieWrapper.connectionObj = new Strophe.Connection(chatConfig.Params[device].bosh_service_url);
-    	strophieWrapper.connectionObj.connect(username,'123',strophieWrapper.onConnect);
+    	strophieWrapper.connectionObj.connect(username,password,strophieWrapper.onConnect);
+        console.log("OPenfire wrapper");
+        console.log(username);
+        console.log(password);
 	},
 
 	//executed after connection done

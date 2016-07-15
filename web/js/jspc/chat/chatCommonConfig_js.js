@@ -21,21 +21,21 @@ chatConfig.Params = {
 									"group_name":"Desired Partner Matches",
 									//"order_id":0,
 									"show_group_name":true,
-									"hide_offline_users":true
+									"hide_offline_users":false
 								},
 								{
 									"id":"eoi_R",
 									"group_name":"Interest Received",
 									//"order_id":1,
 									"show_group_name":true,
-									"hide_offline_users":true
+									"hide_offline_users":false
 								},
 								{
 									"id":"shortlisted",
 									"group_name":"Shortlisted Members",
 									//"order_id":2,
 									"show_group_name":true,
-									"hide_offline_users":true
+									"hide_offline_users":false
 								}
 							]
 						},
