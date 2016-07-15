@@ -160,39 +160,25 @@ var strophieWrapper = {
 	    strophieWrapper.setRosterStorage(strophieWrapper.Roster);
 	},
 
-	onMessage :function(msg) {
-	    var to = msg.getAttribute('to');
-	    var from = msg.getAttribute('from');
-	    var type = msg.getAttribute('type');
-	    var elems = msg.getElementsByTagName('body');
-	    if (type == "chat" && elems.length > 0) {
-		var body = elems[0];
-		console.log('ECHOBOT: I got a message from ' + from + ': ' + 
-		    Strophe.getText(body));
-		var text = Strophe.getText(body) + " (this is echo)";
-	    
-		//var reply = $msg({to: from, from: to, type: 'chat', id: 'purple4dac25e4'}).c('active', {xmlns: "http://jabber.org/protocol/chatstates"}).up().cnode(body);
-	            //.cnode(Strophe.copyElement(body)); 
-		//connection.send(reply.tree());
-		console.log('ECHOBOT: I sent ' + from + ': ' + Strophe.getText(body));
-	    }
-	    // we must return true to keep the handler alive.  
-	    // returning false would remove it after it finishes.
+	//executed on msg receipt
+	onMessage :function(iq) {
+		console.log("got message");
+		console.log(iq);
+		var msgObject = strophieWrapper.formatMsgObj(iq);
+		console.log("sending to plugin");
+		if(msgObject["body"] != "" && typeof msgObject["body"] != "undefined")
+		{
+			console.log(msgObject);
+			invokePluginReceivedMsgHandler(msgObject);
+		}   
+		/*	//var reply = $msg({to: from, from: to, type: 'chat', id: 'purple4dac25e4'}).c('active', {xmlns: "http://jabber.org/protocol/chatstates"}).up().cnode(body);
+		            //.cnode(Strophe.copyElement(body)); 
+			//connection.send(reply.tree());
+			console.log('ECHOBOT: I sent ' + from + ': ' + Strophe.getText(body));
+	    */
 	    return true;
 	},
-	/*getUniqueId: function(suffix) {
-        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            var r = Math.random() * 16 | 0,
-                v = c == 'x' ? r : r & 0x3 | 0x8;
-            return v.toString(16);
-        });
-        if (typeof(suffix) == "string" || typeof(suffix) == "number") {
-            return uuid + ":" + suffix;
-        } else {
-            return uuid + "";
-        }
-    },*/
-
+	
     //parser for roster object
     formatRosterObj: function(obj){
     	var chat_status = obj["attributes"]["chat_status"] || "offline";
@@ -297,5 +283,25 @@ var strophieWrapper = {
             console.log(messageResponse);
             console.log('I sent to' + to + ': ' + message);
         }
+
+
+    /*format msg object*/
+    formatMsgObj : function(msg){
+    	var outputObj = {
+    		"from":msg.getAttribute('from').split("@")[0],
+    		"to":msg.getAttribute('to').split("@")[0],
+    		"type":msg.getAttribute('type'),
+    		"msg_id":msg.getAttribute('id')
+    	};
+    	if(outputObj["type"] == "chat")
+    	{
+    		console.log("its chat");
+    		var body = msg.getElementsByTagName("body");
+    		console.log(body);
+    		if(typeof body != "undefined" && body.length >0)
+    			outputObj["body"] = Strophe.getText(body[0]);
+    	}
+    	return outputObj;
+
     }
 }
