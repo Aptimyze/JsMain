@@ -325,8 +325,10 @@ JsChat.prototype = {
                 console.log("addlisting for "+runID+"--"+data[key]["rosterDetails"]["chat_status"]);
                 console.log(data[key]);
                 //console.log(runID+" is now "+status);
+                var fullJID = runID;
                 res = runID.split("@");
                 runID = res[0];
+                statusArr[runID] = status;
                 $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
                     console.log("groups "+val);
                     var List = '',fullname = data[key]["rosterDetails"]["fullname"],tabShowStatus = $('div.' + val).attr('data-showuser');
@@ -334,7 +336,8 @@ JsChat.prototype = {
 
 
                     List += '<li class=\"clearfix profileIcon\"';
-                    List += "id=\"" + runID + "_"+val + "\" data-checks=\""+ prfCheckSum +"\">";
+                    //List += "id=\"" + runID + "_"+val + "\" data-checks=\""+ prfCheckSum +"\">";
+                    List += "id=\"" + runID + "_"+val + "\" data-checks=\""+ prfCheckSum +"\" data-jid=\""+ fullJID+"\">";
                     List += "<img id=\"pic_" + runID + "_" +val + "\" src=\""+picurl+"\" class=\"fl\">";
                     List += '<div class="fl f14 fontlig pt15 pl18">';
 
@@ -375,7 +378,9 @@ JsChat.prototype = {
                                     $('div.' + val + ' ul').parent().removeClass("disp-none");
                                 }
                                 $("#" + runID+"_" + val).on("click", function() {
-                                   elem._chatPanelsBox(runID,status);
+                                   currentID = $(this).attr("id").split("_")[0];
+                                    console.log("manvi",statusArr[currentID],currentID);
+                                    elem._chatPanelsBox(currentID,statusArr[currentID],$(this).attr("data-jid"));
 
                                 }); 
                             }
@@ -578,8 +583,9 @@ JsChat.prototype = {
                     //TODO: fire send chat query and return unique id, also check for 3 messages
                     if( _this.onSendingMessage  && typeof (_this.onSendingMessage) == "function" ){
                         console.log("in plugin send message");
-                        console.log(userId);
-                        _this.onSendingMessage(text);
+                        console.log(text);
+                        console.log($('chat-box[user-id="' + userId + '"]').attr("data-jid"));
+                        _this.onSendingMessage(text,$('chat-box[user-id="' + userId + '"]').attr("data-jid"));
                     }
                     console.log("after");
                     setTimeout(function() {
@@ -608,8 +614,8 @@ JsChat.prototype = {
             var username = $(this).closest(".extraChatList").attr("id").split("_")[1],
                 originalElem = $('chat-box[user-id="' + username + '"]'),
                 status = $("chat-box[user-id='" + username + "'] .chatBoxBar .onlineStatus").html(),
-                chatHtml = $(originalElem).find(".chatMessage").html();
-            curElem._appendChatBox(username, status);
+                chatHtml = $(originalElem).find(".chatMessage").html(),jid = $('chat-box[user-id="' + username + '"]').attr("data-jid") ;
+            curElem._appendChatBox(username, status,jid);
             $(originalElem).remove();
             $("chat-box[user-id='" + username + "'] .chatMessage").html(chatHtml);
             $(this).closest(".extraChatList").remove();
@@ -661,8 +667,8 @@ JsChat.prototype = {
     },
 
     //append chat box on page
-    _appendChatBox: function(userId, status) {
-        $("#chatBottomPanel").prepend('<chat-box status-user="' + status + '" user-id="' + userId + '"></chat-box>');
+    _appendChatBox: function(userId, status,jid) {
+        $("#chatBottomPanel").prepend('<chat-box data-jid="'+jid+'" status-user="' + status + '" user-id="' + userId + '"></chat-box>');
     },
 
     //create side panel of extra chat
@@ -767,7 +773,7 @@ JsChat.prototype = {
     },
 
     //appending chat box
-    _chatPanelsBox: function(userId, status) {
+    _chatPanelsBox: function(userId, status,jid) {
         var curElem = this,
             heightPlus = false,
             bodyWidth = $("body").width();
@@ -792,7 +798,7 @@ JsChat.prototype = {
                 curElem._bindExtraPopupUserClose($(".nchatic_4"));
                 curElem._bindExtraUserNameBox();
             }
-            curElem._appendChatBox(userId, status);
+            curElem._appendChatBox(userId, status,jid);
 
         } else {
             $(".extraChatList").each(function(index, element) {
@@ -808,7 +814,7 @@ JsChat.prototype = {
                         value = parseInt($(".extraNumber").text().split("+")[1]),
                         data = $($("chat-box")[len - 1 - value]).attr("user-id"),
                         chatHtml = $(originalElem).find(".chatMessage").html();
-                    curElem._appendChatBox(username, status);
+                    curElem._appendChatBox(username, status,jid);
                     originalElem.remove();
                     $("chat-box[user-id='" + username + "'] .chatMessage").html(chatHtml);
                     $(this).closest(".extraChatList").remove();
