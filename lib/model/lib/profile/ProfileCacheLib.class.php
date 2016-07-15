@@ -72,7 +72,10 @@ class ProfileCacheLib
      */
     public function isCached($criteria, $key, $fields)
     {
-        //jsCacheWrapperException::logThis(new Exception("$fields is checked for profile cache"));
+        $this->logThis(LoggingEnums::LOG_INFO,"Cache Criteria Check : {$criteria} and its value is {$key} and needs following fields {$fields}");
+        if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
+           return false;
+        }
 
         if(false === $this->validateCriteria($criteria)) {
             return false;
@@ -107,6 +110,10 @@ class ProfileCacheLib
      */
     public function cacheThis($szCriteria, $key, $arrParams)
     {
+        if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
+            return false;
+        }
+
         //If Criteria is other then PROFILEID then return false
         if (false === $this->validateCriteria($szCriteria)) {
             return false;
@@ -119,6 +126,7 @@ class ProfileCacheLib
         if (0 === count($arrParams)) {
             return false;
         }
+
         //Set Hash Object
         JsMemcache::getInstance()->setHashObject($szKey, $arrParams);
         //TODO : Update Local Cache also
@@ -134,15 +142,29 @@ class ProfileCacheLib
      * @return bool|void
      */
     public function updateCache($paramArr, $szCriteria, $key, $extraWhereCnd = "")
-    {              
-        if(false === $this->isCached($szCriteria, $key, array_keys($paramArr))) {
-            return ;
+    {
+        if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
+            return false;
         }
-        $arrData = $this->cacheThis($szCriteria, $key, $paramArr);
+
+        $bUpdateFromMysql = false;
+        if(false === $this->isCached($szCriteria, $key, array_keys($paramArr))) {
+            //TODO : Need to handle this case
+            $bUpdateFromMysql = true;
+        }
 
         //Now Process extraWhereCnd
+        if (false === $bUpdateFromMysql && strlen($extraWhereCnd)) {
+            $bUpdateFromMysql = $this->processGenericWhereClause($key, $extraWhereCnd) ? false : true;
+        }
 
-        return $arrData;
+        if ($bUpdateFromMysql) {
+            $result = $this->cacheFromMysql($szCriteria, $key, $extraWhereCnd);
+        } else {
+            $result = $this->cacheThis($szCriteria, $key, $paramArr);
+        }
+
+        return $result;
     }
 
     /**
@@ -152,8 +174,15 @@ class ProfileCacheLib
      */
     public function insertInCache($iProfileID, $paramArr)
     {
+        if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
+            return false;
+        }
+
         $paramArr[ProfileCacheConstants::CACHE_HASH_KEY] = $iProfileID;
-        $paramArr[ProfileCacheConstants::ACTIVATED_KEY] = 1;
+        if(false === isset($paramArr[ProfileCacheConstants::ACTIVATED_KEY])) {
+            $paramArr[ProfileCacheConstants::ACTIVATED_KEY] = 1;
+        }
+
         return $this->cacheThis(ProfileCacheConstants::CACHE_HASH_KEY, $iProfileID, $paramArr);
     }
 
@@ -166,6 +195,10 @@ class ProfileCacheLib
      */
     public function get($szCriteria, $key, $fields, $arrExtraWhereClause = null)
     {
+        if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
+            return false;
+        }
+
         if (false === $this->validateCriteria($szCriteria)) {
            return false;
         }
@@ -323,6 +356,96 @@ class ProfileCacheLib
             $this->arrRecords[intval($key)][$col] = $val;
         }
         return true;
+    }
+
+    /**
+     * @param $key
+     * @param $szWhereCnd
+     * @return bool
+     */
+    private function processGenericWhereClause($key, $szWhereCnd)
+    {
+        $arrData = $this->getFromLocalCache($key);
+        $arrAllowedWhereCnd = array('activatedKey=1','activatedKey= 1','activatedKey = 1','activatedKey =1');
+
+        if (in_array($szWhereCnd, $arrAllowedWhereCnd) && $arrData['activatedKey'] == '1') {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $szCriteria
+     * @param $key
+     * @param null $extraWhereCnd
+     * @return bool
+     */
+    private function cacheFromMysql($szCriteria, $key, $extraWhereCnd = null)
+    {
+        $storeObj = NEWJS_JPROFILE::getInstance();
+        $arrData = $storeObj->get($key, $szCriteria, ProfileCacheConstants::ALL_FIELDS_SYM);
+        //TODO : If execution is from some skiped scripts then do not cachce
+        return $this->cacheThis(ProfileCacheConstants::CACHE_HASH_KEY, $arrData[ProfileCacheConstants::CACHE_HASH_KEY], $arrData);
+    }
+
+    /**
+     * @param $enLogType
+     * @param $Var
+     * @return bool
+     */
+    private function logThis($enLogType,$Var)
+    {
+        if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE_LOGS) {
+            return false;
+        }
+
+        if($enLogType > ProfileCacheConstants::LOG_LEVEL) {
+            return false;
+        }
+
+        $logManager = LoggingManager::getInstance(ProfileCacheConstants::PROFILE_LOG_PATH);
+        switch ($enLogType) {
+            case LoggingEnums::LOG_INFO:
+                    $logManager->logThis(LoggingEnums::LOG_INFO,$Var);
+                break;
+            case LoggingEnums::LOG_DEBUG:
+                    $logManager->logThis(LoggingEnums::LOG_DEBUG,$Var);
+                break;
+            case LoggingEnums::LOG_ERROR:
+                    $logManager->logThis(LoggingEnums::LOG_ERROR,$Var);
+                break;
+            default:
+                break;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param string $st_Time
+     */
+    private function calculateResourceUsages($st_Time='',$message="")
+    {
+        $end_time = microtime(TRUE);
+        $var = memory_get_usage(true);
+
+        if ($var < 1024)
+            $mem =  $var." bytes";
+        elseif ($var < 1048576)
+            $mem =  round($var/1024,2)." kilobytes";
+        else
+            $mem = round($var/1048576,2)." megabytes";
+
+        $timeTaken = $end_time - $st_Time;
+        $usages = "Memory usages : {$mem} & Time taken : {$timeTaken} {$message}";
+
+        $this->logThis(LoggingEnums::LOG_INFO, $usages);
+    }
+
+    private function createNewTime()
+    {
+        return microtime(TRUE);
     }
 }
 ?>
