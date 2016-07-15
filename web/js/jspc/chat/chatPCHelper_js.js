@@ -41,22 +41,6 @@ function initiateChatConnection()
     console.log(strophieWrapper.connectionObj);
 }
 
-
-
-function sendMessage(message,to) {
-    if(message && to){
-	var reply = $msg({
-	    to: to,
-	    type: 'chat'
-	})
-	.cnode(Strophe.xmlElement('body', message)).up()
-	.c('active', {xmlns: "http://jabber.org/protocol/chatstates"});
-	var messageResponse = strophieWrapper.connectionObj.send(reply);
-    console.log(messageResponse);
-	console.log('I sent to' + to + ': ' + message);
-    }
-}
-
 /*function fetchConverseSettings
 * get value of converse settings' key
 * @params:key
@@ -405,7 +389,8 @@ $(document).ready(function(){
 
     objJsChat.onSendingMessage = function(message,to){
         console.log("In helper file onSendingMessage");
-        sendMessage(message,to);
+        strophieWrapper.sendMessage(message,to);
+        //sendMessage(message,to);
         //var x = converse.listen.on('messageSend',"MEssagesend");
         //console.log(x);
         /*

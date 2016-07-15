@@ -273,5 +273,20 @@ var strophieWrapper = {
     	}else{
     		return false;
     	}
+    },
+    
+    //sending Message
+    sendMessage: function(message, to){
+        if(message && to){
+            var reply = $msg({
+                to: to,
+                type: 'chat'
+            })
+            .cnode(Strophe.xmlElement('body', message)).up()
+            .c('active', {xmlns: "http://jabber.org/protocol/chatstates"});
+            var messageResponse = strophieWrapper.connectionObj.send(reply);
+            console.log(messageResponse);
+            console.log('I sent to' + to + ': ' + message);
+        }
     }
 }
