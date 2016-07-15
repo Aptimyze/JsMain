@@ -599,7 +599,9 @@ class SearchApiDisplay
 		{
 			if(MobileCommon::isDesktop() || MobileCommon::isMobile())
 			{
-	                        if(count($SearchResponseObj->getFeturedProfileArr())>0){
+									 if(MobileCommon::isApp()!='A')
+                   {
+                         if(count($SearchResponseObj->getFeturedProfileArr())>0){
         	                        $featuredProfileArr=$SearchResponseObj->getFeturedProfileArr();
                 	                foreach($featuredProfileArr as $k=>$v){
                         	                $featuredProfileArrNew[$v["id"]]=$v;
@@ -607,9 +609,11 @@ class SearchApiDisplay
                                 	        
                                         	$this->searchResultsData[] = $v;
 	                                }
-				}
-                        }
-                }   
+													}
+										}
+								
+        }   
+    }
 
 		$this->profileIdStr = trim(implode(",",$this->profileids),",");
 
