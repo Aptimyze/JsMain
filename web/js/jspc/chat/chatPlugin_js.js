@@ -988,7 +988,7 @@ JsChat.prototype = {
         {
             errorHTML += '<div class="txtc color5 f13 mt10" id="loginErr">'+curEle._loginFailueMsg+'</div>';
         }
-        if(failed == false || typeof failed == "undefined")
+        if(failed == false || typeof failed == "undefined" || $("#js-loginPanel").length == 0)
             $(this._parendID).append(LoginHTML);
         else
         {
