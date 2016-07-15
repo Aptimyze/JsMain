@@ -29439,7 +29439,7 @@ return Backbone.BrowserStorage;
                 }
             },
 
-            presenceHandler: function (presence) {
+            presenceHandler: function (presence) { //ankita_presence
                 var $presence = $(presence),
                     presence_type = presence.getAttribute('type');
                 if (presence_type === 'error') { return true; }
@@ -29732,7 +29732,7 @@ return Backbone.BrowserStorage;
                         $el = $('<div id="conversejs">');
                         //console.log($el);
                         //console.log("ankita_append custom converse templates");
-                        //$('body').append($el);
+                        $('body').append($el);
                     }
                     //console.log(converse.templates.chats_panel());
                     $el.html(converse.templates.chats_panel());

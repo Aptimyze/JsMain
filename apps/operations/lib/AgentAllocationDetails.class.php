@@ -486,7 +486,7 @@ public function fetchProfiles($processObj)
                 $endDt          =$processObj->getEndDate();
                 $profiles      	=$this->fetchWebmasterLeadsEligibleProfiles($subMethod, $startDt, $endDt);
 		if(count($profiles)>0){
-			$obj =new incentive_MAIN_ADMIN('newjs_slave');
+			$obj =new incentive_MAIN_ADMIN();
 			$profilesAllocated =$obj->getProfilesDetails($profiles);
 			if(count($profilesAllocated)>0){
 				foreach($profilesAllocated as $key=>$value){
@@ -1474,7 +1474,7 @@ public function fetchNewFailedPaymentEligibleProfiles($processName='',$startDt='
 
 public function fetchWebmasterLeadsEligibleProfiles($subMethod='', $startDt='', $endDt='')
 {
-        $execCallbackObj      =new billing_EXC_CALLBACK('newjs_slave');
+        $execCallbackObj      =new billing_EXC_CALLBACK();
 	if($subMethod!='RCB_WEBMASTER_LEADS'){
 		$startDt        =date("Y-m-d H:i:s", time()-2*60*60);
         	$endDt          =date("Y-m-d H:i:s", time());
@@ -1893,7 +1893,7 @@ public function applyGenericFilters($profileArr, $method='',$subMethod='')
 	$methodForJprofileFilter =array('WEBMASTER_LEADS','NEW_FAILED_PAYMENT','FIELD_SALES');
 
         // Main admin check
-        $mainAdminObj=new incentive_MAIN_ADMIN('newjs_slave');
+        $mainAdminObj=new incentive_MAIN_ADMIN();
         $profileDetails =$mainAdminObj->getProfilesDetails($profileArr);
 	if(count($profileDetails)>0){
 		foreach($profileDetails as $key=>$val)
@@ -1997,7 +1997,7 @@ public function check_profile($profileid,$method='')
 		return false;
 
 	// Main admin check
-	$mainAdminObj=new incentive_MAIN_ADMIN('newjs_slave');
+	$mainAdminObj=new incentive_MAIN_ADMIN();
 	$alloted=$mainAdminObj->get($profileid,"PROFILEID","COUNT(*) AS CNT");
 	if($alloted['CNT']>0)
 		return false;

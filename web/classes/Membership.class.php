@@ -1798,6 +1798,7 @@ class Membership
     {
         $profileid = $this->profileid;
         $userObj = new memUser($profileid);
+        $userObj->setMemStatus();
         $userObj->setCurrency($type);
         $memHandlerObj = new MembershipHandler();
         $memApiFuncs = new MembershipApiFunctions();
@@ -1809,6 +1810,7 @@ class Membership
 
         if ($device == "iOS_app" || $screeningStatus == "N") {
             $main_service = $mainServiceId;
+            $allMembershipsNew = $mainServiceId;
             $service_str_off = $allMemberships;
             $discount = 0;
             $discount_type = 12;

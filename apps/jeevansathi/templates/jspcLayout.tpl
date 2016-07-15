@@ -61,6 +61,11 @@
         var showChat = "~$showChat`";
     </script>
     ~/if`
+    ~if $showChat`
+        <script>
+            var openfireUrl= "~JsConstants::$openfireConfig['HOST']`:~JsConstants::$openfireConfig['WSPORT']`";
+        </script>
+    ~/if`
 </head>
 ~if get_slot('optionaljsb9Key')|count_characters neq 0`
 ~JsTrackingHelper::getHeadTrackJs()`
@@ -124,8 +129,6 @@ _fbq.push(['addPixelId', '569447716516417']);
 window._fbq = window._fbq || [];
 window._fbq.push(['track', 'PixelInitialized', {}]);
 </script>
+<script type="text/javascript" language="Javascript" src="http://localhost/min/?f=/js/jspc/chat/enc-base64-min.js,/js/jspc/chat/aes.js,/js/jspc/chat/core.js,/js/jspc/chat/enc-utf16.js"></script>
 <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=569447716516417&amp;ev=PixelInitialized" /></noscript>
-~if $showChat eq 1`
-  <script>jQuery.noConflict();</script>
-~/if`
 ~/if`

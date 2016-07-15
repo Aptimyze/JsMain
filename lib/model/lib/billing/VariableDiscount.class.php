@@ -518,7 +518,7 @@ class VariableDiscount
     }
     public function getActiveDurations()
     {
-	$key='MAIN_MEM_DURATION';
+	$keyMain='MAIN_MEM_DURATION';
 	$memCacheObject = JsMemcache::getInstance();
         if($memCacheObject->get($keyMain)){
         	$durationsArr =unserialize($memCacheObject->get($keyMain));

@@ -21,8 +21,9 @@ JsChat.prototype = {
     _logoutChat: '.jschatLogOut',
     _minChatBarIn: '.js-minChatBarIn',
     _scrollDivId: '#nchatDivs',
-    _listingClass: 'ul.chatlist',
+    _listingClass: 'ul.chatlist li',
     _listingTabs:{},
+    _loginFailueMsg:"Login Failed,Try later",
 
     _construct: function() {
 
@@ -35,6 +36,8 @@ JsChat.prototype = {
             this._listData = arguments[1][0].listData;
         if (arguments[1][0].listingTabs)
             this._listingTabs = arguments[1][0].listingTabs;
+        if (arguments[1][0]._loginFailueMsg)
+            this._loginFailueMsg = arguments[1][0].loginFailueMsg;
     },
     //start:get screen height
     _getHeight: function() {
@@ -129,7 +132,7 @@ JsChat.prototype = {
         console.log(curEleRef._loginStatus);
         if (curEleRef._loginStatus == 'N') {
             $(curEleRef._listingPanelID).fadeOut('slow', function() {
-                if($(this._loginPanelID).length == 0){
+                if($(curEleRef._loginPanelID).length == 0){
                     console.log("Length is 0 of login panel");
                     curEleRef.addLoginHTML();
                 }
@@ -171,6 +174,7 @@ JsChat.prototype = {
 
 
     },
+
     //start:set height for the listing scroll div
     _chatScrollHght: function() {
         console.log('cal scroll div');
@@ -201,10 +205,10 @@ JsChat.prototype = {
             }
             TabsOpt += "<p>" + objin["tab_name"] + "</p><div class=\"showlinec\"></div></li>";
         }
-        TabsOpt += '</ul></div><div id="nchatDivs" class="nchatscrollDiv">';
+        TabsOpt += '</ul></div><div id="nchatDivs" class="nchatscrollDiv"><div id="scrollDivLoader" class="spinner"></div>';
         TabsOpt += '<div class="showtab1 js-htab"> ';
         for (var i = 0; i < obj["tab1"]["groups"].length; i++) {
-            TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + "\" data-showuser=\""+ obj["tab1"]["groups"][i]["hide_offline_users"]   +"\">";
+            TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + " disp-none\" data-showuser=\""+ obj["tab1"]["groups"][i]["hide_offline_users"]   +"\">";
             //TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + "\">";
             TabsOpt += "<div class=\"f12 fontreg nchatbdr2";
             if(obj["tab1"]["groups"][i]["show_group_name"]==false)
@@ -235,61 +239,154 @@ JsChat.prototype = {
         })
     },
     //start:addlisting
-    addListingInit: function(data) {
+   /*addListingInit: function(data) {
+        console.log("in addListingInit");
         var elem = this;
+        var mainIndex = 0;
+        var statusObj = [];
         for (var key in data) {
-            var runID = data[key]["rosterDetails"]["jid"],res = '',status = data[key]["rosterDetails"]["chat_status"];
-            console.log("addlisting for "+runID);
-            console.log(data);
-            res = runID.split("@");
-            runID = res[0];
-            $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
-                var List = '',username = data[key]["rosterDetails"]["fullname"],tabShowStatus = $('div.' + val).attr('data-showuser');
-                List += '<li class=\"clearfix profileIcon\"';
-                List += "id=\"" + (runID + val) + "\" >";
-                List += "<img id=\"pic_" + runID + "_" +val + "\" src=\"images/pic1.jpg\" class=\"fl\">";
-                List += '<div class="fl f14 fontlig pt15 pl18">';
-                List += data[key]["rosterDetails"]["fullname"];
-                List += '</div>';
-                console.log(runID+" is "+status);
-                if(status == "online")
-                {
-                    List += '<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>';
-                }
-                List += '</li>';
-                if(tabShowStatus == 'false')
-                {
-                    console.log(status+"2222");
-                    $('div.' + val + ' ul').append(List);
-                    $("#" + username+"_" + val).on("click", function() {
-                       elem._chatPanelsBox(username,status);
-                    });
-                }
-                else
-                {
-                    console.log(status+"1111");
-                    if(status=='online')
-                    {
-                       $('div.' + val + ' ul').append(List);
-                    }
-                    $("#" + username+"_" + val).on("click", function() {
-                       elem._chatPanelsBox(username,status);
-                    });
-                }
-
-                //console.log(List);
-                /*$('div.' + val + ' ul').append(List);
-				//bind click on listing]
-                $("#" + username + val).on("click", function() {
-                    elem._chatPanelsBox(username,status);
-                });*/
-            });
+        var runID = data[key]["attributes"]["jid"],
+        res = '',
+        status = data[key]["chat_status"],
+        username = data[key]["attributes"]["name"];
+        statusObj[username]=data[key]["chat_status"];
+        console.log(runID + " is now " + status);
+        res = runID.split("@");
+        runID = res[0];
+        $.each(data[key]["group"], function(index, val) {
+        var List = '',
+           tabShowStatus = $('div.' + val).attr('data-showuser');
+        List += '<li class=\"clearfix profileIcon\"';
+        List += "id=\"" + runID + "_" + val + "\" >";
+        List += "<img id=\"pic_" + runID + "_" + val + "\" src=\"images/pic1.jpg\" class=\"fl\">";
+        List += '<div class="fl f14 fontlig pt15 pl18">';
+        List += data[key]["attributes"]["name"];
+        List += '</div>';
+        //console.log(runID + " is in list " + val);
+        if (status == "online") {
+           List += '<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>';
         }
-        //console.log("setting mCustomScrollbar");
+        List += '</li>';
+        var addNode = false;
+        if (tabShowStatus == 'false') {
+           addNode = true;
+        } else {
+           if (status == 'online') {
+               addNode = true;
+           }
+        }
+        if (addNode == true) {
+           if ($('#' + runID + "_" + val).length == 0) {
+               if ($('#' + runID + "_" + val).find('.nchatspr').length == 0) {
+                   $('div.' + val + ' ul').append(List);
+                   $("#" + username + "_" + val).on("click", function() {
+        var id = $(this).attr("id").split("_")[0];
+                       elem._chatPanelsBox(id, statusObj[id]);
+                   });
+               }
+           } else {
+               $(elem._mainID).find($('#' + runID + "_" + val)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
+           }
+        }
+        });
+        mainIndex++;
+        }
+        elem._chatScrollHght();
+        $(elem._scrollDivId).mCustomScrollbar({
+        theme: "light"
+        });
+   },*/
+
+   //start:addlisting
+    addListingInit: function(data) {
+        var elem = this,statusArr=[],currentID;
+        console.log("addListing");
+        for (var key in data) {
+            if(typeof data[key]["rosterDetails"]["jid"] != "undefined")
+            {
+                var runID = data[key]["rosterDetails"]["jid"],res = '',status = data[key]["rosterDetails"]["chat_status"];
+                console.log("addlisting for "+runID+"--"+data[key]["rosterDetails"]["chat_status"]);
+                console.log(data[key]);
+                //console.log(runID+" is now "+status);
+                res = runID.split("@");
+                runID = res[0];
+                $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
+                    console.log("groups "+val);
+                    var List = '',fullname = data[key]["rosterDetails"]["fullname"],tabShowStatus = $('div.' + val).attr('data-showuser');
+                    var getNamelbl = fullname,picurl=data[key]["rosterDetails"]["listing_tuple_photo"],prfCheckSum=data[key]["rosterDetails"]["profile_checksum"];  //ankita for image
+
+
+                    List += '<li class=\"clearfix profileIcon\"';
+                    List += "id=\"" + runID + "_"+val + "\" data-checks=\""+ prfCheckSum +"\">";
+                    List += "<img id=\"pic_" + runID + "_" +val + "\" src=\""+picurl+"\" class=\"fl\">";
+                    List += '<div class="fl f14 fontlig pt15 pl18">';
+
+                    List += getNamelbl;
+
+                    List += '</div>';
+                    console.log(runID+" is "+status);
+                    if(status == "online")
+                    {
+                        List += '<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>';
+                    }
+                    List += '</li>';
+                    var addNode = false;
+                    console.log("Nitish"+tabShowStatus);
+                    if(tabShowStatus == 'false')
+                    {
+                        console.log(status+"2222");
+                        addNode = true;
+                    }
+                    else
+                    {
+                        console.log(status+"1111");
+                        if(status=='online')
+                        {
+                           addNode = true;
+                            $('div.' + val + ' ul').append(List);
+                            if($('div.' + val + ' ul').parent().hasClass("disp-none")){
+                                $('div.' + val + ' ul').parent().removeClass("disp-none");
+                            }
+                            $("#" + runID+"_" + val).on("click", function() {
+                                currentID = $(this).attr("id").split("_")[0];
+                                console.log(statusArr[currentID]);
+                               elem._chatPanelsBox(currentID,statusArr[currentID]);
+
+                            }); 
+                        }
+                    }
+                    console.log("chexcking");
+                    console.log(addNode);
+                    if(addNode == true)
+                    {
+                        if($('#'+runID + "_" + val).length==0)
+                        {
+                            if($('#'+runID + "_" + val).find('.nchatspr').length==0)
+                            {
+                                $('div.' + val + ' ul').append(List);
+                                if($('div.' + val + ' ul').parent().hasClass("disp-none")){
+                                    $('div.' + val + ' ul').parent().removeClass("disp-none");
+                                }
+                                $("#" + runID+"_" + val).on("click", function() {
+                                   elem._chatPanelsBox(runID,status);
+
+                                }); 
+                            }
+                        }
+                        else
+                        {
+                            $(elem._mainID).find($('#'+runID + "_" + val)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
+                        }
+                    }
+                });
+            }
+        }
         elem._chatScrollHght();
         $(elem._scrollDivId).mCustomScrollbar({
             theme: "light"
         });
+        //call hover functionality
+        $(elem._listingClass).on('mouseenter mouseleave',{ global: elem }, elem._calltohover);
     },
 
     //scrolling down chat box
@@ -384,13 +481,55 @@ JsChat.prototype = {
         });
     },
 
+    onPostBlockCallback:null,
+    
+    //remove from list
+    _removeFromListing:function(param1,data){
+          console.log('remove element 11');
+          //removeCall1 if user is removed from backend
+          if(param1=='removeCall1')
+           {
+               console.log("calllign _removeFromListing");
+               for (var key in data)
+               {
+                       var runID = '';
+                       runID = data[key]["rosterDetails"]["jid"].split("@")[0];
+                       $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
+                           var tabShowStatus='';
+                           var listElements = '';
+                           //this check the sub header status in the list
+                           var tabShowStatus = $('div.' + val).attr('data-showuser');
+                           listElements = $('#'+runID+'_'+val);
+                           if(tabShowStatus=='false')
+                           {
+                            console.log("here1"+tabShowStatus);
+                               $(listElements).find('.nchatspr').detach();
+                           }
+                           else
+                           {
+                            console.log("here2"+tabShowStatus);
+                               $('div').find(listElements).detach();
+                           }
+                       });
+               }
+           }
+           //removeCall2 if user is removed from block click on chatbox
+           else if(param1=='removeCall2')
+           {
+               $(this._mainID).find('*[id*="'+data+'"]').detach();               
+               //$('*[id*="'+data+'"]').remove();
+               if( this.onPostBlockCallback && typeof this.onPostBlockCallback == 'function' )
+               {
+                   this.onPostBlockCallback(data);  
+               }
+           }
+       },
+
     //bind clicking block icon
     _bindBlock: function(elem, userId) {
         var curElem = this;
         $(elem).off("click").on("click", function() {
-            //TODO: fire block query
-            //TODO:atul, add function here
-            //curElem._removeFromListing(userId);
+            curElem._removeFromListing('removeCall2',userId);
             sessionStorage.setItem("htmlStr_" + userId, $('chat-box[user-id="' + userId + '"] .chatMessage').html());
             $('chat-box[user-id="' + userId + '"] .chatMessage').html('<div id="blockText" class="pos-rel wid90p txtc colorGrey padall-10">You have blocked this user</div><div class="pos-rel fullwid txtc mt20"><div id="undoBlock" class="padall-10 color5 disp_ib cursp">Undo</div></div>');
             $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
@@ -428,11 +567,14 @@ JsChat.prototype = {
                     $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
                         scrollTop: $(".rightBubble").length + $(".leftBubble").length * 50
                     }, 500);
+                    
+                    //TODO: fire send chat query and return unique id, also check for 3 messages
                     if( _this.onSendingMessage  && typeof (_this.onSendingMessage) == "function" ){
                         console.log("in plugin send message");
-                        _this.onSendingMessage();
+                        console.log(userId);
+                        _this.onSendingMessage(text);
                     }
-                    //TODO: fire send chat query and return unique id, also check for 3 messages
+                    console.log("after");
                     setTimeout(function() {
                         //on recieving data with uniqueID
                         $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + "ueiuh");
@@ -718,7 +860,7 @@ JsChat.prototype = {
             curElem._textAreaAdjust(this);
         });
         $('chat-box[user-id="' + userId + '"] #pic_' + userId).addClass("downBarPic cursp");
-        $('chat-box[user-id="' + userId + '"] .chatBoxBar').append('<div class="downBarText fullhgt"><div class="downBarUserName disp_ib pos-rel f14 colrw wid44p fontlig">' + userId + '<div class="onlineStatus f11 opa50 mt4"></div></div><div class="iconBar cursp fr padallf_2 disp_ib opa40"><i class="nchatspr nchatic_3"></i><i class="nchatspr nchatic_2 ml10 mr10"></i><i class="nchatspr nchatic_1 mr10"></i></div><div class="pinkBubble2 fr vertM scir disp_ib padall-10 m11"><span class="noOfMessg f13 pos-abs">0</span></div></div>');
+        $('chat-box[user-id="' + userId + '"] .chatBoxBar').append('<div class="downBarText fullhgt"><div class="downBarUserName disp_ib pos-rel f14 colrw wid44p fontlig">' + $(".chatlist li[id*='"+userId+"'] div").html() + '<div class="onlineStatus f11 opa50 mt4"></div></div><div class="iconBar cursp fr padallf_2 disp_ib opa40"><i class="nchatspr nchatic_3"></i><i class="nchatspr nchatic_2 ml10 mr10"></i><i class="nchatspr nchatic_1 mr10"></i></div><div class="pinkBubble2 fr vertM scir disp_ib padall-10 m11"><span class="noOfMessg f13 pos-abs">0</span></div></div>');
         curElem._bindInnerHtml(userId, status);
     },
 
@@ -816,19 +958,19 @@ JsChat.prototype = {
             console.log('case 2');
             if($(curEle._loginPanelID).length == 0 ){
                 console.log("ankita_1");
-                curEle._appendLoggedHTML();    
+                //curEle._appendLoggedHTML();    
             }
             else{
                 console.log("ankita_2");
                 $(curEle._loginPanelID).fadeOut('fast',function() {
-                    curEle._appendLoggedHTML();
+                    //curEle._appendLoggedHTML();
                 });
             }
         }
         //user logged out from chat in the same session
         else {
             console.log('case 3');
-            $(curEle._loginPanelID).fadeOut('slow', function() {
+            $(curEle._loginPanelID).fadeOut('fast', function() {
                 $(curEle._listingPanelID).fadeIn('slow');
             });
         }
@@ -843,6 +985,214 @@ JsChat.prototype = {
         */
 
     },
+    
+    //start:function calculate the current postion for hover box
+    _calHoverPos:function(param2,param3){
+
+
+        var hoverbtm, newTop, hgtHiddenBelow, hgtVisible;
+        var sHeight = $(window).height();
+
+        hoverbtm = (parseInt(param2 + param3));
+        hoverbtm = parseInt(hoverbtm / 2);
+        if (hoverbtm < sHeight) 
+        {
+            param2 = (Math.round(param2 / 2)) - 10;
+            newTop = param2;
+            if ((newTop + param3) > sHeight) 
+            {
+                hgtVisible = sHeight - param2;
+                hgtHiddenBelow = param3 - hgtVisible;
+                newTop = param2 - hgtHiddenBelow;
+            }
+        } 
+        else 
+        {
+            hgtVisible = sHeight - param2;
+            hgtHiddenBelow = param3 - hgtVisible;
+            newTop = param2 - hgtHiddenBelow;
+        }
+        return newTop;
+
+    },
+
+    onPreHoverCallback:null,
+
+    //start:hover box html structure
+    _hoverBoxStr:function(param1,param2,pCheckSum){
+        //console.log($('#'+param1+'_hover').length);
+        console.log("in hoverBoxStr");
+        console.log(pCheckSum);
+        var TotalBtn = '',widCal='';
+        TotalBtn = param2["buttonDetails"]["buttons"].length;
+        console.log('TotalBtn: '+TotalBtn);
+        widCal = parseInt(100/TotalBtn);
+        console.log('widCal: '+widCal);
+
+        if($('#'+param1+'_hover').length == 0 )
+        {
+
+            var str='<div class="pos_fix info-hover fontlig nz21 vishid"';
+            str+='id="'+param1+'_hover">';
+                str+='<div class="nchatbdr3 f13">';
+                    str+='<img src="'+param2.PHOTO+'" class="vtop"/>';
+                        str+='<div class="nchatgrad padall-10">';
+                            str+='<ul class="listnone lh22">';
+                                str+='<li>'+param2.AGE+', '+ param2.HEIGHT+'</li>';
+                                str+='<li>'+param2.COMMUNITY+'</li>';
+                                str+='<li>'+ param2.EDUCATION +'</li>';
+                                str+='<li>'+ param2.PROFFESION +'</li>';
+                                str+='<li>'+ param2.SALARY+'</li>';
+                                str+='<li>'+ param2.CITY+'</li>';
+                            str+='</ul>';
+                            str+='<p class="txtc nc-color2 pt10 hgt18">';
+                                str+='<span class="disp-none">You accepted her interest</span>';
+                            str+='</p>';                                    
+                        str+='</div>';
+                        //start:button structure
+                        str+='<div class="'+ param1+'_BtnRespnse nchatgrad fullwid clearfix">';
+                            $.each(param2["buttonDetails"]["buttons"],function(k,v){
+                                str+='<button class="hBtn bg_pink lh50 brdr-0 txtc colrw cursp"';
+                                str+='id="'+param1+'_'+v.action+'"';
+                                str+='data-pCheckSum="'+pCheckSum+'"';
+                                str+='data-params="'+param2.buttonDetails.buttons[0].params+'"';
+                                if(TotalBtn==1)
+                                {
+                                    str+='style="width:100%">';
+                                }
+                                else
+                                {
+                                    if(k==0)
+                                    {
+                                       str+='style="width:'+widCal+'%"> ';
+                                    }
+                                    else
+                                    {
+                                        str+='style="width:'+(widCal-1)+'%;margin-left:1px">';
+                                    }
+                                }
+
+                                str+= v.label;
+                               str+='</button>';
+                            });
+
+
+
+
+
+                        str+='</div>';
+                        //end:button structure
+                str+='</div>';
+
+            str+='</div>';
+
+
+            return str;
+        }
+        console.log("End of _hoverBoxStr"); 
+    },
+    
+    onHoverContactButtonClick: null,
+    
+     //start:update vcard
+    updateVCard:function(param,pCheckSum,callback){
+        //console.log('in vard update');
+        var globalRef = this;
+        var finalstr;
+        $.each(param.vCard,function(k,v){                   
+          finalstr = globalRef._hoverBoxStr(k,v,pCheckSum);
+          $(globalRef._mainID).append(finalstr);
+        });
+        console.log("Callback calling starts");
+        callback();
+        console.log("Callaback ends");
+    },
+    
+     //start:check hover
+    _checkHover:function(param){
+        var curEleID = $(param).attr('id');            
+        curEleID = curEleID.split("_");
+        curEleID = curEleID[0];
+        var checkSumP = $(param).attr('data-checks');
+        var hoverNewTop = $(param)[0].getBoundingClientRect().top;
+        var _this = this;
+         //as per discussion with ashok this height is goign to be fixed
+        var hoverDivHgt = 435;
+        hoverNewTop = this._calHoverPos(hoverNewTop,hoverDivHgt);
+        if(this._checkWidth() )
+        {
+            var shiftright = 245;
+        } 
+        else 
+        {
+            var shiftright = Math.round($(this._parendID)[0].getBoundingClientRect().width);
+        }
+        //console.log('hoverNewTop:'+hoverNewTop+' shiftright:'+shiftright);
+        //if element exist        
+        if($('#'+curEleID+'_hover').length != 0)
+        {
+            $('#'+curEleID+'_hover').css({ 
+                'top':  hoverNewTop,                     
+                'visibility': 'visible',
+                'right':shiftright
+            });    
+        }
+        else
+        {
+            //console.log('call to onPreHoverCallback');
+             if( this.onPreHoverCallback && typeof this.onPreHoverCallback == 'function' )
+             {
+                 console.log("Before precall");
+                this.onPreHoverCallback(checkSumP,curEleID,hoverNewTop,shiftright); 
+                //once div is created from precallback below ling shows the hovred list information
+                console.log("After precall");
+                
+                 console.log("Atul console");
+             }
+        }
+        $('.info-hover').hover(
+        function() {
+            $(this).css('visibility', 'visible');
+        },
+        function() {
+            $(this).css('visibility', 'hidden');
+        }
+                
+            
+        );
+        $('#'+curEleID+'_hover .hBtn').off("click").on('click',function(){ 
+            if( _this.onHoverContactButtonClick && typeof _this.onHoverContactButtonClick == 'function' )
+            {
+                _this.onHoverContactButtonClick(this);
+            }
+        });
+    }, 
+    
+    _timer:'undefined',
+    //start:hover functionality
+    _calltohover:function(e){
+        //console.log("In _calltohover");
+        //global level ref.
+        var _this = e.data.global;
+        var curHoverEle = this;
+        //console.log(this);
+        var getID = $(this).attr('id');            
+        getID = getID.split("_");
+        getID = getID[0];
+        //set timer variable
+        if(e.type == "mouseenter")
+        {
+            _this._timer = setTimeout(function() { 
+                _this._checkHover(curHoverEle);  
+            }, 500);                
+        }
+        else
+        {
+            $('#'+getID+'_hover').css('visibility', 'hidden');
+            clearTimeout(_this._timer);
+        }
+    },
+    
     //start:append Chat Logged in Panel
     _appendLoggedHTML: function() {
         var curEle = this;
@@ -855,17 +1205,28 @@ JsChat.prototype = {
             //curEle.addListingInit(curEle._listData);
         });
         
-        //call hover functionality
-       // $(curEle._listingClass).
+        
 
     },
     
    //start:this function image,name in top chat logged in scenario
-    addLoginHTML: function() {
+    addLoginHTML: function(failed) {
         console.log('in addLoginHTML');
         var curEle = this;
         var LoginHTML = '<div class="fullwid txtc fontlig pos-rel" id="js-loginPanel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarOut"></i> </div><div> <img src="images/chat-profile-pic.jpg" class="chatmt1"/> </div><button id="js-chatLogin" class="chatbtnbg1 mauto chatw1 colrw f14 brdr-0 lh40 cursp nchatm5">Login to Chat</button></div>';
-        $(this._parendID).append(LoginHTML);
+        var errorHTML = '';
+        if(failed == true)
+        {
+            errorHTML += '<div class="txtc color5 f13 mt10" id="loginErr">'+curEle._loginFailueMsg+'</div>';
+        }
+        if(failed == false || typeof failed == "undefined" || $("#js-loginPanel").length == 0)
+            $(this._parendID).append(LoginHTML);
+        else
+        {
+            console.log("removing");
+            $(curEle._loginPanelID).fadeIn('fast');
+            $(curEle._loginPanelID).append(errorHTML);
+        }
         $('.js-minChatBarOut').click(function() {
 
             curEle._minimizeChatOutPanel();
@@ -882,6 +1243,12 @@ JsChat.prototype = {
             } 
         });
     },
+
+    hideChatLoader: function(){
+        console.log("hiding loader_ankita");
+        $("#scrollDivLoader").hide();
+    },
+
     //start:this function is that init forthe chat
     start: function() {
         var divElement = document.createElement("Div");

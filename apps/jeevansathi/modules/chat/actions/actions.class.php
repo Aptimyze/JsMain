@@ -35,8 +35,14 @@ class chatActions extends sfActions
         $apiResponseHandlerObj = ApiResponseHandler::getInstance();
         $loginData = $request->getAttribute("loginData");
         if($loginData){
-            $username = $loginData['USERNAME'];
-            $url = "http://localhost:9090/plugins/restapi/v1/users/".$username;
+
+            $username = $loginData['PROFILEID'];
+
+		$uname = $loginData['USERNAME'];
+	    $pass = EncryptPassword::generatePassword($uname);
+
+            $url = JsConstants::$openfireConfig['HOST'].":".JsConstants::$openfireConfig['PORT']."/plugins/restapi/v1/users/".$username;
+            //$url = "http://localhost:9090/plugins/restapi/v1/users/".$username;
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
@@ -60,8 +66,9 @@ class chatActions extends sfActions
             else{
                 //create user
                 $response['userStatus'] = "New user created";
-                $url = "http://localhost:9090/plugins/restapi/v1/users/";
-                $data = array("username" => "$username", "password" => "123");
+                $url = JsConstants::$openfireConfig['HOST'].":".JsConstants::$openfireConfig['PORT']."/plugins/restapi/v1/users/";
+                //$url = "http://localhost:9090/plugins/restapi/v1/users/";
+                $data = array("username" => $username, "password" => $pass);
                 $jsonData = json_encode($data);
                 
                 $ch = curl_init();
@@ -96,8 +103,9 @@ class chatActions extends sfActions
                 curl_close ($ch);
             }
             //Encrypt Password
-            $hash = "123";
+            $hash = EncryptPassword::cryptoJsAesEncrypt("chat", $pass);
             $response['hash'] = $hash;
+            //$response['hash'] = $pass;
         }
         else{
             $response = "Logged Out Profile";
@@ -147,8 +155,28 @@ class chatActions extends sfActions
                 $chatObj = new Chat();
                 $result = $chatObj->convertXml($storeResult);
                 unset($chatObj);
+                $username = $request->getParameter('username');
+                $profile["$username"]["NAME"] = "Atul";
+                $profile["$username"]["EMAIL"] = "Atul@gmail.com";
+                $profile["$username"]["PHOTO"] = "http://mediacdn.jeevansathi.com/1769/6/35386110-1436589041.jpeg";
+                $profile["$username"]["AGE"] = "3";
+                $profile["$username"]["HEIGHT"] = "5 9";
+                $profile["$username"]["PROFFESION"] = "Christian";
+                $profile["$username"]["SALARY"] = "Rs. 15 - 20lac";
+                $profile["$username"]["CITY"] = "New Delhi";
+                $d1["action"] = "INITIATE";
+                $d1["label"] = "Send Interest";
+                $d1["iconid"] = null;
+                $d1["primary"] = "true";
+                $d1["secondary"] = "true";
+                $d1["params"] = "&stype=P17";
+                $d1["enable"] = true;
+                $d1["id"] = "INITIATE";
+                $buttons["buttons"][] = $d1;
                 
-                $response = array("vCard"=>$result);
+                $profile["$username"]["buttonDetails"] = $buttons;
+                $response = array("vCard"=>$profile);
+                
                 $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
             }
             else{

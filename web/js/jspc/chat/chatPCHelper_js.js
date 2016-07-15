@@ -1,7 +1,10 @@
 /*This file includes functions used for intermediate data transfer for JSPC chat from 
 * converse client(converse.js) to chat plugin(chat_js.js)
 */
-var listingInputData = [],listCreationDone=false,objJsChat;  //listing data sent to plugin-array of objects
+
+var listingInputData = [],listCreationDone=false,objJsChat,pass;  //listing data sent to plugin-array of objects
+
+//var decrypted = JSON.parse(CryptoJS.AES.decrypt(api response, "chat", {format: CryptoJSAesJson}).toString(CryptoJS.enc.Utf8));
 
 function readSiteCookie(name) {
     var nameEQ = escape(name) + "=",ca = document.cookie.split(';');
@@ -18,52 +21,39 @@ var pluginId = '#chatOpenPanel',device = 'PC';
 /*function initiateChatConnection
 * request sent to openfire to initiate chat and maintain session
 * @params:none
-*/     
+*/ 
+    
 function initiateChatConnection()
 {
-    //only for dev env--------------------start:ankita
-    var username = "a1@localhost";
-    if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
-        username = "a12@localhost";
-    else if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
-        username = "a1@localhost";
-    //only for dev env--------------------end:ankita
-    console.log("Username:");
-    console.log(username);
-    try
-    {
-        //initialise converse settings
-        require(['converse'], function (converse) {
-            converse.initialize({
-                bosh_service_url: chatConfig.Params[device].bosh_service_url,
-                keepalive: chatConfig.Params[device].keepalive,
-                message_carbons: true,
-                //play_sounds: true,
-                roster_groups: chatConfig.Params[device].roster_groups,
-                hide_offline_users: chatConfig.Params[device].hide_offline_users,
-                debug:false,
-                //prebind:true,
-                auto_login:true,
-                //jid:username,
-                //password:"123",
-                //sid:sid,
-                //rid:1,
-                show_controlbox_by_default:true,
-                use_vcards:chatConfig.Params[device].use_vcards,
-                authentication:'login',
-                listing_data:{},
-                credentials_url: '/api/v1/chat/fetchCredentials?jid='+username,
-                rosterDisplayGroups:chatConfig.Params[device].rosterDisplayGroups,
-                listCreationDone:false,
-                //prebind_url: 'http://localhost/api/v1/chat/authenticateChatSession?jid=a1@localhost',  
-            }),function(){
-                console.log("calling callback");
-            }
-        });
-    }
-    catch(e)
-    {
-        console.log("Exception thrown in initiateChatConnection function - "+e);
+    var username = loggedInJspcUser+'@localhost';
+    /*
+    if(readSiteCookie("CHATUSERNAME")=="bassi")
+        username = 'a8@localhost';
+    else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
+        username = 'a2@localhost';
+    */
+    console.log("Nitish"+username);
+
+    console.log(chatConfig.Params[device].bosh_service_url);
+    console.log("user:"+username+" pass:"+pass);
+
+    strophieWrapper.connect(chatConfig.Params[device].bosh_service_url,username,pass);
+    console.log(strophieWrapper.connectionObj);
+}
+
+
+
+function sendMessage(message,to) {
+    var to = 'a2@localhost';
+    if(message && to){
+	var reply = $msg({
+	    to: to,
+	    type: 'chat'
+	})
+	.cnode(Strophe.xmlElement('body', message)).up()
+	.c('active', {xmlns: "http://jabber.org/protocol/chatstates"});
+	connection.send(reply);
+	log('I sent ' + to + ': ' + message);
     }
 }
 
@@ -72,79 +62,25 @@ function initiateChatConnection()
 * @params:key
 * @return:value
 */
+/*
 function fetchConverseSettings(key)
 {
     var value = converse.settings.get(key);
     return value;
 }
-
+*/
 /*function setConverseSettings
 * set value of converse settings' key
 * @params:key,value
 * @return:none
 */
+/*
 function setConverseSettings(key,value)
 {
     converse.settings.set(key,value);
 }
-
-/*function mapListingJsonToHTML
-* map json data for listing to html
-* @params:jsonData
-* @return:listingHTML
 */
-function mapListingJsonToHTML(jsonData)  //used for old plugin - ankita
-{
-    var listingHTML = '<div id="listing_tab1">';
-    $.each(jsonData,function( index, val ){
-        listingHTML = listingHTML+ '<div id="'+chatConfig.Params[device].rosterDisplayGroups[index]+'"><div class="f12 fontreg nchatbdr2"><p class="nchatt1 fontreg pl15">'+index+'</p></div><ul class="chatlist">';
-        $.each(val,function( key, details ){
-              listingHTML = listingHTML+'<li class="clearfix profileIcon" id="profile_'+details.fullname+'"><img id="pic_'+key.fullname+'" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">'+details.fullname+'</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li>';
-        });
-        listingHTML = listingHTML+'</ul></div>';
-    });
-    listingHTML = listingHTML + '</div>';
-    return listingHTML;   
-}
 
-/*function updateListing
-* update listing
-* @params:rosterData
-*/
-function updateListing(rosterData) //used for old plugin - ankita
-{
-    //console.log("roster update");
-    //console.log(rosterData);
-    var newRosterHTML = "",groupid;
-    groupid = chatConfig.Params[device].rosterDisplayGroups[rosterData.groups[0]]; //group id mapping
-    //handle if no user in group - case ankita
-    //if this new user doesn't exist already
-    if($("#"+groupid).find("ul.chatlist").find("li#profile_"+rosterData.fullname).length === 0)
-    {
-        newRosterHTML = '<li class="clearfix profileIcon" id="profile_'+rosterData.fullname+'"> <img id="pic_'+rosterData.fullname+'" src="images/pic1.jpg" class="fl"/><div class="fl f14 fontlig pt15 pl18">'+rosterData.fullname+'</div><div class="fr"><i class="nchatspr nchatic5 mt15"></i></div></li>';
-        //append newRosterHTML
-        $("#"+groupid).find("ul.chatlist").append(newRosterHTML);
-    }     
-}
-
-/*function createListingPanel
-* creates listing panel after login and json data generation
-* @params:none
-*/ 
-function createListingPanel()   //used for old plugin--ankita
-{
-    //get json data for listing
-    var listingData = fetchConverseSettings("listing_data");
-    //console.log(listingData);
-    $(pluginId).setChatPluginOption("listingJsonData",listingData);
-    //map json data to listing html
-    var listingHTML = mapListingJsonToHTML(listingData);
-    //console.log(listingHTML);
-    $(pluginId).setChatPluginOption("Tab1Data" ,listingHTML);
-    //show listing panel by appending html
-    var ChatPluginObj = $(pluginId).chatplugin();
-    ChatPluginObj.addListingBody();
-}
 // Changes XML to JSON
 function xmlToJson(xml) {
     // Create the return object
@@ -181,54 +117,58 @@ function xmlToJson(xml) {
     return obj;
 }
 
+/*invokePluginLoginHandler
+*handles login success/failure cases
+* @param: state
+*/
+function invokePluginLoginHandler(state)
+{
+    if(state == "success")
+    {
+        createCookie("chatAuth","true");
+        objJsChat._appendLoggedHTML();
+    }
+    else
+        objJsChat.addLoginHTML(true);
+}
+
 /*invokePluginAddlisting
-function to add roster item with vcard details or update roster item details in listing
-* @inputs:listObject,vcardObj,key(create_list/add_node/update_status)
+function to add roster item or update roster item details in listing
+* @inputs:listObject,key(create_list/add_node/update_status)
 */
 
-function invokePluginManagelisting(listObject,vcardObj,key){
-    //console.log(listObject);
-    //console.log(vcardObj); //to be cached---ankita
-    var listNodeObj = {"rosterDetails":{},"vcardDetails":vcardObj},nodeArr = [];
-    if(typeof listObject.attributes == "undefined")
-        listNodeObj["rosterDetails"] = listObject;
-    else
-        listNodeObj["rosterDetails"] = listObject.attributes;
-    if(key=="add_node"){
-        
-        if(listCreationDone == false){   
-            //create list with n nodes
-            listingInputData.push(listNodeObj);
-            console.log("adding node before list creation");
-            if(listingInputData.length == chatConfig.Params[device].initialRosterLimit["nodesCount"]){
-                key = "create_list";
-                console.log("list created after adding "+listingInputData.length+" nodes");
-                //plugin.addInList(listingInputData,key); 
-                listCreationDone = true;
-                objJsChat.addListingInit(listingInputData);
-                console.log(listingInputData);
-                setConverseSettings("listCreationDone",true);
-            }
-        } else{
-           //add single node after list creation
-            nodeArr.push(listNodeObj);
-            console.log("adding single node");
-            console.log(nodeArr);
-            //plugin.addInList(nodeArr,key);
-            objJsChat.addListingInit(nodeArr);
+function invokePluginManagelisting(listObject,key){
+    console.log("calling invokePluginAddlisting");
+    if(key=="add_node" || key=="create_list"){
+        if(key=="create_list")
+        {
+            objJsChat.hideChatLoader();
         }
+        console.log("adding "+listObject.length+" nodes in invokePluginAddlisting");
+        console.log(listObject);
+        objJsChat.addListingInit(listObject);
     } else if(key=="update_status"){             
         //update existing user status in listing
         nodeArr.push(listNodeObj);
         console.log("updating status");
         console.log(nodeArr);
-        //plugin.addInList(nodeArr,key);
+        if(listNodeObj["rosterDetails"]["chat_status"] == "offline")  //from online to offline
+        {
+            console.log("removing from listing");
+            objJsChat._removeFromListing("removeCall1",nodeArr);
+        }
+        else if(listNodeObj["rosterDetails"]["chat_status"] == "online") //from offline to online
+        {
+            console.log("adding in list");
+            objJsChat.addListingInit(nodeArr);
+        }
     } else if(key=="delete_node"){
         //remove user from roster in listing
-        nodeArr.push(listNodeObj);
-        console.log("deleting node from roster");
-        console.log(nodeArr);
-        //plugin.addInList(nodeArr,key);
+        //nodeArr.push(listNodeObj);
+        var userId = (listNodeObj["rosterDetails"]["jid"]).split("@");
+        console.log("deleting node from roster-"+userId[0]);
+        //console.log(nodeArr);
+        objJsChat._removeFromListing("removeCall2",userId[0]);
     }
 }
 
@@ -288,20 +228,20 @@ function checkNewLogin(profileid) {
 * sets time interval after which json data will be sent to plugin to create list if not created
 * @params: none
 */
-function setCreateListingInterval()
+/*function setCreateListingInterval()
 {
     setTimeout(function(){
         if(listCreationDone==false)
         {
             console.log("triggering list creation as time interval exceeded");
             listCreationDone = true;
-            setConverseSettings("listCreationDone",true);
+            //setConverseSettings("listCreationDone",true);
             console.log(listingInputData);
             //plugin.addInList(listingInputData,"create_list"); 
             objJsChat.addListingInit(listingInputData);   
         }
     },chatConfig.Params[device].initialRosterLimit["timeInterval"]);
-}
+}*/
 
 function checkAuthentication(){
     var auth;
@@ -312,9 +252,11 @@ function checkAuthentication(){
             console.log(data.statusCode);
             if(data.responseStatusCode == "0"){
                 console.log("In chatUserAuthentication Login Done");
-                createCookie("chatAuth","true");
+                //createCookie("chatAuth","true");
                 //loginChat();
                 auth = 'true';
+		pass = JSON.parse(CryptoJS.AES.decrypt(data.hash, "chat", {format: CryptoJSAesJson}).toString(CryptoJS.enc.Utf8));
+
             }
             else{
                 console.log(data.responseMessage);
@@ -329,9 +271,11 @@ function checkAuthentication(){
 
 function logoutChat(){
     console.log("In logout chat function")
-    converse.user.logout();
+    //converse.user.logout();
+    strophieWrapper.disconnect();
     eraseCookie("chatAuth");
 }
+
 
 function invokePluginReceivedMsgHandler(msgObj)
 {
@@ -340,6 +284,39 @@ function invokePluginReceivedMsgHandler(msgObj)
     if(msgObj["message"] != "") 
         objJsChat._appendRecievedMessage(msgObj["message"],msgObj["from"].substr(0, msgObj["from"].indexOf('@')),msgObj["msgid"]); 
 }
+
+
+/*var CryptoJSAesJson = {
+    stringify: function (cipherParams) {
+        var j = {ct: cipherParams.ciphertext.toString(CryptoJS.enc.Base64)};
+        if (cipherParams.iv) j.iv = cipherParams.iv.toString();
+        if (cipherParams.salt) j.s = cipherParams.salt.toString();
+        return JSON.stringify(j);
+    },
+    parse: function (jsonStr) {
+        var j = JSON.parse(jsonStr);
+        var cipherParams = CryptoJS.lib.CipherParams.create({ciphertext: CryptoJS.enc.Base64.parse(j.ct)});
+        if (j.iv) cipherParams.iv = CryptoJS.enc.Hex.parse(j.iv)
+        if (j.s) cipherParams.salt = CryptoJS.enc.Hex.parse(j.s)
+        return cipherParams;
+    }
+}*/
+var CryptoJSAesJson = {
+    stringify: function (cipherParams) {
+        var j = {ct: cipherParams.ciphertext.toString(CryptoJS.enc.Base64)};
+        if (cipherParams.iv) j.iv = cipherParams.iv.toString();
+        if (cipherParams.salt) j.s = cipherParams.salt.toString();
+        return JSON.stringify(j);
+    },
+    parse: function (jsonStr) {
+        var j = JSON.parse(jsonStr);
+        var cipherParams = CryptoJS.lib.CipherParams.create({ciphertext: CryptoJS.enc.Base64.parse(j.ct)});
+        if (j.iv) cipherParams.iv = CryptoJS.enc.Hex.parse(j.iv);
+        if (j.s) cipherParams.salt = CryptoJS.enc.Hex.parse(j.s);
+        return cipherParams;
+    }
+}
+
 
 $(document).ready(function(){
     console.log("User");
@@ -351,6 +328,7 @@ $(document).ready(function(){
         var chatLoggedIn = readCookie('chatAuth');
         var loginStatus;
         if(chatLoggedIn == 'true'){
+            checkAuthentication();
             loginStatus = "Y";
             initiateChatConnection();
         }
@@ -379,6 +357,7 @@ $(document).ready(function(){
                 return ;
             }
             else{
+                console.log("Initiate strophe connection in preclick");
                 initiateChatConnection();
                 objJsChat._loginStatus = 'Y';
             }
@@ -387,8 +366,31 @@ $(document).ready(function(){
     }
 
     objJsChat.onChatLoginSuccess = function(){
-        //trigger list creation if nodes in roster lesser than limit
-        setCreateListingInterval();
+        console.log("show loader---manvi");
+        //trigger list creation
+        console.log("in triggerBindings");
+        strophieWrapper.triggerBindings();
+        //setCreateListingInterval();
+    }
+    
+    objJsChat.onHoverContactButtonClick = function(params){
+        console.log(params);
+        checkSum = $("#"+params.id).attr('data-pchecksum');
+        params = $("#"+params.id).attr('data-params');
+        checkSum = "7619da4377fbf2a405ede0d0535a716ei9513636";
+        
+        url = "/api/v2/contacts/postEOI";
+        $.ajax({
+            type: 'POST',
+            data: {profilechecksum: checkSum,params: params,source: "chat"},
+            url: url,
+            success: function(data) {
+                console.log(data);
+                console.log(data.actiondetails.errmsglabel);
+                $("#"+params.id).html(data.actiondetails.errmsglabel);
+            }
+        });
+        
     }
     
     objJsChat.onLogoutPreClick = function(){
@@ -398,11 +400,118 @@ $(document).ready(function(){
     }
 
     objJsChat.onSendingMessage = function(){
+        
+        console.log("In helper file onSendingMessage");
+        //var x = converse.listen.on('messageSend',"MEssagesend");
+        //console.log(x);
         /*
         console.log("Converse");
         //converse.emit('showSentOTRMessage',"msg");
         //console.log("Helper file onSendingMessage"+converse.ChatBoxView());
         converse.ChatBoxView().sendMessage("hi");
+        */
+       //console.log(converse.initialize.ChatBoxView);
+       //console.log(converse.initialize.ChatBoxView());
+       //converse.initialize.ChatBoxView.sendMessage("Hihello");
+       
+       /*
+       var msg = converse.env.$msg({
+          from: 'a1@localhost',
+          to: 'a6@localhost',
+          type: 'chat',
+          body: "from INtermediate file"
+       });
+       converse.send(msg);
+       */
+    }
+    
+    
+    objJsChat.onPostBlockCallback= function(param){
+
+       console.log('the user id to be blocked:'+ param);
+       //the function goes here which will send user id to the backend
+    }
+    
+    objJsChat.onPreHoverCallback = function(pCheckSum,username,hoverNewTop,shiftright){
+        console.log("In Helper preHoverCB");
+        console.log(pCheckSum);
+        jid = [];
+        jid[0] = "'"+pCheckSum+"'";
+        url = "/api/v1/chat/fetchVCard";
+        $.ajax({
+            type: 'POST',
+            data: {jid: jid,username: username},
+            url: url,
+            success: function(data) {
+                console.log(data);
+                objJsChat.updateVCard(data,pCheckSum,function(){
+                    $('#'+username+'_hover').css({ 
+                        'top':  hoverNewTop,                     
+                        'visibility': 'visible',
+                        'right':shiftright
+                    });
+                    console.log("Callback done");
+                });
+            }
+        });
+        /*
+        var res = 
+            {
+                "vCard": 
+                {
+                    "a6": 
+                    {
+                        "NAME": "nitish",
+                        "EMAIL": "nitish@gmail.com",
+                        "PHOTO": "url",
+                        "AGE":"3",
+                        "HEIGHT":"5 9",
+                        "COMMUNITY":"Sikh: Arora Punjabi",
+                        "EDUCATION":"MBA/PGDM, B.Com",
+                        "PROFFESION":"Software",
+                        "SALARY":"Rs. 15 - 20lac",
+                        "CITY":"New Delhi",
+                        "buttonDetails":
+                        {
+                            "buttons":
+                            [
+                                {
+                                "action":"INITIATE",
+                                "label":"Send Interest",
+                                "iconid":null,
+                                "primary":"true",
+                                "secondary":"true",
+                                "params":"&stype=P17",
+                                "enable":true,
+                                "id":"INITIATE"
+                                },
+                                 {
+                                "action":"INITIATE",
+                                "label":"Send Interest",
+                                "iconid":null,
+                                "primary":"true",
+                                "secondary":"true",
+                                "params":"&stype=P17",
+                                "enable":true,
+                                "id":"INITIATE"
+                                }
+                            ],
+                            "button":null,
+                            "infomsgiconid":null,
+                            "infomsglabel":null,
+                            "infobtnlabel":null,
+                            "infobtnvalue":null,
+                            "infobtnaction":null
+                        },
+                        "responseStatusCode": "0",
+                        "responseMessage": "Successful",
+                        "AUTHCHECKSUM": null,
+                        "hamburgerDetails": null,
+                        "phoneDetails": null
+                    }  
+                }
+            }
+        ;
         */
     }
 

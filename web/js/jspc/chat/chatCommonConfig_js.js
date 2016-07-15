@@ -4,7 +4,7 @@ var chatConfig = chatConfig || {};
 
 chatConfig.Params = {
 				PC:{
-					bosh_service_url:'ws://localhost:7070/ws/',  //connection manager for openfire
+					bosh_service_url:'ws://'+openfireUrl+'/ws/',  //connection manager for openfire
 					keepalive:true, //keep logged in session alive
 					roster_groups:true, //show categories in listing
 					hide_offline_users:false, //hide offline users from list
@@ -21,21 +21,21 @@ chatConfig.Params = {
 									"group_name":"Desired Partner Matches",
 									//"order_id":0,
 									"show_group_name":true,
-									"hide_offline_users":true
+									"hide_offline_users":false
 								},
 								{
 									"id":"eoi_R",
 									"group_name":"Interest Received",
 									//"order_id":1,
 									"show_group_name":true,
-									"hide_offline_users":true
+									"hide_offline_users":false
 								},
 								{
 									"id":"shortlisted",
 									"group_name":"Shortlisted Members",
 									//"order_id":2,
 									"show_group_name":true,
-									"hide_offline_users":true
+									"hide_offline_users":false
 								}
 							]
 						},
@@ -52,6 +52,6 @@ chatConfig.Params = {
 							]
 						}
 					},
-                    initialRosterLimit:{"nodesCount":3,"timeInterval":40000} //config for initial roster to be sent to plugin to create list initially				
+                    //initialRosterLimit:{"nodesCount":3,"timeInterval":30000} //config for initial roster to be sent to plugin to create list initially				
 				}
 			};

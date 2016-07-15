@@ -107,7 +107,7 @@ EOF;
      * This function trigger email
      */
     private function notify(){
-	$dt = date("Y-m-d");
+	$dt = date("Y-m-d H:i:s");
         $serverMessage = "Hi,<br/><br/>"."Please find below the server details exceeding threshold.".$this->mailMessage;
         SendMail::send_email(self::EMAIL_TO, $serverMessage,"Servers exceeding threshold - $dt"); 
     }

@@ -34,7 +34,39 @@ class GetRosterData
 			foreach($usernameArray as $key=>$value)
 			{
 				$profilelists[$value->getPROFILEID()]["USERNAME"] = $value->getUSERNAME();
+				$profilelists[$value->getPROFILEID()]["PROFILECHECKSUM"] = md5($value->getPROFILEID())."i".$value->getPROFILEID();
 			}
+
+
+			//Photo logic
+			$pidArr["PROFILEID"] =$profileIdArr["PROFILEID"];
+			$photoType = 'ThumbailUrl';
+			$profileObj=LoggedInProfile::getInstance('newjs_master',$this->profileid);
+			$multipleProfileObj = new ProfileArray();
+
+			$pidArrTemp = $profiles;
+
+			$profileDetails = $multipleProfileObj->getResultsBasedOnJprofileFields($pidArr);
+
+			$multiplePictureObj = new PictureArray($profileDetails);
+			$photosArr = $multiplePictureObj->getProfilePhoto();
+
+			foreach($pidArrTemp as $profileId)
+			{
+				$photoObj = $photosArr[$profileId];
+				if($photoObj)
+				{
+					eval('$temp =$photoObj->get'.$photoType.'();');
+					$profilelists[$profileId]['PHOTO'] = $temp;
+					unset($temp);
+				}
+				else
+				{
+					$profilelists[$profileId]['PHOTO'] = '';
+				}
+			}
+			//Ends here
+
 		}
 		return $profilelists;
 	}
