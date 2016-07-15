@@ -73,9 +73,10 @@ var strophieWrapper = {
 		var user_id = rosterObj[strophieWrapper.rosterDetailsKey]["jid"].split("@")[0],subscription = rosterObj[strophieWrapper.rosterDetailsKey]["subscription"];
 		if(strophieWrapper.checkForSubscription(subscription) == true)
 		{
-			strophieWrapper.Roster[user_id] = rosterObj;
+			var nodeArr = [];
+			nodeArr[user_id] = strophieWrapper.Roster[user_id] = rosterObj;
 			console.log(strophieWrapper.Roster[user_id]);
-			invokePluginManagelisting(rosterObj,"add_node");
+			invokePluginManagelisting(nodeArr,"add_node");
 		}
 	},
 

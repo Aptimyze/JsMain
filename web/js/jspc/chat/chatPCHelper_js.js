@@ -31,7 +31,7 @@ function initiateChatConnection()
     if(readSiteCookie("CHATUSERNAME")=="bassi")
         username = 'a8@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
-        username = 'a2@localhost';8/
+        username = 'a2@localhost';*/
     
     console.log("Nitish"+username);
 
