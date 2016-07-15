@@ -39,47 +39,26 @@ class NewMatchesMailer extends SearchParamters
 		$sent_date = $paramArr["sent_date"];
 		if($sent_date && !is_numeric($sent_date))
                 	$sent_date = "";				//White Listing ends
-
+                
+                
 		if($logic_used==6)					//For Trends profile
 		{
-			$obj = new TrendsPartnerProfile();
-			$obj->setPartnerDetails($this->pid);
-			$this->setGENDER($obj->getGENDER());
-                        $this->setLAGE($obj->getLAGE());
-                        $this->setHAGE($obj->getHAGE());
-                        $this->setLHEIGHT($obj->getLHEIGHT());
-                        $this->setHHEIGHT($obj->getHHEIGHT());
-                        $this->setMSTATUS(str_replace("'","",$obj->getPARTNER_MSTATUS()));
-                        $this->setRELIGION(str_replace("'","",$obj->getPARTNER_RELIGION()));
-                        $this->setMTONGUE(str_replace("'","",$obj->getPARTNER_MTONGUE()));
-                        $this->setCASTE(str_replace("'","",$obj->getPARTNER_CASTE()));
-                        $this->setEDU_LEVEL_NEW(str_replace("'","",$obj->getPARTNER_ELEVEL_NEW()));
-                        $this->setOCCUPATION(str_replace("'","",$obj->getPARTNER_OCC()));
-                        $this->setCITY_RES(str_replace("'","",$obj->getPARTNER_CITYRES()));
-
-			$income = str_replace("'","",$obj->getPARTNER_INCOME());
-
-			if($income || $income=='0')			//Get income values from TRENDS_SORTBY column starts
+                        $searchCObj = new NewMatchesTrendsMailer($this->loggedInProfileObj);
+                        
+			$searchCObj->setSearchCriteria($this->pid);
+                        
+                        foreach($searchCObj->forwardCriteria as $k=>$v)	
 			{
-				$imObj = new IncomeMapping;
-				$incomeArr = explode(",",$income);
-				foreach($incomeArr as $k=>$v)
-				{
-					$temp = $imObj->getIncomeFromTrendsSortBy($v);
-					if($temp && is_array($temp))
-					{
-						foreach($temp as $kk=>$vv)
-						{
-							$incomeFinalArr[] = $vv;
-						}
-						unset($temp);
-					}
-				}
-				unset($incomeArr);
-				unset($imObj);
-			}						//Get income values from TRENDS_SORTBY column ends
-
-			if($incomeFinalArr && is_array($incomeFinalArr))	//Get LINCOME,HINCOME,LINCOME_DOL,HINCOME_DOL values from income
+                                if(array_key_exists($v,$searchCObj->incomeStrings))
+                                        $tempVal = $searchCObj->incomeStrings[$v];
+                                else
+                                        eval('$tempVal = $searchCObj->get'.$v.'();');
+                                
+				if($tempVal)
+					eval('$this->set'.$v.'("'.$tempVal.'");');
+			}
+                        
+                        foreach($searchCObj->trendsSearchReverseForwardCriteria as $k=>$v)	
 			{
 				$lincome = 100;
 				$hincome = -1;
