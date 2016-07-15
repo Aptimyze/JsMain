@@ -40,18 +40,18 @@ date_default_timezone_set('Asia/Calcutta');
 for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
 {       $myDbName=getActiveServerName($activeServerId);       $myDbArr[$myDbName]=$mysqlObj->connect("$myDbName");       mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$myDbArr[$myDbName]);
 }
-$dbMessageLogObj_main1=new NEWJS_MESSAGE_LOG("shard1_slave");
-$dbMessageLogObj_main2=new NEWJS_MESSAGE_LOG("shard2_slave");
-$dbMessageLogObj_main3=new NEWJS_MESSAGE_LOG("shard3_slave");
+$dbDeletedMessageLogObj_main1=new NEWJS_DELETED_MESSAGE_LOG("shard3_slave");
+$dbDeletedMessageLogObj_main2=new NEWJS_DELETED_MESSAGE_LOG("shard3_slave");
+$dbDeletedMessageLogObj_main3=new NEWJS_DELETED_MESSAGE_LOG("shard3_slave");
 for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
 {
 	$k=$activeServerId+1;
 	if($k==1)
-		$dbMessageLogObj_main=$dbMessageLogObj_main1;
+		$dbDeletedMessageLogObj_main=$dbDeletedMessageLogObj_main1;
 	if($k==2)
-		$dbMessageLogObj_main=$dbMessageLogObj_main2;
+		$dbDeletedMessageLogObj_main=$dbDeletedMessageLogObj_main2;
 	if($k==3)
-		$dbMessageLogObj_main=$dbMessageLogObj_main3;
+		$dbDeletedMessageLogObj_main=$dbDeletedMessageLogObj_main3;
 	$dbNameS=getActiveServerName($activeServerId,"master");
 	$dbM=$mysqlObj->connect($dbNameS);
 	mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$dbS);
@@ -180,7 +180,6 @@ for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
 		echo "CONTACTS ARCHIVING";
 		echo "\n\n";
 		echo $sql="SELECT A.SENDER,A.RECEIVER FROM newjs.DELETED_PROFILE_CONTACTS A where TIME<'$archiveDate' AND A.SENDER%$totalScript=$currentScript";
-		echo $sql."\n\n";
 		$res=mysql_query($sql,$dbS) or die(mysql_error($dbS).$sql);
 		while($row=mysql_fetch_array($res))
 		{
@@ -194,16 +193,16 @@ for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
 			$col2=$row["RECEIVER"];
 			unset($col_id);
 			unset($col_str);
-			//echo $sql."\n\n";
+			//echo "\n\n";
 			$sqlAdded="SELECT COUNT(*) as CNT FROM newjs.DELETED_PROFILE_CONTACTS  WHERE SENDER='$col1' and RECEIVER='$col2' AND TIME<'$archiveDate'";
 			$resAdded=mysql_query($sqlAdded,$dbM) or die(mysql_error($dbM).$sqlAdded);
 			$rowAdded=mysql_fetch_array($resAdded);
 			$cntAdded=$rowAdded["CNT"];
 			if($cntAdded>0)
 			{
-				//echo $sql."\n\n";
-				$resultM=$dbMessageLogObj_main->getMessageLogHousekeeping($col1,$col2);
-				//$sql_1="SELECT ID FROM newjs.DELETED_MESSAGE_LOG WHERE SENDER IN ('$col1','$col2') AND RECEIVER IN ('$col1','$col2')";
+				//echo "\n\n";
+				$resultM=$dbDeletedMessageLogObj_main->getMessageLogHousekeeping($col1,$col2);
+				//echo $sql_1="SELECT ID FROM newjs.DELETED_MESSAGE_LOG WHERE SENDER IN ('$col1','$col2') AND RECEIVER IN ('$col1','$col2')";
 				//$res_1=mysql_query($sql_1,$dbS) or die(mysql_error($dbS).$sql_1);
 				//while($row_1=mysql_fetch_array($res_1))
 				foreach($resultM as $k=>$row_1)
@@ -221,12 +220,12 @@ for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
 				$affectedDb[1]=$viewedDb;
 $ProfileId1shard=JsDbSharding::getShardNo($col1);
 $ProfileId2shard=JsDbSharding::getShardNo($col2);
-$dbMessageLogObj1=new NEWJS_MESSAGE_LOG_ARCHIVE($ProfileId1shard);
-$dbMessageLogObj2=new NEWJS_MESSAGE_LOG_ARCHIVE($ProfileId2shard);
+$dbMessageLogArchiveObj1=new NEWJS_MESSAGE_LOG_ARCHIVE($ProfileId1shard);
+$dbMessageLogArchiveObj2=new NEWJS_MESSAGE_LOG_ARCHIVE($ProfileId2shard);
 $dbDeletedMessagesObj1=new NEWJS_DELETED_MESSAGES($ProfileId1shard);
 $dbDeletedMessagesObj2=new NEWJS_DELETED_MESSAGES($ProfileId2shard);
-$dbDeletedMessagesObj1=new NEWJS_MESSAGES_ARCHIVE($ProfileId1shard);
-$dbMessageObj2=new NEWJS_MESSAGES_ARCHIVE($ProfileId2shard);
+$dbDeletedMessagesArchiveObj1=new NEWJS_MESSAGES_ARCHIVE($ProfileId1shard);
+$dbDeletedMessagesArchiveObj2=new NEWJS_MESSAGES_ARCHIVE($ProfileId2shard);
 $dbDeletedMessageLogObj1=new NEWJS_DELETED_MESSAGE_LOG($ProfileId1shard);
 $dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG($ProfileId2shard);
 				for($ll=0;$ll<count($affectedDb);$ll++)
@@ -234,47 +233,47 @@ $dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG($ProfileId2shard);
 					$shard=$ll+1;
 					if($shard==1)
 					{
-						$dbMessageLogObj=$dbMessageLogObj1;
+						$dbMessageLogArchiveObj=$dbMessageLogArchiveObj1;
 						$dbDeletedMessagesObj=$dbDeletedMessagesObj1;
-						$dbDeletedMessagesObj=$dbDeletedMessagesObj1;
+						$dbDeletedMessagesArchiveObj=$dbDeletedMessagesArchiveObj1;
 						$dbDeletedMessageLogObj=$dbDeletedMessageLogObj1;
 					}
 					if($shard==2)
 					{
-						$dbMessageLogObj=$dbMessageLogObj2;
+						$dbMessageLogArchiveObj=$dbMessageLogArchiveObj2;
 						$dbDeletedMessagesObj=$dbDeletedMessagesObj2;
-						$dbDeletedMessagesObj=$dbDeletedMessagesObj2;
+						$dbDeletedMessagesArchiveObj=$dbDeletedMessagesArchiveObj2;
 						$dbDeletedMessageLogObj=$dbDeletedMessageLogObj2;
 					}
 					
 					$dbMShard=$affectedDb[$ll];	
 					//echo $sql."\n\n";
-					$sql_1="BEGIN";
-					$dbMessageLogObj->startTransaction();
+					echo $sql_1="BEGIN";
+					$dbMessageLogArchiveObj->startTransaction();
 					mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
 	
 					if(is_array($col_id))
 					{
 						$col_str=implode("','",$col_id);
-						//echo $sql."\n\n";
-						$dbMessageLogObj->insertMessageLogHousekeeping($col_id);
-						//$sql_1="INSERT INTO newjs.MESSAGE_LOG_ARCHIVE SELECT * FROM newjs.DELETED_MESSAGE_LOG WHERE ID IN ('$col_str')";
+						echo "\n\n";
+						$dbMessageLogArchiveObj->insertMessageLogHousekeeping($col_id);
+						//echo $sql_1="INSERT INTO newjs.MESSAGE_LOG_ARCHIVE SELECT * FROM newjs.DELETED_MESSAGE_LOG WHERE ID IN ('$col_str')";
 						//mysql_query($sql_1,$dbMShard) or die(mysql_error($dbMShard).$sql_1);
-						//echo $sql."\n\n";
+						echo "\n\n";
 						$dbDeletedMessageLogObj->deleteMultipleLogForSingleProfile($col_id);
-						//$sql_1="DELETE FROM newjs.DELETED_MESSAGE_LOG WHERE ID IN ('$col_str')"; 
+						//echo $sql_1="DELETE FROM newjs.DELETED_MESSAGE_LOG WHERE ID IN ('$col_str')"; 
 						//mysql_query($sql_1,$dbMShard) or die(mysql_error($dbMShard).$sql_1);
 
-						//echo $sql."\n\n";
-						$dbMessageObj->insertMessageLogHousekeeping($col_id);
-						//$sql_1="INSERT INTO newjs.MESSAGES_ARCHIVE SELECT * FROM newjs.DELETED_MESSAGES WHERE ID IN ('$col_str')";
+						echo "\n\n";
+						$dbDeletedMessagesArchiveObj->insertMessageLogHousekeeping($col_id);
+						//echo $sql_1="INSERT INTO newjs.MESSAGES_ARCHIVE SELECT * FROM newjs.DELETED_MESSAGES WHERE ID IN ('$col_str')";
 						//mysql_query($sql_1,$dbMShard) or die(mysql_error($dbMShard).$sql_1);
-						//echo $sql."\n\n";
+						echo "\n\n";
 						$dbDeletedMessagesObj->deleteMessages($col_id);
-						//$sql_1="DELETE FROM newjs.DELETED_MESSAGES WHERE ID IN ('$col_str')"; 
+						//echo $sql_1="DELETE FROM newjs.DELETED_MESSAGES WHERE ID IN ('$col_str')"; 
 						//mysql_query($sql_1,$dbMShard) or die(mysql_error($dbMShard).$sql_1);
 					}
-					//echo $sql."\n\n";
+					//echo "\n\n";
 					$sql_1="INSERT INTO newjs.PROFILE_CONTACTS_ARCHIVE SELECT * FROM newjs.DELETED_PROFILE_CONTACTS WHERE SENDER='$col1' and RECEIVER='$col2'";
 					mysql_query($sql_1,$dbMShard) or die(mysql_error($dbMShard).$sql_1);
 					//echo $sql."\n\n";
@@ -292,17 +291,17 @@ $dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG($ProfileId2shard);
 					$shard=$ll+1;
 					if($shard==1)
 					{
-						$dbMessageLogObj=$dbMessageLogObj1;
+						$dbMessageLogArchiveObj=$dbMessageLogArchiveObj1;
 					}
 					if($shard==2)
 					{
-						$dbMessageLogObj=$dbMessageLogObj2;
+						$dbMessageLogArchiveObj=$dbMessageLogArchiveObj2;
 					}
 						
 						$dbMShard=$affectedDb[$ll];
 						//echo $sql."\n\n";
 						$sql_1="COMMIT";
-						$dbMessageLogObj->commitTransaction();
+						$dbMessageLogArchiveObj->commitTransaction();
 						mysql_query($sql_1,$dbMShard) or die(mysql_error($dbMShard).$sql_1);
 				}
 			}

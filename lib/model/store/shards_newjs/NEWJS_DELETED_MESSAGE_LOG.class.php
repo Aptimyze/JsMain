@@ -209,11 +209,39 @@ class NEWJS_DELETED_MESSAGE_LOG extends TABLE{
 					$sql="DELETE FROM newjs.DELETED_MESSAGE_LOG WHERE ID IN (".$idStr.")";
 					$prep=$this->db->prepare($sql);
 					$prep->execute();
+					
+					return true;
+				}	
+			}
+			catch(PDOException $e)
+			{
+				jsCacheWrapperException::logThis($e);
+				/*** echo the sql statement and error message ***/
+				throw new jsException($e);
+			}
+	}
+	
+	public function getMessageLogHousekeeping($profileId1,$profileId2)
+	{
+		
+		
+		try 
+			{
+				if(!$profileId1 || !$profileId2)
+				{
+					throw new jsException("","profile id is not specified in function getMessageLogHousekeeping of newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					$sql="SELECT ID FROM newjs.DELETED_MESSAGE_LOG WHERE SENDER IN (:PROFILEID1,:PROFILEID2) AND RECEIVER IN (:PROFILEID1,:PROFILEID2)";
+					$prep=$this->db->prepare($sql);
+					$prep->bindValue(":PROFILEID1",$profileId1,PDO::PARAM_INT);
+					$prep->bindValue(":PROFILEID2",$profileId2,PDO::PARAM_INT);
+					$prep->execute();
 					while($row = $prep->fetch(PDO::FETCH_ASSOC))
 					{
 						$output[] = $row;
 					}
-				
 					return $output;
 				}	
 			}
