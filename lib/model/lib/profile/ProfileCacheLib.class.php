@@ -70,7 +70,7 @@ class ProfileCacheLib
      * @param $fields
      * @return bool
      */
-    public function isCached($criteria, $key, $fields)
+    public function isCached($criteria, $key, $fields,$fromUpdate=false)
     {
         $this->logThis(LoggingEnums::LOG_INFO,"Cache Criteria Check : {$criteria} and its value is {$key} and needs following fields {$fields}");
         if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
@@ -78,6 +78,11 @@ class ProfileCacheLib
         }
 
         if(false === $this->validateCriteria($criteria)) {
+            return false;
+        }
+
+        //if from command line and not for update then not use cache
+        if ($this->isCommandLineScript() && false === $fromUpdate) {
             return false;
         }
 
@@ -148,7 +153,7 @@ class ProfileCacheLib
         }
 
         $bUpdateFromMysql = false;
-        if(false === $this->isCached($szCriteria, $key, array_keys($paramArr))) {
+        if(false === $this->isCached($szCriteria, $key, array_keys($paramArr), true)) {
             //TODO : Need to handle this case
             $bUpdateFromMysql = true;
         }
@@ -201,6 +206,15 @@ class ProfileCacheLib
 
         if (false === $this->validateCriteria($szCriteria)) {
            return false;
+        }
+
+        if (false === $this->isCached($szCriteria, $key, $fields)) {
+            return false;
+        }
+
+        if ($this->isCommandLineScript()) {
+            //TODO : throw exception of command line usages from command line script
+            return false;
         }
 
         $arrData = $this->getFromLocalCache($key);
@@ -443,9 +457,20 @@ class ProfileCacheLib
         $this->logThis(LoggingEnums::LOG_INFO, $usages);
     }
 
+    /**
+     * @return mixed
+     */
     private function createNewTime()
     {
         return microtime(TRUE);
+    }
+
+    /**
+     * @return bool
+     */
+    private function isCommandLineScript()
+    {
+        return (php_sapi_name() === ProfileCacheConstants::COMMAND_LINE);
     }
 }
 ?>
