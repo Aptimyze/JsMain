@@ -360,17 +360,6 @@ JsChat.prototype = {
                         if(status=='online')
                         {
                            addNode = true;
-                            $('div.' + val + ' ul').append(List);
-                            if($('div.' + val + ' ul').parent().hasClass("disp-none")){
-                                $('div.' + val + ' ul').parent().parent().find(".noResult").addClass("disp-none");
-                                $('div.' + val + ' ul').parent().removeClass("disp-none");
-                            }
-                            $("#" + runID+"_" + val).on("click", function() {
-                                currentID = $(this).attr("id").split("_")[0];
-                                console.log(statusArr[currentID]);
-                               elem._chatPanelsBox(currentID,statusArr[currentID]);
-
-                            }); 
                         }
                     }
                     console.log("chexcking");

@@ -108,21 +108,18 @@ var strophieWrapper = {
 	updatePresence: function(user_id,chat_status){
 		console.log("start of updatePresence");
 		console.log(strophieWrapper.Roster[user_id]);
-		//if(typeof strophieWrapper.Roster[user_id] == "undefined")
-		{
-			console.log("presence before list 123");
-			console.log(strophieWrapper.Roster[user_id]);
-			console.log(chat_status+" 123");
-			strophieWrapper.Roster[user_id] = strophieWrapper.mergeRosterObj(strophieWrapper.Roster[user_id],strophieWrapper.mapRosterObj({"chat_status":chat_status}));
-			console.log(strophieWrapper.Roster[user_id]);
-			console.log("end of updatePresence");
-		}
+		console.log("new "+chat_status+" 123");
+		strophieWrapper.Roster[user_id] = strophieWrapper.mergeRosterObj(strophieWrapper.Roster[user_id],strophieWrapper.mapRosterObj({"chat_status":chat_status}));
+		console.log(strophieWrapper.Roster[user_id]);
+		console.log("end of updatePresence");
 		console.log("end of updatePresence for "+user_id);
 		if(strophieWrapper.initialRosterFetched == true){
 			console.log("change in status after initialRosterFetched done for "+user_id);
+			console.log(strophieWrapper.Roster[user_id]);
 			var nodeArr = [];
-			nodeArr[user_id].push(strophieWrapper.Roster[user_id]);
-			invokePluginManagelisting(nodeArr,"update_status");
+			nodeArr[user_id] = strophieWrapper.Roster[user_id];
+			console.log(nodeArr);
+			invokePluginManagelisting(nodeArr,"update_status",user_id);
 		}
 	},
 
