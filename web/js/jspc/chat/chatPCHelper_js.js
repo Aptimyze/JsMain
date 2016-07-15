@@ -27,11 +27,11 @@ function initiateChatConnection()
 {
     var username = loggedInJspcUser+'@localhost';
     
-    /* var username = 'a1@localhost';
+    /*var username = 'a1@localhost';
     if(readSiteCookie("CHATUSERNAME")=="bassi")
         username = 'a8@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
-        username = 'a2@localhost';*
+        username = 'a2@localhost';
     */
     console.log("Nitish"+username);
 
