@@ -356,8 +356,8 @@ JsChat.prototype = {
                             if($('div.' + val + ' ul').parent().hasClass("disp-none")){
                                 $('div.' + val + ' ul').parent().removeClass("disp-none");
                             }
-                            $("#" + username+"_" + val).on("click", function() {
-                               elem._chatPanelsBox(username,status);
+                            $("#" + runID+"_" + val).on("click", function() {
+                               elem._chatPanelsBox(runID,status);
 
                             }); 
                         }

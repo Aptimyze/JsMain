@@ -386,7 +386,7 @@ $(document).ready(function(){
             success: function(data) {
                 console.log(data);
                 console.log(data.actiondetails.errmsglabel);
-                $("#"+params.id).val(data.actiondetails.errmsglabel);
+                $("#"+params.id).html(data.actiondetails.errmsglabel);
             }
         });
         
