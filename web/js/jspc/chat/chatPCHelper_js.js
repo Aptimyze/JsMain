@@ -146,6 +146,10 @@ function invokePluginManagelisting(listObject,key){
         console.log("adding "+listObject.length+" nodes in invokePluginAddlisting");
         console.log(listObject);
         objJsChat.addListingInit(listObject);
+        if(key == "create_list")
+        {
+            objJsChat.noResultError();
+        }
     } else if(key=="update_status"){             
         //update existing user status in listing
         nodeArr.push(listNodeObj);
