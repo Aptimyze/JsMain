@@ -375,18 +375,20 @@ $(document).ready(function(){
     
     objJsChat.onHoverContactButtonClick = function(params){
         console.log(params);
+        
         checkSum = $("#"+params.id).attr('data-pchecksum');
-        params = $("#"+params.id).attr('data-params');
+        apiParams = $("#"+params.id).attr('data-params');
         checkSum = "7619da4377fbf2a405ede0d0535a716ei9513636";
         
         url = "/api/v2/contacts/postEOI";
         $.ajax({
             type: 'POST',
-            data: {profilechecksum: checkSum,params: params,source: "chat"},
+            data: {profilechecksum: checkSum,params: apiParams,source: "chat"},
             url: url,
             success: function(data) {
                 console.log(data);
-                console.log(data.actiondetails.errmsglabel);
+                console.log(params);
+                console.log(params.id);
                 $("#"+params.id).html(data.actiondetails.errmsglabel);
             }
         });
@@ -399,9 +401,11 @@ $(document).ready(function(){
         logoutChat();
     }
 
-    objJsChat.onSendingMessage = function(){
-        
+    objJsChat.onSendingMessage = function(message,to){
         console.log("In helper file onSendingMessage");
+        console.log(message);
+        console.log("***");
+        console.log(to);
         //var x = converse.listen.on('messageSend',"MEssagesend");
         //console.log(x);
         /*
