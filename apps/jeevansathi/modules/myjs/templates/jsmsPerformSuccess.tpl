@@ -46,7 +46,7 @@
 	<div class="pad1">
 		<div class="rem_pad1">
 			<div class="fl wid20p"> <i id ="hamburgerIcon" class="mainsp baricon " hamburgermenu="1" dmove="left" dshow="" dhide="decide" dselect="" dependant="" dcallback="" dindexpos="1"></i> </div>
-                        <div class="fl wid60p txtc color5  fontthin f19">Home</div>
+                        <div id='myJsHeadingId' class="fl wid60p txtc color5  fontthin f19">Home</div>
                                                 <div class="fr">
 				<div class="fullwid">
 					<div class="fl padr15 posrel">
