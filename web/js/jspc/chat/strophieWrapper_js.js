@@ -82,7 +82,7 @@ var strophieWrapper = {
 	//executed after presence has been fetched
 	onPresenceReceived : function(presence){
 		var presence_type = $(presence).attr('type'),chat_status="offline"; // unavailable, subscribed, etc...
-		var from = $(presence).attr('from'),user_id = from.split("/")[0]; // the jabber_id of the contact
+		var from = $(presence).attr('from'),user_id = from.split("@")[0]; // the jabber_id of the contact
 		console.log("start of onPresenceReceived for "+user_id);
 		if (presence_type != 'error'){
 		if (presence_type === 'unavailable'){
