@@ -339,7 +339,7 @@ $(document).ready(function(){
         //objJsChat._loginStatus = 'N';
         console.log("Checking variable");
         console.log(chatLoggedIn);
-
+        var chatLoggedIn = readCookie('chatAuth');
         if(chatLoggedIn != 'true'){
             var auth = checkAuthentication();
             if(auth != "true"){
@@ -386,7 +386,8 @@ $(document).ready(function(){
     objJsChat.onLogoutPreClick = function(){
         console.log("In Logout preclick");
         objJsChat._loginStatus = 'N';
-        logoutChat();
+        strophieWrapper.disconnect();
+        eraseCookie("chatAuth");
     }
 
     objJsChat.onSendingMessage = function(message,to){
