@@ -260,6 +260,31 @@ var strophieWrapper = {
     		return false;
     	}
     },
+    
+    //sending Message
+    sendMessage: function(message, to){
+        if(message && to){
+            var id = strophieWrapper.connectionObj.getUniqueId();
+            console.log(id);
+            var reply = $msg({
+                to: to,
+                type: 'chat'
+            })
+            .cnode(Strophe.xmlElement('body', message)).up()
+            .c('active', {xmlns: "http://jabber.org/protocol/chatstates"});
+            console.log(reply);
+            console.log(typeof(reply));
+            var request = Strophe.xmlElement('request', {'xmlns': Strophe.NS.RECEIPTS});
+            //reply.append(request);
+            console.log("***");
+            console.log(reply);
+
+            var messageResponse = strophieWrapper.connectionObj.send(reply);
+            console.log(messageResponse);
+            console.log('I sent to' + to + ': ' + message);
+        }
+    },
+
 
     /*format msg object*/
     formatMsgObj : function(msg){
@@ -278,5 +303,6 @@ var strophieWrapper = {
     			outputObj["body"] = Strophe.getText(body[0]);
     	}
     	return outputObj;
+
     }
 }

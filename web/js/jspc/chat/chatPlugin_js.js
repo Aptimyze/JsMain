@@ -1197,7 +1197,7 @@ JsChat.prototype = {
         {
             _this._timer = setTimeout(function() { 
                 _this._checkHover(curHoverEle);  
-            }, 500);                
+            }, 1000);                
         }
         else
         {
