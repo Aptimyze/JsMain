@@ -202,11 +202,11 @@ for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
 			if($cntAdded>0)
 			{
 				//echo $sql."\n\n";
-				$res=$dbMessageLogObj_main->getMessageLogHousekeeping($col1,$col2);
+				$resultM=$dbMessageLogObj_main->getMessageLogHousekeeping($col1,$col2);
 				//$sql_1="SELECT ID FROM newjs.DELETED_MESSAGE_LOG WHERE SENDER IN ('$col1','$col2') AND RECEIVER IN ('$col1','$col2')";
 				//$res_1=mysql_query($sql_1,$dbS) or die(mysql_error($dbS).$sql_1);
 				//while($row_1=mysql_fetch_array($res_1))
-				foreach($res as $k=>$row_1)
+				foreach($resultM as $k=>$row_1)
 				{
 					$col_id[]=$row_1["ID"];
 				}
