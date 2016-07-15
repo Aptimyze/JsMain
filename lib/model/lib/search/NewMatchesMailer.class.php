@@ -60,77 +60,24 @@ class NewMatchesMailer extends SearchParamters
                         
                         foreach($searchCObj->trendsSearchReverseForwardCriteria as $k=>$v)	
 			{
-				$lincome = 100;
-				$hincome = -1;
-				$lincome_dol = 100;
-				$hincome_dol = -1;
-				$incomeStr = "";
-				foreach($incomeFinalArr as $k=>$v)
-				{
-					if($v["SORTBY"]!=0)
-					{
-						if($v["TYPE"]=="RUPEES")
-						{
-							if($lincome>$v["MIN_VALUE"])
-								$lincome = $v["MIN_VALUE"];
-							if($hincome<$v["MAX_VALUE"])
-								$hincome = $v["MAX_VALUE"];
-						}
-						elseif($v["TYPE"]=="DOLLARS")
-						{
-							if($lincome_dol>$v["MIN_VALUE"])
-                                                                $lincome_dol = $v["MIN_VALUE"];
-                                                        if($hincome_dol<$v["MAX_VALUE"])
-                                                                $hincome_dol = $v["MAX_VALUE"];
-						}
-					}
-					$incomeStr = $incomeStr.$v["VALUE"].",";
-				}
-				$incomeStr = rtrim($incomeStr,",");
-				if($lincome==100)
-					$lincome = "";
-				if($hincome==-1)
-					$hincome = "";
-				if($lincome_dol==100)
-					$lincome_dol = "";
-				if($hincome_dol == -1)
-					$hincome_dol = "";
-			}						//Get LINCOME,HINCOME,LINCOME_DOL,HINCOME_DOL values from income ends
-			unset($incomeFinalArr);
-
-                        $this->setINCOME($incomeStr);
-			$this->setLINCOME($lincome);
-			$this->setHINCOME($hincome);
-			$this->setLINCOME_DOL($lincome_dol);
-			$this->setHINCOME_DOL($hincome_dol);
-
-			$this->setMSTATUS_IGNORE(str_replace("'","",$obj->getPARTNER_MSTATUS_IGNORE()));
-			$this->setMANGLIK_IGNORE(str_replace("'","",$obj->getPARTNER_MANGLIK_IGNORE()));
+				eval('$tempVal = $searchCObj->get'.$v.'();');
+                                $tempVal = str_replace("'","",$tempVal);
+				if($tempVal)
+					eval('$this->set'.$k.'("'.$tempVal.'");');
+			}
 		}
 		else				//For Non Trends profile
 		{
-			$obj = new PartnerProfile($this->loggedInProfileObj);
-			$obj->getDppCriteria();
-			$this->setGENDER($obj->getGENDER());
-			$this->setLAGE($obj->getLAGE());
-			$this->setHAGE($obj->getHAGE());
-			$this->setLHEIGHT($obj->getLHEIGHT());
-			$this->setHHEIGHT($obj->getHHEIGHT());
-			$this->setMSTATUS($obj->getMSTATUS());
-			$this->setRELIGION($obj->getRELIGION());
-			$this->setMTONGUE($obj->getMTONGUE());
-			$this->setCASTE($obj->getCASTE());
-			$this->setEDU_LEVEL_NEW($obj->getEDU_LEVEL_NEW());
-			$this->setOCCUPATION($obj->getOCCUPATION());
-			$this->setCITY_RES($obj->getCITY_RES());
-			$this->setCITY_INDIA($obj->getCITY_INDIA());
-			$this->setINCOME($obj->getINCOME());
-			$this->setLINCOME($obj->getLINCOME());
-			$this->setHINCOME($obj->getHINCOME());
-			$this->setLINCOME_DOL($obj->getLINCOME_DOL());
-			$this->setHINCOME_DOL($obj->getHINCOME_DOL());
+                        $searchCObj = new NewMatchesDppMailer($this->loggedInProfileObj);
+			$searchCObj->setSearchCriteria();
+                        foreach($searchCObj->forwardCriteria as $k=>$v)	
+			{
+                                eval('$tempVal = $searchCObj->get'.$v.'();');
+				if($tempVal)
+					eval('$this->set'.$v.'("'.$tempVal.'");');
+			}
 		}
-		unset($obj);
+		unset($searchCObj);
 		
 		if($sent_date)		//If mailer sent date is available then find a 7 days before date from the sent date
 		{
