@@ -21,6 +21,18 @@ class AllocatedProfiles
     {
     	$mainAdminObj = new incentive_MAIN_ADMIN();
     	$profilesArr = $mainAdminObj->getOnlineProfilesForAllocatedAgent($agentsArray,$lastTimeOnlineDate);
+
+	$jsCommonObj =new JsCommon();
+	if($lastTimeOnlineDate){
+		$score1 =strtotime($lastTimeOnlineDate);
+		$score2=time();
+	}
+	$onlineProfiles =$jsCommonObj->getOnlineUsetList($score1,$score2);	
+	foreach($profilesArr as $key=>$val){
+		$profileid =$key;
+		if(!in_array($profileid, $onlineProfiles))
+			unset($profilesArr[$profileid]);
+	}
     	unset($mainAdminObj);
     	return $profilesArr;
     }

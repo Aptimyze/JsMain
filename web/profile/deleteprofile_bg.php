@@ -35,6 +35,7 @@ else
 		$logError=3;
 }
 $mainDb = connect_db();
+$slaveDb = connect_slave();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$mainDb);
 if($logError)
 {
@@ -146,12 +147,12 @@ mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
 
 //Added by Amit Jaiswal to Mark deleted in sugarcrm if a lead is there for current user mentioned in sugarcrm enhancement 2 PRD
 $username_query="select USERNAME from newjs.JPROFILE where PROFILEID='".$profileid."'";
-$username_result=mysql_query($username_query,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$username_query);
+$username_result=mysql_query($username_query,$slaveDb) or mysql_error_with_mail(mysql_error($mainDb).$username_query);
 $row=mysql_fetch_assoc($username_result);
 $username=$row['USERNAME'];
 
 $sugar_sql="select id_c from sugarcrm.leads_cstm where jsprofileid_c='".$username."'";
-$sugar_res=mysql_query($sugar_sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sugar_sql);
+$sugar_res=mysql_query($sugar_sql,$slaveDb) or mysql_error_with_mail(mysql_error($mainDb).$sugar_sql);
 if(mysql_num_rows($sugar_res)>0)
 {
 	while($sugar_row=mysql_fetch_array($sugar_res))
