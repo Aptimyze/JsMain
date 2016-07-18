@@ -218,7 +218,7 @@ JsChat.prototype = {
             TabsOpt += "<p>" + objin["tab_name"] + "</p><div class=\"showlinec\"></div></li>";
         }
         TabsOpt += '</ul></div><div id="nchatDivs" class="nchatscrollDiv"><div id="scrollDivLoader" class="spinner"></div>';
-        TabsOpt += '<div class="showtab1 js-htab"> <div id="showtab1NoResult" class="noResult f13 fontreg disp-none">'+curEle._noDataTabMsg["tab1"]+'</div>';
+        TabsOpt += '<div class="showtab1 js-htab" id="tab1"> <div id="showtab1NoResult" class="noResult f13 fontreg disp-none">'+curEle._noDataTabMsg["tab1"]+'</div>';
         for (var i = 0; i < obj["tab1"]["groups"].length; i++) {
             TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + " disp-none chatListing\" data-showuser=\""+ obj["tab1"]["groups"][i]["hide_offline_users"]   +"\">";
             //TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + "\">";
@@ -230,7 +230,7 @@ JsChat.prototype = {
 
         }
         TabsOpt += '</div>';
-        TabsOpt += '<div class="showtab2 js-htab disp-none"> <div id="showtab2NoResult" class="noResult f13 fontreg disp-none">'+curEle._noDataTabMsg["tab2"]+'</div>';
+        TabsOpt += '<div class="showtab2 js-htab disp-none" id="tab2"> <div id="showtab2NoResult" class="noResult f13 fontreg disp-none">'+curEle._noDataTabMsg["tab2"]+'</div>';
         for (var i = 0; i < obj["tab2"]["groups"].length; i++) {
             TabsOpt += "<div class=\"" + obj["tab2"]["groups"][i]["id"] + "\" data-showuser=\""+ obj["tab2"]["groups"][i]["hide_offline_users"]   +"\">";
             //TabsOpt += "<div class=\"" + obj["tab2"]["groups"][i]["id"] + "\">";
@@ -373,6 +373,13 @@ JsChat.prototype = {
                                 if($('#'+runID + "_" + val).find('.nchatspr').length==0){
                                     console.log("checking no of nodes in group "+$('div.' + val + ' ul li').size());
                                     if(typeof elem._listingNodesLimit[val] == "undefined" || $('div.' + val + ' ul li').size() <= elem._listingNodesLimit[val]){
+                                        console.log("b2");
+                                        var tabId = $('div.' + val).parent().attr("id");
+                                        if($("#show"+tabId+"NoResult").length != 0){
+                                            console.log("me");
+                                            
+                                            $("#show"+tabId+"NoResult").addClass("disp-none");
+                                        }
                                         elem._placeContact("new",runID,val,status,List);
                                         if($('div.' + val + ' ul').parent().hasClass("disp-none")){
                                             $('div.' + val + ' ul').parent().removeClass("disp-none");
@@ -556,6 +563,7 @@ JsChat.prototype = {
                 this.onPostBlockCallback(data);  
             }
         }
+        this.noResultError();
     },
 
     //bind clicking block icon
