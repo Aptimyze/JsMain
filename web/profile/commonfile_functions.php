@@ -608,6 +608,7 @@ $js_arr[]=array("jsms/help/JSMSHelp_js"     => "3");
 $js_arr[]=array("jsms/help/jsmsPostQuery_js"     => "3");
 $js_arr[]=array("jsms/help/autoPopulateFreshdesk_js"     => "3");
 $js_arr[]=array("jspc/chat/customElem"     => "1");
+$js_arr[]=array("jspc/chat/strophe_receipts"     => "1");
 return $js_arr;
 }
 function getJavascript(){
