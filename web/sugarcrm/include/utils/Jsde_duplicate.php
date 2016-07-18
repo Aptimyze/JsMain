@@ -6,6 +6,7 @@ It is used for finding the duplicate entries for leads and jeevansathi records.
 ********************************************************************************/
 require_once ('include/entryPoint.php');
 include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
+include_once(JsConstants::$docRoot."/profile/connect_db.php");
 class Duplicate {
     var $db;
     var $dbUpdate;
@@ -857,6 +858,7 @@ class Duplicate {
 	function updateLeadSeriousnessCount($id,$partition='')
 	{
 		$updateJprofile=0;
+		$this->dbUpdate = connect_db();
 		if($id)
 		{
 			if($partition)
