@@ -22,14 +22,16 @@ class notificationActions extends sfActions
   public function executeUpdateNotificationStatusV1(sfWebRequest $request)
   {
 	$respObj = ApiResponseHandler::getInstance();
-	$registrationid = $request->getParameter('registrationid');
+	//$registrationid = $request->getParameter('registrationid');
 	$notificationStatus = $request->getParameter('notificationStatus');
-	if($request->getAttribute("loginData"))
+	$loginData =$request->getAttribute("loginData");
+	$profileid =$loginData['PROFILEID'];
+	if($profileid)
 	{
-		$loggedInProfileObj=LoggedInProfile::getInstance('newjs_master');
-		$profileid= $loggedInProfileObj->getPROFILEID();
+		//$loggedInProfileObj=LoggedInProfile::getInstance('newjs_master');
+		//$profileid= $loggedInProfileObj->getPROFILEID();
 		$mobileApiRegistrationObj = new MOBILE_API_REGISTRATION_ID;
-		$mobileApiRegistrationObj->updateNotificationStatus($registrationid,$profileid,$notificationStatus);
+		$mobileApiRegistrationObj->updateNotificationStatus($profileid,$notificationStatus);
 	}
 	$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
         $respObj->generateResponse();
@@ -130,7 +132,7 @@ class notificationActions extends sfActions
 	        $profileid= $loggedInProfileObj->getPROFILEID();
 	}*/
 	$localLogObj= new MOBILE_API_LOCAL_NOTIFICATION_LOG();
-	$localLogObj->addLog($registrationid,$apiappVersion, $currentOSversion,$profileid,$deviceBrand,$deviceModel);
+	//$localLogObj->addLog($registrationid,$apiappVersion, $currentOSversion,$profileid,$deviceBrand,$deviceModel);
 	if(!$profileid){
                 $respObj = ApiResponseHandler::getInstance();
                 $respObj->setHttpArray(ResponseHandlerConfig::$LOGOUT_PROFILE);
