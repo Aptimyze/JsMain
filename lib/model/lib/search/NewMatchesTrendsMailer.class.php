@@ -22,6 +22,7 @@ class NewMatchesTrendsMailer extends TrendsPartnerProfile {
         public function setSearchCriteria($paramArr) {
                 $this->setPartnerDetails($this->pid);
                 $income = str_replace("'", "", $this->getPARTNER_INCOME());
+                $this->incomeStrings["INDIA_NRI"] = "";
                 if($this->getPARTNER_COUNTRY_RES_IGNORE()){
                         $this->incomeStrings["INDIA_NRI"] = '2';
                 }
