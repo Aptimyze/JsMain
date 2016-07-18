@@ -72,11 +72,12 @@ class ProfileCacheLib
      */
     public function isCached($criteria, $key, $fields,$fromUpdate=false)
     {
-        $this->logThis(LoggingEnums::LOG_INFO,"Cache Criteria Check : {$criteria} and its value is {$key} and needs following fields {$fields}");
         if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
            return false;
         }
 
+        $this->logThis(LoggingEnums::LOG_INFO,"Cache Criteria Check : {$criteria} and its value is {$key} and needs following fields {$fields}");
+        
         if(false === $this->validateCriteria($criteria)) {
             return false;
         }
