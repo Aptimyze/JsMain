@@ -1338,7 +1338,7 @@ return $result;
 						$output[] = $row;
 					}
 				
-					return $output[0];
+					return $output;
 				}	
 			}
 			catch(PDOException $e)
