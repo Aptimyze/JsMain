@@ -86,6 +86,11 @@ class ProfileCacheLib
             return false;
         }
 
+        //For Update case check only profile exist in cache or not
+        if (isset($this->arrRecords[intval($key)]) && $fromUpdate) {
+            return true;
+        }
+
         if (isset($this->arrRecords[intval($key)]) && $this->checkFieldsAvailability($key, $fields)) {
             return true;
         }
@@ -96,12 +101,14 @@ class ProfileCacheLib
         //If array count is zero then record is not cached
         if(0 === count($this->getFromLocalCache($key))) {
             unset($this->arrRecords[intval($key)]);
+            $this->logThis(LoggingEnums::LOG_INFO, "Cache Mis for Criteria {$criteria} : {$key}");
             return false;
         }
 
         //Check all fields specified in param fields is present in cache also, right now we are assuming all fields are cached together
         if (false === $this->checkFieldsAvailability($key, $fields)) {
-           return false;
+            $this->logThis(LoggingEnums::LOG_INFO, "Cache Mis due to fields {$criteria} : {$key} and {$fields}");
+            return false;
         }
 
         return true;
@@ -133,7 +140,9 @@ class ProfileCacheLib
         }
 
         //Set Hash Object
+        $stTime = $this->createNewTime();
         JsMemcache::getInstance()->setHashObject($szKey, $arrParams);
+        $this->calculateResourceUsages($stTime,'Set : '," for key {$key}");
         //TODO : Update Local Cache also
         $this->updateInLocalCache($key, $arrParams);
         return true;
@@ -282,7 +291,9 @@ class ProfileCacheLib
      */
     private function storeInLocalCache($key)
     {
+        $stTime = $this->createNewTime();
         $this->arrRecords[intval($key)] = JsMemcache::getInstance()->getHashAllValue($this->getDecoratedKey($key));
+        $this->calculateResourceUsages($stTime,'Get : '," for key {$key}");
     }
 
     /**
@@ -439,7 +450,7 @@ class ProfileCacheLib
     /**
      * @param string $st_Time
      */
-    private function calculateResourceUsages($st_Time='',$message="")
+    private function calculateResourceUsages($st_Time='', $preMsg="",$postMessage="")
     {
         $end_time = microtime(TRUE);
         $var = memory_get_usage(true);
@@ -452,7 +463,7 @@ class ProfileCacheLib
             $mem = round($var/1048576,2)." megabytes";
 
         $timeTaken = $end_time - $st_Time;
-        $usages = "Memory usages : {$mem} & Time taken : {$timeTaken} {$message}";
+        $usages = "{$preMsg} Memory usages : {$mem} & Time taken : {$timeTaken} {$postMessage}";
 
         $this->logThis(LoggingEnums::LOG_INFO, $usages);
     }
