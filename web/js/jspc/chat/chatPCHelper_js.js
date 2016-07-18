@@ -1,7 +1,7 @@
 /*This file includes functions used for intermediate data transfer for JSPC chat from 
 * chat client(chatStrophieClient_js.js) to chat plugin(chat_js.js)
 */
-var listingInputData = [],listCreationDone=false,objJsChat,pass;
+var listingInputData = [],listCreationDone=false,objJsChat,pass,username;
 
 //var decrypted = JSON.parse(CryptoJS.AES.decrypt(api response, "chat", {format: CryptoJSAesJson}).toString(CryptoJS.enc.Utf8));
 
@@ -23,14 +23,17 @@ var pluginId = '#chatOpenPanel',device = 'PC';
 */   
 function initiateChatConnection()
 {
-    var username = loggedInJspcUser+'@localhost';
-    /*if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
-        username = 'a1@localhost';
+    username = loggedInJspcUser+'@localhost';
+    /*
+    if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
+        username = 'a6@localhost';
+    
     if(readSiteCookie("CHATUSERNAME")=="bassi")
         username = '1@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
-        username = 'a2@localhost';*/
+        username = 'a2@localhost';
     pass = '123';
+	*/
 
 
     //console.log("Nitish"+username);
@@ -274,7 +277,12 @@ function invokePluginReceivedMsgHandler(msgObj)
     {
         console.log("invokePluginReceivedMsgHandler");
         console.log(msgObj);
-        objJsChat._appendRecievedMessage(msgObj["body"],msgObj["from"],msgObj["msg_id"],msgObj["msg_state"]); 
+        if(msgObj['msg_state'] == "received"){
+            objJsChat._changeStatusOfMessg(msgObj["receivedId"],msgObj["from"],"recievedRead");
+        }
+        else{
+            objJsChat._appendRecievedMessage(msgObj["body"],msgObj["from"],msgObj["msg_id"],msgObj["msg_state"]); 
+        }
     }
 }
 
@@ -395,30 +403,8 @@ $(document).ready(function(){
     }
 
     objJsChat.onSendingMessage = function(message,to){
-        console.log("In helper file onSendingMessage");
-        strophieWrapper.sendMessage(message,to);
-        //sendMessage(message,to);
-        //var x = converse.listen.on('messageSend',"MEssagesend");
-        //console.log(x);
-        /*
-        console.log("Converse");
-        //converse.emit('showSentOTRMessage',"msg");
-        //console.log("Helper file onSendingMessage"+converse.ChatBoxView());
-        converse.ChatBoxView().sendMessage("hi");
-        */
-       //console.log(converse.initialize.ChatBoxView);
-       //console.log(converse.initialize.ChatBoxView());
-       //converse.initialize.ChatBoxView.sendMessage("Hihello");
-       
-       /*
-       var msg = converse.env.$msg({
-          from: 'a1@localhost',
-          to: 'a6@localhost',
-          type: 'chat',
-          body: "from INtermediate file"
-       });
-       converse.send(msg);
-       */
+        var msgId = strophieWrapper.sendMessage(message,to);
+        return msgId;
     }
     
     
