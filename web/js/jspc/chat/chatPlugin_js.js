@@ -1010,7 +1010,10 @@ JsChat.prototype = {
         if (newStatus == "recieved") {
             $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_8").addClass("nchatic_10");
         } else if (newStatus == "recievedRead") {
-            $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_10 nchatic_8").addClass("nchatic_9");
+            $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_8").addClass("nchatic_10");
+            setTimeout(function() { 
+                $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_10 nchatic_8").addClass("nchatic_9");
+            }, 500);
         }
     },
 
