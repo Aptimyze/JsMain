@@ -85,7 +85,7 @@ class ProfileDataActions extends sfActions
                     "'Logout'" => array(array("Logout Data"),array("IP Address","Time")),
                     'Login' => array(array("Login Data"),array("IP Address","Time")),
                     "EditLog" => array(array("Modification Log : MOD_INDEXVAL"),array("MOD_INDEXVAL","Mod_Date","IP")),
-                    "EOILog" => array(array("Contact History"),array("Sender","Receiver","Date (IST)","TYPE","IP","MESSAGE","Phone Mobile","Phone Res","Phone Alternate","Contact")),
+                    "EOILog" => array(array("Contact History"),array("Sender","Receiver","EmailId","Date (IST)","TYPE","IP","MESSAGE","Phone Mobile","Phone Res","Phone Alternate","Contact")),
                     "PaymentLog" => array(array("Payment Data"),array("Bill Id","Payment Mode","Cheque No","Cheque Date(EST)","Cheque City","Bank","IP","Status","Entry Date(EST)*","Service Names","Gateway*","TXN Ref No*","RRN*")),
                 );
                 
@@ -138,7 +138,7 @@ class ProfileDataActions extends sfActions
                                 $csvData .= "No Record(s) Found";   
                        }
                 }elseif($actionName == 'EOILog'){
-                        $pageResponse = (array)$pageResponse;
+                        $pageResponse = (array)$pageResponse;              
                         foreach($headerArray[$actionName] as $header){
                             $csvData .= implode(',',$header)."\n";
                         }
@@ -151,6 +151,7 @@ class ProfileDataActions extends sfActions
                                                    $messageDetails = (array)$messageDetails;
                                                    $csvData .= $messageDetails['SENDER'].",";
                                                    $csvData .= $messageDetails['RECEIVER'].",";
+                                                   $csvData .= $messageDetails['EMAIL'].",";
                                                    $csvData .= $messageDetails['DATE'].",";
                                                    $csvData .= $messageDetails['TYPE'].",";
                                                    $csvData .= $messageDetails['IP'].",";
