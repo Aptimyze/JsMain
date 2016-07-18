@@ -254,18 +254,18 @@ JsChat.prototype = {
     noResultError:function(){
         var dataLength;
         $(".js-htab").each(function(index, element) {
-        dataLength = 0;
-        $(this).find(".chatlist").each(function(index2, element2) {
-           console.log($(this).find("li").length);
-            dataLength = dataLength + $(this).find("li").length;
-        });
-        if(dataLength == 0){
-        console.log(element);
-        $(element).find(".noResult").removeClass("disp-none").addClass("disp_ib");
-        $(element).find(".chatListing").each(function(index, element) {
-               $(this).addClass("disp-none");
-           });
-        }
+            dataLength = 0;
+            $(this).find(".chatlist").each(function(index2, element2) {
+                console.log($(this).find("li").length);
+                dataLength = dataLength + $(this).find("li").length;
+            });
+            if(dataLength == 0){
+                console.log(element);
+                $(element).find(".noResult").removeClass("disp-none").addClass("disp_ib");
+                $(element).find(".chatListing").each(function(index, element) {
+                       $(this).addClass("disp-none");
+                   });
+            }
         });
     },
     //start:addlisting
