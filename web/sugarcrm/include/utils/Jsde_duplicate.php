@@ -879,13 +879,13 @@ class Duplicate {
 					 $cstmTableName="sugarcrm_housekeeping.connected_leads_cstm";
 				}
 				$sql="UPDATE $leadsTableName,$cstmTableName SET seriousness_count_c=seriousness_count_c+1,date_modified=NOW() WHERE id=id_c AND id='$id'";
-                                $this->dbUpdate->query($sql);
+				mysql_query($sql,$this->dbUpdate);
 				$updateJprofile=1;
 			}
 			if(!$leadsTableName)
 			{
 				$sql="UPDATE sugarcrm.leads,sugarcrm.leads_cstm SET seriousness_count_c=seriousness_count_c+1,date_modified=NOW() WHERE id='$id' AND id=id_c";
-				$this->dbUpdate->query($sql);
+				mysql_query($sql,$this->dbUpdate);
 				if(!$this->dbUpdate->getAffectedRowCount())
 				{
 					foreach ($this->partitionsArray as $partition)
@@ -893,7 +893,7 @@ class Duplicate {
 						$leadsTableName="sugarcrm_housekeeping.".$partition."_leads";
 						$cstmTableName = "sugarcrm_housekeeping.".$partition."_leads_cstm";
 						$sql="UPDATE $leadsTableName,$cstmTableName SET seriousness_count_c=seriousness_count_c+1,date_modified=NOW() WHERE id='$id' AND id=id_c";
-						$this->dbUpdate->query($sql);
+						mysql_query($sql,$this->dbUpdate);
 						if($this->dbUpdate->getAffectedRowCount())
 						{
 							$updateJprofile=1;
