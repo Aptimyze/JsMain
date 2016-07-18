@@ -158,22 +158,6 @@ Abstract class ApiAuthentication
 			$this->loginData=$this->IsAlive($loginData,$gcm);
 			if($this->loginData)
 			{
-
-				//Entry in Chat Roster
-				try {
-					$producerObj = new Producer();
-					if ($producerObj->getRabbitMQServerConnected()) {
-						$chatData = array('process' => 'USERLOGIN', 'data' => ($this->loginData["PROFILEID"]), 'redeliveryCount' => 0);
-						$producerObj->sendMessage($chatData);
-					}
-					unset($producerObj);
-				} catch (Exception $e) {
-					throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
-				}
-
-				//End
-
-				
 				if($this->trackLogin)
 				{
 					$this->loginData[AUTHCHECKSUM]=$this->encryptAppendTime($this->createAuthChecksum());
@@ -493,6 +477,19 @@ Abstract class ApiAuthentication
 		{
 			$dbObj=new userplane_recentusers;
 			$dbObj->replacedata($pid);
+			//Entry in Chat Roster
+			try {
+				$producerObj = new Producer();
+				if ($producerObj->getRabbitMQServerConnected()) {
+					$chatData = array('process' => 'USERLOGIN', 'data' => ($pid), 'redeliveryCount' => 0);
+					$producerObj->sendMessage($chatData);
+				}
+				unset($producerObj);
+			} catch (Exception $e) {
+				throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
+			}
+
+			//End
 		}
 
 		if($pid)

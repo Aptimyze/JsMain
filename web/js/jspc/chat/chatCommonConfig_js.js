@@ -28,7 +28,7 @@ chatConfig.Params = {
 									"group_name":"Interest Received",
 									//"order_id":1,
 									"show_group_name":true,
-									"hide_offline_users":false
+									"hide_offline_users":true
 								},
 								{
 									"id":"shortlisted",
@@ -52,6 +52,74 @@ chatConfig.Params = {
 							]
 						}
 					},
+
+					buttons: [
+						{
+							"eoi_r": [
+								{
+									"action": "ACCEPT",
+									"label": "Accept Interest",
+									"iconid": "090",
+									"primary": "true",
+									"secondary": null,
+									"params": "responseTracking=8",
+									"enable": true,
+									"id": "ACCEPT"
+								},
+								{
+									"action": "DECLINE",
+									"label": "Decline Interest",
+									"iconid": "089",
+									"primary": "true",
+									"secondary": null,
+									"params": "responseTracking=8",
+									"enable": true,
+									"id": "DECLINE"
+								}
+							]
+						},
+						{
+							"dpp": [
+								{
+									"action": "INITIATE",
+									"label": "Send Interest",
+									"iconid": "001",
+									"primary": "true",
+									"secondary": "true",
+									"params": "stype=WV",
+									"enable": true,
+									"id": "INITIATE"
+								}
+							]
+						},
+						{
+							"shortlisted": [
+								{
+									"action": "INITIATE",
+									"label": "Send Interest",
+									"iconid": "001",
+									"primary": "true",
+									"secondary": "true",
+									"params": "stype=WV",
+									"enable": true,
+									"id": "INITIATE"
+								}
+							]
+						},
+						{
+							"accepted_by_me": [
+								{
+									"action": "WRITE_MESSAGE",
+									"label": "Write Message",
+									"iconid": "086",
+									"primary": "true",
+									"secondary": "true",
+									"enable": true,
+									"id": "WRITE_MESSAGE"
+								}
+							]
+						}
+					],
 					groupWiseNodesLimit:{
 										"dpp":200,
 				                        "eoi_R":100,
