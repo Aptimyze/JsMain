@@ -20,7 +20,10 @@ $mysqlObj=new Mysql;
 
 $db=connect_db();
 mysql_query("set session wait_timeout=1000",$db);
-	$sql="SELECT PROFILEID,EMAIL FROM MAIL.INACTIVE_PROFILES_TEMP WHERE STATUS!='Y'";
+
+for($i=0;$i<5;$i++)
+{
+	$sql="SELECT PROFILEID,EMAIL FROM MAIL.INACTIVE_PROFILES_TEMP WHERE STATUS!='Y' and (`PROFILEID` % 5 = $i)";
 	$res=mysql_query($sql,$db) or die(mysql_error($db));
 	if(mysql_num_rows($res))
 	{
@@ -38,6 +41,8 @@ mysql_query("set session wait_timeout=1000",$db);
 
         
 	}
-}
 
+    unset($res);
+}
+}
 ?>
