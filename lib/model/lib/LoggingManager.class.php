@@ -113,7 +113,7 @@ class LoggingManager
         $errVal = print_r(sfContext::getInstance()->getRequest()->getParameterHolder()->getAll(),true);
         $szLogString = $errorString."\n[RequestParams] : ".$errVal;
 
-        $this->writeToFile($szLogType, $szLogString);
+        $this->writeToFile($szLogString);
     }
 
     /**
@@ -125,7 +125,7 @@ class LoggingManager
         $szLogType = $this->getLogType(LoggingEnums::LOG_INFO);
         $szLogString = "$szLogType [{$this->iUniqueID}:{$clientIp}]: ".$message;
 
-        $this->writeToFile($szLogType, $szLogString);
+        $this->writeToFile($szLogString);
     }
 
     /**
@@ -155,16 +155,15 @@ class LoggingManager
     }
 
     /**
-     * @param $szLogType
      * @param $szLogString
      */
-    private function writeToFile($szLogType, $szLogString)
+    private function writeToFile($szLogString)
     {
         $currDate = Date('Y-m-d');
-        $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH."{$szLogType}-".$currDate.".log";
+        $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH."-".$currDate.".log";
         if ($this->szLogPath) {
             $this->createDirectory($this->szLogPath);
-            $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH.$this->szLogPath."//{$szLogType}log-".$currDate.".log";
+            $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
         }
 
         //Add in log file
