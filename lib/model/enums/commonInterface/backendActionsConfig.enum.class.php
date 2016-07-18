@@ -60,7 +60,7 @@ class fsoInterfaceDisplay
 
 class crmCommonConfig
 {
-	public static $useCrmMemcache = true;
+	public static $useCrmMemcache = false;
 }
 
 ?>
