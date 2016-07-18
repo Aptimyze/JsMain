@@ -25,7 +25,7 @@ JsChat.prototype = {
     _listingTabs:{},
     _loginFailueMsg:"Login Failed,Try later",
     _noDataTabMsg:{"tab1":"There are no matching members online. Please relax your partner preference to see more matches.",
-                   "tab2":""
+                   "tab2":"You currently don’t have any accepted members, get started by sending interests or initiating chat with your matches."
                    },
     _rosterDetailsKey:"rosterDetails",
     _listingNodesLimit:{},
@@ -515,45 +515,43 @@ JsChat.prototype = {
     
     //remove from list
     _removeFromListing:function(param1,data){
-          console.log('remove element 11');
-          //removeCall1 if user is removed from backend
-          if(param1=='removeCall1')
-           {
-               console.log("calllign _removeFromListing");
-               for (var key in data)
-               {
-                       var runID = '';
-                       runID = data[key]["rosterDetails"]["jid"].split("@")[0];
-                       $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
-                           var tabShowStatus='';
-                           var listElements = '';
-                           //this check the sub header status in the list
-                           var tabShowStatus = $('div.' + val).attr('data-showuser');
-                           listElements = $('#'+runID+'_'+val);
-                           if(tabShowStatus=='false')
-                           {
-                            console.log("here1"+tabShowStatus);
-                               $(listElements).find('.nchatspr').detach();
-                           }
-                           else
-                           {
-                            console.log("here2"+tabShowStatus);
-                               $('div').find(listElements).detach();
-                           }
-                       });
-               }
-           }
-           //removeCall2 if user is removed from block click on chatbox
-           else if(param1=='removeCall2')
-           {
-               $(this._mainID).find('*[id*="'+data+'"]').detach();               
-               //$('*[id*="'+data+'"]').remove();
-               if( this.onPostBlockCallback && typeof this.onPostBlockCallback == 'function' )
-               {
-                   this.onPostBlockCallback(data);  
-               }
-           }
-       },
+        console.log('remove element 11');
+        //removeCall1 if user is removed from backend
+        if(param1=='removeCall1'){
+            console.log("calllign _removeFromListing");
+            for (var key in data){
+                var runID = '';
+                runID = data[key][this._rosterDetailsKey]["jid"].split("@")[0];
+                if(typeof data[key][this._rosterDetailsKey]["groups"] != "undefined" && data[key][this._rosterDetailsKey]["groups"].length >0){
+                    $.each(data[key][this._rosterDetailsKey]["groups"], function(index, val) {
+                        var tabShowStatus='',listElements = '';
+                        //this check the sub header status in the list
+                        var tabShowStatus = $('div.' + val).attr('data-showuser');
+                        listElements = $('#'+runID+'_'+val);
+                        if(tabShowStatus=='false'){
+                           $(listElements).find('.nchatspr').detach();
+                        }
+                        else{
+                            $('div').find(listElements).detach();
+                            if($('div.' + val + ' ul li').size() == 0){
+                                $('div.' + val + ' ul').parent().addClass("disp-none");
+                            }
+                        }
+                        this._updateStatusInChatBox(runID,data[key][this._rosterDetailsKey]["chat_status"]);
+                    });
+                }
+            }
+        }
+        //removeCall2 if user is removed from block click on chatbox
+        else if(param1=='removeCall2')
+        {
+            $(this._mainID).find('*[id*="'+data+'"]').detach();               
+            if( this.onPostBlockCallback && typeof this.onPostBlockCallback == 'function' )
+            {
+                this.onPostBlockCallback(data);  
+            }
+        }
+    },
 
     //bind clicking block icon
     _bindBlock: function(elem, userId) {
