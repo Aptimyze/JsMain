@@ -249,5 +249,43 @@ class BILLING_ORDERS extends TABLE{
             throw new jsException($e);
         }       
     }
+
+    public function getOrderDetailsForId($id){
+        try     
+        {       
+            $sql="SELECT * FROM billing.ORDERS WHERE ID=:ID";
+            $prep=$this->db->prepare($sql);
+            $prep->bindValue(":ID", $id, PDO::PARAM_INT);
+            $prep->execute();
+            if($result = $prep->fetch(PDO::FETCH_ASSOC))
+            {       
+                $res = $result;
+            }       
+            return $res;
+
+        }       
+        catch(PDOException $e)
+        {       
+            /*** echo the sql statement and error message ***/
+            throw new jsException($e);
+        }       
+    }
+
+    public function updateOrderForReconsiliation($id)
+    {
+        try
+        {
+            $sql = "UPDATE billing.ORDERS SET PMTRECVD='0000-00-00', STATUS='' WHERE ID=:ID";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":ID",$id,PDO::PARAM_INT);
+            $res->execute();
+            return true;
+        }
+        catch(PDOException $e)
+        {
+            /*** echo the sql statement and error message ***/
+            throw new jsException($e);
+        }
+    }
 }
 ?>

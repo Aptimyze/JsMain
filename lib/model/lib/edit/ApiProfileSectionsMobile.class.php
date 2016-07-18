@@ -715,7 +715,8 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		if(strpos($szCountry,"51")!==false || strpos($szCountry,"128")!==false)
 			$showCity=1;
 		$szCity = $this->getDecorateDPP_Response($jpartnerObj->getPARTNER_CITYRES());
-		$DppBasicArr["BasicDetails"][OnClick][]= $this->getApiFormatArray("P_CITY","City",trim($jpartnerObj->getDecoratedPARTNER_CITYRES()),$szCity,$this->getApiScreeningField("PARTNER_CITYRES"),$this->dropdown,'',1,'',!$showCity);
+		$szState = $this->getDecorateDPP_Response($jpartnerObj->getSTATE());
+		$DppBasicArr["BasicDetails"][OnClick][]= $this->handleStateCityData($szState,$szCity,$showCity);
 		return $DppBasicArr;
 	}
 
@@ -1087,5 +1088,38 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		return $arr;
 
 	}
+
+	/** @function
+	 * @returns state and city array
+	 * @param $stateVal String
+	 * @param $cityVal String
+	 * */
+	public function handleStateCityData($stateVal,$cityVal,$showCity='')
+    {	$jpartnerObj=$this->profile->getJpartner();
+    	if($stateVal == "DM" && $cityVal == "DM")
+    	{
+    		$szStateCity = "DM";
+    		$stateCityNames = "Doesn't Matter";
+    	}
+    	elseif($stateVal == "DM")
+    	{
+    		$szStateCity = $cityVal;
+    		$stateCityNames = trim($jpartnerObj->getDecoratedPARTNER_CITYRES());
+    	}
+    	elseif($cityVal == "DM")
+    	{
+    		$szStateCity = $stateVal;
+    		$stateCityNames = trim($jpartnerObj->getDecoratedSTATE());	
+    	}
+    	else
+    	{
+    		$szStateCity = $stateVal.",".$cityVal;
+    		$stateNames = trim($jpartnerObj->getDecoratedSTATE());
+    		$cityNames = trim($jpartnerObj->getDecoratedPARTNER_CITYRES());
+    		$stateCityNames = $stateNames.",".$cityNames;
+    	}
+    	$stateCityArr = $this->getApiFormatArray("P_CITY","State/City",$stateCityNames,$szStateCity,$this->getApiScreeningField("PARTNER_CITYRES"),$this->dropdown,'',1,'',!$showCity);
+    	return($stateCityArr);
+    }
 }
 ?>

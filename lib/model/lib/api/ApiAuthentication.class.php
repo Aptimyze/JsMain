@@ -424,6 +424,10 @@ Abstract class ApiAuthentication
 		{
 			$dbObj=new userplane_recentusers;
 			$dbObj->DeleteRecord($pid);
+
+                        // Remove Online-User 
+			$jsCommonObj =new JsCommon();
+			$jsCommonObj->removeOnlineUser($pid);	
 		}
 	}	
     /*
@@ -489,6 +493,13 @@ Abstract class ApiAuthentication
 		{
 			$dbObj=new userplane_recentusers;
 			$dbObj->replacedata($pid);
+		}
+
+		if($pid)
+		{
+			// Online-User Tracking in Cache 
+			$jsCommonObj =new JsCommon();
+			$jsCommonObj->setOnlineUser($pid);
 		}
 
 	}

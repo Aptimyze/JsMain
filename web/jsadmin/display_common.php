@@ -108,7 +108,7 @@ function pagesarr($n,$l)
 
 function get_lead_details_all($resultSet,$leadArr)
 {
-	global $db;
+	$db =connect_slave();
 	global $CASTE_DROP;
 	global $CITY_DROP;
 	global $CITY_INDIA_DROP;

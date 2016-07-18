@@ -227,5 +227,96 @@ class JsMemcache extends sfMemcacheCache{
 			parent::remove($key);
 		}
 	}
+        public function zAdd($key,$test1,$test2)
+        {
+                if(self::isRedis())
+                {
+                        if($this->client)
+                        {
+                                try
+                                {
+                                        $this->client->zAdd($key,$test1,$test2);
+                                }
+                                catch (Exception $e)
+                                {
+                                        jsException::log("D-redisClusters".$e->getMessage());
+                                }
+                        }
+                }
+        }
+        public function zRange($key,$test1,$test2)
+        {
+                if(self::isRedis())
+                {
+                        if($this->client)
+                        {
+                                try
+                                {
+                                        $dataSet =$this->client->zRange($key,$test1,$test2);
+					return $dataSet;
+                                }
+                                catch (Exception $e)
+                                {
+                                        jsException::log("D-redisClusters".$e->getMessage());
+					return false;
+                                }
+                        }
+                }
+        }
+        public function zRem($key,$value)
+        {
+                if(self::isRedis())
+                {
+                        if($this->client)
+                        {
+                                try
+                                {
+                                        $this->client->zRem($key,$value);
+                                }
+                                catch (Exception $e)
+                                {
+                                        jsException::log("D-redisClusters".$e->getMessage());
+                                }
+                        }
+                }
+        }
+        public function zRangeByScore($key,$test1,$test2)
+        {
+                if(self::isRedis())
+                {
+                        if($this->client)
+                        {
+                                try
+                                {
+                                        $dataSet =$this->client->zRangeByScore($key,$test1,$test2);
+					return $dataSet;
+                                }
+                                catch (Exception $e)
+                                {
+                                        jsException::log("D-redisClusters".$e->getMessage());
+                                }
+                        }
+                }
+        }
+        public function zRemRangeByScore($key,$test1,$test2)
+        {
+                if(self::isRedis())
+                {
+                        if($this->client)
+                        {
+                                try
+                                {
+                                        $dataSet =$this->client->zRemRangeByScore($key,$test1,$test2);
+                                        return $dataSet;
+                                }
+                                catch (Exception $e)
+                                {
+                                        jsException::log("D-redisClusters".$e->getMessage());
+                                }
+                        }
+                }
+        }
+
+
 }
 ?>
