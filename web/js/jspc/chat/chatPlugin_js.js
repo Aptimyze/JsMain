@@ -936,33 +936,56 @@ JsChat.prototype = {
         }
     },
     //add meesage recieved from another user
-    _appendRecievedMessage: function(message, userId, uniqueId) {
+    _appendRecievedMessage: function(message, userId, uniqueId,msg_state) {
         console.log("in _appendRecievedMessage");
-        console.log("to "+userId);
-        //if chat box is not opened
-        if ($('chat-box[user-id="' + userId + '"]').length == 0) {
-            $(".profileIcon[id^='" + userId + "']")[0].click();
+        //append received message in chatbox
+        if(typeof message != "undefined" && message!= ""){
+            console.log("received message - "+message);
+            //if chat box is not opened
+            if ($('chat-box[user-id="' + userId + '"]').length == 0) {
+                $(".profileIcon[id^='" + userId + "']")[0].click();
+            }
+            console.log("remove typing state if exists-manvi");
+            //adding message in chat area
+            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText">' + message + '</div></div>');
+            //check for 3 messages and remove binding
+            if ($('chat-box[user-id="' + userId + '"] .chatMessage').hasClass("restrictMessg2")) {
+                $('chat-box[user-id="' + userId + '"] .chatMessage').find("#restrictMessgTxt").remove();
+                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+            }
+            var val;
+            //adding bubble for minimized tab
+            if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
+                val = parseInt($('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html()) + 1;
+                $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html(val);
+                $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2').show();
+            }
+            //adding bubble for side tab
+            if ($("#extra_" + userId + " .pinkBubble").length != 0) {
+                val = parseInt($("#extra_" + userId + " .pinkBubble span").html());
+                $("#extra_" + userId + " .pinkBubble span").html(val + 1);
+                $("#extra_" + userId + " .pinkBubble").show();
+            }
         }
-
-        var val;
-        //adding message in chat area
-        $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText">' + message + '</div></div>');
-        //check for 3 messages and remove binding
-        if ($('chat-box[user-id="' + userId + '"] .chatMessage').hasClass("restrictMessg2")) {
-            $('chat-box[user-id="' + userId + '"] .chatMessage').find("#restrictMessgTxt").remove();
-            $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-        }
-        //adding bubble for minimized tab
-        if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
-            val = parseInt($('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html()) + 1;
-            $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html(val);
-            $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2').show();
-        }
-        //adding bubble for side tab
-        if ($("#extra_" + userId + " .pinkBubble").length != 0) {
-            val = parseInt($("#extra_" + userId + " .pinkBubble span").html());
-            $("#extra_" + userId + " .pinkBubble span").html(val + 1);
-            $("#extra_" + userId + " .pinkBubble").show();
+        else if(typeof msg_state!= "undefined"){
+            console.log("message is about to come - "+msg_state);
+            if(msg_state == 'composing'){
+                //adding bubble for minimized tab
+                if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
+                    console.log("show typing state in minimized chat box top-manvi");
+                }
+                else{
+                    console.log("show typing state in opended chat box top-manvi");
+                }
+            }
+            else if(msg_state == 'paused' || msg_state == 'gone'){
+                if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
+                    console.log("remove typing state in minimized chat box top-manvi");
+                }
+                else{
+                    console.log("remove typing state in opended chat box top-manvi");
+                }
+            }
         }
     },
 
