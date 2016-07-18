@@ -32,13 +32,15 @@ for($i=0;$i<5;$i++)
 
 		while($row=mysql_fetch_assoc($res))
         {   
+
+            $sql2="UPDATE MAIL.INACTIVE_PROFILES_TEMP SET STATUS='Y' WHERE PROFILEID=".$row['PROFILEID'];
+            mysql_query($sql2,$db) or die(mysql_error($db));
+
             $result=$emailDbObj->getLastEntry($row['PROFILEID']);
             if($result['ID']) continue;
             $emailUID=$emailDbObj->insertEmailChange($row['PROFILEID'],$row['EMAIL']);
             $emailVerObj->sendVerificationMail($row['PROFILEID'],$emailUID);
-            $sql2="UPDATE MAIL.INACTIVE_PROFILES_TEMP SET STATUS='Y' WHERE PROFILEID=".$row['PROFILEID'];
-            mysql_query($sql2,$db) or die(mysql_error($db));
-
+            
         
 	}
 
