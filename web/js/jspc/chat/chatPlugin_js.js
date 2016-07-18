@@ -396,7 +396,7 @@ JsChat.prototype = {
                             else{
                                 elem._placeContact("existing",runID,val,status);   
                             }
-                            //this._updateStatusInChatBox(runID,status); 
+                            //elem._updateStatusInChatBox(runID,status); 
                         }
                     });
             }
@@ -808,7 +808,7 @@ JsChat.prototype = {
     //update status in chat box top
     _updateStatusInChatBox: function(userId,chat_status){
         if ($('chat-box[user-id="' + userId + '"]').length != 0) {
-            console.log("manvi update status in chatbox "+chat_status);
+            $("chat-box[user-id='" + userId + "'] .chatBoxBar .onlineStatus").html(chat_status);
         }
     },
 
