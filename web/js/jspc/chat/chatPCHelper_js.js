@@ -29,8 +29,8 @@ function initiateChatConnection()
     if(readSiteCookie("CHATUSERNAME")=="bassi")
         username = '1@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
-        username = 'a2@localhost';*/
-    pass = '123';
+        username = 'a2@localhost';
+    pass = '123';*/
 
 
     //console.log("Nitish"+username);
