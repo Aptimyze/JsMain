@@ -528,7 +528,7 @@ JsChat.prototype = {
     _removeFromListing:function(param1,data){
         console.log('remove element 11');
         //removeCall1 if user is removed from backend
-        if(param1=='removeCall1'){
+        if(param1=='removeCall1' || param1 == 'delete_node'){
             console.log("calllign _removeFromListing");
             for (var key in data){
                 var runID = '';
@@ -540,10 +540,12 @@ JsChat.prototype = {
                         //this check the sub header status in the list
                         var tabShowStatus = $('div.' + val).attr('data-showuser');
                         listElements = $('#'+runID+'_'+val);
-                        if(tabShowStatus=='false'){
+                        if(tabShowStatus=='false' && param1!= 'delete_node'){
+                            console.log("123");
                            $(listElements).find('.nchatspr').detach();
                         }
                         else{
+                            console.log("345");
                             $('div').find(listElements).detach();
                             if($('div.' + val + ' ul li').length == 0){
                                 $('div.' + val + ' ul').parent().addClass("disp-none");

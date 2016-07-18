@@ -29,9 +29,9 @@ function initiateChatConnection()
     if(readSiteCookie("CHATUSERNAME")=="bassi")
         username = '1@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
-        username = 'a2@localhost';
+        username = 'a2@localhost';*/
     pass = '123';
-    */
+
 
     //console.log("Nitish"+username);
     //console.log(chatConfig.Params[device].bosh_service_url);
@@ -140,6 +140,7 @@ function invokePluginManagelisting(listObject,key,user_id){
         //update existing user status in listing
         if(typeof user_id != "undefined"){
             console.log("entered for user_id"+user_id);
+            console.log(listObject[user_id][strophieWrapper.rosterDetailsKey]["chat_status"]);
             if(listObject[user_id][strophieWrapper.rosterDetailsKey]["chat_status"] == "offline"){  //from online to offline
                 console.log("removing from listing");
                 objJsChat._removeFromListing("removeCall1",listObject);
@@ -155,8 +156,7 @@ function invokePluginManagelisting(listObject,key,user_id){
         //remove user from roster in listing
         if(typeof user_id != "undefined"){
             console.log("deleting node from roster-"+user_id);
-            objJsChat._removeFromListing("removeCall2",user_id);
-            objJsChat.noResultError();
+            objJsChat._removeFromListing('delete_node',listObject);
         }
     }
 }
