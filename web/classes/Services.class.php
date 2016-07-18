@@ -6,8 +6,8 @@
  */
 
 if (JsConstants::$whichMachine != 'matchAlert') {
-	include_once ($_SERVER["DOCUMENT_ROOT"] . "/billing/comfunc_sums.php");
-	include_once ($_SERVER["DOCUMENT_ROOT"] . "/P/pg/functions.php");
+	include_once (JsConstants::$docRoot . "/billing/comfunc_sums.php");
+	include_once (JsConstants::$docRoot . "/P/pg/functions.php");
 }
 
 class Services
@@ -159,7 +159,7 @@ class Services
 
         if(!empty($serviceid)){
 			$serviceid = "'".$serviceid."'";
-			$billingServicesObj = new billing_SERVICES();
+			$billingServicesObj = new billing_SERVICES('newjs_slave');
 			$allServiceDetails = $billingServicesObj->fetchAllServiceDetails($serviceid);
         }
         $price = 0;
@@ -300,7 +300,7 @@ class Services
         $serviceid_arr = @explode(",", $serviceid);
         $serviceid_str = "'".@implode("','", $serviceid_arr)."'";
         
-        $billingServicesObj = new billing_SERVICES();
+        $billingServicesObj = new billing_SERVICES('newjs_slave');
         $serviceDetails = $billingServicesObj->fetchAllServiceDetails($serviceid_str);
         foreach($serviceid_arr as $key=>$val){
         	foreach($serviceDetails as $kk=>$vv){

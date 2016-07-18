@@ -149,8 +149,11 @@ class ShowProfileStats
 	 */
 	private function getOnlineStatus()
 	{
+                $jsCommonObj =new JsCommon();
+                $onlineStatus =$jsCommonObj->getOnlineStatus($this->profileid);
+		/*
 		$recentOnlineObj = new userplane_recentusers();
-		$onlineStatus = $recentOnlineObj->isOnline($this->profileid);
+		$onlineStatus = $recentOnlineObj->isOnline($this->profileid);*/
 		$this->mainDataArr['ONLINE_STATUS'] = $onlineStatus;
 	}
 

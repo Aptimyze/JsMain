@@ -100,6 +100,14 @@
                                         		</table>
                                     		</td>
                                 	</tr>
+                                    <tr>
+                                    <td>
+                                    <!--FeedBack section :Start-->
+                                     ~include_partial("global/mailerFeedback",[commonParamaters=>$data.commonParamaters,stype=>$data.stypeMatch,profilechecksum=>$data.RECEIVER.PROFILECHECKSUM,mailerLinks=>$mailerLinks,mailSentDate=>$data.mailSentDate])`
+                                    </td>
+                                    </tr>
+                                    <!--FeedBack section :End-->
+
                         	~if $data.MEMBERSHIP.membership eq 0 || ( $data.MEMBERSHIP.membership eq 1 && $data.MEMBERSHIP.renew.RENEW eq 1)`
                                 	<tr>
                                     		<td style="padding-left:10px;">

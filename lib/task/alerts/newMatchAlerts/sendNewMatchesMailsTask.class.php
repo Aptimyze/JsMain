@@ -4,12 +4,11 @@
  * this cron will populate data for sending fresh matchAlerts
  */
 
-include_once(JsConstants::$alertDocRoot."/newMatches/Receiver.class.php");
-include_once(JsConstants::$alertDocRoot."/newMatches/StrategyNTvsNEW.php");
-include_once(JsConstants::$alertDocRoot."/newMatches/StrategyTvsNEW.php");
 include_once(JsConstants::$alertDocRoot."/classes/Mysql.class.php");
 class sendNewMatchesMailsTask extends sfBaseTask
 {
+	private $limitRec = 10;
+        private $sameGenderProfiles = array();
     protected function configure()
     {
         $this->addArguments(array(
@@ -38,46 +37,29 @@ EOF;
         if(!sfContext::hasInstance())
             sfContext::createInstance ($this->configuration);
         
-        $mysqlObj = new Mysql;
-        $localdb=$mysqlObj->connect("alerts");
         
         $newMatchAlertReceiver = new new_matches_emails_RECEIVER();
         $profilesArr = $newMatchAlertReceiver->getProfilesToSendEmails($arguments["totalScript"],$arguments["currentScript"]);
         foreach($profilesArr as $key=>$value)
         {
-            $profileId=$value["PROFILEID"];
-            
-            $newMatchAlertReceiver->updateSent($profileId);
-            
-            $receiverObj=new Receiver($profileId,$localdb);//get receiver profile
-            
-            if($receiverObj->getSameGenderError()=='N' && $receiverObj->getIsPartnerProfileExist()=="Y")
-            {
-                    if($receiverObj->getHasTrend() != true || $receiverObj->getSwitchToDpp()==1)
-                    {
-                            $StrategyObj = new StrategyNTvsNEW($receiverObj,$localdb);
-                            $StrategyObj->doProcessing();
-                    }
-                    else
-                    {
-                            $StrategyObj = new StrategyTvsNEW($receiverObj,$localdb);
-                            $StrategyObj->doProcessing();
-                    }
-                    unset($StrategyObj);
-            }
-            else
-            {
-                    $gap=MailerConfigVariables::getNoOfDays();
-                    $zeropid=$profileId;
-                    
-                    $newMatchesEmailsGender = new new_matches_emails_GENDER_OR_JPARTNER_ERROR();
-                    $newMatchesEmailsGender->insert($zeropid, $gap);
-                    $sameGenderArr.=$profileId. " , ";
-            }
+                $profileId=$value["PROFILEID"];
+                $hasTrends=$value["HASTRENDS"];
+                $dppSwitch=$value["DPP_SWITCH"];
+                
+                $loggedInProfileObj = LoggedInProfile::getInstance();
+		$loggedInProfileObj->getDetail($profileId,"PROFILEID","*");
+                
+                $newMatchAlertReceiver->updateSent($profileId);
+                
+                $StrategyFactoryObj = new NewMatchesMailerStrategy($loggedInProfileObj, $this->limitRec,$dppSwitch,$hasTrends);   
+                if($StrategyFactoryObj->getSameGenderAndDppExistsError() == false){
+                        $StrategyFactoryObj->getMatches();        
+                }else{
+                        $this->sameGenderProfiles[] = $profileId;
+                }
         }
-        if($sameGenderArr)
-        {
-            mail("lavesh.rawat@jeevansathi.com","Same Gender Error or DPP data missing","PROFILEID's = ".$sameGenderArr);
-        }   
+        if(!empty($sameGenderProfiles)){
+                mail("bhavanakadwal@gmail.com","Same Gender Error","PROFILEID's = ".implode(',',$this->sameGenderProfiles));
+        }
     }
 }

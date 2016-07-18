@@ -527,5 +527,29 @@ class BILLING_PURCHASES extends TABLE{
             throw new jsException($e);
         }
     }
+
+    public function getProfilesForReconsiliationAfter($time)
+    {
+        try
+        {
+            if($time)
+            {
+                $sql="SELECT * from billing.PURCHASES WHERE STATUS='DONE' AND ENTRY_DT>=:ENTRY_DT ORDER BY ENTRY_DT DESC LIMIT 1";
+                $prep=$this->db->prepare($sql);
+                $prep->bindValue(":ENTRY_DT",$time,PDO::PARAM_INT);
+                $prep->execute();
+                $i=0;
+                while($result = $prep->fetch(PDO::FETCH_ASSOC))
+                {
+                    $profiles[$result["BILLID"]]=$result;
+                }
+                return $profiles;
+            }
+        }
+        catch(PDOException $e)
+        {
+            throw new jsException($e);
+        }
+    }   
 }
 ?>

@@ -47,7 +47,7 @@
       <div class="pt28 pb20 txtc fontlig f22 ">Desired Partner Profile </div>
           <div class="pt10 pb20 txtc fontlig f16">The criteria you mention here determines the ‘Desired Partner Matches’ you see. So please review this information carefully. 
 Moreover, Filters determine whose Interests/Calls you want to receive.</div>
-        <p class="color5 f15 txtc pb30 js-apMes~if isset($existingData['ap_screen_msg'])`~else` disp-none~/if`">~if isset($existingData['ap_screen_msg'])`~$existingData['ap_screen_msg']`~/if`</p>
+        <!--<p class="color5 f15 txtc pb30 js-apMes~if isset($existingData['ap_screen_msg'])`~else` disp-none~/if`">~if isset($existingData['ap_screen_msg'])`~$existingData['ap_screen_msg']`~/if`</p>-->
       <div id="loadLate" style="visibility:hidden;">
       ~foreach from=$arrOut key=heading item=arrData`
         ~include_Partial("profile/jspcDpp/_dppGeneric",['data'=>$arrData,'fieldArray'=>$arrData.fieldArray,'heading'=>$heading,'dropDownData'=>$dropDownData,'existingData'=>$existingData,'filterArr'=>$filterArr,'underScreeningMessage'=>$underScreeningMessage])`

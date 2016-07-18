@@ -71,6 +71,7 @@ EOF;
 				$data["body"]=$subjectAndBody["body"];
 				$data["showDpp"]=$subjectAndBody["showDpp"];
 				$data["surveyLink"]=$subjectAndBody["surveyLink"];
+        $data["mailSentDate"] = date("Y-m-d H:i:s");
 				$subject ='=?UTF-8?B?' . base64_encode($subjectAndBody["subject"]) . '?='; 
 				$this->smarty->assign('data',$data);
 				$msg = $this->smarty->fetch(MAILER_COMMON_ENUM::getTemplate($this->mailerName).".tpl");

@@ -120,7 +120,7 @@
                 <div class="bg_pink lh40 f16 colrw centerBtn cursp hoverPink"><a class ="colrw fullhgt fullwid pos_rel disp_b" href="/contactus/index?fromSideLink=1">Live Help Chat</a></div>
                 <div class="f14 colr2 mt10">Chat with our Customer Care</div>
                 <div class="mt70"></div>
-                <div class="bg_pink lh40 f16 colrw centerBtn cursp hoverPink js-openRequestCallBack">Request Callback</div>
+                <div class="bg_pink lh40 f16 colrw centerBtn cursp hoverPink" onclick="toggleRequestCallBackOverlay(1,'Help_Page_JSPC'); return false;">Request Callback</div>
                 <div class="f14 colr2 mt10">Our Customer Care will get back to you</div>
             </div>
         </div>

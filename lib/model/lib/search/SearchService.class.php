@@ -355,6 +355,7 @@ class SearchService
 					{
 						if($labelVal)
 						{
+                                                        $labelVal= strtoupper($labelVal);
                                         		//$reset++;
 							$isSelected = 0;
 							if($this->isClusterValueSelected($labelVal,$SearchParamtersObj->{"get".$v1}()))
@@ -879,6 +880,7 @@ class SearchService
 					{
 						if($labelVal)
 						{
+                                                        $labelVal= strtoupper($labelVal);
                                         		//$reset++;
 							$isSelected = 0;
 							if($this->isClusterValueSelected($labelVal,$SearchParamtersObj->{"get".$v1}()))

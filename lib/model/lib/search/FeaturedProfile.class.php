@@ -9,6 +9,7 @@ class FeaturedProfile extends MembersLookingForMe
 	private $avoidRevereseCriteria;
 	private $logoutScore = 1;
 	private $loginScore = 5;
+        private $lastLoginForFeatured = 15;
 
 	public function getFEATURE_PROFILE(){return $this->FEATURE_PROFILE;}
         public function setFEATURE_PROFILE($x){$this->FEATURE_PROFILE = $x;}
@@ -54,6 +55,10 @@ class FeaturedProfile extends MembersLookingForMe
 			$this->setIgnoreProfiles($SearchParamtersObj->getIgnoreProfiles());
 		if($SearchParamtersObj->getProfilesToShow())
 			$this->setProfilesToShow($SearchParamtersObj->getProfilesToShow());
+                
+                $this->setLLAST_LOGIN_DT(date('Y-m-d h:m:s',  strtotime('-'.$this->lastLoginForFeatured.' days')));
+                $this->setHLAST_LOGIN_DT(date('Y-m-d h:m:s'));
+                $this->setRangeParams(SearchConfig::$searchRangeParameters.",".SearchConfig::$membersLookingForMeRangeParameters.",".SearchConfig::$featuredProfileParams);
 
 		if($this->loggedInProfileObj)
 		{

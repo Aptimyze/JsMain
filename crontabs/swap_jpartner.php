@@ -131,7 +131,7 @@ while($myrow=mysql_fetch_array($result))
         $myDbName=getProfileDatabaseConnectionName($myrow["PROFILEID"],'',$mysqlObj);
 	$mysqlObj->ping($myDb[$myDbName]);
 
-	$sql_jp="SELECT PROFILEID,CHILDREN,LAGE,HAGE,LHEIGHT,HHEIGHT,HANDICAPPED,PARTNER_BTYPE,PARTNER_CASTE,PARTNER_CITYRES,PARTNER_COMP,PARTNER_COUNTRYRES,PARTNER_DIET,PARTNER_DRINK,PARTNER_ELEVEL_NEW,PARTNER_INCOME,PARTNER_MANGLIK,PARTNER_MSTATUS,PARTNER_MTONGUE,PARTNER_OCC,PARTNER_SMOKE,PARTNER_RELATION,PARTNER_RELIGION,LINCOME,LINCOME_DOL FROM newjs.JPARTNER WHERE PROFILEID='" . $myrow["PROFILEID"] . "'";
+	$sql_jp="SELECT PROFILEID,CHILDREN,LAGE,HAGE,LHEIGHT,HHEIGHT,HANDICAPPED,PARTNER_BTYPE,PARTNER_CASTE,PARTNER_CITYRES,PARTNER_COMP,PARTNER_COUNTRYRES,PARTNER_DIET,PARTNER_DRINK,PARTNER_ELEVEL_NEW,PARTNER_INCOME,PARTNER_MANGLIK,PARTNER_MSTATUS,PARTNER_MTONGUE,PARTNER_OCC,PARTNER_SMOKE,PARTNER_RELATION,PARTNER_RELIGION,LINCOME,LINCOME_DOL,STATE FROM newjs.JPARTNER WHERE PROFILEID='" . $myrow["PROFILEID"] . "'";
 	$res_jp=mysql_query($sql_jp,$myDb[$myDbName]) or die("19 ".$myDb[$myDbName].mysql_error($myDb[$myDbName]));
 	if(mysql_num_rows($res_jp))
 	{
@@ -143,6 +143,18 @@ while($myrow=mysql_fetch_array($result))
 			$casteStr = get_all_caste_revamp_js_db($row_jp['PARTNER_CASTE'],$db);
 			$row_jp['PARTNER_CASTE'] = "'".$casteStr."'";
 		}
+                if($row_jp['STATE']){
+                    $stateArr = explode(",",$row_jp['STATE']);
+                    $cityWithQuotes = "";
+                    foreach($stateArr as $key => $value){
+                        $cityString = FieldMap::getFieldLabel('state_CITY', trim($value,"'"));
+                        $cityWithQuotes.= str_replace(",","','",$cityString);
+                    }
+                    if($row_jp['PARTNER_CITYRES'])
+                        $row_jp['PARTNER_CITYRES'].= ",'".$cityWithQuotes."'";
+                    else
+                        $row_jp['PARTNER_CITYRES'] = "'".$cityWithQuotes."'";
+                } 
 
 		$filterIncome = getFilteredIncome($row_jp['LINCOME'],$row_jp['LINCOME_DOL']);
 
@@ -163,7 +175,7 @@ while($myrow=mysql_fetch_array($result))
 	$myDbName=getProfileDatabaseConnectionName($myrow["PROFILEID"],'',$mysqlObj);
         $mysqlObj->ping($myDb[$myDbName]);
 
-        $sql_jp="SELECT PROFILEID,CHILDREN,LAGE,HAGE,LHEIGHT,HHEIGHT,HANDICAPPED,PARTNER_BTYPE,PARTNER_CASTE,PARTNER_CITYRES,PARTNER_COMP,PARTNER_COUNTRYRES,PARTNER_DIET,PARTNER_DRINK,PARTNER_ELEVEL_NEW,PARTNER_INCOME,PARTNER_MANGLIK,PARTNER_MSTATUS,PARTNER_MTONGUE,PARTNER_OCC,PARTNER_SMOKE,PARTNER_RELATION,PARTNER_RELIGION,LINCOME,LINCOME_DOL FROM newjs.JPARTNER WHERE PROFILEID='" . $myrow["PROFILEID"] . "'";
+        $sql_jp="SELECT PROFILEID,CHILDREN,LAGE,HAGE,LHEIGHT,HHEIGHT,HANDICAPPED,PARTNER_BTYPE,PARTNER_CASTE,PARTNER_CITYRES,PARTNER_COMP,PARTNER_COUNTRYRES,PARTNER_DIET,PARTNER_DRINK,PARTNER_ELEVEL_NEW,PARTNER_INCOME,PARTNER_MANGLIK,PARTNER_MSTATUS,PARTNER_MTONGUE,PARTNER_OCC,PARTNER_SMOKE,PARTNER_RELATION,PARTNER_RELIGION,LINCOME,LINCOME_DOL,STATE FROM newjs.JPARTNER WHERE PROFILEID='" . $myrow["PROFILEID"] . "'";
         $res_jp=mysql_query($sql_jp,$myDb[$myDbName]) or die("19 ".mysql_error1($myDb[$myDbName]));
         if(mysql_num_rows($res_jp))
         {
@@ -175,6 +187,19 @@ while($myrow=mysql_fetch_array($result))
                         $casteStr = get_all_caste_revamp_js_db($row_jp['PARTNER_CASTE'],$db);
                         $row_jp['PARTNER_CASTE'] = "'".$casteStr."'";
                 }
+                
+                if($row_jp['STATE']){
+                    $stateArr = explode(",",$row_jp['STATE']);
+                    $cityWithQuotes = "";
+                    foreach($stateArr as $key => $value){
+                        $cityString = FieldMap::getFieldLabel('state_CITY', trim($value,"'"));
+                        $cityWithQuotes.= str_replace(",","','",$cityString);
+                    }
+                    if($row_jp['PARTNER_CITYRES'])
+                        $row_jp['PARTNER_CITYRES'].= ",'".$cityWithQuotes."'";
+                    else
+                        $row_jp['PARTNER_CITYRES'] = "'".$cityWithQuotes."'";
+                } 
 
                 $filterIncome = getFilteredIncome($row_jp['LINCOME'],$row_jp['LINCOME_DOL']);
 
