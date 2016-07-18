@@ -1,8 +1,7 @@
 /*This file includes functions used for intermediate data transfer for JSPC chat from 
-* converse client(converse.js) to chat plugin(chat_js.js)
+* chat client(chatStrophieClient_js.js) to chat plugin(chat_js.js)
 */
-
-var listingInputData = [],listCreationDone=false,objJsChat,pass;  //listing data sent to plugin-array of objects
+var listingInputData = [],listCreationDone=false,objJsChat,pass;
 
 //var decrypted = JSON.parse(CryptoJS.AES.decrypt(api response, "chat", {format: CryptoJSAesJson}).toString(CryptoJS.enc.Utf8));
 
@@ -21,23 +20,22 @@ var pluginId = '#chatOpenPanel',device = 'PC';
 /*function initiateChatConnection
 * request sent to openfire to initiate chat and maintain session
 * @params:none
-*/ 
-    
+*/   
 function initiateChatConnection()
 {
     var username = loggedInJspcUser+'@localhost';
-    
-    /*var username = 'a1@localhost';
+    /*if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
+        username = 'a1@localhost';
     if(readSiteCookie("CHATUSERNAME")=="bassi")
-        username = 'a8@localhost';
+        username = '1@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
-        username = 'a2@localhost';*/
-    
-    console.log("Nitish"+username);
+        username = 'a2@localhost';
+    pass = '123';
+    */
 
-    console.log(chatConfig.Params[device].bosh_service_url);
+    //console.log("Nitish"+username);
+    //console.log(chatConfig.Params[device].bosh_service_url);
     console.log("user:"+username+" pass:"+pass);
-
     strophieWrapper.connect(chatConfig.Params[device].bosh_service_url,username,pass);
     console.log(strophieWrapper.connectionObj);
 }
@@ -65,7 +63,6 @@ function setConverseSettings(key,value)
     converse.settings.set(key,value);
 }
 */
-
 
 // Changes XML to JSON
 function xmlToJson(xml) {
@@ -129,40 +126,38 @@ function to add roster item or update roster item details in listing
 function invokePluginManagelisting(listObject,key,user_id){
     console.log("calling invokePluginAddlisting");
     if(key=="add_node" || key=="create_list"){
-        if(key=="create_list")
-        {
-            objJsChat.hideChatLoader();
+        if(key=="create_list"){
+            objJsChat.manageChatLoader("hide");
         }
         console.log("adding nodes in invokePluginAddlisting");
         console.log(listObject);
         objJsChat.addListingInit(listObject);
-        if(key == "create_list")
-        {
+        if(key == "create_list"){
             objJsChat.noResultError();
         }
-    }else if(key=="update_status"){             
+    }
+    else if(key=="update_status"){             
         //update existing user status in listing
-        if(typeof user_id != "undefined")
-        {
+        if(typeof user_id != "undefined"){
             console.log("entered for user_id"+user_id);
-            if(listObject[user_id]["rosterDetails"]["chat_status"] == "offline")  //from online to offline
-            {
+            if(listObject[user_id][strophieWrapper.rosterDetailsKey]["chat_status"] == "offline"){  //from online to offline
                 console.log("removing from listing");
                 objJsChat._removeFromListing("removeCall1",listObject);
             }
-            else if(listObject[user_id]["rosterDetails"]["chat_status"] == "online") //from offline to online
-            {
+            else if(listObject[user_id][strophieWrapper.rosterDetailsKey]["chat_status"] == "online"){ //from offline to online
                 console.log("adding in list");
                 objJsChat.addListingInit(listObject);
             }
         }
-    } else if(key=="delete_node"){
+    } 
+    else if(key=="delete_node"){
+        console.log(user_id);
         //remove user from roster in listing
-        //nodeArr.push(listNodeObj);
-        var userId = (listObject["rosterDetails"]["jid"]).split("@");
-        console.log("deleting node from roster-"+userId[0]);
-        //console.log(nodeArr);
-        objJsChat._removeFromListing("removeCall2",userId[0]);
+        if(typeof user_id != "undefined"){
+            console.log("deleting node from roster-"+user_id);
+            objJsChat._removeFromListing("removeCall2",user_id);
+            objJsChat.noResultError();
+        }
     }
 }
 
@@ -192,7 +187,6 @@ function readCookie(name) {
 function eraseCookie(name) {
     createCookie(name, "", -1);
     console.log("in erase cookie function");
-    console.log("erasing cookie");
 }
 
 function checkEmptyOrNull(item) {
@@ -270,12 +264,18 @@ function logoutChat(){
     eraseCookie("chatAuth");
 }
 
-
+/*invokePluginReceivedMsgHandler
+* invokes msg handler function of plugin
+*@params :msgObj
+*/
 function invokePluginReceivedMsgHandler(msgObj)
 {
-    console.log("invokePluginReceivedMsgHandler");
-    console.log(msgObj);
-    objJsChat._appendRecievedMessage(msgObj["body"],msgObj["from"],msgObj["msg_id"]); 
+    if(typeof msgObj["from"] != "undefined")
+    {
+        console.log("invokePluginReceivedMsgHandler");
+        console.log(msgObj);
+        objJsChat._appendRecievedMessage(msgObj["body"],msgObj["from"],msgObj["msg_id"],msgObj["msg_state"]); 
+    }
 }
 
 
@@ -317,7 +317,6 @@ $(document).ready(function(){
     checkNewLogin(loggedInJspcUser);
     var checkDiv = $("#chatOpenPanel").length;
     if(showChat && (checkDiv != 0)){
-
         var chatLoggedIn = readCookie('chatAuth');
         var loginStatus;
         if(chatLoggedIn == 'true'){
@@ -334,7 +333,9 @@ $(document).ready(function(){
         mainID:"#chatOpenPanel",
         //profilePhoto: "<path>",
         profileName: "bassi",
-        listingTabs:chatConfig.Params[device].listingTabs
+        listingTabs:chatConfig.Params[device].listingTabs,
+        rosterDetailsKey:strophieWrapper.rosterDetailsKey,
+        listingNodesLimit:chatConfig.Params[device].groupWiseNodesLimit
     });
 
 
