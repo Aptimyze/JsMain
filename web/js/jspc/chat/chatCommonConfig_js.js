@@ -28,14 +28,14 @@ chatConfig.Params = {
 									"group_name":"Interest Received",
 									//"order_id":1,
 									"show_group_name":true,
-									"hide_offline_users":true
+									"hide_offline_users":false
 								},
 								{
 									"id":"shortlisted",
 									"group_name":"Shortlisted Members",
 									//"order_id":2,
 									"show_group_name":true,
-									"hide_offline_users":false
+									"hide_offline_users":true
 								}
 							]
 						},
@@ -47,7 +47,7 @@ chatConfig.Params = {
 									"group_name":"Accepted By Me",
 									//"order_id":0,
 									"show_group_name":false,
-									"hide_offline_users":true
+									"hide_offline_users":false
 								}
 							]
 						}
