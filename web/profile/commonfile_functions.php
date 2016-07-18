@@ -503,7 +503,7 @@ $js_arr[]=array("jspc/myjs/myjs_js"             => "10");
 $js_arr[]=array("jspc/myjs/myjs_pcrevamp"                 => "14");
 $js_arr[]=array("jspc/myjs/engBarJs_js"          => "7");
 $js_arr[]=array("jspc/common/nano"     => "1");
-$js_arr[]=array("jspc/common/commonJspc_js"                => "13");
+$js_arr[]=array("jspc/common/commonJspc_js"                => "14");
 $js_arr[]=array("jspc/registration/registrationJspc_js"           => "8");
 $js_arr[]=array("jspc/registration/validation_js"        => "9");
 $js_arr[]=array("jspc/search/hslider"    => "1");
@@ -538,7 +538,7 @@ $js_arr[]=array("jspc/common/test1"    => "1");
 $js_arr[]=array("jspc/common/AjaxWrapper"      => "3");
 $js_arr[]=array("jspc/phone/phone_js"     => "2");
 $js_arr[]=array("jspc/common/colorbox"    => "1");
-$js_arr[]=array("jspc/common/phoneVeriLayers_js"      => "3");
+$js_arr[]=array("jspc/common/phoneVeriLayers_js"      => "4");
 $js_arr[]=array("jspc/membership/jspc_mem_custom_scrollbar"    => "1");
 $js_arr[]=array("jspc/membership/jspc_mem_slider"    => "1");
 $js_arr[]=array("jspc/membership/jspc_mem_js"              => "11");
@@ -607,6 +607,7 @@ $js_arr[]=array("jspc/help/JSPCHelp_js"     => "3");
 $js_arr[]=array("jsms/help/JSMSHelp_js"     => "3");
 $js_arr[]=array("jsms/help/jsmsPostQuery_js"     => "3");
 $js_arr[]=array("jsms/help/autoPopulateFreshdesk_js"     => "3");
+$js_arr[]=array("jspc/chat/customElem"     => "1");
 return $js_arr;
 }
 function getJavascript(){

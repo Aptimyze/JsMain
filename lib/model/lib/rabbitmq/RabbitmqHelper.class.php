@@ -16,6 +16,7 @@ class RabbitmqHelper
     $emailAlertArray=array("queueMail"=>"",
                           "queueSmsGcm"=>"",
                           "browserNotification"=>"nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com",
+			  "UpdateSeen"=>"eshajain88@gmail.com,lavesh.rawat@gmail.com",
                           "default"=>"pankaj.khandelwal@jeevansathi.com,tanu.gupta@brijj.com,ankita.g@jeevansathi.com,sanyam.chopra@jeevansathi.com,nitish.sharma@jeevansathi.com"
                           );            
     

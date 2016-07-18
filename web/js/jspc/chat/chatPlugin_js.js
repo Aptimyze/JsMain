@@ -21,8 +21,14 @@ JsChat.prototype = {
     _logoutChat: '.jschatLogOut',
     _minChatBarIn: '.js-minChatBarIn',
     _scrollDivId: '#nchatDivs',
-    _listingClass: 'ul.chatlist',
+    _listingClass: 'ul.chatlist li',
     _listingTabs:{},
+    _loginFailueMsg:"Login Failed,Try later",
+    _noDataTabMsg:{"tab1":"There are no matching members online. Please relax your partner preference to see more matches.",
+                   "tab2":"You currently don’t have any accepted members, get started by sending interests or initiating chat with your matches."
+                   },
+    _rosterDetailsKey:"rosterDetails",
+    _listingNodesLimit:{},
 
     _construct: function() {
 
@@ -35,7 +41,16 @@ JsChat.prototype = {
             this._listData = arguments[1][0].listData;
         if (arguments[1][0].listingTabs)
             this._listingTabs = arguments[1][0].listingTabs;
+        if (arguments[1][0].loginFailueMsg)
+            this._loginFailueMsg = arguments[1][0].loginFailueMsg;
+        if (arguments[1][0].noDataTabMsg)
+            this._noDataTabMsg = arguments[1][0].noDataTabMsg;
+        if (arguments[1][0].rosterDetailsKey)
+            this._rosterDetailsKey = arguments[1][0].rosterDetailsKey;
+        if (arguments[1][0].listingNodesLimit)
+            this._listingNodesLimit = arguments[1][0].listingNodesLimit;
     },
+
     //start:get screen height
     _getHeight: function() {
         return ($(window).height());
@@ -171,6 +186,7 @@ JsChat.prototype = {
 
 
     },
+
     //start:set height for the listing scroll div
     _chatScrollHght: function() {
         console.log('cal scroll div');
@@ -201,10 +217,10 @@ JsChat.prototype = {
             }
             TabsOpt += "<p>" + objin["tab_name"] + "</p><div class=\"showlinec\"></div></li>";
         }
-        TabsOpt += '</ul></div><div id="nchatDivs" class="nchatscrollDiv">';
-        TabsOpt += '<div class="showtab1 js-htab"> ';
+        TabsOpt += '</ul></div><div id="nchatDivs" class="nchatscrollDiv"><div id="scrollDivLoader" class="spinner"></div>';
+        TabsOpt += '<div class="showtab1 js-htab"> <div id="showtab1NoResult" class="noResult f13 fontreg disp-none">'+curEle._noDataTabMsg["tab1"]+'</div>';
         for (var i = 0; i < obj["tab1"]["groups"].length; i++) {
-            TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + "\" data-showuser=\""+ obj["tab1"]["groups"][i]["hide_offline_users"]   +"\">";
+            TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + " disp-none chatListing\" data-showuser=\""+ obj["tab1"]["groups"][i]["hide_offline_users"]   +"\">";
             //TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + "\">";
             TabsOpt += "<div class=\"f12 fontreg nchatbdr2";
             if(obj["tab1"]["groups"][i]["show_group_name"]==false)
@@ -214,7 +230,7 @@ JsChat.prototype = {
 
         }
         TabsOpt += '</div>';
-        TabsOpt += '<div class="showtab2 js-htab disp-none">';
+        TabsOpt += '<div class="showtab2 js-htab disp-none"> <div id="showtab2NoResult" class="noResult f13 fontreg disp-none">'+curEle._noDataTabMsg["tab2"]+'</div>';
         for (var i = 0; i < obj["tab2"]["groups"].length; i++) {
             TabsOpt += "<div class=\"" + obj["tab2"]["groups"][i]["id"] + "\" data-showuser=\""+ obj["tab2"]["groups"][i]["hide_offline_users"]   +"\">";
             //TabsOpt += "<div class=\"" + obj["tab2"]["groups"][i]["id"] + "\">";
@@ -233,6 +249,24 @@ JsChat.prototype = {
 
             curEle._chatTabs($(this).attr('id'));
         })
+    },
+
+    noResultError:function(){
+        var dataLength;
+        $(".js-htab").each(function(index, element) {
+        dataLength = 0;
+        $(this).find(".chatlist").each(function(index2, element2) {
+           console.log($(this).find("li").length);
+            dataLength = dataLength + $(this).find("li").length;
+        });
+        if(dataLength == 0){
+        console.log(element);
+        $(element).find(".noResult").removeClass("disp-none").addClass("disp_ib");
+        $(element).find(".chatListing").each(function(index, element) {
+               $(this).addClass("disp-none");
+           });
+        }
+        });
     },
     //start:addlisting
    /*addListingInit: function(data) {
@@ -295,70 +329,96 @@ JsChat.prototype = {
 
    //start:addlisting
     addListingInit: function(data) {
-        var elem = this;
-        for (var key in data) {
-            var runID = data[key]["rosterDetails"]["jid"],res = '',status = data[key]["rosterDetails"]["chat_status"];
-            console.log("addlisting for "+runID+"--"+data[key]["rosterDetails"]["chat_status"]);
-            console.log(data[key]);
-            //console.log(runID+" is now "+status);
-            res = runID.split("@");
-            runID = res[0];
-            $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
-                console.log("groups "+val);
-                var List = '',fullname = data[key]["rosterDetails"]["fullname"],tabShowStatus = $('div.' + val).attr('data-showuser');
-                var username = fullname,tuplePhoto=data[key]["rosterDetails"]["listing_tuple_photo"],profileChecksum=data[key]["rosterDetails"]["profile_checksum"];  //ankita for image
-
-                List += '<li class=\"clearfix profileIcon\"';
-                List += "id=\"" + runID + "_"+val + "\" >";
-                List += "<img id=\"pic_" + runID + "_" +val + "\" src=\""+tuplePhoto+"\" class=\"fl\">";
-                List += '<div class="fl f14 fontlig pt15 pl18">';
-                List += username;
-                List += '</div>';
-                console.log(runID+" is "+status);
-                if(status == "online")
-                {
-                    List += '<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>';
-                }
-                List += '</li>';
-                var addNode = false;
-                if(tabShowStatus == 'false')
-                {
-                    console.log(status+"2222");
-                    addNode = true;
-                }
-                else
-                {
-                    console.log(status+"1111");
-                    if(status=='online')
-                    {
-                       addNode = true;
-                    }
-                }
-                console.log("chexcking");
-                console.log(addNode);
-                if(addNode == true)
-                {
-                    if($('#'+runID + "_" + val).length==0)
-                    {
-                        if($('#'+runID + "_" + val).find('.nchatspr').length==0)
-                        {
-                            $('div.' + val + ' ul').append(List);
-                            $("#" + username+"_" + val).on("click", function() {
-                               elem._chatPanelsBox(username,status);
-                            }); 
+        var elem = this,statusArr=[],currentID;
+        console.log("addListing");
+        for (var key in data) 
+        {
+            if(typeof data[key][this._rosterDetailsKey]["jid"] != "undefined")
+            {
+                var runID = data[key][this._rosterDetailsKey]["jid"],res = '',status = data[key][this._rosterDetailsKey]["chat_status"];
+                console.log("addlisting for "+runID+"--"+data[key][this._rosterDetailsKey]["chat_status"]);
+                var fullJID = runID;
+                res = runID.split("@");
+                runID = res[0];
+                statusArr[runID] = status;
+                if(typeof data[key][this._rosterDetailsKey]["groups"] != "undefined" && data[key][this._rosterDetailsKey]["groups"].length >0)
+    				$.each(data[key]["rosterDetails"]["groups"], function(index, val) {
+                        console.log("groups "+val);
+                        var List = '',fullname = data[key]["rosterDetails"]["fullname"],tabShowStatus = $('div.' + val).attr('data-showuser');
+                        var getNamelbl = fullname,picurl=data[key]["rosterDetails"]["listing_tuple_photo"],prfCheckSum=data[key]["rosterDetails"]["profile_checksum"];  //ankita for image
+                        List += '<li class=\"clearfix profileIcon\"';
+                        List += "id=\"" + runID + "_"+val + "\" data-checks=\""+ prfCheckSum +"\" data-jid=\""+ fullJID+"\">";
+                        List += "<img id=\"pic_" + runID + "_" +val + "\" src=\""+picurl+"\" class=\"fl\">";
+                        List += '<div class="fl f14 fontlig pt15 pl18">';
+                        List += getNamelbl;
+                        List += '</div>';
+                        if(status == "online"){
+                            List += '<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>';
                         }
-                    }
-                    else
-                    {
-                        $(elem._mainID).find($('#'+runID + "_" + val)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
-                    }
-                }
-            });
+                        List += '</li>';
+                        var addNode = false;
+                        if(tabShowStatus == 'false'){
+                            console.log(status+"2222");
+                            addNode = true;
+                        }
+                        else{
+                            console.log(status+"1111");
+                            if(status == 'online'){
+                               addNode = true;
+                            }
+                        }
+                        if(addNode == true){
+                            if($('#'+runID + "_" + val).length==0){
+                                if($('#'+runID + "_" + val).find('.nchatspr').length==0){
+                                    console.log("checking no of nodes in group "+$('div.' + val + ' ul li').size());
+                                    if(typeof elem._listingNodesLimit[val] == "undefined" || $('div.' + val + ' ul li').size() <= elem._listingNodesLimit[val]){
+                                        elem._placeContact("new",runID,val,status,List);
+                                        if($('div.' + val + ' ul').parent().hasClass("disp-none")){
+                                            $('div.' + val + ' ul').parent().removeClass("disp-none");
+                                        }
+                                        $("#" + runID+"_" + val).on("click", function() {
+                                           currentID = $(this).attr("id").split("_")[0];
+                                            console.log("manvi",statusArr[currentID],currentID);
+                                            elem._chatPanelsBox(currentID,statusArr[currentID],$(this).attr("data-jid"));
+                                        });
+                                    } 
+                                }
+                 
+                            }
+                            else{
+                                elem._placeContact("existing",runID,val,status);   
+                            }
+                            elem._updateStatusInChatBox(runID,status); 
+                        }
+                    });
+            }
         }
         elem._chatScrollHght();
         $(elem._scrollDivId).mCustomScrollbar({
             theme: "light"
         });
+        //call hover functionality
+        $(elem._listingClass).on('mouseenter mouseleave',{ global: elem }, elem._calltohover);
+    },
+
+    //place contact in appropriate position in listing
+    _placeContact:function(key,contactID,groupID,status,contactHTML){
+        if(key == "new"){
+            console.log("ankita_adding"+contactID+" in groupID");
+            console.log(contactHTML);
+            /*if(status == "online")          //add new online element in start
+                $('div.' + groupID + ' ul').prepend(contactHTML);
+            else*/                         //add new offline element in end
+            $('div.' + groupID + ' ul').append(contactHTML);
+        }
+        else if(key == "existing" && status == "online"){
+            //add online chat_status icon
+            $(elem._mainID).find($('#'+contactID + "_" + groupID)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
+            //move this element to beginning of listing
+            /*var html = $(elem._mainID).find($('#'+contactID + "_" + groupID)).html();
+            $(elem._mainID).find($('#'+contactID + "_" + groupID)).remove();
+            $('div.' + groupID + ' ul').prepend(html);*/
+        }
     },
 
     //scrolling down chat box
@@ -457,45 +517,43 @@ JsChat.prototype = {
     
     //remove from list
     _removeFromListing:function(param1,data){
-          console.log('remove element 11');
-          //removeCall1 if user is removed from backend
-          if(param1=='removeCall1')
-           {
-               console.log("calllign _removeFromListing");
-               for (var key in data)
-               {
-                       var runID = '';
-                       runID = data[key]["rosterDetails"]["jid"].split("@")[0];
-                       $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
-                           var tabShowStatus='';
-                           var listElements = '';
-                           //this check the sub header status in the list
-                           var tabShowStatus = $('div.' + val).attr('data-showuser');
-                           listElements = $('#'+runID+'_'+val);
-                           if(tabShowStatus=='false')
-                           {
-                            console.log("here1"+tabShowStatus);
-                               $(listElements).find('.nchatspr').detach();
-                           }
-                           else
-                           {
-                            console.log("here2"+tabShowStatus);
-                               $('div').find(listElements).detach();
-                           }
-                       });
-               }
-           }
-           //removeCall2 if user is removed from block click on chatbox
-           else if(param1=='removeCall2')
-           {
-               $(this._mainID).find('*[id*="'+data+'"]').detach();               
-               //$('*[id*="'+data+'"]').remove();
-               if( this.onPostBlockCallback && typeof this.onPostBlockCallback == 'function' )
-               {
-                   this.onPostBlockCallback(data);  
-               }
-           }
-       },
+        console.log('remove element 11');
+        //removeCall1 if user is removed from backend
+        if(param1=='removeCall1'){
+            console.log("calllign _removeFromListing");
+            for (var key in data){
+                var runID = '';
+                runID = data[key][this._rosterDetailsKey]["jid"].split("@")[0];
+                if(typeof data[key][this._rosterDetailsKey]["groups"] != "undefined" && data[key][this._rosterDetailsKey]["groups"].length >0){
+                    $.each(data[key][this._rosterDetailsKey]["groups"], function(index, val) {
+                        var tabShowStatus='',listElements = '';
+                        //this check the sub header status in the list
+                        var tabShowStatus = $('div.' + val).attr('data-showuser');
+                        listElements = $('#'+runID+'_'+val);
+                        if(tabShowStatus=='false'){
+                           $(listElements).find('.nchatspr').detach();
+                        }
+                        else{
+                            $('div').find(listElements).detach();
+                            if($('div.' + val + ' ul li').size() == 0){
+                                $('div.' + val + ' ul').parent().addClass("disp-none");
+                            }
+                        }
+                        this._updateStatusInChatBox(runID,data[key][this._rosterDetailsKey]["chat_status"]);
+                    });
+                }
+            }
+        }
+        //removeCall2 if user is removed from block click on chatbox
+        else if(param1=='removeCall2')
+        {
+            $(this._mainID).find('*[id*="'+data+'"]').detach();               
+            if( this.onPostBlockCallback && typeof this.onPostBlockCallback == 'function' )
+            {
+                this.onPostBlockCallback(data);  
+            }
+        }
+    },
 
     //bind clicking block icon
     _bindBlock: function(elem, userId) {
@@ -539,11 +597,15 @@ JsChat.prototype = {
                     $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
                         scrollTop: $(".rightBubble").length + $(".leftBubble").length * 50
                     }, 500);
+                    
+                    //TODO: fire send chat query and return unique id, also check for 3 messages
                     if( _this.onSendingMessage  && typeof (_this.onSendingMessage) == "function" ){
                         console.log("in plugin send message");
-                        _this.onSendingMessage();
+                        console.log(text);
+                        console.log($('chat-box[user-id="' + userId + '"]').attr("data-jid"));
+                        _this.onSendingMessage(text,$('chat-box[user-id="' + userId + '"]').attr("data-jid"));
                     }
-                    //TODO: fire send chat query and return unique id, also check for 3 messages
+                    console.log("after");
                     setTimeout(function() {
                         //on recieving data with uniqueID
                         $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + "ueiuh");
@@ -570,8 +632,8 @@ JsChat.prototype = {
             var username = $(this).closest(".extraChatList").attr("id").split("_")[1],
                 originalElem = $('chat-box[user-id="' + username + '"]'),
                 status = $("chat-box[user-id='" + username + "'] .chatBoxBar .onlineStatus").html(),
-                chatHtml = $(originalElem).find(".chatMessage").html();
-            curElem._appendChatBox(username, status);
+                chatHtml = $(originalElem).find(".chatMessage").html(),jid = $('chat-box[user-id="' + username + '"]').attr("data-jid") ;
+            curElem._appendChatBox(username, status,jid);
             $(originalElem).remove();
             $("chat-box[user-id='" + username + "'] .chatMessage").html(chatHtml);
             $(this).closest(".extraChatList").remove();
@@ -623,8 +685,8 @@ JsChat.prototype = {
     },
 
     //append chat box on page
-    _appendChatBox: function(userId, status) {
-        $("#chatBottomPanel").prepend('<chat-box status-user="' + status + '" user-id="' + userId + '"></chat-box>');
+    _appendChatBox: function(userId, status,jid) {
+        $("#chatBottomPanel").prepend('<chat-box data-jid="'+jid+'" status-user="' + status + '" user-id="' + userId + '"></chat-box>');
     },
 
     //create side panel of extra chat
@@ -728,8 +790,15 @@ JsChat.prototype = {
         //TODO: fire query to send interest	
     },
 
+    //update status in chat box top
+    _updateStatusInChatBox: function(userId,chat_status){
+        if ($('chat-box[user-id="' + userId + '"]').length != 0) {
+            console.log("manvi update status in chatbox "+chat_status);
+        }
+    },
+
     //appending chat box
-    _chatPanelsBox: function(userId, status) {
+    _chatPanelsBox: function(userId, status,jid) {
         var curElem = this,
             heightPlus = false,
             bodyWidth = $("body").width();
@@ -754,7 +823,7 @@ JsChat.prototype = {
                 curElem._bindExtraPopupUserClose($(".nchatic_4"));
                 curElem._bindExtraUserNameBox();
             }
-            curElem._appendChatBox(userId, status);
+            curElem._appendChatBox(userId, status,jid);
 
         } else {
             $(".extraChatList").each(function(index, element) {
@@ -770,7 +839,7 @@ JsChat.prototype = {
                         value = parseInt($(".extraNumber").text().split("+")[1]),
                         data = $($("chat-box")[len - 1 - value]).attr("user-id"),
                         chatHtml = $(originalElem).find(".chatMessage").html();
-                    curElem._appendChatBox(username, status);
+                    curElem._appendChatBox(username, status,jid);
                     originalElem.remove();
                     $("chat-box[user-id='" + username + "'] .chatMessage").html(chatHtml);
                     $(this).closest(".extraChatList").remove();
@@ -829,7 +898,7 @@ JsChat.prototype = {
             curElem._textAreaAdjust(this);
         });
         $('chat-box[user-id="' + userId + '"] #pic_' + userId).addClass("downBarPic cursp");
-        $('chat-box[user-id="' + userId + '"] .chatBoxBar').append('<div class="downBarText fullhgt"><div class="downBarUserName disp_ib pos-rel f14 colrw wid44p fontlig">' + userId + '<div class="onlineStatus f11 opa50 mt4"></div></div><div class="iconBar cursp fr padallf_2 disp_ib opa40"><i class="nchatspr nchatic_3"></i><i class="nchatspr nchatic_2 ml10 mr10"></i><i class="nchatspr nchatic_1 mr10"></i></div><div class="pinkBubble2 fr vertM scir disp_ib padall-10 m11"><span class="noOfMessg f13 pos-abs">0</span></div></div>');
+        $('chat-box[user-id="' + userId + '"] .chatBoxBar').append('<div class="downBarText fullhgt"><div class="downBarUserName disp_ib pos-rel f14 colrw wid44p fontlig">' + $(".chatlist li[id*='"+userId+"'] div").html() + '<div class="onlineStatus f11 opa50 mt4"></div></div><div class="iconBar cursp fr padallf_2 disp_ib opa40"><i class="nchatspr nchatic_3"></i><i class="nchatspr nchatic_2 ml10 mr10"></i><i class="nchatspr nchatic_1 mr10"></i></div><div class="pinkBubble2 fr vertM scir disp_ib padall-10 m11"><span class="noOfMessg f13 pos-abs">0</span></div></div>');
         curElem._bindInnerHtml(userId, status);
     },
 
@@ -867,33 +936,56 @@ JsChat.prototype = {
         }
     },
     //add meesage recieved from another user
-    _appendRecievedMessage: function(message, userId, uniqueId) {
+    _appendRecievedMessage: function(message, userId, uniqueId,msg_state) {
         console.log("in _appendRecievedMessage");
-        console.log("to "+userId);
-        //if chat box is not opened
-        if ($('chat-box[user-id="' + userId + '"]').length == 0) {
-            $(".profileIcon[id^='" + userId + "']")[0].click();
+        //append received message in chatbox
+        if(typeof message != "undefined" && message!= ""){
+            console.log("received message - "+message);
+            //if chat box is not opened
+            if ($('chat-box[user-id="' + userId + '"]').length == 0) {
+                $(".profileIcon[id^='" + userId + "']")[0].click();
+            }
+            console.log("remove typing state if exists-manvi");
+            //adding message in chat area
+            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText">' + message + '</div></div>');
+            //check for 3 messages and remove binding
+            if ($('chat-box[user-id="' + userId + '"] .chatMessage').hasClass("restrictMessg2")) {
+                $('chat-box[user-id="' + userId + '"] .chatMessage').find("#restrictMessgTxt").remove();
+                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+            }
+            var val;
+            //adding bubble for minimized tab
+            if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
+                val = parseInt($('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html()) + 1;
+                $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html(val);
+                $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2').show();
+            }
+            //adding bubble for side tab
+            if ($("#extra_" + userId + " .pinkBubble").length != 0) {
+                val = parseInt($("#extra_" + userId + " .pinkBubble span").html());
+                $("#extra_" + userId + " .pinkBubble span").html(val + 1);
+                $("#extra_" + userId + " .pinkBubble").show();
+            }
         }
-
-        var val;
-        //adding message in chat area
-        $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText">' + message + '</div></div>');
-        //check for 3 messages and remove binding
-        if ($('chat-box[user-id="' + userId + '"] .chatMessage').hasClass("restrictMessg2")) {
-            $('chat-box[user-id="' + userId + '"] .chatMessage').find("#restrictMessgTxt").remove();
-            $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-        }
-        //adding bubble for minimized tab
-        if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
-            val = parseInt($('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html()) + 1;
-            $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html(val);
-            $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2').show();
-        }
-        //adding bubble for side tab
-        if ($("#extra_" + userId + " .pinkBubble").length != 0) {
-            val = parseInt($("#extra_" + userId + " .pinkBubble span").html());
-            $("#extra_" + userId + " .pinkBubble span").html(val + 1);
-            $("#extra_" + userId + " .pinkBubble").show();
+        else if(typeof msg_state!= "undefined"){
+            console.log("message is about to come - "+msg_state);
+            if(msg_state == 'composing'){
+                //adding bubble for minimized tab
+                if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
+                    console.log("show typing state in minimized chat box top-manvi");
+                }
+                else{
+                    console.log("show typing state in opended chat box top-manvi");
+                }
+            }
+            else if(msg_state == 'paused' || msg_state == 'gone'){
+                if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
+                    console.log("remove typing state in minimized chat box top-manvi");
+                }
+                else{
+                    console.log("remove typing state in opended chat box top-manvi");
+                }
+            }
         }
     },
 
@@ -927,19 +1019,19 @@ JsChat.prototype = {
             console.log('case 2');
             if($(curEle._loginPanelID).length == 0 ){
                 console.log("ankita_1");
-                curEle._appendLoggedHTML();    
+                //curEle._appendLoggedHTML();    
             }
             else{
                 console.log("ankita_2");
                 $(curEle._loginPanelID).fadeOut('fast',function() {
-                    curEle._appendLoggedHTML();
+                    //curEle._appendLoggedHTML();
                 });
             }
         }
         //user logged out from chat in the same session
         else {
             console.log('case 3');
-            $(curEle._loginPanelID).fadeOut('slow', function() {
+            $(curEle._loginPanelID).fadeOut('fast', function() {
                 $(curEle._listingPanelID).fadeIn('slow');
             });
         }
@@ -954,6 +1046,214 @@ JsChat.prototype = {
         */
 
     },
+    
+    //start:function calculate the current postion for hover box
+    _calHoverPos:function(param2,param3){
+
+
+        var hoverbtm, newTop, hgtHiddenBelow, hgtVisible;
+        var sHeight = $(window).height();
+
+        hoverbtm = (parseInt(param2 + param3));
+        hoverbtm = parseInt(hoverbtm / 2);
+        if (hoverbtm < sHeight) 
+        {
+            param2 = (Math.round(param2 / 2)) - 10;
+            newTop = param2;
+            if ((newTop + param3) > sHeight) 
+            {
+                hgtVisible = sHeight - param2;
+                hgtHiddenBelow = param3 - hgtVisible;
+                newTop = param2 - hgtHiddenBelow;
+            }
+        } 
+        else 
+        {
+            hgtVisible = sHeight - param2;
+            hgtHiddenBelow = param3 - hgtVisible;
+            newTop = param2 - hgtHiddenBelow;
+        }
+        return newTop;
+
+    },
+
+    onPreHoverCallback:null,
+
+    //start:hover box html structure
+    _hoverBoxStr:function(param1,param2,pCheckSum){
+        //console.log($('#'+param1+'_hover').length);
+        console.log("in hoverBoxStr");
+        console.log(pCheckSum);
+        var TotalBtn = '',widCal='';
+        TotalBtn = param2["buttonDetails"]["buttons"].length;
+        console.log('TotalBtn: '+TotalBtn);
+        widCal = parseInt(100/TotalBtn);
+        console.log('widCal: '+widCal);
+
+        if($('#'+param1+'_hover').length == 0 )
+        {
+
+            var str='<div class="pos_fix info-hover fontlig nz21 vishid"';
+            str+='id="'+param1+'_hover">';
+                str+='<div class="nchatbdr3 f13">';
+                    str+='<img src="'+param2.PHOTO+'" class="vtop"/>';
+                        str+='<div class="nchatgrad padall-10">';
+                            str+='<ul class="listnone lh22">';
+                                str+='<li>'+param2.AGE+', '+ param2.HEIGHT+'</li>';
+                                str+='<li>'+param2.COMMUNITY+'</li>';
+                                str+='<li>'+ param2.EDUCATION +'</li>';
+                                str+='<li>'+ param2.PROFFESION +'</li>';
+                                str+='<li>'+ param2.SALARY+'</li>';
+                                str+='<li>'+ param2.CITY+'</li>';
+                            str+='</ul>';
+                            str+='<p class="txtc nc-color2 pt10 hgt18">';
+                                str+='<span class="disp-none">You accepted her interest</span>';
+                            str+='</p>';                                    
+                        str+='</div>';
+                        //start:button structure
+                        str+='<div class="'+ param1+'_BtnRespnse nchatgrad fullwid clearfix">';
+                            $.each(param2["buttonDetails"]["buttons"],function(k,v){
+                                str+='<button class="hBtn bg_pink lh50 brdr-0 txtc colrw cursp"';
+                                str+='id="'+param1+'_'+v.action+'"';
+                                str+='data-pCheckSum="'+pCheckSum+'"';
+                                str+='data-params="'+param2.buttonDetails.buttons[0].params+'"';
+                                if(TotalBtn==1)
+                                {
+                                    str+='style="width:100%">';
+                                }
+                                else
+                                {
+                                    if(k==0)
+                                    {
+                                       str+='style="width:'+widCal+'%"> ';
+                                    }
+                                    else
+                                    {
+                                        str+='style="width:'+(widCal-1)+'%;margin-left:1px">';
+                                    }
+                                }
+
+                                str+= v.label;
+                               str+='</button>';
+                            });
+
+
+
+
+
+                        str+='</div>';
+                        //end:button structure
+                str+='</div>';
+
+            str+='</div>';
+
+
+            return str;
+        }
+        console.log("End of _hoverBoxStr"); 
+    },
+    
+    onHoverContactButtonClick: null,
+    
+     //start:update vcard
+    updateVCard:function(param,pCheckSum,callback){
+        //console.log('in vard update');
+        var globalRef = this;
+        var finalstr;
+        $.each(param.vCard,function(k,v){                   
+          finalstr = globalRef._hoverBoxStr(k,v,pCheckSum);
+          $(globalRef._mainID).append(finalstr);
+        });
+        console.log("Callback calling starts");
+        callback();
+        console.log("Callaback ends");
+    },
+    
+     //start:check hover
+    _checkHover:function(param){
+        var curEleID = $(param).attr('id');            
+        curEleID = curEleID.split("_");
+        curEleID = curEleID[0];
+        var checkSumP = $(param).attr('data-checks');
+        var hoverNewTop = $(param)[0].getBoundingClientRect().top;
+        var _this = this;
+         //as per discussion with ashok this height is goign to be fixed
+        var hoverDivHgt = 435;
+        hoverNewTop = this._calHoverPos(hoverNewTop,hoverDivHgt);
+        if(this._checkWidth() )
+        {
+            var shiftright = 245;
+        } 
+        else 
+        {
+            var shiftright = Math.round($(this._parendID)[0].getBoundingClientRect().width);
+        }
+        //console.log('hoverNewTop:'+hoverNewTop+' shiftright:'+shiftright);
+        //if element exist        
+        if($('#'+curEleID+'_hover').length != 0)
+        {
+            $('#'+curEleID+'_hover').css({ 
+                'top':  hoverNewTop,                     
+                'visibility': 'visible',
+                'right':shiftright
+            });    
+        }
+        else
+        {
+            //console.log('call to onPreHoverCallback');
+             if( this.onPreHoverCallback && typeof this.onPreHoverCallback == 'function' )
+             {
+                 console.log("Before precall");
+                this.onPreHoverCallback(checkSumP,curEleID,hoverNewTop,shiftright); 
+                //once div is created from precallback below ling shows the hovred list information
+                console.log("After precall");
+                
+                 console.log("Atul console");
+             }
+        }
+        $('.info-hover').hover(
+        function() {
+            $(this).css('visibility', 'visible');
+        },
+        function() {
+            $(this).css('visibility', 'hidden');
+        }
+                
+            
+        );
+        $('#'+curEleID+'_hover .hBtn').off("click").on('click',function(){ 
+            if( _this.onHoverContactButtonClick && typeof _this.onHoverContactButtonClick == 'function' )
+            {
+                _this.onHoverContactButtonClick(this);
+            }
+        });
+    }, 
+    
+    _timer:'undefined',
+    //start:hover functionality
+    _calltohover:function(e){
+        //console.log("In _calltohover");
+        //global level ref.
+        var _this = e.data.global;
+        var curHoverEle = this;
+        //console.log(this);
+        var getID = $(this).attr('id');            
+        getID = getID.split("_");
+        getID = getID[0];
+        //set timer variable
+        if(e.type == "mouseenter")
+        {
+            _this._timer = setTimeout(function() { 
+                _this._checkHover(curHoverEle);  
+            }, 1000);                
+        }
+        else
+        {
+            $('#'+getID+'_hover').css('visibility', 'hidden');
+            clearTimeout(_this._timer);
+        }
+    },
+    
     //start:append Chat Logged in Panel
     _appendLoggedHTML: function() {
         var curEle = this;
@@ -966,17 +1266,28 @@ JsChat.prototype = {
             //curEle.addListingInit(curEle._listData);
         });
         
-        //call hover functionality
-       // $(curEle._listingClass).
+        
 
     },
     
    //start:this function image,name in top chat logged in scenario
-    addLoginHTML: function() {
+    addLoginHTML: function(failed) {
         console.log('in addLoginHTML');
         var curEle = this;
         var LoginHTML = '<div class="fullwid txtc fontlig pos-rel" id="js-loginPanel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarOut"></i> </div><div> <img src="images/chat-profile-pic.jpg" class="chatmt1"/> </div><button id="js-chatLogin" class="chatbtnbg1 mauto chatw1 colrw f14 brdr-0 lh40 cursp nchatm5">Login to Chat</button></div>';
-        $(this._parendID).append(LoginHTML);
+        var errorHTML = '';
+        if(failed == true)
+        {
+            errorHTML += '<div class="txtc color5 f13 mt10" id="loginErr">'+curEle._loginFailueMsg+'</div>';
+        }
+        if(failed == false || typeof failed == "undefined" || $("#js-loginPanel").length == 0)
+            $(this._parendID).append(LoginHTML);
+        else
+        {
+            console.log("removing");
+            $(curEle._loginPanelID).fadeIn('fast');
+            $(curEle._loginPanelID).append(errorHTML);
+        }
         $('.js-minChatBarOut').click(function() {
 
             curEle._minimizeChatOutPanel();
@@ -993,6 +1304,15 @@ JsChat.prototype = {
             } 
         });
     },
+
+    //manage chat loader
+    manageChatLoader: function(type){
+        if(type == "hide"){
+            console.log("hiding loader_ankita");
+            $("#scrollDivLoader").hide();
+        }
+    },
+
     //start:this function is that init forthe chat
     start: function() {
         var divElement = document.createElement("Div");

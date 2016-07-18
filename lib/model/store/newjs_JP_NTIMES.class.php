@@ -60,7 +60,25 @@ class NEWJS_JP_NTIMES extends TABLE{
 				throw new jsException($e);
 			}
 		}
-		
-		
+
+	/**
+	 * insertRecord
+	 * @param $iProfileId
+	 * @param $iCount
+	 * @return bool
+	 */
+	public function insertRecord($iProfileId,$iCount)
+	{
+		try{
+			$sql = "INSERT IGNORE INTO newjs.JP_NTIMES(PROFILEID,NTIMES) VALUES(:PID,:CNT)";
+			$prep=$this->db->prepare($sql);
+			$prep->bindValue(":PID",$iProfileId,PDO::PARAM_INT);
+			$prep->bindValue(":CNT",$iCount,PDO::PARAM_INT);
+			$prep->execute();
+			return true;
+		} catch(PDOException $ex) {
+			throw new jsException($ex);
+		}
+	}
 }
 ?>

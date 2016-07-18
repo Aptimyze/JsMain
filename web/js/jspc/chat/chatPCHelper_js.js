@@ -1,7 +1,8 @@
 /*This file includes functions used for intermediate data transfer for JSPC chat from 
-* converse client(converse.js) to chat plugin(chat_js.js)
+* chat client(chatStrophieClient_js.js) to chat plugin(chat_js.js)
 */
-var listingInputData = [],listCreationDone=false,objJsChat;  //listing data sent to plugin-array of objects
+var listingInputData = [],listCreationDone=false,objJsChat,pass;
+
 //var decrypted = JSON.parse(CryptoJS.AES.decrypt(api response, "chat", {format: CryptoJSAesJson}).toString(CryptoJS.enc.Utf8));
 
 function readSiteCookie(name) {
@@ -19,35 +20,24 @@ var pluginId = '#chatOpenPanel',device = 'PC';
 /*function initiateChatConnection
 * request sent to openfire to initiate chat and maintain session
 * @params:none
-*/ 
-    
+*/   
 function initiateChatConnection()
 {
-    var username = 'a1@localhost';
+    var username = loggedInJspcUser+'@localhost';
+    /*if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
+        username = 'a1@localhost';
     if(readSiteCookie("CHATUSERNAME")=="bassi")
-        username = 'a8@localhost';
+        username = '1@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
         username = 'a2@localhost';
-    console.log(chatConfig.Params[device].bosh_service_url);
-    strophieWrapper.connect(chatConfig.Params[device].bosh_service_url,username,"123");
+    pass = '123';
+    */
+
+    //console.log("Nitish"+username);
+    //console.log(chatConfig.Params[device].bosh_service_url);
+    console.log("user:"+username+" pass:"+pass);
+    strophieWrapper.connect(chatConfig.Params[device].bosh_service_url,username,pass);
     console.log(strophieWrapper.connectionObj);
-}
-
-
-
-function sendMessage() {
-    var message = "$('#message').get(0).value";
-    var to = 'a2@localhost';
-    if(message && to){
-	var reply = $msg({
-	    to: to,
-	    type: 'chat'
-	})
-	.cnode(Strophe.xmlElement('body', message)).up()
-	.c('active', {xmlns: "http://jabber.org/protocol/chatstates"});
-	connection.send(reply);
-	log('I sent ' + to + ': ' + message);
-    }
 }
 
 /*function fetchConverseSettings
@@ -110,39 +100,64 @@ function xmlToJson(xml) {
     return obj;
 }
 
+/*invokePluginLoginHandler
+*handles login success/failure cases
+* @param: state
+*/
+function invokePluginLoginHandler(state)
+{
+    if(state == "success")
+    {
+        createCookie("chatAuth","true");
+        objJsChat._appendLoggedHTML();
+    }
+    else
+    {
+        eraseCookie("chatAuth");
+        objJsChat.addLoginHTML(true);
+    }
+}
+
 /*invokePluginAddlisting
 function to add roster item or update roster item details in listing
-* @inputs:listObject,key(create_list/add_node/update_status)
+* @inputs:listObject,key(create_list/add_node/update_status),user_id(optional)
 */
 
-function invokePluginManagelisting(listObject,key){
+function invokePluginManagelisting(listObject,key,user_id){
     console.log("calling invokePluginAddlisting");
-    if(key=="add_node"){
-        console.log("adding "+listObject.length+" nodes in invokePluginAddlisting");
+    if(key=="add_node" || key=="create_list"){
+        if(key=="create_list"){
+            objJsChat.manageChatLoader("hide");
+        }
+        console.log("adding nodes in invokePluginAddlisting");
         console.log(listObject);
         objJsChat.addListingInit(listObject);
-    } else if(key=="update_status"){             
+        if(key == "create_list"){
+            objJsChat.noResultError();
+        }
+    }
+    else if(key=="update_status"){             
         //update existing user status in listing
-        nodeArr.push(listNodeObj);
-        console.log("updating status");
-        console.log(nodeArr);
-        if(listNodeObj["rosterDetails"]["chat_status"] == "offline")  //from online to offline
-        {
-            console.log("removing from listing");
-            objJsChat._removeFromListing("removeCall1",nodeArr);
+        if(typeof user_id != "undefined"){
+            console.log("entered for user_id"+user_id);
+            if(listObject[user_id][strophieWrapper.rosterDetailsKey]["chat_status"] == "offline"){  //from online to offline
+                console.log("removing from listing");
+                objJsChat._removeFromListing("removeCall1",listObject);
+            }
+            else if(listObject[user_id][strophieWrapper.rosterDetailsKey]["chat_status"] == "online"){ //from offline to online
+                console.log("adding in list");
+                objJsChat.addListingInit(listObject);
+            }
         }
-        else if(listNodeObj["rosterDetails"]["chat_status"] == "online") //from offline to online
-        {
-            console.log("adding in list");
-            objJsChat.addListingInit(nodeArr);
-        }
-    } else if(key=="delete_node"){
+    } 
+    else if(key=="delete_node"){
+        console.log(user_id);
         //remove user from roster in listing
-        //nodeArr.push(listNodeObj);
-        var userId = (listNodeObj["rosterDetails"]["jid"]).split("@");
-        console.log("deleting node from roster-"+userId[0]);
-        //console.log(nodeArr);
-        objJsChat._removeFromListing("removeCall2",userId[0]);
+        if(typeof user_id != "undefined"){
+            console.log("deleting node from roster-"+user_id);
+            objJsChat._removeFromListing("removeCall2",user_id);
+            objJsChat.noResultError();
+        }
     }
 }
 
@@ -172,7 +187,6 @@ function readCookie(name) {
 function eraseCookie(name) {
     createCookie(name, "", -1);
     console.log("in erase cookie function");
-    console.log("erasing cookie");
 }
 
 function checkEmptyOrNull(item) {
@@ -226,9 +240,11 @@ function checkAuthentication(){
             console.log(data.statusCode);
             if(data.responseStatusCode == "0"){
                 console.log("In chatUserAuthentication Login Done");
-                createCookie("chatAuth","true");
+                //createCookie("chatAuth","true");
                 //loginChat();
                 auth = 'true';
+		pass = JSON.parse(CryptoJS.AES.decrypt(data.hash, "chat", {format: CryptoJSAesJson}).toString(CryptoJS.enc.Utf8));
+
             }
             else{
                 console.log(data.responseMessage);
@@ -248,17 +264,22 @@ function logoutChat(){
     eraseCookie("chatAuth");
 }
 
-
+/*invokePluginReceivedMsgHandler
+* invokes msg handler function of plugin
+*@params :msgObj
+*/
 function invokePluginReceivedMsgHandler(msgObj)
 {
-    console.log("invokePluginReceivedMsgHandler");
-    console.log(msgObj);
-    if(msgObj["message"] != "") 
-        objJsChat._appendRecievedMessage(msgObj["message"],msgObj["from"].substr(0, msgObj["from"].indexOf('@')),msgObj["msgid"]); 
+    if(typeof msgObj["from"] != "undefined")
+    {
+        console.log("invokePluginReceivedMsgHandler");
+        console.log(msgObj);
+        objJsChat._appendRecievedMessage(msgObj["body"],msgObj["from"],msgObj["msg_id"],msgObj["msg_state"]); 
+    }
 }
 
 
-var CryptoJSAesJson = {
+/*var CryptoJSAesJson = {
     stringify: function (cipherParams) {
         var j = {ct: cipherParams.ciphertext.toString(CryptoJS.enc.Base64)};
         if (cipherParams.iv) j.iv = cipherParams.iv.toString();
@@ -272,7 +293,23 @@ var CryptoJSAesJson = {
         if (j.s) cipherParams.salt = CryptoJS.enc.Hex.parse(j.s)
         return cipherParams;
     }
+}*/
+var CryptoJSAesJson = {
+    stringify: function (cipherParams) {
+        var j = {ct: cipherParams.ciphertext.toString(CryptoJS.enc.Base64)};
+        if (cipherParams.iv) j.iv = cipherParams.iv.toString();
+        if (cipherParams.salt) j.s = cipherParams.salt.toString();
+        return JSON.stringify(j);
+    },
+    parse: function (jsonStr) {
+        var j = JSON.parse(jsonStr);
+        var cipherParams = CryptoJS.lib.CipherParams.create({ciphertext: CryptoJS.enc.Base64.parse(j.ct)});
+        if (j.iv) cipherParams.iv = CryptoJS.enc.Hex.parse(j.iv);
+        if (j.s) cipherParams.salt = CryptoJS.enc.Hex.parse(j.s);
+        return cipherParams;
+    }
 }
+
 
 $(document).ready(function(){
     console.log("User");
@@ -280,10 +317,10 @@ $(document).ready(function(){
     checkNewLogin(loggedInJspcUser);
     var checkDiv = $("#chatOpenPanel").length;
     if(showChat && (checkDiv != 0)){
-
         var chatLoggedIn = readCookie('chatAuth');
         var loginStatus;
         if(chatLoggedIn == 'true'){
+            checkAuthentication();
             loginStatus = "Y";
             initiateChatConnection();
         }
@@ -296,7 +333,9 @@ $(document).ready(function(){
         mainID:"#chatOpenPanel",
         //profilePhoto: "<path>",
         profileName: "bassi",
-        listingTabs:chatConfig.Params[device].listingTabs
+        listingTabs:chatConfig.Params[device].listingTabs,
+        rosterDetailsKey:strophieWrapper.rosterDetailsKey,
+        listingNodesLimit:chatConfig.Params[device].groupWiseNodesLimit
     });
 
 
@@ -304,7 +343,7 @@ $(document).ready(function(){
         //objJsChat._loginStatus = 'N';
         console.log("Checking variable");
         console.log(chatLoggedIn);
-
+        var chatLoggedIn = readCookie('chatAuth');
         if(chatLoggedIn != 'true'){
             var auth = checkAuthentication();
             if(auth != "true"){
@@ -321,19 +360,44 @@ $(document).ready(function(){
     }
 
     objJsChat.onChatLoginSuccess = function(){
-        //trigger list creation if nodes in roster lesser than limit
+        console.log("show loader---manvi");
+        //trigger list creation
         console.log("in triggerBindings");
         strophieWrapper.triggerBindings();
         //setCreateListingInterval();
     }
     
+    objJsChat.onHoverContactButtonClick = function(params){
+        console.log(params);
+        checkSum = $("#"+params.id).attr('data-pchecksum');
+        params = $("#"+params.id).attr('data-params');
+        checkSum = "7619da4377fbf2a405ede0d0535a716ei9513636";
+        
+        url = "/api/v2/contacts/postEOI";
+        $.ajax({
+            type: 'POST',
+            data: {profilechecksum: checkSum,params: params,source: "chat"},
+            url: url,
+            success: function(data) {
+                console.log(data);
+                console.log(data.actiondetails.errmsglabel);
+                $("#"+params.id).html(data.actiondetails.errmsglabel);
+            }
+        });
+        
+    }
+    
     objJsChat.onLogoutPreClick = function(){
         console.log("In Logout preclick");
         objJsChat._loginStatus = 'N';
-        logoutChat();
+        strophieWrapper.disconnect();
+        eraseCookie("chatAuth");
     }
 
-    objJsChat.onSendingMessage = function(){
+    objJsChat.onSendingMessage = function(message,to){
+        console.log("In helper file onSendingMessage");
+        strophieWrapper.sendMessage(message,to);
+        //sendMessage(message,to);
         //var x = converse.listen.on('messageSend',"MEssagesend");
         //console.log(x);
         /*
@@ -356,11 +420,95 @@ $(document).ready(function(){
        converse.send(msg);
        */
     }
-
+    
+    
     objJsChat.onPostBlockCallback= function(param){
 
        console.log('the user id to be blocked:'+ param);
        //the function goes here which will send user id to the backend
+    }
+    
+    objJsChat.onPreHoverCallback = function(pCheckSum,username,hoverNewTop,shiftright){
+        console.log("In Helper preHoverCB");
+        console.log(pCheckSum);
+        jid = [];
+        jid[0] = "'"+pCheckSum+"'";
+        url = "/api/v1/chat/fetchVCard";
+        $.ajax({
+            type: 'POST',
+            data: {jid: jid,username: username},
+            url: url,
+            success: function(data) {
+                console.log(data);
+                objJsChat.updateVCard(data,pCheckSum,function(){
+                    $('#'+username+'_hover').css({ 
+                        'top':  hoverNewTop,                     
+                        'visibility': 'visible',
+                        'right':shiftright
+                    });
+                    console.log("Callback done");
+                });
+            }
+        });
+        /*
+        var res = 
+            {
+                "vCard": 
+                {
+                    "a6": 
+                    {
+                        "NAME": "nitish",
+                        "EMAIL": "nitish@gmail.com",
+                        "PHOTO": "url",
+                        "AGE":"3",
+                        "HEIGHT":"5 9",
+                        "COMMUNITY":"Sikh: Arora Punjabi",
+                        "EDUCATION":"MBA/PGDM, B.Com",
+                        "PROFFESION":"Software",
+                        "SALARY":"Rs. 15 - 20lac",
+                        "CITY":"New Delhi",
+                        "buttonDetails":
+                        {
+                            "buttons":
+                            [
+                                {
+                                "action":"INITIATE",
+                                "label":"Send Interest",
+                                "iconid":null,
+                                "primary":"true",
+                                "secondary":"true",
+                                "params":"&stype=P17",
+                                "enable":true,
+                                "id":"INITIATE"
+                                },
+                                 {
+                                "action":"INITIATE",
+                                "label":"Send Interest",
+                                "iconid":null,
+                                "primary":"true",
+                                "secondary":"true",
+                                "params":"&stype=P17",
+                                "enable":true,
+                                "id":"INITIATE"
+                                }
+                            ],
+                            "button":null,
+                            "infomsgiconid":null,
+                            "infomsglabel":null,
+                            "infobtnlabel":null,
+                            "infobtnvalue":null,
+                            "infobtnaction":null
+                        },
+                        "responseStatusCode": "0",
+                        "responseMessage": "Successful",
+                        "AUTHCHECKSUM": null,
+                        "hamburgerDetails": null,
+                        "phoneDetails": null
+                    }  
+                }
+            }
+        ;
+        */
     }
 
     objJsChat.start();

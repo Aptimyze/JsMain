@@ -63,5 +63,22 @@ class newjs_HOROSCOPE extends TABLE
 			throw new jsException($e);
 		}
 	}
+
+	/**
+	 * @param $iID
+	 * @return bool
+	 */
+	public function deleteRecord($iProfileID)
+	{
+		try{
+			$sql = 'DELETE FROM newjs.HOROSCOPE WHERE PROFILEID = :PID';
+			$pdoStatement = $this->db->prepare($sql);
+			$pdoStatement->bindValue(':PID',$iProfileID,PDO::PARAM_INT);
+			$pdoStatement->execute();
+			return true;
+		} catch (PDOException $ex) {
+			throw new jsException($ex);
+		}
+	}
 }
 ?>

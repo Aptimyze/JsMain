@@ -36,8 +36,11 @@ class chatActions extends sfActions
         $loginData = $request->getAttribute("loginData");
         if($loginData){
 
-            $username = $loginData['USERNAME'];
-	    $pass = EncryptPassword::generatePassword($username);
+            $username = $loginData['PROFILEID'];
+
+		$uname = $loginData['USERNAME'];
+	    $pass = EncryptPassword::generatePassword($uname);
+
             $url = JsConstants::$openfireConfig['HOST'].":".JsConstants::$openfireConfig['PORT']."/plugins/restapi/v1/users/".$username;
             //$url = "http://localhost:9090/plugins/restapi/v1/users/".$username;
             $ch = curl_init();
@@ -47,7 +50,7 @@ class chatActions extends sfActions
             curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
 
             $headers = array();
-            $headers[] = 'Authorization: '.ChatEnum::$openFireAuthorizationKey;
+            $headers[] = 'Authorization: '.JsConstants::$openfireRestAPIKey;
             $headers[] = 'Accept: application/json';
 
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -65,7 +68,7 @@ class chatActions extends sfActions
                 $response['userStatus'] = "New user created";
                 $url = JsConstants::$openfireConfig['HOST'].":".JsConstants::$openfireConfig['PORT']."/plugins/restapi/v1/users/";
                 //$url = "http://localhost:9090/plugins/restapi/v1/users/";
-                $data = array("username" => "$username", "password" => $pass);
+                $data = array("username" => $username, "password" => $pass);
                 $jsonData = json_encode($data);
                 
                 $ch = curl_init();
@@ -76,7 +79,7 @@ class chatActions extends sfActions
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
 
                 $headers = array();
-                $headers[] = 'Authorization: '.ChatEnum::$openFireAuthorizationKey;
+                $headers[] = 'Authorization: '.JsConstants::$openfireRestAPIKey;
                 $headers[] = 'Accept: application/json';
                 $headers[] = 'Content-Type: application/json';
 
@@ -100,9 +103,9 @@ class chatActions extends sfActions
                 curl_close ($ch);
             }
             //Encrypt Password
-            //$hash = EncryptPassword::cryptoJsAesEncrypt("chat", $pass);
-            //$response['hash'] = $hash;
-            $response['hash'] = $pass;
+            $hash = EncryptPassword::cryptoJsAesEncrypt("chat", $pass);
+            $response['hash'] = $hash;
+            //$response['hash'] = $pass;
         }
         else{
             $response = "Logged Out Profile";
@@ -152,8 +155,28 @@ class chatActions extends sfActions
                 $chatObj = new Chat();
                 $result = $chatObj->convertXml($storeResult);
                 unset($chatObj);
+                $username = $request->getParameter('username');
+                $profile["$username"]["NAME"] = "Atul";
+                $profile["$username"]["EMAIL"] = "Atul@gmail.com";
+                $profile["$username"]["PHOTO"] = "http://mediacdn.jeevansathi.com/1769/6/35386110-1436589041.jpeg";
+                $profile["$username"]["AGE"] = "3";
+                $profile["$username"]["HEIGHT"] = "5 9";
+                $profile["$username"]["PROFFESION"] = "Christian";
+                $profile["$username"]["SALARY"] = "Rs. 15 - 20lac";
+                $profile["$username"]["CITY"] = "New Delhi";
+                $d1["action"] = "INITIATE";
+                $d1["label"] = "Send Interest";
+                $d1["iconid"] = null;
+                $d1["primary"] = "true";
+                $d1["secondary"] = "true";
+                $d1["params"] = "&stype=P17";
+                $d1["enable"] = true;
+                $d1["id"] = "INITIATE";
+                $buttons["buttons"][] = $d1;
                 
-                $response = array("vCard"=>$result);
+                $profile["$username"]["buttonDetails"] = $buttons;
+                $response = array("vCard"=>$profile);
+                
                 $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
             }
             else{
@@ -178,9 +201,73 @@ class chatActions extends sfActions
 	    $getData["profiles"] = $getRosterDataObj->getRosterDataByType($type,$limit);
 	    $apiResponseHandlerObj = ApiResponseHandler::getInstance();
 	    $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-	    $apiResponseHandlerObj->setResponseBody($getData);
+	    
+$apiResponseHandlerObj->setResponseBody($getData);
 	    $apiResponseHandlerObj->generateResponse();
 	    die;
     }
+
+	public function executeGetDppDataV1(sfwebrequest $request)
+	{
+		$profileid = $request->getParameter("profileid");
+		$photoType = $request->getParameter("photoType");
+		$limit = $request->getParameter("limit");
+		$currentPage = $request->getParameter("currentPage");
+		$dontShowFilteredProfiles = $request->getParameter("dontShowFilteredProfiles");
+
+		/***/
+		if(!$photoType)
+			$photoType = 'MainPicUrl';
+		if(!$dontShowFilteredProfiles)
+			$dontShowFilteredProfiles = 1;
+		if(!$limit)
+			$limit = 10;
+		if(!$currentPage)
+			$currentPage = 1;
+		$completeResponse = 1;
+		/***/
+
+		$profileObj = LoggedInProfile::getInstance('',$profileid);
+		$profileObj->getDetail('','','*');
+		$partnerObj = new SearchCommonFunctions();
+
+
+		$obj = $partnerObj->getMyDppMatches(sort,$profileObj,$limit,$currentPage,$paramArr,$removeMatchAlerts,$dontShowFilteredProfiles,$twoWayMatches,$clustersToShow,$results_orAnd_cluster,$notInProfiles,$completeResponse);
+		$arr = $obj->getResultsArr();
+		if($arr)
+		{
+			$pidArr["PROFILEID"] = implode(",",$obj->getSearchResultsPidArr());
+			$profileObj=LoggedInProfile::getInstance('newjs_master');
+			$multipleProfileObj = new ProfileArray();
+
+			$profileDetails = $multipleProfileObj->getResultsBasedOnJprofileFields($pidArr);
+			$multiplePictureObj = new PictureArray($profileDetails);
+			$photosArr = $multiplePictureObj->getProfilePhoto();
+			foreach($arr as $k=>$v)
+			{
+				$pid = $v["id"];
+				$cArr[$pid]["USERNAME"] = $v["USERNAME"];
+				$cArr[$pid]["PROFILECHECKSUM"] = jsAuthentication::jsEncryptProfilechecksum($pid);
+				$photoObj = $photosArr[$pid];
+				if($photoObj)
+				{
+					eval('$temp =$photoObj->get'.$photoType.'();');
+					$cArr[$pid]["PHOTO"] = $temp;
+					unset($temp);
+				}
+				else
+				{
+					$cArr[$pid]["PHOTO"] = NULL;
+				}
+
+			}
+		}
+		$getData["profiles"] = $cArr;
+		$apiResponseHandlerObj = ApiResponseHandler::getInstance();
+		$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+		$apiResponseHandlerObj->setResponseBody($getData);
+		$apiResponseHandlerObj->generateResponse();
+		die;
+	}
 }
 ?>
