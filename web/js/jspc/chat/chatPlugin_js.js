@@ -266,7 +266,7 @@ JsChat.prototype = {
                $(this).addClass("disp-none");
            });
         }
-        }); 
+        });
     },
     //start:addlisting
    /*addListingInit: function(data) {
@@ -371,7 +371,7 @@ JsChat.prototype = {
                             if($('#'+runID + "_" + val).length==0){
                                 if($('#'+runID + "_" + val).find('.nchatspr').length==0){
                                     console.log("checking no of nodes in group "+$('div.' + val + ' ul li').size());
-                                    if($('div.' + val + ' ul li').size() <= elem._listingNodesLimit[val]){
+                                    if(typeof elem._listingNodesLimit[val] == "undefined" || $('div.' + val + ' ul li').size() <= elem._listingNodesLimit[val]){
                                         elem._placeContact("new",runID,val,status,List);
                                         if($('div.' + val + ' ul').parent().hasClass("disp-none")){
                                             $('div.' + val + ' ul').parent().removeClass("disp-none");
@@ -404,6 +404,8 @@ JsChat.prototype = {
     //place contact in appropriate position in listing
     _placeContact:function(key,contactID,groupID,status,contactHTML){
         if(key == "new"){
+            console.log("ankita_adding"+contactID+" in groupID");
+            console.log(contactHTML);
             /*if(status == "online")          //add new online element in start
                 $('div.' + groupID + ' ul').prepend(contactHTML);
             else*/                         //add new offline element in end
