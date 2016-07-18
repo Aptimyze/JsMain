@@ -24,6 +24,11 @@ JsChat.prototype = {
     _listingClass: 'ul.chatlist li',
     _listingTabs:{},
     _loginFailueMsg:"Login Failed,Try later",
+    _noDataTabMsg:{"tab1":"There are no matching members online. Please relax your partner preference to see more matches.",
+                   "tab2":""
+                   },
+    _rosterDetailsKey:"rosterDetails",
+    _listingNodesLimit:{},
 
     _construct: function() {
 
@@ -36,9 +41,16 @@ JsChat.prototype = {
             this._listData = arguments[1][0].listData;
         if (arguments[1][0].listingTabs)
             this._listingTabs = arguments[1][0].listingTabs;
-        if (arguments[1][0]._loginFailueMsg)
+        if (arguments[1][0].loginFailueMsg)
             this._loginFailueMsg = arguments[1][0].loginFailueMsg;
+        if (arguments[1][0].noDataTabMsg)
+            this._noDataTabMsg = arguments[1][0].noDataTabMsg;
+        if (arguments[1][0].rosterDetailsKey)
+            this._rosterDetailsKey = arguments[1][0].rosterDetailsKey;
+        if (arguments[1][0].listingNodesLimit)
+            this._listingNodesLimit = arguments[1][0].listingNodesLimit;
     },
+
     //start:get screen height
     _getHeight: function() {
         return ($(window).height());
@@ -206,7 +218,7 @@ JsChat.prototype = {
             TabsOpt += "<p>" + objin["tab_name"] + "</p><div class=\"showlinec\"></div></li>";
         }
         TabsOpt += '</ul></div><div id="nchatDivs" class="nchatscrollDiv"><div id="scrollDivLoader" class="spinner"></div>';
-        TabsOpt += '<div class="showtab1 js-htab"> <div id="showtab1NoResult" class="noResult f13 fontreg disp-none">There are no matching members online. Please relax your partner preference to see more matches.</div>';
+        TabsOpt += '<div class="showtab1 js-htab"> <div id="showtab1NoResult" class="noResult f13 fontreg disp-none">'+curEle._noDataTabMsg["tab1"]+'</div>';
         for (var i = 0; i < obj["tab1"]["groups"].length; i++) {
             TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + " disp-none chatListing\" data-showuser=\""+ obj["tab1"]["groups"][i]["hide_offline_users"]   +"\">";
             //TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + "\">";
@@ -218,7 +230,7 @@ JsChat.prototype = {
 
         }
         TabsOpt += '</div>';
-        TabsOpt += '<div class="showtab2 js-htab disp-none"> <div id="showtab2NoResult" class="noResult f13 fontreg disp-none">You currently dont have any accepted members, get started by sending interests or initiating chat with your matches</div>';
+        TabsOpt += '<div class="showtab2 js-htab disp-none"> <div id="showtab2NoResult" class="noResult f13 fontreg disp-none">'+curEle._noDataTabMsg["tab2"]+'</div>';
         for (var i = 0; i < obj["tab2"]["groups"].length; i++) {
             TabsOpt += "<div class=\"" + obj["tab2"]["groups"][i]["id"] + "\" data-showuser=\""+ obj["tab2"]["groups"][i]["hide_offline_users"]   +"\">";
             //TabsOpt += "<div class=\"" + obj["tab2"]["groups"][i]["id"] + "\">";
@@ -238,6 +250,7 @@ JsChat.prototype = {
             curEle._chatTabs($(this).attr('id'));
         })
     },
+
     noResultError:function(){
         var dataLength;
         $(".js-htab").each(function(index, element) {
@@ -318,79 +331,66 @@ JsChat.prototype = {
     addListingInit: function(data) {
         var elem = this,statusArr=[],currentID;
         console.log("addListing");
-        for (var key in data) {
-            if(typeof data[key]["rosterDetails"]["jid"] != "undefined")
+        for (var key in data) 
+        {
+            if(typeof data[key][this._rosterDetailsKey]["jid"] != "undefined")
             {
-                var runID = data[key]["rosterDetails"]["jid"],res = '',status = data[key]["rosterDetails"]["chat_status"];
-                console.log("addlisting for "+runID+"--"+data[key]["rosterDetails"]["chat_status"]);
-                console.log(data[key]);
-                //console.log(runID+" is now "+status);
+                var runID = data[key][this._rosterDetailsKey]["jid"],res = '',status = data[key][this._rosterDetailsKey]["chat_status"];
+                console.log("addlisting for "+runID+"--"+data[key][this._rosterDetailsKey]["chat_status"]);
                 var fullJID = runID;
                 res = runID.split("@");
                 runID = res[0];
                 statusArr[runID] = status;
-                $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
-                    console.log("groups "+val);
-                    var List = '',fullname = data[key]["rosterDetails"]["fullname"],tabShowStatus = $('div.' + val).attr('data-showuser');
-                    var getNamelbl = fullname,picurl=data[key]["rosterDetails"]["listing_tuple_photo"],prfCheckSum=data[key]["rosterDetails"]["profile_checksum"];  //ankita for image
-
-
-                    List += '<li class=\"clearfix profileIcon\"';
-                    //List += "id=\"" + runID + "_"+val + "\" data-checks=\""+ prfCheckSum +"\">";
-                    List += "id=\"" + runID + "_"+val + "\" data-checks=\""+ prfCheckSum +"\" data-jid=\""+ fullJID+"\">";
-                    List += "<img id=\"pic_" + runID + "_" +val + "\" src=\""+picurl+"\" class=\"fl\">";
-                    List += '<div class="fl f14 fontlig pt15 pl18">';
-
-                    List += getNamelbl;
-
-                    List += '</div>';
-                    console.log(runID+" is "+status);
-                    if(status == "online")
-                    {
-                        List += '<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>';
-                    }
-                    List += '</li>';
-                    var addNode = false;
-                    console.log("Nitish"+tabShowStatus);
-                    if(tabShowStatus == 'false')
-                    {
-                        console.log(status+"2222");
-                        addNode = true;
-                    }
-                    else
-                    {
-                        console.log(status+"1111");
-                        if(status=='online')
-                        {
-                           addNode = true;
+                if(typeof data[key][this._rosterDetailsKey]["groups"] != "undefined" && data[key][this._rosterDetailsKey]["groups"].length >0)
+    				$.each(data[key]["rosterDetails"]["groups"], function(index, val) {
+                        console.log("groups "+val);
+                        var List = '',fullname = data[key]["rosterDetails"]["fullname"],tabShowStatus = $('div.' + val).attr('data-showuser');
+                        var getNamelbl = fullname,picurl=data[key]["rosterDetails"]["listing_tuple_photo"],prfCheckSum=data[key]["rosterDetails"]["profile_checksum"];  //ankita for image
+                        List += '<li class=\"clearfix profileIcon\"';
+                        List += "id=\"" + runID + "_"+val + "\" data-checks=\""+ prfCheckSum +"\" data-jid=\""+ fullJID+"\">";
+                        List += "<img id=\"pic_" + runID + "_" +val + "\" src=\""+picurl+"\" class=\"fl\">";
+                        List += '<div class="fl f14 fontlig pt15 pl18">';
+                        List += getNamelbl;
+                        List += '</div>';
+                        if(status == "online"){
+                            List += '<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>';
                         }
-                    }
-                    console.log("chexcking");
-                    console.log(addNode);
-                    if(addNode == true)
-                    {
-                        if($('#'+runID + "_" + val).length==0)
-                        {
-                            if($('#'+runID + "_" + val).find('.nchatspr').length==0)
-                            {
-                                $('div.' + val + ' ul').append(List);
-                                if($('div.' + val + ' ul').parent().hasClass("disp-none")){
-                                    $('div.' + val + ' ul').parent().removeClass("disp-none");
-                                }
-                                $("#" + runID+"_" + val).on("click", function() {
-                                   currentID = $(this).attr("id").split("_")[0];
-                                    console.log("manvi",statusArr[currentID],currentID);
-                                    elem._chatPanelsBox(currentID,statusArr[currentID],$(this).attr("data-jid"));
-
-                                }); 
+                        List += '</li>';
+                        var addNode = false;
+                        if(tabShowStatus == 'false'){
+                            console.log(status+"2222");
+                            addNode = true;
+                        }
+                        else{
+                            console.log(status+"1111");
+                            if(status == 'online'){
+                               addNode = true;
                             }
                         }
-                        else
-                        {
-                            $(elem._mainID).find($('#'+runID + "_" + val)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
+                        if(addNode == true){
+                            if($('#'+runID + "_" + val).length==0){
+                                if($('#'+runID + "_" + val).find('.nchatspr').length==0){
+                                    console.log("checking no of nodes in group "+$('div.' + val + ' ul li').size());
+                                    if($('div.' + val + ' ul li').size() <= elem._listingNodesLimit[val]){
+                                        elem._placeContact("new",runID,val,status,List);
+                                        if($('div.' + val + ' ul').parent().hasClass("disp-none")){
+                                            $('div.' + val + ' ul').parent().removeClass("disp-none");
+                                        }
+                                        $("#" + runID+"_" + val).on("click", function() {
+                                           currentID = $(this).attr("id").split("_")[0];
+                                            console.log("manvi",statusArr[currentID],currentID);
+                                            elem._chatPanelsBox(currentID,statusArr[currentID],$(this).attr("data-jid"));
+                                        });
+                                    } 
+                                }
+                 
+                            }
+                            else{
+                                elem._placeContact("existing",runID,val,status);   
+                            }
+                            elem._updateStatusInChatBox(runID,status); 
                         }
-                    }
-                });
+                    });
             }
         }
         elem._chatScrollHght();
@@ -399,6 +399,24 @@ JsChat.prototype = {
         });
         //call hover functionality
         $(elem._listingClass).on('mouseenter mouseleave',{ global: elem }, elem._calltohover);
+    },
+
+    //place contact in appropriate position in listing
+    _placeContact:function(key,contactID,groupID,status,contactHTML){
+        if(key == "new"){
+            /*if(status == "online")          //add new online element in start
+                $('div.' + groupID + ' ul').prepend(contactHTML);
+            else*/                         //add new offline element in end
+            $('div.' + groupID + ' ul').append(contactHTML);
+        }
+        else if(key == "existing" && status == "online"){
+            //add online chat_status icon
+            $(elem._mainID).find($('#'+contactID + "_" + groupID)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
+            //move this element to beginning of listing
+            /*var html = $(elem._mainID).find($('#'+contactID + "_" + groupID)).html();
+            $(elem._mainID).find($('#'+contactID + "_" + groupID)).remove();
+            $('div.' + groupID + ' ul').prepend(html);*/
+        }
     },
 
     //scrolling down chat box
@@ -770,6 +788,13 @@ JsChat.prototype = {
     _sendInterest: function(userId) {
         console.log("fire send interest query");
         //TODO: fire query to send interest	
+    },
+
+    //update status in chat box top
+    _updateStatusInChatBox: function(userId,chat_status){
+        if ($('chat-box[user-id="' + userId + '"]').length != 0) {
+            console.log("manvi update status in chatbox "+chat_status);
+        }
     },
 
     //appending chat box
@@ -1257,9 +1282,12 @@ JsChat.prototype = {
         });
     },
 
-    hideChatLoader: function(){
-        console.log("hiding loader_ankita");
-        $("#scrollDivLoader").hide();
+    //manage chat loader
+    manageChatLoader: function(type){
+        if(type == "hide"){
+            console.log("hiding loader_ankita");
+            $("#scrollDivLoader").hide();
+        }
     },
 
     //start:this function is that init forthe chat
