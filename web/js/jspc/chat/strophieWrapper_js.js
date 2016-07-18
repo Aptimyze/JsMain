@@ -96,11 +96,21 @@ var strophieWrapper = {
 		}
 	},
 
+	authorize: function(jid, message)
+    {
+        var pres = $pres({to: jid, type: "subscribed"});
+        if (message && message != "")
+            pres.c("status").t(message);
+        strophieWrapper.connectionObj.send(pres);
+    },
+
 	//executed after presence has been fetched
 	onPresenceReceived : function(presence){
 		var presence_type = $(presence).attr('type'),chat_status="offline"; // unavailable, subscribed, etc...
 		var from = $(presence).attr('from'),user_id = from.split("@")[0]; // the jabber_id of the contact
 		console.log("start of onPresenceReceived for "+user_id);
+		console.log(from);
+		strophieWrapper.authorize(from.split("/")[0]);
 		if (presence_type != 'error'){
 		if (presence_type === 'unavailable'){
 			//console.log(from+" is offline");
@@ -116,7 +126,7 @@ var strophieWrapper = {
 			}
 		}
 		strophieWrapper.updatePresence(user_id,chat_status);
-		console.log("end of onPresenceReceived");
+		console.log("end of onPresenceReceived for "+user_id+"---"+chat_status);
 		console.log(strophieWrapper.Roster[user_id]);
 		return true;
     },
@@ -156,9 +166,10 @@ var strophieWrapper = {
 				listObj[strophieWrapper.rosterDetailsKey]["chat_status"] = status;
 				listObj[strophieWrapper.rosterDetailsKey]["last_online_time"] = last_online_time;
 				strophieWrapper.Roster[user_id] = strophieWrapper.mergeRosterObj(strophieWrapper.Roster[user_id],listObj);
-				//var pres = $pres({to: this.attr('jid'), type: "subscribe"});
-				//console.log($pres);
-				//strophieWrapper.connectionObj.send(pres);
+				var pres = $pres({to: jid, type: "subscribe"});
+				console.log("sending presence for "+jid);
+				console.log(pres);
+				strophieWrapper.connectionObj.send(pres);
 			}
 		});
 		console.log("end of onRosterReceived");
