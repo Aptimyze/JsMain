@@ -28,7 +28,7 @@ chatConfig.Params = {
 									"group_name":"Interest Received",
 									//"order_id":1,
 									"show_group_name":true,
-									"hide_offline_users":false
+									"hide_offline_users":true
 								},
 								{
 									"id":"shortlisted",

@@ -130,7 +130,8 @@ var strophieWrapper = {
 		strophieWrapper.Roster[user_id] = strophieWrapper.mergeRosterObj(strophieWrapper.Roster[user_id],strophieWrapper.mapRosterObj(updatedObj));
 		console.log(strophieWrapper.Roster[user_id]);
 		console.log("end of updatePresence for "+user_id);
-		if(strophieWrapper.initialRosterFetched == true && typeof strophieWrapper.Roster[user_id] != "undefined"){
+		console.log(strophieWrapper.initialRosterFetched);
+		if(strophieWrapper.initialRosterFetched == true){
 			console.log("change in status after initialRosterFetched done for "+user_id);
 			console.log(strophieWrapper.Roster[user_id]);
 			var nodeArr = [];
@@ -162,9 +163,10 @@ var strophieWrapper = {
 		});
 		console.log("end of onRosterReceived");
 		console.log(strophieWrapper.Roster);
+		console.log("setting roster fetched flag");
+	    strophieWrapper.initialRosterFetched = true;
         //strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
 	    invokePluginManagelisting(strophieWrapper.Roster,"create_list");
-	    strophieWrapper.initialRosterFetched = true;
 	    strophieWrapper.setRosterStorage(strophieWrapper.Roster);
 	},
 

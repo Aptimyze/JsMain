@@ -333,15 +333,15 @@ JsChat.prototype = {
         console.log("addListing");
         for (var key in data) 
         {
-            if(typeof data[key][this._rosterDetailsKey]["jid"] != "undefined")
+            if(typeof data[key]["rosterDetails"]["jid"] != "undefined")
             {
-                var runID = data[key][this._rosterDetailsKey]["jid"],res = '',status = data[key][this._rosterDetailsKey]["chat_status"];
-                console.log("addlisting for "+runID+"--"+data[key][this._rosterDetailsKey]["chat_status"]);
+                var runID = data[key]["rosterDetails"]["jid"],res = '',status = data[key]["rosterDetails"]["chat_status"];
+                console.log("addlisting for "+runID+"--"+data[key]["rosterDetails"]["chat_status"]);
                 var fullJID = runID;
                 res = runID.split("@");
                 runID = res[0];
                 statusArr[runID] = status;
-                if(typeof data[key][this._rosterDetailsKey]["groups"] != "undefined" && data[key][this._rosterDetailsKey]["groups"].length >0)
+                if(typeof data[key]["rosterDetails"]["groups"] != "undefined" && data[key]["rosterDetails"]["groups"].length >0)
     				$.each(data[key]["rosterDetails"]["groups"], function(index, val) {
                         console.log("groups "+val);
                         var List = '',fullname = data[key]["rosterDetails"]["fullname"],tabShowStatus = $('div.' + val).attr('data-showuser');
@@ -367,6 +367,7 @@ JsChat.prototype = {
                                addNode = true;
                             }
                         }
+                        console.log("addNode"+addNode);
                         if(addNode == true){
                             if($('#'+runID + "_" + val).length==0){
                                 if($('#'+runID + "_" + val).find('.nchatspr').length==0){
@@ -388,7 +389,7 @@ JsChat.prototype = {
                             else{
                                 elem._placeContact("existing",runID,val,status);   
                             }
-                            elem._updateStatusInChatBox(runID,status); 
+                            //this._updateStatusInChatBox(runID,status); 
                         }
                     });
             }
@@ -412,8 +413,9 @@ JsChat.prototype = {
             $('div.' + groupID + ' ul').append(contactHTML);
         }
         else if(key == "existing" && status == "online"){
+            console.log("changing icon");
             //add online chat_status icon
-            $(elem._mainID).find($('#'+contactID + "_" + groupID)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
+            $(this._mainID).find($('#'+contactID + "_" + groupID)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
             //move this element to beginning of listing
             /*var html = $(elem._mainID).find($('#'+contactID + "_" + groupID)).html();
             $(elem._mainID).find($('#'+contactID + "_" + groupID)).remove();
@@ -523,9 +525,10 @@ JsChat.prototype = {
             console.log("calllign _removeFromListing");
             for (var key in data){
                 var runID = '';
-                runID = data[key][this._rosterDetailsKey]["jid"].split("@")[0];
-                if(typeof data[key][this._rosterDetailsKey]["groups"] != "undefined" && data[key][this._rosterDetailsKey]["groups"].length >0){
-                    $.each(data[key][this._rosterDetailsKey]["groups"], function(index, val) {
+                runID = data[key]["rosterDetails"]["jid"].split("@")[0];
+                if(typeof data[key]["rosterDetails"]["groups"] != "undefined")
+                {
+                    $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
                         var tabShowStatus='',listElements = '';
                         //this check the sub header status in the list
                         var tabShowStatus = $('div.' + val).attr('data-showuser');
@@ -535,11 +538,11 @@ JsChat.prototype = {
                         }
                         else{
                             $('div').find(listElements).detach();
-                            if($('div.' + val + ' ul li').size() == 0){
+                            if($('div.' + val + ' ul li').length == 0){
                                 $('div.' + val + ' ul').parent().addClass("disp-none");
                             }
                         }
-                        this._updateStatusInChatBox(runID,data[key][this._rosterDetailsKey]["chat_status"]);
+                        //this._updateStatusInChatBox(runID,data[key]["rosterDetails"]["chat_status"]);
                     });
                 }
             }
