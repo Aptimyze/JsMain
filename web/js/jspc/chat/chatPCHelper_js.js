@@ -24,12 +24,15 @@ var pluginId = '#chatOpenPanel',device = 'PC';
 function initiateChatConnection()
 {
     var username = loggedInJspcUser+'@localhost';
-    
-    /*var username = 'a1@localhost';
+    /*if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
+        username = 'a1@localhost';
     if(readSiteCookie("CHATUSERNAME")=="bassi")
-        username = 'a8@localhost';
+        username = '1@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
-        username = 'a2@localhost';*/
+        username = 'a2@localhost';
+    pass = '123';
+    */
+
     //console.log("Nitish"+username);
     //console.log(chatConfig.Params[device].bosh_service_url);
     console.log("user:"+username+" pass:"+pass);
@@ -148,6 +151,7 @@ function invokePluginManagelisting(listObject,key,user_id){
         }
     } 
     else if(key=="delete_node"){
+        console.log(user_id);
         //remove user from roster in listing
         if(typeof user_id != "undefined"){
             console.log("deleting node from roster-"+user_id);

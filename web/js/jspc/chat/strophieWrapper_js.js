@@ -78,21 +78,21 @@ var strophieWrapper = {
 	onRosterUpdate: function(iq){
 		console.log("in onRosterPush");
 		console.log(iq);
-		var nodeObj= xmlToJson(iq),rosterObj = strophieWrapper.formatRosterObj(nodeObj["query"]["item"]);
-		var nodeArr = [],user_id = rosterObj[strophieWrapper.rosterDetailsKey]["jid"].split("@")[0],subscription = rosterObj[strophieWrapper.rosterDetailsKey]["subscription"],ask = rosterObj[strophieWrapper.rosterDetailsKey]["ask"]; 
-		if(strophieWrapper.checkForSubscription(subscription) == true){
-			nodeArr[user_id] = strophieWrapper.Roster[user_id] = rosterObj;
+		var nodeObj= xmlToJson(iq);
+		rosterObj = strophieWrapper.formatRosterObj(nodeObj["query"]["item"]);
+		console.log(rosterObj);
+		var nodeArr = [],user_id = rosterObj[strophieWrapper.rosterDetailsKey]["jid"].split("@")[0],subscription = rosterObj[strophieWrapper.rosterDetailsKey]["subscription"],ask=rosterObj[strophieWrapper.rosterDetailsKey]["ask"]; 
+		nodeArr[user_id] = strophieWrapper.Roster[user_id] = rosterObj;
+		console.log(nodeArr);
+		console.log(ask);
+		if(ask == "unsubscribe"){
 			console.log(strophieWrapper.Roster[user_id]);
-			console.log(subscription+"123"); //if it is remove then use subscription to check
-			console.log(ask+" here");
-			if(ask == "unsubscribe" || subscription == "remove"){
-				console.log("deleting node");
-				invokePluginManagelisting(nodeArr,"delete_node",user_id);
-			}
-			else{
-				console.log("adding node");
-				invokePluginManagelisting(nodeArr,"add_node");
-			}
+			console.log("deleting node");
+			invokePluginManagelisting(nodeArr,"delete_node",user_id);
+		}
+		else if(strophieWrapper.checkForSubscription(subscription) == true){
+			console.log("adding node");
+			invokePluginManagelisting(nodeArr,"add_node");
 		}
 	},
 
@@ -196,7 +196,8 @@ var strophieWrapper = {
 								"subscription":obj["attributes"]["subscription"],
 								"profile_checksum":fullname[2],
 								"listing_tuple_photo":fullname[1],
-								"last_online_time":null
+								"last_online_time":null,
+								"ask":obj["attributes"]["ask"]
 							};
 		newObj[strophieWrapper.rosterDetailsKey]["groups"].push(obj["group"]["#text"]);
 		return newObj;
