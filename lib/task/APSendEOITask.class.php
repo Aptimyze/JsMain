@@ -59,7 +59,7 @@ EOF;
                 if(!$this->isOneTime)
                     $whereCondition = date('Y-m-d',strtotime('-'.($this->lastLoginDays).' days'));
 		$profileArr = $profileInfoObj->getAPProfilesResumed($whereCondition);
-		//$profileArr=array(1=>array("PROFILEID"=>144111));
+		$profileArr=array(1=>array("PROFILEID"=>144111,"LAST_LOGIN_DT"=>"2016-07-13 00:00:00"));
 		$totalContactsMade = 0;
 		$totalSenders = 0;
                 $date = date("Y-m-d");
@@ -134,7 +134,7 @@ EOF;
                                     //get dpp matches with not in param
                                     
                                     //profiles registered 7 days before
-                                     $verifiedProfilesDate = date('Y-m-d hh:mm:ss', strtotime('-'.$this->verifyActiveDays.' days'));
+                                     $verifiedProfilesDate = date('Y-m-d h:m:s', strtotime('-'.$this->verifyActiveDays.' days'));
                                      $partnerMatchesArr = $partnerObj->getMyDppMatches('',$profileObj,$limit,'','','',$this->removeFilteredProfiles,$searchMutualMatches,'','',$notInProfiles,$verifiedProfilesDate);
                                      $resultArr = $partnerMatchesArr;
                                      $dppLoop++; 
