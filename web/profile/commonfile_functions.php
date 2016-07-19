@@ -429,7 +429,7 @@ $js_arr[]=array("jsms/utility/hamSearch_js"  => "1");
 $js_arr[]=array("jsms/membership/revamp_mobile_membership"      => "5");
 $js_arr[]=array("jsms/membership/new_revamp_mobile_membership"                 => "12");
 $js_arr[]=array("jsms/membership/new_revamp_mobile_payment"        => "7");
-$js_arr[]=array("jsms/profile/ep/mobeditsave_js"    => "4");
+$js_arr[]=array("jsms/profile/ep/mobeditsave_js"      => "7");
 $js_arr[]=array("jsms/phone/phone_js"        => "7");
 $js_arr[]=array("jsms/photo/mobPhotoUpload_v1"  => "1");
 $js_arr[]=array("jsms/search/relaxCriteria_v1"  => "1");

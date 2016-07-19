@@ -759,6 +759,11 @@ if(isset($data))//successful login
         if(in_array('MG',$priv) || in_array('P',$priv) || in_array('SLHDO',$priv)){
                 $linkarr[]="<a href=\"$SITE_URL/operations.php/crmInterface/slaveLagStatus\">Get Server Lag Status</a>";
         }
+
+        if( in_array('CSEXEC',$priv) || in_array('CSSUP',$priv)  || in_array("P",$priv) ||in_array("MG",$priv) )
+        $linkarr[]="<a href=\"$SITE_URL/operations.php/feedback/reportAbuse\">Fetch Report Abuse Data</a>";
+
+
         if(in_array('SLHDO',$priv) || in_array('P',$priv) || in_array('SLHD',$priv) || in_array('MG',$priv)){
                 $linkarr[]="<a href=\"$SITE_URL/operations.php/crmInterface/helpBackend\">Help Questions</a>";
         }

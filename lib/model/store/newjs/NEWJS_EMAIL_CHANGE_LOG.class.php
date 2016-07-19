@@ -44,7 +44,7 @@ class NEWJS_EMAIL_CHANGE_LOG extends TABLE {
 		}
 		return $this->db->lastInsertId();	
 	}
-        public function getLastId($profileid)
+        public function getLastEntry($profileid)
         {
                 try{
                         
@@ -53,7 +53,7 @@ class NEWJS_EMAIL_CHANGE_LOG extends TABLE {
                                 $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
                                 $res->execute();
                                 if($result = $res->fetch(PDO::FETCH_ASSOC))
-                                    return $result['ID'];
+                                    return $result;
     							else return false;                    
                 }
                 catch(Exception $e)

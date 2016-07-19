@@ -8,19 +8,29 @@
 *********************************************************************************************/
 $start = @date('H:i:s');
 
+// Redis connection String
+$dir ="/home/developer/jsdialer";
+include_once($dir.'/plugins/predis-1.1/autoload.php');
+$ifSingleRedis ='tcp://127.0.0.1:6379';
+
 //Open connection at JSDB
 $db_js = mysql_connect("ser2.jeevansathi.jsb9.net","user_dialer","DIALlerr") or die("Unable to connect to js server at".$start);
 $db_js_157 = mysql_connect("localhost:/tmp/mysql_06.sock","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
 
+// Redis Data fetch 
+$client = new Predis\Client($ifSingleRedis);
+//$client->zAdd('mylist', '1', 'one');
+$pro_array =$online_array = $client->zRange('online_user', 0, -1);
+
 //Compute all online users
-$pro_array = array();
+/*$pro_array = array();
 $sql1= "SELECT userID FROM userplane.recentusers";
 $res1=mysql_query($sql1,$db_js) or die($sql1.mysql_error($db_js));
 while($myrow1 = mysql_fetch_array($res1))
 {
         $pro_array[] = $myrow1["userID"];
 	$online_array[] = $myrow1["userID"];
-}
+}*/
 
 //Remove profiles who are online but already priortized
 $last_pro_array = array();
@@ -62,18 +72,10 @@ $pro_array = array_diff($pro_array,$last_pro_array);
 $pro_array = array_unique($pro_array);
 $pro_str = @implode("','",$pro_array);
 
-//Compute all the active campaigns
-/*$sqlc= "SELECT CAMPAIGN FROM incentive.CAMPAIGN WHERE ACTIVE = 'Y' AND CAMPAIGN!='PUNE_JS'";
-$resc=mysql_query($sqlc,$db_js) or die($sqlc.mysql_error($db_js));
-while($myrowc = mysql_fetch_array($resc))
-	$camp_array[] = $myrowc["CAMPAIGN"];*/
+/*$sqlc= "SELECT CAMPAIGN FROM incentive.CAMPAIGN WHERE ACTIVE = 'Y' AND CAMPAIGN!='PUNE_JS'";*/
 $camp_array = array("JS_NCRNEW","MAH_JSNEW");
 
-//Compute Suffix for active leadids
-/*$sql_lf="SELECT LEAD_ID_SUFFIX FROM incentive.LARGE_FILE ORDER BY ENTRY_DT DESC LIMIT 1";
-$res_lf=mysql_query($sql_lf,$db_js) or die($sql_lf.mysql_error($db_js));
-$row_lf=mysql_fetch_assoc($res_lf);
-$suffix = $row_lf['LEAD_ID_SUFFIX'];*/
+/*$sql_lf="SELECT LEAD_ID_SUFFIX FROM incentive.LARGE_FILE ORDER BY ENTRY_DT DESC LIMIT 1";*/
 $suffix = '070116';
 
 if(count($camp_array)>0)

@@ -78,8 +78,8 @@ class SearchTitleAndTextEnums
                 self::$SUBHEADING_MAPPING["V1"]["PC"]["twowaymatch"] = "Shown below are people where both of you match each other's criteria";
                 self::$SUBHEADING_MAPPING["V1"]["PC"]["justJoinedMatches"] = "Shown below are your desired partner matches who joined in the last week";
                 self::$SUBHEADING_MAPPING["V1"]["PC"]["kundlialerts"] = "Here you can see all the 'Kundli Matches' which were sent to you on Email in the last 45 days";
-                self::$SUBHEADING_MAPPING["V1"]["PC"]["matchalerts"]["trend"] = array(0=>"Matches are based on history of your interests & acceptances.",1=>"Send me matches based on my Desired Partner Preferences only");
-                self::$SUBHEADING_MAPPING["V1"]["PC"]["matchalerts"]["dpp"] = array(0=>"Matches are based strictly on your Desired Partner Preferences.",1=>"Send me matches based on my history of interests & acceptances");
+                self::$SUBHEADING_MAPPING["V1"]["PC"]["matchalerts"]["trend"] = array(0=>"Matches are based on history of your interests & acceptances.",1=>"Matches are based strictly on your Desired Partner Preferences.");
+                self::$SUBHEADING_MAPPING["V1"]["PC"]["matchalerts"]["dpp"] = array(0=>"Matches are based strictly on your Desired Partner Preferences.",1=>"Matches are based on history of your interests & acceptances.");
                 
                 self::$CUSTOM_SUBHEADING_MAPPING["V1"]["PC"]["partnermatches"] = 'Please broaden your partner preference slightly to receive more matches in this list <a href="/profile/dpp"><span class="disp_ip color5 pl10 f15 pause-rel">Modify</span></a>';
                 self::$CUSTOM_SUBHEADING_MAPPING["V1"]["PC"]["justJoinedMatches"] = 'Please broaden your partner preference slightly to receive more matches in this list <a href="/profile/dpp"><span class="disp_ip color5 pl10 f15 pause-rel">Modify</span></a>';

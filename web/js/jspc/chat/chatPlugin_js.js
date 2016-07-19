@@ -1294,6 +1294,11 @@ JsChat.prototype = {
 
     },
     
+    /*
+     * Sending typing event
+     */
+    sendingTypingEvent: null,
+    
    //start:this function image,name in top chat logged in scenario
     addLoginHTML: function(failed) {
         console.log('in addLoginHTML');

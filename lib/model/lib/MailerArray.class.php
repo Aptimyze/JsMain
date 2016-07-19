@@ -71,6 +71,7 @@
 '62'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'BASIC_DETAILS','URL'=>'profile/viewprofile.php','OTHER_GET_PARAMS'=>'ownview=1&EditWhatNew=Basic','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '63'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'SAVED_SEARCH','URL'=>'search/perform','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '64'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'EMAIL_VER_SUCCESS','URL'=>'static/verifyEmail','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
+'65'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'MATCHALERT_FEEDBACK','URL'=>'/mailer/feedbackMatchAlertMailer','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 );
 private static $linkNameArray=array(
 'PHOTO_ALBUM'=>'1',
@@ -137,6 +138,7 @@ private static $linkNameArray=array(
 'BASIC_DETAILS'=>'62',
 'SAVED_SEARCH'=>'63',
 'EMAIL_VER_SUCCESS'=>'64',
+'MATCHALERT_FEEDBACK'=>'65',
 );
 private static $variableArray=array(
 'ABOUTPROFILE'=>array('VARIABLE_PROCESSING_CLASS'=>'2','MAX_LENGTH'=>'100','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'About Profile'),

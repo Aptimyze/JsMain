@@ -25,7 +25,7 @@ class MessageQueues
   CONST EXCLUSIVE = false;    // the queue can be accessed in other channels
   CONST AUTO_DELETE = false;  //the queue won't be deleted once the channel is closed.
   CONST EXCHANGE = "";        //for default(nameless) exchange.
-  CONST CHATEXCHANGE = "CHAT"; //Chat Exchange
+  CONST CHATEXCHANGE = "Profile"; //Chat Exchange
   CONST MANDATORY = true;     //If set,server will return an unroutable message with a Return method. If false, the server silently drops the message.
   CONST IMMEDIATE = false;    // If this set, the server will return an undeliverable message with a Return method. If false, the server will queue the message, but with no guarantee that it will ever be consumed.
   CONST MULTIPLE_TAG = true;  //If set,multiple messages can be rejected with a single method. If false, the delivery tag refers to a single message.

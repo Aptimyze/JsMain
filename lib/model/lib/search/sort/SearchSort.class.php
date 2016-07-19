@@ -34,7 +34,8 @@ class SearchSort
         * @var String $filterSortScore
         */
 	private $filterSortScore;
-
+        
+        private $reverseSortStr;
 	/**
 	* When Photos is searched , visible photos will be given more prefernce.
 	* @access public 
@@ -207,5 +208,68 @@ class SearchSort
                 $fl =  $st.$middle.$end;
                 return $fl;
         }
+        public function getReverseDppSort(){
+                return $this->reverseSortStr;
+        }
+        protected function setReverseDppSorting($loggedInProfileObj = '', $sortLastLogin = 0) {
+                $sortArray = array();
+                // Login time condition
+                $sortLogin = '';
+                if ($sortLastLogin == 1)
+                        $sortLogin = "LAST_LOGIN_SCORE"; // User who have logged in in last 15 days will be given 100 score
+
+                $doesntMatterValue = 99999;
+
+                if ($loggedInProfileObj && $loggedInProfileObj->getPROFILEID() != '') {
+                        if ($loggedInProfileObj->getCASTE()) {
+                                $sortArray[] = "or(tf(PARTNER_CASTE," . $loggedInProfileObj->getCASTE() . "),tf(PARTNER_CASTE," . $doesntMatterValue . "))";
+                        }
+                        if ($loggedInProfileObj->getAGE()) {
+                                $sortArray[] = "and(if(abs(sub(min(PARTNER_LAGE," . $loggedInProfileObj->getAGE() . "),PARTNER_LAGE)),0,1),if(abs(sub(max(PARTNER_HAGE," . $loggedInProfileObj->getAGE() . "),PARTNER_HAGE)),0,1))";
+                        }
+                        if ($loggedInProfileObj->getMSTATUS()) {
+                                $sortArray[] = "or(tf(PARTNER_MSTATUS," . $loggedInProfileObj->getMSTATUS() . "),tf(PARTNER_MSTATUS," . $doesntMatterValue . "))";
+                        }
+                        if ($loggedInProfileObj->getRELIGION()) {
+                                $sortArray[] = "or(tf(PARTNER_RELIGION," . $loggedInProfileObj->getRELIGION() . "),tf(PARTNER_RELIGION," . $doesntMatterValue . "))";
+                        }
+                        if ($loggedInProfileObj->getCOUNTRY_RES()) {
+                                $sortArray[] = "or(tf(PARTNER_COUNTRYRES," . $loggedInProfileObj->getCOUNTRY_RES() . "),tf(PARTNER_COUNTRYRES," . $doesntMatterValue . "))";
+                        }
+                        if ($loggedInProfileObj->getCITY_RES()) {
+                                $sortArray[] = "or(tf(PARTNER_CITYRES," . $loggedInProfileObj->getCITY_RES() . "),tf(PARTNER_CITYRES," . $doesntMatterValue . "))";
+                        }
+                        if ($loggedInProfileObj->getMTONGUE()) {
+                                $sortArray[] = "or(tf(PARTNER_MTONGUE," . $loggedInProfileObj->getMTONGUE() . "),tf(PARTNER_MTONGUE," . $doesntMatterValue . "))";
+                        }
+                        if ($loggedInProfileObj->getGENDER() == 'F') {
+                                if ($loggedInProfileObj->getEDU_LEVEL_NEW()) {
+                                        $sortArray[] = "or(tf(PARTNER_ELEVEL_NEW," . $loggedInProfileObj->getEDU_LEVEL_NEW() . "),tf(PARTNER_ELEVEL_NEW," . $doesntMatterValue . "))";
+                                }
+                        } else {
+                                if ($loggedInProfileObj->getINCOME()) {
+                                        $sortArray[] = "or(tf(PARTNER_INCOME_FILTER," . $loggedInProfileObj->getINCOME() . "),tf(PARTNER_INCOME_FILTER," . $doesntMatterValue . "))";
+                                }
+                        }
+                }
+
+                if (!empty($sortArray)) {
+                        $brace = '';
+                        $strCondition = '';
+                        foreach ($sortArray as $arr) {
+                                $strCondition .= "if(" . $arr . ",";
+                                $brace .= ",0)";
+                        }
+                        $strCondition .= "1" . $brace;
+                        if($sortLastLogin == 1)
+                                $strCondition = "sum(" . $sortLogin . "," . $strCondition . ")";
+                        else
+                                $strCondition = "sum(". $strCondition . ")";
+                } else {
+                        $strCondition = $sortLogin;
+                }
+                $this->reverseSortStr = $strCondition;
+        }
+
 }
 ?>

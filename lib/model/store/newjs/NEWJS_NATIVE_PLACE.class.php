@@ -133,5 +133,33 @@ class NEWJS_NATIVE_PLACE extends TABLE
 		throw new jsException($e);
 	}
    }
+   public function getNativeDataForMultipleProfiles($profileidArray)
+   {
+	try
+	{
+                foreach($profileidArray as $k=>$v)
+                {
+                        $idArr[]=$v;		
+                        $idSqlArr[]=":v$k";
+                }
+                $strId=implode(",",$idSqlArr);
+		$sql = "SELECT PROFILEID,NATIVE_COUNTRY,NATIVE_STATE,NATIVE_CITY FROM newjs.NATIVE_PLACE WHERE PROFILEID IN ($strId)";
+		$pdoStatement = $this->db->prepare($sql);
+                foreach($idArr as $k=>$v)
+                        $pdoStatement->bindValue(":v$k", $v, PDO::PARAM_INT);
+                
+		$pdoStatement->execute();
+		$resultArray=array();
+                while($result = $pdoStatement->fetch(PDO::FETCH_ASSOC))
+                {
+                        $resultArray[]=$result;
+                }
+                return $resultArray;
+	}
+	catch(Exception $e)
+	{
+		throw new jsException($e);
+	}
+   }
 }
 ?>

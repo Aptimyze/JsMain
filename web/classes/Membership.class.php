@@ -1,11 +1,11 @@
 <?php
 
 if (JsConstants::$whichMachine != 'matchAlert') {
-	include_once ($_SERVER["DOCUMENT_ROOT"] . "/billing/comfunc_sums.php");
-	include_once ($_SERVER['DOCUMENT_ROOT'] . "/jsadmin/ap_common.php");
+	include_once (JsConstants::$docRoot . "/billing/comfunc_sums.php");
+	include_once (JsConstants::$docRoot . "/jsadmin/ap_common.php");
 }
 
-include_once ($_SERVER['DOCUMENT_ROOT'] . "/classes/Services.class.php");
+include_once (JsConstants::$docRoot . "/classes/Services.class.php");
 
 class Membership
 {
@@ -112,6 +112,18 @@ class Membership
         $this->profileid = $profileid;
     }
 
+    public function __get($property) {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
+    }
+
+    public function __set($property, $value) {
+        if (property_exists($this, $property)) {
+            $this->$property = $value;
+        }
+    }
+
     function generateOrder($profileid, $paymode, $curtype, $amount, $service_str, $service_main, $discount, $setactivate, $gateway = '', $discount_type = '') {
         if ($profileid > 0) {
             $ORDERID = sprintf("J%1.1s%09lX", 'Z', time(NULL));
@@ -181,7 +193,7 @@ class Membership
         return $ret;
     }
     
-    function startServiceOrder($orderid) {
+    function startServiceOrder($orderid, $skipBill = false) {
         global $smarty;
         
         list($part1, $part2) = explode('-', $orderid);
@@ -265,9 +277,9 @@ class Membership
         $this->expiry_dt = $myrow["EXPIRY_DT"];
         $this->set_activate = $myrow["SET_ACTIVATE"];
         
-        $this->makePaid();
+        $this->makePaid($skipBill);
 
-        include_once ($_SERVER['DOCUMENT_ROOT'] . "/profile/suspected_ip.php");
+        include_once (JsConstants::$docRoot . "/profile/suspected_ip.php");
         $suspected_check = doubtfull_ip("$ip");
         
         if ($suspected_check) send_email('vikas@jeevansathi.com', $this->profileid, "Payment Profileid of suspected email-id", "payment@jeevansathi.com");
@@ -278,7 +290,7 @@ class Membership
         
         $receiptid = $this->receiptid;
         $billid = $this->billid;
-        include_once ($_SERVER["DOCUMENT_ROOT"] . "/billing/invoiceGenerate.php");
+        include_once (JsConstants::$docRoot . "/billing/invoiceGenerate.php");
         
         //different mail function called to send html mail along with pdf attachment.
 		$canSendObj= canSendFactory::initiateClass(CanSendEnums::$channelEnums[EMAIL],array("EMAIL"=>$this->email,"EMAIL_TYPE"=>"29"),$myrow['PROFILEID']);
@@ -397,7 +409,7 @@ class Membership
         $membershipMailer = new MembershipMailer();
         $receiptid = $this->receiptid;
         $billid = $this->billid;
-        include_once ($_SERVER["DOCUMENT_ROOT"] . "/billing/invoiceGenerate.php");
+        include_once (JsConstants::$docRoot . "/billing/invoiceGenerate.php");
         $membershipMailer->sendWelcomeMailerToPaidUser(1835, $this->profileid, $bill, $this->serviceid);
 
         // global $payment_gateway;
@@ -572,15 +584,19 @@ class Membership
         $billingPayStatLog->insertEntry($orderid,$status,$gateway,$msg);
     }
     
-    function makePaid() {
-        $this->generateBill();
+    function makePaid($skipBill = false) {
+        if($skipBill == true){
+            $this->setGenerateBillParams();
+        } else {
+            $this->generateBill();
+        }
         $this->generateReceipt();
         $this->setServiceActivation();
         $this->populatePurchaseDetail();
         $this->updateJprofileSubscription();
     }
-    
-    function generateBill() {
+
+    function setGenerateBillParams(){
         if (strstr($this->serviceid, 'C') || strstr($this->serviceid, 'P') || strstr($this->serviceid, 'ES') || strstr($this->serviceid, 'X') || strstr($this->serviceid, 'NCP')) {
             $this->membership = 'Y';
             $dur_arr = array('1W', '2W', '6W', '11', '12', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'L', '10');
@@ -596,34 +612,21 @@ class Membership
         }
         
         $this->service_tax_content = billingVariables::SERVICE_TAX_CONTENT;
-        /*
-        if($this->curtype=='RS')
-        {
-            if(strtotime(date("Y-m-d H:i:s")) > strtotime(date("2016-05-31 23:59:59"))){
-                $this->service_tax_content ="(Inclusive of Swachh Bharat Cess and Krishi Kalyan Cess)";
-            }  elseif(strtotime(date("Y-m-d H:i:s")) > strtotime(date("2015-11-14 23:59:59"))){
-                $this->service_tax_content ="(Inclusive of Swachh Bharat Cess)";
-            }  elseif(strtotime(date("Y-m-d H:i:s")) > strtotime(date("2015-05-31 23:59:59"))){
-                $this->service_tax_content = NULL;
-            } else {
-                $this->service_tax_content ="(Including 2% Education Cess and 1% Secondary Higher Education Cess on Service Tax)";
-            }
-        }
-        elseif ($this->curtype == 'DOL') {
-            if(strtotime(date("Y-m-d H:i:s")) > strtotime(date("2016-05-25 23:59:59"))){
-                $this->service_tax_content = "(Inclusive of Swachh Bharat Cess and Krishi Kalyan Cess)";
-            }
-            else{
-                $this->service_tax_content = "(Inclusive of Swachh Bharat Cess)";
-            }
-        }
-         */
-        
+
         //Field for identifying the team to which sales belong
         $jprofileObj = new JPROFILE();
         $myrow_sales = $jprofileObj->get($this->profileid,'PROFILEID');
         $this->sales_type = $myrow_sales['CRM_TEAM'];
+    }
+    
+    function generateBill() {
 
+        if(empty($this->discount_type) || $this->discount_type == 0){
+            $this->discount_type = 12;
+        }
+
+        $this->setGenerateBillParams();
+        
         //Generating Bill ID.
         $billingPurObj = new BILLING_PURCHASES();
         $paramsStr = "SERVICEID, PROFILEID, USERNAME, NAME, ADDRESS, GENDER, CITY, PIN, EMAIL, RPHONE, OPHONE, MPHONE, COMMENT, OVERSEAS, DISCOUNT, DISCOUNT_TYPE, DISCOUNT_REASON, WALKIN, CENTER, ENTRYBY, DUEAMOUNT, DUEDATE, ENTRY_DT, STATUS, SERVEFOR, VERIFY_SERVICE, ORDERID, DEPOSIT_DT, DEPOSIT_BRANCH, IPADD, CUR_TYPE, ENTRY_FROM, MEMBERSHIP, DOL_CONV_BILL, SALES_TYPE, SERVICE_TAX_CONTENT";
@@ -634,7 +637,37 @@ class Membership
         $valuesStr .= ",'$this->tax_rate'";
 
         $this->billid = $billingPurObj->genericPurchaseInsert($paramsStr, $valuesStr);
-
+        
+        /**
+         * Code added for tracking discount given per transaction
+         */
+        $memHandlerObj = new MembershipHandler();
+        list($execName, $supervisor) = $memHandlerObj->getAllotedExecSupervisor($this->profileid);
+        if(empty($supervisor)){
+            $supervisor = 'rohan.m';
+        }
+        $servicesObj = new Services();
+        $transObj = new billing_TRACK_TRANSACTION_DISCOUNT_APPROVAL();
+        $serArr = $servicesObj->getServiceName($this->serviceid);
+        foreach($serArr as $key=>$val){
+            $services_names[] = $val['NAME'];
+        }
+        $serName = implode(",", $services_names);
+        $iniAmt = $servicesObj->getTotalPrice($this->serviceid);
+        $finAmt = round($iniAmt - $this->discount, 2);
+        $discPerc = round((($iniAmt - $finAmt)/$iniAmt) * 100, 2);
+        $transObj->insert($this->billid, $this->profileid, $this->discount_type, $supervisor, $discPerc, $iniAmt, $finAmt, $this->serviceid);
+        if ($supervisor != 'rohan.m') {
+            $jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
+            $execEmail = $jsadminPswrdsObj->getEmail($supervisor);
+            $subject = "Bill with discount of {$discPerc}% offered by {$execName}; Final Bill Amount: {$finAmt}";
+            $msg = "Bill Details ({$serName})";
+            SendMail::send_email($execEmail,$msg,$subject,$from="js-sums@jeevansathi.com",$cc="avneet.bindra@jeevansathi.com");
+        }
+        /**
+         * End Code
+         */
+        
         try {
             $ordrDeviceObj = new billing_ORDERS_DEVICE();
             $ordrDeviceObj->updateBillingDetails($this->orderid,$this->orderid_part1,$this->billid);
@@ -653,26 +686,23 @@ class Membership
         }
         
         if(empty($this->device) || $this->device == ''){
-        	$this->device = 'desktop';
+            $this->device = 'desktop';
         }
-        
     }
 
-    function generateReceipt() {
-
-    	// Invoice generation Logic
-		$billyear = (date('m', strtotime(date("Y-m-d H:i:s")))<'04') ? date('y',strtotime('-1 year')) : date('y');
+    function generateInvoiceNo(){
+        $billyear = (date('m', strtotime(date("Y-m-d H:i:s")))<'04') ? date('y',strtotime('-1 year')) : date('y');
         $billid_toassign = $billyear;
         $d = $billid_toassign + 1;
         if ($d < 10) {
-        	$d = "0" . $d;
+            $d = "0" . $d;
         }
         $billid_toassign.= $d;
         $serviceid_arr = @explode(",", $this->serviceid);
         for ($i = 0; $i < count($serviceid_arr); $i++) {
-        	$service_type[] = get_service_type($serviceid_arr[$i]);
+            $service_type[] = get_service_type($serviceid_arr[$i]);
         }
-		$sid = end($serviceid_arr);
+        $sid = end($serviceid_arr);
         if (@in_array("P", $service_type)) $billid_toassign.= "-F";
         if (@in_array("D", $service_type)) $billid_toassign.= "-D";
         if (@in_array("C", $service_type)) $billid_toassign.= "-C";
@@ -688,6 +718,13 @@ class Membership
         for ($i = 0; $i < $no_zero; $i++) $billid_toassign.= "0";
         $billid_toassign.= $this->billid;
         $invNo = $billid_toassign;
+        return $invNo;
+    }
+
+    function generateReceipt() {
+
+    	// Invoice generation Logic
+		$invNo = $this->generateInvoiceNo();
 
         $billingPaymentDetObj = new BILLING_PAYMENT_DETAIL();
         $paramsStr = "PROFILEID, BILLID, MODE, TYPE, AMOUNT, CD_NUM, CD_DT, CD_CITY, BANK, OBANK, REASON, STATUS, BOUNCE_DT, ENTRY_DT, ENTRYBY,DEPOSIT_DT,DEPOSIT_BRANCH,IPADD,SOURCE,TRANS_NUM,INVOICE_NO";
@@ -944,7 +981,7 @@ class Membership
     	$membershipMailer = new MembershipMailer();
     	$receiptid = $this->receiptid;
         $billid = $this->billid;
-        include_once ($_SERVER["DOCUMENT_ROOT"] . "/billing/invoiceGenerate.php");
+        include_once (JsConstants::$docRoot . "/billing/invoiceGenerate.php");
         $membershipMailer->sendWelcomeMailerToPaidUser(1835, $this->profileid, $bill, $this->serviceid);
 
         // $serviceid_arr = @explode(",", $this->serviceid);
@@ -1838,9 +1875,9 @@ class Membership
                     $reqid = $link_discount;
                 }
             } else if ($renewalActive){
-                $dicount_type = 10;
+                $discount_type = 1;
                 if ($fest) {
-                    $dicount_type = 7;
+                    $discount_type = 7;
                 }
             } else if ($fest) {
                 $discount_type = 6;
@@ -1888,7 +1925,7 @@ class Membership
     }
 
     function sendInstantSms() {
-        include_once ($_SERVER["DOCUMENT_ROOT"] . "/profile/InstantSMS.php");
+        include_once (JsConstants::$docRoot . "/profile/InstantSMS.php");
         $sms = new InstantSMS("PAYMENT_PHONE_VERIFY", $this->profileid);
         $sms->send();
         if ($this->amount > 0 && $this->curtype == "RS") {
@@ -1907,7 +1944,7 @@ class Membership
         if (1)
          //$ftoStateArray['STATE']=='DUPLICATE')
         {
-            include_once ($_SERVER['DOCUMENT_ROOT'] . "/../apps/operations/lib/JsCommonLib.class.php");
+            include_once (JsConstants::$docRoot . "/../apps/operations/lib/JsCommonLib.class.php");
             $checked[0] = $this->profileid;
             JsOpsCommon::updateFtoStatus($checked, 1);
         } 

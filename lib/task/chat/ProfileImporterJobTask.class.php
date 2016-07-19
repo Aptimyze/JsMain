@@ -147,7 +147,22 @@ EOF;
         foreach($this->arrProfiles as $key=>$profileInfo)
         {
             try{
-                //TODO: Add Logic to import on message queue
+                $producerObj = new Producer();
+                if ($producerObj->getRabbitMQServerConnected()) {
+                    $chatData = array('process' => 'USERCREATION', 'data' => ($profileInfo["PROFILEID"]), 'redeliveryCount' => 0);
+                    $producerObj->sendMessage($chatData);
+	                if($this->m_bDebugInfo)
+	                {
+		                $this->logSection('DebugInfo: ', $profileInfo["PROFILEID"].' Inserted In queue');
+	                }
+                }
+	            else
+	            {
+		            if($this->m_bDebugInfo)
+		            {
+			            $this->logSection('DebugInfo: ', 'No rabbitmq connection found');
+		            }
+	            }
             } catch (Exception $ex) {
                 if($this->m_bDebugInfo)
                 {
@@ -157,6 +172,7 @@ EOF;
                 unset($completionObj);
             }
         }
+	    unset($producerObj);
 
     }
 
