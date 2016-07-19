@@ -66,7 +66,7 @@ class MOBILE_API_REGISTRATION_ID extends TABLE{
         public function updateNotificationStatus($profileid,$notificationStatus)
         {
                 if(!in_array($notificationStatus,array("Y","N")))
-		     throw new jsException("","Err in value for update in notification status");
+		     throw new jsException("","Error in value for update in notification status");
 		$sqlUpdate = "UPDATE  MOBILE_API.REGISTRATION_ID SET NOTIFICATION_STATUS =:NOTIFICATION_STATUS,`TIME`=now() WHERE PROFILEID=:PROFILEID";
                 $resUpdate = $this->db->prepare($sqlUpdate);
                 $resUpdate->bindValue(":PROFILEID",$profileid,constant('PDO::PARAM_'.$this->{'PROFILEID_BIND_TYPE'}));
