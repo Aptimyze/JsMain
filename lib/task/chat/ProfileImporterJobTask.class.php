@@ -147,7 +147,12 @@ EOF;
         foreach($this->arrProfiles as $key=>$profileInfo)
         {
             try{
-                //TODO: Add Logic to import on message queue
+                $producerObj = new Producer();
+                if ($producerObj->getRabbitMQServerConnected()) {
+                    $chatData = array('process' => 'USERCREATION', 'data' => ($profileInfo["PROFILEID"]), 'redeliveryCount' => 0);
+                    $producerObj->sendMessage($chatData);
+                }
+                unset($producerObj);
             } catch (Exception $ex) {
                 if($this->m_bDebugInfo)
                 {
