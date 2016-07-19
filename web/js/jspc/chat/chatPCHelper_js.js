@@ -29,7 +29,13 @@ function initiateChatConnection()
     if(readSiteCookie("CHATUSERNAME")=="bassi")
         username = '1@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
-        username = 'a2@localhost';
+        username = 'a10@localhost';
+    else if(readSiteCookie("CHATUSERNAME") == "ZZRS3292")
+        username = 'a9@localhost';
+    else if(readSiteCookie("CHATUSERNAME")=="ZZVV2929")
+        username = 'a14@localhost';
+    else if(readSiteCookie("CHATUSERNAME")=="ZZRR5723")
+        username = 'a11@localhost';
     pass = '123';*/
 
 
@@ -272,9 +278,16 @@ function invokePluginReceivedMsgHandler(msgObj)
 {
     if(typeof msgObj["from"] != "undefined")
     {
-        console.log("invokePluginReceivedMsgHandler");
-        console.log(msgObj);
-        objJsChat._appendRecievedMessage(msgObj["body"],msgObj["from"],msgObj["msg_id"],msgObj["msg_state"]); 
+        if(typeof msgObj["body"]!= "undefined" && msgObj["body"]!= ""){
+            console.log("invokePluginReceivedMsgHandler-handle message");
+            console.log(msgObj);
+            objJsChat._appendRecievedMessage(msgObj["body"],msgObj["from"],msgObj["msg_id"]); 
+        }
+        else if(typeof msgObj["msg_state"] != "undefined" && msgObj["msg_state"]!= ""){
+            console.log("invokePluginReceivedMsgHandler-handle typing state");
+            console.log(msgObj);
+            objJsChat._handleMsgComposingStatus(msgObj["from"],msgObj["msg_state"]);
+        }
     }
 }
 
@@ -440,14 +453,14 @@ $(document).ready(function(){
             url: url,
             success: function(data) {
                 console.log(data);
-                objJsChat.updateVCard(data,pCheckSum,function(){
+                /*objJsChat.updateVCard(data,pCheckSum,function(){
                     $('#'+username+'_hover').css({ 
                         'top':  hoverNewTop,                     
                         'visibility': 'visible',
                         'right':shiftright
                     });
                     console.log("Callback done");
-                });
+                });*/
             }
         });
         /*
