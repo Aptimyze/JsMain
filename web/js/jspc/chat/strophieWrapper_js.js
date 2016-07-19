@@ -451,4 +451,21 @@ var strophieWrapper = {
         this._conn.addHandler(proxyHandler, Strophe.NS.RECEIPTS, 'message',
                               type, null, from, options);
     },
+    
+    /*
+     * sending typing event
+     */
+    typingEvent: function(from, to, typingState){
+        if(from && to && typingState){
+            var id = strophieWrapper.connectionObj.getUniqueId();
+            var sendStatus = $msg({
+                from: username,
+                to: to,
+                type: 'chat',
+                id: id,
+            })
+            .c(typingState, {xmlns: "http://jabber.org/protocol/chatstates"});
+            strophieWrapper.connectionObj.send(sendStatus);
+        }
+    }
 }

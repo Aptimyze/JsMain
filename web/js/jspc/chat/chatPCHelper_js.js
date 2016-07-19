@@ -407,6 +407,13 @@ $(document).ready(function(){
         
     }
     
+    /*
+     * Sending typing event
+     */
+    objJsChat.sendingTypingEvent = function(from, to, typingState){
+        strophieWrapper.typingEvent(from, to, typingState);
+    }
+    
     objJsChat.onLogoutPreClick = function(){
         console.log("In Logout preclick");
         objJsChat._loginStatus = 'N';
