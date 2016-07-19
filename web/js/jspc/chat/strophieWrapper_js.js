@@ -73,7 +73,7 @@ var strophieWrapper = {
     
 	//send presence
 	sendPresence : function(){
-		console.log("in sendPresence");
+		console.log("in self sendPresence");
         strophieWrapper.connectionObj.send($pres().tree());
     },
 
@@ -104,11 +104,16 @@ var strophieWrapper = {
 				strophieWrapper.Roster.splice(user_id);
 				//unauthorize if required
 			}
-			else if(strophieWrapper.checkForSubscription(subscription) == true){
+			else if(strophieWrapper.checkForSubscription(subscription) == true){	
 				console.log("adding node");
 				console.log(subscription);
 				invokePluginManagelisting(nodeArr,"add_node");
-				strophieWrapper.subscribe(rosterObj[strophieWrapper.rosterDetailsKey]["jid"],rosterObj[strophieWrapper.rosterDetailsKey]["nick"]);	
+				if(subscription == "to")
+					strophieWrapper.subscribe(rosterObj[strophieWrapper.rosterDetailsKey]["jid"],rosterObj[strophieWrapper.rosterDetailsKey]["nick"]);						
+				setTimeout(function(){
+					strophieWrapper.sendPresence();
+				},10000);
+				
 			}
 		}
 	},
