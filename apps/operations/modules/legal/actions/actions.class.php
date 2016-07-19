@@ -36,7 +36,7 @@ class legalActions extends sfActions
   	$this->moduleurl=$generatedUrl.$this->getModuleName();
 
   	//One of Name and Address is mandatory
-  	if($request->getParameter("username") =="" && $request->getParameter("address") == "" &&$request->getParameter("email") == "" )
+  	if($request->getParameter("username") =="" && $request->getParameter("address") == "" && $request->getParameter("email") == "" )
   	{
   		$this->error = "Please Provide atleast one of Name, Address, Email";
   	} 
