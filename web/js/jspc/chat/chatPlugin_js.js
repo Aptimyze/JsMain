@@ -22,6 +22,7 @@ JsChat.prototype = {
     _minChatBarIn: '.js-minChatBarIn',
     _scrollDivId: '#nchatDivs',
     _listingClass: 'ul.chatlist li',
+    _imageUrl: '',
     _listingTabs:{},
     _loginFailueMsg:"Login Failed,Try later",
     _noDataTabMsg:{"tab1":"There are no matching members online. Please relax your partner preference to see more matches.",
@@ -49,6 +50,8 @@ JsChat.prototype = {
             this._rosterDetailsKey = arguments[1][0].rosterDetailsKey;
         if (arguments[1][0].listingNodesLimit)
             this._listingNodesLimit = arguments[1][0].listingNodesLimit;
+        if (arguments[1][0].imageUrl)
+            this._imageUrl = arguments[1][0].imageUrl;
     },
 
     //start:get screen height
@@ -161,7 +164,7 @@ JsChat.prototype = {
     //start:addChatTop function
     _addChatTop: function(param) {
         var curEleRef = this;
-        var chatHeaderHTML = '<div class="nchatbg1 nchatp2 clearfix pos-rel nchathgt1"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarIn"></i> </div><div class="fl"> <img src="images/chat-profile-small.jpg" class="nchatp4"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp">Logout</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>';
+        var chatHeaderHTML = '<div class="nchatbg1 nchatp2 clearfix pos-rel nchathgt1"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarIn"></i> </div><div class="fl"> <img src="'+this._imageUrl+'" class="nchatp4 wd40"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp">Logout</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>';
         $(curEleRef._listingPanelID).append(chatHeaderHTML);
 
 
@@ -1303,7 +1306,7 @@ JsChat.prototype = {
     addLoginHTML: function(failed) {
         console.log('in addLoginHTML');
         var curEle = this;
-        var LoginHTML = '<div class="fullwid txtc fontlig pos-rel" id="js-loginPanel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarOut"></i> </div><div> <img src="images/chat-profile-pic.jpg" class="chatmt1"/> </div><button id="js-chatLogin" class="chatbtnbg1 mauto chatw1 colrw f14 brdr-0 lh40 cursp nchatm5">Login to Chat</button></div>';
+        var LoginHTML = '<div class="fullwid txtc fontlig pos-rel" id="js-loginPanel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarOut"></i> </div><div> <img src="'+this._imageUrl+'" class="chatmt1"/> </div><button id="js-chatLogin" class="chatbtnbg1 mauto chatw1 colrw f14 brdr-0 lh40 cursp nchatm5">Login to Chat</button></div>';
         var errorHTML = '';
         if(failed == true)
         {
