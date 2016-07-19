@@ -473,7 +473,7 @@ Abstract class ApiAuthentication
 			if($allow)
 			@setcookie("LOGUSERENTRY",time(),0,"/",$this->domain);
 		}
-		if($allow && $pid)
+		if($allow && $pid && !$this->isMobile)
 		{
 			$dbObj=new userplane_recentusers;
 			$dbObj->replacedata($pid);
