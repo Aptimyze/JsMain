@@ -2,7 +2,6 @@ var strophieWrapper = {
 	connectionObj: null,
 	Roster: [],
 	initialRosterFetched: false,
-	rosterSubscriptionAllowed : ["to","both"],
 	rosterDetailsKey:"rosterDetails",
 	useLocalStorage:false,
 	msgStates: {
@@ -10,7 +9,8 @@ var strophieWrapper = {
 	        "ACTIVE":'active',
 	        "COMPOSING":'composing',
 	        "PAUSED":'paused',
-	        "GONE":'gone'
+	        "GONE":'gone',
+            "RECEIVED":'received'
     	},
 
 	//connect to openfire
@@ -59,8 +59,18 @@ var strophieWrapper = {
         strophieWrapper.connectionObj.addHandler(strophieWrapper.onMessage, null, 'message', null, null,  null); 
    		//binding event for new node push in roster
    		strophieWrapper.connectionObj.addHandler(strophieWrapper.onRosterUpdate,Strophe.NS.ROSTER,'iq','set');
+		//binding event for message receipts
+        strophieWrapper.connectionObj.addHandler(strophieWrapper.onMessageReceipt,Strophe.NS.RECEIPTS,'iq','set');
     },
 	
+    /*
+     * On message receipt
+     */
+    onMessageReceipt: function(msg){
+        console.log("In message receipt handler");
+        console.log(msg);
+    },
+    
 	//send presence
 	sendPresence : function(){
 		console.log("in sendPresence");
@@ -81,34 +91,75 @@ var strophieWrapper = {
 		var nodeObj= xmlToJson(iq);
 		rosterObj = strophieWrapper.formatRosterObj(nodeObj["query"]["item"]);
 		console.log(rosterObj);
-		var nodeArr = [],user_id = rosterObj[strophieWrapper.rosterDetailsKey]["jid"].split("@")[0],subscription = rosterObj[strophieWrapper.rosterDetailsKey]["subscription"],ask=rosterObj[strophieWrapper.rosterDetailsKey]["ask"]; 
-		nodeArr[user_id] = strophieWrapper.Roster[user_id] = rosterObj;
-		console.log(nodeArr);
-		console.log(ask);
-		if(ask == "unsubscribe"){
-			console.log(strophieWrapper.Roster[user_id]);
-			console.log("deleting node");
-			invokePluginManagelisting(nodeArr,"delete_node",user_id);
-		}
-		else if(strophieWrapper.checkForSubscription(subscription) == true){
-			console.log("adding node");
-			invokePluginManagelisting(nodeArr,"add_node");
+		var nodeArr = [],user_id = rosterObj[strophieWrapper.rosterDetailsKey]["jid"].split("@")[0],subscription = rosterObj[strophieWrapper.rosterDetailsKey]["subscription"],ask=rosterObj[strophieWrapper.rosterDetailsKey]["ask"];
+		if(strophieWrapper.checkForGroups(rosterObj[strophieWrapper.rosterDetailsKey]["groups"])==true)
+		{
+			nodeArr[user_id] = strophieWrapper.Roster[user_id] = rosterObj;
+			console.log(nodeArr);
+			console.log(ask);
+			if(ask == "unsubscribe"){
+				console.log(strophieWrapper.Roster[user_id]);
+				console.log("deleting node");
+				invokePluginManagelisting(nodeArr,"delete_node",user_id);
+				strophieWrapper.Roster.splice(user_id);
+				//unauthorize if required
+			}
+			else if(strophieWrapper.checkForSubscription(subscription) == true){
+				console.log("adding node");
+				console.log(subscription);
+				invokePluginManagelisting(nodeArr,"add_node");
+				strophieWrapper.subscribe(rosterObj[strophieWrapper.rosterDetailsKey]["jid"],rosterObj[strophieWrapper.rosterDetailsKey]["nick"]);	
+			}
 		}
 	},
+
+	//subscribe user in roster for presence updates
+	subscribe: function(jid,nick,message){
+		var pres = $pres({to: jid, type: "subscribe"});
+		if (message && message !== "") {
+            pres.c("status").t(message).up();
+        }
+        if (nick && nick !== "") {
+            pres.c('nick', {'xmlns': Strophe.NS.NICK}).t(nick).up();
+        }
+		console.log("subscribing -"+jid+"with nick "+nick);
+		console.log(pres);
+		strophieWrapper.connectionObj.send(pres);
+	},
+
+	//authorize user on getting subscribe request
+	authorize: function(jid, message){
+    	console.log("authorizing - "+jid);
+        var pres = $pres({to: jid, type: "subscribed"});
+        if (message && message != "")
+            pres.c("status").t(message);
+        strophieWrapper.connectionObj.send(pres);
+    },
 
 	//executed after presence has been fetched
 	onPresenceReceived : function(presence){
 		var presence_type = $(presence).attr('type'),chat_status="offline"; // unavailable, subscribed, etc...
 		var from = $(presence).attr('from'),user_id = from.split("@")[0]; // the jabber_id of the contact
 		console.log("start of onPresenceReceived for "+user_id);
+		console.log(from);
+		console.log($(presence));
+		strophieWrapper.authorize(from.split("/")[0]);
 		if (presence_type != 'error'){
-		if (presence_type === 'unavailable'){
-			//console.log(from+" is offline");
-			chat_status = "offline";
-		}else{
-			var show = $(presence).find("show").text(); // this is what gives away, dnd, etc.
+			if (presence_type === 'unavailable'){
+				chat_status = "offline";
+			}
+	        /*else if (presence_type === 'unsubscribe'){
+	            return;
+	        } 
+	        else if (presence_type === 'subscribe') {
+	        	console.log("ank-subscribe");
+	        	console.log($(presence)); 
+	            strophieWrapper.authorize(from.split("/")[0]);
+	            //return;  //uncomment if required
+	        }*/
+			else{
+				var show = $(presence).find("show").text(); // this is what gives away, dnd, etc.
 				if (show === 'chat' || show === ''){
-					//console.log(from+" is online");
 					chat_status = "online";
 				}else{
 					// etc...
@@ -116,7 +167,7 @@ var strophieWrapper = {
 			}
 		}
 		strophieWrapper.updatePresence(user_id,chat_status);
-		console.log("end of onPresenceReceived");
+		console.log("end of onPresenceReceived for "+user_id+"---"+chat_status);
 		console.log(strophieWrapper.Roster[user_id]);
 		return true;
     },
@@ -128,9 +179,7 @@ var strophieWrapper = {
 		if(chat_status == "online")
 			updatedObj["last_online_time"] = new Date();
 		strophieWrapper.Roster[user_id] = strophieWrapper.mergeRosterObj(strophieWrapper.Roster[user_id],strophieWrapper.mapRosterObj(updatedObj));
-		console.log(strophieWrapper.Roster[user_id]);
-		console.log("end of updatePresence for "+user_id);
-		console.log(strophieWrapper.initialRosterFetched);
+		
 		if(strophieWrapper.initialRosterFetched == true){
 			console.log("change in status after initialRosterFetched done for "+user_id);
 			console.log(strophieWrapper.Roster[user_id]);
@@ -139,6 +188,9 @@ var strophieWrapper = {
 			console.log(nodeArr);
 			invokePluginManagelisting(nodeArr,"update_status",user_id);
 		}
+		console.log(strophieWrapper.Roster[user_id]);
+		console.log("end of updatePresence for "+user_id);
+		console.log(strophieWrapper.initialRosterFetched);
 	},
 
 	//executed after roster has been fetched
@@ -149,16 +201,20 @@ var strophieWrapper = {
 			var subscription = $(this).attr("subscription"),jid = $(this).attr("jid"),user_id = jid.split("@")[0];
 			if(strophieWrapper.checkForSubscription(subscription) == true && user_id != strophieWrapper.getSelfJID().split("@")[0]){
 				var listObj = strophieWrapper.formatRosterObj(xmlToJson(this)),status = "offline",last_online_time = null;
-				if(typeof strophieWrapper.Roster[user_id] !== "undefined"){
-					status = strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["chat_status"];
-					last_online_time = strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["last_online_time"];
+				if(strophieWrapper.checkForGroups(listObj[strophieWrapper.rosterDetailsKey]["groups"])==true)
+				{
+					if(typeof strophieWrapper.Roster[user_id] !== "undefined"){
+						status = strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["chat_status"];
+						last_online_time = strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["last_online_time"];
+					}
+					listObj[strophieWrapper.rosterDetailsKey]["chat_status"] = status;
+					listObj[strophieWrapper.rosterDetailsKey]["last_online_time"] = last_online_time;
+					strophieWrapper.Roster[user_id] = strophieWrapper.mergeRosterObj(strophieWrapper.Roster[user_id],listObj);
+					if(subscription == "to")
+					{
+						strophieWrapper.subscribe(jid,listObj[strophieWrapper.rosterDetailsKey]["nick"]);
+					}
 				}
-				listObj[strophieWrapper.rosterDetailsKey]["chat_status"] = status;
-				listObj[strophieWrapper.rosterDetailsKey]["last_online_time"] = last_online_time;
-				strophieWrapper.Roster[user_id] = strophieWrapper.mergeRosterObj(strophieWrapper.Roster[user_id],listObj);
-				//var pres = $pres({to: this.attr('jid'), type: "subscribe"});
-				//console.log($pres);
-				//strophieWrapper.connectionObj.send(pres);
 			}
 		});
 		console.log("end of onRosterReceived");
@@ -189,10 +245,14 @@ var strophieWrapper = {
     //parser for roster object
     formatRosterObj: function(obj){
     	console.log("in formatRosterObj");
-    	var chat_status = obj["attributes"]["chat_status"] || "offline",newObj = {},fullname = obj["attributes"]["name"].split("|");
+    	var chat_status = obj["attributes"]["chat_status"] || "offline",newObj = {};
+    	var fullname = "";
+    	if(typeof obj["attributes"]["name"]!= "undefined")
+    		fullname = obj["attributes"]["name"].split("|");
 		newObj[strophieWrapper.rosterDetailsKey] = { 
 								"jid":obj["attributes"]["jid"],
 								"chat_status":chat_status,
+								"nick":fullname,
 								"fullname":fullname[0],
 								"groups":[],
 								"subscription":obj["attributes"]["subscription"],
@@ -201,7 +261,8 @@ var strophieWrapper = {
 								"last_online_time":null,
 								"ask":obj["attributes"]["ask"]
 							};
-		newObj[strophieWrapper.rosterDetailsKey]["groups"].push(obj["group"]["#text"]);
+		if(typeof obj["group"]!= "undefined")
+			newObj[strophieWrapper.rosterDetailsKey]["groups"].push(obj["group"]["#text"]);
 		return newObj;
     },
 
@@ -264,31 +325,48 @@ var strophieWrapper = {
     	}
     },
     
+    //check for groups of user
+    checkForGroups:function(groupArr){
+    	if(typeof groupArr == "undefined" || groupArr.length == 0){
+    		return false;
+    	}
+    	else{
+    		$.each(groupArr,function(index,val){
+    			if(val != "dpp" && val!= "eoi_R" && val!= "accepted_by_me" && val!= "shortlisted")
+    				return false;
+    		});
+    		return true;
+    	}
+    },
+
     //sending Message
     sendMessage: function(message, to){
         if(message && to){
-            var id = strophieWrapper.connectionObj.getUniqueId();
-            console.log(id);
             var reply = $msg({
+                from: username,
                 to: to,
-                type: 'chat'
+                type: 'chat',
             })
             .cnode(Strophe.xmlElement('body', message)).up()
-            .cnode(Strophe.xmlElement('request', {'xmlns': Strophe.NS.RECEIPTS})).up()
             .c('active', {xmlns: "http://jabber.org/protocol/chatstates"});
-            console.log(reply);
-            console.log(typeof(reply));
-            //var request = Strophe.xmlElement('request', {'xmlns': Strophe.NS.RECEIPTS});
-            //reply.append(request);
-            console.log("***");
-            console.log(reply);
-
-            var messageResponse = strophieWrapper.connectionObj.send(reply);
-            console.log(messageResponse);
-            console.log('I sent to' + to + ': ' + message);
+            var messageId = strophieWrapper.connectionObj.receipts.sendMessage(reply);
+            return messageId;
         }
     },
 
+    getUniqueId: function(suffix) {
+        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0,
+                v = c == 'x' ? r : r & 0x3 | 0x8;
+            return v.toString(16);
+        });
+        if (typeof(suffix) == "string" || typeof(suffix) == "number") {
+            return uuid + ":" + suffix;
+        } else {
+            return uuid + "";
+        }
+    },
+    
     /*format msg object*/
     formatMsgObj : function(msg){
     	var outputObj = {
@@ -297,6 +375,21 @@ var strophieWrapper = {
     		"type":msg.getAttribute('type'),
     		"msg_id":msg.getAttribute('id')
     	};
+        var $message = $(msg),msg_state;
+        msg_state = ( $message.find(strophieWrapper.msgStates["COMPOSING"]).length && strophieWrapper.msgStates["COMPOSING"] ||
+                                    $message.find(strophieWrapper.msgStates["PAUSED"]).length && strophieWrapper.msgStates["PAUSED"] ||
+                                    $message.find(strophieWrapper.msgStates["INACTIVE"]).length && strophieWrapper.msgStates["INACTIVE"] ||
+                                    $message.find(strophieWrapper.msgStates["ACTIVE"]).length && strophieWrapper.msgStates["ACTIVE"] ||
+                                    $message.find(strophieWrapper.msgStates["GONE"]).length && strophieWrapper.msgStates["GONE"] ||
+                                    $message.find(strophieWrapper.msgStates["RECEIVED"]).length && strophieWrapper.msgStates["RECEIVED"]
+                                  );
+                          console.log(msg_state);
+                          
+        if(typeof msg_state != "undefined"){
+            outputObj["msg_state"] = msg_state;//strophieWrapper.mapChatStateMessage(chat_state);
+        }
+        var received = msg.getElementsByTagName("received");
+        console.log(received);
     	if(outputObj["type"] == "chat"){
     		var body = msg.getElementsByTagName("body");
     		//console.log(body);
@@ -304,22 +397,20 @@ var strophieWrapper = {
     			outputObj["body"] = Strophe.getText(body[0]);
     		else
     			outputObj["body"] = null;
-    		var $message = $(msg),msg_state;
-    		msg_state = ( $message.find(strophieWrapper.msgStates["COMPOSING"]).length && strophieWrapper.msgStates["COMPOSING"] ||
-               							$message.find(strophieWrapper.msgStates["PAUSED"]).length && strophieWrapper.msgStates["PAUSED"] ||
-                        				$message.find(strophieWrapper.msgStates["INACTIVE"]).length && strophieWrapper.msgStates["INACTIVE"] ||
-				                        $message.find(strophieWrapper.msgStates["ACTIVE"]).length && strophieWrapper.msgStates["ACTIVE"] ||
-				                        $message.find(strophieWrapper.msgStates["GONE"]).length && strophieWrapper.msgStates["GONE"]
-				                      );
-    		if(typeof msg_state != "undefined")
-    			outputObj["msg_state"] = msg_state;//strophieWrapper.mapChatStateMessage(chat_state);
     	}
+        else if(msg_state == "received"){
+            var rec = received[0];
+            if(typeof rec != "undefined"){
+                outputObj["receivedId"] = rec.getAttribute('id');
+            }
+        }
+        
     	return outputObj;
 
     },
     
     //map chat message state for chat box
-    mapChatStateMessage: function(chat_state) {
+    /*mapChatStateMessage: function(chat_state) {
     	var msg = "";
 	    if (chat_state === strophieWrapper.msgStates["COMPOSING"]) {
 	        msg = 'typing';
@@ -334,12 +425,46 @@ var strophieWrapper = {
 	    console.log("in mapChatStateMessage");
 	    console.log(msg);
 	    return msg;
-	},
+	},*/
 
     /*
      * Disconnect strophe connection
      */
     disconnect: function(){
         strophieWrapper.connectionObj.disconnect();
+    },
+    
+    /* addMessageHandler
+    ** add a message handler that handles XEP-0184 message receipts
+    */
+    addReceiptHandler: function(handler, type, from, options) {
+        var that = this;
+
+        var proxyHandler = function(msg) {
+            that._processReceipt(msg);
+         
+            // call original handler
+            return handler(msg);
+        };
+
+        this._conn.addHandler(proxyHandler, Strophe.NS.RECEIPTS, 'message',
+                              type, null, from, options);
+    },
+    
+    /*
+     * sending typing event
+     */
+    typingEvent: function(from, to, typingState){
+        if(from && to && typingState){
+            var id = strophieWrapper.connectionObj.getUniqueId();
+            var sendStatus = $msg({
+                from: username,
+                to: to,
+                type: 'chat',
+                id: id,
+            })
+            .c(typingState, {xmlns: "http://jabber.org/protocol/chatstates"});
+            strophieWrapper.connectionObj.send(sendStatus);
+        }
     }
 }

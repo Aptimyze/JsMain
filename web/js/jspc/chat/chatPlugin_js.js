@@ -396,7 +396,7 @@ JsChat.prototype = {
                             else{
                                 elem._placeContact("existing",runID,val,status);   
                             }
-                            //this._updateStatusInChatBox(runID,status); 
+                            //elem._updateStatusInChatBox(runID,status); 
                         }
                     });
             }
@@ -422,7 +422,9 @@ JsChat.prototype = {
         else if(key == "existing" && status == "online"){
             console.log("changing icon");
             //add online chat_status icon
-            $(this._mainID).find($('#'+contactID + "_" + groupID)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
+            if($('#'+contactID + "_" + groupID).find('.nchatspr').length==0){
+                $(this._mainID).find($('#'+contactID + "_" + groupID)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
+            }
             //move this element to beginning of listing
             /*var html = $(elem._mainID).find($('#'+contactID + "_" + groupID)).html();
             $(elem._mainID).find($('#'+contactID + "_" + groupID)).remove();
@@ -593,7 +595,7 @@ JsChat.prototype = {
 
     //sending chat
     _bindSendChat: function(userId) {
-        var _this = this;
+        var _this = this,messageId;
         $('chat-box[user-id="' + userId + '"] textarea').keyup(function(e) {
             var curElem = this;
             if (e.keyCode == 13 && !e.shiftKey) {
@@ -616,19 +618,21 @@ JsChat.prototype = {
                         console.log("in plugin send message");
                         console.log(text);
                         console.log($('chat-box[user-id="' + userId + '"]').attr("data-jid"));
-                        _this.onSendingMessage(text,$('chat-box[user-id="' + userId + '"]').attr("data-jid"));
+                        messageId = _this.onSendingMessage(text,$('chat-box[user-id="' + userId + '"]').attr("data-jid"));
                     }
                     console.log("after");
-                    setTimeout(function() {
+                    //setTimeout(function() {
                         //on recieving data with uniqueID
-                        $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + "ueiuh");
+                        //set single tick here
+                        $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + messageId);
+                        _this._changeStatusOfMessg(messageId,userId,"recieved");
                         //scenario if 3 messages have been sent
                         var threeSent = false;
                         if (threeSent == true) {
                             $(curElem).prop("disabled", true);
                             $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">You can send more message only if she replies</div>').addClass("restrictMessg2");
                         }
-                    }, 2000);
+                    //}, 2000);
                 }
             }
         });
@@ -806,7 +810,7 @@ JsChat.prototype = {
     //update status in chat box top
     _updateStatusInChatBox: function(userId,chat_status){
         if ($('chat-box[user-id="' + userId + '"]').length != 0) {
-            console.log("manvi update status in chatbox "+chat_status);
+            $("chat-box[user-id='" + userId + "'] .chatBoxBar .onlineStatus").html(chat_status);
         }
     },
 
@@ -949,11 +953,10 @@ JsChat.prototype = {
         }
     },
     //add meesage recieved from another user
-    _appendRecievedMessage: function(message, userId, uniqueId,msg_state) {
+    _appendRecievedMessage: function(message, userId, uniqueId) {
         console.log("in _appendRecievedMessage");
         //append received message in chatbox
         if(typeof message != "undefined" && message!= ""){
-            console.log("received message - "+message);
             //if chat box is not opened
             if ($('chat-box[user-id="' + userId + '"]').length == 0) {
                 $(".profileIcon[id^='" + userId + "']")[0].click();
@@ -973,6 +976,7 @@ JsChat.prototype = {
                 $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html(val);
                 $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2').show();
             }
+            
             //adding bubble for side tab
             if ($("#extra_" + userId + " .pinkBubble").length != 0) {
                 val = parseInt($("#extra_" + userId + " .pinkBubble span").html());
@@ -980,10 +984,13 @@ JsChat.prototype = {
                 $("#extra_" + userId + " .pinkBubble").show();
             }
         }
-        else if(typeof msg_state!= "undefined"){
-            console.log("message is about to come - "+msg_state);
+    },
+
+    //handle typing status of message
+    _handleMsgComposingStatus:function(userId,msg_state){
+        console.log("in _handleMsgComposingStatus");
+        if(typeof msg_state!= "undefined"){
             if(msg_state == 'composing'){
-                //adding bubble for minimized tab
                 if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
                     console.log("show typing state in minimized chat box top-manvi");
                 }
@@ -1004,10 +1011,14 @@ JsChat.prototype = {
 
     //change from sending status to sent / sent and read
     _changeStatusOfMessg: function(messgId, userId, newStatus) {
+        console.log("Change status"+newStatus);
         if (newStatus == "recieved") {
             $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_8").addClass("nchatic_10");
         } else if (newStatus == "recievedRead") {
-            $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_10, nchatic_8").addClass("nchatic_9");
+            $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_8").addClass("nchatic_10");
+            setTimeout(function() { 
+                $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_10 nchatic_8").addClass("nchatic_9");
+            }, 500);
         }
     },
 
@@ -1282,6 +1293,11 @@ JsChat.prototype = {
         
 
     },
+    
+    /*
+     * Sending typing event
+     */
+    sendingTypingEvent: null,
     
    //start:this function image,name in top chat logged in scenario
     addLoginHTML: function(failed) {

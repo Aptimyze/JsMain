@@ -787,7 +787,7 @@ die;
 		if(!$timeout)
 			$timeout = 5;
 		$result = null;
-		if($type!="POST")
+		if($type=="GET")
 		{
 			$response = CommonUtility::sendCurlGetRequest($url,$timeout);
 		}
