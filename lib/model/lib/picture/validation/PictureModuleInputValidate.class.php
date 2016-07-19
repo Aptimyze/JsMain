@@ -185,9 +185,10 @@ class PictureModuleInputValidate extends ValidationHandler
 
         public function validateGetMultiUserPhotoV1Action($request)
         {
-		$pattern1 = "/^([A-Za-z])+$/";
+		$pid =  $request->getParameter("pid");
+                $photoType =  $request->getParameter("photoType");
 
-		if(!$request->getParameter("pid") || !$request->getParameter("photoType"))
+		if(!$request->getParameter("photoType"))
 		{
 			$errorString = "picture/validation/PictureModuleInputValidate.class.php(1) : validateGetMultiUserPhotoV1Action($pid) ($photoType)";
 			ValidationHandler::getValidationHandler("",$errorString);

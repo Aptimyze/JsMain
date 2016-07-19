@@ -14,7 +14,7 @@ class GetMultiUserPhotoV1Action extends sfActions
 		$pidArr["PROFILEID"] ='5547372,8914646,8953994,1,2,3,4';
 		$photoType = 'MainPicUrl';
 		*/
-		$pidArr["PROFILEID"] =  $request->getParameter("pid");
+		$pid = $request->getParameter("pid");
 		$photoType =  $request->getParameter("photoType");
 
 		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("moduleName"));
@@ -23,6 +23,14 @@ class GetMultiUserPhotoV1Action extends sfActions
 		if($finalArr["statusCode"]==ResponseHandlerConfig::$SUCCESS["statusCode"])
 		{
 			$profileObj=LoggedInProfile::getInstance('newjs_master');
+			if($pid)
+				$pidArr["PROFILEID"] =  $pid;
+			else
+			{
+				$pidArr["PROFILEID"] =  $profileObj->getPROFILEID();
+				$selfPicture=1;
+			}
+
 			$multipleProfileObj = new ProfileArray();
 
 			$pidArrTemp = explode(",",$pidArr["PROFILEID"]);
@@ -35,19 +43,21 @@ class GetMultiUserPhotoV1Action extends sfActions
 			foreach($pidArrTemp as $profileId)
 			{
 				$photoObj = $photosArr[$profileId];
+				if($selfPicture)
+					$profileId=0;
 				if($photoObj)
 				{
 					$photoTypeArr = explode(",",$photoType);
 					foreach($photoTypeArr as $k=>$v)
 					{
 						eval('$temp =$photoObj->get'.$v.'();');
-						$finalArr[$profileId]['PHOTO'][$v] = $temp;
+						$finalArr['profiles'][$profileId]['PHOTO'][$v] = $temp;
 						unset($temp);
 					}
 				}
 				else
 				{
-					$finalArr[$profileId]['PHOTO'] = '';
+					$finalArr['profiles'][$profileId]['PHOTO'] = '';
 				}
 			}
 		}
