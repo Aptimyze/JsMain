@@ -3,6 +3,8 @@
 */
 var listingInputData = [],listCreationDone=false,objJsChat,pass,username;
 
+var pluginId = '#chatOpenPanel',device = 'PC';
+
 //var decrypted = JSON.parse(CryptoJS.AES.decrypt(api response, "chat", {format: CryptoJSAesJson}).toString(CryptoJS.enc.Utf8));
 
 function readSiteCookie(name) {
@@ -15,7 +17,23 @@ function readSiteCookie(name) {
     return null;
 }
 
-var pluginId = '#chatOpenPanel',device = 'PC';
+
+/*
+* Function to get profile image for login state
+ */
+function getProfileImage(){
+    $.ajax({
+        url: "/api/v1/social/getMultiUserPhoto?photoType=ProfilePic120Url",
+        async: false,
+        success: function(data){
+            if(data.statusCode == "0"){
+                imageUrl = data.profiles[0].PHOTO.ProfilePic120Url;
+            }
+        }
+    });
+    return imageUrl;
+}
+
 
 /*function initiateChatConnection
 * request sent to openfire to initiate chat and maintain session
@@ -349,21 +367,8 @@ var CryptoJSAesJson = {
         return cipherParams;
     }
 }
-/*
- * Function to get profile image for login state
- */
-function getProfileImage(){
-    $.ajax({
-        url: "/api/v1/social/getMultiUserPhoto?photoType=ProfilePic120Url",
-        async: false,
-        success: function(data){
-            if(data.statusCode == "0"){
-                imageUrl = data.profiles[0].PHOTO.ProfilePic120Url;
-            }
-        }
-    });
-    return imageUrl;
-}
+
+
 $(document).ready(function(){
     console.log("User");
     console.log(loggedInJspcUser);
@@ -386,12 +391,11 @@ $(document).ready(function(){
         loginStatus: loginStatus,
         mainID:"#chatOpenPanel",
         //profilePhoto: "<path>",
-        profileName: "bassi",
         imageUrl: imgUrl,
+        profileName: "bassi",
         listingTabs:chatConfig.Params[device].listingTabs,
         rosterDetailsKey:strophieWrapper.rosterDetailsKey,
-        listingNodesLimit:chatConfig.Params[device].groupWiseNodesLimit,
-        
+        listingNodesLimit:chatConfig.Params[device].groupWiseNodesLimit
     });
 
 
