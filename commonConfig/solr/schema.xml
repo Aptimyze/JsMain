@@ -332,6 +332,7 @@
  <field name="INCOME_FILTER" type="string" indexed="true" stored="false" />
  <field name="ONLINE" type="string" indexed="true" stored="true" />
  <field name="VERIFY_ACTIVATED_DT" type="date" indexed="true" stored="true" />
+ <field name="VERIFY_ACTIVATED_DT_ONLY" type="date" indexed="true" stored="true" />
  <field name="VERIFICATION_SEAL" type="string" indexed="true" stored="true" />
  </fields>
 
