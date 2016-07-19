@@ -207,6 +207,40 @@ $apiResponseHandlerObj->setResponseBody($getData);
 	    die;
     }
 
+    public function executeGetProfileDataV1(sfwebrequest $request){
+        $apiResponseHandlerObj = ApiResponseHandler::getInstance();
+        $loginData = $request->getAttribute("loginData");
+        if($loginData){
+
+		$profileid     = JsCommon::getProfileFromChecksum($request->getParameter("profilechecksum"));
+		//$profileid = $request->getParameter("profileid");
+		$profile = new Profile();
+		$profile->getDetail($profileid, "PROFILEID","*");
+		$response = array(
+				"username"=>$profile->getUSERNAME(),
+				"age"=>$profile->getAGE()." Years",
+				"height"=>$profile->getDecoratedHeight(),
+				"religion"=>$profile->getDecoratedReligion(),
+				"caste"=>$profile->getDecoratedCaste(),
+				"mtongue"=>$profile->getDecoratedCommunity(),
+				"education"=>$profile->getDecoratedEducation(),
+				"occupation"=>$profile->getDecoratedOccupation(),
+				"income"=>$profile->getDecoratedIncomeLevel(),
+				"city"=>$profile->getDecoratedCity()
+				);
+            $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+
+        }
+        else{
+            $response = "Logged Out Profile";
+            $apiResponseHandlerObj->setHttpArray(ChatEnum::$loggedOutProfile);
+        }
+        $apiResponseHandlerObj->setResponseBody($response);
+        $apiResponseHandlerObj->generateResponse();
+        die;
+
+    }
+
 	public function executeGetDppDataV1(sfwebrequest $request)
 	{
 		$profileid = $request->getParameter("profileid");
