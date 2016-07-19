@@ -74,19 +74,8 @@
 		<input type="hidden" name="CCRDType" value="~$CCRDType`">
 	~/if`
 	~if $currency eq 'DOL'`
-		<input type="hidden" name='merchant_id' value="~$mid`">
-		<input type="hidden" name='amount' value="~$amount`">
-		<input type="hidden" name='order_id' value="~$txnid`">
-		<input type="hidden" name="tid" value="~$checksum`">
 		<input type="hidden" name="encRequest" value="~$encRequest`">
 		<input type="hidden" name="access_code" value="~$accessCode`">
-		<input type="hidden" name="merchant_param1" value="~$checksum`">
-		<input type="hidden" name='redirect_url' value="~$returnURL`">	
-		<input type="hidden" name='cancel_url' value="~$returnURL`">
-		<input type="hidden" name="language" value="EN">
-		<input type="hidden" name="currency" value="USD">
-		<input type="hidden" name="billing_name" value="~$firstname`">
-		<input type="hidden" name="billing_address" value="~$address`">
 	~/if`
 	<!-- end parameters -->
 </form>

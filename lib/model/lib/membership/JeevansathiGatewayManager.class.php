@@ -149,12 +149,11 @@ class JeevansathiGatewayManager
         $nameOfUserObj = new incentive_NAME_OF_USER();
         $userName      = $nameOfUserObj->getName($apiParams->profileid);
         if ($apiParams->currency == 'DOL') {
-            $merchantDataArr = array('merchant_id' => $apiObj->mid, 'amount' => $apiObj->amount, 'order_id' => $apiObj->txnid, 'tid' => $apiObj->checksum, 'merchant_param1' => $apiObj->checksum, 'redirect_url' => $apiObj->returnURL, 'cancel_url' => $apiObj->returnURL, 'language' => 'EN', 'currency' => 'USD', 'billing_name' => $apiObj->firstname, 'billing_address' => $apiObj->address);
+            $merchantDataArr = array('currency' => 'USD', 'merchant_id' => $apiObj->mid, 'amount' => $ORDER["AMOUNT"], 'order_id' => $ORDER["ORDERID"], 'tid' => $apiParams->checksum, 'merchant_param1' => $apiParams->checksum, 'redirect_url' => $apiObj->returnURL, 'cancel_url' => $apiObj->returnURL, 'language' => 'EN');
             foreach ($merchantDataArr as $key => $val) {
-                $merchantDataString .= $key . '=' . $value . '&';
+                $merchantDataString .= $key . '=' . $val . '&';
             }
-            $apiObj->encRequest = CCAvenueDolManager::encrypt($merchantDataString, $apiObj->key);
-            //$apiObj->ccavenueChecksum = CCAvenueDolManager::getCheckSum($apiObj->mid, $ORDER["ORDERID"], $ORDER["AMOUNT"], $apiObj->key, "USD", $apiObj->returnURL);
+            $apiObj->encRequest = CCAvenueDolManager::encrypt($merchantDataString, $apiObj->key);        
         } else {
             $apiObj->ccavenueChecksum = CCAvenueRsManager::getCheckSum($apiObj->mid, $ORDER["AMOUNT"], $ORDER["ORDERID"], $apiObj->returnURL, $apiObj->key);
         }
