@@ -110,18 +110,22 @@ JsChat.prototype = {
         minChatPanel +='<div class="pt5 pr10">ONLINE MATCHES</div>';
         minChatPanel +='</li>';
         minChatPanel +='<li>';
-        /* if(this._loginStatus == 'Y')
-        {*/
-           minChatPanel +='<div class="bg_pink disp-tbl txtc nchatb">';
-               minChatPanel +='<div class="vmid disp-cell">';
-                   minChatPanel += 2;//this._onlineUserMsgMe();  
-               minChatPanel +='</div>';
-           minChatPanel +='</div>'; 
-        /* }
-        else
-        {
+        if(this._loginStatus == 'Y'){
+            var count = this._onlineUserMsgMe();
+            if(count>0){
+                minChatPanel +='<div class="bg_pink disp-tbl txtc nchatb">';
+                minChatPanel +='<div class="vmid disp-cell">';
+                minChatPanel += count;   
+                minChatPanel +='</div>';
+                minChatPanel +='</div>'; 
+            }
+            else{
+                minChatPanel +='<div class="nchatb vishid"></div>';
+            }
+        }
+        else{
            minChatPanel +='<div class="nchatb vishid"></div>';
-        }*/     
+        }     
         minChatPanel +='</li>';
         minChatPanel +='<li class="pl10">'; 
         minChatPanel +='<i class="nchatspr nchatopen"></i>';
@@ -1038,22 +1042,24 @@ JsChat.prototype = {
                 $("#extra_" + userId + " .pinkBubble span").html(val + 1);
                 $("#extra_" + userId + " .pinkBubble").show();
             }
-            var noOfInputs = 0;
-
-            $("chat-box .chatBoxBar .pinkBubble2").each(function(index, element) {
-                    if($(this).find(".noOfMessg").html() != 0){
-                        noOfInputs++;
-                    }
-                });
-
-                $(".extraChatList .pinkBubble").each(function(index, element) {
-                    if($(this).find(".noOfMessg").html() != 0){
-                        noOfInputs++;
-                    }
-                });
-            setTimeout(function(){ //call function to place this value;
-                console.log(noOfInputs);}, 500);
+            
         }
+    },
+
+    _onlineUserMsgMe: function(){
+        var noOfInputs = 0;
+        $("chat-box .chatBoxBar .pinkBubble2").each(function(index, element) {
+            if($(this).find(".noOfMessg").html() != 0){
+                noOfInputs++;
+            }
+        });
+
+        $(".extraChatList .pinkBubble").each(function(index, element) {
+            if($(this).find(".noOfMessg").html() != 0){
+                noOfInputs++;
+            }
+        });
+        return noOfInputs;
     },
 
     //handle typing status of message
