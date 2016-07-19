@@ -28,6 +28,16 @@ class logoutv1Action extends sfActions
 			$dbObj=new userplane_recentusers;
                         $dbObj->DeleteRecord($loginData[PROFILEID]);
 
+                        // Remove Online-User
+			$pid =$loginData['PROFILEID'];
+                        $jsCommonObj =new JsCommon();
+                        $jsCommonObj->removeOnlineUser($pid);
+                        /*
+			$JsMemcacheObj =JsMemcache::getInstance(); 
+                        $JsMemcacheObj->delete();
+			$listName =CommonConstants::ONLINE_USER_LIST;
+			$JsMemcacheObj->zRem($listName, $pid);*/
+
 			$apiObj=ApiResponseHandler::getInstance();
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$done = NotificationFunctions::manageGcmRegistrationid($registrationid)?"1":"0";

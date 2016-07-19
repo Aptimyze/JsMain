@@ -115,7 +115,7 @@ function onPhoneVerifyBack(){
                             <span id="mainPhone1"></span>
                         </div>
                         <div class="fl">
-                            <div class="icons1 edit"></div>
+                            <div id='myjs-phoneEditIcon' class="icons1 edit"></div>
                         </div>
                         <div class="clr"></div>
                     </a>

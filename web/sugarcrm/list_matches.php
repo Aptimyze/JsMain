@@ -1,6 +1,6 @@
 <?php
 include("connect.inc");
-$db=connect_db();
+$db=connect_slave();
 
 if($id)
 {
