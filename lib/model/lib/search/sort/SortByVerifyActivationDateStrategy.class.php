@@ -22,7 +22,7 @@ class SortByVerifyActivationDateStrategy extends SearchSort implements SortStrat
                 $this->SearchParamtersObj = $SearchParamtersObj;
 		parent::isPhotoSorting($SearchParamtersObj,$loggedInProfileObj,1);
 		parent::isFilterSorting($loggedInProfileObj);
-		parent::setReverseDppSorting($loggedInProfileObj, 0);
+		parent::setReverseDppSorting($loggedInProfileObj, 0); // Called with second parameter as 0 When LAst login score is not required in sort string
         }
 
 
