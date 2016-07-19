@@ -9,7 +9,8 @@ var strophieWrapper = {
 	        "ACTIVE":'active',
 	        "COMPOSING":'composing',
 	        "PAUSED":'paused',
-	        "GONE":'gone'
+	        "GONE":'gone',
+            "RECEIVED":'received'
     	},
 
 	//connect to openfire
@@ -58,8 +59,18 @@ var strophieWrapper = {
         strophieWrapper.connectionObj.addHandler(strophieWrapper.onMessage, null, 'message', null, null,  null); 
    		//binding event for new node push in roster
    		strophieWrapper.connectionObj.addHandler(strophieWrapper.onRosterUpdate,Strophe.NS.ROSTER,'iq','set');
+		//binding event for message receipts
+        strophieWrapper.connectionObj.addHandler(strophieWrapper.onMessageReceipt,Strophe.NS.RECEIPTS,'iq','set');
     },
 	
+    /*
+     * On message receipt
+     */
+    onMessageReceipt: function(msg){
+        console.log("In message receipt handler");
+        console.log(msg);
+    },
+    
 	//send presence
 	sendPresence : function(){
 		console.log("in sendPresence");
@@ -332,25 +343,15 @@ var strophieWrapper = {
     //sending Message
     sendMessage: function(message, to){
         if(message && to){
-            var id = strophieWrapper.connectionObj.getUniqueId();
-            console.log(id);
             var reply = $msg({
+                from: username,
                 to: to,
-                type: 'chat'
+                type: 'chat',
             })
             .cnode(Strophe.xmlElement('body', message)).up()
-            .cnode(Strophe.xmlElement('request', {'xmlns': Strophe.NS.RECEIPTS})).up()
             .c('active', {xmlns: "http://jabber.org/protocol/chatstates"});
-            console.log(reply);
-            console.log(typeof(reply));
-            //var request = Strophe.xmlElement('request', {'xmlns': Strophe.NS.RECEIPTS});
-            //reply.append(request);
-            console.log("***");
-            console.log(reply);
-
-            var messageResponse = strophieWrapper.connectionObj.send(reply);
-            console.log(messageResponse);
-            console.log('I sent to' + to + ': ' + message);
+            var messageId = strophieWrapper.connectionObj.receipts.sendMessage(reply);
+            return messageId;
         }
     },
 
@@ -375,6 +376,21 @@ var strophieWrapper = {
     		"type":msg.getAttribute('type'),
     		"msg_id":msg.getAttribute('id')
     	};
+        var $message = $(msg),msg_state;
+        msg_state = ( $message.find(strophieWrapper.msgStates["COMPOSING"]).length && strophieWrapper.msgStates["COMPOSING"] ||
+                                    $message.find(strophieWrapper.msgStates["PAUSED"]).length && strophieWrapper.msgStates["PAUSED"] ||
+                                    $message.find(strophieWrapper.msgStates["INACTIVE"]).length && strophieWrapper.msgStates["INACTIVE"] ||
+                                    $message.find(strophieWrapper.msgStates["ACTIVE"]).length && strophieWrapper.msgStates["ACTIVE"] ||
+                                    $message.find(strophieWrapper.msgStates["GONE"]).length && strophieWrapper.msgStates["GONE"] ||
+                                    $message.find(strophieWrapper.msgStates["RECEIVED"]).length && strophieWrapper.msgStates["RECEIVED"]
+                                  );
+                          console.log(msg_state);
+                          
+        if(typeof msg_state != "undefined"){
+            outputObj["msg_state"] = msg_state;//strophieWrapper.mapChatStateMessage(chat_state);
+        }
+        var received = msg.getElementsByTagName("received");
+        console.log(received);
     	if(outputObj["type"] == "chat"){
     		var body = msg.getElementsByTagName("body");
     		//console.log(body);
@@ -382,16 +398,14 @@ var strophieWrapper = {
     			outputObj["body"] = Strophe.getText(body[0]);
     		else
     			outputObj["body"] = null;
-    		var $message = $(msg),msg_state;
-    		msg_state = ( $message.find(strophieWrapper.msgStates["COMPOSING"]).length && strophieWrapper.msgStates["COMPOSING"] ||
-               							$message.find(strophieWrapper.msgStates["PAUSED"]).length && strophieWrapper.msgStates["PAUSED"] ||
-                        				$message.find(strophieWrapper.msgStates["INACTIVE"]).length && strophieWrapper.msgStates["INACTIVE"] ||
-				                        $message.find(strophieWrapper.msgStates["ACTIVE"]).length && strophieWrapper.msgStates["ACTIVE"] ||
-				                        $message.find(strophieWrapper.msgStates["GONE"]).length && strophieWrapper.msgStates["GONE"]
-				                      );
-    		if(typeof msg_state != "undefined")
-    			outputObj["msg_state"] = msg_state;//strophieWrapper.mapChatStateMessage(chat_state);
     	}
+        else if(msg_state == "received"){
+            var rec = received[0];
+            if(typeof rec != "undefined"){
+                outputObj["receivedId"] = rec.getAttribute('id');
+            }
+        }
+        
     	return outputObj;
 
     },
@@ -419,5 +433,22 @@ var strophieWrapper = {
      */
     disconnect: function(){
         strophieWrapper.connectionObj.disconnect();
-    }
+    },
+    
+    /* addMessageHandler
+    ** add a message handler that handles XEP-0184 message receipts
+    */
+    addReceiptHandler: function(handler, type, from, options) {
+        var that = this;
+
+        var proxyHandler = function(msg) {
+            that._processReceipt(msg);
+         
+            // call original handler
+            return handler(msg);
+        };
+
+        this._conn.addHandler(proxyHandler, Strophe.NS.RECEIPTS, 'message',
+                              type, null, from, options);
+    },
 }

@@ -595,7 +595,7 @@ JsChat.prototype = {
 
     //sending chat
     _bindSendChat: function(userId) {
-        var _this = this;
+        var _this = this,messageId;
         $('chat-box[user-id="' + userId + '"] textarea').keyup(function(e) {
             var curElem = this;
             if (e.keyCode == 13 && !e.shiftKey) {
@@ -618,19 +618,21 @@ JsChat.prototype = {
                         console.log("in plugin send message");
                         console.log(text);
                         console.log($('chat-box[user-id="' + userId + '"]').attr("data-jid"));
-                        _this.onSendingMessage(text,$('chat-box[user-id="' + userId + '"]').attr("data-jid"));
+                        messageId = _this.onSendingMessage(text,$('chat-box[user-id="' + userId + '"]').attr("data-jid"));
                     }
                     console.log("after");
-                    setTimeout(function() {
+                    //setTimeout(function() {
                         //on recieving data with uniqueID
-                        $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + "ueiuh");
+                        //set single tick here
+                        $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + messageId);
+                        _this._changeStatusOfMessg(messageId,userId,"recieved");
                         //scenario if 3 messages have been sent
                         var threeSent = false;
                         if (threeSent == true) {
                             $(curElem).prop("disabled", true);
                             $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">You can send more message only if she replies</div>').addClass("restrictMessg2");
                         }
-                    }, 2000);
+                    //}, 2000);
                 }
             }
         });
@@ -1008,10 +1010,14 @@ JsChat.prototype = {
 
     //change from sending status to sent / sent and read
     _changeStatusOfMessg: function(messgId, userId, newStatus) {
+        console.log("Change status"+newStatus);
         if (newStatus == "recieved") {
             $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_8").addClass("nchatic_10");
         } else if (newStatus == "recievedRead") {
-            $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_10, nchatic_8").addClass("nchatic_9");
+            $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_8").addClass("nchatic_10");
+            setTimeout(function() { 
+                $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_10 nchatic_8").addClass("nchatic_9");
+            }, 500);
         }
     },
 
