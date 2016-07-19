@@ -53,7 +53,8 @@ class Membership
     private $curtype;
     private $entry_from;
     private $membership;
-    
+    private $orderid_part1;
+
     //payment detail insertion variables.
     private $billid;
     private $mode;
@@ -197,7 +198,7 @@ class Membership
         global $smarty;
         
         list($part1, $part2) = explode('-', $orderid);
-        
+
         $billingOrderObj = new BILLING_ORDERS();
         $orderDetails = $billingOrderObj->getOrderDetailsForOrderID($part2, $part1);
         $myrow = $orderDetails[0];
