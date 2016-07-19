@@ -151,8 +151,18 @@ EOF;
                 if ($producerObj->getRabbitMQServerConnected()) {
                     $chatData = array('process' => 'USERCREATION', 'data' => ($profileInfo["PROFILEID"]), 'redeliveryCount' => 0);
                     $producerObj->sendMessage($chatData);
+	                if($this->m_bDebugInfo)
+	                {
+		                $this->logSection('DebugInfo: ', $profileInfo["PROFILEID"].' Inserted In queue');
+	                }
                 }
-                unset($producerObj);
+	            else
+	            {
+		            if($this->m_bDebugInfo)
+		            {
+			            $this->logSection('DebugInfo: ', 'No rabbitmq connection found');
+		            }
+	            }
             } catch (Exception $ex) {
                 if($this->m_bDebugInfo)
                 {
@@ -162,6 +172,7 @@ EOF;
                 unset($completionObj);
             }
         }
+	    unset($producerObj);
 
     }
 
