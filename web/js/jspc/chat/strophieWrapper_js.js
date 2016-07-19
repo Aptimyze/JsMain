@@ -237,7 +237,7 @@ var strophieWrapper = {
 		console.log(iq);
 		var msgObject = strophieWrapper.formatMsgObj(iq);
 		//console.log("sending to plugin");
-		//console.log(msgObject);
+		console.log(msgObject);
 		invokePluginReceivedMsgHandler(msgObject);   
 		/*	//var reply = $msg({to: from, from: to, type: 'chat', id: 'purple4dac25e4'}).c('active', {xmlns: "http://jabber.org/protocol/chatstates"}).up().cnode(body);
 		            //.cnode(Strophe.copyElement(body)); 
@@ -381,14 +381,24 @@ var strophieWrapper = {
     		"msg_id":msg.getAttribute('id')
     	};
         var $message = $(msg),msg_state;
-        msg_state = ( $message.find(strophieWrapper.msgStates["COMPOSING"]).length && strophieWrapper.msgStates["COMPOSING"] ||
-                                    $message.find(strophieWrapper.msgStates["PAUSED"]).length && strophieWrapper.msgStates["PAUSED"] ||
-                                    $message.find(strophieWrapper.msgStates["INACTIVE"]).length && strophieWrapper.msgStates["INACTIVE"] ||
-                                    $message.find(strophieWrapper.msgStates["ACTIVE"]).length && strophieWrapper.msgStates["ACTIVE"] ||
-                                    $message.find(strophieWrapper.msgStates["GONE"]).length && strophieWrapper.msgStates["GONE"] ||
-                                    $message.find(strophieWrapper.msgStates["RECEIVED"]).length && strophieWrapper.msgStates["RECEIVED"]
-                                  );
-                          console.log(msg_state);
+        if($message.find(strophieWrapper.msgStates["COMPOSING"]).length != 0)
+        {
+        	console.log("1111");
+        	msg_state = strophieWrapper.msgStates["COMPOSING"];
+        }	
+        else if($message.find(strophieWrapper.msgStates["PAUSED"]).length != 0)
+        {
+        	console.log("222");
+        	msg_state = "paused";
+        }
+        else if($message.find(strophieWrapper.msgStates["GONE"]).length != 0)
+        	msg_state = strophieWrapper.msgStates["GONE"];
+        else if($message.find(strophieWrapper.msgStates["ACTIVE"]).length != 0)
+        	msg_state = strophieWrapper.msgStates["ACTIVE"];
+		else if($message.find(strophieWrapper.msgStates["INACTIVE"]).length != 0)
+        	msg_state = strophieWrapper.msgStates["INACTIVE"];
+        console.log("in formatMsgObj");
+        console.log(msg_state);
                           
         if(typeof msg_state != "undefined"){
             outputObj["msg_state"] = msg_state;//strophieWrapper.mapChatStateMessage(chat_state);
@@ -463,7 +473,7 @@ var strophieWrapper = {
         if(from && to && typingState){
             var id = strophieWrapper.connectionObj.getUniqueId();
             var sendStatus = $msg({
-                from: username,
+                from: from,
                 to: to,
                 type: 'chat',
                 id: id,

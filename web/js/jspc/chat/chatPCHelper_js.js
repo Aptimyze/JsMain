@@ -24,16 +24,15 @@ var pluginId = '#chatOpenPanel',device = 'PC';
 function initiateChatConnection()
 {
     username = loggedInJspcUser+'@localhost';
-    /*
-    if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
-        username = 'a6@localhost';
     
+    /*if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
+        username = 'a1@localhost';
     if(readSiteCookie("CHATUSERNAME")=="bassi")
         username = '1@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
-        username = 'a10@localhost';
-    else if(readSiteCookie("CHATUSERNAME") == "ZZRS3292")
         username = 'a9@localhost';
+    else if(readSiteCookie("CHATUSERNAME") == "ZZRS3292")
+        username = 'a10@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZVV2929")
         username = 'a14@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZRR5723")
@@ -281,7 +280,7 @@ function invokePluginReceivedMsgHandler(msgObj)
 {
     if(typeof msgObj["from"] != "undefined")
     {
-        if(typeof msgObj["body"]!= "undefined" && msgObj["body"]!= ""){
+        if(typeof msgObj["body"]!= "undefined" && msgObj["body"]!= "" && msgObj["body"] != null){
             console.log("invokePluginReceivedMsgHandler-handle message");
             console.log(msgObj);
             objJsChat._appendRecievedMessage(msgObj["body"],msgObj["from"],msgObj["msg_id"]); 
@@ -292,10 +291,31 @@ function invokePluginReceivedMsgHandler(msgObj)
             objJsChat._handleMsgComposingStatus(msgObj["from"],msgObj["msg_state"]);
         console.log("invokePluginReceivedMsgHandler");
         console.log(msgObj);*/
-        if(msgObj['msg_state'] == "received"){
+        if(typeof msgObj["msg_state"] != "undefined")
+            switch(msgObj['msg_state'])
+            {
+                case "received":
+                                objJsChat._changeStatusOfMessg(msgObj["receivedId"],msgObj["from"],"recievedRead");
+                                break;
+                case "composing":
+                                objJsChat._handleMsgComposingStatus(msgObj["from"],"composing");
+                                break;
+                case "paused":
+                                objJsChat._handleMsgComposingStatus(msgObj["from"],"paused");
+                                break;
+            }
+        /*if(msgObj['msg_state'] == "received"){
             objJsChat._changeStatusOfMessg(msgObj["receivedId"],msgObj["from"],"recievedRead");
-        }
+        }*/
+        
     }
+}
+
+/*send typing state to receiver through openfire
+* @params:from,to,typing_state
+*/
+function sendTypingState(from,to,typing_state){
+    strophieWrapper.typingEvent(from,to,typing_state);
 }
 
 

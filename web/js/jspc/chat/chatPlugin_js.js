@@ -103,8 +103,31 @@ JsChat.prototype = {
     },
     //start:minimize html
     minimizedPanelHTML: function() {
-        console.log('min html');
-        var minChatPanel = '<div class="nchatbg1 nchatw2 nchatp6 pos_fix colrw nchatmax js-minpanel cursp"><ul class="nchatHor clearfix f13 fontreg"> <li>      <div class="pt5 pr10">ONLINE MATCHES</div></li><li><div class="bg_pink disp-tbl txtc nchatb"><div class="vmid disp-cell">2</div></div></li><li class="pl10"> <i class="nchatspr nchatopen"></i> </li></ul></div>';
+        var minChatPanel ='';
+        minChatPanel += '<div class="nchatbg1 nchatw2 nchatp6 pos_fix colrw nchatmax js-minpanel cursp">';
+        minChatPanel +='<ul class="nchatHor clearfix f13 fontreg">';
+        minChatPanel +=' <li>';
+        minChatPanel +='<div class="pt5 pr10">ONLINE MATCHES</div>';
+        minChatPanel +='</li>';
+        minChatPanel +='<li>';
+        /* if(this._loginStatus == 'Y')
+        {*/
+           minChatPanel +='<div class="bg_pink disp-tbl txtc nchatb">';
+               minChatPanel +='<div class="vmid disp-cell">';
+                   minChatPanel += 2;//this._onlineUserMsgMe();  
+               minChatPanel +='</div>';
+           minChatPanel +='</div>'; 
+        /* }
+        else
+        {
+           minChatPanel +='<div class="nchatb vishid"></div>';
+        }*/     
+        minChatPanel +='</li>';
+        minChatPanel +='<li class="pl10">'; 
+        minChatPanel +='<i class="nchatspr nchatopen"></i>';
+        minChatPanel +='</li>';
+        minChatPanel +='</ul>';
+        minChatPanel +='</div>';
         $(this._mainID).append(minChatPanel);
     },
     //start:minimize html
@@ -487,6 +510,21 @@ JsChat.prototype = {
             elem.find(".chatBoxBar").removeClass("cursp");
             elem.find(".downBarPic").removeClass("downBarPicMin");
             elem.find(".downBarUserName").removeClass("downBarUserNameMin");
+            var noOfInputs = 0;
+
+            $("chat-box .chatBoxBar .pinkBubble2").each(function(index, element) {
+                    if($(this).find(".noOfMessg").html() != 0){
+                        noOfInputs++;
+                    }
+                });
+
+                $(".extraChatList .pinkBubble").each(function(index, element) {
+                    if($(this).find(".noOfMessg").html() != 0){
+                        noOfInputs++;
+                    }
+                });
+            setTimeout(function(){ //call function to place this value;
+                console.log(noOfInputs);}, 500);
         });
     },
 
@@ -600,12 +638,26 @@ JsChat.prototype = {
 
     //sending chat
     _bindSendChat: function(userId) {
-        var _this = this,messageId;
+        var _this = this,messageId,jid= $('chat-box[user-id="' + userId + '"]').attr("data-jid");
+        var out;
+        $('chat-box[user-id="' + userId + '"] textarea').focusout(function(){
+           console.log("focus out to "+jid);
+           out =1;
+            //fire event typing paused
+            sendTypingState("a1@localhost",jid,"paused");
+        });
         $('chat-box[user-id="' + userId + '"] textarea').keyup(function(e) {
             var curElem = this;
+            console.log("1233");
+            if($(this).val().length == 1 || out == 1){
+                console.log("typing start");
+                out = 0;
+                //fire event typing start
+                sendTypingState("a1@localhost",jid,"composing");
+            }
             if (e.keyCode == 13 && !e.shiftKey) {
                 var text = $(this).val(),
-                    textAreamElem = this;
+                textAreamElem = this;
                 $(textAreamElem).val("").css("height", "24px");
                 if (text.length > 1) {
                     var superParent = $(this).parent().parent(),
@@ -988,32 +1040,61 @@ JsChat.prototype = {
                 $("#extra_" + userId + " .pinkBubble span").html(val + 1);
                 $("#extra_" + userId + " .pinkBubble").show();
             }
+            var noOfInputs = 0;
+
+            $("chat-box .chatBoxBar .pinkBubble2").each(function(index, element) {
+                    if($(this).find(".noOfMessg").html() != 0){
+                        noOfInputs++;
+                    }
+                });
+
+                $(".extraChatList .pinkBubble").each(function(index, element) {
+                    if($(this).find(".noOfMessg").html() != 0){
+                        noOfInputs++;
+                    }
+                });
+            setTimeout(function(){ //call function to place this value;
+                console.log(noOfInputs);}, 500);
         }
     },
 
     //handle typing status of message
-    _handleMsgComposingStatus:function(userId,msg_state){
-        console.log("in _handleMsgComposingStatus");
+   _handleMsgComposingStatus:function(userId,msg_state){
+      console.log("in _handleMsgComposingStatus"+msg_state+userId);
         if(typeof msg_state!= "undefined"){
-            if(msg_state == 'composing'){
+        if(msg_state == 'composing') 
+            {
+                //localStorage.setItem("status_"+userId, $('chat-box[user-id="' + userId + '"] .onlineStatus').html());
                 if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
-                    console.log("show typing state in minimized chat box top-manvi");
+                    console.log("yess", $('chat-box[user-id="' + userId + '"] .downBarUserName'))
+                    $('chat-box[user-id="' + userId + '"] .downBarUserName').html('<div class="onlineStatus f11 opa50 mt4">typing...</div>');
                 }
-                else{
-                    console.log("show typing state in opended chat box top-manvi");
-                }
+                else {
+                    $('chat-box[user-id="' + userId + '"] .onlineStatus').html("typing...");
+                } 
             }
             else if(msg_state == 'paused' || msg_state == 'gone'){
-                if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
-                    console.log("remove typing state in minimized chat box top-manvi");
+                var idStatus="";
+                console.log($(".chatlist li[id*='"+userId+"']").find(".nchatspr"));
+                if($(".chatlist li[id*='"+userId+"']").find(".nchatspr").length != 0){
+                    idStatus = "online";
+                } 
+                else {
+                    idStatus = "offline";
                 }
-                else{
-                    console.log("remove typing state in opended chat box top-manvi");
+
+                if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
+                    var userName = $(".chatlist li[id*='"+userId+"'] div").html();
+                    $('chat-box[user-id="' + userId + '"] .downBarUserName').html(userName+'<div class="onlineStatus f11 opa50 mt4">'+idStatus+'</div>');
+                    $('chat-box[user-id="' + userId + '"] .onlineStatus').hide();
+                }
+                else
+                {
+                    $('chat-box[user-id="' + userId + '"] .onlineStatus').html(idStatus);
                 }
             }
         }
-    },
-
+  },
     //change from sending status to sent / sent and read
     _changeStatusOfMessg: function(messgId, userId, newStatus) {
         console.log("Change status"+newStatus);
