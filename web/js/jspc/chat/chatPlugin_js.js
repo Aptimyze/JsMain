@@ -976,6 +976,7 @@ JsChat.prototype = {
                 $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html(val);
                 $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2').show();
             }
+            
             //adding bubble for side tab
             if ($("#extra_" + userId + " .pinkBubble").length != 0) {
                 val = parseInt($("#extra_" + userId + " .pinkBubble span").html());

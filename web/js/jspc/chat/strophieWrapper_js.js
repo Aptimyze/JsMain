@@ -92,7 +92,7 @@ var strophieWrapper = {
 		rosterObj = strophieWrapper.formatRosterObj(nodeObj["query"]["item"]);
 		console.log(rosterObj);
 		var nodeArr = [],user_id = rosterObj[strophieWrapper.rosterDetailsKey]["jid"].split("@")[0],subscription = rosterObj[strophieWrapper.rosterDetailsKey]["subscription"],ask=rosterObj[strophieWrapper.rosterDetailsKey]["ask"];
-		//if(strophieWrapper.checkForGroups(rosterObj[strophieWrapper.rosterDetailsKey]["groups"])==true)
+		if(strophieWrapper.checkForGroups(rosterObj[strophieWrapper.rosterDetailsKey]["groups"])==true)
 		{
 			nodeArr[user_id] = strophieWrapper.Roster[user_id] = rosterObj;
 			console.log(nodeArr);
@@ -106,10 +106,9 @@ var strophieWrapper = {
 			}
 			else if(strophieWrapper.checkForSubscription(subscription) == true){
 				console.log("adding node");
+				console.log(subscription);
 				invokePluginManagelisting(nodeArr,"add_node");
-				if(subscription == "to"){
-					strophieWrapper.subscribe(rosterObj[strophieWrapper.rosterDetailsKey]["jid"],rosterObj[strophieWrapper.rosterDetailsKey]["nick"]);	
-				}	
+				strophieWrapper.subscribe(rosterObj[strophieWrapper.rosterDetailsKey]["jid"],rosterObj[strophieWrapper.rosterDetailsKey]["nick"]);	
 			}
 		}
 	},
@@ -202,7 +201,7 @@ var strophieWrapper = {
 			var subscription = $(this).attr("subscription"),jid = $(this).attr("jid"),user_id = jid.split("@")[0];
 			if(strophieWrapper.checkForSubscription(subscription) == true && user_id != strophieWrapper.getSelfJID().split("@")[0]){
 				var listObj = strophieWrapper.formatRosterObj(xmlToJson(this)),status = "offline",last_online_time = null;
-				//if(strophieWrapper.checkForGroups(listObj[strophieWrapper.rosterDetailsKey]["groups"])==true)
+				if(strophieWrapper.checkForGroups(listObj[strophieWrapper.rosterDetailsKey]["groups"])==true)
 				{
 					if(typeof strophieWrapper.Roster[user_id] !== "undefined"){
 						status = strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["chat_status"];
