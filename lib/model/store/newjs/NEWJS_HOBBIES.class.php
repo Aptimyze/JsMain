@@ -121,6 +121,12 @@ class NEWJS_HOBBIES extends TABLE{
 					$resUpdateHobby->bindValue(":".$key, $val);
 				$resUpdateHobby->bindValue(":PROFILEID", $pid);
 				$resUpdateHobby->execute();
+				if(!$resUpdateHobby->rowCount()) {
+					$sqlUpdateHobby="SELECT 1 FROM newjs.JHOBBY where PROFILEID=:PROFILEID";
+					$resUpdateHobby = $this->db->prepare($sqlUpdateHobby);
+					$resUpdateHobby->bindValue(":PROFILEID", $pid);
+					$resUpdateHobby->execute();
+				}
 				if(!$resUpdateHobby->rowCount())
 				{
 					$sqlEditHobby = "REPLACE INTO JHOBBY ($keys) VALUES ($values)";
