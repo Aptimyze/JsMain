@@ -407,8 +407,9 @@ Abstract class ApiAuthentication
 	{
 		if(is_numeric($pid))
 		{
+			/* Removed 
 			$dbObj=new userplane_recentusers;
-			$dbObj->DeleteRecord($pid);
+			$dbObj->DeleteRecord($pid);*/
 
                         // Remove Online-User 
 			$jsCommonObj =new JsCommon();
@@ -473,12 +474,12 @@ Abstract class ApiAuthentication
 			if($allow)
 			@setcookie("LOGUSERENTRY",time(),0,"/",$this->domain);
 		}
-		
+		/* Removed	
 		if($allow && $pid)
 		{
 			$dbObj=new userplane_recentusers;
 			$dbObj->replacedata($pid);
-		}
+		}*/
 
 		if($pid)
 		{
