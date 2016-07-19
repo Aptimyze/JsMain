@@ -51,7 +51,10 @@ class GetMultiUserPhotoV1Action extends sfActions
 					foreach($photoTypeArr as $k=>$v)
 					{
 						eval('$temp =$photoObj->get'.$v.'();');
-						$finalArr['profiles'][$profileId]['PHOTO'][$v] = $temp;
+						if($temp)
+							$finalArr['profiles'][$profileId]['PHOTO'][$v] = $temp;
+						else
+							$finalArr['profiles'][$profileId]['PHOTO'][$v] = '';
 						unset($temp);
 					}
 				}
