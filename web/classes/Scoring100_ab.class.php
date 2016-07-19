@@ -4,6 +4,7 @@
 * @author Vibhor Garg 
 * @copyright Copyright 2011, Infoedge India Ltd.
 */
+include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 class Scoring_ab
 {
 	//Variables
@@ -118,7 +119,12 @@ class Scoring_ab
 				$this->newmodel[CUR_TYPE] = $rowpd['CUR_TYPE'];
                         }
                 }
-
+		
+		//$pidShard=JsDbSharding::getShardNo($profileid,'slave');
+		$shard = ($profileid%3) + 1;
+		$dbName = "shard".$shard."Slave112";
+		$dbMessageLogObj=new NEWJS_MESSAGE_LOG($dbName);
+		
 		//Activity Data
 		$this->newmodel[lOGIN_hist_In_week]="";
 		$this->newmodel[Search_In14Days]="";
@@ -154,21 +160,24 @@ class Scoring_ab
 			if($rowe = mysql_fetch_array($rese)){
 				$this->newmodel[Viewer_In_HalfMonth]=$rowe["cnt"];
 			}
-
+			
 			$total = 0;
-			$sqll = "SELECT COUNT(*) as cnt,TYPE FROM newjs.MESSAGE_LOG WHERE SENDER = '$this->PROFILEID' AND DATE >= '$lim_7_dt' GROUP BY TYPE";
-			$resl = mysql_query_decide($sqll,$shDb) or die($sqll.mysql_error($shDb));
-			while($rowl = mysql_fetch_array($resl)){
+			$res=$dbMessageLogObj->getMessageLogScoringAb100($this->PROFILEID,'SENDER',$lim_7_dt);
+			//$sqll = "SELECT COUNT(*) as cnt,TYPE FROM newjs.MESSAGE_LOG WHERE SENDER = '$this->PROFILEID' AND DATE >= '$lim_7_dt' GROUP BY TYPE";
+			//$resl = mysql_query_decide($sqll,$shDb) or die($sqll.mysql_error($shDb));
+			//while($rowl = mysql_fetch_array($resl)){
+			foreach($res as $key=>$rowl){
 				if($rowl["TYPE"] == 'I')
 					$this->newmodel[Message_Req_I_Week]=$rowl["cnt"];
 				$total += $rowl["cnt"];
 			}
 			$this->newmodel[Message_In_week]=$total;
-
-			$sqll = "SELECT COUNT(*) as cnt FROM newjs.MESSAGE_LOG WHERE RECEIVER = '$this->PROFILEID' AND DATE >= '$lim_7_dt'";
-			$resl = mysql_query_decide($sqll,$shDb) or die($sqll.mysql_error($shDb));
-			if($rowl = mysql_fetch_array($resl)){
-				$this->newmodel[Message_Req_R_Week]=$rowl["cnt"];
+			$rowl=$dbMessageLogObj->getMessageLogCountScoringAb100($this->PROFILEID,'RECEIVER',$lim_7_dt);
+			//$sqll = "SELECT COUNT(*) as cnt FROM newjs.MESSAGE_LOG WHERE RECEIVER = '$this->PROFILEID' AND DATE >= '$lim_7_dt'";
+			//$resl = mysql_query_decide($sqll,$shDb) or die($sqll.mysql_error($shDb));
+			//if($rowl = mysql_fetch_array($resl)){
+			if($rowl){
+				$this->newmodel[Message_Req_R_Week]=$rowl;
 			}
 
 			$sqll = "SELECT COUNT(*) as cnt FROM userplane.CHAT_REQUESTS WHERE RECEIVER = '$this->PROFILEID' AND TIMEOFINSERTION >= '$lim_15_dt'";
@@ -202,10 +211,13 @@ class Scoring_ab
                 {
                         $fdate = date("Y-m-d", strtotime($this->newmodel[$this->PROFILEID]['SUBSCRIPTION_END_DATE'])-60*86400);
                         $ldate = date("Y-m-d", strtotime($this->newmodel[$this->PROFILEID]['SUBSCRIPTION_END_DATE']));
-                        $sqlml2 = "SELECT COUNT(*) as cnt FROM newjs.MESSAGE_LOG WHERE RECEIVER='$this->PROFILEID' AND DATE>='$fdate' AND DATE<'$ldate' AND TYPE='I'";
-                        $resml2 = mysql_query_decide($sqlml2,$shDb) or die($sqlml2.mysql_error($shDb));
-                        if($rowml2 = mysql_fetch_array($resml2)){
-                                $this->newmodel[MESSAGES_COUNT]=$rowml2["cnt"];
+                        $rowml2=$dbMessageLogObj->getMessageLogCountEOIScoringAb100($this->PROFILEID,'RECEIVER',$fdate,$ldate);
+                        
+                        //$sqlml2 = "SELECT COUNT(*) as cnt FROM newjs.MESSAGE_LOG WHERE RECEIVER='$this->PROFILEID' AND DATE>='$fdate' AND DATE<'$ldate' AND TYPE='I'";
+                        //$resml2 = mysql_query_decide($sqlml2,$shDb) or die($sqlml2.mysql_error($shDb));
+                        //if($rowml2 = mysql_fetch_array($resml2)){
+                        if($rowml2){
+                                $this->newmodel[MESSAGES_COUNT]=$rowml2;
                         }
 
                         $lim_30_dt = date("Y-m-d",time()-30*86400);
