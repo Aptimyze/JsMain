@@ -349,8 +349,21 @@ var CryptoJSAesJson = {
         return cipherParams;
     }
 }
-
-
+/*
+ * Function to get profile image for login state
+ */
+function getProfileImage(){
+    $.ajax({
+        url: "/api/v1/social/getMultiUserPhoto?photoType=ProfilePic120Url",
+        async: false,
+        success: function(data){
+            if(data.statusCode == "0"){
+                imageUrl = data.profiles[0].PHOTO.ProfilePic120Url;
+            }
+        }
+    });
+    return imageUrl;
+}
 $(document).ready(function(){
     console.log("User");
     console.log(loggedInJspcUser);
@@ -367,15 +380,18 @@ $(document).ready(function(){
         else{
             loginStatus = "N";
         }
+        imgUrl = getProfileImage();
 
         objJsChat = new JsChat({
         loginStatus: loginStatus,
         mainID:"#chatOpenPanel",
         //profilePhoto: "<path>",
         profileName: "bassi",
+        imageUrl: imgUrl,
         listingTabs:chatConfig.Params[device].listingTabs,
         rosterDetailsKey:strophieWrapper.rosterDetailsKey,
-        listingNodesLimit:chatConfig.Params[device].groupWiseNodesLimit
+        listingNodesLimit:chatConfig.Params[device].groupWiseNodesLimit,
+        
     });
 
 
