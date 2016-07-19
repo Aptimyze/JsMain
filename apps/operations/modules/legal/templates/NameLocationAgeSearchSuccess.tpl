@@ -47,6 +47,17 @@
             </td>
             
              </tr>
+
+             <!-- Email -->
+             <tr>
+            <td width="28%" class="label" bgcolor="#F9F9F9" style="font-size:14px" align="right">Enter EmailId:
+</td>
+
+            <td width="30%" bgcolor="#F9F9F9">
+              <input type="text" name="email" value="~if $email`~$email`~/if`" size="40" maxlength="100" class="textboxes1">
+            </td>
+            
+             </tr>
              ~if $error`
              <tr valign="middle" align="center" >
 	

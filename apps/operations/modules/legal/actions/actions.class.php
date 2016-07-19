@@ -36,22 +36,23 @@ class legalActions extends sfActions
   	$this->moduleurl=$generatedUrl.$this->getModuleName();
 
   	//One of Name and Address is mandatory
-  	if($request->getParameter("username") =="" && $request->getParameter("address") == "")
+  	if($request->getParameter("username") =="" && $request->getParameter("address") == "" &&$request->getParameter("email") == "" )
   	{
-  		$this->error = "Please Provide atleast one of Name and Address";
+  		$this->error = "Please Provide atleast one of Name, Address, Email";
   	} 
   	//if any one of Name or Address is filled
-  	elseif($request->getParameter("username") != "" || $request->getParameter("address") != "") 
+  	elseif($request->getParameter("username") != "" || $request->getParameter("address") != "" || $request->getParameter("email") != "") 
   	{
   		$this->username=trim($request->getParameter("username"));
   		$this->age=$request->getParameter("age");
   		$this->address = trim($request->getParameter("address"));
+  		$this->email = trim($request->getParameter("email"));
   		$nameArr = "";
   		$addressArr = "";
   		$nameArr = $this->getArrValues($this->username);
   		$addressArr = $this->getArrValues($this->address);
   		$nameAgeSearchObj =  new nameAgeSearch();
-  		$this->legalDataArr = $nameAgeSearchObj->getProfilesForLegal($nameArr,$this->age,$addressArr);
+  		$this->legalDataArr = $nameAgeSearchObj->getProfilesForLegal($nameArr,$this->age,$addressArr,$this->email);
   		$this->legalDataCount = count($this->legalDataArr);
   	}
 

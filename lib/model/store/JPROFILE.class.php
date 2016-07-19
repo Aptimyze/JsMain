@@ -1491,12 +1491,12 @@ public function duplicateEmail($email)
 
 
 	//This function executes a select query on join of jprofile and incentives.name_of_user to fetch PROFILEID,EMAIL,USERNAME for the profiles that match the criteria
-	public function getDataForLegal($nameArr,$age,$addressArr)
-	{
+	public function getDataForLegal($nameArr,$age,$addressArr,$email)
+	{		
 		$parentAddressCondition .=" OR ("; 
 
 		//if both name and address are not array	
-		if(!is_array($nameArr) && !is_array($addressArr))
+		if(!is_array($nameArr) && !is_array($addressArr) && $email=="")
 		{
 			throw new jsException("Both usernameArr and AddressArr are empty");
 		}
@@ -1542,8 +1542,19 @@ public function duplicateEmail($email)
 
 				$sql .= $addressCondition.$parentAddressCondition.")"; 
 			}
+			if($email)
+			{
+				if(is_array($nameArr) || is_array($addressArr) || $age)
+				{
+					$emailCondition .=" AND J.EMAIL LIKE :EMAIL";
+				}
+				else
+				{
+					$emailCondition .=" J.EMAIL LIKE :EMAIL";
+				}
+				$sql .=$emailCondition;
+			}
 			
-			//$sql = $sql." AND J.EMAIL LIKE 'vikkujain%'"; //REMOVE THIS
 			$pdoStatement = $this->db->prepare($sql);
 			if(is_array($nameArr))
 			{
@@ -1564,7 +1575,10 @@ public function duplicateEmail($email)
 					$pdoStatement->bindValue(":PCONTACTARR".$key,'%'.$value.'%',PDO::PARAM_STR);				
 				}
 			}
-			
+			if($email)
+			{				
+				$pdoStatement->bindValue(":EMAIL",$email.'%',PDO::PARAM_STR);
+			}
 			$pdoStatement->execute();
             while($result  = $pdoStatement->fetch(PDO::FETCH_ASSOC))
 			{

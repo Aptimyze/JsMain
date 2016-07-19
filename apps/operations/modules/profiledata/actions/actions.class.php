@@ -193,14 +193,7 @@ class ProfileDataActions extends sfActions
 		if($this->username)
 		{
 			$profObj=Operator::getInstance();
-			if(strpos($this->username,"@"))
-			{
-				$profObj->getDetail($this->username,"EMAIL","PROFILEID,ACTIVATED,INCOMPLETE");
-			}
-			else
-			{
-				$profObj->getDetail($this->username,"USERNAME","PROFILEID,ACTIVATED,INCOMPLETE");
-			}
+			$profObj->getDetail($this->username,"USERNAME","PROFILEID,ACTIVATED,INCOMPLETE");
 			$this->profileid = $profObj->getPROFILEID();
 			$this->activated=$profileStatus[$profObj->getACTIVATED()];
 			if($profObj->getINCOMPLETE()=='Y')
@@ -221,7 +214,7 @@ class ProfileDataActions extends sfActions
 		}
 		else
 		{
-			$this->error = "Please enter a valid username or email !";
+			$this->error = "Please enter a valid username!";
 			$this->setTemplate("index");
 		}
 		
