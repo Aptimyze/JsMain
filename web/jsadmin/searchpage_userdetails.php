@@ -104,7 +104,7 @@ if(authenticated($cid))
 		//$fromtable = "MESSAGE_LOG";
 	}
 		
-		$result=$dbMessageLog->getMessagesDataSearchPageDetails($profileid,$senderRecevierStr='SENDER');
+		$result=$dbMessageLog->getMessagesDataSearchPageDetails($profileid,'SENDER');
 	//$sql_conts_i = "SELECT COUNT(*) as cnt,IP FROM newjs.$fromtable where SENDER = '$profileid' GROUP BY IP ";
 	//$sql_conts_i = "SELECT CONVERT_TZ(DATE,'SYSTEM','right/Asia/Calcutta') as DATE,INET_NTOA(IP) AS IP,RECEIVER FROM newjs.$fromtable where SENDER = '$profileid' ORDER BY DATE DESC limit 20 ";
 
@@ -121,7 +121,7 @@ if(authenticated($cid))
 		$i++;
 	}
 	
-	$response=$dbMessageLog->getMessagesDataSearchPageDetails($profileid,$senderRecevierStr='RECEIVER');
+	$response=$dbMessageLog->getMessagesDataSearchPageDetails($profileid,'RECEIVER');
 	//$sql_conts_a = "SELECT COUNT(*) as cnt,IP FROM newjs.$fromtable WHERE RECEIVER = '$profileid' AND TYPE='A' GROUP BY IP";
 	//$sql_conts_a = "SELECT CONVERT_TZ(DATE,'SYSTEM','right/Asia/Calcutta') as DATE,INET_NTOA(IP) AS IP,RECEIVER FROM newjs.$fromtable WHERE RECEIVER = '$profileid' AND TYPE='A' ORDER BY DATE limit 20";
      //   $result_conts_a =$mysql->ExecuteQuery($sql_conts_a,$myDb) or die("Unable to select from $fromtable".mysql_error_js());

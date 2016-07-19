@@ -91,7 +91,7 @@ class NEWJS_DELETED_MESSAGE_LOG extends TABLE{
 				}
 				else
 				{
-					$sql="select ID FROM newjs.DELETED_MESSAGE WHERE ".$senderRecevierStr."=:PROFILEID";
+					$sql="select ID FROM newjs.DELETED_MESSAGE_LOG WHERE ".$senderRecevierStr."=:PROFILEID";
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
 					$prep->execute();
@@ -252,5 +252,35 @@ class NEWJS_DELETED_MESSAGE_LOG extends TABLE{
 				throw new jsException($e);
 			}
 	}
+	public function getMessagesDataSearchPageDetails($profileid,$senderRecevierStr='SENDER')
+	{
+		try 
+			{
+				if(!$profileid)
+				{
+					throw new jsException("","profile id is not specified in function getMessagesDataSearchPageDetails of newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					$sql="SELECT CONVERT_TZ(DATE,'SYSTEM','right/Asia/Calcutta') as DATE,INET_NTOA(IP) AS IP,RECEIVER FROM newjs.DELETED_MESSAGE_LOG  where ".$senderRecevierStr." = :PROFILEID ORDER BY DATE DESC limit 20";
+					$prep=$this->db->prepare($sql);
+					$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+					$prep->execute();
+					while($row = $prep->fetch(PDO::FETCH_ASSOC))
+					{
+						$output[] = $row;
+					}
+				
+					return $output;
+				}	
+			}
+			catch(PDOException $e)
+			{
+				jsCacheWrapperException::logThis($e);
+				/*** echo the sql statement and error message ***/
+				throw new jsException($e);
+			}
+	}
+	
 }
 ?>
