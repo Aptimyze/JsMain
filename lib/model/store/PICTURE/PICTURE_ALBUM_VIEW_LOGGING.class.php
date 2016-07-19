@@ -21,7 +21,7 @@ class PICTURE_ALBUM_VIEW_LOGGING extends TABLE
 		}
 		catch(Exception $e)
 		{
-			throw new jsException($e);
+			jsException::log("Proifle Album View Logging entry could not be inserted in PICTURE.ALBUM_VIEW_LOGGING");
 		}
 	}
 }
