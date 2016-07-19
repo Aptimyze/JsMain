@@ -422,7 +422,9 @@ JsChat.prototype = {
         else if(key == "existing" && status == "online"){
             console.log("changing icon");
             //add online chat_status icon
-            $(this._mainID).find($('#'+contactID + "_" + groupID)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
+            if($('#'+contactID + "_" + groupID).find('.nchatspr').length==0){
+                $(this._mainID).find($('#'+contactID + "_" + groupID)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
+            }
             //move this element to beginning of listing
             /*var html = $(elem._mainID).find($('#'+contactID + "_" + groupID)).html();
             $(elem._mainID).find($('#'+contactID + "_" + groupID)).remove();
@@ -949,11 +951,10 @@ JsChat.prototype = {
         }
     },
     //add meesage recieved from another user
-    _appendRecievedMessage: function(message, userId, uniqueId,msg_state) {
+    _appendRecievedMessage: function(message, userId, uniqueId) {
         console.log("in _appendRecievedMessage");
         //append received message in chatbox
         if(typeof message != "undefined" && message!= ""){
-            console.log("received message - "+message);
             //if chat box is not opened
             if ($('chat-box[user-id="' + userId + '"]').length == 0) {
                 $(".profileIcon[id^='" + userId + "']")[0].click();
@@ -980,10 +981,13 @@ JsChat.prototype = {
                 $("#extra_" + userId + " .pinkBubble").show();
             }
         }
-        else if(typeof msg_state!= "undefined"){
-            console.log("message is about to come - "+msg_state);
+    },
+
+    //handle typing status of message
+    _handleMsgComposingStatus:function(userId,msg_state){
+        console.log("in _handleMsgComposingStatus");
+        if(typeof msg_state!= "undefined"){
             if(msg_state == 'composing'){
-                //adding bubble for minimized tab
                 if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
                     console.log("show typing state in minimized chat box top-manvi");
                 }
