@@ -216,6 +216,27 @@ $apiResponseHandlerObj->setResponseBody($getData);
 		//$profileid = $request->getParameter("profileid");
 		$profile = new Profile();
 		$profile->getDetail($profileid, "PROFILEID","*");
+
+
+                        //Photo logic
+                        $pidArr["PROFILEID"] =$profileid;
+                        $photoType = 'MainPicUrl';
+                        $profileObj=LoggedInProfile::getInstance('newjs_master',$loginData["PROFILEID"]);
+                        $multipleProfileObj = new ProfileArray();
+                        $profileDetails = $multipleProfileObj->getResultsBasedOnJprofileFields($pidArr);
+                        $multiplePictureObj = new PictureArray($profileDetails);
+                        $photosArr = $multiplePictureObj->getProfilePhoto();
+			$photo = '';
+			$photoObj = $photosArr[$profileid];
+			if($photoObj)
+			{
+				eval('$temp =$photoObj->get'.$photoType.'();');
+				$photo = $temp;
+				unset($temp);
+			}
+                        //Ends here
+
+
 		$response = array(
 				"username"=>$profile->getUSERNAME(),
 				"age"=>$profile->getAGE()." Years",
@@ -226,7 +247,8 @@ $apiResponseHandlerObj->setResponseBody($getData);
 				"education"=>$profile->getDecoratedEducation(),
 				"occupation"=>$profile->getDecoratedOccupation(),
 				"income"=>$profile->getDecoratedIncomeLevel(),
-				"city"=>$profile->getDecoratedCity()
+				"city"=>$profile->getDecoratedCity(),
+				"photo"=>$photo
 				);
             $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 
