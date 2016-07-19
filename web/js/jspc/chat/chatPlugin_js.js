@@ -152,7 +152,9 @@ JsChat.prototype = {
                     curEleRef.addLoginHTML();
                 }
                 else{
-                    $(curEleRef._loginPanelID).fadeIn('slow');   
+                    $(curEleRef._loginPanelID).fadeIn('slow',function(){
+                        $(curEleRef._listingPanelID).remove();
+                    });   
                 }
             });
         } else {
