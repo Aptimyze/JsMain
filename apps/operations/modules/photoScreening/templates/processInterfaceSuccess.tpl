@@ -1,11 +1,28 @@
-~include_partial('global/header')`
+<!DOCTYPE html>
+<head>
+<meta content="IE=edge" http-equiv="X-UA-Compatible">
+<meta http-equiv="content-language" content="en" />
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<link rel="shortcut icon" href="/favicon1.ico" />
+<link rel="stylesheet" async=true type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<link rel="stylesheet" type="text/css" href="http://static.a.j.com/min/?f=/css/jspc/common/commonJspc_css.css,/css/jspc/photoUpload/photoup_css.css,/css/jspc/photoUpload/cropper.css,/css/jspc/photoUpload/main.css" />
+
+<script type="text/javascript" language="Javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+
+<body>
+
 <br>
  <div align="center" ><b>PICTURE PROCESS INTERFACE</b> </div>
+
 ~if $noProfileFound`
 	<div align="center" ><b>No More Profiles to be Screened. Please try after some time. </b> </div>
 ~elseif $noPhotosFound`
 	<div align="center" ><b>This profile has no photos to be screened. </b> </div>
 ~else`
+~include_partial('photoScreening/cropper',["uploadUrl"=>$uploadUrl,"photoArr"=>$photoArr,"profileData"=>$profileData,"search"=>$search])`
 	~if $search neq 1`
 		<table width="600" border="1" cellspacing="0" cellpadding='3' ALIGN="CENTER" >
 		    <tr class=label align=center>
@@ -40,10 +57,11 @@
         ~include_partial("screenedCrousel",["screened"=>$photoArr['screened']])`
 ~/if`
 <form name="list" id="ScreenForm" enctype="multipart/form-data"  action="~JsConstants::$siteUrl`/operations.php/photoScreening/uploadProcessScreening?name=~$name`&cid=~$cid`&source=~$source`"  method="POST">
-	<input type=hidden name="profileid" value="~$profileData['PROFILEID']`">
+	<input type=hidden name="profileid" value="~$profileData['PROFILEID']`" id="profileid">
 	<input type = "hidden" name= "emailAdd" value = "~$profileData['EMAIL']`">
 	<input type=hidden name="source" value="~$source`">
 	<input type=hidden name="cid" value="~$cid`">
+	<input type=hidden name="profileid" value="~$profileid`">
 	<input type=hidden name="mailid" value="~$mailid`">
 	<input type=hidden name="pictureIDs" value="~$photoArr['pictureIDs']`">
 	<input type=hidden name="username" value="~$name`">
@@ -182,4 +200,7 @@
 		});
 	}
 </script>
+<script type="text/javascript" src="http://static.a.j.com/min/?f=/js/jspc/common/commonJspc_js.js,/js/jspc/common/AjaxWrapper.js"></script>
+
+<script type="text/javascript" src="http://static.a.j.com/min/?f=/js/jspc/photoUpload/cropper.js,/js/jspc/photoUpload/main.js,/js/jspc/photoUpload/bootstrap.js,/js/jspc/photoUpload/tooltip.js"></script>
 </body>

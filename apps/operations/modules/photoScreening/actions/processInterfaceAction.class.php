@@ -31,9 +31,9 @@ class processInterfaceAction extends sfActions {
 		$allotParam=array("SOURCE"=>$this->source,"INTERFACE"=>ProfilePicturesTypeEnum::$INTERFACE["2"],"NAME"=>$name);
 		if($request->getParameter('profileId'))
                         $allotParam["PROFILEID"] = $request->getParameter('profileId');
-               
                 $profileAllotedObj = $profileAllotmentFactory->getAllot($allotParam);
                 $profileDetails = $profileAllotedObj->getAllotedProfile($allotParam);
+		$this->profileid = $profileDetails['profileData']['PROFILEID'];
 		if(!is_array($profileDetails))
 			$this->noProfileFound = 1;
 		else
