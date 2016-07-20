@@ -407,6 +407,18 @@ class commonActions extends sfActions
 				$responseSet = ButtonResponse::buttonDetailsMerge($array);
 				$finalresponseArray["actiondetails"] = null;
 				$finalresponseArray["buttondetails"] = ButtonResponse::buttonDetailsMerge($array);
+				//Entry in Chat Roster
+				try {
+					$producerObj = new Producer();
+					if ($producerObj->getRabbitMQServerConnected()) {
+						$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'REMOVE_BOOKMARK', 'body' => array('sender' => array('profileid'=>$this->loginProfile->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->loginProfile->getPROFILEID()),'username'=>$this->loginProfile->getUSERNAME()), 'receiver' => array('profileid'=>$bookmarkee,'checksum'=>$bookmarkeeChecksum))), 'redeliveryCount' => 0);
+						$producerObj->sendMessage($chatData);
+					}
+					unset($producerObj);
+				} catch (Exception $e) {
+					throw new jsException("Something went wrong while sending in chat queue for remove bookmark -" . $e);
+				}
+				//End
 			}
 			else
 			{
@@ -422,14 +434,18 @@ class commonActions extends sfActions
 				$finalresponseArray["actiondetails"] = null;
 				$finalresponseArray["buttondetails"] = ButtonResponse::buttonDetailsMerge($array);
 			}
-			/*if(MobileCommon::isMobile())
-			{
-				$otherProfile = new Profile("",$bookmarkee);
-				$otherProfile->getDetail("","","*");
-				$buttonObj = new ButtonResponse($this->loginProfile,$otherProfile);
-				$button_after_action = $buttonObj->getButtonArray();
-				$finalresponseArray["button_after_action"] = ButtonResponse::buttondetailsMerge($button_after_action);
-			}*/
+			//Entry in Chat Roster
+			try {
+				$producerObj = new Producer();
+				if ($producerObj->getRabbitMQServerConnected()) {
+					$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'ADD_BOOKMARK', 'body' => array('sender' => array('profileid'=>$this->loginProfile->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->loginProfile->getPROFILEID()),'username'=>$this->loginProfile->getUSERNAME()), 'receiver' => array('profileid'=>$bookmarkee,'checksum'=>$bookmarkeeChecksum))), 'redeliveryCount' => 0);
+					$producerObj->sendMessage($chatData);
+				}
+				unset($producerObj);
+			} catch (Exception $e) {
+				throw new jsException("Something went wrong while sending in chat queue for remove bookmark -" . $e);
+			}
+			//End
 			$bookmarkerMemcacheObject->updateMemcache();
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiObj->setResponseBody($finalresponseArray);
