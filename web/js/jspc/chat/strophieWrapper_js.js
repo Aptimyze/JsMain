@@ -399,6 +399,8 @@ var strophieWrapper = {
         	msg_state = strophieWrapper.msgStates["ACTIVE"];
 		else if($message.find(strophieWrapper.msgStates["INACTIVE"]).length != 0)
         	msg_state = strophieWrapper.msgStates["INACTIVE"];
+        else if($message.find(strophieWrapper.msgStates["RECEIVED"]).length != 0)
+        	msg_state = strophieWrapper.msgStates["RECEIVED"];
         console.log("in formatMsgObj");
         console.log(msg_state);
                           
