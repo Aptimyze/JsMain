@@ -104,7 +104,7 @@ class ApiIgnoreProfileV1Action extends sfActions
 					try {
 						$producerObj = new Producer();
 						if ($producerObj->getRabbitMQServerConnected()) {
-							$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'UNBLOCK', 'body' => array('senderid' => $this->loginProfile->getPROFILEID(), 'receiverid' => $this->ignoreProfile->getPROFILEID(), 'senderusername' => $this->loginProfile->getUSERNAME(), 'receiverusername' => $this->ignoreProfile->getUSERNAME())), 'redeliveryCount' => 0);
+							$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'UNBLOCK', 'body' => array('sender' => array('profileid'=>$this->loginProfile->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->loginProfile->getPROFILEID()),'username'=>$this->loginProfile->getUSERNAME()), 'receiver' => array('profileid'=>$this->ignoreProfile->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->ignoreProfile->getPROFILEID),"username"=>$this->ignoreProfile->getUSERNAME()))), 'redeliveryCount' => 0);
 							$producerObj->sendMessage($chatData);
 						}
 						unset($producerObj);
@@ -149,7 +149,7 @@ class ApiIgnoreProfileV1Action extends sfActions
 					try {
 						$producerObj = new Producer();
 						if ($producerObj->getRabbitMQServerConnected()) {
-							$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'BLOCK', 'body' => array('senderid' => $this->loginProfile->getPROFILEID(), 'receiverid' => $this->ignoreProfile->getPROFILEID(), 'senderusername' => $this->loginProfile->getUSERNAME(), 'receiverusername' => $this->ignoreProfile->getUSERNAME())), 'redeliveryCount' => 0);
+							$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'BLOCK', 'body' => array('sender' => array('profileid'=>$this->loginProfile->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->loginProfile->getPROFILEID()),'username'=>$this->loginProfile->getUSERNAME()), 'receiver' => array('profileid'=>$this->ignoreProfile->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->ignoreProfile->getPROFILEID),"username"=>$this->ignoreProfile->getUSERNAME()))), 'redeliveryCount' => 0);
 							$producerObj->sendMessage($chatData);
 						}
 						unset($producerObj);

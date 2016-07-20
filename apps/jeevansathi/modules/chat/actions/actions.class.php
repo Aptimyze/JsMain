@@ -39,9 +39,9 @@ class chatActions extends sfActions
             $username = $loginData['PROFILEID'];
 
 		//$uname = $loginData['USERNAME'];
-	    //$pass = EncryptPassword::generatePassword($uname);
+	    $pass = EncryptPassword::generatePassword($username);
             //$pass = EncryptPassword::generatePassword("test".$username);
-            $pass = "test".$username;
+            //$pass = "test".$username;
 
             $url = JsConstants::$openfireConfig['HOST'].":".JsConstants::$openfireConfig['PORT']."/plugins/restapi/v1/users/".$username;
             //$url = "http://localhost:9090/plugins/restapi/v1/users/".$username;
@@ -329,5 +329,38 @@ $apiResponseHandlerObj->setResponseBody($getData);
 		$apiResponseHandlerObj->generateResponse();
 		die;
 	}
+    public function executeSendEOIV1(sfwebrequest $request){
+        $apiResponseHandlerObj = ApiResponseHandler::getInstance();
+        $loginData = $request->getAttribute("loginData");
+        if($loginData){
+		//Count from Nitesh
+                if($checkCount==0){
+                        $url = JsConstants::$siteUrl."/api/v2/contacts/postEOI";
+                        $data = array("AUTHCHECKSUM"=>$loginData["AUTHCHECKSUM"],"profilechecksum" => $request->getParameter('profilechecksum'), "chatMessage" => $request->getParameter('chatMessage'), "stype"=>$request->getParameter('stype'));
+                        $ch = curl_init();
+                        curl_setopt($ch, CURLOPT_URL, $url);
+                        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
+                        curl_setopt($ch, CURLOPT_TIMEOUT, 4);
+                        curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                        $curlResult = curl_exec ($ch);
+                        curl_close ($ch);
+                        $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+                        $response = json_decode($curlResult, true);
+                }
+                else{
+                        //Append messages as EOI messages
+                        $response = "Messages appended";
+                }
+        }
+        else{
+            $response = "Logged Out Profile";
+            $apiResponseHandlerObj->setHttpArray(ChatEnum::$loggedOutProfile);
+        }
+        $apiResponseHandlerObj->setResponseBody($response);
+        $apiResponseHandlerObj->generateResponse();
+        die;
+    }
+
 }
 ?>

@@ -106,7 +106,8 @@ class RequestHandlerConfig
         "fetchVCard"=>array("v1"=>"fetchVCardV1"),
 	"getRoasterData"=>array("v1"=>"getRosterDataV1"),
 	"getDppData"=>array("v1"=>"getDppDataV1"),
-	"getProfileData"=>array("v1"=>"getProfileDataV1")
+	"getProfileData"=>array("v1"=>"getProfileDataV1"),
+	"sendEOI"=>array("v1"=>"sendEOIV1")
         )
 );
 
