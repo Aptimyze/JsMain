@@ -10,6 +10,8 @@ class NEWJS_MESSAGES extends TABLE{
 
         public function __construct($dbname="")
         {
+			if(strpos($dbname,'master')!==false)
+				$dbname=$dbname."Rep";
 			parent::__construct($dbname);
         }
         public function Messages($Id)

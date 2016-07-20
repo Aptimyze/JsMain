@@ -5,6 +5,8 @@ class NEWJS_MESSAGES_ARCHIVE extends TABLE{
        
         public function __construct($dbname="")
         {
+			if(strpos($dbname,'master')!==false && JsConstants::$communicationRep)
+				$dbname=$dbname."Rep";
 			parent::__construct($dbname);
         }
         
