@@ -15,7 +15,7 @@ class CropperProcess
         {
                 $this->profileObj = $profileObj;
         }
-	public function process($cropImageSource,$cropBoxDimensionsArr,$imgPreviewTypeArr)
+	public function process($cropImageSource,$cropBoxDimensionsArr,$imgPreviewTypeArr,$ops=false)
 	{
                 $imageType = PictureFunctions::getImageFormatType($cropImageSource);
 
@@ -50,6 +50,11 @@ class CropperProcess
                                 {
                                 $profilesUpdate[$picId][$picMappingField] = $this->resizePlusStoreCroppedImage($sourceImage,$picId,$profileid,$picMappingField,ProfilePicturesTypeEnum::$CROPPED_NONSCREENED_PICTURE_SIZES[$picMappingField],$imageType,'nonScreened');
                                 }
+				if($ops)
+				{
+					$profilesUpdate[$picId]["MainPicUrl"]=$this->resizePlusStoreCroppedImage($sourceImage,$picId,$profileid,"MainPicUrl",ProfilePicturesTypeEnum::$CROPPED_NONSCREENED_PICTURE_SIZES["MainPicUrl"],$imageType,'nonScreened');
+
+				}
                     }
 		return $profilesUpdate;
 	}

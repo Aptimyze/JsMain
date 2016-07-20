@@ -35,7 +35,7 @@ class uploadProcessCropperScreeningAction extends sfActions {
                 $imgPreviewTypeArr = $request->getParameter('imgPreviewTypeArr');
        
                 $cropperProcessObj = new CropperProcess($profileObj);
-                $picturesToUpdate = $cropperProcessObj->process($cropImageSource,$cropBoxDimensionsArr,$imgPreviewTypeArr);
+                $picturesToUpdate = $cropperProcessObj->process($cropImageSource,$cropBoxDimensionsArr,$imgPreviewTypeArr,$ops=true);
 		$photoScreeningServiceObj = new photoScreeningService($profileObj);
 		$picDataForTracking = $photoScreeningServiceObj->pictureScreenStatus($this->profileid);
 
