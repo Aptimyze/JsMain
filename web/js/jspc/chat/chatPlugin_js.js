@@ -817,13 +817,13 @@ JsChat.prototype = {
 
     _postChatPanelsBox: function(userId) {
         var curElem = this;
-        console.log($(".chatlist li[id*='"+userId+"']").attr("id").split("_")[1]);
-        var group = $(".chatlist li[id*='"+userId+"']").attr("id").split("_")[1];
-        if(group == "dpp" || group == "shortlisted") {
+        console.log($(".chatlist li[id*='"+userId+"']").attr("id").split(userId+"_")[1]);
+        var group = $(".chatlist li[id*='"+userId+"']").attr("id").split(userId+"_")[1];
+        if(group == chatConfig.Params["categoryNames"]["Desired Partner Matches"] || group == chatConfig.Params["categoryNames"]["Shortlisted Members"]) {
            response = "interest_pending";
-        } else if(group == "eoi") {
+        } else if(group == chatConfig.Params["categoryNames"]["Interest Received"]) {
            response = "pog_interest_pending";
-        } else if(group == "accepted") {
+        } else if(group == chatConfig.Params["categoryNames"]["Acceptance"]) {
             response = "pog_interest_accepted";
         } else {
             response = "none_applicable";
@@ -1236,7 +1236,7 @@ JsChat.prototype = {
             var str='<div class="pos_fix info-hover fontlig nz21 vishid"';
             str+='id="'+param1+'_hover">';
                 str+='<div class="nchatbdr3 f13">';
-                    str+='<img src="'+param2.PHOTO+'" class="vtop"/>';
+                    str+='<img src="'+param2.PHOTO+'" class="vtop ch220"/>';
                         str+='<div class="nchatgrad padall-10">';
                             str+='<ul class="listnone lh22">';
                                 str+='<li>'+param2.AGE+', '+ param2.HEIGHT+'</li>';
@@ -1419,7 +1419,7 @@ JsChat.prototype = {
     addLoginHTML: function(failed) {
         console.log('in addLoginHTML');
         var curEle = this;
-        var LoginHTML = '<div class="fullwid txtc fontlig pos-rel" id="js-loginPanel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarOut"></i> </div><div> <img src="'+this._imageUrl+'" class="chatmt1"/> </div><button id="js-chatLogin" class="chatbtnbg1 mauto chatw1 colrw f14 brdr-0 lh40 cursp nchatm5">Login to Chat</button></div>';
+        var LoginHTML = '<div class="fullwid txtc fontlig pos-rel" id="js-loginPanel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarOut"></i> </div><div class="chpt100"> <img src="'+this._imageUrl+'" /> </div><button id="js-chatLogin" class="chatbtnbg1 mauto chatw1 colrw f14 brdr-0 lh40 cursp nchatm5">Login to Chat</button></div>';
         var errorHTML = '';
         if(failed == true)
         {

@@ -38,8 +38,10 @@ class chatActions extends sfActions
 
             $username = $loginData['PROFILEID'];
 
-		$uname = $loginData['USERNAME'];
-	    $pass = EncryptPassword::generatePassword($uname);
+		//$uname = $loginData['USERNAME'];
+	    //$pass = EncryptPassword::generatePassword($uname);
+            //$pass = EncryptPassword::generatePassword("test".$username);
+            $pass = "test".$username;
 
             $url = JsConstants::$openfireConfig['HOST'].":".JsConstants::$openfireConfig['PORT']."/plugins/restapi/v1/users/".$username;
             //$url = "http://localhost:9090/plugins/restapi/v1/users/".$username;
@@ -158,12 +160,14 @@ class chatActions extends sfActions
                 $username = $request->getParameter('username');
                 $profile["$username"]["NAME"] = "Atul";
                 $profile["$username"]["EMAIL"] = "Atul@gmail.com";
-                $profile["$username"]["PHOTO"] = "http://mediacdn.jeevansathi.com/1769/6/35386110-1436589041.jpeg";
+                $profile["$username"]["PHOTO"] = "http://mediacdn.jeevansathi.com/3418/10/68370525-1468221044.jpeg";
                 $profile["$username"]["AGE"] = "3";
                 $profile["$username"]["HEIGHT"] = "5 9";
-                $profile["$username"]["PROFFESION"] = "Christian";
+                $profile["$username"]["PROFFESION"] = "Doctor";
                 $profile["$username"]["SALARY"] = "Rs. 15 - 20lac";
                 $profile["$username"]["CITY"] = "New Delhi";
+                $profile["$username"]["COMMUNITY"] = "Brahmin";
+                $profile["$username"]["EDUCATION"] = "B.Tech";
                 $d1["action"] = "INITIATE";
                 $d1["label"] = "Send Interest";
                 $d1["iconid"] = null;

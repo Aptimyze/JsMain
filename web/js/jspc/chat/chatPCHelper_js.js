@@ -532,14 +532,14 @@ $(document).ready(function(){
             url: url,
             success: function(data) {
                 console.log(data);
-                /*objJsChat.updateVCard(data,pCheckSum,function(){
+                objJsChat.updateVCard(data,pCheckSum,function(){
                     $('#'+username+'_hover').css({ 
                         'top':  hoverNewTop,                     
                         'visibility': 'visible',
                         'right':shiftright
                     });
                     console.log("Callback done");
-                });*/
+                });
             }
         });
         /*
