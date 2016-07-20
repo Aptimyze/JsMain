@@ -45,27 +45,28 @@
 <form id="form1" name="form1" action="~$gatewayURL`" method="POST">
 	<!-- Parameters required for payment -->
 	~if $currency eq 'RS'`
-		<input type="hidden" name='merchant_id' value="~$mid`">
-		<input type="hidden" name='amount' value="~$amount`">
-		<input type="hidden" name='order_id' value="~$txnid`">
-		<input type="hidden" name='redirect_url' value="~$returnURL`">
-		<input type="hidden" name="billing_cust_name" value="~$firstname`">
-		<input type="hidden" name="billing_cust_address" value="~$address`">
+		<input type="hidden" name='Merchant_Id' value="~$mid`">
+		<input type="hidden" name='Amount' value="~$amount`">
+		<input type="hidden" name='Order_Id' value="~$txnid`">
+		<input type="hidden" name="billing_cust_tel" value="~$BILL_PHONE`"> 
+		<input type="hidden" name='Redirect_Url' value="~$returnURL`">
+		<input type="hidden" name='Checksum' value="~$ccavenueChecksum`">
+		<input type="hidden" name="billing_cust_name" value="~$firstname`"> 
+		<input type="hidden" name="billing_cust_address" value="~$address`"> 
 		<input type="hidden" name="billing_cust_city" value="~$city_order`">
-		<input type="hidden" name="billing_cust_country" value="~$country_order`">
+		<input type="hidden" name="billing_cust_country" value="~$country_order`"> 
 		<input type="hidden" name="billing_cust_state" value="~$BILL_STATE`">
 		<input type="hidden" name="billing_zip_code" value="~$BILL_PINCODE`">
-		<input type="hidden" name="delivery_cust_tel" value="">
-		<input type="hidden" name='Checksum' value="~$ccavenueChecksum`">
-		<input type="hidden" name="billing_cust_tel" value="~$BILL_PHONE`">
-		<input type="hidden" name="billing_cust_email" value="~$BILL_EMAIL`">
-		<input type="hidden" name="delivery_cust_name" value="~$firstname`">
-		<input type="hidden" name="delivery_cust_address" value="~$address`">
+		<input type="hidden" name="delivery_cust_tel" value=""> 
+		<input type="hidden" name="billing_cust_tel" value="~$BILL_PHONE`"> 
+		<input type="hidden" name="billing_cust_email" value="~$BILL_EMAIL`"> 
+		<input type="hidden" name="delivery_cust_name" value="~$firstname`"> 
+		<input type="hidden" name="delivery_cust_address" value="~$address`"> 
 		<input type="hidden" name="delivery_cust_city" value="~$city_order`">
 		<input type="hidden" name="delivery_cust_country" value="">
 		<input type="hidden" name="delivery_cust_state" value="~$BILL_STATE`">
 		<input type="hidden" name="delivery_zip_code" value="">
-		<input type="hidden" name="delivery_cust_notes" value="">
+		<input type="hidden" name="delivery_cust_notes" value=""> 
 		<input type="hidden" name="Merchant_Param" value="~$checksum`">
 	~/if`
 	~if $paymentMode eq 'NB' or $paymentMode eq 'CSH'`

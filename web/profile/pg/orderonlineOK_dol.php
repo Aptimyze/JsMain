@@ -7,10 +7,6 @@ include_once $_SERVER['DOCUMENT_ROOT'] . "/classes/Membership.class.php";
 $serObj        = new Services;
 $membershipObj = new Membership;
 
-if ($data = authenticated($checksum)) {
-    $profileid = $data["PROFILEID"];
-}
-
 if (JsConstants::$whichMachine == 'test') {
     $WorkingKey = gatewayConstants::$CCAvenueTestDolSalt;
 } else {
@@ -25,19 +21,24 @@ $dataSize      = sizeof($decryptValues);
 
 for ($i = 0; $i < $dataSize; $i++) {
     $information = explode('=', $decryptValues[$i]);
-    if ($i == 3) {
-        $order_status = strtolower($information[1]);
-    }
+    $decoded_response[$information[0]] = $information[1];
+}
+
+$order_status = strtolower($decoded_response['order_status']);
+$Order_Id = $decoded_response['order_id'];
+
+if ($data = authenticated($decoded_response['merchant_param5'])) {
+    $profileid = $data["PROFILEID"];
 }
 
 if ($order_status == 'success') {
-    $AuthDesc == "Y";
+    $AuthDesc = "Y";
     $ret_status = "S";
 } elseif ($order_status == 'failure' || $order_status == 'aborted' || $order_status == 'invalid') {
-    $AuthDesc == "N";
+    $AuthDesc = "N";
     $ret_status = "F";
 } else {
-    $AuthDesc == "U";
+    $AuthDesc = "U";
     $ret_status = "U";
 }
 
@@ -45,7 +46,7 @@ $membershipObj->log_payment_status($Order_Id, $ret_status, 'CCAVENUE', $AuthDesc
 
 $dup = false;
 
-if ($AuthDesc == "Y") {
+if ($profileid && $AuthDesc == "Y") {
     $dup = false;
     $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
 
@@ -115,7 +116,7 @@ if ($AuthDesc == "Y") {
             $smarty->display("pg/orderreceipt.htm");
         }
     }
-} else if ($AuthDesc == "N") {
+} else if ($profileid && $AuthDesc == "N") {
     $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
     $smarty->assign("CHECKSUM", $Merchant_Param);
     $smarty->assign("HEAD", $smarty->fetch("revamp_head.htm"));

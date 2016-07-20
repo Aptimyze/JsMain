@@ -763,7 +763,7 @@ class paymentOption
 
 class gatewayConstants
 {
-    public static $CCAvenueLiveDolMerchantId = "cca_63430";
+    public static $CCAvenueLiveDolMerchantId = "63430";
     public static $CCAvenueLiveDolSalt = "7C1F2325E7B5E8B39C36C2D3BF6D25E3";
     public static $CCAvenueLiveDolURL = 'https://secure.ccavenue.com/transaction/transaction.do?command=initiateTransaction';
     public static $CCAvenueLiveDolAccessCode = "AVDD04CD91AO78DDOA";
@@ -772,7 +772,7 @@ class gatewayConstants
     public static $CCAvenueLiveRsSalt = "a5qdxwe59g5af94qphru8hjubw1t9o6u";
     public static $CCAvenueLiveRsURL = "https://www.ccavenue.com/shopzone/cc_details.jsp";
     
-    public static $CCAvenueTestDolMerchantId = "cca_63430";
+    public static $CCAvenueTestDolMerchantId = "63430";
     public static $CCAvenueTestDolSalt = "7C1F2325E7B5E8B39C36C2D3BF6D25E3";
     public static $CCAvenueTestDolURL = 'https://test.ccavenue.com/transaction/transaction.do?command=initiateTransaction';
     public static $CCAvenueTestDolAccessCode = "AVDD04CD91AO78DDOA";
