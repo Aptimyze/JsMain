@@ -1216,7 +1216,7 @@ JsChat.prototype = {
             var str='<div class="pos_fix info-hover fontlig nz21 vishid"';
             str+='id="'+param1+'_hover">';
                 str+='<div class="nchatbdr3 f13">';
-                    str+='<img src="'+param2.PHOTO+'" class="vtop"/>';
+                    str+='<img src="'+param2.PHOTO+'" class="vtop ch220"/>';
                         str+='<div class="nchatgrad padall-10">';
                             str+='<ul class="listnone lh22">';
                                 str+='<li>'+param2.AGE+', '+ param2.HEIGHT+'</li>';
