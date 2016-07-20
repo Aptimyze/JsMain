@@ -4,8 +4,6 @@ class newjs_DELETED_PROFILE_CONTACTS extends TABLE
 {
         public function __construct($dbname="")
         {
-			if(strpos($dbname,'master')!==false && JsConstants::$communicationRep)
-				$dbname=$dbname."Rep";
                 parent::__construct($dbname);
         }
         public function getContactsCount($where, $group='',$time='',$skipProfile)
