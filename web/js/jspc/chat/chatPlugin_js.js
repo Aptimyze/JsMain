@@ -800,42 +800,31 @@ JsChat.prototype = {
 
     _postChatPanelsBox: function(userId) {
         var curElem = this;
-        // TODO: fire query to get scenario and get message(if any)
-        var response = "";
-        // var response = "free_interest_pending";
-        // var response = "free_interest_sent";
-        // var response = "paid_interest_pending";
-        // var response = "paid_interest_sent";
-        //  var response = "pog_interest_pending";
-        // var response = "pog_interest_accepted";
-        // var response = "pog_interest_declined";	
-
+        console.log($(".chatlist li[id*='"+userId+"']").attr("id").split("_")[1]);
+        var group = $(".chatlist li[id*='"+userId+"']").attr("id").split("_")[1];
+        if(group == "dpp" || group == "shortlisted") {
+           response = "interest_pending";
+        } else if(group == "eoi") {
+           response = "pog_interest_pending";
+        } else if(group == "accepted") {
+            response = "pog_interest_accepted";
+        } else {
+            response = "none_applicable";
+        }
+        var membership = "paid";
+        //var membership = "free";
         setTimeout(function() {
             switch (response) {
-                case "free_interest_pending":
-                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="sendInterest cursp sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_6 "></i><span class="vertTexBtm"> Send Interest</span></div><div id="sentDiv" class="sendDiv disp-none pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div><div class="pos-abs fullwid txtc colorGrey top120">Only paid members can start chat<div id="becomePaidMember" class="color5 cursp">Become a Paid Member</div></div>');
+                case "interest_pending":
+                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="sendInterest cursp sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_6 "></i><span class="vertTexBtm"> Send Interest</span></div><div id="sentDiv" class="sendDiv disp-none pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
                     $('chat-box[user-id="' + userId + '"] #sendInt').on("click", function() {
-                        curElem._sendInterest(userId);
+                        //TODO: fire query to send interest              
                         $(this).parent().find("#sentDiv").removeClass("disp-none");
                         $(this).remove();
                     });
                     break;
-                case "free_interest_sent":
-                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div><div class="pos-abs fullwid txtc colorGrey top120">Only paid members can start chat<div id="becomePaidMember" class="color5 cursp">Become a Paid Member</div></div>');
-                    break;
-                case "paid_interest_pending":
-                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="sendDiv cursp pos-abs wid140 color5"><i class="nchatspr nchatic_6 "></i><span clas="vertTexBtm"> Send Interest</span></div><div id="sentDiv" class="txtc fullwid disp-none mt10 color5"> Your interest has been sent</div><div id="initChatText" class="pos-abs color5 txtc top120 left10">Initiating chat will also send your interest </div>');
-                    $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-                    $('chat-box[user-id="' + userId + '"] #sendInt').on("click", function() {
-                        curElem._sendInterest(userId);
-                        $(this).parent().find("#sentDiv").removeClass("disp-none")
-                        $(this).parent().find("#initChatText").remove();
-                        $(this).remove();
-                    });
-                    break;
-                case "paid_interest_sent":
-                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="txtc fullwid mt10 color5"> Your interest has been sent</div>');
-                    $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                case "interest_sent":
+                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
                     break;
                 case "pog_interest_pending":
                     $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="pos-rel wid90p txtc colorGrey padall-10">The member wants to chat</div><div class="pos-rel fullwid txtc colorGrey mt20"><div id="accept" class="acceptInterest padall-10 color5 disp_ib cursp">Accept</div><div id="decline" class="acceptInterest padall-10 color5 disp_ib cursp">Decline</div></div><div id="acceptTxt" class="pos-rel fullwid txtc color5 mt25">Accept interest to continue chat</div><div id="sentDiv" class="fullwid pos-rel disp-none mt10 color5 txtc">Interest Accepted continue chat</div><div id="declineDiv" class="sendDiv txtc disp-none pos-abs wid80p mt10 color5">Interest Declined, you can\'t chat with this user anymore</div>');
@@ -859,21 +848,22 @@ JsChat.prototype = {
                     break;
                 case "pog_interest_declined":
                     $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="sendDiv txtc pos-abs wid80p mt10 color5">Interest Declined, you can\'t chat with this user anymore</div>');
-            		break;
-				default:
-					$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                    break;
+                case "none_applicable":
+                    $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+            }
+            //check for membership
+            if(membership == "paid" && response.indexOf("pog") == -1 && response != "none_applicable"){
+                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+            } 
+            else if(membership == "free" && response.indexOf("pog") == -1 && response != "none_applicable") {
+                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="pos-abs fullwid txtc colorGrey top120">Only paid members can start chat<div id="becomePaidMember" class="color5 cursp">Become a Paid Member</div></div>');                                
 			}
             $('chat-box[user-id="' + userId + '"] .spinner').hide();
             //TODO: fire query to get message list	
-
-        }, 2000);
+        }, 1000);
 
     },
-    _sendInterest: function(userId) {
-        console.log("fire send interest query");
-        //TODO: fire query to send interest	
-    },
-
     //update status in chat box top
     _updateStatusInChatBox: function(userId,chat_status){
         console.log("_updateStatusInChatBox for "+userId+"-"+chat_status+"--"+$('chat-box[user-id="' + userId + '"]').length);
