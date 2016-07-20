@@ -166,7 +166,7 @@ function sendAjaxRequest(count) {
         purl = SITE_URL + "/social/MobPhoto";
     else
 				purl = imageCopyServer+"/social/MobPhoto";
-				alert(purl);
+				//alert(purl);
     ajaxCurrentRequest = $.ajax({
         url: purl, // Url to which the request is send
         type: "POST", // Type of request to be send, called as method

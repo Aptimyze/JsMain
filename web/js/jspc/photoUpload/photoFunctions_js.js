@@ -27,7 +27,7 @@ function sendAjaxRequest(count,filename)
         pUrl = "/api/v3/social/uploadPhoto";
     else
         pUrl = "/"+imageCopyServer+"/api/v3/social/uploadPhoto";
-    alert(imageCopyServer+" :: "+pUrl);
+    //alert(imageCopyServer+" :: "+pUrl);
     currentEvent = count;
     dataToBeSent = formDataArray[count];
     statusArr[completed + 1] = 2;
@@ -387,7 +387,7 @@ function importFbRequest(val)
         pUrl = "/api/v3/social/importFb";
     else
         pUrl = "/"+imageCopyServer+"/api/v3/social/importFb";
-    alert(imageCopyServer+" : "+pUrl);
+    //alert(imageCopyServer+" : "+pUrl);
     $.myObj.ajax({
         type: 'POST',
         url: pUrl,
