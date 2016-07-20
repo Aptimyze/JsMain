@@ -50,7 +50,7 @@ chatConfig.Params = {
                 }]
             }
         },
-        buttons: [{
+        "buttons": {
             "intrec": [{
                 "action": "ACCEPT",
                 "label": "Accept Interest",
@@ -69,8 +69,7 @@ chatConfig.Params = {
                 "params": "responseTracking=8",
                 "enable": true,
                 "id": "DECLINE"
-            }]
-        }, {
+            }],
             "dpp": [{
                 "action": "INITIATE",
                 "label": "Send Interest",
@@ -80,8 +79,7 @@ chatConfig.Params = {
                 "params": "stype=WV",
                 "enable": true,
                 "id": "INITIATE"
-            }]
-        }, {
+            }],
             "shortlist": [{
                 "action": "INITIATE",
                 "label": "Send Interest",
@@ -91,8 +89,7 @@ chatConfig.Params = {
                 "params": "stype=WV",
                 "enable": true,
                 "id": "INITIATE"
-            }]
-        }, {
+            }],
             "acceptance": [{
                 "action": "WRITE_MESSAGE",
                 "label": "Write Message",
@@ -102,7 +99,7 @@ chatConfig.Params = {
                 "enable": true,
                 "id": "WRITE_MESSAGE"
             }]
-        }],
+        },
         groupWiseNodesLimit: {
             "dpp": 200,
             "intrec": 100,

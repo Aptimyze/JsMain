@@ -181,6 +181,7 @@ JsChat.prototype = {
                 else{
                     $(curEleRef._loginPanelID).fadeIn('slow',function(){
                         $(curEleRef._listingPanelID).remove();
+                        $(".info-hover").remove();
                     });   
                 }
             });
@@ -1218,18 +1219,66 @@ JsChat.prototype = {
     },
 
     onPreHoverCallback:null,
-
-    //start:hover box html structure
-    _hoverBoxStr:function(param1,param2,pCheckSum){
-        //console.log($('#'+param1+'_hover').length);
-        console.log("in hoverBoxStr");
-        console.log(pCheckSum);
+    
+    /*
+     * get Button Stucture on hover
+     */
+    _getButtonStructure: function(userId,group,pCheckSum){
+        var groupButtons = chatConfig.Params[device]["buttons"][group];
+        var str = '';
         var TotalBtn = '',widCal='';
-        TotalBtn = param2["buttonDetails"]["buttons"].length;
+        
+        TotalBtn = groupButtons.length;
         console.log('TotalBtn: '+TotalBtn);
         widCal = parseInt(100/TotalBtn);
         console.log('widCal: '+widCal);
+        
+        console.log("BB");
+        $.each(groupButtons,function(k,v){
+            console.log(k);
+            console.log(v);
+            console.log("KKKKKK"+v.action);
+            
+            str+='<button class="hBtn bg_pink lh50 brdr-0 txtc colrw cursp"';
+            str+='id="'+userId+'_'+v.action+'"';
+            str+='data-pCheckSum="'+pCheckSum+'"';
+            str+='data-params="'+v.params+'"';
+            if(TotalBtn==1)
+            {
+                str+='style="width:100%">';
+            }
+            else
+            {
+                if(k==0)
+                {
+                   str+='style="width:'+widCal+'%"> ';
+                }
+                else
+                {
+                    str+='style="width:'+(widCal-1)+'%;margin-left:1px">';
+                }
+            }
 
+            str+= v.label;
+            str+='</button>';
+            
+        })
+        
+        /*
+        $.each(param2["buttonDetails"]["buttons"],function(k,v){
+            
+        });
+        */
+       return str;
+    },
+            
+    //start:hover box html structure
+    _hoverBoxStr:function(param1,param2,pCheckSum){
+        var _this = this;
+        var group = $(".chatlist li[id*='"+param1+"']").attr("id").split(param1+"_")[1];
+        //console.log($('#'+param1+'_hover').length);
+        console.log("in hoverBoxStr");
+        console.log(pCheckSum);
         if($('#'+param1+'_hover').length == 0 )
         {
 
@@ -1252,35 +1301,7 @@ JsChat.prototype = {
                         str+='</div>';
                         //start:button structure
                         str+='<div class="'+ param1+'_BtnRespnse nchatgrad fullwid clearfix">';
-                            $.each(param2["buttonDetails"]["buttons"],function(k,v){
-                                str+='<button class="hBtn bg_pink lh50 brdr-0 txtc colrw cursp"';
-                                str+='id="'+param1+'_'+v.action+'"';
-                                str+='data-pCheckSum="'+pCheckSum+'"';
-                                str+='data-params="'+param2.buttonDetails.buttons[0].params+'"';
-                                if(TotalBtn==1)
-                                {
-                                    str+='style="width:100%">';
-                                }
-                                else
-                                {
-                                    if(k==0)
-                                    {
-                                       str+='style="width:'+widCal+'%"> ';
-                                    }
-                                    else
-                                    {
-                                        str+='style="width:'+(widCal-1)+'%;margin-left:1px">';
-                                    }
-                                }
-
-                                str+= v.label;
-                               str+='</button>';
-                            });
-
-
-
-
-
+                        str+=_this._getButtonStructure(param1,group,pCheckSum);
                         str+='</div>';
                         //end:button structure
                 str+='</div>';
@@ -1383,14 +1404,16 @@ JsChat.prototype = {
         //set timer variable
         if(e.type == "mouseenter")
         {
+            
             _this._timer = setTimeout(function() { 
                 _this._checkHover(curHoverEle);  
             }, 1000);                
         }
         else
         {
-            $('#'+getID+'_hover').css('visibility', 'hidden');
+            
             clearTimeout(_this._timer);
+            $('#'+getID+'_hover').css('visibility', 'hidden');
         }
     },
     
