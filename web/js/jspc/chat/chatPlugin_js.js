@@ -507,6 +507,7 @@ JsChat.prototype = {
 
     //scrolling up chat box
     _scrollUp: function(elem) {
+        var curEle = this;
         elem.animate({
             bottom: "0px"
         }, function() {
@@ -533,6 +534,21 @@ JsChat.prototype = {
                 });
             setTimeout(function(){ //call function to place this value;
                 console.log(noOfInputs);}, 500);
+        });
+        curEle._handleUnreadMessages(elem);
+    },
+
+    //handle unread messages
+    _handleUnreadMessages: function(elem){
+        //handle received and unread messages in chatbox
+        var selfJID = getConnectedUserJID(),receiverID = $(elem).attr("data-jid");
+        $(elem).find(".received").each(function(){
+            var msg_id = $(this).attr("data-msgid");
+            var msgObj = {"from":selfJID,"to":receiverID,"msg_id":msg_id,"msg_state":"receiver_received_read"};
+            $(this).removeClass("received").addClass("received_read");
+            console.log("marking msg as read");
+            console.log(msgObj);
+            invokePluginReceivedMsgHandler(msgObj);
         });
     },
 
@@ -1028,7 +1044,7 @@ JsChat.prototype = {
             }
             console.log("remove typing state if exists-manvi");
             //adding message in chat area
-            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText">' + message + '</div></div>');
+            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText" data-msgid='+uniqueId+'>' + message + '</div></div>');
             //check for 3 messages and remove binding
             if ($('chat-box[user-id="' + userId + '"] .chatMessage').hasClass("restrictMessg2")) {
                 $('chat-box[user-id="' + userId + '"] .chatMessage').find("#restrictMessgTxt").remove();
@@ -1040,6 +1056,10 @@ JsChat.prototype = {
                 val = parseInt($('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html()) + 1;
                 $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html(val);
                 $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2').show();
+                $('chat-box[user-id="' + userId + '"] .chatMessage').find('#text_' + userId + '_' + uniqueId).addClass("received");
+            }
+            else{
+                $('chat-box[user-id="' + userId + '"] .chatMessage').find('#text_' + userId + '_' + uniqueId).addClass("received_read");
             }
             
             //adding bubble for side tab

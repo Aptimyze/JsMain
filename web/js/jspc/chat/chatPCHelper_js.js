@@ -312,23 +312,26 @@ function invokePluginReceivedMsgHandler(msgObj)
             console.log(msgObj);
             objJsChat._appendRecievedMessage(msgObj["body"],msgObj["from"],msgObj["msg_id"]); 
         }
-        /*else if(typeof msgObj["msg_state"] != "undefined" && msgObj["msg_state"]!= ""){
-            console.log("invokePluginReceivedMsgHandler-handle typing state");
-            console.log(msgObj);
-            objJsChat._handleMsgComposingStatus(msgObj["from"],msgObj["msg_state"]);
-        console.log("invokePluginReceivedMsgHandler");
-        console.log(msgObj);*/
+        
         if(typeof msgObj["msg_state"] != "undefined")
             switch(msgObj['msg_state'])
             {
-                case "received":
-                                objJsChat._changeStatusOfMessg(msgObj["receivedId"],msgObj["from"],"recievedRead");
+                case strophieWrapper.msgStates["RECEIVED"]:
+                                objJsChat._changeStatusOfMessg(msgObj["receivedId"],msgObj["from"],"recieved");
                                 break;
-                case "composing":
-                                objJsChat._handleMsgComposingStatus(msgObj["from"],"composing");
+                case strophieWrapper.msgStates["COMPOSING"]:
+                                objJsChat._handleMsgComposingStatus(msgObj["from"],strophieWrapper.msgStates["COMPOSING"]);
                                 break;
-                case "paused":
-                                objJsChat._handleMsgComposingStatus(msgObj["from"],"paused");
+                case strophieWrapper.msgStates["PAUSED"]:
+                                objJsChat._handleMsgComposingStatus(msgObj["from"],strophieWrapper.msgStates["PAUSED"]);
+                                break;
+                case strophieWrapper.msgStates["RECEIVER_RECEIVED_READ"]:
+                                console.log("send received read status to "+msgObj["to"]+" from "+msgObj["from"]+ "-"+msgObj["msg_id"]);
+                                strophieWrapper.sendReceivedReadEvent(msgObj["from"], msgObj["to"], msgObj["msg_id"],strophieWrapper.msgStates["RECEIVER_RECEIVED_READ"]);
+                                break;
+                case strophieWrapper.msgStates["SENDER_RECEIVED_READ"]:
+                                console.log("received received read status to "+msgObj["to"]+" from "+msgObj["from"]+ "-"+msgObj["msg_id"]);
+                                objJsChat._changeStatusOfMessg(msgObj["msg_id"],msgObj["from"],"recievedRead");
                                 break;
             }
         /*if(msgObj['msg_state'] == "received"){

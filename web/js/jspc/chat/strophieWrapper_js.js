@@ -10,7 +10,9 @@ var strophieWrapper = {
 	        "COMPOSING":'composing',
 	        "PAUSED":'paused',
 	        "GONE":'gone',
-            "RECEIVED":'received'
+            "RECEIVED":'received',
+            "SENDER_RECEIVED_READ":'sender_received_read',
+            "RECEIVER_RECEIVED_READ":'receiver_received_read'
     	},
     rosterGroups:chatConfig.Params.PC.rosterGroups,
 
@@ -399,6 +401,8 @@ var strophieWrapper = {
         	msg_state = strophieWrapper.msgStates["ACTIVE"];
 		else if($message.find(strophieWrapper.msgStates["INACTIVE"]).length != 0)
         	msg_state = strophieWrapper.msgStates["INACTIVE"];
+        else if($message.find(strophieWrapper.msgStates["RECEIVER_RECEIVED_READ"]).length != 0)
+        	msg_state = strophieWrapper.msgStates["SENDER_RECEIVED_READ"];
         console.log("in formatMsgObj");
         console.log(msg_state);
                           
@@ -421,7 +425,6 @@ var strophieWrapper = {
                 outputObj["receivedId"] = rec.getAttribute('id');
             }
         }
-        
     	return outputObj;
 
     },
@@ -481,6 +484,22 @@ var strophieWrapper = {
                 id: id,
             })
             .c(typingState, {xmlns: "http://jabber.org/protocol/chatstates"});
+            strophieWrapper.connectionObj.send(sendStatus);
+        }
+    },
+
+    /*
+     * sending typing event
+     */
+    sendReceivedReadEvent: function(from, to, msg_id,state){
+        if(from && to && state){
+            var sendStatus = $msg({
+                from: from,
+                to: to,
+                type: 'chat',
+                id: msg_id
+            })
+            .c(state, {xmlns: "http://jabber.org/protocol/chatstates"});
             strophieWrapper.connectionObj.send(sendStatus);
         }
     }
