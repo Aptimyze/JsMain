@@ -3,6 +3,8 @@
 */
 var listingInputData = [],listCreationDone=false,objJsChat,pass,username;
 
+var pluginId = '#chatOpenPanel',device = 'PC';
+
 //var decrypted = JSON.parse(CryptoJS.AES.decrypt(api response, "chat", {format: CryptoJSAesJson}).toString(CryptoJS.enc.Utf8));
 
 function readSiteCookie(name) {
@@ -15,7 +17,23 @@ function readSiteCookie(name) {
     return null;
 }
 
-var pluginId = '#chatOpenPanel',device = 'PC';
+
+/*
+* Function to get profile image for login state
+ */
+function getProfileImage(){
+    $.ajax({
+        url: "/api/v1/social/getMultiUserPhoto?photoType=ProfilePic120Url",
+        async: false,
+        success: function(data){
+            if(data.statusCode == "0"){
+                imageUrl = data.profiles[0].PHOTO.ProfilePic120Url;
+            }
+        }
+    });
+    return imageUrl;
+}
+
 
 /*function initiateChatConnection
 * request sent to openfire to initiate chat and maintain session
@@ -24,16 +42,15 @@ var pluginId = '#chatOpenPanel',device = 'PC';
 function initiateChatConnection()
 {
     username = loggedInJspcUser+'@localhost';
-    /*
-    if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
-        username = 'a6@localhost';
     
+    /*if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
+        username = 'a1@localhost';
     if(readSiteCookie("CHATUSERNAME")=="bassi")
         username = '1@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
-        username = 'a10@localhost';
-    else if(readSiteCookie("CHATUSERNAME") == "ZZRS3292")
         username = 'a9@localhost';
+    else if(readSiteCookie("CHATUSERNAME") == "ZZRS3292")
+        username = 'a10@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZVV2929")
         username = 'a14@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZRR5723")
@@ -47,6 +64,15 @@ function initiateChatConnection()
     console.log("user:"+username+" pass:"+pass);
     strophieWrapper.connect(chatConfig.Params[device].bosh_service_url,username,pass);
     console.log(strophieWrapper.connectionObj);
+}
+
+function getConnectedUserJID()
+{
+    var jid = strophieWrapper.connectionObj.jid;
+    if(typeof jid!= "undefined")
+        return jid.split("/")[0];
+    else
+        return null;
 }
 
 /*function fetchConverseSettings
@@ -281,21 +307,45 @@ function invokePluginReceivedMsgHandler(msgObj)
 {
     if(typeof msgObj["from"] != "undefined")
     {
-        if(typeof msgObj["body"]!= "undefined" && msgObj["body"]!= ""){
+        if(typeof msgObj["body"]!= "undefined" && msgObj["body"]!= "" && msgObj["body"] != null){
             console.log("invokePluginReceivedMsgHandler-handle message");
             console.log(msgObj);
             objJsChat._appendRecievedMessage(msgObj["body"],msgObj["from"],msgObj["msg_id"]); 
         }
-        /*else if(typeof msgObj["msg_state"] != "undefined" && msgObj["msg_state"]!= ""){
-            console.log("invokePluginReceivedMsgHandler-handle typing state");
-            console.log(msgObj);
-            objJsChat._handleMsgComposingStatus(msgObj["from"],msgObj["msg_state"]);
-        console.log("invokePluginReceivedMsgHandler");
-        console.log(msgObj);*/
-        if(msgObj['msg_state'] == "received"){
+        
+        if(typeof msgObj["msg_state"] != "undefined")
+            switch(msgObj['msg_state'])
+            {
+                case strophieWrapper.msgStates["RECEIVED"]:
+                                objJsChat._changeStatusOfMessg(msgObj["receivedId"],msgObj["from"],"recieved");
+                                break;
+                case strophieWrapper.msgStates["COMPOSING"]:
+                                objJsChat._handleMsgComposingStatus(msgObj["from"],strophieWrapper.msgStates["COMPOSING"]);
+                                break;
+                case strophieWrapper.msgStates["PAUSED"]:
+                                objJsChat._handleMsgComposingStatus(msgObj["from"],strophieWrapper.msgStates["PAUSED"]);
+                                break;
+                case strophieWrapper.msgStates["RECEIVER_RECEIVED_READ"]:
+                                console.log("send received read status to "+msgObj["to"]+" from "+msgObj["from"]+ "-"+msgObj["msg_id"]);
+                                strophieWrapper.sendReceivedReadEvent(msgObj["from"], msgObj["to"], msgObj["msg_id"],strophieWrapper.msgStates["RECEIVER_RECEIVED_READ"]);
+                                break;
+                case strophieWrapper.msgStates["SENDER_RECEIVED_READ"]:
+                                console.log("received received read status to "+msgObj["to"]+" from "+msgObj["from"]+ "-"+msgObj["msg_id"]);
+                                objJsChat._changeStatusOfMessg(msgObj["msg_id"],msgObj["from"],"recievedRead");
+                                break;
+            }
+        /*if(msgObj['msg_state'] == "received"){
             objJsChat._changeStatusOfMessg(msgObj["receivedId"],msgObj["from"],"recievedRead");
-        }
+        }*/
+        
     }
+}
+
+/*send typing state to receiver through openfire
+* @params:from,to,typing_state
+*/
+function sendTypingState(from,to,typing_state){
+    strophieWrapper.typingEvent(from,to,typing_state);
 }
 
 
@@ -329,7 +379,41 @@ var CryptoJSAesJson = {
         return cipherParams;
     }
 }
+/*
+ * Function to get profile image for login state
+ */
+function getProfileImage(){
+    var imageUrl = localStorage.getItem('userImg'),flag = true;
+    if(imageUrl){
+        var user = JSON.parse(imageUrl);
+        user = user['user'];
+        if(user == loggedInJspcUser)
+            flag = false;
+    }
+    if(flag){
+        $.ajax({
+            url: "/api/v1/social/getMultiUserPhoto?photoType=ProfilePic120Url",
+            async: false,
+            success: function(data){
+                if(data.statusCode == "0"){
+                    imageUrl = data.profiles[0].PHOTO.ProfilePic120Url;
+                    localStorage.setItem('userImg', JSON.stringify({'userImg':imageUrl,'user':loggedInJspcUser}));
+                }
+            }
+        });
+    }
+    return imageUrl;
+}
 
+/*
+ * Clear local storage
+ */
+function clearLocalStorage(){
+    var removeArr = ['userImg'];
+    $.each(removeArr, function(key,val){
+        localStorage.removeItem(val);
+    });
+}
 
 $(document).ready(function(){
     console.log("User");
@@ -347,11 +431,13 @@ $(document).ready(function(){
         else{
             loginStatus = "N";
         }
+        imgUrl = getProfileImage();
 
         objJsChat = new JsChat({
         loginStatus: loginStatus,
         mainID:"#chatOpenPanel",
         //profilePhoto: "<path>",
+        imageUrl: imgUrl,
         profileName: "bassi",
         listingTabs:chatConfig.Params[device].listingTabs,
         rosterDetailsKey:strophieWrapper.rosterDetailsKey,
@@ -417,6 +503,7 @@ $(document).ready(function(){
     objJsChat.onLogoutPreClick = function(){
         console.log("In Logout preclick");
         objJsChat._loginStatus = 'N';
+        clearLocalStorage();
         strophieWrapper.disconnect();
         eraseCookie("chatAuth");
     }
@@ -445,14 +532,14 @@ $(document).ready(function(){
             url: url,
             success: function(data) {
                 console.log(data);
-                /*objJsChat.updateVCard(data,pCheckSum,function(){
+                objJsChat.updateVCard(data,pCheckSum,function(){
                     $('#'+username+'_hover').css({ 
                         'top':  hoverNewTop,                     
                         'visibility': 'visible',
                         'right':shiftright
                     });
                     console.log("Callback done");
-                });*/
+                });
             }
         });
         /*

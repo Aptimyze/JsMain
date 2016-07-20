@@ -22,6 +22,7 @@ JsChat.prototype = {
     _minChatBarIn: '.js-minChatBarIn',
     _scrollDivId: '#nchatDivs',
     _listingClass: 'ul.chatlist li',
+    _imageUrl: '',
     _listingTabs:{},
     _loginFailueMsg:"Login Failed,Try later",
     _noDataTabMsg:{"tab1":"There are no matching members online. Please relax your partner preference to see more matches.",
@@ -49,6 +50,8 @@ JsChat.prototype = {
             this._rosterDetailsKey = arguments[1][0].rosterDetailsKey;
         if (arguments[1][0].listingNodesLimit)
             this._listingNodesLimit = arguments[1][0].listingNodesLimit;
+        if (arguments[1][0].imageUrl)
+            this._imageUrl = arguments[1][0].imageUrl;
     },
 
     //start:get screen height
@@ -100,8 +103,35 @@ JsChat.prototype = {
     },
     //start:minimize html
     minimizedPanelHTML: function() {
-        console.log('min html');
-        var minChatPanel = '<div class="nchatbg1 nchatw2 nchatp6 pos_fix colrw nchatmax js-minpanel cursp"><ul class="nchatHor clearfix f13 fontreg"> <li>      <div class="pt5 pr10">ONLINE MATCHES</div></li><li><div class="bg_pink disp-tbl txtc nchatb"><div class="vmid disp-cell">2</div></div></li><li class="pl10"> <i class="nchatspr nchatopen"></i> </li></ul></div>';
+        var minChatPanel ='';
+        minChatPanel += '<div class="nchatbg1 nchatw2 nchatp6 pos_fix colrw nchatmax js-minpanel cursp">';
+        minChatPanel +='<ul class="nchatHor clearfix f13 fontreg">';
+        minChatPanel +=' <li>';
+        minChatPanel +='<div class="pt5 pr10">ONLINE MATCHES</div>';
+        minChatPanel +='</li>';
+        minChatPanel +='<li>';
+        if(this._loginStatus == 'Y'){
+            var count = this._onlineUserMsgMe();
+            if(count>0){
+                minChatPanel +='<div class="bg_pink disp-tbl txtc nchatb">';
+                minChatPanel +='<div class="vmid disp-cell">';
+                minChatPanel += count;   
+                minChatPanel +='</div>';
+                minChatPanel +='</div>'; 
+            }
+            else{
+                minChatPanel +='<div class="nchatb vishid"></div>';
+            }
+        }
+        else{
+           minChatPanel +='<div class="nchatb vishid"></div>';
+        }     
+        minChatPanel +='</li>';
+        minChatPanel +='<li class="pl10">'; 
+        minChatPanel +='<i class="nchatspr nchatopen"></i>';
+        minChatPanel +='</li>';
+        minChatPanel +='</ul>';
+        minChatPanel +='</div>';
         $(this._mainID).append(minChatPanel);
     },
     //start:minimize html
@@ -149,7 +179,9 @@ JsChat.prototype = {
                     curEleRef.addLoginHTML();
                 }
                 else{
-                    $(curEleRef._loginPanelID).fadeIn('slow');   
+                    $(curEleRef._loginPanelID).fadeIn('slow',function(){
+                        $(curEleRef._listingPanelID).remove();
+                    });   
                 }
             });
         } else {
@@ -161,7 +193,7 @@ JsChat.prototype = {
     //start:addChatTop function
     _addChatTop: function(param) {
         var curEleRef = this;
-        var chatHeaderHTML = '<div class="nchatbg1 nchatp2 clearfix pos-rel nchathgt1"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarIn"></i> </div><div class="fl"> <img src="images/chat-profile-small.jpg" class="nchatp4"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp">Logout</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>';
+        var chatHeaderHTML = '<div class="nchatbg1 nchatp2 clearfix pos-rel nchathgt1"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarIn"></i> </div><div class="fl"> <img src="'+this._imageUrl+'" class="nchatp4 wd40"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp">Logout</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>';
         $(curEleRef._listingPanelID).append(chatHeaderHTML);
 
 
@@ -347,7 +379,7 @@ JsChat.prototype = {
                         var List = '',fullname = data[key]["rosterDetails"]["fullname"],tabShowStatus = $('div.' + val).attr('data-showuser');
                         var getNamelbl = fullname,picurl=data[key]["rosterDetails"]["listing_tuple_photo"],prfCheckSum=data[key]["rosterDetails"]["profile_checksum"];  //ankita for image
                         List += '<li class=\"clearfix profileIcon\"';
-                        List += "id=\"" + runID + "_"+val + "\" data-checks=\""+ prfCheckSum +"\" data-jid=\""+ fullJID+"\">";
+                        List += "id=\"" + runID + "_"+val + "\" data-status=\""+status+"\" data-checks=\""+ prfCheckSum +"\" data-jid=\""+ fullJID+"\">";
                         List += "<img id=\"pic_" + runID + "_" +val + "\" src=\""+picurl+"\" class=\"fl\">";
                         List += '<div class="fl f14 fontlig pt15 pl18">';
                         List += getNamelbl;
@@ -396,7 +428,7 @@ JsChat.prototype = {
                             else{
                                 elem._placeContact("existing",runID,val,status);   
                             }
-                            //elem._updateStatusInChatBox(runID,status); 
+                            elem._updateStatusInChatBox(runID,status); 
                         }
                     });
             }
@@ -419,12 +451,16 @@ JsChat.prototype = {
             else*/                         //add new offline element in end
             $('div.' + groupID + ' ul').append(contactHTML);
         }
-        else if(key == "existing" && status == "online"){
+        else if(key == "existing"){
             console.log("changing icon");
-            //add online chat_status icon
-            if($('#'+contactID + "_" + groupID).find('.nchatspr').length==0){
-                $(this._mainID).find($('#'+contactID + "_" + groupID)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
+            if(status == "online")
+            {
+                //add online chat_status icon
+                if($('#'+contactID + "_" + groupID).find('.nchatspr').length==0){
+                    $(this._mainID).find($('#'+contactID + "_" + groupID)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
+                }
             }
+            
             //move this element to beginning of listing
             /*var html = $(elem._mainID).find($('#'+contactID + "_" + groupID)).html();
             $(elem._mainID).find($('#'+contactID + "_" + groupID)).remove();
@@ -471,6 +507,7 @@ JsChat.prototype = {
 
     //scrolling up chat box
     _scrollUp: function(elem) {
+        var curEle = this;
         elem.animate({
             bottom: "0px"
         }, function() {
@@ -482,6 +519,36 @@ JsChat.prototype = {
             elem.find(".chatBoxBar").removeClass("cursp");
             elem.find(".downBarPic").removeClass("downBarPicMin");
             elem.find(".downBarUserName").removeClass("downBarUserNameMin");
+            var noOfInputs = 0;
+
+            $("chat-box .chatBoxBar .pinkBubble2").each(function(index, element) {
+                    if($(this).find(".noOfMessg").html() != 0){
+                        noOfInputs++;
+                    }
+                });
+
+                $(".extraChatList .pinkBubble").each(function(index, element) {
+                    if($(this).find(".noOfMessg").html() != 0){
+                        noOfInputs++;
+                    }
+                });
+            setTimeout(function(){ //call function to place this value;
+                console.log(noOfInputs);}, 500);
+        });
+        curEle._handleUnreadMessages(elem);
+    },
+
+    //handle unread messages
+    _handleUnreadMessages: function(elem){
+        //handle received and unread messages in chatbox
+        var selfJID = getConnectedUserJID(),receiverID = $(elem).attr("data-jid");
+        $(elem).find(".received").each(function(){
+            var msg_id = $(this).attr("data-msgid");
+            var msgObj = {"from":selfJID,"to":receiverID,"msg_id":msg_id,"msg_state":"receiver_received_read"};
+            $(this).removeClass("received").addClass("received_read");
+            console.log("marking msg as read");
+            console.log(msgObj);
+            invokePluginReceivedMsgHandler(msgObj);
         });
     },
 
@@ -529,6 +596,7 @@ JsChat.prototype = {
     //remove from list
     _removeFromListing:function(param1,data){
         console.log('remove element 11');
+        var elem = this;
         //removeCall1 if user is removed from backend
         if(param1=='removeCall1' || param1 == 'delete_node'){
             console.log("calllign _removeFromListing");
@@ -553,7 +621,8 @@ JsChat.prototype = {
                                 $('div.' + val + ' ul').parent().addClass("disp-none");
                             }
                         }
-                        //this._updateStatusInChatBox(runID,data[key]["rosterDetails"]["chat_status"]);
+                        console.log(this);
+                        elem._updateStatusInChatBox(runID,data[key]["rosterDetails"]["chat_status"]);
                     });
                 }
             }
@@ -595,12 +664,27 @@ JsChat.prototype = {
 
     //sending chat
     _bindSendChat: function(userId) {
-        var _this = this,messageId;
+        var _this = this,messageId,jid= $('chat-box[user-id="' + userId + '"]').attr("data-jid");
+        var out;
+        var selfJID = getConnectedUserJID();
+        $('chat-box[user-id="' + userId + '"] textarea').focusout(function(){
+           console.log("focus out to "+jid);
+           out =1;
+            //fire event typing paused
+            sendTypingState(selfJID,jid,"paused");
+        });
         $('chat-box[user-id="' + userId + '"] textarea').keyup(function(e) {
             var curElem = this;
+            console.log("1233");
+            if($(this).val().length == 1 || out == 1){
+                console.log("typing start");
+                out = 0;
+                //fire event typing start
+                sendTypingState(selfJID,jid,"composing");
+            }
             if (e.keyCode == 13 && !e.shiftKey) {
                 var text = $(this).val(),
-                    textAreamElem = this;
+                textAreamElem = this;
                 $(textAreamElem).val("").css("height", "24px");
                 if (text.length > 1) {
                     var superParent = $(this).parent().parent(),
@@ -733,42 +817,31 @@ JsChat.prototype = {
 
     _postChatPanelsBox: function(userId) {
         var curElem = this;
-        // TODO: fire query to get scenario and get message(if any)
-        var response = "";
-        // var response = "free_interest_pending";
-        // var response = "free_interest_sent";
-        // var response = "paid_interest_pending";
-        // var response = "paid_interest_sent";
-        //  var response = "pog_interest_pending";
-        // var response = "pog_interest_accepted";
-        // var response = "pog_interest_declined";	
-
+        console.log($(".chatlist li[id*='"+userId+"']").attr("id").split(userId+"_")[1]);
+        var group = $(".chatlist li[id*='"+userId+"']").attr("id").split(userId+"_")[1];
+        if(group == chatConfig.Params["categoryNames"]["Desired Partner Matches"] || group == chatConfig.Params["categoryNames"]["Shortlisted Members"]) {
+           response = "interest_pending";
+        } else if(group == chatConfig.Params["categoryNames"]["Interest Received"]) {
+           response = "pog_interest_pending";
+        } else if(group == chatConfig.Params["categoryNames"]["Acceptance"]) {
+            response = "pog_interest_accepted";
+        } else {
+            response = "none_applicable";
+        }
+        var membership = "paid";
+        //var membership = "free";
         setTimeout(function() {
             switch (response) {
-                case "free_interest_pending":
-                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="sendInterest cursp sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_6 "></i><span class="vertTexBtm"> Send Interest</span></div><div id="sentDiv" class="sendDiv disp-none pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div><div class="pos-abs fullwid txtc colorGrey top120">Only paid members can start chat<div id="becomePaidMember" class="color5 cursp">Become a Paid Member</div></div>');
+                case "interest_pending":
+                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="sendInterest cursp sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_6 "></i><span class="vertTexBtm"> Send Interest</span></div><div id="sentDiv" class="sendDiv disp-none pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
                     $('chat-box[user-id="' + userId + '"] #sendInt').on("click", function() {
-                        curElem._sendInterest(userId);
+                        //TODO: fire query to send interest              
                         $(this).parent().find("#sentDiv").removeClass("disp-none");
                         $(this).remove();
                     });
                     break;
-                case "free_interest_sent":
-                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div><div class="pos-abs fullwid txtc colorGrey top120">Only paid members can start chat<div id="becomePaidMember" class="color5 cursp">Become a Paid Member</div></div>');
-                    break;
-                case "paid_interest_pending":
-                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="sendDiv cursp pos-abs wid140 color5"><i class="nchatspr nchatic_6 "></i><span clas="vertTexBtm"> Send Interest</span></div><div id="sentDiv" class="txtc fullwid disp-none mt10 color5"> Your interest has been sent</div><div id="initChatText" class="pos-abs color5 txtc top120 left10">Initiating chat will also send your interest </div>');
-                    $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-                    $('chat-box[user-id="' + userId + '"] #sendInt').on("click", function() {
-                        curElem._sendInterest(userId);
-                        $(this).parent().find("#sentDiv").removeClass("disp-none")
-                        $(this).parent().find("#initChatText").remove();
-                        $(this).remove();
-                    });
-                    break;
-                case "paid_interest_sent":
-                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="txtc fullwid mt10 color5"> Your interest has been sent</div>');
-                    $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                case "interest_sent":
+                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
                     break;
                 case "pog_interest_pending":
                     $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="pos-rel wid90p txtc colorGrey padall-10">The member wants to chat</div><div class="pos-rel fullwid txtc colorGrey mt20"><div id="accept" class="acceptInterest padall-10 color5 disp_ib cursp">Accept</div><div id="decline" class="acceptInterest padall-10 color5 disp_ib cursp">Decline</div></div><div id="acceptTxt" class="pos-rel fullwid txtc color5 mt25">Accept interest to continue chat</div><div id="sentDiv" class="fullwid pos-rel disp-none mt10 color5 txtc">Interest Accepted continue chat</div><div id="declineDiv" class="sendDiv txtc disp-none pos-abs wid80p mt10 color5">Interest Declined, you can\'t chat with this user anymore</div>');
@@ -792,30 +865,38 @@ JsChat.prototype = {
                     break;
                 case "pog_interest_declined":
                     $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="sendDiv txtc pos-abs wid80p mt10 color5">Interest Declined, you can\'t chat with this user anymore</div>');
-            		break;
-				default:
-					$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                    break;
+                case "none_applicable":
+                    $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+            }
+            //check for membership
+            if(membership == "paid" && response.indexOf("pog") == -1 && response != "none_applicable"){
+                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+            } 
+            else if(membership == "free" && response.indexOf("pog") == -1 && response != "none_applicable") {
+                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="pos-abs fullwid txtc colorGrey top120">Only paid members can start chat<div id="becomePaidMember" class="color5 cursp">Become a Paid Member</div></div>');                                
 			}
             $('chat-box[user-id="' + userId + '"] .spinner').hide();
             //TODO: fire query to get message list	
-
-        }, 2000);
+        }, 1000);
 
     },
-    _sendInterest: function(userId) {
-        console.log("fire send interest query");
-        //TODO: fire query to send interest	
-    },
-
     //update status in chat box top
     _updateStatusInChatBox: function(userId,chat_status){
+        //console.log("_updateStatusInChatBox for "+userId+"-"+chat_status+"--"+$('chat-box[user-id="' + userId + '"]').length);
+        if($(".chatlist li[id*='"+userId+"']").length != 0){
+            $(".chatlist li[id*='"+userId+"']").attr("data-status",chat_status);
+        }
         if ($('chat-box[user-id="' + userId + '"]').length != 0) {
+            console.log("change to "+chat_status);
             $("chat-box[user-id='" + userId + "'] .chatBoxBar .onlineStatus").html(chat_status);
         }
     },
 
     //appending chat box
     _chatPanelsBox: function(userId, status,jid) {
+        if($(".chatlist li[id*='"+userId+"']").length != 0)
+            status = $(".chatlist li[id*='"+userId+"']").attr("data-status");
         var curElem = this,
             heightPlus = false,
             bodyWidth = $("body").width();
@@ -963,7 +1044,7 @@ JsChat.prototype = {
             }
             console.log("remove typing state if exists-manvi");
             //adding message in chat area
-            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText">' + message + '</div></div>');
+            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText" data-msgid='+uniqueId+'>' + message + '</div></div>');
             //check for 3 messages and remove binding
             if ($('chat-box[user-id="' + userId + '"] .chatMessage').hasClass("restrictMessg2")) {
                 $('chat-box[user-id="' + userId + '"] .chatMessage').find("#restrictMessgTxt").remove();
@@ -975,6 +1056,10 @@ JsChat.prototype = {
                 val = parseInt($('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html()) + 1;
                 $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html(val);
                 $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2').show();
+                $('chat-box[user-id="' + userId + '"] .chatMessage').find('#text_' + userId + '_' + uniqueId).addClass("received");
+            }
+            else{
+                $('chat-box[user-id="' + userId + '"] .chatMessage').find('#text_' + userId + '_' + uniqueId).addClass("received_read");
             }
             
             //adding bubble for side tab
@@ -983,32 +1068,63 @@ JsChat.prototype = {
                 $("#extra_" + userId + " .pinkBubble span").html(val + 1);
                 $("#extra_" + userId + " .pinkBubble").show();
             }
+            
         }
+    },
+
+    _onlineUserMsgMe: function(){
+        var noOfInputs = 0;
+        $("chat-box .chatBoxBar .pinkBubble2").each(function(index, element) {
+            if($(this).find(".noOfMessg").html() != 0){
+                noOfInputs++;
+            }
+        });
+
+        $(".extraChatList .pinkBubble").each(function(index, element) {
+            if($(this).find(".noOfMessg").html() != 0){
+                noOfInputs++;
+            }
+        });
+        return noOfInputs;
     },
 
     //handle typing status of message
-    _handleMsgComposingStatus:function(userId,msg_state){
-        console.log("in _handleMsgComposingStatus");
+   _handleMsgComposingStatus:function(userId,msg_state){
+      console.log("in _handleMsgComposingStatus"+msg_state+userId);
         if(typeof msg_state!= "undefined"){
-            if(msg_state == 'composing'){
+        if(msg_state == 'composing') 
+            {
+                //localStorage.setItem("status_"+userId, $('chat-box[user-id="' + userId + '"] .onlineStatus').html());
                 if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
-                    console.log("show typing state in minimized chat box top-manvi");
+                    console.log("yess", $('chat-box[user-id="' + userId + '"] .downBarUserName'))
+                    $('chat-box[user-id="' + userId + '"] .downBarUserName').html('<div class="onlineStatus f11 opa50 mt4">typing...</div>');
                 }
-                else{
-                    console.log("show typing state in opended chat box top-manvi");
-                }
+                else {
+                    $('chat-box[user-id="' + userId + '"] .onlineStatus').html("typing...");
+                } 
             }
             else if(msg_state == 'paused' || msg_state == 'gone'){
-                if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
-                    console.log("remove typing state in minimized chat box top-manvi");
+                var idStatus="";
+                console.log($(".chatlist li[id*='"+userId+"']").find(".nchatspr"));
+                if($(".chatlist li[id*='"+userId+"']").find(".nchatspr").length != 0){
+                    idStatus = "online";
+                } 
+                else {
+                    idStatus = "offline";
                 }
-                else{
-                    console.log("remove typing state in opended chat box top-manvi");
+
+                if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
+                    var userName = $(".chatlist li[id*='"+userId+"'] div").html();
+                    $('chat-box[user-id="' + userId + '"] .downBarUserName').html(userName+'<div class="onlineStatus f11 opa50 mt4">'+idStatus+'</div>');
+                    $('chat-box[user-id="' + userId + '"] .onlineStatus').hide();
+                }
+                else
+                {
+                    $('chat-box[user-id="' + userId + '"] .onlineStatus').html(idStatus);
                 }
             }
         }
-    },
-
+  },
     //change from sending status to sent / sent and read
     _changeStatusOfMessg: function(messgId, userId, newStatus) {
         console.log("Change status"+newStatus);
@@ -1120,7 +1236,7 @@ JsChat.prototype = {
             var str='<div class="pos_fix info-hover fontlig nz21 vishid"';
             str+='id="'+param1+'_hover">';
                 str+='<div class="nchatbdr3 f13">';
-                    str+='<img src="'+param2.PHOTO+'" class="vtop"/>';
+                    str+='<img src="'+param2.PHOTO+'" class="vtop ch220"/>';
                         str+='<div class="nchatgrad padall-10">';
                             str+='<ul class="listnone lh22">';
                                 str+='<li>'+param2.AGE+', '+ param2.HEIGHT+'</li>';
@@ -1303,7 +1419,7 @@ JsChat.prototype = {
     addLoginHTML: function(failed) {
         console.log('in addLoginHTML');
         var curEle = this;
-        var LoginHTML = '<div class="fullwid txtc fontlig pos-rel" id="js-loginPanel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarOut"></i> </div><div> <img src="images/chat-profile-pic.jpg" class="chatmt1"/> </div><button id="js-chatLogin" class="chatbtnbg1 mauto chatw1 colrw f14 brdr-0 lh40 cursp nchatm5">Login to Chat</button></div>';
+        var LoginHTML = '<div class="fullwid txtc fontlig pos-rel" id="js-loginPanel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarOut"></i> </div><div class="chpt100"> <img src="'+this._imageUrl+'" /> </div><button id="js-chatLogin" class="chatbtnbg1 mauto chatw1 colrw f14 brdr-0 lh40 cursp nchatm5">Login to Chat</button></div>';
         var errorHTML = '';
         if(failed == true)
         {
