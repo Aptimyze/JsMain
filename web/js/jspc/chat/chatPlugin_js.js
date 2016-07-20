@@ -460,7 +460,7 @@ JsChat.prototype = {
                     $(this._mainID).find($('#'+contactID + "_" + groupID)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
                 }
             }
-            $('#'+contactID + "_" + groupID).attr("data-status",status);
+            
             //move this element to beginning of listing
             /*var html = $(elem._mainID).find($('#'+contactID + "_" + groupID)).html();
             $(elem._mainID).find($('#'+contactID + "_" + groupID)).remove();
@@ -877,7 +877,10 @@ JsChat.prototype = {
 
     //update status in chat box top
     _updateStatusInChatBox: function(userId,chat_status){
-        console.log("_updateStatusInChatBox for "+userId+"-"+chat_status+"--"+$('chat-box[user-id="' + userId + '"]').length);
+        //console.log("_updateStatusInChatBox for "+userId+"-"+chat_status+"--"+$('chat-box[user-id="' + userId + '"]').length);
+        if($(".chatlist li[id*='"+userId+"']").length != 0){
+            $(".chatlist li[id*='"+userId+"']").attr("data-status",chat_status);
+        }
         if ($('chat-box[user-id="' + userId + '"]').length != 0) {
             console.log("change to "+chat_status);
             $("chat-box[user-id='" + userId + "'] .chatBoxBar .onlineStatus").html(chat_status);
