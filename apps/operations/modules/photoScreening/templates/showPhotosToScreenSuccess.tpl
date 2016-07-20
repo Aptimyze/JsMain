@@ -43,6 +43,7 @@
 ~/if`
 <br/>
  <form name="list" id="ScreenForm" enctype="multipart/form-data"  action="~sfConfig::get('app_site_url')`~$imageCopyServer`/operations.php/photoScreening/uploadScreeningAction?cid=~$cid`"  method="POST">
+
    <input type=hidden name="profileid" value="~$profileData['PROFILEID']`">
    <input type = "hidden" name= "emailAdd" value = "~$profileData['EMAIL']`">
    <input type=hidden name="source" value="~$source`">

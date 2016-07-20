@@ -31,7 +31,30 @@ class PictureFunctions
 	*/
 	public static function getPictureDocUrl($imageUrl)
 	{ 
-		$imageUrl = self::getCloudOrApplicationCompleteUrl($imageUrl,true);
+		if(strpos($imageUrl,JsConstants::$applicationPhotoUrl)!=1)
+		{
+			$imageUrl=str_replace(JsConstants::$applicationPhotoUrl,JsConstants::$docRoot,$imageUrl);
+		}
+		if(PictureFunctions::IfUsePhotoDistributed('X'))
+		{
+			$imageUrl = str_replace(JsConstants::$photoServerName.'/','',$imageUrl);
+		}
+
+		return $imageUrl;
+	}
+	
+	
+	/*This function is used to get image server enum url instead of application url of pictures
+	@param imageUrl : imageUrl
+	@return imageUrl : image url with image server
+	*/
+	public static function getPictureServerUrl($imageUrl)
+	{ 
+		if(PictureFunctions::IfUsePhotoDistributed('X') && strpos($imageUrl,JsConstants::$applicationPhotoUrl)!=1)
+		{
+			$imageUrl=str_replace(JsConstants::$applicationPhotoUrl,IMAGE_SERVER_ENUM::$appPicUrl,$imageUrl);
+		}
+		
 		return $imageUrl;
 	}
 	
@@ -357,9 +380,13 @@ class PictureFunctions
 			$setServer = $setServer.$remaining;
 		else
 			$setServer=$value;
-		if(JsConstants::$usePhotoDistributed && $getAbsoluteUrl)
+		if(PictureFunctions::IfUsePhotoDistributed('X') && $getAbsoluteUrl)
 		{
-			$setServer = str_replace(JsConstants::$photoServerName.'/','',$setServer);
+			$matchToBeArr = JsConstants::$photoServerShardingEnums;
+			foreach($matchToBeArr as $k=>$v)
+				$setServer = str_replace($v.'/','',$setServer);
+			//$setServer = str_replace(JsConstants::$photoServerName.'/','',$setServer);
+			
 		}
 		return $setServer;
 	}
@@ -558,5 +585,34 @@ class PictureFunctions
         	}
         	return $result;
         }
+
+	/**
+	* pid = 'X' fro  face detection,preproces
+	*/
+	public static function IfUsePhotoDistributed($pid)
+	{
+		if(in_array($pid,array('9061321','2114','1572'))) //add 'X' for facedet/copy to orig on live server
+			return 1;
+
+		if(JsConstants::$usePhotoDistributed)
+			return 1;
+		return 0;
+	}
+
+	public static function getNameIfUsePhotoDistributed($mainPic) 
+	{
+		$matchToBeArr = JsConstants::$photoServerShardingEnums;
+		foreach($matchToBeArr as $k=>$v)
+		{
+			if($mainPic)
+			{
+				if(strstr($mainPic,$v))
+				{
+					return $v;
+				}
+			}
+		}
+		return NULL;
+	}
 }
 ?>

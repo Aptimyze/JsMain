@@ -23,11 +23,11 @@ function displayConfirmationMessage(message,showErrorBox,pictureid)
 function sendAjaxRequest(count,filename) 
 {
     var pUrl;
-    if (typeof imageCopyServer === 'undefined')
+    if (typeof imageCopyServer === 'undefined' || imageCopyServer == '')
         pUrl = "/api/v3/social/uploadPhoto";
     else
         pUrl = "/"+imageCopyServer+"/api/v3/social/uploadPhoto";
-    alert(pUrl);
+    alert(imageCopyServer+" :: "+pUrl);
     currentEvent = count;
     dataToBeSent = formDataArray[count];
     statusArr[completed + 1] = 2;
@@ -382,9 +382,15 @@ function setChangePhotoButton()
 }
 function importFbRequest(val)
 {
+	 var pUrl;
+    if (typeof imageCopyServer === 'undefined' || imageCopyServer == '')
+        pUrl = "/api/v3/social/importFb";
+    else
+        pUrl = "/"+imageCopyServer+"/api/v3/social/importFb";
+    alert(imageCopyServer+" : "+pUrl);
     $.myObj.ajax({
         type: 'POST',
-        url: '/api/v3/social/importFb',
+        url: pUrl,
         timeout: 120000,
 	data:{urlToSave:val},
         success: function(d) {

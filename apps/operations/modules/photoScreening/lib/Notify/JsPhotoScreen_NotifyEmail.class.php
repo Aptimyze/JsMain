@@ -122,7 +122,7 @@ class JsPhotoScreen_NotifyEmail
 	{
 		if(!$this->m_enMailerType)
 		{
-			throw new jsException("","Mailer Type is not specified in JsPhotoScreen_NotifyEmail");
+			//throw new jsException("","Mailer Type is not specified in JsPhotoScreen_NotifyEmail");
 		}
 		switch($this->m_enMailerType)
 		{

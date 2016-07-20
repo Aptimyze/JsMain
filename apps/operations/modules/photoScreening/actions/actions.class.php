@@ -143,10 +143,53 @@ class photoScreeningActions extends sfActions {
                                 $profileAllotedObj->reNewProfileForPreprocess($profileDetails["profileData"]["PROFILEID"]);
                                 $this->redirect(JsConstants::$siteUrl."/operations.php/photoScreening/screen?name=".$name."&cid=".$this->cid."&source=".$this->source);
                         }
+                        
+                         if(PictureFunctions::IfUsePhotoDistributed($profileDetails["profileData"]["PROFILEID"]))
+                        {
+                                $matchToBeArr = JsConstants::$photoServerShardingEnums;
 
-			if(JsConstants::$usePhotoDistributed)
-                        	$this->imageCopyServer = IMAGE_SERVER_ENUM::getImageServerEnum($profileDetails["profileData"]["PROFILEID"],'withSlash');
-                        $this->setTemplate('showPhotosToScreen');
+                                $arr = $photoData["profilePic"]["profileType"];
+                                $mainPic = $photoData["profilePic"]["mainPicUrl"]["url"];
+
+                                /***/
+                                foreach($matchToBeArr as $k=>$v)
+                                {
+                                        if($mainPic)
+                                        {
+                                                if(strstr($mainPic,$v))
+                                                {
+                                                        $finalArr[] = $v;
+                                                        $l1 = $v;
+                                                }
+                                        }
+                                }
+
+                                if($photoData["nonScreened"])
+                                {
+                                        foreach($photoData["nonScreened"] as $kk=>$vv)
+                                        {
+                                                foreach($matchToBeArr as $k=>$v)
+                                                {
+                                                        if(strstr($vv["url"],$v))
+                                                        {
+                                                                if(is_array($finalArr) && in_array($v,$finalArr))
+                                                                        ;
+                                                                else
+                                                                        $finalArr[] = $v;
+                                                        }
+                                                }
+                                        }
+                                }
+                                if(count($finalArr)==1)
+                                        $this->imageCopyServer = "/".$finalArr[0];
+                                else
+                                {
+                                        $this->imageCopyServer = "/".$l1;
+                                }
+
+
+											}
+												$this->setTemplate('showPhotosToScreen');
                 }
                 
                 
@@ -278,7 +321,7 @@ class photoScreeningActions extends sfActions {
 		$interface = $photoScreeningServiceObj->photoScreeningProfileStatus($this->profileid);
 		if(PictureStaticVariablesEnum::$PICTURE_STATUS[$interface]=="PROCESS_QUEUE")
 		{
-			if(JsConstants::$usePhotoDistributed)
+			if(PictureFunctions::IfUsePhotoDistributed($this->profileid))
 			{
 				if($this->profileid)
 					$this->imageCopyServer = IMAGE_SERVER_ENUM::getImageServerEnum($this->profileid,'withSlash');
@@ -313,7 +356,7 @@ class photoScreeningActions extends sfActions {
 
                 $userData['ALBUM'] = NULL;
                 $this->profileData = $userData;
-		if(JsConstants::$usePhotoDistributed)
+		if(PictureFunctions::IfUsePhotoDistributed($this->profileid))
 		{
 			if($this->profileid)
 				$this->imageCopyServer = IMAGE_SERVER_ENUM::getImageServerEnum($this->profileid,'withSlash');
@@ -406,7 +449,7 @@ class photoScreeningActions extends sfActions {
                                                 
                                         }
                                         if($edit == 1 && $this->preprocessing!=1){
-							if(JsConstants::$usePhotoDistributed)
+							if(PictureFunctions::IfUsePhotoDistributed($profileInfo["PROFILEID"]))
 							{
 								if($profileInfo["PROFILEID"])
 									$this->imageCopyServer = IMAGE_SERVER_ENUM::getImageServerEnum($profileInfo["PROFILEID"],'withSlash');
@@ -439,6 +482,23 @@ class photoScreeningActions extends sfActions {
                 $name = $request->getAttribute("name");
                 $this->master = 0;
 
+		/*may no needed now **/
+		/*
+		if($formArr["copyImages"])
+		{
+			$copyImagesArr = explode(",",$formArr["copyImages"]);
+			foreach($copyImagesArr as $k=>$v)
+			{
+				$ttt = explode("uploads",$v);
+				if($ttt[1])
+				{
+					$ttt0 = explode("?",$ttt[1]);
+					$ttt1 = JsConstants::$docRoot."/uploads".$ttt0[0];
+					copy($v,$ttt1);
+				}
+			}
+		}
+		*/
                 if ($formArr['Skip']) {   //If User presses skip
                         $this->mailid = $formArr['mailid'];
                         $this->setTemplate('skipComments');
@@ -534,7 +594,7 @@ class photoScreeningActions extends sfActions {
                         	}
 	                        if($this->master==2)
 				{
-					if(JsConstants::$usePhotoDistributed)
+					if(PictureFunctions::IfUsePhotoDistributed($profileInfo["PROFILEID"]))
 					{
 						if($profileInfo["PROFILEID"])
 							$this->imageCopyServer = IMAGE_SERVER_ENUM::getImageServerEnum($profileInfo["PROFILEID"],'withSlash');

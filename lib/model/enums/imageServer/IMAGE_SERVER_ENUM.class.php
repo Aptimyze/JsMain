@@ -7,12 +7,14 @@ class IMAGE_SERVER_ENUM
         public static $cloudUrl    = "CL" ;
 	public static $cloudArchiveUrl ="AR";
 	
-	public static function getImageServerEnum($pid,$withSlash='')
+	public static function getImageServerEnum($pid,$withSlash='',$getSelf='')
 	{
-		if(JsConstants::$usePhotoDistributed)
+		if(PictureFunctions::IfUsePhotoDistributed($pid))
 		{
-			
-			$str= JsConstants::$photoServerShardingEnums[$pid%count(JsConstants::$photoServerShardingEnums)];	
+			if($getSelf!='')
+				 $str= JsConstants::$photoServerName;
+			else
+				$str= JsConstants::$photoServerShardingEnums[$pid%count(JsConstants::$photoServerShardingEnums)];	
 			if($withSlash!='')
 				$str = "/".$str;
 			return $str;

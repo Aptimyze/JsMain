@@ -206,6 +206,7 @@ var mobEditPage=(function(){
 			}
 			else
 			{
+				if(value!=null)
 				$.each(value, function(k ,v)
 				{
 					
