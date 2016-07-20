@@ -129,6 +129,11 @@ class ApiIgnoreProfileV1Action extends sfActions
 	                	$params["isIgnored"] = 1;
 	                	$responseArray["buttons"][0] = ButtonResponse::getIgnoreButton("",$params);
 	                }
+	             if(MobileCommon::isApp() == "A")
+	                {
+	                	$params["isIgnored"] = 1;
+	                	$responseArray["buttons"][0] = ButtonResponseApi::getIgnoreButton("",'','Y',true,'UNDO IGNORE');
+	                }
 					$buttonDetails = ButtonResponse::buttonDetailsMerge($responseArray);
 					$actionDetails = ButtonResponse::actionDetailsMerge(array("notused"=>1));
 					$this->m_arrOut=array('status'=>"1",'message'=>$this->getIgnoreMessage(),'button_after_action'=>$button,'buttondetails'=>$buttonDetails);

@@ -246,11 +246,11 @@ Class ButtonResponseApi
 		$button = self::buttonMerge($button);
 		return $button;
 	}
-	public static function getIgnoreButton($loginProfile='', $otherProfile='',$isIgnored=null,$enable=true)
+	public static function getIgnoreButton($loginProfile='', $otherProfile='',$isIgnored=null,$enable=true,$label)
     {
     	
 		if ($isIgnored) {
-           $button["label"]  = "Unblock";
+           $button["label"]  = $label ? $label : "Unblock";
 		if(MobileCommon::isApp()=="I")
 		{
 			$button["iconid"] = IdToAppImagesMapping::UNDO_IGNORE;
@@ -265,7 +265,7 @@ Class ButtonResponseApi
             }
             else{
                     $button["iconid"] = IdToAppImagesMapping::A_IGNORE;
-                    $button["label"]  = "Block";
+                    $button["label"]  = $label? $label:"Block";
                     $button["action"] = "IGNORE";
                     $button["params"]  = "&ignore=1";
             }

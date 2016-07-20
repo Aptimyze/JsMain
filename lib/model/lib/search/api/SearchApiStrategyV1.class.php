@@ -17,7 +17,7 @@ class SearchApiStrategyV1
 	private $searchCat;
 	private $version;
 	private $channel;
-	private $profileTupleInfoArr = array('PROFILECHECKSUM','userLoginStatus','SUBSCRIPTION','AGE','USERNAME','DECORATED_HEIGHT','DECORATED_OCCUPATION','DECORATED_CASTE','DECORATED_INCOME','DECORATED_MTONGUE','DECORATED_EDU_LEVEL_NEW','DECORATED_CITY_RES','PHOTO','SIZE','ALBUM_COUNT','CONTACT_STATUS','BOOKMARKED','VERIFY_ACTIVATED_DT','NEW_FLAG','DECORATED_RELIGION','GENDER','FEATURED','FILTER_SCORE','FILTER_REASON','HIGHLIGHTED','VERIFICATION_SEAL','VERIFICATION_STATUS','stype','MSTATUS','COLLEGE','PG_COLLEGE','COMPANY_NAME');
+	private $profileTupleInfoArr = array('PROFILECHECKSUM','userLoginStatus','SUBSCRIPTION','AGE','USERNAME','DECORATED_HEIGHT','DECORATED_OCCUPATION','DECORATED_CASTE','DECORATED_INCOME','DECORATED_MTONGUE','DECORATED_EDU_LEVEL_NEW','DECORATED_CITY_RES','PHOTO','SIZE','ALBUM_COUNT','CONTACT_STATUS','BOOKMARKED','VERIFY_ACTIVATED_DT','NEW_FLAG','DECORATED_RELIGION','GENDER','FEATURED','FILTER_SCORE','FILTER_REASON','HIGHLIGHTED','VERIFICATION_SEAL','VERIFICATION_STATUS','stype','MSTATUS','COLLEGE','PG_COLLEGE','COMPANY_NAME','IGNORE_BUTTON');
         private $profileInfoMappingArr = array("subscription"=>"subscription_icon","decorated_city_res"=>"decorated_location","contact_status"=>"eoi_label","verify_activated_dt"=>"timetext","new_flag"=>"seen","VERIFICATION_SEAL"=>"verification_seal");
 
 	const caste_relaxation_text1  = 'To get $casteMappingCnt more matching profiles, include castes $casteMappingCastes';
@@ -365,12 +365,13 @@ class SearchApiStrategyV1
                                                                 $this->output[$profileKey][$i]['subscription_text'] = $this->handlingSpecialCasesForSearch('subscription_text',$v[$vv],$profileVal[$k]['PHOTO_REQUESTED'],$SearchParamtersObj->getGENDER(),$SearchParamtersObj,$profileVal[$k]); 
                                                 }
                                                 
-                                                if(in_array($fieldName,array('bookmarked','album_count','eoi_label')))
+                                                if(in_array($fieldName,array('bookmarked','album_count','eoi_label','ignore_button')))
                                                 {
                                                         if($fieldName=='album_count')
                                                                 $this->output[$profileKey][$i][$fieldName] = $value["value"];
 
                                                         $tempkey = $fieldName=='eoi_label'?0:($fieldName=='bookmarked'?1:2);
+                                                        if($fieldName!='album_count')
                                                         $button[$tempkey] = $value;
                                                 }
                                                 elseif($fieldName=='photo')
@@ -571,6 +572,10 @@ class SearchApiStrategyV1
 			case "album_count":
 				$value =  ButtonResponseApi::getAlbumButton($value,$gender);
 				break;
+			case "ignore_button":
+				$value =  ButtonResponseApi::getIgnoreButton('','','',true,'IGNORE');
+				break;
+			
 			case "age":
 				$value = $value." Years";
 				break;
