@@ -143,6 +143,9 @@ class photoScreeningActions extends sfActions {
                                 $profileAllotedObj->reNewProfileForPreprocess($profileDetails["profileData"]["PROFILEID"]);
                                 $this->redirect(JsConstants::$siteUrl."/operations.php/photoScreening/screen?name=".$name."&cid=".$this->cid."&source=".$this->source);
                         }
+
+			if(JsConstants::$usePhotoDistributed)
+                        	$this->imageCopyServer = IMAGE_SERVER_ENUM::getImageServerEnum($profileDetails["profileData"]["PROFILEID"],'withSlash');
                         $this->setTemplate('showPhotosToScreen');
                 }
                 
@@ -274,7 +277,14 @@ class photoScreeningActions extends sfActions {
 		$photoScreeningServiceObj = new photoScreeningService();
 		$interface = $photoScreeningServiceObj->photoScreeningProfileStatus($this->profileid);
 		if(PictureStaticVariablesEnum::$PICTURE_STATUS[$interface]=="PROCESS_QUEUE")
-			$this->redirect(sfConfig::get("app_site_url") . "/operations.php/photoScreening/processInterface?cid=$this->cid&name=$name&source=master&actualSource=skipped&profileId=$this->profileid&skipMemcache=1");
+		{
+			if(JsConstants::$usePhotoDistributed)
+			{
+				if($this->profileid)
+					$this->imageCopyServer = IMAGE_SERVER_ENUM::getImageServerEnum($this->profileid,'withSlash');
+			}
+			$this->redirect(sfConfig::get("app_site_url").$this->imageCopyServer."/operations.php/photoScreening/processInterface?cid=$this->cid&name=$name&source=master&actualSource=skipped&profileId=$this->profileid&skipMemcache=1");
+		}
 		elseif(PictureStaticVariablesEnum::$PICTURE_STATUS[$interface]=="FACE_CRON_COMPLETED")
 	                $this->redirect(sfConfig::get("app_site_url") . "/operations.php/photoScreening/screen?cid=$this->cid&name=$name&source=master&actualSource=skipped&profileId=$this->profileid&skipMemcache=1");
 		else
@@ -303,6 +313,11 @@ class photoScreeningActions extends sfActions {
 
                 $userData['ALBUM'] = NULL;
                 $this->profileData = $userData;
+		if(JsConstants::$usePhotoDistributed)
+		{
+			if($this->profileid)
+				$this->imageCopyServer = IMAGE_SERVER_ENUM::getImageServerEnum($this->profileid,'withSlash');
+		}
 
                 if ($album) {
                         foreach ($album as $photo) {
@@ -391,7 +406,12 @@ class photoScreeningActions extends sfActions {
                                                 
                                         }
                                         if($edit == 1 && $this->preprocessing!=1){
-                                                        $this->redirect(JsConstants::$siteUrl."/operations.php/photoScreening/processInterface?name=".$name."&cid=".$this->cid."&source=".$this->source."&profileId=".$profileInfo["PROFILEID"]); 
+							if(JsConstants::$usePhotoDistributed)
+							{
+								if($profileInfo["PROFILEID"])
+									$this->imageCopyServer = IMAGE_SERVER_ENUM::getImageServerEnum($profileInfo["PROFILEID"],'withSlash');
+							}
+                                                        $this->redirect(JsConstants::$siteUrl.$this->imageCopyServer."/operations.php/photoScreening/processInterface?name=".$name."&cid=".$this->cid."&source=".$this->source."&profileId=".$profileInfo["PROFILEID"]); 
                                                 }
 					elseif($this->preprocessing!=1){
  						$this->redirect(JsConstants::$siteUrl."/operations.php/photoScreening/screen?name=".$name."&cid=".$this->cid."&source=".$this->source."&profileId=".$profileInfo["PROFILEID"]);
@@ -502,18 +522,25 @@ class photoScreeningActions extends sfActions {
                                         //$pictureDelete = $photoUpdateObj->deleteRowsBasedOnPicId();
                                         
                                 }
-                        //TRACKING
-                        if($picDataForTracking){
-                            $trackParamArr = $photoScreeningServiceObj->prepareParameter("TRACK", $name, $formArr, $picture, $picDataForTracking); // Data Required for Update,tracking & notification Functions
-                            $trackingObj = new JsPhotoScreen_TrackingManager($trackParamArr);
-                        }
+	                        //TRACKING
+        	                if($picDataForTracking){
+                	            $trackParamArr = $photoScreeningServiceObj->prepareParameter("TRACK", $name, $formArr, $picture, $picDataForTracking); // Data Required for Update,tracking & notification Functions
+                        	    $trackingObj = new JsPhotoScreen_TrackingManager($trackParamArr);
+	                        }
                         
-                        if(count($picture["screenedPicToDelete"])==0 && !$picDataForTracking && $isProfileScreened==0 && count($paramArr["DELETE"])==0)
-                        {
-                            $response = "Error - Please perform some action";
-                        }
-                        if($this->master==2)
-                                $this->redirect(JsConstants::$siteUrl."/operations.php/photoScreening/processInterface?name=".$name."&cid=".$this->cid."&source=master&profileId=".$this->profileid); 
+        	                if(count($picture["screenedPicToDelete"])==0 && !$picDataForTracking && $isProfileScreened==0 && count($paramArr["DELETE"])==0)
+                	        {
+                        	    $response = "Error - Please perform some action";
+                        	}
+	                        if($this->master==2)
+				{
+					if(JsConstants::$usePhotoDistributed)
+					{
+						if($profileInfo["PROFILEID"])
+							$this->imageCopyServer = IMAGE_SERVER_ENUM::getImageServerEnum($profileInfo["PROFILEID"],'withSlash');
+					}
+					$this->redirect(JsConstants::$siteUrl.$this->imageCopyServer."/operations.php/photoScreening/processInterface?name=".$name."&cid=".$this->cid."&source=master&profileId=".$this->profileid); 
+				}
                         } elseif(!$response)
                                 $response = "Error - Deleted photo is selected as Profile Pic";
 

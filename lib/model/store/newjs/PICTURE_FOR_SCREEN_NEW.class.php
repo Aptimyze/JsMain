@@ -17,6 +17,7 @@ class PICTURE_FOR_SCREEN_NEW extends TABLE
         **/
         public function get($paramArr=array())
         {
+					
                 foreach($paramArr as $key=>$val)
                         ${$key} = $val;
 
@@ -53,9 +54,11 @@ class PICTURE_FOR_SCREEN_NEW extends TABLE
 				$sql.=" AND COALESCE(OriginalPicUrl, '') != ''";
 			else if($OriginalPicUrl == 2)
 				$sql.=" AND COALESCE(OriginalPicUrl, '') = ''";
-
+			if($MainPicUrl)
+				$sql.= " AND MainPicUrl like :MainPicUrl ";
 			if($LIMIT)
 				$sql.=" LIMIT :LIMIT ";
+				
                         $res = $this->db->prepare($sql);
                         if($PROFILEID)
                                 $res->bindValue(":PROFILEID", $PROFILEID, PDO::PARAM_INT);
@@ -63,6 +66,9 @@ class PICTURE_FOR_SCREEN_NEW extends TABLE
                                 $res->bindValue(":PICTUREID", $PICTUREID, PDO::PARAM_INT);
                         if($ORDERING || $ORDERING=='0')
                                 $res->bindValue(":ORDERING", $ORDERING, PDO::PARAM_INT);
+                        if($MainPicUrl)
+													$res->bindValue(":MainPicUrl", $MainPicUrl, PDO::PARAM_STR);
+													
 			if($SCREEN_BIT)
 			{
 			 	if(is_array($SCREEN_BIT))
@@ -80,6 +86,7 @@ class PICTURE_FOR_SCREEN_NEW extends TABLE
 			}
                         if($LIMIT)
 				 $res->bindValue(":LIMIT", $LIMIT, PDO::PARAM_INT);
+				
                         $res->execute();
                         while($row = $res->fetch(PDO::FETCH_ASSOC))
                         {

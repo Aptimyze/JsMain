@@ -31,11 +31,7 @@ class PictureFunctions
 	*/
 	public static function getPictureDocUrl($imageUrl)
 	{ 
-		if(strpos($imageUrl,JsConstants::$applicationPhotoUrl)!=1)
-		{  
-                	$imageUrl=str_replace(JsConstants::$applicationPhotoUrl,JsConstants::$docRoot,$imageUrl);
-                        
-                }
+		$imageUrl = self::getCloudOrApplicationCompleteUrl($imageUrl,true);
 		return $imageUrl;
 	}
 	
@@ -356,11 +352,15 @@ class PictureFunctions
 			 case IMAGE_SERVER_ENUM::$cloudArchiveUrl : $setServer=JsConstants::$cloudArchiveUrl;
                                                             break;
 		}
+		
 		if($setServer)
 			$setServer = $setServer.$remaining;
 		else
 			$setServer=$value;
-
+		if(JsConstants::$usePhotoDistributed && $getAbsoluteUrl)
+		{
+			$setServer = str_replace(JsConstants::$photoServerName.'/','',$setServer);
+		}
 		return $setServer;
 	}
 	/*

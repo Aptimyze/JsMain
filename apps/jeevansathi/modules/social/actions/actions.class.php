@@ -614,6 +614,8 @@ class socialActions extends sfActions
 
   public function executeAddPhotos(sfWebRequest $request)
   {
+	if(JsConstants::$usePhotoDistributed)
+		$this->imageCopyServer = IMAGE_SERVER_ENUM::getDefaultEnum();
 	if(MobileCommon::isMobile("JS_MOBILE"))
 	{
 		header('Location: '.$SITE_URL."/profile/viewprofile.php?ownview=1");
@@ -700,6 +702,8 @@ class socialActions extends sfActions
 		$this->showConf = $request->getParameter('showConf');
 		$this->importPhotosBarHeightPerShift = PictureStaticVariablesEnum::$importPhotosBarHeightPerShift;
 		$this->importPhotosBarCountPerShift = PictureStaticVariablesEnum::$importPhotosBarCountPerShift;
+		if(JsConstants::$usePhotoDistributed)
+			$this->imageCopyServer = IMAGE_SERVER_ENUM::getImageServerEnum($profileObj->getPROFILEID());
   }
 
   /**

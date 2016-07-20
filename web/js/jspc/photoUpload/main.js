@@ -262,6 +262,12 @@ $(function () {
 function sendProcessCropperRequest(cordinatesArray,imageSource,imgPreviewTypeArr)
 {
 	var url = '/social/processCropper';
+	
+    if (typeof imageCopyServer === 'undefined')
+        url = "/social/processCropper";
+    else
+        url = "/"+imageCopyServer+"/social/processCropper";
+    alert(url);
 	var postSendData = {'cropBoxDimensionsArr':cordinatesArray,'imageSource':imageSource,'imgPreviewTypeArr':imgPreviewTypeArr};
 	
 	$.myObj.ajax({
