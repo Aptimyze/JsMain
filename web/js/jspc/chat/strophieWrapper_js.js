@@ -12,6 +12,7 @@ var strophieWrapper = {
 	        "GONE":'gone',
             "RECEIVED":'received'
     	},
+    rosterGroups:chatConfig.Params.PC.rosterGroups,
 
 	//connect to openfire
 	connect: function(bosh_service_url,username,password){
@@ -337,7 +338,8 @@ var strophieWrapper = {
     	}
     	else{
     		$.each(groupArr,function(index,val){
-    			if(val != "dpp" && val!= "eoi_R" && val!= "accepted_by_me" && val!= "shortlisted")
+    			if($.inArray(val,strophieWrapper.rosterGroups) == -1)
+    			//if(val != "dpp" && val!= "eoi_R" && val!= "accepted_by_me" && val!= "shortlisted")
     				return false;
     		});
     		return true;
