@@ -39,9 +39,9 @@ class chatActions extends sfActions
             $username = $loginData['PROFILEID'];
 
 		//$uname = $loginData['USERNAME'];
-	    //$pass = EncryptPassword::generatePassword($uname);
+	    $pass = EncryptPassword::generatePassword($username);
             //$pass = EncryptPassword::generatePassword("test".$username);
-            $pass = "test".$username;
+            //$pass = "test".$username;
 
             $url = JsConstants::$openfireConfig['HOST'].":".JsConstants::$openfireConfig['PORT']."/plugins/restapi/v1/users/".$username;
             //$url = "http://localhost:9090/plugins/restapi/v1/users/".$username;

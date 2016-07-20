@@ -63,7 +63,7 @@ function cryptoJsAesEncrypt($passphrase, $value){
 
 
 static function generatePassword($string) {
-    $ans = array();
+/*    $ans = array();
     $string = str_split($string);
     #go through every character, changing it to its ASCII value
     for ($i = 0; $i < count($string); $i++) {
@@ -78,7 +78,8 @@ static function generatePassword($string) {
     }
 
     #turn it into a string
-    return implode('', $ans);
+    return implode('', $ans);*/
+    return md5($string);
 }
 
 /*static function decode($string) {
