@@ -92,8 +92,8 @@ class CancelContact extends ContactEvent{
         $sendMailData = array('process' =>'MAIL','data'=>array('type' => 'CANCELCONTACT','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID() ) ), 'redeliveryCount'=>0 );
         $producerObj->sendMessage($sendMailData);
 	//Remove from contact roster
-        $chatData = array('process' =>'CHATROSTERS','data'=>array('type' => 'CANCEL_INITIATE','body'=>array('senderid'=>$this->contactHandler->getViewed()->getPROFILEID(),'receiverid'=>$this->contactHandler->getViewer()->getPROFILEID(),'senderusername'=>$this->contactHandler->getViewed()->getUSERNAME(),'receiverusername'=>$this->contactHandler->getViewed()->getUSERNAME() ) ), 'redeliveryCount'=>0 );
-        $producerObj->sendMessage($chatData);
+      $chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'CANCELCONTACT', 'body' => array('sender' => array('profileid'=>$this->contactHandler->getViewer()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewer()->getPROFILEID()),'username'=>$this->contactHandler->getViewer()->getUSERNAME()), 'receiver' => array('profileid'=>$this->contactHandler->getViewed()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewer()->getPROFILEID),"username"=>$this->contactHandler->getViewer()->getUSERNAME()))), 'redeliveryCount' => 0);
+      $producerObj->sendMessage($chatData);
     }
     else
     {
