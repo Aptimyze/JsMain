@@ -376,7 +376,41 @@ var CryptoJSAesJson = {
         return cipherParams;
     }
 }
+/*
+ * Function to get profile image for login state
+ */
+function getProfileImage(){
+    var imageUrl = localStorage.getItem('userImg'),flag = true;
+    if(imageUrl){
+        var user = JSON.parse(imageUrl);
+        user = user['user'];
+        if(user == loggedInJspcUser)
+            flag = false;
+    }
+    if(flag){
+        $.ajax({
+            url: "/api/v1/social/getMultiUserPhoto?photoType=ProfilePic120Url",
+            async: false,
+            success: function(data){
+                if(data.statusCode == "0"){
+                    imageUrl = data.profiles[0].PHOTO.ProfilePic120Url;
+                    localStorage.setItem('userImg', JSON.stringify({'userImg':imageUrl,'user':loggedInJspcUser}));
+                }
+            }
+        });
+    }
+    return imageUrl;
+}
 
+/*
+ * Clear local storage
+ */
+function clearLocalStorage(){
+    var removeArr = ['userImg'];
+    $.each(removeArr, function(key,val){
+        localStorage.removeItem(val);
+    });
+}
 
 $(document).ready(function(){
     console.log("User");
@@ -466,6 +500,7 @@ $(document).ready(function(){
     objJsChat.onLogoutPreClick = function(){
         console.log("In Logout preclick");
         objJsChat._loginStatus = 'N';
+        clearLocalStorage();
         strophieWrapper.disconnect();
         eraseCookie("chatAuth");
     }
