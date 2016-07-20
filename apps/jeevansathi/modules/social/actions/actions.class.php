@@ -777,7 +777,18 @@ class socialActions extends sfActions
 	$album = $picServiceObj->getAlbum($contact_status);
         
 	if(is_array($album))
+	{
 		$this->countPics = count($album);
+
+		//Code for album view logging
+		if($requestedProfileid != $loggedInProfileid)
+		{
+			$channel = MobileCommon::getChannel();
+			$date = date("Y-m-d H:i:s");
+			$albumViewLoggingObj = new albumViewLogging();
+			$albumViewLoggingObj->logProfileAlbumView($loggedInProfileid,$requestedProfileid,$date,$channel);
+		}		
+	}
 	else if($profilechecksum)
 		$this->redirect(sfConfig::get("app_site_url")."/profile/viewprofile.php?profilechecksum=".$profilechecksum);
 	else
