@@ -580,6 +580,7 @@ JsChat.prototype = {
     //remove from list
     _removeFromListing:function(param1,data){
         console.log('remove element 11');
+        var elem = this;
         //removeCall1 if user is removed from backend
         if(param1=='removeCall1' || param1 == 'delete_node'){
             console.log("calllign _removeFromListing");
@@ -605,7 +606,7 @@ JsChat.prototype = {
                             }
                         }
                         console.log(this);
-                        this._updateStatusInChatBox(runID,data[key]["rosterDetails"]["chat_status"]);
+                        elem._updateStatusInChatBox(runID,data[key]["rosterDetails"]["chat_status"]);
                     });
                 }
             }
