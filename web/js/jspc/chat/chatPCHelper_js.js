@@ -66,6 +66,15 @@ function initiateChatConnection()
     console.log(strophieWrapper.connectionObj);
 }
 
+function getConnectedUserJID()
+{
+    var jid = strophieWrapper.connectionObj.jid;
+    if(typeof jid!= "undefined")
+        return jid.split("/")[0];
+    else
+        return null;
+}
+
 /*function fetchConverseSettings
 * get value of converse settings' key
 * @params:key

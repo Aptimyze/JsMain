@@ -379,7 +379,7 @@ JsChat.prototype = {
                         var List = '',fullname = data[key]["rosterDetails"]["fullname"],tabShowStatus = $('div.' + val).attr('data-showuser');
                         var getNamelbl = fullname,picurl=data[key]["rosterDetails"]["listing_tuple_photo"],prfCheckSum=data[key]["rosterDetails"]["profile_checksum"];  //ankita for image
                         List += '<li class=\"clearfix profileIcon\"';
-                        List += "id=\"" + runID + "_"+val + "\" data-checks=\""+ prfCheckSum +"\" data-jid=\""+ fullJID+"\">";
+                        List += "id=\"" + runID + "_"+val + "\" data-status=\""+status+"\" data-checks=\""+ prfCheckSum +"\" data-jid=\""+ fullJID+"\">";
                         List += "<img id=\"pic_" + runID + "_" +val + "\" src=\""+picurl+"\" class=\"fl\">";
                         List += '<div class="fl f14 fontlig pt15 pl18">';
                         List += getNamelbl;
@@ -428,7 +428,7 @@ JsChat.prototype = {
                             else{
                                 elem._placeContact("existing",runID,val,status);   
                             }
-                            //elem._updateStatusInChatBox(runID,status); 
+                            elem._updateStatusInChatBox(runID,status); 
                         }
                     });
             }
@@ -451,12 +451,16 @@ JsChat.prototype = {
             else*/                         //add new offline element in end
             $('div.' + groupID + ' ul').append(contactHTML);
         }
-        else if(key == "existing" && status == "online"){
+        else if(key == "existing"){
             console.log("changing icon");
-            //add online chat_status icon
-            if($('#'+contactID + "_" + groupID).find('.nchatspr').length==0){
-                $(this._mainID).find($('#'+contactID + "_" + groupID)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
+            if(status == "online")
+            {
+                //add online chat_status icon
+                if($('#'+contactID + "_" + groupID).find('.nchatspr').length==0){
+                    $(this._mainID).find($('#'+contactID + "_" + groupID)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
+                }
             }
+            $('#'+contactID + "_" + groupID).attr("data-status",status);
             //move this element to beginning of listing
             /*var html = $(elem._mainID).find($('#'+contactID + "_" + groupID)).html();
             $(elem._mainID).find($('#'+contactID + "_" + groupID)).remove();
@@ -600,7 +604,8 @@ JsChat.prototype = {
                                 $('div.' + val + ' ul').parent().addClass("disp-none");
                             }
                         }
-                        //this._updateStatusInChatBox(runID,data[key]["rosterDetails"]["chat_status"]);
+                        console.log(this);
+                        this._updateStatusInChatBox(runID,data[key]["rosterDetails"]["chat_status"]);
                     });
                 }
             }
@@ -644,11 +649,12 @@ JsChat.prototype = {
     _bindSendChat: function(userId) {
         var _this = this,messageId,jid= $('chat-box[user-id="' + userId + '"]').attr("data-jid");
         var out;
+        var selfJID = getConnectedUserJID();
         $('chat-box[user-id="' + userId + '"] textarea').focusout(function(){
            console.log("focus out to "+jid);
            out =1;
             //fire event typing paused
-            sendTypingState("a1@localhost",jid,"paused");
+            sendTypingState(selfJID,jid,"paused");
         });
         $('chat-box[user-id="' + userId + '"] textarea').keyup(function(e) {
             var curElem = this;
@@ -657,7 +663,7 @@ JsChat.prototype = {
                 console.log("typing start");
                 out = 0;
                 //fire event typing start
-                sendTypingState("a1@localhost",jid,"composing");
+                sendTypingState(selfJID,jid,"composing");
             }
             if (e.keyCode == 13 && !e.shiftKey) {
                 var text = $(this).val(),
@@ -870,13 +876,17 @@ JsChat.prototype = {
 
     //update status in chat box top
     _updateStatusInChatBox: function(userId,chat_status){
+        console.log("_updateStatusInChatBox for "+userId+"-"+chat_status+"--"+$('chat-box[user-id="' + userId + '"]').length);
         if ($('chat-box[user-id="' + userId + '"]').length != 0) {
+            console.log("change to "+chat_status);
             $("chat-box[user-id='" + userId + "'] .chatBoxBar .onlineStatus").html(chat_status);
         }
     },
 
     //appending chat box
     _chatPanelsBox: function(userId, status,jid) {
+        if($(".chatlist li[id*='"+userId+"']").length != 0)
+            status = $(".chatlist li[id*='"+userId+"']").attr("data-status");
         var curElem = this,
             heightPlus = false,
             bodyWidth = $("body").width();
