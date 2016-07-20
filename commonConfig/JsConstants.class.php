@@ -163,4 +163,6 @@ class JsConstants
   public static $photoServerName='JSPIC1';
 	public static $photoServerShardingEnums = array("JSPIC1","JSPIC2","JSPIC3");
 
+	
+	public static $communicationRep = true;
 }
