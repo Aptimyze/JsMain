@@ -112,4 +112,3 @@ chatConfig.Params = {
     }
 };
 chatConfig.Params.PC.rosterGroups = [chatConfig.Params.categoryNames['Desired Partner Matches'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members']];
-console.log(chatConfig.Params);

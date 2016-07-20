@@ -801,13 +801,13 @@ JsChat.prototype = {
 
     _postChatPanelsBox: function(userId) {
         var curElem = this;
-        console.log($(".chatlist li[id*='"+userId+"']").attr("id").split("_")[1]);
-        var group = $(".chatlist li[id*='"+userId+"']").attr("id").split("_")[1];
-        if(group == "dpp" || group == "shortlisted") {
+        console.log($(".chatlist li[id*='"+userId+"']").attr("id").split(userId+"_")[1]);
+        var group = $(".chatlist li[id*='"+userId+"']").attr("id").split(userId+"_")[1];
+        if(group == chatConfig.Params["categoryNames"]["Desired Partner Matches"] || group == chatConfig.Params["categoryNames"]["Shortlisted Members"]) {
            response = "interest_pending";
-        } else if(group == "eoi") {
+        } else if(group == chatConfig.Params["categoryNames"]["Interest Received"]) {
            response = "pog_interest_pending";
-        } else if(group == "accepted") {
+        } else if(group == chatConfig.Params["categoryNames"]["Acceptance"]) {
             response = "pog_interest_accepted";
         } else {
             response = "none_applicable";
