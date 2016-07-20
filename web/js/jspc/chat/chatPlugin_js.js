@@ -1415,6 +1415,14 @@ JsChat.prototype = {
             clearTimeout(_this._timer);
             $('#'+getID+'_hover').css('visibility', 'hidden');
         }
+        $('.info-hover').hover(
+            function() {
+                $(this).css('visibility', 'visible');
+            },
+            function() {
+                $(this).css('visibility', 'hidden');
+            }
+        );
     },
     
     //start:append Chat Logged in Panel
