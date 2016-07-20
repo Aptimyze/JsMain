@@ -62,6 +62,13 @@
              <tr valign="middle" align="center" >
 	
               <td class="fieldsnew" colspan="2" style="width:50px;height:10px;color:red"><BR>~$error`</td></tr>~/if`
+              
+              ~if $legalDataCount eq 0`
+				<tr valign="middle" align="center" >
+	
+              <td class="fieldsnew" colspan="2" style="width:50px;height:10px;color:red"><BR>~$noResultsFoundMsg`</td></tr>
+				~/if`
+
               <tr valign="middle" align="center" >
 	
               <td class="fieldsnew" colspan="2"><input type="submit" name="Go" value="  Search  " class="textboxes1" style="width:70px;height:30px;background:green;color:white"></td></tr>
@@ -108,5 +115,6 @@
 	~/foreach`
 </table>
 ~/if`
+
 ~include_partial('global/footer')`
 

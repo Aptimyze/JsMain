@@ -54,6 +54,7 @@ class legalActions extends sfActions
   		$nameAgeSearchObj =  new nameAgeSearch();
   		$this->legalDataArr = $nameAgeSearchObj->getProfilesForLegal($nameArr,$this->age,$addressArr,$this->email);
   		$this->legalDataCount = count($this->legalDataArr);
+  		$this->noResultsFoundMsg = "No results found.";
   	}
 
   	$this->setTemplate("NameLocationAgeSearch");
