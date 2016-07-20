@@ -573,7 +573,7 @@ class SearchApiStrategyV1
 				$value =  ButtonResponseApi::getAlbumButton($value,$gender);
 				break;
 			case "ignore_button":
-				$value =  ButtonResponseApi::getIgnoreButton('','','',true,'IGNORE');
+				$value =  ButtonResponseApi::getIgnoreButton('','','',true,'Ignore');
 				break;
 			
 			case "age":
