@@ -334,6 +334,10 @@ $apiResponseHandlerObj->setResponseBody($getData);
         $loginData = $request->getAttribute("loginData");
         if($loginData){
 		//Count from Nitesh
+		if($checkCount==3){
+			$response["message"] = "You can send more messages only of user replies";
+			$response["cansend"] = false;
+		}
                 if($checkCount==0){
                         $url = JsConstants::$siteUrl."/api/v2/contacts/postEOI";
                         $data = array("AUTHCHECKSUM"=>$loginData["AUTHCHECKSUM"],"profilechecksum" => $request->getParameter('profilechecksum'), "chatMessage" => $request->getParameter('chatMessage'), "stype"=>$request->getParameter('stype'));
@@ -347,10 +351,11 @@ $apiResponseHandlerObj->setResponseBody($getData);
                         curl_close ($ch);
                         $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
                         $response = json_decode($curlResult, true);
+			$response["cansend"] = true;
                 }
                 else{
                         //Append messages as EOI messages
-                        $response = "Messages appended";
+			$response["cansend"] = true;
                 }
         }
         else{
