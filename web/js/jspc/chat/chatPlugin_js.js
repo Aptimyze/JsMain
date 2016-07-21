@@ -1493,7 +1493,8 @@ JsChat.prototype = {
         {
             console.log("removing");
             $(curEle._loginPanelID).fadeIn('fast');
-            $(curEle._loginPanelID).append(errorHTML);
+            if($(curEle._loginPanelID).find("#loginErr").length == 0)
+                $(curEle._loginPanelID).append(errorHTML);
         }
         $('.js-minChatBarOut').click(function() {
 
