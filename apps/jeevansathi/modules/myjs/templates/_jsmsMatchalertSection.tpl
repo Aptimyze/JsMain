@@ -15,7 +15,7 @@
  <div id="match_alert_tuples"  style="white-space: nowrap; margin-left:10px; font-size:0px; overflow-x:hidden; width:200%; ">
    
         ~foreach from=$matchalertData.tuples item=tupleInfo key=id`
-                        ~include_partial("myjs/jsmsProfileTuple",[profileTuple=>$tupleInfo,section=>"matchAlert",index=>$id,gender=>$gender])`
+                        ~include_partial("myjs/jsmsProfileTuple",[profileTuple=>$tupleInfo,section=>"matchAlert",index=>$id,gender=>$gender,total=>$matchalertData.view_all_count,contactId=>$matchalertData.contact_id])`
                 
         ~/foreach`
         <div style="margin-right:10px; display: inline-block;margin-left:0px; display:none;position:relative; height:140px;" id="loadingMorePic">

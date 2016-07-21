@@ -285,7 +285,7 @@ var acceptance = function() {
         innerHtml=innerHtml.replace(/\{\{email\}\}/g,'email'+i);
           innerHtml=innerHtml.replace(/\{\{EDUCATION_STR\}\}/g,profiles[i]["edu_level_new"]);
           
-        innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,"/profile/viewprofile.php?profilechecksum="+profiles[i]["profilechecksum"]+"&"+this.data.tracking);
+        innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,"/profile/viewprofile.php?profilechecksum="+profiles[i]["profilechecksum"]+"&"+this.data.tracking+"&total_rec="+this.data.total+"&actual_offset="+(i+1)+"&contact_id="+this.data.contact_id);
         this.containerHtml=this.containerHtml.replace(/\{\{LISTING_LINK\}\}/g,listingUrlArray[this.name]);
         sendMessage = profiles[i]["buttonDetailsJSMS"]["canwrite"];
 			if(sendMessage==null){
@@ -398,7 +398,7 @@ photoRequest.prototype.post = function() {
 			for (i = 0; i < count; i++) {
 				innerHtml=innerHtml+this.innerHtml;
 				innerHtml=innerHtml.replace(/\{\{PROFILE_SMALL_CARD1_ID\}\}/g,profiles[i]["profilechecksum"]+this.name+"_id");
-				innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,"/profile/viewprofile.php?profilechecksum="+profiles[i]["profilechecksum"]+"&"+this.data.tracking);
+				innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,"/profile/viewprofile.php?profilechecksum="+profiles[i]["profilechecksum"]+"&"+this.data.tracking+"&total_rec="+this.data.total+"&actual_offset="+(i+1)+"&contact_id="+this.data.contact_id);
                 innerHtml=innerHtml.replace(/\{\{PHOTO_URL\}\}/gi,"data-src='"+profiles[i]["profilepic120url"]+"'");
 			}
 			if(remainingCount!=0)
@@ -528,7 +528,7 @@ try{
 				innerHtml=innerHtml.replace(/\{\{EDUCATION_STR\}\}/g,profiles[i]["edu_level_new"]);
         innerHtml=innerHtml.replace(/\{\{ONLINE_STR\}\}/g,profiles[i]["userloginstatus"]);
 				innerHtml=innerHtml.replace(/\{\{OCCUPATION\}\}/g,profiles[i]["occupation"]);
-				innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,'/profile/viewprofile.php?profilechecksum='+profiles[i]["profilechecksum"]+"&"+this.data.tracking);
+				innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,'/profile/viewprofile.php?profilechecksum='+profiles[i]["profilechecksum"]+"&"+this.data.tracking+"&total_rec="+this.data.total+"&actual_offset="+(interestsCount)+"&contact_id="+this.data.contact_id);
         innerHtml=innerHtml.replace(/\{\{LOCATION\}\}/g,profiles[i]["location"]);
 				innerHtml=innerHtml.replace(/\{\{INCOME\}\}/g,profiles[i]["income"]);
 				var caste = profiles[i]["caste"].split(':');

@@ -538,7 +538,7 @@ function generateFaceCard(Object)
 		if(loopCount){
 		    for (i = 0; i < loopCount; i++) {
 				innerHtml=innerHtml+Object.innerHtml;
-				innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,"/profile/viewprofile.php?profilechecksum="+Object.data.profiles[i]["profilechecksum"]+'&'+tracking);
+				innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,"/profile/viewprofile.php?profilechecksum="+Object.data.profiles[i]["profilechecksum"]+'&'+tracking+Object.name!='DAILYMATCHES' ? ("&total_rec="+totalCount+"&offset="+(i)+"&searchid="+Object.data.searchIdForNavigation) :"");
 				innerHtml=innerHtml.replace(/\{\{PROFILE_FACE_CARD_ID\}\}/g,Object.data.profiles[i]["profilechecksum"]+"_"+Object.name+"_id");
         innerHtml=innerHtml.replace(/\{\{js-AlbumCount\}\}/gi,Object.data.profiles[i]['album_count']);
         
