@@ -3660,8 +3660,12 @@ EditApp = function(){
           showHideField(gradDeg,"show");
           showHideField(gradCollg,"show");
           showHideField(other_ugDeg,"show");
-
-          showHideField(postGradDeg,"show");
+          if(eduLevelVal == 42 || eduLevelVal == 21)
+            showHideField(postGradDeg,"show");
+          else{
+            editedFields["career"]["DEGREE_PG"]= eduLevelVal;
+            showHideField(postGradDeg,"hide");  
+          }
           showHideField(postGradCollg,"show");
           showHideField(other_pgDeg,"show");
           
@@ -5261,7 +5265,10 @@ EditApp = function(){
         showHideField(gradCollg,"show");
         showHideField(other_ugDeg,"show");
         
-        showHideField(postGradDeg,"show");
+        if(maxEducation.value == '21' || maxEducation.value == '42')
+            showHideField(postGradDeg,"show");
+        else
+            showHideField(postGradDeg,"hide");
         showHideField(postGradCollg,"show");
         showHideField(other_pgDeg,"show");
       }
