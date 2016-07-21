@@ -6,6 +6,7 @@ chatConfig.Params = {
         "Interest Received": "intrec",
         "Acceptance": "acceptance",
         "Shortlisted Members": "shortlist",
+        "Interest Sent":"intsent"
     },
     PC: {
         bosh_service_url: 'ws://' + openfireUrl + '/ws/', //connection manager for openfire
@@ -19,25 +20,32 @@ chatConfig.Params = {
         listingTabs: {
             "tab1": {
                 "tab_name": "Online Matches",
-                "groups": [{
-                    "id": "dpp",
-                    "group_name": "Desired Partner Matches",
-                    //"order_id":0,
-                    "show_group_name": true,
-                    "hide_offline_users": false
-                }, {
-                    "id": "intrec",
-                    "group_name": "Interest Received",
-                    //"order_id":1,
-                    "show_group_name": true,
-                    "hide_offline_users": false
-                }, {
-                    "id": "shortlist",
-                    "group_name": "Shortlisted Members",
-                    //"order_id":2,
-                    "show_group_name": true,
-                    "hide_offline_users": false
-                }]
+                "groups": [
+	                {
+	                    "id": "dpp",
+	                    "group_name": "Desired Partner Matches",
+	                    "show_group_name": true,
+	                    "hide_offline_users": false
+	                },
+	                {
+	                    "id": "intsent",
+	                    "group_name": "Interest Sent",
+	                    "show_group_name": true,
+	                    "hide_offline_users": false
+	                }, 
+	                {
+	                    "id": "intrec",
+	                    "group_name": "Interest Received",
+	                    "show_group_name": true,
+	                    "hide_offline_users": false
+	                }, 
+	                {
+	                    "id": "shortlist",
+	                    "group_name": "Shortlisted Members",
+	                    "show_group_name": true,
+	                    "hide_offline_users": false
+	                }
+                ]
             },
             "tab2": {
                 "tab_name": "Accepted",
@@ -103,9 +111,10 @@ chatConfig.Params = {
         groupWiseNodesLimit: {
             "dpp": 200,
             "intrec": 100,
-            "shortlist": 100
+            "shortlist": 100,
+            "intsent":100
         },
         //initialRosterLimit:{"nodesCount":3,"timeInterval":30000} //config for initial roster to be sent to plugin to create list initially
     }
 };
-chatConfig.Params.PC.rosterGroups = [chatConfig.Params.categoryNames['Desired Partner Matches'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members']];
+chatConfig.Params.PC.rosterGroups = [chatConfig.Params.categoryNames['Desired Partner Matches'], chatConfig.Params.categoryNames['Interest Sent'],chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members']];

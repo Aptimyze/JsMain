@@ -95,8 +95,7 @@ var strophieWrapper = {
 		rosterObj = strophieWrapper.formatRosterObj(nodeObj["query"]["item"]);
 		console.log(rosterObj);
 		var nodeArr = [],user_id = rosterObj[strophieWrapper.rosterDetailsKey]["jid"].split("@")[0],subscription = rosterObj[strophieWrapper.rosterDetailsKey]["subscription"],ask=rosterObj[strophieWrapper.rosterDetailsKey]["ask"];
-		if(strophieWrapper.checkForGroups(rosterObj[strophieWrapper.rosterDetailsKey]["groups"])==true)
-		{
+		if(strophieWrapper.checkForGroups(rosterObj[strophieWrapper.rosterDetailsKey]["groups"])==true){
 			nodeArr[user_id] = strophieWrapper.Roster[user_id] = rosterObj;
 			console.log(nodeArr);
 			console.log(ask);
@@ -385,14 +384,10 @@ var strophieWrapper = {
     		"msg_id":msg.getAttribute('id')
     	};
         var $message = $(msg),msg_state;
-        if($message.find(strophieWrapper.msgStates["COMPOSING"]).length != 0)
-        {
-        	console.log("1111");
+        if($message.find(strophieWrapper.msgStates["COMPOSING"]).length != 0){
         	msg_state = strophieWrapper.msgStates["COMPOSING"];
         }	
-        else if($message.find(strophieWrapper.msgStates["PAUSED"]).length != 0)
-        {
-        	console.log("222");
+        else if($message.find(strophieWrapper.msgStates["PAUSED"]).length != 0){
         	msg_state = "paused";
         }
         else if($message.find(strophieWrapper.msgStates["GONE"]).length != 0)
@@ -430,24 +425,6 @@ var strophieWrapper = {
     	return outputObj;
 
     },
-    
-    //map chat message state for chat box
-    /*mapChatStateMessage: function(chat_state) {
-    	var msg = "";
-	    if (chat_state === strophieWrapper.msgStates["COMPOSING"]) {
-	        msg = 'typing';
-	    } 
-	    else if(chat_state === strophieWrapper.msgStates["PAUSED"]) {
-	        msg = 'stopped typing';
-	    } else if(chat_state === strophieWrapper.msgStates["INACTIVE"] || chat_state === strophieWrapper.msgStates["ACTIVE"]){
-	        msg = 'active or inactive';
-	    } else if(chat_state === strophieWrapper.msgStates["GONE"]) {
-	        msg = 'gone away';
-	    }
-	    console.log("in mapChatStateMessage");
-	    console.log(msg);
-	    return msg;
-	},*/
 
     /*
      * Disconnect strophe connection

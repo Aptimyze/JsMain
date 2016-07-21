@@ -449,23 +449,22 @@ JsChat.prototype = {
             console.log(contactHTML);
             /*if(status == "online")          //add new online element in start
                 $('div.' + groupID + ' ul').prepend(contactHTML);
-            else*/                         //add new offline element in end
-            $('div.' + groupID + ' ul').append(contactHTML);
+            else */                           //add new offline element in end
+                $('div.' + groupID + ' ul').append(contactHTML);
         }
         else if(key == "existing"){
             console.log("changing icon");
-            if(status == "online")
-            {
+            if(status == "online"){
                 //add online chat_status icon
                 if($('#'+contactID + "_" + groupID).find('.nchatspr').length==0){
                     $(this._mainID).find($('#'+contactID + "_" + groupID)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
                 }
+                //move this element to beginning of listing
+                /* $('div').find($('#'+contactID + "_" + groupID)).detach();
+                $('div.' + groupID + ' ul').prepend(content); */
+
+                //$('#'+contactID + "_" + groupID).parent().prepend($('#'+contactID + "_" + groupID));
             }
-            
-            //move this element to beginning of listing
-            /*var html = $(elem._mainID).find($('#'+contactID + "_" + groupID)).html();
-            $(elem._mainID).find($('#'+contactID + "_" + groupID)).remove();
-            $('div.' + groupID + ' ul').prepend(html);*/
         }
     },
 
@@ -520,7 +519,7 @@ JsChat.prototype = {
             elem.find(".chatBoxBar").removeClass("cursp");
             elem.find(".downBarPic").removeClass("downBarPicMin");
             elem.find(".downBarUserName").removeClass("downBarUserNameMin");
-            var noOfInputs = 0;
+            /*var noOfInputs = 0;
 
             $("chat-box .chatBoxBar .pinkBubble2").each(function(index, element) {
                     if($(this).find(".noOfMessg").html() != 0){
@@ -534,7 +533,7 @@ JsChat.prototype = {
                     }
                 });
             setTimeout(function(){ //call function to place this value;
-                console.log(noOfInputs);}, 500);
+                console.log(noOfInputs);}, 500);*/
         });
         curEle._handleUnreadMessages(elem);
     },
@@ -666,7 +665,7 @@ JsChat.prototype = {
     //sending chat
     _bindSendChat: function(userId) {
         var _this = this,messageId,jid= $('chat-box[user-id="' + userId + '"]').attr("data-jid");
-        var out;
+        var out = 1;
         var selfJID = getConnectedUserJID();
         $('chat-box[user-id="' + userId + '"] textarea').focusout(function(){
            console.log("focus out to "+jid);
@@ -677,7 +676,7 @@ JsChat.prototype = {
         $('chat-box[user-id="' + userId + '"] textarea').keyup(function(e) {
             var curElem = this;
             console.log("1233");
-            if($(this).val().length == 1 || out == 1){
+            if($(this).val().length >= 1 && out == 1){
                 console.log("typing start");
                 out = 0;
                 //fire event typing start
@@ -1036,6 +1035,7 @@ JsChat.prototype = {
     },
     //add meesage recieved from another user
     _appendRecievedMessage: function(message, userId, uniqueId) {
+        var curEle = this;
         console.log("in _appendRecievedMessage");
         //append received message in chatbox
         if(typeof message != "undefined" && message!= ""){
@@ -1045,7 +1045,7 @@ JsChat.prototype = {
             }
             console.log("remove typing state if exists-manvi");
             //adding message in chat area
-            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText" data-msgid='+uniqueId+'>' + message + '</div></div>');
+            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText received" data-msgid='+uniqueId+'>' + message + '</div></div>');
             //check for 3 messages and remove binding
             if ($('chat-box[user-id="' + userId + '"] .chatMessage').hasClass("restrictMessg2")) {
                 $('chat-box[user-id="' + userId + '"] .chatMessage').find("#restrictMessgTxt").remove();
@@ -1057,10 +1057,11 @@ JsChat.prototype = {
                 val = parseInt($('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html()) + 1;
                 $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html(val);
                 $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2').show();
-                $('chat-box[user-id="' + userId + '"] .chatMessage').find('#text_' + userId + '_' + uniqueId).addClass("received");
+                //$('chat-box[user-id="' + userId + '"] .chatMessage').find('#text_' + userId + '_' + uniqueId).addClass("received");
             }
             else{
-                $('chat-box[user-id="' + userId + '"] .chatMessage').find('#text_' + userId + '_' + uniqueId).addClass("received_read");
+                //$('chat-box[user-id="' + userId + '"] .chatMessage').find('#text_' + userId + '_' + uniqueId).addClass("received");
+                curEle._handleUnreadMessages($('chat-box[user-id="' + userId + '"]'));
             }
             
             //adding bubble for side tab
@@ -1073,6 +1074,7 @@ JsChat.prototype = {
         }
     },
 
+    //get count of minimized chat boxes with unread messages
     _onlineUserMsgMe: function(){
         var noOfInputs = 0;
         $("chat-box .chatBoxBar .pinkBubble2").each(function(index, element) {
@@ -1091,10 +1093,9 @@ JsChat.prototype = {
 
     //handle typing status of message
    _handleMsgComposingStatus:function(userId,msg_state){
-      console.log("in _handleMsgComposingStatus"+msg_state+userId);
+        console.log("in _handleMsgComposingStatus"+msg_state+userId);
         if(typeof msg_state!= "undefined"){
-        if(msg_state == 'composing') 
-            {
+            if(msg_state == 'composing') {
                 //localStorage.setItem("status_"+userId, $('chat-box[user-id="' + userId + '"] .onlineStatus').html());
                 if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
                     console.log("yess", $('chat-box[user-id="' + userId + '"] .downBarUserName'))
@@ -1110,7 +1111,7 @@ JsChat.prototype = {
                 if($(".chatlist li[id*='"+userId+"']").find(".nchatspr").length != 0){
                     idStatus = "online";
                 } 
-                else {
+                else{
                     idStatus = "offline";
                 }
 
@@ -1119,13 +1120,12 @@ JsChat.prototype = {
                     $('chat-box[user-id="' + userId + '"] .downBarUserName').html(userName+'<div class="onlineStatus f11 opa50 mt4">'+idStatus+'</div>');
                     $('chat-box[user-id="' + userId + '"] .onlineStatus').hide();
                 }
-                else
-                {
+                else{
                     $('chat-box[user-id="' + userId + '"] .onlineStatus').html(idStatus);
                 }
             }
         }
-  },
+    },
     //change from sending status to sent / sent and read
     _changeStatusOfMessg: function(messgId, userId, newStatus) {
         console.log("Change status"+newStatus);
@@ -1404,7 +1404,7 @@ JsChat.prototype = {
         //set timer variable
         if(e.type == "mouseenter")
         {
-            
+   
             _this._timer = setTimeout(function() { 
                 _this._checkHover(curHoverEle);  
             }, 1000);                
