@@ -1488,5 +1488,36 @@ public function duplicateEmail($email)
                         throw new jsException($ex);
                 }
 	}
+        
+        public function getEmailLike($email)
+	{
+		try
+		{
+			$sql = "SELECT EMAIL FROM newjs.JPROFILE WHERE EMAIL LIKE :EMAILID";
+			$pdoStatement = $this->db->prepare($sql);
+                        $pdoStatement->bindValue(":EMAILID",$email.'%',PDO::PARAM_STR);
+			$pdoStatement->execute();
+                        while($result  = $pdoStatement->fetch(PDO::FETCH_ASSOC))
+                            $return[]=$result;
+			return $return;
+		}
+		catch(Exception $ex){
+                        throw new jsException($ex);
+                }
+	}
+        public function updateEmail($email,$newEmail)
+	{
+		try
+		{
+			$sql = "UPDATE newjs.JPROFILE SET EMAIL = :NEW_EMAIL WHERE EMAIL= :EMAILID";
+			$pdoStatement = $this->db->prepare($sql);
+                        $pdoStatement->bindValue(":EMAILID",$email,PDO::PARAM_STR);
+                        $pdoStatement->bindValue(":NEW_EMAIL",$newEmail,PDO::PARAM_STR);
+			$pdoStatement->execute();
+		}
+		catch(Exception $ex){
+                        throw new jsException($ex);
+                }
+	}
 }
 ?>

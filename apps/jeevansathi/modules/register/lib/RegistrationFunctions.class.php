@@ -253,4 +253,17 @@ class RegistrationFunctions
             }
             return json_encode($completeFields,JSON_FORCE_OBJECT);
         }
+        public static function deletedEmailModify($email){
+            $jprofileObj = new JPROFILE();
+            $emailArr = $jprofileObj->getEmailLike($email."_deleted");
+            $lastNumber = 1;
+            if(is_array($emailArr)){
+                foreach($emailArr as $key=>$val){
+                    $lastNumber = substr($val[EMAIL],-1);
+                    if($max < $lastNumber)
+                        $max=$lastNumber;
+                }
+            }
+            $jprofileObj->updateEmail($email,$email."_deleted".($max+1));
+        }
 }
