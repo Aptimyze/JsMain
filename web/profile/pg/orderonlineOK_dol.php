@@ -57,6 +57,8 @@ if ($profileid && $AuthDesc == "Y") {
     list($part1, $part2) = explode("-", $Order_Id);
     $sql                 = "SELECT * from billing.ORDERS where ID = '$part2' and ORDERID = '$part1'";
     $res                 = mysql_query_decide($sql);
+    $ordrDeviceObj = new billing_ORDERS_DEVICE();
+    $device = $ordrDeviceObj->getOrderDevice($part2, $part1);
 
     if (mysql_num_rows($res)) {
         $myrow                    = mysql_fetch_array($res);
@@ -117,6 +119,11 @@ if ($profileid && $AuthDesc == "Y") {
         }
     }
 } else if ($profileid && $AuthDesc == "N") {
+    list($part1, $part2) = explode("-", $Order_Id);
+    $sql                 = "SELECT * from billing.ORDERS where ID = '$part2' and ORDERID = '$part1'";
+    $res                 = mysql_query_decide($sql);
+    $ordrDeviceObj = new billing_ORDERS_DEVICE();
+    $device = $ordrDeviceObj->getOrderDevice($part2, $part1);
     $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
     $smarty->assign("CHECKSUM", $decoded_response['merchant_param5']);
     $smarty->assign("HEAD", $smarty->fetch("revamp_head.htm"));
