@@ -2061,7 +2061,6 @@ case "state_CITY":
 "TR"=>"TR01",
 "UK"=>"UK05,UK11,UK10,UK07,UK02,UK01,UK08,UK04,UK12,UK06,UK03,UK09",
 "UP"=>"UP13,UP12,UP42,UP14,UP53,UP41,UP26,UP48,UP47,UP21,UP46,UP18,UP19,UP17,UP24,UP45,UP22,UP16,UP44,UP54,UP25,UP43,UP33,UP20,UP34,UP04,UP39,UP02,UP37,UP50,UP36,UP38,UP52,UP05,UP35,UP30,UP51,UP06,UP01,UP40,UP32,UP29,UP11,UP10,UP03,UP08,UP09,UP49",
-"WB"=>"WB23,WB19,WB11,WB12,WB09,WB24,WB39,WB31,WB20,WB04,WB34,WB22,WB10,WB18,WB21,WB05,WB38,WB02,WB35,WB42,WB07,WB29,WB32,WB03,WB06,WB30,WB14,WB33,WB13,WB40,WB17,WB26,WB01,WB37,WB16,WB08,WB27,WB28,WB41,WB36,WB25",
 );
 
 	break;
@@ -3024,7 +3023,7 @@ case "income_level":
 case "degree_grouping":
 
         $arr=array(
-"UG"=>" 1 , 2 , 3 , 4 , 5 , 6 , 9 , 17 , 22 , 23 , 24 , 25 , 26 , 28 , 32 , 33 , 34 , 35 , 38 , 39 , 40 ",
+"UG"=>" 1 , 2 , 3 , 4 , 5 , 6 , 17 , 22 , 25 , 26 , 28 , 32 , 33 , 34 , 35 , 38 , 39 , 40 ",
 "PG"=>" 7 , 8 , 10 , 11 , 12 , 13 , 14 , 15 , 16 , 18 , 19 , 20 , 21 , 29 , 30 , 31 , 36 , 37 , 41 , 42 , 43 ",
 );
 
@@ -3035,8 +3034,6 @@ case "degree_grouping":
 case "degree_ug":
 
 	$arr=array(
-"23"=>"High School",
-"24"=>"Trade School",
 "1"=>"B.A",
 "35"=>"B.Arch",
 "2"=>"B.Com",
@@ -3053,7 +3050,6 @@ case "degree_ug":
 "26"=>"BHMS",
 "6"=>"BL/LLB",
 "32"=>"BVSc.",
-"9"=>"Diploma",
 "17"=>"MBBS",
 "22"=>"Other",
 );
