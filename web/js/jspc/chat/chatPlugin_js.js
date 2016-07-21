@@ -80,6 +80,11 @@ JsChat.prototype = {
 		var curEle = this;
         console.log('in max');
         console.log($(this._maxChatBarOut));
+        $("chat-box").each(function(index, element) {
+            if($(this).attr("pos-state") == "open"){
+                curEle._scrollUp($(this));
+            }      
+       });
         $(this._maxChatBarOut).fadeOut('slow', function() {
             $(this).remove();
         });
@@ -151,6 +156,9 @@ JsChat.prototype = {
     //start:minimize html
     _minimizeChatOutPanel: function() {
         var curEle = this;
+        $("chat-box").each(function(index, element) {
+            curEle._scrollDown($(this),"min");
+        });
 		$(curEle._chatBottomPanelID).hide();
         if (this._checkWidth()) {
 
@@ -483,26 +491,32 @@ JsChat.prototype = {
     },
 
     //scrolling down chat box
-    _scrollDown: function(elem, removeBorder) {
-        if (removeBorder) {
+   _scrollDown: function(elem, type) {
+        console.log(elem);
+        if (type=="remove") {
             elem.animate({
                 bottom: "-350px"
-            }, function() {
+                }, function() {
                 $(this).remove();
             });
-        } else {
+        } 
+        else if(type == "retain" || type=="min") {
             elem.animate({
                 bottom: "-307px"
-            }, function() {
+                }, function() {
                 $(elem.find(".nchatic_2")[0]).hide();
                 $(elem.find(".nchatic_3")[0]).hide();
                 elem.find(".onlineStatus").hide();
-				if(elem.find(".pinkBubble2 span").html() != 0) {
-					elem.find(".pinkBubble2").show();
-				}
+
+                if (elem.find(".pinkBubble2 span").html() != 0) {
+                   elem.find(".pinkBubble2").show();
+                }
                 elem.find(".chatBoxBar").addClass("cursp");
                 elem.find(".downBarPic").addClass("downBarPicMin");
                 elem.find(".downBarUserName").addClass("downBarUserNameMin");
+                if(type != "min") {
+                    $(elem).attr("pos-state","close");
+                }
             });
         }
     },
@@ -533,21 +547,11 @@ JsChat.prototype = {
             elem.find(".chatBoxBar").removeClass("cursp");
             elem.find(".downBarPic").removeClass("downBarPicMin");
             elem.find(".downBarUserName").removeClass("downBarUserNameMin");
-            /*var noOfInputs = 0;
-
-            $("chat-box .chatBoxBar .pinkBubble2").each(function(index, element) {
-                    if($(this).find(".noOfMessg").html() != 0){
-                        noOfInputs++;
-                    }
-                });
-
-                $(".extraChatList .pinkBubble").each(function(index, element) {
-                    if($(this).find(".noOfMessg").html() != 0){
-                        noOfInputs++;
-                    }
-                });
-            setTimeout(function(){ //call function to place this value;
-                console.log(noOfInputs);}, 500);*/
+            elem.find('.chatMessage').animate({
+                scrollTop: (elem.find(".rightBubble").length + elem.find(".leftBubble").length) * 50
+            }, 1000);
+            $(elem).attr("pos-state","open");
+           
         });
         curEle._handleUnreadMessages(elem);
     },
@@ -571,7 +575,7 @@ JsChat.prototype = {
         var curElem = this;
         $(elem).off("click").on("click", function(e) {
             e.stopPropagation();
-            curElem._scrollDown($(this).closest("chat-box"), false);
+            curElem._scrollDown($(this).closest("chat-box"), "retain");
         });
     },
 
@@ -579,7 +583,7 @@ JsChat.prototype = {
     _bindMaximize: function(elem, userId) {
         var curElem = this;
         $(elem).off("click").on("click", function() {
-            curElem._scrollDown($(".extraPopup"), false);
+             curElem._scrollDown($(this).closest("chat-box"), "retain");
             setTimeout(function() {
                 $(".extraChats").css("padding-top", "0px");
             }, 100);
@@ -591,7 +595,7 @@ JsChat.prototype = {
     _bindClose: function(elem) {
         var curElem = this;
         $(elem).off("click").on("click", function() {
-            curElem._scrollDown($(this).closest("chat-box"), true);
+            curElem._scrollDown($(this).closest("chat-box"), "remove");
             if ($(".extraNumber")) {
                 var value = parseInt($(".extraNumber").text().split("+")[1]);
                 var bodyWidth = $("body").width();
@@ -708,7 +712,7 @@ JsChat.prototype = {
                     var height = $($(superParent).find(".talkText")[$(superParent).find(".talkText").length - 1]).height();
                     $($(superParent).find(".talkText")[$(superParent).find(".talkText").length - 1]).next().css("margin-top", height);
                     $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
-                        scrollTop: $(".rightBubble").length + $(".leftBubble").length * 50
+                        scrollTop: ($(".rightBubble").length + $(".leftBubble").length) * 50
                     }, 500);
                     
                     //TODO: fire send chat query and return unique id, also check for 3 messages
@@ -740,7 +744,7 @@ JsChat.prototype = {
     _bindExtraUserNameBox: function() {
         var curElem = this;
         $('body').on('click', '.extraUsername', function() {
-            curElem._scrollDown($(".extraPopup"), false);
+            curElem._scrollDown($(".extraPopup"), "retain");
             setTimeout(function() {
                 $(".extraChats").css("padding-top", "0px");
             }, 100);
@@ -801,7 +805,7 @@ JsChat.prototype = {
 
     //append chat box on page
     _appendChatBox: function(userId, status,jid) {
-        $("#chatBottomPanel").prepend('<chat-box data-jid="'+jid+'" status-user="' + status + '" user-id="' + userId + '"></chat-box>');
+        $("#chatBottomPanel").prepend('<chat-box pos-state="open" data-jid="'+jid+'" status-user="' + status + '" user-id="' + userId + '"></chat-box>');
     },
 
     //create side panel of extra chat
@@ -819,7 +823,7 @@ JsChat.prototype = {
             var len = $("chat-box").length,
                 value = parseInt($(".extraNumber").text().split("+")[1]),
                 position = len - value - 1;
-            curElem._scrollDown($($('chat-box')[position]), false);
+            curElem._scrollDown($($('chat-box')[position]), "retain");
             $(".extraPopup").animate({
                 bottom: "48px"
             });
@@ -946,7 +950,7 @@ JsChat.prototype = {
             $(".extraChatList").each(function(index, element) {
                 var id = $(this).attr("id").split("_")[1];
                 if (id == userId) {
-                    curElem._scrollDown($(".extraPopup"), false);
+                    curElem._scrollDown($(".extraPopup"), "retain");
                     setTimeout(function() {
                         $(".extraChats").css("padding-top", "0px");
                     }, 100);
@@ -966,7 +970,7 @@ JsChat.prototype = {
             });
         }
         if ($(".extraChats").length > 0 && $(".extraPopup ").css("bottom") != "-300px") {
-            curElem._scrollDown($(".extraPopup "), false);
+            curElem._scrollDown($(".extraPopup "), "retain");
             setTimeout(function() {
                 $(".extraChats").css("padding-top", "0px");
             }, 100);

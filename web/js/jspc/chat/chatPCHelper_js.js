@@ -419,6 +419,7 @@ function clearLocalStorage(){
 * @output: response
 */
 function handlePreAcceptanceMsg(apiParams){
+    console.log(apiParams);
     var outputData;
     if(typeof apiParams!= "undefined"){
         var postData = "";
@@ -547,6 +548,7 @@ $(document).ready(function(){
 
     //executed for sending message
     objJsChat.onSendingMessage = function(message,to,contact_state){
+        console.log("in start of SendingMessage");
         var msgId,canSend;
         if(contact_state == chatConfig.Params[device].contactStatus["none_applicable"]["key"]){
             alert("not allowed to chat");
@@ -554,27 +556,40 @@ $(document).ready(function(){
         else if(contact_state == chatConfig.Params[device].contactStatus["pog_interest_accepted"]["key"]){
             console.log("ankita_here");
             canSend = false;
+            console.log("sending post acceptance msg");
             msgId = strophieWrapper.sendMessage(message,to);
+            console.log("sent post acceptance msg");
         }
         else{
+            console.log("sending pre acceptance msg with "+contact_state);
+
             var id = new Date();
-            msgId = "123"+id;
+            msgId = "123"+id.getTime();
             canSend = true;
             var apiParams = {
                     "url":chatConfig.Params[device].contactStatus[contact_state]["apiUrl"],
                     "postParams":
                             {
-                                "profileChecksum":"4c41f8845105429abbd11cc184d0e330i9061321",
-                                "tracking":chatConfig.Params[device].contactStatus[contact_state]["tracking"]
+                                "profilechecksum":"4c41f8845105429abbd11cc184d0e330i9061321",
+                                "chatMessage":message
                             }
                         };
+            if(typeof chatConfig.Params[device].contactStatus[contact_state]["tracking"]!= "undefined"){
+                console.log("adding tracking in api inputs");
+                console.log(chatConfig.Params[device].contactStatus[contact_state]["tracking"]);
+                $.each(chatConfig.Params[device].contactStatus[contact_state]["tracking"],function(key,val){
+                    apiParams["postParams"][key] = val;
+                });
+            }
             var apiResponse = handlePreAcceptanceMsg(apiParams);
-            msgId = "123";//apiResponse["msg_id"];
+            //msgId = apiResponse["msg_id"];
             canSend = apiResponse["cansend"];
+            console.log("sent pre acceptance msg");
         }
         var output = {"msg_id":msgId,"canSend":canSend,"errorMsg":"You can send more message only if she replies"};
-        console.log("onSendingMessage");
+        
         console.log(output);
+        console.log("end of onSendingMessage");
         return output;
     }
     
