@@ -52,6 +52,7 @@ Class ButtonResponseApi
 							$button[]                 = self::getInitiateButton($this->page);
 							$button[]                 = self::getShortListButton($this->loginProfile, $this->otherProfile);
 							$button[]                 = self::getContactDetailsButton();
+							$button[]                 = self::getIgnoreButton('', '','',true,'Ignore');
 							$responseArray["buttons"] = $button;
 							//echo "NOCONTACT";
 							break;
