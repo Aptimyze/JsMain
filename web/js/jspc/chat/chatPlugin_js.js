@@ -551,7 +551,7 @@ JsChat.prototype = {
                 scrollTop: (elem.find(".rightBubble").length + elem.find(".leftBubble").length) * 50
             }, 1000);
             $(elem).attr("pos-state","open");
-           
+
         });
         curEle._handleUnreadMessages(elem);
     },
@@ -659,23 +659,31 @@ JsChat.prototype = {
 
     //bind clicking block icon
     _bindBlock: function(elem, userId) {
-        var curElem = this;
+        var curElem = this,enableClose;
         $(elem).off("click").on("click", function() {
+            enableClose = true;
             curElem._removeFromListing('removeCall2',userId);
             sessionStorage.setItem("htmlStr_" + userId, $('chat-box[user-id="' + userId + '"] .chatMessage').html());
             $('chat-box[user-id="' + userId + '"] .chatMessage').html('<div id="blockText" class="pos-rel wid90p txtc colorGrey padall-10">You have blocked this user</div><div class="pos-rel fullwid txtc mt20"><div id="undoBlock" class="padall-10 color5 disp_ib cursp">Undo</div></div>');
             $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
-            curElem._bindUnblock(userId);
+            enableClose = true;
+            setTimeout(function(){ 
+                if(enableClose == true){
+                    curElem._scrollDown($('chat-box[user-id="' + userId + '"]'), "remove");
+                }
+            }, 5000);
+            $('chat-box[user-id="' + userId + '"] #undoBlock').off("click").on("click", function() {
+                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                enableClose = false;
+                var htmlStr = sessionStorage.getItem("htmlStr_" + userId);
+                $('chat-box[user-id="' + userId + '"] .chatMessage').html(htmlStr);
+                //TODO: fire query for unblock
+            });
         });
     },
 
     _bindUnblock: function(userId) {
-        $('chat-box[user-id="' + userId + '"] #undoBlock').off("click").on("click", function() {
-            $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-            var htmlStr = sessionStorage.getItem("htmlStr_" + userId);
-            $('chat-box[user-id="' + userId + '"] .chatMessage').html(htmlStr);
-            //TODO: fire query for unblock
-        });
+        
     },
 
     onSendingMessage: null,
@@ -879,6 +887,9 @@ JsChat.prototype = {
                         $(this).closest(".chatMessage").find("#declineDiv").removeClass("disp-none");
                         $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt").remove();
                         $(this).remove();
+                        setTimeout(function(){ 
+                            curElem._scrollDown($('chat-box[user-id="' + userId + '"]'), "remove");
+                        }, 5000);
                         //TODO: fire query for declining request
                     });
                     break;
