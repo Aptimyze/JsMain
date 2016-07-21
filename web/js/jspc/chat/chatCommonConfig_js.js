@@ -110,10 +110,32 @@ chatConfig.Params = {
         },
 
         contactStatus:{
-        	"interest_pending":
-        	{
+        	"interest_pending":{
+        		"key":"interest_pending",
         		"apiUrl":"/api/v1/chat/sendEOI"
-        	}        	
+        	},
+        	"pog_interest_pending":{
+        		"key":"pog_interest_pending",
+        		"apiUrl":"/api/v1/chat/sendEOI"
+        	},
+        	"pog_interest_accepted":{
+        		"key":"pog_interest_accepted",
+        		"apiUrl":"/api/v1/chat/sendEOI"
+        	},
+        	"interest_pending":{
+        		"key":"interest_pending",
+        		"apiUrl":"/api/v1/chat/sendEOI"
+        	},
+        	"none_applicable":{
+        		"key":"none_applicable",
+        		"apiUrl":"/api/v1/chat/sendEOI"
+        	},
+        	"interest_sent":{
+        		"key":"interest_sent"
+        	}, 
+        	"pog_interest_declined":{
+        		"key":"pog_interest_declined"
+        	}	
         },
        
         groupWiseNodesLimit: {

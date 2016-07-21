@@ -716,22 +716,20 @@ JsChat.prototype = {
                         console.log("in plugin send message");
                         console.log(text);
                         console.log($('chat-box[user-id="' + userId + '"]').attr("data-jid"));
-                        messageId = _this.onSendingMessage(text,$('chat-box[user-id="' + userId + '"]').attr("data-jid"),$('chat-box[user-id="' + userId + '"]').attr("data-contact"));
-                        
-                    }
-                    console.log("after");
-                    //setTimeout(function() {
-                        //on recieving data with uniqueID
-                        //set single tick here
+                        var msgSendOutput = _this.onSendingMessage(text,$('chat-box[user-id="' + userId + '"]').attr("data-jid"),$('chat-box[user-id="' + userId + '"]').attr("data-contact"));
+                        messageId = msgSendOutput["msg_id"];
+                        limitReached = msgSendOutput["limitReached"];
+                        console.log("after "+limitReached+"-"+$('chat-box[user-id="' + userId + '"]').attr("data-contact"));
+                        //on recieving data with uniqueID,set single tick here
                         $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + messageId);
                         _this._changeStatusOfMessg(messageId,userId,"recieved");
-                        //scenario if 3 messages have been sent
-                        var threeSent = false;
-                        if (threeSent == true) {
+                        //scenario if messages above limit have been sent
+                        if (limitReached == true){
                             $(curElem).prop("disabled", true);
                             $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">You can send more message only if she replies</div>').addClass("restrictMessg2");
                         }
-                    //}, 2000);
+                    }
+                    
                 }
             }
         });
@@ -835,20 +833,20 @@ JsChat.prototype = {
         console.log($(".chatlist li[id*='"+userId+"']").attr("id").split(userId+"_")[1]);
         var group = $(".chatlist li[id*='"+userId+"']").attr("id").split(userId+"_")[1];
         if(group == chatConfig.Params["categoryNames"]["Desired Partner Matches"] || group == chatConfig.Params["categoryNames"]["Shortlisted Members"]) {
-           response = "interest_pending";
+           response = chatConfig.Params[device].contactStatus["interest_pending"]["key"];
         } else if(group == chatConfig.Params["categoryNames"]["Interest Received"]) {
-           response = "pog_interest_pending";
+           response = chatConfig.Params[device].contactStatus["pog_interest_pending"]["key"];
         } else if(group == chatConfig.Params["categoryNames"]["Acceptance"]) {
-            response = "pog_interest_accepted";
+            response = chatConfig.Params[device].contactStatus["pog_interest_accepted"]["key"];
         } else {
-            response = "none_applicable";
+            response = chatConfig.Params[device].contactStatus["none_applicable"]["key"];
         }
         var membership = "paid";
         $('chat-box[user-id="' + userId + '"]').attr("data-contact",response);
         //var membership = "free";
         setTimeout(function() {
             switch (response) {
-                case "interest_pending":
+                case chatConfig.Params[device].contactStatus["interest_pending"]["key"]:
                     $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="sendInterest cursp sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_6 "></i><span class="vertTexBtm"> Send Interest</span></div><div id="sentDiv" class="sendDiv disp-none pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
                     $('chat-box[user-id="' + userId + '"] #sendInt').on("click", function() {
                         //TODO: fire query to send interest              
@@ -856,10 +854,10 @@ JsChat.prototype = {
                         $(this).remove();
                     });
                     break;
-                case "interest_sent":
+                case chatConfig.Params[device].contactStatus["interest_sent"]["key"]:
                     $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
                     break;
-                case "pog_interest_pending":
+                case chatConfig.Params[device].contactStatus["pog_interest_pending"]["key"]:
                     $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="pos-rel wid90p txtc colorGrey padall-10">The member wants to chat</div><div class="pos-rel fullwid txtc colorGrey mt20"><div id="accept" class="acceptInterest padall-10 color5 disp_ib cursp">Accept</div><div id="decline" class="acceptInterest padall-10 color5 disp_ib cursp">Decline</div></div><div id="acceptTxt" class="pos-rel fullwid txtc color5 mt25">Accept interest to continue chat</div><div id="sentDiv" class="fullwid pos-rel disp-none mt10 color5 txtc">Interest Accepted continue chat</div><div id="declineDiv" class="sendDiv txtc disp-none pos-abs wid80p mt10 color5">Interest Declined, you can\'t chat with this user anymore</div>');
                     $('chat-box[user-id="' + userId + '"] #accept').on("click", function() {
                         $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
@@ -875,21 +873,21 @@ JsChat.prototype = {
                         //TODO: fire query for declining request
                     });
                     break;
-                case "pog_interest_accepted":
+                case chatConfig.Params[device].contactStatus["pog_interest_accepted"]["key"]:
                     $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="fullwid pos-rel mt10 color5 txtc">Interest Accepted continue chat</div>');
                     $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
                     break;
-                case "pog_interest_declined":
+                case chatConfig.Params[device].contactStatus["pog_interest_declined"]["key"]:
                     $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="sendDiv txtc pos-abs wid80p mt10 color5">Interest Declined, you can\'t chat with this user anymore</div>');
                     break;
-                case "none_applicable":
+                case chatConfig.Params[device].contactStatus["none_applicable"]["key"]:
                     $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
             }
             //check for membership
-            if(membership == "paid" && response.indexOf("pog") == -1 && response != "none_applicable"){
+            if(membership == "paid" && response.indexOf("pog") == -1 && response != chatConfig.Params[device].contactStatus["none_applicable"]["key"]){
                  $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
             } 
-            else if(membership == "free" && response.indexOf("pog") == -1 && response != "none_applicable") {
+            else if(membership == "free" && response.indexOf("pog") == -1 && response != chatConfig.Params[device].contactStatus["none_applicable"]["key"]) {
                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="pos-abs fullwid txtc colorGrey top120">Only paid members can start chat<div id="becomePaidMember" class="color5 cursp">Become a Paid Member</div></div>');                                
 			}
             $('chat-box[user-id="' + userId + '"] .spinner').hide();
