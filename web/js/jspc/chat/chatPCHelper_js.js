@@ -433,6 +433,7 @@ function handlePreAcceptanceMsg(apiParams){
             data: postData,
             timeout: 60000,
             cache: false,
+            async: false,
             beforeSend: function(xhr){               
             },
 
@@ -568,8 +569,8 @@ $(document).ready(function(){
                             }
                         };
             var apiResponse = handlePreAcceptanceMsg(apiParams);
-            msgId = apiResponse["msg_id"];
-            canSend = apiResponse["canSend"];
+            msgId = "123";//apiResponse["msg_id"];
+            canSend = apiResponse["cansend"];
         }
         var output = {"msg_id":msgId,"canSend":canSend,"errorMsg":"You can send more message only if she replies"};
         console.log("onSendingMessage");
