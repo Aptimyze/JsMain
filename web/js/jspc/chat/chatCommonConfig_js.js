@@ -108,6 +108,14 @@ chatConfig.Params = {
                 "id": "WRITE_MESSAGE"
             }]
         },
+
+        contactStatus:{
+        	"interest_pending":
+        	{
+        		"apiUrl":"/api/v1/chat/sendEOI"
+        	}        	
+        },
+       
         groupWiseNodesLimit: {
             "dpp": 200,
             "intrec": 100,
