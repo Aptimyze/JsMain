@@ -96,7 +96,7 @@ if ($profileid && $AuthDesc == "Y") {
         $smarty->assign("BILL_NAME", $myrow["USERNAME"]);
         $smarty->assign("PAYTYPE", $paytype);
         $smarty->assign("PROFILEID", $profileid);
-        $smarty->assign("CHECKSUM", $Merchant_Param);
+        $smarty->assign("CHECKSUM", $decoded_response['merchant_param5']);
         $data = authenticated();
         $smarty->assign("USERNAME", $data[USERNAME]);
         $smarty->assign("FOOT", $smarty->fetch("footer.htm"));
@@ -118,7 +118,7 @@ if ($profileid && $AuthDesc == "Y") {
     }
 } else if ($profileid && $AuthDesc == "N") {
     $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
-    $smarty->assign("CHECKSUM", $Merchant_Param);
+    $smarty->assign("CHECKSUM", $decoded_response['merchant_param5']);
     $smarty->assign("HEAD", $smarty->fetch("revamp_head.htm"));
     $smarty->assign("SUBHEADER", $smarty->fetch("subheader.htm"));
     $smarty->assign("TOPLEFT", $smarty->fetch("topleft.htm"));
