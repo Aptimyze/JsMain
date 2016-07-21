@@ -718,15 +718,16 @@ JsChat.prototype = {
                         console.log($('chat-box[user-id="' + userId + '"]').attr("data-jid"));
                         var msgSendOutput = _this.onSendingMessage(text,$('chat-box[user-id="' + userId + '"]').attr("data-jid"),$('chat-box[user-id="' + userId + '"]').attr("data-contact"));
                         messageId = msgSendOutput["msg_id"];
-                        limitReached = msgSendOutput["limitReached"];
-                        console.log("after "+limitReached+"-"+$('chat-box[user-id="' + userId + '"]').attr("data-contact"));
+                        
                         //on recieving data with uniqueID,set single tick here
                         $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + messageId);
                         _this._changeStatusOfMessg(messageId,userId,"recieved");
+                        
                         //scenario if messages above limit have been sent
-                        if (limitReached == true){
+                        if(msgSendOutput["canSend"] == false){
                             $(curElem).prop("disabled", true);
-                            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">You can send more message only if she replies</div>').addClass("restrictMessg2");
+                            if(typeof msgSendOutput["errorMsg"] != "undefined")
+                                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">'+msgSendOutput["errorMsg"]+'</div>').addClass("restrictMessg2");
                         }
                     }
                     
@@ -830,6 +831,8 @@ JsChat.prototype = {
 
     _postChatPanelsBox: function(userId) {
         var curElem = this;
+        var membership = "paid";
+
         console.log($(".chatlist li[id*='"+userId+"']").attr("id").split(userId+"_")[1]);
         var group = $(".chatlist li[id*='"+userId+"']").attr("id").split(userId+"_")[1];
         if(group == chatConfig.Params["categoryNames"]["Desired Partner Matches"] || group == chatConfig.Params["categoryNames"]["Shortlisted Members"]) {
@@ -841,8 +844,10 @@ JsChat.prototype = {
         } else {
             response = chatConfig.Params[device].contactStatus["none_applicable"]["key"];
         }
-        var membership = "paid";
-        $('chat-box[user-id="' + userId + '"]').attr("data-contact",response);
+        if(membership == "paid")
+            $('chat-box[user-id="' + userId + '"]').attr("data-contact",response);
+        else
+            $('chat-box[user-id="' + userId + '"]').attr("data-contact",chatConfig.Params[device].contactStatus["none_applicable"]["key"]);
         //var membership = "free";
         setTimeout(function() {
             switch (response) {
@@ -1421,7 +1426,7 @@ JsChat.prototype = {
         });
     }, 
     
-    _timer:'undefined',
+    _timer:null,
     //start:hover functionality
     _calltohover:function(e){
         //console.log("In _calltohover");
@@ -1432,13 +1437,14 @@ JsChat.prototype = {
         var getID = $(this).attr('id');            
         getID = getID.split("_");
         getID = getID[0];
+        clearTimeout(_this._timer);
         //set timer variable
         if(e.type == "mouseenter")
         {
    
             _this._timer = setTimeout(function() { 
                 _this._checkHover(curHoverEle);  
-            }, 1000);                
+            }, 500);                
         }
         else
         {
@@ -1483,14 +1489,12 @@ JsChat.prototype = {
         var curEle = this;
         var LoginHTML = '<div class="fullwid txtc fontlig pos-rel" id="js-loginPanel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarOut"></i> </div><div class="chpt100"> <img src="'+this._imageUrl+'" /> </div><button id="js-chatLogin" class="chatbtnbg1 mauto chatw1 colrw f14 brdr-0 lh40 cursp nchatm5">Login to Chat</button></div>';
         var errorHTML = '';
-        if(failed == true)
-        {
+        if(failed == true){
             errorHTML += '<div class="txtc color5 f13 mt10" id="loginErr">'+curEle._loginFailueMsg+'</div>';
         }
         if(failed == false || typeof failed == "undefined" || $("#js-loginPanel").length == 0)
             $(this._parendID).append(LoginHTML);
-        else
-        {
+        else{
             console.log("removing");
             $(curEle._loginPanelID).fadeIn('fast');
             if($(curEle._loginPanelID).find("#loginErr").length == 0)
