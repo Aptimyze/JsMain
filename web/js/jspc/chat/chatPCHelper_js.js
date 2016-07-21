@@ -139,8 +139,7 @@ function xmlToJson(xml) {
 *handles login success/failure cases
 * @param: state
 */
-function invokePluginLoginHandler(state)
-{
+function invokePluginLoginHandler(state){
     if(state == "success")
     {
         createCookie("chatAuth","true");
@@ -415,6 +414,43 @@ function clearLocalStorage(){
     });
 }
 
+/*handle msg with limit before acceptance
+* @input: apiParams
+* @output: response
+*/
+function handlePreAcceptanceMsg(apiParams){
+    var outputData;
+    if(typeof apiParams!= "undefined"){
+        var postData = "";
+        if(typeof apiParams["postParams"] != "undefined" && apiParams["postParams"].length > 0){
+            postData = apiParams["postParams"];
+        }
+
+        $.myObj.ajax({
+            url: apiParams["url"],
+            dataType: 'json',
+            type: 'POST',
+            data: postData,
+            timeout: 60000,
+            cache: false,
+            beforeSend: function(xhr){               
+            },
+
+            success: function(response){
+                console.log("in success of handlePreAcceptanceMsg");
+                console.log(response);
+                outputData = response;
+            },
+            error: function(xhr){
+                console.log("in error of handlePreAcceptanceMsg");
+                console.log(xhr);
+                return "error";
+            }
+        });
+    }
+    return outputData;
+}
+
 $(document).ready(function(){
     console.log("User");
     console.log(loggedInJspcUser);
@@ -508,10 +544,37 @@ $(document).ready(function(){
         eraseCookie("chatAuth");
     }
 
-    objJsChat.onSendingMessage = function(message,to,contactStatus){
-        var msgId = strophieWrapper.sendMessage(message,to);
-        var output = {"msg_id":msgId,"limitReached":true};
-        return msgId;
+    //executed for sending message
+    objJsChat.onSendingMessage = function(message,to,contact_state){
+        var msgId,canSend;
+        if(contact_state == chatConfig.Params[device].contactStatus["none_applicable"]["key"]){
+            alert("not allowed to chat");
+        }
+        else if(contact_state == chatConfig.Params[device].contactStatus["pog_interest_accepted"]["key"]){
+            console.log("ankita_here");
+            canSend = false;
+            msgId = strophieWrapper.sendMessage(message,to);
+        }
+        else{
+            var id = new Date();
+            msgId = "123"+id;
+            canSend = true;
+            var apiParams = {
+                    "url":chatConfig.Params[device].contactStatus[contact_state]["apiUrl"],
+                    "postParams":
+                            {
+                                "profileChecksum":"4c41f8845105429abbd11cc184d0e330i9061321",
+                                "tracking":chatConfig.Params[device].contactStatus[contact_state]["tracking"]
+                            }
+                        };
+            var apiResponse = handlePreAcceptanceMsg(apiParams);
+            msgId = apiResponse["msg_id"];
+            canSend = apiResponse["canSend"];
+        }
+        var output = {"msg_id":msgId,"canSend":canSend,"errorMsg":"You can send more message only if she replies"};
+        console.log("onSendingMessage");
+        console.log(output);
+        return output;
     }
     
     
