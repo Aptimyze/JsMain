@@ -1661,7 +1661,7 @@ class MembershipHandler
     public function getExclusiveAllocationDetails($assigned=false,$orderBy="")
     {
         $exclusiveObj = new billing_EXCLUSIVE_MEMBERS();
-        $allocationDetails = $exclusiveObj->getExclusiveMembers("PROFILEID,DATE_FORMAT(BILLING_DT, '%d/%m/%Y') AS BILLING_DT,ASSIGNED_TO,BILL_ID",$assigned,$orderBy);
+        $allocationDetails = $exclusiveObj->getExclusiveMembers("PROFILEID,DATE_FORMAT(BILLING_DT, '%d/%m/%Y %H:%i:%s') AS BILLING_DT,ASSIGNED_TO,BILL_ID",$assigned,$orderBy);
         if(is_array($allocationDetails) && $allocationDetails)
         {
             $profileIDArr = array_keys($allocationDetails);
@@ -1700,11 +1700,6 @@ class MembershipHandler
                 }
                 else
                     unset($allocationDetails[$profileid]);
-            }
-            $billPurObj = new BILLING_PURCHASES('newjs_slave');
-            $billidDet = $billPurObj->fetchAllDataForBillidArr($billIdArr);
-            foreach ($allocationDetails as $profileid=>&$val){
-                $val['BILLING_DT'] = date("d/m/Y H:i:s", strtotime($billidDet[$val['BILL_ID']]['ENTRY_DT']));
             }
             unset($billingDetails);
             unset($jsadminDetails);
