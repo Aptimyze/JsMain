@@ -48,9 +48,9 @@ function initiateChatConnection()
     if(readSiteCookie("CHATUSERNAME")=="bassi")
         username = '1@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
-        username = 'a9@localhost';
+        username = 'a8@localhost';
     else if(readSiteCookie("CHATUSERNAME") == "ZZRS3292")
-        username = 'a10@localhost';
+        username = 'a13@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZVV2929")
         username = 'a14@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZRR5723")
@@ -508,8 +508,9 @@ $(document).ready(function(){
         eraseCookie("chatAuth");
     }
 
-    objJsChat.onSendingMessage = function(message,to){
+    objJsChat.onSendingMessage = function(message,to,contactStatus){
         var msgId = strophieWrapper.sendMessage(message,to);
+        var output = {"msg_id":msgId,"limitReached":true};
         return msgId;
     }
     

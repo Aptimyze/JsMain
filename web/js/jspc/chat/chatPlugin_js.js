@@ -110,7 +110,7 @@ JsChat.prototype = {
         minChatPanel +='<div class="pt5 pr10">ONLINE MATCHES</div>';
         minChatPanel +='</li>';
         minChatPanel +='<li>';
-        if(this._loginStatus == 'Y'){
+        /*if(this._loginStatus == 'Y'){
             var count = this._onlineUserMsgMe();
             if(count>0){
                 minChatPanel +='<div class="bg_pink disp-tbl txtc nchatb">';
@@ -125,7 +125,21 @@ JsChat.prototype = {
         }
         else{
            minChatPanel +='<div class="nchatb vishid"></div>';
-        }     
+        } */
+        var count = this._onlineUserMsgMe();
+        minChatPanel +='<div class="bg_pink disp-tbl txtc nchatb showcountmin';
+        if( (this._loginStatus == 'Y') && (count>0))
+        {
+        minChatPanel+='">';
+        }
+        else
+        {
+        minChatPanel+=' vishid">';
+        }
+        minChatPanel +='<div class="vmid disp-cell countVal">';
+        minChatPanel += count; 
+           minChatPanel +='</div>';                                
+        minChatPanel +='</div>';     
         minChatPanel +='</li>';
         minChatPanel +='<li class="pl10">'; 
         minChatPanel +='<i class="nchatspr nchatopen"></i>';
@@ -702,7 +716,8 @@ JsChat.prototype = {
                         console.log("in plugin send message");
                         console.log(text);
                         console.log($('chat-box[user-id="' + userId + '"]').attr("data-jid"));
-                        messageId = _this.onSendingMessage(text,$('chat-box[user-id="' + userId + '"]').attr("data-jid"));
+                        messageId = _this.onSendingMessage(text,$('chat-box[user-id="' + userId + '"]').attr("data-jid"),$('chat-box[user-id="' + userId + '"]').attr("data-contact"));
+                        
                     }
                     console.log("after");
                     //setTimeout(function() {
@@ -829,6 +844,7 @@ JsChat.prototype = {
             response = "none_applicable";
         }
         var membership = "paid";
+        $('chat-box[user-id="' + userId + '"]').attr("data-contact",response);
         //var membership = "free";
         setTimeout(function() {
             switch (response) {
@@ -1070,7 +1086,11 @@ JsChat.prototype = {
                 $("#extra_" + userId + " .pinkBubble span").html(val + 1);
                 $("#extra_" + userId + " .pinkBubble").show();
             }
-            
+            //change count of online matches panel
+            if($(".js-minpanel").length != 0){
+                var count = curEle._onlineUserMsgMe();
+                console.log("count - "+count);
+            }
         }
     },
 
@@ -1088,6 +1108,19 @@ JsChat.prototype = {
                 noOfInputs++;
             }
         });
+        if($('.showcountmin').hasClass('vishid')) 
+       {
+           console.log('no exist');
+           //noOfInputs = 5;
+           $('.countVal').html(noOfInputs);
+           $('.showcountmin').toggleClass('vishid');
+          
+       }
+       else
+       {
+            //noOfInputs = 15;
+           $('.countVal').html(noOfInputs);
+       }
         return noOfInputs;
     },
 
