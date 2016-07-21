@@ -718,7 +718,7 @@ JsChat.prototype = {
                         console.log($('chat-box[user-id="' + userId + '"]').attr("data-jid"));
                         var msgSendOutput = _this.onSendingMessage(text,$('chat-box[user-id="' + userId + '"]').attr("data-jid"),$('chat-box[user-id="' + userId + '"]').attr("data-contact"));
                         messageId = msgSendOutput["msg_id"];
-                        
+                        console.log("handling output of onSendingMessage in plugin");
                         //on recieving data with uniqueID,set single tick here
                         $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + messageId);
                         _this._changeStatusOfMessg(messageId,userId,"recieved");

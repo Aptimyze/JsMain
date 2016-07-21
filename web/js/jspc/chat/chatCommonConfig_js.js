@@ -113,7 +113,9 @@ chatConfig.Params = {
         	"interest_pending":{
         		"key":"interest_pending",
         		"apiUrl":"/api/v1/chat/sendEOI",
-        		"tracking":"stype=WV"
+        		"tracking":{
+        				"stype":"WV"
+        			}
         	},
         	"pog_interest_pending":{
         		"key":"pog_interest_pending",
