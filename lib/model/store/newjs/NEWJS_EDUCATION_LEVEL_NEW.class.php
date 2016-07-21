@@ -57,7 +57,7 @@ class NEWJS_EDUCATION_LEVEL_NEW extends TABLE
 	{
 		try
                 {
-                        $sql = "SELECT SQL_CACHE E.ID AS ID, E.LABEL AS LABEL, E.VALUE AS VALUE, EG.LABEL AS GROUP_NAME,IF(E.OLD_VALUE=3 OR E.OLD_VALUE=4,'UG',IF(E.OLD_VALUE=5 OR E.OLD_VALUE=6,'PG',IF(E.OLD_VALUE = 0,'ALL',''))) AS EDU_TYPE FROM newjs.EDUCATION_LEVEL_NEW E, newjs.EDUCATION_GROUPING EG WHERE E.GROUPING = EG.VALUE ORDER BY EG.SORTBY,E.SORTBY";
+                        $sql = "SELECT SQL_CACHE E.ID AS ID, E.LABEL AS LABEL, E.VALUE AS VALUE, EG.LABEL AS GROUP_NAME,IF(E.OLD_VALUE=4,'UG',IF(E.OLD_VALUE=5 OR E.OLD_VALUE=6,'PG',IF(E.OLD_VALUE = 0,'ALL',''))) AS EDU_TYPE FROM newjs.EDUCATION_LEVEL_NEW E, newjs.EDUCATION_GROUPING EG WHERE E.GROUPING = EG.VALUE ORDER BY EG.SORTBY,E.SORTBY";
                         $res = $this->db->prepare($sql);
                         $res->execute();
                         while($row = $res->fetch(PDO::FETCH_ASSOC))
