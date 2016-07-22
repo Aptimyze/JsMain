@@ -78,6 +78,7 @@ class jsValidatorMail extends sfValidatorBase
     if ($this->_emailDeleted($value,$activatedFlag))
     {
 	  $this->_trackDuplicateEmail($value,'Y',1);
+          //modify old email
           $deletedEmailModify = new RegistrationFunctions();
           $affectedRows = $deletedEmailModify->deletedEmailModify($value);
           if($affectedRows == 0)

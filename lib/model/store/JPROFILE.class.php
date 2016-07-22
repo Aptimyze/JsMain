@@ -1489,6 +1489,7 @@ public function duplicateEmail($email)
                 }
 	}
         
+        //get email similar to supplied values
         public function getEmailLike($email)
 	{
 		try
@@ -1505,6 +1506,8 @@ public function duplicateEmail($email)
                         throw new jsException($ex);
                 }
 	}
+        
+        //update existing email with value appended
         public function updateEmail($email,$newEmail)
 	{
 		try

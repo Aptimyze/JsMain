@@ -253,10 +253,14 @@ class RegistrationFunctions
             }
             return json_encode($completeFields,JSON_FORCE_OBJECT);
         }
+        
+        //this function modifies existing email which has been deleted to make new entry
         public static function deletedEmailModify($email){
             $jprofileObj = new JPROFILE();
-            $emailArr = $jprofileObj->getEmailLike($email."_deleted");
+            //fetch if already emails exist
+            $emailArr = $jprofileObj->getEmailLike($email.RegistrationEnums::$emailModification);
             $lastNumber = 1;
+            $max=0;
             if(is_array($emailArr)){
                 foreach($emailArr as $key=>$val){
                     $lastNumber = substr($val[EMAIL],-1);
@@ -264,7 +268,7 @@ class RegistrationFunctions
                         $max=$lastNumber;
                 }
             }
-            $affectedRows = $jprofileObj->updateEmail($email,$email."_deleted".($max+1));
+            $affectedRows = $jprofileObj->updateEmail($email,$email.RegistrationEnums::$emailModification.($max+1));
             return $affectedRows;
         }
 }
