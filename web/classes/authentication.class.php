@@ -35,6 +35,8 @@ class protect
         private $AUTHCHECKSUM="AUTHCHECKSUM";
 	public $allowDeactive="";
 	public $allowUsernameLogin=false;	
+        private $dateTime1 ='10';
+        private $dateTime2 ='22';
 	/*
 	**** @function: Class Constructor
 	**** @include: the class configuration file: Mysql.class.php
@@ -1327,9 +1329,15 @@ class protect
                                 $sql="replace into userplane.recentusers(userID,lastTimeOnline) values('$pid','$time')";
                                 $mysql->executeQuery($sql,$db);*/
 
-                        	// Online-User Tracking in Cache
-                        	$jsCommonObj =new JsCommon();
-                        	$jsCommonObj->setOnlineUser($pid);
+	                        // Add Online-User
+	                        $dateTime =date("H");
+	                        $redisOnline =true;
+	                        if(($dateTime>=$this->dateTime1) && ($dateTime<$this->dateTime2))
+	                                $redisOnline =false;
+				if($redisOnline){
+	                        	$jsCommonObj =new JsCommon();
+	                        	$jsCommonObj->setOnlineUser($pid);
+				}
                         }
                 }
                 
@@ -1346,9 +1354,15 @@ class protect
                         $sql="delete from  userplane.recentusers where userID='$pid'";
                         $mysql->executeQuery($sql,$db);*/
 
-                        // Remove Online-User 
-                        $jsCommonObj =new JsCommon();
-                        $jsCommonObj->removeOnlineUser($pid);
+                        // Remove Online-User
+                        $dateTime =date("H");
+                        $redisOnline =true;
+                        if(($dateTime>$this->dateTime1) && ($dateTime<$this->dateTime2))
+                                $redisOnline =false;
+			if($redisOnline){
+	                        $jsCommonObj =new JsCommon();
+	                        $jsCommonObj->removeOnlineUser($pid);
+			}
                 }
 	}
 
