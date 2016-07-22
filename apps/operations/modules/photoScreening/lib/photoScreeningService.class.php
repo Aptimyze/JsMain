@@ -1987,7 +1987,7 @@ class photoScreeningService
 	*@param formArr : form array
 	*@return output : either error message or array of count and success message
 	*/	
-	public function processUpload($formArr,$ops=false,$filesGlobArri='')
+	public function processUpload($formArr,$ops=false,$filesGlobArr='')
         {
                 $photoFileServiceObj = new photoFileService();
 		if(!$ops)
