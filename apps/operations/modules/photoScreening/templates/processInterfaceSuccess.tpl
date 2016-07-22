@@ -7,7 +7,7 @@
 <link rel="stylesheet" async=true type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<link rel="stylesheet" type="text/css" href="http://static.a.j.com/min/?f=/css/jspc/common/commonJspc_css.css,/css/jspc/photoUpload/photoup_css.css,/css/jspc/photoUpload/cropper.css,/css/jspc/photoUpload/main.css" />
+<link rel="stylesheet" type="text/css" href="/min/?f=/css/jspc/common/commonJspc_css.css,/css/jspc/photoUpload/photoup_css.css,/css/jspc/photoUpload/cropper.css,/css/jspc/photoUpload/main.css" />
 
 <script type="text/javascript" language="Javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 </head>
@@ -213,7 +213,7 @@
 		});
 	}
 </script>
-<script type="text/javascript" src="http://static.a.j.com/min/?f=/js/jspc/common/commonJspc_js.js,/js/jspc/common/AjaxWrapper.js"></script>
+<script type="text/javascript" src="/min/?f=/js/jspc/common/commonJspc_js.js,/js/jspc/common/AjaxWrapper.js"></script>
 
-<script type="text/javascript" src="http://static.a.j.com/min/?f=/js/jspc/photoUpload/cropper.js,/js/jspc/photoUpload/main.js,/js/jspc/photoUpload/bootstrap.js,/js/jspc/photoUpload/tooltip.js"></script>
+<script type="text/javascript" src="/min/?f=/js/jspc/photoUpload/cropper.js,/js/jspc/photoUpload/main.js,/js/jspc/photoUpload/bootstrap.js,/js/jspc/photoUpload/tooltip.js"></script>
 </body>
