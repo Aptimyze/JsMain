@@ -51,8 +51,9 @@ Class ButtonResponseApi
 						case ContactHandler::NOCONTACT:
 							$button[]                 = self::getInitiateButton($this->page);
 							$button[]                 = self::getShortListButton($this->loginProfile, $this->otherProfile);
-							$button[]                 = self::getContactDetailsButton();
 							$button[]                 = self::getIgnoreButton('', '','',true,'Ignore');
+							$button[]                 = self::getContactDetailsButton();
+							
 							$responseArray["buttons"] = $button;
 							//echo "NOCONTACT";
 							break;
