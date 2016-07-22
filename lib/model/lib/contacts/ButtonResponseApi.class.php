@@ -150,7 +150,8 @@ Class ButtonResponseApi
 							break;
 						case ContactHandler::CANCEL:
 							//echo "CANCEL";
-							$responseArray["infobtnlabel"] = "They cancelled interest on " . $date;
+							$button[] = self::getAcceptButton("Accept Again");
+							$responseArray["infobtnlabel"] = "You cancelled your interest on " . $date;
 							$responseArray["buttons"] = $button;
 							break;
 					}
