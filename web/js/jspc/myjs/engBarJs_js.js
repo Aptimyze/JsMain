@@ -528,7 +528,7 @@ try{
 				innerHtml=innerHtml.replace(/\{\{EDUCATION_STR\}\}/g,profiles[i]["edu_level_new"]);
         innerHtml=innerHtml.replace(/\{\{ONLINE_STR\}\}/g,profiles[i]["userloginstatus"]);
 				innerHtml=innerHtml.replace(/\{\{OCCUPATION\}\}/g,profiles[i]["occupation"]);
-				innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,'/profile/viewprofile.php?profilechecksum='+profiles[i]["profilechecksum"]+"&"+this.data.tracking+"&total_rec="+this.data.total+"&actual_offset="+(interestsCount)+"&contact_id="+this.data.contact_id.split('_')[0]+"INTEREST_RECEIVED");
+				innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,'/profile/viewprofile.php?profilechecksum='+profiles[i]["profilechecksum"]+"&"+this.data.tracking+"&total_rec="+this.data.total+"&actual_offset="+(interestsCount)+"&contact_id="+this.data.contact_id.split('_')[0]+"_INTEREST_RECEIVED");
         innerHtml=innerHtml.replace(/\{\{LOCATION\}\}/g,profiles[i]["location"]);
 				innerHtml=innerHtml.replace(/\{\{INCOME\}\}/g,profiles[i]["income"]);
 				var caste = profiles[i]["caste"].split(':');
