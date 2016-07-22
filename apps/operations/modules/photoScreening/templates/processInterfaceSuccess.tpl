@@ -22,6 +22,7 @@
 ~elseif $noPhotosFound`
 	<div align="center" ><b>This profile has no photos to be screened. </b> </div>
 ~else`
+<form name="list" id="ScreenForm" enctype="multipart/form-data"  action="~JsConstants::$siteUrl`/operations.php/photoScreening/uploadProcessScreening?name=~$name`&cid=~$cid`&source=~$source`"  method="POST">
 ~include_partial('photoScreening/cropper',["uploadUrl"=>$uploadUrl,"photoArr"=>$photoArr,"profileData"=>$profileData,"search"=>$search])`
 	~if $search neq 1`
 		<table width="600" border="1" cellspacing="0" cellpadding='3' ALIGN="CENTER" >
@@ -56,7 +57,6 @@
 ~if $photoArr['screened']`
         ~include_partial("screenedCrousel",["screened"=>$photoArr['screened']])`
 ~/if`
-<form name="list" id="ScreenForm" enctype="multipart/form-data"  action="~JsConstants::$siteUrl`/operations.php/photoScreening/uploadProcessScreening?name=~$name`&cid=~$cid`&source=~$source`"  method="POST">
 	<input type=hidden name="profileid" value="~$profileData['PROFILEID']`" id="profileid">
 	<input type = "hidden" name= "emailAdd" value = "~$profileData['EMAIL']`">
 	<input type=hidden name="source" value="~$source`">
@@ -68,6 +68,11 @@
 	<input type=hidden name="mail" value="~$mail`">
 	<input type = "hidden" name = "screenedProfilePicId" value = "~$screenedProfilePicId`">
 	<input type="hidden" name="havePhotoValue" value="~$profileData['HAVEPHOTO']`">
+	<input type="hidden" name="cropBoxDimensionsArr" value="" id="cropBoxDimensionsArr">
+	<input type="hidden" name="imageSource" value="" id="imageSource">
+	<input type="hidden" name="imgPreviewTypeArr" value="" id="imgPreviewTypeArr">
+	<input type="hidden" name="ops" value=false id="ops">
+	<input type="hidden" name="hideCropper" value="~$hideCropper`" id="hideCropper">
 	<table width=760 align="CENTER" cellspacing="0px;">
         	~assign var = "tabIndex" value = 1`
         	<tr class="formhead topDetails" style="background:#EFEFD3;">
@@ -166,6 +171,10 @@
 ~include_partial('global/footer')`
 <script>
         window.onload = function (){
+		if($("#hideCropper").val()==true)
+		{
+			closeCropper();
+		}
 		$("#ScreenForm").submit(function(event)
                 {
 			var val = $("input[type=submit][clicked=true]").val();
@@ -191,6 +200,10 @@
 				}
 				if(!bool)
                                  event.preventDefault();
+			}
+			else
+			{
+				sendOpsProcessCropperRequest();
 			}
 
 		});

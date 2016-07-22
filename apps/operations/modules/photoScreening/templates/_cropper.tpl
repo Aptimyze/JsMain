@@ -135,7 +135,7 @@
 		<!--start:bottom-->
 		<div class="pubdr3 pup8 clearfix fontlig">
 			<div class="fl bg_pink wid190 txtc lh40 cursp pos_rel scrollhid" id="ops-cropperSave">
-				<a href="#" class="f20 colrw pinkRipple hoverPink" onclick="return false;" style="outline: 0;" id="js-cropperSaveAnchor">Save</a>
+<input type="submit" id="submit1" name="Submit1" value="SUBMIT1" tabIndex="~$tabIndex++`" >
 			</div>
 			<div class="fl pt10 pl30">
 				<a href="#" id="js-cropperOpsClose" class="color5 f20" onclick="return false;" style="outline: 0;">Cancel</a>

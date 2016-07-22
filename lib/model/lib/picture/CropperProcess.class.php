@@ -43,19 +43,37 @@ class CropperProcess
                                 {
                                         foreach($picMappingField as $k=>$v)
                                         {
-                                        $profilesUpdate[$picId][$v] = $this->resizePlusStoreCroppedImage($sourceImage,$picId,$profileid,$v,ProfilePicturesTypeEnum::$CROPPED_NONSCREENED_PICTURE_SIZES[$v],$imageType,'nonScreened');
+					$resizedImage = $this->resizeImage($sourceImage,ProfilePicturesTypeEnum::$CROPPED_NONSCREENED_PICTURE_SIZES[$v]);
+					if($ops)
+					{
+						$filesGlobArr['uploadPhotoNonScr']['name'][$v]=$resizedImage;
+						$filesGlobArr['uploadPhotoNonScr']['type'][$v]=$imageType;
+					}
+					else
+						$profilesUpdate[$picId][$v] = $this->StoreCroppedImage($resizedImage,$picId,$profileid,$v,$imageType,'nonScreened');
                                         }
                                 }
                                 else if($picMappingField)
                                 {
-                                $profilesUpdate[$picId][$picMappingField] = $this->resizePlusStoreCroppedImage($sourceImage,$picId,$profileid,$picMappingField,ProfilePicturesTypeEnum::$CROPPED_NONSCREENED_PICTURE_SIZES[$picMappingField],$imageType,'nonScreened');
+					$resizedImage = $this->resizeImage($sourceImage,ProfilePicturesTypeEnum::$CROPPED_NONSCREENED_PICTURE_SIZES[$picMappingField]);
+					if($ops)
+					{
+						$filesGlobArr['uploadPhotoNonScr']['name'][$picMappingField]=$resizedImage;
+						$filesGlobArr['uploadPhotoNonScr']['type'][$picMappingField]=$imageType;
+					}
+					else
+						$profilesUpdate[$picId][$picMappingField] = $this->StoreCroppedImage($resizedImage,$picId,$profileid,$picMappingField,$imageType,'nonScreened');
                                 }
 				if($ops)
 				{
-					$profilesUpdate[$picId]["MainPicUrl"]=$this->resizePlusStoreCroppedImage($sourceImage,$picId,$profileid,"MainPicUrl",ProfilePicturesTypeEnum::$CROPPED_NONSCREENED_PICTURE_SIZES["MainPicUrl"],$imageType,'nonScreened');
+					$resizedImage = $this->resizeImage($sourceImage,ProfilePicturesTypeEnum::$CROPPED_NONSCREENED_PICTURE_SIZES["MainPicUrl"]);
+					$filesGlobArr['uploadPhotoNonScr']['name'][1]=$resizedImage;
+					$filesGlobArr['uploadPhotoNonScr']['type'][1]=$imageType;
 
 				}
                     }
+		if($ops)
+			return $filesGlobArr;
 		return $profilesUpdate;
 	}
         /*
@@ -82,16 +100,13 @@ class CropperProcess
         * @param : $sourceImagePath(original pic to be resized),$picId(main pic id),$profileid,$picMappingField,$newDimensions,$imageType(jpeg/gif/png),$pictureType(nonscreened/screened)
         * @return : $dbSaveUrl
         */
-        private function resizePlusStoreCroppedImage($sourceImage,$picId,$profileid,$picMappingField,$newDimensions,$imageType,$pictureType)
+        private function StoreCroppedImage($newImage,$picId,$profileid,$picMappingField,$imageType,$pictureType)
         {
                 $pictureObj = new NonScreenedPicture();
                 $manipulator = new ImageManipulator();
 
                 //get save url for resized pic
                 $picSaveUrl = $pictureObj->getSaveUrlPicture(ProfilePicturesTypeEnum::$PICTURE_UPLOAD_DIR[$picMappingField],$picId,$profileid,$imageType,$pictureType);
-
-                //resize pic to new dimensions
-                $newImage = $manipulator->resize($sourceImage,$newDimensions,false);
 
                 //save newImage in disk location($picSaveUrl)
                 $manipulator->save($newImage,$picSaveUrl,$imageType);
@@ -102,4 +117,9 @@ class CropperProcess
                 unset($pictureObj);
                 return $dbSaveUrl;
         }
+	private function resizeImage($sourceImage,$newDimensions)
+	{
+                $manipulator = new ImageManipulator();
+                return $newImage = $manipulator->resize($sourceImage,$newDimensions,false);
+	}
 }

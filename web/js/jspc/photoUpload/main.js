@@ -7,6 +7,7 @@ $("#js-cropperOpsClose").on('click',function(){
                 $("#commonOverlay").hide();
                 $(".js-cropper").hide();
         }
+	var cordinatesArray = {};
 $(function () {
 
 	'use strict';
@@ -15,7 +16,6 @@ $(function () {
 	var $body = $('body');
 
 	/** LAVESH **/
-	var cordinatesArray = {};
 	$('#js-cropperSave').bind('click', function() {
 	
 	var imageSource = $('.cropper-canvas').find('img').attr('src');
@@ -26,18 +26,6 @@ $(function () {
 	sendProcessCropperRequest(cordinatesArray,imageSource,imgPreviewTypeArr);
 	});
 	/** LAVESH **/
-
-	$('#ops-cropperSave').bind('click', function() {
-
-        var imageSource = $('.cropper-canvas').find('img').attr('src');
-        //1-D array of preview type
-        var imgPreviewTypeArr = ["imgPreviewLG","imgPreviewMD","imgPreviewSM","imgPreviewSS","imgPreviewXS"];
-
-	var ops = true;
-	var profileid = $("#profileid").val();
-        //send ajax request to actual cropper
-        sendOpsProcessCropperRequest(cordinatesArray,imageSource,imgPreviewTypeArr,ops,profileid);
-        });
 
 	// Tooltip
 	$('[data-toggle="tooltip"]').tooltip();
@@ -310,36 +298,15 @@ function sendProcessCropperRequest(cordinatesArray,imageSource,imgPreviewTypeArr
 	return false;
 }
 
-function sendOpsProcessCropperRequest(cordinatesArray,imageSource,imgPreviewTypeArr,ops,profileid)
+function sendOpsProcessCropperRequest()
 {
-        var url = '/operations.php/photoScreening/uploadProcessCropperScreening';
-        var postSendData = {'cropBoxDimensionsArr':cordinatesArray,'imageSource':imageSource,'imgPreviewTypeArr':imgPreviewTypeArr,'ops':ops,'profileid':profileid};
-
-        $.myObj.ajax({
-                url: url,
-                dataType: 'json',
-                type: 'GET',
-                data: postSendData,
-                timeout: 60000,
-                beforeSend: function( xhr )
-                {
-                        showCommonLoader();
-                        //console.log(postSendData);            
-                },
-
-                success: function(response)
-                {
-                        hideCommonLoader();
-                        //console.log("cropped image successfully"); 
-closeCropper();
-  //                      window.location.reload();
-                },
-                error: function(xhr)
-                {
-                        console.log("error"); //LATER
-                        return "error";
-                }
-        });
-        return false;
+        var imageSource = $('.cropper-canvas').find('img').attr('src');
+        var imgPreviewTypeArr = ["imgPreviewLG","imgPreviewMD","imgPreviewSM","imgPreviewSS","imgPreviewXS"];
+	imgPreviewTypeArrStr = JSON.stringify(imgPreviewTypeArr, null, 2);
+	cordinatesArrayStr = JSON.stringify(cordinatesArray, null, 2);
+	$("#cropBoxDimensionsArr").val(cordinatesArrayStr);
+	$("#imageSource").val(imageSource);
+	$("#imgPreviewTypeArr").val(imgPreviewTypeArrStr);
+	$("#ops").val(true);
 }
 

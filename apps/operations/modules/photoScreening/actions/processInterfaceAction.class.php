@@ -40,9 +40,11 @@ class processInterfaceAction extends sfActions {
 		{
 			$photoScreeningServiceObj = new photoScreeningService($profileDetails["profileObj"]);
 			$paramArr["interface"]=ProfilePicturesTypeEnum::$INTERFACE["2"];
-
+			$this->hideCropper = false;
                 	//Show in Template 
                 	$this->photoArr = $photoScreeningServiceObj->getPicturesToScreen($paramArr);
+                        if(array_key_exists("nonScreened",$this->photoArr))
+				$this->hideCropper = true;
 			$this->mainPicSize = ProfilePicturesTypeEnum::$MAIN_PIC_MAX_SIZE;
                 	$this->profileData = $profileDetails["profileData"];
                 	if (!$this->photoArr["nonScreened"] && !$this->photoArr["profilePic"]) 
