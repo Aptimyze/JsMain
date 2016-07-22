@@ -264,6 +264,7 @@ class RegistrationFunctions
                         $max=$lastNumber;
                 }
             }
-            $jprofileObj->updateEmail($email,$email."_deleted".($max+1));
+            $affectedRows = $jprofileObj->updateEmail($email,$email."_deleted".($max+1));
+            return $affectedRows;
         }
 }

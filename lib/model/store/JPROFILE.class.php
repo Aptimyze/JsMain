@@ -1514,6 +1514,7 @@ public function duplicateEmail($email)
                         $pdoStatement->bindValue(":EMAILID",$email,PDO::PARAM_STR);
                         $pdoStatement->bindValue(":NEW_EMAIL",$newEmail,PDO::PARAM_STR);
 			$pdoStatement->execute();
+                        return $pdoStatement->rowCount();
 		}
 		catch(Exception $ex){
                         throw new jsException($ex);
