@@ -40,8 +40,10 @@ function initiateChatConnection() {
     username = loggedInJspcUser + '@localhost';
     /*if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
         username = 'a1@localhost';
-    if(readSiteCookie("CHATUSERNAME")=="bassi")
+    else if(readSiteCookie("CHATUSERNAME")=="bassi")
         username = '1@localhost';
+    else if(readSiteCookie("CHATUSERNAME")=="VWZ4557")
+        username = 'a9@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
         username = 'a8@localhost';
     else if(readSiteCookie("CHATUSERNAME") == "ZZRS3292")
@@ -393,9 +395,11 @@ function handlePreAcceptChat(apiParams) {
     var outputData = {};
     if (typeof apiParams != "undefined") {
         var postData = "";
-        if (typeof apiParams["postParams"] != "undefined" && apiParams["postParams"].length > 0) {
+        if (typeof apiParams["postParams"] != "undefined" && apiParams["postParams"]) {
             postData = apiParams["postParams"];
         }
+        console.log("postData");
+        console.log(postData);
         $.myObj.ajax({
             url: apiParams["url"],
             dataType: 'json',
@@ -568,7 +572,7 @@ $(document).ready(function() {
                     var apiParams = {
                         "url": chatConfig.Params[device].preAcceptChat["apiUrl"],
                         "postParams": {
-                            "profilechecksum": "4c41f8845105429abbd11cc184d0e330i9061321", //receiverProfileChecksum
+                            "profilechecksum": "4ddba5c85d628cf4faaaca776540cb1ei7575569", //receiverProfileChecksum
                             "chatMessage": message
                         }
                     };

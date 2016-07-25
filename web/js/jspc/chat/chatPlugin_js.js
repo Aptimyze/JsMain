@@ -793,6 +793,7 @@ JsChat.prototype = {
     _postChatPanelsBox: function(userId) {
         var curElem = this;
         var membership = "paid"; //get membership status-pending
+        
         console.log("in _postChatPanelsBox");
         console.log($(".chatlist li[id*='" + userId + "']").attr("id").split(userId + "_")[1]);
         var groupID = $(".chatlist li[id*='" + userId + "']").attr("id").split(userId + "_")[1];
@@ -801,21 +802,7 @@ JsChat.prototype = {
         if (typeof chatBoxType == "undefined") chatBoxType = curElem._contactStatusMapping["none_applicable"]["key"];
         console.log("chatboxtype--" + chatBoxType);
         $('chat-box[user-id="' + userId + '"]').attr("data-contact", chatBoxType);
-        /*if(group == chatConfig.Params["categoryNames"]["Desired Partner Matches"] || group == chatConfig.Params["categoryNames"]["Shortlisted Members"]) {
-           response = curElem._contactStatusMapping["pg_interest_pending"]["key"];
-        } 
-        else if(group == chatConfig.Params["categoryNames"]["Interest Received"]) {
-           response = curElem._contactStatusMapping["pg_acceptance_pending"]["key"];
-        } 
-        else if(group == chatConfig.Params["categoryNames"]["Acceptance"]) {
-            response = curElem._contactStatusMapping["both_accepted"]["key"];
-        }
-        else if(group == chatConfig.Params["categoryNames"]["Interest Sent"]) {
-            response = curElem._contactStatusMapping["pog_acceptance_pending"]["key"];
-        }
-        else{
-            response = curElem._contactStatusMapping["none_applicable"]["key"];
-        }*/
+        
         //var membership = "free";
         setTimeout(function() {
             curElem._updateChatBoxInnerDiv(userId, chatBoxType);
@@ -834,6 +821,7 @@ JsChat.prototype = {
             case curElem._contactStatusMapping["pg_interest_pending"]["key"]:
                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="sendInterest cursp sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_6 "></i><span class="vertTexBtm"> Send Interest</span></div><div id="sentDiv" class="sendDiv disp-none pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
                 //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                //$('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">Initiating chat will also send your interest</div>').addClass("restrictMessg2");
                 $('chat-box[user-id="' + userId + '"] #sendInt').on("click", function() {
                     if (typeof curElem.onChatBoxContactButtonsClick == "function") {
                         response = curElem.onChatBoxContactButtonsClick({
@@ -852,7 +840,6 @@ JsChat.prototype = {
             case curElem._contactStatusMapping["pog_acceptance_pending"]["key"]:
                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
                 //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-                //add cancel interest button and bind it - manvi
                 break;
             case curElem._contactStatusMapping["pg_acceptance_pending"]["key"]:
                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="pos-rel wid90p txtc colorGrey padall-10">The member wants to chat</div><div class="pos-rel fullwid txtc colorGrey mt20"><div id="accept" class="acceptInterest padall-10 color5 disp_ib cursp">Accept</div><div id="decline" class="acceptInterest padall-10 color5 disp_ib cursp">Decline</div></div><div id="acceptTxt" class="pos-rel fullwid txtc color5 mt25">Accept interest to continue chat</div><div id="sentDiv" class="fullwid pos-rel disp-none mt10 color5 txtc">Interest Accepted continue chat</div><div id="declineDiv" class="sendDiv txtc disp-none pos-abs wid80p mt10 color5">Interest Declined, you can\'t chat with this user anymore</div>');
