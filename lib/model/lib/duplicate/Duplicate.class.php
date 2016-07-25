@@ -117,7 +117,7 @@ if($phoneVerRow=(new PHONE_VERIFIED_LOG())->getLogForOtherNumberVerified($profil
 			$rawDuplicateObj->setReason(REASON::PHONE); 
 			$rawDuplicateObj->setIsDuplicate(IS_DUPLICATE::YES); 
 			$rawDuplicateObj->addExtension('MARKED_BY','SYSTEM');
-	  		$rawDuplicateObj->setScreenAction(SCREEN_ACTION::IN);
+	  		$rawDuplicateObj->setScreenAction(SCREEN_ACTION::NONE);
 	  		$rawDuplicateObj->addExtension('IDENTIFIED_ON',date('Y-m-d H:i:s'));
 	  		$rawDuplicateObj->setComments("None");
 			DuplicateHandler::HandleDuplicatesInsert($rawDuplicateObj);
