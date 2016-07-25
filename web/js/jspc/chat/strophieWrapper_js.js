@@ -115,6 +115,7 @@ var strophieWrapper = {
                 }, 10000);
             }
         }
+        strophieWrapper.connectionObj.addHandler(strophieWrapper.onRosterUpdate, Strophe.NS.ROSTER, 'iq', 'set');
     },
     //subscribe user in roster for presence updates
     subscribe: function(jid, nick, message) {
