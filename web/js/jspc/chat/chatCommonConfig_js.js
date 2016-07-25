@@ -88,6 +88,16 @@ chatConfig.Params = {
                 "enable": true,
                 "id": "INITIATE"
             }],
+            "intsent": [{
+                "action": "CANCEL",
+                "label": "Cancel Interest",
+                "iconid": "005",
+                "primary": "true",
+                "secondary": "true",
+                "params": "stype=WV",
+                "enable": true,
+                "id": "CANCEL"
+            }],
             "shortlist": [{
                 "action": "INITIATE",
                 "label": "Send Interest",
@@ -109,38 +119,70 @@ chatConfig.Params = {
             }]
         },
 
-        contactStatus:{
-        	"interest_pending":{
-        		"key":"interest_pending",
-        		"apiUrl":"/api/v1/chat/sendEOI",
-        		"tracking":{
-        				"stype":"WV"
-        			}
+        //contact status mapping for chat box types
+        groupBasedChatBox:{
+        	"dpp":"pg_interest_pending",
+        	"intsent":"pog_acceptance_pending",
+        	"intrec":"pg_acceptance_pending",
+        	"acceptance":"both_accepted",
+        	"shortlist":"pg_interest_pending"
+        },
+
+        /* communication type and mode config
+		* if enableChat is true and useOpenfireForChat is true,then post acceptance msg through openfire,
+		* else if enableChat is true and useOpenfireForChat is false,then pre acceptance msg through posteoi api,
+		* else if enableChat is false, chat is not possible
+		*/ 
+        contactStatusMapping:{
+        	"pg_interest_pending":{
+        		"key":"pg_interest_pending",
+        		"enableChat":true,
+        		"useOpenfireForChat":false
         	},
-        	"pog_interest_pending":{
-        		"key":"pog_interest_pending",
-        		"apiUrl":"/api/v1/chat/sendEOI"
+        	"pog_acceptance_pending":{
+        		"key":"pog_acceptance_pending",
+        		"useOpenfireForChat":false,
+        		"enableChat":true
+        	},
+        	"pg_acceptance_pending":{
+        		"key":"pg_acceptance_pending",
+        		"useOpenfireForChat":false,
+        		"enableChat":false
         	},
         	"pog_interest_accepted":{
         		"key":"pog_interest_accepted",
-        		"apiUrl":"/api/v1/chat/sendEOI"
+        		"useOpenfireForChat":true,
+        		"enableChat":true
         	},
-        	"interest_pending":{
-        		"key":"interest_pending",
-        		"apiUrl":"/api/v1/chat/sendEOI"
+        	"pog_interest_declined":{
+        		"key":"pog_interest_declined",
+        		"useOpenfireForChat":false,
+        		"enableChat":false
         	},
+        	"pg_interest_declined":{
+        		"key":"pg_interest_declined",
+        		"useOpenfireForChat":false,
+        		"enableChat":false
+        	}, 
         	"none_applicable":{
         		"key":"none_applicable",
-        		"apiUrl":"/api/v1/chat/sendEOI"
+        		"useOpenfireForChat":false,
+        		"enableChat":false
         	},
-        	"interest_sent":{
-        		"key":"interest_sent"
-        	}, 
-        	"pog_interest_declined":{
-        		"key":"pog_interest_declined"
+        	"both_accepted":{
+        		"key":"both_accepted",
+        		"useOpenfireForChat":true,
+        		"enableChat":true
         	}	
         },
        
+       	preAcceptChat:{	  //confirm whether this will send message
+       		"apiUrl":"/api/v1/chat/sendEOI",
+    		"extraParams":{
+    				"stype":"WV"
+    			}
+       	},
+
         groupWiseNodesLimit: {
             "dpp": 200,
             "intrec": 100,
