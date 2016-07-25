@@ -149,6 +149,7 @@ class NotificationDataPool
             $condition["WHERE"]["IN"]["COUNT"]    = 1;
             $condition["WHERE"]["NOT_IN"]["FILTERED"]    = 'Y';
             $condition["LIMIT"] = "0,10";//safe in case if some of the profiles are not valid and their data is not present in sms_temp_table
+	    $condition["ORDER"]			  ='TIME';			
             $cntArr = $contactRecordsObj->getContactsCount(array("RECEIVER"=>$profileid,"TYPE"=>ContactHandler::INITIATED,"COUNT"=>1),"FILTERED",1);
             if(is_array($cntArr))
             {

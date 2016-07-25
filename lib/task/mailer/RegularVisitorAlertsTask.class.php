@@ -78,9 +78,9 @@ EOF;
 				$msg = $this->smarty->fetch(MAILER_COMMON_ENUM::getTemplate($this->mailerName).".tpl");
                                 $subject = $this->getSubject($data["USERS"][0],$data["COUNT"]);
                                 $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName);
-				$this->recentProfileVisitorNotification($pid,$subject);
-                $otherUserId = $data["USERS"][0]->getPROFILEID();
-                $this->recentProfileVisitorsBrowserNotification($pid, $subject,$otherUserId);
+				$otherUserId = $data["USERS"][0]->getPROFILEID();
+				$this->recentProfileVisitorNotification($pid,$subject,$otherUserId);
+                		$this->recentProfileVisitorsBrowserNotification($pid, $subject,$otherUserId);
 			}
 			else
 				$flag = "I"; // Invalid users given in database
@@ -92,11 +92,11 @@ EOF;
 		}
 	}
   }
-  protected function recentProfileVisitorNotification($profileid, $subject)
+  protected function recentProfileVisitorNotification($profileid, $subject,$otherUserId)
   {
 	$notificationKey ='PROFILE_VISITOR';
 	$instantNotificationObj =new InstantAppNotification($notificationKey);
-	$instantNotificationObj->sendNotification($profileid,'',$subject);	
+	$instantNotificationObj->sendNotification($profileid,$otherUserId,$subject);	
 
   }
   
