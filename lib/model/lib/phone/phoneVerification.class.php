@@ -125,7 +125,8 @@ protected function phoneUpdateProcess($message)
 
 			$phoneLogObj= new PHONE_VERIFIED_LOG();
 			$phoneLogObj->insertEntry($profileid,$this->getPhoneType(), $this->getPhone(),$message);
-            
+			
+			Duplicate::logIfDuplicate($profileid,$this->phone);            
 
 			JsMemcache::getInstance()->set($profileid."_PHONE_VERIFIED",'Y');
 		
