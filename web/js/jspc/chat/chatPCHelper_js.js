@@ -423,6 +423,26 @@ function handlePreAcceptChat(apiParams) {
     }
     return outputData;
 }
+
+/*
+ * Handle error/info case from button click
+ */
+function handleErrorInHoverButton(jid,data){
+    console.log("@@1");
+    if(data.buttondetails.button){
+        data.buttondetails.button.errmsglabel = "You have exceeded the limit of the number of interests you can send";
+        if(data.buttondetails.button.errmsglabel){
+            objJsChat.hoverErrorHandling(jid,data,"info");
+        }
+        else{
+            //Change button text
+        }
+    }
+    else{
+        objJsChat.hoverErrorHandling(jid,data,"error");
+    }
+}
+
 $(document).ready(function() {
     console.log("User");
     console.log(loggedInJspcUser);
@@ -479,8 +499,11 @@ $(document).ready(function() {
                 console.log(params);
                 checkSum = $("#" + params.id).attr('data-pchecksum');
                 paramsData = $("#" + params.id).attr('data-params');
-                checkSum = "7619da4377fbf2a405ede0d0535a716ei9513636";
-                url = "/api/v2/contacts/postEOI";
+                checkSum = "802d65a19583249de2037f9a05b2e424i6341959";
+                idBeforeSplit = params.id.split('_');
+                idAfterSplit = idBeforeSplit[0];
+                action = idBeforeSplit[1];
+                url = chatConfig.Params["actionUrl"][action];
                 $.ajax({
                     type: 'POST',
                     data: {
@@ -490,9 +513,7 @@ $(document).ready(function() {
                     },
                     url: url,
                     success: function(data) {
-                        console.log(data);
-                        console.log(data.actiondetails.errmsglabel);
-                        $("#" + params.id).html(data.actiondetails.errmsglabel);
+                        handleErrorInHoverButton(idAfterSplit,data);
                     }
                 });
             }
@@ -584,6 +605,7 @@ $(document).ready(function() {
             url = "/api/v1/chat/fetchVCard";
             $.ajax({
                 type: 'POST',
+                async: false,
                 data: {
                     jid: jid,
                     username: username

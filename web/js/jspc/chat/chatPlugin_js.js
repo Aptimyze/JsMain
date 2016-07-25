@@ -1298,9 +1298,9 @@ JsChat.prototype = {
             str += '<img src="' + param2.PHOTO + '" class="vtop ch220"/>';
             str+='<div class="padall-10 pos-rel">';
                 //start:error case 1
-            str+='<div class="pos-abs err2 nchatrr1 disp-none" id="'+param1+'hoverDvBgEr">';
-            str+='<div class="padall-10 colr5 f13 fontli disp-tbl" style="height: 100%;">';
-            str+=' <div class="disp-cell vmid txtc lh27" id="'+param1+'hoverBgEr">';
+            str+='<div class="pos-abs err2 nchatrr1 disp-none" id="'+param1+'_hoverDvBgEr">';
+            str+='<div class="padall-10 colr5 f13 fontli disp-tbl" >';
+            str+=' <div class="disp-cell vmid txtc lh27 ht160" id="'+param1+'_hoverBgEr">';
             str+='</div>';
             str+='</div>';
             str+='</div>';
@@ -1317,16 +1317,16 @@ JsChat.prototype = {
             //end:hover info
             str+='</div>'
             //start:button structure
-            str+='<div class="fullwid clearfix">';
+            str+='<div class="fullwid clearfix" id="'+param1+'_BtnRespnse">';
             str+='<p class="txtc nc-color2 lh27 nhgt28" id="hovererr1">';         
             str+='</p>';
-            str+='<div class="'+param1+'_BtnRespnse">';
+            str+='<div >';
             str += _this._getButtonStructure(param1, group, pCheckSum);
             str+='</div>';
             str+='</div>';
             //end:button structure
-            str+='<div class="f13 colr5 fontlig disp-none" id="'+param1+'hoverDvSmEr"><div class="err1 txtc lh20 nchatp12">';
-            str+='<p id="'+param1+'hoverSmEr"> error message 1</p>';
+            str+='<div class="f13 colr5 fontlig disp-none" id="'+param1+'_hoverDvSmEr"><div class="err1 txtc lh20 nchatp12">';
+            str+='<p id="'+param1+'_hoverSmEr"> error message 1</p>';
             str+='</div>';
             str+='</div>';
             str+='</div>';
@@ -1351,6 +1351,25 @@ JsChat.prototype = {
         console.log("Callback calling starts");
         callback();
         console.log("Callaback ends");
+    },
+    
+    /*
+     * Error handling in case of hover
+     */
+    hoverErrorHandling: function(jid,data,type){
+        console.log("In error handling");
+        console.log(jid,data);
+        console.log(type);
+        if(type == "error"){
+            $("#"+jid+"_BtnRespnse").addClass("disp-none");
+            $("#"+jid+"_hoverDvSmEr").removeClass("disp-none");
+            $("#"+jid+"_hoverSmEr").html(data.buttondetails.button.errmsglabel);
+            
+        }
+        else if(type == "info"){
+            $("#"+jid+"_hoverDvBgEr").removeClass("disp-none");
+            $("#"+jid+"_hoverBgEr").html(data.buttondetails.button.errmsglabel);
+        }
     },
     //start:check hover
     _checkHover: function(param) {
@@ -1391,7 +1410,8 @@ JsChat.prototype = {
         }, function() {
             $(this).css('visibility', 'hidden');
         });
-        $('#' + curEleID + '_hover .hBtn').off("click").on('click', function() {
+        $('#' + curEleID + '_hover .hBtn').on('click', function() {
+            console.log("Atul sir ki ichcha");
             if (_this.onHoverContactButtonClick && typeof _this.onHoverContactButtonClick == 'function') {
                 _this.onHoverContactButtonClick(this);
             }

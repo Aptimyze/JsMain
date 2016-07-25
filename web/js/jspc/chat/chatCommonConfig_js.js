@@ -8,6 +8,11 @@ chatConfig.Params = {
         "Shortlisted Members": "shortlist",
         "Interest Sent": "intsent"
     },
+    actionUrl:{
+        "ACCEPT": "/api/v2/contacts/postAccept",
+        "DECLINE": "/api/v2/contacts/postNotInterested",
+        "INITIATE": "/api/v2/contacts/postEOI"
+    },
     PC: {
         bosh_service_url: 'ws://' + openfireUrl + '/ws/', //connection manager for openfire
         keepalive: true, //keep logged in session alive
