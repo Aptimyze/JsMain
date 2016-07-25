@@ -94,25 +94,16 @@ class HandleFtoDuplicate
 		$fto_timestamp = JSstrToTime($fto_live_date);
 		$timestamp1 = JSstrToTime($entry_dt1);
 		$timestamp2 = JSstrToTime($entry_dt2);
-		if($timestamp1>=$fto_timestamp && $timestamp2>=$fto_timestamp)		//BOTH PROFILES AFTER FTO LIVE DATE
+		if($timestamp1<$fto_timestamp && $timestamp2<$fto_timestamp)		//BOTH PROFILES BEFORE FTO LIVE DATE
+			return null;
+		else
 		{
 			if($timestamp1>=$timestamp2)
 				return $profileid1;
 			else
 				return $profileid2;
 		}
-		elseif($timestamp1>=$fto_timestamp && $timestamp2<$fto_timestamp)		//FIRST PROFILE AFTER AND SECOND PROFILE BEFORE FTO LIVE DATE
-		{
-			return $profileid1;
-		}
-		elseif($timestamp1<$fto_timestamp && $timestamp2>=$fto_timestamp)		//FIRST PROFILE BEFORE AND SECOND PROFILE AFTER FTPO LIVE DATE
-		{
-			return $profileid2;
-		}
-		else									//BOTH PROFILES BEFORE FTO LIVE DATE
-		{
-			return null;
-		}
+		
 	}
 }
 ?>

@@ -139,6 +139,29 @@ class PHONE_VERIFIED_LOG extends TABLE{
                         throw new jsException($e);
                 }
         }
+        public function getLogForOtherNumberVerified($profileId,$number,$startDate,$endDate)
+        {
+                try
+                {       
+
+                        $startDate=strtotime(date('Y-m-d H:i:s',))
+                        $sql = "SELECT * FROM jsadmin.PHONE_VERIFIED_LOG WHERE PROFILEID!=:PROFILEID AND PHONE_NUM=:PHONE_NUM AND ENTRY_DT BETWEEN :STARTDATE AND :ENDDATE ";
+                        $prep=$this->db->prepare($sql);
+                        $prep->bindValue(":PHONE_NUM",$number,PDO::PARAM_STR);
+                        $prep->bindValue(":STARTDATE",$startDate,PDO::PARAM_STR);
+                        $prep->bindValue(":ENDDATE",$endDate,PDO::PARAM_STR);
+                        $prep->bindValue(":PROFILEID",$profileId,PDO::PARAM_STR);
+                        $prep->execute();
+                        
+                        if($result = $prep->fetchAll(PDO::FETCH_ASSOC))
+                        return $result;
+                }
+                catch(PDOException $e)
+                {
+                        throw new jsException($e);
+                }
+        }
+
 
 public function insertEntry($profileid,$phoneType,$phoneNum,$msg,$opUsername){
                
