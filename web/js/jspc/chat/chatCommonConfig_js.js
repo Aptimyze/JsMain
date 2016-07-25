@@ -6,7 +6,7 @@ chatConfig.Params = {
         "Interest Received": "intrec",
         "Acceptance": "acceptance",
         "Shortlisted Members": "shortlist",
-        "Interest Sent":"intsent"
+        "Interest Sent": "intsent"
     },
     PC: {
         bosh_service_url: 'ws://' + openfireUrl + '/ws/', //connection manager for openfire
@@ -20,32 +20,27 @@ chatConfig.Params = {
         listingTabs: {
             "tab1": {
                 "tab_name": "Online Matches",
-                "groups": [
-	                {
-	                    "id": "dpp",
-	                    "group_name": "Desired Partner Matches",
-	                    "show_group_name": true,
-	                    "hide_offline_users": false
-	                },
-	                {
-	                    "id": "intsent",
-	                    "group_name": "Interest Sent",
-	                    "show_group_name": true,
-	                    "hide_offline_users": false
-	                }, 
-	                {
-	                    "id": "intrec",
-	                    "group_name": "Interest Received",
-	                    "show_group_name": true,
-	                    "hide_offline_users": false
-	                }, 
-	                {
-	                    "id": "shortlist",
-	                    "group_name": "Shortlisted Members",
-	                    "show_group_name": true,
-	                    "hide_offline_users": false
-	                }
-                ]
+                "groups": [{
+                    "id": "dpp",
+                    "group_name": "Desired Partner Matches",
+                    "show_group_name": true,
+                    "hide_offline_users": false
+                }, {
+                    "id": "intsent",
+                    "group_name": "Interest Sent",
+                    "show_group_name": true,
+                    "hide_offline_users": false
+                }, {
+                    "id": "intrec",
+                    "group_name": "Interest Received",
+                    "show_group_name": true,
+                    "hide_offline_users": false
+                }, {
+                    "id": "shortlist",
+                    "group_name": "Shortlisted Members",
+                    "show_group_name": true,
+                    "hide_offline_users": false
+                }]
             },
             "tab2": {
                 "tab_name": "Accepted",
@@ -118,78 +113,74 @@ chatConfig.Params = {
                 "id": "WRITE_MESSAGE"
             }]
         },
-
         //contact status mapping for chat box types
-        groupBasedChatBox:{
-        	"dpp":"pg_interest_pending",
-        	"intsent":"pog_acceptance_pending",
-        	"intrec":"pg_acceptance_pending",
-        	"acceptance":"both_accepted",
-        	"shortlist":"pg_interest_pending"
+        groupBasedChatBox: {
+            "dpp": "pg_interest_pending",
+            "intsent": "pog_acceptance_pending",
+            "intrec": "pg_acceptance_pending",
+            "acceptance": "both_accepted",
+            "shortlist": "pg_interest_pending"
         },
-
         /* communication type and mode config
-		* if enableChat is true and useOpenfireForChat is true,then post acceptance msg through openfire,
-		* else if enableChat is true and useOpenfireForChat is false,then pre acceptance msg through posteoi api,
-		* else if enableChat is false, chat is not possible
-		*/ 
-        contactStatusMapping:{
-        	"pg_interest_pending":{
-        		"key":"pg_interest_pending",
-        		"enableChat":true,
-        		"useOpenfireForChat":false
-        	},
-        	"pog_acceptance_pending":{
-        		"key":"pog_acceptance_pending",
-        		"useOpenfireForChat":false,
-        		"enableChat":true
-        	},
-        	"pg_acceptance_pending":{
-        		"key":"pg_acceptance_pending",
-        		"useOpenfireForChat":false,
-        		"enableChat":false
-        	},
-        	"pog_interest_accepted":{
-        		"key":"pog_interest_accepted",
-        		"useOpenfireForChat":true,
-        		"enableChat":true
-        	},
-        	"pog_interest_declined":{
-        		"key":"pog_interest_declined",
-        		"useOpenfireForChat":false,
-        		"enableChat":false
-        	},
-        	"pg_interest_declined":{
-        		"key":"pg_interest_declined",
-        		"useOpenfireForChat":false,
-        		"enableChat":false
-        	}, 
-        	"none_applicable":{
-        		"key":"none_applicable",
-        		"useOpenfireForChat":false,
-        		"enableChat":false
-        	},
-        	"both_accepted":{
-        		"key":"both_accepted",
-        		"useOpenfireForChat":true,
-        		"enableChat":true
-        	}	
+         * if enableChat is true and useOpenfireForChat is true,then post acceptance msg through openfire,
+         * else if enableChat is true and useOpenfireForChat is false,then pre acceptance msg through posteoi api,
+         * else if enableChat is false, chat is not possible
+         */
+        contactStatusMapping: {
+            "pg_interest_pending": {
+                "key": "pg_interest_pending",
+                "enableChat": true,
+                "useOpenfireForChat": false
+            },
+            "pog_acceptance_pending": {
+                "key": "pog_acceptance_pending",
+                "useOpenfireForChat": false,
+                "enableChat": true
+            },
+            "pg_acceptance_pending": {
+                "key": "pg_acceptance_pending",
+                "useOpenfireForChat": false,
+                "enableChat": false
+            },
+            "pog_interest_accepted": {
+                "key": "pog_interest_accepted",
+                "useOpenfireForChat": true,
+                "enableChat": true
+            },
+            "pog_interest_declined": {
+                "key": "pog_interest_declined",
+                "useOpenfireForChat": false,
+                "enableChat": false
+            },
+            "pg_interest_declined": {
+                "key": "pg_interest_declined",
+                "useOpenfireForChat": false,
+                "enableChat": false
+            },
+            "none_applicable": {
+                "key": "none_applicable",
+                "useOpenfireForChat": false,
+                "enableChat": false
+            },
+            "both_accepted": {
+                "key": "both_accepted",
+                "useOpenfireForChat": true,
+                "enableChat": true
+            }
         },
-       
-       	preAcceptChat:{	  //confirm whether this will send message
-       		"apiUrl":"/api/v1/chat/sendEOI",
-    		"extraParams":{
-    				"stype":"WV"
-    			}
-       	},
-
+        preAcceptChat: { //confirm whether this will send message
+            "apiUrl": "/api/v1/chat/sendEOI",
+            "extraParams": {
+                "stype": "WV"
+            }
+        },
         groupWiseNodesLimit: {
             "dpp": 200,
             "intrec": 100,
             "shortlist": 100,
-            "intsent":100
+            "intsent": 100
         },
         //initialRosterLimit:{"nodesCount":3,"timeInterval":30000} //config for initial roster to be sent to plugin to create list initially
     }
 };
-chatConfig.Params.PC.rosterGroups = [chatConfig.Params.categoryNames['Desired Partner Matches'], chatConfig.Params.categoryNames['Interest Sent'],chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members']];
+chatConfig.Params.PC.rosterGroups = [chatConfig.Params.categoryNames['Desired Partner Matches'], chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members']];
