@@ -192,6 +192,7 @@ JsChat.prototype = {
     logOutChat: function() {
         var curEleRef = this;
         $(curEleRef._toggleID).toggleClass('disp-none');
+        $(curEleRef._chatBottomPanelID).hide();
         console.log("In logout Chat");
         console.log(curEleRef._loginStatus);
         if (curEleRef._loginStatus == 'N') {
@@ -804,7 +805,7 @@ JsChat.prototype = {
 
     //adding data in extra popup
     _addDataExtraPopup: function(data) {
-        $(".extraPopup").append('<div id="extra_' + data + '" class="extraChatList pad8_new"><div class="extraUsername cursp colrw minWid65 disp_ib pad8_new fontlig f14">' + data + '</div><div class="pinkBubble vertM scir disp_ib padall-10"><span class="noOfMessg f13 pos-abs">1</span></div><i class="nchatspr nchatic_4 cursp disp_ib mt6 ml10"></i></div>');
+        $(".extraPopup").append('<div id="extra_' + data + '" class="extraChatList pad8_new"><div class="extraUsername cursp colrw minWid65 disp_ib pad8_new fontlig f14">' +  $(".chatlist li[id*='" + data + "'] div").html() + '</div><div class="pinkBubble vertM scir disp_ib padall-10"><span class="noOfMessg f13 pos-abs">1</span></div><i class="nchatspr nchatic_4 cursp disp_ib mt6 ml10"></i></div>');
         $("#extra_" + data + " .pinkBubble span").html($('chat-box[user-id="' + data + '"] .chatBoxBar .pinkBubble2 span').html());
         if ($("#extra_" + data + " .pinkBubble span").html() == 0) {
             $("#extra_" + data + " .pinkBubble").hide();
@@ -1199,6 +1200,9 @@ JsChat.prototype = {
     _startLoginHTML: function() {
         console.log('_startLoginHTML call');
         var curEle = this;
+        if($(curEle._chatBottomPanelID).length !=0){
+            setTimeout(function(){ $(curEle._chatBottomPanelID).show(); }, 1000);
+        }
         //user not logged in and coming for first time dhuila is wrong
         if (($(this._listingPanelID).length == 0) && (this._loginStatus == "N")) {
             console.log('case 1');
