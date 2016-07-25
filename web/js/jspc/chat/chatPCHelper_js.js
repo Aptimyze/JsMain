@@ -149,6 +149,10 @@ function invokePluginManagelisting(listObject, key, user_id) {
         console.log("adding nodes in invokePluginAddlisting");
         console.log(listObject);
         objJsChat.addListingInit(listObject);
+        if(key == "add_node"){
+            objJsChat._updateChatPanelsBox(user_id);
+            console.log("update chat box");
+        }
         if (key == "create_list") {
             objJsChat.noResultError();
         }

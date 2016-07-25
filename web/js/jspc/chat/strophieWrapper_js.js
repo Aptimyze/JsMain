@@ -108,11 +108,12 @@ var strophieWrapper = {
             } else if (strophieWrapper.checkForSubscription(subscription) == true) {
                 console.log("adding node");
                 console.log(subscription);
-                invokePluginManagelisting(nodeArr, "add_node");
-                if (subscription == "to") strophieWrapper.subscribe(rosterObj[strophieWrapper.rosterDetailsKey]["jid"], rosterObj[strophieWrapper.rosterDetailsKey]["nick"]);
+                invokePluginManagelisting(nodeArr, "add_node",user_id);
+                if (subscription == "to") 
+                	strophieWrapper.subscribe(rosterObj[strophieWrapper.rosterDetailsKey]["jid"], rosterObj[strophieWrapper.rosterDetailsKey]["nick"]);
                 setTimeout(function() {
                     strophieWrapper.sendPresence();
-                }, 10000);
+                }, 5000);
             }
         }
         strophieWrapper.connectionObj.addHandler(strophieWrapper.onRosterUpdate, Strophe.NS.ROSTER, 'iq', 'set');
