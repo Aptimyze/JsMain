@@ -1248,7 +1248,12 @@ JsChat.prototype = {
                 console.log(k);
                 console.log(v);
                 console.log("KKKKKK" + v.action);
-                str += '<button class="hBtn bg_pink lh50 brdr-0 txtc colrw cursp"';
+                if(group == chatConfig.Params["categoryNames"]["Interest Sent"]){
+                    str += '<div class="nchatbg-grey lh50 brdr-0 txtc colrw"';
+                }
+                else{
+                    str += '<button class="hBtn bg_pink lh50 brdr-0 txtc colrw cursp"';
+                }
                 str += 'id="' + userId + '_' + v.action + '"';
                 str += 'data-pCheckSum="' + pCheckSum + '"';
                 str += 'data-params="' + v.params + '"';
@@ -1262,7 +1267,12 @@ JsChat.prototype = {
                     }
                 }
                 str += v.label;
-                str += '</button>';
+                if(group == chatConfig.Params["categoryNames"]["Interest Sent"]){
+                    str += '</div>';
+                }
+                else{
+                    str += '</button>';
+                }
             })
             /*
             $.each(param2["buttonDetails"]["buttons"],function(k,v){
