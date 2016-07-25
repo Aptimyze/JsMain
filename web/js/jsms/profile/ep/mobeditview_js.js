@@ -389,6 +389,7 @@ function formatJsonOutput(result)
 	delete(result.phoneDetails);
 	delete(result.responseMessage);
 	delete(result.responseStatusCode);
+        delete(result.imageCopyServer);
 	return result;
 }
 
