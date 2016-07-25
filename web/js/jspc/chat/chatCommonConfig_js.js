@@ -90,7 +90,7 @@ chatConfig.Params = {
             }],
             "intsent": [{
                 "action": "CANCEL",
-                "label": "Cancel Interest",
+                "label": "Interest Sent",
                 "iconid": "005",
                 "primary": "true",
                 "secondary": "true",

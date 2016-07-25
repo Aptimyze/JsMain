@@ -1272,7 +1272,12 @@ JsChat.prototype = {
                 console.log(k);
                 console.log(v);
                 console.log("KKKKKK" + v.action);
-                str += '<button class="hBtn bg_pink lh50 brdr-0 txtc colrw cursp"';
+                if(group == chatConfig.Params["categoryNames"]["Interest Sent"]){
+                    str += '<div class="nchatbg-grey lh50 brdr-0 txtc colrw"';
+                }
+                else{
+                    str += '<button class="hBtn bg_pink lh50 brdr-0 txtc colrw cursp"';
+                }
                 str += 'id="' + userId + '_' + v.action + '"';
                 str += 'data-pCheckSum="' + pCheckSum + '"';
                 str += 'data-params="' + v.params + '"';
@@ -1286,7 +1291,12 @@ JsChat.prototype = {
                     }
                 }
                 str += v.label;
-                str += '</button>';
+                if(group == chatConfig.Params["categoryNames"]["Interest Sent"]){
+                    str += '</div>';
+                }
+                else{
+                    str += '</button>';
+                }
             })
             /*
             $.each(param2["buttonDetails"]["buttons"],function(k,v){
@@ -1331,7 +1341,7 @@ JsChat.prototype = {
             str+='<div class="fullwid clearfix" id="'+param1+'_BtnRespnse">';
             str+='<p class="txtc nc-color2 lh27 nhgt28" id="hovererr1">';         
             str+='</p>';
-            str+='<div >';
+            str+='<div id="'+param1+'_BtnOuter">';
             str += _this._getButtonStructure(param1, group, pCheckSum);
             str+='</div>';
             str+='</div>';
@@ -1384,8 +1394,8 @@ JsChat.prototype = {
             $("#"+jid+"_BtnRespnse div button").html(data.buttondetails.button.label);
         }
         else{
-            $("#"+jid+"_BtnRespnse div button").addClass("").removeClass("bg_pink");
-            $("#"+jid+"_BtnRespnse div button").html(data.buttondetails.button.label);
+            $("#"+jid+"_BtnOuter button").remove();
+            $("#"+jid+"_BtnOuter").append('<button class="bg_pink lh50 brdr-0 txtc colrw cursp" style="width:100%">Start Conversation</button>');
         }
     },
     //start:check hover
@@ -1428,7 +1438,6 @@ JsChat.prototype = {
             $(this).css('visibility', 'hidden');
         });
         $('#' + curEleID + '_hover .hBtn').off('click').on('click', function() {
-            console.log("Atul sir ki ichcha");
             if (_this.onHoverContactButtonClick && typeof _this.onHoverContactButtonClick == 'function') {
                 _this.onHoverContactButtonClick(this);
             }
