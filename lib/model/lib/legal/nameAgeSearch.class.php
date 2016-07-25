@@ -5,7 +5,7 @@ class nameAgeSearch
 {
 	public function getProfilesForLegal($nameArr,$age,$addressArr,$email)
 	{
-		$jprofileObj = new JPROFILE();
+		$jprofileObj = new JPROFILE("newjs_slave");
 		$legalDataArr = $jprofileObj->getDataForLegal($nameArr,$age,$addressArr,$email);
 		return($legalDataArr);
 	}
