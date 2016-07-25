@@ -165,19 +165,12 @@ if(count($camp_array)>0)
 				$cnt1++;
 				if($allocated)//Allocated to agent
 				{
-					if($discount)//Eligible for VD
-		                                $npriority = '9';
+					if($analytic_score>=91 && $analytic_score<=100)
+						$npriority = '7';
+					elseif($analytic_score>=81 && $analytic_score<=90)
+						$npriority = '6';
 					else
-					{
-						if($analytic_score>=81 && $analytic_score<=100)
-                                                        $npriority = '8';
-						elseif($analytic_score>=56 && $analytic_score<=80)
-                                                        $npriority = '7';
-                                                elseif($analytic_score>=1 && $analytic_score<=55)
-                                                        $npriority = '6';
-						else
-							$ignore = 1;
-					}
+						$ignore = 1;
 					if($dialed_today)
                                                 $query2 = "UPDATE easy.dbo.ct_$campaign_name SET LAST_LOGIN_DATE=getdate() FROM easy.dbo.ct_$campaign_name where easycode='$ecode'";
                                         else
@@ -188,30 +181,22 @@ if(count($camp_array)>0)
 				}
 				else
 				{
-					if($discount)//Eligible for VD
-					{
-						if($analytic_score>=81 && $analytic_score<=100)
-                                                        $npriority = '9';
-						elseif($analytic_score>=56 && $analytic_score<=80)
-							$npriority = '8';
-						elseif($analytic_score>=1 && $analytic_score<=55)
-							$npriority = '7';
-						else
-							$ignore = 1;
-					}
-                                        else
-                                        {
-                                                if($analytic_score>=91 && $analytic_score<=100)
-                                                        $npriority = '9';
-                                                elseif($analytic_score>=81 && $analytic_score<=90)
-                                                        $npriority = '8';
-						elseif($analytic_score>=56 && $analytic_score<=80)
-                                                        $npriority = '7';
-                                                elseif($analytic_score>=31 && $analytic_score<=55)
-                                                        $npriority = '6';
-                                                else
-                                                        $ignore = 1;
-                                        }
+					if($analytic_score>=96 && $analytic_score<=100)
+                                                $npriority = '9';
+                                        elseif($analytic_score>=91 && $analytic_score<=95)
+                                                $npriority = '8';
+                                        elseif($analytic_score>=86 && $analytic_score<=90)
+                                                $npriority = '7';
+                                        elseif($analytic_score>=81 && $analytic_score<=85)
+						$npriority = '6';
+					elseif($analytic_score>=76 && $analytic_score<=80)
+						$npriority = '5';
+					elseif($analytic_score>=71 && $analytic_score<=75)
+						$npriority = '4';
+					elseif($analytic_score>=61 && $analytic_score<=70)
+						$npriority = '3';
+					else
+						$ignore = 1;
 					if($dialed_today)
                                                 $query2 = "UPDATE easy.dbo.ct_$campaign_name SET LAST_LOGIN_DATE=getdate() FROM easy.dbo.ct_$campaign_name where easycode='$ecode'";
                                         else

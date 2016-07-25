@@ -47,7 +47,8 @@ class GetAlbumV1Action extends sfActions
 					$contactsRecordObj = new ContactsRecords();
 		                        $contact_status_new = $contactsRecordObj->getContactType($viewerObj,$loggedInProfile);
                                 	$contact_status = $contact_status_new["TYPE"];
-                		}
+                		}         
+                
 				$picServiceObj = new PictureService($viewerObj);
 				$album = $picServiceObj->getAlbum($contact_status);
 				if($album && is_array($album))
@@ -84,7 +85,17 @@ class GetAlbumV1Action extends sfActions
 				}
 				if($albumArr && is_array($albumArr))
 				{
-                                        $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+					//Code for album view logging
+					if($profileid != $loggedInProfileid)
+					{
+						$channel = MobileCommon::getChannel();
+						$date = date("Y-m-d H:i:s");
+						$albumViewLoggingObj = new albumViewLogging();
+						$albumViewLoggingObj->logProfileAlbumView($loggedInProfileid,$profileid,$date,$channel);
+					}
+
+
+                    $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 					if($request->getParameter("profileChecksum"))
                                         	$respObj->setResponseBody(array("albumUrls"=>$albumArr));
 					else

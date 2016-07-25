@@ -973,7 +973,7 @@ class Membership
     function addExclusiveMemberEntry()
     {
         $exclusiveObj = new billing_EXCLUSIVE_MEMBERS();
-        $detailsArr = array("PROFILEID"=>$this->profileid,"ASSIGNED_TO"=>NULL,"ASSIGNED"=>'N',"BILLING_DT"=>date("Y-m-d"),"BILL_ID"=>$this->billid,"ASSIGNED_DT"=>'0000-00-00');
+        $detailsArr = array("PROFILEID"=>$this->profileid,"ASSIGNED_TO"=>NULL,"ASSIGNED"=>'N',"BILLING_DT"=>date("Y-m-d H:i:s"),"BILL_ID"=>$this->billid,"ASSIGNED_DT"=>'0000-00-00');
         $exclusiveObj->addExclusiveMember($detailsArr);
         unset($exclusiveObj);
     }

@@ -88,6 +88,7 @@ The User / subscriber / visitor to Jeevansathi.com is prohibited from uploading,
 <p class="pt20"> 47. Paid Membership is co-extensive with the profile, membership expires as soon as the profile is deleted and cannot be reactivated.</p>
 <p class="pt20"> 48. In the eAdvantage/eSathi unlimited plan, Response Booster and Featured Profile services will have a validity of 1 year, and will be stopped 1 year after the purchase of eAdvantage Unlimited plan. Rest of the services available under this plan will have unlimited duration.</p>
 <p class="pt20"> 49. 'Featured Profile' subscribers will be considered to be shown at the top of search results only if they regularly login to their account. If 'Featured Profile' subscribers don't access the website for more than 15 days, they will be removed from the pool of users considered for being shown at the top of Search Page.</p>
+<p class="pt20"> 50. Sending of Response Booster interests on behalf of Response Booster subscribers is subject to them regularly accessing their accounts. If an account is not accessed for more than 15 days, Response Booster interests will be stopped until the subscriber accesses his/her account.</p>
 <p class="fontreg pt20">Restriction / Prohibitions</p>
 
  

@@ -1720,50 +1720,29 @@ class csvGenerationHandler
 	}
 	public function fetchDialerPriority($allotedTo,$vdDiscount,$score,$processName)
 	{
-		if($processName=='renewalProcessInDialer')
-			$priority =$this->fetchDialerPriorityForScore($score);	
-		elseif($processName=='upsellProcessInDialer')
-			$priority='6';
-		elseif($allotedTo=='' && $vdDiscount && $score>=1 && $score<=100)
-			$priority='6';
-		elseif( $allotedTo=='' && !$vdDiscount){
-			$priority =$this->fetchDialerPriorityForScore($score);
-		}
-		elseif($allotedTo){
-			if($score>=1 && $score <=100)
-				$priority='0';
-		}
-		return $priority;
-	}
-	public function fetchDialerPriorityForScore($score)
-	{
-		if($score>=81 && $score<=100)
-			$priority='5';
-		elseif($score>=61 && $score<=80)
-			$priority='4';
-		elseif($score>=41 && $score<=60)
-			$priority='3';
-		elseif($score>=21 and $score<=40)
-			$priority='2';
-		elseif($score>=11 and $score<=20)
-			$priority='1';
-		elseif($score>=1 and $score<=10)
-			$priority='0';
-		return $priority;
+		//INITIAL PRIORITY UPDATE 
+                if($allotedTo=='')
+                {
+                        if($score>=81 && $score<=100)
+                                $priority='2';
+                        elseif($score>=41 && $score<=80)
+                                $priority='1';
+                        else
+                                $priority='0';
+                }
+                else
+                        $priority='0';
+                return $priority;
 	}
 	public function fetchDialerStatus($allotedTo,$vdDiscount,$score,$processName)
 	{
 		if($processName=='failedPaymentInDialer' || $processName=='upsellProcessInDialer' || $processName=='renewalProcessInDialer' || $processName=='rcbCampaignInDialer')
 			$dial_status=1;
 		else{
-			if($allotedTo=='' && $vdDiscount && $score>=1 && $score<=100)
+			if($allotedTo=='')
 				$dial_status = '1';
-			elseif( $allotedTo=='' && !$vdDiscount)
-				$dial_status = '1';
-			elseif($allotedTo){
-				if($score>=1 && $score <=100)
-					$dial_status = '2';
-			}
+			else
+				$dial_status = '2';
 		}
 		return $dial_status;
 	}
