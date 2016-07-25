@@ -144,7 +144,6 @@ class PHONE_VERIFIED_LOG extends TABLE{
                 try
                 {       
 
-                        $startDate=strtotime(date('Y-m-d H:i:s',))
                         $sql = "SELECT * FROM jsadmin.PHONE_VERIFIED_LOG WHERE PROFILEID!=:PROFILEID AND PHONE_NUM=:PHONE_NUM AND ENTRY_DT BETWEEN :STARTDATE AND :ENDDATE ";
                         $prep=$this->db->prepare($sql);
                         $prep->bindValue(":PHONE_NUM",$number,PDO::PARAM_STR);

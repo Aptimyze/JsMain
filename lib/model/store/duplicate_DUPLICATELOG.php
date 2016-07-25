@@ -106,6 +106,25 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
                 return $return;
         }
 
+        public function fetchResultForAPair($profile1,$profile2)
+        {
+                try
+                {
+                        $sql="select count(*) as cnt from DUPLICATE_PROFILE_LOG where PROFILE1 IN (:PROFILE1,:PROFILE2) AND PROFILE2 IN (:PROFILE1,:PROFILE2)";
+                        $prep = $this->db->prepare($sql);
+                        $prep->bindValue(":PROFILE1",$profile1);
+                        $prep->bindValue(":PROFILE2",$profile2);
+                        $prep->execute();
+
+                        if($result = $prep->fetch(PDO::FETCH_ASSOC))
+                            return $result;
+                
+                }
+                catch (Exception $e)
+                {
+                        throw new jsException($e);
+                }
+        }
         public function insertDuplicateProfileLog(RawDuplicate $rawDuplicateObj)
         {
         try {
