@@ -1292,30 +1292,46 @@ JsChat.prototype = {
         console.log("in hoverBoxStr");
         console.log(pCheckSum);
         if ($('#' + param1 + '_hover').length == 0) {
-            var str = '<div class="pos_fix info-hover fontlig nz21 vishid"';
-            str += 'id="' + param1 + '_hover">';
-            str += '<div class="nchatbdr3 f13">';
+            var str='<div class="pos_fix info-hover fontlig nz21 vishid"';
+            str+='id="'+param1+'_hover">';
+            str+='<div class="nchatbdr3 f13 nchatgrad" style="width:220px; height: 449px">';
             str += '<img src="' + param2.PHOTO + '" class="vtop ch220"/>';
-            str += '<div class="nchatgrad padall-10">';
-            str += '<ul class="listnone lh22">';
-            str += '<li>' + param2.AGE + ', ' + param2.HEIGHT + '</li>';
-            str += '<li>' + param2.COMMUNITY + '</li>';
-            str += '<li>' + param2.EDUCATION + '</li>';
-            str += '<li>' + param2.PROFFESION + '</li>';
-            str += '<li>' + param2.SALARY + '</li>';
-            str += '<li>' + param2.CITY + '</li>';
-            str += '</ul>';
-            str += '<p class="txtc nc-color2 pt10 hgt18">';
-            str += '<span class="disp-none">You accepted her interest</span>';
-            str += '</p>';
-            str += '</div>';
+            str+='<div class="padall-10 pos-rel">';
+                //start:error case 1
+            str+='<div class="pos-abs err2 nchatrr1 disp-none" id="'+param1+'hoverDvBgEr">';
+            str+='<div class="padall-10 colr5 f13 fontli disp-tbl" style="height: 100%;">';
+            str+=' <div class="disp-cell vmid txtc lh27" id="'+param1+'hoverBgEr">';
+            str+='</div>';
+            str+='</div>';
+            str+='</div>';
+            //end:error case 2
+            //start:hover info
+            str+='<ul class="listnone lh22">';
+            str+='<li>'+param2.AGE+', '+ param2.HEIGHT+'</li>';
+            str+='<li>'+param2.COMMUNITY+'</li>';
+            str+='<li>'+ param2.EDUCATION +'</li>';
+            str+='<li>'+ param2.PROFFESION +'</li>';
+            str+='<li>'+ param2.SALARY+'</li>';
+            str+='<li>'+ param2.CITY+'</li>';
+            str+='</ul>';
+            //end:hover info
+            str+='</div>'
             //start:button structure
-            str += '<div class="' + param1 + '_BtnRespnse nchatgrad fullwid clearfix">';
+            str+='<div class="fullwid clearfix">';
+            str+='<p class="txtc nc-color2 lh27 nhgt28" id="hovererr1">';         
+            str+='</p>';
+            str+='<div class="'+param1+'_BtnRespnse">';
             str += _this._getButtonStructure(param1, group, pCheckSum);
-            str += '</div>';
+            str+='</div>';
+            str+='</div>';
             //end:button structure
-            str += '</div>';
-            str += '</div>';
+            str+='<div class="f13 colr5 fontlig disp-none" id="'+param1+'hoverDvSmEr"><div class="err1 txtc lh20 nchatp12">';
+            str+='<p id="'+param1+'hoverSmEr"> error message 1</p>';
+            str+='</div>';
+            str+='</div>';
+            str+='</div>';
+            str+='</div>';
+
             return str;
         }
         console.log("End of _hoverBoxStr");
