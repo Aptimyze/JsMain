@@ -1452,14 +1452,14 @@ JsChat.prototype = {
         var getID = $(this).attr('id');            
         getID = getID.split("_");
         getID = getID[0];
-        clearTimeout(_this._timer);
+        
         //set timer variable
         if(e.type == "mouseenter")
         {
-   
+             clearTimeout(_this._timer);
             _this._timer = setTimeout(function() { 
                 _this._checkHover(curHoverEle);  
-            }, 500);                
+            }, 1000);                
         }
         else
         {
