@@ -442,8 +442,7 @@ function handlePreAcceptChat(apiParams){
                 console.log(response);
                 outputData["canSend"] = response["cansend"];
                 outputData["errorMsg"] = response["message"];
-                var d = new Date();
-                outputData["msg_id"] = "ankita_"+d;
+                outputData["msg_id"] = strophieWrapper.getUniqueId();
             },
             error: function(xhr){
                 console.log("in error of handlePreAcceptanceMsg");

@@ -859,7 +859,7 @@ JsChat.prototype = {
         console.log($(".chatlist li[id*='"+userId+"']").attr("id").split(userId+"_")[1]);
         var groupID = $(".chatlist li[id*='"+userId+"']").attr("id").split(userId+"_")[1];
         console.log("ankita"+groupID+"-"+curElem._groupBasedChatBox[groupID]);
-        var chatBoxType = curElem._groupBasedChatBox[groupID];
+        var chatBoxType = curElem._contactStatusMapping[curElem._groupBasedChatBox[groupID]]["key"];
         if(typeof chatBoxType == "undefined")
             chatBoxType = curElem._contactStatusMapping["none_applicable"]["key"];
         console.log("chatboxtype--"+chatBoxType);
@@ -884,7 +884,7 @@ JsChat.prototype = {
             curElem._updateChatBoxInnerDiv(userId,chatBoxType);
             curElem._enableChatTextArea($('chat-box[user-id="' + userId + '"]').attr("data-contact"),userId,membership);
             $('chat-box[user-id="' + userId + '"] .spinner').hide();
-        }, 1000);
+        }, 500);
     },
 
     //update contact status and enable/disable chat in chat box on basis of membership and contact status
