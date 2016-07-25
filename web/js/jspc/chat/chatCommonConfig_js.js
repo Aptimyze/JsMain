@@ -110,7 +110,7 @@ chatConfig.Params = {
             }],
             "acceptance": [{
                 "action": "WRITE_MESSAGE",
-                "label": "Write Message",
+                "label": "Start Conversation",
                 "iconid": "086",
                 "primary": "true",
                 "secondary": "true",
