@@ -11,7 +11,6 @@ class sugarcrm_email_addresses extends TABLE
     	try{
 
 			$sql = "SELECT email_address FROM sugarcrm.email_addresses where id=:EMAIL_ID";
-		
 		    $prep = $this->db->prepare($sql);
 		    $prep->bindValue(":EMAIL_ID",$email_address_id,PDO::PARAM_STR);
 		    $prep->execute();

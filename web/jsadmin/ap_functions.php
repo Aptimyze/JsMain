@@ -666,15 +666,16 @@ function check_ex_form_detail($profileid)
 // This function gets the PROFILEID corresponding to the LEAD_ID
 function get_UserProfileid($id="")
 {
+	$db = connect_slave();
         $sql="SELECT `jsprofileid_c` AS `USERNAME` from sugarcrm.leads_cstm where id_c='$id'";     
-        $resName=mysql_query_decide($sql) or die("Error while fetching username   ".mysql_error_js());
+        $resName=mysql_query_decide($sql,$db) or die("Error while fetching username   ".mysql_error_js());
         $rowName=mysql_fetch_assoc($resName);
         $username=$rowName["USERNAME"];
         $username =trim($username);
 
         if($username){
                 $sql="SELECT `PROFILEID` FROM newjs.JPROFILE WHERE `USERNAME`='$username'";
-                $resid=mysql_query_decide($sql) or die("Error while fetching username   ".mysql_error_js());
+                $resid=mysql_query_decide($sql,$db) or die("Error while fetching username   ".mysql_error_js());
                 $row=mysql_fetch_assoc($resid);
                 $profileid=$row["PROFILEID"];
         }
@@ -687,8 +688,9 @@ function get_UserProfileid($id="")
 function leadDetails($id="")
 {
 	$leadData_arr =array();
+	$db = connect_slave();
 	$sql ="SELECT leads_cstm.type_c as newspaper,leads_cstm.edition_date_c as edition_date,leads.lead_source as source,leads.assistant as assistant from sugarcrm.leads,sugarcrm.leads_cstm where leads.id=leads_cstm.id_c AND leads.id='$id'";
-	$res =mysql_query_decide($sql) or die("Error while fetching username   ".mysql_error_js());	
+	$res =mysql_query_decide($sql,$db) or die("Error while fetching username   ".mysql_error_js());	
 	$row=mysql_fetch_assoc($res);
 	$edition_date 	=$row['edition_date'];
 	$source 	=$row['source'];
@@ -708,7 +710,7 @@ function leadDetails($id="")
 		$source_name ="Email";
 
 	$sql ="SELECT `id`,`filename` from sugarcrm.notes where parent_id='$id'";
-	$res =mysql_query_decide($sql) or die("Error while fetching username   ".mysql_error_js());
+	$res =mysql_query_decide($sql,$db) or die("Error while fetching username   ".mysql_error_js());
 	$row=mysql_fetch_assoc($res);
 	$filename   =$row['filename']; 
 	$file_id    =$row['id'];	
@@ -721,8 +723,9 @@ function leadDetails($id="")
 function leadContactDetails($id="")
 {
 	global $smarty;
+	$db = connect_slave();
         $sql ="SELECT `phone_mobile`,`phone_home`,`primary_address_street`,`primary_address_city`,`primary_address_state`,`primary_address_country`,`primary_address_postalcode` from sugarcrm.leads where id='$id'";
-        $res =mysql_query_decide($sql) or die("Error while fetching lead contact details   ".mysql_error_js());
+        $res =mysql_query_decide($sql,$db) or die("Error while fetching lead contact details   ".mysql_error_js());
         $row=mysql_fetch_assoc($res);
         $show_mobile   		=$row['phone_mobile'];
         $show_phone   		=$row['phone_home'];
@@ -743,7 +746,7 @@ function leadContactDetails($id="")
 		$address1 .=" , ".$primary_address_code;
 
 	$sql1 ="SELECT eadd.email_address as EMAIL from sugarcrm.email_addr_bean_rel as emap,sugarcrm.email_addresses as eadd where emap.bean_id='$id' AND emap.bean_module='Leads' AND emap.email_address_id=eadd.id";
-	$res1 =mysql_query_decide($sql1) or die("Error while fetching lead contact details   ".mysql_error_js());
+	$res1 =mysql_query_decide($sql1,$db) or die("Error while fetching lead contact details   ".mysql_error_js());
 	$row1=mysql_fetch_assoc($res1);	
 	$email_id =$row['EMAIL'];	
 

@@ -10,7 +10,7 @@
     * Array of all caste genertaed from newjs.NEWJS_CASTE Table
     */
 		private static $arrAllCaste=array(
-'1'=>array('PARENT'=>'7','ISALL'=>'Y','ISGROUP'=>''),
+'1'=>array('PARENT'=>'7','ISALL'=>'','ISGROUP'=>''),
 '2'=>array('PARENT'=>'3','ISALL'=>'Y','ISGROUP'=>''),
 '3'=>array('PARENT'=>'3','ISALL'=>'','ISGROUP'=>''),
 '4'=>array('PARENT'=>'3','ISALL'=>'','ISGROUP'=>''),

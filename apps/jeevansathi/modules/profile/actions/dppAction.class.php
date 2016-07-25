@@ -225,7 +225,6 @@ class dppAction extends sfAction {
 			                 }  							
                                          
                  }
-	
 		 $this->dropDownData = $this->getDropDowns($request);
      $this->casteDropDown = json_encode($this->getCasteValues(),true);
      

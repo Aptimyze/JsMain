@@ -1179,6 +1179,18 @@ case 'ADDR_PROOF_VAL':
 					$field->setFieldType("text");
 					$field->setConstraintClass("proof_val");
 					$field->setTableName("VERIFICATION_DOCUMENT:PROOF_VAL");
+                                break;
+case 'P_STATE':
+					$field=new Field('','P_STATE');
+					$field->setFieldType("dropdown");
+					$field->setConstraintClass("partner_state");
+					$field->setTableName("JPARTNER:STATE");
+				break;
+case 'CITY_INDIA':
+					$field=new Field('','CITY_INDIA');
+					$field->setFieldType("dropdown");
+					$field->setConstraintClass("partner_city_india");
+					$field->setTableName("JPARTNER:CITY_INDIA");
 				break;
                 
 }

@@ -497,7 +497,7 @@ class DetailActionLib
 			$myDb = $mysqlObj->connect("$myDbName");
 		}
 		$jpartnerObj = new JPartnerDecorated;
-		if (in_array("T", explode(",", $actionObject->loginProfile->getSUBSCRIPTION()))) {
+		/*if (in_array("T", explode(",", $actionObject->loginProfile->getSUBSCRIPTION()))) {
 			$myDb_ap = $mysqlObj->connect("Assisted_Product");
 			$APeditID = sfContext::getInstance()->getRequest()->getParameter("APeditID");
 			$partnerWhrCond = " AND CREATED_BY='ONLINE'";
@@ -535,7 +535,7 @@ class DetailActionLib
 				$jpartnerObj = new JPartnerDecorated("Assisted_Product.AP_DPP_FILTER_ARCHIVE");
 			}
 			$jpartnerObj->setPartnerDetails(sfContext::getInstance()->getRequest()->getParameter("matchPointPID"), $myDb_ap, $mysqlObj, "*", $partnerWhrCond);
-		} else
+		} else*/
 		//If dpp is getting edited by non assisted user
 		$jpartnerObj->setPartnerDetails($profileId, $myDb, $mysqlObj);
 		return $jpartnerObj;

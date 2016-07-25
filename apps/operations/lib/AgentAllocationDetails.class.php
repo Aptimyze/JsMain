@@ -486,7 +486,7 @@ public function fetchProfiles($processObj)
                 $endDt          =$processObj->getEndDate();
                 $profiles      	=$this->fetchWebmasterLeadsEligibleProfiles($subMethod, $startDt, $endDt);
 		if(count($profiles)>0){
-			$obj =new incentive_MAIN_ADMIN('newjs_slave');
+			$obj =new incentive_MAIN_ADMIN();
 			$profilesAllocated =$obj->getProfilesDetails($profiles);
 			if(count($profilesAllocated)>0){
 				foreach($profilesAllocated as $key=>$value){
@@ -1504,12 +1504,16 @@ public function fetchOutboundProfiles($processObj)
 	}
 	else if($subMethod=="ONLINE_NEW_PROFILES"){
                 $profileAllocTechObj    =new incentive_PROFILE_ALLOCATION_TECH();
-                $recentusersObj         =new userplane_recentusers();
+                //$recentusersObj       =new userplane_recentusers();
+		$onlineProfiles		=$this->getOnlineProfiles();
                 $preallocateArr         =$profileAllocTechObj->getPreAllocatedProfiles($agentName);
-		for($i=0; $i<count($preallocateArr); $i++)
-			$idArr[] = $preallocateArr[$i]['PROFILEID'];
-		if(count($idArr)>0)
-	                $profileArr = $recentusersObj->fetchOnlineProfiles($idArr);
+		for($i=0; $i<count($preallocateArr); $i++){
+			$profileid =$preallocateArr[$i]['PROFILEID'];
+			if(in_array($profileid, $onlineProfiles))
+				$profileArr[] = $profileid;
+		}
+		/*if(count($idArr)>0)
+	                $profileArr = $recentusersObj->fetchOnlineProfiles($idArr);*/
 	}
 	else if($subMethod=="FTA"){
 		$ftaAllocTechObj        =new incentive_FTA_ALLOCATION_TECH();
@@ -1893,7 +1897,7 @@ public function applyGenericFilters($profileArr, $method='',$subMethod='')
 	$methodForJprofileFilter =array('WEBMASTER_LEADS','NEW_FAILED_PAYMENT','FIELD_SALES');
 
         // Main admin check
-        $mainAdminObj=new incentive_MAIN_ADMIN('newjs_slave');
+        $mainAdminObj=new incentive_MAIN_ADMIN();
         $profileDetails =$mainAdminObj->getProfilesDetails($profileArr);
 	if(count($profileDetails)>0){
 		foreach($profileDetails as $key=>$val)
@@ -1997,7 +2001,7 @@ public function check_profile($profileid,$method='')
 		return false;
 
 	// Main admin check
-	$mainAdminObj=new incentive_MAIN_ADMIN('newjs_slave');
+	$mainAdminObj=new incentive_MAIN_ADMIN();
 	$alloted=$mainAdminObj->get($profileid,"PROFILEID","COUNT(*) AS CNT");
 	if($alloted['CNT']>0)
 		return false;
@@ -2539,6 +2543,13 @@ public function fetchPincodesOfCities($cities)
 		$agentInfoArr =$pswrdsObj->fetchAgentInfo();
 		return $agentInfoArr;
 	}
+        public function getOnlineProfiles()
+        {
+        	$jsCommonObj =new JsCommon();
+                $profilesArr =$jsCommonObj->getOnlineUsetList();
+		return $profilesArr;
+        }
+	
 
 }
 ?>

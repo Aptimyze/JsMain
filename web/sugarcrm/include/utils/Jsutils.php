@@ -3,7 +3,7 @@ $path1=dirname(__FILE__);
 //die;
 chdir("$path1/../..");
 include_once("custom/include/language/en_us.lang.php");
-
+include_once(JsConstants::$docRoot."/profile/connect_db.php");
 /**get the detail of a lead given the lead_id 
  * @param string lead_id 
  * @returns Array of all the fields-value of the lead
@@ -40,7 +40,7 @@ function addProfileId($lead_id,$profileid,$db){
  * */
 
 function get_lead_email($leadid){
-	global $db;
+	$db = connect_slave();
 	$lead_enq_sql="select enquirer_email_id_c from sugarcrm.leads_cstm where id_c='$leadid'";
 	$lead_res=mysql_query_decide($lead_enq_sql);
 	$row=mysql_fetch_assoc($lead_res);
@@ -211,6 +211,7 @@ function create_aboutyourself($about_yourselfArr,$gender){
 		else return false;
 }
 function fetchLeadSource($source_c,$campaign_id,$db){
+			$db = connect_slave();
 			$sugar_source_to_js_source=array(
 				1=>"S_PAd_Call",
 				2=>"S_Walk_In",

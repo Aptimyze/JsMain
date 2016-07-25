@@ -118,7 +118,6 @@ class sugarcrm_leads extends TABLE{
                 {
 					$now = date("Y-m-d G:i:s");
 					$sql = "SELECT user_name FROM sugarcrm.leads l, sugarcrm.users as u where l.assigned_user_id=u.id  and l.id=:lead";
-					
 					$prep = $this->db->prepare($sql);
 					
 				  	$prep->bindValue(":lead", $lead, PDO::PARAM_STR);	
@@ -140,7 +139,6 @@ class sugarcrm_leads extends TABLE{
                 try
                 {
 					$sql_cstm = "SELECT * FROM sugarcrm.leads_cstm l where l.id_c=:leadid";
-					
 					$prep = $this->db->prepare($sql_cstm);
 					
 				  	$prep->bindValue(":leadid", $leadid, PDO::PARAM_STR);	
@@ -162,7 +160,6 @@ class sugarcrm_leads extends TABLE{
                 try
                 {
 					$sql = "SELECT * FROM sugarcrm.leads l where l.id=:leadid";
-					
 					$prep = $this->db->prepare($sql);
 					
 				  	$prep->bindValue(":leadid", $leadid, PDO::PARAM_STR);	

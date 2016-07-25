@@ -1,5 +1,6 @@
 <?php
 include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
+include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 class protect
 {
 	/***
@@ -34,6 +35,8 @@ class protect
         private $AUTHCHECKSUM="AUTHCHECKSUM";
 	public $allowDeactive="";
 	public $allowUsernameLogin=false;	
+        private $dateTime1 ='10';
+        private $dateTime2 ='22';
 	/*
 	**** @function: Class Constructor
 	**** @include: the class configuration file: Mysql.class.php
@@ -1321,9 +1324,20 @@ class protect
 			}
                         if($allow)
                         {
+				/*
 				$time=date("Y-m-d G:i:s");
                                 $sql="replace into userplane.recentusers(userID,lastTimeOnline) values('$pid','$time')";
-                                $mysql->executeQuery($sql,$db);
+                                $mysql->executeQuery($sql,$db);*/
+
+	                        // Add Online-User
+	                        $dateTime =date("H");
+	                        $redisOnline =true;
+	                        if(($dateTime>=$this->dateTime1) && ($dateTime<$this->dateTime2))
+	                                $redisOnline =false;
+				if($redisOnline){
+	                        	$jsCommonObj =new JsCommon();
+	                        	$jsCommonObj->setOnlineUser($pid);
+				}
                         }
                 }
                 
@@ -1334,10 +1348,21 @@ class protect
 	{
 		if(is_numeric($pid))
                 {
+			/*
                         $mysql= new Mysql;
                         $db=$mysql->connect();
                         $sql="delete from  userplane.recentusers where userID='$pid'";
-                        $mysql->executeQuery($sql,$db);
+                        $mysql->executeQuery($sql,$db);*/
+
+                        // Remove Online-User
+                        $dateTime =date("H");
+                        $redisOnline =true;
+                        if(($dateTime>$this->dateTime1) && ($dateTime<$this->dateTime2))
+                                $redisOnline =false;
+			if($redisOnline){
+	                        $jsCommonObj =new JsCommon();
+	                        $jsCommonObj->removeOnlineUser($pid);
+			}
                 }
 	}
 
