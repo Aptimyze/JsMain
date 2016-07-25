@@ -53,7 +53,8 @@ class Membership
     private $curtype;
     private $entry_from;
     private $membership;
-    
+    private $orderid_part1;
+
     //payment detail insertion variables.
     private $billid;
     private $mode;
@@ -197,7 +198,7 @@ class Membership
         global $smarty;
         
         list($part1, $part2) = explode('-', $orderid);
-        
+
         $billingOrderObj = new BILLING_ORDERS();
         $orderDetails = $billingOrderObj->getOrderDetailsForOrderID($part2, $part1);
         $myrow = $orderDetails[0];
@@ -972,7 +973,7 @@ class Membership
     function addExclusiveMemberEntry()
     {
         $exclusiveObj = new billing_EXCLUSIVE_MEMBERS();
-        $detailsArr = array("PROFILEID"=>$this->profileid,"ASSIGNED_TO"=>NULL,"ASSIGNED"=>'N',"BILLING_DT"=>date("Y-m-d"),"BILL_ID"=>$this->billid,"ASSIGNED_DT"=>'0000-00-00');
+        $detailsArr = array("PROFILEID"=>$this->profileid,"ASSIGNED_TO"=>NULL,"ASSIGNED"=>'N',"BILLING_DT"=>date("Y-m-d H:i:s"),"BILL_ID"=>$this->billid,"ASSIGNED_DT"=>'0000-00-00');
         $exclusiveObj->addExclusiveMember($detailsArr);
         unset($exclusiveObj);
     }
@@ -1888,11 +1889,6 @@ class Membership
                 if ($fest) {
                     $discount_type = 9;
                 }
-            } else if ($couponCodeVal && $mainServiceId) {
-                $discountVal = $memHandlerObj->validateCouponCode($mainServiceId, $couponCodeVal);
-                if (is_numeric($discountVal) && $discountVal > 0) {
-                    $discount_type = 14;
-                }
             } else {
                 $discount_type = 12;
             }
@@ -1908,6 +1904,16 @@ class Membership
             
             list($total, $discount) = $memHandlerObj->setTrackingPriceAndDiscount($userObj, $profileid, $mainServiceId, $allMemberships, $type, $device, $couponCode, $backendRedirect, $profileCheckSum, $reqid);
         }
+
+        if ($couponCodeVal && $mainServiceId) {
+            $discountVal = $memHandlerObj->validateCouponCode($mainServiceId, $couponCodeVal);
+            if (is_numeric($discountVal) && $discountVal > 0) {
+                $additionalDisc = round(($total*$discountVal)/100, 2);
+                $discount = $discount + $additionalDisc;
+                $total = $total - $additionalDisc;
+                $discount_type = 14;
+            }
+        } 
 
         $payment['total'] = $total;
         $payment['service_str'] = $allMembershipsNew;

@@ -1071,7 +1071,7 @@ public static function insertConsentMessageFlag($profileid) {
         {
                 // Remove Online-User list
 		$score1 =0;
-		if($score2=''){
+		if(!$score2){
 			$expiryTime =CommonConstants::ONLINE_USER_EXPIRY;
 			$start  =date("Y-m-d H:i:s", time()-$expiryTime);
 			$score2 =strtotime($start);

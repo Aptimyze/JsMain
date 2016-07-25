@@ -85,6 +85,7 @@
 $(document).ready(function() {
 	slider();
 });
+var imageCopyServer = "~$imageCopyServer`";
 var profileId = ~$loggedInProfileId`;
 var photoDisplay = "~$PHOTODISPLAY|decodevar`";
 var photosDetails =jQuery.makeArray(~$urlsJson|decodevar`);

@@ -9,6 +9,7 @@
                 $previous_db = "";
 include_once(JsConstants::$docRoot."/commonFiles/mysql_multiple_connections.php");
 
+if(!function_exists('connect_db')){
 	function connect_db($nohtml="")
 	{
 		if($nohtml==1)
@@ -26,7 +27,7 @@ include_once(JsConstants::$docRoot."/commonFiles/mysql_multiple_connections.php"
 
 		return $db;
 	}
-
+}
 	function connect_db_ro($nohtml="")
 	{
 		if($nohtml==1)
@@ -41,7 +42,7 @@ include_once(JsConstants::$docRoot."/commonFiles/mysql_multiple_connections.php"
 
 		return $db;
 	}
-
+if(!function_exists('connect_slave')){
 	function connect_slave()
         {
                 $db=db_set_active("slave",MysqlDbConstants::$misSlave[HOST].":".MysqlDbConstants::$misSlave[PORT],MysqlDbConstants::$misSlave[USER],MysqlDbConstants::$misSlave[PASS],MYSQL_CLIENT_COMPRESS) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes","","ShowErrTemplate","YES","81");
@@ -53,7 +54,8 @@ include_once(JsConstants::$docRoot."/commonFiles/mysql_multiple_connections.php"
                 return $db;
 		
         }
-
+}
+if(!function_exists('connect_slave81')){
         function connect_slave81()
         {
                 $db=db_set_active("slave81",MysqlDbConstants::$alertsSlave[HOST].":".MysqlDbConstants::$alertsSlave[PORT],MysqlDbConstants::$alertsSlave[USER],MysqlDbConstants::$alertsSlave[PASS],MYSQL_CLIENT_COMPRESS);
@@ -64,6 +66,7 @@ include_once(JsConstants::$docRoot."/commonFiles/mysql_multiple_connections.php"
 
                 return $db;
         }
+}
 
 	function connect_mmm()
 	{
@@ -99,7 +102,7 @@ include_once(JsConstants::$docRoot."/commonFiles/mysql_multiple_connections.php"
 
                 return $db;
         }
-
+if(!function_exists('connect_737')){
 	function connect_737()
         {
 		//return connect_db();
@@ -112,7 +115,7 @@ include_once(JsConstants::$docRoot."/commonFiles/mysql_multiple_connections.php"
 
                 return $db;
         }
-
+}
 	function connect_737_ro()
         {
 		//return connect_db();

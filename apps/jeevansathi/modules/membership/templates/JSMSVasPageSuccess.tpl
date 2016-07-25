@@ -237,6 +237,9 @@
 		$("#continueBtn, #nextButton").click(function(){
 			callRedirectManager();
 		});
+		if(readCookie('backState') == "changePlan"){
+			$("#pageBack").hide();	
+		}
 		$("#pageBack").click(function(e){
 			if(readCookie('backState') != "changePlan"){
 				eraseCookie('backState');

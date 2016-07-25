@@ -39,7 +39,8 @@
 ~if $photoArr['screened']`
         ~include_partial("screenedCrousel",["screened"=>$photoArr['screened']])`
 ~/if`
-<form name="list" id="ScreenForm" enctype="multipart/form-data"  action="~JsConstants::$siteUrl`/operations.php/photoScreening/uploadProcessScreening?name=~$name`&cid=~$cid`&source=~$source`"  method="POST">
+<form name="list" id="ScreenForm" enctype="multipart/form-data"  action="~JsConstants::$siteUrl`~$imageCopyServer`/operations.php/photoScreening/uploadProcessScreening?name=~$name`&cid=~$cid`&source=~$source`"  method="POST">
+	
 	<input type=hidden name="profileid" value="~$profileData['PROFILEID']`">
 	<input type = "hidden" name= "emailAdd" value = "~$profileData['EMAIL']`">
 	<input type=hidden name="source" value="~$source`">

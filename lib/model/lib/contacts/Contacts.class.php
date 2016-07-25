@@ -466,8 +466,8 @@ class Contacts {
 	public function insertContact()
 	{
 		$dbContactGetId = new newjs_CONTACTS_GET_ID();
-		$this->setCONTACTID($dbContactGetId->generateId());
-		$dbContactGetId->delete();
+		$this->setCONTACTID($dbContactGetId->getAutoIncrementMessageId());
+		//$dbContactGetId->delete();
 		$this->setFOLDER($this->GetFolderId());
 
 		$this->setTIME(date("Y-m-d H:i:s"));
