@@ -30,6 +30,8 @@ JsChat.prototype = {
                    },
     _rosterDetailsKey:"rosterDetails",
     _listingNodesLimit:{},
+    _groupBasedChatBox:{},
+    _contactStatusMapping:{},
 
     _construct: function() {
 
@@ -52,6 +54,10 @@ JsChat.prototype = {
             this._listingNodesLimit = arguments[1][0].listingNodesLimit;
         if (arguments[1][0].imageUrl)
             this._imageUrl = arguments[1][0].imageUrl;
+        if (arguments[1][0].groupBasedChatBox)
+            this._groupBasedChatBox = arguments[1][0].groupBasedChatBox;
+        if (arguments[1][0].contactStatusMapping)
+            this._contactStatusMapping = arguments[1][0].contactStatusMapping;
     },
 
     //start:get screen height
@@ -441,8 +447,7 @@ JsChat.prototype = {
                                             $('div.' + val + ' ul').parent().removeClass("disp-none");
                                         }
                                         $("#" + runID+"_" + val).on("click", function() {
-                                           currentID = $(this).attr("id").split("_")[0];
-                                            console.log("manvi",statusArr[currentID],currentID);
+                                            currentID = $(this).attr("id").split("_")[0];
                                             elem._chatPanelsBox(currentID,statusArr[currentID],$(this).attr("data-jid"));
                                         });
                                     } 
@@ -689,6 +694,8 @@ JsChat.prototype = {
 
     onSendingMessage: null,
 
+    onChatBoxContactButtonsClick:null,
+
     //sending chat
     _bindSendChat: function(userId) {
         var _this = this,messageId,jid= $('chat-box[user-id="' + userId + '"]').attr("data-jid");
@@ -702,7 +709,6 @@ JsChat.prototype = {
         });
         $('chat-box[user-id="' + userId + '"] textarea').keyup(function(e) {
             var curElem = this;
-            console.log("1233");
             if($(this).val().length >= 1 && out == 1){
                 console.log("typing start");
                 out = 0;
@@ -724,23 +730,28 @@ JsChat.prototype = {
                         scrollTop: ($(".rightBubble").length + $(".leftBubble").length) * 50
                     }, 500);
                     
-                    //TODO: fire send chat query and return unique id, also check for 3 messages
+                    //fire send chat query and return unique id
                     if( _this.onSendingMessage  && typeof (_this.onSendingMessage) == "function" ){
                         console.log("in plugin send message");
                         console.log(text);
                         console.log($('chat-box[user-id="' + userId + '"]').attr("data-jid"));
-                        var msgSendOutput = _this.onSendingMessage(text,$('chat-box[user-id="' + userId + '"]').attr("data-jid"),$('chat-box[user-id="' + userId + '"]').attr("data-contact"));
+                        var profileChecksum = $(".chatlist li[id*='"+userId+"']").attr("data-checks");
+                        var msgSendOutput = _this.onSendingMessage(text,$('chat-box[user-id="' + userId + '"]').attr("data-jid"),profileChecksum,$('chat-box[user-id="' + userId + '"]').attr("data-contact"));
                         messageId = msgSendOutput["msg_id"];
                         console.log("handling output of onSendingMessage in plugin");
-                        //on recieving data with uniqueID,set single tick here
+
                         $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + messageId);
-                        _this._changeStatusOfMessg(messageId,userId,"recieved");
-                        
-                        //scenario if messages above limit have been sent
-                        if(msgSendOutput["canSend"] == false){
+                        if(msgSendOutput["canSend"] == true){
+                            //msg sending success,set single tick here
+                            _this._changeStatusOfMessg(messageId,userId,"recieved");
+                        }
+                        else if(msgSendOutput["canSend"] == false){
+                            //msg sending failure
                             $(curElem).prop("disabled", true);
-                            if(typeof msgSendOutput["errorMsg"] != "undefined")
-                                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">'+msgSendOutput["errorMsg"]+'</div>').addClass("restrictMessg2");
+                            if(typeof msgSendOutput["errorMsg"] == "undefined"){
+                                msgSendOutput["errorMsg"] = "Something went wrong..";
+                            }
+                            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">'+msgSendOutput["errorMsg"]+'</div>').addClass("restrictMessg2");
                         }
                     }
                     
@@ -844,78 +855,140 @@ JsChat.prototype = {
 
     _postChatPanelsBox: function(userId) {
         var curElem = this;
-        var membership = "paid";
-
+        var membership = "paid"; //get membership status-pending
+        console.log("in _postChatPanelsBox");
         console.log($(".chatlist li[id*='"+userId+"']").attr("id").split(userId+"_")[1]);
-        var group = $(".chatlist li[id*='"+userId+"']").attr("id").split(userId+"_")[1];
-        if(group == chatConfig.Params["categoryNames"]["Desired Partner Matches"] || group == chatConfig.Params["categoryNames"]["Shortlisted Members"]) {
-           response = chatConfig.Params[device].contactStatus["interest_pending"]["key"];
-        } else if(group == chatConfig.Params["categoryNames"]["Interest Received"]) {
-           response = chatConfig.Params[device].contactStatus["pog_interest_pending"]["key"];
-        } else if(group == chatConfig.Params["categoryNames"]["Acceptance"]) {
-            response = chatConfig.Params[device].contactStatus["pog_interest_accepted"]["key"];
-        } else {
-            response = chatConfig.Params[device].contactStatus["none_applicable"]["key"];
+        var groupID = $(".chatlist li[id*='"+userId+"']").attr("id").split(userId+"_")[1];
+        console.log("ankita"+groupID+"-"+curElem._groupBasedChatBox[groupID]);
+        var chatBoxType = curElem._groupBasedChatBox[groupID];
+        if(typeof chatBoxType == "undefined")
+            chatBoxType = curElem._contactStatusMapping["none_applicable"]["key"];
+        console.log("chatboxtype--"+chatBoxType);
+        $('chat-box[user-id="' + userId + '"]').attr("data-contact",chatBoxType);
+        /*if(group == chatConfig.Params["categoryNames"]["Desired Partner Matches"] || group == chatConfig.Params["categoryNames"]["Shortlisted Members"]) {
+           response = curElem._contactStatusMapping["pg_interest_pending"]["key"];
+        } 
+        else if(group == chatConfig.Params["categoryNames"]["Interest Received"]) {
+           response = curElem._contactStatusMapping["pg_acceptance_pending"]["key"];
+        } 
+        else if(group == chatConfig.Params["categoryNames"]["Acceptance"]) {
+            response = curElem._contactStatusMapping["both_accepted"]["key"];
         }
-        if(membership == "paid")
-            $('chat-box[user-id="' + userId + '"]').attr("data-contact",response);
-        else
-            $('chat-box[user-id="' + userId + '"]').attr("data-contact",chatConfig.Params[device].contactStatus["none_applicable"]["key"]);
+        else if(group == chatConfig.Params["categoryNames"]["Interest Sent"]) {
+            response = curElem._contactStatusMapping["pog_acceptance_pending"]["key"];
+        }
+        else{
+            response = curElem._contactStatusMapping["none_applicable"]["key"];
+        }*/
         //var membership = "free";
         setTimeout(function() {
-            switch (response) {
-                case chatConfig.Params[device].contactStatus["interest_pending"]["key"]:
-                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="sendInterest cursp sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_6 "></i><span class="vertTexBtm"> Send Interest</span></div><div id="sentDiv" class="sendDiv disp-none pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
-                    $('chat-box[user-id="' + userId + '"] #sendInt').on("click", function() {
-                        //TODO: fire query to send interest              
-                        $(this).parent().find("#sentDiv").removeClass("disp-none");
-                        $(this).remove();
-                    });
-                    break;
-                case chatConfig.Params[device].contactStatus["interest_sent"]["key"]:
-                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
-                    break;
-                case chatConfig.Params[device].contactStatus["pog_interest_pending"]["key"]:
-                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="pos-rel wid90p txtc colorGrey padall-10">The member wants to chat</div><div class="pos-rel fullwid txtc colorGrey mt20"><div id="accept" class="acceptInterest padall-10 color5 disp_ib cursp">Accept</div><div id="decline" class="acceptInterest padall-10 color5 disp_ib cursp">Decline</div></div><div id="acceptTxt" class="pos-rel fullwid txtc color5 mt25">Accept interest to continue chat</div><div id="sentDiv" class="fullwid pos-rel disp-none mt10 color5 txtc">Interest Accepted continue chat</div><div id="declineDiv" class="sendDiv txtc disp-none pos-abs wid80p mt10 color5">Interest Declined, you can\'t chat with this user anymore</div>');
-                    $('chat-box[user-id="' + userId + '"] #accept').on("click", function() {
-                        $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-                        $(this).closest(".chatMessage").find("#sentDiv").removeClass("disp-none");
-                        $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
-                        $(this).remove();
-                        //TODO: fire query for accepting request
-                    });
-                    $('chat-box[user-id="' + userId + '"] #decline').on("click", function() {
-                        $(this).closest(".chatMessage").find("#declineDiv").removeClass("disp-none");
-                        $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt").remove();
-                        $(this).remove();
-                        setTimeout(function(){ 
-                            curElem._scrollDown($('chat-box[user-id="' + userId + '"]'), "remove");
-                        }, 5000);
-                        //TODO: fire query for declining request
-                    });
-                    break;
-                case chatConfig.Params[device].contactStatus["pog_interest_accepted"]["key"]:
-                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="fullwid pos-rel mt10 color5 txtc">Interest Accepted continue chat</div>');
-                    $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-                    break;
-                case chatConfig.Params[device].contactStatus["pog_interest_declined"]["key"]:
-                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="sendDiv txtc pos-abs wid80p mt10 color5">Interest Declined, you can\'t chat with this user anymore</div>');
-                    break;
-                case chatConfig.Params[device].contactStatus["none_applicable"]["key"]:
-                    $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-            }
-            //check for membership
-            if(membership == "paid" && response.indexOf("pog") == -1 && response != chatConfig.Params[device].contactStatus["none_applicable"]["key"]){
-                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-            } 
-            else if(membership == "free" && response.indexOf("pog") == -1 && response != chatConfig.Params[device].contactStatus["none_applicable"]["key"]) {
-                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="pos-abs fullwid txtc colorGrey top120">Only paid members can start chat<div id="becomePaidMember" class="color5 cursp">Become a Paid Member</div></div>');                                
-			}
+            curElem._updateChatBoxInnerDiv(userId,chatBoxType);
+            curElem._enableChatTextArea($('chat-box[user-id="' + userId + '"]').attr("data-contact"),userId,membership);
             $('chat-box[user-id="' + userId + '"] .spinner').hide();
-            //TODO: fire query to get message list	
         }, 1000);
-
     },
+
+    //update contact status and enable/disable chat in chat box on basis of membership and contact status
+    _updateChatBoxInnerDiv:function(userId,chatBoxType){
+        console.log("in _updateChatBoxInnerDiv");
+        var curElem = this,new_contact_state = chatBoxType,response;
+        console.log(curElem);
+        switch(chatBoxType) {
+            case curElem._contactStatusMapping["pg_interest_pending"]["key"]:
+                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="sendInterest cursp sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_6 "></i><span class="vertTexBtm"> Send Interest</span></div><div id="sentDiv" class="sendDiv disp-none pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
+                //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                $('chat-box[user-id="' + userId + '"] #sendInt').on("click", function() {
+                    if(typeof curElem.onChatBoxContactButtonsClick == "function"){
+                        response = curElem.onChatBoxContactButtonsClick({"receiverID":userId,"buttonType":"INITIATE"});
+                        if(response == true){           
+                            $(this).parent().find("#sentDiv").removeClass("disp-none");
+                            $(this).remove();
+                            new_contact_state = curElem._contactStatusMapping["pog_acceptance_pending"]["key"];
+                            $('chat-box[user-id="' + userId + '"]').attr("data-contact",new_contact_state);
+                        }
+                        else
+                            console.log("cannot send interest in chat box");
+                    }
+                });
+                break;
+            case curElem._contactStatusMapping["pog_acceptance_pending"]["key"]:
+                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
+                //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                //add cancel interest button and bind it - manvi
+                break;
+            case curElem._contactStatusMapping["pg_acceptance_pending"]["key"]:
+                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="pos-rel wid90p txtc colorGrey padall-10">The member wants to chat</div><div class="pos-rel fullwid txtc colorGrey mt20"><div id="accept" class="acceptInterest padall-10 color5 disp_ib cursp">Accept</div><div id="decline" class="acceptInterest padall-10 color5 disp_ib cursp">Decline</div></div><div id="acceptTxt" class="pos-rel fullwid txtc color5 mt25">Accept interest to continue chat</div><div id="sentDiv" class="fullwid pos-rel disp-none mt10 color5 txtc">Interest Accepted continue chat</div><div id="declineDiv" class="sendDiv txtc disp-none pos-abs wid80p mt10 color5">Interest Declined, you can\'t chat with this user anymore</div>');
+                //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+                $('chat-box[user-id="' + userId + '"] #accept').on("click", function() {
+                    if(typeof curElem.onChatBoxContactButtonsClick == "function"){
+                        response = curElem.onChatBoxContactButtonsClick({"receiverID":userId,"buttonType":"ACCEPT"});
+                        if(response == true){  
+                            $(this).closest(".chatMessage").find("#sentDiv").removeClass("disp-none");
+                            $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
+                            $(this).remove();
+                            new_contact_state = curElem._contactStatusMapping["both_accepted"]["key"];
+                            //TODO: fire query for accepting request
+                            $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                            $('chat-box[user-id="' + userId + '"]').attr("data-contact",new_contact_state);
+                        }
+                        else
+                            console.log("cannot accept interest in chat box");
+                    }
+                });
+                $('chat-box[user-id="' + userId + '"] #decline').on("click", function() {
+                    if(typeof curElem.onChatBoxContactButtonsClick == "function"){
+                        response = curElem.onChatBoxContactButtonsClick({"receiverID":userId,"buttonType":"DECLINE"});
+                        if(response == true){  
+                            $(this).closest(".chatMessage").find("#declineDiv").removeClass("disp-none");
+                            $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+                            $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt").remove();
+                            $(this).remove();
+                            //TODO: fire query for declining request
+                            new_contact_state = curElem._contactStatusMapping["pg_interest_declined"]["key"];
+                            $('chat-box[user-id="' + userId + '"]').attr("data-contact",new_contact_state);
+                            setTimeout(function(){ 
+                                curElem._scrollDown($('chat-box[user-id="' + userId + '"]'), "remove");
+                            }, 5000);
+                        }
+                        else
+                            console.log("cannot decline interest in chat box");
+                    }
+                });
+                break;
+            case curElem._contactStatusMapping["pog_interest_accepted"]["key"]:
+                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="fullwid pos-rel mt10 color5 txtc">Interest Accepted continue chat</div>');
+                //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                break;
+            case curElem._contactStatusMapping["pog_interest_declined"]["key"]:
+                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="sendDiv txtc pos-abs wid80p mt10 color5">Interest Declined, you can\'t chat with this user anymore</div>');
+                //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+                break;
+            case curElem._contactStatusMapping["none_applicable"]["key"]:
+                //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+                break;
+            case curElem._contactStatusMapping["both_accepted"]["key"]:
+                break;
+        }
+        //TODO: fire query to get message history as well as offline messages  
+    },
+
+    //based on membership and chatboxtype,enable or disable chat textarea in chat box
+    _enableChatTextArea:function(chatBoxType,userId,membership){
+        var curElem = this;
+        //check for membership status of logged in user
+        if(membership == "paid"){
+            if(curElem._contactStatusMapping[chatBoxType]["enableChat"] == true)
+                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+            else
+                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+        } 
+        else if(membership == "free"){
+            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="pos-abs fullwid txtc colorGrey top120">Only paid members can start chat<div id="becomePaidMember" class="color5 cursp">Become a Paid Member</div></div>');                                
+            $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+        }
+        //TODO: fire query to get message history as well as offline messages  
+    },
+
     //update status in chat box top
     _updateStatusInChatBox: function(userId,chat_status){
         //console.log("_updateStatusInChatBox for "+userId+"-"+chat_status+"--"+$('chat-box[user-id="' + userId + '"]').length);
@@ -1046,6 +1119,7 @@ JsChat.prototype = {
         this._bindMinimize($('chat-box[user-id="' + userId + '"] .nchatic_2'));
         this._bindClose($('chat-box[user-id="' + userId + '"] .nchatic_1'));
         this._bindBlock($('chat-box[user-id="' + userId + '"] .nchatic_3'), userId);
+        this._postChatPanelsBox(userId);
         this._bindSendChat(userId);
         //setTimeout(function(){  curElem._appendRecievedMessage("hi this is amacjrheabf erhfbjahberf aerb",userId,"ueiuh");
         /*setTimeout(function(){  this._changeStatusOfMessg("ueiuh",userId,"recieved"); 
@@ -1053,7 +1127,7 @@ JsChat.prototype = {
         }, 2000);
         }, 2000);*/
         //}, 8000);
-        this._postChatPanelsBox(userId);
+        //this._postChatPanelsBox(userId);
 
     },
 
@@ -1078,7 +1152,7 @@ JsChat.prototype = {
             if ($('chat-box[user-id="' + userId + '"]').length == 0) {
                 $(".profileIcon[id^='" + userId + "']")[0].click();
             }
-            console.log("remove typing state if exists-manvi");
+            
             //adding message in chat area
             $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText received" data-msgid='+uniqueId+'>' + message + '</div></div>');
             //check for 3 messages and remove binding
@@ -1376,7 +1450,9 @@ JsChat.prototype = {
         //console.log('in vard update');
         var globalRef = this;
         var finalstr;
-        $.each(param.vCard,function(k,v){                   
+        $.each(param.vCard,function(k,v){ 
+        console.log("set"); 
+        console.log(k);                 
           finalstr = globalRef._hoverBoxStr(k,v,pCheckSum);
           $(globalRef._mainID).append(finalstr);
         });

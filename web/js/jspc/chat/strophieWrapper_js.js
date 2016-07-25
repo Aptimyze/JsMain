@@ -349,17 +349,25 @@ var strophieWrapper = {
 
     //sending Message
     sendMessage: function(message, to){
-        if(message && to){
-            var reply = $msg({
-                from: username,
-                to: to,
-                type: 'chat',
-            })
-            .cnode(Strophe.xmlElement('body', message)).up()
-            .c('active', {xmlns: "http://jabber.org/protocol/chatstates"});
-            var messageId = strophieWrapper.connectionObj.receipts.sendMessage(reply);
-            return messageId;
-        }
+    	var outputObj;
+    	try{
+	        if(message && to){
+	            var reply = $msg({
+	                from: username,
+	                to: to,
+	                type: 'chat',
+	            })
+	            .cnode(Strophe.xmlElement('body', message)).up()
+	            .c('active', {xmlns: "http://jabber.org/protocol/chatstates"});
+	            var messageId = strophieWrapper.connectionObj.receipts.sendMessage(reply);
+	            outputObj = {"msg_id":messageId,"canSend":true};
+	            return outputObj;
+	        }
+	    }
+	    catch(e){
+	    	outputObj = {"msg_id":strophieWrapper.getUniqueId(),"canSend":false,"errorMsg":e};
+	    }
+	    return outputObj;
     },
 
     getUniqueId: function(suffix) {
@@ -404,9 +412,9 @@ var strophieWrapper = {
         console.log(msg_state);
                           
         if(typeof msg_state != "undefined"){
-            outputObj["msg_state"] = msg_state;//strophieWrapper.mapChatStateMessage(chat_state);
+            outputObj["msg_state"] = msg_state;
         }
-        var received = msg.getElementsByTagName("received");
+        var received = msg.getElementsByTagName(strophieWrapper.msgStates["RECEIVED"]);
         console.log(received);
     	if(outputObj["type"] == "chat"){
     		var body = msg.getElementsByTagName("body");
@@ -416,7 +424,7 @@ var strophieWrapper = {
     		else
     			outputObj["body"] = null;
     	}
-        else if(msg_state == "received"){
+        else if(msg_state == strophieWrapper.msgStates["RECEIVED"]){
             var rec = received[0];
             if(typeof rec != "undefined"){
                 outputObj["receivedId"] = rec.getAttribute('id');

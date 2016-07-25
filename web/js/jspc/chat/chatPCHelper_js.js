@@ -414,19 +414,18 @@ function clearLocalStorage(){
     });
 }
 
-/*handle msg with limit before acceptance
+/*hit api for chat before acceptance
 * @input: apiParams
 * @output: response
 */
-function handlePreAcceptanceMsg(apiParams){
+function handlePreAcceptChat(apiParams){
     console.log(apiParams);
-    var outputData;
+    var outputData = {};
     if(typeof apiParams!= "undefined"){
         var postData = "";
         if(typeof apiParams["postParams"] != "undefined" && apiParams["postParams"].length > 0){
             postData = apiParams["postParams"];
         }
-
         $.myObj.ajax({
             url: apiParams["url"],
             dataType: 'json',
@@ -441,12 +440,17 @@ function handlePreAcceptanceMsg(apiParams){
             success: function(response){
                 console.log("in success of handlePreAcceptanceMsg");
                 console.log(response);
-                outputData = response;
+                outputData["canSend"] = response["cansend"];
+                outputData["errorMsg"] = response["message"];
+                var d = new Date();
+                outputData["msg_id"] = "ankita_"+d;
             },
             error: function(xhr){
                 console.log("in error of handlePreAcceptanceMsg");
                 console.log(xhr);
-                return "error";
+                outputData["canSend"] = false;
+                outputData["errorMsg"] = "Something went wrong";
+                //return "error";
             }
         });
     }
@@ -479,7 +483,9 @@ $(document).ready(function(){
         profileName: "bassi",
         listingTabs:chatConfig.Params[device].listingTabs,
         rosterDetailsKey:strophieWrapper.rosterDetailsKey,
-        listingNodesLimit:chatConfig.Params[device].groupWiseNodesLimit
+        listingNodesLimit:chatConfig.Params[device].groupWiseNodesLimit,
+        groupBasedChatBox:chatConfig.Params[device].groupBasedChatBox,
+        contactStatusMapping:chatConfig.Params[device].contactStatusMapping
     });
 
 
@@ -504,7 +510,6 @@ $(document).ready(function(){
     }
 
     objJsChat.onChatLoginSuccess = function(){
-        console.log("show loader---manvi");
         //trigger list creation
         console.log("in triggerBindings");
         strophieWrapper.triggerBindings();
@@ -531,6 +536,32 @@ $(document).ready(function(){
         
     }
     
+    /*executed on click of contact engine buttons in chat box
+    */
+    objJsChat.onChatBoxContactButtonsClick = function(params){
+        if(typeof params!= "undefined" && params){
+            var userId = params["receiverID"];
+            switch(params["buttonType"]){
+                case "INITIATE":
+                    //TODO: fire query to send interest              
+                    break;
+                case "ACCEPT":
+                    //TODO: fire query to accept interest
+                    break;  
+                case "DECLINE":
+                    //TODO: fire query to decline interest
+                    break;
+                case "CANCEL":
+                    //TODO: fire query to cancel interest
+                    break;
+            }
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
     /*
      * Sending typing event
      */
@@ -546,48 +577,44 @@ $(document).ready(function(){
         eraseCookie("chatAuth");
     }
 
-    //executed for sending message
-    objJsChat.onSendingMessage = function(message,to,contact_state){
+    //executed for sending chat message
+    objJsChat.onSendingMessage = function(message,receivedJId,receiverProfileChecksum,contact_state){
         console.log("in start of SendingMessage");
-        var msgId,canSend;
-        if(contact_state == chatConfig.Params[device].contactStatus["none_applicable"]["key"]){
-            alert("not allowed to chat");
-        }
-        else if(contact_state == chatConfig.Params[device].contactStatus["pog_interest_accepted"]["key"]){
-            console.log("ankita_here");
-            canSend = false;
-            console.log("sending post acceptance msg");
-            msgId = strophieWrapper.sendMessage(message,to);
-            console.log("sent post acceptance msg");
+        var output;
+        if(chatConfig.Params[device].contactStatusMapping[contact_state]["enableChat"] == true){
+            if(chatConfig.Params[device].contactStatusMapping[contact_state]["useOpenfireForChat"] == true){
+                console.log("sending post acceptance msg");
+                output = strophieWrapper.sendMessage(message,receivedJId);
+                console.log("sent post acceptance msg");
+            }
+            else{
+                console.log("sending pre acceptance msg with "+contact_state);
+                var apiParams = {
+                    "url":chatConfig.Params[device].preAcceptChat["apiUrl"],
+                    "postParams":
+                        {
+                            "profilechecksum":"4c41f8845105429abbd11cc184d0e330i9061321",//receiverProfileChecksum
+                            "chatMessage":message
+                        }
+                };
+                if(typeof chatConfig.Params[device].preAcceptChat["extraParams"] != "undefined"){
+                    console.log("adding tracking in api inputs");
+                    console.log(chatConfig.Params[device].preAcceptChat["extraParams"]);
+                    $.each(chatConfig.Params[device].preAcceptChat["extraParams"],function(key,val){
+                        apiParams["postParams"][key] = val;
+                    });    
+                }
+                console.log("apiParams");
+                console.log(apiParams);
+                output = handlePreAcceptChat(apiParams);
+                console.log("sent pre acceptance msg");
+            }
         }
         else{
-            console.log("sending pre acceptance msg with "+contact_state);
-
-            var id = new Date();
-            msgId = "123"+id.getTime();
-            canSend = true;
-            var apiParams = {
-                    "url":chatConfig.Params[device].contactStatus[contact_state]["apiUrl"],
-                    "postParams":
-                            {
-                                "profilechecksum":"4c41f8845105429abbd11cc184d0e330i9061321",
-                                "chatMessage":message
-                            }
-                        };
-            if(typeof chatConfig.Params[device].contactStatus[contact_state]["tracking"]!= "undefined"){
-                console.log("adding tracking in api inputs");
-                console.log(chatConfig.Params[device].contactStatus[contact_state]["tracking"]);
-                $.each(chatConfig.Params[device].contactStatus[contact_state]["tracking"],function(key,val){
-                    apiParams["postParams"][key] = val;
-                });
-            }
-            var apiResponse = handlePreAcceptanceMsg(apiParams);
-            //msgId = apiResponse["msg_id"];
-            canSend = apiResponse["cansend"];
-            console.log("sent pre acceptance msg");
+            output = {};
+            output["errorMsg"] = "You are not allowed to chat";
+            output["canSend"] = false;
         }
-        var output = {"msg_id":msgId,"canSend":canSend,"errorMsg":"You can send more message only if she replies"};
-        
         console.log(output);
         console.log("end of onSendingMessage");
         return output;
