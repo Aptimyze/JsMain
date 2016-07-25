@@ -242,6 +242,7 @@ $apiResponseHandlerObj->setResponseBody($getData);
 
 
 		$response = array(
+                "jid"=>$profile->getPROFILEID(),
 				"username"=>$profile->getUSERNAME(),
 				"age"=>$profile->getAGE()." Years",
 				"height"=>$profile->getDecoratedHeight(),
