@@ -482,14 +482,14 @@ $(document).ready(function() {
         objJsChat.onHoverContactButtonClick = function(params) {
                 console.log(params);
                 checkSum = $("#" + params.id).attr('data-pchecksum');
-                params = $("#" + params.id).attr('data-params');
+                paramsData = $("#" + params.id).attr('data-params');
                 checkSum = "7619da4377fbf2a405ede0d0535a716ei9513636";
                 url = "/api/v2/contacts/postEOI";
                 $.ajax({
                     type: 'POST',
                     data: {
                         profilechecksum: checkSum,
-                        params: params,
+                        params: paramsData,
                         source: "chat"
                     },
                     url: url,
