@@ -1286,7 +1286,7 @@ JsChat.prototype = {
             str+='<div class="padall-10 pos-rel">';
                 //start:error case 1
             str+='<div class="pos-abs err2 nchatrr1 disp-none" id="'+param1+'_hoverDvBgEr">';
-            str+='<div class="padall-10 colr5 f13 fontli disp-tbl" >';
+            str+='<div class="padall-10 colr5 f13 fontli disp-tbl wid90" >';
             str+=' <div class="disp-cell vmid txtc lh27 ht160" id="'+param1+'_hoverBgEr">';
             str+='</div>';
             str+='</div>';
@@ -1343,19 +1343,25 @@ JsChat.prototype = {
     /*
      * Error handling in case of hover
      */
-    hoverErrorHandling: function(jid,data,type){
+    hoverButtonHandling: function(jid,data,type){
         console.log("In error handling");
         console.log(jid,data);
         console.log(type);
         if(type == "error"){
             $("#"+jid+"_BtnRespnse").addClass("disp-none");
             $("#"+jid+"_hoverDvSmEr").removeClass("disp-none");
-            $("#"+jid+"_hoverSmEr").html(data.buttondetails.button.errmsglabel);
-            
+            $("#"+jid+"_hoverSmEr").html(data.actiondetails.errmsglabel);
+
         }
         else if(type == "info"){
             $("#"+jid+"_hoverDvBgEr").removeClass("disp-none");
-            $("#"+jid+"_hoverBgEr").html(data.buttondetails.button.errmsglabel);
+            $("#"+jid+"_hoverBgEr").html(data.actiondetails.errmsglabel);
+            $("#"+jid+"_BtnRespnse div button").addClass("nchatbg-grey colrw");
+            $("#"+jid+"_BtnRespnse div button").html(data.buttondetails.button.label);
+        }
+        else{
+            $("#"+jid+"_BtnRespnse div button").addClass("").removeClass("bg_pink");
+            $("#"+jid+"_BtnRespnse div button").html(data.buttondetails.button.label);
         }
     },
     //start:check hover
@@ -1397,7 +1403,7 @@ JsChat.prototype = {
         }, function() {
             $(this).css('visibility', 'hidden');
         });
-        $('#' + curEleID + '_hover .hBtn').on('click', function() {
+        $('#' + curEleID + '_hover .hBtn').off('click').on('click', function() {
             console.log("Atul sir ki ichcha");
             if (_this.onHoverContactButtonClick && typeof _this.onHoverContactButtonClick == 'function') {
                 _this.onHoverContactButtonClick(this);

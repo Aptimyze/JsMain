@@ -433,17 +433,18 @@ function handlePreAcceptChat(apiParams) {
  */
 function handleErrorInHoverButton(jid,data){
     console.log("@@1");
-    if(data.buttondetails.button){
-        data.buttondetails.button.errmsglabel = "You have exceeded the limit of the number of interests you can send";
-        if(data.buttondetails.button.errmsglabel){
-            objJsChat.hoverErrorHandling(jid,data,"info");
+    if(data.buttondetails && data.buttondetails.button){
+        //data.actiondetails.errmsglabel = "You have exceeded the limit of the number of interests you can send";
+        if(data.actiondetails.errmsglabel){
+            objJsChat.hoverButtonHandling(jid,data,"info");
         }
         else{
             //Change button text
+            objJsChat.hoverButtonHandling(jid,data);
         }
     }
     else{
-        objJsChat.hoverErrorHandling(jid,data,"error");
+        objJsChat.hoverButtonHandling(jid,data,"error");
     }
 }
 
