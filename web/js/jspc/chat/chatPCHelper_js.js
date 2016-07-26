@@ -49,21 +49,6 @@ function getProfileImage() {
  */
 function initiateChatConnection() {
     username = loggedInJspcUser + '@localhost';
-	/*if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
-        username = 'a1@localhost';
-    else if(readSiteCookie("CHATUSERNAME")=="bassi")
-        username = '1@localhost';
-    else if(readSiteCookie("CHATUSERNAME")=="VWZ4557")
-        username = 'a9@localhost';
-    else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
-        username = 'a8@localhost';
-    else if(readSiteCookie("CHATUSERNAME") == "ZZRS3292")
-        username = 'a13@localhost';
-    else if(readSiteCookie("CHATUSERNAME")=="ZZVV2929")
-        username = 'a14@localhost';
-    else if(readSiteCookie("CHATUSERNAME")=="ZZRR5723")
-        username = 'a11@localhost';
-    pass = '123';*/
     pcHelperLogger("user:" + username + " pass:" + pass);
     strophieWrapper.connect(chatConfig.Params[device].bosh_service_url, username, pass);
     pcHelperLogger(strophieWrapper.connectionObj);
@@ -420,7 +405,7 @@ function handleErrorInHoverButton(jid, data) {
     }
 }
 
-function contactActionCall(action, checkSum, params){
+function contactActionCall(action, checkSum, params) {
     var response;
     url = chatConfig.Params["actionUrl"][action];
     $.myObj.ajax({
@@ -433,18 +418,17 @@ function contactActionCall(action, checkSum, params){
             source: "chat"
         },
         url: url,
-        success: function(data) {
+        success: function (data) {
             response = data;
-            console.log(response);
+            pcHelperLogger(response);
         },
-        error: function(){
-          response = "false";
+        error: function () {
+            response = "false";
         }
     });
-    console.log(response);
+    pcHelperLogger(response);
     return response;
 }
-
 $(document).ready(function () {
     pcHelperLogger("User");
     pcHelperLogger(loggedInJspcUser);
@@ -453,6 +437,33 @@ $(document).ready(function () {
     if (showChat && (checkDiv != 0)) {
         var chatLoggedIn = readCookie('chatAuth');
         var loginStatus;
+        $(window).on("offline", function () {
+            strophieWrapper.currentConnStatus = Strophe.Status.DISCONNECTED;
+        });
+        $(window).on("online", function () {
+            if (chatLoggedIn == 'true') {
+                globalSleep(1500);
+                var tAuth = checkAuthentication();
+                if (tAuth == 'true') {
+                    initiateChatConnection();
+                    if (strophieWrapper.getCurrentConnStatus()) {
+                        loginStatus = "Y";
+                        objJsChat = new JsChat({
+                            loginStatus: loginStatus,
+                            mainID: "#chatOpenPanel",
+                            //profilePhoto: "<path>",
+                            imageUrl: imgUrl,
+                            profileName: "bassi",
+                            listingTabs: chatConfig.Params[device].listingTabs,
+                            rosterDetailsKey: strophieWrapper.rosterDetailsKey,
+                            listingNodesLimit: chatConfig.Params[device].groupWiseNodesLimit,
+                            groupBasedChatBox: chatConfig.Params[device].groupBasedChatBox,
+                            contactStatusMapping: chatConfig.Params[device].contactStatusMapping
+                        });
+                    }
+                }
+            }
+        });
         if (chatLoggedIn == 'true') {
             checkAuthentication();
             loginStatus = "Y";
@@ -505,15 +516,6 @@ $(document).ready(function () {
                 idBeforeSplit = params.id.split('_');
                 idAfterSplit = idBeforeSplit[0];
                 action = idBeforeSplit[1];
-                /*
-                response = contactActionCall(action, checkSum, paramsData);
-                if(response !="false"){
-                    console.log("Not false");
-                    console.log(response);
-                    handleErrorInHoverButton(idAfterSplit,response);
-                }
-                */
-                
                 url = chatConfig.Params["actionUrl"][action];
                 $.ajax({
                     type: 'POST',
@@ -527,8 +529,6 @@ $(document).ready(function () {
                         handleErrorInHoverButton(idAfterSplit, data);
                     }
                 });
-                
-               
             }
             /*executed on click of contact engine buttons in chat box
              */
@@ -640,3 +640,12 @@ $(document).ready(function () {
         objJsChat.start();
     }
 });
+
+function globalSleep(milliseconds) {
+    var start = new Date().getTime();
+    for (var i = 0; i < 1e7; i++) {
+        if ((new Date().getTime() - start) > milliseconds) {
+            break;
+        }
+    }
+}
