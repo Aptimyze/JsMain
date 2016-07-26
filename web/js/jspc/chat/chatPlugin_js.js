@@ -1289,45 +1289,47 @@ JsChat.prototype = {
         console.log("in hoverBoxStr");
         console.log(pCheckSum);
         if ($('#' + param1 + '_hover').length == 0) {
-            var str='<div class="pos_fix info-hover fontlig nz21 vishid"';
-            str+='id="'+param1+'_hover">';
-            str+='<div class="nchatbdr3 f13 nchatgrad" style="width:220px; height: 449px">';
-            str += '<img src="' + param2.PHOTO + '" class="vtop ch220"/>';
-            str+='<div class="padall-10 pos-rel">';
-                //start:error case 1
-            str+='<div class="pos-abs err2 nchatrr1 disp-none" id="'+param1+'_hoverDvBgEr">';
-            str+='<div class="padall-10 colr5 f13 fontli disp-tbl wid90" >';
-            str+=' <div class="disp-cell vmid txtc lh27 ht160" id="'+param1+'_hoverBgEr">';
+            var str='<div class="pos_fix info-hover fontlig nz21 vishid" id="'+param1+'_hover">';
+	str+='<div class="nchatbdr3 f13 nchatgrad nchathoverdim pos-rel">';
+    	str+='<img src="' + param2.PHOTO + '" class="vtop ch220"/>';
+			str+='<div id="'+param1+'_hoverinfo-a">';
+        		str+='<div class="padall-10 pos-rel">';
+            		str+='<div class="pos-abs err2 nchatrr1 disp-none" id="'+param1+'_hoverDvBgEr">';
+            			str+='<div class="padall-10 colr5 f13 fontli disp-tbl wid90" >';
+            				str+='<div class="disp-cell vmid txtc lh27 ht160" id="'+param1+'_hoverBgEr"></div>';
+            			str+='</div>';
+            		str+='</div>';
+            		str+='<ul class="listnone lh22">';
+                        str+='<li>'+param2.AGE+', '+ param2.HEIGHT+'</li>';
+                        str+='<li>'+param2.COMMUNITY+'</li>';
+                        str+='<li>'+ param2.EDUCATION +'</li>';
+                        str+='<li>'+ param2.PROFFESION +'</li>';
+                        str+='<li>'+ param2.SALARY+'</li>';
+                        str+='<li>'+ param2.CITY+'</li>';
+                    str+='</ul>';
+            	str+='</div>';
+           		str+='<div class="fullwid clearfix" id="'+param1+'_BtnRespnse">';
+                str+='<p class="txtc nc-color2 lh27 nhgt28"></p>';
+                	str+='<div id="'+param1+'_BtnOuter">';
+            			str += _this._getButtonStructure(param1, group, pCheckSum);
+            		str+='</div>';
+            	str+='</div>';
+          str+='</div>';
+          
+            str+='<div id="'+param1+'_hoverDvSmEr" class="pos-rel padall-10 disp-none">';
+          	str+='<div class="txtr">';
+            	str+='<i class="nchatspr nchatic_1 hcross" id="'+param1+'_hcross" ></i>';
             str+='</div>';
+            
+                str+='<div class="disp-tbl f13 colr5 fontlig fullwid">';
+                	str+='<div class="disp-cell vmid txtc nhgt180" id="'+param1+'_hoverSmEr">';
+                    	
+                    str+='</div>';                
+                str+='</div>   ';         
             str+='</div>';
-            str+='</div>';
-            //end:error case 2
-            //start:hover info
-            str+='<ul class="listnone lh22">';
-            str+='<li>'+param2.AGE+', '+ param2.HEIGHT+'</li>';
-            str+='<li>'+param2.COMMUNITY+'</li>';
-            str+='<li>'+ param2.EDUCATION +'</li>';
-            str+='<li>'+ param2.PROFFESION +'</li>';
-            str+='<li>'+ param2.SALARY+'</li>';
-            str+='<li>'+ param2.CITY+'</li>';
-            str+='</ul>';
-            //end:hover info
-            str+='</div>'
-            //start:button structure
-            str+='<div class="fullwid clearfix" id="'+param1+'_BtnRespnse">';
-            str+='<p class="txtc nc-color2 lh27 nhgt28" id="hovererr1">';         
-            str+='</p>';
-            str+='<div id="'+param1+'_BtnOuter">';
-            str += _this._getButtonStructure(param1, group, pCheckSum);
-            str+='</div>';
-            str+='</div>';
-            //end:button structure
-            str+='<div class="f13 colr5 fontlig disp-none" id="'+param1+'_hoverDvSmEr"><div class="err1 txtc lh20 nchatp12">';
-            str+='<p id="'+param1+'_hoverSmEr"> error message 1</p>';
-            str+='</div>';
-            str+='</div>';
-            str+='</div>';
-            str+='</div>';
+           
+	str+='</div>';
+str+='</div>';           	
 
             return str;
         }
@@ -1358,8 +1360,10 @@ JsChat.prototype = {
         console.log(jid,data);
         console.log(type);
         if(type == "error"){
-            $("#"+jid+"_BtnRespnse").addClass("disp-none");
-            $("#"+jid+"_hoverDvSmEr").removeClass("disp-none");
+            //$("#"+jid+"_BtnRespnse").addClass("disp-none");
+            //$("#"+jid+"_hoverDvSmEr").removeClass("disp-none");
+            $("#"+jid+"_hoverinfo-a").addClass("disp-none");
+            $("#"+jid+"_hoverDvSmEr").addClass("disp_b").removeClass("disp-none");            
             $("#"+jid+"_hoverSmEr").html(data.actiondetails.errmsglabel);
 
         }
@@ -1417,6 +1421,13 @@ JsChat.prototype = {
             if (_this.onHoverContactButtonClick && typeof _this.onHoverContactButtonClick == 'function') {
                 _this.onHoverContactButtonClick(this);
             }
+        });
+        $('.hcross').off('click').on('click', function() {
+            var id = $(this).attr('id');
+            var jid = id.split('_');
+            jid = jid[0];
+            $("#"+jid+"_hoverinfo-a").removeClass("disp-none");
+            $("#"+jid+"_hoverDvSmEr").removeClass("disp_b").addClass("disp-none");
         });
     },
     _timer: null,
