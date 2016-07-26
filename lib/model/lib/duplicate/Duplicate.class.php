@@ -95,13 +95,12 @@ class Duplicate
 
 
 // implements the new logic for duplicate profiles added by Palash based on phone verification updation
-public static function logIfDuplicate($profileId,$phoneNumVerified){
+public static function logIfDuplicate($profileObj,$phoneNumVerified){
 
-$profileObj=new Profile();
-$profileObj->getDetail($profileId, 'PROFILEID');
+if(!$profileObj || !$phoneNumVerified) return;
 $startDate=date('Y-m-d H:i:s',(strtotime ( '-90 days'  ) ));
 $endDate=date('Y-m-d H:i:s');
-                        
+$profileId=$profileObj->getPROFILEID();                
 if($phoneVerRow=(new PHONE_VERIFIED_LOG())->getLogForOtherNumberVerified($profileId,$phoneNumVerified,$startDate,$endDate))
 {
 	$profileObj2=new Profile();
@@ -121,7 +120,7 @@ if($phoneVerRow=(new PHONE_VERIFIED_LOG())->getLogForOtherNumberVerified($profil
 	  		$rawDuplicateObj->addExtension('IDENTIFIED_ON',date('Y-m-d H:i:s'));
 	  		$rawDuplicateObj->setComments("None");
 			DuplicateHandler::HandleDuplicatesInsert($rawDuplicateObj);
-			duplicateProfilesMail::sendEmailToDuplicateProfiles($profileId);
+//			duplicateProfilesMail::sendEmailToDuplicateProfiles($profileId);
 
 		}
 	

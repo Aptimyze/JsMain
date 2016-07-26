@@ -83,13 +83,11 @@ protected function phoneUpdateProcess($message)
 				case 'M':
 				$paramArr=array('MOB_STATUS'=>'Y','PHONE_FLAG'=>'');
 				JPROFILE::getInstance('')->edit($paramArr, $profileid, 'PROFILEID');
-				$profileObject->getDetail();
 				break;
 
 				case 'L':
 				$paramArr=array('LANDL_STATUS'=>'Y','PHONE_FLAG'=>'');
 				JPROFILE::getInstance('')->edit($paramArr, $profileid, 'PROFILEID');
-				$this->profileObj->getDetail();
 				break;
 
 				case 'A':
@@ -99,8 +97,7 @@ protected function phoneUpdateProcess($message)
 				break;
 			}
 
-			
-
+			$this->profileObject->getDetail($profileid,'PROFILEID');
 			$verifiedLogObj= new PHONE_VERIFIED_LOG();
 			$row=$verifiedLogObj->getNoOfTimesVerified($profileid);
 			$noOfTimesVerified=$row['COUNT'];
@@ -126,8 +123,7 @@ protected function phoneUpdateProcess($message)
 			$phoneLogObj= new PHONE_VERIFIED_LOG();
 			$phoneLogObj->insertEntry($profileid,$this->getPhoneType(), $this->getPhone(),$message);
 			
-			Duplicate::logIfDuplicate($profileid,$this->phone);            
-
+			Duplicate::logIfDuplicate($this->profileObject,$this->phone);            
 			JsMemcache::getInstance()->set($profileid."_PHONE_VERIFIED",'Y');
 		
 			
