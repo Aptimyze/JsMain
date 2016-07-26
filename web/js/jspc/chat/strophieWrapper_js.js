@@ -263,8 +263,8 @@ var strophieWrapper = {
             "fullname": fullname[0],
             "groups": [],
             "subscription": obj["attributes"]["subscription"],
-            "profile_checksum": fullname[2],
-            "listing_tuple_photo": fullname[1],
+            "profile_checksum": fullname[1],
+            "listing_tuple_photo": "",
             "last_online_time": null,
             "ask": obj["attributes"]["ask"]
         };

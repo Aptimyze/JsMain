@@ -433,38 +433,30 @@ JsChat.prototype = {
         $(elem._listingClass).on('mouseenter mouseleave', {
             global: elem
         }, elem._calltohover);
-        var APIsrc ="http://xmppdev.jeevansathi.com/api/v1/social/getMultiUserPhoto?pid=";
+        //var APIsrc ="http://xmppdev.jeevansathi.com/api/v1/social/getMultiUserPhoto?pid=";
         console.log("api");
         console.log(jidStr);
+        var apiParams = {};
         if(jidStr){
-            APIsrc += jidStr.slice(0,-1);
+            apiParams["pid"] = jidStr.slice(0,-1);
+            apiParams["photoType"] = "ProfilePic120Url,MainPicUrl";
+            console.log("1123");
+            console.log(apiParams);
+            requestListingPhoto(apiParams);  
         }
-        console.log("1123");
-        console.log(APIsrc);
-        /*$.each(jidArr,function(index,elem){
-            if(index < jidArr.length-1) {
-                APIsrc += elem+",";
-            }
-            else {
-                APIsrc += elem;
-            }
-        });*/
-        APIsrc += "&photoType=ProfilePic120Url,MainPicUrl";
-        console.log("APIsrc",APIsrc);
-
-
-        //fire query and get response
-
-
-        var response = {"message":"Successful","statusCode":"0","profiles":{"a1":{"PHOTO":{"ProfilePic120Url":"https://secure.gravatar.com/avatar/ef65f74b4aa2107469060e6e8b6d9478?s=48&r=g&d=monsterid","MainPicUrl":"http:\/\/172.16.3.185\/1092\/13\/21853681-1397620904.jpeg"}},"a2":{"PHOTO":{"ProfilePic120Url":"https://secure.gravatar.com/avatar/ce41f41832224bd81f404f839f383038?s=48&r=g&d=monsterid","MainPicUrl":"http:\/\/172.16.3.185\/1140\/6\/22806868-1402139087.jpeg"}},"a3":{"PHOTO":{"ProfilePic120Url":"https://avatars0.githubusercontent.com/u/46974?v=3&s=96","MainPicUrl":"http:\/\/172.16.3.185\/1153\/15\/23075984-1403583209.jpeg"}},"a6":{"PHOTO":{"ProfilePic120Url":"","MainPicUrl":"http:\/\/xmppdev.jeevansathi.com\/uploads\/NonScreenedImages\/mainPic\/16\/29\/15997035ii6124c9f1a0ee0d7c209b7b81c3224e25iic4ca4238a0b923820dcc509a6f75849b.jpg"}},"a4":{"PHOTO":""}},"responseStatusCode":"0","responseMessage":"Successful","AUTHCHECKSUM":null,"hamburgerDetails":null,"phoneDetails":null};
-        $.each(Object.keys(response.profiles),function(index,element){
-            if(response.profiles[element].PHOTO.ProfilePic120Url) {
-              $(".chatlist img[id*='pic_"+element+"']").attr("src",response.profiles[element].PHOTO.ProfilePic120Url);
-            }
-        });
-
-
     },
+
+    //add photo in tuple div of listing
+    _addListingPhoto:function(photoObj){
+        if(typeof photoObj!= "undefined"){
+            $.each(Object.keys(photoObj.profiles),function(index,element){
+                if(photoObj.profiles[element].PHOTO.ProfilePic120Url) {
+                  $(".chatlist img[id*='pic_"+element+"']").attr("src",photoObj.profiles[element].PHOTO.ProfilePic120Url);
+                }
+            });
+        }
+    },
+
     //place contact in appropriate position in listing
     _placeContact: function(key, contactID, groupID, status, contactHTML) {
         if (key == "new") {
@@ -925,7 +917,7 @@ JsChat.prototype = {
                 //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
                 break;
             case curElem._contactStatusMapping["pg_acceptance_pending"]["key"]:
-                $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sendInt,#restrictMessgTxt").remove();
+                $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sendInt,#restrictMessgTxt,#initiateText").remove();
                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="pos-rel wid90p txtc colorGrey padall-10">The member wants to chat</div><div class="pos-rel fullwid txtc colorGrey mt20"><div id="accept" class="acceptInterest padall-10 color5 disp_ib cursp">Accept</div><div id="decline" class="acceptInterest padall-10 color5 disp_ib cursp">Decline</div></div><div id="acceptTxt" class="pos-rel fullwid txtc color5 mt25">Accept interest to continue chat</div><div id="sentDiv" class="fullwid pos-rel disp-none mt10 color5 txtc">Interest Accepted continue chat</div><div id="declineDiv" class="sendDiv txtc disp-none pos-abs wid80p mt10 color5">Interest Declined, you can\'t chat with this user anymore</div>');
                 //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
                 $('chat-box[user-id="' + userId + '"] #accept').on("click", function() {

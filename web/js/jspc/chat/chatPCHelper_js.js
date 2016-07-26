@@ -43,6 +43,34 @@ function getProfileImage() {
     });
     return imageUrl;
 }
+
+
+function requestListingPhoto(apiParams){
+    var apiUrl = "/api/v1/social/getMultiUserPhoto";
+    if(typeof apiParams!= "undefined" && apiParams){
+        $.myObj.ajax({
+            url: apiUrl,
+            dataType: 'json',
+            type: 'POST',
+            data: apiParams,
+            timeout: 60000,
+            cache: false,
+            beforeSend: function (xhr) {
+
+            },
+            success: function (response) {
+                if(response["statusCode"] == "0"){
+                    response = {"message":"Successful","statusCode":"0","profiles":{"a1":{"PHOTO":{"ProfilePic120Url":"https://secure.gravatar.com/avatar/ef65f74b4aa2107469060e6e8b6d9478?s=48&r=g&d=monsterid","MainPicUrl":"http:\/\/172.16.3.185\/1092\/13\/21853681-1397620904.jpeg"}},"a2":{"PHOTO":{"ProfilePic120Url":"https://secure.gravatar.com/avatar/ce41f41832224bd81f404f839f383038?s=48&r=g&d=monsterid","MainPicUrl":"http:\/\/172.16.3.185\/1140\/6\/22806868-1402139087.jpeg"}},"a3":{"PHOTO":{"ProfilePic120Url":"https://avatars0.githubusercontent.com/u/46974?v=3&s=96","MainPicUrl":"http:\/\/172.16.3.185\/1153\/15\/23075984-1403583209.jpeg"}},"a6":{"PHOTO":{"ProfilePic120Url":"","MainPicUrl":"http:\/\/xmppdev.jeevansathi.com\/uploads\/NonScreenedImages\/mainPic\/16\/29\/15997035ii6124c9f1a0ee0d7c209b7b81c3224e25iic4ca4238a0b923820dcc509a6f75849b.jpg"}},"a4":{"PHOTO":""}},"responseStatusCode":"0","responseMessage":"Successful","AUTHCHECKSUM":null,"hamburgerDetails":null,"phoneDetails":null};
+                    objJsChat._addListingPhoto(response);
+                }
+            },
+            error: function (xhr) {
+                //return "error";
+            }
+        });  
+    }
+}
+
 /*function initiateChatConnection
  * request sent to openfire to initiate chat and maintain session
  * @params:none
