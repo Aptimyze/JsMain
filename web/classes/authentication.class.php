@@ -35,6 +35,8 @@ class protect
         private $AUTHCHECKSUM="AUTHCHECKSUM";
 	public $allowDeactive="";
 	public $allowUsernameLogin=false;	
+        private $dateTime1 ='10';
+        private $dateTime2 ='22';
 	/*
 	**** @function: Class Constructor
 	**** @include: the class configuration file: Mysql.class.php
@@ -1322,19 +1324,20 @@ class protect
 			}
                         if($allow)
                         {
+				/*
 				$time=date("Y-m-d G:i:s");
                                 $sql="replace into userplane.recentusers(userID,lastTimeOnline) values('$pid','$time')";
-                                $mysql->executeQuery($sql,$db);
+                                $mysql->executeQuery($sql,$db);*/
 
-                        	// Online-User Tracking in Cache
-                        	$jsCommonObj =new JsCommon();
-                        	$jsCommonObj->setOnlineUser($pid);
-				/*
-	                        $JsMemcacheObj =JsMemcache::getInstance();
-        	                $expiryTime =CommonConstants::ONLINE_USER_EXPIRY;
-        	                $listName =CommonConstants::ONLINE_USER_LIST;
-        	                $JsMemcacheObj->set($pid, $time(), $expiryTime);
-        	                $JsMemcacheObj->zAdd($listName,time(),$pid);*/
+	                        // Add Online-User
+	                        $dateTime =date("H");
+	                        $redisOnline =true;
+	                        if(($dateTime>=$this->dateTime1) && ($dateTime<$this->dateTime2))
+	                                $redisOnline =false;
+				if($redisOnline){
+	                        	$jsCommonObj =new JsCommon();
+	                        	$jsCommonObj->setOnlineUser($pid);
+				}
                         }
                 }
                 
@@ -1345,19 +1348,21 @@ class protect
 	{
 		if(is_numeric($pid))
                 {
+			/*
                         $mysql= new Mysql;
                         $db=$mysql->connect();
                         $sql="delete from  userplane.recentusers where userID='$pid'";
-                        $mysql->executeQuery($sql,$db);
+                        $mysql->executeQuery($sql,$db);*/
 
-                        // Remove Online-User 
-                        $jsCommonObj =new JsCommon();
-                        $jsCommonObj->removeOnlineUser($pid);
-			/*
-                        $JsMemcacheObj =JsMemcache::getInstance();
-                        $JsMemcacheObj->delete($pid);
-                        $listName =CommonConstants::ONLINE_USER_LIST;
-                        $JsMemcacheObj->zRem($listName, $pid);*/
+                        // Remove Online-User
+                        $dateTime =date("H");
+                        $redisOnline =true;
+                        if(($dateTime>$this->dateTime1) && ($dateTime<$this->dateTime2))
+                                $redisOnline =false;
+			if($redisOnline){
+	                        $jsCommonObj =new JsCommon();
+	                        $jsCommonObj->removeOnlineUser($pid);
+			}
                 }
 	}
 

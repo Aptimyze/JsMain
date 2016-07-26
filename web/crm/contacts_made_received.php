@@ -1,4 +1,5 @@
 <?php
+include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 	//to zip the file before sending it
 	$zipIt = 0;
 	if (strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip'))
@@ -151,15 +152,27 @@
 		}	
 		
 		//while($myrow=mysql_fetch_array($result))
+		$pidShard=JsDbSharding::getShardNo($pid);
+		$dbMessageLogObj=new NEWJS_MESSAGE_LOG($pidShard);
 		for($i=0;$i<count($contactResult);$i++)
 		{
 			//section added by Gaurav on 30 May 2006 to select MESSAGE from MESSAGE_LOG table
 			//Changes made by Sadaf on 10 July 2006 to select messages from MESSAGES table
 			 //$sql_msg="select ID from newjs.MESSAGE_LOG where $contact='$myrow[$contact]' and $self='$self_profileid' AND IS_MSG='Y' order by ID limit 1";
-			 $sql_msg="select ID from newjs.MESSAGE_LOG where $contact='".$contactResult[$i][$contact]."' and $self='$self_profileid' AND IS_MSG='Y' order by ID limit 1";
-			$result_msg=$mysql->executeQuery($sql_msg,$myDb) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_msg,"ShowErrTemplate");
-			$myrow_msg=$mysql->fetchArray($result_msg);
-			$msg_id=$myrow_msg['ID'];
+			 if($self=="SENDER"){
+				$sender=$self_profileid;
+				$receiver=$contactResult[$i][$contact];
+			}
+			else{
+				$receiver=$self_profileid;
+				$sender=$contactResult[$i][$contact];
+			}
+			$result=$dbMessageLogObj->getMessageLogIDCMR($sender,$receiver);
+			
+			//$sql_msg="select ID from newjs.MESSAGE_LOG where $contact='".$contactResult[$i][$contact]."' and $self='$self_profileid' AND IS_MSG='Y' order by ID limit 1";
+			//$result_msg=$mysql->executeQuery($sql_msg,$myDb) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_msg,"ShowErrTemplate");
+			//$myrow_msg=$mysql->fetchArray($result_msg);
+			$msg_id=$result;
 			$msg='';
 			if($msg_id)
 			{

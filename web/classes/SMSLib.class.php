@@ -13,6 +13,7 @@ class SMSLib{
         var $occupationDetail=array();
         var $heightDetail=array();
         var $cityDetail=array();
+        var $countryDetail=array();
 	var $smsType;
 	var $dbMaster;
 
@@ -37,6 +38,7 @@ include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 			$this->occupationDetail = $OCCUPATION_DROP;
 			$this->heightDetail = $HEIGHT_DROP;
 			$this->cityDetail = $CITY_INDIA_DROP;
+			$this->countryDetail = $COUNTRY_DROP;
 		//}
 		$this->smsType = $smsType;
         }
@@ -94,7 +96,8 @@ include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 			"SANAME"=>array("maxlength"=>"13"),
 			"COMPANY_NAME"=>array("maxlength"=>12),
 			"OTHER_EMAIL"=>array("maxlength"=>"40"),		// added by Palash
-			"PHONE_ISD_COMMA"=>array("maxlength"=>"17")    //      ,,
+			"PHONE_ISD_COMMA"=>array("maxlength"=>"17"),    //      ,,
+			"COUNTRY_RES"=>array("maxlength"=>"10")         //added by nitesh
                 );
                 return $varArr[$variable];
         }
@@ -235,8 +238,17 @@ include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 
 			case "CITY_RES":
 				$city_res=$this->getVariables("CITY_RES");
-				$CITY_RES= $this->cityDetail[$messageValue["CITY_RES"]];		
-				return strlen($CITY_RES)<=$city_res["maxlength"] ? $CITY_RES : substr($CITY_RES,0,$city_res["maxlength"]-2)."..";
+				$CITY_RES= $this->cityDetail[$messageValue["CITY_RES"]];
+				if($CITY_RES)		
+					return strlen($CITY_RES)<=$city_res["maxlength"] ? $CITY_RES : substr($CITY_RES,0,$city_res["maxlength"]-2)."..";
+				else
+				{
+					$country_res=$this->getVariables("COUNTRY_RES");
+					$COUNTRY_RES= $this->countryDetail[$messageValue["COUNTRY_RES"]];
+					if($COUNTRY_RES)		
+						return strlen($COUNTRY_RES)<=$country_res["maxlength"] ? $COUNTRY_RES : substr($COUNTRY_RES,0,$country_res["maxlength"]-2)."..";
+					
+				}
 		
 			case "TOLLNO":
 				return "18004196299";

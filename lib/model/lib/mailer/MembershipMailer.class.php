@@ -5,12 +5,18 @@ class MembershipMailer {
 
         $mailerServiceObj = new MailerService();
         sfProjectConfiguration::getActive()->loadHelpers("Partial","global/mailerfooter");
-	$mailerLinks = $mailerServiceObj->getLinks();
+	    $mailerLinks = $mailerServiceObj->getLinks();
 
         $email_sender = new EmailSender(MailerGroup::MEMBERSHIP_MAILER, $mailid);
         $emailTpl = $email_sender->setProfileId($profileid);
         $smartyObj = $emailTpl->getSmarty();
         $smartyObj->assign("mailerLinks",$mailerLinks);
+        $protect_obj = new protect;
+        $profilechecksum = md5($profileid)."i".$profileid;
+        $profileObj = LoggedInProfile::getInstance('newjs_slave',$profileid);
+        $echecksum = $protect_obj->js_encrypt($profilechecksum,$profileObj->getEMAIL());
+        $autoLoginLink = JsConstants::$siteUrl."/membership/jspc?CMGFRMMMMJS=1&checksum=$profilechecksum&profilechecksum=$profilechecksum&echecksum=$echecksum&enable_auto_loggedin=1&from_source=FP_RB_PROMO_MAILER";
+        $smartyObj->assign("membershipAutoLoginLink", $autoLoginLink);
 
         if(is_array($dataArr))
                 $smartyObj =$this->setSmartyParams($mailid,$smartyObj,$mailerServiceObj, $dataArr);

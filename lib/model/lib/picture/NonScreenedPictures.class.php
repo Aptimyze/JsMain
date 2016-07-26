@@ -331,8 +331,16 @@ class NonScreenedPicture extends Picture
 		$paramArr=Array(
 				"CURRENTSCRIPT"=>$currentScript,
 				"TOTALSCRIPT"=>$totalScripts,
-				"LIMIT"=>$limit,			
+				"LIMIT"=>$limit	
+	
 				);
+		if(PictureFunctions::IfUsePhotoDistributed('X'))
+			$paramArr['MainPicUrl'] ="LIKE '%".JsConstants::$photoServerName."%'";
+		else
+		{
+			$words = preg_replace('/\d/', '', JsConstants::$photoServerName);
+			$paramArr['MainPicUrl'] ="NOT LIKE '%".$words."%'";
+		}
 		$paramArr['SCREEN_BIT'] = explode("#",$screenBit);
 		$paramArr['ORDERING'] = '0';
 		$paramArr['OriginalPicUrl'] = 1;
@@ -377,14 +385,21 @@ class NonScreenedPicture extends Picture
 	*/
 	public function getFreshUploadePictures($totalScripts,$currentScript,$limit="")
 	{
+		
 		$photoObj=new PICTURE_FOR_SCREEN_NEW;
 		$paramArr=Array(
 		"CURRENTSCRIPT"=>$currentScript,
 		"TOTALSCRIPT"=>$totalScripts,
-		"LIMIT"=>$limit,
-		"OriginalPicUrl"=>2,			
+		"OriginalPicUrl"=>2,		
+			"LIMIT"=>$limit	
 		);
-		
+		if(PictureFunctions::IfUsePhotoDistributed('X'))
+			$paramArr['MainPicUrl'] ="LIKE '%".JsConstants::$photoServerName."%'";
+		else
+		{
+			$words = preg_replace('/\d/', '', JsConstants::$photoServerName);
+			$paramArr['MainPicUrl'] ="NOT LIKE '%".$words."%'";
+		}
 		$result =$photoObj->get($paramArr);
 		unset($photoObj);
 		if(is_array($result))
@@ -393,7 +408,10 @@ class NonScreenedPicture extends Picture
 			{
 				$setServer = PictureFunctions::getCloudOrApplicationCompleteUrl($value['MainPicUrl'],true);
 				if($setServer)
+				{
                         		$result[$key]['MainPicUrl']=$setServer; 
+                        		$result[$key]['IfUsePhotoDistributed']= PictureFunctions::getNameIfUsePhotoDistributed($value['MainPicUrl']);
+				}
 
 			}
 		}
