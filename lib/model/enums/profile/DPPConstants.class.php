@@ -198,7 +198,7 @@
 	  		"MARITAL_STATUS" =>"Marital Status",
 	  		"HAVE_CHILDREN" => "Have Children",
 	  		"COUNTRY" => "Country",
-	  		"CITY" => "State/City living in",),
+	  		"CITY" => "State/City"),
 	  	"RELIGION_ETHINICITY" => array(
 	  		"RELIGION" => "Religion",
 	  		"CASTE" => "Caste",

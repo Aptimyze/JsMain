@@ -32,7 +32,7 @@ class MAIL_EMAIL_VER_MAILER extends TABLE
 	                try
 	                {//print_r($pid);die;
 	                	
-						$sql = "UPDATE MAIL.SHORTLISTED_PROFILES SET SENT=:STATUS WHERE RECEIVER=:PROFILEID";
+						$sql = "UPDATE MAIL.EMAIL_VER_MAILER SET SENT=:STATUS WHERE RECEIVER=:PROFILEID";
 						$res = $this->db->prepare($sql);
 			            $res->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
 			            $res->bindValue(":STATUS", $mailStatus, PDO::PARAM_INT);
@@ -61,7 +61,7 @@ class MAIL_EMAIL_VER_MAILER extends TABLE
 	public function getMailCountForRange()
     	{           
                 try{    
-                        $sql = "SELECT count(1) as cnt,SENT FROM MAIL.SHORTLISTED_PROFILES group by SENT";
+                        $sql = "SELECT count(1) as cnt,SENT FROM MAIL.EMAIL_VER_MAILER group by SENT";
                         $res=$this->db->prepare($sql);
                         $res->execute();
 			$total = 0;

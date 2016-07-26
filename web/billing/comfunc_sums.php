@@ -4,6 +4,7 @@ include_once JsConstants::$docRoot . "/crm/func_sky.php";
 include_once JsConstants::$docRoot . "/profile/contacts_functions.php";
 include_once JsConstants::$docRoot . "/commonFiles/comfunc.inc";
 include_once JsConstants::$docRoot . "/classes/JProfileUpdateLib.php";
+include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
 /**
  * @param $serid
@@ -758,9 +759,9 @@ function charge_back_stats_log($profileid, $receiptid, $noChargeLog = '')
     include_once "$path/classes/Mysql.class.php";
     include_once "$path/classes/Memcache.class.php";
 
-    $mysql = new Mysql;
-    $myDbName = getProfileDatabaseConnectionName($profileid, '', $mysql);
-    $myDb = $mysql->connect("$myDbName");
+//    $mysql = new Mysql;
+//    $myDbName = getProfileDatabaseConnectionName($profileid, '', $mysql);
+//    $myDb = $mysql->connect("$myDbName");
     $sql_user = " SELECT ENTRY_DT,PHONE_RES,STD,PHONE_MOB,CONTACT,IPADD from newjs.JPROFILE where PROFILEID='$profileid' ";
     $res_user = mysql_query_decide($sql_user) or logError_sums($sql_user, 1);
     $row_user = mysql_fetch_array($res_user);
@@ -856,11 +857,16 @@ $wtng_me=$row_rec["cnt"];
             $wtng_me = $contactResult[$i]['CNT'];
         }
     }
+	$pidShard=JsDbSharding::getShardNo($profileid,'slave');
+	$dbMessageLogObj=new NEWJS_MESSAGE_LOG($pidShard);
+	$res=$dbMessageLogObj->getMessageLogBilling($profileid,'SENDER','');
 
-    $sql_con_made = " SELECT RECEIVER,DATE,IP from newjs.MESSAGE_LOG where SENDER='$profileid' order by ID desc limit 20";
-    $res_con_made = $mysql->executeQuery($sql_con_made, $myDb) or logError_sums($sql_con_made, 1);
+//    $sql_con_made = " SELECT RECEIVER,DATE,IP from newjs.MESSAGE_LOG where SENDER='$profileid' order by ID desc limit 20";
+//    $res_con_made = $mysql->executeQuery($sql_con_made, $myDb) or logError_sums($sql_con_made, 1);
 
-    while ($row_con_made = $mysql->fetchArray($res_con_made)) {
+//    while ($row_con_made = $mysql->fetchArray($res_con_made)) {
+        foreach ($res as $key=>$row_con_made)
+    {
         $sql = "select USERNAME from newjs.JPROFILE where PROFILEID=$row_con_made[RECEIVER] ";
         $res = mysql_query_decide($sql) or logError_sums($sql, 1);
         $row = mysql_fetch_array($res);
@@ -870,10 +876,14 @@ $wtng_me=$row_rec["cnt"];
 
     addslashes(stripslashes($con_made));
 
-    $sql_con_acc = " SELECT SENDER,DATE,IP from newjs.MESSAGE_LOG where RECEIVER='$profileid' and TYPE='A' order by ID desc limit 20";
-    $res_con_acc = $mysql->executeQuery($sql_con_acc, $myDb) or logError_sums($sql_con_acc, 1);
+	$res=$dbMessageLogObj->getMessageLogBilling($profileid,'RECEIVER','A');
 
-    while ($row_con_acc = $mysql->fetchArray($res_con_acc)) {
+//    $sql_con_acc = " SELECT SENDER,DATE,IP from newjs.MESSAGE_LOG where RECEIVER='$profileid' and TYPE='A' order by ID desc limit 20";
+//    $res_con_acc = $mysql->executeQuery($sql_con_acc, $myDb) or logError_sums($sql_con_acc, 1);
+
+//    while ($row_con_acc = $mysql->fetchArray($res_con_acc)) {
+        foreach ($res as $key=>$row_con_acc)
+	{
         $sql = "select USERNAME from newjs.JPROFILE where PROFILEID=$row_con_acc[SENDER] ";
         $res = mysql_query_decide($sql) or logError_sums($sql, 1);
         $row = mysql_fetch_array($res);

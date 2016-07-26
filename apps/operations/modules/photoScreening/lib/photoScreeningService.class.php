@@ -1285,10 +1285,8 @@ class photoScreeningService
 	*/
 	public function moveImageToScreened($source,$dest)
         {
-                if(strstr($source,'JS'))
-                {
-                        $source=str_replace('JS',JsConstants::$docRoot,$source);
-                }
+								$source = PictureFunctions::getCloudOrApplicationCompleteUrl($source,true);
+								$dest = PictureFunctions::getCloudOrApplicationCompleteUrl($dest,true);
                 chmod($source,0777);
                 
                 if($source==$dest)

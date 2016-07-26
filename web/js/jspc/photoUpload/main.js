@@ -269,6 +269,12 @@ $(function () {
 function sendProcessCropperRequest(cordinatesArray,imageSource,imgPreviewTypeArr)
 {
 	var url = '/social/processCropper';
+	
+    if (typeof imageCopyServer === 'undefined' || imageCopyServer == '')
+        url = "/social/processCropper";
+    else
+        url = "/"+imageCopyServer+"/social/processCropper";
+    //alert(url);
 	var postSendData = {'cropBoxDimensionsArr':cordinatesArray,'imageSource':imageSource,'imgPreviewTypeArr':imgPreviewTypeArr};
 	
 	$.myObj.ajax({
@@ -286,8 +292,14 @@ function sendProcessCropperRequest(cordinatesArray,imageSource,imgPreviewTypeArr
 		success: function(response) 
 		{
 			hideCommonLoader();
+			var url = '/social/addPhotos?showConf=1';
+	
+			if (typeof imageCopyServer === 'undefined' || imageCopyServer == '')
+        url = "/social/addPhotos?showConf=1";
+			else
+        url = "/"+imageCopyServer+"/social/addPhotos?showConf=1";
 			//console.log("cropped image successfully"); 
-			window.location="/social/addPhotos?showConf=1";
+			window.location=url;
 		},
 		error: function(xhr) 
 		{
