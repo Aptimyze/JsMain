@@ -107,12 +107,15 @@ if($phoneVerRow=(new PHONE_VERIFIED_LOG())->getLogForOtherNumberVerified($profil
 	foreach ($phoneVerRow as $key => $value) {
 		# code...
 
-		$profileObj2->getDetail($value['PROFILEID'],'PROFILEID');
+		$profileObj2->getDetail($value['PROFILEID'],'PROFILEID','PROFILEID,ACTIVATED,INCOMPLETE,GENDER,ENTRY_DT');
 		if( ($profileObj2->getACTIVATED() != 'D') && ($profileObj->getACTIVATED() != 'D') && ($profileObj2->getINCOMPLETE() != 'Y') && ($profileObj2->getGENDER()==$profileObj->getGENDER()))
 		{
 			$rawDuplicateObj=new RawDuplicate();
-			if(strtotime($profileObj->getENTRY_DT()) > strtotime($profileObj2->getENTRY_DT()))
-			{	
+			$timeStamp1=JSstrToTime($profileObj->getENTRY_DT());
+			$timeStamp2=JSstrToTime($profileObj2->getENTRY_DT());
+			
+			if($timeStamp1 > $timeStamp2)
+			{
 				$rawDuplicateObj->setProfileid2($profileId); //profile found as a duplicate
 				$rawDuplicateObj->setProfileid1($value['PROFILEID']); 
 			}
