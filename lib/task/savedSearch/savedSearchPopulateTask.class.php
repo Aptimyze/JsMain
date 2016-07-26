@@ -37,7 +37,17 @@ EOF;
 		
 		//Truncate table Data       
 		$savedSearchObj->truncateSavedSearchData();
-		$searchAgentObj = new SEARCH_AGENT();
-		$receiverData = $searchAgentObj->insertSavedSearchMailerData($currentScript,$totalScripts);	
+
+        $lastLoginDate = date('Y-m-d', strtotime("-1 month"));
+
+        //select from slave
+		$selectSearchAgentObj = new SEARCH_AGENT("newjs_slave");
+		$receiverData = $selectSearchAgentObj->selectSavedSearchMailerData($currentScript,$totalScripts,$lastLoginDate);
+        unset($selectSearchAgentObj);
+        
+        //insert to master
+        $insertDataObj = new SEARCH_AGENT("newjs_master");
+        $insertDataObj->insertSavedSearchMailerData($receiverData);
+        unset($insertDataObj);
     }
 }
