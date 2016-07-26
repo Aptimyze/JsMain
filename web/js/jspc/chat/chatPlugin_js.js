@@ -809,10 +809,10 @@ JsChat.prototype = {
         else{
             console.log("in case b");
             switch(groupID){
-                case "acceptance":
+                case chatConfig.Params.categoryNames["Acceptance"]: //acceptance from 
                                 chatBoxType = curElem._contactStatusMapping["pog_interest_accepted"]["key"];
                                 break;
-                case "intrec":
+                case chatConfig.Params.categoryNames["Interest Received"]:
                                 chatBoxType = curElem._contactStatusMapping["pg_acceptance_pending"]["key"];
                                 break;
                 default:
