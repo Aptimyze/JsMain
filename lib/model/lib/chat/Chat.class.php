@@ -18,4 +18,17 @@ class Chat {
         }
         return $result;
     }
+    
+    public function addNewProfile($profileid){
+        try{
+            $producerObj = new Producer();
+            if ($producerObj->getRabbitMQServerConnected()) {
+                $chatData = array('process' => 'USERCREATION', 'data' => ($profileid), 'redeliveryCount' => 0);
+                $producerObj->sendMessage($chatData);
+            }
+        }
+        catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
 }
