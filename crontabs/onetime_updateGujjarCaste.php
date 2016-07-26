@@ -9,6 +9,8 @@ include("config.php");
 include("connect.inc");
 include_once(JsConstants::$docRoot."/classes/Mysql.class.php");
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+include_once(JsConstants::$docRoot."/classes/globalVariables.Class.php");
+
 global $updateTypeArray;
 $updateTypeArray = array("single","comma","pipehash");
 // Column mapping and values to update
