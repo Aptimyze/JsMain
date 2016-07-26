@@ -164,7 +164,7 @@ class Producer
 					break;
 				case "CHATROSTERS":
 					$data = $msgdata['data'];
-					$msg = new AMQPMessage($data, array('delivery_mode' => MQ::DELIVERYMODE));
+					$msg = new AMQPMessage(json_encode($data), array('delivery_mode' => MQ::DELIVERYMODE));
 					$this->channel->basic_publish($msg, MQ::CHATEXCHANGE, "roster");
 					break;
 				case "UPDATE_SEEN":

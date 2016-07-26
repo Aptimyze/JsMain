@@ -113,6 +113,7 @@
 .nchatm3{margin-left:14px;}
 .nchatm4{margin-left:3px}
 .nchatm5{margin-top:5%}
+.nchatm90{margin-top: 90%;}
 .chatp1 {
 	padding:10px 15px 15px 22px
 }
@@ -687,3 +688,4 @@ margin-top: 220px;
 }
 .nchathoverdim{width:220px; height: 449px}
 .nhgt180{height: 180px}
+.wid40hgt40{width:40px;height:40px;}
