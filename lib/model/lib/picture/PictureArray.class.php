@@ -37,8 +37,11 @@ class PictureArray
 	  * @return - Array of Picture Objects of all profiles having Photos
 	**/
 
-	public function getProfilePhoto($photoType = 'N', $skipProfilePrivacy='',$viewedDppArr='',$viewerObj='',$skipContacts='',$contactsBetweenViewedAndViewer='',$isMobile='')
+	public function getProfilePhoto($photoType = 'N', $skipProfilePrivacy='',$viewedDppArr='',$viewerObj='',$skipContacts='',$contactsBetweenViewedAndViewer='',$isMobile='',$dbname='')
 	{
+                if($dbname == ''){
+                        $dbname = 'newjs_master';
+                }
 		$this->viewerObj = $viewerObj;
 		//checking if atleast one profile is passed for which photo is to be fetched
 		if(!is_array($this->viewedObjArr))
@@ -51,12 +54,12 @@ class PictureArray
 		{
 			if(strstr($_SERVER['PHP_SELF'],'symfony_index.php'))
 			{
-				$this->viewerObj=LoggedInProfile::getInstance('newjs_master');
+				$this->viewerObj=LoggedInProfile::getInstance($dbname);
 			}
 			else
 			{
 				global $data;
-				$this->viewerObj=LoggedInProfile::getInstance('newjs_master',$data['PROFILEID']);
+				$this->viewerObj=LoggedInProfile::getInstance($dbname,$data['PROFILEID']);
 			}
 
 			if(!$this->viewerObj || $this->viewerObj->getPROFILEID() == '')
@@ -134,7 +137,7 @@ class PictureArray
 		{
 			if($this->viewerObj && $profilesWithPrivacySet && is_array($viewedDppArr))
 			{
-				$viewedFilterParameters = MultipleUserFilter::getFilterParameters($profilesWithPrivacySet);
+				$viewedFilterParameters = MultipleUserFilter::getFilterParameters($profilesWithPrivacySet,$dbname);
 				$viewerParameters = $this->viewerObj->getFilterParameters();
 				$filterObj = new MultipleUserFilter($viewerParameters, $viewedFilterParameters, $viewedDppArr, $this->viewerObj->getPROFILEID(), $profilesWithPrivacySet);
 				$profilesPassingFilters = $filterObj->checkIfProfileMatchesDpp();
@@ -239,6 +242,8 @@ class PictureArray
 			$photoObjArr = $this->getProfilePics($this->viewedObjArr,$tempContacts,'mobile',1,$photoType);
 		else
 			$photoObjArr = $this->getProfilePics($this->viewedObjArr,$tempContacts,'',1,$photoType);
+                
+                
 		unset($tempContacts); 
 		$pictureDisplayLogic = FieldMap::getFieldLabel('photo_display_logic', '', 1);
 
@@ -573,7 +578,7 @@ class PictureArray
 
 		if($profilesWithScreenedPhoto)	
 		{
-			$PICTURE_NEW = new PICTURE_NEW("newjs_bmsSlave");
+			$PICTURE_NEW = new PICTURE_NEW("newjs_masterRep");
 			$arr = $PICTURE_NEW->getScreendPictureCountByPid($profilesWithScreenedPhoto);
 		}
 		return $arr;

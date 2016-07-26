@@ -74,7 +74,9 @@ class AuthFilter extends sfFilter {
 			}
 				$protect_obj = new protect;
 				$request->setAttribute("protect_obj",$protect_obj);
-				
+				if(strpos($_SERVER['REQUEST_URI'],"search")!==false)
+					$request->setParameter('searchRepConn', 1);
+					
 			if ($this->isFirstCall() && !$request->getAttribute('FirstCall')) {
 				$request->setAttribute('FirstCall', 1);
 				

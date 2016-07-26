@@ -81,7 +81,7 @@ class SearchApiDisplay
 
 	public function getDisplayData($searchId='')
 	{
-		$chatObj = new ChatLibrary();
+		$chatObj = new ChatLibrary(searchConfig::getSearchDb());
 
 		//logged in profile object
 //		$this->viewerObj = LoggedInProfile::getInstance("newjs_master",'');
@@ -154,7 +154,7 @@ class SearchApiDisplay
 			}
 			*/
 			//get logged-in user's bookmarks
-			$bookmarkObj = new Bookmarks();
+			$bookmarkObj = new Bookmarks(searchConfig::getSearchDb());
 			$bookmarks = $bookmarkObj->getProfilesBookmarks($viewer, $this->profileids, 1);
 
 			//get chat requests received by logged-in user
@@ -441,7 +441,7 @@ class SearchApiDisplay
                 	                        $tempArr = $this->SearchParamtersObj->getAlertsDateConditionArr();
                                 	        if(!$tempArr)
                                         	{
-                                                	$MatchAlerts = new MatchAlerts;
+                                                	$MatchAlerts = new MatchAlerts(SearchConfig::getSearchDb());
 	                                                $tempArr = $MatchAlerts->getProfilesWithOutSorting($this->viewerObj->getPROFILEID());
         	                                        $this->SearchParamtersObj->setAlertsDateConditionArr($tempArr);
                 	                        }
@@ -466,7 +466,7 @@ class SearchApiDisplay
                                         	$tempArr = $this->SearchParamtersObj->getAlertsDateConditionArr();
 	                                        if(!$tempArr)
         	                                {
-                	                                $KundliAlerts = new KundliAlerts;
+                	                                $KundliAlerts = new KundliAlerts(SearchConfig::getSearchDb());
                         	                        $tempArr = $KundliAlerts->getProfilesWithOutSorting($this->viewerObj->getPROFILEID());
                                 	                $this->SearchParamtersObj->setAlertsDateConditionArr($tempArr);
                                         	}
@@ -627,6 +627,7 @@ class SearchApiDisplay
 
 		$this->getDisplayData($searchId);
 		$this->getProfilePhotoForMultipleUsers();
+                
 		return $this->finalResultsArray;
 
 	}
@@ -639,10 +640,11 @@ class SearchApiDisplay
 	public function getProfilePhotoForMultipleUsers()
 	{
 		$multiplePictureObj = new PictureArray($this->profileObjArr);
+                
 		if($this->isMobile)
-			$photosArr = $multiplePictureObj->getProfilePhoto('',$this->viewedProfilesDpp,'','',$this->allContacts,'mobile');
+			$photosArr = $multiplePictureObj->getProfilePhoto('',$this->viewedProfilesDpp,'','',$this->allContacts,'mobile','',searchConfig::getSearchDb());
 		else
-			$photosArr = $multiplePictureObj->getProfilePhoto('',$this->viewedProfilesDpp,'','',$this->allContacts);
+			$photosArr = $multiplePictureObj->getProfilePhoto('',$this->viewedProfilesDpp,'','',$this->allContacts,'','',searchConfig::getSearchDb());
 
 		$noOfPhotosArr = $multiplePictureObj->getNoOfPics($this->profileObjArr);
 		$this->viewerObj = LoggedInProfile::getInstance("newjs_master",'');
@@ -662,7 +664,7 @@ class SearchApiDisplay
 				{
 					if(!MobileCommon::isDesktop())
 					{
-                                		$pictureSizeObj = new PICTURE_MobAppPicSize("newjs_bmsSlave");
+                                		$pictureSizeObj = new PICTURE_MobAppPicSize("newjs_masterRep");
 		                                $pictureSize = $pictureSizeObj->getPictureSize($pictureId);
 					}
 				}
