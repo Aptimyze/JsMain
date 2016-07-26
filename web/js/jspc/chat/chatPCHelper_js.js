@@ -73,7 +73,24 @@ function requestListingPhoto(apiParams) {
  */
 function initiateChatConnection() {
     username = loggedInJspcUser + '@localhost';
-    pcHelperLogger("user:" + username + " pass:" + pass);
+    /*if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
+        username = 'a1@localhost';
+    else if(readSiteCookie("CHATUSERNAME")=="bassi")
+        username = '1@localhost';
+    else if(readSiteCookie("CHATUSERNAME")=="VWZ4557")
+        username = 'a9@localhost';
+    else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
+        username = 'a8@localhost';
+    else if(readSiteCookie("CHATUSERNAME") == "ZZRS3292")
+        username = 'a13@localhost';
+    else if(readSiteCookie("CHATUSERNAME")=="ZZVV2929")
+        username = 'a14@localhost';
+    else if(readSiteCookie("CHATUSERNAME")=="ZZRR5723")
+        username = 'a11@localhost';
+    pass = '123';*/
+    //console.log("Nitish"+username);
+    //console.log(chatConfig.Params[device].bosh_service_url);
+    console.log("user:" + username + " pass:" + pass);
     strophieWrapper.connect(chatConfig.Params[device].bosh_service_url, username, pass);
     pcHelperLogger(strophieWrapper.connectionObj);
 }
@@ -598,7 +615,7 @@ $(document).ready(function () {
                     var apiParams = {
                         "url": chatConfig.Params[device].preAcceptChat["apiUrl"],
                         "postParams": {
-                            "profilechecksum": "4ddba5c85d628cf4faaaca776540cb1ei7575569", //receiverProfileChecksum
+                            "profilechecksum": /*"4ddba5c85d628cf4faaaca776540cb1ei7575569", */receiverProfileChecksum,
                             "chatMessage": message
                         }
                     };
