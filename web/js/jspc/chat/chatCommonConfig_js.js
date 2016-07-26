@@ -13,6 +13,11 @@ chatConfig.Params = {
         "DECLINE": "/api/v2/contacts/postNotInterested",
         "INITIATE": "/api/v2/contacts/postEOI"
     },
+    trackingParams:{
+        "ACCEPT": "responseTracking=8",
+        "DECLINE": "responseTracking=8",
+        "INITIATE": "stype=WV"
+    },
     photoUrl:"/api/v1/social/getMultiUserPhoto",
     PC: {
         bosh_service_url: 'ws://' + openfireUrl + '/ws/', //connection manager for openfire
