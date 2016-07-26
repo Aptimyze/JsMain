@@ -109,11 +109,11 @@ if($phoneVerRow=(new PHONE_VERIFIED_LOG())->getLogForOtherNumberVerified($profil
 		# code...
 
 		$profileObj2->getDetail($value['PROFILEID'],'PROFILEID');
-		if( ($profileObj2->getACTIVATED() != 'N') && $profileObj2->getGENDER()==$profileObj->getGENDER())
+		if( ($profileObj2->getACTIVATED() != 'D') && ($profileObj->getACTIVATED() != 'D') && ($profileObj2->getINCOMPLETE() != 'N') && ($profileObj2->getGENDER()==$profileObj->getGENDER()))
 		{
 			$rawDuplicateObj=new RawDuplicate();
-			$rawDuplicateObj->setProfileid2($value['PROFILEID']); //profile found as a duplicate
-			$rawDuplicateObj->setProfileid1($profileId); 
+			$rawDuplicateObj->setProfileid2($profileId); //profile found as a duplicate
+			$rawDuplicateObj->setProfileid1($value['PROFILEID']); 
 			$rawDuplicateObj->setReason(REASON::PHONE); 
 			$rawDuplicateObj->setIsDuplicate(IS_DUPLICATE::YES); 
 			$rawDuplicateObj->addExtension('MARKED_BY','SYSTEM');
@@ -121,9 +121,6 @@ if($phoneVerRow=(new PHONE_VERIFIED_LOG())->getLogForOtherNumberVerified($profil
 	  		$rawDuplicateObj->addExtension('IDENTIFIED_ON',date('Y-m-d H:i:s'));
 	  		$rawDuplicateObj->setComments("None");
 			DuplicateHandler::HandleDuplicatesInsert($rawDuplicateObj);
-
-
-
 		}
 	
 
