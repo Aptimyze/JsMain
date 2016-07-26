@@ -14,7 +14,7 @@ class MessageQueues
   CONST INVALIDATECACHE = "invalidateCache";
   //per queue msg limit mapping
   public static $upperMessageLimitPerQueue = array("default"=>1000,"INSTANT_NOTIFICATION_QUEUE"=>10000);
-  public static $queuesWithoutMsgCountLimit = array("SCHEDULED_NOTIFICATION_QUEUE1","SCHEDULED_NOTIFICATION_QUEUE2", "SCHEDULED_NOTIFICATION_QUEUE3"); //queues not to be considered for msg upper limit alert
+  public static $queuesWithoutMsgCountLimit = array("SCHEDULED_NOTIFICATION_QUEUE1","SCHEDULED_NOTIFICATION_QUEUE2", "SCHEDULED_NOTIFICATION_QUEUE3", "SCHEDULED_NOTIFICATION_QUEUE4"); //queues not to be considered for msg upper limit alert
   CONST SAFE_LIMIT = 200000000;     //Limit in MB's for the difference between memory allowed and memory used by rabbitmq.
   CONST MSGBODYLIMIT = NULL;  //to prevent truncation of message. NULL specify that a message of any length can be sent over the queue.
   CONST DELIVERYMODE = 2;     //for persistent messages. 2 is the default value to make messages persistent and the other allowed value is 1 which corresponds to non-persistent messages.
@@ -47,15 +47,18 @@ class MessageQueues
   public static $SCHEDULED_NOTIFICATION_QUEUE1 = "SCHEDULED_NOTIFICATION_QUEUE1"; //Queue for sending scheduled notification data from notification queue 1 to GCM
   public static $SCHEDULED_NOTIFICATION_QUEUE2 = "SCHEDULED_NOTIFICATION_QUEUE2"; //Queue for sending scheduled notification data from notification queue 2 to GCM
   public static $SCHEDULED_NOTIFICATION_QUEUE3 = "SCHEDULED_NOTIFICATION_QUEUE3"; //Queue for sending scheduled notification data from notification queue 3 to GCM
+  public static $SCHEDULED_NOTIFICATION_QUEUE4 = "SCHEDULED_NOTIFICATION_QUEUE4"; //Queue for sending scheduled notification data from notification queue 4 to GCM
   public static $DELAYED_NOTIFICATION_EXCHANGE = array("NAME"=>"DelayedNotificationExchange","TYPE"=>"direct","DURABLE"=>true);
   public static $INSTANT_NOTIFICATION_EXCHANGE = array("NAME"=>"InstantNotificationExchange","TYPE"=>"fanout","DURABLE"=>true);
   public static $scheduledNotificationBindingKeyArr=array("SCHEDULED_NOTIFICATION_QUEUE1" => "JS_NOTIFICATION1",
       "SCHEDULED_NOTIFICATION_QUEUE2" => "JS_NOTIFICATION2",
-      "SCHEDULED_NOTIFICATION_QUEUE3" => "JS_NOTIFICATION3"
+      "SCHEDULED_NOTIFICATION_QUEUE3" => "JS_NOTIFICATION3",
+      "SCHEDULED_NOTIFICATION_QUEUE4" => "JS_NOTIFICATION4"
   ); //queue name to exchange binding key mapping
   public static $scheduledNotificationDelayMappingArr =  array("SCHEDULED_NOTIFICATION_QUEUE1" => 6.5,
       "SCHEDULED_NOTIFICATION_QUEUE2" => 6,
-      "SCHEDULED_NOTIFICATION_QUEUE3" => 6
+      "SCHEDULED_NOTIFICATION_QUEUE3" => 6,
+      "SCHEDULED_NOTIFICATION_QUEUE4" => 6
   );  //queue name to delay time(unit) mapping(configurable after queue deletion using x-expire field in queue declaration)
   public static $notificationDelayMultiplier = 3600; //1 hr multiple delay
   public static $notificationQueueExpiryTime = 7; //queue will expire if unused for 7 hrs,not used currently

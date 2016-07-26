@@ -62,15 +62,46 @@ class AppNotificationScheduler extends NotificationScheduler
 			  $insertData[$k]['COUNT']=$v['COUNT'];
 			  $insertData[$k]['MSG_ID']=$v['MSG_ID'];
 			  $insertData[$k]['SENT']='N';	
-              $insertData[$k]['PHOTO_URL']=$v['PHOTO_URL'];
+		          $insertData[$k]['PHOTO_URL']=$v['PHOTO_URL'];
 			  if($v['NOTIFICATION_KEY']=='VD')
 				  $insertData[$k]['TITLE']=$v['NOTIFICATION_MESSAGE_TITLE'];		
 			  else
-				$insertData[$k]['TITLE']=$v['TITLE'];	
+				$insertData[$k]['TITLE']=$v['TITLE'];
+			  $this->insert($insertData);	
 		  }
 		  $scheduledAppNotificationsObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
 		  $scheduledAppNotificationsObj->insert($insertData);
 	  }
   }
+
+  public function insert($notificationData){
+        $producerObj = new JsNotificationProduce();
+        if(is_array($notificationData) && $notificationData)
+        foreach ($notificationData as $key => $val){
+            unset($paramsArr);
+	    $paramsArr['PROFILEID']=$val['SELF']['PROFILEID'];
+	    $paramsArr['NOTIFICATION_KEY']=$val['NOTIFICATION_KEY'];
+	    $paramsArr['MESSAGE']=$val['NOTIFICATION_MESSAGE'];
+	    $paramsArr['LANDING_SCREEN']=$val['LANDING_SCREEN'];
+	    $paramsArr['OS_TYPE']=$val['OS_TYPE'];
+	    $paramsArr['PRIORITY']=$val['PRIORITY'];
+	    $paramsArr['COLLAPSE_STATUS']=$val['COLLAPSE_STATUS'];
+	    $paramsArr['TTL']=$val['TTL'];
+	    $paramsArr['COUNT']=$val['COUNT'];
+	    $paramsArr['MSG_ID']=$val['MSG_ID'];
+	    $paramsArr['SENT']='N';  
+	    $paramsArr['PHOTO_URL']=$val['PHOTO_URL'];
+	    $paramsArr['TITLE']=$val['NOTIFICATION_MESSAGE_TITLE'];
+
+	    if($producerObj->getRabbitMQServerConnected()){
+		$msgdata = FormatNotification::formatPushNotification($paramsArr,$val["OS_TYPE"],true);
+		$producerObj->sendMessage($msgdata);
+	    }
+	    else{
+		$str = "\nRabbitmq Notification Error Alert: Rabbitmq Server is down.";
+		RabbitmqHelper::sendAlert($str,"browserNotification");
+	    }
+        }
+    }
 }
 ?>
