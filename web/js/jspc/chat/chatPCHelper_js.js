@@ -447,6 +447,32 @@ function handleErrorInHoverButton(jid, data) {
         objJsChat.hoverButtonHandling(jid, data, "error");
     }
 }
+
+function contactActionCall(action, checkSum, params){
+    var response;
+    url = chatConfig.Params["actionUrl"][action];
+    $.myObj.ajax({
+        type: 'POST',
+        aync: false,
+        dataType: 'json',
+        data: {
+            profilechecksum: checkSum,
+            params: params,
+            source: "chat"
+        },
+        url: url,
+        success: function(data) {
+            response = data;
+            console.log(response);
+        },
+        error: function(){
+          response = "false";
+        }
+    });
+    console.log(response);
+    return response;
+}
+
 $(document).ready(function () {
     pcHelperLogger("User");
     pcHelperLogger(loggedInJspcUser);
@@ -507,6 +533,15 @@ $(document).ready(function () {
                 idBeforeSplit = params.id.split('_');
                 idAfterSplit = idBeforeSplit[0];
                 action = idBeforeSplit[1];
+                /*
+                response = contactActionCall(action, checkSum, paramsData);
+                if(response !="false"){
+                    console.log("Not false");
+                    console.log(response);
+                    handleErrorInHoverButton(idAfterSplit,response);
+                }
+                */
+                
                 url = chatConfig.Params["actionUrl"][action];
                 $.ajax({
                     type: 'POST',
@@ -520,6 +555,8 @@ $(document).ready(function () {
                         handleErrorInHoverButton(idAfterSplit, data);
                     }
                 });
+                
+               
             }
             /*executed on click of contact engine buttons in chat box
              */
