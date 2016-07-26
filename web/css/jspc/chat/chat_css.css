@@ -665,3 +665,23 @@ wid165 {
 line-height: 17px;    
 margin-top: 220px;
    padding:10px}
+.wd40{
+    height:40px;
+    width:40px;
+}
+.chpt100{
+    padding-top: 100%;
+}
+.ch220{
+    height:220px;
+    width:220px;
+}
+.nchatrr1{width: 100%; height: 100%; background: rgba(226,226,226,0.9);top:0; left:0; height: 179px;}
+.nhgt28{height: 28px}
+.ht160{height:160px}
+.nchatbg-grey{
+    background-color: #999999;
+}
+.wid90{
+    width:90%
+}

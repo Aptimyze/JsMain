@@ -38,8 +38,10 @@ class chatActions extends sfActions
 
             $username = $loginData['PROFILEID'];
 
-		$uname = $loginData['USERNAME'];
-	    $pass = EncryptPassword::generatePassword($uname);
+		//$uname = $loginData['USERNAME'];
+	    $pass = EncryptPassword::generatePassword($username);
+            //$pass = EncryptPassword::generatePassword("test".$username);
+            //$pass = "test".$username;
 
             $url = JsConstants::$openfireConfig['HOST'].":".JsConstants::$openfireConfig['PORT']."/plugins/restapi/v1/users/".$username;
             //$url = "http://localhost:9090/plugins/restapi/v1/users/".$username;
@@ -158,12 +160,14 @@ class chatActions extends sfActions
                 $username = $request->getParameter('username');
                 $profile["$username"]["NAME"] = "Atul";
                 $profile["$username"]["EMAIL"] = "Atul@gmail.com";
-                $profile["$username"]["PHOTO"] = "http://mediacdn.jeevansathi.com/1769/6/35386110-1436589041.jpeg";
+                $profile["$username"]["PHOTO"] = "http://mediacdn.jeevansathi.com/3418/10/68370525-1468221044.jpeg";
                 $profile["$username"]["AGE"] = "3";
                 $profile["$username"]["HEIGHT"] = "5 9";
-                $profile["$username"]["PROFFESION"] = "Christian";
+                $profile["$username"]["PROFFESION"] = "Doctor";
                 $profile["$username"]["SALARY"] = "Rs. 15 - 20lac";
                 $profile["$username"]["CITY"] = "New Delhi";
+                $profile["$username"]["COMMUNITY"] = "Brahmin";
+                $profile["$username"]["EDUCATION"] = "B.Tech";
                 $d1["action"] = "INITIATE";
                 $d1["label"] = "Send Interest";
                 $d1["iconid"] = null;
@@ -238,6 +242,7 @@ $apiResponseHandlerObj->setResponseBody($getData);
 
 
 		$response = array(
+                "jid"=>$profile->getPROFILEID(),
 				"username"=>$profile->getUSERNAME(),
 				"age"=>$profile->getAGE()." Years",
 				"height"=>$profile->getDecoratedHeight(),
@@ -325,5 +330,43 @@ $apiResponseHandlerObj->setResponseBody($getData);
 		$apiResponseHandlerObj->generateResponse();
 		die;
 	}
+    public function executeSendEOIV1(sfwebrequest $request){
+        $apiResponseHandlerObj = ApiResponseHandler::getInstance();
+        $loginData = $request->getAttribute("loginData");
+        if($loginData){
+		//Count from Nitesh
+		if($checkCount==3){
+			$response["message"] = "You can send more messages only of user replies";
+			$response["cansend"] = false;
+		}
+                if($checkCount==0){
+                        $url = JsConstants::$siteUrl."/api/v2/contacts/postEOI";
+                        $data = array("AUTHCHECKSUM"=>$loginData["AUTHCHECKSUM"],"profilechecksum" => $request->getParameter('profilechecksum'), "chatMessage" => $request->getParameter('chatMessage'), "stype"=>$request->getParameter('stype'));
+                        $ch = curl_init();
+                        curl_setopt($ch, CURLOPT_URL, $url);
+                        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
+                        curl_setopt($ch, CURLOPT_TIMEOUT, 4);
+                        curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                        $curlResult = curl_exec ($ch);
+                        curl_close ($ch);
+                        $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+                        $response = json_decode($curlResult, true);
+			$response["cansend"] = true;
+                }
+                else{
+                        //Append messages as EOI messages
+			$response["cansend"] = true;
+                }
+        }
+        else{
+            $response = "Logged Out Profile";
+            $apiResponseHandlerObj->setHttpArray(ChatEnum::$loggedOutProfile);
+        }
+        $apiResponseHandlerObj->setResponseBody($response);
+        $apiResponseHandlerObj->generateResponse();
+        die;
+    }
+
 }
 ?>
