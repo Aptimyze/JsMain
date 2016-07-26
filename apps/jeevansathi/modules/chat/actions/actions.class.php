@@ -70,6 +70,8 @@ class chatActions extends sfActions
                 $response['userStatus'] = "New user created";
                 $url = JsConstants::$openfireConfig['HOST'].":".JsConstants::$openfireConfig['PORT']."/plugins/restapi/v1/users/";
                 //$url = "http://localhost:9090/plugins/restapi/v1/users/";
+                $profileImporterObj = new Chat();
+                $profileImporterObj->addNewProfile($username);
                 $data = array("username" => $username, "password" => $pass);
                 $jsonData = json_encode($data);
                 

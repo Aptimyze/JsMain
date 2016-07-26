@@ -353,7 +353,7 @@ JsChat.prototype = {
     //start:addlisting
     addListingInit: function(data) {
         var elem = this,
-            statusArr = [],
+            statusArr = [],jidStr = "",
             currentID;
         console.log("addListing");
         for (var key in data) {
@@ -365,6 +365,7 @@ JsChat.prototype = {
                 var fullJID = runID;
                 res = runID.split("@");
                 runID = res[0];
+                jidStr = jidStr+runID+",";
                 statusArr[runID] = status;
                 if (typeof data[key]["rosterDetails"]["groups"] != "undefined" && data[key]["rosterDetails"]["groups"].length > 0) $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
                     console.log("groups " + val);
@@ -376,7 +377,7 @@ JsChat.prototype = {
                         prfCheckSum = data[key]["rosterDetails"]["profile_checksum"]; //ankita for image
                     List += '<li class=\"clearfix profileIcon\"';
                     List += "id=\"" + runID + "_" + val + "\" data-status=\"" + status + "\" data-checks=\"" + prfCheckSum + "\" data-jid=\"" + fullJID + "\">";
-                    List += "<img id=\"pic_" + runID + "_" + val + "\" src=\"" + picurl + "\" class=\"fl\">";
+                    List += "<img id=\"pic_" + runID + "_" + val + "\" src=\"" + picurl + "\" class=\"fl wid40hgt40\">";
                     List += '<div class="fl f14 fontlig pt15 pl18">';
                     List += getNamelbl;
                     List += '</div>';
@@ -432,7 +433,28 @@ JsChat.prototype = {
         $(elem._listingClass).on('mouseenter mouseleave', {
             global: elem
         }, elem._calltohover);
+        //var APIsrc ="http://xmppdev.jeevansathi.com/api/v1/social/getMultiUserPhoto?pid=";
+        console.log("api");
+        console.log(jidStr);
+        var apiParams = {};
+        if(jidStr){
+            apiParams["pid"] = jidStr.slice(0,-1);
+            apiParams["photoType"] = "ProfilePic120Url";
+            requestListingPhoto(apiParams);  
+        }
     },
+
+    //add photo in tuple div of listing
+    _addListingPhoto:function(photoObj){
+        if(typeof photoObj!= "undefined" && typeof Object.keys(photoObj.profiles)!= "undefined"){
+            $.each(Object.keys(photoObj.profiles),function(index,element){
+                if(photoObj.profiles[element].PHOTO.ProfilePic120Url) {
+                  $(".chatlist img[id*='pic_"+element+"']").attr("src",photoObj.profiles[element].PHOTO.ProfilePic120Url);
+                }
+            });
+        }
+    },
+
     //place contact in appropriate position in listing
     _placeContact: function(key, contactID, groupID, status, contactHTML) {
         if (key == "new") {
@@ -672,8 +694,14 @@ JsChat.prototype = {
                 if (text.length > 1) {
                     var superParent = $(this).parent().parent(),
                         timeLog = new Date().getTime();
-                    $(superParent).find("#sendInt,#initChatText,#sentDiv").remove();
+                    
+                    $(superParent).find("#initChatText,#sentDiv").remove();
                     $(superParent).find(".chatMessage").css("height", "250px").append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id ="tempText_' + userId + '_' + timeLog + '" class="talkText">' + text + '</div><i class="nchatspr nchatic_8 fr vertM"></i></div>');
+                    if($(superParent).find("#sendInt").length != 0){
+                        $(superParent).find(".chatMessage").append("<div class='pos-rel fr pr10' id='interestSent'>Your interest has been sent</div>")
+                        $(superParent).find("#initiateText").remove();
+                        $(superParent).find("#sendInt").remove();
+                    }
                     var height = $($(superParent).find(".talkText")[$(superParent).find(".talkText").length - 1]).height();
                     $($(superParent).find(".talkText")[$(superParent).find(".talkText").length - 1]).next().css("margin-top", height);
                     $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
@@ -865,7 +893,7 @@ JsChat.prototype = {
             case curElem._contactStatusMapping["pg_interest_pending"]["key"]:
                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="sendInterest cursp sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_6 "></i><span class="vertTexBtm"> Send Interest</span></div><div id="sentDiv" class="sendDiv disp-none pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
                 //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-                //$('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">Initiating chat will also send your interest</div>').addClass("restrictMessg2");
+                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="initiateText" class="color5 pos-rel txtc fullwid nchatm90">Initiating chat will also send your interest</div>');
                 $('chat-box[user-id="' + userId + '"] #sendInt').on("click", function() {
                     if (typeof curElem.onChatBoxContactButtonsClick == "function") {
                         response = curElem.onChatBoxContactButtonsClick({
@@ -874,6 +902,7 @@ JsChat.prototype = {
                         });
                         if (response == true) {
                             $(this).parent().find("#sentDiv").removeClass("disp-none");
+                            $(this).parent().find("#initiateText").remove();
                             $(this).remove();
                             new_contact_state = curElem._contactStatusMapping["pog_acceptance_pending"]["key"];
                             $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
@@ -886,7 +915,7 @@ JsChat.prototype = {
                 //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
                 break;
             case curElem._contactStatusMapping["pg_acceptance_pending"]["key"]:
-                $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sendInt,#restrictMessgTxt").remove();
+                $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sendInt,#restrictMessgTxt,#initiateText").remove();
                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="pos-rel wid90p txtc colorGrey padall-10">The member wants to chat</div><div class="pos-rel fullwid txtc colorGrey mt20"><div id="accept" class="acceptInterest padall-10 color5 disp_ib cursp">Accept</div><div id="decline" class="acceptInterest padall-10 color5 disp_ib cursp">Decline</div></div><div id="acceptTxt" class="pos-rel fullwid txtc color5 mt25">Accept interest to continue chat</div><div id="sentDiv" class="fullwid pos-rel disp-none mt10 color5 txtc">Interest Accepted continue chat</div><div id="declineDiv" class="sendDiv txtc disp-none pos-abs wid80p mt10 color5">Interest Declined, you can\'t chat with this user anymore</div>');
                 //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
                 $('chat-box[user-id="' + userId + '"] #accept').on("click", function() {
@@ -1337,45 +1366,47 @@ JsChat.prototype = {
         console.log("in hoverBoxStr");
         console.log(pCheckSum);
         if ($('#' + param1 + '_hover').length == 0) {
-            var str='<div class="pos_fix info-hover fontlig nz21 vishid"';
-            str+='id="'+param1+'_hover">';
-            str+='<div class="nchatbdr3 f13 nchatgrad" style="width:220px; height: 449px">';
-            str += '<img src="' + param2.PHOTO + '" class="vtop ch220"/>';
-            str+='<div class="padall-10 pos-rel">';
-                //start:error case 1
-            str+='<div class="pos-abs err2 nchatrr1 disp-none" id="'+param1+'_hoverDvBgEr">';
-            str+='<div class="padall-10 colr5 f13 fontli disp-tbl wid90" >';
-            str+=' <div class="disp-cell vmid txtc lh27 ht160" id="'+param1+'_hoverBgEr">';
+            var str='<div class="pos_fix info-hover fontlig nz21 vishid" id="'+param1+'_hover">';
+	str+='<div class="nchatbdr3 f13 nchatgrad nchathoverdim pos-rel">';
+    	str+='<img src="' + param2.PHOTO + '" class="vtop ch220"/>';
+			str+='<div id="'+param1+'_hoverinfo-a">';
+        		str+='<div class="padall-10 pos-rel">';
+            		str+='<div class="pos-abs err2 nchatrr1 disp-none" id="'+param1+'_hoverDvBgEr">';
+            			str+='<div class="padall-10 colr5 f13 fontli disp-tbl wid90" >';
+            				str+='<div class="disp-cell vmid txtc lh27 ht160" id="'+param1+'_hoverBgEr"></div>';
+            			str+='</div>';
+            		str+='</div>';
+            		str+='<ul class="listnone lh22">';
+                        str+='<li>'+param2.AGE+', '+ param2.HEIGHT+'</li>';
+                        str+='<li>'+param2.COMMUNITY+'</li>';
+                        str+='<li>'+ param2.EDUCATION +'</li>';
+                        str+='<li>'+ param2.PROFFESION +'</li>';
+                        str+='<li>'+ param2.SALARY+'</li>';
+                        str+='<li>'+ param2.CITY+'</li>';
+                    str+='</ul>';
+            	str+='</div>';
+           		str+='<div class="fullwid clearfix" id="'+param1+'_BtnRespnse">';
+                str+='<p class="txtc nc-color2 lh27 nhgt28"></p>';
+                	str+='<div id="'+param1+'_BtnOuter">';
+            			str += _this._getButtonStructure(param1, group, pCheckSum);
+            		str+='</div>';
+            	str+='</div>';
+          str+='</div>';
+          
+            str+='<div id="'+param1+'_hoverDvSmEr" class="pos-rel padall-10 disp-none">';
+          	str+='<div class="txtr">';
+            	str+='<i class="nchatspr nchatic_1 hcross" id="'+param1+'_hcross" ></i>';
             str+='</div>';
+            
+                str+='<div class="disp-tbl f13 colr5 fontlig fullwid">';
+                	str+='<div class="disp-cell vmid txtc nhgt180" id="'+param1+'_hoverSmEr">';
+                    	
+                    str+='</div>';                
+                str+='</div>   ';         
             str+='</div>';
-            str+='</div>';
-            //end:error case 2
-            //start:hover info
-            str+='<ul class="listnone lh22">';
-            str+='<li>'+param2.AGE+', '+ param2.HEIGHT+'</li>';
-            str+='<li>'+param2.COMMUNITY+'</li>';
-            str+='<li>'+ param2.EDUCATION +'</li>';
-            str+='<li>'+ param2.PROFFESION +'</li>';
-            str+='<li>'+ param2.SALARY+'</li>';
-            str+='<li>'+ param2.CITY+'</li>';
-            str+='</ul>';
-            //end:hover info
-            str+='</div>'
-            //start:button structure
-            str+='<div class="fullwid clearfix" id="'+param1+'_BtnRespnse">';
-            str+='<p class="txtc nc-color2 lh27 nhgt28" id="hovererr1">';         
-            str+='</p>';
-            str+='<div id="'+param1+'_BtnOuter">';
-            str += _this._getButtonStructure(param1, group, pCheckSum);
-            str+='</div>';
-            str+='</div>';
-            //end:button structure
-            str+='<div class="f13 colr5 fontlig disp-none" id="'+param1+'_hoverDvSmEr"><div class="err1 txtc lh20 nchatp12">';
-            str+='<p id="'+param1+'_hoverSmEr"> error message 1</p>';
-            str+='</div>';
-            str+='</div>';
-            str+='</div>';
-            str+='</div>';
+           
+	str+='</div>';
+str+='</div>';           	
 
             return str;
         }
@@ -1406,8 +1437,10 @@ JsChat.prototype = {
         console.log(jid,data);
         console.log(type);
         if(type == "error"){
-            $("#"+jid+"_BtnRespnse").addClass("disp-none");
-            $("#"+jid+"_hoverDvSmEr").removeClass("disp-none");
+            //$("#"+jid+"_BtnRespnse").addClass("disp-none");
+            //$("#"+jid+"_hoverDvSmEr").removeClass("disp-none");
+            $("#"+jid+"_hoverinfo-a").addClass("disp-none");
+            $("#"+jid+"_hoverDvSmEr").addClass("disp_b").removeClass("disp-none");            
             $("#"+jid+"_hoverSmEr").html(data.actiondetails.errmsglabel);
 
         }
@@ -1465,6 +1498,13 @@ JsChat.prototype = {
             if (_this.onHoverContactButtonClick && typeof _this.onHoverContactButtonClick == 'function') {
                 _this.onHoverContactButtonClick(this);
             }
+        });
+        $('.hcross').off('click').on('click', function() {
+            var id = $(this).attr('id');
+            var jid = id.split('_');
+            jid = jid[0];
+            $("#"+jid+"_hoverinfo-a").removeClass("disp-none");
+            $("#"+jid+"_hoverDvSmEr").removeClass("disp_b").addClass("disp-none");
         });
     },
     _timer: null,
