@@ -90,19 +90,14 @@ class HandleFtoDuplicate
 	*/
 	private function compareDates($entry_dt1,$entry_dt2,$profileid1,$profileid2)
 	{
-		$fto_live_date = FTOLiveFlags::FTO_LIVE_DATE;
-		$fto_timestamp = JSstrToTime($fto_live_date);
 		$timestamp1 = JSstrToTime($entry_dt1);
 		$timestamp2 = JSstrToTime($entry_dt2);
-		if($timestamp1<$fto_timestamp && $timestamp2<$fto_timestamp)		//BOTH PROFILES BEFORE FTO LIVE DATE
-			return null;
-		else
-		{
+		
 			if($timestamp1>=$timestamp2)
 				return $profileid1;
 			else
 				return $profileid2;
-		}
+		
 		
 	}
 }
