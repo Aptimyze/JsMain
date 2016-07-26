@@ -43,11 +43,10 @@ function getProfileImage() {
     });
     return imageUrl;
 }
-
-
-function requestListingPhoto(apiParams){
-    var apiUrl = "/api/v1/social/getMultiUserPhoto";
-    if(typeof apiParams!= "undefined" && apiParams){
+//request listing photo through api
+function requestListingPhoto(apiParams) {
+    var apiUrl = chatConfig.Params.photoUrl;
+    if (typeof apiParams != "undefined" && apiParams) {
         $.myObj.ajax({
             url: apiUrl,
             dataType: 'json',
@@ -55,29 +54,26 @@ function requestListingPhoto(apiParams){
             data: apiParams,
             timeout: 60000,
             cache: false,
-            beforeSend: function (xhr) {
-
-            },
+            beforeSend: function (xhr) {},
             success: function (response) {
-                if(response["statusCode"] == "0"){
-                    response = {"message":"Successful","statusCode":"0","profiles":{"a1":{"PHOTO":{"ProfilePic120Url":"https://secure.gravatar.com/avatar/ef65f74b4aa2107469060e6e8b6d9478?s=48&r=g&d=monsterid","MainPicUrl":"http:\/\/172.16.3.185\/1092\/13\/21853681-1397620904.jpeg"}},"a2":{"PHOTO":{"ProfilePic120Url":"https://secure.gravatar.com/avatar/ce41f41832224bd81f404f839f383038?s=48&r=g&d=monsterid","MainPicUrl":"http:\/\/172.16.3.185\/1140\/6\/22806868-1402139087.jpeg"}},"a3":{"PHOTO":{"ProfilePic120Url":"https://avatars0.githubusercontent.com/u/46974?v=3&s=96","MainPicUrl":"http:\/\/172.16.3.185\/1153\/15\/23075984-1403583209.jpeg"}},"a6":{"PHOTO":{"ProfilePic120Url":"","MainPicUrl":"http:\/\/xmppdev.jeevansathi.com\/uploads\/NonScreenedImages\/mainPic\/16\/29\/15997035ii6124c9f1a0ee0d7c209b7b81c3224e25iic4ca4238a0b923820dcc509a6f75849b.jpg"}},"a4":{"PHOTO":""}},"responseStatusCode":"0","responseMessage":"Successful","AUTHCHECKSUM":null,"hamburgerDetails":null,"phoneDetails":null};
+                if (response["statusCode"] == "0") {
+                    //response = {"message":"Successful","statusCode":"0","profiles":{"a1":{"PHOTO":{"ProfilePic120Url":"https://secure.gravatar.com/avatar/ef65f74b4aa2107469060e6e8b6d9478?s=48&r=g&d=monsterid","MainPicUrl":"http:\/\/172.16.3.185\/1092\/13\/21853681-1397620904.jpeg"}},"a2":{"PHOTO":{"ProfilePic120Url":"https://secure.gravatar.com/avatar/ce41f41832224bd81f404f839f383038?s=48&r=g&d=monsterid","MainPicUrl":"http:\/\/172.16.3.185\/1140\/6\/22806868-1402139087.jpeg"}},"a3":{"PHOTO":{"ProfilePic120Url":"https://avatars0.githubusercontent.com/u/46974?v=3&s=96","MainPicUrl":"http:\/\/172.16.3.185\/1153\/15\/23075984-1403583209.jpeg"}},"a6":{"PHOTO":{"ProfilePic120Url":"","MainPicUrl":"http:\/\/xmppdev.jeevansathi.com\/uploads\/NonScreenedImages\/mainPic\/16\/29\/15997035ii6124c9f1a0ee0d7c209b7b81c3224e25iic4ca4238a0b923820dcc509a6f75849b.jpg"}},"a4":{"PHOTO":""}},"responseStatusCode":"0","responseMessage":"Successful","AUTHCHECKSUM":null,"hamburgerDetails":null,"phoneDetails":null};
                     objJsChat._addListingPhoto(response);
                 }
             },
             error: function (xhr) {
                 //return "error";
             }
-        });  
+        });
     }
 }
-
 /*function initiateChatConnection
  * request sent to openfire to initiate chat and maintain session
  * @params:none
  */
 function initiateChatConnection() {
     username = loggedInJspcUser + '@localhost';
-	/*if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
+    /*if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
         username = 'a1@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="bassi")
         username = '1@localhost';
@@ -92,7 +88,9 @@ function initiateChatConnection() {
     else if(readSiteCookie("CHATUSERNAME")=="ZZRR5723")
         username = 'a11@localhost';
     pass = '123';*/
-    pcHelperLogger("user:" + username + " pass:" + pass);
+    //console.log("Nitish"+username);
+    //console.log(chatConfig.Params[device].bosh_service_url);
+    console.log("user:" + username + " pass:" + pass);
     strophieWrapper.connect(chatConfig.Params[device].bosh_service_url, username, pass);
     pcHelperLogger(strophieWrapper.connectionObj);
 }
@@ -448,7 +446,7 @@ function handleErrorInHoverButton(jid, data) {
     }
 }
 
-function contactActionCall(action, checkSum, params){
+function contactActionCall(action, checkSum, params) {
     var response;
     url = chatConfig.Params["actionUrl"][action];
     console.log(params);
@@ -462,18 +460,17 @@ function contactActionCall(action, checkSum, params){
             source: "chat"
         },
         url: url,
-        success: function(data) {
+        success: function (data) {
             response = data;
-            console.log(response);
+            pcHelperLogger(response);
         },
-        error: function(){
-          response = "false";
+        error: function () {
+            response = "false";
         }
     });
-    console.log(response);
+    pcHelperLogger(response);
     return response;
 }
-
 $(document).ready(function () {
     pcHelperLogger("User");
     pcHelperLogger(loggedInJspcUser);
@@ -482,6 +479,33 @@ $(document).ready(function () {
     if (showChat && (checkDiv != 0)) {
         var chatLoggedIn = readCookie('chatAuth');
         var loginStatus;
+        $(window).on("offline", function () {
+            strophieWrapper.currentConnStatus = Strophe.Status.DISCONNECTED;
+        });
+        $(window).on("online", function () {
+            if (chatLoggedIn == 'true') {
+                globalSleep(1500);
+                var tAuth = checkAuthentication();
+                if (tAuth == 'true') {
+                    initiateChatConnection();
+                    if (strophieWrapper.getCurrentConnStatus()) {
+                        loginStatus = "Y";
+                        objJsChat = new JsChat({
+                            loginStatus: loginStatus,
+                            mainID: "#chatOpenPanel",
+                            //profilePhoto: "<path>",
+                            imageUrl: imgUrl,
+                            profileName: "bassi",
+                            listingTabs: chatConfig.Params[device].listingTabs,
+                            rosterDetailsKey: strophieWrapper.rosterDetailsKey,
+                            listingNodesLimit: chatConfig.Params[device].groupWiseNodesLimit,
+                            groupBasedChatBox: chatConfig.Params[device].groupBasedChatBox,
+                            contactStatusMapping: chatConfig.Params[device].contactStatusMapping
+                        });
+                    }
+                }
+            }
+        });
         if (chatLoggedIn == 'true') {
             checkAuthentication();
             loginStatus = "Y";
@@ -534,30 +558,12 @@ $(document).ready(function () {
                 idBeforeSplit = params.id.split('_');
                 idAfterSplit = idBeforeSplit[0];
                 action = idBeforeSplit[1];
-                
                 response = contactActionCall(action, checkSum, paramsData);
-                if(response !="false"){
+                if (response != "false") {
                     console.log("Not false");
                     console.log(response);
-                    handleErrorInHoverButton(idAfterSplit,response);
+                    handleErrorInHoverButton(idAfterSplit, response);
                 }
-                
-                /*
-                url = chatConfig.Params["actionUrl"][action];
-                $.ajax({
-                    type: 'POST',
-                    data: {
-                        profilechecksum: checkSum,
-                        params: paramsData,
-                        source: "chat"
-                    },
-                    url: url,
-                    success: function (data) {
-                        handleErrorInHoverButton(idAfterSplit, data);
-                    }
-                });
-                */
-               
             }
             /*executed on click of contact engine buttons in chat box
              */
@@ -613,7 +619,7 @@ $(document).ready(function () {
                     var apiParams = {
                         "url": chatConfig.Params[device].preAcceptChat["apiUrl"],
                         "postParams": {
-                            "profilechecksum": "4ddba5c85d628cf4faaaca776540cb1ei7575569", //receiverProfileChecksum
+                            "profilechecksum": /*"4ddba5c85d628cf4faaaca776540cb1ei7575569", */receiverProfileChecksum,
                             "chatMessage": message
                         }
                     };
@@ -672,3 +678,12 @@ $(document).ready(function () {
         objJsChat.start();
     }
 });
+
+function globalSleep(milliseconds) {
+    var start = new Date().getTime();
+    for (var i = 0; i < 1e7; i++) {
+        if ((new Date().getTime() - start) > milliseconds) {
+            break;
+        }
+    }
+}

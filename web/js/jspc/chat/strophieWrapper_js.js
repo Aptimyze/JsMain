@@ -15,6 +15,7 @@ var strophieWrapper = {
         "RECEIVER_RECEIVED_READ": 'receiver_received_read'
     },
     rosterGroups: chatConfig.Params.PC.rosterGroups,
+    currentConnStatus: null,
     loggingEnabled: true,
     commonLogger: function (message) {
         if (strophieWrapper.loggingEnabled) {
@@ -26,11 +27,13 @@ var strophieWrapper = {
         strophieWrapper.connectionObj = new Strophe.Connection(chatConfig.Params[device].bosh_service_url);
         strophieWrapper.connectionObj.connect(username, password, strophieWrapper.onConnect);
         strophieWrapper.commonLogger("Openfire wrapper");
-        strophieWrapper.commonLogger(username);
-        strophieWrapper.commonLogger(password);
+    },
+    getCurrentConnStatus: function () {
+        return (strophieWrapper.currentConnStatus == Strophe.Status.CONNECTED);
     },
     //executed after connection done
     onConnect: function (status) {
+        strophieWrapper.currentConnStatus = status;
         strophieWrapper.commonLogger("In onConnect function");
         if (status == Strophe.Status.CONNECTING) {
             strophieWrapper.commonLogger("Connecting");
@@ -44,11 +47,9 @@ var strophieWrapper = {
             $('#connect').get(0).value = 'connect';
         } else if (status == Strophe.Status.AUTHFAIL) {
             strophieWrapper.commonLogger("AUTHFAIL");
-            //append login failure panel
             invokePluginLoginHandler("failure");
         } else if (status == Strophe.Status.CONNECTED) {
             strophieWrapper.commonLogger("CONNECTED");
-            //append listing panel
             invokePluginLoginHandler("success");
         }
     },
@@ -249,6 +250,13 @@ var strophieWrapper = {
     },
     //parser for roster object
     formatRosterObj: function (obj) {
+    	var listing_tuple_photo = "";
+    	if(loggedInJspcGender){
+    		if(loggedInJspcGender == "M")
+    			listing_tuple_photo = chatConfig.Params[device].noPhotoUrl["listingTuple"]["F"];
+    		else if(loggedInJspcGender == "F")
+    			listing_tuple_photo = chatConfig.Params[device].noPhotoUrl["listingTuple"]["M"];
+    	}
         strophieWrapper.commonLogger("in formatRosterObj");
         var chat_status = obj["attributes"]["chat_status"] || "offline",
             newObj = {};
@@ -256,6 +264,8 @@ var strophieWrapper = {
         if (typeof obj["attributes"]["name"] != "undefined") {
             fullname = obj["attributes"]["name"].split("|");
         }
+        console.log(loggedInJspcGender);
+
         newObj[strophieWrapper.rosterDetailsKey] = {
             "jid": obj["attributes"]["jid"],
             "chat_status": chat_status,
@@ -264,7 +274,7 @@ var strophieWrapper = {
             "groups": [],
             "subscription": obj["attributes"]["subscription"],
             "profile_checksum": fullname[1],
-            "listing_tuple_photo": "",
+            "listing_tuple_photo": listing_tuple_photo,
             "last_online_time": null,
             "ask": obj["attributes"]["ask"]
         };
@@ -340,7 +350,7 @@ var strophieWrapper = {
     sendMessage: function (message, to) {
         var outputObj;
         try {
-            if (message && to) {
+            if (message && to && strophieWrapper.getCurrentConnStatus()) {
                 var reply = $msg({
                     from: username,
                     to: to,
@@ -352,6 +362,13 @@ var strophieWrapper = {
                 outputObj = {
                     "msg_id": messageId,
                     "canSend": true
+                };
+                return outputObj;
+            } else {
+                outputObj = {
+                    "msg_id": strophieWrapper.getUniqueId(),
+                    "canSend": false,
+                    "errorMsg": 'Your current offline, please check your internet connection and try again'
                 };
                 return outputObj;
             }

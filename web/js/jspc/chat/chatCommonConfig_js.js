@@ -18,6 +18,7 @@ chatConfig.Params = {
         "DECLINE": "responseTracking=8",
         "INITIATE": "stype=WV"
     },
+    photoUrl:"/api/v1/social/getMultiUserPhoto",
     PC: {
         bosh_service_url: 'ws://' + openfireUrl + '/ws/', //connection manager for openfire
         keepalive: true, //keep logged in session alive
@@ -123,6 +124,14 @@ chatConfig.Params = {
                 "id": "WRITE_MESSAGE"
             }]
         },
+
+        //no photo url for images
+        noPhotoUrl:{
+            "listingTuple":{
+                "M":"/images/picture/120x120_m.png?noPhoto",
+                "F":"/images/picture/120x120_f.png?noPhoto"
+            }
+        },
         //contact status mapping for chat box types
         groupBasedChatBox: {
             "dpp": "pg_interest_pending",
@@ -178,7 +187,7 @@ chatConfig.Params = {
                 "enableChat": true
             }
         },
-        preAcceptChat: { 
+        preAcceptChat: {
             "apiUrl": "/api/v1/chat/sendEOI",
             "extraParams": {
                 "stype": "WV"

@@ -441,16 +441,14 @@ JsChat.prototype = {
         var apiParams = {};
         if(jidStr){
             apiParams["pid"] = jidStr.slice(0,-1);
-            apiParams["photoType"] = "ProfilePic120Url,MainPicUrl";
-            console.log("1123");
-            console.log(apiParams);
+            apiParams["photoType"] = "ProfilePic120Url";
             requestListingPhoto(apiParams);  
         }
     },
 
     //add photo in tuple div of listing
     _addListingPhoto:function(photoObj){
-        if(typeof photoObj!= "undefined"){
+        if(typeof photoObj!= "undefined" && typeof Object.keys(photoObj.profiles)!= "undefined"){
             $.each(Object.keys(photoObj.profiles),function(index,element){
                 if(photoObj.profiles[element].PHOTO.ProfilePic120Url) {
                   $(".chatlist img[id*='pic_"+element+"']").attr("src",photoObj.profiles[element].PHOTO.ProfilePic120Url);
