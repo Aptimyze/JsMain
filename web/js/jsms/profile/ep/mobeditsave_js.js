@@ -206,6 +206,7 @@ function updateEducation(json,realJson,indexPos)
 		var val=-1;
 		var findpg=0;
 		var findug=0;
+                var showPgDegree = 0;
 		$.each(json["edu_level_new"],function(key,value){
 		val=value;	
 		});
@@ -216,6 +217,10 @@ function updateEducation(json,realJson,indexPos)
 					$.each(v1,function(key,value){	
 						if(parseInt(key)==parseInt(val))
 						{
+                                                        if(parseInt(val) == 42 || parseInt(val) == 21)
+                                                             showPgDegree = 1;
+                                                        else
+                                                            CommonOverlayEditUpdate(val,"degree_pg");
 							findpg=1;
 							findug=1;
 						}
@@ -239,6 +244,10 @@ function updateEducation(json,realJson,indexPos)
 			if(findpg)
 			{
 				$("#DEGREE_PG_TOP").removeClass("dn");
+                                if(showPgDegree)
+                                    $("#DEGREE_PG_TOP").removeClass("dn");
+                                else
+                                    $("#DEGREE_PG_TOP").addClass("dn");
 				$("#PG_COLLEGE_TOP").removeClass("dn");
 				if(realJson.OnClick[1].label_val =="N_B")
 				{

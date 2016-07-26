@@ -347,7 +347,7 @@ class DetailedViewApi
 		}
 		
 		$this->m_arrOut['post_grad'] = $arrPGOut;
-		
+		$NonGradDegree = 0;
 		//UG Degree and Colg name
 		$arrUGOut = array('deg'=>null,'name'=>null);
 		if(in_array($iHighestDegree,$arrUG_Group) || in_array($iHighestDegree,$arrPG_Group))
@@ -369,12 +369,13 @@ class DetailedViewApi
 		else
 		{
 			$arrUGOut = null;
+			$NonGradDegree = 1;
 		}
                 
                 $this->m_arrOut['college'] = $objProfile->getCOLLEGE();
                 $this->m_arrOut['pg_college'] = $objProfile->getPG_COLLEGE();
 		$this->m_arrOut['under_grad'] = $arrUGOut;
-		
+		$this->m_arrOut['non_grad'] = $NonGradDegree;
 		//School
 		$this->m_arrOut['school'] = null;
 		if($objEducation->SCHOOL != $objEducation->nullValueMarker)
@@ -1007,30 +1008,14 @@ class DetailedViewApi
 			$this->m_arrOut[strtolower($key)] = null;
                         if($key == "DPP_MANGLIK")
                             $value = CommonFunction::setManglikWithoutDontKnow($jPartnerObj->$val());
-                        else{
-
+                        else
                             $value = $jPartnerObj->$val();
-                        }
 			
 			if($value && $value != ApiViewConstants::getNullValueMarker())
 			{
 				$this->m_arrOut[strtolower($key)] = $value;
 			}
 		}
-
-		if($this->m_arrOut['dpp_state']!="")
-		{
-			if($this->m_arrOut['dpp_city']!="")
-			{
-				$this->m_arrOut['dpp_city'] = $this->m_arrOut['dpp_state'].", ".$this->m_arrOut['dpp_city'];
-			}
-			else
-			{
-				$this->m_arrOut['dpp_city'] = $this->m_arrOut['dpp_state'];
-			}
-			
-		}
-		
 		//Small Community Labels for DPP Mtongue
         if($this->m_arrOut['dpp_mtongue'] && strlen($jPartnerObj->getPARTNER_MTONGUE()))
         {
