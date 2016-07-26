@@ -448,7 +448,7 @@ JsChat.prototype = {
 
     //add photo in tuple div of listing
     _addListingPhoto:function(photoObj){
-        if(typeof photoObj!= "undefined"){
+        if(typeof photoObj!= "undefined" && typeof Object.keys(photoObj.profiles)!= "undefined"){
             $.each(Object.keys(photoObj.profiles),function(index,element){
                 if(photoObj.profiles[element].PHOTO.ProfilePic120Url) {
                   $(".chatlist img[id*='pic_"+element+"']").attr("src",photoObj.profiles[element].PHOTO.ProfilePic120Url);
