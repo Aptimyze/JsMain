@@ -23,7 +23,11 @@ class uploadProcessScreeningAction extends sfActions {
                 $this->source = $formArr['source'];
                 $this->username = $formArr['username'];
                 $this->emailAdd = $formArr['emailAdd'];
-		$ops = $formArr["ops"];
+		if($formArr['ops']=="false" || $formArr['ops']==''||$formArr['ops']==false)
+			$ops = false;
+		else
+			$ops = true;
+		$formArr['ops']=$ops;
 		$this->name= $request->getAttribute('name'); 
 		$this->interface = ProfilePicturesTypeEnum::$INTERFACE["2"];
                 if ($formArr['Skip'])
