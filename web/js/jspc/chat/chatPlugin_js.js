@@ -353,7 +353,7 @@ JsChat.prototype = {
     //start:addlisting
     addListingInit: function(data) {
         var elem = this,
-            statusArr = [],
+            statusArr = [],jidStr = "",
             currentID;
         console.log("addListing");
         for (var key in data) {
@@ -365,6 +365,7 @@ JsChat.prototype = {
                 var fullJID = runID;
                 res = runID.split("@");
                 runID = res[0];
+                jidStr = jidStr+runID+",";
                 statusArr[runID] = status;
                 if (typeof data[key]["rosterDetails"]["groups"] != "undefined" && data[key]["rosterDetails"]["groups"].length > 0) $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
                     console.log("groups " + val);
@@ -376,7 +377,7 @@ JsChat.prototype = {
                         prfCheckSum = data[key]["rosterDetails"]["profile_checksum"]; //ankita for image
                     List += '<li class=\"clearfix profileIcon\"';
                     List += "id=\"" + runID + "_" + val + "\" data-status=\"" + status + "\" data-checks=\"" + prfCheckSum + "\" data-jid=\"" + fullJID + "\">";
-                    List += "<img id=\"pic_" + runID + "_" + val + "\" src=\"" + picurl + "\" class=\"fl\">";
+                    List += "<img id=\"pic_" + runID + "_" + val + "\" src=\"" + picurl + "\" class=\"fl wid40hgt40\">";
                     List += '<div class="fl f14 fontlig pt15 pl18">';
                     List += getNamelbl;
                     List += '</div>';
@@ -432,6 +433,37 @@ JsChat.prototype = {
         $(elem._listingClass).on('mouseenter mouseleave', {
             global: elem
         }, elem._calltohover);
+        var APIsrc ="http://xmppdev.jeevansathi.com/api/v1/social/getMultiUserPhoto?pid=";
+        console.log("api");
+        console.log(jidStr);
+        if(jidStr){
+            APIsrc += jidStr.slice(0,-1);
+        }
+        console.log("1123");
+        console.log(APIsrc);
+        /*$.each(jidArr,function(index,elem){
+            if(index < jidArr.length-1) {
+                APIsrc += elem+",";
+            }
+            else {
+                APIsrc += elem;
+            }
+        });*/
+        APIsrc += "&photoType=ProfilePic120Url,MainPicUrl";
+        console.log("APIsrc",APIsrc);
+
+
+        //fire query and get response
+
+
+        var response = {"message":"Successful","statusCode":"0","profiles":{"a1":{"PHOTO":{"ProfilePic120Url":"https://secure.gravatar.com/avatar/ef65f74b4aa2107469060e6e8b6d9478?s=48&r=g&d=monsterid","MainPicUrl":"http:\/\/172.16.3.185\/1092\/13\/21853681-1397620904.jpeg"}},"a2":{"PHOTO":{"ProfilePic120Url":"https://secure.gravatar.com/avatar/ce41f41832224bd81f404f839f383038?s=48&r=g&d=monsterid","MainPicUrl":"http:\/\/172.16.3.185\/1140\/6\/22806868-1402139087.jpeg"}},"a3":{"PHOTO":{"ProfilePic120Url":"https://avatars0.githubusercontent.com/u/46974?v=3&s=96","MainPicUrl":"http:\/\/172.16.3.185\/1153\/15\/23075984-1403583209.jpeg"}},"a6":{"PHOTO":{"ProfilePic120Url":"","MainPicUrl":"http:\/\/xmppdev.jeevansathi.com\/uploads\/NonScreenedImages\/mainPic\/16\/29\/15997035ii6124c9f1a0ee0d7c209b7b81c3224e25iic4ca4238a0b923820dcc509a6f75849b.jpg"}},"a4":{"PHOTO":""}},"responseStatusCode":"0","responseMessage":"Successful","AUTHCHECKSUM":null,"hamburgerDetails":null,"phoneDetails":null};
+        $.each(Object.keys(response.profiles),function(index,element){
+            if(response.profiles[element].PHOTO.ProfilePic120Url) {
+              $(".chatlist img[id*='pic_"+element+"']").attr("src",response.profiles[element].PHOTO.ProfilePic120Url);
+            }
+        });
+
+
     },
     //place contact in appropriate position in listing
     _placeContact: function(key, contactID, groupID, status, contactHTML) {
@@ -672,8 +704,14 @@ JsChat.prototype = {
                 if (text.length > 1) {
                     var superParent = $(this).parent().parent(),
                         timeLog = new Date().getTime();
-                    $(superParent).find("#sendInt,#initChatText,#sentDiv").remove();
+                    
+                    $(superParent).find("#initChatText,#sentDiv").remove();
                     $(superParent).find(".chatMessage").css("height", "250px").append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id ="tempText_' + userId + '_' + timeLog + '" class="talkText">' + text + '</div><i class="nchatspr nchatic_8 fr vertM"></i></div>');
+                    if($(superParent).find("#sendInt").length != 0){
+                        $(superParent).find(".chatMessage").append("<div class='pos-rel fr pr10' id='interestSent'>Your interest has been sent</div>")
+                        $(superParent).find("#initiateText").remove();
+                        $(superParent).find("#sendInt").remove();
+                    }
                     var height = $($(superParent).find(".talkText")[$(superParent).find(".talkText").length - 1]).height();
                     $($(superParent).find(".talkText")[$(superParent).find(".talkText").length - 1]).next().css("margin-top", height);
                     $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
@@ -865,7 +903,7 @@ JsChat.prototype = {
             case curElem._contactStatusMapping["pg_interest_pending"]["key"]:
                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="sendInterest cursp sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_6 "></i><span class="vertTexBtm"> Send Interest</span></div><div id="sentDiv" class="sendDiv disp-none pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
                 //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-                //$('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">Initiating chat will also send your interest</div>').addClass("restrictMessg2");
+                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="initiateText" class="color5 pos-rel txtc fullwid nchatm90">Initiating chat will also send your interest</div>');
                 $('chat-box[user-id="' + userId + '"] #sendInt').on("click", function() {
                     if (typeof curElem.onChatBoxContactButtonsClick == "function") {
                         response = curElem.onChatBoxContactButtonsClick({
@@ -874,6 +912,7 @@ JsChat.prototype = {
                         });
                         if (response == true) {
                             $(this).parent().find("#sentDiv").removeClass("disp-none");
+                            $(this).parent().find("#initiateText").remove();
                             $(this).remove();
                             new_contact_state = curElem._contactStatusMapping["pog_acceptance_pending"]["key"];
                             $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);

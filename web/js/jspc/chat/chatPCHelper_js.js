@@ -49,6 +49,21 @@ function getProfileImage() {
  */
 function initiateChatConnection() {
     username = loggedInJspcUser + '@localhost';
+	/*if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
+        username = 'a1@localhost';
+    else if(readSiteCookie("CHATUSERNAME")=="bassi")
+        username = '1@localhost';
+    else if(readSiteCookie("CHATUSERNAME")=="VWZ4557")
+        username = 'a9@localhost';
+    else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
+        username = 'a8@localhost';
+    else if(readSiteCookie("CHATUSERNAME") == "ZZRS3292")
+        username = 'a13@localhost';
+    else if(readSiteCookie("CHATUSERNAME")=="ZZVV2929")
+        username = 'a14@localhost';
+    else if(readSiteCookie("CHATUSERNAME")=="ZZRR5723")
+        username = 'a11@localhost';
+    pass = '123';*/
     pcHelperLogger("user:" + username + " pass:" + pass);
     strophieWrapper.connect(chatConfig.Params[device].bosh_service_url, username, pass);
     pcHelperLogger(strophieWrapper.connectionObj);

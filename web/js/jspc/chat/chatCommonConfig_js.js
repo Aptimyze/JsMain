@@ -173,7 +173,7 @@ chatConfig.Params = {
                 "enableChat": true
             }
         },
-        preAcceptChat: { //confirm whether this will send message
+        preAcceptChat: { 
             "apiUrl": "/api/v1/chat/sendEOI",
             "extraParams": {
                 "stype": "WV"
