@@ -103,7 +103,7 @@ var strophieWrapper = {
             subscription = rosterObj[strophieWrapper.rosterDetailsKey]["subscription"],
             ask = rosterObj[strophieWrapper.rosterDetailsKey]["ask"];
         if (strophieWrapper.checkForGroups(rosterObj[strophieWrapper.rosterDetailsKey]["groups"]) == true) {
-            nodeArr[user_id] = strophieWrapper.Roster[user_id] = rosterObj;
+            nodeArr[user_id] = rosterObj;
             strophieWrapper.commonLogger(nodeArr);
             strophieWrapper.commonLogger(ask);
             if (ask == "unsubscribe") {
@@ -115,7 +115,22 @@ var strophieWrapper = {
             } else if (strophieWrapper.checkForSubscription(subscription) == true) {
                 strophieWrapper.commonLogger("adding node");
                 strophieWrapper.commonLogger(subscription);
-                invokePluginManagelisting(nodeArr, "add_node", user_id);
+                if(typeof strophieWrapper.Roster[user_id] == "undefined"){
+                	invokePluginManagelisting(nodeArr, "add_node", user_id);
+                }
+                else if(typeof strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["groups"] != "undefined"){
+                	var oldGroupId = strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["groups"][0];
+                	if(oldGroupId && oldGroupId != rosterObj[strophieWrapper.rosterDetailsKey]["groups"][0]){
+                		var oldArr = [];
+                		oldArr[user_id] = strophieWrapper.Roster[user_id];
+                		strophieWrapper.commonLogger("moving node from "+oldGroupId);
+                		invokePluginManagelisting(oldArr,"delete_node",user_id);
+                		strophieWrapper.commonLogger("adding node");
+                		strophieWrapper.commonLogger(nodeArr);
+                		invokePluginManagelisting(nodeArr,"add_node",user_id);
+                	}
+                }
+                strophieWrapper.Roster[user_id] = rosterObj;
                 if (subscription == "to") {
                     strophieWrapper.subscribe(rosterObj[strophieWrapper.rosterDetailsKey]["jid"], rosterObj[strophieWrapper.rosterDetailsKey]["nick"]);
                 }

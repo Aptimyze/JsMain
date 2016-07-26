@@ -66,6 +66,7 @@ JsChat.prototype = {
             return false;
         }
     },
+
     //start:maximize html
     _maximizeChatPanel: function() {
         var curEle = this;
@@ -642,7 +643,7 @@ JsChat.prototype = {
     //bind clicking block icon
     _bindBlock: function(elem, userId) {
         var curElem = this,
-            enableClose;
+        enableClose;
         $(elem).off("click").on("click", function() {
             enableClose = true;
             curElem._removeFromListing('removeCall2', userId);
