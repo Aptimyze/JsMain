@@ -108,7 +108,7 @@ if($phoneVerRow=(new PHONE_VERIFIED_LOG())->getLogForOtherNumberVerified($profil
 		# code...
 
 		$profileObj2->getDetail($value['PROFILEID'],'PROFILEID');
-		if( ($profileObj2->getACTIVATED() != 'D') && ($profileObj->getACTIVATED() != 'D') && ($profileObj2->getINCOMPLETE() != 'N') && ($profileObj2->getGENDER()==$profileObj->getGENDER()))
+		if( ($profileObj2->getACTIVATED() != 'D') && ($profileObj->getACTIVATED() != 'D') && ($profileObj2->getINCOMPLETE() != 'Y') && ($profileObj2->getGENDER()==$profileObj->getGENDER()))
 		{
 			$rawDuplicateObj=new RawDuplicate();
 			$rawDuplicateObj->setProfileid2($profileId); //profile found as a duplicate
