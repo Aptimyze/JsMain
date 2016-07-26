@@ -794,15 +794,35 @@ JsChat.prototype = {
         });
     },
 
-    _getChatBoxType:function(userId){
+    _getChatBoxType:function(userId,key){
         console.log("in _getChatBoxType");
         var curElem = this;
         console.log($(".chatlist li[id*='" + userId + "']").attr("id").split(userId + "_")[1]);
         var groupID = $(".chatlist li[id*='" + userId + "']").attr("id").split(userId + "_")[1];
         console.log("ankita" + groupID + "-" + curElem._groupBasedChatBox[groupID]);
-        var chatBoxType = curElem._contactStatusMapping[curElem._groupBasedChatBox[groupID]]["key"];
-        if (typeof chatBoxType == "undefined") 
-            chatBoxType = curElem._contactStatusMapping["none_applicable"]["key"];
+        var chatBoxType;
+        var oldChatBoxType = $('chat-box[user-id="' + userId + '"]').attr("data-contact");
+        if(typeof key == "undefined" || key != "updateChatBoxType"){
+            console.log("in case a");
+            chatBoxType = curElem._contactStatusMapping[curElem._groupBasedChatBox[groupID]]["key"];
+        }
+        else{
+            console.log("in case b");
+            switch(groupID){
+                case "acceptance":
+                                chatBoxType = curElem._contactStatusMapping["pog_interest_accepted"]["key"];
+                                break;
+                case "intrec":
+                                chatBoxType = curElem._contactStatusMapping["pg_acceptance_pending"]["key"];
+                                break;
+                default:
+                                chatBoxType = curElem._contactStatusMapping[curElem._groupBasedChatBox[groupID]]["key"];
+                                break;
+
+            }
+        }
+        if(typeof chatBoxType == "undefined") 
+            chatBoxType = curElem._contactStatusMapping["none_applicable"]["key"];  
         console.log("chatboxtype--" + chatBoxType);
         $('chat-box[user-id="' + userId + '"]').attr("data-contact", chatBoxType);
         return chatBoxType;
@@ -816,25 +836,27 @@ JsChat.prototype = {
         
         //var membership = "free";
         var chatBoxType= curElem._getChatBoxType(userId);
-        setTimeout(function() {
+        //setTimeout(function() {
             curElem._setChatBoxInnerDiv(userId, chatBoxType);
             curElem._enableChatTextArea($('chat-box[user-id="' + userId + '"]').attr("data-contact"), userId, membership);
             if($('chat-box[user-id="' + userId + '"] .spinner').length != 0)
                 $('chat-box[user-id="' + userId + '"] .spinner').hide();
-        }, 500);
+        //}, 500);
     },
 
     _updateChatPanelsBox:function(userId){
         var curElem = this;
         if($('chat-box[user-id="' + userId + '"]').length != 0){
             console.log("in _updateChatPanelsBox for "+userId);
-            var chatBoxType = curElem._getChatBoxType(userId);
+            var chatBoxType = curElem._getChatBoxType(userId,"updateChatBoxType");
+            curElem._setChatBoxInnerDiv(userId,chatBoxType);
+            curElem._enableChatTextArea(chatBoxType,userId,"paid");
         }
     },
 
     //update contact status and enable/disable chat in chat box on basis of membership and contact status
     _setChatBoxInnerDiv: function(userId, chatBoxType) {
-        console.log("in _updateChatBoxInnerDiv");
+        console.log("in _setChatBoxInnerDiv");
         var curElem = this,
             new_contact_state = chatBoxType,
             response;
@@ -905,6 +927,7 @@ JsChat.prototype = {
                 });
                 break;
             case curElem._contactStatusMapping["pog_interest_accepted"]["key"]:
+                $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sentDiv").remove();
                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="fullwid pos-rel mt10 color5 txtc">Interest Accepted continue chat</div>');
                 //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
                 break;
