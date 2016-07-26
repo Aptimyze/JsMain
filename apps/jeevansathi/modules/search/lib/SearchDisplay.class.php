@@ -469,7 +469,7 @@ class SearchDisplay
 					$tempArr = $this->SearchParamtersObj->getAlertsDateConditionArr();
 					if(!$tempArr)
 					{
-						$MatchAlerts = new MatchAlerts(SearchConfig::getSearchDb());
+						$MatchAlerts = new MatchAlerts();
 						$tempArr = $MatchAlerts->getProfilesWithOutSorting($this->viewerObj->getPROFILEID());
         	                                $this->SearchParamtersObj->setAlertsDateConditionArr($tempArr);
 					}
@@ -484,7 +484,7 @@ class SearchDisplay
 					$tempArr = $this->SearchParamtersObj->getAlertsDateConditionArr();
 					if(!$tempArr)
 					{
-                                                $KundliAlerts = new KundliAlerts(SearchConfig::getSearchDb());
+                                                $KundliAlerts = new KundliAlerts();
 						$tempArr = $KundliAlerts->getProfilesWithOutSorting($this->viewerObj->getPROFILEID());
 						$this->SearchParamtersObj->setAlertsDateConditionArr($tempArr);
 					}

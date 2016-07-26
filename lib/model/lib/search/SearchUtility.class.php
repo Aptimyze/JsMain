@@ -61,7 +61,7 @@ class SearchUtility
 					/** matchAlerts Profile **/
 					if($removeMatchAlerts)
 					{
-						$matchalerts_LOG = new matchalerts_LOG(SearchConfig::getSearchDb());
+						$matchalerts_LOG = new matchalerts_LOG();
 						$hideArr.= $matchalerts_LOG->getProfilesSentInMatchAlerts($pid,$seperator);
 					}
 				}
@@ -116,7 +116,7 @@ class SearchUtility
 						}
 						if($week || $SearchParamtersObj->getNEWSEARCH_CLUSTERING() || ($_GET["moreLinkCluster"] && in_array($_GET["moreLinkCluster"],array('OCCUPATION','EDU_LEVEL_NEW'))))
 						{
-							$MatchAlerts = new MatchAlerts(SearchConfig::getSearchDb());
+							$MatchAlerts = new MatchAlerts();
 							$matArr1 = $MatchAlerts->getProfilesWithOutSorting($pid,$week);
 						}
 						else

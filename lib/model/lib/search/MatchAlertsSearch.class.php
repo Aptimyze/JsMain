@@ -52,7 +52,7 @@ class MatchAlertsSearch extends SearchParamters
 	public function getSearchCriteria()
 	{
 		$this->setSEARCH_TYPE($this->stype);
-		$MatchAlerts = new MatchAlerts(SearchConfig::getSearchDb());
+		$MatchAlerts = new MatchAlerts();
 		$arr = $MatchAlerts->getProfilesWithOutSorting($this->pid);
 		$this->alertsDateConditionArr = $arr;
 		if($arr)
