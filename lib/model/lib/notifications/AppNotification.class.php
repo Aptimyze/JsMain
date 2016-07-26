@@ -126,15 +126,15 @@ public function microtime_float()
 				{
 					if($applicableProfilesData[$profileid])
 					{
-						$loggedInProfileObj = Profile::getInstance('newjs_master',$profileid);
-						$loggedInProfileObj->setDetail($applicableProfilesData[$profileid]);
+						//$loggedInProfileObj = Profile::getInstance('newjs_master',$profileid);
+						//$loggedInProfileObj->setDetail($applicableProfilesData[$profileid]);
 						//$matchCount[$profileid] = MatchalertNotification::getCount($profileid);
 						$matchalertData 	=MatchalertNotification::getCount($profileid);
 						$matchCount[$profileid] =$matchalertData['COUNT'];
 						$matchProfilePhoto[$profileid] =$matchalertData['PHOTO'];;
 					}
 				}
-				unset($loggedInProfileObj);
+				//unset($loggedInProfileObj);
 				unset($dppMatchDetails);
 				unset($applicableProfilesData);
 				$counter = 0;
