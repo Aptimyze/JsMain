@@ -222,7 +222,12 @@ Abstract class ApiAuthentication
 		}
 
 		$difftime = date("Y-m-d H:i:s",$loginData[TIME]);
-		$dbObj=new jsadmin_AUTO_EXPIRY;
+		if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
+			$dbObj=new jsadmin_AUTO_EXPIRY("newjs_masterRep");
+		else
+			$dbObj=new jsadmin_AUTO_EXPIRY("newjs_master");
+		
+		
 		if($dbObj->IsAlive($loginData[PROFILEID],$difftime))
 		{
 			$loginData[TIME]=time();
@@ -305,7 +310,11 @@ Abstract class ApiAuthentication
 		{
 			$username=$_COOKIE[$this->cookieRemName];
 			$password=$_COOKIE[$this->cookieRemPass];
-			$dbJprofile=new JPROFILE();
+			if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
+				$dbJprofile=new JPROFILE("newjs_masterRep");
+			else
+				$dbJprofile=new JPROFILE("newjs_master");
+			
 			$paramArr='PROFILEID,DTOFBIRTH,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,PASSWORD';
 			$this->loginData=$dbJprofile->get($username,"USERNAME",$paramArr);
 			$pwdData = PasswordHashFunctions::unmixString($this->loginData['PASSWORD']);
@@ -340,7 +349,10 @@ Abstract class ApiAuthentication
 					return NULL;
 			}
 			$id=$temp[PR];
-			$dbJprofile=new JPROFILE();
+			if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
+				$dbJprofile=new JPROFILE("newjs_masterRep");
+			else
+				$dbJprofile=new JPROFILE("newjs_master");
 			$paramArr='PROFILEID,DTOFBIRTH,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,PASSWORD';
 			$this->loginData=$dbJprofile->get($id,"PROFILEID",$paramArr);
 		}
@@ -454,7 +466,10 @@ Abstract class ApiAuthentication
 			$dbLoginHistoryCount->replaceLoginHistoryCount($profileID);
 		}
 		//update Jprofile LAST_LOGIN_DT
-		$dbJprofile=new JPROFILE();
+		if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
+				$dbJprofile=new JPROFILE("newjs_masterRep");
+			else
+				$dbJprofile=new JPROFILE("newjs_master");
 		$dbJprofile->updateLoginSortDate($profileID);
 
 	}
@@ -485,7 +500,10 @@ Abstract class ApiAuthentication
 		}
 		if($allow && $pid && !$this->isMobile)
 		{
-			$dbObj=new userplane_recentusers;
+			if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
+				$dbObj=new userplane_recentusers("newjs_masterRep");
+			else
+				$dbObj=new userplane_recentusers("newjs_master");
 			$dbObj->replacedata($pid);
 		}
 
