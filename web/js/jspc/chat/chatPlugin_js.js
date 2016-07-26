@@ -583,6 +583,7 @@ JsChat.prototype = {
                 var runID = '';
                 runID = data[key]["rosterDetails"]["jid"].split("@")[0];
                 if (typeof data[key]["rosterDetails"]["groups"] != "undefined") {
+                    console.log(data[key]["rosterDetails"]["groups"]);
                     $.each(data[key]["rosterDetails"]["groups"], function(index, val) {
                         var tabShowStatus = '',
                             listElements = '';
@@ -592,7 +593,8 @@ JsChat.prototype = {
                         if (tabShowStatus == 'false' && param1 != 'delete_node') {
                             console.log("123");
                             $(listElements).find('.nchatspr').detach();
-                        } else {
+                        } 
+                        else {
                             console.log("345");
                             $('div').find(listElements).detach();
                             if ($('div.' + val + ' ul li').length == 0) {
@@ -600,8 +602,9 @@ JsChat.prototype = {
                             }
                         }
                         console.log(this);
-                        elem._updateStatusInChatBox(runID, data[key]["rosterDetails"]["chat_status"]);
+                        elem._updateStatusInChatBox(runID, "offline");
                     });
+                    console.log("here");
                 }
             }
         }
@@ -790,29 +793,70 @@ JsChat.prototype = {
             }, 300);
         });
     },
+
+    _getChatBoxType:function(userId,key){
+        console.log("in _getChatBoxType");
+        var curElem = this;
+        console.log($(".chatlist li[id*='" + userId + "']").attr("id").split(userId + "_")[1]);
+        var groupID = $(".chatlist li[id*='" + userId + "']").attr("id").split(userId + "_")[1];
+        console.log("ankita" + groupID + "-" + curElem._groupBasedChatBox[groupID]);
+        var chatBoxType;
+        var oldChatBoxType = $('chat-box[user-id="' + userId + '"]').attr("data-contact");
+        if(typeof key == "undefined" || key != "updateChatBoxType"){
+            console.log("in case a");
+            chatBoxType = curElem._contactStatusMapping[curElem._groupBasedChatBox[groupID]]["key"];
+        }
+        else{
+            console.log("in case b");
+            switch(groupID){
+                case chatConfig.Params.categoryNames["Acceptance"]: //acceptance from 
+                                chatBoxType = curElem._contactStatusMapping["pog_interest_accepted"]["key"];
+                                break;
+                case chatConfig.Params.categoryNames["Interest Received"]:
+                                chatBoxType = curElem._contactStatusMapping["pg_acceptance_pending"]["key"];
+                                break;
+                default:
+                                chatBoxType = curElem._contactStatusMapping[curElem._groupBasedChatBox[groupID]]["key"];
+                                break;
+
+            }
+        }
+        if(typeof chatBoxType == "undefined") 
+            chatBoxType = curElem._contactStatusMapping["none_applicable"]["key"];  
+        console.log("chatboxtype--" + chatBoxType);
+        $('chat-box[user-id="' + userId + '"]').attr("data-contact", chatBoxType);
+        return chatBoxType;
+    },
+
     _postChatPanelsBox: function(userId) {
         var curElem = this;
         var membership = "paid"; //get membership status-pending
         
         console.log("in _postChatPanelsBox");
-        console.log($(".chatlist li[id*='" + userId + "']").attr("id").split(userId + "_")[1]);
-        var groupID = $(".chatlist li[id*='" + userId + "']").attr("id").split(userId + "_")[1];
-        console.log("ankita" + groupID + "-" + curElem._groupBasedChatBox[groupID]);
-        var chatBoxType = curElem._contactStatusMapping[curElem._groupBasedChatBox[groupID]]["key"];
-        if (typeof chatBoxType == "undefined") chatBoxType = curElem._contactStatusMapping["none_applicable"]["key"];
-        console.log("chatboxtype--" + chatBoxType);
-        $('chat-box[user-id="' + userId + '"]').attr("data-contact", chatBoxType);
         
         //var membership = "free";
-        setTimeout(function() {
-            curElem._updateChatBoxInnerDiv(userId, chatBoxType);
+        var chatBoxType= curElem._getChatBoxType(userId);
+        //setTimeout(function() {
+            curElem._setChatBoxInnerDiv(userId, chatBoxType);
             curElem._enableChatTextArea($('chat-box[user-id="' + userId + '"]').attr("data-contact"), userId, membership);
-            $('chat-box[user-id="' + userId + '"] .spinner').hide();
-        }, 500);
+            if($('chat-box[user-id="' + userId + '"] .spinner').length != 0)
+                $('chat-box[user-id="' + userId + '"] .spinner').hide();
+        //}, 500);
     },
+
+    _updateChatPanelsBox:function(userId){
+        var curElem = this;
+        if($('chat-box[user-id="' + userId + '"]').length != 0){
+            console.log("in _updateChatPanelsBox for "+userId);
+            var chatBoxType = curElem._getChatBoxType(userId,"updateChatBoxType");
+            curElem._setChatBoxInnerDiv(userId,chatBoxType);
+            curElem._enableChatTextArea(chatBoxType,userId,"paid");
+        }
+    },
+
     //update contact status and enable/disable chat in chat box on basis of membership and contact status
-    _updateChatBoxInnerDiv: function(userId, chatBoxType) {
-        console.log("in _updateChatBoxInnerDiv");
+    _setChatBoxInnerDiv: function(userId, chatBoxType) {
+        console.log("in _setChatBoxInnerDiv");
         var curElem = this,
             new_contact_state = chatBoxType,
             response;
@@ -842,6 +886,7 @@ JsChat.prototype = {
                 //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
                 break;
             case curElem._contactStatusMapping["pg_acceptance_pending"]["key"]:
+                $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sendInt,#restrictMessgTxt").remove();
                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="pos-rel wid90p txtc colorGrey padall-10">The member wants to chat</div><div class="pos-rel fullwid txtc colorGrey mt20"><div id="accept" class="acceptInterest padall-10 color5 disp_ib cursp">Accept</div><div id="decline" class="acceptInterest padall-10 color5 disp_ib cursp">Decline</div></div><div id="acceptTxt" class="pos-rel fullwid txtc color5 mt25">Accept interest to continue chat</div><div id="sentDiv" class="fullwid pos-rel disp-none mt10 color5 txtc">Interest Accepted continue chat</div><div id="declineDiv" class="sendDiv txtc disp-none pos-abs wid80p mt10 color5">Interest Declined, you can\'t chat with this user anymore</div>');
                 //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
                 $('chat-box[user-id="' + userId + '"] #accept').on("click", function() {
@@ -883,7 +928,8 @@ JsChat.prototype = {
                 });
                 break;
             case curElem._contactStatusMapping["pog_interest_accepted"]["key"]:
-                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="fullwid pos-rel mt10 color5 txtc">Interest Accepted continue chat</div>');
+                $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sentDiv,#restrictMessgTxt").remove();
+                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="fullwid pos-rel mt10 color5 txtc fl">Interest Accepted continue chat</div>');
                 //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
                 break;
             case curElem._contactStatusMapping["pog_interest_declined"]["key"]:
@@ -903,8 +949,10 @@ JsChat.prototype = {
         var curElem = this;
         //check for membership status of logged in user
         if (membership == "paid") {
-            if (curElem._contactStatusMapping[chatBoxType]["enableChat"] == true) $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-            else $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+            if (curElem._contactStatusMapping[chatBoxType]["enableChat"] == true) 
+                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+            else 
+                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
         } else if (membership == "free") {
             $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="pos-abs fullwid txtc colorGrey top120">Only paid members can start chat<div id="becomePaidMember" class="color5 cursp">Become a Paid Member</div></div>');
             $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
@@ -1248,7 +1296,12 @@ JsChat.prototype = {
                 console.log(k);
                 console.log(v);
                 console.log("KKKKKK" + v.action);
-                str += '<button class="hBtn bg_pink lh50 brdr-0 txtc colrw cursp"';
+                if(group == chatConfig.Params["categoryNames"]["Interest Sent"]){
+                    str += '<div class="nchatbg-grey lh50 brdr-0 txtc colrw"';
+                }
+                else{
+                    str += '<button class="hBtn bg_pink lh50 brdr-0 txtc colrw cursp"';
+                }
                 str += 'id="' + userId + '_' + v.action + '"';
                 str += 'data-pCheckSum="' + pCheckSum + '"';
                 str += 'data-params="' + v.params + '"';
@@ -1262,7 +1315,12 @@ JsChat.prototype = {
                     }
                 }
                 str += v.label;
-                str += '</button>';
+                if(group == chatConfig.Params["categoryNames"]["Interest Sent"]){
+                    str += '</div>';
+                }
+                else{
+                    str += '</button>';
+                }
             })
             /*
             $.each(param2["buttonDetails"]["buttons"],function(k,v){
@@ -1285,9 +1343,9 @@ JsChat.prototype = {
             str += '<img src="' + param2.PHOTO + '" class="vtop ch220"/>';
             str+='<div class="padall-10 pos-rel">';
                 //start:error case 1
-            str+='<div class="pos-abs err2 nchatrr1 disp-none" id="'+param1+'hoverDvBgEr">';
-            str+='<div class="padall-10 colr5 f13 fontli disp-tbl" style="height: 100%;">';
-            str+=' <div class="disp-cell vmid txtc lh27" id="'+param1+'hoverBgEr">';
+            str+='<div class="pos-abs err2 nchatrr1 disp-none" id="'+param1+'_hoverDvBgEr">';
+            str+='<div class="padall-10 colr5 f13 fontli disp-tbl wid90" >';
+            str+=' <div class="disp-cell vmid txtc lh27 ht160" id="'+param1+'_hoverBgEr">';
             str+='</div>';
             str+='</div>';
             str+='</div>';
@@ -1304,16 +1362,16 @@ JsChat.prototype = {
             //end:hover info
             str+='</div>'
             //start:button structure
-            str+='<div class="fullwid clearfix">';
+            str+='<div class="fullwid clearfix" id="'+param1+'_BtnRespnse">';
             str+='<p class="txtc nc-color2 lh27 nhgt28" id="hovererr1">';         
             str+='</p>';
-            str+='<div class="'+param1+'_BtnRespnse">';
+            str+='<div id="'+param1+'_BtnOuter">';
             str += _this._getButtonStructure(param1, group, pCheckSum);
             str+='</div>';
             str+='</div>';
             //end:button structure
-            str+='<div class="f13 colr5 fontlig disp-none" id="'+param1+'hoverDvSmEr"><div class="err1 txtc lh20 nchatp12">';
-            str+='<p id="'+param1+'hoverSmEr"> error message 1</p>';
+            str+='<div class="f13 colr5 fontlig disp-none" id="'+param1+'_hoverDvSmEr"><div class="err1 txtc lh20 nchatp12">';
+            str+='<p id="'+param1+'_hoverSmEr"> error message 1</p>';
             str+='</div>';
             str+='</div>';
             str+='</div>';
@@ -1338,6 +1396,31 @@ JsChat.prototype = {
         console.log("Callback calling starts");
         callback();
         console.log("Callaback ends");
+    },
+    
+    /*
+     * Error handling in case of hover
+     */
+    hoverButtonHandling: function(jid,data,type){
+        console.log("In error handling");
+        console.log(jid,data);
+        console.log(type);
+        if(type == "error"){
+            $("#"+jid+"_BtnRespnse").addClass("disp-none");
+            $("#"+jid+"_hoverDvSmEr").removeClass("disp-none");
+            $("#"+jid+"_hoverSmEr").html(data.actiondetails.errmsglabel);
+
+        }
+        else if(type == "info"){
+            $("#"+jid+"_hoverDvBgEr").removeClass("disp-none");
+            $("#"+jid+"_hoverBgEr").html(data.actiondetails.errmsglabel);
+            $("#"+jid+"_BtnRespnse div button").addClass("nchatbg-grey colrw");
+            $("#"+jid+"_BtnRespnse div button").html(data.buttondetails.button.label);
+        }
+        else{
+            $("#"+jid+"_BtnOuter button").remove();
+            $("#"+jid+"_BtnOuter").append('<button class="bg_pink lh50 brdr-0 txtc colrw cursp" style="width:100%">Start Conversation</button>');
+        }
     },
     //start:check hover
     _checkHover: function(param) {
@@ -1378,7 +1461,7 @@ JsChat.prototype = {
         }, function() {
             $(this).css('visibility', 'hidden');
         });
-        $('#' + curEleID + '_hover .hBtn').off("click").on('click', function() {
+        $('#' + curEleID + '_hover .hBtn').off('click').on('click', function() {
             if (_this.onHoverContactButtonClick && typeof _this.onHoverContactButtonClick == 'function') {
                 _this.onHoverContactButtonClick(this);
             }
