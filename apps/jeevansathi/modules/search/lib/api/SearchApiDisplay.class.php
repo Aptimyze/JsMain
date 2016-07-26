@@ -662,7 +662,7 @@ class SearchApiDisplay
 				{
 					if(!MobileCommon::isDesktop())
 					{
-                                		$pictureSizeObj = new PICTURE_MobAppPicSize("newjs_bmsSlave");
+                                		$pictureSizeObj = new PICTURE_MobAppPicSize("newjs_masterRep");
 		                                $pictureSize = $pictureSizeObj->getPictureSize($pictureId);
 					}
 				}

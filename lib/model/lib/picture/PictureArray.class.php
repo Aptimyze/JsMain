@@ -573,7 +573,7 @@ class PictureArray
 
 		if($profilesWithScreenedPhoto)	
 		{
-			$PICTURE_NEW = new PICTURE_NEW("newjs_bmsSlave");
+			$PICTURE_NEW = new PICTURE_NEW("newjs_masterRep");
 			$arr = $PICTURE_NEW->getScreendPictureCountByPid($profilesWithScreenedPhoto);
 		}
 		return $arr;

@@ -361,7 +361,7 @@ class JPROFILE extends TABLE{
          * @exception PDOException for database level error handling
          */
         public function edit($paramArr=array(), $value, $criteria="PROFILEID",$extraWhereCnd=""){
-			if($this->dbName=="newjs_bmsSlave")
+			if($this->dbName=="newjs_masterRep")
 				$this->setConnection("newjs_master");
                 if(!$value)
                         throw new jsException("","$criteria IS BLANK");
@@ -395,7 +395,7 @@ class JPROFILE extends TABLE{
                     }
         }
         public function insert($paramArr=array()){
-			if($this->dbName=="newjs_bmsSlave")
+			if($this->dbName=="newjs_masterRep")
 				$this->setConnection("newjs_master");
 			try {
 				$keys_arr=array_keys($paramArr);
@@ -557,7 +557,7 @@ class JPROFILE extends TABLE{
 
 	public function Deactive($pid)
 	{
-		if($this->dbName=="newjs_bmsSlave")
+		if($this->dbName=="newjs_masterRep")
 				$this->setConnection("newjs_master");
 		try{
 			$sql="update JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D', MOD_DT=now(),activatedKey=0 where PROFILEID=:profileid";
@@ -652,7 +652,7 @@ public function duplicateEmail($email)
 	
 	public function updateLoginSortDate($pid)
     {
-		if($this->dbName=="newjs_bmsSlave")
+		if($this->dbName=="newjs_masterRep")
 				$this->setConnection("newjs_master");
 		if(!$pid)
 			throw new jsException("","VALUE OR TYPE IS BLANK IN insertIntoLoginHistory() of NEWJS_LOG_LOGIN_HISTORY.class.php");
@@ -774,7 +774,7 @@ public function duplicateEmail($email)
         }
 	public function updateHaveJEducation($profiles)
 	{
-		if($this->dbName=="newjs_bmsSlave")
+		if($this->dbName=="newjs_masterRep")
 				$this->setConnection("newjs_master");
                 try
                 {
@@ -832,7 +832,7 @@ public function duplicateEmail($email)
 
         public function updateOfflineBillingDetails($profileid)
         {
-			if($this->dbName=="newjs_bmsSlave")
+			if($this->dbName=="newjs_masterRep")
 				$this->setConnection("newjs_master");
                 try
                 {
@@ -849,7 +849,7 @@ public function duplicateEmail($email)
 
         public function updateSubscriptionStatus($subscription, $profileid)
         {
-			if($this->dbName=="newjs_bmsSlave")
+			if($this->dbName=="newjs_masterRep")
 				$this->setConnection("newjs_master");
                 try
                 {
@@ -867,7 +867,7 @@ public function duplicateEmail($email)
         
         public function updatePrivacy($privacy, $profileid)
         {
-			if($this->dbName=="newjs_bmsSlave")
+			if($this->dbName=="newjs_masterRep")
 				$this->setConnection("newjs_master");
                 try
                 {
@@ -929,7 +929,7 @@ public function duplicateEmail($email)
 		
 		public function updateHide($privacy, $profileid,$dayinterval)
         {
-			if($this->dbName=="newjs_bmsSlave")
+			if($this->dbName=="newjs_masterRep")
 				$this->setConnection("newjs_master");
                 try
                 {
@@ -946,7 +946,7 @@ public function duplicateEmail($email)
         
         public function updateUnHide($privacy,$profileid)
         {
-			if($this->dbName=="newjs_bmsSlave")
+			if($this->dbName=="newjs_masterRep")
 				$this->setConnection("newjs_master");
                 try
                 {
@@ -979,7 +979,7 @@ public function duplicateEmail($email)
 
 		public function updateDeleteData($profileid)
         {
-			if($this->dbName=="newjs_bmsSlave")
+			if($this->dbName=="newjs_masterRep")
 				$this->setConnection("newjs_master");
                 try
                 {

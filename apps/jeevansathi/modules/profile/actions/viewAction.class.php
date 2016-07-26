@@ -218,14 +218,14 @@ class viewAction extends sfAction
 				$username=$username_temp;
 				
 			//Change this later
-			$profile = Profile::getInstance("newjs_bmsSlave");
+			$profile = Profile::getInstance("newjs_masterRep");
 			$profile->getDetail($username,'USERNAME',"","RAW");
 			//$profileid=JSCOMMON::getProfileFromUsername($username);	
 					
 		}
 		if($profileid)
 		{
-			$profile = Profile::getInstance("newjs_bmsSlave");
+			$profile = Profile::getInstance("newjs_masterRep");
 			$profile->getDetail($profileid,'PROFILEID',"","RAW");
 		}			
 				
