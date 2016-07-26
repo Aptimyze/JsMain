@@ -159,21 +159,25 @@ class SEARCH_AGENT extends TABLE
         public function insertSavedSearchMailerData($receiverData)
         {
                 try
-                {
-                        $sql="INSERT IGNORE INTO search.send_saved_search_mail (RECEIVER,SEARCH_ID,SEARCH_NAME) VALUES ";                        $res = $this->db->prepare($sql);
-                        foreach($receiverData as $key=>$value)
+                {       if(is_array($receiverData))
                         {
-                                $sql .="(:RECEIVER".$key.",:SEARCH_ID".$key.",:SEARCH_NAME".$key."),";
+                                $sql="INSERT IGNORE INTO search.send_saved_search_mail (RECEIVER,SEARCH_ID,SEARCH_NAME) VALUES ";                        
+                                $res = $this->db->prepare($sql);
+                                foreach($receiverData as $key=>$value)
+                                {
+                                        $sql .="(:RECEIVER".$key.",:SEARCH_ID".$key.",:SEARCH_NAME".$key."),";
+                                }
+                                $sql = rtrim($sql,",");
+                                $res = $this->db->prepare($sql);
+                                foreach($receiverData as $key => $value)
+                                {
+                                        $res->bindValue(":RECEIVER".$key, $value["PROFILEID"], PDO::PARAM_INT);
+                                        $res->bindValue(":SEARCH_ID".$key, $value["ID"], PDO::PARAM_INT);
+                                        $res->bindValue(":SEARCH_NAME".$key, $value["SEARCH_NAME"], PDO::PARAM_STR);
+                                }
+                                $res->execute();
                         }
-                        $sql = rtrim($sql,",");
-                        $res = $this->db->prepare($sql);
-                        foreach($receiverData as $key => $value)
-                        {
-                                $res->bindValue(":RECEIVER".$key, $value["PROFILEID"], PDO::PARAM_INT);
-                                $res->bindValue(":SEARCH_ID".$key, $value["ID"], PDO::PARAM_INT);
-                                $res->bindValue(":SEARCH_NAME".$key, $value["SEARCH_NAME"], PDO::PARAM_STR);
-                        }
-                        $res->execute();
+                        
                 }
                 catch(PDOException $e)
                 {

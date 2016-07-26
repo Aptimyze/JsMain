@@ -45,9 +45,12 @@ EOF;
 		$receiverData = $selectSearchAgentObj->selectSavedSearchMailerData($currentScript,$totalScripts,$lastLoginDate);
         unset($selectSearchAgentObj);
         
-        //insert to master
-        $insertDataObj = new SEARCH_AGENT("newjs_master");
-        $insertDataObj->insertSavedSearchMailerData($receiverData);
-        unset($insertDataObj);
+        if(is_array($receiverData))
+        {
+            //insert to master
+            $insertDataObj = new SEARCH_AGENT("newjs_master");
+            $insertDataObj->insertSavedSearchMailerData($receiverData);
+            unset($insertDataObj);
+        }
     }
 }
