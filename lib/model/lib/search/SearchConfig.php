@@ -75,7 +75,11 @@ class SearchConfig
 	public static $clustersWithAny = array('HANDICAPPED');
 	/* Search Cluster Info */
 
-	
+	/**
+         * Db to be called in all search requests
+         */
+        public static $searchDbName = "newjs_masterRep";
+        
 	/*
 	* List The Array name corresponding to SEARCH_MALE/FEMALE fields used in cluster
 	*/
@@ -197,4 +201,8 @@ class SearchConfig
 	/* For Search UI */
 
 	public static $advanceSearchMtongueHardCodeArray = array(19=>41,30=>70,36=>71);		//Same mtongue in different regions have some hardcoded values in advance search. This array keeps the mapping. Array index has the original vale and array value has the hardcoded value
+        
+        public static function getSearchDb($params = array()){
+                return self::$searchDbName;
+        }
 }

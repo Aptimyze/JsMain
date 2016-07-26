@@ -281,7 +281,7 @@ class ScreenedPicture extends Picture
         public function get($paramArr=array(),$getFromMasterR='')
         {
 		if($getFromMasterR=='1')
-			 $photoObj=new PICTURE_NEW("newjs_bmsSlave");
+			 $photoObj=new PICTURE_NEW("newjs_masterRep");
 		else
 			$photoObj=new PICTURE_NEW;
                 $detailArr=$photoObj->get($paramArr);
@@ -370,14 +370,14 @@ class ScreenedPicture extends Picture
 	
 	public function getMultipleUserProfilePics($whereCondition)
         {
-		$photoObj=new PICTURE_NEW("newjs_bmsSlave");
+		$photoObj=new PICTURE_NEW("newjs_masterRep");
                 $profilePicsArr=$photoObj->getMultipleUserProfilePics($whereCondition);
                 return $profilePicsArr;
 	}
 
 	public function getMultipleUserPicsCount($whereCondition)
         {
-                $photoObj=new PICTURE_NEW("newjs_bmsSlave");
+                $photoObj=new PICTURE_NEW("newjs_masterRep");
                 $profilePicsCountArr=$photoObj->getMultipleUserPicsCount($whereCondition);
                 return $profilePicsCountArr;
         }
