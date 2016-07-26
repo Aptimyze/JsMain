@@ -451,6 +451,7 @@ function handleErrorInHoverButton(jid, data) {
 function contactActionCall(action, checkSum, params){
     var response;
     url = chatConfig.Params["actionUrl"][action];
+    console.log(params);
     $.myObj.ajax({
         type: 'POST',
         async: false,
@@ -562,7 +563,10 @@ $(document).ready(function () {
              */
         objJsChat.onChatBoxContactButtonsClick = function (params) {
                 if (typeof params != "undefined" && params) {
-                    var userId = params["receiverID"];
+                    var userId = params["receiverID"],
+                        checkSum = params["checkSum"],
+                        trackingParams = params["trackingParams"];
+                    var response = contactActionCall(params["buttonType"], checkSum, trackingParams)
                     switch (params["buttonType"]) {
                     case "INITIATE":
                         //TODO: fire query to send interest              

@@ -375,6 +375,7 @@ JsChat.prototype = {
                     var getNamelbl = fullname,
                         picurl = data[key]["rosterDetails"]["listing_tuple_photo"],
                         prfCheckSum = data[key]["rosterDetails"]["profile_checksum"]; //ankita for image
+                        console.log("prfCheckSum",data[key]["rosterDetails"])
                     List += '<li class=\"clearfix profileIcon\"';
                     List += "id=\"" + runID + "_" + val + "\" data-status=\"" + status + "\" data-checks=\"" + prfCheckSum + "\" data-jid=\"" + fullJID + "\">";
                     List += "<img id=\"pic_" + runID + "_" + val + "\" src=\"" + picurl + "\" class=\"fl wid40hgt40\">";
@@ -413,7 +414,8 @@ JsChat.prototype = {
                                     }
                                     $("#" + runID + "_" + val).on("click", function() {
                                         currentID = $(this).attr("id").split("_")[0];
-                                        elem._chatPanelsBox(currentID, statusArr[currentID], $(this).attr("data-jid"));
+                                        console.log("earlier",$(this).attr("data-checks"));
+                                        elem._chatPanelsBox(currentID, statusArr[currentID], $(this).attr("data-jid"),$(this).attr("data-checks"));
                                     });
                                 }
                             }
@@ -748,7 +750,8 @@ JsChat.prototype = {
                 status = $("chat-box[user-id='" + username + "'] .chatBoxBar .onlineStatus").html(),
                 chatHtml = $(originalElem).find(".chatMessage").html(),
                 jid = $('chat-box[user-id="' + username + '"]').attr("data-jid");
-            curElem._appendChatBox(username, status, jid);
+                pcheckSum = $('chat-box[user-id="' + username + '"]').attr("data-checks");
+            curElem._appendChatBox(username, status, jid, pcheckSum);
             $(originalElem).remove();
             $("chat-box[user-id='" + username + "'] .chatMessage").html(chatHtml);
             $(this).closest(".extraChatList").remove();
@@ -796,8 +799,8 @@ JsChat.prototype = {
         }
     },
     //append chat box on page
-    _appendChatBox: function(userId, status, jid) {
-        $("#chatBottomPanel").prepend('<chat-box pos-state="open" data-jid="' + jid + '" status-user="' + status + '" user-id="' + userId + '"></chat-box>');
+    _appendChatBox: function(userId, status, jid, pcheckSum) {
+        $("#chatBottomPanel").prepend('<chat-box pos-state="open" data-jid="' + jid + '" status-user="' + status + '" user-id="' + userId + '" data-checks="'+pcheckSum+'"></chat-box>');
     },
     //create side panel of extra chat
     _createSideChatBox: function() {
@@ -886,10 +889,12 @@ JsChat.prototype = {
 
     //update contact status and enable/disable chat in chat box on basis of membership and contact status
     _setChatBoxInnerDiv: function(userId, chatBoxType) {
+        console.log();
         console.log("in _setChatBoxInnerDiv");
         var curElem = this,
             new_contact_state = chatBoxType,
-            response;
+            response,
+            checkSum = $("chat-box[user-id='"+userId+"'").attr("data-checks");
         console.log(curElem);
         switch (chatBoxType) {
             case curElem._contactStatusMapping["pg_interest_pending"]["key"]:
@@ -900,6 +905,8 @@ JsChat.prototype = {
                     if (typeof curElem.onChatBoxContactButtonsClick == "function") {
                         response = curElem.onChatBoxContactButtonsClick({
                             "receiverID": userId,
+                            "checkSum": checkSum,
+                            "trackingParams": chatConfig.Params["trackingParams"]["INITIATE"],
                             "buttonType": "INITIATE"
                         });
                         if (response == true) {
@@ -924,6 +931,8 @@ JsChat.prototype = {
                     if (typeof curElem.onChatBoxContactButtonsClick == "function") {
                         response = curElem.onChatBoxContactButtonsClick({
                             "receiverID": userId,
+                            "checkSum": checkSum,
+                            "trackingParams": chatConfig.Params["trackingParams"]["ACCEPT"],
                             "buttonType": "ACCEPT"
                         });
                         if (response == true) {
@@ -941,6 +950,8 @@ JsChat.prototype = {
                     if (typeof curElem.onChatBoxContactButtonsClick == "function") {
                         response = curElem.onChatBoxContactButtonsClick({
                             "receiverID": userId,
+                            "checkSum": checkSum,
+                            "trackingParams": chatConfig.Params["trackingParams"]["DECLINE"],
                             "buttonType": "DECLINE"
                         });
                         if (response == true) {
@@ -1002,7 +1013,8 @@ JsChat.prototype = {
         }
     },
     //appending chat box
-    _chatPanelsBox: function(userId, status, jid) {
+    _chatPanelsBox: function(userId, status, jid, pcheckSum) {
+        console.log("pcheckSum",pcheckSum)
         if ($(".chatlist li[id*='" + userId + "']").length != 0) status = $(".chatlist li[id*='" + userId + "']").attr("data-status");
         var curElem = this,
             heightPlus = false,
@@ -1027,7 +1039,7 @@ JsChat.prototype = {
                 curElem._bindExtraPopupUserClose($(".nchatic_4"));
                 curElem._bindExtraUserNameBox();
             }
-            curElem._appendChatBox(userId, status, jid);
+            curElem._appendChatBox(userId, status, jid, pcheckSum);
         } else {
             $(".extraChatList").each(function(index, element) {
                 var id = $(this).attr("id").split("_")[1];
@@ -1042,7 +1054,7 @@ JsChat.prototype = {
                         value = parseInt($(".extraNumber").text().split("+")[1]),
                         data = $($("chat-box")[len - 1 - value]).attr("user-id"),
                         chatHtml = $(originalElem).find(".chatMessage").html();
-                    curElem._appendChatBox(username, status, jid);
+                    curElem._appendChatBox(username, status, jid, pcheckSum);
                     originalElem.remove();
                     $("chat-box[user-id='" + username + "'] .chatMessage").html(chatHtml);
                     $(this).closest(".extraChatList").remove();
