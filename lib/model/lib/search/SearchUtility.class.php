@@ -35,7 +35,7 @@ class SearchUtility
 			$pid = $loggedInProfileObj->getPROFILEID();
 			if(get_class($SearchParamtersObj) == "FeaturedProfile")
 			{
-				$fplObj = new NEWJS_FEATURED_PROFILE_LOG;
+				$fplObj = new NEWJS_FEATURED_PROFILE_LOG(SearchConfig::getSearchDb());
 				$profiles = $fplObj->getProfilesToIgnore($pid,$seperator);
 				if($profiles)
 				{
@@ -51,7 +51,7 @@ class SearchUtility
 				if($pid)
 				{
 					/* ignored profiles two way */
-					$IgnoredProfilesObj = new IgnoredProfiles;
+					$IgnoredProfilesObj = new IgnoredProfiles();
 					$hideArr = $IgnoredProfilesObj->listIgnoredProfile($pid,$seperator);
 
 					/* contacted profiles */
@@ -61,7 +61,7 @@ class SearchUtility
 					/** matchAlerts Profile **/
 					if($removeMatchAlerts)
 					{
-						$matchalerts_LOG = new matchalerts_LOG;
+						$matchalerts_LOG = new matchalerts_LOG(SearchConfig::getSearchDb());
 						$hideArr.= $matchalerts_LOG->getProfilesSentInMatchAlerts($pid,$seperator);
 					}
 				}
@@ -69,7 +69,7 @@ class SearchUtility
 				if($SearchParamtersObj->getONLINE()==SearchConfig::$onlineSearchFlag)
 				/* For Online search  */
 				{
-					$ChatLibraryObj = new ChatLibrary;
+					$ChatLibraryObj = new ChatLibrary(SearchConfig::getSearchDb());
 					$tempArr = $ChatLibraryObj->findOnlineProfiles($seperator,$SearchParamtersObj);
 					$SearchParamtersObj->setOnlineProfiles($tempArr);
 					unset($tempArr);
@@ -116,7 +116,7 @@ class SearchUtility
 						}
 						if($week || $SearchParamtersObj->getNEWSEARCH_CLUSTERING() || ($_GET["moreLinkCluster"] && in_array($_GET["moreLinkCluster"],array('OCCUPATION','EDU_LEVEL_NEW'))))
 						{
-							$MatchAlerts = new MatchAlerts;
+							$MatchAlerts = new MatchAlerts(SearchConfig::getSearchDb());
 							$matArr1 = $MatchAlerts->getProfilesWithOutSorting($pid,$week);
 						}
 						else
