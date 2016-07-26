@@ -196,8 +196,8 @@ Abstract class ApiAuthentication
 	{
 		//need to check the DOB,GENDER,ACTIVATION,INCOMPLETE fields
 		//Get the Login Data from JProfile -->call Store
-		if((sfContext::getInstance()->getRequest()->getParameter("module")=="homepage" && sfContext::getInstance()->getRequest()->getParameter("action")=="index") || (sfContext::getInstance()->getRequest()->getParameter("module")=="myjs" && sfContext::getInstance()->getRequest()->getParameter("action")=="jspcPerform"))
-			$loggedInProfileObj=LoggedInProfile::getInstance("newjs_master");
+		if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
+			$loggedInProfileObj=LoggedInProfile::getInstance("newjs_masterRep");
 		else
 			$loggedInProfileObj=LoggedInProfile::getInstance("newjs_master");
 		$loggedInProfileObj->getDetail($loginData[PROFILEID],"","*");
