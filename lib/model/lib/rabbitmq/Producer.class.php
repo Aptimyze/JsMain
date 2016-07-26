@@ -178,7 +178,12 @@ class Producer
 				case "USERLOGIN":
 					$data = $msgdata['data'];
 					$msg = new AMQPMessage($data, array('delivery_mode' => MQ::DELIVERYMODE));
-					$this->channel->basic_publish($msg, MQ::CHATEXCHANGE,"login");
+					$this->channel->basic_publish($msg, MQ::CHATEXCHANGE,"create");
+					break;
+				case "USER_DELETE":
+					$data = $msgdata['data'];
+					$msg = new AMQPMessage($data, array('delivery_mode' => MQ::DELIVERYMODE));
+					$this->channel->basic_publish($msg, MQ::CHATEXCHANGE,"delete");
 					break;
 
 			}
