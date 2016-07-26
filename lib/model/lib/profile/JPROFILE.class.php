@@ -190,7 +190,7 @@ class JPROFILE
 
     public function getArray($valueArray = "", $excludeArray = "", $greaterThanArray = "", $fields = "PROFILEID", $lessThanArray = "", $orderby = "", $limit = "", $greaterThanEqualArrayWithoutQuote = "", $lessThanEqualArrayWithoutQuote = "", $like = "", $nolike = "", $addWhereText = "")
     {
-        return self::$objProfileMysql->getArray($valueArray, $excludeArray, $greaterThanArray, $fields = "PROFILEID", $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
+        return self::$objProfileMysql->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
     }
 
     public function getProfileIdsThatSatisfyConditions($equality_cond_arr = '', $between_cond = '')
@@ -550,6 +550,14 @@ class JPROFILE
     public function getPhotoScreenProcessQueueCount()
     {
         return self::$objProfileMysql->getPhotoScreenAcceptQueueCount();
+    }
+    /**
+     * This function executes a select query on join of jprofile and incentives.name_of_user
+     * to fetch PROFILEID,EMAIL,USERNAME for the profiles that match the criteria
+     */
+    public function getDataForLegal($nameArr,$age,$addressArr,$email)
+    {
+        return self::$objProfileMysql->getDataForLegal($nameArr, $age, $addressArr, $email);
     }
 }
 
