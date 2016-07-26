@@ -121,6 +121,8 @@ if($phoneVerRow=(new PHONE_VERIFIED_LOG())->getLogForOtherNumberVerified($profil
 	  		$rawDuplicateObj->addExtension('IDENTIFIED_ON',date('Y-m-d H:i:s'));
 	  		$rawDuplicateObj->setComments("None");
 			DuplicateHandler::HandleDuplicatesInsert($rawDuplicateObj);
+			duplicateProfilesMail::sendEmailToDuplicateProfiles($profileId);
+
 		}
 	
 
