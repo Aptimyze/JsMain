@@ -425,7 +425,7 @@ function contactActionCall(action, checkSum, params){
     url = chatConfig.Params["actionUrl"][action];
     $.myObj.ajax({
         type: 'POST',
-        aync: false,
+        async: false,
         dataType: 'json',
         data: {
             profilechecksum: checkSum,
@@ -505,15 +505,15 @@ $(document).ready(function () {
                 idBeforeSplit = params.id.split('_');
                 idAfterSplit = idBeforeSplit[0];
                 action = idBeforeSplit[1];
-                /*
+                
                 response = contactActionCall(action, checkSum, paramsData);
                 if(response !="false"){
                     console.log("Not false");
                     console.log(response);
                     handleErrorInHoverButton(idAfterSplit,response);
                 }
-                */
                 
+                /*
                 url = chatConfig.Params["actionUrl"][action];
                 $.ajax({
                     type: 'POST',
@@ -527,7 +527,7 @@ $(document).ready(function () {
                         handleErrorInHoverButton(idAfterSplit, data);
                     }
                 });
-                
+                */
                
             }
             /*executed on click of contact engine buttons in chat box
