@@ -439,9 +439,7 @@ JsChat.prototype = {
         var apiParams = {};
         if(jidStr){
             apiParams["pid"] = jidStr.slice(0,-1);
-            apiParams["photoType"] = "ProfilePic120Url,MainPicUrl";
-            console.log("1123");
-            console.log(apiParams);
+            apiParams["photoType"] = "ProfilePic120Url";
             requestListingPhoto(apiParams);  
         }
     },

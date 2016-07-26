@@ -249,6 +249,13 @@ var strophieWrapper = {
     },
     //parser for roster object
     formatRosterObj: function (obj) {
+    	var listing_tuple_photo = "";
+    	if(loggedInJspcGender){
+    		if(loggedInJspcGender == "M")
+    			listing_tuple_photo = chatConfig.Params[device].noPhotoUrl["listingTuple"]["F"];
+    		else if(loggedInJspcGender == "F")
+    			listing_tuple_photo = chatConfig.Params[device].noPhotoUrl["listingTuple"]["M"];
+    	}
         strophieWrapper.commonLogger("in formatRosterObj");
         var chat_status = obj["attributes"]["chat_status"] || "offline",
             newObj = {};
@@ -256,6 +263,8 @@ var strophieWrapper = {
         if (typeof obj["attributes"]["name"] != "undefined") {
             fullname = obj["attributes"]["name"].split("|");
         }
+        console.log(loggedInJspcGender);
+
         newObj[strophieWrapper.rosterDetailsKey] = {
             "jid": obj["attributes"]["jid"],
             "chat_status": chat_status,
@@ -264,7 +273,7 @@ var strophieWrapper = {
             "groups": [],
             "subscription": obj["attributes"]["subscription"],
             "profile_checksum": fullname[1],
-            "listing_tuple_photo": "",
+            "listing_tuple_photo": listing_tuple_photo,
             "last_online_time": null,
             "ask": obj["attributes"]["ask"]
         };
