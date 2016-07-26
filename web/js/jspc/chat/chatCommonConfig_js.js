@@ -8,7 +8,7 @@ chatConfig.Params = {
         "Shortlisted Members": "shortlist",
         "Interest Sent": "intsent"
     },
-    actionUrl:{
+    actionUrl: {
         "ACCEPT": "/api/v2/contacts/postAccept",
         "DECLINE": "/api/v2/contacts/postNotInterested",
         "INITIATE": "/api/v2/contacts/postEOI"
