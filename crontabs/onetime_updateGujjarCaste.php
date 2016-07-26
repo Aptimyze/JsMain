@@ -128,6 +128,7 @@ function updateCasteInTables($tableName,$columnName,$oldValue,$newValue,$slaveCo
                         }elseif($updateType == "pipehash"){
                               $oldValues = explode('|',$row[$columnName]);  
                               $newArray = array();
+                              $arrOut = array();
                               foreach($oldValues as $oVal){
                                       $weightage = explode("#",$oVal);
                                       if($weightage[0] == $oldValue || $weightage[0] == $newValue){
