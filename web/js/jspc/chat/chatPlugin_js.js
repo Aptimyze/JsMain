@@ -31,6 +31,12 @@ JsChat.prototype = {
     _listingNodesLimit: {},
     _groupBasedChatBox: {},
     _contactStatusMapping: {},
+    _loggingEnabledPlugin: true,
+    _chatLoggerPlugin: function (message) {
+        if (this._loggingEnabledPlugin) {
+            console.log(message);
+        }
+    },
     _construct: function () {
         if (arguments[1][0].loginStatus) this._loginStatus = arguments[1][0].loginStatus;
         //configurable main div
@@ -59,7 +65,7 @@ JsChat.prototype = {
     },
     //start:check login status
     checkLoginStatus: function () {
-        console.log('check status');
+        this._chatLoggerPlugin('check status');
         if (this._loginStatus == "Y") {
             return true;
         } else {
@@ -69,8 +75,8 @@ JsChat.prototype = {
     //start:maximize html
     _maximizeChatPanel: function () {
         var curEle = this;
-        console.log('in max');
-        console.log($(this._maxChatBarOut));
+        this._chatLoggerPlugin('in max');
+        this._chatLoggerPlugin($(this._maxChatBarOut));
         $("chat-box").each(function (index, element) {
             if ($(this).attr("pos-state") == "open") {
                 curEle._scrollUp($(this));
@@ -80,7 +86,7 @@ JsChat.prototype = {
             $(this).remove();
         });
         if (this._checkWidth()) {
-            console.log('screen size less than 1024');
+            this._chatLoggerPlugin('screen size less than 1024');
         } else {
             $("body").animate({
                 width: '80%'
@@ -160,15 +166,16 @@ JsChat.prototype = {
     onLogoutPreClick: null,
     //start:log out from chat
     logOutChat: function () {
-        var curEleRef = this;
+        var curEleRef = this,
+            that = this;
         $(curEleRef._toggleID).toggleClass('disp-none');
         $(curEleRef._chatBottomPanelID).hide();
-        console.log("In logout Chat");
-        console.log(curEleRef._loginStatus);
+        this._chatLoggerPlugin("In logout Chat");
+        this._chatLoggerPlugin(curEleRef._loginStatus);
         if (curEleRef._loginStatus == 'N') {
             $(curEleRef._listingPanelID).fadeOut('slow', function () {
                 if ($(curEleRef._loginPanelID).length == 0) {
-                    console.log("Length is 0 of login panel");
+                    that._chatLoggerPlugin("Length is 0 of login panel");
                     curEleRef.addLoginHTML();
                 } else {
                     $(curEleRef._loginPanelID).fadeIn('slow', function () {
@@ -185,16 +192,17 @@ JsChat.prototype = {
     },
     //start:addChatTop function
     _addChatTop: function (param) {
-        var curEleRef = this;
+        var curEleRef = this,
+            that = this;
         var chatHeaderHTML = '<div class="nchatbg1 nchatp2 clearfix pos-rel nchathgt1"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarIn"></i> </div><div class="fl"> <img src="' + this._imageUrl + '" class="nchatp4 wd40"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp">Logout</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>';
         $(curEleRef._listingPanelID).append(chatHeaderHTML);
         $(curEleRef._toggleLogoutDiv).off("click").on("click", function () {
-            console.log($(this));
+            that._chatLoggerPlugin($(this));
             $(curEleRef._toggleID).toggleClass('disp-none');
         });
         $(curEleRef._logoutChat).click(function () {
             if (curEleRef.onLogoutPreClick && typeof (curEleRef.onLogoutPreClick) == "function") {
-                console.log("in if");
+                that._chatLoggerPlugin("in if");
                 curEleRef.onLogoutPreClick();
             }
             curEleRef.logOutChat();
@@ -205,17 +213,17 @@ JsChat.prototype = {
     },
     //start:set height for the listing scroll div
     _chatScrollHght: function () {
-        console.log('cal scroll div');
+        this._chatLoggerPlugin('cal scroll div');
         var totalHgt = this._getHeight();
         var remHgt = parseInt(totalHgt) - 140;
-        console.log(remHgt);
-        console.log(this._scrollDivId);
+        this._chatLoggerPlugin(remHgt);
+        this._chatLoggerPlugin(this._scrollDivId);
         $(this._scrollDivId).css('height', remHgt);
     },
     //start:add tab
     addTab: function () {
         //this script is same as old one shared eariler need to be reworked as discussed
-        console.log('in addTab');
+        this._chatLoggerPlugin('in addTab');
         var obj = this._listingTabs;
         var curEle = this;
         var TabID;
@@ -261,96 +269,102 @@ JsChat.prototype = {
     },
     noResultError: function () {
         var dataLength;
+        var that = this;
         $(".js-htab").each(function (index, element) {
             dataLength = 0;
             $(this).find(".chatlist").each(function (index2, element2) {
-                console.log($(this).find("li").length);
+                that._chatLoggerPlugin($(this).find("li").length);
                 dataLength = dataLength + $(this).find("li").length;
             });
             if (dataLength == 0) {
-                console.log(element);
+                that._chatLoggerPlugin(element);
                 $(element).find(".noResult").removeClass("disp-none").addClass("disp_ib");
                 $(element).find(".chatListing").each(function (index, element) {
                     $(this).addClass("disp-none");
                 });
             }
         });
+        delete that;
     },
     addListingInit: function (data) {
         var elem = this,
             statusArr = [],
             jidStr = "",
             currentID;
-        console.log("addListing");
+        this._chatLoggerPlugin("addListing");
         for (var key in data) {
             if (typeof data[key]["rosterDetails"]["jid"] != "undefined") {
                 var runID = data[key]["rosterDetails"]["jid"],
                     res = '',
                     status = data[key]["rosterDetails"]["chat_status"];
-                console.log("addlisting for " + runID + "--" + data[key]["rosterDetails"]["chat_status"]);
+                this._chatLoggerPlugin("addlisting for " + runID + "--" + data[key]["rosterDetails"]["chat_status"]);
                 var fullJID = runID;
                 res = runID.split("@");
                 runID = res[0];
                 jidStr = jidStr + runID + ",";
                 statusArr[runID] = status;
-                if (typeof data[key]["rosterDetails"]["groups"] != "undefined" && data[key]["rosterDetails"]["groups"].length > 0) $.each(data[key]["rosterDetails"]["groups"], function (index, val) {
-                    console.log("groups " + val);
-                    var List = '',
-                        fullname = data[key]["rosterDetails"]["fullname"],
-                        tabShowStatus = $('div.' + val).attr('data-showuser');
-                    var getNamelbl = fullname,
-                        picurl = data[key]["rosterDetails"]["listing_tuple_photo"],
-                        prfCheckSum = data[key]["rosterDetails"]["profile_checksum"]; //ankita for image
-                    console.log("prfCheckSum", data[key]["rosterDetails"])
-                    List += '<li class=\"clearfix profileIcon\"';
-                    List += "id=\"" + runID + "_" + val + "\" data-status=\"" + status + "\" data-checks=\"" + prfCheckSum + "\" data-jid=\"" + fullJID + "\">";
-                    List += "<img id=\"pic_" + runID + "_" + val + "\" src=\"" + picurl + "\" class=\"fl wid40hgt40\">";
-                    List += '<div class="fl f14 fontlig pt15 pl18">';
-                    List += getNamelbl;
-                    List += '</div>';
-                    if (status == "online") {
-                        List += '<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>';
-                    }
-                    List += '</li>';
-                    var addNode = false;
-                    if (tabShowStatus == 'false') {
-                        console.log(status + "2222");
-                        addNode = true;
-                    } else {
-                        console.log(status + "1111");
-                        if (status == 'online') {
+                if (typeof data[key]["rosterDetails"]["groups"] != "undefined" && data[key]["rosterDetails"]["groups"].length > 0) {
+                    var that = this;
+                    $.each(data[key]["rosterDetails"]["groups"], function (index, val) {
+                        that._chatLoggerPlugin("groups " + val);
+                        var List = '',
+                            fullname = data[key]["rosterDetails"]["fullname"],
+                            tabShowStatus = $('div.' + val).attr('data-showuser');
+                        var getNamelbl = fullname,
+                            picurl = data[key]["rosterDetails"]["listing_tuple_photo"],
+                            prfCheckSum = data[key]["rosterDetails"]["profile_checksum"]; //ankita for image
+                        that._chatLoggerPlugin("prfCheckSum", data[key]["rosterDetails"])
+                        List += '<li class=\"clearfix profileIcon\"';
+                        List += "id=\"" + runID + "_" + val + "\" data-status=\"" + status + "\" data-checks=\"" + prfCheckSum + "\" data-jid=\"" + fullJID + "\">";
+                        List += "<img id=\"pic_" + runID + "_" + val + "\" src=\"" + picurl + "\" class=\"fl wid40hgt40\">";
+                        List += '<div class="fl f14 fontlig pt15 pl18">';
+                        List += getNamelbl;
+                        List += '</div>';
+                        if (status == "online") {
+                            List += '<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>';
+                        }
+                        List += '</li>';
+                        var addNode = false;
+                        if (tabShowStatus == 'false') {
+                            that._chatLoggerPlugin(status + "2222");
                             addNode = true;
-                        }
-                    }
-                    console.log("addNode" + addNode);
-                    if (addNode == true) {
-                        if ($('#' + runID + "_" + val).length == 0) {
-                            if ($('#' + runID + "_" + val).find('.nchatspr').length == 0) {
-                                console.log("checking no of nodes in group " + $('div.' + val + ' ul li').size());
-                                if (typeof elem._listingNodesLimit[val] == "undefined" || $('div.' + val + ' ul li').size() <= elem._listingNodesLimit[val]) {
-                                    console.log("b2");
-                                    var tabId = $('div.' + val).parent().attr("id");
-                                    if ($("#show" + tabId + "NoResult").length != 0) {
-                                        console.log("me");
-                                        $("#show" + tabId + "NoResult").addClass("disp-none");
-                                    }
-                                    elem._placeContact("new", runID, val, status, List);
-                                    if ($('div.' + val + ' ul').parent().hasClass("disp-none")) {
-                                        $('div.' + val + ' ul').parent().removeClass("disp-none");
-                                    }
-                                    $("#" + runID + "_" + val).on("click", function () {
-                                        currentID = $(this).attr("id").split("_")[0];
-                                        console.log("earlier", $(this).attr("data-checks"));
-                                        elem._chatPanelsBox(currentID, statusArr[currentID], $(this).attr("data-jid"), $(this).attr("data-checks"));
-                                    });
-                                }
-                            }
                         } else {
-                            elem._placeContact("existing", runID, val, status);
+                            that._chatLoggerPlugin(status + "1111");
+                            if (status == 'online') {
+                                addNode = true;
+                            }
                         }
-                        elem._updateStatusInChatBox(runID, status);
-                    }
-                });
+                        that._chatLoggerPlugin("addNode" + addNode);
+                        if (addNode == true) {
+                            if ($('#' + runID + "_" + val).length == 0) {
+                                if ($('#' + runID + "_" + val).find('.nchatspr').length == 0) {
+                                    that._chatLoggerPlugin("checking no of nodes in group " + $('div.' + val + ' ul li').size());
+                                    if (typeof elem._listingNodesLimit[val] == "undefined" || $('div.' + val + ' ul li').size() <= elem._listingNodesLimit[val]) {
+                                        that._chatLoggerPlugin("b2");
+                                        var tabId = $('div.' + val).parent().attr("id");
+                                        if ($("#show" + tabId + "NoResult").length != 0) {
+                                            that._chatLoggerPlugin("me");
+                                            $("#show" + tabId + "NoResult").addClass("disp-none");
+                                        }
+                                        elem._placeContact("new", runID, val, status, List);
+                                        if ($('div.' + val + ' ul').parent().hasClass("disp-none")) {
+                                            $('div.' + val + ' ul').parent().removeClass("disp-none");
+                                        }
+                                        $("#" + runID + "_" + val).on("click", function () {
+                                            currentID = $(this).attr("id").split("_")[0];
+                                            that._chatLoggerPlugin("earlier", $(this).attr("data-checks"));
+                                            elem._chatPanelsBox(currentID, statusArr[currentID], $(this).attr("data-jid"), $(this).attr("data-checks"));
+                                        });
+                                    }
+                                }
+                            } else {
+                                elem._placeContact("existing", runID, val, status);
+                            }
+                            elem._updateStatusInChatBox(runID, status);
+                        }
+                    });
+                    delete that;
+                }
             }
         }
         elem._chatScrollHght();
@@ -362,8 +376,8 @@ JsChat.prototype = {
             global: elem
         }, elem._calltohover);
         //var APIsrc ="http://xmppdev.jeevansathi.com/api/v1/social/getMultiUserPhoto?pid=";
-        console.log("api");
-        console.log(jidStr);
+        this._chatLoggerPlugin("api");
+        this._chatLoggerPlugin(jidStr);
         var apiParams = {};
         if (jidStr) {
             apiParams["pid"] = jidStr.slice(0, -1);
@@ -384,29 +398,22 @@ JsChat.prototype = {
     //place contact in appropriate position in listing
     _placeContact: function (key, contactID, groupID, status, contactHTML) {
         if (key == "new") {
-            console.log("ankita_adding" + contactID + " in groupID");
-            console.log(contactHTML);
-            /*if(status == "online")          //add new online element in start
-                $('div.' + groupID + ' ul').prepend(contactHTML);
-            else */ //add new offline element in end
+            this._chatLoggerPlugin("ankita_adding" + contactID + " in groupID");
+            this._chatLoggerPlugin(contactHTML);
             $('div.' + groupID + ' ul').append(contactHTML);
         } else if (key == "existing") {
-            console.log("changing icon");
+            this._chatLoggerPlugin("changing icon");
             if (status == "online") {
                 //add online chat_status icon
                 if ($('#' + contactID + "_" + groupID).find('.nchatspr').length == 0) {
                     $(this._mainID).find($('#' + contactID + "_" + groupID)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
                 }
-                //move this element to beginning of listing
-                /* $('div').find($('#'+contactID + "_" + groupID)).detach();
-                $('div.' + groupID + ' ul').prepend(content); */
-                //$('#'+contactID + "_" + groupID).parent().prepend($('#'+contactID + "_" + groupID));
             }
         }
     },
     //scrolling down chat box
     _scrollDown: function (elem, type) {
-        console.log(elem);
+        this._chatLoggerPlugin(elem);
         if (type == "remove") {
             elem.animate({
                 bottom: "-350px"
@@ -469,6 +476,7 @@ JsChat.prototype = {
         //handle received and unread messages in chatbox
         var selfJID = getConnectedUserJID(),
             receiverID = $(elem).attr("data-jid");
+        var that = this;
         $(elem).find(".received").each(function () {
             var msg_id = $(this).attr("data-msgid");
             var msgObj = {
@@ -478,10 +486,11 @@ JsChat.prototype = {
                 "msg_state": "receiver_received_read"
             };
             $(this).removeClass("received").addClass("received_read");
-            console.log("marking msg as read");
-            console.log(msgObj);
+            that._chatLoggerPlugin("marking msg as read");
+            that._chatLoggerPlugin(msgObj);
             invokePluginReceivedMsgHandler(msgObj);
         });
+        delete that;
     },
     //bind clicking minimize icon
     _bindMinimize: function (elem) {
@@ -522,16 +531,17 @@ JsChat.prototype = {
     onPostBlockCallback: null,
     //remove from list
     _removeFromListing: function (param1, data) {
-        console.log('remove element 11');
+        this._chatLoggerPlugin('remove element 11');
         var elem = this;
         //removeCall1 if user is removed from backend
         if (param1 == 'removeCall1' || param1 == 'delete_node') {
-            console.log("calllign _removeFromListing");
+            this._chatLoggerPlugin("calllign _removeFromListing");
             for (var key in data) {
                 var runID = '';
                 runID = data[key]["rosterDetails"]["jid"].split("@")[0];
                 if (typeof data[key]["rosterDetails"]["groups"] != "undefined") {
-                    console.log(data[key]["rosterDetails"]["groups"]);
+                    this._chatLoggerPlugin(data[key]["rosterDetails"]["groups"]);
+                    var that = this;
                     $.each(data[key]["rosterDetails"]["groups"], function (index, val) {
                         var tabShowStatus = '',
                             listElements = '';
@@ -539,19 +549,20 @@ JsChat.prototype = {
                         var tabShowStatus = $('div.' + val).attr('data-showuser');
                         listElements = $('#' + runID + '_' + val);
                         if (tabShowStatus == 'false' && param1 != 'delete_node') {
-                            console.log("123");
+                            that._chatLoggerPlugin("123");
                             $(listElements).find('.nchatspr').detach();
                         } else {
-                            console.log("345");
+                            that._chatLoggerPlugin("345");
                             $('div').find(listElements).detach();
                             if ($('div.' + val + ' ul li').length == 0) {
                                 $('div.' + val + ' ul').parent().addClass("disp-none");
                             }
                         }
-                        console.log(this);
+                        that._chatLoggerPlugin(this);
                         elem._updateStatusInChatBox(runID, "offline");
                     });
-                    console.log("here");
+                    delete that;
+                    this._chatLoggerPlugin("here");
                 }
             }
         }
@@ -595,11 +606,12 @@ JsChat.prototype = {
     //sending chat
     _bindSendChat: function (userId) {
         var _this = this,
+            that = this,
             messageId, jid = $('chat-box[user-id="' + userId + '"]').attr("data-jid");
         var out = 1;
         var selfJID = getConnectedUserJID();
         $('chat-box[user-id="' + userId + '"] textarea').focusout(function () {
-            console.log("focus out to " + jid);
+            that._chatLoggerPlugin("focus out to " + jid);
             out = 1;
             //fire event typing paused
             sendTypingState(selfJID, jid, "paused");
@@ -607,7 +619,7 @@ JsChat.prototype = {
         $('chat-box[user-id="' + userId + '"] textarea').keyup(function (e) {
             var curElem = this;
             if ($(this).val().length >= 1 && out == 1) {
-                console.log("typing start");
+                that._chatLoggerPlugin("typing start");
                 out = 0;
                 //fire event typing start
                 sendTypingState(selfJID, jid, "composing");
@@ -633,13 +645,13 @@ JsChat.prototype = {
                     }, 500);
                     //fire send chat query and return unique id
                     if (_this.onSendingMessage && typeof (_this.onSendingMessage) == "function") {
-                        console.log("in plugin send message");
-                        console.log(text);
-                        console.log($('chat-box[user-id="' + userId + '"]').attr("data-jid"));
+                        that._chatLoggerPlugin("in plugin send message");
+                        that._chatLoggerPlugin(text);
+                        that._chatLoggerPlugin($('chat-box[user-id="' + userId + '"]').attr("data-jid"));
                         var profileChecksum = $(".chatlist li[id*='" + userId + "']").attr("data-checks");
                         var msgSendOutput = _this.onSendingMessage(text, $('chat-box[user-id="' + userId + '"]').attr("data-jid"), profileChecksum, $('chat-box[user-id="' + userId + '"]').attr("data-contact"));
                         messageId = msgSendOutput["msg_id"];
-                        console.log("handling output of onSendingMessage in plugin");
+                        that._chatLoggerPlugin("handling output of onSendingMessage in plugin");
                         $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + messageId);
                         if (msgSendOutput["canSend"] == true) {
                             //msg sending success,set single tick here
@@ -656,6 +668,7 @@ JsChat.prototype = {
                 }
             }
         });
+        delete that;
     },
     //binding click on extra popup username listing
     _bindExtraUserNameBox: function () {
@@ -747,18 +760,18 @@ JsChat.prototype = {
         });
     },
     _getChatBoxType: function (userId, key) {
-        console.log("in _getChatBoxType");
+        this._chatLoggerPlugin("in _getChatBoxType");
         var curElem = this;
-        console.log($(".chatlist li[id*='" + userId + "']").attr("id").split(userId + "_")[1]);
+        this._chatLoggerPlugin($(".chatlist li[id*='" + userId + "']").attr("id").split(userId + "_")[1]);
         var groupID = $(".chatlist li[id*='" + userId + "']").attr("id").split(userId + "_")[1];
-        console.log("ankita" + groupID + "-" + curElem._groupBasedChatBox[groupID]);
+        this._chatLoggerPlugin("ankita" + groupID + "-" + curElem._groupBasedChatBox[groupID]);
         var chatBoxType;
         var oldChatBoxType = $('chat-box[user-id="' + userId + '"]').attr("data-contact");
         if (typeof key == "undefined" || key != "updateChatBoxType") {
-            console.log("in case a");
+            this._chatLoggerPlugin("in case a");
             chatBoxType = curElem._contactStatusMapping[curElem._groupBasedChatBox[groupID]]["key"];
         } else {
-            console.log("in case b");
+            this._chatLoggerPlugin("in case b");
             switch (groupID) {
             case chatConfig.Params.categoryNames["Acceptance"]: //acceptance from 
                 chatBoxType = curElem._contactStatusMapping["pog_interest_accepted"]["key"];
@@ -771,15 +784,17 @@ JsChat.prototype = {
                 break;
             }
         }
-        if (typeof chatBoxType == "undefined") chatBoxType = curElem._contactStatusMapping["none_applicable"]["key"];
-        console.log("chatboxtype--" + chatBoxType);
+        if (typeof chatBoxType == "undefined") {
+            chatBoxType = curElem._contactStatusMapping["none_applicable"]["key"];
+        }
+        this._chatLoggerPlugin("chatboxtype--" + chatBoxType);
         $('chat-box[user-id="' + userId + '"]').attr("data-contact", chatBoxType);
         return chatBoxType;
     },
     _postChatPanelsBox: function (userId) {
         var curElem = this;
         var membership = "paid"; //get membership status-pending
-        console.log("in _postChatPanelsBox");
+        this._chatLoggerPlugin("in _postChatPanelsBox");
         //var membership = "free";
         var chatBoxType = curElem._getChatBoxType(userId);
         //setTimeout(function() {
@@ -791,169 +806,157 @@ JsChat.prototype = {
     _updateChatPanelsBox: function (userId) {
         var curElem = this;
         if ($('chat-box[user-id="' + userId + '"]').length != 0) {
-            console.log("in _updateChatPanelsBox for " + userId);
+            this._chatLoggerPlugin("in _updateChatPanelsBox for " + userId);
             var chatBoxType = curElem._getChatBoxType(userId, "updateChatBoxType");
             curElem._setChatBoxInnerDiv(userId, chatBoxType);
             curElem._enableChatTextArea(chatBoxType, userId, "paid");
         }
     },
-
     //update contact status and enable/disable chat in chat box on basis of membership and contact status
     _setChatBoxInnerDiv: function (userId, chatBoxType) {
-        console.log();
-        console.log("in _setChatBoxInnerDiv");
+        this._chatLoggerPlugin();
+        this._chatLoggerPlugin("in _setChatBoxInnerDiv");
         var curElem = this,
+            that = this,
             new_contact_state = chatBoxType,
             response,
             checkSum = $("chat-box[user-id='" + userId + "'").attr("data-checks");
-        console.log(curElem);
+        this._chatLoggerPlugin(curElem);
         switch (chatBoxType) {
-            case curElem._contactStatusMapping["pg_interest_pending"]["key"]:
-                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="sendInterest cursp sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_6 "></i><span class="vertTexBtm"> Send Interest</span></div><div id="sentDiv" class="sendDiv disp-none pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
-                //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="initiateText" class="color5 pos-rel txtc fullwid nchatm90">Initiating chat will also send your interest</div>');
-                $('chat-box[user-id="' + userId + '"] #sendInt').on("click", function() {
-                    if (typeof curElem.onChatBoxContactButtonsClick == "function") {
-                        response = curElem.onChatBoxContactButtonsClick({
-                            "receiverID": userId,
-                            "checkSum": checkSum,
-                            "trackingParams": chatConfig.Params["trackingParams"]["INITIATE"],
-                            "buttonType": "INITIATE"
-                        });
-                        console.log("res",response);
-                        if (response != false) {
-                            if(response.responseMessage != "Successful"){
-                                console.log($(this));
-                                $(this).html(response.responseMessage);
-                            }
-                            else if(response.buttondetails && response.buttondetails.button){
-                                if (data.actiondetails.errmsglabel) {
-                                    $(this).html("error");
-                                }
-                                else{
-                                    $(this).find("#sentDiv").removeClass("disp-none");
-                                    $(this).find("#initiateText").remove();
-                                    $(this).remove();
-                                    new_contact_state = curElem._contactStatusMapping["pog_acceptance_pending"]["key"];
-                                    $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
-                                }
-                            }
-                            else{
+        case curElem._contactStatusMapping["pg_interest_pending"]["key"]:
+            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="sendInterest cursp sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_6 "></i><span class="vertTexBtm"> Send Interest</span></div><div id="sentDiv" class="sendDiv disp-none pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
+            //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="initiateText" class="color5 pos-rel txtc fullwid nchatm90">Initiating chat will also send your interest</div>');
+            $('chat-box[user-id="' + userId + '"] #sendInt').on("click", function () {
+                if (typeof curElem.onChatBoxContactButtonsClick == "function") {
+                    response = curElem.onChatBoxContactButtonsClick({
+                        "receiverID": userId,
+                        "checkSum": checkSum,
+                        "trackingParams": chatConfig.Params["trackingParams"]["INITIATE"],
+                        "buttonType": "INITIATE"
+                    });
+                    console.log("res", response);
+                    if (response != false) {
+                        if (response.responseMessage != "Successful") {
+                            console.log($(this));
+                            $(this).html(response.responseMessage);
+                        } else if (response.buttondetails && response.buttondetails.button) {
+                            if (data.actiondetails.errmsglabel) {
                                 $(this).html("error");
+                            } else {
+                                $(this).find("#sentDiv").removeClass("disp-none");
+                                $(this).find("#initiateText").remove();
+                                $(this).remove();
+                                new_contact_state = curElem._contactStatusMapping["pog_acceptance_pending"]["key"];
+                                $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
                             }
                         } else {
-                            console.log("cannot send interest in chat box");
                             $(this).html("error");
                         }
+                    } else {
+                        console.log("cannot send interest in chat box");
+                        $(this).html("error");
                     }
-                });
-                break;
-            case curElem._contactStatusMapping["pog_acceptance_pending"]["key"]:
-                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
-                //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-                break;
-            case curElem._contactStatusMapping["pg_acceptance_pending"]["key"]:
-                $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sendInt,#restrictMessgTxt,#initiateText").remove();
-                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="pos-rel wid90p txtc colorGrey padall-10">The member wants to chat</div><div class="pos-rel fullwid txtc colorGrey mt20"><div id="accept" class="acceptInterest padall-10 color5 disp_ib cursp">Accept</div><div id="decline" class="acceptInterest padall-10 color5 disp_ib cursp">Decline</div></div><div id="acceptTxt" class="pos-rel fullwid txtc color5 mt25">Accept interest to continue chat</div><div id="sentDiv" class="fullwid pos-rel disp-none mt10 color5 txtc">Interest Accepted continue chat</div><div id="declineDiv" class="sendDiv txtc disp-none pos-abs wid80p mt10 color5">Interest Declined, you can\'t chat with this user anymore</div>');
-                //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
-                $('chat-box[user-id="' + userId + '"] #accept').on("click", function() {
-                    if (typeof curElem.onChatBoxContactButtonsClick == "function") {
-                        response = curElem.onChatBoxContactButtonsClick({
-                            "receiverID": userId,
-                            "checkSum": checkSum,
-                            "trackingParams": chatConfig.Params["trackingParams"]["ACCEPT"],
-                            "buttonType": "ACCEPT"
-                        });
-                        
-                        if (response != false) {
-                            if(response.responseMessage != "Successful"){
-                                console.log($(this));
-                                $(this).html(response.responseMessage);
-                                $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
-                            }
-                            else if(response.buttondetails && response.buttondetails.button){
-                                if (data.actiondetails.errmsglabel) {
-                                    $(this).html("error");
-                                    $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
-                                }
-                                else{
-                                    $(this).closest(".chatMessage").find("#sentDiv").removeClass("disp-none");
-                                    $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
-                                    $(this).remove();
-                                    new_contact_state = curElem._contactStatusMapping["both_accepted"]["key"];
-                                    //TODO: fire query for accepting request
-                                    $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-                                    $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
-                                }
-                            }
-                            else{
+                }
+            });
+            break;
+        case curElem._contactStatusMapping["pog_acceptance_pending"]["key"]:
+            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
+            //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+            break;
+        case curElem._contactStatusMapping["pg_acceptance_pending"]["key"]:
+            $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sendInt,#restrictMessgTxt,#initiateText").remove();
+            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="pos-rel wid90p txtc colorGrey padall-10">The member wants to chat</div><div class="pos-rel fullwid txtc colorGrey mt20"><div id="accept" class="acceptInterest padall-10 color5 disp_ib cursp">Accept</div><div id="decline" class="acceptInterest padall-10 color5 disp_ib cursp">Decline</div></div><div id="acceptTxt" class="pos-rel fullwid txtc color5 mt25">Accept interest to continue chat</div><div id="sentDiv" class="fullwid pos-rel disp-none mt10 color5 txtc">Interest Accepted continue chat</div><div id="declineDiv" class="sendDiv txtc disp-none pos-abs wid80p mt10 color5">Interest Declined, you can\'t chat with this user anymore</div>');
+            //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+            $('chat-box[user-id="' + userId + '"] #accept').on("click", function () {
+                if (typeof curElem.onChatBoxContactButtonsClick == "function") {
+                    response = curElem.onChatBoxContactButtonsClick({
+                        "receiverID": userId,
+                        "checkSum": checkSum,
+                        "trackingParams": chatConfig.Params["trackingParams"]["ACCEPT"],
+                        "buttonType": "ACCEPT"
+                    });
+                    if (response != false) {
+                        if (response.responseMessage != "Successful") {
+                            console.log($(this));
+                            $(this).html(response.responseMessage);
+                            $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
+                        } else if (response.buttondetails && response.buttondetails.button) {
+                            if (data.actiondetails.errmsglabel) {
                                 $(this).html("error");
                                 $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
+                            } else {
+                                $(this).closest(".chatMessage").find("#sentDiv").removeClass("disp-none");
+                                $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
+                                $(this).remove();
+                                new_contact_state = curElem._contactStatusMapping["both_accepted"]["key"];
+                                //TODO: fire query for accepting request
+                                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                                $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
                             }
                         } else {
-                            console.log("cannot send interest in chat box");
                             $(this).html("error");
-                            $(this).closest(".chatMessage").find("#sendInt, #acceptTxt, #decline").remove();
+                            $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
                         }
+                    } else {
+                        console.log("cannot send interest in chat box");
+                        $(this).html("error");
+                        $(this).closest(".chatMessage").find("#sendInt, #acceptTxt, #decline").remove();
                     }
-                });
-                $('chat-box[user-id="' + userId + '"] #decline').on("click", function() {
-                    if (typeof curElem.onChatBoxContactButtonsClick == "function") {
-                        response = curElem.onChatBoxContactButtonsClick({
-                            "receiverID": userId,
-                            "checkSum": checkSum,
-                            "trackingParams": chatConfig.Params["trackingParams"]["DECLINE"],
-                            "buttonType": "DECLINE"
-                        });
-                        
-                        if (response != false) {
-                            if(response.responseMessage != "Successful"){
-                                console.log($(this));
-                                $(this).html(response.responseMessage);
-                                $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt").remove();
-                            }
-                            else if(response.buttondetails && response.buttondetails.button){
-                                if (data.actiondetails.errmsglabel) {
-                                    $(this).html("error");
-                                    $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt").remove();
-                                }
-                                else{
-                                    $(this).closest(".chatMessage").find("#sentDiv").removeClass("disp-none");
-                                    $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
-                                    $(this).remove();
-                                    new_contact_state = curElem._contactStatusMapping["both_accepted"]["key"];
-                                    //TODO: fire query for accepting request
-                                    $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-                                    $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
-                                }
-                            }
-                            else{
+                }
+            });
+            $('chat-box[user-id="' + userId + '"] #decline').on("click", function () {
+                if (typeof curElem.onChatBoxContactButtonsClick == "function") {
+                    response = curElem.onChatBoxContactButtonsClick({
+                        "receiverID": userId,
+                        "checkSum": checkSum,
+                        "trackingParams": chatConfig.Params["trackingParams"]["DECLINE"],
+                        "buttonType": "DECLINE"
+                    });
+                    if (response != false) {
+                        if (response.responseMessage != "Successful") {
+                            console.log($(this));
+                            $(this).html(response.responseMessage);
+                            $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt").remove();
+                        } else if (response.buttondetails && response.buttondetails.button) {
+                            if (data.actiondetails.errmsglabel) {
                                 $(this).html("error");
                                 $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt").remove();
+                            } else {
+                                $(this).closest(".chatMessage").find("#sentDiv").removeClass("disp-none");
+                                $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
+                                $(this).remove();
+                                new_contact_state = curElem._contactStatusMapping["both_accepted"]["key"];
+                                //TODO: fire query for accepting request
+                                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                                $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
                             }
                         } else {
-                            console.log("cannot send interest in chat box");
                             $(this).html("error");
-                            $(this).closest(".chatMessage").find("#sendInt, #acceptTxt").remove();
+                            $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt").remove();
                         }
-                        
+                    } else {
+                        console.log("cannot send interest in chat box");
+                        $(this).html("error");
+                        $(this).closest(".chatMessage").find("#sendInt, #acceptTxt").remove();
                     }
-                });
-                break;
-            case curElem._contactStatusMapping["pog_interest_accepted"]["key"]:
-                $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sentDiv,#restrictMessgTxt").remove();
-                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="fullwid pos-rel mt10 color5 txtc fl">Interest Accepted continue chat</div>');
-                //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-                break;
-            case curElem._contactStatusMapping["pog_interest_declined"]["key"]:
-                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="sendDiv txtc pos-abs wid80p mt10 color5">Interest Declined, you can\'t chat with this user anymore</div>');
-                //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
-                break;
-            case curElem._contactStatusMapping["none_applicable"]["key"]:
-                //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
-                break;
-            case curElem._contactStatusMapping["both_accepted"]["key"]:
-                break;
+                }
+            });
+            break;
+        case curElem._contactStatusMapping["pog_interest_accepted"]["key"]:
+            $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sentDiv,#restrictMessgTxt").remove();
+            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="fullwid pos-rel mt10 color5 txtc fl">Interest Accepted continue chat</div>');
+            //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+            break;
+        case curElem._contactStatusMapping["pog_interest_declined"]["key"]:
+            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="sendDiv txtc pos-abs wid80p mt10 color5">Interest Declined, you can\'t chat with this user anymore</div>');
+            //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+            break;
+        case curElem._contactStatusMapping["none_applicable"]["key"]:
+            //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+            break;
+        case curElem._contactStatusMapping["both_accepted"]["key"]:
+            break;
         }
         //TODO: fire query to get message history as well as offline messages  
     },
@@ -972,18 +975,18 @@ JsChat.prototype = {
     },
     //update status in chat box top
     _updateStatusInChatBox: function (userId, chat_status) {
-        //console.log("_updateStatusInChatBox for "+userId+"-"+chat_status+"--"+$('chat-box[user-id="' + userId + '"]').length);
+        //this._chatLoggerPlugin("_updateStatusInChatBox for "+userId+"-"+chat_status+"--"+$('chat-box[user-id="' + userId + '"]').length);
         if ($(".chatlist li[id*='" + userId + "']").length != 0) {
             $(".chatlist li[id*='" + userId + "']").attr("data-status", chat_status);
         }
         if ($('chat-box[user-id="' + userId + '"]').length != 0) {
-            console.log("change to " + chat_status);
+            this._chatLoggerPlugin("change to " + chat_status);
             $("chat-box[user-id='" + userId + "'] .chatBoxBar .onlineStatus").html(chat_status);
         }
     },
     //appending chat box
     _chatPanelsBox: function (userId, status, jid, pcheckSum) {
-        console.log("pcheckSum", pcheckSum)
+        this._chatLoggerPlugin("pcheckSum", pcheckSum);
         if ($(".chatlist li[id*='" + userId + "']").length != 0) status = $(".chatlist li[id*='" + userId + "']").attr("data-status");
         var curElem = this,
             heightPlus = false,
@@ -1040,8 +1043,7 @@ JsChat.prototype = {
         }
     },
     //add data in side panel and update number
-
-    _updateSideChatBox: function() {
+    _updateSideChatBox: function () {
         var curElem = this;
         var value = parseInt($(".extraNumber").text().split("+")[1]) + 1,
             len = $("chat-box").length + 1,
@@ -1097,13 +1099,6 @@ JsChat.prototype = {
         this._bindBlock($('chat-box[user-id="' + userId + '"] .nchatic_3'), userId);
         this._postChatPanelsBox(userId);
         this._bindSendChat(userId);
-        //setTimeout(function(){  curElem._appendRecievedMessage("hi this is amacjrheabf erhfbjahberf aerb",userId,"ueiuh");
-        /*setTimeout(function(){  this._changeStatusOfMessg("ueiuh",userId,"recieved"); 
-        setTimeout(function(){  this._changeStatusOfMessg("ueiuh",userId,"recievedRead"); 
-        }, 2000);
-        }, 2000);*/
-        //}, 8000);
-        //this._postChatPanelsBox(userId);
     },
     //append self sent message on opening window again
     _appendSelfMessage: function (message, userId, uniqueId, status) {
@@ -1118,8 +1113,9 @@ JsChat.prototype = {
     },
     //add meesage recieved from another user
     _appendRecievedMessage: function (message, userId, uniqueId) {
-        var curEle = this;
-        console.log("in _appendRecievedMessage");
+        var curEle = this,
+            that = this;
+        this._chatLoggerPlugin("in _appendRecievedMessage");
         //append received message in chatbox
         if (typeof message != "undefined" && message != "") {
             //if chat box is not opened
@@ -1153,7 +1149,7 @@ JsChat.prototype = {
             //change count of online matches panel
             if ($(".js-minpanel").length != 0) {
                 var count = curEle._onlineUserMsgMe();
-                console.log("count - " + count);
+                that._chatLoggerPlugin("count - " + count);
             }
         }
     },
@@ -1171,7 +1167,7 @@ JsChat.prototype = {
             }
         });
         if ($('.showcountmin').hasClass('vishid')) {
-            console.log('no exist');
+            this._chatLoggerPlugin('no exist');
             //noOfInputs = 5;
             $('.countVal').html(noOfInputs);
             $('.showcountmin').toggleClass('vishid');
@@ -1183,19 +1179,19 @@ JsChat.prototype = {
     },
     //handle typing status of message
     _handleMsgComposingStatus: function (userId, msg_state) {
-        console.log("in _handleMsgComposingStatus" + msg_state + userId);
+        this._chatLoggerPlugin("in _handleMsgComposingStatus" + msg_state + userId);
         if (typeof msg_state != "undefined") {
             if (msg_state == 'composing') {
                 //localStorage.setItem("status_"+userId, $('chat-box[user-id="' + userId + '"] .onlineStatus').html());
                 if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
-                    console.log("yess", $('chat-box[user-id="' + userId + '"] .downBarUserName'))
+                    this._chatLoggerPlugin("yess", $('chat-box[user-id="' + userId + '"] .downBarUserName'))
                     $('chat-box[user-id="' + userId + '"] .downBarUserName').html('<div class="onlineStatus f11 opa50 mt4">typing...</div>');
                 } else {
                     $('chat-box[user-id="' + userId + '"] .onlineStatus').html("typing...");
                 }
             } else if (msg_state == 'paused' || msg_state == 'gone') {
                 var idStatus = "";
-                console.log($(".chatlist li[id*='" + userId + "']").find(".nchatspr"));
+                this._chatLoggerPlugin($(".chatlist li[id*='" + userId + "']").find(".nchatspr"));
                 if ($(".chatlist li[id*='" + userId + "']").find(".nchatspr").length != 0) {
                     idStatus = "online";
                 } else {
@@ -1213,7 +1209,7 @@ JsChat.prototype = {
     },
     //change from sending status to sent / sent and read
     _changeStatusOfMessg: function (messgId, userId, newStatus) {
-        console.log("Change status" + newStatus);
+        this._chatLoggerPlugin("Change status" + newStatus);
         if (newStatus == "recieved") {
             $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_8").addClass("nchatic_10");
         } else if (newStatus == "recievedRead") {
@@ -1227,7 +1223,7 @@ JsChat.prototype = {
     onChatLoginSuccess: null, //function triggered after successful chat login
     //start:login screen
     _startLoginHTML: function () {
-        console.log('_startLoginHTML call');
+        this._chatLoggerPlugin('_startLoginHTML call');
         var curEle = this;
         if ($(curEle._chatBottomPanelID).length != 0) {
             setTimeout(function () {
@@ -1236,19 +1232,19 @@ JsChat.prototype = {
         }
         //user not logged in and coming for first time dhuila is wrong
         if (($(this._listingPanelID).length == 0) && (this._loginStatus == "N")) {
-            console.log('case 1');
+            this._chatLoggerPlugin('case 1');
             $(curEle._loginPanelID).fadeOut('slow', function () {
                 curEle._appendLoggedHTML();
             });
         }
         //user was logged earlier in which login is not call'd
         else if (($(this._listingPanelID).length == 0) && (this._loginStatus == "Y")) {
-            console.log('case 2');
+            this._chatLoggerPlugin('case 2');
             if ($(curEle._loginPanelID).length == 0) {
-                console.log("ankita_1");
+                this._chatLoggerPlugin("ankita_1");
                 //curEle._appendLoggedHTML();    
             } else {
-                console.log("ankita_2");
+                this._chatLoggerPlugin("ankita_2");
                 $(curEle._loginPanelID).fadeOut('fast', function () {
                     //curEle._appendLoggedHTML();
                 });
@@ -1256,20 +1252,13 @@ JsChat.prototype = {
         }
         //user logged out from chat in the same session
         else {
-            console.log('case 3');
+            this._chatLoggerPlugin('case 3');
             $(curEle._loginPanelID).fadeOut('fast', function () {
                 $(curEle._listingPanelID).fadeIn('slow');
             });
         }
-        console.log("Login status value");
-        console.log(this._loginStatus);
-        /*
-        if((this._loginStatus == "Y")){
-             $(curEle._loginPanelID).fadeOut('slow', function() {
-                curEle._appendLoggedHTML();
-            });
-        }
-        */
+        this._chatLoggerPlugin("Login status value");
+        this._chatLoggerPlugin(this._loginStatus);
     },
     //start:function calculate the current postion for hover box
     _calHoverPos: function (param2, param3) {
@@ -1302,52 +1291,49 @@ JsChat.prototype = {
         var TotalBtn = '',
             widCal = '';
         TotalBtn = groupButtons.length;
-        console.log('TotalBtn: ' + TotalBtn);
+        this._chatLoggerPlugin('TotalBtn: ' + TotalBtn);
         widCal = parseInt(100 / TotalBtn);
-        console.log('widCal: ' + widCal);
-        console.log("BB");
+        this._chatLoggerPlugin('widCal: ' + widCal);
+        this._chatLoggerPlugin("BB");
+        var that = this;
         $.each(groupButtons, function (k, v) {
-                console.log(k);
-                console.log(v);
-                console.log("KKKKKK" + v.action);
-                if (group == chatConfig.Params["categoryNames"]["Interest Sent"]) {
-                    str += '<div class="nchatbg-grey lh50 brdr-0 txtc colrw"';
+            that._chatLoggerPlugin(k);
+            that._chatLoggerPlugin(v);
+            that._chatLoggerPlugin("KKKKKK" + v.action);
+            if (group == chatConfig.Params["categoryNames"]["Interest Sent"]) {
+                str += '<div class="nchatbg-grey lh50 brdr-0 txtc colrw"';
+            } else {
+                str += '<button class="hBtn bg_pink lh50 brdr-0 txtc colrw cursp"';
+            }
+            str += 'id="' + userId + '_' + v.action + '"';
+            str += 'data-pCheckSum="' + pCheckSum + '"';
+            str += 'data-params="' + v.params + '"';
+            if (TotalBtn == 1) {
+                str += 'style="width:100%">';
+            } else {
+                if (k == 0) {
+                    str += 'style="width:' + widCal + '%"> ';
                 } else {
-                    str += '<button class="hBtn bg_pink lh50 brdr-0 txtc colrw cursp"';
+                    str += 'style="width:' + (widCal - 1) + '%;margin-left:1px">';
                 }
-                str += 'id="' + userId + '_' + v.action + '"';
-                str += 'data-pCheckSum="' + pCheckSum + '"';
-                str += 'data-params="' + v.params + '"';
-                if (TotalBtn == 1) {
-                    str += 'style="width:100%">';
-                } else {
-                    if (k == 0) {
-                        str += 'style="width:' + widCal + '%"> ';
-                    } else {
-                        str += 'style="width:' + (widCal - 1) + '%;margin-left:1px">';
-                    }
-                }
-                str += v.label;
-                if (group == chatConfig.Params["categoryNames"]["Interest Sent"]) {
-                    str += '</div>';
-                } else {
-                    str += '</button>';
-                }
-            })
-            /*
-            $.each(param2["buttonDetails"]["buttons"],function(k,v){
-                
-            });
-            */
+            }
+            str += v.label;
+            if (group == chatConfig.Params["categoryNames"]["Interest Sent"]) {
+                str += '</div>';
+            } else {
+                str += '</button>';
+            }
+        });
+        delete that;
         return str;
     },
     //start:hover box html structure
     _hoverBoxStr: function (param1, param2, pCheckSum) {
         var _this = this;
         var group = $(".chatlist li[id*='" + param1 + "']").attr("id").split(param1 + "_")[1];
-        //console.log($('#'+param1+'_hover').length);
-        console.log("in hoverBoxStr");
-        console.log(pCheckSum);
+        //this._chatLoggerPlugin($('#'+param1+'_hover').length);
+        this._chatLoggerPlugin("in hoverBoxStr");
+        this._chatLoggerPlugin(pCheckSum);
         if ($('#' + param1 + '_hover').length == 0) {
             var str = '<div class="pos_fix info-hover fontlig nz21 vishid" id="' + param1 + '_hover">';
             str += '<div class="nchatbdr3 f13 nchatgrad nchathoverdim pos-rel">';
@@ -1388,31 +1374,33 @@ JsChat.prototype = {
             str += '</div>';
             return str;
         }
-        console.log("End of _hoverBoxStr");
+        this._chatLoggerPlugin("End of _hoverBoxStr");
     },
     onHoverContactButtonClick: null,
     //start:update vcard
     updateVCard: function (param, pCheckSum, callback) {
-        //console.log('in vard update');
+        //this._chatLoggerPlugin('in vard update');
         var globalRef = this;
         var finalstr;
+        var that = this;
         $.each(param.vCard, function (k, v) {
-            console.log("set");
-            console.log(k);
+            that._chatLoggerPlugin("set");
+            that._chatLoggerPlugin(k);
             finalstr = globalRef._hoverBoxStr(k, v, pCheckSum);
             $(globalRef._mainID).append(finalstr);
         });
-        console.log("Callback calling starts");
+        delete that;
+        this._chatLoggerPlugin("Callback calling starts");
         callback();
-        console.log("Callaback ends");
+        this._chatLoggerPlugin("Callaback ends");
     },
     /*
      * Error handling in case of hover
      */
     hoverButtonHandling: function (jid, data, type) {
-        console.log("In error handling");
-        console.log(jid, data);
-        console.log(type);
+        this._chatLoggerPlugin("In error handling");
+        this._chatLoggerPlugin(jid, data);
+        this._chatLoggerPlugin(type);
         if (type == "error") {
             //$("#"+jid+"_BtnRespnse").addClass("disp-none");
             //$("#"+jid+"_hoverDvSmEr").removeClass("disp-none");
@@ -1445,7 +1433,7 @@ JsChat.prototype = {
         } else {
             var shiftright = Math.round($(this._parendID)[0].getBoundingClientRect().width);
         }
-        //console.log('hoverNewTop:'+hoverNewTop+' shiftright:'+shiftright);
+        //this._chatLoggerPlugin('hoverNewTop:'+hoverNewTop+' shiftright:'+shiftright);
         //if element exist        
         if ($('#' + curEleID + '_hover').length != 0) {
             $('#' + curEleID + '_hover').css({
@@ -1454,13 +1442,12 @@ JsChat.prototype = {
                 'right': shiftright
             });
         } else {
-            //console.log('call to onPreHoverCallback');
+            //this._chatLoggerPlugin('call to onPreHoverCallback');
             if (this.onPreHoverCallback && typeof this.onPreHoverCallback == 'function') {
-                console.log("Before precall");
+                this._chatLoggerPlugin("Before precall");
                 this.onPreHoverCallback(checkSumP, curEleID, hoverNewTop, shiftright);
                 //once div is created from precallback below ling shows the hovred list information
-                console.log("After precall");
-                console.log("Atul console");
+                this._chatLoggerPlugin("After precall");
             }
         }
         $('.info-hover').hover(function () {
@@ -1484,11 +1471,11 @@ JsChat.prototype = {
     _timer: null,
     //start:hover functionality
     _calltohover: function (e) {
-        //console.log("In _calltohover");
+        //this._chatLoggerPlugin("In _calltohover");
         //global level ref.
         var _this = e.data.global;
         var curHoverEle = this;
-        //console.log(this);
+        //this._chatLoggerPlugin(this);
         var getID = $(this).attr('id');
         getID = getID.split("_");
         getID = getID[0];
@@ -1511,13 +1498,11 @@ JsChat.prototype = {
     //start:append Chat Logged in Panel
     _appendLoggedHTML: function () {
         var curEle = this;
-        console.log('_appendLoggedHTML');
+        this._chatLoggerPlugin('_appendLoggedHTML');
         $(curEle._parendID).append('<div class="fullwid fontlig nchatcolor" id="js-lsitingPanel"/> ').promise().done(function () {
             curEle._addChatTop();
             curEle.addTab();
             curEle.onChatLoginSuccess();
-            //first time intialization passing tab1 as param
-            //curEle.addListingInit(curEle._listData);
         });
     },
     /*
@@ -1526,7 +1511,7 @@ JsChat.prototype = {
     sendingTypingEvent: null,
     //start:this function image,name in top chat logged in scenario
     addLoginHTML: function (failed) {
-        console.log('in addLoginHTML');
+        this._chatLoggerPlugin('in addLoginHTML');
         var curEle = this;
         var LoginHTML = '<div class="fullwid txtc fontlig pos-rel" id="js-loginPanel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarOut"></i> </div><div class="chpt100"> <img src="' + this._imageUrl + '" /> </div><button id="js-chatLogin" class="chatbtnbg1 mauto chatw1 colrw f14 brdr-0 lh40 cursp nchatm5">Login to Chat</button></div>';
         var errorHTML = '';
@@ -1535,7 +1520,7 @@ JsChat.prototype = {
         }
         if (failed == false || typeof failed == "undefined" || $("#js-loginPanel").length == 0) $(this._parendID).append(LoginHTML);
         else {
-            console.log("removing");
+            this._chatLoggerPlugin("removing");
             $(curEle._loginPanelID).fadeIn('fast');
             if ($(curEle._loginPanelID).find("#loginErr").length == 0) $(curEle._loginPanelID).append(errorHTML);
         }
@@ -1543,21 +1528,23 @@ JsChat.prototype = {
             curEle._minimizeChatOutPanel();
         });
         //start login button capture
+        var that = this;
         $(this._loginbtnID).click(function () {
             if (curEle.onEnterToChatPreClick && typeof (curEle.onEnterToChatPreClick) == "function") {
-                console.log("in onEnterToChatPreClick");
+                that._chatLoggerPlugin("in onEnterToChatPreClick");
                 curEle.onEnterToChatPreClick();
             }
             if (curEle._loginStatus == "Y") {
-                console.log("ankita_logged in");
+                that._chatLoggerPlugin("ankita_logged in");
                 curEle._startLoginHTML();
             }
         });
+        delete that;
     },
     //manage chat loader
     manageChatLoader: function (type) {
         if (type == "hide") {
-            console.log("hiding loader_ankita");
+            this._chatLoggerPlugin("hiding loader_ankita");
             $("#scrollDivLoader").hide();
         }
     },
@@ -1571,10 +1558,10 @@ JsChat.prototype = {
             $(this._parendID).addClass('wid20p').css('height', this._getHeight());
         }
         if (this.checkLoginStatus()) {
-            console.log("checking login status");
+            this._chatLoggerPlugin("checking login status");
             this._startLoginHTML();
         } else {
-            console.log("in start function");
+            this._chatLoggerPlugin("in start function");
             this.addLoginHTML();
         }
     },
