@@ -11,7 +11,21 @@ chatConfig.Params = {
     actionUrl: {
         "ACCEPT": "/api/v2/contacts/postAccept",
         "DECLINE": "/api/v2/contacts/postNotInterested",
-        "INITIATE": "/api/v2/contacts/postEOI"
+        "INITIATE": "/api/v2/contacts/postEOI",
+        "BLOCK":"/api/v1/common/ignoreprofile",
+        "UNBLOCK":"/api/v1/common/ignoreprofile"
+    },
+    trackingParams:{
+        "ACCEPT": {
+            "responseTracking":8
+            },
+        "DECLINE": {
+            "responseTracking":8
+            },
+        "INITIATE": {
+            "stype":"WV"},
+        "BLOCK":{},
+        "UNBLOCK":{}
     },
     photoUrl:"/api/v1/social/getMultiUserPhoto",
     PC: {
@@ -125,6 +139,10 @@ chatConfig.Params = {
             "listingTuple":{
                 "M":"/images/picture/120x120_m.png?noPhoto",
                 "F":"/images/picture/120x120_f.png?noPhoto"
+            },
+            "self120":{
+                "M":"/images/picture/120x120_m.png?noPhoto",
+                "F":"/images/picture/120x120_f.png?noPhoto",
             }
         },
         //contact status mapping for chat box types

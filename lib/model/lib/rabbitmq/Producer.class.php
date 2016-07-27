@@ -112,6 +112,7 @@ class Producer
 	public function sendMessage($msgdata)
 	{
 		try {
+            $this->channel->exchange_declare(MQ::CHATEXCHANGE, "direct", MQ::PASSIVE, "true", MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::MAILQUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::SMSQUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::CONTACTCACHEINITIATE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
