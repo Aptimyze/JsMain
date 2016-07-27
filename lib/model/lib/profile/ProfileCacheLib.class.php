@@ -142,7 +142,7 @@ class ProfileCacheLib
 
         //Set Hash Object
         $stTime = $this->createNewTime();
-        JsMemcache::getInstance()->setHashObject($szKey, $arrParams);
+        JsMemcache::getInstance()->setHashObject($szKey, $arrParams, ProfileCacheConstants::CACHE_EXPIRE_TIME);
         $this->calculateResourceUsages($stTime,'Set : '," for key {$key}");
         //TODO : Update Local Cache also
         $this->updateInLocalCache($key, $arrParams);
