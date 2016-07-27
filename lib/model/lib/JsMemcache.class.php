@@ -232,7 +232,7 @@ class JsMemcache extends sfMemcacheCache{
 	 * @param $key
 	 * @param $arrValue
 	 */
-	public function setHashObject($key,$arrValue)
+	public function setHashObject($key,$arrValue,$expiryTime=3600)
 	{
 		if(self::isRedis())
 		{
@@ -241,6 +241,7 @@ class JsMemcache extends sfMemcacheCache{
 				try
 				{
 					$this->client->hmset($key, $arrValue);
+					$this->client->expire($key, $expiryTime);
 				}
 				catch (Exception $e)
 				{
