@@ -51,10 +51,6 @@ Class ButtonResponseApi
 						case ContactHandler::NOCONTACT:
 							$button[]                 = self::getInitiateButton($this->page);
 							$button[]                 = self::getShortListButton($this->loginProfile, $this->otherProfile);
-
-							if(MobileCommon::isApp()=='A' && sfContext::getInstance()->getRequest()->getParameter('API_APP_VERSION') >=50 )
-							$button[]                 = self::getIgnoreButton('', '','',true,'Ignore');
-							
 							$button[]                 = self::getContactDetailsButton();
 							
 							$responseArray["buttons"] = $button;
