@@ -568,7 +568,7 @@ JsChat.prototype = {
         }
         //removeCall2 if user is removed from block click on chatbox
         else if (param1 == 'removeCall2') {
-            $(this._mainID).find('*[id*="' + data + '"]').detach();
+            //$(this._mainID).find('*[id*="' + data + '"]').detach();
             if (this.onPostBlockCallback && typeof this.onPostBlockCallback == 'function') {
                 this.onPostBlockCallback(data);
             }
@@ -580,15 +580,36 @@ JsChat.prototype = {
         var curElem = this,
             enableClose;
         $(elem).off("click").on("click", function () {
-            enableClose = true;
-            curElem._removeFromListing('removeCall2', userId);
-            sessionStorage.setItem("htmlStr_" + userId, $('chat-box[user-id="' + userId + '"] .chatMessage').html());
-            $('chat-box[user-id="' + userId + '"] .chatMessage').html('<div id="blockText" class="pos-rel wid90p txtc colorGrey padall-10">You have blocked this user</div><div class="pos-rel fullwid txtc mt20"><div id="undoBlock" class="padall-10 color5 disp_ib cursp">Undo</div></div>');
-            $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
-            enableClose = true;
-            setTimeout(function () {
-                if (enableClose == true) {
-                    curElem._scrollDown($('chat-box[user-id="' + userId + '"]'), "remove");
+            var profileChecksum = $(".chatlist li[id*='" + userId + "']").attr("data-checks");
+            if (curElem.onChatBoxContactButtonsClick && typeof curElem.onChatBoxContactButtonsClick == 'function'){
+                var response = curElem.onChatBoxContactButtonsClick({
+                                                "buttonType":"BLOCK",
+                                                "receiverID":userId,
+                                                "checkSum":"b000c6f67da48635ce121932ce6e664ei8763067",
+                                                "trackingParams":chatConfig.Params.trackingParams["BLOCK"],
+                                                "extraParams":{
+                                                    "ignore":1
+                                                }
+                                            });
+                if(response == true){
+                    enableClose = true;
+                    curElem._removeFromListing('removeCall2', userId);
+                    sessionStorage.setItem("htmlStr_" + userId, $('chat-box[user-id="' + userId + '"] .chatMessage').html());
+                    $('chat-box[user-id="' + userId + '"] .chatMessage').html('<div id="blockText" class="pos-rel wid90p txtc colorGrey padall-10">You have blocked this user</div><div class="pos-rel fullwid txtc mt20"><div id="undoBlock" class="padall-10 color5 disp_ib cursp">Undo</div></div>');
+                    $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+                    //enableClose = true;
+                    setTimeout(function () {
+                        if (enableClose == true) {
+                            curElem._scrollDown($('chat-box[user-id="' + userId + '"]'), "remove");
+                        }
+                    }, 5000);
+                    $('chat-box[user-id="' + userId + '"] #undoBlock').off("click").on("click", function () {
+                        $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                        enableClose = false;
+                        var htmlStr = sessionStorage.getItem("htmlStr_" + userId);
+                        $('chat-box[user-id="' + userId + '"] .chatMessage').html(htmlStr);
+                        //TODO: fire query for unblock
+                    });   
                 }
             }, 5000);
             $('chat-box[user-id="' + userId + '"] #undoBlock').off("click").on("click", function () {
