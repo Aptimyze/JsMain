@@ -12,7 +12,7 @@ function chatLoggerPC(msgOrObj) {
     if (loggingEnabledPC) {
         if (typeof (window.console) != 'undefined') {
             try {
-                // Leave empty
+                invalidfunctionthrowanerrorplease();
             } catch (err) {
                 var logStack = err.stack;
             }

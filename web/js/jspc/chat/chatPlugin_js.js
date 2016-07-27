@@ -36,7 +36,7 @@ JsChat.prototype = {
         if (this._loggingEnabledPlugin) {
             if (typeof (window.console) != 'undefined') {
                 try {
-                    // Leave empty
+                    invalidfunctionthrowanerrorplease();
                 } catch (err) {
                     var logStack = err.stack;
                 }
@@ -1444,7 +1444,8 @@ JsChat.prototype = {
     //start:hover box html structure
     _hoverBoxStr: function (param1, param2, pCheckSum) {
         var _this = this;
-        var group = $(".chatlist li[id^='" + param1 + "_']").attr("id").split(param1 + "_")[1];
+        var groupId = $("chat-box[user-id='" + param1 + "'");
+        var group = $(".chatlist li[id='" + param1 + "_" + groupId + "']").attr("id").split(param1 + "_")[1];
         //this._chatLoggerPlugin($('#'+param1+'_hover').length);
         this._chatLoggerPlugin("in hoverBoxStr");
         this._chatLoggerPlugin(pCheckSum);
