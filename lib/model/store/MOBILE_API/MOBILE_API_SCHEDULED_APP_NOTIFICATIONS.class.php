@@ -169,7 +169,7 @@ class MOBILE_API_SCHEDULED_APP_NOTIFICATIONS extends TABLE{
 	}
 	public function updateSent($idArr='',$notificationKey,$status,$pid='')
 	{
-                if((!is_array($idArr)&&!$pid&&|$msgId)||!$notificationKey||!$status)
+                if((!is_array($idArr) && !$pid &&  !$msgId) || !$notificationKey || !$status)
 		     throw new jsException("","(idArr & pid) or notificationKey or status not provided to updatestatus in MOBILE_API.SCHEDULED_APP_NOTIFICATIONS");
                 try
                 {

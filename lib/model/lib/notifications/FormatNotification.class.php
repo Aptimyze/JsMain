@@ -56,7 +56,7 @@ class FormatNotification
         }
 	$queueName = MessageQueues::$notificationArr[$details['NOTIFICATION_KEY']];
 	if($queueName == '')
-		$queueName = 'JS_NOTIFICATION4';
+		$queueName = 'JS_NOTIFICATION6';
     	$msgdata = array('process' => $queueName, 'data' => array('type' => $type, 'body' => $dataArray), 'redeliveryCount' => 0);
 		return $msgdata;
     }
