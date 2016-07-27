@@ -21,7 +21,7 @@ var strophieWrapper = {
         if (strophieWrapper.loggingEnabledStrophe) {
             if (typeof (window.console) != 'undefined') {
                 try {
-                    invalidfunctionthrowanerrorplease();
+                    // Leave empty
                 } catch (err) {
                     var logStack = err.stack;
                 }

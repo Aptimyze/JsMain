@@ -12,7 +12,7 @@ function chatLoggerPC(msgOrObj) {
     if (loggingEnabledPC) {
         if (typeof (window.console) != 'undefined') {
             try {
-                invalidfunctionthrowanerrorplease();
+                // Leave empty
             } catch (err) {
                 var logStack = err.stack;
             }
@@ -528,15 +528,19 @@ $(document).ready(function () {
         var chatLoggedIn = readCookie('chatAuth');
         var loginStatus;
         $(window).on("offline", function () {
+            chatLoggerPC("detected internet disconnection");
             strophieWrapper.currentConnStatus = Strophe.Status.DISCONNECTED;
         });
         $(window).on("online", function () {
+            globalSleep(15000);
+            chatLoggerPC("detected internet connectivity");
             if (chatLoggedIn == 'true') {
-                globalSleep(1500);
                 var tAuth = checkAuthentication();
                 if (tAuth == 'true') {
+                    chatLoggerPC("authentication successful");
                     initiateChatConnection();
                     if (strophieWrapper.getCurrentConnStatus()) {
+                        chatLoggerPC("Strophe Connection successful");
                         loginStatus = "Y";
                         objJsChat = new JsChat({
                             loginStatus: loginStatus,

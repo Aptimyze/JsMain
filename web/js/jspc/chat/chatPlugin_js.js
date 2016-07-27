@@ -36,7 +36,7 @@ JsChat.prototype = {
         if (this._loggingEnabledPlugin) {
             if (typeof (window.console) != 'undefined') {
                 try {
-                    invalidfunctionthrowanerrorplease();
+                    // Leave empty
                 } catch (err) {
                     var logStack = err.stack;
                 }
@@ -1359,7 +1359,7 @@ JsChat.prototype = {
                 this._chatLoggerPlugin("ankita_2");
                 $(curEle._loginPanelID).remove();
                 // function () {
-                    //curEle._appendLoggedHTML();
+                //curEle._appendLoggedHTML();
                 //});
             }
         }
