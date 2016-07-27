@@ -376,7 +376,6 @@ class NotificationDataPool
                        $icon = 'D';
                     else
                        $icon = $photoArray['url'];
-                    //$this->ThumbailUrl=$profilePicObj->getThumbailUrl();
                 }
                 else{
                     $icon = 'D';

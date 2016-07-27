@@ -200,12 +200,12 @@ public function microtime_float()
 
 		  case "PROFILE_VISITOR":
 			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
-			$details = $this->getProfilesData($applicableProfiles,$className="newjs_SMS_TEMP_TABLE");
-            
+			//$details = $this->getProfilesData($applicableProfiles,$className="newjs_SMS_TEMP_TABLE");
             		$poolObj = new NotificationDataPool();
-            		$dataAccumulated = $poolObj->getProfileVisitorData($applicableProfiles, $details,$message);
+			$applicableProfilesArr =array_keys($applicableProfiles);
+			$applicableProfilesNew =array('SELF'=>$applicableProfilesArr[0],'OTHER'=>$appProfiles['OTHER']);
+            		$dataAccumulated = $poolObj->getProfileVisitorData($applicableProfilesNew, $applicableProfiles,$message);
             		unset($poolObj);
-            
 			break;
                   case "BUY_MEMB":
                         $applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
