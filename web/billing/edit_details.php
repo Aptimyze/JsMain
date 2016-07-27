@@ -65,17 +65,17 @@ if(isset($data))
 			$sql_ins_str=implode(",",$INS_FIELDS);
 			$sql_log="INSERT into billing.EDIT_LOG(BILLID,RECEIPTID,LOG_STATUS,MOD_BY,MOD_DT,".$sql_ins_str.") SELECT $billid,$receiptid,'P','$user',now(),$sql_mod_str ";
 			$sql_log.= "from billing.PAYMENT_DETAIL as pd,billing.PURCHASES as pur WHERE pd.RECEIPTID='$receiptid' AND pd.BILLID=pur.BILLID";
-			mysql_query_decide($sql_log) or die($sql_log.mysql_error_js()); 
+			mysql_query_decide($sql_log) or mysql_error_js();
 		}
 		    
 		$sql="SELECT AMOUNT,STATUS FROM billing.PAYMENT_DETAIL WHERE RECEIPTID='$receiptid'";
-		$res=mysql_query_decide($sql) or die(mysql_error_js());
+		$res=mysql_query_decide($sql) or mysql_error_js();
 		$row=mysql_fetch_array($res);
 		$oldstatus=$row['STATUS'];
 		$amt=$row['AMOUNT'];
 
 		$sql_s="SELECT DUEAMOUNT FROM billing.PURCHASES WHERE BILLID='$billid'";
-		$res_s=mysql_query_decide($sql_s) or die(mysql_error_js());
+		$res_s=mysql_query_decide($sql_s) or mysql_error_js();
 		$row_s=mysql_fetch_array($res_s);
 		$dueamt=$row_s['DUEAMOUNT'];
 
@@ -126,7 +126,7 @@ if(count($sql_update)>0)
 {
 		$sql_update_str=implode(",",$sql_update);
 		$sql_u=$sql_u.$sql_update_str."WHERE BILLID='$billid'";
-		mysql_query_decide($sql_u) or die("$sql_u<br>".mysql_query_decide());
+		mysql_query_decide($sql_u) or mysql_error_js();
 }
 
 		$sql="UPDATE billing.PAYMENT_DETAIL SET ";
@@ -149,7 +149,7 @@ if(count($sql_pd)>0)
 {
                 $sql_update_pd_str=implode(",",$sql_pd);
                 $sql_u=$sql.$sql_update_pd_str."WHERE RECEIPTID='$receiptid'";
-                mysql_query_decide($sql_u) or die("$sql_u<br>".mysql_query_decide());
+                mysql_query_decide($sql_u) or mysql_error_js();
 }
 
 		if(count($MOD_FIELDS)>0)
@@ -158,7 +158,7 @@ if(count($sql_pd)>0)
                         $sql_ins_str=implode(",",$INS_FIELDS);
                         $sql_log="INSERT into billing.EDIT_LOG(BILLID,RECEIPTID,LOG_STATUS,MOD_BY,MOD_DT,".$sql_ins_str.") SELECT $billid,$receiptid,'M','$user',now(),$sql_mod_str ";
                         $sql_log.= "from billing.PAYMENT_DETAIL as pd,billing.PURCHASES as pur WHERE pd.RECEIPTID='$receiptid' AND pd.BILLID=pur.BILLID";
-                        mysql_query_decide($sql_log) or die("$sql_log".mysql_error_js());
+                        mysql_query_decide($sql_log) or mysql_error_js();
                 }
 
 
@@ -180,7 +180,7 @@ if(count($sql_pd)>0)
 			$deldate=date("Y-m-d");
 
 			$sql="SELECT AMOUNT,STATUS FROM billing.PAYMENT_DETAIL WHERE RECEIPTID='$receiptid'";
-			$res=mysql_query_decide($sql) or die(mysql_error_js());
+			$res=mysql_query_decide($sql) or mysql_error_js();
 			$row=mysql_fetch_array($res);
 			$oldstatus=$row['STATUS'];
 			$amt=$row['AMOUNT'];
@@ -189,7 +189,7 @@ if(count($sql_pd)>0)
 				if($add_back_amt)
 				{
 					$sql_s="SELECT DUEAMOUNT FROM billing.PURCHASES WHERE BILLID='$billid'";
-					$res_s=mysql_query_decide($sql_s) or die(mysql_error_js());
+					$res_s=mysql_query_decide($sql_s) or mysql_error_js();
 					$row_s=mysql_fetch_array($res_s);
 					$dueamt=$row_s['DUEAMOUNT'];
 					if($oldstatus=="DONE")
@@ -197,13 +197,13 @@ if(count($sql_pd)>0)
 						$dueamt+=$amt;
 		
 						$sql_u="UPDATE billing.PURCHASES SET DUEAMOUNT='$dueamt' WHERE BILLID='$billid'";
-						mysql_query_decide($sql_u) or die(mysql_query_decide());
+						mysql_query_decide($sql_u) or mysql_error_js();
 					}
 				}
 
 				$user = getuser($cid);
 				$sql="UPDATE billing.PAYMENT_DETAIL SET STATUS='DELETE', ENTRYBY = '$user', DEL_REASON = '$delreason' WHERE RECEIPTID='$receiptid'";
-				mysql_query_decide($sql) or die(mysql_error_js());
+				mysql_query_decide($sql) or mysql_error_js();
 
 				$msg=" Profileid : $profileid \n";
 				$msg.=" Username : $uname \n";
@@ -245,7 +245,7 @@ if(count($sql_pd)>0)
 	else
 	{
 		$sql="SELECT PROFILEID,RECEIPTID,BILLID,MODE,TYPE,AMOUNT,CD_NUM,CD_DT,CD_CITY,BANK,OBANK,REASON,STATUS,ENTRY_DT,ENTRYBY,DEPOSIT_BRANCH,DEPOSIT_DT FROM billing.PAYMENT_DETAIL WHERE RECEIPTID='$receiptid'";
-		$res=mysql_query_decide($sql) or die(mysql_error_js());
+		$res=mysql_query_decide($sql) or mysql_error_js();
 		if($row=mysql_fetch_array($res))
 		{
 			$profileid=$row['PROFILEID'];
@@ -272,13 +272,13 @@ if(count($sql_pd)>0)
 		
 
 			$sql1 = "select WALKIN from billing.PURCHASES where BILLID = $billid";
-			$res1 = mysql_query_decide($sql1) or die(mysql_error_js());
+			$res1 = mysql_query_decide($sql1) or mysql_error_js();
 			$row1 = mysql_fetch_array($res1);
 			$walkinby = $row1['WALKIN'];
 		}
 
 		$sql_u="SELECT USERNAME FROM jsadmin.PSWRDS WHERE PRIVILAGE LIKE '%BU%'";
-		$res_u=mysql_query_decide($sql_u) or die(mysql_error_js());
+		$res_u=mysql_query_decide($sql_u) or mysql_error_js();
 		$i=0;
 		while($row_u=mysql_fetch_array($res_u))
 		{
@@ -286,7 +286,7 @@ if(count($sql_pd)>0)
 			$i++;
 		}
 		$sql="SELECT NAME FROM incentive.BRANCHES order by NAME";
-                $res=mysql_query_decide($sql) or die(mysql_error_js());
+                $res=mysql_query_decide($sql) or mysql_error_js();
                 $i=0;
                 while($row=mysql_fetch_array($res))
                 {

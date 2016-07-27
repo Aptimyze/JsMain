@@ -24,10 +24,13 @@ if (!defined('ClickTale_Root'))
 require_once(ClickTale_Root."/ClickTale.Settings.php");
 require_once(ClickTale_Root."/ClickTale.inc.php");
 require_once(ClickTale_Root."/ClickTale.Logger.php");
+// including for logging purpose
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
+
 ?>
 
 <?php
-if (empty(ClickTale_Settings::Instance()->AllowDebug)) die("Debug mode is disabled.");
+if (empty(ClickTale_Settings::Instance()->AllowDebug)) LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_INFO, new Exception("Debug mode is disabled."));
 ?>
 
 <h1> ClickTale Debug </h1><br>

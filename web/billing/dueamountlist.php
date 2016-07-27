@@ -55,7 +55,7 @@ if(authenticated($cid))
 			$smarty->assign("SEARCH","YES");
 			$sql.=" ORDER BY ENTRY_DT asc";
 //echo "sql : ".$sql;
-			$result1=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+			$result1=mysql_query_decide($sql) or mysql_error_js();
 
 			$total=mysql_num_rows($result1);
 			$num_page=ceil($total/$maxlimit); 
@@ -86,7 +86,7 @@ if(authenticated($cid))
 					$services .= ",".$myrow['ADDON_SERVICEID'];
 				$services_str=str_replace(",","','",$services);
 				$sql_ser="SELECT NAME from billing.SERVICES where SERVICEID in ('$services_str')";
-				$result_ser=mysql_query_decide($sql_ser) or die("$sql_ser".mysql_error_js());
+				$result_ser=mysql_query_decide($sql_ser) or mysql_error_js();
 				while($myrow_ser=mysql_fetch_array($result_ser))
 				{
 					$servicename_arr[]=$myrow_ser['NAME'];

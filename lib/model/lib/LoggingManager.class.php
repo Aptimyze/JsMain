@@ -31,6 +31,16 @@ class LoggingManager
     private $iUniqueID = null;
 
     /**
+     * @var null|string
+     */
+    private $clientIp = null; 
+
+    /**
+     * @var null|string
+     */
+    private $channelName = null;
+
+    /**
      * @var bool
      */
     private $bDoItOnce = true;
@@ -79,41 +89,77 @@ class LoggingManager
     /**
      * @param $enLogType
      * @param $Var
+     * @param $isSymfony checks whether the error raised is from symfony or non-symfony code
      */
-    public function logThis($enLogType,$Var=null)
+    public function logThis($enLogType,$Var=null,$isSymfony=true)
     {
         if($enLogType > LoggingEnums::LOG_LEVEL) {
            return ;
-        }
+       }
 
-        switch ($enLogType) {
-            case LoggingEnums::LOG_INFO:
-                    $this->logInfo($Var);
-                break;
-            case LoggingEnums::LOG_DEBUG:
-                    $this->logDebug($Var);
-                break;
-            case LoggingEnums::LOG_ERROR:
-                    $this->logException($Var);
-                break;
-            default:
-                break;
-        }
+       switch ($enLogType) {
+        case LoggingEnums::LOG_INFO:
+        $this->logInfo($Var);
+        break;
+        case LoggingEnums::LOG_DEBUG:
+        $this->logDebug($Var);
+        break;
+        case LoggingEnums::LOG_ERROR:
+            $this->logException($Var,$isSymfony);
+        break;
+        default:
+        break;
     }
-
+}   
     /**
      * @param $exception
      */
-    private function logException($exception)
+    private function logException($exception,$isSymfony)
     {
-        $errorString = $exception->__toString();
-        $clientIp = FetchClientIP();
-        $szLogType = $this->getLogType(LoggingEnums::LOG_ERROR);
-        $errorString = "$szLogType [{$this->iUniqueID}:{$clientIp}]: ".$errorString;
-        $errVal = print_r(sfContext::getInstance()->getRequest()->getParameterHolder()->getAll(),true);
-        $szLogString = $errorString."\n[RequestParams] : ".$errVal;
+        // $errorString = $exception->__toString();
+        // $clientIp = FetchClientIP();
+        // $szLogType = $this->getLogType(LoggingEnums::LOG_ERROR);
+        // $errorString = "$szLogType [{$this->iUniqueID}:{$clientIp}]: ".$errorString;
+        // $errVal = print_r(sfContext::getInstance()->getRequest()->getParameterHolder()->getAll(),true);
+        // $szLogString = $errorString."\n[RequestParams] : ".$errVal;
 
-        $this->writeToFile($szLogString);
+        $logData = "";
+        $clientIp = FetchClientIP();
+        $channelName = MobileCommon::getFullChannelName();
+
+        if ( $isSymfony )
+        {
+            $module_name = sfContext::getInstance()->getModuleName();
+            $action_name = sfContext::getInstance()->getActionName();
+        }
+        else
+        {
+            $exceptionRaisedFrom = $exception->getFile();
+            $exceptionLiesIn = $exception->getTrace()[0]['file'];
+
+            // let us get module name of the file.
+
+            $module_action = str_replace(JsConstants::$docRoot, "", $exceptionLiesIn);
+
+            // explode it to get module name.
+
+            $module_name = explode('/', $module_action)[1];
+            $action_name = explode('/', $module_action)[2];
+
+
+        }
+
+
+        $logData = $logData."".$this->iUniqueID;
+        $logData = $logData." ".$channelName;
+        $logData = $logData." ".$clientIp;
+        $logData = $logData." ".$module_name;
+        $logData = $logData." ".$action_name;
+        $logData = $logData." ".$this->getLogType(LoggingEnums::LOG_ERROR);
+
+        $logData = $logData." ".$exception;
+
+        $this->writeToFile($logData);
     }
 
     /**
@@ -137,10 +183,9 @@ class LoggingManager
         $stackTrace = $ex->__toString();
 
         $clientIp = FetchClientIP();
-        $szLogType = $this->getLogType(LoggingEnums::LOG_INFO);
+        $szLogType = $this->getLogType(LoggingEnums::LOG_DEBUG);
         $szLogString = "$szLogType [{$this->iUniqueID}:{$clientIp}]: ".$stackTrace;
-
-        $this->writeToFile($this->getLogType(LoggingEnums::LOG_ERROR), $szLogString);
+        $this->writeToFile($szLogString);
     }
 
     /**

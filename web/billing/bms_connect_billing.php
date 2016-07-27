@@ -47,7 +47,7 @@ function authenticatedBms($checksum,$ip,$priv)
 	}
 
 	$sql_chk = "select USERID,USERNAME, TIME_IN,PRIVILEGE , SITE from bms2.CONNECT where ID='$userno' and PRIVILEGE='$priv'";
-	$res_chk = mysql_query_decide($sql_chk,$dbbms) or die(mysql_error_js());
+	$res_chk = mysql_query_decide($sql_chk,$dbbms) or mysql_error_js();
 	$count=mysql_num_rows($res_chk);
 
 	if ($count > 0)	
@@ -58,7 +58,7 @@ function authenticatedBms($checksum,$ip,$priv)
 		{
 			$tm = time();
 			$sql_up = "update bms2.CONNECT set TIME_IN='$tm' where ID='$userno'";
-			$res_up = mysql_query_decide($sql_up,$dbbms) or die(mysql_error_js());
+			$res_up = mysql_query_decide($sql_up,$dbbms) or mysql_error_js();
 			$id=$md."~".$userno;
 			$ret["ID"] = $id;
 			$ret["USER"] = $myrow["USERNAME"];

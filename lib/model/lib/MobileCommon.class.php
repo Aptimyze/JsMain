@@ -255,6 +255,30 @@ class MobileCommon{
 		if(MobileCommon::isDesktop())
 			return "P";
 	}
+
+	/**
+     * @return channel names
+     */
+    public static function getFullChannelName(){
+        switch (self::getChannel()) {
+            case 'P':
+                return "PC";
+                break;
+            case 'A':
+                return "ANDROID";
+                break;
+            case 'I':
+                return "IPHONE";
+                break;
+            case 'MS':
+                return "NEW MOBILE BROWSER";
+                break;
+            
+            default:
+                return "UNKNOWN CHANNEL";
+                break;
+        }
+    }
   
   /*
    * isOldMobileSite

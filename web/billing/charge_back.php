@@ -24,7 +24,7 @@ if(isset($data))
 		else
 		{
 			$sql="SELECT PROFILEID,USERNAME,DUEAMOUNT,EMAIL FROM billing.PURCHASES WHERE BILLID='$billid'";
-			$res=mysql_query_decide($sql) or die(mysql_error_js());
+			$res=mysql_query_decide($sql) or mysql_error_js();
 			$row=mysql_fetch_array($res);
 			$profileid=$row['PROFILEID'];
 			$username=$row['USERNAME'];
@@ -35,7 +35,7 @@ if(isset($data))
 			charge_back_stats_log($profileid,$receiptid);
 
 			$sql="UPDATE billing.PAYMENT_DETAIL SET STATUS='CHARGE_BACK', REASON = '".addslashes(stripslashes($reason))."', BOUNCE_DT = now() WHERE RECEIPTID='$receiptid'";
-			mysql_query_decide($sql) or die(mysql_error_js());
+			mysql_query_decide($sql) or mysql_error_js();
 
 			//$dueamt+=$amt;
 			$status='STOPPED';
@@ -45,18 +45,18 @@ if(isset($data))
 			/*code to change the due amount of last billid*/			
 
 			$sql_due_sel="SELECT BILLID,DUEAMOUNT FROM billing.PURCHASES  WHERE PROFILEID='$profileid' order by BILLID desc LIMIT 1";
-			$res_due_sel=mysql_query_decide($sql_due_sel) or die(mysql_error_js());
+			$res_due_sel=mysql_query_decide($sql_due_sel) or mysql_error_js();
                         $row_due_sel=mysql_fetch_array($res_due_sel);
 			$billid_set=$row_due_sel['BILLID'];
 			$dueamt_set=$row_due_sel['DUEAMOUNT'];
 			$dueamt_set+=$amt;
 			$sql="UPDATE billing.PURCHASES SET DUEAMOUNT='$dueamt_set' WHERE BILLID='$billid_set'";
-			mysql_query_decide($sql) or die(mysql_error_js());
+			mysql_query_decide($sql) or mysql_error_js();
 
 			/*end of code*/
 
 			$sql1 ="INSERT INTO billing.BOUNCED_CHEQUE_HISTORY ( ID , RECEIPTID , PROFILEID , BILLID , STATUS,BOUNCE_DT , REMINDER_DT , ENTRYBY , ENTRY_DT , DISPLAY) VALUES ('', '$receiptid', '$profileid', '$billid', 'CHARGE_BACK', NOW(),DATE_ADD( CURDATE( ) , INTERVAL 2 DAY ), '$user', NOW(), 'Y')";
-                        mysql_query_decide($sql1) or die("$sql1".mysql_error_js());
+                        mysql_query_decide($sql1) or mysql_error_js();
 
 			$cc="payments@jeevansathi.com,rohan.mathur@jeevansathi.com,JSSalesLeads@Infoedge.com,nishant.sharma@naukri.com,services@jeevansathi.com,shyam@naukri.com,jitesh.bhugra@naukri.com";
 
@@ -77,7 +77,7 @@ if(isset($data))
 
 			//added by sriram to prevent the query being run several times on page reload.
                         $sql_act = "SELECT ACTIVATED,PREACTIVATED FROM newjs.JPROFILE WHERE PROFILEID = '$profileid'";
-                        $res_act = mysql_query_decide($sql_act) or die($sql_act);
+                        $res_act = mysql_query_decide($sql_act) or mysql_error_js();
                         $row_act = mysql_fetch_array($res_act);
                         // delete the contacts of this person
                         if($row_act['ACTIVATED']!='D' && !$offline_billing)
@@ -89,7 +89,7 @@ if(isset($data))
                         //end of - added by sriram to prevent the query being run several times on page reload.
 
 			/*$sql="UPDATE newjs.JPROFILE SET PREACTIVATED=IF(ACTIVATED<>'D',ACTIVATED,PREACTIVATED), ACTIVATED='D',activatedKey=0, SUBSCRIPTION='', ACTIVATE_ON=now() where PROFILEID='$profileid'";
-			mysql_query_decide($sql) or die(mysql_error_js());*/
+			mysql_query_decide($sql) or mysql_error_js(); */
 			if($row_act['ACTIVATED']!='D')
 				$preActivated =$row_act['ACTIVATED'];
 			else
@@ -103,7 +103,7 @@ if(isset($data))
 
 
 			$sql="INSERT into jsadmin.DELETED_PROFILES(PROFILEID,USERNAME,REASON,COMMENTS,USER,TIME) values('$profileid','$username','Charge Back','$reason','$user',now())";
-                        mysql_query_decide($sql) or die(mysql_error_js());
+                        mysql_query_decide($sql) or mysql_error_js();
 
 			if($offline_billing)
 				stop_offline_service($profileid);
@@ -123,7 +123,7 @@ if(isset($data))
 	{
 		list($order,$id)=explode("-",$orderid);
 		$sql="SELECT USERNAME,ENTRY_DT,PROFILEID FROM billing.ORDERS WHERE ID='$id' AND ORDERID='$order'";
-		$res=mysql_query_decide($sql) or die(mysql_error_js());
+		$res=mysql_query_decide($sql) or mysql_error_js();
 		if($row=mysql_fetch_array($res))
 		{
 			$username=$row['USERNAME'];
@@ -145,7 +145,7 @@ if(isset($data))
 		}
 
 		$sql="SELECT AMOUNT,REASON FROM billing.PAYMENT_DETAIL WHERE RECEIPTID='$receiptid'";
-		$res=mysql_query_decide($sql) or die(mysql_error_js());
+		$res=mysql_query_decide($sql) or mysql_error_js();
 		if($row=mysql_fetch_array($res))
 		{
 			$amt=$row['AMOUNT'];
@@ -172,7 +172,7 @@ if(isset($data))
 	elseif($CMDIVR)
 	{
 		$sql = "SELECT p.USERNAME,pd.ENTRY_DT, pd.PROFILEID, pd.AMOUNT, pd.REASON FROM billing.PURCHASES p, billing.PAYMENT_DETAIL pd WHERE pd.RECEIPTID='$receiptid' AND p.BILLID=pd.BILLID AND pd.TRANS_NUM = '$ivr_number'";
-		$res=mysql_query_decide($sql) or die(mysql_error_js());
+		$res=mysql_query_decide($sql) or mysql_error_js();
 		if($row=mysql_fetch_array($res))
 		{
 			$username=$row['USERNAME'];
