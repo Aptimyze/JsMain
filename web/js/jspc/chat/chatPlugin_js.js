@@ -884,7 +884,7 @@ JsChat.prototype = {
             curElem._enableChatTextArea(chatBoxType,userId,"paid");
         }
     },
-
+    
     //update contact status and enable/disable chat in chat box on basis of membership and contact status
     _setChatBoxInnerDiv: function(userId, chatBoxType) {
         console.log();
@@ -907,13 +907,31 @@ JsChat.prototype = {
                             "trackingParams": chatConfig.Params["trackingParams"]["INITIATE"],
                             "buttonType": "INITIATE"
                         });
-                        if (response == true) {
-                            $(this).parent().find("#sentDiv").removeClass("disp-none");
-                            $(this).parent().find("#initiateText").remove();
-                            $(this).remove();
-                            new_contact_state = curElem._contactStatusMapping["pog_acceptance_pending"]["key"];
-                            $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
-                        } else console.log("cannot send interest in chat box");
+                        console.log("res",response);
+                        if (response != false) {
+                            if(response.responseMessage != "Successful"){
+                                console.log($(this));
+                                $(this).html(response.responseMessage);
+                            }
+                            else if(response.buttondetails && response.buttondetails.button){
+                                if (data.actiondetails.errmsglabel) {
+                                    $(this).html("error");
+                                }
+                                else{
+                                    $(this).find("#sentDiv").removeClass("disp-none");
+                                    $(this).find("#initiateText").remove();
+                                    $(this).remove();
+                                    new_contact_state = curElem._contactStatusMapping["pog_acceptance_pending"]["key"];
+                                    $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
+                                }
+                            }
+                            else{
+                                $(this).html("error");
+                            }
+                        } else {
+                            console.log("cannot send interest in chat box");
+                            $(this).html("error");
+                        }
                     }
                 });
                 break;
@@ -933,15 +951,37 @@ JsChat.prototype = {
                             "trackingParams": chatConfig.Params["trackingParams"]["ACCEPT"],
                             "buttonType": "ACCEPT"
                         });
-                        if (response == true) {
-                            $(this).closest(".chatMessage").find("#sentDiv").removeClass("disp-none");
-                            $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
-                            $(this).remove();
-                            new_contact_state = curElem._contactStatusMapping["both_accepted"]["key"];
-                            //TODO: fire query for accepting request
-                            $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-                            $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
-                        } else console.log("cannot accept interest in chat box");
+                        
+                        if (response != false) {
+                            if(response.responseMessage != "Successful"){
+                                console.log($(this));
+                                $(this).html(response.responseMessage);
+                                $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
+                            }
+                            else if(response.buttondetails && response.buttondetails.button){
+                                if (data.actiondetails.errmsglabel) {
+                                    $(this).html("error");
+                                    $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
+                                }
+                                else{
+                                    $(this).closest(".chatMessage").find("#sentDiv").removeClass("disp-none");
+                                    $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
+                                    $(this).remove();
+                                    new_contact_state = curElem._contactStatusMapping["both_accepted"]["key"];
+                                    //TODO: fire query for accepting request
+                                    $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                                    $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
+                                }
+                            }
+                            else{
+                                $(this).html("error");
+                                $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
+                            }
+                        } else {
+                            console.log("cannot send interest in chat box");
+                            $(this).html("error");
+                            $(this).closest(".chatMessage").find("#sendInt, #acceptTxt, #decline").remove();
+                        }
                     }
                 });
                 $('chat-box[user-id="' + userId + '"] #decline').on("click", function() {
@@ -952,18 +992,38 @@ JsChat.prototype = {
                             "trackingParams": chatConfig.Params["trackingParams"]["DECLINE"],
                             "buttonType": "DECLINE"
                         });
-                        if (response == true) {
-                            $(this).closest(".chatMessage").find("#declineDiv").removeClass("disp-none");
-                            $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
-                            $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt").remove();
-                            $(this).remove();
-                            //TODO: fire query for declining request
-                            new_contact_state = curElem._contactStatusMapping["pg_interest_declined"]["key"];
-                            $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
-                            setTimeout(function() {
-                                curElem._scrollDown($('chat-box[user-id="' + userId + '"]'), "remove");
-                            }, 5000);
-                        } else console.log("cannot decline interest in chat box");
+                        
+                        if (response != false) {
+                            if(response.responseMessage != "Successful"){
+                                console.log($(this));
+                                $(this).html(response.responseMessage);
+                                $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt").remove();
+                            }
+                            else if(response.buttondetails && response.buttondetails.button){
+                                if (data.actiondetails.errmsglabel) {
+                                    $(this).html("error");
+                                    $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt").remove();
+                                }
+                                else{
+                                    $(this).closest(".chatMessage").find("#sentDiv").removeClass("disp-none");
+                                    $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
+                                    $(this).remove();
+                                    new_contact_state = curElem._contactStatusMapping["both_accepted"]["key"];
+                                    //TODO: fire query for accepting request
+                                    $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                                    $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
+                                }
+                            }
+                            else{
+                                $(this).html("error");
+                                $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt").remove();
+                            }
+                        } else {
+                            console.log("cannot send interest in chat box");
+                            $(this).html("error");
+                            $(this).closest(".chatMessage").find("#sendInt, #acceptTxt").remove();
+                        }
+                        
                     }
                 });
                 break;
@@ -1070,6 +1130,7 @@ JsChat.prototype = {
     },
     //add data in side panel and update number
     _updateSideChatBox: function() {
+        var curElem = this;
         var value = parseInt($(".extraNumber").text().split("+")[1]) + 1,
             len = $("chat-box").length + 1,
             data = $($("chat-box")[len - value - 1]).attr("user-id");
