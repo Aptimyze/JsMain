@@ -1296,7 +1296,7 @@ JsChat.prototype = {
                 $(curEle._chatBottomPanelID).show();
             }, 1000);
         }
-        //user not logged in and coming for first time dhuila is wrong
+        //user not logged in and coming for first time 
         if (($(this._listingPanelID).length == 0) && (this._loginStatus == "N")) {
             this._chatLoggerPlugin('case 1');
             $(curEle._loginPanelID).fadeOut('slow', function () {
