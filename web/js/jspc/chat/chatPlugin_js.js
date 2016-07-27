@@ -1342,7 +1342,7 @@ JsChat.prototype = {
                 $(curEle._chatBottomPanelID).show();
             }, 1000);
         }
-        //user not logged in and coming for first time dhuila is wrong
+        //user not logged in and coming for first time 
         if (($(this._listingPanelID).length == 0) && (this._loginStatus == "N")) {
             this._chatLoggerPlugin('case 1');
             $(curEle._loginPanelID).fadeOut('slow', function () {
@@ -1357,9 +1357,10 @@ JsChat.prototype = {
                 //curEle._appendLoggedHTML();    
             } else {
                 this._chatLoggerPlugin("ankita_2");
-                $(curEle._loginPanelID).fadeOut('fast', function () {
+                $(curEle._loginPanelID).remove();
+                // function () {
                     //curEle._appendLoggedHTML();
-                });
+                //});
             }
         }
         //user logged out from chat in the same session
