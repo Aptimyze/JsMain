@@ -248,6 +248,13 @@ class MyJs implements Module
                                             }
                                                 else $infoTypeObj[$infoType] = $infoTypeAdapter->getProfiles($conditionArray, $skipArray);
                                         }
+                                        //Cache the data
+                                        $arrAllowedType = array('INTEREST_RECEIVED','VISITORS','MATCH_ALERT');
+                                        if(in_array($infoType, $arrAllowedType))  
+                                        {
+                                          $szCackeKey = $this->profileObj->getPROFILEID().'_'.$infoType;
+                                          JsMemcache::getInstance()->set($szCackeKey,serialize($infoTypeObj[$infoType]),1800); 
+                                        }
 					unset($skipArrayTemp);
 					if(is_array($infoTypeObj[$infoType]))
 					{
@@ -356,6 +363,7 @@ class MyJs implements Module
 							$this->completeProfilesInfo[$infoType]["SHOW_NEXT"] = $this->completeProfilesInfo[$infoType]["CURRENT_NAV"] + 1;
 						$this->completeProfilesInfo[$infoType]["NAVIGATION_INDEX"] = $this->getNavigationArray($this->completeProfilesInfo[$infoType]["CURRENT_NAV"], $countToConsider, $config["COUNT"]);
 					}
+          $this->completeProfilesInfo[$infoType]["CONTACT_ID"] = $this->profileObj->getPROFILEID().'_'.$infoType ;
 				}
                         }
                         unset($infoTypeObj);
