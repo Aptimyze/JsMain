@@ -1311,9 +1311,10 @@ JsChat.prototype = {
                 //curEle._appendLoggedHTML();    
             } else {
                 this._chatLoggerPlugin("ankita_2");
-                $(curEle._loginPanelID).fadeOut('fast', function () {
+                $(curEle._loginPanelID).remove();
+                // function () {
                     //curEle._appendLoggedHTML();
-                });
+                //});
             }
         }
         //user logged out from chat in the same session
