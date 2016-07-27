@@ -230,10 +230,10 @@ JsChat.prototype = {
                     curEleRef.addLoginHTML();
                 } else {
                     $(curEleRef._loginPanelID).fadeIn('slow', function () {
-                        $(curEleRef._listingPanelID).remove();
                         $(".info-hover").remove();
                     });
                 }
+                $(curEleRef._listingPanelID).remove();
             });
         } else {
             $(curEleRef._listingPanelID).fadeOut('slow', function () {
