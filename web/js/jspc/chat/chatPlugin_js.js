@@ -504,7 +504,7 @@ JsChat.prototype = {
     _bindMaximize: function (elem, userId) {
         var curElem = this;
         $(elem).off("click").on("click", function () {
-            curElem._scrollDown($(this).closest("chat-box"), "retain");
+            curElem._scrollDown( $(".extraPopup"), "retain");
             setTimeout(function () {
                 $(".extraChats").css("padding-top", "0px");
             }, 100);
@@ -743,7 +743,9 @@ JsChat.prototype = {
             pcheckSum = $('chat-box[user-id="' + username + '"]').attr("data-checks");
             curElem._appendChatBox(username, status, jid, pcheckSum);
             $(originalElem).remove();
-            $("chat-box[user-id='" + username + "'] .chatMessage").html(chatHtml);
+             $("chat-box[user-id='" + username + "'] .chatMessage").html("");
+            curElem._postChatPanelsBox(username);
+            //$("chat-box[user-id='" + username + "'] .chatMessage").html(chatHtml);
             $(this).closest(".extraChatList").remove();
             setTimeout(function () {
                 curElem._scrollUp($('chat-box[user-id="' + username + '"]'));
@@ -819,8 +821,8 @@ JsChat.prototype = {
     _getChatBoxType: function (userId, key) {
         this._chatLoggerPlugin("in _getChatBoxType");
         var curElem = this;
-        this._chatLoggerPlugin($(".chatlist li[id*='" + userId + "']").attr("id").split(userId + "_")[1]);
-        var groupID = $(".chatlist li[id*='" + userId + "']").attr("id").split(userId + "_")[1];
+        this._chatLoggerPlugin($(".chatlist li[id*='" + userId + "']").attr("id").split("_")[1]);
+        var groupID = $(".chatlist li[id*='" + userId + "']").attr("id").split("_")[1];
         this._chatLoggerPlugin("ankita" + groupID + "-" + curElem._groupBasedChatBox[groupID]);
         var chatBoxType;
         var oldChatBoxType = $('chat-box[user-id="' + userId + '"]').attr("data-contact");
@@ -1085,7 +1087,8 @@ JsChat.prototype = {
                         chatHtml = $(originalElem).find(".chatMessage").html();
                     curElem._appendChatBox(username, status, jid, pcheckSum);
                     originalElem.remove();
-                    $("chat-box[user-id='" + username + "'] .chatMessage").html(chatHtml);
+                    $("chat-box[user-id='" + username + "'] .chatMessage").html("");
+                    curElem._postChatPanelsBox(username);
                     $(this).closest(".extraChatList").remove();
                     curElem._addDataExtraPopup(data);
                     curElem._bindExtraPopupUserClose($("#extra_" + data + " .nchatic_4"));
@@ -1347,6 +1350,7 @@ JsChat.prototype = {
         var str = '';
         var TotalBtn = '',
             widCal = '';
+    console.log(groupButtons,"Nitish");
         TotalBtn = groupButtons.length;
         this._chatLoggerPlugin('TotalBtn: ' + TotalBtn);
         widCal = parseInt(100 / TotalBtn);
