@@ -158,6 +158,12 @@ class JsConstants
         public static $redisCluster = ['tcp://172.10.18.61:7000','tcp://172.10.18.62:7000','tcp://172.10.18.63:7000','tcp://172.10.18.64:7000','tcp://172.10.18.65:7000','tcp://172.10.18.64:7005'];
         public static $redisSentinel = ['tcp://172.10.18.65:26379', 'tcp://172.10.18.64:26379','tcp://172.10.18.70:26379'];
         public static $ifSingleRedis = 'tcp://172.10.18.65:6379';
+		/*public static $ifSingleRedis = array(
+		'scheme'   => 'tcp',
+		'host'     => '127.0.0.1',
+		'port'     => 6379,
+		'persistent' => true
+	);*/
 
 	 public static $usePhotoDistributed = 0;
   public static $photoServerName='JSPIC1';
