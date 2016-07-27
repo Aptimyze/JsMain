@@ -105,7 +105,7 @@
 	</tr>
 	~foreach from=$legalDataArr key=k item=dataArr`
 	<tr>
-	<td class="label" valign="middle" colspan="1" align="center"> ~$dataArr.PROFILEID`</td>
+	<td class="label" valign="middle" colspan="1" align="center"> ~$dataArr.USERNAME`</td>
 	<td class="label" valign="middle" colspan="1" align="center"> ~$dataArr.NAME`</td>
 	<td class="label" valign="middle" colspan="1" align="center"> ~$dataArr.EMAIL`</td>
 	<td class="label" valign="middle" colspan="1" align="center"> ~$dataArr.AGE`</td>
