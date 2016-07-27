@@ -303,7 +303,7 @@ EOF;
             $today = strtotime(date("Y-m-d"));
             $expiryDate = strtotime($subsDetailsArr['EXPIRY_DT']);
             $daysRemaining = floor(($expiryDate - $today)/(60*60*24))+1;
-            $eoiToBeSent = min(max(floor(2*($durationOfPack/90)*(($mutualMatchesCount*0.7)/$daysRemaining)),$minEois),$maxEois);
+            $eoiToBeSent = min(max(floor(2*($durationOfPack/90)*(($mutualMatchesCount*0.6)/$daysRemaining)),$minEois),$maxEois);
             return $eoiToBeSent;
         }
         
