@@ -54,6 +54,7 @@ class Membership
     private $entry_from;
     private $membership;
     private $orderid_part1;
+    private $device;
 
     //payment detail insertion variables.
     private $billid;
