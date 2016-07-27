@@ -325,11 +325,11 @@ function getProfileImage() {
     var imageUrl = localStorage.getItem('userImg'),
         flag = true;
     if (imageUrl) {
-        var user = JSON.parse(imageUrl);
-        user = user['user'];
+        var data = JSON.parse(imageUrl);
+        var user = data['user'];
         if (user == loggedInJspcUser) {
             flag = false;
-            imageUrl = user['img'];
+            imageUrl = data['img'];
         }
     }
     if (flag) {
