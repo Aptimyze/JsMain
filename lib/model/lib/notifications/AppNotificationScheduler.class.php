@@ -78,6 +78,7 @@ class AppNotificationScheduler extends NotificationScheduler
         $producerObj = new JsNotificationProduce();
         if(is_array($notificationData) && $notificationData)
         foreach ($notificationData as $key => $val){
+		/*
             unset($paramsArr);
 	    $paramsArr['PROFILEID']=$val['SELF']['PROFILEID'];
 	    $paramsArr['NOTIFICATION_KEY']=$val['NOTIFICATION_KEY'];
@@ -92,9 +93,9 @@ class AppNotificationScheduler extends NotificationScheduler
 	    $paramsArr['SENT']='N';  
 	    $paramsArr['PHOTO_URL']=$val['PHOTO_URL'];
 	    $paramsArr['TITLE']=$val['NOTIFICATION_MESSAGE_TITLE'];
-
+		*/
 	    if($producerObj->getRabbitMQServerConnected()){
-		$msgdata = FormatNotification::formatPushNotification($paramsArr,$val["OS_TYPE"],true);
+		$msgdata = FormatNotification::formatPushNotification($val,$val["OS_TYPE"],true);
 		$producerObj->sendMessage($msgdata);
 	    }
 	    else{
