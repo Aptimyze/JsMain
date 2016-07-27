@@ -132,6 +132,20 @@ class JsNotificationsConsume
       if(in_array($type, BrowserNotificationEnums::$notificationChannelType))
       { 
         $handlerObj->sendGcmNotification($type,$body);  
+      }
+      if($type == 'APP_NOTIFICATION')
+      {
+	$notificationSenderObj = new NotificationSender;	
+	//filter profiles based on notification count
+        if(in_array($body["NOTIFICATION_KEY"],NotificationEnums::$scheduledNotificationPriorityArr))
+        	$filteredProfileDetails = $notificationSenderObj->filterProfilesBasedOnNotificationCount($body,$body["NOTIFICATION_KEY"]);
+        else
+        	$filteredProfileDetails = $body;
+	//Send Notification
+	$notificationSenderObj->sendNotifications($body);
+	//Update Status
+	$scheduledAppNotificationUpdateSentObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
+        $scheduledAppNotificationUpdateSentObj->updateSent($body["MSG_ID"],$body["NOTIFICATION_KEY"],NotificationEnums::$PENDING);
       }     
     }
     catch (Exception $exception) 
