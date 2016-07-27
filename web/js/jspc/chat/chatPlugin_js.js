@@ -611,7 +611,7 @@ JsChat.prototype = {
                         //TODO: fire query for unblock
                     });   
                 }
-            }, 5000);
+            }
             $('chat-box[user-id="' + userId + '"] #undoBlock').off("click").on("click", function () {
                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
                 enableClose = false;
