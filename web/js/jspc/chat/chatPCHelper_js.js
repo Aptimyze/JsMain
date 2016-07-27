@@ -591,7 +591,7 @@ $(document).ready(function () {
                         case "UNBLOCK":
                             break;
                     }*/
-                    return true;
+                    return response;
                 } else {
                     return false;
                 }
