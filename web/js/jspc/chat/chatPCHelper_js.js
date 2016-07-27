@@ -165,6 +165,7 @@ function invokePluginManagelisting(listObject, key, user_id) {
         pcHelperLogger(listObject);
         objJsChat.addListingInit(listObject);
         if (key == "add_node") {
+            //update chat box content if opened
             objJsChat._updateChatPanelsBox(user_id);
             pcHelperLogger("update chat box");
         }
