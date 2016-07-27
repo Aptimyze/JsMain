@@ -573,24 +573,6 @@ $(document).ready(function () {
                         trackingParams = params["trackingParams"],
                         extraParams = params["extraParams"];
                     var response = contactActionCall(params["buttonType"], checkSum, trackingParams,extraParams);
-                    /*switch (params["buttonType"]) {
-                        case "INITIATE":
-                            //TODO: fire query to send interest              
-                            break;
-                        case "ACCEPT":
-                            //TODO: fire query to accept interest
-                            break;
-                        case "DECLINE":
-                            //TODO: fire query to decline interest
-                            break;
-                        case "CANCEL":
-                            //TODO: fire query to cancel interest
-                            break;
-                        case "BLOCK":
-                            break;
-                        case "UNBLOCK":
-                            break;
-                    }*/
                     return response;
                 } else {
                     return false;
