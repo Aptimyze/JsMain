@@ -139,6 +139,10 @@ chatConfig.Params = {
             "listingTuple":{
                 "M":"/images/picture/120x120_m.png?noPhoto",
                 "F":"/images/picture/120x120_f.png?noPhoto"
+            },
+            "self120":{
+                "M":"/images/picture/120x120_m.png?noPhoto",
+                "F":"/images/picture/120x120_f.png?noPhoto",
             }
         },
         //contact status mapping for chat box types

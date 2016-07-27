@@ -1464,8 +1464,7 @@ JsChat.prototype = {
             str += '<li>' + param2.caste + '</li>';
             str += '<li>' + param2.education + '</li>';
             str += '<li>' + param2.occupation + '</li>';
-            str += '<li>' + param2.income + '</li>';
-            str += '<li>' + param2.city + '</li>';
+            str += '<li>' + param2.income + ', '+param2.city + '</li>';
             str += '</ul>';
             str += '</div>';
             str += '<div class="fullwid clearfix" id="' + param1 + '_BtnRespnse">';
