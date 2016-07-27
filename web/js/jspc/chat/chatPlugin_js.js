@@ -802,8 +802,8 @@ JsChat.prototype = {
     _getChatBoxType: function (userId, key) {
         this._chatLoggerPlugin("in _getChatBoxType");
         var curElem = this;
-        this._chatLoggerPlugin($(".chatlist li[id*='" + userId + "']").attr("id").split(userId + "_")[1]);
-        var groupID = $(".chatlist li[id*='" + userId + "']").attr("id").split(userId + "_")[1];
+        this._chatLoggerPlugin($(".chatlist li[id*='" + userId + "']").attr("id").split("_")[1]);
+        var groupID = $(".chatlist li[id*='" + userId + "']").attr("id").split("_")[1];
         this._chatLoggerPlugin("ankita" + groupID + "-" + curElem._groupBasedChatBox[groupID]);
         var chatBoxType;
         var oldChatBoxType = $('chat-box[user-id="' + userId + '"]').attr("data-contact");
@@ -1331,6 +1331,7 @@ JsChat.prototype = {
         var str = '';
         var TotalBtn = '',
             widCal = '';
+    console.log(groupButtons,"Nitish");
         TotalBtn = groupButtons.length;
         this._chatLoggerPlugin('TotalBtn: ' + TotalBtn);
         widCal = parseInt(100 / TotalBtn);
