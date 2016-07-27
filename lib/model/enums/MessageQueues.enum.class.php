@@ -48,8 +48,8 @@ class MessageQueues
   public static $SCHEDULED_NOTIFICATION_QUEUE2 = "SCHEDULED_NOTIFICATION_QUEUE2"; //Queue for sending scheduled notification data from notification queue 2 to GCM
   public static $SCHEDULED_NOTIFICATION_QUEUE3 = "SCHEDULED_NOTIFICATION_QUEUE3"; //Queue for sending scheduled notification data from notification queue 3 to GCM
   public static $SCHEDULED_NOTIFICATION_QUEUE4 = "SCHEDULED_NOTIFICATION_QUEUE4"; //Queue for sending scheduled notification data from notification queue 4 to GCM
-  public static $SCHEDULED_NOTIFICATION_QUEUE5 = "SCHEDULED_NOTIFICATION_QUEUE5"; //Queue for sending scheduled notification data from notification queue 4 to GCM
-  public static $SCHEDULED_NOTIFICATION_QUEUE6 = "SCHEDULED_NOTIFICATION_QUEUE6"; //Queue for sending scheduled notification data from notification queue 4 to GCM
+  public static $SCHEDULED_NOTIFICATION_QUEUE5 = "SCHEDULED_NOTIFICATION_QUEUE5"; //Queue for sending scheduled notification data from notification queue 5 to GCM
+  public static $SCHEDULED_NOTIFICATION_QUEUE6 = "SCHEDULED_NOTIFICATION_QUEUE6"; //Queue for sending scheduled notification data from notification queue 6 to GCM
   public static $DELAYED_NOTIFICATION_EXCHANGE = array("NAME"=>"DelayedNotificationExchange","TYPE"=>"direct","DURABLE"=>true);
   public static $INSTANT_NOTIFICATION_EXCHANGE = array("NAME"=>"InstantNotificationExchange","TYPE"=>"fanout","DURABLE"=>true);
   public static $scheduledNotificationBindingKeyArr=array("SCHEDULED_NOTIFICATION_QUEUE1" => "JS_NOTIFICATION1",
