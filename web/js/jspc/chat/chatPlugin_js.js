@@ -1451,7 +1451,7 @@ JsChat.prototype = {
         if ($('#' + param1 + '_hover').length == 0) {
             var str = '<div class="pos_fix info-hover fontlig nz21 vishid" id="' + param1 + '_hover">';
             str += '<div class="nchatbdr3 f13 nchatgrad nchathoverdim pos-rel">';
-            str += '<img src="' + param2.PHOTO + '" class="vtop ch220"/>';
+            str += '<img src="' + param2.photo + '" class="vtop ch220"/>';
             str += '<div id="' + param1 + '_hoverinfo-a">';
             str += '<div class="padall-10 pos-rel">';
             str += '<div class="pos-abs err2 nchatrr1 disp-none" id="' + param1 + '_hoverDvBgEr">';
@@ -1460,12 +1460,12 @@ JsChat.prototype = {
             str += '</div>';
             str += '</div>';
             str += '<ul class="listnone lh22">';
-            str += '<li>' + param2.AGE + ', ' + param2.HEIGHT + '</li>';
-            str += '<li>' + param2.COMMUNITY + '</li>';
-            str += '<li>' + param2.EDUCATION + '</li>';
-            str += '<li>' + param2.PROFFESION + '</li>';
-            str += '<li>' + param2.SALARY + '</li>';
-            str += '<li>' + param2.CITY + '</li>';
+            str += '<li>' + param2.age + ', ' + param2.height + '</li>';
+            str += '<li>' + param2.caste + '</li>';
+            str += '<li>' + param2.education + '</li>';
+            str += '<li>' + param2.occupation + '</li>';
+            str += '<li>' + param2.income + '</li>';
+            str += '<li>' + param2.city + '</li>';
             str += '</ul>';
             str += '</div>';
             str += '<div class="fullwid clearfix" id="' + param1 + '_BtnRespnse">';
@@ -1497,12 +1497,12 @@ JsChat.prototype = {
         var globalRef = this;
         var finalstr;
         var that = this;
-        $.each(param.vCard, function (k, v) {
+        //$.each(param.vCard, function (k, v) {
             that._chatLoggerPlugin("set");
-            that._chatLoggerPlugin(k);
-            finalstr = globalRef._hoverBoxStr(k, v, pCheckSum);
+            //that._chatLoggerPlugin(k);
+            finalstr = globalRef._hoverBoxStr(param.jid, param, pCheckSum);
             $(globalRef._mainID).append(finalstr);
-        });
+        //});
         delete that;
         this._chatLoggerPlugin("Callback calling starts");
         callback();

@@ -692,16 +692,18 @@ $(document).ready(function () {
             chatLoggerPC(pCheckSum);
             jid = [];
             jid[0] = "'" + pCheckSum + "'";
-            url = "/api/v1/chat/fetchVCard";
+            url = "/api/v1/chat/getProfileData";
             $.ajax({
                 type: 'POST',
                 async: false,
                 data: {
                     jid: jid,
-                    username: username
+                    username: username,
+                    profilechecksum: pCheckSum
                 },
                 url: url,
                 success: function (data) {
+                    console.log("Nitishvcard");
                     chatLoggerPC(data);
                     objJsChat.updateVCard(data, pCheckSum, function () {
                         $('#' + username + '_hover').css({
