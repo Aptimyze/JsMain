@@ -17,11 +17,62 @@ var strophieWrapper = {
     rosterGroups: chatConfig.Params.PC.rosterGroups,
     currentConnStatus: null,
     loggingEnabledStrophe: true,
-    stropheLoggerPC: function (message) {
+    stropheLoggerPC: function (msgOrObj) {
         if (strophieWrapper.loggingEnabledStrophe) {
-            console.log(message);
+            if (typeof (window.console) != 'undefined') {
+                try {
+                    invalidfunctionthrowanerrorplease();
+                } catch (err) {
+                    var logStack = err.stack;
+                }
+                var fullTrace = logStack.split('\n');
+                for (var i = 0; i < fullTrace.length; ++i) {
+                    fullTrace[i] = fullTrace[i].replace(/\s+/g, ' ');
+                }
+                var caller = fullTrace[1],
+                    callerParts = caller.split('@'),
+                    line = '';
+                //CHROME & SAFARI
+                if (callerParts.length == 1) {
+                    callerParts = fullTrace[2].split('('), caller = false;
+                    //we have an object caller
+                    if (callerParts.length > 1) {
+                        caller = callerParts[0].replace('at Object.', '');
+                        line = callerParts[1].split(':');
+                        line = line[2];
+                    }
+                    //called from outside of an object
+                    else {
+                        callerParts[0] = callerParts[0].replace('at ', '');
+                        callerParts = callerParts[0].split(':');
+                        caller = callerParts[0] + callerParts[1];
+                        line = callerParts[2];
+                    }
+                }
+                //FIREFOX
+                else {
+                    var callerParts2 = callerParts[1].split(':');
+                    line = callerParts2.pop();
+                    callerParts[1] = callerParts2.join(':');
+                    caller = (callerParts[0] == '') ? callerParts[1] : callerParts[0];
+                }
+                console.log(' ');
+                console.warn('Console log: ' + caller + ' ( line ' + line + ' )');
+                console.log(msgOrObj);
+                console.log({
+                    'Full trace:': fullTrace
+                });
+                console.log(' ');
+            } else {
+                //shout('This browser does not support console.log!')
+            }
         }
     },
+    // stropheLoggerPC: function (message) {
+    //     if (strophieWrapper.loggingEnabledStrophe) {
+    //         console.log(message);
+    //     }
+    // },
     //connect to openfire
     connect: function (bosh_service_url, username, password) {
         strophieWrapper.connectionObj = new Strophe.Connection(chatConfig.Params[device].bosh_service_url);
