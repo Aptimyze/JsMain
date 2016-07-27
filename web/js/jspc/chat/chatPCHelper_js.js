@@ -6,10 +6,10 @@ var listingInputData = [],
     objJsChat, pass, username;
 var pluginId = '#chatOpenPanel',
     device = 'PC';
-var pcHelperLogging = true;
+var loggingEnabledPC = true;
 
-function pcHelperLogger(message) {
-    if (pcHelperLogging) {
+function chatLoggerPC(message) {
+    if (loggingEnabledPC) {
         console.log(message);
     }
 }
@@ -73,26 +73,9 @@ function requestListingPhoto(apiParams) {
  */
 function initiateChatConnection() {
     username = loggedInJspcUser + '@localhost';
-    /*if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
-        username = 'a1@localhost';
-    else if(readSiteCookie("CHATUSERNAME")=="bassi")
-        username = '1@localhost';
-    else if(readSiteCookie("CHATUSERNAME")=="VWZ4557")
-        username = 'a9@localhost';
-    else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
-        username = 'a8@localhost';
-    else if(readSiteCookie("CHATUSERNAME") == "ZZRS3292")
-        username = 'a13@localhost';
-    else if(readSiteCookie("CHATUSERNAME")=="ZZVV2929")
-        username = 'a14@localhost';
-    else if(readSiteCookie("CHATUSERNAME")=="ZZRR5723")
-        username = 'a11@localhost';
-    pass = '123';*/
-    //console.log("Nitish"+username);
-    //console.log(chatConfig.Params[device].bosh_service_url);
-    console.log("user:" + username + " pass:" + pass);
+    chatLoggerPC("user:" + username + " pass:" + pass);
     strophieWrapper.connect(chatConfig.Params[device].bosh_service_url, username, pass);
-    pcHelperLogger(strophieWrapper.connectionObj);
+    chatLoggerPC(strophieWrapper.connectionObj);
 }
 
 function getConnectedUserJID() {
@@ -156,18 +139,18 @@ function to add roster item or update roster item details in listing
 * @inputs:listObject,key(create_list/add_node/update_status),user_id(optional)
 */
 function invokePluginManagelisting(listObject, key, user_id) {
-    pcHelperLogger("calling invokePluginAddlisting");
+    chatLoggerPC("calling invokePluginAddlisting");
     if (key == "add_node" || key == "create_list") {
         if (key == "create_list") {
             objJsChat.manageChatLoader("hide");
         }
-        pcHelperLogger("adding nodes in invokePluginAddlisting");
-        pcHelperLogger(listObject);
+        chatLoggerPC("adding nodes in invokePluginAddlisting");
+        chatLoggerPC(listObject);
         objJsChat.addListingInit(listObject);
         if (key == "add_node") {
             //update chat box content if opened
             objJsChat._updateChatPanelsBox(user_id);
-            pcHelperLogger("update chat box");
+            chatLoggerPC("update chat box");
         }
         if (key == "create_list") {
             objJsChat.noResultError();
@@ -175,21 +158,21 @@ function invokePluginManagelisting(listObject, key, user_id) {
     } else if (key == "update_status") {
         //update existing user status in listing
         if (typeof user_id != "undefined") {
-            pcHelperLogger("entered for user_id" + user_id);
-            pcHelperLogger(listObject[user_id][strophieWrapper.rosterDetailsKey]["chat_status"]);
+            chatLoggerPC("entered for user_id" + user_id);
+            chatLoggerPC(listObject[user_id][strophieWrapper.rosterDetailsKey]["chat_status"]);
             if (listObject[user_id][strophieWrapper.rosterDetailsKey]["chat_status"] == "offline") { //from online to offline
-                pcHelperLogger("removing from listing");
+                chatLoggerPC("removing from listing");
                 objJsChat._removeFromListing("removeCall1", listObject);
             } else if (listObject[user_id][strophieWrapper.rosterDetailsKey]["chat_status"] == "online") { //from offline to online
-                pcHelperLogger("adding in list");
+                chatLoggerPC("adding in list");
                 objJsChat.addListingInit(listObject);
             }
         }
     } else if (key == "delete_node") {
-        pcHelperLogger(user_id);
+        chatLoggerPC(user_id);
         //remove user from roster in listing
         if (typeof user_id != "undefined") {
-            pcHelperLogger("deleting node from roster-" + user_id);
+            chatLoggerPC("deleting node from roster-" + user_id);
             objJsChat._removeFromListing('delete_node', listObject);
         }
     }
@@ -224,7 +207,7 @@ function readCookie(name) {
 
 function eraseCookie(name) {
     createCookie(name, "", -1);
-    pcHelperLogger("in erase cookie function");
+    chatLoggerPC("in erase cookie function");
 }
 
 function checkEmptyOrNull(item) {
@@ -255,9 +238,9 @@ function checkAuthentication() {
         url: "/api/v1/chat/chatUserAuthentication",
         async: false,
         success: function (data) {
-            pcHelperLogger(data.statusCode);
+            chatLoggerPC(data.statusCode);
             if (data.responseStatusCode == "0") {
-                pcHelperLogger("In chatUserAuthentication Login Done");
+                chatLoggerPC("In chatUserAuthentication Login Done");
                 //createCookie("chatAuth","true");
                 //loginChat();
                 auth = 'true';
@@ -265,8 +248,8 @@ function checkAuthentication() {
                     format: CryptoJSAesJson
                 }).toString(CryptoJS.enc.Utf8));
             } else {
-                pcHelperLogger(data.responseMessage);
-                pcHelperLogger("In checkAuthentication failure");
+                chatLoggerPC(data.responseMessage);
+                chatLoggerPC("In checkAuthentication failure");
                 eraseCookie("chatAuth");
                 auth = 'false';
             }
@@ -276,7 +259,7 @@ function checkAuthentication() {
 }
 
 function logoutChat() {
-    pcHelperLogger("In logout chat function")
+    chatLoggerPC("In logout chat function")
         //converse.user.logout();
     strophieWrapper.disconnect();
     eraseCookie("chatAuth");
@@ -288,8 +271,8 @@ function logoutChat() {
 function invokePluginReceivedMsgHandler(msgObj) {
     if (typeof msgObj["from"] != "undefined") {
         if (typeof msgObj["body"] != "undefined" && msgObj["body"] != "" && msgObj["body"] != null) {
-            pcHelperLogger("invokePluginReceivedMsgHandler-handle message");
-            pcHelperLogger(msgObj);
+            chatLoggerPC("invokePluginReceivedMsgHandler-handle message");
+            chatLoggerPC(msgObj);
             objJsChat._appendRecievedMessage(msgObj["body"], msgObj["from"], msgObj["msg_id"]);
         }
         if (typeof msgObj["msg_state"] != "undefined") switch (msgObj['msg_state']) {
@@ -303,11 +286,11 @@ function invokePluginReceivedMsgHandler(msgObj) {
                 objJsChat._handleMsgComposingStatus(msgObj["from"], strophieWrapper.msgStates["PAUSED"]);
                 break;
             case strophieWrapper.msgStates["RECEIVER_RECEIVED_READ"]:
-                pcHelperLogger("send received read status to " + msgObj["to"] + " from " + msgObj["from"] + "-" + msgObj["msg_id"]);
+                chatLoggerPC("send received read status to " + msgObj["to"] + " from " + msgObj["from"] + "-" + msgObj["msg_id"]);
                 strophieWrapper.sendReceivedReadEvent(msgObj["from"], msgObj["to"], msgObj["msg_id"], strophieWrapper.msgStates["RECEIVER_RECEIVED_READ"]);
                 break;
             case strophieWrapper.msgStates["SENDER_RECEIVED_READ"]:
-                pcHelperLogger("received received read status to " + msgObj["to"] + " from " + msgObj["from"] + "-" + msgObj["msg_id"]);
+                chatLoggerPC("received received read status to " + msgObj["to"] + " from " + msgObj["from"] + "-" + msgObj["msg_id"]);
                 objJsChat._changeStatusOfMessg(msgObj["msg_id"], msgObj["from"], "recievedRead");
                 break;
             }
@@ -393,15 +376,15 @@ function clearLocalStorage() {
  * @output: response
  */
 function handlePreAcceptChat(apiParams) {
-    pcHelperLogger(apiParams);
+    chatLoggerPC(apiParams);
     var outputData = {};
     if (typeof apiParams != "undefined") {
         var postData = "";
         if (typeof apiParams["postParams"] != "undefined" && apiParams["postParams"]) {
             postData = apiParams["postParams"];
         }
-        pcHelperLogger("postData");
-        pcHelperLogger(postData);
+        chatLoggerPC("postData");
+        chatLoggerPC(postData);
         $.myObj.ajax({
             url: apiParams["url"],
             dataType: 'json',
@@ -412,15 +395,15 @@ function handlePreAcceptChat(apiParams) {
             async: false,
             beforeSend: function (xhr) {},
             success: function (response) {
-                pcHelperLogger("in success of handlePreAcceptanceMsg");
-                pcHelperLogger(response);
+                chatLoggerPC("in success of handlePreAcceptanceMsg");
+                chatLoggerPC(response);
                 outputData["canSend"] = response["cansend"];
                 outputData["errorMsg"] = response["message"];
                 outputData["msg_id"] = strophieWrapper.getUniqueId();
             },
             error: function (xhr) {
-                pcHelperLogger("in error of handlePreAcceptanceMsg");
-                pcHelperLogger(xhr);
+                chatLoggerPC("in error of handlePreAcceptanceMsg");
+                chatLoggerPC(xhr);
                 outputData["canSend"] = false;
                 outputData["errorMsg"] = "Something went wrong";
                 //return "error";
@@ -433,7 +416,7 @@ function handlePreAcceptChat(apiParams) {
  * Handle error/info case from button click
  */
 function handleErrorInHoverButton(jid, data) {
-    pcHelperLogger("@@1");
+    chatLoggerPC("@@1");
     if (data.buttondetails && data.buttondetails.button) {
         //data.actiondetails.errmsglabel = "You have exceeded the limit of the number of interests you can send";
         if (data.actiondetails.errmsglabel) {
@@ -450,7 +433,7 @@ function handleErrorInHoverButton(jid, data) {
 function contactActionCall(action, checkSum, params) {
     var response;
     url = chatConfig.Params["actionUrl"][action];
-    console.log(params);
+    chatLoggerPC(params);
     $.myObj.ajax({
         type: 'POST',
         async: false,
@@ -463,18 +446,18 @@ function contactActionCall(action, checkSum, params) {
         url: url,
         success: function (data) {
             response = data;
-            pcHelperLogger(response);
+            chatLoggerPC(response);
         },
         error: function () {
             response = "false";
         }
     });
-    pcHelperLogger(response);
+    chatLoggerPC(response);
     return response;
 }
 $(document).ready(function () {
-    pcHelperLogger("User");
-    pcHelperLogger(loggedInJspcUser);
+    chatLoggerPC("User");
+    chatLoggerPC(loggedInJspcUser);
     checkNewLogin(loggedInJspcUser);
     var checkDiv = $("#chatOpenPanel").length;
     if (showChat && (checkDiv != 0)) {
@@ -529,30 +512,30 @@ $(document).ready(function () {
         });
         objJsChat.onEnterToChatPreClick = function () {
             //objJsChat._loginStatus = 'N';
-            pcHelperLogger("Checking variable");
-            pcHelperLogger(chatLoggedIn);
+            chatLoggerPC("Checking variable");
+            chatLoggerPC(chatLoggedIn);
             var chatLoggedIn = readCookie('chatAuth');
             if (chatLoggedIn != 'true') {
                 var auth = checkAuthentication();
                 if (auth != "true") {
-                    pcHelperLogger("Before return");
+                    chatLoggerPC("Before return");
                     return;
                 } else {
-                    pcHelperLogger("Initiate strophe connection in preclick");
+                    chatLoggerPC("Initiate strophe connection in preclick");
                     initiateChatConnection();
                     objJsChat._loginStatus = 'Y';
                 }
             }
-            pcHelperLogger("In callback");
+            chatLoggerPC("In callback");
         }
         objJsChat.onChatLoginSuccess = function () {
             //trigger list creation
-            pcHelperLogger("in triggerBindings");
+            chatLoggerPC("in triggerBindings");
             strophieWrapper.triggerBindings();
             //setCreateListingInterval();
         }
         objJsChat.onHoverContactButtonClick = function (params) {
-                pcHelperLogger(params);
+                chatLoggerPC(params);
                 checkSum = $("#" + params.id).attr('data-pchecksum');
                 paramsData = $("#" + params.id).attr('data-params');
                 checkSum = "802d65a19583249de2037f9a05b2e424i6341959";
@@ -561,8 +544,8 @@ $(document).ready(function () {
                 action = idBeforeSplit[1];
                 response = contactActionCall(action, checkSum, paramsData);
                 if (response != "false") {
-                    console.log("Not false");
-                    console.log(response);
+                    chatLoggerPC("Not false");
+                    chatLoggerPC(response);
                     handleErrorInHoverButton(idAfterSplit, response);
                 }
             }
@@ -600,7 +583,7 @@ $(document).ready(function () {
             strophieWrapper.typingEvent(from, to, typingState);
         }
         objJsChat.onLogoutPreClick = function () {
-                pcHelperLogger("In Logout preclick");
+                chatLoggerPC("In Logout preclick");
                 objJsChat._loginStatus = 'N';
                 clearLocalStorage();
                 strophieWrapper.disconnect();
@@ -608,50 +591,50 @@ $(document).ready(function () {
             }
             //executed for sending chat message
         objJsChat.onSendingMessage = function (message, receivedJId, receiverProfileChecksum, contact_state) {
-            pcHelperLogger("in start of SendingMessage");
+            chatLoggerPC("in start of SendingMessage");
             var output;
             if (chatConfig.Params[device].contactStatusMapping[contact_state]["enableChat"] == true) {
                 if (chatConfig.Params[device].contactStatusMapping[contact_state]["useOpenfireForChat"] == true) {
-                    pcHelperLogger("sending post acceptance msg");
+                    chatLoggerPC("sending post acceptance msg");
                     output = strophieWrapper.sendMessage(message, receivedJId);
-                    pcHelperLogger("sent post acceptance msg");
+                    chatLoggerPC("sent post acceptance msg");
                 } else {
-                    pcHelperLogger("sending pre acceptance msg with " + contact_state);
+                    chatLoggerPC("sending pre acceptance msg with " + contact_state);
                     var apiParams = {
                         "url": chatConfig.Params[device].preAcceptChat["apiUrl"],
                         "postParams": {
-                            "profilechecksum": /*"4ddba5c85d628cf4faaaca776540cb1ei7575569", */receiverProfileChecksum,
+                            "profilechecksum": /*"4ddba5c85d628cf4faaaca776540cb1ei7575569", */ receiverProfileChecksum,
                             "chatMessage": message
                         }
                     };
                     if (typeof chatConfig.Params[device].preAcceptChat["extraParams"] != "undefined") {
-                        pcHelperLogger("adding tracking in api inputs");
-                        pcHelperLogger(chatConfig.Params[device].preAcceptChat["extraParams"]);
+                        chatLoggerPC("adding tracking in api inputs");
+                        chatLoggerPC(chatConfig.Params[device].preAcceptChat["extraParams"]);
                         $.each(chatConfig.Params[device].preAcceptChat["extraParams"], function (key, val) {
                             apiParams["postParams"][key] = val;
                         });
                     }
-                    pcHelperLogger("apiParams");
-                    pcHelperLogger(apiParams);
+                    chatLoggerPC("apiParams");
+                    chatLoggerPC(apiParams);
                     output = handlePreAcceptChat(apiParams);
-                    pcHelperLogger("sent pre acceptance msg");
+                    chatLoggerPC("sent pre acceptance msg");
                 }
             } else {
                 output = {};
                 output["errorMsg"] = "You are not allowed to chat";
                 output["canSend"] = false;
             }
-            pcHelperLogger(output);
-            pcHelperLogger("end of onSendingMessage");
+            chatLoggerPC(output);
+            chatLoggerPC("end of onSendingMessage");
             return output;
         }
         objJsChat.onPostBlockCallback = function (param) {
-            pcHelperLogger('the user id to be blocked:' + param);
+            chatLoggerPC('the user id to be blocked:' + param);
             //the function goes here which will send user id to the backend
         }
         objJsChat.onPreHoverCallback = function (pCheckSum, username, hoverNewTop, shiftright) {
-            pcHelperLogger("In Helper preHoverCB");
-            pcHelperLogger(pCheckSum);
+            chatLoggerPC("In Helper preHoverCB");
+            chatLoggerPC(pCheckSum);
             jid = [];
             jid[0] = "'" + pCheckSum + "'";
             url = "/api/v1/chat/fetchVCard";
@@ -664,14 +647,14 @@ $(document).ready(function () {
                 },
                 url: url,
                 success: function (data) {
-                    pcHelperLogger(data);
+                    chatLoggerPC(data);
                     objJsChat.updateVCard(data, pCheckSum, function () {
                         $('#' + username + '_hover').css({
                             'top': hoverNewTop,
                             'visibility': 'visible',
                             'right': shiftright
                         });
-                        pcHelperLogger("Callback done");
+                        chatLoggerPC("Callback done");
                     });
                 }
             });
