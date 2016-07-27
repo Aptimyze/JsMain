@@ -343,6 +343,7 @@ function getProfileImage() {
         user = user['user'];
         if (user == loggedInJspcUser) {
             flag = false;
+            imageUrl = user['userImg'];
         }
     }
     if (flag) {
@@ -556,22 +557,9 @@ $(document).ready(function () {
                     var userId = params["receiverID"],
                         checkSum = params["checkSum"],
                         trackingParams = params["trackingParams"];
-                    var response = contactActionCall(params["buttonType"], checkSum, trackingParams)
-                    switch (params["buttonType"]) {
-                    case "INITIATE":
-                        //TODO: fire query to send interest              
-                        break;
-                    case "ACCEPT":
-                        //TODO: fire query to accept interest
-                        break;
-                    case "DECLINE":
-                        //TODO: fire query to decline interest
-                        break;
-                    case "CANCEL":
-                        //TODO: fire query to cancel interest
-                        break;
-                    }
-                    return true;
+                    var response = contactActionCall(params["buttonType"], checkSum, trackingParams);
+                    console.log("Responseee");
+                    return response;
                 } else {
                     return false;
                 }
