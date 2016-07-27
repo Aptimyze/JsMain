@@ -2049,6 +2049,7 @@ class photoScreeningService
                                         }
                                         else
                                         {
+/*
                                                 $pid = $formArr["picIdNonScr"][1];
                                                 $picSaveUrl = $pictureObj->getSaveUrlPicture(ProfilePicturesTypeEnum::$PICTURE_UPLOAD_DIR["MainPicUrl"],$pid,$this->profileObj->getPROFILEID(),$imageT,'nonScreened');
                                                 $picUrl = $pictureObj->getDisplayPicUrl(ProfilePicturesTypeEnum::$PICTURE_UPLOAD_DIR["MainPicUrl"],$pid,$this->profileObj->getPROFILEID(),$imageT,'nonScreened');
@@ -2056,6 +2057,7 @@ class photoScreeningService
 						$result = $manipulator->save($v,$picSaveUrl,$imageT);
 						$picturesToUpdate[$pid]["MainPicUrl"]=$picUrl;
 						$count++;
+*/
                                         }
 				}
 				$pictureServiceObj->setPicProgressBit(ProfilePicturesTypeEnum::$INTERFACE["2"],$picturesToUpdate);

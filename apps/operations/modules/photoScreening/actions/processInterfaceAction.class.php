@@ -43,7 +43,8 @@ class processInterfaceAction extends sfActions {
 			$this->hideCropper = false;
                 	//Show in Template 
                 	$this->photoArr = $photoScreeningServiceObj->getPicturesToScreen($paramArr);
-                        if(array_key_exists("nonScreened",$this->photoArr))
+			$totalPicSizeForScreen = count($this->photoArr['profilePic']['profileType']);
+                        if(array_key_exists("nonScreened",$this->photoArr)||$totalPicSizeForScreen==0)
 				$this->hideCropper = true;
 			$this->mainPicSize = ProfilePicturesTypeEnum::$MAIN_PIC_MAX_SIZE;
                 	$this->profileData = $profileDetails["profileData"];

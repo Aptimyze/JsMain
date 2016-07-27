@@ -67,9 +67,9 @@ class CropperProcess
                     }
 			if($ops)
 			{
-				$resizedImage = $this->resizeImage($sourceImage,ProfilePicturesTypeEnum::$CROPPED_NONSCREENED_PICTURE_SIZES["MainPicUrl"]);
-				$filesGlobArr['uploadPhotoNonScr']['name'][1]=$resizedImage;
-				$filesGlobArr['uploadPhotoNonScr']['type'][1]=$imageType;
+//				$resizedImage = $this->resizeImage($sourceImage,ProfilePicturesTypeEnum::$CROPPED_NONSCREENED_PICTURE_SIZES["MainPicUrl"]);
+//				$filesGlobArr['uploadPhotoNonScr']['name'][1]=$resizedImage;
+//				$filesGlobArr['uploadPhotoNonScr']['type'][1]=$imageType;
 
 			}
 		if($ops)
