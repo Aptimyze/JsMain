@@ -28,21 +28,7 @@ function readSiteCookie(name) {
     }
     return null;
 }
-/*
- * Function to get profile image for login state
- */
-function getProfileImage() {
-    $.ajax({
-        url: "/api/v1/social/getMultiUserPhoto?photoType=ProfilePic120Url",
-        async: false,
-        success: function (data) {
-            if (data.statusCode == "0") {
-                imageUrl = data.profiles[0].PHOTO.ProfilePic120Url;
-            }
-        }
-    });
-    return imageUrl;
-}
+
 //request listing photo through api
 function requestListingPhoto(apiParams) {
     var apiUrl = chatConfig.Params.photoUrl;
@@ -360,7 +346,7 @@ function getProfileImage() {
         user = user['user'];
         if (user == loggedInJspcUser) {
             flag = false;
-            imageUrl = user['userImg'];
+            imageUrl = user['img'];
         }
     }
     if (flag) {
@@ -371,7 +357,7 @@ function getProfileImage() {
                 if (data.statusCode == "0") {
                     imageUrl = data.profiles[0].PHOTO.ProfilePic120Url;
                     localStorage.setItem('userImg', JSON.stringify({
-                        'userImg': imageUrl,
+                        'img': imageUrl,
                         'user': loggedInJspcUser
                     }));
                 }
