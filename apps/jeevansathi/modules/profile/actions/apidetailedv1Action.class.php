@@ -270,7 +270,7 @@ class apidetailedv1Action extends sfAction
 			if(MobileCommon::isIOSApp())
 				$out["buttonDetails"] = $buttonObj->getButtonArray(array('PHOTO'=>$out['pic']['url'],"IGNORE"=>$this->IGNORED));
 			else
-				$out["buttonDetails"] = $buttonObj->getButtonArray(array('IGNORE'=>$this->IGNORED));
+				$out["buttonDetails"] = $buttonObj->getButtonArray(array('IGNORED'=>$this->IGNORED));
 		}	
 		$out['show_gunascore'] = "y";
 		return $out;
