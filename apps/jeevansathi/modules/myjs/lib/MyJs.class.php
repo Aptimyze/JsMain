@@ -248,6 +248,13 @@ class MyJs implements Module
                                             }
                                                 else $infoTypeObj[$infoType] = $infoTypeAdapter->getProfiles($conditionArray, $skipArray);
                                         }
+                                        //Cache the data
+                                        $arrAllowedType = array('INTEREST_RECEIVED','VISITORS','MATCH_ALERT');
+                                        if(in_array($infoType, $arrAllowedType))  
+                                        {
+                                          $szCackeKey = $this->profileObj->getPROFILEID().'_'.$infoType;
+                                          JsMemcache::getInstance()->set($szCackeKey,serialize($infoTypeObj[$infoType]),1800); 
+                                        }
 					unset($skipArrayTemp);
 					if(is_array($infoTypeObj[$infoType]))
 					{
