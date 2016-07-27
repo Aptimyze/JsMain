@@ -8,12 +8,62 @@ var pluginId = '#chatOpenPanel',
     device = 'PC';
 var loggingEnabledPC = true;
 
-function chatLoggerPC(message) {
+function chatLoggerPC(msgOrObj) {
     if (loggingEnabledPC) {
-        console.log(message);
+        if (typeof (window.console) != 'undefined') {
+            try {
+                invalidfunctionthrowanerrorplease();
+            } catch (err) {
+                var logStack = err.stack;
+            }
+            var fullTrace = logStack.split('\n');
+            for (var i = 0; i < fullTrace.length; ++i) {
+                fullTrace[i] = fullTrace[i].replace(/\s+/g, ' ');
+            }
+            var caller = fullTrace[1],
+                callerParts = caller.split('@'),
+                line = '';
+            //CHROME & SAFARI
+            if (callerParts.length == 1) {
+                callerParts = fullTrace[2].split('('), caller = false;
+                //we have an object caller
+                if (callerParts.length > 1) {
+                    caller = callerParts[0].replace('at Object.', '');
+                    line = callerParts[1].split(':');
+                    line = line[2];
+                }
+                //called from outside of an object
+                else {
+                    callerParts[0] = callerParts[0].replace('at ', '');
+                    callerParts = callerParts[0].split(':');
+                    caller = callerParts[0] + callerParts[1];
+                    line = callerParts[2];
+                }
+            }
+            //FIREFOX
+            else {
+                var callerParts2 = callerParts[1].split(':');
+                line = callerParts2.pop();
+                callerParts[1] = callerParts2.join(':');
+                caller = (callerParts[0] == '') ? callerParts[1] : callerParts[0];
+            }
+            console.log(' ');
+            console.warn('Console log: ' + caller + ' ( line ' + line + ' )');
+            console.log(msgOrObj);
+            console.log({
+                'Full trace:': fullTrace
+            });
+            console.log(' ');
+        } else {
+            //shout('This browser does not support console.log!')
+        }
     }
 }
-
+// function chatLoggerPC(message) {
+//     if (loggingEnabledPC) {
+//         console.log(message);
+//     }
+// }
 function readSiteCookie(name) {
     var nameEQ = escape(name) + "=",
         ca = document.cookie.split(';');
@@ -28,7 +78,6 @@ function readSiteCookie(name) {
     }
     return null;
 }
-
 //request listing photo through api
 function requestListingPhoto(apiParams) {
     var apiUrl = chatConfig.Params.photoUrl;
@@ -59,7 +108,7 @@ function requestListingPhoto(apiParams) {
  */
 function initiateChatConnection() {
     username = loggedInJspcUser + '@localhost';
-	/*if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
+    /*if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
         username = 'a1@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="bassi")
         username = '1@localhost';
@@ -349,7 +398,7 @@ function getProfileImage() {
     }
     if (flag) {
         $.ajax({
-            url: chatConfig.Params[device].photoUrl+"?photoType=ProfilePic120Url",
+            url: chatConfig.Params[device].photoUrl + "?photoType=ProfilePic120Url",
             async: false,
             success: function (data) {
                 if (data.statusCode == "0") {
@@ -432,22 +481,22 @@ function handleErrorInHoverButton(jid, data) {
     }
 }
 
-function contactActionCall(action, checkSum, trackingParams,extraParams) {
-    var response,url = chatConfig.Params["actionUrl"][action],channel='';
+function contactActionCall(action, checkSum, trackingParams, extraParams) {
+    var response, url = chatConfig.Params["actionUrl"][action],
+        channel = '';
     console.log(trackingParams);
-    if(device == 'PC')
-        channel = 'pc';
+    if (device == 'PC') channel = 'pc';
     var postData = {};
     postData["profilechecksum"] = checkSum;
     postData["channel"] = channel;
     postData["pageSource"] = "chat";
-    if(typeof trackingParams != "undefined"){
-        $.each(trackingParams,function(key,val){
+    if (typeof trackingParams != "undefined") {
+        $.each(trackingParams, function (key, val) {
             postData[key] = val;
-        }); 
+        });
     }
-    if(typeof extraParams != "undefined"){
-        $.each(extraParams,function(k,v){
+    if (typeof extraParams != "undefined") {
+        $.each(extraParams, function (k, v) {
             postData[k] = v;
         });
     }
@@ -572,7 +621,7 @@ $(document).ready(function () {
                         checkSum = params["checkSum"],
                         trackingParams = params["trackingParams"],
                         extraParams = params["extraParams"];
-                    var response = contactActionCall(params["buttonType"], checkSum, trackingParams,extraParams);
+                    var response = contactActionCall(params["buttonType"], checkSum, trackingParams, extraParams);
                     return response;
                 } else {
                     return false;
