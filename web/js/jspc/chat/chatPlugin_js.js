@@ -585,7 +585,7 @@ JsChat.prototype = {
                 var response = curElem.onChatBoxContactButtonsClick({
                                                 "buttonType":"BLOCK",
                                                 "receiverID":userId,
-                                                "checkSum":"b000c6f67da48635ce121932ce6e664ei8763067",
+                                                "checkSum":"049ab73a3bd05383c7ca0e96fcd290d6i6604118",
                                                 "trackingParams":chatConfig.Params.trackingParams["BLOCK"],
                                                 "extraParams":{
                                                     "ignore":1
@@ -603,22 +603,32 @@ JsChat.prototype = {
                             curElem._scrollDown($('chat-box[user-id="' + userId + '"]'), "remove");
                         }
                     }, 5000);
+                    //console.log($('chat-box[user-id="' + userId + '"] #undoBlock'))
                     $('chat-box[user-id="' + userId + '"] #undoBlock').off("click").on("click", function () {
-                        $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-                        enableClose = false;
-                        var htmlStr = sessionStorage.getItem("htmlStr_" + userId);
-                        $('chat-box[user-id="' + userId + '"] .chatMessage').html(htmlStr);
-                        //TODO: fire query for unblock
+                        console.log("123");
+                        if (curElem.onChatBoxContactButtonsClick && typeof curElem.onChatBoxContactButtonsClick == 'function'){
+                            console.log("done111");
+                            var response = curElem.onChatBoxContactButtonsClick({
+                                                    "buttonType":"UNBLOCK",
+                                                    "receiverID":userId,
+                                                    "checkSum":"049ab73a3bd05383c7ca0e96fcd290d6i6604118",
+                                                    "trackingParams":chatConfig.Params.trackingParams["UNBLOCK"],
+                                                    "extraParams":{
+                                                        "ignore":0
+                                                    }
+                                                });
+                            if(response == true){
+                                console.log("done22");
+                                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                                enableClose = false;
+                                var htmlStr = sessionStorage.getItem("htmlStr_" + userId);
+                                $('chat-box[user-id="' + userId + '"] .chatMessage').html(htmlStr);
+                            }
+                        }
                     });   
                 }
             }
-            $('chat-box[user-id="' + userId + '"] #undoBlock').off("click").on("click", function () {
-                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-                enableClose = false;
-                var htmlStr = sessionStorage.getItem("htmlStr_" + userId);
-                $('chat-box[user-id="' + userId + '"] .chatMessage').html(htmlStr);
-                //TODO: fire query for unblock
-            });
+            
         });
     },
     _bindUnblock: function (userId) {},
@@ -649,11 +659,15 @@ JsChat.prototype = {
                 var text = $(this).val(),
                     textAreamElem = this;
                 $(textAreamElem).val("").css("height", "24px");
+                console.log("manviiiiiiiiii",$(textAreamElem).val());
                 if (text.length > 1) {
+                    console.log("if statement")
                     var superParent = $(this).parent().parent(),
                         timeLog = new Date().getTime();
                     $(superParent).find("#initChatText,#sentDiv").remove();
+                    console.log("apenndddddd");
                     $(superParent).find(".chatMessage").css("height", "250px").append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id ="tempText_' + userId + '_' + timeLog + '" class="talkText">' + text + '</div><i class="nchatspr nchatic_8 fr vertM"></i></div>');
+                    console.log("apenndddddd end");
                     if ($(superParent).find("#sendInt").length != 0) {
                         $(superParent).find(".chatMessage").append("<div class='pos-rel fr pr10' id='interestSent'>Your interest has been sent</div>")
                         $(superParent).find("#initiateText").remove();
@@ -664,28 +678,31 @@ JsChat.prototype = {
                     $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
                         scrollTop: ($(".rightBubble").length + $(".leftBubble").length) * 50
                     }, 500);
+                    
                     //fire send chat query and return unique id
-                    if (_this.onSendingMessage && typeof (_this.onSendingMessage) == "function") {
-                        that._chatLoggerPlugin("in plugin send message");
-                        that._chatLoggerPlugin(text);
-                        that._chatLoggerPlugin($('chat-box[user-id="' + userId + '"]').attr("data-jid"));
-                        var profileChecksum = $(".chatlist li[id*='" + userId + "']").attr("data-checks");
-                        var msgSendOutput = _this.onSendingMessage(text, $('chat-box[user-id="' + userId + '"]').attr("data-jid"), profileChecksum, $('chat-box[user-id="' + userId + '"]').attr("data-contact"));
-                        messageId = msgSendOutput["msg_id"];
-                        that._chatLoggerPlugin("handling output of onSendingMessage in plugin");
-                        $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + messageId);
-                        if (msgSendOutput["canSend"] == true) {
-                            //msg sending success,set single tick here
-                            _this._changeStatusOfMessg(messageId, userId, "recieved");
-                        } else if (msgSendOutput["canSend"] == false) {
-                            //msg sending failure
-                            $(curElem).prop("disabled", true);
-                            if (typeof msgSendOutput["errorMsg"] == "undefined") {
-                                msgSendOutput["errorMsg"] = "Something went wrong..";
+                    setTimeout(function () {
+                        if (_this.onSendingMessage && typeof (_this.onSendingMessage) == "function") {
+                            //that._chatLoggerPlugin("in plugin send message");
+                            //that._chatLoggerPlugin(text);
+                            //that._chatLoggerPlugin($('chat-box[user-id="' + userId + '"]').attr("data-jid"));
+                            var profileChecksum = $(".chatlist li[id*='" + userId + "']").attr("data-checks");
+                            var msgSendOutput = _this.onSendingMessage(text, $('chat-box[user-id="' + userId + '"]').attr("data-jid"), profileChecksum, $('chat-box[user-id="' + userId + '"]').attr("data-contact"));
+                            messageId = msgSendOutput["msg_id"];
+                            //that._chatLoggerPlugin("handling output of onSendingMessage in plugin");
+                            $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + messageId);
+                            if (msgSendOutput["canSend"] == true) {
+                                //msg sending success,set single tick here
+                                _this._changeStatusOfMessg(messageId, userId, "recieved");
+                            } else if (msgSendOutput["canSend"] == false) {
+                                //msg sending failure
+                                $(curElem).prop("disabled", true);
+                                if (typeof msgSendOutput["errorMsg"] == "undefined") {
+                                    msgSendOutput["errorMsg"] = "Something went wrong..";
+                                }
+                                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">' + msgSendOutput["errorMsg"] + '</div>').addClass("restrictMessg2");
                             }
-                            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">' + msgSendOutput["errorMsg"] + '</div>').addClass("restrictMessg2");
                         }
-                    }
+                    },50);
                 }
             }
         });
