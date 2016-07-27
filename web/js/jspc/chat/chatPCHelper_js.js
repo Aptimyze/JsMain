@@ -59,6 +59,21 @@ function requestListingPhoto(apiParams) {
  */
 function initiateChatConnection() {
     username = loggedInJspcUser + '@localhost';
+	/*if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
+        username = 'a1@localhost';
+    else if(readSiteCookie("CHATUSERNAME")=="bassi")
+        username = '1@localhost';
+    else if(readSiteCookie("CHATUSERNAME")=="VWZ4557")
+        username = 'a9@localhost';
+    else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
+        username = 'a8@localhost';
+    else if(readSiteCookie("CHATUSERNAME") == "ZZRS3292")
+        username = 'a13@localhost';
+    else if(readSiteCookie("CHATUSERNAME")=="ZZVV2929")
+        username = 'a14@localhost';
+    else if(readSiteCookie("CHATUSERNAME")=="ZZRR5723")
+        username = 'a11@localhost';
+    pass = '123';*/
     chatLoggerPC("user:" + username + " pass:" + pass);
     strophieWrapper.connect(chatConfig.Params[device].bosh_service_url, username, pass);
     chatLoggerPC(strophieWrapper.connectionObj);
@@ -334,7 +349,7 @@ function getProfileImage() {
     }
     if (flag) {
         $.ajax({
-            url: "/api/v1/social/getMultiUserPhoto?photoType=ProfilePic120Url",
+            url: chatConfig.Params[device].photoUrl+"?photoType=ProfilePic120Url",
             async: false,
             success: function (data) {
                 if (data.statusCode == "0") {
@@ -417,26 +432,39 @@ function handleErrorInHoverButton(jid, data) {
     }
 }
 
-function contactActionCall(action, checkSum, params) {
-    var response;
-    url = chatConfig.Params["actionUrl"][action];
-    chatLoggerPC(params);
+function contactActionCall(action, checkSum, trackingParams,extraParams) {
+    var response,url = chatConfig.Params["actionUrl"][action],channel='';
+    console.log(trackingParams);
+    if(device == 'PC')
+        channel = 'pc';
+    var postData = {};
+    postData["profilechecksum"] = checkSum;
+    postData["channel"] = channel;
+    postData["pageSource"] = "chat";
+    if(typeof trackingParams != "undefined"){
+        $.each(trackingParams,function(key,val){
+            postData[key] = val;
+        }); 
+    }
+    if(typeof extraParams != "undefined"){
+        $.each(extraParams,function(k,v){
+            postData[k] = v;
+        });
+    }
     $.myObj.ajax({
         type: 'POST',
         async: false,
         dataType: 'json',
-        data: {
-            profilechecksum: checkSum,
-            params: params,
-            source: "chat"
-        },
+        data: postData,
         url: url,
         success: function (data) {
             response = data;
             chatLoggerPC(response);
         },
-        error: function () {
-            response = "false";
+        error: function (xhr) {
+            response = false;
+            console.log("ankita2");
+            chatLoggerPC(xhr);
         }
     });
     chatLoggerPC(response);
@@ -530,7 +558,7 @@ $(document).ready(function () {
                 idAfterSplit = idBeforeSplit[0];
                 action = idBeforeSplit[1];
                 response = contactActionCall(action, checkSum, paramsData);
-                if (response != "false") {
+                if (response != false) {
                     chatLoggerPC("Not false");
                     chatLoggerPC(response);
                     handleErrorInHoverButton(idAfterSplit, response);
@@ -542,10 +570,28 @@ $(document).ready(function () {
                 if (typeof params != "undefined" && params) {
                     var userId = params["receiverID"],
                         checkSum = params["checkSum"],
-                        trackingParams = params["trackingParams"];
-                    var response = contactActionCall(params["buttonType"], checkSum, trackingParams);
-                    console.log("Responseee");
-                    return response;
+                        trackingParams = params["trackingParams"],
+                        extraParams = params["extraParams"];
+                    var response = contactActionCall(params["buttonType"], checkSum, trackingParams,extraParams);
+                    /*switch (params["buttonType"]) {
+                        case "INITIATE":
+                            //TODO: fire query to send interest              
+                            break;
+                        case "ACCEPT":
+                            //TODO: fire query to accept interest
+                            break;
+                        case "DECLINE":
+                            //TODO: fire query to decline interest
+                            break;
+                        case "CANCEL":
+                            //TODO: fire query to cancel interest
+                            break;
+                        case "BLOCK":
+                            break;
+                        case "UNBLOCK":
+                            break;
+                    }*/
+                    return true;
                 } else {
                     return false;
                 }

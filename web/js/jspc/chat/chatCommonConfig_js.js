@@ -11,12 +11,21 @@ chatConfig.Params = {
     actionUrl: {
         "ACCEPT": "/api/v2/contacts/postAccept",
         "DECLINE": "/api/v2/contacts/postNotInterested",
-        "INITIATE": "/api/v2/contacts/postEOI"
+        "INITIATE": "/api/v2/contacts/postEOI",
+        "BLOCK":"/api/v1/common/ignoreprofile",
+        "UNBLOCK":"/api/v1/common/ignoreprofile"
     },
     trackingParams:{
-        "ACCEPT": "responseTracking=8",
-        "DECLINE": "responseTracking=8",
-        "INITIATE": "stype=WV"
+        "ACCEPT": {
+            "responseTracking":8
+            },
+        "DECLINE": {
+            "responseTracking":8
+            },
+        "INITIATE": {
+            "stype":"WV"},
+        "BLOCK":{},
+        "UNBLOCK":{}
     },
     photoUrl:"/api/v1/social/getMultiUserPhoto",
     PC: {
