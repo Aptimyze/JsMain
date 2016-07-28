@@ -94,6 +94,11 @@ class AppNotificationScheduler extends NotificationScheduler
 	    $paramsArr['PHOTO_URL']=$val['PHOTO_URL'];
 	    $paramsArr['TITLE']=$val['NOTIFICATION_MESSAGE_TITLE'];
 		*/
+            $pid =$val['PROFILEID'];
+            $pidArr[] =$pid;    
+            if(in_array($pid, $pidArr))
+                continue;
+
 	    if($producerObj->getRabbitMQServerConnected()){
 		$msgdata = FormatNotification::formatPushNotification($val,$val["OS_TYPE"],true);
 		$producerObj->sendMessage($msgdata);
