@@ -4,7 +4,7 @@
 include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 	//$master=connect_db();
 	$slave = connect_slave();
-	$time   =       date("Y-m-d H:i:s",mktime(date("H")-3,date("i"),date("s"),date("m"),date("d"),date("Y")));
+	$time   =       date("Y-m-d H:i:s",mktime(date("H")-5,date("i"),date("s"),date("m"),date("d"),date("Y")));
         $verificationWays = array('OPS','KNW','IVR','SMS','OTP');
 	$res = checkPhoneVerifiedWithMsg($time,$slave);print_r($res);
 	
