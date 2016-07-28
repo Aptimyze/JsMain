@@ -356,6 +356,7 @@ class MyJs implements Module
 							$this->completeProfilesInfo[$infoType]["SHOW_NEXT"] = $this->completeProfilesInfo[$infoType]["CURRENT_NAV"] + 1;
 						$this->completeProfilesInfo[$infoType]["NAVIGATION_INDEX"] = $this->getNavigationArray($this->completeProfilesInfo[$infoType]["CURRENT_NAV"], $countToConsider, $config["COUNT"]);
 					}
+          $this->completeProfilesInfo[$infoType]["CONTACT_ID"] = $this->profileObj->getPROFILEID().'_'.$infoType ;
 				}
                         }
                         unset($infoTypeObj);
