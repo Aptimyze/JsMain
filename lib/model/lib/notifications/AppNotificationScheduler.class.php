@@ -67,7 +67,12 @@ class AppNotificationScheduler extends NotificationScheduler
 				  $insertData[$k]['TITLE']=$v['NOTIFICATION_MESSAGE_TITLE'];		
 			  else
 				$insertData[$k]['TITLE']=$v['TITLE'];
-			  $this->insert($insertData);	
+
+		           $pid =$v['SELF']['PROFILEID'];
+        		   if(!in_array($pid, $pidArr)){
+	        		$pidArr[] =$pid;
+			  	$this->insert($insertData);	
+			   }	
 		  }
 		  $scheduledAppNotificationsObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
 		  $scheduledAppNotificationsObj->insert($insertData);
@@ -94,10 +99,6 @@ class AppNotificationScheduler extends NotificationScheduler
 	    $paramsArr['PHOTO_URL']=$val['PHOTO_URL'];
 	    $paramsArr['TITLE']=$val['NOTIFICATION_MESSAGE_TITLE'];
 		*/
-            $pid =$val['PROFILEID'];
-            if(in_array($pid, $pidArr))
-                continue;
-	    $pidArr[] =$pid;	
 	    if($producerObj->getRabbitMQServerConnected()){
 		$msgdata = FormatNotification::formatPushNotification($val,$val["OS_TYPE"],true);
 		$producerObj->sendMessage($msgdata);
