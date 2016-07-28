@@ -210,7 +210,11 @@ class SearchSort
         }
         public function getReverseDppSort(){
                 return $this->reverseSortStr;
-        }
+        }/**
+         * This function generates reverse Dpp String
+         * @param type $loggedInProfileObj
+         * @param type $sortLastLogin require sorting on the basis of Last Login Score.
+         */
         protected function setReverseDppSorting($loggedInProfileObj = '', $sortLastLogin = 0) {
                 $sortArray = array();
                 // Login time condition
