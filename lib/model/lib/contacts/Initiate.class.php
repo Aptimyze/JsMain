@@ -277,7 +277,7 @@ class Initiate extends ContactEvent
 						//Add for contact roster
 
 
-						$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'CONTACT_INITIATED', 'body' => array('senderid' => $this->contactHandler->getViewed()->getPROFILEID(), 'receiverid' => $this->contactHandler->getViewer()->getPROFILEID(), 'senderusername' => $this->contactHandler->getViewed()->getUSERNAME(), 'receiverusername' => $this->contactHandler->getViewed()->getUSERNAME())), 'redeliveryCount' => 0);
+						$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'INITIATE', 'body' => array('sender' => array('profileid'=>$this->contactHandler->getViewer()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewer()->getPROFILEID()),'username'=>$this->contactHandler->getViewer()->getUSERNAME()), 'receiver' => array('profileid'=>$this->contactHandler->getViewed()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewer()->getPROFILEID),"username"=>$this->contactHandler->getViewer()->getUSERNAME()))), 'redeliveryCount' => 0);
 						$producerObj->sendMessage($chatData);
 					}
 					unset($producerObj);
@@ -286,20 +286,6 @@ class Initiate extends ContactEvent
 				}
 			}
 
-
-			//Entry in Chat Roster
-			try {
-				$producerObj = new Producer();
-				if ($producerObj->getRabbitMQServerConnected()) {
-					$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'INITIATE', 'body' => array('sender' => array('profileid'=>$this->contactHandler->getViewer()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewer()->getPROFILEID()),'username'=>$this->contactHandler->getViewer()->getUSERNAME()), 'receiver' => array('profileid'=>$this->contactHandler->getViewed()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewer()->getPROFILEID),"username"=>$this->contactHandler->getViewer()->getUSERNAME()))), 'redeliveryCount' => 0);
-					$producerObj->sendMessage($chatData);
-				}
-				unset($producerObj);
-			} catch (Exception $e) {
-				throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
-			}
-
-			//End
 
 			if ($dateDiff <= 30 && !$isFiltered && $this->contactHandler->getPageSource() != 'AP') { // Instant mailer
 				$this->sendMail();

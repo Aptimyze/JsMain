@@ -391,6 +391,8 @@ class commonActions extends sfActions
 //                      $bookmarker = $request->getParameter('bookmarker');
 			$bookmarkeeChecksum = $request->getParameter('profilechecksum');
 			$bookmarkee = JsAuthentication::jsDecryptProfilechecksum($bookmarkeeChecksum);
+			$this->Profile = new Profile();
+			$this->Profile->getDetail($bookmarkee, "PROFILEID");
 			$bookmarkObj = new Bookmarks();
 			$shortlist = $request->getParameter('shortlist');
 			$bookmarkerMemcacheObject = new ProfileMemcacheService($bookmarker);
@@ -411,7 +413,7 @@ class commonActions extends sfActions
 				try {
 					$producerObj = new Producer();
 					if ($producerObj->getRabbitMQServerConnected()) {
-						$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'REMOVE_BOOKMARK', 'body' => array('sender' => array('profileid'=>$this->loginProfile->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->loginProfile->getPROFILEID()),'username'=>$this->loginProfile->getUSERNAME()), 'receiver' => array('profileid'=>$bookmarkee,'checksum'=>$bookmarkeeChecksum))), 'redeliveryCount' => 0);
+						$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'REMOVE_BOOKMARK', 'body' => array('sender' => array('profileid'=>$this->loginProfile->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->loginProfile->getPROFILEID()),'username'=>$this->loginProfile->getUSERNAME()), 'receiver' => array('profileid'=>$bookmarkee,'checksum'=>$bookmarkeeChecksum,'username'=>$this->Profile->getUSERNAME()))), 'redeliveryCount' => 0);
 						$producerObj->sendMessage($chatData);
 					}
 					unset($producerObj);
@@ -438,7 +440,7 @@ class commonActions extends sfActions
 			try {
 				$producerObj = new Producer();
 				if ($producerObj->getRabbitMQServerConnected()) {
-					$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'ADD_BOOKMARK', 'body' => array('sender' => array('profileid'=>$this->loginProfile->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->loginProfile->getPROFILEID()),'username'=>$this->loginProfile->getUSERNAME()), 'receiver' => array('profileid'=>$bookmarkee,'checksum'=>$bookmarkeeChecksum))), 'redeliveryCount' => 0);
+					$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'ADD_BOOKMARK', 'body' => array('sender' => array('profileid'=>$this->loginProfile->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->loginProfile->getPROFILEID()),'username'=>$this->loginProfile->getUSERNAME()), 'receiver' => array('profileid'=>$bookmarkee,'checksum'=>$bookmarkeeChecksum,'username'=>$this->Profile->getUSERNAME()))), 'redeliveryCount' => 0);
 					$producerObj->sendMessage($chatData);
 				}
 				unset($producerObj);
