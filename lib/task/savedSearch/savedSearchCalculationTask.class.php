@@ -93,7 +93,6 @@ EOF;
         				$savedSearchObj->updateUserMailerData($finalArr);
         			}
         		}
-                $flag = 0;
         	}
         	else
         	{
