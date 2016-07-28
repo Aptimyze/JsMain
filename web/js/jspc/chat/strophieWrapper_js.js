@@ -585,18 +585,19 @@ var strophieWrapper = {
 	    	if(typeof groups != "undefined" && strophieWrapper.checkForGroups(groups) == true){
 		    	var user_id = rosterParams["jid"].split("@")[0];
 		        if(typeof strophieWrapper.Roster[user_id] != "undefined"){
-		           	var iq = $iq({type: 'set', id: strophieWrapper.getUniqueId('roster')})
+		           	var iq = $iq({from:rosterParams["jid"], type: 'set', id: strophieWrapper.getUniqueId('roster')})
 		                    .c('query', {xmlns: Strophe.NS.ROSTER})
-		                    .c('item', {'jid': rosterParams["jid"], 'name': rosterParams["nick"], 'subscription': rosterParams["subscription"]});
+		                    .c('item', {jid: rosterParams["jid"], name: rosterParams["nick"], subscription: 'both'});
 		            iq.c('group').t(rosterParams["groupid"]).up();
 		            console.log("in addRosterItem");
 		            console.log(iq);
+		            
 		            strophieWrapper.connectionObj.sendIQ(iq, function(status){
-		                stropheLoggerPC("roster adding stanza: "+jid);
+		                console.log("roster adding stanza: "+jid);
 		            });
 		        }
 		        else{
-		            stropheLoggerPC("user cannot be addeded in roster");
+		            console.log("user cannot be addeded in roster");
 		        }
 		    }
 		}
