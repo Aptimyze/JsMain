@@ -8,6 +8,7 @@ $_SERVER['DOCUMENT_ROOT']=$path_class;
 include_once("$path_class/classes/globalVariables.Class.php");
 include_once("$path_class/classes/Mysql.class.php");
 include_once("$path_class/classes/Memcache.class.php");
+include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
 $mysql=new Mysql;
 $sql_timeout='set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000';
@@ -28,7 +29,7 @@ $profileid = $argv[1];
 $sql="DELETE FROM newjs.DELETED_PROFILE_LOG WHERE PROFILEID='$profileid'";
 mysql_query_decide($sql,$db) or die(mysql_error_js($db));
 $i=0;
-
+$myProfileIdShard=JsDbSharding::getShardNo($profileid);
 $myDbname=getProfileDatabaseConnectionName($profileid,'',$mysql);
 $myDb=$myDbarr[$myDbname];
 
@@ -40,6 +41,9 @@ delete_and_move_records_on_retreiveProfile($profileid,"BOOKMARKS","BOOKMARKER","
 delete_and_move_records_on_retreiveProfile($profileid,"BOOKMARKS","BOOKMARKEE","BOOKMARKER",$mysql);
 delete_and_move_records_on_retreiveProfile($profileid,"IGNORE_PROFILE","IGNORED_PROFILEID","PROFILEID",$mysql);
 delete_and_move_records_on_retreiveProfile($profileid,"IGNORE_PROFILE","PROFILEID","IGNORED_PROFILEID",$mysql);
+
+delete_and_move_records_on_retreiveProfile($profileid,"VIEW_CONTACTS_LOG","VIEWER","VIEWED",$mysql,'','jsadmin');
+delete_and_move_records_on_retreiveProfile($profileid,"VIEW_CONTACTS_LOG","VIEWED","VIEWER",$mysql,'','jsadmin');
 
 $sql="select * from newjs.DELETED_PROFILE_CONTACTS where SENDER='$profileid'";
 $result=$mysql->executeQuery($sql,$myDb) or die(mysql_error_js($myDb));
@@ -129,19 +133,24 @@ unset($CONTACT);
 unset($PROFILEID);
 
 //Getting the SENDER and RECEIVER from MESSAGE_LOG table corresponding to the retrieval user
-	
-	$myDb=$myDbarr[$myDbname];
-	$sql="select ID,RECEIVER from newjs.DELETED_MESSAGE_LOG where SENDER='$profileid'";
-	$result=$mysql->ExecuteQuery($sql,$myDb) or die($sql);
-	while($myrow=$mysql->fetchArray($result))
+	$connection=JsDbSharding::getShardNo($profileid);
+	$dbDeletedMessageLogObj=new NEWJS_DELETED_MESSAGE_LOG($connection);
+	$result=$dbDeletedMessageLogObj->getSenderIdMessageLog($profileid,'SENDER');
+	//$myDb=$myDbarr[$myDbname];
+	//$sql="select ID,RECEIVER from newjs.DELETED_MESSAGE_LOG where SENDER='$profileid'";
+	//$result=$mysql->ExecuteQuery($sql,$myDb) or die($sql);
+	//while($myrow=$mysql->fetchArray($result))
+	foreach($result as $key=>$myrow)
 	{
 		$CONTACT[$myrow["RECEIVER"]][]=$myrow["ID"];
 		$PROFILEID[$myrow["RECEIVER"]]=$myrow["RECEIVER"];
 	}
-
-	$sql="select ID,SENDER from newjs.DELETED_MESSAGE_LOG where RECEIVER='$profileid'";
-	$result=$mysql->ExecuteQuery($sql,$myDb) or die($sql);
-	while($myrow=$mysql->fetchArray($result))
+	
+	$res=$dbDeletedMessageLogObj->getSenderIdMessageLog($profileid,'RECEIVER');
+//	$sql="select ID,SENDER from newjs.DELETED_MESSAGE_LOG where RECEIVER='$profileid'";
+//	$result=$mysql->ExecuteQuery($sql,$myDb) or die($sql);
+	//while($myrow=$mysql->fetchArray($result))
+	foreach($res as $key=>$myrow)
 	{
 		$CONTACT[$myrow["SENDER"]][]=$myrow["ID"];
 	        $PROFILEID[$myrow["SENDER"]]=$myrow["SENDER"];
@@ -154,6 +163,15 @@ if(is_array($CONTACT))
 }
 
 //Getting the PROFILEID of the user's whoes PROFILEID are not deleted
+$messageShardCount=0;
+$dbMyMessageLog=new NEWJS_MESSAGE_LOG($myProfileIdShard);
+$dbMyDeletedMessageLogObj=new NEWJS_DELETED_MESSAGE_LOG($myProfileIdShard);
+$dbOtherMessageLogObj1=new NEWJS_MESSAGE_LOG("shard1_master");
+$dbOtherMessageLogObj2=new NEWJS_MESSAGE_LOG("shard2_master");
+$dbOtherMessageLogObj3=new NEWJS_MESSAGE_LOG("shard3_master");
+$dbOtherDeletedMessageLogObj1=new NEWJS_DELETED_MESSAGE_LOG("shard1_master");
+$dbOtherDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG("shard2_master");
+$dbOtherDeletedMessageLogObj3=new NEWJS_DELETED_MESSAGE_LOG("shard3_master");
 
 $sql_jp = "SELECT PROFILEID FROM newjs.JPROFILE WHERE PROFILEID IN('$profilestr') and ACTIVATED<>'D'";
 $res_jp = mysql_query_decide($sql_jp) or die($sql_jp.mysql_error_js());
@@ -164,28 +182,48 @@ while($row_jp = mysql_fetch_array($res_jp))
 			foreach($CONTACT[$row_jp['PROFILEID']] as $key=>$val)
 			{
 				$contactid=$val;
-
-				//inserting the messages back to message_log from delete_message_log table
-				$sql="insert ignore into newjs.MESSAGE_LOG select * from newjs.DELETED_MESSAGE_LOG where ID='$contactid'";
-				//Query to run on both sharded servers
-				$myDbothername=getProfileDatabaseConnectionName($row_jp['PROFILEID'],'',$mysql);
-				$myDbother=$myDbarr[$myDbothername];
-				$myDb=$myDbarr[$myDbname];
-
-				$res=$mysql->ExecuteQuery($sql,$myDbother) or die(mysql_error_js());
-				if($res)
-				{       
-					$sql="delete from newjs.DELETED_MESSAGE_LOG where ID='$contactid'";
-					$mysql->ExecuteQuery($sql,$myDbother) or die(mysql_error_js());
-				}
-				if($myDbothername!=$myDbname)
+				$messageShardCount = ($row_jp['PROFILEID']%3) + 1;
+				if($messageShardCount==1)
 				{
-					$sql="insert ignore into newjs.MESSAGE_LOG select * from newjs.DELETED_MESSAGE_LOG where ID='$contactid'";
-				        $res=$mysql->ExecuteQuery($sql,$myDb) or die(mysql_error_js());
-                			if($res)
+					$dbOtherMessageLogObj=$dbOtherMessageLogObj1;
+					$dbOtherDeletedMessageLogObj=$dbOtherDeletedMessageLogObj1;
+				}
+				if($messageShardCount==2)
+				{
+					$dbOtherMessageLogObj=$dbOtherMessageLogObj2;
+					$dbOtherDeletedMessageLogObj=$dbOtherDeletedMessageLogObj2;
+				}
+				if($messageShardCount==3)
+				{
+					$dbOtherMessageLogObj=$dbOtherMessageLogObj3;
+					$dbOtherDeletedMessageLogObj=$dbOtherDeletedMessageLogObj3;
+				}
+				$otherProfileIdShard=JsDbSharding::getShardNo($row_jp['PROFILEID']);
+				//inserting the messages back to message_log from delete_message_log table
+				$res=$dbOtherMessageLogObj->insertMessageLogFromDeletedLogContact($contactid);
+				//$sql="insert ignore into newjs.MESSAGE_LOG select * from newjs.DELETED_MESSAGE_LOG where ID='$contactid'";
+				//Query to run on both sharded servers
+				//$myDbothername=getProfileDatabaseConnectionName($row_jp['PROFILEID'],'',$mysql);
+				//$myDbother=$myDbarr[$myDbothername];
+				//$myDb=$myDbarr[$myDbname];
+
+				//$res=$mysql->ExecuteQuery($sql,$myDbother) or die(mysql_error_js());
+				if($res)
+				{    
+					   $dbOtherDeletedMessageLogObj->deleteMessageLogById($contactid);
+				//	$sql="delete from newjs.DELETED_MESSAGE_LOG where ID='$contactid'";
+				//	$mysql->ExecuteQuery($sql,$myDbother) or die(mysql_error_js());
+				}
+				if($myProfileIdShard!=$otherProfileIdShard)
+				{
+					$response=$dbMyMessageLog->insertMessageLogFromDeletedLogContact($contactid);
+					//$sql="insert ignore into newjs.MESSAGE_LOG select * from newjs.DELETED_MESSAGE_LOG where ID='$contactid'";
+				       // $res=$mysql->ExecuteQuery($sql,$myDb) or die(mysql_error_js());
+                			if($response)
 	                		{	
-        	                		$sql="delete from newjs.DELETED_MESSAGE_LOG where ID='$contactid'";
-						$mysql->ExecuteQuery($sql,$myDb) or die(mysql_error_js());
+								$dbMyDeletedMessageLogObj->deleteMessageLogById($contactid);
+        	                		//$sql="delete from newjs.DELETED_MESSAGE_LOG where ID='$contactid'";
+						//$mysql->ExecuteQuery($sql,$myDb) or die(mysql_error_js());
         			    	}
 				}
 			}

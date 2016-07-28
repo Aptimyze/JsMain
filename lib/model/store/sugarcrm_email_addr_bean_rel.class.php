@@ -11,7 +11,6 @@ class sugarcrm_email_addr_bean_rel extends TABLE
     	try{
 
 			$sql = "SELECT email_address_id FROM sugarcrm.email_addr_bean_rel where bean_id=:PROFILEID";
-			$this->db = connect_slave();	
 		    $prep = $this->db->prepare($sql);
 		    $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
 		    $prep->execute();

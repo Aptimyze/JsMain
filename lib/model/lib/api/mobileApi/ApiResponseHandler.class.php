@@ -11,6 +11,7 @@ class ApiResponseHandler
 	private static $apiResponseHandlerObj = null;
 	private $authChecksum;
 	private $hamburgerDetails = null;
+	private $imageCopyServer = null;
 	private $phoneDetails = null;
 
 	//Constructor
@@ -35,6 +36,11 @@ class ApiResponseHandler
 	public function getUpgradeDetails(){return $this->upgradeDetails;}
 	public function setPhoneDetails($phoneDetails){$this->phoneDetails = $phoneDetails;}
 	public function getPhoneDetails(){return $this->phoneDetails;}
+	public function getImageCopyServer(){return $this->imageCopyServer;}
+	public function setImageCopyServer($pid)
+	{
+		$this->imageCopyServer = IMAGE_SERVER_ENUM::getImageServerEnum($pid);
+	}
 	public function setHttpArray($httpArray)
 	{
 		if(is_array($httpArray))
@@ -97,6 +103,7 @@ class ApiResponseHandler
 		$output["responseMessage"] = $this->responseMessage;
 		$output["AUTHCHECKSUM"]=$this->authChecksum;
 		$output["hamburgerDetails"]=$this->hamburgerDetails;
+		$output["imageCopyServer"]=$this->imageCopyServer;
 		if(isset($this->upgradeDetails)){
 			$output["FORCEUPGRADE"]=$this->upgradeDetails[FORCEUPGRADE];
 			if(isset($this->upgradeDetails[forceupgrade_message]))

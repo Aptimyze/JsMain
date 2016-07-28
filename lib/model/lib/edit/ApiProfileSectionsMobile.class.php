@@ -253,12 +253,15 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		$eduArr[CollegeDetails][singleKey]=0;
 		$eduArr[CollegeDetails][OnClick][]=$this->getApiFormatArray("EDU_LEVEL_NEW","Highest Degree",$this->profile->getDecoratedEducation(),$this->profile->getEDU_LEVEL_NEW(),$this->getApiScreeningField("EDU_LEVEL_NEW"),$this->dropdown,"","","updateEducation");
 		$isPG=FieldMap::getFieldLabel("degree_pg",$this->profile->getEDU_LEVEL_NEW())?1:0;
+                $showPg = 0;
+                if($this->profile->getEDU_LEVEL_NEW() == 21 || $this->profile->getEDU_LEVEL_NEW() == 42)
+                   $showPg = 1;
 		//highest degree should in a pg degree
 		//if(array_key_exists($this->profile->getEDU_LEVEL_NEW(),FieldMap::getFieldLabel("degree_pg","",1)))
 		//{
 			//if(!$isPG)
 			//$education->PG_DEGREE="N_B";
-			$eduArr[CollegeDetails][OnClick][]=$this->getApiFormatArray("DEGREE_PG","PG Degree" , $education->PG_DEGREE,$educationValues[PG_DEGREE],$this->getApiScreeningField("DEGREE_PG"),$this->dropdown,'','','',!$isPG);
+			$eduArr[CollegeDetails][OnClick][]=$this->getApiFormatArray("DEGREE_PG","PG Degree" , $education->PG_DEGREE,$educationValues[PG_DEGREE],$this->getApiScreeningField("DEGREE_PG"),$this->dropdown,'','','',!$showPg);
 			//if(!$isPG)
 			//$education->PG_COLLEGE="N_B";
 			$eduArr[CollegeDetails][OnClick][]=$this->getApiFormatArray("PG_COLLEGE","PG College" , $education->PG_COLLEGE,"",$this->getApiScreeningField("PG_COLLEGE"),$this->text,'','','',!$isPG);
