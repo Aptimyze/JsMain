@@ -752,6 +752,7 @@ JsChat.prototype = {
                     }, 500);
                     //fire send chat query and return unique id
                     setTimeout(function () {
+                         sendTypingState(selfJID, jid, "paused");
                         if (_this.onSendingMessage && typeof (_this.onSendingMessage) == "function") {
                             //that._chatLoggerPlugin("in plugin send message");
                             //that._chatLoggerPlugin(text);
