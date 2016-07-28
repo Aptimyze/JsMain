@@ -4,7 +4,7 @@
 include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 	//$master=connect_db();
 	$slave = connect_slave();
-	$time   =       date("Y-m-d H:i:s",mktime(date("H")-5,date("i"),date("s"),date("m"),date("d"),date("Y")));
+	$time   =       date("Y-m-d H:i:s",mktime(date("H")-5	,date("i"),date("s"),date("m"),date("d"),date("Y")));
         $verificationWays = array('OPS','KNW','IVR','SMS','OTP');
 	$res = checkPhoneVerifiedWithMsg($time,$slave);print_r($res);
 	
@@ -50,7 +50,7 @@ include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 			while($row = mysql_fetch_array($res)){
 				$ver[$row['CHANNEL']][$row['ISD']] = $row['COUNT'];
 			}
-			if(count($ver)<4)
+			if(count($ver))
 			{
 				$verificationChannel = array('I','A','P','MS');
 				foreach($verificationChannel as $k=>$v)
@@ -82,5 +82,7 @@ include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 				}
 				return  $errorStr;
 			}
+			else
+				return "OTP NOT WORKING";
         }
 ?>
