@@ -185,11 +185,11 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
         }
 
 
-        public function fetchConfirmedDuplicates()
+        public function fetchConfirmedDuplicates($limit,$offset)
         {
         try {
 
-            $sql = "SELECT PROFILE1, PROFILE2 where IS_DUPLICATE='YES'";
+            $sql = "SELECT PROFILE1, PROFILE2 from duplicates.DUPLICATE_PROFILE_LOG where IS_DUPLICATE='YES' LIMIT $limit OFFSET $offset";
             
             $prep = $this->db->prepare($sql);
             
@@ -200,12 +200,13 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
                                 $finalR[]=$result;
                         }
                     
-            return $finalR; 
+            return $finalR;
+            } 
         catch (Exception $e) 
                 {
                 throw new jsException($e);
                 }
-        }
+        
 }
 }
 ?>

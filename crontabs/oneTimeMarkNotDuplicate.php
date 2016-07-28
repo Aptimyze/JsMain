@@ -1,30 +1,13 @@
 <?php 
+
 $curFilePath = dirname(__FILE__)."/"; 
 include_once("/usr/local/scripts/DocRoot.php");
-
 ini_set('max_execution_time','0');
 ini_set('memory_limit',-1);
 chdir(dirname(__FILE__));
-include("../config.php");
-include("../connect.inc");
 
-include_once($_SERVER['DOCUMENT_ROOT']."/classes/globalVariables.Class.php");
-include_once($_SERVER['DOCUMENT_ROOT']."/classes/Mysql.class.php");
-include_once($_SERVER['DOCUMENT_ROOT']."/classes/Memcache.class.php");
-include_once(JsConstants::$docRoot."/commonFiles/RevampJsDbFunctions.php");
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
-include_once($_SERVER['DOCUMENT_ROOT']."/profile/connect_functions.inc");
-
-
-$mysqlObj=new Mysql;
-
-$db=connect_db();
-mysql_query("set session wait_timeout=1000",$db);
 	
-			
-
-			$profile1=new Profile();
-			$profile2=new Profile();
 
 			$rawDuplicateObj= new RawDuplicate();
 		  	$rawDuplicateObj->setReason(REASON::NONE); 
@@ -33,48 +16,97 @@ mysql_query("set session wait_timeout=1000",$db);
 	  		$rawDuplicateObj->setScreenAction(SCREEN_ACTION::NONE);
 	  		$rawDuplicateObj->addExtension('IDENTIFIED_ON',date('Y-m-d H:i:s'));
 	  		$rawDuplicateObj->setComments("None");
-		  	$arr=(new DUPLICATE_PROFILE_LOG())->fetchConfirmedDuplicates();
+
+
+	  	for($i=0;;$i+=1000)
+	 {	
+
+
+	 		unset($valueArray);
+	 		unset($arr);
+		  	unset($jprofileArray);
+		  	unset($profileArray);
+
+
+		  	$arr=(new DUPLICATE_PROFILE_LOG())->fetchConfirmedDuplicates(1000,$i);
+		  	if(!$arr) break;
+		  	$valueArray['PROFILEID']="";
+		  	foreach ($arr as $key => $value) {
+		  		# code...
+		  		$valueArray['PROFILEID'].=($value['PROFILE1'].",".$value['PROFILE1'].",");
+		  	}
+
+		  	$valueArray['PROFILEID']=substr($valueArray['PROFILEID'],0, -1);
+
+		  	$jprofileArray=JPROFILE::getInstance()->getArray($valueArray,"",'',"PROFILEID,ACTIVATED,GENDER,ENTRY_DT");
+
+		  	foreach ($jprofileArray as $key => $value) 
+		  		{
+
+		  			$profileArray[$value['PROFILEID']]=$value;
+
+		  		}
 	foreach ($arr as $key => $value) {
+
 		# code...
-		  $profile1->getDetail($arr['PROFILE1'],'PROFILEID','PROFILEID,GENDER,ACTIVATED,ENTRY_DT');
-		  $profile2->getDetail($arr['PROFILE2'],'PROFILEID','PROFILEID,GENDER,ACTIVATED,ENTRY_DT');
-		  if(($profile1->getGENDER() != $profile2->getGENDER()) && ($profile1->getACTIVATED()=='D' || $profile2->getACTIVATED()=='D')  )
+			
+
+			unset($timeStamp1);	
+			unset($timeStamp2);
+
+			$timeStamp1=JSstrToTime($profileArray[$value['PROFILE1']]['ENTRY_DT']);
+			$timeStamp2=JSstrToTime($profileArray[$value['PROFILE2']]['ENTRY_DT']);
+
+			if($timeStamp1 < $timeStamp2)
+			{	
+				$profile1=$value['PROFILE1'];
+				$profile2=$value['PROFILE2'];
+			}
+			else 
+			{
+				$profile2=$value['PROFILE1'];
+				$profile1=$value['PROFILE2'];
+			
+			}
+
+
+		  if(($profileArray[$profile2]['GENDER'] != $profileArray[$profile1]['GENDER']) && ($profileArray[$profile2]['ACTIVATED']=='D' || $profileArray[$profile1]['ACTIVATED']=='D')  )
 		  {
 
-		  	$rawDuplicateObj->setProfile1($profile1->getPROFILEID()); 			
-		  	$rawDuplicateObj->setProfile2($profile2->getPROFILEID()); 			
+		  	$rawDuplicateObj->setProfile1($profileArray[$profile1]['PROFILEID']); 			
+		  	$rawDuplicateObj->setProfile2($profileArray[$profile2]['PROFILEID']); 			
 			$ProbableRes=new PROBABLE_DUPLICATES();
 			$ProbableRes->removeProbable($rawDuplicateObj);
 			$ProbableRes->unsetPriority($rawDuplicateObj);
 			DuplicateHandler::DuplicateProfilelog($rawDuplicateObj);
 			DuplicateHandler::MarkNotDuplicate($rawDuplicateObj);
 
-			$dupArr[$profile1->getPROFILEID()]= $dupArr[$profile1->getPROFILEID()]!='N' ? 'Y' : 'N';
-			$dupArr[$profile2->getPROFILEID()]= $dupArr[$profile2->getPROFILEID()]!='N' ? 'Y' : 'N';
+			$dupArr[$profile2]= $dupArr[$profile2]!='N' ? 'Y' : 'N';
 
 
 		}	
 		else {
-			$timeStamp1=JSstrToTime($profile1->getENTRY_DT());
-			$timeStamp2=JSstrToTime($profile2->getENTRY_DT());
+
 			
-			if($timeStamp1 > $timeStamp2)
-			{
-				$dupArr[$profile1->getPROFILEID()]= 'N';
-			}
-			else
-				 $dupArr[$profile2->getPROFILEID()]='N';
+				 $dupArr[$profile2]='N';
+			
+
 		}
 
-		$notDuplicateObj=new DUPLICATES_PROFILES();
+	}
+
+}
+
+			$notDuplicateObj=new DUPLICATES_PROFILES();
+			$IntlObj =  new INCENTIVE_NEGATIVE_TREATMENT_LIST;
+
 		foreach ($dupArr as $key => $value) {
 			# code...
 	  		if($value=='Y')
-	  		$notDuplicateObj->removeProfileAsDuplicate($key);
-
-		}
-
-
+	  		{
+	  			$notDuplicateObj->removeProfileAsDuplicate($key);
+  				$IntlObj->deleteRecords($key);
+	  		}
 
 
 		}
