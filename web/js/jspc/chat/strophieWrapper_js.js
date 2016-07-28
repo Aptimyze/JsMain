@@ -16,7 +16,7 @@ var strophieWrapper = {
     },
     rosterGroups: chatConfig.Params.PC.rosterGroups,
     currentConnStatus: null,
-    loggingEnabledStrophe: true,
+    loggingEnabledStrophe: false,
     stropheLoggerPC: function (msgOrObj) {
         if (strophieWrapper.loggingEnabledStrophe) {
             if (typeof (window.console) != 'undefined') {
@@ -272,8 +272,9 @@ var strophieWrapper = {
     },
     //executed after roster has been fetched
     onRosterReceived: function (iq) {
-        strophieWrapper.stropheLoggerPC("in onRosterReceived");
+        console.log("in onRosterReceived");
         strophieWrapper.stropheLoggerPC(iq);
+        console.log(iq);
         $(iq).find("item").each(function () {
             var subscription = $(this).attr("subscription"),
                 jid = $(this).attr("jid"),

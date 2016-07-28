@@ -348,12 +348,16 @@ JsChat.prototype = {
                 var runID = data[key]["rosterDetails"]["jid"],
                     res = '',
                     status = data[key]["rosterDetails"]["chat_status"];
-                this._chatLoggerPlugin("addlisting for " + runID + "--" + data[key]["rosterDetails"]["chat_status"]);
+                console.log("addlisting for " + runID + "--" + data[key]["rosterDetails"]["chat_status"]);
                 var fullJID = runID;
                 res = runID.split("@");
                 runID = res[0];
                 jidStr = jidStr + runID + ",";
                 statusArr[runID] = status;
+                if(fullJID == "6211752@localhost")
+                {
+                    console.log("ankita678");
+                }
                 if (typeof data[key]["rosterDetails"]["groups"] != "undefined" && data[key]["rosterDetails"]["groups"].length > 0) {
                     var that = this;
                     $.each(data[key]["rosterDetails"]["groups"], function (index, val) {
@@ -968,7 +972,7 @@ JsChat.prototype = {
                             curElem._chatLoggerPlugin($(this));
                             $(this).html(response.responseMessage);
                         } else if (response.buttondetails && response.buttondetails.button) {
-                            if (data.actiondetails.errmsglabel) {
+                            if (response.actiondetails.errmsglabel) {
                                 $(this).html("error");
                             } else {
                                 $(this).find("#sentDiv").removeClass("disp-none");
@@ -1011,7 +1015,7 @@ JsChat.prototype = {
                             $(this).html(response.responseMessage);
                             $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt,#chatBoxErr").remove();
                         } else if (response.buttondetails && response.buttondetails.button) {
-                            if (data.actiondetails.errmsglabel) {
+                            if (response.actiondetails.errmsglabel) {
                                 $(this).html("error");
                                 $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
                             } else {
@@ -1050,7 +1054,7 @@ JsChat.prototype = {
                             $(this).html(response.responseMessage);
                             $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt,#chatBoxErr").remove();
                         } else if (response.buttondetails && response.buttondetails.button) {
-                            if (data.actiondetails.errmsglabel) {
+                            if (response.actiondetails.errmsglabel) {
                                 $(this).html("error");
                                 $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt").remove();
                             } else {
