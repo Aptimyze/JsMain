@@ -8,10 +8,6 @@ class MIS_OTP_LOG extends TABLE{
 	
 
 public function insertEntry($id,$phoneNum,$isd,$channel){
-               
-                if(!$id||!$phoneType||!$phoneNum||!$isd || !$channel)
-                        throw new jsException("","one or more of the arguements IS BLANK IN insert() OF MIS_OTP_LOG.class.php");
-
                 try
                 {
 
@@ -27,11 +23,8 @@ public function insertEntry($id,$phoneNum,$isd,$channel){
                 }
                 catch(PDOException $e)
                 {
-					
 					jsCacheWrapperException::logThis($e);
 					return true;
-                        /*** echo the sql statement and error message ***/
-                        //throw new jsException($e);
                 }
     }
 
