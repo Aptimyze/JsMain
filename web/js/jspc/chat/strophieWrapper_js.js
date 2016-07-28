@@ -595,31 +595,4 @@ var strophieWrapper = {
 		        }
 		    }
 		}
-    addRosterItem: function (rosterParams) {
-        if (typeof rosterParams != "undefined") {
-            var groups = [];
-            groups.push(rosterParams["groupid"]);
-            if (typeof groups != "undefined" && strophieWrapper.checkForGroups(groups) == true) {
-                var user_id = rosterParams["jid"].split("@")[0];
-                if (typeof strophieWrapper.Roster[user_id] != "undefined") {
-                    var iq = $iq({
-                        type: 'set',
-                        id: strophieWrapper.getUniqueId('roster')
-                    }).c('query', {
-                        xmlns: Strophe.NS.ROSTER
-                    }).c('item', {
-                        jid: rosterParams["jid"],
-                        name: rosterParams["nick"],
-                        subscription: rosterParams["subscription"]
-                    });
-                    iq.c('group').t(rosterParams["groupid"]).up();
-                    strophieWrapper.connectionObj.sendIQ(iq, function (status) {
-                        stropheLoggerPC("roster adding stanza: " + jid);
-                    });
-                } else {
-                    stropheLoggerPC("user cannot be addeded in roster");
-                }
-            }
-        }
-    }
 }
