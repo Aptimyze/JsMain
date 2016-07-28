@@ -6,7 +6,7 @@ var listingInputData = [],
     objJsChat, pass, username;
 var pluginId = '#chatOpenPanel',
     device = 'PC';
-var loggingEnabledPC = true;
+var loggingEnabledPC = false;
 
 function chatLoggerPC(msgOrObj) {
     if (loggingEnabledPC) {
@@ -115,7 +115,7 @@ function initiateChatConnection() {
     else if(readSiteCookie("CHATUSERNAME")=="VWZ4557")
         username = 'a9@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
-        username = 'a8@localhost';
+        username = 'a2@localhost';
     else if(readSiteCookie("CHATUSERNAME") == "ZZRS3292")
         username = 'a13@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZVV2929")
@@ -530,7 +530,7 @@ function contactActionCall(contactParams) {
             success: function (data) {
                 response = data;
                 chatLoggerPC(response);
-                if (response["statusCode"] == "0") {
+                if(response["responseStatusCode"] == "0"){
                     updateRosterOnChatContactActions({
                         "receiverJID": receiverJID,
                         "nickName": nickName,
@@ -694,6 +694,11 @@ $(document).ready(function () {
                 var receiverJID = $("#" + params.id).attr('data-jid');
                 var nickName = $("#" + params.id).attr('data-nick');
                 checkSum = "802d65a19583249de2037f9a05b2e424i6341959";
+                var trackingParamsArr = paramsData.split("&"),trackingParams={};
+                $.each(trackingParamsArr,function(key,val){
+                    var v = val.split("=");
+                    trackingParams[v[0]] = v[1];
+                });
                 idBeforeSplit = params.id.split('_');
                 idAfterSplit = idBeforeSplit[0];
                 action = idBeforeSplit[1];
@@ -701,7 +706,7 @@ $(document).ready(function () {
                     "receiverJID": receiverJID,
                     "action": action,
                     "checkSum": checkSum,
-                    "trackingParams": paramsData,
+                    "trackingParams": trackingParams,
                     "nickName": nickName
                 });
                 if (response != false) {

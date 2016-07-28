@@ -31,7 +31,7 @@ JsChat.prototype = {
     _listingNodesLimit: {},
     _groupBasedChatBox: {},
     _contactStatusMapping: {},
-    _loggingEnabledPlugin: true,
+    _loggingEnabledPlugin: false,
     _chatLoggerPlugin: function (msgOrObj) {
         if (this._loggingEnabledPlugin) {
             if (typeof (window.console) != 'undefined') {
@@ -348,12 +348,16 @@ JsChat.prototype = {
                 var runID = data[key]["rosterDetails"]["jid"],
                     res = '',
                     status = data[key]["rosterDetails"]["chat_status"];
-                this._chatLoggerPlugin("addlisting for " + runID + "--" + data[key]["rosterDetails"]["chat_status"]);
+                console.log("addlisting for " + runID + "--" + data[key]["rosterDetails"]["chat_status"]);
                 var fullJID = runID;
                 res = runID.split("@");
                 runID = res[0];
                 jidStr = jidStr + runID + ",";
                 statusArr[runID] = status;
+                if(fullJID == "6211752@localhost")
+                {
+                    console.log("ankita678");
+                }
                 if (typeof data[key]["rosterDetails"]["groups"] != "undefined" && data[key]["rosterDetails"]["groups"].length > 0) {
                     var that = this;
                     $.each(data[key]["rosterDetails"]["groups"], function (index, val) {
@@ -632,8 +636,12 @@ JsChat.prototype = {
         var curElem = this,
             enableClose, groupId = $('chat-box[user-id="' + userId + '"]').attr("group-id");
         var user_name = $(".chatlist li[id='" + userId + "_" + groupId + "'] div").html();
+        var nick = user_name;
+        var profileChecksum = $(".chatlist li[id='" + userId + "_" + groupId + "']").attr("data-checks");
+        if(profileChecksum){
+            nick = nick + "|"+profileChecksum;
+        }
         $(elem).off("click").on("click", function () {
-            var profileChecksum = $(".chatlist li[id='" + userId + "_" + groupId + "']").attr("data-checks");
             if (curElem.onChatBoxContactButtonsClick && typeof curElem.onChatBoxContactButtonsClick == 'function') {
                 var response = curElem.onChatBoxContactButtonsClick({
                     "buttonType": "BLOCK",
@@ -643,8 +651,8 @@ JsChat.prototype = {
                     "extraParams": {
                         "ignore": 1
                     },
-                    "receiverJID": $('chat-box[user-id="' + userId + '"]').attr("data-jid"),
-                    "nick": user_name + "|" + profileChecksum
+                    "receiverJID":$('chat-box[user-id="' + userId + '"]').attr("data-jid"),
+                    "nick":nick
                 });
                 if (response != false) {
                     if (response.responseMessage == "Successful") {
@@ -660,7 +668,8 @@ JsChat.prototype = {
                             }
                         }, 5000);
                         $('chat-box[user-id="' + userId + '"] #undoBlock').off("click").on("click", function () {
-                            var profileChecksum = $(".chatlist li[id*='" + userId + "']").attr("data-checks");
+                            
+                            //var profileChecksum = $(".chatlist li[id*='" + userId + "']").attr("data-checks");
                             if (curElem.onChatBoxContactButtonsClick && typeof curElem.onChatBoxContactButtonsClick == 'function') {
                                 var response = curElem.onChatBoxContactButtonsClick({
                                     "buttonType": "UNBLOCK",
@@ -670,8 +679,8 @@ JsChat.prototype = {
                                     "extraParams": {
                                         "ignore": 0
                                     },
-                                    "receiverJID": $('chat-box[user-id="' + userId + '"]').attr("data-jid"),
-                                    "nick": user_name + "|" + profileChecksum
+                                    "receiverJID":$('chat-box[user-id="' + userId + '"]').attr("data-jid"),
+                                    "nick":nick
                                 });
                                 if (response != false) {
                                     if (response.responseMessage == "Successful") {
@@ -938,6 +947,10 @@ JsChat.prototype = {
             checkSum = $("chat-box[user-id='" + userId + "'").attr("data-checks"),
             groupId = $("chat-box[user-id='" + userId + "'").attr("group-id"),
             user_name = $(".chatlist li[id='" + userId + "_" + groupId + "'] div").html();
+        var nick;
+        if(checkSum){
+            nick = nick + "|"+checkSum;
+        }
         this._chatLoggerPlugin(curElem);
         switch (chatBoxType) {
         case curElem._contactStatusMapping["pg_interest_pending"]["key"]:
@@ -951,15 +964,15 @@ JsChat.prototype = {
                         "checkSum": checkSum,
                         "trackingParams": chatConfig.Params["trackingParams"]["INITIATE"],
                         "buttonType": "INITIATE",
-                        "receiverJID": $('chat-box[user-id="' + userId + '"]').attr("data-jid"),
-                        "nick": user_name + "|" + checkSum
+                        "receiverJID":$('chat-box[user-id="' + userId + '"]').attr("data-jid"),
+                        "nick":nick
                     });
                     if (response != false) {
                         if (response.responseMessage != "Successful") {
                             curElem._chatLoggerPlugin($(this));
                             $(this).html(response.responseMessage);
                         } else if (response.buttondetails && response.buttondetails.button) {
-                            if (data.actiondetails.errmsglabel) {
+                            if (response.actiondetails.errmsglabel) {
                                 $(this).html("error");
                             } else {
                                 $(this).find("#sentDiv").removeClass("disp-none");
@@ -993,8 +1006,8 @@ JsChat.prototype = {
                         "checkSum": checkSum,
                         "trackingParams": chatConfig.Params["trackingParams"]["ACCEPT"],
                         "buttonType": "ACCEPT",
-                        "receiverJID": $('chat-box[user-id="' + userId + '"]').attr("data-jid"),
-                        "nick": user_name + "|" + checkSum
+                        "receiverJID":$('chat-box[user-id="' + userId + '"]').attr("data-jid"),
+                        "nick":nick
                     });
                     if (response != false) {
                         if (response.responseMessage != "Successful") {
@@ -1002,7 +1015,7 @@ JsChat.prototype = {
                             $(this).html(response.responseMessage);
                             $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt,#chatBoxErr").remove();
                         } else if (response.buttondetails && response.buttondetails.button) {
-                            if (data.actiondetails.errmsglabel) {
+                            if (response.actiondetails.errmsglabel) {
                                 $(this).html("error");
                                 $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
                             } else {
@@ -1032,8 +1045,8 @@ JsChat.prototype = {
                         "checkSum": checkSum,
                         "trackingParams": chatConfig.Params["trackingParams"]["DECLINE"],
                         "buttonType": "DECLINE",
-                        "receiverJID": $('chat-box[user-id="' + userId + '"]').attr("data-jid"),
-                        "nick": user_name + "|" + checkSum
+                        "receiverJID":$('chat-box[user-id="' + userId + '"]').attr("data-jid"),
+                        "nick":nick
                     });
                     if (response != false) {
                         if (response.responseMessage != "Successful") {
@@ -1041,7 +1054,7 @@ JsChat.prototype = {
                             $(this).html(response.responseMessage);
                             $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt,#chatBoxErr").remove();
                         } else if (response.buttondetails && response.buttondetails.button) {
-                            if (data.actiondetails.errmsglabel) {
+                            if (response.actiondetails.errmsglabel) {
                                 $(this).html("error");
                                 $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt").remove();
                             } else {
@@ -1115,7 +1128,7 @@ JsChat.prototype = {
             heightPlus = false,
             bodyWidth = $("body").width();
         if ($(curElem._chatBottomPanelID).length == 0) {
-            $("body").append("<div id='chatBottomPanel' class='btmNegtaive pos_fix calhgt2 nz20 fontlig'></div>");
+            $("body").append("<div id='chatBottomPanel' class='btmNegtaive pos_fix calhgt2 fontlig'></div>");
         }
         var bottomPanelWidth = $(window).width() - $(curElem._parendID).width();
         $(curElem._chatBottomPanelID).css('width', bottomPanelWidth);
@@ -1182,7 +1195,7 @@ JsChat.prototype = {
             userId, status, response;
         chatBoxProto.attachedCallback = function () {
             this.innerHTML = '<div class="chatBoxBar fullwid hgt57 bg5 pos-rel fullwid"></div><div class="chatArea fullwid fullhgt"><div class="messageArea f13 bg13 fullhgt"><div class="chatMessage scrolla pos_abs fullwid" style="height: 250px;"><div class="spinner"></div></div></div><div class="chatInput brdrbtm_new fullwid btm0 pos-abs bg-white"><textarea cols="23" style="width: 220px;" id="txtArea"  class="inputText lh20 brdr-0 padall-10 colorGrey hgt18 fontlig" placeholder="Write message"></textarea></div></div>';
-            $(this).addClass("z1000 btm0 brd_new fr mr7 fullhgt wid240 pos-rel disp_ib");
+            $(this).addClass("z7 btm0 brd_new fr mr7 fullhgt wid240 pos-rel disp_ib");
             userId = $(this).attr("user-id");
             status = $(this).attr("status-user");
             elem._appendInnerHtml(userId, status);
@@ -1682,7 +1695,7 @@ JsChat.prototype = {
     //start:this function is that init forthe chat
     start: function () {
         var divElement = document.createElement("Div");
-        $(divElement).addClass('pos_fix chatbg chatpos1 nz20 js-openOutPanel').appendTo(this._mainID);
+        $(divElement).addClass('pos_fix chatbg chatpos1 z7 js-openOutPanel').appendTo(this._mainID);
         this._createPrototypeChatBox();
         if (this._checkWidth()) {} else {
             $('body').css('width', '80%');
