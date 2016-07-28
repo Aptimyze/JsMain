@@ -100,7 +100,7 @@ public static function logIfDuplicate($profileObj,$phoneNumVerified){
 if(!$profileObj || !$phoneNumVerified) return;
 $startDate=date('Y-m-d H:i:s',(strtotime ( '-90 days'  ) ));
 $endDate=date('Y-m-d H:i:s');
-$profileId=$profileObj->getPROFILEID();                
+$profileId=$profileObj->getPROFILEID();    
 if($phoneVerRow=(new PHONE_VERIFIED_LOG())->getLogForOtherNumberVerified($profileId,$phoneNumVerified,$startDate,$endDate))
 {
 	$profileObj2=new Profile();
