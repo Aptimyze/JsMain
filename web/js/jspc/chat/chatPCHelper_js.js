@@ -399,11 +399,21 @@ function getProfileImage() {
     }
     if (flag) {
         $.ajax({
-            url: chatConfig.Params[device].photoUrl + "?photoType=ProfilePic120Url",
+            url: chatConfig.Params.photoUrl + "?photoType=ProfilePic120Url",
             async: false,
             success: function (data) {
                 if (data.statusCode == "0") {
                     imageUrl = data.profiles[0].PHOTO.ProfilePic120Url;
+                    if(imageUrl == ""){
+                        if (loggedInJspcGender) {
+                            if (loggedInJspcGender == "F"){
+                                imageUrl = chatConfig.Params[device].noPhotoUrl["self120"]["F"];
+                            }
+                            else if (loggedInJspcGender == "M"){
+                                imageUrl = chatConfig.Params[device].noPhotoUrl["self120"]["M"];
+                            }
+                        }
+                    }
                     localStorage.setItem('userImg', JSON.stringify({
                         'img': imageUrl,
                         'user': loggedInJspcUser
@@ -785,16 +795,18 @@ $(document).ready(function () {
             chatLoggerPC(pCheckSum);
             jid = [];
             jid[0] = "'" + pCheckSum + "'";
-            url = "/api/v1/chat/fetchVCard";
+            url = "/api/v1/chat/getProfileData";
             $.ajax({
                 type: 'POST',
                 async: false,
                 data: {
                     jid: jid,
-                    username: username
+                    username: username,
+                    profilechecksum: pCheckSum
                 },
                 url: url,
                 success: function (data) {
+                    console.log("Nitishvcard");
                     chatLoggerPC(data);
                     objJsChat.updateVCard(data, pCheckSum, function () {
                         $('#' + username + '_hover').css({

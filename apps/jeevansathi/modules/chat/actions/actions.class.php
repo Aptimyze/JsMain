@@ -11,14 +11,14 @@
 class chatActions extends sfActions
 {
 	/**
-	* Executes authenticateChatSession action  - returns jid,sid and rid for chat session
-	*
-	* @param sfRequest $request A request object
-	*/
- 	public function executeAuthenticateChatSessionV1(sfWebRequest $request)
- 	{
+	 * Executes authenticateChatSession action  - returns jid,sid and rid for chat session
+	 *
+	 * @param sfRequest $request A request object
+	 */
+	public function executeAuthenticateChatSessionV1(sfWebRequest $request)
+	{
 		$xmppPrebind = new XmppPrebind('localhost', 'http://localhost:7070/http-bind/', 'converse', false, false);
-		$username = substr("a1@localhost", 0,2);
+		$username = substr("a1@localhost", 0, 2);
 		$xmppPrebind->connect($username, '123');
 		$xmppPrebind->auth();
 		$response = $xmppPrebind->getSessionInfo(); // array containing sid, rid and jid
@@ -28,247 +28,241 @@ class chatActions extends sfActions
 		$apiResponseHandlerObj->setResponseBody($response);
 		$apiResponseHandlerObj->generateResponse();
 		die;
- 	}
-    
-    public function executeChatUserAuthenticationV1(sfWebRequest $request)
-    {
-        $apiResponseHandlerObj = ApiResponseHandler::getInstance();
-        $loginData = $request->getAttribute("loginData");
-        if($loginData){
+	}
 
-            $username = $loginData['PROFILEID'];
+	public function executeChatUserAuthenticationV1(sfWebRequest $request)
+	{
+		$apiResponseHandlerObj = ApiResponseHandler::getInstance();
+		$loginData = $request->getAttribute("loginData");
+		if ($loginData) {
 
-		//$uname = $loginData['USERNAME'];
-	    $pass = EncryptPassword::generatePassword($username);
-            //$pass = EncryptPassword::generatePassword("test".$username);
-            //$pass = "test".$username;
+			$username = $loginData['PROFILEID'];
 
-            $url = JsConstants::$openfireConfig['HOST'].":".JsConstants::$openfireConfig['PORT']."/plugins/restapi/v1/users/".$username;
-            //$url = "http://localhost:9090/plugins/restapi/v1/users/".$username;
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 4);
-            curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+			//$uname = $loginData['USERNAME'];
+			$pass = EncryptPassword::generatePassword($username);
+			//$pass = EncryptPassword::generatePassword("test".$username);
+			//$pass = "test".$username;
 
-            $headers = array();
-            $headers[] = 'Authorization: '.JsConstants::$openfireRestAPIKey;
-            $headers[] = 'Accept: application/json';
+			$url = JsConstants::$openfireConfig['HOST'] . ":" . JsConstants::$openfireConfig['PORT'] . "/plugins/restapi/v1/users/" . $username;
+			//$url = "http://localhost:9090/plugins/restapi/v1/users/".$username;
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 4);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+			$headers = array();
+			$headers[] = 'Authorization: ' . JsConstants::$openfireRestAPIKey;
+			$headers[] = 'Accept: application/json';
 
-            $curlResult = curl_exec ($ch);
-            curl_close ($ch);
-            $result = json_decode($curlResult, true);
-            if($result['username']){
-                //User exists
-                $response['userStatus'] = "User exists";
-                $apiResponseHandlerObj->setHttpArray(ChatEnum::$userExists);
-            }
-            else{
-                //create user
-                $response['userStatus'] = "New user created";
-                $url = JsConstants::$openfireConfig['HOST'].":".JsConstants::$openfireConfig['PORT']."/plugins/restapi/v1/users/";
-                //$url = "http://localhost:9090/plugins/restapi/v1/users/";
-                $profileImporterObj = new Chat();
-                $profileImporterObj->addNewProfile($username);
-                $data = array("username" => $username, "password" => $pass);
-                $jsonData = json_encode($data);
-                
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $url);
-                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
-                curl_setopt($ch, CURLOPT_TIMEOUT, 4);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-                $headers = array();
-                $headers[] = 'Authorization: '.JsConstants::$openfireRestAPIKey;
-                $headers[] = 'Accept: application/json';
-                $headers[] = 'Content-Type: application/json';
+			$curlResult = curl_exec($ch);
+			curl_close($ch);
+			$result = json_decode($curlResult, true);
+			if ($result['username']) {
+				//User exists
+				$response['userStatus'] = "User exists";
+				$apiResponseHandlerObj->setHttpArray(ChatEnum::$userExists);
+			} else {
+				//create user
+				$response['userStatus'] = "New user created";
+				$url = JsConstants::$openfireConfig['HOST'] . ":" . JsConstants::$openfireConfig['PORT'] . "/plugins/restapi/v1/users/";
+				//$url = "http://localhost:9090/plugins/restapi/v1/users/";
+				$profileImporterObj = new Chat();
+				$profileImporterObj->addNewProfile($username);
+				$data = array("username" => $username, "password" => $pass);
+				$jsonData = json_encode($data);
 
-                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, $url);
+				curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
+				curl_setopt($ch, CURLOPT_TIMEOUT, 4);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
 
-                $curlResult = curl_exec ($ch);
-                
-                if(curl_getinfo($ch, CURLINFO_HTTP_CODE) == '201'){
-                    $response['userStatus'] = "New user created";
-                    $apiResponseHandlerObj->setHttpArray(ChatEnum::$newUserCreated);
-                }
-                elseif(curl_getinfo($ch, CURLINFO_HTTP_CODE) == '409'){
-                    $response['userStatus'] = "User Exists";
-                    $apiResponseHandlerObj->setHttpArray(ChatEnum::$userCreationError);
-                }
-                else{
-                    $result = json_decode($curlResult, true);
-                    $reponse['exception'] = $result['exception'];
-                    $apiResponseHandlerObj->setHttpArray(ChatEnum::$error);
-                }
-                curl_close ($ch);
-            }
-            //Encrypt Password
-            $hash = EncryptPassword::cryptoJsAesEncrypt("chat", $pass);
-            $response['hash'] = $hash;
-            //$response['hash'] = $pass;
-        }
-        else{
-            $response = "Logged Out Profile";
-            $apiResponseHandlerObj->setHttpArray(ChatEnum::$loggedOutProfile);
-        }
-        $apiResponseHandlerObj->setResponseBody($response);
-        $apiResponseHandlerObj->generateResponse();
-        die;
-    }
-    
-    public function executeFetchCredentialsV1(sfWebRequest $request)
-    {
-        $apiResponseHandlerObj = ApiResponseHandler::getInstance();
-        $loginData = $request->getAttribute("loginData");
-        if($loginData){
-            //$username = $loginData['USERNAME'];
-            //$jid = $username."@localhost";
-            $jid = $request->getParameter('jid'); //Will be commented later nitish
-            $response['jid'] = $jid;
-            $response['password'] = '123';
-            $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-        }
-        else{
-            $response = "Logged Out Profile";
-            $apiResponseHandlerObj->setHttpArray(ChatEnum::$loggedOutProfile);
-        }
-        $apiResponseHandlerObj->setResponseBody($response);
-        $apiResponseHandlerObj->generateResponse();
-        die;
-    }
-    
-    public function executeFetchVCardV1(sfwebrequest $request){
-        $apiResponseHandlerObj = ApiResponseHandler::getInstance();
-        $loginData = $request->getAttribute("loginData");
-        if($loginData){
-            $jid = $request->getParameter('jid');
-            if(is_array($jid)){
-                foreach($jid as $key => $val){
-                    $username.=$val.",";
-                }
-                $username = rtrim($username,",");
-                
-                $vcardDetailsObj = new chat_ofVcard();
-                $storeResult = $vcardDetailsObj->getVCardDetails($username);
-                unset($vcardDetailsObj);
-                
-                $chatObj = new Chat();
-                $result = $chatObj->convertXml($storeResult);
-                unset($chatObj);
-                $username = $request->getParameter('username');
-                $profile["$username"]["NAME"] = "Atul";
-                $profile["$username"]["EMAIL"] = "Atul@gmail.com";
-                $profile["$username"]["PHOTO"] = "http://mediacdn.jeevansathi.com/3418/10/68370525-1468221044.jpeg";
-                $profile["$username"]["AGE"] = "3";
-                $profile["$username"]["HEIGHT"] = "5 9";
-                $profile["$username"]["PROFFESION"] = "Doctor";
-                $profile["$username"]["SALARY"] = "Rs. 15 - 20lac";
-                $profile["$username"]["CITY"] = "New Delhi";
-                $profile["$username"]["COMMUNITY"] = "Brahmin";
-                $profile["$username"]["EDUCATION"] = "B.Tech";
-                $d1["action"] = "INITIATE";
-                $d1["label"] = "Send Interest";
-                $d1["iconid"] = null;
-                $d1["primary"] = "true";
-                $d1["secondary"] = "true";
-                $d1["params"] = "&stype=P17";
-                $d1["enable"] = true;
-                $d1["id"] = "INITIATE";
-                $buttons["buttons"][] = $d1;
-                
-                $profile["$username"]["buttonDetails"] = $buttons;
-                $response = array("vCard"=>$profile);
-                
-                $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-            }
-            else{
-                $apiResponseHandlerObj->setHttpArray(ChatEnum::$invalidFormat);
-            }
-        }
-        else{
-            $response = "Logged Out Profile";
-            $apiResponseHandlerObj->setHttpArray(ChatEnum::$loggedOutProfile);
-        }
-        $apiResponseHandlerObj->setResponseBody($response);
-        $apiResponseHandlerObj->generateResponse();
-        die;
-    }
+				$headers = array();
+				$headers[] = 'Authorization: ' . JsConstants::$openfireRestAPIKey;
+				$headers[] = 'Accept: application/json';
+				$headers[] = 'Content-Type: application/json';
+
+				curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+				$curlResult = curl_exec($ch);
+
+				if (curl_getinfo($ch, CURLINFO_HTTP_CODE) == '201') {
+					$response['userStatus'] = "New user created";
+					$apiResponseHandlerObj->setHttpArray(ChatEnum::$newUserCreated);
+				} elseif (curl_getinfo($ch, CURLINFO_HTTP_CODE) == '409') {
+					$response['userStatus'] = "User Exists";
+					$apiResponseHandlerObj->setHttpArray(ChatEnum::$userCreationError);
+				} else {
+					$result = json_decode($curlResult, true);
+					$reponse['exception'] = $result['exception'];
+					$apiResponseHandlerObj->setHttpArray(ChatEnum::$error);
+				}
+				curl_close($ch);
+			}
+			//Encrypt Password
+			$hash = EncryptPassword::cryptoJsAesEncrypt("chat", $pass);
+			$response['hash'] = $hash;
+			//$response['hash'] = $pass;
+		} else {
+			$response = "Logged Out Profile";
+			$apiResponseHandlerObj->setHttpArray(ChatEnum::$loggedOutProfile);
+		}
+		$apiResponseHandlerObj->setResponseBody($response);
+		$apiResponseHandlerObj->generateResponse();
+		die;
+	}
+
+	public function executeFetchCredentialsV1(sfWebRequest $request)
+	{
+		$apiResponseHandlerObj = ApiResponseHandler::getInstance();
+		$loginData = $request->getAttribute("loginData");
+		if ($loginData) {
+			//$username = $loginData['USERNAME'];
+			//$jid = $username."@localhost";
+			$jid = $request->getParameter('jid'); //Will be commented later nitish
+			$response['jid'] = $jid;
+			$response['password'] = '123';
+			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+		} else {
+			$response = "Logged Out Profile";
+			$apiResponseHandlerObj->setHttpArray(ChatEnum::$loggedOutProfile);
+		}
+		$apiResponseHandlerObj->setResponseBody($response);
+		$apiResponseHandlerObj->generateResponse();
+		die;
+	}
+
+	public function executeFetchVCardV1(sfwebrequest $request)
+	{
+		$apiResponseHandlerObj = ApiResponseHandler::getInstance();
+		$loginData = $request->getAttribute("loginData");
+		if ($loginData) {
+			$jid = $request->getParameter('jid');
+			if (is_array($jid)) {
+				foreach ($jid as $key => $val) {
+					$username .= $val . ",";
+				}
+				$username = rtrim($username, ",");
+
+				$vcardDetailsObj = new chat_ofVcard();
+				$storeResult = $vcardDetailsObj->getVCardDetails($username);
+				unset($vcardDetailsObj);
+
+				$chatObj = new Chat();
+				$result = $chatObj->convertXml($storeResult);
+				unset($chatObj);
+				$username = $request->getParameter('username');
+				$profile["$username"]["NAME"] = "Atul";
+				$profile["$username"]["EMAIL"] = "Atul@gmail.com";
+				$profile["$username"]["PHOTO"] = "http://mediacdn.jeevansathi.com/3418/10/68370525-1468221044.jpeg";
+				$profile["$username"]["AGE"] = "3";
+				$profile["$username"]["HEIGHT"] = "5 9";
+				$profile["$username"]["PROFFESION"] = "Doctor";
+				$profile["$username"]["SALARY"] = "Rs. 15 - 20lac";
+				$profile["$username"]["CITY"] = "New Delhi";
+				$profile["$username"]["COMMUNITY"] = "Brahmin";
+				$profile["$username"]["EDUCATION"] = "B.Tech";
+				$d1["action"] = "INITIATE";
+				$d1["label"] = "Send Interest";
+				$d1["iconid"] = null;
+				$d1["primary"] = "true";
+				$d1["secondary"] = "true";
+				$d1["params"] = "&stype=P17";
+				$d1["enable"] = true;
+				$d1["id"] = "INITIATE";
+				$buttons["buttons"][] = $d1;
+
+				$profile["$username"]["buttonDetails"] = $buttons;
+				$response = array("vCard" => $profile);
+
+				$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+			} else {
+				$apiResponseHandlerObj->setHttpArray(ChatEnum::$invalidFormat);
+			}
+		} else {
+			$response = "Logged Out Profile";
+			$apiResponseHandlerObj->setHttpArray(ChatEnum::$loggedOutProfile);
+		}
+		$apiResponseHandlerObj->setResponseBody($response);
+		$apiResponseHandlerObj->generateResponse();
+		die;
+	}
 
 
-    public function executeGetRosterDataV1(sfwebrequest $request){
-	    $profileid = $request->getParameter("profileid");
-	    $type = $request->getParameter("type");
-	    $limit = $request->getParameter("limit");
-	    $getRosterDataObj = new GetRosterData($profileid);
-	    $getData["profiles"] = $getRosterDataObj->getRosterDataByType($type,$limit);
-	    $apiResponseHandlerObj = ApiResponseHandler::getInstance();
-	    $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-	    
-$apiResponseHandlerObj->setResponseBody($getData);
-	    $apiResponseHandlerObj->generateResponse();
-	    die;
-    }
+	public function executeGetRosterDataV1(sfwebrequest $request)
+	{
+		$profileid = $request->getParameter("profileid");
+		$type = $request->getParameter("type");
+		$limit = $request->getParameter("limit");
+		$getRosterDataObj = new GetRosterData($profileid);
+		$getData["profiles"] = $getRosterDataObj->getRosterDataByType($type, $limit);
+		$apiResponseHandlerObj = ApiResponseHandler::getInstance();
+		$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 
-    public function executeGetProfileDataV1(sfwebrequest $request){
-        $apiResponseHandlerObj = ApiResponseHandler::getInstance();
-        $loginData = $request->getAttribute("loginData");
-        if($loginData){
+		$apiResponseHandlerObj->setResponseBody($getData);
+		$apiResponseHandlerObj->generateResponse();
+		die;
+	}
 
-		$profileid     = JsCommon::getProfileFromChecksum($request->getParameter("profilechecksum"));
-		//$profileid = $request->getParameter("profileid");
-		$profile = new Profile();
-		$profile->getDetail($profileid, "PROFILEID","*");
+	public function executeGetProfileDataV1(sfwebrequest $request)
+	{
+		$apiResponseHandlerObj = ApiResponseHandler::getInstance();
+		$loginData = $request->getAttribute("loginData");
+		if ($loginData) {
+
+			$profileid = JsCommon::getProfileFromChecksum($request->getParameter("profilechecksum"));
+			//$profileid = $request->getParameter("profileid");
+			$profile = new Profile();
+			$profile->getDetail($profileid, "PROFILEID", "*");
 
 
-                        //Photo logic
-                        $pidArr["PROFILEID"] =$profileid;
-                        $photoType = 'MainPicUrl';
-                        $profileObj=LoggedInProfile::getInstance('newjs_master',$loginData["PROFILEID"]);
-                        $multipleProfileObj = new ProfileArray();
-                        $profileDetails = $multipleProfileObj->getResultsBasedOnJprofileFields($pidArr);
-                        $multiplePictureObj = new PictureArray($profileDetails);
-                        $photosArr = $multiplePictureObj->getProfilePhoto();
+			//Photo logic
+			$pidArr["PROFILEID"] = $profileid;
+			$photoType = 'MainPicUrl';
+			$profileObj = LoggedInProfile::getInstance('newjs_master', $loginData["PROFILEID"]);
+			$multipleProfileObj = new ProfileArray();
+			$profileDetails = $multipleProfileObj->getResultsBasedOnJprofileFields($pidArr);
+			$multiplePictureObj = new PictureArray($profileDetails);
+			$photosArr = $multiplePictureObj->getProfilePhoto();
 			$photo = '';
 			$photoObj = $photosArr[$profileid];
-			if($photoObj)
-			{
-				eval('$temp =$photoObj->get'.$photoType.'();');
+			if ($photoObj) {
+				eval('$temp =$photoObj->get' . $photoType . '();');
 				$photo = $temp;
 				unset($temp);
 			}
-                        //Ends here
+			//Ends here
 
 
-		$response = array(
-                "jid"=>$profile->getPROFILEID(),
-				"username"=>$profile->getUSERNAME(),
-				"age"=>$profile->getAGE()." Years",
-				"height"=>$profile->getDecoratedHeight(),
-				"religion"=>$profile->getDecoratedReligion(),
-				"caste"=>$profile->getDecoratedCaste(),
-				"mtongue"=>$profile->getDecoratedCommunity(),
-				"education"=>$profile->getDecoratedEducation(),
-				"occupation"=>$profile->getDecoratedOccupation(),
-				"income"=>$profile->getDecoratedIncomeLevel(),
-				"city"=>$profile->getDecoratedCity(),
-				"photo"=>$photo
-				);
-            $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+			$response = array(
+				"jid" => $profile->getPROFILEID(),
+				"username" => $profile->getUSERNAME(),
+				"age" => $profile->getAGE() . " Years",
+				"height" => $profile->getDecoratedHeight(),
+				"religion" => $profile->getDecoratedReligion(),
+				"caste" => $profile->getDecoratedCaste(),
+				"mtongue" => $profile->getDecoratedCommunity(),
+				"education" => $profile->getDecoratedEducation(),
+				"occupation" => $profile->getDecoratedOccupation(),
+				"income" => $profile->getDecoratedIncomeLevel(),
+				"city" => $profile->getDecoratedCity(),
+				"photo" => $photo
+			);
+			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 
-        }
-        else{
-            $response = "Logged Out Profile";
-            $apiResponseHandlerObj->setHttpArray(ChatEnum::$loggedOutProfile);
-        }
-        $apiResponseHandlerObj->setResponseBody($response);
-        $apiResponseHandlerObj->generateResponse();
-        die;
+		} else {
+			$response = "Logged Out Profile";
+			$apiResponseHandlerObj->setHttpArray(ChatEnum::$loggedOutProfile);
+		}
+		$apiResponseHandlerObj->setResponseBody($response);
+		$apiResponseHandlerObj->generateResponse();
+		die;
 
-    }
+	}
 
 	public function executeGetDppDataV1(sfwebrequest $request)
 	{
@@ -279,47 +273,42 @@ $apiResponseHandlerObj->setResponseBody($getData);
 		$dontShowFilteredProfiles = $request->getParameter("dontShowFilteredProfiles");
 
 		/***/
-		if(!$photoType)
+		if (!$photoType)
 			$photoType = 'MainPicUrl';
-		if(!$dontShowFilteredProfiles)
+		if (!$dontShowFilteredProfiles)
 			$dontShowFilteredProfiles = 1;
-		if(!$limit)
+		if (!$limit)
 			$limit = 10;
-		if(!$currentPage)
+		if (!$currentPage)
 			$currentPage = 1;
 		$completeResponse = 1;
 		/***/
 
-		$profileObj = LoggedInProfile::getInstance('',$profileid);
-		$profileObj->getDetail('','','*');
+		$profileObj = LoggedInProfile::getInstance('', $profileid);
+		$profileObj->getDetail('', '', '*');
 		$partnerObj = new SearchCommonFunctions();
 
 
-		$obj = $partnerObj->getMyDppMatches(sort,$profileObj,$limit,$currentPage,$paramArr,$removeMatchAlerts,$dontShowFilteredProfiles,$twoWayMatches,$clustersToShow,$results_orAnd_cluster,$notInProfiles,$completeResponse);
+		$obj = $partnerObj->getMyDppMatches(sort, $profileObj, $limit, $currentPage, $paramArr, $removeMatchAlerts, $dontShowFilteredProfiles, $twoWayMatches, $clustersToShow, $results_orAnd_cluster, $notInProfiles, $completeResponse);
 		$arr = $obj->getResultsArr();
-		if($arr)
-		{
-			$pidArr["PROFILEID"] = implode(",",$obj->getSearchResultsPidArr());
-			$profileObj=LoggedInProfile::getInstance('newjs_master');
+		if ($arr) {
+			$pidArr["PROFILEID"] = implode(",", $obj->getSearchResultsPidArr());
+			$profileObj = LoggedInProfile::getInstance('newjs_master');
 			$multipleProfileObj = new ProfileArray();
 
 			$profileDetails = $multipleProfileObj->getResultsBasedOnJprofileFields($pidArr);
 			$multiplePictureObj = new PictureArray($profileDetails);
 			$photosArr = $multiplePictureObj->getProfilePhoto();
-			foreach($arr as $k=>$v)
-			{
+			foreach ($arr as $k => $v) {
 				$pid = $v["id"];
 				$cArr[$pid]["USERNAME"] = $v["USERNAME"];
 				$cArr[$pid]["PROFILECHECKSUM"] = jsAuthentication::jsEncryptProfilechecksum($pid);
 				$photoObj = $photosArr[$pid];
-				if($photoObj)
-				{
-					eval('$temp =$photoObj->get'.$photoType.'();');
+				if ($photoObj) {
+					eval('$temp =$photoObj->get' . $photoType . '();');
 					$cArr[$pid]["PHOTO"] = $temp;
 					unset($temp);
-				}
-				else
-				{
+				} else {
 					$cArr[$pid]["PHOTO"] = NULL;
 				}
 
@@ -332,43 +321,77 @@ $apiResponseHandlerObj->setResponseBody($getData);
 		$apiResponseHandlerObj->generateResponse();
 		die;
 	}
-    public function executeSendEOIV1(sfwebrequest $request){
-        $apiResponseHandlerObj = ApiResponseHandler::getInstance();
-        $loginData = $request->getAttribute("loginData");
-        if($loginData){
-		//Count from Nitesh
-		if($checkCount==3){
-			$response["message"] = "You can send more messages only of user replies";
-			$response["cansend"] = false;
+
+	public function executeSendEOIV1(sfwebrequest $request)
+	{
+		$apiResponseHandlerObj = ApiResponseHandler::getInstance();
+		$this->loginData = $request->getAttribute("loginData");
+		$this->loginProfile = LoggedInProfile::getInstance();
+		if ($this->loginProfile->getPROFILEID()) {
+			$this->userProfile = $request->getParameter('profilechecksum');
+			if ($this->userProfile) {
+				$this->Profile = new Profile();
+				$profileid = JsCommon::getProfileFromChecksum($this->userProfile);
+				$this->Profile->getDetail($profileid, "PROFILEID");
+				$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
+				if ($this->contactObj->getTYPE() == ContactHandler::INITIATED && $this->contactObj->getSenderObj()->getPROFILEID() == $this->loginProfile->getPROFILEID()) {
+					$messageLogObj = new messageLog();
+					$message = $messageLogObj->getEOIMessages($this->loginProfile->getPROFILEID(), array($profileid));
+					$msgText = $message[0]["MESSAGE"];
+					$forCount = explode("||",$msgText);
+					$count = count($forCount);
+					if($count>=3)
+					{
+						$response["cansend"] = false;
+						$response['sent'] = false;
+					}
+					else{
+						$msgText = $msgText."||".$request->getParameter('chatMessage');
+						$_GET["messageid"] = $message[0]["ID"];
+						sfContext::getInstance()->getRequest()->setParameter("messageid",$message[0]["ID"]);
+						$_GET["chatMessage"] = $msgText;
+						$messageCommunication = new MessageCommunication('',$this->loginProfile->getPROFILEID());
+						$messageCommunication->insertMessage();
+						$count++;
+						if($count<3)
+						{
+							$response["cansend"] = true;
+						}
+						else
+						{
+							$response["cansend"] = false;
+						}
+						$response['sent'] = true;
+					}
+
+				} else {
+					$url = JsConstants::$siteUrl . "/api/v2/contacts/postEOI";
+					$data = array("AUTHCHECKSUM" => $this->loginData["AUTHCHECKSUM"], "profilechecksum" => $request->getParameter('profilechecksum'), "chatMessage" => $request->getParameter('chatMessage'), "stype" => $request->getParameter('stype'));
+					$ch = curl_init();
+					curl_setopt($ch, CURLOPT_URL, $url);
+					curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
+					curl_setopt($ch, CURLOPT_TIMEOUT, 4);
+					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+					curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+					$curlResult = curl_exec($ch);
+					curl_close($ch);
+					$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+					$response = json_decode($curlResult, true);
+					$response["cansend"] = true;
+					$response['sent'] = true;
+
+				}
+			}
+		} else {
+			$response = "Logged Out Profile";
+			$apiResponseHandlerObj->setHttpArray(ChatEnum::$loggedOutProfile);
 		}
-                if($checkCount==0){
-                        $url = JsConstants::$siteUrl."/api/v2/contacts/postEOI";
-                        $data = array("AUTHCHECKSUM"=>$loginData["AUTHCHECKSUM"],"profilechecksum" => $request->getParameter('profilechecksum'), "chatMessage" => $request->getParameter('chatMessage'), "stype"=>$request->getParameter('stype'));
-                        $ch = curl_init();
-                        curl_setopt($ch, CURLOPT_URL, $url);
-                        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
-                        curl_setopt($ch, CURLOPT_TIMEOUT, 4);
-                        curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
-                        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-                        $curlResult = curl_exec ($ch);
-                        curl_close ($ch);
-                        $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-                        $response = json_decode($curlResult, true);
-			$response["cansend"] = true;
-                }
-                else{
-                        //Append messages as EOI messages
-			$response["cansend"] = true;
-                }
-        }
-        else{
-            $response = "Logged Out Profile";
-            $apiResponseHandlerObj->setHttpArray(ChatEnum::$loggedOutProfile);
-        }
-        $apiResponseHandlerObj->setResponseBody($response);
-        $apiResponseHandlerObj->generateResponse();
-        die;
-    }
+		$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+		$apiResponseHandlerObj->setResponseBody($response);
+		$apiResponseHandlerObj->generateResponse();
+		die;
+	}
 
 }
+
 ?>
