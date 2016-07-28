@@ -768,18 +768,19 @@ JsChat.prototype = {
                                 console.log("sent-"+messageId);
                                 _this._changeStatusOfMessg(messageId, userId, "recieved");
                             } else if (msgSendOutput["sent"] == false) {
+                                if(msgSendOutput["cansend"] == false){
+                                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">You can send more messages only if she replies</div>').addClass("restrictMessg2");
+                                    $(curElem).prop("disabled", true);
+                                    //$('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">' + msgSendOutput["errorMsg"] + '</div>').addClass("restrictMessg2");
+                                }
                                 //msg sending failure
                                 //$(curElem).prop("disabled", true);
-                                if (typeof msgSendOutput["errorMsg"] == "undefined") {
-                                    msgSendOutput["errorMsg"] = "Something went wrong..";
+                                else if (msgSendOutput["errorMsg"]) {
+                                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">' + msgSendOutput["errorMsg"] + '</div>').addClass("restrictMessg2");
                                 }
-                                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">' + msgSendOutput["errorMsg"] + '</div>').addClass("restrictMessg2");
+                                
                             }
-                            if(msgSendOutput["cansend"] == false){
-                                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">You can send more messages only if she replies</div>').addClass("restrictMessg2");
-                                $(curElem).prop("disabled", true);
-                                //$('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">' + msgSendOutput["errorMsg"] + '</div>').addClass("restrictMessg2");
-                            }
+                            
                         }
                     }, 50);
                 }
