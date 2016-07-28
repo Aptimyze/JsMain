@@ -73,8 +73,8 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 		  if(($profileArray[$profile2]['GENDER'] != $profileArray[$profile1]['GENDER']) && ($profileArray[$profile2]['ACTIVATED']=='D' || $profileArray[$profile1]['ACTIVATED']=='D')  )
 		  {
 
-		  	$rawDuplicateObj->setProfile1($profileArray[$profile1]['PROFILEID']); 			
-		  	$rawDuplicateObj->setProfile2($profileArray[$profile2]['PROFILEID']); 			
+		  	$rawDuplicateObj->setProfileid1($profileArray[$profile1]['PROFILEID']); 			
+		  	$rawDuplicateObj->setProfileid2($profileArray[$profile2]['PROFILEID']); 			
 			$ProbableRes=new PROBABLE_DUPLICATES();
 			$ProbableRes->removeProbable($rawDuplicateObj);
 			$ProbableRes->unsetPriority($rawDuplicateObj);
