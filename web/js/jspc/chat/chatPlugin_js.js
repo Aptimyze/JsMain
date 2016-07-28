@@ -892,7 +892,7 @@ JsChat.prototype = {
         this._chatLoggerPlugin("in _getChatBoxType");
         var curElem = this;
         //var groupId = $('chat-box[user-id="' + userId + '"]').attr("group-id");
-        this._chatLoggerPlugin($(".chatlist li[id='" + userId + "_" + groupID + "']").attr("id").split("_")[1]);
+        //this._chatLoggerPlugin($(".chatlist li[id='" + userId + "_" + groupID + "']").attr("id").split("_")[1]);
         //var groupID = $(".chatlist li[id='" + userId + "_" + groupId + "']").attr("id").split("_")[1];
         this._chatLoggerPlugin("ankita" + groupID + "-" + curElem._groupBasedChatBox[groupID]);
         var chatBoxType;
@@ -1458,6 +1458,7 @@ JsChat.prototype = {
             str += 'data-params="' + v.params + '"';
             str += 'data-jid="' + jid + '"';
             str += 'data-nick="' + nick + '"';
+            str += 'data-group="' + group + '"';
             if (TotalBtn == 1) {
                 str += 'style="width:100%">';
             } else {
@@ -1608,7 +1609,14 @@ JsChat.prototype = {
         });
         $('#' + curEleID + '_hover .hBtn').off('click').on('click', function () {
             if (_this.onHoverContactButtonClick && typeof _this.onHoverContactButtonClick == 'function') {
-                _this.onHoverContactButtonClick(this);
+                if($(this).html() == "Start Conversation"){
+                    currentID = $(this).attr("id").split("_")[0];
+                    
+                    _this._chatPanelsBox(currentID, 'offline', $(this).attr("data-jid"), $(this).attr("data-checks"), $(this).attr("data-group"));
+                }
+                else{
+                    _this.onHoverContactButtonClick(this);
+                }
             }
         });
         $('.hcross').off('click').on('click', function () {
