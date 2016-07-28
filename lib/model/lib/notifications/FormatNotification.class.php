@@ -41,7 +41,7 @@ class FormatNotification
     {
 	if($channel == 'ALL' || $channel == 'AND')
 	{
-	    $dataArray = array("PROFILEID"=>array($details["PROFILEID"]),"MESSAGE"=>$details['MESSAGE'],'LANDING_SCREEN'=>$details['LANDING_SCREEN'],'PRIORITY'=>$details['PRIORITY'],"COLLAPSE_STATUS"=>$details['COLLAPSE_STATUS'],"TITLE"=>$details['TITLE'],"COUNT"=>$details['COUNT'],"SENT"=>$details['SENT'],"PHOTO_URL"=>$details['PHOTO_URL'],'NOTIFICATION_KEY'=>$details['NOTIFICATION_KEY'],'MSG_ID'=>$details['MSG_ID'],"TTL"=>$details["TTL"]);
+	    $dataArray = array("PROFILEID"=>$details["PROFILEID"],"MESSAGE"=>$details['MESSAGE'],'LANDING_SCREEN'=>$details['LANDING_SCREEN'],'PRIORITY'=>$details['PRIORITY'],"COLLAPSE_STATUS"=>$details['COLLAPSE_STATUS'],"TITLE"=>$details['TITLE'],"COUNT"=>$details['COUNT'],"SENT"=>$details['SENT'],"PHOTO_URL"=>$details['PHOTO_URL'],'NOTIFICATION_KEY'=>$details['NOTIFICATION_KEY'],'MSG_ID'=>$details['MSG_ID'],"TTL"=>$details["TTL"],"OS_TYPE"=>$details['OS_TYPE']);
             $type = "APP_NOTIFICATION";
 	}
     	elseif(in_array("CRM_AND", $channel)==false)

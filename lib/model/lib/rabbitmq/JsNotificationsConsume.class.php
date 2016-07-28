@@ -119,6 +119,7 @@ class JsNotificationsConsume
    */
   public function processMessage(AMQPMessage $msg)
   {
+
     $msgdata=json_decode($msg->body,true);
     $process=$msgdata['process'];
     $redeliveryCount=$msgdata['redeliveryCount'];
@@ -136,16 +137,20 @@ class JsNotificationsConsume
       if($type == 'APP_NOTIFICATION')
       {
 	$notificationSenderObj = new NotificationSender;	
+	$profileid =$body['PROFILEID'];
+	$dataSet[$profileid] =$body;
+
 	//filter profiles based on notification count
         if(in_array($body["NOTIFICATION_KEY"],NotificationEnums::$scheduledNotificationPriorityArr))
-        	$filteredProfileDetails = $notificationSenderObj->filterProfilesBasedOnNotificationCount($body,$body["NOTIFICATION_KEY"]);
+        	$filteredProfileDetails = $notificationSenderObj->filterProfilesBasedOnNotificationCount($dataSet,$body["NOTIFICATION_KEY"]);
         else
-        	$filteredProfileDetails = $body;
+        	$filteredProfileDetails = $dataSet;
 	//Send Notification
-	$notificationSenderObj->sendNotifications($body);
+	//print_r($filteredProfileDetails);
+	$notificationSenderObj->sendNotifications($filteredProfileDetails);
 	//Update Status
 	$scheduledAppNotificationUpdateSentObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
-        $scheduledAppNotificationUpdateSentObj->updateSent($body["MSG_ID"],$body["NOTIFICATION_KEY"],NotificationEnums::$PENDING);
+        $scheduledAppNotificationUpdateSentObj->updateSuccessSent(NotificationEnums::$PENDING,$body["MSG_ID"]);
       }     
     }
     catch (Exception $exception) 
