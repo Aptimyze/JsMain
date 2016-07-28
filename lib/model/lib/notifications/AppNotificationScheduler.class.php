@@ -68,21 +68,19 @@ class AppNotificationScheduler extends NotificationScheduler
 			  else
 				$insertData[$k]['TITLE']=$v['TITLE'];
 
-		           $pid =$v['SELF']['PROFILEID'];
-        		   if(!in_array($pid, $pidArr)){
-	        		$pidArr[] =$pid;
-			  	$this->insert($insertData);	
-			   }	
+				$dataSet =$insertData[$k];	
+			  	$this->insert($dataSet);
+				unset($dataSet);		
 		  }
 		  $scheduledAppNotificationsObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
 		  $scheduledAppNotificationsObj->insert($insertData);
 	  }
   }
 
-  public function insert($notificationData){
+  public function insert($dataSet){
         $producerObj = new JsNotificationProduce();
-        if(is_array($notificationData) && $notificationData)
-        foreach ($notificationData as $key => $val){
+        if(is_array($dataSet))
+        //foreach ($notificationData as $key => $val){
 		/*
             unset($paramsArr);
 	    $paramsArr['PROFILEID']=$val['SELF']['PROFILEID'];
@@ -100,14 +98,14 @@ class AppNotificationScheduler extends NotificationScheduler
 	    $paramsArr['TITLE']=$val['NOTIFICATION_MESSAGE_TITLE'];
 		*/
 	    if($producerObj->getRabbitMQServerConnected()){
-		$msgdata = FormatNotification::formatPushNotification($val,$val["OS_TYPE"],true);
+		$msgdata = FormatNotification::formatPushNotification($dataSet,$dataSet["OS_TYPE"],true);
 		$producerObj->sendMessage($msgdata);
 	    }
 	    else{
 		$str = "\nRabbitmq Notification Error Alert: Rabbitmq Server is down.";
 		RabbitmqHelper::sendAlert($str,"browserNotification");
 	    }
-        }
+        //}
     }
 }
 ?>
