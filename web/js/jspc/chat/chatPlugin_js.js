@@ -1502,7 +1502,7 @@ JsChat.prototype = {
             str += '<li>' + param2.income + ', ' + param2.city + '</li>';
             str += '</ul>';
             str += '</div>';
-            str += '<div class="fullwid clearfix" id="' + param1 + '_BtnRespnse">';
+            str += '<div class="fullwid clearfix pos-rel" id="' + param1 + '_BtnRespnse">';
             str += '<p class="txtc nc-color2 lh27 nhgt28"></p>';
             str += '<div id="' + param1 + '_BtnOuter">';
             str += _this._getButtonStructure(param1, group, pCheckSum, jid, nick);
@@ -1511,7 +1511,7 @@ JsChat.prototype = {
             str += '</div>';
             str += '<div id="' + param1 + '_hoverDvSmEr" class="pos-rel padall-10 disp-none">';
             str += '<div class="txtr">';
-            str += '<i class="nchatspr nchatic_1 hcross" id="' + param1 + '_hcross" ></i>';
+            str += '<i class="nchatspr nchatic_1 hcross cursp" id="' + param1 + '_hcross" ></i>';
             str += '</div>';
             str += '<div class="disp-tbl f13 colr5 fontlig fullwid">';
             str += '<div class="disp-cell vmid txtc nhgt180" id="' + param1 + '_hoverSmEr">';
