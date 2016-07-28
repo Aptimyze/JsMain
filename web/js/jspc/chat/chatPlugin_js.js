@@ -977,7 +977,7 @@ JsChat.prototype = {
                             $(this).html(response.responseMessage);
                         } else if (response.buttondetails && response.buttondetails.button) {
                             if (response.actiondetails.errmsglabel) {
-                                $(this).html("error");
+                                $(this).html(response.actiondetails.errmsglabel);
                             } else {
                                 $(this).find("#sentDiv").removeClass("disp-none");
                                 $(this).find("#initiateText,#chatBoxErr").remove();
@@ -1020,7 +1020,7 @@ JsChat.prototype = {
                             $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt,#chatBoxErr").remove();
                         } else if (response.buttondetails && response.buttondetails.button) {
                             if (response.actiondetails.errmsglabel) {
-                                $(this).html("error");
+                                $(this).html(response.actiondetails.errmsglabel);
                                 $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
                             } else {
                                 $(this).closest(".chatMessage").find("#sentDiv").removeClass("disp-none");
@@ -1059,7 +1059,7 @@ JsChat.prototype = {
                             $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt,#chatBoxErr").remove();
                         } else if (response.buttondetails && response.buttondetails.button) {
                             if (response.actiondetails.errmsglabel) {
-                                $(this).html("error");
+                                $(this).html(response.actiondetails.errmsglabel);
                                 $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt").remove();
                             } else {
                                 $(this).closest(".chatMessage").find("#sentDiv").removeClass("disp-none");
