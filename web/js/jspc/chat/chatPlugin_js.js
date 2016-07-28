@@ -1128,7 +1128,7 @@ JsChat.prototype = {
             heightPlus = false,
             bodyWidth = $("body").width();
         if ($(curElem._chatBottomPanelID).length == 0) {
-            $("body").append("<div id='chatBottomPanel' class='btmNegtaive pos_fix calhgt2 nz20 fontlig'></div>");
+            $("body").append("<div id='chatBottomPanel' class='btmNegtaive pos_fix calhgt2 fontlig'></div>");
         }
         var bottomPanelWidth = $(window).width() - $(curElem._parendID).width();
         $(curElem._chatBottomPanelID).css('width', bottomPanelWidth);
@@ -1195,7 +1195,7 @@ JsChat.prototype = {
             userId, status, response;
         chatBoxProto.attachedCallback = function () {
             this.innerHTML = '<div class="chatBoxBar fullwid hgt57 bg5 pos-rel fullwid"></div><div class="chatArea fullwid fullhgt"><div class="messageArea f13 bg13 fullhgt"><div class="chatMessage scrolla pos_abs fullwid" style="height: 250px;"><div class="spinner"></div></div></div><div class="chatInput brdrbtm_new fullwid btm0 pos-abs bg-white"><textarea cols="23" style="width: 220px;" id="txtArea"  class="inputText lh20 brdr-0 padall-10 colorGrey hgt18 fontlig" placeholder="Write message"></textarea></div></div>';
-            $(this).addClass("z1000 btm0 brd_new fr mr7 fullhgt wid240 pos-rel disp_ib");
+            $(this).addClass("z7 btm0 brd_new fr mr7 fullhgt wid240 pos-rel disp_ib");
             userId = $(this).attr("user-id");
             status = $(this).attr("status-user");
             elem._appendInnerHtml(userId, status);
@@ -1695,7 +1695,7 @@ JsChat.prototype = {
     //start:this function is that init forthe chat
     start: function () {
         var divElement = document.createElement("Div");
-        $(divElement).addClass('pos_fix chatbg chatpos1 nz20 js-openOutPanel').appendTo(this._mainID);
+        $(divElement).addClass('pos_fix chatbg chatpos1 z7 js-openOutPanel').appendTo(this._mainID);
         this._createPrototypeChatBox();
         if (this._checkWidth()) {} else {
             $('body').css('width', '80%');
