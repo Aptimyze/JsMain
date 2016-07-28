@@ -11,7 +11,6 @@
  */
 class AuthFilter extends sfFilter {
 	public function execute($filterChain) {
-		
 	$context = $this->getContext();
 		$request = $context->getRequest();
 

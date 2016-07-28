@@ -82,23 +82,29 @@ class LoggingManager
             self::$instance = new $className;
         }
         self::$instance->szLogPath = $basePath;
-
         return self::$instance;
     }
 
-    /**
+     /**
+     * log the data passed, the format is:
+     * time logId clientChannel clientIp modulName actionName controllerName isSymfony  
      * @param $enLogType
-     * @param $Var
-     * @param $isSymfony checks whether the error raised is from symfony or non-symfony code
+     * @param $logArray - an associative array which contains
+     *       moduleName (optional)
+     *        ,actionName(optional),controllerName(optional),isSymfony(checks whether error has been raised from symfony or non-symfony code),API_VERSION(optional),statusCode, typeOfError 
+
      */
-    public function logThis($enLogType,$Var=null,$isSymfony=true)
+
+    public function logThis($enLogType,$Var,$isSymfony=true)
     {
-        if($enLogType > LoggingEnums::LOG_LEVEL) {
+
+            if($enLogType > LoggingEnums::LOG_LEVEL) {
            return ;
        }
 
        switch ($enLogType) {
         case LoggingEnums::LOG_INFO:
+
         $this->logInfo($Var);
         break;
         case LoggingEnums::LOG_DEBUG:
@@ -110,7 +116,32 @@ class LoggingManager
         default:
         break;
     }
-}   
+
+
+
+
+    // public function logThis($enLogType,$Var=null,$isSymfony=true)
+    // {
+
+
+    //     if($enLogType > LoggingEnums::LOG_LEVEL) {
+    //        return ;
+    //    }
+
+    //    switch ($enLogType) {
+    //     case LoggingEnums::LOG_INFO:
+    //     $this->logInfo($Var);
+    //     break;
+    //     case LoggingEnums::LOG_DEBUG:
+    //     $this->logDebug($Var);
+    //     break;
+    //     case LoggingEnums::LOG_ERROR:
+    //         $this->logException($Var,$isSymfony);
+    //     break;
+    //     default:
+    //     break;
+    // }
+}      
     /**
      * @param $exception
      */
