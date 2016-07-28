@@ -157,7 +157,7 @@ class SearchApiStrategyV1
 		$this->output["matchAlertsLogic"] = null;
 		if($this->output["searchBasedParam"]=='matchalerts' || $this->searchCat=='matchalerts')
 		{
-			$newjsMatchLogicObj = new newjs_MATCH_LOGIC();
+			$newjsMatchLogicObj = new newjs_MATCH_LOGIC(SearchConfig::getSearchDb());
 			$this->output["matchAlertsLogic"] = $newjsMatchLogicObj->getPresentLogic($loggedInProfileObj->getPROFILEID(),MailerConfigVariables::$oldMatchAlertLogic);
 		}
 		$params["matLogic"]= $this->output["matchAlertsLogic"];

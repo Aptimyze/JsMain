@@ -254,7 +254,7 @@ class FieldSalesFollowUpStatusMis
 	public function getBackgroundColor($reporters){
 		foreach($reporters as $agent){
 			$misObj = new misGenerationhandler();
-			$jsObj = new jsadmin_PSWRDS();
+			$jsObj = new jsadmin_PSWRDS('newjs_slave');
 			$priv = $jsObj->getPrivilegeForAgent($agent);
 			$color = $misObj->getRowColour($priv);
 			$res[$agent] =  $color;
