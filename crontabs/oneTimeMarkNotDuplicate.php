@@ -33,7 +33,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 		  	$valueArray['PROFILEID']="";
 		  	foreach ($arr as $key => $value) {
 		  		# code...
-		  		$valueArray['PROFILEID'].=($value['PROFILE1'].",".$value['PROFILE1'].",");
+		  		$valueArray['PROFILEID'].=($value['PROFILE1'].",".$value['PROFILE2'].",");
 		  	}
 
 		  	$valueArray['PROFILEID']=substr($valueArray['PROFILEID'],0, -1);
