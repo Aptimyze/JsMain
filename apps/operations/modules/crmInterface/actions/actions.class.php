@@ -624,7 +624,7 @@ class crmInterfaceActions extends sfActions
         $this->name = $request->getParameter('name');
         $this->image = $request->getParameter('image');
         $this->ajaxType = $request->getParameter('ajaxType');
-        $mailerDataObj = new jeevansathi_mailer_DAILY_MAILER_COUNT_LOG();
+        $mailerDataObj = new jeevansathi_mailer_DAILY_MAILER_COUNT_LOG('newjs_slave');
         $mailerKeys = $mailerDataObj->fetchUniqueKeys();
 	    $this->rangeYear = date("Y");
         $mailStats = array();
