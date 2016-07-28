@@ -52,7 +52,7 @@ include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 			}
 			if(count($ver)<4)
 			{
-				$verificationChannel = array('I','A','P','MS','M');
+				$verificationChannel = array('I','A','P','MS');
 				foreach($verificationChannel as $k=>$v)
 				{
 					if(!$ver[$v])
