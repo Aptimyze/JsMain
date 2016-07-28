@@ -81,7 +81,7 @@ class CancelAccept extends ContactEvent{
     $producerObj=new Producer();
     if($producerObj->getRabbitMQServerConnected())
     {
-      $chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'CANCEL', 'body' => array('sender' => array('profileid'=>$this->contactHandler->getViewer()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewer()->getPROFILEID()),'username'=>$this->contactHandler->getViewer()->getUSERNAME()), 'receiver' => array('profileid'=>$this->contactHandler->getViewed()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewer()->getPROFILEID),"username"=>$this->contactHandler->getViewer()->getUSERNAME()))), 'redeliveryCount' => 0);
+      $chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'CANCEL', 'body' => array('sender' => array('profileid'=>$this->contactHandler->getViewer()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewer()->getPROFILEID()),'username'=>$this->contactHandler->getViewer()->getUSERNAME()), 'receiver' => array('profileid'=>$this->contactHandler->getViewed()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewed()->getPROFILEID),"username"=>$this->contactHandler->getViewed()->getUSERNAME()))), 'redeliveryCount' => 0);
       $producerObj->sendMessage($chatData);
     }
 

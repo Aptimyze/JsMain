@@ -55,12 +55,12 @@ chatConfig.Params = {
                     "group_name": "Desired Partner Matches",
                     "show_group_name": true,
                     "hide_offline_users": false
-                }, {
+                },*/ {
                     "id": "intsent",
                     "group_name": "Interest Sent",
                     "show_group_name": true,
                     "hide_offline_users": false
-                },*/ {
+                }, {
                     "id": "intrec",
                     "group_name": "Interest Received",
                     "show_group_name": true,
@@ -226,4 +226,4 @@ chatConfig.Params = {
         }
     }
 };
-chatConfig.Params.PC.rosterGroups = [/*chatConfig.Params.categoryNames['Desired Partner Matches'], chatConfig.Params.categoryNames['Interest Sent'], */chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members']];
+chatConfig.Params.PC.rosterGroups = [/*chatConfig.Params.categoryNames['Desired Partner Matches'],*/ chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members']];
