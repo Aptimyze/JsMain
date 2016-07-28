@@ -740,11 +740,7 @@ JsChat.prototype = {
                         timeLog = new Date().getTime();
                     $(superParent).find("#initChatText,#sentDiv,#chatBoxErr").remove();
                     $(superParent).find(".chatMessage").css("height", "250px").append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id ="tempText_' + userId + '_' + timeLog + '" class="talkText">' + text + '</div><i class="nchatspr nchatic_8 fr vertM"></i></div>');
-                    if ($(superParent).find("#sendInt").length != 0) {
-                        $(superParent).find(".chatMessage").append("<div class='pos-rel fr pr10' id='interestSent'>Your interest has been sent</div>")
-                        $(superParent).find("#initiateText,#chatBoxErr").remove();
-                        $(superParent).find("#sendInt").remove();
-                    }
+                    
                     var height = $($(superParent).find(".talkText")[$(superParent).find(".talkText").length - 1]).height();
                     $($(superParent).find(".talkText")[$(superParent).find(".talkText").length - 1]).next().css("margin-top", height);
                     $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
@@ -766,6 +762,11 @@ JsChat.prototype = {
                             if (msgSendOutput["sent"] == true) {
                                 //msg sending success,set single tick here
                                 console.log("sent-"+messageId);
+                                if ($(superParent).find("#sendInt").length != 0) {
+                                    $(superParent).find(".chatMessage").append("<div class='pos-rel fr pr10' id='interestSent'>Your interest has been sent</div>")
+                                    $(superParent).find("#initiateText,#chatBoxErr").remove();
+                                    $(superParent).find("#sendInt").remove();
+                                }
                                 $(superParent).find("#sendDiv").remove();
                                 _this._changeStatusOfMessg(messageId, userId, "recieved");
                             } else if (msgSendOutput["sent"] == false) {
