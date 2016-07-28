@@ -23,7 +23,7 @@ class InboxConfig
 					   1=>array("Vname"=>"Requests","horizontalTabsArr"=>array(0=>array("HTabId"=>3,"infoTypeID"=>9,"Hname"=>"Received"),1=>array("HTabId"=>4,"infoTypeID"=>14,"Hname"=>"Sent")),"defaultHtabInfoID"=>9),
 					   2=>array("Vname"=>"Acceptances","horizontalTabsArr"=>array(0=>array("HTabId"=>6,"infoTypeID"=>3,"Hname"=>"People I Accepted"),1=>array("HTabId"=>7,"infoTypeID"=>2,"Hname"=>"People Accepted Me")),"defaultHtabInfoID"=>3),
 					   3=>array("Vname"=>"Messages","horizontalTabsArr"=>array(0=>array("HTabId"=>9,"infoTypeID"=>4,"Hname"=>"All Messages")),"defaultHtabInfoID"=>4),
-					   4=>array("Vname"=>"Declines","horizontalTabsArr"=>array(0=>array("HTabId"=>12,"infoTypeID"=>20,"Hname"=>"People I Blocked"),1=>array("HTabId"=>13,"infoTypeID"=>11,"Hname"=>"People I Declined"),2=>array("HTabId"=>14,"infoTypeID"=>10,"Hname"=>"People Declined Me")),"defaultHtabInfoID"=>20),
+					   4=>array("Vname"=>"Declines","horizontalTabsArr"=>array(0=>array("HTabId"=>12,"infoTypeID"=>20,"Hname"=>"Blocked/Ignored"),1=>array("HTabId"=>13,"infoTypeID"=>11,"Hname"=>"People I Declined"),2=>array("HTabId"=>14,"infoTypeID"=>10,"Hname"=>"People Declined Me")),"defaultHtabInfoID"=>20),
 				       5=>array("Vname"=>"Viewed Contacts","horizontalTabsArr"=>array(0=>array("HTabId"=>15,"infoTypeID"=>17,"Hname"=>"People Viewed My Contact"),1=>array("HTabId"=>16,"infoTypeID"=>16,"Hname"=>"Contacts I Viewed")),"defaultHtabInfoID"=>17),
 				       6=>array("Vname"=>"We Talk For You","horizontalTabsArr"=>array(0=>array("HTabId"=>18,"infoTypeID"=>19,"Hname"=>"People to be called"),1=>array("HTabId"=>19,"infoTypeID"=>21,"Hname"=>"People already called")),"defaultHtabInfoID"=>19)
 					);
