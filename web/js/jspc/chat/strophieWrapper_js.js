@@ -403,7 +403,7 @@ var strophieWrapper = {
             return false;
         } else {
             $.each(groupArr, function (index, val) {
-                if ($.inArray(val, strophieWrapper.rosterGroups) == -1) {
+                if (strophieWrapper.rosterGroups.indexOf(val) == -1) {
                     return false;
                 }
             });
