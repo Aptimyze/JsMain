@@ -467,7 +467,8 @@ function handlePreAcceptChat(apiParams) {
                         outputData["msg_id"] = strophieWrapper.getUniqueId();
                     }
                     else{
-                        outputData = response;  
+                        outputData = response; 
+                        outputData["sent"] = true; 
                         outputData["msg_id"] = strophieWrapper.getUniqueId();
                     }
                 }
