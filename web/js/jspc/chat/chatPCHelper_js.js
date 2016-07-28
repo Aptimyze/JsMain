@@ -694,6 +694,11 @@ $(document).ready(function () {
                 var receiverJID = $("#" + params.id).attr('data-jid');
                 var nickName = $("#" + params.id).attr('data-nick');
                 checkSum = "802d65a19583249de2037f9a05b2e424i6341959";
+                var trackingParamsArr = paramsData.split("&"),trackingParams={};
+                $.each(trackingParamsArr,function(key,val){
+                    var v = val.split("=");
+                    trackingParams[v[0]] = v[1];
+                });
                 idBeforeSplit = params.id.split('_');
                 idAfterSplit = idBeforeSplit[0];
                 action = idBeforeSplit[1];
@@ -701,7 +706,7 @@ $(document).ready(function () {
                     "receiverJID": receiverJID,
                     "action": action,
                     "checkSum": checkSum,
-                    "trackingParams": paramsData,
+                    "trackingParams": trackingParams,
                     "nickName": nickName
                 });
                 if (response != false) {

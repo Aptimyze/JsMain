@@ -90,7 +90,7 @@ chatConfig.Params = {
                 "iconid": "090",
                 "primary": "true",
                 "secondary": null,
-                "params": {"responseTracking":8},
+                "params": "responseTracking=8",
                 "enable": true,
                 "id": "ACCEPT"
             }, {
@@ -99,7 +99,7 @@ chatConfig.Params = {
                 "iconid": "089",
                 "primary": "true",
                 "secondary": null,
-                "params": {"responseTracking":8},
+                "params": "responseTracking=8",
                 "enable": true,
                 "id": "DECLINE"
             }],
@@ -109,7 +109,7 @@ chatConfig.Params = {
                 "iconid": "001",
                 "primary": "true",
                 "secondary": "true",
-                "params": {"stype":"WV"},
+                "params": "stype=WV",
                 "enable": true,
                 "id": "INITIATE"
             }],
@@ -119,7 +119,7 @@ chatConfig.Params = {
                 "iconid": "005",
                 "primary": "true",
                 "secondary": "true",
-                "params": {"stype":"WV"},
+                "params": "stype=WV",
                 "enable": true,
                 "id": "CANCEL"
             }],
@@ -129,7 +129,7 @@ chatConfig.Params = {
                 "iconid": "001",
                 "primary": "true",
                 "secondary": "true",
-                "params": {"stype":"WV"},
+                "params": "stype=WV",
                 "enable": true,
                 "id": "INITIATE"
             }],
