@@ -364,8 +364,16 @@ class chatActions extends sfActions
 						$response['sent'] = true;
 					}
 
-				} else {
-					$url = JsConstants::$siteUrl . "/api/v2/contacts/postEOI";
+				}
+				else {
+					ob_start();
+					$request->setParameter('INTERNAL', 1);
+					$request->setParameter("actionName","postEOI");
+					$request->setParameter("moduleName","contacts");
+					$data = sfContext::getInstance()->getController()->getPresentationFor('contacts', 'postEOIv2');
+					$output = ob_get_contents();
+					ob_end_clean();
+					/*$url = JsConstants::$siteUrl . "/api/v2/contacts/postEOI";
 					$data = array("AUTHCHECKSUM" => $this->loginData["AUTHCHECKSUM"], "profilechecksum" => $request->getParameter('profilechecksum'), "chatMessage" => $request->getParameter('chatMessage'), "stype" => $request->getParameter('stype'));
 					$ch = curl_init();
 					curl_setopt($ch, CURLOPT_URL, $url);
@@ -375,8 +383,8 @@ class chatActions extends sfActions
 					curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 					$curlResult = curl_exec($ch);
 					curl_close($ch);
-					$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-					$response = json_decode($curlResult, true);
+					$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);*/
+					$response = json_decode($output, true);
 					$response["cansend"] = true;
 					$response['sent'] = true;
 

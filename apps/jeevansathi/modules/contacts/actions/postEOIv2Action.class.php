@@ -18,6 +18,7 @@ class postEOIv2Action extends sfAction
 	function execute($request){
 		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("moduleName"));
 		$apiObj                  = ApiResponseHandler::getInstance();
+
 		if ($request->getParameter("actionName")=="postEOI")
 		{
 			$inputValidateObj->validateContactActionData($request);
@@ -28,7 +29,7 @@ class postEOIv2Action extends sfAction
 				//Contains logined Profile information;
 				$this->loginProfile = LoggedInProfile::getInstance();
 			//	$this->loginProfile->getDetail($this->loginData["PROFILEID"], "PROFILEID");
-				
+
 				if ($this->loginProfile->getPROFILEID()) {
 					$this->userProfile = $request->getParameter('profilechecksum');
 					if ($this->userProfile) {
@@ -78,7 +79,12 @@ class postEOIv2Action extends sfAction
 				$apiObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
 			$apiObj->generateResponse();
 		}
-		die;
+		$internal = $request->getParameter("internal");
+		if($internal == 1){
+			return sfView::NONE;
+		} else {
+			die;
+		}
 	}
 	
 	
