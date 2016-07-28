@@ -10,11 +10,11 @@ chatConfig.Params = {
     },
     //subscriptions for group id's
     groupWiseSubscription:{
-        "dpp": "to",
-        "intrec": "to",
-        "acceptance": "both",
-        "shortlist": "to",
-        "intsent": "to"
+        "dpp": 'to',
+        "intrec": 'to',
+        "acceptance": 'both',
+        "shortlist": 'to',
+        "intsent": 'to'
     },
     //api's url for contact engine actions
     actionUrl: {
@@ -40,7 +40,7 @@ chatConfig.Params = {
     //api url for getting photo
     photoUrl:"/api/v1/social/getMultiUserPhoto",
     PC: {
-        updateRosterFromFrontend:true,
+        updateRosterFromFrontend:false,
         bosh_service_url: 'ws://' + openfireUrl + '/ws/', //connection manager for openfire
         keepalive: true, //keep logged in session alive
         roster_groups: true, //show categories in listing

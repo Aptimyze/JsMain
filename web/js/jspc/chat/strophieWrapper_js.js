@@ -582,8 +582,10 @@ var strophieWrapper = {
 		        if(typeof strophieWrapper.Roster[user_id] != "undefined"){
 		           	var iq = $iq({type: 'set', id: strophieWrapper.getUniqueId('roster')})
 		                    .c('query', {xmlns: Strophe.NS.ROSTER})
-		                    .c('item', {jid: rosterParams["jid"], name: rosterParams["nick"], subscription: rosterParams["subscription"]});
+		                    .c('item', {'jid': rosterParams["jid"], 'name': rosterParams["nick"], 'subscription': rosterParams["subscription"]});
 		            iq.c('group').t(rosterParams["groupid"]).up();
+		            console.log("in addRosterItem");
+		            console.log(iq);
 		            strophieWrapper.connectionObj.sendIQ(iq, function(status){
 		                stropheLoggerPC("roster adding stanza: "+jid);
 		            });

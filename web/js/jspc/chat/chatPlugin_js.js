@@ -31,7 +31,7 @@ JsChat.prototype = {
     _listingNodesLimit: {},
     _groupBasedChatBox: {},
     _contactStatusMapping: {},
-    _loggingEnabledPlugin: true,
+    _loggingEnabledPlugin: false,
     _chatLoggerPlugin: function (msgOrObj) {
         if (this._loggingEnabledPlugin) {
             if (typeof (window.console) != 'undefined') {
@@ -632,19 +632,23 @@ JsChat.prototype = {
         var curElem = this,
             enableClose, groupId = $('chat-box[user-id="' + userId + '"]').attr("group-id");
         var user_name = $(".chatlist li[id='" + userId + "_" + groupId + "'] div").html();
+        var nick = user_name;
+        var profileChecksum = $(".chatlist li[id='" + userId + "_" + groupId + "']").attr("data-checks");
+        if(profileChecksum){
+            nick = nick + "|"+"79af009546369669073e92dca9ca83e5i7004620";
+        }
         $(elem).off("click").on("click", function () {
-            var profileChecksum = $(".chatlist li[id='" + userId + "_" + groupId + "']").attr("data-checks");
             if (curElem.onChatBoxContactButtonsClick && typeof curElem.onChatBoxContactButtonsClick == 'function') {
                 var response = curElem.onChatBoxContactButtonsClick({
                     "buttonType": "BLOCK",
                     "receiverID": userId,
-                    "checkSum": profileChecksum,
+                    "checkSum": "79af009546369669073e92dca9ca83e5i7004620",
                     "trackingParams": chatConfig.Params.trackingParams["BLOCK"],
                     "extraParams": {
                         "ignore": 1
                     },
                     "receiverJID":$('chat-box[user-id="' + userId + '"]').attr("data-jid"),
-                    "nick":user_name+"|"+profileChecksum
+                    "nick":nick
                 });
                 if (response != false) {
                     if (response.responseMessage == "Successful") {
@@ -662,19 +666,19 @@ JsChat.prototype = {
                         
                         $('chat-box[user-id="' + userId + '"] #undoBlock').off("click").on("click", function () {
                             
-                            var profileChecksum = $(".chatlist li[id*='" + userId + "']").attr("data-checks");
+                            //var profileChecksum = $(".chatlist li[id*='" + userId + "']").attr("data-checks");
                             if (curElem.onChatBoxContactButtonsClick && typeof curElem.onChatBoxContactButtonsClick == 'function') {
                                 
                                 var response = curElem.onChatBoxContactButtonsClick({
                                     "buttonType": "UNBLOCK",
                                     "receiverID": userId,
-                                    "checkSum": profileChecksum,
+                                    "checkSum": "79af009546369669073e92dca9ca83e5i7004620",
                                     "trackingParams": chatConfig.Params.trackingParams["UNBLOCK"],
                                     "extraParams": {
                                         "ignore": 0
                                     },
                                     "receiverJID":$('chat-box[user-id="' + userId + '"]').attr("data-jid"),
-                                    "nick":user_name+"|"+profileChecksum
+                                    "nick":nick
                                 });
                                 if (response != false) {
                                     if (response.responseMessage == "Successful") {
@@ -942,6 +946,10 @@ JsChat.prototype = {
             checkSum = $("chat-box[user-id='" + userId + "'").attr("data-checks"),
             groupId = $("chat-box[user-id='" + userId + "'").attr("group-id"),
             user_name = $(".chatlist li[id='" + userId + "_" + groupId + "'] div").html();
+        var nick;
+        if(checkSum){
+            nick = nick + "|"+checkSum;
+        }
         this._chatLoggerPlugin(curElem);
         switch (chatBoxType) {
         case curElem._contactStatusMapping["pg_interest_pending"]["key"]:
@@ -956,7 +964,7 @@ JsChat.prototype = {
                         "trackingParams": chatConfig.Params["trackingParams"]["INITIATE"],
                         "buttonType": "INITIATE",
                         "receiverJID":$('chat-box[user-id="' + userId + '"]').attr("data-jid"),
-                        "nick":user_name+"|"+checkSum
+                        "nick":nick
                     });
                     
                     if (response != false) {
@@ -999,7 +1007,7 @@ JsChat.prototype = {
                         "trackingParams": chatConfig.Params["trackingParams"]["ACCEPT"],
                         "buttonType": "ACCEPT",
                         "receiverJID":$('chat-box[user-id="' + userId + '"]').attr("data-jid"),
-                        "nick":user_name+"|"+checkSum
+                        "nick":nick
                     });
                     if (response != false) {
                         if (response.responseMessage != "Successful") {
@@ -1038,7 +1046,7 @@ JsChat.prototype = {
                         "trackingParams": chatConfig.Params["trackingParams"]["DECLINE"],
                         "buttonType": "DECLINE",
                         "receiverJID":$('chat-box[user-id="' + userId + '"]').attr("data-jid"),
-                        "nick":user_name+"|"+checkSum
+                        "nick":nick
                     });
                     if (response != false) {
                         if (response.responseMessage != "Successful") {

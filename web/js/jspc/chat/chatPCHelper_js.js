@@ -6,7 +6,7 @@ var listingInputData = [],
     objJsChat, pass, username;
 var pluginId = '#chatOpenPanel',
     device = 'PC';
-var loggingEnabledPC = true;
+var loggingEnabledPC = false;
 
 function chatLoggerPC(msgOrObj) {
     if (loggingEnabledPC) {
@@ -115,7 +115,7 @@ function initiateChatConnection() {
     else if(readSiteCookie("CHATUSERNAME")=="VWZ4557")
         username = 'a9@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
-        username = 'a8@localhost';
+        username = 'a2@localhost';
     else if(readSiteCookie("CHATUSERNAME") == "ZZRS3292")
         username = 'a13@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="ZZVV2929")
@@ -531,7 +531,7 @@ function contactActionCall(contactParams) {
             success: function (data) {
                 response = data;
                 chatLoggerPC(response);
-                if(response["statusCode"] == "0"){
+                if(response["responseStatusCode"] == "0"){
                     updateRosterOnChatContactActions({
                         "receiverJID":receiverJID,
                         "nickName":nickName,
@@ -564,6 +564,7 @@ function updateRosterOnChatContactActions(rosterParams){
             if(typeof receiverJID != "undefined" && receiverJID){
                 switch(action){
                     case "BLOCK":
+                                chatLoggerPC("ankita_blocking"+receiverJID);
                                 strophieWrapper.removeRosterItem(receiverJID);
                                 break;
                     case "ACCEPT":
@@ -578,6 +579,7 @@ function updateRosterOnChatContactActions(rosterParams){
                     case "UNBLOCK":
                                 var user_id = receiverJID.split("@")[0];
                                 var existingGroupId = objJsChat._fetchChatBoxGroupID(user_id),groupArr = [];
+                                console.log("old group-"+existingGroupId+"-"+chatConfig.Params.groupWiseSubscription[existingGroupId]);
                                 groupArr.push(existingGroupId);
                                 if(typeof existingGroupId != "undefined" && strophieWrapper.checkForGroups(groupArr) == true){
                                     strophieWrapper.addRosterItem({
