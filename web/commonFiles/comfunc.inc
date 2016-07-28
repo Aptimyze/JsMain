@@ -256,7 +256,7 @@ function misc_rev_printbill($receiptid,$billid="")
 {
         global $smarty;
 	$sql="SELECT SALEID, ENTRY_DT,TDS from billing.REV_PAYMENT where RECEIPTID='$receiptid'";
-	$result=mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
+	$result=mysql_query_decide($sql) or mysql_error_js();
 	$myrow=mysql_fetch_array($result);
 	$billid=$myrow['SALEID'];
 	$billdate=$myrow['ENTRY_DT'];
@@ -267,7 +267,7 @@ function misc_rev_printbill($receiptid,$billid="")
         $inv_date=my_format_date($inv_day,$inv_month,$inv_year);
 
         $sql="SELECT a.PROFILEID,a.NAME, a.ADDRESS,a.USERNAME,a.CPP,b.SALE_AMT,b.SERVICE_TAX,b.TOTAL_AMT from marriage_bureau.BUREAU_PROFILE as a,billing.REV_MASTER as b where a.PROFILEID=b.BUREAU_PID and b.SALEID='$billid'";
-        $result=mysql_query_decide($sql)  or die("$sql<br>".mysql_error_js());
+        $result=mysql_query_decide($sql)  or mysql_error_js();
         $myrow=mysql_fetch_array($result);
         
 	
@@ -281,7 +281,7 @@ function misc_rev_printbill($receiptid,$billid="")
 
                                                                                                  
         $sql="SELECT MODE, TYPE, AMOUNT, CD_NUM, CD_DT, CD_CITY, ENTRY_DT from billing.REV_PAYMENT where RECEIPTID= '$receiptid'";
-        $result=mysql_query_decide($sql)  or die("$sql<br>".mysql_error_js());
+        $result=mysql_query_decide($sql)  or mysql_error_js();
         $myrow1=mysql_fetch_array($result);
 	list($rec_dt,$rec_time)=explode(" ",$myrow1['ENTRY_DT']);
         $r_dt=explode("-",$rec_dt);
@@ -417,7 +417,7 @@ function misc_rev_sales_printbill($receiptid='',$saleid,$saleType='')
 		$receiptid='';
 
         $sql="SELECT SHIP_TO_ADDRESS,SHIP_TO_COUNTRY,SHIP_TO_PIN,SALE_AMT,SERVICE_TAX,DISCOUNT,ENTRY_DT,TOTAL_AMT,COMP_NAME,SALE_DES,START_DATE,END_DATE,SALE_BY,CUR_TYPE,TAX_RATE,SERVICE_TAX_CONTENT from billing.REV_MASTER r WHERE SALEID='$saleid'";
-        $result=mysql_query_decide($sql)  or die("$sql<br>".mysql_error_js());
+        $result=mysql_query_decide($sql)  or mysql_error_js();
         $myrow=mysql_fetch_array($result);
 
         $smarty->assign("comp_name",$myrow['COMP_NAME']);
@@ -449,7 +449,7 @@ function misc_rev_sales_printbill($receiptid='',$saleid,$saleType='')
 
 	if($receiptid){
 	        $sql="SELECT SERVICE_TAX,BILL_TO_NAME,BILL_TO_ADDRESS,BILL_TO_COUNTRY,BILL_TO_PIN,TDS,MODE,TYPE,AMOUNT,CD_NUM,CD_DT,CD_CITY,ENTRY_DT,DEPOSIT_BRANCH from billing.REV_PAYMENT where RECEIPTID= '$receiptid'";
-        	$result=mysql_query_decide($sql)  or die("$sql<br>".mysql_error_js());
+        	$result=mysql_query_decide($sql)  or mysql_error_js();
         	$myrow1=mysql_fetch_array($result);
 	        $bill_date =date("d-M-Y",JSstrToTime($myrow1['ENTRY_DT']));
 	        /*
@@ -489,12 +489,12 @@ function misc_rev_sales_printbill($receiptid='',$saleid,$saleType='')
 	if($sale_by!='ONLINE')
 	{
 		$sql_jsadmin ="select SUB_CENTER from jsadmin.PSWRDS WHERE USERNAME='$sale_by'";
-		$res_jsadmin=mysql_query_decide($sql_jsadmin) or die("$sql_jsadmin<br>".mysql_error_js());
+		$res_jsadmin=mysql_query_decide($sql_jsadmin) or mysql_error_js();
 		$row_jsadmin=mysql_fetch_assoc($res_jsadmin);
 		$center =strtoupper($row_jsadmin['SUB_CENTER']);
 
 		$sql_add="SELECT c.ADDRESS,c.PHONE,c.MOBILE FROM billing.BRANCHES b LEFT JOIN newjs.CONTACT_US c ON b.VALUE=c.VALUE WHERE b.NAME LIKE '%$center%'";
-		$res_add=mysql_query_decide($sql_add) or die("$sql_add<br>".mysql_error_js());
+		$res_add=mysql_query_decide($sql_add) or mysql_error_js();
 		$row_add=mysql_fetch_assoc($res_add);
 		$address_br=$row_add['ADDRESS'];
 		$phone_br=$row_add['PHONE'];

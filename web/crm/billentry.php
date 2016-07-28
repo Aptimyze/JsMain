@@ -51,7 +51,7 @@ if(authenticated($cid))
                 else
 			$sql="SELECT PAYMENT_COLLECT.ID AS ID,PROFILEID,USERNAME,STATUS,ENTRY_DT,ADDON_SERVICEID,DISCOUNT,SERVICES.NAME as SERVICE from incentive.PAYMENT_COLLECT,billing.SERVICES,incentive.BRANCH_CITY where CONFIRM='Y' and AR_GIVEN='Y' and STATUS in ('C','S') and DISPLAY <> 'N' and  PAYMENT_COLLECT.CITY IN ('$ar') and PAYMENT_COLLECT.SERVICE=SERVICES.SERVICEID and PAYMENT_COLLECT.CITY=BRANCH_CITY.VALUE AND BILLING=''";		
 
-		$result=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+		$result=mysql_query_decide($sql) or mysql_error_js();
 		while($myrow=mysql_fetch_array($result))
 		{
 
@@ -65,7 +65,7 @@ if(authenticated($cid))
                                 $addon_serviceid_str = implode(",",$addon_serviceid_ar);
 
                                 $sql = "Select NAME from billing.SERVICES where SERVICEID in ($addon_serviceid_str)";
-                                $result_services = mysql_query_decide($sql) or die(mysql_error_js());
+                                $result_services = mysql_query_decide($sql) or mysql_error_js();
                                 while($myrow_result_services = mysql_fetch_array($result_services))
                                 {
                                         $services[] = "<br>".$myrow_result_services["NAME"];
@@ -77,7 +77,7 @@ if(authenticated($cid))
 
 
 			$sql="SELECT ENTRYBY from incentive.LOG where PROFILEID='$myrow[PROFILEID]' and CONFIRM='Y' and AR_GIVEN=''";	
-			$result1=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+			$result1=mysql_query_decide($sql) or mysql_error_js();
 			$myrow1=mysql_fetch_array($result1);
 			$entryby=$myrow1['ENTRYBY'];
 				

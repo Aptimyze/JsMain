@@ -44,6 +44,7 @@ class sfError404Exception extends sfException
       if (!sfConfig::get('sf_test'))
       {
         error_log($this->getMessage());
+        LoggingManager::getInstance(LoggingEnums::Ex500or404)->logThis(LoggingEnums::LOG_ERROR, $this->getMessage());
       }
 
       sfContext::getInstance()->getController()->forward(sfConfig::get('sf_error_404_module'), sfConfig::get('sf_error_404_action'));

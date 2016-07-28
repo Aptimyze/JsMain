@@ -31,7 +31,7 @@ if(isset($data))
                                                                                                  
            	}
 		$sql.=$where;	
-		$result=mysql_query_decide($sql) or die(mysql_error_js());
+		$result=mysql_query_decide($sql) or mysql_error_js();
 		if(mysql_num_rows($result)>0)
 		{
 			$flag=1;

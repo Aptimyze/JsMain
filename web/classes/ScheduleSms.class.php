@@ -1,4 +1,6 @@
 <?php
+// including for logging purpose
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 class ScheduleSms
 {
     var $scheduleSettings = array();
@@ -2154,7 +2156,7 @@ class ScheduleSms
     function matchAlertArray($profileid, $gap)
     {
         $sql = "SELECT DISTINCT USER from matchalerts.LOG WHERE DATE >= " . $gap . " AND RECEIVER = " . $profileid . " AND USER NOT IN (SELECT BEST_MATCH FROM BEST_MATCH_SMS_LOG WHERE PROFILEID =" . $profileid . " AND SENT = 'Y' ) ";
-        $res = mysql_query($sql, $this->dbMatch) or die(mysql_error());
+        $res = mysql_query($sql, $this->dbMatch) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error()));
         $count = 0;
         while ($row = mysql_fetch_assoc($res)) {
             $arr[$count++] = $row['USER'];
@@ -2386,7 +2388,7 @@ class ScheduleSms
     		return false;
 
     	$sqlNegative = "SELECT PROFILEID FROM incentive.NEGATIVE_PROFILE_LIST WHERE MOBILE IN('$number','0$number','91$number')";
-    	$resNegative = mysql_query($sqlNegative,$db_slave) or die("$sqlNegative".mysql_error($db_slave));
+    	$resNegative = mysql_query($sqlNegative,$db_slave) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error()));
     	$rowCnt =mysql_num_rows($resNegative); 
     	if($rowCnt>0)
     		return false;
@@ -2429,7 +2431,7 @@ class ScheduleSms
     		return false;
 
     	$sqlJunk ="select count(*) cnt from newjs.PHONE_JUNK WHERE PHONE_NUM='$number'";
-    	$resJunk = mysql_query($sqlJunk,$db_slave) or die("$sqlJunk".mysql_error($db_slave));
+    	$resJunk = mysql_query($sqlJunk,$db_slave) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($db_slave)));
     	$rowJunk = mysql_fetch_array($resJunk);
     	if($rowJunk['cnt']>0)
     		return false;

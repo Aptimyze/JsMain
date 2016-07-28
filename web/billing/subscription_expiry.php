@@ -17,7 +17,7 @@ $ts -= (24*60*60) * 10;
 $before_ten_days = date("Y-m-d",$ts);
 
 $sql="SELECT ID,PROFILEID, EXPIRY_DT, SERVEFOR FROM billing.SERVICE_STATUS WHERE EXPIRY_DT BETWEEN '$before_ten_days' AND '$curdate' AND ACTIVE='Y'";
-$res=mysql_query_decide($sql) or die($sql.mysql_error_js());
+$res=mysql_query_decide($sql) or mysql_error_js();
 while($row=mysql_fetch_array($res))
 {
 	$id=$row['ID'];
@@ -28,7 +28,7 @@ while($row=mysql_fetch_array($res))
 	if(($row['SERVEFOR']=='L')|| ($row['SERVEFOR']=='T'))
 		$assisted_arr[$pid][]=$row['SERVEFOR'];
 	$sql1="UPDATE billing.SERVICE_STATUS SET ACTIVE='E' WHERE ID=$id";
-	$res1=mysql_query_decide($sql1) or die($sql.mysql_error_js());
+	$res1=mysql_query_decide($sql1) or mysql_error_js();
 	if($row['SERVEFOR']=='I')
 		endIntroCalls($pid);
 		
@@ -50,7 +50,7 @@ if(count($profileids_arr)>0)
 		$check_main=array();
 		$profile=$profileids_arr[$i];
 		$sql="SELECT SERVEFOR,ACTIVATED FROM billing.SERVICE_STATUS WHERE PROFILEID=$profile AND ACTIVE='Y' AND EXPIRY_DT>'$curdate'";
-		$res=mysql_query_decide($sql) or die($sql.mysql_error_js());
+		$res=mysql_query_decide($sql) or mysql_error_js();
 		if(mysql_num_rows($res))
 		{
 			while($row=mysql_fetch_array($res))
@@ -76,11 +76,12 @@ if(count($profileids_arr)>0)
 		{
 		
 			$sql1="UPDATE billing.SERVICE_STATUS SET ACTIVE='E' WHERE PROFILEID=$profile AND ACTIVE='Y' AND SERVEFOR='I'";
-		        $res1=mysql_query_decide($sql1) or die($sql.mysql_error_js());
+		        $res1=mysql_query_decide($sql1) or mysql_error_js();
 			endIntroCalls($profile);
 		}*/
 		/*$sql1="UPDATE newjs.JPROFILE set SUBSCRIPTION='$servefor_str' where PROFILEID='$profile' ";
-		mysql_query_decide($sql1) or die($sql1.mysql_error_js());*/
+		mysql_query_decide($sql1) or mysql_error_js();
+		*/
                 $jprofileObj    =JProfileUpdateLib::getInstance();
                 $paramArr     	=array("SUBSCRIPTION"=>$servefor_str);
                 $jprofileObj->editJPROFILE($paramArr,$profile,'PROFILEID');

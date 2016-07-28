@@ -29,7 +29,7 @@ if(isset($data))
 			$sql.= " WHERE ID = '$part2' ";//Allow to check the exact status
 			if($part1 != "*")
 			$sql .= " and ORDERID='$part1'";
-			$res=mysql_query_decide($sql) or die(mysql_error_js());
+			$res=mysql_query_decide($sql) or mysql_error_js();
                 	$row=mysql_fetch_array($res);
 			$pid=$row["PROFILEID"];
 			$where=" WHERE PROFILEID='$pid' ";
@@ -46,14 +46,14 @@ if(isset($data))
 		}
 
 		$sql_s.=$where;
-		$res_s=mysql_query_decide($sql_s) or die(mysql_error_js());
+		$res_s=mysql_query_decide($sql_s) or mysql_error_js();
 		if($row_s=mysql_fetch_array($res_s))
 		{
 			$i=0;
 			do
 			{
 				$sql_jp="SELECT SUBSCRIPTION from newjs.JPROFILE where USERNAME='".addslashes($row_s[USERNAME])."'";
-				$result_jp=mysql_query_decide($sql_jp) or die(mysql_error_js());
+				$result_jp=mysql_query_decide($sql_jp) or mysql_error_js();
 				$myrow_jp=mysql_fetch_array($result_jp);
 				
 				$duration=getServiceDetails($row_s['SERVICEMAIN']);
@@ -140,7 +140,7 @@ if(isset($data))
 			$sql.="STATUS='B'";
 
 		$sql.=" AND ORDERID in ($accarr)";
-		$res=mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
+		$res=mysql_query_decide($sql) or mysql_error_js();
 		while($row=mysql_fetch_array($res))
 		{
 			//condition required in case of single record searched without status
@@ -150,7 +150,7 @@ if(isset($data))
 				$membershipObj->startServiceOrder($row['ORDERID'].'-'.$row['ID']);
 				//**code added to track the orders for which the status field is blank and service is started
 				$sql_tmp = "INSERT INTO billing.ORDERS_STARTED(ORDERID, ENTRY_DT) VALUES('$row[ORDERID]',now())";
-				$res_tmp = mysql_query_decide($sql_tmp) or die(mysql_error_js().$sql_tmp);
+				$res_tmp = mysql_query_decide($sql_tmp) or mysql_error_js();
 				//**end code
 			} 
 		}
@@ -159,7 +159,7 @@ if(isset($data))
 			$sql_u="UPDATE billing.ORDERS SET STATUS='A' WHERE 1 AND ORDERID = $accarr";
 		else
 			$sql_u="UPDATE billing.ORDERS SET STATUS='A' WHERE STATUS IN ('Y','B') AND ORDERID IN ($accarr)";
-		mysql_query_decide($sql_u) or die("$sql_u<br>".mysql_error_js());
+		mysql_query_decide($sql_u) or mysql_error_js();
 	}
 */
 	if($rejarr){
@@ -172,19 +172,20 @@ if(isset($data))
 			$sql.="STATUS='Y'";
 
 		$sql.=" AND ID in ($rejarr)";
-		$res=mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
+		$res=mysql_query_decide($sql) or mysql_error_js();
 		while($row=mysql_fetch_array($res))
 		{
 			$profileid=$row['PROFILEID'];
 			/*$sql="UPDATE newjs.JPROFILE SET SUBSCRIPTION='' WHERE PROFILEID='$profileid'";
-			mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());*/
+			mysql_query_decide($sql) or mysql_error_js();
+			*/
 			$jprofileObj    =JProfileUpdateLib::getInstance();
                         $updateStr      ="SUBSCRIPTION=''";
                         $paramArr       =$jprofileObj->convertUpdateStrToArray($updateStr);
                         $jprofileObj->editJPROFILE($paramArr,$profileid,'PROFILEID');
 			
 			$sql_c="UPDATE billing.PURCHASES SET STATUS='STOPPED' WHERE PROFILEID='$profileid'";
-			mysql_query_decide($sql_c) or die(mysql_error_js());
+			mysql_query_decide($sql_c) or mysql_error_js();
 		}
 	}
 		if(count($tempidR) == '1')
@@ -192,7 +193,7 @@ if(isset($data))
 		else
 			$sql_u="UPDATE billing.ORDERS SET STATUS='R' WHERE STATUS IN ('N','Y','B') AND ID IN ($rejarr)";
 
-		mysql_query_decide($sql_u) or die("$sql_u<br>".mysql_error_js());
+		mysql_query_decide($sql_u) or mysql_error_js();
 	}
 
 

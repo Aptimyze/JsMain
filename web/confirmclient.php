@@ -24,7 +24,7 @@ if(authenticated($cid))
 	{
 		$i=1;
 		$sql="SELECT PROFILEID,USERNAME,PAYMENT_COLLECT.NAME,EMAIL,PHONE_RES,PHONE_MOB,SERVICES.NAME as SERVICE,ADDRESS,BRANCH_CITY.LABEL as CITY,PIN from incentive.PAYMENT_COLLECT, billing.SERVICES,incentive.BRANCH_CITY where CONFIRM='' and AR_GIVEN='' and PAYMENT_COLLECT.SERVICE=SERVICES.SERVICEID and PAYMENT_COLLECT.CITY=BRANCH_CITY.VALUE";	
-		$result=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+		$result=mysql_query_decide($sql) or mysql_error_js();
 		if($myrow=mysql_fetch_array($result))
 		{
 			do
