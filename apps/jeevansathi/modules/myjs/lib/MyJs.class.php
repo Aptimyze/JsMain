@@ -597,7 +597,7 @@ class MyJs implements Module
                                 "MATCH_ALERT"=>"stype=".SearchTypesEnums::MATCHALERT_MYJS_IOS,
                                 );
 
-		return $trackingMap[$infoType];
+		return $trackingMap[$listing];
 	}
 
 
