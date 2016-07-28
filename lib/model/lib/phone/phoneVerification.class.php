@@ -128,12 +128,13 @@ protected function phoneUpdateProcess($message)
 			$id=$verifiedLogObj->insertEntry($profileid,$this->getPhoneType(), $this->getPhone(),$message);
              
              //OTP LOGGING
-             $otpLogObj =new MIS_OTP_LOG();
-             $channel=MobileCommon::getChannel();
-             if(!$channel)
-				$channel='M';
-             $otpLogObj->insertEntry($id,$this->getPhoneType(),$this->getPhone(),$this->getIsd(),$channel);
-            
+             if($message=="OTP"){
+				$otpLogObj =new MIS_OTP_LOG();
+				$channel=MobileCommon::getChannel();
+				if(!$channel)
+					$channel='M';
+				$otpLogObj->insertEntry($id,$this->getPhone(),$this->getIsd(),$channel);
+            }
 
 			JsMemcache::getInstance()->set($profileid."_PHONE_VERIFIED",'Y');
 		

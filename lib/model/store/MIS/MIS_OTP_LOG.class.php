@@ -7,7 +7,7 @@ class MIS_OTP_LOG extends TABLE{
 
 	
 
-public function insertEntry($id,$phoneType,$phoneNum,$isd,$channel){
+public function insertEntry($id,$phoneNum,$isd,$channel){
                
                 if(!$id||!$phoneType||!$phoneNum||!$isd || !$channel)
                         throw new jsException("","one or more of the arguements IS BLANK IN insert() OF MIS_OTP_LOG.class.php");
