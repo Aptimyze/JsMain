@@ -608,3 +608,37 @@ function logOutCheck(param,upgradeFromTopNavBar){
     top.location.href=param; 
     return true; 
 }
+
+var timeToCache = 3600; // Time in seconds
+function getUrlForHeaderCaching($url)
+{
+	var now = $.now();
+	var lastDppHeaderCaching = localStorage.getItem('dppHeaderCaching');
+	var lastDppChangedActionTimestamp = localStorage.getItem('lastDppChangedActionTimestamp');
+	var lastContactActionTimestamp = localStorage.getItem('lastContactActionTimestamp');
+	if(lastDppHeaderCaching!='null')
+	{
+		timestamp = lastDppHeaderCaching;
+		var seconds =  (now - lastDppHeaderCaching)/1000;
+		if(seconds>timeToCache)
+			timestamp = now;
+		if(lastDppChangedActionTimestamp>timestamp)
+			timestamp = lastDppChangedActionTimestamp;
+		if(lastContactActionTimestamp>timestamp)
+			timestamp = lastContactActionTimestamp;
+	}
+	else
+		timestamp = now;
+	localStorage.setItem('dppHeaderCaching',timestamp);
+	return $url+"?useHeaderCaching=1&timestamp="+timestamp;	
+}
+function callAfterContact()
+{
+	var now = $.now();
+	localStorage.setItem('lastContactActionTimestamp',now);
+}
+function callAfterDppChange()
+{
+	var now = $.now();
+	localStorage.setItem('lastDppChangedActionTimestamp',now);
+}
