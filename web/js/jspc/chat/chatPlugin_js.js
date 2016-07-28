@@ -1485,7 +1485,7 @@ JsChat.prototype = {
             str += '<li>' + param2.income + ', ' + param2.city + '</li>';
             str += '</ul>';
             str += '</div>';
-            str += '<div class="fullwid clearfix" id="' + param1 + '_BtnRespnse">';
+            str += '<div class="fullwid clearfix pos-rel" id="' + param1 + '_BtnRespnse">';
             str += '<p class="txtc nc-color2 lh27 nhgt28"></p>';
             str += '<div id="' + param1 + '_BtnOuter">';
             str += _this._getButtonStructure(param1, group, pCheckSum, jid, nick);
