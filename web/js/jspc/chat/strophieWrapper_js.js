@@ -21,7 +21,7 @@ var strophieWrapper = {
         if (strophieWrapper.loggingEnabledStrophe) {
             if (typeof (window.console) != 'undefined') {
                 try {
-                    invalidfunctionthrowanerrorplease();
+                    throw new Error('Initiate Stack Trace');
                 } catch (err) {
                     var logStack = err.stack;
                 }
