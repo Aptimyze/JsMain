@@ -458,14 +458,16 @@ function handlePreAcceptChat(apiParams) {
             success: function (response) {
                 chatLoggerPC("in success of handlePreAcceptanceMsg");
                 chatLoggerPC(response);
-                outputData["canSend"] = response["cansend"];
+                outputData = response;
+                //outputData["canSend"] = response["cansend"];
                 outputData["errorMsg"] = response["message"];
                 outputData["msg_id"] = strophieWrapper.getUniqueId();
             },
             error: function (xhr) {
                 chatLoggerPC("in error of handlePreAcceptanceMsg");
                 chatLoggerPC(xhr);
-                outputData["canSend"] = false;
+                outputData["sent"] = false;
+                outputData["cansend"] = true;
                 outputData["errorMsg"] = "Something went wrong";
                 //return "error";
             }
@@ -783,7 +785,8 @@ $(document).ready(function () {
             } else {
                 output = {};
                 output["errorMsg"] = "You are not allowed to chat";
-                output["canSend"] = false;
+                output["cansend"] = false;
+                output["sent"] = false;
             }
             chatLoggerPC(output);
             chatLoggerPC("end of onSendingMessage");

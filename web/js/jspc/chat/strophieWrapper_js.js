@@ -304,6 +304,7 @@ var strophieWrapper = {
         //strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
         invokePluginManagelisting(strophieWrapper.Roster, "create_list");
         strophieWrapper.setRosterStorage(strophieWrapper.Roster);
+        strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
     },
     //executed on msg receipt
     onMessage: function (iq) {
@@ -426,13 +427,15 @@ var strophieWrapper = {
                 var messageId = strophieWrapper.connectionObj.receipts.sendMessage(reply);
                 outputObj = {
                     "msg_id": messageId,
-                    "canSend": true
+                    "cansend": true,
+                    "sent":true
                 };
                 return outputObj;
             } else {
                 outputObj = {
                     "msg_id": strophieWrapper.getUniqueId(),
-                    "canSend": false,
+                    "cansend": false,
+                    "sent":false,
                     "errorMsg": 'Your current offline, please check your internet connection and try again'
                 };
                 return outputObj;
@@ -440,8 +443,9 @@ var strophieWrapper = {
         } catch (e) {
             outputObj = {
                 "msg_id": strophieWrapper.getUniqueId(),
-                "canSend": false,
-                "errorMsg": e
+                "cansend": false,
+                "errorMsg": "Something went wrong",
+                "sent":false
             };
         }
         return outputObj;
@@ -581,18 +585,19 @@ var strophieWrapper = {
 	    	if(typeof groups != "undefined" && strophieWrapper.checkForGroups(groups) == true){
 		    	var user_id = rosterParams["jid"].split("@")[0];
 		        if(typeof strophieWrapper.Roster[user_id] != "undefined"){
-		           	var iq = $iq({type: 'set', id: strophieWrapper.getUniqueId('roster')})
+		           	var iq = $iq({from:rosterParams["jid"], type: 'set', id: strophieWrapper.getUniqueId('roster')})
 		                    .c('query', {xmlns: Strophe.NS.ROSTER})
-		                    .c('item', {'jid': rosterParams["jid"], 'name': rosterParams["nick"], 'subscription': rosterParams["subscription"]});
+		                    .c('item', {jid: rosterParams["jid"], name: rosterParams["nick"], subscription: 'both'});
 		            iq.c('group').t(rosterParams["groupid"]).up();
 		            console.log("in addRosterItem");
 		            console.log(iq);
+		            
 		            strophieWrapper.connectionObj.sendIQ(iq, function(status){
-		                stropheLoggerPC("roster adding stanza: "+jid);
+		                console.log("roster adding stanza: "+jid);
 		            });
 		        }
 		        else{
-		            stropheLoggerPC("user cannot be addeded in roster");
+		            console.log("user cannot be addeded in roster");
 		        }
 		    }
 		}
