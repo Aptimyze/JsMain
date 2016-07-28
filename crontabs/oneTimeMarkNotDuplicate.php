@@ -70,7 +70,7 @@ mysql_query("set session wait_timeout=1000",$db);
 		foreach ($dupArr as $key => $value) {
 			# code...
 	  		if($value=='Y')
-	  		$notDuplicateObj->removeProfileAsDuplicate($rawDuplicateObj->getProfileid1());
+	  		$notDuplicateObj->removeProfileAsDuplicate($key);
 
 		}
 
