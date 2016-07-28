@@ -209,7 +209,7 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
         }
 
         function getSimilarProfilesFromSearch($loggedIn, $viewed, $viewedGender, $includeCaste, $includeAwaitingContacts, $suggAlgoNoOfResults, $viewer = '') {
-                $profileObj = Profile::getInstance("newjs_bmsSlave", $viewed);
+                $profileObj = Profile::getInstance("newjs_masterRep", $viewed);
                 $row = $profileObj->getDetail($viewed, "PROFILEID","*");
                 
                 if ($row) {

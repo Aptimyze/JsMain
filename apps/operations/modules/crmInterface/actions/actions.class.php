@@ -213,6 +213,13 @@ class crmInterfaceActions extends sfActions
 								$this->startDate        =date("d M Y",strtotime($startDate));
 								$this->endDate          =date("d M Y",strtotime($endDate));
 								$this->discountSuccess  =true;
+								$memCacheObject = JsMemcache::getInstance();
+								$membershipKeyArray = VariableParams::$membershipKeyArray;
+								$keys_removed = "";
+								foreach ($membershipKeyArray as $key => $keyVal) {
+								    $memCacheObject->remove($keyVal);
+								    $keys_removed .= $keyVal.",\n"; 
+								}
 						}
 						else
 								$this->discountError =true;
@@ -276,6 +283,13 @@ class crmInterfaceActions extends sfActions
                         $memHandlerObject =new MembershipHandler();
                         $memHandlerObject->flushMemcacheForMembership();
 			$this->successMsg = "Discount Values Successfully Applied";
+			$memCacheObject = JsMemcache::getInstance();
+			$membershipKeyArray = VariableParams::$membershipKeyArray;
+			$keys_removed = "";
+			foreach ($membershipKeyArray as $key => $keyVal) {
+			    $memCacheObject->remove($keyVal);
+			    $keys_removed .= $keyVal.",\n"; 
+			}
 		}
 	}
 
@@ -317,6 +331,13 @@ class crmInterfaceActions extends sfActions
 			}
 			$this->successMsg = "Discount/Duration Values Successfully Applied";
 			unset($this->errorMsg);
+			$memCacheObject = JsMemcache::getInstance();
+			$membershipKeyArray = VariableParams::$membershipKeyArray;
+			$keys_removed = "";
+			foreach ($membershipKeyArray as $key => $keyVal) {
+			    $memCacheObject->remove($keyVal);
+			    $keys_removed .= $keyVal.",\n"; 
+			}
 			// get the updated values from database for display
 			$this->offerArr = $commCrmFuncObj->getFestiveOfferMappingDetails();
 		}

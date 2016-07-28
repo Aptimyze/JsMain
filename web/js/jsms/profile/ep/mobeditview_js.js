@@ -206,6 +206,7 @@ var mobEditPage=(function(){
 			}
 			else
 			{
+				if(value!=null)
 				$.each(value, function(k ,v)
 				{
 					
@@ -388,6 +389,7 @@ function formatJsonOutput(result)
 	delete(result.phoneDetails);
 	delete(result.responseMessage);
 	delete(result.responseStatusCode);
+        delete(result.imageCopyServer);
 	return result;
 }
 

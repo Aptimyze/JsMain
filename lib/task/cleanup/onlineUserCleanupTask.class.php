@@ -21,7 +21,16 @@ EOF;
   {
         if(!sfContext::hasInstance())
                 sfContext::createInstance($this->configuration);
-                $jsCommonObj =new JsCommon();
-                $profilesArr =$jsCommonObj->removeOfflineProfiles();
+
+		$dateTime1 ='10';
+		$dateTime2 ='22';
+		$dateTime =date("H");
+		$redisOnline =true;
+		if(($dateTime>=$dateTime1) && ($dateTime<$dateTime2))
+			$redisOnline =false;
+		if($redisOnline){
+                	$jsCommonObj =new JsCommon();
+                	$profilesArr =$jsCommonObj->removeOfflineProfiles();
+		}
   }
 }

@@ -1,0 +1,81 @@
+<?php
+/**
+ * contacts actions.
+ *
+ * @package    jeevansathi
+ * @subpackage contacts
+ * @author     Your name here
+ * @version    SVN: $Id: actions.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ */
+class popChatAction extends sfAction
+{
+	/**
+	 * Executes index action
+	 *
+	 * @param sfRequest $request A	 request object
+	 */
+	
+	function execute($request)
+	{
+		
+		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("module"));
+		$apiObj                  = ApiResponseHandler::getInstance();
+
+		if ($request->getParameter("action")=="popChat")
+		{
+			
+			$inputJSON = file_get_contents('php://input');
+			$input= json_decode( $inputJSON, TRUE );
+			
+			
+			
+				$sender=substr($input['from'],0,strrpos($input['from'] ,"@"));
+				$receiver=substr($input['to'],0,strrpos($input['to'] ,"@"));
+				//$message=$input['msg'];
+				$request->setParameter("communicationType",'C');
+				$communicationType='C';
+			//	$request->setParameter("message",$message);
+			
+			$inputValidateObj->validatePopChat($request);
+			$output = $inputValidateObj->getResponse();
+			if($output["statusCode"]==ResponseHandlerConfig::$SUCCESS["statusCode"])
+			{
+				//echo $sender."--".$receiver."--".$message;die;
+				//Contains logined Profile information;
+				$this->senderProfile = new Profile("",$sender);
+				$this->senderProfile->getDetail($sender, "PROFILEID");
+				$this->receiverProfile= new Profile("",$receiver);
+				$this->receiverProfile->getDetail($receiver, "PROFILEID");
+					
+				$js_communication=new JS_Communication($this->senderProfile,$this->receiverProfile,$communicationType,$message);
+				$arr=$js_communication->getCommunication();
+				if($arr)
+				{
+					$responseArray["Message"] = json_encode($arr);
+					$responseArray["chatId"] = $Id;
+				}
+			}
+		}
+		if (is_array($responseArray)) {
+			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+			$apiObj->setResponseBody($responseArray);
+			$apiObj->generateResponse();
+		}
+		else
+		{
+			if(is_array($output))
+				$apiObj->setHttpArray($output);
+			else
+				$apiObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+			$apiObj->generateResponse();
+		}
+		die;
+	}
+
+
+	function executePopChat($request)
+	{
+		echo "getMessageHistory";die;
+		
+	}
+}

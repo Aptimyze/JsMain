@@ -435,19 +435,20 @@ class commonActions extends sfActions
 				$responseSet = ButtonResponse::buttonDetailsMerge($array);
 				$finalresponseArray["actiondetails"] = null;
 				$finalresponseArray["buttondetails"] = ButtonResponse::buttonDetailsMerge($array);
-			}
-			//Entry in Chat Roster
-			try {
-				$producerObj = new Producer();
-				if ($producerObj->getRabbitMQServerConnected()) {
-					$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'ADD_BOOKMARK', 'body' => array('sender' => array('profileid'=>$this->loginProfile->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->loginProfile->getPROFILEID()),'username'=>$this->loginProfile->getUSERNAME()), 'receiver' => array('profileid'=>$bookmarkee,'checksum'=>$bookmarkeeChecksum,'username'=>$this->Profile->getUSERNAME()))), 'redeliveryCount' => 0);
-					$producerObj->sendMessage($chatData);
+				//Entry in Chat Roster
+				try {
+					$producerObj = new Producer();
+					if ($producerObj->getRabbitMQServerConnected()) {
+						$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'ADD_BOOKMARK', 'body' => array('sender' => array('profileid'=>$this->loginProfile->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->loginProfile->getPROFILEID()),'username'=>$this->loginProfile->getUSERNAME()), 'receiver' => array('profileid'=>$bookmarkee,'checksum'=>$bookmarkeeChecksum,'username'=>$this->Profile->getUSERNAME()))), 'redeliveryCount' => 0);
+						$producerObj->sendMessage($chatData);
+					}
+					unset($producerObj);
+				} catch (Exception $e) {
+					throw new jsException("Something went wrong while sending in chat queue for remove bookmark -" . $e);
 				}
-				unset($producerObj);
-			} catch (Exception $e) {
-				throw new jsException("Something went wrong while sending in chat queue for remove bookmark -" . $e);
+				//End
 			}
-			//End
+
 			$bookmarkerMemcacheObject->updateMemcache();
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiObj->setResponseBody($finalresponseArray);

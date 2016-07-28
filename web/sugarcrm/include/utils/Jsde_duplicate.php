@@ -6,6 +6,7 @@ It is used for finding the duplicate entries for leads and jeevansathi records.
 ********************************************************************************/
 require_once ('include/entryPoint.php');
 include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
+include_once(JsConstants::$docRoot."/profile/connect_db.php");
 class Duplicate {
     var $db;
     var $dbUpdate;
@@ -857,6 +858,7 @@ class Duplicate {
 	function updateLeadSeriousnessCount($id,$partition='')
 	{
 		$updateJprofile=0;
+		$this->dbUpdate = connect_db();
 		if($id)
 		{
 			if($partition)
@@ -877,13 +879,13 @@ class Duplicate {
 					 $cstmTableName="sugarcrm_housekeeping.connected_leads_cstm";
 				}
 				$sql="UPDATE $leadsTableName,$cstmTableName SET seriousness_count_c=seriousness_count_c+1,date_modified=NOW() WHERE id=id_c AND id='$id'";
-                                $this->dbUpdate->query($sql);
+				mysql_query($sql,$this->dbUpdate);
 				$updateJprofile=1;
 			}
 			if(!$leadsTableName)
 			{
 				$sql="UPDATE sugarcrm.leads,sugarcrm.leads_cstm SET seriousness_count_c=seriousness_count_c+1,date_modified=NOW() WHERE id='$id' AND id=id_c";
-				$this->dbUpdate->query($sql);
+				mysql_query($sql,$this->dbUpdate);
 				if(!$this->dbUpdate->getAffectedRowCount())
 				{
 					foreach ($this->partitionsArray as $partition)
@@ -891,7 +893,7 @@ class Duplicate {
 						$leadsTableName="sugarcrm_housekeeping.".$partition."_leads";
 						$cstmTableName = "sugarcrm_housekeeping.".$partition."_leads_cstm";
 						$sql="UPDATE $leadsTableName,$cstmTableName SET seriousness_count_c=seriousness_count_c+1,date_modified=NOW() WHERE id='$id' AND id=id_c";
-						$this->dbUpdate->query($sql);
+						mysql_query($sql,$this->dbUpdate);
 						if($this->dbUpdate->getAffectedRowCount())
 						{
 							$updateJprofile=1;

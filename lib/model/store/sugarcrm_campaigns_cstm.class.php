@@ -11,7 +11,6 @@ class sugarcrm_campaigns_cstm extends TABLE
     	try{
 
 		    $sql = "SELECT newspaper_c,edition_c,newspaper_edition_c,email_id_c,mobile_no_c FROM sugarcrm.campaigns_cstm WHERE id_c =:CAMPAIGN_ID";
-		    $this->db = connect_slave();
 		    $prep = $this->db->prepare($sql);			
 		    $prep->bindValue(":CAMPAIGN_ID",$campaign_id,PDO::PARAM_STR);
 		    $prep->execute();

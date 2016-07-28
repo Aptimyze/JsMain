@@ -8,19 +8,18 @@
 *********************************************************************************************/
 $start = @date('H:i:s');
 
-// Redis connection String
 $dir ="/home/developer/jsdialer";
 include_once($dir.'/plugins/predis-1.1/autoload.php');
-$ifSingleRedis ='tcp://127.0.0.1:6379';
+$ifSingleRedis ='tcp://172.10.18.65:6380';
+
+// Redis Data fetch 
+$client = new Predis\Client($ifSingleRedis);
+$pro_array =$online_array = $client->zRange('online_user', 0, -1);
+//print_r($pro_array);die;
 
 //Open connection at JSDB
 $db_js = mysql_connect("ser2.jeevansathi.jsb9.net","user_dialer","DIALlerr") or die("Unable to connect to js server at".$start);
 $db_js_157 = mysql_connect("localhost:/tmp/mysql_06.sock","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
-
-// Redis Data fetch 
-$client = new Predis\Client($ifSingleRedis);
-//$client->zAdd('mylist', '1', 'one');
-$pro_array =$online_array = $client->zRange('online_user', 0, -1);
 
 //Compute all online users
 /*$pro_array = array();
@@ -72,10 +71,18 @@ $pro_array = array_diff($pro_array,$last_pro_array);
 $pro_array = array_unique($pro_array);
 $pro_str = @implode("','",$pro_array);
 
-/*$sqlc= "SELECT CAMPAIGN FROM incentive.CAMPAIGN WHERE ACTIVE = 'Y' AND CAMPAIGN!='PUNE_JS'";*/
+//Compute all the active campaigns
+/*$sqlc= "SELECT CAMPAIGN FROM incentive.CAMPAIGN WHERE ACTIVE = 'Y' AND CAMPAIGN!='PUNE_JS'";
+$resc=mysql_query($sqlc,$db_js) or die($sqlc.mysql_error($db_js));
+while($myrowc = mysql_fetch_array($resc))
+	$camp_array[] = $myrowc["CAMPAIGN"];*/
 $camp_array = array("JS_NCRNEW","MAH_JSNEW");
 
-/*$sql_lf="SELECT LEAD_ID_SUFFIX FROM incentive.LARGE_FILE ORDER BY ENTRY_DT DESC LIMIT 1";*/
+//Compute Suffix for active leadids
+/*$sql_lf="SELECT LEAD_ID_SUFFIX FROM incentive.LARGE_FILE ORDER BY ENTRY_DT DESC LIMIT 1";
+$res_lf=mysql_query($sql_lf,$db_js) or die($sql_lf.mysql_error($db_js));
+$row_lf=mysql_fetch_assoc($res_lf);
+$suffix = $row_lf['LEAD_ID_SUFFIX'];*/
 $suffix = '070116';
 
 if(count($camp_array)>0)
@@ -158,19 +165,12 @@ if(count($camp_array)>0)
 				$cnt1++;
 				if($allocated)//Allocated to agent
 				{
-					if($discount)//Eligible for VD
-		                                $npriority = '9';
+					if($analytic_score>=91 && $analytic_score<=100)
+						$npriority = '7';
+					elseif($analytic_score>=81 && $analytic_score<=90)
+						$npriority = '6';
 					else
-					{
-						if($analytic_score>=81 && $analytic_score<=100)
-                                                        $npriority = '8';
-						elseif($analytic_score>=56 && $analytic_score<=80)
-                                                        $npriority = '7';
-                                                elseif($analytic_score>=1 && $analytic_score<=55)
-                                                        $npriority = '6';
-						else
-							$ignore = 1;
-					}
+						$ignore = 1;
 					if($dialed_today)
                                                 $query2 = "UPDATE easy.dbo.ct_$campaign_name SET LAST_LOGIN_DATE=getdate() FROM easy.dbo.ct_$campaign_name where easycode='$ecode'";
                                         else
@@ -181,30 +181,22 @@ if(count($camp_array)>0)
 				}
 				else
 				{
-					if($discount)//Eligible for VD
-					{
-						if($analytic_score>=81 && $analytic_score<=100)
-                                                        $npriority = '9';
-						elseif($analytic_score>=56 && $analytic_score<=80)
-							$npriority = '8';
-						elseif($analytic_score>=1 && $analytic_score<=55)
-							$npriority = '7';
-						else
-							$ignore = 1;
-					}
-                                        else
-                                        {
-                                                if($analytic_score>=91 && $analytic_score<=100)
-                                                        $npriority = '9';
-                                                elseif($analytic_score>=81 && $analytic_score<=90)
-                                                        $npriority = '8';
-						elseif($analytic_score>=56 && $analytic_score<=80)
-                                                        $npriority = '7';
-                                                elseif($analytic_score>=31 && $analytic_score<=55)
-                                                        $npriority = '6';
-                                                else
-                                                        $ignore = 1;
-                                        }
+					if($analytic_score>=96 && $analytic_score<=100)
+                                                $npriority = '9';
+                                        elseif($analytic_score>=91 && $analytic_score<=95)
+                                                $npriority = '8';
+                                        elseif($analytic_score>=86 && $analytic_score<=90)
+                                                $npriority = '7';
+                                        elseif($analytic_score>=81 && $analytic_score<=85)
+						$npriority = '6';
+					elseif($analytic_score>=76 && $analytic_score<=80)
+						$npriority = '5';
+					elseif($analytic_score>=71 && $analytic_score<=75)
+						$npriority = '4';
+					elseif($analytic_score>=61 && $analytic_score<=70)
+						$npriority = '3';
+					else
+						$ignore = 1;
 					if($dialed_today)
                                                 $query2 = "UPDATE easy.dbo.ct_$campaign_name SET LAST_LOGIN_DATE=getdate() FROM easy.dbo.ct_$campaign_name where easycode='$ecode'";
                                         else
