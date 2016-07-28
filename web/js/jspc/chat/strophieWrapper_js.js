@@ -595,4 +595,5 @@ var strophieWrapper = {
 		        }
 		    }
 		}
+	}
 }
