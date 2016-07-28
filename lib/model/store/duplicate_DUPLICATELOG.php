@@ -185,24 +185,27 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
         }
 
 
-        public function fetchProbableOrConfirmedDuplicates($group1,$profile1,$profile2)
+        public function fetchConfirmedDuplicates()
         {
         try {
 
-            $sql = "SELECT (PROFILE1, PROFILE2)";
+            $sql = "SELECT PROFILE1, PROFILE2 where IS_DUPLICATE='YES'";
             
             $prep = $this->db->prepare($sql);
-            $prep->bindValue(":GROUP1",$group1, PDO::PARAM_INT);
-            $prep->bindValue(":PROFILEID1", $profile1, PDO::PARAM_INT);
-            $prep->bindValue(":PROFILEID2", $profile2, PDO::PARAM_INT);
-           
+            
             $prep->execute();
             
-                }
-                catch (Exception $e) {
-            throw new jsException($e);
+            while ($result = $prep->fetch(PDO::FETCH_ASSOC))
+                        {
+                                $finalR[]=$result;
+                        }
+                    
+            return $finalR; 
+        catch (Exception $e) 
+                {
+                throw new jsException($e);
                 }
         }
 }
-
+}
 ?>
