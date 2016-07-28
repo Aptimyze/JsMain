@@ -695,7 +695,7 @@ $(document).ready(function () {
                 var paramsData = $("#" + params.id).attr('data-params');
                 var receiverJID = $("#" + params.id).attr('data-jid');
                 var nickName = $("#" + params.id).attr('data-nick');
-                checkSum = "802d65a19583249de2037f9a05b2e424i6341959";
+                //checkSum = "802d65a19583249de2037f9a05b2e424i6341959";
                 var trackingParamsArr = paramsData.split("&"),trackingParams={};
                 $.each(trackingParamsArr,function(key,val){
                     var v = val.split("=");
