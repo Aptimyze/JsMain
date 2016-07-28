@@ -111,7 +111,7 @@ flex-flow: row wrap;
 justify-content: center;
 }
 ul.myjstab li{width:25%;color:#34495e;font-family:"Roboto", "sans-serif";font-weight:300; font-size:13px;position: relative;
-z-index: 1;
+/*z-index: 1;*/
 display: block;
 margin: 0;
 text-align: center;
@@ -382,4 +382,8 @@ box-shadow: -1px -13px 33px -9px rgba(153,153,153,0.96);}
 }
 .margin_new18 {
     margin: 18px 0px;
+}
+.bubble_overlay{
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.65);
 }
