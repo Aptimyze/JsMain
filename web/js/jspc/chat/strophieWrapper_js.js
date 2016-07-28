@@ -16,7 +16,7 @@ var strophieWrapper = {
     },
     rosterGroups: chatConfig.Params.PC.rosterGroups,
     currentConnStatus: null,
-    loggingEnabledStrophe: true,
+    loggingEnabledStrophe: false,
     stropheLoggerPC: function (msgOrObj) {
         if (strophieWrapper.loggingEnabledStrophe) {
             if (typeof (window.console) != 'undefined') {
@@ -272,8 +272,9 @@ var strophieWrapper = {
     },
     //executed after roster has been fetched
     onRosterReceived: function (iq) {
-        strophieWrapper.stropheLoggerPC("in onRosterReceived");
+        console.log("in onRosterReceived");
         strophieWrapper.stropheLoggerPC(iq);
+        console.log(iq);
         $(iq).find("item").each(function () {
             var subscription = $(this).attr("subscription"),
                 jid = $(this).attr("jid"),
@@ -403,7 +404,7 @@ var strophieWrapper = {
             return false;
         } else {
             $.each(groupArr, function (index, val) {
-                if ($.inArray(val, strophieWrapper.rosterGroups) == -1) {
+                if (strophieWrapper.rosterGroups.indexOf(val) == -1) {
                     return false;
                 }
             });
@@ -573,31 +574,27 @@ var strophieWrapper = {
         }
     },
     //add user in roster
-    addRosterItem: function (rosterParams) {
-        if (typeof rosterParams != "undefined") {
-            var groups = [];
-            groups.push(rosterParams["groupid"]);
-            if (typeof groups != "undefined" && strophieWrapper.checkForGroups(groups) == true) {
-                var user_id = rosterParams["jid"].split("@")[0];
-                if (typeof strophieWrapper.Roster[user_id] != "undefined") {
-                    var iq = $iq({
-                        type: 'set',
-                        id: strophieWrapper.getUniqueId('roster')
-                    }).c('query', {
-                        xmlns: Strophe.NS.ROSTER
-                    }).c('item', {
-                        jid: rosterParams["jid"],
-                        name: rosterParams["nick"],
-                        subscription: rosterParams["subscription"]
-                    });
-                    iq.c('group').t(rosterParams["groupid"]).up();
-                    strophieWrapper.connectionObj.sendIQ(iq, function (status) {
-                        stropheLoggerPC("roster adding stanza: " + jid);
-                    });
-                } else {
-                    stropheLoggerPC("user cannot be addeded in roster");
-                }
-            }
-        }
-    }
+    addRosterItem:function(rosterParams){
+    	if(typeof rosterParams != "undefined"){
+	    	var groups = [];
+	    	groups.push(rosterParams["groupid"]);
+	    	if(typeof groups != "undefined" && strophieWrapper.checkForGroups(groups) == true){
+		    	var user_id = rosterParams["jid"].split("@")[0];
+		        if(typeof strophieWrapper.Roster[user_id] != "undefined"){
+		           	var iq = $iq({type: 'set', id: strophieWrapper.getUniqueId('roster')})
+		                    .c('query', {xmlns: Strophe.NS.ROSTER})
+		                    .c('item', {'jid': rosterParams["jid"], 'name': rosterParams["nick"], 'subscription': rosterParams["subscription"]});
+		            iq.c('group').t(rosterParams["groupid"]).up();
+		            console.log("in addRosterItem");
+		            console.log(iq);
+		            strophieWrapper.connectionObj.sendIQ(iq, function(status){
+		                stropheLoggerPC("roster adding stanza: "+jid);
+		            });
+		        }
+		        else{
+		            stropheLoggerPC("user cannot be addeded in roster");
+		        }
+		    }
+		}
+	}
 }
