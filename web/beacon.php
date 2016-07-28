@@ -121,13 +121,13 @@ function extractHtml5data($array)
 	{
 		$sql = "INSERT IGNORE INTO MIS.MOBILE_ACTIVITY_LOG(session_id,user_id,activity_type,activity_type_value,user_agent,current_url,ref_url,perceived_loadtime_page,time_head_page_ready,boomr_pageid,t_head,t_body,server_p_time,bandwidth,bandwidth_err,latency,latency_err,hml5applicationcache,hml5canvas,hml5frmdate,hml5frmsautofocus,hml5geolocation, hml5history,hml5localstorage,hml5video,hml5webworkers,ip_address,logged_at,noscript,SW,PD,PO) VALUES ('$array[session_id]',$array[user_id],'$array[activity_type]','$array[activity_type_value]','$array[user_agent]','$array[current_url]','$array[ref_url]',$array[perceived_loadtime_page],$array[time_head_page_ready],'$array[boomr_pageid]',$array[t_head],$array[t_body],$array[server_p_time],$array[bandwidth],$array[bandwidth_err],$array[latency],$array[latency_err],$array[hml5applicationcache],$array[hml5canvas],$array[hml5frmdate],$array[hml5frmsautofocus],$array[hml5geolocation], $array[hml5history],$array[hml5localstorage],$array[hml5video],$array[hml5webworkers],$array[ip_address],'$array[logged_at]',$array[noscript],'$array[sw]','$array[pd]','$array[po]')";
 		
-		mysql_query_decide($sql);// or die("2 $sql".mysql_error_js());
+		mysql_query_decide($sql) or mysql_error_js();
 	}
 	
 	function saveCSS3data($array)
 	{
 		$sql = "INSERT IGNORE INTO MIS.MOBILE_ACTIVITY_CSSLOG(session_id,user_id,activity_type,user_agent,mediaqueries,fontface,borderimage,borderradius,boxshadow,flexbox,opacity,cssanimations,cssgradients,cssreflections,csstransforms,csstransitions,logged_at) VALUES ('$array[session_id]',$array[user_id],'$array[activity_type]','$array[user_agent]',$array[mediaqueries],$array[fontface],$array[borderimage],$array[borderradius],$array[boxshadow],$array[flexbox],$array[opacity],$array[cssanimations],$array[cssgradients],$array[cssreflections],$array[csstransforms],$array[csstransitions],'$array[logged_at]')";
 		
-		mysql_query_decide($sql);// or die("2 $sql".mysql_error_js());
+		mysql_query_decide($sql) or mysql_error_js();
 	}
 ?>

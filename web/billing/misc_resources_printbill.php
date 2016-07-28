@@ -18,7 +18,7 @@ if(authenticated($cid))
 	}
 	list($billid,$receiptid)= explode("i",$_POST['cbbill']);
 	$sql="select a.CATEGORY,a.BUREAU_PID from billing.REV_MASTER as a,billing.REV_PAYMENT as b where b.RECEIPTID='$receiptid' and a.SALEID=b.SALEID ";
-	$result=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+	$result=mysql_query_decide($sql) or mysql_error_js();
 	$myrow=mysql_fetch_array($result);
 	$category=$myrow['CATEGORY'];
 	$bureau_pid=$myrow['BUREAU_PID'];
@@ -54,7 +54,7 @@ if(authenticated($cid))
 		}
 		
 		$sql="select a.USERNAME,a.NAME,c.RECEIPTID,c.TYPE,c.AMOUNT,c.ENTRY_DT from marriage_bureau.BUREAU_PROFILE as a,billing.REV_MASTER as b,billing.REV_PAYMENT as c where c.RECEIPTID='$receiptid' and b.SALEID=c.SALEID and a.PROFILEID=b.BUREAU_PID";
-		$result=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+		$result=mysql_query_decide($sql) or mysql_error_js();
 		$myrow=mysql_fetch_array($result);
 		$name=$myrow['NAME'];
 		$username=$myrow['USERNAME'];
@@ -70,7 +70,7 @@ if(authenticated($cid))
                 $msg = "Dear $name,\n\n We have received your payment of $type $amount on $inv_date \n\nCopy of your bill (Bill.rtf) has been attached with this mail. Kindly revert back for any discrepancies in the bill."; 
 		$sql="SELECT EMAIL from jsadmin.PSWRDS where USERNAME='$user'";
 		$result=mysql_query_decide($sql);
-		$myrow=mysql_fetch_array($result) or die("$sql".mysql_error_js());
+		$myrow=mysql_fetch_array($result) or mysql_error_js();
 		$entrybyemail= $myrow['EMAIL'];
 
                 send_email("$email",$msg,$subject,'webmaster@jeevansathi.com',$entrybyemail,"aman.sharma@jeevansathi.com",$bill);

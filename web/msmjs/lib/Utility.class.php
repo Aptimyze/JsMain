@@ -2,9 +2,13 @@
 //class Utility
 //{
 	include_once "config/config.php";
+        // include wrapper for logging
+        include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
+
 	/***********log error function**********************/
         function logError($message,$query="",$critical="exit", $sendmailto="NO")
         {
+                LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($message));
                 global $db, $smarty, $checksum;
                 ob_start();
                 var_dump($_SERVER);

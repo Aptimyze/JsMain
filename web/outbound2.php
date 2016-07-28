@@ -33,7 +33,7 @@ if(authenticated($cid))
 		{
 		
 	                $sql="SELECT ENTRYBY,MODE,COMMENT,ENTRY_DT FROM incentive.HISTORY WHERE PROFILEID='$profileid' ORDER BY ENTRY_DT DESC";
-        	        $res=mysql_query_decide($sql) or die(mysql_error_js());
+        	        $res=mysql_query_decide($sql) or mysql_error_js();
                 	$i=1;
 	                while($myrow=mysql_fetch_array($res))
         	        {
@@ -82,17 +82,17 @@ if(authenticated($cid))
 			if($follow!='F')
 			{
 				$sql1="DELETE FROM incentive.MAIN_ADMIN WHERE PROFILEID='$profileid' AND ALLOTED_TO='$name'";
-				mysql_query_decide($sql1) or die("1 $sql1".mysql_error_js());
+				mysql_query_decide($sql1) or mysql_error_js();
 				$sql2 = "INSERT INTO incentive.CLAIM (PROFILEID,USERNAME,CONVINCE_TIME,COMMENT,ENTRY_TIME,ENTRYBY,STATUS,MODE,RES_NO,MOB_NO,EMAIL,WILL_PAY) VALUES ('$profileid','$USERNAME',now(),'$COMMENTS',now(),'$name','$follow','O','$PHONE_MOB','$PHONE_RES','$EMAIL','$WILL_PAY')";
-            			mysql_query_decide($sql2) or die("2 $sql2".mysql_error_js());
+            			mysql_query_decide($sql2) or mysql_error_js();
 			}
 			else
 			{
 				$sql3 = "UPDATE incentive.MAIN_ADMIN SET STATUS='$follow',FOLLOWUP_TIME='$follow_time',ALTERNATE_NO='$ALTERNATE_NO',CONVINCE_TIME=now(),WILL_PAY='$WILL_PAY',COMMENTS='$COMMENTS' WHERE PROFILEID='$profileid' AND ALLOTED_TO='$name' AND MODE='O'";
-				mysql_query_decide($sql3) or die("3 $sql3".mysql_error_js());		
+				mysql_query_decide($sql3) or mysql_error_js();
 			}
                         $sql4 = "INSERT INTO incentive.HISTORY (PROFILEID,USERNAME,ENTRYBY,MODE,COMMENT,ENTRY_DT) VALUES ('$profileid','$USERNAME','$name','O','$COMMENTS',now())";
-			mysql_query_decide($sql4) or die("4 $sql4".mysql_error_js());
+			mysql_query_decide($sql4) or mysql_error_js();
 
 		}	
 		$msg ="Entry for <font color=\"blue\">$USERNAME</font> is done<br>";
@@ -113,21 +113,21 @@ if(authenticated($cid))
 	else
 	{
         	$sql= "SELECT USERNAME,PHONE_MOB,PHONE_RES FROM newjs.JPROFILE WHERE PROFILEID='$profileid'";
-	        $result = mysql_query_decide($sql) or die("4".mysql_error_js());
+	        $result = mysql_query_decide($sql) or mysql_error_js();
 	        $myrow=mysql_fetch_array($result);
 		$USERNAME=$myrow["USERNAME"];
 		$PHONE_MOB=$myrow["PHONE_MOB"];
 		$PHONE_RES=$myrow["PHONE_RES"];	
 
 		$sql="SELECT ALTERNATE_NO,COMMENTS,WILL_PAY FROM incentive.MAIN_ADMIN WHERE PROFILEID='$profileid' AND STATUS='F'";
-		$res=mysql_query_decide($sql) or die(mysql_error_js());
+		$res=mysql_query_decide($sql) or mysql_error_js();
 		$row=mysql_fetch_array($res);
 		$alt_no=$row['ALTERNATE_NO'];
 		$comments=$row['COMMENTS'];
 		$will_pay=$row['WILL_PAY'];
 
 		$sql="SELECT ENTRYBY,MODE,COMMENT,ENTRY_DT FROM incentive.HISTORY WHERE PROFILEID='$profileid' ORDER BY ENTRY_DT DESC";
-                $res=mysql_query_decide($sql) or die(mysql_error_js());
+                $res=mysql_query_decide($sql) or mysql_error_js();
 		$i=1;
 		while($myrow=mysql_fetch_array($res))
 		{

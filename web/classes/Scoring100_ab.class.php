@@ -5,6 +5,9 @@
 * @copyright Copyright 2011, Infoedge India Ltd.
 */
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+// including for logging purpose
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
+
 class Scoring_ab
 {
 	//Variables
@@ -55,7 +58,7 @@ class Scoring_ab
 
 		/*Set all common parameters*/
                 $sql="SELECT $parameter FROM newjs.JPROFILE WHERE PROFILEID=$profileid";
-                $result = mysql_query_decide($sql,$myDb) or die($sql.mysql_error($myDb));
+                $result = mysql_query_decide($sql,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($myDb)));
                 $myrow = mysql_fetch_array($result);
 		if($myrow)
                 {
@@ -107,7 +110,7 @@ class Scoring_ab
 		if($ptype=='R' || $ptype=='C')
                 {
                          $sqlpd = "SELECT SUBSCRIPTION_START_DATE,SUBSCRIPTION_END_DATE,SERVICEID,CUR_TYPE,NET_AMOUNT,DISCOUNT,START_DATE FROM billing.PURCHASE_DETAIL WHERE PROFILEID='$this->PROFILEID'";
-                        $respd = mysql_query_decide($sqlpd,$myDb) or die($sqlpd.mysql_error($myDb));
+                        $respd = mysql_query_decide($sqlpd,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($myDb)));
                         while($rowpd = mysql_fetch_array($respd))
                         {
                                 $this->newmodel[SUBSCRIPTION_START_DATE] = $rowpd['SUBSCRIPTION_START_DATE'];
@@ -119,12 +122,7 @@ class Scoring_ab
 				$this->newmodel[CUR_TYPE] = $rowpd['CUR_TYPE'];
                         }
                 }
-		
-		//$pidShard=JsDbSharding::getShardNo($profileid,'slave');
-		$shard = ($profileid%3) + 1;
-		$dbName = "shard".$shard."Slave112";
-		$dbMessageLogObj=new NEWJS_MESSAGE_LOG($dbName);
-		
+
 		//Activity Data
 		$this->newmodel[lOGIN_hist_In_week]="";
 		$this->newmodel[Search_In14Days]="";
@@ -141,7 +139,7 @@ class Scoring_ab
 		{
 			$lim_7_dt = date("Y-m-d",time()-7*86400);
 			$sqll = "SELECT COUNT(*) as cnt FROM newjs.LOGIN_HISTORY WHERE PROFILEID = '$this->PROFILEID' AND LOGIN_DT >= '$lim_7_dt'";
-			$resl = mysql_query_decide($sqll,$shDb) or die($sqll.mysql_error($shDb));
+			$resl = mysql_query_decide($sqll,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($shDb)));
 			if($rowl = mysql_fetch_array($resl)){
 				$this->newmodel[lOGIN_hist_In_week]=$rowl["cnt"];
 			}
@@ -150,21 +148,21 @@ class Scoring_ab
 
 			$lim_15_dt = date("Y-m-d",time()-15*86400);
 			$sqle = "SELECT COUNT(*) as cnt FROM newjs.EOI_VIEWED_LOG WHERE VIEWED = '$this->PROFILEID' AND DATE >= '$lim_15_dt'";
-			$rese = mysql_query_decide($sqle,$shDb) or die($sqle.mysql_error($shDb));
+			$rese = mysql_query_decide($sqle,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($shDb)));
 			if($rowe = mysql_fetch_array($rese)){
 				$this->newmodel[Viewed_In_HalfMonth]=$rowe["cnt"];
 			}
 
 			$sqle = "SELECT COUNT(*) as cnt FROM newjs.EOI_VIEWED_LOG WHERE VIEWER = '$this->PROFILEID' AND DATE >= '$lim_15_dt'";
-			$rese = mysql_query_decide($sqle,$shDb) or die($sqle.mysql_error($shDb));
+			$rese = mysql_query_decide($sqle,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($shDb)));
 			if($rowe = mysql_fetch_array($rese)){
 				$this->newmodel[Viewer_In_HalfMonth]=$rowe["cnt"];
 			}
-			
+
 			$total = 0;
 			$res=$dbMessageLogObj->getMessageLogScoringAb100($this->PROFILEID,'SENDER',$lim_7_dt);
 			//$sqll = "SELECT COUNT(*) as cnt,TYPE FROM newjs.MESSAGE_LOG WHERE SENDER = '$this->PROFILEID' AND DATE >= '$lim_7_dt' GROUP BY TYPE";
-			//$resl = mysql_query_decide($sqll,$shDb) or die($sqll.mysql_error($shDb));
+			//$resl = mysql_query_decide($sqll,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($shDb)));
 			//while($rowl = mysql_fetch_array($resl)){
 			foreach($res as $key=>$rowl){
 				if($rowl["TYPE"] == 'I')
@@ -174,32 +172,32 @@ class Scoring_ab
 			$this->newmodel[Message_In_week]=$total;
 			$rowl=$dbMessageLogObj->getMessageLogCountScoringAb100($this->PROFILEID,'RECEIVER',$lim_7_dt);
 			//$sqll = "SELECT COUNT(*) as cnt FROM newjs.MESSAGE_LOG WHERE RECEIVER = '$this->PROFILEID' AND DATE >= '$lim_7_dt'";
-			//$resl = mysql_query_decide($sqll,$shDb) or die($sqll.mysql_error($shDb));
+			//$resl = mysql_query_decide($sqll,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($shDb)));
 			//if($rowl = mysql_fetch_array($resl)){
 			if($rowl){
 				$this->newmodel[Message_Req_R_Week]=$rowl;
 			}
 
 			$sqll = "SELECT COUNT(*) as cnt FROM userplane.CHAT_REQUESTS WHERE RECEIVER = '$this->PROFILEID' AND TIMEOFINSERTION >= '$lim_15_dt'";
-			$resl = mysql_query_decide($sqll,$myDb) or die($sqll.mysql_error($myDb));
+			$resl = mysql_query_decide($sqll,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($shDb)));
 			if($rowl = mysql_fetch_array($resl)){
 				$this->newmodel[ChatReciever_HalfMOnth]=$rowl["cnt"];
 			}
 
 			$sqll = "SELECT COUNT(*) as cnt FROM newjs.PHOTO_REQUEST WHERE PROFILEID = '$this->PROFILEID' AND DATE >= '$lim_15_dt'";
-			$resl = mysql_query_decide($sqll,$shDb) or die($sqll.mysql_error($shDb));
+			$resl = mysql_query_decide($sqll,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($shDb)));
 			if($rowl = mysql_fetch_array($resl)){
 				$this->newmodel[Photo_Receive_In_HalfMonth]=$rowl["cnt"];
 			}
 
 			$sqll = "SELECT COUNT(*) as cnt FROM newjs.HOROSCOPE_REQUEST WHERE PROFILEID_REQUEST_BY = '$this->PROFILEID' AND DATE >= '$lim_15_dt'";
-			$resl = mysql_query_decide($sqll,$shDb) or die($sqll.mysql_error($shDb));
+			$resl = mysql_query_decide($sqll,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($shDb)));
 			if($rowl = mysql_fetch_array($resl)){
 				$this->newmodel[Horoscope_Send_In_HalfMonth]=$rowl["cnt"];
 			}
 		
 			$sqll = "SELECT COUNT(*) as cnt FROM newjs.PHOTO_REQUEST WHERE PROFILEID_REQ_BY = '$this->PROFILEID' AND DATE >= '$lim_15_dt'";
-			$resl = mysql_query_decide($sqll,$shDb) or die($sqll.mysql_error($shDb));
+			$resl = mysql_query_decide($sqll,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($shDb)));
 			if($rowl = mysql_fetch_array($resl)){
 				$this->newmodel[Photo_Send_In_week]=$rowl["cnt"];
 			}
@@ -214,7 +212,7 @@ class Scoring_ab
                         $rowml2=$dbMessageLogObj->getMessageLogCountEOIScoringAb100($this->PROFILEID,'RECEIVER',$fdate,$ldate);
                         
                         //$sqlml2 = "SELECT COUNT(*) as cnt FROM newjs.MESSAGE_LOG WHERE RECEIVER='$this->PROFILEID' AND DATE>='$fdate' AND DATE<'$ldate' AND TYPE='I'";
-                        //$resml2 = mysql_query_decide($sqlml2,$shDb) or die($sqlml2.mysql_error($shDb));
+                        //$resml2 = mysql_query_decide($sqlml2,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($shDb)));
                         //if($rowml2 = mysql_fetch_array($resml2)){
                         if($rowml2){
                                 $this->newmodel[MESSAGES_COUNT]=$rowml2;
@@ -222,13 +220,13 @@ class Scoring_ab
 
                         $lim_30_dt = date("Y-m-d",time()-30*86400);
                         $sqll = "SELECT COUNT(*) as cnt FROM newjs.LOGIN_HISTORY WHERE PROFILEID = '$this->PROFILEID' AND LOGIN_DT >= '$lim_30_dt'";
-                        $resl = mysql_query_decide($sqll,$shDb) or die($sqll.mysql_error($shDb));
+                        $resl = mysql_query_decide($sqll,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($shDb)));
                         if($rowl = mysql_fetch_array($resl)){
                                 $this->newmodel[LOGINS_LAST30]=$rowl["cnt"];
                         }
 
                         $sqle = "SELECT COUNT(*) as cnt FROM newjs.EOI_VIEWED_LOG WHERE VIEWED = '$this->PROFILEID' AND DATE >= '$lim_30_dt'";
-                        $rese = mysql_query_decide($sqle,$shDb) or die($sqle.mysql_error($shDb));
+                        $rese = mysql_query_decide($sqle,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($shDb)));
                         if($rowe = mysql_fetch_array($rese)){
                                 $this->newmodel[VIEWS_LAST30]=$rowe["cnt"];
                         }

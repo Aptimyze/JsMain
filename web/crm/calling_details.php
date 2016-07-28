@@ -17,7 +17,7 @@ if(authenticated($cid))
 	{
 		$flag=1;
 		$sql = "SELECT PROFILEID,EMAIL,SUBSCRIPTION FROM newjs.JPROFILE WHERE USERNAME='$USERNAME'";
-                $result=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+                $result=mysql_query_decide($sql) or mysql_error_js();
                 if($myrow=mysql_fetch_array($result))
 		{
 	                $profileid=$myrow['PROFILEID'];
@@ -34,7 +34,7 @@ if(authenticated($cid))
 			}
 
 			$sql="SELECT CENTER,EMP_ID FROM jsadmin.PSWRDS WHERE USERNAME='$name' AND COMPANY='JS'";
-			$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+			$res=mysql_query_decide($sql) or mysql_error_js();
 			$row=mysql_fetch_array($res);
 			$center=strtoupper($row['CENTER']);
 			$emp_id=$row['EMP_ID'];
@@ -46,7 +46,7 @@ if(authenticated($cid))
 				$sql="SELECT EMP_ID FROM jsadmin.PSWRDS WHERE HEAD_ID='$emp_id' AND COMPANY='JS'";
 			else
 				$sql="SELECT EMP_ID FROM jsadmin.PSWRDS WHERE UPPER(CENTER)='$center' AND COMPANY='JS'";
-			$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+			$res=mysql_query_decide($sql) or mysql_error_js();
                         	
 			while($row=mysql_fetch_array($res))
 			{
@@ -68,7 +68,7 @@ if(authenticated($cid))
 					if($emp_id_str1=='')
 						$emp_id_str1="''";		
 					$sql="SELECT EMP_ID FROM jsadmin.PSWRDS WHERE HEAD_ID IN ($emp_id_str1) AND COMPANY='JS'";
-					$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+					$res=mysql_query_decide($sql) or mysql_error_js();
 
 					if(mysql_num_rows($res) == 0)
 					{
@@ -96,7 +96,7 @@ if(authenticated($cid))
 			}                        	  
 
 			$sql="SELECT USERNAME FROM jsadmin.PSWRDS WHERE EMP_ID IN ($emp_id_str) AND COMPANY='JS'";
-			$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+			$res=mysql_query_decide($sql) or mysql_error_js();
 
 			while($row=mysql_fetch_array($res))
 			{
@@ -107,7 +107,7 @@ if(authenticated($cid))
 			{
 				/*	
 	                        $sqlD ="select DEALLOCATION_DT from incentive.DEALLOCATION_TRACK where PROFILEID='$profileid'";
-        	                $resD=mysql_query_decide($sqlD) or die("$sqlD".mysql_error_js());
+        	                $resD=mysql_query_decide($sqlD) or mysql_error_js();
         	                while($rowD=mysql_fetch_array($resD))
         	                        $deAllocateDates[]=$rowD['DEALLOCATION_DT'];
 				*/
@@ -117,7 +117,7 @@ if(authenticated($cid))
 				$curenttAlloted =0;
 				//$dateSet =JSstrToTime('2013-03-01 00:00:00');	
 				$sql="SELECT ALLOTED_TO,STATUS FROM incentive.MAIN_ADMIN WHERE PROFILEID='$profileid' AND ALLOTED_TO IN ('$allot_str')";
-				$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+				$res=mysql_query_decide($sql) or mysql_error_js();
 				if($row=mysql_fetch_array($res))
 					$curenttAlloted =1;
 				if($limit && !$curenttAlloted)
@@ -143,7 +143,7 @@ if(authenticated($cid))
 						$smarty->assign("orig_alloted_to",$orig_alloted_to);
 						$sql="SELECT ALLOTED_TO, ALLOT_TIME, RELAX_DAYS,DE_ALLOCATION_DT,REAL_DE_ALLOCATION_DT FROM incentive.CRM_DAILY_ALLOT WHERE PROFILEID='$profileid'";
 						$sql .=" UNION select ALLOTED_TO, ALLOT_TIME, RELAX_DAYS,DE_ALLOCATION_DT,REAL_DE_ALLOCATION_DT FROM incentive.CRM_DAILY_ALLOT_TRACK WHERE PROFILEID='$profileid' ORDER BY ALLOT_TIME ASC";
-						$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+						$res=mysql_query_decide($sql) or mysql_error_js();
 						if($row=mysql_fetch_array($res))
 						{
 							$i=0;
@@ -183,7 +183,7 @@ if(authenticated($cid))
 					{
 						$sql="SELECT ALLOTED_TO, ALLOT_TIME, RELAX_DAYS,DE_ALLOCATION_DT,REAL_DE_ALLOCATION_DT FROM incentive.CRM_DAILY_ALLOT WHERE PROFILEID='$profileid'";
 						$sql .=" UNION select ALLOTED_TO, ALLOT_TIME, RELAX_DAYS,DE_ALLOCATION_DT,REAL_DE_ALLOCATION_DT FROM incentive.CRM_DAILY_ALLOT_TRACK WHERE PROFILEID='$profileid' ORDER BY ALLOT_TIME ASC";
-						$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+						$res=mysql_query_decide($sql) or mysql_error_js();
 						if($row=mysql_fetch_array($res))
 						{
 							$i=0;

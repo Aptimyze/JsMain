@@ -37,7 +37,7 @@ if(authenticated($cid))
 		}
 
 		$sql="SELECT ACTIVATED,PROFILEID,PHONE_RES, PHONE_MOB, EMAIL, CITY_RES, COUNTRY_RES FROM newjs.JPROFILE WHERE USERNAME='".addslashes(stripslashes($username))."'";
-		$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+		$res=mysql_query_decide($sql) or mysql_error_js();
 		if($row=mysql_fetch_array($res))
 		{
 			$profileid=$row['PROFILEID'];
@@ -58,7 +58,7 @@ if(authenticated($cid))
 				$email=$row['EMAIL'];
 
 				$sql="SELECT ALLOTED_TO FROM incentive.MAIN_ADMIN WHERE PROFILEID='$profileid'";
-				$res1=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+				$res1=mysql_query_decide($sql) or mysql_error_js();
 				if($row1=mysql_fetch_array($res1))
 				{
 					$error++;
@@ -68,16 +68,16 @@ if(authenticated($cid))
 				/*else
 				{
 					$sql="SELECT LEFT(PRIORITY,4) AS CITY FROM incentive.BRANCH_CITY WHERE VALUE='$row[CITY_RES]'";
-					$res1=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+					$res1=mysql_query_decide($sql) or mysql_error_js();
 					$row1=mysql_fetch_array($res1);
 
 					$sql="SELECT CENTER FROM jsadmin.PSWRDS WHERE USERNAME='$allot_to'";
-					$res2=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+					$res2=mysql_query_decide($sql) or mysql_error_js();
 					$row2=mysql_fetch_array($res2);
 					$center=strtoupper($row2['CENTER']);
 
 					$sql="SELECT LEFT(PRIORITY,4) AS CITY FROM incentive.BRANCH_CITY WHERE UPPER(LABEL)='$center'";
-					$res2=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+					$res2=mysql_query_decide($sql) or mysql_error_js();
 					$row2=mysql_fetch_array($res2);
 
 					if($row1['CITY']!=$row2['CITY'])
@@ -97,7 +97,7 @@ if(authenticated($cid))
 			/*else
 			{
 				$sql="SELECT ENTRYBY FROM incentive.CLAIM WHERE PROFILEID='$profileid'";
-				$res1=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+				$res1=mysql_query_decide($sql) or mysql_error_js();
 				if($row1=mysql_fetch_array($res1))
 				{
 					$error++;
@@ -114,14 +114,14 @@ if(authenticated($cid))
 		if($error)
 		{
 			/*$sql="SELECT USERNAME FROM jsadmin.PSWRDS WHERE PRIVILAGE LIKE '%IUO%' AND ACTIVE='Y' AND CENTER='NOIDA'";
-			$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+			$res=mysql_query_decide($sql) or mysql_error_js();
 			while($row=mysql_fetch_array($res))
 			{
 				$arr[]=$row['USERNAME'];
 			}*/
 
 			$sql="SELECT EMP_ID FROM jsadmin.PSWRDS WHERE USERNAME='$entryby' AND COMPANY='JS'";
-			$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+			$res=mysql_query_decide($sql) or mysql_error_js();
 			$row=mysql_fetch_array($res);
 			$emp_id=$row['EMP_ID'];
 
@@ -129,7 +129,7 @@ if(authenticated($cid))
 			$emp_id_str1="";
 			
 			$sql="SELECT EMP_ID FROM jsadmin.PSWRDS WHERE HEAD_ID='$emp_id' AND COMPANY='JS'";
-			$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+			$res=mysql_query_decide($sql) or mysql_error_js();
 				
 			while($row=mysql_fetch_array($res))
 			{
@@ -147,7 +147,7 @@ if(authenticated($cid))
 				$emp_id_str2="";
 				
 				$sql="SELECT EMP_ID FROM jsadmin.PSWRDS WHERE HEAD_ID IN ('$emp_id_str1') AND COMPANY='JS'";
-				$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+				$res=mysql_query_decide($sql) or mysql_error_js();
 
 				if(mysql_num_rows($res) == 0)
 				{
@@ -174,7 +174,7 @@ if(authenticated($cid))
 			}
 
 			$sql="SELECT USERNAME FROM jsadmin.PSWRDS WHERE EMP_ID IN ($emp_id_str) AND COMPANY='JS' AND (PRIVILAGE LIKE '%IUO%' OR PRIVILAGE LIKE '%IUI%') AND ACTIVE='Y'";
-			$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+			$res=mysql_query_decide($sql) or mysql_error_js();
 
 			while($row=mysql_fetch_array($res))
 			{
@@ -193,7 +193,7 @@ if(authenticated($cid))
 		else
 		{
 			$sql="SELECT PRIVILAGE FROM jsadmin.PSWRDS WHERE USERNAME='$allot_to' AND ACTIVE='Y'";
-			$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+			$res=mysql_query_decide($sql) or mysql_error_js();
 			$row=mysql_fetch_array($res);
 			if(strpos($row["PRIVILAGE"],"IUO"))
 				$mode='O';
@@ -208,29 +208,29 @@ if(authenticated($cid))
 					//if(substr($allot_time,0,10)!=$today)
 					//{
 						$sql="INSERT INTO incentive.CRM_DAILY_ALLOT (PROFILEID, ALLOT_TIME, ALLOTED_TO) VALUES ('$profileid','$allot_time','$allot_to')";
-						mysql_query_decide($sql) or die("$sql".mysql_error_js());
+						mysql_query_decide($sql) or mysql_error_js();
 					//}
 
 					$sql="INSERT INTO incentive.MAIN_ADMIN (PROFILEID,ALLOT_TIME,ALLOTED_TO,MODE,RES_NO,MOB_NO,EMAIL,STATUS,WILL_PAY,REASON) VALUES('$profileid','$allot_time','$allot_to','$mode','".addslashes($ph_res)."','".addslashes($ph_mob)."','$email','C','$will_pay_val','$call_source')";
-					mysql_query_decide($sql) or die("$sql".mysql_error_js());
+					mysql_query_decide($sql) or mysql_error_js();
 				}
 				else
 				{
 					$sql="INSERT INTO incentive.MAIN_ADMIN (PROFILEID,ALLOT_TIME,ALLOTED_TO,MODE,RES_NO,MOB_NO,EMAIL,STATUS,WILL_PAY,REASON) VALUES('$profileid',now(),'$allot_to','$mode','".addslashes($ph_res)."','".addslashes($ph_mob)."','$email','C','$will_pay_val','$call_source')";
-					mysql_query_decide($sql) or die("$sql".mysql_error_js());
+					mysql_query_decide($sql) or mysql_error_js();
 
 					$sql="INSERT INTO incentive.CRM_DAILY_ALLOT (PROFILEID,ALLOT_TIME,ALLOTED_TO) SELECT PROFILEID,ALLOT_TIME,ALLOTED_TO from incentive.MAIN_ADMIN where PROFILEID='$profileid'";
-					mysql_query_decide($sql) or die("$sql".mysql_error_js());
+					mysql_query_decide($sql) or mysql_error_js();
 				}
 
 				$sql="INSERT INTO incentive.MANUAL_ALLOT (PROFILEID, ALLOT_TIME, ALLOTED_TO, ALLOTED_BY, COMMENTS, CALL_SOURCE) VALUES ('$profileid',now(),'$allot_to','$entryby','".addslashes(stripslashes($comments))."','$call_source')";
-				mysql_query_decide($sql) or die("$sql".mysql_error_js());
+				mysql_query_decide($sql) or mysql_error_js();
 				
 				$sqlh = "INSERT INTO incentive.HISTORY (PROFILEID,USERNAME,ENTRYBY,MODE,DISPOSITION,VALIDATION,COMMENT,ENTRY_DT) VALUES ('$profileid','".addslashes(stripslashes($username))."','$entryby','$mode','$will_pay_val','$call_source','".addslashes(stripslashes($comments))."',now())";
-	                        mysql_query_decide($sqlh) or die("$sqlh".mysql_error_js());
+	                        mysql_query_decide($sqlh) or mysql_error_js();
 
 				$sql="UPDATE incentive.MAIN_ADMIN_POOL SET ALLOTMENT_AVAIL='N' WHERE PROFILEID='$profileid'";
-				mysql_query_decide($sql) or die("$sql".mysql_error_js());
+				mysql_query_decide($sql) or mysql_error_js();
 
 				if(!$allot_time)
 					$allot_time=date("Y-m-d H:i:s");
@@ -250,14 +250,14 @@ if(authenticated($cid))
 			else
 			{
 				/*$sql="SELECT USERNAME FROM jsadmin.PSWRDS WHERE PRIVILAGE LIKE '%IUO%' AND ACTIVE='Y' AND CENTER='NOIDA'";
-				$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+				$res=mysql_query_decide($sql) or mysql_error_js();
 				while($row=mysql_fetch_array($res))
 				{
 					$arr[]=$row['USERNAME'];
 				}*/
 
 				$sql="SELECT EMP_ID FROM jsadmin.PSWRDS WHERE USERNAME='$entryby' AND COMPANY='JS'";
-				$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+				$res=mysql_query_decide($sql) or mysql_error_js();
 				$row=mysql_fetch_array($res);
 				$emp_id=$row['EMP_ID'];
 
@@ -265,7 +265,7 @@ if(authenticated($cid))
 				$emp_id_str1="";
 				
 				$sql="SELECT EMP_ID FROM jsadmin.PSWRDS WHERE HEAD_ID='$emp_id' AND COMPANY='JS'";
-				$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+				$res=mysql_query_decide($sql) or mysql_error_js();
 					
 				while($row=mysql_fetch_array($res))
 				{
@@ -283,7 +283,7 @@ if(authenticated($cid))
 					$emp_id_str2="";
 					
 					$sql="SELECT EMP_ID FROM jsadmin.PSWRDS WHERE HEAD_ID IN ('$emp_id_str1') AND COMPANY='JS'";
-					$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+					$res=mysql_query_decide($sql) or mysql_error_js();
 
 					if(mysql_num_rows($res) == 0)
 					{
@@ -310,7 +310,7 @@ if(authenticated($cid))
 				}
 
 				$sql="SELECT USERNAME FROM jsadmin.PSWRDS WHERE EMP_ID IN ($emp_id_str) AND COMPANY='JS' AND (PRIVILAGE LIKE '%IUO%' OR PRIVILAGE LIKE '%IUI%') AND ACTIVE='Y'";
-				$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+				$res=mysql_query_decide($sql) or mysql_error_js();
 
 				while($row=mysql_fetch_array($res))
 				{
@@ -330,14 +330,14 @@ if(authenticated($cid))
 	else
 	{
 		/*$sql="SELECT USERNAME FROM jsadmin.PSWRDS WHERE PRIVILAGE LIKE '%IUO%' AND ACTIVE='Y' AND CENTER='NOIDA'";
-		$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+		$res=mysql_query_decide($sql) or mysql_error_js();
 		while($row=mysql_fetch_array($res))
 		{
 			$arr[]=$row['USERNAME'];
 		}*/
 
 		$sql="SELECT EMP_ID FROM jsadmin.PSWRDS WHERE USERNAME='$entryby' AND COMPANY='JS'";
-		$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+		$res=mysql_query_decide($sql) or mysql_error_js();
 		$row=mysql_fetch_array($res);
 		$emp_id=$row['EMP_ID'];
 
@@ -345,7 +345,7 @@ if(authenticated($cid))
 		$emp_id_str1="";
 		
 		$sql="SELECT EMP_ID FROM jsadmin.PSWRDS WHERE HEAD_ID='$emp_id' AND COMPANY='JS'";
-		$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+		$res=mysql_query_decide($sql) or mysql_error_js();
 			
 		while($row=mysql_fetch_array($res))
 		{
@@ -363,7 +363,7 @@ if(authenticated($cid))
 			$emp_id_str2="";
 			
 			$sql="SELECT EMP_ID FROM jsadmin.PSWRDS WHERE HEAD_ID IN ('$emp_id_str1') AND COMPANY='JS'";
-			$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+			$res=mysql_query_decide($sql) or mysql_error_js();
 
 			if(mysql_num_rows($res) == 0)
 			{
@@ -390,7 +390,7 @@ if(authenticated($cid))
 		}
 
 		$sql="SELECT USERNAME FROM jsadmin.PSWRDS WHERE EMP_ID IN ($emp_id_str) AND COMPANY='JS' AND (PRIVILAGE LIKE '%IUO%' OR PRIVILAGE LIKE '%IUI%') AND ACTIVE='Y'";
-		$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+		$res=mysql_query_decide($sql) or mysql_error_js();
 		while($row=mysql_fetch_array($res))
 		{
 			$arr[]=$row['USERNAME'];

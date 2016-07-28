@@ -14,4 +14,11 @@ class LoggingEnums
     const LOG_INFO = 2;
     const LOG_DEBUG = 1;
     const LOG_ERROR = 0;
+    // 1 for logging all modules, 0 for not
+    const LOG_ALL = 1;
+    // 1 for logging all modules in same file, 0 different
+    const LOG_TOGETHER = 0;
+    // module names
+    const JsA = 'jsadmin';
+    const Ex500or404 = '500-404';
 }

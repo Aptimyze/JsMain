@@ -4,7 +4,7 @@ function profileview($profileid,$checksum)
 	global $smarty;	
 		
 	$sql="select USERNAME,NTIMES,MOD_DT,GENDER,INCOMPLETE from newjs.JPROFILE where PROFILEID='$profileid'";
-	$result=mysql_query_decide($sql) or die("1".mysql_error_js());//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+	$result=mysql_query_decide($sql) or mysql_error_js();//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 	
 	if(mysql_num_rows($result) > 0)
 	{
@@ -25,7 +25,7 @@ function profileview($profileid,$checksum)
 		mysql_free_result($result);
 		
 		$sql="select count(*) from newjs.JPROFILE where GENDER='$gender' and MOD_DT > '" . $myrow["MOD_DT"] . "'";
-		$result=mysql_query_decide($sql) or die("2".mysql_error_js());//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+		$result=mysql_query_decide($sql) or mysql_error_js();//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 		$countrow=mysql_fetch_row($result);
 		
 		$thoseAbove=$countrow[0];
@@ -36,7 +36,7 @@ function profileview($profileid,$checksum)
 		mysql_free_result($result);
 		
 		$sql="select count(*) from newjs.JPROFILE where GENDER='$gender'";
-		$result=mysql_query_decide($sql) or die("3".mysql_error_js());//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+		$result=mysql_query_decide($sql) or mysql_error_js();//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 		
 		$totalmyrow=mysql_fetch_row($result);
 		
@@ -61,7 +61,7 @@ function profileview($profileid,$checksum)
 		}
 		
 		$sql="select count(*) as cnt from newjs.CONTACTS where RECEIVER='$profileid' and TYPE='I'";
-		$result=mysql_query_decide($sql) or die("4".mysql_error_js());//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+		$result=mysql_query_decide($sql) or mysql_error_js();//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 		
 		$myrow=mysql_fetch_array($result);
 		$smarty->assign("RECEIVED_I",$myrow["cnt"]);
@@ -69,7 +69,7 @@ function profileview($profileid,$checksum)
 		mysql_free_result($result);
 		
 		$sql="select count(*) as cnt from newjs.CONTACTS where RECEIVER='$profileid' and TYPE='A'";
-		$result=mysql_query_decide($sql) or die("5".mysql_error_js());//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+		$result=mysql_query_decide($sql) or mysql_error_js();//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 		
 		$myrow=mysql_fetch_array($result);
 		$smarty->assign("RECEIVED_A",$myrow["cnt"]);
@@ -78,7 +78,7 @@ function profileview($profileid,$checksum)
 		mysql_free_result($result);
 		
 		$sql="select count(*) as cnt from newjs.CONTACTS where RECEIVER='$profileid' and TYPE='D'";
-		$result=mysql_query_decide($sql) or die("6".mysql_error_js());//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+		$result=mysql_query_decide($sql) or mysql_error_js();//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 		
 		$myrow=mysql_fetch_array($result);
 		$smarty->assign("RECEIVED_D",$myrow["cnt"]);
@@ -87,7 +87,7 @@ function profileview($profileid,$checksum)
 		mysql_free_result($result);
 		
 		$sql="select count(*) as cnt from newjs.CONTACTS where SENDER='$profileid' and TYPE='I'";
-		$result=mysql_query_decide($sql) or die("7".mysql_error_js());//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+		$result=mysql_query_decide($sql) or mysql_error_js();//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 		
 		$myrow=mysql_fetch_array($result);
 		$smarty->assign("MADE_I",$myrow["cnt"]);
@@ -96,7 +96,7 @@ function profileview($profileid,$checksum)
 		mysql_free_result($result);
 		
 		$sql="select count(*) as cnt from newjs.CONTACTS where SENDER='$profileid' and TYPE='A'";
-		$result=mysql_query_decide($sql) or die("8".mysql_error_js());//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+		$result=mysql_query_decide($sql) or mysql_error_js();//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 		
 		$myrow=mysql_fetch_array($result);
 		$smarty->assign("MADE_A",$myrow["cnt"]);
@@ -105,7 +105,7 @@ function profileview($profileid,$checksum)
 		mysql_free_result($result);
 		
 		$sql="select count(*) as cnt from newjs.CONTACTS where SENDER='$profileid' and TYPE='D'";
-		$result=mysql_query_decide($sql) or die("9".mysql_error_js());//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+		$result=mysql_query_decide($sql) or mysql_error_js();//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 		
 		$myrow=mysql_fetch_array($result);
 		$smarty->assign("MADE_D",$myrow["cnt"]);

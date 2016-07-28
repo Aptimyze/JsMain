@@ -68,7 +68,7 @@ if(authenticated($cid))
 		else
 		{
 			$sql2 = "INSERT INTO incentive.PAYMENT_COLLECT (PROFILEID,USERNAME,NAME,EMAIL,PHONE_RES,PHONE_MOB,SERVICE,ADDRESS,CITY,PIN,BYUSER,ENTRY_DT) VALUES ('$profileid','$USERNAME','$NAME1','$EMAIL','$PHONE_RES','$PHONE_MOB','$SERVICE','$ADDRESS','$city','$pin','Y',now())";
-       			mysql_query_decide($sql2) or die("$sql2".mysql_error_js());
+       			mysql_query_decide($sql2) or mysql_error_js();
 
 			$msg .= "<a href=\"paymentcontact.php?name=$name&cid=$cid\">";
 			$msg .= "Continue &gt;&gt;</a>";

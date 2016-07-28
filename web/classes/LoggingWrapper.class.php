@@ -40,7 +40,7 @@ class LoggingWrapper
 	{
 		// get module name 
 		$module = 'jsadmin';
-		return LoggingManager::getInstance($module)->logThis($enLogType,$Var,$isSymfony = false);
+		return LoggingManager::getInstance($module)->logThis($enLogType,$Var);
 	}
 }
 

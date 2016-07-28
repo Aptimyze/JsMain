@@ -17,7 +17,7 @@ while($row=mysql_fetch_array($res))
         $profileids_arr1[]=$pid;
 
         $sql1="UPDATE billing.SERVICE_STATUS SET ACTIVATED='Y', ACTIVATED_ON='$curdate',ACTIVATE_ON='0' WHERE ID=$id";
-        $res1=mysql_query_decide($sql1,$db) or die($sql1.mysql_error_js());
+        $res1=mysql_query_decide($sql1,$db) or mysql_error_js();
 }
 $profileids_arr_n=array_unique($profileids_arr1);
 $profileids_arr=array_values($profileids_arr_n);
@@ -34,7 +34,7 @@ if($profileids_arr)
                 unset($servefor_arr1);
 
                 $sql="SELECT SERVEFOR FROM billing.SERVICE_STATUS WHERE PROFILEID=$profile AND ACTIVE='Y' AND ACTIVATED='Y'  AND EXPIRY_DT>'$curdate'";
-                $res=mysql_query_decide($sql,$db) or die($sql.mysql_error_js());
+                $res=mysql_query_decide($sql,$db) or mysql_error_js();
                 while($row=mysql_fetch_array($res))
                 {
                         $servefor1.=",".$row['SERVEFOR'];
@@ -46,7 +46,7 @@ if($profileids_arr)
                 $servefor_str=implode(",",$servefor_arr1);
 
 		$sql_offline = "SELECT PROFILEID,BILLID FROM jsadmin.OFFLINE_BILLING WHERE PROFILEID=$profile ORDER BY BILLID DESC LIMIT 1";
-                $res_offline = mysql_query_decide($sql_offline,$db) or die($sql.mysql_error_js());
+                $res_offline = mysql_query_decide($sql_offline,$db) or mysql_error_js();
 		while($row_offline = mysql_fetch_array($res_offline))
                         $offline_bill = $row_offline["BILLID"];
 
@@ -54,7 +54,7 @@ if($profileids_arr)
                 if($offline_bill)
 		{
 			$sql_off="UPDATE jsadmin.OFFLINE_BILLING SET ACTIVE='Y' WHERE PROFILEID=$profile AND BILLID=$offline_bill";
-                        mysql_query_decide($sql_off,$db) or die($sql_off.mysql_error_js());
+                        mysql_query_decide($sql_off,$db) or mysql_error_js();
 
 			$paramArr =array("SUBSCRIPTION"=>$servefor_str);
 			$extraStr ="PREACTIVATED=IF(PREACTIVATED <> ACTIVATED, ACTIVATED,PREACTIVATED),ACTIVATED='Y',activatedKey=1";

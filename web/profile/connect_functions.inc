@@ -1,6 +1,9 @@
 <?php
 include_once(JsConstants::$docRoot."/commonFiles/crmLoginFunctions.php");
 
+// include wrapper for logging
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
+
 if(!function_exists("filter_page_redirection"))
 {
 	function filter_page_redirection($profileid)
@@ -3566,6 +3569,7 @@ if(!function_exists('logError'))
 {
         function logError($message,$query="",$critical="exit", $sendmailto="NO",$server="",$database="")
         {
+        		LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($message));
                 global $smarty, $checksum,$sql,$ajax_error,$isMobile;
 
                 //if(mysql_error_js() && $sendmailto!="YES")
