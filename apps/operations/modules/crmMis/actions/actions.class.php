@@ -441,9 +441,9 @@ class crmMisActions extends sfActions
 			$this->report_format = $request->getParameter("report_format");
 			$this->monthNum = crmParams::$monthOrder[$this->monthName];
 			if($this->monthNum<10) 	$this->monthNum = "0".$this->monthNum;
-			$jsadminPswrdsObj = new jsadmin_PSWRDS();
-			$incentiveSalesTargetObj = new incentive_SALES_TARGET();
-			$incentiveMonthlyObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY();
+			$jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
+			$incentiveSalesTargetObj = new incentive_SALES_TARGET('newjs_slave');
+			$incentiveMonthlyObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY('newjs_slave');
 			$misGenerationhandlerObj = new misGenerationhandler();
 			$this->agentName = $misGenerationhandlerObj->get_SLHDO();
 
@@ -720,9 +720,9 @@ class crmMisActions extends sfActions
 			}
 			$this->monthNum = crmParams::$monthOrder[$this->monthName];
 			if($this->monthNum<10) 	$this->monthNum = "0".$this->monthNum;
-			$jsadminPswrdsObj = new jsadmin_PSWRDS();
-			$incentiveSalesTargetObj = new incentive_SALES_TARGET();
-			$incentiveMonthlyObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY();
+			$jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
+			$incentiveSalesTargetObj = new incentive_SALES_TARGET('newjs_slave');
+			$incentiveMonthlyObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY('newjs_slave');
 			$misGenerationhandlerObj = new misGenerationhandler();
 
 			$allCenters = $jsadminPswrdsObj->fetchAllDistinctCenters();
@@ -2065,7 +2065,7 @@ class crmMisActions extends sfActions
                  $end_date 		=$formArr["yearValue"]."-".$formArr["monthValue"]."-".date("t",strtotime($start_date));
                  $this->displayDate 	=date("F Y",strtotime($start_date));
 
-		 $dailyScheduledLog =new MOBILE_API_DAILY_NOTIFICATION_COUNT_LOG;
+		 $dailyScheduledLog =new MOBILE_API_DAILY_NOTIFICATION_COUNT_LOG('newjs_slave');
 
 		 $appNotificationsObj =new MOBILE_API_APP_NOTIFICATIONS('newjs_slave');
 		 $scheduledNotificaionArr =$appNotificationsObj->getScheduledNotifications();
@@ -2139,7 +2139,7 @@ class crmMisActions extends sfActions
                   foreach(array_keys($dateArr) as $key=>$value)
                           $this->yearArr[] = array('NAME'=>$value, 'VALUE'=>$value);
 
-                  $appNotificationObj =new MOBILE_API_APP_NOTIFICATIONS;
+                  $appNotificationObj =new MOBILE_API_APP_NOTIFICATIONS('newjs_slave');
 		  $fields ='NOTIFICATION_KEY,FREQUENCY';
                   $notificationArrTemp =$appNotificationObj->getActiveNotifications($fields);
 		  foreach($notificationArrTemp as $key=>$value){
@@ -2176,10 +2176,10 @@ class crmMisActions extends sfActions
 			} else {
 				$start = $request->getParameter('selectedYear')."-".$request->getParameter('selectedMonth')."-01 00:00:00";
 				$end = $request->getParameter('selectedYear')."-".$request->getParameter('selectedMonth')."-31 00:00:00";
-				$billOrder = new BILLING_ORDERS();
-				$billOrderDev = new billing_ORDERS_DEVICE();
-				$billPurc = new BILLING_PURCHASES();
-				$billServ = new billing_SERVICES();
+				$billOrder = new BILLING_ORDERS('newjs_slave');
+				$billOrderDev = new billing_ORDERS_DEVICE('newjs_slave');
+				$billPurc = new BILLING_PURCHASES('newjs_slave');
+				$billServ = new billing_SERVICES('newjs_slave');
 				$allOrderDet = $billOrder->getAllOrdersForAppleWithinRange($start, $end);
 				$billids = $billOrderDev->getApplePayOrdersForOrderIds(array_keys($allOrderDet));
 				$billingDet = $billPurc->fetchAllDataForBillidArr(array_keys($billids));
