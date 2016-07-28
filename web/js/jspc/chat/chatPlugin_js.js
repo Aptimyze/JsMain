@@ -763,16 +763,20 @@ JsChat.prototype = {
                             messageId = msgSendOutput["msg_id"];
                             //that._chatLoggerPlugin("handling output of onSendingMessage in plugin");
                             $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + messageId);
-                            if (msgSendOutput["canSend"] == true) {
+                            if (msgSendOutput["sent"] == true) {
                                 //msg sending success,set single tick here
                                 _this._changeStatusOfMessg(messageId, userId, "recieved");
-                            } else if (msgSendOutput["canSend"] == false) {
+                            } else if (msgSendOutput["sent"] == false) {
                                 //msg sending failure
-                                $(curElem).prop("disabled", true);
+                                //$(curElem).prop("disabled", true);
                                 if (typeof msgSendOutput["errorMsg"] == "undefined") {
                                     msgSendOutput["errorMsg"] = "Something went wrong..";
                                 }
                                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">' + msgSendOutput["errorMsg"] + '</div>').addClass("restrictMessg2");
+                            }
+                            if(msgSendOutput["cansend"] == false){
+                                $(curElem).prop("disabled", true);
+                                //$('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">' + msgSendOutput["errorMsg"] + '</div>').addClass("restrictMessg2");
                             }
                         }
                     }, 50);
@@ -974,7 +978,7 @@ JsChat.prototype = {
                             $(this).html(response.responseMessage);
                         } else if (response.buttondetails && response.buttondetails.button) {
                             if (response.actiondetails.errmsglabel) {
-                                $(this).html("error");
+                                $(this).html(response.actiondetails.errmsglabel);
                             } else {
                                 $(this).find("#sentDiv").removeClass("disp-none");
                                 $(this).find("#initiateText,#chatBoxErr").remove();
@@ -1017,7 +1021,7 @@ JsChat.prototype = {
                             $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt,#chatBoxErr").remove();
                         } else if (response.buttondetails && response.buttondetails.button) {
                             if (response.actiondetails.errmsglabel) {
-                                $(this).html("error");
+                                $(this).html(response.actiondetails.errmsglabel);
                                 $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
                             } else {
                                 $(this).closest(".chatMessage").find("#sentDiv").removeClass("disp-none");
@@ -1056,7 +1060,7 @@ JsChat.prototype = {
                             $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt,#chatBoxErr").remove();
                         } else if (response.buttondetails && response.buttondetails.button) {
                             if (response.actiondetails.errmsglabel) {
-                                $(this).html("error");
+                                $(this).html(response.actiondetails.errmsglabel);
                                 $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt").remove();
                             } else {
                                 $(this).closest(".chatMessage").find("#sentDiv").removeClass("disp-none");
@@ -1508,7 +1512,7 @@ JsChat.prototype = {
             str += '</div>';
             str += '<div id="' + param1 + '_hoverDvSmEr" class="pos-rel padall-10 disp-none">';
             str += '<div class="txtr">';
-            str += '<i class="nchatspr nchatic_1 hcross" id="' + param1 + '_hcross" ></i>';
+            str += '<i class="nchatspr nchatic_1 hcross cursp" id="' + param1 + '_hcross" ></i>';
             str += '</div>';
             str += '<div class="disp-tbl f13 colr5 fontlig fullwid">';
             str += '<div class="disp-cell vmid txtc nhgt180" id="' + param1 + '_hoverSmEr">';

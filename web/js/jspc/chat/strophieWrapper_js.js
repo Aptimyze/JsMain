@@ -426,13 +426,15 @@ var strophieWrapper = {
                 var messageId = strophieWrapper.connectionObj.receipts.sendMessage(reply);
                 outputObj = {
                     "msg_id": messageId,
-                    "canSend": true
+                    "cansend": true,
+                    "sent":true
                 };
                 return outputObj;
             } else {
                 outputObj = {
                     "msg_id": strophieWrapper.getUniqueId(),
-                    "canSend": false,
+                    "cansend": false,
+                    "sent":false,
                     "errorMsg": 'Your current offline, please check your internet connection and try again'
                 };
                 return outputObj;
@@ -440,8 +442,9 @@ var strophieWrapper = {
         } catch (e) {
             outputObj = {
                 "msg_id": strophieWrapper.getUniqueId(),
-                "canSend": false,
-                "errorMsg": e
+                "cansend": false,
+                "errorMsg": "Something went wrong",
+                "sent":false
             };
         }
         return outputObj;
