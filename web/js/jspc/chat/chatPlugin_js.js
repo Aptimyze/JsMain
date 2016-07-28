@@ -766,6 +766,7 @@ JsChat.prototype = {
                             if (msgSendOutput["sent"] == true) {
                                 //msg sending success,set single tick here
                                 console.log("sent-"+messageId);
+                                $(superParent).find("#sendDiv").remove();
                                 _this._changeStatusOfMessg(messageId, userId, "recieved");
                             } else if (msgSendOutput["sent"] == false) {
                                 if(msgSendOutput["cansend"] == false){
