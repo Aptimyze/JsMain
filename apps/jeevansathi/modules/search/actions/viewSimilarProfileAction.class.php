@@ -121,7 +121,7 @@ class viewSimilarProfileAction extends sfActions
 		}
 		else
 		{
-			$this->Profile=new Profile("newjs_bmsSlave");
+			$this->Profile=new Profile("newjs_masterRep");
 			$this->Profile->getDetail($contactedProfileId,"PROFILEID");
 			if($this->Profile->getUSERNAME()!=$contactedUsername)
 			{

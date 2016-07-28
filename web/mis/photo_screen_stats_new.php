@@ -1,7 +1,6 @@
 <?php
 include_once("connect.inc");
-$db=connect_master();
-$db2=connect_master();
+$db=connect_misdb();
 $data=authenticated($checksum);
 
 if(isset($data)|| $JSIndicator)

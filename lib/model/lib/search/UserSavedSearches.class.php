@@ -178,7 +178,7 @@ class UserSavedSearches extends SearchParamters
 		$fields = "SQL_CACHE SEARCH_NAME,ID";
 		if($getAllData)
 			$fields.=",".$this->possibleSearchParamters;
-                $SEARCH_AGENTObj = new SEARCH_AGENT;
+                $SEARCH_AGENTObj = new SEARCH_AGENT(SearchConfig::getSearchDb());
 		$arr = $SEARCH_AGENTObj->get($paramArr,$fields);
 		if($arr)
 		{

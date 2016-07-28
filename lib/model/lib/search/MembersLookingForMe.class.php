@@ -49,7 +49,7 @@ class MembersLookingForMe extends SearchParamters
 		if($searchId)
 		{
 	                $paramArr['ID'] = $searchId;
-                	$SEARCHQUERYobj = new SEARCHQUERY;
+                	$SEARCHQUERYobj = new SEARCHQUERY(SearchConfig::getSearchDb());
 	                $arr = $SEARCHQUERYobj->get($paramArr,SearchConfig::$possibleSearchParamters);
 
         	        if(is_array($arr[0]))
@@ -78,7 +78,7 @@ class MembersLookingForMe extends SearchParamters
 					$value = $this->loggedInProfileObj->getOCCUPATION();
 				elseif($v=="PARTNER_ELEVEL_NEW"){
 					$value = $this->loggedInProfileObj->getEDU_LEVEL_NEW();
-                                        $ugPg = $this->loggedInProfileObj->getEducationDetail(1);
+                                        $ugPg = $this->loggedInProfileObj->getEducationDetail(1,SearchConfig::getSearchDb());
                                         if(!empty($ugPg)){
                                                 if($ugPg["PG_DEGREE"])
                                                       $value .= " "  .$ugPg["PG_DEGREE"];

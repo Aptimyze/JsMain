@@ -73,7 +73,7 @@ class detailedAction extends sfAction
 		$this->loginData=$data=$request->getAttribute("loginData");
 		//Contains logined Profile information;
 		$this->loginProfile=LoggedInProfile::getInstance();
-		$this->profile=Profile::getInstance("newjs_bmsSlave");
+		$this->profile=Profile::getInstance("newjs_masterRep");
 		$this->isMobile=MobileCommon::isMobile("JS_MOBILE");
 		//Assinging smarty variable
 		$this->smarty=$smarty;
