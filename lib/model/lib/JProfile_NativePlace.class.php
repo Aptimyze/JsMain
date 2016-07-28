@@ -202,7 +202,7 @@ class JProfile_NativePlace
 			$this->m_szNativeState 		= $arrInfo[NATIVE_STATE]==null?'':$arrInfo[NATIVE_STATE];
 			$this->m_szNativeCountry 	= $arrInfo[NATIVE_COUNTRY]==null?'':$arrInfo[NATIVE_COUNTRY];
 			
-			$this->m_szDecorate_NativeCity 		= ($this->m_szNativeCity != '0') ?$this->getLabel($this->m_szNativeCity,'city_india') : ("Other");
+			$this->m_szDecorate_NativeCity 		= ($this->m_szNativeCity != '0') ?$this->getLabel($this->m_szNativeCity,'city_india') : ("Others");
 			$this->m_szDecorate_NativeCountry 	= $this->getLabel($this->m_szNativeCountry,'country');
 			$this->m_szDecorate_NativeState 	= $this->getLabel($this->m_szNativeState,'state_india');
 		}	
