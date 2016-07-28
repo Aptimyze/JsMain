@@ -28,7 +28,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 		  	unset($profileArray);
 
 
-		  	$arr=(new DUPLICATE_PROFILE_LOG())->fetchConfirmedDuplicates(1000,$i);
+		  	$arr=(new DUPLICATE_PROFILE_LOG('newjs_slave'))->fetchConfirmedDuplicates(1000,$i);
 		  	if(!$arr) break;
 		  	$valueArray['PROFILEID']="";
 		  	foreach ($arr as $key => $value) {
@@ -38,7 +38,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 
 		  	$valueArray['PROFILEID']=substr($valueArray['PROFILEID'],0, -1);
 
-		  	$jprofileArray=JPROFILE::getInstance()->getArray($valueArray,"",'',"PROFILEID,ACTIVATED,GENDER,ENTRY_DT");
+		  	$jprofileArray=JPROFILE::getInstance('newjs_slave')->getArray($valueArray,"",'',"PROFILEID,ACTIVATED,GENDER,ENTRY_DT");
 
 		  	foreach ($jprofileArray as $key => $value) 
 		  		{
