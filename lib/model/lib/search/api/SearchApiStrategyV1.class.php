@@ -371,9 +371,9 @@ class SearchApiStrategyV1
                                                                 $this->output[$profileKey][$i][$fieldName] = $value["value"];
 
                                                         $tempkey = $fieldName=='eoi_label'?0:($fieldName=='bookmarked'?1:2);
-                                                        if($fieldName!='album_count' || MobileCommon::isApp()!='A' || !(sfContext::getInstance()->getRequest()->getParameter('API_APP_VERSION') >=50) )	
+                                                        if($fieldName!='album_count' || MobileCommon::isApp()!='A' || !(sfContext::getInstance()->getRequest()->getParameter('API_APP_VERSION') >=51) )	
                                                         $button[$tempkey] = $value;
-                                                        if($fieldName=='ignore_button' && MobileCommon::isApp()=='A' && (sfContext::getInstance()->getRequest()->getParameter('API_APP_VERSION')) >=50 )
+                                                        if($fieldName=='ignore_button' && MobileCommon::isApp()=='A' && (sfContext::getInstance()->getRequest()->getParameter('API_APP_VERSION')) >=51 )
                                                         $button[$tempkey] = $value;
 
 
