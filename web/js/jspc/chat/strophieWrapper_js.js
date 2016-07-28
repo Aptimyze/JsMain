@@ -20,9 +20,8 @@ var strophieWrapper = {
     stropheLoggerPC: function (msgOrObj) {
         if (strophieWrapper.loggingEnabledStrophe) {
             if (typeof (window.console) != 'undefined') {
-            	
                 try {
-                    
+                    throw new Error('Initiate Stack Trace');
                 } catch (err) {
                     var logStack = err.stack;
                 }
@@ -318,12 +317,11 @@ var strophieWrapper = {
     formatRosterObj: function (obj) {
         var listing_tuple_photo = "";
         if (loggedInJspcGender) {
-            if (loggedInJspcGender == "M"){
-            	listing_tuple_photo = chatConfig.Params[device].noPhotoUrl["listingTuple"]["F"];
+            if (loggedInJspcGender == "M") {
+                listing_tuple_photo = chatConfig.Params[device].noPhotoUrl["listingTuple"]["F"];
+            } else if (loggedInJspcGender == "F") {
+                listing_tuple_photo = chatConfig.Params[device].noPhotoUrl["listingTuple"]["M"];
             }
-            else if(loggedInJspcGender == "F"){
-            	listing_tuple_photo = chatConfig.Params[device].noPhotoUrl["listingTuple"]["M"];
-        	}
         }
         strophieWrapper.stropheLoggerPC("in formatRosterObj");
         var chat_status = obj["attributes"]["chat_status"] || "offline",
@@ -332,7 +330,6 @@ var strophieWrapper = {
         if (typeof obj["attributes"]["name"] != "undefined") {
             fullname = obj["attributes"]["name"].split("|");
         }
-      
         newObj[strophieWrapper.rosterDetailsKey] = {
             "jid": obj["attributes"]["jid"],
             "chat_status": chat_status,
@@ -556,22 +553,25 @@ var strophieWrapper = {
             strophieWrapper.connectionObj.send(sendStatus);
         }
     },
-
     //remove user from roster
-    removeRosterItem:function(jid){
-    	var user_id = jid.split("@")[0];
-        if(typeof strophieWrapper.Roster[user_id] != "undefined"){
-            var iq = $iq({type: 'set'}).c('query', {xmlns: Strophe.NS.ROSTER}).c('item', {jid: jid,
-                subscription: "remove"});
-            strophieWrapper.connectionObj.sendIQ(iq, function(status){
-                stropheLoggerPC("Removed stanza: "+jid);
+    removeRosterItem: function (jid) {
+        var user_id = jid.split("@")[0];
+        if (typeof strophieWrapper.Roster[user_id] != "undefined") {
+            var iq = $iq({
+                type: 'set'
+            }).c('query', {
+                xmlns: Strophe.NS.ROSTER
+            }).c('item', {
+                jid: jid,
+                subscription: "remove"
             });
-        }
-        else{
-           stropheLoggerPC("user does not exist in roster");
+            strophieWrapper.connectionObj.sendIQ(iq, function (status) {
+                stropheLoggerPC("Removed stanza: " + jid);
+            });
+        } else {
+            stropheLoggerPC("user does not exist in roster");
         }
     },
-
     //add user in roster
     addRosterItem:function(rosterParams){
     	if(typeof rosterParams != "undefined"){
@@ -595,5 +595,31 @@ var strophieWrapper = {
 		        }
 		    }
 		}
+    addRosterItem: function (rosterParams) {
+        if (typeof rosterParams != "undefined") {
+            var groups = [];
+            groups.push(rosterParams["groupid"]);
+            if (typeof groups != "undefined" && strophieWrapper.checkForGroups(groups) == true) {
+                var user_id = rosterParams["jid"].split("@")[0];
+                if (typeof strophieWrapper.Roster[user_id] != "undefined") {
+                    var iq = $iq({
+                        type: 'set',
+                        id: strophieWrapper.getUniqueId('roster')
+                    }).c('query', {
+                        xmlns: Strophe.NS.ROSTER
+                    }).c('item', {
+                        jid: rosterParams["jid"],
+                        name: rosterParams["nick"],
+                        subscription: rosterParams["subscription"]
+                    });
+                    iq.c('group').t(rosterParams["groupid"]).up();
+                    strophieWrapper.connectionObj.sendIQ(iq, function (status) {
+                        stropheLoggerPC("roster adding stanza: " + jid);
+                    });
+                } else {
+                    stropheLoggerPC("user cannot be addeded in roster");
+                }
+            }
+        }
     }
 }
