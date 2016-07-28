@@ -762,16 +762,20 @@ JsChat.prototype = {
                             messageId = msgSendOutput["msg_id"];
                             //that._chatLoggerPlugin("handling output of onSendingMessage in plugin");
                             $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + messageId);
-                            if (msgSendOutput["canSend"] == true) {
+                            if (msgSendOutput["sent"] == true) {
                                 //msg sending success,set single tick here
                                 _this._changeStatusOfMessg(messageId, userId, "recieved");
-                            } else if (msgSendOutput["canSend"] == false) {
+                            } else if (msgSendOutput["sent"] == false) {
                                 //msg sending failure
-                                $(curElem).prop("disabled", true);
+                                //$(curElem).prop("disabled", true);
                                 if (typeof msgSendOutput["errorMsg"] == "undefined") {
                                     msgSendOutput["errorMsg"] = "Something went wrong..";
                                 }
                                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">' + msgSendOutput["errorMsg"] + '</div>').addClass("restrictMessg2");
+                            }
+                            if(msgSendOutput["cansend"] == false){
+                                $(curElem).prop("disabled", true);
+                                //$('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">' + msgSendOutput["errorMsg"] + '</div>').addClass("restrictMessg2");
                             }
                         }
                     }, 50);
