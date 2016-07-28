@@ -459,7 +459,7 @@ function handlePreAcceptChat(apiParams) {
                 chatLoggerPC("in success of handlePreAcceptanceMsg");
                 chatLoggerPC(response);
                 if(response["responseStatusCode"] == "0"){
-                    if(response["actiondetails"] && response["actiondetails"]["errmsglabel"])
+                    if(response["actiondetails"] && typeof response["actiondetails"]["errmsglabel"]!= "undefined")
                     {
                         outputData["cansend"] = false;
                         outputData["sent"] = false;
