@@ -304,6 +304,7 @@ var strophieWrapper = {
         //strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
         invokePluginManagelisting(strophieWrapper.Roster, "create_list");
         strophieWrapper.setRosterStorage(strophieWrapper.Roster);
+        strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
     },
     //executed on msg receipt
     onMessage: function (iq) {
