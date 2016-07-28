@@ -110,7 +110,7 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
         {
                 try
                 {
-                        $sql="select count(*) as cnt from DUPLICATE_PROFILE_LOG where PROFILE1 IN (:PROFILE1,:PROFILE2) AND PROFILE2 IN (:PROFILE1,:PROFILE2)";
+                        $sql="select count(*) as cnt from DUPLICATE_PROFILE_LOG where PROFILE1 IN (:PROFILE1,:PROFILE2) AND PROFILE2 IN (:PROFILE1,:PROFILE2) AND IS_DUPLICATE='YES'";
                         $prep = $this->db->prepare($sql);
                         $prep->bindValue(":PROFILE1",$profile1,PDO::PARAM_INT);
                         $prep->bindValue(":PROFILE2",$profile2,PDO::PARAM_INT);
@@ -170,6 +170,26 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
         try {
 
             $sql = "insert ignore into  duplicates.DUPLICATE_PROFILES set DUPLICATE_ID=:GROUP1,PROFILEID=:PROFILEID1;insert ignore into  duplicates.DUPLICATE_PROFILES set DUPLICATE_ID=:GROUP1,PROFILEID=:PROFILEID2;";
+            
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":GROUP1",$group1, PDO::PARAM_INT);
+            $prep->bindValue(":PROFILEID1", $profile1, PDO::PARAM_INT);
+            $prep->bindValue(":PROFILEID2", $profile2, PDO::PARAM_INT);
+           
+            $prep->execute();
+            
+                }
+                catch (Exception $e) {
+            throw new jsException($e);
+                }
+        }
+
+
+        public function fetchProbableOrConfirmedDuplicates($group1,$profile1,$profile2)
+        {
+        try {
+
+            $sql = "SELECT (PROFILE1, PROFILE2)";
             
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":GROUP1",$group1, PDO::PARAM_INT);

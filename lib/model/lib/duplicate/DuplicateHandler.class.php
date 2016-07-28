@@ -28,8 +28,11 @@ class DuplicateHandler
 	  $second=$rawDuplicateObj->getProfileid2();
 	  $groupids=$dupCon->getDuplicateID($rawDuplicateObj);
 
+// added by Palash to ensure that once if a pair is marked confirmed duplicate then it cant be marked again as duplicate
 	  $alreadyLogged=(new DUPLICATE_PROFILE_LOG())->fetchResultForAPair($first,$second);
 	  if($alreadyLogged['cnt']) return;
+//////////////////////////////////////////////	
+
 	//Added by Anand to handle duplicate profiles for fto
 	$HfdObj = new HandleFtoDuplicate;
        	$HfdObj->ftoDuplicateLogic($first,$second);	  
@@ -153,7 +156,7 @@ class DuplicateHandler
   public static function MarkPermanentNotDuplicate(RawDuplicate $rawDuplicateObj) {
 	  $obj=new PERMANENT_NOT_DUPLICATE();
 	  $obj->MarkPermanentNotDuplicates($rawDuplicateObj);
-  } // end of member function MarkNotDuplicate
+  } // end of member function MarkPermanentNotDuplicate
   
     
   
