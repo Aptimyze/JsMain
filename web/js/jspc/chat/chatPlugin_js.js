@@ -982,16 +982,16 @@ JsChat.prototype = {
                             } else {
                                 $(this).find("#sentDiv").removeClass("disp-none");
                                 $(this).find("#initiateText,#chatBoxErr").remove();
-                                $(this).remove();
+                                //$(this).remove();
                                 new_contact_state = curElem._contactStatusMapping["pog_acceptance_pending"]["key"];
                                 $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
                                 $('chat-box[user-id="' + userId + '"]').attr("group-id", chatConfig.Params.categoryNames["Interest Sent"]);
                             }
                         } else {
-                            $(this).html("error");
+                            $(this).html(response.actiondetails.errmsglabel);
                         }
                     } else {
-                        $(this).html("error");
+                        $(this).html("Something went wrong.");
                     }
                 }
             });
@@ -1026,7 +1026,7 @@ JsChat.prototype = {
                             } else {
                                 $(this).closest(".chatMessage").find("#sentDiv").removeClass("disp-none");
                                 $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
-                                $(this).remove();
+                                //$(this).remove();
                                 new_contact_state = curElem._contactStatusMapping["both_accepted"]["key"];
                                 //TODO: fire query for accepting request
                                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
@@ -1034,11 +1034,11 @@ JsChat.prototype = {
                                 $('chat-box[user-id="' + userId + '"]').attr("group-id", chatConfig.Params.categoryNames["Acceptance"]);
                             }
                         } else {
-                            $(this).html("error");
+                            $(this).html(response.actiondetails.errmsglabel);
                             $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
                         }
                     } else {
-                        $(this).html("error");
+                        $(this).html("Something went wrong.");
                         $(this).closest(".chatMessage").find("#sendInt, #acceptTxt, #decline").remove();
                     }
                 }
@@ -1065,7 +1065,7 @@ JsChat.prototype = {
                             } else {
                                 $(this).closest(".chatMessage").find("#sentDiv").removeClass("disp-none");
                                 $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
-                                $(this).remove();
+                                //$(this).remove();
                                 new_contact_state = curElem._contactStatusMapping["pg_interest_declined"]["key"];
                                 //TODO: fire query for accepting request
                                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
@@ -1073,11 +1073,11 @@ JsChat.prototype = {
                                 $('chat-box[user-id="' + userId + '"]').attr("group-id", chatConfig.Params.categoryNames["none_applicable"]);
                             }
                         } else {
-                            $(this).html("error");
+                            $(this).html(response.actiondetails.errmsglabel);
                             $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt").remove();
                         }
                     } else {
-                        $(this).html("error");
+                        $(this).html("Something went wrong.");
                         $(this).closest(".chatMessage").find("#sendInt, #acceptTxt").remove();
                     }
                 }
