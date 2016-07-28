@@ -63,6 +63,7 @@ class apiActions extends sfActions
 		$request->setAttribute("loginData",$loginData);
 		$request->setAttribute('profileid', $loginData[PROFILEID]);
 		$respObj->setAuthChecksum($loginData[AUTHCHECKSUM]);
+		$respObj->setImageCopyServer($loginData[PROFILEID]);
 	}
 	private function ForwardOrNot($request,$loginData,$upgradeStatus)
 	{

@@ -153,7 +153,7 @@ abstract class Picture
 	{
                 $saveUrl = "";
                 if(!$type)
-                        $type=".jpg";
+                        $type=".jpeg";
                 elseif(!strstr($type,"."))
                         $type=".".$type;
 
@@ -181,12 +181,12 @@ abstract class Picture
 		$saveUrl = "";
 		if($picType == "MailImages")
 		{
-			$saveUrl = "JS/uploads/".$picType."/".$imgAttachName;
+			$saveUrl = IMAGE_SERVER_ENUM::$appPicUrl."/uploads/".$picType."/".$imgAttachName;
 		}
 		else
 		{
 			if(!$type)
-				$type=".jpg";
+				$type=".jpeg";
 			elseif(!strstr($type,"."))
 				$type=".".$type;
 			$photoUrlId=$this->photoEncyption($picId,$profileId);
@@ -197,9 +197,9 @@ abstract class Picture
 			else
 			{
 				if($objectType=='screened')
-					$saveUrl=$this->getDirectory($picId,"JS/uploads/ScreenedImages/$picType/",1)."/".$photoUrlId.$type;
+					$saveUrl=$this->getDirectory($picId,IMAGE_SERVER_ENUM::$appPicUrl.IMAGE_SERVER_ENUM::getImageServerEnum($profileId,'1',1)."/uploads/ScreenedImages/$picType/",1)."/".$photoUrlId.$type;
 				elseif($objectType=='nonScreened')
-					$saveUrl=$this->getDirectory($picId,"JS/uploads/NonScreenedImages/$picType/",1)."/".$photoUrlId.$type;
+					$saveUrl=$this->getDirectory($picId,IMAGE_SERVER_ENUM::$appPicUrl.IMAGE_SERVER_ENUM::getImageServerEnum($profileId,'1',1)."/uploads/NonScreenedImages/$picType/",1)."/".$photoUrlId.$type;
 			}
 		}
                 return $saveUrl;

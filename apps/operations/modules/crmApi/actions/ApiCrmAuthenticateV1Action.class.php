@@ -42,7 +42,9 @@ class ApiCrmAuthenticateV1Action extends sfActions
 						$registrationid = $request->getParameter("REGISTRATION_ID");
 						$appVersion = $request->getParameter("APP_VERSION");
 						$notificationObj = new BrowserNotification();
-						$notificationObj->manageRegistrationid($registrationid,'',$result["agentid"],"CRM_AND",$appVersion);
+						if(!empty($registrationid) && isset($registrationid)){
+							$notificationObj->manageRegistrationid($registrationid,'',$result["agentid"],"CRM_AND",$appVersion);
+						}
 						unset($notificationObj);
 					}
 					$apiObj->setHttpArray(CrmResponseHandlerConfig::$AGENT_LOGIN_SUCCESS); 

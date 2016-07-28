@@ -340,7 +340,7 @@ class apidetailedv1Action extends sfAction
 			// 	$username=$username_temp;
 				
 			//Change this later
-			$profile = Profile::getInstance("newjs_bmsSlave");
+			$profile = Profile::getInstance("newjs_masterRep");
 			$profile->getDetail($username,'USERNAME',"*","RAW");
 			$usernameUpper=strtoupper($username);
 			if(!$profile->getPROFILEID() && $usernameUpper!=$username)
@@ -354,7 +354,7 @@ class apidetailedv1Action extends sfAction
 		}
 		if($profileid)
 		{
-			$profile = Profile::getInstance("newjs_bmsSlave");
+			$profile = Profile::getInstance("newjs_masterRep");
 			$profile->getDetail($profileid,'PROFILEID',"*","RAW");
 		}			
 				

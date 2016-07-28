@@ -47,12 +47,12 @@ class viewProfileOptimization{
             }
             $this->statusArr["Ignore"] = $ignore;
             $this->statusArr["IgnoreFilter"] = $otherIgnored;
-            $bookmark= new NEWJS_BOOKMARKS("newjs_bmsSlave");
+            $bookmark= new NEWJS_BOOKMARKS("newjs_masterRep");
             $this->statusArr["isBookmarked"] = $bookmark->isBookmarked(self::$sender,self::$receiver);
         }
-            $fsoObj = new PROFILE_VERIFICATION_FSO("newjs_bmsSlave");
+            $fsoObj = new PROFILE_VERIFICATION_FSO("newjs_masterRep");
             $this->statusArr["fsoStatus"] = $fsoObj->check(self::$receiver);
-            $hobbyObj=new NEWJS_HOBBIES("newjs_bmsSlave");
+            $hobbyObj=new NEWJS_HOBBIES("newjs_masterRep");
             $this->statusArr["hobbies"] = $hobbyObj->getUserHobbies(self::$receiver);
     }
     

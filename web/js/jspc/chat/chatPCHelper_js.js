@@ -458,10 +458,19 @@ function handlePreAcceptChat(apiParams) {
             success: function (response) {
                 chatLoggerPC("in success of handlePreAcceptanceMsg");
                 chatLoggerPC(response);
-                outputData = response;
-                //outputData["canSend"] = response["cansend"];
-                outputData["errorMsg"] = response["message"];
-                outputData["msg_id"] = strophieWrapper.getUniqueId();
+                if(response["responseStatusCode"] == "0"){
+                    if(response["actiondetails"]["errmsglabel"])
+                    {
+                        outputData["cansend"] = false;
+                        outputData["sent"] = false;
+                        outputData["errorMsg"] = response["actiondetails"]["errmsglabel"];
+                        outputData["msg_id"] = strophieWrapper.getUniqueId();
+                    }
+                    else{
+                        outputData = response;  
+                        outputData["msg_id"] = strophieWrapper.getUniqueId();
+                    }
+                }
             },
             error: function (xhr) {
                 chatLoggerPC("in error of handlePreAcceptanceMsg");
@@ -766,7 +775,7 @@ $(document).ready(function () {
                     var apiParams = {
                         "url": chatConfig.Params[device].preAcceptChat["apiUrl"],
                         "postParams": {
-                            "profilechecksum": /*"4ddba5c85d628cf4faaaca776540cb1ei7575569", */ receiverProfileChecksum,
+                            "profilechecksum": receiverProfileChecksum,
                             "chatMessage": message
                         }
                     };

@@ -10,6 +10,7 @@ chdir($dirname);
 include('connect.inc');
 include("../sugarcrm/custom/crons/housekeepingConfig.php");
 include("../sugarcrm/include/utils/systemProcessUsersConfig.php");
+include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 global $partitionsArray;
 global $process_user_mapping;
 
@@ -68,14 +69,53 @@ for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
         $myDbarr[$myDbName]=$mysqlObj->connect("$myDbName");
 	mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$myDbarr[$myDbName]);
 }
+ $messageShardCount=0;
+ $dbMessageLogObj1=new NEWJS_MESSAGE_LOG("shard1_master");
+ $dbMessageLogObj2=new NEWJS_MESSAGE_LOG("shard2_master");
+ $dbMessageLogObj3=new NEWJS_MESSAGE_LOG("shard3_master");
+ $dbDeletedMessagesObj1=new NEWJS_DELETED_MESSAGES("shard1_master");
+ $dbDeletedMessagesObj2=new NEWJS_DELETED_MESSAGES("shard2_master");
+ $dbDeletedMessagesObj3=new NEWJS_DELETED_MESSAGES("shard3_master");
+ $dbMessageObj1=new NEWJS_MESSAGES("shard1_master");
+ $dbMessageObj2=new NEWJS_MESSAGES("shard2_master");
+ $dbMessageObj3=new NEWJS_MESSAGES("shard3_master");
+ $dbDeletedMessageLogObj1=new NEWJS_DELETED_MESSAGE_LOG("shard1_master");
+ $dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG("shard2_master");
+ $dbDeletedMessageLogObj3=new NEWJS_DELETED_MESSAGE_LOG("shard3_master");
+
+
 
 /****  Transaction for all 3 shards started here. We will commit all three shards together. ****/
 if(count($myDbarr))
 {
+	$i=1;
 	foreach($myDbarr as $key=>$value)
 	{
 		$myDb=$myDbarr[$key];
 		
+		if($i==1)
+		{
+			$dbMessageLogObj=$dbMessageLogObj1;
+			$dbDeletedMessagesObj=$dbDeletedMessagesObj1;
+			$dbMessageObj=$dbMessageObj1;
+			$dbDeletedMessageLogObj=$dbDeletedMessageLogObj1;
+		}
+		if($i==2)
+		{
+			$dbMessageLogObj=$dbMessageLogObj2;
+			$dbDeletedMessagesObj=$dbDeletedMessagesObj2;
+			$dbMessageObj=$dbMessageObj2;
+			$dbDeletedMessageLogObj=$dbDeletedMessageLogObj2;
+		}
+		if($i==3)
+		{
+			$dbMessageLogObj=$dbMessageLogObj3;
+			$dbDeletedMessagesObj=$dbDeletedMessagesObj3;
+			$dbMessageObj=$dbMessageObj3;
+			$dbDeletedMessageLogObj=$dbDeletedMessageLogObj3;
+		}
+		
+		$dbMessageLogObj->startTransaction();
 		$sql="BEGIN"; 
 		mysql_query($sql,$myDb) or mysql_error_with_mail(mysql_error($myDb).$sql);
 
@@ -85,14 +125,15 @@ if(count($myDbarr))
 		delFromTables('DELETED_PHOTO_REQUEST','PHOTO_REQUEST',$myDb,$profileid,"PROFILEID");
 		delFromTables('DELETED_PHOTO_REQUEST','PHOTO_REQUEST',$myDb,$profileid,"PROFILEID_REQ_BY");
 
-		delFromTables('DELETED_MESSAGE_LOG','MESSAGE_LOG',$myDb,$profileid,"RECEIVER");
-		delFromTables('DELETED_MESSAGE_LOG','MESSAGE_LOG',$myDb,$profileid,"SENDER");
+		delFromTables('DELETED_MESSAGE_LOG','MESSAGE_LOG',$myDb,$profileid,"RECEIVER",'',$dbMessageLogObj,$dbDeletedMessagesObj,$dbMessageObj,$dbDeletedMessageLogObj);
+		delFromTables('DELETED_MESSAGE_LOG','MESSAGE_LOG',$myDb,$profileid,"SENDER",'',$dbMessageLogObj,$dbDeletedMessagesObj,$dbMessageObj,$dbDeletedMessageLogObj);
 
 		delFromTables('DELETED_EOI_VIEWED_LOG','EOI_VIEWED_LOG',$myDb,$profileid,"VIEWER");
 		delFromTables('DELETED_EOI_VIEWED_LOG','EOI_VIEWED_LOG',$myDb,$profileid,"VIEWED");
 
 		delFromTables('DELETED_PROFILE_CONTACTS','CONTACTS',$myDb,$profileid,"SENDER");
 		delFromTables('DELETED_PROFILE_CONTACTS','CONTACTS',$myDb,$profileid,"RECEIVER");
+		$i++;
 	}
 }
 /****  Transaction for all 3 shards started here.We will commit all three shards together. ****/
@@ -114,6 +155,9 @@ delFromTables('DELETED_OFFLINE_MATCHES','OFFLINE_MATCHES',$mainDb,$profileid,"PR
 
 delFromTables('DELETED_OFFLINE_NUDGE_LOG','OFFLINE_NUDGE_LOG',$mainDb,$profileid,"SENDER",'jsadmin');
 delFromTables('DELETED_OFFLINE_NUDGE_LOG','OFFLINE_NUDGE_LOG',$mainDb,$profileid,"RECEIVER",'jsadmin');
+
+delFromTables('DELETED_VIEW_CONTACTS_LOG','VIEW_CONTACTS_LOG',$mainDb,$profileid,"VIEWER",'jsadmin');
+delFromTables('DELETED_VIEW_CONTACTS_LOG','VIEW_CONTACTS_LOG',$mainDb,$profileid,"VIEWED",'jsadmin');
 /****  Transaction for master tables started here . ****/
 
 
@@ -125,6 +169,14 @@ $iii=1;
 foreach($myDbarr as $key=>$value)
 {
 	$myDb=$myDbarr[$key];
+	if($iii==1)
+		$dbMessageLogObj=$dbMessageLogObj1;
+	if($iii==2)
+		$dbMessageLogObj=$dbMessageLogObj2;
+	if($iii==3)
+		$dbMessageLogObj=$dbMessageLogObj3;
+		
+	$dbMessageLogObj->commitTransaction();
 	$sql="COMMIT";
 	mysql_query($sql,$myDb) or mysql_error_with_mail(mysql_error($myDb).$sql);
 
@@ -214,6 +266,7 @@ mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_t
 
 /*** For CONATCT_STATUS TABLE numbers. ***/
 $affectedId=array();
+$k=1;
 foreach($myDbarr as $key=>$value)
 {
 	$myDb=$myDbarr[$key];
@@ -333,9 +386,18 @@ foreach($myDbarr as $key=>$value)
 			
 		}
 	}
-	$sql = "SELECT RECEIVER, SEEN FROM DELETED_MESSAGE_LOG WHERE SENDER = '$profileid' AND TYPE = 'R' AND IS_MSG = 'Y'";
-	$result=mysql_query($sql,$myDb) or mysql_error_with_mail(mysql_error($myDb).$sql);
-	while($myrow=mysql_fetch_array($result))
+	if($k==1)
+		$dbDeletedMessagesObj=$dbDeletedMessagesObj1;
+	if($k==2)
+		$dbDeletedMessagesObj=$dbDeletedMessagesObj2;
+	if($k==3)
+		$dbDeletedMessagesObj=$dbDeletedMessagesObj3;
+	
+	$result=$dbDeletedMessagesObj->getSenderMessages($profileid);
+	$k++;
+	//$sql = "SELECT RECEIVER, SEEN FROM DELETED_MESSAGE_LOG WHERE SENDER = '$profileid' AND TYPE = 'R' AND IS_MSG = 'Y'";
+	//$result=mysql_query($sql,$myDb) or mysql_error_with_mail(mysql_error($myDb).$sql);
+	foreach($result as $key=>$myrow)
 	{
 		if($myrow["SEEN"]!= 'Y')
 			$CONTACT_STATUS_FIELD['MESSAGE_NEW']=-1;
@@ -375,47 +437,76 @@ if(JsConstants::$webServiceFlag == 1)
 * @param string whereStrLabel is where-condition on which profileid is checked.
 * @param string $databaseName optinal field for specifying the database name. @default is 'newjs'
 */
-function delFromTables($delTable,$selTable,$db,$profileid,$whereStrLabel,$databaseName='')
+function delFromTables($delTable,$selTable,$db,$profileid,$whereStrLabel,$databaseName='',$dbMessageLogObj='',$dbDeletedMessagesObj='',$dbMessageObj='',$dbDeletedMessageLogObj='')
 {
 	if(!$databaseName)
 		$databaseName='newjs';
 
 	if($selTable=='MESSAGE_LOG')
 	{
-	        $sql="select ID FROM $databaseName.$selTable WHERE $whereStrLabel='$profileid'";
+		
+		/*$sql="select ID FROM $databaseName.$selTable WHERE $whereStrLabel='$profileid'";
         	$result=mysql_query($sql,$db) or mysql_error_with_mail(mysql_error($db).$sql);
 	        while($myrow=mysql_fetch_array($result))
 		{
 			$idsArr[]=$myrow["ID"];
-		}	
-		if($idsArr)
+		}*/
+		$idsArr=$dbMessageLogObj->getAllMessageIdLog($profileid,$whereStrLabel);
+		
+		if(is_array($idsArr))
 		{
-			$idStr=implode(",",$idsArr);
-			$sql="INSERT IGNORE INTO $databaseName.DELETED_MESSAGES SELECT * FROM $databaseName.MESSAGES WHERE ID IN ($idStr)";
-			mysql_query($sql,$db) or ($skip=1);
-			if(!$skip)
+			//$idStr=implode(",",$idsArr);
+			$result=$dbDeletedMessagesObj->insertIntoDeletedMessages($idsArr);
+		
+			//$sql="INSERT IGNORE INTO $databaseName.DELETED_MESSAGES SELECT * FROM $databaseName.MESSAGES WHERE ID IN ($idStr)";
+			//mysql_query($sql,$db) or ($skip=1);
+			
+			if($result)
 			{
-				$sql="DELETE FROM $databaseName.MESSAGES WHERE ID IN ($idStr)";
-				mysql_query($sql,$db) or ($skip=1);
+		
+				$res=$dbMessageObj->deleteMessages($idsArr);
+				
+		
+				if(!$res)
+						mysql_error_with_mail(mysql_error($db)."deleteMessages");
+				//$sql="DELETE FROM $databaseName.MESSAGES WHERE ID IN ($idStr)";
+				//mysql_query($sql,$db) or ($skip=1);
 			}
-			if($skip)
+			else
 			{
-				mysql_error_with_mail(mysql_error($db).$sql);
+				mysql_error_with_mail(mysql_error($db)."insertIntoDeletedMessages");
 				/* no need to rollback as it is defaulted*/
 			}
 
 		}
-	}
-	$sql="INSERT IGNORE INTO $databaseName.$delTable SELECT * FROM $databaseName.$selTable WHERE $whereStrLabel='$profileid'";
-	mysql_query($sql,$db) or ($skip=1);
-	if (!$skip) {
-		if ($selTable == "CONTACTS" && JsConstants::$webServiceFlag == 1) {
-			$url = JsConstants::$contactUrl."/v1/contacts/".$profileid."?TYPE=".$whereStrLabel;
-			sendCurlDeleteRequest($url);
-
+		
+		$res=$dbDeletedMessageLogObj->insert($profileid,$whereStrLabel);
+		
+		//$sql="INSERT IGNORE INTO $databaseName.$delTable SELECT * FROM $databaseName.$selTable WHERE $whereStrLabel='$profileid'";
+		//mysql_query($sql,$db) or ($skip=1);
+		if ($res) {
+			
+		
+				$response=$dbMessageLogObj->deleteMessageLog($profileid,$whereStrLabel);
+		
+				if(!$response)
+					$skip=1;
+				//$sql = "DELETE FROM $databaseName.$selTable WHERE $whereStrLabel='$profileid'";
+				//mysql_query($sql, $db) or ($skip = 1);			
 		}
-		$sql = "DELETE FROM $databaseName.$selTable WHERE $whereStrLabel='$profileid'";
-		mysql_query($sql, $db) or ($skip = 1);
+	}
+	else{
+		$sql="INSERT IGNORE INTO $databaseName.$delTable SELECT * FROM $databaseName.$selTable WHERE $whereStrLabel='$profileid'";
+		mysql_query($sql,$db) or ($skip=1);
+		if (!$skip) {
+			if ($selTable == "CONTACTS" && JsConstants::$webServiceFlag == 1) {
+				$url = JsConstants::$contactUrl."/v1/contacts/".$profileid."?TYPE=".$whereStrLabel;
+				sendCurlDeleteRequest($url);
+
+			} 
+				$sql = "DELETE FROM $databaseName.$selTable WHERE $whereStrLabel='$profileid'";
+				mysql_query($sql, $db) or ($skip = 1);
+		}
 	}
 	
 	

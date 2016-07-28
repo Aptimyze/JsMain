@@ -674,7 +674,7 @@ JsChat.prototype = {
                                 var response = curElem.onChatBoxContactButtonsClick({
                                     "buttonType": "UNBLOCK",
                                     "receiverID": userId,
-                                    "checkSum": profileChecksum,
+                                    "checkSum":profileChecksum,
                                     "trackingParams": chatConfig.Params.trackingParams["UNBLOCK"],
                                     "extraParams": {
                                         "ignore": 0
@@ -765,6 +765,7 @@ JsChat.prototype = {
                             $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + messageId);
                             if (msgSendOutput["sent"] == true) {
                                 //msg sending success,set single tick here
+                                console.log("sent-"+messageId);
                                 _this._changeStatusOfMessg(messageId, userId, "recieved");
                             } else if (msgSendOutput["sent"] == false) {
                                 //msg sending failure
@@ -775,6 +776,7 @@ JsChat.prototype = {
                                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">' + msgSendOutput["errorMsg"] + '</div>').addClass("restrictMessg2");
                             }
                             if(msgSendOutput["cansend"] == false){
+                                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">You can send more messages only if she replies</div>').addClass("restrictMessg2");
                                 $(curElem).prop("disabled", true);
                                 //$('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">' + msgSendOutput["errorMsg"] + '</div>').addClass("restrictMessg2");
                             }

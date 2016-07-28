@@ -361,7 +361,7 @@ class JPROFILE extends TABLE{
          * @exception PDOException for database level error handling
          */
         public function edit($paramArr=array(), $value, $criteria="PROFILEID",$extraWhereCnd=""){
-			if($this->dbName=="newjs_bmsSlave")
+			if($this->dbName=="newjs_masterRep")
 				$this->setConnection("newjs_master");
                 if(!$value)
                         throw new jsException("","$criteria IS BLANK");
@@ -395,7 +395,7 @@ class JPROFILE extends TABLE{
                     }
         }
         public function insert($paramArr=array()){
-			if($this->dbName=="newjs_bmsSlave")
+			if($this->dbName=="newjs_masterRep")
 				$this->setConnection("newjs_master");
 			try {
 				$keys_arr=array_keys($paramArr);
@@ -557,7 +557,7 @@ class JPROFILE extends TABLE{
 
 	public function Deactive($pid)
 	{
-		if($this->dbName=="newjs_bmsSlave")
+		if($this->dbName=="newjs_masterRep")
 				$this->setConnection("newjs_master");
 		try{
 			$sql="update JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D', MOD_DT=now(),activatedKey=0 where PROFILEID=:profileid";
@@ -652,7 +652,7 @@ public function duplicateEmail($email)
 	
 	public function updateLoginSortDate($pid)
     {
-		if($this->dbName=="newjs_bmsSlave")
+		if($this->dbName=="newjs_masterRep")
 				$this->setConnection("newjs_master");
 		if(!$pid)
 			throw new jsException("","VALUE OR TYPE IS BLANK IN insertIntoLoginHistory() of NEWJS_LOG_LOGIN_HISTORY.class.php");
@@ -774,7 +774,7 @@ public function duplicateEmail($email)
         }
 	public function updateHaveJEducation($profiles)
 	{
-		if($this->dbName=="newjs_bmsSlave")
+		if($this->dbName=="newjs_masterRep")
 				$this->setConnection("newjs_master");
                 try
                 {
@@ -832,7 +832,7 @@ public function duplicateEmail($email)
 
         public function updateOfflineBillingDetails($profileid)
         {
-			if($this->dbName=="newjs_bmsSlave")
+			if($this->dbName=="newjs_masterRep")
 				$this->setConnection("newjs_master");
                 try
                 {
@@ -849,7 +849,7 @@ public function duplicateEmail($email)
 
         public function updateSubscriptionStatus($subscription, $profileid)
         {
-			if($this->dbName=="newjs_bmsSlave")
+			if($this->dbName=="newjs_masterRep")
 				$this->setConnection("newjs_master");
                 try
                 {
@@ -867,7 +867,7 @@ public function duplicateEmail($email)
         
         public function updatePrivacy($privacy, $profileid)
         {
-			if($this->dbName=="newjs_bmsSlave")
+			if($this->dbName=="newjs_masterRep")
 				$this->setConnection("newjs_master");
                 try
                 {
@@ -929,7 +929,7 @@ public function duplicateEmail($email)
 		
 		public function updateHide($privacy, $profileid,$dayinterval)
         {
-			if($this->dbName=="newjs_bmsSlave")
+			if($this->dbName=="newjs_masterRep")
 				$this->setConnection("newjs_master");
                 try
                 {
@@ -946,7 +946,7 @@ public function duplicateEmail($email)
         
         public function updateUnHide($privacy,$profileid)
         {
-			if($this->dbName=="newjs_bmsSlave")
+			if($this->dbName=="newjs_masterRep")
 				$this->setConnection("newjs_master");
                 try
                 {
@@ -979,7 +979,7 @@ public function duplicateEmail($email)
 
 		public function updateDeleteData($profileid)
         {
-			if($this->dbName=="newjs_bmsSlave")
+			if($this->dbName=="newjs_masterRep")
 				$this->setConnection("newjs_master");
                 try
                 {
@@ -1528,5 +1528,107 @@ SQL;
 		}
 	}
 
+
+	//This function executes a select query on join of jprofile and incentives.name_of_user to fetch PROFILEID,EMAIL,USERNAME for the profiles that match the criteria
+	public function getDataForLegal($nameArr,$age,$addressArr,$email)
+	{		
+		$parentAddressCondition .=" OR ("; 
+
+		//if both name and address are not array	
+		if(!is_array($nameArr) && !is_array($addressArr) && $email=="")
+		{
+			throw new jsException("Both usernameArr and AddressArr are empty");
+		}
+		try
+		{
+			$sql .= "SELECT J.PROFILEID, J.USERNAME, J.EMAIL, N.NAME, J.AGE, J.CONTACT, J.PARENTS_CONTACT FROM newjs.JPROFILE as J LEFT JOIN incentive.NAME_OF_USER as N ON N.PROFILEID = J.PROFILEID	 WHERE "; //N.NAME LIKE '%vikas%' AND N.NAME LIKE '%jyana%'";
+			if(is_array($nameArr))
+			{
+				foreach($nameArr as $key=>$value)
+				{
+					$nameCondition .="N.NAME LIKE :NAMEARR$key AND ";
+				}
+				$nameCondition = rtrim($nameCondition," AND");
+				$sql .=$nameCondition;
+			}
+			if($age)
+			{
+				if(is_array($nameArr))
+					$ageCondition = " AND J.AGE = :AGE";
+				else
+					$ageCondition = "J.AGE = :AGE";
+				$sql .=$ageCondition;
+			}
+			if(is_array($addressArr))
+			{	
+				if($ageCondition != "" || $nameCondition != "")
+				{
+					$addressCondition .= " AND ((";
+				}
+				else
+				{
+					$addressCondition .= " ((";
+				}
+				foreach($addressArr as $key=>$value)
+				{
+					$addressCondition .= " J.CONTACT LIKE :CONTACTARR$key AND ";
+					$parentAddressCondition .=" J.PARENTS_CONTACT LIKE :PCONTACTARR$key AND ";
+				}
+				$addressCondition = rtrim($addressCondition,"AND ");
+				$addressCondition = $addressCondition." )";
+				$parentAddressCondition = rtrim($parentAddressCondition,"AND ");
+				$parentAddressCondition = $parentAddressCondition." )";
+
+				$sql .= $addressCondition.$parentAddressCondition.")"; 
+			}
+			if($email)
+			{
+				if(is_array($nameArr) || is_array($addressArr) || $age)
+				{
+					$emailCondition .=" AND J.EMAIL LIKE :EMAIL";
+				}
+				else
+				{
+					$emailCondition .=" J.EMAIL LIKE :EMAIL";
+				}
+				$sql .=$emailCondition;
+			}
+			
+			$pdoStatement = $this->db->prepare($sql);
+			if(is_array($nameArr))
+			{
+				foreach($nameArr as $key=>$value)
+				{			
+					$pdoStatement->bindValue(":NAMEARR".$key,'%'.$value.'%',PDO::PARAM_STR);				
+				}
+			}
+			if($age)
+			{				
+				$pdoStatement->bindValue(":AGE",$age,PDO::PARAM_INT);
+			}
+			if(is_array($addressArr))
+			{
+				foreach($addressArr as $key=>$value)
+				{			
+					$pdoStatement->bindValue(":CONTACTARR".$key,'%'.$value.'%',PDO::PARAM_STR);				
+					$pdoStatement->bindValue(":PCONTACTARR".$key,'%'.$value.'%',PDO::PARAM_STR);				
+				}
+			}
+			if($email)
+			{				
+				$pdoStatement->bindValue(":EMAIL",$email.'%',PDO::PARAM_STR);
+			}
+			$pdoStatement->execute();
+            while($result  = $pdoStatement->fetch(PDO::FETCH_ASSOC))
+			{
+				$finalArr[]  = $result;
+			}
+			return $finalArr;
+		}
+		catch(Exception $ex)
+		{
+            throw new jsException($ex);
+        }
+}
 }
 ?>

@@ -53,6 +53,13 @@ if(authenticated($cid))
 
 		// function to flush memcache
 		flush_memcache_ForMembership();	
+		$memCacheObject = JsMemcache::getInstance();
+		$membershipKeyArray = VariableParams::$membershipKeyArray;
+		$keys_removed = "";
+		foreach ($membershipKeyArray as $key => $keyVal) {
+		    $memCacheObject->remove($keyVal);
+		    $keys_removed .= $keyVal.",\n"; 
+		}
 	}
 
 	// Normal execution code	

@@ -27,15 +27,15 @@ EOF;
 
 	protected function execute($arguments = array(), $options = array())
 	{
-	    $countObj = new jeevansathi_mailer_DAILY_MAILER_COUNT_LOG();
-	    $cronDocRoot = JsConstants::$cronDocRoot;
+		
+		$cronDocRoot = JsConstants::$cronDocRoot;
         $php5 = JsConstants::$php5path;
-        
+
         passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring EMAIL_VER_MAILER");
 		(new MAIL_EMAIL_VER_MAILER())->EmptyMailer();
-	
 
-        passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring EMAIL_VER_MAILER#INSERT");	
+		passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring EMAIL_VER_MAILER#INSERT");	
+		$countObj = new jeevansathi_mailer_DAILY_MAILER_COUNT_LOG();
 		$instanceID = $countObj->getID('EMAIL_VER_MAILER');
 		$memObject=JsMemcache::getInstance();
 		$memObject->set('emailVerInstanceId',$instanceID);

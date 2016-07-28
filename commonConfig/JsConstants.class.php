@@ -152,6 +152,7 @@ class JsConstants
                                                 "PHOTO_REQUEST"=>true,
 						"HOROSCOPE_REQUEST"=>true
                                                 );
+
 	public static $memoryCachingSystem = 'redis1'; // redis,redisCluster,redisSentinel(needed new library),memcache 
         public static $redisCachingUrl = 'apitoCaching';
         public static $redisCluster = ['tcp://172.10.18.61:7000','tcp://172.10.18.62:7000','tcp://172.10.18.63:7000','tcp://172.10.18.64:7000','tcp://172.10.18.65:7000','tcp://172.10.18.64:7005'];
@@ -161,4 +162,17 @@ class JsConstants
     /***openfire config for chat**/
     public static $openfireConfig = array('HOST'=>'localhost','PORT'=>'9090','WSPORT'=>'7070');
     public static $openfireRestAPIKey = "MhXPRu3f4Aw07EbR";
+		/*public static $ifSingleRedis = array(
+		'scheme'   => 'tcp',
+		'host'     => '127.0.0.1',
+		'port'     => 6379,
+		'persistent' => true
+	);*/
+
+	 public static $usePhotoDistributed = 0;
+  public static $photoServerName='JSPIC1';
+	public static $photoServerShardingEnums = array("JSPIC1","JSPIC2","JSPIC3");
+
+	
+	public static $communicationRep = true;
 }
