@@ -8,6 +8,15 @@ chatConfig.Params = {
         "Shortlisted Members": "shortlist",
         "Interest Sent": "intsent"
     },
+    //subscriptions for group id's
+    groupWiseSubscription:{
+        "dpp": "to",
+        "intrec": "to",
+        "acceptance": "both",
+        "shortlist": "to",
+        "intsent": "to"
+    },
+    //api's url for contact engine actions
     actionUrl: {
         "ACCEPT": "/api/v2/contacts/postAccept",
         "DECLINE": "/api/v2/contacts/postNotInterested",
@@ -15,6 +24,7 @@ chatConfig.Params = {
         "BLOCK":"/api/v1/common/ignoreprofile",
         "UNBLOCK":"/api/v1/common/ignoreprofile"
     },
+    //tracking params for contact engine actions
     trackingParams:{
         "ACCEPT": {
             "responseTracking":8
@@ -27,15 +37,15 @@ chatConfig.Params = {
         "BLOCK":{},
         "UNBLOCK":{}
     },
+    //api url for getting photo
     photoUrl:"/api/v1/social/getMultiUserPhoto",
     PC: {
+        updateRosterFromFrontend:true,
         bosh_service_url: 'ws://' + openfireUrl + '/ws/', //connection manager for openfire
         keepalive: true, //keep logged in session alive
         roster_groups: true, //show categories in listing
         hide_offline_users: false, //hide offline users from list
         use_vcards: false, //fetch vcards of users
-        //rosterDisplayGroups:{"Desired Partner Matches":"dpp","Interest Received":"intrec","shortlist Members":"shortlist","Accepted Members":"acceptance"},
-        //categories in listing to be shown with mapping to their div ids---not required in new plugin ankita
         //tab id to tab names mapping
         listingTabs: {
             "tab1": {
@@ -196,19 +206,20 @@ chatConfig.Params = {
                 "enableChat": true
             }
         },
+        //api config for pre acceptance messages
         preAcceptChat: {
             "apiUrl": "/api/v1/chat/sendEOI",
             "extraParams": {
                 "stype": "WV"
             }
         },
+        //max count of nodes limit per group
         groupWiseNodesLimit: {
-            "dpp": 200,
-            "intrec": 100,
-            "shortlist": 100,
-            "intsent": 100
-        },
-        //initialRosterLimit:{"nodesCount":3,"timeInterval":30000} //config for initial roster to be sent to plugin to create list initially
+            "dpp": 100,
+            "intrec": 50,
+            "shortlist": 50,
+            "intsent": 50
+        }
     }
 };
 chatConfig.Params.PC.rosterGroups = [chatConfig.Params.categoryNames['Desired Partner Matches'], chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members']];

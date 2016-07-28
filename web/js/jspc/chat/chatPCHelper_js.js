@@ -198,8 +198,9 @@ function invokePluginManagelisting(listObject, key, user_id) {
         chatLoggerPC(listObject);
         objJsChat.addListingInit(listObject);
         if (key == "add_node") {
+            var newGroupId = listObject[user_id][strophieWrapper.rosterDetailsKey]["groups"][0];
             //update chat box content if opened
-            objJsChat._updateChatPanelsBox(user_id);
+            objJsChat._updateChatPanelsBox(user_id,newGroupId);
             chatLoggerPC("update chat box");
         }
         if (key == "create_list") {
@@ -481,44 +482,120 @@ function handleErrorInHoverButton(jid, data) {
     }
 }
 
-function contactActionCall(action, checkSum, trackingParams, extraParams) {
-    var response, url = chatConfig.Params["actionUrl"][action],
-        channel = '';
-    console.log(trackingParams);
-    if (device == 'PC') channel = 'pc';
-    var postData = {};
-    postData["profilechecksum"] = checkSum;
-    postData["channel"] = channel;
-    postData["pageSource"] = "chat";
-    if (typeof trackingParams != "undefined") {
-        $.each(trackingParams, function (key, val) {
-            postData[key] = val;
-        });
-    }
-    if (typeof extraParams != "undefined") {
-        $.each(extraParams, function (k, v) {
-            postData[k] = v;
-        });
-    }
-    $.myObj.ajax({
-        type: 'POST',
-        async: false,
-        dataType: 'json',
-        data: postData,
-        url: url,
-        success: function (data) {
-            response = data;
-            chatLoggerPC(response);
-        },
-        error: function (xhr) {
-            response = false;
-            console.log("ankita2");
-            chatLoggerPC(xhr);
+function contactActionCall(contactParams) {
+    var response;
+    if(typeof contactParams != "undefined"){
+        var receiverJID = contactParams["receiverJID"],
+        action = contactParams["action"],
+        checkSum = contactParams["checkSum"],
+        trackingParams = contactParams["trackingParams"],
+        extraParams = contactParams["extraParams"],
+        nickName = contactParams["nickName"];
+        var url = chatConfig.Params["actionUrl"][action],
+            channel = '';
+        chatLoggerPC("in contactActionCall for "+receiverJID);
+        chatLoggerPC(trackingParams);
+        if (device == 'PC'){
+            channel = 'pc';
         }
-    });
+        var postData = {};
+        postData["profilechecksum"] = checkSum;
+        postData["channel"] = channel;
+        postData["pageSource"] = "chat";
+        if (typeof trackingParams != "undefined") {
+            $.each(trackingParams, function (key, val) {
+                postData[key] = val;
+            });
+        }
+        if (typeof extraParams != "undefined") {
+            $.each(extraParams, function (k, v) {
+                postData[k] = v;
+            });
+        }
+        $.myObj.ajax({
+            type: 'POST',
+            async: false,
+            dataType: 'json',
+            data: postData,
+            url: url,
+            success: function (data) {
+                response = data;
+                chatLoggerPC(response);
+                if(response["statusCode"] == "0"){
+                    updateRosterOnChatContactActions({
+                        "receiverJID":receiverJID,
+                        "nickName":nickName,
+                        "action":action
+                    });
+                }
+            },
+            error: function (xhr) {
+                response = false;
+                chatLoggerPC(xhr);
+            }
+        });
+    }
+    else{
+        response = false;
+    }
     chatLoggerPC(response);
     return response;
+
 }
+
+/*update roster on user action in chat(hover box/chat box) via Strophie
+*@params: rosterParams
+*/
+function updateRosterOnChatContactActions(rosterParams){
+    if(typeof rosterParams != "undefined"){
+        chatLoggerPC("in updateRoster");
+        var receiverJID = rosterParams["receiverJID"],action = rosterParams["action"],nickName=rosterParams["nickName"];
+        if(chatConfig.Params[device].updateRosterFromFrontend == true){
+            if(typeof receiverJID != "undefined" && receiverJID){
+                switch(action){
+                    case "BLOCK":
+                                strophieWrapper.removeRosterItem(receiverJID);
+                                break;
+                    case "ACCEPT":
+                                strophieWrapper.removeRosterItem(receiverJID);
+                                strophieWrapper.addRosterItem({
+                                        "jid":receiverJID,
+                                        "groupid":chatConfig.Params.categoryNames["Acceptance"],
+                                        "subscription":chatConfig.Params.groupWiseSubscription[chatConfig.Params.categoryNames["Acceptance"]],
+                                        "nick":nickName
+                                });
+                                break;
+                    case "UNBLOCK":
+                                var user_id = receiverJID.split("@")[0];
+                                var existingGroupId = objJsChat._fetchChatBoxGroupID(user_id),groupArr = [];
+                                groupArr.push(existingGroupId);
+                                if(typeof existingGroupId != "undefined" && strophieWrapper.checkForGroups(groupArr) == true){
+                                    strophieWrapper.addRosterItem({
+                                            "jid":receiverJID,
+                                            "groupid":existingGroupId,
+                                            "subscription":chatConfig.Params.groupWiseSubscription[existingGroupId],
+                                            "nick":nickName
+                                    });
+                                }
+                                break;
+                    case "DECLINE":
+                                strophieWrapper.removeRosterItem(receiverJID);
+                                break;
+                    case "INITIATE":
+                                strophieWrapper.removeRosterItem(receiverJID);
+                                strophieWrapper.addRosterItem({
+                                        "jid":receiverJID,
+                                        "groupid":chatConfig.Params.categoryNames["Interest Sent"],
+                                        "subscription":chatConfig.Params.groupWiseSubscription[chatConfig.Params.categoryNames["Interest Sent"]],
+                                        "nick":nickName
+                                });
+                                break;
+                }
+            }
+        }
+    }
+}
+
 $(document).ready(function () {
     chatLoggerPC("User");
     chatLoggerPC(loggedInJspcUser);
@@ -604,13 +681,21 @@ $(document).ready(function () {
         }
         objJsChat.onHoverContactButtonClick = function (params) {
                 chatLoggerPC(params);
-                checkSum = $("#" + params.id).attr('data-pchecksum');
-                paramsData = $("#" + params.id).attr('data-params');
+                var checkSum = $("#" + params.id).attr('data-pchecksum');
+                var paramsData = $("#" + params.id).attr('data-params');
+                var receiverJID = $("#" + params.id).attr('data-jid');
+                var nickName = $("#" + params.id).attr('data-nick');
                 checkSum = "802d65a19583249de2037f9a05b2e424i6341959";
                 idBeforeSplit = params.id.split('_');
                 idAfterSplit = idBeforeSplit[0];
                 action = idBeforeSplit[1];
-                response = contactActionCall(action, checkSum, paramsData);
+                response = contactActionCall({
+                        "receiverJID":receiverJID,
+                        "action":action,
+                        "checkSum":checkSum,
+                        "trackingParams":paramsData,
+                        "nickName":nickName
+                    });
                 if (response != false) {
                     chatLoggerPC("Not false");
                     chatLoggerPC(response);
@@ -624,8 +709,16 @@ $(document).ready(function () {
                     var userId = params["receiverID"],
                         checkSum = params["checkSum"],
                         trackingParams = params["trackingParams"],
-                        extraParams = params["extraParams"];
-                    var response = contactActionCall(params["buttonType"], checkSum, trackingParams, extraParams);
+                        extraParams = params["extraParams"],
+                        nickName = params["nick"];
+                    var response = contactActionCall({
+                            "receiverJID":params["receiverJID"],
+                            "action":params["buttonType"],
+                            "checkSum":checkSum,
+                            "trackingParams":trackingParams,
+                            "extraParams":extraParams,
+                            "nickName":nickName
+                        });
                     return response;
                 } else {
                     return false;
