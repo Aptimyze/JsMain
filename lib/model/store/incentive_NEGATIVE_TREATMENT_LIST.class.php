@@ -162,8 +162,8 @@ public function isFtoDuplicate($profileId){
 		}
 		catch(Exception $e)
 		{
-			throw new jsException($e);
-		}
+            jsCacheWrapperException::logThis($e);
+        }
 	}
 	/*
         *This function inserts record into the incentive.NEGATIVE_TREATMENT_LIST table

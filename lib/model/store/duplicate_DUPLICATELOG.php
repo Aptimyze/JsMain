@@ -36,7 +36,7 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
                          }
                 }
                 catch (Exception $e) {
-            throw new jsException($e);
+            jsCacheWrapperException::logThis($e);
                 }
 
                 return $return;
@@ -59,7 +59,7 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
                 }
 		catch(Exception $e)
 		{
-			throw new jsException($e);
+			jsCacheWrapperException::logThis($e);
 		}
 		return $return;
 	}
@@ -81,7 +81,7 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
              	}
                 catch (Exception $e) 
 		{
-	        	throw new jsException($e);
+	        	jsCacheWrapperException::logThis($e);
                 }
                 return $return;
 	}
@@ -101,7 +101,7 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
                 }
                 catch (Exception $e)
                 {
-                        throw new jsException($e);
+                        jsCacheWrapperException::logThis($e);
                 }
                 return $return;
         }
@@ -122,7 +122,7 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
                 }
                 catch (Exception $e)
                 {
-                        throw new jsException($e);
+                        jsCacheWrapperException::logThis($e);
                 }
         }
         public function insertDuplicateProfileLog(RawDuplicate $rawDuplicateObj)
@@ -147,7 +147,7 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
                 catch (Exception $e) {
 					//var_dump($e);
 					//$prep->errorInfo()[2];
-            throw new jsException($e);
+            jsCacheWrapperException::logThis($e);
                 }
         }
         public function updateGroupID($group1,$group2)
@@ -162,7 +162,7 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
             
                 }
                 catch (Exception $e) {
-            throw new jsException($e);
+            jsCacheWrapperException::logThis($e);
                 }
         }
         public function updateProfileGroupID($group1,$profile1,$profile2)
@@ -180,7 +180,7 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
             
                 }
                 catch (Exception $e) {
-            throw new jsException($e);
+            jsCacheWrapperException::logThis($e);
                 }
         }
 
@@ -204,7 +204,7 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
             } 
         catch (Exception $e) 
                 {
-                throw new jsException($e);
+                jsCacheWrapperException::logThis($e);
                 }
         
 }

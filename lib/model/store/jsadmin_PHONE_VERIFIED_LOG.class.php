@@ -157,7 +157,7 @@ class PHONE_VERIFIED_LOG extends TABLE{
                 }
                 catch(PDOException $e)
                 {
-                        throw new jsException($e);
+                        jsCacheWrapperException::logThis($e);
                 }
         }
 
