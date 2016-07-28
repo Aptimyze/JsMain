@@ -91,4 +91,29 @@ class ContactModuleInputValidate extends ValidationHandler
 		if(preg_match("/^([a-zA-Z])+$/",$value))
 			return true;
 	}
+	public function validatePushChat ($request)
+	{
+		if($request->getParameter("communicationType") && $request->getParameter("message"))
+			$this->response = ResponseHandlerConfig::$SUCCESS;
+		else
+		{
+			$errorString="--RECEIVER--".$request->getParameter("profilechecksum")."--TYPE--".$request->getParameter("type")."--TYPE--".$request->getParameter("message");
+			$errorString    = "Chat Input Validation Failed:" . $errorString;
+			$this->response = ResponseHandlerConfig::$POST_PARAM_INVALID;
+			ValidationHandler::getValidationHandler("", $errorString);
+		}
+	}
+	
+	public function validatePopChat ($request)
+	{
+		if($request->getParameter("communicationType"))
+			$this->response = ResponseHandlerConfig::$SUCCESS;
+		else
+		{
+			$errorString="--RECEIVER--".$request->getParameter("profilechecksum")."--TYPE--".$request->getParameter("type")."--TYPE--".$request->getParameter("message");
+			$errorString    = "Chat Input Validation Failed:" . $errorString;
+			$this->response = ResponseHandlerConfig::$POST_PARAM_INVALID;
+			ValidationHandler::getValidationHandler("", $errorString);
+		}
+	}
 }

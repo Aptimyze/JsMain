@@ -649,9 +649,9 @@ class MessageCommunication
 			
 			// logic for generated id
 			$dbObj = new newjs_MESSAGE_LOG_GET_ID();
-			$generatedId = $dbObj->generateID();
+			$generatedId = $dbObj->getAutoIncrementMessageId();
 			$this->setID($generatedId);
-			$dbObj->deleteGenerateID();
+			//$dbObj->deleteGenerateID();
 			$this->setIS_MSG(MessageCommunication::NO) ;
 			$this->setOBSCENE(MessageCommunication::NO);
 			$this->setOBS_MSG_ID(MessageCommunication::ZERO);

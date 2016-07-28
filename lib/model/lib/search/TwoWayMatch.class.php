@@ -111,7 +111,7 @@ class TwoWayMatch extends SearchParamters
                 if($searchId)
                 {
                         $paramArr['ID'] = $searchId;
-                        $SEARCHQUERYobj = new SEARCHQUERY;
+                        $SEARCHQUERYobj = new SEARCHQUERY(SearchConfig::getSearchDb());
                         $arr = $SEARCHQUERYobj->get($paramArr,SearchConfig::$possibleSearchParamters);
 
                         if(is_array($arr[0]))

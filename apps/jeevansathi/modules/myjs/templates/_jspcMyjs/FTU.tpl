@@ -89,6 +89,7 @@
                
                 
             </div>
+            </div>
             <!--start:article-->
     <article id="DESIREDPARTNERMATCHES"> 
       <!--start:div-->

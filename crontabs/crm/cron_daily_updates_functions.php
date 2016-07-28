@@ -279,28 +279,17 @@ function data_comparision($dialer_data,$campaign_name,$ecode,$db_dialer,$vd_prof
 
 	//INITIAL PRIORITY UPDATE 
 	$priority='';
-        if($alloted_to=='' && $vd_percent && $score>=1 && $score<=100)
-                $priority='6';
-        elseif( $alloted_to=='' && !$vd_percent)
-        {
-                if($score>=81 && $score<=100)
-                        $priority='5';
-                elseif($score>=61 && $score<=80)
-                        $priority='4';
-                elseif($score>=41 && $score<=60)
-                        $priority='3';
-                elseif($score>=21 and $score<=40)
+	if($alloted_to=='')
+	{
+		if($score>=81 && $score<=100)
                         $priority='2';
-                elseif($score>=11 and $score<=20)
+                elseif($score>=41 && $score<=80)
                         $priority='1';
-                elseif($score>=1 and $score<=10)
-                        $priority='0';
-        }
-        elseif($alloted_to !='')
-        {
-                if($score>=1 && $score <=100)
-                        $priority='0';
-        }
+		else
+			$priority='0';
+	}
+	else
+		$priority='0';
         if($priority!=$dialer_data['initialPriority'] && $priority!='')
         {
 		if($update_str=='')

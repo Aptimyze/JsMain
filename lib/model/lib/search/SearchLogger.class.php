@@ -8,6 +8,7 @@
 class SearchLogger extends SearchParamters
 {
 	private $ID;
+	private $dbname;
 	private $pid;
         private $LastSearchRequiredFor = Array(SearchTypesEnums::Advance,SearchTypesEnums::MobileSearchBand,SearchTypesEnums::Quick,SearchTypesEnums::App);
 
@@ -15,6 +16,7 @@ class SearchLogger extends SearchParamters
         {
 		parent::__construct();
                 $this->possibleSearchParamters = SearchConfig::$possibleSearchParamters;
+                $this->dbname = searchConfig::getSearchDb();
                 if($loggedInProfileObj && $loggedInProfileObj->getPROFILEID())
                         $this->pid =  $loggedInProfileObj->getPROFILEID();
         }
@@ -28,7 +30,7 @@ class SearchLogger extends SearchParamters
 	public function logSearchCriteria($SearchParamtersObj,$totalResults)
 	{ 
                 $flag = 0;
-		$SEARCHQUERYObj = new SEARCHQUERY;
+		$SEARCHQUERYObj = new SEARCHQUERY($this->dbname);
 		$possibleSearchParamters = explode(",",$this->possibleSearchParamters);
                 foreach($possibleSearchParamters as $v)
                 {
@@ -81,7 +83,7 @@ class SearchLogger extends SearchParamters
                 
                 if($this->pid && in_array(trim($updateArr["SEARCH_TYPE"],"/'"),$this->LastSearchRequiredFor))
 		{
-                        $search_LATEST_SEARCHQUERYObj = new search_LATEST_SEARCHQUERY;
+                        $search_LATEST_SEARCHQUERYObj = new search_LATEST_SEARCHQUERY($this->dbname);
 			$paramArray["ID"]=$searchId;
 			$paramArray["PROFILEID"]=$this->pid;
                         $paramArray["SEARCH_CHANNEL"]=CommonFunction::getChannel();
@@ -110,7 +112,7 @@ class SearchLogger extends SearchParamters
 		$arr = unserialize(JsMemcache::getInstance()->get($keySC));
 		if(!$arr)
 		{
-               		$SEARCHQUERYobj = new SEARCHQUERY;
+               		$SEARCHQUERYobj = new SEARCHQUERY($this->dbname);
 	                $arr = $SEARCHQUERYobj->get($paramArr,$this->possibleSearchParamters,$ifNonCritical);
 			if($arr)
 			{
@@ -143,7 +145,7 @@ class SearchLogger extends SearchParamters
 	
 	public function getLastSearchCriteria($id,$stype='')
 	{
-                $search_LATEST_SEARCHQUERYObj = new search_LATEST_SEARCHQUERY;
+                $search_LATEST_SEARCHQUERYObj = new search_LATEST_SEARCHQUERY($this->dbname);
 		$paramArray["PROFILEID"]= $id;
                 $paramArray["SEARCH_CHANNEL"]=CommonFunction::getChannel();
                 if($stype)

@@ -29,14 +29,17 @@ class logoutv1Action extends sfActions
                         $dbObj->DeleteRecord($loginData[PROFILEID]);
 
                         // Remove Online-User
-			$pid =$loginData['PROFILEID'];
-                        $jsCommonObj =new JsCommon();
-                        $jsCommonObj->removeOnlineUser($pid);
-                        /*
-			$JsMemcacheObj =JsMemcache::getInstance(); 
-                        $JsMemcacheObj->delete();
-			$listName =CommonConstants::ONLINE_USER_LIST;
-			$JsMemcacheObj->zRem($listName, $pid);*/
+		        $dateTime1 ='10';
+        		$dateTime2 ='22';
+                	$dateTime =date("H");
+                	$redisOnline =true;
+                	if(($dateTime>=$dateTime1) && ($dateTime<$dateTime2))
+                	        $redisOnline =false;
+			if($redisOnline){	
+				$pid =$loginData['PROFILEID'];
+	                        $jsCommonObj =new JsCommon();
+	                        $jsCommonObj->removeOnlineUser($pid);
+			}
 
 			$apiObj=ApiResponseHandler::getInstance();
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);

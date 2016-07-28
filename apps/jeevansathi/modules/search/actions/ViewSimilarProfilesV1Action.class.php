@@ -34,7 +34,7 @@ class ViewSimilarProfilesV1Action extends sfActions {
                         if ($resp["statusCode"] == ResponseHandlerConfig::$SUCCESS["statusCode"]) {
                                 $viewedProfileChecksum = $request->getParameter('profilechecksum');
                                 $viewedProfileID = JsCommon::getProfileFromChecksum($viewedProfileChecksum);
-                                $this->Profile = new Profile("newjs_bmsSlave");
+                                $this->Profile = new Profile("newjs_masterRep");
                                 $this->Profile->getDetail($viewedProfileID, "PROFILEID");
                                 $viewedGender = $this->Profile->getGENDER();
                                 //$viewSimilarProfileObj = new ViewSimilarPageProfiles($loggedInProfileObj, $this->Profile);
