@@ -43,7 +43,7 @@ delete_and_move_records_on_retreiveProfile($profileid,"IGNORE_PROFILE","IGNORED_
 delete_and_move_records_on_retreiveProfile($profileid,"IGNORE_PROFILE","PROFILEID","IGNORED_PROFILEID",$mysql);
 
 delete_and_move_records_on_retreiveProfile($profileid,"VIEW_CONTACTS_LOG","VIEWER","VIEWED",$mysql,'','jsadmin');
-delete_and_move_records_on_retreiveProfile($profileid,"VIEW_CONTACTS_LOG","VIEWED","VIEWER",$mysql'','jsadmin');
+delete_and_move_records_on_retreiveProfile($profileid,"VIEW_CONTACTS_LOG","VIEWED","VIEWER",$mysql,'','jsadmin');
 
 $sql="select * from newjs.DELETED_PROFILE_CONTACTS where SENDER='$profileid'";
 $result=$mysql->executeQuery($sql,$myDb) or die(mysql_error_js($myDb));
