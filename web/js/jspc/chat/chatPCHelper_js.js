@@ -451,24 +451,31 @@ function handlePreAcceptChat(apiParams) {
             dataType: 'json',
             type: 'POST',
             data: postData,
-            timeout: 60000,
             cache: false,
             async: false,
-            beforeSend: function (xhr) {},
+            beforeSend: function (xhr) {
+
+            },
             success: function (response) {
                 chatLoggerPC("in success of handlePreAcceptanceMsg");
                 chatLoggerPC(response);
                 if(response["responseStatusCode"] == "0"){
-                    if(response["actiondetails"] && typeof response["actiondetails"]["errmsglabel"]!= "undefined")
+                    if(response["actiondetails"])
                     {
-                        outputData["cansend"] = false;
-                        outputData["sent"] = false;
-                        outputData["errorMsg"] = response["actiondetails"]["errmsglabel"];
-                        outputData["msg_id"] = strophieWrapper.getUniqueId();
+                        if(response["actiondetails"]["errmsglabel"]){
+                            outputData["cansend"] = outputData["cansend"] || false;
+                            outputData["sent"] = false;
+                            outputData["errorMsg"] = response["actiondetails"]["errmsglabel"];
+                            outputData["msg_id"] = strophieWrapper.getUniqueId();
+                        }
+                        else{
+                            outputData["cansend"] = true;
+                            outputData["sent"] = true;
+                            outputData["msg_id"] = strophieWrapper.getUniqueId();
+                        }
                     }
                     else{
-                        outputData = response; 
-                        //outputData["sent"] = true; 
+                        outputData = response;
                         outputData["msg_id"] = strophieWrapper.getUniqueId();
                     }
                 }
@@ -503,6 +510,10 @@ function handleErrorInHoverButton(jid, data) {
     }
 }
 
+/*call api on click on contact engine buttons in chat
+* @params:contactParams
+* @return: response
+*/
 function contactActionCall(contactParams) {
     var response;
     if (typeof contactParams != "undefined") {
@@ -802,10 +813,10 @@ $(document).ready(function () {
             chatLoggerPC("end of onSendingMessage");
             return output;
         }
-        objJsChat.onPostBlockCallback = function (param) {
+        /*objJsChat.onPostBlockCallback = function (param) {
             chatLoggerPC('the user id to be blocked:' + param);
             //the function goes here which will send user id to the backend
-        }
+        }*/
         objJsChat.onPreHoverCallback = function (pCheckSum, username, hoverNewTop, shiftright) {
             chatLoggerPC("In Helper preHoverCB");
             chatLoggerPC(pCheckSum);
@@ -822,7 +833,7 @@ $(document).ready(function () {
                 },
                 url: url,
                 success: function (data) {
-                    console.log("Nitishvcard");
+                    //console.log("Nitishvcard");
                     chatLoggerPC(data);
                     objJsChat.updateVCard(data, pCheckSum, function () {
                         $('#' + username + '_hover').css({

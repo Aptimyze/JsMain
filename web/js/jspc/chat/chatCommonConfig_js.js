@@ -214,7 +214,9 @@ chatConfig.Params = {
         preAcceptChat: {
             "apiUrl": "/api/v1/chat/sendEOI",
             "extraParams": {
-                "stype": "WV"
+                "stype": "WV",
+                "pageSource":"chat",
+                "channel":'pc'
             }
         },
         //max count of nodes limit per group

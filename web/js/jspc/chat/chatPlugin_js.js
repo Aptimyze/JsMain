@@ -348,16 +348,12 @@ JsChat.prototype = {
                 var runID = data[key]["rosterDetails"]["jid"],
                     res = '',
                     status = data[key]["rosterDetails"]["chat_status"];
-                console.log("addlisting for " + runID + "--" + data[key]["rosterDetails"]["chat_status"]);
+                elem._chatLoggerPlugin("addlisting for " + runID + "--" + data[key]["rosterDetails"]["chat_status"]);
                 var fullJID = runID;
                 res = runID.split("@");
                 runID = res[0];
                 jidStr = jidStr + runID + ",";
                 statusArr[runID] = status;
-                if(fullJID == "6211752@localhost")
-                {
-                    console.log("ankita678");
-                }
                 if (typeof data[key]["rosterDetails"]["groups"] != "undefined" && data[key]["rosterDetails"]["groups"].length > 0) {
                     var that = this;
                     $.each(data[key]["rosterDetails"]["groups"], function (index, val) {
@@ -416,8 +412,9 @@ JsChat.prototype = {
                             } else {
                                 elem._placeContact("existing", runID, val, status);
                             }
-                            elem._updateStatusInChatBox(runID, status);
+                            //elem._updateStatusInChatBox(runID, status);
                         }
+                        elem._updateStatusInChatBox(runID, status);
                     });
                     delete that;
                 }
@@ -584,7 +581,7 @@ JsChat.prototype = {
             }
         });
     },
-    onPostBlockCallback: null,
+    //onPostBlockCallback: null,
     //remove from list
     _removeFromListing: function (param1, data) {
         this._chatLoggerPlugin('remove element 11');
@@ -625,9 +622,9 @@ JsChat.prototype = {
         //removeCall2 if user is removed from block click on chatbox
         else if (param1 == 'removeCall2') {
             $(this._mainID).find('*[id*="' + data + '"]').detach();
-            if (this.onPostBlockCallback && typeof this.onPostBlockCallback == 'function') {
+            /*if (this.onPostBlockCallback && typeof this.onPostBlockCallback == 'function') {
                 this.onPostBlockCallback(data);
-            }
+            }*/
         }
         this.noResultError();
     },
@@ -714,8 +711,9 @@ JsChat.prototype = {
     _bindSendChat: function (userId) {
         var _this = this,
             that = this,
-            messageId, jid = $('chat-box[user-id="' + userId + '"]').attr("data-jid");
-        var out = 1;
+            messageId, 
+            jid = $('chat-box[user-id="' + userId + '"]').attr("data-jid"),
+            out = 1;
         var selfJID = getConnectedUserJID();
         $('chat-box[user-id="' + userId + '"] textarea').focusout(function () {
             that._chatLoggerPlugin("focus out to " + jid);
@@ -741,9 +739,9 @@ JsChat.prototype = {
                     $(superParent).find("#initChatText,#sentDiv,#chatBoxErr").remove();
                     $(superParent).find(".chatMessage").css("height", "250px").append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id ="tempText_' + userId + '_' + timeLog + '" class="talkText">' + text + '</div><i class="nchatspr nchatic_8 fr vertM"></i></div>');
                     if ($(superParent).find("#sendInt").length != 0) {
-                        $(superParent).find(".chatMessage").append("<div class='pos-rel fr pr10' id='interestSent'>Your interest has been sent</div>")
+                        //$(superParent).find(".chatMessage").append("<div class='pos-rel fr pr10' id='interestSent'>Your interest has been sent</div>");
                         $(superParent).find("#initiateText,#chatBoxErr").remove();
-                        $(superParent).find("#sendInt").remove();
+                        //$(superParent).find("#sendInt").remove();
                     }
                     var height = $($(superParent).find(".talkText")[$(superParent).find(".talkText").length - 1]).height();
                     $($(superParent).find(".talkText")[$(superParent).find(".talkText").length - 1]).next().css("margin-top", height);
@@ -752,36 +750,39 @@ JsChat.prototype = {
                     }, 500);
                     //fire send chat query and return unique id
                     setTimeout(function () {
-                         sendTypingState(selfJID, jid, "paused");
+                        out = 1;
+                        sendTypingState(selfJID, jid, "paused");
                         if (_this.onSendingMessage && typeof (_this.onSendingMessage) == "function") {
-                            //that._chatLoggerPlugin("in plugin send message");
-                            //that._chatLoggerPlugin(text);
-                            //that._chatLoggerPlugin($('chat-box[user-id="' + userId + '"]').attr("data-jid"));
                             var groupId = $('chat-box[user-id="' + userId + '"]').attr("group-id");
                             var profileChecksum = $(".chatlist li[id='" + userId + "_" + groupId + "']").attr("data-checks");
                             var msgSendOutput = _this.onSendingMessage(text, $('chat-box[user-id="' + userId + '"]').attr("data-jid"), profileChecksum, $('chat-box[user-id="' + userId + '"]').attr("data-contact"));
                             messageId = msgSendOutput["msg_id"];
                             //that._chatLoggerPlugin("handling output of onSendingMessage in plugin");
-                            $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + messageId);
-                            if (msgSendOutput["sent"] == true) {
-                                //msg sending success,set single tick here
-                                console.log("sent-"+messageId);
-                                $(superParent).find("#sendDiv").remove();
-                                _this._changeStatusOfMessg(messageId, userId, "recieved");
-                            } else if (msgSendOutput["sent"] == false) {
+                            if(messageId)
+                                $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + messageId);
+                            if(msgSendOutput["sent"] == false || msgSendOutput["cansend"] == false){
+                                var error_msg = msgSendOutput['errorMsg'] || "Something went wrong";
+                                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">'+error_msg+'</div>').addClass("restrictMessg2");
                                 if(msgSendOutput["cansend"] == false){
-                                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">You can send more messages only if she replies</div>').addClass("restrictMessg2");
                                     $(curElem).prop("disabled", true);
-                                    //$('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">' + msgSendOutput["errorMsg"] + '</div>').addClass("restrictMessg2");
                                 }
-                                //msg sending failure
-                                //$(curElem).prop("disabled", true);
-                                else if (msgSendOutput["errorMsg"]) {
-                                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">' + msgSendOutput["errorMsg"] + '</div>').addClass("restrictMessg2");
-                                }
-                                
                             }
-                            
+                            else{
+                                if(msgSendOutput["sent"] == true) {
+                                    if ($(superParent).find("#sendInt").length != 0) {
+                                        $(superParent).find(".chatMessage").append("<div class='pos-rel fr pr10' id='interestSent'>Your interest has been sent</div>");
+                                        //$(superParent).find("#initiateText,#chatBoxErr").remove();
+                                        $(superParent).find("#sendInt").remove();
+                                    }
+                                    //msg sending success,set single tick here
+                                    $(superParent).find("#sendDiv").remove();
+                                    $(superParent).find("#interestSent").removeClass("disp-none");
+                                    _this._changeStatusOfMessg(messageId, userId, "recieved");
+                                }
+                                if(msgSendOutput["cansend"] == true){
+                                    $(curElem).prop("disabled", false);
+                                } 
+                            } 
                         }
                     }, 50);
                 }
@@ -1357,14 +1358,17 @@ JsChat.prototype = {
     },
     //change from sending status to sent / sent and read
     _changeStatusOfMessg: function (messgId, userId, newStatus) {
-        this._chatLoggerPlugin("Change status" + newStatus);
-        if (newStatus == "recieved") {
-            $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_8").addClass("nchatic_10");
-        } else if (newStatus == "recievedRead") {
-            $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_8").addClass("nchatic_10");
-            setTimeout(function () {
-                $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_10 nchatic_8").addClass("nchatic_9");
-            }, 500);
+        if(messgId){
+            this._chatLoggerPlugin("Change status" + newStatus);
+            if (newStatus == "recieved") {
+                $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_8").addClass("nchatic_10");
+            } 
+            else if (newStatus == "recievedRead") {
+                $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_8").addClass("nchatic_10");
+                setTimeout(function () {
+                    $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_10 nchatic_8").addClass("nchatic_9");
+                }, 500);
+            }
         }
     },
     onEnterToChatPreClick: null,
@@ -1439,7 +1443,7 @@ JsChat.prototype = {
         var str = '';
         var TotalBtn = '',
             widCal = '';
-        console.log(groupButtons, "Nitish");
+        //console.log(groupButtons, "Nitish");
         TotalBtn = groupButtons.length;
         this._chatLoggerPlugin('TotalBtn: ' + TotalBtn);
         widCal = parseInt(100 / TotalBtn);
