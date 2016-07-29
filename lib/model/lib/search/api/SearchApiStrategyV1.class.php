@@ -371,10 +371,14 @@ class SearchApiStrategyV1
                                                                 $this->output[$profileKey][$i][$fieldName] = $value["value"];
 
                                                         $tempkey = $fieldName=='eoi_label'?0:($fieldName=='bookmarked'?1:2);
-                                                        if($fieldName!='album_count' || MobileCommon::isApp()!='A' || !(sfContext::getInstance()->getRequest()->getParameter('API_APP_VERSION') >=51) )	
-                                                        $button[$tempkey] = $value;
-                                                        if($fieldName=='ignore_button' && MobileCommon::isApp()=='A' && (sfContext::getInstance()->getRequest()->getParameter('API_APP_VERSION')) >=51 )
-                                                        $button[$tempkey] = $value;
+
+                                                        /// added by Palash for android app for ignore button and ruling out album button
+                                                        $appVersion=sfContext::getInstance()->getRequest()->getParameter('API_APP_VERSION');
+                                                        if($fieldName!='ignore_button' && !($fieldName=='album_count' && MobileCommon::isApp()=='A' && $appVersion >=51) )	
+                                                     	   $button[$tempkey] = $value;
+                                                        else if($fieldName=='ignore_button' && MobileCommon::isApp()=='A' && $appVersion>=51 )
+                                                        	$button[$tempkey] = $value;
+                                                        /// added by Palash for android app for ignore button and ruling out album button
 
 
                                                 }
