@@ -735,7 +735,7 @@ function populate_misc_saletype()
 function populate_misc_saleby()
 {
     $sql = "SELECT USERNAME FROM jsadmin.PSWRDS WHERE ACTIVE!='N' and PRIVILAGE REGEXP 'BA|BU|MR|MBU' ORDER BY USERNAME";
-    $res = mysql_query_decide($sql) or mysql_error_js();
+    $res = mysql_query_decide($sql) or die(mysql_error_js());
     $i = 0;
 
     while ($row = mysql_fetch_array($res)) {
@@ -1040,18 +1040,18 @@ function populate_reject_reason($from)
 function reject_reason($order_id, $entry_by, $rej_reason, $from)
 {
     $sql_ins = "INSERT INTO billing.REJECTED_RECORDS(ORDER_ID,REJECTED_BY,REJECT_REASON,ENTRY_DT) VALUES('$order_id','$entry_by','$rej_reason',now())";
-    mysql_query_decide($sql_ins) or mysql_error_js();
+    mysql_query_decide($sql_ins) or die("$sql_ins" . mysql_error_js());
     if ($from == "BANK_TRANSFER_RECORD") {
         $sql_upd = "UPDATE billing.CHEQUE_REQ_DETAILS SET  STATUS='CANCEL' WHERE REQUEST_ID = '$order_id'";
-        mysql_query_decide($sql_upd) or mysql_error_js();
+        mysql_query_decide($sql_upd) or die("$sql_upd" . mysql_error_js());
 
         $sql_upd = "UPDATE incentive.PAYMENT_COLLECT SET ACC_REJ_MAIL_BY='$entry_by' WHERE ID = '$order_id'";
-        mysql_query_decide($sql_upd) or mysql_error_js();
+        mysql_query_decide($sql_upd) or die("$sql_upd" . mysql_error_js());
     } elseif ($from == "CONFIRM_CLIENT") {
         $sql_ins = "INSERT INTO incentive.LOG (PROFILEID,USERNAME,NAME,EMAIL,PHONE_RES,PHONE_MOB,SERVICE,ADDRESS,CITY,PIN,BYUSER,CONFIRM,AR_GIVEN,ENTRY_DT,ARAMEX_DT,STATUS,BILLING,ENTRYBY,COMMENTS,PREF_TIME,COURIER_TYPE,REF_ID) SELECT PROFILEID,USERNAME,NAME,EMAIL,PHONE_RES,PHONE_MOB,SERVICE,ADDRESS,CITY,PIN,BYUSER,CONFIRM,AR_GIVEN,ENTRY_DT,ARAMEX_DT,STATUS,BILLING,ENTRYBY,COMMENTS,PREF_TIME,COURIER_TYPE,'$order_id' FROM incentive.PAYMENT_COLLECT where ID='$order_id'";
-        mysql_query_decide($sql_ins) or mysql_error_js();
+        mysql_query_decide($sql_ins) or die("$sql_ins" . mysql_error_js());
         $sql_upd = "UPDATE incentive.PAYMENT_COLLECT SET DISPLAY = 'N',CONFIRM='N', ENTRYBY='$entry_by',ENTRY_DT=now(),COMMENTS = '$rej_reason', ACC_REJ_MAIL_BY ='$entry_by' WHERE ID ='$order_id'";
-        mysql_query_decide($sql_upd) or mysql_error_js();
+        mysql_query_decide($sql_upd) or die("$sql_upd" . mysql_error_js());
     }
 }
 

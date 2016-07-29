@@ -152,7 +152,7 @@ function messageSendDetailsTracking($profileid,$sms_type,$sms_key,$message,$mobi
 	$message =urldecode($message);
         $message =mysql_real_escape_string($message);
 	$sql="INSERT INTO newjs.SMS_DETAIL(`PROFILEID`,`SMS_TYPE`,`SMS_KEY`,`MESSAGE`,`ADD_DATE`,`PHONE_MOB`,`SENT`) VALUES('$profileid','$sms_type','$sms_key','$message',now(),'$mobile','Y')";
-	mysql_query($sql) or mysql_error_js();
+	mysql_query($sql) or die($sql.mysql_error_js()); 
 }
 
 function smsinc_checkmphone($phone)     // returns 1 if phone no. is not valid

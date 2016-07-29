@@ -13,7 +13,7 @@ if(isset($data))
 	{
 		$error=0;
 		$sql="SELECT USERNAME,EMAIL,BILLID,STATUS,WALKIN,SERVICEID,ENTRY_DT FROM billing.PURCHASES WHERE ENTRY_DT BETWEEN '$syear-$smonth-$sday' AND '$eyear-$emonth-$eday' ORDER BY BILLID";
-		$res=mysql_query_decide($sql) or mysql_error_js();
+		$res=mysql_query_decide($sql) or die(mysql_error_js());
 		if($row=mysql_fetch_array($res))
 		{
 			$i=0;
@@ -57,7 +57,7 @@ else
 function getservicename($sid)
 {
 	$sql="SELECT NAME FROM billing.SERVICES WHERE SERVICEID='$sid'";
-	$res=mysql_query_decide($sql) or mysql_error_js();
+	$res=mysql_query_decide($sql) or die(mysql_error_js());
 	$row=mysql_fetch_array($res);
 	$sname=$row['NAME'];
 

@@ -111,14 +111,14 @@ if($data)
 		$entryby = getname($cid);
 
 		$sql_old = "SELECT PROFILEID,AMOUNT FROM billing.IVR_DETAILS WHERE ID='$ivr_ref'";
-		$res_old = mysql_query_decide($sql_old) or mysql_error_js();
+		$res_old = mysql_query_decide($sql_old) or die("$sql".mysql_error_js());
 		$row_old = mysql_fetch_array($res_old);
 
 		$profileid = $row_old["PROFILEID"];
 		$old_amount = $row_old['AMOUNT'];
 
 		$sql_pd = "SELECT BILLID, RECEIPTID FROM billing.PAYMENT_DETAIL WHERE PROFILEID='$profileid' AND TRANS_NUM='$ivr_ref'";
-		$res_pd = mysql_query_decide($sql_pd) or mysql_error_js();
+		$res_pd = mysql_query_decide($sql_pd) or die("$sql".mysql_error_js());
 		$row_pd = mysql_fetch_array($res_pd);
 
 		$billid = $row_pd['BILLID'];
@@ -128,10 +128,10 @@ if($data)
                         $mod_str = "AMOUNT changed from $old_amount to $amount in IVR_DETAILS table";
 
 			$sql_log = "INSERT INTO billing.EDIT_DETAILS_LOG(PROFILEID,BILLID,RECEIPTID,CHANGES,ENTRYBY,ENTRY_DT) VALUES('$profileid','$billid','$receiptid','$mod_str','$entryby','$now')";
-			mysql_query_decide($sql_log) or mysql_error_js();
+			mysql_query_decide($sql_log) or die("$sql_log".mysql_error_js());
 
 			$sql_upd_ivr = "UPDATE billing.IVR_DETAILS SET AMOUNT='$amount' WHERE ID='$ivr_ref'";
-			mysql_query_decide($sql_upd_ivr) or mysql_error_js();
+			mysql_query_decide($sql_upd_ivr) or die("$sql_upd_ivr".mysql_error_js());
                 }
 		$smarty->assign("ivr_ref",$ivr_ref);
 		$smarty->assign("IVR_DETAILS_UPDATED",1);

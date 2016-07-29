@@ -46,28 +46,28 @@ class ScoringGlobalParams
 	// SET FUNCTIONS
 	public function setNationalityArr() {
 		$sql1="SELECT Nationality, Country FROM scoring_new.COUNTRY_NATIONALITY";
-		$result1 = mysql_query_decide($sql1,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($myDb))); 
+		$result1 = mysql_query_decide($sql1,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql1.mysql_error($myDb))); 
 		while($row = mysql_fetch_array($result1)) {
 			$this->nationalityArr[$row['Country']] = $row['Nationality'];
 		}
 	}
 	public function setGroupNameArr() {
 		$sql1="SELECT GROUPNAME, SourceID FROM MIS.SOURCE";
-		$result1 = mysql_query_decide($sql1,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($myDb))); 
+		$result1 = mysql_query_decide($sql1,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql1.mysql_error($myDb))); 
 		while($row = mysql_fetch_array($result1)) {
 			$this->groupNameArr[$row['SourceID']] = $row['GROUPNAME'];
 		}
 	}
 	public function setCityZoneArr() {
 		$sql1="SELECT CityZone, City FROM scoring_new.CITY_ZONE";
-		$result1 = mysql_query_decide($sql1,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($myDb))); 
+		$result1 = mysql_query_decide($sql1,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql1.mysql_error($myDb))); 
 		while($row = mysql_fetch_array($result1)) {
 			$this->cityZoneArr[$row['City']] = $row['CityZone'];
 		}
 	}
 	public function setCommunityZoneArr() {
 		$sql1="SELECT ComZone, Community FROM scoring_new.COMMUNITY_ZONE";
-		$result1 = mysql_query_decide($sql1,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($myDb))); 
+		$result1 = mysql_query_decide($sql1,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql1.mysql_error($myDb))); 
 		while($row = mysql_fetch_array($result1)) {
 			$this->communityZoneArr[$row['Community']] = $row['ComZone'];
 		}
@@ -81,7 +81,7 @@ class ScoringGlobalParams
 	}
 	public function setWeightParamArr() {
 		$sql1="SELECT profile_type, weight, param FROM scoring_new.WEIGHT";
-		$result1 = mysql_query_decide($sql1,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($myDb))); 
+		$result1 = mysql_query_decide($sql1,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql1.mysql_error($myDb))); 
 		while($row = mysql_fetch_array($result1)) {
 			$this->weightParamArr[$row['profile_type']][$row['param']] = $row['weight'];
 		}
@@ -93,7 +93,7 @@ class ScoringGlobalParams
 
                 //SEARCHES_14_cap and SEARCHES_accel
                 $sql1 = "SELECT COUNT(CASE WHEN DATE >= '$lim_7_dt' THEN 1 ELSE NULL END) AS CNT1,COUNT(CASE WHEN DATE >= '$lim_14_dt' THEN 1 ELSE NULL END) AS CNT2,PROFILEID FROM MIS.SEARCHQUERY WHERE PROFILEID IN ($this->total_profiles) GROUP BY PROFILEID";
-                $res1 = mysql_query_decide($sql1,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($myDb))); 
+                $res1 = mysql_query_decide($sql1,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql1.mysql_error($myDb))); 
                 while($row1 = mysql_fetch_array($res1)){
                         $this->searchParams[$row1["PROFILEID"]][0] = $row1["CNT1"];
                         $this->searchParams[$row1["PROFILEID"]][1] = $row1["CNT2"];
@@ -105,7 +105,7 @@ class ScoringGlobalParams
 		
 		//payment_hits_14_1_mod,payment_hits_14_2_mod and payment_hits_14_3_mod
                 $sql6 = "SELECT COUNT(*) AS CNT,PAGE,PROFILEID FROM  billing.PAYMENT_HITS WHERE ENTRY_DT>='$lim_14_dt' AND PROFILEID IN ($this->total_profiles) GROUP BY PAGE,PROFILEID";
-                $res6 = mysql_query_decide($sql6,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($myDb))); 
+                $res6 = mysql_query_decide($sql6,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql6.mysql_error($myDb))); 
                 while($row6 = mysql_fetch_array($res6))
                 {
 			if($row6["PAGE"]==1)
@@ -127,7 +127,7 @@ class ScoringGlobalParams
                 $shDbName=getActiveServerName(1,"slave");
                 $shDb2=$mysqlObj->connect($shDbName);
                 $sql1 = "SELECT COUNT(CASE WHEN DATE >= '$lim_7_dt' THEN 1 ELSE NULL END) AS CNT1, COUNT(CASE WHEN DATE >= '$lim_14_dt' THEN 1 ELSE NULL END) AS CNT2,VIEWER FROM newjs.VIEW_LOG_TRIGGER WHERE VIEWER IN ($this->total_profiles) GROUP BY VIEWER";
-                $res1 = mysql_query_decide($sql1,$shDb2) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($shDb2)));
+                $res1 = mysql_query_decide($sql1,$shDb2) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql1.mysql_error($shDb2)));
                 while($row1 = mysql_fetch_array($res1)){
 			$this->viewParameters[$row1["VIEWER"]][0]=$row1["CNT1"];
 			$this->viewParameters[$row1["VIEWER"]][1]=$row1["CNT2"];

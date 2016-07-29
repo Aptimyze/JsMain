@@ -44,7 +44,7 @@ if(authenticated($cid))
 			exit;
 		}
 		$sql="SELECT SERVICEID,ADDON_SERVICEID,USERNAME,EMAIL,AMOUNT,TYPE,PAYMENT_DETAIL.ENTRY_DT from billing.PURCHASES,billing.PAYMENT_DETAIL where PAYMENT_DETAIL.RECEIPTID='$receiptid' and PURCHASES.BILLID=PAYMENT_DETAIL.BILLID";
-		$result=mysql_query_decide($sql) or mysql_error_js();
+		$result=mysql_query_decide($sql) or die("$sql".mysql_error_js());
 		$myrow=mysql_fetch_array($result);
 		$username=$myrow['USERNAME'];
 		$amount=$myrow['AMOUNT'];
@@ -55,7 +55,7 @@ if(authenticated($cid))
 		$service_selected=$myrow['SERVICEID'];
 		$sql="SELECT c.COMPID as COMPID, c.DURATION as DURATION from billing.SERVICES a,
 billing.PACK_COMPONENTS b, billing.COMPONENTS c  where a.PACKID = b.PACKID AND b.COMPID = c.COMPID AND a.SERVICEID = '$service_selected'";
-		$result_pkg=mysql_query_decide($sql) or mysql_error_js();
+		$result_pkg=mysql_query_decide($sql) or die(mysql_error_js());
                 $myrow_pkg = mysql_fetch_array($result_pkg);
 		$duration=$myrow_pkg["DURATION"];
 
@@ -78,7 +78,7 @@ billing.PACK_COMPONENTS b, billing.COMPONENTS c  where a.PACKID = b.PACKID AND b
  
 		$sql="SELECT EMAIL from jsadmin.PSWRDS where USERNAME='$user'";
 		$result=mysql_query_decide($sql);
-		$myrow=mysql_fetch_array($result) or mysql_error_js();
+		$myrow=mysql_fetch_array($result) or die("$sql".mysql_error_js());
 		$entrybyemail= $myrow['EMAIL'];
 
                 //send_email("$email",$msg,$subject,'webmaster@jeevansathi.com',$entrybyemail,"aman.sharma@jeevansathi.com",$bill);

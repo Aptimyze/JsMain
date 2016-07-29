@@ -20,7 +20,7 @@ if(isset($data))
 		$user=getname($cid);
 
 		$sql="SELECT MEMBERSHIP,PROFILEID,USERNAME,WALKIN,DUEAMOUNT,EMAIL FROM billing.PURCHASES WHERE BILLID='$billid'";
-		$res=mysql_query_decide($sql) or mysql_error_js();
+		$res=mysql_query_decide($sql) or die(mysql_error_js());
 		$row=mysql_fetch_array($res);
 		$profileid=$row['PROFILEID'];
 		$walkin=$row['WALKIN'];
@@ -39,16 +39,16 @@ if(isset($data))
 		/*code to change the due amount of last billid*/
 		$dueamt+=$amt;
 		$sql="UPDATE billing.PURCHASES SET DUEAMOUNT='$dueamt' WHERE BILLID='$billid'";
-		mysql_query_decide($sql) or mysql_error_js();
+		mysql_query_decide($sql) or die(mysql_error_js());
 		/*end of code*/
 
 		/*to send mails to alloted persons*/	
 		$sql_allot="SELECT ALLOTED_TO FROM incentive.MAIN_ADMIN WHERE PROFILEID='$profileid'";
-		$res_allot=mysql_query_decide($sql_allot) or mysql_error_js();
+		$res_allot=mysql_query_decide($sql_allot) or die(mysql_error_js());
 		if($row_allot=mysql_fetch_array($res_allot))
 		{
 			$sql_e="SELECT EMAIL FROM jsadmin.PSWRDS WHERE USERNAME='$row_allot[ALLOTED_TO]'";
-                	$res_e=mysql_query_decide($sql_e) or mysql_error_js();
+                	$res_e=mysql_query_decide($sql_e) or die(mysql_error_js());
                 	if($row_e=mysql_fetch_array($res_e))
                 	{
                         	$aemail=$row_e['EMAIL'];
@@ -58,19 +58,19 @@ if(isset($data))
 		/*to send mails to alloted persons*/	
 		
 		$sql="SELECT EMAIL FROM jsadmin.PSWRDS WHERE USERNAME='$walkin'";
-		$res_e=mysql_query_decide($sql) or mysql_error_js();
+		$res_e=mysql_query_decide($sql) or die(mysql_error_js());
 		if($row_e=mysql_fetch_array($res_e))
 			$wemail=$row_e['EMAIL'];
 		if(!$wemail)
 			$wemail="mahesh@jeevansathi.com";
 
 		$sql="SELECT EMAIL FROM jsadmin.PSWRDS WHERE USERNAME='$user'";
-		$res_e=mysql_query_decide($sql) or mysql_error_js();
+		$res_e=mysql_query_decide($sql) or die(mysql_error_js());
 		if($row_e=mysql_fetch_array($res_e))
 			$eemail=$row_e['EMAIL'];
 
 		$sql="SELECT CD_NUM,CD_DT,BANK,CD_CITY FROM billing.PAYMENT_DETAIL WHERE RECEIPTID='$receiptid'";
-		$res=mysql_query_decide($sql) or mysql_error_js();
+		$res=mysql_query_decide($sql) or die(mysql_error_js());
 		if($row=mysql_fetch_array($res))
 		{
 			$cd_num=$row['CD_NUM'];
@@ -164,10 +164,10 @@ if(isset($data))
 			$smarty->assign("BOUNCE_REASON",$reason);
 
 		$sql="UPDATE billing.PAYMENT_DETAIL SET STATUS='BOUNCE', REASON = '".addslashes(stripslashes($reason))."', BOUNCE_DT = now(),MAIL_TYPE='$stern' WHERE RECEIPTID='$receiptid'";
-	        mysql_query_decide($sql) or mysql_error_js();
+	        mysql_query_decide($sql) or die(mysql_error_js());
 
 		$sql ="INSERT INTO billing.BOUNCED_CHEQUE_HISTORY ( ID , RECEIPTID , PROFILEID , BILLID ,BOUNCE_DT  , REMINDER_DT , ENTRYBY , ENTRY_DT , DISPLAY ) VALUES ('', '$receiptid', '$profileid', '$billid', NOW(),DATE_ADD( CURDATE() , INTERVAL 2 DAY ), '$user', NOW(), 'Y')";
-		mysql_query_decide($sql) or mysql_error_js();
+		mysql_query_decide($sql) or die(mysql_error_js());
 
 		bounced_mail($profileid,"C");
 
@@ -206,7 +206,7 @@ if(isset($data))
 			$flag=1;
 
 			$sql_act = "SELECT ACTIVATED,PREACTIVATED FROM newjs.JPROFILE WHERE PROFILEID = '$profileid'";
-			$res_act = mysql_query_decide($sql_act) or mysql_error_js();
+			$res_act = mysql_query_decide($sql_act) or die(mysql_error_js());
 			$row_act = mysql_fetch_array($res_act);
 			
 			// delete the contacts of this person
@@ -218,7 +218,7 @@ if(isset($data))
                         }
 
 			/*$sql="UPDATE newjs.JPROFILE SET PREACTIVATED=IF(ACTIVATED<>'D',ACTIVATED,PREACTIVATED), ACTIVATED='D', ACTIVATE_ON=now(),activatedKey=0 where PROFILEID='$profileid'";
-                        mysql_query_decide($sql) or mysql_error_js();
+                        mysql_query_decide($sql) or die(mysql_error_js());
                         */
                         if($row_act['ACTIVATED']!='D')
                                 $preActivated =$row_act['ACTIVATED'];
@@ -232,7 +232,7 @@ if(isset($data))
                         $jprofileObj->editJPROFILE($paramArr,$profileid,'PROFILEID');
 			
 			$sql="INSERT into jsadmin.DELETED_PROFILES(PROFILEID,USERNAME,REASON,COMMENTS,USER,TIME) values('$profileid','$username','Cheque Bounce','$reason','$user',now())";
-			mysql_query_decide($sql) or mysql_error_js();
+			mysql_query_decide($sql) or die(mysql_error_js());
 
 			if($offline_billing)
 				stop_offline_service($profileid);
@@ -251,7 +251,7 @@ if(isset($data))
 	else
 	{
 		$sql="SELECT AMOUNT,CD_NUM,CD_DT,CD_CITY,BANK,REASON FROM billing.PAYMENT_DETAIL WHERE RECEIPTID='$receiptid'";
-		$res=mysql_query_decide($sql) or mysql_error_js();
+		$res=mysql_query_decide($sql) or die(mysql_error_js());
 		if($row=mysql_fetch_array($res))
 		{
 			$amt=$row['AMOUNT'];

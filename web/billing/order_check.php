@@ -13,7 +13,7 @@ if($Order_Id)
 	$id_arr=explode("-",$Order_Id);
 	$id=$id_arr[1];
 	$sql=" select PROFILEID from  billing.ORDERS where ID=$id";
-	$result=mysql_query_decide($sql) or mysql_error_js();
+	$result=mysql_query_decide($sql) or die('Failure,Go back & try again'.mysql_error_js());
 	$myrow_1 = mysql_fetch_array($result);
 	if($myrow_1['PROFILEID'] > 0)
 	{
@@ -22,7 +22,7 @@ if($Order_Id)
 		$ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
 		$pid=$myrow_1['PROFILEID'];
 		$sql1="SELECT COUNT(*) AS CNT FROM billing.PURCHASES WHERE PROFILEID='$pid' AND ORDERID='$id'";
-		$res1=mysql_query_decide($sql1) or mysql_error_js();
+		$res1=mysql_query_decide($sql1) or die('Failure,Go back & try again'.mysql_error_js());
 		$row1=mysql_fetch_assoc($res1);
 		
 		//ret should work for voucher code working
@@ -31,7 +31,7 @@ if($Order_Id)
 		{
 			$membershipObj->startServiceOrder($Order_Id);
 			$sql_tmp = "INSERT INTO billing.ORDERS_STARTED(ORDERID, ENTRY_DT) VALUES('$Order_Id',now())";
-			$res_tmp = mysql_query_decide($sql_tmp) or mysql_error_js();
+			$res_tmp = mysql_query_decide($sql_tmp) or die(mysql_error_js().$sql_tmp);
 
 			echo "Service Started\n";
 		}	

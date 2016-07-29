@@ -62,8 +62,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 			$j=0;
 		
 		 $sql="select USERNAME,ACTIVATED from newjs.JPROFILE where PROFILEID='$self_profileid'";
-	         $result=mysql_query_decide($sql) or mysql_error_js();
-	         //logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+	         $result=mysql_query_decide($sql) or die("1".mysql_error_js());//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 		$myrow_ACT=mysql_fetch_array($result);
                                                                                                                              
                 if($myrow_ACT["ACTIVATED"]=="D")
@@ -121,7 +120,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 		$countrow = $count_contactResult[0]['CNT'];
 		
 		/*$sql="select FOUND_ROWS() as cnt";
-		$resultcount=mysql_query_decide($sql) or mysql_error_js();to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+		$resultcount=mysql_query_decide($sql) or die("c2".mysql_error_js());//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 		
 		$countrow=mysql_fetch_row($resultcount);*/
 		
@@ -190,8 +189,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 			//Determine whether this user has a photo
 			//$sql1="select HAVEPHOTO from newjs.JPROFILE where PROFILEID='$myrow[$contact]'";
 			$sql1="select HAVEPHOTO from newjs.JPROFILE where PROFILEID='$contactResult[$i][$contact]'";
-			$result1=mysql_query_decide($sql1) or mysql_error_js();
-			//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql1,"ShowErrTemplate");
+			$result1=mysql_query_decide($sql1) or die("c3".mysql_error_js());//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql1,"ShowErrTemplate");
 			$myrow1=mysql_fetch_array($result1);
 			if($myrow1["HAVEPHOTO"]=="Y")
 				$photo=1;
@@ -200,8 +198,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 			//Determine whether this user has been bookmarked  
 			//$sql2="select count(*) as count from newjs.BOOKMARKS where BOOKMARKER='$self_profileid' and BOOKMARKEE='$myrow[$contact]'";		
 			$sql2="select count(*) as count from newjs.BOOKMARKS where BOOKMARKER='$self_profileid' and BOOKMARKEE='$contactResult[$i][$contact]'";		
-			$result2=mysql_query_decide($sql2) or mysql_error_js();
-			//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql2,"ShowErrTemplate");
+			$result2=mysql_query_decide($sql2) or die("c4".mysql_error_js());//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql2,"ShowErrTemplate");
 			$myrow2=mysql_fetch_array($result2);
 			if($myrow2["count"]>0)
 				$bookmark=1;
@@ -263,8 +260,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 
                 $sql="select USERNAME,AGE,HEIGHT,CASTE,OCCUPATION,COUNTRY_RES,CITY_RES from newjs.JPROFILE where PROFILEID='$profileid'";
-                $result=mysql_query_decide($sql) or mysql_error_js();
-                //logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate") ;
+                $result=mysql_query_decide($sql) or die("cp1".mysql_error_js());//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate") ;
                 $myrow=mysql_fetch_array($result);
                 $country_code=$myrow["COUNTRY_RES"];
                 if($country_code==128)

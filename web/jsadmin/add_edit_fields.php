@@ -43,7 +43,7 @@ if(authenticated($cid))
 		$operator_name=getname($cid);
 
 		$sql="select PROFILEID,SUBSCRIPTION,MOD_DT,ACTIVATED,INCOMPLETE from newjs.JPROFILE where USERNAME='$username'";
-		$result = mysql_query_decide($sql) or mysql_error_js();
+		$result=mysql_query_decide($sql) or die("$sql"."0".mysql_error_js());
 		if(mysql_num_rows($result)>0)
 		{
 			$myrow=mysql_fetch_array($result);

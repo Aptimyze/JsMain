@@ -71,8 +71,9 @@
 		*/
 		public function logStatus($module)
 		{
-			if(array_key_exists($module, $this->arrConfig))
+			if(array_key_exists($module, $this->arrConfig)){
 				return $this->arrConfig[$module]['logging'];
+			}
 			else
 			{
 				// module not in config
@@ -85,8 +86,9 @@
 		*/
 		public function dirStatus($module)
 		{
-			if(array_key_exists($module, $this->arrConfig))
+			if(array_key_exists($module, $this->arrConfig)){
 				return $this->arrConfig[$module]['directory'];
+			}
 			else
 			{
 				return 0;

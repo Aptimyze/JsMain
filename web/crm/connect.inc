@@ -1,4 +1,4 @@
-<?php
+x`<?php
 include("config.php");
 include_once("../jsadmin/handleCrmLogin.php");
 include_once(JsConstants::$docRoot."/commonFiles/crmLoginFunctions.php");
@@ -13,7 +13,7 @@ function login ($id, $pass)
 	$mycond = 0;
 	$pass = md5($pass);
 	$sql = "select RESID,LAST_LOGIN_DT,MOD_DT from jsadmin.PSWRDS where USERNAME= binary '$id' and PASSWORD= binary '$pass' AND ACTIVE='Y'";
-	$res = mysql_query_decide($sql) or mysql_error_js();
+	$res = mysql_query_decide($sql) or die("Could not Execute query pwdError".mysql_error_js());
 	$count = mysql_num_rows($res);
 	
 	if ($count > 0)
@@ -44,19 +44,19 @@ function login ($id, $pass)
 		if($expire)
 		{
 			$sql="UPDATE jsadmin.PSWRDS SET ACTIVE='N' WHERE RESID='$recid'";
-                        mysql_query_decide($sql) or mysql_error_js();
+                        mysql_query_decide($sql) or die("$sql".mysql_error_js());
 			$ret="-1";
 		}
 		else
 		{
 			$sql="UPDATE jsadmin.PSWRDS SET LAST_LOGIN_DT=NOW() WHERE RESID='$recid'";
-			mysql_query_decide($sql) or mysql_error_js();
+			mysql_query_decide($sql) or die("$sql".mysql_error_js());
 
 			$sql="delete from jsadmin.CONNECT where TIME < ($tm - $TOUT)";
 			$result = mysql_query_decide($sql);
 		
 			$sqlup="insert into jsadmin.CONNECT (ID, USER, IPADDR, TIME) values ('','$recid','$ip','$tm')";
-			$sqlup_con = mysql_query_decide($sqlup) or mysql_error_js();
+			$sqlup_con = mysql_query_decide($sqlup) or die($sqlup." : ".mysql_error_js());
 
 			$id=mysql_insert_id_js();
 			$ret=md5($id)."i".$id;
@@ -84,7 +84,7 @@ function login ($id, $pass)
         else
         {
 		$sql_chk = "select * from jsadmin.CONNECT where ID=$userno";
-		$res_chk = mysql_query_decide($sql_chk) or mysql_error_js();$sql_chk ".mysql_error_js());
+		$res_chk = mysql_query_decide($sql_chk) or die("Could not Authenticate User: auError $sql_chk ".mysql_error_js());
 		$count = mysql_num_rows($res_chk);
 
 		if ($count > 0)
@@ -95,7 +95,7 @@ function login ($id, $pass)
 			{
 				$tm = time();
 				$sql_up = "update jsadmin.CONNECT set TIME=$tm where ID=$userno";
-				$res_up = mysql_query_decide($sql_up) or mysql_error_js();
+				$res_up = mysql_query_decide($sql_up) or die("Could not Authenticate User: upError".mysql_error_js());
 
 				$ret["ID"] = $md."i".$userno;
 				$ret["USER"]=$myrow["USER"];
@@ -147,7 +147,7 @@ function login ($id, $pass)
         else
         {                                                                                                                    
 		 $sql_usr = "select USER from jsadmin.CONNECT where ID=$userno";
-		$res_usr = mysql_query_decide($sql_usr) or mysql_error_js();
+		$res_usr = mysql_query_decide($sql_usr) or die("Could not return data from Connect1. $sql_usr ".mysql_error_js());
 		$count = mysql_num_rows($res_usr);
 
 		if ($count > 0)
@@ -156,7 +156,7 @@ function login ($id, $pass)
 			$ret_usr = $myrow["USER"];
 		
 			$sql_getusr = "select USERNAME from jsadmin.PSWRDS where RESID=$ret_usr";
-			$res_getusr = mysql_query_decide($sql_getusr) or mysql_error_js();
+			$res_getusr = mysql_query_decide($sql_getusr) or die("Could not return data from Pswrds.".mysql_error_js());
 			$count_usr = mysql_num_rows($res_getusr);
 		
 			if($count_usr > 0)
@@ -187,7 +187,7 @@ function login ($id, $pass)
         else
         {
 		$sql_usr = "select USER from jsadmin.CONNECT where ID=$userno";
-		$res_usr = mysql_query_decide($sql_usr) or mysql_error_js();
+		$res_usr = mysql_query_decide($sql_usr) or die("Could not return data from Connect1.".mysql_error_js());
 		$count = mysql_num_rows($res_usr);
 
 		if ($count > 0)
@@ -196,7 +196,7 @@ function login ($id, $pass)
 			$ret_usr = $myrow["USER"];
 		
 			$sql_getusr = "select PRIVILAGE from jsadmin.PSWRDS where RESID=$ret_usr";
-			$res_getusr = mysql_query_decide($sql_getusr) or mysql_error_js();
+			$res_getusr = mysql_query_decide($sql_getusr) or die("Could not return data from Pswrds.".mysql_error_js());
 			$count_usr = mysql_num_rows($res_getusr);
 		
 			if($count_usr > 0)
@@ -227,7 +227,7 @@ function login ($id, $pass)
 	{
 
 		$sql_usr = "select USER from jsadmin.CONNECT where ID=$connection and IPADDR='$ip'";
-		$res_usr = mysql_query_decide($sql_usr) or mysql_error_js();
+		$res_usr = mysql_query_decide($sql_usr) or die("Could not return data from Connect1.".mysql_error_js());
 		$count = mysql_num_rows($res_usr);
 	
 		if ($count > 0)
@@ -236,7 +236,7 @@ function login ($id, $pass)
 			$ret_usr = $myrow["USER"];
 		
 			$sql_getusr = "select CENTER from jsadmin.PSWRDS where RESID=$ret_usr";
-			$res_getusr = mysql_query_decide($sql_getusr) or mysql_error_js();
+			$res_getusr = mysql_query_decide($sql_getusr) or die("Could not return data from Pswrds.".mysql_error_js());
 			$count_usr = mysql_num_rows($res_getusr);
 		
 			if($count_usr > 0)
@@ -261,7 +261,7 @@ function getcenter_for_walkin($walkin)
 { 
         $sql_usr = "select center from jsadmin.PSWRDS where USERNAME='$walkin' ";
                                                                                                                              
-        $res_usr = mysql_query_decide($sql_usr) or mysql_error_js();
+        $res_usr = mysql_query_decide($sql_usr) or die("Could not return data from executive.".mysql_error_js());
                                                                                                                              
         $count = mysql_num_rows($res_usr);
                                                                                                                              
@@ -283,7 +283,7 @@ function getcenter_for_walkin($walkin)
 	global $TOUT;
 
 	$sql_usr = "select USER from jsadmin.CONNECT where ID=$connection and IPADDR='$ip'";
-	$res_usr = mysql_query_decide($sql_usr) or mysql_error_js();
+	$res_usr = mysql_query_decide($sql_usr) or die("Could not return data from Connect1.".mysql_error_js());
 	$count = mysql_num_rows($res_usr);
 
 	if ($count > 0)
@@ -292,7 +292,7 @@ function getcenter_for_walkin($walkin)
 		$ret_usr = $myrow["USER"];
 		
 		$sql_getusr = "select EMAIL from jsadmin.PSWRDS where RESID=$ret_usr";
-		$res_getusr = mysql_query_decide($sql_getusr) or mysql_error_js();
+		$res_getusr = mysql_query_decide($sql_getusr) or die("Could not return data from Pswrds.".mysql_error_js());
 		$count_usr = mysql_num_rows($res_getusr);
 		
 		if($count_usr > 0)
@@ -497,12 +497,12 @@ function logError($message,$query="",$critical="exit", $sendmailto="NO")
         $temp=explode("i",$cid);
         $userid=$temp[1];
         $sql="SELECT USER FROM jsadmin.CONNECT WHERE ID='$userid'";
-        $res=mysql_query_decide($sql) or mysql_error_js();
+        $res=mysql_query_decide($sql) or die(mysql_error_js());
         $row=mysql_fetch_array($res);
         $id=$row['USER'];
                                                                                                                              
         $sql="SELECT USERNAME FROM jsadmin.PSWRDS WHERE RESID='$id'";
-        $res=mysql_query_decide($sql) or mysql_error_js();
+        $res=mysql_query_decide($sql) or die(mysql_error_js());
         $row=mysql_fetch_array($res);
         $username=$row['USERNAME'];
         return $username;
@@ -513,13 +513,13 @@ function get_centre($cid)
         $temp=explode("i",$cid);
         $userid=$temp[1];
         /*$sql="SELECT USER FROM jsadmin.CONNECT WHERE ID='$userid'";
-        $res=mysql_query_decide($sql) or mysql_error_js();
+        $res=mysql_query_decide($sql) or die(mysql_error_js());
         $row=mysql_fetch_array($res);
         $id=$row['USER'];
                                                                                                  
                                                                                                  
         $sql="SELECT CENTER FROM jsadmin.PSWRDS WHERE RESID='$id'";
-        $res=mysql_query_decide($sql) or mysql_error_js();
+        $res=mysql_query_decide($sql) or die(mysql_error_js());
         $row=mysql_fetch_array($res);
         $centre=$row['CENTER'];*/
         if($userid)
@@ -535,12 +535,12 @@ function get_login_email($cid)
 	/*$temp=explode("i",$cid);
         $userid=$temp[1];
         $sql="SELECT USER FROM jsadmin.CONNECT WHERE ID='$userid'";
-        $res=mysql_query_decide($sql) or mysql_error_js();
+        $res=mysql_query_decide($sql) or die(mysql_error_js());
         $row=mysql_fetch_array($res);
         $id=$row['USER'];
 	
 	$sql="SELECT EMAIL FROM jsadmin.PSWRDS WHERE RESID='$id'";
-        $res=mysql_query_decide($sql) or mysql_error_js();
+        $res=mysql_query_decide($sql) or die(mysql_error_js());
         $row=mysql_fetch_array($res);
         $email=$row['EMAIL'];*/
         if($cid)
@@ -575,7 +575,7 @@ function populate_will_pay($sel_val=0)
 {
 	$j=0;
 	$sql_d="SELECT * from incentive.CRM_DISPOSITION WHERE ACTIVE='Y'";
-        $result_d= mysql_query_decide($sql_d) or mysql_error_js();
+        $result_d= mysql_query_decide($sql_d) or die(mysql_error_js());
         while($myrow_d=mysql_fetch_row($result_d))
         {
 		$will_pay_arr[$j]['val'] = "$myrow_d[1]";
@@ -593,7 +593,7 @@ function populate_will_pay($sel_val=0)
                 $strtemp .= $will_pay_value[$j]."|X|";
 
                 $sql="SELECT VALIDATION_VALUE,VALIDATION_LABEL from incentive.CRM_DISPOSITION_VALIDATION where DISPOSITION ='$val'";
-                $result1= mysql_query_decide($sql) or mysql_error_js();
+                $result1= mysql_query_decide($sql) or die(mysql_error_js());
 
 
                  while($myrow1=mysql_fetch_row($result1))
@@ -643,7 +643,7 @@ function populate_call_type($sel_val=0)
                 $strtemp .= $call_type_value[$j]."|X|";
 
                 $sql="SELECT SUBTYPE_VALUE,SUBTYPE_LABEL from incentive.SERVICE_CALL_SUBTYPE where CALL_TYPE ='$val'";
-                $result1= mysql_query_decide($sql) or mysql_error_js();
+                $result1= mysql_query_decide($sql) or die(mysql_error_js());
 
 
                  while($myrow1=mysql_fetch_row($result1))
@@ -719,7 +719,7 @@ return $ret;
 function get_name_of_user($profileid)
 {
 	$sql_name_of_user = "SELECT NAME FROM incentive.NAME_OF_USER WHERE PROFILEID='$profileid'";
-	$res_name_of_user = mysql_query_decide($sql_name_of_user) or mysql_error_js();
+	$res_name_of_user = mysql_query_decide($sql_name_of_user) or die("$sql_name_of_user".mysql_error_js());
 	$row_name_of_user = mysql_fetch_array($res_name_of_user);
 
 	if($row_name_of_user['NAME'])
@@ -797,7 +797,7 @@ function getDiscount($profileStr)
 {
 	$dataSet =array();
         $sql="SELECT PROFILEID,DISCOUNT,EDATE from billing.VARIABLE_DISCOUNT WHERE PROFILEID IN($profileStr)";
-        $res=mysql_query_decide($sql) or mysql_error_js();
+        $res=mysql_query_decide($sql) or die(mysql_error_js());
         while($row=mysql_fetch_array($res))
 	{
 		$profileid		=$row['PROFILEID'];		
