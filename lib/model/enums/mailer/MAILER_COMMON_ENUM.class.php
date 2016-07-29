@@ -74,9 +74,10 @@ class MAILER_COMMON_ENUM
                 self::init();
                 if(array_key_exists($type,self::$userFieldLabel))
                         $enum=self::$userFieldLabel[$type];
-                else
+                else{
+                        LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR,new Exception("Invalid Type userFieldLabel Enum is requested in MAILER_COMMON_ENUM.class.php"));
                         throw new Exception("Invalid Type userFieldLabel Enum is requested in MAILER_COMMON_ENUM.class.php");
-
+                    }
                 return $enum;
         }
 
@@ -90,8 +91,9 @@ class MAILER_COMMON_ENUM
                 self::init();
 		if(array_key_exists($type,self::$mailerSenders))
 			$enum=self::$mailerSenders[$type];
-		else
+		else{LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR,new Exception("Invalid Type Enum is requested in MAILER_COMMON_ENUM.class.php"));
 			throw new Exception("Invalid Type Enum is requested in MAILER_COMMON_ENUM.class.php");
+        }
 
 		return $enum;
         }
@@ -105,9 +107,10 @@ class MAILER_COMMON_ENUM
                 self::init();
 		if(array_key_exists($type,self::$template))
                 	$enum= self::$template[$type];
-		else		
+		else	
+        {	LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR,new Exception("Invalid type is requested in getTemplate in MAILER_COMMON_ENUM.class.php"));
 			throw new Exception("Invalid type is requested in getTemplate in MAILER_COMMON_ENUM.class.php");
-		
+		}
 		return $enum;
         }
 
@@ -120,9 +123,10 @@ class MAILER_COMMON_ENUM
                 self::init();
                 if(array_key_exists($type,self::$membershipTracking))
                         $enum= self::$membershipTracking[$type];
-                else            
+                else  {    
+                LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR,new Exception("Invalid type is requested in getMembershipTracking in MAILER_COMMON_ENUM.class.php"));      
                         throw new Exception("Invalid type is requested in getMembershipTracking in MAILER_COMMON_ENUM.class.php");
-
+                    }
                 return $enum;
         }
 	/* This function is used to get google play tracking values of the given mailer type 
@@ -134,9 +138,10 @@ class MAILER_COMMON_ENUM
                 self::init();
                 if(array_key_exists($type,self::$googlePlayTracking))
                         $enum= self::$googlePlayTracking[$type];
-                else
+                else {
+                    LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR,new Exception("Invalid type is requested in getGooglePlayTracking in MAILER_COMMON_ENUM.class.php"));
                         throw new Exception("Invalid type is requested in getGooglePlayTracking in MAILER_COMMON_ENUM.class.php");
-
+                    }
                 return $enum;
         }
         
@@ -149,9 +154,11 @@ class MAILER_COMMON_ENUM
                 self::init();
                 if(array_key_exists($type,self::$iTunesTracking))
                         $enum= self::$iTunesTracking[$type];
-                else
+                else{
+                    LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR,new Exception("Invalid type is requested in getITunesTracking in MAILER_COMMON_ENUM.class.php"));
                         throw new Exception("Invalid type is requested in getITunesTracking in MAILER_COMMON_ENUM.class.php");
 
+                    }
                 return $enum;
         }
 

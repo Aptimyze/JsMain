@@ -12,9 +12,13 @@ public function __construct($phone,$virtualNo)
 
 		try
 		{
-    		if(!$phone || !$virtualNo) throw new Exception("wrong or null : phone or VirtualNo", 1);   	
+    		if(!$phone || !$virtualNo){ 
+    			LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR,new Exception("wrong or null : phone or VirtualNo", 1));
+    			throw new Exception("wrong or null : phone or VirtualNo", 1);}   	
 			$profileId=phoneKnowlarity::getProfileFromPhoneVNo($phone,$virtualNo);
-			if(!$profileId) throw new Exception("wrong or null : phone or VirtualNo", 1);			
+			if(!$profileId){ 
+				LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR,new Exception("wrong or null : phone or VirtualNo", 1));
+				throw new Exception("wrong or null : phone or VirtualNo", 1);}			
 			$this->profileObject=new Profile('',$profileId);
 			$this->profileObject->getDetail("","","*");
 			$this->isd=$this->profileObject->getISD();
@@ -41,7 +45,10 @@ public function __construct($phone,$virtualNo)
 			break;
 			}
 
-					if(!$this->phoneType) throw new Exception("The phone is not saved for any profile", 1);			
+					if(!$this->phoneType){
+						 LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR,new Exception("The phone is not saved for any profile", 1));
+					 throw new Exception("The phone is not saved for any profile", 1);			
+					}
 					else $this->phone=$phone;
 			}
 			catch(Exception $e){
