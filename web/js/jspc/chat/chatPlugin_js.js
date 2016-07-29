@@ -1149,7 +1149,7 @@ JsChat.prototype = {
             $(curElem._chatBottomPanelID).css("bottom", "0px");
         }*/
         if ($(curElem._chatBottomPanelID).length == 0) {
-            $("body").append(curElem._getHtmlStructure("chatBottomPanel","",""));
+            $("body").append("<div id='chatBottomPanel' class='btmNegtaive pos_fix calhgt2 z7 fontlig'></div>");
             curElem._bottomPanelWidth = $(window).width() - $(curElem._parendID).width();
             $(curElem._chatBottomPanelID).css('max-width',curElem._bottomPanelWidth);
             $(curElem._chatBottomPanelID).css("right", $(curElem._parendID).width());
