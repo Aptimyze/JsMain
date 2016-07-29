@@ -16,10 +16,7 @@ class LoggingWrapper
      */
     private static $instance = null;
 
-	function __construct()
-	{
-
-	}
+	private function __construct() {}
 
 	/**
      * Get Instance
@@ -36,11 +33,15 @@ class LoggingWrapper
         return self::$instance;
 	}
 
+	 /**
+     * @param $enLogType
+     * @param $Var
+     */
 	public function sendLog($enLogType,$Var=null)
 	{
 		// get module name 
 		$module = 'jsadmin';
-		return LoggingManager::getInstance($module)->logThis($enLogType,$Var,null,false);
+		return LoggingManager::getInstance($module)->logThis($enLogType,$Var,false);
 	}
 }
 

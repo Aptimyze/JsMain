@@ -58,10 +58,10 @@ class LoggingManager
         A function to retrieve uniqueId of the instance of LoggingManager
 
     */
-        public function getUniqueId()
-        {   
-          return($this->iUniqueID);
-        }
+    public function getUniqueId()
+    {   
+        return($this->iUniqueID);
+    }
     /* A function to print the all info of requests
 
     */
@@ -69,19 +69,19 @@ class LoggingManager
     public function allInfo($functionname)
     { 
         // die("reached");
-      $currDate = Date('Y-m-d');
+        $currDate = Date('Y-m-d');
 
-      $reqId = sfContext::getInstance()->getRequest()->getAttribute('REQUEST_ID_FOR_TRACKING');
+     $reqId = sfContext::getInstance()->getRequest()->getAttribute('REQUEST_ID_FOR_TRACKING');
 
-      $szStringToWrite=$reqId . "  moduleName  action_name  " . $functionname ." works fine at time \n";
-
-
+     $szStringToWrite=$reqId . "  module_name  action_name  " . $functionname ." works fine at time \n";
+     
+     
       $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
       $this->createDirectory($filePath);
      //die($filePath);
       $fileResource = fopen($filePath,"a");
-      fwrite($fileResource,$szStringToWrite);
-      fclose($fileResource);
+        fwrite($fileResource,$szStringToWrite);
+        fclose($fileResource);
         //
     }   
 
@@ -89,7 +89,7 @@ class LoggingManager
      * __destruct
      */
     private function __destruct() {
-      self::$instance = null;
+        self::$instance = null;
     }
 
     /**
@@ -108,13 +108,13 @@ class LoggingManager
      */
     public static function getInstance($basePath = null)
     {
-      if (null === self::$instance) {
-        $className =  __CLASS__;
-        self::$instance = new $className;
-      }
-      self::$instance->szLogPath = $basePath;
+        if (null === self::$instance) {
+            $className =  __CLASS__;
+            self::$instance = new $className;
+        }
+        self::$instance->szLogPath = $basePath;
 
-      return self::$instance;
+        return self::$instance;
     }
 
      /**
@@ -129,7 +129,6 @@ class LoggingManager
      *       ,statusCode
      *       ,typeOfError(whether php error, or mysql etc.) 
      */
-
      public function logThis($enLogType,$Var,$logArray = array(),$isSymfony=true)
      {
       if($this->canLog($Var))
@@ -156,8 +155,6 @@ class LoggingManager
 
     /**
      * @param $exception
-     * @param $isSymfony
-     * @param $logArray
      */
     private function logException($exception,$isSymfony,$logArray)
     {
@@ -316,7 +313,6 @@ class LoggingManager
         $actionName = $logArray['actionName'];
       }
       return $action_name;
-
     }
 
     /**
@@ -355,21 +351,21 @@ class LoggingManager
      */
     private function writeToFile($szLogString)
     {
-      $currDate = Date('Y-m-d');
-      $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH."-".$currDate.".log";
-      if ($this->szLogPath && $this->canCreateDir($this->szLogPath)) {
-        $this->createDirectory($this->szLogPath);
-        $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
-      }
+        $currDate = Date('Y-m-d');
+        $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH."-".$currDate.".log";
+        if ($this->szLogPath && $this->canCreateDir($this->szLogPath)) {
+            $this->createDirectory($this->szLogPath);
+            $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
+        }
 
         //Add in log file
-      if($this->bDoItOnce) {
-        $szLogString = "\n".$szLogString;
-        $this->bDoItOnce = false;
-      }
-      $fileResource = fopen($filePath,"a");
-      fwrite($fileResource,$szLogString."\n");
-      fclose($fileResource);
+        if($this->bDoItOnce) {
+            $szLogString = "\n".$szLogString;
+            $this->bDoItOnce = false;
+        }
+        $fileResource = fopen($filePath,"a");
+        fwrite($fileResource,$szLogString."\n");
+        fclose($fileResource);
     }
 
     /**
@@ -378,21 +374,21 @@ class LoggingManager
      */
     private function getLogType($enLogType)
     {
-      switch ($enLogType) {
-        case LoggingEnums::LOG_INFO:
-        $szLogType = 'Info';
-        break;
-        case LoggingEnums::LOG_DEBUG:
-        $szLogType = 'Debug';
-        break;
-        case LoggingEnums::LOG_ERROR:
-        $szLogType = 'Error';
-        break;
-        default:
-        $szLogType = 'Log';
-        break;
-      }
-      return $szLogType;
+        switch ($enLogType) {
+            case LoggingEnums::LOG_INFO:
+                    $szLogType = 'Info';
+                break;
+            case LoggingEnums::LOG_DEBUG:
+                    $szLogType = 'Debug';
+                break;
+            case LoggingEnums::LOG_ERROR:
+                    $szLogType = 'Error';
+                break;
+            default:
+                $szLogType = 'Log';
+                break;
+        }
+        return $szLogType;
     }
 
     /**
@@ -401,10 +397,10 @@ class LoggingManager
     private function canLog($Var=null)
     {
         // TODO: get module name
-      $module = $this->szLogPath;
+        $module = $this->szLogPath;
 
         // check if log for all is set, if not set then check if module can log
-      return (LoggingEnums::LOG_ALL ? 1 : LoggingConfig::getInstance()->logStatus($module));
+        return (LoggingEnums::LOG_ALL ? 1 : LoggingConfig::getInstance()->logStatus($module));
     }
 
     /**
@@ -413,6 +409,6 @@ class LoggingManager
     private function canCreateDir($szLogPath)
     {
         // check if log for all modules is together, if not set then check if module can create diff directory
-      return (LoggingEnums::LOG_TOGETHER ? 0 : LoggingConfig::getInstance()->dirStatus($szLogPath));
+        return (LoggingEnums::LOG_TOGETHER ? 0 : LoggingConfig::getInstance()->dirStatus($szLogPath));
     }
-  }
+}

@@ -41,10 +41,10 @@ if(authenticated($cid))
 	if($Confirm && $FLAG==1)
 	{
 		$sql3 = "INSERT INTO incentive.LOG (PROFILEID,USERNAME,NAME,EMAIL,PHONE_RES,PHONE_MOB,SERVICE,ADDRESS,CITY,PIN,BYUSER,CONFIRM,AR_GIVEN,ENTRY_DT,ARAMEX_DT,STATUS,BILLING,ENTRYBY,COMMENTS,PREF_TIME,COURIER_TYPE,REF_ID,PREFIX_NAME,LANDMARK) SELECT PROFILEID,USERNAME,NAME,EMAIL,PHONE_RES,PHONE_MOB,SERVICE,ADDRESS,CITY,PIN,BYUSER,CONFIRM,AR_GIVEN,ENTRY_DT,ARAMEX_DT,STATUS,BILLING,ENTRYBY,COMMENTS,PREF_TIME,COURIER_TYPE,'$id',PREFIX_NAME,LANDMARK FROM incentive.PAYMENT_COLLECT where ID='$id'";
-                mysql_query_decide($sql3) or mysql_error_js();
+                mysql_query_decide($sql3) or die("$sql3".mysql_error_js());
 
 		$sql="UPDATE incentive.PAYMENT_COLLECT set CONFIRM='Y', ENTRYBY='$name',ENTRY_DT=now(),COMMENTS = '$new_comment',COURIER_TYPE='$courier_type', ACC_REJ_MAIL_BY='$name' where ID='$id'";
-		mysql_query_decide($sql) or mysql_error_js();
+		mysql_query_decide($sql) or die("$sql".mysql_error_js());
 		
 
 		echo "<br>";
@@ -57,7 +57,7 @@ if(authenticated($cid))
 		if($name == 'jayaprabha')
                 {
                         $sql="SELECT VALUE FROM incentive.BRANCH_CITY WHERE IN_REGION='S'";
-                        $result=mysql_query_decide($sql) or mysql_error_js();
+                        $result=mysql_query_decide($sql) or die("$sql".mysql_error_js());
                         while($myrow=mysql_fetch_array($result))
                                 $ar_branch[]=$myrow['VALUE'];
 
@@ -70,7 +70,7 @@ if(authenticated($cid))
 		elseif($user_type=='outbound')
 		{
 			$sql = "SELECT AR_BRANCH FROM incentive.ARAMEX_BRANCHES WHERE 1";
-			$res = mysql_query_decide($sql) or mysql_error_js();
+			$res = mysql_query_decide($sql) or die("$sql".mysql_error_js());
 			while($row = mysql_fetch_array($res))
 				$arm_city_arr[] = $row["AR_BRANCH"];
 
@@ -80,7 +80,7 @@ if(authenticated($cid))
 			unset($arm_city_arr);
 
 			$sql = "SELECT PROFILEID FROM incentive.MAIN_ADMIN WHERE ALLOTED_TO = '$name'";
-			$res = mysql_query_decide($sql) or mysql_error_js();
+			$res = mysql_query_decide($sql) or die("$sql".mysql_error_js());
 			while($row = mysql_fetch_array($res))
 				$profileid_arr[] = $row['PROFILEID'];
 
@@ -101,7 +101,7 @@ if(authenticated($cid))
 					if($profileid_str)
 					{
 						$sql_jp = "SELECT PROFILEID FROM newjs.JPROFILE WHERE PROFILEID IN($profileid_str) AND CITY_RES IN('$arm_city_str')";
-						$res_jp = mysql_query_decide($sql_jp) or mysql_error_js();
+						$res_jp = mysql_query_decide($sql_jp) or die($sql_jp.mysql_error_js());
 						while($row_jp = mysql_fetch_array($res_jp))
 							$final_profileid_arr[] = $row_jp['PROFILEID'];
 					}
@@ -129,7 +129,7 @@ if(authenticated($cid))
 				$sql="SELECT VALUE FROM incentive.BRANCH_CITY WHERE VALUE like('GU%') or VALUE like('MH%') or VALUE like('MP%')";
 			else
 				$sql="SELECT VALUE FROM incentive.BRANCH_CITY WHERE NEAR_BRANCH='$centre'";
-                        $result=mysql_query_decide($sql) or mysql_error_js();
+                        $result=mysql_query_decide($sql) or die("$sql".mysql_error_js());
                         while($myrow=mysql_fetch_array($result))
                         {
                                 $ar_branch[]=$myrow['VALUE'];
@@ -141,7 +141,7 @@ if(authenticated($cid))
 	/**********Code added by Aman to show the records alloted to those who have left*****************/
 		
 			$sql="SELECT UPPER(LABEL) FROM incentive.BRANCH_CITY WHERE VALUE IN('$ar')";
-			$result=mysql_query_decide($sql) or mysql_error_js();
+			$result=mysql_query_decide($sql) or die("$sql".mysql_error_js());
                         while($myrow=mysql_fetch_array($result))
                         {
                                 $branch_label[]=$myrow['LABEL'];
@@ -199,7 +199,7 @@ if(authenticated($cid))
 //		$sql="SELECT PROFILEID,USERNAME,PAYMENT_COLLECT.NAME,EMAIL,PHONE_RES,PHONE_MOB,SERVICES.NAME as SERVICE,ADDRESS,BRANCH_CITY.LABEL as CITY,PIN from incentive.PAYMENT_COLLECT, billing.SERVICES,incentive.BRANCH_CITY where CONFIRM='' and AR_GIVEN='' and PAYMENT_COLLECT.SERVICE=SERVICES.SERVICEID and PAYMENT_COLLECT.CITY=BRANCH_CITY.VALUE";	
 
 		if(!$do_not_run_query)
-			$result=mysql_query_decide($sql) or mysql_error_js();
+			$result=mysql_query_decide($sql) or die("$sql".mysql_error_js());
 		if($myrow=@mysql_fetch_array($result))
 		{
 			do
@@ -208,7 +208,7 @@ if(authenticated($cid))
 				$pid=$myrow["PROFILEID"];
 				/* removed online/offline check
 				$sql_jp = "SELECT CRM_TEAM FROM newjs.JPROFILE WHERE PROFILEID=$pid";
-				$res_jp = mysql_query_decide($sql_jp) or mysql_error_js();
+				$res_jp = mysql_query_decide($sql_jp) or die($sql_jp.mysql_error_js());
 				if($row_jp = mysql_fetch_array($res_jp))
 					$source = $row_jp['CRM_TEAM'];
 				if($source=='online')

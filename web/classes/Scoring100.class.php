@@ -75,7 +75,7 @@ class Scoring
 
 		/*Set all common parameters*/
                 $sql="SELECT $parameter FROM newjs.JPROFILE WHERE PROFILEID=$profileid";
-                $result = mysql_query_decide($sql,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($myDb)));
+                $result = mysql_query_decide($sql,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($myDb)));
                 $myrow = mysql_fetch_array($result);
 		if($myrow)
                 {
@@ -206,7 +206,7 @@ class Scoring
 			//PARTNER_FIELDSFILLED
 			$PartnerFieldsFilled=0;
 			$sql1 = "SELECT LAGE,LHEIGHT,CASTE_MTONGUE,PARTNER_CASTE,PARTNER_CITYRES,PARTNER_ELEVEL_NEW,PARTNER_INCOME,PARTNER_MSTATUS,PARTNER_MTONGUE,PARTNER_OCC,PARTNER_RELIGION FROM newjs.JPARTNER WHERE PROFILEID='$this->PROFILEID'";
-			$res1 = mysql_query_decide($sql1,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($shDb)));
+			$res1 = mysql_query_decide($sql1,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql1.mysql_error($shDb)));
 			while($row1 = mysql_fetch_array($res1))
 			{
 				if($row1["LAGE"]!='')
@@ -266,7 +266,7 @@ class Scoring
 	
 			//Purchase Data
 			 $sqlpd = "SELECT SUBSCRIPTION_START_DATE,SUBSCRIPTION_END_DATE,SERVICEID,CUR_TYPE,NET_AMOUNT,DISCOUNT,START_DATE FROM billing.PURCHASE_DETAIL WHERE PROFILEID='$this->PROFILEID'";
-                        $respd = mysql_query_decide($sqlpd,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($myDb)));
+                        $respd = mysql_query_decide($sqlpd,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sqlpd.mysql_error($myDb)));
                         while($rowpd = mysql_fetch_array($respd))
                         {
 				$this->newmodel[SUBSCRIPTION_START_DATE] = $rowpd['SUBSCRIPTION_START_DATE'];
@@ -282,20 +282,20 @@ class Scoring
 			$fdate = date("Y-m-d", strtotime($this->newmodel[$this->PROFILEID]['SUBSCRIPTION_END_DATE'])-60*86400);
 			$ldate = date("Y-m-d", strtotime($this->newmodel[$this->PROFILEID]['SUBSCRIPTION_END_DATE']));
                         $sqlml2 = "SELECT COUNT(*) as cnt FROM newjs.MESSAGE_LOG WHERE RECEIVER='$this->PROFILEID' AND DATE>='$fdate' AND DATE<'$ldate' AND TYPE='I'";
-                        $resml2 = mysql_query_decide($sqlml2,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($shDb)));
+                        $resml2 = mysql_query_decide($sqlml2,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sqlml2.mysql_error($shDb)));
                         if($rowml2 = mysql_fetch_array($resml2)){
 				$this->newmodel[MESSAGES_COUNT] = $rowml2["cnt"];
                         }
 
 			$lim_30_dt = date("Y-m-d",time()-30*86400);
 			$sqll = "SELECT COUNT(*) as cnt FROM newjs.LOGIN_HISTORY WHERE PROFILEID = '$this->PROFILEID' AND LOGIN_DT >= '$lim_30_dt'";
-	                $resl = mysql_query_decide($sqll,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($shDb)));
+	                $resl = mysql_query_decide($sqll,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sqll.mysql_error($shDb)));
                 	if($rowl = mysql_fetch_array($resl)){
                 	        $this->newmodel[LOGINS_LAST30]=$rowl["cnt"];
                 	}
 
                         $sqle = "SELECT COUNT(*) as cnt FROM newjs.EOI_VIEWED_LOG WHERE VIEWED = '$this->PROFILEID' AND DATE >= '$lim_30_dt'";
-                        $rese = mysql_query_decide($sqle,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($shDb)));
+                        $rese = mysql_query_decide($sqle,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sqle.mysql_error($shDb)));
                         if($rowe = mysql_fetch_array($rese)){
                                 $this->newmodel[VIEWS_LAST30]=$rowe["cnt"];
                         }
@@ -379,7 +379,7 @@ class Scoring
         	$login_last7=0;
         	$login_last14=0;
 		$sql1 = "SELECT COUNT(CASE WHEN LOGIN_DT >= '$lim_7_dt' THEN 1 ELSE NULL END) AS CNT1, COUNT(CASE WHEN LOGIN_DT >= '$lim_14_dt' THEN 1 ELSE NULL END) AS CNT2 FROM newjs.LOGIN_HISTORY WHERE PROFILEID = '$pid'";
-                $res1 = mysql_query_decide($sql1,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($shDb)));
+                $res1 = mysql_query_decide($sql1,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql1.mysql_error($shDb)));
                 if($row1 = mysql_fetch_array($res1)){
                 	$login_last7=$row1["CNT1"];
                 	$login_last14=$row1["CNT2"];
@@ -472,12 +472,12 @@ class Scoring
                         $count_7_si=0;
                         $count_14_si=0;
 			/*$sql1 = "SELECT COUNT(*) AS CNT1 FROM newjs.CONTACTS WHERE SENDER='$pid' AND TIME>='$lim_7_dt' AND TYPE='I'";
-	                $res1 = mysql_query_decide($sql1,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($myDb)));
+	                $res1 = mysql_query_decide($sql1,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql1.mysql_error($myDb)));
         	        if($row1 = mysql_fetch_array($res1))
                 	        $count_7_si=$row1["CNT1"];
 			*/
 	                $sql2 = "SELECT COUNT(*) AS CNT2,TYPE FROM newjs.CONTACTS WHERE SENDER='$pid' AND TIME>='$lim_14_dt' AND TYPE IN ('A','I') GROUP BY TYPE";
-        	        $res2 = mysql_query_decide($sql2,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($shDb)));
+        	        $res2 = mysql_query_decide($sql2,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql2.mysql_error($shDb)));
                 	while($row2 = mysql_fetch_array($res2))
 			{
 				if($row2["TYPE"]=='A')
@@ -488,7 +488,7 @@ class Scoring
 
                         //CONT_14_RA_cap
                         /*$sql4 = "SELECT COUNT(*) AS CONT_14_RA FROM newjs.CONTACTS WHERE RECEIVER='$pid' AND TYPE='A' AND TIME>='$lim_14_dt'";
-                        $res4 = mysql_query_decide($sql4,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($myDb)));die($sql4.mysql_error($shDb));
+                        $res4 = mysql_query_decide($sql4,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql4.mysql_error($myDb)));die($sql4.mysql_error($shDb));
                         if($row4 = mysql_fetch_array($res4))
                         $count_14_ra = $row4["CONT_14_RA"];
 			*/
@@ -608,7 +608,7 @@ class Scoring
                         $sql = "select bias from scoring_new.$param where $param=$param_val AND profile_type='$ptype'";
                 else
                         $sql = "select bias from scoring_new.$param where $param='$param_val' AND profile_type='$ptype'";
-                $res = mysql_query_decide($sql,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($myDb)));
+                $res = mysql_query_decide($sql,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($myDb)));
                 if($row = @mysql_fetch_array($res))
                         return $row["bias"];
                 else
@@ -626,7 +626,7 @@ class Scoring
 			$sql = "select bias from scoring_new.$param where $param1=$param_val1 AND $param2='$param_val2' AND profile_type='$ptype'";
                 else
 			$sql = "select bias from scoring_new.$param where $param1='$param_val1' AND $param2='$param_val2' AND profile_type='$ptype'";
-                $res = mysql_query_decide($sql,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($myDb)));
+                $res = mysql_query_decide($sql,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($myDb)));
                 if($row = @mysql_fetch_array($res))
                         return $row["bias"];
                 else

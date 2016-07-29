@@ -6,6 +6,7 @@ cache/jeevansathi/*
 cache/operations/*
 web/smarty/templates_c/*
 web/uploads/SearchLogs/*
+web/uploads/Logger/*
 log/*
 .idea
 .eclipse

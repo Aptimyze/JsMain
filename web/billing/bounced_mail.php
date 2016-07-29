@@ -18,7 +18,7 @@ function bounced_mail($profileid,$bounced_from)
 	profileview($profileid,$checksum);
 
 	$sql="SELECT ENTRY_DT,IPADD FROM newjs.JPROFILE WHERE PROFILEID='$profileid'";
-	$res=mysql_query_decide($sql,$db_slave) or mysql_error_js();
+	$res=mysql_query_decide($sql,$db_slave) or die(mysql_error_js());
 	if($row=mysql_fetch_array($res))
 	{
 		list($edt,$etime)=explode(" ",$row['ENTRY_DT']);
@@ -34,7 +34,7 @@ function bounced_mail($profileid,$bounced_from)
 	}
 
 	$sql="SELECT SERVICEID,ENTRY_DT FROM billing.PURCHASES WHERE PROFILEID='$profileid' ORDER BY ENTRY_DT DESC";
-	$res=mysql_query_decide($sql,$db_slave) or mysql_error_js();
+	$res=mysql_query_decide($sql,$db_slave) or die(mysql_error_js());
 	if($row=mysql_fetch_array($res))
 	{
 		list($pdt,$ptime)=explode(" ",$row['ENTRY_DT']);
@@ -51,7 +51,7 @@ function bounced_mail($profileid,$bounced_from)
 		else
 		{
 			$sql = "Select c.DURATION as DURATION from billing.SERVICES a, billing.PACK_COMPONENTS b, billing.COMPONENTS c where a.PACKID = b.PACKID AND b.COMPID = c.COMPID AND a.SERVICEID ='$row[SERVICEID]'";	
-			$result_duration = mysql_query_decide($sql,$db_slave) or mysql_error_js();
+			$result_duration = mysql_query_decide($sql,$db_slave) or die(mysql_error_js());
 			$myrow_duration = mysql_fetch_array($result_duration);
 			$n = $myrow_duration["DURATION"];
 		}
@@ -59,7 +59,7 @@ function bounced_mail($profileid,$bounced_from)
 	}
 
 	$sql="SELECT ID,ORDERID FROM billing.ORDERS WHERE PROFILEID='$profileid' ORDER BY ENTRY_DT DESC";
-	$res=mysql_query_decide($sql,$db_slave) or mysql_error_js();
+	$res=mysql_query_decide($sql,$db_slave) or die(mysql_error_js());
 	if($row=mysql_fetch_array($res))
 	{
 		$orderid=$row['ORDERID']."-".$row['ID'];
@@ -68,7 +68,7 @@ function bounced_mail($profileid,$bounced_from)
 
 /*
 	$sql="SELECT TIME FROM newjs.CONTACTS WHERE SENDER='$profileid' ORDER BY TIME DESC";
-	$res=mysql_query_decide($sql) or mysql_error_js();
+	$res=mysql_query_decide($sql) or die(mysql_error_js());
 	if($row=mysql_fetch_array($res))
 	{
 		list($cdt,$ctime)=explode(" ",$row['TIME']);

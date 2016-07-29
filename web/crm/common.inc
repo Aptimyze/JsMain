@@ -9,7 +9,7 @@ include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 	include_once("../classes/Membership.class.php");
 
 	$sql="SELECT SERVICE,NAME,ADDON_SERVICEID FROM incentive.PAYMENT_COLLECT WHERE PROFILEID='$profileid' and ID='$id'";
-        $result=mysql_query_decide($sql)  or mysql_error_js();
+        $result=mysql_query_decide($sql)  or die("$sql<br>".mysql_error_js());
         $myrow=mysql_fetch_array($result);
 
         $smarty->assign("name",$myrow['NAME']);
@@ -50,7 +50,7 @@ function printinvoice($profileid,$id)
         $invoice_toassign.=$d;
                                                                                                  
         $sql="SELECT SERVICE,USERNAME,NAME,ADDON_SERVICEID, ADDRESS, CITY, PIN, EMAIL,DISCOUNT from incentive.PAYMENT_COLLECT where PROFILEID='$profileid' and ID = '$id'";
-        $result=mysql_query_decide($sql)  or mysql_error_js();
+        $result=mysql_query_decide($sql)  or die("$sql<br>".mysql_error_js());
         $myrow=mysql_fetch_array($result);
 /*
         if(strstr($myrow['SERVICE'],'2'))
@@ -127,7 +127,7 @@ function printinvoice($profileid,$id)
         $smarty->assign("cur","Rs");
                                                                                                  
         $sql="SELECT SQL_CACHE NAME, desktop_RS, desktop_DOL from billing.SERVICES where SERVICEID in ('$service_str') order by SORTBY";
-        $result=mysql_query_decide($sql) or mysql_error_js();
+        $result=mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
         $i=1;
 	$service_cost_total=0;
         while($myrow2=mysql_fetch_array($result))

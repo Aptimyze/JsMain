@@ -1,6 +1,7 @@
 <?php 
 	/**
-	* 
+	* Description of LoggingConfig
+	* Library Class to handle configurations for Logging
 	*/
 	class LoggingConfig
 	{
@@ -15,15 +16,42 @@
 		*/
 		private $arrConfig = array(
 			// 'logging' => 1, logging is on for this module
-			
-			LoggingEnums::JsA => array('logging' => 0, 'level' => 0, 'directory' => 1),
-			'example_module' => array('logging' => 0, 'level' => 0, 'directory' => 1)
+			LoggingEnums::JsA => array(
+				'logging' => 1,
+				'level' => 1, 
+				'directory' => 1, 
+				'stack_trace' => 1
+				),
+			LoggingEnums::Ex500or404 => array(
+				'logging' => 1, 
+				'level' => 1, 
+				'directory' => 1, 
+				'stack_trace' => 1
+				),
 			);
 
-		function __construct()
-		{
+		/**
+     	* Constructor function
+     	*/
+		private function __construct() {}
 
+		/**
+		* __destruct
+		*/
+		private function __destruct() 
+		{
+			self::$instance = null;
 		}
+
+		/**
+		* To Stop clone of this class object
+		*/
+		private function __clone() {}
+
+		/**
+		* To stop unserialize for this class object
+		*/
+		private function __wakeup() {}
 
 		/**
 		* Get Instance
@@ -43,11 +71,13 @@
 		*/
 		public function logStatus($module)
 		{
-			if(array_key_exists($module, $this->arrConfig))
+			if(array_key_exists($module, $this->arrConfig)){
 				return $this->arrConfig[$module]['logging'];
+			}
 			else
 			{
-				
+				// module not in config
+				return 2;
 			}
 		}
 
@@ -56,11 +86,12 @@
 		*/
 		public function dirStatus($module)
 		{
-			if(array_key_exists($module, $this->arrConfig))
+			if(array_key_exists($module, $this->arrConfig)){
 				return $this->arrConfig[$module]['directory'];
+			}
 			else
 			{
-				
+				return 0;
 			}
 		}
 	}

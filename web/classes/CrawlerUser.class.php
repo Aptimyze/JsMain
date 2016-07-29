@@ -66,7 +66,7 @@ class CrawlerUser
 				$sql.=" AND  NO_OF_CONTACT_VIEWS_ALLOWED-NO_OF_CONTACT_DETAILS_VIEWED>3";
 			$sql.=" ORDER BY RAND() ";
 			echo "\n".$sql;
-			$res=$mysqlObj->executeQuery($sql,$db) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error()));
+			$res=$mysqlObj->executeQuery($sql,$db) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception("Error while fetching user accounts   ".mysql_error()));
 			if($mysqlObj->numRows($res))
 			{
 				while($row=$mysqlObj->fetchAssoc($res))
@@ -81,7 +81,7 @@ class CrawlerUser
 						$sqlCheck="SELECT COUNT(*) AS COUNT FROM crawler.$tableName WHERE ACCOUNT_ID='$row[ACCOUNT_ID]' AND TIME>=CURDATE()";
 						if($action=='contact_detail_view')
 							$sqlCheck.=" AND CONTACT_DETAIL_VIEW='Y'";
-						$resCheck=$mysqlObj->executeQuery($sqlCheck,$db) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error()));
+						$resCheck=$mysqlObj->executeQuery($sqlCheck,$db) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception("Error while checking user account  ".mysql_error()));
 						if($rowCheck=$mysqlObj->fetchAssoc($resCheck))
 						{
 							if(1)
@@ -103,7 +103,7 @@ class CrawlerUser
                         {
                                 $sql = "SELECT * FROM crawler.crawler_competition_accounts WHERE ACTIVE='Y' AND SITE_ID='$siteId' AND GENDER='$userGender' AND RELIGION='$religion'  ORDER BY RAND()";
                                 echo "\n".$sql;
-                                $res=$mysqlObj->executeQuery($sql,$db) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error()));
+                                $res=$mysqlObj->executeQuery($sql,$db) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception("Error while fetching user accounts   ".mysql_error()));
                                 while($row=$mysqlObj->fetchAssoc($res))
                                 {
                                         if($action)
@@ -116,7 +116,7 @@ class CrawlerUser
                                                 $sqlCheck="SELECT COUNT(*) AS COUNT FROM crawler.$tableName WHERE ACCOUNT_ID='$row[ACCOUNT_ID]' AND TIME>=CURDATE()";
                                                 if($action=='contact_detail_view')
                                                         $sqlCheck.=" AND CONTACT_DETAIL_VIEW='Y'";
-                                                $resCheck=$mysqlObj->executeQuery($sqlCheck,$db) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error()));
+                                                $resCheck=$mysqlObj->executeQuery($sqlCheck,$db) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception("Error while checking user account  ".mysql_error()));
                                                 if($rowCheck=$mysqlObj->fetchAssoc($resCheck))
                                                 {
                                                         if(1)

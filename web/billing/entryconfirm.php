@@ -35,14 +35,14 @@ if(authenticated($cid))
 		else
 		{
 			$sql="SELECT EMAIL,CENTER from jsadmin.PSWRDS where USERNAME='$walkin'";
-			$result = mysql_query_decide($sql) or mysql_error_js();
+			$result = mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
 			$myrow=mysql_fetch_array($result);
 			$center=$myrow['CENTER'];
 			$email_walkin=$myrow['EMAIL'];
 		}
 	
 		$sql="SELECT PROFILEID,EMAIL from newjs.JPROFILE where USERNAME='$username'";
-		$result = mysql_query_decide($sql) or mysql_error_js();
+		$result = mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
 		$myrow=mysql_fetch_array($result);
 		$profileid=$myrow['PROFILEID'];
 		$email_jprofile=$myrow['EMAIL'];
@@ -64,7 +64,7 @@ if(authenticated($cid))
 
 		$sql = "Select c.RIGHTS as RIGHTS, c.DURATION as DURATION from billing.SERVICES a, billing.PACK_COMPONENTS b, billing.COMPONENTS c where a.PACKAGE = 'Y' AND a.ADDON = 'N' AND a.PACKID = b.PACKID AND b.COMPID = c.COMPID AND a.SERVICEID = '$service_selected'";
 	
-		$result = mysql_query_decide($sql) or mysql_error_js();
+		$result = mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
 		while($myrow = mysql_fetch_array($result))
 		{
 			$duration= $myrow["DURATION"];
@@ -74,7 +74,7 @@ if(authenticated($cid))
 		if($addon_services)
 		{
 			$sql = "Select c.RIGHTS as RIGHTS from billing.SERVICES a, billing.COMPONENTS c where a.PACKAGE = 'N' AND a.ADDON = 'Y' AND a.COMPID = c.COMPID AND a.SERVICEID in ($addon_services)";
-        	        $result = mysql_query_decide($sql) or mysql_error_js();
+        	        $result = mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
 			while($myrow = mysql_fetch_array($result))
 				$subscription_ar[] = $myrow["RIGHTS"];
 		}
@@ -83,7 +83,7 @@ if(authenticated($cid))
 		else
 			$subscription = $subscription_ar;	
 		/*$sql="UPDATE newjs.JPROFILE set SUBSCRIPTION='$subscription' where PROFILEID='$profileid'";
-		mysql_query_decide($sql) or mysql_error_js();*/
+		mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());*/
                         $jprofileObj    =JProfileUpdateLib::getInstance();
                         $paramArr      	=array("SUBSCRIPTION"=>$subscription);
                         $jprofileObj->editJPROFILE($paramArr,$profileid,'PROFILEID');
@@ -95,16 +95,16 @@ if(authenticated($cid))
 		
 		/*add puneet*/
 		$sql="INSERT into billing.PURCHASES (SERVICEID, PROFILEID, USERNAME, NAME, ADDRESS, GENDER, CITY, PIN, EMAIL, RPHONE, OPHONE, MPHONE, COMMENT, OVERSEAS, DISCOUNT, DISCOUNT_TYPE, DISCOUNT_REASON,WALKIN, CENTER, ENTRYBY, DUEAMOUNT, DUEDATE, ENTRY_DT, STATUS,SERVEFOR,ADDON_SERVICEID,TAX_RATE,DEPOSIT_DT,DEPOSIT_BRANCH,IPADD) values ('$service_selected','$profileid','$username','$custname','$address','$gender','$city','$pin','$email','$resphone','$offphone','$mobphone','$comment','$overseas','$discount','$discount_type','$reason','$walkin','$center','$loginname','$part_payment','$due_date',now(),'DONE','$subscription','$addon_services_str','$tax_value','$deposit_date','$deposit_branch','$ip')";
-		mysql_query_decide($sql) or mysql_error_js();
+		mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
 		
 		$billid=mysql_insert_id_js();
 		
 		$sql="INSERT into billing.PAYMENT_DETAIL (PROFILEID, BILLID, MODE, TYPE, AMOUNT, CD_NUM, CD_DT, CD_CITY, BANK, OBANK, STATUS, ENTRY_DT, ENTRYBY,DEPOSIT_DT,DEPOSIT_BRANCH,IPADD) values ('$profileid','$billid','$mode','$type','$amount','$cdnum','$cd_date','$cd_city','$bankfeed','$obank','DONE',now(),'$loginname','$deposit_date','$deposit_branch','$ip')"; 	
-		mysql_query_decide($sql) or mysql_error_js();
+		mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
 		$receiptid= mysql_insert_id_js();	
 
 		$sql="SELECT c.COMPID as COMPID, c.DURATION as DURATION from billing.SERVICES a, billing.PACK_COMPONENTS b, billing.COMPONENTS c  where a.PACKID = b.PACKID AND b.COMPID = c.COMPID AND a.SERVICEID = '$service_selected'";		
-		$result_pkg=mysql_query_decide($sql) or mysql_error_js();
+		$result_pkg=mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
 		while($myrow_pkg = mysql_fetch_array($result_pkg))
 		{
 			$dur=$myrow_pkg['DURATION'];
@@ -121,7 +121,7 @@ if(authenticated($cid))
 		if($source=="A")
 		{
 			$sql_crm="SELECT ENTRY_DT,STATUS from incentive.PAYMENT_COLLECT where PROFILEID='$profileid' ORDER BY ENTRY_DT DESC LIMIT 1";
-			$result_crm=mysql_query_decide($sql_crm) or mysql_error_js();
+			$result_crm=mysql_query_decide($sql_crm) or die("$sql_crm<br>".mysql_error_js());
 			$myrow_crm=mysql_fetch_array($result_crm);
 			if($myrow_crm['STATUS']=="S")
 				list($activation_date,$temperoray)=explode(" ",$myrow_crm['ENTRY_DT']);
@@ -132,7 +132,7 @@ if(authenticated($cid))
 			$activation_date=date('Y-m-d');
 //*****************//
 			$sql="INSERT into billing.SERVICE_STATUS (BILLID,PROFILEID,SERVICEID, COMPID, ACTIVATED, ACTIVATED_ON, ACTIVATED_BY, EXPIRY_DT)values ('$billid','$profileid','$service_selected','$components','Y','$activation_date','$loginname',ADDDATE('$activation_date', INTERVAL $dur MONTH))";
-		mysql_query_decide($sql) or mysql_error_js();
+		mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
 
 /*		 $sql="SELECT SERVICEID,PACKAGE,COMPID,PACKID,ADDON from billing.SERVICES where SERVICEID IN ('$service_selected')";
 		if($addon_services)
@@ -144,24 +144,24 @@ if(authenticated($cid))
 			if($myrow['PACKAGE'] == 'N' && $myrow['ADDON'] == 'Y')
 			{
 				$sql_addon="SELECT DURATION from billing.COMPONENTS where COMPID='$myrow[COMPID]'";
-				$result_addon = mysql_query_decide($sql_addon) or mysql_error_js();
+				$result_addon = mysql_query_decide($sql_addon) or die(mysql_error_js());
 				$myrow_addon=mysql_fetch_array($result_addon);
 				
 				$sql="INSERT into billing.SERVICE_STATUS (BILLID, PROFILEID,SERVICEID, COMPID, ACTIVATED, ACTIVATED_ON, ACTIVATED_BY, EXPIRY_DT) values ('$billid','$profileid','$myrow[SERVICEID]','$myrow[COMPID]','Y',now(),'$loginname',ADDDATE(now(), INTERVAL $myrow_addon[DURATION] MONTH))";
-				mysql_query_decide($sql) or mysql_error_js();
+				mysql_query_decide($sql) or die(mysql_error_js());
 			}
 			elseif($myrow['PACKAGE'] == 'Y' && $myrow['ADDON'] == 'N')	
 			{
 				$packid=$myrow['PACKID'];
 				$sql_pkg="SELECT COMPID from billing.PACK_COMPONENTS where PACKID='$packid'";
-				$result_pkg=mysql_query_decide($sql_pkg) or mysql_error_js();
+				$result_pkg=mysql_query_decide($sql_pkg) or die(mysql_error_js());
 				while($myrow1=mysql_fetch_array($result_pkg))
 				{
 					$sql_comp="SELECT DURATION from billing.COMPONENTS where COMPID='$myrow1[COMPID]'";
-					$result_comp = mysql_query_decide($sql_comp) or mysql_error_js();
+					$result_comp = mysql_query_decide($sql_comp) or die(mysql_error_js());
 					$myrow_comp=mysql_fetch_array($result_comp);
 					$sql="INSERT into billing.SERVICE_STATUS (BILLID,PROFILEID,SERVICEID, COMPID, ACTIVATED, ACTIVATED_ON, ACTIVATED_BY, EXPIRY_DT)values ('$billid','$profileid','$myrow[SERVICEID]','$myrow1[COMPID]','Y',now(),'$loginname',ADDDATE(now(), INTERVAL $myrow_comp[DURATION] MONTH))";
-					mysql_query_decide($sql) or mysql_error_js();
+					mysql_query_decide($sql) or die(mysql_error_js());
 				}
 			}
 
@@ -171,7 +171,7 @@ if(authenticated($cid))
 		if($source=="A")
 		{
 			$sql="UPDATE incentive.PAYMENT_COLLECT set BILLING='Y' where PROFILEID='$profileid'";
-			mysql_query_decide($sql) or mysql_error_js();
+			mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
 		}
 		if(strstr($service_selected,'P'))	
 			$subject = "Congrats!You are now an e-Rishta Member!";
@@ -191,7 +191,7 @@ if(authenticated($cid))
 		else
 		{
 			$sql="SELECT EMAIL from jsadmin.PSWRDS where USERNAME='$walkin'";
-			$result=mysql_query_decide($sql) or mysql_error_js();
+			$result=mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
 			$myrow=mysql_fetch_array($result);
 			$walkinemail= $myrow['EMAIL'];
 
@@ -267,7 +267,7 @@ old comments
 		$smarty->assign("BOLD_LISTING_SELECTED",$bold_listing);
 
 		$sql="SELECT NAME,SERVICEID, PRICE_RS, PRICE_DOL from billing.SERVICES where PACKAGE = 'Y' AND ID > 6";
-                $result=mysql_query_decide($sql) or mysql_error_js();
+                $result=mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
                 while($myrow=mysql_fetch_array($result))
                 {
                        $services_list[] = array("NAME" =>$myrow["NAME"],

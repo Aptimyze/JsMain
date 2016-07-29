@@ -1,16 +1,19 @@
 /**
 * @author Lavesh Rawat & Pankaj Khandelwal
-* Please do not modify without consulting the Auther of this file.
+* Please do not modify without consulting the Author of this file.
 */
 (function($) {
   $.myObj = {
-
     ajax: function(objConfig) {
-
+      //console.log(_rID);
+      if (typeof _rID != "undefined" && typeof objConfig.headers != "undefined") {
+          objConfig.headers['RID_AJAX'] = _rID;
+          var str=_rID + " is the Request id and the ajax header id is " + objConfig['RID_AJAX'] + "\n";
+      }
       $.ajax({
         type: objConfig.type, 
         url: objConfig.url,
-        headers: (objConfig.headers != undefined)?objConfig.headers:{}, 
+        headers: (objConfig.headers != undefined)?objConfig.headers:{'RID_AJAX':_rID}, 
         async: (objConfig.async != undefined)?objConfig.async:true,
         data : (objConfig.data != undefined)?objConfig.data:{},
         dataType : (objConfig.dataType != undefined)?objConfig.dataType:'json',
@@ -31,6 +34,7 @@
           objConfig.complete(data, objConfig);
         }
       },
+
       success: function(data, textStatus, xhr) {
        /** add common code **/
        

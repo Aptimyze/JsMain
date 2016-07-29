@@ -28,7 +28,7 @@ if(isset($data))
 		else
 		{
 			$sql="SELECT PROFILEID,ORDER_NO,ENTRY_DT,AMOUNT FROM billing.oct_nov_record WHERE USERNAME='".addslashes($username)."'";
-			$res=mysql_query_decide($sql) or mysql_error_js();
+			$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
 			if($row=mysql_fetch_array($res))
 			{
 				$smarty->assign("profileid",$row['PROFILEID']);
@@ -76,7 +76,7 @@ if(isset($data))
 		else
 		{
 			$sql="SELECT EMAIL FROM newjs.JPROFILE WHERE PROFILEID='$profileid'";
-			$res=mysql_query_decide($sql) or mysql_error_js();
+			$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
 			if($row=mysql_fetch_array($res))
 			{
 				$cemail=$row['EMAIL'];
@@ -109,7 +109,7 @@ if(isset($data))
 				send_email($cemail,$msg,$subject,$from,$cc);
 
 				/*$sql="UPDATE newjs.JPROFILE SET PREACTIVATED=ACTIVATED,ACTIVATED='D',SUBSCRIPTION='',ACTIVATE_ON=now(),activatedKey=0 WHERE PROFILEID='$profileid'";
-				mysql_query_decide($sql) or mysql_error_js();
+				mysql_query_decide($sql) or die(mysql_error_js());
 				*/
 				$jprofileObj    =JProfileUpdateLib::getInstance();
 				$dateNew        =date("Y-m-d");

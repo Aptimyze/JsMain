@@ -31,7 +31,7 @@ if(authenticated($data))
 		if($flag=="M")
 		{
 			$sql_mod="SELECT * FROM billing.BANK WHERE ID='$ID'";
-			$res_mod=mysql_query_decide($sql_mod) or mysql_error_js();
+			$res_mod=mysql_query_decide($sql_mod) or die("Error while fetching records for modification. ".mysql_error_js());
 			$row_mod=mysql_fetch_array($res_mod);
 			$smarty->assign("ID",$ID);
 			$smarty->assign("NAME",$row_mod['NAME']);
@@ -49,10 +49,10 @@ if(authenticated($data))
 		{
 			$i=0;
 			$sql_sel="SELECT SQL_CALC_FOUND_ROWS * FROM billing.BANK ORDER BY NAME ";//LIMIT $j,$PAGELEN";
-			$res_sql=mysql_query_decide($sql_sel) or mysql_error_js();
+			$res_sql=mysql_query_decide($sql_sel) or die("Error while selecting BANK records. ".mysql_error_js());
 
 			$csql = "Select FOUND_ROWS()";
-        	        $cres = mysql_query_decide($csql) or mysql_error_js();
+        	        $cres = mysql_query_decide($csql) or die(mysql_error_js());
 	                $crow = mysql_fetch_row($cres);
         	        $TOTALREC = $crow[0];
 
