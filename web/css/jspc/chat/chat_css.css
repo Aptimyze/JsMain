@@ -278,6 +278,10 @@ ul.nchatdwn1 li {
 	top: 1px;
 	border:1px solid #34495e;
 }
+.scrollxy{
+	overflow-x: hidden;
+	overflow-y:auto;
+}
 .nchatscrollDiv {
 	overflow: auto;
 	position: relative;
@@ -610,7 +614,7 @@ wid165 {
 	top: 4px;
 }
 .nchatbtmNegtaive {
-	bottom: -300px;
+	bottom: -1000px;
 }
 .interestSentMessg {
 	position: relative;

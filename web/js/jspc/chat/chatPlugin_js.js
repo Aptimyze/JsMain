@@ -1204,7 +1204,7 @@ JsChat.prototype = {
             chatBoxProto = Object.create(HTMLElement.prototype),
             userId, status, response;
         chatBoxProto.attachedCallback = function () {
-            this.innerHTML = '<div class="chatBoxBar fullwid hgt57 bg5 pos-rel fullwid"></div><div class="chatArea fullwid fullhgt"><div class="messageArea f13 bg13 fullhgt"><div class="chatMessage scrolla pos_abs fullwid" style="height: 250px;"><div class="spinner"></div></div></div><div class="chatInput brdrbtm_new fullwid btm0 pos-abs bg-white"><textarea cols="23" style="width: 220px;" id="txtArea"  class="inputText lh20 brdr-0 padall-10 colorGrey hgt18 fontlig" placeholder="Write message"></textarea></div></div>';
+            this.innerHTML = '<div class="chatBoxBar fullwid hgt57 bg5 pos-rel fullwid"></div><div class="chatArea fullwid fullhgt"><div class="messageArea f13 bg13 fullhgt"><div class="chatMessage pos_abs fullwid scrollxy" style="height: 250px;"><div class="spinner"></div></div></div><div class="chatInput brdrbtm_new fullwid btm0 pos-abs bg-white"><textarea cols="23" style="width: 220px;" id="txtArea"  class="inputText lh20 brdr-0 padall-10 colorGrey hgt18 fontlig" placeholder="Write message"></textarea></div></div>';
             $(this).addClass("z7 btm0 brd_new fr mr7 fullhgt wid240 pos-rel disp_ib");
             userId = $(this).attr("user-id");
             status = $(this).attr("status-user");
@@ -1255,6 +1255,9 @@ JsChat.prototype = {
         var len = $('chat-box[user-id="' + userId + '"] .talkText').length - 1,
             height = $($('chat-box[user-id="' + userId + '"] .talkText')[len]).height();
         $($('chat-box[user-id="' + userId + '"] .talkText')[len]).next().css("margin-top", height);
+        $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
+           scrollTop: ($('chat-box[user-id="' + userId + '"] .rightBubble').length + $('chat-box[user-id="' + userId + '"] .leftBubble').length) * 50
+        }, 1000);
         if (status != "sending") {
             curElem._changeStatusOfMessg(uniqueId, userId, status);
         }
