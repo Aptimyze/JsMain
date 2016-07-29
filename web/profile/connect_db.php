@@ -91,7 +91,7 @@ if(!function_exists('connect_slave81')){
 
                 return $db;
         }
-
+if(!function_exists('connect_db4')){
 	function connect_db4()
         {
                 $db=db_set_active("db4",MysqlDbConstants::$viewSimilar[HOST].":".MysqlDbConstants::$viewSimilar[PORT],MysqlDbConstants::$viewSimilar[USER],MysqlDbConstants::$viewSimilar[PASS],MYSQL_CLIENT_COMPRESS) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes","","ShowErrTemplate","YES","db4");
@@ -102,6 +102,7 @@ if(!function_exists('connect_slave81')){
 
                 return $db;
         }
+}
 if(!function_exists('connect_737')){
 	function connect_737()
         {
@@ -128,7 +129,7 @@ if(!function_exists('connect_737')){
 
                 return $db;
         }
-
+if(!function_exists('connect_db2')){
 	function connect_db2()
         {
                 $db=db_set_active("db2","localhost:/tmp/mysql2.sock","user","CLDLRTa9",MYSQL_CLIENT_COMPRESS) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes","","ShowErrTemplate","YES");
@@ -139,7 +140,7 @@ if(!function_exists('connect_737')){
 
                 return $db;
         }
-
+}
 	function connect_737_lan()
         {
 		return connect_db();
