@@ -191,7 +191,7 @@ if(authenticated($cid))
 		else
 		{
 			$sql="SELECT count(*) as cnt from newjs.JPROFILE where USERNAME='$username'"; 
-			$result=mysql_query_decide($sql) or mysql_error_js();
+			$result=mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
 			$myrow=mysql_fetch_array($result);
 			if($myrow['cnt']==0)
 			{
@@ -206,7 +206,7 @@ if(authenticated($cid))
 		  	$smarty->assign("SERVICE_TYPE",$service_type);	
 		}
 		$sql="SELECT NAME,SERVICEID, desktop_RS, desktop_DOL from billing.SERVICES where PACKAGE = 'Y' AND ID > 6";
-		$result=mysql_query_decide($sql) or mysql_error_js();
+		$result=mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
 		while($myrow=mysql_fetch_array($result))
 		{
                        $services_list[] = array("NAME" =>$myrow["NAME"],
@@ -220,7 +220,7 @@ if(authenticated($cid))
 //added for voice mail
 /*
 //                $sql="SELECT VOICEMAILID, NAME, PRICE_RS, PRICE_DOL from billing.VOICEMAIL";
-                $result=mysql_query_decide($sql) or mysql_error_js();
+                $result=mysql_query_decide($sql) or die("$sql".mysql_error_js());
                 while($myrow=mysql_fetch_array($result))
                 {
                          $values[] = array("voicemailid"=>$myrow["VOICEMAILID"],
@@ -278,7 +278,7 @@ if(authenticated($cid))
 		$service_amount=($myrow["price"]*(1-($TAX_RATE/100)));
 		
 		$sql = "Select c.DURATION from billing.SERVICES a, billing.PACK_COMPONENTS b, billing.COMPONENTS c where a.PACKID = b.PACKID AND b.COMPID = c.COMPID AND a.SERVICEID = '$service_selected'";
-		$result_duration = mysql_query_decide($sql) or mysql_error_js();
+		$result_duration = mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
 		$myrow_duration = mysql_fetch_array($result_duration);
 		$duration = $myrow_duration["DURATION"];
 
@@ -303,7 +303,7 @@ if(authenticated($cid))
 
 	
 			$sql = "Select $currency_str as PRICE, NAME from billing.SERVICES where SERVICEID IN ($addon_services_str)";
-			$result_price = mysql_query_decide($sql) or mysql_error_js();
+			$result_price = mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
 			$addon_service_amount = 0;
 			while($myrow_price = mysql_fetch_array($result_price))
 			{
@@ -344,7 +344,7 @@ if(authenticated($cid))
 		if($is_error==0)
 		{
 			$sql="SELECT EMAIL from newjs.JPROFILE where USERNAME='$username'";
-			$result = mysql_query_decide($sql) or mysql_error_js();
+			$result = mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
 			$myrow=mysql_fetch_array($result);
                 	$email_jprofile=$myrow['EMAIL'];
 	                if($email == '')
@@ -431,7 +431,7 @@ if(authenticated($cid))
 	                if($source=='A')
         	        {
                 	        $sql="SELECT * from incentive.PAYMENT_COLLECT where ID='$crm_id' order by ID desc";
-                        	$result=mysql_query_decide($sql) or mysql_error_js();
+                        	$result=mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
 	                        $myrow=mysql_fetch_array($result);
         	                $username=$myrow['USERNAME'];
                 	        $smarty->assign("CUSTNAME",$myrow['NAME']);
@@ -439,7 +439,7 @@ if(authenticated($cid))
 	                        $smarty->assign("PIN",$myrow['PIN']);
         	                 $sid=$myrow['SERVICE'];
 	                         $sql1="SELECT NAME,SERVICEID from billing.SERVICES where PACKAGE = 'Y' AND SERVICEID = '$sid'";
-        	                $result1=mysql_query_decide($sql1) or mysql_error_js();
+        	                $result1=mysql_query_decide($sql1) or die("$sql1<br>".mysql_error_js());
                 	        while($myrow1=mysql_fetch_array($result1))
                         	{
 	                        $smarty->assign("SERVICE_NAME",$myrow1['NAME']);
@@ -507,7 +507,7 @@ if(authenticated($cid))
 
 
 			$sql="SELECT NAME FROM incentive.BRANCHES order by NAME";
-			$res=mysql_query_decide($sql) or mysql_error_js();
+			$res=mysql_query_decide($sql) or die(mysql_error_js());
 			$i=0;
 			while($row=mysql_fetch_array($res))
 			{
@@ -582,7 +582,7 @@ if(authenticated($cid))
 	else
 	{
 		$sql = "Select INCOMPLETE from newjs.JPROFILE where PROFILEID = '$pid'";	
-		$result = mysql_query_decide($sql) or mysql_error_js();
+		$result = mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
 		$myrow = mysql_fetch_array($result);
 		if($myrow['INCOMPLETE'] == 'Y')
 		{
@@ -595,7 +595,7 @@ if(authenticated($cid))
 		if($source=='A')
 		{
 			$sql="SELECT * from incentive.PAYMENT_COLLECT where ID='$crm_id' order by ID desc";
-			$result=mysql_query_decide($sql) or mysql_error_js();
+			$result=mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
 			$myrow=mysql_fetch_array($result);
 			$username=$myrow['USERNAME'];
 			$smarty->assign("CUSTNAME",$myrow['NAME']);
@@ -603,7 +603,7 @@ if(authenticated($cid))
 			$smarty->assign("PIN",$myrow['PIN']);
 			$sid=$myrow['SERVICE'];	
 			 $sql1="SELECT NAME,SERVICEID from billing.SERVICES where PACKAGE = 'Y' AND SERVICEID = '$sid'";
-	                $result1=mysql_query_decide($sql1) or mysql_error_js();
+	                $result1=mysql_query_decide($sql1) or die("$sql1<br>".mysql_error_js());
         	        while($myrow1=mysql_fetch_array($result1))
                 	{
 			$smarty->assign("SERVICE_NAME",$myrow1['NAME']);
@@ -648,7 +648,7 @@ if(authenticated($cid))
 		else
 		{
 			$sql="SELECT USERNAME,GENDER,CONTACT,CITY_RES,PINCODE,PHONE_RES,PHONE_MOB from newjs.JPROFILE where PROFILEID='$pid'";
-			$result = mysql_query_decide($sql) or mysql_error_js();
+			$result = mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
 			$myrow=mysql_fetch_array($result);
 			$username=$myrow['USERNAME'];
 			$smarty->assign("GENDER",$myrow['GENDER']);
@@ -665,7 +665,7 @@ if(authenticated($cid))
 
 $smarty->assign("USERNAME",stripslashes($username)); //found some problem with "'; changes made by Alok on 15th Feb 2005
 			$sql="SELECT NAME, SERVICEID, PRICE_RS, PRICE_DOL from billing.SERVICES where PACKAGE = 'Y' AND ID >'6' ";
-			$result=mysql_query_decide($sql) or mysql_error_js();
+			$result=mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
 			while($myrow=mysql_fetch_array($result))
 			{
 	                        $services_list[] = array("NAME" =>$myrow["NAME"],
@@ -681,7 +681,7 @@ $smarty->assign("USERNAME",stripslashes($username)); //found some problem with "
 
 //added for voice mail
 /*		$sql="SELECT VOICEMAILID, NAME, PRICE_RS, PRICE_DOL from billing.VOICEMAIL";
-		$result=mysql_query_decide($sql) or mysql_error_js();
+		$result=mysql_query_decide($sql) or die("$sql".mysql_error_js());
 		while($myrow=mysql_fetch_array($result))
 		{
 			 $values[] = array("voicemailid"=>$myrow["VOICEMAILID"],
@@ -713,7 +713,7 @@ $smarty->assign("USERNAME",stripslashes($username)); //found some problem with "
 
 	
 		$sql="SELECT NAME FROM incentive.BRANCHES order by NAME";
-                $res=mysql_query_decide($sql) or mysql_error_js();
+                $res=mysql_query_decide($sql) or die(mysql_error_js());
                 $i=0;
                 while($row=mysql_fetch_array($res))
                 {

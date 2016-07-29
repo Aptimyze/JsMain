@@ -20,5 +20,12 @@ class LoggingEnums
     const LOG_TOGETHER = 0;
     // module names
     const JsA = 'jsadmin';
+
     const Ex500or404 = '500-404';
+    // name of channels returned
+    const P = 'P';
+    const A = 'A';
+    const I = 'I';
+    const MS = 'MS';
+
 }

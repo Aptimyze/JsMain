@@ -271,7 +271,7 @@ if(authenticated($cid))
 				if($marked_for_deletion)
 				{
 					$sql_act = "SELECT ACTIVATED,PREACTIVATED FROM newjs.JPROFILE WHERE PROFILEID = '$profileid'";
-					$res_act = mysql_query_decide($sql_act) or mysql_error_js();
+					$res_act = mysql_query_decide($sql_act) or die($sql_act.mysql_error_js());
 					$row_act = mysql_fetch_array($res_act);
 					if($row_act['ACTIVATED']!='D' && !$offline_billing)
 					{

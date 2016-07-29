@@ -13,18 +13,18 @@ include_once($_SERVER['DOCUMENT_ROOT']."/ivr/jsivrFunctions.php");
 
 class jsProfileVerify
 {
-	private $mysqlObj;
-	private $db;
-	private $dbConn;
+	// private $mysqlObj;
+	// private $db;
+	// private $dbConn;
 
-	public function __construct($mysqlObj="",$dbConn="")
-	{
-		if(!$mysqlObj)
-			$this->mysqlObj = new Mysql;
-		if(!$dbConn)
-			$this->dbConn="master";
-		$this->db = $this->mysqlObj->connect("$this->dbConn");
-	}
+	// public function __construct($mysqlObj="",$dbConn="")
+	// {
+	// 	if(!$mysqlObj)
+	// 		$this->mysqlObj = new Mysql;
+	// 	if(!$dbConn)
+	// 		$this->dbConn="master";
+	// 	$this->db = $this->mysqlObj->connect("$this->dbConn");
+	// }
 
         /**
         * This function validate the profile id of the user and active status of profileId

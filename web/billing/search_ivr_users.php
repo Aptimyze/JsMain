@@ -13,7 +13,7 @@
 			elseif($criteria == "ivr")
 				$sql = "SELECT PROFILEID FROM billing.IVR_DETAILS WHERE ID='$keyword'";
 
-			$res = mysql_query_decide($sql) or mysql_error_js();
+			$res = mysql_query_decide($sql) or die($sql.mysql_error());
 			$row = mysql_fetch_array($res);
 			$profileid = $row['PROFILEID'];
 			$username = $row["USERNAME"];
@@ -21,14 +21,14 @@
 			if($criteria == "ivr")
 			{
 				$sql = "SELECT USERNAME FROM newjs.JPROFILE WHERE PROFILEID='$profileid'";
-				$res = mysql_query_decide($sql) or mysql_error_js();
+				$res = mysql_query_decide($sql) or die($sql.mysql_error());
 				$row = mysql_fetch_array($res);
 				$username = $row["USERNAME"];
 			}
 
 			$i=0;
 			$sql_ivr = "SELECT * FROM billing.IVR_DETAILS WHERE PROFILEID='$profileid' ORDER BY ID DESC";
-			$res_ivr = mysql_query_decide($sql_ivr) or mysql_error_js();
+			$res_ivr = mysql_query_decide($sql_ivr) or die($sql_ivr.mysql_error());
 			while($row_ivr = mysql_fetch_array($res_ivr))
 			{
 				unset($services);

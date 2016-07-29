@@ -48,7 +48,7 @@ if(isset($data))
            	}
 
 		$sql.=$where;	
-		$result=mysql_query_decide($sql) or mysql_error_js();
+		$result=mysql_query_decide($sql) or die(mysql_error_js());
 		if(mysql_num_rows($result)>0)
 		{
 			$flag=1;
@@ -92,7 +92,7 @@ if(isset($data))
 						unset($addon_serviceid_ar);
 					}
 					}
-                                	$result_services = mysql_query_decide($sql) or mysql_error_js();
+                                	$result_services = mysql_query_decide($sql) or die(mysql_error_js());
 					while($myrow_result_services = mysql_fetch_array($result_services))
 					{
 						$services[] = $myrow_result_services["NAME"];

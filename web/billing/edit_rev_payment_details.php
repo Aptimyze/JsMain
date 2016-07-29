@@ -207,7 +207,7 @@ if(isset($data))
 				$user = getuser($cid);
 				//query to delete the record.
 				$sql="UPDATE billing.REV_PAYMENT SET STATUS='DELETE', ENTRYBY = '$user', DEL_REASON = '$delreason' WHERE RECEIPTID='$receiptid'";
-				mysql_query_decide($sql) or mysql_error_js();
+				mysql_query_decide($sql) or die(mysql_error_js());
 
 				//query to update due amount by reversing the existing transaction
 				$sql2 = "SELECT SALEID, AMOUNT, TDS FROM billing.REV_PAYMENT WHERE RECEIPTID='$receiptid'";
@@ -256,7 +256,7 @@ if(isset($data))
 	{
 		//query to find payment details.
 		$sql="SELECT RECEIPTID,SALEID,MODE,TYPE,AMOUNT,TDS,CD_NUM,CD_DT,CD_CITY,BANK,OBANK,REASON,STATUS,ENTRY_DT,ENTRYBY,SOURCE,TRANS_NUM,SERVICE_TAX FROM billing.REV_PAYMENT WHERE RECEIPTID='$receiptid'";
-		$res=mysql_query_decide($sql) or mysql_error_js();
+		$res=mysql_query_decide($sql) or die(mysql_error_js());
 		if($row=mysql_fetch_array($res))
 		{
 			$saleid = $row['SALEID'];
