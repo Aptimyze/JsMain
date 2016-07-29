@@ -1393,7 +1393,7 @@ class NEWJS_JPROFILE extends TABLE
                 }
             }
             if ($cache)
-                $sqlSelectDetail = "SELECT SQL_CACHE $fields FROM newjs.JPROFILE WHERE $criteria = :$criteria";
+                $sqlSelectDetail = "SELECTSQL_CACHE $fields FROM newjs.JPROFILE WHERE $criteria = :$criteria";
             else
                 $sqlSelectDetail = "SELECT $fields FROM newjs.JPROFILE WHERE $criteria = :$criteria";
             if (is_array($extraWhereClause)) {
