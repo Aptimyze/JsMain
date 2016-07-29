@@ -4,12 +4,17 @@ class jsException extends PDOException{
 		if($message){
 			$this->message = $message;
 			parent::__construct(self::getCustomMessage($this, $trace),$code);
-			jsException::log($message);
+			   //$exceptionObj->getMessage();
+			  // die(X);
+					LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR,new Exception($message));
+			
+						jsException::log($message);
 		}
 		else{
 			 parent::__construct(self::getCustomMessage($exceptionObj, $trace),$code);
 			if($exceptionObj)
-			{
+			{     		LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,$exceptionObj);
+
 				jsException::log($exceptionObj->getMessage()."\n".$exceptionObj->getTraceAsString());
 			}
 		}
@@ -34,7 +39,8 @@ An error has occurred! We will be correcting this problem at the earliest. Kindl
         }
 
 	static function log($message){
-		sfContext::getInstance()->getLogger()->err($message);
+		LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR,new Exception($message));
+		//sfContext::getInstance()->getLogger()->err($message);
 	}
 
 	static function nonCriticalError($message){
