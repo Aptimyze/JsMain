@@ -835,6 +835,13 @@ $(document).ready(function () {
                 success: function (data) {
                     //console.log("Nitishvcard");
                     chatLoggerPC(data);
+                    if(data.photo == '' && loggedInJspcGender){
+                        if (loggedInJspcGender == "F") {
+                            data.photo = chatConfig.Params[device].noPhotoUrl["self120"]["M"];
+                        } else if (loggedInJspcGender == "M") {
+                            data.photo = chatConfig.Params[device].noPhotoUrl["self120"]["F"];
+                        }
+                    }
                     objJsChat.updateVCard(data, pCheckSum, function () {
                         $('#' + username + '_hover').css({
                             'top': hoverNewTop,
