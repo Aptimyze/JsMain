@@ -344,6 +344,7 @@ class chatActions extends sfActions
 					{
 						$response["cansend"] = false;
 						$response['sent'] = false;
+						$response["errorMsg"] = "You can send more messages if user replies";
 					}
 					else{
 						$msgText = $msgText."||".$request->getParameter('chatMessage');
@@ -360,6 +361,7 @@ class chatActions extends sfActions
 						else
 						{
 							$response["cansend"] = false;
+							$response["errorMsg"] = "You can send more messages if user replies";
 						}
 						$response['sent'] = true;
 					}

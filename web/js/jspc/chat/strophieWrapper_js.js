@@ -272,9 +272,9 @@ var strophieWrapper = {
     },
     //executed after roster has been fetched
     onRosterReceived: function (iq) {
-        console.log("in onRosterReceived");
+        strophieWrapper.stropheLoggerPC("in onRosterReceived");
         strophieWrapper.stropheLoggerPC(iq);
-        console.log(iq);
+        strophieWrapper.stropheLoggerPC(iq);
         $(iq).find("item").each(function () {
             var subscription = $(this).attr("subscription"),
                 jid = $(this).attr("jid"),
@@ -434,16 +434,16 @@ var strophieWrapper = {
             } else {
                 outputObj = {
                     "msg_id": strophieWrapper.getUniqueId(),
-                    "cansend": false,
+                    "cansend": true,
                     "sent":false,
-                    "errorMsg": 'Your current offline, please check your internet connection and try again'
+                    "errorMsg": 'You are current offline, please check your internet connection and try again'
                 };
                 return outputObj;
             }
         } catch (e) {
             outputObj = {
                 "msg_id": strophieWrapper.getUniqueId(),
-                "cansend": false,
+                "cansend": true,
                 "errorMsg": "Something went wrong",
                 "sent":false
             };
@@ -571,10 +571,10 @@ var strophieWrapper = {
                 subscription: "remove"
             });
             strophieWrapper.connectionObj.sendIQ(iq, function (status) {
-                stropheLoggerPC("Removed stanza: " + jid);
+                strophieWrapper.stropheLoggerPC("Removed stanza: " + jid);
             });
         } else {
-            stropheLoggerPC("user does not exist in roster");
+            strophieWrapper.stropheLoggerPC("user does not exist in roster");
         }
     },
     //add user in roster
@@ -589,15 +589,15 @@ var strophieWrapper = {
 		                    .c('query', {xmlns: Strophe.NS.ROSTER})
 		                    .c('item', {jid: rosterParams["jid"], name: rosterParams["nick"], subscription: 'both'});
 		            iq.c('group').t(rosterParams["groupid"]).up();
-		            console.log("in addRosterItem");
-		            console.log(iq);
+		            strophieWrapper.stropheLoggerPC("in addRosterItem");
+		            //console.log(iq);
 		            
 		            strophieWrapper.connectionObj.sendIQ(iq, function(status){
-		                console.log("roster adding stanza: "+jid);
+		                strophieWrapper.stropheLoggerPC("roster adding stanza: "+jid);
 		            });
 		        }
 		        else{
-		            console.log("user cannot be addeded in roster");
+		            strophieWrapper.stropheLoggerPC("user cannot be addeded in roster");
 		        }
 		    }
 		}
