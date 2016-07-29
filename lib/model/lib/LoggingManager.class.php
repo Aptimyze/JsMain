@@ -75,13 +75,14 @@ class LoggingManager
 
      $szStringToWrite=$reqId . "  module_name  action_name  " . $functionname ." works fine at time \n";
      
-     
-      $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
-      $this->createDirectory($filePath);
+     $this->writeToFile($szStringToWrite);
+     //die($szStringToWrite);
+      //$filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
+      //$this->createDirectory($filePath);
      //die($filePath);
-      $fileResource = fopen($filePath,"a");
-        fwrite($fileResource,$szStringToWrite);
-        fclose($fileResource);
+      //$fileResource = fopen($filePath,"a");
+       // fwrite($fileResource,$szStringToWrite);
+       // fclose($fileResource);
         //
     }   
 
@@ -241,6 +242,9 @@ class LoggingManager
     {
         $currDate = Date('Y-m-d');
         $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH."-".$currDate.".log";
+        //die($filePath);
+        //if($szLogString == "579b21ceb734c module_name action_name values set works fine at time")
+        //die($szLogString);
         if ($this->szLogPath && $this->canCreateDir($this->szLogPath)) {
             $this->createDirectory($this->szLogPath);
             $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
