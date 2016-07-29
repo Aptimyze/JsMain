@@ -563,7 +563,7 @@ JsChat.prototype = {
     _bindMaximize: function (elem, userId) {
         var curElem = this;
         $(elem).off("click").on("click", function () {
-            curElem._scrollDown($(".extraPopup"), "retain");
+            curElem._scrollDown($(".extraPopup"), "retain_extra");
             setTimeout(function () {
                 $(".extraChats").css("padding-top", "0px");
             }, 100);
@@ -1274,9 +1274,7 @@ JsChat.prototype = {
         var len = $('chat-box[user-id="' + userId + '"] .talkText').length - 1,
             height = $($('chat-box[user-id="' + userId + '"] .talkText')[len]).height();
         $($('chat-box[user-id="' + userId + '"] .talkText')[len]).next().css("margin-top", height);
-        $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
-           scrollTop: ($('chat-box[user-id="' + userId + '"] .rightBubble').length + $('chat-box[user-id="' + userId + '"] .leftBubble').length) * 50
-        }, 1000);
+        
         if (status != "sending") {
             curElem._changeStatusOfMessg(uniqueId, userId, status);
         }
@@ -1321,6 +1319,9 @@ JsChat.prototype = {
                 var count = curEle._onlineUserMsgMe();
                 that._chatLoggerPlugin("count - " + count);
             }
+            $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
+               scrollTop: ($('chat-box[user-id="' + userId + '"] .rightBubble').length + $('chat-box[user-id="' + userId + '"] .leftBubble').length) * 50
+            }, 1000);
         }
     },
     //get count of minimized chat boxes with unread messages
