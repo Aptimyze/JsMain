@@ -55,7 +55,10 @@ class LoggingManager
     }
 
     /*
-        A function to retrieve uniqueId of the instance of LoggingManager
+        A function to retrieve uniqu
+
+
+        eId of the instance of LoggingManager
 
     */
     public function getUniqueId()
@@ -68,14 +71,16 @@ class LoggingManager
 
     public function allInfo($functionname)
     { 
-        // die("reached");
-        $currDate = Date('Y-m-d');
+        
+        //$currDate = Date('Y-m-d');
 
-     $reqId = sfContext::getInstance()->getRequest()->getAttribute('REQUEST_ID_FOR_TRACKING');
-
-     $szStringToWrite=$reqId . "  module_name  action_name  " . $functionname ." works fine at time \n";
      
-     $this->writeToFile($szStringToWrite);
+     //$moduleName =
+     //$szStringToWrite=$reqId . "  module_name  action_name  " . $functionname ." works fine at time \n";
+     
+    
+     //$iUniqueID = $reqId;
+     //$this->logInfo($szStringToWrite);
      //die($szStringToWrite);
       //$filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
       //$this->createDirectory($filePath);
@@ -130,6 +135,8 @@ class LoggingManager
             if($enLogType > LoggingEnums::LOG_LEVEL) {
                return ;
             }
+            $reqId = sfContext::getInstance()->getRequest()->getAttribute('REQUEST_ID_FOR_TRACKING');
+            $Var = $reqId." ".$Var;
 
             switch ($enLogType) {
                 case LoggingEnums::LOG_INFO:
@@ -201,6 +208,7 @@ class LoggingManager
      */
     private function logInfo($message)
     {
+
         $clientIp = FetchClientIP();
         $szLogType = $this->getLogType(LoggingEnums::LOG_INFO);
         $szLogString = "$szLogType [{$this->iUniqueID}:{$clientIp}]: ".$message;

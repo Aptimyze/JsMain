@@ -287,13 +287,13 @@ class AuthFilter extends sfFilter {
 					die;
 					}
 				}
-            $obj = LoggingManager::getInstance('test');
+           // $obj = LoggingManager::getInstance('test');
             //echo ($obj->getUniqueId());
             
                $headers = getallheaders();
 	            
 	            if (false === isset($headers['RID_AJAX'])) {
-	            	$request->setAttribute('REQUEST_ID_FOR_TRACKING',$obj->getUniqueId()); 
+	            	$request->setAttribute('REQUEST_ID_FOR_TRACKING',uniqid()); 
 	            }
 	            else
 	            	$request->setAttribute('REQUEST_ID_FOR_TRACKING',$headers['RID_AJAX']);
