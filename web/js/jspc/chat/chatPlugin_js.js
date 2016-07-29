@@ -879,7 +879,7 @@ JsChat.prototype = {
     //create side panel of extra chat
     _createSideChatBox: function () {
         var curElem = this;
-        $(curElem._chatBottomPanelID).append('<div class="extraChats pos_abs nchatbtmNegtaive wid30 hgt43 bg5"><div class="extraNumber cursp colrw opa50">+1</div><div><div class="extraPopup pos_abs l0 nchatbtmNegtaive wid153 bg5"><div>');
+        $(curElem._chatBottomPanelID).append('<div class="extraChats cursp pos_abs nchatbtmNegtaive wid30 hgt43 bg5"><div class="extraNumber colrw opa50">+1</div><div><div class="extraPopup pos_abs l0 nchatbtmNegtaive wid153 bg5"><div>');
         $(".extraChats").css("left", curElem._bottomPanelWidth - $('chat-box').length * 250 - 32);
         curElem._scrollUp($(".extraChats"));
         //adding data in extra popup 
@@ -887,7 +887,7 @@ JsChat.prototype = {
             data = $($("chat-box")[len]).attr("user-id");
         this._addDataExtraPopup(data);
         //binding extra chat small icon click to view popup
-        $(".extraNumber").off("click").on("click", function () {
+        $(".extraChats").off("click").on("click", function () {
             var len = $("chat-box").length,
                 value = parseInt($(".extraNumber").text().split("+")[1]),
                 position = len - value - 1;
