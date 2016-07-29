@@ -54,6 +54,37 @@ class LoggingManager
         $this->iUniqueID = uniqid();
     }
 
+    /*
+        A function to retrieve uniqueId of the instance of LoggingManager
+
+    */
+    public function getUniqueId()
+    {   
+        return($this->iUniqueID);
+    }
+    /* A function to print the all info of requests
+
+    */
+
+    public function allInfo($functionname)
+    { 
+        // die("reached");
+        $currDate = Date('Y-m-d');
+
+     $reqId = sfContext::getInstance()->getRequest()->getAttribute('REQUEST_ID_FOR_TRACKING');
+
+     $szStringToWrite=$reqId . "  module_name  action_name  " . $functionname ." works fine at time \n";
+     
+     
+      $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
+      $this->createDirectory($filePath);
+     //die($filePath);
+      $fileResource = fopen($filePath,"a");
+        fwrite($fileResource,$szStringToWrite);
+        fclose($fileResource);
+        //
+    }   
+
     /**
      * __destruct
      */

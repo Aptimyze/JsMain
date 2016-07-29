@@ -91,8 +91,10 @@ class PROFILE_VERIFICATION_DOCUMENTS_ENUM
 		if(!$attribute || !$doc) 
 		{	if($throwException==false)
 				return false;
-			else
+			else{
+				 LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR,new Exception("Empty Attribute or doc are requested in PROFILE_VERIFICATION_DOCUMENTS_ENUM"));
 				throw new Exception("Empty Attribute or doc are requested in PROFILE_VERIFICATION_DOCUMENTS_ENUM");
+			}
 		}
 		else
 		{
@@ -103,6 +105,7 @@ class PROFILE_VERIFICATION_DOCUMENTS_ENUM
 				if($throwException==false)
 					return false;
 			}
+			 LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR,new Exception("Invalid Attribute: $attribute and doc: $doc are requested in PROFILE_VERIFICATION_DOCUMENTS_ENUM"));
 			throw new Exception("Invalid Attribute: $attribute and doc: $doc are requested in PROFILE_VERIFICATION_DOCUMENTS_ENUM");
 		}
 

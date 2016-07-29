@@ -286,6 +286,12 @@ class AuthFilter extends sfFilter {
 					die;
 					}
 				}
+            $obj = LoggingManager::getInstance('test');
+            //echo ($obj->getUniqueId());
+            
+            $request->setAttribute('REQUEST_ID_FOR_TRACKING',$obj->getUniqueId()); 
+            $this->http_header=$request->getAttribute('REQUEST_ID_FOR_TRACKING');       
+            
 			}
 			else
 			{
