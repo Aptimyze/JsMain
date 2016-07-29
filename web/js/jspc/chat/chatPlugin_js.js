@@ -645,6 +645,7 @@ JsChat.prototype = {
             nick = nick + "|"+profileChecksum;
         }
         $(elem).off("click").on("click", function () {
+
             if (curElem.onChatBoxContactButtonsClick && typeof curElem.onChatBoxContactButtonsClick == 'function') {
                 var response = curElem.onChatBoxContactButtonsClick({
                     "buttonType": "BLOCK",
@@ -665,6 +666,7 @@ JsChat.prototype = {
                         $('chat-box[user-id="' + userId + '"] .chatMessage').html('<div id="blockText" class="pos-rel wid90p txtc colorGrey padall-10">You have blocked this user</div><div class="pos-rel fullwid txtc mt20"><div id="undoBlock" class="padall-10 color5 disp_ib cursp">Undo</div></div>');
                         $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
                         //enableClose = true;
+                        $('chat-box[user-id="' + userId + '"] .nchatic_3').css('pointer-events',"none");
                         setTimeout(function () {
                             if (enableClose == true) {
                                 curElem._scrollDown($('chat-box[user-id="' + userId + '"]'), "remove");
@@ -691,6 +693,7 @@ JsChat.prototype = {
                                         enableClose = false;
                                         var htmlStr = sessionStorage.getItem("htmlStr_" + userId);
                                         $('chat-box[user-id="' + userId + '"] .chatMessage').html(htmlStr);
+                                        $('chat-box[user-id="' + userId + '"] .nchatic_3').css('pointer-events',"auto");
                                     } else {
                                         $('chat-box[user-id="' + userId + '"] #undoBlock').html(response.responseMessage);
                                     }
