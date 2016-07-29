@@ -871,7 +871,7 @@ JsChat.prototype = {
     _createSideChatBox: function () {
         var curElem = this;
         $(curElem._chatBottomPanelID).append('<div class="extraChats pos_abs nchatbtmNegtaive wid30 hgt43 bg5"><div class="extraNumber cursp colrw opa50">+1</div><div><div class="extraPopup pos_abs l0 nchatbtmNegtaive wid153 bg5"><div>');
-        $(".extraChats").css("left", $(curElem._chatBottomPanelID).width() - $('chat-box').length * 250 - 32);
+        $(".extraChats").css("left", curElem._bottomPanelWidth - $('chat-box').length * 250 - 32);
         curElem._scrollUp($(".extraChats"));
         //adding data in extra popup 
         var len = $("chat-box").length - 1,
@@ -1130,6 +1130,9 @@ JsChat.prototype = {
             $("chat-box[user-id='" + userId + "'] .chatBoxBar .onlineStatus").html(chat_status);
         }
     },
+
+    _bottomPanelWidth: 0,
+
     //appending chat box
     _chatPanelsBox: function (userId, status, jid, pcheckSum, groupId) {
         this._chatLoggerPlugin("pcheckSum", pcheckSum);
@@ -1137,16 +1140,25 @@ JsChat.prototype = {
         var curElem = this,
             heightPlus = false,
             bodyWidth = $("body").width();
-        if ($(curElem._chatBottomPanelID).length == 0) {
+        /*if ($(curElem._chatBottomPanelID).length == 0) {
             $("body").append("<div id='chatBottomPanel' class='btmNegtaive pos_fix calhgt2 fontlig'></div>");
         }
         var bottomPanelWidth = $(window).width() - $(curElem._parendID).width();
         $(curElem._chatBottomPanelID).css('width', bottomPanelWidth);
         if ($(curElem._chatBottomPanelID).css("bottom") == "-300px") {
             $(curElem._chatBottomPanelID).css("bottom", "0px");
-        }
+        }*/
+        if ($(curElem._chatBottomPanelID).length == 0) {
+            $("body").append(curElem._getHtmlStructure("chatBottomPanel","",""));
+            curElem._bottomPanelWidth = $(window).width() - $(curElem._parendID).width();
+            $(curElem._chatBottomPanelID).css('max-width',curElem._bottomPanelWidth);
+            $(curElem._chatBottomPanelID).css("right", $(curElem._parendID).width());
+            if ($(curElem._chatBottomPanelID).css("bottom") == "-300px") {
+                $(curElem._chatBottomPanelID).css("bottom", "0px");
+            }
+       }
         if ($('chat-box[user-id="' + userId + '"]').length == 0) {
-            var bodyWidth = $(curElem._chatBottomPanelID).width(),
+            var bodyWidth = curElem._bottomPanelWidth,
                 divWidth = ($("chat-box").length + 1) * 250;
             if (divWidth > bodyWidth) {
                 if ($(".extraChats").length == 0) {
