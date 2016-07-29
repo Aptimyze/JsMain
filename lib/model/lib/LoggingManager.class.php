@@ -150,7 +150,7 @@ class LoggingManager
     /**
      * @param $exception
      */
-    private function logException($exception)
+    private function logException($exception,$isSymfony)
     {
         // $errorString = $exception->__toString();
         // $clientIp = FetchClientIP();
@@ -181,8 +181,6 @@ class LoggingManager
 
             $module_name = explode('/', $module_action)[1];
             $action_name = explode('/', $module_action)[2];
-
-
         }
 
 
