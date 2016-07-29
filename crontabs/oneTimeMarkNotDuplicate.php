@@ -70,7 +70,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 			}
 
 
-		  if(($profileArray[$profile2]['GENDER'] != $profileArray[$profile1]['GENDER']) && ($profileArray[$profile2]['ACTIVATED']=='D' || $profileArray[$profile1]['ACTIVATED']=='D')  )
+		  if(($profileArray[$profile2]['GENDER'] != $profileArray[$profile1]['GENDER']) || ($profileArray[$profile2]['ACTIVATED']=='D') || ($profileArray[$profile1]['ACTIVATED']=='D')  )
 		  {
 
 		  	$rawDuplicateObj->setProfileid1($profileArray[$profile1]['PROFILEID']); 			
