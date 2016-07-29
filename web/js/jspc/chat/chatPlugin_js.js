@@ -473,7 +473,13 @@ JsChat.prototype = {
             }, function () {
                 $(this).remove();
             });
-        } else if (type == "retain" || type == "min") {
+        }
+        else if(type == "retain_extra") {
+            elem.animate({
+                bottom: "-1000px"
+            });
+        }
+        else if (type == "retain" || type == "min") {
             elem.animate({
                 bottom: "-307px"
             }, function () {
@@ -794,7 +800,7 @@ JsChat.prototype = {
     _bindExtraUserNameBox: function () {
         var curElem = this;
         $('body').on('click', '.extraUsername', function () {
-            curElem._scrollDown($(".extraPopup"), "retain");
+            curElem._scrollDown($(".extraPopup"), "retain_extra");
             setTimeout(function () {
                 $(".extraChats").css("padding-top", "0px");
             }, 100);
@@ -1174,7 +1180,7 @@ JsChat.prototype = {
             $(".extraChatList").each(function (index, element) {
                 var id = $(this).attr("id").split("_")[1];
                 if (id == userId) {
-                    curElem._scrollDown($(".extraPopup"), "retain");
+                    curElem._scrollDown($(".extraPopup"), "retain_extra");
                     setTimeout(function () {
                         $(".extraChats").css("padding-top", "0px");
                     }, 100);
@@ -1194,8 +1200,8 @@ JsChat.prototype = {
                 }
             });
         }
-        if ($(".extraChats").length > 0 && $(".extraPopup ").css("bottom") != "-300px") {
-            curElem._scrollDown($(".extraPopup "), "retain");
+        if ($(".extraChats").length > 0 && $(".extraPopup ").css("bottom") != "-1000px") {
+            curElem._scrollDown($(".extraPopup "), "retain_extra");
             setTimeout(function () {
                 $(".extraChats").css("padding-top", "0px");
             }, 100);
@@ -1263,6 +1269,7 @@ JsChat.prototype = {
     //append self sent message on opening window again
     _appendSelfMessage: function (message, userId, uniqueId, status) {
         var curElem = this;
+        console.log("inside _appendSelfMessage",$('chat-box[user-id="' + userId + '"] .chatMessage'));
         $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText">' + message + '</div><i class="nchatspr nchatic_8 fr vertM"></i></div>');
         var len = $('chat-box[user-id="' + userId + '"] .talkText').length - 1,
             height = $($('chat-box[user-id="' + userId + '"] .talkText')[len]).height();
