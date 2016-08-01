@@ -1559,11 +1559,19 @@ JsChat.prototype = {
             str += '</div>';
             str += '</div>';
             str += '<ul class="listnone lh22">';
-            str += '<li>' + param2.age + ', ' + param2.height + '</li>';
+            str += '<li>' + param2.age;
+            if(param2.age){
+                str+= ', ';
+            }
+            str += param2.height + '</li>';
             str += '<li>' + param2.caste + '</li>';
             str += '<li>' + param2.education + '</li>';
             str += '<li>' + param2.occupation + '</li>';
-            str += '<li>' + param2.income + ', ' + param2.city + '</li>';
+            str += '<li>' + param2.income;
+            if(param2.income){
+                str += ', ';
+            }
+            str += param2.city + '</li>';
             str += '</ul>';
             str += '</div>';
             str += '<div class="fullwid clearfix pos-rel" id="' + param1 + '_BtnRespnse">';

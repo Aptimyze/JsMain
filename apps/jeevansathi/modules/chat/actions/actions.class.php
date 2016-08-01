@@ -232,7 +232,8 @@ class chatActions extends sfActions
 			$photoObj = $photosArr[$profileid];
 			if ($photoObj) {
 				eval('$temp =$photoObj->get' . $photoType . '();');
-				$photo = $temp;
+                if(! (strstr($temp, '_vis_') || strstr($temp, 'photocomming')) )
+                    $photo = $temp;
 				unset($temp);
 			}
 			//Ends here
