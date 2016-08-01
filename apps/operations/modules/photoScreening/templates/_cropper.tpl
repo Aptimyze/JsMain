@@ -62,7 +62,7 @@
 				<!--start:div-->
 				<div class="fr puwid7">
 					<div class="pup11">
-						<p class="f15 fontlig color11">This is how your profile picture appears on Jeevansathi</p>
+						<p class="f15 fontlig color11">Username: ~$profileData['USERNAME']`</p>
 						<!--start:crop pictures-->
 						<div class="clearfix pt10">
 							<div class="fl">
