@@ -135,16 +135,16 @@ class LoggingManager
      {
       if($this->canLog($Var))
       {
-        if($enLogType > LoggingEnums::LOG_LEVEL) {
+        if(0 && $enLogType > LoggingEnums::LOG_LEVEL) {
          return ;
        }
 
        switch ($enLogType) {
         case LoggingEnums::LOG_INFO:
-        $this->logInfo($Var,$isSymfony,$logArray());
+        $this->logInfo($Var,$isSymfony,$logArray);
         break;
         case LoggingEnums::LOG_DEBUG:
-        $this->logDebug($Var,$isSymfony,$logArray());
+        $this->logDebug($Var,$isSymfony,$logArray);
         break;
         case LoggingEnums::LOG_ERROR:
         $this->logException($Var,$isSymfony,$logArray);
@@ -160,38 +160,34 @@ class LoggingManager
      */
     private function logException($exception,$isSymfony,$logArray)
     {
-      $logData = $this->getLogType(LoggingEnums::LOG_ERROR);
-      $logData = $logData." : ".$this->getLogData($exception,$isSymfony,$logArray);
+
+      $logData = '['. $this->getLogType(LoggingEnums::LOG_ERROR) .']';
+      $logData = $logData.$this->getLogData($exception,$isSymfony,$logArray);
       $this->writeToFile($logData);
     }
 
     private function getLogData($exception,$isSymfony,$logArray)
     {
-      $time = date('h:i:s');
-      $logData = "";
+      $time = date('h:i:s a');
+
       $logId = $this->getLogId($logArray);
       $clientIp = $this->getLogClientIP();
       $channelName = $this->getLogChannelName();
-
       $moduleName = $this->getLogModuleName($isSymfony,$exception,$logArray);
-
       $actionName = $this->getLogActionName($isSymfony,$exception,$logArray);
-      
       $apiVersion = $this->getLogAPI($logArray);
       $message = $this->getLogMessage($logArray);
+      $typeOfError = $this->getLogTypeOfError($logArray);
 
-      $logData = $logData.""..":";
-      $logData = $logData.":".$logId;
-      $logData = $logData." ".$time;
-      $logData = $logData.":";
+      $logData = $logData." [".$logId.":".$clientIp."]";
+      $logData = $logData." [".$time."]";
       $logData = $logData." ".$channelName;
-      $logData = $logData." ".$clientIp;
-      $logData = $logData." ".$statusCode;
       $logData = $logData." ".$moduleName;
       $logData = $logData." ".$actionName;
+      $logData = $logData." ".$apiVersion;
       $logData = $logData." ".$typeOfError;
+      $logData = $logData." ".$statusCode;
       $logData = $logData." ".$message;
-      $logData = $logData." ".$exception;
       return $logData;
     }
 
@@ -228,9 +224,9 @@ class LoggingManager
     }
 
     /**
-     * @return apiVersion
+     * @return typeOfError
      */
-    public function getLogError($logArray)
+    public function getLogTypeOfError($logArray)
     {
       if ( !isset($logArray['typeOfError']))
       {
@@ -280,6 +276,7 @@ class LoggingManager
      * @return module name
      * @param isSymfony for exception raised from either symfony or non-symfony
      * @param $exception 
+     * @param $logArray the array which consists info related to log 
      */
     public function getLogModuleName($isSymfony = true,$exception = null,$logArray = array())
     {
@@ -287,7 +284,7 @@ class LoggingManager
       {
         if ( $isSymfony )
         {
-          return sfContext::getInstance()->getModuleName();
+          $moduleName =  sfContext::getInstance()->getModuleName();
         }
         else
         {
@@ -295,7 +292,6 @@ class LoggingManager
           $exceptionLiesIn = $exception->getTrace()[0]['file'];
           $module_action = str_replace(JsConstants::$docRoot, "", $exceptionLiesIn);
           $moduleName = explode('/', $module_action)[1];
-          return $moduleName;
         }
       }
       else
@@ -316,22 +312,21 @@ class LoggingManager
       {
         if ( $isSymfony )
         {
-          return sfContext::getInstance()->getActionName();
+          $actionName = sfContext::getInstance()->getActionName();
         }
         else
         {
           $exceptionRaisedFrom = $exception->getFile();
           $exceptionLiesIn = $exception->getTrace()[0]['file'];
           $module_action = str_replace(JsConstants::$docRoot, "", $exceptionLiesIn);
-          $action_name = explode('/', $module_action)[2];
-          return $action_name;
+          $actionName = explode('/', $module_action)[2];
         }
       }
       else
       {
         $actionName = $logArray['actionName'];
       }
-      return $action_name;
+      return $actionName;
     }
 
     /**
@@ -339,8 +334,8 @@ class LoggingManager
      */
     private function logInfo($message,$isSymfony=true,$logArray = array())
     {
-      $logData = $this->getLogType(LoggingEnums::LOG_INFO);
-      $logData = $logData." : ".$this->getLogData($message,$isSymfony,$logArray);
+      $logData = '['. $this->getLogType(LoggingEnums::LOG_INFO) .']';
+      $logData = $logData.$this->getLogData($message,$isSymfony,$logArray);
       $this->writeToFile($logData);
     }
 
@@ -349,8 +344,9 @@ class LoggingManager
      */
     private function logDebug($message,$isSymfony=true,$logArray = array())
     {
-      $logData = $this->getLogType(LoggingEnums::LOG_DEBUG);
-      $logData = $logData." : ".$this->getLogData($message,$isSymfony,$logArray);
+      $logData = '['. $this->getLogType(LoggingEnums::LOG_DEBUG) .']';
+      $logData = $logData.$this->getLogData($message,$isSymfony,$logArray);
+      $logData = $logData." ".$message;
       $this->writeToFile($logData);
     }
 
@@ -372,6 +368,7 @@ class LoggingManager
     {
         $currDate = Date('Y-m-d');
         $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH."-".$currDate.".log";
+
         if ($this->szLogPath && $this->canCreateDir($this->szLogPath)) {
             $this->createDirectory($this->szLogPath);
             $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
