@@ -118,7 +118,7 @@ function getChatHistory(apiParams){
                 //console.log(response);
                 if(typeof response["Message"] != "undefined"){
                     //call plugin function to append history in div
-                    objJsChat._appendChatHistory(apiParams["extraParams"]["from"],apiParams["extraParams"]["to"],response["Message"]);
+                    objJsChat._appendChatHistory(apiParams["extraParams"]["from"],apiParams["extraParams"]["to"],$.parseJSON(response["Message"]));
                 }
             }
         },
@@ -432,9 +432,9 @@ function invokePluginReceivedMsgHandler(msgObj) {
                     objJsChat._changeStatusOfMessg(msgObj["msg_id"], msgObj["from"], "recievedRead");
                     break;
                 case strophieWrapper.msgStates["FORWARDED"]:
-                    //console.log("here_for");
-                    //chatLoggerPC("received received read status to " + msgObj["to"] + " from " + msgObj["from"] + "-" + msgObj["msg_id"]);
-                    //objJsChat._changeStatusOfMessg(msgObj["msg_id"], msgObj["from"], "recievedRead");
+                    console.log("here_for");
+                    console.log(msgObj);
+                    //objJsChat._appendSelfMessage(msgObj["body"],msgObj["to"],msgObj["msg_id"]);
                     break;
             }
             /*if(msgObj['msg_state'] == "received"){

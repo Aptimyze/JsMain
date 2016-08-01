@@ -1314,17 +1314,17 @@ JsChat.prototype = {
     
     //append chat history in chat box
     _appendChatHistory: function(selfJID,otherJID,communication){
-        var uniqueId= '123',self_id = selfJID.split("@")[0],other_id = otherJID.split("@")[0],historyHTML="";
+        var self_id = selfJID.split("@")[0],other_id = otherJID.split("@")[0],historyHTML="";
         if($('chat-box[user-id="' + other_id + '"]').length != 0){
             $.each(communication,function(key,logObj){
                 //console.log(logObj);
                 if(parseInt(logObj["SENDER"]) == self_id){
                     //append self sent message
-                    historyHTML = historyHTML + '<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + uniqueId + '" class="talkText">' + logObj["MESSAGE"] + '</div></div>';
+                    historyHTML = historyHTML + '<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["ID"] + '" class="talkText">' + logObj["MESSAGE"] + '</div></div>';
                 }
                 else if(parseInt(logObj["SENDER"]) == other_id){
                     //append received message
-                    historyHTML = historyHTML + '<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + uniqueId + '" class="talkText">' + logObj["MESSAGE"] + '</div></div>';
+                    historyHTML = historyHTML + '<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["ID"] + '" class="talkText">' + logObj["MESSAGE"] + '</div></div>';
                 }
                 //console.log(historyHTML);
                 if(historyHTML){
