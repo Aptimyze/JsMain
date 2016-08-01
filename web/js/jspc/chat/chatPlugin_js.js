@@ -196,6 +196,11 @@ JsChat.prototype = {
         {
             $(curEle._parendID).fadeOut('slow',function(){
                 curEle.minimizedPanelHTML();
+            }).promise().done(function(){
+                $(curEle._maxChatBarOut).click(function() {
+                console.log('aaa1');
+                curEle._maximizeChatPanel();
+                });
             });
         } else {
             $(this._parendID).animate({
@@ -350,6 +355,30 @@ JsChat.prototype = {
         });
         delete that;
     },
+    
+    manageChatBoxOnChange: function(){
+        console.log("111111111111111",$(".profileIcon"));
+        var id,localVal,group,status,closeArr=[];
+        $(".profileIcon").each(function(index, element) {
+                id = $(this).attr("id").split("_")[0];
+                console.log("id",id);
+                localVal = localStorage.getItem("userId_"+id);
+                console.log(localVal);
+                if(localVal){
+                    group = localVal.split("_")[0];
+                    status = localVal.split("_")[1];
+                    $("#"+id+"_"+group).click();
+                    console.log("status",status);
+                    if(status == "close") {
+                        closeArr.push(id);
+                    }
+                }	
+            });
+        $.each(closeArr, function(index,elem){
+            $('chat-box[user-id="' + elem + '"] .nchatic_2').click();
+        });
+    },
+    
     addListingInit: function (data) {
         var elem = this,
             statusArr = [],
@@ -455,6 +484,7 @@ JsChat.prototype = {
             apiParams["photoType"] = "ProfilePic120Url";
             requestListingPhoto(apiParams);
         }
+        this.manageChatBoxOnChange();
     },
     //add photo in tuple div of listing
     _addListingPhoto: function (photoObj) {
@@ -488,12 +518,14 @@ JsChat.prototype = {
     },
     //scrolling down chat box
     _scrollDown: function (elem, type) {
+        var userId = $(elem).attr("user-id");
         this._chatLoggerPlugin(elem);
         if (type == "remove") {
             elem.animate({
                 bottom: "-350px"
             }, function () {
                 $(this).remove();
+                localStorage.removeItem("userId_"+userId);
             });
         }
         else if(type == "retain_extra") {
@@ -516,6 +548,8 @@ JsChat.prototype = {
                 elem.find(".downBarUserName").addClass("downBarUserNameMin");
                 if (type != "min") {
                     $(elem).attr("pos-state", "close");
+                    var group = $(elem).attr("group-id");
+                    localStorage.setItem("userId_"+userId,group+"_close");
                 }
             });
         }
@@ -549,6 +583,9 @@ JsChat.prototype = {
                 scrollTop: (elem.find(".rightBubble").length + elem.find(".leftBubble").length) * 50
             }, 1000);
             $(elem).attr("pos-state", "open");
+            var postitionState = $(elem).attr("pos-state"),userId = $(elem).attr("user-id");
+            var groupId = $(elem).attr("group-id");
+            localStorage.setItem("userId_"+userId, groupId+"_"+postitionState);
         });
         curEle._handleUnreadMessages(elem);
     },
@@ -967,6 +1004,10 @@ JsChat.prototype = {
         return chatBoxType;
     },
     _postChatPanelsBox: function (userId) {
+        console.log("manviiiii",$('chat-box[user-id="' + userId + '"]'));
+        var postitionState = $('chat-box[user-id="' + userId + '"]').attr("pos-state");
+        var groupId = $('chat-box[user-id="' + userId + '"]').attr("group-id");
+        localStorage.setItem("userId_"+userId, groupId+"_"+postitionState);
         var curElem = this,
             membership = "paid"; //get membership status-pending
         this._chatLoggerPlugin("in _postChatPanelsBox");
@@ -1782,6 +1823,7 @@ JsChat.prototype = {
             curEle._addChatTop();
             curEle.addTab();
             curEle.onChatLoginSuccess();
+            
         });
     },
     /*
