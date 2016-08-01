@@ -42,8 +42,7 @@ $profileObj->getDetail("","","USERNAME,EMAIL");
                                
 
 connect_db();
-$profileid=explode('i',$profilechecksum);
-$profileid=intval($profileid[1]);
+$profileid=JsCommon::getProfileFromChecksum($profilechecksum);
 $lang=$_COOKIE["JS_LANG"];
 $VIEWPROFILE_IMAGE_URL="http://ser4.jeevansathi.com/profile";
 if ($crmback == "admin")
@@ -86,8 +85,7 @@ if($_POST['isJson']){
 	$name=$finalData["name"];
 	$femail[0]=$finalData["femail[]"];
 	$profilechecksum=$finalData["profilechecksum"];
-	$profileid=explode('i',$profilechecksum);
-	$profileid=intval($profileid[1]);
+	$profileid=JsCommon::getProfileFromChecksum($profilechecksum);
 	$ajax_error=$finalData["ajax_error"];
 	$invitation=$finalData["invitation"];
 	$send=$finalData["send"];
@@ -257,7 +255,7 @@ if($send)
 		$smarty->assign("OCCUPATION",$occupation);
 		$smarty->assign("HEIGHT",$height);
 		//$msg=$smarty->fetch("forward2friend.htm");
-		$msg=$smarty->fetch("mail_to_friend.htm");
+		$msg=$smarty->fetch("mail_to_friend.htm");echo($msg);die;
 		for($i=0;$i<count($femail);$i++)
 		{
 			if($femail[$i])
