@@ -37,6 +37,23 @@ chatConfig.Params = {
         "BLOCK":{},
         "UNBLOCK":{}
     },
+    categoryTrackingParams:{
+        "intrec":{
+            "responseTracking":8
+        },
+        "dpp":{
+            "stype":"WV"
+        },
+        "intsent":{
+            "stype":"WV"
+        },
+        "shortlist":{
+            "stype":"WV"
+        },
+        "acceptance":{
+            
+        },
+    },
     //api url for getting photo
     photoUrl:"/api/v1/social/getMultiUserPhoto",
     //api config for pre acceptance messages
