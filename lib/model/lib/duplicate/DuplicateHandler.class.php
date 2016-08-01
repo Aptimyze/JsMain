@@ -30,7 +30,7 @@ class DuplicateHandler
 
 // added by Palash to ensure that once if a pair is marked confirmed duplicate then it cant be marked again as duplicate
 	  $alreadyLogged=(new DUPLICATE_PROFILE_LOG())->fetchResultForAPair($first,$second);
-	  if($alreadyLogged['cnt']) return;
+	  if($alreadyLogged['IS_DUPLICATE']=='YES') return;
 //////////////////////////////////////////////	
 
 	//Added by Anand to handle duplicate profiles for fto

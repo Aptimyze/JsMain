@@ -123,14 +123,10 @@ protected function phoneUpdateProcess($message)
 			$phoneLogObj= new PHONE_VERIFIED_LOG();
 			$phoneLogObj->insertEntry($profileid,$this->getPhoneType(), $this->getPhone(),$message);
 			
-			try
-			{
-				Duplicate::logIfDuplicate($this->profileObject,$this->phone);            
-			}
-			catch(PDOException $e)
-			{
-				jsCacheWrapperException::logThis($e);
-			}
+			
+			Duplicate::logIfDuplicate($this->profileObject,$this->phone);            
+			
+			
 
 			JsMemcache::getInstance()->set($profileid."_PHONE_VERIFIED",'Y');
 		
