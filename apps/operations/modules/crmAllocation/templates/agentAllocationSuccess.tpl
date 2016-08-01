@@ -220,21 +220,25 @@
 	</tr>
 </table>
 <table width=100% align="center">
-	<tr class=fieldsnew>
+	<!--<tr class=fieldsnew>
 		<td align=center><a href="~sfConfig::get('app_site_url')`/operations.php/crmInterface/editDppInterface?profileChecksum=~$profileChecksum`&cid=~$cid`" target="_blank">Edit desired partner profile for this user</a><br><br></td>
-	</tr>
+	</tr>-->
 	<tr class=fieldsnew>
 		<td align=center><a href="~sfConfig::get('app_site_url')`/search/partnermatches?checksum=~$checksum`&echecksum=~$echecksum`&profileChecksum=~$profileChecksum`" target="_blank">View Your Partner Matches</a><br><br></td>
 	</tr>
 	<tr class=fieldsnew>
 		<td align=center><a href="~sfConfig::get('app_site_url')`/crm/mail_to_users.php?cid=~$cid`&profileid=~$profileid`&username=~$username`" target="_blank">Click here to send mail to this user</a><br><br></td>
 	</tr>
+~if $set_filter`
 	<tr class=fieldsnew>
 		<td align=center><a href="~sfConfig::get('app_site_url')`/operations.php/crmInterface/editDppInterface?profileChecksum=~$profileChecksum`&cid=~$cid`" target="_blank">Click here to set filter for this user</a><br><br></td>
 	</tr>
+~/if`
+~if $online_payment`
 	<tr class=fieldsnew>
 		<td align=center><a href="~sfConfig::get('app_site_url')`/crm/online_pickup.php?cid=~$cid`&pid=~$profileid`&username=~$username`" target="_blank">Click here for online payment request </a><br><br></td>
 	</tr>
+~/if`
 	<tr class=fieldsnew>
 		<td align=center><a href="~sfConfig::get('app_site_url')`/crm/phone_number_validation.php?cid=~$cid`&profileid=~$profileid`" target="_blank">Click here to verify Contact Number(s) </a></td>
 	</tr>
