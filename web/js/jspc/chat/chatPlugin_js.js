@@ -138,6 +138,7 @@ JsChat.prototype = {
         });
         if (this._checkWidth()) {
             this._chatLoggerPlugin('screen size less than 1024');
+            $(this._parendID).fadeIn('slow');
         } else {
             $("body").animate({
                 width: '80%'
@@ -191,7 +192,12 @@ JsChat.prototype = {
             curEle._scrollDown($(this), "min");
         });
         $(curEle._chatBottomPanelID).hide();
-        if (this._checkWidth()) {} else {
+        if (curEle._checkWidth()) 
+        {
+            $(curEle._parendID).fadeOut('slow',function(){
+                curEle.minimizedPanelHTML();
+            });
+        } else {
             $(this._parendID).animate({
                 right: '-100%'
             }, 1000);
@@ -1794,7 +1800,15 @@ JsChat.prototype = {
         var divElement = document.createElement("Div");
         $(divElement).addClass('pos_fix chatbg chatpos1 z7 js-openOutPanel').appendTo(this._mainID);
         this._createPrototypeChatBox();
-        if (this._checkWidth()) {} else {
+        var _this = this;
+        if (this._checkWidth()) {
+            $(this._parendID).css('display','none');
+            $(this._parendID).addClass('chatw5').css('height', this._getHeight());
+            this.minimizedPanelHTML();
+            $(this._minPanelId).click(function(){
+                _this._maximizeChatPanel();
+            });
+        } else {
             $('body').css('width', '80%');
             $(this._parendID).addClass('wid20p').css('height', this._getHeight());
         }
