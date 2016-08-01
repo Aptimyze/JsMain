@@ -24,18 +24,18 @@ class pushChatAction extends sfAction
 		if ($request->getParameter("action")=="pushChat")
 		{
 			
-			
 			$inputJSON = file_get_contents('php://input');
 			$input= json_decode( $inputJSON, TRUE );
-			
-			
-			
+			ValidationHandler::getValidationHandler("", $inputJSON);
 				$sender=substr($input['from'],0,strrpos($input['from'] ,"@"));
 				$receiver=substr($input['to'],0,strrpos($input['to'] ,"@"));
 				$message=$input['msg'];
+				$chatID=$input['id'];
 				$request->setParameter("communicationType",'C');
 				$communicationType='C';
-				$request->setParameter("message",$message);
+				if($message)
+					$request->setParameter("message",$message);
+				//echo $request->setParameter("chatID",$chatID);die;
 			
 			$inputValidateObj->validatePushChat($request);
 			$output = $inputValidateObj->getResponse();
@@ -48,12 +48,13 @@ class pushChatAction extends sfAction
 				$this->receiverProfile= new Profile("",$receiver);
 				$this->receiverProfile->getDetail($receiver, "PROFILEID");
 					
-				$js_communication=new JS_Communication($this->senderProfile,$this->receiverProfile,$communicationType,$message);
+				$js_communication=new JS_Communication($this->senderProfile,$this->receiverProfile,$communicationType,$message,$chatID);
 				$Id=$js_communication->storeCommunication();
 				if($Id)
 				{
 					$responseArray["isSent"] = "true";
-					$responseArray["chatId"] = $Id;
+					$responseArray["msgId"] = $Id;
+					$responseArray["chatId"] = $chatID;
 				}
 			}
 		}

@@ -7,14 +7,16 @@ class JS_Communication
 	private $contactObj;
 	private $communicationType;
 	private $message;
+	private $chatID;
 	
-	public function __construct($loginProfile, $otherProfile,$communicationType,$message)
+	public function __construct($loginProfile, $otherProfile,$communicationType,$message,$chatID=0)
 	{
 		$this->loginProfile = $loginProfile;
 		$this->otherProfile = $otherProfile;
 		$this->contactObj = new Contacts($this->loginProfile, $this->otherProfile);
 		$this->communicationType=$communicationType;
 		$this->message=$message;
+		$this->chatID=$chatID;
 	}
 
 	public function storeCommunication()
@@ -29,7 +31,7 @@ class JS_Communication
 		
 		if($this->communicationType="C"){
 			$dbObj = new newjs_CHAT_LOG($dbName1);		
-			$dbObj->insertIntoChatLog($id,$this->loginProfile->getPROFILEID(),$this->otherProfile->getPROFILEID(),'N','N',0,$type,'N','U','U',0);
+			$dbObj->insertIntoChatLog($id,$this->loginProfile->getPROFILEID(),$this->otherProfile->getPROFILEID(),'N','N',0,$type,'N','U','U',$this->chatID);//sfContext::getInstance()->getRequest()->getParameter("chatID"));
 			
 			$dbObjMessage = new newjs_MESSAGES($dbName1);
 			$dbObjMessage->insertSingleMessage($id,$this->message);
