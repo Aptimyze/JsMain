@@ -713,10 +713,12 @@ JsChat.prototype = {
                         });
                     } else {
                         //var htmlStr = sessionStorage.getItem("htmlStr_" + userId);
+                        $('chat-box[user-id="' + userId + '"] #chatBoxErr').remove();
                         $('chat-box[user-id="' + userId + '"] .chatMessage').append("<div class='color5 pos-rel txtc fullwid nchatm90' id='chatBoxErr'>" + response.responseMessage + "</div>");
                         //$(this).html(response.responseMessage);
                     }
                 } else {
+                    $('chat-box[user-id="' + userId + '"] #chatBoxErr').remove();
                     $('chat-box[user-id="' + userId + '"] .chatMessage').append("<div class='color5 pos-rel txtc fullwid nchatm90' id='chatBoxErr'>Something went wrong,please try later</div>");
                 }
             }
