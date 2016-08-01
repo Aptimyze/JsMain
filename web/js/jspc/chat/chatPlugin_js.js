@@ -780,6 +780,7 @@ JsChat.prototype = {
                                 $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + messageId);
                             if(msgSendOutput["sent"] == false || msgSendOutput["cansend"] == false){
                                 var error_msg = msgSendOutput['errorMsg'] || "Something went wrong";
+                                $('chat-box[user-id="' + userId + '"] #restrictMessgTxt').remove();
                                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p">'+error_msg+'</div>').addClass("restrictMessg2");
                                 if(msgSendOutput["cansend"] == false){
                                     $(curElem).prop("disabled", true);
