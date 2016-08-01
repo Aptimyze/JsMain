@@ -978,17 +978,26 @@ JsChat.prototype = {
     _setChatBoxInnerDiv: function (userId, chatBoxType) {
         this._chatLoggerPlugin();
         this._chatLoggerPlugin("in _setChatBoxInnerDiv");
+
         var curElem = this,
             that = this,
             new_contact_state = chatBoxType,
             response,
             checkSum = $("chat-box[user-id='" + userId + "'").attr("data-checks"),
             groupId = $("chat-box[user-id='" + userId + "'").attr("group-id"),
-            user_name = $(".chatlist li[id='" + userId + "_" + groupId + "'] div").html();
+            user_name = $(".chatlist li[id='" + userId + "_" + groupId + "'] div").html(),
+            user_jid = $("chat-box[user-id='" + userId + "'").attr("data-jid");
         var nick;
         if(checkSum){
             nick = nick + "|"+checkSum;
         }
+        //fetch msg history
+        getChatHistory({
+                "extraParams":{
+                    "from":getConnectedUserJID(),
+                    "to":user_jid
+                }
+        });
         this._chatLoggerPlugin(curElem);
         switch (chatBoxType) {
         case curElem._contactStatusMapping["pg_interest_pending"]["key"]:
@@ -1131,9 +1140,7 @@ JsChat.prototype = {
         case curElem._contactStatusMapping["both_accepted"]["key"]:
             break;
         }
-        //TODO: fire query to get message history as well as offline messages
-        //append div of auto handle length with blank initially
-        //chat api will put content in it in async mode  -manvi
+        
     },
     //based on membership and chatboxtype,enable or disable chat textarea in chat box
     _enableChatTextArea: function (chatBoxType, userId, membership) {
@@ -1246,9 +1253,10 @@ JsChat.prototype = {
             chatBoxProto = Object.create(HTMLElement.prototype),
             userId, status, response;
         chatBoxProto.attachedCallback = function () {
-            this.innerHTML = '<div class="chatBoxBar fullwid hgt57 bg5 pos-rel fullwid"></div><div class="chatArea fullwid fullhgt"><div class="messageArea f13 bg13 fullhgt"><div class="chatMessage pos_abs fullwid scrollxy" style="height: 246px;"><div class="spinner"></div></div></div><div class="chatInput brdrbtm_new fullwid btm0 pos-abs bg-white"><textarea cols="23" style="width: 220px;" id="txtArea"  class="inputText lh20 brdr-0 padall-10 colorGrey hgt18 fontlig" placeholder="Write message"></textarea></div></div>';
-            $(this).addClass("z7 btm0 brd_new fr mr7 fullhgt wid240 pos-rel disp_ib");
             userId = $(this).attr("user-id");
+            this.innerHTML = '<div class="chatBoxBar fullwid hgt57 bg5 pos-rel fullwid"></div><div class="chatArea fullwid fullhgt"><div class="messageArea f13 bg13 fullhgt"><div class="chatMessage pos_abs fullwid scrollxy" style="height: 246px;"><div id="chatHistory_'+userId+'"></div><div class="spinner"></div></div></div><div class="chatInput brdrbtm_new fullwid btm0 pos-abs bg-white"><textarea cols="23" style="width: 220px;" id="txtArea"  class="inputText lh20 brdr-0 padall-10 colorGrey hgt18 fontlig" placeholder="Write message"></textarea></div></div>';
+            $(this).addClass("z7 btm0 brd_new fr mr7 fullhgt wid240 pos-rel disp_ib");
+            
             status = $(this).attr("status-user");
             elem._appendInnerHtml(userId, status);
         };
