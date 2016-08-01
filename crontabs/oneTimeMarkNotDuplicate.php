@@ -105,7 +105,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 	  		if($value=='Y')
 	  		{
 	  			$notDuplicateObj->removeProfileAsDuplicate($key);
-  				$IntlObj->deleteRecords($key);
+  				$IntlObj->deleteRecord($key);
 	  		}
 
 
