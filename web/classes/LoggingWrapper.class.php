@@ -37,11 +37,11 @@ class LoggingWrapper
      * @param $enLogType
      * @param $Var
      */
-	public function sendLog($enLogType,$Var=null)
+	public function sendLog($enLogType,$Var=null,$logArray = array())
 	{
-		// get module name 
-		$module = 'jsadmin';
-		return LoggingManager::getInstance($module)->logThis($enLogType,$Var,false);
+		// get module name
+		$module =LoggingManager::getInstance(LoggingEnums::COMMONLOG)->getLogModuleName($isSymfony,$Var,$logArray);
+		return LoggingManager::getInstance($module)->logThis($enLogType,$Var,$logArray,false);
 	}
 }
 

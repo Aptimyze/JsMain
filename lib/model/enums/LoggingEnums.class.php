@@ -19,9 +19,9 @@ class LoggingEnums
     // 1 for logging all modules in same file, 0 different
     const LOG_TOGETHER = 0;
     // module names
-    const JsA = 'jsadmin';
-
-    const Ex500or404 = '500-404';
+    const JSA = 'jsadmin';
+    const COMMONLOG = 'common';
+    const EX500OR404 = '500-404';
     // name of channels returned
     const P = 'P';
     const A = 'A';

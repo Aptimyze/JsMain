@@ -18,7 +18,7 @@ class LoggingManager
     /**
      * Const of File Base Path
      */
-    const LOG_FILE_BASE_PATH = '/uploads/Logger/log';
+    const LOG_FILE_BASE_PATH = '/uploads/Logger/';
 
     /**
      * @var null
