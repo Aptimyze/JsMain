@@ -72,16 +72,18 @@ class LoggingManager
         $currDate = Date('Y-m-d');
 
      $reqId = sfContext::getInstance()->getRequest()->getAttribute('REQUEST_ID_FOR_TRACKING');
-
+    // die($reqId);
      $szStringToWrite=$reqId . "  module_name  action_name  " . $functionname ." works fine at time \n";
+     $this->writeToFile($szStringToWrite);
      
-     
+    /* 
       $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
       $this->createDirectory($filePath);
      //die($filePath);
       $fileResource = fopen($filePath,"a");
         fwrite($fileResource,$szStringToWrite);
         fclose($fileResource);
+        */
         //
     }   
 
@@ -139,10 +141,10 @@ class LoggingManager
 
        switch ($enLogType) {
         case LoggingEnums::LOG_INFO:
-        $this->logInfo($Var);
+        $this->logInfo($Var,$isSymfony,$logArray());
         break;
         case LoggingEnums::LOG_DEBUG:
-        $this->logDebug($Var);
+        $this->logDebug($Var,$isSymfony,$logArray());
         break;
         case LoggingEnums::LOG_ERROR:
         $this->logException($Var,$isSymfony,$logArray);
@@ -167,6 +169,7 @@ class LoggingManager
     {
       $time = date('h:i:s');
       $logData = "";
+      $logId = $this->getLogId($logArray);
       $clientIp = $this->getLogClientIP();
       $channelName = $this->getLogChannelName();
 
@@ -177,8 +180,8 @@ class LoggingManager
       $apiVersion = $this->getLogAPI($logArray);
       $message = $this->getLogMessage($logArray);
 
-      $logData = $logData."".$this->iUniqueID.":";
-      $logData = $logData.":";
+      $logData = $logData.""..":";
+      $logData = $logData.":".$logId;
       $logData = $logData." ".$time;
       $logData = $logData.":";
       $logData = $logData." ".$channelName;
@@ -190,6 +193,22 @@ class LoggingManager
       $logData = $logData." ".$message;
       $logData = $logData." ".$exception;
       return $logData;
+    }
+
+    /**
+     * @return logId
+     */
+    public function getLogId($logArray)
+    {
+      if ( !isset($logArray['logId']))
+      {
+        $logId = $this->iUniqueID;
+      }
+      else
+      {
+        $logId = $logArray['logId'];
+      }
+      return $logId;
     }
 
     /**
