@@ -870,7 +870,7 @@ JsChat.prototype = {
     //adding data in extra popup
     _addDataExtraPopup: function (data) {
         var groupId = $("chat-box[user-id='" + data + "']").attr("group-id");
-        $(".extraPopup").append('<div id="extra_' + data + '" class="extraChatList pad8_new"><div class="extraUsername cursp colrw minWid65 disp_ib pad8_new fontlig f14">' + $(".chatlist li[id='" + data + "_" + groupId + "'] div").html() + '</div><div class="pinkBubble vertM scir disp_ib padall-10"><span class="noOfMessg f13 pos-abs">1</span></div><i class="nchatspr nchatic_4 cursp disp_ib mt6 ml10"></i></div>');
+        $(".extraPopup").append('<div id="extra_' + data + '" class="extraChatList pad8_new"><div class="extraUsername cursp colrw minWid65 disp_ib pad8_new fontlig f14">' + $(".chatlist li[id='" + data + "_" + groupId + "'] div").html() + '</div><div class="pinkBubble scir disp_ib padall-10"><span class="noOfMessg f13 pos-abs">1</span></div><i class="nchatspr fr nchatic_4 cursp disp_ib mt6 ml10"></i></div>');
         $("#extra_" + data + " .pinkBubble span").html($('chat-box[user-id="' + data + '"] .chatBoxBar .pinkBubble2 span').html());
         if ($("#extra_" + data + " .pinkBubble span").html() == 0) {
             $("#extra_" + data + " .pinkBubble").hide();
