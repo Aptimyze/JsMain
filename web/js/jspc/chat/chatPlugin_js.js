@@ -453,10 +453,14 @@ JsChat.prototype = {
         if (key == "new") {
             this._chatLoggerPlugin("ankita_adding" + contactID + " in groupID");
             this._chatLoggerPlugin(contactHTML);
-            $('div.' + groupID + ' ul').append(contactHTML);
+            //if(status == "offline")
+                $('div.' + groupID + ' ul').append(contactHTML);
+            /*else
+                $('div.' + groupID + ' ul').prepend(contactHTML);*/
         } else if (key == "existing") {
             this._chatLoggerPlugin("changing icon");
             if (status == "online") {
+                //move this element to top---manvi
                 //add online chat_status icon
                 if ($('#' + contactID + "_" + groupID).find('.nchatspr').length == 0) {
                     $(this._mainID).find($('#' + contactID + "_" + groupID)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
@@ -1112,7 +1116,9 @@ JsChat.prototype = {
         case curElem._contactStatusMapping["both_accepted"]["key"]:
             break;
         }
-        //TODO: fire query to get message history as well as offline messages  
+        //TODO: fire query to get message history as well as offline messages
+        //append div of auto handle length with blank initially
+        //chat api will put content in it in async mode  
     },
     //based on membership and chatboxtype,enable or disable chat textarea in chat box
     _enableChatTextArea: function (chatBoxType, userId, membership) {
@@ -1272,7 +1278,7 @@ JsChat.prototype = {
     //append self sent message on opening window again
     _appendSelfMessage: function (message, userId, uniqueId, status) {
         var curElem = this;
-        console.log("inside _appendSelfMessage",$('chat-box[user-id="' + userId + '"] .chatMessage'));
+        //console.log("inside _appendSelfMessage",$('chat-box[user-id="' + userId + '"] .chatMessage'));
         $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText">' + message + '</div><i class="nchatspr nchatic_8 fr vertM"></i></div>');
         var len = $('chat-box[user-id="' + userId + '"] .talkText').length - 1,
             height = $($('chat-box[user-id="' + userId + '"] .talkText')[len]).height();

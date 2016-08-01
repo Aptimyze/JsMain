@@ -39,7 +39,24 @@ chatConfig.Params = {
     },
     //api url for getting photo
     photoUrl:"/api/v1/social/getMultiUserPhoto",
-    PC: {
+    //api config for pre acceptance messages
+    preAcceptChat: {
+        "apiUrl": "/api/v1/chat/sendEOI",
+        "extraParams": {
+            "stype": "WV",
+            "pageSource":"chat",
+            "channel":'pc'
+        }
+    },
+    //api config for chat history
+    chatHistoryApi:{
+        "apiUrl":"/contacts/popChat",
+        "extraParams":{
+            "pageSource":"chat",
+            "channel":'pc'
+        }
+    },
+    pc: {
         updateRosterFromFrontend:false,
         bosh_service_url: 'ws://' + openfireUrl + '/ws/', //connection manager for openfire
         keepalive: true, //keep logged in session alive
@@ -210,15 +227,7 @@ chatConfig.Params = {
                 "enableChat": true
             }
         },
-        //api config for pre acceptance messages
-        preAcceptChat: {
-            "apiUrl": "/api/v1/chat/sendEOI",
-            "extraParams": {
-                "stype": "WV",
-                "pageSource":"chat",
-                "channel":'pc'
-            }
-        },
+    
         //max count of nodes limit per group
         groupWiseNodesLimit: {
             "dpp": 100,
@@ -228,4 +237,4 @@ chatConfig.Params = {
         }
     }
 };
-chatConfig.Params.PC.rosterGroups = [/*chatConfig.Params.categoryNames['Desired Partner Matches'],*/ chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members']];
+chatConfig.Params.pc.rosterGroups = [/*chatConfig.Params.categoryNames['Desired Partner Matches'],*/ chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members']];

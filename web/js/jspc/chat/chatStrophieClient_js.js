@@ -751,7 +751,8 @@ try {
                     STANZAS: "urn:ietf:params:xml:ns:xmpp-stanzas",
                     XHTML_IM: "http://jabber.org/protocol/xhtml-im",
                     XHTML: "http://www.w3.org/1999/xhtml",
-                    RECEIPTS: "urn:xmpp:receipts"
+                    RECEIPTS: "urn:xmpp:receipts",
+                    CARBONS:"urn:xmpp:carbons:2"
                 },
                 /** Constants: XHTML_IM Namespace
                  *  contains allowed tags, tag attributes, and css properties.
