@@ -1049,7 +1049,9 @@ JsChat.prototype = {
         getChatHistory({
                 "extraParams":{
                     "from":getConnectedUserJID(),
-                    "to":user_jid
+                    "to":user_jid,
+                    "to_checksum":checkSum,
+                    "from_checksum":self_checksum
                 }
         });
         this._chatLoggerPlugin(curElem);
