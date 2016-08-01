@@ -97,13 +97,15 @@ function getChatHistory(apiParams){
         url: chatConfig.Params.chatHistoryApi["apiUrl"],
         dataType: 'json',
         type: 'POST',
-        data: postData,
+        data: JSON.stringify(postData),
         cache: false,
         async: true,
         beforeSend: function (xhr) {
         },
         success: function (response) {
             if(response["responseStatusCode"] == "0"){
+                console.log("history");
+                console.log(response);
                 //call plugin function to append history in div
             }
         },

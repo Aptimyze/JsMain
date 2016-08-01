@@ -757,7 +757,7 @@ JsChat.prototype = {
                     var superParent = $(this).parent().parent(),
                         timeLog = new Date().getTime();
                     $(superParent).find("#initChatText,#sentDiv,#chatBoxErr").remove();
-                    $(superParent).find(".chatMessage").css("height", "250px").append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id ="tempText_' + userId + '_' + timeLog + '" class="talkText">' + text + '</div><i class="nchatspr nchatic_8 fr vertM"></i></div>');
+                    $(superParent).find(".chatMessage").css("height", "246px").append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id ="tempText_' + userId + '_' + timeLog + '" class="talkText">' + text + '</div><i class="nchatspr nchatic_8 fr vertM"></i></div>');
                     if ($(superParent).find("#sendInt").length != 0) {
                         //$(superParent).find(".chatMessage").append("<div class='pos-rel fr pr10' id='interestSent'>Your interest has been sent</div>");
                         $(superParent).find("#initiateText,#chatBoxErr").remove();
@@ -765,9 +765,16 @@ JsChat.prototype = {
                     }
                     var height = $($(superParent).find(".talkText")[$(superParent).find(".talkText").length - 1]).height();
                     $($(superParent).find(".talkText")[$(superParent).find(".talkText").length - 1]).next().css("margin-top", height);
-                    $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
-                        scrollTop: ($(".rightBubble").length + $(".leftBubble").length) * 50
-                    }, 500);
+                    var divLen = 0;
+                    $('chat-box[user-id="' + userId + '"] .rightBubble').each(function(index, element) {
+                        divLen += $(this).height();
+                    });
+                    $('chat-box[user-id="' + userId + '"] .leftBubble').each(function(index, element) {
+                        divLen += $(this).height();
+                    });
+                   $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
+                       scrollTop: divLen
+                   }, 1000);
                     //fire send chat query and return unique id
                     setTimeout(function () {
                         out = 1;
@@ -971,17 +978,26 @@ JsChat.prototype = {
     _setChatBoxInnerDiv: function (userId, chatBoxType) {
         this._chatLoggerPlugin();
         this._chatLoggerPlugin("in _setChatBoxInnerDiv");
+
         var curElem = this,
             that = this,
             new_contact_state = chatBoxType,
             response,
             checkSum = $("chat-box[user-id='" + userId + "'").attr("data-checks"),
             groupId = $("chat-box[user-id='" + userId + "'").attr("group-id"),
-            user_name = $(".chatlist li[id='" + userId + "_" + groupId + "'] div").html();
+            user_name = $(".chatlist li[id='" + userId + "_" + groupId + "'] div").html(),
+            user_jid = $("chat-box[user-id='" + userId + "'").attr("data-jid");
         var nick;
         if(checkSum){
             nick = nick + "|"+checkSum;
         }
+        //fetch msg history
+        getChatHistory({
+                "extraParams":{
+                    "from":getConnectedUserJID(),
+                    "to":user_jid
+                }
+        });
         this._chatLoggerPlugin(curElem);
         switch (chatBoxType) {
         case curElem._contactStatusMapping["pg_interest_pending"]["key"]:
@@ -1124,9 +1140,7 @@ JsChat.prototype = {
         case curElem._contactStatusMapping["both_accepted"]["key"]:
             break;
         }
-        //TODO: fire query to get message history as well as offline messages
-        //append div of auto handle length with blank initially
-        //chat api will put content in it in async mode  
+        
     },
     //based on membership and chatboxtype,enable or disable chat textarea in chat box
     _enableChatTextArea: function (chatBoxType, userId, membership) {
@@ -1239,9 +1253,10 @@ JsChat.prototype = {
             chatBoxProto = Object.create(HTMLElement.prototype),
             userId, status, response;
         chatBoxProto.attachedCallback = function () {
-            this.innerHTML = '<div class="chatBoxBar fullwid hgt57 bg5 pos-rel fullwid"></div><div class="chatArea fullwid fullhgt"><div class="messageArea f13 bg13 fullhgt"><div class="chatMessage pos_abs fullwid scrollxy" style="height: 250px;"><div class="spinner"></div></div></div><div class="chatInput brdrbtm_new fullwid btm0 pos-abs bg-white"><textarea cols="23" style="width: 220px;" id="txtArea"  class="inputText lh20 brdr-0 padall-10 colorGrey hgt18 fontlig" placeholder="Write message"></textarea></div></div>';
-            $(this).addClass("z7 btm0 brd_new fr mr7 fullhgt wid240 pos-rel disp_ib");
             userId = $(this).attr("user-id");
+            this.innerHTML = '<div class="chatBoxBar fullwid hgt57 bg5 pos-rel fullwid"></div><div class="chatArea fullwid fullhgt"><div class="messageArea f13 bg13 fullhgt"><div class="chatMessage pos_abs fullwid scrollxy" style="height: 246px;"><div id="chatHistory_'+userId+'"></div><div class="spinner"></div></div></div><div class="chatInput brdrbtm_new fullwid btm0 pos-abs bg-white"><textarea cols="23" style="width: 220px;" id="txtArea"  class="inputText lh20 brdr-0 padall-10 colorGrey hgt18 fontlig" placeholder="Write message"></textarea></div></div>';
+            $(this).addClass("z7 btm0 brd_new fr mr7 fullhgt wid240 pos-rel disp_ib");
+            
             status = $(this).attr("status-user");
             elem._appendInnerHtml(userId, status);
         };
@@ -1336,9 +1351,16 @@ JsChat.prototype = {
                 var count = curEle._onlineUserMsgMe();
                 that._chatLoggerPlugin("count - " + count);
             }
-            $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
-               scrollTop: ($('chat-box[user-id="' + userId + '"] .rightBubble').length + $('chat-box[user-id="' + userId + '"] .leftBubble').length) * 50
-            }, 1000);
+            var divLen = 0;
+            $('chat-box[user-id="' + userId + '"] .rightBubble').each(function(index, element) {
+                divLen += $(this).height();
+            });
+            $('chat-box[user-id="' + userId + '"] .leftBubble').each(function(index, element) {
+                divLen += $(this).height();
+            });
+           $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
+               scrollTop: divLen
+           }, 1000);
         }
     },
     //get count of minimized chat boxes with unread messages
