@@ -12,13 +12,14 @@ var strophieWrapper = {
         "GONE": 'gone',
         "RECEIVED": 'received',
         "SENDER_RECEIVED_READ": 'sender_received_read',
-        "RECEIVER_RECEIVED_READ": 'receiver_received_read'
+        "RECEIVER_RECEIVED_READ": 'receiver_received_read',
+        "FORWARDED":'forwarded'
     },
     rosterGroups: chatConfig.Params.pc.rosterGroups,
     currentConnStatus: null,
     loggingEnabledStrophe: false,
     tryReconnection:false,
-    syncSentMessage:false,
+    syncSentMessage:true,
     synchronize_selfPresence: false,
 
     stropheLoggerPC: function (msgOrObj) {
@@ -392,6 +393,8 @@ var strophieWrapper = {
     //executed on msg receipt
     onMessage: function (iq) {
         //strophieWrapper.stropheLoggerPC("got message");
+        //console.log("in onMessage");
+        console.log(iq);
         strophieWrapper.stropheLoggerPC(iq);
         var msgObject = strophieWrapper.formatMsgObj(iq);
         //strophieWrapper.stropheLoggerPC(msgObject);
@@ -516,10 +519,11 @@ var strophieWrapper = {
                     // Forward the message, so that other connected resources are also aware of it.
                     //append it as self sent message
                     strophieWrapper.connectionObj.send(
-                        $msg({ to: strophieWrapper.getSelfJID(true), type: 'chat', id: messageId })
-                        .c('forwarded', {xmlns:'urn:xmpp:forward:0'})
+                        $msg({ to: strophieWrapper.getSelfJID(true), type: 'chat', id: messageId ,forwarded:true})
+                        //.c(strophieWrapper.msgStates["FORWARDED"], {xmlns:'urn:xmpp:forward:0'})
                         //.c('delay', {xmns:'urn:xmpp:delay',stamp:(new Date()).getTime()}).up()
-                        .cnode(reply.tree()));
+                        .cnode(Strophe.xmlElement('body', message)).up());
+                    //console.log("sent forwarded msg");
                 }
                 outputObj = {
                     "msg_id": messageId,
@@ -563,15 +567,21 @@ var strophieWrapper = {
     },
     /*format msg object*/
     formatMsgObj: function (msg) {
+    	//console.log("in formatMsgObj");
+    	console.log(msg);
         var outputObj = {
             "from": msg.getAttribute('from').split("@")[0],
             "to": msg.getAttribute('to').split("@")[0],
             "type": msg.getAttribute('type'),
-            "msg_id": msg.getAttribute('id')
+            "msg_id": msg.getAttribute('id'),
+            "forwarded":msg.getAttribute('forwarded')
         };
         var $message = $(msg),
             msg_state;
-        if ($message.find(strophieWrapper.msgStates["COMPOSING"]).length != 0) {
+        if (outputObj["forwarded"] == "true") {
+        	//console.log("forwarded");
+            msg_state = strophieWrapper.msgStates["FORWARDED"];
+        }else if ($message.find(strophieWrapper.msgStates["COMPOSING"]).length != 0) {
             msg_state = strophieWrapper.msgStates["COMPOSING"];
         } else if ($message.find(strophieWrapper.msgStates["PAUSED"]).length != 0) {
             msg_state = "paused";

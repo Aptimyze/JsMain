@@ -388,34 +388,44 @@ function logoutChat() {
  *@params :msgObj
  */
 function invokePluginReceivedMsgHandler(msgObj) {
+    //console.log("in invokePluginReceivedMsgHandler");
+    //console.log(msgObj);
     if (typeof msgObj["from"] != "undefined") {
-        if (typeof msgObj["body"] != "undefined" && msgObj["body"] != "" && msgObj["body"] != null) {
+        if (typeof msgObj["body"] != "undefined" && msgObj["body"] != "" && msgObj["body"] != null && msgObj['msg_state']!= strophieWrapper.msgStates["FORWARDED"]) {
             //chatLoggerPC("invokePluginReceivedMsgHandler-handle message");
             //chatLoggerPC(msgObj);
+            //console.log("appending RECEIVED");
             objJsChat._appendRecievedMessage(msgObj["body"], msgObj["from"], msgObj["msg_id"]);
         }
-        if (typeof msgObj["msg_state"] != "undefined") switch (msgObj['msg_state']) {
-            case strophieWrapper.msgStates["RECEIVED"]:
-                objJsChat._changeStatusOfMessg(msgObj["receivedId"], msgObj["from"], "recieved");
-                break;
-            case strophieWrapper.msgStates["COMPOSING"]:
-                objJsChat._handleMsgComposingStatus(msgObj["from"], strophieWrapper.msgStates["COMPOSING"]);
-                break;
-            case strophieWrapper.msgStates["PAUSED"]:
-                objJsChat._handleMsgComposingStatus(msgObj["from"], strophieWrapper.msgStates["PAUSED"]);
-                break;
-            case strophieWrapper.msgStates["RECEIVER_RECEIVED_READ"]:
-                //chatLoggerPC("send received read status to " + msgObj["to"] + " from " + msgObj["from"] + "-" + msgObj["msg_id"]);
-                strophieWrapper.sendReceivedReadEvent(msgObj["from"], msgObj["to"], msgObj["msg_id"], strophieWrapper.msgStates["RECEIVER_RECEIVED_READ"]);
-                break;
-            case strophieWrapper.msgStates["SENDER_RECEIVED_READ"]:
-                //chatLoggerPC("received received read status to " + msgObj["to"] + " from " + msgObj["from"] + "-" + msgObj["msg_id"]);
-                objJsChat._changeStatusOfMessg(msgObj["msg_id"], msgObj["from"], "recievedRead");
-                break;
+        if (typeof msgObj["msg_state"] != "undefined") {
+            switch (msgObj['msg_state']) {
+                case strophieWrapper.msgStates["RECEIVED"]:
+                    objJsChat._changeStatusOfMessg(msgObj["receivedId"], msgObj["from"], "recieved");
+                    break;
+                case strophieWrapper.msgStates["COMPOSING"]:
+                    objJsChat._handleMsgComposingStatus(msgObj["from"], strophieWrapper.msgStates["COMPOSING"]);
+                    break;
+                case strophieWrapper.msgStates["PAUSED"]:
+                    objJsChat._handleMsgComposingStatus(msgObj["from"], strophieWrapper.msgStates["PAUSED"]);
+                    break;
+                case strophieWrapper.msgStates["RECEIVER_RECEIVED_READ"]:
+                    //chatLoggerPC("send received read status to " + msgObj["to"] + " from " + msgObj["from"] + "-" + msgObj["msg_id"]);
+                    strophieWrapper.sendReceivedReadEvent(msgObj["from"], msgObj["to"], msgObj["msg_id"], strophieWrapper.msgStates["RECEIVER_RECEIVED_READ"]);
+                    break;
+                case strophieWrapper.msgStates["SENDER_RECEIVED_READ"]:
+                    //chatLoggerPC("received received read status to " + msgObj["to"] + " from " + msgObj["from"] + "-" + msgObj["msg_id"]);
+                    objJsChat._changeStatusOfMessg(msgObj["msg_id"], msgObj["from"], "recievedRead");
+                    break;
+                case strophieWrapper.msgStates["FORWARDED"]:
+                    //console.log("here_for");
+                    //chatLoggerPC("received received read status to " + msgObj["to"] + " from " + msgObj["from"] + "-" + msgObj["msg_id"]);
+                    //objJsChat._changeStatusOfMessg(msgObj["msg_id"], msgObj["from"], "recievedRead");
+                    break;
             }
             /*if(msgObj['msg_state'] == "received"){
                 objJsChat._changeStatusOfMessg(msgObj["receivedId"],msgObj["from"],"recievedRead");
             }*/
+        }
     }
 }
 
