@@ -245,11 +245,18 @@ JsChat.prototype = {
     _addChatTop: function (param) {
         var curEleRef = this,
             that = this;
-        var chatHeaderHTML = '<div class="nchatbg1 nchatp2 clearfix pos-rel nchathgt1"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarIn"></i> </div><div class="fl"> <img src="' + this._imageUrl + '" class="nchatp4 wd40"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp">Logout</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>';
+        var chatHeaderHTML = '<div class="nchatbg1 nchatp2 clearfix pos-rel nchathgt1"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarIn"></i> </div><div class="fl"> <img src="' + this._imageUrl + '" class="nchatp4 wd40"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp">Logout from chat</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>';
         $(curEleRef._listingPanelID).append(chatHeaderHTML);
-        $(curEleRef._toggleLogoutDiv).off("click").on("click", function () {
-            that._chatLoggerPlugin($(this));
+        $(curEleRef._toggleLogoutDiv).off("click").on("click", function() {
             $(curEleRef._toggleID).toggleClass('disp-none');
+            if($(curEleRef._toggleID).hasClass('disp-none') == false) {
+                setTimeout(function(){ 
+                    $("body").on("click",function(){
+                        $("body").off("click");
+                        $(curEleRef._toggleID).addClass('disp-none');
+                    });
+                }, 300);
+            }
         });
         $(curEleRef._logoutChat).click(function () {
             if (curEleRef.onLogoutPreClick && typeof (curEleRef.onLogoutPreClick) == "function") {
@@ -1298,6 +1305,29 @@ JsChat.prototype = {
         this._postChatPanelsBox(userId);
         this._bindSendChat(userId);
     },
+    
+    //append chat history in chat box
+    _appendChatHistory: function(selfJID,otherJID,communication){
+        var uniqueId= '123',self_id = selfJID.split("@")[0],other_id = otherJID.split("@")[0],historyHTML="";
+        if($('chat-box[user-id="' + other_id + '"]').length != 0){
+            $.each(communication,function(key,logObj){
+                //console.log(logObj);
+                if(parseInt(logObj["SENDER"]) == self_id){
+                    //append self sent message
+                    historyHTML = historyHTML + '<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + uniqueId + '" class="talkText">' + logObj["MESSAGE"] + '</div></div>';
+                }
+                else if(parseInt(logObj["SENDER"]) == other_id){
+                    //append received message
+                    historyHTML = historyHTML + '<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + uniqueId + '" class="talkText">' + logObj["MESSAGE"] + '</div></div>';
+                }
+                //console.log(historyHTML);
+                if(historyHTML){
+                    $('chat-box[user-id="' + other_id + '"] .chatMessage').append(historyHTML);
+                }
+            });
+        }
+    },
+
     //append self sent message on opening window again
     _appendSelfMessage: function (message, userId, uniqueId, status) {
         var curElem = this;
