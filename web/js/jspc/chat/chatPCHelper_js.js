@@ -118,7 +118,7 @@ function getChatHistory(apiParams){
                 //console.log(response);
                 if(typeof response["Message"] != "undefined"){
                     //call plugin function to append history in div
-                    objJsChat._appendChatHistory(apiParams["extraParams"]["from"],apiParams["extraParams"]["to"],response["Message"]);
+                    objJsChat._appendChatHistory(apiParams["extraParams"]["from"],apiParams["extraParams"]["to"],$.parseJSON(response["Message"]));
                 }
             }
         },
