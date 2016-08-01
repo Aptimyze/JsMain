@@ -133,7 +133,7 @@ class LoggingManager
      */
      public function logThis($enLogType,$Var,$logArray = array(),$isSymfony=true)
      {
-      if($this->canLog($Var))
+      if($this->canLog($Var,$isSymfony,$logArray))
       {
         if($enLogType > LoggingEnums::LOG_LEVEL) {
          return ;
@@ -141,10 +141,10 @@ class LoggingManager
 
        switch ($enLogType) {
         case LoggingEnums::LOG_INFO:
-        $this->logInfo($Var,$isSymfony,$logArray());
+        $this->logInfo($Var,$isSymfony,$logArray);
         break;
         case LoggingEnums::LOG_DEBUG:
-        $this->logDebug($Var,$isSymfony,$logArray());
+        $this->logDebug($Var,$isSymfony,$logArray);
         break;
         case LoggingEnums::LOG_ERROR:
         $this->logException($Var,$isSymfony,$logArray);
@@ -173,14 +173,14 @@ class LoggingManager
       $clientIp = $this->getLogClientIP();
       $channelName = $this->getLogChannelName();
 
-      $moduleName = $this->getLogModuleName($isSymfony,$exception,$logArray);
-
+      // $moduleName = $this->getLogModuleName($isSymfony,$exception,$logArray);
+      $moduleName = $this->szLogPath;
       $actionName = $this->getLogActionName($isSymfony,$exception,$logArray);
       
       $apiVersion = $this->getLogAPI($logArray);
       $message = $this->getLogMessage($logArray);
 
-      $logData = $logData.""..":";
+      $logData = $logData."".":";
       $logData = $logData.":".$logId;
       $logData = $logData." ".$time;
       $logData = $logData.":";
@@ -287,7 +287,7 @@ class LoggingManager
       {
         if ( $isSymfony )
         {
-          return sfContext::getInstance()->getModuleName();
+          $moduleName = sfContext::getInstance()->getModuleName();
         }
         else
         {
@@ -295,7 +295,6 @@ class LoggingManager
           $exceptionLiesIn = $exception->getTrace()[0]['file'];
           $module_action = str_replace(JsConstants::$docRoot, "", $exceptionLiesIn);
           $moduleName = explode('/', $module_action)[1];
-          return $moduleName;
         }
       }
       else
@@ -371,12 +370,16 @@ class LoggingManager
     private function writeToFile($szLogString)
     {
         $currDate = Date('Y-m-d');
-        $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH."-".$currDate.".log";
-        if ($this->szLogPath && $this->canCreateDir($this->szLogPath)) {
-            $this->createDirectory($this->szLogPath);
-            $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
+        $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH."log-".$currDate.".log";
+        if($this->canCreateDir($this->szLogPath))
+        {
+          $this->createDirectory($this->szLogPath);
+          $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
         }
-
+        else
+        {
+          $this->createDirectory("");
+        }
         //Add in log file
         if($this->bDoItOnce) {
             $szLogString = "\n".$szLogString;
@@ -412,14 +415,17 @@ class LoggingManager
 
     /**
      * @param $Var
+     * @return bool
      */
-    private function canLog($Var=null)
+    private function canLog($Var,$isSymfony,$logArray)
     {
         // TODO: get module name
-        $module = $this->szLogPath;
-
+        if($this->szLogPath == null)
+        {
+          $this->szLogPath = $this->getLogModuleName($isSymfony,$Var,$logArray);
+        }
         // check if log for all is set, if not set then check if module can log
-        return (LoggingEnums::LOG_ALL ? 1 : LoggingConfig::getInstance()->logStatus($module));
+        return (LoggingEnums::LOG_ALL ? 1 : LoggingConfig::getInstance()->logStatus($this->szLogPath));
     }
 
     /**
@@ -427,7 +433,7 @@ class LoggingManager
      */
     private function canCreateDir($szLogPath)
     {
-        // check if log for all modules is together, if not set then check if module can create diff directory
-        return (LoggingEnums::LOG_TOGETHER ? 0 : LoggingConfig::getInstance()->dirStatus($szLogPath));
+      // check if log for all modules is together, if not set then check if module can create diff directory
+      return (LoggingEnums::LOG_TOGETHER ? 0 : LoggingConfig::getInstance()->dirStatus($szLogPath));
     }
 }

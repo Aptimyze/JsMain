@@ -25,7 +25,7 @@
 			LoggingEnums::EX500OR404 => array(
 				'logging' => 1, 
 				'level' => 1, 
-				'directory' => 1, 
+				'directory' => 0, 
 				'stack_trace' => 1
 				),
 			);
@@ -77,7 +77,7 @@
 			else
 			{
 				// module not in config
-				return 2;
+				return 1;
 			}
 		}
 
