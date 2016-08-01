@@ -162,7 +162,12 @@ public function isFtoDuplicate($profileId){
 		}
 		catch(Exception $e)
 		{
-            jsCacheWrapperException::logThis($e);
+
+            if(sfContext::getInstance()->getRequest()->getParameter('phoneVerification')==1);
+                jsCacheWrapperException::logThis($e);
+            else 
+                throw new jsException($e);
+
         }
 	}
 	/*

@@ -77,6 +77,9 @@ public function phoneUpdateProcess($message)
 
 			$profileid=$this->profileObject->getPROFILEID();
 			$profileObject=$this->profileObject;
+			
+			sfContext::getInstance()->getRequest()->setParameter('phoneVerification',1);
+
 			switch ($this->phoneType)
 			{		
 
