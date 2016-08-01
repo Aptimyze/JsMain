@@ -173,7 +173,11 @@ class viewSimilarProfileAction extends sfActions
 		$searchEngine = 'solr';
 		$outputFormat = 'array';
                 
-                if(JsConstants::$vspServer == 'live'){
+                $modVal = 10;
+                $loggedinMod = $this->loginProfile->getPROFILEID()%$modVal;
+                $modResult =  array(1,2);
+                
+                if(JsConstants::$vspServer == 'live' && in_array($loggedinMod,$modResult)){
                     if($this->loginProfile->getGENDER() == 'M')
                       $feedURL = JsConstants::$vspMaleUrl;
                     else
