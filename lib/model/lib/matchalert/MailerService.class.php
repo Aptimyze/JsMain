@@ -722,6 +722,18 @@ return $edu;
 				$dpp = $this->getDppData($operatorProfileObj);
 				$data["DPP"] = $dpp;
 			}
+
+			if($widgetArray["primaryMailGifFlag"])
+			{
+				if(date("d")%2==0)
+				{
+					$data["GifFlag"] = 0;
+				}
+				else
+				{
+					$data["GifFlag"] = 1;
+				}
+			}
 			if($widgetArray["membershipFlag"])
 			{
 				if(strstr($operatorProfileObj->getSUBSCRIPTION(),'F'))
