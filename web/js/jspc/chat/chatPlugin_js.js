@@ -1533,10 +1533,16 @@ JsChat.prototype = {
         //this._chatLoggerPlugin($('#'+param1+'_hover').length);
         this._chatLoggerPlugin("in hoverBoxStr");
         this._chatLoggerPlugin(pCheckSum);
+        var trackingParams = chatConfig.Params.categoryTrackingParams[group],trackingParamsStr = '';
+        if (typeof trackingParams != "undefined") {
+            $.each(trackingParams, function (key, val) {
+                trackingParamsStr+='&'+key+'='+val;
+            });
+        }
         if ($('#' + param1 + '_hover').length == 0) {
             var str = '<div class="pos_fix info-hover fontlig nz21 vishid" id="' + param1 + '_hover">';
             str += '<div class="nchatbdr3 f13 nchatgrad nchathoverdim pos-rel">';
-            str += '<img src="' + param2.photo + '" class="vtop ch220"/>';
+            str += '<a href = "/profile/viewprofile.php?profilechecksum='+pCheckSum+trackingParamsStr+'"><img src="' + param2.photo + '" class="vtop ch220"/></a>';
             str += '<div id="' + param1 + '_hoverinfo-a">';
             str += '<div class="padall-10 pos-rel">';
             str += '<div class="pos-abs err2 nchatrr1 disp-none" id="' + param1 + '_hoverDvBgEr">';
