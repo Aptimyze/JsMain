@@ -422,7 +422,12 @@ JsChat.prototype = {
         }
         elem._chatScrollHght();
         $(elem._scrollDivId).mCustomScrollbar({
-            theme: "light"
+            theme: "light",
+            callbacks:{
+                onScroll:function(){
+                    $('.info-hover').css('visibility', 'hidden');
+                }
+            }
         });
         //call hover functionality
         $(elem._listingClass).on('mouseenter mouseleave', {
@@ -1681,7 +1686,7 @@ JsChat.prototype = {
             clearTimeout(_this._timer);
             _this._timer = setTimeout(function () {
                 _this._checkHover(curHoverEle);
-            }, 1000);
+            }, 500);
         } else {
             clearTimeout(_this._timer);
             $('#' + getID + '_hover').css('visibility', 'hidden');
