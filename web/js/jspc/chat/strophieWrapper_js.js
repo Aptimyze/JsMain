@@ -93,6 +93,7 @@ var strophieWrapper = {
 		    //reconnect to chat if net connected
 		    strophieWrapper.connect(chatConfig.Params[device].bosh_service_url, username, pass);
 		    //triggerbindings call
+
 		    strophieWrapper.triggerBindings();
 		}
     },
@@ -122,6 +123,7 @@ var strophieWrapper = {
     triggerBindings: function () {
         //strophieWrapper.Roster = [];
         //send own presence
+        strophieWrapper.enableCarbons();
         strophieWrapper.sendPresence();
         //fetch roster of logged in user 
         if(strophieWrapper.initialRosterFetched == false){ 
