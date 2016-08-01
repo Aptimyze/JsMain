@@ -54,7 +54,6 @@ class NEWJS_CHAT_LOG extends TABLE{
 		}
 		catch(PDOException $e)
 		{
-			echo "ASD";die;
 			throw new jsException($e);
 			jsCacheWrapperException::logThis($e);
 			/*** echo the sql statement and error message ***/
@@ -73,7 +72,7 @@ class NEWJS_CHAT_LOG extends TABLE{
 				}
 				else
 				{
-					$sql = "SELECT SENDER, DATE, MESSAGE FROM  `CHAT_LOG` JOIN MESSAGES ON ( MESSAGES.ID = CHAT_LOG.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER ))  ORDER BY DATE";
+					$sql = "SELECT SENDER, DATE, MESSAGE ,FOLDERID,C.ID FROM  `CHAT_LOG` AS C JOIN MESSAGES AS M ON ( M.ID = C.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER ))  ORDER BY DATE";
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);
