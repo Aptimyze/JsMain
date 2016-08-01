@@ -725,14 +725,8 @@ return $edu;
 
 			if($widgetArray["primaryMailGifFlag"])
 			{
-				if(date("d")%2==0)
-				{
-					$data["GifFlag"] = 0;
-				}
-				else
-				{
-					$data["GifFlag"] = 1;
-				}
+				$data["GifFlag"] = $this->getGifFlag($emailId);
+				
 			}
 			if($widgetArray["membershipFlag"])
 			{
@@ -820,5 +814,16 @@ return $edu;
 
 	}
 
+	public function getGifFlag($email)
+	{
+		if(strpos($email,"gmail"))
+		{
+			return ((date("d")%2));
+		}
+		else
+		{
+			return 0;
+		}
+	}
 }
 ?>
