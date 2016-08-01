@@ -77,7 +77,7 @@
     </div>
 </noscript>
 ~if $showChat`
-    <body style="width:80%">
+    <body>
     <!--start:chat panel-->
         <div id="chatOpenPanel"> 
         </div>
