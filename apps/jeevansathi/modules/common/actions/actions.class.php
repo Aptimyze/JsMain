@@ -409,18 +409,21 @@ class commonActions extends sfActions
 				$responseSet = ButtonResponse::buttonDetailsMerge($array);
 				$finalresponseArray["actiondetails"] = null;
 				$finalresponseArray["buttondetails"] = ButtonResponse::buttonDetailsMerge($array);
-				//Entry in Chat Roster
-				try {
-					$producerObj = new Producer();
-					if ($producerObj->getRabbitMQServerConnected()) {
-						$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'REMOVE_BOOKMARK', 'body' => array('sender' => array('profileid'=>$this->loginProfile->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->loginProfile->getPROFILEID()),'username'=>$this->loginProfile->getUSERNAME()), 'receiver' => array('profileid'=>$bookmarkee,'checksum'=>$bookmarkeeChecksum,'username'=>$this->Profile->getUSERNAME()))), 'redeliveryCount' => 0);
-						$producerObj->sendMessage($chatData);
+				$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
+				if($this->contactObj->getTYPE() == "N") {
+					//Entry in Chat Roster
+					try {
+						$producerObj = new Producer();
+						if ($producerObj->getRabbitMQServerConnected()) {
+							$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'REMOVE_BOOKMARK', 'body' => array('sender' => array('profileid' => $this->loginProfile->getPROFILEID(), 'checksum' => JsAuthentication::jsEncryptProfilechecksum($this->loginProfile->getPROFILEID()), 'username' => $this->loginProfile->getUSERNAME()), 'receiver' => array('profileid' => $bookmarkee, 'checksum' => $bookmarkeeChecksum, 'username' => $this->Profile->getUSERNAME()))), 'redeliveryCount' => 0);
+							$producerObj->sendMessage($chatData);
+						}
+						unset($producerObj);
+					} catch (Exception $e) {
+						throw new jsException("Something went wrong while sending in chat queue for remove bookmark -" . $e);
 					}
-					unset($producerObj);
-				} catch (Exception $e) {
-					throw new jsException("Something went wrong while sending in chat queue for remove bookmark -" . $e);
+					//End
 				}
-				//End
 			}
 			else
 			{
@@ -436,17 +439,20 @@ class commonActions extends sfActions
 				$finalresponseArray["actiondetails"] = null;
 				$finalresponseArray["buttondetails"] = ButtonResponse::buttonDetailsMerge($array);
 				//Entry in Chat Roster
-				try {
-					$producerObj = new Producer();
-					if ($producerObj->getRabbitMQServerConnected()) {
-						$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'ADD_BOOKMARK', 'body' => array('sender' => array('profileid'=>$this->loginProfile->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->loginProfile->getPROFILEID()),'username'=>$this->loginProfile->getUSERNAME()), 'receiver' => array('profileid'=>$bookmarkee,'checksum'=>$bookmarkeeChecksum,'username'=>$this->Profile->getUSERNAME()))), 'redeliveryCount' => 0);
-						$producerObj->sendMessage($chatData);
+				$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
+				if($this->contactObj->getTYPE() == "N") {
+					try {
+						$producerObj = new Producer();
+						if ($producerObj->getRabbitMQServerConnected()) {
+							$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'ADD_BOOKMARK', 'body' => array('sender' => array('profileid' => $this->loginProfile->getPROFILEID(), 'checksum' => JsAuthentication::jsEncryptProfilechecksum($this->loginProfile->getPROFILEID()), 'username' => $this->loginProfile->getUSERNAME()), 'receiver' => array('profileid' => $bookmarkee, 'checksum' => $bookmarkeeChecksum, 'username' => $this->Profile->getUSERNAME()))), 'redeliveryCount' => 0);
+							$producerObj->sendMessage($chatData);
+						}
+						unset($producerObj);
+					} catch (Exception $e) {
+						throw new jsException("Something went wrong while sending in chat queue for remove bookmark -" . $e);
 					}
-					unset($producerObj);
-				} catch (Exception $e) {
-					throw new jsException("Something went wrong while sending in chat queue for remove bookmark -" . $e);
+					//End
 				}
-				//End
 			}
 
 			$bookmarkerMemcacheObject->updateMemcache();
