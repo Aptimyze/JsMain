@@ -1600,7 +1600,7 @@ JsChat.prototype = {
         if ($('#' + param1 + '_hover').length == 0) {
             var str = '<div class="pos_fix info-hover fontlig nz21 vishid" id="' + param1 + '_hover">';
             str += '<div class="nchatbdr3 f13 nchatgrad nchathoverdim pos-rel">';
-            str += '<a href = "/profile/viewprofile.php?profilechecksum='+pCheckSum+trackingParamsStr+'"><img src="' + param2.photo + '" class="vtop ch220"/></a>';
+            str += '<a href = "/profile/viewprofile.php?profilechecksum='+pCheckSum+trackingParamsStr+'" class = "cursp"><img src="' + param2.photo + '" class="vtop ch220"/></a>';
             str += '<div id="' + param1 + '_hoverinfo-a">';
             str += '<div class="padall-10 pos-rel">';
             str += '<div class="pos-abs err2 nchatrr1 disp-none" id="' + param1 + '_hoverDvBgEr">';
@@ -1680,7 +1680,7 @@ JsChat.prototype = {
         } else if (type == "info") {
             $("#" + jid + "_hoverDvBgEr").removeClass("disp-none");
             $("#" + jid + "_hoverBgEr").html(data.actiondetails.errmsglabel);
-            $("#" + jid + "_BtnRespnse div button").addClass("nchatbg-grey colrw");
+            $("#" + jid + "_BtnRespnse div button").addClass("nchatbg-grey colrw nc").removeClass("cursp");
             $("#" + jid + "_BtnRespnse div button").html(data.buttondetails.button.label);
         } else {
             $("#" + jid + "_BtnOuter button").remove();
@@ -1733,7 +1733,9 @@ JsChat.prototype = {
                     _this._chatPanelsBox(currentID, 'offline', $(this).attr("data-jid"), $(this).attr("data-checks"), $(this).attr("data-group"));
                 }
                 else{
-                    _this.onHoverContactButtonClick(this);
+                    if(!$(this).hasClass("nc")){
+                        _this.onHoverContactButtonClick(this);
+                    }
                 }
             }
         });
