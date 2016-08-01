@@ -765,9 +765,16 @@ JsChat.prototype = {
                     }
                     var height = $($(superParent).find(".talkText")[$(superParent).find(".talkText").length - 1]).height();
                     $($(superParent).find(".talkText")[$(superParent).find(".talkText").length - 1]).next().css("margin-top", height);
-                    $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
-                        scrollTop: ($(".rightBubble").length + $(".leftBubble").length) * 50
-                    }, 500);
+                    var divLen = 0;
+                    $('chat-box[user-id="' + userId + '"] .rightBubble').each(function(index, element) {
+                        divLen += $(this).height();
+                    });
+                    $('chat-box[user-id="' + userId + '"] .leftBubble').each(function(index, element) {
+                        divLen += $(this).height();
+                    });
+                   $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
+                       scrollTop: divLen
+                   }, 1000);
                     //fire send chat query and return unique id
                     setTimeout(function () {
                         out = 1;
@@ -1126,7 +1133,7 @@ JsChat.prototype = {
         }
         //TODO: fire query to get message history as well as offline messages
         //append div of auto handle length with blank initially
-        //chat api will put content in it in async mode  
+        //chat api will put content in it in async mode  -manvi
     },
     //based on membership and chatboxtype,enable or disable chat textarea in chat box
     _enableChatTextArea: function (chatBoxType, userId, membership) {
@@ -1336,9 +1343,16 @@ JsChat.prototype = {
                 var count = curEle._onlineUserMsgMe();
                 that._chatLoggerPlugin("count - " + count);
             }
-            $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
-               scrollTop: ($('chat-box[user-id="' + userId + '"] .rightBubble').length + $('chat-box[user-id="' + userId + '"] .leftBubble').length) * 50
-            }, 1000);
+            var divLen = 0;
+            $('chat-box[user-id="' + userId + '"] .rightBubble').each(function(index, element) {
+                divLen += $(this).height();
+            });
+            $('chat-box[user-id="' + userId + '"] .leftBubble').each(function(index, element) {
+                divLen += $(this).height();
+            });
+           $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
+               scrollTop: divLen
+           }, 1000);
         }
     },
     //get count of minimized chat boxes with unread messages
