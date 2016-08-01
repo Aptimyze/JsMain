@@ -169,7 +169,7 @@ class MOBILE_API_SCHEDULED_APP_NOTIFICATIONS extends TABLE{
 	}
 	public function updateSent($idArr='',$notificationKey,$status,$pid='')
 	{
-                if((!is_array($idArr)&&!$pid)||!$notificationKey||!$status)
+                if((!is_array($idArr) && !$pid &&  !$msgId) || !$notificationKey || !$status)
 		     throw new jsException("","(idArr & pid) or notificationKey or status not provided to updatestatus in MOBILE_API.SCHEDULED_APP_NOTIFICATIONS");
                 try
                 {
@@ -181,6 +181,8 @@ class MOBILE_API_SCHEDULED_APP_NOTIFICATIONS extends TABLE{
 				$sql.= " AND ID IN (".$str.") AND SENT='N'";
 			if($pid)
 				$sql.=" AND PROFILEID =:PROFILEID ";
+			if($msdId)
+				$sql.=" AND MSG_ID =:MSG_ID ";
 		
 			$res=$this->db->prepare($sql);
 			if(is_array($idArr))
@@ -190,6 +192,8 @@ class MOBILE_API_SCHEDULED_APP_NOTIFICATIONS extends TABLE{
 			}
 			if($pid)
 				$res->bindValue(":PROFILEID",$pid,constant('PDO::PARAM_'.$this->{'PROFILEID_BIND_TYPE'}));
+			if($msgId)
+				$res->bindValue(":MSG_ID",$msgId,constant('PDO::PARAM_'.$this->{'MSG_ID_BIND_TYPE'}));
 			$res->bindValue(":NOTIFICATION_KEY",$notificationKey,constant('PDO::PARAM_'.$this->{'NOTIFICATION_KEY_BIND_TYPE'}));
 			$res->bindValue(":SENT",$status,constant('PDO::PARAM_'.$this->{'SENT_BIND_TYPE'}));
 			$res->execute();

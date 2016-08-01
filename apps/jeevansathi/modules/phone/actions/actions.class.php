@@ -374,7 +374,7 @@ class phoneActions extends sfActions
 
 		$respObj = ApiResponseHandler::getInstance();
 		$fail=0;
-		if(!$profileChecksum=$request->getParameter('profileChecksum'))
+		 if(!$profileChecksum= $request->getParameter('profileChecksum') ?  $request->getParameter('profileChecksum') : $request->getParameter('profilechecksum'))
 			throw new Exception("no profilechecksum passed as parameter in request", 1);
 		$selfProfileObj=LoggedInProfile::getInstance();
 		$arr=explode("i",$profileChecksum);

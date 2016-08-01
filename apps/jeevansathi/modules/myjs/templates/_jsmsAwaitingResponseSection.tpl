@@ -18,7 +18,7 @@
     <div id="awaiting_tuples"  style=" white-space: nowrap; margin-left:10px; font-size:0px; width:200%">
         ~foreach from=$eoiData.tuples item=tupleInfo key=id`
                
-                        ~include_partial("myjs/jsmsProfileTuple",[profileTuple=>$tupleInfo,section=>"eoi",index=>$id,gender=>$gender])`
+                        ~include_partial("myjs/jsmsProfileTuple",[profileTuple=>$tupleInfo,section=>"eoi",index=>$id,gender=>$gender,total=>$eoiData.view_all_count,contactId=>$eoiData.contact_id])`
                 
         ~/foreach`
       
