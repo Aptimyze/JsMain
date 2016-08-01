@@ -70,7 +70,7 @@ public function __construct($profileObject='',$phoneType)
         public function getPhoneWithoutIsd(){return $this->phoneWithoutIsd;}
         public function isVerified(){return $this->isVerified;}
 
-protected function phoneUpdateProcess($message)
+public function phoneUpdateProcess($message)
 	{
 			if(!$this->getPhone()) return false;
 			include_once(sfConfig::get("sf_web_dir")."/P/InstantSMS.php");
