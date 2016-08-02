@@ -104,7 +104,7 @@ function getChatHistory(apiParams){
         },
         success: function (response) {
             if(response["responseStatusCode"] == "0"){
-                console.log("history");
+                
                 /*response = {
                   "Message": $.parseJSON("[{\"SENDER\":\"9397643\",\"DATE\":\"2016-07-25 11:02:12\",\"MESSAGE\":\"sasdasdasdasd adads\"},{\"SENDER\":\"9397643\",\"DATE\":\"2016-07-27 12:00:42\",\"MESSAGE\":\"hi\"},{\"SENDER\":\"8980202\",\"DATE\":\"2016-07-27 15:47:01\",\"MESSAGE\":\"hi\"},{\"SENDER\":\"9397643\",\"DATE\":\"2016-07-27 15:51:55\",\"MESSAGE\":\"hi\"},{\"SENDER\":\"8980202\",\"DATE\":\"2016-07-27 15:54:40\",\"MESSAGE\":\"hi\"},{\"SENDER\":\"9397643\",\"DATE\":\"2016-07-27 15:56:20\",\"MESSAGE\":\"hi\"},{\"SENDER\":\"9397643\",\"DATE\":\"2016-07-27 16:01:05\",\"MESSAGE\":\"hi\"},{\"SENDER\":\"9397643\",\"DATE\":\"2016-07-27 16:01:36\",\"MESSAGE\":\"hi\"},{\"SENDER\":\"9397643\",\"DATE\":\"2016-07-27 16:03:06\",\"MESSAGE\":\"hi\"},{\"SENDER\":\"9397643\",\"DATE\":\"2016-07-27 16:06:01\",\"MESSAGE\":\"hi\"},{\"SENDER\":\"9397643\",\"DATE\":\"2016-07-27 16:06:12\",\"MESSAGE\":\"hi\"},{\"SENDER\":\"9397643\",\"DATE\":\"2016-07-27 16:08:52\",\"MESSAGE\":\"hi\"},{\"SENDER\":\"9397643\",\"DATE\":\"2016-07-27 16:10:39\",\"MESSAGE\":\"hi\"},{\"SENDER\":\"9397643\",\"DATE\":\"2016-07-27 16:11:13\",\"MESSAGE\":\"hi\"},{\"SENDER\":\"9397643\",\"DATE\":\"2016-07-27 16:11:52\",\"MESSAGE\":\"hi\"},{\"SENDER\":\"9397643\",\"DATE\":\"2016-07-27 16:16:07\",\"MESSAGE\":\"hi\"},{\"SENDER\":\"9397643\",\"DATE\":\"2016-07-27 16:17:50\",\"MESSAGE\":\"hi\"}]"),
                   "chatId": null,
@@ -432,9 +432,10 @@ function invokePluginReceivedMsgHandler(msgObj) {
                     objJsChat._changeStatusOfMessg(msgObj["msg_id"], msgObj["from"], "recievedRead");
                     break;
                 case strophieWrapper.msgStates["FORWARDED"]:
-                    console.log("here_for");
-                    console.log(msgObj);
-                    //objJsChat._appendSelfMessage(msgObj["body"],msgObj["to"],msgObj["msg_id"]);
+                    if(typeof msgObj["body"]!= "undefined" && msgObj["body"]!= "" && msgObj["body"]!= null){
+                        if(msgObj["forward_jid"] != strophieWrapper.getSelfJID())
+                            objJsChat._appendSelfMessage(msgObj["body"],msgObj["to"],msgObj["msg_id"],"sent");
+                    }
                     break;
             }
             /*if(msgObj['msg_state'] == "received"){
