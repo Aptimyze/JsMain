@@ -40,11 +40,12 @@ class JS_Communication
 			{							
 				$dbObj = new newjs_CHAT_LOG($dbName2);
 			
-				$dbObj->insertIntoChatLog($id,$this->loginProfile->getPROFILEID(),$this->otherProfile->getPROFILEID(),'N','N',0,$type,'N','U','U',0);
+				$dbObj->insertIntoChatLog($id,$this->loginProfile->getPROFILEID(),$this->otherProfile->getPROFILEID(),'N','N',0,$type,'N','U','U',$this->chatID);
 			
 				$dbObjMessage = new newjs_MESSAGES($dbName2);
-				$dbObjMessage->insertSingleMessage($id,$message);
+				$dbObjMessage->insertSingleMessage($id,$this->message);
 			}
+			return $id;
 		
 		}
 		else
