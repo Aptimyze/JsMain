@@ -254,7 +254,11 @@ function invokePluginLoginHandler(state) {
         eraseCookie("chatAuth");
         objJsChat.addLoginHTML(true);
     } else if(state == "logout"){
-        $(objJsChat._logoutChat).click();
+        if($(objJsChat._logoutChat).length != 0)
+            $(objJsChat._logoutChat).click();
+    } else if(state == "login"){
+        if($(objJsChat._loginbtnID).length != 0)
+            $(objJsChat._loginbtnID).click();
     }
 }
 
