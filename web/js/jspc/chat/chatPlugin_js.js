@@ -130,7 +130,7 @@ JsChat.prototype = {
         this._chatLoggerPlugin($(this._maxChatBarOut));
         $("chat-box").each(function (index, element) {
             if ($(this).attr("pos-state") == "open") {
-                curEle._scrollUp($(this));
+                curEle._scrollUp($(this),"297px");
             }
         });
         $(this._maxChatBarOut).fadeOut('slow', function () {
@@ -484,7 +484,7 @@ JsChat.prototype = {
         $(elem._scrollDivId).mCustomScrollbar({
             theme: "light",
             callbacks:{
-                onScroll:function(){
+                onScrollStart:function(){
                     $('.info-hover').css('visibility', 'hidden');
                 }
             }
@@ -571,7 +571,7 @@ JsChat.prototype = {
         }
         else if (type == "retain" || type == "min") {
             elem.animate({
-                bottom: "-307px"
+                bottom: "-14px"
             }, function () {
                 $(elem.find(".nchatic_2")[0]).hide();
                 $(elem.find(".nchatic_3")[0]).hide();
@@ -610,10 +610,10 @@ JsChat.prototype = {
         }
     },
     //scrolling up chat box
-    _scrollUp: function (elem) {
+    _scrollUp: function (elem,btmValue) {
         var curEle = this;
         elem.animate({
-            bottom: "0px"
+            bottom: btmValue
         }, function () {
             $(elem.find(".nchatic_2")[0]).show();
             $(elem.find(".nchatic_3")[0]).show();
@@ -677,7 +677,7 @@ JsChat.prototype = {
             setTimeout(function () {
                 $(".extraChats").css("padding-top", "0px");
             }, 100);
-            curElem._scrollUp($('chat-box[user-id="' + userId + '"]'));
+            curElem._scrollUp($('chat-box[user-id="' + userId + '"]'),"297px");
         });
     },
     //bind clicking close icon
@@ -942,7 +942,7 @@ JsChat.prototype = {
             //$("chat-box[user-id='" + username + "'] .chatMessage").html(chatHtml);
             $(this).closest(".extraChatList").remove();
             setTimeout(function () {
-                curElem._scrollUp($('chat-box[user-id="' + username + '"]'));
+                curElem._scrollUp($('chat-box[user-id="' + username + '"]'),"297px");
             }, 700);
             //adding data in extra popup 
             var len = $("chat-box").length,
@@ -1002,7 +1002,7 @@ JsChat.prototype = {
         var curElem = this;
         $(curElem._chatBottomPanelID).append('<div class="extraChats cursp pos_abs nchatbtmNegtaive wid30 hgt43 bg5"><div class="extraNumber colrw opa50">+1</div><div><div class="extraPopup pos_abs l0 nchatbtmNegtaive wid153 bg5"><div>');
         $(".extraChats").css("left", curElem._bottomPanelWidth - $('chat-box').length * 250 - 32);
-        curElem._scrollUp($(".extraChats"));
+        curElem._scrollUp($(".extraChats"),"0px");
         //adding data in extra popup 
         var len = $("chat-box").length - 1,
             data = $($("chat-box")[len]).attr("user-id");
@@ -1311,7 +1311,7 @@ JsChat.prototype = {
             $(curElem._chatBottomPanelID).css("bottom", "0px");
         }*/
         if ($(curElem._chatBottomPanelID).length == 0) {
-            $("body").append("<div id='chatBottomPanel' class='btmNegtaive pos_fix calhgt2 z7 fontlig'></div>");
+            $("body").append("<div id='chatBottomPanel' class='btmNegtaive pos_fix calhgt2 z7 fontlig hgt57'></div>");
             curElem._bottomPanelWidth = $(window).width() - $(curElem._parendID).width();
             $(curElem._chatBottomPanelID).css('max-width',curElem._bottomPanelWidth);
             $(curElem._chatBottomPanelID).css("right", $(curElem._parendID).width());
@@ -1380,7 +1380,7 @@ JsChat.prototype = {
         chatBoxProto.attachedCallback = function () {
             userId = $(this).attr("user-id");
             this.innerHTML = '<div class="chatBoxBar fullwid hgt57 bg5 pos-rel fullwid"></div><div class="chatArea fullwid fullhgt"><div class="messageArea f13 bg13 fullhgt"><div class="chatMessage pos_abs fullwid scrollxy" style="height: 246px;"><div id="chatHistory_'+userId+'"></div><div class="spinner"></div></div></div><div class="chatInput brdrbtm_new fullwid btm0 pos-abs bg-white"><textarea cols="23" style="width: 220px;" id="txtArea"  class="inputText lh20 brdr-0 padall-10 colorGrey hgt18 fontlig" placeholder="Write message"></textarea></div></div>';
-            $(this).addClass("z7 btm0 brd_new fr mr7 fullhgt wid240 pos-rel disp_ib");
+            $(this).addClass("z7 b297 hgt352 brd_new fr mr7 fullhgt wid240 pos-rel disp_ib");
             
             status = $(this).attr("status-user");
             elem._appendInnerHtml(userId, status);

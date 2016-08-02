@@ -105,7 +105,7 @@ function getChatHistory(apiParams){
         success: function (response) {
             if(response["responseStatusCode"] == "0"){
                 console.log("history");
-                console.log($.parseJSON(response["Message"]));
+                //console.log($.parseJSON(response["Message"]));
                 if(typeof response["Message"] != "undefined"){
                     //call plugin function to append history in div
                     objJsChat._appendChatHistory(apiParams["extraParams"]["from"],apiParams["extraParams"]["to"],$.parseJSON(response["Message"]));
@@ -516,6 +516,7 @@ function clearLocalStorage() {
     $.each(removeArr, function (key, val) {
         localStorage.removeItem(val);
     });
+    localStorage.removeItem("chatStateData");
 }
 
 /*hit api for chat before acceptance
