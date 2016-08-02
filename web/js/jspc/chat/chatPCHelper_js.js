@@ -671,10 +671,16 @@ function updateRosterOnChatContactActions(rosterParams) {
             user_id = receiverJID.split("@")[0];
         if (chatConfig.Params[device].updateRosterFromFrontend == true) {
             if (typeof receiverJID != "undefined" && receiverJID) {
-                var nodeArr = strophieWrapper.Roster[user_id];
+                var nodeArr = [];
+                nodeArr[user_id] = strophieWrapper.Roster[user_id];
+                console.log("obj");
+                console.log(strophieWrapper.Roster[user_id]);
                 if(typeof nodeArr != "undefined"){
                     if(action == "ACCEPT" || action == "DECLINE" || action == "BLOCK" || action == "INITIATE"){
-                        invokePluginManagelisting(nodeArr, "delete_node", user_id);              
+                        setTimeout(function(){
+                            console.log("removing");
+                            invokePluginManagelisting(nodeArr, "delete_node", user_id); 
+                        },5000);                
                     }
                 }
                 /*switch (action) {

@@ -74,7 +74,7 @@ chatConfig.Params = {
         }
     },
     pc: {
-        updateRosterFromFrontend:false,
+        updateRosterFromFrontend:true,
         bosh_service_url: 'ws://' + openfireUrl + '/ws/', //connection manager for openfire
         keepalive: true, //keep logged in session alive
         roster_groups: true, //show categories in listing
