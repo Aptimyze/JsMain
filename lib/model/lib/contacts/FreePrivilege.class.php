@@ -38,7 +38,31 @@ class FreePrivilege extends Privilege
 	public function updatePrivilege(ContactHandler $contactHandler)
 	{		
 		$this->privilegeArray= $this->getPrivilege($contactHandler);
-				
+		if($this->privilegeArray[0]['COMMUNICATION']['MESSAGE']=='P')
+		{ 
+			$dbName = JsDbSharding::getShardNo($contactHandler->getViewer()->getPROFILEID());
+			$dbMessageLogObj=new NEWJS_MESSAGE_LOG($dbName);
+			$messages=$dbMessageLogObj->getPaidMemberCommunicationHistory($contactHandler->getViewer()->getPROFILEID(),$contactHandler->getViewed()->getPROFILEID());
+			$presetMessage[] = str_ireplace("{{USERNA ME}}",$contactHandler->getViewer()->getUSERNAME(),Messages::ACCEPT_PRESET_PAID_SELF);
+			$presetMessage[] = str_ireplace("{{USERNAME}}",$contactHandler->getViewer()->getUSERNAME(),Messages::ACCEPT_PRESET_FREE);
+			$presetMessage[] = str_ireplace("{{USERNA ME}}",$contactHandler->getViewed()->getUSERNAME(),Messages::ACCEPT_PRESET_PAID_SELF);
+			$presetMessage[] = str_ireplace("{{USERNAME}}",$contactHandler->getViewed()->getUSERNAME(),Messages::ACCEPT_PRESET_FREE);
+			
+			foreach($messages as$k=>$val)
+			{
+				$message=$val['MESSAGE'];
+				$messageCmp = trim(html_entity_decode($message,ENT_QUOTES));
+				if(!in_array($messageCmp,$presetMessage))
+				{
+					$this->privilegeArray[0]['COMMUNICATION']['MESSAGE']="Y";
+				}
+				else{
+					$message = null;
+				}
+			}
+			if($this->privilegeArray[0]['COMMUNICATION']['MESSAGE']=='P')
+				$this->privilegeArray[0]['COMMUNICATION']['MESSAGE']=='N';
+		}
 	}
 	
 /**
