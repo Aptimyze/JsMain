@@ -230,5 +230,23 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
                 }
         
 }
+
+
+    //Three function for innodb transactions
+    public function startTransaction()
+    {
+        $this->db->beginTransaction();
+    }
+    public function commitTransaction()
+    {
+        $this->db->commit();
+    }
+
+    public function rollbackTransaction()
+    {
+        $this->db->rollback();
+    }
+    //Three function for innodb transactions
+
 }
 ?>

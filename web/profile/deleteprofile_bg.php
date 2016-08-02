@@ -34,6 +34,7 @@ else
 	if(!is_numeric($profileid))
 		$logError=3;
 }
+
 $mainDb = connect_db();
 $slaveDb = connect_slave();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$mainDb);
@@ -104,6 +105,8 @@ if(count($myDbarr))
 $mainDb = connect_db();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$mainDb);
 $sql="BEGIN"; 
+$dupLogObj=new DUPLICATE_PROFILE_LOG();
+$dupLogObj->startTransaction();
 mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
 delFromTables('DELETED_BOOKMARKS','BOOKMARKS',$mainDb,$profileid,"BOOKMARKER");
 delFromTables('DELETED_BOOKMARKS','BOOKMARKS',$mainDb,$profileid,"BOOKMARKEE");
@@ -117,7 +120,7 @@ delFromTables('DELETED_OFFLINE_MATCHES','OFFLINE_MATCHES',$mainDb,$profileid,"PR
 delFromTables('DELETED_OFFLINE_NUDGE_LOG','OFFLINE_NUDGE_LOG',$mainDb,$profileid,"SENDER",'jsadmin');
 delFromTables('DELETED_OFFLINE_NUDGE_LOG','OFFLINE_NUDGE_LOG',$mainDb,$profileid,"RECEIVER",'jsadmin');
 
-markProfilesAsNonDuplicate($profileid);
+markProfilesAsNonDuplicate($profileid,$dupLogObj);
 
 /****  Transaction for master tables started here . ****/
 
@@ -142,6 +145,7 @@ foreach($myDbarr as $key=>$value)
 /** mainDb committed **/
 $sql="COMMIT";
 mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
+$dupLogObj->commitTransaction();
 
 $sql_del = "DELETE FROM newjs.CONTACTS_STATUS WHERE PROFILEID='$profileid'";
 mysql_query($sql_del,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql_del);
@@ -461,8 +465,8 @@ function sendCurlDeleteRequest($url)
 	return $result;
 }
 
-function markProfilesAsNonDuplicate($profileid){
-    $dupLogObj=new DUPLICATE_PROFILE_LOG();
+function markProfilesAsNonDuplicate($profileid,$dupLogObj){
+    
     $dupArray = $dupLogObj->fetchLogForAProfile($profileid);
     foreach ($dupArray as $key => $value) 
     {
@@ -526,7 +530,6 @@ function markProfilesAsNonDuplicate($profileid){
               }
               
               $tempFlag=0;
-              
               foreach($tempProfileArray as $key3 => $value3)
               {
                   
@@ -536,7 +539,7 @@ function markProfilesAsNonDuplicate($profileid){
                            break;
                         }  
               }    
-              
+
               if($tempFlag==0)
               {
               
