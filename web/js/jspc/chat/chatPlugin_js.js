@@ -1755,11 +1755,8 @@ JsChat.prototype = {
         //as per discussion with ashok this height is goign to be fixed
         var hoverDivHgt = 435;
         hoverNewTop = this._calHoverPos(hoverNewTop, hoverDivHgt);
-        if (this._checkWidth()) {
-            var shiftright = 245;
-        } else {
-            var shiftright = Math.round($(this._parendID)[0].getBoundingClientRect().width);
-        }
+        
+        var shiftright = Math.round($(this._parendID)[0].getBoundingClientRect().width);
         //this._chatLoggerPlugin('hoverNewTop:'+hoverNewTop+' shiftright:'+shiftright);
         //if element exist        
         if ($('#' + curEleID + '_hover').length != 0) {
