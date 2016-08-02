@@ -1457,12 +1457,14 @@ JsChat.prototype = {
                 }
                 //console.log(historyHTML);
                 if(historyHTML){
-                    $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_"+other_id).append(historyHTML);
+                    $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_"+other_id).append(historyHTML).promise().done(function(){
+                        curElem._scrollToBottom(other_id);
+                    });
                     /*setTimeout(function(){
                       curElem._scrollToBottom(other_id);  
                     },1000);*/
-                    
-                    curElem._scrollToBottom(other_id); 
+
+                     
                 }
             });
         }
