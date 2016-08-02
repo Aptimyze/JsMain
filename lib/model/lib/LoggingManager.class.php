@@ -62,30 +62,7 @@ class LoggingManager
     {   
         return($this->iUniqueID);
     }
-    /* A function to print the all info of requests
 
-    */
-
-    public function allInfo($functionname)
-    { 
-        // die("reached");
-        $currDate = Date('Y-m-d');
-
-     $reqId = sfContext::getInstance()->getRequest()->getAttribute('REQUEST_ID_FOR_TRACKING');
-    // die($reqId);
-     $szStringToWrite=$reqId . "  module_name  action_name  " . $functionname ." works fine at time \n";
-     $this->writeToFile($szStringToWrite);
-     
-    /* 
-      $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
-      $this->createDirectory($filePath);
-     //die($filePath);
-      $fileResource = fopen($filePath,"a");
-        fwrite($fileResource,$szStringToWrite);
-        fclose($fileResource);
-        */
-        //
-    }   
 
     /**
      * __destruct
@@ -172,29 +149,53 @@ class LoggingManager
 
       $logId = $this->getLogId($logArray);
       $clientIp = $this->getLogClientIP();
+    
       $channelName = $this->getLogChannelName();
 
       // $moduleName = $this->getLogModuleName($isSymfony,$exception,$logArray);
       $moduleName = $this->szLogPath;
       $actionName = $this->getLogActionName($isSymfony,$exception,$logArray);
+      
       $apiVersion = $this->getLogAPI($logArray);
       $message = $this->getLogMessage($logArray);
-      $typeOfError = $this->getLogTypeOfError($logArray);
+      $uniqueSubId = $this->getLogUniqueSubId($logArray);
+      $headers = getallheaders();
 
       $logData = $logData." [".$logId.":".$clientIp."]";
       $logData = $logData." [".$time."]";
+      $logData = $logData.$uniqueSubId;
       $logData = $logData." ".$channelName;
+      $logData = $logData." ".$clientIp;
+      $logData = $logData." ".$statusCode;
       $logData = $logData." ".$moduleName;
       $logData = $logData." ".$actionName;
       $logData = $logData." ".$apiVersion;
       $logData = $logData." ".$typeOfError;
       $logData = $logData." ".$statusCode;
       $logData = $logData." ".$message;
+      $logData = $logData." ".$exception;
       return $logData;
     }
 
     /**
      * @return logId
+     */
+    public function getLogUniqueSubId($logArray)
+    {
+      if ( !isset($logArray['uniqueSubId']))
+      { 
+        $uniqueSubId = sfContext::getInstance()->getRequest()->getAttribute('UNIQUE_REQUEST_SUB_ID');
+        
+      }
+      else
+      { 
+        $uniqueSubId = $logArray['uniqueSubId'];
+      }
+      return $uniqueSubId;
+    }
+
+    /**
+     * @return UniqueSubId
      */
     public function getLogId($logArray)
     {
@@ -294,6 +295,7 @@ class LoggingManager
           $exceptionLiesIn = $exception->getTrace()[0]['file'];
           $module_action = str_replace(JsConstants::$docRoot, "", $exceptionLiesIn);
           $moduleName = explode('/', $module_action)[1];
+         
         }
       }
       else
@@ -432,7 +434,17 @@ class LoggingManager
      */
     private function canCreateDir($szLogPath)
     {
-      // check if log for all modules is together, if not set then check if module can create diff directory
-      return (LoggingEnums::LOG_TOGETHER ? 0 : LoggingConfig::getInstance()->dirStatus($szLogPath));
+        // check if log for all modules is together, if not set then check if module can create diff directory
+        return (LoggingEnums::LOG_TOGETHER ? 0 : LoggingConfig::getInstance()->dirStatus($szLogPath));
+    }
+
+    /**
+     *sets unique id
+     * @param $uniqueID
+     */
+
+    public function setUniqueId($uniqueID)
+    {
+        $this->iUniqueID = $uniqueID;
     }
 }

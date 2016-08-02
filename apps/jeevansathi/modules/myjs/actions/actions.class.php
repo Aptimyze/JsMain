@@ -252,7 +252,7 @@ class myjsActions extends sfActions
 		$entryDate = $this->loginProfile->getENTRY_DT();
 		$CITY_RES_pixel = $this->loginProfile->getCITY_RES();
 		$this->profilePic = $this->loginProfile->getHAVEPHOTO();
-		LoggingManager::getInstance('test')->allInfo(" values set");
+	
 		if (empty($this->profilePic))
 			$this->profilePic="N";
 		$this->username = $this->loginProfile->getUSERNAME();
@@ -260,7 +260,7 @@ class myjsActions extends sfActions
 		//New Membership 
 		$memHandlerObj = new MembershipHandler();
 		$this->membershipStatus = $memHandlerObj->getRealMembershipName($this->profileid);
-			LoggingManager::getInstance('test')->allInfo(" membership status ");
+			
 		if($this->profilePic!="N"){
 			$pictureServiceObj=new PictureService($this->loginProfile);
 			$profilePicObj = $pictureServiceObj->getProfilePic();
@@ -274,7 +274,7 @@ class myjsActions extends sfActions
 				
 			$this->ThumbailUrl=$profilePicObj->getThumbailUrl();
 			}
-			LoggingManager::getInstance('test')->allInfo(" Photo set ");
+			
 		}
    		else{
 			$this->photoUrl=$this->ThumbailUrl=PictureFunctions::getNoPhotoJSMS($this->gender,'ProfilePic120Url');
@@ -479,5 +479,6 @@ return $staticCardArr;
 
 
 	} 
+
 }
  

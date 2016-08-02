@@ -286,19 +286,34 @@ class AuthFilter extends sfFilter {
 					die;
 					}
 				}
-            $obj = LoggingManager::getInstance();
+            
             //echo ($obj->getUniqueId());
+				$Previo = 0;
+
             
                $headers = getallheaders();
+               $request->setAttribute('UNIQUE_REQUEST_SUB_ID',uniqid());
 	            
 	            if (false === isset($headers['RID_AJAX'])) {
-	            	$request->setAttribute('REQUEST_ID_FOR_TRACKING',$obj->getUniqueId()); 
+
+	            	$out = LoggingManager::getInstance()->getUniqueId();
+	            	$request->setAttribute('REQUEST_ID_FOR_TRACKING',$out); 
+	            	//echo ($request->getAttribute('REQUEST_ID_FOR_TRACKING'));
+	            	//echo "first";
+
 	            }
 	            else
+	            {  
+	            	LoggingManager::getInstance()->setUniqueId($headers['RID_AJAX']);
 	            	$request->setAttribute('REQUEST_ID_FOR_TRACKING',$headers['RID_AJAX']);
+	            }
+	            
+	            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "My Request");
+	            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "My second Request");
+	            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "My third Request");
+	            
 
-
-              
+            //  die("X" . $request->getAttribute('REQUEST_ID_FOR_TRACKING')."  ".$request->getAttribute('UNIQUE_REQUEST_SUB_ID'));
             
 			}
 			else
