@@ -76,7 +76,7 @@ abstract class AbstractProfileCompletionScore {
 			$iProfileID = $Var;
 		}	
 		else
-		{     LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR,new Exception('Profile Object Init Error'));
+		{     LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,new Exception('Profile Object Init Error'));
 			throw new Exception('Profile Object Init Error');
 		}
         
@@ -125,7 +125,7 @@ abstract class AbstractProfileCompletionScore {
 			$objScoreTable->replaceRecord($this->m_objProfile->getPROFILEID(), intval($iScore));
 		}
 		catch(Exception $e)
-		{     LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR,$e);
+		{     LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,$e);
 			$subject = "ProfileCompletionScore : Exception While updaing score";
 			SendMail::send_email("kunal.test02@gmail.com","'".print_r($e,true)."'",$subject);
 		}

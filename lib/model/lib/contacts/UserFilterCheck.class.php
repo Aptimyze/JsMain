@@ -605,7 +605,7 @@ class UserFilterCheck
 						
 		}
 		else
-		{   LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR,sfException(sprintf(' Jpartner object is not present  %s::%s.', get_class($this), $method)));
+		{   LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,sfException(sprintf(' Jpartner object is not present  %s::%s.', get_class($this), $method)));
 			throw new sfException(sprintf(' Jpartner object is not present  %s::%s.', get_class($this), $method));
 		}
 		
@@ -706,7 +706,7 @@ class UserFilterCheck
 		}
 		else
 		{		
-			LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR,sfException(sprintf(' No profile class object send with profileid  %s::%s.', get_class($actionObj), $method)));
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,sfException(sprintf(' No profile class object send with profileid  %s::%s.', get_class($actionObj), $method)));
 			throw new sfException(sprintf(' No profile class object send with profileid  %s::%s.', get_class($actionObj), $method));
 		}
 		return $dpp_parameters;

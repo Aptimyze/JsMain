@@ -6,7 +6,7 @@ class IMAGE_SERVER_IMAGE_TYPE_ENUM
         static public $imageTypeEnum = array();
     	
 	/* All the enums for every module and image type combination required need to be mentioned in this initializing function*/
-	static public function init()
+	 static public function init()
         {
                 self::$imageTypeEnum["PICTURE"]["MainPicUrl"]="P_M";
                 self::$imageTypeEnum["PICTURE"]["ProfilePicUrl"]="P_P";
@@ -41,11 +41,13 @@ class IMAGE_SERVER_IMAGE_TYPE_ENUM
 		if(array_key_exists($module,self::$imageTypeEnum) && array_key_exists($type,self::$imageTypeEnum[$module]))
 			$enum=self::$imageTypeEnum[$module][$type];
 		else
-			{    LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR,new Exception("Invalid Image Type Enum is requested in IMAGE_SERVER_IMAGE_TYPE_ENUM.class.php"));
+			{
+			    LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,new Exception("Invalid Image Type Enum is requested in IMAGE_SERVER_IMAGE_TYPE_ENUM.class.php"));
 			throw new Exception("Invalid Image Type Enum is requested in IMAGE_SERVER_IMAGE_TYPE_ENUM.class.php");
 
 		return $enum;
-        }
+        	}
+    	}
 	
 	/* this function is used to retrieve Image type corrsponding to a module name and enum provided.
 	Exception class is used instead of jsException as it is an static function and jsException will not be recognised here
@@ -59,10 +61,12 @@ class IMAGE_SERVER_IMAGE_TYPE_ENUM
 		if(array_key_exists($module,self::$imageTypeEnum))
                 	$imageType= array_search($enum,self::$imageTypeEnum[$module]);
 		if(!$imageType)		
-	  	{   LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR,new Exception("Invalid Image Type is requested in IMAGE_SERVER_IMAGE_TYPE_ENUM.class.php"));
+	  	{   
+	  		LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,new Exception("Invalid Image Type is requested in IMAGE_SERVER_IMAGE_TYPE_ENUM.class.php"));
 			throw new Exception("Invalid Image Type is requested in IMAGE_SERVER_IMAGE_TYPE_ENUM.class.php");
 		
 		return $imageType;
         }
+    	}
 }
 ?>

@@ -34,7 +34,7 @@ class NEWJS_VIRTUALNO extends TABLE
 	public function getVNoFromVId($vId)
 	{
 		if (!$vId){
-			LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR,new Exception("no virtual ID passed in arguements in getVNoFromVId in NEWJS_VIRTUALNO", 1));
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,new Exception("no virtual ID passed in arguements in getVNoFromVId in NEWJS_VIRTUALNO", 1));
 		 throw new Exception("no virtual ID passed in arguements in getVNoFromVId in NEWJS_VIRTUALNO", 1);}
 
 		try
@@ -62,7 +62,7 @@ class NEWJS_VIRTUALNO extends TABLE
 	{
 
 		if (!$vNumber){
-				LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR,new Exception("no virtual no passed in arguements IN getVIdFromVNo in NEWJS_VIRTUALNO", 1));
+				LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,new Exception("no virtual no passed in arguements IN getVIdFromVNo in NEWJS_VIRTUALNO", 1));
 
 		 throw new Exception("no virtual no passed in arguements IN getVIdFromVNo in NEWJS_VIRTUALNO", 1);}
 		
@@ -89,7 +89,7 @@ public function updateVIdAsLatest($vId)
 
 		if (!$vId){
 
-			LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR,new Exception("no virtual ID passed in arguements in getVNoFromVId in NEWJS_VIRTUALNO", 1));
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,new Exception("no virtual ID passed in arguements in getVNoFromVId in NEWJS_VIRTUALNO", 1));
 		throw new Exception("no virtual ID passed in arguements in updateVIdAsLatest in NEWJS_VIRTUALNO", 1);
 	}
 		

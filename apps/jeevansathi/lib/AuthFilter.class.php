@@ -286,7 +286,7 @@ class AuthFilter extends sfFilter {
 					die;
 					}
 				}
-            $obj = LoggingManager::getInstance('test');
+            $obj = LoggingManager::getInstance();
             //echo ($obj->getUniqueId());
             
                $headers = getallheaders();

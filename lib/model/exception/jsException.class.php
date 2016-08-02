@@ -6,7 +6,7 @@ class jsException extends PDOException{
 			parent::__construct(self::getCustomMessage($this, $trace),$code);
 			   //$exceptionObj->getMessage();
 			  // die(X);
-					LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR,new Exception($message));
+					LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,new Exception($message));
 			
 						jsException::log($message);
 		}
@@ -39,7 +39,7 @@ An error has occurred! We will be correcting this problem at the earliest. Kindl
         }
 
 	static function log($message){
-		LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR,new Exception($message));
+		LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,new Exception($message));
 		//sfContext::getInstance()->getLogger()->err($message);
 	}
 

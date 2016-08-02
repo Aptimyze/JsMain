@@ -67,7 +67,7 @@ class itunesReceiptValidator {
         curl_close($ch);
 
         if ($errno != 0) {
-            LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR,new Exception($errmsg, $errno));
+            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,new Exception($errmsg, $errno));
             throw new Exception($errmsg, $errno);
         }
 

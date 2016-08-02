@@ -16,7 +16,7 @@ public function __construct($profileObject,$phoneType)
 
 			
 			if (!$profileObject || !$phoneType){
-				            LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR,new Exception("No phoneType or profileObject",1));
+				            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,new Exception("No phoneType or profileObject",1));
 				throw new Exception("No phoneType or profileObject", 1);
 				$this->profileObject=$profileObject;
 				$this->phoneType=$phoneType;
@@ -38,7 +38,7 @@ public function __construct($profileObject,$phoneType)
 				}
 
 	
-
+			}
 		}
 		catch(Exception $e)
 		{

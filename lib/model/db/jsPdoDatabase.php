@@ -89,7 +89,7 @@ class jsPdoDebug {
 				return call_user_func_array(array($this->delegate , $method), $args);
 			} catch (PDOException $e) {
 				//Logging manager added for pdo as well
-				LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR, $e);
+				LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, $e);
 				error_log('jsDatabase PDO error in ' . $method . '(\'' . $args[0] . '\', ...) [Error message: ' . $e->getMessage() . ']');
 				throw $e;
 			}
@@ -110,7 +110,7 @@ class jsPdoStatementDebug {
 		try {
 			return $this->delegate->execute($input_parameters);
 		} catch(PDOException $e) {
-			LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR, $e);
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, $e);
 			error_log('jsDatabase PDOStatement execute error: [Query: ' . $this->delegate->queryString . '] [Bound values: ' . $this->boundValues($input_parameters) . '] [Error message: ' . $e->getMessage() . ']');
 			throw $e;
 		}
@@ -161,7 +161,7 @@ class jsPdoPersistent {
 			try {
 				return call_user_func_array(array($this->delegate , $method), $args);
 			} catch (PDOException $e) {
-				LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR, $e);
+				LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, $e);
 				$error = $this->delegate->errorInfo();
 				if($error[1] == 2006 || $error[1] == 2013)
 				{
@@ -173,7 +173,7 @@ class jsPdoPersistent {
 						return call_user_func_array(array($this->delegate , $method), $args);
 					}
 					catch(PDOException $pe)
-					{  LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR, $e);
+					{  LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, $e);
 						throw $e;
 					}
 				}
@@ -247,13 +247,13 @@ class jsPdoStatementPersistent {
 				}
 				catch(PDOException $pe)
 				{
-					LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR, $pe);
+					LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, $pe);
 					throw $pe;
 				}
 			}
 			else
 			{
-				LoggingManager::getInstance('test')->logThis(LoggingEnums::LOG_ERROR, $e);
+				LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, $e);
 				throw $e;
 			}
 		}
