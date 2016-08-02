@@ -18,8 +18,8 @@ class incentive_BRANCH_CITY extends TABLE
             $prep = $this->db->prepare($sql);
             $prep->execute();
             while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
-                if ($row_near["VALUE"] != "GU") {
-                    $near_ar[$row_near["VALUE"]] = $row_near["LABEL"];
+                if ($result["VALUE"] != "GU") {
+                    $near_ar[$result["VALUE"]] = $result["LABEL"];
                 }
             }
             return $near_ar;
