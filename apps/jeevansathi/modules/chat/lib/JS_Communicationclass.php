@@ -13,7 +13,7 @@ class JS_Communication
 	{
 		$this->loginProfile = $loginProfile;
 		$this->otherProfile = $otherProfile;
-		$this->contactObj = new Contacts($this->loginProfile, $this->otherProfile);
+		//$this->contactObj = new Contacts($this->loginProfile, $this->otherProfile);
 		$this->communicationType=$communicationType;
 		$this->message=$message;
 		$this->chatID=$chatID;
@@ -21,40 +21,36 @@ class JS_Communication
 
 	public function storeCommunication()
 	{
-		$type=$this->contactObj->getTYPE();
-		
-		$dbName1 = JsDbSharding::getShardNo($this->loginProfile->getPROFILEID());
-		$dbName2 = JsDbSharding::getShardNo($this->otherProfile->getPROFILEID());
-		
-		$chatIdObj=new NEWJS_CHAT_LOG_GET_ID();
-		$id=$chatIdObj->getAutoIncrementMessageId();
-		
-		if($this->communicationType="C"){
-			$dbObj = new newjs_CHAT_LOG($dbName1);		
-			$dbObj->insertIntoChatLog($id,$this->loginProfile->getPROFILEID(),$this->otherProfile->getPROFILEID(),'N','N',0,$type,'N','U','U',$this->chatID);//sfContext::getInstance()->getRequest()->getParameter("chatID"));
+		if($this->validateChat()){
+			//$type=$this->contactObj->getTYPE();**To be removed**
+			$type="A";
 			
-			$dbObjMessage = new NEWJS_CHATS($dbName1);
-			$dbObjMessage->insertSingleMessage($id,$this->message);
-		
-			if($dbName1 != $dbName2)
-			{							
-				$dbObj = new newjs_CHAT_LOG($dbName2);
+			$dbName1 = JsDbSharding::getShardNo($this->loginProfile->getPROFILEID());
+			$dbName2 = JsDbSharding::getShardNo($this->otherProfile->getPROFILEID());
 			
-				$dbObj->insertIntoChatLog($id,$this->loginProfile->getPROFILEID(),$this->otherProfile->getPROFILEID(),'N','N',0,$type,'N','U','U',$this->chatID);
+			$chatIdObj=new NEWJS_CHAT_LOG_GET_ID();
+			$id=$chatIdObj->getAutoIncrementMessageId();
 			
-				$dbObjMessage = new NEWJS_CHATS($dbName2);
+			if($this->communicationType="C"){
+				$dbObj = new newjs_CHAT_LOG($dbName1);
+				$dbObj->insertIntoChatLog($id,$this->loginProfile->getPROFILEID(),$this->otherProfile->getPROFILEID(),'N','N',0,$type,'N','U','U',$this->chatID);//sfContext::getInstance()->getRequest()->getParameter("chatID"));
+				
+				$dbObjMessage = new NEWJS_CHATS($dbName1);
 				$dbObjMessage->insertSingleMessage($id,$this->message);
+			
+				if($dbName1 != $dbName2)
+				{							
+					$dbObj = new newjs_CHAT_LOG($dbName2);
+				
+					$dbObj->insertIntoChatLog($id,$this->loginProfile->getPROFILEID(),$this->otherProfile->getPROFILEID(),'N','N',0,$type,'N','U','U',$this->chatID);
+				
+					$dbObjMessage = new NEWJS_CHATS($dbName2);
+					$dbObjMessage->insertSingleMessage($id,$this->message);
+				}
+				return $id;
 			}
-			return $id;
 		
-		}
-		else
-		{			
-			echo "wrongCommuncicationType";die;
-		}
-		
-		return $id;
-		
+		}		
 	}
 
 	public function getCommunication($msgIdNo)
@@ -87,5 +83,19 @@ class JS_Communication
 		
 	}
 
-
+	public function validateChat()
+	{
+		if($this->loginProfile->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus()=="FREE")
+		{
+			$dbName1 = JsDbSharding::getShardNo($this->loginProfile->getPROFILEID());
+			$dbObj = new newjs_CHAT_LOG($dbName1);
+			if($dbObj->getChatCount($this->loginProfile->getPROFILEID(),$this->otherProfile->getPROFILEID()))
+				return true;
+			else
+				return false;
+		}
+		else
+			return true;
+	}
+		
 }

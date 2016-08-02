@@ -94,6 +94,38 @@ class NEWJS_CHAT_LOG extends TABLE{
 			}
 			return $output;
 		}
-		
+	
+	public function getChatCount($viewer,$viewed)
+		{
+			try
+			{
+				if(!$viewer && !$viewed)
+				{
+					throw new jsException("","profile ids are not specified in  funcion getMessageHistory OF newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					if($pagination)
+						$whrStr="AND M.ID < ".$pagination;
+					else
+						$whrStr="";
+					$sql = "SELECT count(*) as CNT FROM  `CHAT_LOG`  WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER ))";
+					$prep=$this->db->prepare($sql);
+					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
+					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);
+					$prep->execute();
+					while($row = $prep->fetch(PDO::FETCH_ASSOC))
+					{
+						$count = $row['CNT'];
+					}
+					return $count;
+				}
+			}
+			catch (PDOException $e)
+			{
+				throw new jsException($e);
+			}
+			return $output;
+		}	
 }
 	?>
