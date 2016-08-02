@@ -890,6 +890,9 @@ JsChat.prototype = {
                                 if ($(superParent).find("#sendInt").length != 0) {
                                     $(superParent).find("#sendInt").remove();
                                 }
+                                if(msgSendOutput["sent"] == true){
+                                    _this._changeStatusOfMessg(messageId, userId, "recieved");
+                                }
                                 if(msgSendOutput["cansend"] == false){
                                     $(curElem).prop("disabled", true);
                                 }
