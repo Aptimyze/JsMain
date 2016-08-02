@@ -501,10 +501,10 @@ JsChat.prototype = {
         if (key == "new") {
             this._chatLoggerPlugin("ankita_adding" + contactID + " in groupID");
             this._chatLoggerPlugin(contactHTML);
-            //if(status == "offline")
+            if(status == "offline")
                 $('div.' + groupID + ' ul').append(contactHTML);
-            /*else
-                $('div.' + groupID + ' ul').prepend(contactHTML);*/
+            else
+                $('div.' + groupID + ' ul').prepend(contactHTML);
         } else if (key == "existing") {
             this._chatLoggerPlugin("changing icon");
             if (status == "online") {
@@ -513,6 +513,9 @@ JsChat.prototype = {
                 if ($('#' + contactID + "_" + groupID).find('.nchatspr').length == 0) {
                     $(this._mainID).find($('#' + contactID + "_" + groupID)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
                 }
+                console.log("cloning");
+                $('#' + contactID + "_" + groupID).prependTo('div.' + groupID + ' ul');
+                //$('#' + contactID + "_" + groupID).remove();
             }
         }
     },
