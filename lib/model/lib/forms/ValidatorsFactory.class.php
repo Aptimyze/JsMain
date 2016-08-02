@@ -1,5 +1,6 @@
 <?php
 class ValidatorsFactory{
+public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","STATE_INDIA");
 	
 	public static function getValidator($field,$form_values="",$page=""){
 		$const_cl=$field->getConstraintClass();
@@ -124,8 +125,13 @@ class ValidatorsFactory{
 		if($field_map_name && !in_array($field_map_name,$hobby_arr)&& !in_array($field_map_name,$not_to_check_arr))
 		{
 			$choices=@array_keys(FieldMap::getFieldLabel($field_map_name,'',1));
+			if(in_array($field->getName(),self::$validateZeroForFields))
+			{
+				$choices[]='0';
+			}
 			$choiceValidator = new sfValidatorChoice(array('choices'=>$choices,'required'=>false),array('invalid'=>$errInvalid));
 		}
+  
 		if(in_array($field_map_name,$hobby_arr))
 		{
 			return new jsValidatorWhiteList(array('required'=>false,'FieldMapLabel'=>@$field_map_name,'Value'=>@$form_values[$field->getName()],'FieldName'=>@$field->getName(),'isHobby'=>1));

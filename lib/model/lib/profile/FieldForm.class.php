@@ -5,6 +5,7 @@ include_once(sfConfig::get("sf_web_dir") . "/profile/functions_edit_profile.php"
 include_once(sfConfig::get("sf_web_dir")."/ivr/jsivrFunctions.php");
 class FieldForm extends sfForm
 {
+	public static $saveBlankIfZeroForFields = array("DIET","DRINK","SMOKE","MOTHER_OCC","FAMILY_BACK","FAMILY_STATUS","FAMILY_TYPE","FAMILY_VALUES","COMPLEXION","BTYPE","FAMILY_INCOME","NATIVE_COUNTRY","STATE_INDIA","NATIVE_STATE");
 	private $page_obj;
 	public $formValues;
 	public $fieldNameArr;
@@ -61,6 +62,8 @@ class FieldForm extends sfForm
 	  $bExecuteNative_PlaceUpdate = false;
 	  $this->formValues=$this->getValues();
 	  foreach($this->formValues as $field_name=>$value){
+		if(in_array($field_name,self::$saveBlankIfZeroForFields) && $value==0)
+			$value = "";
 		 // if($value!==null){
 		  $field_name=strtoupper($field_name);
 		  $field_obj=$this->fieldObjArr[$field_name];

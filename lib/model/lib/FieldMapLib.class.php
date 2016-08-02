@@ -3110,6 +3110,7 @@ case "education_label":
 case "family_background":
 
 	$arr=array(
+"0"=>"Please Select",
 "1"=>"Business/Entrepreneur",
 "2"=>"Service - Private",
 "3"=>"Service - Govt./PSU",
@@ -3125,6 +3126,7 @@ case "family_background":
 case "mother_occupation":
 
 	$arr=array(
+"0"=>"Please Select",
 "1"=>"Housewife",
 "2"=>"Business/Entrepreneur",
 "3"=>"Service-Private",
@@ -8996,6 +8998,7 @@ case "children_ascii_array":
 	case "family_values":
 
 		$arr=array(
+"0"=>"Please Select",
 "4" => "Orthodox",
 "1" => "Conservative",
 "2" => "Moderate",
@@ -9007,6 +9010,7 @@ case "children_ascii_array":
 	case "family_type":
 
 		$arr=array(
+"0"=>"Please Select",
 "1" => "Joint Family",
 "2" => "Nuclear Family",
 "3" => "Others",
@@ -9017,6 +9021,7 @@ case "children_ascii_array":
 	case "family_status":
 
 		$arr=array(
+"0"=>"Please Select",
 "3" => "Rich/Affluent",
 "2" => "Upper Middle Class",
 "1" => "Middle Class",
@@ -9095,6 +9100,7 @@ case "children_ascii_array":
 	case "bodytype":
 
 		$arr=array(
+"0"=>"Please Select",
 "1" => "Slim",
 "2" => "Average",
 "3" => "Athletic",
@@ -9106,6 +9112,7 @@ case "children_ascii_array":
 	case "complexion":
 
 		$arr=array(
+"0"=>"Please Select",
 "1" => "Very Fair",
 "2" => "Fair",
 "3" => "Wheatish",
@@ -9118,6 +9125,7 @@ case "children_ascii_array":
 	case "smoke":
 
 		$arr=array(
+"0"=>"Please Select",
 "Y" => "Yes",
 "N" => "No",
 "O" => "Occasionally",
@@ -9128,6 +9136,7 @@ case "children_ascii_array":
 	case "diet":
 
 		$arr=array(
+"0"=>"Please Select",
 "V" => "Vegetarian",
 "N" => "Non Vegetarian",
 "J" => "Jain",
@@ -9139,6 +9148,7 @@ case "children_ascii_array":
 	case "drink":
 
 		$arr=array(
+"0"=>"Please Select",
 "Y" => "Yes",
 "N" => "No",
 "O" => "Occasionally",
