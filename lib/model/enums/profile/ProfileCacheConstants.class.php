@@ -11,8 +11,8 @@
 class ProfileCacheConstants
 {
     const ENABLE_PROFILE_CACHE = false;
-    const CONSUME_PROFILE_CACHE = true;
-    const ENABLE_PROFILE_CACHE_LOGS = false;
+    const CONSUME_PROFILE_CACHE = false;
+    const ENABLE_PROFILE_CACHE_LOGS = true;
     const LOG_LEVEL = 3;
     const CACHE_CRITERIA = 'PROFILEID';
     const ALL_FIELDS_SYM = '*';

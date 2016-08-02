@@ -16,6 +16,12 @@ class LoggingManager
     private static $instance = null;
 
     /**
+     * @var Object
+     */
+     static private $isFirstCall = 0;
+
+
+    /**
      * Const of File Base Path
      */
     const LOG_FILE_BASE_PATH = '/uploads/Logger/log';
@@ -49,9 +55,11 @@ class LoggingManager
      * Constructor function
      */
     private function __construct($basePath = null)
-    {
+    { 
+
       $this->szLogPath = $basePath;
       $this->iUniqueID = uniqid();
+      
     }
 
     /*
@@ -60,36 +68,17 @@ class LoggingManager
     */
     public function getUniqueId()
     {   
+        
         return($this->iUniqueID);
+
     }
-    /* A function to print the all info of requests
-
-    */
-
-    public function allInfo($functionname)
-    { 
-        // die("reached");
-        $currDate = Date('Y-m-d');
-
-     $reqId = sfContext::getInstance()->getRequest()->getAttribute('REQUEST_ID_FOR_TRACKING');
-    // die($reqId);
-     $szStringToWrite=$reqId . "  module_name  action_name  " . $functionname ." works fine at time \n";
-     $this->writeToFile($szStringToWrite);
-     
-     
-      $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
-      $this->createDirectory($filePath);
-  
-      $fileResource = fopen($filePath,"a");
-        fwrite($fileResource,$szStringToWrite);
-        fclose($fileResource);
-        //
-    }   
-
+    
     /**
      * __destruct
      */
     private function __destruct() {
+      //throw new Exception('deleting singleton object');
+      $this->logThis(LoggingEnums::LOG_INFO,"deleting singleton object");
         self::$instance = null;
     }
 
@@ -114,7 +103,6 @@ class LoggingManager
             self::$instance = new $className;
         }
         self::$instance->szLogPath = $basePath;
-
         return self::$instance;
     }
 
@@ -131,19 +119,23 @@ class LoggingManager
      *       ,typeOfError(whether php error, or mysql etc.) 
      */
      public function logThis($enLogType,$Var,$logArray = array(),$isSymfony=true)
-     {
+     {   
       if($this->canLog($Var))
       {
         if($enLogType > LoggingEnums::LOG_LEVEL) {
          return ;
        }
+       
+       
+    //  $Var = $this->iUniqueID . "   ".$Var." bbb  ";
+            
 
        switch ($enLogType) {
         case LoggingEnums::LOG_INFO:
-        $this->logInfo($Var,$isSymfony,$logArray());
+        $this->logInfo($Var,$isSymfony,$logArray);
         break;
         case LoggingEnums::LOG_DEBUG:
-        $this->logDebug($Var,$isSymfony,$logArray());
+        $this->logDebug($Var,$isSymfony,$logArray);
         break;
         case LoggingEnums::LOG_ERROR:
         $this->logException($Var,$isSymfony,$logArray);
@@ -165,10 +157,11 @@ class LoggingManager
     }
 
     private function getLogData($exception,$isSymfony,$logArray)
-    {
+    { 
       $time = date('h:i:s');
       $logData = "";
       $clientIp = $this->getLogClientIP();
+      $logId = $this->iUniqueID;
       $channelName = $this->getLogChannelName();
 
       $moduleName = $this->getLogModuleName($isSymfony,$exception,$logArray);
@@ -177,10 +170,13 @@ class LoggingManager
       
       $apiVersion = $this->getLogAPI($logArray);
       $message = $this->getLogMessage($logArray);
+      $uniqueSubId = $this->getLogUniqueSubId($logArray);
+      $headers = getallheaders();
 
-      $logData = $logData.""..":";
-      $logData = $logData.":".$logId;
-      $logData = $logData." ".$time;
+      $logData = $logData."";
+      $logData = $logData. $this->iUniqueID." ";
+      $logData = $logData.$uniqueSubId;
+      $logData = $logData.$time;
       $logData = $logData.":";
       $logData = $logData." ".$channelName;
       $logData = $logData." ".$clientIp;
@@ -195,6 +191,23 @@ class LoggingManager
 
     /**
      * @return logId
+     */
+    public function getLogUniqueSubId($logArray)
+    {
+      if ( !isset($logArray['uniqueSubId']))
+      { 
+        $uniqueSubId = sfContext::getInstance()->getRequest()->getAttribute('UNIQUE_REQUEST_SUB_ID');
+        
+      }
+      else
+      { 
+        $uniqueSubId = $logArray['uniqueSubId'];
+      }
+      return $uniqueSubId;
+    }
+
+    /**
+     * @return UniqueSubId
      */
     public function getLogId($logArray)
     {
@@ -377,7 +390,7 @@ class LoggingManager
 
         //Add in log file
         if($this->bDoItOnce) {
-            $szLogString = "\n".$szLogString;
+            $szLogString = "\n\nNew Request\n".$szLogString;
             $this->bDoItOnce = false;
         }
         $fileResource = fopen($filePath,"a");
@@ -427,5 +440,10 @@ class LoggingManager
     {
         // check if log for all modules is together, if not set then check if module can create diff directory
         return (LoggingEnums::LOG_TOGETHER ? 0 : LoggingConfig::getInstance()->dirStatus($szLogPath));
+    }
+
+    public function setUniqueId($uniqueID)
+    {
+        $this->iUniqueID = $uniqueID;
     }
 }
