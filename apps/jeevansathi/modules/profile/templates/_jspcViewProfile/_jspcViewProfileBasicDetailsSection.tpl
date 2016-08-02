@@ -21,7 +21,36 @@
           ~/if`
               <div class="prfp3">
                 <div class="clearfix prfbr1 pb2">
-                  <div class="fl fontlig color11"><span class="disp_ib f24">~$apiData['about']['username']`</span><span class="disp_ib f12 opa50 pl10">~$apiData['about']['last_active']`</span></div>
+                  <div class="fl fontlig color11">
+		     ~if $nameOfUser`
+			<span class="disp_ib fixWidthOverflow f24">
+				~$nameOfUser`
+			</span>
+			<span class="f15 vertSuper">(~$apiData['about']['username']`)</span>
+		     ~else`
+			<span class="disp_ib f24">
+				~$apiData['about']['username']`
+			</span>
+		     ~/if`
+			<span class="disp_ib fr f12 opa50 pl10 mt10">~$apiData['about']['last_active']`</span>
+		  </div>
+                </div>
+                <div class="pos-rel mt10 color11 fontlig pos-rel textTru">
+                  <div class="pos-abs f12 colr5 prfpos3">~$apiData['about']['subscription_icon']`</div>
+                  <ul class="prfdesc f14 clearfix">
+                    <li class="textTru">~$apiData['about']['age']`,   ~$apiData['about']['height']`</li>
+                    <li class="textTru">~$apiData['about']['educationOnSummary']`</li>
+                    <li class="textTru">~$apiData['about']['location']`</li>
+                    <li class="textTru">~$apiData['about']['work_status']['value']`</li>
+                    <li class="textTru">~$apiData['about']['religion']`,  ~$apiData['about']['caste']`</li>
+                    <li class="textTru">~$apiData['about']['income']`</li>
+                    <li class="textTru">~$apiData['about']['mtongue']`</li>
+                    <li class="textTru">~$apiData['about']['m_status']`</li>
+                    ~if $apiData['about']['have_child'] neq ""`
+                    <li class="textTru">~$apiData['about']['have_child']`</li>
+                    ~/if`
+                  </ul> 
+                </div>
                   <div class="fr mt5"> 
 
                                           <span class="disp_ib pos-rel communicationToolTip">
@@ -54,42 +83,6 @@
                     <!--end:tooltip--> 
                   </span>
                   </div>
-                </div>
-                <div class="pos-rel mt10 color11 fontlig pos-rel textTru">
-                  <div class="pos-abs f12 colr5 prfpos3">~$apiData['about']['subscription_icon']`</div>
-                  <ul class="prfdesc f14 clearfix">
-                    <li class="textTru">~$apiData['about']['age']`,   ~$apiData['about']['height']`</li>
-                    <li class="textTru">~$apiData['about']['educationOnSummary']`</li>
-                    <li class="textTru">~$apiData['about']['location']`</li>
-                    <li class="textTru">~$apiData['about']['work_status']['value']`</li>
-                    <li class="textTru">~$apiData['about']['religion']`,  ~$apiData['about']['caste']`</li>
-                    <li class="textTru">~$apiData['about']['income']`</li>
-                    <li class="textTru">~$apiData['about']['mtongue']`</li>
-                    <li class="textTru">~$apiData['about']['m_status']`</li>
-                    ~if $apiData['about']['have_child'] neq ""`
-                    <li class="textTru">~$apiData['about']['have_child']`</li>
-                    ~/if`
-                  </ul> 
-                </div>
-                ~if $apiData['about']['verification_value'] neq "0"`
-                <div class="pt10 fontlig">
-                  <a href="/static/agentinfo">
-                    <div class="f15 colr2 clearfix"> <i class="fl icons prfic7"></i>
-                      <div class="fl pt1">Verified by visit</div>
-                    </div>
-                      ~if $apiData['about']['verification_value'] neq "1"`
-                    <div class="color11 opa70 f12 pt5"> Documents provided: ~$apiData['about']['verification_value']` </div>
-                    ~/if`
-                  </a>
-                </div>
-                ~/if`
-                ~if $apiData['about']['verification_value'] eq "0"`
-                <div class="pt10 fontlig">
-                  <div class="f15 colr2 clearfix">
-                    <div class="fl pt1"></div>
-                  </div>
-                </div>
-                ~/if`
               </div>
             </div>
             

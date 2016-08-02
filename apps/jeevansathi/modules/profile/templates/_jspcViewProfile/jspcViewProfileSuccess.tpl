@@ -276,7 +276,7 @@ style="height:387px; background-image: url('~$arrOutDisplay["about"]["coverPhoto
             ~/if`
            </div>
         <!--end:photo--> 
-        ~include_Partial("profile/jspcViewProfile/_jspcViewProfileBasicDetailsSection",["apiData"=>$arrOutDisplay,"finalResponse"=>$finalResponse,"loginProfileId"=>$loginProfile->getPROFILEID()])`
+        ~include_Partial("profile/jspcViewProfile/_jspcViewProfileBasicDetailsSection",["apiData"=>$arrOutDisplay,"finalResponse"=>$finalResponse,"loginProfileId"=>$loginProfile->getPROFILEID(),"nameOfUser"=>$nameOfUser])`
         
       </div>
       <!--end:photo div 1-->
