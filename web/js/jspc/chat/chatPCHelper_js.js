@@ -12,7 +12,7 @@ var listingInputData = [],
 */
 function handleChatDisconnection(){
     //show error msg--design
-    alert("disconnected from chat,reconnecting..");
+    console.log("disconnected from chat,reconnecting..");
     //reconnect to chat
     if(username && pass){
         strophieWrapper.reconnect(chatConfig.Params[device].bosh_service_url, username, pass);
@@ -753,7 +753,7 @@ $(document).ready(function () {
         $(window).on("online", function () {
             globalSleep(15000);
             console.log("detected internet connectivity");
-            if (chatLoggedIn == 'true') {
+            /*if (chatLoggedIn == 'true') {
                 var tAuth = checkAuthentication();
                 if (tAuth == 'true') {
                     //chatLoggerPC("authentication successful");
@@ -775,7 +775,13 @@ $(document).ready(function () {
                         });
                     }
                 }
+            }*/
+            if (chatLoggedIn == 'true') {
+                if(username && pass){
+                    strophieWrapper.reconnect(chatConfig.Params[device].bosh_service_url, username, pass);
+                }
             }
+
         });
         if (chatLoggedIn == 'true') {
             checkAuthentication();
