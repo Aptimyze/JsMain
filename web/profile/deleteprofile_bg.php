@@ -69,7 +69,6 @@ for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
 	mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$myDbarr[$myDbName]);
 }
 
-markProfilesAsNonDuplicate($profileid);
 
 
 /****  Transaction for all 3 shards started here. We will commit all three shards together. ****/
@@ -117,6 +116,9 @@ delFromTables('DELETED_OFFLINE_MATCHES','OFFLINE_MATCHES',$mainDb,$profileid,"PR
 
 delFromTables('DELETED_OFFLINE_NUDGE_LOG','OFFLINE_NUDGE_LOG',$mainDb,$profileid,"SENDER",'jsadmin');
 delFromTables('DELETED_OFFLINE_NUDGE_LOG','OFFLINE_NUDGE_LOG',$mainDb,$profileid,"RECEIVER",'jsadmin');
+
+markProfilesAsNonDuplicate($profileid);
+
 /****  Transaction for master tables started here . ****/
 
 
@@ -540,6 +542,8 @@ function markProfilesAsNonDuplicate($profileid){
               
                   $negativeObj->deleteRecord($key);
                   (new NEWJS_SWAP_JPROFILE())->insert($key);
+                  $dp=new DUPLICATES_PROFILES();
+				  $dp->removeProfileAsDuplicate($key);
                   
               }
               unset($tempArray);
