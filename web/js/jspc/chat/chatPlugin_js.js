@@ -1379,7 +1379,7 @@ JsChat.prototype = {
             userId, status, response;
         chatBoxProto.attachedCallback = function () {
             userId = $(this).attr("user-id");
-            this.innerHTML = '<div class="chatBoxBar fullwid hgt57 bg5 pos-rel fullwid"></div><div class="chatArea fullwid fullhgt"><div class="messageArea f13 bg13 fullhgt"><div class="chatMessage pos_abs fullwid scrollxy" style="height: 246px;"><div id="chatHistory_'+userId+'"></div><div class="spinner"></div></div></div><div class="chatInput brdrbtm_new fullwid btm0 pos-abs bg-white"><textarea cols="23" style="width: 220px;" id="txtArea"  class="inputText lh20 brdr-0 padall-10 colorGrey hgt18 fontlig" placeholder="Write message"></textarea></div></div>';
+            this.innerHTML = '<div class="chatBoxBar fullwid hgt57 bg5 pos-rel fullwid"></div><div class="chatArea fullwid fullhgt"><div class="messageArea f13 bg13 fullhgt"><div class="chatMessage pos_abs fullwid scrollxy" style="height: 246px;"><div id="chatHistory_'+userId+'" class="clearfix"></div><div class="spinner"></div></div></div><div class="chatInput brdrbtm_new fullwid btm0 pos-abs bg-white"><textarea cols="23" style="width: 220px;" id="txtArea"  class="inputText lh20 brdr-0 padall-10 colorGrey hgt18 fontlig" placeholder="Write message"></textarea></div></div>';
             $(this).addClass("z7 b297 hgt352 brd_new fr mr7 fullhgt wid240 pos-rel disp_ib");
             
             status = $(this).attr("status-user");
@@ -1424,8 +1424,11 @@ JsChat.prototype = {
         this._bindSendChat(userId);
     },
 
-    _scrollToBottom:function(userId){
+    _scrollToBottom:function(userId,extra){
         var divLen = 0;
+        if(typeof extra != "undefined"){
+            divLen += extra;
+        }
         $('chat-box[user-id="' + userId + '"] .rightBubble').each(function(index, element) {
             divLen += $(this).height();
         });
@@ -1458,7 +1461,13 @@ JsChat.prototype = {
                 //console.log(historyHTML);
                 if(historyHTML){
                     $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_"+other_id).append(historyHTML).promise().done(function(){
-                        curElem._scrollToBottom(other_id);
+                        //curElem._scrollToBottom(other_id,100);
+                        var height = document.getElementById("chatHistory_"+other_id).scrollHeight;
+                        console.log("history height"+height);
+                        $('chat-box[user-id="' + other_id + '"] .chatMessage').animate({
+                           scrollTop: height
+                        }, 500);
+
                     });
                     /*setTimeout(function(){
                       curElem._scrollToBottom(other_id);  
