@@ -9,7 +9,6 @@
  * @subpackage contacts
  * @see ProfileMemcache
  */
-
 /**
  * Initiate action class
  *
@@ -23,8 +22,7 @@
  * @author Ankit Garg <ankit.garg@jeevansathi.com>
  * @extends ContactEvent
  */
-class Initiate extends ContactEvent
-{
+class Initiate extends ContactEvent{
 
 	/**#@+
 	 * @access private
@@ -97,9 +95,9 @@ class Initiate extends ContactEvent
 	 * @param ContactHandler $contactHandler
 	 * @access public
 	 */
-	public function __construct(ContactHandler $contactHandler)
-	{
-		try {
+	public function __construct(ContactHandler $contactHandler) {
+		try
+		{
 			$this->contactHandler = $contactHandler;
 			$this->_draft = null;
 			$this->_contactsOnceObj = null;
@@ -111,7 +109,8 @@ class Initiate extends ContactEvent
 
 			if ($this->contactHandler->getPageSource() == "AP")
 				$this->optionalFlag = true;
-		} catch (Exception $e) {
+		}
+		catch (Exception $e) {
 			throw new jsException($e);
 		}
 		parent::__construct();
@@ -121,7 +120,7 @@ class Initiate extends ContactEvent
 	/**#@+
 	 * @access public
 	 *
-	 * /**
+	/**
 	 * Sets Pre-action values which will be displayed.
 	 *
 	 * <p>
@@ -158,7 +157,8 @@ class Initiate extends ContactEvent
 			$this->component->drafts = $this->component->eoiDrafts = $draftArray;
 			$this->setPostDrafts($this->component->drafts);
 		}
-		if ($this->contactHandler->getViewer()->getPROFILE_STATE()->getActivationState()->getUNDERSCREENED() == "Y" && FTOLiveFlags::IS_FTO_LIVE != 1) {
+		if ($this->contactHandler->getViewer()->getPROFILE_STATE()->getActivationState()->getUNDERSCREENED()=="Y" && FTOLiveFlags::IS_FTO_LIVE != 1)
+		{
 			$this->component->innerTpl = 'profile_eoi_iuni_post';
 		}
 	}
@@ -184,33 +184,36 @@ class Initiate extends ContactEvent
 	 * @uses _makeEntryInContactsOnce()    Makes entry in contacts once table for cron to fire mails.
 	 * @uses sendMail()                   To send mail in whatever cases.
 	 */
-	public function submit()
-	{
+	public function submit() {
 		try {
 			$this->_errorArray = $this->errorHandlerObj->getAllError();
-			if (is_array($this->_errorArray) && ((in_array(ErrorHandler::UNDERSCREENING, $this->_errorArray) !== false) || (in_array(ErrorHandler::INCOMPLETE, $this->_errorArray) !== false))) {
+			if(is_array($this->_errorArray) && ((in_array(ErrorHandler::UNDERSCREENING, $this->_errorArray) !== false) || (in_array(ErrorHandler::INCOMPLETE, $this->_errorArray) !== false)))
+			{
 				$this->_submitTemporaryContacts();
 				return true;
-			} else if (is_array($this->_errorArray) && ((in_array(ErrorHandler::FILTERED, $this->_errorArray) !== false))) {
+			}
+			else if (is_array($this->_errorArray) && ((in_array(ErrorHandler::FILTERED, $this->_errorArray) !== false))) {
 				$this->contactHandler->getContactObj()->setFILTERED(Contacts::FILTERED);
 			}
 
 			if ($this->contactHandler->getContactObj()->getTYPE() === "E" && $this->contactHandler->getToBeType() === "I") {
 				// Do Not update memcache variables.
-			} else {
-				$this->viewerMemcacheObject->update("NOT_REP", 1, $this->optionalFlag);
-				$this->viewerMemcacheObject->update("TOTAL_CONTACTS_MADE", 1, $this->optionalFlag);
-				$this->viewerMemcacheObject->update("MONTH_INI_BY_ME", 1, $this->optionalFlag);
-				$this->viewerMemcacheObject->update("TODAY_INI_BY_ME", 1, $this->optionalFlag);
-				$this->viewerMemcacheObject->update("WEEK_INI_BY_ME", 1, $this->optionalFlag);
-				$this->viewerMemcacheObject->update("CONTACTS_MADE_AFTER_DUP", 1, $this->optionalFlag);
+			}
+			else {
+				$this->viewerMemcacheObject->update("NOT_REP",1,$this->optionalFlag);
+				$this->viewerMemcacheObject->update("TOTAL_CONTACTS_MADE",1,$this->optionalFlag);
+				$this->viewerMemcacheObject->update("MONTH_INI_BY_ME",1,$this->optionalFlag);
+				$this->viewerMemcacheObject->update("TODAY_INI_BY_ME",1,$this->optionalFlag);
+				$this->viewerMemcacheObject->update("WEEK_INI_BY_ME",1,$this->optionalFlag);
+				$this->viewerMemcacheObject->update("CONTACTS_MADE_AFTER_DUP",1,$this->optionalFlag);
 				$this->viewerMemcacheObject->updateMemcache();
 				if ($this->contactHandler->getContactObj()->getFILTERED() === Contacts::FILTERED) {
-					$this->viewedMemcacheObject->update("FILTERED", 1, $this->optionalFlag);
-					$this->viewedMemcacheObject->update("FILTERED_NEW", 1, $this->optionalFlag);
-				} else {
-					$this->viewedMemcacheObject->update("AWAITING_RESPONSE", 1, $this->optionalFlag);
-					$this->viewedMemcacheObject->update("AWAITING_RESPONSE_NEW", 1, $this->optionalFlag);
+					$this->viewedMemcacheObject->update("FILTERED",1,$this->optionalFlag);
+					$this->viewedMemcacheObject->update("FILTERED_NEW",1,$this->optionalFlag);
+				}
+				else {
+					$this->viewedMemcacheObject->update("AWAITING_RESPONSE",1,$this->optionalFlag);
+					$this->viewedMemcacheObject->update("AWAITING_RESPONSE_NEW",1,$this->optionalFlag);
 				}
 				$this->viewedMemcacheObject->updateMemcache();
 			}
@@ -219,24 +222,27 @@ class Initiate extends ContactEvent
 
 			$this->contactHandler->getContactObj()->setType("I");
 
-			if ($this->contactHandler->getContactType() == ContactHandler::CANCEL_CONTACT) {
+			if($this->contactHandler->getContactType()==ContactHandler::CANCEL_CONTACT) {
 				$this->contactHandler->getContactObj()->updateContact();
-				$this->viewerMemcacheObject->update("CANCELLED_EOI", -1, $this->optionalFlag);
-				$this->viewerMemcacheObject->update("NOT_REP", 1, $this->optionalFlag);
-				$this->viewedMemcacheObject->update("DEC_ME", -1, $this->optionalFlag);
-				if ($this->contactHandler->getContactObj()->getSEEN() == Contacts::NOTSEEN)
-					$this->viewedMemcacheObject->update("DEC_ME_NEW", -1, $this->optionalFlag);
-				$this->viewerMemcacheObject->update("DEC_BY_ME", -1, $this->optionalFlag);
+				$this->viewerMemcacheObject->update("CANCELLED_EOI",-1,$this->optionalFlag);
+				$this->viewerMemcacheObject->update("NOT_REP",1,$this->optionalFlag);
+				$this->viewedMemcacheObject->update("DEC_ME",-1,$this->optionalFlag);
+				if($this->contactHandler->getContactObj()->getSEEN() == Contacts::NOTSEEN)
+					$this->viewedMemcacheObject->update("DEC_ME_NEW",-1,$this->optionalFlag);
+				$this->viewerMemcacheObject->update("DEC_BY_ME",-1,$this->optionalFlag);
 				if ($this->contactHandler->getContactObj()->getFILTERED() === Contacts::FILTERED) {
-					$this->viewedMemcacheObject->update("FILTERED", 1, $this->optionalFlag);
-					$this->viewedMemcacheObject->update("FILTERED_NEW", 1, $this->optionalFlag);
-				} else {
-					$this->viewedMemcacheObject->update("AWAITING_RESPONSE", 1, $this->optionalFlag);
-					$this->viewedMemcacheObject->update("AWAITING_RESPONSE_NEW", 1, $this->optionalFlag);
+					$this->viewedMemcacheObject->update("FILTERED",1,$this->optionalFlag);
+					$this->viewedMemcacheObject->update("FILTERED_NEW",1,$this->optionalFlag);
+				}
+				else {
+					$this->viewedMemcacheObject->update("AWAITING_RESPONSE",1,$this->optionalFlag);
+					$this->viewedMemcacheObject->update("AWAITING_RESPONSE_NEW",1,$this->optionalFlag);
 				}
 				$this->viewerMemcacheObject->updateMemcache();
 				$this->viewedMemcacheObject->updateMemcache();
-			} else {
+			}
+			else
+			{
 				$this->contactHandler->getContactObj()->setCount(1);
 				$this->contactHandler->getContactObj()->insertContact();
 				$action = FTOStateUpdateReason::EOI_SENT;
@@ -245,102 +251,84 @@ class Initiate extends ContactEvent
 			}
 
 			//curl for analytics team by Nitesh for Lavesh team
-			if (JsConstants::$vspServer == 'live') {
+			if(JsConstants::$vspServer == 'live'){
 				$feedURL = JsConstants::$postEoiUrl;
-				$postParams = json_encode(array("PROFILEID" => $this->contactHandler->getViewer()->getPROFILEID(), "PROFILEID_POG" => $this->contactHandler->getViewed()->getPROFILEID(), 'ACTION' => 'I'));
-				$profilesList = CommonUtility::sendCurlPostRequest($feedURL, $postParams);
+				$postParams = json_encode(array("PROFILEID"=>$this->contactHandler->getViewer()->getPROFILEID(),"PROFILEID_POG"=>$this->contactHandler->getViewed()->getPROFILEID(),'ACTION'=>'I'));
+				$profilesList = CommonUtility::sendCurlPostRequest($feedURL,$postParams);
 			}
 
 			$this->_searchContactFlowTracking();
 
-			$this->contactHandler->setElement(CONTACT_ELEMENTS::STATUS, "I");
+			$this->contactHandler->setElement(CONTACT_ELEMENTS::STATUS,"I");
 			$this->handleMessage();
 			$isFiltered = $this->_makeEntryInContactsOnce();
 
 			$viewedEntryDate = $this->viewed->getENTRY_DT();
 			$now = date("Y-m-d");
 			$dateDiff = (JSstrToTime($now) - JSstrToTime($viewedEntryDate)) / 86400;
-			if ($this->contactHandler->getContactObj()->getFILTERED() != Contacts::FILTERED && $this->contactHandler->getPageSource() != "AP") {
+			if ($this->contactHandler->getContactObj()->getFILTERED() != Contacts::FILTERED && $this->contactHandler->getPageSource()!="AP") {
 
-				try {
+				try
+				{
 					$instantNotificationObj = new InstantAppNotification("EOI");
-					$instantNotificationObj->sendNotification($this->contactHandler->getViewed()->getPROFILEID(), $this->contactHandler->getViewer()->getPROFILEID());
-				} catch (Exception $e) {
+					$instantNotificationObj->sendNotification($this->contactHandler->getViewed()->getPROFILEID(),$this->contactHandler->getViewer()->getPROFILEID());
+				}
+				catch(Exception $e)
+				{
 					throw new jsException($e);
 				}
-				try {
+				try
+				{
 					//send instant JSPC/JSMS notification
 					$producerObj = new Producer();
-					if ($producerObj->getRabbitMQServerConnected()) {
-						$notificationData = array("notificationKey" => "EOI", "selfUserId" => $this->contactHandler->getViewed()->getPROFILEID(), "otherUserId" => $this->contactHandler->getViewer()->getPROFILEID());
+					if($producerObj->getRabbitMQServerConnected())
+					{
+						$notificationData = array("notificationKey"=>"EOI","selfUserId" => $this->contactHandler->getViewed()->getPROFILEID(),"otherUserId" => $this->contactHandler->getViewer()->getPROFILEID());
 						$producerObj->sendMessage(formatCRMNotification::mapBufferInstantNotification($notificationData));
-						//Add for contact roster
-
-
-						$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'INITIATE', 'body' => array('sender' => array('profileid'=>$this->contactHandler->getViewer()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewer()->getPROFILEID()),'username'=>$this->contactHandler->getViewer()->getUSERNAME()), 'receiver' => array('profileid'=>$this->contactHandler->getViewed()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewed()->getPROFILEID),"username"=>$this->contactHandler->getViewed()->getUSERNAME()))), 'redeliveryCount' => 0);
-						$producerObj->sendMessage($chatData);
 					}
 					unset($producerObj);
-				} catch (Exception $e) {
+				}
+				catch (Exception $e) {
 					throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
 				}
 			}
+			try {
+				//send instant JSPC/JSMS notification
+				$producerObj = new Producer();
+				if ($producerObj->getRabbitMQServerConnected()) {
+					//Add for contact roster
+					$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'INITIATE', 'body' => array('sender' => array('profileid'=>$this->contactHandler->getViewer()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewer()->getPROFILEID()),'username'=>$this->contactHandler->getViewer()->getUSERNAME()), 'receiver' => array('profileid'=>$this->contactHandler->getViewed()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewed()->getPROFILEID),"username"=>$this->contactHandler->getViewed()->getUSERNAME()),"filter"=>$this->contactHandler->getContactObj()->getFILTERED())), 'redeliveryCount' => 0);
+					$producerObj->sendMessage($chatData);
+				}
+				unset($producerObj);
+			} catch (Exception $e) {
+				throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
+			}
 
-
-			if ($dateDiff <= 30 && !$isFiltered && $this->contactHandler->getPageSource() != 'AP') { // Instant mailer
+			if ($dateDiff <= 30 && !$isFiltered && $this->contactHandler->getPageSource()!='AP') { // Instant mailer
 				$this->sendMail();
 			}
-			if ($dateDiff <= 1) { //Instant SMS
-				include_once(JsConstants::$docRoot . "/profile/InstantSMS.php");
-				$sms = new InstantSMS("INSTANT_EOI", $this->viewed->getPROFILEID(), array(), $this->viewer->getPROFILEID());
+			if($dateDiff <=1 ) { //Instant SMS
+				include_once(JsConstants::$docRoot. "/profile/InstantSMS.php");
+				$sms= new InstantSMS("INSTANT_EOI",$this->viewed->getPROFILEID(),array(),$this->viewer->getPROFILEID());
 				$sms->send();
 			}
 
-		} catch (Exception $e) {
+		}
+		catch (Exception $e) {
 			throw new jsException($e);
 		}
 
 	}
 
-/**
-	 * Submit Temporary contacts made by sender.
-	 *
-	 * <p>
-	 * This function logs the contacts of an underscreened profile in {@link NEWJS_CONTACTS_TEMP} class.
-	 * It also updates JsMemcache data variables.
-	 * </p>
-	 *
-	 */
+	public function sendMail() {
 
-	private function _submitTemporaryContacts()
-	{
+		$viewedSubscriptionStatus = $this->viewed->getPROFILE_STATE()->getPaymentStates()->isPaid();
 
-		$receiver_username = $this->viewed->getUSERNAME();
-		$contact_status = $this->contactHandler->getContactType();
+		ContactMailer::InstantEOIMailer($this->viewed->getPROFILEID(), $this->viewer->getPROFILEID(), $this->_getEOIMailerDraft(), $viewedSubscriptionStatus);
 
-		$sender_profileid = $this->viewer->getPROFILEID();
-		$receiver_profileid = $this->viewed->getPROFILEID();
-
-		if ($sender_profileid && $receiver_profileid) {
-
-			$this->viewerMemcacheObject->update("TOTAL_CONTACTS_MADE", 1, $this->optionalFlag);
-			$this->viewerMemcacheObject->update("MONTH_INI_BY_ME", 1, $this->optionalFlag);
-			$this->viewerMemcacheObject->update("TODAY_INI_BY_ME", 1, $this->optionalFlag);
-			$this->viewerMemcacheObject->update("WEEK_INI_BY_ME", 1, $this->optionalFlag);
-			$this->viewerMemcacheObject->update("CONTACTS_MADE_AFTER_DUP", 1, $this->optionalFlag);
-			$this->viewerMemcacheObject->updateMemcache();
-
-
-			$contacts_temp_obj = new NEWJS_CONTACTS_TEMP();
-			$contacts_temp_obj->insert(
-				$this->viewer->getPROFILEID(),
-				$this->viewed->getPROFILEID(),
-				$this->contactHandler->getElements(CONTACT_ELEMENTS::MESSAGE),
-				$this->contactHandler->getElements(CONTACT_ELEMENTS::DRAFT_NAME),
-				$this->contactHandler->getElements(CONTACT_ELEMENTS::DRAFT_WRITE),
-				$this->contactHandler->getElements(CONTACT_ELEMENTS::STYPE)
-			);
-		}
+		//Update in CONTACTS_ONCE
+		$this->_contactsOnceObj->update($this->viewer->getPROFILEID(), $this->viewed->getPROFILEID(), "Y");
 	}
 
 	/**#@+
@@ -357,24 +345,97 @@ class Initiate extends ContactEvent
 	 * @uses NEWJS_MATCHALERT_CONTACTS->insert() To insert into matchalert_contacts table.
 	 */
 	/***
-	 * private function _matchAlertContactsTracking() {
-	 *
-	 * $stype = null;
-	 *
-	 * $clicksource = $this->contactHandler->getElements(CONTACT_ELEMENTS::CLICKSOURCE);
-	 * if ($clicksource) {
-	 *
-	 * $matchAlertContactsObj = new NEWJS_MATCHALERT_CONTACTS();
-	 * $stype = $matchAlertContactsObj->insert($this->viewer->getPROFILEID(), $this->viewed->getPROFILEID(), $clicksource);
-	 *
-	 * unset($matchAlertContactsObj);
-	 * }
-	 *
-	 * return $stype ? $stype : null;
-	 * }
-	 **/
+	private function _matchAlertContactsTracking() {
 
-/**
+	$stype = null;
+
+	$clicksource = $this->contactHandler->getElements(CONTACT_ELEMENTS::CLICKSOURCE);
+	if ($clicksource) {
+
+	$matchAlertContactsObj = new NEWJS_MATCHALERT_CONTACTS();
+	$stype = $matchAlertContactsObj->insert($this->viewer->getPROFILEID(), $this->viewed->getPROFILEID(), $clicksource);
+
+	unset($matchAlertContactsObj);
+	}
+
+	return $stype ? $stype : null;
+	}
+	 **/
+	/**
+	 * Tracks pages from where EOI is done.
+	 *
+	 * <p>
+	 * This function logs the search type and the pages from where EOI was done. {@link MIS_SEARCH_CONTACT_FLOW_TRACKING_NEW} store executes
+	 * queries related to the page from where EOI was performed.
+	 * </p>
+	 *
+	 * @uses JsDbSharding::getShardNo() To get the shard db number on which the query should run.
+	 */
+	private function _searchContactFlowTracking() {
+
+		$shard = JsDbSharding::getShardNo($this->viewer->getPROFILEID());
+
+		$searchContactFlowTrackingObj = new MIS_SEARCH_CONTACT_FLOW_TRACKING_NEW($shard);
+
+		$from_detailProfile = ($this->contactHandler->getPageSource() === "VDP") ? "Y" : "N";
+		//MatchAlert handling setting stype to B for matchalert1 clicksource
+		$clicksource = $this->contactHandler->getElements(CONTACT_ELEMENTS::CLICKSOURCE);
+		if (!$this->stype) {
+			$this->stype = $this->contactHandler->getElements(CONTACT_ELEMENTS::STYPE);
+			if($this->stype=='CO' || $this->stype=='CN' || $this->stype=='CN2')
+				$this->stype = "C";
+			else if($this->stype=='VO' || $this->stype=='VN')
+				$this->stype='V';
+		}
+		$searchContactFlowTrackingObj->insert(
+			$this->viewer->getPROFILEID(),
+			$this->stype,
+			$this->contactHandler->getContactObj()->getCONTACTID(),
+			$from_detailProfile
+		);
+	} // end of _searchContactFlowTracking
+
+	/**
+	 * Submit Temporary contacts made by sender.
+	 *
+	 * <p>
+	 * This function logs the contacts of an underscreened profile in {@link NEWJS_CONTACTS_TEMP} class.
+	 * It also updates JsMemcache data variables.
+	 * </p>
+	 *
+	 */
+
+	private function _submitTemporaryContacts() {
+
+		$receiver_username = $this->viewed->getUSERNAME();
+		$contact_status = $this->contactHandler->getContactType();
+
+		$sender_profileid = $this->viewer->getPROFILEID();
+		$receiver_profileid = $this->viewed->getPROFILEID();
+
+		if ($sender_profileid && $receiver_profileid) {
+
+			$this->viewerMemcacheObject->update("TOTAL_CONTACTS_MADE",1,$this->optionalFlag);
+			$this->viewerMemcacheObject->update("MONTH_INI_BY_ME",1,$this->optionalFlag);
+			$this->viewerMemcacheObject->update("TODAY_INI_BY_ME",1,$this->optionalFlag);
+			$this->viewerMemcacheObject->update("WEEK_INI_BY_ME",1,$this->optionalFlag);
+			$this->viewerMemcacheObject->update("CONTACTS_MADE_AFTER_DUP",1,$this->optionalFlag);
+			$this->viewerMemcacheObject->updateMemcache();
+
+
+			$contacts_temp_obj = new NEWJS_CONTACTS_TEMP();
+			$contacts_temp_obj->insert(
+				$this->viewer->getPROFILEID(),
+				$this->viewed->getPROFILEID(),
+				$this->contactHandler->getElements(CONTACT_ELEMENTS::MESSAGE),
+				$this->contactHandler->getElements(CONTACT_ELEMENTS::DRAFT_NAME),
+				$this->contactHandler->getElements(CONTACT_ELEMENTS::DRAFT_WRITE),
+				$this->contactHandler->getElements(CONTACT_ELEMENTS::STYPE)
+			);
+		}
+	} // end of _submitTemporaryContacts
+
+	/**
 	 * Identify the limit hit and log it.
 	 *
 	 * <p>
@@ -390,30 +451,103 @@ class Initiate extends ContactEvent
 	 *
 	 * @uses _insertContactHitLimitInDb() Inserts the hit limit type in DB.
 	 */
-	private function _addContactHitLimit()
-	{
-		$data = CommonFunction::getContactLimits($this->viewer->getSUBSCRIPTION(), $this->viewer->getPROFILEID());
+	private function _addContactHitLimit(){
+		$data = CommonFunction::getContactLimits($this->viewer->getSUBSCRIPTION(),$this->viewer->getPROFILEID());
 
-		if ($this->viewerMemcacheObject->get("TODAY_INI_BY_ME", $this->optionalFlag) >= $data[DAY_LIMIT]) {
+		if($this->viewerMemcacheObject->get("TODAY_INI_BY_ME",$this->optionalFlag) >= $data[DAY_LIMIT])
+		{
 			$this->_insertContactHitLimitInDb("T");
-		} else if (
-			$this->viewerMemcacheObject->get("MONTH_INI_BY_ME", $this->optionalFlag) >= $data[MONTH_LIMIT]
-		) {
+		}
+		else if (
+			$this->viewerMemcacheObject->get("MONTH_INI_BY_ME",$this->optionalFlag) >= $data[MONTH_LIMIT]
+		)
+		{
 			$this->_insertContactHitLimitInDb("M");
-		} else if (
+		}
+		else if (
 			!stristr($this->viewer->getSUBSCRIPTION(), 'F') &&
-			$this->viewerMemcacheObject->get("TOTAL_CONTACTS_MADE", $this->optionalFlag) >= $data[OVERALL_LIMIT]
-		) {
+			$this->viewerMemcacheObject->get("TOTAL_CONTACTS_MADE",$this->optionalFlag) >= $data[OVERALL_LIMIT]
+		)
+		{
 			$this->_insertContactHitLimitInDb("O");
-		} else if ($this->viewerMemcacheObject->get("WEEK_INI_BY_ME", $this->optionalFlag) >= $data[WEEKLY_LIMIT]) {
+		}
+		else if ($this->viewerMemcacheObject->get("WEEK_INI_BY_ME",$this->optionalFlag) >= $data[WEEKLY_LIMIT]) {
 			$this->_insertContactHitLimitInDb("W");
-		} else if (($this->viewerMemcacheObject->get("CONTACTS_MADE_AFTER_DUP", $this->optionalFlag) >= $data[NOT_VALIDNUMBER_LIMIT]) &&
-			@in_array(ErrorHandler::PHONE_NOT_VERIFIED, $this->_errorArray)
-		) {
+		}
+		else if (($this->viewerMemcacheObject->get("CONTACTS_MADE_AFTER_DUP",$this->optionalFlag) >= $data[NOT_VALIDNUMBER_LIMIT]) &&
+			@in_array(ErrorHandler::PHONE_NOT_VERIFIED, $this->_errorArray)) {
 			$this->_insertContactHitLimitInDb("I");
 		}
 
-	} // end of _searchContactFlowTracking
+	} // end of _addContactHitLimit
+
+	/**
+	 * Set draft member for EOI instant mailer
+	 *
+	 * <p>
+	 * This function sets the draft to be displayed in Instant EOI mailer.
+	 * </p>
+	 *
+	 * @param $draft The message viewer wrote to viewed.
+	 */
+	private function _setEOIMailerDraft($draft) {
+		$this->_draft = $draft;
+	} // end of _setEOIMailerDraft
+
+	/**
+	 * Get draft member for EOI instant mailer
+	 *
+	 * <p>
+	 * This function gets the draft to be displayed in Instant EOI mailer.
+	 * </p>
+	 * @return string.
+	 */
+	private function _getEOIMailerDraft() {
+		if (isset($this->_draft)) {
+			return $this->_draft;
+		}
+		else {
+			return " "; // In case when no draft was set (to be on the safer side)
+		}
+	} // end of _getEOIMailerDraft
+
+	/**
+	 * Make an entry in NEWJS_CONTACTS_ONCE table.
+	 *
+	 * <p>
+	 * This function makes an entry in CONTACTS_ONCE table for EOI mailer cron.
+	 * </p>
+	 * @return boolean
+	 */
+	private function _makeEntryInContactsOnce() {
+
+		$this->_contactsOnceObj = new NEWJS_CONTACTS_ONCE();
+
+		if ($this->_contactsOnceObj) {
+			$presetMessage = PresetMessage::getPresentMessage($this->viewer,CONTACTHANDLER::INITIATED);
+			if(strcmp(trim($this->contactHandler->getElements(CONTACT_ELEMENTS::MESSAGE)),trim($presetMessage)) != 0)
+				$this->_setEOIMailerDraft(stripslashes(htmlspecialchars($this->contactHandler->getElements(CONTACT_ELEMENTS::MESSAGE), ENT_QUOTES)));
+			// Make an entry in CONTACTS_ONCE.
+			if (in_array(ErrorHandler::FILTERED, $this->_errorArray) && is_array($this->_errorArray)) {
+				$this->_contactsOnceObj->insert(
+					$this->contactHandler->getContactObj()->getCONTACTID(),
+					$this->viewer->getPROFILEID(),
+					$this->viewed->getPROFILEID(),
+					$this->_getEOIMailerDraft(),
+					"Y");
+				return true;
+			}
+			else {
+				$this->_contactsOnceObj->insert(
+					$this->contactHandler->getContactObj()->getCONTACTID(),
+					$this->viewer->getPROFILEID(),
+					$this->viewed->getPROFILEID(),
+					$this->_getEOIMailerDraft(),
+					"N");
+				return false;
+			}
+		}
+	} // end of _makeEntryInContactsOnce
 
 	/**
 	 * When Contact Limit is hit, fire query to insert in DB.
@@ -426,8 +560,7 @@ class Initiate extends ContactEvent
 	 *
 	 * @param string $type
 	 */
-	private function _insertContactHitLimitInDb($type)
-	{
+	private function _insertContactHitLimitInDb($type){
 
 		$contact_fault_monitor_obj = new MIS_CONTACTS_FAULT_MONITOR();
 
@@ -446,123 +579,7 @@ class Initiate extends ContactEvent
 				$type
 			);
 		}
-	} // end of _submitTemporaryContacts
-
-	/**
-	 * Tracks pages from where EOI is done.
-	 *
-	 * <p>
-	 * This function logs the search type and the pages from where EOI was done. {@link MIS_SEARCH_CONTACT_FLOW_TRACKING_NEW} store executes
-	 * queries related to the page from where EOI was performed.
-	 * </p>
-	 *
-	 * @uses JsDbSharding::getShardNo() To get the shard db number on which the query should run.
-	 */
-	private function _searchContactFlowTracking()
-	{
-
-		$shard = JsDbSharding::getShardNo($this->viewer->getPROFILEID());
-
-		$searchContactFlowTrackingObj = new MIS_SEARCH_CONTACT_FLOW_TRACKING_NEW($shard);
-
-		$from_detailProfile = ($this->contactHandler->getPageSource() === "VDP") ? "Y" : "N";
-		//MatchAlert handling setting stype to B for matchalert1 clicksource
-		$clicksource = $this->contactHandler->getElements(CONTACT_ELEMENTS::CLICKSOURCE);
-		if (!$this->stype) {
-			$this->stype = $this->contactHandler->getElements(CONTACT_ELEMENTS::STYPE);
-			if ($this->stype == 'CO' || $this->stype == 'CN' || $this->stype == 'CN2')
-				$this->stype = "C";
-			else if ($this->stype == 'VO' || $this->stype == 'VN')
-				$this->stype = 'V';
-		}
-		$searchContactFlowTrackingObj->insert(
-			$this->viewer->getPROFILEID(),
-			$this->stype,
-			$this->contactHandler->getContactObj()->getCONTACTID(),
-			$from_detailProfile
-		);
-	} // end of _addContactHitLimit
-
-	/**
-	 * Make an entry in NEWJS_CONTACTS_ONCE table.
-	 *
-	 * <p>
-	 * This function makes an entry in CONTACTS_ONCE table for EOI mailer cron.
-	 * </p>
-	 * @return boolean
-	 */
-	private function _makeEntryInContactsOnce()
-	{
-
-		$this->_contactsOnceObj = new NEWJS_CONTACTS_ONCE();
-
-		if ($this->_contactsOnceObj) {
-			$presetMessage = PresetMessage::getPresentMessage($this->viewer, CONTACTHANDLER::INITIATED);
-			if (strcmp(trim($this->contactHandler->getElements(CONTACT_ELEMENTS::MESSAGE)), trim($presetMessage)) != 0)
-				$this->_setEOIMailerDraft(stripslashes(htmlspecialchars($this->contactHandler->getElements(CONTACT_ELEMENTS::MESSAGE), ENT_QUOTES)));
-			// Make an entry in CONTACTS_ONCE.
-			if (in_array(ErrorHandler::FILTERED, $this->_errorArray) && is_array($this->_errorArray)) {
-				$this->_contactsOnceObj->insert(
-					$this->contactHandler->getContactObj()->getCONTACTID(),
-					$this->viewer->getPROFILEID(),
-					$this->viewed->getPROFILEID(),
-					$this->_getEOIMailerDraft(),
-					"Y");
-				return true;
-			} else {
-				$this->_contactsOnceObj->insert(
-					$this->contactHandler->getContactObj()->getCONTACTID(),
-					$this->viewer->getPROFILEID(),
-					$this->viewed->getPROFILEID(),
-					$this->_getEOIMailerDraft(),
-					"N");
-				return false;
-			}
-		}
-	} // end of _setEOIMailerDraft
-
-	/**
-	 * Set draft member for EOI instant mailer
-	 *
-	 * <p>
-	 * This function sets the draft to be displayed in Instant EOI mailer.
-	 * </p>
-	 *
-	 * @param $draft The message viewer wrote to viewed.
-	 */
-	private function _setEOIMailerDraft($draft)
-	{
-		$this->_draft = $draft;
-	} // end of _getEOIMailerDraft
-
-	/**
-	 * Get draft member for EOI instant mailer
-	 *
-	 * <p>
-	 * This function gets the draft to be displayed in Instant EOI mailer.
-	 * </p>
-	 * @return string.
-	 */
-	private function _getEOIMailerDraft()
-	{
-		if (isset($this->_draft)) {
-			return $this->_draft;
-		} else {
-			return " "; // In case when no draft was set (to be on the safer side)
-		}
-	} // end of _makeEntryInContactsOnce
-
-		public function sendMail()
-	{
-
-		$viewedSubscriptionStatus = $this->viewed->getPROFILE_STATE()->getPaymentStates()->isPaid();
-
-		ContactMailer::InstantEOIMailer($this->viewed->getPROFILEID(), $this->viewer->getPROFILEID(), $this->_getEOIMailerDraft(), $viewedSubscriptionStatus);
-
-		//Update in CONTACTS_ONCE
-		$this->_contactsOnceObj->update($this->viewer->getPROFILEID(), $this->viewed->getPROFILEID(), "Y");
 	} // end of _insertContactHitLimitInDb
-
 	/**#@-*/
 
 	public function getErrorArray()

@@ -121,6 +121,7 @@ class Producer
 			$this->channel->queue_declare(MQ::BUFFER_INSTANT_NOTIFICATION_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::DELETE_RETRIEVE_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::UPDATE_SEEN_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+			$this->channel->queue_declare(MQ::CHAT_MESSAGE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 		} catch (Exception $exception) {
 			$str = "\nRabbitMQ Error in producer, Unable to" . " declare queues : " . $exception->getMessage() . "\tLine:" . __LINE__;
 			RabbitmqHelper::sendAlert($str, "default");
@@ -184,6 +185,10 @@ class Producer
 					$msg = new AMQPMessage($data, array('delivery_mode' => MQ::DELIVERYMODE));
 					$this->channel->basic_publish($msg, MQ::CHATEXCHANGE,"delete");
 					break;
+				case "CHATMESSAGE":
+					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::CHAT_MESSAGE, MQ::MANDATORY, MQ::IMMEDIATE);
+					break;
+
 
 			}
 		} catch (Exception $exception) {
