@@ -52,6 +52,7 @@ Class ButtonResponseApi
 							$button[]                 = self::getInitiateButton($this->page);
 							$button[]                 = self::getShortListButton($this->loginProfile, $this->otherProfile);
 							$button[]                 = self::getContactDetailsButton();
+							
 							$responseArray["buttons"] = $button;
 							//echo "NOCONTACT";
 							break;
@@ -150,8 +151,7 @@ Class ButtonResponseApi
 							break;
 						case ContactHandler::CANCEL:
 							//echo "CANCEL";
-							$button[] = self::getAcceptButton("Accept Again");
-							$responseArray["infobtnlabel"] = "You cancelled your interest on " . $date;
+							$responseArray["infobtnlabel"] = "They cancelled interest on " . $date;
 							$responseArray["buttons"] = $button;
 							break;
 					}
@@ -246,11 +246,11 @@ Class ButtonResponseApi
 		$button = self::buttonMerge($button);
 		return $button;
 	}
-	public static function getIgnoreButton($loginProfile='', $otherProfile='',$isIgnored=null,$enable=true)
+	public static function getIgnoreButton($loginProfile='', $otherProfile='',$isIgnored=null,$enable=true,$label)
     {
     	
 		if ($isIgnored) {
-           $button["label"]  = "Unblock";
+           $button["label"]  = $label ? $label : "Unblock";
 		if(MobileCommon::isApp()=="I")
 		{
 			$button["iconid"] = IdToAppImagesMapping::UNDO_IGNORE;
@@ -265,7 +265,7 @@ Class ButtonResponseApi
             }
             else{
                     $button["iconid"] = IdToAppImagesMapping::A_IGNORE;
-                    $button["label"]  = "Block";
+                    $button["label"]  = $label? $label:"Block";
                     $button["action"] = "IGNORE";
                     $button["params"]  = "&ignore=1";
             }
@@ -432,8 +432,7 @@ Class ButtonResponseApi
 					break;
 				case ContactHandler::CANCEL:
 					//echo "CANCEL";
-					$button[] = self::getAcceptButton("Accept Again");
-					$responseArray["infobtnlabel"] = "You cancelled your interest on " . $date;
+					$responseArray["infobtnlabel"] = "They cancelled interest on " . $date;
 					$responseArray["buttons"] = $button;
 					break;
 			}
@@ -619,8 +618,7 @@ Class ButtonResponseApi
 					break;
 				case ContactHandler::CANCEL:
 					//echo "CANCEL";
-					$button[] = self::getAcceptButton("Accept Again");
-					$responseArray["infobtnlabel"] = "You cancelled your interest on " . $date;
+					$responseArray["infobtnlabel"] = "They cancelled interest on " . $date;
 					$responseArray["buttons"] = $button;	
 					break;
 			}

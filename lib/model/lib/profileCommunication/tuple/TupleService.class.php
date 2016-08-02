@@ -354,7 +354,7 @@ class TupleService
 		{
 			$profArrObj                = new ProfileArray();
 			$profileIdArr["PROFILEID"] = implode(",", $profileIds);
-			$this->profileDetailsArray = $profArrObj->getResultsBasedOnJprofileFields($profileIdArr, '', '', implode(',', self::$logics["PROFILE_LOGIC"]["FIELDS"]),'JPROFILE',"newjs_bmsSlave"); 
+			$this->profileDetailsArray = $profArrObj->getResultsBasedOnJprofileFields($profileIdArr, '', '', implode(',', self::$logics["PROFILE_LOGIC"]["FIELDS"]),'JPROFILE',"newjs_masterRep"); 
 			$profilesArray             = $this->getProfileLogiceResultArray();
                        return $profilesArray;
 		}
@@ -369,7 +369,7 @@ class TupleService
 	{
 		if(!empty($profileIds))
 		{
-			$jprofArrObj                = new NEWJS_JPROFILE_EDUCATION("newjs_bmsSlave");
+			$jprofArrObj                = new NEWJS_JPROFILE_EDUCATION("newjs_masterRep");
 			$profileDetailsArray = $jprofArrObj->getProfileEducation($profileIds,'mailer');
 				
 			foreach($profileDetailsArray as $k=>$row)
@@ -501,7 +501,7 @@ else {
 		// Setting Mobile App Pic size for all the pictureids
 		if(MobileCommon::isMobile() && is_array($pictureIdsArray))
 		{
-			$pictureSizeObj = new PICTURE_MobAppPicSize("newjs_bmsSlave");
+			$pictureSizeObj = new PICTURE_MobAppPicSize("newjs_masterRep");
 	    $pictureSize = $pictureSizeObj->getPictureSize($pictureIdsArray); 
 	    foreach($pictureIdsArray as $profileId=>$value)
 			{
@@ -848,7 +848,7 @@ else {
 	{
 		if(!empty($profileIds))
 		{
-			$jprofArrObj                = new NEWJS_NATIVE_PLACE("newjs_bmsSlave");
+			$jprofArrObj                = new NEWJS_NATIVE_PLACE("newjs_masterRep");
                          if(!is_array($profileIds)){
                             $profileIds = array($profileIds);
                         }

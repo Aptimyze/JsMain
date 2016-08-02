@@ -139,7 +139,7 @@ class DiscountHeadsMis
 
  		foreach($serviceIdArr as $id)
 		{
-			$sObj = new billing_SERVICES();
+			$sObj = new billing_SERVICES('newjs_slave');
 
 			if($this->currency == 'DOL')
 				$info = $sObj->fetchServiceDetailForDollarTrxn($id, 'desktop');
@@ -165,7 +165,7 @@ class DiscountHeadsMis
 		$this->trxn['IS_UNLIMITED'] = 0;
  		foreach($serviceIdArr as $id)
 		{
-                        $sObj = new billing_SERVICES();
+                        $sObj = new billing_SERVICES('newjs_slave');
 
                         if($this->currency == 'DOL')
                                 $info = $sObj->fetchServiceDetailForDollarTrxn($id, 'desktop');
@@ -220,7 +220,7 @@ class DiscountHeadsMis
 		{
 			$mhObj = new MembershipHandler();
 			//for accessing non-symfony function
-			connect_db();
+			connect_slave();
 			//end
 
 			$serviceCharged = array();
@@ -242,7 +242,7 @@ class DiscountHeadsMis
 
 	public function isFestive()
 	{
-		$festiveObj = new billing_FESTIVE_LOG_REVAMP();
+		$festiveObj = new billing_FESTIVE_LOG_REVAMP('newjs_slave');
 		$res = $festiveObj->getLastActiveServices($this->trxn['BILLING_DT']); 
 		if($res)
 			return 1;
@@ -252,14 +252,14 @@ class DiscountHeadsMis
 	public function isRenewal()
 	{
 		$memObj = new Membership();
-		connect_db();   //for accessing non-symfony function
+		connect_slave();   //for accessing non-symfony function
 		$res = $memObj->isRenewableEver($this->trxn['PROFILEID'], $this->trxn['BILLING_DT']);			
 		return $res;
 	}
 
 	public function calculateEffectiveTotalDiscount()  // for eg. e-Sathi Classified 6-months Membership
 	{
-		$pdObj = new billing_PURCHASE_DETAIL();
+		$pdObj = new billing_PURCHASE_DETAIL('newjs_slave');
 		$absoluteTotalPrice = $pdObj->getTotalPriceOfTransaction($this->trxn['BILLID'], $this->trxn['PROFILEID']);	
 		$this->trxn['TOTAL_DISCOUNT'] -= $absoluteTotalPrice - $this->trxn['TOTAL_STD_PRICE'];
 		unset($pdObj);
@@ -336,13 +336,13 @@ class DiscountHeadsMis
 	{
 		foreach($this->allTrxnDetailArr as $key => $trxn)
 		{
-			$cdaObj = new CRM_DAILY_ALLOT(); 
+			$cdaObj = new CRM_DAILY_ALLOT('newjs_slave'); 
 			$this->allTrxnDetailArr[$key]['ALLOTED_TO'] = $cdaObj->getAllotedAgentToTransaction($trxn['PROFILEID'], $trxn['BILLING_DT']);	
 			unset($cdaObj);
 	
 			if(!$this->allTrxnDetailArr[$key]['ALLOTED_TO'])
 			{
-				$cdatObj = new CRM_DAILY_ALLOT_TRACK(); 
+				$cdatObj = new CRM_DAILY_ALLOT_TRACK('newjs_slave'); 
 				$this->allTrxnDetailArr[$key]['ALLOTED_TO'] = $cdatObj->getAllotedAgentToTransaction($trxn['PROFILEID'], $trxn['BILLING_DT']);	
 				unset($cdatObj);
 			}
@@ -354,7 +354,7 @@ class DiscountHeadsMis
 
 	public function fetchBillingDetailsTrxnWise($agent='')
 	{
-		$pObj = new BILLING_PURCHASES();
+		$pObj = new BILLING_PURCHASES('newjs_slave');
 		$this->allTrxnDetailArr = $pObj->fetchTransactionInfo($this->start_dt, $this->end_dt, $this->currency);
 		unset($pObj);
 

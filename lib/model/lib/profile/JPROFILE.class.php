@@ -144,7 +144,7 @@ class JPROFILE
      */
     public function edit($paramArr = array(), $value, $criteria = "PROFILEID", $extraWhereCnd = "")
     {
-        $bResult = self::$objProfileMysql->updateRecod($paramArr,$value,$criteria,$extraWhereCnd);
+        $bResult = self::$objProfileMysql->updateRecord($paramArr,$value,$criteria,$extraWhereCnd);
 
         if(true === $bResult) {
             ProfileCacheLib::getInstance()->updateCache($paramArr, $criteria, $value, $extraWhereCnd);
@@ -550,6 +550,22 @@ class JPROFILE
     public function getPhotoScreenProcessQueueCount()
     {
         return self::$objProfileMysql->getPhotoScreenAcceptQueueCount();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmailLike()
+    {
+        return self::$objProfileMysql->getEmailLike();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function updateEmail()
+    {
+        return self::$objProfileMysql->getEmailLike();
     }
     /**
      * This function executes a select query on join of jprofile and incentives.name_of_user

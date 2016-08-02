@@ -7,7 +7,6 @@ include_once ("../profile/pg/functions.php");
 include_once ("connect.inc");
 
 $db = connect_misdb();
-$db2 = connect_master();
 
 $data = authenticated($checksum);
 if (isset($data) || $JSIndicator) {

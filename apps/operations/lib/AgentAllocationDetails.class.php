@@ -2325,7 +2325,7 @@ public function fetchPincodesOfCities($cities)
 
 	public function getValidUsersForFieldSalesTarget()
 	{
-		$jsadminPswrdsObj = new jsadmin_PSWRDS();
+		$jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
         	$privileges = $jsadminPswrdsObj->getPrivilegesForSalesTarget();
 
         	$usernames = array();

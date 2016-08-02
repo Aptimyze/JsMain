@@ -209,7 +209,7 @@ class RevampCasteFunctions
 	*/
 	public function getParentIfSingle($casteString)
 	{
-		$casteObj = new NEWJS_CASTE;
+		$casteObj = new NEWJS_CASTE(SearchConfig::getSearchDb());
                 $output = $casteObj->getParentIfSingle($casteString);
 		return $output;
 	}

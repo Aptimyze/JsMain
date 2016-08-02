@@ -29,7 +29,7 @@ class logoutv1Action extends sfActions
                         $dbObj->DeleteRecord($loginData[PROFILEID]);
 
                         // Remove Online-User
-		        $dateTime1 ='10';
+		        $dateTime1 ='11';
         		$dateTime2 ='22';
                 	$dateTime =date("H");
                 	$redisOnline =true;
