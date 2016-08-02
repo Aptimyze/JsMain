@@ -26,6 +26,7 @@ class ImageManipulator
      */
     public function __construct($file = null)
     {
+        ini_set('memory_limit', '1024M');
         if (null !== $file) 
         {
             $this->setImageString($file);
