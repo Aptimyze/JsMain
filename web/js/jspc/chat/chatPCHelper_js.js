@@ -889,6 +889,7 @@ $(document).ready(function () {
                 //chatLoggerPC("In Logout preclick");
                 objJsChat._loginStatus = 'N';
                 clearLocalStorage();
+                strophieWrapper.initialRosterFetched = false;
                 strophieWrapper.disconnect();
                 eraseCookie("chatAuth");
             }
