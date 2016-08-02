@@ -185,6 +185,47 @@ d in the result
 	{
 		return $this->getName($profileid);
 	}
+
+                /* This function inserts entry into NAME_OF_USER table
+                 * */
+        public function insertNameInfo($profileid,$name,$display)
+        {
+                try
+                {
+				if(!$profileid || (!$name && !$display))
+					throw new jsException("","data missing in insertNameInfo function profileid:".$profileid.",name:".$name.",display:".$display);
+					
+                                        $sqlUpdateName="Update incentive.NAME_OF_USER SET ";
+					if($name)
+						$sqlUpdateName.= " NAME=:NAME ";
+					if($name && $display)
+						$sqlUpdateName.=" , ";
+					if($display)
+						$sqlUpdateName.= " DISPLAY=:DISPLAY ";
+					$sqlUpdateName.=" where PROFILEID=:PROFILEID";
+                                        $resUpdateName = $this->db->prepare($sqlUpdateName);
+                                        $resUpdateName->bindValue(":PROFILEID", $profileid);
+					if($name)
+						$resUpdateName->bindValue(":NAME", $name);
+					if($display)
+						$resUpdateName->bindValue(":DISPLAY", $display);
+                                        $resUpdateName->execute();
+
+                                        if(!$resUpdateName->rowCount())
+                                        {
+                                                        $sql="REPLACE INTO incentive.NAME_OF_USER(PROFILEID,NAME,DISPLAY) VALUES(:PROFILEID,:NAME,:DISPLAY)";
+                                                        $resSelectDetail = $this->db->prepare($sql);
+                                                        $resSelectDetail->bindValue(":PROFILEID", $profileid);
+                                                        $resSelectDetail->bindValue(":NAME", $name);
+							$resSelectDetail->bindValue(":DISPLAY", $display);
+                                                        $resSelectDetail->execute();
+                                        }
+                }
+                catch(Exception $e)
+                {
+                        throw new jsException($e);
+                }
+        }
 		
 }
 ?>

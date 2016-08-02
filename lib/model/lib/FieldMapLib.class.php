@@ -9996,7 +9996,9 @@ break;
 default:
 
 				break;
-
+	case "displayname":
+		$arr['Y']='Y';
+		$arr['N']='N';
 			}
 
 			if($returnArr)

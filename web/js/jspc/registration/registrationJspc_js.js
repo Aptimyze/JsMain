@@ -2359,3 +2359,23 @@ function clearUgDegree(){
     historyStoreObj.push(onBrowserBack, "#register");
   
 })();
+    $(document).ready(function(e) {
+	inputData['displayname']="Y";
+        $(".optionDrop li").each(function(index, element) {
+            $(this).on("click",function(){
+                                $(".optionDrop li").each(function(index, element) {
+                                        $(this).removeClass("selected");
+                                });
+                                $(this).addClass("selected");
+                                if($(this).attr("id") == "showYes") {
+                                        $("#showText").html("Show to All");
+                                }
+                                else {
+                                        $("#showText").html("Don<92>t show my name");
+                                }
+				var displayNameVal = $(this).attr('data-fieldVal');
+				inputData['displayname']=displayNameVal;
+                        });
+        });
+    });
+

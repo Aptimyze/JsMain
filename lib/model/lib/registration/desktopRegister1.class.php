@@ -82,11 +82,10 @@ class desktopRegister1 extends registrationBaseClass {
       
       $jprofileDefaultData = $this->getJprofileDefaultData();
       $this->id = $this->form->updateData('', $jprofileDefaultData);
-      if($name = trim($this->arrFormValues['name_of_user']))
-      {
-        $name_pdo = new incentive_NAME_OF_USER();
-        $name_pdo->insertName($this->id, $name);
-      }
+      $name = trim($this->arrFormValues['name_of_user']);
+      $display = trim($this->arrFormValues['displayname']);
+      $name_pdo = new NameOfUser($this->id);
+      $name_pdo->insertName($name,$display);
     }
   }
 /*
