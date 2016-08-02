@@ -743,6 +743,12 @@ function globalSleep(milliseconds) {
 $(document).ready(function () {
     //chatLoggerPC("User");
     //chatLoggerPC(loggedInJspcUser);
+    $(window).focus(function() {
+        console.log("Focus");
+        if(objJsChat && objJsChat.manageChatBoxOnChange && typeof (objJsChat.manageChatBoxOnChange) == "function"){
+            objJsChat.manageChatBoxOnChange();
+        }
+    });
     checkNewLogin(loggedInJspcUser);
     var checkDiv = $("#chatOpenPanel").length;
     if (showChat && (checkDiv != 0)) {
