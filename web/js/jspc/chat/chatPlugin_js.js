@@ -1505,7 +1505,7 @@ JsChat.prototype = {
     _changeStatusOfMessg: function (messgId, userId, newStatus) {
         if(messgId){
             this._chatLoggerPlugin("Change status" + newStatus);
-            if (newStatus == "recieved" || newStatus == "sent") {
+            if (newStatus == "recieved") {
                 $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_8").addClass("nchatic_10");
             } 
             else if (newStatus == "recievedRead") {

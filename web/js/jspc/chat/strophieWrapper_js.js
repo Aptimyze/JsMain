@@ -521,13 +521,14 @@ var strophieWrapper = {
                 if(strophieWrapper.syncSentMessage == true){
                     // Forward the message, so that other connected resources are also aware of it.
                     //append it as self sent message
-                    setTimeout(function(){
+                   /* setTimeout(function(){
+                    	console.log("sending msg forward");
                     	strophieWrapper.connectionObj.send(
                         $msg({ to: strophieWrapper.getSelfJID(true), type: 'chat', id: messageId })
                             .c('forwarded', {xmlns:'urn:xmpp:forward:0'})
                             .cnode(reply.tree()));
                     	//console.log("sent forwarded msg"+messageId);
-                    },2000);
+                    },2000);*/
                     
                 }
                 outputObj = {
@@ -613,7 +614,8 @@ var strophieWrapper = {
         	var msg1 = forwardObj[0].getElementsByTagName("message");
         	//console.log(outputObj);
         	outputObj["to"] = msg1[0].getAttribute("to").split("@")[0];
-        	outputObj["forward_jid"] = msg.getAttribute('from');
+        	outputObj["forward_jid"] = msg1[0].getAttribute('from');
+        	outputObj["msg_id"] = msg1[0].getAttribute("id");
         }
         //strophieWrapper.stropheLoggerPC(received);
         if (outputObj["type"] == "chat") {

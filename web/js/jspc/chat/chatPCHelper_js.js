@@ -434,7 +434,7 @@ function invokePluginReceivedMsgHandler(msgObj) {
                 case strophieWrapper.msgStates["FORWARDED"]:
                     if(typeof msgObj["body"]!= "undefined" && msgObj["body"]!= "" && msgObj["body"]!= null){
                         if(msgObj["forward_jid"] != strophieWrapper.getSelfJID())
-                            objJsChat._appendSelfMessage(msgObj["body"],msgObj["to"],msgObj["msg_id"],"sent");
+                            objJsChat._appendSelfMessage(msgObj["body"],msgObj["to"],msgObj["msg_id"],"recieved");
                     }
                     break;
             }
