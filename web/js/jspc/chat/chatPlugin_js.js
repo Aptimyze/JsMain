@@ -1049,7 +1049,9 @@ JsChat.prototype = {
         getChatHistory({
                 "extraParams":{
                     "from":getConnectedUserJID(),
-                    "to":user_jid
+                    "to":user_jid,
+                    "to_checksum":checkSum,
+                    "from_checksum":self_checksum
                 }
         });
         this._chatLoggerPlugin(curElem);
@@ -1377,16 +1379,20 @@ JsChat.prototype = {
 
     //append self sent message on opening window again
     _appendSelfMessage: function (message, userId, uniqueId, status) {
+        console.log("appending self sent msg");
         var curElem = this;
-        //console.log("inside _appendSelfMessage",$('chat-box[user-id="' + userId + '"] .chatMessage'));
-        $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText">' + message + '</div><i class="nchatspr nchatic_8 fr vertM"></i></div>');
-        var len = $('chat-box[user-id="' + userId + '"] .talkText').length - 1,
-            height = $($('chat-box[user-id="' + userId + '"] .talkText')[len]).height();
-        $($('chat-box[user-id="' + userId + '"] .talkText')[len]).next().css("margin-top", height);
-        
-        if (status != "sending") {
-            curElem._changeStatusOfMessg(uniqueId, userId, status);
-        }
+        if($('chat-box[user-id="' + userId + '"] .chatMessage').find("#text_"+userId+uniqueId).length == 0){
+            console.log("appending self sent msg 1");
+            //console.log("inside _appendSelfMessage",$('chat-box[user-id="' + userId + '"] .chatMessage'));
+            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText">' + message + '</div><i class="nchatspr nchatic_8 fr vertM"></i></div>');
+            var len = $('chat-box[user-id="' + userId + '"] .talkText').length - 1,
+                height = $($('chat-box[user-id="' + userId + '"] .talkText')[len]).height();
+            $($('chat-box[user-id="' + userId + '"] .talkText')[len]).next().css("margin-top", height);
+            
+            if (status != "sending") {
+                curElem._changeStatusOfMessg(uniqueId, userId, status);
+            } 
+        }  
     },
     //add meesage recieved from another user
     _appendRecievedMessage: function (message, userId, uniqueId) {

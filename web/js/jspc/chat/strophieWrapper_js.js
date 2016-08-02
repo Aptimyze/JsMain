@@ -288,6 +288,7 @@ var strophieWrapper = {
             chat_status = "offline"; // unavailable, subscribed, etc...
         var from = $(presence).attr('from'),
             user_id = from.split("@")[0]; // the jabber_id of the contact
+        //console.log(presence);
         if(strophieWrapper.isItSelfUser(user_id) == false){
 	        //strophieWrapper.stropheLoggerPC("start of onPresenceReceived for " + user_id);
 	        //strophieWrapper.stropheLoggerPC(from);
@@ -356,6 +357,7 @@ var strophieWrapper = {
 
     //executed after roster has been fetched
     onRosterReceived: function (iq) {
+    	console.log(iq);
         //strophieWrapper.stropheLoggerPC("in onRosterReceived");
         strophieWrapper.stropheLoggerPC(iq);
         //strophieWrapper.stropheLoggerPC(iq);
@@ -394,10 +396,11 @@ var strophieWrapper = {
     onMessage: function (iq) {
         //strophieWrapper.stropheLoggerPC("got message");
         //console.log("in onMessage");
-        console.log(iq);
+        //console.log(iq);
         strophieWrapper.stropheLoggerPC(iq);
         var msgObject = strophieWrapper.formatMsgObj(iq);
         //strophieWrapper.stropheLoggerPC(msgObject);
+        //if(msgObject["msg_state"] == strophieWrapper.msgStates["FORWARDED"] && getSelfJID() != msgObject[]
         invokePluginReceivedMsgHandler(msgObject);
         return true;
     },
@@ -518,12 +521,15 @@ var strophieWrapper = {
                 if(strophieWrapper.syncSentMessage == true){
                     // Forward the message, so that other connected resources are also aware of it.
                     //append it as self sent message
-                    strophieWrapper.connectionObj.send(
-                        $msg({ to: strophieWrapper.getSelfJID(true), type: 'chat', id: messageId ,forwarded:true})
-                        //.c(strophieWrapper.msgStates["FORWARDED"], {xmlns:'urn:xmpp:forward:0'})
-                        //.c('delay', {xmns:'urn:xmpp:delay',stamp:(new Date()).getTime()}).up()
-                        .cnode(Strophe.xmlElement('body', message)).up());
-                    //console.log("sent forwarded msg");
+                   /* setTimeout(function(){
+                    	console.log("sending msg forward");
+                    	strophieWrapper.connectionObj.send(
+                        $msg({ to: strophieWrapper.getSelfJID(true), type: 'chat', id: messageId })
+                            .c('forwarded', {xmlns:'urn:xmpp:forward:0'})
+                            .cnode(reply.tree()));
+                    	//console.log("sent forwarded msg"+messageId);
+                    },2000);*/
+                    
                 }
                 outputObj = {
                     "msg_id": messageId,
@@ -567,21 +573,20 @@ var strophieWrapper = {
     },
     /*format msg object*/
     formatMsgObj: function (msg) {
-    	//console.log("in formatMsgObj");
+    	console.log("in formatMsgObj");
     	console.log(msg);
         var outputObj = {
             "from": msg.getAttribute('from').split("@")[0],
             "to": msg.getAttribute('to').split("@")[0],
             "type": msg.getAttribute('type'),
-            "msg_id": msg.getAttribute('id'),
-            "forwarded":msg.getAttribute('forwarded')
+            "msg_id": msg.getAttribute('id')
         };
         var $message = $(msg),
             msg_state;
-        if (outputObj["forwarded"] == "true") {
-        	//console.log("forwarded");
+        
+        if ($message.find(strophieWrapper.msgStates["FORWARDED"]).length != 0) {
             msg_state = strophieWrapper.msgStates["FORWARDED"];
-        }else if ($message.find(strophieWrapper.msgStates["COMPOSING"]).length != 0) {
+        } else if ($message.find(strophieWrapper.msgStates["COMPOSING"]).length != 0) {
             msg_state = strophieWrapper.msgStates["COMPOSING"];
         } else if ($message.find(strophieWrapper.msgStates["PAUSED"]).length != 0) {
             msg_state = "paused";
@@ -602,6 +607,16 @@ var strophieWrapper = {
             outputObj["msg_state"] = msg_state;
         }
         var received = msg.getElementsByTagName(strophieWrapper.msgStates["RECEIVED"]);
+        if(msg_state == strophieWrapper.msgStates["FORWARDED"]){
+        	var forwardObj = msg.getElementsByTagName(strophieWrapper.msgStates["FORWARDED"]);
+        	console.log("in from");
+        	console.log(msg);
+        	var msg1 = forwardObj[0].getElementsByTagName("message");
+        	//console.log(outputObj);
+        	outputObj["to"] = msg1[0].getAttribute("to").split("@")[0];
+        	outputObj["forward_jid"] = msg1[0].getAttribute('from');
+        	outputObj["msg_id"] = msg1[0].getAttribute("id");
+        }
         //strophieWrapper.stropheLoggerPC(received);
         if (outputObj["type"] == "chat") {
             var body = msg.getElementsByTagName("body");
@@ -614,6 +629,7 @@ var strophieWrapper = {
                 outputObj["receivedId"] = rec.getAttribute('id');
             }
         }
+        console.log(outputObj);
         return outputObj;
     },
     /*
