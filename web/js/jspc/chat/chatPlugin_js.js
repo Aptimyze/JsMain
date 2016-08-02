@@ -1424,7 +1424,7 @@ JsChat.prototype = {
         });
         $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
            scrollTop: divLen
-        }, 1000);
+        }, 500);
     },
 
     //append chat history in chat box
@@ -1445,7 +1445,10 @@ JsChat.prototype = {
                 //console.log(historyHTML);
                 if(historyHTML){
                     $('chat-box[user-id="' + other_id + '"] .chatMessage').append(historyHTML);
-                    curElem._scrollToBottom(other_id);
+                    setTimeout(function(){
+                      curElem._scrollToBottom(other_id);  
+                    },1000);
+                    
                 }
             });
         }
@@ -1455,6 +1458,9 @@ JsChat.prototype = {
     _appendSelfMessage: function (message, userId, uniqueId, status) {
         console.log("appending self sent msg");
         var curElem = this;
+        if ($('chat-box[user-id="' + userId + '"]').length == 0) {
+            $(".profileIcon[id^='" + userId + "']")[0].click();
+        }
         if($('chat-box[user-id="' + userId + '"] .chatMessage').find("#text_"+userId+uniqueId).length == 0){
             console.log("appending self sent msg 1");
             //console.log("inside _appendSelfMessage",$('chat-box[user-id="' + userId + '"] .chatMessage'));
