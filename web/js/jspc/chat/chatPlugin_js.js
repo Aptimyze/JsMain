@@ -1462,6 +1462,7 @@ JsChat.prototype = {
                       curElem._scrollToBottom(other_id);  
                     },1000);*/
                     
+                    curElem._scrollToBottom(other_id); 
                 }
             });
         }
