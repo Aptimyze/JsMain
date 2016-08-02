@@ -309,7 +309,8 @@ JsChat.prototype = {
             }
             TabsOpt += "<p>" + objin["tab_name"] + "</p><div class=\"showlinec\"></div></li>";
         }
-        TabsOpt += '</ul></div><div id="nchatDivs" class="nchatscrollDiv"><div id="scrollDivLoader" class="spinner"></div>';
+        TabsOpt += '</ul></div>';
+        TabsOpt += '<div id="nchatDivs" class="nchatscrollDiv"><div id="scrollDivLoader" class="spinner"></div>';
         TabsOpt += '<div class="showtab1 js-htab" id="tab1"> <div id="showtab1NoResult" class="noResult f13 fontreg disp-none">' + curEle._noDataTabMsg["tab1"] + '</div>';
         for (var i = 0; i < obj["tab1"]["groups"].length; i++) {
             TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + " disp-none chatListing\" data-showuser=\"" + obj["tab1"]["groups"][i]["hide_offline_users"] + "\">";
@@ -317,7 +318,9 @@ JsChat.prototype = {
             TabsOpt += "<div class=\"f12 fontreg nchatbdr2";
             if (obj["tab1"]["groups"][i]["show_group_name"] == false) TabsOpt += " disp-none";
             TabsOpt += "\"><p class=\"nchatt1 fontreg pl15\">" + obj["tab1"]["groups"][i]["group_name"] + "</p></div>";
-            TabsOpt += "<ul class=\"chatlist\"></ul></div>";
+            //TabsOpt += "<ul class=\"chatlist\"></ul></div>";
+            TabsOpt += "<ul class=\"chatlist online\"></ul>";
+            TabsOpt += "<ul class=\"chatlist offline\"></ul></div>";
         }
         TabsOpt += '</div>';
         TabsOpt += '<div class="showtab2 js-htab disp-none" id="tab2"> <div id="showtab2NoResult" class="noResult f13 fontreg disp-none">' + curEle._noDataTabMsg["tab2"] + '</div>';
@@ -327,10 +330,14 @@ JsChat.prototype = {
             TabsOpt += "<div class=\"f12 fontreg nchatbdr2";
             if (obj["tab2"]["groups"][i]["show_group_name"] == false) TabsOpt += " disp-none";
             TabsOpt += "\"><p class=\"nchatt1 fontreg pl15\">" + obj["tab2"]["groups"][i]["group_name"] + "</p></div>";
-            TabsOpt += "<ul class=\"chatlist\"></ul></div>";
+            //TabsOpt += "<ul class=\"chatlist\"></ul></div>";
+            TabsOpt += "<ul class=\"chatlist online\"></ul>";
+            TabsOpt += "<ul class=\"chatlist offline\"></ul></div>";
+
         }
         TabsOpt += '</div>';
         TabsOpt += '</div>';
+
         $(this._listingPanelID).append(TabsOpt);
         $(this._tabclass).click(function () {
             curEle._chatTabs($(this).attr('id'));
@@ -501,10 +508,8 @@ JsChat.prototype = {
         if (key == "new") {
             this._chatLoggerPlugin("ankita_adding" + contactID + " in groupID");
             this._chatLoggerPlugin(contactHTML);
-            if(status == "offline")
-                $('div.' + groupID + ' ul').append(contactHTML);
-            else
-                $('div.' + groupID + ' ul').prepend(contactHTML);
+            $('div.' + groupID + ' ul.'+status).prepend(contactHTML);
+           
         } else if (key == "existing") {
             this._chatLoggerPlugin("changing icon");
             if (status == "online") {
@@ -513,9 +518,10 @@ JsChat.prototype = {
                 if ($('#' + contactID + "_" + groupID).find('.nchatspr').length == 0) {
                     $(this._mainID).find($('#' + contactID + "_" + groupID)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
                 }
-                console.log("cloning");
-                $('#' + contactID + "_" + groupID).prependTo('div.' + groupID + ' ul');
-                //$('#' + contactID + "_" + groupID).remove();
+                $('#' + contactID + "_" + groupID).prependTo('div.' + groupID + ' ul.'+status);
+            }
+            else if(status == "offline"){
+                $('#' + contactID + "_" + groupID).prependTo('div.' + groupID + ' ul.'+status);  
             }
         }
     },
@@ -672,6 +678,7 @@ JsChat.prototype = {
                         if (tabShowStatus == 'false' && param1 != 'delete_node') {
                             that._chatLoggerPlugin("123");
                             $(listElements).find('.nchatspr').detach();
+                            elem._placeContact("existing",runID,val,"offline");
                         } else {
                             that._chatLoggerPlugin("345");
                             $('div').find(listElements).detach();
