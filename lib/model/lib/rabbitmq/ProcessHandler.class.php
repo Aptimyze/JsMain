@@ -163,5 +163,25 @@ class ProcessHandler
 			break;
 	}
  }
+
+ /**
+ * HandleProfileCacheQueue
+ * @param $process
+ * @param $body
+ */
+ public function HandleProfileCacheQueue($process, $body)
+ {
+     try{
+         JsMemcache::getInstance()->delete($body,true);
+     } catch (Exception $ex) {
+         //Requeue the data
+         $reSendData = array('process' =>$process,'data'=>array('type' => '','body'=>$body), 'redeliveryCount'=> 0);
+         $producerObj=new Producer();
+         $producerObj->sendMessage($reSendData);
+     }
+
+ }
+
+
 }
 ?>

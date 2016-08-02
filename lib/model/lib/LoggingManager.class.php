@@ -42,6 +42,9 @@ class LoggingManager
     {
         $this->szLogPath = $basePath;
         $this->iUniqueID = uniqid();
+        if (false === is_dir(JsConstants::$docRoot.'/uploads/Logger')) {
+            mkdir(JsConstants::$docRoot.'/uploads/Logger',0777,true);
+        }
     }
 
     /**

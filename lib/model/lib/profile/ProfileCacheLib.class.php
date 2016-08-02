@@ -140,11 +140,9 @@ class ProfileCacheLib
             return false;
         }
 
-        //Set Hash Object
-        $stTime = $this->createNewTime();
-        JsMemcache::getInstance()->setHashObject($szKey, $arrParams, ProfileCacheConstants::CACHE_EXPIRE_TIME);
-        $this->calculateResourceUsages($stTime,'Set : '," for key {$key}");
-        //TODO : Update Local Cache also
+        //Store in Cache
+        $this->storeInCache($szKey, $arrParams);
+        //Update Local Cache also
         $this->updateInLocalCache($key, $arrParams);
         return true;
     }
@@ -164,7 +162,7 @@ class ProfileCacheLib
 
         $bUpdateFromMysql = false;
         if(false === $this->isCached($szCriteria, $key, array_keys($paramArr), true)) {
-            //TODO : Need to handle this case
+            //Server From MySql
             $bUpdateFromMysql = true;
         }
 
@@ -223,7 +221,7 @@ class ProfileCacheLib
         }
 
         if ($this->isCommandLineScript()) {
-            //TODO : throw exception of command line usages from command line script
+            //Throw exception of command line usages from command line script
             return false;
         }
 
@@ -483,6 +481,43 @@ class ProfileCacheLib
     private function isCommandLineScript()
     {
         return (php_sapi_name() === ProfileCacheConstants::COMMAND_LINE);
+    }
+
+    /**
+     * @param $szKey
+     * @param $arrParams
+     * @return bool
+     */
+    public function storeInCache($szKey, $arrParams)
+    {
+        //Set Hash Object
+        $stTime = $this->createNewTime();
+        $bSuccess = false;
+        $iTryCount = 0;
+        do {
+            try{
+                JsMemcache::getInstance()->setHashObject($szKey, $arrParams, ProfileCacheConstants::CACHE_EXPIRE_TIME,true);
+                $bSuccess = true;
+            } catch (Exception $ex) {
+                $bSuccess = false;
+                ++$iTryCount;
+                $this->logThis(LoggingEnums::LOG_INFO, "Profile Cache failed while setting up in cache,Retrying again and its count : {$iTryCount}");
+            }
+            //If Attempt Count Reached to Max Attempt Count
+            if ($iTryCount === ProfileCacheConstants::CACHE_MAX_ATTEMPT_COUNT) {
+                $this->logThis(LoggingEnums::LOG_INFO, "Profile Cache Update failed, Adding in MQ for key : {$szKey}");
+
+                //Add into MQ
+                $producerObj = new Producer();
+                $iProfileID = substr($szKey, strlen(ProfileCacheConstants::PROFILE_CACHE_PREFIX));
+                $queueData = array('process' =>MessageQueues::PROCESS_PROFILE_CACHE_DELETE,'data'=>array('type' => '','body'=>array('PROFILEID'=>$iProfileID)), 'redeliveryCount'=>0 );
+                $producerObj->sendMessage($queueData);
+
+            }
+        } while ($bSuccess === false && $iTryCount < ProfileCacheConstants::CACHE_MAX_ATTEMPT_COUNT);
+        $this->calculateResourceUsages($stTime,'Set : '," for key {$key}");
+
+        return $bSuccess;
     }
 }
 ?>
