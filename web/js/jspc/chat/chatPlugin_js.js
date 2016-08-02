@@ -1439,25 +1439,28 @@ JsChat.prototype = {
 
     //append chat history in chat box
     _appendChatHistory: function(selfJID,otherJID,communication){
+        console.log("self message");
         var self_id = selfJID.split("@")[0],other_id = otherJID.split("@")[0],historyHTML="";
         var curElem = this;
         if($('chat-box[user-id="' + other_id + '"]').length != 0){
             $.each(communication,function(key,logObj){
+                console.log(logObj["MESSAGE"]);
                 //console.log(logObj);
                 if(parseInt(logObj["SENDER"]) == self_id){
                     //append self sent message
                     historyHTML = historyHTML + '<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["ID"] + '" class="talkText">' + logObj["MESSAGE"] + '</div></div>';
                 }
                 else if(parseInt(logObj["SENDER"]) == other_id){
+                    
                     //append received message
                     historyHTML = historyHTML + '<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["ID"] + '" class="talkText">' + logObj["MESSAGE"] + '</div></div>';
                 }
                 //console.log(historyHTML);
                 if(historyHTML){
-                    $('chat-box[user-id="' + other_id + '"] .chatMessage').append(historyHTML);
-                    setTimeout(function(){
+                    $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_"+other_id).append(historyHTML);
+                    /*setTimeout(function(){
                       curElem._scrollToBottom(other_id);  
-                    },1000);
+                    },1000);*/
                     
                 }
             });
