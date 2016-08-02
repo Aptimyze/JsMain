@@ -1488,46 +1488,42 @@ public function duplicateEmail($email)
                         throw new jsException($ex);
                 }
 	}
-
-	public function getActiveProfiles($totalScript=1,$currentScript=0,$lastLoginWithIn='6 months',$limitProfiles=0)
+        
+        //get email similar to supplied values
+        public function getEmailLike($email)
 	{
-		if(!is_numeric(intval($totalScript)) || !$totalScript)
+		try
 		{
-			throw new jsException("","totalScript is not numeric in getUncomputedProfiles OF PROFILE_PROFILE_COMPLETION_SCORE.class.php");
-		}
-
-		if(!is_numeric(intval($currentScript)))
-		{
-			throw new jsException("","currentScript is not numeric in getUncomputedProfiles OF PROFILE_PROFILE_COMPLETION_SCORE.class.php");
-		}
-
-		$time = new DateTime();
-		$time->sub(date_interval_create_from_date_string($lastLoginWithIn));
-
-		try{
-			$sql =  <<<SQL
-            SELECT *
-            FROM  newjs.`JPROFILE`
-            WHERE LAST_LOGIN_DT  >=  :LAST_LOGIN_DT 
-            AND activatedKey=1
-	        AND PROFILEID MOD :T_SCRIPT = :CUR_SCRIPT
-            AND ACTIVATED = 'Y'
-SQL;
-			if($limitProfiles)
-				$sql .= ' LIMIT '. $limitProfiles;
-
+			$sql = "SELECT EMAIL FROM newjs.JPROFILE WHERE EMAIL LIKE :EMAILID";
 			$pdoStatement = $this->db->prepare($sql);
-			$pdoStatement->bindValue(":LAST_LOGIN_DT",$time->format('Y-m-d'),PDO::PARAM_STR);
-			$pdoStatement->bindValue(":T_SCRIPT",$totalScript,PDO::PARAM_STR);
-			$pdoStatement->bindValue(":CUR_SCRIPT",$currentScript,PDO::PARAM_STR);
+                        $pdoStatement->bindValue(":EMAILID",$email.'%',PDO::PARAM_STR);
 			$pdoStatement->execute();
-
-			return $pdoStatement->fetchAll(PDO::FETCH_ASSOC);
-		} catch (Exception $ex) {
-			throw new jsException($ex);
+                        while($result  = $pdoStatement->fetch(PDO::FETCH_ASSOC))
+                            $return[]=$result;
+			return $return;
 		}
+		catch(Exception $ex){
+                        throw new jsException($ex);
+                }
 	}
+        
+        //update existing email with value appended
+        public function updateEmail($email,$newEmail)
+	{
+		try
+		{
+			$sql = "UPDATE newjs.JPROFILE SET EMAIL = :NEW_EMAIL WHERE EMAIL= :EMAILID";
+			$pdoStatement = $this->db->prepare($sql);
+                        $pdoStatement->bindValue(":EMAILID",$email,PDO::PARAM_STR);
+                        $pdoStatement->bindValue(":NEW_EMAIL",$newEmail,PDO::PARAM_STR);
+			$pdoStatement->execute();
+                        return $pdoStatement->rowCount();
+		}
+		catch(Exception $ex){
+                        throw new jsException($ex);
+                }
 
+	}
 
 	//This function executes a select query on join of jprofile and incentives.name_of_user to fetch PROFILEID,EMAIL,USERNAME for the profiles that match the criteria
 	public function getDataForLegal($nameArr,$age,$addressArr,$email)

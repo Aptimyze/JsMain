@@ -14,7 +14,6 @@ include_once($_SERVER['DOCUMENT_ROOT']."/classes/Memcache.class.php");
 $mysql=new Mysql;
 
 $db=connect_misdb();
-$db2=connect_master();
 
 if(authenticated($cid) || $JSIndicator==1)
 {

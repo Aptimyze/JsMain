@@ -8,7 +8,7 @@ class RenewalFollowUpStatusMis
 
 	public function fetchProfilesWithoutFollowupDateCount($reporters){
 		foreach($reporters as $agent){
-			$maObj = new incentive_MAIN_ADMIN();
+			$maObj = new incentive_MAIN_ADMIN('newjs_slave');
 			$res[$agent] = $maObj->countProfilesWithoutFollowupDate($agent);
 		}
 		return $res;
@@ -174,7 +174,7 @@ class RenewalFollowUpStatusMis
 
 	public function fetchProfileDataWithoutFollowupDate($agent){
 		$profileData = array();
-		$maObj = new incentive_MAIN_ADMIN();
+		$maObj = new incentive_MAIN_ADMIN('newjs_slave');
 		$fsObj = new FieldSalesFollowUpStatusMis();
 		$profileData = $maObj->getProfilesWithoutFollowupDate($agent);
 		$profileData = $fsObj->getAllProfileDataForExecutive($profileData, $agent);
@@ -185,7 +185,7 @@ class RenewalFollowUpStatusMis
 	}
 
 	public function fetchRenewalProfileIds($agent){
-		$maObj = new incentive_MAIN_ADMIN();
+		$maObj = new incentive_MAIN_ADMIN('newjs_slave');
 		$allotedProfiles = $maObj->getAllotedProfiles($agent);
 		$renewalProfiles = array();
 		foreach($allotedProfiles as $id){
@@ -197,7 +197,7 @@ class RenewalFollowUpStatusMis
 	}
 
 	public function fetchRenewalProfilesWithoutFollowedupIds($agent){
-		$maObj = new incentive_MAIN_ADMIN();
+		$maObj = new incentive_MAIN_ADMIN('newjs_slave');
 		$allotedProfiles = $maObj->getAllotedProfiles($agent);
 		$exp_dt = array();
 		foreach($allotedProfiles as $id){
@@ -222,7 +222,7 @@ class RenewalFollowUpStatusMis
 	}
 
 	public function fetchRenewalProfilesWithoutFollowedupRangeWiseIds($agent, $expireRangeArr, $col_id){
-		$maObj = new incentive_MAIN_ADMIN();
+		$maObj = new incentive_MAIN_ADMIN('newjs_slave');
 		$allotedProfiles = $maObj->getAllotedProfiles($agent);
 		$exp_dt = array();
 		foreach($allotedProfiles as $id){
@@ -251,7 +251,7 @@ class RenewalFollowUpStatusMis
 
 	public function fetchProfileData($agent, $expireRangeArr, $col_id){
 		$profileData = array();
-		$maObj = new incentive_MAIN_ADMIN();
+		$maObj = new incentive_MAIN_ADMIN('newjs_slave');
 		$fsObj = new FieldSalesFollowUpStatusMis();
 		if($col_id == 2)
 			$profileIds = $this->fetchRenewalProfileIds($agent);

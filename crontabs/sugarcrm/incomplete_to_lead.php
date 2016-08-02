@@ -57,7 +57,7 @@ class IncompleteProfiles{
 		$sql="select $select from newjs.JPROFILE where PROFILEID='$profileid' and ACTIVATED<> 'D'";
 		$sql1="select HOBBY from newjs.JHOBBY where PROFILEID='$profileid'";
 		$sql2="select PLACE_BIRTH from newjs.ASTRO_DETAILS where PROFILEID='$profileid'";
-		$profile_res=$this->duplicateSalve->db->requireSingleRow($sql);
+		$profile_res=$this->duplicateSlave->db->requireSingleRow($sql);
 		$profile_res1=$this->duplicateSlave->db->requireSingleRow($sql1);
 		$profile_res2=$this->duplicateSlave->db->requireSingleRow($sql2);
 		$sql="select NAME from incentive.NAME_OF_USER where PROFILEID='$profileid'";

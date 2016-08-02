@@ -152,7 +152,7 @@ class LoginV1Action extends sfActions
 	else
 	{
 		if($result[ACTIVATED]=='D'){
-			$apiObj->setHttpArray(ResponseHandlerConfig::$LOGIN_FAILURE_DELETED);
+			$apiObj->setHttpArray(ResponseHandlerConfig::$LOGIN_FAILURE_ACCESS);
 			//ValidationHandler::getValidationHandler("","Profile with this email address has been deleted");
 			$this->trackDeleteProfileAttempts($email);
 		}

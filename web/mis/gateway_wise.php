@@ -2,7 +2,6 @@
 include("connect.inc");
 include_once("../profile/pg/functions.php");    // included for dollar conversion rate
 $db=connect_misdb();
-$db2=connect_master();
 
 if(authenticated($checksum))
 {

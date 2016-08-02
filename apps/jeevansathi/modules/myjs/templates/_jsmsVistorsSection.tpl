@@ -12,7 +12,7 @@
 				~assign var=counter value=$counter+1`
 				
 					<div class="fl~if $counter eq 1`~else` pl_a~/if`">
-                                            <a href="~$SITE_URL`/profile/viewprofile.php?profilechecksum=~$tupleInfo.profilechecksum`&stype=~SearchTypesEnums::VISITORS_MYJS_JSMS`"><img src="~$tupleInfo.photo.url`" height="60" width="60"/></a>
+                                            <a href="~$SITE_URL`/profile/viewprofile.php?profilechecksum=~$tupleInfo.profilechecksum`&stype=~SearchTypesEnums::VISITORS_MYJS_JSMS`&actual_offset=~$id+1`&contact_id=~$visitorData.contact_id`&total_rec=~$visitorData.view_all_count`"><img src="~$tupleInfo.photo.url`" height="60" width="60"/></a>
 					</div>
 				
 					
