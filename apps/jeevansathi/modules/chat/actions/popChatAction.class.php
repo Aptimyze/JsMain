@@ -34,6 +34,7 @@ class popChatAction extends sfAction
 			//	$message=$input['msg'];
 				$request->setParameter("communicationType",'C');
 				$communicationType='C';
+				$pageNo=$request->getParameter('pageNo');
 			//	$request->setParameter("message",$message);
 			
 			$inputValidateObj->validatePopChat($request);

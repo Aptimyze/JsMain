@@ -291,6 +291,7 @@ JsChat.prototype = {
     },
     //start:add tab
     addTab: function () {
+        console.log("addTab");
         //this script is same as old one shared eariler need to be reworked as discussed
         this._chatLoggerPlugin('in addTab');
         var obj = this._listingTabs;
@@ -1922,14 +1923,17 @@ JsChat.prototype = {
     },
     //start:append Chat Logged in Panel
     _appendLoggedHTML: function () {
-        var curEle = this;
-        this._chatLoggerPlugin('_appendLoggedHTML');
-        $(curEle._parendID).append('<div class="fullwid fontlig nchatcolor" id="js-lsitingPanel"/> ').promise().done(function () {
-            curEle._addChatTop();
-            curEle.addTab();
-            curEle.onChatLoginSuccess();
-            
-        });
+        if($('#js-lsitingPanel').length == 0){
+            console.log("in _appendLoggedHTML");
+            var curEle = this;
+            this._chatLoggerPlugin('_appendLoggedHTML');
+            $(curEle._parendID).append('<div class="fullwid fontlig nchatcolor" id="js-lsitingPanel"/> ').promise().done(function () {
+                curEle._addChatTop();
+                curEle.addTab();
+                curEle.onChatLoginSuccess();
+                
+            });
+        }
     },
     /*
      * Sending typing event
