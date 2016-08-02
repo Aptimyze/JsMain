@@ -74,7 +74,7 @@ chatConfig.Params = {
         }
     },
     pc: {
-        updateRosterFromFrontend:false,
+        updateRosterFromFrontend:true,
         bosh_service_url: 'ws://' + openfireUrl + '/ws/', //connection manager for openfire
         keepalive: true, //keep logged in session alive
         roster_groups: true, //show categories in listing
@@ -206,42 +206,50 @@ chatConfig.Params = {
             "pg_interest_pending": {
                 "key": "pg_interest_pending",
                 "enableChat": true,
-                "useOpenfireForChat": false
+                "useOpenfireForChat": false,
+                "showHistory":false
             },
             "pog_acceptance_pending": {
                 "key": "pog_acceptance_pending",
                 "useOpenfireForChat": false,
-                "enableChat": true
+                "enableChat": true,
+                "showHistory":false
             },
             "pg_acceptance_pending": {
                 "key": "pg_acceptance_pending",
                 "useOpenfireForChat": false,
-                "enableChat": false
+                "enableChat": false,
+                "showHistory":false
             },
             "pog_interest_accepted": {
                 "key": "pog_interest_accepted",
                 "useOpenfireForChat": true,
-                "enableChat": true
+                "enableChat": true,
+                "showHistory":false
             },
             "pog_interest_declined": {
                 "key": "pog_interest_declined",
                 "useOpenfireForChat": false,
-                "enableChat": false
+                "enableChat": false,
+                "showHistory":false
             },
             "pg_interest_declined": {
                 "key": "pg_interest_declined",
                 "useOpenfireForChat": false,
-                "enableChat": false
+                "enableChat": false,
+                "showHistory":false
             },
             "none_applicable": {
                 "key": "none_applicable",
                 "useOpenfireForChat": false,
-                "enableChat": false
+                "enableChat": false,
+                "showHistory":false
             },
             "both_accepted": {
                 "key": "both_accepted",
                 "useOpenfireForChat": true,
-                "enableChat": true
+                "enableChat": true,
+                "showHistory":true
             }
         },
     

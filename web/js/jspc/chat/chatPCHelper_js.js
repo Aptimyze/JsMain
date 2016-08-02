@@ -563,7 +563,7 @@ function handlePreAcceptChat(apiParams) {
                     }
                     else{
                         outputData = response;
-                        outputData["msg_id"] = strophieWrapper.getUniqueId();
+                        outputData["msg_id"] = response["messageid"];
                     }
                 }
             },
@@ -672,10 +672,16 @@ function updateRosterOnChatContactActions(rosterParams) {
             user_id = receiverJID.split("@")[0];
         if (chatConfig.Params[device].updateRosterFromFrontend == true) {
             if (typeof receiverJID != "undefined" && receiverJID) {
-                var nodeArr = strophieWrapper.Roster[user_id];
+                var nodeArr = [];
+                nodeArr[user_id] = strophieWrapper.Roster[user_id];
+                console.log("obj");
+                console.log(strophieWrapper.Roster[user_id]);
                 if(typeof nodeArr != "undefined"){
                     if(action == "ACCEPT" || action == "DECLINE" || action == "BLOCK" || action == "INITIATE"){
-                        invokePluginManagelisting(nodeArr, "delete_node", user_id);              
+                        setTimeout(function(){
+                            console.log("removing");
+                            invokePluginManagelisting(nodeArr, "delete_node", user_id); 
+                        },5000);                
                     }
                 }
                 /*switch (action) {
@@ -741,12 +747,12 @@ $(document).ready(function () {
         var chatLoggedIn = readCookie('chatAuth');
         var loginStatus;
         $(window).on("offline", function () {
-            chatLoggerPC("detected internet disconnection");
+            console.log("detected internet disconnection");
             strophieWrapper.currentConnStatus = Strophe.Status.DISCONNECTED;
         });
         $(window).on("online", function () {
             globalSleep(15000);
-            chatLoggerPC("detected internet connectivity");
+            console.log("detected internet connectivity");
             if (chatLoggedIn == 'true') {
                 var tAuth = checkAuthentication();
                 if (tAuth == 'true') {
