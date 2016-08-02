@@ -43,9 +43,9 @@ class FreePrivilege extends Privilege
 			$dbName = JsDbSharding::getShardNo($contactHandler->getViewer()->getPROFILEID());
 			$dbMessageLogObj=new NEWJS_MESSAGE_LOG($dbName);
 			$messages=$dbMessageLogObj->getPaidMemberCommunicationHistory($contactHandler->getViewer()->getPROFILEID(),$contactHandler->getViewed()->getPROFILEID());
-			$presetMessage[] = str_ireplace("{{USERNA ME}}",$contactHandler->getViewer()->getUSERNAME(),Messages::ACCEPT_PRESET_PAID_SELF);
+			$presetMessage[] = str_ireplace("{{USERNAME}}",$contactHandler->getViewer()->getUSERNAME(),Messages::ACCEPT_PRESET_PAID_SELF);
 			$presetMessage[] = str_ireplace("{{USERNAME}}",$contactHandler->getViewer()->getUSERNAME(),Messages::ACCEPT_PRESET_FREE);
-			$presetMessage[] = str_ireplace("{{USERNA ME}}",$contactHandler->getViewed()->getUSERNAME(),Messages::ACCEPT_PRESET_PAID_SELF);
+			$presetMessage[] = str_ireplace("{{USERNAME}}",$contactHandler->getViewed()->getUSERNAME(),Messages::ACCEPT_PRESET_PAID_SELF);
 			$presetMessage[] = str_ireplace("{{USERNAME}}",$contactHandler->getViewed()->getUSERNAME(),Messages::ACCEPT_PRESET_FREE);
 			
 			foreach($messages as$k=>$val)
