@@ -1112,15 +1112,17 @@ JsChat.prototype = {
         if(checkSum){
             nick = nick + "|"+checkSum;
         }
-        //fetch msg history
-        getChatHistory({
-                "extraParams":{
-                    "from":getConnectedUserJID(),
-                    "to":user_jid,
-                    "to_checksum":checkSum,
-                    "from_checksum":self_checksum
-                }
-        });
+        if(curElem._contactStatusMapping[chatBoxType]["showHistory"] == true){
+            //fetch msg history
+            getChatHistory({
+                    "extraParams":{
+                        "from":getConnectedUserJID(),
+                        "to":user_jid,
+                        "to_checksum":checkSum,
+                        "from_checksum":self_checksum
+                    }
+            });
+        }
         this._chatLoggerPlugin(curElem);
         switch (chatBoxType) {
         case curElem._contactStatusMapping["pg_interest_pending"]["key"]:

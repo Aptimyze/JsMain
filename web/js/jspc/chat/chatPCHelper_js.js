@@ -562,7 +562,7 @@ function handlePreAcceptChat(apiParams) {
                     }
                     else{
                         outputData = response;
-                        outputData["msg_id"] = strophieWrapper.getUniqueId();
+                        outputData["msg_id"] = response["messageid"];
                     }
                 }
             },
@@ -746,12 +746,12 @@ $(document).ready(function () {
         var chatLoggedIn = readCookie('chatAuth');
         var loginStatus;
         $(window).on("offline", function () {
-            chatLoggerPC("detected internet disconnection");
+            console.log("detected internet disconnection");
             strophieWrapper.currentConnStatus = Strophe.Status.DISCONNECTED;
         });
         $(window).on("online", function () {
             globalSleep(15000);
-            chatLoggerPC("detected internet connectivity");
+            console.log("detected internet connectivity");
             if (chatLoggedIn == 'true') {
                 var tAuth = checkAuthentication();
                 if (tAuth == 'true') {
