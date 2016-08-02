@@ -37,11 +37,9 @@ class LoggingWrapper
      * @param $enLogType
      * @param $Var
      */
-	public function sendLog($enLogType,$Var=null)
+	public function sendLog($enLogType,$Var=null,$logArray = array())
 	{
-		// get module name 
-		$module = 'jsadmin';
-		return LoggingManager::getInstance($module)->logThis($enLogType,$Var,false);
+		return LoggingManager::getInstance()->logThis($enLogType,$Var,$logArray,false);
 	}
 }
 
