@@ -131,10 +131,10 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
                 {
                         $sql="select * from DUPLICATE_PROFILE_LOG where PROFILE1=:PROFILEID OR PROFILE2=:PROFILEID";
                         $prep = $this->db->prepare($sql);
-                        $prep->bindValue(":PROFILEID",$profile2,PDO::PARAM_INT);
+                        $prep->bindValue(":PROFILEID",$profileId,PDO::PARAM_INT);
                         $prep->execute();
 
-                        if($result = $prep->fetch(PDO::FETCH_ASSOC))
+                        while($result = $prep->fetch(PDO::FETCH_ASSOC))
                                 $resultArr[]=$result;
                         
                         return $resultArr;

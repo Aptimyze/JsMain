@@ -462,7 +462,6 @@ function sendCurlDeleteRequest($url)
 function markProfilesAsNonDuplicate($profileid){
     $dupLogObj=new DUPLICATE_PROFILE_LOG();
     $dupArray = $dupLogObj->fetchLogForAProfile($profileid);
-    
     foreach ($dupArray as $key => $value) 
     {
         if($value['PROFILE1']==$profileid) $profile2=$value['PROFILE2'];
@@ -482,7 +481,6 @@ function markProfilesAsNonDuplicate($profileid){
         
     }
     
-    
     $rawDuplicateObj=new RawDuplicate();
     $rawDuplicateObj->setReason(REASON::NONE); 
     $rawDuplicateObj->setIsDuplicate(IS_DUPLICATE::NO); 
@@ -492,7 +490,6 @@ function markProfilesAsNonDuplicate($profileid){
     $rawDuplicateObj->setComments("Profile Deleted");
     $rawDuplicateObj->setProfileid1($profileid);
     $negativeObj=new INCENTIVE_NEGATIVE_TREATMENT_LIST();
-    
             
     foreach($profileArray as $key => $value)
     {
@@ -505,7 +502,10 @@ function markProfilesAsNonDuplicate($profileid){
               $tempArray=$dupLogObj->fetchLogForAProfile($key);
               foreach($tempArray as $key1 => $value1)   
               {
-                      if($value1['PROFILE1']==$profileid) $tempProfile2=$value1['PROFILE2'];
+
+              		  if($value1['PROFILE2']==$profileid || $value1['PROFILE1']==$profileid) continue;
+                      	
+                      if($value1['PROFILE1']==$key) $tempProfile2=$value1['PROFILE2'];
                       else $tempProfile2=$value1['PROFILE1'];
 
                       if(!$tempProfileArray[$tempProfile2]['ENTRY_DATE'])
@@ -524,10 +524,11 @@ function markProfilesAsNonDuplicate($profileid){
               }
               
               $tempFlag=0;
+              
               foreach($tempProfileArray as $key3 => $value3)
               {
                   
-                        if($value3['IS_DUPLICATE']=='YES')
+                        if($value3['FLAG']=='YES')
                         {
                            $tempFlag=1;
                            break;
