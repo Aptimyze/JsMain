@@ -88,8 +88,12 @@ class ShowProfileStatsAction extends sfActions
 	//JSC-1684
 	if(in_array('FPSUP',$privArr)||in_array('INBSUP',$privArr)||in_array('LTFHD',$privArr)||in_array('LTFSUP',$privArr)||in_array('MgrFld',$privArr)||in_array('SLHD',$privArr)||in_array('SLHDO',$privArr)||in_array('SLMGR',$privArr)||in_array('SLMNTR',$privArr)||in_array('SLSMGR',$privArr)||in_array('SLSUP',$privArr)||in_array('SupFld',$privArr)||in_array('SUPPRM',$privArr)||in_array('OPR',$privArr))
                 $this->online_payment=1;
+	else
+		$this->online_payment=0;
 	if(in_array('FPSUP',$privArr)||in_array('INBSUP',$privArr)||in_array('LTFHD',$privArr)||in_array('LTFSUP',$privArr)||in_array('MgrFld',$privArr)||in_array('SLHD',$privArr)||in_array('SLHDO',$privArr)||in_array('SLMGR',$privArr)||in_array('SLMNTR',$privArr)||in_array('SLSMGR',$privArr)||in_array('SLSUP',$privArr)||in_array('SupFld',$privArr)||in_array('SUPPRM',$privArr)||in_array('ExPmSr',$privArr)||in_array('CSEXEC',$privArr))
                 $this->set_filter=1;
+	else
+		$this->set_filter=0;
   }
 
   //This function alters the $myProfileArr to a desired form

@@ -327,6 +327,95 @@ class JsMemcache extends sfMemcacheCache{
 		}
 	}
 
+    /**
+     * @param $key
+     * @param $arrValue
+     */
+    public function setHashObject($key,$arrValue,$expiryTime=3600)
+    {
+        if(self::isRedis())
+        {
+            if($this->client)
+            {
+                try
+                {
+                    $this->client->hmset($key, $arrValue);
+                    $this->client->expire($key, $expiryTime);
+                }
+                catch (Exception $e)
+                {
+                    jsException::log("HS-redisClusters".$e->getMessage());
+                }
+            }
+        }
+    }
 
+    /**
+     * @param $key
+     * @param $subKey
+     * @return mixed
+     */
+    public function getHashOneValue($key,$subKey)
+    {
+        if(self::isRedis())
+        {
+            if($this->client)
+            {
+                try
+                {
+                    return $this->client->hget($key, $subKey);
+                }
+                catch (Exception $e)
+                {
+                    jsException::log("HG-redisClusters".$e->getMessage());
+                }
+            }
+        }
+    }
+
+    /**
+     * @param $key
+     * @param $arrSubKey
+     * @return mixed
+     */
+    public function getHashManyValue($key,$arrSubKey)
+    {
+        if(self::isRedis())
+        {
+            if($this->client)
+            {
+                try
+                {
+                    return $this->client->hmget($key, $arrSubKey);
+                }
+                catch (Exception $e)
+                {
+                    jsException::log("HGM-redisClusters".$e->getMessage());
+                }
+            }
+        }
+    }
+
+    /**
+     * @param $key
+     * @return mixed
+     */
+    public function getHashAllValue($key)
+    {
+        if(self::isRedis())
+        {
+            if($this->client)
+            {
+                try
+                {
+                    return $this->client->hgetall($key);
+                }
+                catch (Exception $e)
+                {
+                    jsException::log("HG-redisClusters".$e->getMessage());
+                }
+            }
+        }
+    }
 }
 ?>
