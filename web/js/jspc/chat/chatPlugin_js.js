@@ -506,6 +506,7 @@ JsChat.prototype = {
         this.manageChatBoxOnChange();
         $(window).focus(function() {
             console.log("Focus");
+            //invokePluginLoginHandler("login");
             if(elem && elem.manageChatBoxOnChange && typeof (elem.manageChatBoxOnChange) == "function"){
                 console.log(1);
               elem.manageChatBoxOnChange();

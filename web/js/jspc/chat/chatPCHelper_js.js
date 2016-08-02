@@ -257,7 +257,8 @@ function invokePluginLoginHandler(state) {
         if($(objJsChat._logoutChat).length != 0)
             $(objJsChat._logoutChat).click();
     } else if(state == "login"){
-        if($(objJsChat._loginbtnID).length != 0)
+        console.log("herenbnbh");
+        if($(objJsChat._loginbtnID).length != 0 && readCookie('chatAuth') == "true")
             $(objJsChat._loginbtnID).click();
     }
 }
@@ -752,6 +753,9 @@ $(document).ready(function () {
     if (showChat && (checkDiv != 0)) {
         var chatLoggedIn = readCookie('chatAuth');
         var loginStatus;
+        $(window).focus(function() {
+            invokePluginLoginHandler("login");
+        });
         $(window).on("offline", function () {
             console.log("detected internet disconnection");
             strophieWrapper.currentConnStatus = Strophe.Status.DISCONNECTED;
@@ -815,7 +819,8 @@ $(document).ready(function () {
             //chatLoggerPC("Checking variable");
             //chatLoggerPC(chatLoggedIn);
             var chatLoggedIn = readCookie('chatAuth');
-            if (chatLoggedIn != 'true') {
+            //if (chatLoggedIn != 'true') 
+            {
                 var auth = checkAuthentication();
                 if (auth != "true") {
                     //chatLoggerPC("Before return");
@@ -826,10 +831,10 @@ $(document).ready(function () {
                     objJsChat._loginStatus = 'Y';
                 }
             }
-            else if (chatLoggedIn == 'true'){
+            /*else if (chatLoggedIn == 'true'){
                 //objJsChat._loginStatus = 'Y';
                 location.reload();
-            }
+            }*/
             //chatLoggerPC("In callback");
         }
         objJsChat.onChatLoginSuccess = function () {

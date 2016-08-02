@@ -320,12 +320,11 @@ var strophieWrapper = {
 	    				console.log("logout");
 	    				invokePluginLoginHandler("logout");
 	    			}
-	    			else if(chat_status == "online"){
+	    			/*else if(chat_status == "online"){
 	    				console.log("login");
 	    				invokePluginLoginHandler("login");
-	    			}
-	    			//disconnect this if offline or reconnect if online
-	    			//if on login page or logout page
+	    			}*/
+	    			
 	    		}
 	    	}
 	    }
