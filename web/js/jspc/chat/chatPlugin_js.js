@@ -825,16 +825,8 @@ JsChat.prototype = {
                     }
                     var height = $($(superParent).find(".talkText")[$(superParent).find(".talkText").length - 1]).height();
                     $($(superParent).find(".talkText")[$(superParent).find(".talkText").length - 1]).next().css("margin-top", height);
-                    var divLen = 0;
-                    $('chat-box[user-id="' + userId + '"] .rightBubble').each(function(index, element) {
-                        divLen += $(this).height();
-                    });
-                    $('chat-box[user-id="' + userId + '"] .leftBubble').each(function(index, element) {
-                        divLen += $(this).height();
-                    });
-                   $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
-                       scrollTop: divLen
-                   }, 1000);
+                    
+                    _this._scrollToBottom(userId);
                     //fire send chat query and return unique id
                     setTimeout(function () {
                         out = 1;
@@ -1364,10 +1356,24 @@ JsChat.prototype = {
         this._postChatPanelsBox(userId);
         this._bindSendChat(userId);
     },
-    
+
+    _scrollToBottom:function(userId){
+        var divLen = 0;
+        $('chat-box[user-id="' + userId + '"] .rightBubble').each(function(index, element) {
+            divLen += $(this).height();
+        });
+        $('chat-box[user-id="' + userId + '"] .leftBubble').each(function(index, element) {
+            divLen += $(this).height();
+        });
+        $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
+           scrollTop: divLen
+        }, 1000);
+    },
+
     //append chat history in chat box
     _appendChatHistory: function(selfJID,otherJID,communication){
         var self_id = selfJID.split("@")[0],other_id = otherJID.split("@")[0],historyHTML="";
+        var curElem = this;
         if($('chat-box[user-id="' + other_id + '"]').length != 0){
             $.each(communication,function(key,logObj){
                 //console.log(logObj);
@@ -1382,6 +1388,7 @@ JsChat.prototype = {
                 //console.log(historyHTML);
                 if(historyHTML){
                     $('chat-box[user-id="' + other_id + '"] .chatMessage').append(historyHTML);
+                    curElem._scrollToBottom(other_id);
                 }
             });
         }
@@ -1444,16 +1451,7 @@ JsChat.prototype = {
                 var count = curEle._onlineUserMsgMe();
                 that._chatLoggerPlugin("count - " + count);
             }
-            var divLen = 0;
-            $('chat-box[user-id="' + userId + '"] .rightBubble').each(function(index, element) {
-                divLen += $(this).height();
-            });
-            $('chat-box[user-id="' + userId + '"] .leftBubble').each(function(index, element) {
-                divLen += $(this).height();
-            });
-           $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
-               scrollTop: divLen
-           }, 1000);
+            curEle._scrollToBottom(userId);
         }
     },
     //get count of minimized chat boxes with unread messages
