@@ -51,7 +51,8 @@ class InboxMobileAppV1
                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
 				),
 			"ACCEPTANCES_RECEIVED"=>Array(
 				"PROFILECHECKSUM",
@@ -75,7 +76,8 @@ class InboxMobileAppV1
                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
 				),
 			"INTEREST_SENT"=>Array(
 				"PROFILECHECKSUM",
@@ -100,7 +102,8 @@ class InboxMobileAppV1
 				"SEEN",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
         ),
 			"ACCEPTANCES_SENT"=>Array(
 				"PROFILECHECKSUM",
@@ -123,7 +126,8 @@ class InboxMobileAppV1
                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
 				),
 			"MATCH_ALERT"=>Array(
 				"PROFILECHECKSUM",
@@ -147,7 +151,8 @@ class InboxMobileAppV1
                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
                                 ),
 				"VISITORS"=>Array(
 				"PROFILECHECKSUM",
@@ -169,7 +174,8 @@ class InboxMobileAppV1
                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
 				),
 				"SHORTLIST"=>Array(
 				"PROFILECHECKSUM",
@@ -191,7 +197,8 @@ class InboxMobileAppV1
                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
 				),
 				"NOT_INTERESTED"=>Array(
 				"PROFILECHECKSUM",
@@ -214,7 +221,8 @@ class InboxMobileAppV1
                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
 				),
                                 "NOT_INTERESTED_BY_ME"=>Array(
                                 "PROFILECHECKSUM",
@@ -236,7 +244,8 @@ class InboxMobileAppV1
                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
                                 ),
 				"PHOTO_REQUEST_RECEIVED"=>Array(
 				"PROFILECHECKSUM",
@@ -251,7 +260,8 @@ class InboxMobileAppV1
 				"ThumbailUrl",
 				"tuple_title_field",
 				"VERIFICATION_SEAL",
-                                "VERIFICATION_STATUS"),
+                                "VERIFICATION_STATUS",
+                                "NAME_OF_USER",),
 				"MY_MESSAGE" => Array(
 				"PROFILECHECKSUM",
 				"USERNAME",
@@ -263,7 +273,8 @@ class InboxMobileAppV1
                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
 				),
 				
 				"CONTACTS_VIEWED"=>Array(
@@ -286,7 +297,8 @@ class InboxMobileAppV1
                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"),
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",),
 				"PEOPLE_WHO_VIEWED_MY_CONTACTS"=>Array(
                                 "PROFILECHECKSUM",
                                 "USERNAME",
@@ -308,7 +320,8 @@ class InboxMobileAppV1
                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"),
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",),
 
 				"FILTERED_INTEREST"=>Array(
 				"PROFILECHECKSUM",
@@ -332,7 +345,8 @@ class InboxMobileAppV1
                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
 				),
 				"IGNORED_PROFILES" => Array(
             	"PROFILECHECKSUM",
@@ -357,7 +371,8 @@ class InboxMobileAppV1
                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"),
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",),
 			);
 		self::$informationTypeFields     = Array(
 				"NEW_COUNT",

@@ -348,7 +348,12 @@ public function getPIC_ID($x="") {
     public function setIS_ALBUM($x) {
         $this->IS_ALBUM = $x;
     }
-
+    public function setNAME_OF_USER($x) {
+	$this->NAME_OF_USER = $x;
+    }
+    public function getNAME_OF_USER() {
+	return $this->NAME_OF_USER;
+    }
     public function getIS_ALBUM_TEXT() {
         return $this->IS_ALBUM_TEXT;
     }

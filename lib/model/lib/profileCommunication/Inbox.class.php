@@ -218,6 +218,7 @@ class Inbox implements Module
 		$countObj     = $this->getCount('',$infoTypeNav,$fromGetDisplayFunction);
 		$tupleService = new TupleService();
 		$tupleService->setLoginProfile($this->profileObj->getPROFILEID());
+		$tupleService->setLoginProfileObj($this->profileObj);
 		$config = $this->configurations[$infoTypeNav["PAGE"]];
 		$key = $this->profileObj->getPROFILEID()."_".$infoTypeNav["PAGE"];
 		$keyCount = $key."_COUNT"; 
@@ -301,6 +302,12 @@ class Inbox implements Module
 						// Get required tuple, unique fields required by the tuples
 						$tupleFields            = $tupleService->getFields($tuple);
 						$fields                 = array_merge($fields, $tupleFields);
+						$nameOfUserObj = new NameOfUser;
+						$profileNameData = $nameOfUserObj->getNameData($this->profileObj->getPROFILEID());
+						if($profileNameData[0]['DISPLAY']=="Y")
+						{
+							$fields[]="NAME_OF_USER";
+						}
 						//print_r($fields );die;
 						//Attaching the callout message,icons and buttons ids  with each profile
 						$infoTypeObj[$infoType] = $tupleService->setButtonIds($config["BUTTONS"], $infoTypeObj[$infoType]);
