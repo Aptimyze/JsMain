@@ -288,10 +288,18 @@ if ($this->contactHandler->getContactObj()->getFILTERED() != Contacts::FILTERED 
       }
       unset($producerObj);
     }
-    catch(Exception $e)
-    {
-      throw new jsException("Something went wrong while sending instant EOI notification-".$e);
-    }
+			try {
+				//send instant JSPC/JSMS notification
+				$producerObj = new Producer();
+				if ($producerObj->getRabbitMQServerConnected()) {
+					//Add for contact roster
+					$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'INITIATE', 'body' => array('sender' => array('profileid'=>$this->contactHandler->getViewer()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewer()->getPROFILEID()),'username'=>$this->contactHandler->getViewer()->getUSERNAME()), 'receiver' => array('profileid'=>$this->contactHandler->getViewed()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewed()->getPROFILEID),"username"=>$this->contactHandler->getViewed()->getUSERNAME()),"filter"=>$this->contactHandler->getContactObj()->getFILTERED())), 'redeliveryCount' => 0);
+					$producerObj->sendMessage($chatData);
+				}
+				unset($producerObj);
+			} catch (Exception $e) {
+				throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
+			}
 }
 
       if ($dateDiff <= 30 && !$isFiltered && $this->contactHandler->getPageSource()!='AP') { // Instant mailer

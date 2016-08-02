@@ -189,9 +189,29 @@ class Producer
         case "DELETE_RETRIEVE":
                     $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::DELETE_RETRIEVE_QUEUE,MQ::MANDATORY,MQ::IMMEDIATE);
                     break;
-        case "UPDATE_SEEN":
-                    $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::UPDATE_SEEN_QUEUE,MQ::MANDATORY,MQ::IMMEDIATE);
-                    break;
+	case "CHATROSTERS":
+					$data = $msgdata['data'];
+					$msg = new AMQPMessage(json_encode($data), array('delivery_mode' => MQ::DELIVERYMODE));
+					$this->channel->basic_publish($msg, MQ::CHATEXCHANGE, "roster");
+					break;
+				case "UPDATE_SEEN":
+					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::UPDATE_SEEN_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+					break;
+				case "USERCREATION":
+					$data = $msgdata['data'];
+					$msg = new AMQPMessage($data, array('delivery_mode' => MQ::DELIVERYMODE));
+					$this->channel->basic_publish($msg, MQ::CHATEXCHANGE,"create");
+					break;
+				case "USERLOGIN":
+					$data = $msgdata['data'];
+					$msg = new AMQPMessage($data, array('delivery_mode' => MQ::DELIVERYMODE));
+					$this->channel->basic_publish($msg, MQ::CHATEXCHANGE,"create");
+					break;
+				case "USER_DELETE":
+					$data = $msgdata['data'];
+					$msg = new AMQPMessage($data, array('delivery_mode' => MQ::DELIVERYMODE));
+					$this->channel->basic_publish($msg, MQ::CHATEXCHANGE,"delete");
+					break;
       }
     }
     catch (Exception $exception)
