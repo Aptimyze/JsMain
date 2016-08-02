@@ -69,6 +69,9 @@ for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
 	mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$myDbarr[$myDbName]);
 }
 
+markProfilesAsNonDuplicate($profileid);
+
+
 /****  Transaction for all 3 shards started here. We will commit all three shards together. ****/
 if(count($myDbarr))
 {
@@ -454,4 +457,101 @@ function sendCurlDeleteRequest($url)
 	curl_close($ch);
 
 	return $result;
+}
+
+function markProfilesAsNonDuplicate($profileid){
+    $dupLogObj=new DUPLICATE_PROFILE_LOG();
+    $dupArray = $dupLogObj->fetchLogForAProfile($profileid);
+    
+    foreach ($dupArray as $key => $value) 
+    {
+        if($value['PROFILE1']==$profileid) $profile2=$value['PROFILE2'];
+        else $profile2=$value['PROFILE1'];
+        
+        if(!$profileArray[$profile2]['ENTRY_DATE'])
+        {
+                $profileArray[$profile2]['ENTRY_DATE']=$value['ENTRY_DATE'];
+                $profileArray[$profile2]['FLAG']=$value['IS_DUPLICATE'];
+        }
+            if(JSstrToTime($profileArray[$profile2]['ENTRY_DATE']) < JSstrToTime($value['ENTRY_DATE']))
+        {
+                $profileArray[$profile2]['ENTRY_DATE']=$value['ENTRY_DATE'];
+                $profileArray[$profile2]['FLAG']=$value['IS_DUPLICATE'];
+        }
+
+        
+    }
+    
+    
+    $rawDuplicateObj=new RawDuplicate();
+    $rawDuplicateObj->setReason(REASON::NONE); 
+    $rawDuplicateObj->setIsDuplicate(IS_DUPLICATE::NO); 
+    $rawDuplicateObj->addExtension('MARKED_BY','SYSTEM');
+    $rawDuplicateObj->setScreenAction(SCREEN_ACTION::NONE);
+    $rawDuplicateObj->addExtension('IDENTIFIED_ON',date('Y-m-d H:i:s'));
+    $rawDuplicateObj->setComments("Profile Deleted");
+    $rawDuplicateObj->setProfileid1($profileid);
+    $negativeObj=new INCENTIVE_NEGATIVE_TREATMENT_LIST();
+    
+            
+    foreach($profileArray as $key => $value)
+    {
+        
+        if($value['FLAG']=='YES')
+        {
+              $rawDuplicateObj->setProfileid2($key);
+              DuplicateHandler::DuplicateProfilelog($rawDuplicateObj); 
+              
+              $tempArray=$dupLogObj->fetchLogForAProfile($key);
+              foreach($tempArray as $key1 => $value1)   
+              {
+                      if($value1['PROFILE1']==$profileid) $tempProfile2=$value1['PROFILE2'];
+                      else $tempProfile2=$value1['PROFILE1'];
+
+                      if(!$tempProfileArray[$tempProfile2]['ENTRY_DATE'])
+                      {
+                              $tempProfileArray[$tempProfile2]['ENTRY_DATE']=$value1['ENTRY_DATE'];
+                              $tempProfileArray[$tempProfile2]['FLAG']=$value1['IS_DUPLICATE'];
+                      }
+                      if(JSstrToTime($tempProfileArray[$tempProfile2]['ENTRY_DATE']) < JSstrToTime($value1['ENTRY_DATE']))
+                      {
+                              $tempProfileArray[$tempProfile2]['ENTRY_DATE']=$value1['ENTRY_DATE'];
+                              $tempProfileArray[$tempProfile2]['FLAG']=$value1['IS_DUPLICATE'];
+                      }
+                  
+                      
+                  
+              }
+              
+              $tempFlag=0;
+              foreach($tempProfileArray as $key3 => $value3)
+              {
+                  
+                        if($value3['IS_DUPLICATE']=='YES')
+                        {
+                           $tempFlag=1;
+                           break;
+                        }  
+              }    
+              
+              if($tempFlag==0)
+              {
+              
+                  $negativeObj->deleteRecord($key);
+                  (new NEWJS_SWAP_JPROFILE())->insert($key);
+                  
+              }
+              unset($tempArray);
+              unset($tempProfileArray);
+              
+              
+              
+            
+        }
+        
+        
+    }
+    
+    
+    
 }

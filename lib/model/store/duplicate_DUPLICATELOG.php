@@ -125,6 +125,28 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
                         jsCacheWrapperException::logThis($e);
                 }
         }
+        
+        public function fetchLogForAProfile($profileId){
+            try
+                {
+                        $sql="select * from DUPLICATE_PROFILE_LOG where PROFILE1=:PROFILEID OR PROFILE2=:PROFILEID";
+                        $prep = $this->db->prepare($sql);
+                        $prep->bindValue(":PROFILEID",$profile2,PDO::PARAM_INT);
+                        $prep->execute();
+
+                        if($result = $prep->fetch(PDO::FETCH_ASSOC))
+                                $resultArr[]=$result;
+                        
+                        return $resultArr;
+                
+                }
+                catch (Exception $e)
+                {
+                        jsCacheWrapperException::logThis($e);
+                }
+            
+        }
+        
         public function insertDuplicateProfileLog(RawDuplicate $rawDuplicateObj)
         {
         try {
