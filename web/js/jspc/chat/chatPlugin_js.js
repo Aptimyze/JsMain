@@ -854,6 +854,7 @@ JsChat.prototype = {
             if (e.keyCode == 13 && !e.shiftKey) {
                 var text = $(this).val(),
                     textAreamElem = this;
+                text = $("<div/>").html(text).text();
                 $(textAreamElem).val("").css("height", "24px");
                 if (text.length > 1) {
                     var superParent = $(this).parent().parent(),
