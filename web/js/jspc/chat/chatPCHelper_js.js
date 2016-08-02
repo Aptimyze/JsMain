@@ -250,9 +250,11 @@ function invokePluginLoginHandler(state) {
     if (state == "success") {
         createCookie("chatAuth", "true");
         objJsChat._appendLoggedHTML();
-    } else {
+    } else if(state == "failure"){
         eraseCookie("chatAuth");
         objJsChat.addLoginHTML(true);
+    } else if(state == "logout"){
+        $(objJsChat._logoutChat).click();
     }
 }
 
