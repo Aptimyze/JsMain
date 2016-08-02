@@ -826,6 +826,10 @@ $(document).ready(function () {
                     objJsChat._loginStatus = 'Y';
                 }
             }
+            else if (chatLoggedIn == 'true'){
+                //objJsChat._loginStatus = 'Y';
+                location.reload();
+            }
             //chatLoggerPC("In callback");
         }
         objJsChat.onChatLoginSuccess = function () {
