@@ -23,6 +23,7 @@ class sfError404Exception extends sfException
    */
   public function printStackTrace()
   {
+    LoggingManager::getInstance(LoggingEnums::EX500OR404)->logThis(LoggingEnums::LOG_ERROR, new Exception("404 page encountered"));
     $exception = null === $this->wrappedException ? $this : $this->wrappedException;
 
     if (sfConfig::get('sf_debug'))
@@ -44,7 +45,6 @@ class sfError404Exception extends sfException
       if (!sfConfig::get('sf_test'))
       {
         error_log($this->getMessage());
-        LoggingManager::getInstance(LoggingEnums::EX500OR404)->logThis(LoggingEnums::LOG_ERROR, $this->getMessage());
       }
 
       sfContext::getInstance()->getController()->forward(sfConfig::get('sf_error_404_module'), sfConfig::get('sf_error_404_action'));

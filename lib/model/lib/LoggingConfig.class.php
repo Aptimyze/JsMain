@@ -25,7 +25,7 @@
 			LoggingEnums::EX500OR404 => array(
 				'logging' => 1, 
 				'level' => 1, 
-				'directory' => 0, 
+				'directory' => 1,
 				'stack_trace' => 1
 				),
 			);

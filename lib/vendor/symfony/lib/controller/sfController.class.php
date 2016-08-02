@@ -192,7 +192,7 @@ abstract class sfController
       {
         $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Action "%s/%s" does not exist', $moduleName, $actionName))));
       }
-
+      LoggingManager::getInstance(LoggingEnums::EX500OR404)->logThis(LoggingEnums::LOG_ERROR, new Exception("404 page encountered"));
       throw new sfError404Exception(sprintf('Action "%s/%s" does not exist.', $moduleName, $actionName));
     }
 
