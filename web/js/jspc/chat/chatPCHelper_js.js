@@ -250,9 +250,16 @@ function invokePluginLoginHandler(state) {
     if (state == "success") {
         createCookie("chatAuth", "true");
         objJsChat._appendLoggedHTML();
-    } else {
+    } else if(state == "failure"){
         eraseCookie("chatAuth");
         objJsChat.addLoginHTML(true);
+    } else if(state == "logout"){
+        if($(objJsChat._logoutChat).length != 0)
+            $(objJsChat._logoutChat).click();
+    } else if(state == "login"){
+        console.log("herenbnbh");
+        if($(objJsChat._loginbtnID).length != 0 && readCookie('chatAuth') == "true")
+            $(objJsChat._loginbtnID).click();
     }
 }
 
@@ -746,6 +753,9 @@ $(document).ready(function () {
     if (showChat && (checkDiv != 0)) {
         var chatLoggedIn = readCookie('chatAuth');
         var loginStatus;
+        $(window).focus(function() {
+            invokePluginLoginHandler("login");
+        });
         $(window).on("offline", function () {
             console.log("detected internet disconnection");
             strophieWrapper.currentConnStatus = Strophe.Status.DISCONNECTED;
@@ -776,7 +786,8 @@ $(document).ready(function () {
                     }
                 }
             }*/
-            if (chatLoggedIn == 'true') {
+            chatLoggedIn = readCookie('chatAuth');
+            if (chatLoggedIn == 'true' && loginStatus == "Y") {
                 if(username && pass){
                     strophieWrapper.reconnect(chatConfig.Params[device].bosh_service_url, username, pass);
                 }
@@ -808,7 +819,8 @@ $(document).ready(function () {
             //chatLoggerPC("Checking variable");
             //chatLoggerPC(chatLoggedIn);
             var chatLoggedIn = readCookie('chatAuth');
-            if (chatLoggedIn != 'true') {
+            //if (chatLoggedIn != 'true') 
+            {
                 var auth = checkAuthentication();
                 if (auth != "true") {
                     //chatLoggerPC("Before return");
@@ -819,6 +831,10 @@ $(document).ready(function () {
                     objJsChat._loginStatus = 'Y';
                 }
             }
+            /*else if (chatLoggedIn == 'true'){
+                //objJsChat._loginStatus = 'Y';
+                location.reload();
+            }*/
             //chatLoggerPC("In callback");
         }
         objJsChat.onChatLoginSuccess = function () {

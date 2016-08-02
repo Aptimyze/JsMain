@@ -20,7 +20,7 @@ var strophieWrapper = {
     loggingEnabledStrophe: false,
     tryReconnection:true,
     syncSentMessage:true,
-    synchronize_selfPresence: false,
+    synchronize_selfPresence: true,
 
     stropheLoggerPC: function (msgOrObj) {
         if (strophieWrapper.loggingEnabledStrophe) {
@@ -128,7 +128,6 @@ var strophieWrapper = {
         strophieWrapper.sendPresence();
         //fetch roster of logged in user 
         if(strophieWrapper.initialRosterFetched == false){ 
-        	console.log("heree3ee3");
         	strophieWrapper.getRoster();
         }
         //binding event for presence update in roster
@@ -290,24 +289,25 @@ var strophieWrapper = {
         var from = $(presence).attr('from'),
             user_id = from.split("@")[0]; // the jabber_id of the contact
         //console.log(presence);
+        if (presence_type != 'error') {
+            if (presence_type === 'unavailable') {
+                chat_status = "offline";
+            } else {
+                var show = $(presence).find("show").text(); // this is what gives away, dnd, etc.
+                if (show === 'chat' || show === '') {
+                    chat_status = "online";
+                } else {
+                    // etc...
+                }
+            }
+	    }
         if(strophieWrapper.isItSelfUser(user_id) == false){
 	        //strophieWrapper.stropheLoggerPC("start of onPresenceReceived for " + user_id);
 	        //strophieWrapper.stropheLoggerPC(from);
 	        strophieWrapper.stropheLoggerPC(presence);
 	        //strophieWrapper.authorize(from.split("/")[0]);
 	        strophieWrapper.authorize(from);
-	        if (presence_type != 'error') {
-	            if (presence_type === 'unavailable') {
-	                chat_status = "offline";
-	            } else {
-	                var show = $(presence).find("show").text(); // this is what gives away, dnd, etc.
-	                if (show === 'chat' || show === '') {
-	                    chat_status = "online";
-	                } else {
-	                    // etc...
-	                }
-	            }
-	        }
+	        
 	        strophieWrapper.updatePresence(user_id, chat_status);
 	        //strophieWrapper.stropheLoggerPC("end of onPresenceReceived for " + user_id + "---" + chat_status);
 	        //strophieWrapper.stropheLoggerPC(strophieWrapper.Roster[user_id]);
@@ -315,9 +315,16 @@ var strophieWrapper = {
 	    else{
 	    	if(strophieWrapper.synchronize_selfPresence == true){
 	    		if(from != strophieWrapper.getSelfJID()){
-	    			console.log("updating self presence for different resource - "+from);
-	    			//disconnect this if offline or reconnect if online
-	    			//if on login page or logout page
+	    			console.log("updating self presence for different resource - "+from+chat_status);
+	    			if(chat_status == "offline"){
+	    				console.log("logout");
+	    				invokePluginLoginHandler("logout");
+	    			}
+	    			/*else if(chat_status == "online"){
+	    				console.log("login");
+	    				invokePluginLoginHandler("login");
+	    			}*/
+	    			
 	    		}
 	    	}
 	    }
