@@ -357,26 +357,37 @@ JsChat.prototype = {
     },
     
     manageChatBoxOnChange: function(){
-        console.log("111111111111111",$(".profileIcon"));
-        var id,localVal,group,status,closeArr=[];
-        $(".profileIcon").each(function(index, element) {
-                id = $(this).attr("id").split("_")[0];
-                console.log("id",id);
-                localVal = localStorage.getItem("userId_"+id);
-                console.log(localVal);
-                if(localVal){
-                    group = localVal.split("_")[0];
-                    status = localVal.split("_")[1];
-                    $("#"+id+"_"+group).click();
-                    console.log("status",status);
-                    if(status == "close") {
-                        closeArr.push(id);
-                    }
-                }	
-            });
+        
+        var closeArr=[],removeArr=[],data = [];
+        if(localStorage.getItem("chatStateData")) {
+            data = JSON.parse(localStorage.getItem("chatStateData"));
+        }
+        
+        $.each(data,function(index, element){
+            console.log(element);
+            if(element["state"] != "remove") {
+                $("#"+element["userId"]+"_"+element["group"]).click();
+            }
+            if(element["state"] == "close") {
+                closeArr.push(element["userId"]);
+            }
+            else if(element["state"] == "remove") {
+                removeArr.push(element["userId"]);
+            }
+            if(element["state"] == "open") {
+                $('chat-box[user-id="'+element["userId"]+'"] .downBarUserName').click();
+            }
+        });
+        
+        console.log("closeArr",closeArr);
+        console.log("removeArr",removeArr);
         $.each(closeArr, function(index,elem){
             $('chat-box[user-id="' + elem + '"] .nchatic_2').click();
         });
+        $.each(removeArr, function(index,elem){
+            $('chat-box[user-id="' + elem + '"] .nchatic_1').click();
+        });
+        
     },
     
     addListingInit: function (data) {
@@ -485,6 +496,13 @@ JsChat.prototype = {
             requestListingPhoto(apiParams);
         }
         this.manageChatBoxOnChange();
+        $(window).focus(function() {
+            console.log("Focus");
+            if(elem && elem.manageChatBoxOnChange && typeof (elem.manageChatBoxOnChange) == "function"){
+                console.log(1);
+              elem.manageChatBoxOnChange();
+            }
+        });
     },
     //add photo in tuple div of listing
     _addListingPhoto: function (photoObj) {
@@ -525,7 +543,16 @@ JsChat.prototype = {
                 bottom: "-350px"
             }, function () {
                 $(this).remove();
-                localStorage.removeItem("userId_"+userId);
+                var data = [];
+                if(localStorage.getItem("chatStateData")) {
+                    data = JSON.parse(localStorage.getItem("chatStateData"));
+                }
+                $.each(data,function(index, element){
+                    if(element["userId"] == $(elem).attr("user-id")){
+                        element["state"] = "remove";
+                    }
+                });
+                localStorage.setItem("chatStateData",JSON.stringify(data));
             });
         }
         else if(type == "retain_extra") {
@@ -548,8 +575,16 @@ JsChat.prototype = {
                 elem.find(".downBarUserName").addClass("downBarUserNameMin");
                 if (type != "min") {
                     $(elem).attr("pos-state", "close");
-                    var group = $(elem).attr("group-id");
-                    localStorage.setItem("userId_"+userId,group+"_close");
+                    var data = [];
+                    if(localStorage.getItem("chatStateData")) {
+                        data = JSON.parse(localStorage.getItem("chatStateData"));
+                    }
+                    $.each(data,function(index, element){
+                        if(element["userId"] == $(elem).attr("user-id")){
+                            element["state"] = "close";
+                        }
+                    });
+                    localStorage.setItem("chatStateData",JSON.stringify(data));
                 }
             });
         }
@@ -583,9 +618,16 @@ JsChat.prototype = {
                 scrollTop: (elem.find(".rightBubble").length + elem.find(".leftBubble").length) * 50
             }, 1000);
             $(elem).attr("pos-state", "open");
-            var postitionState = $(elem).attr("pos-state"),userId = $(elem).attr("user-id");
-            var groupId = $(elem).attr("group-id");
-            localStorage.setItem("userId_"+userId, groupId+"_"+postitionState);
+            var data = [];
+            if(localStorage.getItem("chatStateData")) {
+                data = JSON.parse(localStorage.getItem("chatStateData"));
+            }
+            $.each(data,function(index, element){
+                if(element["userId"] == $(elem).attr("user-id")){
+                    element["state"] = "open";
+                }
+            });
+            localStorage.setItem("chatStateData",JSON.stringify(data));
         });
         curEle._handleUnreadMessages(elem);
     },
@@ -1005,9 +1047,24 @@ JsChat.prototype = {
     },
     _postChatPanelsBox: function (userId) {
         console.log("manviiiii",$('chat-box[user-id="' + userId + '"]'));
-        var postitionState = $('chat-box[user-id="' + userId + '"]').attr("pos-state");
         var groupId = $('chat-box[user-id="' + userId + '"]').attr("group-id");
-        localStorage.setItem("userId_"+userId, groupId+"_"+postitionState);
+        var data = [];
+        if(localStorage.getItem("chatStateData")) {
+            data =  JSON.parse(localStorage.getItem("chatStateData"));
+        }
+        var dataPresent = false;
+        $.each(data,function(index, elem){
+            if(elem["userId"]== userId && elem["state"] != "remove") {
+                dataPresent = true;
+            } else if(elem["userId"]== userId && elem["state"] == "remove") {
+                elem["state"] = "open";
+            }
+        });
+        if(dataPresent == false) {
+            var obj = {userId:userId,state:"open",group:groupId};
+            data.push(obj);
+        }
+        localStorage.setItem("chatStateData", JSON.stringify(data));
         var curElem = this,
             membership = "paid"; //get membership status-pending
         this._chatLoggerPlugin("in _postChatPanelsBox");
