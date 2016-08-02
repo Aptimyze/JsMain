@@ -851,10 +851,15 @@ JsChat.prototype = {
                 //fire event typing start
                 sendTypingState(selfJID, jid, "composing");
             }
-            if (e.keyCode == 13 && !e.shiftKey) {
+            if(e.keyCode == 13 && e.shiftKey && $(this).val().length == 1) {
+                $(this).val("");
+            }
+            else if (e.keyCode == 13 && !e.shiftKey) {
                 var text = $(this).val(),
                     textAreamElem = this;
+                    console.log("text before",text);
                 text = $("<div/>").html(text).text();
+                console.log("Text entered",text);
                 $(textAreamElem).val("").css("height", "24px");
                 if (text.length > 1) {
                     var superParent = $(this).parent().parent(),
@@ -1458,24 +1463,25 @@ JsChat.prototype = {
                     //append received message
                     historyHTML = historyHTML + '<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["ID"] + '" class="talkText">' + logObj["MESSAGE"] + '</div></div>';
                 }
-                //console.log(historyHTML);
-                if(historyHTML){
-                    $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_"+other_id).append(historyHTML).promise().done(function(){
-                        //curElem._scrollToBottom(other_id,100);
-                        var height = document.getElementById("chatHistory_"+other_id).scrollHeight;
-                        console.log("history height"+height);
-                        $('chat-box[user-id="' + other_id + '"] .chatMessage').animate({
-                           scrollTop: height
-                        }, 500);
-
-                    });
-                    /*setTimeout(function(){
-                      curElem._scrollToBottom(other_id);  
-                    },1000);*/
-
-                     
-                }
+                
             });
+            //console.log(historyHTML);
+            if(historyHTML){
+                $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_"+other_id).append(historyHTML).promise().done(function(){
+                    //curElem._scrollToBottom(other_id,100);
+                    var height = document.getElementById("chatHistory_"+other_id).scrollHeight;
+                    console.log("history height"+height);
+                    $('chat-box[user-id="' + other_id + '"] .chatMessage').animate({
+                       scrollTop: height
+                    }, 500);
+
+                });
+                /*setTimeout(function(){
+                  curElem._scrollToBottom(other_id);  
+                },1000);*/
+
+                 
+            }
         }
     },
 
