@@ -365,6 +365,7 @@ class chatActions extends sfActions
 							$response["errorMsg"] = "You can send more messages if user replies";
 						}
 						$response['sent'] = true;
+						$response["messageid"] = $message[0]["ID"];
 					}
 
 				}
@@ -376,17 +377,6 @@ class chatActions extends sfActions
 					$data = sfContext::getInstance()->getController()->getPresentationFor('contacts', 'postEOIv2');
 					$output = ob_get_contents();
 					ob_end_clean();
-					/*$url = JsConstants::$siteUrl . "/api/v2/contacts/postEOI";
-					$data = array("AUTHCHECKSUM" => $this->loginData["AUTHCHECKSUM"], "profilechecksum" => $request->getParameter('profilechecksum'), "chatMessage" => $request->getParameter('chatMessage'), "stype" => $request->getParameter('stype'));
-					$ch = curl_init();
-					curl_setopt($ch, CURLOPT_URL, $url);
-					curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
-					curl_setopt($ch, CURLOPT_TIMEOUT, 4);
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-					curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-					$curlResult = curl_exec($ch);
-					curl_close($ch);
-					$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);*/
 					$response = json_decode($output, true);
 					$response["cansend"] = true;
 					$response['sent'] = true;

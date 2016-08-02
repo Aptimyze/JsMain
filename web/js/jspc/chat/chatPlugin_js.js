@@ -309,7 +309,8 @@ JsChat.prototype = {
             }
             TabsOpt += "<p>" + objin["tab_name"] + "</p><div class=\"showlinec\"></div></li>";
         }
-        TabsOpt += '</ul></div><div id="nchatDivs" class="nchatscrollDiv"><div id="scrollDivLoader" class="spinner"></div>';
+        TabsOpt += '</ul></div>';
+        TabsOpt += '<div id="nchatDivs" class="nchatscrollDiv"><div id="scrollDivLoader" class="spinner"></div>';
         TabsOpt += '<div class="showtab1 js-htab" id="tab1"> <div id="showtab1NoResult" class="noResult f13 fontreg disp-none">' + curEle._noDataTabMsg["tab1"] + '</div>';
         for (var i = 0; i < obj["tab1"]["groups"].length; i++) {
             TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + " disp-none chatListing\" data-showuser=\"" + obj["tab1"]["groups"][i]["hide_offline_users"] + "\">";
@@ -317,7 +318,9 @@ JsChat.prototype = {
             TabsOpt += "<div class=\"f12 fontreg nchatbdr2";
             if (obj["tab1"]["groups"][i]["show_group_name"] == false) TabsOpt += " disp-none";
             TabsOpt += "\"><p class=\"nchatt1 fontreg pl15\">" + obj["tab1"]["groups"][i]["group_name"] + "</p></div>";
-            TabsOpt += "<ul class=\"chatlist\"></ul></div>";
+            //TabsOpt += "<ul class=\"chatlist\"></ul></div>";
+            TabsOpt += "<ul class=\"chatlist online\"></ul>";
+            TabsOpt += "<ul class=\"chatlist offline\"></ul></div>";
         }
         TabsOpt += '</div>';
         TabsOpt += '<div class="showtab2 js-htab disp-none" id="tab2"> <div id="showtab2NoResult" class="noResult f13 fontreg disp-none">' + curEle._noDataTabMsg["tab2"] + '</div>';
@@ -327,10 +330,14 @@ JsChat.prototype = {
             TabsOpt += "<div class=\"f12 fontreg nchatbdr2";
             if (obj["tab2"]["groups"][i]["show_group_name"] == false) TabsOpt += " disp-none";
             TabsOpt += "\"><p class=\"nchatt1 fontreg pl15\">" + obj["tab2"]["groups"][i]["group_name"] + "</p></div>";
-            TabsOpt += "<ul class=\"chatlist\"></ul></div>";
+            //TabsOpt += "<ul class=\"chatlist\"></ul></div>";
+            TabsOpt += "<ul class=\"chatlist online\"></ul>";
+            TabsOpt += "<ul class=\"chatlist offline\"></ul></div>";
+
         }
         TabsOpt += '</div>';
         TabsOpt += '</div>';
+
         $(this._listingPanelID).append(TabsOpt);
         $(this._tabclass).click(function () {
             curEle._chatTabs($(this).attr('id'));
@@ -519,10 +526,8 @@ JsChat.prototype = {
         if (key == "new") {
             this._chatLoggerPlugin("ankita_adding" + contactID + " in groupID");
             this._chatLoggerPlugin(contactHTML);
-            //if(status == "offline")
-                $('div.' + groupID + ' ul').append(contactHTML);
-            /*else
-                $('div.' + groupID + ' ul').prepend(contactHTML);*/
+            $('div.' + groupID + ' ul.'+status).prepend(contactHTML);
+           
         } else if (key == "existing") {
             this._chatLoggerPlugin("changing icon");
             if (status == "online") {
@@ -531,6 +536,10 @@ JsChat.prototype = {
                 if ($('#' + contactID + "_" + groupID).find('.nchatspr').length == 0) {
                     $(this._mainID).find($('#' + contactID + "_" + groupID)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
                 }
+                $('#' + contactID + "_" + groupID).prependTo('div.' + groupID + ' ul.'+status);
+            }
+            else if(status == "offline"){
+                $('#' + contactID + "_" + groupID).prependTo('div.' + groupID + ' ul.'+status);  
             }
         }
     },
@@ -711,6 +720,7 @@ JsChat.prototype = {
                         if (tabShowStatus == 'false' && param1 != 'delete_node') {
                             that._chatLoggerPlugin("123");
                             $(listElements).find('.nchatspr').detach();
+                            elem._placeContact("existing",runID,val,"offline");
                         } else {
                             that._chatLoggerPlugin("345");
                             $('div').find(listElements).detach();
@@ -1436,16 +1446,20 @@ JsChat.prototype = {
 
     //append self sent message on opening window again
     _appendSelfMessage: function (message, userId, uniqueId, status) {
+        console.log("appending self sent msg");
         var curElem = this;
-        //console.log("inside _appendSelfMessage",$('chat-box[user-id="' + userId + '"] .chatMessage'));
-        $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText">' + message + '</div><i class="nchatspr nchatic_8 fr vertM"></i></div>');
-        var len = $('chat-box[user-id="' + userId + '"] .talkText').length - 1,
-            height = $($('chat-box[user-id="' + userId + '"] .talkText')[len]).height();
-        $($('chat-box[user-id="' + userId + '"] .talkText')[len]).next().css("margin-top", height);
-        
-        if (status != "sending") {
-            curElem._changeStatusOfMessg(uniqueId, userId, status);
-        }
+        if($('chat-box[user-id="' + userId + '"] .chatMessage').find("#text_"+userId+uniqueId).length == 0){
+            console.log("appending self sent msg 1");
+            //console.log("inside _appendSelfMessage",$('chat-box[user-id="' + userId + '"] .chatMessage'));
+            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText">' + message + '</div><i class="nchatspr nchatic_8 fr vertM"></i></div>');
+            var len = $('chat-box[user-id="' + userId + '"] .talkText').length - 1,
+                height = $($('chat-box[user-id="' + userId + '"] .talkText')[len]).height();
+            $($('chat-box[user-id="' + userId + '"] .talkText')[len]).next().css("margin-top", height);
+            
+            if (status != "sending") {
+                curElem._changeStatusOfMessg(uniqueId, userId, status);
+            } 
+        }  
     },
     //add meesage recieved from another user
     _appendRecievedMessage: function (message, userId, uniqueId) {
@@ -1798,11 +1812,8 @@ JsChat.prototype = {
         //as per discussion with ashok this height is goign to be fixed
         var hoverDivHgt = 435;
         hoverNewTop = this._calHoverPos(hoverNewTop, hoverDivHgt);
-        if (this._checkWidth()) {
-            var shiftright = 245;
-        } else {
-            var shiftright = Math.round($(this._parendID)[0].getBoundingClientRect().width);
-        }
+        
+        var shiftright = Math.round($(this._parendID)[0].getBoundingClientRect().width);
         //this._chatLoggerPlugin('hoverNewTop:'+hoverNewTop+' shiftright:'+shiftright);
         //if element exist        
         if ($('#' + curEleID + '_hover').length != 0) {
