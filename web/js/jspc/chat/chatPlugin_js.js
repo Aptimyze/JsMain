@@ -875,7 +875,7 @@ JsChat.prototype = {
                     var height = $($(superParent).find(".talkText")[$(superParent).find(".talkText").length - 1]).height();
                     $($(superParent).find(".talkText")[$(superParent).find(".talkText").length - 1]).next().css("margin-top", height);
                     
-                    _this._scrollToBottom(userId);
+                    _this._scrollToBottom(userId,height);
                     //fire send chat query and return unique id
                     setTimeout(function () {
                         out = 1;
@@ -1435,15 +1435,18 @@ JsChat.prototype = {
         if(typeof extra != "undefined"){
             divLen += extra;
         }
-        $('chat-box[user-id="' + userId + '"] .rightBubble').each(function(index, element) {
-            divLen += $(this).height();
-        });
-        $('chat-box[user-id="' + userId + '"] .leftBubble').each(function(index, element) {
-            divLen += $(this).height();
-        });
+        else{
+            $('chat-box[user-id="' + userId + '"] .rightBubble').each(function(index, element) {
+                divLen += $(this).height();
+            });
+            $('chat-box[user-id="' + userId + '"] .leftBubble').each(function(index, element) {
+                divLen += $(this).height();
+            });
+        }
         $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
            scrollTop: divLen
         }, 500);
+
     },
 
     //append chat history in chat box

@@ -250,9 +250,11 @@ function invokePluginLoginHandler(state) {
     if (state == "success") {
         createCookie("chatAuth", "true");
         objJsChat._appendLoggedHTML();
-    } else {
+    } else if(state == "failure"){
         eraseCookie("chatAuth");
         objJsChat.addLoginHTML(true);
+    } else if(state == "logout"){
+        $(objJsChat._logoutChat).click();
     }
 }
 
@@ -776,7 +778,8 @@ $(document).ready(function () {
                     }
                 }
             }*/
-            if (chatLoggedIn == 'true') {
+            chatLoggedIn = readCookie('chatAuth');
+            if (chatLoggedIn == 'true' && loginStatus == "Y") {
                 if(username && pass){
                     strophieWrapper.reconnect(chatConfig.Params[device].bosh_service_url, username, pass);
                 }
