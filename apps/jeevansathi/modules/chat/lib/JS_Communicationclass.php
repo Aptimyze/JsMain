@@ -1,7 +1,7 @@
 <?php
 class JS_Communication
 {
-	private static $RESULTS_PER_PAGE_APP=30;
+	private static $RESULTS_PER_PAGE_CHAT=20;
 	private $loginProfile;
 	private $otherProfile;
 	private $contactObj;
@@ -57,16 +57,15 @@ class JS_Communication
 		
 	}
 
-	public function getCommunication()
+	public function getCommunication($msgIdNo)
 	{
 		$type=$this->contactObj->getTYPE();
 		
 		$dbName1 = JsDbSharding::getShardNo($this->loginProfile->getPROFILEID());
 		$dbName2 = JsDbSharding::getShardNo($this->otherProfile->getPROFILEID());
-		
 		if($this->communicationType="C"){
 			$dbObj = new newjs_CHAT_LOG($dbName1);		
-			return $dbObj->getMessageHistory($this->loginProfile->getPROFILEID(),$this->otherProfile->getPROFILEID());
+			return $dbObj->getMessageHistory($this->loginProfile->getPROFILEID(),$this->otherProfile->getPROFILEID(),self::$RESULTS_PER_PAGE_CHAT,$msgIdNo);
 			
 			
 		/*

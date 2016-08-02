@@ -62,7 +62,7 @@ class NEWJS_CHAT_LOG extends TABLE{
 	}
 
 
-	public function getMessageHistory($viewer,$viewed)
+	public function getMessageHistory($viewer,$viewed,$limit,$pagination="")
 		{
 			try
 			{
@@ -72,7 +72,11 @@ class NEWJS_CHAT_LOG extends TABLE{
 				}
 				else
 				{
-					$sql = "SELECT SENDER, DATE, MESSAGE ,FOLDERID,C.ID FROM  `CHAT_LOG` AS C JOIN CHATS AS M ON ( M.ID = C.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER ))  ORDER BY DATE";
+					if($pagination)
+						$whrStr="AND M.ID < ".$pagination;
+					else
+						$whrStr="";
+					$sql = "SELECT SENDER,RECEIVER, DATE, MESSAGE ,FOLDERID,C.ID FROM  `CHAT_LOG` AS C JOIN CHATS AS M ON ( M.ID = C.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER )) ".$whrStr." ORDER BY DATE DESC limit ".$limit;
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);

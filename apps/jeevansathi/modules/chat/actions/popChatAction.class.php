@@ -34,7 +34,7 @@ class popChatAction extends sfAction
 			//	$message=$input['msg'];
 				$request->setParameter("communicationType",'C');
 				$communicationType='C';
-				$pageNo=$request->getParameter('pageNo');
+				$msgIdNo=$input['messageId'];
 			//	$request->setParameter("message",$message);
 			
 			$inputValidateObj->validatePopChat($request);
@@ -49,11 +49,14 @@ class popChatAction extends sfAction
 				$this->receiverProfile->getDetail($receiver, "PROFILEID");
 					
 				$js_communication=new JS_Communication($this->senderProfile,$this->receiverProfile,$communicationType,$message);
-				$arr=$js_communication->getCommunication();
+				$arr=$js_communication->getCommunication($msgIdNo);
 				if($arr)
 				{
+					if(count($arr)<20)
+						$responseArray["pagination"] = 0;
+					else
+						$responseArray["pagination"] = 1;
 					$responseArray["Message"] = json_encode($arr);
-					$responseArray["chatId"] = $Id;
 				}
 			}
 		}
