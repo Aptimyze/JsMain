@@ -18,7 +18,7 @@ var strophieWrapper = {
     rosterGroups: chatConfig.Params.pc.rosterGroups,
     currentConnStatus: null,
     loggingEnabledStrophe: false,
-    tryReconnection:false,
+    tryReconnection:true,
     syncSentMessage:true,
     synchronize_selfPresence: false,
 
@@ -95,7 +95,7 @@ var strophieWrapper = {
 		    strophieWrapper.connect(chatConfig.Params[device].bosh_service_url, username, pass);
 		    //triggerbindings call
 
-		    strophieWrapper.triggerBindings();
+		    //strophieWrapper.triggerBindings();
 		}
     },
     //executed after connection done
@@ -128,6 +128,7 @@ var strophieWrapper = {
         strophieWrapper.sendPresence();
         //fetch roster of logged in user 
         if(strophieWrapper.initialRosterFetched == false){ 
+        	console.log("heree3ee3");
         	strophieWrapper.getRoster();
         }
         //binding event for presence update in roster
