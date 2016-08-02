@@ -851,10 +851,15 @@ JsChat.prototype = {
                 //fire event typing start
                 sendTypingState(selfJID, jid, "composing");
             }
-            if (e.keyCode == 13 && !e.shiftKey) {
+            if(e.keyCode == 13 && e.shiftKey && $(this).val().length == 1) {
+                $(this).val("");
+            }
+            else if (e.keyCode == 13 && !e.shiftKey) {
                 var text = $(this).val(),
                     textAreamElem = this;
+                    console.log("text before",text);
                 text = $("<div/>").html(text).text();
+                console.log("Text entered",text);
                 $(textAreamElem).val("").css("height", "24px");
                 if (text.length > 1) {
                     var superParent = $(this).parent().parent(),
