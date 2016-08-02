@@ -778,7 +778,8 @@ $(document).ready(function () {
                     }
                 }
             }*/
-            if (chatLoggedIn == 'true') {
+            chatLoggedIn = readCookie('chatAuth');
+            if (chatLoggedIn == 'true' && loginStatus == "Y") {
                 if(username && pass){
                     strophieWrapper.reconnect(chatConfig.Params[device].bosh_service_url, username, pass);
                 }
