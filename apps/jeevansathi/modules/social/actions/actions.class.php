@@ -1819,6 +1819,13 @@ CloseMySelf(this);</script>';
 	else
 		$uploaded=false;
 	$pictureid = $pictureidArr['PIC_ID'];
+	if(($setProfilePic=$request->getParameter("setProfilePhoto"))=="Y")
+	{
+                $whereArr["PICTUREID"] = $pictureid;
+                $whereArr["PROFILEID"] = $profileObj->getPROFILEID();
+                $currentPicObj = $pictureServiceObj->getPicDetails($whereArr,1);                        //Get picture object correspondingto Picture ID
+                $status=$pictureServiceObj->setProfilePic($currentPicObj[0]); 
+	}
 	$respObj = ApiResponseHandler::getInstance();
 	$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 	$respObj->setResponseBody(array("uploaded"=>$uploaded,"label"=>"success upload","PICTUREID"=>$pictureid));
