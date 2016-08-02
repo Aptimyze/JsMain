@@ -1985,15 +1985,20 @@ class photoScreeningService
 	*@param formArr : form array
 	*@return output : either error message or array of count and success message
 	*/	
-	public function processUpload($formArr)
+	public function processUpload($formArr,$ops=false,$filesGlobArr='')
         {
                 $photoFileServiceObj = new photoFileService();
-                $output = $photoFileServiceObj->fileValidate($formArr);
+		if(!$ops)
+			$output = $photoFileServiceObj->fileValidate($formArr);
+		elseif(is_array($filesGlobArr))
+			$output="Success";
+		else
+			$output = "Err..issue with cropping photos";
 		$count =0;
                 if($output=="Success")
                 {
 			
-                        if ($_FILES["uploadPhotoNonScr"])                       //If non screened photos exist
+                        if ($_FILES["uploadPhotoNonScr"] || $filesGlobArr)
                         {
                                 $pictureServiceObj =new PictureService($this->profileObj,'SCREENING');
                                 $pictureObj = new NonScreenedPicture('SCREENING');
@@ -2027,8 +2032,34 @@ class photoScreeningService
 							$count++;
 						}
 					}
-
                                 }
+                                foreach ($filesGlobArr["uploadPhotoNonScr"]['name'] as $k=>$v)
+                                {
+					$imageT = $filesGlobArr["uploadPhotoNonScr"]["type"][$k];
+                                        if(array_key_exists($k,ProfilePicturesTypeEnum::$PICTURE_SIZES))
+                                        {
+                                                $pid = $formArr["picIdNonScr"][1];
+                                                $picSaveUrl = $pictureObj->getSaveUrlPicture(ProfilePicturesTypeEnum::$PICTURE_UPLOAD_DIR[$k],$pid,$this->profileObj->getPROFILEID(),$imageT,'nonScreened');
+                                                $picUrl =  $pictureObj->getDisplayPicUrl(ProfilePicturesTypeEnum::$PICTURE_UPLOAD_DIR[$k],$pid,$this->profileObj->getPROFILEID(),$imageT,'nonScreened');
+                                        //        $result = $pictureFunctionsObj->moveImage($_FILES["uploadPhotoNonScr"]["tmp_name"][$k],$picSaveUrl);
+						$manipulator = new ImageManipulator();
+						$result = $manipulator->save($v,$picSaveUrl,$imageT);
+						$picturesToUpdate[$pid][$k]=$picUrl;
+						$count++;
+                                        }
+                                        else
+                                        {
+/*
+                                                $pid = $formArr["picIdNonScr"][1];
+                                                $picSaveUrl = $pictureObj->getSaveUrlPicture(ProfilePicturesTypeEnum::$PICTURE_UPLOAD_DIR["MainPicUrl"],$pid,$this->profileObj->getPROFILEID(),$imageT,'nonScreened');
+                                                $picUrl = $pictureObj->getDisplayPicUrl(ProfilePicturesTypeEnum::$PICTURE_UPLOAD_DIR["MainPicUrl"],$pid,$this->profileObj->getPROFILEID(),$imageT,'nonScreened');
+						$manipulator = new ImageManipulator();
+						$result = $manipulator->save($v,$picSaveUrl,$imageT);
+						$picturesToUpdate[$pid]["MainPicUrl"]=$picUrl;
+						$count++;
+*/
+                                        }
+				}
 				$pictureServiceObj->setPicProgressBit(ProfilePicturesTypeEnum::$INTERFACE["2"],$picturesToUpdate);
 				$profileScreened = "0";
 				$statusArr =$pictureObj->profilePictureStatusArr($this->profileObj->getPROFILEID());

@@ -26,7 +26,7 @@ Abstract class ApiAuthentication
 	private $mixer =   "6D5BsZR7mTmxvJE7xpyT1WStW5avfQvr";
 	private $inactiveMin="35";//The time in minutes to force new login, if account has been inactive used for older login functionality
 	private $expiryCookieTime=2592000;
-	private $dateTime1 ='10';
+	private $dateTime1 ='11';
 	private $dateTime2 ='22';	
 	
 	public function __construct($request)

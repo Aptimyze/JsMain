@@ -5,7 +5,6 @@ include_once("../profile/pg/functions.php");
 include_once("user_hierarchy.php");
 include_once("../crm/history.php");
 $db=connect_misdb();
-$db2=connect_master();
 
 if(authenticated($cid))
 {

@@ -102,5 +102,6 @@ class RegistrationEnums {
 		"JSPCR3"=>array("COUNTRY_RES","AGE"),
 		"JSPCR4"=>array("COUNTRY_RES","AGE")
 	);
+  public static $emailModification = "_deleted";
 }
 ?>
