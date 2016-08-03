@@ -1449,16 +1449,16 @@ JsChat.prototype = {
     },
     _scrollToBottom: function (userId, extra) {
         var divLen = 0;
-        if (typeof extra != "undefined") {
-            divLen += extra;
-        } else {
+        //if (typeof extra != "undefined") {
+           // divLen += extra;
+        //} else {
             $('chat-box[user-id="' + userId + '"] .rightBubble').each(function (index, element) {
                 divLen += $(this).height();
             });
             $('chat-box[user-id="' + userId + '"] .leftBubble').each(function (index, element) {
                 divLen += $(this).height();
             });
-        }
+        //}
         $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
             scrollTop: divLen
         }, 500);
