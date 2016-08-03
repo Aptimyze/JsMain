@@ -159,6 +159,7 @@ public function isFtoDuplicate($profileId){
 			$prep->bindValue(":FLAG_INBOUND_CALL", $paramArr["FLAG_INBOUND_CALL"], PDO::PARAM_STR);
 			$prep->bindValue(":CHAT_INITIATION", $paramArr["CHAT_INITIATION"], PDO::PARAM_STR);
 			$prep->execute();
+                        return $this->db->lastInsertId();
 		}
 		catch(Exception $e)
 		{

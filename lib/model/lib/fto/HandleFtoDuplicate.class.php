@@ -43,16 +43,11 @@ class HandleFtoDuplicate
 					{
 						if($v->getPROFILEID()==$id)
 						{
-                                                    try {
-                                                      //send mail to the second profile marked as duplicate
-                                                      duplicateProfilesMail::sendEmailToDuplicateProfiles($id);
-                                                    } 
-                                                    catch (Exception $ex) {
-                                                    }
+                                                    
 							if(!strstr($v->getSUBSCRIPTION(),"F"))
 							{
 								$IntlObj =  new INCENTIVE_NEGATIVE_TREATMENT_LIST;
-								$IntlObj->addRecord($fto_duplicate_arr,1);
+								$lastInsertedId=$IntlObj->addRecord($fto_duplicate_arr,1);
 
 								if($fto_duplicate_arr["FLAG_VIEWABLE"]=="N")	//Delete entry from search tables
 								{
@@ -64,6 +59,14 @@ class HandleFtoDuplicate
 									unset($NsfObj);
 								}
 							}
+                                                        
+                                                        try {
+                                                      //send mail to the second profile marked as duplicate
+                                                      if($lastInsertedId)
+                                                            duplicateProfilesMail::sendEmailToDuplicateProfiles($id);
+                                                    } 
+                                                    catch (Exception $ex) {
+                                                    }
 							break;
 						}
 					}
