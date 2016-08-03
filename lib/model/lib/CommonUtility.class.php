@@ -783,16 +783,13 @@ die;
 	*/
 	public static function checkChatPanelCondition($loggedIn,$module, $action){
 		$chatNotAvailModuleArr = ["membership","register","phone","social"];
+        $chatNotAvailActioneArr = ["phoneVerificationPcDisplay","page500","404"];
 		$showChat = 1;
 		if(!$loggedIn)
 			$showChat = 0;
-		else if(in_array($module, $chatNotAvailModuleArr)){
+		else if(in_array($module, $chatNotAvailModuleArr) || in_array($action, $chatNotAvailActioneArr)){
 			$showChat = 0;
 		}
-        else if($module == "homepage" && $action == "phoneVerificationPcDisplay"){
-            //Done to cater internal redirect
-            $showChat = 0;
-        }
 		return $showChat;
 	}
 
