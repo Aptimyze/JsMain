@@ -61,7 +61,7 @@ class FreePrivilege extends Privilege
 				}
 			}
 			if($this->privilegeArray[0]['COMMUNICATION']['MESSAGE']=='P')
-				$this->privilegeArray[0]['COMMUNICATION']['MESSAGE']=='N';
+				$this->privilegeArray[0]['COMMUNICATION']['MESSAGE']='N';
 		}
 	}
 	
