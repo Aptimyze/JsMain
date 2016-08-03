@@ -434,9 +434,13 @@ function checkAuthentication() {
                 //createCookie("chatAuth","true");
                 //loginChat();
                 auth = 'true';
-                pass = JSON.parse(CryptoJS.AES.decrypt(data.hash, "chat", {
+                console.log("Beforepass",data.hash);
+                pass = data.hash;
+                /*pass = JSON.parse(CryptoJS.AES.decrypt(data.hash, "chat", {
                     format: CryptoJSAesJson
                 }).toString(CryptoJS.enc.Utf8));
+                */
+                console.log("afterpass",pass);
             } else {
                 //chatLoggerPC(data.responseMessage);
                 //chatLoggerPC("In checkAuthentication failure");
