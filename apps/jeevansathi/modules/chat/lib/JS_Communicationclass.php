@@ -21,7 +21,6 @@ class JS_Communication
 
 	public function storeCommunication()
 	{
-		if($this->validateChat()){
 			//$type=$this->contactObj->getTYPE();**To be removed**
 			$type="A";
 			
@@ -49,8 +48,6 @@ class JS_Communication
 				}
 				return $id;
 			}
-		
-		}		
 	}
 
 	public function getCommunication($msgIdNo)
