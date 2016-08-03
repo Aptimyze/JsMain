@@ -1474,11 +1474,11 @@ JsChat.prototype = {
                 //console.log(logObj);
                 if (parseInt(logObj["SENDER"]) == self_id) {
                     //append self sent message
-                    $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText">' + logObj["MESSAGE"] + '</div></div>');
+                    $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText">' + logObj["MESSAGE"] + '</div><i class="nchatspr nchatic_9 fr vertM"></i></div>');
 
                 } else if (parseInt(logObj["SENDER"]) == other_id) {
                     //append received message
-                    $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText received" data-msgid=' + logObj["FOLDERID"] + '>' + logObj["MESSAGE"] + '</div></div>');
+                    $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText received_read" data-msgid=' + logObj["FOLDERID"] + '>' + logObj["MESSAGE"] + '</div></div>');
                 }
             });
             //console.log(historyHTML);
@@ -1498,18 +1498,19 @@ JsChat.prototype = {
     _appendSelfMessage: function (message, userId, uniqueId, status) {
         console.log("appending self sent msg");
         var curElem = this;
-        if ($('chat-box[user-id="' + userId + '"]').length == 0) {
+        /*if ($('chat-box[user-id="' + userId + '"]').length == 0) {
             $(".profileIcon[id^='" + userId + "']")[0].click();
-        }
-        if ($('chat-box[user-id="' + userId + '"] .chatMessage').find("#text_" + userId + uniqueId).length == 0) {
-            console.log("appending self sent msg 1");
-            //console.log("inside _appendSelfMessage",$('chat-box[user-id="' + userId + '"] .chatMessage'));
-            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText">' + message + '</div><i class="nchatspr nchatic_8 fr vertM"></i></div>');
-            var len = $('chat-box[user-id="' + userId + '"] .talkText').length - 1,
-                height = $($('chat-box[user-id="' + userId + '"] .talkText')[len]).height();
-            $($('chat-box[user-id="' + userId + '"] .talkText')[len]).next().css("margin-top", height);
-            if (status != "sending") {
-                curElem._changeStatusOfMessg(uniqueId, userId, status);
+        }*/
+        if ($('chat-box[user-id="' + userId + '"]').length != 0){
+            if ($('chat-box[user-id="' + userId + '"] .chatMessage').find("#text_" + userId + uniqueId).length == 0) {
+    
+                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText">' + message + '</div><i class="nchatspr nchatic_8 fr vertM"></i></div>');
+                var len = $('chat-box[user-id="' + userId + '"] .talkText').length - 1,
+                    height = $($('chat-box[user-id="' + userId + '"] .talkText')[len]).height();
+                $($('chat-box[user-id="' + userId + '"] .talkText')[len]).next().css("margin-top", height);
+                if (status != "sending") {
+                    curElem._changeStatusOfMessg(uniqueId, userId, status);
+                }
             }
         }
     },
