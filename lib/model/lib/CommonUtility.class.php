@@ -776,6 +776,22 @@ die;
 		return $result;
 	}
 
+	/*checkChatPanelCondition
+	* check whether to show chat panel or not acc to module
+	* @inputs: $loggedIn,$module
+	* @return: $showChat
+	*/
+	public static function checkChatPanelCondition($loggedIn,$module){
+		$moduleArr = ["membership","registration"];
+		$showChat = 1;
+		if(!$loggedIn)
+			$showChat = 0;
+		else if(in_array($module, $moduleArr)){
+			$showChat = 0;
+		}
+		return $showChat;
+	}
+
 
 
 
