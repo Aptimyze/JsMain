@@ -17,8 +17,8 @@ class popChatAction extends sfAction
 	
 	function execute($request)
 	{
-		
-		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("module"));
+	
+		//$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("module"));
 		$apiObj                  = ApiResponseHandler::getInstance();
 
 		if ($request->getParameter("action")=="popChat")
@@ -37,9 +37,9 @@ class popChatAction extends sfAction
 				$msgIdNo=$input['messageId'];
 			//	$request->setParameter("message",$message);
 			
-			$inputValidateObj->validatePopChat($request);
-			$output = $inputValidateObj->getResponse();
-			if($output["statusCode"]==ResponseHandlerConfig::$SUCCESS["statusCode"])
+			//$inputValidateObj->validatePopChat($request);
+			//$output = $inputValidateObj->getResponse();
+			if(1)
 			{
 				//echo $sender."--".$receiver."--".$message;die;
 				//Contains logined Profile information;
@@ -70,7 +70,7 @@ class popChatAction extends sfAction
 			if(is_array($output))
 				$apiObj->setHttpArray($output);
 			else
-				$apiObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+				$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiObj->generateResponse();
 		}
 		die;
