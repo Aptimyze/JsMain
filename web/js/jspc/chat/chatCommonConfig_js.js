@@ -259,7 +259,8 @@ chatConfig.Params = {
             "intrec": 50,
             "shortlist": 50,
             "intsent": 50
-        }
+        },
+        storeMsgInLocalStorage:true
     }
 };
 chatConfig.Params.pc.rosterGroups = [/*chatConfig.Params.categoryNames['Desired Partner Matches'],*/ chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members']];

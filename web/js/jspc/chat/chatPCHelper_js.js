@@ -754,7 +754,8 @@ $(document).ready(function () {
         var chatLoggedIn = readCookie('chatAuth');
         var loginStatus;
         $(window).focus(function() {
-            invokePluginLoginHandler("login");
+            if(strophieWrapper.synchronize_selfPresence == true)
+                invokePluginLoginHandler("login");
         });
         $(window).on("offline", function () {
             console.log("detected internet disconnection");
