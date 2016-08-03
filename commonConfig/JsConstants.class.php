@@ -168,7 +168,7 @@ class JsConstants
 	 public static $usePhotoDistributed = 0;
   public static $photoServerName='JSPIC1';
 	public static $photoServerShardingEnums = array("JSPIC1","JSPIC2","JSPIC3");
-
-	
 	public static $communicationRep = true;
+        public static $communicationServiceUrl = "http://192.168.120.70:8290";
+        public static $jsChatFlag  = '1';
 }
