@@ -436,7 +436,7 @@ class protect
                         //die;
                         $request_uri=$_SERVER['REQUEST_URI'];
                         //print_r("request_uri is >>>>".$request_uri);
-                        $fileslist=array("login.php","intermediate.php","login_redirect.php","jsChat.php","social/import","register/","sugarcrm","autoSug");
+                        $fileslist=array("login.php","login_redirect.php","social/import","register/","sugarcrm","autoSug");
 
                         $iftrue=true;
                         foreach($fileslist as $key=>$val)
@@ -446,10 +446,10 @@ class protect
                                         $iftrue=false;
 
                         }
-                        if($iftrue && !$isMobile){
+                        /*if($iftrue && !$isMobile){
                                         header("Location:".$SITE_URL."/profile/intermediate.php?parentUrl=".$request_uri);
                                         exit;
-                                }
+                                }*/
                         //}
                 }
 

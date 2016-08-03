@@ -504,19 +504,7 @@ Abstract class ApiAuthentication
 			else
 				$dbObj=new userplane_recentusers("newjs_master");
 			$dbObj->replacedata($pid);
-			//Entry in Chat Roster
-			try {
-				$producerObj = new Producer();
-				if ($producerObj->getRabbitMQServerConnected()) {
-					$chatData = array('process' => 'USERLOGIN', 'data' => ($pid), 'redeliveryCount' => 0);
-					$producerObj->sendMessage($chatData);
-				}
-				unset($producerObj);
-			} catch (Exception $e) {
-				throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
-			}
 
-			//End
 		}
 
 		// Add Online-User

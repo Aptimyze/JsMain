@@ -598,7 +598,6 @@ function sendAjaxHtmlDisplay(ajaxConfig, fun) {
 }
 
 function logOutCheck(param,upgradeFromTopNavBar){
-    $(".jschatLogOut").click();
     if(top.logOut) 
         top.logOut(); 
     if(top.profileId) 

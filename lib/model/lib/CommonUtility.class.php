@@ -845,8 +845,6 @@ die;
 		{
 			if($invalidate == 1)
 				$process = "INVALIDATE";
-			elseif($invalidate ==2 )
-				$process = "USERLOGIN";
 			else
 				$process = "CACHE";
 			$producerObj=new Producer();

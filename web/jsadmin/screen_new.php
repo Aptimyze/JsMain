@@ -438,20 +438,7 @@ if (authenticated($cid)) {
           $action = FTOStateUpdateReason::SCREEN;
           $profileObj->getPROFILE_STATE()->updateFTOState($profileObj,$action);
         }
-				if($addInUserCreation == 1)
-				{
-					try {
-						$producerObj = new Producer();
-						if ($producerObj->getRabbitMQServerConnected()) {
-							$chatData = array('process' => 'USERCREATION', 'data' => $profileid, 'redeliveryCount' => 0);
-							$producerObj->sendMessage($chatData);
-						}
-						unset($producerObj);
-					} catch (Exception $e) {
-						throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
-					}
 
-				}
 				//Log modified values
 				$log_name = $name;
 				$log_val = array();
