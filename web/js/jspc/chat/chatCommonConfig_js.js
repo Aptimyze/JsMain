@@ -264,7 +264,7 @@ chatConfig.Params = {
             "intsent": 50
         },
         storeMsgInLocalStorage:true,
-        maxMsgLimit:100
+        maxMsgLimit:1000
     }
 };
 chatConfig.Params.pc.rosterGroups = [ /*chatConfig.Params.categoryNames['Desired Partner Matches'],*/ chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members']];
