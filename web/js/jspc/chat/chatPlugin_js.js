@@ -649,9 +649,8 @@ JsChat.prototype = {
             elem.find(".chatBoxBar").removeClass("cursp");
             elem.find(".downBarPic").removeClass("downBarPicMin");
             elem.find(".downBarUserName").removeClass("downBarUserNameMin");
-            elem.find('.chatMessage').animate({
-                scrollTop: (elem.find(".rightBubble").length + elem.find(".leftBubble").length) * 50
-            }, 1000);
+            curEle._scrollToBottom($(elem).attr("user-id"));
+            
             $(elem).attr("pos-state", "open");
             var data = [];
             if (localStorage.getItem("chatStateData")) {
