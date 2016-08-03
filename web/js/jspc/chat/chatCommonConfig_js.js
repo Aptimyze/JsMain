@@ -263,7 +263,7 @@ chatConfig.Params = {
             "shortlist": 50,
             "intsent": 50
         },
-        storeMsgInLocalStorage:true,
+        storeMsgInLocalStorage:false,
         maxMsgLimit:1000
     }
 };
