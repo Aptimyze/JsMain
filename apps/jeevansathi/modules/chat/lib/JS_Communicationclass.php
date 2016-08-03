@@ -1,7 +1,7 @@
 <?php
 class JS_Communication
 {
-	private static $RESULTS_PER_PAGE_CHAT=20;
+	public static $RESULTS_PER_PAGE_CHAT=20;
 	private $loginProfile;
 	private $otherProfile;
 	private $contactObj;
