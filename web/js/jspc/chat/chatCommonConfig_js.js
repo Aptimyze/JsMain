@@ -66,7 +66,7 @@ chatConfig.Params = {
     },
     //api config for chat history
     chatHistoryApi: {
-        "apiUrl": "/contacts/popChat",
+        "apiUrl": "/chat/popChat",
         "extraParams": {
             "pageSource": "chat",
             "channel": 'pc'
