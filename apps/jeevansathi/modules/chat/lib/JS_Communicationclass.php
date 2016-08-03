@@ -55,8 +55,8 @@ class JS_Communication
 
 	public function getCommunication($msgIdNo)
 	{
-		$type=$this->contactObj->getTYPE();
-		
+		//$type=$this->contactObj->getTYPE();
+		$type="A";
 		$dbName1 = JsDbSharding::getShardNo($this->loginProfile->getPROFILEID());
 		$dbName2 = JsDbSharding::getShardNo($this->otherProfile->getPROFILEID());
 		if($this->communicationType="C"){

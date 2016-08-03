@@ -66,7 +66,7 @@ chatConfig.Params = {
     },
     //api config for chat history
     chatHistoryApi: {
-        "apiUrl": "/contacts/popChat",
+        "apiUrl": "/chat/popChat",
         "extraParams": {
             "pageSource": "chat",
             "channel": 'pc'
@@ -260,7 +260,8 @@ chatConfig.Params = {
             "shortlist": 50,
             "intsent": 50
         },
-        storeMsgInLocalStorage:true
+        storeMsgInLocalStorage:true,
+        maxMsgLimit:100
     }
 };
 chatConfig.Params.pc.rosterGroups = [ /*chatConfig.Params.categoryNames['Desired Partner Matches'],*/ chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members']];
