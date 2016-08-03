@@ -782,11 +782,11 @@ die;
 	* @return: $showChat
 	*/
 	public static function checkChatPanelCondition($loggedIn,$module){
-		$moduleArr = ["membership","registration"];
+		$chatNotAvailModuleArr = ["membership","register","phone","social"];
 		$showChat = 1;
 		if(!$loggedIn)
 			$showChat = 0;
-		else if(in_array($module, $moduleArr)){
+		else if(in_array($module, $chatNotAvailModuleArr)){
 			$showChat = 0;
 		}
 		return $showChat;

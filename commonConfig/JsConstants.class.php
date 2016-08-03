@@ -175,4 +175,5 @@ class JsConstants
 
 	
 	public static $communicationRep = true;
+    public static $jsChatFlag = 1; //1=enable chat, 0=disable chat
 }
