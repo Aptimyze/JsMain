@@ -134,9 +134,9 @@ function getChatHistory(apiParams) {
     }
     else{
         console.log("localStorage for history");
-        response["Message"] = oldHistory;
+
         //call plugin function to append history in div
-        objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], $.parseJSON(response["Message"]));
+        objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], $.parseJSON(oldHistory));
     }
 }
 
