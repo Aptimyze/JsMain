@@ -122,6 +122,9 @@ function getChatHistory(apiParams) {
                         if(setLocalStorage == true){
                             localStorage.setItem("chatHistory_"+bare_from_jid+"_"+bare_to_jid,response["Message"]);
                         }
+                        if(response["pagination"] == 0){
+                            $("#moreHistory_"+bare_to_jid.split("@")[0]).val("0");
+                        }
                         //call plugin function to append history in div
                         objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], $.parseJSON(response["Message"]));
                     }
