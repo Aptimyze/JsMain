@@ -89,8 +89,8 @@ class jsPdoDebug {
 				return call_user_func_array(array($this->delegate , $method), $args);
 			} catch (PDOException $e) {
 				//Logging manager added for pdo as well
-				LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, $e);
-				error_log('jsDatabase PDO error in ' . $method . '(\'' . $args[0] . '\', ...) [Error message: ' . $e->getMessage() . ']');
+				LoggingManager::getInstance()->logThis(LoggingEnums::LOG_DEBUG, $e,array('message'=>'jsDatabase PDO error in ' . $method . '(\'' . $args[0] . '\', ...) [Error message: ' . $e->getMessage() . ']'));
+			
 				throw $e;
 			}
 		}
@@ -110,8 +110,7 @@ class jsPdoStatementDebug {
 		try {
 			return $this->delegate->execute($input_parameters);
 		} catch(PDOException $e) {
-			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, $e);
-			error_log('jsDatabase PDOStatement execute error: [Query: ' . $this->delegate->queryString . '] [Bound values: ' . $this->boundValues($input_parameters) . '] [Error message: ' . $e->getMessage() . ']');
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_DEBUG, $e,array('message'=>'jsDatabase PDOStatement execute error: [Query: ' . $this->delegate->queryString . '] [Bound values: ' . $this->boundValues($input_parameters) . '] [Error message: ' . $e->getMessage() . ']'));		
 			throw $e;
 		}
 	}
@@ -166,7 +165,7 @@ class jsPdoPersistent {
 				if($error[1] == 2006 || $error[1] == 2013)
 				{
 					try{
-						 error_log('jsDatabase PDOPersistent  error: [dsn: ' . $this->dsn . '] [Error message: ' . $error[2] . ']');
+						LoggingManager::getInstance()->logThis(LoggingEnums::LOG_DEBUG, $e,array('message'=>'jsDatabase PDOPersistent  error: [dsn: ' . $this->dsn . '] [Error message: ' . $error[2] . ']'));	
 						$pdoDatabase = new jsPdoDatabase($this->dsn, $this->username, $this->password, $this->reconnect, $this->debug);
 						$this->delegate = $pdoDatabase->getConnection();
 						$this->setAttributes();
@@ -235,7 +234,7 @@ class jsPdoStatementPersistent {
 			if($error[1] == 2006 || $error[1] == 2013)
 			{
 				try{
-					error_log('jsDatabase PDOStatementPersistent  error: [dsn: ' . $this->dsn . '] [Error message: ' . $error[2] . '] [Query: '.$this->statement . ']');
+					LoggingManager::getInstance()->logThis(LoggingEnums::LOG_DEBUG, $e,array('message'=>'jsDatabase PDOStatementPersistent  error: [dsn: ' . $this->dsn . '] [Error message: ' . $error[2] . '] [Query: '.$this->statement . ']'));
 					$pdoPersistent = new jsPdoDatabase($this->dsn, $this->username, $this->password, $this->reconnect, $this->debug);
 					$this->delegate = $pdoPersistent->getConnection()->prepare($this->statement, $this->driver_options);
 					$this->setAttributes();
