@@ -115,6 +115,47 @@ function getChatHistory(apiParams) {
     });
 }
 
+/*
+ * request self name
+ * @inputs none
+ * @returns self name / username
+ */
+function getSelfName(){
+    var selfName = localStorage.getItem('name'),
+        flag = true;
+    if (selfName) {
+        var data = JSON.parse(selfName);
+        var user = data['user'];
+        if (user == loggedInJspcUser) {
+            flag = false;
+            selfName = data['selfName'];
+        }
+    }
+    if(flag){
+        var apiUrl = chatConfig.Params.selfNameUr;
+        console.log("In self Name");
+        $.myObj.ajax({
+            url: apiUrl,
+            async: false,
+            success: function (response) {
+                if (response["responseStatusCode"] == "0") {
+                    selfName = response["name"];
+                    console.log("Success In self Name",selfName);
+                    localStorage.setItem('name', JSON.stringify({
+                        'selfName': selfName,
+                        'user': loggedInJspcUser
+                    }));
+                }
+            },
+            error: function (xhr) {
+                //return "error";
+            }
+        });
+        console.log("ReturnIn self Name");
+    }
+    return selfName;
+}
+
 function readSiteCookie(name) {
     var nameEQ = escape(name) + "=",
         ca = document.cookie.split(';');
@@ -781,12 +822,13 @@ $(document).ready(function () {
             loginStatus = "N";
         }
         imgUrl = getProfileImage();
+        selfName = getSelfName();
         objJsChat = new JsChat({
             loginStatus: loginStatus,
             mainID: "#chatOpenPanel",
             //profilePhoto: "<path>",
             imageUrl: imgUrl,
-            profileName: "bassi",
+            selfName: selfName,
             listingTabs: chatConfig.Params[device].listingTabs,
             rosterDetailsKey: strophieWrapper.rosterDetailsKey,
             listingNodesLimit: chatConfig.Params[device].groupWiseNodesLimit,

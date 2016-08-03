@@ -108,7 +108,8 @@ class RequestHandlerConfig
 	"getRoasterData"=>array("v1"=>"getRosterDataV1"),
 	"getDppData"=>array("v1"=>"getDppDataV1"),
 	"getProfileData"=>array("v1"=>"getProfileDataV1"),
-	"sendEOI"=>array("v1"=>"sendEOIV1")
+	"sendEOI"=>array("v1"=>"sendEOIV1"),
+        "selfName"=>array("v1"=>"SelfNameV1"),
         )
 );
 

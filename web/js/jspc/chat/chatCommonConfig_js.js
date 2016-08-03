@@ -55,6 +55,9 @@ chatConfig.Params = {
     },
     //api url for getting photo
     photoUrl: "/api/v1/social/getMultiUserPhoto",
+    
+    //api url for getting self name
+    selfNameUr: "/api/v1/chat/selfName",
     //api config for pre acceptance messages
     preAcceptChat: {
         "apiUrl": "/api/v1/chat/sendEOI",
