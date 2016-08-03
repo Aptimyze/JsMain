@@ -781,7 +781,7 @@ die;
 	* @inputs: $loggedIn,$module
 	* @return: $showChat
 	*/
-	public static function checkChatPanelCondition($loggedIn,$module){
+	public static function checkChatPanelCondition($loggedIn,$module, $action){
 		$chatNotAvailModuleArr = ["membership","register","phone","social"];
 		$showChat = 1;
 		if(!$loggedIn)
@@ -789,6 +789,10 @@ die;
 		else if(in_array($module, $chatNotAvailModuleArr)){
 			$showChat = 0;
 		}
+        else if($module == "homepage" && $action == "phoneVerificationPcDisplay"){
+            //Done to cater internal redirect
+            $showChat = 0;
+        }
 		return $showChat;
 	}
 

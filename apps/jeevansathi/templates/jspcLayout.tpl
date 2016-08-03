@@ -1,7 +1,8 @@
 ~assign var=module value= $sf_request->getParameter('module')`
 ~assign var=loggedIn value= $sf_request->getAttribute('login')`
+~assign var=action value= $sf_context->getActionName()`
 ~if JsConstants::$jsChatFlag eq "1"`
-    ~assign var=showChat value= CommonUtility::checkChatPanelCondition($loggedIn,$module)`
+    ~assign var=showChat value= CommonUtility::checkChatPanelCondition($loggedIn,$module,$action)`
 ~/if`
 <!DOCTYPE html>
 <head>
