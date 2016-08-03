@@ -262,7 +262,11 @@ JsChat.prototype = {
         console.log("add chat top",this._selfName);
         var curEleRef = this,
             that = this;
-        var chatHeaderHTML = '<div class="nchatbg1 nchatp2 clearfix pos-rel nchathgt1"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarIn"></i> </div><div class="fl"> <img src="' + this._imageUrl + '" class="nchatp4 wd40"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">'+this._selfName+'</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp">Logout from chat</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">'+this._selfName+'</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>';
+        
+        var lengthReq = 16;
+        var stringName = this._selfName;
+        var trimmedString = stringName.length > lengthReq ? stringName.substring(0, lengthReq - 3) + "..." : stringName;
+        var chatHeaderHTML = '<div class="nchatbg1 nchatp2 clearfix pos-rel nchathgt1"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarIn"></i> </div><div class="fl"> <img src="' + this._imageUrl + '" class="nchatp4 wd40"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">'+trimmedString+'</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp">Logout from chat</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">'+trimmedString+'</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>';
         $(curEleRef._listingPanelID).append(chatHeaderHTML);
         $(curEleRef._toggleLogoutDiv).off("click").on("click", function () {
             $(curEleRef._toggleID).toggleClass('disp-none');
@@ -397,6 +401,31 @@ JsChat.prototype = {
             $('chat-box[user-id="' + elem + '"] .nchatic_1').click();
         });
     },
+    
+    /*
+     * Manage minimize and maximize panel state, not used now
+     */
+    manageMinMaxState: function (elem){
+        console.log("in min max state");
+        var state = localStorage.getItem('panelState');
+        if(state){
+            var data = JSON.parse(state);
+            var state = data['state'];
+            var user = data['user'];
+            if(user && user == loggedInJspcUser){
+                if(state == 'min'){
+                    $(elem._minimizeChatOutPanel());
+                }
+                else if(state == 'max'){
+                    elem._maximizeChatPanel();
+                }
+            }
+            else{
+                localStorage.removeItem('panelState');
+            }
+        }
+    },
+    
     addListingInit: function (data) {
         var elem = this,
             statusArr = [],
@@ -1830,6 +1859,9 @@ JsChat.prototype = {
         //as per discussion with ashok this height is goign to be fixed
         var hoverDivHgt = 435;
         hoverNewTop = this._calHoverPos(hoverNewTop, hoverDivHgt);
+        if(hoverNewTop < 0){
+            hoverNewTop = 0;
+        }
         var shiftright = Math.round($(this._parendID)[0].getBoundingClientRect().width);
         //this._chatLoggerPlugin('hoverNewTop:'+hoverNewTop+' shiftright:'+shiftright);
         //if element exist        
