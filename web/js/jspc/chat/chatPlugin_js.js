@@ -1174,7 +1174,7 @@ JsChat.prototype = {
                     "to_checksum": checkSum,
                     "from_checksum": self_checksum
                 }
-            });
+            },"first_history");
         }
         this._chatLoggerPlugin(curElem);
         switch (chatBoxType) {
@@ -1489,7 +1489,7 @@ JsChat.prototype = {
         }, 500);
     },
     //append chat history in chat box
-    _appendChatHistory: function (selfJID, otherJID, communication) {
+    _appendChatHistory: function (selfJID, otherJID, communication,key) {
         console.log("self message");
         console.log(communication);
         var self_id = selfJID.split("@")[0],
@@ -1510,6 +1510,8 @@ JsChat.prototype = {
                     $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText received_read" data-msgid=' + logObj["FOLDERID"] + '>' + logObj["MESSAGE"] + '</div></div>');
                 }
             });
+            if(key == "first_history")
+                curElem._scrollToBottom(other_id);
             if(latestMsgId != ""){
                 console.log("setting");
                 $('chat-box[user-id="' + other_id + '"]').find("#moreHistory_"+other_id).attr("data-latestMsgId",latestMsgId);

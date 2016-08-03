@@ -83,7 +83,7 @@ function chatLoggerPC(msgOrObj) {
  * @inputs: chatParams
  * @output: response
  */
-function getChatHistory(apiParams) {
+function getChatHistory(apiParams,key) {
     var postData = {},setLocalStorage=false,fetchFromLocalStorage = false,oldHistory;
     var bare_from_jid = apiParams["extraParams"]["from"].split("/")[0],bare_to_jid = apiParams["extraParams"]["to"].split("/")[0];
     if (typeof apiParams["extraParams"] != "undefined") {
@@ -135,7 +135,7 @@ function getChatHistory(apiParams) {
                         }
                         manageHistoryLoader(bare_to_jid.split("@")[0],"hide");
                         //call plugin function to append history in div
-                        objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], $.parseJSON(response["Message"]));
+                        objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], $.parseJSON(response["Message"]),key);
                     }
                 }
             },
