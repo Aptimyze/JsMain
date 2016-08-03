@@ -441,7 +441,7 @@ class MembershipMailer {
 
 		// jprofile details
 		$jprofileObj =new JPROFILE('newjs_local111');
-		$fields ='PROFILEID,USERNAME,EMAIL,PHONE_OWNER_NAME,MOBILE_OWNER_NAME,PHONE_MOB,PHONE_WITH_STD,RELATION';
+		$fields ='PROFILEID,USERNAME,EMAIL,PHONE_OWNER_NAME,MOBILE_OWNER_NAME,PHONE_MOB,PHONE_WITH_STD,MOBILE_NUMBER_OWNER,PHONE_NUMBER_OWNER';
 		$valueArray['PROFILEID'] =$profileStr;
 		$excludeArray =array("ACTIVATED"=>"'D'");
 		$resDetails =$jprofileObj->getArray($valueArray,$excludeArray,'',$fields);	
@@ -449,13 +449,13 @@ class MembershipMailer {
 		// jprofile Contact
 	        $jprofileContactObj    =new NEWJS_JPROFILE_CONTACT('newjs_local111');
         	$valueArr['PROFILEID']  =$profileStr;
-        	$result                 =$jprofileContactObj->getArray($valueArr,'','','PROFILEID,ALT_MOBILE,ALT_MOBILE_OWNER_NAME');
+        	$result                 =$jprofileContactObj->getArray($valueArr,'','','PROFILEID,ALT_MOBILE,ALT_MOBILE_OWNER_NAME,ALT_MOBILE_NUMBER_OWNER');
 		if(is_array($result)){
 			foreach($result as $key=>$val){
 				$pid =$val['PROFILEID'];
 				$altContactArr[$pid]['ALT_MOBILE'] =$val['ALT_MOBILE'];
 				$altContactArr[$pid]['ALT_OWNER_NAME'] =$val['ALT_MOBILE_OWNER_NAME'];
-				
+				$altContactArr[$pid]['ALT_MOBILE_NUMBER_OWNER'] =$val['ALT_MOBILE_NUMBER_OWNER'];
 			}
 		}
 		// data formatting
@@ -466,10 +466,12 @@ class MembershipMailer {
 			
 			$dataSet[$id]['USERNAME']	=$dataArr['USERNAME'];
 			$dataSet[$id]['VIEWED_DATE'] 	=date("d/m/Y", strtotime($viewedDate));
-			$relation	                =FieldMap::getFieldLabel('relation',$dataArr['RELATION']);
-			$mobileArr			=array($dataArr['PHONE_MOB'],$dataArr['MOBILE_OWNER_NAME'],$relation);
-			$landlineArr			=array($dataArr['PHONE_WITH_STD'],$dataArr['PHONE_OWNER_NAME'],$relation);
-			$alternateArr			=array($altContactArr[$pid]['ALT_MOBILE'],$altContactArr[$pid]['ALT_OWNER_NAME'],$relation);
+			$relationMob	                =FieldMap::getFieldLabel('relationship',$dataArr['MOBILE_NUMBER_OWNER']);
+			$relationLandline               =FieldMap::getFieldLabel('relationship',$dataArr['PHONE_NUMBER_OWNER']);
+			$relationAlt                    =FieldMap::getFieldLabel('relationship',$dataArr['ALT_MOBILE_NUMBER_OWNER']);	
+			$mobileArr			=array($dataArr['PHONE_MOB'],$dataArr['MOBILE_OWNER_NAME'],$relationMob);
+			$landlineArr			=array($dataArr['PHONE_WITH_STD'],$dataArr['PHONE_OWNER_NAME'],$relationLandline);
+			$alternateArr			=array($altContactArr[$pid]['ALT_MOBILE'],$altContactArr[$pid]['ALT_OWNER_NAME'],$relationAlt);
 			$mobileArrNew			=array_filter($mobileArr);
 			$landlineArrNew			=array_filter($landlineArr);
 			$alternateArrNew		=array_filter($alternateArr);
