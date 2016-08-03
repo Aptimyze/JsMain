@@ -791,7 +791,8 @@ $(document).ready(function () {
             rosterDetailsKey: strophieWrapper.rosterDetailsKey,
             listingNodesLimit: chatConfig.Params[device].groupWiseNodesLimit,
             groupBasedChatBox: chatConfig.Params[device].groupBasedChatBox,
-            contactStatusMapping: chatConfig.Params[device].contactStatusMapping
+            contactStatusMapping: chatConfig.Params[device].contactStatusMapping,
+            maxMsgLimit:chatConfig.Params[device].maxMsgLimit
         });
         objJsChat.onEnterToChatPreClick = function () {
             //objJsChat._loginStatus = 'N';
