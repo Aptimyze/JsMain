@@ -393,6 +393,30 @@ class chatActions extends sfActions
 		die;
 	}
 
+    /*
+     * Get user's name to be shown after login
+     */
+    public function executeSelfNameV1(sfwebrequest $request){
+        $apiResponseHandlerObj = ApiResponseHandler::getInstance();
+		$loginData = $request->getAttribute("loginData");
+		if ($loginData) {
+            $profileid = $loginData['PROFILEID'];
+            $nameOfUserOb=new incentive_NAME_OF_USER();
+            $nameOfUser=$nameOfUserOb->getName($profileid);
+            if(!$nameOfUser){
+                $nameOfUser = $loginData['USERNAME'];
+            }
+            $response["name"] = $nameOfUser;
+        }
+        else{
+            $response = "Logged Out Profile";
+			$apiResponseHandlerObj->setHttpArray(ChatEnum::$loggedOutProfile);
+        }
+        $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+		$apiResponseHandlerObj->setResponseBody($response);
+		$apiResponseHandlerObj->generateResponse();
+        die;
+    }
 }
 
 ?>

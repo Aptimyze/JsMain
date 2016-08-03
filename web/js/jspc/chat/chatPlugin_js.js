@@ -21,6 +21,7 @@ JsChat.prototype = {
     _scrollDivId: '#nchatDivs',
     _listingClass: 'ul.chatlist li',
     _imageUrl: '',
+    _selfName: '',
     _listingTabs: {},
     _loginFailueMsg: "Login Failed,Try later",
     _noDataTabMsg: {
@@ -100,6 +101,7 @@ JsChat.prototype = {
         if (arguments[1][0].rosterDetailsKey) this._rosterDetailsKey = arguments[1][0].rosterDetailsKey;
         if (arguments[1][0].listingNodesLimit) this._listingNodesLimit = arguments[1][0].listingNodesLimit;
         if (arguments[1][0].imageUrl) this._imageUrl = arguments[1][0].imageUrl;
+        if (arguments[1][0].selfName) this._selfName = arguments[1][0].selfName;
         if (arguments[1][0].groupBasedChatBox) this._groupBasedChatBox = arguments[1][0].groupBasedChatBox;
         if (arguments[1][0].contactStatusMapping) this._contactStatusMapping = arguments[1][0].contactStatusMapping;
         if (arguments[1][0].maxMsgLimit) {
@@ -257,9 +259,10 @@ JsChat.prototype = {
     },
     //start:addChatTop function
     _addChatTop: function (param) {
+        console.log("add chat top",this._selfName);
         var curEleRef = this,
             that = this;
-        var chatHeaderHTML = '<div class="nchatbg1 nchatp2 clearfix pos-rel nchathgt1"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarIn"></i> </div><div class="fl"> <img src="' + this._imageUrl + '" class="nchatp4 wd40"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp">Logout from chat</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">Ashish A</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>';
+        var chatHeaderHTML = '<div class="nchatbg1 nchatp2 clearfix pos-rel nchathgt1"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarIn"></i> </div><div class="fl"> <img src="' + this._imageUrl + '" class="nchatp4 wd40"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">'+this._selfName+'</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp">Logout from chat</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">'+this._selfName+'</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>';
         $(curEleRef._listingPanelID).append(chatHeaderHTML);
         $(curEleRef._toggleLogoutDiv).off("click").on("click", function () {
             $(curEleRef._toggleID).toggleClass('disp-none');

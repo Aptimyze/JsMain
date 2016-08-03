@@ -109,6 +109,7 @@ class RequestHandlerConfig
 	"getDppData"=>array("v1"=>"getDppDataV1"),
 	"getProfileData"=>array("v1"=>"getProfileDataV1"),
 	"sendEOI"=>array("v1"=>"sendEOIV1"),
+        "selfName"=>array("v1"=>"SelfNameV1"),
 	"pushChat"=>array("v1"=>"pushChat"),
 	"popChat"=>array("v1"=>"popChat")
         )
