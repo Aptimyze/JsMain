@@ -1472,18 +1472,20 @@ JsChat.prototype = {
         var curElem = this;
         if ($('chat-box[user-id="' + other_id + '"]').length != 0) {
             $.each(communication, function (key, logObj) {
-                console.log(logObj["MESSAGE"]);
                 //console.log(logObj);
                 if (parseInt(logObj["SENDER"]) == self_id) {
                     //append self sent message
-                    historyHTML = historyHTML + '<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["ID"] + '" class="talkText">' + logObj["MESSAGE"] + '</div></div>';
+                    /*historyHTML = historyHTML + '<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText">' + logObj["MESSAGE"] + '</div></div>';*/
+                    $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText">' + logObj["MESSAGE"] + '</div></div>');
+
                 } else if (parseInt(logObj["SENDER"]) == other_id) {
                     //append received message
-                    historyHTML = historyHTML + '<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["ID"] + '" class="talkText">' + logObj["MESSAGE"] + '</div></div>';
+                    /*historyHTML = historyHTML + '<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText received" data-msgid=' + logObj["FOLDERID"] + '>' + logObj["MESSAGE"] + '</div></div>';*/
+                    $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText received" data-msgid=' + logObj["FOLDERID"] + '>' + logObj["MESSAGE"] + '</div></div>');
                 }
             });
             //console.log(historyHTML);
-            if (historyHTML) {
+            /*if (historyHTML) {
                 $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).append(historyHTML).promise().done(function () {
                     //curElem._scrollToBottom(other_id,100);
                     var height = document.getElementById("chatHistory_" + other_id).scrollHeight;
@@ -1492,10 +1494,7 @@ JsChat.prototype = {
                         scrollTop: height
                     }, 500);
                 });
-                /*setTimeout(function(){
-                  curElem._scrollToBottom(other_id);  
-                },1000);*/
-            }
+            }*/
         }
     },
     //append self sent message on opening window again
