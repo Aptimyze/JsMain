@@ -69,50 +69,77 @@ function chatLoggerPC(msgOrObj) {
         }
     }
 }
-// function chatLoggerPC(message) {
-//     if (loggingEnabledPC) {
-//         console.log(message);
-//     }
-// }
+
 /*getChatHistory
  * fetch chat history on opening window again
  * @inputs: chatParams
  * @output: response
  */
 function getChatHistory(apiParams) {
-    var postData = {};
+    var postData = {},setLocalStorage=false,fetchFromLocalStorage = false,oldHistory;
+    var bare_from_jid = apiParams["extraParams"]["from"].split("/")[0],bare_to_jid = apiParams["extraParams"]["to"].split("/")[0];
     if (typeof apiParams["extraParams"] != "undefined") {
         $.each(apiParams["extraParams"], function (key, value) {
             postData[key] = value;
         });
+        if(typeof apiParams["extraParams"]["messageId"] == "undefined"){
+            console.log("no messageId");
+            if(chatConfig.Params[device].storeMsgInLocalStorage == true){
+                oldHistory = localStorage.getItem("chatHistory_"+bare_from_jid+"_"+bare_to_jid);
+                console.log("oldHistory");
+                console.log(oldHistory);
+                if(typeof oldHistory!= "undefined"){
+                    fetchFromLocalStorage = true;
+                }
+                setLocalStorage = true;
+            }
+        }
+        else{
+            fetchFromLocalStorage = false;
+        }
     }
-    if (typeof chatConfig.Params.chatHistoryApi["extraParams"] != "undefined") {
-        $.each(chatConfig.Params.chatHistoryApi["extraParams"], function (k, v) {
-            postData[k] = v;
+    if(fetchFromLocalStorage == false){
+        console.log("api for history");
+
+        if (typeof chatConfig.Params.chatHistoryApi["extraParams"] != "undefined") {
+            $.each(chatConfig.Params.chatHistoryApi["extraParams"], function (k, v) {
+                postData[k] = v;
+            });
+        }
+        $.myObj.ajax({
+            url: chatConfig.Params.chatHistoryApi["apiUrl"],
+            dataType: 'json',
+            type: 'POST',
+            data: JSON.stringify(postData),
+            cache: false,
+            async: true,
+            beforeSend: function (xhr) {},
+            success: function (response) {
+                if (response["responseStatusCode"] == "0") {
+                    console.log("history");
+                    //console.log($.parseJSON(response["Message"]));
+                    if (typeof response["Message"] != "undefined") {
+                        if(setLocalStorage == true){
+                            localStorage.setItem("chatHistory_"+bare_from_jid+"_"+bare_to_jid,response["Message"]);
+                        }
+                        //call plugin function to append history in div
+                        objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], $.parseJSON(response["Message"]));
+                    }
+                }
+            },
+            error: function (xhr) {
+                //return "error";
+            }
         });
     }
-    $.myObj.ajax({
-        url: chatConfig.Params.chatHistoryApi["apiUrl"],
-        dataType: 'json',
-        type: 'POST',
-        data: JSON.stringify(postData),
-        cache: false,
-        async: true,
-        beforeSend: function (xhr) {},
-        success: function (response) {
-            if (response["responseStatusCode"] == "0") {
-                console.log("history");
-                //console.log($.parseJSON(response["Message"]));
-                if (typeof response["Message"] != "undefined") {
-                    //call plugin function to append history in div
-                    objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], $.parseJSON(response["Message"]));
-                }
-            }
-        },
-        error: function (xhr) {
-            //return "error";
+    else{
+        console.log("localStorage for history");
+        if(!oldHistory){
+            oldHistory = "{}";
         }
-    });
+        //call plugin function to append history in div
+        objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], $.parseJSON(oldHistory));
+    }
 }
 
 /*
