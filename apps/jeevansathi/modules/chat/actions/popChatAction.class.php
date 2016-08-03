@@ -21,7 +21,7 @@ class popChatAction extends sfAction
 		$inputValidateObj = ValidateInputFactory::getModuleObject("chat");
 		$apiObj                  = ApiResponseHandler::getInstance();
 
-		if ($request->getParameter("action")=="popChat")
+		if ($request->getParameter("action")=="apiRequest")
 		{
 			
 			$inputJSON = file_get_contents('php://input');
@@ -39,6 +39,7 @@ class popChatAction extends sfAction
 			
 			$inputValidateObj->validatePopChat($request);
 			$output = $inputValidateObj->getResponse();
+			
 			if($output["statusCode"]==ResponseHandlerConfig::$SUCCESS["statusCode"])
 			{
 				//echo $sender."--".$receiver."--".$message;die;
