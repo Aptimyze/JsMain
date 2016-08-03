@@ -111,7 +111,6 @@ class RequestHandlerConfig
 	"sendEOI"=>array("v1"=>"sendEOIV1"),
 	"pushChat"=>array("v1"=>"pushChat"),
 	"popChat"=>array("v1"=>"popChat")
-	
         )
 );
 

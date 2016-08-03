@@ -39,6 +39,7 @@ class popChatAction extends sfAction
 			
 			$inputValidateObj->validatePopChat($request);
 			$output = $inputValidateObj->getResponse();
+			
 			if($output["statusCode"]==ResponseHandlerConfig::$SUCCESS["statusCode"])
 			{
 				//echo $sender."--".$receiver."--".$message;die;
