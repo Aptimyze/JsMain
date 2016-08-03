@@ -269,6 +269,13 @@ class SearchApiDisplay
 						}
 						//$this->finalResultsArray[$pid][$fieldName]=substr($this->searchResultsData[$key][$fieldName],0,8)."..".$pid;
 					}
+					if($fieldName =="NAME_OF_USER")
+					{
+						$name = "";
+						$nameOfUserObj = new NameOfUser;
+						$name = $nameOfUserObj->getNameStr($this->searchResultsData[$key][$fieldName],$this->viewerObj->getSUBSCRIPTION());
+						$this->finalResultsArray[$pid][$fieldName]=$name;
+					}
 					if(strstr(SearchConfig::$searchDisplayDecoratedFields,$fieldName))
 					{
 						$decoratedFieldName = $decoratedMappingSearchDisplay[$fieldName];
