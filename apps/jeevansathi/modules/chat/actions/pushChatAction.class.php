@@ -41,21 +41,34 @@ class pushChatAction extends sfAction
 			$output = $inputValidateObj->getResponse();
 			if($output["statusCode"]==ResponseHandlerConfig::$SUCCESS["statusCode"])
 			{
-				//echo $sender."--".$receiver."--".$message;die;
-				//Contains logined Profile information;
-				$this->senderProfile = new Profile("",$sender);
-				$this->senderProfile->getDetail($sender, "PROFILEID");
-				$this->receiverProfile= new Profile("",$receiver);
-				$this->receiverProfile->getDetail($receiver, "PROFILEID");
-					
-				$js_communication=new JS_Communication($this->senderProfile,$this->receiverProfile,$communicationType,$message,$chatID);
-				$Id=$js_communication->storeCommunication();
-				if($Id)
-				{
-					$responseArray["isSent"] = "true";
-					$responseArray["msgId"] = $Id;
-					$responseArray["chatId"] = $chatID;
+				$data["sender"] = $sender;
+				$data["receiver"] = $receiver;
+				$data["communicationType"] = $communicationType;
+				$data["message"] = $message;
+				$data['chatid'] = $chatID;
+				try{
+					//send instant JSPC/JSMS notification
+					$producerObj = new Producer();
+					if ($producerObj->getRabbitMQServerConnected()) {
+						$chatData = array('process' => 'CHATMESSAGE', 'data' => array('type' => 'PUSH', 'body' => $data), 'redeliveryCount' => 0);
+						$producerObj->sendMessage($chatData);
+						//Add for contact roster
+					}
+					else{
+						//echo $sender."--".$receiver."--".$message;die;
+						//Contains logined Profile information;
+						$js_communication=new JS_Communication($sender,$receiver,$communicationType,$message,$chatID);
+						$js_communication->storeCommunication();
+					}
+					unset($producerObj);
+				} catch (Exception $e) {
+					throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
 				}
+
+
+				$responseArray["isSent"] = "true";
+				$responseArray["chatId"] = $chatID;
+
 			}
 		}
 		if (is_array($responseArray)) {

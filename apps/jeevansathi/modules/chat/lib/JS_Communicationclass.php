@@ -25,15 +25,15 @@ class JS_Communication
 			//$type=$this->contactObj->getTYPE();**To be removed**
 			$type="A";
 			
-			$dbName1 = JsDbSharding::getShardNo($this->loginProfile->getPROFILEID());
-			$dbName2 = JsDbSharding::getShardNo($this->otherProfile->getPROFILEID());
+			$dbName1 = JsDbSharding::getShardNo($this->loginProfile);
+			$dbName2 = JsDbSharding::getShardNo($this->otherProfile);
 			
 			$chatIdObj=new NEWJS_CHAT_LOG_GET_ID();
 			$id=$chatIdObj->getAutoIncrementMessageId();
 			
 			if($this->communicationType="C"){
 				$dbObj = new newjs_CHAT_LOG($dbName1);
-				$dbObj->insertIntoChatLog($id,$this->loginProfile->getPROFILEID(),$this->otherProfile->getPROFILEID(),'N','N',0,$type,'N','U','U',$this->chatID);//sfContext::getInstance()->getRequest()->getParameter("chatID"));
+				$dbObj->insertIntoChatLog($id,$this->loginProfile,$this->otherProfile,'N','N',0,$type,'N','U','U',$this->chatID);//sfContext::getInstance()->getRequest()->getParameter("chatID"));
 				
 				$dbObjMessage = new NEWJS_CHATS($dbName1);
 				$dbObjMessage->insertSingleMessage($id,$this->message);
@@ -42,7 +42,7 @@ class JS_Communication
 				{							
 					$dbObj = new newjs_CHAT_LOG($dbName2);
 				
-					$dbObj->insertIntoChatLog($id,$this->loginProfile->getPROFILEID(),$this->otherProfile->getPROFILEID(),'N','N',0,$type,'N','U','U',$this->chatID);
+					$dbObj->insertIntoChatLog($id,$this->loginProfile,$this->otherProfile,'N','N',0,$type,'N','U','U',$this->chatID);
 				
 					$dbObjMessage = new NEWJS_CHATS($dbName2);
 					$dbObjMessage->insertSingleMessage($id,$this->message);
