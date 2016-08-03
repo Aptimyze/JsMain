@@ -9,7 +9,7 @@ chatConfig.Params = {
         "Interest Sent": "intsent"
     },
     //subscriptions for group id's
-    groupWiseSubscription:{
+    groupWiseSubscription: {
         "dpp": 'to',
         "intrec": 'to',
         "acceptance": 'both',
@@ -21,60 +21,59 @@ chatConfig.Params = {
         "ACCEPT": "/api/v2/contacts/postAccept",
         "DECLINE": "/api/v2/contacts/postNotInterested",
         "INITIATE": "/api/v2/contacts/postEOI",
-        "BLOCK":"/api/v1/common/ignoreprofile",
-        "UNBLOCK":"/api/v1/common/ignoreprofile"
+        "BLOCK": "/api/v1/common/ignoreprofile",
+        "UNBLOCK": "/api/v1/common/ignoreprofile"
     },
     //tracking params for contact engine actions
-    trackingParams:{
+    trackingParams: {
         "ACCEPT": {
-            "responseTracking":8
-            },
+            "responseTracking": 8
+        },
         "DECLINE": {
-            "responseTracking":8
-            },
+            "responseTracking": 8
+        },
         "INITIATE": {
-            "stype":"WV"},
-        "BLOCK":{},
-        "UNBLOCK":{}
+            "stype": "WV"
+        },
+        "BLOCK": {},
+        "UNBLOCK": {}
     },
-    categoryTrackingParams:{
-        "intrec":{
-            "responseTracking":8
+    categoryTrackingParams: {
+        "intrec": {
+            "responseTracking": 8
         },
-        "dpp":{
-            "stype":"WV"
+        "dpp": {
+            "stype": "WV"
         },
-        "intsent":{
-            "stype":"WV"
+        "intsent": {
+            "stype": "WV"
         },
-        "shortlist":{
-            "stype":"WV"
+        "shortlist": {
+            "stype": "WV"
         },
-        "acceptance":{
-            
-        },
+        "acceptance": {},
     },
     //api url for getting photo
-    photoUrl:"/api/v1/social/getMultiUserPhoto",
+    photoUrl: "/api/v1/social/getMultiUserPhoto",
     //api config for pre acceptance messages
     preAcceptChat: {
         "apiUrl": "/api/v1/chat/sendEOI",
         "extraParams": {
             "stype": "WV",
-            "pageSource":"chat",
-            "channel":'pc'
+            "pageSource": "chat",
+            "channel": 'pc'
         }
     },
     //api config for chat history
-    chatHistoryApi:{
-        "apiUrl":"/contacts/popChat",
-        "extraParams":{
-            "pageSource":"chat",
-            "channel":'pc'
+    chatHistoryApi: {
+        "apiUrl": "/contacts/popChat",
+        "extraParams": {
+            "pageSource": "chat",
+            "channel": 'pc'
         }
     },
     pc: {
-        updateRosterFromFrontend:true,
+        updateRosterFromFrontend: true,
         bosh_service_url: 'ws://' + openfireUrl + '/ws/', //connection manager for openfire
         keepalive: true, //keep logged in session alive
         roster_groups: true, //show categories in listing
@@ -84,27 +83,30 @@ chatConfig.Params = {
         listingTabs: {
             "tab1": {
                 "tab_name": "Online Matches",
-                "groups": [/*{
-                    "id": "dpp",
-                    "group_name": "Desired Partner Matches",
-                    "show_group_name": true,
-                    "hide_offline_users": false
-                },*/ {
-                    "id": "intsent",
-                    "group_name": "Interest Sent",
-                    "show_group_name": true,
-                    "hide_offline_users": false
-                }, {
-                    "id": "intrec",
-                    "group_name": "Interest Received",
-                    "show_group_name": true,
-                    "hide_offline_users": false
-                }, {
-                    "id": "shortlist",
-                    "group_name": "Shortlisted Members",
-                    "show_group_name": true,
-                    "hide_offline_users": false
-                }]
+                "groups": [
+                    /*{
+                                        "id": "dpp",
+                                        "group_name": "Desired Partner Matches",
+                                        "show_group_name": true,
+                                        "hide_offline_users": false
+                                    },*/
+                    {
+                        "id": "intsent",
+                        "group_name": "Interest Sent",
+                        "show_group_name": true,
+                        "hide_offline_users": false
+                    }, {
+                        "id": "intrec",
+                        "group_name": "Interest Received",
+                        "show_group_name": true,
+                        "hide_offline_users": false
+                    }, {
+                        "id": "shortlist",
+                        "group_name": "Shortlisted Members",
+                        "show_group_name": true,
+                        "hide_offline_users": false
+                    }
+                ]
             },
             "tab2": {
                 "tab_name": "Accepted",
@@ -177,16 +179,15 @@ chatConfig.Params = {
                 "id": "WRITE_MESSAGE"
             }]
         },
-
         //no photo url for images
-        noPhotoUrl:{
-            "listingTuple":{
-                "M":"/images/picture/120x120_m.png?noPhoto",
-                "F":"/images/picture/120x120_f.png?noPhoto"
+        noPhotoUrl: {
+            "listingTuple": {
+                "M": "/images/picture/120x120_m.png?noPhoto",
+                "F": "/images/picture/120x120_f.png?noPhoto"
             },
-            "self120":{
-                "M":"/images/picture/120x120_m.png?noPhoto",
-                "F":"/images/picture/120x120_f.png?noPhoto",
+            "self120": {
+                "M": "/images/picture/120x120_m.png?noPhoto",
+                "F": "/images/picture/120x120_f.png?noPhoto",
             }
         },
         //contact status mapping for chat box types
@@ -207,52 +208,51 @@ chatConfig.Params = {
                 "key": "pg_interest_pending",
                 "enableChat": true,
                 "useOpenfireForChat": false,
-                "showHistory":false
+                "showHistory": false
             },
             "pog_acceptance_pending": {
                 "key": "pog_acceptance_pending",
                 "useOpenfireForChat": false,
                 "enableChat": true,
-                "showHistory":false
+                "showHistory": false
             },
             "pg_acceptance_pending": {
                 "key": "pg_acceptance_pending",
                 "useOpenfireForChat": false,
                 "enableChat": false,
-                "showHistory":false
+                "showHistory": false
             },
             "pog_interest_accepted": {
                 "key": "pog_interest_accepted",
                 "useOpenfireForChat": true,
                 "enableChat": true,
-                "showHistory":false
+                "showHistory": false
             },
             "pog_interest_declined": {
                 "key": "pog_interest_declined",
                 "useOpenfireForChat": false,
                 "enableChat": false,
-                "showHistory":false
+                "showHistory": false
             },
             "pg_interest_declined": {
                 "key": "pg_interest_declined",
                 "useOpenfireForChat": false,
                 "enableChat": false,
-                "showHistory":false
+                "showHistory": false
             },
             "none_applicable": {
                 "key": "none_applicable",
                 "useOpenfireForChat": false,
                 "enableChat": false,
-                "showHistory":false
+                "showHistory": false
             },
             "both_accepted": {
                 "key": "both_accepted",
                 "useOpenfireForChat": true,
                 "enableChat": true,
-                "showHistory":true
+                "showHistory": true
             }
         },
-    
         //max count of nodes limit per group
         groupWiseNodesLimit: {
             "dpp": 100,
@@ -262,4 +262,4 @@ chatConfig.Params = {
         }
     }
 };
-chatConfig.Params.pc.rosterGroups = [/*chatConfig.Params.categoryNames['Desired Partner Matches'],*/ chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members']];
+chatConfig.Params.pc.rosterGroups = [ /*chatConfig.Params.categoryNames['Desired Partner Matches'],*/ chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members']];

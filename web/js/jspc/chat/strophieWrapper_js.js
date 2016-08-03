@@ -13,15 +13,14 @@ var strophieWrapper = {
         "RECEIVED": 'received',
         "SENDER_RECEIVED_READ": 'sender_received_read',
         "RECEIVER_RECEIVED_READ": 'receiver_received_read',
-        "FORWARDED":'forwarded'
+        "FORWARDED": 'forwarded'
     },
     rosterGroups: chatConfig.Params.pc.rosterGroups,
     currentConnStatus: null,
     loggingEnabledStrophe: false,
-    tryReconnection:true,
-    syncSentMessage:true,
+    tryReconnection: true,
+    syncSentMessage: true,
     synchronize_selfPresence: true,
-
     stropheLoggerPC: function (msgOrObj) {
         if (strophieWrapper.loggingEnabledStrophe) {
             if (typeof (window.console) != 'undefined') {
@@ -88,15 +87,14 @@ var strophieWrapper = {
         return (strophieWrapper.currentConnStatus == Strophe.Status.CONNECTED);
     },
     //reconnect to openfire
-    reconnect:function(bosh_service_url, username, password){
-    	if(strophieWrapper.tryReconnection == true){
-    		strophieWrapper.disconnect();
-		    //reconnect to chat if net connected
-		    strophieWrapper.connect(chatConfig.Params[device].bosh_service_url, username, pass);
-		    //triggerbindings call
-
-		    //strophieWrapper.triggerBindings();
-		}
+    reconnect: function (bosh_service_url, username, password) {
+        if (strophieWrapper.tryReconnection == true) {
+            strophieWrapper.disconnect();
+            //reconnect to chat if net connected
+            strophieWrapper.connect(chatConfig.Params[device].bosh_service_url, username, pass);
+            //triggerbindings call
+            //strophieWrapper.triggerBindings();
+        }
     },
     //executed after connection done
     onConnect: function (status) {
@@ -127,8 +125,8 @@ var strophieWrapper = {
         strophieWrapper.enableCarbons();
         strophieWrapper.sendPresence();
         //fetch roster of logged in user 
-        if(strophieWrapper.initialRosterFetched == false){ 
-        	strophieWrapper.getRoster();
+        if (strophieWrapper.initialRosterFetched == false) {
+            strophieWrapper.getRoster();
         }
         //binding event for presence update in roster
         strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
@@ -148,28 +146,26 @@ var strophieWrapper = {
     },
     //send presence
     sendPresence: function () {
-    	if(strophieWrapper.getCurrentConnStatus()){
-	        //strophieWrapper.stropheLoggerPC("in self sendPresence");
-	        strophieWrapper.connectionObj.send($pres().tree());
-	    }
-	    else{
-	    	handleChatDisconnection();
-	    }
+        if (strophieWrapper.getCurrentConnStatus()) {
+            //strophieWrapper.stropheLoggerPC("in self sendPresence");
+            strophieWrapper.connectionObj.send($pres().tree());
+        } else {
+            handleChatDisconnection();
+        }
     },
     //fetch roster
     getRoster: function () {
-    	if(strophieWrapper.getCurrentConnStatus()){
-	        //strophieWrapper.stropheLoggerPC("in getRoster");
-	        var iq = $iq({
-	            type: 'get'
-	        }).c('query', {
-	            xmlns: Strophe.NS.ROSTER
-	        });
-	        strophieWrapper.connectionObj.sendIQ(iq, strophieWrapper.onRosterReceived);
-	    }
-	    else{
-	    	handleChatDisconnection();
-	    }
+        if (strophieWrapper.getCurrentConnStatus()) {
+            //strophieWrapper.stropheLoggerPC("in getRoster");
+            var iq = $iq({
+                type: 'get'
+            }).c('query', {
+                xmlns: Strophe.NS.ROSTER
+            });
+            strophieWrapper.connectionObj.sendIQ(iq, strophieWrapper.onRosterReceived);
+        } else {
+            handleChatDisconnection();
+        }
     },
     //executed on new push/remove event in roster
     onRosterUpdate: function (iq) {
@@ -222,46 +218,43 @@ var strophieWrapper = {
     },
     //subscribe user in roster for presence updates
     subscribe: function (jid, nick, message) {
-    	if(strophieWrapper.getCurrentConnStatus()){
-	        var pres = $pres({
-	            to: jid,
-	            type: "subscribe"
-	        });
-	        if (message && message !== "") {
-	            pres.c("status").t(message).up();
-	        }
-	        if (nick && nick !== "") {
-	            pres.c('nick', {
-	                'xmlns': Strophe.NS.NICK
-	            }).t(nick).up();
-	        }
-	        //strophieWrapper.stropheLoggerPC("subscribing -" + jid + "with nick " + nick);
-	        strophieWrapper.stropheLoggerPC(pres);
-	        strophieWrapper.connectionObj.send(pres);
-	    }
-	    else{
-	    	handleChatDisconnection();
-	    }
+        if (strophieWrapper.getCurrentConnStatus()) {
+            var pres = $pres({
+                to: jid,
+                type: "subscribe"
+            });
+            if (message && message !== "") {
+                pres.c("status").t(message).up();
+            }
+            if (nick && nick !== "") {
+                pres.c('nick', {
+                    'xmlns': Strophe.NS.NICK
+                }).t(nick).up();
+            }
+            //strophieWrapper.stropheLoggerPC("subscribing -" + jid + "with nick " + nick);
+            strophieWrapper.stropheLoggerPC(pres);
+            strophieWrapper.connectionObj.send(pres);
+        } else {
+            handleChatDisconnection();
+        }
     },
     //authorize user on getting subscribe request
     authorize: function (jid, message) {
-    	if(strophieWrapper.getCurrentConnStatus()){
-	        //strophieWrapper.stropheLoggerPC("authorizing - " + jid);
-	        var pres = $pres({
-	            to: jid,
-	            type: "subscribed"
-	        });
-	        if (message && message != "") {
-	            pres.c("status").t(message);
-	        }
-	        strophieWrapper.connectionObj.send(pres);
-	    }
-	    else{
-	    	handleChatDisconnection();
-	    }
+        if (strophieWrapper.getCurrentConnStatus()) {
+            //strophieWrapper.stropheLoggerPC("authorizing - " + jid);
+            var pres = $pres({
+                to: jid,
+                type: "subscribed"
+            });
+            if (message && message != "") {
+                pres.c("status").t(message);
+            }
+            strophieWrapper.connectionObj.send(pres);
+        } else {
+            handleChatDisconnection();
+        }
     },
-
-    enableCarbons: function (){
+    enableCarbons: function () {
         /*if (!this.message_carbons) {
             return;
         }*/
@@ -269,19 +262,19 @@ var strophieWrapper = {
             from: strophieWrapper.getSelfJID(),
             id: 'enablecarbons',
             type: 'set'
-          })
-          .c('enable', {xmlns: Strophe.NS.CARBONS});
+        }).c('enable', {
+            xmlns: Strophe.NS.CARBONS
+        });
         strophieWrapper.connectionObj.addHandler(function (iq) {
             if ($(iq).find('error').length > 0) {
-            	console.log("error in carbons");
+                console.log("error in carbons");
             } else {
-            	console.log("carbons enabled");
+                console.log("carbons enabled");
                 //this.session.save({carbons_enabled: true});
             }
         }.bind(this), null, "iq", null, "enablecarbons");
         strophieWrapper.connectionObj.send(carbons_iq);
     },
-
     //executed after presence has been fetched
     onPresenceReceived: function (presence) {
         var presence_type = $(presence).attr('type'),
@@ -300,34 +293,31 @@ var strophieWrapper = {
                     // etc...
                 }
             }
-	    }
-        if(strophieWrapper.isItSelfUser(user_id) == false){
-	        //strophieWrapper.stropheLoggerPC("start of onPresenceReceived for " + user_id);
-	        //strophieWrapper.stropheLoggerPC(from);
-	        strophieWrapper.stropheLoggerPC(presence);
-	        //strophieWrapper.authorize(from.split("/")[0]);
-	        strophieWrapper.authorize(from);
-	        
-	        strophieWrapper.updatePresence(user_id, chat_status);
-	        //strophieWrapper.stropheLoggerPC("end of onPresenceReceived for " + user_id + "---" + chat_status);
-	        //strophieWrapper.stropheLoggerPC(strophieWrapper.Roster[user_id]);
-	    }
-	    else{
-	    	if(strophieWrapper.synchronize_selfPresence == true){
-	    		if(from != strophieWrapper.getSelfJID()){
-	    			console.log("updating self presence for different resource - "+from+chat_status);
-	    			if(chat_status == "offline"){
-	    				console.log("logout");
-	    				invokePluginLoginHandler("logout");
-	    			}
-	    			/*else if(chat_status == "online"){
-	    				console.log("login");
-	    				invokePluginLoginHandler("login");
-	    			}*/
-	    			
-	    		}
-	    	}
-	    }
+        }
+        if (strophieWrapper.isItSelfUser(user_id) == false) {
+            //strophieWrapper.stropheLoggerPC("start of onPresenceReceived for " + user_id);
+            //strophieWrapper.stropheLoggerPC(from);
+            strophieWrapper.stropheLoggerPC(presence);
+            //strophieWrapper.authorize(from.split("/")[0]);
+            strophieWrapper.authorize(from);
+            strophieWrapper.updatePresence(user_id, chat_status);
+            //strophieWrapper.stropheLoggerPC("end of onPresenceReceived for " + user_id + "---" + chat_status);
+            //strophieWrapper.stropheLoggerPC(strophieWrapper.Roster[user_id]);
+        } else {
+            if (strophieWrapper.synchronize_selfPresence == true) {
+                if (from != strophieWrapper.getSelfJID()) {
+                    console.log("updating self presence for different resource - " + from + chat_status);
+                    if (chat_status == "offline") {
+                        console.log("logout");
+                        invokePluginLoginHandler("logout");
+                    }
+                    /*else if(chat_status == "online"){
+                        console.log("login");
+                        invokePluginLoginHandler("login");
+                    }*/
+                }
+            }
+        }
         return true;
     },
     //update chat_status of roster items
@@ -352,20 +342,17 @@ var strophieWrapper = {
         //strophieWrapper.stropheLoggerPC("end of updatePresence for " + user_id);
         //strophieWrapper.stropheLoggerPC(strophieWrapper.initialRosterFetched);
     },
-
     //check if this userid is self id
-    isItSelfUser:function(user_id){
-    	if(user_id == strophieWrapper.getSelfJID().split("@")[0]){
-    		return true;
-    	}
-    	else{
-    		return false;
-    	}
+    isItSelfUser: function (user_id) {
+        if (user_id == strophieWrapper.getSelfJID().split("@")[0]) {
+            return true;
+        } else {
+            return false;
+        }
     },
-
     //executed after roster has been fetched
     onRosterReceived: function (iq) {
-    	console.log(iq);
+        console.log(iq);
         //strophieWrapper.stropheLoggerPC("in onRosterReceived");
         strophieWrapper.stropheLoggerPC(iq);
         //strophieWrapper.stropheLoggerPC(iq);
@@ -472,10 +459,10 @@ var strophieWrapper = {
     },
     //get self jid of connected user
     getSelfJID: function (splitBySlash) {
-    	var jid = strophieWrapper.connectionObj.jid || null;
-    	if(jid != null && splitBySlash == true){
-    		jid = jid.split("/")[0];
-    	}
+        var jid = strophieWrapper.connectionObj.jid || null;
+        if (jid != null && splitBySlash == true) {
+            jid = jid.split("/")[0];
+        }
         return jid;
     },
     //set listing data in roster
@@ -526,34 +513,33 @@ var strophieWrapper = {
                     xmlns: "http://jabber.org/protocol/chatstates"
                 });
                 var messageId = strophieWrapper.connectionObj.receipts.sendMessage(reply);
-                if(strophieWrapper.syncSentMessage == true){
+                if (strophieWrapper.syncSentMessage == true) {
                     // Forward the message, so that other connected resources are also aware of it.
                     //append it as self sent message
-                   /* setTimeout(function(){
-                    	console.log("sending msg forward");
-                    	strophieWrapper.connectionObj.send(
-                        $msg({ to: strophieWrapper.getSelfJID(true), type: 'chat', id: messageId })
-                            .c('forwarded', {xmlns:'urn:xmpp:forward:0'})
-                            .cnode(reply.tree()));
-                    	//console.log("sent forwarded msg"+messageId);
-                    },2000);*/
-                    
+                    /* setTimeout(function(){
+                        console.log("sending msg forward");
+                        strophieWrapper.connectionObj.send(
+                         $msg({ to: strophieWrapper.getSelfJID(true), type: 'chat', id: messageId })
+                             .c('forwarded', {xmlns:'urn:xmpp:forward:0'})
+                             .cnode(reply.tree()));
+                        //console.log("sent forwarded msg"+messageId);
+                     },2000);*/
                 }
                 outputObj = {
                     "msg_id": messageId,
                     "cansend": true,
-                    "sent":true
+                    "sent": true
                 };
                 return outputObj;
             } else {
                 outputObj = {
                     "msg_id": strophieWrapper.getUniqueId(),
                     "cansend": true,
-                    "sent":false,
+                    "sent": false,
                     "errorMsg": 'You are currently offline, please check your internet connection and try again'
                 };
-                if(strophieWrapper.getCurrentConnStatus() == false){
-                	handleChatDisconnection();
+                if (strophieWrapper.getCurrentConnStatus() == false) {
+                    handleChatDisconnection();
                 }
                 return outputObj;
             }
@@ -562,7 +548,7 @@ var strophieWrapper = {
                 "msg_id": strophieWrapper.getUniqueId(),
                 "cansend": true,
                 "errorMsg": "Something went wrong",
-                "sent":false
+                "sent": false
             };
         }
         return outputObj;
@@ -581,8 +567,8 @@ var strophieWrapper = {
     },
     /*format msg object*/
     formatMsgObj: function (msg) {
-    	console.log("in formatMsgObj");
-    	console.log(msg);
+        console.log("in formatMsgObj");
+        console.log(msg);
         var outputObj = {
             "from": msg.getAttribute('from').split("@")[0],
             "to": msg.getAttribute('to').split("@")[0],
@@ -591,7 +577,6 @@ var strophieWrapper = {
         };
         var $message = $(msg),
             msg_state;
-        
         if ($message.find(strophieWrapper.msgStates["FORWARDED"]).length != 0) {
             msg_state = strophieWrapper.msgStates["FORWARDED"];
         } else if ($message.find(strophieWrapper.msgStates["COMPOSING"]).length != 0) {
@@ -615,15 +600,15 @@ var strophieWrapper = {
             outputObj["msg_state"] = msg_state;
         }
         var received = msg.getElementsByTagName(strophieWrapper.msgStates["RECEIVED"]);
-        if(msg_state == strophieWrapper.msgStates["FORWARDED"]){
-        	var forwardObj = msg.getElementsByTagName(strophieWrapper.msgStates["FORWARDED"]);
-        	console.log("in from");
-        	console.log(msg);
-        	var msg1 = forwardObj[0].getElementsByTagName("message");
-        	//console.log(outputObj);
-        	outputObj["to"] = msg1[0].getAttribute("to").split("@")[0];
-        	outputObj["forward_jid"] = msg1[0].getAttribute('from');
-        	outputObj["msg_id"] = msg1[0].getAttribute("id");
+        if (msg_state == strophieWrapper.msgStates["FORWARDED"]) {
+            var forwardObj = msg.getElementsByTagName(strophieWrapper.msgStates["FORWARDED"]);
+            console.log("in from");
+            console.log(msg);
+            var msg1 = forwardObj[0].getElementsByTagName("message");
+            //console.log(outputObj);
+            outputObj["to"] = msg1[0].getAttribute("to").split("@")[0];
+            outputObj["forward_jid"] = msg1[0].getAttribute('from');
+            outputObj["msg_id"] = msg1[0].getAttribute("id");
         }
         //strophieWrapper.stropheLoggerPC(received);
         if (outputObj["type"] == "chat") {
@@ -662,97 +647,99 @@ var strophieWrapper = {
      * sending typing event
      */
     typingEvent: function (from, to, typingState) {
-    	if(strophieWrapper.getCurrentConnStatus()){
-	        if (from && to && typingState) {
-	            var id = strophieWrapper.connectionObj.getUniqueId();
-	            var sendStatus = $msg({
-	                from: from,
-	                to: to,
-	                type: 'chat',
-	                id: id,
-	            }).c(typingState, {
-	                xmlns: "http://jabber.org/protocol/chatstates"
-	            });
-	            strophieWrapper.connectionObj.send(sendStatus);
-	        }
-	    }
-	    else{
-	    	handleChatDisconnection();
-	    }
+        if (strophieWrapper.getCurrentConnStatus()) {
+            if (from && to && typingState) {
+                var id = strophieWrapper.connectionObj.getUniqueId();
+                var sendStatus = $msg({
+                    from: from,
+                    to: to,
+                    type: 'chat',
+                    id: id,
+                }).c(typingState, {
+                    xmlns: "http://jabber.org/protocol/chatstates"
+                });
+                strophieWrapper.connectionObj.send(sendStatus);
+            }
+        } else {
+            handleChatDisconnection();
+        }
     },
     /*
      * sending typing event
      */
     sendReceivedReadEvent: function (from, to, msg_id, state) {
-    	if(strophieWrapper.getCurrentConnStatus()){
-	        if (from && to && state) {
-	            var sendStatus = $msg({
-	                from: from,
-	                to: to,
-	                type: 'chat',
-	                id: msg_id
-	            }).c(state, {
-	                xmlns: "http://jabber.org/protocol/chatstates"
-	            });
-	            strophieWrapper.connectionObj.send(sendStatus);
-	        }
-	    }
-	    else{
-	    	handleChatDisconnection();
-	    }
+        if (strophieWrapper.getCurrentConnStatus()) {
+            if (from && to && state) {
+                var sendStatus = $msg({
+                    from: from,
+                    to: to,
+                    type: 'chat',
+                    id: msg_id
+                }).c(state, {
+                    xmlns: "http://jabber.org/protocol/chatstates"
+                });
+                strophieWrapper.connectionObj.send(sendStatus);
+            }
+        } else {
+            handleChatDisconnection();
+        }
     },
     //remove user from roster
     removeRosterItem: function (jid) {
-    	if(strophieWrapper.getCurrentConnStatus()){
-	        var user_id = jid.split("@")[0];
-	        if (typeof strophieWrapper.Roster[user_id] != "undefined") {
-	            var iq = $iq({
-	                type: 'set'
-	            }).c('query', {
-	                xmlns: Strophe.NS.ROSTER
-	            }).c('item', {
-	                jid: jid,
-	                subscription: "remove"
-	            });
-	            strophieWrapper.connectionObj.sendIQ(iq, function (status) {
-	                //strophieWrapper.stropheLoggerPC("Removed stanza: " + jid);
-	            });
-	        } else {
-	            //strophieWrapper.stropheLoggerPC("user does not exist in roster");
-	        }
-	    }
-	    else{
-	    	handleChatDisconnection();
-	    }
+        if (strophieWrapper.getCurrentConnStatus()) {
+            var user_id = jid.split("@")[0];
+            if (typeof strophieWrapper.Roster[user_id] != "undefined") {
+                var iq = $iq({
+                    type: 'set'
+                }).c('query', {
+                    xmlns: Strophe.NS.ROSTER
+                }).c('item', {
+                    jid: jid,
+                    subscription: "remove"
+                });
+                strophieWrapper.connectionObj.sendIQ(iq, function (status) {
+                    //strophieWrapper.stropheLoggerPC("Removed stanza: " + jid);
+                });
+            } else {
+                //strophieWrapper.stropheLoggerPC("user does not exist in roster");
+            }
+        } else {
+            handleChatDisconnection();
+        }
     },
     //add user in roster
-    addRosterItem:function(rosterParams){
-    	if(strophieWrapper.getCurrentConnStatus()){
-	    	if(typeof rosterParams != "undefined"){
-		    	var groups = [];
-		    	groups.push(rosterParams["groupid"]);
-		    	if(typeof groups != "undefined" && strophieWrapper.checkForGroups(groups) == true){
-			    	var user_id = rosterParams["jid"].split("@")[0];
-			        if(typeof strophieWrapper.Roster[user_id] != "undefined"){
-			           	var iq = $iq({from:rosterParams["jid"], type: 'set', id: strophieWrapper.getUniqueId('roster')})
-			                    .c('query', {xmlns: Strophe.NS.ROSTER})
-			                    .c('item', {jid: rosterParams["jid"], name: rosterParams["nick"], subscription: 'both'});
-			            iq.c('group').t(rosterParams["groupid"]).up();
-			            //strophieWrapper.stropheLoggerPC("in addRosterItem");
-			            //console.log(iq);
-			            
-			            strophieWrapper.connectionObj.sendIQ(iq, function(status){
-			                //strophieWrapper.stropheLoggerPC("roster adding stanza: "+jid);
-			            });
-			        }
-			        else{
-			            //strophieWrapper.stropheLoggerPC("user cannot be addeded in roster");
-			        }
-			    }
-			}
-		}
-		else{
-			handleChatDisconnection();
-		}
-	}
+    addRosterItem: function (rosterParams) {
+        if (strophieWrapper.getCurrentConnStatus()) {
+            if (typeof rosterParams != "undefined") {
+                var groups = [];
+                groups.push(rosterParams["groupid"]);
+                if (typeof groups != "undefined" && strophieWrapper.checkForGroups(groups) == true) {
+                    var user_id = rosterParams["jid"].split("@")[0];
+                    if (typeof strophieWrapper.Roster[user_id] != "undefined") {
+                        var iq = $iq({
+                            from: rosterParams["jid"],
+                            type: 'set',
+                            id: strophieWrapper.getUniqueId('roster')
+                        }).c('query', {
+                            xmlns: Strophe.NS.ROSTER
+                        }).c('item', {
+                            jid: rosterParams["jid"],
+                            name: rosterParams["nick"],
+                            subscription: 'both'
+                        });
+                        iq.c('group').t(rosterParams["groupid"]).up();
+                        //strophieWrapper.stropheLoggerPC("in addRosterItem");
+                        //console.log(iq);
+                        strophieWrapper.connectionObj.sendIQ(iq, function (status) {
+                            //strophieWrapper.stropheLoggerPC("roster adding stanza: "+jid);
+                        });
+                    } else {
+                        //strophieWrapper.stropheLoggerPC("user cannot be addeded in roster");
+                    }
+                }
+            }
+        } else {
+            handleChatDisconnection();
+        }
+    }
 }
