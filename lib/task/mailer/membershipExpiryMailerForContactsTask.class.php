@@ -29,31 +29,49 @@ EOF;
 
 		// Get profiles
 		$todayDate =date("Y-m-d");
-		$expiryDate =date("Y-m-d",strtotime("$todayDate -1 days")); 
-		$endDate =$expiryDate." 23:59:59";
+		$expiryDate1 =date("Y-m-d",strtotime("$todayDate -3 days"));
+		$expiryDate2 =date("Y-m-d",strtotime("$todayDate -1 days")); 
+		$endDate =$expiryDate2." 23:59:59";
 		$serviceStatusObj = new BILLING_SERVICE_STATUS('newjs_local111');
-		$profilesArr =$serviceStatusObj->getExpiredProfilesForDate($expiryDate);
-		//print_r($profilesArr);
+		$profilesArr =$serviceStatusObj->getExpiredProfilesForDate($expiryDate1, $expiryDate2);
+
+		// logic to handle profiles lost dur to slave lag
+		if(is_array($profilesArr)){
+			$profilesArr1 =array_keys($profilesArr);
+
+			$memExpObj =new billing_MEM_EXPIRY_CONTACTS_LOG('newjs_local111');
+			$getProfileList =$memExpObj->getProfileList($expiryDate1);
+			$profilesArr2 =array_diff($profilesArr1,$getProfileList);	
+			if(is_array($profilesArr2)){
+				foreach($profilesArr2 as $key=>$profileid){
+					$profilesArrNew[] =$profilesArr[$profileid];
+				}
+			}
+		}
+		unset($profilesArr);
+		unset($profilesArr1);
+		unset($profilesArr2);	
+		unset($getProfileList);
 
 		$mailId 	='1836';
 		$attachmentName ='Jeevansathi-Contacts.xls';
 		$mmObj 		=new MembershipMailer();
+		$memExpInsObj 	=new billing_MEM_EXPIRY_CONTACTS_LOG();
 		$header 	=array("USERNAME"=>"Profile ID","VIEWED_DATE"=>"Contact viewed on","MOBILE"=>"Mobile Number","LANDLINE"=>"Landline Number","ALT"=>"Alternate Number","EMAIL"=>"Email ID");
 
-		if(count($profilesArr)>0){
-			foreach($profilesArr as $key=>$data){
+		if(count($profilesArrNew)>0){
+			foreach($profilesArrNew as $key=>$data){
 				$profileid		=$data['PROFILEID'];
 				$dataArr['profileid']	=$profileid;
 				$startDate		=$data['ACTIVATED_ON'];
 				$dataSet 		=$mmObj->getContactsViewedList($profileid,$startDate,$endDate);
 				$attachment		=$mmObj->getExcelData($dataSet,$header);	
-				print_r($attachment);
+				//print_r($attachment);
 				$deliveryStatus		=$mmObj->sendMembershipMailer($mailId, $profileid,$dataArr,$attachment,$attachmentName);
+				$memExpInsObj->add($profileid);		;
 				unset($dataArr);
 			}
 			unset($mmObj);
-			unset($vdObj);
-			unset($profilesArr);
 		}
 	}
 }

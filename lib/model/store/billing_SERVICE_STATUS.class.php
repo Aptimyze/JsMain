@@ -748,14 +748,15 @@ class BILLING_SERVICE_STATUS extends TABLE {
         return $result;
     }
     // get expired profiles for date	
-    public function getExpiredProfilesForDate($dateSet){
+    public function getExpiredProfilesForDate($dateSet1, $dateSet2){
         try{
-            $sql = "SELECT PROFILEID,ACTIVATED_ON from billing.SERVICE_STATUS WHERE EXPIRY_DT=:EXPIRY_DT AND SERVEFOR LIKE '%F%'";
+            $sql = "SELECT PROFILEID,ACTIVATED_ON from billing.SERVICE_STATUS WHERE EXPIRY_DT>=:EXPIRY_DT1 AND EXPIRY_DT<=:EXPIRY_DT2 AND SERVEFOR LIKE '%F%'";
             $prep = $this->db->prepare($sql);
-            $prep->bindValue(":EXPIRY_DT", $dateSet, PDO::PARAM_STR);
+            $prep->bindValue(":EXPIRY_DT1", $dateSet1, PDO::PARAM_STR);
+	    $prep->bindValue(":EXPIRY_DT2", $dateSet2, PDO::PARAM_STR);	
             $prep->execute();
             while($row = $prep->fetch(PDO::FETCH_ASSOC)){
-                $result[] = $row;
+                $result[$row['PROFILEID']] = $row;
             }
             return $result;
         } catch (Exception $ex) {
