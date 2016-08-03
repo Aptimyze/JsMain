@@ -1,6 +1,11 @@
 <?php
 class jsException extends PDOException{
         public function __construct($exceptionObj = "", $message = null, $trace=0, $code=0) {
+        if ( $code == 0 )
+        {
+			$code = $exceptionObj->getCode();
+        }
+
 		if($message){
 			$this->message = $message;
 			parent::__construct(self::getCustomMessage($this, $trace),$code);			

@@ -160,7 +160,7 @@ class LoggingManager
       
       $logData = $logData." [".$logId.":".$clientIp."]";
       $logData = $logData." [".$time."]";
-      $logData = $logData.$uniqueSubId;
+      $logData = $logData." [".$uniqueSubId."]";
       $logData = $logData." ".$channelName;
       $logData = $logData." ".$clientIp;
       $logData = $logData." ".$statusCode;
@@ -256,7 +256,7 @@ class LoggingManager
         else if ( $exception instanceof PredisException)
           return LoggingEnums::REDIS_EXCEPTION;
         else
-          return LoggingEnums::UNKNOWN_EXCEPTION;
+          return LoggingEnums::EXCEPTION;
 
       }
       else

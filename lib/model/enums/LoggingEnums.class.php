@@ -33,4 +33,5 @@ class LoggingEnums
     const REDIS_EXCEPTION = "REDIS";
     const AMQP_EXCEPTION = "AMQP";
     const UNKNOWN_EXCEPTION = "UNKNOWN";
+    const EXCEPTION = "EXCEPTION";
 }
