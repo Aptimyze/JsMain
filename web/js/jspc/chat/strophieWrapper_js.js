@@ -297,10 +297,12 @@ var strophieWrapper = {
         if (strophieWrapper.isItSelfUser(user_id) == false) {
             //strophieWrapper.stropheLoggerPC("start of onPresenceReceived for " + user_id);
             //strophieWrapper.stropheLoggerPC(from);
-            strophieWrapper.stropheLoggerPC(presence);
-            //strophieWrapper.authorize(from.split("/")[0]);
-            strophieWrapper.authorize(from);
-            strophieWrapper.updatePresence(user_id, chat_status);
+            if (presence_type != 'error') {
+	            strophieWrapper.stropheLoggerPC(presence);
+	            //strophieWrapper.authorize(from.split("/")[0]);
+	            strophieWrapper.authorize(from);
+	            strophieWrapper.updatePresence(user_id, chat_status);
+        	}
             //strophieWrapper.stropheLoggerPC("end of onPresenceReceived for " + user_id + "---" + chat_status);
             //strophieWrapper.stropheLoggerPC(strophieWrapper.Roster[user_id]);
         } else {
