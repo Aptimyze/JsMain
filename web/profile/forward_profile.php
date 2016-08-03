@@ -255,7 +255,7 @@ if($send)
 		$smarty->assign("OCCUPATION",$occupation);
 		$smarty->assign("HEIGHT",$height);
 		//$msg=$smarty->fetch("forward2friend.htm");
-		$msg=$smarty->fetch("mail_to_friend.htm");echo($msg);die;
+		$msg=$smarty->fetch("mail_to_friend.htm");
 		for($i=0;$i<count($femail);$i++)
 		{
 			if($femail[$i])
