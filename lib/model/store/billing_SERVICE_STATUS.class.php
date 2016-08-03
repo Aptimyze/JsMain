@@ -747,4 +747,20 @@ class BILLING_SERVICE_STATUS extends TABLE {
         }
         return $result;
     }
+    // get expired profiles for date	
+    public function getExpiredProfilesForDate($dateSet){
+        try{
+            $sql = "SELECT PROFILEID,ACTIVATED_ON from billing.SERVICE_STATUS WHERE EXPIRY_DT=:EXPIRY_DT AND SERVEFOR LIKE '%F%'";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":EXPIRY_DT", $dateSet, PDO::PARAM_STR);
+            $prep->execute();
+            while($row = $prep->fetch(PDO::FETCH_ASSOC)){
+                $result[] = $row;
+            }
+            return $result;
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
+
 }
