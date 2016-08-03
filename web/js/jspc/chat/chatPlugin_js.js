@@ -1113,6 +1113,31 @@ JsChat.prototype = {
         curElem._enableChatTextArea($('chat-box[user-id="' + userId + '"]').attr("data-contact"), userId, membership);
         if ($('chat-box[user-id="' + userId + '"] .spinner').length != 0) $('chat-box[user-id="' + userId + '"] .spinner').hide();
         //}, 500);
+        $('chat-box[user-id="' + userId + '"] .chatMessage').scroll(function() {
+            var height = $(this).scrollTop();
+            if(height == 0){
+                //fetch more history
+                var showMoreHistory = $("#moreHistory_"+userId).val(),latestMsgId = $("#moreHistory_"+userId).attr("data-latestMsgId");
+                if(showMoreHistory == "1" && latestMsgId){
+                    console.log("yess on top",height);
+                    console.log("loading more history");
+                    clearTimeout(clearTimedOut);
+                    clearTimedOut = setTimeout(function(){
+                        getChatHistory({
+                            "extraParams": {
+                                "from": getConnectedUserJID(),
+                                "to": userId+"@localhost",
+                                "to_checksum": "",
+                                "from_checksum": self_checksum,
+                                "messageId":latestMsgId
+                            }
+                        }); 
+                    },500); 
+                    
+                }
+             
+            }    
+        });
     },
     _updateChatPanelsBox: function (userId, newGroupId) {
         var curElem = this;
@@ -1465,17 +1490,15 @@ JsChat.prototype = {
     //append chat history in chat box
     _appendChatHistory: function (selfJID, otherJID, communication) {
         console.log("self message");
+        console.log(communication);
         var self_id = selfJID.split("@")[0],
             other_id = otherJID.split("@")[0],
-            historyHTML = "",latestMsgId;
+            historyHTML = "",latestMsgId="";
         var curElem = this;
         if ($('chat-box[user-id="' + other_id + '"]').length != 0) {
-            latestMsgId = "";
+            
             $.each(communication, function (key, logObj) {
-                if(latestMsgId == ""){
-                    console.log("adding id"+logObj["ID"]);
-                    latestMsgId = logObj["ID"];
-                }
+                latestMsgId = logObj["ID"];
                 //console.log(logObj);
                 if (parseInt(logObj["SENDER"]) == self_id) {
                     //append self sent message

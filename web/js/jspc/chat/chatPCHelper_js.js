@@ -6,7 +6,8 @@ var listingInputData = [],
     objJsChat, pass, username,
     pluginId = '#chatOpenPanel',
     device = 'pc',
-    loggingEnabledPC = false;
+    loggingEnabledPC = false,
+    clearTimedOut;
 /*handle chat disconnection case
  */
 function handleChatDisconnection() {
