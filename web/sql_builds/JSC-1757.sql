@@ -4,5 +4,11 @@ INSERT INTO jeevansathi_mailer.EMAIL_TYPE ( ID , MAIL_ID , TPL_LOCATION , HEADER
 
 INSERT INTO jeevansathi_mailer.MAILER_SUBJECT (  MAIL_ID ,  SUBJECT_TYPE ,  SUBJECT_CODE ,  DESCRIPTION ) VALUES ('1836',  'D',  'Contact details viewed by you in your last membership',  'Membership Expiry mail for Viewed Contacts');
 
-
+use billing;
+CREATE TABLE `MEM_EXPIRY_CONTACTS_LOG` (
+ `PROFILEID` int(11) NOT NULL,
+ `ENTRY_DT` datetime NOT NULL,
+ KEY `PROFILEID` (`PROFILEID`),
+ KEY `ENTRY_DT` (`ENTRY_DT`)
+) ENGINE=InnoDB;
 ~                                                                      
