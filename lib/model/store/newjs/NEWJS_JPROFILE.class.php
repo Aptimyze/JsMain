@@ -1355,6 +1355,15 @@ class NEWJS_JPROFILE extends TABLE
 
             $resEditProfile->bindValue(":$criteria", $value, $paramType);
             $resEditProfile->execute();
+
+            $sqlEditProfile = str_replace(":$criteria", $value, $sqlEditProfile);
+            if (is_array($paramArr)) {
+                foreach ($paramArr as $key => $val) {
+                    $sqlEditProfile = str_replace(":$key", $val, $sqlEditProfile);
+                }
+            }
+
+            LoggingManager::getInstance('JPROFILE')->logThis(LoggingEnums::LOG_DEBUG, $sqlEditProfile);
         } catch (PDOException $e) {
             throw new jsException($e);
         }
@@ -1409,6 +1418,14 @@ class NEWJS_JPROFILE extends TABLE
                 foreach ($extraBind as $key => $val)
                     $resSelectDetail->bindValue(":$key", $val);
             $resSelectDetail->execute();
+            $sqlSelectDetail = str_replace(":$criteria", $value, $sqlSelectDetail);
+            if (is_array($extraWhereClause)) {
+                foreach ($extraWhereClause as $key => $val) {
+                    $sqlSelectDetail = str_replace(":$key", $val, $sqlSelectDetail);
+                }
+            }
+            LoggingManager::getInstance('JPROFILE')->logThis(LoggingEnums::LOG_DEBUG, $sqlSelectDetail);
+
             $rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC);
             return $rowSelectDetail;
         } catch (PDOException $e) {
