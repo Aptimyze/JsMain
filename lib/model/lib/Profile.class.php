@@ -1502,13 +1502,13 @@ class Profile{
          *
          * Returns education detail array of profile
          */
-        public function getEducationDetail($valuesOnly="")
+        public function getEducationDetail($valuesOnly="",$dbname="")
         {
 			if($this->HAVE_JEDUCATION=='Y'){
 				//If already fetched then return the fetched object
 				//otherwise fetch education details
 				if(! $this->education_other instanceof ProfileComponent){
-				$pe=new NEWJS_JPROFILE_EDUCATION();
+				$pe=new NEWJS_JPROFILE_EDUCATION($dbname);
 				$education_arr=$pe->getProfileEducation($this->PROFILEID);
 				if($valuesOnly)
 					return $education_arr;

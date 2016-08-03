@@ -19,6 +19,13 @@ function connect_db()
         return $db;
 }
 
+function connect_rep()
+{
+        $db = db_set_active("masterRep",MysqlDbConstants::$masterRep[HOST].":".MysqlDbConstants::$masterRep[PORT],MysqlDbConstants::$masterRep[USER],MysqlDbConstants::$masterRep[PASS]) or die("Can't connect to Database".mysql_error());
+        mysql_select_db_js("incentive",$db);               // connection string
+        return $db;
+}
+
 function connect_db2()
 {
 	$db2 = db_set_active("slave",MysqlDbConstants::$misSlave[HOST],MysqlDbConstants::$misSlave[USER],MysqlDbConstants::$misSlave[PASS],MYSQL_CLIENT_COMPRESS) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception("Cudnt connect to slave".mysql_error()));

@@ -3,7 +3,6 @@ include("connect.inc");
 include_once("../profile/pg/functions.php");
 
 $db=connect_misdb();
-$db2=connect_master();
 
 $data=authenticated($checksum);
 $flag=0;

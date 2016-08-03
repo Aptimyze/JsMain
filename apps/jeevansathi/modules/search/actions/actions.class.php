@@ -1668,19 +1668,25 @@ class searchActions extends sfActions
 					$resultArr["paginationArray"]= $this->paginationArr; 
 					$statusArr = $inputValidateObj->getResponse();
 				}
+
 			}
 			
 			/** caching **/
 			$ifApiCached = SearchUtility::cachedSearchApi('set',$request,'',$statusArr,$resultArr);
+
 			/** caching **/
+
+			$resultArr["searchIdForNavigation"]= $this->searchId;
+
 		}
 		else
 		{
 			//validation are logged in search validation.
 			$statusArr = $resp;
 		}   
-                
-                unset($inputValidateObj);
+
+
+        		unset($inputValidateObj);
                 $respObj = ApiResponseHandler::getInstance();
                 $respObj->setHttpArray($statusArr);//print_r($resultArr);die;
                 $respObj->setResponseBody($resultArr);
