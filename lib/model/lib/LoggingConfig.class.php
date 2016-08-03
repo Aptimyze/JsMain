@@ -25,7 +25,7 @@
 			LoggingEnums::EX500OR404 => array(
 				'logging' => 1, 
 				'level' => 1, 
-				'directory' => 1,
+				'directory' => 0,
 				'stack_trace' => 1
 				),
 			);
@@ -71,14 +71,11 @@
 		*/
 		public function logStatus($module)
 		{
-			if(array_key_exists($module, $this->arrConfig)){
-				return $this->arrConfig[$module]['logging'];
-			}
-			else
-			{
+			if(!array_key_exists($module, $this->arrConfig)){
 				// module not in config
 				return 1;
 			}
+			return $this->arrConfig[$module]['logging'];
 		}
 
 		/**
@@ -86,13 +83,10 @@
 		*/
 		public function dirStatus($module)
 		{
-			if(array_key_exists($module, $this->arrConfig)){
-				return $this->arrConfig[$module]['directory'];
-			}
-			else
-			{
+			if(!array_key_exists($module, $this->arrConfig)){
 				return 0;
 			}
+			return $this->arrConfig[$module]['directory'];
 		}
 	}
 ?>

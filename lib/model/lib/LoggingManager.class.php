@@ -108,29 +108,25 @@ class LoggingManager
      *       ,statusCode
      *       ,typeOfError(whether php error, or mysql etc.) 
      */
-     public function logThis($enLogType,$Var,$logArray = array(),$isSymfony=true)
-     {
-      if($this->canLog($Var,$isSymfony,$logArray))
+    public function logThis($enLogType,$Var,$logArray = array(),$isSymfony=true)
+    {
+      if($this->canLog($Var,$isSymfony,$logArray) && $enLogType < LoggingEnums::LOG_LEVEL)
       {
-        if(0 && $enLogType > LoggingEnums::LOG_LEVEL) {
-         return ;
-       }
-
-       switch ($enLogType) {
-        case LoggingEnums::LOG_INFO:
-        $this->logInfo($Var,$isSymfony,$logArray);
-        break;
-        case LoggingEnums::LOG_DEBUG:
-        $this->logDebug($Var,$isSymfony,$logArray);
-        break;
-        case LoggingEnums::LOG_ERROR:
-        $this->logException($Var,$isSymfony,$logArray);
-        break;
-        default:
-        break;
+        switch ($enLogType) {
+          case LoggingEnums::LOG_INFO:
+          $this->logInfo($Var,$isSymfony,$logArray);
+          break;
+          case LoggingEnums::LOG_DEBUG:
+          $this->logDebug($Var,$isSymfony,$logArray);
+          break;
+          case LoggingEnums::LOG_ERROR:
+          $this->logException($Var,$isSymfony,$logArray);
+          break;
+          default:
+          break;
+        }
       }
     }
-  }
 
     /**
      * @param $exception
@@ -420,7 +416,7 @@ class LoggingManager
      */
     private function canLog($Var,$isSymfony,$logArray)
     {
-        // TODO: get module name
+        // set module name
         if($this->szLogPath == null)
         {
           $this->szLogPath = $this->getLogModuleName($isSymfony,$Var,$logArray);
