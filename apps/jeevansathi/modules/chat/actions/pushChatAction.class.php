@@ -46,29 +46,28 @@ class pushChatAction extends sfAction
 				$data["communicationType"] = $communicationType;
 				$data["message"] = $message;
 				$data['chatid'] = $chatID;
-				try{
-					//send instant JSPC/JSMS notification
-					$producerObj = new Producer();
-					if ($producerObj->getRabbitMQServerConnected()) {
-						$chatData = array('process' => 'CHATMESSAGE', 'data' => array('type' => 'PUSH', 'body' => $data), 'redeliveryCount' => 0);
-						$producerObj->sendMessage($chatData);
-						//Add for contact roster
+				$js_communication=new JS_Communication($sender,$receiver,$communicationType,$message,$chatID);
+				if($js_communication->validateChat()) {
+					try {
+						//send instant JSPC/JSMS notification
+						$producerObj = new Producer();
+						if ($producerObj->getRabbitMQServerConnected()) {
+							$chatData = array('process' => 'CHATMESSAGE', 'data' => array('type' => 'PUSH', 'body' => $data), 'redeliveryCount' => 0);
+							$producerObj->sendMessage($chatData);
+							//Add for contact roster
+						} else {
+							//echo $sender."--".$receiver."--".$message;die;
+							//Contains logined Profile information;
+							$js_communication = new JS_Communication($sender, $receiver, $communicationType, $message, $chatID);
+							$js_communication->storeCommunication();
+						}
+						unset($producerObj);
+					} catch (Exception $e) {
+						throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
 					}
-					else{
-						//echo $sender."--".$receiver."--".$message;die;
-						//Contains logined Profile information;
-						$js_communication=new JS_Communication($sender,$receiver,$communicationType,$message,$chatID);
-						$js_communication->storeCommunication();
-					}
-					unset($producerObj);
-				} catch (Exception $e) {
-					throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
+					$responseArray["isSent"] = "true";
+					$responseArray["chatId"] = $chatID;
 				}
-
-
-				$responseArray["isSent"] = "true";
-				$responseArray["chatId"] = $chatID;
-
 			}
 		}
 		if (is_array($responseArray)) {
