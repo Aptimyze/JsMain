@@ -18,10 +18,10 @@ class pushChatAction extends sfAction
 	function execute($request)
 	{
 		
-		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("module"));
+		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("moduleName"));
 		$apiObj                  = ApiResponseHandler::getInstance();
 
-		if ($request->getParameter("action")=="pushChat")
+		if ($request->getParameter("actionName")=="pushChat")
 		{
 			
 			$inputJSON = file_get_contents('php://input');
