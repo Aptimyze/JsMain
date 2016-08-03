@@ -151,12 +151,13 @@ class LoggingManager
       // $moduleName = $this->getLogModuleName($isSymfony,$exception,$logArray);
       $moduleName = $this->szLogPath;
       $actionName = $this->getLogActionName($isSymfony,$exception,$logArray);
-      
       $apiVersion = $this->getLogAPI($logArray);
       $message = $this->getLogMessage($logArray);
       $uniqueSubId = $this->getLogUniqueSubId($logArray);
+      $statusCode = $this->getLogStatusCode($exception,$logArray,$enLogType);
+      $typeOfError = $this->getLogTypeOfError($exception,$logArray);
       $headers = getallheaders();
-
+      
       $logData = $logData." [".$logId.":".$clientIp."]";
       $logData = $logData." [".$time."]";
       $logData = $logData.$uniqueSubId;
@@ -173,6 +174,7 @@ class LoggingManager
       {
         $logData = $logData." ".$exception;
       }
+    
       return $logData;
     }
 
