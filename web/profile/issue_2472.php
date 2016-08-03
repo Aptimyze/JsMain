@@ -58,6 +58,7 @@ if((($parent == 1)||($parent == 9)) && !$logged_astro_details)
 		$in_state="$profileid,$other_profileid";
 	else
 		$in_state="$profileid";
+	$in_state = implode(",",array_diff(explode(",",$in_state), [0]));
 	$sql_astro="SELECT PROFILEID,LAGNA_DEGREES_FULL,SUN_DEGREES_FULL,MOON_DEGREES_FULL,MARS_DEGREES_FULL,MERCURY_DEGREES_FULL,JUPITER_DEGREES_FULL,VENUS_DEGREES_FULL,SATURN_DEGREES_FULL FROM newjs.ASTRO_DETAILS WHERE PROFILEID IN($in_state)";
 	$result_astro=mysql_query_decide($sql_astro) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_astro,"ShowErrTemplate");
 	if(mysql_num_rows($result_astro) > 0)
