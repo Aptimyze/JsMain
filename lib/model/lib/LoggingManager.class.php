@@ -196,6 +196,21 @@ class LoggingManager
     }
 
     /**
+     * @return status code
+     */
+    public function getLogStatusCode($exception,$logArray,$enLogType)
+    {
+      if ( !isset($logArray['statusCode']))
+      {
+        return $exception->getCode();
+      }
+      else
+      {
+        return $logArray['statusCode'];
+      }
+    }
+
+    /**
      * @return UniqueSubId
      */
     public function getLogId($logArray)
@@ -218,7 +233,7 @@ class LoggingManager
     {
       if ( !isset($logArray['apiVersion']))
       {
-        $apiVersion = "";
+        $apiVersion =  sfContext::getInstance()->getRequest()->getParameter("version");
       }
       else
       {
@@ -230,11 +245,19 @@ class LoggingManager
     /**
      * @return typeOfError
      */
-    public function getLogTypeOfError($logArray)
+    public function getLogTypeOfError($exception,$logArray)
     {
       if ( !isset($logArray['typeOfError']))
       {
-        $typeOfError = "";
+        if ( $exception instanceof PDOException)
+          return LoggingEnums::PDO_EXCEPTION;
+        else if ( $exception instanceof AMQPException)
+          return LoggingEnums::AMQP_EXCEPTION;
+        else if ( $exception instanceof PredisException)
+          return LoggingEnums::REDIS_EXCEPTION;
+        else
+          return LoggingEnums::UNKNOWN_EXCEPTION;
+
       }
       else
       {
@@ -242,6 +265,7 @@ class LoggingManager
       }
       return $typeOfError;
     }
+
 
     /**
      * @return message
