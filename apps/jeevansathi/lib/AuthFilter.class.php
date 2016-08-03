@@ -300,8 +300,7 @@ class AuthFilter extends sfFilter {
 
 	            	$out = LoggingManager::getInstance()->getUniqueId();
 	            	$request->setAttribute('REQUEST_ID_FOR_TRACKING',$out); 
-	            	//echo ($request->getAttribute('REQUEST_ID_FOR_TRACKING'));
-	            	//echo "first";
+	            	
 
 	            }
 	            else
@@ -309,13 +308,13 @@ class AuthFilter extends sfFilter {
 	            	LoggingManager::getInstance()->setUniqueId($headers['RID_AJAX']);
 	            	$request->setAttribute('REQUEST_ID_FOR_TRACKING',$headers['RID_AJAX']);
 	            }
+	            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "CHECKING AJAX CALLS FOR HOMEPAGE");
 	            
-	            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "My Request");
-	            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "My second Request");
-	            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "My third Request");
 	            
 
-            //  die("X" . $request->getAttribute('REQUEST_ID_FOR_TRACKING')."  ".$request->getAttribute('UNIQUE_REQUEST_SUB_ID'));
+	            
+
+           
             
 			}
 			else
