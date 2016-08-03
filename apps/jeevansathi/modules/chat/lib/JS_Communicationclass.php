@@ -57,11 +57,11 @@ class JS_Communication
 	{
 		//$type=$this->contactObj->getTYPE();
 		$type="A";
-		$dbName1 = JsDbSharding::getShardNo($this->loginProfile->getPROFILEID());
-		$dbName2 = JsDbSharding::getShardNo($this->otherProfile->getPROFILEID());
+		$dbName1 = JsDbSharding::getShardNo($this->loginProfile);
+		$dbName2 = JsDbSharding::getShardNo($this->otherProfile);
 		if($this->communicationType="C"){
 			$dbObj = new newjs_CHAT_LOG($dbName1);		
-			return $dbObj->getMessageHistory($this->loginProfile->getPROFILEID(),$this->otherProfile->getPROFILEID(),self::$RESULTS_PER_PAGE_CHAT,$msgIdNo);
+			return $dbObj->getMessageHistory($this->loginProfile,$this->otherProfile,self::$RESULTS_PER_PAGE_CHAT,$msgIdNo);
 			
 			
 		/*
@@ -85,11 +85,13 @@ class JS_Communication
 
 	public function validateChat()
 	{
-		if($this->loginProfile->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus()=="FREE")
+		$loginProfileObj = new Profile();
+		$loginProfileObj->getDetail($this->loginProfile, "PROFILEID", "*");
+		if($loginProfileObj->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus()=="FREE")
 		{
-			$dbName1 = JsDbSharding::getShardNo($this->loginProfile->getPROFILEID());
+			$dbName1 = JsDbSharding::getShardNo($this->loginProfile);
 			$dbObj = new newjs_CHAT_LOG($dbName1);
-			if($dbObj->getChatCount($this->loginProfile->getPROFILEID(),$this->otherProfile->getPROFILEID()))
+			if($dbObj->getChatCount($this->loginProfile,$this->otherProfile))
 				return true;
 			else
 				return false;

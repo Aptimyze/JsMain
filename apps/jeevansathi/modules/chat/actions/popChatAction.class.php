@@ -44,12 +44,12 @@ class popChatAction extends sfAction
 			{
 				//echo $sender."--".$receiver."--".$message;die;
 				//Contains logined Profile information;
-				$this->senderProfile = new Profile("",$sender);
+				/*$this->senderProfile = new Profile("",$sender);
 				$this->senderProfile->getDetail($sender, "PROFILEID");
 				$this->receiverProfile= new Profile("",$receiver);
-				$this->receiverProfile->getDetail($receiver, "PROFILEID");
+				$this->receiverProfile->getDetail($receiver, "PROFILEID");*/
 					
-				$js_communication=new JS_Communication($this->senderProfile,$this->receiverProfile,$communicationType,$message);
+				$js_communication=new JS_Communication($sender,$receiver,$communicationType,$message);
 				$arr=$js_communication->getCommunication($msgIdNo);
 				if($arr)
 				{
