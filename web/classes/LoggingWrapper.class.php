@@ -37,7 +37,7 @@ class LoggingWrapper
      * @param $enLogType
      * @param $Var
      */
-	public function sendLog($enLogType,$Var=null,$logArray = array())
+	public function sendLog($enLogType,$Var=null,$logArray = array('typeOfError'=>LoggingEnums::MYSQL_EXCEPTION))
 	{
 		return LoggingManager::getInstance()->logThis($enLogType,$Var,$logArray,false);
 	}

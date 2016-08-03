@@ -151,15 +151,16 @@ class LoggingManager
       // $moduleName = $this->getLogModuleName($isSymfony,$exception,$logArray);
       $moduleName = $this->szLogPath;
       $actionName = $this->getLogActionName($isSymfony,$exception,$logArray);
-      
       $apiVersion = $this->getLogAPI($logArray);
       $message = $this->getLogMessage($logArray);
       $uniqueSubId = $this->getLogUniqueSubId($logArray);
+      $statusCode = $this->getLogStatusCode($exception,$logArray,$enLogType);
+      $typeOfError = $this->getLogTypeOfError($exception,$logArray);
       $headers = getallheaders();
-
+      
       $logData = $logData." [".$logId.":".$clientIp."]";
       $logData = $logData." [".$time."]";
-      $logData = $logData.$uniqueSubId;
+      $logData = $logData." [".$uniqueSubId."]";
       $logData = $logData." ".$channelName;
       $logData = $logData." ".$clientIp;
       $logData = $logData." ".$statusCode;
@@ -173,6 +174,7 @@ class LoggingManager
       {
         $logData = $logData." ".$exception;
       }
+    
       return $logData;
     }
 
@@ -191,6 +193,21 @@ class LoggingManager
         $uniqueSubId = $logArray['uniqueSubId'];
       }
       return $uniqueSubId;
+    }
+
+    /**
+     * @return status code
+     */
+    public function getLogStatusCode($exception,$logArray,$enLogType)
+    {
+      if ( !isset($logArray['statusCode']))
+      {
+        return $exception->getCode();
+      }
+      else
+      {
+        return $logArray['statusCode'];
+      }
     }
 
     /**
@@ -216,7 +233,7 @@ class LoggingManager
     {
       if ( !isset($logArray['apiVersion']))
       {
-        $apiVersion = "";
+        $apiVersion =  sfContext::getInstance()->getRequest()->getParameter("version");
       }
       else
       {
@@ -228,11 +245,19 @@ class LoggingManager
     /**
      * @return typeOfError
      */
-    public function getLogTypeOfError($logArray)
+    public function getLogTypeOfError($exception,$logArray)
     {
       if ( !isset($logArray['typeOfError']))
       {
-        $typeOfError = "";
+        if ( $exception instanceof PDOException)
+          return LoggingEnums::PDO_EXCEPTION;
+        else if ( $exception instanceof AMQPException)
+          return LoggingEnums::AMQP_EXCEPTION;
+        else if ( $exception instanceof PredisException)
+          return LoggingEnums::REDIS_EXCEPTION;
+        else
+          return LoggingEnums::EXCEPTION;
+
       }
       else
       {
@@ -240,6 +265,7 @@ class LoggingManager
       }
       return $typeOfError;
     }
+
 
     /**
      * @return message

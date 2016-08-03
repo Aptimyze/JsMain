@@ -76,8 +76,8 @@ abstract class AbstractProfileCompletionScore {
 			$iProfileID = $Var;
 		}	
 		else
-		{     LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,new Exception('Profile Object Init Error'));
-			throw new Exception('Profile Object Init Error');
+		{
+			throw new jsException('','Profile Object Init Error');
 		}
         
         //Fill Up Details 

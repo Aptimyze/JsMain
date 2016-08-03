@@ -27,5 +27,11 @@ class LoggingEnums
     const A = 'A';
     const I = 'I';
     const MS = 'MS';
-
+    // exceptions type
+    const MYSQL_EXCEPTION = "MYSQL";
+    const PDO_EXCEPTION = "PDO";
+    const REDIS_EXCEPTION = "REDIS";
+    const AMQP_EXCEPTION = "AMQP";
+    const UNKNOWN_EXCEPTION = "UNKNOWN";
+    const EXCEPTION = "EXCEPTION";
 }

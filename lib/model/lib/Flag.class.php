@@ -87,9 +87,8 @@ class Flag
 			$flag_val=FieldMap::getFieldLabel("flagval",strtolower($FLAGID));
 
 		if($flag_val==='' && $photo_val==='')
-		{	LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,new Exception("flag value doesn't exist $FLAGID, $value"));
-
-			throw new Exception("flag value doesn't exist $FLAGID, $value");
+		{
+			throw new jsException('',"flag value doesn't exist $FLAGID, $value");
 		}
 		$newflag=$flag_val;
 		if(!$newflag)
