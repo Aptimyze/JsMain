@@ -287,11 +287,13 @@ function invokePluginLoginHandler(state) {
     } else if (state == "failure") {
         eraseCookie("chatAuth");
         objJsChat.addLoginHTML(true);
-    } else if (state == "logout") {
-        if ($(objJsChat._logoutChat).length != 0) $(objJsChat._logoutChat).click();
-    } else if (state == "login") {
-        console.log("herenbnbh");
-        if ($(objJsChat._loginbtnID).length != 0 && readCookie('chatAuth') == "true") $(objJsChat._loginbtnID).click();
+    } else if (state == "session_sync") {
+        if ($(objJsChat._logoutChat).length != 0 && readCookie('chatAuth') != "true") {
+            $(objJsChat._logoutChat).click();
+        }
+        if ($(objJsChat._loginbtnID).length != 0 && readCookie('chatAuth') == "true"){
+            $(objJsChat._loginbtnID).click();
+        }
     }
 }
 /*invokePluginAddlisting
@@ -774,7 +776,7 @@ $(document).ready(function () {
         var loginStatus;
         $(window).focus(function() {
             if(strophieWrapper.synchronize_selfPresence == true){
-                invokePluginLoginHandler("login");
+                invokePluginLoginHandler("session_sync");
             }
         });
         $(window).on("offline", function () {

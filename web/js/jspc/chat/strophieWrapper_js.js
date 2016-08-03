@@ -307,10 +307,10 @@ var strophieWrapper = {
             if (strophieWrapper.synchronize_selfPresence == true) {
                 if (from != strophieWrapper.getSelfJID()) {
                     console.log("updating self presence for different resource - " + from + chat_status);
-                    if (chat_status == "offline") {
+                    /*if (chat_status == "offline") {
                         console.log("logout");
                         invokePluginLoginHandler("logout");
-                    }
+                    }*/
                     /*else if(chat_status == "online"){
                         console.log("login");
                         invokePluginLoginHandler("login");
