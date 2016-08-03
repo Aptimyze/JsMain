@@ -172,8 +172,8 @@ class jsPdoPersistent {
 						return call_user_func_array(array($this->delegate , $method), $args);
 					}
 					catch(PDOException $pe)
-					{  LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, $e);
-						throw $e;
+					{  LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, $pe);
+						throw $pe;
 					}
 				}
 				else

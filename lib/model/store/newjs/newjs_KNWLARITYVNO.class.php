@@ -101,8 +101,7 @@ class newjs_KNWLARITYVNO extends TABLE{
 	public function insertNewVno($profileid,$phoneNo,$vNo)
 	{
 		if (!$profileid || !$phoneNo || !$vNo){
-			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,new Exception("either of phoneNo, profileid, virtual No not passed in arguements in function getDetailsFromProfileId in newjs_KNWLARITYVNO", 1));
-		 throw new Exception("either of phoneNo, profileid, virtual No not passed in arguements in function getDetailsFromProfileId in newjs_KNWLARITYVNO", 1);
+		 throw new jsException('',"either of phoneNo, profileid, virtual No not passed in arguements in function getDetailsFromProfileId in newjs_KNWLARITYVNO", 1);
 		}
 		try
 		{
@@ -124,8 +123,7 @@ public function getVnoFromPhone($phoneNo)
 	{
 
 		if (!$phoneNo){
-			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,new Exception("no phoneNo passed in arguements in function getVnoFromPhone in newjs_KNWLARITYVNO", 1));
-		 throw new Exception("no phoneNo passed in arguements in function getVnoFromPhone in newjs_KNWLARITYVNO", 1);
+		 throw new jsException('',"no phoneNo passed in arguements in function getVnoFromPhone in newjs_KNWLARITYVNO", 1);
 		}
 		
 		try

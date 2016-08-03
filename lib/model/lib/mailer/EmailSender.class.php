@@ -320,8 +320,8 @@ class EmailSender{
   public function getTemplate(){
     if($this->email_tpl)
       return $this->email_tpl;
-    else{LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,new Exception("Empty Attribute or doc are requested in PROFILE_VERIFICATION_DOCUMENTS_ENUM"));
-      throw new Exception("Please call setTemplate first");
+    else{
+      throw new jsException('',"Please call setTemplate first");
     }
   }
 

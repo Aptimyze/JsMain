@@ -42,10 +42,8 @@ class IMAGE_SERVER_IMAGE_TYPE_ENUM
 			$enum=self::$imageTypeEnum[$module][$type];
 		else
 			{
-			    LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,new Exception("Invalid Image Type Enum is requested in IMAGE_SERVER_IMAGE_TYPE_ENUM.class.php"));
-			throw new Exception("Invalid Image Type Enum is requested in IMAGE_SERVER_IMAGE_TYPE_ENUM.class.php");
-
-		return $enum;
+				throw new jsException('',"Invalid Image Type Enum is requested in IMAGE_SERVER_IMAGE_TYPE_ENUM.class.php");
+				return $enum;
         	}
     	}
 	
@@ -62,9 +60,7 @@ class IMAGE_SERVER_IMAGE_TYPE_ENUM
                 	$imageType= array_search($enum,self::$imageTypeEnum[$module]);
 		if(!$imageType)		
 	  	{   
-	  		LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,new Exception("Invalid Image Type is requested in IMAGE_SERVER_IMAGE_TYPE_ENUM.class.php"));
-			throw new Exception("Invalid Image Type is requested in IMAGE_SERVER_IMAGE_TYPE_ENUM.class.php");
-		
+			throw new jsException('',"Invalid Image Type is requested in IMAGE_SERVER_IMAGE_TYPE_ENUM.class.php");
 		return $imageType;
         }
     	}
