@@ -1781,7 +1781,7 @@ JsChat.prototype = {
             if (param2.income) {
                 str += ', ';
             }
-            str += param2.city + '</li>';
+            str += param2.location + '</li>';
             str += '</ul>';
             str += '</div>';
             str += '<div class="fullwid clearfix pos-rel" id="' + param1 + '_BtnRespnse">';

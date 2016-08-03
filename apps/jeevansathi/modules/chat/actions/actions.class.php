@@ -39,7 +39,7 @@ class chatActions extends sfActions
 			$username = $loginData['PROFILEID'];
 
 			//$uname = $loginData['USERNAME'];
-			$pass = EncryptPassword::generatePassword($username);
+			$pass = md5($username);
 			//$pass = EncryptPassword::generatePassword("test".$username);
 			//$pass = "test".$username;
 
@@ -104,7 +104,8 @@ class chatActions extends sfActions
 				curl_close($ch);
 			}
 			//Encrypt Password
-			$hash = EncryptPassword::cryptoJsAesEncrypt("chat", $pass);
+			//$hash = EncryptPassword::cryptoJsAesEncrypt("chat", $pass);
+            $hash = $pass;
 			$response['hash'] = $hash;
 			//$response['hash'] = $pass;
 		} else {
