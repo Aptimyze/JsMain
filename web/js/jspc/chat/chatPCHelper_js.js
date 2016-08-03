@@ -88,7 +88,7 @@ function getChatHistory(apiParams) {
                 oldHistory = localStorage.getItem("chatHistory_"+bare_from_jid+"_"+bare_to_jid);
                 console.log("oldHistory");
                 console.log(oldHistory);
-                if(typeof oldHistory!= "undefined" && oldHistory){
+                if(typeof oldHistory!= "undefined"){
                     fetchFromLocalStorage = true;
                 }
                 setLocalStorage = true;
@@ -134,7 +134,9 @@ function getChatHistory(apiParams) {
     }
     else{
         console.log("localStorage for history");
-
+        if(!oldHistory){
+            oldHistory = "{}";
+        }
         //call plugin function to append history in div
         objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], $.parseJSON(oldHistory));
     }
