@@ -708,3 +708,7 @@ margin-top: 220px;
 .tneg20_3{top:-20px;right: -5px;}
 .hgt352{height:352px;}
 .b297{bottom:297px}
+.spinner2{width: 10px;height: 10px;margin: 10px 110px;animation: rotate 0.8s infinite linear;
+    border: 2px solid #34495e;
+    border-right-color: transparent;
+    border-radius: 50%;}

@@ -19,6 +19,13 @@ function handleChatDisconnection() {
     }
 }
 
+function manageHistoryLoader(user_id,type){
+    if(type == "show" && $('chat-box[user-id="' + user_id + '"] .spinner').is(":visible") == false){
+        $('chat-box[user-id="' + user_id + '"] .spinner2').removeClass("disp-none");
+    } else if(type == "hide") {
+        $('chat-box[user-id="' + user_id + '"] .spinner2').addClass("disp-none");
+    }
+}
 function chatLoggerPC(msgOrObj) {
     if (loggingEnabledPC) {
         if (typeof (window.console) != 'undefined') {
@@ -126,6 +133,7 @@ function getChatHistory(apiParams) {
                         if(response["pagination"] == 0){
                             $("#moreHistory_"+bare_to_jid.split("@")[0]).val("0");
                         }
+                        manageHistoryLoader(bare_to_jid.split("@")[0],"hide");
                         //call plugin function to append history in div
                         objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], $.parseJSON(response["Message"]));
                     }
