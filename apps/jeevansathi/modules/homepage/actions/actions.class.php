@@ -161,7 +161,7 @@ class homepageActions extends sfActions
                 header("Location:".$SITE_URL."/profile/mem_comparison.php");
                 die;
         }
-        $request->setParameter("fromHomepage",1);
+        //$request->setParameter("fromHomepage",1);
         //$a=MobileCommon::isNewMobileSite();
         //var_dump($a);die;
 		if(!MobileCommon::isNewMobileSite() && MobileCommon::isMobile()){
