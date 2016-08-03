@@ -53,7 +53,7 @@ class popChatAction extends sfAction
 				$arr=$js_communication->getCommunication($msgIdNo);
 				if($arr)
 				{
-					if(count($arr)<20)
+					if(count($arr)<JS_Communication::$RESULTS_PER_PAGE_CHAT)
 						$responseArray["pagination"] = 0;
 					else
 						$responseArray["pagination"] = 1;
