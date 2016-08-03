@@ -67,6 +67,10 @@
         <script>
             var openfireUrl= "~JsConstants::$openfireConfig['HOST']`:~JsConstants::$openfireConfig['WSPORT']`";
         </script>
+    ~else`
+        <script>
+            var openfireUrl= "";
+        </script>
     ~/if`
 </head>
 ~if get_slot('optionaljsb9Key')|count_characters neq 0`

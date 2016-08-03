@@ -805,6 +805,10 @@ $(document).ready(function () {
     if (showChat && (checkDiv != 0)) {
         var chatLoggedIn = readCookie('chatAuth');
         var loginStatus;
+        $("#jspcChatout").on('click',function(){
+            console.log("Logout clicked");
+           $(".jschatLogOut").click(); 
+        });
         $(window).focus(function() {
             if(strophieWrapper.synchronize_selfPresence == true){
                 invokePluginLoginHandler("session_sync");
