@@ -773,7 +773,7 @@ public function executeAppredirect(sfWebRequest $request)
 			  	$outData = array_merge($outData,$this->getFieldMapData($val));
 			if($val=="family_income")
 			{
-				$optionalArr[0] = array("0"=>array("0"=>"Please Select"));
+				$optionalArr[0] = array("0"=>array("0"=>"Select"));
 				foreach($outData['family_income'] as $x=>$y)
 				{
 					$mergedArr = array_merge($optionalArr,$y);
@@ -782,7 +782,7 @@ public function executeAppredirect(sfWebRequest $request)
 			}
 			if($val=="state_india" || $val=="native_country")
 			{
-				$optionalArr = array("0"=>array("0"=>"Please Select"));
+				$optionalArr = array("0"=>array("0"=>"Select"));
 				$mergedArr = array_merge($optionalArr,$outData[$val][0]);
 				$outData[$val][0]=$mergedArr;
 			}
@@ -794,7 +794,7 @@ public function executeAppredirect(sfWebRequest $request)
 		  $output = $this->getFieldMapData($k);
 			if($k=="family_income")
 			{
-                                $optionalArr[0] = array("0"=>array("0"=>"Please Select"));
+                                $optionalArr[0] = array("0"=>array("0"=>"Select"));
                                 foreach($output as $x=>$y)
                                 {
                                         $mergedArr = array_merge($optionalArr,$y);
@@ -803,7 +803,7 @@ public function executeAppredirect(sfWebRequest $request)
 			}
                         if($k=="state_india" || $k=="native_country")
                         {
-                                $optionalArr = array("0"=>array("0"=>"Please Select"));
+                                $optionalArr = array("0"=>array("0"=>"Select"));
                                 $mergedArr = array_merge($optionalArr,$output[0]);
                                 $output[0]=$mergedArr;
                         }
@@ -1826,7 +1826,7 @@ public function executeAppredirect(sfWebRequest $request)
    */
   private function getJsmsNativeState(){
     $arr=FieldMap::getFieldLabel("state_india",'',1);
-    $Arr[0][] = array("0"=>"Please Select");
+    $Arr[0][] = array("0"=>"Select");
     $Arr[0][] = array("NI"=>"Outside India");
 	  foreach($arr as $key=>$val)
 			$Arr[0][]=array($key=>$val);
@@ -1843,7 +1843,7 @@ public function executeAppredirect(sfWebRequest $request)
     $Arr[1]=Array("-1"=>"--More");
     $Arr[2]=FieldMap::getFieldLabel("country",'',1);
 		
-    $output[] = array("0"=>"Please Select");
+    $output[] = array("0"=>"Select");
     $output[] = array("FI"=>"From India");
     foreach($Arr as $key=>$val)
     {
