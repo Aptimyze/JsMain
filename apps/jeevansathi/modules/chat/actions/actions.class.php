@@ -250,7 +250,8 @@ class chatActions extends sfActions
 				"education" => $profile->getDecoratedEducation(),
 				"occupation" => $profile->getDecoratedOccupation(),
 				"income" => $profile->getDecoratedIncomeLevel(),
-				"city" => $profile->getDecoratedCity(),
+				//"city" => $profile->getDecoratedCity(),
+                                "location" => ($profile->getDecoratedCity() ?: $profile->getDecoratedCountry()),
 				"photo" => $photo
 			);
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
