@@ -1,5 +1,0 @@
-
-Error : 579b547879286:: 06:34:56: JSPC 127.0.0.1  jsadmin add_edit_fields.php   exception 'Exception' with message 'You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'selectPROFILEID,SUBSCRIPTION,MOD_DT,ACTIVATED,INCOMPLETE from newjs.JPROFILE whe' at line 1' in /var/www/html/branch1/web/commonFiles/mysql_multiple_connections.php:92
-Stack trace:
-#0 /var/www/html/branch1/web/jsadmin/add_edit_fields.php(46): mysql_error_js()
-#1 {main}

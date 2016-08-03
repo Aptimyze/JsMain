@@ -25,8 +25,8 @@
 			LoggingEnums::EX500OR404 => array(
 				'logging' => 1, 
 				'level' => 1, 
-				'directory' => 0,
-				'stack_trace' => 1
+				'directory' => 1,
+				'stack_trace' => 0
 				),
 			);
 
@@ -87,6 +87,17 @@
 				return 0;
 			}
 			return $this->arrConfig[$module]['directory'];
+		}
+
+		/**
+		* @return stack trace status of module
+		*/
+		public function traceStatus($module)
+		{
+			if(!array_key_exists($module, $this->arrConfig)){
+				return 1;
+			}
+			return $this->arrConfig[$module]['stack_trace'];
 		}
 	}
 ?>

@@ -169,7 +169,10 @@ class LoggingManager
       $logData = $logData." ".$typeOfError;
       $logData = $logData." ".$statusCode;
       $logData = $logData." ".$message;
-      $logData = $logData." ".$exception;
+      if($this->canWriteTrace($this->szLogPath))
+      {
+        $logData = $logData." ".$exception;
+      }
       return $logData;
     }
 
@@ -442,5 +445,13 @@ class LoggingManager
     public function setUniqueId($uniqueID)
     {
         $this->iUniqueID = $uniqueID;
+    }
+
+    /**
+     * @param $szPath
+     */
+    private function canWriteTrace($szLogPath)
+    {
+        return LoggingConfig::getInstance()->traceStatus($szLogPath);
     }
 }
