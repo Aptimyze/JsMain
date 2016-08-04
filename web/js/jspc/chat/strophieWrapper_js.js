@@ -143,6 +143,8 @@ var strophieWrapper = {
      * On message receipt
      */
     onMessageReceipt: function (msg) {
+    	console.log("on message request");
+    	console.log(msg);
         //strophieWrapper.stropheLoggerPC("In message receipt handler");
         strophieWrapper.stropheLoggerPC(msg);
     },
