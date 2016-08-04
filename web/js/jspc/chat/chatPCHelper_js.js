@@ -220,10 +220,9 @@ function getSelfName(){
 @return : membership
 */
 function getMembershipStatus(){
-    return "paid";
     var membership = localStorage.getItem("self_subcription");
     //confirm check
-    if(membership && membership.indexOf("F")>=0 && membership.indexOf("D")>=0){
+    if(membership && (membership.search("F")!= -1 || membership.search("D")!= -1)){
         return "paid";
     }
     else{

@@ -484,6 +484,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fae7d3d6', e
 .top150 {
 	top: 150px
 }
+.mt120{margin-top: 120px}
 textarea[disabled] {
 	background-color: white;
 }
