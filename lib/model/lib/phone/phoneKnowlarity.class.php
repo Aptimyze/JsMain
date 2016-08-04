@@ -16,8 +16,7 @@ public function __construct($profileObject,$phoneType)
 
 			
 			if (!$profileObject || !$phoneType){
-				            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,new Exception("No phoneType or profileObject",1));
-				throw new Exception("No phoneType or profileObject", 1);
+				throw new jsException('',"No phoneType or profileObject", 1);
 			}
 				$this->profileObject=$profileObject;
 				$this->phoneType=$phoneType;

@@ -82,7 +82,7 @@ function bounced_mail($profileid,$bounced_from)
 	$smarty->assign("LAST_CONTACT_DT",my_format_date($dd,$mm,$yy));
 
 	$sql="SELECT BOUNCE_DT,REASON,MAIL_TYPE,MODE FROM billing.PAYMENT_DETAIL WHERE PROFILEID='$profileid' AND STATUS IN ('BOUNCE','CHARGE_BACK')";
-	$res=mysql_query_decide($sql,$db_slave) or mysql_error_js();
+	$res=mysql_query_decide($sql,$db_slave) or die(mysql_error_js());
 	if($row=mysql_fetch_array($res))
 	{
 		list($bdt,$btime)=explode(" ",$row['BOUNCE_DT']);

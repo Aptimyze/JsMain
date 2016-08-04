@@ -59,8 +59,8 @@ class IMAGE_SERVER_IMAGE_TYPE_ENUM
 		if(!$imageType)		
 	  	{   
 			throw new jsException('',"Invalid Image Type is requested in IMAGE_SERVER_IMAGE_TYPE_ENUM.class.php");
-		return $imageType;
         }
+		return $imageType;
     	}
 }
 ?>

@@ -89,7 +89,7 @@ if(isset($data))
                         //end of - added by sriram to prevent the query being run several times on page reload.
 
 			/*$sql="UPDATE newjs.JPROFILE SET PREACTIVATED=IF(ACTIVATED<>'D',ACTIVATED,PREACTIVATED), ACTIVATED='D',activatedKey=0, SUBSCRIPTION='', ACTIVATE_ON=now() where PROFILEID='$profileid'";
-			mysql_query_decide($sql) or die(mysql_error_js()); */
+			mysql_query_decide($sql) or die(mysql_error_js());*/
 			if($row_act['ACTIVATED']!='D')
 				$preActivated =$row_act['ACTIVATED'];
 			else
