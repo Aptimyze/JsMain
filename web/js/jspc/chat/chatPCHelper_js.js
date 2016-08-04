@@ -848,7 +848,7 @@ $(document).ready(function () {
            $(".jschatLogOut").click(); 
         });
         $(window).focus(function() {
-            //invokePluginLoginHandler("")
+            invokePluginLoginHandler("manageLogout");
             if(strophieWrapper.synchronize_selfPresence == true){
                 invokePluginLoginHandler("session_sync");
             }

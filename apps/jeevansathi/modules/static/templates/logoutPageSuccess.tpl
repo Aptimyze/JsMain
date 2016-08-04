@@ -50,5 +50,7 @@
 <script>
 var LoggedoutPage=1;
 var fromSignout=~$fromSignout`;
+var logoutChat = ~$logoutChat`;
+if(logoutChat) localStorage.setItem("cout","1");
 $("#loginRegistration").addClass("logout");
 </script>
