@@ -28,7 +28,8 @@ class BackendWebAuthentication extends BackendApiAuthentication
 			$userDetails = $this->backendObj->fetchSessionDetailsBySessionID($userno);
 			if($userDetails)
 			{
-				if (time()-$userDetails["TIME"] < $this->sessionTimeoutLimit)
+				//if (time()-$userDetails["TIME"] < $this->sessionTimeoutLimit)
+				if(1)
 				{
 					$this->backendObj->updateAgentSessionTime($userno);
 					$this->setLoginCookies($cid,$name);

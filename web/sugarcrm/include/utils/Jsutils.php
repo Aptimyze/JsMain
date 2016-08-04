@@ -3,7 +3,7 @@ $path1=dirname(__FILE__);
 //die;
 chdir("$path1/../..");
 include_once("custom/include/language/en_us.lang.php");
-
+include_once(JsConstants::$docRoot."/profile/connect_db.php");
 /**get the detail of a lead given the lead_id 
  * @param string lead_id 
  * @returns Array of all the fields-value of the lead

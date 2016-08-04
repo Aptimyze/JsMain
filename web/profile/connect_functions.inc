@@ -1,4 +1,5 @@
 <?php
+
 include_once(JsConstants::$docRoot."/commonFiles/crmLoginFunctions.php");
 
 if(!function_exists("filter_page_redirection"))
@@ -223,14 +224,16 @@ function get_dup_overall_cnt($profileid)
 	$profArray=array();
 	if($profileid)
 	{
-		$mysqlObj=new Mysql;
-
-		$myDbName=getProfileDatabaseConnectionName($profileid,'',$mysqlObj);
-		$myDb=$mysqlObj->connect("$myDbName");
-		$sql="select RECEIVER, DATEDIFF(now(),`DATE`) as `TIME` from newjs.MESSAGE_LOG where SENDER='$profileid' and `TYPE`='I' order by `DATE` DESC";
-		$res=$mysqlObj->executeQuery($sql,$myDb);
+//		$mysqlObj=new Mysql;
+		$senderShard=JsDbSharding::getShardNo($profileid);
+		$dbMessageLogObj=new NEWJS_MESSAGE_LOG($senderShard);
+		//$myDbName=getProfileDatabaseConnectionName($profileid,'',$mysqlObj);
+		//$myDb=$mysqlObj->connect("$myDbName");
+		$res=$dbMessageLogObj->getMessagesBasedOnType($profileid,"I");
+		//$sql="select RECEIVER, DATEDIFF(now(),`DATE`) as `TIME` from newjs.MESSAGE_LOG where SENDER='$profileid' and `TYPE`='I' order by `DATE` DESC";
+		//$res=$mysqlObj->executeQuery($sql,$myDb);
 			
-		while($row=mysql_fetch_assoc($res))
+		foreach($res as $key=>$row)
 		{
 			if($row['TIME']<=$dup_live_diff)
 				$profArray[$row[RECEIVER]]=1;
@@ -7430,6 +7433,7 @@ function check_astro_details($profileid,$show_horoscope="abc")
 				$profileid_str.="'".$profileid_arr[$i]."',";
 		}
 		$profileid_str=substr($profileid_str,0,strlen($profileid_str)-1);
+		$profileid_str = implode(",",array_diff(explode(",",$profileid_str), [0]));
 		if($profileid_str)
 		{
 			$sql_ast_det="SELECT PROFILEID,LAGNA_DEGREES_FULL,SUN_DEGREES_FULL,MOON_DEGREES_FULL,MARS_DEGREES_FULL,MERCURY_DEGREES_FULL,JUPITER_DEGREES_FULL,VENUS_DEGREES_FULL,SATURN_DEGREES_FULL FROM newjs.ASTRO_DETAILS WHERE PROFILEID IN ($profileid_str)";

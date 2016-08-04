@@ -70,14 +70,14 @@ class FieldSalesExecutivePerformanceMis
 	{
 		if($this->execArray && is_array($this->execArray))
 		{
-			$incHisObj = new incentive_HISTORY;
+			$incHisObj = new incentive_HISTORY('newjs_slave');
 			$output = $incHisObj->getFreshVisitDoneDataForExecs($this->execArray,$this->start_dt,$this->end_dt);
 			unset($incHisObj);
 
 			$start_dt = date('Y-m-d 00:00:00', strtotime('-29 day', strtotime($this->start_dt)));
 			if($output && is_array($output))
 			{
-				$proVerDocObj = new PROFILE_VERIFICATION_DOCUMENTS();
+				$proVerDocObj = new PROFILE_VERIFICATION_DOCUMENTS('newjs_slave');
 				foreach($output as $k=>$v) {
 					$profilesArr[] = $v["PROFILEID"];
 					$countArr = $proVerDocObj->countVerifiedDocumentsForProfilesArr($profilesArr);
@@ -95,7 +95,7 @@ class FieldSalesExecutivePerformanceMis
 						{
 							if($flag==0 && $result["ALLOT_TIME"]<=$v["ENTRY_DT"] && $result["DE_ALLOCATION_DT"]." 23:59:59">=$v["ENTRY_DT"])
 							{
-								$maObj = new MANUAL_ALLOT();
+								$maObj = new MANUAL_ALLOT('newjs_slave');
 								$fs_alloc_stat = $maObj->getAllocationStatus($v["ENTRYBY"],$v["PROFILEID"],$start_dt,$this->end_dt);
 								if($fs_alloc_stat != 'FS') 	continue;
 								unset($maObj);
@@ -119,14 +119,14 @@ class FieldSalesExecutivePerformanceMis
 		$start_dt = date('Y-m-d 00:00:00', strtotime('-29 day', strtotime($this->start_dt)));
 		if($this->execArray && is_array($this->execArray))
 		{
-			$incMIEObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY;
+			$incMIEObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY('newjs_slave');
 			$output = $incMIEObj->getProfilesWhichPaidDataForExecs($this->execArray,$this->start_dt,$this->end_dt);
 			unset($incMIEObj);
 		}
 		if($output && is_array($output))
 		{
 			foreach($output as $k=>$v){
-				$maObj = new MANUAL_ALLOT();
+				$maObj = new MANUAL_ALLOT('newjs_slave');
 				$fs_alloc_stat = $maObj->getAllocationStatus($v["ALLOTED_TO"],$v["PROFILEID"],$start_dt,$this->end_dt);
 				$result = $this->getAgentAllotedData($v["ALLOTED_TO"],$v["PROFILEID"]);
 				if($fs_alloc_stat != 'FS' || $result["ALLOT_TIME"]>$v["ENTRY_DT"] || $result["DE_ALLOCATION_DT"]<$v["D"])
@@ -142,7 +142,7 @@ class FieldSalesExecutivePerformanceMis
 	{
 		$start_dt = date('Y-m-d 00:00:00', strtotime('-29 day', strtotime($this->start_dt)));
 		{
-			$incMIEObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY;
+			$incMIEObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY('newjs_slave');
 			$output = $incMIEObj->getSalesDataForExecs1($this->execArray,$this->start_dt,$this->end_dt);
 			unset($incMIEObj);
 		}
@@ -150,7 +150,7 @@ class FieldSalesExecutivePerformanceMis
 		if($output && is_array($output))
 		{
 			foreach($output as $k=>$v){
-				$maObj = new MANUAL_ALLOT();
+				$maObj = new MANUAL_ALLOT('newjs_slave');
 				$fs_alloc_stat = $maObj->getAllocationStatus($v["ALLOTED_TO"],$v["PROFILEID"],$start_dt,$this->end_dt);
 				$result = $this->getAgentAllotedData($v["ALLOTED_TO"],$v["PROFILEID"]);
 				if($fs_alloc_stat != 'FS' || $result["ALLOT_TIME"]>$v["ENTRY_DT"] || $result["DE_ALLOCATION_DT"]<$v["D"])
@@ -262,7 +262,7 @@ class FieldSalesExecutivePerformanceMis
 	{
 		if($this->execArray && is_array($this->execArray))
 		{
-			$incHisObj = new incentive_HISTORY;
+			$incHisObj = new incentive_HISTORY('newjs_slave');
 			$infoArr = $incHisObj->getFreshVisitDoneDataForExecs($this->execArray,$this->dateRange[0],$this->end_dt);
 			foreach($infoArr as $v) {
 				$freshDataArr[$v['ENTRYBY']][$v['PROFILEID']] = $v['ENTRY_DT'];
@@ -284,7 +284,7 @@ class FieldSalesExecutivePerformanceMis
 					{
 						if($flag==0 && $result["ALLOT_TIME"]<=$v["ENTRY_DT"] && $result["DE_ALLOCATION_DT"]." 23:59:59">=$v["ENTRY_DT"])
 						{
-							$maObj = new MANUAL_ALLOT();
+							$maObj = new MANUAL_ALLOT('newjs_slave');
 							$fs_alloc_stat = $maObj->getAllocationStatus($v["ENTRYBY"],$v["PROFILEID"],$start_dt,$this->dateRange[1]);
 							if($fs_alloc_stat != 'FS') 	continue;
 							unset($maObj);
@@ -308,7 +308,7 @@ class FieldSalesExecutivePerformanceMis
 				$jj=0;
 				foreach($execDetailsArr as $k=>$v)
 				{
-					$imieObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY;
+					$imieObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY('newjs_slave');
 					$output = $imieObj->getSalesDataForExecs($this->execArray,$v["ALLOT_TIME"],$v["DE_ALLOT_TIME"],$v["PROFILEID"]);
 					unset($imieObj);
 
@@ -351,11 +351,11 @@ class FieldSalesExecutivePerformanceMis
 	//This function is called when a hyperlink for sales amount or profiles count which paid is clicked for an executive on Result Screen 1
 	public function getProfilesPaymentDataDetails()
 	{
-		$imieObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY;
+		$imieObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY('newjs_slave');
 		$output = $imieObj->getSalesDataForExecs($this->execArray,$this->start_dt,$this->end_dt,'',1);
 		$start_dt = date('Y-m-d 00:00:00', strtotime('-29 day', strtotime($this->dateRange[0])));
 		foreach ($output as $k => $v) {
-			$maObj = new MANUAL_ALLOT();
+			$maObj = new MANUAL_ALLOT('newjs_slave');
 			$fs_alloc_stat = $maObj->getAllocationStatus($v["ALLOTED_TO"],$v["PROFILEID"],$start_dt,$this->dateRange[1]);
 			if($fs_alloc_stat != 'FS') 	unset($output[$k]);
 			unset($maObj);
@@ -391,7 +391,7 @@ class FieldSalesExecutivePerformanceMis
 			}
 			unset($usernameArr);
 
-			$incHisObj = new incentive_HISTORY;
+			$incHisObj = new incentive_HISTORY('newjs_slave');
 			$jj=0;
 			foreach($output as $k=>$v)
 			{
@@ -487,7 +487,7 @@ class FieldSalesExecutivePerformanceMis
 	// Function to get background color per agent
 	public function getBackgroundColor($reporters){
 		foreach($reporters as $agent){
-			$jsObj = new jsadmin_PSWRDS();
+			$jsObj = new jsadmin_PSWRDS('newjs_slave');
 			$priv = $jsObj->getPrivilegeForAgent($agent);
 			$color = $this->getRowColour($priv);
 			$res[$agent] =  $color;
@@ -497,7 +497,7 @@ class FieldSalesExecutivePerformanceMis
 
 	// Function to get actual Field Sales agents during the selection period
 	public function getActualFieldSalesAgents(){
-		$incManualAllot = new MANUAL_ALLOT();
+		$incManualAllot = new MANUAL_ALLOT('newjs_slave');
 		$agents = $incManualAllot->getAllotedAgentsDetailsInDateRange($this->start_dt, $this->end_dt);
 		$fsAgents = array();
 
@@ -517,7 +517,7 @@ class FieldSalesExecutivePerformanceMis
 
 	// Function to get agent wise alloted profiles with their allot time and deallocation date in array format
 	public function getAgentAllotedProfileArray($agentArray){
-		$crmDailyAllotObj = new CRM_DAILY_ALLOT();
+		$crmDailyAllotObj = new CRM_DAILY_ALLOT('newjs_slave');
 		$agentAllotedProfileArray = array();
 		foreach($agentArray as $key=>$value){
 			$agentAllotedProfileArray[$value] = $crmDailyAllotObj->getAgentAllotedProfileArray($value, $this->start_dt, $this->end_dt);
@@ -526,7 +526,7 @@ class FieldSalesExecutivePerformanceMis
 	}
 
 	public function getAgentAllotedProfileArrayFromTrac($agentArray){
-		$crmDailyAllotTracObj = new CRM_DAILY_ALLOT_TRACK();
+		$crmDailyAllotTracObj = new CRM_DAILY_ALLOT_TRACK('newjs_slave');
 		$agentAllotedProfileArray = array();
 		foreach($agentArray as $key=>$value){
 			$agentAllotedProfileArray[$value] = $crmDailyAllotTracObj->getAgentAllotedProfileArray($value, $this->start_dt, $this->end_dt);
@@ -571,7 +571,7 @@ class FieldSalesExecutivePerformanceMis
 
 	// Function to get list of Fresh Visits done per agent after allotment before deallocation period expires
 	public function getAgentAllotedProfileFreshVisitArray($agentAllotedArray, $start_date, $end_date){
-		$crmHistoryObj = new incentive_HISTORY();
+		$crmHistoryObj = new incentive_HISTORY('newjs_slave');
 		$agentAllotedProfileFreshVisitArray = array();
 		$profid = array();
 		$outputArray = array();
@@ -620,8 +620,8 @@ class FieldSalesExecutivePerformanceMis
 
 	// Function to get number of Alloted Profiles that have Paid within the alloted period duration
 	public function getAgentAllotedProfilePaidArray($allotedArray){
-		$crmMonthlyIncEligObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY();
-        $purchasesObj = new BILLING_PURCHASES();
+		$crmMonthlyIncEligObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY('newjs_slave');
+        	$purchasesObj = new BILLING_PURCHASES('newjs_slave');
 		$agentAllotedProfilePaidArray = array();
 		foreach($allotedArray as $key=>$value){
             foreach($value as $k => $v){
@@ -888,7 +888,7 @@ class FieldSalesExecutivePerformanceMis
 		// 30 days prior of start date
 		$start_date = date('Y-m-d 00:00:00', strtotime('-29 day', strtotime($start_date)));
 		$end_date = $end_date." 23:59:59";
-		$maObj = new MANUAL_ALLOT();
+		$maObj = new MANUAL_ALLOT('newjs_slave');
 		$allocation = $maObj->getDistinctFieldSalesAgents($start_date, $end_date);
 		
 		// visibility check
@@ -915,11 +915,11 @@ class FieldSalesExecutivePerformanceMis
     }
     public function getAgentAllotedData($agentName, $profileId)
     {
-	$incCDAObj = new CRM_DAILY_ALLOT;
+	$incCDAObj = new CRM_DAILY_ALLOT('newjs_slave');
 	$res = $incCDAObj->getAllocationDates($agentName,$profileId);
 	if(!$res)
 	{
-		$incCDATObj = new CRM_DAILY_ALLOT_TRACK;
+		$incCDATObj = new CRM_DAILY_ALLOT_TRACK('newjs_slave');
 		$res = $incCDATObj->getAllocationDates($agentName,$profileId);
 	}
 	return $res;	

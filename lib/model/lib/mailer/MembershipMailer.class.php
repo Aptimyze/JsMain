@@ -1,20 +1,31 @@
 <?php 
 class MembershipMailer {
     
-    public function sendMembershipMailer($mailid, $profileid, $dataArr=''){
+    public function sendMembershipMailer($mailid, $profileid, $dataArr='',$attachment='',$attachmentName=''){
 
         $mailerServiceObj = new MailerService();
         sfProjectConfiguration::getActive()->loadHelpers("Partial","global/mailerfooter");
-	$mailerLinks = $mailerServiceObj->getLinks();
+	    $mailerLinks = $mailerServiceObj->getLinks();
 
         $email_sender = new EmailSender(MailerGroup::MEMBERSHIP_MAILER, $mailid);
         $emailTpl = $email_sender->setProfileId($profileid);
         $smartyObj = $emailTpl->getSmarty();
         $smartyObj->assign("mailerLinks",$mailerLinks);
+        $protect_obj = new protect;
+        $profilechecksum = md5($profileid)."i".$profileid;
+        $profileObj = LoggedInProfile::getInstance('newjs_slave',$profileid);
+        $echecksum = $protect_obj->js_encrypt($profilechecksum,$profileObj->getEMAIL());
+        $autoLoginLink = JsConstants::$siteUrl."/membership/jspc?CMGFRMMMMJS=1&checksum=$profilechecksum&profilechecksum=$profilechecksum&echecksum=$echecksum&enable_auto_loggedin=1&from_source=FP_RB_PROMO_MAILER";
+        $smartyObj->assign("membershipAutoLoginLink", $autoLoginLink);
 
         if(is_array($dataArr))
                 $smartyObj =$this->setSmartyParams($mailid,$smartyObj,$mailerServiceObj, $dataArr);
 
+	if($attachment){	
+		$email_sender->setAttachment($attachment);
+		$email_sender->setAttachmentName($attachmentName);
+		$email_sender->setAttachmentType('application/vnd.ms-excel');
+	}
         $email_sender->send();
         $deliveryStatus =$email_sender->getEmailDeliveryStatus();
         return $deliveryStatus;
@@ -55,7 +66,7 @@ class MembershipMailer {
                         $smartyObj->assign("unsubscribeLink",$unsubscribeLink);
                         $smartyObj->assign("instanceID",$dataArr['instanceID']);
 						break;
-				case 'NEW_MEMBERSHIP_PAYMENT':
+		case 'NEW_MEMBERSHIP_PAYMENT':
                         $mailerLinks = $mailerServiceObj->getLinks();
                         $unsubscribeLink = $mailerLinks['UNSUBSCRIBE'];
                         $smartyObj->assign("profileid",$dataArr['profileid']);
@@ -66,15 +77,22 @@ class MembershipMailer {
                         $smartyObj->assign("servMain",$dataArr['servMain']);
                         $smartyObj->assign("username",$dataArr['username']);
                         $smartyObj->assign("dppLink",$mailerLinks['MY_DPP']);
-						break;
-				case 'JS_EXCLUSIVE_FEEDBACK':
-						$currency =$dataArr['currency'];
-					        if(!empty($currency)){
-			        			$smartyObj->assign('currency',$currency);
-			        		}
-						break;
+			break;
+		case 'JS_EXCLUSIVE_FEEDBACK':
+			$currency =$dataArr['currency'];
+		        if(!empty($currency)){
+        			$smartyObj->assign('currency',$currency);
+        		}
+			break;
+                case 'MEM_EXPIRY_CONTACTS_VIEWED':
+                        $mailerLinks = $mailerServiceObj->getLinks();
+                        $unsubscribeLink = $mailerLinks['UNSUBSCRIBE'];
+                        $smartyObj->assign("profileid",$dataArr['profileid']);
+                        $smartyObj->assign("PROFILEID",$dataArr['profileid']);
+                        $smartyObj->assign("unsubscribeLink",$unsubscribeLink);
+                        break;
                 default:
-						break;
+			break;
         }
         return $smartyObj;
     }
@@ -409,7 +427,128 @@ class MembershipMailer {
         }
         $email_sender->send();
     }   		
+    function getContactsViewedList($profileid,$startDate,$endDate){
+	
+	$contactViewObj 	=new JSADMIN_VIEW_CONTACTS_LOG('newjs_local111');
+	$profileViewedArr 	=$contactViewObj->countContactsViewForDates($profileid,$startDate,$endDate);
 
+	if(is_array($profileViewedArr)){
+		foreach($profileViewedArr as $key=>$data){
+			$profileidArr[] 	=$key;
+			$detailsArr[$key] 	=$data['DATE'];
+		}
+		$profileStr =implode(",", $profileidArr);
+
+		// jprofile details
+		$hiddenContact ='Contact hidden';
+		$jprofileObj =new JPROFILE('newjs_local111');
+		$fields ='PROFILEID,GENDER,USERNAME,EMAIL,PHONE_OWNER_NAME,MOBILE_OWNER_NAME,PHONE_MOB,PHONE_WITH_STD,MOBILE_NUMBER_OWNER,PHONE_NUMBER_OWNER,SHOWPHONE_RES,SHOWPHONE_MOB';
+		$valueArray['PROFILEID'] =$profileStr;
+		$excludeArray =array("ACTIVATED"=>"'D'");
+		$resDetails =$jprofileObj->getArray($valueArray,$excludeArray,'',$fields);	
+
+		// jprofile Contact
+	        $jprofileContactObj    =new NEWJS_JPROFILE_CONTACT('newjs_local111');
+        	$valueArr['PROFILEID']  =$profileStr;
+        	$result                 =$jprofileContactObj->getArray($valueArr,'','','PROFILEID,ALT_MOBILE,ALT_MOBILE_OWNER_NAME,ALT_MOBILE_NUMBER_OWNER,SHOWALT_MOBILE');
+		if(is_array($result)){
+			foreach($result as $key=>$val){
+				$pid =$val['PROFILEID'];
+				$altContactArr[$pid]['ALT_MOBILE'] =$val['ALT_MOBILE'];
+				$altContactArr[$pid]['ALT_OWNER_NAME'] =$val['ALT_MOBILE_OWNER_NAME'];
+				$altContactArr[$pid]['ALT_MOBILE_NUMBER_OWNER'] =$val['ALT_MOBILE_NUMBER_OWNER'];
+				$altContactArr[$pid]['SHOWALT_MOBILE'] =$val['SHOWALT_MOBILE'];
+			}
+		}
+		// data formatting
+		$id=0;
+		foreach($resDetails as $key=>$dataArr){
+			$pid 				=$dataArr['PROFILEID'];
+			$viewedDate			=$detailsArr[$pid];
+			$gender				=$dataArr['GENDER'];
+			if($gender=='M')
+				$relation		='number_owner_male';
+			else
+				$relation		='number_owner_female';	
+
+			$showMob			=$dataArr['SHOWPHONE_MOB'];	
+			$showPhone			=$dataArr['SHOWPHONE_RES'];
+			$showAlt			=$altContactArr[$pid]['SHOWALT_MOBILE'];
+	
+			$dataSet[$id]['USERNAME']	=$dataArr['USERNAME'];
+			$dataSet[$id]['VIEWED_DATE'] 	=date("d/m/Y", strtotime($viewedDate));
+			$phoneMob			=$dataArr['PHONE_MOB'];
+			$phoneLandline			=$dataArr['PHONE_WITH_STD'];
+			$phoneAlt			=$altContactArr[$pid]['ALT_MOBILE'];
+			if($showMob=='Y' && $phoneMob){
+				$relationMob		=FieldMap::getFieldLabel($relation,$dataArr['MOBILE_NUMBER_OWNER']);
+				$mobileArr      	=array($phoneMob,$dataArr['MOBILE_OWNER_NAME'],$relationMob);
+				$mobileArrNew           =array_filter($mobileArr);
+				$mobileData		=implode(",", $mobileArrNew);
+			}
+			elseif($showMob!='Y' && $phoneMob){
+				$mobileData		=$hiddenContact;
+			}
+			else	
+				$mobileData		='';
+			if($showPhone=='Y' && $phoneLandline){
+				$relationLandline  	=FieldMap::getFieldLabel($relation,$dataArr['PHONE_NUMBER_OWNER']);
+				$landlineArr            =array($phoneLandline,$dataArr['PHONE_OWNER_NAME'],$relationLandline);
+				$landlineArrNew         =array_filter($landlineArr);
+				$landlineData		=implode(",", $landlineArrNew);
+			}
+			elseif($showPhone!='Y' && $phoneLandline){
+				$landlineData		=$hiddenContact;
+			}
+			else
+				$landlineData		='';
+			if($showAlt=='Y' && $phoneAlt){
+				$relationAlt            =FieldMap::getFieldLabel($relation,$altContactArr[$pid]['ALT_MOBILE_NUMBER_OWNER']);
+				$alternateArr          =array($phoneAlt,$altContactArr[$pid]['ALT_OWNER_NAME'],$relationAlt);
+				$alternateArrNew       	=array_filter($alternateArr);
+				$altData		=implode(",", $alternateArrNew);	
+			}
+			elseif($showAlt!='Y' && $phoneAlt){
+				$altData		=$hiddenContact;	
+			}
+			else
+				$altData		='';
+                        $dataSet[$id]['MOBILE']         =$mobileData;
+                        $dataSet[$id]['LANDLINE']       =$landlineData;
+                        $dataSet[$id]['ALT']            =$altData;
+			$dataSet[$id]['EMAIL']          =$dataArr['EMAIL'];	
+			$id++;
+		}
+		return $dataSet;
+	}
+	return;
+    }
+    public function getExcelData($data,$dataHeader){
+        $retval = "";
+        if (is_array($data)  && !empty($data)){
+                $row = 0;
+                foreach(array_values($data) as $_data){
+                        if (is_array($_data) && !empty($_data)){
+                                foreach($dataHeader as $key1=>$val1){
+                                        if($row==0)
+                                                $headerVal[] =$val1;
+
+                                        $values[] =$_data[$key1];
+                                }
+                                if($row==0){
+                                        $retval =implode("\t",$headerVal);
+                                        $retval .= "\n\n";
+                                }
+                                $retval .=implode("\t",$values);
+                                $retval .= "\n";
+                                unset($values);
+                                //increment the row so we don't create headers all over again
+                                $row++;
+                        }
+                }
+        }
+        return $retval;
+    }
     public function sendWelcomeMailerToPaidUser($mailid, $profileid, $attachment, $services){
 
         $mailerServiceObj = new MailerService();

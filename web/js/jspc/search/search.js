@@ -491,7 +491,7 @@ $("body").delegate('.js-removeProfile, .js-search-undoRemoveProfile','click', fu
 	}else
 	     var blockOrUnblock = 1;
        
-	if((blockOrUnblock==1 && $(this).text().indexOf("Block")!=-1) || blockOrUnblock==0){
+	if((blockOrUnblock==1 && $(this).text().indexOf("Ignore")!=-1) || blockOrUnblock==0){
 	    var postParams = {'blockArr[profilechecksum]':profileCheckSum,'blockArr[action]':blockOrUnblock};
 	    $.myObj.ajax({
 		    url: url,
@@ -544,7 +544,7 @@ function blockProfileOnSRP(srpTuple,profileCheckSum,usernameOfProfile){
                                 </div>\
                                 <div class='fl pl10 pt10'>\
                                         <div class='color11'>"+usernameOfProfile+"</div>\
-                                    <div class='colr2 pt3'>This profile has been moved to your blocked members list and will not be able to contact you.</div>\
+                                    <div class='colr2 pt3'>This profile has been moved to Blocked/Ignored list. It will not appear again in future searches or in other listings.</div>\
                                 </div>\
                                 <div class='fr pt25 colr5 js-search-undoRemoveProfile cursp' id='undoRemove"+srpTuple+"' data='"+profileCheckSum+"'>\
                                         Undo\

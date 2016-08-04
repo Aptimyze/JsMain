@@ -9,6 +9,7 @@
                 $previous_db = "";
 include_once(JsConstants::$docRoot."/commonFiles/mysql_multiple_connections.php");
 
+if(!function_exists('connect_db')){
 	function connect_db($nohtml="")
 	{
 		if($nohtml==1)
@@ -26,7 +27,7 @@ include_once(JsConstants::$docRoot."/commonFiles/mysql_multiple_connections.php"
 
 		return $db;
 	}
-
+}
 	function connect_db_ro($nohtml="")
 	{
 		if($nohtml==1)
@@ -41,7 +42,7 @@ include_once(JsConstants::$docRoot."/commonFiles/mysql_multiple_connections.php"
 
 		return $db;
 	}
-
+if(!function_exists('connect_slave')){
 	function connect_slave()
         {
                 $db=db_set_active("slave",MysqlDbConstants::$misSlave[HOST].":".MysqlDbConstants::$misSlave[PORT],MysqlDbConstants::$misSlave[USER],MysqlDbConstants::$misSlave[PASS],MYSQL_CLIENT_COMPRESS) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes","","ShowErrTemplate","YES","81");
@@ -53,7 +54,8 @@ include_once(JsConstants::$docRoot."/commonFiles/mysql_multiple_connections.php"
                 return $db;
 		
         }
-
+}
+if(!function_exists('connect_slave81')){
         function connect_slave81()
         {
                 $db=db_set_active("slave81",MysqlDbConstants::$alertsSlave[HOST].":".MysqlDbConstants::$alertsSlave[PORT],MysqlDbConstants::$alertsSlave[USER],MysqlDbConstants::$alertsSlave[PASS],MYSQL_CLIENT_COMPRESS);
@@ -64,6 +66,7 @@ include_once(JsConstants::$docRoot."/commonFiles/mysql_multiple_connections.php"
 
                 return $db;
         }
+}
 
 	function connect_mmm()
 	{
@@ -75,7 +78,7 @@ include_once(JsConstants::$docRoot."/commonFiles/mysql_multiple_connections.php"
 
                 return $db;
 	}
-
+if(!function_exists('connect_slave_ro')){
 	function connect_slave_ro()
         {
 		return connect_slave81();
@@ -88,7 +91,8 @@ include_once(JsConstants::$docRoot."/commonFiles/mysql_multiple_connections.php"
 
                 return $db;
         }
-
+}
+if(!function_exists('connect_db4')){
 	function connect_db4()
         {
                 $db=db_set_active("db4",MysqlDbConstants::$viewSimilar[HOST].":".MysqlDbConstants::$viewSimilar[PORT],MysqlDbConstants::$viewSimilar[USER],MysqlDbConstants::$viewSimilar[PASS],MYSQL_CLIENT_COMPRESS) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes","","ShowErrTemplate","YES","db4");
@@ -99,7 +103,8 @@ include_once(JsConstants::$docRoot."/commonFiles/mysql_multiple_connections.php"
 
                 return $db;
         }
-
+}
+if(!function_exists('connect_737')){
 	function connect_737()
         {
 		//return connect_db();
@@ -112,7 +117,8 @@ include_once(JsConstants::$docRoot."/commonFiles/mysql_multiple_connections.php"
 
                 return $db;
         }
-
+}
+if(!function_exists('connect_737_ro')){
 	function connect_737_ro()
         {
 		//return connect_db();
@@ -125,7 +131,8 @@ include_once(JsConstants::$docRoot."/commonFiles/mysql_multiple_connections.php"
 
                 return $db;
         }
-
+}
+if(!function_exists('connect_db2')){
 	function connect_db2()
         {
                 $db=db_set_active("db2","localhost:/tmp/mysql2.sock","user","CLDLRTa9",MYSQL_CLIENT_COMPRESS) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes","","ShowErrTemplate","YES");
@@ -136,7 +143,8 @@ include_once(JsConstants::$docRoot."/commonFiles/mysql_multiple_connections.php"
 
                 return $db;
         }
-
+}
+if(!function_exists('connect_737_lan')){
 	function connect_737_lan()
         {
 		return connect_db();
@@ -149,7 +157,7 @@ include_once(JsConstants::$docRoot."/commonFiles/mysql_multiple_connections.php"
 
                 return $db;
         }
-
+}
 if(!function_exists('connect_211'))
 {
 	function connect_211()
@@ -163,7 +171,7 @@ if(!function_exists('connect_211'))
 		return $db2;
 	}
 }
-
+if(!function_exists('connect_303')){
 	function connect_303()
 	{	
 		$db2 = db_set_active("303",MysqlDbConstants::$misSlave[HOST],MysqlDbConstants::$misSlave[USER],MysqlDbConstants::$misSlave[PASS],MYSQL_CLIENT_COMPRESS) or die("Can't connect to Database".mysql_error());
@@ -174,7 +182,7 @@ if(!function_exists('connect_211'))
 
                 return $db2;
 	}
-
+}
 	function connect_openfire()
         {
                 $db=db_set_active("openfire",MysqlDbConstants::$master[HOST].":".MysqlDbConstants::$master[PORT],MysqlDbConstants::$master[USER],MysqlDbConstants::$master[PASS]) or die();
@@ -198,7 +206,7 @@ if(!function_exists('connect_211'))
 
                 return $db;
         }
-
+if(!function_exists('connect_dnc')){
 	function connect_dnc()
         {
                 $db_dnc =mysql_connect(MysqlDbConstants::$dnc[HOST].":".MysqlDbConstants::$dnc[PORT],MysqlDbConstants::$dnc[USER],MysqlDbConstants::$dnc[PASS]) or die("");
@@ -209,5 +217,6 @@ if(!function_exists('connect_211'))
 
                 return $db_dnc;
         }
+}
 
 ?>

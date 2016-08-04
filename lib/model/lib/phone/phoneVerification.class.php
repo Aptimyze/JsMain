@@ -69,6 +69,7 @@ public function __construct($profileObject='',$phoneType)
         public function getPhone(){return $this->phone;}
         public function getPhoneWithoutIsd(){return $this->phoneWithoutIsd;}
         public function isVerified(){return $this->isVerified;}
+        public function getIsd(){return $this->isd;}
 
 public function phoneUpdateProcess($message)
 	{
@@ -123,8 +124,6 @@ public function phoneUpdateProcess($message)
            	$jsadminObj=new jsadmin_OFFLINE_MATCHES();
            	$jsadminObj->updateCategory($profileid,'6');
 
-			$phoneLogObj= new PHONE_VERIFIED_LOG();
-			$phoneLogObj->insertEntry($profileid,$this->getPhoneType(), $this->getPhone(),$message);
 			
 			if(JsConstants::$duplicateLoggingQueue)
                                                 {
@@ -147,6 +146,17 @@ public function phoneUpdateProcess($message)
 			            
 			
 			
+		//	$phoneLogObj= new PHONE_VERIFIED_LOG();
+			$id=$verifiedLogObj->insertEntry($profileid,$this->getPhoneType(), $this->getPhone(),$message);
+             
+             //OTP LOGGING
+             if($message=="OTP"){
+				$otpLogObj =new MIS_OTP_LOG();
+				$channel=MobileCommon::getChannel();
+				if(!$channel)
+					$channel='M';
+				$otpLogObj->insertEntry($id,$this->getPhone(),$this->getIsd(),$channel);
+            }
 
 			JsMemcache::getInstance()->set($profileid."_PHONE_VERIFIED",'Y');
 		

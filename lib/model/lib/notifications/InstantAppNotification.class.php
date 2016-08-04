@@ -56,7 +56,9 @@ class InstantAppNotification
                           	}
                           	if($thumbNail)
 					$profileDetails[$selfProfile]['PHOTO_URL']=$thumbNail;
-                          	else  
+                          	elseif($notificationData['PHOTO_URL']!='')
+					$profileDetails[$selfProfile]['PHOTO_URL'] =$notificationData['PHOTO_URL'];
+				else  
 					$profileDetails[$selfProfile]['PHOTO_URL']="D";
 
 				if($notificationData['OTHER_PROFILE_CHECKSUM'])

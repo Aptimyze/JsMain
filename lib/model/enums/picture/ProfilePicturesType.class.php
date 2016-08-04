@@ -92,7 +92,8 @@ class ProfilePicturesTypeEnum
                                                             "ProfilePic450Url"=>array("w"=>"450","h"=>"450"),
                                                             "ProfilePicUrl"=>array("w"=>"150","h"=>"200"),
                                                             "MobileAppPicUrl"=>array("w"=>"450","h"=>"600"),
-                                                            "ThumbailUrl"=>array("w"=>"60","h"=>"60")
+                                                            "ThumbailUrl"=>array("w"=>"60","h"=>"60"),
+							    "MainPicUrl"=>array("w"=>"990","h"=>"512")
                         );
         
         

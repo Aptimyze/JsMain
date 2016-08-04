@@ -1,2 +1,2 @@
 type=command
-command=${php5} ${docRoot}/symfony  notification:schedulePushNotificationsKey MATCHALERT 2 1
+command=${php5} ${docRoot}/symfony  notification:schedulePushNotificationsKey MATCHALERT 3 1

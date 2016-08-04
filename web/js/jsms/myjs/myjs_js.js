@@ -1,4 +1,3 @@
-
 var awaitingResponseCount, visitorCount, matchalertCount, limit = 0,tupleObject,tupleObject2,
 	index = 0,
             pc_temp1 = 0,

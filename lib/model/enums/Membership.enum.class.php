@@ -56,7 +56,8 @@ class VariableParams
 		'1804' => 'VD',
 		'1797' => 'JS_EXCLUSIVE_FEEDBACK',
 		'1795' => 'MEMBERSHIP_PROMOTIONAL',
-		'1835' => 'NEW_MEMBERSHIP_PAYMENT'
+		'1835' => 'NEW_MEMBERSHIP_PAYMENT',
+		'1836' => 'MEM_EXPIRY_CONTACTS_VIEWED'
 	);
 	public static $discountLimitText =array("flatCap"=>"Flat","flatSmall"=>"flat","uptoCap"=>"Upto","uptoSmall"=>"upto");
     public static $mainMembershipsArr = array(
@@ -763,17 +764,19 @@ class paymentOption
 
 class gatewayConstants
 {
-    public static $CCAvenueLiveDolMerchantId = "jsdollar5615";
-    public static $CCAvenueLiveDolSalt = "6cwghcvrmo2091w2uxnxeerde9xj7nle";
-    public static $CCAvenueLiveDolURL = 'https://world.ccavenue.com/servlet/ccw.CCAvenueController';
+    public static $CCAvenueLiveDolMerchantId = "63430";
+    public static $CCAvenueLiveDolSalt = "7C1F2325E7B5E8B39C36C2D3BF6D25E3";
+    public static $CCAvenueLiveDolURL = 'https://secure.ccavenue.com/transaction/transaction.do?command=initiateTransaction';
+    public static $CCAvenueLiveDolAccessCode = "AVDD04CD91AO78DDOA";
     
     public static $CCAvenueLiveRsMerchantId = "M_anyana_1395";
     public static $CCAvenueLiveRsSalt = "a5qdxwe59g5af94qphru8hjubw1t9o6u";
     public static $CCAvenueLiveRsURL = "https://www.ccavenue.com/shopzone/cc_details.jsp";
     
-    public static $CCAvenueTestDolMerchantId = "jsdollar5615";
-    public static $CCAvenueTestDolSalt = "6cwghcvrmo2091w2uxnxeerde9xj7nle";
-    public static $CCAvenueTestDolURL = 'https://world.ccavenue.com/servlet/ccw.CCAvenueController';
+    public static $CCAvenueTestDolMerchantId = "63430";
+    public static $CCAvenueTestDolSalt = "7C1F2325E7B5E8B39C36C2D3BF6D25E3";
+    public static $CCAvenueTestDolURL = 'https://test.ccavenue.com/transaction/transaction.do?command=initiateTransaction';
+    public static $CCAvenueTestDolAccessCode = "AVDD04CD91AO78DDOA";
     
     public static $CCAvenueTestRsMerchantId = "M_anyana_1395";
     public static $CCAvenueTestRsSalt = "a5qdxwe59g5af94qphru8hjubw1t9o6u";

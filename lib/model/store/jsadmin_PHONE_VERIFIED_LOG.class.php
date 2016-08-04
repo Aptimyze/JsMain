@@ -179,6 +179,7 @@ public function insertEntry($profileid,$phoneType,$phoneNum,$msg,$opUsername){
                     $res->bindValue(":PHONETYPE", $phoneType, PDO::PARAM_STR);            
                     $res->bindValue(":TIME", (new DateTime)->format('Y-m-j H:i:s'), PDO::PARAM_STR);            
                     $res->execute();
+                    return $this->db->lastInsertId();
                 }
                 catch(PDOException $e)
                 {
