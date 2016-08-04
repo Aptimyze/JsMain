@@ -730,8 +730,11 @@ include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 			$actObj->profilechecksum=$jc->profilechecksum;
 			$actObj->SHOW_NEXT_PREV=$jc->SHOW_NEXT_PREV;
 			$actObj->other_params=$jc->other_params;
-			$actObj->SHOW_PREV=$jc->SHOW_PREV;
-			$actObj->SHOW_NEXT=$jc->SHOW_NEXT;
+			if($actObj->stype != SearchTypesEnums::KundliAlerts)
+			{
+				$actObj->SHOW_PREV=$jc->SHOW_PREV;
+				$actObj->SHOW_NEXT=$jc->SHOW_NEXT;
+			}
 			
 			$actObj->next_prev_prof=$jc->next_prev_prof;
 			

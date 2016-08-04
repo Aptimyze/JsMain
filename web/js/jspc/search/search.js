@@ -3,6 +3,8 @@
 */
 var loadImageId = "idd1"; // First image id to load
 var loadFeaturedImageId = "iddf1"; // first featured profile image id
+var minAcceptedGunaScore = 18;		//Minimum gunaScore below which profiles shouldnt be shown on Kundli Matches
+
 /**
 * Document ready function to populate first response
 */
@@ -211,6 +213,7 @@ function searchListingAction(thisElement){
 * Function which will use api response and populate tuples and clusters
 */
 function pageResponsePopulate(response) {
+	
 		/** call to get guna score **/
 		if(typeof(loggedInJspcUser)!="undefined" && loggedInJspcUser!=""){
 				getGunaScore(response);
@@ -238,7 +241,7 @@ function pageResponsePopulate(response) {
 			*/
 
 			/**
-			* show clusters section is replace by title on left in case of shortlisted section / visitors
+			* show clusters section is replaced by title on left in case of shortlisted section / visitors
 			*/
 			if(response.listType=='cc' || response.listType=='noClusSearch')
 			{
@@ -247,6 +250,7 @@ function pageResponsePopulate(response) {
 		                infoArr1["heading"] = response.heading;
                 		infoArr1["totalCount"] = response.total;
 		                infoArr1["message"] = response.ccmessage;
+		                infoArr1["searchBasedParam"] = response.searchBasedParam;
 				loadClusters(val,infoArr1);
 			}
 			else
@@ -271,7 +275,7 @@ function pageResponsePopulate(response) {
 	*/
 	if($('#pageSubHeading').length)
 	{
-        	if(typeof response.pageSubHeading!="undefined")
+        	if(typeof response.pageSubHeading!="undefined" && response.pageSubHeading!=null)
 		{
 			$("#pageSubHeadingTop").show();
 			$("#pageSubHeading").html(response.pageSubHeading);
@@ -976,25 +980,21 @@ function getGunaScore(response)
 	var deleteChecksumArr = new Array();
 	var searchBasedParam = response.searchBasedParam;
 	var searchResponse = response;
-	var profileLength;
-	var featureProfileLength;
-	//console.log(searchResponse.profiles.length);
+	var profileLength = 0;
+	var featureProfileLength = 0;
+
+	//Length of profiles array in response
 	if('profiles' in searchResponse && Array.isArray(searchResponse.profiles))
 	{
 		profileLength = searchResponse.profiles.length;
 	}
-	else
-	{
-		profileLength = 0;
-	}
+
+	//Length of feature profiles array in response
 	if('featuredProfiles' in searchResponse)
 	{
 		featureProfileLength = searchResponse.featuredProfiles.length;
 	}
-	else
-	{
-		featureProfileLength = 0;
-	}
+
 	//loop to fetch profilchecksums for normal and featured profiles and club them in an array
 	$.each(response, function(key, val) {
 		if (key == 'profiles' && val!==null) {
@@ -1028,7 +1028,7 @@ function getGunaScore(response)
 				{
 					$.each(gunaScoreArr, function(key,val){	
 						$.each(val, function(profchecksum,gunaScore){
-							if(gunaScore <= 30)
+							if(gunaScore <= searchResponse.minAcceptedGunaScore)
 							{
 								deleteChecksumArr.push(profchecksum);
 							}
@@ -1040,22 +1040,29 @@ function getGunaScore(response)
 						kundliAlertListingHandling(searchResponse,profileLength,'profiles',deleteChecksumArr);
 					}
 								
-					if(featureProfileLength != 0)
+					if((searchResponse.profiles.length == 0))
 					{
-						kundliAlertListingHandling(searchResponse,featureProfileLength,'featuredProfiles',deleteChecksumArr);
-					}
+						if(searchResponse.page_index < searchResponse.paginationArray.length)
+						{
+								loadPage(parseInt(searchResponse.page_index) + 1);
+						}
+						else
+						{
+							setTimeout(function(){
+							$("#zeroPageHeading").html(searchResponse.result_count);
+							$("#zeroPageMsg").html(searchResponse.DefaultZeroMsg);
+							$("#js-searchContainer").hide();
+							$("#zeroResultSection").show();
+						}, 0.1);
+						}
 
-					console.log(searchResponse);
-					console.log(searchResponse.profiles.length);					
-
-					if((searchResponse.no_of_results - (25*searchResponse.page_index)) > 0 && (searchResponse.profiles.length == 0))
-					{console.log("herher");
-						loadPage(parseInt(searchResponse.page_index) + 1);
+						
+						
 					}
-					console.log(searchResponse);					
+				
 					setTimeout(function(){
 						setGunaScoreOnListing(gunaScoreArr);
-					}, 2000);
+					}, 3000);
 				}
 				else
 				{
@@ -1067,6 +1074,7 @@ function getGunaScore(response)
 
 }
 
+//This function is used to delete profiles from profiles array whose guna is less than a mininum accepted value
 function kundliAlertListingHandling(searchResponse,length,profileType,deleteChecksumArr)
 {
 	while(length)
@@ -1080,6 +1088,7 @@ function kundliAlertListingHandling(searchResponse,length,profileType,deleteChec
 	}
 }
 
+//This function sets the Guna score on search tuples corresponnding to their id's
 function setGunaScoreOnListing(gunaScoreArr)
 {
 	$.each(gunaScoreArr, function(key,val){	

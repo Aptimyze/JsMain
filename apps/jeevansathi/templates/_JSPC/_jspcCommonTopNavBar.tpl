@@ -119,7 +119,7 @@ window.onload=function(){
                                 <li><a class="disp_b" href="/search/twoway">Mutual Matches</a></li>
                                 <li><a class="disp_b" href="/search/reverseDpp">People Looking for me</a></li>
                                 ~if $showKundliList eq '1'`
-                                <li><a class="disp_b" href="/search/kundlialerts">Kundli Matches</a></li>
+                                <li><a class="disp_b" href="/search/kundlialerts">Kundli Matches<div class="fr"><div class="bg_pink mr15 mt10"><div style="line-height:10px;" class="colrw disp_b padall-6">New</div></div></div></a></li>
                                 ~/if`
                                 <li><a class="disp_b" href="/search/shortlisted">Shortlisted members</a></li>
                                 <li><a class="disp_b" href="/search/visitors">Recent Profile Visitors</a></li>
