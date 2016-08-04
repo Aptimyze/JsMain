@@ -589,7 +589,7 @@ function getProfileImage() {
             success: function (data) {
                 if (data.statusCode == "0") {
                     imageUrl = data.profiles[0].PHOTO.ProfilePic120Url;
-                    if (imageUrl == "") {
+                    if (typeof imageUrl == "undefined" || imageUrl == "") {
                         if (loggedInJspcGender) {
                             if (loggedInJspcGender == "F") {
                                 imageUrl = chatConfig.Params[device].noPhotoUrl["self120"]["F"];
