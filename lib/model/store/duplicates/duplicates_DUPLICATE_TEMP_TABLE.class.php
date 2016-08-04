@@ -11,7 +11,7 @@ class duplicates_DUPLICATE_TEMP_TABLE extends TABLE {
             if(!$inString) return false;
                         try {
                         $sql="select * from duplicates.DUPLICATE_TEMP_TABLE where PROFILEID IN (:INSTRING)";
-	  
+            $prep = $this->db->prepare($sql);	  
              $prep->bindValue(":INTRING",$inString, PDO::PARAM_STR);
              $prep->execute();
              while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
