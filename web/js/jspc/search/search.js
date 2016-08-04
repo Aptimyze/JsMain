@@ -979,12 +979,12 @@ function getGunaScore(response)
 	var profileLength;
 	var featureProfileLength;
 	//console.log(searchResponse.profiles.length);
-	if('featuredProfiles' in searchResponse && Array.isArray(searchResponse.profiles))
-	{console.log("!!!");
+	if('profiles' in searchResponse && Array.isArray(searchResponse.profiles))
+	{
 		profileLength = searchResponse.profiles.length;
 	}
 	else
-	{console.log("@@@");
+	{
 		profileLength = 0;
 	}
 	if('featuredProfiles' in searchResponse)
@@ -995,7 +995,6 @@ function getGunaScore(response)
 	{
 		featureProfileLength = 0;
 	}
-	console.log(profileLength);
 	//loop to fetch profilchecksums for normal and featured profiles and club them in an array
 	$.each(response, function(key, val) {
 		if (key == 'profiles' && val!==null) {
