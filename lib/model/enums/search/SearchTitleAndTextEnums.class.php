@@ -80,7 +80,7 @@ class SearchTitleAndTextEnums
                 self::$SUBHEADING_MAPPING["V1"]["PC"]["verifiedMatches"] = 'Shown below are members<a href="/static/agentinfo"><span class="disp_ip color5 pause-rel"> verified by a personal visit</span></a> and match your Desired Partner Profile';
                 self::$SUBHEADING_MAPPING["V1"]["PC"]["twowaymatch"] = "Shown below are people where both of you match each other's criteria";
                 self::$SUBHEADING_MAPPING["V1"]["PC"]["justJoinedMatches"] = "Shown below are your desired partner matches who joined in the last week";
-                self::$SUBHEADING_MAPPING["V1"]["PC"]["kundlialerts"] = "Shown below are matches with a compatible guna score based on horoscope matching";
+                self::$SUBHEADING_MAPPING["V1"]["PC"]["kundlialerts"] = "Shown here are matches with a compatible guna score based on horoscope matching";
                 self::$SUBHEADING_MAPPING["V1"]["PC"]["matchalerts"]["trend"] = array(0=>"Matches are based on history of your interests & acceptances.",1=>"Matches are based strictly on your Desired Partner Preferences.");
                 self::$SUBHEADING_MAPPING["V1"]["PC"]["matchalerts"]["dpp"] = array(0=>"Matches are based strictly on your Desired Partner Preferences.",1=>"Matches are based on history of your interests & acceptances.");
                 
@@ -116,7 +116,7 @@ class SearchTitleAndTextEnums
 		self::$MESSAGE_0RESULT_MAPPING["V1"]["PC"]["twowaymatch"] = "Profiles where both of you match each other's criteria will appear here<br>Please relax your Desired Partner Profile to see results";
 		self::$MESSAGE_0RESULT_MAPPING["V1"]["PC"]["justJoinedMatches"] = "People matching your desired partner profile and have joined in last one week will appear here<br>Please relax your Desired Partner Profile to see results";
 		self::$MESSAGE_0RESULT_MAPPING["V1"]["PC"]["kundlialerts"] = array(
-																			"withoutHoro"=>"Please <a href='/profile/viewprofile.php?ownview=1&EditWhatNew=uploadhoroscope'>create your horoscope</a> to see your Kundli matches",
+																			"withoutHoro"=>"Please <a href='/profile/viewprofile.php?ownview=1&EditWhatNew=uploadhoroscope'><span class='color5'>create your horoscope</span></a> to see your Kundli matches",
 																			"withHoro"=>"Kindly relax the criteria present in your Desired Partner Profile",
 																		);
 		self::$MESSAGE_0RESULT_MAPPING["V1"]["PC"]["matchalerts"] = "We are finding the best recommendations for you. It may take a while.";
