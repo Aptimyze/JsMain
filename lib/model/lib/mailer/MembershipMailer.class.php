@@ -442,7 +442,7 @@ class MembershipMailer {
 		// jprofile details
 		$hiddenContact ='Contact hidden';
 		$jprofileObj =new JPROFILE('newjs_local111');
-		$fields ='PROFILEID,USERNAME,EMAIL,PHONE_OWNER_NAME,MOBILE_OWNER_NAME,PHONE_MOB,PHONE_WITH_STD,MOBILE_NUMBER_OWNER,PHONE_NUMBER_OWNER,SHOWPHONE_RES,SHOWPHONE_MOB';
+		$fields ='PROFILEID,GENDER,USERNAME,EMAIL,PHONE_OWNER_NAME,MOBILE_OWNER_NAME,PHONE_MOB,PHONE_WITH_STD,MOBILE_NUMBER_OWNER,PHONE_NUMBER_OWNER,SHOWPHONE_RES,SHOWPHONE_MOB';
 		$valueArray['PROFILEID'] =$profileStr;
 		$excludeArray =array("ACTIVATED"=>"'D'");
 		$resDetails =$jprofileObj->getArray($valueArray,$excludeArray,'',$fields);	
@@ -465,6 +465,11 @@ class MembershipMailer {
 		foreach($resDetails as $key=>$dataArr){
 			$pid 				=$dataArr['PROFILEID'];
 			$viewedDate			=$detailsArr[$pid];
+			$gender				=$dataArr['GENDER'];
+			if($gender=='M')
+				$relation		='number_owner_male';
+			else
+				$relation		='number_owner_female';	
 
 			$showMob			=$dataArr['SHOWPHONE_MOB'];	
 			$showPhone			=$dataArr['SHOWPHONE_RES'];
@@ -476,7 +481,7 @@ class MembershipMailer {
 			$phoneLandline			=$dataArr['PHONE_WITH_STD'];
 			$phoneAlt			=$altContactArr[$pid]['ALT_MOBILE'];
 			if($showMob=='Y' && $phoneMob){
-				$relationMob		=FieldMap::getFieldLabel('number_owner',$dataArr['MOBILE_NUMBER_OWNER']);
+				$relationMob		=FieldMap::getFieldLabel($relation,$dataArr['MOBILE_NUMBER_OWNER']);
 				$mobileArr      	=array($phoneMob,$dataArr['MOBILE_OWNER_NAME'],$relationMob);
 				$mobileArrNew           =array_filter($mobileArr);
 				$mobileData		=implode(",", $mobileArrNew);
@@ -487,7 +492,7 @@ class MembershipMailer {
 			else	
 				$mobileData		='';
 			if($showPhone=='Y' && $phoneLandline){
-				$relationLandline  	=FieldMap::getFieldLabel('number_owner',$dataArr['PHONE_NUMBER_OWNER']);
+				$relationLandline  	=FieldMap::getFieldLabel($relation,$dataArr['PHONE_NUMBER_OWNER']);
 				$landlineArr            =array($phoneLandline,$dataArr['PHONE_OWNER_NAME'],$relationLandline);
 				$landlineArrNew         =array_filter($landlineArr);
 				$landlineData		=implode(",", $landlineArrNew);
@@ -498,7 +503,7 @@ class MembershipMailer {
 			else
 				$landlineData		='';
 			if($showAlt=='Y' && $phoneAlt){
-				$relationAlt            =FieldMap::getFieldLabel('number_owner',$dataArr['ALT_MOBILE_NUMBER_OWNER']);
+				$relationAlt            =FieldMap::getFieldLabel($relation,$altContactArr[$pid]['ALT_MOBILE_NUMBER_OWNER']);
 				$alternateArr          =array($phoneAlt,$altContactArr[$pid]['ALT_OWNER_NAME'],$relationAlt);
 				$alternateArrNew       	=array_filter($alternateArr);
 				$altData		=implode(",", $alternateArrNew);	
