@@ -440,8 +440,9 @@ class MembershipMailer {
 		$profileStr =implode(",", $profileidArr);
 
 		// jprofile details
+		$hiddenContact ='Contact hidden';
 		$jprofileObj =new JPROFILE('newjs_local111');
-		$fields ='PROFILEID,USERNAME,EMAIL,PHONE_OWNER_NAME,MOBILE_OWNER_NAME,PHONE_MOB,PHONE_WITH_STD,MOBILE_NUMBER_OWNER,PHONE_NUMBER_OWNER';
+		$fields ='PROFILEID,USERNAME,EMAIL,PHONE_OWNER_NAME,MOBILE_OWNER_NAME,PHONE_MOB,PHONE_WITH_STD,MOBILE_NUMBER_OWNER,PHONE_NUMBER_OWNER,SHOWPHONE_RES,SHOWPHONE_MOB';
 		$valueArray['PROFILEID'] =$profileStr;
 		$excludeArray =array("ACTIVATED"=>"'D'");
 		$resDetails =$jprofileObj->getArray($valueArray,$excludeArray,'',$fields);	
@@ -449,13 +450,14 @@ class MembershipMailer {
 		// jprofile Contact
 	        $jprofileContactObj    =new NEWJS_JPROFILE_CONTACT('newjs_local111');
         	$valueArr['PROFILEID']  =$profileStr;
-        	$result                 =$jprofileContactObj->getArray($valueArr,'','','PROFILEID,ALT_MOBILE,ALT_MOBILE_OWNER_NAME,ALT_MOBILE_NUMBER_OWNER');
+        	$result                 =$jprofileContactObj->getArray($valueArr,'','','PROFILEID,ALT_MOBILE,ALT_MOBILE_OWNER_NAME,ALT_MOBILE_NUMBER_OWNER,SHOWALT_MOBILE');
 		if(is_array($result)){
 			foreach($result as $key=>$val){
 				$pid =$val['PROFILEID'];
 				$altContactArr[$pid]['ALT_MOBILE'] =$val['ALT_MOBILE'];
 				$altContactArr[$pid]['ALT_OWNER_NAME'] =$val['ALT_MOBILE_OWNER_NAME'];
 				$altContactArr[$pid]['ALT_MOBILE_NUMBER_OWNER'] =$val['ALT_MOBILE_NUMBER_OWNER'];
+				$altContactArr[$pid]['SHOWALT_MOBILE'] =$val['SHOWALT_MOBILE'];
 			}
 		}
 		// data formatting
@@ -463,26 +465,58 @@ class MembershipMailer {
 		foreach($resDetails as $key=>$dataArr){
 			$pid 				=$dataArr['PROFILEID'];
 			$viewedDate			=$detailsArr[$pid];
-			
+
+			$showMob			=$dataArr['SHOWPHONE_MOB'];	
+			$showPhone			=$dataArr['SHOWPHONE_RES'];
+			$showAlt			=$altContactArr[$pid]['SHOWALT_MOBILE'];
+	
 			$dataSet[$id]['USERNAME']	=$dataArr['USERNAME'];
 			$dataSet[$id]['VIEWED_DATE'] 	=date("d/m/Y", strtotime($viewedDate));
-			$relationMob	                =FieldMap::getFieldLabel('relationship',$dataArr['MOBILE_NUMBER_OWNER']);
-			$relationLandline               =FieldMap::getFieldLabel('relationship',$dataArr['PHONE_NUMBER_OWNER']);
-			$relationAlt                    =FieldMap::getFieldLabel('relationship',$dataArr['ALT_MOBILE_NUMBER_OWNER']);	
-			$mobileArr			=array($dataArr['PHONE_MOB'],$dataArr['MOBILE_OWNER_NAME'],$relationMob);
-			$landlineArr			=array($dataArr['PHONE_WITH_STD'],$dataArr['PHONE_OWNER_NAME'],$relationLandline);
-			$alternateArr			=array($altContactArr[$pid]['ALT_MOBILE'],$altContactArr[$pid]['ALT_OWNER_NAME'],$relationAlt);
-			$mobileArrNew			=array_filter($mobileArr);
-			$landlineArrNew			=array_filter($landlineArr);
-			$alternateArrNew		=array_filter($alternateArr);
-                        $dataSet[$id]['MOBILE']         =implode(",", $mobileArrNew);
-                        $dataSet[$id]['LANDLINE']       =implode(",", $landlineArrNew);
-                        $dataSet[$id]['ALT']            =implode(",", $alternateArrNew);
+			$phoneMob			=$dataArr['PHONE_MOB'];
+			$phoneLandline			=$dataArr['PHONE_WITH_STD'];
+			$phoneAlt			=$altContactArr[$pid]['ALT_MOBILE'];
+			if($showMob=='Y' && $phoneMob){
+				$relationMob		=FieldMap::getFieldLabel('relationship',$dataArr['MOBILE_NUMBER_OWNER']);
+				$mobileArr      	=array($phoneMob,$dataArr['MOBILE_OWNER_NAME'],$relationMob);
+				$mobileArrNew           =array_filter($mobileArr);
+				$mobileData		=implode(",", $mobileArrNew);
+			}
+			elseif($showMob!='Y' && $phoneMob){
+				$mobileData		=$hiddenContact;
+			}
+			else	
+				$mobileData		='';
+			if($showPhone=='Y' && $phoneLandline){
+				$relationLandline  	=FieldMap::getFieldLabel('relationship',$dataArr['PHONE_NUMBER_OWNER']);
+				$landlineArr            =array($phoneLandline,$dataArr['PHONE_OWNER_NAME'],$relationLandline);
+				$landlineArrNew         =array_filter($landlineArr);
+				$landlineData		=implode(",", $landlineArrNew);
+			}
+			elseif($showPhone!='Y' && $phoneLandline){
+				$landlineData		=$hiddenContact;
+			}
+			else
+				$landlineData		='';
+			if($showAlt=='Y' && $phoneAlt){
+				$relationAlt            =FieldMap::getFieldLabel('relationship',$dataArr['ALT_MOBILE_NUMBER_OWNER']);
+				$alternateArr          =array($phoneAlt,$altContactArr[$pid]['ALT_OWNER_NAME'],$relationAlt);
+				$alternateArrNew       	=array_filter($alternateArr);
+				$altData		=implode(",", $alternateArrNew);	
+			}
+			elseif($showAlt!='Y' && $phoneAlt){
+				$altData		=$hiddenContact;	
+			}
+			else
+				$altData		='';
+                        $dataSet[$id]['MOBILE']         =$mobileData;
+                        $dataSet[$id]['LANDLINE']       =$landlineData;
+                        $dataSet[$id]['ALT']            =$altData;
 			$dataSet[$id]['EMAIL']          =$dataArr['EMAIL'];	
 			$id++;
 		}
 		return $dataSet;
 	}
+	return;
     }
     public function getExcelData($data,$dataHeader){
         $retval = "";

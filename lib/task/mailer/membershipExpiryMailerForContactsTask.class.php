@@ -38,9 +38,10 @@ EOF;
 		// logic to handle profiles lost dur to slave lag
 		if(is_array($profilesArr)){
 			$profilesArr1 =array_keys($profilesArr);
-
 			$memExpObj =new billing_MEM_EXPIRY_CONTACTS_LOG('newjs_local111');
 			$getProfileList =$memExpObj->getProfileList($expiryDate1);
+			if(!is_array($getProfileList))
+				$getProfileList =array();
 			$profilesArr2 =array_diff($profilesArr1,$getProfileList);	
 			if(is_array($profilesArr2)){
 				foreach($profilesArr2 as $key=>$profileid){
@@ -65,10 +66,12 @@ EOF;
 				$dataArr['profileid']	=$profileid;
 				$startDate		=$data['ACTIVATED_ON'];
 				$dataSet 		=$mmObj->getContactsViewedList($profileid,$startDate,$endDate);
-				$attachment		=$mmObj->getExcelData($dataSet,$header);	
-				//print_r($attachment);
-				$deliveryStatus		=$mmObj->sendMembershipMailer($mailId, $profileid,$dataArr,$attachment,$attachmentName);
-				$memExpInsObj->add($profileid);		;
+				if($dataSet){
+					$attachment	=$mmObj->getExcelData($dataSet,$header);	
+					$deliveryStatus	=$mmObj->sendMembershipMailer($mailId, $profileid,$dataArr,$attachment,$attachmentName);
+					$memExpInsObj->add($profileid);		;
+					//print_r($attachment);
+				}
 				unset($dataArr);
 			}
 			unset($mmObj);
