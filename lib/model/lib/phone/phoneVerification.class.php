@@ -101,7 +101,7 @@ public function phoneUpdateProcess($message)
 				break;
 			}
 
-			$this->profileObject->getDetail($profileid,'PROFILEID');
+			$this->profileObject->getDetail($profileid,'PROFILEID','*');
 			$verifiedLogObj= new PHONE_VERIFIED_LOG();
 			$row=$verifiedLogObj->getNoOfTimesVerified($profileid);
 			$noOfTimesVerified=$row['COUNT'];
