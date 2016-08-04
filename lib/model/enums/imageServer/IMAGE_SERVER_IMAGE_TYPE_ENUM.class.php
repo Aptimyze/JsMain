@@ -41,10 +41,8 @@ class IMAGE_SERVER_IMAGE_TYPE_ENUM
 		if(array_key_exists($module,self::$imageTypeEnum) && array_key_exists($type,self::$imageTypeEnum[$module]))
 			$enum=self::$imageTypeEnum[$module][$type];
 		else
-			{
-				throw new jsException('',"Invalid Image Type Enum is requested in IMAGE_SERVER_IMAGE_TYPE_ENUM.class.php");
-				return $enum;
-        	}
+			throw new jsException('',"Invalid Image Type Enum is requested in IMAGE_SERVER_IMAGE_TYPE_ENUM.class.php");
+		return $enum;
     	}
 	
 	/* this function is used to retrieve Image type corrsponding to a module name and enum provided.

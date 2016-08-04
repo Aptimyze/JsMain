@@ -259,12 +259,12 @@ class seoActions extends sfActions
     }
     
     public function execute404(sfWebRequest $request) {
-        LoggingManager::getInstance(LoggingEnums::EX500OR404)->logThis(LoggingEnums::LOG_ERROR, new Exception("404 page encountered"), array('message' => $request->getUri()));
         //JsCommon::SeoFooter($this);
         sfContext::getInstance()->getResponse()->setStatusCode(404, 'Not Found');
         if (MobileCommon::isMobile()) {
             $this->forward("static", "page404");
         }
+        LoggingManager::getInstance(LoggingEnums::EX500OR404)->logThis(LoggingEnums::LOG_ERROR, new Exception("404 page encountered"), array('message' => $request->getUri()));
     }
     
     function TopSearchBandFields() {

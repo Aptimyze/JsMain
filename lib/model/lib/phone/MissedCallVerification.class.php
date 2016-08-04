@@ -45,7 +45,7 @@ public function __construct($phone,$virtualNo)
 			}
 
 					if(!$this->phoneType){
-					 throw new jsException("The phone is not saved for any profile", 1);
+					 throw new jsException('',"The phone is not saved for any profile", 1);
 					}
 					else $this->phone=$phone;
 			}
