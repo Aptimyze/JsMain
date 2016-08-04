@@ -126,8 +126,25 @@ public function phoneUpdateProcess($message)
 			$phoneLogObj= new PHONE_VERIFIED_LOG();
 			$phoneLogObj->insertEntry($profileid,$this->getPhoneType(), $this->getPhone(),$message);
 			
-			
-			Duplicate::logIfDuplicate($this->profileObject,$this->phone);            
+			if(JsConstants::$duplicateLoggingQueue)
+                                                {
+                                                        $producerObj=new Producer();
+                                                        if($producerObj->getRabbitMQServerConnected())
+                                                        {
+                                                                $updateSeenData = array('process' =>'DUPLICATE_LOG','data'=>array('phone' => $this->phone,'profileId'=>$this->profileObject->getPROFILEID()), 'redeliveryCount'=>0 );
+                                                                $producerObj->sendMessage($updateSeenData);
+                                                        }
+                                                        else
+                                                        {
+                                                              $this->sendMail();
+                                                        }
+                                                }
+                                                else
+                                                {
+							Duplicate::logIfDuplicate($this->profileObject,$this->phone);
+                                                }
+
+			            
 			
 			
 
@@ -249,7 +266,6 @@ static public function hidePhoneVerLayer($profileObj)
 public function savePhone($phoneNo,$std='',$isd='')
 {
        
-	$this->entryInDuplcationCheckOnEdit();
     $this->JPROFILE = JPROFILE::getInstance($dbname);
     $phoneType=$this->phoneType;
 	$timeNow=(new DateTime)->format('Y-m-j H:i:s');
@@ -369,36 +385,10 @@ public function contact_archive($field="",$val="")
 
 
 
-public function entryInDuplcationCheckOnEdit()
-{
-		switch ($this->phoneType)
-		{
-			case 'M':
-			$phoneType='phone_mob';
-			break;
-
-			case 'A':
-			$phoneType='alt_mobile';
-			break;
-
-			case 'L':
-			$phoneType='phone_res';
-			break;
-		}
-        $symfonyFilePath=realpath($_SERVER['DOCUMENT_ROOT']."/../");
-        $storeOb=new duplicates_DUPLICATE_CHECKS_FIELDS();
-        $dup_flag_value=$storeOb->get_from_duplication_check_fields($profileid);
-        if($dup_flag_value){
-                if($dup_flag_value[TYPE]=='NEW')
-                        $to_not_update_dup=true;
-                else
-                        $dup_flag_value=$dup_flag_value[FIELDS_TO_BE_CHECKED];
-        }
-        if(!$to_not_update_dup){
-                $dup_flag_value=Flag::setFlag($phoneType,$dup_flag_value,'duplicationFieldsVal');
-                $storeOb->insertRetrievedEntry(LoggedInProfile::getInstance(),'edit',$dup_flag_value);
-        }
-}
-
+  private function sendMail()
+  {
+	$http_msg=print_r($_SERVER,true);
+	mail("palashc2011@gmail.com,niteshsethi1987@gmail.com","rabbit mq server issue in PhoneVerification Duplication check","rabbit mq server issue in PhoneVerification Duplication check");
+  }
 
 }
