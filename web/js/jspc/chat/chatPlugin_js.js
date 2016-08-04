@@ -908,6 +908,8 @@ JsChat.prototype = {
                             messageId = msgSendOutput["msg_id"];
                             //that._chatLoggerPlugin("handling output of onSendingMessage in plugin");
                             if (messageId) $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + messageId);
+                            console.log("sent");
+                            console.log(msgSendOutput);
                             if (msgSendOutput["sent"] == false || msgSendOutput["cansend"] == false) {
                                 var error_msg = msgSendOutput['errorMsg'] || "Something went wrong";
                                 $('chat-box[user-id="' + userId + '"] #restrictMessgTxt').remove();
@@ -916,6 +918,7 @@ JsChat.prototype = {
                                     $(superParent).find("#sendInt").remove();
                                 }
                                 if (msgSendOutput["sent"] == true) {
+                                    console.log("marking");
                                     _this._changeStatusOfMessg(messageId, userId, "recieved");
                                 }
                                 if (msgSendOutput["cansend"] == false) {
@@ -1649,7 +1652,7 @@ JsChat.prototype = {
             }
         }
     },
-    //change from sending status to sent / sent and read
+    //change from sending status to sent or received read
     _changeStatusOfMessg: function (messgId, userId, newStatus) {
         if (messgId) {
             this._chatLoggerPlugin("Change status" + newStatus);

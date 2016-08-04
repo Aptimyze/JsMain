@@ -104,6 +104,8 @@ Strophe.addConnectionPlugin('receipts', {
 	 * remove msg from queue on received 
 	*/
 	_processReceipt: function(msg){
+		console.log("in _processReceipt");
+		console.log(msg);
 		var id = msg.getAttribute('id'),
 			from = msg.getAttribute('from'),
 			req = msg.getElementsByTagName('request'),
