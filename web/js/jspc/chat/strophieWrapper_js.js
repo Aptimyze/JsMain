@@ -515,7 +515,7 @@ var strophieWrapper = {
                 }).cnode(Strophe.xmlElement('body', message)).up().c('active', {
                     xmlns: "http://jabber.org/protocol/chatstates"
                 });
-                var messageId = strophieWrapper.connectionObj.receipts.sendMessage(reply);
+                var messageId = strophieWrapper.connectionObj.send(reply);
                 if (strophieWrapper.syncMessageForSessions == true) {
                     // Forward the message, so that other connected resources are also aware of it.
                     //append it as self sent message
