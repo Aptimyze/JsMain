@@ -27,7 +27,9 @@ class EoiViewLog{
         public function setEoiViewedForAReceiver($receiver,$filtered=0)
         {
             
-            $eoiSenderArray=(new newjs_CONTACTS())->getContactedProfiles($receiver, 'RECEIVER', array('I'),'', $filtered);
+            $receiverShard=JsDbSharding::getShardNo($receiver);
+            $eoiSenderArray=(new newjs_CONTACTS($receiverShard))->getContactedProfiles($receiver, 'RECEIVER', array('I'),'', $filtered);
+            
             foreach ($eoiSenderArray['I'] as $key => $value) 
             {
                 $tempShard =  JsDbSharding::getShardNo($value);
