@@ -1,6 +1,7 @@
 ~assign var=module value= $sf_request->getParameter('module')`
 ~assign var=loggedIn value= $sf_request->getAttribute('login')`
 ~assign var=action value= $sf_context->getActionName()`
+~assign var=subscription value= $sf_request->getAttribute('subscription')`
 ~if JsConstants::$jsChatFlag eq "1"`
     ~assign var=showChat value= CommonUtility::checkChatPanelCondition($loggedIn,$module,$action)`
 ~/if`
@@ -62,15 +63,17 @@
         var showChat = "~$showChat`";
         var loggedInJspcGender = "~$sf_request->getAttribute('gender')|decodevar`";
         var self_checksum = "~$sf_request->getAttribute('profilechecksum')`";
+        localStorage.setItem("self_subcription","~$subscription`");
     </script>
     ~/if`
     ~if $showChat`
         <script>
             var openfireUrl= "~JsConstants::$openfireConfig['HOST']`:~JsConstants::$openfireConfig['WSPORT']`";
+            var openfireServerName = "~JsConstants::$openfireConfig['SERVER_NAME']`";
         </script>
     ~else`
         <script>
-            var openfireUrl= "";
+            var openfireUrl= "",openfireServerName="";
         </script>
     ~/if`
 </head>

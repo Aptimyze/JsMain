@@ -19,7 +19,7 @@ var strophieWrapper = {
     currentConnStatus: null,
     loggingEnabledStrophe: false,
     tryReconnection: true,
-    syncSentMessage: true,
+    syncMessageForSessions: true,
     synchronize_selfPresence: true,
     stropheLoggerPC: function (msgOrObj) {
         if (strophieWrapper.loggingEnabledStrophe) {
@@ -122,7 +122,9 @@ var strophieWrapper = {
     triggerBindings: function () {
         //strophieWrapper.Roster = [];
         //send own presence
-        strophieWrapper.enableCarbons();
+        if(strophieWrapper.syncMessageForSessions == true){
+        	strophieWrapper.enableCarbons();
+        }
         strophieWrapper.sendPresence();
         //fetch roster of logged in user 
         if (strophieWrapper.initialRosterFetched == false) {
@@ -270,7 +272,6 @@ var strophieWrapper = {
                 console.log("error in carbons");
             } else {
                 console.log("carbons enabled");
-                //this.session.save({carbons_enabled: true});
             }
         }.bind(this), null, "iq", null, "enablecarbons");
         strophieWrapper.connectionObj.send(carbons_iq);
@@ -308,7 +309,7 @@ var strophieWrapper = {
         } else {
             if (strophieWrapper.synchronize_selfPresence == true) {
                 if (from != strophieWrapper.getSelfJID()) {
-                    console.log("updating self presence for different resource - " + from + chat_status);
+                    //console.log("updating self presence for different resource - " + from + chat_status);
                     /*if (chat_status == "offline") {
                         console.log("logout");
                         invokePluginLoginHandler("logout");
@@ -514,8 +515,8 @@ var strophieWrapper = {
                 }).cnode(Strophe.xmlElement('body', message)).up().c('active', {
                     xmlns: "http://jabber.org/protocol/chatstates"
                 });
-                var messageId = strophieWrapper.connectionObj.receipts.sendMessage(reply);
-                if (strophieWrapper.syncSentMessage == true) {
+                var messageId = strophieWrapper.connectionObj.send(reply);
+                if (strophieWrapper.syncMessageForSessions == true) {
                     // Forward the message, so that other connected resources are also aware of it.
                     //append it as self sent message
                     /* setTimeout(function(){
@@ -604,8 +605,8 @@ var strophieWrapper = {
         var received = msg.getElementsByTagName(strophieWrapper.msgStates["RECEIVED"]);
         if (msg_state == strophieWrapper.msgStates["FORWARDED"]) {
             var forwardObj = msg.getElementsByTagName(strophieWrapper.msgStates["FORWARDED"]);
-            console.log("in from");
-            console.log(msg);
+            //console.log("in from");
+            //console.log(msg);
             var msg1 = forwardObj[0].getElementsByTagName("message");
             //console.log(outputObj);
             outputObj["to"] = msg1[0].getAttribute("to").split("@")[0];

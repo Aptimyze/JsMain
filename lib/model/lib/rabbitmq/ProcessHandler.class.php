@@ -3,6 +3,7 @@
 This class includes functions for sending mail, sms and notifications.
 */
 include_once(JsConstants::$cronDocRoot."/crontabs/connect.inc");
+
 class ProcessHandler
 {
   /**

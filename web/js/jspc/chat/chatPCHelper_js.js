@@ -19,11 +19,18 @@ function handleChatDisconnection() {
     }
 }
 
-function manageHistoryLoader(user_id,type){
-    if(type == "show" && $('chat-box[user-id="' + user_id + '"] .spinner').is(":visible") == false){
-        $('chat-box[user-id="' + user_id + '"] .spinner2').removeClass("disp-none");
-    } else if(type == "hide") {
-        $('chat-box[user-id="' + user_id + '"] .spinner2').addClass("disp-none");
+/*manageHistoryLoader
+*show/hide loader for msg history
+*@params:user_jid,type
+*/
+function manageHistoryLoader(user_jid,type){
+    if(typeof user_jid!= "undefined"){
+        var user_id = user_jid.split("@")[0];
+        if(type == "show" && $('chat-box[user-id="' + user_id + '"] .spinner').is(":visible") == false){
+            $('chat-box[user-id="' + user_id + '"] .spinner2').removeClass("disp-none");
+        } else if(type == "hide") {
+            $('chat-box[user-id="' + user_id + '"] .spinner2').addClass("disp-none");
+        }
     }
 }
 function chatLoggerPC(msgOrObj) {
@@ -131,24 +138,36 @@ function getChatHistory(apiParams,key) {
                             localStorage.setItem("chatHistory_"+bare_from_jid+"_"+bare_to_jid,response["Message"]);
                         }
                         if(response["pagination"] == 0){
+                            console.log("no more history");
                             $("#moreHistory_"+bare_to_jid.split("@")[0]).val("0");
                         }
-                        manageHistoryLoader(bare_to_jid.split("@")[0],"hide");
+                        else{
+                            $("#moreHistory_"+bare_to_jid.split("@")[0]).val("1");
+                        }
+                        manageHistoryLoader(bare_to_jid,"hide");
                         //call plugin function to append history in div
                         objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], $.parseJSON(response["Message"]),key);
                     }
+                    else{
+                        manageHistoryLoader(bare_to_jid,"hide");
+                    }
+                }
+                else{
+                    manageHistoryLoader(bare_to_jid,"hide");
                 }
             },
             error: function (xhr) {
+                manageHistoryLoader(bare_to_jid,"hide");
                 //return "error";
             }
         });
     }
     else{
-        console.log("localStorage for history");
+        //console.log("localStorage for history");
         if(!oldHistory){
             oldHistory = "{}";
         }
+        manageHistoryLoader(bare_to_jid,"hide");
         //call plugin function to append history in div
         objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], $.parseJSON(oldHistory));
     }
@@ -172,14 +191,14 @@ function getSelfName(){
     }
     if(flag){
         var apiUrl = chatConfig.Params.selfNameUr;
-        console.log("In self Name");
+        //console.log("In self Name");
         $.myObj.ajax({
             url: apiUrl,
             async: false,
             success: function (response) {
                 if (response["responseStatusCode"] == "0") {
                     selfName = response["name"];
-                    console.log("Success In self Name",selfName);
+                    //console.log("Success In self Name",selfName);
                     localStorage.setItem('name', JSON.stringify({
                         'selfName': selfName,
                         'user': loggedInJspcUser
@@ -190,25 +209,26 @@ function getSelfName(){
                 //return "error";
             }
         });
-        console.log("ReturnIn self Name");
+        //console.log("ReturnIn self Name");
     }
     return selfName;
 }
 
-function readSiteCookie(name) {
-    var nameEQ = escape(name) + "=",
-        ca = document.cookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) === ' ') {
-            c = c.substring(1, c.length);
-        }
-        if (c.indexOf(nameEQ) === 0) {
-            return unescape(c.substring(nameEQ.length, c.length));
-        }
+/*fetch membership status of current user
+@return : membership
+*/
+function getMembershipStatus(){
+    return "paid";
+    var membership = localStorage.getItem("self_subcription");
+    //confirm check
+    if(membership && membership.indexOf("F")>=0 && membership.indexOf("D")>=0){
+        return "paid";
     }
-    return null;
+    else{
+        return "free";
+    }
 }
+
 /* requestListingPhoto
  * request listing photo through api
  * @inputs: apiParams
@@ -242,7 +262,7 @@ function requestListingPhoto(apiParams) {
  * @params:none
  */
 function initiateChatConnection() {
-    username = loggedInJspcUser + '@localhost';
+    username = loggedInJspcUser + '@' + openfireServerName;
     /*if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
         username = 'a1@localhost';
     else if(readSiteCookie("CHATUSERNAME")=="bassi")
@@ -446,13 +466,13 @@ function checkAuthentication() {
                 //createCookie("chatAuth","true");
                 //loginChat();
                 auth = 'true';
-                console.log("Beforepass",data.hash);
+                //console.log("Beforepass",data.hash);
                 pass = data.hash;
                 /*pass = JSON.parse(CryptoJS.AES.decrypt(data.hash, "chat", {
                     format: CryptoJSAesJson
                 }).toString(CryptoJS.enc.Utf8));
                 */
-                console.log("afterpass",pass);
+                //console.log("afterpass",pass);
             } else {
                 //chatLoggerPC(data.responseMessage);
                 //chatLoggerPC("In checkAuthentication failure");
@@ -746,14 +766,14 @@ function updateRosterOnChatContactActions(rosterParams) {
             if (typeof receiverJID != "undefined" && receiverJID) {
                 var nodeArr = [];
                 nodeArr[user_id] = strophieWrapper.Roster[user_id];
-                console.log("obj");
-                console.log(strophieWrapper.Roster[user_id]);
+                //console.log("obj");
+                //console.log(strophieWrapper.Roster[user_id]);
                 if (typeof nodeArr != "undefined") {
                     if (action == "ACCEPT" || action == "DECLINE" || action == "BLOCK" || action == "INITIATE") {
                         setTimeout(function () {
-                            console.log("removing");
+                            console.log("removing list from frontend in case of consumer delay");
                             invokePluginManagelisting(nodeArr, "delete_node", user_id);
-                        }, 5000);
+                        }, 10000);
                     }
                 }
                 /*switch (action) {
@@ -818,7 +838,7 @@ $(document).ready(function () {
         var chatLoggedIn = readCookie('chatAuth');
         var loginStatus;
         $("#jspcChatout").on('click',function(){
-            console.log("Logout clicked");
+            //console.log("Logout clicked");
            $(".jschatLogOut").click(); 
         });
         $(window).focus(function() {
@@ -827,7 +847,7 @@ $(document).ready(function () {
             }
         });
         $(window).on("offline", function () {
-            console.log("detected internet disconnection");
+            //console.log("detected internet disconnection");
             strophieWrapper.currentConnStatus = Strophe.Status.DISCONNECTED;
         });
         $(window).on("online", function () {
