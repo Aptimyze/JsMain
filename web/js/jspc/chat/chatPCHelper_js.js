@@ -34,6 +34,7 @@ function manageHistoryLoader(user_jid,type){
     }
 }
 function chatLoggerPC(msgOrObj) {
+    /*
     if (loggingEnabledPC) {
         if (typeof (window.console) != 'undefined') {
             try {
@@ -75,7 +76,7 @@ function chatLoggerPC(msgOrObj) {
             //console.log(' ');
             console.warn('Console log: ' + caller + ' ( line ' + line + ' )');
             //console.log(msgOrObj);
-            //console.log({
+            console.log({
                 'Full trace:': fullTrace
             });
             //console.log(' ');
@@ -83,6 +84,7 @@ function chatLoggerPC(msgOrObj) {
             //shout('This browser does not support //console.log!')
         }
     }
+    */
 }
 
 /*getChatHistory
@@ -353,6 +355,10 @@ function invokePluginLoginHandler(state) {
         if ($(objJsChat._loginbtnID).length != 0 && readCookie('chatAuth') == "true"){
             $(objJsChat._loginbtnID).click();
         }
+    } else if(state == "manageLogout"){
+        if(localStorage.getItem('cout') == "1"){
+            $(objJsChat._logoutChat).click();
+        }
     }
 }
 /*invokePluginAddlisting
@@ -468,6 +474,7 @@ function checkAuthentication() {
                 auth = 'true';
                 ////console.log("Beforepass",data.hash);
                 pass = data.hash;
+                localStorage.removeItem("cout");
                 /*pass = JSON.parse(CryptoJS.AES.decrypt(data.hash, "chat", {
                     format: CryptoJSAesJson
                 }).toString(CryptoJS.enc.Utf8));
@@ -842,6 +849,7 @@ $(document).ready(function () {
            $(".jschatLogOut").click(); 
         });
         $(window).focus(function() {
+            //invokePluginLoginHandler("")
             if(strophieWrapper.synchronize_selfPresence == true){
                 invokePluginLoginHandler("session_sync");
             }
