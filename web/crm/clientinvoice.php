@@ -119,7 +119,7 @@ if(authenticated($cid))
 			$sql="SELECT count(*) from incentive.PAYMENT_COLLECT,incentive.BRANCH_CITY where CONFIRM='Y' and AR_GIVEN='' and DISPLAY <> 'N'  and PAYMENT_COLLECT.CITY=BRANCH_CITY.VALUE";
 		else
 			$sql="SELECT count(*) from incentive.PAYMENT_COLLECT,incentive.BRANCH_CITY where CONFIRM='Y' and AR_GIVEN='' and DISPLAY <> 'N' and PAYMENT_COLLECT.CITY IN('$ar') and PAYMENT_COLLECT.CITY=BRANCH_CITY.VALUE";
-                $result=mysql_query_decide($sql,$db) or mysql_error_js();
+                $result=mysql_query_decide($sql,$db) or die(mysql_error_js());
                 $myrow = mysql_fetch_row($result);
                 $TOTALREC = $myrow[0];
 
@@ -127,7 +127,7 @@ if(authenticated($cid))
 			$sql="SELECT incentive.PAYMENT_COLLECT.ID,PROFILEID,USERNAME,PAYMENT_COLLECT.NAME,EMAIL,PHONE_RES,PHONE_MOB,ENTRY_DT,ADDON_SERVICEID,SERVICE,ADDRESS,COMMENTS,PREF_TIME,COURIER_TYPE,BRANCH_CITY.LABEL as CITY,PIN,ENTRYBY from incentive.PAYMENT_COLLECT,incentive.BRANCH_CITY where CONFIRM='Y' and AR_GIVEN='' and DISPLAY <> 'N' and PAYMENT_COLLECT.CITY=BRANCH_CITY.VALUE";// LIMIT $j,$PAGELEN";	
 		else
 			$sql="SELECT incentive.PAYMENT_COLLECT.ID,PROFILEID,USERNAME,PAYMENT_COLLECT.NAME,EMAIL,PHONE_RES,PHONE_MOB,ENTRY_DT,ADDON_SERVICEID,SERVICE,ADDRESS,COMMENTS,PREF_TIME,COURIER_TYPE,BRANCH_CITY.LABEL as CITY,PIN,ENTRYBY from incentive.PAYMENT_COLLECT, incentive.BRANCH_CITY where CONFIRM='Y' and AR_GIVEN='' and DISPLAY <> 'N' and PAYMENT_COLLECT.CITY IN ('$ar') and PAYMENT_COLLECT.CITY=BRANCH_CITY.VALUE LIMIT $j,$PAGELEN";	
-		$result=mysql_query_decide($sql) or mysql_error_js();
+		$result=mysql_query_decide($sql) or die(mysql_error_js());
 		while($myrow=mysql_fetch_array($result))
 		{
 //			$address=$myrow["ADDRESS"]." ".$myrow["CITY"]."-".$myrow["PIN"];
@@ -161,7 +161,7 @@ if(authenticated($cid))
                                 $addon_serviceid_str = implode(",",$addon_serviceid_ar);
 
                                 $sql = "Select NAME from billing.SERVICES where SERVICEID in ($addon_serviceid_str)";
-                                $result_services = mysql_query_decide($sql) or mysql_error_js();
+                                $result_services = mysql_query_decide($sql) or die(mysql_error_js());
                                 while($myrow_result_services = mysql_fetch_array($result_services))
                                 {
                                         $services[] = "<br>".$myrow_result_services["NAME"];

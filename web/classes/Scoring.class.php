@@ -247,7 +247,7 @@ class Scoring_Variables
 		if($profileid)
                         $this->PROFILEID=$profileid;
                 $sql="SELECT $parameter FROM newjs.JPROFILE WHERE  activatedKey=1 and PROFILEID=$profileid";
-                $result = mysql_query_decide($sql,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($myDb)));
+                $result = mysql_query_decide($sql,$myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($myDb)));
                 $myrow = mysql_fetch_array($result);
 		if($myrow)
                 {
@@ -369,17 +369,17 @@ class Attribute_Parameters
 		$this->setAGE_GENDER($scorevars->getAGE().",".$scorevars->getGENDER());
 		$con = $scorevars->getCOUNTRY_RES();
                 $sql1="SELECT SQL_CACHE Nationality FROM scoring.country_nationality WHERE Country='$con'";
-                $result1 = mysql_query_decide($sql1,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql1.mysql_error($myDb)));
+                $result1 = mysql_query_decide($sql1,$myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql1.mysql_error($myDb)));
                 $myrow1 = mysql_fetch_array($result1);
 		$nationality=$myrow1["Nationality"];
 		$ci = $scorevars->getCITY_RES();
 		$sql2="SELECT SQL_CACHE CityZone FROM scoring.city_zone WHERE City='$ci'";
-                $result2 = mysql_query_decide($sql2,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($myDb)));
+                $result2 = mysql_query_decide($sql2,$myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception(mysql_error($myDb)));
                 $myrow2 = mysql_fetch_array($result2);
                 $cityzone=$myrow2["CityZone"];
 		$com = $scorevars->getMTONGUE();
 		$sql3="SELECT SQL_CACHE ComZone FROM scoring.community_zone WHERE Community='$com'";
-                $result3 = mysql_query_decide($sql3,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql3.mysql_error($myDb)));
+                $result3 = mysql_query_decide($sql3,$myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql3.mysql_error($myDb)));
                 $myrow3 = mysql_fetch_array($result3);
                 $comzone=$myrow3["ComZone"];
 		if($nationality == "NRI")
@@ -420,7 +420,7 @@ class Attribute_Parameters
 			$sql = "select SQL_CACHE bias from scoring.$param where $param=$param_val AND payment_type='$ptype'";
 		else
 			$sql = "select SQL_CACHE bias from scoring.$param where $param='$param_val' AND payment_type='$ptype'";
-		$res = mysql_query_decide($sql,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($myDb)));
+		$res = mysql_query_decide($sql,$myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($myDb)));
 		if($row = @mysql_fetch_array($res))
 			return $row["bias"];
 		else
@@ -459,7 +459,7 @@ class Attribute_Parameters
 				break;
 			}
 		}
-                $res = mysql_query_decide($sql,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($myDb)));
+                $res = mysql_query_decide($sql,$myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($myDb)));
                 if($row = @mysql_fetch_array($res))
                         return $row["bias"];
                 else
@@ -539,13 +539,13 @@ class Behaviour_Parameters
 		$lim_1_dt = date("Y-m-d",time()-86400);
 		$lim_7_dt = date("Y-m-d",time()-7*86400);
 		$sql3 = "SELECT MAX(PAGE) AS PAGE FROM  billing.PAYMENT_HITS WHERE PROFILEID='$pid' AND ENTRY_DT BETWEEN '$lim_7_dt' AND '$cut_off'";
-                $res3 = mysql_query_decide($sql3,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql3.mysql_error($myDb)));
+                $res3 = mysql_query_decide($sql3,$myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql3.mysql_error($myDb)));
                 if($row3 = mysql_fetch_array($res3))
                         $this->setMAX_PAYMENT_PAGE($row3["PAGE"]);
                 else
                         $this->setMAX_PAYMENT_PAGE(0);
                 $sql4 = "SELECT pd.ENTRY_DT,p.SERVICEID FROM billing.PURCHASES as p,billing.PAYMENT_DETAIL as pd WHERE p.BILLID = pd.BILLID AND pd.PROFILEID ='$pid' order by pd.RECEIPTID desc";
-                $res4 = mysql_query_decide($sql4,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql4.mysql_error($myDb)));
+                $res4 = mysql_query_decide($sql4,$myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql4.mysql_error($myDb)));
                 while($row4 = mysql_fetch_array($res4))
                 {
                         $last_pay_date=$row4["ENTRY_DT"];
@@ -564,7 +564,7 @@ class Behaviour_Parameters
                 }
                 $this->setTIME_SINCE_LAST_PAY_MEMTYPE(round(((time()-JSstrToTime($last_pay_date))/86400)/30,0)."*".$mem_type);
 		$sql1 = "SELECT TYPE FROM newjs.CONTACTS WHERE SENDER='$pid' AND TIME BETWEEN '$lim_7_dt 00:00:00' AND '$cut_off 23:59:59'";
-		$res1 = mysql_query_decide($sql1,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql1.mysql_error($shDb)));
+		$res1 = mysql_query_decide($sql1,$shDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql1.mysql_error($shDb)));
 		while($row1 = mysql_fetch_array($res1))
 		{
 			if($row1["TYPE"]=="I")
@@ -589,7 +589,7 @@ class Behaviour_Parameters
 			$this->setDECLINE_LAST7(round($D/$T,-1));
 		}
 		$sql2 = "SELECT COUNT(*) AS CNT FROM newjs.LOGIN_HISTORY WHERE PROFILEID='$pid' AND LOGIN_DT BETWEEN '$lim_7_dt' AND '$lim_1_dt'";
-		$res2 = mysql_query_decide($sql2,$shDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql2.mysql_error($shDb)));
+		$res2 = mysql_query_decide($sql2,$shDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql2.mysql_error($shDb)));
                 if($row2 = mysql_fetch_array($res2))
 			$this->setLOGIN_LAST7($row2["CNT"]);
 		else
@@ -604,7 +604,7 @@ class Behaviour_Parameters
 	                $sql = "select SQL_CACHE bias from scoring.$param where $param=$param_val AND payment_type='$ptype'";
 		else
 			$sql = "select SQL_CACHE bias from scoring.$param where $param='$param_val' AND payment_type='$ptype'";
-                $res = mysql_query_decide($sql,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($myDb)));
+                $res = mysql_query_decide($sql,$myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($myDb)));
                 if($row = @mysql_fetch_array($res))
                         return $row["bias"];
                 else
@@ -622,7 +622,7 @@ class Behaviour_Parameters
 		else
 			$param_val_both[1]=$param_mem[0];
                 $sql = "select SQL_CACHE bias from scoring.$param where time_since_last_pay=$param_val_both[0] AND memtype IN ('$param_val_both[1]')";
-                $res = mysql_query_decide($sql,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($myDb)));
+                $res = mysql_query_decide($sql,$myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($myDb)));
                 if($row = @mysql_fetch_array($res))
                         return $row["bias"];
                 else

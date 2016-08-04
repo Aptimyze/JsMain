@@ -177,8 +177,7 @@ if(isset($data))
 		{
 			$profileid=$row['PROFILEID'];
 			/*$sql="UPDATE newjs.JPROFILE SET SUBSCRIPTION='' WHERE PROFILEID='$profileid'";
-			mysql_query_decide($sql) or mysql_error_js();
-			*/
+			mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());*/
 			$jprofileObj    =JProfileUpdateLib::getInstance();
                         $updateStr      ="SUBSCRIPTION=''";
                         $paramArr       =$jprofileObj->convertUpdateStrToArray($updateStr);

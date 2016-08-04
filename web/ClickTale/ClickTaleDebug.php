@@ -30,7 +30,7 @@ include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 ?>
 
 <?php
-if (empty(ClickTale_Settings::Instance()->AllowDebug)) LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_INFO, new Exception("Debug mode is disabled."));
+if (empty(ClickTale_Settings::Instance()->AllowDebug)) LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_INFO, new Exception("Debug mode is disabled."));
 ?>
 
 <h1> ClickTale Debug </h1><br>

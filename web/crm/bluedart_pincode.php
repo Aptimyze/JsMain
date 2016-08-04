@@ -2,7 +2,7 @@
 include("connect.inc");
 
 $sql_1="SELECT DISTINCT(CITY) FROM billing.BLUEDART_PINCODE GROUP BY CITY";
-$res_1=mysql_query_decide($sql_1) or mysql_error_js();
+$res_1=mysql_query_decide($sql_1) or die(mysql_error_js());
 while($row_1=mysql_fetch_array($res_1))
 {
 	$city_pin[]=$row_1['CITY'];	
@@ -12,7 +12,7 @@ while($row_1=mysql_fetch_array($res_1))
 if($submit)
 {
 	$sql="SELECT CITY,BDEL_LOC,STATE,PINCODE FROM billing.BLUEDART_PINCODE WHERE CITY='$pin'";
-	$res=mysql_query_decide($sql) or mysql_error_js();
+	$res=mysql_query_decide($sql) or die(mysql_error_js());
 	$count=mysql_num_rows($res);
 	if($count)
 	{

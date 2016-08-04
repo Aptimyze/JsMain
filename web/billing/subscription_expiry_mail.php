@@ -48,7 +48,7 @@ if($profileids_arr)
 	for($i=0;$i<count($profileids_arr);$i++){
 		$profile=$profileids_arr[$i];
 		$sql1="SELECT PROFILEID FROM billing.SERVICE_STATUS WHERE EXPIRY_DT >'$curdate' AND ACTIVE='Y' AND SERVEFOR like '%F%' AND PROFILEID='$profile'";
-		$res1=mysql_query_decide($sql1,$db_slave) or die("$sql1".mysql_error_js());
+		$res1=mysql_query_decide($sql1,$db_slave) or  die("$sql1".mysql_error_js());
 		if(!mysql_num_rows($res1)){
 
 			list($year,$month,$day) = explode("-",$curdate);

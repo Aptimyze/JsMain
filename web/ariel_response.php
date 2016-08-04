@@ -19,7 +19,7 @@ if($_GET)
 		$checkbox2 = "Not Specified";
 	}
 	$sql ="INSERT INTO billing.ARIEL_CAMPAIGN VALUES ('','$gender', '$name', '$checkbox1', '$checkbox2',now())";
-	$resReg = mysql_query_decide($sql,$db) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($db));
+	$resReg = mysql_query_decide($sql,$db) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($db)));
 	if($gender == "Male"){
 		header("Location: http://bs.serving-sys.com/BurstingPipe/adServer.bs?cn=tf&c=20&mc=click&pli=13252654&PluID=0&ord=%5btimestamp");
 	} else {

@@ -1,4 +1,4 @@
-x`<?php
+<?php
 include("config.php");
 include_once("../jsadmin/handleCrmLogin.php");
 include_once(JsConstants::$docRoot."/commonFiles/crmLoginFunctions.php");

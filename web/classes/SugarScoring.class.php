@@ -121,7 +121,7 @@ class Sugar_Variables
 		if($leadid)
                         $this->ID_C=$leadid;
                 $sql="SELECT $parameter FROM sugarcrm.leads_cstm WHERE id_c='$leadid'";
-                $result = mysql_query_decide($sql,$myDb) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($myDb)));
+                $result = mysql_query_decide($sql,$myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($myDb)));
                 $myrow = mysql_fetch_array($result);
 		if($myrow)
                 {

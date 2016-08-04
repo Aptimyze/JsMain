@@ -37,14 +37,13 @@ if(!function_exists('mysql_query_decide'))
 
 function logError($sql="",$db="")
 {
-        $error = mysql_error();
-        LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($error));
+        LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error()));
         if(!$db)
                 global $db;
 
         $today=date("Y-m-d h:m:s");
 
-	error_log("\n\nQuery : $sql \t Error : " .$error. " \t $today",3,JsConstants::$docRoot."/sugarcrm/logerror.txt");
+	error_log("\n\nQuery : $sql \t Error : " .mysql_error(). " \t $today",3,JsConstants::$docRoot."/sugarcrm/logerror.txt");
 }
 
 function logTime()
@@ -52,7 +51,7 @@ function logTime()
         global $pagename;
         $pagename=$_SERVER['PHP_SELF'];
         $errorstring="\n" . date("Y-m-d G:i:s",time()).",$pagename\n";
-	error_log($errorstring,3,JsConstants::$docRoot."/sugarcrm/logtime.txt);
+	error_log($errorstring,3,JsConstants::$docRoot."/sugarcrm/logtime.txt");
 }
 
 $smarty = new Smarty;

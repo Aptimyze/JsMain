@@ -33,7 +33,17 @@ class LoggingWrapper
         return self::$instance;
 	}
 
-	 /**
+	/**
+     * @param $enLogType
+     * @param $Var
+     */
+	public function sendLogAndDie($enLogType,$Var=null,$logArray = array('typeOfError'=>LoggingEnums::MYSQL_EXCEPTION))
+	{
+		$this->sendLog($enLogType,$Var,$logArray);
+		die($Var->getMessage());
+	}
+
+	/**
      * @param $enLogType
      * @param $Var
      */

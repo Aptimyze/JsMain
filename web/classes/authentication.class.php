@@ -1299,7 +1299,7 @@ class protect
             $mailedtime = date("Y-m-d H:i:s",$autoLoginTime);
             $db = connect_db();
             $sql = "select count(*) CNT from jsadmin.AUTO_EXPIRY WHERE PROFILEID = '$profileid' AND DATE > '$mailedtime'";
-            $result = mysql_query($sql,$db) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error($result)));
+            $result = mysql_query($sql,$db) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception(mysql_error($result)));
             $row = mysql_fetch_assoc($result);   
             
         	if($timediff > $this->expiryTime || $row['CNT']) //30*24*60*60 seconds or email or password changed after mail sent.

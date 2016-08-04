@@ -218,8 +218,7 @@ if(isset($data))
                         }
 
 			/*$sql="UPDATE newjs.JPROFILE SET PREACTIVATED=IF(ACTIVATED<>'D',ACTIVATED,PREACTIVATED), ACTIVATED='D', ACTIVATE_ON=now(),activatedKey=0 where PROFILEID='$profileid'";
-                        mysql_query_decide($sql) or die(mysql_error_js());
-                        */
+                        mysql_query_decide($sql) or die(mysql_error_js());*/
                         if($row_act['ACTIVATED']!='D')
                                 $preActivated =$row_act['ACTIVATED'];
                         else

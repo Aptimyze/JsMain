@@ -65,7 +65,7 @@ if(authenticated($cid))
                                 $addon_serviceid_str = implode(",",$addon_serviceid_ar);
 
                                 $sql = "Select NAME from billing.SERVICES where SERVICEID in ($addon_serviceid_str)";
-                                $result_services = mysql_query_decide($sql) or mysql_error_js();
+                                $result_services = mysql_query_decide($sql) or die(mysql_error_js());
                                 while($myrow_result_services = mysql_fetch_array($result_services))
                                 {
                                         $services[] = "<br>".$myrow_result_services["NAME"];

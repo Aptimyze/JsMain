@@ -71,8 +71,7 @@ if(authenticated($cid))
 		elseif($user_type=='outbound')
 		{
 			$sql = "SELECT AR_BRANCH FROM incentive.ARAMEX_BRANCHES WHERE 1";
-			$res = mysql_query_decide($sql,$db_slave) or die("$sql".mysql_error_js());
-
+			$res = mysql_query_decide($sql,$db_slave) or die($sql.mysql_error_js());
 			while($row = mysql_fetch_array($res))
 				$arm_city_arr[] = $row["AR_BRANCH"];
 
@@ -153,7 +152,6 @@ if(authenticated($cid))
 
 			$sql_sel="SELECT USERNAME FROM jsadmin.PSWRDS WHERE UPPER(CENTER) IN ('$br_lbl') AND PRIVILAGE LIKE  '%IUO%' AND ACTIVE='N'";
 			$res_sel=mysql_query_decide($sql_sel,$db_slave) or die(mysql_error_js());
-
                         while($row=mysql_fetch_array($res_sel))
                         {
                                 $usernamearr[]=$row['USERNAME'];
@@ -163,7 +161,6 @@ if(authenticated($cid))
 			{
 				$user_str=implode("','",$usernamearr);
 				$sql_cnt_dif="SELECT COUNT(*) from incentive.PAYMENT_COLLECT,incentive.MAIN_ADMIN,incentive.BRANCH_CITY where CONFIRM='' and PAYMENT_COLLECT.CITY IN ('$ar') and DISPLAY <> 'N' and incentive.PAYMENT_COLLECT.PROFILEID=incentive.MAIN_ADMIN.PROFILEID and incentive.MAIN_ADMIN.ALLOTED_TO IN('$user_str') and PAYMENT_COLLECT.CITY=BRANCH_CITY.VALUE";
-
                         	$result_diff=mysql_query_decide($sql_cnt_dif,$db_slave) or die(mysql_error_js());
                         	$myrow_diff = mysql_fetch_row($result_diff);
                         	$count_diff = $myrow_diff[0];
@@ -172,7 +169,6 @@ if(authenticated($cid))
 			if(in_array('IUO',$privilage))
 			{
 				$sql="SELECT COUNT(*) from incentive.PAYMENT_COLLECT,incentive.MAIN_ADMIN,incentive.BRANCH_CITY where CONFIRM='' and PAYMENT_COLLECT.CITY IN ('$ar') and DISPLAY <> 'N' and incentive.PAYMENT_COLLECT.PROFILEID=incentive.MAIN_ADMIN.PROFILEID and incentive.MAIN_ADMIN.ALLOTED_TO='$name' and PAYMENT_COLLECT.CITY=BRANCH_CITY.VALUE";
-
 				$result=mysql_query_decide($sql,$db_slave) or die(mysql_error_js());
 				$myrow = mysql_fetch_row($result);
 				$count_out = $myrow[0];

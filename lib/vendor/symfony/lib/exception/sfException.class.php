@@ -112,7 +112,6 @@ class sfException extends Exception
     }
     catch (Exception $e)
     {
-      LoggingManager::getInstance(LoggingEnums::EX500OR404)->logThis(LoggingEnums::LOG_ERROR,$e);
     }
 
     if (!sfConfig::get('sf_test'))
@@ -126,7 +125,6 @@ class sfException extends Exception
    */
   static protected function outputStackTrace(Exception $exception)
   {
-    LoggingManager::getInstance(LoggingEnums::EX500OR404)->logThis(LoggingEnums::LOG_ERROR,$exception);
     $format = 'html';
     $code   = '500';
     $text   = 'Internal Server Error';

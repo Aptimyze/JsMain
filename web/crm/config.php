@@ -14,7 +14,7 @@ $db=connect_db();
 
 function connect_db()
 {
-	$db = db_set_active("master",MysqlDbConstants::$master[HOST].":".MysqlDbConstants::$master[PORT],MysqlDbConstants::$master[USER],MysqlDbConstants::$master[PASS]) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception("Can't connect to Database".mysql_error()));
+	$db = db_set_active("master",MysqlDbConstants::$master[HOST].":".MysqlDbConstants::$master[PORT],MysqlDbConstants::$master[USER],MysqlDbConstants::$master[PASS]) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception("Can't connect to Database".mysql_error()));
         mysql_select_db_js("incentive",$db);               // connection string
         return $db;
 }
@@ -28,35 +28,35 @@ function connect_rep()
 
 function connect_db2()
 {
-	$db2 = db_set_active("slave",MysqlDbConstants::$misSlave[HOST],MysqlDbConstants::$misSlave[USER],MysqlDbConstants::$misSlave[PASS],MYSQL_CLIENT_COMPRESS) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception("Cudnt connect to slave".mysql_error()));
+	$db2 = db_set_active("slave",MysqlDbConstants::$misSlave[HOST],MysqlDbConstants::$misSlave[USER],MysqlDbConstants::$misSlave[PASS],MYSQL_CLIENT_COMPRESS) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception("Cudnt connect to slave".mysql_error()));
         mysql_select_db_js("incentive",$db2);               // connection string
         return $db2;
 }
 
 function connect_81()
 {
-	$db2 = db_set_active("slave81",MysqlDbConstants::$alertsSlave[HOST].":".MysqlDbConstants::$alertsSlave[PORT],MysqlDbConstants::$alertsSlave[USER],MysqlDbConstants::$alerts[PASS]) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception("Can't connect to Database".mysql_error()));
+	$db2 = db_set_active("slave81",MysqlDbConstants::$alertsSlave[HOST].":".MysqlDbConstants::$alertsSlave[PORT],MysqlDbConstants::$alertsSlave[USER],MysqlDbConstants::$alerts[PASS]) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception("Can't connect to Database".mysql_error()));
         mysql_select_db_js("incentive",$db2);               // connection string
         return $db2;
 }
 
 function connect_737()
 {
-	$db2 = db_set_active("737",MysqlDbConstants::$bmsSlave[HOST].":".MysqlDbConstants::$bmsSlave[PORT],MysqlDbConstants::$bmsSlave[USER],MysqlDbConstants::$bmsSlave[PASS]) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception("Can't connect to Database".mysql_error()));
+	$db2 = db_set_active("737",MysqlDbConstants::$bmsSlave[HOST].":".MysqlDbConstants::$bmsSlave[PORT],MysqlDbConstants::$bmsSlave[USER],MysqlDbConstants::$bmsSlave[PASS]) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception("Can't connect to Database".mysql_error()));
         mysql_select_db_js("incentive",$db2);               // connection string
         return $db2;
 }
 
 function connect_211()
 {
-        $db2 = db_set_active("211",MysqlDbConstants::$viewLog[HOST].":".MysqlDbConstants::$viewLog[PORT],MysqlDbConstants::$viewLog[USER],MysqlDbConstants::$viewLog[PASS]) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception("Can't connect to Database".mysql_error()));
+        $db2 = db_set_active("211",MysqlDbConstants::$viewLog[HOST].":".MysqlDbConstants::$viewLog[PORT],MysqlDbConstants::$viewLog[USER],MysqlDbConstants::$viewLog[PASS]) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception("Can't connect to Database".mysql_error()));
         mysql_select_db_js("newjs",$db2);               // connection string
         return $db2;
 }
 
 function connect_dnc()
 {
-	$db_dnc =mysql_connect(MysqlDbConstants::$dnc[HOST].":".MysqlDbConstants::$dnc[PORT],MysqlDbConstants::$dnc[USER],MysqlDbConstants::$dnc[PASS]) or LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception("Unable to connect to dnc server"));
+	$db_dnc =mysql_connect(MysqlDbConstants::$dnc[HOST].":".MysqlDbConstants::$dnc[PORT],MysqlDbConstants::$dnc[USER],MysqlDbConstants::$dnc[PASS]) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception("Unable to connect to dnc server"));
         return $db_dnc;
 }
 

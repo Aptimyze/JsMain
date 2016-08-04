@@ -80,8 +80,7 @@ if(count($profileids_arr)>0)
 			endIntroCalls($profile);
 		}*/
 		/*$sql1="UPDATE newjs.JPROFILE set SUBSCRIPTION='$servefor_str' where PROFILEID='$profile' ";
-		mysql_query_decide($sql1) or die($sql.mysql_error_js());
-		*/
+		mysql_query_decide($sql1) or die($sql.mysql_error_js());*/
                 $jprofileObj    =JProfileUpdateLib::getInstance();
                 $paramArr     	=array("SUBSCRIPTION"=>$servefor_str);
                 $jprofileObj->editJPROFILE($paramArr,$profile,'PROFILEID');
