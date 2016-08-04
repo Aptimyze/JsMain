@@ -211,7 +211,7 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
         {
         try {
 
-            $sql = "SELECT PROFILE1, PROFILE2 from duplicates.DUPLICATE_PROFILE_LOG where IS_DUPLICATE='YES' LIMIT $limit OFFSET $offset ORDER BY ENTRY_DATE DESC";
+            $sql = "SELECT PROFILE1, PROFILE2 from duplicates.DUPLICATE_PROFILE_LOG where IS_DUPLICATE='YES' ORDER BY ENTRY_DATE DESC LIMIT $limit OFFSET $offset ";
             
             $prep = $this->db->prepare($sql);
             

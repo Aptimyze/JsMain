@@ -104,7 +104,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 	}
         unset($duplicateTempArray);
 }
-
+                        $duplicateTempObj = new duplicates_DUPLICATE_TEMP_TABLE('newjs_slave');
 			$notDuplicateObj=new DUPLICATES_PROFILES();
 			$IntlObj =  new INCENTIVE_NEGATIVE_TREATMENT_LIST;
                         $duplicateTempArray=$duplicateTempObj->getNonDuplicateProfiles();
