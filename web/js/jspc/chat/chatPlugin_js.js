@@ -1335,7 +1335,7 @@ JsChat.prototype = {
             if (curElem._contactStatusMapping[chatBoxType]["enableChat"] == true) $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
             else $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
         } else if (membership == "free") {
-            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="pos-abs fullwid txtc colorGrey mt120">Only paid members can start chat<div id="becomePaidMember" class="color5 cursp">Become a Paid Member</div></div>');
+            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="pos-abs fullwid txtc colorGrey mt120">Only paid members can start chat<div  class="becomePaidMember_chat color5 cursp"><a href="/membership/jspc" class = "cursp js-colorParent">Become a Paid Member</a></div></div>');
             $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
         }
         //TODO: fire query to get message history as well as offline messages  
