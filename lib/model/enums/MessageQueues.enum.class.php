@@ -38,6 +38,7 @@ class MessageQueues
   CONST REDELIVERY_LIMIT = 3; //This limit is used to set the redelivery limit of messages at the consumer end.
   CONST AGENT_NOTIFICATIONSQUEUE = "AgentsNotificationsQueue"; //Queue for storing agent notifications(notify for FP online users to agents)
   CONST BUFFER_INSTANT_NOTIFICATION_QUEUE = "BufferInstantNotificationsQueue"; //Queue for storing buffer instant notifications(JSPC/JSMS/FSO)
+  CONST DUPLICATE_LOG_QUEUE = "DuplicateLogQueue"; //Queue for logging duplicate profiles
   CONST DELETE_RETRIEVE_QUEUE = "DeleteRetrieveQueue"; //Queue that contains profileId's for those profiles that are deleted.
   CONST UPDATE_SEEN_QUEUE = "updateSeenQueue";
   CONST CRONDELETERETRIEVE_STARTCOMMAND = "symfony cron:cronConsumeDeleteRetrieveQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
@@ -61,7 +62,7 @@ class MessageQueues
   public static $notificationQueueExpiryTime = 7; //queue will expire if unused for 7 hrs,not used currently
   public static $INSTANT_NOTIFICATION_QUEUE = "INSTANT_NOTIFICATION_QUEUE"; //Queue for sending instant notification data from notification queue to GCM
   public static $notificationArr = array("JUST_JOIN" => "JS_NOTIFICATION1", "PENDING_EOI" => "JS_NOTIFICATION2", "MEM_EXPIRE_A5" => "JS_NOTIFICATION3", "MEM_EXPIRE_A10" => "JS_NOTIFICATION3", "MEM_EXPIRE_A15" => "JS_NOTIFICATION3", "MEM_EXPIRE_B1" => "JS_NOTIFICATION3", "MEM_EXPIRE_B5" => "JS_NOTIFICATION3",  "AGENT_ONLINE_PROFILE"=>"JS_INSTANT_NOTIFICATION","AGENT_FP_PROFILE"=>"JS_INSTANT_NOTIFICATION", "PROFILE_VISITOR" => "JS_INSTANT_NOTIFICATION","EOI"=>"JS_INSTANT_NOTIFICATION","MESSAGE_RECEIVED"=>"JS_INSTANT_NOTIFICATION","EOI_REMINDER"=>"JS_INSTANT_NOTIFICATION");
-
+  
   /*----------------JS notification(scheduled/instant) queues configuration details-------------------------*/
 }
 
