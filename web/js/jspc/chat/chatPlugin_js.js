@@ -139,28 +139,13 @@ JsChat.prototype = {
                 curEle._scrollUp($(this), "297px");
             }
         });
-        $(this._maxChatBarOut).fadeOut('slow', function () {
-            $(this).remove();
-        });
+        $(this._maxChatBarOut).remove();
         if (this._checkWidth()) {
             this._chatLoggerPlugin('screen size less than 1024');
             $(this._parendID).fadeIn('slow');
         } else {
-            $("body").animate({
-                width: '80%'
-            }, {
-                duration: 400,
-                queue: false
-            });
-            $(this._parendID).animate({
-                right: '0'
-            }, {
-                duration: 400,
-                queue: false
-            });
-            setTimeout(function () {
-                $(curEle._chatBottomPanelID).show();
-            }, 400);
+            $("body").css('width','80%');
+            $(this._parendID).css('display','block');
         }
     },
     //start:minimize html
@@ -208,15 +193,9 @@ JsChat.prototype = {
                 });
             });
         } else {
-            $(this._parendID).animate({
-                right: '-100%'
-            }, 1000);
-            $("body").animate({
-                "width": "100%",
-            }, {
-                duration: 300,
-                complete: this.minimizedPanelHTML()
-            });
+            $(curEle._parendID).css('display','none');
+            $("body").css('width','100%');
+            this.minimizedPanelHTML();
         }
         $(this._maxChatBarOut).click(function () {
             curEle._maximizeChatPanel();
