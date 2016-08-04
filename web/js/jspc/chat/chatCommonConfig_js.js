@@ -78,10 +78,10 @@ chatConfig.Params = {
     pc: {
         updateRosterFromFrontend: true,
         bosh_service_url: 'ws://' + openfireUrl + '/ws/', //connection manager for openfire
-        keepalive: true, //keep logged in session alive
-        roster_groups: true, //show categories in listing
+        //keepalive: true, //keep logged in session alive
+        //roster_groups: true, //show categories in listing
         hide_offline_users: false, //hide offline users from list
-        use_vcards: false, //fetch vcards of users
+        //use_vcards: false, //fetch vcards of users
         //tab id to tab names mapping
         listingTabs: {
             "tab1": {
@@ -229,7 +229,7 @@ chatConfig.Params = {
                 "key": "pog_interest_accepted",
                 "useOpenfireForChat": true,
                 "enableChat": true,
-                "showHistory": false
+                "showHistory": true
             },
             "pog_interest_declined": {
                 "key": "pog_interest_declined",

@@ -7,4 +7,5 @@ class ChatEnum {
     public static $userCreationError = array("message"=>"Error creating user","statusCode"=>'1');
     public static $error = array("message"=>"Some Error Occurred","statusCode"=>'1');
     public static $invalidFormat = array("message"=>"Invalid format of jid","statusCode"=>'1');
+    public static $msgHistoryLimit = 20;
 }

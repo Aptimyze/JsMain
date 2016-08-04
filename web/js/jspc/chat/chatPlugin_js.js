@@ -203,7 +203,7 @@ JsChat.prototype = {
                 curEle.minimizedPanelHTML();
             }).promise().done(function () {
                 $(curEle._maxChatBarOut).click(function () {
-                    console.log('aaa1');
+                    //console.log('aaa1');
                     curEle._maximizeChatPanel();
                 });
             });
@@ -259,7 +259,7 @@ JsChat.prototype = {
     },
     //start:addChatTop function
     _addChatTop: function (param) {
-        console.log("add chat top",this._selfName);
+        //console.log("add chat top",this._selfName);
         var curEleRef = this,
             that = this;
         
@@ -301,7 +301,7 @@ JsChat.prototype = {
     },
     //start:add tab
     addTab: function () {
-        console.log("addTab");
+        //console.log("addTab");
         //this script is same as old one shared eariler need to be reworked as discussed
         this._chatLoggerPlugin('in addTab');
         var obj = this._listingTabs;
@@ -379,7 +379,7 @@ JsChat.prototype = {
             data = JSON.parse(localStorage.getItem("chatStateData"));
         }
         $.each(data, function (index, element) {
-            console.log(element);
+            //console.log(element);
             if (element["state"] != "remove") {
                 $("#" + element["userId"] + "_" + element["group"]).click();
             }
@@ -392,8 +392,8 @@ JsChat.prototype = {
                 $('chat-box[user-id="' + element["userId"] + '"] .downBarUserName').click();
             }
         });
-        console.log("closeArr", closeArr);
-        console.log("removeArr", removeArr);
+        //console.log("closeArr", closeArr);
+        //console.log("removeArr", removeArr);
         $.each(closeArr, function (index, elem) {
             $('chat-box[user-id="' + elem + '"] .nchatic_2').click();
         });
@@ -406,7 +406,7 @@ JsChat.prototype = {
      * Manage minimize and maximize panel state, not used now
      */
     manageMinMaxState: function (elem){
-        console.log("in min max state");
+        //console.log("in min max state");
         var state = localStorage.getItem('panelState');
         if(state){
             var data = JSON.parse(state);
@@ -533,10 +533,10 @@ JsChat.prototype = {
         }
         this.manageChatBoxOnChange();
         $(window).focus(function () {
-            console.log("Focus");
+            //console.log("Focus");
             //invokePluginLoginHandler("login");
             if (elem && elem.manageChatBoxOnChange && typeof (elem.manageChatBoxOnChange) == "function") {
-                console.log(1);
+                //console.log(1);
                 elem.manageChatBoxOnChange();
             }
         });
@@ -879,9 +879,9 @@ JsChat.prototype = {
             } else if (e.keyCode == 13 && !e.shiftKey) {
                 var text = $(this).val(),
                     textAreamElem = this;
-                console.log("text before", text);
+                //console.log("text before", text);
                 text = $("<div/>").html(text).text();
-                console.log("Text entered", text);
+                //console.log("Text entered", text);
                 $(textAreamElem).val("").css("height", "24px");
                 if (text.length > 1) {
                     var superParent = $(this).parent().parent(),
@@ -904,7 +904,7 @@ JsChat.prototype = {
                             var groupId = $('chat-box[user-id="' + userId + '"]').attr("group-id");
                             var profileChecksum = $(".chatlist li[id='" + userId + "_" + groupId + "']").attr("data-checks");
                             var msgSendOutput = _this.onSendingMessage(text, $('chat-box[user-id="' + userId + '"]').attr("data-jid"), profileChecksum, $('chat-box[user-id="' + userId + '"]').attr("data-contact"));
-                            console.log("got response");
+                            //console.log("got response");
                             messageId = msgSendOutput["msg_id"];
                             //that._chatLoggerPlugin("handling output of onSendingMessage in plugin");
                             if (messageId) $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + messageId);
@@ -1080,7 +1080,7 @@ JsChat.prototype = {
         return chatBoxType;
     },
     _postChatPanelsBox: function (userId) {
-        console.log("manviiiii", $('chat-box[user-id="' + userId + '"]'));
+        //console.log("manviiiii", $('chat-box[user-id="' + userId + '"]'));
         var groupId = $('chat-box[user-id="' + userId + '"]').attr("group-id");
         var data = [];
         if (localStorage.getItem("chatStateData")) {
@@ -1103,10 +1103,9 @@ JsChat.prototype = {
             data.push(obj);
         }
         localStorage.setItem("chatStateData", JSON.stringify(data));
-        var curElem = this,
-            membership = "paid"; //get membership status-pending
+        var curElem = this,membership = getMembershipStatus(); //get membership status
         this._chatLoggerPlugin("in _postChatPanelsBox");
-        //var membership = "free";
+       
         var chatBoxType = curElem._getChatBoxType(userId, $('chat-box[user-id="' + userId + '"]').attr("group-id"));
         //setTimeout(function() {
         curElem._setChatBoxInnerDiv(userId, chatBoxType);
@@ -1115,20 +1114,22 @@ JsChat.prototype = {
         //}, 500);
         $('chat-box[user-id="' + userId + '"] .chatMessage').scroll(function() {
             var height = $(this).scrollTop();
+            //if(height <= 10){
             if(height == 0){
                 //fetch more history
                 var showMoreHistory = $("#moreHistory_"+userId).val(),latestMsgId = $("#moreHistory_"+userId).attr("data-latestMsgId");
                 if(showMoreHistory == "1" && latestMsgId){
-                    console.log("yess on top",height);
+                    //console.log("yess on top",height);
                     console.log("loading more history");
                     clearTimeout(clearTimedOut);
+                    var to_checksum = $("chat-box[user-id='" + userId + "'").attr("data-checks");
                     clearTimedOut = setTimeout(function(){
-                        manageHistoryLoader(userId,"show");
+                        manageHistoryLoader(userId+"@"+openfireServerName,"show");
                         getChatHistory({
                             "extraParams": {
                                 "from": getConnectedUserJID(),
-                                "to": userId+"@localhost",
-                                "to_checksum": "",
+                                "to": userId+"@"+openfireServerName,
+                                "to_checksum": to_checksum,
                                 "from_checksum": self_checksum,
                                 "messageId":latestMsgId
                             }
@@ -1141,12 +1142,12 @@ JsChat.prototype = {
         });
     },
     _updateChatPanelsBox: function (userId, newGroupId) {
-        var curElem = this;
+        var curElem = this,membership=getMembershipStatus();
         if ($('chat-box[user-id="' + userId + '"]').length != 0) {
             this._chatLoggerPlugin("in _updateChatPanelsBox for " + userId);
             var chatBoxType = curElem._getChatBoxType(userId, newGroupId, "updateChatBoxType");
             curElem._setChatBoxInnerDiv(userId, chatBoxType);
-            curElem._enableChatTextArea(chatBoxType, userId, "paid");
+            curElem._enableChatTextArea(chatBoxType, userId, membership);
         }
     },
     //update contact status and enable/disable chat in chat box on basis of membership and contact status
@@ -1166,6 +1167,7 @@ JsChat.prototype = {
             nick = nick + "|" + checkSum;
         }
         if (curElem._contactStatusMapping[chatBoxType]["showHistory"] == true) {
+            $("#moreHistory_"+userId).val("1");
             //fetch msg history
             getChatHistory({
                 "extraParams": {
@@ -1175,6 +1177,9 @@ JsChat.prototype = {
                     "from_checksum": self_checksum
                 }
             },"first_history");
+        }
+        else{
+            $("#moreHistory_"+userId).val("0"); 
         }
         this._chatLoggerPlugin(curElem);
         switch (chatBoxType) {
@@ -1429,7 +1434,7 @@ JsChat.prototype = {
             userId, status, response;
         chatBoxProto.attachedCallback = function () {
             userId = $(this).attr("user-id");
-            this.innerHTML = '<div class="chatBoxBar fullwid hgt57 bg5 pos-rel fullwid"></div><div class="chatArea fullwid fullhgt"><div class="messageArea f13 bg13 fullhgt"><div class="chatMessage pos_abs fullwid scrollxy" style="height: 246px;"><input type="hidden" value="1" id="moreHistory_'+userId+'" data-latestMsgId=""/><div class="spinner2 disp-none"></div><div id="chatHistory_' + userId + '" class="clearfix"></div><div class="spinner"></div></div></div><div class="chatInput brdrbtm_new fullwid btm0 pos-abs bg-white"><textarea cols="23" maxlength="'+elem._maxMsgLimit+'" style="width: 220px;" id="txtArea"  class="inputText lh20 brdr-0 padall-10 colorGrey hgt18 fontlig" placeholder="Write message"></textarea></div></div>';
+            this.innerHTML = '<div class="chatBoxBar fullwid hgt57 bg5 pos-rel fullwid"></div><div class="chatArea fullwid fullhgt"><div class="messageArea f13 bg13 fullhgt"><div class="chatMessage pos_abs fullwid scrollxy" style="height: 246px;"><input type="hidden" value="0" id="moreHistory_'+userId+'" data-latestMsgId=""/><div class="spinner2 disp-none"></div><div id="chatHistory_' + userId + '" class="clearfix"></div><div class="spinner"></div></div></div><div class="chatInput brdrbtm_new fullwid btm0 pos-abs bg-white"><textarea cols="23" maxlength="'+elem._maxMsgLimit+'" style="width: 220px;" id="txtArea"  class="inputText lh20 brdr-0 padall-10 colorGrey hgt18 fontlig" placeholder="Write message"></textarea></div></div>';
             $(this).addClass("z7 b297 hgt352 brd_new fr mr7 fullhgt wid240 pos-rel disp_ib");
             status = $(this).attr("status-user");
             elem._appendInnerHtml(userId, status);
@@ -1490,11 +1495,11 @@ JsChat.prototype = {
     },
     //append chat history in chat box
     _appendChatHistory: function (selfJID, otherJID, communication,key) {
-        console.log("self message");
-        console.log(communication);
+        //console.log("self message");
+        //console.log(communication);
         var self_id = selfJID.split("@")[0],
             other_id = otherJID.split("@")[0],
-            historyHTML = "",latestMsgId="";
+            latestMsgId="";
         var curElem = this;
         if ($('chat-box[user-id="' + other_id + '"]').length != 0) {
             
@@ -1516,16 +1521,13 @@ JsChat.prototype = {
                 console.log("setting");
                 $('chat-box[user-id="' + other_id + '"]').find("#moreHistory_"+other_id).attr("data-latestMsgId",latestMsgId);
             }
-            //console.log(historyHTML);
-            /*if (historyHTML) {
-                $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).append(historyHTML).promise().done(function () {
-                    //curElem._scrollToBottom(other_id,100);
-                    var height = document.getElementById("chatHistory_" + other_id).scrollHeight;
-                    console.log("history height" + height);
-                    $('chat-box[user-id="' + other_id + '"] .chatMessage').animate({
-                        scrollTop: height
-                    }, 500);
-                });
+            
+            /*
+            var height = document.getElementById("chatHistory_" + other_id).scrollHeight;
+            console.log("history height" + height);
+            $('chat-box[user-id="' + other_id + '"] .chatMessage').animate({
+                scrollTop: height
+            }, 500);
             }*/
         }
     },
