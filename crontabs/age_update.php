@@ -4,6 +4,7 @@
 	include_once(JsConstants::$docRoot."/classes/globalVariables.Class.php");
 	include_once(JsConstants::$docRoot."/classes/Mysql.class.php");
 	include_once(JsConstants::$docRoot."/classes/Jpartner.class.php");
+	include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
 	$myDb_Slave = connect_slave();
 	$myDb_Master = connect_db();
@@ -20,14 +21,18 @@
 		
 		$sql=   "SELECT PROFILEID, DTOFBIRTH, AGE, FLOOR( DATEDIFF(	NOW( ) , DTOFBIRTH ) / 365.25 ) AS ACTUAL_AGE FROM JPROFILE WHERE FLOOR( DATEDIFF( 	NOW( ) , DTOFBIRTH ) / 365.25) <> AGE";
 		$arrResultSet = mysql_query($sql,$myDb_Slave);
-		
+		$objUpdate = JProfileUpdateLib::getInstance();
 		while($row = mysql_fetch_assoc($arrResultSet))
 		{
-			//echo "ACTUAL_AGE : ".$row['ACTUAL_AGE']." : AGE : ".$row['AGE'] ; 
-			$sql="update JPROFILE set AGE=".$row['ACTUAL_AGE'] ." where PROFILEID=" . $row['PROFILEID'];
+			//echo "ACTUAL_AGE : ".$row['ACTUAL_AGE']." : AGE : ".$row['AGE'] ;
+			$result = $objUpdate->editJPROFILE(array('AGE'=>$row['ACTUAL_AGE']),$row['PROFILEID'],'PROFILEID');
+//			$sql="update JPROFILE set AGE=".$row['ACTUAL_AGE'] ." where PROFILEID=" . $row['PROFILEID'];
 			//echo "\n $sql \n";
-			mysql_query($sql,$myDb_Master) or logError($sql);
-
+//			mysql_query($sql,$myDb_Master) or logError($sql);
+			if (false === $result) {
+				$sql="update JPROFILE set AGE=".$row['ACTUAL_AGE'] ." where PROFILEID=" . $row['PROFILEID'];
+				logError($sql);
+			}
 			update_JPARTNER(array('PROFILEID'=>$row[PROFILEID],'AGE'=>$row['ACTUAL_AGE']));
 		}
 		

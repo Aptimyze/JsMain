@@ -12,6 +12,7 @@ class FAQFeedBack
 	private $m_bValidForm;
 	private $m_iTracePath;
 	private $errorReq;
+	private $webRequest;
 	
 	public function __construct($api=0)
 	{
@@ -24,6 +25,64 @@ class FAQFeedBack
 	public function getTracePath()
 	{
 		return $this->m_iTracePath;
+	}
+
+
+
+	private function insertReportAbuseLog(){
+
+		$reasonNew=$this->webRequest->getParameter('reason');
+
+		$this->otherProfile=new Profile();
+		if($this->webRequest->getParameter('profilechecksum') && $reasonNew)
+		{ 
+			$otherProfileId = JsCommon::getProfileFromChecksum($this->webRequest->getParameter('profilechecksum'));
+		}
+		
+		else{
+			
+			$feed=$this->webRequest->getParameter('feed');
+			$reason=$feed['message'];
+
+			$pos=strpos($reason,':');
+			$reasonNew=trim(substr($reason,$pos+1));
+
+			$pos2=strpos($reason,'by');
+			$arr2=split(' ',trim(substr($reason,$pos2+2)));
+			$otherUsername=trim($arr2[0]);
+			$this->otherProfile->getDetail($otherUsername,"USERNAME");
+			$otherProfileId=$this->otherProfile->getPROFILEID();
+			
+		}
+
+		$reasonsCategory=array('duplicate profile','incorrect details/photo','already married/engaged','looks like fake profile','inappropriate content','spam','looks like a fake profile');
+
+		if(in_array(strtolower($reasonNew),$reasonsCategory))
+		{
+			$categoryNew=$reasonNew;
+			$otherReason=''; 
+
+		}
+		else
+		{
+			$categoryNew='other';
+			$otherReason=$reasonNew; 
+
+		}
+
+		$loginProfile=LoggedInProfile::getInstance();
+		if(!$reasonNew || !$loginProfile->getPROFILEID() || !$otherProfileId) return;
+		(new REPORT_ABUSE_LOG())->insertReport($loginProfile->getPROFILEID(),$otherProfileId,$categoryNew,$otherReason);
+
+				// block for blocking the reported abuse added by Palash
+
+				$ignore_Store_Obj = new NEWJS_IGNORE;
+				$ignore_Store_Obj->ignoreProfile($loginProfile->getPROFILEID(),$otherProfileId);
+				JsMemcache::getInstance()->remove($loginProfile->getPROFILEID());
+				JsMemcache::getInstance()->remove($otherProfileId);
+
+				//////////////////////////////////////////////////
+
 	}
 	private function extractInfo(sfWebRequest $request)
 	{
@@ -61,7 +120,7 @@ class FAQFeedBack
 	public function ProcessData(sfWebRequest $request)
 	{
 		$this->extractInfo($request);
-		
+		$this->webRequest=$request;
 		$this->m_objForm = new FeedBackForm($this->api);
 		$arrDeafults = array('name'=>$this->m_szName,'username'=>$this->m_szUserName,'email'=>$this->m_szEmail);
 		$this->m_objForm->setDefaults($arrDeafults);
@@ -94,8 +153,16 @@ class FAQFeedBack
 				$this->m_bValidForm = true;
 				
 				$this->InsertFeedBack();
+				
+
+			if($this->m_szCategory!=FeedbackEnum::CAT_ABUSE)
+			{	
 				$this->FwdMail();
-				return true;
+				
+			}
+
+			return true;
+
 
 			}
 			else
@@ -129,7 +196,6 @@ class FAQFeedBack
 		$objTicketStore 			= new FEEDBACK_TICKETS;
 		$objTicket_Message_STORE 	= new FEEDBACK_TICKET_MESSAGES;
 		$objMIS_FeedBack_Result		= new MIS_FEEDBACK_RESULT;
-		
 		
 		$arrResult = array();
 		$objTicketStore->fetch_IDs($arrResult,$this->m_szUserName,$this->m_szEmail,$this->m_iTracePath);
@@ -166,7 +232,12 @@ class FAQFeedBack
 			
 			//Insert in MIS_FEEDBACK_RESULT Store
 			$objMIS_FeedBack_Result->Insert($this->m_szCategory,$iTicketID);
-			
+
+			if($this->m_szCategory==FeedbackEnum::CAT_ABUSE)
+			{	
+
+    			$this->insertReportAbuseLog();
+    		}	
 		}
 		
 	}

@@ -84,6 +84,7 @@ EOF;
             exec("ps aux | grep \"".MessageQueues::CRONCONSUMER_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $out);
             exec("ps aux | grep \"".MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $notificationConsumerOut);
             exec("ps aux | grep \"".MessageQueues::CRONDELETERETRIEVE_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $deleteRetrieveConsumerOut);
+            exec("ps aux | grep \"".MessageQueues::UPDATESEEN_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $updateSeenConsumerOut);
             if(!empty($out) && is_array($out))
               foreach ($out as $key => $value) 
               {
@@ -105,12 +106,21 @@ EOF;
                 if($count2 >0)
                   exec("kill -9 ".$value);
               }
+            if(!empty($updateSeenConsumerOut) && is_array($updateSeenConsumerOut))
+              foreach ($updateSeenConsumerOut as $key => $value)
+              {
+                $count2 = shell_exec("ps -p ".$value." | wc -l") -1;
+                if($count2 >0)
+                  exec("kill -9 ".$value);
+              }
             for($i=1;$i<=MessageQueues::CONSUMERCOUNT ;$i++)
               passthru(JsConstants::$php5path." ".MessageQueues::CRONCONSUMER_STARTCOMMAND." > /dev/null &"); 
             for($i=1;$i<=MessageQueues::NOTIFICATIONCONSUMERCOUNT ;$i++)
               passthru(JsConstants::$php5path." ".MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND." > /dev/null &");
               for($i=1;$i<=MessageQueues::CONSUMER_COUNT_SINGLE ;$i++)
               passthru(JsConstants::$php5path." ".MessageQueues::CRONDELETERETRIEVE_STARTCOMMAND." > /dev/null &");  
+              for($i=1;$i<=MessageQueues::UPDATE_SEEN_CONSUMER_COUNT ;$i++)
+              passthru(JsConstants::$php5path." ".MessageQueues::UPDATESEEN_STARTCOMMAND." > /dev/null &");  
             RabbitmqHelper::sendAlert($str,"default");
           }
         }
@@ -220,6 +230,7 @@ EOF;
     //restart inactive notification consumer for queues bound to InstantNotificationExchange exchange
     $this->restartInactiveConsumer(MessageQueues::NOTIFICATIONCONSUMERCOUNT,MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND,"browserNotification");
     $this->restartInactiveConsumer(MessageQueues::CONSUMER_COUNT_SINGLE,MessageQueues::CRONDELETERETRIEVE_STARTCOMMAND,"DeleteRetrieve");
+    $this->restartInactiveConsumer(MessageQueues::UPDATE_SEEN_CONSUMER_COUNT,MessageQueues::UPDATESEEN_STARTCOMMAND,"UpdateSeen");
 
     //runs consumer to consume accumulated messages in queues on the second server if fallback status flag is set.
     if(MessageQueues::FALLBACK_STATUS==true)
@@ -230,8 +241,11 @@ EOF;
         $consumerObj->receiveMessage(); 
         $notificationConsumerObj=new JsNotificationsConsume('SECOND_SERVER',$messageCount);
         $notificationConsumerObj->receiveMessage();
-        $delRetrieveConsumerObj=new deleteRetrieveConsumer('FIRST_SERVER',$messageCount);  //If $serverid='FIRST_SERVER', then 2nd param in Consumer constructor is not taken into account.
+        $delRetrieveConsumerObj=new deleteRetrieveConsumer('SECOND_SERVER',$messageCount);  //If $serverid='FIRST_SERVER', then 2nd param in Consumer constructor is not taken into account.
         $delRetrieveConsumerObj->receiveMessage();   
+        $updateSeenConsumerObj=new updateSeenConsumer('SECOND_SERVER',$messageCount);  //If $serverid='FIRST_SERVER', then 2nd param in Consumer constructor is not taken into account.
+        $updateSeenConsumerObj->receiveMessage();
+
       }
     }    
   }

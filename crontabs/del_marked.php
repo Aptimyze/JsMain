@@ -1,8 +1,8 @@
 <?php 
   $curFilePath = dirname(__FILE__)."/"; 
  include_once("/usr/local/scripts/DocRoot.php");
-
 	include("connect.inc");
+	include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 	$db= connect_db();
 
 	$sql="set session wait_timeout=10000";
@@ -23,9 +23,11 @@
 	}
 	if(count($profiles)>0)
 	{
+		$jprofileUpdateObj = JProfileUpdateLib::getInstance();
 		$pid= implode(",",$profiles);
-		$sql2="UPDATE newjs.JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D',activatedKey=0 where PROFILEID IN ($pid)";
-		mysql_query_decide($sql2) or die(logError($sql2,$db));
+		//$sql2="UPDATE newjs.JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D',activatedKey=0 where PROFILEID IN ($pid)";
+		//mysql_query_decide($sql2) or die(logError($sql2,$db));
+		$jprofileUpdateObj->deactivateProfiles($profiles);
 		$sql3="UPDATE jsadmin.MARK_DELETE SET STATUS='D',DATE='$today' where PROFILEID IN ($pid)";
                 mysql_query_decide($sql3) or die(logError($sql3,$db));
 		$sql="SELECT REASON,ENTRY_BY,PROFILEID,COMMENTS FROM jsadmin.MARK_DELETE WHERE PROFILEID IN ($pid)";

@@ -182,13 +182,7 @@ class SearchCommonFunctions
                     return SearchConfig::$profilesPerPageOnApp;
                 if(MobileCommon::isNewMobileSite() || MobileCommon::isApp()=='I')
                     return SearchConfig::$profilesPerPageOnWapSite;
-		$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
-		if($loggedInProfileObj && $loggedInProfileObj->getPROFILEID())
-			$profileid = $loggedInProfileObj->getPROFILEID();
-
-		if($profileid && JsMemcache::getInstance()->get($profileid."_DUMMY_USER")==CommonFunction::createChecksumForProfile($profileid))
-			return SearchConfig::$premium_dummy_user_search_count;
-		elseif($SearchParametersObj && $SearchParametersObj->getNoOfResults())
+		if($SearchParametersObj && $SearchParametersObj->getNoOfResults())
 			return $SearchParametersObj->getNoOfResults();
 		else
 			return SearchConfig::$profilesPerPage;
@@ -197,7 +191,7 @@ class SearchCommonFunctions
 	/**
 	* This section will show the dpp matches.
 	*/
-	public static function getMyDppMatches($sort="",$loggedInProfileObj='',$limit='',$currentPage="",$paramArr='',$removeMatchAlerts="",$dontShowFilteredProfiles="",$twoWayMatches='',$clustersToShow='',$results_orAnd_cluster='',$notInProfiles='')
+	public static function getMyDppMatches($sort="",$loggedInProfileObj='',$limit='',$currentPage="",$paramArr='',$removeMatchAlerts="",$dontShowFilteredProfiles="",$twoWayMatches='',$clustersToShow='',$results_orAnd_cluster='',$notInProfiles='',$verifiedProfilesDate = '')
 	{
                 $searchEngine = 'solr';
                 $outputFormat = 'array';
@@ -216,6 +210,10 @@ class SearchCommonFunctions
                     $SearchParamtersObj->getSearchCriteria();
                 else
                     $SearchParamtersObj->getDppCriteria();
+                if($verifiedProfilesDate){
+                    $SearchParamtersObj->setHVERIFY_ACTIVATED_DT($verifiedProfilesDate);
+                    $SearchParamtersObj->setLVERIFY_ACTIVATED_DT('2001-01-01 00:00:00');
+                }
 		if($paramArr && is_array($paramArr))
 		{
 			foreach($paramArr as $k=>$v)

@@ -599,9 +599,9 @@ function generateFaceCard(Object)
 				$("#dailyMatchesCountTotal").html(totalCount);
 				$("#dailyMatchesCountBar").removeClass("disp-none");
 				$("#dailyMatchesCountBar > .disp-tbl").addClass("bounceIn animated");
-				setBellCountHTML(newEngagementArray);
+				//setBellCountHTML(newEngagementArray);
 				bellCountStatus++;
-				createTotalBellCounts(newEngagementArray["DAILY_MATCHES_NEW"]);				
+				//createTotalBellCounts(newEngagementArray["DAILY_MATCHES_NEW"]);				
 			}
 			else if(Object.name=="JUSTJOINED")
 			{
@@ -609,9 +609,9 @@ function generateFaceCard(Object)
 				$("#justJoinedCountTotal").html(totalCount);
 				$("#justJoinedCountBar").removeClass("disp-none");
 				$("#justJoinedCountBar > .disp-tbl").addClass("bounceIn animated");
-				setBellCountHTML(newEngagementArray);
+				//setBellCountHTML(newEngagementArray);
 				bellCountStatus++;
-				createTotalBellCounts(newEngagementArray["NEW_MATCHES"]);
+				//createTotalBellCounts(newEngagementArray["NEW_MATCHES"]);
 			}
 		
 			
@@ -642,7 +642,7 @@ function generateShortCards(Object)
         for (i = 0; i < count; i++) {
          innerHtml=innerHtml+Object.innerHtml;
          innerHtml=innerHtml.replace(/\{\{PROFILE_SMALL_CARD1_ID\}\}/g,Object.data.profiles[i]["profilechecksum"]+Object.name+"_id");
-         innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,"/profile/viewprofile.php?profilechecksum="+Object.data.profiles[i]["profilechecksum"]+"&"+tracking);
+         innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,"/profile/viewprofile.php?profilechecksum="+Object.data.profiles[i]["profilechecksum"]+"&"+tracking+"&total_rec="+Object.data.total+"&actual_offset="+(i+1)+"&contact_id="+Object.data.contact_id);
          innerHtml=innerHtml.replace(/\{\{PHOTO_URL\}\}/gi,"data-src='"+Object.data.profiles[i]["profilepic120url"]+"'");
        }
        if(remainingCount!=0)

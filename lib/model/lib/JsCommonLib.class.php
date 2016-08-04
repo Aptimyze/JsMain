@@ -481,15 +481,23 @@ public static function insertConsentMessageFlag($profileid) {
 			}
 			
 			$ARR=explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_ELEVEL_NEW()));
+                        $ugPg = $profile->getEducationDetail(1);
+                        $pg = 0;
+                        $ug = 0;
+                        if(!empty($ugPg) && is_array($ugPg)){
+                                if($ugPg["PG_DEGREE"])
+                                      $pg = $ugPg["PG_DEGREE"];
+                                if($ugPg["UG_DEGREE"])
+                                      $ug = $ugPg["UG_DEGREE"];
+                        }
 			if(is_array($ARR))
-			if(in_array($profile->getEDU_LEVEL_NEW(),$ARR))
+			if(in_array($profile->getEDU_LEVEL_NEW(),$ARR) || in_array($pg,$ARR) || in_array($ug,$ARR))
 			{
 				$CODE['ELEVEL_NEW']='gnf';
 				$CODE['Highest Degree']='gnf';
 				$CODE['Education']='gnf';
 				
 			}
-			
 			$ARR=explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_MTONGUE()));
 			if(is_array($ARR))
 			if(in_array($profile->getMTONGUE(),$ARR))
@@ -513,15 +521,46 @@ public static function insertConsentMessageFlag($profileid) {
 				$CODE['COUNTRYRES']='gnf';
 				$CODE['COUNTRYRES']='gnf';
 			}
-			$ARR=explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_INCOME()));
-			if(is_array($ARR))
-			if(in_array($profile->getINCOME(),$ARR))
+			$ARR=array_filter(explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_INCOME())));
+                        $incomeObj = new IncomeMapping;
+                        $ARR = $incomeObj->removeNoIncome($ARR);
+                        $incomeArray = $incomeObj->getLowerIncomes($profile->getINCOME());
+                        $result = array_intersect($ARR, $incomeArray);
+                        
+			if(is_array($ARR) && !empty($ARR)){
+                                if(in_array($profile->getINCOME(),$ARR) || !empty($result))
+                                {
+                                        $CODE['INCOME']='gnf';
+                                        $CODE['Income']='gnf';
+                                        $CODE['Annual Income']='gnf';
+                                }
+                        }else{
+                                $CODE['INCOME']='gnf';
+                                $CODE['Income']='gnf';
+                                $CODE['Annual Income']='gnf';
+                        }
+			$cityArr=explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_CITYRES()));
+			if($jpartnerObj->getSTATE())
 			{
-				$CODE['INCOME']='gnf';
-				$CODE['Income']='gnf';
-				$CODE['Annual Income']='gnf';
+				$stateArr=explode(",",JsCommon::remove_quot($jpartnerObj->getSTATE()));
+			}	
+			$stateCityMapping = FieldMap::getFieldLabel('state_CITY','',1);
+			if(count($stateArr))
+			{
+				foreach($stateArr as $key=>$val)
+				{
+					if(array_key_exists($val, $stateCityMapping))
+					{
+						$cityString .= $stateCityMapping[$val];
+						$cityString .= ",";
+					}
+				}
+				$ARR = array_merge($cityArr,explode(",",rtrim($cityString,",")));
 			}
-			$ARR=explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_CITYRES()));
+			else
+			{
+				$ARR = $cityArr;
+			}
 			if(is_array($ARR))
 			if(in_array($profile->getCITY_RES(),$ARR))
 			{
@@ -976,7 +1015,7 @@ public static function insertConsentMessageFlag($profileid) {
 			return $num;
 	}
 
-		public static function checkIosPromoValid($ua)
+	public static function checkIosPromoValid($ua)
         {
                 $ua = $_SERVER['HTTP_USER_AGENT'];
                 $pm = preg_match('/iPhone\s*([0-9\.]*)/',$ua,$matches);
@@ -986,8 +1025,64 @@ public static function insertConsentMessageFlag($profileid) {
                 if($av>=7)
                 	return true;
                 return false;
+	}
+        public static function setOnlineUser($pid)
+        {
+        	$JsMemcacheObj =JsMemcache::getInstance();
+                $expiryTime =CommonConstants::ONLINE_USER_EXPIRY;
+                $listName =CommonConstants::ONLINE_USER_LIST;
+		$onlineUserKey =CommonConstants::ONLINE_USER_KEY;
+		$key =$onlineUserKey.$pid;
+                $JsMemcacheObj->set($key, time(), $expiryTime);
+                $JsMemcacheObj->zAdd($listName,time(),$pid);
+        }
+        public static function getOnlineUsetList($score1='',$score2='')
+        {
+                $JsMemcacheObj  =JsMemcache::getInstance();
+                $listName       =CommonConstants::ONLINE_USER_LIST;
+                if($score1 && $score2)
+                        $onlineProfilesArr =$JsMemcacheObj->zRangeByScore($listName, $score1, $score2);
+                else
+                        $onlineProfilesArr =$JsMemcacheObj->zRange($listName, 0, -1);
+                return $onlineProfilesArr;
+        }
+        public static function removeOnlineUser($pid)
+        {
+        	// Remove Online-User 
+		$onlineUserKey =CommonConstants::ONLINE_USER_KEY;
+		$key=$onlineUserKey.$pid;
+                $JsMemcacheObj =JsMemcache::getInstance();
+                $JsMemcacheObj->delete($key);
+                $listName =CommonConstants::ONLINE_USER_LIST;
+                $JsMemcacheObj->zRem($listName, $pid);
+        }
+        public static function getOnlineStatus($pid)
+        {
+                // Check Online-User 
+		$onlineUserKey =CommonConstants::ONLINE_USER_KEY;
+		$key =$onlineUserKey.$pid;
+                $JsMemcacheObj =JsMemcache::getInstance();
+                $online =$JsMemcacheObj->get($key);
+		if($online)
+			return true;
+		return false;
+        }
+        public static function removeOfflineProfiles($score1='',$score2='')
+        {
+                // Remove Online-User list
+		$score1 =0;
+		if(!$score2){
+			$expiryTime =CommonConstants::ONLINE_USER_EXPIRY;
+			$start  =date("Y-m-d H:i:s", time()-$expiryTime);
+			$score2 =strtotime($start);
 		}
+		$listName =CommonConstants::ONLINE_USER_LIST;
+                $JsMemcacheObj =JsMemcache::getInstance();
+                $JsMemcacheObj->zRemRangeByScore($listName, $score1, $score2);
+        }
 
-		
+
+
+
 }
 ?>

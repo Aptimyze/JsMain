@@ -17,6 +17,7 @@ include_once (JsConstants::$docRoot . "/classes/shardingRelated.php");
 include_once (JsConstants::$docRoot . "/commonFiles/flag.php");
 include_once (JsConstants::$docRoot . "/profile/contacts_functions.php");
 include_once (JsConstants::$cronDocRoot . "/lib/model/enums/Membership.enum.class.php");
+include_once (JsConstants::$docRoot . "/classes/JProfileUpdateLib.php");
 
 $error_msg = "Due to some temporary problem your request could not be processed. Please try after some time.";
 
@@ -360,10 +361,12 @@ function start_service($orderid) {
     
     $sql = "INSERT into billing.SERVICE_STATUS (BILLID, PROFILEID, SERVICEID, COMPID, ACTIVATED, ACTIVATED_ON, ACTIVATE_ON, ACTIVATED_BY, EXPIRY_DT) values " . implode(",", $insert_query);
     mysql_query_decide($sql) or logError($error_msg, $sql, "ShowErrTemplate", $announce_to_email);
-    
+   
     if ($myrow['SET_ACTIVATE'] != 'Y') {
-        $sql = "UPDATE newjs.JPROFILE set SUBSCRIPTION='$subscription', SUBSCRIPTION_EXPIRY_DT = '$myrow[EXPIRY_DT]' where PROFILEID='$myrow[PROFILEID]'";
-        mysql_query_decide($sql) or logError($error_msg, $sql, "ShowErrTemplate", $announce_to_email);
+
+	$jprofileObj    =JProfileUpdateLib::getInstance();
+	$paramArr =array("SUBSCRIPTION"=>$subscription,"SUBSCRIPTION_EXPIRY_DT"=>$myrow['EXPIRY_DT']);
+	$jprofileObj->editJPROFILE($paramArr,$myrow['PROFILEID'],'PROFILEID');
         
         if (isset($_COOKIE['JSLOGIN'])) {
             $checksum = $_COOKIE['JSLOGIN'];

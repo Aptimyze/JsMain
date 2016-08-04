@@ -27,6 +27,8 @@ class MAILER_COMMON_ENUM
                 self::$mailerSenders["NEW_MATCHES"]["ALIAS"]="Jeevansathi Matches";
 		self::$mailerSenders["VISITORALERT"]["SENDER"]="visitoralert@jeevansathi.com";
                 self::$mailerSenders["VISITORALERT"]["ALIAS"]="Jeevansathi Alerts";
+                self::$mailerSenders["SAVED_SEARCH"]["SENDER"]="matchalert@jeevansathi.com";
+                self::$mailerSenders["SAVED_SEARCH"]["ALIAS"]="Jeevansathi Matches";
                 self::$mailerSenders["CONTACTVIEWERS"]["ALIAS"]="Jeevansathi Alerts";
                 self::$mailerSenders["CONTACTVIEWERS"]["SENDER"]="contacts@jeevansathi.com";
                 self::$mailerSenders["UPLOADED_PHOTO"]["SENDER"]="contacts@jeevansathi.com";
@@ -36,25 +38,31 @@ class MAILER_COMMON_ENUM
 		self::$template["VISITORALERT"]= "visitoralert";
                 self::$template["CONTACTVIEWERS"]="contactViewers";
                 self::$template["UPLOADED_PHOTO"]="requestedPhotoUploaded";
+                self::$template["SAVED_SEARCH"]="savedSearch";
 		self::$membershipTracking["MATCHALERT"]= array('vdGetDiscount'=>'VDMA1','vdPercent'=>'VDMA2','upgrade'=>'MA2','renew'=>'MA2RO','renewPercent'=>'MA2RC');
 		self::$membershipTracking["NEW_MATCHES"]= array('vdGetDiscount'=>'VDNP1','vdPercent'=>'VDNP2','upgrade'=>'NP2','renew'=>'NP2RO','renewPercent'=>'NP2RC');
                 self::$membershipTracking["VISITORALERT"] = array('vdGetDiscount'=>'VDVA1','vdPercent'=>'VDVA2','upgrade'=>'VA2','renew'=>'VA2R','renewPercent'=>'VA2RC');
                 self::$membershipTracking["CONTACTVIEWERS"] = array('vdGetDiscount'=>'VDCV1','vdPercent'=>'VDCV2','upgrade'=>'CD2','renew'=>'CV2R','renewPercent'=>'CV2RC');
 		self::$membershipTracking["CONTACTVIEWERS"] = array('vdGetDiscount'=>'VDCV1','vdPercent'=>'VDCV2','upgrade'=>'CD2','renew'=>'CV2R','renewPercent'=>'CV2RC');
                 self::$membershipTracking["UPLOADED_PHOTO"] = array('vdGetDiscount'=>'VDUP1','vdPercent'=>'VDUP2','upgrade'=>'UP2','renew'=>'UP2R','renewPercent'=>'UP2RC');
+                self::$membershipTracking["SAVED_SEARCH"] = array('vdGetDiscount'=>'VDSS1','vdPercent'=>'VDSS2','upgrade'=>'SS2','renew'=>'SS2R','renewPercent'=>'SS2RC');
 		self::$userFieldLabel["MATCHALERT"] = "USER";
 		self::$userFieldLabel["NEW_MATCHES"] = "USER";
                 self::$userFieldLabel["VISITORALERT"] = "VISITOR";
 		self::$userFieldLabel["CONTACTVIEWERS"] = "VISITOR";
                 self::$userFieldLabel["UPLOADED_PHOTO"] = "USER";
+                self::$userFieldLabel["SAVED_SEARCH"] = "USER";
 		self::$googlePlayTracking["MATCHALERT"] = "utm_content=MatchAlert_M&utm_campaign=JSAA";
                 self::$googlePlayTracking["NEW_MATCHES"] = "utm_content=MatchAlert_M&utm_campaign=JSAA";
                 self::$googlePlayTracking["VISITORALERT"] = "utm_content=MatchAlert_M&utm_campaign=JSAA";
                 self::$googlePlayTracking["CONTACTVIEWERS"] = "utm_content=contactViewers&utm_campaign=JSAA";
+                self::$googlePlayTracking["SAVED_SEARCH"] = "utm_content=SavedSearch_M&utm_campaign=JSAA";
                 self::$iTunesTracking["MATCHALERT"] = "cc=MatchAlert_M";
                 self::$iTunesTracking["NEW_MATCHES"] = "cc=MatchAlert_M";
                 self::$iTunesTracking["VISITORALERT"] = "cc=VisitorAlert_M";
                 self::$iTunesTracking["CONTACTVIEWERS"] = "cc=contactViewers";
+               self::$iTunesTracking["SAVED_SEARCH"] = "cc=SavedSearch_M";
+
         }
 	
 	/* This function is used to get user field label of the given mailer type 

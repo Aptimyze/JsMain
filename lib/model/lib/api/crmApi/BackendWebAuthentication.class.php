@@ -17,7 +17,7 @@ class BackendWebAuthentication extends BackendApiAuthentication
 		$this->backendObj = new backendActionsLib(array("jsadmin_CONNECT"=>"newjs_master"),$this->useCrmMemcache); 
 		if(!$cid)
 			$cid=$_COOKIE["CRM_NOTIFICATION_AGENTID"];
-		$name = $_COOKIE["CRM_NOTIFICATION_AGENT"];
+		$name = preg_replace('/[^A-Za-z0-9\. -_]/', '', $_COOKIE["CRM_NOTIFICATION_AGENT"]);
 		if(strlen($cid)==0 || !$cid)
 		{
 			return null;
@@ -28,7 +28,8 @@ class BackendWebAuthentication extends BackendApiAuthentication
 			$userDetails = $this->backendObj->fetchSessionDetailsBySessionID($userno);
 			if($userDetails)
 			{
-				if (time()-$userDetails["TIME"] < $this->sessionTimeoutLimit)
+				//if (time()-$userDetails["TIME"] < $this->sessionTimeoutLimit)
+				if(1)
 				{
 					$this->backendObj->updateAgentSessionTime($userno);
 					$this->setLoginCookies($cid,$name);

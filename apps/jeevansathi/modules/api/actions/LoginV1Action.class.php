@@ -44,7 +44,8 @@ class LoginV1Action extends sfActions
         	if($count>2)
         	{
         		//setcookie('loginAttempt','1',time()+86400000,"/");
-        		setcookie("loginAttemptNew", '1', time() + 86400,"/");
+        		if(!$request->getcookie('loginAttemptNew'))
+					setcookie("loginAttemptNew", '1', time() + 86400,"/");
         		if($captcha!=1)
         		{
         			if(MobileCommon::isDesktop())
@@ -151,7 +152,7 @@ class LoginV1Action extends sfActions
 	else
 	{
 		if($result[ACTIVATED]=='D'){
-			$apiObj->setHttpArray(ResponseHandlerConfig::$LOGIN_FAILURE_DELETED);
+			$apiObj->setHttpArray(ResponseHandlerConfig::$LOGIN_FAILURE_ACCESS);
 			//ValidationHandler::getValidationHandler("","Profile with this email address has been deleted");
 			$this->trackDeleteProfileAttempts($email);
 		}

@@ -32,7 +32,7 @@ class InstantSMS {
 	
 	private function setProfileDetails() {
 				
-		$sql = "SELECT EMAIL,JPROFILE.PROFILEID, GENDER, USERNAME, PASSWORD, SUBSCRIPTION, PHONE_MOB, CASTE, DTOFBIRTH, MSTATUS, MTONGUE,  MOB_STATUS,EMAIL, SEC_SOURCE,CITY_RES,PINCODE,ISD FROM newjs.JPROFILE LEFT JOIN newjs.JPROFILE_ALERTS ON JPROFILE.PROFILEID=JPROFILE_ALERTS.PROFILEID WHERE JPROFILE.PROFILEID = '$this->profileid'";
+		$sql = "SELECT EMAIL,JPROFILE.PROFILEID, GENDER, USERNAME, PASSWORD, SUBSCRIPTION, PHONE_MOB, CASTE, DTOFBIRTH, MSTATUS, MTONGUE,  MOB_STATUS,EMAIL, SEC_SOURCE,CITY_RES,COUNTRY_RES,PINCODE,ISD FROM newjs.JPROFILE LEFT JOIN newjs.JPROFILE_ALERTS ON JPROFILE.PROFILEID=JPROFILE_ALERTS.PROFILEID WHERE JPROFILE.PROFILEID = '$this->profileid'";
 		if(!in_array($this->smsKey,$this->settingIndependent))
 			$sql.=" and  (JPROFILE_ALERTS.SERVICE_SMS !=  'U' OR JPROFILE_ALERTS.SERVICE_SMS IS NULL)";
 		if($this->smsKey != "REGISTER_CONFIRM")
@@ -70,6 +70,9 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 	}	
 		
 	private function isWhitelistedProfile() {
+
+		if($this->smsKey=='OTP') return true;
+
 		if(!$this->SMSLib->getMobileCorrectFormat($this->profileDetails["PHONE_MOB"],$this->profileDetails["ISD"]))
 			return false;
 		switch ($this->smsKey) {
@@ -173,7 +176,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 	
 	private function setOtherProfile() {
 				
-		$sql = "SELECT PROFILEID, GENDER, USERNAME, PASSWORD,AGE,HEIGHT, SUBSCRIPTION, PHONE_MOB, CASTE, DTOFBIRTH, MSTATUS, MTONGUE,  MOB_STATUS,EDU_LEVEL,INCOME,OCCUPATION,CITY_RES,EMAIL, SEC_SOURCE,EDU_LEVEL_NEW, ISD, SHOWPHONE_MOB,PHONE_WITH_STD  FROM newjs.JPROFILE WHERE PROFILEID = '$this->otherProfileId'";
+		$sql = "SELECT PROFILEID, GENDER, USERNAME, PASSWORD,AGE,HEIGHT, SUBSCRIPTION, PHONE_MOB, CASTE, DTOFBIRTH, MSTATUS, MTONGUE,  MOB_STATUS,EDU_LEVEL,INCOME,OCCUPATION,COUNTRY_RES,CITY_RES,EMAIL, SEC_SOURCE,EDU_LEVEL_NEW, ISD, SHOWPHONE_MOB,PHONE_WITH_STD  FROM newjs.JPROFILE WHERE PROFILEID = '$this->otherProfileId'";
 		$res = mysql_query($sql,$this->SMSLib->dbMaster) or logError($this->error,$sql,"ShowErrTemplate");
 		$row = mysql_fetch_assoc($res);
 		// set ProfileDetails for the given ProfileID
@@ -284,15 +287,6 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 				$smsVendorObj = SmsVendorFactory::getSmsVendor("air2web");
 				$xmlResponse = $smsVendorObj->generateXml($this->profileid,$this->profileDetails["PHONE_MOB"],$message,$this->smsSettings["SEND_TIME"]);
 				$smsVendorObj->send($xmlResponse,$acc);
-				//$xmlResponse = generateReceiverXmlData($this->profileid, $message, $from="", $this->profileDetails["PHONE_MOB"], $this->smsSettings["SEND_TIME"]);	
-				//sendSMS($xmlResponse, "priority");
-                                //pankaj trac #918 starts here
-				//Commented as hide functionality is not required
-				/*if(in_array($this->smsKey,$this->unverified_key)){
-					$sql = "UPDATE newjs.JPROFILE SET ACTIVATED = 'H' WHERE PROFILEID = '".$this->profileid."'";
-					$res = mysql_query_decide($sql) or die("$res".mysql_error_js());
-				}*/
-				//ends here 
 			}
 			//Insert in sms log
 			$this->insertInSmsLog($message,$sent);

@@ -33,7 +33,7 @@ $smarty->assign("LEFTBANNER",basename($_SERVER['PHP_SELF']));
 if($_COOKIE['SULEKHACO']=="yes")
 	$smarty->assign("SULEKHACO",1);
 
-$mob_cookie_arr=explode(",",$_COOKIE['JS_MOBILE']);
+$mob_cookie_arr=explode(",",preg_replace('/[^A-Za-z0-9\. -]/', '', $_COOKIE['JS_MOBILE']));
 $MOB_COOKIE=$mob_cookie_arr[0];
 if($MOB_COOKIE=='Y')
 	$smarty->assign("MOB_YES",1);

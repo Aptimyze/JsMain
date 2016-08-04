@@ -223,7 +223,9 @@ class DetailedViewApi
 		elseif($this->getMembershipType() == 'eadvantage')
 		{
 			$this->m_arrOut['subscription_text'] = mainMem::EADVANTAGE_LABEL;
-		}
+		}else{
+                        $this->m_arrOut['subscription_text'] = '';
+                }
 	}
 
 	
@@ -295,7 +297,6 @@ class DetailedViewApi
 			$szAboutMyEdu = null;
 			
 		$this->m_arrOut['myedu'] = $szAboutMyEdu;
-		
 		//PG Degree
 		$objEducation = $this->m_objProfile->getEducationDetail();
 		
@@ -346,7 +347,7 @@ class DetailedViewApi
 		}
 		
 		$this->m_arrOut['post_grad'] = $arrPGOut;
-		
+		$NonGradDegree = 0;
 		//UG Degree and Colg name
 		$arrUGOut = array('deg'=>null,'name'=>null);
 		if(in_array($iHighestDegree,$arrUG_Group) || in_array($iHighestDegree,$arrPG_Group))
@@ -368,10 +369,13 @@ class DetailedViewApi
 		else
 		{
 			$arrUGOut = null;
+			$NonGradDegree = 1;
 		}
-				
+                
+                $this->m_arrOut['college'] = $objProfile->getCOLLEGE();
+                $this->m_arrOut['pg_college'] = $objProfile->getPG_COLLEGE();
 		$this->m_arrOut['under_grad'] = $arrUGOut;
-		
+		$this->m_arrOut['non_grad'] = $NonGradDegree;
 		//School
 		$this->m_arrOut['school'] = null;
 		if($objEducation->SCHOOL != $objEducation->nullValueMarker)
@@ -424,7 +428,7 @@ class DetailedViewApi
 			$arrWorkInfo = null;
 			
 		$this->m_arrOut['work_status'] = $arrWorkInfo;
-		
+		$this->m_arrOut['company_name'] = $objProfile->getCOMPANY_NAME() ?"Works at ".$objProfile->getCOMPANY_NAME():"";
 		//Earnings
 		$this->m_arrOut['earning'] = null;
 		if(($szInc_Lvl = $objProfile->getDecoratedIncomeLevel()) != ApiViewConstants::getNullValueMarker())

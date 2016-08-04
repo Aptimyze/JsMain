@@ -124,7 +124,10 @@ function page_load_date(to_page,year)
 ~section name=mysec loop=$USERNAME`
 <form name="form1" method="post" action="duplicate_profile_delete.php?cid=~$cid`&pid=~$PID[mysec]`&username=~$USERNAME[mysec]`" onsubmit="return validate();">
       <tr>
-        <td><a onclick="window.open('~$SITE_URL`/jsadmin/showstat.php?cid=~$cid`&profileid=~$PID[mysec]`','','fullscreen=1,resizable=1,scrollbars=1');" href="#">~$USERNAME[mysec]`</a></td>
+        <td>
+		<!--<a onclick="window.open('~$SITE_URL`/jsadmin/showstat.php?cid=~$cid`&profileid=~$PID[mysec]`','','fullscreen=1,resizable=1,scrollbars=1');" href="#">~$USERNAME[mysec]`</a>-->
+		<a onclick="window.open('~$SITE_URL`/operations.php/commoninterface/ShowProfileStats?cid=~$cid`&profileid=~$PID[mysec]`','','fullscreen=1,resizable=1,scrollbars=1');" href="#">~$USERNAME[mysec]`</a>
+	</td>
         <td>~$ENTRY_DATE[mysec]`</td>
         <td>~$MOBILE[mysec]`</td>
 	<td>~$LANDLINE[mysec]`</td>

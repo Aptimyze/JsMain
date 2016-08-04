@@ -6,7 +6,7 @@ include_once($_SERVER['DOCUMENT_ROOT']."/classes/globalVariables.Class.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Mysql.class.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Memcache.class.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Jpartner.class.php");
-
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 $mysqlObj=new Mysql;
 
 if(authenticated($cid))
@@ -58,8 +58,14 @@ if(authenticated($cid))
 		
 		if(count($sqlval))
 		{
-			$sql = $sql.implode(",",$sqlval)." where PROFILEID='$pid'";
-			mysql_query_decide($sql) or die("$sql".mysql_error_js());  
+			$objUpdate = JProfileUpdateLib::getInstance();
+			$updateParams = $objUpdate->convertUpdateStrToArray(implode(",",$sqlval));
+			$result = $objUpdate->editJPROFILE($updateParams,$pid,'PROFILEID');
+			if(false === $result) {
+				die("Issue while update JPROFILE at line 65");
+			}
+//			$sql = $sql.implode(",",$sqlval)." where PROFILEID='$pid'";
+//			mysql_query_decide($sql) or die("$sql".mysql_error_js());
 			
 			$msg .= implode("<br>",$msgval);
         }

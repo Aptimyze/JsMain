@@ -53,7 +53,7 @@ class sugarcrm_leads_cstm extends TABLE{
                 try{
 
                     $sql = "SELECT age_c,date_birth_c,gender_c,height_c,marital_status_c,religion_c,mother_tongue_c,caste_c,education_c,occupation_c,income_c,manglik_c,source_c,enquirer_mobile_no_c,enquirer_landline_c,score_c,std_c,std_enquirer_c,jsprofileid_c FROM sugarcrm.leads_cstm WHERE id_c =:PROFILEID";
-                
+               
                     $prep = $this->db->prepare($sql);
                     $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
                     $prep->execute();
@@ -71,7 +71,6 @@ class sugarcrm_leads_cstm extends TABLE{
                 try{
 
                     $sql = "SELECT max(score_c) as max,min(score_c) as min FROM sugarcrm.leads_cstm";
-                
                     $prep = $this->db->prepare($sql);
                     $prep->execute();
                     $res=$prep->fetch(PDO::FETCH_ASSOC);

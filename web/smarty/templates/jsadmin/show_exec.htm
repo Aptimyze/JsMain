@@ -104,7 +104,7 @@
 								~section name=sec loop=$allotted`
 									<tr class=fieldsnew>
 										<td align=center >&nbsp;~$allotted[sec].SNo`</td>
-										<td align=center ><a href='/jsadmin/showstat.php?cid=~$checksum`&profileid=~$allotted[sec].PROFILEID`'>&nbsp;~$allotted[sec].USERNAME`</a></td>
+										<td align=center ><a href='/operations.php/commoninterface/ShowProfileStats?cid=~$checksum`&profileid=~$allotted[sec].PROFILEID`'>&nbsp;~$allotted[sec].USERNAME`</a></td>
 										<td align=center >&nbsp;~$allotted[sec].ENTRY_DT`</td>
 										<td align=center >&nbsp;~$allotted[sec].ALLOT_TIME`</td>
 										<td align=center >&nbsp;~$allotted[sec].SCHEDULED_TIME`</td>
@@ -141,7 +141,7 @@
 								~section name=sec loop=$followup`
 									<tr class=fieldsnew>
 									<td align=center >&nbsp;~$followup[sec].SNO`</td>
-									<td align=center ><a href='/jsadmin/showstat.php?cid=~$checksum`&profileid=~$followup[sec].PROFILEID`'>&nbsp;~$followup[sec].USERNAME`</a></td>
+									<td align=center ><a href='/operations.php/commoninterface/ShowProfileStats?cid=~$checksum`&profileid=~$followup[sec].PROFILEID`'>&nbsp;~$followup[sec].USERNAME`</a></td>
 									<td align=center >&nbsp;~$followup[sec].ENTRY_DT`</td>
 									<td align=center >&nbsp;~$followup[sec].ALLOT_TIME`</td>
 									<td align=center >&nbsp;~$followup[sec].COMPLETION_TIME`</td>
@@ -175,7 +175,7 @@
 								~section name=sec loop=$onhold`
 									<tr class=fieldsnew>
 									<td align=center >&nbsp;~$onhold[sec].SNO`</td>
-									<td align=center ><a href='/jsadmin/showstat.php?cid=~$checksum`&profileid=~$onhold[sec].PROFILEID`'>&nbsp;~$onhold[sec].USERNAME`</a></td>
+									<td align=center ><a href='/operations.php/commoninterface/ShowProfileStats?cid=~$checksum`&profileid=~$onhold[sec].PROFILEID`'>&nbsp;~$onhold[sec].USERNAME`</a></td>
 									<td align=center >&nbsp;~$onhold[sec].ENTRY_DT`</td>
 									<td align=center >&nbsp;~$onhold[sec].ALLOTTED_TIME`</td>
 									<td align=center >&nbsp;~$onhold[sec].HOLD_TIME`</td>

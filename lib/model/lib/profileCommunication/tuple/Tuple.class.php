@@ -70,6 +70,12 @@ class Tuple {
     public $MOBPHOTOSIZE;
     public $INTEREST_VIEWED_DATE;
 		public $VERIFICATIONSEAL;
+		public $COMPANY_NAME;
+		public $COLLEGE;
+		public $PG_COLLEGE;
+		public $ANCESTRAL_ORIGIN;
+		public $NATIVE_CITY;
+		public $NATIVE_STATE;
 
     //Getters and setter of all the base class as well as child class fields
         
@@ -84,6 +90,15 @@ class Tuple {
     }
     public function getGENDER() {
         return $this->GENDER;
+    }
+    public function getCOMPANY_NAME() {
+        return $this->COMPANY_NAME;
+    }
+    public function getCOLLEGE(){
+        return $this->COLLEGE;
+    }
+    public function getPG_COLLEGE(){
+        return $this->PG_COLLEGE;
     }
     public function getAGE() {
         return $this->AGE;
@@ -124,6 +139,9 @@ class Tuple {
     public function getCITY() {
         return $this->CITY;
     }
+    public function getCITY_ID() {
+        return $this->CITY_ID;
+    }
     public function getACTIVATED() {
 		return $this->ACTIVATED;
 	}
@@ -144,8 +162,44 @@ class Tuple {
         public function setprofileObject($x) {
         $this->profileObject=$x;
     }
+    public function setANCESTRAL_ORIGIN($x) {
+        $this->ANCESTRAL_ORIGIN=$x;
+    }
+    public function getANCESTRAL_ORIGIN() {
+        return $this->ANCESTRAL_ORIGIN;
+    }
+    
+    public function setNATIVE_CITY($x) {
+        $this->NATIVE_CITY=$x;
+    }
+    public function getNATIVE_CITY() {
+        return $this->NATIVE_CITY;
+    }
+    
+    public function setNATIVE_STATE($x) {
+        $this->NATIVE_STATE=$x;
+    }
+    public function getNATIVE_STATE() {
+        return $this->NATIVE_STATE;
+    }
+    public function setNATIVE_STATE_ID($x) {
+        $this->NATIVE_STATE_ID=$x;
+    }
+    public function getNATIVE_STATE_ID() {
+        return $this->NATIVE_STATE_ID;
+    }
+    
     public function setPROFILEID($x) {
         $this->PROFILEID = $x;
+    }
+    public function setCOMPANY_NAME($x) {
+        $this->COMPANY_NAME = $x;
+    }
+    public function setCOLLEGE($x) {
+        $this->COLLEGE = $x;
+    }
+    public function setPG_COLLEGE($x) {
+        $this->PG_COLLEGE = $x;
     }
     public function setUSERNAME($x) {
         $this->USERNAME = $x;
@@ -191,6 +245,9 @@ class Tuple {
     }
     public function setCITY($x) {
         $this->CITY = $x;
+    }
+    public function setCITY_ID($x) {
+        $this->CITY_ID = $x;
     }
     public function getSHOW_HOROSCOPE() {
         return $this->SHOW_HOROSCOPE;

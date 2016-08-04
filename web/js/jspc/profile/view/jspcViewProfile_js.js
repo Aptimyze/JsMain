@@ -440,7 +440,6 @@ function customOptionButton(optionBtnName) {
 			$('input[name="' + optionBtnName + '"]').closest('li').removeClass('selected');
 			$(this).closest('li').addClass("selected");
 		});
-		checkBox.eq(0).closest('li').addClass('selected');
 
 }
 
@@ -561,20 +560,20 @@ if(layerObj.find("#otherOptionBtn").is(':checked')) {
 	if(!reason) {layerObj.find('#errorText').removeClass('disp-none');return;}
 }
 $('.js-overlay').unbind('click');
-showCommonLoader();
 if (finalResponse) var otherUser=finalResponse.about.username;
 var selfUname=selfUsername;
 var layerObj=$("#reportAbuse-layer");
 var ajaxConfig=new Object();
+if(!layerObj.find(".selected").length) {layerObj.find('#RAReasonHead').text("*Please Select a reason");return;}
 if(!reason) reason=layerObj.find(".selected").eq(0).text().trim();
 if(!reason||!selfUname || !otherUser) return;
-
+showCommonLoader();
 var feed={};
-
+reason=$.trim(reason);
 //feed.message:as sdf sd f
 feed.category='Abuse';
-feed.message=otherUser+' has been reported abuse by '+selfUname+' with the following reason:\\n\\n'+reason;
-ajaxData={'feed':feed,'CMDSubmit':'1'};
+feed.message=otherUser+' has been reported abuse by '+selfUname+' with the following reason:'+reason;
+ajaxData={'feed':feed,'CMDSubmit':'1','profilechecksum':ProCheckSum,'reason':reason};
 ajaxConfig.url='/api/v1/faq/feedbackAbuse';
 ajaxConfig.data=ajaxData;
 ajaxConfig.type='POST'

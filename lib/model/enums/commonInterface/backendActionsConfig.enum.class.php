@@ -4,7 +4,7 @@ class uploadVD
     const EMPTY_SOURCE = 1;  //not used
     const INCOMPLETE_UPLOAD = 2;  //not used
     const COMPLETE_UPLOAD = 3;   //not used
-    public static $RECORDS_SELECTED_PER_TRANSFER = 10000;
+    public static $RECORDS_SELECTED_PER_TRANSFER = 5000;
     public static $vdDurationArr =array('2','3','6','12','L');
 }
 
@@ -13,7 +13,8 @@ class exclusiveMemberList
 	public static $TYPE_TABID_MAPPING = array("ASSIGNED"=>array("TABID"=>0,"ACTION"=>"UNASSIGN","NAME"=>"Assigned customers"),
 											"PENDING"=>array("TABID"=>1,"ACTION"=>"ASSIGN","NAME"=>"Pending customers")
 											);
-	public static $displayColumnsNames = array("Client Name","Username","Age","Gender","Marital Status","Height","Religion/Caste","Annual Income","Matches","Contact No","Email","Billing Date","Service Duration","Service Expiry Date","Sales Person","Executive","Action");
+	//public static $displayColumnsNames = array("Client Name","Username","Age","Gender","Marital Status","Height","Religion/Caste","Annual Income","Matches","Contact No","Email","Billing Date","Service Duration","Service Expiry Date","Sales Person","Executive","Action");
+	public static $displayColumnsNames = array("Client Name","Username","Age","Gender","Marital Status","Height","Religion/Caste","Annual Income","Contact No","Email","Billing Date","Service Duration","Service Expiry Date","Sales Person","Executive","Action");
 
 	public static $specificColumnMapping = array("HEIGHT"=>"height_without_meters","RELIGION"=>"religion","CASTE"=>"caste_without_religion","INCOME"=>"income_map","SERVICEID"=>"SERVICE_DURATION");
 
@@ -59,7 +60,7 @@ class fsoInterfaceDisplay
 
 class crmCommonConfig
 {
-	public static $useCrmMemcache = true;
+	public static $useCrmMemcache = false;
 }
 
 ?>

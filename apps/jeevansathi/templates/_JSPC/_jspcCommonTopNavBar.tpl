@@ -164,13 +164,37 @@ window.onload=function(){
                             <!--end:number-->
                             <!--start:submenu-->
                             <ul class="submenu topnavbg pos-abs navbell menushadowGNB navBarZ">
-                                <li>
+                           <!--     <li>
                                     <a href="/search/justjoined">
                                     <div class="clearfix topnavp1">
                                         <div class="fl">Just Joined Matches</div>
                                         <div class="fr">
                                             <div id="justJoinedCountParent" class="disp-tbl  txtc" style="display:none">
                                                 <div id="justJoinedCount" class="disp-cell vmid colrw bg_pink f12 fontlig tdim2 count">0</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </li>-->
+                                <li>
+                                    <a href="/inbox/1/1">
+                                    <div class="clearfix topnavp1">
+                                        <div class="fl">Interests Received</div>
+                                        <div class="fr">
+                                            <div id="interestsReceivedCountParent" class="disp-tbl  txtc" style="display:none">
+                                                <div id="interestsReceivedCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/inbox/2/1">
+                                    <div class="clearfix topnavp1">
+                                        <div class="fl">Members who Accepted me</div>
+                                        <div class="fr">
+                                            <div id="membersAcceptedMeCountParent" class="disp-tbl countBell txtc" style="display:none">
+                                                <div id="membersAcceptedMeCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
                                             </div>
                                         </div>
                                     </div>
@@ -199,32 +223,8 @@ window.onload=function(){
                                         </div>
                                     </div>
                                     </a>
-                                </li>
-                                <li>
-                                    <a href="/inbox/1/1">
-                                    <div class="clearfix topnavp1">
-                                        <div class="fl">Interests Received</div>
-                                        <div class="fr">
-                                            <div id="interestsReceivedCountParent" class="disp-tbl  txtc" style="display:none">
-                                                <div id="interestsReceivedCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="/inbox/2/1">
-                                    <div class="clearfix topnavp1">
-                                        <div class="fl">Members who Accepted me</div>
-                                        <div class="fr">
-                                            <div id="membersAcceptedMeCountParent" class="disp-tbl countBell txtc" style="display:none">
-                                                <div id="membersAcceptedMeCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    </a>
-                                </li>
-                                <li>
+                                </li>                                
+                              <!--  <li>
                                     <a href="/search/matchalerts">
                                     <div class="clearfix topnavp1">
                                         <div class="fl">Match Alerts</div>
@@ -235,20 +235,11 @@ window.onload=function(){
                                         </div>
                                     </div>
                                     </a>
-                                </li>
+                                </li>-->
 				 <li>
                                     <a href="/inbox/12/1">
                                     <div class="clearfix topnavp1">
                                         <div class="fl">Filtered Interests</div>
-                                        
-                                        <div class="fl ml10">
-											<div class="bg_pink">
-												<div style="line-height:8px;" class="colrw disp_b padall-6">
-													New
-												</div>
-											</div>
-										</div>
-                                        
                                         <div class="fr">
                                             <div id="membersFilteredInterestCountParent" class="disp-tbl  txtc" style="display:none">
                                                 <div id="FilteredInterstsCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
@@ -275,8 +266,8 @@ window.onload=function(){
                                 <li><div class="topnavp1"><a class="disp_b" href="/settings/jspcSettings?changePassword=1">Change Password</a></div></li>
                                 <li>
                                     <div class="clearfix topnavp1">
-                                        <div class="fl pt5"><a class="disp_b" href="/profile/mem_comparison.php">You are ~if strstr($subscription,"F") or strstr($subscription,"D")`a Paid~else`Free~/if` Member  </a></div>
-                                        ~if strstr($subscription,"F") or strstr($subscription,"D")`
+                                        <div class="fl pt5"><a class="disp_b" href="/profile/mem_comparison.php">You are~if CommonFunction::getMembershipName($profileid) neq 'Free'` a Paid~else` a Free~/if` Member  </a></div>
+                                        ~if CommonFunction::getMembershipName($profileid) neq 'Free'`
                                         ~else`
                                         <div class="fr">
                                             <div class="bg_pink navp2"><a class="colrw disp_b" href="/profile/mem_comparison.php">Upgrade</a></div>

@@ -58,6 +58,7 @@ class SearchConfig
 
 	public static $membersLookingForMeWhereParameters = 'PARTNER_MTONGUE,PARTNER_CASTE,PARTNER_RELIGION,PARTNER_COUNTRYRES,PARTNER_BTYPE,PARTNER_COMP,PARTNER_ELEVEL_NEW,PARTNER_INCOME,PARTNER_OCC,PARTNER_MSTATUS,PARTNER_CITYRES,PARTNER_DRINK,PARTNER_SMOKE,PARTNER_DIET,PARTNER_HANDICAPPED,PARTNER_MANGLIK';
 	public static $membersLookingForMeRangeParameters = 'PARTNER_LAGE,PARTNER_HAGE,PARTNER_LHEIGHT,PARTNER_HHEIGHT';
+        public static $featuredProfileParams = 'LAST_LOGIN_DT';
 	public static $textBasedSearchParameters = "KEYWORD_SEARCH_FIELD";
 	public static $featureProfileWhereParameters = "FEATURE_PROFILE";
 	//For Solr
@@ -74,7 +75,11 @@ class SearchConfig
 	public static $clustersWithAny = array('HANDICAPPED');
 	/* Search Cluster Info */
 
-	
+	/**
+         * Db to be called in all search requests
+         */
+        public static $searchDbName = "newjs_masterRep";
+        
 	/*
 	* List The Array name corresponding to SEARCH_MALE/FEMALE fields used in cluster
 	*/
@@ -162,7 +167,9 @@ class SearchConfig
 	}
 
 	/* For Search UI */
-        public static $searchDisplayFields = 'HEIGHT,USERNAME,PROFILEID,RELIGION,CASTE,MTONGUE,EDU_LEVEL_NEW,INCOME,OCCUPATION,AGE,LAST_LOGIN_DT,ENTRY_DT,SUBSCRIPTION,CITY_RES,COUNTRY_RES,MSTATUS';
+
+        public static $searchDisplayFields = 'HEIGHT,USERNAME,PROFILEID,RELIGION,CASTE,MTONGUE,EDU_LEVEL_NEW,INCOME,OCCUPATION,AGE,LAST_LOGIN_DT,ENTRY_DT,SUBSCRIPTION,CITY_RES,COUNTRY_RES,MSTATUS,COLLEGE,PG_COLLEGE,COMPANY_NAME,NATIVE_CITY,NATIVE_STATE,ANCESTRAL_ORIGIN';
+
         public static $searchDisplayDecoratedFields = 'HEIGHT,RELIGION,CASTE,MTONGUE,EDU_LEVEL_NEW,OCCUPATION,INCOME,CITY_RES,COUNTRY_RES';
 	public static function decoratedMappingSearchDisplay()
 	{
@@ -194,4 +201,8 @@ class SearchConfig
 	/* For Search UI */
 
 	public static $advanceSearchMtongueHardCodeArray = array(19=>41,30=>70,36=>71);		//Same mtongue in different regions have some hardcoded values in advance search. This array keeps the mapping. Array index has the original vale and array value has the hardcoded value
+        
+        public static function getSearchDb($params = array()){
+                return self::$searchDbName;
+        }
 }

@@ -32,7 +32,12 @@ class ApiIgnoreProfileV1Action extends sfActions
 		$apiResponseHandlerObj->setHttpArray($this->m_iResponseStatus);
 		$apiResponseHandlerObj->setResponseBody($this->m_arrOut);	
 		$apiResponseHandlerObj->generateResponse();
-		die;
+		
+		if($request->getParameter('INTERNAL')==1){
+			return sfView::NONE;
+		} else {
+			die;
+		}
 	}
 	
 	/**
@@ -123,6 +128,11 @@ class ApiIgnoreProfileV1Action extends sfActions
 	                {
 	                	$params["isIgnored"] = 1;
 	                	$responseArray["buttons"][0] = ButtonResponse::getIgnoreButton("",$params);
+	                }
+	             if(MobileCommon::isApp() == "A")
+	                {
+	                	$params["isIgnored"] = 1;
+	                	$responseArray["buttons"][0] = ButtonResponseApi::getIgnoreButton("",'','Y',true,'Undo Ignore');
 	                }
 					$buttonDetails = ButtonResponse::buttonDetailsMerge($responseArray);
 					$actionDetails = ButtonResponse::actionDetailsMerge(array("notused"=>1));

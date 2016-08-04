@@ -1004,15 +1004,10 @@ class searchActions extends sfActions
 				$mapped[] = 'COUNTRY_RES';
 			}
 
-			if(($state || $city_india) && !$SearchParamtersObj->getCITY_RES())
+			if($city_india && !$SearchParamtersObj->getCITY_RES())
 			{
 				$mapped[] = 'CITY_RES';
 				$append='';
-				if($state)
-				{
-					$city_res = $state;
-					$append.=",";
-				}
 				if($city_india)
 					$city_res.=$append.$city_india;
 				$SearchParamtersObj->setCITY_RES($city_res);
@@ -1040,19 +1035,26 @@ class searchActions extends sfActions
 					}
 				}
 			}
+                        
+                        //setting state and city from memcache which user has selected
+                        $memObject=JsMemcache::getInstance();
+                        if($stateToSet = $memObject->get('stateToSet-'.$searchId))
+                            $SearchParamtersObj->setSTATE($stateToSet,'',1);
+                        if($cityToSet = $memObject->get('cityToSet-'.$searchId))
+                            $SearchParamtersObj->setCITY_RES($cityToSet,'',1);
 			/* mapping groups to individual values*/
 			
-			if(strstr($loggedInProfileObj->getSUBSCRIPTION(),"T"))
+			/*if(strstr($loggedInProfileObj->getSUBSCRIPTION(),"T"))
 			{
 				$apObj = new SaveDppForAP;
 				$success = $apObj->SaveDppFromSearch($SearchParamtersObj,$loggedInProfileObj->getPROFILEID());
 				unset($apObj);
 			}
 			else
-			{			
+			{*/			
 				$UserSavedSearches = new PartnerProfile($loggedInProfileObj);
 				$success = $UserSavedSearches->saveSearchAsDpp($SearchParamtersObj,$mapped);
-			}
+			//}
 			if(MobileCommon::isDesktop())
 			{
 				if($success)
@@ -1221,6 +1223,8 @@ class searchActions extends sfActions
 			$searchResultscache = new SearchResultscache;
 			if(is_array($responseObj->getSearchResultsPidArr()) && is_array($responseObj->getFeturedProfileArr()))
                         	$searchPidArr = array_diff($responseObj->getSearchResultsPidArr(),$responseObj->getFeturedProfileArr());
+			else
+                                $searchPidArr = $responseObj->getSearchResultsPidArr();
 			$searchResultscache->add($searchId,$responseObj->getUrlToSave(),$searchPidArr);	
 		}
 		return $searchId;
@@ -1664,19 +1668,25 @@ class searchActions extends sfActions
 					$resultArr["paginationArray"]= $this->paginationArr; 
 					$statusArr = $inputValidateObj->getResponse();
 				}
+
 			}
 			
 			/** caching **/
 			$ifApiCached = SearchUtility::cachedSearchApi('set',$request,'',$statusArr,$resultArr);
+
 			/** caching **/
+
+			$resultArr["searchIdForNavigation"]= $this->searchId;
+
 		}
 		else
 		{
 			//validation are logged in search validation.
 			$statusArr = $resp;
 		}   
-                
-                unset($inputValidateObj);
+
+
+        		unset($inputValidateObj);
                 $respObj = ApiResponseHandler::getInstance();
                 $respObj->setHttpArray($statusArr);//print_r($resultArr);die;
                 $respObj->setResponseBody($resultArr);

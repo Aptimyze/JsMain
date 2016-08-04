@@ -63,21 +63,43 @@
                         <tr>
                             <td class="bg5 colrw cmp-lh1 vmid fontreg f17 pl20">Benefits You Get</td>
                         </tr>
+                        ~foreach from=$data.serviceContent key=k item=v name=servicesLoop`
+                            ~if $v.subscription_id eq 'ESP'`
+                                ~assign var=eSathiCheck value=1`
+                            ~else`
+                                ~assign var=eSathiCheck value=0`
+                            ~/if`
+                        ~/foreach`
                         ~foreach from=$data.allBenefits key=k item=v name=allBenefitsLoop`
                         ~if $smarty.foreach.allBenefitsLoop.index lte 2`
                         <tr>
                             <td class="bdrb cmp-lh1 pl20">~$v`</td>
                         </tr>
                         ~/if`
-                        ~if $smarty.foreach.allBenefitsLoop.index gt 2 && $smarty.foreach.allBenefitsLoop.index neq $smarty.foreach.allBenefitsLoop.last`
-                        <tr>
-                            <td class="bdrb cmp-lh1 pl20">~$v`</td>
-                        </tr>
-                        ~/if`
-                        ~if $smarty.foreach.allBenefitsLoop.last`
-                        <tr>
-                            <td class="bdrb cmp-lh2 pl20">~$v`</td>
-                        </tr>
+                        ~if $eSathiCheck eq 1`
+                            ~if $smarty.foreach.allBenefitsLoop.index gt 2 && $smarty.foreach.allBenefitsLoop.index neq $smarty.foreach.allBenefitsLoop.last`
+                            <tr>
+                                <td class="bdrb cmp-lh1 pl20">~$v`</td>
+                            </tr>
+                            ~/if`
+                            ~if $smarty.foreach.allBenefitsLoop.last`
+                            <tr>
+                                <td class="bdrb cmp-lh2 pl20">~$v`</td>
+                            </tr>
+                            ~/if`
+                        ~else`
+                            ~if $smarty.foreach.allBenefitsLoop.index lt (($smarty.foreach.allBenefitsLoop.total)-2)`
+                            ~if $smarty.foreach.allBenefitsLoop.index gt 2 && $smarty.foreach.allBenefitsLoop.index lt (($smarty.foreach.allBenefitsLoop.total)-2)`
+                            <tr>
+                                <td class="bdrb cmp-lh1 pl20">~$v`</td>
+                            </tr>
+                            ~/if`
+                            ~if $smarty.foreach.allBenefitsLoop.index eq (($smarty.foreach.allBenefitsLoop.total)-2)`
+                            <tr>
+                                <td class="bdrb cmp-lh2 pl20">~$v`</td>
+                            </tr>
+                            ~/if`
+                            ~/if`
                         ~/if`
                         ~/foreach`
                         <tr>
@@ -99,7 +121,7 @@
                                     <td class="bg5 colrw cmp-lh1 vmid fontreg f17 txtc">~$v.subscription_name`</td>
                                 </tr>
                                 ~foreach from=$v.benefits key=kk item=vv name=benefitsLoop`
-                                ~if $smarty.foreach.benefitsLoop.index eq 4`
+                                ~if $smarty.foreach.benefitsLoop.index eq 5`
                                 <tr>
                                     <td class="bdrb1 bdrb2 vmid txtc cmp-lh2"><i class="mem-sprite mem-chk3"></i></td>
                                 </tr>
@@ -110,14 +132,28 @@
                                 ~/if`
                                 ~/foreach`
                                 ~foreach from=$v.benefitsExcluded key=kk item=vv name=benefitsExcludedLoop`
-                                ~if $smarty.foreach.benefitsExcludedLoop.last`
-                                <tr>
-                                    <td class="bdrb1 bdrb2 vmid txtc cmp-lh2"><i class="mem-sprite mem-cross1"></i></td>
-                                </tr>
+                                ~if $eSathiCheck eq 1`
+                                    ~if $smarty.foreach.benefitsExcludedLoop.last`
+                                    <tr>
+                                        <td class="bdrb1 bdrb2 vmid txtc cmp-lh2"><i class="mem-sprite mem-cross1"></i></td>
+                                    </tr>
+                                    ~else`
+                                    <tr>
+                                        <td class="bdrb2 vmid txtc cmp-lh2"><i class="mem-sprite mem-cross1"></i></td>
+                                    </tr>
+                                    ~/if`
                                 ~else`
-                                <tr>
-                                    <td class="bdrb2 vmid txtc cmp-lh2"><i class="mem-sprite mem-cross1"></i></td>
-                                </tr>
+                                    ~if $smarty.foreach.benefitsExcludedLoop.index lt (($smarty.foreach.benefitsExcludedLoop.total)-2)`
+                                    ~if $smarty.foreach.benefitsExcludedLoop.index eq (($smarty.foreach.benefitsExcludedLoop.total)-3)`
+                                    <tr>
+                                        <td class="bdrb1 bdrb2 vmid txtc cmp-lh2"><i class="mem-sprite mem-cross1"></i></td>
+                                    </tr>
+                                    ~else`
+                                    <tr>
+                                        <td class="bdrb2 vmid txtc cmp-lh2"><i class="mem-sprite mem-cross1"></i></td>
+                                    </tr>
+                                    ~/if`
+                                    ~/if`
                                 ~/if`
                                 ~/foreach`
                                 <tr>
@@ -162,14 +198,19 @@
                                     <td class="bdrb2 vmid txtc cmp-lh2"><i class="mem-sprite mem-cross1"></i></td>
                                 </tr>
                                 <tr>
-                                    <td class="bdrb2 bdrb1 vmid txtc cmp-lh2"><i class="mem-sprite mem-cross1"></i></td>
+                                    <td class="bdrb2 vmid txtc cmp-lh2"><i class="mem-sprite mem-cross1"></i></td>
                                 </tr>
-                                <!-- <tr>
+                                ~if $eSathiCheck eq 1`
+                                <tr>
                                     <td class="bdrb2 vmid txtc cmp-lh2"><i class="mem-sprite mem-cross1"></i></td>
                                 </tr>
                                 <tr>
-                                    <td class="bdrb2 bdrb1 vmid txtc cmp-lh1"><i class="mem-sprite mem-cross1"></i></td>
-                                </tr> -->
+                                    <td class="bdrb2 vmid txtc cmp-lh2"><i class="mem-sprite mem-cross1"></i></td>
+                                </tr>
+                                ~/if`
+                                <tr>
+                                    <td class="bdrb2 bdrb1 vmid txtc cmp-lh2"><i class="mem-sprite mem-cross1"></i></td>
+                                </tr>
                                 <tr>
                                     <td class="bdrb1 vmid txtc mem-cb-hgt1"></td>
                                 </tr>
@@ -290,8 +331,14 @@
                             ~foreach from=$v.benefits key=kk item=vv name=benefitsLoop`
                             <li class="check">~$vv`</li>
                             ~/foreach`
-                            ~foreach from=$v.benefitsExcluded key=kk item=vv name=benefitsExcludedLoop`
-                            <li class="cross txtstr color12">~$vv`</li>
+                            ~foreach from=$v.benefitsExcluded key=kk item=vv name=benefitsExcludedListingLoop`
+                            ~if $eSathiCheck eq 1`
+                                <li class="cross txtstr color12">~$vv`</li>
+                            ~else`
+                                ~if $smarty.foreach.benefitsExcludedListingLoop.index lt (($smarty.foreach.benefitsExcludedListingLoop.total)-2)`
+                                <li class="cross txtstr color12">~$vv`</li>
+                                ~/if`
+                            ~/if`
                             ~/foreach`
                         </ul>
                     </div>
@@ -341,6 +388,7 @@
                     <li>Understand qualities you are looking in your desired partner</li>
                     <li>Hand-picking of profiles by Jeevansathi that match your expectations</li>
                     <li>Contact shortlisted profiles & arrange meetings on your behalf</li>
+                    <li>Priority Customer service</li>
                 </ul>
                 <div id="jsxKnowMoreLink" class="pl19 pt10"><a href="~sfConfig::get('app_site_url')`/membership/jsexclusiveDetail" class="fontreg f16 colr5">Know More</a></div>
                 <!--start:value-->

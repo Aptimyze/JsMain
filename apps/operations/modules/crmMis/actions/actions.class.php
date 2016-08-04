@@ -441,9 +441,9 @@ class crmMisActions extends sfActions
 			$this->report_format = $request->getParameter("report_format");
 			$this->monthNum = crmParams::$monthOrder[$this->monthName];
 			if($this->monthNum<10) 	$this->monthNum = "0".$this->monthNum;
-			$jsadminPswrdsObj = new jsadmin_PSWRDS();
-			$incentiveSalesTargetObj = new incentive_SALES_TARGET();
-			$incentiveMonthlyObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY();
+			$jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
+			$incentiveSalesTargetObj = new incentive_SALES_TARGET('newjs_slave');
+			$incentiveMonthlyObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY('newjs_slave');
 			$misGenerationhandlerObj = new misGenerationhandler();
 			$this->agentName = $misGenerationhandlerObj->get_SLHDO();
 
@@ -720,9 +720,9 @@ class crmMisActions extends sfActions
 			}
 			$this->monthNum = crmParams::$monthOrder[$this->monthName];
 			if($this->monthNum<10) 	$this->monthNum = "0".$this->monthNum;
-			$jsadminPswrdsObj = new jsadmin_PSWRDS();
-			$incentiveSalesTargetObj = new incentive_SALES_TARGET();
-			$incentiveMonthlyObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY();
+			$jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
+			$incentiveSalesTargetObj = new incentive_SALES_TARGET('newjs_slave');
+			$incentiveMonthlyObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY('newjs_slave');
 			$misGenerationhandlerObj = new misGenerationhandler();
 
 			$allCenters = $jsadminPswrdsObj->fetchAllDistinctCenters();
@@ -2058,23 +2058,24 @@ class crmMisActions extends sfActions
 	    // Submit State	
             if($formArr['submit'])
             {
+		 $this->channelKey	=$formArr['channelKey'];
 		 $notificationKey 	=$formArr['notificationKey'];
 		 $this->notificationType=$notificationKey;
                  $start_date 		=$formArr["yearValue"]."-".$formArr["monthValue"]."-01";
                  $end_date 		=$formArr["yearValue"]."-".$formArr["monthValue"]."-".date("t",strtotime($start_date));
                  $this->displayDate 	=date("F Y",strtotime($start_date));
 
-		 $dailyScheduledLog =new MOBILE_API_DAILY_NOTIFICATION_COUNT_LOG;
+		 $dailyScheduledLog =new MOBILE_API_DAILY_NOTIFICATION_COUNT_LOG('newjs_slave');
 
 		 $appNotificationsObj =new MOBILE_API_APP_NOTIFICATIONS('newjs_slave');
 		 $scheduledNotificaionArr =$appNotificationsObj->getScheduledNotifications();
 		 $scheduledNotificaionStr ="'".implode("','", $scheduledNotificaionArr)."'";
 	
-		 $dataArr =$dailyScheduledLog->getData($start_date, $end_date, $notificationKey);
+		 $dataArr =$dailyScheduledLog->getData($start_date, $end_date, $notificationKey,'',$this->channelKey);
 		 if($notificationKey)
 			$dataArrForScheduled =$dataArr;
 		 else
-			$dataArrForScheduled =$dailyScheduledLog->getData($start_date, $end_date, '', $scheduledNotificaionStr);
+			$dataArrForScheduled =$dailyScheduledLog->getData($start_date, $end_date, '', $scheduledNotificaionStr,$this->channelKey);
 		 if(count($dataArr)>0){
 			foreach($dataArr as $key=>$val){
 
@@ -2096,21 +2097,27 @@ class crmMisActions extends sfActions
 				$dataArr[$key]['TOTAL_ACKNOWLEDGED']    =$overallAcknowledged;
 
 				// push success rate%
-				$pushSuccess  				=($pushAcknowledged/$totalPushed)*100;
-				$dataArr[$key]['PUSH_SUCCESS_RATE'] 	=round($pushSuccess,0)."%";
-
+				if($pushAcknowledged){	
+					$pushSuccess  				=($pushAcknowledged/$totalPushed)*100;
+					$dataArr[$key]['PUSH_SUCCESS_RATE'] 	=round($pushSuccess,0)."%";
+				}
 				// local success rate%
-                                $localSuccess    			=($localAcknowledged/$totalLocalEligibleScheduled)*100;
-                                $dataArr[$key]['LOCAL_SUCCESS_RATE'] 	=round($localSuccess,0)."%";
-
+				if($localAcknowledged){
+	                                $localSuccess    			=($localAcknowledged/$totalLocalEligibleScheduled)*100;
+	                                $dataArr[$key]['LOCAL_SUCCESS_RATE'] 	=round($localSuccess,0)."%";
+				}
 				// overall success rate%
-                                $overallSuccess    			=($overallAcknowledged/$total)*100;
-                                $dataArr[$key]['OVERALL_SUCCESS_RATE']	=round($overallSuccess,0)."%";
-
+				if($overallAcknowledged){
+	                                $overallSuccess    			=($overallAcknowledged/$total)*100;
+        	                        $dataArr[$key]['OVERALL_SUCCESS_RATE']	=round($overallSuccess,0)."%";
+				}
 				$newData[$val['DAY']] =$dataArr[$key];					
 			}
 			unset($countTypeArr);
-                        $countTypeArr =array('TOTAL_COUNT','','','','PUSHED_TO_GCM','PUSHED_TO_IOS','TOTAL_PUSHED','ACCEPTED_BY_GCM','ACCEPTED_BY_IOS','TOTAL_ACCEPTED','PUSH_ACKNOWLEDGED','PUSH_SUCCESS_RATE','','','','TOTAL_LOCAL_ELIGIBLE','LOCAL_API_HIT_BY_DEVICE','LOCAL_SENT_TO_DEVICE','LOCAL_ACKNOWLEDGED','LOCAL_SUCCESS_RATE','','','','TOTAL_ACKNOWLEDGED','OVERALL_SUCCESS_RATE','','','','ACTIVE_LOGIN_7DAY','ACTIVE_LOGIN_1DAY');
+			if($this->channelKey=='A_I')	
+	                        $countTypeArr =array('TOTAL_COUNT','','','','PUSHED_TO_GCM','PUSHED_TO_IOS','TOTAL_PUSHED','ACCEPTED_BY_GCM','ACCEPTED_BY_IOS','TOTAL_ACCEPTED','PUSH_ACKNOWLEDGED','PUSH_SUCCESS_RATE','','','','TOTAL_LOCAL_ELIGIBLE','LOCAL_API_HIT_BY_DEVICE','LOCAL_SENT_TO_DEVICE','LOCAL_ACKNOWLEDGED','LOCAL_SUCCESS_RATE','','','','TOTAL_ACKNOWLEDGED','OVERALL_SUCCESS_RATE','','','','ACTIVE_LOGIN_7DAY','ACTIVE_LOGIN_1DAY');
+			else
+				$countTypeArr =array('TOTAL_COUNT','','','','PUSHED_TO_GCM','','','','','','PUSH_ACKNOWLEDGED','PUSH_SUCCESS_RATE');
 
 			if(!$notificationKey)
 				$this->notificationType ='All Notification';
@@ -2127,10 +2134,12 @@ class crmMisActions extends sfActions
                   $this->monthArr 	= GetDateArrays::getMonthArray();
                   $this->yearArr 	= array();
                   $dateArr 		= GetDateArrays::generateDateDataForRange('2016',($this->todayYear));
+
+		  $this->channelArr	=NotificationEnums::$channelArr;			
                   foreach(array_keys($dateArr) as $key=>$value)
                           $this->yearArr[] = array('NAME'=>$value, 'VALUE'=>$value);
 
-                  $appNotificationObj =new MOBILE_API_APP_NOTIFICATIONS;
+                  $appNotificationObj =new MOBILE_API_APP_NOTIFICATIONS('newjs_slave');
 		  $fields ='NOTIFICATION_KEY,FREQUENCY';
                   $notificationArrTemp =$appNotificationObj->getActiveNotifications($fields);
 		  foreach($notificationArrTemp as $key=>$value){
@@ -2167,10 +2176,10 @@ class crmMisActions extends sfActions
 			} else {
 				$start = $request->getParameter('selectedYear')."-".$request->getParameter('selectedMonth')."-01 00:00:00";
 				$end = $request->getParameter('selectedYear')."-".$request->getParameter('selectedMonth')."-31 00:00:00";
-				$billOrder = new BILLING_ORDERS();
-				$billOrderDev = new billing_ORDERS_DEVICE();
-				$billPurc = new BILLING_PURCHASES();
-				$billServ = new billing_SERVICES();
+				$billOrder = new BILLING_ORDERS('newjs_slave');
+				$billOrderDev = new billing_ORDERS_DEVICE('newjs_slave');
+				$billPurc = new BILLING_PURCHASES('newjs_slave');
+				$billServ = new billing_SERVICES('newjs_slave');
 				$allOrderDet = $billOrder->getAllOrdersForAppleWithinRange($start, $end);
 				$billids = $billOrderDev->getApplePayOrdersForOrderIds(array_keys($allOrderDet));
 				$billingDet = $billPurc->fetchAllDataForBillidArr(array_keys($billids));

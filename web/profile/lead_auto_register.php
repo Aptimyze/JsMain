@@ -6,6 +6,7 @@ include_once($path."/sugarcrm/include/utils/Jsutils.php");
 include_once($path."/sugarcrm/custom/crons/JsSuccessAutoRegEmail.php");
 include_once($path."/sugarcrm/custom/crons/housekeepingConfig.php");
 include_once($path."/sugarcrm/include/utils/systemProcessUsersConfig.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 global $partitionsArray;
 global $process_user_mapping;
 function register_lead($leadid){
@@ -218,7 +219,13 @@ function register_lead($leadid){
 		$others_update_sql.=$update_arrTostring;
 		$others_update_sql.="where USERNAME='$username'";
 //		echo $others_update_sql;
-		mysql_query_decide($others_update_sql) or logerror("Some problem into data of sugar where leadid=$leadid");
+//		mysql_query_decide($others_update_sql) or logerror("Some problem into data of sugar where leadid=$leadid");
+		$objUpdate = JProfileUpdateLib::getInstance();
+		$arrUpdateParams = $objUpdate->convertUpdateStrToArray($update_arrTostring);
+		$result = $objUpdate->editJPROFILE($arrUpdateParams,$username,'USERNAME');
+		if(false == $result) {
+			logerror("Some problem into data of sugar where leadid=$leadid");
+		}
 		$hobbies=array();
 		if($lead_row['hobbies_c']){
 		$hobbies_tmp=$lead_row['hobbies_c'];
@@ -295,15 +302,8 @@ function register_lead($leadid){
 include_once(JsConstants::$docRoot."/commonFiles/sms_inc.php");
 			$parameters = array("KEY"=>"SI_WELCOME","PROFILEID"=>$profileid,"DATA"=>$profileid);
 			sendSingleInstantSms($parameters);
-    
-			/* Ends Here of SMS code */
-		}
 
-		//update hobbies of the user
-		if(count($hobbies)!=0)
-		{
-			$hobbiesString=implode(",",$hobbies);
-			$sql="insert into newjs.JHOBBY set PROFILEID='$profileid',HOBBY='$hobbiesString'";
+			/* Ends Here of SMS code */
 		}
 		return true;
 

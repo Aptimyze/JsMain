@@ -3276,16 +3276,17 @@ EditApp = function(){
       {
             editData.append('editFieldArr['+key+']', value);
       });
-      if(sectionId == 'verification'){
-          $.myObj.ajax({
+      var eData = {};
+      eData.editFieldArr = editFieldArr;
+      $.myObj.ajax({
         url: "/api/v1/profile/editsubmit",
         type: 'POST',
-        datatype: 'json',
+        datatype: 'json',       
         cache: false,
         async: true,
-        contentType: false,
-        data: editData,
-        processData: false,
+        contentType: sectionId == 'verification'?false:"application/x-www-form-urlencoded",
+        data: sectionId == 'verification'?editData:eData,
+        processData: sectionId == 'verification'?false:true,
         success: function (result) {
                 if(typeof showLoader != "undefined" && showLoader === false){
                 }else{
@@ -3319,50 +3320,7 @@ EditApp = function(){
                   toggleLoader(false);
                 }
         }
-      });    
-      }else{
-              $.myObj.ajax({
-        url: "/api/v1/profile/editsubmit",
-        type: 'POST',
-        datatype: 'json',
-        cache: false,
-        async: true,
-        data: {editFieldArr: editFieldArr},
-        success: function (result) {
-                if(typeof showLoader != "undefined" && showLoader === false){
-                }else{
-                  toggleLoader(false);
-                }
-          var statusCode = parseInt(result.responseStatusCode);
-          if (statusCode === 0) {
-            showHideEditSection(sectionId,"hide");
-            editAppObject.needToUpdate = true;
-            storeData(JSON.stringify(result.editApi));
-            updateView(result.viewApi);
-            delete editedFields[sectionId];
-          }
-          else if(statusCode === 1 &&  result.hasOwnProperty('error'))
-          {
-            for(var key in result.error){
-              var parentId = '#'+key.toLowerCase()+'Parent';
-              
-              if($(parentId).length == 0)
-                continue;
-              var errorMsg = getDecoratedServerError(key,result['error'][key]);
-              $(parentId).find('.js-errorLabel').text(errorMsg).removeClass(dispNone);
-            }
-            var validationCheck = '#'+sectionId +'EditForm' +' .js-errorLabel:not(.disp-none)'
-            $(document).scrollTop($(validationCheck).offset().top);
-          }
-        },
-        error:function(result){
-                if(typeof showLoader != "undefined" && showLoader === false){
-                }else{
-                  toggleLoader(false);
-                }
-        }
-        });
-      }
+      }); 
     }
     
     /*
@@ -3702,8 +3660,12 @@ EditApp = function(){
           showHideField(gradDeg,"show");
           showHideField(gradCollg,"show");
           showHideField(other_ugDeg,"show");
-
-          showHideField(postGradDeg,"show");
+          if(eduLevelVal == 42 || eduLevelVal == 21)
+            showHideField(postGradDeg,"show");
+          else{
+            editedFields["career"]["DEGREE_PG"]= eduLevelVal;
+            showHideField(postGradDeg,"hide");  
+          }
           showHideField(postGradCollg,"show");
           showHideField(other_pgDeg,"show");
           
@@ -4219,6 +4181,9 @@ EditApp = function(){
       }
     }
     validateImage = function(fieldId,fieldKey){
+        if(typeof $('#' + fieldId)[0].files[0] == 'undefined' || $('#' + fieldId)[0].files[0] == null){
+                return true;
+        }
         var file = $('#'+fieldId)[0].files[0];
         if (file && file.name.split(".")[1] == "jpg" || file.name.split(".")[1] == "JPG" || file.name.split(".")[1] == "jpeg" || file.name.split(".")[1] == "JPEG" || file.name.split(".")[1] == "PDF" || file.name.split(".")[1] == "pdf") {
         } else {
@@ -4250,6 +4215,8 @@ EditApp = function(){
         var t2 = geteditedValue("ADDR_PROOF_TYPE","VALUE");
         var v2 = geteditedValue("ADDR_PROOF_VAL","VALUE");
         onvaluechange(t1,v1,t2,v2,editAppObject["verification"]["ID_PROOF_VAL"]);
+        $('#id_proof_val').attr("value",'');
+        $('#id_proof_val').val("");
     }
     
     onAddrProofTypeChange = function(){
@@ -4266,6 +4233,8 @@ EditApp = function(){
         var t2 = geteditedValue("ADDR_PROOF_TYPE");
         var v2 = 1;
         onvaluechange(t1,v1,t2,v2,editAppObject["verification"]["ADDR_PROOF_VAL"]);
+        $('#addr_proof_val').attr("value",'');
+        $('#addr_proof_val').val("");
     }
     geteditedValue = function(fieldKey,fieldtype){
         var fieldObj = editAppObject["verification"][fieldKey];
@@ -5296,7 +5265,10 @@ EditApp = function(){
         showHideField(gradCollg,"show");
         showHideField(other_ugDeg,"show");
         
-        showHideField(postGradDeg,"show");
+        if(maxEducation.value == '21' || maxEducation.value == '42')
+            showHideField(postGradDeg,"show");
+        else
+            showHideField(postGradDeg,"hide");
         showHideField(postGradCollg,"show");
         showHideField(other_pgDeg,"show");
       }
@@ -6140,3 +6112,16 @@ function updateProfileCompletionScore(score){
 
         });
 }
+
+$('.js-previewAlbum').click(function(){
+    var photoData = $(this).attr("data");
+    photoData = photoData.split(",");
+    var username = photoData[1];
+    var profilechecksum = photoData[2];
+    var albumCount = photoData[0];
+    if((typeof(loggedInJspcUser)!="undefined" && loggedInJspcUser=="") || !profilechecksum){
+                return true;
+     }
+    openPhotoAlbum(username,profilechecksum,albumCount);
+
+})

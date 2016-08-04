@@ -531,7 +531,7 @@ Reason		:	For optimizing search queries by fetching result set for 120 records
 		$jpartnerObj=new Jpartner;
 		$mysqlObj=new Mysql;
 	}
-
+	$resultprofiles = implode(",",array_diff(explode(",",$resultprofiles), [0]));
 	// do this in logged out case also
 	if(mysql_num_rows($result1)>0)
 	{
@@ -1789,7 +1789,7 @@ function change_criteria($lage,$hage,$lheight,$hheight,$Gender)
 		{
 			$myage=$_COOKIE['JS_AGE'];
 			settype($myage,"integer");
-			$myheight=$_COOKIE['JS_HEIGHT'];
+			$myheight=preg_replace('/[^A-Za-z0-9\. -]/', '', $_COOKIE['JS_HEIGHT']);
 			settype($myheight,"integer");
 		}
 		else

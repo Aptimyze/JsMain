@@ -7,16 +7,16 @@ if (strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip'))
 if($zipIt)
         ob_start("ob_gzhandler");
 //end of it
-include("connect.inc");
-include("../crm/func_sky.php");
+include_once(JsConstants::$docRoot."/crm/func_sky.php");
+include_once(JsConstants::$docRoot."/jsadmin/connect.inc");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 global $cnt;
-;
+
 $data=authenticated($cid);
 if($data)
 {
 $name=getname($cid);
 $db=connect_db();
-//print_r($_POST);
 if($send)
 {
 	$cnt++;
@@ -101,11 +101,15 @@ elseif($confirm)
 	$len=count($pid);
 	if($reason=='I')
 	{
+		$jprofileObj =JProfileUpdateLib::getInstance();
 		while($j<$len)
 		{
 			$profile=$pid[$j];
-			$sql2="UPDATE newjs.JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D',activatedKey=0 where PROFILEID=$profile";
-	        	mysql_query_decide($sql2) or die(logError($sql2,$db));
+			/*$sql2="UPDATE newjs.JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D',activatedKey=0 where PROFILEID=$profile";
+	        	mysql_query_decide($sql2) or die(logError($sql2,$db));*/
+			$extraStr ="PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D',activatedKey=0";
+			$jprofileObj->updateJProfileForBilling('',$profile,'PROFILEID',$extraStr);
+
 	       		$tm = date("Y-M-d");
 	        	$sql1= "SELECT USERNAME FROM newjs.JPROFILE WHERE PROFILEID=$profile";
 	        	$res1=mysql_query_decide($sql1) or die(logError($sql1,$db));

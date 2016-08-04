@@ -618,7 +618,7 @@ case "caste":
 "428"=>"Hindu: Gondhali",
 "429"=>"Hindu: Gramani",
 "430"=>"Hindu: Gurav",
-"431"=>"Hindu: Gurjar",
+//"431"=>"Hindu: Gurjar",
 "432"=>"Hindu: Kahar",
 "433"=>"Hindu: Kalal",
 "434"=>"Hindu: Kalinga Vysya",
@@ -3023,7 +3023,7 @@ case "income_level":
 case "degree_grouping":
 
         $arr=array(
-"UG"=>" 1 , 2 , 3 , 4 , 5 , 6 , 9 , 17 , 22 , 23 , 24 , 25 , 26 , 28 , 32 , 33 , 34 , 35 , 38 , 39 , 40 ",
+"UG"=>" 1 , 2 , 3 , 4 , 5 , 6 , 17 , 22 , 25 , 26 , 28 , 32 , 33 , 34 , 35 , 38 , 39 , 40 ",
 "PG"=>" 7 , 8 , 10 , 11 , 12 , 13 , 14 , 15 , 16 , 18 , 19 , 20 , 21 , 29 , 30 , 31 , 36 , 37 , 41 , 42 , 43 ",
 );
 
@@ -3034,8 +3034,6 @@ case "degree_grouping":
 case "degree_ug":
 
 	$arr=array(
-"23"=>"High School",
-"24"=>"Trade School",
 "1"=>"B.A",
 "35"=>"B.Arch",
 "2"=>"B.Com",
@@ -3052,7 +3050,6 @@ case "degree_ug":
 "26"=>"BHMS",
 "6"=>"BL/LLB",
 "32"=>"BVSc.",
-"9"=>"Diploma",
 "17"=>"MBBS",
 "22"=>"Other",
 );
@@ -3538,7 +3535,7 @@ case "caste_small":
 "428"=>"-Gondhali",
 "429"=>"-Gramani",
 "430"=>"-Gurav",
-"431"=>"-Gurjar",
+//"431"=>"-Gurjar",
 "432"=>"-Kahar",
 "433"=>"-Kalal",
 "434"=>"-Kalinga Vysya",
@@ -4005,7 +4002,7 @@ case "caste_without_religion":
 "428"=>"Gondhali",
 "429"=>"Gramani",
 "430"=>"Gurav",
-"431"=>"Gurjar",
+//"431"=>"Gurjar",
 "432"=>"Kahar",
 "433"=>"Kalal",
 "434"=>"Kalinga Vysya",
@@ -8667,7 +8664,7 @@ case "caste_clusters_breadcrumb":
 "428"=>"Gondhali",
 "429"=>"Gramani",
 "430"=>"Gurav",
-"431"=>"Gurjar",
+//"431"=>"Gurjar",
 "432"=>"Kahar",
 "433"=>"Kalal",
 "434"=>"Kalinga Vysya",

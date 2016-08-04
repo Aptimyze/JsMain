@@ -1500,9 +1500,11 @@ class ApiMembershipDetailsV2Action extends sfAction
 				}
 			} elseif($this->specialActive == 1){
 				// Logic for differentiating between flat and upto Variable Discount
-				$vdodObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
-				$discountVD = $vdodObj->getDiscountDetailsForProfile($this->profileid);
-				unset($discountVD['PROFILEID']);
+				/*$vdodObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
+				$discountVD = $vdodObj->getDiscountDetailsForProfile($this->profileid);*/
+                                $vdodObj =new VariableDiscount();
+                                $discountVD =$vdodObj->getAllDiscountForProfile($this->profileid);
+
 				$maxVDDisc = max(array_values($discountVD));
 				unset($vdodObj);
 				if (count(array_unique($discountVD)) == 1 ) {
@@ -1648,24 +1650,18 @@ class ApiMembershipDetailsV2Action extends sfAction
 
 			} elseif($this->specialActive == 1){
 				// Logic for differentiating between flat and upto Variable Discount
-				$vdodObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
-				$discountVD = $vdodObj->getDiscountDetailsForProfile($this->profileid);
+				/*$vdodObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
+				$discountVD = $vdodObj->getDiscountDetailsForProfile($this->profileid);*/
+                                $vdodObj =new VariableDiscount();
+                                $discountVD =$vdodObj->getAllDiscountForProfile($this->profileid);
+
 				$maxVDDisc = max(array_values($discountVD));
 				unset($vdodObj);
-				unset($discountVD['PROFILEID']);
 				if (count(array_unique($discountVD)) == 1 ) {
 					$flat = true;
 				} else {
 					$flat = false;
 				}
-				/*if($this->renewCheckFlag){
-					if($this->renewalPercent > $maxVDDisc){
-						$this->discPerc = $this->renewalPercent;
-						$renewVDFlag = 1;
-					} else {
-						$this->discPerc = $maxVDDisc;
-					}
-				}*/
 				$this->discPerc = $maxVDDisc;
 				if($this->fest == 1){
                                         if($flat){

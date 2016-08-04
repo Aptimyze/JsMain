@@ -48,8 +48,8 @@ class PaymentHandler
         if (array_key_exists($city_res, $nearByCities)) return $courier = 'Y';
     }
     
-    public function getNearByCities() {
-        $nearByCities = $this->payObj->getNearBycities();
+    public function getNearByCities($chequePickup = NULL) {
+        $nearByCities = $this->payObj->getNearBycities($chequePickup);
         return $nearByCities;
     }
     

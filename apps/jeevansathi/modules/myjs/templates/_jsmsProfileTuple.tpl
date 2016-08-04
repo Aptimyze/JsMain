@@ -5,7 +5,7 @@
             <img src="/images/jsms/commonImg/loader.gif" class="srp_box2 contactLoader" style="position:absolute;display:none; top:65px; ">
    
                  <div class="bg4" style="overflow-x: hidden; " id="hideOnAction">
-                     <a id="detailedProfileRedirect" href="~$SITE_URL`/profile/viewprofile.php?profilechecksum=~$profileTuple.profilechecksum`&~if $section eq "eoi"`responseTracking=~JSTrackingPageType::MYJS_EOI_JSMS`~else`stype=~SearchTypesEnums::MATCHALERT_MYJS_JSMS`~/if`"> 
+                     <a id="detailedProfileRedirect" href="~$SITE_URL`/profile/viewprofile.php?profilechecksum=~$profileTuple.profilechecksum`&~if $section eq "eoi"`responseTracking=~JSTrackingPageType::MYJS_EOI_JSMS`~else`stype=~SearchTypesEnums::MATCHALERT_MYJS_JSMS`~/if`&total_rec=~$total`&actual_offset=~$index+1`&contact_id=~$contactId`"> 
                          <div class="pad16" style="overflow:hidden;height:140px;" >
                              <div style="overflow-x:hidden; height:100%;">
                         <div style="white-space: nowrap; word-wrap:normal; width:200%;" class="overflowWrap">
