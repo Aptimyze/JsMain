@@ -3,7 +3,7 @@
 This class includes functions for sending mail, sms and notifications.
 */
 include_once(JsConstants::$cronDocRoot."/crontabs/connect.inc");
-include_once(JsConstants::$cronDocRoot."/aps/jeevansathi/modules/chat/lib/JS_Communicationclass.php");
+
 class ProcessHandler
 {
   /**
