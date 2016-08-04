@@ -1600,6 +1600,8 @@ class Profile{
 		 */
 			foreach($res as $field=>$value){
 				$this->$field=$value;
+				if(in_array($this->$field,ProfileEnums::$saveBlankIfZeroForFields) &&$value=="0")
+					$this->$field='';
 			}
 		}
 		return $res;
