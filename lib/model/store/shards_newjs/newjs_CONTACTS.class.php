@@ -683,7 +683,7 @@ public function getSendersPending($profileids)
 	}
 
 
-	public function getContactedProfiles($profileId,$senderReceiver,$type='',$cnt='')
+	public function getContactedProfiles($profileId,$senderReceiver,$type='',$cnt='',$filtered=0)
 	{
 		try{
 			if(!$profileId)
@@ -715,6 +715,10 @@ public function getSendersPending($profileids)
 			}
 			if($cnt)
 				$sql.=" AND COUNT=:COUNT ";
+                        if($filtered=='Y')
+				$sql.=" AND FILTERED='Y' ";
+                        elseif($filtered=='N')
+                            $sql.=" AND FILTERED!='Y' ";
 			$res=$this->db->prepare($sql);
 			$res->bindValue(":PROFILEID",$profileId,PDO::PARAM_INT);
 			if($cnt)

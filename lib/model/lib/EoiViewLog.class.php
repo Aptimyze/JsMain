@@ -23,5 +23,28 @@ class EoiViewLog{
 		$viewedData = $eoiViewedLogObj->getMutipleEoiViewed($viewer,$viewed);
 		return $viewedData;
 	}
+        
+        public function setEoiViewedForAReceiver($receiver,$filtered=0)
+        {
+            
+            $eoiSenderArray=(new newjs_CONTACTS())->getContactedProfiles($receiver, 'RECEIVER', array('I'),'', $filtered);
+            foreach ($eoiSenderArray['I'] as $key => $value) 
+            {
+                $tempShard =  JsDbSharding::getShardNo($value);
+                $tempArray['R'] = $receiver;                
+                $tempArray['S'] = $value;
+                $shardArray[$tempShard][]=$tempArray;
+                unset($tempArray);
+                
+            }
+            
+            for($i=0;$i<3;$i++)
+            {
+            $tempShard =  JsDbSharding::getShardNo($i);    
+            $eoiViewLogStore = new NEWJS_EOI_VIEWED_LOG($tempShard);
+            $eoiViewLogStore->insertMultiple($shardArray[$tempShard]);
+            unset($eoiViewLogStore);
+            }
+        }
 	
 }	

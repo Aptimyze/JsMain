@@ -154,6 +154,8 @@ class inboxActions extends sfActions
 						{
 							$contactsObj = new ContactsRecords();
 							$contactsObj->makeAllContactSeen($pid,ContactHandler::INITIATED);
+                                                        $contactRObj=new EoiViewLog();
+                                                        $contactRObj->setEoiViewedForAReceiver($pid,'N');
 						}
 						$profileMemcacheObj->update("AWAITING_RESPONSE_NEW",-$currentCount);
 						$profileMemcacheObj->updateMemcache();
@@ -230,6 +232,8 @@ class inboxActions extends sfActions
                                                 {
 							$contactsObj = new ContactsRecords();
 							$contactsObj->makeAllContactSeen($pid,ContactHandler::FILTERED);
+                                                        $contactRObj=new EoiViewLog();
+                                                        $contactRObj->setEoiViewedForAReceiver($pid,'Y');
                                                 }
 						$profileMemcacheObj->update("FILTERED_NEW",-$currentCount);
 						$profileMemcacheObj->updateMemcache();
@@ -486,7 +490,7 @@ public function executePerformV2(sfWebRequest $request)
 					$response2["infotypeid2"]=1;
 					$response2["url"]="/profile/contacts_made_received.php?page=eoi&filter=R";
 					 break;  
-					
+					// later modified the data sent as we have to update the seen status of the receiver in the contacts table and also eoi viewed log
 					case 'INTEREST_RECEIVED':
 					case 'INTEREST_RECEIVED_FILTER':
 					$response2["subtitle"]='Received '.$response2['total'];
@@ -512,6 +516,8 @@ public function executePerformV2(sfWebRequest $request)
                                                 {
 							$contactsObj = new ContactsRecords();
 							$contactsObj->makeAllContactSeen($pid,ContactHandler::INITIATED);
+                                                        $contactRObj=new EoiViewLog();
+                                                        $contactRObj->setEoiViewedForAReceiver($pid,'N');
 						}
 						$profileMemcacheObj = new ProfileMemcacheService($profileObj);
 						$currentCount =  $profileMemcacheObj->get("AWAITING_RESPONSE_NEW");
@@ -656,6 +662,8 @@ public function executePerformV2(sfWebRequest $request)
 							{
 								$contactsObj = new ContactsRecords();
 								$contactsObj->makeAllContactSeen($pid,ContactHandler::FILTERED);
+                                                                $contactRObj=new EoiViewLog();
+                                                                $contactRObj->setEoiViewedForAReceiver($pid,'Y');
 							}
 							$profileMemcacheObj->update("FILTERED_NEW",-$currentCount);
 							$profileMemcacheObj->updateMemcache();
