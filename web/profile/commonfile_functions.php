@@ -520,7 +520,7 @@ $js_arr[]=array("jspc/common/jquery_equalheights"   => "1");
 $js_arr[]=array("jspc/common/photoAlbum"   => "1");
 $js_arr[]=array("jspc/search/saveSearch"   => "1");
 $js_arr[]=array("jspc/search/relaxCriteria"   => "1");
-$js_arr[]=array("jspc/search/search"         => "7");
+$js_arr[]=array("jspc/search/search"          => "8");
 $js_arr[]=array("jspc/search/searchClusters"   => "1");
 $js_arr[]=array("jspc/search/searchBand"     => "3");
 $js_arr[]=array("jspc/search/searchDropdowns"     => "3");
