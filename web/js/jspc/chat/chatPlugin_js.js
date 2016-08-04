@@ -993,7 +993,7 @@ JsChat.prototype = {
     },
     //append chat box on page
     _appendChatBox: function (userId, status, jid, pcheckSum, groupId) {
-        $("#chatBottomPanel").prepend('<chat-box group-id="' + groupId + '" pos-state="open" data-jid="' + jid + '" status-user="' + status + '" user-id="' + userId + '" data-checks="' + pcheckSum + '"></chat-box>');
+        $("#chatBottomPanel").prepend('<chat-box group-id="' + groupId + '" pos-state="open" data-paidInitiated="false" data-jid="' + jid + '" status-user="' + status + '" user-id="' + userId + '" data-checks="' + pcheckSum + '"></chat-box>');
     },
     //get group id from opened chat box if exists for unblock
     _fetchChatBoxGroupID: function (userId) {
@@ -1314,8 +1314,11 @@ JsChat.prototype = {
             if (curElem._contactStatusMapping[chatBoxType]["enableChat"] == true) $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
             else $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
         } else if (membership == "free") {
-            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="chat_freeMemMsg_'+userId+'" class="pos-abs fullwid txtc colorGrey mt120">Only paid members can start chat<div  class="becomePaidMember_chat color5 cursp"><a href="/membership/jspc" class = "cursp js-colorParent">Become a Paid Member</a></div></div>');
-            $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+            var hasPaidIntiated = $('chat-box[user-id="' + userId + '"]').attr("data-paidInitiated");
+            if(hasPaidIntiated == "false"){
+                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="chat_freeMemMsg_'+userId+'" class="pos-abs fullwid txtc colorGrey mt120">Only paid members can start chat<div  class="becomePaidMember_chat color5 cursp"><a href="/membership/jspc" class = "cursp js-colorParent">Become a Paid Member</a></div></div>');
+                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+            }
         }
         //TODO: fire query to get message history as well as offline messages  
     },
@@ -1496,6 +1499,7 @@ JsChat.prototype = {
                 } else if (parseInt(logObj["SENDER"]) == other_id) {
                     if(key == "first_history" && removeFreeMemMsg == false){
                         removeFreeMemMsg = true;
+                        $('chat-box[user-id="' + other_id + '"]').attr("data-paidInitiated","true");
                         $('chat-box[user-id="' + other_id + '"] #chat_freeMemMsg_'+other_id).remove();
                         $('chat-box[user-id="' + other_id + '"] textarea').prop("disabled", false);
                     }
@@ -1552,6 +1556,7 @@ JsChat.prototype = {
                 $(".profileIcon[id^='" + userId + "']")[0].click();
             }
             if($('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).length != 0){
+                $('chat-box[user-id="' + userId + '"]').attr("data-paidInitiated","true");
                 $('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).remove();
                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
             }
