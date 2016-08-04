@@ -49,6 +49,8 @@ class EoiViewLog{
                 unset($tempArray);
                 
             }
+            
+            
             for($i=0;$i<3;$i++)
             {
             $tempShard =  JsDbSharding::getShardNo($i);    
