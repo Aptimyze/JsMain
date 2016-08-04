@@ -162,8 +162,8 @@ class ProfileCacheLib
 
         $bUpdateFromMysql = false;
         if(false === $this->isCached($szCriteria, $key, array_keys($paramArr), true)) {
-            //Server From MySql
-            $bUpdateFromMysql = true;
+            //If Cache does not exist then do not set cache
+            return false;
         }
 
         //Now Process extraWhereCnd
@@ -516,6 +516,61 @@ class ProfileCacheLib
             }
         } while ($bSuccess === false && $iTryCount < ProfileCacheConstants::CACHE_MAX_ATTEMPT_COUNT);
         $this->calculateResourceUsages($stTime,'Set : '," for key {$key}");
+
+        return $bSuccess;
+    }
+
+    /**
+     * @param $Var
+     */
+    public function removeCache($Var)
+    {
+        if (is_array($Var)) {
+            foreach($Var as $k => $iProfileID) {
+                $this->purge($iProfileID);
+            }
+        } else {
+            $this->purge($Var);
+        }
+    }
+
+    /**
+     * @param $key
+     * @return mixed
+     */
+    private function purge($key)
+    {
+        if(isset($this->arrRecords[intval($key)])){
+            unset($this->arrRecords[intval($key)]);
+        }
+
+        $szKey = ProfileCacheConstants::PROFILE_CACHE_PREFIX.$key;
+
+        $stTime = $this->createNewTime();
+        $bSuccess = false;
+        $iTryCount = 0;
+        do {
+            try{
+                JsMemcache::getInstance()->delete($szKey,true);
+                $bSuccess = true;
+            } catch (Exception $ex) {
+                $bSuccess = false;
+                ++$iTryCount;
+                $this->logThis(LoggingEnums::LOG_INFO, "Profile Cache Purge Failed,Retrying again and its count : {$iTryCount}");
+            }
+            //If Attempt Count Reached to Max Attempt Count
+            if ($iTryCount === ProfileCacheConstants::CACHE_MAX_ATTEMPT_COUNT) {
+                $this->logThis(LoggingEnums::LOG_INFO, "Profile Cache Purge Failed, Adding in MQ for key : {$szKey}");
+
+                //Add into MQ
+                $producerObj = new Producer();
+                $iProfileID = substr($szKey, strlen(ProfileCacheConstants::PROFILE_CACHE_PREFIX));
+                $queueData = array('process' =>MessageQueues::PROCESS_PROFILE_CACHE_DELETE,'data'=>array('type' => '','body'=>array('PROFILEID'=>$iProfileID)), 'redeliveryCount'=>0 );
+                $producerObj->sendMessage($queueData);
+
+            }
+        } while ($bSuccess === false && $iTryCount < ProfileCacheConstants::CACHE_MAX_ATTEMPT_COUNT);
+        $this->calculateResourceUsages($stTime,'Delete : '," for key {$key}");
 
         return $bSuccess;
     }

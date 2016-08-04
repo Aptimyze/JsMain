@@ -223,7 +223,9 @@ class JPROFILE
 
     public function Deactive($pid)
     {
-        return self::$objProfileMysql->Deactive($pid);
+        $result = self::$objProfileMysql->Deactive($pid);
+        ProfileCacheLib::getInstance()->removeCache($pid);
+        return $result;
     }
 
     public function duplicateEmail($email)
@@ -253,7 +255,9 @@ class JPROFILE
      */
     public function updateLoginSortDate($pid)
     {
-        return self::$objProfileMysql->updateLoginSortDate($pid);
+        $result = self::$objProfileMysql->updateLoginSortDate($pid);
+        ProfileCacheLib::getInstance()->removeCache($pid);
+        return $result;
     }
 
     public function getLoggedInProfilesForDateRange($logindDtStart, $loginDtEnd)
@@ -288,7 +292,11 @@ class JPROFILE
 
     public function updateHaveJEducation($profiles)
     {
-        return self::$objProfileMysql->updateHaveJEducation($profiles);
+        $result = self::$objProfileMysql->updateHaveJEducation($profiles);
+        if ($result) {
+            ProfileCacheLib::getInstance()->removeCache(explode(",",$profiles));
+        }
+        return $result;
     }
 
     public function getProfilesForDateRange($start_dt, $end_dt, $status)
@@ -303,7 +311,9 @@ class JPROFILE
 
     public function updateOfflineBillingDetails($profileid)
     {
-        return self::$objProfileMysql->updateOfflineBillingDetails($profileid);
+        $res = self::$objProfileMysql->updateOfflineBillingDetails($profileid);
+        ProfileCacheLib::getInstance()->removeCache($profileid);
+        return $res;
     }
 
     public function updateSubscriptionStatus($subscription, $profileid)
@@ -334,12 +344,16 @@ class JPROFILE
 
     public function updateHide($privacy, $profileid, $dayinterval)
     {
-        return self::$objProfileMysql->updateHide($privacy, $profileid, $dayinterval);
+        $result = self::$objProfileMysql->updateHide($privacy, $profileid, $dayinterval);
+        ProfileCacheLib::getInstance()->removeCache($profileid);
+        return $result;
     }
 
     public function updateUnHide($privacy, $profileid)
     {
-        return self::$objProfileMysql->updateUnHide($privacy, $profileid);
+        $result = self::$objProfileMysql->updateUnHide($privacy, $profileid);
+        ProfileCacheLib::getInstance()->removeCache($profileid);
+        return $result;
     }
 
     public function SelectDeleteData($profileid)
@@ -350,7 +364,10 @@ class JPROFILE
 
     public function updateDeleteData($profileid)
     {
-        return self::$objProfileMysql->updateDeleteData($profileid);
+        $result = self::$objProfileMysql->updateDeleteData($profileid);
+        ProfileCacheLib::getInstance()->removeCache($profileid);
+        return $result;
+
     }
 
     public function getEmailFromUsername($username)
@@ -382,7 +399,9 @@ class JPROFILE
      */
     public function updateIncompleteProfileStatus($profileIdArray)
     {
-        return self::$objProfileMysql->updateIncompleteProfileStatus($profileIdArray);
+        $result = self::$objProfileMysql->updateIncompleteProfileStatus($profileIdArray);
+        ProfileCacheLib::getInstance()->removeCache($profileIdArray);
+        return $result;
     }
 
     /**
@@ -433,7 +452,11 @@ class JPROFILE
      */
     public function updateProfileForArchive($iProfileID)
     {
-        return self::$objProfileMysql->updateProfileForArchive($iProfileID);
+        $result = self::$objProfileMysql->updateProfileForArchive($iProfileID);
+        if($result) {
+            ProfileCacheLib::getInstance()->removeCache($iProfileID);
+        }
+        return $result;
     }
 
     /**
@@ -446,7 +469,11 @@ class JPROFILE
      */
     public function updateProfileForBilling($paramArr = array(), $value, $criteria = "PROFILEID", $extraStr = '')
     {
-        return self::$objProfileMysql->updateProfileForBilling($paramArr, $value, $criteria, $extraStr);
+        $result = self::$objProfileMysql->updateProfileForBilling($paramArr, $value, $criteria, $extraStr);
+        if($result && $criteria == "PROFILEID") {
+            ProfileCacheLib::getInstance()->removeCache($value);
+        }
+        return $result;
     }
 
     /**
@@ -457,7 +484,11 @@ class JPROFILE
      */
     function updateProfileSeriousnessCount($profileArr)
     {
-        return self::$objProfileMysql->updateProfileSeriousnessCount($profileArr);
+        $result = self::$objProfileMysql->updateProfileSeriousnessCount($profileArr);
+        if ($result) {
+            ProfileCacheLib::getInstance()->removeCache($profileArr);
+        }
+        return $result;
     }
 
 
@@ -470,7 +501,11 @@ class JPROFILE
      */
     function updateForMutipleProfiles($paramArr, $profileArr)
     {
-        return self::$objProfileMysql->updateForMutipleProfiles($paramArr, $profileArr);
+        $result = self::$objProfileMysql->updateForMutipleProfiles($paramArr, $profileArr);
+        if ($result) {
+            ProfileCacheLib::getInstance()->removeCache($profileArr);
+        }
+        return $result;
     }
 
 
@@ -492,7 +527,12 @@ class JPROFILE
      */
     function updateSortDate($profileId)
     {
-        return self::$objProfileMysql->updateSortDate($profileId);
+        $result = self::$objProfileMysql->updateSortDate($profileId);
+        if($result) {
+            ProfileCacheLib::getInstance()->removeCache($profileId);
+        }
+
+        return $result;
     }
 
 
@@ -519,7 +559,9 @@ class JPROFILE
      */
     public function DeactiveProfiles($profileArr)
     {
-        return self::$objProfileMysql->DeactiveProfiles($profileArr);
+        $result = self::$objProfileMysql->DeactiveProfiles($profileArr);
+        ProfileCacheLib::getInstance()->removeCache($profileArr);
+        return $result;
     }
 
     /**

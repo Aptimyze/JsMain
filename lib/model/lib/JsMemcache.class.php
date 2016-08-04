@@ -200,7 +200,7 @@ class JsMemcache extends sfMemcacheCache{
 	 */
 	public function remove($key, $throwException=false)
 	{
-		$this->delete($key,$setException);
+		$this->delete($key,$throwException);
 	}
 
 	/**
