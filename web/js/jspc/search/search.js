@@ -973,8 +973,30 @@ for (i = mid; i < end; i++) {
 function getGunaScore(response)
 {	var diffGender = response.diffGenderSearch;
 	var profilechecksumArr = new Array();
+	var deleteChecksumArr = new Array();
+	var searchBasedParam = response.searchBasedParam;
+	var searchResponse = response;
+	var profileLength;
+	var featureProfileLength;
+	//console.log(searchResponse.profiles.length);
+	if('featuredProfiles' in searchResponse && Array.isArray(searchResponse.profiles))
+	{console.log("!!!");
+		profileLength = searchResponse.profiles.length;
+	}
+	else
+	{console.log("@@@");
+		profileLength = 0;
+	}
+	if('featuredProfiles' in searchResponse)
+	{
+		featureProfileLength = searchResponse.featuredProfiles.length;
+	}
+	else
+	{
+		featureProfileLength = 0;
+	}
+	console.log(profileLength);
 	//loop to fetch profilchecksums for normal and featured profiles and club them in an array
-	
 	$.each(response, function(key, val) {
 		if (key == 'profiles' && val!==null) {
 			$.each(val, function(key1, val1)
@@ -989,25 +1011,81 @@ function getGunaScore(response)
 			});
 		}
 	});
+
+	//The profileChecksumArr contains profilechecksum of both profiles and featured profiles on a particular page
 	profilechecksumArr = profilechecksumArr.join(",");
 	$.myObj.ajax({
 		showError: false, 
 		method: "POST",
 		url : '/api/v1/search/gunaScore?profilechecksumArr='+profilechecksumArr+'&diffGender='+diffGender,
 		data : ({dataType:"json"}),
-		async:true,
+		async: (searchBasedParam == 'kundlialerts') ? false : true,
 		timeout:20000,
 		success:function(response){
 			gunaScoreArr = response.gunaScores;
-			if(Array.isArray(gunaScoreArr)){
-				$.each(gunaScoreArr, function(key,val){	
-					$.each(val, function(profchecksum,gunaScore){
-						$(".gunaScore-"+profchecksum).html("Guna "+gunaScore+"/36");
-					});	
-				});
+			if(Array.isArray(gunaScoreArr))
+			{
+				if(searchBasedParam == 'kundlialerts')
+				{
+					$.each(gunaScoreArr, function(key,val){	
+						$.each(val, function(profchecksum,gunaScore){
+							if(gunaScore <= 30)
+							{
+								deleteChecksumArr.push(profchecksum);
+							}
+						});	
+					});
+
+					if(profileLength != 0)
+					{
+						kundliAlertListingHandling(searchResponse,profileLength,'profiles',deleteChecksumArr);
+					}
+								
+					if(featureProfileLength != 0)
+					{
+						kundliAlertListingHandling(searchResponse,featureProfileLength,'featuredProfiles',deleteChecksumArr);
+					}
+
+					console.log(searchResponse);
+					console.log(searchResponse.profiles.length);					
+
+					if((searchResponse.no_of_results - (25*searchResponse.page_index)) > 0 && (searchResponse.profiles.length == 0))
+					{console.log("herher");
+						loadPage(parseInt(searchResponse.page_index) + 1);
+					}
+					console.log(searchResponse);					
+					setTimeout(function(){
+						setGunaScoreOnListing(gunaScoreArr);
+					}, 2000);
+				}
+				else
+				{
+					setGunaScoreOnListing(gunaScoreArr);
+				}	
 			}
 		}
 	});
 
 }
 
+function kundliAlertListingHandling(searchResponse,length,profileType,deleteChecksumArr)
+{
+	while(length)
+	{
+		length--;
+		if(jQuery.inArray(searchResponse[profileType][length].profilechecksum, deleteChecksumArr) !== -1)
+		{	
+			searchResponse[profileType].splice(length,1);
+		}
+
+	}
+}
+
+function setGunaScoreOnListing(gunaScoreArr)
+{
+	$.each(gunaScoreArr, function(key,val){	
+		$.each(val, function(profchecksum,gunaScore){
+			$(".gunaScore-"+profchecksum).html("Guna "+gunaScore+"/36");
+		});	
+	});
+}
