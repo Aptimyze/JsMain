@@ -47,6 +47,7 @@ class duplicates_DUPLICATE_TEMP_TABLE extends TABLE {
                         
                 
                 $sql="select PROFILEID from duplicates.DUPLICATE_TEMP_TABLE where STATUS='Y'";
+                $prep = $this->db->prepare($sql);
                 $prep->execute();
              while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
                         $return[]=$result['PROFILEID'];
