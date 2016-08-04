@@ -1482,16 +1482,16 @@ JsChat.prototype = {
     },
     _scrollToBottom: function (userId, extra) {
         var divLen = 0;
-        //if (typeof extra != "undefined") {
-           // divLen += extra;
-        //} else {
-            $('chat-box[user-id="' + userId + '"] .rightBubble').each(function (index, element) {
-                divLen += $(this).height();
-            });
-            $('chat-box[user-id="' + userId + '"] .leftBubble').each(function (index, element) {
-                divLen += $(this).height();
-            });
-        //}
+        if (typeof extra != "undefined") {
+           divLen += extra;
+        }
+        $('chat-box[user-id="' + userId + '"] .rightBubble').each(function (index, element) {
+            divLen += $(this).height();
+        });
+        $('chat-box[user-id="' + userId + '"] .leftBubble').each(function (index, element) {
+            divLen += $(this).height();
+        });
+        
         $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
             scrollTop: divLen
         }, 500);
@@ -1519,7 +1519,7 @@ JsChat.prototype = {
                 }
             });
             if(key == "first_history")
-                curElem._scrollToBottom(other_id);
+                curElem._scrollToBottom(other_id,100);
             if(latestMsgId != ""){
                 console.log("setting");
                 $('chat-box[user-id="' + other_id + '"]').find("#moreHistory_"+other_id).attr("data-latestMsgId",latestMsgId);
