@@ -110,7 +110,7 @@ class LoggingManager
      */
     public function logThis($enLogType,$Var,$logArray = array(),$isSymfony=true)
     {
-      if($this->canLog($Var,$isSymfony,$logArray) && $enLogType < LoggingEnums::LOG_LEVEL)
+      if($this->canLog($enLogType,$Var,$isSymfony,$logArray))
       {
         switch ($enLogType) {
           case LoggingEnums::LOG_INFO:
@@ -154,7 +154,7 @@ class LoggingManager
       $apiVersion = $this->getLogAPI($logArray);
       $message = $this->getLogMessage($logArray);
       $uniqueSubId = $this->getLogUniqueSubId($logArray);
-      $statusCode = $this->getLogStatusCode($exception,$logArray,$enLogType);
+      $statusCode = $this->getLogStatusCode($exception,$logArray);
       $typeOfError = $this->getLogTypeOfError($exception,$logArray);
       $headers = getallheaders();
       
@@ -162,7 +162,6 @@ class LoggingManager
       $logData = $logData." [".$time."]";
       $logData = $logData." [".$uniqueSubId."]";
       $logData = $logData." ".$channelName;
-      $logData = $logData." ".$clientIp;
       $logData = $logData." ".$statusCode;
       $logData = $logData." ".$moduleName;
       $logData = $logData." ".$actionName;
@@ -198,11 +197,14 @@ class LoggingManager
     /**
      * @return status code
      */
-    public function getLogStatusCode($exception,$logArray,$enLogType)
+    public function getLogStatusCode($exception,$logArray)
     {
       if ( !isset($logArray['statusCode']))
       {
-        return $exception->getCode();
+        if ( $exception instanceof Exception)
+          return $exception->getCode();
+        else
+          return "";
       }
       else
       {
@@ -443,7 +445,7 @@ class LoggingManager
      * @param $Var
      * @return bool
      */
-    private function canLog($Var,$isSymfony,$logArray)
+    private function canLog($enLogType,$Var,$isSymfony,$logArray)
     {
         // set module name
         if($this->szLogPath == null)
@@ -451,7 +453,10 @@ class LoggingManager
           $this->szLogPath = $this->getLogModuleName($isSymfony,$Var,$logArray);
         }
         // check if log for all is set, if not set then check if module can log
-        return (LoggingEnums::LOG_ALL ? 1 : LoggingConfig::getInstance()->logStatus($this->szLogPath));
+        $toLog = (LoggingEnums::LOG_ALL ? 1 : LoggingConfig::getInstance()->logStatus($this->szLogPath));
+        // check Log Level
+        $checkLogLevel = ($enLogType <= LoggingEnums::LOG_LEVEL || $enLogType <= LoggingConfig::getInstance()->getLogLevel($this->szLogPath));
+        return $toLog & $checkLogLevel;
     }
 
     /**
