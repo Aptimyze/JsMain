@@ -555,17 +555,17 @@ class JPROFILE
     /**
      * @return mixed
      */
-    public function getEmailLike()
+    public function getEmailLike($email)
     {
-        return self::$objProfileMysql->getEmailLike();
+        return self::$objProfileMysql->getEmailLike($email);
     }
 
     /**
      * @return mixed
      */
-    public function updateEmail()
+    public function updateEmail($email,$newEmail)
     {
-        return self::$objProfileMysql->getEmailLike();
+        return self::$objProfileMysql->updateEmail($email,$newEmail);
     }
     /**
      * This function executes a select query on join of jprofile and incentives.name_of_user
