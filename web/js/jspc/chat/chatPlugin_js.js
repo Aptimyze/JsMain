@@ -1518,6 +1518,7 @@ JsChat.prototype = {
                     if(key == "first_history" && removeFreeMemMsg == false){
                         removeFreeMemMsg = true;
                         $('chat-box[user-id="' + other_id + '"]').find("'.chat_freeMemMsg_"+other_id+"'").remove();
+                        $('chat-box[user-id="' + other_id + '"] textarea').prop("disabled", false);
                     }
                     //append received message
                     $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText received_read" data-msgid=' + logObj["FOLDERID"] + '>' + logObj["MESSAGE"] + '</div></div>');
@@ -1571,7 +1572,10 @@ JsChat.prototype = {
             if ($('chat-box[user-id="' + userId + '"]').length == 0) {
                 $(".profileIcon[id^='" + userId + "']")[0].click();
             }
-            $('chat-box[user-id="' + userId + '"]').find("'.chat_freeMemMsg_"+userId+"'").remove();
+            if($('chat-box[user-id="' + userId + '"]').find("'.chat_freeMemMsg_"+userId+"'").length == 0){
+                $(this).remove();
+                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+            }
 
             //adding message in chat area
             $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText received" data-msgid=' + uniqueId + '>' + message + '</div></div>');
