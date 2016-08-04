@@ -505,17 +505,19 @@ var strophieWrapper = {
     },
     //sending Message
     sendMessage: function (message, to) {
-        var outputObj;
+        var outputObj,messageId;
         try {
             if (message && to && strophieWrapper.getCurrentConnStatus()) {
+            	messageId = strophieWrapper.connectionObj.getUniqueId();
                 var reply = $msg({
                     from: strophieWrapper.getSelfJID(),
                     to: to,
                     type: 'chat',
+                    id:messageId
                 }).cnode(Strophe.xmlElement('body', message)).up().c('active', {
                     xmlns: "http://jabber.org/protocol/chatstates"
                 });
-                var messageId = strophieWrapper.connectionObj.send(reply);
+                strophieWrapper.connectionObj.send(reply);
                 if (strophieWrapper.syncMessageForSessions == true) {
                     // Forward the message, so that other connected resources are also aware of it.
                     //append it as self sent message
