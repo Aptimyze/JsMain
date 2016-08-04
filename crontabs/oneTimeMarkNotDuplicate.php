@@ -46,6 +46,9 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 		  			$profileArray[$value['PROFILEID']]=$value;
 
 		  		}
+                        unset($jprofileArray);
+                        $duplicateTempObj=new duplicates_DUPLICATE_TEMP_TABLE('newjs_slave');
+                        $duplicateTempArray = $duplicateTempObj->getProfileArray($valueArray);
 	foreach ($arr as $key => $value) {
 
 		# code...
@@ -75,38 +78,41 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 
 		  	$rawDuplicateObj->setProfileid1($profileArray[$profile1]['PROFILEID']); 			
 		  	$rawDuplicateObj->setProfileid2($profileArray[$profile2]['PROFILEID']); 			
-			$ProbableRes=new PROBABLE_DUPLICATES();
-			$ProbableRes->removeProbable($rawDuplicateObj);
-			$ProbableRes->unsetPriority($rawDuplicateObj);
 			DuplicateHandler::DuplicateProfilelog($rawDuplicateObj);
 			DuplicateHandler::MarkNotDuplicate($rawDuplicateObj);
-
-			$dupArr[$profile2]= $dupArr[$profile2]!='N' ? 'Y' : 'N';
-
+                        if(!$duplicateTempArray[$profile2])
+                        {
+                            
+                            $duplicateTempObj->insertEntry($profile1,$profile2,'Y');
+                            $duplicateTempArray[$profile2] = 'Y';
+                            
+                        }
 
 		}	
 		else {
-
-			
-				 $dupArr[$profile2]='N';
-			
+                    if(!$duplicateTempArray[$profile2] || $duplicateTempArray[$profile2]=='Y' )
+                        {
+                            
+                            $duplicateTempObj->insertEntry($profile2,'N');
+                            $duplicateTempArray[$profile2] = 'N';
+                            
+                        }
+                        
 
 		}
-
+                    
 	}
-
+        unset($duplicateTempArray);
 }
 
 			$notDuplicateObj=new DUPLICATES_PROFILES();
 			$IntlObj =  new INCENTIVE_NEGATIVE_TREATMENT_LIST;
-
-		foreach ($dupArr as $key => $value) {
+                        $duplicateTempArray=$duplicateTempObj->getNonDuplicateProfiles();
+		foreach ($duplicateTempArray as $key => $value) {
 			# code...
-	  		if($value=='Y')
-	  		{
-	  			$notDuplicateObj->removeProfileAsDuplicate($key);
-  				$IntlObj->deleteRecord($key);
-	  		}
+                                $notDuplicateObj->removeProfileAsDuplicate($value);
+  				$IntlObj->deleteRecord($value);
+	  		
 
 
 		}

@@ -22,7 +22,6 @@ class DuplicateHandler
    
   public static function HandleDuplicatesInsert( rawDuplicate $rawDuplicateObj,$no_log=0 ) {
 	  $dupCon=new DUPLICATES_PROFILES();
-	  $probDupObj=new PROBABLE_DUPLICATES();
 	  
 	  $first=$rawDuplicateObj->getProfileid1();
 	  $second=$rawDuplicateObj->getProfileid2();
@@ -38,15 +37,6 @@ class DuplicateHandler
        	$HfdObj->ftoDuplicateLogic($first,$second);	  
 	//Added by Anand ends
 
-	//Remove entry from probable duplicate if particular profiles are already marked as duplicate
-	if($probDupObj->ReasonPresent($rawDuplicateObj))
-	{
-		$probRawObj=clone($rawDuplicateObj);
-		$probRawObj->setComments("Already marked duplicate");
-		$probRawObj->setIsDuplicate(IS_DUPLICATE::NO);
-		DuplicateHandler::HandleProbableUpdates($probRawObj);
-		unset($probRawObj);
-	}
 	///////////////////////////////////
 	
 	  if(!is_array($groupids)) //No profile found
