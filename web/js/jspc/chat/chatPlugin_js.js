@@ -1496,7 +1496,7 @@ JsChat.prototype = {
                 } else if (parseInt(logObj["SENDER"]) == other_id) {
                     if(key == "first_history" && removeFreeMemMsg == false){
                         removeFreeMemMsg = true;
-                        $('chat-box[user-id="' + other_id + '"]').find("'.chat_freeMemMsg_"+other_id+"'").remove();
+                        $('chat-box[user-id="' + other_id + '"] #chat_freeMemMsg_'+other_id).remove();
                         $('chat-box[user-id="' + other_id + '"] textarea').prop("disabled", false);
                     }
                     //append received message
@@ -1551,8 +1551,8 @@ JsChat.prototype = {
             if ($('chat-box[user-id="' + userId + '"]').length == 0) {
                 $(".profileIcon[id^='" + userId + "']")[0].click();
             }
-            if($('chat-box[user-id="' + userId + '"]').find("'.chat_freeMemMsg_"+userId+"'").length == 0){
-                $(this).remove();
+            if($('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).length != 0){
+                $('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).remove();
                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
             }
 
