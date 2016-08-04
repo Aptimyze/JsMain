@@ -12,7 +12,7 @@ var listingInputData = [],
  */
 function handleChatDisconnection() {
     //show error msg--design
-    console.log("disconnected from chat,reconnecting..");
+    //console.log("disconnected from chat,reconnecting..");
     //reconnect to chat
     if (username && pass) {
         strophieWrapper.reconnect(chatConfig.Params[device].bosh_service_url, username, pass);
@@ -72,15 +72,15 @@ function chatLoggerPC(msgOrObj) {
                 callerParts[1] = callerParts2.join(':');
                 caller = (callerParts[0] == '') ? callerParts[1] : callerParts[0];
             }
-            console.log(' ');
+            //console.log(' ');
             console.warn('Console log: ' + caller + ' ( line ' + line + ' )');
-            console.log(msgOrObj);
-            console.log({
+            //console.log(msgOrObj);
+            //console.log({
                 'Full trace:': fullTrace
             });
-            console.log(' ');
+            //console.log(' ');
         } else {
-            //shout('This browser does not support console.log!')
+            //shout('This browser does not support //console.log!')
         }
     }
 }
@@ -98,11 +98,11 @@ function getChatHistory(apiParams,key) {
             postData[key] = value;
         });
         if(typeof apiParams["extraParams"]["messageId"] == "undefined"){
-            console.log("no messageId");
+            //console.log("no messageId");
             if(chatConfig.Params[device].storeMsgInLocalStorage == true){
                 oldHistory = localStorage.getItem("chatHistory_"+bare_from_jid+"_"+bare_to_jid);
-                console.log("oldHistory");
-                console.log(oldHistory);
+                //console.log("oldHistory");
+                //console.log(oldHistory);
                 if(typeof oldHistory!= "undefined"){
                     fetchFromLocalStorage = true;
                 }
@@ -114,7 +114,7 @@ function getChatHistory(apiParams,key) {
         }
     }
     if(fetchFromLocalStorage == false){
-        console.log("api for history");
+        //console.log("api for history");
 
         if (typeof chatConfig.Params.chatHistoryApi["extraParams"] != "undefined") {
             $.each(chatConfig.Params.chatHistoryApi["extraParams"], function (k, v) {
@@ -131,14 +131,14 @@ function getChatHistory(apiParams,key) {
             beforeSend: function (xhr) {},
             success: function (response) {
                 if (response["responseStatusCode"] == "0") {
-                    console.log("history");
-                    //console.log($.parseJSON(response["Message"]));
+                    //console.log("history");
+                    ////console.log($.parseJSON(response["Message"]));
                     if (typeof response["Message"] != "undefined") {
                         if(setLocalStorage == true){
                             localStorage.setItem("chatHistory_"+bare_from_jid+"_"+bare_to_jid,response["Message"]);
                         }
                         if(response["pagination"] == 0){
-                            console.log("no more history");
+                            //console.log("no more history");
                             $("#moreHistory_"+bare_to_jid.split("@")[0]).val("0");
                         }
                         else{
@@ -163,7 +163,7 @@ function getChatHistory(apiParams,key) {
         });
     }
     else{
-        //console.log("localStorage for history");
+        ////console.log("localStorage for history");
         if(!oldHistory){
             oldHistory = "{}";
         }
@@ -191,14 +191,14 @@ function getSelfName(){
     }
     if(flag){
         var apiUrl = chatConfig.Params.selfNameUr;
-        //console.log("In self Name");
+        ////console.log("In self Name");
         $.myObj.ajax({
             url: apiUrl,
             async: false,
             success: function (response) {
                 if (response["responseStatusCode"] == "0") {
                     selfName = response["name"];
-                    //console.log("Success In self Name",selfName);
+                    ////console.log("Success In self Name",selfName);
                     localStorage.setItem('name', JSON.stringify({
                         'selfName': selfName,
                         'user': loggedInJspcUser
@@ -209,7 +209,7 @@ function getSelfName(){
                 //return "error";
             }
         });
-        //console.log("ReturnIn self Name");
+        ////console.log("ReturnIn self Name");
     }
     return selfName;
 }
@@ -466,13 +466,13 @@ function checkAuthentication() {
                 //createCookie("chatAuth","true");
                 //loginChat();
                 auth = 'true';
-                //console.log("Beforepass",data.hash);
+                ////console.log("Beforepass",data.hash);
                 pass = data.hash;
                 /*pass = JSON.parse(CryptoJS.AES.decrypt(data.hash, "chat", {
                     format: CryptoJSAesJson
                 }).toString(CryptoJS.enc.Utf8));
                 */
-                //console.log("afterpass",pass);
+                ////console.log("afterpass",pass);
             } else {
                 //chatLoggerPC(data.responseMessage);
                 //chatLoggerPC("In checkAuthentication failure");
@@ -495,13 +495,13 @@ function logoutChat() {
  *@params :msgObj
  */
 function invokePluginReceivedMsgHandler(msgObj) {
-    //console.log("in invokePluginReceivedMsgHandler");
-    //console.log(msgObj);
+    ////console.log("in invokePluginReceivedMsgHandler");
+    ////console.log(msgObj);
     if (typeof msgObj["from"] != "undefined") {
         if (typeof msgObj["body"] != "undefined" && msgObj["body"] != "" && msgObj["body"] != null && msgObj['msg_state'] != strophieWrapper.msgStates["FORWARDED"]) {
             //chatLoggerPC("invokePluginReceivedMsgHandler-handle message");
             //chatLoggerPC(msgObj);
-            //console.log("appending RECEIVED");
+            ////console.log("appending RECEIVED");
             objJsChat._appendRecievedMessage(msgObj["body"], msgObj["from"], msgObj["msg_id"]);
         }
         if (typeof msgObj["msg_state"] != "undefined") {
@@ -589,7 +589,7 @@ function getProfileImage() {
             success: function (data) {
                 if (data.statusCode == "0") {
                     imageUrl = data.profiles[0].PHOTO.ProfilePic120Url;
-                    if (imageUrl == "") {
+                    if (typeof imageUrl == "undefined" || imageUrl == "") {
                         if (loggedInJspcGender) {
                             if (loggedInJspcGender == "F") {
                                 imageUrl = chatConfig.Params[device].noPhotoUrl["self120"]["F"];
@@ -766,12 +766,12 @@ function updateRosterOnChatContactActions(rosterParams) {
             if (typeof receiverJID != "undefined" && receiverJID) {
                 var nodeArr = [];
                 nodeArr[user_id] = strophieWrapper.Roster[user_id];
-                //console.log("obj");
-                //console.log(strophieWrapper.Roster[user_id]);
+                ////console.log("obj");
+                ////console.log(strophieWrapper.Roster[user_id]);
                 if (typeof nodeArr != "undefined") {
                     if (action == "ACCEPT" || action == "DECLINE" || action == "BLOCK" || action == "INITIATE") {
                         setTimeout(function () {
-                            console.log("removing list from frontend in case of consumer delay");
+                            //console.log("removing list from frontend in case of consumer delay");
                             invokePluginManagelisting(nodeArr, "delete_node", user_id);
                         }, 10000);
                     }
@@ -838,7 +838,7 @@ $(document).ready(function () {
         var chatLoggedIn = readCookie('chatAuth');
         var loginStatus;
         $("#jspcChatout").on('click',function(){
-            //console.log("Logout clicked");
+            ////console.log("Logout clicked");
            $(".jschatLogOut").click(); 
         });
         $(window).focus(function() {
@@ -847,12 +847,12 @@ $(document).ready(function () {
             }
         });
         $(window).on("offline", function () {
-            //console.log("detected internet disconnection");
+            ////console.log("detected internet disconnection");
             strophieWrapper.currentConnStatus = Strophe.Status.DISCONNECTED;
         });
         $(window).on("online", function () {
             globalSleep(15000);
-            console.log("detected internet connectivity");
+            //console.log("detected internet connectivity");
             /*if (chatLoggedIn == 'true') {
                 var tAuth = checkAuthentication();
                 if (tAuth == 'true') {
@@ -1058,7 +1058,7 @@ $(document).ready(function () {
                 },
                 url: url,
                 success: function (data) {
-                    //console.log("Nitishvcard");
+                    ////console.log("Nitishvcard");
                     //chatLoggerPC(data);
                     if (data.photo == '' && loggedInJspcGender) {
                         if (loggedInJspcGender == "F") {
