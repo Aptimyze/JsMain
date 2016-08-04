@@ -71,8 +71,9 @@ abstract class sfAction extends sfComponent
    */
   public function forward404($message = null)
   {
-    LoggingManager::getInstance(LoggingEnums::EX500OR404)->logThis(LoggingEnums::LOG_ERROR, new Exception("404 page encountered"));
-    throw new sfError404Exception($this->get404Message($message));
+      $ex = new sfError404Exception($this->get404Message($message));
+    LoggingManager::getInstance(LoggingEnums::EX500OR404)->logThis(LoggingEnums::LOG_ERROR, $ex);
+    throw $ex;
   }
 
   /**
@@ -87,8 +88,9 @@ abstract class sfAction extends sfComponent
   {
     if (!$condition)
     {
-      LoggingManager::getInstance(LoggingEnums::EX500OR404)->logThis(LoggingEnums::LOG_ERROR, new Exception("404 page encountered"));
-      throw new sfError404Exception($this->get404Message($message));
+        $ex = new sfError404Exception($this->get404Message($message));
+      LoggingManager::getInstance(LoggingEnums::EX500OR404)->logThis(LoggingEnums::LOG_ERROR, $ex);
+      throw $ex;
     }
   }
 
@@ -104,8 +106,9 @@ abstract class sfAction extends sfComponent
   {
     if ($condition)
     {
-      LoggingManager::getInstance(LoggingEnums::EX500OR404)->logThis(LoggingEnums::LOG_ERROR, new Exception("404 page encountered"));
-      throw new sfError404Exception($this->get404Message($message));
+        $ex = new sfError404Exception($this->get404Message($message));
+      LoggingManager::getInstance(LoggingEnums::EX500OR404)->logThis(LoggingEnums::LOG_ERROR, $ex);
+      throw $ex;
     }
   }
 
@@ -116,7 +119,6 @@ abstract class sfAction extends sfComponent
    */
   public function redirect404()
   {
-    LoggingManager::getInstance(LoggingEnums::EX500OR404)->logThis(LoggingEnums::LOG_ERROR, new Exception("404 page encountered"));
     return $this->redirect('/'.sfConfig::get('sf_error_404_module').'/'.sfConfig::get('sf_error_404_action'));
   }
 
