@@ -143,6 +143,8 @@ var strophieWrapper = {
      * On message receipt
      */
     onMessageReceipt: function (msg) {
+    	console.log("on message request");
+    	console.log(msg);
         //strophieWrapper.stropheLoggerPC("In message receipt handler");
         strophieWrapper.stropheLoggerPC(msg);
     },
@@ -505,17 +507,19 @@ var strophieWrapper = {
     },
     //sending Message
     sendMessage: function (message, to) {
-        var outputObj;
+        var outputObj,messageId;
         try {
             if (message && to && strophieWrapper.getCurrentConnStatus()) {
+            	//messageId = strophieWrapper.connectionObj.getUniqueId();
                 var reply = $msg({
                     from: strophieWrapper.getSelfJID(),
                     to: to,
                     type: 'chat',
+                    //id:messageId
                 }).cnode(Strophe.xmlElement('body', message)).up().c('active', {
                     xmlns: "http://jabber.org/protocol/chatstates"
                 });
-                var messageId = strophieWrapper.connectionObj.send(reply);
+                messageId = strophieWrapper.connectionObj.receipts.sendMessage(reply);
                 if (strophieWrapper.syncMessageForSessions == true) {
                     // Forward the message, so that other connected resources are also aware of it.
                     //append it as self sent message
@@ -640,6 +644,8 @@ var strophieWrapper = {
     addReceiptHandler: function (handler, type, from, options) {
         var that = this;
         var proxyHandler = function (msg) {
+        	console.log("RECEIVED receipt");
+        	console.log(msg);
             that._processReceipt(msg);
             // call original handler
             return handler(msg);
