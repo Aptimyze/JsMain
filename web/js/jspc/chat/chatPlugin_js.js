@@ -1335,7 +1335,7 @@ JsChat.prototype = {
             if (curElem._contactStatusMapping[chatBoxType]["enableChat"] == true) $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
             else $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
         } else if (membership == "free") {
-            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="pos-abs fullwid txtc colorGrey mt120">Only paid members can start chat<div  class="becomePaidMember_chat color5 cursp"><a href="/membership/jspc" class = "cursp js-colorParent">Become a Paid Member</a></div></div>');
+            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="chat_freeMemMsg_'+userId+'" class="pos-abs fullwid txtc colorGrey mt120">Only paid members can start chat<div  class="becomePaidMember_chat color5 cursp"><a href="/membership/jspc" class = "cursp js-colorParent">Become a Paid Member</a></div></div>');
             $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
         }
         //TODO: fire query to get message history as well as offline messages  
@@ -1502,7 +1502,8 @@ JsChat.prototype = {
         //console.log(communication);
         var self_id = selfJID.split("@")[0],
             other_id = otherJID.split("@")[0],
-            latestMsgId="";
+            latestMsgId="",
+            removeFreeMemMsg=false;
         var curElem = this;
         if ($('chat-box[user-id="' + other_id + '"]').length != 0) {
             
@@ -1514,12 +1515,17 @@ JsChat.prototype = {
                     $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText" data-msgid='+logObj["FOLDERID"]+'>' + logObj["MESSAGE"] + '</div><i class="nchatspr nchatic_9 fr vertM"></i></div>');
 
                 } else if (parseInt(logObj["SENDER"]) == other_id) {
+                    if(key == "first_history" && removeFreeMemMsg == false){
+                        removeFreeMemMsg = true;
+                        $('chat-box[user-id="' + other_id + '"]').find("'.chat_freeMemMsg_"+other_id+"'").remove();
+                    }
                     //append received message
                     $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText received_read" data-msgid=' + logObj["FOLDERID"] + '>' + logObj["MESSAGE"] + '</div></div>');
                 }
             });
-            if(key == "first_history")
+            if(key == "first_history"){
                 curElem._scrollToBottom(other_id,100);
+            }
             if(latestMsgId != ""){
                 console.log("setting");
                 $('chat-box[user-id="' + other_id + '"]').find("#moreHistory_"+other_id).attr("data-latestMsgId",latestMsgId);
