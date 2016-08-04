@@ -84,7 +84,7 @@ class NEWJS_EOI_VIEWED_LOG extends TABLE
         
         public function insertMultiple($array)
 	{
-		if(!$array || !is_array($viewer))
+		if(!$array || !is_array($array))
 			throw new jsException("","Problem in eoi viewed log in function insertMultiple");
 
 		try
@@ -96,9 +96,8 @@ class NEWJS_EOI_VIEWED_LOG extends TABLE
                             $valueStr.="(:vR$k , :vS$k, '$timeNow' ),";
                         }
                         $valueStr=substr($valueStr,0,-1);
-			$sql = "INSERT INTO newjs.EOI_VIEWED_LOG(VIEWER,VIEWED,DATE) VALUES $valueStr";
+			$sql = "INSERT IGNORE INTO newjs.EOI_VIEWED_LOG(VIEWER,VIEWED,DATE) VALUES $valueStr";
 			$res = $this->db->prepare($sql);
-			
 			foreach($array as $k=>$v)
                             {
                         
@@ -106,8 +105,7 @@ class NEWJS_EOI_VIEWED_LOG extends TABLE
 				$res->bindValue(":vS$k",$v['S'], PDO::PARAM_INT); 
                             }
 			$res->execute();
-			
-			
+						
 		}
 		catch(PDOException $e)
 		{
