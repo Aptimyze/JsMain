@@ -189,14 +189,14 @@ class LoggingManager
      */
     private function getLogUniqueSubId($logArray)
     {
-      if ( !isset($logArray['uniqueSubId']))
+      if ( !isset($logArray[LoggingEnums::UNIQUE_REQUEST_SUB_ID]))
       { 
         $uniqueSubId = sfContext::getInstance()->getRequest()->getAttribute('UNIQUE_REQUEST_SUB_ID');
         
       }
       else
       { 
-        $uniqueSubId = $logArray['uniqueSubId'];
+        $uniqueSubId = $logArray[LoggingEnums::UNIQUE_REQUEST_SUB_ID];
       }
       return $uniqueSubId;
     }
@@ -208,7 +208,7 @@ class LoggingManager
      */
     private function getLogStatusCode($exception,$logArray)
     {
-      if ( !isset($logArray['statusCode']))
+      if ( !isset($logArray[LoggingEnums::STATUS_CODE]))
       {
         $statusCode = "";
         if ( $exception instanceof Exception)
@@ -218,7 +218,7 @@ class LoggingManager
       }
       else
       {
-        $statusCode = $logArray['statusCode'];
+        $statusCode = $logArray[LoggingEnums::STATUS_CODE];
       }
       return $statusCode;
     }
@@ -230,9 +230,9 @@ class LoggingManager
     private function getLogId($logArray)
     {
       $logId = $this->iUniqueID;
-      if ( isset($logArray['logId']))
+      if ( isset($logArray[LoggingEnums::LOG_ID]))
       {
-        $logId = $logArray['logId'];
+        $logId = $logArray[LoggingEnums::LOG_ID];
       }
       return $logId;
     }
@@ -243,13 +243,13 @@ class LoggingManager
      */
     private function getLogAPI($logArray)
     {
-      if ( !isset($logArray['apiVersion']))
+      if ( !isset($logArray[LoggingEnums::API_VERSION]))
       {
         $apiVersion =  sfContext::getInstance()->getRequest()->getParameter("version");
       }
       else
       {
-        $apiVersion = $logArray['apiVersion'];
+        $apiVersion = $logArray[LoggingEnums::API_VERSION];
       }
       return $apiVersion;
     }
@@ -276,7 +276,7 @@ class LoggingManager
       }
       else
       {
-        $typeOfError = $logArray['typeOfError'];
+        $typeOfError = $logArray[LoggingEnums::TYPE_OF_ERROR];
       }
       return $typeOfError;
     }
@@ -293,9 +293,9 @@ class LoggingManager
       {
         $message = $exception->getMessage();
       }
-      if ( isset($logArray['message']))
+      if ( isset($logArray[LoggingEnums::MESSAGE]))
       {
-        $message = $message." ".$logArray['message'];
+        $message = $message." ".$logArray[LoggingEnums::MESSAGE];
       }
       return $message;
     }
@@ -325,7 +325,7 @@ class LoggingManager
      */
     private function getLogModuleName($isSymfony = true,$exception = null,$logArray = array())
     {
-      if ( !isset($logArray['moduleName']))
+      if ( !isset($logArray[LoggingEnums::MODULE_NAME]))
       {
         if ( $isSymfony )
         {
@@ -344,7 +344,7 @@ class LoggingManager
       }
       else
       {
-        $moduleName = $logArray['moduleName'];
+        $moduleName = $logArray[LoggingEnums::MODULE_NAME];
       }
       return $moduleName;
     }
@@ -357,7 +357,7 @@ class LoggingManager
      */
     private function getLogActionName($isSymfony = true,$exception = null,$logArray = array())
     {
-      if ( !isset($logArray['actionName']))
+      if ( !isset($logArray[LoggingEnums::ACTION_NAME]))
       {
         if ( $isSymfony )
         {
@@ -376,7 +376,7 @@ class LoggingManager
       }
       else
       {
-        $actionName = $logArray['actionName'];
+        $actionName = $logArray[LoggingEnums::ACTION_NAME];
       }
       return $actionName;
     }

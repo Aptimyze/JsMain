@@ -34,4 +34,15 @@ class LoggingEnums
     const AMQP_EXCEPTION = "AMQP";
     const UNKNOWN_EXCEPTION = "UNKNOWN";
     const EXCEPTION = "EXCEPTION";
+    // logArray parameters
+    const STATUS_CODE = "statusCode";
+    const API_VERSION = "apiVersion";
+    const MESSAGE = "message";
+    const CHANNEL_NAME = "channelName";
+    const ACTION_NAME = "actionName";
+    const MODULE_NAME = "moduleName";
+    const TYPE_OF_ERROR = "typeOfError";
+    const LOG_ID = "logId";
+    const UNIQUE_REQUEST_SUB_ID = "uniqueRequestSubId";
+
 }
