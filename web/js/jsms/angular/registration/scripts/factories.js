@@ -565,6 +565,10 @@
 				factory.handleDepValue(fields[indexPos]);
 				if(output.hasOwnProperty(fields[indexPos].dshow))
 					output[fields[indexPos].dshow].value='';
+                                if(output['native_country_jsms']['value']=="0")
+                                {
+                                        fields[indexPos].value = "Not Filled In";
+                                }
 				return;
 			}
 			else if(fields[indexPos].storeKey=="native_state" && output.hasOwnProperty(fields[indexPos].dshow) && output[fields[indexPos].dshow].value!="NI")
@@ -579,13 +583,24 @@
 					depLabel		= val['label'];
 				}
 				var iIndex              = fields[indexPos].optIndex;
-				labelPrefix = optionFields[iIndex].labelPrefix;
+				if(output['native_state_jsms']['value']=="0")
+				{
+					UserDecision.store("native_city",'');
+					depUserSelection='';
+					depLabel='';
+                                        fields[indexPos].value = "Not Filled In";
+				}
+				else
+				{
+					labelPrefix = optionFields[iIndex].labelPrefix;
+					fields[indexPos].value = output['native_state_jsms']['label'] + labelPrefix + depLabel;
+				}
+
 				optionFields[iIndex].value =  depLabel;
 				optionFields[iIndex].userDecision = depUserSelection;
 				fields[indexPos].userDecision=output['native_state_jsms']['value'];
 				fields[indexPos].errorLabel = "";	
 				fields[indexPos].depValue= depUserSelection;
-				fields[indexPos].value = output['native_state_jsms']['label'] + labelPrefix + depLabel;
 				fields[indexPos].value = factory.sanitizeString(fields[indexPos].value);
 				factory.handleDepValue(fields[indexPos]);
 				return;
