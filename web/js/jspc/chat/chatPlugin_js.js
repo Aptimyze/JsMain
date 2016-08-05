@@ -225,9 +225,10 @@ JsChat.prototype = {
                     curEleRef.addLoginHTML();
                 } else {
                     $(curEleRef._loginPanelID).fadeIn('slow', function () {
-                        $(".info-hover").remove();
+                        
                     });
                 }
+                $(".info-hover").remove();
                 $(curEleRef._listingPanelID).remove();
             });
         } else {
@@ -512,6 +513,7 @@ JsChat.prototype = {
             requestListingPhoto(apiParams);
         }
         this.manageChatBoxOnChange();
+        /*
         $(window).focus(function () {
             //console.log("Focus");
             //invokePluginLoginHandler("login");
@@ -520,6 +522,7 @@ JsChat.prototype = {
                 elem.manageChatBoxOnChange();
             }
         });
+        */
     },
     //add photo in tuple div of listing
     _addListingPhoto: function (photoObj) {
@@ -721,6 +724,8 @@ JsChat.prototype = {
                     $(".extraChats, .extraPopup").remove();
                 } else if (value > 1) {
                     $(".extraNumber").text("+" + (value - 1));
+                    var len = $(".extraChatList").length-1;
+                    $($(".extraChatList")[len]).remove();
                 }
             }
         });
