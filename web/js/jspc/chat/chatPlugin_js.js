@@ -724,6 +724,8 @@ JsChat.prototype = {
                     $(".extraChats, .extraPopup").remove();
                 } else if (value > 1) {
                     $(".extraNumber").text("+" + (value - 1));
+                    var len = $(".extraChatList").length-1;
+                    $($(".extraChatList")[len]).remove();
                 }
             }
         });
