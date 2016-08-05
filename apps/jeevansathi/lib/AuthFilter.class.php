@@ -308,7 +308,7 @@ class AuthFilter extends sfFilter {
 	            	LoggingManager::getInstance()->setUniqueId($headers['RID_AJAX']);
 	            	$request->setAttribute('REQUEST_ID_FOR_TRACKING',$headers['RID_AJAX']);
 	            }
-	            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "CHECKING AJAX CALLS FOR HOMEPAGE");
+	            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "In Auth");
 	            
 	            
 

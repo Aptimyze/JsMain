@@ -170,9 +170,9 @@ class LoggingManager
       $logData = $logData." [".$time."]";
       $logData = $logData." [".$uniqueSubId."]";
       $logData = $logData." ".$channelName;
+      $logData = $logData." ".$apiVersion;
       $logData = $logData." ".$moduleName;
       $logData = $logData." ".$actionName;
-      $logData = $logData." ".$apiVersion;
       $logData = $logData." ".$typeOfError;
       $logData = $logData." ".$statusCode;
       $logData = $logData." ".$message;
