@@ -406,7 +406,7 @@ JsChat.prototype = {
         }
     },
     
-    addListingInit: function (data) {
+    addListingInit: function (data,operation) {
         var elem = this,
             statusArr = [],
             jidStr = "",
@@ -467,7 +467,7 @@ JsChat.prototype = {
                                         that._chatLoggerPlugin("me");
                                         $("#show" + tabId + "NoResult").addClass("disp-none");
                                     }
-                                    added = elem._placeContact("new", runID, val, status, List);
+                                    added = elem._placeContact(operation,"new", runID, val, status, List);
                                     if(added == true){
                                         if ($('div.' + val + ' ul').parent().hasClass("disp-none")) {
                                             $('div.' + val + ' ul').parent().removeClass("disp-none");
@@ -480,7 +480,7 @@ JsChat.prototype = {
                                     }
                                 }
                             } else {
-                                added = elem._placeContact("existing", runID, val, status);
+                                added = elem._placeContact(operation,"existing", runID, val, status);
                             }
                             //elem._updateStatusInChatBox(runID, status);
                         }
@@ -535,12 +535,12 @@ JsChat.prototype = {
         }
     },
     //place contact in appropriate position in listing
-    _placeContact: function (key, contactID, groupID, status, contactHTML) {
+    _placeContact: function (operation,key, contactID, groupID, status, contactHTML) {
         var done=false,elem=this;
         if (key == "new") {
             console.log("adding new"+status+"-"+contactID);
             var upperLimit = elem._listingNodesLimit[groupID],totalNodes = $('div.'+groupID+' ul li').size();
-            if (typeof upperLimit == "undefined" || totalNodes < upperLimit){
+            if (operation == "add_node" || operation == "update_status" || typeof upperLimit == "undefined" || totalNodes < upperLimit){
                 console.log("adding1-"+groupID+"-"+contactID+"-"+totalNodes);
                 this._chatLoggerPlugin("ankita_adding" + contactID + " in groupID");
                 this._chatLoggerPlugin(contactHTML);
@@ -753,7 +753,7 @@ JsChat.prototype = {
                         if (tabShowStatus == 'false' && param1 != 'delete_node') {
                             that._chatLoggerPlugin("123");
                             $(listElements).find('.nchatspr').detach();
-                            elem._placeContact("existing", runID, val, "offline");
+                            elem._placeContact(param1,"existing", runID, val, "offline");
                         } else {
                             that._chatLoggerPlugin("345");
                             $('div').find(listElements).detach();
@@ -1483,7 +1483,7 @@ JsChat.prototype = {
             userId, status, response;
         chatBoxProto.attachedCallback = function () {
             userId = $(this).attr("user-id");
-            this.innerHTML = '<div class="chatBoxBar fullwid hgt57 bg5 pos-rel fullwid"></div><div class="chatArea fullwid fullhgt"><div class="messageArea f13 bg13 fullhgt"><div class="chatMessage pos_abs fullwid scrollxy" style="height: 246px;"><input type="hidden" value="0" id="moreHistory_'+userId+'" data-latestMsgId=""/><div class="spinner2 disp-none"></div><div id="chatHistory_' + userId + '" class="clearfix"></div><div class="spinner"></div></div></div><div class="chatInput brdrbtm_new fullwid btm0 pos-abs bg-white"><textarea cols="23" maxlength="'+elem._maxMsgLimit+'" style="width: 220px;" id="txtArea"  class="inputText lh20 brdr-0 padall-10 colorGrey hgt18 fontlig" placeholder="Write message"></textarea></div></div>';
+            this.innerHTML = '<div class="chatBoxBar fullwid hgt57 bg5 pos-rel fullwid"></div><div class="chatArea fullwid fullhgt"><div class="messageArea f13 bg13 fullhgt"><div id="chatMessage_'+userId+'" class="chatMessage pos_abs fullwid scrollxy" style="height: 246px;"><input type="hidden" value="0" id="moreHistory_'+userId+'" data-latestMsgId=""/><div class="spinner2 disp-none"></div><div id="chatHistory_' + userId + '" class="clearfix"></div><div class="spinner"></div></div></div><div class="chatInput brdrbtm_new fullwid btm0 pos-abs bg-white"><textarea cols="23" maxlength="'+elem._maxMsgLimit+'" style="width: 220px;" id="txtArea"  class="inputText lh20 brdr-0 padall-10 colorGrey hgt18 fontlig" placeholder="Write message"></textarea></div></div>';
             $(this).addClass("z7 b297 hgt352 brd_new fr mr7 fullhgt wid240 pos-rel disp_ib");
             status = $(this).attr("status-user");
             elem._appendInnerHtml(userId, status);
@@ -1527,7 +1527,7 @@ JsChat.prototype = {
         this._bindSendChat(userId);
     },
     _scrollToBottom: function (userId, extra) {
-        var divLen = 0;
+        /*var divLen = 0;
         if (typeof extra != "undefined") {
            divLen += extra;
         }
@@ -1541,9 +1541,12 @@ JsChat.prototype = {
             s+=$(this).height();
         });
         console.log("second-"+s);
-        console.log("total-"+divLen);
+        console.log("total-"+divLen);*/
+        //var elem = $('chat-box[user-id="' + userId + '"]');
+        var len = document.getElementById("chatMessage_"+userId).scrollHeight;
+        
         $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
-            scrollTop: divLen
+            scrollTop: len
         }, 1000);
     },
     //append chat history in chat box
