@@ -513,6 +513,7 @@ JsChat.prototype = {
             requestListingPhoto(apiParams);
         }
         this.manageChatBoxOnChange();
+        /*
         $(window).focus(function () {
             //console.log("Focus");
             //invokePluginLoginHandler("login");
@@ -521,6 +522,7 @@ JsChat.prototype = {
                 elem.manageChatBoxOnChange();
             }
         });
+        */
     },
     //add photo in tuple div of listing
     _addListingPhoto: function (photoObj) {
