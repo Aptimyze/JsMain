@@ -375,7 +375,7 @@ function invokePluginManagelisting(listObject, key, user_id) {
         }
         //chatLoggerPC("adding nodes in invokePluginAddlisting");
         //chatLoggerPC(listObject);
-        objJsChat.addListingInit(listObject);
+        objJsChat.addListingInit(listObject,key);
         if (key == "add_node") {
             var newGroupId = listObject[user_id][strophieWrapper.rosterDetailsKey]["groups"][0];
             //update chat box content if opened
@@ -395,7 +395,7 @@ function invokePluginManagelisting(listObject, key, user_id) {
                 objJsChat._removeFromListing("removeCall1", listObject);
             } else if (listObject[user_id][strophieWrapper.rosterDetailsKey]["chat_status"] == "online") { //from offline to online
                 //chatLoggerPC("adding in list");
-                objJsChat.addListingInit(listObject);
+                objJsChat.addListingInit(listObject,key);
             }
         }
     } else if (key == "delete_node") {
@@ -850,12 +850,14 @@ $(document).ready(function () {
             ////console.log("Logout clicked");
            $(".jschatLogOut").click(); 
         });
+        /*
         $(window).focus(function() {
             invokePluginLoginHandler("manageLogout");
             if(strophieWrapper.synchronize_selfPresence == true){
                 invokePluginLoginHandler("session_sync");
             }
         });
+        */
         $(window).on("offline", function () {
             ////console.log("detected internet disconnection");
             strophieWrapper.currentConnStatus = Strophe.Status.DISCONNECTED;

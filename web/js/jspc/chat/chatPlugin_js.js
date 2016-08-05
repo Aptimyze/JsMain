@@ -225,9 +225,10 @@ JsChat.prototype = {
                     curEleRef.addLoginHTML();
                 } else {
                     $(curEleRef._loginPanelID).fadeIn('slow', function () {
-                        $(".info-hover").remove();
+                        
                     });
                 }
+                $(".info-hover").remove();
                 $(curEleRef._listingPanelID).remove();
             });
         } else {
@@ -405,7 +406,7 @@ JsChat.prototype = {
         }
     },
     
-    addListingInit: function (data) {
+    addListingInit: function (data,operation) {
         var elem = this,
             statusArr = [],
             jidStr = "",
@@ -428,7 +429,8 @@ JsChat.prototype = {
                         that._chatLoggerPlugin("groups " + val);
                         var List = '',
                             fullname = data[key]["rosterDetails"]["fullname"],
-                            tabShowStatus = $('div.' + val).attr('data-showuser');
+                            tabShowStatus = $('div.' + val).attr('data-showuser'),
+                            added;
                         var getNamelbl = fullname,
                             picurl = data[key]["rosterDetails"]["listing_tuple_photo"],
                             prfCheckSum = data[key]["rosterDetails"]["profile_checksum"],
@@ -459,14 +461,14 @@ JsChat.prototype = {
                             if ($('#' + runID + "_" + val).length == 0) {
                                 if ($('#' + runID + "_" + val).find('.nchatspr').length == 0) {
                                     that._chatLoggerPlugin("checking no of nodes in group " + $('div.' + val + ' ul li').size());
-                                    if (typeof elem._listingNodesLimit[val] == "undefined" || $('div.' + val + ' ul li').size() <= elem._listingNodesLimit[val]) {
-                                        that._chatLoggerPlugin("b2");
-                                        var tabId = $('div.' + val).parent().attr("id");
-                                        if ($("#show" + tabId + "NoResult").length != 0) {
-                                            that._chatLoggerPlugin("me");
-                                            $("#show" + tabId + "NoResult").addClass("disp-none");
-                                        }
-                                        elem._placeContact("new", runID, val, status, List);
+                                    that._chatLoggerPlugin("b2");
+                                    var tabId = $('div.' + val).parent().attr("id");
+                                    if ($("#show" + tabId + "NoResult").length != 0) {
+                                        that._chatLoggerPlugin("me");
+                                        $("#show" + tabId + "NoResult").addClass("disp-none");
+                                    }
+                                    added = elem._placeContact(operation,"new", runID, val, status, List);
+                                    if(added == true){
                                         if ($('div.' + val + ' ul').parent().hasClass("disp-none")) {
                                             $('div.' + val + ' ul').parent().removeClass("disp-none");
                                         }
@@ -478,7 +480,7 @@ JsChat.prototype = {
                                     }
                                 }
                             } else {
-                                elem._placeContact("existing", runID, val, status);
+                                added = elem._placeContact(operation,"existing", runID, val, status);
                             }
                             //elem._updateStatusInChatBox(runID, status);
                         }
@@ -511,6 +513,7 @@ JsChat.prototype = {
             requestListingPhoto(apiParams);
         }
         this.manageChatBoxOnChange();
+        /*
         $(window).focus(function () {
             //console.log("Focus");
             //invokePluginLoginHandler("login");
@@ -519,6 +522,7 @@ JsChat.prototype = {
                 elem.manageChatBoxOnChange();
             }
         });
+        */
     },
     //add photo in tuple div of listing
     _addListingPhoto: function (photoObj) {
@@ -531,15 +535,36 @@ JsChat.prototype = {
         }
     },
     //place contact in appropriate position in listing
-    _placeContact: function (key, contactID, groupID, status, contactHTML) {
+    _placeContact: function (operation,key, contactID, groupID, status, contactHTML) {
+        var done=false,elem=this;
         if (key == "new") {
-            this._chatLoggerPlugin("ankita_adding" + contactID + " in groupID");
-            this._chatLoggerPlugin(contactHTML);
-            $('div.' + groupID + ' ul.' + status).prepend(contactHTML);
+            console.log("adding new"+status+"-"+contactID);
+            var upperLimit = elem._listingNodesLimit[groupID],totalNodes = $('div.'+groupID+' ul li').size();
+            if (operation == "add_node" || operation == "update_status" || typeof upperLimit == "undefined" || totalNodes < upperLimit){
+                console.log("adding1-"+groupID+"-"+contactID+"-"+totalNodes);
+                this._chatLoggerPlugin("ankita_adding" + contactID + " in groupID");
+                this._chatLoggerPlugin(contactHTML);
+                $('div.' + groupID + ' ul.' + status).prepend(contactHTML);
+                done = true;
+            }
+            else if(totalNodes >= upperLimit && status == "online"){
+                var onlineCount = $('div.'+groupID+' ul.online li').size();
+                if(onlineCount < upperLimit){
+                    console.log("adding2-"+groupID+"-"+contactID+"-"+totalNodes+"-"+onlineCount);
+                    $('div.'+groupID+' ul.'+'offline'+' li:last').remove();
+                    $('div.' + groupID + ' ul.' + status).prepend(contactHTML);
+                    done = true;
+                }
+                else{
+                    done = false;
+                }
+            }
+            else{
+                done = false;
+            }
         } else if (key == "existing") {
             this._chatLoggerPlugin("changing icon");
             if (status == "online") {
-                //move this element to top---manvi
                 //add online chat_status icon
                 if ($('#' + contactID + "_" + groupID).find('.nchatspr').length == 0) {
                     $(this._mainID).find($('#' + contactID + "_" + groupID)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
@@ -548,7 +573,9 @@ JsChat.prototype = {
             } else if (status == "offline") {
                 $('#' + contactID + "_" + groupID).prependTo('div.' + groupID + ' ul.' + status);
             }
+            done = true;
         }
+        return done;
     },
     //scrolling down chat box
     _scrollDown: function (elem, type) {
@@ -697,6 +724,8 @@ JsChat.prototype = {
                     $(".extraChats, .extraPopup").remove();
                 } else if (value > 1) {
                     $(".extraNumber").text("+" + (value - 1));
+                    var len = $(".extraChatList").length-1;
+                    $($(".extraChatList")[len]).remove();
                 }
             }
         });
@@ -724,7 +753,7 @@ JsChat.prototype = {
                         if (tabShowStatus == 'false' && param1 != 'delete_node') {
                             that._chatLoggerPlugin("123");
                             $(listElements).find('.nchatspr').detach();
-                            elem._placeContact("existing", runID, val, "offline");
+                            elem._placeContact(param1,"existing", runID, val, "offline");
                         } else {
                             that._chatLoggerPlugin("345");
                             $('div').find(listElements).detach();
@@ -1347,6 +1376,7 @@ JsChat.prototype = {
                 }
         }
         else if(type == "show"){
+            $('chat-box[user-id="' + userId + '"] #initiateText').remove();
             if($('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).length == 0){
                 if(chatBoxType != "pg_acceptance_pending"){
                     $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="chat_freeMemMsg_'+userId+'" class="pos-abs fullwid txtc colorGrey mt120">Only paid members can start chat<div  class="becomePaidMember_chat color5 cursp"><a href="/membership/jspc" class = "cursp js-colorParent">Become a Paid Member</a></div></div>');
@@ -1453,7 +1483,7 @@ JsChat.prototype = {
             userId, status, response;
         chatBoxProto.attachedCallback = function () {
             userId = $(this).attr("user-id");
-            this.innerHTML = '<div class="chatBoxBar fullwid hgt57 bg5 pos-rel fullwid"></div><div class="chatArea fullwid fullhgt"><div class="messageArea f13 bg13 fullhgt"><div class="chatMessage pos_abs fullwid scrollxy" style="height: 246px;"><input type="hidden" value="0" id="moreHistory_'+userId+'" data-latestMsgId=""/><div class="spinner2 disp-none"></div><div id="chatHistory_' + userId + '" class="clearfix"></div><div class="spinner"></div></div></div><div class="chatInput brdrbtm_new fullwid btm0 pos-abs bg-white"><textarea cols="23" maxlength="'+elem._maxMsgLimit+'" style="width: 220px;" id="txtArea"  class="inputText lh20 brdr-0 padall-10 colorGrey hgt18 fontlig" placeholder="Write message"></textarea></div></div>';
+            this.innerHTML = '<div class="chatBoxBar fullwid hgt57 bg5 pos-rel fullwid"></div><div class="chatArea fullwid fullhgt"><div class="messageArea f13 bg13 fullhgt"><div id="chatMessage_'+userId+'" class="chatMessage pos_abs fullwid scrollxy" style="height: 246px;"><input type="hidden" value="0" id="moreHistory_'+userId+'" data-latestMsgId=""/><div class="spinner2 disp-none"></div><div id="chatHistory_' + userId + '" class="clearfix"></div><div class="spinner"></div></div></div><div class="chatInput brdrbtm_new fullwid btm0 pos-abs bg-white"><textarea cols="23" maxlength="'+elem._maxMsgLimit+'" style="width: 220px;" id="txtArea"  class="inputText lh20 brdr-0 padall-10 colorGrey hgt18 fontlig" placeholder="Write message"></textarea></div></div>';
             $(this).addClass("z7 b297 hgt352 brd_new fr mr7 fullhgt wid240 pos-rel disp_ib");
             status = $(this).attr("status-user");
             elem._appendInnerHtml(userId, status);
@@ -1497,19 +1527,26 @@ JsChat.prototype = {
         this._bindSendChat(userId);
     },
     _scrollToBottom: function (userId, extra) {
-        var divLen = 0;
+        /*var divLen = 0;
         if (typeof extra != "undefined") {
            divLen += extra;
         }
         $('chat-box[user-id="' + userId + '"] .rightBubble').each(function (index, element) {
             divLen += $(this).height();
         });
+        console.log("first-"+divLen);
+        var s=0;
         $('chat-box[user-id="' + userId + '"] .leftBubble').each(function (index, element) {
             divLen += $(this).height();
+            s+=$(this).height();
         });
+        console.log("second-"+s);
+        console.log("total-"+divLen);*/
+        //var elem = $('chat-box[user-id="' + userId + '"]');
+        var len = document.getElementById("chatMessage_"+userId).scrollHeight;
         
         $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
-            scrollTop: divLen
+            scrollTop: len
         }, 1000);
     },
     //append chat history in chat box
@@ -1541,7 +1578,7 @@ JsChat.prototype = {
                 }
             });
             if(requestType == "first_history"){
-                curElem._scrollToBottom(other_id,100);
+                curElem._scrollToBottom(other_id);
             }
             if(latestMsgId != ""){
                 console.log("setting");

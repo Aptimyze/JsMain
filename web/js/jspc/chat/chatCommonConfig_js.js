@@ -266,10 +266,11 @@ chatConfig.Params = {
         },
         //max count of nodes limit per group
         groupWiseNodesLimit: {
-            "dpp": 100,
+            "dpp": 50,
             "intrec": 50,
             "shortlist": 50,
-            "intsent": 50
+            "intsent":50,
+            "acceptance":100
         },
         storeMsgInLocalStorage:false,
         maxMsgLimit:1000
