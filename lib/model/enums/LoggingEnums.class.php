@@ -15,9 +15,9 @@ class LoggingEnums
     const LOG_DEBUG = 1;
     const LOG_ERROR = 0;
     // 1 for logging all modules, 0 for not
-    const LOG_ALL = 1;
+    const CONFIG_ON = false;
     // 1 for logging all modules in same file, 0 different
-    const LOG_TOGETHER = 0;
+    const LOG_TOGETHER = false;
     // module names
     const JSA = 'jsadmin';
     const COMMONLOG = 'common';

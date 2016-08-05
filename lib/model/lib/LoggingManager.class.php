@@ -58,17 +58,17 @@ class LoggingManager
         A function to retrieve uniqueId of the instance of LoggingManager
 
     */
-        public function getUniqueId()
-        {   
-          return($this->iUniqueID);
-        }
+    public function getUniqueId()
+    {   
+        return($this->iUniqueID);
+    }
 
 
     /**
      * __destruct
      */
     private function __destruct() {
-      self::$instance = null;
+        self::$instance = null;
     }
 
     /**
@@ -87,13 +87,13 @@ class LoggingManager
      */
     public static function getInstance($basePath = null)
     {
-      if (null === self::$instance) {
-        $className =  __CLASS__;
-        self::$instance = new $className;
-      }
-      self::$instance->szLogPath = $basePath;
+        if (null === self::$instance) {
+            $className =  __CLASS__;
+            self::$instance = new $className;
+        }
+        self::$instance->szLogPath = $basePath;
 
-      return self::$instance;
+        return self::$instance;
     }
 
      /**
@@ -109,8 +109,8 @@ class LoggingManager
      *       ,statusCode
      *       ,typeOfError(whether php error, or mysql etc.) 
      */
-     public function logThis($enLogType,$Var,$logArray = array(),$isSymfony=true)
-     {
+    public function logThis($enLogType,$Var,$logArray = array(),$isSymfony=true)
+    {
       if($this->canLog($enLogType,$Var,$isSymfony,$logArray))
       {
         switch ($enLogType) {
@@ -375,13 +375,13 @@ class LoggingManager
  /**
      * @param $message
      */
- private function logDebug($message,$isSymfony=true,$logArray = array())
- {
-  $logData = '['. $this->getLogType(LoggingEnums::LOG_DEBUG) .']';
-  $logData = $logData.$this->getLogData($message,$isSymfony,$logArray);
-  $logData = $logData." ".$message;
-  $this->writeToFile($logData);
-}
+    private function logDebug($message,$isSymfony=true,$logArray = array())
+    {
+      $logData = '['. $this->getLogType(LoggingEnums::LOG_DEBUG) .']';
+      $logData = $logData.$this->getLogData($message,$isSymfony,$logArray);
+      $logData = $logData." ".$message;
+      $this->writeToFile($logData);
+    }
 
     /**
      * @param $szPath
@@ -399,25 +399,25 @@ class LoggingManager
      */
     private function writeToFile($szLogString)
     {
-      $currDate = Date('Y-m-d');
-      $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH."log-".$currDate.".log";
-      if($this->canCreateDir($this->szLogPath))
-      {
-        $this->createDirectory($this->szLogPath);
-        $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
-      }
-      else
-      {
-        $this->createDirectory("");
-      }
+        $currDate = Date('Y-m-d');
+        $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH."log-".$currDate.".log";
+        if($this->canCreateDir($this->szLogPath))
+        {
+          $this->createDirectory($this->szLogPath);
+          $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
+        }
+        else
+        {
+          $this->createDirectory("");
+        }
         //Add in log file
-      if($this->bDoItOnce) {
-        $szLogString = "\n".$szLogString;
-        $this->bDoItOnce = false;
-      }
-      $fileResource = fopen($filePath,"a");
-      fwrite($fileResource,$szLogString."\n");
-      fclose($fileResource);
+        if($this->bDoItOnce) {
+            $szLogString = "\n".$szLogString;
+            $this->bDoItOnce = false;
+        }
+        $fileResource = fopen($filePath,"a");
+        fwrite($fileResource,$szLogString."\n");
+        fclose($fileResource);
     }
 
     /**
@@ -426,21 +426,21 @@ class LoggingManager
      */
     private function getLogType($enLogType)
     {
-      switch ($enLogType) {
-        case LoggingEnums::LOG_INFO:
-        $szLogType = 'Info';
-        break;
-        case LoggingEnums::LOG_DEBUG:
-        $szLogType = 'Debug';
-        break;
-        case LoggingEnums::LOG_ERROR:
-        $szLogType = 'Error';
-        break;
-        default:
-        $szLogType = 'Log';
-        break;
-      }
-      return $szLogType;
+        switch ($enLogType) {
+            case LoggingEnums::LOG_INFO:
+                    $szLogType = 'Info';
+                break;
+            case LoggingEnums::LOG_DEBUG:
+                    $szLogType = 'Debug';
+                break;
+            case LoggingEnums::LOG_ERROR:
+                    $szLogType = 'Error';
+                break;
+            default:
+                $szLogType = 'Log';
+                break;
+        }
+        return $szLogType;
     }
 
     /**
@@ -450,15 +450,15 @@ class LoggingManager
     private function canLog($enLogType,$Var,$isSymfony,$logArray)
     {
         // set module name
-      if($this->szLogPath == null)
-      {
-        $this->szLogPath = $this->getLogModuleName($isSymfony,$Var,$logArray);
-      }
-        // check if log for all is set, if not set then check if module can log
-      $toLog = (LoggingEnums::LOG_ALL ? 1 : LoggingConfig::getInstance()->logStatus($this->szLogPath));
+        if($this->szLogPath == null)
+        {
+          $this->szLogPath = $this->getLogModuleName($isSymfony,$Var,$logArray);
+        }
+        // check if config is on, if yes then check if module can log
+        $toLog = (LoggingEnums::CONFIG_ON ? LoggingConfig::getInstance()->logStatus($this->szLogPath) : true);
         // check Log Level
-      $checkLogLevel = ($enLogType <= LoggingEnums::LOG_LEVEL || $enLogType <= LoggingConfig::getInstance()->getLogLevel($this->szLogPath));
-      return $toLog & $checkLogLevel;
+        $checkLogLevel = ($enLogType <= LoggingEnums::LOG_LEVEL || $enLogType <= LoggingConfig::getInstance()->getLogLevel($this->szLogPath));
+        return $toLog & $checkLogLevel;
     }
 
     /**
@@ -467,7 +467,7 @@ class LoggingManager
     private function canCreateDir($szLogPath)
     {
         // check if log for all modules is together, if not set then check if module can create diff directory
-      return (LoggingEnums::LOG_TOGETHER ? 0 : LoggingConfig::getInstance()->dirStatus($szLogPath));
+        return (LoggingEnums::LOG_TOGETHER ? 0 : LoggingConfig::getInstance()->dirStatus($szLogPath));
     }
 
     /**
@@ -477,7 +477,7 @@ class LoggingManager
 
     public function setUniqueId($uniqueID)
     {
-      $this->iUniqueID = $uniqueID;
+        $this->iUniqueID = $uniqueID;
     }
 
     /**
@@ -485,6 +485,6 @@ class LoggingManager
      */
     private function canWriteTrace($szLogPath)
     {
-      return LoggingConfig::getInstance()->traceStatus($szLogPath);
+        return LoggingConfig::getInstance()->traceStatus($szLogPath);
     }
-  }
+}

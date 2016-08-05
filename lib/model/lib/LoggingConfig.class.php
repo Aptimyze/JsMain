@@ -17,16 +17,16 @@
 		private $arrConfig = array(
 			// 'logging' => 1, logging is on for this module
 			LoggingEnums::JSA => array(
-				'logging' => 1,
+				'logging' => true,
 				'level' => LoggingEnums::LOG_DEBUG,
-				'directory' => 1,
-				'stack_trace' => 1
+				'directory' => true,
+				'stack_trace' => false
 				),
 			LoggingEnums::EX500OR404 => array(
-				'logging' => 1,
+				'logging' => true,
 				'level' => LoggingEnums::LOG_ERROR,
-				'directory' => 1,
-				'stack_trace' => 0
+				'directory' => true,
+				'stack_trace' => false
 				),
 			);
 
@@ -73,7 +73,7 @@
 		{
 			if(!array_key_exists($module, $this->arrConfig)){
 				// module not in config
-				return 1;
+				return true;
 			}
 			return $this->arrConfig[$module]['logging'];
 		}
@@ -84,9 +84,9 @@
 		public function dirStatus($module)
 		{
 			if(!array_key_exists($module, $this->arrConfig)){
-				return 0;
+				return false;
 			}
-			return $this->arrConfig[$module]['directory'];
+			return LoggingEnums::CONFIG_ON ? $this->arrConfig[$module]['directory'] : false;
 		}
 
 		/**
@@ -95,9 +95,9 @@
 		public function traceStatus($module)
 		{
 			if(!array_key_exists($module, $this->arrConfig)){
-				return 1;
+				return false;
 			}
-			return $this->arrConfig[$module]['stack_trace'];
+			return LoggingEnums::CONFIG_ON ? $this->arrConfig[$module]['stack_trace'] : false;
 		}
 
 		/**
@@ -106,9 +106,10 @@
 		public function getLogLevel($module)
 		{
 			if(!array_key_exists($module, $this->arrConfig)){
-				return 0;
+				// 	By Default for Exception
+				return LoggingEnums::LOG_ERROR;
 			}
-			return $this->arrConfig[$module]['level'];
+			return LoggingEnums::CONFIG_ON ? $this->arrConfig[$module]['level'] : LoggingEnums::LOG_ERROR;
 		}
 	}
 ?>
