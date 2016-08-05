@@ -160,7 +160,7 @@ class LoggingManager
       $moduleName = $this->szLogPath;
       $actionName = $this->getLogActionName($isSymfony,$exception,$logArray);
       $apiVersion = $this->getLogAPI($logArray);
-      $message = $this->getLogMessage($logArray);
+      $message = $this->getLogMessage($exception,$logArray);
       $uniqueSubId = $this->getLogUniqueSubId($logArray);
       $statusCode = $this->getLogStatusCode($exception,$logArray);
       $typeOfError = $this->getLogTypeOfError($exception,$logArray);
@@ -286,12 +286,16 @@ class LoggingManager
      * @return message
      * @param associative array $logArray 
      */
-    private function getLogMessage($logArray)
+    private function getLogMessage($exception,$logArray)
     {
       $message = "";
       if ( $exception instanceof Exception)
       {
         $message = $exception->getMessage();
+      }
+      else
+      {
+        $message = $exception; 
       }
       if ( isset($logArray[LoggingEnums::MESSAGE]))
       {
