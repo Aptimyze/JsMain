@@ -269,7 +269,7 @@ chatConfig.Params = {
             "dpp": 50,
             "intrec": 50,
             "shortlist": 50,
-            "intsent": 50,
+            "intsent":50,
             "acceptance":100
         },
         storeMsgInLocalStorage:false,

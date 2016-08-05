@@ -378,7 +378,11 @@ var strophieWrapper = {
                     listObj[strophieWrapper.rosterDetailsKey]["last_online_time"] = last_online_time;
                     strophieWrapper.Roster[user_id] = strophieWrapper.mergeRosterObj(strophieWrapper.Roster[user_id], listObj);
                     if (subscription == "to") {
+                    	console.log("subscribe to -"+jid);
                         strophieWrapper.subscribe(jid, listObj[strophieWrapper.rosterDetailsKey]["nick"]);
+                    	setTimeout(function () {
+		                    strophieWrapper.sendPresence();
+		                }, 5000);
                     }
                 }
             }
@@ -391,7 +395,8 @@ var strophieWrapper = {
         invokePluginManagelisting(strophieWrapper.Roster, "create_list");
         strophieWrapper.setRosterStorage(strophieWrapper.Roster);
         strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
-    },
+    	//strophieWrapper.sendPresence();
+   	},
     //executed on msg receipt
     onMessage: function (iq) {
         //strophieWrapper.stropheLoggerPC("got message");
