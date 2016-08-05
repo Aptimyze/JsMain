@@ -225,9 +225,10 @@ JsChat.prototype = {
                     curEleRef.addLoginHTML();
                 } else {
                     $(curEleRef._loginPanelID).fadeIn('slow', function () {
-                        $(".info-hover").remove();
+                        
                     });
                 }
+                $(".info-hover").remove();
                 $(curEleRef._listingPanelID).remove();
             });
         } else {
