@@ -605,5 +605,14 @@ class CommonFunction
     }
     return $arrOut;
   }
+  public static function getMembershipName($profileid){
+	if ($profileid) {
+		$memHandlerObj = new MembershipHandler();
+		$membershipStatus = $memHandlerObj->getRealMembershipName($profileid);
+	} else {
+		$membershipStatus = 'Free';
+	}
+	return $membershipStatus;
+  	}
 }
 ?>
