@@ -47,6 +47,7 @@ class pushChatAction extends sfAction
 				$data["message"] = $message;
 				$data['chatid'] = $chatID;
 				$js_communication=new JS_Communication($sender,$receiver,$communicationType,$message,$chatID);
+
 				if($js_communication->validateChat()) {
 					try {
 						//send instant JSPC/JSMS notification
@@ -63,23 +64,25 @@ class pushChatAction extends sfAction
 						}
 						unset($producerObj);
 					} catch (Exception $e) {
-						throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
+						throw new jsException("Something went wrong while pushing chat message-" . $e);
 					}
 					$responseArray["isSent"] = "true";
 					$responseArray["chatId"] = $chatID;
 				}
+
 			}
 		}
 		if (is_array($responseArray)) {
+
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiObj->setResponseBody($responseArray);
 			$apiObj->generateResponse();
 		}
 		else
 		{
-			if(is_array($output))
+			/*if(is_array($output))
 				$apiObj->setHttpArray($output);
-			else
+			else*/
 				$apiObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
 			$apiObj->generateResponse();
 		}

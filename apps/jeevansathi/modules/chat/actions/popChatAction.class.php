@@ -59,6 +59,8 @@ class popChatAction extends sfAction
 						$responseArray["pagination"] = 1;
 					$responseArray["Message"] = json_encode($arr);
 				}
+				else
+					$responseArray["pagination"] = 0;
 			}
 		}
 		if (is_array($responseArray)) {

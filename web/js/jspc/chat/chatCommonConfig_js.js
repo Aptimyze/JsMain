@@ -211,49 +211,57 @@ chatConfig.Params = {
                 "key": "pg_interest_pending",
                 "enableChat": true,
                 "useOpenfireForChat": false,
-                "showHistory": false
+                "showHistory": false,
+                "checkForPaidInitiation":true
             },
             "pog_acceptance_pending": {
                 "key": "pog_acceptance_pending",
                 "useOpenfireForChat": false,
                 "enableChat": true,
-                "showHistory": false
+                "showHistory": false,
+                "checkForPaidInitiation":true
             },
             "pg_acceptance_pending": {
                 "key": "pg_acceptance_pending",
                 "useOpenfireForChat": false,
                 "enableChat": false,
-                "showHistory": false
+                "showHistory": false,
+                "checkForPaidInitiation":true
             },
             "pog_interest_accepted": {
                 "key": "pog_interest_accepted",
                 "useOpenfireForChat": true,
                 "enableChat": true,
-                "showHistory": true
+                "showHistory": true,
+                "checkForPaidInitiation":true
             },
             "pog_interest_declined": {
                 "key": "pog_interest_declined",
                 "useOpenfireForChat": false,
                 "enableChat": false,
-                "showHistory": false
+                "showHistory": false,
+                "checkForPaidInitiation":false
             },
             "pg_interest_declined": {
                 "key": "pg_interest_declined",
                 "useOpenfireForChat": false,
                 "enableChat": false,
-                "showHistory": false
+                "showHistory": false,
+                "checkForPaidInitiation":false
             },
             "none_applicable": {
                 "key": "none_applicable",
                 "useOpenfireForChat": false,
                 "enableChat": false,
-                "showHistory": false
+                "showHistory": false,
+                "checkForPaidInitiation":true
             },
             "both_accepted": {
                 "key": "both_accepted",
                 "useOpenfireForChat": true,
                 "enableChat": true,
-                "showHistory": true
+                "showHistory": true,
+                "checkForPaidInitiation":true
             }
         },
         //max count of nodes limit per group
