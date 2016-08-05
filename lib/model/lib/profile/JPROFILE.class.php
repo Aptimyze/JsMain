@@ -151,6 +151,19 @@ class JPROFILE
         if(true === $bResult) {
             ProfileCacheLib::getInstance()->updateCache($paramArr, $criteria, $value, $extraWhereCnd);
         }
+
+        //If Criteria is not PROFILEID then remove data from cache.
+        if ($bResult && $criteria != "PROFILEID") {
+           if(isset($paramArr['PROFILEID'])) {
+               $iProfileId = $paramArr['PROFILEID'];
+           } else {
+               $arrData = $this->get($value,$criteria,"PROFILEID");
+               $iProfileId = $arrData['PROFILEID'];
+           }
+
+           //Remove From Cache
+           ProfileCacheLib::getInstance()->removeCache($iProfileId);
+        }
         return $bResult;
     }
 
@@ -318,12 +331,14 @@ class JPROFILE
 
     public function updateSubscriptionStatus($subscription, $profileid)
     {
-        return self::$objProfileMysql->updateSubscriptionStatus($subscription, $profileid);
+        $paramArr = array('SUBSCRIPTION'=>$subscription);
+        return $this->edit($paramArr, $profileid, 'PROFILEID');
     }
 
     public function updatePrivacy($privacy, $profileid)
     {
-        return self::$objProfileMysql->updatePrivacy($privacy, $profileid);
+        $paramArr = array('PRIVACY'=>$privacy, 'MOD_DT'=>date('Y-m-d H:i:s'));
+        return $this->edit($paramArr, $profileid, "PROFILEID","activatedKey=1");
     }
 
     public function SelectPrivacy($profileId)
@@ -607,9 +622,10 @@ class JPROFILE
     /**
      * @return mixed
      */
-    public function updateEmail($email,$newEmail)
+    public function updateEmail($email, $newEmail)
     {
-        return self::$objProfileMysql->updateEmail($email,$newEmail);
+        $paramArr = array('EMAIL'=>$newEmail);
+        return $this->edit($paramArr, $email, 'EMAIL');
     }
     /**
      * This function executes a select query on join of jprofile and incentives.name_of_user
