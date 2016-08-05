@@ -200,17 +200,17 @@ class Producer
 				case "USERCREATION":
 					$data = $msgdata['data'];
 					$msg = new AMQPMessage($data, array('delivery_mode' => MQ::DELIVERYMODE));
-					$this->channel->basic_publish($msg, MQ::CHATEXCHANGE,"create");
+					$this->channel->basic_publish($msg, MQ::CHATEXCHANGE,"profile_created");
 					break;
 				case "USERLOGIN":
 					$data = $msgdata['data'];
 					$msg = new AMQPMessage($data, array('delivery_mode' => MQ::DELIVERYMODE));
-					$this->channel->basic_publish($msg, MQ::CHATEXCHANGE,"create");
+					$this->channel->basic_publish($msg, MQ::CHATEXCHANGE,"profile_created");
 					break;
 				case "USER_DELETE":
 					$data = $msgdata['data'];
 					$msg = new AMQPMessage($data, array('delivery_mode' => MQ::DELIVERYMODE));
-					$this->channel->basic_publish($msg, MQ::CHATEXCHANGE,"delete");
+					$this->channel->basic_publish($msg, MQ::CHATEXCHANGE,"profile_deleted");
 					break;
       }
     }
