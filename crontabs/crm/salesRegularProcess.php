@@ -3,7 +3,6 @@
 * FILE NAME   	: salesRegularProcess.php 
 * DESCRIPTION 	: 
 *********************************************************************************************/
-ini_set('max_execution_time',0);
 $to     ="manoj.rana@naukri.com";
 $from   ="From:JeevansathiCrm@jeevansathi.com";
 

@@ -2,7 +2,6 @@
 $curFilePath = dirname(__FILE__)."/";
 include_once("/usr/local/scripts/DocRoot.php");
 include("$docRoot/crontabs/connect.inc");
-ini_set('max_execution_time',0);
 
 $db2=connect_db();
 $db=connect_slave();
