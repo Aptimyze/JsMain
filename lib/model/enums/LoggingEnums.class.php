@@ -34,4 +34,8 @@ class LoggingEnums
     const AMQP_EXCEPTION = "AMQP";
     const UNKNOWN_EXCEPTION = "UNKNOWN";
     const EXCEPTION = "EXCEPTION";
+    const logging = 'logging';
+    const level = 'level';
+    const directory = 'directory';
+    const stackTrace = 'stackTrace';
 }

@@ -17,16 +17,16 @@
 		private $arrConfig = array(
 			// 'logging' => 1, logging is on for this module
 			LoggingEnums::JSA => array(
-				'logging' => true,
-				'level' => LoggingEnums::LOG_DEBUG,
-				'directory' => true,
-				'stack_trace' => false
+				LoggingEnums::logging => true,
+				LoggingEnums::level => LoggingEnums::LOG_DEBUG,
+				LoggingEnums::directory => true,
+				LoggingEnums::stackTrace => false
 				),
 			LoggingEnums::EX500OR404 => array(
-				'logging' => true,
-				'level' => LoggingEnums::LOG_ERROR,
-				'directory' => true,
-				'stack_trace' => false
+				LoggingEnums::logging => true,
+				LoggingEnums::level => LoggingEnums::LOG_ERROR,
+				LoggingEnums::directory => true,
+				LoggingEnums::stackTrace => false
 				),
 			);
 
@@ -75,7 +75,7 @@
 				// module not in config
 				return true;
 			}
-			return $this->arrConfig[$module]['logging'];
+			return $this->arrConfig[$module][LoggingEnums::logging];
 		}
 
 		/**
@@ -86,7 +86,7 @@
 			if(!array_key_exists($module, $this->arrConfig)){
 				return false;
 			}
-			return LoggingEnums::CONFIG_ON ? $this->arrConfig[$module]['directory'] : false;
+			return LoggingEnums::CONFIG_ON ? $this->arrConfig[$module][LoggingEnums::directory] : false;
 		}
 
 		/**
@@ -97,7 +97,7 @@
 			if(!array_key_exists($module, $this->arrConfig)){
 				return false;
 			}
-			return LoggingEnums::CONFIG_ON ? $this->arrConfig[$module]['stack_trace'] : false;
+			return LoggingEnums::CONFIG_ON ? $this->arrConfig[$module][LoggingEnums::stackTrace] : false;
 		}
 
 		/**
@@ -109,7 +109,7 @@
 				// 	By Default for Exception
 				return LoggingEnums::LOG_ERROR;
 			}
-			return LoggingEnums::CONFIG_ON ? $this->arrConfig[$module]['level'] : LoggingEnums::LOG_ERROR;
+			return LoggingEnums::CONFIG_ON ? $this->arrConfig[$module][LoggingEnums::level] : LoggingEnums::LOG_ERROR;
 		}
 	}
 ?>
