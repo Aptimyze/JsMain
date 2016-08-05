@@ -850,12 +850,14 @@ $(document).ready(function () {
             ////console.log("Logout clicked");
            $(".jschatLogOut").click(); 
         });
+        /*
         $(window).focus(function() {
             invokePluginLoginHandler("manageLogout");
             if(strophieWrapper.synchronize_selfPresence == true){
                 invokePluginLoginHandler("session_sync");
             }
         });
+        */
         $(window).on("offline", function () {
             ////console.log("detected internet disconnection");
             strophieWrapper.currentConnStatus = Strophe.Status.DISCONNECTED;
