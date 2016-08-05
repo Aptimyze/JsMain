@@ -536,11 +536,26 @@ JsChat.prototype = {
     _placeContact: function (key, contactID, groupID, status, contactHTML) {
         var done=false,elem=this;
         if (key == "new") {
-            if (typeof elem._listingNodesLimit[groupID] == "undefined" || $('div.'+groupID+' ul li').size() < elem._listingNodesLimit[groupID]){
+            console.log("adding new"+status+"-"+contactID);
+            var upperLimit = elem._listingNodesLimit[groupID],totalNodes = $('div.'+groupID+' ul li').size();
+            if (typeof upperLimit == "undefined" || totalNodes < upperLimit){
+                console.log("adding1-"+groupID+"-"+contactID+"-"+totalNodes);
                 this._chatLoggerPlugin("ankita_adding" + contactID + " in groupID");
                 this._chatLoggerPlugin(contactHTML);
                 $('div.' + groupID + ' ul.' + status).prepend(contactHTML);
                 done = true;
+            }
+            else if(totalNodes >= upperLimit && status == "online"){
+                var onlineCount = $('div.'+groupID+' ul.online li').size();
+                if(onlineCount < upperLimit){
+                    console.log("adding2-"+groupID+"-"+contactID+"-"+totalNodes+"-"+onlineCount);
+                    $('div.'+groupID+' ul.'+'offline'+' li:last').remove();
+                    $('div.' + groupID + ' ul.' + status).prepend(contactHTML);
+                    done = true;
+                }
+                else{
+                    done = false;
+                }
             }
             else{
                 done = false;
@@ -548,7 +563,6 @@ JsChat.prototype = {
         } else if (key == "existing") {
             this._chatLoggerPlugin("changing icon");
             if (status == "online") {
-                //move this element to top---manvi
                 //add online chat_status icon
                 if ($('#' + contactID + "_" + groupID).find('.nchatspr').length == 0) {
                     $(this._mainID).find($('#' + contactID + "_" + groupID)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
