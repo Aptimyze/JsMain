@@ -270,17 +270,14 @@ class LoggingManager
      */
     public function getLogMessage($logArray)
     {
-      if ( !isset($logArray['message']))
+      $message = "";
+      if ( $exception instanceof Exception)
       {
-        $message = "";
-        if ( $exception instanceof Exception)
-        {
-          $message = $exception->getMessage();
-        }
+        $message = $exception->getMessage();
       }
-      else
+      if ( isset($logArray['message']))
       {
-        $message = $logArray['message'];
+        $message = $message." ".$logArray['message'];
       }
       return $message;
     }
