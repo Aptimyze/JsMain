@@ -351,36 +351,6 @@ JsChat.prototype = {
         });
         delete that;
     },
-    manageChatBoxOnChange: function () {
-        var closeArr = [],
-            removeArr = [],
-            data = [];
-        if (localStorage.getItem("chatStateData")) {
-            data = JSON.parse(localStorage.getItem("chatStateData"));
-        }
-        $.each(data, function (index, element) {
-            //console.log(element);
-            if (element["state"] != "remove") {
-                $("#" + element["userId"] + "_" + element["group"]).click();
-            }
-            if (element["state"] == "close") {
-                closeArr.push(element["userId"]);
-            } else if (element["state"] == "remove") {
-                removeArr.push(element["userId"]);
-            }
-            if (element["state"] == "open") {
-                $('chat-box[user-id="' + element["userId"] + '"] .downBarUserName').click();
-            }
-        });
-        //console.log("closeArr", closeArr);
-        //console.log("removeArr", removeArr);
-        $.each(closeArr, function (index, elem) {
-            $('chat-box[user-id="' + elem + '"] .nchatic_2').click();
-        });
-        $.each(removeArr, function (index, elem) {
-            $('chat-box[user-id="' + elem + '"] .nchatic_1').click();
-        });
-    },
     
     /*
      * Manage minimize and maximize panel state, not used now
@@ -512,15 +482,39 @@ JsChat.prototype = {
             apiParams["photoType"] = "ProfilePic120Url";
             requestListingPhoto(apiParams);
         }
-        this.manageChatBoxOnChange();
+        
+        var newTab = false;
+        if($(".tabUId").length == 0){
+            console.log("does not exsist");
+            $("body").append("<input type='hidden' class='tabUId' id='tab_"+new Date().getTime()+"'>");
+            elem._updateChatStructure("new");
+            newTab = true;
+        }
+
+        if(localStorage.getItem("lastUId")) {
+            if($(".tabUId").attr("id") != localStorage.getItem("lastUId") && newTab ==  false){
+                elem._updateChatStructure("exsisting");
+            }
+        } else {
+            localStorage.setItem("lastUId",$(".tabUId").attr("id"));
+        }    
+        
+        
+        $(window).focus(function() {
+            console.log("tab changed");
+            if(localStorage.getItem("lastUId")) {
+                if($(".tabUId").attr("id") != localStorage.getItem("lastUId")){
+                    elem._updateChatStructure("exsisting");
+                }
+            } else {
+                localStorage.setItem("lastUId",$(".tabUId").attr("id"));
+            }    	
+        });
         /*
         $(window).focus(function () {
             //console.log("Focus");
             //invokePluginLoginHandler("login");
-            if (elem && elem.manageChatBoxOnChange && typeof (elem.manageChatBoxOnChange) == "function") {
-                //console.log(1);
-                elem.manageChatBoxOnChange();
-            }
+        
         });
         */
     },
@@ -584,27 +578,17 @@ JsChat.prototype = {
         if (type == "remove") {
             elem.animate({
                 bottom: "-350px"
-            }, function () {
+            },0, function () {
                 $(this).remove();
-                var data = [];
-                if (localStorage.getItem("chatStateData")) {
-                    data = JSON.parse(localStorage.getItem("chatStateData"));
-                }
-                $.each(data, function (index, element) {
-                    if (element["userId"] == $(elem).attr("user-id")) {
-                        element["state"] = "remove";
-                    }
-                });
-                localStorage.setItem("chatStateData", JSON.stringify(data));
             });
         } else if (type == "retain_extra") {
             elem.animate({
                 bottom: "-1000px"
-            });
+            },0);
         } else if (type == "retain" || type == "min") {
             elem.animate({
                 bottom: "-14px"
-            }, function () {
+            },0, function () {
                 $(elem.find(".nchatic_2")[0]).hide();
                 $(elem.find(".nchatic_3")[0]).hide();
                 elem.find(".onlineStatus").hide();
@@ -616,16 +600,6 @@ JsChat.prototype = {
                 elem.find(".downBarUserName").addClass("downBarUserNameMin");
                 if (type != "min") {
                     $(elem).attr("pos-state", "close");
-                    var data = [];
-                    if (localStorage.getItem("chatStateData")) {
-                        data = JSON.parse(localStorage.getItem("chatStateData"));
-                    }
-                    $.each(data, function (index, element) {
-                        if (element["userId"] == $(elem).attr("user-id")) {
-                            element["state"] = "close";
-                        }
-                    });
-                    localStorage.setItem("chatStateData", JSON.stringify(data));
                 }
             });
         }
@@ -646,7 +620,7 @@ JsChat.prototype = {
         var curEle = this;
         elem.animate({
             bottom: btmValue
-        }, function () {
+        },0, function () {
             $(elem.find(".nchatic_2")[0]).show();
             $(elem.find(".nchatic_3")[0]).show();
             elem.find(".onlineStatus").show();
@@ -658,16 +632,6 @@ JsChat.prototype = {
             curEle._scrollToBottom($(elem).attr("user-id"));
             
             $(elem).attr("pos-state", "open");
-            var data = [];
-            if (localStorage.getItem("chatStateData")) {
-                data = JSON.parse(localStorage.getItem("chatStateData"));
-            }
-            $.each(data, function (index, element) {
-                if (element["userId"] == $(elem).attr("user-id")) {
-                    element["state"] = "open";
-                }
-            });
-            localStorage.setItem("chatStateData", JSON.stringify(data));
         });
         curEle._handleUnreadMessages(elem);
     },
@@ -698,6 +662,7 @@ JsChat.prototype = {
         $(elem).off("click").on("click", function (e) {
             e.stopPropagation();
             curElem._scrollDown($(this).closest("chat-box"), "retain");
+            curElem._changeLocalStorage("stateChange",$(this).closest("chat-box").attr("user-id"),"","min");
         });
     },
     //bind clicking maximize chat box
@@ -709,6 +674,7 @@ JsChat.prototype = {
                 $(".extraChats").css("padding-top", "0px");
             }, 100);
             curElem._scrollUp($('chat-box[user-id="' + userId + '"]'), "297px");
+            curElem._changeLocalStorage("stateChange",userId,"","open");
         });
     },
     //bind clicking close icon
@@ -728,6 +694,7 @@ JsChat.prototype = {
                     $($(".extraChatList")[len]).remove();
                 }
             }
+            curElem._changeLocalStorage("remove",$(this).closest("chat-box").attr("user-id"),"","");
         });
     },
     //onPostBlockCallback: null,
@@ -970,6 +937,7 @@ JsChat.prototype = {
                 jid = $('chat-box[user-id="' + username + '"]').attr("data-jid");
             pcheckSum = $('chat-box[user-id="' + username + '"]').attr("data-checks"),
                 groupId = $('chat-box[user-id="' + username + '"]').attr("group-id");
+                curElem._changeLocalStorage("remove",username,"","");
             curElem._appendChatBox(username, status, jid, pcheckSum, groupId);
             $(originalElem).remove();
             $("chat-box[user-id='" + username + "'] .chatMessage").html("");
@@ -999,6 +967,7 @@ JsChat.prototype = {
     },
     //binding close button on extra popup username listing
     _bindExtraPopupUserClose: function (elem) {
+        var curElem = this;
         $(elem).off("click").on("click", function () {
             var username = $(this).closest(".extraChatList").attr("id").split("_")[1];
             $('chat-box[user-id="' + username + '"]').remove();
@@ -1009,6 +978,7 @@ JsChat.prototype = {
             } else {
                 $(".extraNumber").text("+" + (value - 1));
             }
+            curElem._changeLocalStorage("remove",username,"","");
         });
     },
     //adding data in extra popup
@@ -1094,30 +1064,13 @@ JsChat.prototype = {
         //console.log("manviiiii", $('chat-box[user-id="' + userId + '"]'));
         var groupId = $('chat-box[user-id="' + userId + '"]').attr("group-id");
         var data = [];
-        if (localStorage.getItem("chatStateData")) {
-            data = JSON.parse(localStorage.getItem("chatStateData"));
-        }
         var dataPresent = false;
-        $.each(data, function (index, elem) {
-            if (elem["userId"] == userId && elem["state"] != "remove") {
-                dataPresent = true;
-            } else if (elem["userId"] == userId && elem["state"] == "remove") {
-                elem["state"] = "open";
-            }
-        });
-        if (dataPresent == false) {
-            var obj = {
-                userId: userId,
-                state: "open",
-                group: groupId
-            };
-            data.push(obj);
-        }
-        localStorage.setItem("chatStateData", JSON.stringify(data));
+        
         var curElem = this,membership = getMembershipStatus(); //get membership status
         this._chatLoggerPlugin("in _postChatPanelsBox");
        
         var chatBoxType = curElem._getChatBoxType(userId, $('chat-box[user-id="' + userId + '"]').attr("group-id"));
+        curElem._changeLocalStorage("add",userId,$('chat-box[user-id="' + userId + '"]').attr("group-id"),"open");
         //setTimeout(function() {
         curElem._setChatBoxInnerDiv(userId, chatBoxType);
         curElem._enableChatTextArea($('chat-box[user-id="' + userId + '"]').attr("data-contact"), userId, membership);
@@ -1153,6 +1106,7 @@ JsChat.prototype = {
              
             }    
         });
+        
     },
     _updateChatPanelsBox: function (userId, newGroupId) {
         var curElem = this,membership=getMembershipStatus();
@@ -1444,6 +1398,7 @@ JsChat.prototype = {
                     setTimeout(function () {
                         $(".extraChats").css("padding-top", "0px");
                     }, 100);
+                    curElem._changeLocalStorage("remove",userId,"","");
                     var username = $(this).closest(".extraChatList").attr("id").split("_")[1],
                         originalElem = $('chat-box[user-id="' + username + '"]'),
                         len = $("chat-box").length,
@@ -2054,6 +2009,125 @@ JsChat.prototype = {
             });
         }
     },
+    
+    _changeLocalStorage:function(type,userId,groupId,newState) {
+        console.log("inside function",type,userId,groupId,newState);
+        var data = [];
+        if(localStorage.getItem("chatBoxData")) {
+            data = JSON.parse(localStorage.getItem("chatBoxData"));
+        }
+        if(type == "add"){
+            var dataPresent = false;
+            $.each(data,function(index,elem){
+                if(elem["userId"] == userId) {
+                    dataPresent = true;
+                }
+            });
+            if(dataPresent == false){
+                var obj = {userId:userId,state:newState,group:groupId};
+                data.push(obj);
+            }
+        }
+        else if(type == "remove"){
+            var indexToBeRemoved;
+            $.each(data,function(index,elem){
+                if(elem["userId"] == userId) {
+                    indexToBeRemoved = index;
+                }
+            });
+            if(indexToBeRemoved != undefined) {
+                data.splice(indexToBeRemoved,1);
+            }
+        }
+        else if(type == "stateChange"){
+            $.each(data,function(index,elem){
+                if(elem["userId"] == userId) {
+                    elem["state"] = newState;
+                }
+            });
+        }
+        localStorage.setItem("chatBoxData", JSON.stringify(data));
+    },
+    
+    _updateChatStructure:function(type) {
+		console.log("inside update function",type);
+		var data = [];
+		var currentUserId = [];
+		var localId = [],pageId = [];
+		if(localStorage.getItem("chatBoxData")) {
+			data = JSON.parse(localStorage.getItem("chatBoxData"));
+		}
+		if(type == "new"){
+			setTimeout(function(){ 
+				$.each(data,function(index,elem){
+					console.log(elem["userId"],elem["group"],$("#"+elem["userId"]+"_"+elem["group"]));
+					$("#"+elem["userId"]+"_"+elem["group"]).click();
+					if(elem["state"] == "min") {
+						$('chat-box[user-id="' + elem["userId"] + '"] .nchatic_2').click(); 
+					}
+				});
+			}, 1000);
+		} else if(type == "exsisting"){
+			$("chat-box").each(function(index, element) {
+				currentUserId.push($(element).attr("user-id"));
+            });	
+			$.each(data, function(index,elem){
+				localId.push(elem["userId"]);
+				if($('chat-box[user-id="' + elem["userId"] + '"]').length == 0){
+					$("#"+elem["userId"]+"_"+elem["group"]).click();	
+				}
+				if($('chat-box[user-id="' + elem["userId"] + '"] img').hasClass("downBarPicMin") && elem["state"] == "open") {
+					$('chat-box[user-id="' + elem["userId"] + '"] .chatBoxBar').click();
+				}
+				if(!$('chat-box[user-id="' + elem["userId"] + '"] img').hasClass("downBarPicMin") && elem["state"] == "min") {
+					$('chat-box[user-id="' + elem["userId"] + '"] .nchatic_2').click();
+				}
+			});
+			
+			$.each(currentUserId, function(index1,elem1){
+				var dataPresent = false;
+				$.each(data, function(index2,elem2){
+					if(elem1 == elem2["userId"]) {
+						dataPresent = true;
+					}
+				});
+				if(dataPresent == false) {
+					if($("#extra_"+elem1).length !=0) {
+						$("#extra_"+elem1+" .nchatic_4").click();
+					}
+					else {
+						$('chat-box[user-id="' + elem1 + '"] .nchatic_1').click();
+					}
+				}	
+			});
+			$("chat-box").each(function(index, element) {
+				pageId.push($(element).attr("user-id"));
+            });	
+			localId.reverse();
+			var toClickArr = [];
+			$.each(localId, function(index1, elem1){
+				if(elem1 == pageId[0]) {
+					return false;
+				} else {
+					$.each(pageId, function(index2,elem2){
+						console.log("elem2",elem2);
+						if(elem2 == elem1) {
+							toClickArr.push(elem2);
+						}
+					}); 
+				}
+			});
+			if(toClickArr.length !=0){
+				toClickArr.reverse();
+				$.each(toClickArr, function(index,elem){
+					$("#extra_"+elem+" .extraUsername").click();
+				});
+			}
+		}
+		localStorage.setItem("lastUId",$(".tabUId").attr("id"));
+	},    
+    
+    
     /*
      * Sending typing event
      */
