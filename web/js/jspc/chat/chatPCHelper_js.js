@@ -625,7 +625,8 @@ function clearLocalStorage() {
     $.each(removeArr, function (key, val) {
         localStorage.removeItem(val);
     });
-    localStorage.removeItem("chatStateData");
+    localStorage.removeItem('chatBoxData');
+    localStorage.removeItem('lastUId');
 }
 /*hit api for chat before acceptance
  * @input: apiParams
