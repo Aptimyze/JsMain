@@ -428,7 +428,8 @@ JsChat.prototype = {
                         that._chatLoggerPlugin("groups " + val);
                         var List = '',
                             fullname = data[key]["rosterDetails"]["fullname"],
-                            tabShowStatus = $('div.' + val).attr('data-showuser');
+                            tabShowStatus = $('div.' + val).attr('data-showuser'),
+                            added;
                         var getNamelbl = fullname,
                             picurl = data[key]["rosterDetails"]["listing_tuple_photo"],
                             prfCheckSum = data[key]["rosterDetails"]["profile_checksum"],
@@ -459,14 +460,14 @@ JsChat.prototype = {
                             if ($('#' + runID + "_" + val).length == 0) {
                                 if ($('#' + runID + "_" + val).find('.nchatspr').length == 0) {
                                     that._chatLoggerPlugin("checking no of nodes in group " + $('div.' + val + ' ul li').size());
-                                    if (typeof elem._listingNodesLimit[val] == "undefined" || $('div.' + val + ' ul li').size() <= elem._listingNodesLimit[val]) {
-                                        that._chatLoggerPlugin("b2");
-                                        var tabId = $('div.' + val).parent().attr("id");
-                                        if ($("#show" + tabId + "NoResult").length != 0) {
-                                            that._chatLoggerPlugin("me");
-                                            $("#show" + tabId + "NoResult").addClass("disp-none");
-                                        }
-                                        elem._placeContact("new", runID, val, status, List);
+                                    that._chatLoggerPlugin("b2");
+                                    var tabId = $('div.' + val).parent().attr("id");
+                                    if ($("#show" + tabId + "NoResult").length != 0) {
+                                        that._chatLoggerPlugin("me");
+                                        $("#show" + tabId + "NoResult").addClass("disp-none");
+                                    }
+                                    added = elem._placeContact("new", runID, val, status, List);
+                                    if(added == true){
                                         if ($('div.' + val + ' ul').parent().hasClass("disp-none")) {
                                             $('div.' + val + ' ul').parent().removeClass("disp-none");
                                         }
@@ -478,7 +479,7 @@ JsChat.prototype = {
                                     }
                                 }
                             } else {
-                                elem._placeContact("existing", runID, val, status);
+                                added = elem._placeContact("existing", runID, val, status);
                             }
                             //elem._updateStatusInChatBox(runID, status);
                         }
@@ -532,10 +533,17 @@ JsChat.prototype = {
     },
     //place contact in appropriate position in listing
     _placeContact: function (key, contactID, groupID, status, contactHTML) {
+        var done=false,elem=this;
         if (key == "new") {
-            this._chatLoggerPlugin("ankita_adding" + contactID + " in groupID");
-            this._chatLoggerPlugin(contactHTML);
-            $('div.' + groupID + ' ul.' + status).prepend(contactHTML);
+            if (typeof elem._listingNodesLimit[groupID] == "undefined" || $('div.'+groupID+' ul li').size() < elem._listingNodesLimit[groupID]){
+                this._chatLoggerPlugin("ankita_adding" + contactID + " in groupID");
+                this._chatLoggerPlugin(contactHTML);
+                $('div.' + groupID + ' ul.' + status).prepend(contactHTML);
+                done = true;
+            }
+            else{
+                done = false;
+            }
         } else if (key == "existing") {
             this._chatLoggerPlugin("changing icon");
             if (status == "online") {
@@ -548,7 +556,9 @@ JsChat.prototype = {
             } else if (status == "offline") {
                 $('#' + contactID + "_" + groupID).prependTo('div.' + groupID + ' ul.' + status);
             }
+            done = true;
         }
+        return done;
     },
     //scrolling down chat box
     _scrollDown: function (elem, type) {
