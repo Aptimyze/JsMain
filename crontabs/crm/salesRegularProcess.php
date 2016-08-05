@@ -3,6 +3,7 @@
 * FILE NAME   	: salesRegularProcess.php 
 * DESCRIPTION 	: 
 *********************************************************************************************/
+ini_set('max_execution_time',0);
 $to     ="manoj.rana@naukri.com";
 $from   ="From:JeevansathiCrm@jeevansathi.com";
 
@@ -11,6 +12,7 @@ $db_js = mysql_connect("ser2.jeevansathi.jsb9.net","user_dialer","DIALlerr") or 
 $db_master = mysql_connect("master.js.jsb9.net","user","CLDLRTa9") or die("Unable to connect to js server at ".$start);
 $db_js_111 = mysql_connect("localhost:/tmp/mysql_06.sock","user_sel","CLDLRTa9") or die("Unable to connect to local server");
 $db_dialer = mssql_connect("dialer.infoedge.com","online","jeev@nsathi@123") or die("Unable to connect to dialer server");
+mysql_query("set session wait_timeout=600",$db_master);
 
 include("DialerHandler.class.php");
 $dialerHandlerObj =new DialerHandler($db_js, $db_js_111, $db_dialer,$db_master);
