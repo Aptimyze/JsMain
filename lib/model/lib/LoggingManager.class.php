@@ -54,10 +54,10 @@ class LoggingManager
       $this->iUniqueID = uniqid();
     }
 
-    /*
-        A function to retrieve uniqueId of the instance of LoggingManager
-
-    */
+    /**
+     * A function to retrieve uniqueId of the instance of LoggingManager
+     * @return iUniqueID
+     */
     public function getUniqueId()
     {   
         return($this->iUniqueID);
@@ -83,6 +83,7 @@ class LoggingManager
 
     /**
      * Get Instance
+     * @param $basepath 
      * @return Object of ProfileCacheLib
      */
     public static function getInstance($basePath = null)
@@ -130,7 +131,10 @@ class LoggingManager
     }
 
     /**
-     * @param $exception
+     * Write Exception logs to the file.
+     * @param Exception $exception The exception raised by code 
+     * @param boolean $isSymfony Whether code is called from symfony code or non-symfony code
+     * @param associative array $logArray 
      */
     private function logException($exception,$isSymfony,$logArray)
     {
@@ -140,6 +144,12 @@ class LoggingManager
       $this->writeToFile($logData);
     }
 
+    /**
+     * @return logdata.
+     * @param Exception $exception The exception raised by code 
+     * @param boolean $isSymfony Whether code is called from symfony code or non-symfony code
+     * @param associative array $logArray 
+     */
     private function getLogData($exception,$isSymfony,$logArray)
     {
       $time = date('h:i:s a');
@@ -150,7 +160,7 @@ class LoggingManager
       $moduleName = $this->szLogPath;
       $actionName = $this->getLogActionName($isSymfony,$exception,$logArray);
       $apiVersion = $this->getLogAPI($logArray);
-      $message = $this->getLogMessage($logArray);
+      $message = $this->getLogMessage($exception,$logArray);
       $uniqueSubId = $this->getLogUniqueSubId($logArray);
       $statusCode = $this->getLogStatusCode($exception,$logArray);
       $typeOfError = $this->getLogTypeOfError($exception,$logArray);
@@ -175,27 +185,30 @@ class LoggingManager
 
     /**
      * @return logId
+     * @param associative array logArray
      */
-    public function getLogUniqueSubId($logArray)
+    private function getLogUniqueSubId($logArray)
     {
-      if ( !isset($logArray['uniqueSubId']))
+      if ( !isset($logArray[LoggingEnums::UNIQUE_REQUEST_SUB_ID]))
       { 
         $uniqueSubId = sfContext::getInstance()->getRequest()->getAttribute('UNIQUE_REQUEST_SUB_ID');
         
       }
       else
       { 
-        $uniqueSubId = $logArray['uniqueSubId'];
+        $uniqueSubId = $logArray[LoggingEnums::UNIQUE_REQUEST_SUB_ID];
       }
       return $uniqueSubId;
     }
 
     /**
      * @return status code
+     * @param Exception $exception The exception raised by code 
+     * @param associative array $logArray 
      */
-    public function getLogStatusCode($exception,$logArray)
+    private function getLogStatusCode($exception,$logArray)
     {
-      if ( !isset($logArray['statusCode']))
+      if ( !isset($logArray[LoggingEnums::STATUS_CODE]))
       {
         $statusCode = "";
         if ( $exception instanceof Exception)
@@ -205,44 +218,48 @@ class LoggingManager
       }
       else
       {
-        $statusCode = $logArray['statusCode'];
+        $statusCode = $logArray[LoggingEnums::STATUS_CODE];
       }
       return $statusCode;
     }
 
     /**
      * @return UniqueSubId
+     * @param associative array $logArray 
      */
-    public function getLogId($logArray)
+    private function getLogId($logArray)
     {
       $logId = $this->iUniqueID;
-      if ( isset($logArray['logId']))
+      if ( isset($logArray[LoggingEnums::LOG_ID]))
       {
-        $logId = $logArray['logId'];
+        $logId = $logArray[LoggingEnums::LOG_ID];
       }
       return $logId;
     }
 
     /**
+     * @param associative array $logArray 
      * @return apiVersion
      */
-    public function getLogAPI($logArray)
+    private function getLogAPI($logArray)
     {
-      if ( !isset($logArray['apiVersion']))
+      if ( !isset($logArray[LoggingEnums::API_VERSION]))
       {
         $apiVersion =  sfContext::getInstance()->getRequest()->getParameter("version");
       }
       else
       {
-        $apiVersion = $logArray['apiVersion'];
+        $apiVersion = $logArray[LoggingEnums::API_VERSION];
       }
       return $apiVersion;
     }
 
     /**
+     * @param Exception $exception The exception raised by code 
+     * @param associative array $logArray 
      * @return typeOfError
      */
-    public function getLogTypeOfError($exception,$logArray)
+    private function getLogTypeOfError($exception,$logArray)
     {
       if ( !isset($logArray['typeOfError']))
       {
@@ -259,7 +276,7 @@ class LoggingManager
       }
       else
       {
-        $typeOfError = $logArray['typeOfError'];
+        $typeOfError = $logArray[LoggingEnums::TYPE_OF_ERROR];
       }
       return $typeOfError;
     }
@@ -267,17 +284,22 @@ class LoggingManager
 
     /**
      * @return message
+     * @param associative array $logArray 
      */
-    public function getLogMessage($logArray)
+    private function getLogMessage($exception,$logArray)
     {
       $message = "";
       if ( $exception instanceof Exception)
       {
         $message = $exception->getMessage();
       }
-      if ( isset($logArray['message']))
+      else
       {
-        $message = $message." ".$logArray['message'];
+        $message = $exception; 
+      }
+      if ( isset($logArray[LoggingEnums::MESSAGE]))
+      {
+        $message = $message." ".$logArray[LoggingEnums::MESSAGE];
       }
       return $message;
     }
@@ -285,7 +307,7 @@ class LoggingManager
     /**
      * @return channel name
      */
-    public function getLogChannelName()
+    private function getLogChannelName()
     {
       return MobileCommon::getFullChannelName();
     }
@@ -293,7 +315,7 @@ class LoggingManager
     /**
      * @return ip
      */
-    public function getLogClientIP()
+    private function getLogClientIP()
     {
       return FetchClientIP();
     }
@@ -301,13 +323,13 @@ class LoggingManager
 
     /**
      * @return module name
-     * @param isSymfony for exception raised from either symfony or non-symfony
-     * @param $exception 
-     * @param $logArray the array which consists info related to log 
+     * @param Exception $exception The exception raised by code 
+     * @param boolean $isSymfony Whether code is called from symfony code or non-symfony code
+     * @param associative array $logArray
      */
-    public function getLogModuleName($isSymfony = true,$exception = null,$logArray = array())
+    private function getLogModuleName($isSymfony = true,$exception = null,$logArray = array())
     {
-      if ( !isset($logArray['moduleName']))
+      if ( !isset($logArray[LoggingEnums::MODULE_NAME]))
       {
         if ( $isSymfony )
         {
@@ -326,19 +348,20 @@ class LoggingManager
       }
       else
       {
-        $moduleName = $logArray['moduleName'];
+        $moduleName = $logArray[LoggingEnums::MODULE_NAME];
       }
       return $moduleName;
     }
 
     /**
      * @return action name
-     * @param isSymfony for exception raised from either symfony or non-symfony
-     * @param $exception 
+     * @param Exception $exception The exception raised by code 
+     * @param boolean $isSymfony Whether code is called from symfony code or non-symfony code
+     * @param associative array $logArray 
      */
-    public function getLogActionName($isSymfony = true,$exception = null,$logArray = array())
+    private function getLogActionName($isSymfony = true,$exception = null,$logArray = array())
     {
-      if ( !isset($logArray['actionName']))
+      if ( !isset($logArray[LoggingEnums::ACTION_NAME]))
       {
         if ( $isSymfony )
         {
@@ -357,13 +380,15 @@ class LoggingManager
       }
       else
       {
-        $actionName = $logArray['actionName'];
+        $actionName = $logArray[LoggingEnums::ACTION_NAME];
       }
       return $actionName;
     }
 
     /**
-     * @param $message
+     * @param String $message The message passed into $message variable 
+     * @param boolean $isSymfony Whether code is called from symfony code or non-symfony code
+     * @param associative array $logArray
      */
     private function logInfo($message,$isSymfony=true,$logArray = array())
     {
@@ -372,8 +397,11 @@ class LoggingManager
       $this->writeToFile($logData);
     }
 
- /**
+    /**
      * @param $message
+     * @param String $message The message passed into $message variable 
+     * @param boolean $isSymfony Whether code is called from symfony code or non-symfony code
+     * @param associative array $logArray
      */
     private function logDebug($message,$isSymfony=true,$logArray = array())
     {
