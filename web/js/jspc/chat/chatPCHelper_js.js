@@ -225,11 +225,11 @@ function getSelfName(){
 function getMembershipStatus(){
     var membership = localStorage.getItem("self_subcription");
     //confirm check
-    if(membership && (membership.search("F")!= -1 || membership.search("D")!= -1)){
-        return "paid";
+    if(membership && membership!= "Free"){
+        return "Paid";
     }
     else{
-        return "free";
+        return "Free";
     }
 }
 

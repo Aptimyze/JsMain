@@ -1313,14 +1313,14 @@ JsChat.prototype = {
     _enableChatTextArea: function (chatBoxType, userId, membership) {
         var curElem = this;
         //check for membership status of logged in user
-        if (membership == "paid") {
+        if (membership == "Paid") {
             if (curElem._contactStatusMapping[chatBoxType]["enableChat"] == true) {
                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
             }
             else {
                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
             }
-        } else if (membership == "free") {
+        } else if (membership == "Free") {
             var checkForPaidInitiation = curElem._contactStatusMapping[chatBoxType]["checkForPaidInitiation"];
             if(checkForPaidInitiation == true){
                 var hasPaidIntiated = $('chat-box[user-id="' + userId + '"]').attr("data-paidInitiated");
