@@ -1313,14 +1313,14 @@ JsChat.prototype = {
     _enableChatTextArea: function (chatBoxType, userId, membership) {
         var curElem = this;
         //check for membership status of logged in user
-        if (membership == "paid") {
+        if (membership == "Paid") {
             if (curElem._contactStatusMapping[chatBoxType]["enableChat"] == true) {
                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
             }
             else {
                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
             }
-        } else if (membership == "free") {
+        } else if (membership == "Free") {
             var checkForPaidInitiation = curElem._contactStatusMapping[chatBoxType]["checkForPaidInitiation"];
             if(checkForPaidInitiation == true){
                 var hasPaidIntiated = $('chat-box[user-id="' + userId + '"]').attr("data-paidInitiated");
@@ -1478,7 +1478,7 @@ JsChat.prototype = {
         $('chat-box[user-id="' + userId + '"] #txtArea').on("keyup", function () {
             curElem._textAreaAdjust(this);
         });
-        $('chat-box[user-id="' + userId + '"] #pic_' + userId).addClass("downBarPic cursp");
+        $('chat-box[user-id="' + userId + '"] #pic_' + userId).addClass("downBarPic");
         $('chat-box[user-id="' + userId + '"] .chatBoxBar').append('<div class="downBarText fullhgt"><div class="downBarUserName disp_ib pos-rel f14 colrw wid44p fontlig">' + $(".chatlist li[id='" + userId + "_" + groupId + "'] div").html() + '<div class="onlineStatus f11 opa50 mt4"></div></div><div class="iconBar cursp fr padallf_2 disp_ib"><i class="nchatspr nchatic_3"><div class="pos-abs fullBlockTitle disp-none tneg20 bg-white f13 brderinp pad510">Block</div></i><i class="nchatspr nchatic_2 ml10 mr10"><div class="pos-abs fullMinTitle disp-none tneg20_2 bg-white f13 brderinp pad510">Minimize</div></i><i class="nchatspr nchatic_1 mr10"><div class="pos-abs fullCloseTitle disp-none tneg20_3 bg-white f13 brderinp pad510">Close</div></i></div><div class="pinkBubble2 fr vertM scir disp_ib padall-10 m11"><span class="noOfMessg f13 pos-abs">0</span></div></div>');
         curElem._bindInnerHtml(userId, status);
     },
