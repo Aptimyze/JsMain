@@ -1510,7 +1510,7 @@ JsChat.prototype = {
         
         $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
             scrollTop: divLen
-        }, 500);
+        }, 1000);
     },
     //append chat history in chat box
     _appendChatHistory: function (selfJID, otherJID, communication,requestType) {
