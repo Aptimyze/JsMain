@@ -71,7 +71,10 @@ class CommunicationHistory
 				$previousStatus                            = $value['TYPE'];
 				$message_log[$value['DATE']]["type"]  = $type . $side;
 				$message_log[$value['DATE']]["who"]     = $who;
-				$message_log[$value['DATE']]["message"] = $value['MESSAGE'];
+				if($value['MESSAGE'])
+					$message_log[$value['DATE']]["message"] = $value['MESSAGE'];
+				else
+					$message_log[$value['DATE']]["message"] = " "; //inserting space to prevent null exception in various channels
 			} //$messagelog as $key => $value
 			
 		$senderDetails["INCOMPLETE"] = $this->loginProfile->getINCOMPLETE();
@@ -249,7 +252,7 @@ class CommunicationHistory
 					break;
 				case "CR":
 					$result[$count]["header"] = $value["who"]." cancelled $hisher interest";
-					$result[$count]["message"] = $value["who"]." cancelled $hisher interest";
+					$result[$count]["message"] =$value["message"];// $value["who"]." cancelled $hisher interest";
 					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
 					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
 					$result[$count]["button"] = null;
@@ -257,7 +260,7 @@ class CommunicationHistory
 					break;
                                 case "ER":
                                         $result[$count]["header"] = $value["who"]." cancelled $hisher interest";
-                                        $result[$count]["message"] = $value["who"]." cancelled $hisher interest";
+                                        $result[$count]["message"] = $value["message"];//$value["who"]." cancelled $hisher interest";
                                         $result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
                                         $result[$count]["ismine"] = $value["who"]=="You"?true:false;
                                         $result[$count]["button"] = null;
@@ -328,7 +331,7 @@ class CommunicationHistory
 					break;
 				case "CS":
 					$result[$count]["header"] = $value["who"]." cancelled interest";
-					$result[$count]["message"] = $value["who"]." cancelled interest";
+					$result[$count]["message"] = $value["message"];//$value["who"]." cancelled interest";
 					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
 					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
 					$result[$count]["button"] = null;
@@ -336,7 +339,7 @@ class CommunicationHistory
 					break;
                                 case "ES":
                                         $result[$count]["header"] = $value["who"]." cancelled interest";
-                                        $result[$count]["message"] = $value["who"]." cancelled interest";
+                                        $result[$count]["message"] =$value["message"];// $value["who"]." cancelled interest";
                                         $result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
                                         $result[$count]["ismine"] = $value["who"]=="You"?true:false;
                                         $result[$count]["button"] = null;
