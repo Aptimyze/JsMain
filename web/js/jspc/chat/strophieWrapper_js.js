@@ -137,17 +137,17 @@ var strophieWrapper = {
         //binding event for new node push in roster
         strophieWrapper.connectionObj.addHandler(strophieWrapper.onRosterUpdate, Strophe.NS.ROSTER, 'iq', 'set');
         //binding event for message receipts
-        strophieWrapper.connectionObj.addHandler(strophieWrapper.onMessageReceipt, Strophe.NS.RECEIPTS, 'iq', 'set');
+        //strophieWrapper.connectionObj.addHandler(strophieWrapper.onMessageReceipt, Strophe.NS.RECEIPTS, 'iq', 'set');
     },
     /*
      * On message receipt
      */
-    onMessageReceipt: function (msg) {
+    /*onMessageReceipt: function (msg) {
     	console.log("on message request");
     	console.log(msg);
         //strophieWrapper.stropheLoggerPC("In message receipt handler");
         strophieWrapper.stropheLoggerPC(msg);
-    },
+    },*/
     //send presence
     sendPresence: function () {
         if (strophieWrapper.getCurrentConnStatus()) {
@@ -510,16 +510,16 @@ var strophieWrapper = {
         var outputObj,messageId;
         try {
             if (message && to && strophieWrapper.getCurrentConnStatus()) {
-            	//messageId = strophieWrapper.connectionObj.getUniqueId();
+            	messageId = strophieWrapper.connectionObj.getUniqueId();
                 var reply = $msg({
                     from: strophieWrapper.getSelfJID(),
                     to: to,
                     type: 'chat',
-                    //id:messageId
+                    id:messageId
                 }).cnode(Strophe.xmlElement('body', message)).up().c('active', {
                     xmlns: "http://jabber.org/protocol/chatstates"
                 });
-                messageId = strophieWrapper.connectionObj.receipts.sendMessage(reply);
+                strophieWrapper.connectionObj.send(reply);
                 if (strophieWrapper.syncMessageForSessions == true) {
                     // Forward the message, so that other connected resources are also aware of it.
                     //append it as self sent message
@@ -606,7 +606,7 @@ var strophieWrapper = {
         if (typeof msg_state != "undefined") {
             outputObj["msg_state"] = msg_state;
         }
-        var received = msg.getElementsByTagName(strophieWrapper.msgStates["RECEIVED"]);
+        //var received = msg.getElementsByTagName(strophieWrapper.msgStates["RECEIVED"]);
         if (msg_state == strophieWrapper.msgStates["FORWARDED"]) {
             var forwardObj = msg.getElementsByTagName(strophieWrapper.msgStates["FORWARDED"]);
             //console.log("in from");
@@ -623,12 +623,12 @@ var strophieWrapper = {
             ////strophieWrapper.stropheLoggerPC(body);
             if (typeof body != "undefined" && body.length > 0) outputObj["body"] = Strophe.getText(body[0]);
             else outputObj["body"] = null;
-        } else if (msg_state == strophieWrapper.msgStates["RECEIVED"]) {
+        } /*else if (msg_state == strophieWrapper.msgStates["RECEIVED"]) {
             var rec = received[0];
             if (typeof rec != "undefined") {
                 outputObj["receivedId"] = rec.getAttribute('id');
             }
-        }
+        }*/
         console.log(outputObj);
         return outputObj;
     },
@@ -641,7 +641,7 @@ var strophieWrapper = {
     /* addMessageHandler
      ** add a message handler that handles XEP-0184 message receipts
      */
-    addReceiptHandler: function (handler, type, from, options) {
+    /*addReceiptHandler: function (handler, type, from, options) {
         var that = this;
         var proxyHandler = function (msg) {
         	console.log("RECEIVED receipt");
@@ -651,7 +651,7 @@ var strophieWrapper = {
             return handler(msg);
         };
         this._conn.addHandler(proxyHandler, Strophe.NS.RECEIPTS, 'message', type, null, from, options);
-    },
+    },*/
     /*
      * sending typing event
      */

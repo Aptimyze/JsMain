@@ -874,7 +874,7 @@ JsChat.prototype = {
                     }
                     var height = $($(superParent).find(".talkText")[$(superParent).find(".talkText").length - 1]).height();
                     $($(superParent).find(".talkText")[$(superParent).find(".talkText").length - 1]).next().css("margin-top", height);
-                    _this._scrollToBottom(userId, height);
+                    _this._scrollToBottom(userId,100);
                     //fire send chat query and return unique id
                     setTimeout(function () {
                         out = 1;
@@ -1101,21 +1101,23 @@ JsChat.prototype = {
                 //fetch more history
                 var showMoreHistory = $("#moreHistory_"+userId).val(),latestMsgId = $("#moreHistory_"+userId).attr("data-latestMsgId");
                 if(showMoreHistory == "1" && latestMsgId){
-                    //console.log("yess on top",height);
-                    console.log("loading more history");
+                    //console.log("yess on top",height);                   
                     clearTimeout(clearTimedOut);
                     var to_checksum = $("chat-box[user-id='" + userId + "'").attr("data-checks");
                     clearTimedOut = setTimeout(function(){
-                        manageHistoryLoader(userId+"@"+openfireServerName,"show");
-                        getChatHistory({
-                            "extraParams": {
-                                "from": getConnectedUserJID(),
-                                "to": userId+"@"+openfireServerName,
-                                "to_checksum": to_checksum,
-                                "from_checksum": self_checksum,
-                                "messageId":latestMsgId
-                            }
-                        }); 
+                        if($("#moreHistory_"+userId).val() == "1"){
+                            console.log("loading more history");
+                            manageHistoryLoader(userId+"@"+openfireServerName,"show");
+                            getChatHistory({
+                                "extraParams": {
+                                    "from": getConnectedUserJID(),
+                                    "to": userId+"@"+openfireServerName,
+                                    "to_checksum": to_checksum,
+                                    "from_checksum": self_checksum,
+                                    "messageId":latestMsgId
+                                }
+                            }); 
+                        }
                     },500); 
                     
                 }
@@ -1239,6 +1241,7 @@ JsChat.prototype = {
                                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
                                 $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
                                 $('chat-box[user-id="' + userId + '"]').attr("group-id", chatConfig.Params.categoryNames["Acceptance"]);
+                                curElem._enableChatTextArea(new_contact_state, userId, getMembershipStatus());
                             }
                         } else {
                             $(this).html(response.actiondetails.errmsglabel);
@@ -1311,18 +1314,48 @@ JsChat.prototype = {
         var curElem = this;
         //check for membership status of logged in user
         if (membership == "paid") {
-            if (curElem._contactStatusMapping[chatBoxType]["enableChat"] == true) $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-            else $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+            if (curElem._contactStatusMapping[chatBoxType]["enableChat"] == true) {
+                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+            }
+            else {
+                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+            }
         } else if (membership == "free") {
-            var hasPaidIntiated = $('chat-box[user-id="' + userId + '"]').attr("data-paidInitiated");
-            console.log("hasPaidIntiated"+hasPaidIntiated);
-            if(hasPaidIntiated == "false"){
-                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="chat_freeMemMsg_'+userId+'" class="pos-abs fullwid txtc colorGrey mt120">Only paid members can start chat<div  class="becomePaidMember_chat color5 cursp"><a href="/membership/jspc" class = "cursp js-colorParent">Become a Paid Member</a></div></div>');
+            var checkForPaidInitiation = curElem._contactStatusMapping[chatBoxType]["checkForPaidInitiation"];
+            if(checkForPaidInitiation == true){
+                var hasPaidIntiated = $('chat-box[user-id="' + userId + '"]').attr("data-paidInitiated");
+                console.log("hasPaidIntiated"+hasPaidIntiated);
+                if(hasPaidIntiated == "false"){
+                    curElem._manageFreeMemCase("show",userId,chatBoxType);
+                }
+                else if(hasPaidIntiated == "true"){
+                    curElem._manageFreeMemCase("hide",userId,chatBoxType); 
+                }
+            }
+            else{
+                curElem._manageFreeMemCase("hide",userId,chatBoxType);
+            }
+        }  
+    },
+
+    //show/hide free mem msg
+    _manageFreeMemCase:function(type,userId,chatBoxType){
+        if(type == "hide"){
+            if($('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).length != 0){
+                    $('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).remove();
+                    $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                }
+        }
+        else if(type == "show"){
+            if($('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).length == 0){
+                if(chatBoxType != "pg_acceptance_pending"){
+                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="chat_freeMemMsg_'+userId+'" class="pos-abs fullwid txtc colorGrey mt120">Only paid members can start chat<div  class="becomePaidMember_chat color5 cursp"><a href="/membership/jspc" class = "cursp js-colorParent">Become a Paid Member</a></div></div>');
+                }
                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
             }
         }
-        //TODO: fire query to get message history as well as offline messages  
     },
+
     //update status in chat box top
     _updateStatusInChatBox: function (userId, chat_status) {
         //this._chatLoggerPlugin("_updateStatusInChatBox for "+userId+"-"+chat_status+"--"+$('chat-box[user-id="' + userId + '"]').length);
@@ -1488,8 +1521,7 @@ JsChat.prototype = {
             latestMsgId="",
             removeFreeMemMsg=false;
         var curElem = this;
-        if ($('chat-box[user-id="' + other_id + '"]').length != 0) {
-            
+        if ($('chat-box[user-id="' + other_id + '"]').length != 0) {      
             $.each(communication, function (key, logObj) {
                 latestMsgId = logObj["ID"];
                 //console.log(logObj);
@@ -1498,13 +1530,11 @@ JsChat.prototype = {
                     $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText" data-msgid='+logObj["FOLDERID"]+'>' + logObj["MESSAGE"] + '</div><i class="nchatspr nchatic_9 fr vertM"></i></div>');
 
                 } else if (parseInt(logObj["SENDER"]) == other_id) {
-                    console.log("done"+requestType+removeFreeMemMsg);
-                    if(requestType == "first_history" && removeFreeMemMsg == false){
-                        console.log("remove free msg");
+                    //console.log("done"+requestType+removeFreeMemMsg);
+                    if(removeFreeMemMsg == false){
+                        //console.log("remove free msg");
                         removeFreeMemMsg = true;
-                        $('chat-box[user-id="' + other_id + '"]').attr("data-paidInitiated","true");
-                        $('chat-box[user-id="' + other_id + '"] #chat_freeMemMsg_'+other_id).remove();
-                        $('chat-box[user-id="' + other_id + '"] textarea').prop("disabled", false);
+                        curElem._enableChatAfterPaidInitiates(other_id);
                     }
                     //append received message
                     $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText received_read" data-msgid=' + logObj["FOLDERID"] + '>' + logObj["MESSAGE"] + '</div></div>');
@@ -1547,6 +1577,16 @@ JsChat.prototype = {
             }
         }
     },
+    
+    //enable chat for free member if paid initiates
+    _enableChatAfterPaidInitiates: function(userId){
+        $('chat-box[user-id="' + userId + '"]').attr("data-paidInitiated","true");
+        if($('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).length != 0){
+            $('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).remove();
+            $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+        }
+    },
+
     //add meesage recieved from another user
     _appendRecievedMessage: function (message, userId, uniqueId) {
         var curEle = this,
@@ -1558,11 +1598,7 @@ JsChat.prototype = {
             if ($('chat-box[user-id="' + userId + '"]').length == 0) {
                 $(".profileIcon[id^='" + userId + "']")[0].click();
             }
-            if($('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).length != 0){
-                $('chat-box[user-id="' + userId + '"]').attr("data-paidInitiated","true");
-                $('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).remove();
-                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-            }
+            curEle._enableChatAfterPaidInitiates(userId);
 
             //adding message in chat area
             $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText received" data-msgid=' + uniqueId + '>' + message + '</div></div>');

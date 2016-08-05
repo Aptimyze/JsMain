@@ -139,7 +139,9 @@ function getChatHistory(apiParams,key) {
                         if(setLocalStorage == true){
                             localStorage.setItem("chatHistory_"+bare_from_jid+"_"+bare_to_jid,response["Message"]);
                         }
+                          console.log("setting pagination-"+response["pagination"]);
                         if(response["pagination"] == 0){
+
                             //console.log("no more history");
                             $("#moreHistory_"+bare_to_jid.split("@")[0]).val("0");
                         }
@@ -151,6 +153,7 @@ function getChatHistory(apiParams,key) {
                         objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], $.parseJSON(response["Message"]),key);
                     }
                     else{
+                        $("#moreHistory_"+bare_to_jid.split("@")[0]).val("0");
                         manageHistoryLoader(bare_to_jid,"hide");
                     }
                 }
@@ -618,7 +621,7 @@ function getProfileImage() {
  * Clear local storage
  */
 function clearLocalStorage() {
-    var removeArr = ['userImg'];
+    var removeArr = ['userImg','self_subcription'];
     $.each(removeArr, function (key, val) {
         localStorage.removeItem(val);
     });
@@ -1087,5 +1090,5 @@ $(document).ready(function () {
         }
         objJsChat.start();
     }
-    
+
 });
