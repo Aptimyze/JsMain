@@ -1529,10 +1529,14 @@ JsChat.prototype = {
         $('chat-box[user-id="' + userId + '"] .rightBubble').each(function (index, element) {
             divLen += $(this).height();
         });
+        console.log("first-"+divLen);
+        var s=0;
         $('chat-box[user-id="' + userId + '"] .leftBubble').each(function (index, element) {
             divLen += $(this).height();
+            s+=$(this).height();
         });
-        
+        console.log("second-"+s);
+        console.log("total-"+divLen);
         $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
             scrollTop: divLen
         }, 1000);
@@ -1566,7 +1570,7 @@ JsChat.prototype = {
                 }
             });
             if(requestType == "first_history"){
-                curElem._scrollToBottom(other_id,100);
+                curElem._scrollToBottom(other_id);
             }
             if(latestMsgId != ""){
                 console.log("setting");
