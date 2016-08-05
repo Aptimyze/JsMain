@@ -444,6 +444,8 @@
 				}
 				if(field.storeKey=="native_state" && screenName=="s9" && !preFilledData['native_state'])
 				{
+                                        if(preFilledData["native_country"]=="0")
+                                                preFilledData["native_country"]='';
                                         field.userDecision = preFilledData["native_country"];
 					val = factory.getLabel("native_country_jsms",field.userDecision);
 					if(val)
