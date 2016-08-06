@@ -4,7 +4,7 @@
 class MessageQueues
 {
   CONST CONSUMERCOUNT = 4;  //Number of instances of Consumer class run at a time.
-  CONST NOTIFICATIONCONSUMERCOUNT = 2;  //Number of instances of JsNotificationsConsume class run at a time.
+  CONST NOTIFICATIONCONSUMERCOUNT = 5;  //Number of instances of JsNotificationsConsume class run at a time.
   CONST MAILQUEUE = "MailQueue";  //Queue for storing mails
   CONST SMSQUEUE = "SmsGcmQueue"; //Queue for storing sms
   CONST CONTACTCACHEINITIATE = "ContactCacheInitiate"; //Queue for sending data to webservice to create cache
@@ -59,11 +59,11 @@ class MessageQueues
       "SCHEDULED_NOTIFICATION_QUEUE5" => "JS_NOTIFICATION5",
       "SCHEDULED_NOTIFICATION_QUEUE6" => "JS_NOTIFICATION6"	
   ); //queue name to exchange binding key mapping
-  public static $scheduledNotificationDelayMappingArr =  array("SCHEDULED_NOTIFICATION_QUEUE1" => 8.5,
+  public static $scheduledNotificationDelayMappingArr =  array("SCHEDULED_NOTIFICATION_QUEUE1" => 8,
       "SCHEDULED_NOTIFICATION_QUEUE2" => 8,
-      "SCHEDULED_NOTIFICATION_QUEUE3" => 3,
-      "SCHEDULED_NOTIFICATION_QUEUE4" => 2,
-      "SCHEDULED_NOTIFICATION_QUEUE5" => 11,
+      "SCHEDULED_NOTIFICATION_QUEUE3" => 2,
+      "SCHEDULED_NOTIFICATION_QUEUE4" => 0.5,
+      "SCHEDULED_NOTIFICATION_QUEUE5" => 10,
       "SCHEDULED_NOTIFICATION_QUEUE6" => 1
   );  //queue name to delay time(unit) mapping(configurable after queue deletion using x-expire field in queue declaration)
   public static $notificationDelayMultiplier = 3600; //1 hr multiple delay
