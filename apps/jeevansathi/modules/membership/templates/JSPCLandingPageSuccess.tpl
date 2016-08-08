@@ -848,7 +848,7 @@
             var str = $(this).text();
             if(str.indexOf('FREE') >= 0){
                 str = str.toString();
-                str = str.replace("FREE","<p class='f13 colr5'>Free</p>");
+                str = str.replace("FREE","<p class='f13 colr5'>FREE</p>");
                 $(this).html(str);
             }
         });

@@ -47,7 +47,6 @@ function changeTabContent(param1, param2, timeout) {
         d = $(selectedMem).attr('mainMemDur');
     c = $(selectedMem).attr('mainMemContact');
     managePriceStrike(m, d);
-    changeMemCookie(m, d, c);
 }
 
 function createCookie(name, value, days) {
@@ -407,7 +406,7 @@ function managePriceStrike(m, d) {
     if ($("#main_" + m).hasClass("active")) {
         if (profileid) {
             $(".list-main_" + m + " #finalMemTab_" + m).html($($("#main_" + m + " span")[1]).html() + ' - ');
-            $(".list-main_" + m + " #finalMemDuration_" + m).html($("#" + m + d + "_duration").html() + ' for ');
+            $(".list-main_" + m + " #finalMemDuration_" + m).html($("#" + m + d + "_duration").text() + ' for ');
             $(".list-main_" + m + " #finalMemPrice_" + m).html($("#" + m + d + "_price").html());
         } else {
             $(".list-main_" + m + " #finalMemTab_" + m).html($($("#main_" + m + " span")[1]).html() + ' starts @ ');
