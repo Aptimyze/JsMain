@@ -46,15 +46,9 @@ class incentive_NEGATIVE_PROFILE_LIST extends TABLE
         public function checkEmailOrPhone($type,$value){
                 try
                 {
-                        if($type == 'MOBILE')
-                            $sql = "SELECT ID from incentive.NEGATIVE_PROFILE_LIST WHERE $type LIKE :value";
-                        else
                             $sql = "SELECT ID from incentive.NEGATIVE_PROFILE_LIST WHERE $type =:value";
                         $prep = $this->db->prepare($sql);
-                        if($type == 'MOBILE')
-                            $prep->bindValue(":value",'%'.$value.'%',PDO::PARAM_STR);
-                        else
-                            $prep->bindValue(":value",$value,PDO::PARAM_STR);
+                        $prep->bindValue(":value",$value,PDO::PARAM_STR);
                         $prep->execute();
                         if($prep->fetch(PDO::FETCH_ASSOC))
                           return true;
