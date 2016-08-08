@@ -31,6 +31,7 @@
        },
        complete: function(data,textStatus, xhr){
         if ( $.isFunction(objConfig.complete) ) {
+
           objConfig.complete(data, objConfig);
         }
       },
@@ -39,7 +40,7 @@
        /** add common code **/
        
        if(data.responseStatusCode == 9)
-       { 
+       {
         var url = "";
         url = window.location.href;
         //console.log("/static/logoutPage?redirectUri="+url);

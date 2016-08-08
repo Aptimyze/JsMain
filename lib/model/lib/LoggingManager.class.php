@@ -168,11 +168,12 @@ class LoggingManager
       
       $logData = $logData." [".$logId.":".$clientIp."]";
       $logData = $logData." [".$time."]";
+      if($uniqueSubId != "")
       $logData = $logData." [".$uniqueSubId."]";
       $logData = $logData." ".$channelName;
+      $logData = $logData." ".$apiVersion;
       $logData = $logData." ".$moduleName;
       $logData = $logData." ".$actionName;
-      $logData = $logData." ".$apiVersion;
       $logData = $logData." ".$typeOfError;
       $logData = $logData." ".$statusCode;
       $logData = $logData." ".$message;
@@ -191,7 +192,7 @@ class LoggingManager
     {
       if ( !isset($logArray[LoggingEnums::UNIQUE_REQUEST_SUB_ID]))
       { 
-        $uniqueSubId = sfContext::getInstance()->getRequest()->getAttribute('UNIQUE_REQUEST_SUB_ID');
+        $uniqueSubId = sfContext::getInstance()->getRequest()->getAttribute('AJAX_REQUEST_SUB_ID');
         
       }
       else
@@ -504,8 +505,9 @@ class LoggingManager
      */
 
     public function setUniqueId($uniqueID)
-    {
+    {   //die(X);
         $this->iUniqueID = $uniqueID;
+        
     }
 
     /**

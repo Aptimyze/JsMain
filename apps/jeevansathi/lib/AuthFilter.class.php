@@ -289,26 +289,27 @@ class AuthFilter extends sfFilter {
 					}
 				}
             
-            //echo ($obj->getUniqueId());
-				$Previo = 0;
+            
+
+               		//$request->setAttribute('UNIQUE_REQUEST_SUB_ID',uniqid());
 
             
                $headers = getallheaders();
-               $request->setAttribute('UNIQUE_REQUEST_SUB_ID',uniqid());
+            
 	            
 	            if (false === isset($headers['RID_AJAX'])) {
-
 	            	$out = LoggingManager::getInstance()->getUniqueId();
 	            	$request->setAttribute('REQUEST_ID_FOR_TRACKING',$out); 
-	            	
 
 	            }
 	            else
-	            {  
+	            {   
 	            	LoggingManager::getInstance()->setUniqueId($headers['RID_AJAX']);
 	            	$request->setAttribute('REQUEST_ID_FOR_TRACKING',$headers['RID_AJAX']);
+	            	$request->setAttribute('AJAX_REQUEST_SUB_ID',uniqid());
+	            
 	            }
-	            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "CHECKING AJAX CALLS FOR HOMEPAGE");
+	            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "In Auth");
 	            
 	            
 
