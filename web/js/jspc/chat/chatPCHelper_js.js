@@ -621,7 +621,7 @@ function getProfileImage() {
  * Clear local storage
  */
 function clearLocalStorage() {
-    var removeArr = ['userImg','self_subcription'];
+    var removeArr = ['userImg'];
     $.each(removeArr, function (key, val) {
         localStorage.removeItem(val);
     });
