@@ -1683,6 +1683,7 @@ SQL;
         } catch (Exception $ex) {
             throw new jsException($ex);
         }
+    }
 
     /**
      *  //Function to log Select Query Count
