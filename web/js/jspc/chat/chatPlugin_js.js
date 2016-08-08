@@ -230,6 +230,9 @@ JsChat.prototype = {
                 }
                 $(".info-hover").remove();
                 $(curEleRef._listingPanelID).remove();
+                $("chat-box").each(function(index,elem){
+                    $(elem).remove();
+                });
             });
         } else {
             $(curEleRef._listingPanelID).fadeOut('slow', function () {
@@ -833,6 +836,9 @@ JsChat.prototype = {
             console.log(newMsg);
             var oldMessages = JSON.parse(localStorage.getItem(selfJID+'_'+other));
             if(type == 'send' || type == 'receive'){
+                if(typeof oldMessages == "undefined" || oldMessages == '' || oldMessages == null){
+                    oldMessages = [];
+                }
                 oldMessages.unshift(newMsg);
             }
             else if(type == 'history'){
