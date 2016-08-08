@@ -139,7 +139,9 @@ function getChatHistory(apiParams,key) {
                         if(setLocalStorage == true){
                             localStorage.setItem("chatHistory_"+bare_from_jid+"_"+bare_to_jid,response["Message"]);
                         }
+                          console.log("setting pagination-"+response["pagination"]);
                         if(response["pagination"] == 0){
+
                             //console.log("no more history");
                             $("#moreHistory_"+bare_to_jid.split("@")[0]).val("0");
                         }
@@ -151,6 +153,7 @@ function getChatHistory(apiParams,key) {
                         objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], $.parseJSON(response["Message"]),key);
                     }
                     else{
+                        $("#moreHistory_"+bare_to_jid.split("@")[0]).val("0");
                         manageHistoryLoader(bare_to_jid,"hide");
                     }
                 }
@@ -222,11 +225,11 @@ function getSelfName(){
 function getMembershipStatus(){
     var membership = localStorage.getItem("self_subcription");
     //confirm check
-    if(membership && (membership.search("F")!= -1 || membership.search("D")!= -1)){
-        return "paid";
+    if(membership && membership!= "Free"){
+        return "Paid";
     }
     else{
-        return "free";
+        return "Free";
     }
 }
 
@@ -372,7 +375,7 @@ function invokePluginManagelisting(listObject, key, user_id) {
         }
         //chatLoggerPC("adding nodes in invokePluginAddlisting");
         //chatLoggerPC(listObject);
-        objJsChat.addListingInit(listObject);
+        objJsChat.addListingInit(listObject,key);
         if (key == "add_node") {
             var newGroupId = listObject[user_id][strophieWrapper.rosterDetailsKey]["groups"][0];
             //update chat box content if opened
@@ -392,7 +395,7 @@ function invokePluginManagelisting(listObject, key, user_id) {
                 objJsChat._removeFromListing("removeCall1", listObject);
             } else if (listObject[user_id][strophieWrapper.rosterDetailsKey]["chat_status"] == "online") { //from offline to online
                 //chatLoggerPC("adding in list");
-                objJsChat.addListingInit(listObject);
+                objJsChat.addListingInit(listObject,key);
             }
         }
     } else if (key == "delete_node") {
@@ -618,11 +621,12 @@ function getProfileImage() {
  * Clear local storage
  */
 function clearLocalStorage() {
-    var removeArr = ['userImg'];
+    var removeArr = ['userImg','self_subcription'];
     $.each(removeArr, function (key, val) {
         localStorage.removeItem(val);
     });
-    localStorage.removeItem("chatStateData");
+    localStorage.removeItem('chatBoxData');
+    localStorage.removeItem('lastUId');
 }
 /*hit api for chat before acceptance
  * @input: apiParams
@@ -847,12 +851,14 @@ $(document).ready(function () {
             ////console.log("Logout clicked");
            $(".jschatLogOut").click(); 
         });
+        /*
         $(window).focus(function() {
             invokePluginLoginHandler("manageLogout");
             if(strophieWrapper.synchronize_selfPresence == true){
                 invokePluginLoginHandler("session_sync");
             }
         });
+        */
         $(window).on("offline", function () {
             ////console.log("detected internet disconnection");
             strophieWrapper.currentConnStatus = Strophe.Status.DISCONNECTED;
@@ -1087,5 +1093,5 @@ $(document).ready(function () {
         }
         objJsChat.start();
     }
-    
+
 });

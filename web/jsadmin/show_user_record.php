@@ -3,6 +3,8 @@
 include("connect.inc");
 include(JsConstants::$docRoot."/commonFiles/flag.php");
 
+$db = connect_rep();
+
 if(authenticated($cid))
 {
     $operator_name=getname($cid);
@@ -11,13 +13,13 @@ if(authenticated($cid))
     {
         $smarty->assign("FLAG","1");
         $sql="SELECT PROFILEID FROM newjs.JPROFILE WHERE USERNAME='$username'";
-        $res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+        $res=mysql_query_decide($sql,$db) or die("$sql".mysql_error_js());
         $row=mysql_fetch_array($res);
         $profileid=$row['PROFILEID'];
         $sql1="SELECT USERNAME,SCREENING_TYPE,RECEIVE_TIME,SUBMIT_TIME,ALLOT_TIME,SUBMITED_TIME,ALLOTED_TO,STATUS, SUBSCRIPTION_TYPE, SCREENING_VAL FROM MAIN_ADMIN WHERE PROFILEID='$profileid' ORDER BY SCREENING_TYPE,SUBMITED_TIME DESC";
-        $result=mysql_query_decide($sql1) or die("$sql 1".mysql_error_js());
+        $result=mysql_query_decide($sql1,$db) or die("$sql 1".mysql_error_js());
         $sql="SELECT USERNAME,SCREENING_TYPE,RECEIVE_TIME,SUBMIT_TIME,ALLOT_TIME,SUBMITED_TIME,ALLOTED_TO,STATUS, SUBSCRIPTION_TYPE, SCREENING_VAL FROM MAIN_ADMIN_LOG WHERE PROFILEID='$profileid' ORDER BY SCREENING_TYPE,SUBMITED_TIME DESC";
-        $res=mysql_query_decide($sql) or die("$sql ".mysql_error_js());
+        $res=mysql_query_decide($sql,$db) or die("$sql ".mysql_error_js());
         if($row=mysql_fetch_array($res))
         {
             $i=0;

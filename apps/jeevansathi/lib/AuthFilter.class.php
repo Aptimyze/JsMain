@@ -263,7 +263,7 @@ class AuthFilter extends sfFilter {
 				else
 					$request->setAttribute('subscriptionHeader',"1");
 				
-				$request->setAttribute('subscription',$data[SUBSCRIPTION]);
+				//$request->setAttribute('subscription',$data[SUBSCRIPTION]);
 				$request->setAttribute('checksum', $data[CHECKSUM]);
 				$request->setAttribute('profilechecksum', (md5($data["PROFILEID"]) . "i" . $data["PROFILEID"]));
 				$request->setAttribute('username', $data[USERNAME]);

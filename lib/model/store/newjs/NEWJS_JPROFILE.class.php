@@ -1410,6 +1410,7 @@ class NEWJS_JPROFILE extends TABLE
                     $resSelectDetail->bindValue(":$key", $val);
             $resSelectDetail->execute();
             $rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC);
+            $this->logSelectCount();
             return $rowSelectDetail;
         } catch (PDOException $e) {
             throw new jsException($e);
@@ -1642,6 +1643,7 @@ class NEWJS_JPROFILE extends TABLE
             throw new jsException($ex);
         }
     }
+
     
     
     public function getActiveProfiles($totalScript=1,$currentScript=0,$lastLoginWithIn='6 months',$limitProfiles=0)
@@ -1681,6 +1683,18 @@ SQL;
         } catch (Exception $ex) {
             throw new jsException($ex);
         }
+    }
+
+    /**
+     *  //Function to log Select Query Count
+     */
+    private function logSelectCount()
+    {
+        $key = 'selCount_'.date('Y-m-d');
+        JsMemcache::getInstance()->incrCount($key);
+
+        $key .= '::'.date('H');
+        JsMemcache::getInstance()->incrCount($key);
     }
 }
 

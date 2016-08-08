@@ -6,6 +6,7 @@ $curdate=date("Y-m-d",$tt);
 include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
 $db = connect_db();
+mysql_query("set session wait_timeout=600",$db);
 //$db_slave = connect_slave();
 
 $sql="SELECT s.BILLID, s.PROFILEID, s.ID FROM billing.SERVICE_STATUS as s, billing.PURCHASES as p WHERE p.BILLID=s.BILLID and s.ACTIVATE_ON = '$curdate' AND p.STATUS='DONE' AND s.ACTIVE='Y'";
