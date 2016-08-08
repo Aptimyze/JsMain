@@ -311,7 +311,7 @@ var strophieWrapper = {
                 var show = $(presence).find("show").text(); // this is what gives away, dnd, etc.
                 if (show === 'chat' || show === '') {
                     chat_status = "online";
-                    strophieWrapper.sendPresence();
+                    //strophieWrapper.sendPresence();
                 } else {
                     // etc...
                 }
