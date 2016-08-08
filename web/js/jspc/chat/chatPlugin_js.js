@@ -903,7 +903,9 @@ JsChat.prototype = {
                             //console.log("got response");
                             messageId = msgSendOutput["msg_id"];
                             //that._chatLoggerPlugin("handling output of onSendingMessage in plugin");
-                            if (messageId) $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + messageId);
+                            if (messageId) {
+                                $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + messageId);
+                            }
                             console.log("sent");
                             console.log(msgSendOutput);
                             var newMsg = {
@@ -1573,9 +1575,12 @@ JsChat.prototype = {
                 //console.log(logObj);
                 if (parseInt(logObj["SENDER"]) == self_id) {
                     //append self sent message
-                    $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText" data-msgid='+logObj["FOLDERID"]+'>' + logObj["MESSAGE"] + '</div><i class="nchatspr nchatic_9 fr vertM"></i></div>');
-                    var len = $("#text_"+logObj["FOLDERID"]).height();
-                    $("#text_"+logObj["FOLDERID"]).next().css("margin-top",len);
+                    $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText" data-msgid='+logObj["FOLDERID"]+'>' + logObj["MESSAGE"] + '</div><i class="nchatspr nchatic_9 fr vertM"></i></div>').promise().done(function(){
+                            var len = $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["FOLDERID"]).height();
+                                
+                            $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["FOLDERID"]).next().css("margin-top",len);
+                    });
+                    
                 } else if (parseInt(logObj["SENDER"]) == other_id) {
                     //console.log("done"+requestType+removeFreeMemMsg);
                     if(removeFreeMemMsg == false){
