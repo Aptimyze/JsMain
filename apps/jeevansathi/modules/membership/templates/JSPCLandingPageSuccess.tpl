@@ -472,7 +472,7 @@
                 Why Paid Membership?
             </div>
             <div class="pt10 f16 fontlig">
-                When you buy paid membership, you get many benifits over free member. This increases your response from other members and you get more visibility on website. You will be able to:
+                Upgrade your membership now to find your perfect partner! With a paid membership, you can seamlessly connect with your prospects and get more responses. Here are some key benefits:
             </div>
             <div class="disp_ib memPadNew">
                 <i class="newSprt newSprt_1">
