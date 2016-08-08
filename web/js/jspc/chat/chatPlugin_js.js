@@ -501,7 +501,7 @@ JsChat.prototype = {
         
         
         $(window).focus(function() {
-            console.log("tab changed");
+            //console.log("tab changed");
             if(localStorage.getItem("lastUId")) {
                 if($(".tabUId").attr("id") != localStorage.getItem("lastUId")){
                     elem._updateChatStructure("exsisting");
@@ -629,8 +629,9 @@ JsChat.prototype = {
             elem.find(".chatBoxBar").removeClass("cursp");
             elem.find(".downBarPic").removeClass("downBarPicMin");
             elem.find(".downBarUserName").removeClass("downBarUserNameMin");
-            curEle._scrollToBottom($(elem).attr("user-id"));
-            
+            if($(elem).attr("user-id") != undefined){
+                curEle._scrollToBottom($(elem).attr("user-id"));
+            }
             $(elem).attr("pos-state", "open");
         });
         curEle._handleUnreadMessages(elem);
@@ -827,6 +828,26 @@ JsChat.prototype = {
     _bindUnblock: function (userId) {},
     onSendingMessage: null,
     onChatBoxContactButtonsClick: null,
+    storeMessagesInLocalHistory: function(selfJID,other,newMsg,type){
+        if(localStorageExists){
+            console.log(newMsg);
+            var oldMessages = JSON.parse(localStorage.getItem(selfJID+'_'+other));
+            if(type == 'send' || type == 'receive'){
+                oldMessages.unshift(newMsg);
+            }
+            else if(type == 'history'){
+                if(typeof oldMessages == "undefined" || oldMessages == '' || oldMessages == null){
+                    oldMessages = newMsg;
+                }
+                else{
+                    oldMessages.push(newMsg);
+                }
+
+                //newMsg.unshift(oldMessages);
+            }
+            localStorage.setItem(selfJID+'_'+other,JSON.stringify(oldMessages));
+        }
+    },
     //sending chat
     _bindSendChat: function (userId) {
         var _this = this,
@@ -882,9 +903,41 @@ JsChat.prototype = {
                             //console.log("got response");
                             messageId = msgSendOutput["msg_id"];
                             //that._chatLoggerPlugin("handling output of onSendingMessage in plugin");
-                            if (messageId) $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + messageId);
+                            if (messageId) {
+                                $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + messageId);
+                            }
                             console.log("sent");
                             console.log(msgSendOutput);
+                            var newMsg = {
+                                'SENDER': selfJID.split('@')[0],
+                                'RECEIVER': userId,
+                                'DATE': '',
+                                'MESSAGE': text,
+                                'FOLDERID': messageId,
+                                'ID': ''
+                            };
+                            
+                            _this.storeMessagesInLocalHistory(selfJID.split('@')[0],userId,newMsg,'send');
+                            /*
+                            var sjid=selfJID.split('@')[0];
+                            var oldMessages = JSON.parse(localStorage.getItem(sjid+'_'+userId)) || [];
+                            var newMsg = {
+                              'from':sjid,
+                              'to':userId,
+                              'msg':text
+                            };
+                            //var temp = [];
+                            oldMessages.unshift(newMsg);
+                            //newMsg.push(oldMessages);
+                            //temp.push(oldMessages);
+                            console.log(typeof oldMessages);
+                            console.log(JSON.parse(localStorage.getItem(sjid+'_'+userId)),"log");
+                            //oldMessages.push(newMsg);
+                            localStorage.setItem(sjid+'_'+userId,JSON.stringify(oldMessages));
+                            */
+                            console.log("**************");
+                            //var oldMessages = JSON.parse(localStorage.getItem(sjid+'_'+userId));
+                            //console.log(oldMessages);
                             if (msgSendOutput["sent"] == false || msgSendOutput["cansend"] == false) {
                                 var error_msg = msgSendOutput['errorMsg'] || "Something went wrong";
                                 $('chat-box[user-id="' + userId + '"] #restrictMessgTxt').remove();
@@ -984,7 +1037,7 @@ JsChat.prototype = {
     //adding data in extra popup
     _addDataExtraPopup: function (data) {
         var groupId = $("chat-box[user-id='" + data + "']").attr("group-id");
-        $(".extraPopup").append('<div id="extra_' + data + '" class="extraChatList pad8_new"><div class="extraUsername cursp colrw minWid65 disp_ib pad8_new fontlig f14">' + $(".chatlist li[id='" + data + "_" + groupId + "'] div").html() + '</div><div class="pinkBubble scir disp_ib padall-10"><span class="noOfMessg f13 pos-abs">1</span></div><i class="nchatspr fr nchatic_4 cursp disp_ib mt6 ml10"></i></div>');
+        $(".extraPopup").append('<div id="extra_' + data + '" class="extraChatList pad08"><div class="extraUsername cursp colrw minWid65 disp_ib pad8_new fontlig f14">' + $(".chatlist li[id='" + data + "_" + groupId + "'] div").html() + '</div><i class="nchatspr fr nchatic_4 cursp disp_ib mt6 ml10"></i><div class="pinkBubble scir disp_ib padall-10 fr"><span class="noOfMessg f13 pos-abs">1</span></div></div>');
         $("#extra_" + data + " .pinkBubble span").html($('chat-box[user-id="' + data + '"] .chatBoxBar .pinkBubble2 span').html());
         if ($("#extra_" + data + " .pinkBubble span").html() == 0) {
             $("#extra_" + data + " .pinkBubble").hide();
@@ -1005,7 +1058,7 @@ JsChat.prototype = {
     //create side panel of extra chat
     _createSideChatBox: function () {
         var curElem = this;
-        $(curElem._chatBottomPanelID).append('<div class="extraChats cursp pos_abs nchatbtmNegtaive wid30 hgt43 bg5"><div class="extraNumber colrw opa50">+1</div><div><div class="extraPopup pos_abs l0 nchatbtmNegtaive wid153 bg5"><div>');
+        $(curElem._chatBottomPanelID).append('<div class="extraChats cursp pos_abs nchatbtmNegtaive wid30 hgt43 bg5"><div class="extraNumber colrw opa50">+1</div><div><div class="extraPopup pos_abs l0 nchatbtmNegtaive wid170 bg5"><div>');
         $(".extraChats").css("left", curElem._bottomPanelWidth - $('chat-box').length * 250 - 32);
         curElem._scrollUp($(".extraChats"), "0px");
         //adding data in extra popup 
@@ -1370,7 +1423,7 @@ JsChat.prototype = {
             $(curElem._chatBottomPanelID).css("bottom", "0px");
         }*/
         if ($(curElem._chatBottomPanelID).length == 0) {
-            $("body").append("<div id='chatBottomPanel' class='btmNegtaive pos_fix calhgt2 z7 fontlig hgt57'></div>");
+            $("body").append("<div id='chatBottomPanel' class='btmNegtaive pos_fix calhgt2 z5 fontlig hgt57'></div>");
             curElem._bottomPanelWidth = $(window).width() - $(curElem._parendID).width();
             $(curElem._chatBottomPanelID).css('max-width', curElem._bottomPanelWidth);
             $(curElem._chatBottomPanelID).css("right", $(curElem._parendID).width());
@@ -1440,7 +1493,7 @@ JsChat.prototype = {
         chatBoxProto.attachedCallback = function () {
             userId = $(this).attr("user-id");
             this.innerHTML = '<div class="chatBoxBar fullwid hgt57 bg5 pos-rel fullwid"></div><div class="chatArea fullwid fullhgt"><div class="messageArea f13 bg13 fullhgt"><div id="chatMessage_'+userId+'" class="chatMessage pos_abs fullwid scrollxy" style="height: 246px;"><input type="hidden" value="0" id="moreHistory_'+userId+'" data-latestMsgId=""/><div class="spinner2 disp-none"></div><div id="chatHistory_' + userId + '" class="clearfix"></div><div class="spinner"></div></div></div><div class="chatInput brdrbtm_new fullwid btm0 pos-abs bg-white"><textarea cols="23" maxlength="'+elem._maxMsgLimit+'" style="width: 220px;" id="txtArea"  class="inputText lh20 brdr-0 padall-10 colorGrey hgt18 fontlig" placeholder="Write message"></textarea></div></div>';
-            $(this).addClass("z7 b297 hgt352 brd_new fr mr7 fullhgt wid240 pos-rel disp_ib");
+            $(this).addClass("z5 b297 hgt352 brd_new fr mr7 fullhgt wid240 pos-rel disp_ib");
             status = $(this).attr("status-user");
             elem._appendInnerHtml(userId, status);
         };
@@ -1499,6 +1552,7 @@ JsChat.prototype = {
         console.log("second-"+s);
         console.log("total-"+divLen);*/
         //var elem = $('chat-box[user-id="' + userId + '"]');
+        console.log(document.getElementById("chatMessage_"+userId));
         var len = document.getElementById("chatMessage_"+userId).scrollHeight;
         
         $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
@@ -1508,6 +1562,7 @@ JsChat.prototype = {
     //append chat history in chat box
     _appendChatHistory: function (selfJID, otherJID, communication,requestType) {
         //console.log("self message");
+        this.storeMessagesInLocalHistory(selfJID.split('@')[0],otherJID.split('@')[0],communication,'history');
         console.log("_appendChatHistory"+requestType);
         var self_id = selfJID.split("@")[0],
             other_id = otherJID.split("@")[0],
@@ -1520,8 +1575,12 @@ JsChat.prototype = {
                 //console.log(logObj);
                 if (parseInt(logObj["SENDER"]) == self_id) {
                     //append self sent message
-                    $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText" data-msgid='+logObj["FOLDERID"]+'>' + logObj["MESSAGE"] + '</div><i class="nchatspr nchatic_9 fr vertM"></i></div>');
-
+                    $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText" data-msgid='+logObj["FOLDERID"]+'>' + logObj["MESSAGE"] + '</div><i class="nchatspr nchatic_9 fr vertM"></i></div>').promise().done(function(){
+                            var len = $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["FOLDERID"]).height();
+                                
+                            $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["FOLDERID"]).next().css("margin-top",len);
+                    });
+                    
                 } else if (parseInt(logObj["SENDER"]) == other_id) {
                     //console.log("done"+requestType+removeFreeMemMsg);
                     if(removeFreeMemMsg == false){
@@ -1584,8 +1643,19 @@ JsChat.prototype = {
     _appendRecievedMessage: function (message, userId, uniqueId) {
         var curEle = this,
             that = this;
+        var selfJID = getConnectedUserJID(); 
+        selfJID = selfJID.split('@')[0];
+        var newMsg = {
+            'SENDER': userId,
+            'RECEIVER': selfJID,
+            'DATE': '',
+            'MESSAGE': message,
+            'FOLDERID': uniqueId,
+            'ID': ''
+        };
         this._chatLoggerPlugin("in _appendRecievedMessage");
         //append received message in chatbox
+        this.storeMessagesInLocalHistory(selfJID, userId, newMsg, 'receive')
         if (typeof message != "undefined" && message != "") {
             //if chat box is not opened
             if ($('chat-box[user-id="' + userId + '"]').length == 0) {

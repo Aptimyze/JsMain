@@ -713,3 +713,12 @@ margin-top: 220px;
     border: 2px solid #34495e;
     border-right-color: transparent;
     border-radius: 50%;}
+.extraPopup {
+max-height: 500px;
+overflow-x: hidden;
+overflow-y: auto;
+}
+.pad08{padding: 0px 8px;}
+.wid170{
+    width: 170px;
+}

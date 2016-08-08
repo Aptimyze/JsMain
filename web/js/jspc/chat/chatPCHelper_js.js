@@ -7,7 +7,8 @@ var listingInputData = [],
     pluginId = '#chatOpenPanel',
     device = 'pc',
     loggingEnabledPC = false,
-    clearTimedOut;
+    clearTimedOut,
+    localStorageExists = isStorageExist();
 /*handle chat disconnection case
  */
 function handleChatDisconnection() {
