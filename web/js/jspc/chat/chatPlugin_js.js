@@ -1765,6 +1765,7 @@ JsChat.prototype = {
         if (messgId) {
             this._chatLoggerPlugin("Change status" + newStatus);
             if (newStatus == "recieved") {
+                console.log("marked");
                 $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_8").addClass("nchatic_10");
             } else if (newStatus == "recievedRead") {
                 $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_8").addClass("nchatic_10");
