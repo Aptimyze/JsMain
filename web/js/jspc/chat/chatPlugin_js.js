@@ -629,8 +629,9 @@ JsChat.prototype = {
             elem.find(".chatBoxBar").removeClass("cursp");
             elem.find(".downBarPic").removeClass("downBarPicMin");
             elem.find(".downBarUserName").removeClass("downBarUserNameMin");
-            curEle._scrollToBottom($(elem).attr("user-id"));
-            
+            if($(elem).attr("user-id") != undefined){
+                curEle._scrollToBottom($(elem).attr("user-id"));
+            }
             $(elem).attr("pos-state", "open");
         });
         curEle._handleUnreadMessages(elem);
@@ -828,22 +829,24 @@ JsChat.prototype = {
     onSendingMessage: null,
     onChatBoxContactButtonsClick: null,
     storeMessagesInLocalHistory: function(selfJID,other,newMsg,type){
-        console.log(newMsg);
-        var oldMessages = JSON.parse(localStorage.getItem(selfJID+'_'+other));
-        if(type == 'send' || type == 'receive'){
-            oldMessages.unshift(newMsg);
-        }
-        else if(type == 'history'){
-            if(typeof oldMessages == "undefined" || oldMessages == '' || oldMessages == null){
-                oldMessages = newMsg;
+        if(storeMessagesInLocalHistory){
+            console.log(newMsg);
+            var oldMessages = JSON.parse(localStorage.getItem(selfJID+'_'+other));
+            if(type == 'send' || type == 'receive'){
+                oldMessages.unshift(newMsg);
             }
-            else{
-                oldMessages.push(newMsg);
+            else if(type == 'history'){
+                if(typeof oldMessages == "undefined" || oldMessages == '' || oldMessages == null){
+                    oldMessages = newMsg;
+                }
+                else{
+                    oldMessages.push(newMsg);
+                }
+
+                //newMsg.unshift(oldMessages);
             }
-                
-            //newMsg.unshift(oldMessages);
+            localStorage.setItem(selfJID+'_'+other,JSON.stringify(oldMessages));
         }
-        localStorage.setItem(selfJID+'_'+other,JSON.stringify(oldMessages));
     },
     //sending chat
     _bindSendChat: function (userId) {
@@ -913,6 +916,7 @@ JsChat.prototype = {
                                 'FOLDERID': messageId,
                                 'ID': ''
                             };
+                            
                             _this.storeMessagesInLocalHistory(selfJID.split('@')[0],userId,newMsg,'send');
                             /*
                             var sjid=selfJID.split('@')[0];
@@ -1033,7 +1037,7 @@ JsChat.prototype = {
     //adding data in extra popup
     _addDataExtraPopup: function (data) {
         var groupId = $("chat-box[user-id='" + data + "']").attr("group-id");
-        $(".extraPopup").append('<div id="extra_' + data + '" class="extraChatList pad8_new"><div class="extraUsername cursp colrw minWid65 disp_ib pad8_new fontlig f14">' + $(".chatlist li[id='" + data + "_" + groupId + "'] div").html() + '</div><div class="pinkBubble scir disp_ib padall-10"><span class="noOfMessg f13 pos-abs">1</span></div><i class="nchatspr fr nchatic_4 cursp disp_ib mt6 ml10"></i></div>');
+        $(".extraPopup").append('<div id="extra_' + data + '" class="extraChatList pad08"><div class="extraUsername cursp colrw minWid65 disp_ib pad8_new fontlig f14">' + $(".chatlist li[id='" + data + "_" + groupId + "'] div").html() + '</div><i class="nchatspr fr nchatic_4 cursp disp_ib mt6 ml10"></i><div class="pinkBubble scir disp_ib padall-10 fr"><span class="noOfMessg f13 pos-abs">1</span></div></div>');
         $("#extra_" + data + " .pinkBubble span").html($('chat-box[user-id="' + data + '"] .chatBoxBar .pinkBubble2 span').html());
         if ($("#extra_" + data + " .pinkBubble span").html() == 0) {
             $("#extra_" + data + " .pinkBubble").hide();
@@ -1054,7 +1058,7 @@ JsChat.prototype = {
     //create side panel of extra chat
     _createSideChatBox: function () {
         var curElem = this;
-        $(curElem._chatBottomPanelID).append('<div class="extraChats cursp pos_abs nchatbtmNegtaive wid30 hgt43 bg5"><div class="extraNumber colrw opa50">+1</div><div><div class="extraPopup pos_abs l0 nchatbtmNegtaive wid153 bg5"><div>');
+        $(curElem._chatBottomPanelID).append('<div class="extraChats cursp pos_abs nchatbtmNegtaive wid30 hgt43 bg5"><div class="extraNumber colrw opa50">+1</div><div><div class="extraPopup pos_abs l0 nchatbtmNegtaive wid170 bg5"><div>');
         $(".extraChats").css("left", curElem._bottomPanelWidth - $('chat-box').length * 250 - 32);
         curElem._scrollUp($(".extraChats"), "0px");
         //adding data in extra popup 
@@ -1419,7 +1423,7 @@ JsChat.prototype = {
             $(curElem._chatBottomPanelID).css("bottom", "0px");
         }*/
         if ($(curElem._chatBottomPanelID).length == 0) {
-            $("body").append("<div id='chatBottomPanel' class='btmNegtaive pos_fix calhgt2 z7 fontlig hgt57'></div>");
+            $("body").append("<div id='chatBottomPanel' class='btmNegtaive pos_fix calhgt2 z5 fontlig hgt57'></div>");
             curElem._bottomPanelWidth = $(window).width() - $(curElem._parendID).width();
             $(curElem._chatBottomPanelID).css('max-width', curElem._bottomPanelWidth);
             $(curElem._chatBottomPanelID).css("right", $(curElem._parendID).width());
@@ -1489,7 +1493,7 @@ JsChat.prototype = {
         chatBoxProto.attachedCallback = function () {
             userId = $(this).attr("user-id");
             this.innerHTML = '<div class="chatBoxBar fullwid hgt57 bg5 pos-rel fullwid"></div><div class="chatArea fullwid fullhgt"><div class="messageArea f13 bg13 fullhgt"><div id="chatMessage_'+userId+'" class="chatMessage pos_abs fullwid scrollxy" style="height: 246px;"><input type="hidden" value="0" id="moreHistory_'+userId+'" data-latestMsgId=""/><div class="spinner2 disp-none"></div><div id="chatHistory_' + userId + '" class="clearfix"></div><div class="spinner"></div></div></div><div class="chatInput brdrbtm_new fullwid btm0 pos-abs bg-white"><textarea cols="23" maxlength="'+elem._maxMsgLimit+'" style="width: 220px;" id="txtArea"  class="inputText lh20 brdr-0 padall-10 colorGrey hgt18 fontlig" placeholder="Write message"></textarea></div></div>';
-            $(this).addClass("z7 b297 hgt352 brd_new fr mr7 fullhgt wid240 pos-rel disp_ib");
+            $(this).addClass("z5 b297 hgt352 brd_new fr mr7 fullhgt wid240 pos-rel disp_ib");
             status = $(this).attr("status-user");
             elem._appendInnerHtml(userId, status);
         };
@@ -1548,6 +1552,7 @@ JsChat.prototype = {
         console.log("second-"+s);
         console.log("total-"+divLen);*/
         //var elem = $('chat-box[user-id="' + userId + '"]');
+        console.log(document.getElementById("chatMessage_"+userId));
         var len = document.getElementById("chatMessage_"+userId).scrollHeight;
         
         $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
