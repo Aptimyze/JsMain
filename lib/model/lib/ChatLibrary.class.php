@@ -46,7 +46,7 @@ class ChatLibrary
 
 	public function getIfUserIsOnlineInJSChat($profileIdStr,$key)
 	{
-		if(JsConstants::$jsChatFlag)
+		if(JsConstants::$jsChatFlag=='1')
 		{
 			$arr = self::getPresenceOfIds($profileIdStr);
 			foreach($arr as $k=>$v)
@@ -62,7 +62,7 @@ class ChatLibrary
 	}
 	public function findOnlineProfiles($key='',$SearchParamtersObj='')
 	{
-		if(JsConstants::$jsChatFlag)
+		if(JsConstants::$jsChatFlag=='1')
 		{
 			$arr = self::getPresenceOfIds();
 

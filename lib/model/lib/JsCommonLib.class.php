@@ -691,7 +691,7 @@ public static function insertConsentMessageFlag($profileid) {
 	{
 		if($profile)
 		{
-			if(JsConstants::$jsChatFlag)
+			if(JsConstants::$jsChatFlag=='1')
 	                {
 				$arr = ChatLibrary::getPresenceOfIds($profile);
 				if(is_array($arr) && count($arr)>0)
