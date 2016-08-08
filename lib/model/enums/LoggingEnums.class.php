@@ -44,5 +44,8 @@ class LoggingEnums
     const TYPE_OF_ERROR = "typeOfError";
     const LOG_ID = "logId";
     const UNIQUE_REQUEST_SUB_ID = "uniqueRequestSubId";
-
+    const logging = 'logging';
+    const level = 'level';
+    const directory = 'directory';
+    const stackTrace = 'stackTrace';
 }

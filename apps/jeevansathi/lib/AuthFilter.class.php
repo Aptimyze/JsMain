@@ -309,7 +309,7 @@ class AuthFilter extends sfFilter {
 	            	$request->setAttribute('AJAX_REQUEST_SUB_ID',uniqid());
 	            
 	            }
-	            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "CHECKING AJAX CALLS FOR HOMEPAGE");
+	            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "In Auth");
 	            
 	            
 
