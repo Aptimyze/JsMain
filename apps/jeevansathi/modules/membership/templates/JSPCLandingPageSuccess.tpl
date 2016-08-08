@@ -353,7 +353,7 @@
                             ~/foreach`
                         </ul>
                         <div class="mt24 mem_pad10_new2 wid90p txtc brdrTop colrgrey f15 fontreg">
-                            <span id="finalMemTab"></span><span id="finalMemDuration"></span>~$data.currency`<span id="finalMemPrice"></span>
+                            <span id="finalMemTab_~$v.subscription_id`"></span><span id="finalMemDuration_~$v.subscription_id`"></span>~$data.currency`<span id="finalMemPrice_~$v.subscription_id`"></span>
                         </div>
                         <!--start:total-->
                         ~if $data.userId eq '0'`
@@ -786,6 +786,11 @@
             $("ul.tabs li[mainMemTab="+readCookie('mainMemTab')+"]").addClass('active');
             var tabNum = $("ul.tabs li.active").index(),getTabId = $("ul.tabs li.active").attr('id');
             changeTabContent(getTabId,tabNum, 200);
+            $('#sliderContainer div').find('.plansel').each(function () {
+                var m = $(this).attr('mainMem'),
+                    d = $(this).attr('mainMemDur');
+                managePriceStrike(m, d);
+            });
         })
         $(".continueBtn").click(function(){
             if ($(this).attr('id') == 'mainServContinueBtn') 

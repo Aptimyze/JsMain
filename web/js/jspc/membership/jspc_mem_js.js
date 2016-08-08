@@ -399,13 +399,13 @@ function managePriceStrike(m, d) {
     }
     if ($("#main_" + m).hasClass("active")) {
         if (profileid) {
-            $(".list-main_" + m + " #finalMemTab").html($($("#main_" + m + " span")[1]).html() + ' - ');
-            $(".list-main_" + m + " #finalMemDuration").html($("#" + m + d + "_duration").html() + ' for ');
-            $(".list-main_" + m + " #finalMemPrice").html($("#" + m + d + "_price").html());
+            $(".list-main_" + m + " #finalMemTab_" + m).html($($("#main_" + m + " span")[1]).html() + ' - ');
+            $(".list-main_" + m + " #finalMemDuration_" + m).html($("#" + m + d + "_duration").html() + ' for ');
+            $(".list-main_" + m + " #finalMemPrice_" + m).html($("#" + m + d + "_price").html());
         } else {
-            $(".list-main_" + m + " #finalMemTab").html($($("#main_" + m + " span")[1]).html() + ' starts @ ');
-            $(".list-main_" + m + " #finalMemDuration").html();
-            $(".list-main_" + m + " #finalMemPrice").html($("#tab_" + m + "_startingPrice").html());
+            $(".list-main_" + m + " #finalMemTab_" + m).html($($("#main_" + m + " span")[1]).html() + ' starts @ ');
+            $(".list-main_" + m + " #finalMemDuration_" + m).html();
+            $(".list-main_" + m + " #finalMemPrice_" + m).html($("#tab_" + m + "_startingPrice").html());
         }
     }
     $('#' + m + "_final_price").html(removeZeroInDecimal(commaSeparateNumber(actualPrice)));
