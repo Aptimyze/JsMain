@@ -16,7 +16,7 @@
 		*/
 		private $arrConfig = array(
 			// 'logging' => 1, logging is on for this module
-			LoggingEnums::JSA => array(
+			LoggingEnums::JSADMIN => array(
 				LoggingEnums::logging => true,
 				LoggingEnums::level => LoggingEnums::LOG_DEBUG,
 				LoggingEnums::directory => true,
@@ -95,7 +95,7 @@
 		public function traceStatus($module)
 		{
 			if(!array_key_exists($module, $this->arrConfig)){
-				return false;
+				return LoggingEnums::LOG_TRACE;
 			}
 			return LoggingEnums::CONFIG_ON ? $this->arrConfig[$module][LoggingEnums::stackTrace] : false;
 		}
