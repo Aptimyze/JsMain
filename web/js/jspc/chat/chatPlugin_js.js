@@ -1423,7 +1423,7 @@ JsChat.prototype = {
             $(curElem._chatBottomPanelID).css("bottom", "0px");
         }*/
         if ($(curElem._chatBottomPanelID).length == 0) {
-            $("body").append("<div id='chatBottomPanel' class='btmNegtaive pos_fix calhgt2 z5 fontlig hgt57'></div>");
+            $("body").append("<div id='chatBottomPanel' class='btmNegtaive pos_fix calhgt2 z4 fontlig hgt57'></div>");
             curElem._bottomPanelWidth = $(window).width() - $(curElem._parendID).width();
             $(curElem._chatBottomPanelID).css('max-width', curElem._bottomPanelWidth);
             $(curElem._chatBottomPanelID).css("right", $(curElem._parendID).width());
@@ -1493,7 +1493,7 @@ JsChat.prototype = {
         chatBoxProto.attachedCallback = function () {
             userId = $(this).attr("user-id");
             this.innerHTML = '<div class="chatBoxBar fullwid hgt57 bg5 pos-rel fullwid"></div><div class="chatArea fullwid fullhgt"><div class="messageArea f13 bg13 fullhgt"><div id="chatMessage_'+userId+'" class="chatMessage pos_abs fullwid scrollxy" style="height: 246px;"><input type="hidden" value="0" id="moreHistory_'+userId+'" data-latestMsgId=""/><div class="spinner2 disp-none"></div><div id="chatHistory_' + userId + '" class="clearfix"></div><div class="spinner"></div></div></div><div class="chatInput brdrbtm_new fullwid btm0 pos-abs bg-white"><textarea cols="23" maxlength="'+elem._maxMsgLimit+'" style="width: 220px;" id="txtArea"  class="inputText lh20 brdr-0 padall-10 colorGrey hgt18 fontlig" placeholder="Write message"></textarea></div></div>';
-            $(this).addClass("z5 b297 hgt352 brd_new fr mr7 fullhgt wid240 pos-rel disp_ib");
+            $(this).addClass("b297 hgt352 brd_new fr mr7 fullhgt wid240 pos-rel disp_ib");
             status = $(this).attr("status-user");
             elem._appendInnerHtml(userId, status);
         };
