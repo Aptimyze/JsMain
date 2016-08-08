@@ -540,7 +540,7 @@ $js_arr[]=array("jspc/common/colorbox"    => "1");
 $js_arr[]=array("jspc/common/phoneVeriLayers_js"       => "5");
 $js_arr[]=array("jspc/membership/jspc_mem_custom_scrollbar"    => "1");
 $js_arr[]=array("jspc/membership/jspc_mem_slider"    => "1");
-$js_arr[]=array("jspc/membership/jspc_mem_js"                => "13");
+$js_arr[]=array("jspc/membership/jspc_mem_js"                 => "14");
 $js_arr[]=array("jspc/membership/jspc_mem_sweetalert"    => "1");
 $js_arr[]=array("jspc/membership/jspc_mem_scrollpane"    => "1");
 $js_arr[]=array("jspc/membership/jspc_mem_mousewheel"    => "1");
