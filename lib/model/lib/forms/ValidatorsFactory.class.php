@@ -12,6 +12,10 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 		if($field_map_name &&  !in_array($field_map_name,$not_to_check_arr))
 		{
 			$choices=@array_keys(FieldMap::getFieldLabel($field_map_name,'',1));
+                        if(in_array($field->getName(),self::$validateZeroForFields))
+                        {
+                                $choices[]='0';
+                        }
 			$choiceValidator = new sfValidatorChoice(array('choices'=>$choices,'required'=>false),array('invalid'=>$errInvalid));
 		}
 		switch($const_cl){
