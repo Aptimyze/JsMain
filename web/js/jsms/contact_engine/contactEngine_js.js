@@ -287,11 +287,22 @@ params["profilechecksum"] =input.val();
     child=$(".eoiDeclineBtn");
     child.unbind("click");
     child.bind("click",function(){
+        $(this).unbind("click");
+        var input=$(this).children("input");
+        params["profilechecksum"] =input.val();
+        params["actionName"] ="DECLINE_MYJS";
+        performAction(params["actionName"], params,  $(this).attr("index"),false);
+    
+    });
+    
+    child=$(".matchAlertBtn");
+    child.unbind("click");
+    child.bind("click",function(){
         $(".eoiAcceptBtn").attr("disabled",true);
         $(".eoiDeclineBtn").attr("disabled",true);
         var input=$(this).children("input");
 params["profilechecksum"] =input.val();
-        params["actionName"] ="DECLINE_MYJS";
+        params["actionName"] ="INITIATE_MYJS";
         performAction(params["actionName"], params,  $(this).attr("index"),false);
     
     });
@@ -433,6 +444,12 @@ function performAction(action, params, index,isPrime)
     $("#eoituple_"+index+" .contactLoader").css("display","block");
     
 }
+    else if(action=="INITIATE_MYJS")
+    {
+        params["stype"]=responseTrackingno;
+         
+        
+    }
       else
 	{
 		loaderTop();
@@ -454,7 +471,7 @@ function performAction(action, params, index,isPrime)
     data: params,
     //crossDomain: true,
     success: function(result){
-                    if ((action=="ACCEPT_MYJS")||(action=="DECLINE_MYJS"))
+                    if ((action=="ACCEPT_MYJS")||(action=="DECLINE_MYJS") || (action=="INITIATE_MYJS"))
                         $("#eoituple_"+index+" .contactLoader").hide();
 		else
 		{
@@ -469,7 +486,7 @@ function performAction(action, params, index,isPrime)
 		}
                     if(CommonErrorHandling(result,'?regMsg=Y')) //CE means contact engine
       {
-                            if ((action=="ACCEPT_MYJS")||(action=="DECLINE_MYJS")) afterActionMyjs(index); 
+                            if ((action=="ACCEPT_MYJS")||(action=="DECLINE_MYJS")||(action=="INITIATE_MYJS")) afterActionMyjs(index, action); 
                             else afterAction(result,action,index);
       }
     }
@@ -480,19 +497,20 @@ params = {};
 
 
 
-function afterActionMyjs(index){
-    $("#eoituple_"+index+" #contactLoader").hide();
-        $("#eoituple_"+index).fadeOut(1500);
-                
-    var x=parseInt($("#eoi_count").html());
-                x--;
-          $("#eoi_count").html(x);
-    setTimeout(function(){
-        $("#eoituple_"+index).remove();
-                if ($("#eoi_count").html()=='0') $("#eoiAbsent").show();
-                      $(".eoiAcceptBtn").attr("disabled",false);
+function afterActionMyjs(index,action){
+    
+    var section= (action=='INITIATE_MYJS') ? 'matchAlert' : 'eoi';
+        $("#"+section+"tuple_"+index+" #contactLoader").hide();
+        $("#"+section+"tuple_"+index).fadeOut(1500);
+        var x=parseInt($("#"+section+"_count").html());
+        x--;
+        $("#"+section+"_count").html(x);
+        setTimeout(function(){
+        $("#"+section+"tuple_"+index).remove();
+        if ($("#"+section+"_count").html()=='0') $("#"+section+"Absent").show();
+        $(".eoiAcceptBtn").attr("disabled",false);
         $(".eoiDeclineBtn").attr("disabled",false);
-    tupleObject._tupleIndex--;
+        tupleObject._tupleIndex--;
         tupleObject.indexFix();
         tupleObject._goTo(tupleObject._index);          
     },1500);

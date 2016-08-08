@@ -1,5 +1,5 @@
 ~if $profileTuple neq ''`
-        <div style="margin-right:10px; display: inline-block;margin-left:0px; position:relative;" ~if $section eq "eoi"`id="eoituple_~$index`~/if`">
+        <div style="margin-right:10px; display: inline-block;margin-left:0px; position:relative;" id="$section`tuple_~$index`">
            <input class="proChecksum" type="hidden" value="~$profileTuple.profilechecksum`" />
     
             <img src="/images/jsms/commonImg/loader.gif" class="srp_box2 contactLoader" style="position:absolute;display:none; top:65px; ">
@@ -40,6 +40,19 @@
                     <div class="txtc wid49p fl f15 pad2 eoiDeclineBtn"  index="~$index`">
                         <input type="hidden" value="~$profileTuple.profilechecksum`"/>
                          <a class="f15 color2 fontlig">Decline</a>
+                    </div>
+                    <div class="clr"></div>
+
+                 </div>
+~/if`
+~if $section eq 'matchAlert'`     
+                    
+                 <div class="brdr8 fullwid" style="height:60px;">
+
+                        <div class="txtc fullwid fl matchAlertBtn brdr7 pad2" index="~$index`"  >
+                            <input type="hidden" value="~$profileTuple.profilechecksum`" />
+
+                            <a class="f15 color2 fontreg">Send Interest</a>
                     </div>
                     <div class="clr"></div>
 

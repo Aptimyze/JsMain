@@ -45,7 +45,7 @@
 <div class="pb20" id="eoiNotPresent">
       <div class="bg8">
         <div class="pad14 txtc">
-          <div class="fontlig f14 color8">Members Matching Your Desired Partner Profile Will Appear Here</div>
+          <div id='matchAlertAbsentText' class="fontlig f14 color8">Members Matching Your Desired Partner Profile Will Appear Here</div>
         </div>
       </div>
 </div>
