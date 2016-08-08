@@ -1119,9 +1119,8 @@ JsChat.prototype = {
         }
         this._chatLoggerPlugin("chatboxtype--" + chatBoxType);
         $('chat-box[user-id="' + userId + '"]').attr("group-id", groupID);
-        //Manvi
-        curElem._changeLocalStorage("changeGroup",userId,groupId,"");
         $('chat-box[user-id="' + userId + '"]').attr("data-contact", chatBoxType);
+        curElem._changeLocalStorage("changeGroup",userId,groupID,"");
         return chatBoxType;
     },
     _postChatPanelsBox: function (userId) {
