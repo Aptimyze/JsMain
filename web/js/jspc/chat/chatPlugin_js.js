@@ -1235,7 +1235,7 @@ JsChat.prototype = {
                                 $(this).html(response.actiondetails.errmsglabel);
                             } else {
                                 $(this).find("#sentDiv").removeClass("disp-none");
-                                $(this).find("#initiateText,#chatBoxErr").remove();
+                                $(this).find("#initiateText,#chatBoxErr,#sendInt").remove();
                                 //$(this).remove();
                                 new_contact_state = curElem._contactStatusMapping["pog_acceptance_pending"]["key"];
                                 $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
