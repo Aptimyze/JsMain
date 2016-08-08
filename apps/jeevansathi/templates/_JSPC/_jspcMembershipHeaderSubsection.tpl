@@ -343,7 +343,7 @@ $(document).ready(function() {
         else
         {
             // $('#bannerTextTop').html("<div class='f24 pb5'>More Value</div><div class='fontreg f14 pb10'>LESS PRICE</div><div class='lh20 f14'>Lowest Price per contact<br>Maximum benefits per month<br>Biggest Savings Per Plan</div>");
-            $('#bannerTextMinimize span').html("Space for Sale, contact Vijay Bhaskar for further inquiries").removeClass('f24').addClass('f18');
+            $('#bannerTextMinimize span').html("Upgrade now to find your perfect life partner!").removeClass('f24').addClass('f18');
         }
         // $('.js-expand').animate({
         //     height: "toggle"
@@ -357,7 +357,7 @@ $(document).ready(function() {
            $('#bannerTextMinimize span').html(bannerMsg); 
         } 
         else
-            $('#bannerTextMinimize span').html("Space for Sale, contact Vijay Bhaskar for further inquiries").removeClass('f24').addClass('f18');
+            $('#bannerTextMinimize span').html("Upgrade now to find your perfect life partner!").removeClass('f24').addClass('f18');
     }
     
     if(checkEmptyOrNull(showCountdown)){
