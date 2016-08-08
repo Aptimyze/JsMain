@@ -1,6 +1,6 @@
 <?php
 class ErrorHelp{
-	    public static $ERR_EMAIL=array(1=>array('id'=>'err_email_del',"msg"=>"Provide your email in proper format, e.g. raj1984@gmail.com"),2=>array('id'=>'err_email_duplicate',"msg"=>"Duplicate"),3=>array('id'=>'err_email_req',"msg"=>"Provide your email in proper format, e.g. raj1984@gmail.com"),
+	    public static $ERR_EMAIL=array(1=>array('id'=>'err_email_del',"msg"=>"Provide your email in proper format, e.g. raj1984@gmail.com"),2=>array('id'=>'err_email_duplicate',"msg"=>"Duplicate"),3=>array('id'=>'err_email_req',"msg"=>"Provide your email in proper format, e.g. raj1984@gmail.com"),4=>array('id'=>'err_email_revoke','msg'=>"Already having this email"),
 				);
 		public static $ERR_MESSENGER_ID=array(1=>array('id'=>'err_messenger_invalid',"msg"=>"Word not allowed. Please provide a valid messenger ID."),2=>array('id'=>'err_messenger_min',"msg"=>"Messenger ID should be at least 4 characters long."),3=>array('id'=>'err_messenger_pattern',"msg"=>"Please provide a valid messenger ID."),4=>array('id'=>'err_messenger_alpha',"msg"=>"At least one alphabet should be present in messenger ID."));
 		
@@ -8,7 +8,7 @@ class ErrorHelp{
 		
 		public static $ERR_PINCODE=array(1=>array('id'=>'err_pin_req',"msg"=>"Please provide the Pincode of your residence."),2=>array('id'=>'err_pin_invalid',"msg"=>"Pincode you provided is invalid."),3=>array('id'=>'err_pin_delhi',"msg"=>"Please provide a pincode that belongs to Delhi."),4=>array('id'=>'err_pin_mumbai',"msg"=>"Please provide a pincode that belongs to Mumbai."),5=>array('id'=>'err_pin_pune',"msg"=>"Please provide a pincode that belongs to Pune."));
 		
-		public static $ERR_PHONE_MOB = array(1=>array('id'=>"err_mobile_invalid",'msg'=>"Provide a valid mobile number."),2=>array('id'=>"err_mobile_length_international",'msg'=>"International Mobile number should contain atleast 8 digits."),3=>array('id'=>"err_mobile_isd",'msg'=>"Please provide country code."),4=>array('id'=>'err_isd_code','msg'=>'Please provide valid country isd'));
+		public static $ERR_PHONE_MOB = array(1=>array('id'=>"err_mobile_invalid",'msg'=>"Provide a valid mobile number."),2=>array('id'=>"err_mobile_length_international",'msg'=>"International Mobile number should contain atleast 8 digits."),3=>array('id'=>"err_mobile_isd",'msg'=>"Please provide country code."),4=>array('id'=>'err_isd_code','msg'=>'Please provide valid country isd'),5=>array('id'=>"err_phone_revoke","msg"=>"Already having this number"));
 		
 		public static $ERR_PHONE_RES = array(1=>array('id'=>"err_phone_invalid",'msg'=>"Provide a valid landline number."),2 => array('id'=>"err_phone_isd",'msg'=>"Please provide country code by selecting country."));
 		
