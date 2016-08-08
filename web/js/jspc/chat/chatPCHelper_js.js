@@ -673,7 +673,7 @@ function handlePreAcceptChat(apiParams) {
                         }
                     } else {
                         outputData = response;
-                        outputData["msg_id"] = response["messageid"];
+                        outputData["msg_id"] = strophieWrapper.getUniqueId();
                     }
                 }
             },
