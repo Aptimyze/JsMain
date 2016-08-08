@@ -451,7 +451,7 @@ $js_arr[]=array("jsms/angular/registration/scripts/app"     => "4");
 $js_arr[]=array("jsms/angular/registration/scripts/controllers"              => "14");
 $js_arr[]=array("jsms/angular/registration/scripts/services"    => "3");
 $js_arr[]=array("jsms/angular/registration/scripts/directives"         => "8");
-$js_arr[]=array("jsms/angular/registration/scripts/factories"              => "15");
+$js_arr[]=array("jsms/angular/registration/scripts/factories"               => "16");
 $js_arr[]=array("jsms/angular/registration/hamburger_reg_js"       => "6");
 $js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"         => "10");
 $js_arr[]=array("jsms/contact_engine/contactEngine_js"                      => "22");
