@@ -172,6 +172,7 @@ class ProfileCacheLib
         }
 
         if ($bUpdateFromMysql) {
+            $this->logThis(LoggingEnums::LOG_DEBUG, "Updating from myql: Criteria: {$szCriteria} , Value: {$key} & extraWhereCnd : {$extraWhereCnd}");
             $result = $this->cacheFromMysql($szCriteria, $key, $extraWhereCnd);
         } else {
             $result = $this->cacheThis($szCriteria, $key, $paramArr);

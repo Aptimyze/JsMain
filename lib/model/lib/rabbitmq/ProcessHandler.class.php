@@ -172,7 +172,12 @@ class ProcessHandler
  public function HandleProfileCacheQueue($process, $body)
  {
      try{
-         JsMemcache::getInstance()->delete($body,true);
+         $key = $body['PROFILEID'];
+         if(0 === strlen($key)) {
+             return ;
+         }
+         $key = ProfileCacheConstants::PROFILE_CACHE_PREFIX . $key;
+         JsMemcache::getInstance()->delete($key, true);
      } catch (Exception $ex) {
          //Requeue the data
          $reSendData = array('process' =>$process,'data'=>array('type' => '','body'=>$body), 'redeliveryCount'=> 0);

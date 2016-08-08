@@ -126,8 +126,8 @@ class JPROFILE
         //Get Records from Mysql
         $result = self::$objProfileMysql->selectRecord($value, $criteria, $fields, $extraWhereClause, $cache);
         //TODO : Request to Cache this Record, on demand
-        if (is_array($result)) {
-            ProfileCacheLib::getInstance()->cacheThis($criteria, $value, $result);
+        if (is_array($result) && $result['PROFILEID']) {
+            ProfileCacheLib::getInstance()->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $result['PROFILEID'], $result);
         }
 
         return $result;
@@ -268,9 +268,22 @@ class JPROFILE
      */
     public function updateLoginSortDate($pid)
     {
-        $result = self::$objProfileMysql->updateLoginSortDate($pid);
-        ProfileCacheLib::getInstance()->removeCache($pid);
-        return $result;
+        $now = date('Y-m-d H:i:s');
+        $arrData = $this->get($pid,'PROFILEID','SORT_DT');
+
+        $time = new DateTime();
+        $time->sub(date_interval_create_from_date_string("7 days"));
+        $time7days = $time->format('Y-m-d H:i:s');
+
+        if ($time7days > $arrData['SORT_DT']) {
+            $arrData['SORT_DT'] = $time7days;
+        }
+
+        $paramArr = array('LAST_LOGIN_DT'=>$now,'SORT_DT'=>$arrData['SORT_DT']);
+        return $this->edit($paramArr, $pid, "PROFILEID");
+//        $result = self::$objProfileMysql->updateLoginSortDate($pid);
+//        ProfileCacheLib::getInstance()->removeCache($pid);
+//        return $result;
     }
 
     public function getLoggedInProfilesForDateRange($logindDtStart, $loginDtEnd)
