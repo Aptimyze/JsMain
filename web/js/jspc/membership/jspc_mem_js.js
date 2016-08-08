@@ -41,6 +41,13 @@ function changeTabContent(param1, param2, timeout) {
         $(this).css('display', 'none');
     });
     $('.list-' + param1).slideDown(timeout);
+    var currentTab = $('.planlist ul.tabs').find('li.active').attr('mainMemTab');
+    var selectedMem = $('#tab_' + currentTab).find('.plansel');
+    var m = $(selectedMem).attr('mainMem'),
+        d = $(selectedMem).attr('mainMemDur');
+    c = $(selectedMem).attr('mainMemContact');
+    managePriceStrike(m, d);
+    changeMemCookie(m, d, c);
 }
 
 function createCookie(name, value, days) {
