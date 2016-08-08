@@ -188,6 +188,12 @@ class Producer
 				case "CHATMESSAGE":
 					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::CHAT_MESSAGE, MQ::MANDATORY, MQ::IMMEDIATE);
 					break;
+				case "ROSTERCREATION":
+					$data = $msgdata['data'];
+					$msg = new AMQPMessage($data, array('delivery_mode' => MQ::DELIVERYMODE));
+					$this->channel->basic_publish($msg, MQ::CHATEXCHANGE,"roster_created");
+					break;
+
 
 
 			}
