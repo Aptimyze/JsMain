@@ -1079,7 +1079,7 @@ function getGunaScore(response)
 				
 					setTimeout(function(){
 						setGunaScoreOnListing(gunaScoreArr);
-					}, 3000);
+					}, 100);
 				}
 				else
 				{
