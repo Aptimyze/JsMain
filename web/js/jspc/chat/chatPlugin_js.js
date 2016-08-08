@@ -952,7 +952,7 @@ JsChat.prototype = {
                                     $(superParent).find("#sendInt").remove();
                                 }
                                 if (msgSendOutput["sent"] == true) {
-                                    console.log("marking");
+                                    console.log("marking sent");
                                     _this._changeStatusOfMessg(messageId, userId, "recieved");
                                 }
                                 if (msgSendOutput["cansend"] == false) {
@@ -1106,6 +1106,9 @@ JsChat.prototype = {
             case chatConfig.Params.categoryNames["Interest Received"]:
                 chatBoxType = curElem._contactStatusMapping["pg_acceptance_pending"]["key"];
                 break;
+            case chatConfig.Params.categoryNames["Interest Sent"]:
+                chatBoxType = curElem._contactStatusMapping["pog_acceptance_pending"]["key"];
+                break;
             default:
                 chatBoxType = curElem._contactStatusMapping[curElem._groupBasedChatBox[groupID]]["key"];
                 break;
@@ -1248,6 +1251,7 @@ JsChat.prototype = {
             });
             break;
         case curElem._contactStatusMapping["pog_acceptance_pending"]["key"]:
+            $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sendInt,#restrictMessgTxt,#initiateText,#chatBoxErr").remove();
             $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
             //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
             break;
