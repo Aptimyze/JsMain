@@ -517,9 +517,6 @@ include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
             } else $mob='';
             	return $mob;
             
-            case "DELETE_URL":
-            	$longURL = $this->SITE_URL."/static/deleteOption";
-                return $this->getShortURL($longURL, $messageValue["RECEIVER"]["PROFILEID"],$messageValue["RECEIVER"]["EMAIL"]);
                 
             case "ISD_PHONE_MOB":
             	if ($messageValue["ISD_PHONE_MOB"]){
