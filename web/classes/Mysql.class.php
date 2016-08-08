@@ -148,7 +148,7 @@ class Mysql
 					$dbPasswd = MysqlDbConstants::$viewLogRep[PASS];
 					$dbName = MysqlDbConstants::$viewLogRep[DEFAULT_DB];
 					break;
-                                case '111Slave_shard1' :
+                                case '112Slave_shard1' :
                                         $dbHost = MysqlDbConstants::$shard1Slave112[HOST].":".MysqlDbConstants::$shard1Slave112[PORT];
                                         $dbUser = MysqlDbConstants::$shard1Slave112[USER];
                                         $dbPasswd = MysqlDbConstants::$shard1Slave112[PASS];

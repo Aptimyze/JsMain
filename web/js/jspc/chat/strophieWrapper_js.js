@@ -92,8 +92,6 @@ var strophieWrapper = {
             strophieWrapper.disconnect();
             //reconnect to chat if net connected
             strophieWrapper.connect(chatConfig.Params[device].bosh_service_url, username, pass);
-            //triggerbindings call
-            //strophieWrapper.triggerBindings();
         }
     },
     //executed after connection done
@@ -191,7 +189,7 @@ var strophieWrapper = {
                 //strophieWrapper.stropheLoggerPC("deleting node");
                 invokePluginManagelisting(nodeArr, "delete_node", user_id);
                 strophieWrapper.Roster.splice(user_id);
-                //unauthorize if required
+                //strophieWrapper.unauthorize(rosterObj[strophieWrapper.rosterDetailsKey]["jid"]);
             } else if (strophieWrapper.checkForSubscription(subscription) == true) {
                 //strophieWrapper.stropheLoggerPC("adding node");
                 //strophieWrapper.stropheLoggerPC(subscription);
@@ -219,6 +217,7 @@ var strophieWrapper = {
             }
         }
         strophieWrapper.connectionObj.addHandler(strophieWrapper.onRosterUpdate, Strophe.NS.ROSTER, 'iq', 'set');
+        //return true;
     },
     //subscribe user in roster for presence updates
     subscribe: function (jid, nick, message) {
@@ -258,6 +257,26 @@ var strophieWrapper = {
             handleChatDisconnection();
         }
     },
+
+    /** Function: unauthorize
+     * Unauthorize presence subscription
+     *
+     * Parameters:jid,message
+     */
+    unauthorize: function(jid, message)
+    {
+        if (strophieWrapper.getCurrentConnStatus()) {
+            var pres = $pres({to: jid, type: "unsubscribed"});
+            if(message && message != ""){
+                pres.c("status").t(message);
+            }
+            strophieWrapper.connectionObj.send(pres);
+        }
+        else{
+            handleChatDisconnection();
+        }
+    },
+
     enableCarbons: function () {
         /*if (!this.message_carbons) {
             return;
@@ -292,11 +311,13 @@ var strophieWrapper = {
                 var show = $(presence).find("show").text(); // this is what gives away, dnd, etc.
                 if (show === 'chat' || show === '') {
                     chat_status = "online";
+                    //strophieWrapper.sendPresence();
                 } else {
                     // etc...
                 }
             }
         }
+        console.log("RECEIVED presence for "+from+"-"+chat_status);
         if (strophieWrapper.isItSelfUser(user_id) == false) {
             //strophieWrapper.stropheLoggerPC("start of onPresenceReceived for " + user_id);
             //strophieWrapper.stropheLoggerPC(from);
@@ -380,9 +401,9 @@ var strophieWrapper = {
                     if (subscription == "to") {
                     	console.log("subscribe to -"+jid);
                         strophieWrapper.subscribe(jid, listObj[strophieWrapper.rosterDetailsKey]["nick"]);
-                    	setTimeout(function () {
-		                    strophieWrapper.sendPresence();
-		                }, 5000);
+                    	/*setTimeout(function () {
+		                strophieWrapper.sendPresence();
+		                }, 5000);*/
                     }
                 }
             }

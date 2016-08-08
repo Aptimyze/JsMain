@@ -145,7 +145,9 @@ class ProfileCacheLib
         JsMemcache::getInstance()->setHashObject($szKey, $arrParams, ProfileCacheConstants::CACHE_EXPIRE_TIME);
         $this->calculateResourceUsages($stTime,'Set : '," for key {$key}");
         //TODO : Update Local Cache also
-        $this->updateInLocalCache($key, $arrParams);
+        if (false === $this->isCommandLineScript()) {
+            $this->updateInLocalCache($key, $arrParams);
+        }
         return true;
     }
 
@@ -164,8 +166,8 @@ class ProfileCacheLib
 
         $bUpdateFromMysql = false;
         if(false === $this->isCached($szCriteria, $key, array_keys($paramArr), true)) {
-            //TODO : Need to handle this case
-            $bUpdateFromMysql = true;
+            //If Cache does not exist then do not set cache
+            return false;
         }
 
         //Now Process extraWhereCnd

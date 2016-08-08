@@ -88,11 +88,11 @@ chatConfig.Params = {
                 "tab_name": "Online Matches",
                 "groups": [
                     /*{
-                                        "id": "dpp",
-                                        "group_name": "Desired Partner Matches",
-                                        "show_group_name": true,
-                                        "hide_offline_users": false
-                                    },*/
+                        "id": "dpp",
+                        "group_name": "Desired Partner Matches",
+                        "show_group_name": true,
+                        "hide_offline_users": false
+                    },*/
                     {
                         "id": "intsent",
                         "group_name": "Interest Sent",
@@ -116,7 +116,6 @@ chatConfig.Params = {
                 "groups": [{
                     "id": "acceptance",
                     "group_name": "Acceptance",
-                    //"order_id":0,
                     "show_group_name": false,
                     "hide_offline_users": false
                 }]
