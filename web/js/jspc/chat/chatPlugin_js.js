@@ -1521,7 +1521,8 @@ JsChat.prototype = {
                 if (parseInt(logObj["SENDER"]) == self_id) {
                     //append self sent message
                     $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText" data-msgid='+logObj["FOLDERID"]+'>' + logObj["MESSAGE"] + '</div><i class="nchatspr nchatic_9 fr vertM"></i></div>');
-
+                    var len = $("#text_"+logObj["FOLDERID"]).height();
+                    $("#text_"+logObj["FOLDERID"]).next().css("margin-top",len);
                 } else if (parseInt(logObj["SENDER"]) == other_id) {
                     //console.log("done"+requestType+removeFreeMemMsg);
                     if(removeFreeMemMsg == false){
