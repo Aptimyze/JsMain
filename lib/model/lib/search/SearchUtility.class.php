@@ -105,6 +105,7 @@ class SearchUtility
 
 					if($SearchParamtersObj->getMATCHALERTS_DATE_CLUSTER())
 					{
+						
 						$week= $SearchParamtersObj->getMATCHALERTS_DATE_CLUSTER();
 						if($week=='All')
 							$week='';
@@ -114,13 +115,22 @@ class SearchUtility
 							rsort($weekArr);
 							$week = $weekArr[0];
 						}
-						if($week || $SearchParamtersObj->getNEWSEARCH_CLUSTERING() || ($_GET["moreLinkCluster"] && in_array($_GET["moreLinkCluster"],array('OCCUPATION','EDU_LEVEL_NEW'))))
-						{
-							$MatchAlerts = new MatchAlerts();
+						//if($week || $SearchParamtersObj->getNEWSEARCH_CLUSTERING() || ($_GET["moreLinkCluster"] && in_array($_GET["moreLinkCluster"],array('OCCUPATION','EDU_LEVEL_NEW'))))
+						//{
+							//$MatchAlerts = new MatchAlerts();
+							//$matArr1 = $MatchAlerts->getProfilesWithOutSorting($pid,$week);
+						//}
+						//else
+							//$matArr1 = $SearchParamtersObj->getAlertsDateConditionArr();
+							
+						//if($week=='')
+						//	$matArr1 = $SearchParamtersObj->getAlertsDateConditionArr();
+						//else{
+								$MatchAlerts = new MatchAlerts();
 							$matArr1 = $MatchAlerts->getProfilesWithOutSorting($pid,$week);
-						}
-						else
-							$matArr1 = $SearchParamtersObj->getAlertsDateConditionArr();
+						//}
+							
+							
 					}
 					else
 						$matArr1 = KundliAlerts::getProfilesWithOutSorting($pid);

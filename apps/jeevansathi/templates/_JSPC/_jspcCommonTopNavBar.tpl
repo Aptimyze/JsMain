@@ -266,8 +266,8 @@ window.onload=function(){
                                 <li><div class="topnavp1"><a class="disp_b" href="/settings/jspcSettings?changePassword=1">Change Password</a></div></li>
                                 <li>
                                     <div class="clearfix topnavp1">
-                                        <div class="fl pt5"><a class="disp_b" href="/profile/mem_comparison.php">You are ~if strstr($subscription,"F") or strstr($subscription,"D")`a Paid~else`Free~/if` Member  </a></div>
-                                        ~if strstr($subscription,"F") or strstr($subscription,"D")`
+                                        <div class="fl pt5"><a class="disp_b" href="/profile/mem_comparison.php">You are~if CommonFunction::getMembershipName($profileid) neq 'Free'` a Paid~else` a Free~/if` Member  </a></div>
+                                        ~if CommonFunction::getMembershipName($profileid) neq 'Free'`
                                         ~else`
                                         <div class="fr">
                                             <div class="bg_pink navp2"><a class="colrw disp_b" href="/profile/mem_comparison.php">Upgrade</a></div>

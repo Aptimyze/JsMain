@@ -722,6 +722,12 @@ return $edu;
 				$dpp = $this->getDppData($operatorProfileObj);
 				$data["DPP"] = $dpp;
 			}
+
+			if($widgetArray["primaryMailGifFlag"])
+			{
+				$data["GifFlag"] = $this->getGifFlag($emailId);
+				
+			}
 			if($widgetArray["membershipFlag"])
 			{
 				if(strstr($operatorProfileObj->getSUBSCRIPTION(),'F'))
@@ -808,5 +814,16 @@ return $edu;
 
 	}
 
+	public function getGifFlag($email)
+	{
+		if(strpos($email,"gmail"))
+		{
+			return ((date("d")%2));
+		}
+		else
+		{
+			return 0;
+		}
+	}
 }
 ?>

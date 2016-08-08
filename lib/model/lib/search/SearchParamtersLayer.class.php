@@ -133,9 +133,9 @@ class SearchParamtersLayer
 					$SearchParamtersObj = PredefinedSearchFactory::getSetterBy('MembersLookingForMe',$loggedInProfileObj);
 				elseif($twowaymatch)
 					$SearchParamtersObj = PredefinedSearchFactory::getSetterBy('TwoWayMatch',$loggedInProfileObj);
-                                elseif($verifiedMatches)
+        elseif($verifiedMatches)
 					$SearchParamtersObj = PredefinedSearchFactory::getSetterBy('verifiedMatches',$loggedInProfileObj);
-                                elseif($ContactViewAttempts)
+			  elseif($ContactViewAttempts)
 					$SearchParamtersObj = PredefinedSearchFactory::getSetterBy('ContactViewAttempts',$loggedInProfileObj);
 				else
 					$SearchParamtersObj = PredefinedSearchFactory::getSetterBy('searchId',$loggedInProfileObj);

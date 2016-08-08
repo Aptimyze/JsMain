@@ -163,5 +163,14 @@ class ProcessHandler
 			break;
 	}
  }
+ 
+ 
+  public function logDuplicate($phone,$profileId)
+ {
+	$profileObj=new Profile();
+        $profileObj->getDetail($profileId, 'PROFILEID',"*");
+        
+        Duplicate::logIfDuplicate($profileObj,$phone);
+ }
 }
 ?>
