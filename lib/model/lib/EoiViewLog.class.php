@@ -53,7 +53,9 @@ class EoiViewLog{
             
             for($i=0;$i<3;$i++)
             {
+            
             $tempShard =  JsDbSharding::getShardNo($i);    
+            if(!count($shardArray[$tempShard])) continue;
             $eoiViewLogStore = new NEWJS_EOI_VIEWED_LOG($tempShard);
             $eoiViewLogStore->insertMultiple($shardArray[$tempShard]);
             unset($eoiViewLogStore);
