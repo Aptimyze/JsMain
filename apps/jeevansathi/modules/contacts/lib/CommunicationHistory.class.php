@@ -220,9 +220,9 @@ class CommunicationHistory
 					break;
 				
 				case "IR":
-					$result[$count]["header"] = $value["who"]." expressed interest";
+					$result[$count]["header"] = " ";
 					if(!$value["message"])
-						$result[$count]["message"]=$result[$count]["header"];
+						$result[$count]["message"]=$value["who"]." expressed interest";
 					else
 						$result[$count]["message"] = $value["message"];
 					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
@@ -231,9 +231,9 @@ class CommunicationHistory
 					$count++;
 					break;
 				case "RR":
-					$result[$count]["header"] = $value["who"]." sent a reminder";
+					$result[$count]["header"] = " ";
 					if(!$value["message"])
-						$result[$count]["message"]=$result[$count]["header"];
+						$result[$count]["message"]=$value["who"]." sent a reminder";
 					else
 						$result[$count]["message"] = $value["message"];
 					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
@@ -242,9 +242,9 @@ class CommunicationHistory
 					$count++;
 					break;
 				case "AR":
-					$result[$count]["header"] = $value["who"]." accepted your interest";
+					$result[$count]["header"] = " ";
 					if(!$value["message"])
-						$result[$count]["message"]=$result[$count]["header"];
+						$result[$count]["message"]=$value["who"]." accepted your interest";
 					else
 						$result[$count]["message"] = $value["message"];
 					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
@@ -253,9 +253,9 @@ class CommunicationHistory
 					$count++;
 					break;
 				case "DR":
-					$result[$count]["header"] = $value["who"]." declined your interest";
+					$result[$count]["header"] = " ";
 					if(!$value["message"])
-						$result[$count]["message"]=$result[$count]["header"];
+						$result[$count]["message"]=$value["who"]." declined your interest";
 					else
 						$result[$count]["message"] = $value["message"];
 					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
@@ -263,9 +263,9 @@ class CommunicationHistory
 					$count++;
 					break;
 				case "CR":
-					$result[$count]["header"] = $value["who"]." cancelled $hisher interest";
+					$result[$count]["header"] = " ";
 					if(!$value["message"])
-						$result[$count]["message"]=$result[$count]["header"];
+						$result[$count]["message"]=$value["who"]." cancelled $hisher interest";
 					else
 						$result[$count]["message"] =$value["message"];// $value["who"]." cancelled $hisher interest";
 					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
@@ -274,9 +274,9 @@ class CommunicationHistory
 					$count++;
 					break;
                                 case "ER":
-                                        $result[$count]["header"] = $value["who"]." cancelled $hisher interest";
+                                        $result[$count]["header"] = " ";
                                         if(!$value["message"])
-											$result[$count]["message"]=$result[$count]["header"];
+											$result[$count]["message"]=$value["who"]." cancelled $hisher interest";
 										else
 											$result[$count]["message"] = $value["message"];//$value["who"]." cancelled $hisher interest";
                                         $result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
@@ -308,9 +308,9 @@ class CommunicationHistory
 					$count++;
 					break;
 				case "RS":
-					$result[$count]["header"] = $value["who"]." sent a reminder";
+					$result[$count]["header"] = " ";
 					if(!$value["message"])
-						$result[$count]["message"]=$result[$count]["header"];
+						$result[$count]["message"]=$value["who"]." sent a reminder";
 					else
 						$result[$count]["message"] = $value["message"];
 					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
@@ -319,9 +319,9 @@ class CommunicationHistory
 					$count++;
 					break;
 				case "IS":
-					$result[$count]["header"] = $value["who"]." expressed interest";
+					$result[$count]["header"] = " ";
 					if(!$value["message"])
-						$result[$count]["message"]=$result[$count]["header"];
+						$result[$count]["message"]=$value["who"]." expressed interest";
 					else
 						$result[$count]["message"] = $value["message"];
 					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
@@ -330,9 +330,9 @@ class CommunicationHistory
 					$count++;
 					break;
 				case "TIS":
-                                        $result[$count]["header"] = $value["who"]." expressed interest";
+                                        $result[$count]["header"] = " ";
                                         if(!$value["message"])
-											$result[$count]["message"]=$result[$count]["header"];
+											$result[$count]["message"]=$value["who"]." expressed interest";
 										else
 											$result[$count]["message"] = $value["message"];
                                         $result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
@@ -341,9 +341,9 @@ class CommunicationHistory
                                         $count++;
                                         break;
 				case "AS":
-					$result[$count]["header"] = $value["who"]." accepted $hisher interest";
+					$result[$count]["header"] = " ";
 					if(!$value["message"])
-						$result[$count]["message"]=$result[$count]["header"];
+						$result[$count]["message"]=$value["who"]." accepted $hisher interest";
 					else
 						$result[$count]["message"] = $value["message"];
 					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
@@ -352,9 +352,9 @@ class CommunicationHistory
 					$count++;
 					break;
 				case "DS":
-					$result[$count]["header"] = $value["who"]." declined $hisher interest";
+					$result[$count]["header"] = " ";
 					if(!$value["message"])
-						$result[$count]["message"]=$result[$count]["header"];
+						$result[$count]["message"]=$value["who"]." declined $hisher interest";
 					else
 						$result[$count]["message"] = $value["message"];
 					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
@@ -363,9 +363,9 @@ class CommunicationHistory
 					$count++;
 					break;
 				case "CS":
-					$result[$count]["header"] = $value["who"]." cancelled interest";
+					$result[$count]["header"] = " ";
 					if(!$value["message"])
-						$result[$count]["message"]=$result[$count]["header"];
+						$result[$count]["message"]=$value["who"]." cancelled interest";
 					else
 						$result[$count]["message"] = $value["message"];//$value["who"]." cancelled interest";
 					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
@@ -374,9 +374,9 @@ class CommunicationHistory
 					$count++;
 					break;
                                 case "ES":
-                                        $result[$count]["header"] = $value["who"]." cancelled interest";
+                                        $result[$count]["header"] = " ";
                                         if(!$value["message"])
-											$result[$count]["message"]=$result[$count]["header"];
+											$result[$count]["message"]=$value["who"]." cancelled interest";
 										else
 											$result[$count]["message"] =$value["message"];// $value["who"]." cancelled interest";
                                         $result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
@@ -401,9 +401,9 @@ class CommunicationHistory
 					$count++;
 					break;
 				case "MR":
-					$result[$count]["header"] = $value["who"]." sent a Message";
+					$result[$count]["header"] = " ";
 					if(!$value["message"])
-						$result[$count]["message"]=$result[$count]["header"];
+						$result[$count]["message"]=$value["who"]." sent a Message";
 					else
 						$result[$count]["message"] = $value["message"];
 					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
@@ -412,9 +412,9 @@ class CommunicationHistory
 					$count++;
 					break;
 				case "MS":
-					$result[$count]["header"] = "You sent a Message";
+					$result[$count]["header"] = " ";
 					if(!$value["message"])
-						$result[$count]["message"]=$result[$count]["header"];
+						$result[$count]["message"]="You sent a Message";
 					else
 						$result[$count]["message"] = $value["message"];
 					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
@@ -423,9 +423,9 @@ class CommunicationHistory
 					$count++;
 					break;
 				case "IV":
-                                       $result[$count]["header"] = $value['who']." viewed your interest";
+                                       $result[$count]["header"] = " ";
                                        if(!$value["message"])
-											$result[$count]["message"]=$result[$count]["header"];
+											$result[$count]["message"]=$value['who']." viewed your interest";
 										else
 											$result[$count]["message"] = $value['message'];
                                        $result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
