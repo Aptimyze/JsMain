@@ -1119,6 +1119,8 @@ JsChat.prototype = {
         }
         this._chatLoggerPlugin("chatboxtype--" + chatBoxType);
         $('chat-box[user-id="' + userId + '"]').attr("group-id", groupID);
+        //Manvi
+        curElem._changeLocalStorage("changeGroup",userId,groupId,"");
         $('chat-box[user-id="' + userId + '"]').attr("data-contact", chatBoxType);
         return chatBoxType;
     },
@@ -2125,6 +2127,12 @@ JsChat.prototype = {
             $.each(data,function(index,elem){
                 if(elem["userId"] == userId) {
                     elem["state"] = newState;
+                }
+            });
+        } else if(type == "changeGroup") {
+            $.each(data,function(index,elem){
+                if(elem["userId"] == userId) {
+                    elem["group"] = groupId;
                 }
             });
         }
