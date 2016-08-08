@@ -3,8 +3,7 @@
 */
 var loadImageId = "idd1"; // First image id to load
 var loadFeaturedImageId = "iddf1"; // first featured profile image id
-var minAcceptedGunaScore = 18;		//Minimum gunaScore below which profiles shouldnt be shown on Kundli Matches
-
+var profChecksumCheckArr = new Array();
 /**
 * Document ready function to populate first response
 */
@@ -1010,7 +1009,7 @@ function getGunaScore(response)
 			});
 		}
 	});
-
+	profChecksumCheckArr = profilechecksumArr;
 	//The profileChecksumArr contains profilechecksum of both profiles and featured profiles on a particular page
 	profilechecksumArr = profilechecksumArr.join(",");
 	$.myObj.ajax({
@@ -1026,6 +1025,24 @@ function getGunaScore(response)
 			{
 				if(searchBasedParam == 'kundlialerts')
 				{
+					$.each(profChecksumCheckArr, function(index, value){
+						var flag = false;
+						$.each(gunaScoreArr, function(key,val){	
+							$.each(val, function(profchecksum,gunaScore){
+								if(value === profchecksum)
+								{
+									flag = true;
+								}
+							});	
+						});
+						if(flag == false)
+						{
+							deleteChecksumArr.push(value);
+						}
+					});
+					
+
+
 					$.each(gunaScoreArr, function(key,val){	
 						$.each(val, function(profchecksum,gunaScore){
 							if(gunaScore <= searchResponse.minAcceptedGunaScore)
