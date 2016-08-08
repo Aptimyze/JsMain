@@ -172,6 +172,8 @@ var strophieWrapper = {
     //executed on new push/remove event in roster
     onRosterUpdate: function (iq) {
         //strophieWrapper.stropheLoggerPC("in onRosterPush");
+        console.log("onRosterUpdate");
+        console.log(iq);
         strophieWrapper.stropheLoggerPC(iq);
         var nodeObj = xmlToJson(iq);
         rosterObj = strophieWrapper.formatRosterObj(nodeObj["query"]["item"]);
