@@ -829,7 +829,7 @@ JsChat.prototype = {
     onSendingMessage: null,
     onChatBoxContactButtonsClick: null,
     storeMessagesInLocalHistory: function(selfJID,other,newMsg,type){
-        if(storeMessagesInLocalHistory){
+        if(localStorageExists){
             console.log(newMsg);
             var oldMessages = JSON.parse(localStorage.getItem(selfJID+'_'+other));
             if(type == 'send' || type == 'receive'){
