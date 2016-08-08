@@ -501,7 +501,7 @@ JsChat.prototype = {
         
         
         $(window).focus(function() {
-            console.log("tab changed");
+            //console.log("tab changed");
             if(localStorage.getItem("lastUId")) {
                 if($(".tabUId").attr("id") != localStorage.getItem("lastUId")){
                     elem._updateChatStructure("exsisting");
@@ -827,6 +827,24 @@ JsChat.prototype = {
     _bindUnblock: function (userId) {},
     onSendingMessage: null,
     onChatBoxContactButtonsClick: null,
+    storeMessagesInLocalHistory: function(selfJID,other,newMsg,type){
+        console.log(newMsg);
+        var oldMessages = JSON.parse(localStorage.getItem(selfJID+'_'+other));
+        if(type == 'send' || type == 'receive'){
+            oldMessages.unshift(newMsg);
+        }
+        else if(type == 'history'){
+            if(typeof oldMessages == "undefined" || oldMessages == '' || oldMessages == null){
+                oldMessages = newMsg;
+            }
+            else{
+                oldMessages.push(newMsg);
+            }
+                
+            //newMsg.unshift(oldMessages);
+        }
+        localStorage.setItem(selfJID+'_'+other,JSON.stringify(oldMessages));
+    },
     //sending chat
     _bindSendChat: function (userId) {
         var _this = this,
@@ -885,6 +903,35 @@ JsChat.prototype = {
                             if (messageId) $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + messageId);
                             console.log("sent");
                             console.log(msgSendOutput);
+                            var newMsg = {
+                                'SENDER': selfJID.split('@')[0],
+                                'RECEIVER': userId,
+                                'DATE': '',
+                                'MESSAGE': text,
+                                'FOLDERID': messageId,
+                                'ID': ''
+                            };
+                            _this.storeMessagesInLocalHistory(selfJID.split('@')[0],userId,newMsg,'send');
+                            /*
+                            var sjid=selfJID.split('@')[0];
+                            var oldMessages = JSON.parse(localStorage.getItem(sjid+'_'+userId)) || [];
+                            var newMsg = {
+                              'from':sjid,
+                              'to':userId,
+                              'msg':text
+                            };
+                            //var temp = [];
+                            oldMessages.unshift(newMsg);
+                            //newMsg.push(oldMessages);
+                            //temp.push(oldMessages);
+                            console.log(typeof oldMessages);
+                            console.log(JSON.parse(localStorage.getItem(sjid+'_'+userId)),"log");
+                            //oldMessages.push(newMsg);
+                            localStorage.setItem(sjid+'_'+userId,JSON.stringify(oldMessages));
+                            */
+                            console.log("**************");
+                            //var oldMessages = JSON.parse(localStorage.getItem(sjid+'_'+userId));
+                            //console.log(oldMessages);
                             if (msgSendOutput["sent"] == false || msgSendOutput["cansend"] == false) {
                                 var error_msg = msgSendOutput['errorMsg'] || "Something went wrong";
                                 $('chat-box[user-id="' + userId + '"] #restrictMessgTxt').remove();
@@ -1508,6 +1555,7 @@ JsChat.prototype = {
     //append chat history in chat box
     _appendChatHistory: function (selfJID, otherJID, communication,requestType) {
         //console.log("self message");
+        this.storeMessagesInLocalHistory(selfJID.split('@')[0],otherJID.split('@')[0],communication,'history');
         console.log("_appendChatHistory"+requestType);
         var self_id = selfJID.split("@")[0],
             other_id = otherJID.split("@")[0],
@@ -1585,8 +1633,19 @@ JsChat.prototype = {
     _appendRecievedMessage: function (message, userId, uniqueId) {
         var curEle = this,
             that = this;
+        var selfJID = getConnectedUserJID(); 
+        selfJID = selfJID.split('@')[0];
+        var newMsg = {
+            'SENDER': userId,
+            'RECEIVER': selfJID,
+            'DATE': '',
+            'MESSAGE': message,
+            'FOLDERID': uniqueId,
+            'ID': ''
+        };
         this._chatLoggerPlugin("in _appendRecievedMessage");
         //append received message in chatbox
+        this.storeMessagesInLocalHistory(selfJID, userId, newMsg, 'receive')
         if (typeof message != "undefined" && message != "") {
             //if chat box is not opened
             if ($('chat-box[user-id="' + userId + '"]').length == 0) {
