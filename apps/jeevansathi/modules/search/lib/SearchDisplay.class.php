@@ -56,8 +56,13 @@ class SearchDisplay
 		{
 			$degreeGrouping = FieldMap::getFieldLabel("degree_grouping","","1");
 				
-                        if($education != '')
-                                $showEducation[]=FieldMap::getFieldLabel($decoratedFieldName,$education);
+                        if($education != ''){
+                                $educationExploded = explode(",",$education);
+                                $eduString = "";
+                                foreach($educationExploded as $key=>$val){
+                                    $showEducation[] = FieldMap::getFieldLabel($decoratedFieldName,$val);
+                                }
+                        }
                         if($pgDegree != '')
                                 $showEducation[]=FieldMap::getFieldLabel($decoratedFieldName,$pgDegree);
                         if($ugDegree != '')
