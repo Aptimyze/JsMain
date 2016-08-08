@@ -482,7 +482,7 @@ class ProfileCacheLib
     /**
      * @return bool
      */
-    private function isCommandLineScript()
+    public function isCommandLineScript()
     {
         return (php_sapi_name() === ProfileCacheConstants::COMMAND_LINE);
     }
