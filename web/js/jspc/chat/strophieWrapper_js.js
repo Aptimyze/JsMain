@@ -194,6 +194,7 @@ var strophieWrapper = {
                 //strophieWrapper.stropheLoggerPC("adding node");
                 //strophieWrapper.stropheLoggerPC(subscription);
                 if (typeof strophieWrapper.Roster[user_id] == "undefined") {
+                    console.log("adding new1");
                     invokePluginManagelisting(nodeArr, "add_node", user_id);
                 } else if (typeof strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["groups"] != "undefined") {
                     var oldGroupId = strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["groups"][0];
@@ -204,6 +205,7 @@ var strophieWrapper = {
                         invokePluginManagelisting(oldArr, "delete_node", user_id);
                         //strophieWrapper.stropheLoggerPC("adding node");
                         //strophieWrapper.stropheLoggerPC(nodeArr);
+                        console.log("adding new 2");
                         invokePluginManagelisting(nodeArr, "add_node", user_id);
                     }
                 }
