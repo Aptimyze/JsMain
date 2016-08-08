@@ -88,6 +88,26 @@ function chatLoggerPC(msgOrObj) {
     */
 }
 
+/*getMessagesFromLocalStorage
+ * Fetch messages from local storage
+ */
+function getMessagesFromLocalStorage(selfJID, other_id){
+    var page = parseInt($("#moreHistory_"+other_id).attr("data-page"));
+    
+    $("#moreHistory_"+other_id).attr("data-page",page+1);
+    var chunk = chatConfig.Params[device].moreMsgChunk;
+    var oldMessages = JSON.parse(localStorage.getItem(selfJID+'_'+other_id));
+    if(oldMessages){
+        var pc = page*chunk;
+        var messages = [];
+        var limit = Math.min(pc+chunk,oldMessages.length);
+        for(var i=pc;i<limit;i++){
+            messages.push(oldMessages[i]);
+        }
+    }
+    return messages;
+}
+
 /*getChatHistory
  * fetch chat history on opening window again
  * @inputs: chatParams
@@ -116,7 +136,13 @@ function getChatHistory(apiParams,key) {
             fetchFromLocalStorage = false;
         }
     }
-    if(fetchFromLocalStorage == false){
+    var messageFromLocalStorage = getMessagesFromLocalStorage(apiParams["extraParams"]["from"].split("@")[0], apiParams["extraParams"]["to"].split("@")[0]);
+    if(!(messageFromLocalStorage == undefined || messageFromLocalStorage == null || messageFromLocalStorage.length  == 0)){
+        manageHistoryLoader(bare_to_jid,"hide");
+        //call plugin function to append history in div
+        objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], messageFromLocalStorage,key);
+    }
+    else{
         //console.log("api for history");
 
         if (typeof chatConfig.Params.chatHistoryApi["extraParams"] != "undefined") {
@@ -152,6 +178,7 @@ function getChatHistory(apiParams,key) {
                         manageHistoryLoader(bare_to_jid,"hide");
                         //call plugin function to append history in div
                         objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], $.parseJSON(response["Message"]),key);
+                        objJsChat.storeMessagesInLocalHistory(apiParams["extraParams"]["from"].split('@')[0],apiParams["extraParams"]["to"].split('@')[0],$.parseJSON(response["Message"]),'history');
                     }
                     else{
                         $("#moreHistory_"+bare_to_jid.split("@")[0]).val("0");
@@ -167,15 +194,6 @@ function getChatHistory(apiParams,key) {
                 //return "error";
             }
         });
-    }
-    else{
-        ////console.log("localStorage for history");
-        if(!oldHistory){
-            oldHistory = "{}";
-        }
-        manageHistoryLoader(bare_to_jid,"hide");
-        //call plugin function to append history in div
-        objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], $.parseJSON(oldHistory));
     }
 }
 
