@@ -504,9 +504,14 @@ function checkAuthentication() {
             } else {
                 //chatLoggerPC(data.responseMessage);
                 //chatLoggerPC("In checkAuthentication failure");
-                eraseCookie("chatAuth");
                 auth = 'false';
+                invokePluginLoginHandler("failure");
             }
+        },
+        error: function (xhr) {
+                auth = 'false';
+                invokePluginLoginHandler("failure");
+                //return "error";
         }
     });
     return auth;
@@ -686,7 +691,7 @@ function handlePreAcceptChat(apiParams) {
                         }
                     } else {
                         outputData = response;
-                        outputData["msg_id"] = response["messageid"];
+                        outputData["msg_id"] = strophieWrapper.getUniqueId();
                     }
                 }
             },

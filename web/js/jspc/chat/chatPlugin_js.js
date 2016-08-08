@@ -957,7 +957,7 @@ JsChat.prototype = {
                                     $(superParent).find("#sendInt").remove();
                                 }
                                 if (msgSendOutput["sent"] == true) {
-                                    console.log("marking");
+                                    console.log("marking sent");
                                     _this._changeStatusOfMessg(messageId, userId, "recieved");
                                 }
                                 if (msgSendOutput["cansend"] == false) {
@@ -1111,6 +1111,9 @@ JsChat.prototype = {
             case chatConfig.Params.categoryNames["Interest Received"]:
                 chatBoxType = curElem._contactStatusMapping["pg_acceptance_pending"]["key"];
                 break;
+            case chatConfig.Params.categoryNames["Interest Sent"]:
+                chatBoxType = curElem._contactStatusMapping["pog_acceptance_pending"]["key"];
+                break;
             default:
                 chatBoxType = curElem._contactStatusMapping[curElem._groupBasedChatBox[groupID]]["key"];
                 break;
@@ -1122,6 +1125,7 @@ JsChat.prototype = {
         this._chatLoggerPlugin("chatboxtype--" + chatBoxType);
         $('chat-box[user-id="' + userId + '"]').attr("group-id", groupID);
         $('chat-box[user-id="' + userId + '"]').attr("data-contact", chatBoxType);
+        curElem._changeLocalStorage("changeGroup",userId,groupID,"");
         return chatBoxType;
     },
     _postChatPanelsBox: function (userId) {
@@ -1237,7 +1241,7 @@ JsChat.prototype = {
                                 $(this).html(response.actiondetails.errmsglabel);
                             } else {
                                 $(this).find("#sentDiv").removeClass("disp-none");
-                                $(this).find("#initiateText,#chatBoxErr").remove();
+                                $(this).find("#initiateText,#chatBoxErr,#sendInt").remove();
                                 //$(this).remove();
                                 new_contact_state = curElem._contactStatusMapping["pog_acceptance_pending"]["key"];
                                 $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
@@ -1253,6 +1257,7 @@ JsChat.prototype = {
             });
             break;
         case curElem._contactStatusMapping["pog_acceptance_pending"]["key"]:
+            $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sendInt,#restrictMessgTxt,#initiateText,#chatBoxErr").remove();
             $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
             //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
             break;
@@ -1434,7 +1439,7 @@ JsChat.prototype = {
             $(curElem._chatBottomPanelID).css("bottom", "0px");
         }*/
         if ($(curElem._chatBottomPanelID).length == 0) {
-            $("body").append("<div id='chatBottomPanel' class='btmNegtaive pos_fix calhgt2 z4 fontlig hgt57'></div>");
+            $("body").append("<div id='chatBottomPanel' class='btmNegtaive pos_fix calhgt2 z5 fontlig hgt57'></div>");
             curElem._bottomPanelWidth = $(window).width() - $(curElem._parendID).width();
             $(curElem._chatBottomPanelID).css('max-width', curElem._bottomPanelWidth);
             $(curElem._chatBottomPanelID).css("right", $(curElem._parendID).width());
@@ -1504,7 +1509,7 @@ JsChat.prototype = {
         chatBoxProto.attachedCallback = function () {
             userId = $(this).attr("user-id");
             this.innerHTML = '<div class="chatBoxBar fullwid hgt57 bg5 pos-rel fullwid"></div><div class="chatArea fullwid fullhgt"><div class="messageArea f13 bg13 fullhgt"><div id="chatMessage_'+userId+'" class="chatMessage pos_abs fullwid scrollxy" style="height: 246px;"><input type="hidden" value="0" id="moreHistory_'+userId+'" data-latestMsgId="" data-page="0"/><div class="spinner2 disp-none"></div><div id="chatHistory_' + userId + '" class="clearfix"></div><div class="spinner"></div></div></div><div class="chatInput brdrbtm_new fullwid btm0 pos-abs bg-white"><textarea cols="23" maxlength="'+elem._maxMsgLimit+'" style="width: 220px;" id="txtArea"  class="inputText lh20 brdr-0 padall-10 colorGrey hgt18 fontlig" placeholder="Write message"></textarea></div></div>';
-            $(this).addClass("b297 hgt352 brd_new fr mr7 fullhgt wid240 pos-rel disp_ib");
+            $(this).addClass("z5 b297 hgt352 brd_new fr mr7 fullhgt wid240 pos-rel disp_ib");
             status = $(this).attr("status-user");
             elem._appendInnerHtml(userId, status);
         };
@@ -1765,6 +1770,7 @@ JsChat.prototype = {
         if (messgId) {
             this._chatLoggerPlugin("Change status" + newStatus);
             if (newStatus == "recieved") {
+                console.log("marked");
                 $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_8").addClass("nchatic_10");
             } else if (newStatus == "recievedRead") {
                 $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_8").addClass("nchatic_10");
@@ -2124,6 +2130,12 @@ JsChat.prototype = {
             $.each(data,function(index,elem){
                 if(elem["userId"] == userId) {
                     elem["state"] = newState;
+                }
+            });
+        } else if(type == "changeGroup") {
+            $.each(data,function(index,elem){
+                if(elem["userId"] == userId) {
+                    elem["group"] = groupId;
                 }
             });
         }
