@@ -261,6 +261,13 @@ chatConfig.Params = {
                 "enableChat": true,
                 "showHistory": true,
                 "checkForPaidInitiation":true
+            },
+            "pg_interest_accepted": {
+                "key": "pg_interest_accepted",
+                "useOpenfireForChat": true,
+                "enableChat": true,
+                "showHistory": true,
+                "checkForPaidInitiation":true
             }
         },
         //max count of nodes limit per group
