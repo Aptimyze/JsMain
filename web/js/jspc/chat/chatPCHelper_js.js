@@ -920,6 +920,26 @@ $(document).ready(function () {
             contactStatusMapping: chatConfig.Params[device].contactStatusMapping,
             maxMsgLimit:chatConfig.Params[device].maxMsgLimit
         });
+        $(window).on("offline", function () {
+            strophieWrapper.currentConnStatus = Strophe.Status.DISCONNECTED;
+        });
+        $(window).on("online", function () {
+            globalSleep(15000);
+            //console.log("detected internet connectivity");
+            chatLoggedIn = readCookie('chatAuth');
+            if (chatLoggedIn == 'true' && loginStatus == "Y") {
+                if (username && pass) {
+                    strophieWrapper.reconnect(chatConfig.Params[device].bosh_service_url, username, pass);
+                }
+            }
+        });
+        if (chatLoggedIn == 'true') {
+            checkAuthentication();
+            loginStatus = "Y";
+            initiateChatConnection();
+        } else {
+            loginStatus = "N";
+        }
         objJsChat.onEnterToChatPreClick = function () {
             //objJsChat._loginStatus = 'N';
             //chatLoggerPC("Checking variable");
@@ -1094,49 +1114,7 @@ $(document).ready(function () {
             });
         }
         objJsChat.start();
-        $(window).on("offline", function () {
-            strophieWrapper.currentConnStatus = Strophe.Status.DISCONNECTED;
-        });
-        $(window).on("online", function () {
-            globalSleep(15000);
-            //console.log("detected internet connectivity");
-            /*if (chatLoggedIn == 'true') {
-                var tAuth = checkAuthentication();
-                if (tAuth == 'true') {
-                    //chatLoggerPC("authentication successful");
-                    initiateChatConnection();
-                    if (strophieWrapper.getCurrentConnStatus()) {
-                        //chatLoggerPC("Strophe Connection successful");
-                        loginStatus = "Y";
-                        objJsChat = new JsChat({
-                            loginStatus: loginStatus,
-                            mainID: "#chatOpenPanel",
-                            //profilePhoto: "<path>",
-                            imageUrl: imgUrl,
-                            profileName: "bassi",
-                            listingTabs: chatConfig.Params[device].listingTabs,
-                            rosterDetailsKey: strophieWrapper.rosterDetailsKey,
-                            listingNodesLimit: chatConfig.Params[device].groupWiseNodesLimit,
-                            groupBasedChatBox: chatConfig.Params[device].groupBasedChatBox,
-                            contactStatusMapping: chatConfig.Params[device].contactStatusMapping
-                        });
-                    }
-                }
-            }*/
-            chatLoggedIn = readCookie('chatAuth');
-            if (chatLoggedIn == 'true' && loginStatus == "Y") {
-                if (username && pass) {
-                    strophieWrapper.reconnect(chatConfig.Params[device].bosh_service_url, username, pass);
-                }
-            }
-        });
-        if (chatLoggedIn == 'true') {
-            checkAuthentication();
-            loginStatus = "Y";
-            initiateChatConnection();
-        } else {
-            loginStatus = "N";
-        }
+        
     }
 
 });
