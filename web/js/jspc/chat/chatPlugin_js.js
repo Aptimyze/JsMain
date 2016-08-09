@@ -614,7 +614,8 @@ JsChat.prototype = {
     _textAreaAdjust: function (o) {
         o.style.height = "1px";
         o.style.height = (o.scrollHeight - 16) + "px";
-        var height = 250 - (o.scrollHeight - 44);
+        var elem = $(o);
+        var height = 294 - elem.parent().height();
         if (height > 195) {
             $(o).closest("div").parent().find(".chatMessage").css("height", height);
         } else {
@@ -821,12 +822,12 @@ JsChat.prototype = {
                     } else {
                         //var htmlStr = sessionStorage.getItem("htmlStr_" + userId);
                         $('chat-box[user-id="' + userId + '"] #chatBoxErr').remove();
-                        $('chat-box[user-id="' + userId + '"] .chatMessage').append("<div class='color5 pos-rel txtc fullwid nchatm90' id='chatBoxErr'>" + response.responseMessage + "</div>");
+                        $('chat-box[user-id="' + userId + '"] .chatMessage').append("<div class='color5 pos-rel txtc fullwid nchatm85 mb20' id='chatBoxErr'>" + response.responseMessage + "</div>");
                         //$(this).html(response.responseMessage);
                     }
                 } else {
                     $('chat-box[user-id="' + userId + '"] #chatBoxErr').remove();
-                    $('chat-box[user-id="' + userId + '"] .chatMessage').append("<div class='color5 pos-rel txtc fullwid nchatm90' id='chatBoxErr'>Something went wrong,please try later</div>");
+                    $('chat-box[user-id="' + userId + '"] .chatMessage').append("<div class='color5 pos-rel txtc fullwid nchatm85 mb20' id='chatBoxErr'>Something went wrong,please try later</div>");
                 }
             }
         });
@@ -967,6 +968,7 @@ JsChat.prototype = {
                                 if (msgSendOutput["sent"] == true) {
                                     if ($(superParent).find("#sendInt").length != 0) {
                                         $(superParent).find(".chatMessage").append("<div class='pos-rel fr pr10' id='interestSent'>Your interest has been sent</div>");
+                                        $(superParent).find(".chatMessage #sentDiv").remove();
                                         //$(superParent).find("#initiateText,#chatBoxErr").remove();
                                         $(superParent).find("#sendInt").remove();
                                     }
@@ -1224,7 +1226,7 @@ JsChat.prototype = {
         case curElem._contactStatusMapping["pg_interest_pending"]["key"]:
             $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="sendInterest cursp sendDiv pos-abs color5 mt10 wid70p txtc"><i class="nchatspr nchatic_6 "></i><span class="vertTexBtm"> Send Interest</span></div><div id="sentDiv" class="sendDiv disp-none pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
             //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="initiateText" class="color5 pos-rel txtc fullwid nchatm90">Initiating chat will also send your interest</div>');
+            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="initiateText" class="color5 pos-rel txtc fullwid nchatm85 mb20">Initiating chat will also send your interest</div>');
             $('chat-box[user-id="' + userId + '"] #sendInt').on("click", function () {
                 if (typeof curElem.onChatBoxContactButtonsClick == "function") {
                     response = curElem.onChatBoxContactButtonsClick({
