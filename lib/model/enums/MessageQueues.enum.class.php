@@ -11,6 +11,7 @@ class MessageQueues
   CONST GCMQUEUE = "SmsGcmQueue"; //Queue for storing gcm. Currenly same queue is used for both SMS and GCM.
   CONST CONSUMER_COUNT_SINGLE = 1; //This is to ensure that only 1 consumer instance runs at a time.
   CONST UPDATE_SEEN_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
+  CONST PROFILE_CACHE_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST INVALIDATECACHE = "invalidateCache";
   //per queue msg limit mapping
   public static $upperMessageLimitPerQueue = array("default"=>1000,"INSTANT_NOTIFICATION_QUEUE"=>10000);
@@ -42,6 +43,7 @@ class MessageQueues
   CONST UPDATE_SEEN_QUEUE = "updateSeenQueue";
   CONST CRONDELETERETRIEVE_STARTCOMMAND = "symfony cron:cronConsumeDeleteRetrieveQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
   CONST UPDATESEEN_STARTCOMMAND = "symfony cron:cronConsumeUpdateSeenQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
+  CONST PROFILE_CACHE_STARTCOMMAND = "symfony profileCache:ConsumeQueue"; //Command to start profile cache queue consuming cron
   /*----------------JS notification(scheduled/instant) queues configuration details--------------------------*/
 
   public static $SCHEDULED_NOTIFICATION_QUEUE1 = "SCHEDULED_NOTIFICATION_QUEUE1"; //Queue for sending scheduled notification data from notification queue 1 to GCM
