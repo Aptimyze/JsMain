@@ -97,17 +97,21 @@ class Producer
 		$this->isRabbitMQServerConnected = $connectionStatus;
 	}
 
-	/**
-	 *
-	 * Encodes $msgdata(param) as json message and sends it to queue.
-	 *
-	 * <p>
-	 * declares queues and then publishes message based on process(mail/sms/gcm).
-	 * </p>
-	 *
-	 * @access public
-	 * @param $msgdata
-	 */
+  /**
+   *
+   * get value of flag $isRabbitMQServerConnected
+   *
+   * <p>
+   * returns $isRabbitMQServerConnected
+   * </p>
+   *
+   * @access public
+   * @param none
+   */
+  public function getRabbitMQServerConnected()
+  {
+    return $this->isRabbitMQServerConnected;
+  }
 
 	public function sendMessage($msgdata)
 	{
@@ -122,6 +126,7 @@ class Producer
 			$this->channel->queue_declare(MQ::DELETE_RETRIEVE_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::UPDATE_SEEN_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::CHAT_MESSAGE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+			 $this->channel->queue_declare(MQ::DUPLICATE_LOG_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 		} catch (Exception $exception) {
 			$str = "\nRabbitMQ Error in producer, Unable to" . " declare queues : " . $exception->getMessage() . "\tLine:" . __LINE__;
 			RabbitmqHelper::sendAlert($str, "default");
@@ -193,12 +198,12 @@ class Producer
 					$msg = new AMQPMessage($data, array('delivery_mode' => MQ::DELIVERYMODE));
 					$this->channel->basic_publish($msg, MQ::CHATEXCHANGE,"roster_created");
 					break;
-
-
-
+				case "DUPLICATE_LOG":
+                    $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::DUPLICATE_LOG_QUEUE,MQ::MANDATORY,MQ::IMMEDIATE);
+                    break;
 			}
 		} catch (Exception $exception) {
-			echo $str = "\nRabbitMQ Error in producer, Unable to publish message : " . $exception->getMessage() . "\tLine:" . __LINE__;die;
+			$str = "\nRabbitMQ Error in producer, Unable to publish message : " . $exception->getMessage() . "\tLine:" . __LINE__;die;
 			RabbitmqHelper::sendAlert($str, "default");
 			return;
 		}
@@ -223,21 +228,6 @@ class Producer
 		}
 	}
 
-	/**
-	 *
-	 * get value of flag $isRabbitMQServerConnected
-	 *
-	 * <p>
-	 * returns $isRabbitMQServerConnected
-	 * </p>
-	 *
-	 * @access public
-	 * @param none
-	 */
-	public function getRabbitMQServerConnected()
-	{
-		return $this->isRabbitMQServerConnected;
-	}
 }
 
 ?>

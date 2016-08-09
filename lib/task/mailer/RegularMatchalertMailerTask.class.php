@@ -56,13 +56,13 @@ EOF;
 		$mailerLinks = $mailerServiceObj->getLinks();
 		$this->smarty->assign('mailerLinks',$mailerLinks);
 		$this->smarty->assign('mailerName',MAILER_COMMON_ENUM::getSenderEnum($this->mailerName)["SENDER"]);
-		$widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>true,"googleAppTrackingFlag"=>true);
+		$widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>true,"googleAppTrackingFlag"=>true,"primaryMailGifFlag"=>true);
 		foreach($receivers as $sno=>$values)
 		{
 			$pid = $values["RECEIVER"];
 			$sno = $values["SNO"];
 			$data = $mailerServiceObj->getRecieverDetails($pid,$values,$this->mailerName,$widgetArray);
-			if(is_array($data))
+      if(is_array($data))
 			{
                                 $stypeMatch = $this->getStype($values["LOGIC_USED"]);
 				//Common Parameters required in mailer links
@@ -75,7 +75,7 @@ EOF;
 				$subject ='=?UTF-8?B?' . base64_encode($subjectAndBody["subject"]) . '?='; 
 				$this->smarty->assign('data',$data);
 				$msg = $this->smarty->fetch(MAILER_COMMON_ENUM::getTemplate($this->mailerName).".tpl");
-				$flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid);
+        $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid);
 				
 			}
 			else
