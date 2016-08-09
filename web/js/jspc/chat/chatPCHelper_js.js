@@ -106,11 +106,14 @@ function getMessagesFromLocalStorage(selfJID, other_id){
             $("#moreHistory_"+other_id).attr("data-localMsg","1");
         }
         else{
-            $("#moreHistory_"+other_id).attr("data-localMsg","0")
+            $("#moreHistory_"+other_id).attr("data-localMsg","0");
         }
         for(var i=pc;i<limit;i++){
             messages.push(oldMessages[i]);
         }
+    }
+    else{
+        $("#moreHistory_"+other_id).attr("data-localMsg","0");
     }
     return messages;
 }
