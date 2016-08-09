@@ -246,7 +246,7 @@ JsChat.prototype = {
         var curEleRef = this,
             that = this;
         
-        var lengthReq = 16;
+        var lengthReq = 14;
         var stringName = this._selfName;
         var trimmedString = stringName.length > lengthReq ? stringName.substring(0, lengthReq - 3) + "..." : stringName;
         var chatHeaderHTML = '<div class="nchatbg1 nchatp2 clearfix pos-rel nchathgt1"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarIn"></i> </div><div class="fl"> <img src="' + this._imageUrl + '" class="nchatp4 wd40"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">'+trimmedString+'</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp">Logout from chat</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">'+trimmedString+'</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>';
@@ -1150,7 +1150,7 @@ JsChat.prototype = {
             if(height == 0){
                 //fetch more history
                 var showMoreHistory = $("#moreHistory_"+userId).val(),latestMsgId = $("#moreHistory_"+userId).attr("data-latestMsgId"),
-                localMsg = $("#moreHistory_"+userId).attr("data-latestMsgId");
+                localMsg = $("#moreHistory_"+userId).attr("data-localMsg");
                 if(showMoreHistory == "1" && (latestMsgId || localMsg)){
                     //console.log("yess on top",height);                   
                     clearTimeout(clearTimedOut);
@@ -1370,6 +1370,7 @@ JsChat.prototype = {
             //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
             break;
         case curElem._contactStatusMapping["both_accepted"]["key"]:
+            $(this).closest(".chatMessage").find("#sentDiv").removeClass("disp-none");
             $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sendInt, #decline, #acceptTxt").remove();
             break;
         }
