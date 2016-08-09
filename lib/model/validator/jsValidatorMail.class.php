@@ -61,7 +61,12 @@ class jsValidatorMail extends sfValidatorBase
   {
 	$email = (string) $value;
     $value = trim($email);
-    
+    $negativeProfileListObj = new incentive_NEGATIVE_PROFILE_LIST;
+    $negativeEmail = $negativeProfileListObj->checkEmailOrPhone("EMAIL",$value);
+    if($negativeEmail)
+    {
+	throw new sfValidatorError($this, 'err_email_revoke', array('value' => $value));
+    }
     $activatedFlag = $this->_dupProfileEmail($value);
     
     if ($this->_emailValidation($value))
