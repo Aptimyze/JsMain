@@ -1356,10 +1356,21 @@ JsChat.prototype = {
             $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="sendDiv txtc pos-abs wid80p mt10 color5">Interest Declined, you can\'t chat with this user anymore</div>');
             //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
             break;
+        case curElem._contactStatusMapping["pg_interest_accepted"]["key"]:
+            $(this).closest(".chatMessage").find("#sentDiv").removeClass("disp-none");
+            $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
+            //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+            break;
+        case curElem._contactStatusMapping["pg_interest_declined"]["key"]:
+            $(this).closest(".chatMessage").find("#sentDiv").removeClass("disp-none");
+            $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
+            //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+            break;
         case curElem._contactStatusMapping["none_applicable"]["key"]:
             //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
             break;
         case curElem._contactStatusMapping["both_accepted"]["key"]:
+            $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sendInt, #decline, #acceptTxt").remove();
             break;
         }
     },
