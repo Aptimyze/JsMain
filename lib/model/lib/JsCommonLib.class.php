@@ -89,12 +89,14 @@ public static function insertConsentMessageFlag($profileid) {
         		
        			$loggedInProfileObj=LoggedInProfile::getInstance();
                	if(!$loggedInProfileObj->getPROFILEID()) $loggedInProfileObj->getDetail($profileid,'','*');
-                if ($primaryNum=$loggedInProfileObj->getPHONE_MOB())
+               	$primaryNum=$loggedInProfileObj->getPHONE_MOB();
+                if ($primaryNum)
                 {
-                	$jprofileObj=new JPROFILE();
-                	$resultArray=$jprofileObj->checkPhone(array($primaryNum));
+					$isd=$loggedInProfileObj->getISD();
+                	$jprofileObj=new JPROFILE("newjs_slave");
+                	$resultArray=$jprofileObj->checkPhone(array($primaryNum),$isd);
                 	$selfProfileId=$loggedInProfileObj->getPROFILEID();
-                	$isd=$loggedInProfileObj->getISD();
+                	
 
                 	foreach ($resultArray as $key => $value) 
                 	{
