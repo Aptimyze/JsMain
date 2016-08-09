@@ -1369,6 +1369,7 @@ JsChat.prototype = {
             //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
             break;
         case curElem._contactStatusMapping["both_accepted"]["key"]:
+            $(this).closest(".chatMessage").find("#sentDiv").removeClass("disp-none");
             $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sendInt, #decline, #acceptTxt").remove();
             break;
         }
