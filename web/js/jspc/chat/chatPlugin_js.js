@@ -840,7 +840,7 @@ JsChat.prototype = {
     storeMessagesInLocalHistory: function(selfJID,other,newMsg,type){
         if(localStorageExists){
             console.log(newMsg);
-            var oldMessages = JSON.parse(localStorage.getItem(selfJID+'_'+other));
+            var oldMessages = JSON.parse(localStorage.getItem('chatMsg_'+selfJID+'_'+other));
             if(type == 'send' || type == 'receive'){
                 if(typeof oldMessages == "undefined" || oldMessages == '' || oldMessages == null){
                     oldMessages = [];
@@ -859,7 +859,7 @@ JsChat.prototype = {
 
                 //newMsg.unshift(oldMessages);
             }
-            localStorage.setItem(selfJID+'_'+other,JSON.stringify(oldMessages));
+            localStorage.setItem('chatMsg_'+selfJID+'_'+other,JSON.stringify(oldMessages));
         }
     },
     //sending chat

@@ -96,7 +96,7 @@ function getMessagesFromLocalStorage(selfJID, other_id){
     
     $("#moreHistory_"+other_id).attr("data-page",page+1);
     var chunk = chatConfig.Params[device].moreMsgChunk;
-    var oldMessages = JSON.parse(localStorage.getItem(selfJID+'_'+other_id));
+    var oldMessages = JSON.parse(localStorage.getItem('chatMsg_'+selfJID+'_'+other_id));
     if(oldMessages){
         var pc = page*chunk;
         var messages = [];
@@ -485,6 +485,7 @@ function checkNewLogin(profileid) {
             eraseCookie('chatAuth');
             eraseCookie('chatEncrypt');
             createCookie('chatEncrypt', computedChatEncrypt);
+            clearChatMsgFromLS();
         }
     } else {
         createCookie('chatEncrypt', computedChatEncrypt);
@@ -651,6 +652,15 @@ function getProfileImage() {
     }
     return imageUrl;
 }
+
+function clearChatMsgFromLS(){
+    var patt = new RegExp("chatMsg_");
+    for(var key in localStorage){
+        if(patt.test(key)){
+            localStorage.removeItem(key);
+        }
+    }
+}
 /*
  * Clear local storage
  */
@@ -661,6 +671,7 @@ function clearLocalStorage() {
     });
     localStorage.removeItem('chatBoxData');
     localStorage.removeItem('lastUId');
+    clearChatMsgFromLS();
 }
 /*hit api for chat before acceptance
  * @input: apiParams
