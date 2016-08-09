@@ -880,7 +880,7 @@ $(document).ready(function () {
         var loginStatus;
         $("#jspcChatout").on('click',function(){
             ////console.log("Logout clicked");
-           $(".jschatLogOut").click(); 
+           $(objJsChat._logoutChat).click(); 
         });
         /*
         $(window).focus(function() {
