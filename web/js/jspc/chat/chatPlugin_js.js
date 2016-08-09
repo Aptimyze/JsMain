@@ -1347,12 +1347,12 @@ JsChat.prototype = {
             });
             break;
         case curElem._contactStatusMapping["pog_interest_accepted"]["key"]:
-            $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sentDiv,#restrictMessgTxt").remove();
+            $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sentDiv,#restrictMessgTxt,#acceptTxt").remove();
             $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="fullwid pos-rel mt10 color5 txtc fl">Interest Accepted continue chat</div>');
             //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
             break;
         case curElem._contactStatusMapping["pog_interest_declined"]["key"]:
-            $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sentDiv,#restrictMessgTxt").remove();
+            $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sentDiv,#restrictMessgTxt,#acceptTxt").remove();
             $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="sendDiv txtc pos-abs wid80p mt10 color5">Interest Declined, you can\'t chat with this user anymore</div>');
             //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
             break;
