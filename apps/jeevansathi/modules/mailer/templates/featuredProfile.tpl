@@ -137,7 +137,7 @@
 																				</td>
 																			</tr>
 																		</table>
-																		
+
 																	</td>
 																</tr>
 																<tr>
@@ -207,7 +207,7 @@
 																												<table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;">
 																													<tr>
 																														<td width="80" align="left" style="font-family:arial, Geneva, sans-serif; font-size:18px; color:#34495e;">~$dataArr->getUSERNAME()`</td>
-																														<td align="left" width="120"  style="font-family:arial, Geneva, sans-serif; font-size:10px; color:#f1f1f1;">online 2 days ago</td>
+																														<td align="left" width="120"  style="font-family:arial, Geneva, sans-serif; font-size:10px; color:#BDBABA;">online 2 days ago</td>
 																													</tr>
 																												</table>
 																											</td>
@@ -268,7 +268,7 @@
 																										</td>
 																									</tr>
 																								</table>
-																								
+
 																							</td>
 																							<td width="10"></td>
 																						</tr>
@@ -309,7 +309,7 @@
 																	<td height="27"></td>
 																</tr>
 																<tr>
-																	<td align="center" style="font-family:arial, Geneva, sans-serif; font-size:14px; color:#505050;">To enrol for this service, kindly <a href="~$mailerLinks['MEMBERSHIP_COMPARISON']`~$commonParamaters`?profilechecksum=~$profilechecksum`" target="_blank" style="color:#d9475c; text-decoration:none;"><em>click here</em></a> or call at <1-800-419-6299></td>
+																<td align="center" style="font-family:arial, Geneva, sans-serif; font-size:14px; color:#505050;">To enrol for this service, kindly <a href="~$mailerLinks['MEMBERSHIP_COMPARISON']`~$commonParamaters`?profilechecksum=~$profilechecksum`" target="_blank" style="color:#d9475c; text-decoration:none;"><em>click here</em></a> or call at<a href="tel:1-800-419-6299"style="color:#d9475c;"> 1-800-419-6299</a></td>
 																</tr>
 																<tr>
 																	<td height="20"></td>

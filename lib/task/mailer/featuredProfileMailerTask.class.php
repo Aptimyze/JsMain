@@ -4,7 +4,6 @@
  *created on : 08 August 2016 
  */
 
-ini_set("max_execution_time",-1);
 class featuredProfileMailerTask extends sfBaseTask
 {
 	private $smarty;
@@ -41,15 +40,7 @@ $this->addOptions(array(
 
         $mailerServiceObj = new MailerService();
 
-        $LockingService = new LockingService;
-        $file = $this->mailerName."_".$totalScript."_".$currentScript.".txt";
-        $lock = $LockingService->getFileLock($file,1);
-        if(!$lock)
-        	successfullDie();
-
         $receivers = $mailerServiceObj->getFeaturedProfileMailerReceivers($totalScript,$currentScript,$this->limit);
-        
-        //$stypeMatch = SearchTypesEnums::SaveSearchMailer;
         $this->smarty = $mailerServiceObj->getMailerSmarty();
 
         if(is_array($receivers))
@@ -59,7 +50,7 @@ $this->addOptions(array(
     		$this->smarty->assign('mailerLinks',$mailerLinks);
     		$this->smarty->assign('mailerName',MAILER_COMMON_ENUM::getSenderEnum($this->mailerName)["SENDER"]);
 
-    		//$widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>true,"googleAppTrackingFlag"=>true);
+    		// loop around each profile, fetch data corresponding to profileId and send mail
     		foreach($receivers as $sno => $values)
     		{
     			$profileId = $values;
@@ -77,18 +68,19 @@ $this->addOptions(array(
                 $dataArr = $data[$profileId];
                	
                 if($dataArr && is_object($dataArr))
-				{	
-					$subjectAndBody = $this->getSubjectAndBody();					
-                    $subject = $subjectAndBody["subject"];
-                    
+				{							
+                    $subject = featuredProfileMailerEnum::$featuredProfileSubject;
+
+                    //echecksum
                     $receiverechecksum = JsAuthentication::jsEncrypt($profileId,"");
 					$commonParamaters ="/".$receiverechecksum."/".$dataArr->getPROFILECHECKSUM();
+					
 					$this->smarty->assign('commonParamaters',$commonParamaters);
 					$this->smarty->assign('dataArr',$dataArr);
 					$this->smarty->assign('profileId',$profileId);
                     $msg = $this->smarty->fetch(MAILER_COMMON_ENUM::getTemplate($this->mailerName).".tpl");
                     // $file = fopen("sampleMailer.html","w");
-                    // fwrite($file,$msg);echo("ndaklnsd");die;
+                    // fwrite($file,$msg);die;
 
                     //Sending mail and tracking sent status
                     $flag = $mailerServiceObj->sendAndVerifyMail($dataArr->getEMAIL(),$msg,$subject,$this->mailerName,$profileId);
@@ -97,6 +89,8 @@ $this->addOptions(array(
 				{
 					$flag = 'I'; // Invalid users given in database
 				}
+
+				// update SENT value in database
 				$mailerServiceObj->updateSentForFeaturedProfileUsers($profileId,$flag);
 				unset($subject);
 				unset($dataArr);
@@ -105,10 +99,4 @@ $this->addOptions(array(
     		}
         }
     }
-
-    protected function getSubjectAndBody()
-  {
-        $subject["subject"] = "Want to feature at the top of search results on Jeevansathi? Find out how";
-        return $subject;
-  }
 }

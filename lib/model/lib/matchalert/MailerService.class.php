@@ -834,7 +834,7 @@ return $edu;
 	*/
 	public function getFeaturedProfileMailerReceivers($totalScript="",$script="",$limit='')
 	{
-		$featuredProfileObj = new FEATURED_PROFILE_MAILER();
+		$featuredProfileObj = new FEATURED_PROFILE_MAILER("newjs_masterRep");
 		$recievers = $featuredProfileObj->getMailerProfiles($totalScript,$script,$limit);
 		return $recievers;
 	}
@@ -847,7 +847,7 @@ return $edu;
 	{
 		if(!$profileId || !$flag)
 			throw  new jsException("No sno/flag in updateSentForSavedSearchUsers() in savedSearchesMailerTask.class.php");
-		$featuredProfileObj = new FEATURED_PROFILE_MAILER();
+		$featuredProfileObj = new FEATURED_PROFILE_MAILER("newjs_masterRep");
                 $featuredProfileObj->update($profileId,$flag);
 
 	}

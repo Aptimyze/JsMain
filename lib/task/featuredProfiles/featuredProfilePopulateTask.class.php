@@ -34,7 +34,7 @@ EOF;
         $currentScript = $arguments["currentScript"]; // current script number
     
         //creating featured profile store object
-        $featuredProfileObj = new FEATURED_PROFILE_MAILER();
+        $featuredProfileObj = new FEATURED_PROFILE_MAILER("newjs_masterRep");
 
         //Truncate table Data       
         $featuredProfileObj->truncateFeaturedProfileData();
