@@ -1409,6 +1409,7 @@ class NEWJS_JPROFILE extends TABLE
             LoggingManager::getInstance('JPROFILE')->logThis(LoggingEnums::LOG_DEBUG, $sqlSelectDetail);
 
             $rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC);
+            $this->logSelectCount();
             return $rowSelectDetail;
         } catch (PDOException $e) {
             throw new jsException($e);
@@ -1629,6 +1630,18 @@ class NEWJS_JPROFILE extends TABLE
         {
             throw new jsException($ex);
         }
+    }
+
+    /**
+     *  //Function to log Select Query Count
+     */
+    private function logSelectCount()
+    {
+        $key = 'selCount_'.date('Y-m-d');
+        JsMemcache::getInstance()->incrCount($key);
+
+        $key .= '::'.date('H');
+        JsMemcache::getInstance()->incrCount($key);
     }
 }
 

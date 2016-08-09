@@ -4,7 +4,7 @@
 class MessageQueues
 {
   CONST CONSUMERCOUNT = 4;  //Number of instances of Consumer class run at a time.
-  CONST NOTIFICATIONCONSUMERCOUNT = 2;  //Number of instances of JsNotificationsConsume class run at a time.
+  CONST NOTIFICATIONCONSUMERCOUNT = 5;  //Number of instances of JsNotificationsConsume class run at a time.
   CONST MAILQUEUE = "MailQueue";  //Queue for storing mails
   CONST SMSQUEUE = "SmsGcmQueue"; //Queue for storing sms
   CONST CONTACTCACHEINITIATE = "ContactCacheInitiate"; //Queue for sending data to webservice to create cache
@@ -39,6 +39,7 @@ class MessageQueues
   CONST REDELIVERY_LIMIT = 3; //This limit is used to set the redelivery limit of messages at the consumer end.
   CONST AGENT_NOTIFICATIONSQUEUE = "AgentsNotificationsQueue"; //Queue for storing agent notifications(notify for FP online users to agents)
   CONST BUFFER_INSTANT_NOTIFICATION_QUEUE = "BufferInstantNotificationsQueue"; //Queue for storing buffer instant notifications(JSPC/JSMS/FSO)
+  CONST DUPLICATE_LOG_QUEUE = "DuplicateLogQueue"; //Queue for logging duplicate profiles
   CONST DELETE_RETRIEVE_QUEUE = "DeleteRetrieveQueue"; //Queue that contains profileId's for those profiles that are deleted.
   CONST UPDATE_SEEN_QUEUE = "updateSeenQueue";
   CONST CRONDELETERETRIEVE_STARTCOMMAND = "symfony cron:cronConsumeDeleteRetrieveQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
@@ -61,16 +62,17 @@ class MessageQueues
       "SCHEDULED_NOTIFICATION_QUEUE5" => "JS_NOTIFICATION5",
       "SCHEDULED_NOTIFICATION_QUEUE6" => "JS_NOTIFICATION6"	
   ); //queue name to exchange binding key mapping
-  public static $scheduledNotificationDelayMappingArr =  array("SCHEDULED_NOTIFICATION_QUEUE1" => 8.5,
+  public static $scheduledNotificationDelayMappingArr =  array("SCHEDULED_NOTIFICATION_QUEUE1" => 8,
       "SCHEDULED_NOTIFICATION_QUEUE2" => 8,
-      "SCHEDULED_NOTIFICATION_QUEUE3" => 3,
-      "SCHEDULED_NOTIFICATION_QUEUE4" => 2,
-      "SCHEDULED_NOTIFICATION_QUEUE5" => 11,
+      "SCHEDULED_NOTIFICATION_QUEUE3" => 2,
+      "SCHEDULED_NOTIFICATION_QUEUE4" => 0.5,
+      "SCHEDULED_NOTIFICATION_QUEUE5" => 10,
       "SCHEDULED_NOTIFICATION_QUEUE6" => 1
   );  //queue name to delay time(unit) mapping(configurable after queue deletion using x-expire field in queue declaration)
   public static $notificationDelayMultiplier = 3600; //1 hr multiple delay
   public static $notificationQueueExpiryTime = 7; //queue will expire if unused for 7 hrs,not used currently
   public static $INSTANT_NOTIFICATION_QUEUE = "INSTANT_NOTIFICATION_QUEUE"; //Queue for sending instant notification data from notification queue to GCM
+  
   public static $notificationArr = array("JUST_JOIN" => "JS_NOTIFICATION1", "PENDING_EOI" => "JS_NOTIFICATION2", "MEM_EXPIRE_A5" => "JS_NOTIFICATION3", "MEM_EXPIRE_A10" => "JS_NOTIFICATION3", "MEM_EXPIRE_A15" => "JS_NOTIFICATION3", "MEM_EXPIRE_B1" => "JS_NOTIFICATION3", "MEM_EXPIRE_B5" => "JS_NOTIFICATION3",  "AGENT_ONLINE_PROFILE"=>"JS_INSTANT_NOTIFICATION","AGENT_FP_PROFILE"=>"JS_INSTANT_NOTIFICATION", "PROFILE_VISITOR" => "JS_INSTANT_NOTIFICATION","EOI"=>"JS_INSTANT_NOTIFICATION","MESSAGE_RECEIVED"=>"JS_INSTANT_NOTIFICATION","EOI_REMINDER"=>"JS_INSTANT_NOTIFICATION","MATCHALERT"=>"JS_NOTIFICATION4","MEM_DISCOUNT"=>"JS_NOTIFICATION4","FILTERED_EOI"=>"JS_NOTIFICATION5","ATN"=>"JS_NOTIFICATION3","ETN"=>"JS_NOTIFICATION3","CONTACT_VIEWS"=>"JS_NOTIFICATION3","CONTACTS_VIEWED_BY"=>"JS_NOTIFICATION2","VD"=>"JS_NOTIFICATION2","MEM_DISCOUNT"=>"JS_NOTIFICATION6");
 
   /*----------------JS notification(scheduled/instant) queues configuration details-------------------------*/

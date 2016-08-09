@@ -21,6 +21,7 @@ EOF;
 	protected function execute($arguments = array(), $options = array())
 	{
 	    	// SET BASIC CONFIGURATION
+	        ini_set('memory_limit',-1);
 		if(!sfContext::hasInstance()){
 			sfContext::createInstance($this->configuration);
 		}

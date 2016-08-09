@@ -142,8 +142,11 @@ class ProfileCacheLib
 
         //Store in Cache
         $this->storeInCache($szKey, $arrParams);
-        //Update Local Cache also
-        $this->updateInLocalCache($key, $arrParams);
+        
+	//Update Local Cache also
+        if (false === $this->isCommandLineScript()) {
+            $this->updateInLocalCache($key, $arrParams);
+        }
         return true;
     }
 
@@ -479,7 +482,7 @@ class ProfileCacheLib
     /**
      * @return bool
      */
-    private function isCommandLineScript()
+    public function isCommandLineScript()
     {
         return (php_sapi_name() === ProfileCacheConstants::COMMAND_LINE);
     }
