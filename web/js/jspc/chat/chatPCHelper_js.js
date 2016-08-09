@@ -96,7 +96,7 @@ function getMessagesFromLocalStorage(selfJID, other_id){
     
     $("#moreHistory_"+other_id).attr("data-page",page+1);
     var chunk = chatConfig.Params[device].moreMsgChunk;
-    var oldMessages = JSON.parse(localStorage.getItem(selfJID+'_'+other_id));
+    var oldMessages = JSON.parse(localStorage.getItem('chatMsg_'+selfJID+'_'+other_id));
     if(oldMessages){
         var pc = page*chunk;
         var messages = [];
@@ -485,6 +485,7 @@ function checkNewLogin(profileid) {
             eraseCookie('chatAuth');
             eraseCookie('chatEncrypt');
             createCookie('chatEncrypt', computedChatEncrypt);
+            clearChatMsgFromLS();
         }
     } else {
         createCookie('chatEncrypt', computedChatEncrypt);
@@ -651,6 +652,15 @@ function getProfileImage() {
     }
     return imageUrl;
 }
+
+function clearChatMsgFromLS(){
+    var patt = new RegExp("chatMsg_");
+    for(var key in localStorage){
+        if(patt.test(key)){
+            localStorage.removeItem(key);
+        }
+    }
+}
 /*
  * Clear local storage
  */
@@ -661,6 +671,7 @@ function clearLocalStorage() {
     });
     localStorage.removeItem('chatBoxData');
     localStorage.removeItem('lastUId');
+    clearChatMsgFromLS();
 }
 /*hit api for chat before acceptance
  * @input: apiParams
@@ -893,50 +904,7 @@ $(document).ready(function () {
             }
         });
         */
-        $(window).on("offline", function () {
-            ////console.log("detected internet disconnection");
-            strophieWrapper.currentConnStatus = Strophe.Status.DISCONNECTED;
-        });
-        $(window).on("online", function () {
-            globalSleep(15000);
-            //console.log("detected internet connectivity");
-            /*if (chatLoggedIn == 'true') {
-                var tAuth = checkAuthentication();
-                if (tAuth == 'true') {
-                    //chatLoggerPC("authentication successful");
-                    initiateChatConnection();
-                    if (strophieWrapper.getCurrentConnStatus()) {
-                        //chatLoggerPC("Strophe Connection successful");
-                        loginStatus = "Y";
-                        objJsChat = new JsChat({
-                            loginStatus: loginStatus,
-                            mainID: "#chatOpenPanel",
-                            //profilePhoto: "<path>",
-                            imageUrl: imgUrl,
-                            profileName: "bassi",
-                            listingTabs: chatConfig.Params[device].listingTabs,
-                            rosterDetailsKey: strophieWrapper.rosterDetailsKey,
-                            listingNodesLimit: chatConfig.Params[device].groupWiseNodesLimit,
-                            groupBasedChatBox: chatConfig.Params[device].groupBasedChatBox,
-                            contactStatusMapping: chatConfig.Params[device].contactStatusMapping
-                        });
-                    }
-                }
-            }*/
-            chatLoggedIn = readCookie('chatAuth');
-            if (chatLoggedIn == 'true' && loginStatus == "Y") {
-                if (username && pass) {
-                    strophieWrapper.reconnect(chatConfig.Params[device].bosh_service_url, username, pass);
-                }
-            }
-        });
-        if (chatLoggedIn == 'true') {
-            checkAuthentication();
-            loginStatus = "Y";
-            initiateChatConnection();
-        } else {
-            loginStatus = "N";
-        }
+        
         imgUrl = getProfileImage();
         selfName = getSelfName();
         objJsChat = new JsChat({
@@ -1126,6 +1094,49 @@ $(document).ready(function () {
             });
         }
         objJsChat.start();
+        $(window).on("offline", function () {
+            strophieWrapper.currentConnStatus = Strophe.Status.DISCONNECTED;
+        });
+        $(window).on("online", function () {
+            globalSleep(15000);
+            //console.log("detected internet connectivity");
+            /*if (chatLoggedIn == 'true') {
+                var tAuth = checkAuthentication();
+                if (tAuth == 'true') {
+                    //chatLoggerPC("authentication successful");
+                    initiateChatConnection();
+                    if (strophieWrapper.getCurrentConnStatus()) {
+                        //chatLoggerPC("Strophe Connection successful");
+                        loginStatus = "Y";
+                        objJsChat = new JsChat({
+                            loginStatus: loginStatus,
+                            mainID: "#chatOpenPanel",
+                            //profilePhoto: "<path>",
+                            imageUrl: imgUrl,
+                            profileName: "bassi",
+                            listingTabs: chatConfig.Params[device].listingTabs,
+                            rosterDetailsKey: strophieWrapper.rosterDetailsKey,
+                            listingNodesLimit: chatConfig.Params[device].groupWiseNodesLimit,
+                            groupBasedChatBox: chatConfig.Params[device].groupBasedChatBox,
+                            contactStatusMapping: chatConfig.Params[device].contactStatusMapping
+                        });
+                    }
+                }
+            }*/
+            chatLoggedIn = readCookie('chatAuth');
+            if (chatLoggedIn == 'true' && loginStatus == "Y") {
+                if (username && pass) {
+                    strophieWrapper.reconnect(chatConfig.Params[device].bosh_service_url, username, pass);
+                }
+            }
+        });
+        if (chatLoggedIn == 'true') {
+            checkAuthentication();
+            loginStatus = "Y";
+            initiateChatConnection();
+        } else {
+            loginStatus = "N";
+        }
     }
 
 });
