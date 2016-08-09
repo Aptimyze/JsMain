@@ -298,8 +298,6 @@ params["profilechecksum"] =input.val();
     child=$(".matchAlertBtn");
     child.unbind("click");
     child.bind("click",function(){
-        $(".eoiAcceptBtn").attr("disabled",true);
-        $(".eoiDeclineBtn").attr("disabled",true);
         var input=$(this).children("input");
 params["profilechecksum"] =input.val();
         params["actionName"] ="INITIATE_MYJS";
@@ -446,7 +444,7 @@ function performAction(action, params, index,isPrime)
 }
     else if(action=="INITIATE_MYJS")
     {
-        params["stype"]=responseTrackingno;
+        params["stype"]='WMM';
          
         
     }
@@ -507,12 +505,17 @@ function afterActionMyjs(index,action){
         $("#"+section+"_count").html(x);
         setTimeout(function(){
         $("#"+section+"tuple_"+index).remove();
-        if ($("#"+section+"_count").html()=='0') $("#"+section+"Absent").show();
+        if ($("#"+section+"_count").html()=='0')
+        { 
+            $("#"+section+"Absent").show();
+            if(section=='matchAlert')$("#matchAlertAbsentText").text('No more profiles for today');
+        }
         $(".eoiAcceptBtn").attr("disabled",false);
         $(".eoiDeclineBtn").attr("disabled",false);
-        tupleObject._tupleIndex--;
-        tupleObject.indexFix();
-        tupleObject._goTo(tupleObject._index);          
+        tempTupleObject = section=='matchAlert' ? tupleObject2 : tupleObject;
+        tempTupleObject._tupleIndex--;
+        tempTupleObject.indexFix();
+        tempTupleObject._goTo(tempTupleObject._index);          
     },1500);
                 
 }
