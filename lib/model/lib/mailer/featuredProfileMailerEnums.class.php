@@ -7,9 +7,10 @@
 
 class featuredProfileMailerEnum
 {
-	public static $lastLoginDateCriteria = '-3 month';
+	public static $lastLoginDateCriteria = '-1 month';
 	public static $initialDayCount = 15;
 	public static $constantDayInterval = 60;
 	public static $iterationLimit = 6;
 	public static $defualtSentTag = 'N';
+	public static $featuredProfileSubject = "Want to feature at the top of search results on Jeevansathi? Find out how";
 }

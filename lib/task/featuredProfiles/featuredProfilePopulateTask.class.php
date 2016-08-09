@@ -33,12 +33,16 @@ EOF;
         $totalScripts = $arguments["totalScripts"]; // total no of scripts
         $currentScript = $arguments["currentScript"]; // current script number
     
+        //creating featured profile store object
         $featuredProfileObj = new FEATURED_PROFILE_MAILER();
 
         //Truncate table Data       
         $featuredProfileObj->truncateFeaturedProfileData();
 
+        //last login date should not be more than 1 month back
         $lastLoginDate = date('Y-m-d', strtotime(featuredProfileMailerEnum::$lastLoginDateCriteria));
+
+        //verify activation date should be 15 days from current date, and then 15+ (x*60) days
         $verifyActivationInCriteria = "( ";
         for($i=0;$i<featuredProfileMailerEnum::$iterationLimit;$i++)
         {
@@ -48,22 +52,25 @@ EOF;
         $verifyActivationInCriteria = rtrim($verifyActivationInCriteria ,", ").")";
         
         
-        $valueArray = array("SUBSCRIPTION"=>"''","activatedKey"=>1,'ACTIVATED'=>"Y","MOB_STATUS"=>"Y");
+        $valueArray = array("SUBSCRIPTION"=>"''","activatedKey"=>1,'ACTIVATED'=>"Y","MOB_STATUS"=>"Y","INCOMPLETE"=>"N");
         $greaterThanArray = array("LAST_LOGIN_DT"=>$lastLoginDate);
-        $addWhereText = "DATE(VERIFY_ACTIVATED_DT) IN ".$verifyActivationInCriteria." AND EMAIL LIKE 'featuredProfile@js.com%'";
+        $addWhereText = "DATE(VERIFY_ACTIVATED_DT) IN ".$verifyActivationInCriteria;
 
        
         //select from slave
-        $jprofileObj = new JPROFILE('newjs_slave');
+        $jprofileObj = JPROFILE::getInstance('newjs_slave');
         $detailArr = $jprofileObj->getArray($valueArray,'',$greaterThanArray,'PROFILEID','','','','','','','',$addWhereText);
 
         foreach($detailArr as $key=>$value)
         {
           $profileIdArr[] = $value['PROFILEID'];
+          $featuredProfileObj->insertFeaturedProfileData($profileIdArr);
+          unset($profileIdArr);
         }
 		    unset($jprofileObj);
 
-        $featuredProfileObj->insertFeaturedProfileData($profileIdArr);
+        // insert profileId's to featured Profile table
+        
         unset($featuredProfileObj);
     }
 }
