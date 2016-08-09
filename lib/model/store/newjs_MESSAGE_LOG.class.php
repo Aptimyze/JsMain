@@ -782,7 +782,35 @@ public function updateMessageLogDetails($msgCommObj)
 			}
 			return $output;
 		}
-
+		
+		public function getPaidMemberCommunicationHistory($viewer,$viewed)
+		{	
+			try
+			{
+				if(!$viewer && !$viewed)
+				{
+					throw new jsException("","profile ids are not specified in  funcion getMessageHistory OF newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					$sql = "SELECT MESSAGE_LOG.ID as ID, SENDER,TYPE,`DATE`,OBSCENE,MESSAGE FROM  `MESSAGE_LOG` LEFT JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ))  AND TYPE ='R' ORDER BY DATE";
+					$prep=$this->db->prepare($sql);
+					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
+					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);
+					$prep->execute();
+					while($row = $prep->fetch(PDO::FETCH_ASSOC))
+					{
+						$output[] = $row;
+					}
+				}
+			}
+			catch (PDOException $e)
+			{
+				throw new jsException($e);
+			}
+			return $output;
+		}
+	
                 public function getFirstAcceptanceCount($pid)
         	{
                         try

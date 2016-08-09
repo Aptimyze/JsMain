@@ -126,7 +126,7 @@ class JPROFILE
         //Get Records from Mysql
         $result = self::$objProfileMysql->selectRecord($value, $criteria, $fields, $extraWhereClause, $cache);
         //TODO : Request to Cache this Record, on demand
-        if (is_array($result)) {
+        if (is_array($result) && false === ProfileCacheLib::getInstance()->isCommandLineScript()) {
             ProfileCacheLib::getInstance()->cacheThis($criteria, $value, $result);
         }
 

@@ -152,6 +152,7 @@ class JsConstants
                                                 "PHOTO_REQUEST"=>true,
 						"HOROSCOPE_REQUEST"=>true
                                                 );
+        public static $duplicateLoggingQueue =true;
 
 	public static $memoryCachingSystem = 'redis1'; // redis,redisCluster,redisSentinel(needed new library),memcache 
         public static $redisCachingUrl = 'apitoCaching';
