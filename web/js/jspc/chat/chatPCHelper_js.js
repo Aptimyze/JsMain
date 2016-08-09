@@ -904,22 +904,6 @@ $(document).ready(function () {
             }
         });
         */
-        
-        imgUrl = getProfileImage();
-        selfName = getSelfName();
-        objJsChat = new JsChat({
-            loginStatus: loginStatus,
-            mainID: "#chatOpenPanel",
-            //profilePhoto: "<path>",
-            imageUrl: imgUrl,
-            selfName: selfName,
-            listingTabs: chatConfig.Params[device].listingTabs,
-            rosterDetailsKey: strophieWrapper.rosterDetailsKey,
-            listingNodesLimit: chatConfig.Params[device].groupWiseNodesLimit,
-            groupBasedChatBox: chatConfig.Params[device].groupBasedChatBox,
-            contactStatusMapping: chatConfig.Params[device].contactStatusMapping,
-            maxMsgLimit:chatConfig.Params[device].maxMsgLimit
-        });
         $(window).on("offline", function () {
             strophieWrapper.currentConnStatus = Strophe.Status.DISCONNECTED;
         });
@@ -940,6 +924,23 @@ $(document).ready(function () {
         } else {
             loginStatus = "N";
         }
+        
+        imgUrl = getProfileImage();
+        selfName = getSelfName();
+        objJsChat = new JsChat({
+            loginStatus: loginStatus,
+            mainID: "#chatOpenPanel",
+            //profilePhoto: "<path>",
+            imageUrl: imgUrl,
+            selfName: selfName,
+            listingTabs: chatConfig.Params[device].listingTabs,
+            rosterDetailsKey: strophieWrapper.rosterDetailsKey,
+            listingNodesLimit: chatConfig.Params[device].groupWiseNodesLimit,
+            groupBasedChatBox: chatConfig.Params[device].groupBasedChatBox,
+            contactStatusMapping: chatConfig.Params[device].contactStatusMapping,
+            maxMsgLimit:chatConfig.Params[device].maxMsgLimit
+        });
+        
         objJsChat.onEnterToChatPreClick = function () {
             //objJsChat._loginStatus = 'N';
             //chatLoggerPC("Checking variable");
