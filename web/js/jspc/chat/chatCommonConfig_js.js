@@ -210,21 +210,21 @@ chatConfig.Params = {
                 "key": "pg_interest_pending",
                 "enableChat": true,
                 "useOpenfireForChat": false,
-                "showHistory": false,
+                "showHistory": true,
                 "checkForPaidInitiation":true
             },
             "pog_acceptance_pending": {
                 "key": "pog_acceptance_pending",
                 "useOpenfireForChat": false,
                 "enableChat": true,
-                "showHistory": false,
+                "showHistory": true,
                 "checkForPaidInitiation":true
             },
             "pg_acceptance_pending": {
                 "key": "pg_acceptance_pending",
                 "useOpenfireForChat": false,
                 "enableChat": false,
-                "showHistory": false,
+                "showHistory": true,
                 "checkForPaidInitiation":true
             },
             "pog_interest_accepted": {
@@ -261,6 +261,13 @@ chatConfig.Params = {
                 "enableChat": true,
                 "showHistory": true,
                 "checkForPaidInitiation":true
+            },
+            "pg_interest_accepted": {
+                "key": "pg_interest_accepted",
+                "useOpenfireForChat": true,
+                "enableChat": true,
+                "showHistory": true,
+                "checkForPaidInitiation":true
             }
         },
         //max count of nodes limit per group
@@ -272,7 +279,8 @@ chatConfig.Params = {
             "acceptance":100
         },
         storeMsgInLocalStorage:false,
-        maxMsgLimit:1000
+        maxMsgLimit:1000,
+        moreMsgChunk: 20
     }
 };
 chatConfig.Params.pc.rosterGroups = [ /*chatConfig.Params.categoryNames['Desired Partner Matches'],*/ chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members']];

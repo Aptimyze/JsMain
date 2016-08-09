@@ -2,3 +2,4 @@
 # Hook that checks PHP syntax
 echo "commiting...........";
 git commit -m "ForceAllow Css/Js" web/profile/commonfile_functions.php
+git commit -m "ForceAllow localStorageRevision" capistrano/localStorageRevision.txt
