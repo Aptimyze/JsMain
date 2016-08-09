@@ -309,7 +309,7 @@
 																	<td height="27"></td>
 																</tr>
 																<tr>
-																<td align="center" style="font-family:arial, Geneva, sans-serif; font-size:14px; color:#505050;">To enrol for this service, kindly <a href="~$mailerLinks['MEMBERSHIP_COMPARISON']`~$commonParamaters`?profilechecksum=~$profilechecksum`" target="_blank" style="color:#d9475c; text-decoration:none;"><em>click here</em></a> or call at<a href="tel:1-800-419-6299"style="color:#d9475c;"> 1-800-419-6299</a></td>
+																<td align="center" style="font-family:arial, Geneva, sans-serif; font-size:14px; color:#505050;">To enrol for this service, kindly <a href="~$mailerLinks['MEMBERSHIP_COMPARISON']`~$commonParamaters`?profilechecksum=~$profilechecksum`&from_source=featuredProfileMailer" target="_blank" style="color:#d9475c; text-decoration:none;"><em>click here</em></a> or call at<a href="tel:1-800-419-6299"style="color:#d9475c;"> 1-800-419-6299</a></td>
 																</tr>
 																<tr>
 																	<td height="20"></td>
@@ -492,4 +492,5 @@
 												</td>
 											</tr>
 										</table>
+										<img src="~sfConfig::get('app_site_url')`/track.php?MAILER_ID=~$instanceID`" style="display:none !important;overflow:hidden;line-height:0"></img>
 									</body>
