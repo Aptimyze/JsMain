@@ -969,7 +969,7 @@ JsChat.prototype = {
                             } else {
                                 if (msgSendOutput["sent"] == true) {
                                     if ($(superParent).find("#sendInt").length != 0) {
-                                        $(superParent).find(".chatMessage").append("<div class='pos-rel fr pr10' id='interestSent'>Your interest has been sent</div>");
+                                        $(superParent).find(".chatMessage").append("<div  class='inline_txt pos-rel fr pr10' id='interestSent'>Your interest has been sent</div>");
                                         $(superParent).find(".chatMessage").find("#sentDiv").remove();
                                         console.log("yesssssssssssssssss");
                                         //$(superParent).find("#initiateText,#chatBoxErr").remove();
@@ -1266,7 +1266,12 @@ JsChat.prototype = {
             break;
         case curElem._contactStatusMapping["pog_acceptance_pending"]["key"]:
             $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sendInt,#restrictMessgTxt,#initiateText,#chatBoxErr").remove();
-            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
+            var inlineElem =  $('chat-box[user-id="' + userId + '"] .chatMessage .inline_txt');
+            console.log("inlineElem",inlineElem);
+            if(inlineElem == undefined) {
+                     $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
+            }
+
             //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
             break;
         case curElem._contactStatusMapping["pg_acceptance_pending"]["key"]:
