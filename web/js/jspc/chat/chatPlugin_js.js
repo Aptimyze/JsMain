@@ -1266,11 +1266,7 @@ JsChat.prototype = {
             break;
         case curElem._contactStatusMapping["pog_acceptance_pending"]["key"]:
             $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sendInt,#restrictMessgTxt,#initiateText,#chatBoxErr").remove();
-            var inlineElem =  $('chat-box[user-id="' + userId + '"] .chatMessage .inline_txt');
-            console.log("inlineElem",inlineElem);
-            if(inlineElem == undefined) {
-                     $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
-            }
+            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
 
             //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
             break;
