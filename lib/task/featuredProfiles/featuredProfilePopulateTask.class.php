@@ -60,7 +60,6 @@ EOF;
         //select from slave
         $jprofileObj = JPROFILE::getInstance('newjs_slave');
         $detailArr = $jprofileObj->getArray($valueArray,'',$greaterThanArray,'PROFILEID','','','','','','','',$addWhereText);
-echo("lndklsndkn");die;
         foreach($detailArr as $key=>$value)
         {
           $profileIdArr[] = $value['PROFILEID'];
