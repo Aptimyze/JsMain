@@ -200,6 +200,7 @@ class Initiate extends ContactEvent{
         // Do Not update memcache variables.
       }
       else {
+        if(sfContext::getInstance()->getRequest()->getParameter('fromJSMS_MYJS')==1)$this->viewerMemcacheObject->setMatchAlertData();
         $this->viewerMemcacheObject->update("NOT_REP",1,$this->optionalFlag);
         $this->viewerMemcacheObject->update("TOTAL_CONTACTS_MADE",1,$this->optionalFlag);
         $this->viewerMemcacheObject->update("MONTH_INI_BY_ME",1,$this->optionalFlag);

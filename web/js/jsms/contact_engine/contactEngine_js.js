@@ -444,7 +444,9 @@ function performAction(action, params, index,isPrime)
 }
     else if(action=="INITIATE_MYJS")
     {
-        params["stype"]='WMM';
+                params["fromJSMS_MYJS"]='1';
+                params["stype"]='WMM';
+        
          $("#matchAlerttuple_"+index+" .contactLoader").css("display","block");
         
     }
