@@ -616,11 +616,13 @@ JsChat.prototype = {
         o.style.height = (o.scrollHeight - 16) + "px";
         var elem = $(o);
         var height = 294 - elem.parent().height();
-        if (height > 195) {
+        console.log("height",height);
+        if (height > 189) {
             $(o).closest("div").parent().find(".chatMessage").css("height", height);
         } else {
             $(o).css("overflow", "auto");
         }
+        
     },
     //scrolling up chat box
     _scrollUp: function (elem, btmValue) {
@@ -968,7 +970,8 @@ JsChat.prototype = {
                                 if (msgSendOutput["sent"] == true) {
                                     if ($(superParent).find("#sendInt").length != 0) {
                                         $(superParent).find(".chatMessage").append("<div class='pos-rel fr pr10' id='interestSent'>Your interest has been sent</div>");
-                                        $(superParent).find(".chatMessage #sentDiv").remove();
+                                        $(superParent).find(".chatMessage").find("#sentDiv").remove();
+                                        console.log("yesssssssssssssssss");
                                         //$(superParent).find("#initiateText,#chatBoxErr").remove();
                                         $(superParent).find("#sendInt").remove();
                                     }
