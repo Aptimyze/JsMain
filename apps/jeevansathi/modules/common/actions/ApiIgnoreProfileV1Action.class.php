@@ -55,6 +55,7 @@ class ApiIgnoreProfileV1Action extends sfActions
 		}
 		$profileID = $loginData['PROFILEID'];
 		$this->loginProfile = new Profile("",$profileID);
+		$this->loginProfile->getDetail("","","*");
 		if($request->getParameter("profilechecksum"))
 		{
 			$arrParameter["profilechecksum"] = $request->getParameter("profilechecksum");
