@@ -97,7 +97,7 @@
 			if(!array_key_exists($module, $this->arrConfig)){
 				return LoggingEnums::LOG_TRACE;
 			}
-			return LoggingEnums::CONFIG_ON ? $this->arrConfig[$module][LoggingEnums::stackTrace] : false;
+			return LoggingEnums::CONFIG_ON ? $this->arrConfig[$module][LoggingEnums::stackTrace] : LoggingEnums::LOG_TRACE;
 		}
 
 		/**
