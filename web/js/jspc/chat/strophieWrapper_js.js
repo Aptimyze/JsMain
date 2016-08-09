@@ -172,8 +172,8 @@ var strophieWrapper = {
     //executed on new push/remove event in roster
     onRosterUpdate: function (iq) {
         //strophieWrapper.stropheLoggerPC("in onRosterPush");
-        console.log("onRosterUpdate");
-        console.log(iq);
+        //console.log("onRosterUpdate");
+        //console.log(iq);
         strophieWrapper.stropheLoggerPC(iq);
         var nodeObj = xmlToJson(iq);
         rosterObj = strophieWrapper.formatRosterObj(nodeObj["query"]["item"]);
@@ -196,7 +196,7 @@ var strophieWrapper = {
                 //strophieWrapper.stropheLoggerPC("adding node");
                 //strophieWrapper.stropheLoggerPC(subscription);
                 if (typeof strophieWrapper.Roster[user_id] == "undefined") {
-                    console.log("adding new1");
+                    //console.log("adding new1");
                     invokePluginManagelisting(nodeArr, "add_node", user_id);
                 } else if (typeof strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["groups"] != "undefined") {
                     var oldGroupId = strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["groups"][0];
@@ -207,7 +207,7 @@ var strophieWrapper = {
                         invokePluginManagelisting(oldArr, "delete_node", user_id);
                         //strophieWrapper.stropheLoggerPC("adding node");
                         //strophieWrapper.stropheLoggerPC(nodeArr);
-                        console.log("adding new 2");
+                        //console.log("adding new 2");
                         invokePluginManagelisting(nodeArr, "add_node", user_id);
                     }
                 }
@@ -294,9 +294,9 @@ var strophieWrapper = {
         });
         strophieWrapper.connectionObj.addHandler(function (iq) {
             if ($(iq).find('error').length > 0) {
-                console.log("error in carbons");
+                //console.log("error in carbons");
             } else {
-                console.log("carbons enabled");
+                //console.log("carbons enabled");
             }
         }.bind(this), null, "iq", null, "enablecarbons");
         strophieWrapper.connectionObj.send(carbons_iq);
@@ -321,7 +321,7 @@ var strophieWrapper = {
                 }
             }
         }
-        console.log("RECEIVED presence for "+from+"-"+chat_status);
+        //console.log("RECEIVED presence for "+from+"-"+chat_status);
         if (strophieWrapper.isItSelfUser(user_id) == false) {
             //strophieWrapper.stropheLoggerPC("start of onPresenceReceived for " + user_id);
             //strophieWrapper.stropheLoggerPC(from);
@@ -604,8 +604,8 @@ var strophieWrapper = {
     },
     /*format msg object*/
     formatMsgObj: function (msg) {
-        console.log("in formatMsgObj");
-        console.log(msg);
+        //console.log("in formatMsgObj");
+        //console.log(msg);
         var outputObj = {
             "from": msg.getAttribute('from').split("@")[0],
             "to": msg.getAttribute('to').split("@")[0],
@@ -659,7 +659,7 @@ var strophieWrapper = {
                 outputObj["receivedId"] = rec.getAttribute('id');
             }
         }*/
-        console.log(outputObj);
+        //console.log(outputObj);
         return outputObj;
     },
     /*
