@@ -445,7 +445,7 @@ function performAction(action, params, index,isPrime)
     else if(action=="INITIATE_MYJS")
     {
         params["stype"]='WMM';
-         
+         $("#matchAlerttuple_"+index+" .contactLoader").css("display","block");
         
     }
       else
@@ -470,7 +470,11 @@ function performAction(action, params, index,isPrime)
     //crossDomain: true,
     success: function(result){
                     if ((action=="ACCEPT_MYJS")||(action=="DECLINE_MYJS") || (action=="INITIATE_MYJS"))
-                        $("#eoituple_"+index+" .contactLoader").hide();
+                    {
+                    var tempSection = action=="INITIATE_MYJS" ? 'matchAlert' : 'eoi';
+                    $("#"+tempSection+"tuple_"+index+" .contactLoader").hide();
+                    
+                    }
 		else
 		{
 			if(isPrime && action!="MESSAGE")
