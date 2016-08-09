@@ -52,7 +52,7 @@ EOF;
         $verifyActivationInCriteria = rtrim($verifyActivationInCriteria ,", ").")";
         
         
-        $valueArray = array("SUBSCRIPTION"=>"''","activatedKey"=>1,'ACTIVATED'=>"Y","MOB_STATUS"=>"Y","INCOMPLETE"=>"N");
+        $valueArray = array("SUBSCRIPTION"=>"''","activatedKey"=>1,'ACTIVATED'=>"Y,H","MOB_STATUS"=>"Y","INCOMPLETE"=>"N");
         $greaterThanArray = array("LAST_LOGIN_DT"=>$lastLoginDate);
         $addWhereText = "DATE(VERIFY_ACTIVATED_DT) IN ".$verifyActivationInCriteria;
 
@@ -60,7 +60,7 @@ EOF;
         //select from slave
         $jprofileObj = JPROFILE::getInstance('newjs_slave');
         $detailArr = $jprofileObj->getArray($valueArray,'',$greaterThanArray,'PROFILEID','','','','','','','',$addWhereText);
-
+echo("lndklsndkn");die;
         foreach($detailArr as $key=>$value)
         {
           $profileIdArr[] = $value['PROFILEID'];
