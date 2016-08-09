@@ -64,13 +64,13 @@ EOF;
         foreach($detailArr as $key=>$value)
         {
           $profileIdArr[] = $value['PROFILEID'];
+
+          // insert profileId's to featured Profile table
           $featuredProfileObj->insertFeaturedProfileData($profileIdArr);
           unset($profileIdArr);
         }
 		    unset($jprofileObj);
 
-        // insert profileId's to featured Profile table
-        
         unset($featuredProfileObj);
     }
 }
