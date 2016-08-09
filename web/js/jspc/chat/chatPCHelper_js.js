@@ -894,6 +894,7 @@ $(document).ready(function () {
         var loginStatus;
         $("#jspcChatout").on('click',function(){
             ////console.log("Logout clicked");
+            localStorage.removeItem("self_subcription");
            $(objJsChat._logoutChat).click(); 
         });
         /*
