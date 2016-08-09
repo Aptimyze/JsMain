@@ -118,7 +118,7 @@ class ApiIgnoreProfileV1Action extends sfActions
 						try {
 							$producerObj = new Producer();
 							if ($producerObj->getRabbitMQServerConnected()) {
-								$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => $type, 'body' => array('sender' => array('profileid' => $sender->getPROFILEID(), 'checksum' => JsAuthentication::jsEncryptProfilechecksum($sender->getPROFILEID()), 'username' => $sender->getUSERNAME()), 'receiver' => array('profileid' => $receiver->getPROFILEID(), 'checksum' => JsAuthentication::jsEncryptProfilechecksum($receiver->getPROFILEID), "username" => $receiver->getUSERNAME()))), 'redeliveryCount' => 0);
+								$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => $type, 'body' => array('sender' => array('profileid' => $sender->getPROFILEID(), 'checksum' => JsAuthentication::jsEncryptProfilechecksum($sender->getPROFILEID()), 'username' => $sender->getUSERNAME()), 'receiver' => array('profileid' => $receiver->getPROFILEID(), 'checksum' => JsAuthentication::jsEncryptProfilechecksum($receiver->getPROFILEID()), "username" => $receiver->getUSERNAME()))), 'redeliveryCount' => 0);
 								$producerObj->sendMessage($chatData);
 							}
 							unset($producerObj);
@@ -169,7 +169,7 @@ class ApiIgnoreProfileV1Action extends sfActions
 					try {
 						$producerObj = new Producer();
 						if ($producerObj->getRabbitMQServerConnected()) {
-							$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'BLOCK', 'body' => array('sender' => array('profileid'=>$this->loginProfile->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->loginProfile->getPROFILEID()),'username'=>$this->loginProfile->getUSERNAME()), 'receiver' => array('profileid'=>$this->ignoreProfile->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->ignoreProfile->getPROFILEID),"username"=>$this->ignoreProfile->getUSERNAME()))), 'redeliveryCount' => 0);
+							$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'BLOCK', 'body' => array('sender' => array('profileid'=>$this->loginProfile->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->loginProfile->getPROFILEID()),'username'=>$this->loginProfile->getUSERNAME()), 'receiver' => array('profileid'=>$this->ignoreProfile->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->ignoreProfile->getPROFILEID()),"username"=>$this->ignoreProfile->getUSERNAME()))), 'redeliveryCount' => 0);
 							$producerObj->sendMessage($chatData);
 						}
 						unset($producerObj);
