@@ -100,7 +100,14 @@ function getMessagesFromLocalStorage(selfJID, other_id){
     if(oldMessages){
         var pc = page*chunk;
         var messages = [];
-        var limit = Math.min(pc+chunk,oldMessages.length);
+        var oldMsgLength = oldMessages.length
+        var limit = Math.min(pc+chunk,oldMsgLength);
+        if(oldMsgLength>limit){
+            $("#moreHistory_"+other_id).attr("data-localMsg","1");
+        }
+        else{
+            $("#moreHistory_"+other_id).attr("data-localMsg","0")
+        }
         for(var i=pc;i<limit;i++){
             messages.push(oldMessages[i]);
         }
