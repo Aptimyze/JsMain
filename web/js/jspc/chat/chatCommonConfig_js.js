@@ -210,14 +210,14 @@ chatConfig.Params = {
                 "key": "pg_interest_pending",
                 "enableChat": true,
                 "useOpenfireForChat": false,
-                "showHistory": false,
+                "showHistory": true,
                 "checkForPaidInitiation":true
             },
             "pog_acceptance_pending": {
                 "key": "pog_acceptance_pending",
                 "useOpenfireForChat": false,
                 "enableChat": true,
-                "showHistory": false,
+                "showHistory": true,
                 "checkForPaidInitiation":true
             },
             "pg_acceptance_pending": {
