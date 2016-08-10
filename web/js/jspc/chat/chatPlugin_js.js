@@ -2013,8 +2013,24 @@ JsChat.prototype = {
             $("#" + jid + "_BtnRespnse div button").addClass("nchatbg-grey colrw nc").removeClass("cursp");
             $("#" + jid + "_BtnRespnse div button").html(data.buttondetails.button.label);
         } else {
+            var btnLength = $("#" + jid + "_BtnOuter button").length;
             $("#" + jid + "_BtnOuter button").remove();
             var msg = '';
+            if(btnLength == '2'){
+                if(data.buttondetails.infomsglabel == "You declined interest"){
+                    msg = "Interest Declined";
+                    $("#" + jid + "_BtnOuter").append('<button class="nchatbg-grey lh50 brdr-0 txtc colrw nc" style="width:100%">'+msg+'</button>');
+                }
+                else{
+                    msg = "Start Conversation";
+                    $("#" + jid + "_BtnOuter").append('<button class="bg_pink lh50 brdr-0 txtc colrw cursp" style="width:100%">'+msg+'</button>');
+                }
+            }
+            else{
+                msg = 'Interest Sent'
+                $("#" + jid + "_BtnOuter").append('<button class="nchatbg-grey lh50 brdr-0 txtc colrw nc" style="width:100%">'+msg+'</button>');
+            }
+            /*
             if(data.buttondetails.buttons && data.buttondetails.buttons.label){
                 msg = data.buttondetails.buttons.label;
             }
@@ -2022,6 +2038,7 @@ JsChat.prototype = {
                 msg =  data.buttondetails.button.label;
             }
             $("#" + jid + "_BtnOuter").append('<button class="bg_pink lh50 brdr-0 txtc colrw cursp" style="width:100%">'+msg+'</button>');
+            */
         }
     },
     //start:check hover
