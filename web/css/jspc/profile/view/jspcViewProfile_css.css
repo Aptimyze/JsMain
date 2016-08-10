@@ -24,7 +24,7 @@
 .prfrad{border-radius:80px}
 .prfrad1 {border-radius: 20px;}
 .prfrad2{border-top-left-radius: 20px;border-bottom-left-radius:20px}
-.prfb10{background:rgb(00,00,00,0.5);}
+.prfb10{background:rgb(00,00,00);background:rgba(00,00,00,0.5);}
 
 .prfbr1{border-bottom:1px solid #929daa}
 .prfbr2{border-bottom:1px solid #34495e}
