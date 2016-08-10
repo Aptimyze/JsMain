@@ -2014,7 +2014,14 @@ JsChat.prototype = {
             $("#" + jid + "_BtnRespnse div button").html(data.buttondetails.button.label);
         } else {
             $("#" + jid + "_BtnOuter button").remove();
-            $("#" + jid + "_BtnOuter").append('<button class="bg_pink lh50 brdr-0 txtc colrw cursp" style="width:100%">Start Conversation</button>');
+            var msg = '';
+            if(data.buttondetails.buttons.label){
+                msg = data.buttondetails.buttons.label;
+            }
+            else{
+                msg =  data.buttondetails.button.label;
+            }
+            $("#" + jid + "_BtnOuter").append('<button class="bg_pink lh50 brdr-0 txtc colrw cursp" style="width:100%">'+msg+'</button>');
         }
     },
     //start:check hover
