@@ -161,9 +161,11 @@ class Producer
 					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::DELETE_RETRIEVE_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
 					break;
 				case "CHATROSTERS":
-					$data = $msgdata['data'];
-					$msg = new AMQPMessage(json_encode($data), array('delivery_mode' => MQ::DELIVERYMODE));
-					$this->channel->basic_publish($msg, MQ::CHATEXCHANGE, "roster");
+					if (JsConstants::$jsChatFlag > 1) {
+						$data = $msgdata['data'];
+						$msg = new AMQPMessage(json_encode($data), array('delivery_mode' => MQ::DELIVERYMODE));
+						$this->channel->basic_publish($msg, MQ::CHATEXCHANGE, "roster");
+					}
 					break;
 				case "UPDATE_SEEN":
 					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::UPDATE_SEEN_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
