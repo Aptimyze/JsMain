@@ -1674,8 +1674,8 @@ JsChat.prototype = {
         $('chat-box[user-id="' + userId + '"]').attr("data-paidInitiated","true");
         if($('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).length != 0){
             $('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).remove();
-            $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
         }
+        $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
     },
 
     //add meesage recieved from another user
