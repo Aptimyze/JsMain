@@ -141,6 +141,10 @@ class LoggingManager
 
       $logData = '['. $this->getLogType(LoggingEnums::LOG_ERROR) .']';
       $logData = $logData.$this->getLogData($exception,$isSymfony,$logArray);
+      if(LoggingConfig::getInstance()->debugStatus())
+      {
+        $logData = $logData." ".print_r($_SERVER, true);
+      }
       $this->writeToFile($logData);
     }
 
@@ -409,6 +413,7 @@ class LoggingManager
       $logData = '['. $this->getLogType(LoggingEnums::LOG_DEBUG) .']';
       $logData = $logData.$this->getLogData($message,$isSymfony,$logArray);
       $logData = $logData." ".$message;
+      $logData = $logData." ".print_r($_SERVER, true);
       $this->writeToFile($logData);
     }
 
@@ -505,7 +510,7 @@ class LoggingManager
      */
 
     public function setUniqueId($uniqueID)
-    {   //die(X);
+    {
         $this->iUniqueID = $uniqueID;
         
     }
@@ -516,5 +521,5 @@ class LoggingManager
     private function canWriteTrace($szLogPath)
     {
         return LoggingConfig::getInstance()->traceStatus($szLogPath);
-    }
+    }  
 }

@@ -94,6 +94,9 @@
 		*/
 		public function traceStatus($module)
 		{
+			if($this->debugStatus()){
+				return true;
+			}
 			if(!array_key_exists($module, $this->arrConfig)){
 				return LoggingEnums::LOG_TRACE;
 			}
@@ -110,6 +113,18 @@
 				return LoggingEnums::LOG_ERROR;
 			}
 			return LoggingEnums::CONFIG_ON ? $this->arrConfig[$module][LoggingEnums::level] : LoggingEnums::LOG_ERROR;
+		}
+
+		public function debugStatus()
+		{
+			if(LoggingEnums::LOG_LEVEL == LoggingEnums::LOG_DEBUG){
+				return true;
+			}
+			else if(LoggingEnums::CONFIG_ON && $this->arrConfig[$module][LoggingEnums::level] == LoggingEnums::LOG_DEBUG)
+			{
+				return true;
+			}
+			return false;
 		}
 	}
 ?>
