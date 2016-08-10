@@ -284,7 +284,7 @@ class Inbox implements Module
 						$conditionArray = $this->getCondition($infoType, $page);
 						$profilesArray = $infoTypeAdapter->getProfiles($conditionArray, $skipArray,$this->profileObj->getSUBSCRIPTION());
 					 	if(!empty($memdata) && is_array($data) && is_array($profilesArray))
-							$data = array_merge($data,$profilesArray);
+							$data = $data+$profilesArray;
 						else if(is_array($profilesArray))
 							$data = $profilesArray;
 						JsMemcache::getInstance()->set($key,serialize($data),1800);
