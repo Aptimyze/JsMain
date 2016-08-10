@@ -175,6 +175,7 @@ style="height:387px; background-image: url('~$arrOutDisplay["about"]["coverPhoto
   ~if $SHOW_NEXT`
     <!--start:next-->
 
+
     <a id="show_nextListingProfile" ~if isset($nextLink)`href ="/profile/viewprofile.php?~$nextLink|decodevar`&stype=~$STYPE`&responseTracking=~$responseTracking`~$other_params|decodevar`&~$NAVIGATOR`"~else`href ="/profile/viewprofile.php?show_profile=next&total_rec=~$total_rec`&actual_offset=~$actual_offset`&j=~$j`&responseTracking=~$responseTracking`&searchid=~$searchid`~$other_params|decodevar`&~$NAVIGATOR`&tupleId=~$nextTupleId`"~/if`>
     <div class="pos-abs prfpos6 cursp z1">
     	<div class="disp-tbl prfdim6 prfb10 txtc">

@@ -71,6 +71,7 @@
         <script>
             var openfireUrl= "~JsConstants::$openfireConfig['HOST']`:~JsConstants::$openfireConfig['WSPORT']`";
             var openfireServerName = "~JsConstants::$openfireConfig['SERVER_NAME']`";
+            var my_action = "~$action`";
         </script>
     ~else`
         <script>
