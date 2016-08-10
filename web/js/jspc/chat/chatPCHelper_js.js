@@ -733,7 +733,7 @@ function handlePreAcceptChat(apiParams) {
  */
 function handleErrorInHoverButton(jid, data) {
     //chatLoggerPC("@@1");
-    if (data.buttondetails && data.buttondetails.button) {
+    if (data.buttondetails && data.buttondetails.buttons) {
         //data.actiondetails.errmsglabel = "You have exceeded the limit of the number of interests you can send";
         if (data.actiondetails.errmsglabel) {
             objJsChat.hoverButtonHandling(jid, data, "info");
