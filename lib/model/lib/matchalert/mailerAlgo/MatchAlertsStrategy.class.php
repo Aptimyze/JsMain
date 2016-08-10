@@ -8,8 +8,11 @@ abstract class MatchAlertsStrategy
         private $frequency = 1;
 	abstract function getMatches();
   
-        public function logRecords($receiverId,$profileIds,$logicLevel,$limit,$listCount){
-          $profileIdsForList = array_slice($profileIds,0,$listCount); // Profile id list to be added to listings according to new logic
+        public function logRecords($receiverId,$profileIds,$logicLevel,$limit,$listCount = 0){
+          $profileIdsForList = array();
+          if($listCount != 0)
+                $profileIdsForList = array_slice($profileIds,0,$listCount); // Profile id list to be added to listings according to new logic
+          
 	  $profileIds = array_slice($profileIds,0,$limit);
           
           $matchalertLogObj = new matchalerts_LOG();
