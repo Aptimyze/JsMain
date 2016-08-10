@@ -8,4 +8,4 @@ PRIMARY KEY ( `id` ) ,
 UNIQUE (
 `PROFILEID`
 )
-)
+)ENGINE=MyISAM;
