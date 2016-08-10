@@ -16,7 +16,7 @@
 		*/
 		private $arrConfig = array(
 			// 'logging' => 1, logging is on for this module
-			LoggingEnums::JSA => array(
+			LoggingEnums::JSADMIN => array(
 				LoggingEnums::logging => true,
 				LoggingEnums::level => LoggingEnums::LOG_DEBUG,
 				LoggingEnums::directory => true,
@@ -100,10 +100,13 @@
 		*/
 		public function traceStatus($module)
 		{
-			if(!array_key_exists($module, $this->arrConfig)){
-				return false;
+			if($this->debugStatus()){
+				return true;
 			}
-			return LoggingEnums::CONFIG_ON ? $this->arrConfig[$module][LoggingEnums::stackTrace] : false;
+			if(!array_key_exists($module, $this->arrConfig)){
+				return LoggingEnums::LOG_TRACE;
+			}
+			return LoggingEnums::CONFIG_ON ? $this->arrConfig[$module][LoggingEnums::stackTrace] : LoggingEnums::LOG_TRACE;
 		}
 
 		/**
@@ -116,6 +119,18 @@
 				return LoggingEnums::LOG_ERROR;
 			}
 			return LoggingEnums::CONFIG_ON ? $this->arrConfig[$module][LoggingEnums::level] : LoggingEnums::LOG_ERROR;
+		}
+
+		public function debugStatus()
+		{
+			if(LoggingEnums::LOG_LEVEL == LoggingEnums::LOG_DEBUG){
+				return true;
+			}
+			else if(LoggingEnums::CONFIG_ON && $this->arrConfig[$module][LoggingEnums::level] == LoggingEnums::LOG_DEBUG)
+			{
+				return true;
+			}
+			return false;
 		}
 	}
 ?>

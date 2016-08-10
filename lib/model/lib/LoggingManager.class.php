@@ -18,7 +18,7 @@ class LoggingManager
     /**
      * Const of File Base Path
      */
-    const LOG_FILE_BASE_PATH = '/uploads/Logger/';
+    const LOG_FILE_BASE_PATH = '/log/Logger/';
 
     /**
      * @var null
@@ -141,6 +141,10 @@ class LoggingManager
 
       $logData = '['. $this->getLogType(LoggingEnums::LOG_ERROR) .']';
       $logData = $logData.$this->getLogData($exception,$isSymfony,$logArray);
+      if(LoggingConfig::getInstance()->debugStatus())
+      {
+        $logData = $logData." ".print_r($_SERVER, true);
+      }
       $this->writeToFile($logData);
     }
 
@@ -410,6 +414,7 @@ class LoggingManager
       $logData = '['. $this->getLogType(LoggingEnums::LOG_DEBUG) .']';
       $logData = $logData.$this->getLogData($message,$isSymfony,$logArray);
       $logData = $logData." ".$message;
+      $logData = $logData." ".print_r($_SERVER, true);
       $this->writeToFile($logData);
     }
 
@@ -418,7 +423,7 @@ class LoggingManager
      */
     private function createDirectory($szPath)
     {
-      $dirPath = JsConstants::$docRoot.self::LOG_FILE_BASE_PATH.$szPath;
+      $dirPath = JsConstants::$cronDocRoot.self::LOG_FILE_BASE_PATH.$szPath;
       if (false === is_dir($dirPath)) {
         mkdir($dirPath,0777,true);
       }
@@ -430,11 +435,11 @@ class LoggingManager
     private function writeToFile($szLogString)
     {
         $currDate = Date('Y-m-d');
-        $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH."log-".$currDate.".log";
+        $filePath =  JsConstants::$cronDocRoot.self::LOG_FILE_BASE_PATH."log-".$currDate.".log";
         if($this->canCreateDir($this->szLogPath))
         {
           $this->createDirectory($this->szLogPath);
-          $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
+          $filePath =  JsConstants::$cronDocRoot.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
         }
         else
         {
@@ -506,7 +511,7 @@ class LoggingManager
      */
 
     public function setUniqueId($uniqueID)
-    {  
+    {
         $this->iUniqueID = $uniqueID;
         
     }
@@ -517,5 +522,5 @@ class LoggingManager
     private function canWriteTrace($szLogPath)
     {
         return LoggingConfig::getInstance()->traceStatus($szLogPath);
-    }
+    }  
 }

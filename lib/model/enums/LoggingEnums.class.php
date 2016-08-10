@@ -14,12 +14,13 @@ class LoggingEnums
     const LOG_INFO = 2;
     const LOG_DEBUG = 1;
     const LOG_ERROR = 0;
-    // 1 for logging all modules, 0 for not
-    const CONFIG_ON = true;
+    // 1 for Enabling config of modules, 0 for not
+    const CONFIG_ON = false;
     // 1 for logging all modules in same file, 0 different
     const LOG_TOGETHER = false;
+    const LOG_TRACE = false;
     // module names
-    const JSA = 'jsadmin';
+    const JSADMIN = 'jsadmin';
     const COMMONLOG = 'common';
     const EX500OR404 = '500-404';
     // name of channels returned
@@ -44,6 +45,7 @@ class LoggingEnums
     const TYPE_OF_ERROR = "typeOfError";
     const LOG_ID = "logId";
     const UNIQUE_REQUEST_SUB_ID = "uniqueRequestSubId";
+    // config array keys
     const logging = 'logging';
     const level = 'level';
     const directory = 'directory';
