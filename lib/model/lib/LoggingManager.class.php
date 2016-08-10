@@ -93,7 +93,7 @@ class LoggingManager
             self::$instance = new $className;
         }
         self::$instance->szLogPath = $basePath;
-
+        $out = sfContext::getInstance()->getRequest();
         return self::$instance;
     }
 
@@ -171,6 +171,7 @@ class LoggingManager
       if($uniqueSubId != "")
       $logData = $logData." [".$uniqueSubId."]";
       $logData = $logData." ".$channelName;
+      if($apiVersion != "")
       $logData = $logData." ".$apiVersion;
       $logData = $logData." ".$moduleName;
       $logData = $logData." ".$actionName;
@@ -190,14 +191,14 @@ class LoggingManager
      */
     private function getLogUniqueSubId($logArray)
     {
-      if ( !isset($logArray[LoggingEnums::UNIQUE_REQUEST_SUB_ID]))
+      if ( !isset($logArray[LoggingEnums::AJXRSI]))
       { 
-        $uniqueSubId = sfContext::getInstance()->getRequest()->getAttribute('AJAX_REQUEST_SUB_ID');
+        $uniqueSubId = sfContext::getInstance()->getRequest()->getAttribute(LoggingEnums::AJXRSI);
         
       }
       else
       { 
-        $uniqueSubId = $logArray[LoggingEnums::UNIQUE_REQUEST_SUB_ID];
+        $uniqueSubId = $logArray[LoggingEnums::AJXRSI];
       }
       return $uniqueSubId;
     }
@@ -505,7 +506,7 @@ class LoggingManager
      */
 
     public function setUniqueId($uniqueID)
-    {   //die(X);
+    {  
         $this->iUniqueID = $uniqueID;
         
     }

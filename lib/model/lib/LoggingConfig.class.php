@@ -22,6 +22,12 @@
 				LoggingEnums::directory => true,
 				LoggingEnums::stackTrace => false
 				),
+			LoggingEnums::SEO => array(
+				LoggingEnums::logging => false,
+				LoggingEnums::level => LoggingEnums::LOG_DEBUG,
+				LoggingEnums::directory => true,
+				LoggingEnums::stackTrace => false
+				),
 			LoggingEnums::EX500OR404 => array(
 				LoggingEnums::logging => true,
 				LoggingEnums::level => LoggingEnums::LOG_ERROR,
