@@ -58,7 +58,6 @@ class SearchDisplay
 				
                         if($education != ''){
                                 $educationExploded = explode(",",$education);
-                                $eduString = "";
                                 foreach($educationExploded as $key=>$val){
                                     $showEducation[] = FieldMap::getFieldLabel($decoratedFieldName,$val);
                                 }
