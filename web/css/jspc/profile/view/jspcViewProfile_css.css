@@ -207,9 +207,10 @@ ul.vprof3 li:hover{background-color:#d9475c}
 	
 }
 @media (min-width: 1026px){
-	.prfpos5{top:460px; left:0}
-.prfpos6{top:460px; right:0}
+	.prfpos5{top:170px; left:0}
+.prfpos6{top:170px; right:0}
 }
+
 .prflist1 ul li:nth-child(odd){clear:both}
 .wid100{width:100px}
 .wid120{width:120px}
