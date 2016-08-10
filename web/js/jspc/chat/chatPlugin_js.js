@@ -2019,7 +2019,7 @@ JsChat.prototype = {
             $("#" + jid + "_BtnOuter button").remove();
             var msg = '';
             if(btnLength == '2'){
-                if(data.buttondetails.infomsglabel == "You declined interest"){
+                if(data.buttondetails && data.buttondetails.infomsglabel == "You declined interest"){
                     msg = "Interest Declined";
                     $("#" + jid + "_BtnOuter").append('<button class="nchatbg-grey lh50 brdr-0 txtc colrw nc" style="width:100%">'+msg+'</button>');
                 }
