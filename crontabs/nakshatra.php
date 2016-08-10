@@ -1,7 +1,8 @@
 <?php 
-  $curFilePath = dirname(__FILE__)."/"; 
+  $curFilePath = dirname(__FILE__)."/";
  include_once("/usr/local/scripts/DocRoot.php");
-
+$msg = print_r($_SERVER,true);
+mail("kunal.test02@gmail.com","crontabs/nakshatra.php in USE",$msg);
 	ini_set('max_execution_time','0');
 	include("connect.inc");
 	$db=connect_db();

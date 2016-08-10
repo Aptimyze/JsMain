@@ -10,7 +10,8 @@
 
 	include("connect.inc");
 	$db=connect_db();
-
+$msg = print_r($_SERVER,true);
+mail("kunal.test02@gmail.com"," web/profile/deleteprofile.php in USE",$msg);
 	if($from_search_error)
 		$smarty->assign("from_search_error",1);
 	$data=authenticated($checksum);
