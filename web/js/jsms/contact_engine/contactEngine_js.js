@@ -270,17 +270,25 @@ function setTextAreaHgt(){
 }
 
 function bindSlider(){
-    
+ /*   var child=$(".detailedProfileRedirect");
+    child.unbind("click");
+    child.bind("click",function(){
+    var countKey=$(this).attr('countkey');
+    var params=$(this).attr('params');
+    var index= parseInt($(this).attr('index'))+1;
+    window.location.href='/profile/viewprofile.php?'+'&total_rec='+countArray[countKey]+'&actual_offset='+index+'&'+params;
+    });
+   */ 
     var child=$(".eoiAcceptBtn");
     child.unbind("click");
     child.bind("click",function(){
         $(".eoiAcceptBtn").attr("disabled",true);
         $(".eoiDeclineBtn").attr("disabled",true);
         
-        var input=$(this).children("input");
-params["profilechecksum"] =input.val();
+        var input=$(this).children(".inputProChecksum");
+        params["profilechecksum"] =input.val();
         params["actionName"] ="ACCEPT_MYJS";
-                                performAction(params["actionName"], params, $(this).attr("index"),false);
+        performAction(params["actionName"], params, $(this).attr("index"),false);
     
     });
     
@@ -288,9 +296,9 @@ params["profilechecksum"] =input.val();
     child.unbind("click");
     child.bind("click",function(){
         $(this).unbind("click");
-        var input=$(this).children("input");
+        var input=$(this).children(".inputProChecksum");
         params["profilechecksum"] =input.val();
-        params["actionName"] ="DECLINE_MYJS";
+        params["actionName"] ="DECLINE_MYJS";        
         performAction(params["actionName"], params,  $(this).attr("index"),false);
     
     });
@@ -298,12 +306,14 @@ params["profilechecksum"] =input.val();
     child=$(".matchAlertBtn");
     child.unbind("click");
     child.bind("click",function(){
-        var input=$(this).children("input");
+        var input=$(this).children(".inputProChecksum");
 params["profilechecksum"] =input.val();
         params["actionName"] ="INITIATE_MYJS";
+        params["fromJSMS_MYJS"] ="1";
         performAction(params["actionName"], params,  $(this).attr("index"),false);
     
     });
+    
     
     
     }   

@@ -5,7 +5,7 @@
             <img src="/images/jsms/commonImg/loader.gif" class="srp_box2 contactLoader" style="position:absolute;display:none; top:65px; ">
    
                  <div class="bg4" style="overflow-x: hidden; " id="hideOnAction">
-                     <a id="detailedProfileRedirect" href="~$SITE_URL`/profile/viewprofile.php?profilechecksum=~$profileTuple.profilechecksum`&~if $section eq "eoi"`responseTracking=~JSTrackingPageType::MYJS_EOI_JSMS`~else`stype=~SearchTypesEnums::MATCHALERT_MYJS_JSMS`~/if`&total_rec=~$total`&actual_offset=~$index+1`&contact_id=~$contactId`"> 
+                     <a id="detailedProfileRedirect" href="~$SITE_URL`/profile/viewprofile.php?profilechecksum=~$profileTuple.profilechecksum`&~if $section eq "eoi"`responseTracking=~JSTrackingPageType::MYJS_EOI_JSMS`~else`stype=~SearchTypesEnums::MATCHALERT_MYJS_JSMS`~/if`&total_rec=~$total`&actual_offset=~$index+1`&contact_id=~$contactId`" > 
                          <div class="pad16" style="overflow:hidden;height:140px;" >
                              <div style="overflow-x:hidden; height:100%;">
                         <div style="white-space: nowrap; word-wrap:normal; width:200%;" class="overflowWrap">
@@ -33,12 +33,12 @@
                  <div class="brdr8 fullwid" style="height:60px;">
 
                         <div class="txtc wid49p fl eoiAcceptBtn brdr7 pad2" index="~$index`"  >
-                            <input type="hidden" value="~$profileTuple.profilechecksum`" />
+                            <input class='inputProChecksum' type="hidden" value="~$profileTuple.profilechecksum`" />
 
                             <a class="f15 color2 fontreg">Accept</a>
                     </div>
                     <div class="txtc wid49p fl f15 pad2 eoiDeclineBtn"  index="~$index`">
-                        <input type="hidden" value="~$profileTuple.profilechecksum`"/>
+                        <input class='inputProChecksum' type="hidden" value="~$profileTuple.profilechecksum`"/>
                          <a class="f15 color2 fontlig">Decline</a>
                     </div>
                     <div class="clr"></div>
@@ -50,7 +50,7 @@
                  <div class="brdr8 fullwid" style="height:60px;">
 
                         <div class="txtc fullwid fl matchAlertBtn brdr7 pad2" index="~$index`"  >
-                            <input type="hidden" value="~$profileTuple.profilechecksum`" />
+                            <input class='inputProChecksum' type="hidden" value="~$profileTuple.profilechecksum`" />
 
                             <a class="f15 color2 fontreg">Send Interest</a>
                     </div>
