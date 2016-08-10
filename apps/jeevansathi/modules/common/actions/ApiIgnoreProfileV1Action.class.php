@@ -114,6 +114,11 @@ class ApiIgnoreProfileV1Action extends sfActions
 							$sender = $this->loginProfile;
 							$receiver = $this->ignoreProfile;
 						}
+						else
+						{
+							$sender = $this->loginProfile;
+							$receiver = $this->ignoreProfile;
+						}
 						//Entry in Chat Roster
 						try {
 							$producerObj = new Producer();
