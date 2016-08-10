@@ -523,11 +523,14 @@ JsChat.prototype = {
     },
     //add photo in tuple div of listing
     _addListingPhoto: function (photoObj) {
+        //console.log("in _addListingPhoto");
         if (typeof photoObj != "undefined" && typeof Object.keys(photoObj.profiles) != "undefined") {
             $.each(Object.keys(photoObj.profiles), function (index, element) {
                 if (photoObj.profiles[element].PHOTO.ProfilePic120Url) {
-                    $(".chatlist img[id*='pic_" + element + "']").attr("src", photoObj.profiles[element].PHOTO.ProfilePic120Url);
-                    if($("#pic_"+element).length !=0) {
+                    $(".chatlist img[id*='pic_" + element + "_']").attr("src", photoObj.profiles[element].PHOTO.ProfilePic120Url);
+                    //console.log(element);
+                    if($('chat-box[user-id="' + element + '"]').length !=0) {
+                        //console.log("adding for---"+element);
                         $("#pic_"+element).attr("src", photoObj.profiles[element].PHOTO.ProfilePic120Url);
                     }
                 }
@@ -1542,15 +1545,9 @@ JsChat.prototype = {
     //adding innerDiv after creating chatbox
     _appendInnerHtml: function (userId, status) {
         var curElem = this,
-            groupId = $('chat-box[user-id="' + userId + '"]').attr("group-id"),
-            imgId;
-        $("#nchatDivs img").each(function (index, element) {
-            if (userId == $(element).attr("id").split("_")[1]) {
-                imgId = $(element).attr("id");
-            }
-        });
-        $("#" + imgId).clone().appendTo($('chat-box[user-id="' + userId + '"] .chatBoxBar'));
-        $('chat-box[user-id="' + userId + '"] .chatBoxBar img').attr("id", "pic_" + imgId.split("_")[1]);
+            groupId = $('chat-box[user-id="' + userId + '"]').attr("group-id");
+        $("#pic_"+userId+"_"+groupId).clone().appendTo($('chat-box[user-id="' + userId + '"] .chatBoxBar'));
+        $('chat-box[user-id="' + userId + '"] .chatBoxBar img').attr("id", "pic_" + userId);
         $('chat-box[user-id="' + userId + '"] #txtArea').on("keyup", function () {
             curElem._textAreaAdjust(this);
         });
