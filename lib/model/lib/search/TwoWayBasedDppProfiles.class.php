@@ -24,9 +24,9 @@ class TwoWayBasedDppProfiles extends TwoWayMatch {
                 
                 // Set last login date in search param
                 $startDate = date("Y-m-d h:i:s", strtotime("now") - self::DAY_GAP * 24 * 3600);
-                $startDate = date("Y-m-d h:i:s", strtotime("now"));
+                $endDate = date("Y-m-d h:i:s", strtotime("now"));
                 $this->setLLAST_LOGIN_DT($startDate);
-                $this->setHLAST_LOGIN_DT($startDate);
+                $this->setHLAST_LOGIN_DT($endDate);
                 // get two way match range params and add last login date to it
                 $rangeP = $this->getRangeParams();
                 $this->setRangeParams($rangeP.",LAST_LOGIN_DT");
