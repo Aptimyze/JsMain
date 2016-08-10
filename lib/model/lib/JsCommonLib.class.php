@@ -89,12 +89,14 @@ public static function insertConsentMessageFlag($profileid) {
         		
        			$loggedInProfileObj=LoggedInProfile::getInstance();
                	if(!$loggedInProfileObj->getPROFILEID()) $loggedInProfileObj->getDetail($profileid,'','*');
-                if ($primaryNum=$loggedInProfileObj->getPHONE_MOB())
+               	$primaryNum=$loggedInProfileObj->getPHONE_MOB();
+                if ($primaryNum)
                 {
-                	$jprofileObj=new JPROFILE();
-                	$resultArray=$jprofileObj->checkPhone(array($primaryNum));
+					$isd=$loggedInProfileObj->getISD();
+                	$jprofileObj=new JPROFILE("newjs_slave");
+                	$resultArray=$jprofileObj->checkPhone(array($primaryNum),$isd);
                 	$selfProfileId=$loggedInProfileObj->getPROFILEID();
-                	$isd=$loggedInProfileObj->getISD();
+                	
 
                 	foreach ($resultArray as $key => $value) 
                 	{
@@ -691,11 +693,20 @@ public static function insertConsentMessageFlag($profileid) {
 	{
 		if($profile)
 		{
-			$onlineObj=new USERPLANE_USERS();
-			if($onlineObj->isOnline($profile)==true)
+			if(JsConstants::$jsChatFlag=='1')
+	                {
+				$arr = ChatLibrary::getPresenceOfIds($profile);
+				if(is_array($arr) && count($arr)>0)
+					return true;
+        	        }
+                	else
 			{
-				return true;
-			}	
+				$onlineObj=new USERPLANE_USERS();
+				if($onlineObj->isOnline($profile)==true)
+				{
+					return true;
+				}	
+			}
 		}
 		else
 			throw new JSException("online status of user userplane: Profileid missing.");

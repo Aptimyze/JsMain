@@ -63,6 +63,7 @@
         var showChat = "~$showChat`";
         var loggedInJspcGender = "~$sf_request->getAttribute('gender')|decodevar`";
         var self_checksum = "~$sf_request->getAttribute('profilechecksum')`";
+        //localStorage.removeItem("self_subcription");
         localStorage.setItem("self_subcription","~$subscription`");
     </script>
     ~/if`
@@ -70,6 +71,7 @@
         <script>
             var openfireUrl= "~JsConstants::$openfireConfig['HOST']`:~JsConstants::$openfireConfig['WSPORT']`";
             var openfireServerName = "~JsConstants::$openfireConfig['SERVER_NAME']`";
+            var my_action = "~$action`";
         </script>
     ~else`
         <script>

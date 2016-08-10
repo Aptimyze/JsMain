@@ -39,6 +39,7 @@ class chatActions extends sfActions
 			$username = $loginData['PROFILEID'];
 
 			//$uname = $loginData['USERNAME'];
+
 			$pass = md5($username);
 			//$pass = EncryptPassword::generatePassword("test".$username);
 			//$pass = "test".$username;

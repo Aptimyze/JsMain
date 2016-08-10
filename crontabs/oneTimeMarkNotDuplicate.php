@@ -17,7 +17,8 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 	  		$rawDuplicateObj->addExtension('IDENTIFIED_ON',date('Y-m-d H:i:s'));
 	  		$rawDuplicateObj->setComments("None");
 
-
+		 $duplicateTempObj=new duplicates_DUPLICATE_TEMP_TABLE('newjs_masterRep');
+		 (new DUPLICATE_PROFILE_LOG('newjs_masterRep'))->deleteProbableDuplicates();
 	  	for($i=0;;$i+=1000)
 	 {	
 
@@ -46,7 +47,6 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 
 		  		}
                         unset($jprofileArray);
-                        $duplicateTempObj=new duplicates_DUPLICATE_TEMP_TABLE('newjs_slave');
                         $duplicateTempArray = $duplicateTempObj->getProfileArray($valueArray['PROFILEID']);
 	foreach ($arr as $key => $value) {
 
@@ -104,7 +104,6 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 	}
         unset($duplicateTempArray);
 }
-                        $duplicateTempObj = new duplicates_DUPLICATE_TEMP_TABLE('newjs_slave');
 			$notDuplicateObj=new DUPLICATES_PROFILES();
 			$IntlObj =  new INCENTIVE_NEGATIVE_TREATMENT_LIST;
                         $duplicateTempArray=$duplicateTempObj->getNonDuplicateProfiles();

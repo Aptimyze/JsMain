@@ -96,7 +96,7 @@ function getMessagesFromLocalStorage(selfJID, other_id){
     
     $("#moreHistory_"+other_id).attr("data-page",page+1);
     var chunk = chatConfig.Params[device].moreMsgChunk;
-    var oldMessages = JSON.parse(localStorage.getItem(selfJID+'_'+other_id));
+    var oldMessages = JSON.parse(localStorage.getItem('chatMsg_'+selfJID+'_'+other_id));
     if(oldMessages){
         var pc = page*chunk;
         var messages = [];
@@ -106,11 +106,14 @@ function getMessagesFromLocalStorage(selfJID, other_id){
             $("#moreHistory_"+other_id).attr("data-localMsg","1");
         }
         else{
-            $("#moreHistory_"+other_id).attr("data-localMsg","0")
+            $("#moreHistory_"+other_id).attr("data-localMsg","0");
         }
         for(var i=pc;i<limit;i++){
             messages.push(oldMessages[i]);
         }
+    }
+    else{
+        $("#moreHistory_"+other_id).attr("data-localMsg","0");
     }
     return messages;
 }
@@ -482,6 +485,7 @@ function checkNewLogin(profileid) {
             eraseCookie('chatAuth');
             eraseCookie('chatEncrypt');
             createCookie('chatEncrypt', computedChatEncrypt);
+            clearChatMsgFromLS();
         }
     } else {
         createCookie('chatEncrypt', computedChatEncrypt);
@@ -648,6 +652,15 @@ function getProfileImage() {
     }
     return imageUrl;
 }
+
+function clearChatMsgFromLS(){
+    var patt = new RegExp("chatMsg_");
+    for(var key in localStorage){
+        if(patt.test(key)){
+            localStorage.removeItem(key);
+        }
+    }
+}
 /*
  * Clear local storage
  */
@@ -658,6 +671,7 @@ function clearLocalStorage() {
     });
     localStorage.removeItem('chatBoxData');
     localStorage.removeItem('lastUId');
+    clearChatMsgFromLS();
 }
 /*hit api for chat before acceptance
  * @input: apiParams
@@ -719,7 +733,7 @@ function handlePreAcceptChat(apiParams) {
  */
 function handleErrorInHoverButton(jid, data) {
     //chatLoggerPC("@@1");
-    if (data.buttondetails && data.buttondetails.button) {
+    if (data.buttondetails && (data.buttondetails.buttons || data.buttondetails.button)) {
         //data.actiondetails.errmsglabel = "You have exceeded the limit of the number of interests you can send";
         if (data.actiondetails.errmsglabel) {
             objJsChat.hoverButtonHandling(jid, data, "info");
@@ -880,7 +894,8 @@ $(document).ready(function () {
         var loginStatus;
         $("#jspcChatout").on('click',function(){
             ////console.log("Logout clicked");
-           $(".jschatLogOut").click(); 
+            localStorage.removeItem("self_subcription");
+           $(objJsChat._logoutChat).click(); 
         });
         /*
         $(window).focus(function() {
@@ -891,35 +906,11 @@ $(document).ready(function () {
         });
         */
         $(window).on("offline", function () {
-            ////console.log("detected internet disconnection");
             strophieWrapper.currentConnStatus = Strophe.Status.DISCONNECTED;
         });
         $(window).on("online", function () {
             globalSleep(15000);
             //console.log("detected internet connectivity");
-            /*if (chatLoggedIn == 'true') {
-                var tAuth = checkAuthentication();
-                if (tAuth == 'true') {
-                    //chatLoggerPC("authentication successful");
-                    initiateChatConnection();
-                    if (strophieWrapper.getCurrentConnStatus()) {
-                        //chatLoggerPC("Strophe Connection successful");
-                        loginStatus = "Y";
-                        objJsChat = new JsChat({
-                            loginStatus: loginStatus,
-                            mainID: "#chatOpenPanel",
-                            //profilePhoto: "<path>",
-                            imageUrl: imgUrl,
-                            profileName: "bassi",
-                            listingTabs: chatConfig.Params[device].listingTabs,
-                            rosterDetailsKey: strophieWrapper.rosterDetailsKey,
-                            listingNodesLimit: chatConfig.Params[device].groupWiseNodesLimit,
-                            groupBasedChatBox: chatConfig.Params[device].groupBasedChatBox,
-                            contactStatusMapping: chatConfig.Params[device].contactStatusMapping
-                        });
-                    }
-                }
-            }*/
             chatLoggedIn = readCookie('chatAuth');
             if (chatLoggedIn == 'true' && loginStatus == "Y") {
                 if (username && pass) {
@@ -934,6 +925,7 @@ $(document).ready(function () {
         } else {
             loginStatus = "N";
         }
+        
         imgUrl = getProfileImage();
         selfName = getSelfName();
         objJsChat = new JsChat({
@@ -949,6 +941,7 @@ $(document).ready(function () {
             contactStatusMapping: chatConfig.Params[device].contactStatusMapping,
             maxMsgLimit:chatConfig.Params[device].maxMsgLimit
         });
+        
         objJsChat.onEnterToChatPreClick = function () {
             //objJsChat._loginStatus = 'N';
             //chatLoggerPC("Checking variable");
@@ -1123,6 +1116,7 @@ $(document).ready(function () {
             });
         }
         objJsChat.start();
+        
     }
 
 });
