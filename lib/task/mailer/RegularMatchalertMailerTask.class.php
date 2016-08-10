@@ -169,7 +169,7 @@ EOF;
         $MatchAlerts = new MatchAlerts();
         $LogCount = $MatchAlerts->getProfilesCountOfLogicLevel($profileId,$logicLevel);
         $totalCountData = TwoWayBasedDppAlerts::checkForDppProfile($profileId);
-        if($LogCount > $count && !empty($totalCountData)){
+        if($LogCount > $count && !empty($totalCountData) && $totalCountData["CNT"] !=0 ){
                 $outOf = "$count out of ".$totalCountData["CNT"]." profiles";
         }else{
                 $outOf = $count;
