@@ -512,6 +512,17 @@ class SearchJSPC extends SearchJS
                     $rcbObj = new RequestCallBack($params['loggedInProfileObj']);
                     $output['display_rcb_comm'] = $rcbObj->getRCBStatus();
                     unset($rcbObj);
+            }elseif($params["searchCat"] == 'kundlialerts'){
+            	$output['listType'] = 'noClusSearch';
+                $output['clusters'] = null;
+                $output['heading'] = $params['result_count'];
+                $output['pageHeading'] = null;
+                $output['total'] = null;
+                $output['ccmessage'] =  $params['pageSubHeading'];
+                $output['pageSubHeading'] =null;
+                $output['searchBasedParam'] = $params["searchCat"];
+                $output['DefaultZeroMsg'] = SearchTitleAndTextEnums::$MESSAGE_0RESULT_MAPPING["V1"]["PC"]["kundlialerts"]["withHoro"];
+                $output['minAcceptedGunaScore'] = SearchConfig::$minAcceptedGunaScore;
             }
             return $output;
        }

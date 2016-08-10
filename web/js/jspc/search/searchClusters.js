@@ -821,7 +821,13 @@ function moreLayerKeyHandling(e){
 */
 function noClusterSectionResultMapping(params)
 {
+    var jshideCircleclass='disp-tbl';
+    if(params["searchBasedParam"] == 'kundlialerts')
+    {
+         jshideCircleclass='disp-none';
+    }
     var mapping={
+        '{js-hideCircle}': removeNull(jshideCircleclass),
         '{heading}':removeNull(params["heading"]),
         '{totalCount}':removeNull(params["totalCount"]),
         '{message}':removeNull(params["message"])                 
