@@ -32,7 +32,7 @@ class UserSavedSearches extends SearchParamters
 	* Sets SearchParamtersObj corresponding to id(primary key of teh SEARCH_AGENT table.
 	* @param $id the unique id 
 	*/
-	public function getSearchCriteria($id)
+	public function getSearchCriteria($id,$fromMailer= '')
 	{
  		$paramArr['ID'] = $id;
 		$paramArr['PROFILEID'] = $this->pid;
@@ -60,12 +60,18 @@ class UserSavedSearches extends SearchParamters
 		}
 		else
 		{
-			//Log an entry : still perform a search with gender=oppisite gender. 
+			if($fromMailer == 1)
+			{
+				throw new jsException('',"Error Processing Request in SavedSearchCalculationTask");	
+			}
+			else
+			{
+				//Log an entry : still perform a search with gender=oppisite gender. 
 	                if($this->loggedInProfileObj->getGENDER()=='F')
 				$this->setGENDER('M');
 	                else
 				$this->setGENDER('F');
-
+			}
 		}
 	}
 
