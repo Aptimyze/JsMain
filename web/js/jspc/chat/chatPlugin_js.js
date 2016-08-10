@@ -1542,15 +1542,9 @@ JsChat.prototype = {
     //adding innerDiv after creating chatbox
     _appendInnerHtml: function (userId, status) {
         var curElem = this,
-            groupId = $('chat-box[user-id="' + userId + '"]').attr("group-id"),
-            imgId;
-        $("#nchatDivs img").each(function (index, element) {
-            if (userId == $(element).attr("id").split("_")[1]) {
-                imgId = $(element).attr("id");
-            }
-        });
-        $("#" + imgId).clone().appendTo($('chat-box[user-id="' + userId + '"] .chatBoxBar'));
-        $('chat-box[user-id="' + userId + '"] .chatBoxBar img').attr("id", "pic_" + imgId.split("_")[1]);
+            groupId = $('chat-box[user-id="' + userId + '"]').attr("group-id");
+        $("#pic_"+userId+"_"+groupId).clone().appendTo($('chat-box[user-id="' + userId + '"] .chatBoxBar'));
+        $('chat-box[user-id="' + userId + '"] .chatBoxBar img').attr("id", "pic_" + userId);
         $('chat-box[user-id="' + userId + '"] #txtArea').on("keyup", function () {
             curElem._textAreaAdjust(this);
         });
