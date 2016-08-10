@@ -191,7 +191,7 @@ class SearchDisplay
 			$bookmarks = $bookmarkObj->getProfilesBookmarks($viewer, $this->profileids, 1);
 
 			//get chat requests received by logged-in user
-			$chatRequests  = $chatObj->getIfChatRequestSent($this->profileIdStr, $viewer, 1);
+			//$chatRequests  = $chatObj->getIfChatRequestSent($this->profileIdStr, $viewer, 1);
 
 			//get awaiting contact requests received by logged-in user
 			$contactObj = new ContactsRecords();

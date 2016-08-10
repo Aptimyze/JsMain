@@ -220,6 +220,22 @@ unset($notDeliveredProfilesError);
 	*********/
 	function makeInitialContact($sender_profileid,$receiver_profileid,$filtered,$stype,$source,$recSub,$senSub)
 	{
+		try {
+			$senderObj = new Profile("",$sender_profileid);
+			$senderObj->getDetail("","","*");
+			$receiverObj = new Profile("",$sender_profileid);
+			$receiverObj->getDetail("","","*");
+			//send instant JSPC/JSMS notification
+			$producerObj = new Producer();
+			if ($producerObj->getRabbitMQServerConnected()) {
+				//Add for contact roster
+				$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'INITIATE', 'body' => array('sender' => array('profileid'=>$senderObj->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($senderObj->getPROFILEID()),'username'=>$senderObj->getUSERNAME()), 'receiver' => array('profileid'=>$receiverObj->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($receiverObj->getPROFILEID()),"username"=>$receiverObj->getUSERNAME()),"filter"=>$filtered)), 'redeliveryCount' => 0);
+				$producerObj->sendMessage($chatData);
+			}
+			unset($producerObj);
+		} catch (Exception $e) {
+			throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
+		}
                 $contact_id=insertIntoContacts($sender_profileid,$receiver_profileid,'I','Y',1,$filtered,$recSub,$senSub);
                 //script and function to track search to contact flow
                 include_once("search_contact_flow_tracking.php");

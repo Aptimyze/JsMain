@@ -97,26 +97,21 @@ class Producer
 		$this->isRabbitMQServerConnected = $connectionStatus;
 	}
 
-  /**
-   *
-   * get value of flag $isRabbitMQServerConnected
-   *
-   * <p>
-   * returns $isRabbitMQServerConnected
-   * </p>
-   *
-   * @access public
-   * @param none
-   */
-  public function getRabbitMQServerConnected()
-  {
-    return $this->isRabbitMQServerConnected;
-  }
+	/**
+	 *
+	 * Encodes $msgdata(param) as json message and sends it to queue.
+	 *
+	 * <p>
+	 * declares queues and then publishes message based on process(mail/sms/gcm).
+	 * </p>
+	 *
+	 * @access public
+	 * @param $msgdata
+	 */
 
 	public function sendMessage($msgdata)
 	{
 		try {
-            //$this->channel->exchange_declare(MQ::CHATEXCHANGE, "direct", MQ::PASSIVE, "true", MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::MAILQUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::SMSQUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::CONTACTCACHEINITIATE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
@@ -168,28 +163,39 @@ class Producer
 					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::DELETE_RETRIEVE_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
 					break;
 				case "CHATROSTERS":
-					$data = $msgdata['data'];
-					$msg = new AMQPMessage(json_encode($data), array('delivery_mode' => MQ::DELIVERYMODE));
-					$this->channel->basic_publish($msg, MQ::CHATEXCHANGE, "roster");
+					if (JsConstants::$jsChatFlag > 1) {
+						$data = $msgdata['data'];
+						$msg = new AMQPMessage(json_encode($data), array('delivery_mode' => MQ::DELIVERYMODE));
+						$this->channel->basic_publish($msg, MQ::CHATEXCHANGE, "roster");
+					}
 					break;
 				case "UPDATE_SEEN":
 					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::UPDATE_SEEN_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
 					break;
 				case "USERCREATION":
-					$data = $msgdata['data'];
-					$msg = new AMQPMessage($data, array('delivery_mode' => MQ::DELIVERYMODE));
-					$this->channel->basic_publish($msg, MQ::CHATEXCHANGE,"profile_created");
+					if (JsConstants::$jsChatFlag > 1) {
+						$data = $msgdata['data'];
+						$msg = new AMQPMessage($data, array('delivery_mode' => MQ::DELIVERYMODE));
+						$this->channel->basic_publish($msg, MQ::CHATEXCHANGE, "profile_created");
+					}
 					break;
 				case "USERLOGIN":
-					$data = $msgdata['data'];
-					$msg = new AMQPMessage($data, array('delivery_mode' => MQ::DELIVERYMODE));
-					$this->channel->basic_publish($msg, MQ::CHATEXCHANGE,"profile_created");
+					if (JsConstants::$jsChatFlag > 1) {
+						$data = $msgdata['data'];
+						$msg = new AMQPMessage($data, array('delivery_mode' => MQ::DELIVERYMODE));
+						$this->channel->basic_publish($msg, MQ::CHATEXCHANGE, "profile_created");
+					}
 					break;
+				case "DUPLICATE_LOG":
+					    $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::DUPLICATE_LOG_QUEUE,MQ::MANDATORY,MQ::IMMEDIATE);
+					    break;
 				case "USER_DELETE":
-					$data = $msgdata['data'];
-					$msg = new AMQPMessage($data, array('delivery_mode' => MQ::DELIVERYMODE));
-					$this->channel->basic_publish($msg, MQ::CHATEXCHANGE,"profile_deleted");
-					break;
+					if (JsConstants::$jsChatFlag > 1) {
+						$data = $msgdata['data'];
+						$msg = new AMQPMessage($data, array('delivery_mode' => MQ::DELIVERYMODE));
+						$this->channel->basic_publish($msg, MQ::CHATEXCHANGE, "profile_deleted");
+					}
+					break;				
 				case "CHATMESSAGE":
 					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::CHAT_MESSAGE, MQ::MANDATORY, MQ::IMMEDIATE);
 					break;
@@ -203,7 +209,7 @@ class Producer
                     break;
 			}
 		} catch (Exception $exception) {
-			$str = "\nRabbitMQ Error in producer, Unable to publish message : " . $exception->getMessage() . "\tLine:" . __LINE__;die;
+			$str = "\nRabbitMQ Error in producer, Unable to publish message : " . $exception->getMessage() . "\tLine:" . __LINE__;
 			RabbitmqHelper::sendAlert($str, "default");
 			return;
 		}
@@ -226,6 +232,22 @@ class Producer
 			$this->channel->close();
 			$this->connection->close();
 		}
+	}
+
+	/**
+	 *
+	 * get value of flag $isRabbitMQServerConnected
+	 *
+	 * <p>
+	 * returns $isRabbitMQServerConnected
+	 * </p>
+	 *
+	 * @access public
+	 * @param none
+	 */
+	public function getRabbitMQServerConnected()
+	{
+		return $this->isRabbitMQServerConnected;
 	}
 
 }
