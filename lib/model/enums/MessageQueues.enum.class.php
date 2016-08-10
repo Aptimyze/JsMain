@@ -9,6 +9,8 @@ class MessageQueues
   CONST SMSQUEUE = "SmsGcmQueue"; //Queue for storing sms
   CONST CONTACTCACHEINITIATE = "ContactCacheInitiate"; //Queue for sending data to webservice to create cache
   CONST GCMQUEUE = "SmsGcmQueue"; //Queue for storing gcm. Currenly same queue is used for both SMS and GCM.
+  CONST CHATROSTERS = "chatRosters"; //Queue for users rosters for chat
+  CONST USERCREATION = "USER_CREATION"; //Queue for chat user creation
   CONST CONSUMER_COUNT_SINGLE = 1; //This is to ensure that only 1 consumer instance runs at a time.
   CONST UPDATE_SEEN_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST INVALIDATECACHE = "invalidateCache";
@@ -23,6 +25,7 @@ class MessageQueues
   CONST EXCLUSIVE = false;    // the queue can be accessed in other channels
   CONST AUTO_DELETE = false;  //the queue won't be deleted once the channel is closed.
   CONST EXCHANGE = "";        //for default(nameless) exchange.
+  CONST CHATEXCHANGE = "Profile"; //Chat Exchange
   CONST MANDATORY = true;     //If set,server will return an unroutable message with a Return method. If false, the server silently drops the message.
   CONST IMMEDIATE = false;    // If this set, the server will return an undeliverable message with a Return method. If false, the server will queue the message, but with no guarantee that it will ever be consumed.
   CONST MULTIPLE_TAG = true;  //If set,multiple messages can be rejected with a single method. If false, the delivery tag refers to a single message.
