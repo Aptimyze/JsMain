@@ -67,8 +67,7 @@ class Inbox implements Module
 	{
 		
 		try {
-			
-			if (is_array($infoTypenav) && $infoTypenav["NUMBER"]==1)
+			if (is_array($infoTypenav) && ($infoTypenav["NUMBER"]==null || $infoTypenav["NUMBER"]==1))
 			{
 				JsMemcache::getInstance()->delete($this->profileObj->getPROFILEID());
 				
@@ -226,7 +225,7 @@ class Inbox implements Module
 		if ($infoTypeNav && $config) {
 				$tuple       = $config["TUPLE"];
 				$displayFlag = 1;
-				if (is_array($infoTypeNav))
+				if (is_array($infoTypeNav) && $infoTypeNav["NUMBER"]!=null)
 					$nav = $infoTypeNav["NUMBER"];
 				else
 					$nav =1;
@@ -284,9 +283,8 @@ class Inbox implements Module
 						}
 						$conditionArray = $this->getCondition($infoType, $page);
 						$profilesArray = $infoTypeAdapter->getProfiles($conditionArray, $skipArray,$this->profileObj->getSUBSCRIPTION());
-					  
-						if(!empty($memdata) && is_array($profilesArray))
-							$data = $data+$profilesArray;
+					 	if(!empty($memdata) && is_array($data) && is_array($profilesArray))
+							$data = array_merge($data,$profilesArray);
 						else if(is_array($profilesArray))
 							$data = $profilesArray;
 						JsMemcache::getInstance()->set($key,serialize($data),1800);
