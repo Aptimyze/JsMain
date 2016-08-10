@@ -523,12 +523,14 @@ JsChat.prototype = {
     },
     //add photo in tuple div of listing
     _addListingPhoto: function (photoObj) {
+        console.log("in _addListingPhoto");
         if (typeof photoObj != "undefined" && typeof Object.keys(photoObj.profiles) != "undefined") {
             $.each(Object.keys(photoObj.profiles), function (index, element) {
                 if (photoObj.profiles[element].PHOTO.ProfilePic120Url) {
                     $(".chatlist img[id*='pic_" + element + "_']").attr("src", photoObj.profiles[element].PHOTO.ProfilePic120Url);
+                    console.log(element);
                     if($('chat-box[user-id="' + element + '"]').length !=0) {
-                        console.log("adding for"+element);
+                        console.log("adding for---"+element);
                         $("#pic_"+element).attr("src", photoObj.profiles[element].PHOTO.ProfilePic120Url);
                     }
                 }
