@@ -1665,6 +1665,7 @@ JsChat.prototype = {
                 if (status != "sending") {
                     curElem._changeStatusOfMessg(uniqueId, userId, status);
                 }
+                curElem._scrollToBottom(userId);
             }
         }
     },
