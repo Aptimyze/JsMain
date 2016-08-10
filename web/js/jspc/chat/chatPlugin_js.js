@@ -146,6 +146,9 @@ JsChat.prototype = {
         } else {
             $("body").css('width','80%');
             $(this._parendID).css('display','block');
+            if(my_action && my_action=="detailed"){
+                curEle.handleNextPrevButtons("makeCloser");
+            }
         }
     },
     //start:minimize html
@@ -175,6 +178,9 @@ JsChat.prototype = {
         minChatPanel += '</ul>';
         minChatPanel += '</div>';
         $(this._mainID).append(minChatPanel);
+        if(my_action && my_action=="detailed"){
+            this.handleNextPrevButtons("makeFarther");
+        }
     },
     //start:minimize html
     _minimizeChatOutPanel: function () {
@@ -2306,8 +2312,21 @@ JsChat.prototype = {
             $("#scrollDivLoader").hide();
         }
     },
+    //shift next prev buttons
+    handleNextPrevButtons:function(key){
+        if(key == "makeCloser"){
+            var posDiv = $("#topNavigationBar")[0].getBoundingClientRect();
+            $("#show_prevListingProfile > div").css("left",posDiv.left);
+            $("#show_nextListingProfile > div").css("left",posDiv.left + $("#topNavigationBar").width() - $("#show_nextListingProfile > div").width());
+        }
+        else{
+            $("#show_prevListingProfile > div").css("left",0);
+            $("#show_nextListingProfile > div").removeAttr("style");
+        }
+    },
     //start:this function is that init forthe chat
     start: function () {
+        console.log(my_action,"ankita1");
         var divElement = document.createElement("Div");
         $(divElement).addClass('pos_fix chatbg chatpos1 z7 js-openOutPanel').appendTo(this._mainID);
         this._createPrototypeChatBox();
@@ -2322,6 +2341,10 @@ JsChat.prototype = {
         } else {
             $('body').css('width', '80%');
             $(this._parendID).addClass('wid20p').css('height', this._getHeight());
+            //handle postion of next prev buttons on view profile
+            if(my_action && my_action=="detailed"){
+                _this.handleNextPrevButtons("makeCloser");
+            }
         }
         if (this.checkLoginStatus()) {
             this._chatLoggerPlugin("checking login status");
