@@ -168,8 +168,8 @@ EOF;
   public function getDppContent($count,$profileId,$valToMatch,$logicLevel){
         $MatchAlerts = new MatchAlerts();
         $LogCount = $MatchAlerts->getProfilesCountOfLogicLevel($profileId,$logicLevel);
-        if($LogCount > $count){
-                $totalCountData = TwoWayBasedDppAlerts::checkForDppProfile($profileId);
+        $totalCountData = TwoWayBasedDppAlerts::checkForDppProfile($profileId);
+        if($LogCount > $count && !empty($totalCountData)){
                 $outOf = "$count out of ".$totalCountData["CNT"]." profiles";
         }else{
                 $outOf = $count;
