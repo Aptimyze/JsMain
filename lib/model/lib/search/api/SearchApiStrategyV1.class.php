@@ -431,7 +431,7 @@ class SearchApiStrategyV1
                                                   $userloggedin=1;
                                             }
                                                 $params = array("SHORTLIST"=>$bookm,
-                                                "PAGE"=>array("stype"=>$this->output["stype"]),
+						"PAGE"=>array("stype"=>($this->output[$profileKey][$i]["stype"])?$this->output[$profileKey][$i]["stype"]:$this->output["stype"]),
                                                 "PHOTO"=>$this->output[$profileKey][$i]["photo"],
                                                 "USERNAME"=>$this->output[$profileKey][$i]["username"],
                                                 "GENDER"=>$gender,
