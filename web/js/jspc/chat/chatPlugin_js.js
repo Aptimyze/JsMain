@@ -2015,6 +2015,20 @@ JsChat.prototype = {
             $("#" + jid + "_hoverinfo-a").addClass("disp-none");
             $("#" + jid + "_hoverDvSmEr").addClass("disp_b").removeClass("disp-none");
             $("#" + jid + "_hoverSmEr").html(data.actiondetails.errmsglabel);
+            var btnLength = $("#" + jid + "_BtnOuter button").length;
+            $("#" + jid + "_BtnOuter button").remove();
+            var msg = '';
+            if(btnLength == '2'){
+                if(data.buttondetails.infomsglabel == "You declined interest"){
+                    msg = "Interest Declined";
+                    $("#" + jid + "_BtnOuter").append('<button class="nchatbg-grey lh50 brdr-0 txtc colrw nc" style="width:100%">'+msg+'</button>');
+                }
+                else{
+                    msg = "Start Conversation";
+                    $("#" + jid + "_BtnOuter").append('<button class="bg_pink lh50 brdr-0 txtc colrw cursp" style="width:100%">'+msg+'</button>');
+                }
+            }
+            
         } else if (type == "info") {
             $("#" + jid + "_hoverDvBgEr").removeClass("disp-none");
             $("#" + jid + "_hoverBgEr").html(data.actiondetails.errmsglabel);
