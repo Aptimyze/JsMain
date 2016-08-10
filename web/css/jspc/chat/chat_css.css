@@ -728,5 +728,5 @@ overflow-y: auto;
 }
 @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) { 
 .js-chatBoxHeight{
-	height: 250px;
+	height: 255px;
 }}
