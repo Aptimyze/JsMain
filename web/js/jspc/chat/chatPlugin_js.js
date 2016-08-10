@@ -2015,10 +2015,10 @@ JsChat.prototype = {
         } else {
             $("#" + jid + "_BtnOuter button").remove();
             var msg = '';
-            if(data.buttondetails.buttons.label){
+            if(data.buttondetails.buttons && data.buttondetails.buttons.label){
                 msg = data.buttondetails.buttons.label;
             }
-            else{
+            else if(data.buttondetails.button && data.buttondetails.button.label){
                 msg =  data.buttondetails.button.label;
             }
             $("#" + jid + "_BtnOuter").append('<button class="bg_pink lh50 brdr-0 txtc colrw cursp" style="width:100%">'+msg+'</button>');
