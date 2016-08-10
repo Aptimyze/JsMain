@@ -425,8 +425,8 @@ var strophieWrapper = {
     //executed on msg receipt
     onMessage: function (iq) {
         //strophieWrapper.stropheLoggerPC("got message");
-        //console.log("in onMessage");
-        //console.log(iq);
+        console.log("in onMessage");
+        console.log(iq);
         strophieWrapper.stropheLoggerPC(iq);
         var msgObject = strophieWrapper.formatMsgObj(iq);
         //strophieWrapper.stropheLoggerPC(msgObject);
@@ -604,8 +604,8 @@ var strophieWrapper = {
     },
     /*format msg object*/
     formatMsgObj: function (msg) {
-        //console.log("in formatMsgObj");
-        //console.log(msg);
+        console.log("in formatMsgObj");
+        console.log(msg);
         var outputObj = {
             "from": msg.getAttribute('from').split("@")[0],
             "to": msg.getAttribute('to').split("@")[0],
@@ -632,7 +632,7 @@ var strophieWrapper = {
             msg_state = strophieWrapper.msgStates["RECEIVED"];
         }
         //strophieWrapper.stropheLoggerPC("in formatMsgObj");
-        //strophieWrapper.stropheLoggerPC(msg_state);
+        strophieWrapper.stropheLoggerPC(msg_state);
         if (typeof msg_state != "undefined") {
             outputObj["msg_state"] = msg_state;
         }
@@ -659,7 +659,7 @@ var strophieWrapper = {
                 outputObj["receivedId"] = rec.getAttribute('id');
             }
         }*/
-        //console.log(outputObj);
+        console.log(outputObj);
         return outputObj;
     },
     /*
