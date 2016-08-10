@@ -2012,10 +2012,12 @@ JsChat.prototype = {
         if (type == "error") {
             //$("#"+jid+"_BtnRespnse").addClass("disp-none");
             //$("#"+jid+"_hoverDvSmEr").removeClass("disp-none");
-            $("#" + jid + "_hoverinfo-a").addClass("disp-none");
-            $("#" + jid + "_hoverDvSmEr").addClass("disp_b").removeClass("disp-none");
-            $("#" + jid + "_hoverSmEr").html(data.actiondetails.errmsglabel);
-            var btnLength = $("#" + jid + "_BtnOuter button").length;
+            if(data.actiondetails.errmsglabel){
+                $("#" + jid + "_hoverinfo-a").addClass("disp-none");
+                $("#" + jid + "_hoverDvSmEr").addClass("disp_b").removeClass("disp-none");
+                $("#" + jid + "_hoverSmEr").html(data.actiondetails.errmsglabel);
+                var btnLength = $("#" + jid + "_BtnOuter button").length;
+            }
             $("#" + jid + "_BtnOuter button").remove();
             var msg = '';
             if(btnLength == '2'){
