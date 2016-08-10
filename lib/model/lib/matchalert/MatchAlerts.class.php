@@ -111,6 +111,12 @@ class MatchAlerts
                 
                 return $subHeadingArr;
         }
+        public function getProfilesCountOfLogicLevel($profileId,$logicLevel)
+        {
+                $matchAlertObj = new matchalerts_LOG($this->dbname);
+                $output = $matchAlertObj->getProfilesCountOfLogicLevel($profileId,$logicLevel);
+                return $output;
+	}
 
 }
 ?>

@@ -358,5 +358,42 @@ echo $sql."\n";
           }
           $res->execute();
         }
+        /*
+	This function is used to get the profile count on the basis of logic level
+	@param - receiver profileid
+	@return - array of matches
+	*/
+	public function getProfilesCountOfLogicLevel($profileId,$logicLevel)
+	{
+		if(JsConstants::$alertServerEnable &&  $this->db)
+                {
+			if(!$profileId)
+				throw new jsException("","PROFILEID IS BLANK IN getProfilesSentInMatchAlerts() of matchalerts_LOG.class.php");
+
+			try
+			{
+				$sql = "SELECT count(*) as CNT FROM matchalerts.LOG WHERE RECEIVER = :RECEIVER AND LOGICLEVEL = :LOGICLEVEL";
+				$prep = $this->db->prepare($sql);
+                                $prep->bindValue(":RECEIVER",$profileId,PDO::PARAM_INT);
+                                $prep->bindValue(":LOGICLEVEL",$logicLevel,PDO::PARAM_INT);
+				$prep->execute();
+                                $row = $prep->fetch(PDO::FETCH_ASSOC);
+                                if($row){
+                                        return $row['CNT'];
+                                }
+                                return 0;
+			}
+			catch (PDOException $e)
+                        {
+				jsException::log("getProfilesSentInMatchAlerts-->.$sql".$e);
+				return 0;
+                        }
+			return $result;
+		}
+		else
+		{
+			return 0;
+		}
+	}
 }
 ?>

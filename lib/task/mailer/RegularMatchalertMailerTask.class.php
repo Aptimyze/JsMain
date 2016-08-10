@@ -135,14 +135,14 @@ EOF;
 	{
 		case "3": //NT-NT case
 			$subject["subject"]= $count." Desired Partner".$matchStr." for today | $today";
-                        $subject["body"]=$this->getDppContent($count, $profileId, self::NTDPP_COUNT);
+                        $subject["body"]=$this->getDppContent($count, $profileId, self::NTDPP_COUNT,$logic);
                         
                         $subject["showDpp"]= 1;
                         $subject["surveyLink"]= 'NT';
 			break;
 		case "2":// T-NT case
                         $totalCountData = TwoWayBasedDppAlerts::checkForDppProfile($profileId);
-                        $subject["body"]=$this->getDppContent($count, $profileId, self::TDPP_COUNT);
+                        $subject["body"]=$this->getDppContent($count, $profileId, self::TDPP_COUNT,$logic);
                         $subject["showDpp"]= 1;
                         $subject["surveyLink"]= 'NT';
                         break;
@@ -165,11 +165,13 @@ EOF;
    * @param type $valToMatch actual limit for DPP mailer
    * @return type string - mail body
    */
-  public function getDppContent($count,$profileId,$valToMatch){
-        $totalCountData = TwoWayBasedDppAlerts::checkForDppProfile($profileId);
-        if($totalCountData["CNT"] > $count && $count >= $valToMatch)
+  public function getDppContent($count,$profileId,$valToMatch,$logicLevel){
+        $MatchAlerts = new MatchAlerts();
+        $LogCount = $MatchAlerts->getProfilesCountOfLogicLevel($profileId,$logicLevel);
+        if($LogCount > $count){
+                $totalCountData = TwoWayBasedDppAlerts::checkForDppProfile($profileId);
                 $outOf = "$count out of ".$totalCountData["CNT"]." profiles";
-        else{
+        }else{
                 $outOf = $count;
                 if($count==1){
                         $outOf .= " profile";
