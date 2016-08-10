@@ -242,6 +242,9 @@ class apieditdppv1Action extends sfAction
 			$jpartnerEditLog = new JpartnerEditLog();
 			$param["fromBackend"] = $fromBackend;
 			$jpartnerEditLog->logDppEdit($jpartnerObj,$this->dppUpdateArray,$param);
+                        
+                        // remove entry from list count table used in Match alerts mailer
+                        TwoWayBasedDppAlerts::deleteEntry($this->profileId);
 		//}
 		
 		//If profile's Source is ofl_prof Then do following
