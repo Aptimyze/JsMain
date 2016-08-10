@@ -1694,7 +1694,7 @@ JsChat.prototype = {
         };
         this._chatLoggerPlugin("in _appendRecievedMessage");
         //append received message in chatbox
-        this.storeMessagesInLocalHistory(selfJID, userId, newMsg, 'receive')
+        
         if (typeof message != "undefined" && message != "") {
             //if chat box is not opened
             if ($('chat-box[user-id="' + userId + '"]').length == 0) {
@@ -1732,6 +1732,7 @@ JsChat.prototype = {
                 that._chatLoggerPlugin("count - " + count);
             }
             curEle._scrollToBottom(userId);
+            this.storeMessagesInLocalHistory(selfJID, userId, newMsg, 'receive');
         }
     },
     //get count of minimized chat boxes with unread messages
