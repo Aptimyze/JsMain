@@ -62,6 +62,7 @@ class JsConstants
 	public static $alertSymfonyRoot   = '/var/www/htmlrevamp/ser6/branches/milestoneConfig';
 	public static $userHome           = '/home/developer';
 	public static $alertServerEnable  = 1;
+	public static $stopOnPeakLoad     = 1;
         
         /* Vsp URL */
 	public static $vspMaleUrl           = 'http://maleapi.analytics.resdex.com:9000/ecpRecommendations_live';
