@@ -9,7 +9,10 @@ class BellCounts
 			$profileMemcacheObj = new ProfileMemcacheService($profileObj);
 			$bellCounts['AWAITING_RESPONSE_NEW']=JsCommon::convert99($profileMemcacheObj->get("AWAITING_RESPONSE_NEW"));
 			$bellCounts['ACC_ME_NEW']=JsCommon::convert99($profileMemcacheObj->get("ACC_ME_NEW"));
-	                $bellCounts['MESSAGE_NEW']=JsCommon::convert99($profileMemcacheObj->get("MESSAGE_NEW"));
+			if(!JsConstants::$stopOnPeakLoad)
+	            $bellCounts['MESSAGE_NEW']=0;
+	        else
+				$bellCounts['MESSAGE_NEW']=JsCommon::convert99($profileMemcacheObj->get("MESSAGE_NEW"));
 	                $bellCounts['PHOTO_REQUEST_NEW']=JsCommon::convert99($profileMemcacheObj->get("PHOTO_REQUEST_NEW"));
 	        $justJoinedMemcacheCount=$profileMemcacheObj->get('JUST_JOINED_MATCHES_NEW');
 			$bellCounts['NEW_MATCHES']=JsCommon::convert99($justJoinedMemcacheCount);
@@ -37,7 +40,10 @@ class BellCounts
 				$profileMemcacheObj = new ProfileMemcacheService($profileObj);
 				$countDetails["INTEREST_RECEIVED"] = $profileMemcacheObj->get("AWAITING_RESPONSE");
 				$countDetails["ACCEPTED"] = $profileMemcacheObj->get("ACC_ME");
-				$countDetails["MESSAGE"] = $profileMemcacheObj->get("MESSAGE");
+				if(!JsConstants::$stopOnPeakLoad)
+					$countDetails["MESSAGE"] = 0;
+				else
+					$countDetails["MESSAGE"] = $profileMemcacheObj->get("MESSAGE");
 				$countDetails["PHOTO_REQUEST"] = $profileMemcacheObj->get("PHOTO_REQUEST");
 				$countDetails["TOTAL"] = 0;
 				foreach ($countDetails as $key => $value) {
@@ -71,11 +77,18 @@ class BellCounts
 				$profileMemcacheObj = new ProfileMemcacheService($profileObj);
 				$countDetails["AWAITING_RESPONSE_NEW"] = $profileMemcacheObj->get("AWAITING_RESPONSE_NEW");
 				$countDetails["ACC_ME_NEW"] = $profileMemcacheObj->get("ACC_ME_NEW");
-				$countDetails["MESSAGE_NEW"] = $profileMemcacheObj->get("MESSAGE_NEW");
+				if(!JsConstants::$stopOnPeakLoad){
+					$countDetails["MESSAGE_NEW"] = 0;
+					$countDetails["MESSAGE"] = 0;
+				}
+				else{
+					$countDetails["MESSAGE_NEW"] = $profileMemcacheObj->get("MESSAGE_NEW");
+					$countDetails["MESSAGE"] = $profileMemcacheObj->get("MESSAGE");
+				}
 				$countDetails["PHOTO_REQUEST_NEW"] = $profileMemcacheObj->get("PHOTO_REQUEST_NEW");
 				$countDetails["AWAITING_RESPONSE"] = $profileMemcacheObj->get("AWAITING_RESPONSE");
 				$countDetails["ACC_ME"] = $profileMemcacheObj->get("ACC_ME");
-				$countDetails["MESSAGE"] = $profileMemcacheObj->get("MESSAGE");
+				
 				$countDetails["PHOTO_REQUEST"] = $profileMemcacheObj->get("PHOTO_REQUEST");
 				$countDetails["FILTERED_NEW"] = $profileMemcacheObj->get("FILTERED_NEW");
 				if(!$countDetails["FILTERED_NEW"]){
@@ -130,9 +143,13 @@ class BellCounts
 				if(!$countDetails["ACC_ME_NEW"]){
 					$countDetails["ACC_ME_NEW"] = 0;
 				}
-				$countDetails["MESSAGE_NEW"] = $profileMemcacheObj->get("MESSAGE_NEW");
-				if(!$countDetails["MESSAGE_NEW"]){
+				if(!JsConstants::$stopOnPeakLoad)
 					$countDetails["MESSAGE_NEW"] = 0;
+				else{
+					$countDetails["MESSAGE_NEW"] = $profileMemcacheObj->get("MESSAGE_NEW");
+					if(!$countDetails["MESSAGE_NEW"]){
+						$countDetails["MESSAGE_NEW"] = 0;
+					}
 				}
 				$countDetails["PHOTO_REQUEST_NEW"] = $profileMemcacheObj->get("PHOTO_REQUEST_NEW");
 				if(!$countDetails["PHOTO_REQUEST_NEW"]){
