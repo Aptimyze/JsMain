@@ -140,8 +140,8 @@ EOF;
                         $subject["showDpp"]= 1;
                         $subject["surveyLink"]= 'NT';
 			break;
-		case "2":// T-NT case
-                        $totalCountData = TwoWayBasedDppAlerts::checkForDppProfile($profileId);
+		case "2":// T-NT case 
+                        $subject["subject"]= $count." Desired Partner".$matchStr." for today | $today"; 
                         $subject["body"]=$this->getDppContent($count, $profileId, self::TDPP_COUNT,$logic);
                         $subject["showDpp"]= 1;
                         $subject["surveyLink"]= 'NT';
