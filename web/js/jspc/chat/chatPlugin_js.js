@@ -527,7 +527,8 @@ JsChat.prototype = {
             $.each(Object.keys(photoObj.profiles), function (index, element) {
                 if (photoObj.profiles[element].PHOTO.ProfilePic120Url) {
                     $(".chatlist img[id*='pic_" + element + "_']").attr("src", photoObj.profiles[element].PHOTO.ProfilePic120Url);
-                    if($("#pic_"+element).length !=0) {
+                    if($('chat-box[user-id="' + element + '"]').length !=0) {
+                        console.log("adding for"+element);
                         $("#pic_"+element).attr("src", photoObj.profiles[element].PHOTO.ProfilePic120Url);
                     }
                 }
