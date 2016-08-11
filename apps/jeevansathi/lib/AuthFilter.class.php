@@ -65,7 +65,7 @@ class AuthFilter extends sfFilter {
 		else {
 			
 			global $protect_obj;
-			if($request->getParameter('module')=="homepage" && $request->getParameter('action')=="index" && !$request->getParameter("fromHomepage") || $request->getParameter("blockOldConnection500")){
+			if(($request->getParameter('module')=="homepage" && $request->getParameter('action')=="index" )|| ($request->getParameter('module')=="myjs" && $request->getParameter('action')=="jspcPerform" ) || $request->getParameter("blockOldConnection500")){
 				JsCommon::oldIncludes(false);
 			}
 			else{

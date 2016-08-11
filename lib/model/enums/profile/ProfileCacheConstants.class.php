@@ -10,10 +10,10 @@
 
 class ProfileCacheConstants
 {
-    const ENABLE_PROFILE_CACHE = false;
+    const ENABLE_PROFILE_CACHE = true;
     const CONSUME_PROFILE_CACHE = false;
     const ENABLE_PROFILE_CACHE_LOGS = true;
-    const LOG_LEVEL = 3;
+    const LOG_LEVEL = 0;
     const CACHE_CRITERIA = 'PROFILEID';
     const ALL_FIELDS_SYM = '*';
     const PROFILE_CACHE_PREFIX = '_p_';
@@ -22,6 +22,7 @@ class ProfileCacheConstants
     const PROFILE_LOG_PATH = 'ProfileCache';
     const COMMAND_LINE = 'cli';
     const CACHE_EXPIRE_TIME = 3600;
+    const CACHE_MAX_ATTEMPT_COUNT = 3;
     //Acceptable or Relevant Fields which will be allowed as a subkeys in Hash
     //public static $arrHashSubKeys = array('USERNAME', 'AGE', 'CITY_RES', 'COUNTRY_RES', 'CAST', 'RELIGION');
 

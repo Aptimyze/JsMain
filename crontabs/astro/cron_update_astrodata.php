@@ -295,7 +295,9 @@ while($row = mysql_fetch_array($res))
 						'".$row_is_same["SHOW_HOROSCOPE"]."')";
 
 				mysql_query($sql1,$db) or logError($sql1,"ShowErrTemplate");*/
-
+				if(strlen($row_is_same["SHOW_HOROSCOPE"]) === 0 || false === isset($row_is_same["SHOW_HOROSCOPE"])) {
+					$row_is_same["SHOW_HOROSCOPE"] = "";
+				}
 				$arrParams = array(
 					"CITY_BIRTH" => addslashes(stripslashes($astrodata['CITY_BIRTH'])) ,
 					"DTOFBIRTH" => $astrodata['DTOFBIRTH'],

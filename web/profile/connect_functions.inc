@@ -1,9 +1,9 @@
 <?php
-include_once(JsConstants::$docRoot."/commonFiles/crmLoginFunctions.php");
 
 // include wrapper for logging
 include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
-
+include_once(JsConstants::$docRoot."/commonFiles/crmLoginFunctions.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 if(!function_exists("filter_page_redirection"))
 {
 	function filter_page_redirection($profileid)
@@ -7436,6 +7436,7 @@ function check_astro_details($profileid,$show_horoscope="abc")
 				$profileid_str.="'".$profileid_arr[$i]."',";
 		}
 		$profileid_str=substr($profileid_str,0,strlen($profileid_str)-1);
+		$profileid_str = implode(",",array_diff(explode(",",$profileid_str), [0]));
 		if($profileid_str)
 		{
 			$sql_ast_det="SELECT PROFILEID,LAGNA_DEGREES_FULL,SUN_DEGREES_FULL,MOON_DEGREES_FULL,MARS_DEGREES_FULL,MERCURY_DEGREES_FULL,JUPITER_DEGREES_FULL,VENUS_DEGREES_FULL,SATURN_DEGREES_FULL FROM newjs.ASTRO_DETAILS WHERE PROFILEID IN ($profileid_str)";
@@ -8680,6 +8681,7 @@ function delete_profile($profileid,$delete_reason='',$specify_reason='')
         mysql_query_decide($sql_del) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_jp,"ShowErrTemplate");
 
         $sql="update JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D', MOD_DT=now(),activatedKey=0 where PROFILEID='$profileid'";
+		JProfileUpdateLib::getInstance()->removeCache($profileid);
         mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 	
 	if($delete_reason=="I found my match on Jeevansathi.com")

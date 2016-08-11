@@ -200,7 +200,10 @@ class ShowProfileStats
 		if ($mainMembership) {
 			$serviceStatusObj = new BILLING_SERVICE_STATUS('newjs_slave');
 			$expDate = $serviceStatusObj->getMaxExpiryDate($this->profileid);
-			$membershipExpDate = date("M d, Y", strtotime($expDate));
+			if($expDate)
+				$membershipExpDate = date("M d, Y", strtotime($expDate));
+			else
+				$membershipExpDate ='';
 		}
 		if(!$mainMembership)
 			$actionRequired =$actionsReqArr[0];

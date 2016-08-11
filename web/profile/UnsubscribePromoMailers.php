@@ -1,7 +1,9 @@
 <?php
 
 include_once("connect.inc");
-
+$msg = print_r($_SERVER,true);
+mail("kunal.test02@gmail.com"," web/profile/UnsubscribePromoMailers.php in USE",$msg);
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 $protect_obj=new protect;
 $db=connect_db();
 	if($echecksum && $checksum)
@@ -20,6 +22,7 @@ $db=connect_db();
 				$promo_mails='U';					
 				$sql="UPDATE newjs.JPROFILE SET UDATE=".$today.", PROMO_MAILS='U' WHERE PROFILEID=".$profileid;
 				mysql_query_decide($sql) or logError($errorMsg,"$sql","ShowErrTemplate");
+                JProfileUpdateLib::getInstance()->removeCache($profileid);
 				if ($_GET[flag]=='U')
 					$smarty->display('Promo_Unsubscribe.html');
 				else

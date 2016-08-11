@@ -249,12 +249,19 @@ class Initiate extends ContactEvent{
         $this->contactHandler->getViewer()->getPROFILE_STATE()->updateFTOState($this->viewer, $action);
 
       }
-      
+                $requestTimeOut = 300;
 		//curl for analytics team by Nitesh for Lavesh team
 		if(JsConstants::$vspServer == 'live'){
 			$feedURL = JsConstants::$postEoiUrl;
 			$postParams = json_encode(array("PROFILEID"=>$this->contactHandler->getViewer()->getPROFILEID(),"PROFILEID_POG"=>$this->contactHandler->getViewed()->getPROFILEID(),'ACTION'=>'I'));
-			$profilesList = CommonUtility::sendCurlPostRequest($feedURL,$postParams);
+			$profilesList = CommonUtility::sendCurlPostRequest($feedURL,$postParams,$requestTimeOut);
+                        if($profilesList === false){
+                            $date = date("Y-m-d");
+                            $file = fopen(sfConfig::get("sf_upload_dir")."/SearchLogs/eoiTimedout_".$date.".txt","a");
+                            $stringToWrite = $this->contactHandler->getViewer()->getPROFILEID().",".$this->contactHandler->getViewed()->getPROFILEID().",".date("H:i:s",time());
+                            fwrite($file,$stringToWrite."\n");
+                            fclose($file);
+                        }
 		}
 
       $this->_searchContactFlowTracking();
@@ -288,11 +295,22 @@ if ($this->contactHandler->getContactObj()->getFILTERED() != Contacts::FILTERED 
       }
       unset($producerObj);
     }
-    catch(Exception $e)
-    {
-      throw new jsException("Something went wrong while sending instant EOI notification-".$e);
+    catch (Exception $e) {
+	    throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
     }
 }
+	    try {
+		    //send instant JSPC/JSMS notification
+		    $producerObj = new Producer();
+		    if ($producerObj->getRabbitMQServerConnected()) {
+			    //Add for contact roster
+			    $chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'INITIATE', 'body' => array('sender' => array('profileid'=>$this->contactHandler->getViewer()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewer()->getPROFILEID()),'username'=>$this->contactHandler->getViewer()->getUSERNAME()), 'receiver' => array('profileid'=>$this->contactHandler->getViewed()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewed()->getPROFILEID()),"username"=>$this->contactHandler->getViewed()->getUSERNAME()),"filter"=>$this->contactHandler->getContactObj()->getFILTERED())), 'redeliveryCount' => 0);
+			    $producerObj->sendMessage($chatData);
+		    }
+		    unset($producerObj);
+	    } catch (Exception $e) {
+		    throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
+	    }
 
       if ($dateDiff <= 30 && !$isFiltered && $this->contactHandler->getPageSource()!='AP') { // Instant mailer
         $this->sendMail();

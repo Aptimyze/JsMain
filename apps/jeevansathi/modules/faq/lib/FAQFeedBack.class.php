@@ -78,6 +78,21 @@ class FAQFeedBack
 
 				$ignore_Store_Obj = new NEWJS_IGNORE;
 				$ignore_Store_Obj->ignoreProfile($loginProfile->getPROFILEID(),$otherProfileId);
+				//Entry in Chat Roster
+				try {
+					$this->ignoreProfile = new Profile("",$otherProfileId);
+					$this->ignoreProfile->getDetail("","","*");
+					$producerObj = new Producer();
+					if ($producerObj->getRabbitMQServerConnected()) {
+						$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'BLOCK', 'body' => array('sender' => array('profileid'=>$loginProfile->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($loginProfile->getPROFILEID()),'username'=>$loginProfile->getUSERNAME()), 'receiver' => array('profileid'=>$this->ignoreProfile->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->ignoreProfile->getPROFILEID()),"username"=>$this->ignoreProfile->getUSERNAME()))), 'redeliveryCount' => 0);
+						$producerObj->sendMessage($chatData);
+					}
+					unset($producerObj);
+				} catch (Exception $e) {
+					throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
+				}
+
+				//End
 				JsMemcache::getInstance()->remove($loginProfile->getPROFILEID());
 				JsMemcache::getInstance()->remove($otherProfileId);
 
