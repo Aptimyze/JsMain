@@ -615,7 +615,9 @@ class VariableDiscount
 
 			// jprofile data
 			$jprofileObj =new JPROFILE('newjs_slave');
+			$mainAdminPoolObj= new incentive_MAIN_ADMIN_POOL('newjs_slave');	
 			$jprofileData =$jprofileObj->getArray($valueArray,'',$greaterArray,$fields,$lessArray);
+			//print_r($jprofileData);		
 			foreach($jprofileData as $key=>$val){
 				$profileid      =$val['PROFILEID'];
 				$gender         =$val['GENDER'];
@@ -629,6 +631,7 @@ class VariableDiscount
 				}
 				$profileArr[] =$profileid;
 			}
+			//print_r($profileArr);
 			if($expiryDt){
 				$servicesObj =new BILLING_SERVICE_STATUS('newjs_slave');
 				$expiryProfiles =$servicesObj->getMaxExpiryProfilesForDates($expiryDt1, $expiryDt2);
