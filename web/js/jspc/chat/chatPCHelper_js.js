@@ -789,11 +789,11 @@ function contactActionCall(contactParams) {
                 response = data;
                 //chatLoggerPC(response);
                 if (response["responseStatusCode"] == "0") {
-                    updateRosterOnChatContactActions({
+                    /*updateRosterOnChatContactActions({
                         "receiverJID": receiverJID,
                         "nickName": nickName,
                         "action": action
-                    });
+                    });*/
                 }
             },
             error: function (xhr) {
@@ -1118,5 +1118,12 @@ $(document).ready(function () {
         objJsChat.start();
         
     }
+    /*setTimeout(function(){
+        console.log("open chat box for "+my_action);
+        if(my_action == "MobSearch"){
+            console.log("opening chat box");
+            objJsChat._chatPanelsBox(5074911,"online","5074911@testjs-new","677d6a3f332149f81cec7b1a081cf54ci5074911", "mysearch");
+        }
+    },5000);*/
 
 });
