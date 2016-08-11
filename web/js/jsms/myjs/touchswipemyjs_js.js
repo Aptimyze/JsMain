@@ -34,7 +34,7 @@
             ob._maxindex=ob._tupleIndex-ob._lmHidden;
             el.css("width", (transformX * (ob._tupleIndex+1) + 10) + "px");
             addIndex();
-if (ob._objId==7) bindSlider();
+            bindSlider();
         }
 
 
