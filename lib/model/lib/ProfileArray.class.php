@@ -44,7 +44,7 @@ class ProfileArray{
 
     if($orderBy && $limit)
     {
-    	$profileIdArray = $this->$table->getArray($valueArray,$excludeArray,$greaterThanArray,$fields,$lessThanArray,$orderBy,100,$greaterThanEqualArray);
+    	$profileIdArray = $this->$table->getArray($valueArray,$excludeArray,$greaterThanArray,$fields,$lessThanArray,$orderBy,$limit,$greaterThanEqualArray);
     }
     else		
         $profileIdArray = $this->$table->getArray($valueArray,$excludeArray,$greaterThanArray,$fields,$lessThanArray,'','',$greaterThanEqualArray);
