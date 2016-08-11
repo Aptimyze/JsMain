@@ -15,12 +15,6 @@ class jsValidatorMobile extends sfValidatorBase
   {
     $phone = ltrim($this->getOption('landline'),0);
     $value['mobile']=ltrim($value['mobile'],0);
-    $negativeProfileListObj = new incentive_NEGATIVE_PROFILE_LIST;
-    $negativeMobile = $negativeProfileListObj->checkEmailOrPhone("MOBILE",$value['mobile']);
-	if($negativeMobile)
-	{
-		throw new sfValidatorError($this, 'err_phone_revoke', array('value' => $value['mobile']));
-	}
 	if(!(strlen($phone)>0 && empty($value['mobile'])) && !(empty($value['mobile']) && $this->getOption('altMobile')==1))
     {
 		// elements must be either empty or a number
@@ -75,6 +69,15 @@ class jsValidatorMobile extends sfValidatorBase
         $isdkeys=@array_keys(FieldMap::getFieldLabel("isdcode",'',1));
         if(!in_array($isdval,$isdkeys))
        	throw new sfValidatorError($this,'err_isd_code', array('value' => $value));
+	if($value['mobile']!='')
+	{
+		$negativeProfileListObj = new incentive_NEGATIVE_PROFILE_LIST;
+		$negativeMobile = $negativeProfileListObj->checkEmailOrPhone("MOBILE",$value['mobile']);
+		if($negativeMobile)
+		{
+			throw new sfValidatorError($this, 'err_phone_revoke', array('value' => $value['mobile']));
+		}
+	}
 
 	return $value;
   }
