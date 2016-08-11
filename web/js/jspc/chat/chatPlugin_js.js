@@ -454,6 +454,9 @@ JsChat.prototype = {
                                         $("#" + runID + "_" + val).on("click", function () {
                                             currentID = $(this).attr("id").split("_")[0];
                                             that._chatLoggerPlugin("earlier", $(this).attr("data-checks"));
+                                            /*setTimeout(function(){
+                                               $("#"+runID+"_hover").css("visibility","hidden"); 
+                                            },800);*/
                                             elem._chatPanelsBox(currentID, statusArr[currentID], $(this).attr("data-jid"), $(this).attr("data-checks"), $(this).attr("id").split("_")[1]);
                                         });
                                     }
@@ -1625,14 +1628,17 @@ JsChat.prototype = {
                     });
                     
                 } else if (parseInt(logObj["SENDER"]) == other_id) {
-                    //console.log("done"+requestType+removeFreeMemMsg);
-                    if(removeFreeMemMsg == false){
-                        //console.log("remove free msg");
-                        removeFreeMemMsg = true;
-                        curElem._enableChatAfterPaidInitiates(other_id);
+                    //check for default eoi message,remove after monday JSI release
+                    if(logObj["MESSAGE"].indexOf("likes your profile. Please 'Accept' to show that you like this profile") == -1){
+                        //console.log("done"+requestType+removeFreeMemMsg);
+                        if(removeFreeMemMsg == false){
+                            //console.log("remove free msg");
+                            removeFreeMemMsg = true;
+                            curElem._enableChatAfterPaidInitiates(other_id);
+                        }
+                        //append received message
+                        $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText received_read" data-msgid=' + logObj["FOLDERID"] + '>' + logObj["MESSAGE"] + '</div></div>');
                     }
-                    //append received message
-                    $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText received_read" data-msgid=' + logObj["FOLDERID"] + '>' + logObj["MESSAGE"] + '</div></div>');
                 }
             });
             if(requestType == "first_history"){
@@ -1991,20 +1997,22 @@ JsChat.prototype = {
     onHoverContactButtonClick: null,
     //start:update vcard
     updateVCard: function (param, pCheckSum, callback) {
-        //this._chatLoggerPlugin('in vard update');
-        var globalRef = this;
-        var finalstr;
-        var that = this;
-        //$.each(param.vCard, function (k, v) {
-        that._chatLoggerPlugin("set");
-        //that._chatLoggerPlugin(k);
-        finalstr = globalRef._hoverBoxStr(param.jid, param, pCheckSum);
-        $(globalRef._mainID).append(finalstr);
-        //});
-        delete that;
-        this._chatLoggerPlugin("Callback calling starts");
-        callback();
-        this._chatLoggerPlugin("Callaback ends");
+        if(typeof param.jid != "undefined"){
+            //this._chatLoggerPlugin('in vard update');
+            var globalRef = this;
+            var finalstr;
+            var that = this;
+            //$.each(param.vCard, function (k, v) {
+            that._chatLoggerPlugin("set");
+            //that._chatLoggerPlugin(k);
+            finalstr = globalRef._hoverBoxStr(param.jid, param, pCheckSum);
+            $(globalRef._mainID).append(finalstr);
+            //});
+            delete that;
+            this._chatLoggerPlugin("Callback calling starts");
+            callback();
+            this._chatLoggerPlugin("Callaback ends");
+        }
     },
     /*
      * Error handling in case of hover
@@ -2110,6 +2118,7 @@ JsChat.prototype = {
             if (_this.onHoverContactButtonClick && typeof _this.onHoverContactButtonClick == 'function') {
                 if ($(this).html() == "Start Conversation") {
                     currentID = $(this).attr("id").split("_")[0];
+                    $('#' + curEleID + "_hover").css("visibility","hidden");
                     _this._chatPanelsBox(currentID, 'offline', $(this).attr("data-jid"), $(this).attr("data-checks"), $(this).attr("data-group"));
                 } else {
                     if (!$(this).hasClass("nc")) {
