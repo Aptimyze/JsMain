@@ -54,7 +54,7 @@ class JS_Communication
 		//$type="A";
 		$dbName1 = JsDbSharding::getShardNo($this->loginProfile);
 		$dbName2 = JsDbSharding::getShardNo($this->otherProfile);
-		if($this->communicationType="C"){
+		if($this->communicationType=="C"){
 			$dbObj = new newjs_CHAT_LOG($dbName1);		
 			$result= $dbObj->getMessageHistory($this->loginProfile,$this->otherProfile,self::$RESULTS_PER_PAGE_CHAT,$msgIdNo);
 			if(count($result)<20)
