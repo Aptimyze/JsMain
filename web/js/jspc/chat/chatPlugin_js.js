@@ -1722,7 +1722,7 @@ JsChat.prototype = {
             curEle._enableChatAfterPaidInitiates(userId);
 
             //adding message in chat area
-            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText received" data-msgid=' + uniqueId + '>' + message + '</div></div>');
+            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="clearfix"><div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText received" data-msgid=' + uniqueId + '>' + message + '</div></div></div>');
             //check for 3 messages and remove binding
             if ($('chat-box[user-id="' + userId + '"] .chatMessage').hasClass("restrictMessg2")) {
                 $('chat-box[user-id="' + userId + '"] .chatMessage').find("#restrictMessgTxt").remove();
