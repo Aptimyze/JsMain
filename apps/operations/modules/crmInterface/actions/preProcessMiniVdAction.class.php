@@ -94,7 +94,7 @@ class preProcessMiniVdAction extends sfActions
                 if($submit=='Upload Offer Now'){
 
                         // Background script execute to pre-process Mini VD data
-                        passthru(JsConstants::$php5path." ".JsConstants::$alertSymfonyRoot."/symfony billing:preProcessMiniVd > /dev/null &");
+                        passthru(JsConstants::$php5path." ".JsConstants::$alertSymfonyRoot."/symfony billing:preProcessMiniVdData > /dev/null &");
                         $this->successMessage =true; 
 			$submitSuccess =true;
                 }
