@@ -17,7 +17,8 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 	  		$rawDuplicateObj->addExtension('IDENTIFIED_ON',date('Y-m-d H:i:s'));
 	  		$rawDuplicateObj->setComments("None");
 
-
+		 $duplicateTempObj=new duplicates_DUPLICATE_TEMP_TABLE('newjs_masterRep');
+		 (new DUPLICATE_PROFILE_LOG('newjs_masterRep'))->deleteProbableDuplicates();
 	  	for($i=0;;$i+=1000)
 	 {	
 
@@ -39,7 +40,6 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 		  	$valueArray['PROFILEID']=substr($valueArray['PROFILEID'],0, -1);
 
 		  	$jprofileArray=JPROFILE::getInstance('newjs_slave')->getArray($valueArray,"",'',"PROFILEID,ACTIVATED,GENDER,ENTRY_DT");
-
 		  	foreach ($jprofileArray as $key => $value) 
 		  		{
 
@@ -47,8 +47,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 
 		  		}
                         unset($jprofileArray);
-                        $duplicateTempObj=new duplicates_DUPLICATE_TEMP_TABLE('newjs_slave');
-                        $duplicateTempArray = $duplicateTempObj->getProfileArray($valueArray);
+                        $duplicateTempArray = $duplicateTempObj->getProfileArray($valueArray['PROFILEID']);
 	foreach ($arr as $key => $value) {
 
 		# code...
@@ -60,6 +59,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 			$timeStamp1=JSstrToTime($profileArray[$value['PROFILE1']]['ENTRY_DT']);
 			$timeStamp2=JSstrToTime($profileArray[$value['PROFILE2']]['ENTRY_DT']);
 
+                        
 			if($timeStamp1 < $timeStamp2)
 			{	
 				$profile1=$value['PROFILE1'];
@@ -72,7 +72,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 			
 			}
 
-
+                        
 		  if(($profileArray[$profile2]['GENDER'] != $profileArray[$profile1]['GENDER']) || ($profileArray[$profile2]['ACTIVATED']=='D') || ($profileArray[$profile1]['ACTIVATED']=='D')  )
 		  {
 
@@ -83,11 +83,11 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
                         if(!$duplicateTempArray[$profile2])
                         {
                             
-                            $duplicateTempObj->insertEntry($profile1,$profile2,'Y');
+                            $duplicateTempObj->insertEntry($profile2,'Y');
                             $duplicateTempArray[$profile2] = 'Y';
                             
                         }
-
+                        
 		}	
 		else {
                     if(!$duplicateTempArray[$profile2] || $duplicateTempArray[$profile2]=='Y' )
@@ -104,7 +104,6 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 	}
         unset($duplicateTempArray);
 }
-                        $duplicateTempObj = new duplicates_DUPLICATE_TEMP_TABLE('newjs_slave');
 			$notDuplicateObj=new DUPLICATES_PROFILES();
 			$IntlObj =  new INCENTIVE_NEGATIVE_TREATMENT_LIST;
                         $duplicateTempArray=$duplicateTempObj->getNonDuplicateProfiles();

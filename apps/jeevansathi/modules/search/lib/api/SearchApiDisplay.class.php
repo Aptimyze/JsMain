@@ -210,7 +210,8 @@ class SearchApiDisplay
 		}
 
 		//get users online on gtalk
-		$gtalkUsers = $chatObj->getIfUserIsOnlineInGtalk($this->profileIdStr,1);
+		//$gtalkUsers = $chatObj->getIfUserIsOnlineInGtalk($this->profileIdStr,1);
+		
 
 		//get users online on JS chat
 		$jsChatUsers = $chatObj->getIfUserIsOnlineInJSChat($this->profileIdStr,1);

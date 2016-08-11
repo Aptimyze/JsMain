@@ -720,9 +720,9 @@ class crmMisActions extends sfActions
 			}
 			$this->monthNum = crmParams::$monthOrder[$this->monthName];
 			if($this->monthNum<10) 	$this->monthNum = "0".$this->monthNum;
-			$jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
-			$incentiveSalesTargetObj = new incentive_SALES_TARGET('newjs_slave');
-			$incentiveMonthlyObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY('newjs_slave');
+			$jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_masterRep');
+			$incentiveSalesTargetObj = new incentive_SALES_TARGET('newjs_masterRep');
+			$incentiveMonthlyObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY('newjs_masterRep');
 			$misGenerationhandlerObj = new misGenerationhandler();
 
 			$allCenters = $jsadminPswrdsObj->fetchAllDistinctCenters();
