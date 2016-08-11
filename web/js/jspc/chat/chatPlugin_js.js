@@ -939,7 +939,7 @@ JsChat.prototype = {
                                 'RECEIVER': userId,
                                 'DATE': '',
                                 'MESSAGE': text,
-                                'FOLDERID': messageId,
+                                'CHATID': messageId,
                                 'ID': ''
                             };
                             
@@ -1149,6 +1149,7 @@ JsChat.prototype = {
         return chatBoxType;
     },
     _postChatPanelsBox: function (userId) {
+        console.log("in _postChatPanelsBox");
         //console.log("manviiiii", $('chat-box[user-id="' + userId + '"]'));
         var groupId = $('chat-box[user-id="' + userId + '"]').attr("group-id");
         var data = [];
@@ -1625,10 +1626,10 @@ JsChat.prototype = {
                 if (parseInt(logObj["SENDER"]) == self_id) {
                     if(logObj["MESSAGE"].indexOf("Please 'accept' my interest if you want me to contact you further") == -1){
                         //append self sent message
-                        $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText" data-msgid='+logObj["FOLDERID"]+'>' + logObj["MESSAGE"] + '</div><i class="nchatspr nchatic_9 fr vertM"></i></div>').promise().done(function(){
-                                var len = $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["FOLDERID"]).height();
+                        $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["CHATID"] + '" class="talkText" data-msgid='+logObj["CHATID"]+'>' + logObj["MESSAGE"] + '</div><i class="nchatspr nchatic_9 fr vertM"></i></div>').promise().done(function(){
+                                var len = $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["CHATID"]).height();
                                     
-                                $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["FOLDERID"]).next().css("margin-top",len);
+                                $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["CHATID"]).next().css("margin-top",len);
                         });
                     }
                 } else if (parseInt(logObj["SENDER"]) == other_id) {
@@ -1641,7 +1642,7 @@ JsChat.prototype = {
                             curElem._enableChatAfterPaidInitiates(other_id);
                         }
                         //append received message
-                        $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText received_read" data-msgid=' + logObj["FOLDERID"] + '>' + logObj["MESSAGE"] + '</div></div>');
+                        $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["CHATID"] + '" class="talkText received_read" data-msgid=' + logObj["CHATID"] + '>' + logObj["MESSAGE"] + '</div></div>');
                     }
                 }
             });
@@ -1704,7 +1705,7 @@ JsChat.prototype = {
             'RECEIVER': selfJID,
             'DATE': '',
             'MESSAGE': message,
-            'FOLDERID': uniqueId,
+            'CHATID': uniqueId,
             'ID': ''
         };
         this._chatLoggerPlugin("in _appendRecievedMessage");
