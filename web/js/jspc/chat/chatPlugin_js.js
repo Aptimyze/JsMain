@@ -1280,11 +1280,12 @@ JsChat.prototype = {
             });
             break;
         case curElem._contactStatusMapping["pog_acceptance_pending"]["key"]:
-            console.log("appending again....");
             $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sendInt,#restrictMessgTxt,#initiateText,#chatBoxErr").remove();
-            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
+            if($('chat-box[user-id="' + userId + '"] .chatMessage').find("#interestSent").length == 0){
+                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
 
-            //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+            }
             break;
         case curElem._contactStatusMapping["pg_acceptance_pending"]["key"]:
             $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sendInt,#restrictMessgTxt,#initiateText,#chatBoxErr").remove();
