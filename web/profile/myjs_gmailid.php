@@ -3,7 +3,7 @@ include("connect.inc");
 include("registration_functions.inc");
 connect_db();
 $data=authenticated();
-
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 if($email || $submit)
 {
 	if($data["PROFILEID"])
@@ -120,6 +120,7 @@ $activated='X';
 		mail("kunal.test02@gmail.com","web/profile/myjs_gmailid.php in USE",$msg);
 		$sql="UPDATE JPROFILE SET EMAIL='$email',MOD_DT=NOW() WHERE PROFILEID='$data[PROFILEID]'  AND activatedKey=1";
 		mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+		JProfileUpdateLib::getInstance()->removeCache($data[PROFILEID]);
 		echo "1";
 	}
 	else

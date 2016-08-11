@@ -2,6 +2,7 @@
 /**
  * This php script reads no. of instances of rabbitmq ProfileCacheDeleteQueue from MessageQueues.enum.class.php to be run and executes that many instances of profileCache:ConsumeQueue (cronProfileCacheConsumerTask).
  * <code>
+ *  ./symfony ProfileCache:cronExecuteProfileCacheConsumer
  * </code>
  * @author Kunal Verma
  * @created 9th Aug 2016
@@ -21,7 +22,7 @@ class cronExecuteProfileCacheConsumerTask extends sfBaseTask
         $this->name = 'cronExecuteProfileCacheConsumer';
         $this->briefDescription = 'reads no. of instances of rabbitmq ProfileCacheDeleteQueue from MessageQueues.enum.class.php to be run and executes that many instances of cronProfileCacheConsumerTask.';
         $this->detailedDescription = <<<EOF
-     The [cron:cronExecuteProfileCacheConsumer|INFO] reads no. of instances of rabbitmq ProfileCacheDeleteQueue from MessageQueues.enum.class.php to be run and executes that many instances of cronProfileCacheConsumerTask:
+     The [ProfileCache:cronExecuteProfileCacheConsumer|INFO] reads no. of instances of rabbitmq ProfileCacheDeleteQueue from MessageQueues.enum.class.php to be run and executes that many instances of cronProfileCacheConsumerTask:
      [php symfony cron:cronExecuteNotificationConsumer] 
 EOF;
         $this->addOptions(array(

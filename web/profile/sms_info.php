@@ -17,7 +17,7 @@ $smarty->assign("bms_new_win",32);
 //include("../bmsjs/bms_display.php");
 /************************************************End of Portion of Code*****************************************/
 //$db=connect_db();
-
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 if($data)
 {
 	$profileid=$data["PROFILEID"];
@@ -32,6 +32,7 @@ if($data)
 		{
 			$sql = "Update newjs.JPROFILE set PHONE_MOB = '$mobile' where profileid = '$profileid'  and  activatedKey=1 ";
 			$result = mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+			JProfileUpdateLib::getInstance()->removeCache($profileid);
 			if(check_sms_service($mobile))
 				$smarty->assign("SERVICE_AVAILABLE",'1');
 			else
