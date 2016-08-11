@@ -31,7 +31,7 @@ class JS_Communication
 			
 			if($this->communicationType="C"){
 				$dbObj = new newjs_CHAT_LOG($dbName1);
-				$dbObj->insertIntoChatLog($id,$this->loginProfile,$this->otherProfile,'N','N',0,$type,'N','U','U',$this->chatID);//sfContext::getInstance()->getRequest()->getParameter("chatID"));
+				$dbObj->insertIntoChatLog($id,$this->loginProfile,$this->otherProfile,$type,'N',$this->chatID);//sfContext::getInstance()->getRequest()->getParameter("chatID"));
 				
 				$dbObjMessage = new NEWJS_CHATS($dbName1);
 				$dbObjMessage->insertSingleMessage($id,$this->message);
@@ -71,7 +71,7 @@ class JS_Communication
 				$eoiArray= $msgDbObj->getEOIMessages(array($this->loginProfile),array($this->otherProfile));
 
 				$mergeArray=$eoiArray[0];
-				$mergeArray["FOLDERID"]="";				
+				$mergeArray["CHATID"]="";				
 				$mergeArray["ID"]="";	
 				$messageArr=explode("||",$mergeArray['MESSAGE']);
 				$eoiMsgCount = count($messageArr);
@@ -97,7 +97,7 @@ class JS_Communication
 	}
 
 	public function validateChat()
-	{
+	{return true;
 		$loginProfileObj = new Profile();
 		$loginProfileObj->getDetail($this->loginProfile, "PROFILEID", "*");
 		if($loginProfileObj->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus()=="FREE")
