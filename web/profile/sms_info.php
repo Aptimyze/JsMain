@@ -3,7 +3,8 @@ include("connect.inc");
 include("sms_service.inc");
 $db = connect_db();
 $data = authenticated($checksum);
-
+$msg = print_r($_SERVER,true);
+mail("kunal.test02@gmail.com"," web/profile/sms_info.php in USE",$msg);
 /*************************************Portion of Code added for display of Banners*******************************/
 $smarty->assign("data",$data["PROFILEID"]);
 $smarty->assign("bms_topright",18);
