@@ -1322,7 +1322,7 @@ return $result;
 				else
 				{
 					if($type)
-						$typeStr=" TYPE=:TYPE";
+						$typeStr=" AND TYPE=:TYPE";
 					else
 						$typeStr=" ";
 					$sql="SELECT RECEIVER,DATE,IP from newjs.MESSAGE_LOG where ".$senderRecevierStr."=:PROFILEID ".$typeStr." order by ID desc limit 20";

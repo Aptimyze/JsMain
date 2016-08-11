@@ -854,8 +854,8 @@ JsChat.prototype = {
                 if(typeof oldMessages == "undefined" || oldMessages == '' || oldMessages == null){
                     oldMessages = [];
                 }
-                oldMessages.unshift(newMsg);
-            }
+                    oldMessages.unshift(newMsg);    
+                }
             else if(type == 'history'){
                 if(typeof oldMessages == "undefined" || oldMessages == '' || oldMessages == null){
                     oldMessages = newMsg;
@@ -940,7 +940,7 @@ JsChat.prototype = {
                                 'ID': ''
                             };
                             
-                            _this.storeMessagesInLocalHistory(selfJID.split('@')[0],userId,newMsg,'send');
+                            
                             /*
                             var sjid=selfJID.split('@')[0];
                             var oldMessages = JSON.parse(localStorage.getItem(sjid+'_'+userId)) || [];
@@ -971,6 +971,7 @@ JsChat.prototype = {
                                 if (msgSendOutput["sent"] == true) {
                                     console.log("marking sent");
                                     _this._changeStatusOfMessg(messageId, userId, "recieved");
+                                    _this.storeMessagesInLocalHistory(selfJID.split('@')[0],userId,newMsg,'send');
                                 }
                                 if (msgSendOutput["cansend"] == false) {
                                     $(curElem).prop("disabled", true);
@@ -988,6 +989,7 @@ JsChat.prototype = {
                                     $(superParent).find("#sendDiv").remove();
                                     $(superParent).find("#interestSent").removeClass("disp-none");
                                     _this._changeStatusOfMessg(messageId, userId, "recieved");
+                                    _this.storeMessagesInLocalHistory(selfJID.split('@')[0],userId,newMsg,'send');
                                 }
                                 if (msgSendOutput["cansend"] == true) {
                                     $(curElem).prop("disabled", false);
@@ -1456,7 +1458,9 @@ JsChat.prototype = {
     //appending chat box
     _chatPanelsBox: function (userId, status, jid, pcheckSum, groupId) {
         this._chatLoggerPlugin("pcheckSum", pcheckSum);
-        if ($(".chatlist li[id='" + userId + "_" + groupId + "']").length != 0) status = $(".chatlist li[id='" + userId + "_" + groupId + "']").attr("data-status");
+        if ($(".chatlist li[id='" + userId + "_" + groupId + "']").length != 0) {
+            status = $(".chatlist li[id='" + userId + "_" + groupId + "']").attr("data-status");
+        }
         var curElem = this,
             heightPlus = false,
             bodyWidth = $("body").width();
@@ -2370,6 +2374,11 @@ JsChat.prototype = {
         } else {
             this._chatLoggerPlugin("in start function");
             this.addLoginHTML();
+        }
+        if(typeof showHelpScreen !== typeof undefined) {
+            if (showHelpScreen == 'Y' && moduleChat && (moduleChat == "myjs" || moduleChat == "homepage")) {
+                showHelpScreenFunction();
+            }
         }
     },
 };

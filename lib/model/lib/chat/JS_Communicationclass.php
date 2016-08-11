@@ -13,7 +13,6 @@ class JS_Communication
 	{
 		$this->loginProfile = $loginProfile;
 		$this->otherProfile = $otherProfile;
-		//$this->contactObj = new Contacts($this->loginProfile, $this->otherProfile);
 		$this->communicationType=$communicationType;
 		$this->message=$message;
 		$this->chatID=$chatID;
@@ -52,31 +51,48 @@ class JS_Communication
 
 	public function getCommunication($msgIdNo)
 	{
-		//$type=$this->contactObj->getTYPE();
-		$type="A";
+		//$type="A";
 		$dbName1 = JsDbSharding::getShardNo($this->loginProfile);
 		$dbName2 = JsDbSharding::getShardNo($this->otherProfile);
-		if($this->communicationType="C"){
+		if($this->communicationType=="C"){
 			$dbObj = new newjs_CHAT_LOG($dbName1);		
-			return $dbObj->getMessageHistory($this->loginProfile,$this->otherProfile,self::$RESULTS_PER_PAGE_CHAT,$msgIdNo);
-			
-			
-		/*
-			if($dbName1 != $dbName2)
-			{							
-				$dbObj = new newjs_CHAT_LOG($dbName2);
-			
-				$dbObj->getMessageHistory($this->loginProfile->getPROFILEID(),$this->otherProfile->getPROFILEID);
-			
-			}*/
-		
+			$result= $dbObj->getMessageHistory($this->loginProfile,$this->otherProfile,self::$RESULTS_PER_PAGE_CHAT,$msgIdNo);
+			if(count($result)<20)
+			{
+				$loginProfileObj = new Profile();
+				$loginProfileObj->getDetail($this->loginProfile, "PROFILEID", "*");
+				
+				$otherProfileObj = new Profile();
+				$otherProfileObj->getDetail($this->otherProfile, "PROFILEID", "*");
+
+				$this->contactObj = new Contacts($loginProfileObj, $otherProfileObj);
+				//$type=$this->contactObj->getTYPE();
+				$msgDbObj= new NEWJS_MESSAGE_LOG($dbName1);
+				$eoiArray= $msgDbObj->getEOIMessages(array($this->loginProfile),array($this->otherProfile));
+
+				$mergeArray=$eoiArray[0];
+				$mergeArray["FOLDERID"]="";				
+				$mergeArray["ID"]="";	
+				$messageArr=explode("||",$mergeArray['MESSAGE']);
+				$eoiMsgCount = count($messageArr);
+				//print_r($messageArr);die;
+				$i=count($result);
+				for($j=($eoiMsgCount-1);$j>=0;$j--)
+				//foreach($messageArr as $key=>$val)
+				{
+					$mergeArray["MESSAGE"]=$messageArr[$j];
+					$result[$i]=$mergeArray;
+					$i++;
+				}
+					//print_r($result);die;			
+			}		
 		}
 		else
 		{			
 			echo "wrongCommuncicationType";die;
 		}
 		
-		return $id;
+		return $result;
 		
 	}
 

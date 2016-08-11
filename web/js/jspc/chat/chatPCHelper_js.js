@@ -296,19 +296,19 @@ function requestListingPhoto(apiParams) {
  */
 function initiateChatConnection() {
     username = loggedInJspcUser + '@' + openfireServerName;
-    /*if(readSiteCookie("CHATUSERNAME")=="ZZXS8902")
+    /*if(readCookie("CHATUSERNAME")=="ZZXS8902")
         username = 'a1@localhost';
-    else if(readSiteCookie("CHATUSERNAME")=="bassi")
+    else if(readCookie("CHATUSERNAME")=="bassi")
         username = '1@localhost';
-    else if(readSiteCookie("CHATUSERNAME")=="VWZ4557")
+    else if(readCookie("CHATUSERNAME")=="VWZ4557")
         username = 'a9@localhost';
-    else if(readSiteCookie("CHATUSERNAME")=="ZZTY8164")
+    else if(readCookie("CHATUSERNAME")=="ZZTY8164")
         username = 'a2@localhost';
-    else if(readSiteCookie("CHATUSERNAME") == "ZZRS3292")
+    else if(readCookie("CHATUSERNAME") == "ZZRS3292")
         username = 'a13@localhost';
-    else if(readSiteCookie("CHATUSERNAME")=="ZZVV2929")
+    else if(readCookie("CHATUSERNAME")=="ZZVV2929")
         username = 'a14@localhost';
-    else if(readSiteCookie("CHATUSERNAME")=="ZZRR5723")
+    else if(readCookie("CHATUSERNAME")=="ZZRR5723")
         username = 'a11@localhost';
     pass = '123';*/
     //chatLoggerPC("user:" + username + " pass:" + pass);
@@ -789,11 +789,11 @@ function contactActionCall(contactParams) {
                 response = data;
                 //chatLoggerPC(response);
                 if (response["responseStatusCode"] == "0") {
-                    updateRosterOnChatContactActions({
+                    /*updateRosterOnChatContactActions({
                         "receiverJID": receiverJID,
                         "nickName": nickName,
                         "action": action
-                    });
+                    });*/
                 }
             },
             error: function (xhr) {
@@ -1118,5 +1118,13 @@ $(document).ready(function () {
         objJsChat.start();
         
     }
+    /*setTimeout(function(){
+        console.log("open chat box for "+my_action);
+        if(my_action == "MobSearch"){
+            console.log("opening chat box");
+            var extraParams = {"username":"abc"};
+            objJsChat._chatPanelsBox(5074911,"online","5074911@testjs-new","677d6a3f332149f81cec7b1a081cf54ci5074911", "mysearch",extraParams);
+        }
+    },5000);*/
 
 });
