@@ -2373,5 +2373,10 @@ JsChat.prototype = {
             this._chatLoggerPlugin("in start function");
             this.addLoginHTML();
         }
+        if(typeof showHelpScreen !== typeof undefined) {
+            if (showHelpScreen == 'Y' && moduleChat && (moduleChat == "myjs" || moduleChat == "homepage")) {
+                showHelpScreenFunction();
+            }
+        }
     },
 };
