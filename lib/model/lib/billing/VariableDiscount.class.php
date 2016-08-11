@@ -614,8 +614,8 @@ class VariableDiscount
 			// loop end
 
 			// jprofile data
-			$jprofileObj =new JPROFILE('newjs_slave');
-			$mainAdminPoolObj= new incentive_MAIN_ADMIN_POOL('newjs_slave');	
+			$jprofileObj =new JPROFILE('newjs_local111');
+			$mainAdminPoolObj= new incentive_MAIN_ADMIN_POOL('newjs_local111');	
 			$jprofileData =$jprofileObj->getArray($valueArray,'',$greaterArray,$fields,$lessArray);
 			//print_r($jprofileData);		
 			foreach($jprofileData as $key=>$val){
@@ -633,14 +633,14 @@ class VariableDiscount
 			}
 			//print_r($profileArr);
 			if($expiryDt){
-				$servicesObj =new BILLING_SERVICE_STATUS('newjs_slave');
+				$servicesObj =new BILLING_SERVICE_STATUS('newjs_local111');
 				$expiryProfiles =$servicesObj->getMaxExpiryProfilesForDates($expiryDt1, $expiryDt2);
 				if(is_array($expiryProfiles))
 					$profileArr =array_intersect($profileArr, $expiryProfiles);
 			}
 			// get ever paid profiles 
 			if($everPaid || $neverPaid){
-				$purchasesObj =new BILLING_PURCHASES('newjs_slave');
+				$purchasesObj =new BILLING_PURCHASES('newjs_local111');
 				$everPaidArr =$purchasesObj->fetchEverPaidPool();
 			}
 			if($everPaid){
@@ -657,18 +657,26 @@ class VariableDiscount
 
 			// Send Mail for Cluster Count
 			$totalCount =count($profileArr);
-			$message =$clusterName."=".$totalCount;
-	                mail("manoj.rana@naukri.com","VD Cluster Details","$message","From:JeevansathiCrm@jeevansathi.com");
+			$countArr[] =array('cluster'=>$clusterName,'count'=>$totalCount);
+
 			// Delete Cluster
-			$vdClusterObj->deleteCluster($clusterName);	
-		}}
+			$vdClusterObj->deleteCluster($clusterName);
+			unset($profileArr);	
+		}
+		foreach($countArr as $key=>$dataArr){
+			$cluster 	=$dataArr['cluster'];
+			$total 		=$dataArr['count'];
+			$message 	.="\n".$cluster."=".$total;
+		}
+                mail("manoj.rana@naukri.com","VD Cluster Details","$message","From:JeevansathiCrm@jeevansathi.com");
+		}
 		
 	}
 
 	// process Mini-VD Data
         public function addMiniVdDataInTemp($profileArr,$startDate,$endDate,$discount)
         {
-		$services ='P,C,NCP,X';	
+		$services ='P,C,NCP,ESP,X';	
                 $uploadTempObj =new test_VD_UPLOAD_TEMP('newjs_slave');
 
                 if(is_array($profileArr)){
