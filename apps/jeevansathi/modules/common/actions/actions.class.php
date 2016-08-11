@@ -278,7 +278,7 @@ class commonActions extends sfActions
                                             if(MobileCommon::isNewMobileSite())
                                             {
                                                 $request->setParameter("expired","1");
-                                                $this->forward("static","resetPass");
+                                                $this->forward("static","resetPass",0);
                                             }
                                             else
                                             {
@@ -296,7 +296,7 @@ class commonActions extends sfActions
                                         if(MobileCommon::isNewMobileSite())
                                         {
                                             $request->setParameter("success","1");
-                                            $this->forward("static","resetPass");
+                                            $this->forward("static","resetPass",0);
                                         }
                                         else
                                         {
@@ -325,7 +325,7 @@ class commonActions extends sfActions
                                             $request->setParameter("d",$this->d);
                                             $request->setParameter("h",$this->h);
                                             $request->setParameter("emailStr", $profileData[0]['EMAIL']);
-                                            $this->forward("static","resetPass");
+                                            $this->forward("static","resetPass",0);
                                     }    
                                     else
                                             $this->setTemplate("mobile/mobileResetPassword");
@@ -338,7 +338,7 @@ class commonActions extends sfActions
                                         if(MobileCommon::isNewMobileSite())
                                         {
                                             $request->setParameter("expired","1");
-                                            $this->forward("static","resetPass");
+                                            $this->forward("static","resetPass",0);
                                         }
                                         else
                                         {
@@ -561,7 +561,7 @@ class commonActions extends sfActions
             }
         }
                 
-        $this->forward("seo", "404");        
+        $this->forward("seo", "404",0);        
         return sfView::NONE;
     }
 

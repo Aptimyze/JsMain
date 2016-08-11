@@ -472,7 +472,7 @@ class Scoring
                         $count_7_si=0;
                         $count_14_si=0;
 			/*$sql1 = "SELECT COUNT(*) AS CNT1 FROM newjs.CONTACTS WHERE SENDER='$pid' AND TIME>='$lim_7_dt' AND TYPE='I'";
-	                $res1 = mysql_query_decide($sql1,$shDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql1.mysql_error($myDb)));
+	                $res1 = mysql_query_decide($sql1,$shDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql1.mysql_error($shDb)));
         	        if($row1 = mysql_fetch_array($res1))
                 	        $count_7_si=$row1["CNT1"];
 			*/
@@ -488,7 +488,7 @@ class Scoring
 
                         //CONT_14_RA_cap
                         /*$sql4 = "SELECT COUNT(*) AS CONT_14_RA FROM newjs.CONTACTS WHERE RECEIVER='$pid' AND TYPE='A' AND TIME>='$lim_14_dt'";
-                        $res4 = mysql_query_decide($sql4,$shDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql4.mysql_error($myDb)));die($sql4.mysql_error($shDb));
+                        $res4 = mysql_query_decide($sql4,$shDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql4.mysql_error($shDb)));
                         if($row4 = mysql_fetch_array($res4))
                         $count_14_ra = $row4["CONT_14_RA"];
 			*/

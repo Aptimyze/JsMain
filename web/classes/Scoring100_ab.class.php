@@ -179,7 +179,7 @@ class Scoring_ab
 			}
 
 			$sqll = "SELECT COUNT(*) as cnt FROM userplane.CHAT_REQUESTS WHERE RECEIVER = '$this->PROFILEID' AND TIMEOFINSERTION >= '$lim_15_dt'";
-			$resl = mysql_query_decide($sqll,$myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sqll.mysql_error($shDb)));
+			$resl = mysql_query_decide($sqll,$myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sqll.mysql_error($myDb)));
 			if($rowl = mysql_fetch_array($resl)){
 				$this->newmodel[ChatReciever_HalfMOnth]=$rowl["cnt"];
 			}

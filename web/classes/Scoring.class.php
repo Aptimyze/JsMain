@@ -374,7 +374,7 @@ class Attribute_Parameters
 		$nationality=$myrow1["Nationality"];
 		$ci = $scorevars->getCITY_RES();
 		$sql2="SELECT SQL_CACHE CityZone FROM scoring.city_zone WHERE City='$ci'";
-                $result2 = mysql_query_decide($sql2,$myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception(mysql_error($myDb)));
+                $result2 = mysql_query_decide($sql2,$myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql2.mysql_error($myDb)));
                 $myrow2 = mysql_fetch_array($result2);
                 $cityzone=$myrow2["CityZone"];
 		$com = $scorevars->getMTONGUE();

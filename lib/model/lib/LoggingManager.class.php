@@ -18,7 +18,7 @@ class LoggingManager
     /**
      * Const of File Base Path
      */
-    const LOG_FILE_BASE_PATH = '/uploads/Logger/';
+    const LOG_FILE_BASE_PATH = '/log/Logger/';
 
     /**
      * @var null
@@ -93,13 +93,12 @@ class LoggingManager
      */
     public static function getInstance($basePath = null)
     {
-      if (null === self::$instance) {
-        $className =  __CLASS__;
-        self::$instance = new $className;
-      }
-      self::$instance->szLogPath = $basePath;
-
-      return self::$instance;
+        if (null === self::$instance) {
+            $className =  __CLASS__;
+            self::$instance = new $className;
+        }
+        self::$instance->szLogPath = $basePath;
+        return self::$instance;
     }
 
      /**
@@ -146,8 +145,11 @@ class LoggingManager
 
       $logData = $this->getLogData($exception,$isSymfony,$logArray);
       $logData['logType'] = $this->getLogType(LoggingEnums::LOG_ERROR);
-      // $logData = $logData.$this->getLogData($exception,$isSymfony,$logArray);
 
+      if(LoggingConfig::getInstance()->debugStatus())
+      {
+        $logData = $logData." ".print_r($_SERVER, true);
+      }
       $this->writeToFile(json_encode($logData));
     }
 
@@ -158,8 +160,6 @@ class LoggingManager
      */
     private function logInfo($message,$isSymfony=true,$logArray = array())
     {
-      // $logData = '['. $this->getLogType(LoggingEnums::LOG_INFO) .']';
-      // $logData = $logData.$this->getLogData($message,$isSymfony,$logArray);
       $logData = $this->getLogData($message,$isSymfony,$logArray);
       $logData['logType'] = $this->getLogType(LoggingEnums::LOG_INFO);
       $this->writeToFile(json_encode($logData));
@@ -174,13 +174,9 @@ class LoggingManager
     private function logDebug($message,$isSymfony=true,$logArray = array())
     {
 
-      // $logData = '['. $this->getLogType(LoggingEnums::LOG_DEBUG) .']';
-      // $logData = $logData.$this->getLogData($message,$isSymfony,$logArray);
-      // $logData = $logData." ".$message;
-      $this->getLogData($message,$isSymfony,$logArray);
       $logData = $this->getLogData($message,$isSymfony,$logArray);
       $logData['logType'] = $this->getLogType(LoggingEnums::LOG_DEBUG);
-
+        $logData = $logData." ".print_r($_SERVER, true);
       $this->writeToFile(json_encode($logData));
     }
     /**
@@ -217,27 +213,10 @@ class LoggingManager
       $logData['typeOfError'] = $typeOfError;
       $logData['statusCode'] = $statusCode;
       $logData['message'] = $message;
-
       if($this->canWriteTrace($this->szLogPath))
       {
         $logData['exception'] = $exception;
       }
-      
-      // $logData = $logData." [".$logId.":".$clientIp."]";
-      // $logData = $logData." [".$time."]";
-      // if($uniqueSubId != "")
-      // $logData = $logData." [".$uniqueSubId."]";
-      // $logData = $logData." ".$channelName;
-      // $logData = $logData." ".$apiVersion;
-      // $logData = $logData." ".$moduleName;
-      // $logData = $logData." ".$actionName;
-      // $logData = $logData." ".$typeOfError;
-      // $logData = $logData." ".$statusCode;
-      // $logData = $logData." ".$message;
-      // if($this->canWriteTrace($this->szLogPath))
-      // {
-      //   $logData = $logData." ".$exception;
-      // }
       return $logData;
     }
 
@@ -247,14 +226,14 @@ class LoggingManager
      */
     private function getLogUniqueSubId($logArray)
     {
-      if ( !isset($logArray[LoggingEnums::UNIQUE_REQUEST_SUB_ID]))
+      if ( !isset($logArray[LoggingEnums::AJXRSI]))
       { 
-        $uniqueSubId = sfContext::getInstance()->getRequest()->getAttribute('AJAX_REQUEST_SUB_ID');
+        $uniqueSubId = sfContext::getInstance()->getRequest()->getAttribute(LoggingEnums::AJXRSI);
         
       }
       else
       { 
-        $uniqueSubId = $logArray[LoggingEnums::UNIQUE_REQUEST_SUB_ID];
+        $uniqueSubId = $logArray[LoggingEnums::AJXRSI];
       }
       return $uniqueSubId;
     }
@@ -443,13 +422,12 @@ class LoggingManager
       return $actionName;
     }
 
-
     /**
      * @param $szPath
      */
     private function createDirectory($szPath)
     {
-      $dirPath = JsConstants::$docRoot.self::LOG_FILE_BASE_PATH.$szPath;
+      $dirPath = JsConstants::$cronDocRoot.self::LOG_FILE_BASE_PATH.$szPath;
       if (false === is_dir($dirPath)) {
         mkdir($dirPath,0777,true);
       }
@@ -460,17 +438,17 @@ class LoggingManager
      */
     private function writeToFile($szLogString)
     {
-      $currDate = Date('Y-m-d');
-      $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH."log-".$currDate.".log";
-      if($this->canCreateDir($this->szLogPath))
-      {
-        $this->createDirectory($this->szLogPath);
-        $filePath =  JsConstants::$docRoot.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
-      }
-      else
-      {
-        $this->createDirectory("");
-      }
+        $currDate = Date('Y-m-d');
+        $filePath =  JsConstants::$cronDocRoot.self::LOG_FILE_BASE_PATH."log-".$currDate.".log";
+        if($this->canCreateDir($this->szLogPath))
+        {
+          $this->createDirectory($this->szLogPath);
+          $filePath =  JsConstants::$cronDocRoot.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
+        }
+        else
+        {
+          $this->createDirectory("");
+        }
         //Add in log file
       if($this->bDoItOnce) {
         $szLogString = "\n".$szLogString;
@@ -537,9 +515,8 @@ class LoggingManager
      */
 
     public function setUniqueId($uniqueID)
-    {   //die(X);
-      $this->iUniqueID = $uniqueID;
-
+    {
+        $this->iUniqueID = $uniqueID;
     }
 
     /**
@@ -547,6 +524,6 @@ class LoggingManager
      */
     private function canWriteTrace($szLogPath)
     {
-      return LoggingConfig::getInstance()->traceStatus($szLogPath);
-    }
-  }
+        return LoggingConfig::getInstance()->traceStatus($szLogPath);
+    }  
+}

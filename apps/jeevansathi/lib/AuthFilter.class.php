@@ -155,7 +155,7 @@ class AuthFilter extends sfFilter {
 						{
 							$request->setParameter("incompleteUser",1);
 							if(MobileCommon::isNewMobileSite()){
-								$context->getController()->forward("register","newJsmsReg");
+								$context->getController()->forward("register","newJsmsReg",0);
                                                                 die;
                                                         }
                                                         elseif(MobileCommon::isDesktop()){
@@ -187,13 +187,13 @@ class AuthFilter extends sfFilter {
 									die;
 								}
 								elseif(MobileCommon::isNewMobileSite()){
-									$context->getController()->forward("phone","jsmsDisplay");
+									$context->getController()->forward("phone","jsmsDisplay",0);
 									die;
 								}
 								else{
 									if($_GET["crmback"]!="admin"){
 
-										$context->getController()->forward("phone","phoneVerificationPcDisplay");
+										$context->getController()->forward("phone","phoneVerificationPcDisplay",0);
 									}
 									die;
 								}
@@ -201,7 +201,7 @@ class AuthFilter extends sfFilter {
 							
 							if($showConsentMsg=="Y" && MobileCommon::isNewMobileSite())
 							{
-								$context->getController()->forward("phone","consentMessage");
+								$context->getController()->forward("phone","consentMessage",0);
 								die;
 							}
 
@@ -282,8 +282,8 @@ class AuthFilter extends sfFilter {
 				if ($enable_login !== 'off') {
 					if (!$data[PROFILEID] && $context->getResponse()->getStatusCode() == '200') {
 						//$protect_obj->TimedOut(); //Displays timeout page
-						if (sfConfig::get('mod_' . $request->getParameter('module') . '_' . $request->getParameter('action') . '_enable_login_layer') == 'on') $context->getController()->forward("static", "loginLayer"); //Login layer
-						else $context->getController()->forward("static", "logoutPage"); //Logout page
+						if (sfConfig::get('mod_' . $request->getParameter('module') . '_' . $request->getParameter('action') . '_enable_login_layer') == 'on') $context->getController()->forward("static", "loginLayer",0); //Login layer
+						else $context->getController()->forward("static", "logoutPage",0); //Logout page
 					//	throw new sfStopException();
 					die;
 					}
@@ -297,25 +297,19 @@ class AuthFilter extends sfFilter {
                $headers = getallheaders();
             
 	            
-	            if (false === isset($headers['RID_AJAX'])) {
+	            if (false === isset($headers[LoggingEnums::RAJX])) {
 	            	$out = LoggingManager::getInstance()->getUniqueId();
-	            	$request->setAttribute('REQUEST_ID_FOR_TRACKING',$out); 
+	            	$request->setAttribute(LoggingEnums::RIFT,$out); 
 
 	            }
 	            else
-	            {   
-	            	LoggingManager::getInstance()->setUniqueId($headers['RID_AJAX']);
-	            	$request->setAttribute('REQUEST_ID_FOR_TRACKING',$headers['RID_AJAX']);
-	            	$request->setAttribute('AJAX_REQUEST_SUB_ID',uniqid());
-	            
+	            {   	            	
+	            	LoggingManager::getInstance()->setUniqueId($headers[LoggingEnums::RAJX]);
+	            	$request->setAttribute(LoggingEnums::RIFT,$headers[LoggingEnums::RAJX]);
+	            	$request->setAttribute(LoggingEnums::AJXRSI,uniqid());
+	            	
 	            }
-	            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "In Auth");
-	            
-	            
-
-	            
-
-           
+	          	            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "In Auth");  
             
 			}
 			else
