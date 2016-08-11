@@ -247,6 +247,11 @@ class Initiate extends ContactEvent{
         $this->contactHandler->getContactObj()->insertContact();
         $action = FTOStateUpdateReason::EOI_SENT;
         $this->contactHandler->getViewer()->getPROFILE_STATE()->updateFTOState($this->viewer, $action);
+        if(sfContext::getInstance()->getRequest()->getParameter('fromJSMS_MYJS')==1)
+        {
+            $this->viewerMemcacheObject->update("MATCHALERT_TOTAL",-1,$this->optionalFlag);
+            $this->viewerMemcacheObject->setMATCHALERT(0);
+        }
       }
       
 		//curl for analytics team by Nitesh for Lavesh team
@@ -376,12 +381,7 @@ if ($this->contactHandler->getContactObj()->getFILTERED() != Contacts::FILTERED 
         $this->stype='V';
     }
     
-    if($this->stype==SearchTypesEnums::MATCHALERT_MYJS_JSMS || $this->stype==SearchTypesEnums::AppMyJsMatchAlertSection || $this->stype==SearchTypesEnums::MATCHALERT_MYJS_IOS)
-    {                    
-        $this->viewerMemcacheObject->update("MATCHALERT_TOTAL",-1,$this->optionalFlag);
-        $this->viewerMemcacheObject->setMATCHALERT(0);
-    }
-        $searchContactFlowTrackingObj->insert(
+    $searchContactFlowTrackingObj->insert(
         $this->viewer->getPROFILEID(),
         $this->stype,
         $this->contactHandler->getContactObj()->getCONTACTID(),
