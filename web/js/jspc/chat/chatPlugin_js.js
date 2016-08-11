@@ -1203,12 +1203,12 @@ JsChat.prototype = {
         if ($('chat-box[user-id="' + userId + '"]').length != 0) {
             this._chatLoggerPlugin("in _updateChatPanelsBox for " + userId);
             var chatBoxType = curElem._getChatBoxType(userId, newGroupId, "updateChatBoxType");
-            curElem._setChatBoxInnerDiv(userId, chatBoxType);
+            curElem._setChatBoxInnerDiv(userId, chatBoxType,"chatBoxUpdate");
             curElem._enableChatTextArea(chatBoxType, userId, membership);
         }
     },
     //update contact status and enable/disable chat in chat box on basis of membership and contact status
-    _setChatBoxInnerDiv: function (userId, chatBoxType) {
+    _setChatBoxInnerDiv: function (userId, chatBoxType,operation) {
         this._chatLoggerPlugin();
         this._chatLoggerPlugin("in _setChatBoxInnerDiv");
         var curElem = this,
@@ -1227,15 +1227,17 @@ JsChat.prototype = {
         if (curElem._contactStatusMapping[chatBoxType]["showHistory"] == true) {
             console.log("setting moreHistory_");
             $("#moreHistory_"+userId).val("1");
-            //fetch msg history
-            getChatHistory({
-                "extraParams": {
-                    "from": getConnectedUserJID(),
-                    "to": user_jid,
-                    "to_checksum": checkSum,
-                    "from_checksum": self_checksum
-                }
-            },"first_history");
+            if(typeof operation == "undefined" || operation != "chatBoxUpdate"){
+                //fetch msg history
+                getChatHistory({
+                    "extraParams": {
+                        "from": getConnectedUserJID(),
+                        "to": user_jid,
+                        "to_checksum": checkSum,
+                        "from_checksum": self_checksum
+                    }
+                },"first_history");
+            }
         }
         else{
             $("#moreHistory_"+userId).val("0"); 
@@ -1613,6 +1615,7 @@ JsChat.prototype = {
     //append chat history in chat box
     _appendChatHistory: function (selfJID, otherJID, communication,requestType) {
         //console.log("self message");
+
         console.log("_appendChatHistory"+requestType);
         var self_id = selfJID.split("@")[0],
             other_id = otherJID.split("@")[0],
