@@ -1,6 +1,8 @@
 <?php 
   $curFilePath = dirname(__FILE__)."/"; 
  include_once("/usr/local/scripts/DocRoot.php");
+$msg = print_r($_SERVER,true);
+mail("kunal.test02@gmail.com","crontabs/updateJprofile_phoneStatus in USE",$msg);
 
 /***************************************************************************************************************
 * FILE NAME     : dup_updatePhoneStatus.php  

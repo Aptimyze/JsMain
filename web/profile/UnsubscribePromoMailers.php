@@ -1,6 +1,8 @@
 <?php
 
 include_once("connect.inc");
+$msg = print_r($_SERVER,true);
+mail("kunal.test02@gmail.com"," web/profile/UnsubscribePromoMailers.php in USE",$msg);
 
 $protect_obj=new protect;
 $db=connect_db();
