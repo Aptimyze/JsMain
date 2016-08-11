@@ -72,6 +72,7 @@
             var openfireUrl= "~JsConstants::$openfireConfig['HOST']`:~JsConstants::$openfireConfig['WSPORT']`";
             var openfireServerName = "~JsConstants::$openfireConfig['SERVER_NAME']`";
             var my_action = "~$action`";
+            var moduleChat = "~$module`";
         </script>
     ~else`
         <script>
