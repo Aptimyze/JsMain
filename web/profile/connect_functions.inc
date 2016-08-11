@@ -1,7 +1,7 @@
 <?php
 
 include_once(JsConstants::$docRoot."/commonFiles/crmLoginFunctions.php");
-
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 if(!function_exists("filter_page_redirection"))
 {
 	function filter_page_redirection($profileid)
@@ -8678,6 +8678,7 @@ function delete_profile($profileid,$delete_reason='',$specify_reason='')
         mysql_query_decide($sql_del) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_jp,"ShowErrTemplate");
 
         $sql="update JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D', MOD_DT=now(),activatedKey=0 where PROFILEID='$profileid'";
+		JProfileUpdateLib::getInstance()->removeCache($profileid);
         mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 	
 	if($delete_reason=="I found my match on Jeevansathi.com")

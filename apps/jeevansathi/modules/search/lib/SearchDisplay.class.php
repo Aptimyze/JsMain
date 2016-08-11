@@ -56,8 +56,12 @@ class SearchDisplay
 		{
 			$degreeGrouping = FieldMap::getFieldLabel("degree_grouping","","1");
 				
-                        if($education != '')
-                                $showEducation[]=FieldMap::getFieldLabel($decoratedFieldName,$education);
+                        if($education != ''){
+                                $educationExploded = explode(",",$education);
+                                foreach($educationExploded as $key=>$val){
+                                    $showEducation[] = FieldMap::getFieldLabel($decoratedFieldName,$val);
+                                }
+                        }
                         if($pgDegree != '')
                                 $showEducation[]=FieldMap::getFieldLabel($decoratedFieldName,$pgDegree);
                         if($ugDegree != '')
@@ -191,7 +195,7 @@ class SearchDisplay
 			$bookmarks = $bookmarkObj->getProfilesBookmarks($viewer, $this->profileids, 1);
 
 			//get chat requests received by logged-in user
-			$chatRequests  = $chatObj->getIfChatRequestSent($this->profileIdStr, $viewer, 1);
+			//$chatRequests  = $chatObj->getIfChatRequestSent($this->profileIdStr, $viewer, 1);
 
 			//get awaiting contact requests received by logged-in user
 			$contactObj = new ContactsRecords();

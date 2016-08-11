@@ -366,7 +366,6 @@ class MailerService
 	*/	
 	public function getUsersListToSend($profileObj,$filterGenderFlag=false)
 	{
-			
 		if(!is_array($this->userList) || !$profileObj)
 		{
 			jsException::log("No userList or profile in getUsersListToSend() function in RegularMatchAlerts.class.php");
@@ -619,7 +618,7 @@ class MailerService
 	}
 	/* This function is used to load partials , all the partials load is not neccessary so single is uploaded
 	*/
-	private function loadPartials()
+	public function loadPartials()
 	{
         	sfProjectConfiguration::getActive()->loadHelpers("Partial","global/mailerheader");
   	}
@@ -824,6 +823,33 @@ return $edu;
 		{
 			return 0;
 		}
+	}
+
+
+	/* This function is used to get featured profile receivers to send mail 
+	*@param totalScript : total scripts executing for mailer cron
+	*@param script : current script
+	* @param limit : limit of receivers to send mail at a cron execution
+	* @return recievers : array of receivers
+	*/
+	public function getFeaturedProfileMailerReceivers($totalScript="",$script="",$limit='')
+	{
+		$featuredProfileObj = new FEATURED_PROFILE_MAILER("newjs_masterRep");
+		$recievers = $featuredProfileObj->getMailerProfiles($totalScript,$script,$limit);
+		return $recievers;
+	}
+
+	/* This funxtion is used update the sent flag(Y for sent and F for fail) for each featured Profile mail receiver
+	*@param profileId : profileId of person to whom mail is sent
+	*@param flag : sent status of the mail
+	*/
+	public function updateSentForFeaturedProfileUsers($profileId,$flag)
+	{
+		if(!$profileId || !$flag)
+			throw  new jsException("No sno/flag in updateSentForSavedSearchUsers() in savedSearchesMailerTask.class.php");
+		$featuredProfileObj = new FEATURED_PROFILE_MAILER("newjs_masterRep");
+                $featuredProfileObj->update($profileId,$flag);
+
 	}
 }
 ?>

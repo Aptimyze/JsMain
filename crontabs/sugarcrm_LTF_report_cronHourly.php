@@ -5,7 +5,7 @@ include("$docRoot/crontabs/connect.inc");
 
 $db2=connect_db();
 $db=connect_slave();
-
+mysql_query("set session wait_timeout=600",$db2);
 	//************************************    Condition after submit state  ***************************************
 		$exec_id_arr 	=array();	
 		$exec_name_arr 	=array();

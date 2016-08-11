@@ -4,8 +4,7 @@
 
 	include_once($symfonyFilePath.'/lib/vendor/symfony/lib/autoload/sfCoreAutoload.class.php');
 	include_once($symfonyFilePath.'/config/ProjectConfiguration.class.php');
-
-	if(JsConstants::$whichMachine=='matchAlert')
+	if(JsConstants::$whichMachine=='matchAlert' && is_array($_SERVER["argv"]) && $_SERVER["argv"][1]=='cron:FireMail')
 		$app = "masscomm";
 	else
 	{

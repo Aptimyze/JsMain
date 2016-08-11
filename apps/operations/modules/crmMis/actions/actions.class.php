@@ -720,9 +720,9 @@ class crmMisActions extends sfActions
 			}
 			$this->monthNum = crmParams::$monthOrder[$this->monthName];
 			if($this->monthNum<10) 	$this->monthNum = "0".$this->monthNum;
-			$jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
-			$incentiveSalesTargetObj = new incentive_SALES_TARGET('newjs_slave');
-			$incentiveMonthlyObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY('newjs_slave');
+			$jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_masterRep');
+			$incentiveSalesTargetObj = new incentive_SALES_TARGET('newjs_masterRep');
+			$incentiveMonthlyObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY('newjs_masterRep');
 			$misGenerationhandlerObj = new misGenerationhandler();
 
 			$allCenters = $jsadminPswrdsObj->fetchAllDistinctCenters();
@@ -2334,4 +2334,93 @@ class crmMisActions extends sfActions
             $this->setTemplate('salesProcessWiseTrackingMisResult');
         }
     }
+
+    public function executeInboundSalesCampaignMis(sfWebRequest $request){
+		$this->cid      =$request->getParameter('cid');
+		$this->name     =$request->getParameter('name');
+		$this->monthDropDown = array();
+		$this->yearDropDown = array();
+		$this->reportDropDown = array("select"=>"Select", "D"=>"Day View", "M"=>"Month View", "Q"=>"Fiscal Year View");
+		$this->dateDropDown = array();
+
+		$this->campaignDropDown = array("select"=>"Select", "IB_Sales&IB_SupSale" => "IB_Sale & IB_SupSale", "IB_Service&IB_SupService"=>"IB_Service & IB_SupService", "IB_PaidService&IB_SupPaidservice"=>"IB_PaidService & IB_SupPaidservice");
+		
+		$this->yearDropDown['select'] = 'Select';
+		for($i=2016;$i<=date('Y');$i++){
+			$this->yearDropDown[$i] = $i;
+		}
+
+		$this->monthDropDown['select'] = 'Select';
+		for($i=1;$i<=12;$i++){
+			$temp = date('F', mktime(0, 0, 0, $i, 10));
+			$tempI = (str_pad($i,2,'0',STR_PAD_LEFT));
+			$this->monthDropDown[$tempI] = $temp;
+		}
+
+		$this->quarterArr = array('Apr-Jun','Jul-Sep','Oct-Dec','Jan-Mar');
+		for($i=1;$i<=31;$i++){
+			$this->dateDropDown[$i] = $i;
+		}
+
+		$this->flag = 0;
+		
+		if($request->getParameter('submit')){
+			$this->selectedYear = $request->getParameter('selectedYear');
+			$this->selectedMonth = $request->getParameter('selectedMonth');
+			$this->selectedRange = $request->getParameter('selectedRange');
+			$this->campaignSelection = $request->getParameter('campaignSelection');
+
+			if($this->selectedYear == 'select'){
+				$this->errorMsg = "Please select a valid Year";
+			} else if($this->selectedRange == 'select'){
+				$this->errorMsg = "Please select a valid View Type";
+			} else if($this->selectedRange == 'D' && $this->selectedMonth == 'select'){
+				$this->errorMsg = "Please select a valid Month, required for Daily View";
+			} else if($this->campaignSelection == 'select'){
+				$this->errorMsg = "Please select a valid Campaign";
+			} else {
+				$this->flag = 1;
+				if ($this->selectedMonth && $this->selectedRange == "D") {
+					$start = $this->selectedYear."-".$this->selectedMonth."-01 00:00:00";
+					$end = $this->selectedYear."-".$this->selectedMonth."-31 23:59:59";
+				} else {
+					$start = $this->selectedYear."-04-01 00:00:00";
+					$end = ($this->selectedYear+1)."-03-31 23:59:59";
+				}
+				$inbSalesLogObj = new incentive_INBOUND_SALES_LOG('newjs_slave');
+				$campaignSelected = explode("&", $this->campaignSelection);
+				$campaignData[$campaignSelected[0]] = $inbSalesLogObj->fetchCampaignDetailsWithinRange(trim($campaignSelected[0]), $start, $end, $this->selectedRange);
+				$campaignData[$campaignSelected[1]] = $inbSalesLogObj->fetchCampaignDetailsWithinRange(trim($campaignSelected[1]), $start, $end, $this->selectedRange);	
+				$quarterArr = array(1=>array(4,5,6),2=>array(7,8,9),3=>array(10,11,12),4=>array(1,2,3));
+				
+				// Resort Campaign Data according to view format 
+				foreach ($campaignData as $name=>$data) {
+					if (is_array($data) && !empty($data)) {
+						foreach ($data as $val) {
+							if ($this->selectedRange == "D") {
+								$output[$name][$val['DAY']] += $val['CNT'];
+							} else {
+								if ($this->selectedRange == "Q") {
+									if (in_array($val['MONTH'], $quarterArr[1])) {
+										$output[$name]['Apr-Jun'] += $val['CNT'];
+									} else if (in_array($val['MONTH'], $quarterArr[2])) {
+										$output[$name]['Jul-Sep'] += $val['CNT'];
+									} else if (in_array($val['MONTH'], $quarterArr[3])) {
+										$output[$name]['Oct-Dec'] += $val['CNT'];
+									} else if (in_array($val['MONTH'], $quarterArr[4])) {
+										$output[$name]['Jan-Mar'] += $val['CNT'];
+									}
+								} else {
+									$output[$name][date('F', mktime(0, 0, 0, $val['MONTH'], 10))] += $val['CNT'];
+								}
+							}
+						}
+					} 
+				}
+				$this->campaignData = $output;
+				// print_r($this->campaignData);
+				// die;
+			}
+		}
+	}
 }

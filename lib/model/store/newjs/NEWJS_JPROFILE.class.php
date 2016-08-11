@@ -484,7 +484,7 @@ class NEWJS_JPROFILE extends TABLE
 
             if ($fields == 'returnOnlySql')
                 return $sqlSelectDetail;
-
+    
             $resSelectDetail = $this->db->prepare($sqlSelectDetail);
 
             /*
@@ -785,32 +785,14 @@ class NEWJS_JPROFILE extends TABLE
 
     public function updateSubscriptionStatus($subscription, $profileid)
     {
-        if ($this->dbName == "newjs_masterRep")
-            $this->setConnection("newjs_master");
-        try {
-            $sql = "UPDATE newjs.JPROFILE SET SUBSCRIPTION=:SUBSCRIPTION WHERE PROFILEID=:PROFILEID";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
-            $prep->bindValue(":SUBSCRIPTION", $subscription, PDO::PARAM_STR);
-            $prep->execute();
-        } catch (PDOException $e) {
-            throw new jsException($e);
-        }
+        $paramArr = array('SUBSCRIPTION'=>$subscription);
+        return $this->updateRecord($paramArr, $profileid, 'PROFILEID');
     }
 
     public function updatePrivacy($privacy, $profileid)
     {
-        if ($this->dbName == "newjs_masterRep")
-            $this->setConnection("newjs_master");
-        try {
-            $sql = "UPDATE newjs.JPROFILE SET PRIVACY=:PRIVACY , MOD_DT=now() WHERE PROFILEID=:PROFILEID and activatedKey=1";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
-            $prep->bindValue(":PRIVACY", $privacy, PDO::PARAM_STR);
-            $prep->execute();
-        } catch (PDOException $e) {
-            throw new jsException($e);
-        }
+        $paramArr = array('PRIVACY'=>$privacy, 'MOD_DT'=>date('Y-m-d H:i:s'));
+        return $this->updateRecord($paramArr, $profileid, "PROFILEID","activatedKey=1");
     }
 
     public function SelectPrivacy($profileId)
@@ -1410,6 +1392,7 @@ class NEWJS_JPROFILE extends TABLE
                     $resSelectDetail->bindValue(":$key", $val);
             $resSelectDetail->execute();
             $rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC);
+            $this->logSelectCount();
             return $rowSelectDetail;
         } catch (PDOException $e) {
             throw new jsException($e);
@@ -1641,6 +1624,18 @@ class NEWJS_JPROFILE extends TABLE
         {
             throw new jsException($ex);
         }
+    }
+
+    /**
+     *  //Function to log Select Query Count
+     */
+    private function logSelectCount()
+    {
+        $key = 'selCount_'.date('Y-m-d');
+        JsMemcache::getInstance()->incrCount($key);
+
+        $key .= '::'.date('H');
+        JsMemcache::getInstance()->incrCount($key);
     }
 }
 
