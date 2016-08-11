@@ -567,6 +567,7 @@ class VariableDiscount
                 $clusterDetails =$vdClusterObj->getClusterDetails();
                 $fields         ='PROFILEID,GENDER,AGE';
                 $jprofileData   =array();
+		$profileArray	=array();
 
                 if(is_array($clusterDetails)){
                 foreach($clusterDetails as $clusterName=>$fieldArr){
@@ -584,10 +585,10 @@ class VariableDiscount
 				}
 				if($key=='ENTRY_DT'){
 					$greaterArray[$key] =$val1;
-					$lessArray[$key]=$val2;
+					$lessArray[$key]=$val2." 23:59:59";
 				}
 				if($key=='MTONGUE')
-					$valueArray[key]=$val1;
+					$valueArray[$key]=$val1;
 				if($key=='NEVER_PAID')
 					$neverPaid=1;
 				if($key=='EVER_PAID')
@@ -600,7 +601,7 @@ class VariableDiscount
 				if($key=='EXPIRY_DT'){
 					$expiryDt =1;
 					$expiryDt1 =$val1;
-					$expiryDt2 =$val2;	
+					$expiryDt2 =$val2." 23:59:59";	
 				}
 				if($key=='VD_OFFER_DATE'){
 					$startDate      =$val1;
