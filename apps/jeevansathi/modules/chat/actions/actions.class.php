@@ -61,7 +61,7 @@ class chatActions extends sfActions
 			$curlResult = curl_exec($ch);
 			curl_close($ch);
 			$result = json_decode($curlResult, true);
-			if ($result['username']) {
+			if ($result['username'] || $result['user']['username']) {
 				//User exists
 				$response['userStatus'] = "User exists";
 				$apiResponseHandlerObj->setHttpArray(ChatEnum::$userExists);
@@ -202,6 +202,7 @@ class chatActions extends sfActions
 		$limit = $request->getParameter("limit");
 		$getRosterDataObj = new GetRosterData($profileid);
 		$getData["profiles"] = $getRosterDataObj->getRosterDataByType($type, $limit);
+		$getData["count"] = count($getData["profiles"]);
 		$apiResponseHandlerObj = ApiResponseHandler::getInstance();
 		$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 

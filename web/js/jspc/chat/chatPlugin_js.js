@@ -2012,14 +2012,16 @@ JsChat.prototype = {
         if (type == "error") {
             //$("#"+jid+"_BtnRespnse").addClass("disp-none");
             //$("#"+jid+"_hoverDvSmEr").removeClass("disp-none");
-            $("#" + jid + "_hoverinfo-a").addClass("disp-none");
-            $("#" + jid + "_hoverDvSmEr").addClass("disp_b").removeClass("disp-none");
-            $("#" + jid + "_hoverSmEr").html(data.actiondetails.errmsglabel);
+            if(data.actiondetails.errmsglabel){
+                $("#" + jid + "_hoverinfo-a").addClass("disp-none");
+                $("#" + jid + "_hoverDvSmEr").addClass("disp_b").removeClass("disp-none");
+                $("#" + jid + "_hoverSmEr").html(data.actiondetails.errmsglabel);
+            }
             var btnLength = $("#" + jid + "_BtnOuter button").length;
             $("#" + jid + "_BtnOuter button").remove();
             var msg = '';
             if(btnLength == '2'){
-                if(data.buttondetails.infomsglabel == "You declined interest"){
+                if(data.buttondetails && data.buttondetails.infomsglabel == "You declined interest"){
                     msg = "Interest Declined";
                     $("#" + jid + "_BtnOuter").append('<button class="nchatbg-grey lh50 brdr-0 txtc colrw nc" style="width:100%">'+msg+'</button>');
                 }

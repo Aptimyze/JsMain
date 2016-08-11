@@ -19,6 +19,16 @@ class GetRosterData
 	public function getRosterDataByType($type,$limit="")
 	{
 		$infoTypeAdapter = new InformationTypeAdapter($type, $this->profileid);
+		$profileObj = new Profile("",$this->profileid);
+		$gender = $profileObj->getGENDER();
+		if($gender == "F")
+		{
+			$searchableObj = new NEWJS_SEARCH_MALE("newjs_bmsSlave");
+		}
+		else
+		{
+			$searchableObj = new NEWJS_SEARCH_FEMALE("newjs_bmsSlave");
+		}
 		$skipArray = $this->getSkipProfiles($type);
 		$conditions = $this->getConditions($type,$limit);
 		$profilelists = $infoTypeAdapter->getProfiles($conditions,$skipArray);
@@ -30,45 +40,21 @@ class GetRosterData
 				$profiles[] = $key;
 			}
 			$profileIdArr["PROFILEID"] = implode(",",$profiles);
+			$data = $searchableObj->getArray($profileIdArr);
+			foreach($data as $key)
+			{
+				$profile[] =$key["PROFILEID"];
+			}
+			$profileIdArr["PROFILEID"] = implode(",",$profile);
 			$usernameArray = $profArrObj->getResultsBasedOnJprofileFields($profileIdArr, '', '', implode(',',Array("PROFILEID", "USERNAME")),'JPROFILE',"newjs_bmsSlave");
 			foreach($usernameArray as $key=>$value)
 			{
-				$profilelists[$value->getPROFILEID()]["USERNAME"] = $value->getUSERNAME();
-				$profilelists[$value->getPROFILEID()]["PROFILECHECKSUM"] = md5($value->getPROFILEID())."i".$value->getPROFILEID();
+				$profilelist[$value->getPROFILEID()] = $profilelists[$value->getPROFILEID()];
+				$profilelist[$value->getPROFILEID()]["USERNAME"] = $value->getUSERNAME();
+				$profilelist[$value->getPROFILEID()]["PROFILECHECKSUM"] = md5($value->getPROFILEID())."i".$value->getPROFILEID();
 			}
-
-
-			//Photo logic
-			$pidArr["PROFILEID"] =$profileIdArr["PROFILEID"];
-			$photoType = 'ThumbailUrl';
-			$profileObj=LoggedInProfile::getInstance('newjs_master',$this->profileid);
-			$multipleProfileObj = new ProfileArray();
-
-			$pidArrTemp = $profiles;
-
-			$profileDetails = $multipleProfileObj->getResultsBasedOnJprofileFields($pidArr);
-
-			$multiplePictureObj = new PictureArray($profileDetails);
-			$photosArr = $multiplePictureObj->getProfilePhoto();
-
-			foreach($pidArrTemp as $profileId)
-			{
-				$photoObj = $photosArr[$profileId];
-				if($photoObj)
-				{
-					eval('$temp =$photoObj->get'.$photoType.'();');
-					$profilelists[$profileId]['PHOTO'] = $temp;
-					unset($temp);
-				}
-				else
-				{
-					$profilelists[$profileId]['PHOTO'] = '';
-				}
-			}
-			//Ends here
-
 		}
-		return $profilelists;
+		return $profilelist;
 	}
 
 	public function getSkipProfiles($infoType)
