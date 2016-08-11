@@ -74,11 +74,13 @@ class JS_Communication
 				$mergeArray["FOLDERID"]="";				
 				$mergeArray["ID"]="";	
 				$messageArr=explode("||",$mergeArray['MESSAGE']);
+				$eoiMsgCount = count($messageArr);
 				//print_r($messageArr);die;
 				$i=count($result);
-				foreach($messageArr as $key=>$val)
+				for($j=($eoiMsgCount-1);$j>=0;$j--)
+				//foreach($messageArr as $key=>$val)
 				{
-					$mergeArray["MESSAGE"]=$val;
+					$mergeArray["MESSAGE"]=$messageArr[$j];
 					$result[$i]=$mergeArray;
 					$i++;
 				}
