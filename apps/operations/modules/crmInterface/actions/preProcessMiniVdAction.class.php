@@ -90,6 +90,7 @@ class preProcessMiniVdAction extends sfActions
 		if($submit=='delete'){
 			$vdClusterObj->deleteCluster($clusterName);
 			$submitSuccess =true;			
+			$this->successMessage =false;
 		}
                 if($submit=='Upload Offer Now'){
 
