@@ -1026,7 +1026,7 @@ JsChat.prototype = {
             $(originalElem).remove();
             $("chat-box[user-id='" + username + "'] .chatMessage").html("");
             curElem._postChatPanelsBox(username);
-            //$("chat-box[user-id='" + username + "'] .chatMessage").html(chatHtml);
+            $("chat-box[user-id='" + username + "'] .chatMessage").html(chatHtml);
             $(this).closest(".extraChatList").remove();
             setTimeout(function () {
                 curElem._scrollUp($('chat-box[user-id="' + username + '"]'), "297px");
