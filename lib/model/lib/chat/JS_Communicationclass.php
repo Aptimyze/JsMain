@@ -97,7 +97,7 @@ class JS_Communication
 	}
 
 	public function validateChat()
-	{return true;
+	{
 		$loginProfileObj = new Profile();
 		$loginProfileObj->getDetail($this->loginProfile, "PROFILEID", "*");
 		if($loginProfileObj->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus()=="FREE")
