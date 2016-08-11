@@ -529,6 +529,7 @@ function checkAuthentication() {
                 //chatLoggerPC(data.responseMessage);
                 //chatLoggerPC("In checkAuthentication failure");
                 auth = 'false';
+                checkForSiteLoggedOutMode();
                 invokePluginLoginHandler("failure");
             }
         },
