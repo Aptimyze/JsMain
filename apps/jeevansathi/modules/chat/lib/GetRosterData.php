@@ -45,6 +45,7 @@ class GetRosterData
 			}
 			$whereArr["PROFILEID"] = implode(",",$profile);
 			$whereArr["GENDER"] = $otherGender;
+			$whereArr["ACTIVATED"] = 'Y';
 
 			/** 
 			*code added to condiser profile who are logged in in LOGIN_MONTHS_GAP time
