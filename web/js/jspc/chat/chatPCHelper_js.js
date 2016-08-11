@@ -197,7 +197,7 @@ function getChatHistory(apiParams,key) {
                 }
                 else{
                     manageHistoryLoader(bare_to_jid,"hide");
-                    checkForSiteLoggedOutMode();
+                    checkForSiteLoggedOutMode(response);
                 }
             },
             error: function (xhr) {
@@ -529,7 +529,7 @@ function checkAuthentication() {
                 //chatLoggerPC(data.responseMessage);
                 //chatLoggerPC("In checkAuthentication failure");
                 auth = 'false';
-                checkForSiteLoggedOutMode();
+                checkForSiteLoggedOutMode(data);
                 invokePluginLoginHandler("failure");
             }
         },
@@ -1138,7 +1138,7 @@ $(document).ready(function () {
                         });
                     }
                     else {
-                        checkForSiteLoggedOutMode();
+                        checkForSiteLoggedOutMode(data);
                     }
                 }
             });
