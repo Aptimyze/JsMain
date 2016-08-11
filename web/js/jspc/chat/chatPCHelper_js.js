@@ -492,7 +492,7 @@ function checkNewLogin(profileid) {
     }
 }
 
-function checkAuthentication() {
+function checkAuthentication(timer,loginType) {
     var auth;
     $.ajax({
         url: "/api/v1/chat/chatUserAuthentication",
@@ -500,13 +500,34 @@ function checkAuthentication() {
         success: function (data) {
             //chatLoggerPC(data.statusCode);
             if (data.responseStatusCode == "0") {
-                //chatLoggerPC("In chatUserAuthentication Login Done");
-                //createCookie("chatAuth","true");
-                //loginChat();
-                auth = 'true';
-                ////console.log("Beforepass",data.hash);
-                pass = data.hash;
+                if(typeof data.hash !== 'undefined'){
+                    auth = 'true';
+                    pass = data.hash;
+                    if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
+                        objJsChat.manageLoginLoader();
+                    }
+                    if(loginType == "first"){
+                        initiateChatConnection();
+                        objJsChat._loginStatus = 'Y';
+                        objJsChat._startLoginHTML();
+                    }
+                }
+                else{
+                    if(timer<20000){
+                        setTimeout(function(){
+                            checkAuthentication(timer+2000,loginType);
+                        },timer);
+                    }
+                    else{
+                        auth = 'false';
+                        invokePluginLoginHandler("failure");
+                        if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
+                            objJsChat.manageLoginLoader();
+                        }
+                    }
+                }
                 localStorage.removeItem("cout");
+                
                 /*pass = JSON.parse(CryptoJS.AES.decrypt(data.hash, "chat", {
                     format: CryptoJSAesJson
                 }).toString(CryptoJS.enc.Utf8));
@@ -522,6 +543,9 @@ function checkAuthentication() {
         error: function (xhr) {
                 auth = 'false';
                 invokePluginLoginHandler("failure");
+                if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
+                    objJsChat.manageLoginLoader();
+                }
                 //return "error";
         }
     });
@@ -919,7 +943,10 @@ $(document).ready(function () {
             }
         });
         if (chatLoggedIn == 'true') {
-            checkAuthentication();
+            if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
+                objJsChat.manageLoginLoader();
+            }
+            checkAuthentication(500,"second");
             loginStatus = "Y";
             initiateChatConnection();
         } else {
@@ -949,14 +976,19 @@ $(document).ready(function () {
             var chatLoggedIn = readCookie('chatAuth');
             //if (chatLoggedIn != 'true') 
             {
-                var auth = checkAuthentication();
+                if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
+                    objJsChat.manageLoginLoader();
+                }
+                var auth = checkAuthentication(500,"first");
                 if (auth != "true") {
                     //chatLoggerPC("Before return");
                     return;
                 } else {
                     //chatLoggerPC("Initiate strophe connection in preclick");
+                    /*
                     initiateChatConnection();
                     objJsChat._loginStatus = 'Y';
+                    */
                 }
             }
             /*else if (chatLoggedIn == 'true'){

@@ -656,7 +656,7 @@ wid165 {
     text-overflow: ellipsis;
     display: inline-block;
 }
-.spinner {
+.spinner, .loginSpinner {
     margin: 100px;
     height: 28px;
     width: 28px;
