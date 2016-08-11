@@ -10,15 +10,15 @@
             </div>
         </div>
         <div class="wid36p disp_ib vtop">
-            <div class="padall-10 fullwid colrw pl55 f16 fontlig">
+            <div class="mar_mem_new10 colrw f16 fontlig cursp" id="knowMore">
                 Why Paid Member?
-                <span class="cursp f15 fontlig " id="knowMore">
+                <span class="cursp f15 fontlig ">
                     Know More
                 </span>
             </div>
-            <div class="fullwid colrw f16 pl55 fontlig">
+            <div class="mem_mar_lf_55 colrw f16 fontlig cursp" id="landJSExc">
                 Buy Personalized Services
-                <span class="cursp f15 fontlig " id="landJSExc">
+                <span class="cursp f15 fontlig">
                    - JS Exclusive
                 </span>
             </div>

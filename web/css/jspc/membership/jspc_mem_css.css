@@ -1484,3 +1484,11 @@ ul.memul li:nth-last-child(1) {
 .colrgrey {
     color: #2C2C2D;
 }
+
+.mar_mem_new10 {
+    margin : 10px 10px 10px 55px;
+}
+
+.mem_mar_lf_55 {
+    margin-left: 55px;
+}

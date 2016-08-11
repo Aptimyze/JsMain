@@ -703,12 +703,12 @@
         });
         $("#knowMore").on("click", function () {
             $("html, body").animate({
-                scrollTop: $("#whyPaidDiv").prop('scrollHeight') + 650
+                scrollTop: $("#whyPaidDiv").prop('scrollHeight') + 800
             }, 1000);
         });
         $("#landJSExc").on("click", function () {
             $("html, body").animate({
-                scrollTop: $("#jsExclusiveDiv").prop('scrollHeight') + 300
+                scrollTop: $("#jsExclusiveDiv").prop('scrollHeight') + 360
             }, 1000);
         });
     });
