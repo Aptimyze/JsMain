@@ -285,9 +285,6 @@ class JPROFILE
 
         $paramArr = array('LAST_LOGIN_DT'=>$now,'SORT_DT'=>$arrData['SORT_DT']);
         return $this->edit($paramArr, $pid, "PROFILEID");
-//        $result = self::$objProfileMysql->updateLoginSortDate($pid);
-//        ProfileCacheLib::getInstance()->removeCache($pid);
-//        return $result;
     }
 
     public function getLoggedInProfilesForDateRange($logindDtStart, $loginDtEnd)

@@ -556,6 +556,7 @@ class ProfileCacheLib
         do {
             try{
                 JsMemcache::getInstance()->delete($szKey,true);
+                $this->logDelCount();
                 $bSuccess = true;
             } catch (Exception $ex) {
                 $bSuccess = false;
@@ -577,6 +578,18 @@ class ProfileCacheLib
         $this->calculateResourceUsages($stTime,'Delete : '," for key {$key}");
 
         return $bSuccess;
+    }
+
+    /**
+     * Function to count number of delete calls
+     */
+    private function logDelCount()
+    {
+        $key = 'cacheDeleteCount'.date('Y-m-d');
+        JsMemcache::getInstance()->incrCount($key);
+
+        $key .= '::'.date('H');
+        JsMemcache::getInstance()->incrCount($key);
     }
 }
 ?>
