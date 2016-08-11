@@ -649,7 +649,7 @@ class VariableDiscount
 			}
 			if($neverPaid){
 				if(is_array($everPaidArr))
-					$profileArr =array_diff($profileArr, $everPaidArr);
+					$profileArr =array_intersect($profileArr, $everPaidArr);
 			}
 
 			// Add in pool
