@@ -52,7 +52,7 @@ class postCancelInterestv2Action extends sfAction
 					}
 					$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,$this->tobetype,ContactHandler::POST);
 					$this->contactHandlerObj->setElement("STATUS",$this->tobetype);
-					$this->contactHandlerObj->setElement("MESSAGE",PresetMessage::getPresentMessage($this->loginProfile));
+					$this->contactHandlerObj->setElement("MESSAGE","");
 					$this->contactHandlerObj->setElement("DRAFT_NAME","preset");		
 					$this->contactEngineObj=ContactFactory::event($this->contactHandlerObj);
 					$responseArray           = $this->getContactArray();
