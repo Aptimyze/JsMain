@@ -1625,14 +1625,16 @@ JsChat.prototype = {
                     });
                     
                 } else if (parseInt(logObj["SENDER"]) == other_id) {
-                    //console.log("done"+requestType+removeFreeMemMsg);
-                    if(removeFreeMemMsg == false){
-                        //console.log("remove free msg");
-                        removeFreeMemMsg = true;
-                        curElem._enableChatAfterPaidInitiates(other_id);
+                    if(logObj["MESSAGE"].indexOf("likes your profile. Please 'Accept' to show that you like this profile") != -1){
+                        //console.log("done"+requestType+removeFreeMemMsg);
+                        if(removeFreeMemMsg == false){
+                            //console.log("remove free msg");
+                            removeFreeMemMsg = true;
+                            curElem._enableChatAfterPaidInitiates(other_id);
+                        }
+                        //append received message
+                        $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText received_read" data-msgid=' + logObj["FOLDERID"] + '>' + logObj["MESSAGE"] + '</div></div>');
                     }
-                    //append received message
-                    $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText received_read" data-msgid=' + logObj["FOLDERID"] + '>' + logObj["MESSAGE"] + '</div></div>');
                 }
             });
             if(requestType == "first_history"){
