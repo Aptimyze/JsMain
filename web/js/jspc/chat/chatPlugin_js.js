@@ -970,6 +970,7 @@ JsChat.prototype = {
                                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p mt15">' + error_msg + '</div>').addClass("restrictMessg2");
                                 if ($(superParent).find("#sendInt").length != 0) {
                                     $(superParent).find("#sendInt").remove();
+                                    $(superParent).find(".chatMessage").find("#sentDiv").remove();
                                 }
                                 if (msgSendOutput["sent"] == true) {
                                     console.log("marking sent");
@@ -1279,6 +1280,7 @@ JsChat.prototype = {
             });
             break;
         case curElem._contactStatusMapping["pog_acceptance_pending"]["key"]:
+            console.log("appending again....");
             $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sendInt,#restrictMessgTxt,#initiateText,#chatBoxErr").remove();
             $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
 
