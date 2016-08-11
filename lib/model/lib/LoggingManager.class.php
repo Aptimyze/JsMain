@@ -148,7 +148,9 @@ class LoggingManager
 
       if(LoggingConfig::getInstance()->debugStatus())
       {
-        $logData = $logData." ".print_r($_SERVER, true);
+         foreach ($_SERVER as $key => $value) {
+          $logData[$key] = $value;
+        }
       }
       $this->writeToFile(json_encode($logData));
     }
@@ -176,7 +178,10 @@ class LoggingManager
 
       $logData = $this->getLogData($message,$isSymfony,$logArray);
       $logData['logType'] = $this->getLogType(LoggingEnums::LOG_DEBUG);
-        $logData = $logData." ".print_r($_SERVER, true);
+        // $logData = $logData." ".print_r($_SERVER, true);
+        foreach ($_SERVER as $key => $value) {
+          $logData[$key] = $value;
+        }
       $this->writeToFile(json_encode($logData));
     }
     /**
