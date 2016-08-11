@@ -21,6 +21,7 @@ class GetRosterData
 	{
 		$infoTypeAdapter = new InformationTypeAdapter($type, $this->profileid);
 		$profileObj = new Profile("",$this->profileid);
+		$profileObj->getDetail();
 		$gender = $profileObj->getGENDER();
 
 		if($gender == "F")
