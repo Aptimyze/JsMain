@@ -23,7 +23,6 @@ class popChatAction extends sfAction
 
 		if ($request->getParameter("actionName")=="popChat")
 		{
-			
 			$inputJSON = file_get_contents('php://input');
 			$input= json_decode( $inputJSON, TRUE );
 			

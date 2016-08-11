@@ -13,7 +13,6 @@ class JS_Communication
 	{
 		$this->loginProfile = $loginProfile;
 		$this->otherProfile = $otherProfile;
-		//$this->contactObj = new Contacts($this->loginProfile, $this->otherProfile);
 		$this->communicationType=$communicationType;
 		$this->message=$message;
 		$this->chatID=$chatID;
@@ -52,14 +51,33 @@ class JS_Communication
 
 	public function getCommunication($msgIdNo)
 	{
-		//$type=$this->contactObj->getTYPE();
-		$type="A";
+		//$type="A";
 		$dbName1 = JsDbSharding::getShardNo($this->loginProfile);
 		$dbName2 = JsDbSharding::getShardNo($this->otherProfile);
-		if($this->communicationType="C"){
+		if($this->communicationType=="C"){
 			$dbObj = new newjs_CHAT_LOG($dbName1);		
-			return $dbObj->getMessageHistory($this->loginProfile,$this->otherProfile,self::$RESULTS_PER_PAGE_CHAT,$msgIdNo);
-			
+			$result= $dbObj->getMessageHistory($this->loginProfile,$this->otherProfile,self::$RESULTS_PER_PAGE_CHAT,$msgIdNo);
+			if(count($result)<20)
+			{
+				$loginProfileObj = new Profile();
+				$loginProfileObj->getDetail($this->loginProfile, "PROFILEID", "*");
+				
+				$otherProfileObj = new Profile();
+				$otherProfileObj->getDetail($this->otherProfile, "PROFILEID", "*");
+
+				$this->contactObj = new Contacts($loginProfileObj, $otherProfileObj);
+				//$type=$this->contactObj->getTYPE();
+				$msgDbObj= new NEWJS_MESSAGE_LOG($dbName1);
+				$eoiArray= $msgDbObj->getEOIMessages(array($this->loginProfile),array($this->otherProfile));
+
+				$mergeArray=$eoiArray[0];
+				$mergeArray["FOLDERID"]="";				
+				$mergeArray["ID"]="";	
+				$mergeArray['MESSAGE']=str_replace("||","\n",$mergeArray['MESSAGE']);
+				//print_r($mergeArray);die;
+				$result[count($result)]=$mergeArray;
+					//print_r($result);die;			
+			}
 			
 		/*
 			if($dbName1 != $dbName2)
@@ -76,7 +94,7 @@ class JS_Communication
 			echo "wrongCommuncicationType";die;
 		}
 		
-		return $id;
+		return $result;
 		
 	}
 
