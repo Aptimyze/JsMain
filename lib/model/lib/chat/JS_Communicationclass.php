@@ -80,7 +80,7 @@ class JS_Communication
 				for($j=($eoiMsgCount-1);$j>=0;$j--)
 				//foreach($messageArr as $key=>$val)
 				{
-					$mergeArray["MESSAGE"]=str_replace('\r\n','',$messageArr[$j]);
+					$mergeArray["MESSAGE"]=$messageArr[$j];
 					$result[$i]=$mergeArray;
 					$i++;
 				}
