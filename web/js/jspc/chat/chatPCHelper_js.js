@@ -920,14 +920,13 @@ $(document).ready(function () {
             localStorage.removeItem("self_subcription");
            $(objJsChat._logoutChat).click(); 
         });
-        /*
+        
         $(window).focus(function() {
             invokePluginLoginHandler("manageLogout");
             if(strophieWrapper.synchronize_selfPresence == true){
                 invokePluginLoginHandler("session_sync");
             }
         });
-        */
         $(window).on("offline", function () {
             strophieWrapper.currentConnStatus = Strophe.Status.DISCONNECTED;
         });
