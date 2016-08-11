@@ -188,7 +188,7 @@ class VariableDiscountHandler
 	public function fetchClusterProfiles($profileid)
 	{
 		$sql ="select DUPLICATE_ID from duplicates.DUPLICATE_PROFILES where PROFILEID='$profileid'";
-		$res =mysql_query_decide($sql,$this->slaveDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($this->myDb)));
+		$res =mysql_query_decide($sql,$this->slaveDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($this->slaveDb)));
 		if($row = mysql_fetch_array($res)){
 			$duplicateId =$row['DUPLICATE_ID'];
 			$sql1 ="select PROFILEID from duplicates.DUPLICATE_PROFILES where DUPLICATE_ID='$duplicateId'";

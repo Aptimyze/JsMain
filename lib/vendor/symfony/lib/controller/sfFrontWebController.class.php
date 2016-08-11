@@ -41,8 +41,9 @@ class sfFrontWebController extends sfWebController
 
       if (empty($moduleName) || empty($actionName))
       {
-        LoggingManager::getInstance(LoggingEnums::EX500OR404)->logThis(LoggingEnums::LOG_ERROR);
-        throw new sfError404Exception(sprintf('Empty module and/or action after parsing the URL "%s" (%s/%s).', $request->getPathInfo(), $moduleName, $actionName));
+        $ex = new sfError404Exception(sprintf('Empty module and/or action after parsing the URL "%s" (%s/%s).', $request->getPathInfo(), $moduleName, $actionName));
+        LoggingManager::getInstance(LoggingEnums::EX500OR404)->logThis(LoggingEnums::LOG_ERROR, $ex);
+        throw $ex;
       }
 
       // make the first request

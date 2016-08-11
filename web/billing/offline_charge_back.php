@@ -109,8 +109,7 @@ if(isset($data))
 				send_email($cemail,$msg,$subject,$from,$cc);
 
 				/*$sql="UPDATE newjs.JPROFILE SET PREACTIVATED=ACTIVATED,ACTIVATED='D',SUBSCRIPTION='',ACTIVATE_ON=now(),activatedKey=0 WHERE PROFILEID='$profileid'";
-				mysql_query_decide($sql) or die(mysql_error_js());
-				*/
+				mysql_query_decide($sql) or die(mysql_error_js());*/
 				$jprofileObj    =JProfileUpdateLib::getInstance();
 				$dateNew        =date("Y-m-d");
 	                        $updateStr      ="PREACTIVATED=ACTIVATED,ACTIVATED='D',SUBSCRIPTION='',ACTIVATE_ON='$dateNew',activatedKey=0";
