@@ -93,7 +93,6 @@ class LoggingManager
             self::$instance = new $className;
         }
         self::$instance->szLogPath = $basePath;
-        $out = sfContext::getInstance()->getRequest();
         return self::$instance;
     }
 
@@ -413,7 +412,6 @@ class LoggingManager
     {
       $logData = '['. $this->getLogType(LoggingEnums::LOG_DEBUG) .']';
       $logData = $logData.$this->getLogData($message,$isSymfony,$logArray);
-      $logData = $logData." ".$message;
       $logData = $logData." ".print_r($_SERVER, true);
       $this->writeToFile($logData);
     }

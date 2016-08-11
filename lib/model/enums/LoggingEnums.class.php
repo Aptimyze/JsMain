@@ -15,7 +15,7 @@ class LoggingEnums
     const LOG_DEBUG = 1;
     const LOG_ERROR = 0;
     // 1 for Enabling config of modules, 0 for not
-    const CONFIG_ON = false;
+    const CONFIG_ON = true;
     // 1 for logging all modules in same file, 0 different
     const LOG_TOGETHER = false;
     const LOG_TRACE = false;
@@ -54,4 +54,6 @@ class LoggingEnums
     const RAJX = 'RID_AJAX';
     const AJXRSI = 'AJAX_REQUEST_SUB_ID';
     const SEO = 'seo';
+    const MYJS = 'myjs';
+    const HP = 'homepage';
 }

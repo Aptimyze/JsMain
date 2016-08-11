@@ -17,7 +17,7 @@
 		private $arrConfig = array(
 			// 'logging' => 1, logging is on for this module
 			LoggingEnums::JSADMIN => array(
-				LoggingEnums::logging => true,
+				LoggingEnums::logging => false,
 				LoggingEnums::level => LoggingEnums::LOG_DEBUG,
 				LoggingEnums::directory => true,
 				LoggingEnums::stackTrace => false
@@ -34,6 +34,19 @@
 				LoggingEnums::directory => true,
 				LoggingEnums::stackTrace => false
 				),
+			LoggingEnums::MYJS => array(
+				LoggingEnums::logging => true,
+				LoggingEnums::level => LoggingEnums::LOG_INFO,
+				LoggingEnums::directory => false,
+				LoggingEnums::stackTrace => false
+				),
+			LoggingEnums::HP => array(
+				LoggingEnums::logging => false,
+				LoggingEnums::level => LoggingEnums::LOG_INFO,
+				LoggingEnums::directory => false,
+				LoggingEnums::stackTrace => false
+				),
+
 			);
 
 		/**

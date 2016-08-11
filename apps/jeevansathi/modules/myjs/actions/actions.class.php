@@ -100,9 +100,9 @@ class myjsActions extends sfActions
         * Mobile Api version 1.0 action class
         */
         public function executePerformV1(sfWebRequest $request)	
-        {                
-
-                               
+        {          //for logging       
+        	LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs api v1 hit"); 
+          
 		$module= "MYJSAPP";
 		$inputValidateObj = ValidateInputFactory::getModuleObject("myjs");
 		$respObj = ApiResponseHandler::getInstance();
@@ -118,9 +118,10 @@ class myjsActions extends sfActions
                 	$pageNo = $request->getParameter("pageNo");
 			$params["profileList"] = $request->getParameter("profileList");
 			if((MobileCommon::isApp() == "I")||MobileCommon::isNewMobileSite())
-			{
+			{  
 				$Apptype="IOS";
 				$appV1obj = new MyJsIOSV1();
+
                                 
 			}
 			else{
@@ -198,7 +199,8 @@ class myjsActions extends sfActions
                 die;
 	}
 	public function executeJsmsPerform(sfWebRequest $request)
-	{
+	{			//myjs jsms action hit for logging  
+				LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs jsms action"); 
             	$this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMYJSUrl);
                 $this->loginData=$request->getAttribute("loginData");
                 $this->profile=Profile::getInstance();
@@ -236,6 +238,7 @@ class myjsActions extends sfActions
                    $this->setTemplate("jsmsPerform");
                    $request->setParameter('INTERNAL',1);
 				$request->setParameter('getMembershipMessage',1);
+//looging for flow
  	}
 
  	public function executeJspcPerform(sfWebRequest $request)

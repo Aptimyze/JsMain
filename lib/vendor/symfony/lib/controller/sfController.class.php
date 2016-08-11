@@ -173,7 +173,7 @@ abstract class sfController
   public function forward($moduleName, $actionName,$active=1)
   { 
     if($active)
-    LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,"req_fwd->".$moduleName."/".$actionName);
+    LoggingManager::getInstance()->logThis(LoggingEnums::LOG_DEBUG,"req_fwd->".$moduleName."/".$actionName);
     // replace unwanted characters
     $moduleName = preg_replace('/[^a-z0-9_]+/i', '', $moduleName);
     $actionName = preg_replace('/[^a-z0-9_]+/i', '', $actionName);
@@ -383,7 +383,7 @@ abstract class sfController
    */
   public function getPresentationFor($module, $action, $viewName = null)
   {
-     LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,"getPresFor->".$module."/".$action);
+     LoggingManager::getInstance()->logThis(LoggingEnums::LOG_DEBUG,"getPresFor->".$module."/".$action);
 
     if (sfConfig::get('sf_logging_enabled'))
     {
