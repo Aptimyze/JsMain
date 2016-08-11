@@ -2038,6 +2038,9 @@ JsChat.prototype = {
                 $("#" + jid + "_hoverSmEr").html(data.actiondetails.errmsglabel);
             }
             var btnLength = $("#" + jid + "_BtnOuter button").length;
+            var id = $("#" + jid + "_BtnOuter button").attr("id").split("_")[0],
+                data_jid = $("#" + jid + "_BtnOuter button").attr("data-jid"),
+                data_checks = $("#" + jid + "_BtnOuter button").attr("data-pchecksum");
             $("#" + jid + "_BtnOuter button").remove();
             var msg = '';
             if(btnLength == '2'){
@@ -2047,7 +2050,7 @@ JsChat.prototype = {
                 }
                 else{
                     msg = "Start Conversation";
-                    $("#" + jid + "_BtnOuter").append('<button class="bg_pink lh50 brdr-0 txtc colrw cursp hBtn" style="width:100%">'+msg+'</button>');
+                    $("#" + jid + "_BtnOuter").append('<button class="bg_pink lh50 brdr-0 txtc colrw cursp hBtn" style="width:100%" id="'+id+'_WRITE_MESSAGE" data-jid="'+data_jid+'" data-checks="'+data_checks+'" data-group="acceptance">'+msg+'</button>');
                 }
             }
             
@@ -2058,6 +2061,9 @@ JsChat.prototype = {
             $("#" + jid + "_BtnRespnse div button").html(data.buttondetails.button.label);
         } else {
             var btnLength = $("#" + jid + "_BtnOuter button").length;
+            var id = $("#" + jid + "_BtnOuter button").attr("id").split("_")[0],
+                data_jid = $("#" + jid + "_BtnOuter button").attr("data-jid"),
+                data_checks = $("#" + jid + "_BtnOuter button").attr("data-pchecksum");
             $("#" + jid + "_BtnOuter button").remove();
             var msg = '';
             if(btnLength == '2'){
@@ -2067,7 +2073,8 @@ JsChat.prototype = {
                 }
                 else{
                     msg = "Start Conversation";
-                    $("#" + jid + "_BtnOuter").append('<button class="bg_pink lh50 brdr-0 txtc colrw cursp" style="width:100%">'+msg+'</button>');
+                    $("#" + jid + "_BtnOuter").append('<button class="bg_pink lh50 brdr-0 txtc colrw cursp hBtn" style="width:100%" id="'+id+'_WRITE_MESSAGE" data-jid="'+data_jid+'" data-checks="'+data_checks+'" data-group="acceptance">'+msg+'</button>');
+                    $("#" + jid + "_BtnOuter").append('<button class="bg_pink lh50 brdr-0 txtc colrw cursp hBtn" style="width:100%" id="'+id+'_WRITE_MESSAGE" data-jid="'+data_jid+'" data-checks="'+data_checks+'" data-group="acceptance">'+msg+'</button>');
                 }
             }
             else{
