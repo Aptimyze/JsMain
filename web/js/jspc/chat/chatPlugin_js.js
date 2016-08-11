@@ -454,7 +454,9 @@ JsChat.prototype = {
                                         $("#" + runID + "_" + val).on("click", function () {
                                             currentID = $(this).attr("id").split("_")[0];
                                             that._chatLoggerPlugin("earlier", $(this).attr("data-checks"));
-                                            $("#"+runID+"_hover").css("visibility","hidden");
+                                            setTimeout(function(){
+                                               $("#"+runID+"_hover").css("visibility","hidden"); 
+                                            },800);
                                             elem._chatPanelsBox(currentID, statusArr[currentID], $(this).attr("data-jid"), $(this).attr("data-checks"), $(this).attr("id").split("_")[1]);
                                         });
                                     }
