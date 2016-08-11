@@ -16,11 +16,12 @@ class NEWJS_CHAT_LOG extends TABLE{
         }
 		
 		
-	public function insertIntoChatLog($generatedId,$sender,$receiver,$isMsg,$obscene,$idObscene,$type,$seen='',$senderStatus='',$receiverStatus='',$folderId='')
+	public function insertIntoChatLog($generatedId,$sender,$receiver,$type,$seen='',$chatId='')
 	{
+		
 		try 
 		{
-				if(!$sender || !$receiver || !$isMsg ||!$type)
+				if(!$sender || !$receiver || !$type)
 				{
 					throw new jsException("","mandatory params are not specified in function insertIntoMessageLog of newjs_MESSAGE_LOG.class.php");
 				}
@@ -32,21 +33,16 @@ class NEWJS_CHAT_LOG extends TABLE{
 						$ip_new = explode(",",$ip);
 						$ip = $ip_new[1];
 					}
-					$sql="INSERT INTO CHAT_LOG (ID,SENDER,RECEIVER,DATE,IP,IS_MSG,OBSCENE,MSG_OBS_ID,TYPE, SENDER_STATUS, RECEIVER_STATUS, SEEN, FOLDERID) VALUES (:GENERATEDID,:VIEWERID,:VIEWEDID,:DATE,:IP,:ISMSG,:OBSCENE,:IDOBSCENE,:TYPE,:SENDER_STATUS, :RECEIVER_STATUS, :SEEN, :FOLDERID)  ";
+					$sql="INSERT INTO CHAT_LOG (ID,SENDER,RECEIVER,DATE,IP,TYPE,SEEN, CHATID) VALUES (:GENERATEDID,:VIEWERID,:VIEWEDID,:DATE,:IP,:TYPE,:SEEN, :CHATID) ";
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":GENERATEDID",$generatedId,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWERID",$sender,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWEDID",$receiver,PDO::PARAM_INT);
 					$prep->bindValue(":DATE",date("Y-m-d H:i:s"),PDO::PARAM_STR);
 					$prep->bindValue(":IP",$ip,PDO::PARAM_STR);
-					$prep->bindValue(":ISMSG",$isMsg,PDO::PARAM_STR);
-					$prep->bindValue(":OBSCENE",$obscene,PDO::PARAM_STR);
-					$prep->bindValue(":IDOBSCENE",$idObscene,PDO::PARAM_INT);
 					$prep->bindValue(":TYPE",$type,PDO::PARAM_STR);
 					$prep->bindValue(":SEEN",$seen,PDO::PARAM_STR);
-					$prep->bindValue(":SENDER_STATUS",$senderStatus,PDO::PARAM_STR);
-					$prep->bindValue(":RECEIVER_STATUS",$receiverStatus,PDO::PARAM_STR);
-					$prep->bindValue(":FOLDERID",$folderId,PDO::PARAM_INT);
+					$prep->bindValue(":CHATID",$chatId,PDO::PARAM_INT);
 					$prep->execute();
 					
 					return true;
@@ -54,8 +50,9 @@ class NEWJS_CHAT_LOG extends TABLE{
 		}
 		catch(PDOException $e)
 		{
-			throw new jsException($e);
+			
 			jsCacheWrapperException::logThis($e);
+			throw new jsException($e);
 			/*** echo the sql statement and error message ***/
 			
 		}
@@ -76,7 +73,7 @@ class NEWJS_CHAT_LOG extends TABLE{
 						$whrStr="AND M.ID < ".$pagination;
 					else
 						$whrStr="";
-					$sql = "SELECT SENDER,RECEIVER, DATE, MESSAGE ,FOLDERID,C.ID FROM  `CHAT_LOG` AS C JOIN CHATS AS M ON ( M.ID = C.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER )) ".$whrStr." ORDER BY DATE DESC limit ".$limit;
+					$sql = "SELECT SENDER,RECEIVER, DATE, MESSAGE ,CHATID,C.ID FROM  `CHAT_LOG` AS C JOIN CHATS AS M ON ( M.ID = C.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER )) ".$whrStr." ORDER BY DATE DESC limit ".$limit;
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);

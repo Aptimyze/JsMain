@@ -10,6 +10,7 @@ class GetRosterData
 {
 	private $profileid;
 	private $skipProfiles;
+	CONST LOGIN_MONTHS_GAP = 5;
 
 	public function __construct($profileid)
 	{
@@ -20,33 +21,43 @@ class GetRosterData
 	{
 		$infoTypeAdapter = new InformationTypeAdapter($type, $this->profileid);
 		$profileObj = new Profile("",$this->profileid);
+		$profileObj->getDetail();
 		$gender = $profileObj->getGENDER();
+
 		if($gender == "F")
 		{
-			$searchableObj = new NEWJS_SEARCH_MALE("newjs_bmsSlave");
+			$otherGender='M';
 		}
 		else
 		{
-			$searchableObj = new NEWJS_SEARCH_FEMALE("newjs_bmsSlave");
+			$otherGender='F';
 		}
+
 		$skipArray = $this->getSkipProfiles($type);
-		$conditions = $this->getConditions($type,$limit);
+
+		$newLimit = $limit+$limit;//ForOptimization
+		$conditions = $this->getConditions($type,$newLimit);
 		$profilelists = $infoTypeAdapter->getProfiles($conditions,$skipArray);
 		if(is_array($profilelists))
 		{
-			$profArrObj                = new ProfileArray();
 			foreach($profilelists as $key=>$value)
 			{
-				$profiles[] = $key;
+				$profile[] = $key;
 			}
-			$profileIdArr["PROFILEID"] = implode(",",$profiles);
-			$data = $searchableObj->getArray($profileIdArr);
-			foreach($data as $key)
-			{
-				$profile[] =$key["PROFILEID"];
-			}
-			$profileIdArr["PROFILEID"] = implode(",",$profile);
-			$usernameArray = $profArrObj->getResultsBasedOnJprofileFields($profileIdArr, '', '', implode(',',Array("PROFILEID", "USERNAME")),'JPROFILE',"newjs_bmsSlave");
+			$whereArr["PROFILEID"] = implode(",",$profile);
+			$whereArr["GENDER"] = $otherGender;
+			$whereArr["ACTIVATED"] = 'Y';
+
+			/** 
+			*code added to condiser profile who are logged in in LOGIN_MONTHS_GAP time
+			*/
+			$monthGap = mktime(0, 0, 0, date("m")- self::LOGIN_MONTHS_GAP, date("d"),   date("Y"));
+			$dateAfterMonthGap = date("Y-m-d",$monthGap);
+			$greaterThanEqualArrayWithoutQuote["LAST_LOGIN_DT"] = "'".$dateAfterMonthGap."'";
+			$orderBy = "FIELD('PROFILEID',$whereArr[PROFILEID])";
+
+			$profArrObj                = new ProfileArray();
+			$usernameArray = $profArrObj->getResultsBasedOnJprofileFields($whereArr, '', '', implode(',',Array("PROFILEID", "USERNAME")),'JPROFILE',"newjs_bmsSlave","",$greaterThanEqualArrayWithoutQuote,$orderBy,$limit);
 			foreach($usernameArray as $key=>$value)
 			{
 				$profilelist[$value->getPROFILEID()] = $profilelists[$value->getPROFILEID()];
