@@ -971,7 +971,7 @@ JsChat.prototype = {
                                 if (msgSendOutput["sent"] == true) {
                                     console.log("marking sent");
                                     _this._changeStatusOfMessg(messageId, userId, "recieved");
-                                    _this.storeMessagesInLocalHistory(selfJID.split('@')[0],userId,newMsg,'send');
+                                    //_this.storeMessagesInLocalHistory(selfJID.split('@')[0],userId,newMsg,'send');
                                 }
                                 if (msgSendOutput["cansend"] == false) {
                                     $(curElem).prop("disabled", true);
@@ -989,7 +989,7 @@ JsChat.prototype = {
                                     $(superParent).find("#sendDiv").remove();
                                     $(superParent).find("#interestSent").removeClass("disp-none");
                                     _this._changeStatusOfMessg(messageId, userId, "recieved");
-                                    _this.storeMessagesInLocalHistory(selfJID.split('@')[0],userId,newMsg,'send');
+                                    //_this.storeMessagesInLocalHistory(selfJID.split('@')[0],userId,newMsg,'send');
                                 }
                                 if (msgSendOutput["cansend"] == true) {
                                     $(curElem).prop("disabled", false);
@@ -1737,7 +1737,7 @@ JsChat.prototype = {
                 that._chatLoggerPlugin("count - " + count);
             }
             curEle._scrollToBottom(userId);
-            this.storeMessagesInLocalHistory(selfJID, userId, newMsg, 'receive');
+            //this.storeMessagesInLocalHistory(selfJID, userId, newMsg, 'receive');
         }
     },
     //get count of minimized chat boxes with unread messages
