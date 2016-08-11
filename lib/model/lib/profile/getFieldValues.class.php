@@ -91,6 +91,8 @@ class getFieldValues {
       break;
       case "countryReg" : $fieldArr = $this->getCountryValuesForInUsa();
       break;
+      case "stateReg" : $fieldArr = $this->orderForLabelGrid("state_india");
+      break;
       case "cityReg" : $fieldArr = $this->getCityValuesForInUsa();
       break;
       case "horoscopeMatch" : $fieldArr = $this->orderForLabelRadio("horoscope_match");

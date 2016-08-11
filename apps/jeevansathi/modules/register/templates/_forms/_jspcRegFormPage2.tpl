@@ -194,7 +194,25 @@
         </div>
       </div>
     </div>
-    <!--end:countryReg--> 
+    <!--end:countryReg-->
+    <!--start:state-->
+    <div class="mt7 disp-none" id="stateReg_selector">
+      <!--start:error div-->
+      <div class="clearfix f11 fontlig">
+        <div class="reg-wid3 fr colr5  visHid" id="stateReg_error"></div>
+      </div>
+      <!--end:error div-->
+      <div class="fullwid pos_rel clearfix">
+        <div class="reg-wid3 fr reg-divselc bg-white outl-none toValidate" data-attr="stateRegliv" tabindex="0" id="stateReg_box">
+          <label class="lblreg pos_abs js-stateReg js-list pos1_lbl1 required" id="stateReg_label" data-attr="stateRegliv">State</label>
+          <div class="js-tBox" id="stateReg_value" data-type="gridDropdown" data-columns="3" data-toSave ="state_res" data-validate=true data-required=true data-fieldtype="stateReg"  data-search="true">
+            <input autocomplete="off" class="reg_wid2 fr brdr-0 f15 fontlig" id="stateReg-inputBox_set" tabindex="-1"/>
+            <div id="stateReg-gridDropdown_set"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--end:stateReg-->
     <!--start:city-->
     <div class="mt7 disp-none" id="cityReg_selector">
       <!--start:error div-->

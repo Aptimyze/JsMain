@@ -1376,31 +1376,9 @@ var padding = 31;
             ele1.showInp = 0;
           }
           if (ele1.name == "familyState")
-          {
-            if (stateVal != inputData['native_state'])
-            {
-              $("#familyCity-inputBox_set").val("");
-              $("#familyCity").val("");
-              $("#familyCityOther").val("");
-              inputData["native_city"] = "";
-              inputData["ancestral_origin"] = "";
-              regField['familyCity'].showDrop = 0;
-              regField['familyCity'].selected = "";
-              if (ele1.fromIndia == 1)
-              {
-                $("#familyCity_selector").addClass("disp-none");
-                $("#familyCityOther_selector").addClass("disp-none");
-              }
-              else
-              {
-                $("#familyCity_selector").removeClass("disp-none");
-                arrayfamilyCity = dataArray['familyCity'][inputData['native_state']][0];
-                ele1.putValuesInList(regField['familyCity'], arrayfamilyCity);
-                $("#familyCity-gridDropdown_set").hide();
-                $("#familyCityOther_selector").addClass("disp-none");
-              }
-            }
-          }
+              fillCityValues("familyCity","native_state",stateVal,ele1);
+          else if(ele1.name == "stateReg")
+              fillCityValues("cityReg","stateReg",inputData[ele1.formKey],ele1);
           if (ele1.name == "familyCity")
           {
             if (inputData['native_city'] != "0")
@@ -1538,6 +1516,20 @@ var padding = 31;
             regField["horoscopeMatch"].shown = 1;
             regField["horoscopeMatch"].showInput = 1;
             regField["horoscopeMatch"].chosenValue = "";
+          }
+          if (ele1.name == "countryReg" && regField["countryReg"] && regField["countryReg"].selected == "India") {
+              $("#stateReg_selector").removeClass("disp-none");
+              $("#stateReg-list_set").show();
+          }
+          else {
+            $("#stateReg_selector").addClass("disp-none");
+            $("stateReg_value").val("");
+            $("stateReg-inputBox_set").html("");
+            $("stateReg-list_set").find(".activeopt").removeClass("activeopt");
+            inputData["stateReg"] = "";
+            regField["stateReg"].shown = 1;
+            regField["stateReg"].showInput = 1;
+            regField["stateReg"].chosenValue = "";
           }
           if (ele1.name == "mtongue" && regField["caste"] && regField["religion"].selected == "Hindu") {
             regField["caste"].putValuesInList(regField["caste"], dataArray["caste"][0]);
@@ -2252,6 +2244,34 @@ function clearUgDegree(){
     $("#ugCollege-inputBox_set").val('');
     $("#otherUgDegree_value").val('');
 }
+
+//Function to fill values of city according to state 
+  function fillCityValues(fieldName,fieldInput,stateVal,ele1)
+  {
+    if (stateVal != inputData[fieldInput])
+            {
+              $("#"+fieldName+"-inputBox_set").val("");
+              $("#"+fieldName).val("");
+              $("#"+fieldName+"Other").val("");
+              inputData["native_city"] = "";
+              inputData["ancestral_origin"] = "";
+              regField[fieldName].showDrop = 0;
+              regField[fieldName].selected = "";
+              if (ele1.fromIndia == 1)
+              {
+                $("#"+fieldName+"_selector").addClass("disp-none");
+                $("#"+fieldName+"Other_selector").addClass("disp-none");
+              }
+              else
+              {
+                $("#"+fieldName+"_selector").removeClass("disp-none");
+                arrayfamilyCity = dataArray[fieldName][inputData[fieldInput]][0];
+                ele1.putValuesInList(regField[fieldName], arrayfamilyCity);
+                $("#"+fieldName+"-gridDropdown_set").hide();
+                $("#"+fieldName+"Other_selector").addClass("disp-none");
+              }
+            }
+  }
   
 //for handling body click on IE . For closing of dropdowns on click of body
 (function () {
