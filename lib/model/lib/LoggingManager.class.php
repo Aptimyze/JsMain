@@ -206,21 +206,21 @@ class LoggingManager
       $typeOfError = $this->getLogTypeOfError($exception,$logArray);
       $headers = getallheaders();
       $logData = array();
-      $logData['logId'] = $logId;
-      $logData['clientIp'] = $clientIp;
-      $logData['time'] = $time;
+      $logData[LoggingEnums::LOG_ID] = $logId;
+      $logData[LoggingEnums::CLIENT_IP] = $clientIp;
+      $logData[LoggingEnums::TIME] = $time;
       if($uniqueSubId != "")
-        $logData['uniqueSubId'] = $uniqueSubId;
-      $logData['channelName'] = $channelName;
-      $logData['apiVersion'] = $apiVersion;
-      $logData['modulName'] = $modulName;
-      $logData['actionName'] = $actionName;
-      $logData['typeOfError'] = $typeOfError;
-      $logData['statusCode'] = $statusCode;
-      $logData['message'] = $message;
+        $logData[LoggingEnums::UNIQUE_REQUEST_SUB_ID] = $uniqueSubId;
+      $logData[LoggingEnums::CHANNEL_NAME] = $channelName;
+      $logData[LoggingEnums::API_VERSION] = $apiVersion;
+      $logData[LoggingEnums::MODULE_NAME] = $moduleName;
+      $logData[LoggingEnums::ACTION_NAME] = $actionName;
+      $logData[LoggingEnums::TYPE_OF_ERROR] = $typeOfError;
+      $logData[LoggingEnums::STATUS_CODE] = $statusCode;
+      $logData[LoggingEnums::MESSAGE] = $message;
       if($this->canWriteTrace($this->szLogPath))
       {
-        $logData['exception'] = $exception;
+        $logData[LoggingEnums::LOG_EXCEPTION] = $exception;
       }
       return $logData;
     }
@@ -371,6 +371,7 @@ class LoggingManager
      */
     private function getLogModuleName($isSymfony = true,$exception = null,$logArray = array())
     {
+      $moduleName = "";
       if ( !isset($logArray[LoggingEnums::MODULE_NAME]))
       {
         if ( $isSymfony )
@@ -379,7 +380,6 @@ class LoggingManager
         }
         else
         {
-          $modulName = "";
           if ( $exception instanceof Exception)
           {
             $exceptionLiesIn = $exception->getTrace()[0]['file'];

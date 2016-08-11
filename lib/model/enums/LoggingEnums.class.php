@@ -36,6 +36,7 @@ class LoggingEnums
     const UNKNOWN_EXCEPTION = "UNKNOWN";
     const EXCEPTION = "EXCEPTION";
     // logArray parameters
+    const CLIENT_IP = "clientIP";
     const STATUS_CODE = "statusCode";
     const API_VERSION = "apiVersion";
     const MESSAGE = "message";
@@ -44,6 +45,8 @@ class LoggingEnums
     const MODULE_NAME = "moduleName";
     const TYPE_OF_ERROR = "typeOfError";
     const LOG_ID = "logId";
+    const LOG_EXCEPTION = "exception";
+    const TIME = "time";
     const UNIQUE_REQUEST_SUB_ID = "uniqueRequestSubId";
     // config array keys
     const logging = 'logging';
