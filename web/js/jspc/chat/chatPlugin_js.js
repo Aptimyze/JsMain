@@ -1620,13 +1620,14 @@ JsChat.prototype = {
                 latestMsgId = logObj["ID"];
                 //console.log(logObj);
                 if (parseInt(logObj["SENDER"]) == self_id) {
-                    //append self sent message
-                    $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText" data-msgid='+logObj["FOLDERID"]+'>' + logObj["MESSAGE"] + '</div><i class="nchatspr nchatic_9 fr vertM"></i></div>').promise().done(function(){
-                            var len = $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["FOLDERID"]).height();
-                                
-                            $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["FOLDERID"]).next().css("margin-top",len);
-                    });
-                    
+                    if(logObj["MESSAGE"].indexOf("Please 'accept' my interest if you want me to contact you further") == -1){
+                        //append self sent message
+                        $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["FOLDERID"] + '" class="talkText" data-msgid='+logObj["FOLDERID"]+'>' + logObj["MESSAGE"] + '</div><i class="nchatspr nchatic_9 fr vertM"></i></div>').promise().done(function(){
+                                var len = $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["FOLDERID"]).height();
+                                    
+                                $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["FOLDERID"]).next().css("margin-top",len);
+                        });
+                    }
                 } else if (parseInt(logObj["SENDER"]) == other_id) {
                     //check for default eoi message,remove after monday JSI release
                     if(logObj["MESSAGE"].indexOf("likes your profile. Please 'Accept' to show that you like this profile") == -1){
