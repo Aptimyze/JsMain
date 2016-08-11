@@ -35,5 +35,8 @@ EOF;
 	$result = $JprofileForDuplicationObj->del();
 	if(!$result)
 		mail("reshu.rajput@jeevansathi.com","cronDuplicationEntriesDeletionTask","No entries got deleted from JPROFILE_FOR_DUPLICATION");
+		mail("palash.chordia@jeevansathi.com","cronDuplicationEntriesDeletionTask","cron still running");
+        
+        
   }
 }

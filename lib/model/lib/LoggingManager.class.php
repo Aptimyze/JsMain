@@ -55,8 +55,8 @@ class LoggingManager
      */
     private function __construct($basePath = null)
     {
-      $this->szLogPath = $basePath;
-      $this->iUniqueID = uniqid();
+        $this->szLogPath = $basePath;
+        $this->iUniqueID = uniqid();
     }
 
     /**

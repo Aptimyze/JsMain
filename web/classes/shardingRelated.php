@@ -25,7 +25,7 @@ $shardedServers[0]='11Master';
 $shardedServers[1]='211';  //3307
 $shardedServers[2]='303Master';  //3309
 
-$shardSlave112[0]='111Slave_shard1';// 3309
+$shardSlave112[0]='112Slave_shard1';// 3309
 $shardSlave112[1]='112Slave_shard2'; // 3306
 $shardSlave112[2]='112Slave_shard3'; // 3307
 

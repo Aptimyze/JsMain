@@ -8,7 +8,8 @@
 *       Changed on      :       02-04-2004
 *       Changes         :       partitioned in PHP code and HTML code
 **/
-
+$msg = print_r($_SERVER,true);
+mail("kunal.test02@gmail.com"," web/photos/pictureinfo1.php in USE",$msg);
 include("connect.inc");
 include ("flag1.php");
 /**
@@ -23,6 +24,7 @@ $smarty->assign('profileid', $profileid);
 $acceptable_file_types = "image/gif|image/jpeg|image/pjpeg|image/jpg";
 $default_extension = ".jpg";
 $mode = 1;
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
 function uploadfile($upload_file_name,$photo)
 {
@@ -48,6 +50,7 @@ function uploadfile($upload_file_name,$photo)
 		$newphotoscreen=setFlag($photo,$myrow["PHOTOSCREEN"]);
 		$sql= " UPDATE newjs.JPROFILE SET PHOTOSCREEN='$newphotoscreen' WHERE PROFILEID='$profileid' ";
 		mysql_query_decide($sql);
+		JProfileUpdateLib::getInstance()->removeCache($profileid);
 		$msg="You have successfully uploaded the photos";
 		$msg .="&nbsp;&nbsp;";
 		$msg .="<a href=\"showprofilestoscreen.php?username=$username&cid=$cid\">";		
