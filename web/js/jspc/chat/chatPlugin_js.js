@@ -1625,7 +1625,7 @@ JsChat.prototype = {
                     });
                     
                 } else if (parseInt(logObj["SENDER"]) == other_id) {
-                    if(logObj["MESSAGE"].indexOf("likes your profile. Please 'Accept' to show that you like this profile") != -1){
+                    if(logObj["MESSAGE"].indexOf("likes your profile. Please 'Accept' to show that you like this profile") == -1){
                         //console.log("done"+requestType+removeFreeMemMsg);
                         if(removeFreeMemMsg == false){
                             //console.log("remove free msg");
