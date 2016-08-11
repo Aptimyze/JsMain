@@ -108,8 +108,9 @@ class sfObjectRoute extends sfRequestRoute
     // check the related object
     if (!($this->object = $this->getObjectForParameters($this->parameters)) && (!isset($this->options['allow_empty']) || !$this->options['allow_empty']))
     {
-      LoggingManager::getInstance(LoggingEnums::EX500OR404)->logThis(LoggingEnums::LOG_ERROR, new Exception("404 page encountered"));
-      throw new sfError404Exception(sprintf('Unable to find the %s object with the following parameters "%s").', $this->options['model'], str_replace("\n", '', var_export($this->filterParameters($this->parameters), true))));
+      $ex = new sfError404Exception(sprintf('Unable to find the %s object with the following parameters "%s").', $this->options['model'], str_replace("\n", '', var_export($this->filterParameters($this->parameters), true))));
+      LoggingManager::getInstance(LoggingEnums::EX500OR404)->logThis(LoggingEnums::LOG_ERROR, $ex);
+      throw $ex;
     }
 
     return $this->object;
@@ -143,8 +144,9 @@ class sfObjectRoute extends sfRequestRoute
 
     if (!count($this->objects) && isset($this->options['allow_empty']) && !$this->options['allow_empty'])
     {
-      LoggingManager::getInstance(LoggingEnums::EX500OR404)->logThis(LoggingEnums::LOG_ERROR, new Exception("404 page encountered"));
-      throw new sfError404Exception(sprintf('No %s object found for the following parameters "%s").', $this->options['model'], str_replace("\n", '', var_export($this->filterParameters($this->parameters), true))));
+      $ex = new sfError404Exception(sprintf('No %s object found for the following parameters "%s").', $this->options['model'], str_replace("\n", '', var_export($this->filterParameters($this->parameters), true))));
+      LoggingManager::getInstance(LoggingEnums::EX500OR404)->logThis(LoggingEnums::LOG_ERROR, $ex);
+      throw $ex;
     }
 
     return $this->objects;
