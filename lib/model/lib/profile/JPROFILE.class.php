@@ -120,6 +120,7 @@ class JPROFILE
 
         if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
             LoggingManager::getInstance(ProfileCacheConstants::PROFILE_LOG_PATH)->logThis(LoggingEnums::LOG_INFO,"Consuming from cache for criteria: {$criteria} : {$value}");
+            $this->logCacheConsumption();
             return $result;
         }
 
@@ -650,6 +651,15 @@ class JPROFILE
     public function getDataForLegal($nameArr,$age,$addressArr,$email)
     {
         return self::$objProfileMysql->getDataForLegal($nameArr, $age, $addressArr, $email);
+    }
+
+    private function logCacheConsumption()
+    {
+        $key = 'cacheConsumeCount'.date('Y-m-d');
+        JsMemcache::getInstance()->incrCount($key);
+
+        $key .= '::'.date('H');
+        JsMemcache::getInstance()->incrCount($key);
     }
 }
 

@@ -431,5 +431,20 @@ class JProfileUpdateLib
       return false;
     }
   }
+
+  /**
+   * Function to remove Cache of specified profileid or array of profileid
+   * @param $Var
+   * @return bool
+   */
+  public function removeCache($Var)
+  {
+    try {
+      ProfileCacheLib::getInstance()->removeCache($Var);
+    } catch (Exception $ex) {
+      jsCacheWrapperException::logThis($ex);
+      return false;
+    }
+  }
 }
 ?>
