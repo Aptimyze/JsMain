@@ -146,13 +146,13 @@ function getChatHistory(apiParams,key) {
             fetchFromLocalStorage = false;
         }
     }
-    var messageFromLocalStorage = getMessagesFromLocalStorage(apiParams["extraParams"]["from"].split("@")[0], apiParams["extraParams"]["to"].split("@")[0]);
+    /*var messageFromLocalStorage = getMessagesFromLocalStorage(apiParams["extraParams"]["from"].split("@")[0], apiParams["extraParams"]["to"].split("@")[0]);
     if(!(messageFromLocalStorage == undefined || messageFromLocalStorage == null || messageFromLocalStorage.length  == 0)){
         manageHistoryLoader(bare_to_jid,"hide");
         //call plugin function to append history in div
         objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], messageFromLocalStorage,key);
     }
-    else{
+    else{*/
         //console.log("api for history");
 
         if (typeof chatConfig.Params.chatHistoryApi["extraParams"] != "undefined") {
@@ -188,7 +188,7 @@ function getChatHistory(apiParams,key) {
                         manageHistoryLoader(bare_to_jid,"hide");
                         //call plugin function to append history in div
                         objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], $.parseJSON(response["Message"]),key);
-                        objJsChat.storeMessagesInLocalHistory(apiParams["extraParams"]["from"].split('@')[0],apiParams["extraParams"]["to"].split('@')[0],$.parseJSON(response["Message"]),'history');
+                        //objJsChat.storeMessagesInLocalHistory(apiParams["extraParams"]["from"].split('@')[0],apiParams["extraParams"]["to"].split('@')[0],$.parseJSON(response["Message"]),'history');
                     }
                     else{
                         $("#moreHistory_"+bare_to_jid.split("@")[0]).val("0");
@@ -204,7 +204,7 @@ function getChatHistory(apiParams,key) {
                 //return "error";
             }
         });
-    }
+   // }
 }
 
 /*
