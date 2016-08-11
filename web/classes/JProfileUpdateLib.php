@@ -446,5 +446,50 @@ class JProfileUpdateLib
       return false;
     }
   }
+
+  /**	
+   * @param $iProfileID
+   * @return bool|void
+   */
+  public function deactiveSingleProfile($iProfileID)
+  {
+    try {
+      return $this->objJProfileStore->Deactive($iProfileID);
+    } catch (Exception $ex) {
+      jsCacheWrapperException::logThis($ex);
+      return false;
+    }
+  }
+
+  /**
+   * @param $privacy
+   * @param $profileid
+   * @param $dayinterval
+   * @return bool|void
+   */
+  public function updateHideJPROFILE($privacy, $profileid, $dayinterval)
+  {
+    try {
+      return $this->objJProfileStore->updateHide($privacy, $profileid, $dayinterval);
+    } catch (Exception $ex) {
+      jsCacheWrapperException::logThis($ex);
+      return false;
+    }
+  }
+
+  /**
+   * @param $privacy
+   * @param $profileid
+   * @return bool|void
+   */
+  public function updateUnHideJPROFILE($privacy, $profileid)
+  {
+    try {
+      return $this->objJProfileStore->updateUnHide($privacy, $profileid);
+    } catch (Exception $ex) {
+      jsCacheWrapperException::logThis($ex);
+      return false;
+    }
+  }
 }
 ?>
