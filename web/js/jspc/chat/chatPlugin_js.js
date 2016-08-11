@@ -1462,7 +1462,9 @@ JsChat.prototype = {
     //appending chat box
     _chatPanelsBox: function (userId, status, jid, pcheckSum, groupId) {
         this._chatLoggerPlugin("pcheckSum", pcheckSum);
-        if ($(".chatlist li[id='" + userId + "_" + groupId + "']").length != 0) status = $(".chatlist li[id='" + userId + "_" + groupId + "']").attr("data-status");
+        if ($(".chatlist li[id='" + userId + "_" + groupId + "']").length != 0) {
+            status = $(".chatlist li[id='" + userId + "_" + groupId + "']").attr("data-status");
+        }
         var curElem = this,
             heightPlus = false,
             bodyWidth = $("body").width();
