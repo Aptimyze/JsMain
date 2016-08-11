@@ -58,7 +58,7 @@ EOF;
                              unset($finalArr);
                              $SearchParamtersObj->getSearchCriteria($value["SEARCH_ID"],1);
                              $SearchParamtersObj->setHVERIFY_ACTIVATED_DT(date("Y-m-d H:i:s"));
-                             $SearchParamtersObj->setLVERIFY_ACTIVATED_DT(date("Y-m-d H:i:s", strtotime("-100 week")));
+                             $SearchParamtersObj->setLVERIFY_ACTIVATED_DT(date("Y-m-d H:i:s", strtotime("-1 week")));
 
                                //searchEngine = solr
                              //outputFormat = array
