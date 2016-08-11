@@ -851,10 +851,13 @@ JsChat.prototype = {
             console.log(newMsg);
             var oldMessages = JSON.parse(localStorage.getItem('chatMsg_'+selfJID+'_'+other));
             if(type == 'send' || type == 'receive'){
+                newMsg[newMsg['FOLDERID']] = newMsg;
                 if(typeof oldMessages == "undefined" || oldMessages == '' || oldMessages == null){
                     oldMessages = [];
                 }
-                oldMessages.unshift(newMsg);
+                if(!oldMessages[newMsg['FOLDERIF']]){
+                    oldMessages.unshift(newMsg);    
+                }
             }
             else if(type == 'history'){
                 if(typeof oldMessages == "undefined" || oldMessages == '' || oldMessages == null){
@@ -862,7 +865,10 @@ JsChat.prototype = {
                 }
                 else{
                     $.each(newMsg,function(key,val){
-                       oldMessages.push(val); 
+                        if(!oldMessages[val['FOLDERID']]) {
+                            newVal[val['FOLDERID']] = val;
+                            oldMessages.push(newVal);
+                        }
                     });
                 }
 
