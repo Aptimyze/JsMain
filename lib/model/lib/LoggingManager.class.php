@@ -376,7 +376,7 @@ class LoggingManager
       {
         if ( $isSymfony )
         {
-          $moduleName =  sfContext::getInstance()->getModuleName();
+          $moduleName = sfContext::getInstance()->getRequest()->getParameter("module");
         }
         else
         {
@@ -407,7 +407,7 @@ class LoggingManager
       {
         if ( $isSymfony )
         {
-          $actionName = sfContext::getInstance()->getActionName();
+          $actionName = sfContext::getInstance()->getRequest()->getParameter("action");;
         }
         else
         {
