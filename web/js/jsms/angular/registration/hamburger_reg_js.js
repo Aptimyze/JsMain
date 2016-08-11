@@ -608,13 +608,13 @@ var errorMsg = "Something went wrong!! Please try again later";
 			}
 			if(this.type=="native_country_jsms" && json)
 				return json;
-			if(this.type.indexOf("reg_city_")>-1)
+			if(this.type.indexOf("reg_city_")>-1 && this.screenName!="s2")
 			{
 				var split = this.type.split("_");
 				var state = split[2];
 				return json[state];
 			}
-			if(this.type.indexOf("reg_city_jspc")>-1)
+			if(this.type.indexOf("reg_city_jspc")>-1 && this.screenName=="s2")
 			{
                             this.countryValue = staticTables.getUserData('familyIncomeDep');
 			    this.stateValue = staticTables.getUserData('stateDep').replace(/\"/g, "");
