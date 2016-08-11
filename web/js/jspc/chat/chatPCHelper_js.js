@@ -513,9 +513,9 @@ function checkAuthentication(timer,loginType) {
                     }
                 }
                 else{
-                    if(timer<20000){
+                    if(timer<(chatConfig.Params[device].appendRetryLimit*4)){
                         setTimeout(function(){
-                            checkAuthentication(timer+2000,loginType);
+                            checkAuthentication(timer+chatConfig.Params[device].appendRetryLimit,loginType);
                         },timer);
                     }
                     else{
@@ -946,7 +946,7 @@ $(document).ready(function () {
             if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
                 objJsChat.manageLoginLoader();
             }
-            checkAuthentication(500,"second");
+            checkAuthentication(chatConfig.Params[device].loginRetryTimeOut,"second");
             loginStatus = "Y";
             initiateChatConnection();
         } else {
@@ -979,7 +979,7 @@ $(document).ready(function () {
                 if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
                     objJsChat.manageLoginLoader();
                 }
-                var auth = checkAuthentication(500,"first");
+                var auth = checkAuthentication(chatConfig.Params[device].loginRetryTimeOut,"first");
                 if (auth != "true") {
                     //chatLoggerPC("Before return");
                     return;
