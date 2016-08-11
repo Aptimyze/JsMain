@@ -306,6 +306,7 @@ function bindSlider(){
     child=$(".matchAlertBtn");
     child.unbind("click");
     child.bind("click",function(){
+        $(this).unbind("click");
         var input=$(this).children(".inputProChecksum");
 params["profilechecksum"] =input.val();
         params["actionName"] ="INITIATE_MYJS";
