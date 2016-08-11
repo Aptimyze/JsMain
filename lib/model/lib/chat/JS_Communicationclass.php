@@ -73,21 +73,19 @@ class JS_Communication
 				$mergeArray=$eoiArray[0];
 				$mergeArray["FOLDERID"]="";				
 				$mergeArray["ID"]="";	
-				$mergeArray['MESSAGE']=str_replace("||","\n",$mergeArray['MESSAGE']);
-				//print_r($mergeArray);die;
-				$result[count($result)]=$mergeArray;
+				$messageArr=explode("||",$mergeArray['MESSAGE']);
+				$eoiMsgCount = count($messageArr);
+				//print_r($messageArr);die;
+				$i=count($result);
+				for($j=($eoiMsgCount-1);$j>=0;$j--)
+				//foreach($messageArr as $key=>$val)
+				{
+					$mergeArray["MESSAGE"]=$messageArr[$j];
+					$result[$i]=$mergeArray;
+					$i++;
+				}
 					//print_r($result);die;			
-			}
-			
-		/*
-			if($dbName1 != $dbName2)
-			{							
-				$dbObj = new newjs_CHAT_LOG($dbName2);
-			
-				$dbObj->getMessageHistory($this->loginProfile->getPROFILEID(),$this->otherProfile->getPROFILEID);
-			
-			}*/
-		
+			}		
 		}
 		else
 		{			
