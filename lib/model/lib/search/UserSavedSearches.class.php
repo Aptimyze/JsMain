@@ -16,7 +16,7 @@ class UserSavedSearches extends SearchParamters
 	{
 		parent::__construct();
 		$this->possibleSearchParamters = SearchConfig::$possibleSearchParamters;
-
+		$this->loggedInProfileObj = $loggedInProfileObj;
 		/* Save Search is only relevant in logged in case, else show timedout page. */
 		if($loggedInProfileObj->getPROFILEID())
 			$this->pid =  $loggedInProfileObj->getPROFILEID();
