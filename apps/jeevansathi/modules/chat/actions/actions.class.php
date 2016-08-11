@@ -64,14 +64,17 @@ class chatActions extends sfActions
 			if ($result['username'] || $result['user']['username']) {
 				//User exists
 				$response['userStatus'] = "User exists";
+				$response['hash'] = $pass;
 				$apiResponseHandlerObj->setHttpArray(ChatEnum::$userExists);
 			} else {
 				//create user
-				$response['userStatus'] = "New user created";
+				$response['userStatus'] = "Added";
 				$url = JsConstants::$openfireConfig['HOST'] . ":" . JsConstants::$openfireConfig['PORT'] . "/plugins/restapi/v1/users/";
 				//$url = "http://localhost:9090/plugins/restapi/v1/users/";
 				$profileImporterObj = new Chat();
 				$profileImporterObj->addNewProfile($username);
+				$apiResponseHandlerObj->setHttpArray(ChatEnum::$addedToQueue);
+				/*
 				$data = array("username" => $username, "password" => $pass);
 				$jsonData = json_encode($data);
 
@@ -103,11 +106,12 @@ class chatActions extends sfActions
 					$apiResponseHandlerObj->setHttpArray(ChatEnum::$error);
 				}
 				curl_close($ch);
+				*/
 			}
 			//Encrypt Password
 			//$hash = EncryptPassword::cryptoJsAesEncrypt("chat", $pass);
-            $hash = $pass;
-			$response['hash'] = $hash;
+            //$hash = $pass;
+			//$response['hash'] = $hash;
 			//$response['hash'] = $pass;
 		} else {
 			$response = "Logged Out Profile";

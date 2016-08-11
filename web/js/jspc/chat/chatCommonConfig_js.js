@@ -286,7 +286,9 @@ chatConfig.Params = {
         },
         storeMsgInLocalStorage:false,
         maxMsgLimit:1000,
-        moreMsgChunk: 20
+        moreMsgChunk: 20,
+        loginRetryTimeOut: 500,
+        appendRetryLimit: 1000,
     }
 };
 chatConfig.Params.pc.rosterGroups = [ /*chatConfig.Params.categoryNames['Desired Partner Matches'],*/ chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members']];
