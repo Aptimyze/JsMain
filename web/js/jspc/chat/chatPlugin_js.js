@@ -1625,6 +1625,7 @@ JsChat.prototype = {
                     });
                     
                 } else if (parseInt(logObj["SENDER"]) == other_id) {
+                    //check for default eoi message,remove after monday JSI release
                     if(logObj["MESSAGE"].indexOf("likes your profile. Please 'Accept' to show that you like this profile") == -1){
                         //console.log("done"+requestType+removeFreeMemMsg);
                         if(removeFreeMemMsg == false){
@@ -1993,20 +1994,22 @@ JsChat.prototype = {
     onHoverContactButtonClick: null,
     //start:update vcard
     updateVCard: function (param, pCheckSum, callback) {
-        //this._chatLoggerPlugin('in vard update');
-        var globalRef = this;
-        var finalstr;
-        var that = this;
-        //$.each(param.vCard, function (k, v) {
-        that._chatLoggerPlugin("set");
-        //that._chatLoggerPlugin(k);
-        finalstr = globalRef._hoverBoxStr(param.jid, param, pCheckSum);
-        $(globalRef._mainID).append(finalstr);
-        //});
-        delete that;
-        this._chatLoggerPlugin("Callback calling starts");
-        callback();
-        this._chatLoggerPlugin("Callaback ends");
+        if(typeof param.jid != "undefined"){
+            //this._chatLoggerPlugin('in vard update');
+            var globalRef = this;
+            var finalstr;
+            var that = this;
+            //$.each(param.vCard, function (k, v) {
+            that._chatLoggerPlugin("set");
+            //that._chatLoggerPlugin(k);
+            finalstr = globalRef._hoverBoxStr(param.jid, param, pCheckSum);
+            $(globalRef._mainID).append(finalstr);
+            //});
+            delete that;
+            this._chatLoggerPlugin("Callback calling starts");
+            callback();
+            this._chatLoggerPlugin("Callaback ends");
+        }
     },
     /*
      * Error handling in case of hover

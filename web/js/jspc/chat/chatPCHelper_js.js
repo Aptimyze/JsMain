@@ -1097,21 +1097,26 @@ $(document).ready(function () {
                 success: function (data) {
                     ////console.log("Nitishvcard");
                     //chatLoggerPC(data);
-                    if (data.photo == '' && loggedInJspcGender) {
-                        if (loggedInJspcGender == "F") {
-                            data.photo = chatConfig.Params[device].noPhotoUrl["self120"]["M"];
-                        } else if (loggedInJspcGender == "M") {
-                            data.photo = chatConfig.Params[device].noPhotoUrl["self120"]["F"];
+                    if(data["responseStatusCode"] == "0"){
+                        if (data.photo == '' && loggedInJspcGender) {
+                            if (loggedInJspcGender == "F") {
+                                data.photo = chatConfig.Params[device].noPhotoUrl["self120"]["M"];
+                            } else if (loggedInJspcGender == "M") {
+                                data.photo = chatConfig.Params[device].noPhotoUrl["self120"]["F"];
+                            }
                         }
-                    }
-                    objJsChat.updateVCard(data, pCheckSum, function () {
-                        $('#' + username + '_hover').css({
-                            'top': hoverNewTop,
-                            'visibility': 'visible',
-                            'right': shiftright
+                        objJsChat.updateVCard(data, pCheckSum, function () {
+                            $('#' + username + '_hover').css({
+                                'top': hoverNewTop,
+                                'visibility': 'visible',
+                                'right': shiftright
+                            });
+                            //chatLoggerPC("Callback done");
                         });
-                        //chatLoggerPC("Callback done");
-                    });
+                    }
+                    else if(data["responseStatusCode"] == "9"){
+                        window.location.href = "/";
+                    }
                 }
             });
         }
