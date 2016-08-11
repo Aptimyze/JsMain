@@ -786,12 +786,40 @@ public function executeAppredirect(sfWebRequest $request)
 				$mergedArr = array_merge($optionalArr,$outData[$val][0]);
 				$outData[$val][0]=$mergedArr;
 			}
+			if($val=="reg_city_jspc")
+			{
+				$output = $outData;
+				unset($outData);
+				$outData[51]=$output;
+                                $Arr[128][0]=FieldMap::getFieldLabel("city_usa",'',1);
+                                $i=0;
+                                foreach($Arr[128] as $key=>$val)
+                                {
+                                        foreach($val as $k=>$v)
+                                                $outData[128][]=array($i=>array($k=>$v));
+                                        $i++;
+                                }
+			}
 		  }
 		  echo json_encode($outData);
 	  }
 	  else if($k)
 	  {
-		  $output = $this->getFieldMapData($k);
+			$output = $this->getFieldMapData($k);
+			if($k=="reg_city_jspc")
+			{
+				$outData = $output;
+				unset($output);
+				$output[51]=$outData;
+				$Arr[128][0]=FieldMap::getFieldLabel("city_usa",'',1);
+				$i=0;
+				foreach($Arr[128] as $key=>$val)
+				{
+					foreach($val as $k=>$v)
+						$output[128][]=array($i=>array($k=>$v));
+					$i++;
+				}
+			}
 			if($k=="family_income")
 			{
                                 $optionalArr[0] = array("0"=>array("0"=>"Select"));
@@ -1016,6 +1044,10 @@ public function executeAppredirect(sfWebRequest $request)
     if(strstr($k,"stdcodes")){
       $output = $this->getSTDCode();
     }
+if($k=="state_res")
+{
+			$output = $this->getJsmsNativeState();
+}
     if($k=="native_state_jsms")
 		{
 			$output = $this->getJsmsNativeState();

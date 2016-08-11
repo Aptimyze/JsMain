@@ -514,7 +514,7 @@ var errorMsg = "Something went wrong!! Please try again later";
 		};
 		Hamburger.prototype.SpecialDependantLogic=function()
 		{
-			var specialType = ['religion','reg_mstatus','country_res','t_brother','t_sister',"native_state_jsms"];
+			var specialType = ['religion','reg_mstatus','t_brother','t_sister',"native_state_jsms"];
 			if(specialType.indexOf(this.type)!=-1)
 			{
 				var o = this.output[this.type];
@@ -545,14 +545,6 @@ var errorMsg = "Something went wrong!! Please try again later";
 					this.bIndependantCall = true;
 				}
 				
-				if(this.type=='country_res' && o)
-				{
-					if(o.value == 51)
-					{
-						this.dependant = "city_res";
-					}
-				}
-                
                 if((this.type == 't_brother' || this.type == 't_sister') && o ){
                     if (o.value==='0')
                         this.dependant = '';
@@ -622,7 +614,19 @@ var errorMsg = "Something went wrong!! Please try again later";
 				var state = split[2];
 				return json[state];
 			}
-				
+			if(this.type.indexOf("reg_city_jspc")>-1)
+			{
+                            this.countryValue = staticTables.getUserData('familyIncomeDep');
+			    this.stateValue = staticTables.getUserData('stateDep').replace(/\"/g, "");
+				if(this.countryValue=='51')
+				{
+					return json[this.countryValue][this.stateValue];
+				}
+				else//(this.countryValue=='128')
+				{
+					return json[this.countryValue];
+				}
+			}
 			if(this.selectedValue!=-1 && json)
 			{
 				if(json[this.selectedValue] && !this.bIndependantCall)
