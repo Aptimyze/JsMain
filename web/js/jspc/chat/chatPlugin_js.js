@@ -940,7 +940,7 @@ JsChat.prototype = {
                                 'ID': ''
                             };
                             
-                            _this.storeMessagesInLocalHistory(selfJID.split('@')[0],userId,newMsg,'send');
+                            
                             /*
                             var sjid=selfJID.split('@')[0];
                             var oldMessages = JSON.parse(localStorage.getItem(sjid+'_'+userId)) || [];
@@ -971,6 +971,7 @@ JsChat.prototype = {
                                 if (msgSendOutput["sent"] == true) {
                                     console.log("marking sent");
                                     _this._changeStatusOfMessg(messageId, userId, "recieved");
+                                    _this.storeMessagesInLocalHistory(selfJID.split('@')[0],userId,newMsg,'send');
                                 }
                                 if (msgSendOutput["cansend"] == false) {
                                     $(curElem).prop("disabled", true);
@@ -988,6 +989,7 @@ JsChat.prototype = {
                                     $(superParent).find("#sendDiv").remove();
                                     $(superParent).find("#interestSent").removeClass("disp-none");
                                     _this._changeStatusOfMessg(messageId, userId, "recieved");
+                                    _this.storeMessagesInLocalHistory(selfJID.split('@')[0],userId,newMsg,'send');
                                 }
                                 if (msgSendOutput["cansend"] == true) {
                                     $(curElem).prop("disabled", false);
