@@ -1509,8 +1509,19 @@ class NEWJS_JPROFILE extends TABLE
     //update existing email with value appended
     public function updateEmail($email,$newEmail)
     {
-        $paramArr = array('EMAIL'=>$newEmail);
-        return $this->updateRecord($paramArr, $email, 'EMAIL');
+        try
+        {
+            $sql = "UPDATE newjs.JPROFILE SET EMAIL = :NEW_EMAIL WHERE EMAIL= :EMAILID";
+            $pdoStatement = $this->db->prepare($sql);
+            $pdoStatement->bindValue(":EMAILID",$email,PDO::PARAM_STR);
+            $pdoStatement->bindValue(":NEW_EMAIL",$newEmail,PDO::PARAM_STR);
+            $pdoStatement->execute();
+            return $pdoStatement->rowCount();
+        }
+        catch(Exception $ex){
+            throw new jsException($ex);
+        }
+
     }
 
     //This function executes a select query on join of jprofile and incentives.name_of_user to fetch PROFILEID,EMAIL,USERNAME for the profiles that match the criteria

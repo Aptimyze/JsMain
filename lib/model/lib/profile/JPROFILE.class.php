@@ -638,8 +638,7 @@ class JPROFILE
      */
     public function updateEmail($email, $newEmail)
     {
-        $paramArr = array('EMAIL'=>$newEmail);
-        return $this->edit($paramArr, $email, 'EMAIL');
+        return self::$objProfileMysql->updateEmail($email,$newEmail);
     }
     /**
      * This function executes a select query on join of jprofile and incentives.name_of_user
