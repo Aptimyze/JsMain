@@ -2115,6 +2115,7 @@ JsChat.prototype = {
             if (_this.onHoverContactButtonClick && typeof _this.onHoverContactButtonClick == 'function') {
                 if ($(this).html() == "Start Conversation") {
                     currentID = $(this).attr("id").split("_")[0];
+                    $('#' + curEleID + "_hover").css("visibility","hidden");
                     _this._chatPanelsBox(currentID, 'offline', $(this).attr("data-jid"), $(this).attr("data-checks"), $(this).attr("data-group"));
                 } else {
                     if (!$(this).hasClass("nc")) {
