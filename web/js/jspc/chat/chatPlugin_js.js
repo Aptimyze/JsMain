@@ -1166,8 +1166,8 @@ JsChat.prototype = {
             if(height == 0){
                 //fetch more history
                 var showMoreHistory = $("#moreHistory_"+userId).val(),latestMsgId = $("#moreHistory_"+userId).attr("data-latestMsgId"),
-                localMsg = $("#moreHistory_"+userId).attr("data-localMsg");
-                if(showMoreHistory == "1" && (latestMsgId || localMsg)){
+                //localMsg = $("#moreHistory_"+userId).attr("data-localMsg");
+                if(showMoreHistory == "1" && (latestMsgId/* || localMsg*/)){
                     //console.log("yess on top",height);                   
                     clearTimeout(clearTimedOut);
                     var to_checksum = $("chat-box[user-id='" + userId + "'").attr("data-checks");
