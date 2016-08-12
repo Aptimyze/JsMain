@@ -757,6 +757,8 @@ JsChat.prototype = {
     //onPostBlockCallback: null,
     //remove from list
     _removeFromListing: function (param1, data) {
+        console.log("_removeFromListing 1q12");
+        console.log(data);
         this._chatLoggerPlugin('remove element 11');
         var elem = this;
         //removeCall1 if user is removed from backend
