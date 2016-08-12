@@ -1690,8 +1690,10 @@ JsChat.prototype = {
                         //console.log("done"+requestType+removeFreeMemMsg);
                         if(removeFreeMemMsg == false){
                             //console.log("remove free msg");
-                            removeFreeMemMsg = true;
-                            curElem._enableChatAfterPaidInitiates(other_id);
+                            if(typeof logObj["IS_EOI"] == "undefined" && logObj["IS_EOI"] == false){
+                                removeFreeMemMsg = true;
+                                curElem._enableChatAfterPaidInitiates(other_id);
+                            }
                         }
                         //append received message
                         $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="clearfix"><div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["CHATID"] + '" class="talkText received_read" data-msgid=' + logObj["CHATID"] + '>' + logObj["MESSAGE"] + '</div></div></div>');
