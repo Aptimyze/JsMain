@@ -2008,9 +2008,9 @@ JsChat.prototype = {
                 str += 'style="width:100%">';
             } else {
                 if (k == 0) {
-                    str += 'style="width:' + widCal + '%"> ';
+                    str += 'style="width:' + (widCal - 1) + '%"> ';
                 } else {
-                    str += 'style="width:' + (widCal - 1) + '%;margin-left:1px">';
+                    str += 'style="width:' + (widCal - 2) + '%;margin-left:1px">';
                 }
             }
             str += v.label;
