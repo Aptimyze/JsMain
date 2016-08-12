@@ -1093,7 +1093,7 @@ return $result;
 	{
 		try 
 		{
-				if(!$sender || !$receiver || !$isMsg || !$obscene || !$idObscene ||!$type)
+				if(!$sender || !$receiver || !$isMsg || !$obscene ||!$type)
 				{
 					throw new jsException("","mandatory params are not specified in function insertIntoMessageLog of newjs_MESSAGE_LOG.class.php");
 				}

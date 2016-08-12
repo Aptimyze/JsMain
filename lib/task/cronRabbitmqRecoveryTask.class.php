@@ -85,6 +85,7 @@ EOF;
             exec("ps aux | grep \"".MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $notificationConsumerOut);
             exec("ps aux | grep \"".MessageQueues::CRONDELETERETRIEVE_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $deleteRetrieveConsumerOut);
             exec("ps aux | grep \"".MessageQueues::UPDATESEEN_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $updateSeenConsumerOut);
+            exec("ps aux | grep \"".MessageQueues::PROFILE_CACHE_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $profileCacheConsumerOut);
             if(!empty($out) && is_array($out))
               foreach ($out as $key => $value) 
               {
@@ -113,6 +114,17 @@ EOF;
                 if($count2 >0)
                   exec("kill -9 ".$value);
               }
+
+            if(!empty($profileCacheConsumerOut) && is_array($profileCacheConsumerOut)) {
+              foreach ($profileCacheConsumerOut as $key => $value)
+              {
+                $count2 = shell_exec("ps -p ".$value." | wc -l") -1;
+                if($count2 >0)
+                  exec("kill -9 ".$value);
+              }
+            }
+
+
             for($i=1;$i<=MessageQueues::CONSUMERCOUNT ;$i++)
               passthru(JsConstants::$php5path." ".MessageQueues::CRONCONSUMER_STARTCOMMAND." > /dev/null &"); 
             for($i=1;$i<=MessageQueues::NOTIFICATIONCONSUMERCOUNT ;$i++)
@@ -120,7 +132,12 @@ EOF;
               for($i=1;$i<=MessageQueues::CONSUMER_COUNT_SINGLE ;$i++)
               passthru(JsConstants::$php5path." ".MessageQueues::CRONDELETERETRIEVE_STARTCOMMAND." > /dev/null &");  
               for($i=1;$i<=MessageQueues::UPDATE_SEEN_CONSUMER_COUNT ;$i++)
-              passthru(JsConstants::$php5path." ".MessageQueues::UPDATESEEN_STARTCOMMAND." > /dev/null &");  
+              passthru(JsConstants::$php5path." ".MessageQueues::UPDATESEEN_STARTCOMMAND." > /dev/null &");
+
+            for($i=1;$i<=MessageQueues::PROFILE_CACHE_CONSUMER_COUNT ;$i++) {
+              passthru(JsConstants::$php5path." ".MessageQueues::PROFILE_CACHE_STARTCOMMAND." > /dev/null &");
+            }
+
             RabbitmqHelper::sendAlert($str,"default");
           }
         }
@@ -231,7 +248,7 @@ EOF;
     $this->restartInactiveConsumer(MessageQueues::NOTIFICATIONCONSUMERCOUNT,MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND,"browserNotification");
     $this->restartInactiveConsumer(MessageQueues::CONSUMER_COUNT_SINGLE,MessageQueues::CRONDELETERETRIEVE_STARTCOMMAND,"DeleteRetrieve");
     $this->restartInactiveConsumer(MessageQueues::UPDATE_SEEN_CONSUMER_COUNT,MessageQueues::UPDATESEEN_STARTCOMMAND,"UpdateSeen");
-
+    $this->restartInactiveConsumer(MessageQueues::PROFILE_CACHE_CONSUMER_COUNT,MessageQueues::PROFILE_CACHE_STARTCOMMAND,"ProfileCache Queue");
     //runs consumer to consume accumulated messages in queues on the second server if fallback status flag is set.
     if(MessageQueues::FALLBACK_STATUS==true)
     {
@@ -245,7 +262,9 @@ EOF;
         $delRetrieveConsumerObj->receiveMessage();   
         $updateSeenConsumerObj=new updateSeenConsumer('SECOND_SERVER',$messageCount);  //If $serverid='FIRST_SERVER', then 2nd param in Consumer constructor is not taken into account.
         $updateSeenConsumerObj->receiveMessage();
-
+        $profileCacheConsumerObj = new ProfileCacheConsumer('SECOND_SERVER', $messageCount);
+        $profileCacheConsumerObj->receiveMessage();
+        unset($profileCacheConsumerObj);
       }
     }    
   }
