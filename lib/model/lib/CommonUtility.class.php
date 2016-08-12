@@ -781,13 +781,14 @@ die;
 	* @inputs: $loggedIn,$module
 	* @return: $showChat
 	*/
-	public static function checkChatPanelCondition($loggedIn,$module, $action){
+	public static function checkChatPanelCondition($loggedIn,$module, $action,$activated){
 		$chatNotAvailModuleArr = ["membership","register","phone","social"];
         $chatNotAvailActioneArr = ["phoneVerificationPcDisplay","page500","404"];
 		$showChat = 1;
-		if(!$loggedIn)
+		if(!$loggedIn){
 			$showChat = 0;
-		else if(in_array($module, $chatNotAvailModuleArr) || in_array($action, $chatNotAvailActioneArr)){
+        }
+		else if(in_array($module, $chatNotAvailModuleArr) || in_array($action, $chatNotAvailActioneArr) || $activated != 'Y'){
 			$showChat = 0;
 		}
 		return $showChat;

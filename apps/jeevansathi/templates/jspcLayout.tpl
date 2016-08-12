@@ -3,7 +3,7 @@
 ~assign var=action value= $sf_context->getActionName()`
 ~assign var=subscription value= CommonFunction::getMembershipName($sf_request->getAttribute('profileid'))`
 ~if JsConstants::$jsChatFlag eq "1"`
-    ~assign var=showChat value= CommonUtility::checkChatPanelCondition($loggedIn,$module,$action)`
+    ~assign var=showChat value= CommonUtility::checkChatPanelCondition($loggedIn,$module,$action,$sf_request->getAttribute('activated'))`
 ~/if`
 <!DOCTYPE html>
 <head>
