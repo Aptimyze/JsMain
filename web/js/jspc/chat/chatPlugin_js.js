@@ -34,6 +34,8 @@ JsChat.prototype = {
     _contactStatusMapping: {},
     _loggingEnabledPlugin: false,
     _maxMsgLimit:100,
+    _rosterDeleteChatBoxMsg:"",
+
     _chatLoggerPlugin: function (msgOrObj) {
         if (this._loggingEnabledPlugin) {
             if (typeof (window.console) != 'undefined') {
@@ -106,6 +108,9 @@ JsChat.prototype = {
         if (arguments[1][0].contactStatusMapping) this._contactStatusMapping = arguments[1][0].contactStatusMapping;
         if (arguments[1][0].maxMsgLimit) {
             this._maxMsgLimit = arguments[1][0].maxMsgLimit;
+        }
+        if (arguments[1][0].rosterDeleteChatBoxMsg) {
+            this._rosterDeleteChatBoxMsg = arguments[1][0].rosterDeleteChatBoxMsg;
         }
     },
     //start:get screen height
@@ -1216,6 +1221,7 @@ JsChat.prototype = {
         var curElem = this,membership=getMembershipStatus();
         if ($('chat-box[user-id="' + userId + '"]').length != 0) {
             this._chatLoggerPlugin("in _updateChatPanelsBox for " + userId);
+            $('chat-box[user-id="' + userId + '"] #rosterDeleteMsg_'+ userId + '').remove();
             var chatBoxType = curElem._getChatBoxType(userId, newGroupId, "updateChatBoxType");
             curElem._setChatBoxInnerDiv(userId, chatBoxType,"chatBoxUpdate");
             curElem._enableChatTextArea(chatBoxType, userId, membership);
@@ -1761,6 +1767,16 @@ JsChat.prototype = {
             //this.storeMessagesInLocalHistory(selfJID, userId, newMsg, 'receive');
         }
     },
+    
+    //disable chat box on roster item deletion
+    _disableChatPanelsBox:function(userId){
+        if($('chat-box[user-id="' + userId + '"]').length != 0){
+            var curElem = this;
+            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="rosterDeleteMsg_'+userId+'">'+curElem._rosterDeleteChatBoxMsg+'</div>');
+            $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+        }
+    },
+
     //get count of minimized chat boxes with unread messages
     _onlineUserMsgMe: function () {
         var noOfInputs = 0;

@@ -446,6 +446,7 @@ function invokePluginManagelisting(listObject, key, user_id) {
         if (typeof user_id != "undefined") {
             //chatLoggerPC("deleting node from roster-" + user_id);
             objJsChat._removeFromListing('delete_node', listObject);
+            objJsChat._disableChatPanelsBox(user_id);
         }
     }
 }
@@ -988,7 +989,8 @@ $(document).ready(function () {
             listingNodesLimit: chatConfig.Params[device].groupWiseNodesLimit,
             groupBasedChatBox: chatConfig.Params[device].groupBasedChatBox,
             contactStatusMapping: chatConfig.Params[device].contactStatusMapping,
-            maxMsgLimit:chatConfig.Params[device].maxMsgLimit
+            maxMsgLimit:chatConfig.Params[device].maxMsgLimit,
+            rosterDeleteChatBoxMsg:chatConfig.Params[device].rosterDeleteChatBoxMsg
         });
         
         objJsChat.onEnterToChatPreClick = function () {
