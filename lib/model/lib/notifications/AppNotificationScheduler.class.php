@@ -68,9 +68,9 @@ class AppNotificationScheduler extends NotificationScheduler
 			  else
 				$insertData[$k]['TITLE']=$v['TITLE'];
 
-				$dataSet =$insertData[$k];	
+				/*$dataSet =$insertData[$k];	
 			  	$this->insert($dataSet);
-				unset($dataSet);		
+				unset($dataSet);*/		
 		  }
 		  $scheduledAppNotificationsObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
 		  $scheduledAppNotificationsObj->insert($insertData);
@@ -80,23 +80,6 @@ class AppNotificationScheduler extends NotificationScheduler
   public function insert($dataSet){
         $producerObj = new JsNotificationProduce();
         if(is_array($dataSet))
-        //foreach ($notificationData as $key => $val){
-		/*
-            unset($paramsArr);
-	    $paramsArr['PROFILEID']=$val['SELF']['PROFILEID'];
-	    $paramsArr['NOTIFICATION_KEY']=$val['NOTIFICATION_KEY'];
-	    $paramsArr['MESSAGE']=$val['NOTIFICATION_MESSAGE'];
-	    $paramsArr['LANDING_SCREEN']=$val['LANDING_SCREEN'];
-	    $paramsArr['OS_TYPE']=$val['OS_TYPE'];
-	    $paramsArr['PRIORITY']=$val['PRIORITY'];
-	    $paramsArr['COLLAPSE_STATUS']=$val['COLLAPSE_STATUS'];
-	    $paramsArr['TTL']=$val['TTL'];
-	    $paramsArr['COUNT']=$val['COUNT'];
-	    $paramsArr['MSG_ID']=$val['MSG_ID'];
-	    $paramsArr['SENT']='N';  
-	    $paramsArr['PHOTO_URL']=$val['PHOTO_URL'];
-	    $paramsArr['TITLE']=$val['NOTIFICATION_MESSAGE_TITLE'];
-		*/
 	    if($producerObj->getRabbitMQServerConnected()){
 		$msgdata = FormatNotification::formatPushNotification($dataSet,$dataSet["OS_TYPE"],true);
 		$producerObj->sendMessage($msgdata);
@@ -105,7 +88,6 @@ class AppNotificationScheduler extends NotificationScheduler
 		$str = "\nRabbitmq Notification Error Alert: Rabbitmq Server is down.";
 		RabbitmqHelper::sendAlert($str,"browserNotification");
 	    }
-        //}
     }
 }
 ?>
