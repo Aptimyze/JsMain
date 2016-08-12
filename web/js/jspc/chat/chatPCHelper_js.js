@@ -936,7 +936,7 @@ function globalSleep(milliseconds) {
 $(document).ready(function () {
     //chatLoggerPC("User");
     //chatLoggerPC(loggedInJspcUser);
-    if(loggedInJspcUser)
+    if(typeof loggedInJspcUser!= "undefined")
         checkNewLogin(loggedInJspcUser);
     var checkDiv = $("#chatOpenPanel").length;
     if (showChat && (checkDiv != 0)) {
