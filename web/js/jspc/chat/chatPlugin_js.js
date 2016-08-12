@@ -1232,7 +1232,8 @@ JsChat.prototype = {
             checkSum = $("chat-box[user-id='" + userId + "'").attr("data-checks"),
             groupId = $("chat-box[user-id='" + userId + "'").attr("group-id"),
             user_name = $(".chatlist li[id='" + userId + "_" + groupId + "'] div").html(),
-            user_jid = $("chat-box[user-id='" + userId + "'").attr("data-jid");
+            user_jid = $("chat-box[user-id='" + userId + "'").attr("data-jid"),
+            hisStatus = $("chat-box[user-id='" + userId + "'").attr("his-status");
         var nick;
         if (checkSum) {
             nick = nick + "|" + checkSum;
@@ -1242,15 +1243,18 @@ JsChat.prototype = {
             console.log("setting moreHistory_");
             $("#moreHistory_"+userId).val("1");
             if(typeof operation == "undefined" || operation != "chatBoxUpdate"){
-                //fetch msg history
-                getChatHistory({
-                    "extraParams": {
-                        "from": getConnectedUserJID(),
-                        "to": user_jid,
-                        "to_checksum": checkSum,
-                        "from_checksum": self_checksum
-                    }
-                },"first_history");
+                if(hisStatus == undefined && hisStatus != "not"){
+                    console.log("ankita_get hisStatus");
+                    //fetch msg history
+                    getChatHistory({
+                        "extraParams": {
+                            "from": getConnectedUserJID(),
+                            "to": user_jid,
+                            "to_checksum": checkSum,
+                            "from_checksum": self_checksum
+                        }
+                    },"first_history");
+                }
             }
         }
         else{
