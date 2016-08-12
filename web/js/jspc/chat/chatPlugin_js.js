@@ -1429,7 +1429,7 @@ JsChat.prototype = {
             break;
         case curElem._contactStatusMapping["pog_interest_accepted"]["key"]:
             $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sentDiv,#restrictMessgTxt,#acceptTxt").remove();
-            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="fullwid pos-rel mt10 color5 txtc fl">Interest Accepted continue chat</div>');
+            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="fullwid pos-rel mt10 color5 txtc fl" id="acceptRec">Interest Accepted continue chat</div>');
             //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
             break;
         case curElem._contactStatusMapping["pog_interest_declined"]["key"]:
@@ -1815,10 +1815,10 @@ JsChat.prototype = {
     _disableChatPanelsBox:function(userId){
         var curElem = this;
         if($('chat-box[user-id="' + userId + '"]').length != 0){
-            if($('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage #acceptInterest').length == 0){
+            if($('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage #acceptRec').length == 0){
                 console.log("disabling","ankita1");
                 setTimeout(function(){
-                    if($('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage #acceptInterest').length == 0){
+                    if($('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage #acceptRec').length == 0){
                        console.log("disabling","ankita2");
                         var found = false;
                         $.each(curElem._rosterGroups,function(key,groupId){
