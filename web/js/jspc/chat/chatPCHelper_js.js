@@ -936,7 +936,8 @@ function globalSleep(milliseconds) {
 $(document).ready(function () {
     //chatLoggerPC("User");
     //chatLoggerPC(loggedInJspcUser);
-    checkNewLogin(loggedInJspcUser);
+    if(loggedInJspcUser)
+        checkNewLogin(loggedInJspcUser);
     var checkDiv = $("#chatOpenPanel").length;
     if (showChat && (checkDiv != 0)) {
         var chatLoggedIn = readCookie('chatAuth');
