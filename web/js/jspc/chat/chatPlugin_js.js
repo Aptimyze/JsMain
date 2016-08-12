@@ -1032,7 +1032,7 @@ JsChat.prototype = {
             curElem._appendChatBox(username, status, jid, pcheckSum, groupId);
             $(originalElem).remove();
             $("chat-box[user-id='" + username + "'] .chatMessage").html("");
-            curElem._postChatPanelsBox(username);
+            //curElem._postChatPanelsBox(username);
             $("chat-box[user-id='" + username + "'] .chatMessage").html(chatHtml);
             $(this).closest(".extraChatList").remove();
             curElem._scrollUp($('chat-box[user-id="' + username + '"]'), "297px","noAnimate");
