@@ -1083,11 +1083,11 @@ JsChat.prototype = {
     },
     //append chat box on page
     _appendChatBox: function (userId, status, jid, pcheckSum, groupId,hisStatus) {
-        var strHtm = '<chat-box group-id="' + groupId + '" pos-state="open" data-paidInitiated="false" data-jid="' + jid + '" status-user="' + status + '" user-id="' + userId + '" data-checks="' + pcheckSum + ';
+        var strHtm = '<chat-box group-id="' + groupId + '" pos-state="open" data-paidInitiated="false" data-jid="' + jid + '" status-user="' + status + '" user-id="' + userId + '" data-checks="' + pcheckSum;
         if(hisStatus == "noHis"){
             strHtm += 'his-status="not"';
         }
-        strHtm +='></chat-box>';
+        strHtm += '></chat-box>';
         console.log('final str in _appendChatBox',strHtm);
         $("#chatBottomPanel").prepend(strHtm);
         
