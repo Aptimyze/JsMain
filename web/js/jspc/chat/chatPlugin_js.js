@@ -1029,10 +1029,11 @@ JsChat.prototype = {
             pcheckSum = $('chat-box[user-id="' + username + '"]').attr("data-checks"),
                 groupId = $('chat-box[user-id="' + username + '"]').attr("group-id");
                 curElem._changeLocalStorage("remove",username,"","");
-            curElem._appendChatBox(username, status, jid, pcheckSum, groupId);
+            //$(originalElem).clone().appendTo("body");
+            curElem._appendChatBox(username, status, jid, pcheckSum, groupId,"noHis");
             $(originalElem).remove();
             $("chat-box[user-id='" + username + "'] .chatMessage").html("");
-            curElem._postChatPanelsBox(username);
+            //curElem._postChatPanelsBox(username);
             $("chat-box[user-id='" + username + "'] .chatMessage").html(chatHtml);
             $(this).closest(".extraChatList").remove();
             curElem._scrollUp($('chat-box[user-id="' + username + '"]'), "297px","noAnimate");
@@ -1081,8 +1082,15 @@ JsChat.prototype = {
         }
     },
     //append chat box on page
-    _appendChatBox: function (userId, status, jid, pcheckSum, groupId) {
-        $("#chatBottomPanel").prepend('<chat-box group-id="' + groupId + '" pos-state="open" data-paidInitiated="false" data-jid="' + jid + '" status-user="' + status + '" user-id="' + userId + '" data-checks="' + pcheckSum + '"></chat-box>');
+    _appendChatBox: function (userId, status, jid, pcheckSum, groupId,hisStatus) {
+        var strHtm = '<chat-box group-id="' + groupId + '" pos-state="open" data-paidInitiated="false" data-jid="' + jid + '" status-user="' + status + '" user-id="' + userId + '" data-checks="' + pcheckSum + ';
+        if(hisStatus == "noHis"){
+            strHtm += 'his-status="not"';
+        }
+        strHtm +='></chat-box>';
+        console.log('final str in _appendChatBox',strHtm);
+        $("#chatBottomPanel").prepend(strHtm);
+        
     },
     //get group id from opened chat box if exists for unblock
     _fetchChatBoxGroupID: function (userId) {
