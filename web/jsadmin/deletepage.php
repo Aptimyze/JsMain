@@ -1,7 +1,7 @@
 <?php
 include_once("connect.inc");
 include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
-require_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 if(authenticated($cid))
 {
@@ -41,7 +41,18 @@ if(authenticated($cid))
 				$res_act = mysql_query_decide($sql_act) or die(mysql_error_js());
 				$row_act = mysql_fetch_array($res_act);
 				//added by sriram.
-				
+				$profileObj = new LoggedInProfile('',$pid);
+				$profileObj->getDetail('', '', '*');
+				$pictureServiceObj = new PictureService($profileObj);
+				$PICTURE_FOR_SCREEN_NEW = new NonScreenedPicture();
+				$whereCondition["PROFILEID"] = $pid;
+				$pics=$PICTURE_FOR_SCREEN_NEW->get($whereCondition);
+				foreach($pics as $k=>$v)
+				{
+					$pictureid = $v['PICTUREID'];
+					$pictureServiceObj->deletePhoto($pictureid,$profileid);
+				}
+						
 				$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
 				$jprofileUpdateObj->updateJProfileForArchive($pid);
 						
