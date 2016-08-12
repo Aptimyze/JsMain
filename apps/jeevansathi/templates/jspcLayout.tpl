@@ -3,7 +3,7 @@
 ~assign var=action value= $sf_context->getActionName()`
 ~assign var=subscription value= CommonFunction::getMembershipName($sf_request->getAttribute('profileid'))`
 ~if JsConstants::$jsChatFlag eq "1"`
-    ~assign var=showChat value= CommonUtility::checkChatPanelCondition($loggedIn,$module,$action)`
+    ~assign var=showChat value= CommonUtility::checkChatPanelCondition($loggedIn,$module,$action,$sf_request->getAttribute('activated'))`
 ~/if`
 <!DOCTYPE html>
 <head>
@@ -101,7 +101,7 @@
     <div id="clickHolderCE" onclick="javascript:updateClickHolderCE(false,event)" style="height:0px;width:0px">&nbsp;</div>
     <div id="clickHolder" onclick="javascript:updateClickHolder(false,event)" style="height:0px;width:0px" >&nbsp;</div><div id="commonOverlay" class="jspcOverlay js-overlay overlayZ disp-none"></div>
     <!--start:error layer-->
-<div class="pos_fix fullwid z6" style="background-color:#fdfdfd; display:none;" id="commonError">
+<div class="pos_fix fullwid z7" style="background-color:#fdfdfd; display:none;" id="commonError">
     <div class="container errwid2 pt10 pb10">
         <div class="fl">
             <i class="sprite2 erric1"></i>
