@@ -155,6 +155,7 @@ JsChat.prototype = {
                 curEle.handleNextPrevButtons("makeCloser");
             }
         }
+        $(curEle._chatBottomPanelID).show();
     },
     //start:minimize html
     minimizedPanelHTML: function () {
