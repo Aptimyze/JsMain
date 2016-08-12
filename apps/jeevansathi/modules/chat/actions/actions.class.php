@@ -61,7 +61,7 @@ class chatActions extends sfActions
 			$curlResult = curl_exec($ch);
 			curl_close($ch);
 			$result = json_decode($curlResult, true);
-			if ($result['username'] & !is_array($result["properties"])) {
+			if ($result['username'] && !is_array($result["properties"])) {
 				//User exists
 				$response['userStatus'] = "User exists";
 				$response['hash'] = $pass;
