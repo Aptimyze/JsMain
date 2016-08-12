@@ -1729,7 +1729,7 @@ JsChat.prototype = {
             'CHATID': uniqueId,
             'ID': ''
         };
-        this._chatLoggerPlugin("in _appendRecievedMessage");
+        console.log("in _appendRecievedMessage");
         //append received message in chatbox
         
         if (typeof message != "undefined" && message != "") {
