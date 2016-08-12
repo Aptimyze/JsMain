@@ -107,7 +107,7 @@ class JPROFILE
     {
         $fields = $this->getRelevantFields($fields);
         $bServedFromCache = false;
-
+        $this->totalQueryCount();
         if (ProfileCacheLib::getInstance()->isCached($criteria, $value, $fields)) {
             $result = ProfileCacheLib::getInstance()->get($criteria, $value, $fields, $extraWhereClause);
             //When processing extraWhereClause results could be false,
@@ -655,6 +655,15 @@ class JPROFILE
     private function logCacheConsumption()
     {
         $key = 'cacheConsumeCount'.date('Y-m-d');
+        JsMemcache::getInstance()->incrCount($key);
+
+        $key .= '::'.date('H');
+        JsMemcache::getInstance()->incrCount($key);
+    }
+
+    private function totalQueryCount()
+    {
+        $key = 'totalQueryCount'.date('Y-m-d');
         JsMemcache::getInstance()->incrCount($key);
 
         $key .= '::'.date('H');
