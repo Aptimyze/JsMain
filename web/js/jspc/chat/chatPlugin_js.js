@@ -680,7 +680,7 @@ JsChat.prototype = {
         var selfJID = getConnectedUserJID(),
             receiverID = $(elem).attr("data-jid");
         var that = this;
-        if(typeof msgParams!= "undefined"){
+        if(typeof msgParams == "undefined"){
             $(elem).find(".received").each(function () {
                 var msg_id = $(this).attr("data-msgid");
                 var msgObj = {
