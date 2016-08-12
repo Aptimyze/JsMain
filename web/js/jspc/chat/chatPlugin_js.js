@@ -674,25 +674,39 @@ JsChat.prototype = {
         });
         curEle._handleUnreadMessages(elem);
     },
-    //handle unread messages
-    _handleUnreadMessages: function (elem) {
+    //handle unread messages or mark specified message as read
+    _handleUnreadMessages: function (elem,msgParams) {
         //handle received and unread messages in chatbox
         var selfJID = getConnectedUserJID(),
             receiverID = $(elem).attr("data-jid");
         var that = this;
-        $(elem).find(".received").each(function () {
-            var msg_id = $(this).attr("data-msgid");
-            var msgObj = {
-                "from": selfJID,
-                "to": receiverID,
-                "msg_id": msg_id,
-                "msg_state": "receiver_received_read"
-            };
-            $(this).removeClass("received").addClass("received_read");
-            that._chatLoggerPlugin("marking msg as read");
-            that._chatLoggerPlugin(msgObj);
-            invokePluginReceivedMsgHandler(msgObj);
-        });
+        if(typeof msgParams!= "undefined"){
+            $(elem).find(".received").each(function () {
+                var msg_id = $(this).attr("data-msgid");
+                var msgObj = {
+                    "from": selfJID,
+                    "to": receiverID,
+                    "msg_id": msg_id,
+                    "msg_state": "receiver_received_read"
+                };
+                $(this).removeClass("received").addClass("received_read");
+                that._chatLoggerPlugin("marking msg as read");
+                that._chatLoggerPlugin(msgObj);
+                invokePluginReceivedMsgHandler(msgObj);
+            });
+        }
+        else{
+            if(msgParams["msg_id"]){
+                var msgObj = {
+                    "from": selfJID,
+                    "to": receiverID,
+                    "msg_id": msgParams["msg_id"],
+                    "msg_state": "receiver_received_read"
+                };
+                $(this).removeClass("received").addClass("received_read");
+                invokePluginReceivedMsgHandler(msgObj);
+            }
+        }
         delete that;
     },
     //bind clicking minimize icon
@@ -1736,13 +1750,17 @@ JsChat.prototype = {
             var appendMsg = true;
             //if chat box is not opened
             if ($('chat-box[user-id="' + userId + '"]').length == 0) {
-                appendMsg = false;
+                appendMsg = false; //as this msg already exists in history
                 $(".profileIcon[id^='" + userId + "']")[0].click();
             }
             curEle._enableChatAfterPaidInitiates(userId);
             if(appendMsg == true){
                 //adding message in chat area
                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="clearfix"><div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText received" data-msgid=' + uniqueId + '>' + message + '</div></div></div>');
+            }
+            else{
+                //mark this msg read on sender side
+                curEle._handleUnreadMessages($('chat-box[user-id="' + userId + '"]'),{"msg_id":uniqueId});
             }
             //check for 3 messages and remove binding
             if ($('chat-box[user-id="' + userId + '"] .chatMessage').hasClass("restrictMessg2")) {
