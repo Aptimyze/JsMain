@@ -61,7 +61,7 @@ class chatActions extends sfActions
 			$curlResult = curl_exec($ch);
 			curl_close($ch);
 			$result = json_decode($curlResult, true);
-			if ($result['username'] || $result['user']['username']) {
+			if ($result['username'] & !is_array($result["properties"])) {
 				//User exists
 				$response['userStatus'] = "User exists";
 				$response['hash'] = $pass;
@@ -69,50 +69,10 @@ class chatActions extends sfActions
 			} else {
 				//create user
 				$response['userStatus'] = "Added";
-				$url = JsConstants::$openfireConfig['HOST'] . ":" . JsConstants::$openfireConfig['PORT'] . "/plugins/restapi/v1/users/";
-				//$url = "http://localhost:9090/plugins/restapi/v1/users/";
 				$profileImporterObj = new Chat();
 				$profileImporterObj->addNewProfile($username);
 				$apiResponseHandlerObj->setHttpArray(ChatEnum::$addedToQueue);
-				/*
-				$data = array("username" => $username, "password" => $pass);
-				$jsonData = json_encode($data);
-
-				$ch = curl_init();
-				curl_setopt($ch, CURLOPT_URL, $url);
-				curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
-				curl_setopt($ch, CURLOPT_TIMEOUT, 4);
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-				curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
-
-				$headers = array();
-				$headers[] = 'Authorization: ' . JsConstants::$openfireRestAPIKey;
-				$headers[] = 'Accept: application/json';
-				$headers[] = 'Content-Type: application/json';
-
-				curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-				$curlResult = curl_exec($ch);
-
-				if (curl_getinfo($ch, CURLINFO_HTTP_CODE) == '201') {
-					$response['userStatus'] = "New user created";
-					$apiResponseHandlerObj->setHttpArray(ChatEnum::$newUserCreated);
-				} elseif (curl_getinfo($ch, CURLINFO_HTTP_CODE) == '409') {
-					$response['userStatus'] = "User Exists";
-					$apiResponseHandlerObj->setHttpArray(ChatEnum::$userCreationError);
-				} else {
-					$result = json_decode($curlResult, true);
-					$reponse['exception'] = $result['exception'];
-					$apiResponseHandlerObj->setHttpArray(ChatEnum::$error);
-				}
-				curl_close($ch);
-				*/
 			}
-			//Encrypt Password
-			//$hash = EncryptPassword::cryptoJsAesEncrypt("chat", $pass);
-            //$hash = $pass;
-			//$response['hash'] = $hash;
-			//$response['hash'] = $pass;
 		} else {
 			$response = "Logged Out Profile";
 			$apiResponseHandlerObj->setHttpArray(ChatEnum::$loggedOutProfile);

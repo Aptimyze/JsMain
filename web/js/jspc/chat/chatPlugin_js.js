@@ -637,7 +637,7 @@ JsChat.prototype = {
         
     },
     //scrolling up chat box
-    _scrollUp: function (elem, btmValue) {
+    _scrollUp: function (elem, btmValue,type) {
         var curEle = this;
         elem.animate({
             bottom: btmValue
@@ -650,9 +650,16 @@ JsChat.prototype = {
             elem.find(".chatBoxBar").removeClass("cursp");
             elem.find(".downBarPic").removeClass("downBarPicMin");
             elem.find(".downBarUserName").removeClass("downBarUserNameMin");
+            console.log("type in _scrollUp",type);
             if($(elem).attr("user-id") != undefined){
-                curEle._scrollToBottom($(elem).attr("user-id"));
+                if(type == undefined){
+                    curEle._scrollToBottom($(elem).attr("user-id"));
+                } 
+                else if(type == "noAnimate"){
+                    curEle._scrollToBottom($(elem).attr("user-id"),type);
+                }
             }
+            
             $(elem).attr("pos-state", "open");
         });
         curEle._handleUnreadMessages(elem);
@@ -917,7 +924,7 @@ JsChat.prototype = {
                     }
                     var height = $($(superParent).find(".talkText")[$(superParent).find(".talkText").length - 1]).height();
                     $($(superParent).find(".talkText")[$(superParent).find(".talkText").length - 1]).next().css("margin-top", height);
-                    _this._scrollToBottom(userId,100);
+                    _this._scrollToBottom(userId);
                     //fire send chat query and return unique id
                     setTimeout(function () {
                         out = 1;
@@ -1028,9 +1035,8 @@ JsChat.prototype = {
             curElem._postChatPanelsBox(username);
             $("chat-box[user-id='" + username + "'] .chatMessage").html(chatHtml);
             $(this).closest(".extraChatList").remove();
-            setTimeout(function () {
-                curElem._scrollUp($('chat-box[user-id="' + username + '"]'), "297px");
-            }, 700);
+            curElem._scrollUp($('chat-box[user-id="' + username + '"]'), "297px","noAnimate");
+            
             //adding data in extra popup 
             var len = $("chat-box").length,
                 value = parseInt($(".extraNumber").text().split("+")[1]),
@@ -1588,29 +1594,18 @@ JsChat.prototype = {
         this._postChatPanelsBox(userId);
         this._bindSendChat(userId);
     },
-    _scrollToBottom: function (userId, extra) {
-        /*var divLen = 0;
-        if (typeof extra != "undefined") {
-           divLen += extra;
-        }
-        $('chat-box[user-id="' + userId + '"] .rightBubble').each(function (index, element) {
-            divLen += $(this).height();
-        });
-        console.log("first-"+divLen);
-        var s=0;
-        $('chat-box[user-id="' + userId + '"] .leftBubble').each(function (index, element) {
-            divLen += $(this).height();
-            s+=$(this).height();
-        });
-        console.log("second-"+s);
-        console.log("total-"+divLen);*/
-        //var elem = $('chat-box[user-id="' + userId + '"]');
-        console.log(document.getElementById("chatMessage_"+userId));
+    _scrollToBottom: function (userId,type) {
+        console.log("type in _scrollToBottom",type);
         var len = document.getElementById("chatMessage_"+userId).scrollHeight;
-        
-        $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
-            scrollTop: len
-        }, 1000);
+        if(type == undefined) {
+            $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
+                scrollTop: len
+            }, 1000);   
+        } else if(type == "noAnimate") {
+            $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
+                scrollTop: len
+            }, 0);
+        }
     },
     //append chat history in chat box
     _appendChatHistory: function (selfJID, otherJID, communication,requestType) {
