@@ -991,7 +991,8 @@ $(document).ready(function () {
             contactStatusMapping: chatConfig.Params[device].contactStatusMapping,
             maxMsgLimit:chatConfig.Params[device].maxMsgLimit,
             rosterDeleteChatBoxMsg:chatConfig.Params[device].rosterDeleteChatBoxMsg,
-            rosterGroups:chatConfig.Params[device].rosterGroups
+            rosterGroups:chatConfig.Params[device].rosterGroups,
+            checkForDefaultEoiMsg:chatConfig.Params[device].checkForDefaultEoiMsg
         });
         
         objJsChat.onEnterToChatPreClick = function () {

@@ -36,6 +36,7 @@ JsChat.prototype = {
     _maxMsgLimit:100,
     _rosterDeleteChatBoxMsg:"",
     _rosterGroups:[],
+    _checkForDefaultEoiMsg:false,
 
     _chatLoggerPlugin: function (msgOrObj) {
         if (this._loggingEnabledPlugin) {
@@ -115,6 +116,9 @@ JsChat.prototype = {
         }
         if (arguments[1][0].rosterGroups) {
             this._rosterGroups = arguments[1][0].rosterGroups;
+        }
+        if (arguments[1][0].checkForDefaultEoiMsg) {
+            this._checkForDefaultEoiMsg = arguments[1][0].checkForDefaultEoiMsg;
         }
     },
     //start:get screen height
@@ -1650,19 +1654,26 @@ JsChat.prototype = {
     //append chat history in chat box
     _appendChatHistory: function (selfJID, otherJID, communication,requestType) {
         //console.log("self message");
-
         console.log("_appendChatHistory"+requestType);
         var self_id = selfJID.split("@")[0],
             other_id = otherJID.split("@")[0],
             latestMsgId="",
-            removeFreeMemMsg=false;
+            removeFreeMemMsg=false,
+            other_username,
+            defaultEoiSentMsg,
+            defaultEoiRecMsg;
         var curElem = this;
-        if ($('chat-box[user-id="' + other_id + '"]').length != 0) {      
+        if ($('chat-box[user-id="' + other_id + '"]').length != 0) { 
+            if(curElem._checkForDefaultEoiMsg == true){
+                other_username =  $('chat-box[user-id="' + other_id + '"] .downBarUserName').html();    
+                defaultEoiSentMsg = "Jeevansathi member with profile id "+ self_username +" likes your profile. Please 'Accept' to show that you like this profile.";
+                defaultEoiRecMsg = "Jeevansathi member with profile id "+ other_username +" likes your profile. Please 'Accept' to show that you like this profile.";
+            }
             $.each(communication, function (key, logObj) {
                 latestMsgId = logObj["ID"];
                 //console.log(logObj);
                 if (parseInt(logObj["SENDER"]) == self_id) {
-                    if(logObj["MESSAGE"].indexOf("likes your profile. Please 'Accept' to show that you like this profile") == -1 && logObj["MESSAGE"].indexOf("Please 'accept' my interest if you want me to contact you further") == -1){
+                    if(curElem._checkForDefaultEoiMsg == false || logObj["MESSAGE"].indexOf(defaultEoiSentMsg) == -1){
                         //append self sent message
                         $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["CHATID"] + '" class="talkText" data-msgid='+logObj["CHATID"]+'>' + logObj["MESSAGE"] + '</div><i class="nchatspr nchatic_9 fr vertM"></i></div>').promise().done(function(){
                                 var len = $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["CHATID"]).height();
@@ -1672,7 +1683,7 @@ JsChat.prototype = {
                     }
                 } else if (parseInt(logObj["SENDER"]) == other_id) {
                     //check for default eoi message,remove after monday JSI release
-                    if(logObj["MESSAGE"].indexOf("likes your profile. Please 'Accept' to show that you like this profile") == -1 && logObj["MESSAGE"].indexOf("Please 'accept' my interest if you want me to contact you further") == -1){
+                    if(curElem._checkForDefaultEoiMsg == false || logObj["MESSAGE"].indexOf(defaultEoiRecMsg) == -1){
                         //console.log("done"+requestType+removeFreeMemMsg);
                         if(removeFreeMemMsg == false){
                             //console.log("remove free msg");
