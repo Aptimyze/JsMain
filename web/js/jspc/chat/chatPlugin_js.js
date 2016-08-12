@@ -1280,6 +1280,9 @@ JsChat.prototype = {
                         }
                     },"first_history");
                 }
+                else if(hisStatus == "not"){
+                    $("chat-box[user-id='" + userId + "'").removeAttr("his-status");
+                }
             }
         }
         else{
