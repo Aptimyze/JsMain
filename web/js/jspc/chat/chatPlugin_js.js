@@ -1244,6 +1244,7 @@ JsChat.prototype = {
         var curElem = this,membership=getMembershipStatus();
         if ($('chat-box[user-id="' + userId + '"]').length != 0) {
             this._chatLoggerPlugin("in _updateChatPanelsBox for " + userId);
+            console.log("in _updateChatPanelsBox");
             $('chat-box[user-id="' + userId + '"] #rosterDeleteMsg_'+ userId + '').remove();
             var chatBoxType = curElem._getChatBoxType(userId, newGroupId, "updateChatBoxType");
             curElem._setChatBoxInnerDiv(userId, chatBoxType,"chatBoxUpdate");
@@ -1813,22 +1814,26 @@ JsChat.prototype = {
         var curElem = this;
         if($('chat-box[user-id="' + userId + '"]').length != 0){
             if($('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage #acceptInterest').length == 0){
+                console.log("disabling","ankita1");
                 setTimeout(function(){
-                    var found = false;
-                    $.each(curElem._rosterGroups,function(key,groupId){
-                        if($(".chatlist li[id='" + userId + "_" + groupId + "']").length != 0){
-                            found = true;
-                        }
-                        if(found == false){
-                            if($('chat-box[user-id="' + userId + '"]').length != 0){
-                                $('chat-box[user-id="' + userId + '"] .chatMessage').html("");
-                                if($('chat-box[user-id="' + userId + '"] #rosterDeleteMsg_'+ userId + '').length == 0)
-                                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="rosterDeleteMsg_'+userId+'" class="pt20 txtc color5">'+curElem._rosterDeleteChatBoxMsg+'</div>');
-                                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+                    if($('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage #acceptInterest').length == 0){
+                       console.log("disabling","ankita2");
+                        var found = false;
+                        $.each(curElem._rosterGroups,function(key,groupId){
+                            if($(".chatlist li[id='" + userId + "_" + groupId + "']").length != 0){
+                                found = true;
                             }
-                        }
-                    });  
-                },2000);
+                            if(found == false){
+                                if($('chat-box[user-id="' + userId + '"]').length != 0){
+                                    $('chat-box[user-id="' + userId + '"] .chatMessage').html("");
+                                    if($('chat-box[user-id="' + userId + '"] #rosterDeleteMsg_'+ userId + '').length == 0)
+                                        $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="rosterDeleteMsg_'+userId+'" class="pt20 txtc color5">'+curElem._rosterDeleteChatBoxMsg+'</div>');
+                                    $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+                                }
+                            }
+                        });
+                    }  
+                },1000);
             }
         }
     },
