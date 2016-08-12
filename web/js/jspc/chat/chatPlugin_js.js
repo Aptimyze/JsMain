@@ -1998,7 +1998,7 @@ JsChat.prototype = {
             if (group == chatConfig.Params["categoryNames"]["Interest Sent"]) {
                 str += '<div class="nchatbg-grey lh50 brdr-0 txtc colrw"';
             } else {
-                str += '<button class="hBtn bg_pink lh50 brdr-0 txtc colrw cursp"';
+                str += '<button class="hBtn bg_pink lh50 brdr-0 txtc colrw cursp f12 fontlig"';
             }
             str += 'id="' + userId + '_' + v.action + '"';
             str += 'data-pCheckSum="' + pCheckSum + '"';
