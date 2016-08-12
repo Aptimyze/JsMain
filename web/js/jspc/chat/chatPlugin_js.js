@@ -35,6 +35,8 @@ JsChat.prototype = {
     _loggingEnabledPlugin: false,
     _maxMsgLimit:100,
     _rosterDeleteChatBoxMsg:"",
+    _rosterGroups:[],
+    _checkForDefaultEoiMsg:false,
 
     _chatLoggerPlugin: function (msgOrObj) {
         if (this._loggingEnabledPlugin) {
@@ -111,6 +113,12 @@ JsChat.prototype = {
         }
         if (arguments[1][0].rosterDeleteChatBoxMsg) {
             this._rosterDeleteChatBoxMsg = arguments[1][0].rosterDeleteChatBoxMsg;
+        }
+        if (arguments[1][0].rosterGroups) {
+            this._rosterGroups = arguments[1][0].rosterGroups;
+        }
+        if (arguments[1][0].checkForDefaultEoiMsg) {
+            this._checkForDefaultEoiMsg = arguments[1][0].checkForDefaultEoiMsg;
         }
     },
     //start:get screen height
@@ -670,25 +678,39 @@ JsChat.prototype = {
         });
         curEle._handleUnreadMessages(elem);
     },
-    //handle unread messages
-    _handleUnreadMessages: function (elem) {
+    //handle unread messages or mark specified message as read
+    _handleUnreadMessages: function (elem,msgParams) {
         //handle received and unread messages in chatbox
         var selfJID = getConnectedUserJID(),
             receiverID = $(elem).attr("data-jid");
         var that = this;
-        $(elem).find(".received").each(function () {
-            var msg_id = $(this).attr("data-msgid");
-            var msgObj = {
-                "from": selfJID,
-                "to": receiverID,
-                "msg_id": msg_id,
-                "msg_state": "receiver_received_read"
-            };
-            $(this).removeClass("received").addClass("received_read");
-            that._chatLoggerPlugin("marking msg as read");
-            that._chatLoggerPlugin(msgObj);
-            invokePluginReceivedMsgHandler(msgObj);
-        });
+        if(typeof msgParams == "undefined"){
+            $(elem).find(".received").each(function () {
+                var msg_id = $(this).attr("data-msgid");
+                var msgObj = {
+                    "from": selfJID,
+                    "to": receiverID,
+                    "msg_id": msg_id,
+                    "msg_state": "receiver_received_read"
+                };
+                $(this).removeClass("received").addClass("received_read");
+                that._chatLoggerPlugin("marking msg as read");
+                that._chatLoggerPlugin(msgObj);
+                invokePluginReceivedMsgHandler(msgObj);
+            });
+        }
+        else{
+            if(msgParams["msg_id"]){
+                var msgObj = {
+                    "from": selfJID,
+                    "to": receiverID,
+                    "msg_id": msgParams["msg_id"],
+                    "msg_state": "receiver_received_read"
+                };
+                $(this).removeClass("received").addClass("received_read");
+                invokePluginReceivedMsgHandler(msgObj);
+            }
+        }
         delete that;
     },
     //bind clicking minimize icon
@@ -1262,6 +1284,9 @@ JsChat.prototype = {
                         }
                     },"first_history");
                 }
+                else if(hisStatus == "not"){
+                    $("chat-box[user-id='" + userId + "'").removeAttr("his-status");
+                }
             }
         }
         else{
@@ -1629,19 +1654,26 @@ JsChat.prototype = {
     //append chat history in chat box
     _appendChatHistory: function (selfJID, otherJID, communication,requestType) {
         //console.log("self message");
-
         console.log("_appendChatHistory"+requestType);
         var self_id = selfJID.split("@")[0],
             other_id = otherJID.split("@")[0],
             latestMsgId="",
-            removeFreeMemMsg=false;
+            removeFreeMemMsg=false,
+            other_username,
+            defaultEoiSentMsg,
+            defaultEoiRecMsg;
         var curElem = this;
-        if ($('chat-box[user-id="' + other_id + '"]').length != 0) {      
+        if ($('chat-box[user-id="' + other_id + '"]').length != 0) { 
+            if(curElem._checkForDefaultEoiMsg == true){
+                other_username =  $('chat-box[user-id="' + other_id + '"] .downBarUserName').html();    
+                defaultEoiSentMsg = "Jeevansathi member with profile id "+ self_username +" likes your profile. Please 'Accept' to show that you like this profile.";
+                defaultEoiRecMsg = "Jeevansathi member with profile id "+ other_username +" likes your profile. Please 'Accept' to show that you like this profile.";
+            }
             $.each(communication, function (key, logObj) {
                 latestMsgId = logObj["ID"];
                 //console.log(logObj);
                 if (parseInt(logObj["SENDER"]) == self_id) {
-                    if(logObj["MESSAGE"].indexOf("likes your profile. Please 'Accept' to show that you like this profile") == -1 && logObj["MESSAGE"].indexOf("Please 'accept' my interest if you want me to contact you further") == -1){
+                    if(curElem._checkForDefaultEoiMsg == false || logObj["MESSAGE"].indexOf(defaultEoiSentMsg) == -1){
                         //append self sent message
                         $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["CHATID"] + '" class="talkText" data-msgid='+logObj["CHATID"]+'>' + logObj["MESSAGE"] + '</div><i class="nchatspr nchatic_9 fr vertM"></i></div>').promise().done(function(){
                                 var len = $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["CHATID"]).height();
@@ -1651,7 +1683,7 @@ JsChat.prototype = {
                     }
                 } else if (parseInt(logObj["SENDER"]) == other_id) {
                     //check for default eoi message,remove after monday JSI release
-                    if(logObj["MESSAGE"].indexOf("likes your profile. Please 'Accept' to show that you like this profile") == -1 && logObj["MESSAGE"].indexOf("Please 'accept' my interest if you want me to contact you further") == -1){
+                    if(curElem._checkForDefaultEoiMsg == false || logObj["MESSAGE"].indexOf(defaultEoiRecMsg) == -1){
                         //console.log("done"+requestType+removeFreeMemMsg);
                         if(removeFreeMemMsg == false){
                             //console.log("remove free msg");
@@ -1725,18 +1757,25 @@ JsChat.prototype = {
             'CHATID': uniqueId,
             'ID': ''
         };
-        this._chatLoggerPlugin("in _appendRecievedMessage");
+        console.log("in _appendRecievedMessage");
         //append received message in chatbox
         
         if (typeof message != "undefined" && message != "") {
+            var appendMsg = true;
             //if chat box is not opened
             if ($('chat-box[user-id="' + userId + '"]').length == 0) {
+                appendMsg = false; //as this msg already exists in history
                 $(".profileIcon[id^='" + userId + "']")[0].click();
             }
             curEle._enableChatAfterPaidInitiates(userId);
-
-            //adding message in chat area
-            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="clearfix"><div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText received" data-msgid=' + uniqueId + '>' + message + '</div></div></div>');
+            if(appendMsg == true){
+                //adding message in chat area
+                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="clearfix"><div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText received" data-msgid=' + uniqueId + '>' + message + '</div></div></div>');
+            }
+            else{
+                //mark this msg read on sender side
+                curEle._handleUnreadMessages($('chat-box[user-id="' + userId + '"]'),{"msg_id":uniqueId});
+            }
             //check for 3 messages and remove binding
             if ($('chat-box[user-id="' + userId + '"] .chatMessage').hasClass("restrictMessg2")) {
                 $('chat-box[user-id="' + userId + '"] .chatMessage').find("#restrictMessgTxt").remove();
@@ -1771,10 +1810,26 @@ JsChat.prototype = {
     
     //disable chat box on roster item deletion
     _disableChatPanelsBox:function(userId){
+        var curElem = this;
         if($('chat-box[user-id="' + userId + '"]').length != 0){
-            var curElem = this;
-            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="rosterDeleteMsg_'+userId+'">'+curElem._rosterDeleteChatBoxMsg+'</div>');
-            $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+            if($('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage #acceptInterest').length == 0){
+                setTimeout(function(){
+                    var found = false;
+                    $.each(curElem._rosterGroups,function(key,groupId){
+                        if($(".chatlist li[id='" + userId + "_" + groupId + "']").length != 0){
+                            found = true;
+                        }
+                        if(found == false){
+                            if($('chat-box[user-id="' + userId + '"]').length != 0){
+                                $('chat-box[user-id="' + userId + '"] .chatMessage').html("");
+                                if($('chat-box[user-id="' + userId + '"] #rosterDeleteMsg_'+ userId + '').length == 0)
+                                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="rosterDeleteMsg_'+userId+'" class="pt20 txtc color5">'+curElem._rosterDeleteChatBoxMsg+'</div>');
+                                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+                            }
+                        }
+                    });  
+                },2000);
+            }
         }
     },
 
