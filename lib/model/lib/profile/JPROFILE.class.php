@@ -651,7 +651,7 @@ class JPROFILE
     
     public function getActiveProfiles($totalScript=1,$currentScript=0,$lastLoginWithIn='6 months',$limitProfiles=0){
         return self::$objProfileMysql->getActiveProfiles($totalScript,$currentScript,$lastLoginWithIn,$limitProfiles);
-
+    }
 
     private function logCacheConsumption()
     {
