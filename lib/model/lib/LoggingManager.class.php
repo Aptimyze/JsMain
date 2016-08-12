@@ -146,7 +146,7 @@ class LoggingManager
       $logData = $this->getLogData($exception,$isSymfony,$logArray);
       $logData['logType'] = $this->getLogType(LoggingEnums::LOG_ERROR);
 
-      if(LoggingConfig::getInstance()->debugStatus())
+      if(LoggingConfig::getInstance()->debugStatus($this->szLogPath))
       {
          foreach ($_SERVER as $key => $value) {
           $logData[$key] = $value;

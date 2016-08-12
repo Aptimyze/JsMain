@@ -15,7 +15,7 @@ class LoggingEnums
     const LOG_DEBUG = 1;
     const LOG_ERROR = 0;
     // 1 for Enabling config of modules, 0 for not
-    const CONFIG_ON = true;
+    const CONFIG_ON = false;
     // 1 for logging all modules in same file, 0 different
     const LOG_TOGETHER = false;
     const LOG_TRACE = false;
@@ -49,14 +49,14 @@ class LoggingEnums
     const TIME = "time";
     const UNIQUE_REQUEST_SUB_ID = "uniqueRequestSubId";
     // config array keys
-    const logging = 'logging';
-    const level = 'level';
-    const directory = 'directory';
-    const stackTrace = 'stackTrace';
+    const LOGGING = 'logging';
+    const LEVEL = 'level';
+    const DIRECTORY = 'directory';
+    const STACKTRACE = 'stackTrace';
     const RIFT = 'REQUEST_ID_FOR_TRACKING';
     const RAJX = 'RID_AJAX';
     const AJXRSI = 'AJAX_REQUEST_SUB_ID';
     const SEO = 'seo';
     const MYJS = 'myjs';
-    const HP = 'homepage';
+    const HOMEPAGE = 'homepage';
 }
