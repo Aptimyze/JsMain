@@ -53,7 +53,7 @@ $this->addOptions(array(
 			
 			//filter profiles based on notification count
 			if(in_array($this->notificationKey,NotificationEnums::$scheduledNotificationPriorityArr))
-				$filteredProfileDetails = $this->notificationSenderObj->filterProfilesBasedOnNotificationCount($profileDetails,$this->notificationKey);
+				$filteredProfileDetails = $this->notificationSenderObj->filterProfilesBasedOnNotificationCountNew($profileDetails,$this->notificationKey);
 			else
 				$filteredProfileDetails = $profileDetails;
 			unset($profileDetails);
