@@ -1244,6 +1244,7 @@ JsChat.prototype = {
         var curElem = this,membership=getMembershipStatus();
         if ($('chat-box[user-id="' + userId + '"]').length != 0) {
             this._chatLoggerPlugin("in _updateChatPanelsBox for " + userId);
+            console.log("in _updateChatPanelsBox");
             $('chat-box[user-id="' + userId + '"] #rosterDeleteMsg_'+ userId + '').remove();
             var chatBoxType = curElem._getChatBoxType(userId, newGroupId, "updateChatBoxType");
             curElem._setChatBoxInnerDiv(userId, chatBoxType,"chatBoxUpdate");
