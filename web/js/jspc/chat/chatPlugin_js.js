@@ -924,7 +924,7 @@ JsChat.prototype = {
                     }
                     var height = $($(superParent).find(".talkText")[$(superParent).find(".talkText").length - 1]).height();
                     $($(superParent).find(".talkText")[$(superParent).find(".talkText").length - 1]).next().css("margin-top", height);
-                    _this._scrollToBottom(userId,100);
+                    _this._scrollToBottom(userId);
                     //fire send chat query and return unique id
                     setTimeout(function () {
                         out = 1;
@@ -1594,7 +1594,7 @@ JsChat.prototype = {
         this._postChatPanelsBox(userId);
         this._bindSendChat(userId);
     },
-    _scrollToBottom: function (userId, extra,type) {
+    _scrollToBottom: function (userId,type) {
         console.log("type in _scrollToBottom",type);
         var len = document.getElementById("chatMessage_"+userId).scrollHeight;
         if(type == undefined) {
