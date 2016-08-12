@@ -81,6 +81,7 @@ class JS_Communication
 				//foreach($messageArr as $key=>$val)
 				{
 					$mergeArray["MESSAGE"]=$messageArr[$j];
+					$mergeArray["IS_EOI"] = true;
 					$result[$i]=$mergeArray;
 					$i++;
 				}
