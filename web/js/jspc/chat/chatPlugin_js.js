@@ -35,6 +35,7 @@ JsChat.prototype = {
     _loggingEnabledPlugin: false,
     _maxMsgLimit:100,
     _rosterDeleteChatBoxMsg:"",
+    _rosterGroups:[],
 
     _chatLoggerPlugin: function (msgOrObj) {
         if (this._loggingEnabledPlugin) {
@@ -111,6 +112,9 @@ JsChat.prototype = {
         }
         if (arguments[1][0].rosterDeleteChatBoxMsg) {
             this._rosterDeleteChatBoxMsg = arguments[1][0].rosterDeleteChatBoxMsg;
+        }
+        if (arguments[1][0].rosterGroups) {
+            this._rosterGroups = arguments[1][0].rosterGroups;
         }
     },
     //start:get screen height
@@ -1771,10 +1775,23 @@ JsChat.prototype = {
     
     //disable chat box on roster item deletion
     _disableChatPanelsBox:function(userId){
+        var curElem = this;
         if($('chat-box[user-id="' + userId + '"]').length != 0){
-            var curElem = this;
-            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="rosterDeleteMsg_'+userId+'">'+curElem._rosterDeleteChatBoxMsg+'</div>');
-            $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+            setTimeout(function(){
+                var found = false;
+                $.each(curElem._rosterGroups,function(key,groupId){
+                    if($(".chatlist li[id='" + userId + "_" + groupId + "']").length != 0){
+                        found = true;
+                    }
+                    if(found == false){
+                        if($('chat-box[user-id="' + userId + '"]').length != 0){
+                            $('chat-box[user-id="' + userId + '"] .chatMessage').html("");
+                            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="rosterDeleteMsg_'+userId+'" class="pt20 txtc color5">'+curElem._rosterDeleteChatBoxMsg+'</div>');
+                            $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+                        }
+                    }
+                });  
+            },7000);
         }
     },
 

@@ -990,7 +990,8 @@ $(document).ready(function () {
             groupBasedChatBox: chatConfig.Params[device].groupBasedChatBox,
             contactStatusMapping: chatConfig.Params[device].contactStatusMapping,
             maxMsgLimit:chatConfig.Params[device].maxMsgLimit,
-            rosterDeleteChatBoxMsg:chatConfig.Params[device].rosterDeleteChatBoxMsg
+            rosterDeleteChatBoxMsg:chatConfig.Params[device].rosterDeleteChatBoxMsg,
+            rosterGroups:chatConfig.Params[device].rosterGroups
         });
         
         objJsChat.onEnterToChatPreClick = function () {
