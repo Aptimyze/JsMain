@@ -766,38 +766,41 @@ JsChat.prototype = {
             this._chatLoggerPlugin("calllign _removeFromListing");
             for (var key in data) {
                 var runID = '';
-                runID = data[key]["rosterDetails"]["jid"].split("@")[0];
-                if (typeof data[key]["rosterDetails"]["groups"] != "undefined") {
-                    this._chatLoggerPlugin(data[key]["rosterDetails"]["groups"]);
-                    var that = this;
-                    $.each(data[key]["rosterDetails"]["groups"], function (index, val) {
-                        var tabShowStatus = '',
-                            listElements = '';
-                        //this check the sub header status in the list
-                        var tabShowStatus = $('div.' + val).attr('data-showuser');
-                        listElements = $('#' + runID + '_' + val);
-                        if (tabShowStatus == 'false' && param1 != 'delete_node') {
-                            that._chatLoggerPlugin("123");
-                            $(listElements).find('.nchatspr').detach();
-                            elem._placeContact(param1,"existing", runID, val, "offline");
-                        } else {
-                            that._chatLoggerPlugin("345");
-                            $('div').find(listElements).detach();
-                            if ($('div.' + val + ' ul li').length == 0) {
-                                $('div.' + val + ' ul').parent().addClass("disp-none");
+                if(typeof data[key] != "undefined"){
+                    runID = data[key]["rosterDetails"]["jid"].split("@")[0];
+                    if (typeof data[key]["rosterDetails"]["groups"] != "undefined") {
+                        this._chatLoggerPlugin(data[key]["rosterDetails"]["groups"]);
+                        var that = this;
+                        $.each(data[key]["rosterDetails"]["groups"], function (index, val) {
+                            var tabShowStatus = '',
+                                listElements = '';
+                            //this check the sub header status in the list
+                            var tabShowStatus = $('div.' + val).attr('data-showuser');
+                            listElements = $('#' + runID + '_' + val);
+                            if (tabShowStatus == 'false' && param1 != 'delete_node') {
+                                that._chatLoggerPlugin("123");
+                                $(listElements).find('.nchatspr').detach();
+                                elem._placeContact(param1,"existing", runID, val, "offline");
+                            } else {
+                                that._chatLoggerPlugin("345");
+                                $('div').find(listElements).detach();
+                                if ($('div.' + val + ' ul li').length == 0) {
+                                    $('div.' + val + ' ul').parent().addClass("disp-none");
+                                }
                             }
-                        }
-                        that._chatLoggerPlugin(this);
-                        elem._updateStatusInChatBox(runID, "offline");
-                    });
-                    delete that;
-                    this._chatLoggerPlugin("here");
+                            that._chatLoggerPlugin(this);
+                            elem._updateStatusInChatBox(runID, "offline");
+                        });
+                        delete that;
+                        this._chatLoggerPlugin("here");
+                    }
                 }
             }
         }
         //removeCall2 if user is removed from block click on chatbox
         else if (param1 == 'removeCall2') {
-            $(this._mainID).find('*[id*="' + data + '"]').detach();
+            if(typeof data!= "undefined")
+                $(this._mainID).find('*[id*="' + data + '"]').detach();
             /*if (this.onPostBlockCallback && typeof this.onPostBlockCallback == 'function') {
                 this.onPostBlockCallback(data);
             }*/
