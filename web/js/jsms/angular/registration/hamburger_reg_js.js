@@ -617,12 +617,12 @@ var errorMsg = "Something went wrong!! Please try again later";
 			if(this.type.indexOf("reg_city_jspc")>-1 && this.screenName=="s2")
 			{
                             this.countryValue = staticTables.getUserData('familyIncomeDep');
-			    this.stateValue = staticTables.getUserData('stateDep').replace(/\"/g, "");
 				if(this.countryValue=='51')
 				{
+					this.stateValue = staticTables.getUserData('stateDep').replace(/\"/g, "");
 					return json[this.countryValue][this.stateValue];
 				}
-				else//(this.countryValue=='128')
+				else
 				{
 					return json[this.countryValue];
 				}
