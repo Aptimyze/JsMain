@@ -59,24 +59,41 @@
                return false;
             }
         }
+        /*var loggedInJspcUser="~$sf_request->getAttribute('profileid')`";
+        var showChat = "~$showChat`";
+        var loggedInJspcGender = "~$sf_request->getAttribute('gender')|decodevar`";
+        var self_checksum = "~$sf_request->getAttribute('profilechecksum')`";
+        var self_username = "~$sf_request->getAttribute('username')`";
+        var my_action = "~$action`";
+        var moduleChat = "~$module`";
+        //localStorage.removeItem("self_subcription");
+        localStorage.setItem("self_subcription","~$subscription`");*/
+        console.log("in ...1");
+    </script>
+    ~/if`
+    <script>
         var loggedInJspcUser="~$sf_request->getAttribute('profileid')`";
         var showChat = "~$showChat`";
         var loggedInJspcGender = "~$sf_request->getAttribute('gender')|decodevar`";
         var self_checksum = "~$sf_request->getAttribute('profilechecksum')`";
         var self_username = "~$sf_request->getAttribute('username')`";
+        var my_action = "~$action`";
+        var moduleChat = "~$module`";
         //localStorage.removeItem("self_subcription");
         localStorage.setItem("self_subcription","~$subscription`");
+        console.log("in ...2");
     </script>
-    ~/if`
     ~if $showChat`
         <script>
+            console.log("in ...3");
             var openfireUrl= "~JsConstants::$openfireConfig['HOST']`:~JsConstants::$openfireConfig['WSPORT']`";
             var openfireServerName = "~JsConstants::$openfireConfig['SERVER_NAME']`";
-            var my_action = "~$action`";
-            var moduleChat = "~$module`";
+            //var my_action = "~$action`";
+            //var moduleChat = "~$module`";
         </script>
     ~else`
         <script>
+            console.log("in ...4");
             var openfireUrl= "",openfireServerName="";
         </script>
     ~/if`
