@@ -171,6 +171,7 @@ var strophieWrapper = {
     },
     //executed on new push/remove event in roster
     onRosterUpdate: function (iq) {
+        strophieWrapper.Roster = strophieWrapper.Roster.filter(function(n){ return n != undefined }); 
         //strophieWrapper.stropheLoggerPC("in onRosterPush");
         console.log("onRosterUpdate");
         console.log(iq);

@@ -410,6 +410,7 @@ function to add roster item or update roster item details in listing
 * @inputs:listObject,key(create_list/add_node/update_status),user_id(optional)
 */
 function invokePluginManagelisting(listObject, key, user_id) {
+    
     //chatLoggerPC("calling invokePluginAddlisting");
     if (key == "add_node" || key == "create_list") {
         if (key == "create_list") {
