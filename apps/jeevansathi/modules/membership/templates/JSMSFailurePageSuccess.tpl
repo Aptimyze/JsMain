@@ -97,7 +97,7 @@
     },100);
     setTimeout(function(){
       autoPopupFreshdesk(username,email);
-    }, 60000);
+    }, 90000);
   });
 </script>
 ~/if`
