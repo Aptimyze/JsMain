@@ -760,7 +760,8 @@ JsChat.prototype = {
         console.log("_removeFromListing",param1);
         console.log(data);
         data = data.filter(function(n){ return n != undefined }); 
-        console.log("after filter",data);
+        console.log("after filter");
+        console.log(data);
         //this._chatLoggerPlugin('remove element 11');
         var elem = this;
         //removeCall1 if user is removed from backend
