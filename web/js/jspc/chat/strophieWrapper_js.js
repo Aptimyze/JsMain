@@ -239,7 +239,7 @@ var strophieWrapper = {
                     if (strophieWrapper.checkForGroups(nodeArr[user_id][strophieWrapper.rosterDetailsKey]["groups"]) == true) {
                         console.log("removed..");
                         invokePluginManagelisting(nodeArr, "delete_node", user_id);
-                        strophieWrapper.Roster.splice(user_id,1);
+                        var return2 = strophieWrapper.Roster.splice(user_id,1);
                     }
                 } 
                 //case of remove subscription with group
@@ -252,7 +252,7 @@ var strophieWrapper = {
                 if (strophieWrapper.checkForGroups(nodeArr[user_id][strophieWrapper.rosterDetailsKey]["groups"]) == true) {
                     console.log("removed..");
                     invokePluginManagelisting(nodeArr, "delete_node", user_id);
-                    strophieWrapper.Roster.splice(user_id,1);
+                    var return3 = strophieWrapper.Roster.splice(user_id,1);
                 }
             }  
         }
