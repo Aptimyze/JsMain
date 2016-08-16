@@ -951,6 +951,16 @@ JsChat.prototype = {
                 if (text.length > 1) {
                     var superParent = $(this).parent().parent(),
                         timeLog = new Date().getTime();
+                    var finalStr = "";
+                    for (var i = 0, len = text.length; i < len-1; i++) {
+                        if(text.charCodeAt(i) == 10) {
+                            finalStr += "<br />"
+                        } else {
+                            finalStr += text[i];
+                        }
+                    }
+                    console.log(finalStr);
+                    text = finalStr;
                     $(superParent).find("#initChatText,#sentDiv,#chatBoxErr").remove();
                     $(superParent).find(".chatMessage").css("height", "246px").append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id ="tempText_' + userId + '_' + timeLog + '" class="talkText">' + text + '</div><i class="nchatspr nchatic_8 fr vertM"></i></div>');
                     if ($(superParent).find("#sendInt").length != 0) {
@@ -1686,6 +1696,7 @@ JsChat.prototype = {
                 if (parseInt(logObj["SENDER"]) == self_id) {
                     if(curElem._checkForDefaultEoiMsg == false || logObj["MESSAGE"].indexOf(defaultEoiSentMsg) == -1){
                         //append self sent message
+                        logObj["MESSAGE"] = logObj["MESSAGE"].replace("&lt;br /&gt;", "<br />");
                         $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["CHATID"] + '" class="talkText" data-msgid='+logObj["CHATID"]+'>' + logObj["MESSAGE"] + '</div><i class="nchatspr nchatic_9 fr vertM"></i></div>').promise().done(function(){
                                 var len = $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["CHATID"]).height();
                                     
@@ -1704,6 +1715,7 @@ JsChat.prototype = {
                             }
                         }
                         //append received message
+                        logObj["MESSAGE"] = logObj["MESSAGE"].replace("&lt;br /&gt;", "<br />");
                         $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="clearfix"><div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["CHATID"] + '" class="talkText received_read" data-msgid=' + logObj["CHATID"] + '>' + logObj["MESSAGE"] + '</div></div></div>');
                     }
                 }
@@ -1734,7 +1746,7 @@ JsChat.prototype = {
         }*/
         if ($('chat-box[user-id="' + userId + '"]').length != 0){
             if ($('chat-box[user-id="' + userId + '"] .chatMessage').find("#text_" + userId + uniqueId).length == 0) {
-    
+                message = message.replace("&lt;br /&gt;", "<br />");
                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText" data-msgid='+uniqueId+'>' + message + '</div><i class="nchatspr nchatic_8 fr vertM"></i></div>');
                 var len = $('chat-box[user-id="' + userId + '"] .talkText').length - 1,
                     height = $($('chat-box[user-id="' + userId + '"] .talkText')[len]).height();
@@ -1782,7 +1794,8 @@ JsChat.prototype = {
             }
             curEle._enableChatAfterPaidInitiates(userId);
             if(appendMsg == true){
-                //adding message in chat area
+                message = message.replace("&lt;br /&gt;", "<br />");
+                //adding mege in chat area
                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="clearfix"><div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText received" data-msgid=' + uniqueId + '>' + message + '</div></div></div>');
             }
             else{

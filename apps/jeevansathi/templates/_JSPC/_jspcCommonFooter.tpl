@@ -11,6 +11,8 @@
     <!--start:help widget-->
     ~if $module eq 'help'`
         ~include_component('common', 'helpWidget', ['hideHelpMenu'=>'true'])`
+    ~else`
+        ~include_component('common', 'helpWidget')`
     ~/if`
     <!--end:help widget-->
 ~/if`
