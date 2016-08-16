@@ -1696,7 +1696,7 @@ JsChat.prototype = {
                 if (parseInt(logObj["SENDER"]) == self_id) {
                     if(curElem._checkForDefaultEoiMsg == false || logObj["MESSAGE"].indexOf(defaultEoiSentMsg) == -1){
                         //append self sent message
-                        logObj["MESSAGE"] = logObj["MESSAGE"].replace(/&lt;br //&gt;/g, "<br />");
+                        logObj["MESSAGE"] = logObj["MESSAGE"].replace("&lt;br /&gt;", "<br />");
                         $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["CHATID"] + '" class="talkText" data-msgid='+logObj["CHATID"]+'>' + logObj["MESSAGE"] + '</div><i class="nchatspr nchatic_9 fr vertM"></i></div>').promise().done(function(){
                                 var len = $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["CHATID"]).height();
                                     
@@ -1715,7 +1715,7 @@ JsChat.prototype = {
                             }
                         }
                         //append received message
-                        logObj["MESSAGE"] = logObj["MESSAGE"].replace(/&lt;br //&gt;/g, "<br />");
+                        logObj["MESSAGE"] = logObj["MESSAGE"].replace("&lt;br /&gt;", "<br />");
                         $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="clearfix"><div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["CHATID"] + '" class="talkText received_read" data-msgid=' + logObj["CHATID"] + '>' + logObj["MESSAGE"] + '</div></div></div>');
                     }
                 }
@@ -1746,7 +1746,7 @@ JsChat.prototype = {
         }*/
         if ($('chat-box[user-id="' + userId + '"]').length != 0){
             if ($('chat-box[user-id="' + userId + '"] .chatMessage').find("#text_" + userId + uniqueId).length == 0) {
-                message = message.replace(/&lt;br //&gt;/g, "<br />");
+                message = message.replace("&lt;br /&gt;", "<br />");
                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText" data-msgid='+uniqueId+'>' + message + '</div><i class="nchatspr nchatic_8 fr vertM"></i></div>');
                 var len = $('chat-box[user-id="' + userId + '"] .talkText').length - 1,
                     height = $($('chat-box[user-id="' + userId + '"] .talkText')[len]).height();
@@ -1794,7 +1794,7 @@ JsChat.prototype = {
             }
             curEle._enableChatAfterPaidInitiates(userId);
             if(appendMsg == true){
-                message = message.replace(/&lt;br //&gt;/g, "<br />");
+                message = message.replace("&lt;br /&gt;", "<br />");
                 //adding mege in chat area
                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="clearfix"><div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText received" data-msgid=' + uniqueId + '>' + message + '</div></div></div>');
             }
