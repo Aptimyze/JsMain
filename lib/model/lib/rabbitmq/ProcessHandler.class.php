@@ -180,8 +180,30 @@ class ProcessHandler
 			break;
 	}
  }
- 
- 
+
+ /**
+ * HandleProfileCacheQueue
+ * @param $process
+ * @param $body
+ */
+ public function HandleProfileCacheQueue($process, $body)
+ {
+     try{
+         $key = $body['PROFILEID'];
+         if(0 === strlen($key)) {
+             return ;
+         }
+         $key = ProfileCacheConstants::PROFILE_CACHE_PREFIX . $key;
+         JsMemcache::getInstance()->delete($key, true);
+     } catch (Exception $ex) {
+         //Requeue the data
+         $reSendData = array('process' =>$process,'data'=>array('type' => '','body'=>$body), 'redeliveryCount'=> 0);
+         $producerObj=new Producer();
+         $producerObj->sendMessage($reSendData);
+     }
+
+ }
+
   public function logDuplicate($phone,$profileId)
  {
 	$profileObj=new Profile();

@@ -171,9 +171,10 @@ var strophieWrapper = {
     },
     //executed on new push/remove event in roster
     onRosterUpdate: function (iq) {
+        //strophieWrapper.Roster = strophieWrapper.Roster.filter(function(n){ return n != undefined }); 
         //strophieWrapper.stropheLoggerPC("in onRosterPush");
-        //console.log("onRosterUpdate");
-        //console.log(iq);
+        console.log("onRosterUpdate");
+        console.log(iq);
         strophieWrapper.stropheLoggerPC(iq);
         var nodeObj = xmlToJson(iq);
         rosterObj = strophieWrapper.formatRosterObj(nodeObj["query"]["item"]);
@@ -182,43 +183,79 @@ var strophieWrapper = {
             user_id = rosterObj[strophieWrapper.rosterDetailsKey]["jid"].split("@")[0],
             subscription = rosterObj[strophieWrapper.rosterDetailsKey]["subscription"],
             ask = rosterObj[strophieWrapper.rosterDetailsKey]["ask"];
+        nodeArr[user_id] = rosterObj;
         if (strophieWrapper.checkForGroups(rosterObj[strophieWrapper.rosterDetailsKey]["groups"]) == true) {
-            nodeArr[user_id] = rosterObj;
+            //nodeArr[user_id] = rosterObj;
             //strophieWrapper.stropheLoggerPC(nodeArr);
             //strophieWrapper.stropheLoggerPC(ask);
-            if (ask == "unsubscribe") {
-                //strophieWrapper.stropheLoggerPC(strophieWrapper.Roster[user_id]);
-                //strophieWrapper.stropheLoggerPC("deleting node");
-                invokePluginManagelisting(nodeArr, "delete_node", user_id);
-                strophieWrapper.Roster.splice(user_id);
-                //strophieWrapper.unauthorize(rosterObj[strophieWrapper.rosterDetailsKey]["jid"]);
-            } else if (strophieWrapper.checkForSubscription(subscription) == true) {
-                //strophieWrapper.stropheLoggerPC("adding node");
-                //strophieWrapper.stropheLoggerPC(subscription);
-                if (typeof strophieWrapper.Roster[user_id] == "undefined") {
-                    //console.log("adding new1");
-                    invokePluginManagelisting(nodeArr, "add_node", user_id);
-                } else if (typeof strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["groups"] != "undefined") {
-                    var oldGroupId = strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["groups"][0];
-                    if (oldGroupId && oldGroupId != rosterObj[strophieWrapper.rosterDetailsKey]["groups"][0]) {
-                        var oldArr = [];
-                        oldArr[user_id] = strophieWrapper.Roster[user_id];
-                        //strophieWrapper.stropheLoggerPC("moving node from " + oldGroupId);
-                        invokePluginManagelisting(oldArr, "delete_node", user_id);
-                        //strophieWrapper.stropheLoggerPC("adding node");
-                        //strophieWrapper.stropheLoggerPC(nodeArr);
-                        //console.log("adding new 2");
-                        invokePluginManagelisting(nodeArr, "add_node", user_id);
+            if(typeof subscription == "undefined" || subscription != "remove"){
+                if (ask == "unsubscribe") {
+                    console.log("got unsubscribe ask");
+                    //strophieWrapper.stropheLoggerPC(strophieWrapper.Roster[user_id]);
+                    //strophieWrapper.stropheLoggerPC("deleting node");
+                    invokePluginManagelisting(nodeArr, "delete_node", user_id);
+                    console.log(strophieWrapper.Roster);
+                    try{
+                        var return1 = strophieWrapper.Roster.splice(user_id,1);
+                        console.log(return1);
                     }
+                    catch(e){
+                        console.log(e);
+                    }
+                    //strophieWrapper.unauthorize(rosterObj[strophieWrapper.rosterDetailsKey]["jid"]);
+                } else if (strophieWrapper.checkForSubscription(subscription) == true) {
+                    //strophieWrapper.stropheLoggerPC("adding node");
+                    //strophieWrapper.stropheLoggerPC(subscription);
+                    console.log("add node case");
+                    if (typeof strophieWrapper.Roster[user_id] == "undefined" || typeof strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["subscription"]=="undefined") {
+                        console.log("adding new1");
+                        invokePluginManagelisting(nodeArr, "add_node", user_id);
+                    } else if (typeof strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["groups"] != "undefined") {
+                        var oldGroupId = strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["groups"][0];
+                        if (oldGroupId && oldGroupId != rosterObj[strophieWrapper.rosterDetailsKey]["groups"][0]) {
+                            var oldArr = [];
+                            console.log("adding new2");
+                            oldArr[user_id] = strophieWrapper.Roster[user_id];
+                            //strophieWrapper.stropheLoggerPC("moving node from " + oldGroupId);
+                            invokePluginManagelisting(oldArr, "delete_node", user_id);
+                            //strophieWrapper.stropheLoggerPC("adding node");
+                            //strophieWrapper.stropheLoggerPC(nodeArr);
+                            //console.log("adding new 2");
+                            invokePluginManagelisting(nodeArr, "add_node", user_id);
+                        }
+                    }
+                    strophieWrapper.Roster[user_id] = rosterObj;
+                    if (subscription == "to") {
+                        strophieWrapper.subscribe(rosterObj[strophieWrapper.rosterDetailsKey]["jid"], rosterObj[strophieWrapper.rosterDetailsKey]["nick"]);
+                    }
+                    setTimeout(function () {
+                        strophieWrapper.sendPresence();
+                    }, 5000);
                 }
-                strophieWrapper.Roster[user_id] = rosterObj;
-                if (subscription == "to") {
-                    strophieWrapper.subscribe(rosterObj[strophieWrapper.rosterDetailsKey]["jid"], rosterObj[strophieWrapper.rosterDetailsKey]["nick"]);
-                }
-                setTimeout(function () {
-                    strophieWrapper.sendPresence();
-                }, 5000);
             }
+            else if(subscription == "remove"){
+                console.log("got remove subscription 1",rosterObj);
+                if(typeof strophieWrapper.Roster[user_id]!= "undefined"){
+                    nodeArr[user_id] = strophieWrapper.Roster[user_id];
+                    if (strophieWrapper.checkForGroups(nodeArr[user_id][strophieWrapper.rosterDetailsKey]["groups"]) == true) {
+                        console.log("removed..");
+                        invokePluginManagelisting(nodeArr, "delete_node", user_id);
+                        var return2 = strophieWrapper.Roster.splice(user_id,1);
+                    }
+                } 
+                //case of remove subscription with group
+            }
+        }
+        else if(subscription == "remove"){
+            console.log("got remove subscription 2",rosterObj);
+            if(typeof strophieWrapper.Roster[user_id]!= "undefined"){
+                nodeArr[user_id] = strophieWrapper.Roster[user_id];
+                if (strophieWrapper.checkForGroups(nodeArr[user_id][strophieWrapper.rosterDetailsKey]["groups"]) == true) {
+                    console.log("removed..");
+                    invokePluginManagelisting(nodeArr, "delete_node", user_id);
+                    var return3 = strophieWrapper.Roster.splice(user_id,1);
+                }
+            }  
         }
         strophieWrapper.connectionObj.addHandler(strophieWrapper.onRosterUpdate, Strophe.NS.ROSTER, 'iq', 'set');
         //return true;
@@ -382,6 +419,7 @@ var strophieWrapper = {
     },
     //executed after roster has been fetched
     onRosterReceived: function (iq) {
+        console.log("in onRosterReceived");
         console.log(iq);
         //strophieWrapper.stropheLoggerPC("in onRosterReceived");
         strophieWrapper.stropheLoggerPC(iq);
@@ -604,8 +642,8 @@ var strophieWrapper = {
     },
     /*format msg object*/
     formatMsgObj: function (msg) {
-        console.log("in formatMsgObj");
-        console.log(msg);
+        //console.log("in formatMsgObj");
+        //console.log(msg);
         var outputObj = {
             "from": msg.getAttribute('from').split("@")[0],
             "to": msg.getAttribute('to').split("@")[0],
@@ -659,7 +697,7 @@ var strophieWrapper = {
                 outputObj["receivedId"] = rec.getAttribute('id');
             }
         }*/
-        console.log(outputObj);
+        //console.log(outputObj);
         return outputObj;
     },
     /*

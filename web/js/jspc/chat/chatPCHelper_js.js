@@ -410,6 +410,7 @@ function to add roster item or update roster item details in listing
 * @inputs:listObject,key(create_list/add_node/update_status),user_id(optional)
 */
 function invokePluginManagelisting(listObject, key, user_id) {
+    
     //chatLoggerPC("calling invokePluginAddlisting");
     if (key == "add_node" || key == "create_list") {
         if (key == "create_list") {
@@ -421,6 +422,7 @@ function invokePluginManagelisting(listObject, key, user_id) {
         if (key == "add_node") {
             var newGroupId = listObject[user_id][strophieWrapper.rosterDetailsKey]["groups"][0];
             //update chat box content if opened
+            console.log("adding ankita4");
             objJsChat._updateChatPanelsBox(user_id, newGroupId);
             //chatLoggerPC("update chat box");
         }
@@ -446,6 +448,7 @@ function invokePluginManagelisting(listObject, key, user_id) {
         if (typeof user_id != "undefined") {
             //chatLoggerPC("deleting node from roster-" + user_id);
             objJsChat._removeFromListing('delete_node', listObject);
+            objJsChat._disableChatPanelsBox(user_id);
         }
     }
 }
@@ -934,7 +937,8 @@ function globalSleep(milliseconds) {
 $(document).ready(function () {
     //chatLoggerPC("User");
     //chatLoggerPC(loggedInJspcUser);
-    checkNewLogin(loggedInJspcUser);
+    if(typeof loggedInJspcUser!= "undefined")
+        checkNewLogin(loggedInJspcUser);
     var checkDiv = $("#chatOpenPanel").length;
     if (showChat && (checkDiv != 0)) {
         var chatLoggedIn = readCookie('chatAuth');
@@ -988,7 +992,10 @@ $(document).ready(function () {
             listingNodesLimit: chatConfig.Params[device].groupWiseNodesLimit,
             groupBasedChatBox: chatConfig.Params[device].groupBasedChatBox,
             contactStatusMapping: chatConfig.Params[device].contactStatusMapping,
-            maxMsgLimit:chatConfig.Params[device].maxMsgLimit
+            maxMsgLimit:chatConfig.Params[device].maxMsgLimit,
+            rosterDeleteChatBoxMsg:chatConfig.Params[device].rosterDeleteChatBoxMsg,
+            rosterGroups:chatConfig.Params[device].rosterGroups,
+            checkForDefaultEoiMsg:chatConfig.Params[device].checkForDefaultEoiMsg
         });
         
         objJsChat.onEnterToChatPreClick = function () {
