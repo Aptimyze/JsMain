@@ -200,12 +200,13 @@ var strophieWrapper = {
                     //strophieWrapper.stropheLoggerPC(subscription);
                     console.log("add node case");
                     if (typeof strophieWrapper.Roster[user_id] == "undefined") {
-                        //console.log("adding new1");
+                        console.log("adding new1");
                         invokePluginManagelisting(nodeArr, "add_node", user_id);
                     } else if (typeof strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["groups"] != "undefined") {
                         var oldGroupId = strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["groups"][0];
                         if (oldGroupId && oldGroupId != rosterObj[strophieWrapper.rosterDetailsKey]["groups"][0]) {
                             var oldArr = [];
+                            console.log("adding new2");
                             oldArr[user_id] = strophieWrapper.Roster[user_id];
                             //strophieWrapper.stropheLoggerPC("moving node from " + oldGroupId);
                             invokePluginManagelisting(oldArr, "delete_node", user_id);
