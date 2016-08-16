@@ -193,7 +193,7 @@ var strophieWrapper = {
                     //strophieWrapper.stropheLoggerPC(strophieWrapper.Roster[user_id]);
                     //strophieWrapper.stropheLoggerPC("deleting node");
                     invokePluginManagelisting(nodeArr, "delete_node", user_id);
-                    strophieWrapper.Roster.splice(user_id);
+                    strophieWrapper.Roster.splice(user_id,1);
                     //strophieWrapper.unauthorize(rosterObj[strophieWrapper.rosterDetailsKey]["jid"]);
                 } else if (strophieWrapper.checkForSubscription(subscription) == true) {
                     //strophieWrapper.stropheLoggerPC("adding node");
@@ -232,7 +232,7 @@ var strophieWrapper = {
                     if (strophieWrapper.checkForGroups(nodeArr[user_id][strophieWrapper.rosterDetailsKey]["groups"]) == true) {
                         console.log("removed..");
                         invokePluginManagelisting(nodeArr, "delete_node", user_id);
-                        strophieWrapper.Roster.splice(user_id);
+                        strophieWrapper.Roster.splice(user_id,1);
                     }
                 } 
                 //case of remove subscription with group
@@ -245,7 +245,7 @@ var strophieWrapper = {
                 if (strophieWrapper.checkForGroups(nodeArr[user_id][strophieWrapper.rosterDetailsKey]["groups"]) == true) {
                     console.log("removed..");
                     invokePluginManagelisting(nodeArr, "delete_node", user_id);
-                    strophieWrapper.Roster.splice(user_id);
+                    strophieWrapper.Roster.splice(user_id,1);
                 }
             }  
         }
