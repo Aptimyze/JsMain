@@ -68,7 +68,7 @@
         var moduleChat = "~$module`";
         //localStorage.removeItem("self_subcription");
         localStorage.setItem("self_subcription","~$subscription`");*/
-        console.log("in ...1");
+        //console.log("in ...1");
     </script>
     ~/if`
     <script>
@@ -81,11 +81,11 @@
         var moduleChat = "~$module`";
         //localStorage.removeItem("self_subcription");
         localStorage.setItem("self_subcription","~$subscription`");
-        console.log("in ...2");
+        //console.log("in ...2");
     </script>
     ~if $showChat`
         <script>
-            console.log("in ...3");
+            //console.log("in ...3");
             var openfireUrl= "~JsConstants::$openfireConfig['HOST']`:~JsConstants::$openfireConfig['WSPORT']`";
             var openfireServerName = "~JsConstants::$openfireConfig['SERVER_NAME']`";
             //var my_action = "~$action`";
@@ -93,7 +93,7 @@
         </script>
     ~else`
         <script>
-            console.log("in ...4");
+            //console.log("in ...4");
             var openfireUrl= "",openfireServerName="";
         </script>
     ~/if`
