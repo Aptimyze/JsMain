@@ -169,8 +169,8 @@ class chatActions extends sfActions
 		$getRosterDataObj = new GetRosterData($profileid);
 		$getData["profiles"] = $getRosterDataObj->getRosterDataByType($type, $limit);
 		$getData["count"] = count($getData["profiles"]);
-		$getData["username"] = $profileObj->getUSERNAME();
-		$getdata["checksum"] = JsCommon::createChecksumForProfile($profileid);
+		$getData["USERNAME"] = $profileObj->getUSERNAME();
+		$getdata["PROFILECHECKSUM"] = JsCommon::createChecksumForProfile($profileid);
 		$apiResponseHandlerObj = ApiResponseHandler::getInstance();
 		$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 
