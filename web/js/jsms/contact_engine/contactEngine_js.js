@@ -5,7 +5,7 @@ var postParams;
 var photo={};
 var disablePrimary={};
 var disableOthers={};
-var actionUrl = {"CONTACT_DETAIL":"/api/v2/contacts/contactDetails","INITIATE":"/api/v2/contacts/postEOI","CANCEL":"/api/v2/contacts/postCancelInterest","SHORTLIST":"/api/v1/common/AddBookmark","DECLINE":"/api/v2/contacts/postNotInterested","REMINDER":"/api/v2/contacts/postSendReminder","MESSAGE":"/api/v2/contacts/postWriteMessage","ACCEPT":"/api/v2/contacts/postAccept","WRITE_MESSAGE":"/api/v2/contacts/WriteMessage","IGNORE":"/api/v1/common/ignoreprofile","PHONEVERIFICATION":"/phone/jsmsDisplay","MEMBERSHIP":"/profile/mem_comparison.php","COMPLETEPROFILE":"/profile/viewprofile.php","PHOTO_UPLOAD":'/social/MobilePhotoUpload',"ACCEPT_MYJS":"/api/v2/contacts/postAccept","DECLINE_MYJS":"/api/v2/contacts/postNotInterested","EDITPROFILE":"/profile/viewprofile.php?ownview=1"};
+var actionUrl = {"CONTACT_DETAIL":"/api/v2/contacts/contactDetails","INITIATE":"/api/v2/contacts/postEOI","INITIATE_MYJS":"/api/v2/contacts/postEOI","CANCEL":"/api/v2/contacts/postCancelInterest","SHORTLIST":"/api/v1/common/AddBookmark","DECLINE":"/api/v2/contacts/postNotInterested","REMINDER":"/api/v2/contacts/postSendReminder","MESSAGE":"/api/v2/contacts/postWriteMessage","ACCEPT":"/api/v2/contacts/postAccept","WRITE_MESSAGE":"/api/v2/contacts/WriteMessage","IGNORE":"/api/v1/common/ignoreprofile","PHONEVERIFICATION":"/phone/jsmsDisplay","MEMBERSHIP":"/profile/mem_comparison.php","COMPLETEPROFILE":"/profile/viewprofile.php","PHOTO_UPLOAD":'/social/MobilePhotoUpload',"ACCEPT_MYJS":"/api/v2/contacts/postAccept","DECLINE_MYJS":"/api/v2/contacts/postNotInterested","EDITPROFILE":"/profile/viewprofile.php?ownview=1"};
 var actionDetail = {'CONTACT_DETAIL':'ContactDetails',"INITIATE":"postEOI","CANCEL":"cancel","DECLINE":"decline","REMINDER":"reminder","MESSAGE":"postWriteMessage","ACCEPT":"accept","WRITE_MESSAGE":"WriteMessage"};
 var actionTemplate = {"CONTACT_DETAIL":"contactDetailOverlay","INITIATE":"buttonsOverlay","CANCEL":"confirmationOverlay","DECLINE":"confirmationOverlay","REMINDER":"writeMessageOverlay","MESSAGE":"","WRITE_MESSAGE":"writeMessageOverlay","ACCEPT":"confirmationOverlay"}
 var current_index ='';
@@ -270,31 +270,51 @@ function setTextAreaHgt(){
 }
 
 function bindSlider(){
-    
+ /*   var child=$(".detailedProfileRedirect");
+    child.unbind("click");
+    child.bind("click",function(){
+    var countKey=$(this).attr('countkey');
+    var params=$(this).attr('params');
+    var index= parseInt($(this).attr('index'))+1;
+    window.location.href='/profile/viewprofile.php?'+'&total_rec='+countArray[countKey]+'&actual_offset='+index+'&'+params;
+    });
+   */ 
     var child=$(".eoiAcceptBtn");
     child.unbind("click");
     child.bind("click",function(){
         $(".eoiAcceptBtn").attr("disabled",true);
         $(".eoiDeclineBtn").attr("disabled",true);
         
-        var input=$(this).children("input");
-params["profilechecksum"] =input.val();
+        var input=$(this).children(".inputProChecksum");
+        params["profilechecksum"] =input.val();
         params["actionName"] ="ACCEPT_MYJS";
-                                performAction(params["actionName"], params, $(this).attr("index"),false);
+        performAction(params["actionName"], params, $(this).attr("index"),false);
     
     });
     
     child=$(".eoiDeclineBtn");
     child.unbind("click");
     child.bind("click",function(){
-        $(".eoiAcceptBtn").attr("disabled",true);
-        $(".eoiDeclineBtn").attr("disabled",true);
-        var input=$(this).children("input");
-params["profilechecksum"] =input.val();
-        params["actionName"] ="DECLINE_MYJS";
+        $(this).unbind("click");
+        var input=$(this).children(".inputProChecksum");
+        params["profilechecksum"] =input.val();
+        params["actionName"] ="DECLINE_MYJS";        
         performAction(params["actionName"], params,  $(this).attr("index"),false);
     
     });
+    
+    child=$(".matchAlertBtn");
+    child.unbind("click");
+    child.bind("click",function(){
+        $(this).unbind("click");
+        var input=$(this).children(".inputProChecksum");
+params["profilechecksum"] =input.val();
+        params["actionName"] ="INITIATE_MYJS";
+        params["fromJSMS_MYJS"] ="1";
+        performAction(params["actionName"], params,  $(this).attr("index"),false);
+    
+    });
+    
     
     
     }   
@@ -433,6 +453,14 @@ function performAction(action, params, index,isPrime)
     $("#eoituple_"+index+" .contactLoader").css("display","block");
     
 }
+    else if(action=="INITIATE_MYJS")
+    {
+                params["fromJSMS_MYJS"]='1';
+                params["stype"]='WMM';
+        
+         $("#matchAlerttuple_"+index+" .contactLoader").css("display","block");
+        
+    }
       else
 	{
 		loaderTop();
@@ -454,8 +482,12 @@ function performAction(action, params, index,isPrime)
     data: params,
     //crossDomain: true,
     success: function(result){
-                    if ((action=="ACCEPT_MYJS")||(action=="DECLINE_MYJS"))
-                        $("#eoituple_"+index+" .contactLoader").hide();
+                    if ((action=="ACCEPT_MYJS")||(action=="DECLINE_MYJS") || (action=="INITIATE_MYJS"))
+                    {
+                    var tempSection = action=="INITIATE_MYJS" ? 'matchAlert' : 'eoi';
+                    $("#"+tempSection+"tuple_"+index+" .contactLoader").hide();
+                    
+                    }
 		else
 		{
 			if(isPrime && action!="MESSAGE")
@@ -469,7 +501,7 @@ function performAction(action, params, index,isPrime)
 		}
                     if(CommonErrorHandling(result,'?regMsg=Y')) //CE means contact engine
       {
-                            if ((action=="ACCEPT_MYJS")||(action=="DECLINE_MYJS")) afterActionMyjs(index); 
+                            if ((action=="ACCEPT_MYJS")||(action=="DECLINE_MYJS")||(action=="INITIATE_MYJS")) afterActionMyjs(index, action); 
                             else afterAction(result,action,index);
       }
     }
@@ -480,21 +512,27 @@ params = {};
 
 
 
-function afterActionMyjs(index){
-    $("#eoituple_"+index+" #contactLoader").hide();
-        $("#eoituple_"+index).fadeOut(1500);
-                
-    var x=parseInt($("#eoi_count").html());
-                x--;
-          $("#eoi_count").html(x);
-    setTimeout(function(){
-        $("#eoituple_"+index).remove();
-                if ($("#eoi_count").html()=='0') $("#eoiAbsent").show();
-                      $(".eoiAcceptBtn").attr("disabled",false);
+function afterActionMyjs(index,action){
+    
+    var section= (action=='INITIATE_MYJS') ? 'matchAlert' : 'eoi';
+        $("#"+section+"tuple_"+index+" #contactLoader").hide();
+        $("#"+section+"tuple_"+index).fadeOut(1500);
+        var x=parseInt($("#"+section+"_count").html());
+        x--;
+        $("#"+section+"_count").html(x);
+        setTimeout(function(){
+        $("#"+section+"tuple_"+index).remove();
+        if ($("#"+section+"_count").html()=='0')
+        { 
+            $("#"+section+"Absent").show();
+            if(section=='matchAlert')$("#matchAlertAbsentText").text('No more profiles for today');
+        }
+        $(".eoiAcceptBtn").attr("disabled",false);
         $(".eoiDeclineBtn").attr("disabled",false);
-    tupleObject._tupleIndex--;
-        tupleObject.indexFix();
-        tupleObject._goTo(tupleObject._index);          
+        tempTupleObject = section=='matchAlert' ? tupleObject2 : tupleObject;
+        tempTupleObject._tupleIndex--;
+        tempTupleObject.indexFix();
+        tempTupleObject._goTo(tempTupleObject._index);          
     },1500);
                 
 }

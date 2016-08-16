@@ -93,6 +93,26 @@ class BILLING_SERVICE_STATUS extends TABLE {
             throw new jsException($e);
         }
     }
+    public function getMaxExpiryProfilesForDates($expDate1,$expDate2)
+    {
+        try
+        {
+            $sql="SELECT MAX(EXPIRY_DT) as EDATE,PROFILEID FROM billing.SERVICE_STATUS WHERE SERVEFOR LIKE '%F%' AND ACTIVE IN('Y','E') GROUP BY PROFILEID HAVING EDATE>=:EXPDATE1 AND EDATE<=:EXPDATE2";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":EXPDATE1",$expDate1,PDO::PARAM_STR);
+            $prep->bindValue(":EXPDATE2",$expDate2,PDO::PARAM_STR);
+            $prep->execute();
+            while($result=$prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $profiles[]=$result['PROFILEID'];
+            }
+            return $profiles;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    }
     public function getSortedProfilesExpiryBased($profileidStr)
     {
         try
