@@ -231,13 +231,14 @@ var strophieWrapper = {
         }
         else if(subscription == "remove"){
             console.log("got remove subscription 2",rosterObj);
-            /*  if(typeof strophieWrapper.Roster[user_id]!= "undefined"){
+            if(typeof strophieWrapper.Roster[user_id]!= "undefined"){
                 nodeArr[user_id] = strophieWrapper.Roster[user_id];
                 if (strophieWrapper.checkForGroups(nodeArr[user_id][strophieWrapper.rosterDetailsKey]["groups"]) == true) {
+                    console.log("removed..");
                     invokePluginManagelisting(nodeArr, "delete_node", user_id);
                     strophieWrapper.Roster.splice(user_id);
                 }
-            }  */
+            }  
         }
         strophieWrapper.connectionObj.addHandler(strophieWrapper.onRosterUpdate, Strophe.NS.ROSTER, 'iq', 'set');
         //return true;
