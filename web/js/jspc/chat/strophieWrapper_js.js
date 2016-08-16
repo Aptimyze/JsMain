@@ -193,7 +193,9 @@ var strophieWrapper = {
                     //strophieWrapper.stropheLoggerPC(strophieWrapper.Roster[user_id]);
                     //strophieWrapper.stropheLoggerPC("deleting node");
                     invokePluginManagelisting(nodeArr, "delete_node", user_id);
-                    strophieWrapper.Roster.splice(user_id,1);
+                    console.log(strophieWrapper.Roster);
+                    var return1 = strophieWrapper.Roster.splice(user_id,1);
+                    console.log(return1);
                     //strophieWrapper.unauthorize(rosterObj[strophieWrapper.rosterDetailsKey]["jid"]);
                 } else if (strophieWrapper.checkForSubscription(subscription) == true) {
                     //strophieWrapper.stropheLoggerPC("adding node");
