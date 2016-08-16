@@ -1,6 +1,6 @@
 var strophieWrapper = {
     connectionObj: null,
-    Roster: [],
+    Roster: {},
     initialRosterFetched: false,
     rosterDetailsKey: "rosterDetails",
     useLocalStorage: false,
@@ -196,8 +196,9 @@ var strophieWrapper = {
                     invokePluginManagelisting(nodeArr, "delete_node", user_id);
                     console.log(strophieWrapper.Roster);
                     try{
-                        var return1 = strophieWrapper.Roster.splice(user_id,1);
-                        console.log(return1);
+                        delete strophieWrapper.Roster[user_id];
+                        //var return1 = strophieWrapper.Roster.splice(user_id,1);
+                        //console.log(return1);
                     }
                     catch(e){
                         console.log(e);
@@ -240,7 +241,8 @@ var strophieWrapper = {
                     if (strophieWrapper.checkForGroups(nodeArr[user_id][strophieWrapper.rosterDetailsKey]["groups"]) == true) {
                         console.log("removed..");
                         invokePluginManagelisting(nodeArr, "delete_node", user_id);
-                        var return2 = strophieWrapper.Roster.splice(user_id,1);
+                        delete strophieWrapper.Roster[user_id];
+                        //var return2 = strophieWrapper.Roster.splice(user_id,1);
                     }
                 } 
                 //case of remove subscription with group
@@ -253,7 +255,8 @@ var strophieWrapper = {
                 if (strophieWrapper.checkForGroups(nodeArr[user_id][strophieWrapper.rosterDetailsKey]["groups"]) == true) {
                     console.log("removed..");
                     invokePluginManagelisting(nodeArr, "delete_node", user_id);
-                    var return3 = strophieWrapper.Roster.splice(user_id,1);
+                    delete strophieWrapper.Roster[user_id];
+                    //var return3 = strophieWrapper.Roster.splice(user_id,1);
                 }
             }  
         }
