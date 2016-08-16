@@ -1822,10 +1822,10 @@ JsChat.prototype = {
     _disableChatPanelsBox:function(userId){
         var curElem = this;
         if($('chat-box[user-id="' + userId + '"]').length != 0){
-            if($('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage .acceptRec').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage .declineSent').length == 0){
+            if($('chat-box[user-id="' + userId + '"] .chatMessage #sentDiv').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage .acceptRec').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage .declineSent').length == 0){
                 //console.log("disabling","ankita1");
                 setTimeout(function(){
-                    if($('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage .acceptRec').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage .declineSent').length == 0){
+                    if($('chat-box[user-id="' + userId + '"] .chatMessage #sentDiv').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage .acceptRec').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage .declineSent').length == 0){
                        //console.log("disabling","ankita2");
                         var found = false;
                         $.each(curElem._rosterGroups,function(key,groupId){
