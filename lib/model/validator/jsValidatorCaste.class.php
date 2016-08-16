@@ -39,7 +39,11 @@ class jsValidatorCaste extends sfValidatorBase
 		{
 			if(!in_array($clean,$casteArr))
 			{
-				throw new sfValidatorError($this,'please provide a valid value of caste for the religion provided');
+                                if($clean == '431'){// Check added to prevent caste "Gurjar" submit from IOS Will be removed once changed in ios app
+                                        throw new sfValidatorError($this,'This caste is no longer present in system, please select an alternative caste.');
+                                }else{
+                                        throw new sfValidatorError($this,'please provide a valid value of caste for the religion provided');
+                                }
 			}
 		}
 	}

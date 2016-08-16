@@ -198,15 +198,15 @@ class JsMemcache extends sfMemcacheCache{
 	 * Remove $key from redis/memcache.
 	 * A duplicate function need to be added as in existing code people are using both remove/delete.
 	 */
-	public function remove($key)
+	public function remove($key, $throwException=false)
 	{
-		$this->delete($key);
+		$this->delete($key,$throwException);
 	}
 
 	/**
 	 * Remove $key from redis/memcache
 	 */
-	public function delete($key)
+	public function delete($key,$throwException=false)
 	{
 		if(self::isRedis())
 		{
@@ -228,6 +228,9 @@ class JsMemcache extends sfMemcacheCache{
 				}
 				catch (Exception $e)
 				{
+					if($throwException) {
+						throw $e;
+					}
 					jsException::log("D-redisClusters".$e->getMessage());
 				}
 			}
@@ -327,6 +330,121 @@ class JsMemcache extends sfMemcacheCache{
 		}
 	}
 
+	/**
+	 * @param $key
+	 * @param $arrValue
+	 * @param int $expiryTime
+	 * @param bool $throwException
+	 * @return mixed
+	 * @throws Exception
+	 */
+    public function setHashObject($key,$arrValue,$expiryTime=3600,$throwException = false)
+    {
+        if(self::isRedis())
+        {
+            if($this->client)
+            {
+                try
+                {
+                    $result = $this->client->hmset($key, $arrValue);
+                    $this->client->expire($key, $expiryTime);
+					return $result->__toString();
+                }
+                catch (Exception $e)
+                {
+					if ($throwException) {
+						throw $e;
+					}
+                    jsException::log("HS-redisClusters".$e->getMessage());
+                }
+            }
+        }
+    }
 
+    /**
+     * @param $key
+     * @param $subKey
+     * @return mixed
+     */
+    public function getHashOneValue($key,$subKey)
+    {
+        if(self::isRedis())
+        {
+            if($this->client)
+            {
+                try
+                {
+                    return $this->client->hget($key, $subKey);
+                }
+                catch (Exception $e)
+                {
+                    jsException::log("HG-redisClusters".$e->getMessage());
+                }
+            }
+        }
+    }
+
+    /**
+     * @param $key
+     * @param $arrSubKey
+     * @return mixed
+     */
+    public function getHashManyValue($key,$arrSubKey)
+    {
+        if(self::isRedis())
+        {
+            if($this->client)
+            {
+                try
+                {
+                    return $this->client->hmget($key, $arrSubKey);
+                }
+                catch (Exception $e)
+                {
+                    jsException::log("HGM-redisClusters".$e->getMessage());
+                }
+            }
+        }
+    }
+
+    /**
+     * @param $key
+     * @return mixed
+     */
+    public function getHashAllValue($key)
+    {
+        if(self::isRedis())
+        {
+            if($this->client)
+            {
+                try
+                {
+                    return $this->client->hgetall($key);
+                }
+                catch (Exception $e)
+                {
+                    jsException::log("HG-redisClusters".$e->getMessage());
+                }
+            }
+        }
+    }
+
+	public function incrCount($key)
+	{
+		if(self::isRedis())
+		{
+			if($this->client)
+			{
+				try
+				{
+					return $this->client->incr($key);
+				}
+				catch (Exception $e)
+				{
+					jsException::log("HG-redisClusters incr".$e->getMessage());
+				}
+			}
+		}
+	}
 }
 ?>

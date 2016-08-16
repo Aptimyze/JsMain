@@ -163,6 +163,15 @@ class JsNotificationProduce
         case "JS_NOTIFICATION3" :
                     $this->channel->basic_publish($msg,MQ::$DELAYED_NOTIFICATION_EXCHANGE["NAME"],MQ::$scheduledNotificationBindingKeyArr[MQ::$SCHEDULED_NOTIFICATION_QUEUE3]);
                     break;
+	case "JS_NOTIFICATION4" :
+                    $this->channel->basic_publish($msg,MQ::$DELAYED_NOTIFICATION_EXCHANGE["NAME"],MQ::$scheduledNotificationBindingKeyArr[MQ::$SCHEDULED_NOTIFICATION_QUEUE4]);
+                    break;
+        case "JS_NOTIFICATION5" :
+                    $this->channel->basic_publish($msg,MQ::$DELAYED_NOTIFICATION_EXCHANGE["NAME"],MQ::$scheduledNotificationBindingKeyArr[MQ::$SCHEDULED_NOTIFICATION_QUEUE5]);
+                    break;
+        case "JS_NOTIFICATION6" :
+                    $this->channel->basic_publish($msg,MQ::$DELAYED_NOTIFICATION_EXCHANGE["NAME"],MQ::$scheduledNotificationBindingKeyArr[MQ::$SCHEDULED_NOTIFICATION_QUEUE6]);
+                    break;
         case "JS_INSTANT_NOTIFICATION":
                     $this->channel->basic_publish($msg,MQ::$INSTANT_NOTIFICATION_EXCHANGE["NAME"]);
                     break;

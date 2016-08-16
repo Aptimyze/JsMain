@@ -11,6 +11,7 @@ class RequestHandlerConfig
         "insertChromeId"=>array("v1"=>"insertChromeIdV1"),
         "getNotification"=>array("v1"=>"getNotificationV1"),
         "updateNotificationSetting"=>array("v1"=>"updateNotificationSettingV1"),
+        "monitoringNotificationsKey"=>array("v1"=>"monitoringNotificationsKeyV1"),
         "notificationLayerSettings"=>array("v1"=>"notificationLayerSettingsV1")),
 	"search"=>array(
 		"partnermatches"=>array("v1"=>"searchApiV1Action","v2"=>"","v3"=>"searchApiV1Action"),
@@ -92,7 +93,8 @@ class RequestHandlerConfig
 			"save"=>array("v1"=>"saveV1","v3"=>"saveV1"),
 			"verified"=>array("v1"=>"verifiedV1","v3"=>"verifiedV1"),
 			"sendOTPSMS"=>array("v1"=>"SendOtpSMS","v2"=>"SendOtpSMS","v3"=>"SendOtpSMS"),
-			"matchOTP"=>array("v1"=>"MatchOtp","v2"=>"MatchOtp","v3"=>"MatchOtp")),
+			"matchOTP"=>array("v1"=>"MatchOtp","v2"=>"MatchOtp","v3"=>"MatchOtp"),
+			"SMSContactsToMobile"=>array("v1"=>"SMSContactsToMobile","v2"=>"SMSContactsToMobile","v3"=>"SMSContactsToMobile")),
 	"static"=>array("page"=>array("v1"=>"pagev1","v2"=>"pagev1","v3"=>"pagev1"),"pagehits"=>array("v1"=>"savehitsv1","v2"=>"savehitsv1","v3"=>"savehitsv1")),	
     "help"=>array(
         "helpQuery"=>array("v1"=>"SubmitQueryV1"),

@@ -2302,7 +2302,7 @@ public function fetchPincodesOfCities($cities)
 }
 	public function getValidUsersForSalesTarget($usernameArr='')
 	{
-		$jsadminPswrdsObj = new jsadmin_PSWRDS();
+		$jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_masterRep');
 		if($usernameArr && is_array($usernameArr))
 			$privileges = $jsadminPswrdsObj->get_name_priv($usernameArr);
 		else
@@ -2325,7 +2325,7 @@ public function fetchPincodesOfCities($cities)
 
 	public function getValidUsersForFieldSalesTarget()
 	{
-		$jsadminPswrdsObj = new jsadmin_PSWRDS();
+		$jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
         	$privileges = $jsadminPswrdsObj->getPrivilegesForSalesTarget();
 
         	$usernames = array();

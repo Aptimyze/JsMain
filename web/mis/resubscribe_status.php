@@ -9,7 +9,6 @@ Purpose		:To view The data of the people who have resubscribed with us.
 ***********************************************************************************************/
 include("connect.inc");
 $db=connect_misdb();
-$db2=connect_master();
 
 if(authenticated($cid))
 {

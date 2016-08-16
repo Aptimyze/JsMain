@@ -10,7 +10,6 @@ ini_set("max_execution_time","0");
 $flag_using_php5=1;
 include('connect.inc');
 $db = connect_misdb();
-$db2 = connect_master();
                                                                                                                              
 $data = authenticated($cid);
 

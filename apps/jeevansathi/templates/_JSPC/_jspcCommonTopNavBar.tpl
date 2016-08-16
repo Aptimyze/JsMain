@@ -119,7 +119,7 @@ window.onload=function(){
                                 <li><a class="disp_b" href="/search/twoway">Mutual Matches</a></li>
                                 <li><a class="disp_b" href="/search/reverseDpp">People Looking for me</a></li>
                                 ~if $showKundliList eq '1'`
-                                <li><a class="disp_b" href="/search/kundlialerts">Kundli Matches</a></li>
+                                <li><a class="disp_b" href="/search/kundlialerts">Kundli Matches<div class="fr"><div class="bg_pink mr15 mt10"><div style="line-height:10px;" class="colrw disp_b padall-6">New</div></div></div></a></li>
                                 ~/if`
                                 <li><a class="disp_b" href="/search/shortlisted">Shortlisted members</a></li>
                                 <li><a class="disp_b" href="/search/visitors">Recent Profile Visitors</a></li>
@@ -266,8 +266,8 @@ window.onload=function(){
                                 <li><div class="topnavp1"><a class="disp_b" href="/settings/jspcSettings?changePassword=1">Change Password</a></div></li>
                                 <li>
                                     <div class="clearfix topnavp1">
-                                        <div class="fl pt5"><a class="disp_b" href="/profile/mem_comparison.php">You are ~if strstr($subscription,"F") or strstr($subscription,"D")`a Paid~else`Free~/if` Member  </a></div>
-                                        ~if strstr($subscription,"F") or strstr($subscription,"D")`
+                                        <div class="fl pt5"><a class="disp_b" href="/profile/mem_comparison.php">You are~if CommonFunction::getMembershipName($profileid) neq 'Free'` a Paid~else` a Free~/if` Member  </a></div>
+                                        ~if CommonFunction::getMembershipName($profileid) neq 'Free'`
                                         ~else`
                                         <div class="fr">
                                             <div class="bg_pink navp2"><a class="colrw disp_b" href="/profile/mem_comparison.php">Upgrade</a></div>

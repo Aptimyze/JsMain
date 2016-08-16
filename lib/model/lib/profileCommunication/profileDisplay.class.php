@@ -6,7 +6,7 @@ class profileDisplay{
 	public function getNextPreviousProfile($profileObj,$key,$offset)
 	{
 		$data = unserialize(JsMemcache::getInstance()->get($key));
-		if(count($data)<$offset)
+		if(false === $data || count($data)<$offset)
 		{
 			$profileCommunication = new ProfileCommunication();
 			if(MobileCommon::isDesktop())

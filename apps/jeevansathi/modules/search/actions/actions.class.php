@@ -1407,7 +1407,7 @@ class searchActions extends sfActions
 		$inputValidateObj = ValidateInputFactory::getModuleObject('search');
 		$inputValidateObj->validateAppSearchForm($request);
 		$resp = $inputValidateObj->getResponse();
-                $featuredProfile=1;
+    $featuredProfile=1;
 		//print_r($request->getParameterHolder()->getAll());
 
 	
@@ -1567,9 +1567,9 @@ class searchActions extends sfActions
 			
 						}
 					}
-                                        if($request->getParameter("contactViewAttempts") == 1 || $request->getParameter("searchBasedParam")=='contactViewAttempts'){
-                                          $results_orAnd_cluster = "onlyResults";
-                                        }
+					if($request->getParameter("kundlialerts") == 1 || $request->getParameter("searchBasedParam")=='kundlialerts'){
+						$results_orAnd_cluster = "onlyResults";
+					}
 					/** Auto Relaxation Section
 					* increasing search results by changing some search paramters
 					*/
@@ -1617,9 +1617,9 @@ class searchActions extends sfActions
                                         $currentPageFeatured=1;
                                 else
                                         $currentPageFeatured = $currentPage;
-
-				if($request->getParameter("justJoinedMatches")==1 || $request->getParameter("searchBasedParam")=='justJoinedMatches' || $request->getParameter("matchalerts")==1 || $request->getParameter("searchBasedParam")=='matchalerts' || $request->getParameter("searchBasedParam")=='verifiedMatches' || $request->getParameter("searchBasedParam")=='contactViewAttempts' || $request->getParameter("verifiedMatches") == 1 || $request->getParameter("contactViewAttempts") == 1)
-					;
+       
+				if($request->getParameter("justJoinedMatches")==1 || $request->getParameter("matchalerts")==1 || $request->getParameter("verifiedMatches")==1 || $request->getParameter("kundlialerts")==1 || $request->getParameter("contactViewAttempts")==1 || in_array($request->getParameter("searchBasedParam"),array('justJoinedMatches','matchalerts','kundlialerts','contactViewAttempts','verifiedMatches')))
+				;
 				else
 					$request->setParameter("showFeaturedProfiles",$this->SearchChannelObj->getFeaturedProfilesCount());
 				
@@ -1668,19 +1668,25 @@ class searchActions extends sfActions
 					$resultArr["paginationArray"]= $this->paginationArr; 
 					$statusArr = $inputValidateObj->getResponse();
 				}
+
 			}
 			
 			/** caching **/
 			$ifApiCached = SearchUtility::cachedSearchApi('set',$request,'',$statusArr,$resultArr);
+
 			/** caching **/
+
+			$resultArr["searchIdForNavigation"]= $this->searchId;
+
 		}
 		else
 		{
 			//validation are logged in search validation.
 			$statusArr = $resp;
 		}   
-                
-                unset($inputValidateObj);
+
+
+        		unset($inputValidateObj);
                 $respObj = ApiResponseHandler::getInstance();
                 $respObj->setHttpArray($statusArr);//print_r($resultArr);die;
                 $respObj->setResponseBody($resultArr);

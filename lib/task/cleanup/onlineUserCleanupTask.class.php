@@ -22,7 +22,7 @@ EOF;
         if(!sfContext::hasInstance())
                 sfContext::createInstance($this->configuration);
 
-		$dateTime1 ='10';
+		$dateTime1 ='11';
 		$dateTime2 ='22';
 		$dateTime =date("H");
 		$redisOnline =true;

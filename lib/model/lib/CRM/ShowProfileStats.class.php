@@ -200,7 +200,10 @@ class ShowProfileStats
 		if ($mainMembership) {
 			$serviceStatusObj = new BILLING_SERVICE_STATUS('newjs_slave');
 			$expDate = $serviceStatusObj->getMaxExpiryDate($this->profileid);
-			$membershipExpDate = date("M d, Y", strtotime($expDate));
+			if($expDate)
+				$membershipExpDate = date("M d, Y", strtotime($expDate));
+			else
+				$membershipExpDate ='';
 		}
 		if(!$mainMembership)
 			$actionRequired =$actionsReqArr[0];
@@ -539,7 +542,7 @@ class ShowProfileStats
 	private function getMobileUsage()
 	{
 		$lastMonth = date('Y-m-d', strtotime('-30 days'));
-		$loginTrackingobj = new MIS_LOGIN_TRACKING();
+		$loginTrackingobj = new MIS_LOGIN_TRACKING('newjs_slave');
 			$data = $loginTrackingobj->getLoginChannel($this->profileid,$lastMonth);
 		if(is_array($data) && (in_array('A',$data) || in_array('I',$data)))
 			$mobile_usage = "Uses Mobile App";

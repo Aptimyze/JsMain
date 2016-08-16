@@ -26,7 +26,7 @@ Abstract class ApiAuthentication
 	private $mixer =   "6D5BsZR7mTmxvJE7xpyT1WStW5avfQvr";
 	private $inactiveMin="35";//The time in minutes to force new login, if account has been inactive used for older login functionality
 	private $expiryCookieTime=2592000;
-	private $dateTime1 ='10';
+	private $dateTime1 ='11';
 	private $dateTime2 ='22';	
 	
 	public function __construct($request)
@@ -42,7 +42,7 @@ Abstract class ApiAuthentication
 			//Get the Login Data from JProfile -->call Store
 			$dbJprofile=new JPROFILE();
 			
-			$paramArr='PROFILEID,DTOFBIRTH,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,PASSWORD,PHONE_MOB,EMAIL';
+			$paramArr='PROFILEID,DTOFBIRTH,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,PASSWORD,PHONE_MOB,EMAIL,SORT_DT';
 			
 			$loginData=$dbJprofile->get($email,"EMAIL",$paramArr);
 			if(is_array($loginData))
