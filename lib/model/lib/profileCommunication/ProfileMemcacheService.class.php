@@ -768,11 +768,19 @@ public function unsett()
         $this->memcache->setMATCHALERT($matchAlertCount["NEW"] ? $matchAlertCount["NEW"] : 0);
         $this->memcache->setMATCHALERT_TOTAL($matchAlertCount["TOTAL"] ? $matchAlertCount["TOTAL"] : 0);
     }
+    
     public function unsetMatchAlertData()
     {
         $this->memcache->setMATCHALERT($matchAlertCount["NEW"]=0);
         $this->memcache->setMATCHALERT_TOTAL($matchAlertCount["TOTAL"]=0);
     }
+ 
+        public function setMATCHALERT($new=0)
+    {
+        $this->memcache->setMATCHALERT($new);
+    }
+ 
+    
     public function setVisitorAlertData()
     {
         $visitorObj = new Visitors($this->profileid);

@@ -179,6 +179,18 @@ class ProcessHandler
 			Inbox::setAllHoroscopeRequestsSeen($body['profileid']);
 			break;
 	}
+        
+        if($body['contactType']==ContactHandler::FILTERED)
+        {    
+                $contactRObj=new EoiViewLog();
+                $contactRObj->setEoiViewedForAReceiver($body['profileid'],'Y');
+        }
+        
+        if($body['contactType']==ContactHandler::INITIATED)
+        {    
+                $contactRObj=new EoiViewLog();
+                $contactRObj->setEoiViewedForAReceiver($body['profileid'],'N');
+        }
  }
 
  /**

@@ -484,7 +484,7 @@ class NEWJS_JPROFILE extends TABLE
 
             if ($fields == 'returnOnlySql')
                 return $sqlSelectDetail;
-
+    
             $resSelectDetail = $this->db->prepare($sqlSelectDetail);
 
             /*

@@ -560,5 +560,131 @@ class VariableDiscount
         return $discountNewArr;
     }
 
+        // pre-process Mini-VD Data
+        public function preProcessMiniVdData()
+        {
+                $vdClusterObj   =new billing_VD_CLUSTER();
+                $clusterDetails =$vdClusterObj->getClusterDetails();
+                $fields         ='PROFILEID,GENDER,AGE';
+                $jprofileData   =array();
+		$profileArray	=array();
+
+                if(is_array($clusterDetails)){
+                foreach($clusterDetails as $clusterName=>$fieldArr){
+			//loop start
+			foreach($fieldArr as $key=>$data){
+				$val1 =$data['VALUE1'];
+				$val2 =$data['VALUE2'];
+
+				if($key=='LAST_LOGIN_DT'){
+					$greaterArray[$key] =$val1;
+				}
+				if($key=='ACTIVATED'){
+					 $valueArray[$key]="'Y'";
+					 $valueArray['MOB_STATUS']="'Y'";
+				}
+				if($key=='ENTRY_DT'){
+					$greaterArray[$key] =$val1;
+					$lessArray[$key]=$val2." 23:59:59";
+				}
+				if($key=='MTONGUE')
+					$valueArray[$key]=$val1;
+				if($key=='NEVER_PAID')
+					$neverPaid=1;
+				if($key=='EVER_PAID')
+					$everPaid=1;
+				if($key=='ANALYTIC_SCORE'){
+					$analyticScore=1;
+					$scoreMin =$val1;
+					$scoreMax =$val2;
+				}
+				if($key=='EXPIRY_DT'){
+					$expiryDt =1;
+					$expiryDt1 =$val1;
+					$expiryDt2 =$val2." 23:59:59";	
+				}
+				if($key=='VD_OFFER_DATE'){
+					$startDate      =$val1;
+					$endDate        =$val2;
+				}
+				if($key=='DISCOUNT'){
+					$discount       =$val1;
+				}
+			}
+			// loop end
+
+			// jprofile data
+			$jprofileObj =new JPROFILE('newjs_local111');
+			$mainAdminPoolObj= new incentive_MAIN_ADMIN_POOL('newjs_local111');	
+			$jprofileData =$jprofileObj->getArray($valueArray,'',$greaterArray,$fields,$lessArray);
+			//print_r($jprofileData);		
+			foreach($jprofileData as $key=>$val){
+				$profileid      =$val['PROFILEID'];
+				$gender         =$val['GENDER'];
+				$age            =$val['AGE'];
+				if(($gender=='M' && $age<23) || ($gender=='F' && $age<20))
+					continue;
+				if($analyticScore){
+					$eligible =$mainAdminPoolObj->getEligibileProfile($profileid,$scoreMin,$scoreMax);
+					if(!$eligible)
+						continue;
+				}
+				$profileArr[] =$profileid;
+			}
+			//print_r($profileArr);
+			if($expiryDt){
+				$servicesObj =new BILLING_SERVICE_STATUS('newjs_local111');
+				$expiryProfiles =$servicesObj->getMaxExpiryProfilesForDates($expiryDt1, $expiryDt2);
+				if(is_array($expiryProfiles))
+					$profileArr =array_intersect($profileArr, $expiryProfiles);
+			}
+			// get ever paid profiles 
+			if($everPaid || $neverPaid){
+				$purchasesObj =new BILLING_PURCHASES('newjs_local111');
+				$everPaidArr =$purchasesObj->fetchEverPaidPool();
+			}
+			if($everPaid){
+				if(is_array($everPaidArr))
+					$profileArr =array_intersect($profileArr, $everPaidArr);
+			}
+			if($neverPaid){
+				if(is_array($everPaidArr))
+					$profileArr =array_diff($profileArr, $everPaidArr);
+			}
+
+			// Add in pool
+			$this->addMiniVdDataInTemp($profileArr,$startDate,$endDate,$discount);
+
+			// Send Mail for Cluster Count
+			$totalCount =count($profileArr);
+			$countArr[] =array('cluster'=>$clusterName,'count'=>$totalCount);
+
+			// Delete Cluster
+			$vdClusterObj->deleteCluster($clusterName);
+			unset($profileArr);	
+		}
+		foreach($countArr as $key=>$dataArr){
+			$cluster 	=$dataArr['cluster'];
+			$total 		=$dataArr['count'];
+			$message 	.="\n".$cluster."=".$total;
+		}
+                mail("manoj.rana@naukri.com","VD Cluster Details","$message","From:JeevansathiCrm@jeevansathi.com");
+		}
+		
+	}
+
+	// process Mini-VD Data
+        public function addMiniVdDataInTemp($profileArr,$startDate,$endDate,$discount)
+        {
+		$services ='P,C,NCP,ESP,X';	
+                $uploadTempObj =new test_VD_UPLOAD_TEMP('newjs_slave');
+
+                if(is_array($profileArr)){
+                foreach($profileArr as $key=>$profileid){
+                        $uploadTempObj->addVDRecordsInUploadTemp($profileid,$startDate,$endDate,$discount,$services);
+                }}
+        }
+ 
+
 }
 ?>

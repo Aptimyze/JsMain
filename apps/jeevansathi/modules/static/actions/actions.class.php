@@ -772,12 +772,42 @@ public function executeAppredirect(sfWebRequest $request)
 				$outData[$val] = $this->getFieldMapData($val);
 			  else//As in case of reg_caste_ , we are getting array of caste as per religion for optimising calls
 			  	$outData = array_merge($outData,$this->getFieldMapData($val));
+			if($val=="family_income")
+			{
+				$optionalArr[0] = array("0"=>array("0"=>"Select"));
+				foreach($outData['family_income'] as $x=>$y)
+				{
+					$mergedArr = array_merge($optionalArr,$y);
+					$outData['family_income'][$x]=$mergedArr;
+				}
+			}
+			if($val=="state_india" || $val=="native_country")
+			{
+				$optionalArr = array("0"=>array("0"=>"Select"));
+				$mergedArr = array_merge($optionalArr,$outData[$val][0]);
+				$outData[$val][0]=$mergedArr;
+			}
 		  }
 		  echo json_encode($outData);
 	  }
 	  else if($k)
 	  {
 		  $output = $this->getFieldMapData($k);
+			if($k=="family_income")
+			{
+                                $optionalArr[0] = array("0"=>array("0"=>"Select"));
+                                foreach($output as $x=>$y)
+                                {
+                                        $mergedArr = array_merge($optionalArr,$y);
+                                        $output[$x]=$mergedArr;
+                                }
+			}
+                        if($k=="state_india" || $k=="native_country")
+                        {
+                                $optionalArr = array("0"=>array("0"=>"Select"));
+                                $mergedArr = array_merge($optionalArr,$output[0]);
+                                $output[0]=$mergedArr;
+                        }
 		  echo json_encode($output,JSON_FORCE_OBJECT);
 	  }	
 	  
@@ -1797,6 +1827,7 @@ public function executeAppredirect(sfWebRequest $request)
    */
   private function getJsmsNativeState(){
     $arr=FieldMap::getFieldLabel("state_india",'',1);
+    $Arr[0][] = array("0"=>"Select");
     $Arr[0][] = array("NI"=>"Outside India");
 	  foreach($arr as $key=>$val)
 			$Arr[0][]=array($key=>$val);
@@ -1813,6 +1844,7 @@ public function executeAppredirect(sfWebRequest $request)
     $Arr[1]=Array("-1"=>"--More");
     $Arr[2]=FieldMap::getFieldLabel("country",'',1);
 		
+    $output[] = array("0"=>"Select");
     $output[] = array("FI"=>"From India");
     foreach($Arr as $key=>$val)
     {

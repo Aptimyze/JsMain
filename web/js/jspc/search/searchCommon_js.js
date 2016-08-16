@@ -50,7 +50,7 @@ function searchResultMaping(val, noPhotoDiv, val1, profileNoId, defaultImage, fe
     removeThisProfile = "";
   }
   
-  if(resp.searchBasedParam=="justJoinedMatches" || resp.searchBasedParam=='matchalerts' ||  resp.searchBasedParam=='kundlialerts' || resp.searchBasedParam=='contactViewAttempts'){
+  if(resp.searchBasedParam=="justJoinedMatches" || resp.searchBasedParam=='matchalerts' || resp.searchBasedParam=='contactViewAttempts'){
         joinedOnMsg = val1.timetext.replace("She j","J").replace("He j","J");
         removeThisProfile = "disp-none";
     }
@@ -60,7 +60,7 @@ function searchResultMaping(val, noPhotoDiv, val1, profileNoId, defaultImage, fe
     }
     else
         joinedOnMsg = "";
-  
+ 
   /** 
    * Filtered Profiles
    */

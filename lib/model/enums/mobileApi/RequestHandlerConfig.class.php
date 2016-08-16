@@ -11,6 +11,7 @@ class RequestHandlerConfig
         "insertChromeId"=>array("v1"=>"insertChromeIdV1"),
         "getNotification"=>array("v1"=>"getNotificationV1"),
         "updateNotificationSetting"=>array("v1"=>"updateNotificationSettingV1"),
+        "monitoringNotificationsKey"=>array("v1"=>"monitoringNotificationsKeyV1"),
         "notificationLayerSettings"=>array("v1"=>"notificationLayerSettingsV1")),
 	"search"=>array(
 		"partnermatches"=>array("v1"=>"searchApiV1Action","v2"=>"","v3"=>"searchApiV1Action"),
