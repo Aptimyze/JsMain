@@ -199,7 +199,7 @@ var strophieWrapper = {
                     //strophieWrapper.stropheLoggerPC("adding node");
                     //strophieWrapper.stropheLoggerPC(subscription);
                     console.log("add node case");
-                    if (typeof strophieWrapper.Roster[user_id] == "undefined") {
+                    if (typeof strophieWrapper.Roster[user_id] == "undefined" || typeof strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["subscription"]=="undefined") {
                         console.log("adding new1");
                         invokePluginManagelisting(nodeArr, "add_node", user_id);
                     } else if (typeof strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["groups"] != "undefined") {
