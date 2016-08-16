@@ -1746,7 +1746,7 @@ JsChat.prototype = {
         }*/
         if ($('chat-box[user-id="' + userId + '"]').length != 0){
             if ($('chat-box[user-id="' + userId + '"] .chatMessage').find("#text_" + userId + uniqueId).length == 0) {
-                message = message.replace("/\&lt;br \/\&gt;/g, "<br />");
+                message = message.replace(/\&lt;br \/\&gt;/g, "<br />");
                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText" data-msgid='+uniqueId+'>' + message + '</div><i class="nchatspr nchatic_8 fr vertM"></i></div>');
                 var len = $('chat-box[user-id="' + userId + '"] .talkText').length - 1,
                     height = $($('chat-box[user-id="' + userId + '"] .talkText')[len]).height();
