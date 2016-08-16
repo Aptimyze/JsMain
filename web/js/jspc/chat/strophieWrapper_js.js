@@ -194,8 +194,13 @@ var strophieWrapper = {
                     //strophieWrapper.stropheLoggerPC("deleting node");
                     invokePluginManagelisting(nodeArr, "delete_node", user_id);
                     console.log(strophieWrapper.Roster);
-                    var return1 = strophieWrapper.Roster.splice(user_id,1);
-                    console.log(return1);
+                    try{
+                        var return1 = strophieWrapper.Roster.splice(user_id,1);
+                        console.log(return1);
+                    }
+                    catch(e){
+                        console.log(e);
+                    }
                     //strophieWrapper.unauthorize(rosterObj[strophieWrapper.rosterDetailsKey]["jid"]);
                 } else if (strophieWrapper.checkForSubscription(subscription) == true) {
                     //strophieWrapper.stropheLoggerPC("adding node");
