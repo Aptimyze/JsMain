@@ -135,8 +135,10 @@
 		}
 
 		/**
-		* @return get if debug is on for the module
-		*/
+		 * Get if debug is on for the module or not
+		 * @param String $module A module name
+		 * @return bool
+		 */
 		public function debugStatus($module)
 		{
 			if(LoggingEnums::LOG_LEVEL == LoggingEnums::LOG_DEBUG){
