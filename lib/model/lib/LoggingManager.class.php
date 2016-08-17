@@ -41,11 +41,6 @@ class LoggingManager
     private $channelName = null;
 
     /**
-     * @var bool
-     */
-    private $bDoItOnce = true;
-
-    /**
      * @var json_object
      */
     private $logData = array();
@@ -146,7 +141,7 @@ class LoggingManager
       $logData = $this->getLogData($exception,$isSymfony,$logArray);
       $logData[LoggingEnums::LOG_TYPE] = $this->getLogType(LoggingEnums::LOG_ERROR);
 
-      if(LoggingConfig::getInstance()->debugStatus())
+      if(LoggingConfig::getInstance()->debugStatus($this->szLogPath))
       {
          foreach ($_SERVER as $key => $value) {
           $logData[$key] = $value;
@@ -453,13 +448,8 @@ class LoggingManager
         {
           $this->createDirectory("");
         }
-        //Add in log file
-      if($this->bDoItOnce) {
-        $szLogString = "\n".$szLogString;
-        $this->bDoItOnce = false;
-      }
       $fileResource = fopen($filePath,"a");
-      fwrite($fileResource,$szLogString."\n");
+      fwrite($fileResource,$szLogString);
       fclose($fileResource);
     }
 
