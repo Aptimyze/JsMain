@@ -289,7 +289,7 @@ chatConfig.Params = {
         moreMsgChunk: 20,
         loginRetryTimeOut: 500,
         appendRetryLimit: 1000,
-        checkForDefaultEoiMsg:true,
+        checkForDefaultEoiMsg:false,
         rosterDeleteChatBoxMsg:"This profile has been removed from list,so you cannot chat with this profile."
     }
 };

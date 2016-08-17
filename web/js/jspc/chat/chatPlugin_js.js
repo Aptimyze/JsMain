@@ -1720,9 +1720,9 @@ JsChat.prototype = {
                 } else if (parseInt(logObj["SENDER"]) == other_id) {
                     //check for default eoi message,remove after monday JSI release
                     if(curElem._checkForDefaultEoiMsg == false || logObj["MESSAGE"].indexOf(defaultEoiRecMsg) == -1){
-                        //console.log("done"+requestType+removeFreeMemMsg);
+                        console.log("done"+removeFreeMemMsg);
                         if(removeFreeMemMsg == false){
-                            //console.log("remove free msg");
+                            console.log("remove free msg");
                             if(typeof logObj["IS_EOI"] == "undefined" && logObj["IS_EOI"] == false){
                                 removeFreeMemMsg = true;
                                 curElem._enableChatAfterPaidInitiates(other_id);
