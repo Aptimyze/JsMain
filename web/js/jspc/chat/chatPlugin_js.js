@@ -1340,7 +1340,7 @@ JsChat.prototype = {
                         if (response.responseMessage != "Successful") {
                             //curElem._chatLoggerPlugin($(this));
                             $(this).html(response.responseMessage);
-                        } else if (response.buttondetails && response.buttondetails.button) {
+                        } else if (response.buttondetails || response.buttondetails.button) {
                             if (response.actiondetails.errmsglabel) {
                                 $(this).html(response.actiondetails.errmsglabel);
                             } else {
@@ -1389,7 +1389,7 @@ JsChat.prototype = {
                             //curElem._chatLoggerPlugin($(this));
                             $(this).html(response.responseMessage);
                             $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt,#chatBoxErr").remove();
-                        } else if (response.buttondetails && response.buttondetails.button) {
+                        } else if (response.buttondetails || response.buttondetails.button) {
                             if (response.actiondetails.errmsglabel) {
                                 $(this).html(response.actiondetails.errmsglabel);
                                 $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
@@ -1429,7 +1429,7 @@ JsChat.prototype = {
                             //curElem._chatLoggerPlugin($(this));
                             $(this).html(response.responseMessage);
                             $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt,#chatBoxErr").remove();
-                        } else if (response.buttondetails && response.buttondetails.button) {
+                        } else if (response.buttondetails || response.buttondetails.button) {
                             if (response.actiondetails.errmsglabel) {
                                 $(this).html(response.actiondetails.errmsglabel);
                                 $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt").remove();
