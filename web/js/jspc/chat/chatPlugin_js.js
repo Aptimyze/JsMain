@@ -1722,8 +1722,9 @@ JsChat.prototype = {
                     if(curElem._checkForDefaultEoiMsg == false || logObj["MESSAGE"].indexOf(defaultEoiRecMsg) == -1){
                         console.log("done"+removeFreeMemMsg);
                         if(removeFreeMemMsg == false){
-                            console.log("remove free msg");
-                            if(typeof logObj["IS_EOI"] == "undefined" && logObj["IS_EOI"] == false){
+                           console.log(typeof logObj["IS_EOI"]+"-"+logObj["IS_EOI"]);
+                            if(typeof logObj["IS_EOI"] == "undefined" || logObj["IS_EOI"] == false){
+                                console.log("remove free msg");
                                 removeFreeMemMsg = true;
                                 curElem._enableChatAfterPaidInitiates(other_id);
                             }
