@@ -42,11 +42,6 @@ class LoggingManager
     private $channelName = null;
 
     /**
-     * @var bool
-     */
-    private $bDoItOnce = true;
-
-    /**
      * @var json_object
      */
     private $logData = array();
@@ -110,9 +105,9 @@ class LoggingManager
      * @param $logArray - an associative array which contains
      *        moduleName (optional)
      *       ,actionName(optional),
-     *       ,controllerName(optional)
      *       ,apiVersion(optional)
      *       ,statusCode
+     *       ,MESSAGE
      *       ,typeOfError(whether php error, or mysql etc.) 
      */
      public function logThis($enLogType,$Var,$logArray = array(),$isSymfony=true)
@@ -145,7 +140,7 @@ class LoggingManager
     {
 
       $logData = $this->getLogData($exception,$isSymfony,$logArray);
-      $logData['logType'] = $this->getLogType(LoggingEnums::LOG_ERROR);
+      $logData[LoggingEnums::LOG_TYPE] = $this->getLogType(LoggingEnums::LOG_ERROR);
 
       if(LoggingConfig::getInstance()->debugStatus($this->szLogPath))
       {
@@ -210,8 +205,7 @@ class LoggingManager
       $logData[LoggingEnums::LOG_ID] = $logId;
       $logData[LoggingEnums::CLIENT_IP] = $clientIp;
       $logData[LoggingEnums::TIME] = $time;
-      if($uniqueSubId != "")
-        $logData[LoggingEnums::UNIQUE_REQUEST_SUB_ID] = $uniqueSubId;
+      $logData[LoggingEnums::UNIQUE_REQUEST_SUB_ID] = $uniqueSubId;
       $logData[LoggingEnums::CHANNEL_NAME] = $channelName;
       $logData[LoggingEnums::API_VERSION] = $apiVersion;
       $logData[LoggingEnums::MODULE_NAME] = $moduleName;
@@ -455,13 +449,8 @@ class LoggingManager
         {
           $this->createDirectory("");
         }
-        //Add in log file
-      if($this->bDoItOnce) {
-        $szLogString = "\n".$szLogString;
-        $this->bDoItOnce = false;
-      }
       $fileResource = fopen($filePath,"a");
-      fwrite($fileResource,$szLogString."\n");
+      fwrite($fileResource,$szLogString);
       fclose($fileResource);
     }
 
