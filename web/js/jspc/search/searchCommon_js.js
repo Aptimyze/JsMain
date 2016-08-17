@@ -124,7 +124,7 @@ var verificationDocumentsList;
   //adding code for caste
   if(val1.caste == val1.religion)
   {
-    val1.caste = " ";
+    val1.caste = "";
   }
   else
   {
