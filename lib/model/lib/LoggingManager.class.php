@@ -41,11 +41,6 @@ class LoggingManager
     private $channelName = null;
 
     /**
-     * @var bool
-     */
-    private $bDoItOnce = true;
-
-    /**
      * @var json_object
      */
     private $logData = array();
@@ -454,13 +449,8 @@ class LoggingManager
         {
           $this->createDirectory("");
         }
-        //Add in log file
-      if($this->bDoItOnce) {
-        $szLogString = "\n".$szLogString;
-        $this->bDoItOnce = false;
-      }
       $fileResource = fopen($filePath,"a");
-      fwrite($fileResource,$szLogString."\n");
+      fwrite($fileResource,$szLogString);
       fclose($fileResource);
     }
 
