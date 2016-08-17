@@ -16,7 +16,7 @@
               <div class="fullwid pos_rel clearfix">
                 <div class="reg-wid3 fr reg-divselc bg-white outl-none toValidate" tabindex="0" id="familyType_box">
                   <label class="lblreg pos_abs js-familyType js-list pos1_lbl2" id="familyType_label" data-attr="familyType">Family type</label>
-                  <div class="js-tBox reg-mainlist showdd" id="familyType_value" data-validate=false data-required=false data-fieldtype="familyType" data-number="3" data-type="radio" data-toSave="family_type">
+                  <div class="js-tBox reg-mainlist showdd" id="familyType_value" data-validate=false data-required=false data-fieldtype="familyType" data-number="4" data-type="radio" data-toSave="family_type">
                     <div id="familyType-inputBox_set"></div>
                     <ul id="familyType-list_set" class="rlist familyTypeopt">
 		    </ul>

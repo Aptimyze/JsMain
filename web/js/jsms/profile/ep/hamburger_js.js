@@ -492,6 +492,7 @@ var hamHtml="";
       }
       
       if(this.type == "native_country" && value== "FI"){
+        this.type="native_country";
         this.type="native_state";
         this.UpdateHamburgerHTML();
         return;
@@ -505,7 +506,7 @@ var hamHtml="";
 			{
 				
 			}
-			else if(this.dependant && this.type!=this.dependant && this.AnySpecialCheck(value))
+			else if(this.dependant && this.type!=this.dependant && this.AnySpecialCheck(value)&& !(this.type == "native_state" && value==0) && !(this.type == "native_country" && value==0))
 			{
 				stopTouchEvents(1);
 				this.type=this.dependant;

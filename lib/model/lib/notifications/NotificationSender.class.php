@@ -109,5 +109,38 @@ class NotificationSender
 
 	return $profiledetailsArr;
      }
+    public function filterProfilesBasedOnNotificationCountNew($profiledetailsArr,$notificationKey)
+    {
+        $profileidArr = array_keys($profiledetailsArr);
+        $profileidStr = implode(",",$profileidArr);
+        $countObj = new MOBILE_API_SENT_NOTIFICATIONS_COUNT();
+        $count_arr =  $countObj->getCountGroupByProfile($profileidStr);
+        $idArr = array();
+        foreach($profileidArr as $key=>$profileid)
+        {
+                $count = $count_arr[$profileid];
+                if($count>=0 && $count<NotificationEnums::$scheduledNotificationsLimit)
+                {
+                        $countObj->incrementNotificationsCountForProfile($profileid,$count+1);
+                }
+                else if($count==NotificationEnums::$scheduledNotificationsLimit)
+                {
+                        $idArr[] = $profiledetailsArr[$profileid]['ID'];
+                        unset($profiledetailsArr[$profileid]);
+                }
+        }
+        unset($count_arr);
+        unset($profileidArr);
+        unset($countObj);
+
+        if(is_array($idArr) && $idArr)
+                {
+                        $scheduledAppNotificationObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS();
+                        $scheduledAppNotificationObj->updateNotificationStatus($idArr,$notificationKey,NotificationEnums::$CANCELLED);
+                        unset($scheduledAppNotificationObj);
+                }
+                return $profiledetailsArr;
+        }
+
 }
 ?>
