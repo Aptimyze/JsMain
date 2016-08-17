@@ -204,6 +204,11 @@ class LoggingManager
       $headers = getallheaders();
       $logData = array();
 
+      if ( $time != "")
+      {
+        $logData[LoggingEnums::TIME] = $time;
+      }
+
       if ($logId != "") 
       {
         $logData[LoggingEnums::LOG_ID] = $logId;
