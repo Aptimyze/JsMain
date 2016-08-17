@@ -24,33 +24,29 @@ class EoiViewLog{
 		return $viewedData;
 	}
         
-        public function setEoiViewedForAReceiver($receiver,$filtered=0)
+        public function setEoiViewedForAReceiver($receiver,$filtered='')
         {
             
             $receiverShard=JsDbSharding::getShardNo($receiver);
-            $eoiSenderArray=(new newjs_CONTACTS($receiverShard))->getContactedProfiles($receiver, 'RECEIVER', array('I'),'', $filtered);
-            $tempShard =  $receiverShard;
-            foreach ($eoiSenderArray['I'] as $key => $value) 
+			
+			$condition["WHERE"]["IN"]["TYPE"]     = ContactHandler::INITIATED;
+            $condition["WHERE"]["IN"]["RECEIVER"] = $receiver;
+            $condition["WHERE"]["NOT_IN"]["SEEN"] = 'Y';
+            if($filtered=="Y")
+				$condition["WHERE"]["IN"]["FILTERED"] = 'Y';
+			elseif($filtered=="N")
+				$condition["WHERE"]["NOT_IN"]["FILTERED"] = 'Y';
+            $eoiSenderArray=(new ContactsRecords())->getContactedProfileArray($receiver,$condition);
+            
+            foreach ($eoiSenderArray as $key => $value) 
             {
+                $tempShard =  JsDbSharding::getShardNo($key);
                 $tempArray['R'] = $receiver;                
-                $tempArray['S'] = $value;
+                $tempArray['S'] = $key;
                 $shardArray[$tempShard][]=$tempArray;
                 unset($tempArray);
                 
             }
-            
-            foreach ($eoiSenderArray['I'] as $key => $value) 
-            {
-                $tempShard =  JsDbSharding::getShardNo($value);
-                if($tempShard == $receiverShard) continue;
-                $tempArray['R'] = $receiver;                
-                $tempArray['S'] = $value;
-                $shardArray[$tempShard][]=$tempArray;
-                unset($tempArray);
-                
-            }
-            
-            
             for($i=0;$i<3;$i++)
             {
             
