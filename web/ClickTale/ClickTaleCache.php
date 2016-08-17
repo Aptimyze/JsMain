@@ -54,7 +54,7 @@ catch (Exception $ex)
 {
 	ClickTale_Logger::Write($ex->getMessage());
 	header("HTTP/1.0 500 ".$ex->getMessage());
-	LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($ex->getMessage()));
+	LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, $ex);
 }
 
 $config = ClickTale_Settings::Instance()->getCacheProviderConfig();
