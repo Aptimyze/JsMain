@@ -2518,8 +2518,9 @@ public function fetchPincodesOfCities($cities)
 	}
         public function createPhoneVerifiedPool($processObj)
 	{
-		$dateTime =date("Y-m-d H:i:s",time()-10*24*60*60);
-                $phoneVerifiedObj =new PHONE_VERIFIED_LOG('newjs_slave');
+		//$dateTime =date("Y-m-d H:i:s",time()-10*24*60*60);
+		$dateTime =date("Y-m-d H:i:s",time()-3*60*60);
+                $phoneVerifiedObj =new PHONE_VERIFIED_LOG('newjs_masterRep');
                 $verifiedProfiles =$phoneVerifiedObj->fetchVerifiedProfiles($dateTime);
 		$processObj->setPhoneVerifiedProfiles($verifiedProfiles);
         }
