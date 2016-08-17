@@ -48,7 +48,7 @@ class LoggingEnums
     const LOG_ID = "requestId";
     const LOG_EXCEPTION = "exception";
     const TIME = "time";
-    const LOG_TYPE = "logLevel";
+    const LOG_TYPE = "logType";
     const UNIQUE_REQUEST_SUB_ID = "requestSubId";
     // config array keys
     const LOGGING = 'logging';

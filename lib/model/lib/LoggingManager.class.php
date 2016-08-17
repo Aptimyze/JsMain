@@ -145,11 +145,11 @@ class LoggingManager
 
       if(LoggingConfig::getInstance()->debugStatus($this->szLogPath))
       {
-         foreach ($_SERVER as $key => $value) {
-            $logData[$key] = $value;
-        }
+       foreach ($_SERVER as $key => $value) {
+        $logData[$key] = $value;
     }
-    $this->writeToFile(json_encode($logData));
+}
+$this->writeToFile(json_encode($logData));
 }
 
     /**
@@ -204,59 +204,64 @@ class LoggingManager
       $headers = getallheaders();
       $logData = array();
 
-      if ($logId != "") 
+      if ( $time != "")
       {
-        $logData[LoggingEnums::LOG_ID] = $logId;
-    }
-    if ($logId != "")
-    {
-        $logData[LoggingEnums::CLIENT_IP] = $clientIp;
-    }
-    if ( $uniqueSubId != "")
-    {
-     $logData[LoggingEnums::UNIQUE_REQUEST_SUB_ID] = $uniqueSubId;
- } 
+            $logData[LoggingEnums::TIME] = $time;
+        }
 
- if ( $channelName != "")
- {
-     $logData[LoggingEnums::CHANNEL_NAME] = $channelName;
- } 
+        if ($logId != "") 
+        {
+            $logData[LoggingEnums::LOG_ID] = $logId;
+        }
+        if ($logId != "")
+        {
+            $logData[LoggingEnums::CLIENT_IP] = $clientIp;
+        }
+        if ( $uniqueSubId != "")
+        {
+           $logData[LoggingEnums::UNIQUE_REQUEST_SUB_ID] = $uniqueSubId;
+       } 
 
- if ( $apiVersion != "")
- {
-     $logData[LoggingEnums::API_VERSION] = $apiVersion;
- } 
+       if ( $channelName != "")
+       {
+           $logData[LoggingEnums::CHANNEL_NAME] = $channelName;
+       } 
 
- if ( $modulName != "")
- {
-     $logData[LoggingEnums::MODULE_NAME] = $moduleName;
- } 
+       if ( $apiVersion != "")
+       {
+           $logData[LoggingEnums::API_VERSION] = $apiVersion;
+       } 
 
- if ( $actionName != "")
- {
-     $logData[LoggingEnums::ACTION_NAME] = $actionName;
- } 
+       if ( $modulName != "")
+       {
+           $logData[LoggingEnums::MODULE_NAME] = $moduleName;
+       } 
 
- if ( $typeOfError != "")
- {
-     $logData[LoggingEnums::TYPE_OF_ERROR] = $typeOfError;
- } 
+       if ( $actionName != "")
+       {
+           $logData[LoggingEnums::ACTION_NAME] = $actionName;
+       } 
 
- if ( $statusCode != "")
- {
-     $logData[LoggingEnums::STATUS_CODE] = $statusCode;
- } 
+       if ( $typeOfError != "")
+       {
+           $logData[LoggingEnums::TYPE_OF_ERROR] = $typeOfError;
+       } 
 
- if ( $message != "")
- {
-     $logData[LoggingEnums::MESSAGE] = $message;
- } 
+       if ( $statusCode != "")
+       {
+           $logData[LoggingEnums::STATUS_CODE] = $statusCode;
+       } 
 
- if($this->canWriteTrace($this->szLogPath))
- {
-  $logData[LoggingEnums::LOG_EXCEPTION] = $exception;
-}
-return $logData;
+       if ( $message != "")
+       {
+           $logData[LoggingEnums::MESSAGE] = $message;
+       } 
+
+       if($this->canWriteTrace($this->szLogPath))
+       {
+          $logData[LoggingEnums::LOG_EXCEPTION] = $exception;
+      }
+      return $logData;
 }
 
     /**
@@ -483,15 +488,15 @@ return $actionName;
         {
           $this->createDirectory($this->szLogPath);
           $filePath =  $this->baseLogPath.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
-        }
-        else
-        {
+      }
+      else
+      {
           $this->createDirectory("");
-        }
+      }
       $fileResource = fopen($filePath,"a");
       fwrite($fileResource,$szLogString."\n");
       fclose($fileResource);
-    }
+  }
 
     /**
      * @param $enLogType
