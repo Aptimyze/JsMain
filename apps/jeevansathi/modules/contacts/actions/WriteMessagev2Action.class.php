@@ -27,7 +27,7 @@ class WriteMessagev2Action extends sfAction
 				$this->loginData    = $request->getAttribute("loginData");
 				$msgId=$request->getParameter("MSGID");
 				$chatId=$request->getParameter("CHATID");
-				if($request->getParameter("pagination"))
+				if($request->getParameter("hasNext"))
 					$limit=CONTACT_ELEMENTS::PAGINATION_LIMIT;
 
 				//Contains logined Profile information;
@@ -59,13 +59,19 @@ class WriteMessagev2Action extends sfAction
 							//print_r($messageDetailsArr);die;
 							usort($messageDetailsArr, function ($a, $b)	{		$t1 = strtotime($a['DATE']);		$t2 = strtotime($b['DATE']);		return $t2 - $t1;	}  );
 							//print_r($messageDetailsArr);die;
-							if(count($messageDetailsArr)>20)
+							if(count($messageDetailsArr)>20){
 								$messageDetailsArr=array_slice($messageDetailsArr,0,20);
+								$pagination=true;
+							}
+							else
+								$pagination=false;
 				
 						}
 					}
-					else
+					else{
 						$messageDetailsArr = $messageLogObj->getMessageHistory($this->loginProfile->getPROFILEID(),$profileid);
+						$pagination=false;
+					}
 						
 					$count = $messageLogObj->markMessageSeen($this->loginProfile->getPROFILEID(),$profileid);
 					if($count>0)
@@ -87,6 +93,10 @@ class WriteMessagev2Action extends sfAction
 						$profileDisplay =  $this->getProfileDisplayData($tuplesValues[$profileid]);
 					}
 					$responseArray = $this->getContactArray($messageDetailsArr,$request);
+					if($pagination)
+						$responseArray['hasNext'] = true;
+					else
+						$responseArray['hasNext'] = false;
 					$responseArray['profile'] = $profileDisplay;
 				}
 			}
@@ -136,6 +146,7 @@ class WriteMessagev2Action extends sfAction
 				else
 					$arr["MSGID"]=$value["ID"];
 			}
+				
 			if(!$arr["CHATID"] && $request->getParameter("CHATID"))
 				$arr["CHATID"]=$request->getParameter("CHATID");
 			if(!$arr["MSGID"] && $request->getParameter("MSGID"))
