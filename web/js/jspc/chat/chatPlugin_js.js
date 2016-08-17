@@ -159,7 +159,7 @@ JsChat.prototype = {
         } else {
             $("body").css('width','80%');
             $(this._parendID).css('display','block');
-            if(my_action && my_action=="detailed"){
+            if(my_action && (my_action=="detailed" || my_action == "noprofile")){
                 curEle.handleNextPrevButtons("makeCloser");
             }
         }
@@ -192,7 +192,7 @@ JsChat.prototype = {
         minChatPanel += '</ul>';
         minChatPanel += '</div>';
         $(this._mainID).append(minChatPanel);
-        if(my_action && my_action=="detailed"){
+        if(my_action && (my_action=="detailed" || my_action == "noprofile")){
             this.handleNextPrevButtons("makeFarther");
         }
     },
@@ -2515,7 +2515,7 @@ JsChat.prototype = {
             $('body').css('width', '80%');
             $(this._parendID).addClass('wid20p').css('height', this._getHeight());
             //handle postion of next prev buttons on view profile
-            if(my_action && my_action=="detailed"){
+            if(my_action && (my_action=="detailed" || my_action == "noprofile")){
                 _this.handleNextPrevButtons("makeCloser");
             }
         }
