@@ -28,6 +28,10 @@ class KundliMatches extends PartnerProfile
 					$this->getDppCriteria();
 					$this->setSEARCH_TYPE(SearchTypesEnums::KundliAlerts);
 					$this->setHOROSCOPE('Y'); // Horoscope should be present for all the profiles
+					if($this->loggedInProfileObj->getBTIME()=="" || $this->loggedInProfileObj->getCITY_BIRTH()=="" || $this->loggedInProfileObj->getCOUNTRY_BIRTH()=="")
+          {
+						$this->setSHOW_RESULT_FOR_SELF('N');
+					}
 					
 				}
 
