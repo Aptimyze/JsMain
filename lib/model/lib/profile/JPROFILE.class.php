@@ -107,7 +107,7 @@ class JPROFILE
     {
         $fields = $this->getRelevantFields($fields);
         $bServedFromCache = false;
-
+        $this->totalQueryCount();
         if (ProfileCacheLib::getInstance()->isCached($criteria, $value, $fields)) {
             $result = ProfileCacheLib::getInstance()->get($criteria, $value, $fields, $extraWhereClause);
             //When processing extraWhereClause results could be false,
@@ -127,6 +127,9 @@ class JPROFILE
         //Get Records from Mysql
         $result = self::$objProfileMysql->selectRecord($value, $criteria, $fields, $extraWhereClause, $cache);
         //TODO : Request to Cache this Record, on demand
+        if(is_array($result) && $criteria == "PROFILEID") {
+          $result['PROFILEID'] = $value;
+        }
         if ( is_array($result) && 
 	     isset($result['PROFILEID']) &&
 	     false === ProfileCacheLib::getInstance()->isCommandLineScript()
@@ -638,8 +641,7 @@ class JPROFILE
      */
     public function updateEmail($email, $newEmail)
     {
-        $paramArr = array('EMAIL'=>$newEmail);
-        return $this->edit($paramArr, $email, 'EMAIL');
+        return self::$objProfileMysql->updateEmail($email,$newEmail);
     }
     /**
      * This function executes a select query on join of jprofile and incentives.name_of_user
@@ -653,6 +655,15 @@ class JPROFILE
     private function logCacheConsumption()
     {
         $key = 'cacheConsumeCount'.date('Y-m-d');
+        JsMemcache::getInstance()->incrCount($key);
+
+        $key .= '::'.date('H');
+        JsMemcache::getInstance()->incrCount($key);
+    }
+
+    private function totalQueryCount()
+    {
+        $key = 'totalQueryCount'.date('Y-m-d');
         JsMemcache::getInstance()->incrCount($key);
 
         $key .= '::'.date('H');

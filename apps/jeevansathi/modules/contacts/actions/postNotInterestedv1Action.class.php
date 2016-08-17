@@ -41,7 +41,7 @@ class postNotInterestedv1Action extends sfAction
 					$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,'D',ContactHandler::POST);
 					$this->contactHandlerObj->setElement("STATUS","D");	
 					$this->contactHandlerObj->setElement("RESPONSETRACKING",$request->getParameter('responseTracking'));
-					$this->contactHandlerObj->setElement("MESSAGE",PresetMessage::getPresentMessage($this->loginProfile,$this->contactHandlerObj->getToBeType()));
+					$this->contactHandlerObj->setElement("MESSAGE","");
 					$this->contactHandlerObj->setElement("DRAFT_NAME","preset");
 					$this->contactEngineObj=ContactFactory::event($this->contactHandlerObj);
 					$responseArray           = $this->getContactArray();
