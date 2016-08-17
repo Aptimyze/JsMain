@@ -217,11 +217,17 @@ class Inbox implements Module
 		$countObj     = $this->getCount('',$infoTypeNav,$fromGetDisplayFunction);
 		$tupleService = new TupleService();
 		$tupleService->setLoginProfile($this->profileObj->getPROFILEID());
-		$config = $this->configurations[$infoTypeNav["PAGE"]];
 		$key = $this->profileObj->getPROFILEID()."_".$infoTypeNav["PAGE"];
 		$keyCount = $key."_COUNT"; 
 		$infoType = $infoTypeNav["PAGE"];
-		
+
+		// Set limit too high as pagination not implemented in channels others than desktop for messages
+		if(!MobileCommon::isDesktop() && ($infoType == "MESSAGE_RECEIVED" || $infoType == "MY_MESSAGE" || $infoType == "MY_MESSAGE_RECEIVED") && $infoTypeNav["NUMBER"]==null)
+		{
+						$this->configurations[$infoType]["COUNT"]=10000;
+
+		}
+		$config = $this->configurations[$infoTypeNav["PAGE"]];
 		if ($infoTypeNav && $config) {
 				$tuple       = $config["TUPLE"];
 				$displayFlag = 1;
@@ -461,9 +467,6 @@ class Inbox implements Module
 			$limit      = ceil(($this->configurations[$infoType]["COUNT"]*$nav)/self::$profileCount)*self::$profileCount;
 		else
 			$limit = $this->configurations[$infoType]["COUNT"];
-		if(!MobileCommon::isDesktop() && ($infoType == "MESSAGE_RECEIVED" || $infoType == "MY_MESSAGE" || $infoType == "MY_MESSAGE_RECEIVED"))
-			$limit= '100000'; // Set limit too high as pagination not implemented in channels others than desktop for messages
-		
 		if ($infoType != "MATCH_ALERT" && $infoType != "VISITORS") {
 			//$condition["WHERE"]["NOT_IN"]["SEEN"] = "Y";
 			if ($infoType == "INTEREST_RECEIVED") {
