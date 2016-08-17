@@ -492,14 +492,14 @@
                 <i class="newSprt newSprt_3">
                 </i>
                 <div class="fullwid txtc pt10 f16 fontlig">
-                    View phone numbers of the members
+                    View contact details of the members
                 </div>
             </div>
             <div class="disp_ib memPadNew">
                 <i class="newSprt newSprt_4">
                 </i>
                 <div class="fullwid txtc pt10 f16 fontlig">
-                    Show your phone numbers to other members
+                    Show your contact details to other members
                 </div>
             </div>
             <div class="fr cursp pt10 f16 fontlig" id="scrollTop">

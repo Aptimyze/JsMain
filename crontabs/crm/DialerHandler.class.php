@@ -338,7 +338,9 @@ class DialerHandler
 			if($key!='Phone1' && $key!='Phone2'){
 			if(in_array($key1,$phoneFieldsArr)){
 				$field =$dataArr[$key1];
-				$field ='0'.$field;
+				if($field){
+					$field ='0'.$field;
+				}
 				$dataArr[$key1] =$field;	
 			}}
 			$dataSet[$key] =$dataArr[$key1];	

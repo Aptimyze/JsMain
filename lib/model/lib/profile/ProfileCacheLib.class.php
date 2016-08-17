@@ -351,7 +351,7 @@ class ProfileCacheLib
     private function checkFieldsAvailability($key, $fields)
     {
         $arrAllowableFields = $this->getRelevantFields($fields);
-
+        $arrFields = $arrAllowableFields;
         if ($fields == ProfileCacheConstants::ALL_FIELDS_SYM &&
             count($this->getFromLocalCache($key))  !== count($arrAllowableFields)
         ) {
@@ -363,6 +363,14 @@ class ProfileCacheLib
             }
             foreach ($arrFields as $szColName) {
                 if(!in_array($szColName, $arrAllowableFields)) {
+                    return false;
+                }
+            }
+        }
+
+        if (isset($this->arrRecords[intval($key)])) {
+            foreach ($arrFields as $szColName) {
+                if(!array_key_exists($szColName, $this->arrRecords[intval($key)])) {
                     return false;
                 }
             }
