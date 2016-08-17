@@ -795,6 +795,9 @@ JsChat.prototype = {
                             elem._updateStatusInChatBox(runID, "offline");
                         });
                         delete that;
+                        if(param1 == 'delete_node'){
+                            this._changeLocalStorage("remove",runID,"","");
+                        } 
                         this._chatLoggerPlugin("here");
                     }
                 }
@@ -802,13 +805,16 @@ JsChat.prototype = {
         }
         //removeCall2 if user is removed from block click on chatbox
         else if (param1 == 'removeCall2') {
-            if(typeof data!= "undefined")
+            if(typeof data!= "undefined"){
                 $(this._mainID).find('*[id*="' + data + '"]').detach();
+                this._changeLocalStorage("remove",data,"","");
             /*if (this.onPostBlockCallback && typeof this.onPostBlockCallback == 'function') {
                 this.onPostBlockCallback(data);
             }*/
+            }
         }
         this.noResultError();
+       
     },
     //bind clicking block icon
     _bindBlock: function (elem, userId) {
