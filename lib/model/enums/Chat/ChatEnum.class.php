@@ -8,5 +8,6 @@ class ChatEnum {
     public static $error = array("message"=>"Some Error Occurred","statusCode"=>'1');
     public static $addedToQueue = array("message"=>"Added to queue","statusCode"=>'0');
     public static $invalidFormat = array("message"=>"Invalid format of jid","statusCode"=>'1');
+    public static $invalidParameter = array("message"=>"Invalid format of input parameter","statusCode"=>'1');
     public static $msgHistoryLimit = 20;
 }

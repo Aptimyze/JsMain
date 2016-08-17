@@ -392,6 +392,7 @@ function invokePluginLoginHandler(state) {
     } else if (state == "failure") {
         eraseCookie("chatAuth");
         objJsChat.addLoginHTML(true);
+        objJsChat.manageLoginLoader();
     } else if (state == "session_sync") {
         if ($(objJsChat._logoutChat).length != 0 && readCookie('chatAuth') != "true") {
             $(objJsChat._logoutChat).click();

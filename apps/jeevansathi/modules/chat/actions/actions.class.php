@@ -37,42 +37,47 @@ class chatActions extends sfActions
 		if ($loginData) {
 
 			$username = $loginData['PROFILEID'];
+			if($username && $username!= "0" && is_null($username)== false && empty($username)== false) {
+				//$uname = $loginData['USERNAME'];
 
-			//$uname = $loginData['USERNAME'];
+				$pass = md5($username);
+				//$pass = EncryptPassword::generatePassword("test".$username);
+				//$pass = "test".$username;
 
-			$pass = md5($username);
-			//$pass = EncryptPassword::generatePassword("test".$username);
-			//$pass = "test".$username;
+				$url = JsConstants::$openfireConfig['HOST'] . ":" . JsConstants::$openfireConfig['PORT'] . "/plugins/restapi/v1/users/" . $username;
+				//$url = "http://localhost:9090/plugins/restapi/v1/users/".$username;
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, $url);
+				curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
+				curl_setopt($ch, CURLOPT_TIMEOUT, 4);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
-			$url = JsConstants::$openfireConfig['HOST'] . ":" . JsConstants::$openfireConfig['PORT'] . "/plugins/restapi/v1/users/" . $username;
-			//$url = "http://localhost:9090/plugins/restapi/v1/users/".$username;
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
-			curl_setopt($ch, CURLOPT_TIMEOUT, 4);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				$headers = array();
+				$headers[] = 'Authorization: ' . JsConstants::$openfireRestAPIKey;
+				$headers[] = 'Accept: application/json';
 
-			$headers = array();
-			$headers[] = 'Authorization: ' . JsConstants::$openfireRestAPIKey;
-			$headers[] = 'Accept: application/json';
+				curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-			$curlResult = curl_exec($ch);
-			curl_close($ch);
-			$result = json_decode($curlResult, true);
-			if ($result['username'] && !is_array($result["properties"])) {
-				//User exists
-				$response['userStatus'] = "User exists";
-				$response['hash'] = $pass;
-				$apiResponseHandlerObj->setHttpArray(ChatEnum::$userExists);
-			} else {
-				//create user
-				$response['userStatus'] = "Added";
-				$profileImporterObj = new Chat();
-				$profileImporterObj->addNewProfile($username);
-				$apiResponseHandlerObj->setHttpArray(ChatEnum::$addedToQueue);
+				$curlResult = curl_exec($ch);
+				curl_close($ch);
+				$result = json_decode($curlResult, true);
+				if ($result['username'] && !is_array($result["properties"])) {
+					//User exists
+					$response['userStatus'] = "User exists";
+					$response['hash'] = $pass;
+					$apiResponseHandlerObj->setHttpArray(ChatEnum::$userExists);
+				} else {
+					//create user
+					$response['userStatus'] = "Added";
+					$profileImporterObj = new Chat();
+					$profileImporterObj->addNewProfile($username);
+					$apiResponseHandlerObj->setHttpArray(ChatEnum::$addedToQueue);
+				}
 			}
+			else{
+				$response = "Logged Out Profile";
+				$apiResponseHandlerObj->setHttpArray(ChatEnum::$invalidParameter);
+			}	
 		} else {
 			$response = "Logged Out Profile";
 			$apiResponseHandlerObj->setHttpArray(ChatEnum::$loggedOutProfile);
