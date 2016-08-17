@@ -677,7 +677,7 @@ class VariableDiscount
         public function addMiniVdDataInTemp($profileArr,$startDate,$endDate,$discount)
         {
 		$services ='P,C,NCP,ESP,X';	
-                $uploadTempObj =new test_VD_UPLOAD_TEMP('newjs_slave');
+                $uploadTempObj =new test_VD_UPLOAD_TEMP('newjs_local111');
 
                 if(is_array($profileArr)){
                 foreach($profileArr as $key=>$profileid){
