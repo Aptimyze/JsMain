@@ -134,6 +134,9 @@
 			return LoggingEnums::CONFIG_ON ? $this->arrConfig[$module][LoggingEnums::LEVEL] : LoggingEnums::LOG_ERROR;
 		}
 
+		/**
+		* @return get if debug is on for the module
+		*/
 		public function debugStatus($module)
 		{
 			if(LoggingEnums::LOG_LEVEL == LoggingEnums::LOG_DEBUG){
