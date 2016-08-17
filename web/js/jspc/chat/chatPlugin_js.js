@@ -1830,7 +1830,7 @@ JsChat.prototype = {
                 $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2').show();
                 //$('chat-box[user-id="' + userId + '"] .chatMessage').find('#text_' + userId + '_' + uniqueId).addClass("received");
             } else {
-                if($('chat-box[user-id="' + userId + '"] .extra_'+userId).length == 0){
+                if($('#extra_'+userId).length == 0){
                     //$('chat-box[user-id="' + userId + '"] .chatMessage').find('#text_' + userId + '_' + uniqueId).addClass("received");
                     curEle._handleUnreadMessages($('chat-box[user-id="' + userId + '"]'));
                 }
