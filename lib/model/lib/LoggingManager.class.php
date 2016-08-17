@@ -15,6 +15,7 @@ class LoggingManager
      */
     private static $instance = null;
 
+    const BASE_PATH_LOGS = '/var';
     /**
      * Const of File Base Path
      */
@@ -432,7 +433,7 @@ class LoggingManager
      */
     private function createDirectory($szPath)
     {
-      $dirPath = JsConstants::$cronDocRoot.self::LOG_FILE_BASE_PATH.$szPath;
+      $dirPath = self::BASE_PATH_LOGS.self::LOG_FILE_BASE_PATH.$szPath;
       if (false === is_dir($dirPath)) {
         mkdir($dirPath,0777,true);
       }
@@ -444,11 +445,11 @@ class LoggingManager
     private function writeToFile($szLogString)
     {
         $currDate = Date('Y-m-d');
-        $filePath =  JsConstants::$cronDocRoot.self::LOG_FILE_BASE_PATH."log-".$currDate.".log";
+        $filePath =  self::BASE_PATH_LOGS.self::LOG_FILE_BASE_PATH."log-".$currDate.".log";
         if($this->canCreateDir($this->szLogPath))
         {
           $this->createDirectory($this->szLogPath);
-          $filePath =  JsConstants::$cronDocRoot.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
+          $filePath =  self::BASE_PATH_LOGS.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
         }
         else
         {
