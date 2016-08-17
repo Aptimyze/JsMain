@@ -109,9 +109,9 @@ class LoggingManager
      * @param $logArray - an associative array which contains
      *        moduleName (optional)
      *       ,actionName(optional),
-     *       ,controllerName(optional)
      *       ,apiVersion(optional)
      *       ,statusCode
+     *       ,MESSAGE
      *       ,typeOfError(whether php error, or mysql etc.) 
      */
      public function logThis($enLogType,$Var,$logArray = array(),$isSymfony=true)
@@ -144,7 +144,7 @@ class LoggingManager
     {
 
       $logData = $this->getLogData($exception,$isSymfony,$logArray);
-      $logData['logType'] = $this->getLogType(LoggingEnums::LOG_ERROR);
+      $logData[LoggingEnums::LOG_TYPE] = $this->getLogType(LoggingEnums::LOG_ERROR);
 
       if(LoggingConfig::getInstance()->debugStatus())
       {
@@ -209,8 +209,7 @@ class LoggingManager
       $logData[LoggingEnums::LOG_ID] = $logId;
       $logData[LoggingEnums::CLIENT_IP] = $clientIp;
       $logData[LoggingEnums::TIME] = $time;
-      if($uniqueSubId != "")
-        $logData[LoggingEnums::UNIQUE_REQUEST_SUB_ID] = $uniqueSubId;
+      $logData[LoggingEnums::UNIQUE_REQUEST_SUB_ID] = $uniqueSubId;
       $logData[LoggingEnums::CHANNEL_NAME] = $channelName;
       $logData[LoggingEnums::API_VERSION] = $apiVersion;
       $logData[LoggingEnums::MODULE_NAME] = $moduleName;

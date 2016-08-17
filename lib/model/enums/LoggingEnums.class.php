@@ -44,10 +44,11 @@ class LoggingEnums
     const ACTION_NAME = "actionName";
     const MODULE_NAME = "moduleName";
     const TYPE_OF_ERROR = "typeOfError";
-    const LOG_ID = "logId";
+    const LOG_ID = "requestId";
     const LOG_EXCEPTION = "exception";
     const TIME = "time";
-    const UNIQUE_REQUEST_SUB_ID = "uniqueRequestSubId";
+    const LOG_TYPE = "logLevel";
+    const UNIQUE_REQUEST_SUB_ID = "requestSubId";
     // config array keys
     const logging = 'logging';
     const level = 'level';
