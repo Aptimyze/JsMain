@@ -1075,30 +1075,33 @@ JsChat.prototype = {
             pcheckSum = $('chat-box[user-id="' + username + '"]').attr("data-checks"),
                 groupId = $('chat-box[user-id="' + username + '"]').attr("group-id");
                 curElem._changeLocalStorage("remove",username,"","");
-            //$(originalElem).clone().appendTo("body");
-            curElem._appendChatBox(username, status, jid, pcheckSum, groupId,"noHis");
-            $(originalElem).remove();
-            $("chat-box[user-id='" + username + "'] .chatMessage").html("");
-            //curElem._postChatPanelsBox(username);
-            $("chat-box[user-id='" + username + "'] .chatMessage").html(chatHtml);
-            $(this).closest(".extraChatList").remove();
-            curElem._scrollUp($('chat-box[user-id="' + username + '"]'), "297px","noAnimate");
-            
-            //adding data in extra popup 
-            var len = $("chat-box").length,
-                value = parseInt($(".extraNumber").text().split("+")[1]),
-                finalVar = len - 1 - (value - 1),
-                data = $($("chat-box")[finalVar]).attr("user-id"),
-                dataAdded = false;
-            $(".extraChatList").each(function (index, element) {
-                var id = $(this).attr("id").split("_")[1];
-                if (id == data) {
-                    dataAdded = true;
+            if($("#"+username+"_"+groupId).length != 0 ) {
+                curElem._appendChatBox(username, status, jid, pcheckSum, groupId,"noHis");
+                $(originalElem).remove();
+                $("chat-box[user-id='" + username + "'] .chatMessage").html("");
+                //curElem._postChatPanelsBox(username);
+                $("chat-box[user-id='" + username + "'] .chatMessage").html(chatHtml);
+                $(this).closest(".extraChatList").remove();
+                curElem._scrollUp($('chat-box[user-id="' + username + '"]'), "297px","noAnimate");
+                
+                //adding data in extra popup 
+                var len = $("chat-box").length,
+                    value = parseInt($(".extraNumber").text().split("+")[1]),
+                    finalVar = len - 1 - (value - 1),
+                    data = $($("chat-box")[finalVar]).attr("user-id"),
+                    dataAdded = false;
+                $(".extraChatList").each(function (index, element) {
+                    var id = $(this).attr("id").split("_")[1];
+                    if (id == data) {
+                        dataAdded = true;
+                    }
+                });
+                if (dataAdded == false) {
+                    curElem._addDataExtraPopup(data);
+                    curElem._bindExtraPopupUserClose($("#extra_" + data + " .nchatic_4"));
                 }
-            });
-            if (dataAdded == false) {
-                curElem._addDataExtraPopup(data);
-                curElem._bindExtraPopupUserClose($("#extra_" + data + " .nchatic_4"));
+            } else {
+                $(this).next().click();
             }
         });
     },
@@ -1589,10 +1592,15 @@ JsChat.prototype = {
                         value = parseInt($(".extraNumber").text().split("+")[1]),
                         data = $($("chat-box")[len - 1 - value]).attr("user-id"),
                         chatHtml = $(originalElem).find(".chatMessage").html();
-                    curElem._appendChatBox(username, status, jid, pcheckSum, groupId);
+                    //curElem._appendChatBox(username, status, jid, pcheckSum, groupId);
+                    //originalElem.remove();
+                    //$("chat-box[user-id='" + username + "'] .chatMessage").html("");
+                    //curElem._postChatPanelsBox(username);
+                    curElem._appendChatBox(username, status, jid, pcheckSum, groupId,"noHis");
                     originalElem.remove();
-                    $("chat-box[user-id='" + username + "'] .chatMessage").html("");
-                    curElem._postChatPanelsBox(username);
+                    $("chat-box[user-id='" + username + "'] .chatMessage").html("").html(chatHtml);
+                    curElem._scrollToBottom(username,"noAnimate");
+
                     $(this).closest(".extraChatList").remove();
                     curElem._addDataExtraPopup(data);
                     curElem._bindExtraPopupUserClose($("#extra_" + data + " .nchatic_4"));

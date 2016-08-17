@@ -599,3 +599,19 @@ function logOutCheck(param, upgradeFromTopNavBar) {
     top.location.href = param;
     return true;
 }
+function isStorageExist()
+{
+    var bVal = true;
+    if(typeof(Storage)=='undefined')
+        bVal = false;
+
+    try{
+        localStorage.setItem('testLS',"true");
+        localStorage.getItem('testLS');
+        localStorage.removeItem('testLS');
+    }catch(e)
+    {
+        bVal = false;
+    }
+    return bVal;
+}
