@@ -135,7 +135,7 @@ JsChat.prototype = {
     },
     //start:check login status
     checkLoginStatus: function () {
-        this._chatLoggerPlugin('check status');
+        //this._chatLoggerPlugin('check status');
         if (this._loginStatus == "Y") {
             return true;
         } else {
@@ -145,8 +145,8 @@ JsChat.prototype = {
     //start:maximize html
     _maximizeChatPanel: function () {
         var curEle = this;
-        this._chatLoggerPlugin('in max');
-        this._chatLoggerPlugin($(this._maxChatBarOut));
+        //this._chatLoggerPlugin('in max');
+        //this._chatLoggerPlugin($(this._maxChatBarOut));
         $("chat-box").each(function (index, element) {
             if ($(this).attr("pos-state") == "open") {
                 curEle._scrollUp($(this), "297px");
@@ -154,7 +154,7 @@ JsChat.prototype = {
         });
         $(this._maxChatBarOut).remove();
         if (this._checkWidth()) {
-            this._chatLoggerPlugin('screen size less than 1024');
+            //this._chatLoggerPlugin('screen size less than 1024');
             $(this._parendID).fadeIn('slow');
         } else {
             $("body").css('width','80%');
@@ -236,12 +236,12 @@ JsChat.prototype = {
             that = this;
         $(curEleRef._toggleID).toggleClass('disp-none');
         $(curEleRef._chatBottomPanelID).hide();
-        this._chatLoggerPlugin("In logout Chat");
-        this._chatLoggerPlugin(curEleRef._loginStatus);
+        //this._chatLoggerPlugin("In logout Chat");
+        //this._chatLoggerPlugin(curEleRef._loginStatus);
         if (curEleRef._loginStatus == 'N') {
             $(curEleRef._listingPanelID).fadeOut('slow', function () {
                 if ($(curEleRef._loginPanelID).length == 0) {
-                    that._chatLoggerPlugin("Length is 0 of login panel");
+                    //that._chatLoggerPlugin("Length is 0 of login panel");
                     curEleRef.addLoginHTML();
                 } else {
                     $(curEleRef._loginPanelID).fadeIn('slow', function () {
@@ -284,7 +284,7 @@ JsChat.prototype = {
         });
         $(curEleRef._logoutChat).click(function () {
             if (curEleRef.onLogoutPreClick && typeof (curEleRef.onLogoutPreClick) == "function") {
-                that._chatLoggerPlugin("in if");
+                //that._chatLoggerPlugin("in if");
                 curEleRef.onLogoutPreClick();
             }
             curEleRef.logOutChat();
@@ -295,18 +295,18 @@ JsChat.prototype = {
     },
     //start:set height for the listing scroll div
     _chatScrollHght: function () {
-        this._chatLoggerPlugin('cal scroll div');
+        //this._chatLoggerPlugin('cal scroll div');
         var totalHgt = this._getHeight();
         var remHgt = parseInt(totalHgt) - 140;
-        this._chatLoggerPlugin(remHgt);
-        this._chatLoggerPlugin(this._scrollDivId);
+        //this._chatLoggerPlugin(remHgt);
+        //this._chatLoggerPlugin(this._scrollDivId);
         $(this._scrollDivId).css('height', remHgt);
     },
     //start:add tab
     addTab: function () {
         //console.log("addTab");
         //this script is same as old one shared eariler need to be reworked as discussed
-        this._chatLoggerPlugin('in addTab');
+        //this._chatLoggerPlugin('in addTab');
         var obj = this._listingTabs;
         var curEle = this;
         var TabID;
@@ -361,11 +361,11 @@ JsChat.prototype = {
         $(".js-htab").each(function (index, element) {
             dataLength = 0;
             $(this).find(".chatlist").each(function (index2, element2) {
-                that._chatLoggerPlugin($(this).find("li").length);
+                //that._chatLoggerPlugin($(this).find("li").length);
                 dataLength = dataLength + $(this).find("li").length;
             });
             if (dataLength == 0) {
-                that._chatLoggerPlugin(element);
+                //that._chatLoggerPlugin(element);
                 $(element).find(".noResult").removeClass("disp-none").addClass("disp_ib");
                 $(element).find(".chatListing").each(function (index, element) {
                     $(this).addClass("disp-none");
@@ -404,13 +404,13 @@ JsChat.prototype = {
             statusArr = [],
             jidStr = "",
             currentID;
-        this._chatLoggerPlugin("addListing");
+        //this._chatLoggerPlugin("addListing");
         for (var key in data) {
             if (typeof data[key]["rosterDetails"]["jid"] != "undefined") {
                 var runID = data[key]["rosterDetails"]["jid"],
                     res = '',
                     status = data[key]["rosterDetails"]["chat_status"];
-                elem._chatLoggerPlugin("addlisting for " + runID + "--" + data[key]["rosterDetails"]["chat_status"]);
+                //elem._chatLoggerPlugin("addlisting for " + runID + "--" + data[key]["rosterDetails"]["chat_status"]);
                 var fullJID = runID;
                 res = runID.split("@");
                 runID = res[0];
@@ -419,7 +419,7 @@ JsChat.prototype = {
                 if (typeof data[key]["rosterDetails"]["groups"] != "undefined" && data[key]["rosterDetails"]["groups"].length > 0) {
                     var that = this;
                     $.each(data[key]["rosterDetails"]["groups"], function (index, val) {
-                        that._chatLoggerPlugin("groups " + val);
+                        //that._chatLoggerPlugin("groups " + val);
                         var List = '',
                             fullname = data[key]["rosterDetails"]["fullname"],
                             tabShowStatus = $('div.' + val).attr('data-showuser'),
@@ -428,7 +428,7 @@ JsChat.prototype = {
                             picurl = data[key]["rosterDetails"]["listing_tuple_photo"],
                             prfCheckSum = data[key]["rosterDetails"]["profile_checksum"],
                             nick = data[key]["rosterDetails"]["nick"]; //ankita for image
-                        that._chatLoggerPlugin("prfCheckSum", data[key]["rosterDetails"])
+                        //that._chatLoggerPlugin("prfCheckSum", data[key]["rosterDetails"])
                         List += '<li class=\"clearfix profileIcon\"';
                         List += "id=\"" + runID + "_" + val + "\" data-status=\"" + status + "\" data-checks=\"" + prfCheckSum + "\" data-nick=\"" + nick + "\" data-jid=\"" + fullJID + "\">";
                         List += "<img id=\"pic_" + runID + "_" + val + "\" src=\"" + picurl + "\" class=\"fl wid40hgt40\">";
@@ -441,20 +441,20 @@ JsChat.prototype = {
                         List += '</li>';
                         var addNode = false;
                         if (tabShowStatus == 'false') {
-                            that._chatLoggerPlugin(status + "2222");
+                            //that._chatLoggerPlugin(status + "2222");
                             addNode = true;
                         } else {
-                            that._chatLoggerPlugin(status + "1111");
+                            //that._chatLoggerPlugin(status + "1111");
                             if (status == 'online') {
                                 addNode = true;
                             }
                         }
-                        that._chatLoggerPlugin("addNode" + addNode);
+                        //that._chatLoggerPlugin("addNode" + addNode);
                         if (addNode == true) {
                             if ($('#' + runID + "_" + val).length == 0) {
                                 if ($('#' + runID + "_" + val).find('.nchatspr').length == 0) {
-                                    that._chatLoggerPlugin("checking no of nodes in group " + $('div.' + val + ' ul li').size());
-                                    that._chatLoggerPlugin("b2");
+                                    //that._chatLoggerPlugin("checking no of nodes in group " + $('div.' + val + ' ul li').size());
+                                    //that._chatLoggerPlugin("b2");
                                     var tabId = $('div.' + val).parent().attr("id");
                                     if ($("#show" + tabId + "NoResult").length != 0) {
                                         that._chatLoggerPlugin("me");
@@ -500,8 +500,8 @@ JsChat.prototype = {
             global: elem
         }, elem._calltohover);
         //var APIsrc ="http://xmppdev.jeevansathi.com/api/v1/social/getMultiUserPhoto?pid=";
-        this._chatLoggerPlugin("api");
-        this._chatLoggerPlugin(jidStr);
+        //this._chatLoggerPlugin("api");
+        //this._chatLoggerPlugin(jidStr);
         var apiParams = {};
         if (jidStr) {
             apiParams["pid"] = jidStr.slice(0, -1);
@@ -568,8 +568,8 @@ JsChat.prototype = {
             var upperLimit = elem._listingNodesLimit[groupID],totalNodes = $('div.'+groupID+' ul li').size();
             if (operation == "add_node" || operation == "update_status" || typeof upperLimit == "undefined" || totalNodes < upperLimit){
                 //console.log("adding1-"+groupID+"-"+contactID+"-"+totalNodes);
-                this._chatLoggerPlugin("ankita_adding" + contactID + " in groupID");
-                this._chatLoggerPlugin(contactHTML);
+                //this._chatLoggerPlugin("ankita_adding" + contactID + " in groupID");
+                //this._chatLoggerPlugin(contactHTML);
                 $('div.' + groupID + ' ul.' + status).prepend(contactHTML);
                 done = true;
             }
@@ -589,7 +589,7 @@ JsChat.prototype = {
                 done = false;
             }
         } else if (key == "existing") {
-            this._chatLoggerPlugin("changing icon");
+            //this._chatLoggerPlugin("changing icon");
             if (status == "online") {
                 //add online chat_status icon
                 if ($('#' + contactID + "_" + groupID).find('.nchatspr').length == 0) {
@@ -606,7 +606,7 @@ JsChat.prototype = {
     //scrolling down chat box
     _scrollDown: function (elem, type) {
         var userId = $(elem).attr("user-id");
-        this._chatLoggerPlugin(elem);
+        //this._chatLoggerPlugin(elem);
         if (type == "remove") {
             elem.animate({
                 bottom: "-350px"
@@ -694,8 +694,8 @@ JsChat.prototype = {
                     "msg_state": "receiver_received_read"
                 };
                 $(this).removeClass("received").addClass("received_read");
-                that._chatLoggerPlugin("marking msg as read");
-                that._chatLoggerPlugin(msgObj);
+                //that._chatLoggerPlugin("marking msg as read");
+                //that._chatLoggerPlugin(msgObj);
                 invokePluginReceivedMsgHandler(msgObj);
             });
         }
@@ -757,11 +757,11 @@ JsChat.prototype = {
     //onPostBlockCallback: null,
     //remove from list
     _removeFromListing: function (param1, data) {
-        console.log("_removeFromListing",param1);
-        console.log(data);
+        //console.log("_removeFromListing",param1);
+        //console.log(data);
         data = data.filter(function(n){ return n != undefined }); 
-        console.log("after filter");
-        console.log(data);
+        //console.log("after filter");
+        //console.log(data);
         //this._chatLoggerPlugin('remove element 11');
         var elem = this;
         //removeCall1 if user is removed from backend
@@ -772,7 +772,7 @@ JsChat.prototype = {
                 if(typeof data[key] != "undefined"){
                     runID = data[key]["rosterDetails"]["jid"].split("@")[0];
                     if (typeof data[key]["rosterDetails"]["groups"] != "undefined") {
-                        this._chatLoggerPlugin(data[key]["rosterDetails"]["groups"]);
+                        //this._chatLoggerPlugin(data[key]["rosterDetails"]["groups"]);
                         var that = this;
                         $.each(data[key]["rosterDetails"]["groups"], function (index, val) {
                             var tabShowStatus = '',
@@ -781,24 +781,24 @@ JsChat.prototype = {
                             var tabShowStatus = $('div.' + val).attr('data-showuser');
                             listElements = $('#' + runID + '_' + val);
                             if (tabShowStatus == 'false' && param1 != 'delete_node') {
-                                that._chatLoggerPlugin("123");
+                                
                                 $(listElements).find('.nchatspr').detach();
                                 elem._placeContact(param1,"existing", runID, val, "offline");
                             } else {
-                                that._chatLoggerPlugin("345");
+                            
                                 $('div').find(listElements).detach();
                                 if ($('div.' + val + ' ul li').length == 0) {
                                     $('div.' + val + ' ul').parent().addClass("disp-none");
                                 }
                             }
-                            that._chatLoggerPlugin(this);
+                            //that._chatLoggerPlugin(this);
                             elem._updateStatusInChatBox(runID, "offline");
                         });
                         delete that;
                         if(param1 == 'delete_node'){
                             this._changeLocalStorage("remove",runID,"","");
                         } 
-                        this._chatLoggerPlugin("here");
+                        
                     }
                 }
             }
@@ -932,7 +932,7 @@ JsChat.prototype = {
             out = 1;
         var selfJID = getConnectedUserJID();
         $('chat-box[user-id="' + userId + '"] textarea').focusout(function () {
-            that._chatLoggerPlugin("focus out to " + jid);
+            //that._chatLoggerPlugin("focus out to " + jid);
             out = 1;
             //fire event typing paused
             sendTypingState(selfJID, jid, "paused");
@@ -940,7 +940,7 @@ JsChat.prototype = {
         $('chat-box[user-id="' + userId + '"] textarea').keyup(function (e) {
             var curElem = this;
             if ($(this).val().length >= 1 && out == 1) {
-                that._chatLoggerPlugin("typing start");
+                //that._chatLoggerPlugin("typing start");
                 out = 0;
                 //fire event typing start
                 sendTypingState(selfJID, jid, "composing");
@@ -965,7 +965,7 @@ JsChat.prototype = {
                             finalStr += text[i];
                         }
                     }
-                    console.log(finalStr);
+                    //console.log(finalStr);
                     text = finalStr;
                     $(superParent).find("#initChatText,#sentDiv,#chatBoxErr").remove();
                     $(superParent).find(".chatMessage").css("height", "246px").append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id ="tempText_' + userId + '_' + timeLog + '" class="talkText">' + text + '</div><i class="nchatspr nchatic_8 fr vertM"></i></div>');
@@ -1180,19 +1180,19 @@ JsChat.prototype = {
         });
     },
     _getChatBoxType: function (userId, groupID, key) {
-        this._chatLoggerPlugin("in _getChatBoxType");
+        //this._chatLoggerPlugin("in _getChatBoxType");
         var curElem = this;
         //var groupId = $('chat-box[user-id="' + userId + '"]').attr("group-id");
         //this._chatLoggerPlugin($(".chatlist li[id='" + userId + "_" + groupID + "']").attr("id").split("_")[1]);
         //var groupID = $(".chatlist li[id='" + userId + "_" + groupId + "']").attr("id").split("_")[1];
-        this._chatLoggerPlugin("ankita" + groupID + "-" + curElem._groupBasedChatBox[groupID]);
+        //this._chatLoggerPlugin("ankita" + groupID + "-" + curElem._groupBasedChatBox[groupID]);
         var chatBoxType;
         var oldChatBoxType = $('chat-box[user-id="' + userId + '"]').attr("data-contact");
         if (typeof key == "undefined" || key != "updateChatBoxType") {
-            this._chatLoggerPlugin("in case a");
+            //this._chatLoggerPlugin("in case a");
             chatBoxType = curElem._contactStatusMapping[curElem._groupBasedChatBox[groupID]]["key"];
         } else {
-            this._chatLoggerPlugin("in case b");
+            //this._chatLoggerPlugin("in case b");
             switch (groupID) {
             case chatConfig.Params.categoryNames["Acceptance"]: //acceptance from 
                 chatBoxType = curElem._contactStatusMapping["pog_interest_accepted"]["key"];
@@ -1211,7 +1211,7 @@ JsChat.prototype = {
         if (typeof chatBoxType == "undefined") {
             chatBoxType = curElem._contactStatusMapping["none_applicable"]["key"];
         }
-        this._chatLoggerPlugin("chatboxtype--" + chatBoxType);
+        //this._chatLoggerPlugin("chatboxtype--" + chatBoxType);
         $('chat-box[user-id="' + userId + '"]').attr("group-id", groupID);
         $('chat-box[user-id="' + userId + '"]').attr("data-contact", chatBoxType);
         curElem._changeLocalStorage("changeGroup",userId,groupID,"");
@@ -1225,7 +1225,7 @@ JsChat.prototype = {
         var dataPresent = false;
         
         var curElem = this,membership = getMembershipStatus(); //get membership status
-        this._chatLoggerPlugin("in _postChatPanelsBox");
+        //this._chatLoggerPlugin("in _postChatPanelsBox");
        
         var chatBoxType = curElem._getChatBoxType(userId, $('chat-box[user-id="' + userId + '"]').attr("group-id"));
         curElem._changeLocalStorage("add",userId,$('chat-box[user-id="' + userId + '"]').attr("group-id"),"open");
@@ -1270,7 +1270,7 @@ JsChat.prototype = {
     _updateChatPanelsBox: function (userId, newGroupId) {
         var curElem = this,membership=getMembershipStatus();
         if ($('chat-box[user-id="' + userId + '"]').length != 0) {
-            this._chatLoggerPlugin("in _updateChatPanelsBox for " + userId);
+            //this._chatLoggerPlugin("in _updateChatPanelsBox for " + userId);
             //console.log("in _updateChatPanelsBox");
             $('chat-box[user-id="' + userId + '"] #rosterDeleteMsg_'+ userId + '').remove();
             var chatBoxType = curElem._getChatBoxType(userId, newGroupId, "updateChatBoxType");
@@ -1280,8 +1280,8 @@ JsChat.prototype = {
     },
     //update contact status and enable/disable chat in chat box on basis of membership and contact status
     _setChatBoxInnerDiv: function (userId, chatBoxType,operation) {
-        this._chatLoggerPlugin();
-        this._chatLoggerPlugin("in _setChatBoxInnerDiv");
+        //this._chatLoggerPlugin();
+        //this._chatLoggerPlugin("in _setChatBoxInnerDiv");
         var curElem = this,
             that = this,
             new_contact_state = chatBoxType,
@@ -1320,7 +1320,7 @@ JsChat.prototype = {
         else{
             $("#moreHistory_"+userId).val("0"); 
         }
-        this._chatLoggerPlugin(curElem);
+        //this._chatLoggerPlugin(curElem);
         switch (chatBoxType) {
         case curElem._contactStatusMapping["pg_interest_pending"]["key"]:
             $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="sendInterest cursp sendDiv pos-abs color5 mt10 wid70p txtc"><i class="nchatspr nchatic_6 "></i><span class="vertTexBtm"> Send Interest</span></div><div id="sentDiv" class="sendDiv disp-none pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
@@ -1338,7 +1338,7 @@ JsChat.prototype = {
                     });
                     if (response != false) {
                         if (response.responseMessage != "Successful") {
-                            curElem._chatLoggerPlugin($(this));
+                            //curElem._chatLoggerPlugin($(this));
                             $(this).html(response.responseMessage);
                         } else if (response.buttondetails && response.buttondetails.button) {
                             if (response.actiondetails.errmsglabel) {
@@ -1386,7 +1386,7 @@ JsChat.prototype = {
                     });
                     if (response != false) {
                         if (response.responseMessage != "Successful") {
-                            curElem._chatLoggerPlugin($(this));
+                            //curElem._chatLoggerPlugin($(this));
                             $(this).html(response.responseMessage);
                             $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt,#chatBoxErr").remove();
                         } else if (response.buttondetails && response.buttondetails.button) {
@@ -1426,7 +1426,7 @@ JsChat.prototype = {
                     });
                     if (response != false) {
                         if (response.responseMessage != "Successful") {
-                            curElem._chatLoggerPlugin($(this));
+                            //curElem._chatLoggerPlugin($(this));
                             $(this).html(response.responseMessage);
                             $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt,#chatBoxErr").remove();
                         } else if (response.buttondetails && response.buttondetails.button) {
@@ -1539,14 +1539,14 @@ JsChat.prototype = {
             $(".chatlist li[id='" + userId + "_" + groupId + "']").attr("data-status", chat_status);
         }
         if ($('chat-box[user-id="' + userId + '"]').length != 0) {
-            this._chatLoggerPlugin("change to " + chat_status);
+            //this._chatLoggerPlugin("change to " + chat_status);
             $("chat-box[user-id='" + userId + "'] .chatBoxBar .onlineStatus").html(chat_status);
         }
     },
     _bottomPanelWidth: 0,
     //appending chat box
     _chatPanelsBox: function (userId, status, jid, pcheckSum, groupId) {
-        this._chatLoggerPlugin("pcheckSum", pcheckSum);
+        //this._chatLoggerPlugin("pcheckSum", pcheckSum);
         if ($(".chatlist li[id='" + userId + "_" + groupId + "']").length != 0) {
             status = $(".chatlist li[id='" + userId + "_" + groupId + "']").attr("data-status");
         }
@@ -1841,7 +1841,7 @@ JsChat.prototype = {
             //change count of online matches panel
             if ($(".js-minpanel").length != 0) {
                 var count = curEle._onlineUserMsgMe();
-                that._chatLoggerPlugin("count - " + count);
+                //that._chatLoggerPlugin("count - " + count);
             }
             curEle._scrollToBottom(userId);
             //this.storeMessagesInLocalHistory(selfJID, userId, newMsg, 'receive');
@@ -1891,7 +1891,7 @@ JsChat.prototype = {
             }
         });
         if ($('.showcountmin').hasClass('vishid')) {
-            this._chatLoggerPlugin('no exist');
+            //this._chatLoggerPlugin('no exist');
             //noOfInputs = 5;
             $('.countVal').html(noOfInputs);
             $('.showcountmin').toggleClass('vishid');
@@ -1903,12 +1903,12 @@ JsChat.prototype = {
     },
     //handle typing status of message
     _handleMsgComposingStatus: function (userId, msg_state) {
-        this._chatLoggerPlugin("in _handleMsgComposingStatus" + msg_state + userId);
+        //this._chatLoggerPlugin("in _handleMsgComposingStatus" + msg_state + userId);
         if (typeof msg_state != "undefined") {
             if (msg_state == 'composing') {
                 //localStorage.setItem("status_"+userId, $('chat-box[user-id="' + userId + '"] .onlineStatus').html());
                 if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
-                    this._chatLoggerPlugin("yess", $('chat-box[user-id="' + userId + '"] .downBarUserName'))
+                    //this._chatLoggerPlugin("yess", $('chat-box[user-id="' + userId + '"] .downBarUserName'))
                     $('chat-box[user-id="' + userId + '"] .downBarUserName').html('<div class="onlineStatus f11 opa50 mt4">typing...</div>');
                 } else {
                     $('chat-box[user-id="' + userId + '"] .onlineStatus').html("typing...");
@@ -1916,7 +1916,7 @@ JsChat.prototype = {
             } else if (msg_state == 'paused' || msg_state == 'gone') {
                 var idStatus = "",
                     groupId = $('chat-box[user-id="' + userId + '"]').attr("group-id");
-                this._chatLoggerPlugin($(".chatlist li[id='" + userId + "_" + groupId + "']").find(".nchatspr"));
+                //this._chatLoggerPlugin($(".chatlist li[id='" + userId + "_" + groupId + "']").find(".nchatspr"));
                 if ($(".chatlist li[id='" + userId + "_" + groupId + "']").find(".nchatspr").length != 0) {
                     idStatus = "online";
                 } else {
@@ -1935,7 +1935,7 @@ JsChat.prototype = {
     //change from sending status to sent or received read
     _changeStatusOfMessg: function (messgId, userId, newStatus) {
         if (messgId) {
-            this._chatLoggerPlugin("Change status" + newStatus);
+            //this._chatLoggerPlugin("Change status" + newStatus);
             if (newStatus == "recieved") {
                 //console.log("marked");
                 $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_8").addClass("nchatic_10");
@@ -1951,7 +1951,7 @@ JsChat.prototype = {
     onChatLoginSuccess: null, //function triggered after successful chat login
     //start:login screen
     _startLoginHTML: function () {
-        this._chatLoggerPlugin('_startLoginHTML call');
+        //this._chatLoggerPlugin('_startLoginHTML call');
         var curEle = this;
         if ($(curEle._chatBottomPanelID).length != 0) {
             setTimeout(function () {
@@ -1960,19 +1960,19 @@ JsChat.prototype = {
         }
         //user not logged in and coming for first time 
         if (($(this._listingPanelID).length == 0) && (this._loginStatus == "N")) {
-            this._chatLoggerPlugin('case 1');
+            //this._chatLoggerPlugin('case 1');
             $(curEle._loginPanelID).fadeOut('slow', function () {
                 curEle._appendLoggedHTML();
             });
         }
         //user was logged earlier in which login is not call'd
         else if (($(this._listingPanelID).length == 0) && (this._loginStatus == "Y")) {
-            this._chatLoggerPlugin('case 2');
+            //this._chatLoggerPlugin('case 2');
             if ($(curEle._loginPanelID).length == 0) {
-                this._chatLoggerPlugin("ankita_1");
+                //this._chatLoggerPlugin("ankita_1");
                 //curEle._appendLoggedHTML();    
             } else {
-                this._chatLoggerPlugin("ankita_2");
+                //this._chatLoggerPlugin("ankita_2");
                 $(curEle._loginPanelID).remove();
                 // function () {
                 //curEle._appendLoggedHTML();
@@ -1981,13 +1981,13 @@ JsChat.prototype = {
         }
         //user logged out from chat in the same session
         else {
-            this._chatLoggerPlugin('case 3');
+            //this._chatLoggerPlugin('case 3');
             $(curEle._loginPanelID).fadeOut('fast', function () {
                 $(curEle._listingPanelID).fadeIn('slow');
             });
         }
-        this._chatLoggerPlugin("Login status value");
-        this._chatLoggerPlugin(this._loginStatus);
+        //this._chatLoggerPlugin("Login status value");
+        //this._chatLoggerPlugin(this._loginStatus);
     },
     //start:function calculate the current postion for hover box
     _calHoverPos: function (param2, param3) {
@@ -2021,15 +2021,15 @@ JsChat.prototype = {
             widCal = '';
         //console.log(groupButtons, "Nitish");
         TotalBtn = groupButtons.length;
-        this._chatLoggerPlugin('TotalBtn: ' + TotalBtn);
+        //this._chatLoggerPlugin('TotalBtn: ' + TotalBtn);
         widCal = parseInt(100 / TotalBtn);
-        this._chatLoggerPlugin('widCal: ' + widCal);
-        this._chatLoggerPlugin("BB");
+        //this._chatLoggerPlugin('widCal: ' + widCal);
+        //this._chatLoggerPlugin("BB");
         var that = this;
         $.each(groupButtons, function (k, v) {
-            that._chatLoggerPlugin(k);
-            that._chatLoggerPlugin(v);
-            that._chatLoggerPlugin("KKKKKK" + v.action);
+            //that._chatLoggerPlugin(k);
+            //that._chatLoggerPlugin(v);
+            //that._chatLoggerPlugin("KKKKKK" + v.action);
             if (group == chatConfig.Params["categoryNames"]["Interest Sent"]) {
                 str += '<div class="nchatbg-grey lh50 brdr-0 txtc colrw"';
             } else {
@@ -2067,8 +2067,8 @@ JsChat.prototype = {
             nick = $(".chatlist li[id^='" + param1 + "_']").attr("data-nick"),
             jid = $(".chatlist li[id^='" + param1 + "_']").attr("data-jid");
         //this._chatLoggerPlugin($('#'+param1+'_hover').length);
-        this._chatLoggerPlugin("in hoverBoxStr");
-        this._chatLoggerPlugin(pCheckSum);
+        //this._chatLoggerPlugin("in hoverBoxStr");
+        //this._chatLoggerPlugin(pCheckSum);
         var trackingParams = chatConfig.Params.categoryTrackingParams[group],
             trackingParamsStr = '';
         if (typeof trackingParams != "undefined") {
@@ -2123,7 +2123,7 @@ JsChat.prototype = {
             str += '</div>';
             return str;
         }
-        this._chatLoggerPlugin("End of _hoverBoxStr");
+        //this._chatLoggerPlugin("End of _hoverBoxStr");
     },
     onHoverContactButtonClick: null,
     //start:update vcard
@@ -2134,24 +2134,24 @@ JsChat.prototype = {
             var finalstr;
             var that = this;
             //$.each(param.vCard, function (k, v) {
-            that._chatLoggerPlugin("set");
+            //that._chatLoggerPlugin("set");
             //that._chatLoggerPlugin(k);
             finalstr = globalRef._hoverBoxStr(param.jid, param, pCheckSum);
             $(globalRef._mainID).append(finalstr);
             //});
             delete that;
-            this._chatLoggerPlugin("Callback calling starts");
+            //this._chatLoggerPlugin("Callback calling starts");
             callback();
-            this._chatLoggerPlugin("Callaback ends");
+            //this._chatLoggerPlugin("Callaback ends");
         }
     },
     /*
      * Error handling in case of hover
      */
     hoverButtonHandling: function (jid, data, type) {
-        this._chatLoggerPlugin("In error handling");
-        this._chatLoggerPlugin(jid, data);
-        this._chatLoggerPlugin(type);
+        //this._chatLoggerPlugin("In error handling");
+        //this._chatLoggerPlugin(jid, data);
+        //this._chatLoggerPlugin(type);
         if (type == "error") {
             //$("#"+jid+"_BtnRespnse").addClass("disp-none");
             //$("#"+jid+"_hoverDvSmEr").removeClass("disp-none");
@@ -2241,10 +2241,10 @@ JsChat.prototype = {
         } else {
             //this._chatLoggerPlugin('call to onPreHoverCallback');
             if (this.onPreHoverCallback && typeof this.onPreHoverCallback == 'function') {
-                this._chatLoggerPlugin("Before precall");
+                //this._chatLoggerPlugin("Before precall");
                 this.onPreHoverCallback(checkSumP, curEleID, hoverNewTop, shiftright);
                 //once div is created from precallback below ling shows the hovred list information
-                this._chatLoggerPlugin("After precall");
+                //this._chatLoggerPlugin("After precall");
             }
         }
         $('.info-hover').hover(function () {
@@ -2305,7 +2305,7 @@ JsChat.prototype = {
         if ($('#js-lsitingPanel').length == 0) {
             //console.log("in _appendLoggedHTML");
             var curEle = this;
-            this._chatLoggerPlugin('_appendLoggedHTML');
+            //this._chatLoggerPlugin('_appendLoggedHTML');
             $(curEle._parendID).append('<div class="fullwid fontlig nchatcolor" id="js-lsitingPanel"/> ').promise().done(function () {
                 curEle._addChatTop();
                 curEle.addTab();
@@ -2446,7 +2446,7 @@ JsChat.prototype = {
     sendingTypingEvent: null,
     //start:this function image,name in top chat logged in scenario
     addLoginHTML: function (failed) {
-        this._chatLoggerPlugin('in addLoginHTML');
+        //this._chatLoggerPlugin('in addLoginHTML');
         var curEle = this;
         var LoginHTML = '<div class="fullwid txtc fontlig pos-rel" id="js-loginPanel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarOut"></i> </div><div class="chpt100"> <img src="' + this._imageUrl + '" /> </div><button id="js-chatLogin" class="chatbtnbg1 mauto chatw1 colrw f14 brdr-0 lh40 cursp nchatm5">Enter to Chat</button><div id="loginLoader" class="loginSpinner disp-none" style="margin-top: 14px"></div></div>';
         var errorHTML = '';
@@ -2455,7 +2455,7 @@ JsChat.prototype = {
         }
         if (failed == false || typeof failed == "undefined" || $("#js-loginPanel").length == 0) $(this._parendID).append(LoginHTML);
         else {
-            this._chatLoggerPlugin("removing");
+            //this._chatLoggerPlugin("removing");
             $(curEle._loginPanelID).fadeIn('fast');
             if ($(curEle._loginPanelID).find("#loginErr").length == 0) $(curEle._loginPanelID).append(errorHTML);
         }
@@ -2466,7 +2466,7 @@ JsChat.prototype = {
         var that = this;
         $(this._loginbtnID).click(function () {
             if (curEle.onEnterToChatPreClick && typeof (curEle.onEnterToChatPreClick) == "function") {
-                that._chatLoggerPlugin("in onEnterToChatPreClick");
+                //that._chatLoggerPlugin("in onEnterToChatPreClick");
                 curEle.onEnterToChatPreClick();
             }
             /*
@@ -2481,7 +2481,7 @@ JsChat.prototype = {
     //manage chat loader
     manageChatLoader: function (type) {
         if (type == "hide") {
-            this._chatLoggerPlugin("hiding loader_ankita");
+            //this._chatLoggerPlugin("hiding loader_ankita");
             $("#scrollDivLoader").hide();
         }
     },
@@ -2520,10 +2520,10 @@ JsChat.prototype = {
             }
         }
         if (this.checkLoginStatus()) {
-            this._chatLoggerPlugin("checking login status");
+            //this._chatLoggerPlugin("checking login status");
             this._startLoginHTML();
         } else {
-            this._chatLoggerPlugin("in start function");
+            //this._chatLoggerPlugin("in start function");
             this.addLoginHTML();
         }
         if(typeof showHelpScreen !== typeof undefined) {

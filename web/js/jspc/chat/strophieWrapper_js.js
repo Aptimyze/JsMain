@@ -173,9 +173,9 @@ var strophieWrapper = {
     onRosterUpdate: function (iq) {
         //strophieWrapper.Roster = strophieWrapper.Roster.filter(function(n){ return n != undefined }); 
         //strophieWrapper.stropheLoggerPC("in onRosterPush");
-        console.log("onRosterUpdate");
-        console.log(iq);
-        strophieWrapper.stropheLoggerPC(iq);
+        //console.log("onRosterUpdate");
+        //console.log(iq);
+        //strophieWrapper.stropheLoggerPC(iq);
         var nodeObj = xmlToJson(iq);
         rosterObj = strophieWrapper.formatRosterObj(nodeObj["query"]["item"]);
         //strophieWrapper.stropheLoggerPC(rosterObj);
@@ -190,32 +190,32 @@ var strophieWrapper = {
             //strophieWrapper.stropheLoggerPC(ask);
             if(typeof subscription == "undefined" || subscription != "remove"){
                 if (ask == "unsubscribe") {
-                    console.log("got unsubscribe ask");
+                    //console.log("got unsubscribe ask");
                     //strophieWrapper.stropheLoggerPC(strophieWrapper.Roster[user_id]);
                     //strophieWrapper.stropheLoggerPC("deleting node");
                     invokePluginManagelisting(nodeArr, "delete_node", user_id);
-                    console.log(strophieWrapper.Roster);
+                    //console.log(strophieWrapper.Roster);
                     try{
                         delete strophieWrapper.Roster[user_id];
                         //var return1 = strophieWrapper.Roster.splice(user_id,1);
                         //console.log(return1);
                     }
                     catch(e){
-                        console.log(e);
+                        //console.log(e);
                     }
                     //strophieWrapper.unauthorize(rosterObj[strophieWrapper.rosterDetailsKey]["jid"]);
                 } else if (strophieWrapper.checkForSubscription(subscription) == true) {
                     //strophieWrapper.stropheLoggerPC("adding node");
                     //strophieWrapper.stropheLoggerPC(subscription);
-                    console.log("add node case");
+                    //console.log("add node case");
                     if (typeof strophieWrapper.Roster[user_id] == "undefined" || typeof strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["subscription"]=="undefined") {
-                        console.log("adding new1");
+                        //console.log("adding new1");
                         invokePluginManagelisting(nodeArr, "add_node", user_id);
                     } else if (typeof strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["groups"] != "undefined") {
                         var oldGroupId = strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["groups"][0];
                         if (oldGroupId && oldGroupId != rosterObj[strophieWrapper.rosterDetailsKey]["groups"][0]) {
                             var oldArr = [];
-                            console.log("adding new2");
+                            //console.log("adding new2");
                             oldArr[user_id] = strophieWrapper.Roster[user_id];
                             //strophieWrapper.stropheLoggerPC("moving node from " + oldGroupId);
                             invokePluginManagelisting(oldArr, "delete_node", user_id);
@@ -235,11 +235,11 @@ var strophieWrapper = {
                 }
             }
             else if(subscription == "remove"){
-                console.log("got remove subscription 1",rosterObj);
+                //console.log("got remove subscription 1",rosterObj);
                 if(typeof strophieWrapper.Roster[user_id]!= "undefined"){
                     nodeArr[user_id] = strophieWrapper.Roster[user_id];
                     if (strophieWrapper.checkForGroups(nodeArr[user_id][strophieWrapper.rosterDetailsKey]["groups"]) == true) {
-                        console.log("removed..");
+                        //console.log("removed..");
                         invokePluginManagelisting(nodeArr, "delete_node", user_id);
                         delete strophieWrapper.Roster[user_id];
                         //var return2 = strophieWrapper.Roster.splice(user_id,1);
@@ -249,11 +249,11 @@ var strophieWrapper = {
             }
         }
         else if(subscription == "remove"){
-            console.log("got remove subscription 2",rosterObj);
+            //console.log("got remove subscription 2",rosterObj);
             if(typeof strophieWrapper.Roster[user_id]!= "undefined"){
                 nodeArr[user_id] = strophieWrapper.Roster[user_id];
                 if (strophieWrapper.checkForGroups(nodeArr[user_id][strophieWrapper.rosterDetailsKey]["groups"]) == true) {
-                    console.log("removed..");
+                    //console.log("removed..");
                     invokePluginManagelisting(nodeArr, "delete_node", user_id);
                     delete strophieWrapper.Roster[user_id];
                     //var return3 = strophieWrapper.Roster.splice(user_id,1);
@@ -366,7 +366,7 @@ var strophieWrapper = {
             //strophieWrapper.stropheLoggerPC("start of onPresenceReceived for " + user_id);
             //strophieWrapper.stropheLoggerPC(from);
             if (presence_type != 'error') {
-	            strophieWrapper.stropheLoggerPC(presence);
+	            //strophieWrapper.stropheLoggerPC(presence);
 	            //strophieWrapper.authorize(from.split("/")[0]);
 	            strophieWrapper.authorize(from);
 	            strophieWrapper.updatePresence(user_id, chat_status);
@@ -422,10 +422,10 @@ var strophieWrapper = {
     },
     //executed after roster has been fetched
     onRosterReceived: function (iq) {
-        console.log("in onRosterReceived");
-        console.log(iq);
+        //console.log("in onRosterReceived");
+        //console.log(iq);
         //strophieWrapper.stropheLoggerPC("in onRosterReceived");
-        strophieWrapper.stropheLoggerPC(iq);
+        //strophieWrapper.stropheLoggerPC(iq);
         //strophieWrapper.stropheLoggerPC(iq);
         $(iq).find("item").each(function () {
             var subscription = $(this).attr("subscription"),
@@ -444,7 +444,7 @@ var strophieWrapper = {
                     listObj[strophieWrapper.rosterDetailsKey]["last_online_time"] = last_online_time;
                     strophieWrapper.Roster[user_id] = strophieWrapper.mergeRosterObj(strophieWrapper.Roster[user_id], listObj);
                     if (subscription == "to") {
-                    	console.log("subscribe to -"+jid);
+                    	//console.log("subscribe to -"+jid);
                         strophieWrapper.subscribe(jid, listObj[strophieWrapper.rosterDetailsKey]["nick"]);
                     	/*setTimeout(function () {
 		                strophieWrapper.sendPresence();
@@ -466,9 +466,9 @@ var strophieWrapper = {
     //executed on msg receipt
     onMessage: function (iq) {
         //strophieWrapper.stropheLoggerPC("got message");
-        console.log("in onMessage");
-        console.log(iq);
-        strophieWrapper.stropheLoggerPC(iq);
+        //console.log("in onMessage");
+        //console.log(iq);
+        //strophieWrapper.stropheLoggerPC(iq);
         var msgObject = strophieWrapper.formatMsgObj(iq);
         //strophieWrapper.stropheLoggerPC(msgObject);
         //if(msgObject["msg_state"] == strophieWrapper.msgStates["FORWARDED"] && getSelfJID() != msgObject[]
@@ -673,7 +673,7 @@ var strophieWrapper = {
             msg_state = strophieWrapper.msgStates["RECEIVED"];
         }
         //strophieWrapper.stropheLoggerPC("in formatMsgObj");
-        strophieWrapper.stropheLoggerPC(msg_state);
+        //strophieWrapper.stropheLoggerPC(msg_state);
         if (typeof msg_state != "undefined") {
             outputObj["msg_state"] = msg_state;
         }
