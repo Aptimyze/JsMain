@@ -254,6 +254,8 @@ class MobileCommon{
     		return "MS";
     	if(MobileCommon::isDesktop())
     		return "P";
+    	if(MobileCommon::isOldMobileSite())
+    		return LoggingEnums::OS;
     }
 
 	/**
@@ -282,7 +284,10 @@ class MobileCommon{
 				return "JSMS";
 				break;
 
-			}   
+			} 
+			case LoggingEnums::OS:
+			  	return "JSOMS";
+			  	break;  
 			default:
 				return "UNKNOWN CHANNEL";
 			break;
