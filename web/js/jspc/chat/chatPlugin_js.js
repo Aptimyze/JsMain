@@ -1435,7 +1435,7 @@ JsChat.prototype = {
                                 $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt").remove();
                             } else {
                                 $(this).closest(".chatMessage").find("#declineDiv").removeClass("disp-none");
-                                $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
+                                $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt,#accept").remove();
                                 //$(this).remove();
                                 new_contact_state = curElem._contactStatusMapping["pg_interest_declined"]["key"];
                                 //TODO: fire query for accepting request
