@@ -112,6 +112,7 @@ class SearchParamters
         protected $INCOME_SORTBY;
         protected $NATIVE_STATE;
         protected $NATIVE_CITY;
+        protected $SHOW_RESULT_FOR_SELF;
 
         public function __construct()
 	{
@@ -1167,4 +1168,11 @@ class SearchParamters
                 }
                 return NULL;
         }
+        
+        
+      public function setSHOW_RESULT_FOR_SELF($SHOW_RESULT_FOR_SELF='') 
+			{ 
+					$this->SHOW_RESULT_FOR_SELF = $SHOW_RESULT_FOR_SELF; 
+			}
+			public function getSHOW_RESULT_FOR_SELF() { return $this->SHOW_RESULT_FOR_SELF; }
 }
