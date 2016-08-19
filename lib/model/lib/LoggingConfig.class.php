@@ -28,7 +28,13 @@
 				LoggingEnums::DIRECTORY => true,
 				LoggingEnums::STACKTRACE => false
 				),
-			LoggingEnums::EX500OR404 => array(
+			LoggingEnums::EX500 => array(
+				LoggingEnums::LOGGING => true,
+				LoggingEnums::LEVEL => LoggingEnums::LOG_ERROR,
+				LoggingEnums::DIRECTORY => true,
+				LoggingEnums::STACKTRACE => false
+				),
+			LoggingEnums::EX404 => array(
 				LoggingEnums::LOGGING => true,
 				LoggingEnums::LEVEL => LoggingEnums::LOG_ERROR,
 				LoggingEnums::DIRECTORY => true,
@@ -134,6 +140,11 @@
 			return LoggingEnums::CONFIG_ON ? $this->arrConfig[$module][LoggingEnums::LEVEL] : LoggingEnums::LOG_ERROR;
 		}
 
+		/**
+		 * Get if debug is on for the module or not
+		 * @param String $module A module name
+		 * @return bool
+		 */
 		public function debugStatus($module)
 		{
 			if(LoggingEnums::LOG_LEVEL == LoggingEnums::LOG_DEBUG){

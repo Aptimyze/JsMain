@@ -171,7 +171,6 @@ function content_to_send($main_service_id,$addon_service_id,$to_user)
 }
 function logerror_cron($query)
 {
-	mysql_error_js();
 	$err_msg = "QUERY : ".$query."\n ERROR : ".$query.mysql_error_js()."\nDATE : ".date('Y-m-d G:i:s',time()+37800);
 	$error_msg = "echo \"".$err_msg;
         $msg = $error_msg."\" >> ".JsConstants::$docRoot."/billing/log_failed_mailer.txt";

@@ -26,6 +26,11 @@ class LoggingManager
 	 */
 	private $szLogPath = null;
 
+    /**
+     * @var bool
+     */
+    private $flexDir = false;
+
 	/**
 	 * @var null|string
 	 */
@@ -194,7 +199,7 @@ class LoggingManager
 		$logId = $this->getLogId($logArray);
 		$clientIp = $this->getLogClientIP();
 		$channelName = $this->getLogChannelName();
-		$moduleName = $this->szLogPath;
+		$moduleName = $this->getLogModuleName($isSymfony,$exception,$logArray);
 		$actionName = $this->getLogActionName($isSymfony,$exception,$logArray);
 		$apiVersion = $this->getLogAPI($logArray);
 		$message = $this->getLogMessage($exception,$logArray);
@@ -522,31 +527,41 @@ class LoggingManager
 	}
 
 	/**
-	 * @param $Var
-	 * @return bool
-	 */
+     * @param $Var
+     * @return bool
+     */
 	private function canLog($enLogType,$Var,$isSymfony,$logArray)
 	{
-		// set module name
+        // set module name
 		if($this->szLogPath == null)
 		{
 			$this->szLogPath = $this->getLogModuleName($isSymfony,$Var,$logArray);
 		}
-		// check if config is on, if yes then check if module can log
+		else
+		{
+			$this->flexDir = true;
+		}
+      // check if config is on, if yes then check if module can log
 		$toLog = (LoggingEnums::CONFIG_ON ? LoggingConfig::getInstance()->logStatus($this->szLogPath) : true);
-		// check Log Level
+      // check Log Level
 		$checkLogLevel = ($enLogType <= LoggingEnums::LOG_LEVEL || $enLogType <= LoggingConfig::getInstance()->getLogLevel($this->szLogPath));
 		return $toLog & $checkLogLevel;
 	}
 
-	/**
-	 * @param $szPath
-	 */
-	private function canCreateDir($szLogPath)
-	{
-		// check if log for all modules is together, if not set then check if module can create diff directory
-		return (LoggingEnums::LOG_TOGETHER ? 0 : LoggingConfig::getInstance()->dirStatus($szLogPath));
-	}
+    /**
+     * @param $szPath
+     */
+    private function canCreateDir($szLogPath)
+    {
+      // check if log for all modules is together, if not set then check if module can create diff directory
+    	if($this->flexDir)
+    	{
+    		$this->flexDir = false;
+    		return true;
+    	}
+    	return (LoggingEnums::LOG_TOGETHER ? 0 : LoggingConfig::getInstance()->dirStatus($szLogPath));
+    }
+
 
 	/**
 	 *sets unique id
@@ -564,5 +579,4 @@ class LoggingManager
 	private function canWriteTrace($szLogPath)
 	{
 		return LoggingConfig::getInstance()->traceStatus($szLogPath);
-	}  
-}
+	}

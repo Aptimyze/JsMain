@@ -72,7 +72,7 @@ abstract class sfAction extends sfComponent
   public function forward404($message = null)
   {
       $ex = new sfError404Exception($this->get404Message($message));
-    LoggingManager::getInstance(LoggingEnums::EX500OR404)->logThis(LoggingEnums::LOG_ERROR, $ex);
+    LoggingManager::getInstance(LoggingEnums::EX404)->logThis(LoggingEnums::LOG_ERROR, $ex, array('moduleName' => '404'));
     throw $ex;
   }
 
@@ -89,7 +89,7 @@ abstract class sfAction extends sfComponent
     if (!$condition)
     {
         $ex = new sfError404Exception($this->get404Message($message));
-      LoggingManager::getInstance(LoggingEnums::EX500OR404)->logThis(LoggingEnums::LOG_ERROR, $ex);
+      LoggingManager::getInstance(LoggingEnums::EX404)->logThis(LoggingEnums::LOG_ERROR, $ex, array('moduleName' => '404'));
       throw $ex;
     }
   }
@@ -107,7 +107,7 @@ abstract class sfAction extends sfComponent
     if ($condition)
     {
         $ex = new sfError404Exception($this->get404Message($message));
-      LoggingManager::getInstance(LoggingEnums::EX500OR404)->logThis(LoggingEnums::LOG_ERROR, $ex);
+      LoggingManager::getInstance(LoggingEnums::EX404)->logThis(LoggingEnums::LOG_ERROR, $ex, array('moduleName' => '404'));
       throw $ex;
     }
   }
