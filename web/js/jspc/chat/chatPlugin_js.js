@@ -223,11 +223,13 @@ JsChat.prototype = {
     },
     //start:chat tabs click
     _chatTabs: function (param) {
-        $('ul.nchattab1 li').removeClass('active');
-        $('#' + param).addClass('active');
-        $('.js-htab').fadeOut('slow').promise().done(function () {
-            $('.show' + param).fadeIn('slow')
-        });
+        if($('#' + param).hasClass("active") == false) {
+            $('ul.nchattab1 li').removeClass('active cursd');
+            $('#' + param).addClass('active cursd');
+            $('.js-htab').fadeOut('slow').promise().done(function () {
+                $('.show' + param).fadeIn('slow')
+            });
+        }
     },
     onLogoutPreClick: null,
     //start:log out from chat
@@ -317,7 +319,7 @@ JsChat.prototype = {
             var objin = obj[key];
             TabsOpt += "<li id=\"" + TabID + "\" class=\"pos-rel ";
             if (TabID == 'tab1') {
-                TabsOpt += "active\">";
+                TabsOpt += "active cursd\">";
             } else {
                 TabsOpt += "\">";
             }
@@ -436,7 +438,7 @@ JsChat.prototype = {
                         List += getNamelbl;
                         List += '</div>';
                         if (status == "online") {
-                            List += '<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>';
+                            List += '<div class="fr"><i class="nchatspr nchatic5 mt15"><div class="pos-abs fullBlockTitle disp-none tneg20_new bg-white f13 brderinp pad308">Online</div></i></div>';
                         }
                         List += '</li>';
                         var addNode = false;
@@ -593,7 +595,7 @@ JsChat.prototype = {
             if (status == "online") {
                 //add online chat_status icon
                 if ($('#' + contactID + "_" + groupID).find('.nchatspr').length == 0) {
-                    $(this._mainID).find($('#' + contactID + "_" + groupID)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"></i></div>');
+                    $(this._mainID).find($('#' + contactID + "_" + groupID)).append('<div class="fr"><i class="nchatspr nchatic5 mt15"><div class="pos-abs fullBlockTitle disp-none tneg20_new bg-white f13 brderinp pad308">Online</div></i></div>');
                 }
                 $('#' + contactID + "_" + groupID).prependTo('div.' + groupID + ' ul.' + status);
             } else if (status == "offline") {

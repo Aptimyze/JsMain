@@ -699,9 +699,13 @@ margin-top: 220px;
 }
 .nhgt180{height: 180px}
 .wid40hgt40{width:40px;height:40px;}
+.nchatic5:hover .fullBlockTitle{display:block}
 .nchatic_3:hover .fullBlockTitle{display:block}
 .pad510{padding:5px 10px;}
+.pad308{padding:3px 8px;}
 .tneg20{top:-20px;right: 52px;}
+.tneg20_new {top: 2px;right: 17px;
+}
 
 .nchatic_2:hover .fullMinTitle{display:block}
 .tneg20_2{top:-20px;right: 14px;}
