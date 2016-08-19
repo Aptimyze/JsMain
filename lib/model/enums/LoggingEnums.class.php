@@ -22,7 +22,8 @@ class LoggingEnums
     // module names
     const JSADMIN = 'jsadmin';
     const COMMONLOG = 'common';
-    const EX500OR404 = '500-404';
+    const EX500 = '500';
+    const EX404 = '404';
     // name of channels returned
     const P = 'P';
     const A = 'A';
