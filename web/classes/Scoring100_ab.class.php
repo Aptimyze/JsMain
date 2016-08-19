@@ -123,11 +123,11 @@ class Scoring_ab
                         }
                 }
 
-		 		//$pidShard=JsDbSharding::getShardNo($profileid,'slave');
-		 		$shard = ($profileid%3) + 1;
-		 		$dbName = "shard".$shard."Slave112";
-		 		$dbMessageLogObj=new NEWJS_MESSAGE_LOG($dbName);
-
+ 		//$pidShard=JsDbSharding::getShardNo($profileid,'slave');
+ 		$shard = ($profileid%3) + 1;
+ 		$dbName = "shard".$shard."Slave112";
+ 		$dbMessageLogObj=new NEWJS_MESSAGE_LOG($dbName);
+ 		
 		//Activity Data
 		$this->newmodel[lOGIN_hist_In_week]="";
 		$this->newmodel[Search_In14Days]="";
