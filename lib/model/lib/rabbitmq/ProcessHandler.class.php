@@ -163,6 +163,19 @@ class ProcessHandler
  }
  public function updateSeen($type,$body)
  {
+
+	if($body['contactType']==ContactHandler::FILTERED)
+        {
+                $contactRObj=new EoiViewLog();
+                $contactRObj->setEoiViewedForAReceiver($body['profileid'],'Y');
+        }
+
+        if($body['contactType']==ContactHandler::INITIATED)
+        {
+                $contactRObj=new EoiViewLog();
+                $contactRObj->setEoiViewedForAReceiver($body['profileid'],'N');
+        }
+
 	switch($type)
 	{
 		case "ALL_CONTACTS":
@@ -180,17 +193,6 @@ class ProcessHandler
 			break;
 	}
         
-        if($body['contactType']==ContactHandler::FILTERED)
-        {    
-                $contactRObj=new EoiViewLog();
-                $contactRObj->setEoiViewedForAReceiver($body['profileid'],'Y');
-        }
-        
-        if($body['contactType']==ContactHandler::INITIATED)
-        {    
-                $contactRObj=new EoiViewLog();
-                $contactRObj->setEoiViewedForAReceiver($body['profileid'],'N');
-        }
  }
 
  /**

@@ -2380,6 +2380,11 @@ class crmMisActions extends sfActions
 				$this->errorMsg = "Please select a valid Campaign";
 			} else {
 				$this->flag = 1;
+				unset($this->monthDropDown['select']);
+				unset($this->dateDropDown['select']);
+				unset($this->yearDropDown['select']);
+				unset($this->reportDropDown['select']);
+				unset($this->campaignDropDown['select']);
 				if ($this->selectedMonth && $this->selectedRange == "D") {
 					$start = $this->selectedYear."-".$this->selectedMonth."-01 00:00:00";
 					$end = $this->selectedYear."-".$this->selectedMonth."-31 23:59:59";
