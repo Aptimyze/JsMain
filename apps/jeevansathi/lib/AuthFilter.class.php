@@ -307,10 +307,10 @@ class AuthFilter extends sfFilter {
 	            	LoggingManager::getInstance()->setUniqueId($headers[LoggingEnums::RAJX]);
 	            	$request->setAttribute(LoggingEnums::RIFT,$headers[LoggingEnums::RAJX]);
 	            	$request->setAttribute(LoggingEnums::AJXRSI,uniqid());
+
 	            	
 	            }
-	          	            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "In Auth");  
-            
+	          	                        
 			}
 			else
 			{

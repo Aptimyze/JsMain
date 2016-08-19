@@ -19,7 +19,7 @@ class LoggingManager
     /**
      * Const of File Base Path
      */
-    const LOG_FILE_BASE_PATH = '/log/Logger/';
+    const LOG_FILE_BASE_PATH = '/Logger/';
 
     /**
      * @var null
@@ -46,6 +46,8 @@ class LoggingManager
      */
     private $logData = array();
 
+    private $serverLogPath = '/var/www/html/branch1/test';
+
     /**
      * Constructor function
      */
@@ -53,7 +55,11 @@ class LoggingManager
     {
         $this->szLogPath = $basePath;
         $this->iUniqueID = uniqid();
-        $this->baseLogPath = JsConstants::$cronDocRoot;
+        $this->baseLogPath = JsConstants::$cronDocRoot.'/log';
+
+        if(true === is_dir($this->serverLogPath)){
+        $this->baseLogPath = $this->serverLogPath;
+      }
     }
 
     /**
@@ -480,7 +486,7 @@ return $actionName;
         $currDate = Date('Y-m-d');
         $filePath =  $this->baseLogPath.self::LOG_FILE_BASE_PATH."log-".$currDate.".log";
         if($this->canCreateDir($this->szLogPath))
-        {
+        { 
           $this->createDirectory($this->szLogPath);
           $filePath =  $this->baseLogPath.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
         }
@@ -488,6 +494,7 @@ return $actionName;
         {
           $this->createDirectory("");
         }
+
       $fileResource = fopen($filePath,"a");
       fwrite($fileResource,$szLogString."\n");
       fclose($fileResource);
