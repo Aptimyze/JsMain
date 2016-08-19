@@ -396,12 +396,7 @@ class NEWJS_JPROFILE extends TABLE
                     }
                 }
             }
-            $oldfields = $fields;
-            $fields = "AGE,HEIGHT,MANGLIK,MSTATUS,CASTE,RELIGION,MTONGUE,COUNTRY_RES,INCOME,PROFILEID,HAVE_JCONTACT,HAVEPHOTO,MOB_STATUS,LANDL_STATUS,SUBSCRIPTION,INCOMPLETE,ACTIVATED,PHOTO_DISPLAY,GENDER,PRIVACY";
-            if(false !== stripos($this->dbName,'slave') && $fields == "AGE,HEIGHT,MANGLIK,MSTATUS,CASTE,RELIGION,MTONGUE,COUNTRY_RES,INCOME,PROFILEID,HAVE_JCONTACT,HAVEPHOTO,MOB_STATUS,LANDL_STATUS,SUBSCRIPTION,INCOMPLETE,ACTIVATED,PHOTO_DISPLAY,GENDER,PRIVACY") {
-                LoggingManager::getInstance('JPROFILE_getArray')->logThis(LoggingEnums::LOG_ERROR,new Exception('Query calling'));
-            }
-            $fields = $oldfields;
+            
             $sqlSelectDetail = "SELECT $fields FROM newjs.JPROFILE WHERE ";
             $count = 1;
             if (is_array($valueArray)) {
