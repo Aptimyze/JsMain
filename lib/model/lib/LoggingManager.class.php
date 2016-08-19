@@ -27,6 +27,11 @@ class LoggingManager
     private $szLogPath = null;
 
     /**
+     * @var bool
+     */
+    private $flexDir = false;
+
+    /**
      * @var null|string
      */
     private $iUniqueID = null;
@@ -194,7 +199,7 @@ $this->writeToFile(json_encode($logData));
       $logId = $this->getLogId($logArray);
       $clientIp = $this->getLogClientIP();
       $channelName = $this->getLogChannelName();
-      $moduleName = $this->szLogPath;
+      $moduleName = $this->getLogModuleName($isSymfony,$exception,$logArray);
       $actionName = $this->getLogActionName($isSymfony,$exception,$logArray);
       $apiVersion = $this->getLogAPI($logArray);
       $message = $this->getLogMessage($exception,$logArray);
@@ -232,7 +237,7 @@ $this->writeToFile(json_encode($logData));
            $logData[LoggingEnums::API_VERSION] = $apiVersion;
        } 
 
-       if ( $modulName != "")
+       if ( $moduleName != "")
        {
            $logData[LoggingEnums::MODULE_NAME] = $moduleName;
        } 
@@ -531,12 +536,16 @@ return $actionName;
       if($this->szLogPath == null)
       {
         $this->szLogPath = $this->getLogModuleName($isSymfony,$Var,$logArray);
-    }
-        // check if config is on, if yes then check if module can log
-    $toLog = (LoggingEnums::CONFIG_ON ? LoggingConfig::getInstance()->logStatus($this->szLogPath) : true);
-        // check Log Level
-    $checkLogLevel = ($enLogType <= LoggingEnums::LOG_LEVEL || $enLogType <= LoggingConfig::getInstance()->getLogLevel($this->szLogPath));
-    return $toLog & $checkLogLevel;
+      }
+      else
+      {
+        $this->flexDir = true;
+      }
+      // check if config is on, if yes then check if module can log
+      $toLog = (LoggingEnums::CONFIG_ON ? LoggingConfig::getInstance()->logStatus($this->szLogPath) : true);
+      // check Log Level
+      $checkLogLevel = ($enLogType <= LoggingEnums::LOG_LEVEL || $enLogType <= LoggingConfig::getInstance()->getLogLevel($this->szLogPath));
+      return $toLog & $checkLogLevel;
 }
 
     /**
@@ -544,7 +553,12 @@ return $actionName;
      */
     private function canCreateDir($szLogPath)
     {
-        // check if log for all modules is together, if not set then check if module can create diff directory
+      // check if log for all modules is together, if not set then check if module can create diff directory
+      if($this->flexDir)
+      {
+        $this->flexDir = false;
+        return true;
+      }
       return (LoggingEnums::LOG_TOGETHER ? 0 : LoggingConfig::getInstance()->dirStatus($szLogPath));
   }
 
