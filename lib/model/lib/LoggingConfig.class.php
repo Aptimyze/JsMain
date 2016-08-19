@@ -28,7 +28,13 @@
 				LoggingEnums::DIRECTORY => true,
 				LoggingEnums::STACKTRACE => false
 				),
-			LoggingEnums::EX500OR404 => array(
+			LoggingEnums::EX500 => array(
+				LoggingEnums::LOGGING => true,
+				LoggingEnums::LEVEL => LoggingEnums::LOG_ERROR,
+				LoggingEnums::DIRECTORY => true,
+				LoggingEnums::STACKTRACE => false
+				),
+			LoggingEnums::EX404 => array(
 				LoggingEnums::LOGGING => true,
 				LoggingEnums::LEVEL => LoggingEnums::LOG_ERROR,
 				LoggingEnums::DIRECTORY => true,
