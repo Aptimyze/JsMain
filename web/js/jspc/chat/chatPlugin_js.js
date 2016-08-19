@@ -470,9 +470,9 @@ JsChat.prototype = {
                                         $("#" + runID + "_" + val).on("click", function () {
                                             currentID = $(this).attr("id").split("_")[0];
                                             that._chatLoggerPlugin("earlier", $(this).attr("data-checks"));
-                                            /*setTimeout(function(){
-                                               $("#"+runID+"_hover").css("visibility","hidden"); 
-                                            },800);*/
+                                            setTimeout(function(){
+                                               $("#"+currentID+"_hover").css("visibility","hidden"); 
+                                            },100);
                                             elem._chatPanelsBox(currentID, statusArr[currentID], $(this).attr("data-jid"), $(this).attr("data-checks"), $(this).attr("id").split("_")[1]);
                                         });
                                     }
