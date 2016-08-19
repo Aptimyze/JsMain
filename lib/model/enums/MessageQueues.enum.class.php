@@ -15,6 +15,7 @@ class MessageQueues
   CONST UPDATE_SEEN_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST PROFILE_CACHE_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST INVALIDATECACHE = "invalidateCache";
+  CONST CHAT_MESSAGE = "chatMessage";
   //per queue msg limit mapping
   public static $upperMessageLimitPerQueue = array("default"=>1000,"INSTANT_NOTIFICATION_QUEUE"=>10000);
   public static $queuesWithoutMsgCountLimit = array("SCHEDULED_NOTIFICATION_QUEUE1","SCHEDULED_NOTIFICATION_QUEUE2", "SCHEDULED_NOTIFICATION_QUEUE3", "SCHEDULED_NOTIFICATION_QUEUE4","SCHEDULED_NOTIFICATION_QUEUE5","SCHEDULED_NOTIFICATION_QUEUE6"); //queues not to be considered for msg upper limit alert
