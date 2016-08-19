@@ -72,5 +72,19 @@ class test_VD_UPLOAD_TEMP extends TABLE{
 
 
      }
+        public function truncate()
+        {
+                try
+                {
+                        $sql="TRUNCATE TABLE test.VD_UPLOAD_TEMP";
+                        $prep=$this->db->prepare($sql);
+                        $prep->execute();
+                }
+                catch(Exception $e)
+                {
+                        throw new jsException($e);
+                }
+        }
+
 }
 ?>
