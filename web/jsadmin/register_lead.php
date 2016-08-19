@@ -40,7 +40,7 @@ if(authenticated($cid))
 			if(mysql_num_rows($res)<1)
 				$err_code=2;
 			else{
-				moveLead($id,'inactive','active');
+				moveLead($id,'inactive','active',$db);
 				$err_code=0;
 			}
 			}

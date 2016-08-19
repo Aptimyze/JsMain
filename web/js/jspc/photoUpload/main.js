@@ -1,3 +1,13 @@
+$("#js-cropperOpsClose").on('click',function(){
+        closeCropper();
+    });
+
+        function  closeCropper()
+        {
+                $("#commonOverlay").hide();
+                $(".js-cropper").hide();
+        }
+	var cordinatesArray = {};
 $(function () {
 
 	'use strict';
@@ -6,7 +16,6 @@ $(function () {
 	var $body = $('body');
 
 	/** LAVESH **/
-	var cordinatesArray = {};
 	$('#js-cropperSave').bind('click', function() {
 	
 	var imageSource = $('.cropper-canvas').find('img').attr('src');
@@ -17,8 +26,6 @@ $(function () {
 	sendProcessCropperRequest(cordinatesArray,imageSource,imgPreviewTypeArr);
 	});
 	/** LAVESH **/
-
-
 
 	// Tooltip
 	$('[data-toggle="tooltip"]').tooltip();
@@ -302,3 +309,16 @@ function sendProcessCropperRequest(cordinatesArray,imageSource,imgPreviewTypeArr
 	});
 	return false;
 }
+
+function sendOpsProcessCropperRequest()
+{
+        var imageSource = $('.cropper-canvas').find('img').attr('src');
+        var imgPreviewTypeArr = ["imgPreviewLG","imgPreviewMD","imgPreviewSM","imgPreviewSS","imgPreviewXS"];
+	imgPreviewTypeArrStr = JSON.stringify(imgPreviewTypeArr, null, 2);
+	cordinatesArrayStr = JSON.stringify(cordinatesArray, null, 2);
+	$("#cropBoxDimensionsArr").val(cordinatesArrayStr);
+	$("#imageSource").val(imageSource);
+	$("#imgPreviewTypeArr").val(imgPreviewTypeArrStr);
+	$("#ops").val(true);
+}
+

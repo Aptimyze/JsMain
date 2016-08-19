@@ -342,7 +342,7 @@ class misGenerationhandler
 	}
 	public function isPrivilege_P_MG($username)
 	{
-		$jsadminPswrdsObj = new jsadmin_PSWRDS();
+		$jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_masterRep');
 		$priv = $jsadminPswrdsObj->getPrivilegeForAgent($username);
 		$priv = explode("+", $priv);
 		if(in_array("P",$priv) || in_array("MG",$priv))
@@ -358,7 +358,7 @@ class misGenerationhandler
         }
 	public function isPrivilege_P_MG_TRNG($username)
 	{
-		$jsadminPswrdsObj = new jsadmin_PSWRDS();
+		$jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
 		$priv = $jsadminPswrdsObj->getPrivilegeForAgent($username);
 		$priv = explode("+", $priv);
 		if(in_array("P",$priv) || in_array("MG",$priv) || in_array("TRNG",$priv))
@@ -507,7 +507,7 @@ class misGenerationhandler
 	}
 
 	public function get_SLHDO(){
-		$jsObj = new jsadmin_PSWRDS();
+		$jsObj = new jsadmin_PSWRDS('newjs_masterRep');
 		$res = $jsObj->get_name_priv();
 
 		$slhdo = array();

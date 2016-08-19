@@ -25,7 +25,7 @@ class CityWiseFreshAndRenewalMis{
 	}
 
 	public function getSaleProfileWise($rangeLabel, $start_dt, $end_dt) {
-                $pObj = new BILLING_PURCHASES();
+                $pObj = new BILLING_PURCHASES('newjs_slave');
 
 		$saleInfo = $pObj->fetchTotalSalesProfileWise($rangeLabel, $start_dt, $end_dt);
 		foreach($saleInfo as $info) 

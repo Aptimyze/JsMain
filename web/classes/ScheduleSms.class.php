@@ -2023,6 +2023,12 @@ class ScheduleSms
     {
         return "PROFILEID, GENDER, USERNAME, SUBSCRIPTION, PHONE_MOB, PASSWORD, CASTE, DTOFBIRTH, MSTATUS, MTONGUE, COUNTRY_RES,CITY_RES, WEIGHT, AGE, HEIGHT, EDU_LEVEL, INCOME, ENTRY_DT,MOB_STATUS, LAST_LOGIN_DT, HAVEPHOTO, OCCUPATION, COUNTRY_RES, GET_SMS, SOURCE, SERVICE_MESSAGES,EMAIL,COMPANY_NAME,OWN_HOUSE,FAMILY_INCOME,VIEW_COUNT,FTO_SUB_STATE,FTO_ENTRY_DATE,FTO_EXPIRY_DATE,INCOMPLETE,ACTIVATED,LANDL_STATUS,VERIFY_ACTIVATED_DT,FAMILYINFO,EDUCATION,JOB_INFO,ISD";
     }
+    
+    function getJPROFILEFieldsNew()
+    {
+        return "PROFILEID, GENDER, USERNAME, SUBSCRIPTION, PHONE_MOB, PASSWORD, CASTE, DTOFBIRTH, MSTATUS, MTONGUE, CITY_RES, WEIGHT, AGE, HEIGHT, EDU_LEVEL, INCOME, ENTRY_DT,MOB_STATUS, LAST_LOGIN_DT, HAVEPHOTO, OCCUPATION, COUNTRY_RES, GET_SMS, SOURCE, SERVICE_MESSAGES,EMAIL,COMPANY_NAME,OWN_HOUSE,FAMILY_INCOME,VIEW_COUNT,FTO_SUB_STATE,FTO_ENTRY_DATE,FTO_EXPIRY_DATE,INCOMPLETE,ACTIVATED,LANDL_STATUS,VERIFY_ACTIVATED_DT,FAMILYINFO,EDUCATION,JOB_INFO,ISD";
+    }
+    
     function setTempJPROFILE()
     {
         $today = mktime(0, 0, 0, date("m"), date("d"), date("Y")); //timestamp for today
@@ -2066,7 +2072,7 @@ class ScheduleSms
                 $res_sms_alert = mysql_query($sql_sms_alert, $this->dbSlave) or $this->SMSLib->errormail($sql_sms_alert, mysql_errno() . ":" . mysql_error(), "Error occured while fetching data from JPROFILE_ALERTS in setTempJPROFILE() function");
                 while ($row_sms_alert = mysql_fetch_assoc($res_sms_alert))
                     $row_pool[$row_sms_alert['PROFILEID']]['SERVICE_SMS'] = $row_sms_alert['SERVICE_SMS'];
-                $sql_ins = "INSERT INTO newjs.SMS_TEMP_TABLE(" . $this->getJPROFILEFields() . ") VALUES";
+                $sql_ins = "INSERT INTO newjs.SMS_TEMP_TABLE(" . $this->getJPROFILEFieldsNew() . ") VALUES";
                 foreach ($row_pool as $k => $v) {
                     $sql_ins .= "('$v[PROFILEID]', '$v[GENDER]', '" . addslashes($v["USERNAME"]) . "', '$v[SUBSCRIPTION]', '$v[PHONE_MOB]', '" . addslashes($v["PASSWORD"]) . "', '$v[CASTE]', '$v[DTOFBIRTH]', '$v[MSTATUS]', '$v[MTONGUE]', '$v[CITY_RES]', '$v[WEIGHT]', '$v[AGE]', '$v[HEIGHT]', '$v[EDU_LEVEL_NEW]', '$v[INCOME]', '$v[ENTRY_DT]', '$v[MOB_STATUS]', '$v[LAST_LOGIN_DT]', '$v[HAVEPHOTO]', '$v[OCCUPATION]', '$v[COUNTRY_RES]', '$v[GET_SMS]', '$v[SOURCE]', '$v[SERVICE_SMS]','$v[EMAIL]','" . addslashes($v[COMPANY_NAME]) . "','$v[OWN_HOUSE]','$v[FAMILY_INCOME]','$v[VIEW_COUNT]','$v[FTO_SUB_STATE]','$v[FTO_ENTRY_DATE]','$v[FTO_EXPIRY_DATE]', '$v[INCOMPLETE]','$v[ACTIVATED]','$v[LANDL_STATUS]','$v[VERIFY_ACTIVATED_DT]','" . addslashes($v[FAMILYINFO]) . "','" . addslashes($v[EDUCATION]) . "','" . addslashes($v[JOB_INFO]) . "','$v[ISD]'),";
                 }

@@ -31,18 +31,21 @@ class processInterfaceAction extends sfActions {
 		$allotParam=array("SOURCE"=>$this->source,"INTERFACE"=>ProfilePicturesTypeEnum::$INTERFACE["2"],"NAME"=>$name);
 		if($request->getParameter('profileId'))
                         $allotParam["PROFILEID"] = $request->getParameter('profileId');
-               
                 $profileAllotedObj = $profileAllotmentFactory->getAllot($allotParam);
                 $profileDetails = $profileAllotedObj->getAllotedProfile($allotParam);
+		$this->profileid = $profileDetails['profileData']['PROFILEID'];
 		if(!is_array($profileDetails))
 			$this->noProfileFound = 1;
 		else
 		{
 			$photoScreeningServiceObj = new photoScreeningService($profileDetails["profileObj"]);
 			$paramArr["interface"]=ProfilePicturesTypeEnum::$INTERFACE["2"];
-
+			$this->hideCropper = false;
                 	//Show in Template 
                 	$this->photoArr = $photoScreeningServiceObj->getPicturesToScreen($paramArr);
+			$totalPicSizeForScreen = count($this->photoArr['profilePic']['profileType']);
+                        if(array_key_exists("nonScreened",$this->photoArr)||$totalPicSizeForScreen==0)
+				$this->hideCropper = true;
 			$this->mainPicSize = ProfilePicturesTypeEnum::$MAIN_PIC_MAX_SIZE;
                 	$this->profileData = $profileDetails["profileData"];
                 	if (!$this->photoArr["nonScreened"] && !$this->photoArr["profilePic"]) 

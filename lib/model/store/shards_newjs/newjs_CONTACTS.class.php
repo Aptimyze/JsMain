@@ -714,7 +714,7 @@ public function getSendersPending($profileids)
 				$sql = $sql.$str;
 			}
 			if($cnt)
-				$sql.=" AND COUNT=:COUNT ";
+			$sql.=" AND COUNT=:COUNT ";
 			$res=$this->db->prepare($sql);
 			$res->bindValue(":PROFILEID",$profileId,PDO::PARAM_INT);
 			if($cnt)

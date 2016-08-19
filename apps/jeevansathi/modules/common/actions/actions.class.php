@@ -391,6 +391,8 @@ class commonActions extends sfActions
 //                      $bookmarker = $request->getParameter('bookmarker');
 			$bookmarkeeChecksum = $request->getParameter('profilechecksum');
 			$bookmarkee = JsAuthentication::jsDecryptProfilechecksum($bookmarkeeChecksum);
+			$this->Profile = new Profile();
+			$this->Profile->getDetail($bookmarkee, "PROFILEID");
 			$bookmarkObj = new Bookmarks();
 			$shortlist = $request->getParameter('shortlist');
 			$bookmarkerMemcacheObject = new ProfileMemcacheService($bookmarker);
@@ -407,6 +409,21 @@ class commonActions extends sfActions
 				$responseSet = ButtonResponse::buttonDetailsMerge($array);
 				$finalresponseArray["actiondetails"] = null;
 				$finalresponseArray["buttondetails"] = ButtonResponse::buttonDetailsMerge($array);
+				$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
+				if($this->contactObj->getTYPE() == "N" && $this->loginProfile->getGENDER() != $this->Profile->getGENDER()) {
+					//Entry in Chat Roster
+					try {
+						$producerObj = new Producer();
+						if ($producerObj->getRabbitMQServerConnected()) {
+							$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'REMOVE_BOOKMARK', 'body' => array('sender' => array('profileid' => $this->loginProfile->getPROFILEID(), 'checksum' => JsAuthentication::jsEncryptProfilechecksum($this->loginProfile->getPROFILEID()), 'username' => $this->loginProfile->getUSERNAME()), 'receiver' => array('profileid' => $bookmarkee, 'checksum' => $bookmarkeeChecksum, 'username' => $this->Profile->getUSERNAME()))), 'redeliveryCount' => 0);
+							$producerObj->sendMessage($chatData);
+						}
+						unset($producerObj);
+					} catch (Exception $e) {
+						throw new jsException("Something went wrong while sending in chat queue for remove bookmark -" . $e);
+					}
+					//End
+				}
 			}
 			else
 			{
@@ -421,15 +438,23 @@ class commonActions extends sfActions
 				$responseSet = ButtonResponse::buttonDetailsMerge($array);
 				$finalresponseArray["actiondetails"] = null;
 				$finalresponseArray["buttondetails"] = ButtonResponse::buttonDetailsMerge($array);
+				//Entry in Chat Roster
+				$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
+				if($this->contactObj->getTYPE() == "N") {
+					try {
+						$producerObj = new Producer();
+						if ($producerObj->getRabbitMQServerConnected()) {
+							$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'ADD_BOOKMARK', 'body' => array('sender' => array('profileid' => $this->loginProfile->getPROFILEID(), 'checksum' => JsAuthentication::jsEncryptProfilechecksum($this->loginProfile->getPROFILEID()), 'username' => $this->loginProfile->getUSERNAME()), 'receiver' => array('profileid' => $bookmarkee, 'checksum' => $bookmarkeeChecksum, 'username' => $this->Profile->getUSERNAME()))), 'redeliveryCount' => 0);
+							$producerObj->sendMessage($chatData);
+						}
+						unset($producerObj);
+					} catch (Exception $e) {
+						throw new jsException("Something went wrong while sending in chat queue for remove bookmark -" . $e);
+					}
+					//End
+				}
 			}
-			/*if(MobileCommon::isMobile())
-			{
-				$otherProfile = new Profile("",$bookmarkee);
-				$otherProfile->getDetail("","","*");
-				$buttonObj = new ButtonResponse($this->loginProfile,$otherProfile);
-				$button_after_action = $buttonObj->getButtonArray();
-				$finalresponseArray["button_after_action"] = ButtonResponse::buttondetailsMerge($button_after_action);
-			}*/
+
 			$bookmarkerMemcacheObject->updateMemcache();
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiObj->setResponseBody($finalresponseArray);

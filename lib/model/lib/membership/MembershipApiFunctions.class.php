@@ -717,25 +717,25 @@ class MembershipApiFunctions
                     foreach ($value as $kk => $vv) {
                         if ($vv == 1) {
                             $benefits[$kk] = $benefitMsg[$kk];
-                            if ($memID == "ESP" || $memID == "NCP" && $getSupport) {
-                                foreach (VariableParams::$newApiVasNamesAndDescription as $id => $desc) {
-                                    if ($benefits[$kk] == $desc['name']) {
-                                        if ($apiObj->device == "iOS_app") {
-                                            unset($benefits[$kk]);
-                                            $supportingText[] = array(
-                                                'name' => $desc['name'],
-                                                'desc' => $desc['description']
-                                            );
-                                        } 
-                                        else {
-                                            $supportingText[$desc['name']] = $desc['description'];
-                                        }
-                                    }
-                                }
-                            }
                         } 
                         else if ($apiObj->device == 'desktop' && $vv == 0) {
                             $benefitsExcluded[] = $benefitMsg[$kk];
+                        }
+                        if ($getSupport) {
+                            foreach (VariableParams::$newApiVasNamesAndDescription as $id => $desc) {
+                                if ($benefits[$kk] == $desc['name'] || in_array($desc['name'], $benefitsExcluded)) {
+                                    if ($apiObj->device == "iOS_app") {
+                                        unset($benefits[$kk]);
+                                        $supportingText[] = array(
+                                            'name' => $desc['name'],
+                                            'desc' => $desc['description']
+                                        );
+                                    } 
+                                    else {
+                                        $supportingText[$desc['name']] = $desc['description'];
+                                    }
+                                }
+                            }
                         }
                     }
                 }

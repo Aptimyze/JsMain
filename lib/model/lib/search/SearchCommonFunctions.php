@@ -182,13 +182,7 @@ class SearchCommonFunctions
                     return SearchConfig::$profilesPerPageOnApp;
                 if(MobileCommon::isNewMobileSite() || MobileCommon::isApp()=='I')
                     return SearchConfig::$profilesPerPageOnWapSite;
-		$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
-		if($loggedInProfileObj && $loggedInProfileObj->getPROFILEID())
-			$profileid = $loggedInProfileObj->getPROFILEID();
-
-		if($profileid && JsMemcache::getInstance()->get($profileid."_DUMMY_USER")==CommonFunction::createChecksumForProfile($profileid))
-			return SearchConfig::$premium_dummy_user_search_count;
-		elseif($SearchParametersObj && $SearchParametersObj->getNoOfResults())
+		if($SearchParametersObj && $SearchParametersObj->getNoOfResults())
 			return $SearchParametersObj->getNoOfResults();
 		else
 			return SearchConfig::$profilesPerPage;

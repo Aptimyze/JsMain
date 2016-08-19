@@ -52,7 +52,7 @@ class registerMisActions extends sfActions {
         $this->displayDate = date("jS F Y", strtotime($start_date)) . " To " . date("jS F Y", strtotime($end_date));
       }
       if($this->errorMsg == ''){
-        $regQualityObj = new REGISTRATION_QUALITY();
+        $regQualityObj = new REGISTRATION_QUALITY('newjs_masterRep');
         $params['start_date'] = $start_date;
         $params['end_date'] = $end_date;
         $registrationData = $regQualityObj->getRegisrationData($params);  
@@ -133,7 +133,7 @@ class registerMisActions extends sfActions {
         $this->rangeYear = date("Y");
         $this->dateArr = GetDateArrays::getDayArray();
         $this->yearArr = array();
-        $sourceObj = new MIS_SOURCE();
+        $sourceObj = new MIS_SOURCE('newjs_slave');
         $this->sources = $sourceObj->getSourceList(); // get source names for dropdown
         $dateArr = GetDateArrays::generateDateDataForRange('2014', ($this->todayYear));
         foreach (array_keys($dateArr) as $key => $value) {
@@ -148,7 +148,7 @@ class registerMisActions extends sfActions {
       $this->rangeYear = date("Y");
       $this->dateArr = GetDateArrays::getDayArray();
       $this->yearArr = array();
-      $sourceObj = new MIS_SOURCE();
+      $sourceObj = new MIS_SOURCE('newjs_slave');
       $this->sources = $sourceObj->getSourceList(); // get source names for dropdown
       $dateArr = GetDateArrays::generateDateDataForRange('2014', ($this->todayYear));
       foreach (array_keys($dateArr) as $key => $value) {
@@ -406,7 +406,7 @@ class registerMisActions extends sfActions {
         if(strlen($formArr["date1_dateLists_month_list"])==1)
                 $formArr["date1_dateLists_month_list"] = "0".$formArr["date1_dateLists_month_list"];
 	$fromDate = $formArr['date1_dateLists_year_list']."-".$formArr['date1_dateLists_month_list'].$formArr['date1_dateLists_day_list'];
-	$screeningQueueCountObj = new MIS_SCREENING_QUEUE_COUNTS;
+	$screeningQueueCountObj = new MIS_SCREENING_QUEUE_COUNTS('newjs_slave');
 	$records = $screeningQueueCountObj->getRecords($fromDate);
 	foreach($records as $k=>$v)
 	{

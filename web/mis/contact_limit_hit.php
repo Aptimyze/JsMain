@@ -1,7 +1,6 @@
 <?
 include("connect.inc");
 $db=connect_misdb();
-$db2=connect_master();
 //$mon="3";
 //$year="2007";
 $data=authenticated($cid);

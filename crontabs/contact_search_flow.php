@@ -31,7 +31,7 @@ for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
 {
         $mysqlObj=new Mysql;
         $myDbName=getActiveServerName($activeServerId);
-        $myDbName=getActiveServerName($activeServerId,'slave');
+        $myDbName=getActiveServerName($activeServerId,'master');
         $myDb=$mysqlObj->connect("$myDbName");
 
         $sql="SELECT COUNT(*) AS COUNT ,S.SEARCH_TYPE AS SOURCE ,DATE(C.TIME) DATE,C.TYPE AS TYPE   FROM newjs.CONTACTS AS C left join MIS.SEARCH_CONTACT_FLOW_TRACKING_NEW AS S on S.CONTACTID=C.CONTACTID  LEFT JOIN PROFILEID_SERVER_MAPPING M ON C.SENDER = M.PROFILEID WHERE M.SERVERID =$activeServerId AND DATE(C.TIME) = '$backdate' GROUP BY S.SEARCH_TYPE ,DATE(C.TIME),C.TYPE";

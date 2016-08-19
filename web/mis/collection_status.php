@@ -15,10 +15,8 @@
 include_once(JsConstants::$cronDocRoot.'/lib/model/lib/FieldMapLib.class.php');
 include("connect.inc");
                                                                                                  
-//$db=connect_slave81();
 $db2=connect_master();
-$db=$db2;
-$dbs = connect_737();
+$db = connect_misdb();
 
 $data=authenticated($cid);
 if(isset($data))
@@ -42,7 +40,7 @@ if(isset($data))
 			{
 				$arr[$i]['client']=$row['USERNAME'];
 				$sql_slave="SELECT COUNTRY_RES FROM newjs.JPROFILE WHERE USERNAME='{$row['USERNAME']}'";
-				$res_slave=mysql_query_decide($sql_slave,$dbs) or die(mysql_error_js());
+				$res_slave=mysql_query_decide($sql_slave,$db) or die(mysql_error_js());
 				if($row_slave=mysql_fetch_array($res_slave))
 				{
 					$arr[$i]['country'] = FieldMap::getFieldLabel('country',$row_slave['COUNTRY_RES']);
@@ -312,7 +310,7 @@ if(isset($data))
 			}
 			$arr[$i]['client']=$row['USERNAME'];
 			$sql_slave="SELECT COUNTRY_RES FROM newjs.JPROFILE WHERE USERNAME='{$row['USERNAME']}'";
-			$res_slave=mysql_query_decide($sql_slave,$dbs) or die(mysql_error_js());
+			$res_slave=mysql_query_decide($sql_slave,$db) or die(mysql_error_js());
 			if($row_slave=mysql_fetch_array($res_slave))
 			{
 				$arr[$i]['country'] = FieldMap::getFieldLabel('country',$row_slave['COUNTRY_RES']);

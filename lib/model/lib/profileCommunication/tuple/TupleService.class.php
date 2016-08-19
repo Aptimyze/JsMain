@@ -37,6 +37,7 @@ class TupleService
     private $loginProfileObj;
     private $PEOPLE_WHO_VIEWED_MY_CONTACTS=Array();
     private $INTEREST_RECEIVED_FILTER = Array();
+    private $FEATURED_PROFILE_TUPLE =  Array();
 	// Function to initalize logic array which have logic id and corresponding fields mapping
 	static public function initLogics()
 	{
@@ -64,7 +65,8 @@ class TupleService
 					"YOURINFO",
 					"SCREENING",
                                         "COMPANY_NAME",
-                                        "ANCESTRAL_ORIGIN"
+                                        "ANCESTRAL_ORIGIN",
+                                        "EMAIL"
 					
 				),
 				"LOGIC" => Array(
@@ -185,10 +187,13 @@ class TupleService
 		calling the setters of various fields*/
 		if (is_array($profileObjArray)){
                    	foreach ($profileObjArray as $infoType => $profilesInfoTypeBasedValues) {
+                   		
 				if (is_array($profilesInfoTypeBasedValues))
 					foreach ($profilesInfoTypeBasedValues as $profileId => $profileValues) {
+						
 						$tupleObject = $this->getTupleObject($infoType, $profileId);
                                                 foreach($this->profileDetailsArray as $key=>$tp) {
+
 						if ($profileId==($tp->getPROFILEID()))
 	                                                $tupleObject->setprofileObject($this->profileDetailsArray[$key]);
 						}
@@ -208,6 +213,7 @@ class TupleService
 					}
                         }
 			}
+
 	}
         
         public function getlocationWithNativeCity($tupleObject){
@@ -334,6 +340,11 @@ class TupleService
 		return $this->INTEREST_RECEIVED_FILTER;
 	}
 	
+	public function getFEATURED_PROFILE_TUPLE()
+	{
+		return $this->FEATURED_PROFILE_TUPLE;
+	}
+
 	/*This function will return particular tuple object from the requested infotype array and given profileid
 	 *@param  infotype : information type array defined in this service
 	 *@param profileId : profileid to identify the tuple object
@@ -354,7 +365,7 @@ class TupleService
 		{
 			$profArrObj                = new ProfileArray();
 			$profileIdArr["PROFILEID"] = implode(",", $profileIds);
-			$this->profileDetailsArray = $profArrObj->getResultsBasedOnJprofileFields($profileIdArr, '', '', implode(',', self::$logics["PROFILE_LOGIC"]["FIELDS"]),'JPROFILE',"newjs_bmsSlave"); 
+			$this->profileDetailsArray = $profArrObj->getResultsBasedOnJprofileFields($profileIdArr, '', '', implode(',', self::$logics["PROFILE_LOGIC"]["FIELDS"]),'JPROFILE',"newjs_masterRep"); 
 			$profilesArray             = $this->getProfileLogiceResultArray();
                        return $profilesArray;
 		}
@@ -369,7 +380,7 @@ class TupleService
 	{
 		if(!empty($profileIds))
 		{
-			$jprofArrObj                = new NEWJS_JPROFILE_EDUCATION("newjs_bmsSlave");
+			$jprofArrObj                = new NEWJS_JPROFILE_EDUCATION("newjs_masterRep");
 			$profileDetailsArray = $jprofArrObj->getProfileEducation($profileIds,'mailer');
 				
 			foreach($profileDetailsArray as $k=>$row)
@@ -501,7 +512,7 @@ else {
 		// Setting Mobile App Pic size for all the pictureids
 		if(MobileCommon::isMobile() && is_array($pictureIdsArray))
 		{
-			$pictureSizeObj = new PICTURE_MobAppPicSize("newjs_bmsSlave");
+			$pictureSizeObj = new PICTURE_MobAppPicSize("newjs_masterRep");
 	    $pictureSize = $pictureSizeObj->getPictureSize($pictureIdsArray); 
 	    foreach($pictureIdsArray as $profileId=>$value)
 			{
@@ -825,6 +836,7 @@ else {
 				$result[$profileid]["ENTRY_DT"]        = $profileObj->getENTRY_DT();
 				$result[$profileid]["SUBSCRIPTION"]    = $profileObj->getSUBSCRIPTION();
 				$result[$profileid]["LAST_LOGIN_DT"]    = $profileObj->getLAST_LOGIN_DT();
+				$result[$profileid]["EMAIL"]    = $profileObj->getEMAIL();
                                 if(Flag::isFlagSet("company_name",$profileObj->getSCREENING()))
                                         $result[$profileid]["COMPANY_NAME"]          = $profileObj->getCOMPANY_NAME();
                                 else
@@ -848,7 +860,7 @@ else {
 	{
 		if(!empty($profileIds))
 		{
-			$jprofArrObj                = new NEWJS_NATIVE_PLACE("newjs_bmsSlave");
+			$jprofArrObj                = new NEWJS_NATIVE_PLACE("newjs_masterRep");
                          if(!is_array($profileIds)){
                             $profileIds = array($profileIds);
                         }

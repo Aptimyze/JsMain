@@ -37,7 +37,7 @@ class GetAlbumV1Action extends sfActions
 					$profileid = $loggedInProfileid;
 
 				if($profileid!=$loggedInProfileid )
-					$viewerObj = Profile::getInstance("newjs_bmsSlave",$profileid);
+					$viewerObj = Profile::getInstance("newjs_masterRep",$profileid);
 				else
 					$viewerObj = $loggedInProfile;
 				$viewerObj->getDetail("","","HAVEPHOTO,PRIVACY,PHOTO_DISPLAY");

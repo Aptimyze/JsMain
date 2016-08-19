@@ -23,9 +23,13 @@ class uploadProcessScreeningAction extends sfActions {
                 $this->source = $formArr['source'];
                 $this->username = $formArr['username'];
                 $this->emailAdd = $formArr['emailAdd'];
+		if($formArr['ops']=="false" || $formArr['ops']==''||$formArr['ops']==false)
+			$ops = false;
+		else
+			$ops = true;
+		$formArr['ops']=$ops;
 		$this->name= $request->getAttribute('name'); 
 		$this->interface = ProfilePicturesTypeEnum::$INTERFACE["2"];
-       
                 if ($formArr['Skip'])
 		{   //If User presses skip
                         $this->mailid = $formArr['mailid'];
@@ -33,12 +37,24 @@ class uploadProcessScreeningAction extends sfActions {
                         $this->comp = 1;
                 }
                 else
-		{  //If user presses Upload
+		{  
 			$profileObj = Operator::getInstance("", $formArr["profileid"]);
+			$profileObj->getDetail($this->profileid, "PROFILEID", "HAVEPHOTO,PHOTO_DISPLAY,USERNAME");
+			if($ops)
+			{
+				$cropImageSource = $formArr['imageSource'];
+				$cropBoxDimensionsArr = json_decode($formArr['cropBoxDimensionsArr'],true);
+				$formArr['cropBoxDimensionsArr']=$cropBoxDimensionsArr;
+				$imgPreviewTypeArr = json_decode($formArr['imgPreviewTypeArr'],true);
+				$formArr['imgPreviewTypeArr']=$imgPreviewTypeArr;
+				$cropperProcessObj = new CropperProcess($profileObj);
+				$filesGlobArr = $cropperProcessObj->process($cropImageSource,$cropBoxDimensionsArr,$imgPreviewTypeArr,$ops);
+			}
 			$photoScreeningServiceObj = new photoScreeningService($profileObj);
-            $picDataForTracking = $photoScreeningServiceObj->pictureScreenStatus($this->profileid);
-			//$trackingArray["PIC_DATA"] = $photoScreeningServiceObj->pictureScreenStatus($profileObj->getPROFILEID());
-			$output = $photoScreeningServiceObj->processUpload($formArr,$request);
+			$picDataForTracking = $photoScreeningServiceObj->pictureScreenStatus($this->profileid);
+
+			$output = $photoScreeningServiceObj->processUpload($formArr,$ops,$filesGlobArr);
+
 			if(is_array($output))
 			{	
 				$response= $output["message"];	
@@ -47,7 +63,7 @@ class uploadProcessScreeningAction extends sfActions {
 				$trackingArray["source"] = $this->source;
 				$trackingArray["notify"] = $output["notify"];
 				$trackingArray["statusArr"] = $output["statusArr"];
-                $trackingArray["picDataForTracking"] = $picDataForTracking;
+				$trackingArray["picDataForTracking"] = $picDataForTracking;
 				$photoScreeningServiceObj->trackProcessInterface($trackingArray);
 			}
 			else
@@ -65,5 +81,3 @@ class uploadProcessScreeningAction extends sfActions {
 		}
         }
 }
-
-?>

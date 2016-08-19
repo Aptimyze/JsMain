@@ -35,7 +35,7 @@ class protect
         private $AUTHCHECKSUM="AUTHCHECKSUM";
 	public $allowDeactive="";
 	public $allowUsernameLogin=false;	
-        private $dateTime1 ='10';
+        private $dateTime1 ='11';
         private $dateTime2 ='22';
 	/*
 	**** @function: Class Constructor

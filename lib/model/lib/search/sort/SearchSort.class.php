@@ -210,7 +210,11 @@ class SearchSort
         }
         public function getReverseDppSort(){
                 return $this->reverseSortStr;
-        }
+        }/**
+         * This function generates reverse Dpp String
+         * @param type $loggedInProfileObj
+         * @param type $sortLastLogin require sorting on the basis of Last Login Score.
+         */
         protected function setReverseDppSorting($loggedInProfileObj = '', $sortLastLogin = 0) {
                 $sortArray = array();
                 // Login time condition
@@ -219,6 +223,8 @@ class SearchSort
                         $sortLogin = "LAST_LOGIN_SCORE"; // User who have logged in in last 15 days will be given 100 score
 
                 $doesntMatterValue = 99999;
+                
+                $cityStateArr = $this->setCityStateToBeMatched($loggedInProfileObj);
 
                 if ($loggedInProfileObj && $loggedInProfileObj->getPROFILEID() != '') {
                         if ($loggedInProfileObj->getCASTE()) {
@@ -236,9 +242,18 @@ class SearchSort
                         if ($loggedInProfileObj->getCOUNTRY_RES()) {
                                 $sortArray[] = "or(tf(PARTNER_COUNTRYRES," . $loggedInProfileObj->getCOUNTRY_RES() . "),tf(PARTNER_COUNTRYRES," . $doesntMatterValue . "))";
                         }
-                        if ($loggedInProfileObj->getCITY_RES()) {
-                                $sortArray[] = "or(tf(PARTNER_CITYRES," . $loggedInProfileObj->getCITY_RES() . "),tf(PARTNER_CITYRES," . $doesntMatterValue . "))";
-                        }
+                        if($cityStateArr['state'] && $cityStateArr['nativeCity'])
+                            $sortArray[] = "or(tf(PARTNER_CITYRES," . $cityStateArr['nativeCity'] . "),tf(PARTNER_STATE," . $cityStateArr['state'] . "),tf(PARTNER_CITYRES," . $doesntMatterValue . "))";
+                        elseif($cityStateArr['state'] && $cityStateArr['nativeState'])
+                            $sortArray[] = "or(tf(PARTNER_STATE," . $cityStateArr['state'] . "),tf(PARTNER_STATE," . $cityStateArr['nativeState'] . "),tf(PARTNER_STATE," . $doesntMatterValue . "))";
+                        elseif($cityStateArr['nativeCity'] && $cityStateArr['city'])
+                            $sortArray[] = "or(tf(PARTNER_CITYRES," . $cityStateArr['nativeCity'] . "),tf(PARTNER_CITYRES," . $cityStateArr['city'] . "),tf(PARTNER_CITYRES," . $doesntMatterValue . "))";
+                        elseif($cityStateArr['nativeState'] && $cityStateArr['city'])
+                            $sortArray[] = "or(tf(PARTNER_STATE," . $cityStateArr['nativeState'] . "),tf(PARTNER_CITYRES," . $cityStateArr['city'] . "),tf(PARTNER_CITYRES," . $doesntMatterValue . "))";
+                        elseif($cityStateArr['city'])
+                            $sortArray[] = "or(tf(PARTNER_CITYRES," . $cityStateArr['city'] . "),tf(PARTNER_CITYRES," . $doesntMatterValue . "))";
+                        elseif($cityStateArr['state'])
+                            $sortArray[] = "or(tf(PARTNER_STATE," . $cityStateArr['state'] . "),tf(PARTNER_CITYRES," . $doesntMatterValue . "))";
                         if ($loggedInProfileObj->getMTONGUE()) {
                                 $sortArray[] = "or(tf(PARTNER_MTONGUE," . $loggedInProfileObj->getMTONGUE() . "),tf(PARTNER_MTONGUE," . $doesntMatterValue . "))";
                         }
@@ -269,6 +284,29 @@ class SearchSort
                         $strCondition = $sortLogin;
                 }
                 $this->reverseSortStr = $strCondition;
+        }
+        
+        //this function returns values for state,city,nativestate,nativeCity
+        protected function setCityStateToBeMatched($loggedInObj){
+            $profileId = $loggedInObj->getPROFILEID();
+            $nativePlaceObj = new NEWJS_NATIVE_PLACE("newjs_masterRep");
+            $nativeData = $nativePlaceObj->getNativeData($profileId);
+            $nativeState = $nativeData['NATIVE_STATE'];
+            $nativeCity = $nativeData['NATIVE_CITY'];
+            
+            if(strlen($loggedInObj->getCITY_RES())==2){
+                $response['state'] = $loggedInObj->getCITY_RES();
+            }
+            else
+                $response['city'] = $loggedInObj->getCITY_RES();
+            
+            if($nativeState && $nativeCity)
+                $response['nativeCity'] = $nativeCity;
+            
+            elseif($nativeState){
+                $response['nativeState'] = $nativeState;
+            }
+            return $response;
         }
 
 }
