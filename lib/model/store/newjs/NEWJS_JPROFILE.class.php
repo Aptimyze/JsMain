@@ -396,6 +396,12 @@ class NEWJS_JPROFILE extends TABLE
                     }
                 }
             }
+            $oldfields = $fields;
+            $fields = "AGE,HEIGHT,MANGLIK,MSTATUS,CASTE,RELIGION,MTONGUE,COUNTRY_RES,INCOME,PROFILEID,HAVE_JCONTACT,HAVEPHOTO,MOB_STATUS,LANDL_STATUS,SUBSCRIPTION,INCOMPLETE,ACTIVATED,PHOTO_DISPLAY,GENDER,PRIVACY";
+            if(false !== stripos($this->dbName,'slave') && $fields == "AGE,HEIGHT,MANGLIK,MSTATUS,CASTE,RELIGION,MTONGUE,COUNTRY_RES,INCOME,PROFILEID,HAVE_JCONTACT,HAVEPHOTO,MOB_STATUS,LANDL_STATUS,SUBSCRIPTION,INCOMPLETE,ACTIVATED,PHOTO_DISPLAY,GENDER,PRIVACY") {
+                LoggingManager::getInstance('JPROFILE_getArray')->logThis(LoggingEnums::LOG_ERROR,new Exception('Query calling'));
+            }
+            $fields = $oldfields;
             $sqlSelectDetail = "SELECT $fields FROM newjs.JPROFILE WHERE ";
             $count = 1;
             if (is_array($valueArray)) {
@@ -494,6 +500,7 @@ class NEWJS_JPROFILE extends TABLE
             }
             */
             $resSelectDetail->execute();
+            $this->logGetArrayCount();
             while ($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)) {
                 $detailArr[] = $rowSelectDetail;
             }
@@ -1637,6 +1644,19 @@ class NEWJS_JPROFILE extends TABLE
         $key .= '::'.date('H');
         JsMemcache::getInstance()->incrCount($key);
     }
+    
+    /**
+     *  //Function to log Select Query Count
+     */
+    private function logGetArrayCount()
+    {
+        $key = 'getArrayCount_'.date('Y-m-d');
+        JsMemcache::getInstance()->incrCount($key);
+
+        $key .= '::'.date('H');
+        JsMemcache::getInstance()->incrCount($key);
+    }
+    
 }
 
 ?>
