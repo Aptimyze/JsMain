@@ -580,3 +580,4 @@ class LoggingManager
 	{
 		return LoggingConfig::getInstance()->traceStatus($szLogPath);
 	}
+}
