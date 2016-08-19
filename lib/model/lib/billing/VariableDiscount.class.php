@@ -651,6 +651,8 @@ class VariableDiscount
 				if(is_array($everPaidArr))
 					$profileArr =array_diff($profileArr, $everPaidArr);
 			}
+			$profileArr =array_values($profileArr);
+			$profileArr =array_unique($profileArr);
 
 			// Add in pool
 			$this->addMiniVdDataInTemp($profileArr,$startDate,$endDate,$discount);
@@ -668,7 +670,10 @@ class VariableDiscount
 			$total 		=$dataArr['count'];
 			$message 	.="\n".$cluster."=".$total;
 		}
-                mail("manoj.rana@naukri.com","VD Cluster Details","$message","From:JeevansathiCrm@jeevansathi.com");
+	        $subject	= "VD Cluster Details";
+            	$to 		= "manoj.rana@naukri.com,rohan.mathur@jeevansathi.com";
+        	$from 		= "info@jeevansathi.com";
+		SendMail::send_email($to,$message, $subject, $from,$cc,"","","","","","1","","");
 		}
 		
 	}
@@ -676,8 +681,8 @@ class VariableDiscount
 	// process Mini-VD Data
         public function addMiniVdDataInTemp($profileArr,$startDate,$endDate,$discount)
         {
-		$services ='P,C,NCP,ESP,X';	
-                $uploadTempObj =new test_VD_UPLOAD_TEMP('newjs_slave');
+		$services ='P,C,NCP,X';	
+                $uploadTempObj =new test_VD_UPLOAD_TEMP('newjs_local111');
 
                 if(is_array($profileArr)){
                 foreach($profileArr as $key=>$profileid){
