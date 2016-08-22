@@ -25,7 +25,7 @@ class staticActions extends sfActions
   //Find more information in http://devjs.infoedge.com/mediawiki/index.php/Social_Project#404_Error_page
   public function executePage404(sfWebRequest $request)
   {
-  LoggingManager::getInstance(LoggingEnums::EX500OR404)->logThis(LoggingEnums::LOG_ERROR, new Exception("404 page encountered"), array('message' => $request->getUri()));
+  LoggingManager::getInstance(LoggingEnums::EX404)->logThis(LoggingEnums::LOG_ERROR, new Exception("404 page encountered"), array('message' => $request->getUri(), 'moduleName' => '404'));
 	if(MobileCommon::isNewMobileSite())
 	{
 		if(MobileCommon::isAppWebView()){
@@ -109,7 +109,7 @@ class staticActions extends sfActions
   //Find more information in http://devjs.infoedge.com/mediawiki/index.php/Social_Project#500_Internal_Server_Error_page
   public function executePage500(sfWebRequest $request)
   {
-  LoggingManager::getInstance(LoggingEnums::EX500OR404)->logThis(LoggingEnums::LOG_ERROR, new Exception("500 page encountered"), array('message' => $request->getUri()));
+  LoggingManager::getInstance(LoggingEnums::EX500)->logThis(LoggingEnums::LOG_ERROR, new Exception("500 page encountered"), array('message' => $request->getUri(), 'moduleName' => '500'));
   $request->setParameter("blockOldConnection500",1);
 	if(MobileCommon::isNewMobileSite()){
 		if(MobileCommon::isAppWebView()){

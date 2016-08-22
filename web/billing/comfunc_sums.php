@@ -484,7 +484,6 @@ function send_log_mail($email, $Cc, $Bcc, $msg, $subject, $from)
  */
 function logError_sums($query, $sendmail = "0")
 {
-    mysql_error_js();
     global $smarty;
     $error_msg = "Date : " . date('Y-m-d G-i-s', time() + 37800) . "\n";
     $error_msg .= "Sql query : " . $query . "\n";

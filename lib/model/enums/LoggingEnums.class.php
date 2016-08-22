@@ -10,7 +10,7 @@
 
 class LoggingEnums
 {
-    const LOG_LEVEL = 0;
+    const LOG_LEVEL = 2;
     const LOG_INFO = 2;
     const LOG_DEBUG = 1;
     const LOG_ERROR = 0;
@@ -22,7 +22,8 @@ class LoggingEnums
     // module names
     const JSADMIN = 'jsadmin';
     const COMMONLOG = 'common';
-    const EX500OR404 = '500-404';
+    const EX500 = '500';
+    const EX404 = '404';
     // name of channels returned
     const P = 'P';
     const A = 'A';
@@ -48,7 +49,7 @@ class LoggingEnums
     const LOG_ID = "requestId";
     const LOG_EXCEPTION = "exception";
     const TIME = "time";
-    const LOG_TYPE = "logLevel";
+    const LOG_TYPE = "logType";
     const UNIQUE_REQUEST_SUB_ID = "requestSubId";
     // config array keys
     const LOGGING = 'logging';

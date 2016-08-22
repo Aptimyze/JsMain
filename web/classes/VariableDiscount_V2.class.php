@@ -39,7 +39,7 @@ class VariableDiscount
       	        		$sql ="SELECT PROFILEID from newjs.SEARCH_MALE WHERE AGE>23";
 			else
 				$sql ="SELECT PROFILEID from newjs.SEARCH_FEMALE";		
-	       	        $res = mysql_query_decide($sql,$this->slaveDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($this->myDb)));
+	       	        $res = mysql_query_decide($sql,$this->slaveDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($this->slaveDb)));
        		        while($row = mysql_fetch_array($res)){
        	       		        $pid 		=$row['PROFILEID'];
        	       	        	$sql1 		="insert ignore into billing.VARIABLE_DISCOUNT_POOL_TECH_V2(`PROFILEID`) VALUES('$pid')";

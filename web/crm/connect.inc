@@ -13,7 +13,7 @@ function login ($id, $pass)
 	$mycond = 0;
 	$pass = md5($pass);
 	$sql = "select RESID,LAST_LOGIN_DT,MOD_DT from jsadmin.PSWRDS where USERNAME= binary '$id' and PASSWORD= binary '$pass' AND ACTIVE='Y'";
-	$res = mysql_query_decide($sql) or die("Could not Execute query pwdError".mysql_error_js());
+	$res = mysql_query_decide($sql) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception("Could not Execute query pwdError"));
 	$count = mysql_num_rows($res);
 	
 	if ($count > 0)
@@ -95,7 +95,7 @@ function login ($id, $pass)
 			{
 				$tm = time();
 				$sql_up = "update jsadmin.CONNECT set TIME=$tm where ID=$userno";
-				$res_up = mysql_query_decide($sql_up) or die("Could not Authenticate User: upError".mysql_error_js());
+				$res_up = mysql_query_decide($sql_up) or die("Could not Authenticate User: upError");
 
 				$ret["ID"] = $md."i".$userno;
 				$ret["USER"]=$myrow["USER"];
@@ -156,7 +156,7 @@ function login ($id, $pass)
 			$ret_usr = $myrow["USER"];
 		
 			$sql_getusr = "select USERNAME from jsadmin.PSWRDS where RESID=$ret_usr";
-			$res_getusr = mysql_query_decide($sql_getusr) or die("Could not return data from Pswrds.".mysql_error_js());
+			$res_getusr = mysql_query_decide($sql_getusr) or die("Could not return data from Pswrds.");
 			$count_usr = mysql_num_rows($res_getusr);
 		
 			if($count_usr > 0)
@@ -187,7 +187,7 @@ function login ($id, $pass)
         else
         {
 		$sql_usr = "select USER from jsadmin.CONNECT where ID=$userno";
-		$res_usr = mysql_query_decide($sql_usr) or die("Could not return data from Connect1.".mysql_error_js());
+		$res_usr = mysql_query_decide($sql_usr) or die("Could not return data from Connect1.");
 		$count = mysql_num_rows($res_usr);
 
 		if ($count > 0)
@@ -196,7 +196,7 @@ function login ($id, $pass)
 			$ret_usr = $myrow["USER"];
 		
 			$sql_getusr = "select PRIVILAGE from jsadmin.PSWRDS where RESID=$ret_usr";
-			$res_getusr = mysql_query_decide($sql_getusr) or die("Could not return data from Pswrds.".mysql_error_js());
+			$res_getusr = mysql_query_decide($sql_getusr) or die("Could not return data from Pswrds.");
 			$count_usr = mysql_num_rows($res_getusr);
 		
 			if($count_usr > 0)
@@ -227,7 +227,7 @@ function login ($id, $pass)
 	{
 
 		$sql_usr = "select USER from jsadmin.CONNECT where ID=$connection and IPADDR='$ip'";
-		$res_usr = mysql_query_decide($sql_usr) or die("Could not return data from Connect1.".mysql_error_js());
+		$res_usr = mysql_query_decide($sql_usr) or die("Could not return data from Connect1.");
 		$count = mysql_num_rows($res_usr);
 	
 		if ($count > 0)
@@ -236,7 +236,7 @@ function login ($id, $pass)
 			$ret_usr = $myrow["USER"];
 		
 			$sql_getusr = "select CENTER from jsadmin.PSWRDS where RESID=$ret_usr";
-			$res_getusr = mysql_query_decide($sql_getusr) or die("Could not return data from Pswrds.".mysql_error_js());
+			$res_getusr = mysql_query_decide($sql_getusr) or die("Could not return data from Pswrds.");
 			$count_usr = mysql_num_rows($res_getusr);
 		
 			if($count_usr > 0)
@@ -261,7 +261,7 @@ function getcenter_for_walkin($walkin)
 { 
         $sql_usr = "select center from jsadmin.PSWRDS where USERNAME='$walkin' ";
                                                                                                                              
-        $res_usr = mysql_query_decide($sql_usr) or die("Could not return data from executive.".mysql_error_js());
+        $res_usr = mysql_query_decide($sql_usr) or die("Could not return data from executive.");
                                                                                                                              
         $count = mysql_num_rows($res_usr);
                                                                                                                              
@@ -283,7 +283,7 @@ function getcenter_for_walkin($walkin)
 	global $TOUT;
 
 	$sql_usr = "select USER from jsadmin.CONNECT where ID=$connection and IPADDR='$ip'";
-	$res_usr = mysql_query_decide($sql_usr) or die("Could not return data from Connect1.".mysql_error_js());
+	$res_usr = mysql_query_decide($sql_usr) or die("Could not return data from Connect1.");
 	$count = mysql_num_rows($res_usr);
 
 	if ($count > 0)
@@ -292,7 +292,7 @@ function getcenter_for_walkin($walkin)
 		$ret_usr = $myrow["USER"];
 		
 		$sql_getusr = "select EMAIL from jsadmin.PSWRDS where RESID=$ret_usr";
-		$res_getusr = mysql_query_decide($sql_getusr) or die("Could not return data from Pswrds.".mysql_error_js());
+		$res_getusr = mysql_query_decide($sql_getusr) or die("Could not return data from Pswrds.");
 		$count_usr = mysql_num_rows($res_getusr);
 		
 		if($count_usr > 0)
