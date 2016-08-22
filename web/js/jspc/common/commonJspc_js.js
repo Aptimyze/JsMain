@@ -51,6 +51,15 @@ $(document).ready(function (e) {
             $("#SearchProId").focus();
         } else callApiForProfile();
     });
+    
+    $('.js-gnbsearchLists').bind("click keypress", function () {
+				
+				var data = $(this).attr("data");
+				var url = '/search/'+data;
+				url =  getUrlForHeaderCaching(url);
+				window.location.href = url;
+        
+    });
 });
 
 function closeOverlayOnClick() {
@@ -624,7 +633,10 @@ function getUrlForHeaderCaching($url)
 	else
 		timestamp = now;
 	localStorage.setItem('dppHeaderCaching',timestamp);
-	return $url+"?useHeaderCaching=1&timestamp="+timestamp;	
+	if($url.indexOf('?')!='-1')
+		 return $url +"&useHeaderCaching=1&timestamp="+timestamp;
+	else
+		return $url+"?useHeaderCaching=1&timestamp="+timestamp;	
 }
 function callAfterContact()
 {
