@@ -73,10 +73,17 @@ class NEWJS_CHAT_LOG extends TABLE{
 						$whrStr="AND M.ID < ".$pagination;
 					else
 						$whrStr="";
-					$sql = "SELECT SENDER,RECEIVER, DATE, MESSAGE ,CHATID,C.ID FROM  `CHAT_LOG` AS C JOIN CHATS AS M ON ( M.ID = C.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER )) ".$whrStr." ORDER BY DATE DESC limit ".$limit;
+					if($limit)
+						$limitStr= " limit :limit ";
+					else
+						$limitStr="";
+						
+					$sql = "SELECT SENDER,RECEIVER, DATE, MESSAGE ,CHATID,C.ID FROM  `CHAT_LOG` AS C JOIN CHATS AS M ON ( M.ID = C.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER )) ".$whrStr." ORDER BY DATE DESC ".$limitStr;
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);
+					if($limit)
+						$prep->bindValue(":limit",$limit,PDO::PARAM_INT);
 					$prep->execute();
 					while($row = $prep->fetch(PDO::FETCH_ASSOC))
 					{

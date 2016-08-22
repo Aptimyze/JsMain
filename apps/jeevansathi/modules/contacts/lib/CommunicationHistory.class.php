@@ -139,8 +139,34 @@ class CommunicationHistory
 					//$message_log[$value['DATE']]["message"] = "You requested " . $himher . " for Photo";
 				}
 			}
+			
+		$dbName = JsDbSharding::getShardNo($this->loginProfile->getPROFILEID());
+		$chatLogObj = new NEWJS_CHAT_LOG($dbName);
+		$chatDetailsArr = $chatLogObj->getMessageHistory($this->loginProfile->getPROFILEID(),$this->otherProfile->getPROFILEID());
+		//print_r($chatDetailsArr);die;
+		if(is_array($chatDetailsArr)){
+			foreach($chatDetailsArr as $key=>$val)
+			{
+				if ($val["SENDER"] == $this->loginProfile->getPROFILEID()) {
+						$who  = "You";
+						$side = "S";
+					} //$value["SENDER"] == $logged_pid
+					else {
+						$who  = "They";
+						$side = "R";
+					}
+				//	$previousStatus                            = 'A';
+					$message_log[$val['DATE']]["type"]  = 'O'. $side;
+					$message_log[$val['DATE']]["who"]     = $who;
+					if($val['MESSAGE'])
+						$message_log[$val['DATE']]["message"] = $val['MESSAGE'];
+					else
+						$message_log[$val['DATE']]["message"] = ""; //inserting space to prevent null exception in various channels
+			}
+		}	
 		if (is_array($message_log))
 			krsort($message_log);
+		//print_r($message_log);die;
 		$start = 0;
 		if (is_array($message_log))
 			foreach ($message_log as $key => $val) {
@@ -476,6 +502,36 @@ class CommunicationHistory
 					else{
 						$result[$count]["message"] = $value["message"];
 						$result[$count]["header"] = "You sent a Message";
+					}
+					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
+					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
+					$result[$count]["button"] = null;
+					$count++;
+					break;
+				case "OR":
+					
+					if(!$value["message"]){
+						$result[$count]["message"]=$value["who"]." sent a Message through chat";
+						$result[$count]["header"] = " ";
+					}
+					else{
+						$result[$count]["message"] = $value["message"];
+						$result[$count]["header"] = $value["who"]." sent a Message through chat";
+					}
+					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
+					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
+					$result[$count]["button"] = null;
+					$count++;
+					break;
+				case "OS":
+					
+					if(!$value["message"]){
+						$result[$count]["message"]="You sent a Message through chat";
+						$result[$count]["header"] = " ";
+					}
+					else{
+						$result[$count]["message"] = $value["message"];
+						$result[$count]["header"] = "You sent a Message through chat";
 					}
 					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
 					$result[$count]["ismine"] = $value["who"]=="You"?true:false;

@@ -94,10 +94,12 @@ class WriteMessagev2Action extends sfAction
 						$profileDisplay =  $this->getProfileDisplayData($tuplesValues[$profileid]);
 					}
 					$responseArray = $this->getContactArray($messageDetailsArr,$request,$pagination);
-					if($nextPaginationCall)
-						$responseArray['hasNext'] = true;
-					else
-						$responseArray['hasNext'] = false;
+					if($pagination){
+						if($nextPaginationCall)
+							$responseArray['hasNext'] = true;
+						else
+							$responseArray['hasNext'] = false;
+					}
 					$responseArray['profile'] = $profileDisplay;
 				}
 			}
@@ -125,8 +127,7 @@ class WriteMessagev2Action extends sfAction
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
 		if(!empty($messageDetailsArr))
 		{
-			$arr["CHATID"]="";
-			$arr["MSGID"]="";
+			
 			foreach ($messageDetailsArr as $key=>$value)
 			{
 				$arr["messages"][$key]["message"] = CommonUtility::strip_selected_tags($value["MESSAGE"],'script');

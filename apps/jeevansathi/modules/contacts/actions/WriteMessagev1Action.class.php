@@ -81,10 +81,12 @@ class WriteMessagev1Action extends sfAction
 						$profileMemcacheServiceObj->updateMemcache();
 					}
 					$responseArray = $this->getContactArray($messageDetailsArr,$request,$pagination);
-					if($nextPaginationCall)
-						$responseArray['hasNext'] = true;
-					else
-						$responseArray['hasNext'] = false;
+					if($pagination){
+						if($nextPaginationCall)
+							$responseArray['hasNext'] = true;
+						else
+							$responseArray['hasNext'] = false;
+					}
 				}
 			}
 		}
@@ -110,8 +112,7 @@ class WriteMessagev1Action extends sfAction
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
 		if(!empty($messageDetailsArr))
 		{
-			$arr["CHATID"]="";
-			$arr["MSGID"]="";
+			
 			foreach ($messageDetailsArr as $key=>$value)
 			{
 				$arr["messages"][$key]["message"] = $value["MESSAGE"];
@@ -120,10 +121,12 @@ class WriteMessagev1Action extends sfAction
 					$arr["messages"][$key]["mymessage"] = "true";
 				else
 					$arr["messages"][$key]["mymessage"] = "false";
-				if($value["CHATID"])
-					$arr["CHATID"]=$value["ID"];
-				else
-					$arr["MSGID"]=$value["ID"];
+				if($pagination){
+					if($value["CHATID"])
+						$arr["CHATID"]=$value["ID"];
+					else
+						$arr["MSGID"]=$value["ID"];
+				}
 			}
 			if($pagination){
 				if(!$arr["CHATID"] && $request->getParameter("CHATID"))
