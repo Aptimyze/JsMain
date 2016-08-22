@@ -32,7 +32,7 @@ class WriteMessagev1Action extends sfAction
 				$msgId=$request->getParameter("MSGID");
 				$chatId=$request->getParameter("CHATID");
 				$pagination=$request->getParameter("pagination");
-				if($request->getParameter("hasNext"))
+				if($request->getParameter("pagination"))
 					$limit=CONTACT_ELEMENTS::PAGINATION_LIMIT;
 				
 				if ($this->loginProfile->getPROFILEID()) {
