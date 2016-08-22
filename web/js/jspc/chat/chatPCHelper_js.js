@@ -107,7 +107,11 @@ function openNewJSChat(profilechecksum,detailsArr){
                     }
                 },
             nodeArr=[];
-        nodeArr["9398614"] = data;
+        nodeArr[detailsArr[1]] = data;
+
+	localStorage.setItem('jsNoRosterChat_'+detailsArr[1],JSON.stringify(data));
+	console.log(JSON.parse(localStorage.getItem('chat_'+detailsArr[1])));
+
         //create hidden element in chat listing
         objJsChat.createHiddenListNode(nodeArr);
         console.log("opening chat box");
@@ -115,6 +119,25 @@ function openNewJSChat(profilechecksum,detailsArr){
         objJsChat._chatPanelsBox(detailsArr[1],"online",jid,profilechecksum, groupid);
     } 
 }
+
+function removeLocalStorageForNonChatBoxProfiles(id)
+{
+	if(id)
+	{
+	        localStorage.removeItem('jsNoRosterChat_'+id);
+	}
+	else
+	{
+		for (var i = 0; i < localStorage.length; i++){
+			var key = localStorage.key(i);
+			if(key && key.indexOf('jsNoRosterChat_')!='-1')
+			{
+	        		localStorage.removeItem(key);
+			}
+		}
+	}
+}
+
 /*getMessagesFromLocalStorage
  * Fetch messages from local storage
  */
@@ -588,6 +611,7 @@ function checkAuthentication(timer,loginType) {
 function logoutChat() {
     strophieWrapper.disconnect();
     eraseCookie("chatAuth");
+    removeLocalStorageForNonChatBoxProfiles();
 }
 /*invokePluginReceivedMsgHandler
  * invokes msg handler function of plugin

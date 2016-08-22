@@ -797,6 +797,7 @@ JsChat.prototype = {
                 }
             }
             curElem._changeLocalStorage("remove",$(this).closest("chat-box").attr("user-id"),"","");
+	    removeLocalStorageForNonChatBoxProfiles($(this).closest("chat-box").attr("user-id"));
         });
     },
     //onPostBlockCallback: null,
