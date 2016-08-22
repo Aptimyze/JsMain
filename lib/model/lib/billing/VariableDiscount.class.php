@@ -370,6 +370,7 @@ class VariableDiscount
         $profileArr =array();
         $vdDurationArr =uploadVD::$vdDurationArr;
         $variable ='disc';
+	$todayDate -date("Y-m-d");
 
         $count = $VDTempObj->getCountOfRecords($entryDate);
         for($i=0;$i<$count;$i+=$limit)
@@ -380,6 +381,10 @@ class VariableDiscount
             {
                 $pid =$details['PROFILEID'];
                 if($pid){
+
+		    $startDate  =$details['SDATE'];	
+		    if(strtotime($todayDate) != strtotime($startDate))
+			continue;		
 		    $isPaid =$this->checkPaidProfile($pid);	
 		    if($isPaid)
 			continue; 	
