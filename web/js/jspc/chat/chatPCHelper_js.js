@@ -88,6 +88,33 @@ function chatLoggerPC(msgOrObj) {
     */
 }
 
+function openNewJSChat(profilechecksum,detailsArr){
+    if(typeof profilechecksum!= "undefined" && typeof detailsArr!= "undefined"){
+        var jid=detailsArr[1]+"@"+openfireServerName,
+            groupid = chatConfig.Params.groupIDMapping[detailsArr[3]],
+            data= {"rosterDetails":
+                    {
+                        "jid":jid ,
+                        "chat_status": "online",
+                        "nick": detailsArr[0]+"|"+profilechecksum,
+                        "fullname": detailsArr[0],
+                        "groups": [groupid],
+                        "subscription": "to",
+                        "profile_checksum": profilechecksum,
+                        "listing_tuple_photo": detailsArr[2],
+                        "last_online_time": null,
+                        "ask": null
+                    }
+                },
+            nodeArr=[];
+        nodeArr["9398614"] = data;
+        //create hidden element in chat listing
+        objJsChat.createHiddenListNode(nodeArr);
+        console.log("opening chat box");
+        //open chat box
+        objJsChat._chatPanelsBox(detailsArr[1],"online",jid,profilechecksum, groupid);
+    } 
+}
 /*getMessagesFromLocalStorage
  * Fetch messages from local storage
  */
@@ -1155,25 +1182,5 @@ $(document).ready(function () {
         objJsChat.start();
         
     }
-    setTimeout(function(){
-        console.log("open chat box for "+my_action);
-        if(my_action == "MobSearch"){
-            var data= {"jid": "9398614@localhost",
-                        "chat_status": "online",
-                        "nick": "ZZTY9146|26c7434e79434ab59d7f19102d279d5ci9398614",
-                        "fullname": "ZZTY9146",
-                        "groups": ["mysearch"],
-                        "subscription": "to",
-                        "profile_checksum": "26c7434e79434ab59d7f19102d279d5ci9398614",
-                        "listing_tuple_photo": "",
-                        "last_online_time": null,
-                        "ask": null
-                    },nodeArr=[];
-            nodeArr["9398614"] = data;
-            objJsChat.createHiddenListNode(nodeArr);
-            console.log("opening chat box");
-            objJsChat._chatPanelsBox(9398614,"online","9398614@localhost","26c7434e79434ab59d7f19102d279d5ci9398614", "mysearch");
-        }
-    },5000);
 
 });

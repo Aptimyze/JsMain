@@ -762,6 +762,7 @@ function DetailPageBinding()
 function cEButtonActionCalling(elementObj)
 {
 	var arrID=elementObj.attr('id').split('-');
+
 	if(arrID[0]!="CHAT")
 	{
 		var buttonObj=new Button(elementObj);
@@ -773,7 +774,8 @@ function cEButtonActionCalling(elementObj)
 		{
 			var data=elementObj.attr('data').split(',');
 			if(data[0]!="undefined" && data[1]!="undefined"){
-				openChatWindow(data[1],arrID[1],data[1],data[0],'','');
+				openNewJSChat(arrID[1],data);
+				//openChatWindow(data[1],arrID[1],data[1],data[0],'','');
 			}
 		}
 	}

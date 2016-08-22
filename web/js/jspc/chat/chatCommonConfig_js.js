@@ -10,6 +10,9 @@ chatConfig.Params = {
         "Search Results":"mysearch",
         "View other profile":"otherdetailed"
     },
+    groupIDMapping:{
+        'N':"mysearch"
+    },
     //subscriptions for group id's
     groupWiseSubscription: {
         "dpp": 'to',
