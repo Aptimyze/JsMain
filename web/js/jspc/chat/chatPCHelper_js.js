@@ -127,6 +127,19 @@ function openNewJSChat(profilechecksum,detailsArr){
     } 
 }
 
+function retainHiddenListing(){
+    var nodeArr = [];
+    for (var i = 0; i < localStorage.length; i++){
+        var key = localStorage.key(i);
+        if(key && key.indexOf('jsNoRosterChat_')!='-1')
+        {
+            var nodeData = localStorage.getItem(key);
+            nodeArr[key.split("_")[1]] = JSON.parse(nodeData);
+        }
+    }
+    objJsChat.createHiddenListNode(nodeArr);
+}
+
 function removeLocalStorageForNonChatBoxProfiles(id)
 {
 	if(id)

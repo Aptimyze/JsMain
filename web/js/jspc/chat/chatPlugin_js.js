@@ -582,9 +582,7 @@ JsChat.prototype = {
             requestListingPhoto(apiParams);
         }
         if(operation == "create_list"){
-            var nodeArr = [];
-            //create hidden nodes in dom
-            elem.createHiddenListNode(nodeArr);
+            retainHiddenListing();
         }
         var newTab = false;
         if($(".tabUId").length == 0){
