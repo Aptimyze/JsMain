@@ -565,7 +565,7 @@ class VariableDiscount
         {
                 $vdClusterObj   =new billing_VD_CLUSTER();
                 $clusterDetails =$vdClusterObj->getClusterDetails();
-                $fields         ='PROFILEID,GENDER,AGE';
+                $fields         ='PROFILEID,GENDER,AGE,SUBSCRIPTION';
                 $jprofileData   =array();
 		$profileArray	=array();
 
@@ -614,6 +614,7 @@ class VariableDiscount
 			// loop end
 
 			// jprofile data
+			$membershipObj =new Membership();
 			$jprofileObj =new JPROFILE('newjs_local111');
 			$mainAdminPoolObj= new incentive_MAIN_ADMIN_POOL('newjs_local111');	
 			$jprofileData =$jprofileObj->getArray($valueArray,'',$greaterArray,$fields,$lessArray);
@@ -622,6 +623,10 @@ class VariableDiscount
 				$profileid      =$val['PROFILEID'];
 				$gender         =$val['GENDER'];
 				$age            =$val['AGE'];
+				$subscription   =$val['SUBSCRIPTION'];
+
+				if((strstr($subscription,"F")!="")||(strstr($subscription,"D")!=""))
+					continue;
 				if(($gender=='M' && $age<23) || ($gender=='F' && $age<20))
 					continue;
 				if($analyticScore){
@@ -629,6 +634,10 @@ class VariableDiscount
 					if(!$eligible)
 						continue;
 				}
+				$isRenewal =$membershipObj->isRenewable($profileid);
+                                if($isRenewal && ($isRenewal!=1)){
+	                                continue;
+                                }
 				$profileArr[] =$profileid;
 			}
 			//print_r($profileArr);
