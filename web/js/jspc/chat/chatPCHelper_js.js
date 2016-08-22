@@ -88,10 +88,16 @@ function chatLoggerPC(msgOrObj) {
     */
 }
 
+/*open chatbox from search listing or view profile page
+*@inputs:profilechecksum,detailsArr
+*/
 function openNewJSChat(profilechecksum,detailsArr){
     if(typeof profilechecksum!= "undefined" && typeof detailsArr!= "undefined"){
+        var groupid = chatConfig.Params.groupIDMapping[detailsArr[3]];
+        if(typeof groupid == "undefined"){
+            groupid = "mysearch";
+        }
         var jid=detailsArr[1]+"@"+openfireServerName,
-            groupid = chatConfig.Params.groupIDMapping[detailsArr[3]],
             data= {"rosterDetails":
                     {
                         "jid":jid ,
@@ -107,9 +113,10 @@ function openNewJSChat(profilechecksum,detailsArr){
                     }
                 },
             nodeArr=[];
-        nodeArr["9398614"] = data;
+        nodeArr[detailsArr[1]] = data;
         //create hidden element in chat listing
         objJsChat.createHiddenListNode(nodeArr);
+        //write in localstorage
         console.log("opening chat box");
         //open chat box
         objJsChat._chatPanelsBox(detailsArr[1],"online",jid,profilechecksum, groupid);

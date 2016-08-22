@@ -442,6 +442,34 @@ JsChat.prototype = {
                 }
             }
         }
+        /*var newTab = false;
+        if($(".tabUId").length == 0){
+            //console.log("does not exsist");
+            $("body").append("<input type='hidden' class='tabUId' id='tab_"+new Date().getTime()+"'>");
+            elem._updateChatStructure("new");
+            newTab = true;
+        }
+
+        if(localStorage.getItem("lastUId")) {
+            if($(".tabUId").attr("id") != localStorage.getItem("lastUId") && newTab ==  false){
+                elem._updateChatStructure("exsisting");
+            }
+        } else {
+            localStorage.setItem("lastUId",$(".tabUId").attr("id"));
+        }
+        
+        
+        $(window).focus(function() {
+            //console.log("tab changed");
+            if(localStorage.getItem("lastUId")) {
+                if($(".tabUId").attr("id") != localStorage.getItem("lastUId")){
+                    elem._updateChatStructure("exsisting");
+                }
+            } else {
+                localStorage.setItem("lastUId",$(".tabUId").attr("id"));
+            }       
+        });*/
+        
     },
 
     addListingInit: function (data,operation) {
@@ -553,7 +581,11 @@ JsChat.prototype = {
             apiParams["photoType"] = "ProfilePic120Url";
             requestListingPhoto(apiParams);
         }
-        
+        if(operation == "create_list"){
+            var nodeArr = [];
+            //create hidden nodes in dom
+            elem.createHiddenListNode(nodeArr);
+        }
         var newTab = false;
         if($(".tabUId").length == 0){
             //console.log("does not exsist");
@@ -1500,7 +1532,7 @@ JsChat.prototype = {
             });
             break;
         case curElem._contactStatusMapping["pog_interest_accepted"]["key"]:
-            $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sentDiv,#restrictMessgTxt,#acceptTxt").remove();
+            $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sentDiv,#restrictMessgTxt,#accept,#acceptTxt").remove();
             $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="fullwid pos-rel mt10 color5 txtc fl acceptRec">Interest Accepted continue chat</div>');
             //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
             break;

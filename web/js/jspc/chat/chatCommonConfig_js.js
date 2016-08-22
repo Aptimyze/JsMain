@@ -7,11 +7,12 @@ chatConfig.Params = {
         "Acceptance": "acceptance",
         "Shortlisted Members": "shortlist",
         "Interest Sent": "intsent",
-        "Search Results":"mysearch",
-        "View other profile":"otherdetailed"
+        "Search Results":"mysearch"
     },
     groupIDMapping:{
-        'N':"mysearch"
+        'N':"mysearch",
+        'A':"acceptance",
+        'I':"intsent"
     },
     //subscriptions for group id's
     groupWiseSubscription: {
@@ -57,8 +58,7 @@ chatConfig.Params = {
             "stype": "WV"
         },
         "acceptance": {},
-        "mysearch":{},
-        "otherdetailed":{}
+        "mysearch":{}
     },
     //api url for getting photo
     photoUrl: "/api/v1/social/getMultiUserPhoto",
@@ -211,8 +211,7 @@ chatConfig.Params = {
             "intrec": "pg_acceptance_pending",
             "acceptance": "both_accepted",
             "shortlist": "pg_interest_pending",
-            "mysearch":"pg_interest_pending",
-            "otherdetailed":"pg_interest_pending"
+            "mysearch":"pg_interest_pending"
         },
         /* communication type and mode config
          * if enableChat is true and useOpenfireForChat is true,then post acceptance msg through openfire,
