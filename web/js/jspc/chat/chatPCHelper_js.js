@@ -1155,13 +1155,25 @@ $(document).ready(function () {
         objJsChat.start();
         
     }
-    /*setTimeout(function(){
+    setTimeout(function(){
         console.log("open chat box for "+my_action);
         if(my_action == "MobSearch"){
+            var data= {"jid": "9398614@localhost",
+                        "chat_status": "online",
+                        "nick": "ZZTY9146|26c7434e79434ab59d7f19102d279d5ci9398614",
+                        "fullname": "ZZTY9146",
+                        "groups": ["mysearch"],
+                        "subscription": "to",
+                        "profile_checksum": "26c7434e79434ab59d7f19102d279d5ci9398614",
+                        "listing_tuple_photo": "",
+                        "last_online_time": null,
+                        "ask": null
+                    },nodeArr=[];
+            nodeArr["9398614"] = data;
+            objJsChat.createHiddenListNode(nodeArr);
             console.log("opening chat box");
-            var extraParams = {"username":"abc"};
-            objJsChat._chatPanelsBox(5074911,"online","5074911@testjs-new","677d6a3f332149f81cec7b1a081cf54ci5074911", "mysearch",extraParams);
+            objJsChat._chatPanelsBox(9398614,"online","9398614@localhost","26c7434e79434ab59d7f19102d279d5ci9398614", "mysearch");
         }
-    },5000);*/
+    },5000);
 
 });

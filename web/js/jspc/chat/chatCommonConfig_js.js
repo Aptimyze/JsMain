@@ -101,17 +101,22 @@ chatConfig.Params = {
                         "id": "intsent",
                         "group_name": "Interest Sent",
                         "show_group_name": true,
-                        "hide_offline_users": true
+                        "hide_offline_users": false
                     }, {
                         "id": "intrec",
                         "group_name": "Interest Received",
                         "show_group_name": true,
-                        "hide_offline_users": true
+                        "hide_offline_users": false
                     }, {
                         "id": "shortlist",
                         "group_name": "Shortlisted Members",
                         "show_group_name": true,
-                        "hide_offline_users": true
+                        "hide_offline_users": false
+                    },{
+                        "id":"mysearch",
+                        "group_name":"Search Results",
+                        "show_group_name":false,
+                        "hide_offline_users":false
                     }
                 ]
             },
