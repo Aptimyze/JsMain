@@ -413,6 +413,7 @@ JsChat.prototype = {
                 runID = res[0];
                 if (typeof data[key]["rosterDetails"]["groups"] != "undefined" && data[key]["rosterDetails"]["groups"].length > 0) {
                     $.each(data[key]["rosterDetails"]["groups"], function (index, val) {
+                        //check for no roster listing
                         if ($('#' + runID + "_" + val).length == 0) {
                             var List = '',
                                 fullname = data[key]["rosterDetails"]["fullname"],
