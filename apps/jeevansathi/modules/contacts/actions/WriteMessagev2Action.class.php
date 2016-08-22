@@ -27,6 +27,7 @@ class WriteMessagev2Action extends sfAction
 				$this->loginData    = $request->getAttribute("loginData");
 				$msgId=$request->getParameter("MSGID");
 				$chatId=$request->getParameter("CHATID");
+				$pagination=$request->getParameter("pagination");
 				if($request->getParameter("hasNext"))
 					$limit=CONTACT_ELEMENTS::PAGINATION_LIMIT;
 
@@ -46,7 +47,7 @@ class WriteMessagev2Action extends sfAction
 					$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,'M',ContactHandler::PRE);
 					$this->contactEngineObj=ContactFactory::event($this->contactHandlerObj);
 					$messageLogObj = new MessageLog();
-					if($limit){
+					if($limit && $pagination){
 						$dbName = JsDbSharding::getShardNo($this->loginProfile->getPROFILEID());
 						$chatLogObj = new NEWJS_CHAT_LOG($dbName);
 						$msgDetailsArr = $messageLogObj->getMessageHistoryPagination($this->loginProfile->getPROFILEID(),$profileid,$limit,$msgId);
@@ -61,16 +62,16 @@ class WriteMessagev2Action extends sfAction
 							//print_r($messageDetailsArr);die;
 							if(count($messageDetailsArr)>20){
 								$messageDetailsArr=array_slice($messageDetailsArr,0,20);
-								$pagination=true;
+								$nextPaginationCall=true;
 							}
 							else
-								$pagination=false;
+								$nextPaginationCall=false;
 				
 						}
 					}
 					else{
 						$messageDetailsArr = $messageLogObj->getMessageHistory($this->loginProfile->getPROFILEID(),$profileid);
-						$pagination=false;
+						$nextPaginationCall=false;
 					}
 						
 					$count = $messageLogObj->markMessageSeen($this->loginProfile->getPROFILEID(),$profileid);
@@ -92,8 +93,8 @@ class WriteMessagev2Action extends sfAction
 						$tuplesValues = $tupleService->getINTEREST_RECEIVED();
 						$profileDisplay =  $this->getProfileDisplayData($tuplesValues[$profileid]);
 					}
-					$responseArray = $this->getContactArray($messageDetailsArr,$request);
-					if($pagination)
+					$responseArray = $this->getContactArray($messageDetailsArr,$request,$pagination);
+					if($nextPaginationCall)
 						$responseArray['hasNext'] = true;
 					else
 						$responseArray['hasNext'] = false;
@@ -118,7 +119,7 @@ class WriteMessagev2Action extends sfAction
 	}
 
 	
-	private function getContactArray($messageDetailsArr,$request)
+	private function getContactArray($messageDetailsArr,$request,$pagination=false)
 	{
 			
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
@@ -141,16 +142,19 @@ class WriteMessagev2Action extends sfAction
 					$arr["messages"][$key]["mymessage"] = "false";
 					$arr["messages"][$key]["timeTxt"] =$timeTxtVal;
 				}
-				if($value["CHATID"])
-					$arr["CHATID"]=$value["ID"];
-				else
-					$arr["MSGID"]=$value["ID"];
+				if($pagination){
+					if($value["CHATID"])
+						$arr["CHATID"]=$value["ID"];
+					else
+						$arr["MSGID"]=$value["ID"];
+				}
 			}
-				
-			if(!$arr["CHATID"] && $request->getParameter("CHATID"))
-				$arr["CHATID"]=$request->getParameter("CHATID");
-			if(!$arr["MSGID"] && $request->getParameter("MSGID"))
-				$arr["MSGID"]=$request->getParameter("MSGID");	
+			if($pagination){
+				if(!$arr["CHATID"] && $request->getParameter("CHATID"))
+					$arr["CHATID"]=$request->getParameter("CHATID");
+				if(!$arr["MSGID"] && $request->getParameter("MSGID"))
+					$arr["MSGID"]=$request->getParameter("MSGID");	
+			}
 		}
 		else
 		{
