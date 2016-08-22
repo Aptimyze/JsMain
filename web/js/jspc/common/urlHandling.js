@@ -7,8 +7,7 @@ var myUrl = window.location.href;
 $.urlUpdateHistory = function(title,addMoreParams){
         var randomnumber=$.now();
         var value = myUrl.substring(myUrl.lastIndexOf('?'));
-        console.log(addMoreParams);
-            var param = '/search'+addMoreParams;
+        var param = '/search'+addMoreParams;
         var stateObj = {};
         history.replaceState(stateObj,title,param);
 }
