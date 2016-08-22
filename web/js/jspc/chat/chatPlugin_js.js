@@ -619,6 +619,7 @@ JsChat.prototype = {
         
         });
         */
+	ifChatListingIsCreated = 1;
     },
     //add photo in tuple div of listing
     _addListingPhoto: function (photoObj) {
