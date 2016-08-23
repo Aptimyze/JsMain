@@ -9,7 +9,8 @@
  */
 
 class LoggingEnums
-{
+{   
+    const MASTER_FLAG = true;
     const LOG_LEVEL = 2;
     const LOG_INFO = 2;
     const LOG_DEBUG = 1;
@@ -62,5 +63,4 @@ class LoggingEnums
     const SEO = 'seo';
     const MYJS = 'myjs';
     const HOMEPAGE = 'homepage';
-    const MASTER_FLAG = true;
 }
