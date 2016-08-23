@@ -771,7 +771,7 @@ JsChat.prototype = {
     _removeFromListing: function (param1, data) {
         //console.log("_removeFromListing",param1);
         //console.log(data);
-        data = data.filter(function(n){ return n != undefined }); 
+        //data = data.filter(function(n){ return n != undefined }); 
         //console.log("after filter");
         //console.log(data);
         //this._chatLoggerPlugin('remove element 11');
