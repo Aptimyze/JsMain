@@ -62,6 +62,7 @@ class JsConstants
 	public static $alertSymfonyRoot   = '/var/www/htmlrevamp/ser6/branches/milestoneConfig';
 	public static $userHome           = '/home/developer';
 	public static $alertServerEnable  = 1;
+	public static $stopOnPeakLoad     = 1;
         
         /* Vsp URL */
 	public static $vspMaleUrl           = 'http://maleapi.analytics.resdex.com:9000/ecpRecommendations_live';
@@ -169,7 +170,7 @@ class JsConstants
 	 public static $usePhotoDistributed = 0;
   public static $photoServerName='JSPIC1';
 	public static $photoServerShardingEnums = array("JSPIC1","JSPIC2","JSPIC3");
-
-	
 	public static $communicationRep = true;
+        public static $communicationServiceUrl = "http://192.168.120.70:8290";
+        public static $jsChatFlag  = '1';
 }

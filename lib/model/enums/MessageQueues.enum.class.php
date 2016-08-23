@@ -9,9 +9,13 @@ class MessageQueues
   CONST SMSQUEUE = "SmsGcmQueue"; //Queue for storing sms
   CONST CONTACTCACHEINITIATE = "ContactCacheInitiate"; //Queue for sending data to webservice to create cache
   CONST GCMQUEUE = "SmsGcmQueue"; //Queue for storing gcm. Currenly same queue is used for both SMS and GCM.
+  CONST CHATROSTERS = "chatRosters"; //Queue for users rosters for chat
+  CONST USERCREATION = "USER_CREATION"; //Queue for chat user creation
   CONST CONSUMER_COUNT_SINGLE = 1; //This is to ensure that only 1 consumer instance runs at a time.
   CONST UPDATE_SEEN_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
+  CONST PROFILE_CACHE_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST INVALIDATECACHE = "invalidateCache";
+  CONST CHAT_MESSAGE = "chatMessage";
   //per queue msg limit mapping
   public static $upperMessageLimitPerQueue = array("default"=>1000,"INSTANT_NOTIFICATION_QUEUE"=>10000);
   public static $queuesWithoutMsgCountLimit = array("SCHEDULED_NOTIFICATION_QUEUE1","SCHEDULED_NOTIFICATION_QUEUE2", "SCHEDULED_NOTIFICATION_QUEUE3", "SCHEDULED_NOTIFICATION_QUEUE4","SCHEDULED_NOTIFICATION_QUEUE5","SCHEDULED_NOTIFICATION_QUEUE6"); //queues not to be considered for msg upper limit alert
@@ -23,6 +27,7 @@ class MessageQueues
   CONST EXCLUSIVE = false;    // the queue can be accessed in other channels
   CONST AUTO_DELETE = false;  //the queue won't be deleted once the channel is closed.
   CONST EXCHANGE = "";        //for default(nameless) exchange.
+  CONST CHATEXCHANGE = "Profile"; //Chat Exchange
   CONST MANDATORY = true;     //If set,server will return an unroutable message with a Return method. If false, the server silently drops the message.
   CONST IMMEDIATE = false;    // If this set, the server will return an undeliverable message with a Return method. If false, the server will queue the message, but with no guarantee that it will ever be consumed.
   CONST MULTIPLE_TAG = true;  //If set,multiple messages can be rejected with a single method. If false, the delivery tag refers to a single message.
@@ -43,6 +48,7 @@ class MessageQueues
   CONST UPDATE_SEEN_QUEUE = "updateSeenQueue";
   CONST CRONDELETERETRIEVE_STARTCOMMAND = "symfony cron:cronConsumeDeleteRetrieveQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
   CONST UPDATESEEN_STARTCOMMAND = "symfony cron:cronConsumeUpdateSeenQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
+  CONST PROFILE_CACHE_STARTCOMMAND = "symfony ProfileCache:ConsumeQueue"; //Command to start profile cache queue consuming cron
   /*----------------JS notification(scheduled/instant) queues configuration details--------------------------*/
 
   public static $SCHEDULED_NOTIFICATION_QUEUE1 = "SCHEDULED_NOTIFICATION_QUEUE1"; //Queue for sending scheduled notification data from notification queue 1 to GCM
@@ -74,6 +80,8 @@ class MessageQueues
   public static $notificationArr = array("JUST_JOIN" => "JS_NOTIFICATION1", "PENDING_EOI" => "JS_NOTIFICATION2", "MEM_EXPIRE_A5" => "JS_NOTIFICATION3", "MEM_EXPIRE_A10" => "JS_NOTIFICATION3", "MEM_EXPIRE_A15" => "JS_NOTIFICATION3", "MEM_EXPIRE_B1" => "JS_NOTIFICATION3", "MEM_EXPIRE_B5" => "JS_NOTIFICATION3",  "AGENT_ONLINE_PROFILE"=>"JS_INSTANT_NOTIFICATION","AGENT_FP_PROFILE"=>"JS_INSTANT_NOTIFICATION", "PROFILE_VISITOR" => "JS_INSTANT_NOTIFICATION","EOI"=>"JS_INSTANT_NOTIFICATION","MESSAGE_RECEIVED"=>"JS_INSTANT_NOTIFICATION","EOI_REMINDER"=>"JS_INSTANT_NOTIFICATION","MATCHALERT"=>"JS_NOTIFICATION4","MEM_DISCOUNT"=>"JS_NOTIFICATION4","FILTERED_EOI"=>"JS_NOTIFICATION5","ATN"=>"JS_NOTIFICATION3","ETN"=>"JS_NOTIFICATION3","CONTACT_VIEWS"=>"JS_NOTIFICATION3","CONTACTS_VIEWED_BY"=>"JS_NOTIFICATION2","VD"=>"JS_NOTIFICATION2","MEM_DISCOUNT"=>"JS_NOTIFICATION6");
 
   /*----------------JS notification(scheduled/instant) queues configuration details-------------------------*/
+  const PROFILE_CACHE_Q_DELETE = "ProfileCacheDeleteQueue";
+  const PROCESS_PROFILE_CACHE_DELETE = "PROFILE_CACHE_DELETE";
 }
 
 ?>

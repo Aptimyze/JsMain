@@ -247,7 +247,11 @@ class Initiate extends ContactEvent{
         $this->contactHandler->getContactObj()->insertContact();
         $action = FTOStateUpdateReason::EOI_SENT;
         $this->contactHandler->getViewer()->getPROFILE_STATE()->updateFTOState($this->viewer, $action);
-
+        if(sfContext::getInstance()->getRequest()->getParameter('fromJSMS_MYJS')==1)
+        {
+            $this->viewerMemcacheObject->update("MATCHALERT_TOTAL",-1,$this->optionalFlag);
+            $this->viewerMemcacheObject->setMATCHALERT(0);
+        }
       }
                 $requestTimeOut = 300;
 		//curl for analytics team by Nitesh for Lavesh team
@@ -295,11 +299,22 @@ if ($this->contactHandler->getContactObj()->getFILTERED() != Contacts::FILTERED 
       }
       unset($producerObj);
     }
-    catch(Exception $e)
-    {
-      throw new jsException("Something went wrong while sending instant EOI notification-".$e);
+    catch (Exception $e) {
+	    throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
     }
 }
+	    try {
+		    //send instant JSPC/JSMS notification
+		    $producerObj = new Producer();
+		    if ($producerObj->getRabbitMQServerConnected()) {
+			    //Add for contact roster
+			    $chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'INITIATE', 'body' => array('sender' => array('profileid'=>$this->contactHandler->getViewer()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewer()->getPROFILEID()),'username'=>$this->contactHandler->getViewer()->getUSERNAME()), 'receiver' => array('profileid'=>$this->contactHandler->getViewed()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewed()->getPROFILEID()),"username"=>$this->contactHandler->getViewed()->getUSERNAME()),"filter"=>$this->contactHandler->getContactObj()->getFILTERED())), 'redeliveryCount' => 0);
+			    $producerObj->sendMessage($chatData);
+		    }
+		    unset($producerObj);
+	    } catch (Exception $e) {
+		    throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
+	    }
 
       if ($dateDiff <= 30 && !$isFiltered && $this->contactHandler->getPageSource()!='AP') { // Instant mailer
         $this->sendMail();
@@ -383,6 +398,7 @@ if ($this->contactHandler->getContactObj()->getFILTERED() != Contacts::FILTERED 
       else if($this->stype=='VO' || $this->stype=='VN')
         $this->stype='V';
     }
+    
     $searchContactFlowTrackingObj->insert(
         $this->viewer->getPROFILEID(),
         $this->stype,

@@ -1093,7 +1093,7 @@ return $result;
 	{
 		try 
 		{
-				if(!$sender || !$receiver || !$isMsg || !$obscene || !$idObscene ||!$type)
+				if(!$sender || !$receiver || !$isMsg || !$obscene ||!$type)
 				{
 					throw new jsException("","mandatory params are not specified in function insertIntoMessageLog of newjs_MESSAGE_LOG.class.php");
 				}
@@ -1322,7 +1322,7 @@ return $result;
 				else
 				{
 					if($type)
-						$typeStr=" TYPE=:TYPE";
+						$typeStr=" AND TYPE=:TYPE";
 					else
 						$typeStr=" ";
 					$sql="SELECT RECEIVER,DATE,IP from newjs.MESSAGE_LOG where ".$senderRecevierStr."=:PROFILEID ".$typeStr." order by ID desc limit 20";

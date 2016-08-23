@@ -9,6 +9,7 @@ class PICTURE_ALBUM_VIEW_LOGGING extends TABLE
 
 	public function insertLogEntry($loggedInProfileid,$profileid,$date,$channel)
 	{
+		return true;
 		try
 		{
 			$sql = "REPLACE INTO PICTURE.ALBUM_VIEW_LOGGING (VIEWER_ID,VIEWED_ID,DATETIME,CHANNEL) VALUES (:VIEWER_ID,:VIEWED_ID,:DATETIME,:CHANNEL)";
