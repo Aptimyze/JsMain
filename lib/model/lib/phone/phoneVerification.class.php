@@ -205,7 +205,7 @@ public function trackingAfterVerification($noOfTimesVerified) {
 			}
 
 
-			if (JsCommon::showDuplicateNumberConsent($profileid))
+			if ($this->phoneType=='M' && JsCommon::showDuplicateNumberConsent($profileid))
 			{
 			
 			$duplicateObj=new newjs_DUPLICATE_NUMBER_CONSENT();

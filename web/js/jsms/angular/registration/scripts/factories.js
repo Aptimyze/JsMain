@@ -1285,6 +1285,7 @@
             {
                 fields[index].value =email;
                 fields[index].isAutoCorrected = "true";
+                fields[index].userDecision=fields[index].value;
             }
             
         	return;

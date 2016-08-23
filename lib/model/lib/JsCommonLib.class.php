@@ -93,7 +93,7 @@ public static function insertConsentMessageFlag($profileid) {
                 if ($primaryNum)
                 {
 					$isd=$loggedInProfileObj->getISD();
-                	$jprofileObj=new JPROFILE("newjs_slave");
+                	$jprofileObj=new JPROFILE();
                 	$resultArray=$jprofileObj->checkPhone(array($primaryNum),$isd);
                 	$selfProfileId=$loggedInProfileObj->getPROFILEID();
                 	
