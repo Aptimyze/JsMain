@@ -1053,6 +1053,7 @@ $(document).ready(function () {
         });
         
         objJsChat.onEnterToChatPreClick = function () {
+	    removeLocalStorageForNonChatBoxProfiles();
             //objJsChat._loginStatus = 'N';
             
             var chatLoggedIn = readCookie('chatAuth');

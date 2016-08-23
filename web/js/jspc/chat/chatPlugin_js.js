@@ -639,8 +639,10 @@ JsChat.prototype = {
     _removeHiddenNode: function(userId){
         var curElem = this;
         $.each(curElem._rosterGroups,function(key,groupId){
-            if($(".chatlist li[id='" + userId + "_" + groupId + "']").length != 0){
-                $('#'+userId+'_'+groupId).hasClass('js-nonRosterNode').remove();
+            if($('#'+userId+"_"+groupId).length!=0){
+		var className = $('#'+userId+"_"+groupId).attr('class');
+		if(className.indexOf('js-nonRosterNode')!='-1')
+			$('#'+userId+"_"+groupId).remove();
             }
         }); 
     },
