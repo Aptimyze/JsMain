@@ -122,7 +122,7 @@ class viewSimilarProfileAction extends sfActions
 		else
 		{
 			$this->Profile=new Profile("newjs_masterRep");
-			$this->Profile->getDetail($contactedProfileId,"PROFILEID");
+			$this->Profile->getDetail($contactedProfileId,"PROFILEID","*");
 			if($this->Profile->getUSERNAME()!=$contactedUsername)
 			{
 				ValidationHandler::getValidationHandler("","contact Id in view_similar_profile page is not correct as there is a mismatch in username and profile username:".$contact."not equals".$contactedUsername,"Y");
