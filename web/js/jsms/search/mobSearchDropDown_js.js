@@ -539,7 +539,7 @@
 							$('li#searchform_51').find("i.srfrm_checked").removeClass("srfrm_checked").addClass("srfrm_circle");
 						}
 						
-					}
+					} 
 					if(this.type=="location_cities")
 					{
                                              $(this.ulOption).children('li').each(function(i, obj) {
