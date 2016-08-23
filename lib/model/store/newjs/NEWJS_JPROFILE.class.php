@@ -323,7 +323,7 @@ class NEWJS_JPROFILE extends TABLE
                 foreach ($numberArray as $k => $num) {
                     if ($k != 0)
                         $valueArrayM['PHONE_MOB'] .= ", ";
-                    $valueArrayM['PHONE_MOB'] .= "'" . $num . "', '0" . $num . "', '" . $isd . $num . "', '+" . $isd . $num . "', '0" . $isd . $num . "'";
+                    $valueArrayM['PHONE_MOB'] .= "'" . $num . "'";
                 }
             }
             if ($valueArrayM) {
