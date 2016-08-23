@@ -115,15 +115,15 @@ function openNewJSChat(profilechecksum,detailsArr){
             nodeArr=[];
         nodeArr[detailsArr[1]] = data;
 
-    	localStorage.setItem('jsNoRosterChat_'+detailsArr[1],JSON.stringify(data));
-    	console.log(JSON.parse(localStorage.getItem('chat_'+detailsArr[1])));
-
         //create hidden element in chat listing
-        objJsChat.createHiddenListNode(nodeArr);
-        //write in localstorage
-        console.log("opening chat box");
-        //open chat box
-        objJsChat._chatPanelsBox(detailsArr[1],"online",jid,profilechecksum, groupid);
+        var added = objJsChat.createHiddenListNode(nodeArr);
+        console.log("added......",added);
+        if(added == true){
+            //write in localstorage
+        	localStorage.setItem('jsNoRosterChat_'+detailsArr[1],JSON.stringify(data));
+            //open chat box
+            objJsChat._chatPanelsBox(detailsArr[1],"online",jid,profilechecksum, groupid);
+        }
     } 
 }
 

@@ -403,6 +403,7 @@ JsChat.prototype = {
     
     createHiddenListNode:function(data){
         console.log("hidden",data);
+        var addedFlag = false;
         for (var key in data) {
             if (typeof data[key]["rosterDetails"]["jid"] != "undefined") {
                 var runID = data[key]["rosterDetails"]["jid"],
@@ -436,6 +437,7 @@ JsChat.prototype = {
                             if (status == "online") {
                                 if ($('#' + runID + "_" + val).length == 0) {
                                     $('div.' + val + ' ul.' + status).append(List);
+                                    addedFlag = true;
                                 }
                             }
                         }
@@ -443,34 +445,7 @@ JsChat.prototype = {
                 }
             }
         }
-        /*var newTab = false;
-        if($(".tabUId").length == 0){
-            //console.log("does not exsist");
-            $("body").append("<input type='hidden' class='tabUId' id='tab_"+new Date().getTime()+"'>");
-            elem._updateChatStructure("new");
-            newTab = true;
-        }
-
-        if(localStorage.getItem("lastUId")) {
-            if($(".tabUId").attr("id") != localStorage.getItem("lastUId") && newTab ==  false){
-                elem._updateChatStructure("exsisting");
-            }
-        } else {
-            localStorage.setItem("lastUId",$(".tabUId").attr("id"));
-        }
-        
-        
-        $(window).focus(function() {
-            //console.log("tab changed");
-            if(localStorage.getItem("lastUId")) {
-                if($(".tabUId").attr("id") != localStorage.getItem("lastUId")){
-                    elem._updateChatStructure("exsisting");
-                }
-            } else {
-                localStorage.setItem("lastUId",$(".tabUId").attr("id"));
-            }       
-        });*/
-        
+        return addedFlag;
     },
 
     addListingInit: function (data,operation) {
