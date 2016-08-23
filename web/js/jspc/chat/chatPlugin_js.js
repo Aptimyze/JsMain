@@ -336,7 +336,7 @@ JsChat.prototype = {
             if (obj["tab1"]["groups"][i]["show_group_name"] == false) TabsOpt += " disp-none";
 
 	    var jsNonRosterGroup = '';
-            if (obj["tab1"]["groups"][i]["show_group_name"] == false)
+            if (obj["tab1"]["groups"][i]["nonRosterGroup"] == true)
 	    	jsNonRosterGroup += " jsNonRosterGroup ";
 
             TabsOpt += "\"><p class=\"nchatt1 fontreg pl15\">" + obj["tab1"]["groups"][i]["group_name"] + "</p></div>";
