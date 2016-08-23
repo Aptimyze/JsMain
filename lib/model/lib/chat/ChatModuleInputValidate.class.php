@@ -19,11 +19,25 @@ class ChatModuleInputValidate extends ValidationHandler
 	*/
 	public function validatePushChat ($request)
 	{
-		if($request->getParameter("communicationType") && $request->getParameter("message"))
-			$this->response = ResponseHandlerConfig::$SUCCESS;
+		$ip=FetchClientIP();
+		if(strstr($ip, ","))    
+		{                       
+			$ip_new = explode(",",$ip);
+			$ip = $ip_new[1];
+		}
+		$validIp=array("10.10.18.61","10.10.18.62","10.10.18.63","10.10.18.64","10.10.18.65","10.10.18.67","10.10.18.75");
+		if(in_array($ip,$validIp))
+			$whitelistedIp=true;
+		else
+			$whitelistedIp=false;
+			
+		if($request->getParameter("communicationType") && $request->getParameter("message") && $whitelistedIp){
+				$this->response = ResponseHandlerConfig::$SUCCESS;
+		}
 		else
 		{
-			$errorString="--RECEIVER--".$request->getParameter("profilechecksum")."--TYPE--".$request->getParameter("type")."--TYPE--".$request->getParameter("message");
+			
+			$errorString="--RECEIVER--".$request->getParameter("profilechecksum")."--communicationType--".$request->getParameter("communicationType")."--MSG--".$request->getParameter("message")."--IP--".$ip;
 			$errorString    = "Chat Input Validation Failed:" . $errorString;
 			$this->response = ResponseHandlerConfig::$POST_PARAM_INVALID;
 			ValidationHandler::getValidationHandler("", $errorString);
