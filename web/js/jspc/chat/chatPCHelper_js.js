@@ -116,7 +116,7 @@ function openNewJSChat(profilechecksum,detailsArr){
         nodeArr[detailsArr[1]] = data;
 
         var alreadyExists = objJsChat.checkForNodePresence(detailsArr[1]);
-          console.log("added......",alreadyExists);
+        console.log("added......",alreadyExists);
         if(alreadyExists == false){
             //create hidden element in chat listing
             objJsChat.createHiddenListNode(nodeArr);
@@ -147,7 +147,7 @@ function removeLocalStorageForNonChatBoxProfiles(id)
 {
 	if(id)
 	{
-	        localStorage.removeItem('jsNoRosterChat_'+id);
+	    localStorage.removeItem('jsNoRosterChat_'+id);
 	}
 	else
 	{
@@ -155,7 +155,7 @@ function removeLocalStorageForNonChatBoxProfiles(id)
 			var key = localStorage.key(i);
 			if(key && key.indexOf('jsNoRosterChat_')!='-1')
 			{
-	        		localStorage.removeItem(key);
+	        	localStorage.removeItem(key);
 			}
 		}
 	}

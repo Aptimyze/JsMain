@@ -623,6 +623,15 @@ JsChat.prototype = {
             });
         }
     },
+    _removeHiddenNode: function(userId){
+        var curElem = this;
+        $.each(curElem._rosterGroups,function(key,groupId){
+            if($(".chatlist li[id='" + userId + "_" + groupId + "']").length != 0){
+                $('.js-nonRosterNode #'+userId+'_'+groupId).remove();
+            }
+        }); 
+    },
+
     //place contact in appropriate position in listing
     _placeContact: function (operation,key, contactID, groupID, status, contactHTML) {
         var done=false,elem=this;
@@ -633,7 +642,7 @@ JsChat.prototype = {
                 //console.log("adding1-"+groupID+"-"+contactID+"-"+totalNodes);
                 //this._chatLoggerPlugin("ankita_adding" + contactID + " in groupID");
                 //this._chatLoggerPlugin(contactHTML);
-                $('#'+contactID+'_'+groupID+' .js-nonRosterNode').remove();
+                elem._removeHiddenNode(contactID);
                 $('div.' + groupID + ' ul.' + status).prepend(contactHTML);
                 done = true;
             }
