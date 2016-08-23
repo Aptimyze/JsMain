@@ -435,20 +435,21 @@ public function fetchProfiles($processObj)
 				$processObj->setStartDate($screenedTimeStart);
 
                                 if($subMethod=='FIELD_SALES_VISIT'){
-                                        $widgetLogObj =new incentive_FIELD_SALES_WIDGET('newjs_slave');
+                                        $widgetLogObj =new incentive_FIELD_SALES_WIDGET('newjs_masterRep');
         	                        $widgetTimeEnd =$widgetLogObj->getMaxDate();
-					$widgetTimeEndSet =date('Y-m-d H:i:s', strtotime('-4 days',strtotime($widgetTimeEnd)));
+					$widgetTimeEndSet =date('Y-m-d H:i:s', strtotime('-6 hours',strtotime($widgetTimeEnd)));
 	                                $processObj->setEndDate($widgetTimeEndSet);
                 	                $profiles =$widgetLogObj->getLastHourScheduledProfiles($screenedTimeStart,$widgetTimeEnd);
                                 }
                                 else{
-                                        $screeningLogObj =new jsadmin_SCREENING_LOG('newjs_slave');
+                                        $screeningLogObj =new jsadmin_SCREENING_LOG('newjs_masterRep');
 					$screenedTimeEnd =$screeningLogObj->getScreenedMaxDate();
-					$screenedTimeEndSet =date('Y-m-d H:i:s', strtotime('-4 days',strtotime($screenedTimeEnd)));
+					$screenedTimeEndSet =date('Y-m-d H:i:s', strtotime('-6 hours',strtotime($screenedTimeEnd)));
 					$processObj->setEndDate($screenedTimeEndSet);
 					$profiles =$screeningLogObj->getLastHourScreenedProfiles($screenedTimeStart,$screenedTimeEnd);
 				}
 				if(count($profiles)>0){
+					/*
 					if($subMethod != 'FIELD_SALES_VISIT'){
 						$phVerifiedProfiles =array();
 						$phVerifiedProfiles =$processObj->getPhoneVerifiedProfiles();
@@ -456,7 +457,7 @@ public function fetchProfiles($processObj)
 							$profiles =array_intersect($profiles, $phVerifiedProfiles);
 							$profiles =array_values($profiles);
 						}
-					}
+					}*/
 					// get profiles from field sales allocation log
 					$fieldSalesAllocLog =new incentive_FIELD_SALES_LOG();
 					$preDate 	=date("Y-m-d",time()-9*24*60*60);
@@ -657,7 +658,7 @@ public function filterProfilesForAllocation($profiles,$method,$processObj='')
 		$excludeMtongue 	=crmParams::$fieldSalesIgnoreCommunity;
 		$pincodeMappedCity	=crmParams::$fieldSalesPincodeMappedCity;
 		$fieldSalesCity         =$this->fetchFieldSalesCity(); 
-		$screeningObj		=new jsadmin_SCREENING_LOG('newjs_slave');
+		$screeningObj		=new jsadmin_SCREENING_LOG('newjs_masterRep');
 		$screenedTimeHandled 	=$processObj->getStartDate();
 		$subMethod		=$processObj->getSubMethod();	  
 		$pincodeList		=$this->getPincodeList();
@@ -1945,7 +1946,7 @@ public function applyGenericFilters($profileArr, $method='',$subMethod='')
         }
         // Invalid phone check
         if(in_array($method, $methodForJprofileFilter) && count($profileArr)>0){
-		$jprofileObj =new JPROFILE('newjs_slave');
+		$jprofileObj =new JPROFILE('newjs_masterRep');
 		$fields	='PROFILEID,ISD,PHONE_FLAG,ACTIVATED,GENDER,AGE,ENTRY_DT,MTONGUE,SUBSCRIPTION,CITY_RES,PINCODE,MOB_STATUS,LANDL_STATUS';
 		$profileStr =implode(",", $profileArr);	
 		$valueArray['PROFILEID'] =$profileStr;
@@ -2518,8 +2519,9 @@ public function fetchPincodesOfCities($cities)
 	}
         public function createPhoneVerifiedPool($processObj)
 	{
-		$dateTime =date("Y-m-d H:i:s",time()-10*24*60*60);
-                $phoneVerifiedObj =new PHONE_VERIFIED_LOG('newjs_slave');
+		//$dateTime =date("Y-m-d H:i:s",time()-10*24*60*60);
+		$dateTime =date("Y-m-d H:i:s",time()-48*60*60);
+                $phoneVerifiedObj =new PHONE_VERIFIED_LOG('newjs_masterRep');
                 $verifiedProfiles =$phoneVerifiedObj->fetchVerifiedProfiles($dateTime);
 		$processObj->setPhoneVerifiedProfiles($verifiedProfiles);
         }

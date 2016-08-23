@@ -470,6 +470,10 @@ var errorMsg = "Something went wrong!! Please try again later";
 					startTouchEvents();
 					return;
                                 }
+                                if(this.type=="native_state_jsms" && (value=="undefined" ||value==undefined||value=="0"))
+                                {
+                                        this.dependant='';
+                                }
 			if(this.whenHide=="multiple")
 			{
 				

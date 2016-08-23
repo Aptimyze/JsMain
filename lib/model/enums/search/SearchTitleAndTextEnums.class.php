@@ -16,7 +16,7 @@ class SearchTitleAndTextEnums
         static private $HEADING_MAPPING = array();	
         static private $SUBHEADING_MAPPING = array();
         static private $HEADING_0RESULT_MAPPING = array();
-        static private $MESSAGE_0RESULT_MAPPING = array();
+        static public $MESSAGE_0RESULT_MAPPING = array();
         static private $DEFAULT_PIC_SIZE = array();
         static private $CUSTOM_SUBHEADING_MAPPING = array();
         const JUST_JOIN_CUSTOM_MESSAGE_COUNT = 5;
@@ -48,12 +48,13 @@ class SearchTitleAndTextEnums
                 self::$SEARCH_CRITERIA_TEXT_MAPPING["V1"]["PC"]["contactViewAttempts"] = "People who contacted your profile";
                 
                 self::$HEADING_MAPPING["V1"]["PC"]["DEFAULT"] = "<formatNumber_format> Match<es>";
+				self::$HEADING_MAPPING["V1"]["PC"]["kundlialerts"] = "Kundli Matches";
 		/*
                 self::$HEADING_MAPPING["V1"]["PC"]["reverseDpp"] = "<formatNumber_format>  Matches";
                 self::$HEADING_MAPPING["V1"]["PC"]["partnermatches"] = "<formatNumber_format> Desired Partner Matches";
                 self::$HEADING_MAPPING["V1"]["PC"]["twowaymatch"] = "<formatNumber_format> Mutual Match<es>";
                 self::$HEADING_MAPPING["V1"]["PC"]["justJoinedMatches"] = "<formatNumber_format> Just Joined Matches";
-                self::$HEADING_MAPPING["V1"]["PC"]["kundlialerts"] = "<formatNumber_format> Kundli Alerts";
+                
                 self::$HEADING_MAPPING["V1"]["PC"]["matchalerts"] = "<formatNumber_format> Match Alerts";
 		*/
                 
@@ -79,7 +80,7 @@ class SearchTitleAndTextEnums
                 self::$SUBHEADING_MAPPING["V1"]["PC"]["verifiedMatches"] = 'Shown below are members<a href="/static/agentinfo"><span class="disp_ip color5 pause-rel"> verified by a personal visit</span></a> and match your Desired Partner Profile';
                 self::$SUBHEADING_MAPPING["V1"]["PC"]["twowaymatch"] = "Shown below are people where both of you match each other's criteria";
                 self::$SUBHEADING_MAPPING["V1"]["PC"]["justJoinedMatches"] = "Shown below are your desired partner matches who joined in the last week";
-                self::$SUBHEADING_MAPPING["V1"]["PC"]["kundlialerts"] = "Here you can see all the 'Kundli Matches' which were sent to you on Email in the last 45 days";
+                self::$SUBHEADING_MAPPING["V1"]["PC"]["kundlialerts"] = "Shown here are matches with a compatible guna score based on horoscope matching";
                 self::$SUBHEADING_MAPPING["V1"]["PC"]["matchalerts"]["trend"] = array(0=>"Matches are based on history of your interests & acceptances.",1=>"Matches are based strictly on your Desired Partner Preferences.");
                 self::$SUBHEADING_MAPPING["V1"]["PC"]["matchalerts"]["dpp"] = array(0=>"Matches are based strictly on your Desired Partner Preferences.",1=>"Matches are based on history of your interests & acceptances.");
                 
@@ -92,7 +93,7 @@ class SearchTitleAndTextEnums
                 self::$HEADING_0RESULT_MAPPING["V1"]["PC"]["partnermatches"] = "0 Desired Partner Matches";
                 self::$HEADING_0RESULT_MAPPING["V1"]["PC"]["twowaymatch"] = "0 Mutual Matches";
                 self::$HEADING_0RESULT_MAPPING["V1"]["PC"]["justJoinedMatches"] = "0 Just Joined Matches";
-                self::$HEADING_0RESULT_MAPPING["V1"]["PC"]["kundlialerts"] = "0 Kundli Alerts";
+                self::$HEADING_0RESULT_MAPPING["V1"]["PC"]["kundlialerts"] = "Kundli Matches";
                 self::$HEADING_0RESULT_MAPPING["V1"]["PC"]["matchalerts"] = "0 Match Alerts";
                 self::$HEADING_0RESULT_MAPPING["V1"]["APP"]["DEFAULT"] = "My Matches";
                 self::$HEADING_0RESULT_MAPPING["V1"]["APP"]["reverseDpp"] = "No Matches";
@@ -114,7 +115,10 @@ class SearchTitleAndTextEnums
                 self::$MESSAGE_0RESULT_MAPPING["V1"]["PC"]["contactViewAttempts"] = "People who attempted to view your contact will appear here.";
 		self::$MESSAGE_0RESULT_MAPPING["V1"]["PC"]["twowaymatch"] = "Profiles where both of you match each other's criteria will appear here<br>Please relax your Desired Partner Profile to see results";
 		self::$MESSAGE_0RESULT_MAPPING["V1"]["PC"]["justJoinedMatches"] = "People matching your desired partner profile and have joined in last one week will appear here<br>Please relax your Desired Partner Profile to see results";
-		self::$MESSAGE_0RESULT_MAPPING["V1"]["PC"]["kundlialerts"] = "Matches who have guna score of at least 18 will appear here<br>Please create a horoscope using Jeevansathi to start receiving Kundli Matches";
+		self::$MESSAGE_0RESULT_MAPPING["V1"]["PC"]["kundlialerts"] = array(
+																			"withoutHoro"=>"Please <a href='/profile/viewprofile.php?ownview=1&EditWhatNew=uploadhoroscope'><span class='color5'>create your horoscope</span></a> to see your Kundli matches",
+																			"withHoro"=>"Kindly relax the criteria present in your Desired Partner Profile",
+																		);
 		self::$MESSAGE_0RESULT_MAPPING["V1"]["PC"]["matchalerts"] = "We are finding the best recommendations for you. It may take a while.";
                 self::$MESSAGE_0RESULT_MAPPING["V1"]["APP"]["DEFAULT"] = "No Matches Found";
                 self::$MESSAGE_0RESULT_MAPPING["V1"]["APP"]["partnermatches"] = "There are no profiles matching your preference. Please broaden your 'Desired Partner' Preference to see profiles here.";
@@ -232,6 +236,11 @@ class SearchTitleAndTextEnums
 		}
 		else
 		{
+			if($params["SearchType"] == 'kundlialerts')
+			{
+				$horoscope = $params["horoscope"];
+				return self::$MESSAGE_0RESULT_MAPPING["V1"]["PC"]["kundlialerts"][$horoscope];
+			}
 			return self::getValue("MESSAGE_0RESULT_MAPPING",$params);
 		}
 	}
@@ -254,7 +263,7 @@ class SearchTitleAndTextEnums
 		$version = $params["Version"];
 		$channel = $params["Channel"];
 		$search = $params["SearchType"];
-		
+
 		if (!array_key_exists($version,$array))
 		{
 			$version = "V1";

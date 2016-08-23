@@ -37,76 +37,47 @@ class chatActions extends sfActions
 		if ($loginData) {
 
 			$username = $loginData['PROFILEID'];
+			if($username && $username!= "0" && is_null($username)== false && empty($username)== false) {
+				//$uname = $loginData['USERNAME'];
 
-			//$uname = $loginData['USERNAME'];
-			$pass = EncryptPassword::generatePassword($username);
-			//$pass = EncryptPassword::generatePassword("test".$username);
-			//$pass = "test".$username;
+				$pass = md5($username);
+				//$pass = EncryptPassword::generatePassword("test".$username);
+				//$pass = "test".$username;
 
-			$url = JsConstants::$openfireConfig['HOST'] . ":" . JsConstants::$openfireConfig['PORT'] . "/plugins/restapi/v1/users/" . $username;
-			//$url = "http://localhost:9090/plugins/restapi/v1/users/".$username;
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
-			curl_setopt($ch, CURLOPT_TIMEOUT, 4);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
-			$headers = array();
-			$headers[] = 'Authorization: ' . JsConstants::$openfireRestAPIKey;
-			$headers[] = 'Accept: application/json';
-
-			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-			$curlResult = curl_exec($ch);
-			curl_close($ch);
-			$result = json_decode($curlResult, true);
-			if ($result['username']) {
-				//User exists
-				$response['userStatus'] = "User exists";
-				$apiResponseHandlerObj->setHttpArray(ChatEnum::$userExists);
-			} else {
-				//create user
-				$response['userStatus'] = "New user created";
-				$url = JsConstants::$openfireConfig['HOST'] . ":" . JsConstants::$openfireConfig['PORT'] . "/plugins/restapi/v1/users/";
-				//$url = "http://localhost:9090/plugins/restapi/v1/users/";
-				$profileImporterObj = new Chat();
-				$profileImporterObj->addNewProfile($username);
-				$data = array("username" => $username, "password" => $pass);
-				$jsonData = json_encode($data);
-
+				$url = JsConstants::$openfireConfig['HOST'] . ":" . JsConstants::$openfireConfig['PORT'] . "/plugins/restapi/v1/users/" . $username;
+				//$url = "http://localhost:9090/plugins/restapi/v1/users/".$username;
 				$ch = curl_init();
 				curl_setopt($ch, CURLOPT_URL, $url);
 				curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
 				curl_setopt($ch, CURLOPT_TIMEOUT, 4);
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-				curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
 
 				$headers = array();
 				$headers[] = 'Authorization: ' . JsConstants::$openfireRestAPIKey;
 				$headers[] = 'Accept: application/json';
-				$headers[] = 'Content-Type: application/json';
 
 				curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
 				$curlResult = curl_exec($ch);
-
-				if (curl_getinfo($ch, CURLINFO_HTTP_CODE) == '201') {
-					$response['userStatus'] = "New user created";
-					$apiResponseHandlerObj->setHttpArray(ChatEnum::$newUserCreated);
-				} elseif (curl_getinfo($ch, CURLINFO_HTTP_CODE) == '409') {
-					$response['userStatus'] = "User Exists";
-					$apiResponseHandlerObj->setHttpArray(ChatEnum::$userCreationError);
-				} else {
-					$result = json_decode($curlResult, true);
-					$reponse['exception'] = $result['exception'];
-					$apiResponseHandlerObj->setHttpArray(ChatEnum::$error);
-				}
 				curl_close($ch);
+				$result = json_decode($curlResult, true);
+				if ($result['username'] && !is_array($result["properties"])) {
+					//User exists
+					$response['userStatus'] = "User exists";
+					$response['hash'] = $pass;
+					$apiResponseHandlerObj->setHttpArray(ChatEnum::$userExists);
+				} else {
+					//create user
+					$response['userStatus'] = "Added";
+					$profileImporterObj = new Chat();
+					$profileImporterObj->addNewProfile($username);
+					$apiResponseHandlerObj->setHttpArray(ChatEnum::$addedToQueue);
+				}
 			}
-			//Encrypt Password
-			$hash = EncryptPassword::cryptoJsAesEncrypt("chat", $pass);
-			$response['hash'] = $hash;
-			//$response['hash'] = $pass;
+			else{
+				$response = "Logged Out Profile";
+				$apiResponseHandlerObj->setHttpArray(ChatEnum::$invalidParameter);
+			}	
 		} else {
 			$response = "Logged Out Profile";
 			$apiResponseHandlerObj->setHttpArray(ChatEnum::$loggedOutProfile);
@@ -198,8 +169,13 @@ class chatActions extends sfActions
 		$profileid = $request->getParameter("profileid");
 		$type = $request->getParameter("type");
 		$limit = $request->getParameter("limit");
+		$profileObj = new Profile("",$profileid);
+		$profileObj->getDetail($profileid, "PROFILEID", "USERNAME");
 		$getRosterDataObj = new GetRosterData($profileid);
 		$getData["profiles"] = $getRosterDataObj->getRosterDataByType($type, $limit);
+		$getData["count"] = count($getData["profiles"]);
+		$getData["USERNAME"] = $profileObj->getUSERNAME();
+		$getData["PROFILECHECKSUM"] = JsCommon::createChecksumForProfile($profileid);
 		$apiResponseHandlerObj = ApiResponseHandler::getInstance();
 		$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 
@@ -222,7 +198,8 @@ class chatActions extends sfActions
 
 			//Photo logic
 			$pidArr["PROFILEID"] = $profileid;
-			$photoType = 'MainPicUrl';
+			//$photoType = 'MainPicUrl';
+            $photoType = 'ProfilePic120Url';
 			$profileObj = LoggedInProfile::getInstance('newjs_master', $loginData["PROFILEID"]);
 			$multipleProfileObj = new ProfileArray();
 			$profileDetails = $multipleProfileObj->getResultsBasedOnJprofileFields($pidArr);
@@ -232,7 +209,7 @@ class chatActions extends sfActions
 			$photoObj = $photosArr[$profileid];
 			if ($photoObj) {
 				eval('$temp =$photoObj->get' . $photoType . '();');
-                if(! (strstr($temp, '_vis_') || strstr($temp, 'photocomming')) )
+                if(! (strstr($temp, '_vis_') || strstr($temp, 'photocomming') || strstr($temp, 'filtered')) )
                     $photo = $temp;
 				unset($temp);
 			}
@@ -250,7 +227,8 @@ class chatActions extends sfActions
 				"education" => $profile->getDecoratedEducation(),
 				"occupation" => $profile->getDecoratedOccupation(),
 				"income" => $profile->getDecoratedIncomeLevel(),
-				"city" => $profile->getDecoratedCity(),
+				//"city" => $profile->getDecoratedCity(),
+                                "location" => ($profile->getDecoratedCity() ?: $profile->getDecoratedCountry()),
 				"photo" => $photo
 			);
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
@@ -393,6 +371,30 @@ class chatActions extends sfActions
 		die;
 	}
 
+    /*
+     * Get user's name to be shown after login
+     */
+    public function executeSelfNameV1(sfwebrequest $request){
+        $apiResponseHandlerObj = ApiResponseHandler::getInstance();
+		$loginData = $request->getAttribute("loginData");
+		if ($loginData) {
+            $profileid = $loginData['PROFILEID'];
+            $nameOfUserOb=new incentive_NAME_OF_USER();
+            $nameOfUser=$nameOfUserOb->getName($profileid);
+            if(!$nameOfUser){
+                $nameOfUser = $loginData['USERNAME'];
+            }
+            $response["name"] = $nameOfUser;
+        }
+        else{
+            $response = "Logged Out Profile";
+			$apiResponseHandlerObj->setHttpArray(ChatEnum::$loggedOutProfile);
+        }
+        $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+		$apiResponseHandlerObj->setResponseBody($response);
+		$apiResponseHandlerObj->generateResponse();
+        die;
+    }
 }
 
 ?>

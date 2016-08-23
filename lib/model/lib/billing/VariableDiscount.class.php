@@ -370,6 +370,7 @@ class VariableDiscount
         $profileArr =array();
         $vdDurationArr =uploadVD::$vdDurationArr;
         $variable ='disc';
+	$todayDate -date("Y-m-d");
 
         $count = $VDTempObj->getCountOfRecords($entryDate);
         for($i=0;$i<$count;$i+=$limit)
@@ -380,6 +381,10 @@ class VariableDiscount
             {
                 $pid =$details['PROFILEID'];
                 if($pid){
+
+		    $startDate  =$details['SDATE'];	
+		    if(strtotime($todayDate) != strtotime($startDate))
+			continue;		
 		    $isPaid =$this->checkPaidProfile($pid);	
 		    if($isPaid)
 			continue; 	
@@ -559,6 +564,170 @@ class VariableDiscount
         }
         return $discountNewArr;
     }
+
+        // pre-process Mini-VD Data
+        public function preProcessMiniVdData()
+        {
+                $vdClusterObj   =new billing_VD_CLUSTER();
+                $clusterDetails =$vdClusterObj->getClusterDetails();
+                $fields         ='PROFILEID,GENDER,AGE,SUBSCRIPTION';
+                $jprofileData   =array();
+		$profileArray	=array();
+
+                if(is_array($clusterDetails)){
+                foreach($clusterDetails as $clusterName=>$fieldArr){
+			//loop start
+			foreach($fieldArr as $key=>$data){
+				$val1 =$data['VALUE1'];
+				$val2 =$data['VALUE2'];
+
+				if($key=='LAST_LOGIN_DT'){
+					$greaterArray[$key] =$val1;
+				}
+				if($key=='ACTIVATED'){
+					 $valueArray[$key]="'Y'";
+					 $valueArray['MOB_STATUS']="'Y'";
+				}
+				if($key=='ENTRY_DT'){
+					$greaterArray[$key] =$val1;
+					$lessArray[$key]=$val2." 23:59:59";
+				}
+				if($key=='MTONGUE')
+					$valueArray[$key]=$val1;
+				if($key=='NEVER_PAID')
+					$neverPaid=1;
+				if($key=='EVER_PAID')
+					$everPaid=1;
+				if($key=='ANALYTIC_SCORE'){
+					$analyticScore=1;
+					$scoreMin =$val1;
+					$scoreMax =$val2;
+				}
+				if($key=='EXPIRY_DT'){
+					$expiryDt =1;
+					$expiryDt1 =$val1;
+					$expiryDt2 =$val2." 23:59:59";	
+				}
+				if($key=='VD_OFFER_DATE'){
+					$startDate      =$val1;
+					$endDate        =$val2;
+				}
+				if($key=='DISCOUNT'){
+					$discount       =$val1;
+				}
+			}
+			// loop end
+
+			// jprofile data
+			$jprofileObj =new JPROFILE('newjs_local111');
+			$mainAdminPoolObj= new incentive_MAIN_ADMIN_POOL('newjs_local111');	
+			$jprofileData =$jprofileObj->getArray($valueArray,'',$greaterArray,$fields,$lessArray);
+			//print_r($jprofileData);		
+			foreach($jprofileData as $key=>$val){
+				$profileid      =$val['PROFILEID'];
+				$gender         =$val['GENDER'];
+				$age            =$val['AGE'];
+				$subscription   =$val['SUBSCRIPTION'];
+
+				if((strstr($subscription,"F")!="")||(strstr($subscription,"D")!=""))
+					continue;
+				if(($gender=='M' && $age<23) || ($gender=='F' && $age<20))
+					continue;
+				if($analyticScore){
+					$eligible =$mainAdminPoolObj->getEligibileProfile($profileid,$scoreMin,$scoreMax);
+					if(!$eligible)
+						continue;
+				}
+				$isRenewal =$this->isProfileRenewable($profileid);
+                                if($isRenewal && ($isRenewal!=1)){
+	                                continue;
+                                }
+				$profileArr[] =$profileid;
+			}
+			//print_r($profileArr);
+			if($expiryDt){
+				$servicesObj =new BILLING_SERVICE_STATUS('newjs_local111');
+				$expiryProfiles =$servicesObj->getMaxExpiryProfilesForDates($expiryDt1, $expiryDt2);
+				if(is_array($expiryProfiles))
+					$profileArr =array_intersect($profileArr, $expiryProfiles);
+			}
+			// get ever paid profiles 
+			if($everPaid || $neverPaid){
+				$purchasesObj =new BILLING_PURCHASES('newjs_local111');
+				$everPaidArr =$purchasesObj->fetchEverPaidPool();
+			}
+			if($everPaid){
+				if(is_array($everPaidArr))
+					$profileArr =array_intersect($profileArr, $everPaidArr);
+			}
+			if($neverPaid){
+				if(is_array($everPaidArr))
+					$profileArr =array_diff($profileArr, $everPaidArr);
+			}
+			$profileArr =array_values($profileArr);
+			$profileArr =array_unique($profileArr);
+
+			// Add in pool
+			$this->addMiniVdDataInTemp($profileArr,$startDate,$endDate,$discount);
+
+			// Send Mail for Cluster Count
+			$totalCount =count($profileArr);
+			$countArr[] =array('cluster'=>$clusterName,'count'=>$totalCount);
+
+			// Delete Cluster
+			$vdClusterObj->deleteCluster($clusterName);
+			unset($profileArr);	
+		}
+		foreach($countArr as $key=>$dataArr){
+			$cluster 	=$dataArr['cluster'];
+			$total 		=$dataArr['count'];
+			$message 	.="\n".$cluster."=".$total;
+		}
+	        $subject	= "VD Cluster Details";
+            	$to 		= "manoj.rana@naukri.com,rohan.mathur@jeevansathi.com";
+        	$from 		= "info@jeevansathi.com";
+		SendMail::send_email($to,$message, $subject, $from,$cc,"","","","","","1","","");
+		}
+		
+	}
+
+	// process Mini-VD Data
+        public function addMiniVdDataInTemp($profileArr,$startDate,$endDate,$discount)
+        {
+		$services ='P,C,NCP,X';	
+                $uploadTempObj =new test_VD_UPLOAD_TEMP('newjs_local111');
+
+                if(is_array($profileArr)){
+                foreach($profileArr as $key=>$profileid){
+                        $uploadTempObj->addVDRecordsInUploadTemp($profileid,$startDate,$endDate,$discount,$services);
+                }}
+        }
+	function isProfileRenewable($profileid) {
+		$purchasesObj = new BILLING_PURCHASES('newjs_local111');
+		$serviceStatusObj = new BILLING_SERVICE_STATUS('newjs_local111');
+
+		$myrow = $purchasesObj->getPurchaseCount($profileid);
+		if ($myrow['COUNT'] > 0) {
+		    $row = $serviceStatusObj->getLastActiveServiceDetails($profileid);
+		    if ($row['EXPIRY_DT']) {
+			if ($row['SERVICEID'] == "PL" || $row['SERVICEID'] == "CL" || $row['SERVICEID'] == "DL" || $row['SERVICEID'] == "ESPL" || $row['SERVICEID'] == "NCPL") {
+			    return 1;
+			}
+			else {
+			    if ($row['DIFF'] > - 11 && $row['DIFF'] < 30) {
+				list($yy, $mm, $dd) = explode('-', $row["EXPIRY_DT"]);
+				$ts = mktime(0, 0, 0, $mm, $dd + 10, $yy);
+				$expiry_date = date("j-M-Y", $ts);
+				return $expiry_date;
+			    }
+			    else if ($row['DIFF'] > - 11) return 1;
+			    else return 0;
+			}
+		    }
+		    else return 0;
+		}
+		else return 0;
+	}
 
 }
 ?>

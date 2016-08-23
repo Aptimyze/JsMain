@@ -1,0 +1,2 @@
+use jeevansathi_mailer;
+UPDATE  `MAILER_SUBJECT` SET  `SUBJECT_CODE` =  'Your profile has been marked duplicate and will not appear in search results' WHERE  `MAIL_ID` =  '1791' AND CONVERT(  `SUBJECT_TYPE` USING utf8 ) =  'D' AND CONVERT(  `SUBJECT_CODE` USING utf8 ) = 'Here is some information regarding your account visibility' AND CONVERT(  `DESCRIPTION` USING utf8 ) =  'Duplicate profiles mail' LIMIT 1 ;

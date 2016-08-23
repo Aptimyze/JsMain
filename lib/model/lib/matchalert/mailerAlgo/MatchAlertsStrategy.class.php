@@ -8,14 +8,25 @@ abstract class MatchAlertsStrategy
         private $frequency = 1;
 	abstract function getMatches();
   
-        public function logRecords($receiverId,$profileIds,$logicLevel,$limit){
+        public function logRecords($receiverId,$profileIds,$logicLevel,$limit,$listCount = 0){
+          $profileIdsForList = array();
+          if($listCount != 0)
+                $profileIdsForList = array_slice($profileIds,0,$listCount); // Profile id list to be added to listings according to new logic
+          
 	  $profileIds = array_slice($profileIds,0,$limit);
+          
           $matchalertLogObj = new matchalerts_LOG();
-          $matchalertLogObj->insertLogRecords($receiverId, $profileIds, $logicLevel);
-          unset($matchalertLogObj);
-
           $matchalertTempLogObj = new matchalerts_LOG_TEMP();
-          $matchalertTempLogObj->insertLogRecords($receiverId, $profileIds, $logicLevel);
+          
+          if(count($profileIdsForList) > count($profileIds)){
+                $matchalertLogObj->insertLogRecords($receiverId, $profileIdsForList, $logicLevel);
+                $matchalertTempLogObj->insertLogRecords($receiverId, $profileIdsForList, $logicLevel);
+          }else{
+                $matchalertLogObj->insertLogRecords($receiverId, $profileIds, $logicLevel);
+                $matchalertTempLogObj->insertLogRecords($receiverId, $profileIds, $logicLevel);
+          }
+          
+          unset($matchalertLogObj);
           unset($matchalertTempLogObj);
 
           $matchalertMailerObj = new matchalerts_MAILER();

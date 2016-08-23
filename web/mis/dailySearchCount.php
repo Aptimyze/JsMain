@@ -12,7 +12,9 @@ include_once("$path_class/classes/Memcache.class.php");
 
 $mysqlObj=new Mysql;
 $db=connect_misdb();
+$db2=connect_master();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db);
+mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db2);
 $data=authenticated($checksum);
 
 if(isset($data)|| $JSIndicator)
@@ -133,7 +135,8 @@ if(isset($data)|| $JSIndicator)
 				
 				
 			//$sql="SELECT TOTAL,DAY(DATE) AS DAYNO FROM MIS.DAILY_CONTACTSEARCH_TOTAL WHERE SEARCH_TYPE='$searchType' AND DATE BETWEEN '$searchYear-$searchMonth-01' AND '$searchYear-$searchMonth-$monthDays'";
-				$resultnew=mysql_query_decide($sqlnew,$db) or die(mysql_error_js());
+				$resultnew=mysql_query_decide($sqlnew,$db2) or die(mysql_error_js());
+			//$result=mysql_query_decide($sql,$db) or die(mysql_error_js());
 				while($myrownew=mysql_fetch_assoc($resultnew))
 				{
 					$day=$myrownew["DAYNO"];
@@ -245,7 +248,7 @@ if(isset($data)|| $JSIndicator)
 				
 				
 			//$sql2="SELECT TOTAL,SEARCH_TYPE,DAY(DATE) AS DAYNO FROM MIS.DAILY_CONTACTSEARCH_TOTAL WHERE DATE BETWEEN '$searchYear-$searchMonth-01' AND '$searchYear-$searchMonth-$monthDays'";
-				$resultnew2=mysql_query_decide($sqlnew2,$db) or die(mysql_error_js());
+				$resultnew2=mysql_query_decide($sqlnew2,$db2) or die(mysql_error_js());
 			//$result2=mysql_query_decide($sql2,$db) or die(mysql_error_js());
 				while($myrownew2=mysql_fetch_assoc($resultnew2))
 				{
