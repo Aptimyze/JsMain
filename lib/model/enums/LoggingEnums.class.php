@@ -62,4 +62,5 @@ class LoggingEnums
     const SEO = 'seo';
     const MYJS = 'myjs';
     const HOMEPAGE = 'homepage';
+    const MASTER_FLAG = true;
 }

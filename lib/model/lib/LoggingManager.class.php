@@ -54,7 +54,7 @@ class LoggingManager
 	/**
 	 *  Path to Server Location for storing logs
 	 */
-	private $serverLogPath = '/var/www/html/branch1/log';
+	private $serverLogPath = '/data/applogs';
 
 	/**
 	 * Constructor function
@@ -552,7 +552,7 @@ class LoggingManager
 		$toLog = (LoggingEnums::CONFIG_ON ? LoggingConfig::getInstance()->logStatus($this->szLogPath) : true);
 		// check Log Level
 		$checkLogLevel = ($enLogType <= LoggingEnums::LOG_LEVEL || $enLogType <= LoggingConfig::getInstance()->getLogLevel($this->szLogPath));
-		return $toLog & $checkLogLevel;
+		return $toLog & $checkLogLevel & LoggingEnums::MASTER_FLAG;
 	}
 
 	/**
