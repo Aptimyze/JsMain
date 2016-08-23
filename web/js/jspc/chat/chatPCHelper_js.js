@@ -115,15 +115,18 @@ function openNewJSChat(profilechecksum,detailsArr){
             nodeArr=[];
         nodeArr[detailsArr[1]] = data;
 
-        //create hidden element in chat listing
-        var added = objJsChat.createHiddenListNode(nodeArr);
-        console.log("added......",added);
-        if(added == true){
+        var alreadyExists = objJsChat.checkForNodePresence(detailsArr[1]);
+          console.log("added......",alreadyExists);
+        if(alreadyExists == false){
+            //create hidden element in chat listing
+            objJsChat.createHiddenListNode(nodeArr);
+          
             //write in localstorage
         	localStorage.setItem('jsNoRosterChat_'+detailsArr[1],JSON.stringify(data));
-            //open chat box
-            objJsChat._chatPanelsBox(detailsArr[1],"online",jid,profilechecksum, groupid);
         }
+        //open chat box
+        objJsChat._chatPanelsBox(detailsArr[1],"online",jid,profilechecksum, groupid);
+        
     } 
 }
 
