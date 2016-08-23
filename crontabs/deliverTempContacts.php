@@ -16,7 +16,7 @@
         include_once($_SERVER['DOCUMENT_ROOT']."/profile/contact.inc");
 include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
-
+ini_set("memory_limit","512M"); 
         // connect to database
         
 		$slave=connect_slave();
