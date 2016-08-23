@@ -32,7 +32,44 @@ class KundliMatches extends PartnerProfile
           {
 						$this->setSHOW_RESULT_FOR_SELF('N');
 					}
+					else
+							$this->setSHOW_RESULT_FOR_SELF('ISKUNDLIMATCHES');
 					
+				}
+				
+				
+				public function getGunaMatches($SearchResponseObj)
+				{
+					$gunaScoreObj = new gunaScore();
+					$gunaData = $gunaScoreObj->getGunaScore($this->loggedInProfileObj->getPROFILEID(),$this->loggedInProfileObj->getCASTE(),implode(",",$SearchResponseObj->getsearchResultsPidArr()),$this->loggedInProfileObj->getGENDER(),'1');
+					if(is_array($gunaData))
+					{
+						foreach($gunaData as $i=>$v)
+						{
+								foreach($v as $pid=>$guna)
+								{
+									if($guna>=18)
+										$finalSearchPidsArr[]=$pid;
+								}
+						}
+					
+						$SearchResponseObj->setsearchResultsPidArr(array_values(array_intersect($SearchResponseObj->getsearchResultsPidArr(),$finalSearchPidsArr)));
+					
+						$searchResultsArr = $SearchResponseObj->getresultsArr();
+						foreach($searchResultsArr as $i=>$value)
+						{
+							if(!in_array($value["id"],$finalSearchPidsArr))
+								unset($searchResultsArr[$i]);
+						}
+						$SearchResponseObj->setresultsArr(array_values($searchResultsArr));
+					}
+					else
+					{
+						$SearchResponseObj->setsearchResultsPidArr(null);
+						$SearchResponseObj->setresultsArr(array());
+					}
+				
+					return $SearchResponseObj;
 				}
 
 

@@ -11,20 +11,20 @@ class gunaScore
 		 * and accordingly fetches and returns the gunaScoreArr  
 		 */
 
-        public function getGunaScore($profileId,$caste,$profilechecksumArr,$gender)
+        public function getGunaScore($profileId,$caste,$profilechecksumArr,$gender,$haveProfileArr='')
         {	$parentValueArr = gunaScoreConstants::$parentValues;
         	$searchIdArr = array();
         	$profilechecksumArr = explode(",",$profilechecksumArr);
         	//To convert profilechecksum to profileId array
         	foreach($profilechecksumArr as $val)
         	{
-        		$profileid = JsCommon::getProfileFromChecksum($val);
+        		$profileid = ($haveProfileArr=='1')?$val:JsCommon::getProfileFromChecksum($val);
         		$searchIdArr[] = $profileid;
         		$flipIdArr[$val] = $profileid;
         	}
         	//FlippedSearchIdArr used to map gunaScore to profilechecksum
         	$this->flippedSearchIdArr = array_flip($flipIdArr);
-        
+					
         	$parent = $this->getParent($caste);
         	if(in_array($parent, $parentValueArr))
         	{
