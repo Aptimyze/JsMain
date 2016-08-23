@@ -497,7 +497,7 @@ function invokePluginManagelisting(listObject, key, user_id) {
             //update chat box content if opened
             //console.log("adding ankita4");
             objJsChat._updateChatPanelsBox(user_id, newGroupId);
-            $('#' + user_id + '_hover').remove();
+            
         }
         if (key == "create_list") {
             objJsChat.noResultError();
@@ -520,6 +520,7 @@ function invokePluginManagelisting(listObject, key, user_id) {
             
             objJsChat._removeFromListing('delete_node', listObject);
             objJsChat._disableChatPanelsBox(user_id);
+            $('#' + user_id + '_hover').remove();
         }
     }
 }
