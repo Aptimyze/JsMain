@@ -457,7 +457,12 @@ JsChat.prototype = {
                             if (status == "online") {
                                 if ($('#' + runID + "_" + val).length == 0) {
                                     addedFlag = curElem._placeContact("add_hidden","nonRosterAdd", runID, val, status, List);
-                                    
+                                    if(addedFlag == true){
+                                        $("#" + runID + "_" + val).on("click", function () {
+                                            currentID = $(this).attr("id").split("_")[0];
+                                            curElem._chatPanelsBox(currentID, status, $(this).attr("data-jid"), $(this).attr("data-checks"), $(this).attr("id").split("_")[1]);
+                                        });
+                                    }
                                 }
                             }
                         }
@@ -2457,7 +2462,10 @@ JsChat.prototype = {
 		}
 		if(type == "new"){
 			setTimeout(function(){ 
+                //console.log("ankita",data);
 				$.each(data,function(index,elem){
+                    //console.log("here ankita");
+                    //console.log($("#"+elem["userId"]+"_"+elem["group"]));
 					//console.log(elem["userId"],elem["group"],$("#"+elem["userId"]+"_"+elem["group"]));
 					$("#"+elem["userId"]+"_"+elem["group"]).click();
 					if(elem["state"] == "min") {

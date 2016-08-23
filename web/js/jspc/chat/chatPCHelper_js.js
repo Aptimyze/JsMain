@@ -120,7 +120,7 @@ function openNewJSChat(profilechecksum,detailsArr){
         if(alreadyExists == true){
            groupid = output["groupID"];  
         }
-        console.log("added......",alreadyExists);
+        //console.log("added......",alreadyExists);
         if(alreadyExists == false){
             //create hidden element in chat listing
             objJsChat.createHiddenListNode(nodeArr);
