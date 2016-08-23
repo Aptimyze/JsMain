@@ -255,7 +255,7 @@ class MobileCommon{
     	if(MobileCommon::isDesktop())
     		return "P";
     	if(MobileCommon::isOldMobileSite())
-    		return LoggingEnums::OS;
+    		return LoggingEnums::OMS;
     }
 
 	/**
@@ -265,33 +265,36 @@ class MobileCommon{
 		switch (self::getChannel()) {
 			case LoggingEnums::P:
 			{
-				return "JSPC";
+				$channelName = "JSPC";
 				break;
 			}
 			case LoggingEnums::A:
 			{
-				return "JSAA";
+				$channelName = "JSAA";
 				break;
 			}
 			case LoggingEnums::I:
 			{
-				return "JSIA";
+				$channelName = "JSIA";
 				break;
 			}
 			case LoggingEnums::MS:
 			{
-
-				return "JSMS";
+				$channelName = "JSMS";
 				break;
-
 			} 
-			case LoggingEnums::OS:
-			  	return "JSOMS";
-			  	break;  
+			case LoggingEnums::OMS:
+			{
+				$channelName = "JSOMS";
+				break;
+			} 
 			default:
-				return "UNKNOWN CHANNEL";
-			break;
+			{
+				$channelName = "UNKNOWN CHANNEL";
+				break;
+			} 
 		}
+		return $channelName;
 	}
 
   /*

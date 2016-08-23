@@ -30,7 +30,7 @@ class LoggingEnums
     const A = 'A';
     const I = 'I';
     const MS = 'MS';
-    const OS = 'OS';
+    const OMS = 'OMS';
     // exceptions type
     const MYSQL_EXCEPTION = "MYSQL";
     const PDO_EXCEPTION = "PDO";
