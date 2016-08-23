@@ -43,7 +43,7 @@ class jsPdoDatabase extends jsDatabase {
 					return;	
 				}
 			}
-			throw new jsDatabaseException($e->getMessage() . '[dsn: ' . $this->dsn . ']');
+			throw new jsDatabaseException($e->getMessage() . '[dsn: ' . $this->dsn . ']',$e->getCode());
 		}
 
 		// lets generate exceptions instead of silent failures
