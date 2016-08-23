@@ -29,9 +29,10 @@ class pushChatAction extends sfAction
 			ValidationHandler::getValidationHandler("", $inputJSON);
 				$sender=substr($input['from'],0,strrpos($input['from'] ,"@"));
 				$receiver=substr($input['to'],0,strrpos($input['to'] ,"@"));
-				$message=$input['msg'];
+				$message=addslashes(stripslashes(htmlspecialchars($input['msg'],ENT_QUOTES)));
 				$chatID=$input['id'];
 				$request->setParameter("communicationType",'C');
+				$request->setParameter("chatID",$chatID);
 				$communicationType='C';
 				if($message)
 					$request->setParameter("message",$message);

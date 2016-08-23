@@ -40,8 +40,7 @@ class JS_Communication
 				{							
 					$dbObj = new newjs_CHAT_LOG($dbName2);
 				
-					$dbObj->insertIntoChatLog($id,$this->loginProfile,$this->otherProfile,'N','N',0,$type,'N','U','U',$this->chatID);
-				
+					$dbObj->insertIntoChatLog($id,$this->loginProfile,$this->otherProfile,$type,'N',$this->chatID);	
 					$dbObjMessage = new NEWJS_CHATS($dbName2);
 					$dbObjMessage->insertSingleMessage($id,$this->message);
 				}
@@ -81,7 +80,6 @@ class JS_Communication
 				//foreach($messageArr as $key=>$val)
 				{
 					$mergeArray["MESSAGE"]=$messageArr[$j];
-					$mergeArray["IS_EOI"] = true;
 					$result[$i]=$mergeArray;
 					$i++;
 				}
