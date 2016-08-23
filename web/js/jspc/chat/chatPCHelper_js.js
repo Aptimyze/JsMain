@@ -115,7 +115,11 @@ function openNewJSChat(profilechecksum,detailsArr){
             nodeArr=[];
         nodeArr[detailsArr[1]] = data;
 
-        var alreadyExists = objJsChat.checkForNodePresence(detailsArr[1]);
+        var output = objJsChat.checkForNodePresence(detailsArr[1]);
+        var alreadyExists = output["exists"];
+        if(alreadyExists == true){
+           groupid = output["groupID"];  
+        }
         console.log("added......",alreadyExists);
         if(alreadyExists == false){
             //create hidden element in chat listing
@@ -126,7 +130,6 @@ function openNewJSChat(profilechecksum,detailsArr){
         }
         //open chat box
         objJsChat._chatPanelsBox(detailsArr[1],"online",jid,profilechecksum, groupid);
-        
     } 
 }
 
