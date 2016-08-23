@@ -759,9 +759,11 @@ function DetailPageBinding()
 	});
 	
 }
+var ifChatListingIsCreated=0;
 function cEButtonActionCalling(elementObj)
 {
 	var arrID=elementObj.attr('id').split('-');
+
 	if(arrID[0]!="CHAT")
 	{
 		var buttonObj=new Button(elementObj);
@@ -772,8 +774,22 @@ function cEButtonActionCalling(elementObj)
 		if(elementObj.attr('data') && elementObj.hasClass('OnlineChat'))
 		{
 			var data=elementObj.attr('data').split(',');
-			if(data[0]!="undefined" && data[1]!="undefined"){
-				openChatWindow(data[1],arrID[1],data[1],data[0],'','');
+			if(data[0]!="undefined" && data[1]!="undefined")
+			{
+				if($('#js-chatLogin').length)
+				{
+					invokePluginLoginHandler($("#js-chatLogin").click());
+
+					var checkExist = setInterval(function() {
+					if (ifChatListingIsCreated==1){
+					      clearInterval(checkExist);
+						openNewJSChat(arrID[1],data);
+					   }
+					}, 100);
+				}
+				else
+					openNewJSChat(arrID[1],data);
+				//openChatWindow(data[1],arrID[1],data[1],data[0],'','');
 			}
 		}
 	}

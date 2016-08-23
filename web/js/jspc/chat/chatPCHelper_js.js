@@ -88,6 +88,82 @@ function chatLoggerPC(msgOrObj) {
     */
 }
 
+/*open chatbox from search listing or view profile page
+*@inputs:profilechecksum,detailsArr
+*/
+function openNewJSChat(profilechecksum,detailsArr){
+    if(typeof profilechecksum!= "undefined" && typeof detailsArr!= "undefined"){
+        var groupid = chatConfig.Params.groupIDMapping[detailsArr[3]];
+        if(typeof groupid == "undefined"){
+            groupid = "mysearch";
+        }
+        var jid=detailsArr[1]+"@"+openfireServerName,
+            data= {"rosterDetails":
+                    {
+                        "jid":jid ,
+                        "chat_status": "online",
+                        "nick": detailsArr[0]+"|"+profilechecksum,
+                        "fullname": detailsArr[0],
+                        "groups": [groupid],
+                        "subscription": "to",
+                        "profile_checksum": profilechecksum,
+                        "listing_tuple_photo": detailsArr[2],
+                        "last_online_time": null,
+                        "ask": null
+                    }
+                },
+            nodeArr=[];
+        nodeArr[detailsArr[1]] = data;
+
+        var output = objJsChat.checkForNodePresence(detailsArr[1]);
+        var alreadyExists = output["exists"];
+        if(alreadyExists == true){
+           groupid = output["groupID"];  
+        }
+        //console.log("added......",alreadyExists);
+        if(alreadyExists == false){
+            //create hidden element in chat listing
+            objJsChat.createHiddenListNode(nodeArr);
+          
+            //write in localstorage
+        	localStorage.setItem('jsNoRosterChat_'+detailsArr[1],JSON.stringify(data));
+        }
+        //open chat box
+        objJsChat._chatPanelsBox(detailsArr[1],"online",jid,profilechecksum, groupid);
+    } 
+}
+
+function retainHiddenListing(){
+    var nodeArr = [];
+    for (var i = 0; i < localStorage.length; i++){
+        var key = localStorage.key(i);
+        if(key && key.indexOf('jsNoRosterChat_')!='-1')
+        {
+            var nodeData = localStorage.getItem(key);
+            nodeArr[key.split("_")[1]] = JSON.parse(nodeData);
+        }
+    }
+    objJsChat.createHiddenListNode(nodeArr);
+}
+
+function removeLocalStorageForNonChatBoxProfiles(id)
+{
+	if(id)
+	{
+	    localStorage.removeItem('jsNoRosterChat_'+id);
+	}
+	else
+	{
+		for (var i = 0; i < localStorage.length; i++){
+			var key = localStorage.key(i);
+			if(key && key.indexOf('jsNoRosterChat_')!='-1')
+			{
+	        	localStorage.removeItem(key);
+			}
+		}
+	}
+}
+
 /*getMessagesFromLocalStorage
  * Fetch messages from local storage
  */
@@ -561,6 +637,7 @@ function checkAuthentication(timer,loginType) {
 function logoutChat() {
     strophieWrapper.disconnect();
     eraseCookie("chatAuth");
+    removeLocalStorageForNonChatBoxProfiles();
 }
 /*invokePluginReceivedMsgHandler
  * invokes msg handler function of plugin
@@ -976,6 +1053,7 @@ $(document).ready(function () {
         });
         
         objJsChat.onEnterToChatPreClick = function () {
+	    removeLocalStorageForNonChatBoxProfiles();
             //objJsChat._loginStatus = 'N';
             
             var chatLoggedIn = readCookie('chatAuth');
@@ -1155,13 +1233,5 @@ $(document).ready(function () {
         objJsChat.start();
         
     }
-    /*setTimeout(function(){
-        console.log("open chat box for "+my_action);
-        if(my_action == "MobSearch"){
-            console.log("opening chat box");
-            var extraParams = {"username":"abc"};
-            objJsChat._chatPanelsBox(5074911,"online","5074911@testjs-new","677d6a3f332149f81cec7b1a081cf54ci5074911", "mysearch",extraParams);
-        }
-    },5000);*/
 
 });
