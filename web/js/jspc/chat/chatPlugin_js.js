@@ -273,15 +273,25 @@ JsChat.prototype = {
         var trimmedString = stringName.length > lengthReq ? stringName.substring(0, lengthReq - 3) + "..." : stringName;
         var chatHeaderHTML = '<div class="nchatbg1 nchatp2 clearfix pos-rel nchathgt1"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarIn"></i> </div><div class="fl"> <img src="' + this._imageUrl + '" class="nchatp4 wd40"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">'+trimmedString+'</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp">Logout from chat</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">'+trimmedString+'</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>';
         $(curEleRef._listingPanelID).append(chatHeaderHTML);
-        $(curEleRef._toggleLogoutDiv).off("click").on("click", function () {
+	$('body').on('click', function(event) {
+            if(($(event.target).parent().attr('id') != "undefined" && $(event.target).parent().attr('id') != 'js-chattopH') &&
+		($(event.target).attr('id') != "undefined" && $(event.target).attr('id') != "js-chattopH") &&
+		$(event.target).parent().hasClass('js-LogoutPanel') == false && 
+		$(event.target).hasClass('js-LogoutPanel') == false
+		) {
+                $(curEleRef._toggleID).addClass('disp-none');
+            }
+        });
+        $(curEleRef._toggleLogoutDiv).on("click", function () {
             $(curEleRef._toggleID).toggleClass('disp-none');
+
             if ($(curEleRef._toggleID).hasClass('disp-none') == false) {
-                setTimeout(function () {
+                /*setTimeout(function () {
                     $("body").on("click", function () {
-                        $("body").off("click");
+                    //    $("body").off("click");
                         $(curEleRef._toggleID).addClass('disp-none');
                     });
-                }, 300);
+                }, 300);*/
             }
         });
         $(curEleRef._logoutChat).click(function () {
