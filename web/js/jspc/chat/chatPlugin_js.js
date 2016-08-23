@@ -410,14 +410,15 @@ JsChat.prototype = {
     
     //check for node presence
     checkForNodePresence:function(userId){
-        var exists = false,curElem = this;
+        var exists = false,curElem = this,groupID;
         $.each(curElem._rosterGroups,function(key,groupId){
             if($(".chatlist li[id='" + userId + "_" + groupId + "']").length != 0){
                 exists = true;
-            }
-                            
+                groupID = groupId;
+            }                
         });
-        return exists;
+        var output = {"exists":exists,"groupID":groupID};
+        return output;
     },
 
     createHiddenListNode:function(data){
