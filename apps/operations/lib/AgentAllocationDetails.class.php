@@ -437,18 +437,19 @@ public function fetchProfiles($processObj)
                                 if($subMethod=='FIELD_SALES_VISIT'){
                                         $widgetLogObj =new incentive_FIELD_SALES_WIDGET('newjs_masterRep');
         	                        $widgetTimeEnd =$widgetLogObj->getMaxDate();
-					$widgetTimeEndSet =date('Y-m-d H:i:s', strtotime('-4 days',strtotime($widgetTimeEnd)));
+					$widgetTimeEndSet =date('Y-m-d H:i:s', strtotime('-12 hours',strtotime($widgetTimeEnd)));
 	                                $processObj->setEndDate($widgetTimeEndSet);
                 	                $profiles =$widgetLogObj->getLastHourScheduledProfiles($screenedTimeStart,$widgetTimeEnd);
                                 }
                                 else{
                                         $screeningLogObj =new jsadmin_SCREENING_LOG('newjs_masterRep');
 					$screenedTimeEnd =$screeningLogObj->getScreenedMaxDate();
-					$screenedTimeEndSet =date('Y-m-d H:i:s', strtotime('-4 days',strtotime($screenedTimeEnd)));
+					$screenedTimeEndSet =date('Y-m-d H:i:s', strtotime('-12 hours',strtotime($screenedTimeEnd)));
 					$processObj->setEndDate($screenedTimeEndSet);
 					$profiles =$screeningLogObj->getLastHourScreenedProfiles($screenedTimeStart,$screenedTimeEnd);
 				}
 				if(count($profiles)>0){
+					/*
 					if($subMethod != 'FIELD_SALES_VISIT'){
 						$phVerifiedProfiles =array();
 						$phVerifiedProfiles =$processObj->getPhoneVerifiedProfiles();
@@ -456,7 +457,7 @@ public function fetchProfiles($processObj)
 							$profiles =array_intersect($profiles, $phVerifiedProfiles);
 							$profiles =array_values($profiles);
 						}
-					}
+					}*/
 					// get profiles from field sales allocation log
 					$fieldSalesAllocLog =new incentive_FIELD_SALES_LOG();
 					$preDate 	=date("Y-m-d",time()-9*24*60*60);
