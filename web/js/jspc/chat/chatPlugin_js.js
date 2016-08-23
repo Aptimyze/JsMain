@@ -2,6 +2,7 @@
 var JsChat = function () {
     this._construct(this, arguments);
 };
+var lrr;
 //start:prototype
 JsChat.prototype = {
     _mainID: "#chatOpenPanel",
@@ -333,10 +334,15 @@ JsChat.prototype = {
             //TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + "\">";
             TabsOpt += "<div class=\"f12 fontreg nchatbdr2";
             if (obj["tab1"]["groups"][i]["show_group_name"] == false) TabsOpt += " disp-none";
+
+	    var jsNonRosterGroup = '';
+            if (obj["tab1"]["groups"][i]["show_group_name"] == false)
+	    	jsNonRosterGroup += " jsNonRosterGroup ";
+
             TabsOpt += "\"><p class=\"nchatt1 fontreg pl15\">" + obj["tab1"]["groups"][i]["group_name"] + "</p></div>";
             //TabsOpt += "<ul class=\"chatlist\"></ul></div>";
-            TabsOpt += "<ul class=\"chatlist online\"></ul>";
-            TabsOpt += "<ul class=\"chatlist offline\"></ul></div>";
+            TabsOpt += "<ul class=\"chatlist "+jsNonRosterGroup+"online\"></ul>";
+            TabsOpt += "<ul class=\"chatlist"+jsNonRosterGroup+" offline\"></ul></div>";
         }
         TabsOpt += '</div>';
         TabsOpt += '<div class="showtab2 js-htab disp-none" id="tab2"> <div id="showtab2NoResult" class="noResult f13 fontreg disp-none">' + curEle._noDataTabMsg["tab2"] + '</div>';
@@ -364,7 +370,8 @@ JsChat.prototype = {
             dataLength = 0;
             $(this).find(".chatlist").each(function (index2, element2) {
                 //that._chatLoggerPlugin($(this).find("li").length);
-                dataLength = dataLength + $(this).find("li").length;
+		if (!$(this).hasClass('jsNonRosterGroup'))
+	                dataLength = dataLength + $(this).find("li").length;
             });
             if (dataLength == 0) {
                 //that._chatLoggerPlugin(element);

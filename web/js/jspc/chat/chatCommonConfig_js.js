@@ -119,7 +119,8 @@ chatConfig.Params = {
                         "id":"mysearch",
                         "group_name":"Search Results",
                         "show_group_name":false,
-                        "hide_offline_users":false
+                        "hide_offline_users":false,
+			"nonRosterGroup" : true
                     }
                 ]
             },
