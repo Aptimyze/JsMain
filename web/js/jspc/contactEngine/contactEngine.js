@@ -779,16 +779,13 @@ function cEButtonActionCalling(elementObj)
 				if($('#js-chatLogin').length)
 				{
 					invokePluginLoginHandler($("#js-chatLogin").click());
-
-					var checkExist = setInterval(function() {
-					if (ifChatListingIsCreated==1){
-					      clearInterval(checkExist);
-						openNewJSChat(arrID[1],data);
-					   }
-					}, 100);
 				}
-				else
+				var checkExist = setInterval(function() {
+				if (ifChatListingIsCreated==1){
+				      clearInterval(checkExist);
 					openNewJSChat(arrID[1],data);
+				   }
+				}, 100);
 				//openChatWindow(data[1],arrID[1],data[1],data[0],'','');
 			}
 		}
