@@ -1503,7 +1503,7 @@ JsChat.prototype = {
                                 $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
                             } else {
                                 $(this).closest(".chatMessage").find("#sentDiv").removeClass("disp-none");
-                                $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
+                                $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt,#acceptDeclineDiv").remove();
                                 //$(this).remove();
                                 new_contact_state = curElem._contactStatusMapping["both_accepted"]["key"];
                                 //TODO: fire query for accepting request
@@ -1543,7 +1543,7 @@ JsChat.prototype = {
                                 $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt").remove();
                             } else {
                                 $(this).closest(".chatMessage").find("#declineDiv").removeClass("disp-none");
-                                $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt,#accept").remove();
+                                $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt,#accept,#acceptDeclineDiv").remove();
                                 //$(this).remove();
                                 new_contact_state = curElem._contactStatusMapping["pg_interest_declined"]["key"];
                                 //TODO: fire query for accepting request
@@ -1563,7 +1563,7 @@ JsChat.prototype = {
             });
             break;
         case curElem._contactStatusMapping["pog_interest_accepted"]["key"]:
-            $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sentDiv,#restrictMessgTxt,#accept,#acceptTxt").remove();
+            $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sentDiv,#restrictMessgTxt,#acceptDeclineDiv,#accept,#acceptTxt").remove();
             $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="fullwid pos-rel mt10 color5 txtc fl acceptRec">Interest Accepted continue chat</div>');
             //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
             break;
