@@ -30,7 +30,8 @@
 <tr><td height="8"></td></tr>
 <tr><td>If you think your profile has been marked duplicate in error, we request you to call our customer care at 1800-419-6299 to make your profile visible to other members.</td></tr>
 <tr><td height="8"></td></tr>
-<tr><td>Please note that we have informed the same to the other matching user as well.</td></tr>
+<tr><td>If you have created another profile with similar details, please delete it to start appearing in search results again.
+</td></tr>
 <tr><td height="10"></td></tr>
 <tr><td>We look forward to hearing from you.</td></tr>
     <tr>
