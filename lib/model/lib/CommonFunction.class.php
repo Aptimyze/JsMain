@@ -607,8 +607,8 @@ class CommonFunction
   }
 
   	public static function getMembershipName($profileid){
-		if ($profileid) {
-			$memHandlerObj = new MembershipHandler();
+  		if ($profileid) {
+	  		$memHandlerObj = new MembershipHandler();
 			$membershipStatus = $memHandlerObj->getRealMembershipName($profileid);
 		} else {
 			$membershipStatus = 'Free';

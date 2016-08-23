@@ -156,7 +156,7 @@ class crmInterfaceActions extends sfActions
 						$selectedDateArr = array();
 						foreach($formArr['selectedDateArr'] as $k => $dd) {
 							
-							$selectedDateArr[$k] = date('Y-m-d', strtotime('-1 day', strtotime($dd)));
+							$selectedDateArr[$k] = date('Y-m-d', strtotime($dd));
 						}
 						$vdSmsLogObj->insertVdSmsSchedule($selectedDateArr, $formArr['frequency']);
 						$this->successMsg = "Updated successfully ...";			

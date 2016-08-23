@@ -396,6 +396,7 @@ class NEWJS_JPROFILE extends TABLE
                     }
                 }
             }
+            
             $sqlSelectDetail = "SELECT $fields FROM newjs.JPROFILE WHERE ";
             $count = 1;
             if (is_array($valueArray)) {
@@ -494,6 +495,7 @@ class NEWJS_JPROFILE extends TABLE
             }
             */
             $resSelectDetail->execute();
+            $this->logGetArrayCount();
             while ($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)) {
                 $detailArr[] = $rowSelectDetail;
             }
@@ -1678,6 +1680,19 @@ SQL;
         $key .= '::'.date('H');
         JsMemcache::getInstance()->incrCount($key);
     }
+    
+    /**
+     *  //Function to log Select Query Count
+     */
+    private function logGetArrayCount()
+    {
+        $key = 'getArrayCount_'.date('Y-m-d');
+        JsMemcache::getInstance()->incrCount($key);
+
+        $key .= '::'.date('H');
+        JsMemcache::getInstance()->incrCount($key);
+    }
+    
 }
 
 ?>

@@ -370,6 +370,7 @@ class VariableDiscount
         $profileArr =array();
         $vdDurationArr =uploadVD::$vdDurationArr;
         $variable ='disc';
+	$todayDate -date("Y-m-d");
 
         $count = $VDTempObj->getCountOfRecords($entryDate);
         for($i=0;$i<$count;$i+=$limit)
@@ -380,6 +381,10 @@ class VariableDiscount
             {
                 $pid =$details['PROFILEID'];
                 if($pid){
+
+		    $startDate  =$details['SDATE'];	
+		    if(strtotime($todayDate) != strtotime($startDate))
+			continue;		
 		    $isPaid =$this->checkPaidProfile($pid);	
 		    if($isPaid)
 			continue; 	
@@ -565,7 +570,7 @@ class VariableDiscount
         {
                 $vdClusterObj   =new billing_VD_CLUSTER();
                 $clusterDetails =$vdClusterObj->getClusterDetails();
-                $fields         ='PROFILEID,GENDER,AGE';
+                $fields         ='PROFILEID,GENDER,AGE,SUBSCRIPTION';
                 $jprofileData   =array();
 		$profileArray	=array();
 
@@ -622,6 +627,10 @@ class VariableDiscount
 				$profileid      =$val['PROFILEID'];
 				$gender         =$val['GENDER'];
 				$age            =$val['AGE'];
+				$subscription   =$val['SUBSCRIPTION'];
+
+				if((strstr($subscription,"F")!="")||(strstr($subscription,"D")!=""))
+					continue;
 				if(($gender=='M' && $age<23) || ($gender=='F' && $age<20))
 					continue;
 				if($analyticScore){
@@ -629,6 +638,10 @@ class VariableDiscount
 					if(!$eligible)
 						continue;
 				}
+				$isRenewal =$this->isProfileRenewable($profileid);
+                                if($isRenewal && ($isRenewal!=1)){
+	                                continue;
+                                }
 				$profileArr[] =$profileid;
 			}
 			//print_r($profileArr);
@@ -689,7 +702,32 @@ class VariableDiscount
                         $uploadTempObj->addVDRecordsInUploadTemp($profileid,$startDate,$endDate,$discount,$services);
                 }}
         }
- 
+	function isProfileRenewable($profileid) {
+		$purchasesObj = new BILLING_PURCHASES('newjs_local111');
+		$serviceStatusObj = new BILLING_SERVICE_STATUS('newjs_local111');
+
+		$myrow = $purchasesObj->getPurchaseCount($profileid);
+		if ($myrow['COUNT'] > 0) {
+		    $row = $serviceStatusObj->getLastActiveServiceDetails($profileid);
+		    if ($row['EXPIRY_DT']) {
+			if ($row['SERVICEID'] == "PL" || $row['SERVICEID'] == "CL" || $row['SERVICEID'] == "DL" || $row['SERVICEID'] == "ESPL" || $row['SERVICEID'] == "NCPL") {
+			    return 1;
+			}
+			else {
+			    if ($row['DIFF'] > - 11 && $row['DIFF'] < 30) {
+				list($yy, $mm, $dd) = explode('-', $row["EXPIRY_DT"]);
+				$ts = mktime(0, 0, 0, $mm, $dd + 10, $yy);
+				$expiry_date = date("j-M-Y", $ts);
+				return $expiry_date;
+			    }
+			    else if ($row['DIFF'] > - 11) return 1;
+			    else return 0;
+			}
+		    }
+		    else return 0;
+		}
+		else return 0;
+	}
 
 }
 ?>
