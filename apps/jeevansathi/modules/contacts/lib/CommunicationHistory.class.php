@@ -190,7 +190,10 @@ class CommunicationHistory
 
 		if($page)
 		{
-		    
+		    if(MobileCommon::IsApp()=="I")
+			{
+				$CON_HISTORY = array_reverse($CON_HISTORY);
+			}
 			$this->pageNo=$page;
 			$offset=(intval($page)-1)*self::$RESULTS_PER_PAGE_APP;
 			$limit=self::$RESULTS_PER_PAGE_APP;
