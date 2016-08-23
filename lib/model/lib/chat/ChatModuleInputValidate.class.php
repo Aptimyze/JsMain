@@ -46,11 +46,12 @@ class ChatModuleInputValidate extends ValidationHandler
 	
 	public function validatePopChat ($request)
 	{
-		if($request->getParameter("communicationType"))
+		
+		if($request->getParameter("communicationType") && $request->getParameter("sender")==$request->getAttribute('profileid'))
 			$this->response = ResponseHandlerConfig::$SUCCESS;
 		else
 		{
-			$errorString="--RECEIVER--".$request->getParameter("profilechecksum")."--TYPE--".$request->getParameter("type")."--TYPE--".$request->getParameter("message");
+			$errorString="--SENDER--".$request->getParameter("sender")."--LOGGEDINPROFILE--".$request->getAttribute("profileid")."--RECEIVER--".$request->getParameter("profilechecksum")."--TYPE--".$request->getParameter("type")."--TYPE--".$request->getParameter("message");
 			$errorString    = "Chat Input Validation Failed:" . $errorString;
 			$this->response = ResponseHandlerConfig::$POST_PARAM_INVALID;
 			ValidationHandler::getValidationHandler("", $errorString);

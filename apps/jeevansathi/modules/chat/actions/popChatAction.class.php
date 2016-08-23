@@ -30,6 +30,7 @@ class popChatAction extends sfAction
 			
 				$sender=substr($input['from'],0,strrpos($input['from'] ,"@"));
 				$receiver=substr($input['to'],0,strrpos($input['to'] ,"@"));
+				$request->setParameter("sender",$sender);
 			//	$message=$input['msg'];
 				$request->setParameter("communicationType",'C');
 				$communicationType='C';

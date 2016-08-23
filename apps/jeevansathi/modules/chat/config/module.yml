@@ -6,6 +6,6 @@ all:
   sendEOIV1:
     enable_login: on
   popChat:
-    enable_login: off
+    enable_login: on
   pushChat:
     enable_login: off
