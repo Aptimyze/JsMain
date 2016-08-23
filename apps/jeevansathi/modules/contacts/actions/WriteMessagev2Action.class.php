@@ -58,16 +58,18 @@ class WriteMessagev2Action extends sfAction
 						{
 							$messageDetailsArr=array_merge($msgDetailsArr,$chatDetailsArr);
 							//print_r($messageDetailsArr);die;
-							usort($messageDetailsArr, function ($a, $b)	{		$t1 = strtotime($a['DATE']);		$t2 = strtotime($b['DATE']);		return $t2 - $t1;	}  );
-							//print_r($messageDetailsArr);die;
-							if(count($messageDetailsArr)>20){
-								$messageDetailsArr=array_slice($messageDetailsArr,0,20);
-								$nextPaginationCall=true;
-							}
-							else
-								$nextPaginationCall=false;
-				
 						}
+						else
+							$messageDetailsArr=$msgDetailsArr;
+						//print_r($messageDetailsArr);die;
+						usort($messageDetailsArr, function ($a, $b)	{		$t1 = strtotime($a['DATE']);		$t2 = strtotime($b['DATE']);		return $t2 - $t1;	}  );
+						//print_r($messageDetailsArr);die;
+						if(count($messageDetailsArr)>20){
+							$messageDetailsArr=array_slice($messageDetailsArr,0,20);
+							$nextPaginationCall=true;
+						}
+						else
+							$nextPaginationCall=false;
 					}
 					else{
 						$messageDetailsArr = $messageLogObj->getMessageHistory($this->loginProfile->getPROFILEID(),$profileid);
