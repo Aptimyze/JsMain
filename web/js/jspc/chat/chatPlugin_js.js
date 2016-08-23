@@ -408,9 +408,21 @@ JsChat.prototype = {
         }
     },
     
+    //check for node presence
+    checkForNodePresence:function(userId){
+        var exists = false,curElem = this;
+        $.each(curElem._rosterGroups,function(key,groupId){
+            if($(".chatlist li[id='" + userId + "_" + groupId + "']").length != 0){
+                exists = true;
+            }
+                            
+        });
+        return exists;
+    },
+
     createHiddenListNode:function(data){
-        console.log("hidden",data);
-        var addedFlag = false;
+        //console.log("hidden",data);
+        var addedFlag = false,curElem = this;
         for (var key in data) {
             if (typeof data[key]["rosterDetails"]["jid"] != "undefined") {
                 var runID = data[key]["rosterDetails"]["jid"],
@@ -431,7 +443,7 @@ JsChat.prototype = {
                                 picurl = data[key]["rosterDetails"]["listing_tuple_photo"],
                                 prfCheckSum = data[key]["rosterDetails"]["profile_checksum"],
                                 nick = data[key]["rosterDetails"]["nick"]; 
-                            List += '<li class=\"clearfix profileIcon disp-none\"';
+                            List += '<li class=\"clearfix profileIcon js-nonRosterNode disp-none\"';
                             List += "id=\"" + runID + "_" + val + "\" data-status=\"" + status + "\" data-checks=\"" + prfCheckSum + "\" data-nick=\"" + nick + "\" data-jid=\"" + fullJID + "\">";
                             List += "<img id=\"pic_" + runID + "_" + val + "\" src=\"" + picurl + "\" class=\"fl wid40hgt40\">";
                             List += '<div class="fl f14 fontlig pt15 pl18">';
@@ -443,8 +455,8 @@ JsChat.prototype = {
                             List += '</li>';
                             if (status == "online") {
                                 if ($('#' + runID + "_" + val).length == 0) {
-                                    $('div.' + val + ' ul.' + status).append(List);
-                                    addedFlag = true;
+                                    addedFlag = curElem._placeContact("add_hidden","nonRosterAdd", runID, val, status, List);
+                                    
                                 }
                             }
                         }
@@ -452,7 +464,6 @@ JsChat.prototype = {
                 }
             }
         }
-        return addedFlag;
     },
 
     addListingInit: function (data,operation) {
@@ -629,6 +640,7 @@ JsChat.prototype = {
                 //console.log("adding1-"+groupID+"-"+contactID+"-"+totalNodes);
                 //this._chatLoggerPlugin("ankita_adding" + contactID + " in groupID");
                 //this._chatLoggerPlugin(contactHTML);
+                $('#'+contactID+'_'+groupID+' .js-nonRosterNode').remove();
                 $('div.' + groupID + ' ul.' + status).prepend(contactHTML);
                 done = true;
             }
@@ -658,6 +670,9 @@ JsChat.prototype = {
             } else if (status == "offline") {
                 $('#' + contactID + "_" + groupID).prependTo('div.' + groupID + ' ul.' + status);
             }
+            done = true;
+        } else if(key == "nonRosterAdd"){
+            $('div.' + groupID + ' ul.' + status).append(contactHTML);
             done = true;
         }
         return done;

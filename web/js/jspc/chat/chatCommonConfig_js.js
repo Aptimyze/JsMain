@@ -301,4 +301,4 @@ chatConfig.Params = {
         rosterDeleteChatBoxMsg:"This profile has been removed from list,so you cannot chat with this profile."
     }
 };
-chatConfig.Params.pc.rosterGroups = [ /*chatConfig.Params.categoryNames['Desired Partner Matches'],*/ chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members']];
+chatConfig.Params.pc.rosterGroups = [ /*chatConfig.Params.categoryNames['Desired Partner Matches'],*/ chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members'],chatConfig.Params.categoryNames['Search Results']];
