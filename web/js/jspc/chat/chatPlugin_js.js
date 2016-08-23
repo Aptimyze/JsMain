@@ -588,12 +588,15 @@ JsChat.prototype = {
         if($(".tabUId").length == 0){
             //console.log("does not exsist");
             $("body").append("<input type='hidden' class='tabUId' id='tab_"+new Date().getTime()+"'>");
+            console.log("calling update _updateChatStructure new");
             elem._updateChatStructure("new");
+            //elem._updateChatStructure("exsisting");
             newTab = true;
         }
 
         if(localStorage.getItem("lastUId")) {
             if($(".tabUId").attr("id") != localStorage.getItem("lastUId") && newTab ==  false){
+                console.log("calling update _updateChatStructure exsisting");
                 elem._updateChatStructure("exsisting");
             }
         } else {
@@ -1249,8 +1252,10 @@ JsChat.prototype = {
     },
     //create side panel of extra chat
     _createSideChatBox: function () {
+        console.log("_createSideChatBox");
         var curElem = this;
         $(curElem._chatBottomPanelID).append('<div class="extraChats cursp pos_abs nchatbtmNegtaive wid30 hgt43 bg5"><div class="extraNumber colrw opa50">+1</div><div><div class="extraPopup pos_abs l0 nchatbtmNegtaive wid170 bg5"><div>');
+        console.log("created");
         $(".extraChats").css("left", curElem._bottomPanelWidth - $('chat-box').length * 250 - 32);
         curElem._scrollUp($(".extraChats"), "0px");
         //adding data in extra popup 
@@ -1270,6 +1275,7 @@ JsChat.prototype = {
                 $(".extraChats").css("padding-top", "11px");
             }, 300);
         });
+        console.log("121w33");
     },
     _getChatBoxType: function (userId, groupID, key) {
         //this._chatLoggerPlugin("in _getChatBoxType");
@@ -1463,7 +1469,7 @@ JsChat.prototype = {
         case curElem._contactStatusMapping["pg_acceptance_pending"]["key"]:
             $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sendInt,#restrictMessgTxt,#initiateText,#chatBoxErr").remove();
             if($('chat-box[user-id="' + userId + '"] .chatMessage #acceptDeclineDiv').length ==0) {
-                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="pos-rel wid90p txtc colorGrey padall-10">The member wants to chat</div><div id="acceptDeclineDiv" class="pos-rel fullwid txtc colorGrey mt20"><div id="accept" class="acceptInterest padall-10 color5 disp_ib cursp">Accept</div><div id="decline" class="acceptInterest padall-10 color5 disp_ib cursp">Decline</div></div><div id="acceptTxt" class="pos-rel fullwid txtc color5 mt25">Accept interest to continue chat</div><div id="sentDiv" class="fullwid pos-rel disp-none mt10 color5 txtc">Interest Accepted continue chat</div><div id="declineDiv" class="sendDiv txtc disp-none pos-abs wid80p mt10 color5 declineSent">Interest Declined, you can\'t chat with this user anymore</div>');
+                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="pos-rel wid90p txtc colorGrey padall-10">The member wants to chat</div><div id="acceptDeclineDiv" class="pos-rel fullwid txtc colorGrey mt20"><div id="accept" class="acceptInterest padall-10 color5 disp_ib cursp">Accept</div><div id="decline" class="acceptInterest padall-10 color5 disp_ib cursp">Decline</div></div><div id="acceptTxt" class="pos-rel fullwid txtc color5 mt1">Accept interest to continue chat</div><div id="sentDiv" class="fullwid pos-rel disp-none mt10 color5 txtc">Interest Accepted continue chat</div><div id="declineDiv" class="sendDiv txtc disp-none pos-abs wid80p mt10 color5 declineSent">Interest Declined, you can\'t chat with this user anymore</div>');
             }
             //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
             $('chat-box[user-id="' + userId + '"] #accept').on("click", function () {
@@ -1639,6 +1645,7 @@ JsChat.prototype = {
     //appending chat box
     _chatPanelsBox: function (userId, status, jid, pcheckSum, groupId) {
         //this._chatLoggerPlugin("pcheckSum", pcheckSum);
+        console.log("_chatPanelsBox");
         if ($(".chatlist li[id='" + userId + "_" + groupId + "']").length != 0) {
             status = $(".chatlist li[id='" + userId + "_" + groupId + "']").attr("data-status");
         }
@@ -1666,6 +1673,7 @@ JsChat.prototype = {
             var bodyWidth = curElem._bottomPanelWidth,
                 divWidth = ($("chat-box").length + 1) * 250;
             if (divWidth > bodyWidth) {
+                console.log("check");
                 if ($(".extraChats").length == 0) {
                     curElem._createSideChatBox();
                 } else {
@@ -2455,25 +2463,28 @@ JsChat.prototype = {
     },
     
     _updateChatStructure:function(type) {
-		//console.log("inside update function",type);
+		console.log("inside update function",type);
 		var data = [];
 		var currentUserId = [];
 		var localId = [],pageId = [];
 		if(localStorage.getItem("chatBoxData")) {
 			data = JSON.parse(localStorage.getItem("chatBoxData"));
 		}
+        console.log("localstorage",data);
 		if(type == "new"){
 			setTimeout(function(){ 
-                //console.log("ankita",data);
+                console.log("ankita",data);
 				$.each(data,function(index,elem){
-                    //console.log("here ankita");
+                    console.log("here ankita",elem);
                     //console.log($("#"+elem["userId"]+"_"+elem["group"]));
 					//console.log(elem["userId"],elem["group"],$("#"+elem["userId"]+"_"+elem["group"]));
 					$("#"+elem["userId"]+"_"+elem["group"]).click();
 					if(elem["state"] == "min") {
 						$('chat-box[user-id="' + elem["userId"] + '"] .nchatic_2').click(); 
 					}
+                    console.log("click done");
 				});
+                console.log("done");
 			}, 1000);
 		} else if(type == "exsisting"){
 			$("chat-box").each(function(index, element) {
