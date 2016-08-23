@@ -442,7 +442,16 @@ function ccTupleInnerContentResultMapping(val,profileIDNo) {
 		}
 		else
 		{		
-				var casteStr = (val.caste).substr((val.caste).indexOf(":") + 1);
+			var casteStr;	
+			if(val.caste == val.religion)
+			{
+				casteStr = ''; 
+			}
+			else
+			{
+				casteStr = (val.caste).substr((val.caste).indexOf(":") + 1);
+				casteStr = ", "+casteStr;
+			}
 				
 				//for dev environment only
 				if(val.income =="undefined" || val.income == null)
