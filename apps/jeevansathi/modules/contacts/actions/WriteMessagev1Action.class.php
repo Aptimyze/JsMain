@@ -132,7 +132,9 @@ class WriteMessagev1Action extends sfAction
 						$arr["MSGID"]=$value["ID"];
 				}
 			}
+			
 			if($pagination){
+				$arr["messages"]=array_reverse($arr["messages"]);
 				if(!$arr["CHATID"] && $request->getParameter("CHATID"))
 					$arr["CHATID"]=$request->getParameter("CHATID");
 				if(!$arr["MSGID"] && $request->getParameter("MSGID"))
