@@ -129,6 +129,18 @@
 		
 		DropDown.prototype.StopDD=function()
 		{
+                        if(this.type == 'location'){
+                                var ele = $("#search_"+this.type.toUpperCase()).find("div[data]");
+                                var LocationData = $(ele).attr("data");
+                                LocationData = LocationData.split(",");
+                                if(jQuery.inArray("51",LocationData) === -1){
+                                        $("#search_LOCATION_CITIES").addClass("dn");
+                                }else{
+                                        $("#search_LOCATION_CITIES").removeClass("dn");
+                                }
+                        }
+                        var ele = $("#search_"+this.type.toUpperCase()).find("div[data]");
+                        var LocationData = $(ele).attr("data");
 			var ele = this;
 			stopTouchEvents();
 			$(this.DD_OPTION).unbind(clickEventType);
@@ -378,6 +390,13 @@
 						
 						
 					}
+                                        
+                                        if(data[i]["IS_LIST_HEADING"]=="Y")
+					{
+						liClass = "noselect hpad5";
+                                                temp = temp.replace(/mrr10/g,'mrr10 dn');
+                                                divClass = divClass.replace(/color17/g,'color14');
+					}
 					if(!setDependant)
 					{
 						temp = temp.replace(/DD_VALUE_DEP/g,data[i]["VALUE"]);
@@ -471,11 +490,13 @@
 				}
 				else
 				{
-					if($(myLi).hasClass('selected'))
+                                        var unselect = 0;
+					if($(myLi).hasClass('selected')){
 						$(myLi).find("i.srfrm_checked").removeClass("srfrm_checked").addClass("srfrm_circle");
-					else
+                                                unselect = 1;
+                                        }else{
 						$(myLi).find("i.srfrm_circle").addClass("srfrm_checked").removeClass("srfrm_circle");
-					
+                                        }
 					$(myLi).toggleClass("selected");
 					if(this.type=="caste")
 					{
@@ -519,8 +540,19 @@
 						}
 						
 					}
-					
-					
+					if(this.type=="location_cities")
+					{
+                                             $(this.ulOption).children('li').each(function(i, obj) {
+							if($(this).attr("value") == inputv)
+							{		
+                                                                if($(this).hasClass("selected") && unselect == 1)
+								{
+                                                                        $(this).removeClass('selected');
+                                                                        $(this).find("i.srfrm_checked").removeClass("srfrm_checked").addClass("srfrm_circle");
+                                                                }
+							}
+						});   
+                                        }
 					if($(myLi).hasClass("isGroup"))
 					{
 						var myGroup = $(myLi).attr("group");
@@ -744,13 +776,16 @@
 				});
 				
 			});
-			
+			var tvalArr = {};
 			$(ele.ulOption).children(".noGroup.selected").each(function(i, obj) {
 				var temp={};
 				var myData =  $(this).attr("data").replace(/"/g, "\""); 
-				temp[myData]=$(this).attr("value");
-				ele.output.push(temp);
-				tempOutput = tempOutput +","+ $(this).attr("value");
+                                if(myData in tvalArr == false){
+                                        temp[myData]=$(this).attr("value");
+                                        tvalArr[myData]=$(this).attr("value");
+                                        ele.output.push(temp);
+                                        tempOutput = tempOutput +","+ $(this).attr("value");
+                                }
 				if(ele.realType=="lincome")
 				{
 					var temp={};
@@ -760,7 +795,6 @@
 					
 				}
 			});
-			
 			$(ele.ulOption).children(".inGroup.selected").each(function(i, obj) {
 				var temp={};
 				
@@ -774,7 +808,6 @@
 			});
 			
 			ele.output = JSON.stringify(ele.output);
-			
 			
 		};
 		
@@ -876,12 +909,14 @@ function UpdateSection(output)
 				mylabel="Any Mother Tongue";
 			else if(type == "location")
 				mylabel = "Any Country";
+			else if(type == "location_cities")
+				mylabel = "Any State/ City";
                         else if(type == "manglik" || type == "occupation" || type == "education")
 				mylabel = "Doesn't Matter";
 			$(element).find("span[data]").html("");
 			$(element).find("span.label").html(mylabel);	
 	}
-	else if(type=="location" || type=="mtongue" || type=="occupation" || type=="education" || type=="manglik")
+	else if(type=="location" || type=="location_cities" || type=="mtongue" || type=="occupation" || type=="education" || type=="manglik")
 	{
 		
 		if(valueArr.length>1)
@@ -1059,7 +1094,8 @@ function getHeading(type,caste)
 		case 'lincome' : return "Minimum Income";
 		case 'hincome' : return "Maximum Income";
 		case 'mtongue' : return "Mother Tongue";
-		case 'location' : return "Living In";
+		case 'location' : return "Country";
+		case 'location_cities' : return "State/City";
 		case 'religion' : return "Religion";
 		case 'education' : return "Education";
 		case 'occupation' : return "Occupation";
