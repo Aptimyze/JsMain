@@ -81,7 +81,7 @@
         var moduleChat = "~$module`";
         localStorage.removeItem("self_subcription");
         localStorage.setItem("self_subcription","~$subscription`");
-        //console.log("ankita_localstorage",localStorage);
+        console.log("ankita_localstorage",localStorage.getItem("self_subcription"));
         //console.log("in ...2");
     </script>
     ~if $showChat`
