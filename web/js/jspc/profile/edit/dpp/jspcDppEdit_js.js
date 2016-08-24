@@ -370,7 +370,7 @@ function fillTextAreaValues(sectionId){
 
 //to save fields in a particular section with api call
 function saveSectionsFields(sectionId){
- 
+  callAfterDppChange();
   var editFieldArr = {};
   $('.'+sectionId+" .prehide").each(function(){  
   });
