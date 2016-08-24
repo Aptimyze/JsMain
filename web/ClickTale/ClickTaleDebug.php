@@ -24,8 +24,6 @@ if (!defined('ClickTale_Root'))
 require_once(ClickTale_Root."/ClickTale.Settings.php");
 require_once(ClickTale_Root."/ClickTale.inc.php");
 require_once(ClickTale_Root."/ClickTale.Logger.php");
-// including for logging purpose
-include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 
 ?>
 
