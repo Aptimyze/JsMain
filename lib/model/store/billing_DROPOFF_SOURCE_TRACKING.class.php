@@ -12,6 +12,9 @@ class billing_DROPOFF_SOURCE_TRACKING extends TABLE
         if (empty($profileid)) {
             $profileid = 0;
         }
+        if (empty($country)) {
+            $country = 'IN';
+        }
         try
         {
             $dt       = date("Y-m-d H:i:s");
