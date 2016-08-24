@@ -220,9 +220,8 @@ class Inbox implements Module
 		$key = $this->profileObj->getPROFILEID()."_".$infoTypeNav["PAGE"];
 		$keyCount = $key."_COUNT"; 
 		$infoType = $infoTypeNav["PAGE"];
-
 		// Set limit too high as pagination not implemented in channels others than desktop for messages
-		if(!MobileCommon::isDesktop() && ($infoType == "MESSAGE_RECEIVED" || $infoType == "MY_MESSAGE" || $infoType == "MY_MESSAGE_RECEIVED") && $infoTypeNav["NUMBER"]==null)
+		if(!MobileCommon::isDesktop() && ($infoType == "MESSAGE_RECEIVED" || $infoType == "MY_MESSAGE" || $infoType == "MY_MESSAGE_RECEIVED") && ($infoTypeNav["NUMBER"]==null || MobileCommon::isApp()==null))
 		{
 						$this->configurations[$infoType]["COUNT"]=10000;
 
