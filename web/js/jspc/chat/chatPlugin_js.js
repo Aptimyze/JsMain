@@ -1674,9 +1674,7 @@ JsChat.prototype = {
         else if(type == "show"){
             $('chat-box[user-id="' + userId + '"] #initiateText').remove();
             if($('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).length == 0){
-                if(chatBoxType != "pg_acceptance_pending"){
-                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="chat_freeMemMsg_'+userId+'" class="pos-abs fullwid txtc colorGrey mt120">Only paid members can start chat<div  class="becomePaidMember_chat color5 cursp"><a href="/profile/mem_comparison.php" class = "cursp js-colorParent">Become a Paid Member</a></div></div>');
-                }
+                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="chat_freeMemMsg_'+userId+'" class="pos-abs fullwid txtc colorGrey mt120">Only paid members can start chat<div  class="becomePaidMember_chat color5 cursp"><a href="/profile/mem_comparison.php" class = "cursp js-colorParent">Become a Paid Member</a></div></div>');
                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
             }
         }
