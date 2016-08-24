@@ -1079,9 +1079,14 @@ JsChat.prototype = {
                     textAreamElem = this;
                 //console.log("text before", text);
                 text = $("<div/>").html(text).text();
-                //console.log("Text entered", text);
+                var proceed = true;
+                if(!text.replace(/\s/g, '').length) {
+                    proceed = false;
+                    _this._scrollToBottom(userId);
+                }
                 $(textAreamElem).val("").css("height", "24px");
-                if (text.length > 1) {
+                
+                if (text.length > 1 && proceed == true) {
                     var superParent = $(this).parent().parent(),
                         timeLog = new Date().getTime();
                     var finalStr = "";
