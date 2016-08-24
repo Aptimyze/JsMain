@@ -2720,7 +2720,10 @@ EditApp = function(){
         {
           cookOpenTextField(editSectionFormDOM,fieldObject);
 	if(fieldObject.key=="NAME")
+	{
+		showDisplayNameSettingFirstTime(editAppObject[BASIC]["DISPLAYNAME"]);
 		onDisplayNameChange(editAppObject[BASIC]["DISPLAYNAME"]);
+	}
         }
         if( fieldObject.type === FILE_TYPE)
         {
@@ -6152,4 +6155,21 @@ $('.js-previewAlbum').click(function(){
 				storeFieldChangeValue(fieldObject,value);
                         });
         });
+	}
+	function showDisplayNameSettingFirstTime(fieldObject)
+	{
+		if(fieldObject.value=="Y")
+		{
+			var show = "#showYes";
+			var hide = "#showNo";
+		}
+		else
+		{
+			var show = "#showNo";
+			var hide = "#showYes";
+		}
+		var text = $(show).html();
+		$(hide).removeClass("selected");
+		$(show).addClass("selected");
+		$("#showText").html(text);
 	}
