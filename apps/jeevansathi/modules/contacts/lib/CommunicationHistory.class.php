@@ -181,6 +181,7 @@ class CommunicationHistory
 			} else {
 			return false;
 		}
+		//print_r($CON_HISTORY);die;
 		$CON_HISTORY = array_reverse($CON_HISTORY);
 		if($page && (count($CON_HISTORY)>self::$RESULTS_PER_PAGE_APP))
 			$memObject->set('commHistory_'.$this->otherProfile->getPROFILEID().'_'.$this->loginProfile->getPROFILEID(),$CON_HISTORY);
@@ -203,9 +204,13 @@ class CommunicationHistory
 				$this->nextPage='false';
 	
 			$CON_HISTORY = array_slice($CON_HISTORY, $offset,$limit);
+			if(MobileCommon::IsApp()=="I")
+			{
+				$CON_HISTORY = array_reverse($CON_HISTORY);
+			}
 		}
 		else $this->nextPage="";
-
+//print_r($CON_HISTORY);die;
 /////////////////////////////////////
 
 
