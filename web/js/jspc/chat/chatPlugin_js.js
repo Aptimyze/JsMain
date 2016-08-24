@@ -1829,14 +1829,14 @@ JsChat.prototype = {
                 scrollTop: len
             }, 1000);   
         } else if(type == "noAnimate") {
-            console.log("aaaaaaaaa",$('chat-box[user-id="' + userId + '"]').length)
+            //console.log("aaaaaaaaa",$('chat-box[user-id="' + userId + '"]').length)
             setTimeout(function () {
-                console.log("bbbbbbb",$('chat-box[user-id="' + userId + '"]').length)
+                //console.log("bbbbbbb",$('chat-box[user-id="' + userId + '"]').length)
                 var len = document.getElementById("chatMessage_"+userId).scrollHeight;
                     $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
                         scrollTop: len
                     }, 0);
-                }, 500);
+            }, 500);
         }
     },
     //append chat history in chat box
