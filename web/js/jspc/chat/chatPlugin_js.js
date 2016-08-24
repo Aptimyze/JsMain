@@ -1699,11 +1699,15 @@ JsChat.prototype = {
     _chatPanelsBox: function (userId, status, jid, pcheckSum, groupId) {
         //this._chatLoggerPlugin("pcheckSum", pcheckSum);
         //console.log("_chatPanelsBox");
+        var curElem = this;
+        var output = curElem.checkForNodePresence(userId);
+        if(output && output["exists"] == true && output["groupID"]){
+            groupId = output["groupID"];
+        }
         if ($(".chatlist li[id='" + userId + "_" + groupId + "']").length != 0) {
             status = $(".chatlist li[id='" + userId + "_" + groupId + "']").attr("data-status");
         }
-        var curElem = this,
-            heightPlus = false,
+        var heightPlus = false,
             bodyWidth = $("body").width();
         /*if ($(curElem._chatBottomPanelID).length == 0) {
             $("body").append("<div id='chatBottomPanel' class='btmNegtaive pos_fix calhgt2 fontlig'></div>");
