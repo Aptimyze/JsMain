@@ -1171,15 +1171,17 @@ JsChat.prototype = {
                             } else {
                                 if (msgSendOutput["sent"] == true) {
                                     if ($(superParent).find("#sendInt").length != 0) {
+                                        console.log("appending intsent msg ankita");
                                         $(superParent).find(".chatMessage").append("<div  class='inline_txt pos-rel fr pr10' id='interestSent'>Your interest has been sent</div>");
                                         $(superParent).find(".chatMessage").find("#sentDiv").remove();
                                         //console.log("yesssssssssssssssss");
                                         //$(superParent).find("#initiateText,#chatBoxErr").remove();
                                         $(superParent).find("#sendInt").remove();
+                                        $(superParent).find("#interestSent").removeClass("disp-none");
                                     }
                                     //msg sending success,set single tick here
                                     $(superParent).find("#sendDiv").remove();
-                                    $(superParent).find("#interestSent").removeClass("disp-none");
+                                    //$(superParent).find("#interestSent").removeClass("disp-none");
                                     _this._changeStatusOfMessg(messageId, userId, "recieved");
                                     //_this.storeMessagesInLocalHistory(selfJID.split('@')[0],userId,newMsg,'send');
                                 }
