@@ -1200,6 +1200,7 @@ class InboxMobileAppV2
 			$messageCmp = trim(html_entity_decode($message,ENT_QUOTES));
 			if(!in_array($messageCmp,$presetMessage))
 			{
+				$message=str_replace("||","\n",$message);
 				$message= nl2br($message);
 				$message =addslashes(htmlspecialchars_decode($message));
 			}
