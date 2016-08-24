@@ -982,6 +982,9 @@ JsChat.prototype = {
                                         enableClose = false;
                                         var htmlStr = sessionStorage.getItem("htmlStr_" + userId);
                                         $('chat-box[user-id="' + userId + '"] .chatMessage').html(htmlStr);
+                                        if($('chat-box[user-id="' + userId + '"] #rosterDeleteMsg_'+ userId + '').length != 0){
+                                            $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+                                        }
                                         $('chat-box[user-id="' + userId + '"] .nchatic_3').css('pointer-events', "auto");
                                     } else {
                                         $('chat-box[user-id="' + userId + '"] #undoBlock').html(response.responseMessage);
