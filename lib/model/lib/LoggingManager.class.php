@@ -552,7 +552,7 @@ class LoggingManager
 		$toLog = (LoggingEnums::CONFIG_ON ? LoggingConfig::getInstance()->logStatus($this->szLogPath) : true);
 		// check Log Level
 		$checkLogLevel = ($enLogType <= LoggingEnums::LOG_LEVEL || $enLogType <= LoggingConfig::getInstance()->getLogLevel($this->szLogPath));
-		return $toLog & $checkLogLevel & LoggingEnums::MASTER_FLAG;
+		return $toLog && $checkLogLevel && LoggingEnums::MASTER_FLAG;
 	}
 
 	/**
