@@ -1363,7 +1363,7 @@ JsChat.prototype = {
         //this._chatLoggerPlugin("chatboxtype--" + chatBoxType);
         $('chat-box[user-id="' + userId + '"]').attr("group-id", groupID);
         $('chat-box[user-id="' + userId + '"]').attr("data-contact", chatBoxType);
-        curElem._changeLocalStorage("changeGroup",userId,groupID,"");
+        curElem._changeLocalStorage("changeOrAddGroup",userId,groupID,"");
         return chatBoxType;
     },
     _postChatPanelsBox: function (userId) {
@@ -2502,6 +2502,7 @@ JsChat.prototype = {
     
     _changeLocalStorage:function(type,userId,groupId,newState) {
         //console.log("inside function",type,userId,groupId,newState);
+        var thisElem = this;
         var data = [];
         if(localStorage.getItem("chatBoxData")) {
             data = JSON.parse(localStorage.getItem("chatBoxData"));
@@ -2535,12 +2536,17 @@ JsChat.prototype = {
                     elem["state"] = newState;
                 }
             });
-        } else if(type == "changeGroup") {
+        } else if(type == "changeGroup" || type == "changeOrAddGroup") {
+            var found = false;
             $.each(data,function(index,elem){
                 if(elem["userId"] == userId) {
+                    found = true;
                     elem["group"] = groupId;
                 }
             });
+            if(type == "changeOrAddGroup" && found == false){
+                thisElem._changeLocalStorage("add",userId,groupId,newState);
+            }
         }
         localStorage.setItem("chatBoxData", JSON.stringify(data));
     },
