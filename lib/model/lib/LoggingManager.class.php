@@ -20,7 +20,7 @@ class LoggingManager
 	/**
 	 * Const of File Base Path
 	 */
-	const LOG_FILE_BASE_PATH = '/Logger/';
+	private $logDirPath = null;
 
 	/**
 	 * @var null
@@ -72,6 +72,7 @@ class LoggingManager
 		if(true === is_dir($this->serverLogPath)){
 			$this->baseLogPath = $this->serverLogPath;
 	   }
+	   $this->logDirPath = '/Logger/'.Date('Y-m-d').'/';
 	}
 	/**
 	 * A function to retrieve uniqueId of the instance of LoggingManager
@@ -489,7 +490,7 @@ class LoggingManager
 	 */
 	private function createDirectory($szLogPath)
 	{
-		$dirPath = $this->baseLogPath.self::LOG_FILE_BASE_PATH.$szLogPath;
+		$dirPath = $this->baseLogPath.$this->logDirPath.$szLogPath;
 		if (false === is_dir($dirPath)) {
 			mkdir($dirPath,0777,true);
 		}
@@ -501,11 +502,11 @@ class LoggingManager
 	private function writeToFile($szLogString)
 	{
 		$currDate = Date('Y-m-d');
-		$filePath =  $this->baseLogPath.self::LOG_FILE_BASE_PATH."log-".$currDate.".log";
+		$filePath =  $this->baseLogPath.$this->logDirPath."log-".$currDate.".log";
 		if($this->canCreateDir($this->moduleName))
 		{
 			$this->createDirectory($this->szLogPath);
-			$filePath =  $this->baseLogPath.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
+			$filePath =  $this->baseLogPath.$this->logDirPath.$this->szLogPath."//log-".$currDate.".log";
 		}
 		else
 		{
