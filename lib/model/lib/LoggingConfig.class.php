@@ -156,11 +156,24 @@
 			if(LoggingEnums::LOG_LEVEL == LoggingEnums::LOG_DEBUG){
 				return true;
 			}
-			if(LoggingEnums::CONFIG_ON && $this->arrConfig[$module][LoggingEnums::LEVEL] == LoggingEnums::LOG_DEBUG)
+			else if(LoggingEnums::CONFIG_ON && $this->arrConfig[$module][LoggingEnums::LEVEL] == LoggingEnums::LOG_DEBUG)
 			{
 				return true;
 			}
 			return false;
+		}
+
+		/**
+		 * Get if SERVER Param is on for the module or not when in debug mde
+		 * @param String $module A module name
+		 * @return bool
+		 */
+		public function serverParamStatus($module)
+		{
+			if(!array_key_exists($module, $this->arrConfig)){
+				return LoggingEnums::SERVER_FLAG;
+			}
+			return LoggingEnums::CONFIG_ON ? $this->arrConfig[$module][LoggingEnums::SERVER_PARAM] : LoggingEnums::SERVER_FLAG;
 		}
 	}
 ?>

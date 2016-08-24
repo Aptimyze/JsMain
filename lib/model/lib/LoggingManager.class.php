@@ -48,6 +48,11 @@ class LoggingManager
 	private $channelName = null;
 
 	/**
+	 * @var null|string
+	 */
+	private $moduleName = null;
+
+	/**
 	 * @var json_object
 	 */
 	private $logData = array();
@@ -154,8 +159,7 @@ class LoggingManager
 
 		$logData = $this->getLogData($exception,$isSymfony,$logArray);
 		$logData[LoggingEnums::LOG_TYPE] = $this->getLogType(LoggingEnums::LOG_ERROR);
-
-		if(LoggingConfig::getInstance()->debugStatus($this->szLogPath))
+		if(LoggingConfig::getInstance()->debugStatus($this->moduleName) && LoggingConfig::getInstance()->serverParamStatus($this->moduleName))
 		{
 			foreach ($_SERVER as $key => $value) {
 				$logData[$key] = $value;
@@ -187,9 +191,11 @@ class LoggingManager
 
 		$logData = $this->getLogData($message,$isSymfony,$logArray);
 		$logData['logType'] = $this->getLogType(LoggingEnums::LOG_DEBUG);
-		// $logData = $logData." ".print_r($_SERVER, true);
-		foreach ($_SERVER as $key => $value) {
-			$logData[$key] = $value;
+		if(LoggingConfig::getInstance()->serverParamStatus($this->moduleName))
+		{
+			foreach ($_SERVER as $key => $value) {
+				$logData[$key] = $value;
+			}
 		}
 		$this->writeToFile(json_encode($logData));
 	}
@@ -269,7 +275,7 @@ class LoggingManager
 			$logData[LoggingEnums::MESSAGE] = $message;
 		} 
 
-		if($this->canWriteTrace($this->szLogPath))
+		if($this->canWriteTrace($this->moduleName))
 		{
 			$logData[LoggingEnums::LOG_EXCEPTION] = $exception;
 		}
@@ -479,11 +485,11 @@ class LoggingManager
 	}
 
 	/**
-	 * @param $szPath
+	 * @param $szLogPath
 	 */
-	private function createDirectory($szPath)
+	private function createDirectory($szLogPath)
 	{
-		$dirPath = $this->baseLogPath.self::LOG_FILE_BASE_PATH.$szPath;
+		$dirPath = $this->baseLogPath.self::LOG_FILE_BASE_PATH.$szLogPath;
 		if (false === is_dir($dirPath)) {
 			mkdir($dirPath,0777,true);
 		}
@@ -496,7 +502,7 @@ class LoggingManager
 	{
 		$currDate = Date('Y-m-d');
 		$filePath =  $this->baseLogPath.self::LOG_FILE_BASE_PATH."log-".$currDate.".log";
-		if($this->canCreateDir($this->szLogPath))
+		if($this->canCreateDir($this->moduleName))
 		{
 			$this->createDirectory($this->szLogPath);
 			$filePath =  $this->baseLogPath.self::LOG_FILE_BASE_PATH.$this->szLogPath."//log-".$currDate.".log";
@@ -540,25 +546,26 @@ class LoggingManager
 	private function canLog($enLogType,$Var,$isSymfony,$logArray)
 	{
 		// set module name
+		$this->moduleName = $this->getLogModuleName($isSymfony,$Var,$logArray);
 		if($this->szLogPath == null)
 		{
-			$this->szLogPath = $this->getLogModuleName($isSymfony,$Var,$logArray);
+			$this->szLogPath = $this->moduleName;
 		}
 		else
 		{
 			$this->flexDir = true;
 		}
 		// check if config is on, if yes then check if module can log
-		$toLog = (LoggingEnums::CONFIG_ON ? LoggingConfig::getInstance()->logStatus($this->szLogPath) : true);
+		$toLog = (LoggingEnums::CONFIG_ON ? LoggingConfig::getInstance()->logStatus($this->moduleName) : true);
 		// check Log Level
-		$checkLogLevel = ($enLogType <= LoggingEnums::LOG_LEVEL || $enLogType <= LoggingConfig::getInstance()->getLogLevel($this->szLogPath));
+		$checkLogLevel = ($enLogType <= LoggingEnums::LOG_LEVEL || $enLogType <= LoggingConfig::getInstance()->getLogLevel($this->moduleName));
 		return $toLog && $checkLogLevel && LoggingEnums::MASTER_FLAG;
 	}
 
 	/**
-	 * @param $szPath
+	 * @param $moduleName
 	 */
-	private function canCreateDir($szLogPath)
+	private function canCreateDir($moduleName)
 	{
 	  // check if log for all modules is together, if not set then check if module can create diff directory
 		if($this->flexDir)
@@ -566,7 +573,7 @@ class LoggingManager
 			$this->flexDir = false;
 			return true;
 		}
-		return (LoggingEnums::LOG_TOGETHER ? 0 : LoggingConfig::getInstance()->dirStatus($szLogPath));
+		return (LoggingEnums::LOG_TOGETHER ? 0 : LoggingConfig::getInstance()->dirStatus($moduleName));
 	}
 
 
@@ -581,10 +588,10 @@ class LoggingManager
 	}
 
 	/**
-	 * @param $szPath
+	 * @param $moduleName
 	 */
-	private function canWriteTrace($szLogPath)
+	private function canWriteTrace($moduleName)
 	{
-		return LoggingConfig::getInstance()->traceStatus($szLogPath);
+		return LoggingConfig::getInstance()->traceStatus($moduleName);
 	}
 }
