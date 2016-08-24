@@ -59,16 +59,7 @@
                return false;
             }
         }
-        /*var loggedInJspcUser="~$sf_request->getAttribute('profileid')`";
-        var showChat = "~$showChat`";
-        var loggedInJspcGender = "~$sf_request->getAttribute('gender')|decodevar`";
-        var self_checksum = "~$sf_request->getAttribute('profilechecksum')`";
-        var self_username = "~$sf_request->getAttribute('username')`";
-        var my_action = "~$action`";
-        var moduleChat = "~$module`";
-        //localStorage.removeItem("self_subcription");
-        localStorage.setItem("self_subcription","~$subscription`");*/
-        //console.log("in ...1");
+        
     </script>
     ~/if`
     <script>
