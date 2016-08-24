@@ -856,7 +856,11 @@ JsChat.prototype = {
                 }
             }
             curElem._changeLocalStorage("remove",$(this).closest("chat-box").attr("user-id"),"","");
-	    removeLocalStorageForNonChatBoxProfiles($(this).closest("chat-box").attr("user-id"));
+	       removeLocalStorageForNonChatBoxProfiles($(this).closest("chat-box").attr("user-id"));
+            curElem._scrollDown($(".extraPopup"), "retain_extra");
+            setTimeout(function () {
+                $(".extraChats").css("padding-top", "0px");
+            }, 100);
         });
     },
     //onPostBlockCallback: null,
@@ -1234,12 +1238,27 @@ JsChat.prototype = {
     },
     //adding data in extra popup
     _addDataExtraPopup: function (data) {
-        var groupId = $("chat-box[user-id='" + data + "']").attr("group-id");
-        $(".extraPopup").append('<div id="extra_' + data + '" class="extraChatList pad08"><div class="extraUsername cursp colrw minWid65 disp_ib pad8_new fontlig f14">' + $('chat-box[user-id="'+data+'"] .downBarUserName').html().split("<div")[0] + '</div><i class="nchatspr fr nchatic_4 cursp disp_ib mt6 ml10"></i><div class="pinkBubble scir disp_ib padall-10 fr"><span class="noOfMessg f13 pos-abs">1</span></div></div>');
-        $("#extra_" + data + " .pinkBubble span").html($('chat-box[user-id="' + data + '"] .chatBoxBar .pinkBubble2 span').html());
-        if ($("#extra_" + data + " .pinkBubble span").html() == 0) {
-            $("#extra_" + data + " .pinkBubble").hide();
+        var userShowName = "",curElem = this;
+        if($('chat-box[user-id="'+data+'"] .downBarUserName').length != 0) {
+            userShowName = $('chat-box[user-id="'+data+'"] .downBarUserName').html().split("<div")[0];
         }
+        else{
+            var output = curElem.checkForNodePresence(data);
+            if(output["exists"] == true){
+                var groupID = output["groupID"];
+                userShowName = $("#"+data+"_"+groupID+" div").html();
+            }
+        }
+        
+        $(".extraPopup").append('<div id="extra_' + data + '" class="extraChatList pad08"><div class="extraUsername cursp colrw minWid65 disp_ib pad8_new fontlig f14">' + userShowName + '</div><i class="nchatspr fr nchatic_4 cursp disp_ib mt6 ml10"></i><div class="pinkBubble scir disp_ib padall-10 fr"><span class="noOfMessg f13 pos-abs">1</span></div></div>');
+        setTimeout(function () {
+           var bubbleNumber = $('chat-box[user-id="' + data + '"] .chatBoxBar .pinkBubble2 span').html();
+            $("#extra_" + data + " .pinkBubble span").html(bubbleNumber);
+            if ($("#extra_" + data + " .pinkBubble span").html() == 0) {
+                $("#extra_" + data + " .pinkBubble").hide();
+            } 
+        }, 500);
+        
     },
     //append chat box on page
     _appendChatBox: function (userId, status, jid, pcheckSum, groupId,hisStatus) {
@@ -1265,8 +1284,8 @@ JsChat.prototype = {
         //console.log("_createSideChatBox");
         var curElem = this;
         $(curElem._chatBottomPanelID).append('<div class="extraChats cursp pos_abs nchatbtmNegtaive wid30 hgt43 bg5"><div class="extraNumber colrw opa50">+1</div><div><div class="extraPopup pos_abs l0 nchatbtmNegtaive wid170 bg5"><div>');
-        //console.log("created");
-        $(".extraChats").css("left", curElem._bottomPanelWidth - $('chat-box').length * 250 - 32);
+        var leftCss = (curElem._bottomPanelWidth - $('chat-box').length * 250)-32;
+        $(".extraChats").css("left", leftCss);
         curElem._scrollUp($(".extraChats"), "0px");
         //adding data in extra popup 
         var len = $("chat-box").length - 1,
@@ -1503,7 +1522,7 @@ JsChat.prototype = {
                                 $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
                             } else {
                                 $(this).closest(".chatMessage").find("#sentDiv").removeClass("disp-none");
-                                $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
+                                $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt,#acceptDeclineDiv").remove();
                                 //$(this).remove();
                                 new_contact_state = curElem._contactStatusMapping["both_accepted"]["key"];
                                 //TODO: fire query for accepting request
@@ -1543,7 +1562,7 @@ JsChat.prototype = {
                                 $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt").remove();
                             } else {
                                 $(this).closest(".chatMessage").find("#declineDiv").removeClass("disp-none");
-                                $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt,#accept").remove();
+                                $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt,#accept,#acceptDeclineDiv").remove();
                                 //$(this).remove();
                                 new_contact_state = curElem._contactStatusMapping["pg_interest_declined"]["key"];
                                 //TODO: fire query for accepting request
@@ -1563,7 +1582,7 @@ JsChat.prototype = {
             });
             break;
         case curElem._contactStatusMapping["pog_interest_accepted"]["key"]:
-            $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sentDiv,#restrictMessgTxt,#accept,#acceptTxt").remove();
+            $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sentDiv,#restrictMessgTxt,#acceptDeclineDiv,#accept,#acceptTxt").remove();
             $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="fullwid pos-rel mt10 color5 txtc fl acceptRec">Interest Accepted continue chat</div>');
             //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
             break;
@@ -2003,11 +2022,11 @@ JsChat.prototype = {
                 noOfInputs++;
             }
         });
-        $(".extraChatList .pinkBubble").each(function (index, element) {
+        /*$(".extraChatList .pinkBubble").each(function (index, element) {
             if ($(this).find(".noOfMessg").html() != 0) {
                 noOfInputs++;
             }
-        });
+        });*/
         if ($('.showcountmin').hasClass('vishid')) {
             //this._chatLoggerPlugin('no exist');
             //noOfInputs = 5;
