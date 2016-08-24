@@ -836,7 +836,22 @@ JsChat.prototype = {
             }, 100);
             curElem._scrollUp($('chat-box[user-id="' + userId + '"]'), "297px");
             curElem._changeLocalStorage("stateChange",userId,"","open");
+            var bubbleData = [];
+            if(localStorage.getItem("bubbleData")) {
+                bubbleData = JSON.parse(localStorage.getItem("bubbleData"));
+            }
+            var indexToBeRemoved;
+            $.each(bubbleData, function(index, elem){
+                if(elem.userId == userId) {
+                    indexToBeRemoved = index;
+                }
+            });
+            if(indexToBeRemoved != undefined) {
+                bubbleData.splice(indexToBeRemoved,1);
+            }
+            localStorage.setItem("bubbleData", JSON.stringify(bubbleData));
         });
+
     },
     //bind clicking close icon
     _bindClose: function (elem) {
@@ -1811,15 +1826,20 @@ JsChat.prototype = {
     },
     _scrollToBottom: function (userId,type) {
         //console.log("type in _scrollToBottom",type);
-        var len = document.getElementById("chatMessage_"+userId).scrollHeight;
         if(type == undefined) {
+            var len = document.getElementById("chatMessage_"+userId).scrollHeight;
             $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
                 scrollTop: len
             }, 1000);   
         } else if(type == "noAnimate") {
-            $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
-                scrollTop: len
-            }, 0);
+            //console.log("aaaaaaaaa",$('chat-box[user-id="' + userId + '"]').length)
+            setTimeout(function () {
+                //console.log("bbbbbbb",$('chat-box[user-id="' + userId + '"]').length)
+                var len = document.getElementById("chatMessage_"+userId).scrollHeight;
+                    $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
+                        scrollTop: len
+                    }, 0);
+            }, 500);
         }
     },
     //append chat history in chat box
@@ -1970,6 +1990,22 @@ JsChat.prototype = {
                 $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html(val);
                 $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2').show();
                 //$('chat-box[user-id="' + userId + '"] .chatMessage').find('#text_' + userId + '_' + uniqueId).addClass("received");
+                var bubbleData = [];
+                if(localStorage.getItem("bubbleData")) {
+                    bubbleData = JSON.parse(localStorage.getItem("bubbleData"));
+                }
+                var dataPresent = false;
+                $.each(bubbleData, function(index, elem){
+                    if(elem.userId == userId) {
+                        elem.bCount = val;
+                        dataPresent = true;
+                    }
+                });
+                if(dataPresent == false){
+                    var obj = {userId:userId,bCount:val};
+                    bubbleData.push(obj);
+                }
+                localStorage.setItem("bubbleData", JSON.stringify(bubbleData));
             } else {
                 if($('#extra_'+userId).length == 0){
                     //$('chat-box[user-id="' + userId + '"] .chatMessage').find('#text_' + userId + '_' + uniqueId).addClass("received");
@@ -2584,6 +2620,20 @@ JsChat.prototype = {
 				});
 			}
 		}
+        var bubbleData = [];
+        if(localStorage.getItem("bubbleData")) {
+            bubbleData = JSON.parse(localStorage.getItem("bubbleData"));
+        }
+        console.log(bubbleData);
+        setTimeout(function() {
+            $.each(bubbleData, function(index,elem) {
+                console.log("manvi",$('chat-box[user-id="'+elem.userId+'"] .pinkBubble2'));
+                $('chat-box[user-id="'+elem.userId+'"] .pinkBubble2 span').html(elem.bCount);
+                if(elem.bCount != 0){
+                    $('chat-box[user-id="'+elem.userId+'"] .pinkBubble2').show();
+                }
+            });
+        }, 1000);
 		localStorage.setItem("lastUId",$(".tabUId").attr("id"));
 	},    
     
