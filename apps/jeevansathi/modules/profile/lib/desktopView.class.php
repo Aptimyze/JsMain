@@ -191,6 +191,11 @@ class desktopView extends DetailedViewApi
        $this->m_arrOut['dpp_mtongue'] = strip_tags($this->m_arrOut['dpp_mtongue']);
        $this->m_arrOut['dpp_occupation'] = strip_tags($this->m_arrOut['dpp_occupation']);
        $this->m_arrOut['dpp_have_children'] = $jPartnerObj->getDecoratedCHILDREN();
+       $state = $jPartnerObj->getDecoratedSTATE();
+       if($state && $this->m_arrOut['dpp_city'])
+           $this->m_arrOut['dpp_city'] = $state.','.$this->m_arrOut['dpp_city'];
+       elseif($state)
+           $this->m_arrOut['dpp_city'] = $state;
        if($jPartnerObj->getDecoratedNHANDICAPPED())
    $this->m_arrOut['dpp_natureHandi']= $jPartnerObj->getDecoratedNHANDICAPPED(); 
   }

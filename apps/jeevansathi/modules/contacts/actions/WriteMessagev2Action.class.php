@@ -164,6 +164,7 @@ class WriteMessagev2Action extends sfAction
 
 	private function getProfileDisplayData($profileDisplay)
 	{
+           
 		$display["PROFILECHECKSUM"] = $profileDisplay->PROFILECHECKSUM;
 		$display["USERNAME"] = $profileDisplay->USERNAME;
 		$display["AGE"] = $profileDisplay->AGE;
@@ -177,7 +178,7 @@ class WriteMessagev2Action extends sfAction
 		$display["SUBCASTE"] = $profileDisplay->SUBCASTE;
 		$display["MTONGUE"] = $profileDisplay->SUBCASTE;
 		$display["INCOME"] = $profileDisplay->INCOME;
-		$display["edu_level_new"] = $profileDisplay->EDUCATION;
+		$display["edu_level_new"] = (new MailerService())->getEducationDetails($profileDisplay->PROFILEID);
 		$display["ProfilePic120Url"] = $profileDisplay->ProfilePic120Url;
 		$display['subscription_icon'] = $profileDisplay->getsubscription_icon();
 		$display['userloginstatus'] = $profileDisplay->getuserloginstatus();

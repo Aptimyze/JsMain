@@ -410,7 +410,7 @@ class commonActions extends sfActions
 				$finalresponseArray["actiondetails"] = null;
 				$finalresponseArray["buttondetails"] = ButtonResponse::buttonDetailsMerge($array);
 				$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
-				if($this->contactObj->getTYPE() == "N") {
+				if($this->contactObj->getTYPE() == "N" && $this->loginProfile->getGENDER() != $this->Profile->getGENDER()) {
 					//Entry in Chat Roster
 					try {
 						$producerObj = new Producer();
@@ -440,7 +440,7 @@ class commonActions extends sfActions
 				$finalresponseArray["buttondetails"] = ButtonResponse::buttonDetailsMerge($array);
 				//Entry in Chat Roster
 				$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
-				if($this->contactObj->getTYPE() == "N") {
+				if($this->contactObj->getTYPE() == "N" && $this->loginProfile->getGENDER() != $this->Profile->getGENDER()) {
 					try {
 						$producerObj = new Producer();
 						if ($producerObj->getRabbitMQServerConnected()) {

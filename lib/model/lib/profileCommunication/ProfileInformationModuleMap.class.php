@@ -315,7 +315,7 @@ class ProfileInformationModuleMap
 			"APP_TYPE"=> "IOS",
 			"VERSION"=> "1",
 			"SORT_ORDER"=> "3",
-			"COUNT"=> "10",
+			"COUNT"=> "20",
 			"TUPLE"=> "SIZE_120",
 			"TUPLE_ORDER"=> "TIME",
 			"ACTIVE_FLAG"=> "Y",

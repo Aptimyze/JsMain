@@ -48,7 +48,7 @@ class postEOIv2Action extends sfAction
 						$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
 					}
 					$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,'I',ContactHandler::POST);
-					$this->contactHandlerObj->setElement("MESSAGE",PresetMessage::getPresentMessage($this->loginProfile,$this->contactHandlerObj->getToBeType()));
+					$this->contactHandlerObj->setElement("MESSAGE","");
 					$this->contactHandlerObj->setElement("DRAFT_NAME","preset");
 					$this->contactHandlerObj->setElement("STATUS","I");
 					$this->contactHandlerObj->setElement("STYPE",$this->getParameter($request,"stype"));

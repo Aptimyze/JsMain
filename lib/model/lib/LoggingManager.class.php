@@ -42,6 +42,9 @@ class LoggingManager
     {
         $this->szLogPath = $basePath;
         $this->iUniqueID = uniqid();
+        if (false === is_dir(JsConstants::$docRoot.'/uploads/Logger')) {
+            mkdir(JsConstants::$docRoot.'/uploads/Logger',0777,true);
+        }
     }
 
     /**
@@ -133,14 +136,15 @@ class LoggingManager
      */
     private function logDebug($message)
     {
-        $ex = new Exception($message);
-        $stackTrace = $ex->__toString();
+//        $ex = new Exception($message);
+//        $stackTrace = $ex->getTraceAsString();
 
+        $stackTrace = $message;
         $clientIp = FetchClientIP();
-        $szLogType = $this->getLogType(LoggingEnums::LOG_INFO);
-        $szLogString = "$szLogType [{$this->iUniqueID}:{$clientIp}]: ".$stackTrace;
+        $szLogType = $this->getLogType(LoggingEnums::LOG_DEBUG);
+        $szLogString = "$szLogType [{$this->iUniqueID}:{$clientIp}]: ".$stackTrace.$debugTrace;
 
-        $this->writeToFile($this->getLogType(LoggingEnums::LOG_ERROR), $szLogString);
+        $this->writeToFile($szLogString);
     }
 
     /**

@@ -1450,7 +1450,8 @@ class MembershipHandler
         $activationDt 	= $vdDatesArr['ENTRY_DT'];
         $todayDate 	= date("Y-m-d");
         
-        if(strtotime($endDate) >= strtotime($todayDate)){
+        //if(strtotime($endDate) >= strtotime($todayDate)){
+	if(strtotime($startDate) == strtotime($todayDate)){	
             $vdProfilesArr = $vdPoolTechObj->fetchVdPoolTechProfiles();
             foreach ($vdProfilesArr as $key => $profileid){
 		

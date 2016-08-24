@@ -215,6 +215,22 @@
 <script type="text/javascript">
 	var AndroidPromotion = 0;
 	var skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
+	~if $data.backendLink`
+		~if $data.cart_items.main_memberships`
+			createCookie('mainMem', '~$data.subscription_id`', 0);
+			createCookie('mainMemDur', '~$data.subscription_duration`', 0);
+		~/if`
+		~if $data.cart_items.vas_memberships`
+			~if $data.subscription_id neq 'ESP' and $data.subscription_id neq 'NCP'`
+				var cookVasArr = new Array();
+				~foreach from=$data.cart_items.vas_memberships key=k item=v name=vasServLoop`
+					cookVasArr.push('~$v.vas_id`');
+				~/foreach`
+				var finalVasStr = cookVasArr.join(",");
+	        	createCookie('selectedVas', finalVasStr, 0);
+        	~/if`
+		~/if`
+	~/if`
 	$(document).ready(function(){
 		$('html').addClass('rv2_bg1');
 		$("#continueBtn").show();
@@ -436,7 +452,7 @@
 		},100);
 		setTimeout(function(){
 			autoPopupFreshdesk(username,email);
-		}, 60000);
+		}, 90000);
 	});
 </script>
 ~/if`
