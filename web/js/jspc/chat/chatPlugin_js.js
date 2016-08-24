@@ -1590,7 +1590,9 @@ JsChat.prototype = {
             break;
         case curElem._contactStatusMapping["pog_interest_declined"]["key"]:
             $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sentDiv,#restrictMessgTxt,#acceptTxt").remove();
-            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="sendDiv txtc pos-abs wid80p mt10 color5">Interest Declined, you can\'t chat with this user anymore</div>');
+            if($('chat-box[user-id="' + userId + '"] .declineSent').length == 0){
+                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="sendDiv txtc pos-abs wid80p mt10 color5 declineSent">Interest Declined, you can\'t chat with this user anymore</div>');
+            }
             //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
             break;
         case curElem._contactStatusMapping["pg_interest_accepted"]["key"]:
