@@ -156,7 +156,8 @@ class ProcessHandler
              $communicationType = $body["communicationType"];
              $message = $body["message"];
              $chatId = $body["chatid"];
-             $js_communication=new JS_Communication($sender,$receiver,$communicationType,$message,$chatId);
+             $ip = $body["ip"];
+             $js_communication=new JS_Communication($sender,$receiver,$communicationType,$message,$chatId,$ip);
              $js_communication->storeCommunication();
              break;
      }
