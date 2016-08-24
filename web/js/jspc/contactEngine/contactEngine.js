@@ -780,6 +780,9 @@ function cEButtonActionCalling(elementObj)
 				{
 					invokePluginLoginHandler($("#js-chatLogin").click());
 				}
+				else if($(".js-minpanel").length != 0){
+					$(".js-minpanel").click();
+				}
 				var checkExist = setInterval(function() {
 				if (ifChatListingIsCreated==1){
 				      clearInterval(checkExist);
