@@ -466,8 +466,8 @@ var strophieWrapper = {
     //executed on msg receipt
     onMessage: function (iq) {
         //strophieWrapper.stropheLoggerPC("got message");
-        //console.log("in onMessage");
-        //console.log(iq);
+        console.log("in onMessage");
+        console.log(iq);
         //strophieWrapper.stropheLoggerPC(iq);
         var msgObject = strophieWrapper.formatMsgObj(iq);
         //strophieWrapper.stropheLoggerPC(msgObject);
@@ -582,6 +582,7 @@ var strophieWrapper = {
         try {
             if (message && to && strophieWrapper.getCurrentConnStatus()) {
             	messageId = strophieWrapper.connectionObj.getUniqueId();
+                console.log("sent",messageId);
                 var reply = $msg({
                     from: strophieWrapper.getSelfJID(),
                     to: to,
