@@ -7,7 +7,7 @@ class billing_DROPOFF_SOURCE_TRACKING extends TABLE
         parent::__construct($dbname);
     }
 
-    public function addSourceTracking($profileid, $pgNo, $fromSource)
+    public function addSourceTracking($profileid, $pgNo, $fromSource, $country = 'IN')
     {
         if (empty($profileid)) {
             $profileid = 0;
@@ -33,9 +33,9 @@ class billing_DROPOFF_SOURCE_TRACKING extends TABLE
                 $prepUpdate->execute();
             } else {
                 if ($profileid != 0) {
-                    $sqlInsert = "INSERT INTO billing.DROPOFF_SOURCE_TRACKING(PROFILEID,PAGE,ENTRY_DT,SOURCE) VALUES(:PROFILEID,:PAGE,:ENTRY_DT,:SOURCE)";
+                    $sqlInsert = "INSERT INTO billing.DROPOFF_SOURCE_TRACKING(PROFILEID,PAGE,ENTRY_DT,SOURCE,COUNTRY) VALUES(:PROFILEID,:PAGE,:ENTRY_DT,:SOURCE,:COUNTRY)";
                 } else {
-                    $sqlInsert = "INSERT INTO billing.DROPOFF_SOURCE_TRACKING(PAGE,ENTRY_DT,SOURCE) VALUES(:PAGE,:ENTRY_DT,:SOURCE)";
+                    $sqlInsert = "INSERT INTO billing.DROPOFF_SOURCE_TRACKING(PAGE,ENTRY_DT,SOURCE,COUNTRY) VALUES(:PAGE,:ENTRY_DT,:SOURCE,:COUNTRY)";
                 }
                 $prepInsert = $this->db->prepare($sqlInsert);
                 if ($profileid != 0) {
@@ -43,6 +43,7 @@ class billing_DROPOFF_SOURCE_TRACKING extends TABLE
                 }
                 $prepInsert->bindValue(":PAGE", $pgNo, PDO::PARAM_INT);
                 $prepInsert->bindValue(":SOURCE", $fromSource, PDO::PARAM_STR);
+                $prepInsert->bindValue(":COUNTRY", $country, PDO::PARAM_STR);
                 $prepInsert->bindValue(":ENTRY_DT", $dt, PDO::PARAM_STR);
                 $prepInsert->execute();
             }

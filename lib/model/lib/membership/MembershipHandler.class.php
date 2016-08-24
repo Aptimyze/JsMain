@@ -519,7 +519,8 @@ class MembershipHandler
             $billingPaySrcObj = new billing_PAYMENT_SOURCE_TRACKING();
             $billingPaySrcObj->addSourceTracking($profileid, $pgNo, $fromSource);
             $billingDropSrcObj = new billing_DROPOFF_SOURCE_TRACKING();
-            $billingDropSrcObj->addSourceTracking($profileid, $pgNo, $fromSource);
+            $geoIpCountry = $_SERVER['GEOIP_COUNTRY_CODE'];
+            $billingDropSrcObj->addSourceTracking($profileid, $pgNo, $fromSource, $geoIpCountry);
         }
         unset($billingPaySrcObj);
         unset($billingPaymentHitsObj);
