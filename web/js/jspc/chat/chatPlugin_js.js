@@ -856,6 +856,7 @@ JsChat.prototype = {
     },
     //bind clicking close icon
     _bindClose: function (elem) {
+        console.log("in _bindClose ankita");
         var curElem = this;
         $(elem).off("click").on("click", function () {
             curElem._scrollDown($(this).closest("chat-box"), "remove");
