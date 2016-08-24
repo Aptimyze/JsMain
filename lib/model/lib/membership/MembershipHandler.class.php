@@ -518,6 +518,8 @@ class MembershipHandler
         if ($fromSource) {
             $billingPaySrcObj = new billing_PAYMENT_SOURCE_TRACKING();
             $billingPaySrcObj->addSourceTracking($profileid, $pgNo, $fromSource);
+            $billingDropSrcObj = new billing_DROPOFF_SOURCE_TRACKING();
+            $billingDropSrcObj->addSourceTracking($profileid, $pgNo, $fromSource);
         }
         unset($billingPaySrcObj);
         unset($billingPaymentHitsObj);
