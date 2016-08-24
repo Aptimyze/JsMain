@@ -793,4 +793,63 @@ class crmInterfaceActions extends sfActions
         }
     }
 
+	public function executeFinanceDataInterface(sfWebRequest $request)
+	{
+	    $this->cid  = $request->getParameter('cid');
+	    $this->name = $request->getParameter('name');
+	    $this->rangeYear = date("Y", time());
+	    $this->showInitial = 1;
+        if ($request->getParameter("submit"))
+        {
+            $formArr = $request->getParameterHolder()->getAll();
+            $formArr["date1_dateLists_month_list"]++;
+            $formArr["date2_dateLists_month_list"]++;
+            $start_date        = $formArr["date1_dateLists_year_list"] . "-" . $formArr["date1_dateLists_month_list"] . "-" . $formArr["date1_dateLists_day_list"];
+            $end_date          = $formArr["date2_dateLists_year_list"] . "-" . $formArr["date2_dateLists_month_list"] . "-" . $formArr["date2_dateLists_day_list"];
+            $start_date        = date("Y-m-d", strtotime($start_date));
+            $end_date          = date("Y-m-d", strtotime($end_date));
+            $this->displayDate = date("jS F Y", strtotime($start_date)) . " To " . date("jS F Y", strtotime($end_date));
+            if ($start_date > $end_date) {
+                $this->errorMsg = "Invalid Date Selected";
+            }
+            if (!$this->errorMsg) //If no error message then submit the page
+	        {
+	            $this->range_format = $formArr["range_format"];
+	            $this->start_date   = $start_date." 00:00:00";
+	            $this->end_date     = $end_date." 23:59:59";
+	            $this->showInitial  = 0;
+	            $this->showData     = 1;
+	            $purchaseObj        = new BILLING_PURCHASES('newjs_slave');
+	            $this->rawData      = $purchaseObj->fetchFinanceData($this->start_date, $this->end_date);
+	            if ($formArr["report_format"] == "XLS") {
+	                $headerString = "EntryDt\tBillID\tReceiptID\tProfileID\tUsername\tServiceID\tStartDate\tEndDate\tCurrency\tAmount\tDeferrableFlag\r\n";
+	                if($this->rawData && is_array($this->rawData))
+					{
+						foreach($this->rawData as $k=>$v)
+						{
+							$dataString = $dataString.$v["ENTRY_DT"]."\t";
+							$dataString = $dataString.$v["BILLID"]."\t";
+							$dataString = $dataString.$v["RECEIPTID"]."\t";
+							$dataString = $dataString.$v["PROFILEID"]."\t";
+							$dataString = $dataString.$v["USERNAME"]."\t";
+							$dataString = $dataString.$v["SERVICEID"]."\t";
+							$dataString = $dataString.$v["START_DATE"]."\t";
+							$dataString = $dataString.$v["END_DATE"]."\t";
+							$dataString = $dataString.$v["CUR_TYPE"]."\t";
+							$dataString = $dataString.$v["AMOUNT"]."\t";
+							$dataString = $dataString.$v["DEFERRABLE"]."\r\n";
+						}
+					}
+					$xlData = $headerString.$dataString;
+					$string .= $start_date . "_to_" . $end_date;
+	                header("Content-Type: application/vnd.ms-excel");
+	                header("Content-Disposition: attachment; filename=FinanceData_" . $string . ".xls");
+	                header("Pragma: no-cache");
+	                header("Expires: 0");
+	                echo $xlData;
+	                die;
+	            }
+	        }
+        }
+	}
 }
