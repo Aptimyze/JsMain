@@ -2648,7 +2648,7 @@ JsChat.prototype = {
             $.each(bubbleData, function(index,elem) {
                 //confirm manvi
                 if($('chat-box[user-id="'+elem.userId+'"]').attr("pos-state") != "open"){
-                    console.log("manvi",$('chat-box[user-id="'+elem.userId+'"] .pinkBubble2'));
+                    console.log("manvi_check",$('chat-box[user-id="'+elem.userId+'"] .pinkBubble2'));
                     $('chat-box[user-id="'+elem.userId+'"] .pinkBubble2 span').html(elem.bCount);
                     if(elem.bCount != 0){
                         $('chat-box[user-id="'+elem.userId+'"] .pinkBubble2').show();
