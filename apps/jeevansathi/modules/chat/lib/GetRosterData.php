@@ -10,6 +10,7 @@ class GetRosterData
 {
 	private $profileid;
 	private $skipProfiles;
+	CONST LOGIN_MONTHS_GAP = 5;
 
 	public function __construct($profileid)
 	{
@@ -19,56 +20,52 @@ class GetRosterData
 	public function getRosterDataByType($type,$limit="")
 	{
 		$infoTypeAdapter = new InformationTypeAdapter($type, $this->profileid);
+		$profileObj = new Profile("",$this->profileid);
+		$profileObj->getDetail();
+		$gender = $profileObj->getGENDER();
+
+		if($gender == "F")
+		{
+			$otherGender='M';
+		}
+		else
+		{
+			$otherGender='F';
+		}
+
 		$skipArray = $this->getSkipProfiles($type);
-		$conditions = $this->getConditions($type,$limit);
+
+		$newLimit = $limit+$limit;//ForOptimization
+		$conditions = $this->getConditions($type,$newLimit);
 		$profilelists = $infoTypeAdapter->getProfiles($conditions,$skipArray);
 		if(is_array($profilelists))
 		{
-			$profArrObj                = new ProfileArray();
 			foreach($profilelists as $key=>$value)
 			{
-				$profiles[] = $key;
+				$profile[] = $key;
 			}
-			$profileIdArr["PROFILEID"] = implode(",",$profiles);
-			$usernameArray = $profArrObj->getResultsBasedOnJprofileFields($profileIdArr, '', '', implode(',',Array("PROFILEID", "USERNAME")),'JPROFILE',"newjs_bmsSlave");
+			$whereArr["PROFILEID"] = implode(",",$profile);
+			$whereArr["GENDER"] = $otherGender;
+			$whereArr["ACTIVATED"] = 'Y';
+
+			/** 
+			*code added to condiser profile who are logged in in LOGIN_MONTHS_GAP time
+			*/
+			$monthGap = mktime(0, 0, 0, date("m")- self::LOGIN_MONTHS_GAP, date("d"),   date("Y"));
+			$dateAfterMonthGap = date("Y-m-d",$monthGap);
+			$greaterThanEqualArrayWithoutQuote["LAST_LOGIN_DT"] = "'".$dateAfterMonthGap."'";
+			$orderBy = "FIELD('PROFILEID',$whereArr[PROFILEID])";
+
+			$profArrObj                = new ProfileArray();
+			$usernameArray = $profArrObj->getResultsBasedOnJprofileFields($whereArr, '', '', implode(',',Array("PROFILEID", "USERNAME")),'JPROFILE',"newjs_bmsSlave","",$greaterThanEqualArrayWithoutQuote,$orderBy,$limit);
 			foreach($usernameArray as $key=>$value)
 			{
-				$profilelists[$value->getPROFILEID()]["USERNAME"] = $value->getUSERNAME();
-				$profilelists[$value->getPROFILEID()]["PROFILECHECKSUM"] = md5($value->getPROFILEID())."i".$value->getPROFILEID();
+				$profilelist[$value->getPROFILEID()] = $profilelists[$value->getPROFILEID()];
+				$profilelist[$value->getPROFILEID()]["USERNAME"] = $value->getUSERNAME();
+				$profilelist[$value->getPROFILEID()]["PROFILECHECKSUM"] = md5($value->getPROFILEID())."i".$value->getPROFILEID();
 			}
-
-
-			//Photo logic
-			$pidArr["PROFILEID"] =$profileIdArr["PROFILEID"];
-			$photoType = 'ThumbailUrl';
-			$profileObj=LoggedInProfile::getInstance('newjs_master',$this->profileid);
-			$multipleProfileObj = new ProfileArray();
-
-			$pidArrTemp = $profiles;
-
-			$profileDetails = $multipleProfileObj->getResultsBasedOnJprofileFields($pidArr);
-
-			$multiplePictureObj = new PictureArray($profileDetails);
-			$photosArr = $multiplePictureObj->getProfilePhoto();
-
-			foreach($pidArrTemp as $profileId)
-			{
-				$photoObj = $photosArr[$profileId];
-				if($photoObj)
-				{
-					eval('$temp =$photoObj->get'.$photoType.'();');
-					$profilelists[$profileId]['PHOTO'] = $temp;
-					unset($temp);
-				}
-				else
-				{
-					$profilelists[$profileId]['PHOTO'] = '';
-				}
-			}
-			//Ends here
-
 		}
-		return $profilelists;
+		return $profilelist;
 	}
 
 	public function getSkipProfiles($infoType)

@@ -52,7 +52,7 @@ class registerMisActions extends sfActions {
         $this->displayDate = date("jS F Y", strtotime($start_date)) . " To " . date("jS F Y", strtotime($end_date));
       }
       if($this->errorMsg == ''){
-        $regQualityObj = new REGISTRATION_QUALITY('newjs_slave');
+        $regQualityObj = new REGISTRATION_QUALITY('newjs_masterRep');
         $params['start_date'] = $start_date;
         $params['end_date'] = $end_date;
         $registrationData = $regQualityObj->getRegisrationData($params);  

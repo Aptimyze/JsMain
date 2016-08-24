@@ -7,7 +7,7 @@
 class matchalerts_TwoWayVsDppCount extends TABLE {
 
         public function __construct($dbname = "") {
-                $dbname = $dbname ? $dbname : "matchalerts_slave";
+                $dbname = $dbname ? $dbname : "newjs_masterRep";
                 parent::__construct($dbname);
         }
 
@@ -19,7 +19,7 @@ class matchalerts_TwoWayVsDppCount extends TABLE {
         public function getEntryDateForProfile($profileId) {
                 try {
                         if ($profileId) {
-                                $sql = "SELECT PROFILEID,ENTRY_DT,CNT FROM matchalerts.TwoWayVsDppCount WHERE PROFILEID = :PROFILEID";
+                                $sql = "SELECT PROFILEID,ENTRY_DT,CNT FROM MATCHALERT_TRACKING.TwoWayVsDppCount WHERE PROFILEID = :PROFILEID";
                                 $prep = $this->db->prepare($sql);
                                 $prep->bindValue(":PROFILEID", $profileId, PDO::PARAM_INT);
                                 $prep->execute();
@@ -38,7 +38,7 @@ class matchalerts_TwoWayVsDppCount extends TABLE {
         public function deleteEntryOfProfile($profileId) {
                 try {
                         if ($profileId) {
-                                $sql = "DELETE FROM matchalerts.TwoWayVsDppCount WHERE PROFILEID = :PROFILEID";
+                                $sql = "DELETE FROM MATCHALERT_TRACKING.TwoWayVsDppCount WHERE PROFILEID = :PROFILEID";
                                 $prep = $this->db->prepare($sql);
                                 $prep->bindValue(":PROFILEID", $profileId, PDO::PARAM_INT);
                                 $prep->execute();
@@ -55,7 +55,7 @@ class matchalerts_TwoWayVsDppCount extends TABLE {
         public function insertEntryOfProfile($profileId, $date,$cnt) {
                 try {
                         if ($profileId) {
-                                $sql = "REPLACE INTO matchalerts.TwoWayVsDppCount(PROFILEID,ENTRY_DT,CNT) VALUES (:PROFILEID,:DATE,:CNT)";
+                                $sql = "REPLACE INTO MATCHALERT_TRACKING.TwoWayVsDppCount(PROFILEID,ENTRY_DT,CNT) VALUES (:PROFILEID,:DATE,:CNT)";
                                 $prep = $this->db->prepare($sql);
                                 $prep->bindValue(":PROFILEID", $profileId, PDO::PARAM_INT);
                                 $prep->bindValue(":CNT", $cnt, PDO::PARAM_INT);
