@@ -856,7 +856,11 @@ JsChat.prototype = {
                 }
             }
             curElem._changeLocalStorage("remove",$(this).closest("chat-box").attr("user-id"),"","");
-	    removeLocalStorageForNonChatBoxProfiles($(this).closest("chat-box").attr("user-id"));
+	       removeLocalStorageForNonChatBoxProfiles($(this).closest("chat-box").attr("user-id"));
+            curElem._scrollDown($(".extraPopup"), "retain_extra");
+            setTimeout(function () {
+                $(".extraChats").css("padding-top", "0px");
+            }, 100);
         });
     },
     //onPostBlockCallback: null,
