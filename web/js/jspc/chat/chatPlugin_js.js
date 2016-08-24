@@ -2546,7 +2546,7 @@ JsChat.prototype = {
             $.each(data,function(index,elem){
                 if(elem["userId"] == userId) {
                     found = true;
-                    elem["group"] = groupId;
+                    data[index]["group"] = groupId;
                 }
             });
             if(type == "changeOrAddGroup" && found == false){
