@@ -2559,6 +2559,7 @@ JsChat.prototype = {
 			data = JSON.parse(localStorage.getItem("chatBoxData"));
 		}
         //console.log("localstorage",data);
+        
 		if(type == "new"){
 			setTimeout(function(){ 
                // console.log("ankita",data);
@@ -2566,9 +2567,17 @@ JsChat.prototype = {
                     console.log("here ankita",elem);
                     //console.log($("#"+elem["userId"]+"_"+elem["group"]));
 					//console.log(elem["userId"],elem["group"],$("#"+elem["userId"]+"_"+elem["group"]));
-					$("#"+elem["userId"]+"_"+elem["group"]).click();
+                    $("#"+elem["userId"]+"_"+elem["group"]).click();
 					if(elem["state"] == "min") {
-						$('chat-box[user-id="' + elem["userId"] + '"] .nchatic_2').click(); 
+                        var chatBrowser = navigator.userAgent;
+                        if (chatBrowser.indexOf("Firefox") > -1) {
+                            setTimeout(function(){
+                                $('chat-box[user-id="' + elem["userId"] + '"] .nchatic_2').click();
+                            },50);
+                        }
+                        else{
+                            $('chat-box[user-id="' + elem["userId"] + '"] .nchatic_2').click();
+                        }
 					}
                     console.log("click done");
 				});
@@ -2587,7 +2596,16 @@ JsChat.prototype = {
 					$('chat-box[user-id="' + elem["userId"] + '"] .chatBoxBar').click();
 				}
 				if(!$('chat-box[user-id="' + elem["userId"] + '"] img').hasClass("downBarPicMin") && elem["state"] == "min") {
-					$('chat-box[user-id="' + elem["userId"] + '"] .nchatic_2').click();
+                    var chatBrowser = navigator.userAgent;
+                    if (chatBrowser.indexOf("Firefox") > -1) {
+                        setTimeout(function(){
+                            $('chat-box[user-id="' + elem["userId"] + '"] .nchatic_2').click();
+                            console.log("timeout");
+                        },50);
+                    }
+                    else{
+                        $('chat-box[user-id="' + elem["userId"] + '"] .nchatic_2').click();
+                    }
 				}
 			});
 			
