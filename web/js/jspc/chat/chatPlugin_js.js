@@ -1368,7 +1368,7 @@ JsChat.prototype = {
         //this._chatLoggerPlugin("chatboxtype--" + chatBoxType);
         $('chat-box[user-id="' + userId + '"]').attr("group-id", groupID);
         $('chat-box[user-id="' + userId + '"]').attr("data-contact", chatBoxType);
-        curElem._changeLocalStorage("changeGroup",userId,groupID,"");
+        curElem._changeLocalStorage("changeOrAddGroup",userId,groupID,"");
         return chatBoxType;
     },
     _postChatPanelsBox: function (userId) {
@@ -1889,9 +1889,10 @@ JsChat.prototype = {
                     if(curElem._checkForDefaultEoiMsg == false || logObj["MESSAGE"].indexOf(defaultEoiRecMsg) == -1){
                         //console.log("done"+removeFreeMemMsg);
                         if(removeFreeMemMsg == false){
+                            console.log("iseoi",logObj["IS_EOI"]);
                            //console.log(typeof logObj["IS_EOI"]+"-"+logObj["IS_EOI"]);
                             if(typeof logObj["IS_EOI"] == "undefined" || logObj["IS_EOI"] == false){
-                                //console.log("remove free msg");
+                                console.log("remove free msg");
                                 removeFreeMemMsg = true;
                                 curElem._enableChatAfterPaidInitiates(other_id);
                             }
@@ -1945,6 +1946,7 @@ JsChat.prototype = {
     _enableChatAfterPaidInitiates: function(userId){
         $('chat-box[user-id="' + userId + '"]').attr("data-paidInitiated","true");
         if($('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).length != 0){
+            console.log("removing");
             $('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).remove();
         }
         $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
@@ -2507,6 +2509,7 @@ JsChat.prototype = {
     
     _changeLocalStorage:function(type,userId,groupId,newState) {
         //console.log("inside function",type,userId,groupId,newState);
+        var thisElem = this;
         var data = [];
         if(localStorage.getItem("chatBoxData")) {
             data = JSON.parse(localStorage.getItem("chatBoxData"));
@@ -2540,12 +2543,17 @@ JsChat.prototype = {
                     elem["state"] = newState;
                 }
             });
-        } else if(type == "changeGroup") {
+        } else if(type == "changeGroup" || type == "changeOrAddGroup") {
+            var found = false;
             $.each(data,function(index,elem){
                 if(elem["userId"] == userId) {
-                    elem["group"] = groupId;
+                    found = true;
+                    data[index]["group"] = groupId;
                 }
             });
+            if(type == "changeOrAddGroup" && found == false){
+                thisElem._changeLocalStorage("add",userId,groupId,newState);
+            }
         }
         localStorage.setItem("chatBoxData", JSON.stringify(data));
     },
@@ -2656,10 +2664,13 @@ JsChat.prototype = {
         console.log(bubbleData);
         setTimeout(function() {
             $.each(bubbleData, function(index,elem) {
-                console.log("manvi",$('chat-box[user-id="'+elem.userId+'"] .pinkBubble2'));
-                $('chat-box[user-id="'+elem.userId+'"] .pinkBubble2 span').html(elem.bCount);
-                if(elem.bCount != 0){
-                    $('chat-box[user-id="'+elem.userId+'"] .pinkBubble2').show();
+                //confirm manvi
+                if($('chat-box[user-id="'+elem.userId+'"]').attr("pos-state") != "open"){
+                    console.log("manvi_check",$('chat-box[user-id="'+elem.userId+'"] .pinkBubble2'));
+                    $('chat-box[user-id="'+elem.userId+'"] .pinkBubble2 span').html(elem.bCount);
+                    if(elem.bCount != 0){
+                        $('chat-box[user-id="'+elem.userId+'"] .pinkBubble2').show();
+                    }
                 }
             });
         }, 1000);
