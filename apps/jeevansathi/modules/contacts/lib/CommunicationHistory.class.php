@@ -71,8 +71,10 @@ class CommunicationHistory
 				$previousStatus                            = $value['TYPE'];
 				$message_log[$value['DATE']]["type"]  = $type . $side;
 				$message_log[$value['DATE']]["who"]     = $who;
-				if($value['MESSAGE'])
+				if($value['MESSAGE']){
+					$value['MESSAGE']=str_replace("||","</br>",$value['MESSAGE']);
 					$message_log[$value['DATE']]["message"] = $value['MESSAGE'];
+				}
 				else
 					$message_log[$value['DATE']]["message"] = ""; //inserting space to prevent null exception in various channels
 			} //$messagelog as $key => $value

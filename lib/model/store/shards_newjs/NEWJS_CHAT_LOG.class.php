@@ -16,7 +16,7 @@ class NEWJS_CHAT_LOG extends TABLE{
         }
 		
 		
-	public function insertIntoChatLog($generatedId,$sender,$receiver,$type,$seen='',$chatId='')
+	public function insertIntoChatLog($generatedId,$sender,$receiver,$type,$seen='',$chatId='',$ip='')
 	{
 		
 		try 
@@ -27,11 +27,15 @@ class NEWJS_CHAT_LOG extends TABLE{
 				}
 				else
 				{
-					$ip=FetchClientIP();
-					if(strstr($ip, ","))    
-					{                       
-						$ip_new = explode(",",$ip);
-						$ip = $ip_new[1];
+					if(!$ip)
+					{
+						$ip='192.168.192.168';
+						/*$ip=FetchClientIP();
+						if(strstr($ip, ","))    
+						{                       
+							$ip_new = explode(",",$ip);
+							$ip = $ip_new[1];
+						}*/
 					}
 					$sql="INSERT INTO CHAT_LOG (ID,SENDER,RECEIVER,DATE,IP,TYPE,SEEN, CHATID) VALUES (:GENERATEDID,:VIEWERID,:VIEWEDID,:DATE,:IP,:TYPE,:SEEN, :CHATID) ";
 					$prep=$this->db->prepare($sql);

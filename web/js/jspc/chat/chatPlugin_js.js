@@ -150,7 +150,7 @@ JsChat.prototype = {
         //this._chatLoggerPlugin($(this._maxChatBarOut));
         $("chat-box").each(function (index, element) {
             if ($(this).attr("pos-state") == "open") {
-                curEle._scrollUp($(this), "297px");
+                curEle._scrollUp($(this), "297px","noAnimate");
             }
         });
         $(this._maxChatBarOut).remove();
@@ -771,6 +771,7 @@ JsChat.prototype = {
             //console.log("type in _scrollUp",type);
             if($(elem).attr("user-id") != undefined){
                 if(type == undefined){
+                    console.log("scrolling down");
                     curEle._scrollToBottom($(elem).attr("user-id"));
                 } 
                 else if(type == "noAnimate"){
@@ -855,6 +856,7 @@ JsChat.prototype = {
     },
     //bind clicking close icon
     _bindClose: function (elem) {
+        console.log("in _bindClose ankita");
         var curElem = this;
         $(elem).off("click").on("click", function () {
             curElem._scrollDown($(this).closest("chat-box"), "remove");
@@ -1174,15 +1176,17 @@ JsChat.prototype = {
                             } else {
                                 if (msgSendOutput["sent"] == true) {
                                     if ($(superParent).find("#sendInt").length != 0) {
+                                        console.log("appending intsent msg ankita");
                                         $(superParent).find(".chatMessage").append("<div  class='inline_txt pos-rel fr pr10' id='interestSent'>Your interest has been sent</div>");
                                         $(superParent).find(".chatMessage").find("#sentDiv").remove();
                                         //console.log("yesssssssssssssssss");
                                         //$(superParent).find("#initiateText,#chatBoxErr").remove();
                                         $(superParent).find("#sendInt").remove();
+                                        $(superParent).find("#interestSent").removeClass("disp-none");
                                     }
                                     //msg sending success,set single tick here
                                     $(superParent).find("#sendDiv").remove();
-                                    $(superParent).find("#interestSent").removeClass("disp-none");
+                                    //$(superParent).find("#interestSent").removeClass("disp-none");
                                     _this._changeStatusOfMessg(messageId, userId, "recieved");
                                     //_this.storeMessagesInLocalHistory(selfJID.split('@')[0],userId,newMsg,'send');
                                 }
@@ -1677,9 +1681,7 @@ JsChat.prototype = {
         else if(type == "show"){
             $('chat-box[user-id="' + userId + '"] #initiateText').remove();
             if($('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).length == 0){
-                if(chatBoxType != "pg_acceptance_pending"){
-                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="chat_freeMemMsg_'+userId+'" class="pos-abs fullwid txtc colorGrey mt120">Only paid members can start chat<div  class="becomePaidMember_chat color5 cursp"><a href="/profile/mem_comparison.php" class = "cursp js-colorParent">Become a Paid Member</a></div></div>');
-                }
+                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="chat_freeMemMsg_'+userId+'" class="pos-abs fullwid txtc colorGrey mt120">Only paid members can start chat<div  class="becomePaidMember_chat color5 cursp"><a href="/profile/mem_comparison.php" class = "cursp js-colorParent">Become a Paid Member</a></div></div>');
                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
             }
         }
@@ -1702,11 +1704,15 @@ JsChat.prototype = {
     _chatPanelsBox: function (userId, status, jid, pcheckSum, groupId) {
         //this._chatLoggerPlugin("pcheckSum", pcheckSum);
         //console.log("_chatPanelsBox");
+        var curElem = this;
+        var output = curElem.checkForNodePresence(userId);
+        if(output && output["exists"] == true && output["groupID"]){
+            groupId = output["groupID"];
+        }
         if ($(".chatlist li[id='" + userId + "_" + groupId + "']").length != 0) {
             status = $(".chatlist li[id='" + userId + "_" + groupId + "']").attr("data-status");
         }
-        var curElem = this,
-            heightPlus = false,
+        var heightPlus = false,
             bodyWidth = $("body").width();
         /*if ($(curElem._chatBottomPanelID).length == 0) {
             $("body").append("<div id='chatBottomPanel' class='btmNegtaive pos_fix calhgt2 fontlig'></div>");
