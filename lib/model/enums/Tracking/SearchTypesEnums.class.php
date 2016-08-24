@@ -56,6 +56,9 @@ class SearchTypesEnums
         const iOSJustJoinedMatches = 'IU';
 	const MatchAlerts = '25';
 	const KundliAlerts = '32';
+	const KundliAlertsAndroid = 'KA';
+	const KundliAlertsIOS = 'KI';
+	const KundliAlertsJSMS = 'KM';
 	const WapMatchAlertsCC = 'WM';
         const iOSMatchAlertsCC = 'IM';
         const AppMatchAlertsCC = 'AM';

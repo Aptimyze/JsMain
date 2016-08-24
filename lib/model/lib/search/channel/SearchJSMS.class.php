@@ -160,6 +160,14 @@ class SearchJSMS extends SearchJS
 			}
         
         
+     /**
+        * getSearchTypeKundliMatches
+        */
+        public static function getSearchTypeKundliMatches()
+        {
+                 return SearchTypesEnums::KundliAlertsJSMS;
+        }
+        
         	/**
 	* This function will set the channel type
 	*/

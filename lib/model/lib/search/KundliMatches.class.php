@@ -26,7 +26,9 @@ class KundliMatches extends PartnerProfile
 				{
 					
 					$this->getDppCriteria();
-					$this->setSEARCH_TYPE(SearchTypesEnums::KundliAlerts);
+					$channel =  SearchChannelFactory::getChannel();
+          $this->stype =  $channel::getSearchTypeMembersLookingForMe();
+					$this->setSEARCH_TYPE($this->stype);
 					$this->setHOROSCOPE('Y'); // Horoscope should be present for all the profiles
 					if($this->loggedInProfileObj->getBTIME()=="" || $this->loggedInProfileObj->getCITY_BIRTH()=="" || $this->loggedInProfileObj->getCOUNTRY_BIRTH()=="")
           {
@@ -40,35 +42,38 @@ class KundliMatches extends PartnerProfile
 				
 				public function getGunaMatches($SearchResponseObj)
 				{
-					$gunaScoreObj = new gunaScore();
-					$gunaData = $gunaScoreObj->getGunaScore($this->loggedInProfileObj->getPROFILEID(),$this->loggedInProfileObj->getCASTE(),implode(",",$SearchResponseObj->getsearchResultsPidArr()),$this->loggedInProfileObj->getGENDER(),'1');
-					if(is_array($gunaData))
+					if(is_array($SearchResponseObj->getsearchResultsPidArr()))
 					{
-						foreach($gunaData as $i=>$v)
+						$gunaScoreObj = new gunaScore();
+						$gunaData = $gunaScoreObj->getGunaScore($this->loggedInProfileObj->getPROFILEID(),$this->loggedInProfileObj->getCASTE(),implode(",",$SearchResponseObj->getsearchResultsPidArr()),$this->loggedInProfileObj->getGENDER(),'1');
+						if(is_array($gunaData))
 						{
-								foreach($v as $pid=>$guna)
-								{
-									if($guna>=18)
-										$finalSearchPidsArr[]=$pid;
-								}
+							foreach($gunaData as $i=>$v)
+							{
+									foreach($v as $pid=>$guna)
+									{
+										if($guna>=18)
+											$finalSearchPidsArr[]=$pid;
+									}
+							}
+						
+							$SearchResponseObj->setsearchResultsPidArr(array_values(array_intersect($SearchResponseObj->getsearchResultsPidArr(),$finalSearchPidsArr)));
+						
+							$searchResultsArr = $SearchResponseObj->getresultsArr();
+							foreach($searchResultsArr as $i=>$value)
+							{
+								if(!in_array($value["id"],$finalSearchPidsArr))
+									unset($searchResultsArr[$i]);
+							}
+							$SearchResponseObj->setresultsArr(array_values($searchResultsArr));
 						}
-					
-						$SearchResponseObj->setsearchResultsPidArr(array_values(array_intersect($SearchResponseObj->getsearchResultsPidArr(),$finalSearchPidsArr)));
-					
-						$searchResultsArr = $SearchResponseObj->getresultsArr();
-						foreach($searchResultsArr as $i=>$value)
+						else
 						{
-							if(!in_array($value["id"],$finalSearchPidsArr))
-								unset($searchResultsArr[$i]);
+							$SearchResponseObj->setsearchResultsPidArr(null);
+							$SearchResponseObj->setresultsArr(array());
 						}
-						$SearchResponseObj->setresultsArr(array_values($searchResultsArr));
 					}
-					else
-					{
-						$SearchResponseObj->setsearchResultsPidArr(null);
-						$SearchResponseObj->setresultsArr(array());
-					}
-				
+					//print_r($SearchResponseObj); die;
 					return $SearchResponseObj;
 				}
 
