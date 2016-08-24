@@ -150,7 +150,7 @@ JsChat.prototype = {
         //this._chatLoggerPlugin($(this._maxChatBarOut));
         $("chat-box").each(function (index, element) {
             if ($(this).attr("pos-state") == "open") {
-                curEle._scrollUp($(this), "297px");
+                curEle._scrollUp($(this), "297px","noAnimate");
             }
         });
         $(this._maxChatBarOut).remove();
@@ -771,6 +771,7 @@ JsChat.prototype = {
             //console.log("type in _scrollUp",type);
             if($(elem).attr("user-id") != undefined){
                 if(type == undefined){
+                    console.log("scrolling down");
                     curEle._scrollToBottom($(elem).attr("user-id"));
                 } 
                 else if(type == "noAnimate"){
