@@ -10,11 +10,12 @@
 
 class LoggingEnums
 {   
-    const MASTER_FLAG = false;
+    const MASTER_FLAG = true;
     const LOG_LEVEL = 0;
     const LOG_INFO = 2;
     const LOG_DEBUG = 1;
     const LOG_ERROR = 0;
+    const SERVER_FLAG = false;
     // 1 for Enabling config of modules, 0 for not
     const CONFIG_ON = false;
     // 1 for logging all modules in same file, 0 different
@@ -57,6 +58,7 @@ class LoggingEnums
     const LEVEL = 'level';
     const DIRECTORY = 'directory';
     const STACKTRACE = 'stackTrace';
+    const SERVER_PARAM = 'serverParam';
     const RIFT = 'REQUEST_ID_FOR_TRACKING';
     const RAJX = 'RID_AJAX';
     const AJXRSI = 'AJAX_REQUEST_SUB_ID';
