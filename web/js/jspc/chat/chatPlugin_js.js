@@ -2054,9 +2054,17 @@ JsChat.prototype = {
                         localStorage.setItem("bubbleData", JSON.stringify(bubbleData));
                     } else {
                         if($('#extra_'+userId).length == 0){
-                            //$('chat-box[user-id="' + userId + '"] .chatMessage').find('#text_' + userId + '_' + uniqueId).addClass("received");
+                            //$('chat-box[user-id="' + userId + '"] .chatMessage').find('#text_' + userId + '_' + uniqueId).addClass("received")
                             curEle._handleUnreadMessages($('chat-box[user-id="' + userId + '"]'));
-                            var bubbleData = [];
+                           
+                        }
+                    }
+                    //adding bubble for side tab
+                    if ($("#extra_" + userId + " .pinkBubble").length != 0) {
+                        val = parseInt($("#extra_" + userId + " .pinkBubble span").html());
+                        $("#extra_" + userId + " .pinkBubble span").html(val + 1);
+                        $("#extra_" + userId + " .pinkBubble").show();
+                         var bubbleData = [];
                             if(localStorage.getItem("bubbleData")) {
                                 bubbleData = JSON.parse(localStorage.getItem("bubbleData"));
                             }
@@ -2072,13 +2080,6 @@ JsChat.prototype = {
                                 bubbleData.push(obj);
                             }
                             localStorage.setItem("bubbleData", JSON.stringify(bubbleData));
-                        }
-                    }
-                    //adding bubble for side tab
-                    if ($("#extra_" + userId + " .pinkBubble").length != 0) {
-                        val = parseInt($("#extra_" + userId + " .pinkBubble span").html());
-                        $("#extra_" + userId + " .pinkBubble span").html(val + 1);
-                        $("#extra_" + userId + " .pinkBubble").show();
                     }
                     //change count of online matches panel
                     if ($(".js-minpanel").length != 0) {
