@@ -2697,19 +2697,25 @@ JsChat.prototype = {
         if(localStorage.getItem("bubbleData")) {
             bubbleData = JSON.parse(localStorage.getItem("bubbleData"));
         }
+        console.log(bubbleData);
         //console.log(bubbleData);
         setTimeout(function() {
             $.each(bubbleData, function(index,elem) {
                 //confirm manvi
+                console.log($('chat-box[user-id="'+elem.userId+'"]').attr("pos-state"));
                 if($('chat-box[user-id="'+elem.userId+'"]').attr("pos-state") != "open"){
                     console.log("manvi_check",$('chat-box[user-id="'+elem.userId+'"] .pinkBubble2'));
                     $('chat-box[user-id="'+elem.userId+'"] .pinkBubble2 span').html(elem.bCount);
                     if(elem.bCount != 0){
                         $('chat-box[user-id="'+elem.userId+'"] .pinkBubble2').show();
+                        if($('#extra_'+elem.userId).length != 0){
+                            $('#extra_'+elem.userId+' .pinkBubble span').html(elem.bCount);
+                            $('#extra_'+elem.userId+' .pinkBubble').show();
+                        }
                     }
                 }
             });
-        }, 1000);
+        }, 2000);
 		localStorage.setItem("lastUId",$(".tabUId").attr("id"));
 	},    
     
