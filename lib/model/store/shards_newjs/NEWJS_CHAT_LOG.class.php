@@ -16,7 +16,7 @@ class NEWJS_CHAT_LOG extends TABLE{
         }
 		
 		
-	public function insertIntoChatLog($generatedId,$sender,$receiver,$type,$seen='',$chatId='',$ip='')
+	public function insertIntoChatLog($generatedId,$sender,$receiver,$type,$seen='',$chatId='',$ip='',$date)
 	{
 		
 		try 
@@ -42,7 +42,7 @@ class NEWJS_CHAT_LOG extends TABLE{
 					$prep->bindValue(":GENERATEDID",$generatedId,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWERID",$sender,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWEDID",$receiver,PDO::PARAM_INT);
-					$prep->bindValue(":DATE",date("Y-m-d H:i:s"),PDO::PARAM_STR);
+					$prep->bindValue(":DATE",$date,PDO::PARAM_STR);
 					$prep->bindValue(":IP",$ip,PDO::PARAM_STR);
 					$prep->bindValue(":TYPE",$type,PDO::PARAM_STR);
 					$prep->bindValue(":SEEN",$seen,PDO::PARAM_STR);
