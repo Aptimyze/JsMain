@@ -102,13 +102,13 @@ class ProfileCacheLib
         //If array count is zero then record is not cached
         if(0 === count($this->getFromLocalCache($key))) {
             unset($this->arrRecords[intval($key)]);
-            $this->logThis(LoggingEnums::LOG_INFO, "Cache Mis for Criteria {$criteria} : {$key}");
+            $this->logThis(LoggingEnums::LOG_INFO, "Cache Miss from first point for Criteria {$criteria} : {$key}");
             return false;
         }
 
         //Check all fields specified in param fields is present in cache also, right now we are assuming all fields are cached together
         if (false === $this->checkFieldsAvailability($key, $fields)) {
-            $this->logThis(LoggingEnums::LOG_INFO, "Cache Mis due to fields {$criteria} : {$key} and {$fields}");
+            $this->logThis(LoggingEnums::LOG_INFO, "Cache Miss due to fields {$criteria} : {$key} and {$fields}");
             return false;
         }
 
@@ -230,6 +230,7 @@ class ProfileCacheLib
         }
 
         $arrData = $this->getFromLocalCache($key);
+        
         if ($arrExtraWhereClause) {
             $this->processArrayWhereClause($arrData,$arrExtraWhereClause);
         }
@@ -295,6 +296,7 @@ class ProfileCacheLib
     private function storeInLocalCache($key)
     {
         $stTime = $this->createNewTime();
+
         $this->arrRecords[intval($key)] = JsMemcache::getInstance()->getHashAllValue($this->getDecoratedKey($key));
         $this->calculateResourceUsages($stTime,'Get : '," for key {$key}");
     }
@@ -388,6 +390,7 @@ class ProfileCacheLib
         if(!is_array($arrFields)) {
             return false;
         }
+        $this->logThis(LoggingEnums::LOG_INFO, "Setting local cache for key : {$key}");
         foreach($arrFields as $col => $val) {
             $this->arrRecords[intval($key)][$col] = $val;
         }
