@@ -2009,6 +2009,9 @@ JsChat.prototype = {
             }
             var val;
             //adding bubble for minimized tab
+                setTimeout(function(){
+                    
+                
                     if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
                         val = parseInt($('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html()) + 1;
                         $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html(val);
@@ -2049,6 +2052,7 @@ JsChat.prototype = {
                     }
                     curEle._scrollToBottom(userId);
                     //this.storeMessagesInLocalHistory(selfJID, userId, newMsg, 'receive');
+                },60);
             }
     },
     
