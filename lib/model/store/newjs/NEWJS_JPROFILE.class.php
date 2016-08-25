@@ -860,9 +860,11 @@ class NEWJS_JPROFILE extends TABLE
         if ($this->dbName == "newjs_masterRep")
             $this->setConnection("newjs_master");
         try {
-            $sql = "update JPROFILE set ACTIVATED=PREACTIVATED where PROFILEID=:PROFILEID";
+            $now = date('Y-m-d');
+            $sql = "update JPROFILE set ACTIVATED=PREACTIVATED, ACTIVATE_ON=:ACT_ON where PROFILEID=:PROFILEID";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
+            $prep->bindValue(":ACT_ON", $now, PDO::PARAM_STR);
             //$prep->bindValue(":PRIVACY", $privacy, PDO::PARAM_STR);
             $prep->execute();
         } catch (PDOException $e) {
