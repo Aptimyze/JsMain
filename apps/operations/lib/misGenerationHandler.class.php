@@ -665,8 +665,11 @@ class misGenerationhandler
         $date = $saleDetails["DATE"];
         $amount = $saleDetails["AMOUNT"];
         //This if checks if the agent has the basic privilage 'ExcSl'
-        if($priv){
-            if(strpos($priv, 'ExcDIb') !== false){
+        if($priv){            
+            if(strpos($priv, 'ExcWL') !== false || strpos($priv, 'SUPWL') !== false ){
+                $processWiseSale[$date]['RCB_TELE']+= $amount;
+            }
+            else if(strpos($priv, 'ExcDIb') !== false){
                 $processWiseSale[$date]['INBOUND_TELE']+= $amount;
             }
             else if(strpos($priv, 'ExcBSD') !== false || strpos($priv, 'ExcBID') !== false){
