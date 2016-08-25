@@ -357,7 +357,7 @@ var strophieWrapper = {
                 var show = $(presence).find("show").text(); // this is what gives away, dnd, etc.
                 if (show === 'chat' || show === '') {
                     chat_status = "online";
-                    //strophieWrapper.sendPresence();
+                    strophieWrapper.sendPresence();
                 } else {
                     // etc...
                 }
@@ -448,9 +448,9 @@ var strophieWrapper = {
                     if (subscription == "to") {
                     	//console.log("subscribe to -"+jid);
                         strophieWrapper.subscribe(jid, listObj[strophieWrapper.rosterDetailsKey]["nick"]);
-                    	/*setTimeout(function () {
-		                strophieWrapper.sendPresence();
-		                }, 5000);*/
+                    	setTimeout(function () {
+		                  strophieWrapper.sendPresence();
+		                }, 5000);
                     }
                 }
             }
