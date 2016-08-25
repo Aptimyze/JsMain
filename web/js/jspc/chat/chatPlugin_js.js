@@ -1472,11 +1472,11 @@ JsChat.prototype = {
             that = this,
             new_contact_state = chatBoxType,
             response,
-            checkSum = $("chat-box[user-id='" + userId + "'").attr("data-checks"),
-            groupId = $("chat-box[user-id='" + userId + "'").attr("group-id"),
+            checkSum = $("chat-box[user-id='" + userId + "']").attr("data-checks"),
+            groupId = $("chat-box[user-id='" + userId + "']").attr("group-id"),
             user_name = $(".chatlist li[id='" + userId + "_" + groupId + "'] div").html(),
-            user_jid = $("chat-box[user-id='" + userId + "'").attr("data-jid"),
-            hisStatus = $("chat-box[user-id='" + userId + "'").attr("his-status");
+            user_jid = $("chat-box[user-id='" + userId + "']").attr("data-jid"),
+            hisStatus = $("chat-box[user-id='" + userId + "']").attr("his-status");
         var nick;
         if (checkSum) {
             nick = nick + "|" + checkSum;
