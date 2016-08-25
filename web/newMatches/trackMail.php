@@ -4,6 +4,8 @@ include_once(JsConstants::$alertDocRoot."/classes/Mysql.class.php");
 include_once(JsConstants::$alertDocRoot."/newMatches/TrackingFunctions.class.php");
 include_once(JsConstants::$alertDocRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
+// include wrapper for logging
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 $mysqlObj = new Mysql;
 $db=$mysqlObj->connect("alerts");
 
@@ -32,6 +34,7 @@ readfile($path);
 
 function logError($message,$query="")
 {
+		LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($message));
         global $db, $checksum;
 
         ob_start();

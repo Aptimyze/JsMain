@@ -7,6 +7,8 @@
 */
 
 //require_once("mysqlConnections.php");
+// include wrapper for logging
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 
 class Mysql
 {
@@ -382,6 +384,7 @@ class Mysql
 	*/
 	public function logError($sql,$backend="")
 	{
+		LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql));
 		global $smarty,$ajax_error;
 
 		$errorString = "\n".date("Y-m-d G:i:s",time() + 37800)."\nMysql Error: ".addslashes($this->error())."\nMysql Error Number:".$this->errNo()."\nSQL: $sql\nUser Agent : ".$_SERVER['HTTP_USER_AGENT']."\nReferer : ".$_SERVER['HTTP_REFERER']."\nSelf : ".$_SERVER['PHP_SELF']."\nUri : ".$_SERVER['REQUEST_URI']."\nMethod : ".$_SERVER['REQUEST_METHOD']."\n";
