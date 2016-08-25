@@ -1625,10 +1625,10 @@ JsChat.prototype = {
                                 //$(this).remove();
                                 new_contact_state = curElem._contactStatusMapping["pg_interest_declined"]["key"];
                                 //TODO: fire query for accepting request
-                                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
                                 $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
                                 $('chat-box[user-id="' + userId + '"]').attr("group-id", chatConfig.Params.categoryNames["none_applicable"]);
-                                curElem._enableChatTextArea(new_contact_state, userId, getMembershipStatus());
+                                //curElem._enableChatTextArea(new_contact_state, userId, getMembershipStatus());
                             }
                         } else {
                             $(this).html(response.actiondetails.errmsglabel);
@@ -1705,13 +1705,16 @@ JsChat.prototype = {
 
     //show/hide free mem msg
     _manageFreeMemCase:function(type,userId,chatBoxType){
+        //console.log("in _manageFreeMemCase",type);
         if(type == "hide"){
             if($('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).length != 0){
                     $('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).remove();
                     $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
                 }
+                //console.log("hidden");
         }
         else if(type == "show"){
+            //console.log("show 1");
             $('chat-box[user-id="' + userId + '"] #initiateText').remove();
             if($('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).length == 0){
                 if($('chat-box[user-id="' + userId + '"] #acceptDeclineDiv').length == 0){
@@ -1719,6 +1722,7 @@ JsChat.prototype = {
                 }
                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
             }
+            //console.log("show 2");
         }
     },
 
