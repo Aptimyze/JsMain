@@ -1691,24 +1691,27 @@ JsChat.prototype = {
                 var hasPaidIntiated = $('chat-box[user-id="' + userId + '"]').attr("data-paidInitiated");
                 //console.log("hasPaidIntiated"+hasPaidIntiated);
                 if(hasPaidIntiated == "false"){
-                    curElem._manageFreeMemCase("show",userId,chatBoxType);
+                    curElem._manageFreeMemCase("show",userId,chatBoxType,hasPaidIntiated);
                 }
                 else if(hasPaidIntiated == "true"){
-                    curElem._manageFreeMemCase("hide",userId,chatBoxType); 
+                    curElem._manageFreeMemCase("hide",userId,chatBoxType,hasPaidIntiated); 
                 }
             }
             else{
-                curElem._manageFreeMemCase("hide",userId,chatBoxType);
+                curElem._manageFreeMemCase("hide",userId,chatBoxType,"true");
             }
         }  
     },
 
     //show/hide free mem msg
-    _manageFreeMemCase:function(type,userId,chatBoxType){
+    _manageFreeMemCase:function(type,userId,chatBoxType,hasPaidIntiated){
         //console.log("in _manageFreeMemCase",type);
         if(type == "hide"){
             if($('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).length != 0){
                     $('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).remove();
+                   
+                }
+                if(typeof hasPaidIntiated != "undefined" && hasPaidIntiated == "true"){
                     $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
                 }
                 //console.log("hidden");
@@ -2719,7 +2722,7 @@ JsChat.prototype = {
 						$("#extra_"+elem1+" .nchatic_4").click();
 					}
 					else {
-                        //console.log("closing on chat-box change manvi_check");
+                        console.log("closing on chat-box change manvi_check");
 						$('chat-box[user-id="' + elem1 + '"] .nchatic_1').click();
 					}
 				}	
