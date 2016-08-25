@@ -1435,6 +1435,9 @@ JsChat.prototype = {
             //this._chatLoggerPlugin("in _updateChatPanelsBox for " + userId);
             //console.log("in _updateChatPanelsBox");
             $('chat-box[user-id="' + userId + '"] #rosterDeleteMsg_'+ userId + '').remove();
+            if($("#chatHistory_"+userId).length != 0){
+                $("#chatHistory_"+userId).show();
+            }
             var chatBoxType = curElem._getChatBoxType(userId, newGroupId, "updateChatBoxType");
             curElem._setChatBoxInnerDiv(userId, chatBoxType,"chatBoxUpdate");
             curElem._enableChatTextArea(chatBoxType, userId, membership);
@@ -1681,7 +1684,7 @@ JsChat.prototype = {
     //show/hide free mem msg
     _manageFreeMemCase:function(type,userId,chatBoxType){
         if(type == "hide"){
-            if($('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).length != 0){
+            if($('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).length != 0 || ($('chat-box[user-id="' + userId + '"] #chatHistory_'+userId).length != 0)){
                     $('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).remove();
                     $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
                 }
@@ -2063,7 +2066,12 @@ JsChat.prototype = {
                             }
                             if(found == false){
                                 if($('chat-box[user-id="' + userId + '"]').length != 0){
-                                    $('chat-box[user-id="' + userId + '"] .chatMessage').html("");
+                                    if($("#chatHistory_"+userId).length != 0){
+                                        $("#chatHistory_"+userId).hide();
+                                    }
+                                    else{
+                                        $('chat-box[user-id="' + userId + '"] .chatMessage').html("");
+                                    }
                                     if($('chat-box[user-id="' + userId + '"] #rosterDeleteMsg_'+ userId + '').length == 0)
                                         $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="rosterDeleteMsg_'+userId+'" class="pt20 txtc color5">'+curElem._rosterDeleteChatBoxMsg+'</div>');
                                     $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
