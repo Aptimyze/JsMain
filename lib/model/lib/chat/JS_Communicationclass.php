@@ -70,22 +70,25 @@ class JS_Communication
 				//$type=$this->contactObj->getTYPE();
 				$msgDbObj= new NEWJS_MESSAGE_LOG($dbName1);
 				$eoiArray= $msgDbObj->getEOIMessagesForChat(array($this->loginProfile),array($this->otherProfile));
-
+				
 				$mergeArray=$eoiArray[0];
-				$mergeArray["CHATID"]="";				
-				$mergeArray["ID"]="";	
-				$messageArr=explode("||",$mergeArray['MESSAGE']);
-				$eoiMsgCount = count($messageArr);
-				//print_r($messageArr);die;
-				$i=count($result);
-				for($j=($eoiMsgCount-1);$j>=0;$j--)
-				//foreach($messageArr as $key=>$val)
-				{
-					$mergeArray["MESSAGE"]=$messageArr[$j];
-					$mergeArray["IS_EOI"] = true;
-					$result[$i]=$mergeArray;
-					$i++;
+				if($mergeArray['MESSAGE']){
+					$mergeArray["CHATID"]="";				
+					$mergeArray["ID"]="";	
+					$messageArr=explode("||",$mergeArray['MESSAGE']);
+					$eoiMsgCount = count($messageArr);
+					//print_r($messageArr);die;
+					$i=count($result);
+					for($j=($eoiMsgCount-1);$j>=0;$j--)
+					//foreach($messageArr as $key=>$val)
+					{
+						$mergeArray["MESSAGE"]=$messageArr[$j];
+						$mergeArray["IS_EOI"] = true;
+						$result[$i]=$mergeArray;
+						$i++;
+					}
 				}
+				
 					//print_r($result);die;			
 			}		
 		}
