@@ -793,4 +793,113 @@ class crmInterfaceActions extends sfActions
         }
     }
 
+    public function executeBillingManagementInterface(sfWebRequest $request)
+    {
+        $this->cid                 = $request->getParameter('cid');
+        $this->name                = $request->getParameter('name');
+        $agentAllocationDetailsObj = new AgentAllocationDetails();
+        $priv                      = $agentAllocationDetailsObj->getprivilage($this->cid);
+        $priv                      = explode('+', $priv);
+        if (in_array('CRMTEC', $priv)) {
+            $this->showOptions = 1;
+        }
+    }
+
+    public function executeServiceDateChangeInterface(sfWebRequest $request)
+    {
+        $this->cid          = $request->getParameter('cid');
+        $this->name         = $request->getParameter('name');
+        $billingPurDetObj   = new billing_PURCHASE_DETAIL();
+        $billingServStatObj = new BILLING_SERVICE_STATUS();
+        $this->billid       = $request->getParameter('billid');
+        $this->serviceid    = $request->getParameter('serviceid');
+        $this->rangeYear    = '2099';
+        $this->startYear    = date('Y')-1;
+
+        if ($request->getParameter('submitBillid')) {
+            $this->purDet     = $billingPurDetObj->getAllDetailsForBillidArr(array($this->billid));
+            $this->serStatDet = $billingServStatObj->fetchAllServiceDetailsForBillid($this->billid);
+            if (!empty($this->purDet) && !empty($this->serStatDet)) {
+                $this->detailedView = 1;
+            } else {
+                $this->error    = 1;
+                $this->errorMsg = "Billid invalid or data corrupted, please change manually";
+            }
+        }
+
+        if ($request->getParameter("submitServiceid")) //If form is submitted
+        {
+            $formArr = $request->getParameterHolder()->getAll();
+            $formArr["date1_dateLists_month_list"]++;
+            $formArr["date2_dateLists_month_list"]++;
+            $start_date        = $formArr["date1_dateLists_year_list"] . "-" . $formArr["date1_dateLists_month_list"] . "-" . $formArr["date1_dateLists_day_list"];
+            $end_date          = $formArr["date2_dateLists_year_list"] . "-" . $formArr["date2_dateLists_month_list"] . "-" . $formArr["date2_dateLists_day_list"];
+            $start_date        = date("Y-m-d", strtotime($start_date));
+            $end_date          = date("Y-m-d", strtotime($end_date));
+            $this->displayDate = date("jS F Y", strtotime($start_date)) . " To " . date("jS F Y", strtotime($end_date));
+            if ($start_date > $end_date) {
+                $this->error    = 1;
+                $this->errorMsg = "Invalid Date Selected";
+            } else {
+                $billingPurDetObj->updateActivationDates($this->billid, $this->serviceid, $start_date, $end_date);
+                $billingServStatObj->updateActivationDates($this->billid, $this->serviceid, $start_date, $end_date);
+                $this->profileid = $billingServStatObj->getProfileidForBillid($this->billid);
+                $memCacheObject  = JsMemcache::getInstance();
+                if ($memCacheObject) {
+                    $memCacheObject->remove($this->profileid . '_MEM_NAME');
+                    $memCacheObject->remove($this->profileid . "_MEM_OCB_MESSAGE_API17");
+                    $memCacheObject->remove($this->profileid . "_MEM_HAMB_MESSAGE");
+                    $memCacheObject->remove($this->profileid . "_MEM_SUBSTATUS_ARRAY");
+                }
+                $this->purDet       = $billingPurDetObj->getAllDetailsForBillidArr(array($this->billid));
+                $this->serStatDet   = $billingServStatObj->fetchAllServiceDetailsForBillid($this->billid);
+                $this->detailedView = 1;
+            }
+        }
+    }
+
+    public function executeServiceActivationChangeInterface(sfWebRequest $request)
+    {
+        $this->cid          = $request->getParameter('cid');
+        $this->name         = $request->getParameter('name');
+        $billingPurDetObj   = new billing_PURCHASE_DETAIL();
+        $billingServStatObj = new BILLING_SERVICE_STATUS();
+        $jprofileObj        = new JPROFILE();
+        $this->billid       = $request->getParameter('billid');
+        $this->serviceid    = $request->getParameter('serviceid');
+
+        if ($request->getParameter('submitBillid')) {
+            $this->profileid = $billingServStatObj->getProfileidForBillid($this->billid);
+            $this->jprofileDet     = $jprofileObj->get($this->profileid, 'PROFILEID', 'USERNAME, PROFILEID, SUBSCRIPTION');
+            $this->serStatDet = $billingServStatObj->fetchAllServiceDetailsForBillid($this->billid);
+            if (!empty($this->jprofileDet) && !empty($this->serStatDet)) {
+                $this->detailedView = 1;
+            } else {
+                $this->error    = 1;
+                $this->errorMsg = "Billid invalid or data corrupted, please change manually";
+            }
+        }
+
+        if ($request->getParameter("submitServiceid")) //If form is submitted
+        {
+            $serviceStatus = $request->getParameter('serviceStatus');
+            $billingServStatObj->updateActiveStatusForBillidAndServiceid($this->billid, $this->serviceid, $serviceStatus);
+            $this->profileid = $billingServStatObj->getProfileidForBillid($this->billid);
+            $subscription = $billingServStatObj->getActiveServeFor($this->profileid);
+            if(empty($subscription)){
+                $subscription = '';
+            }
+            $jprofileObj->edit(array('SUBSCRIPTION'=>$subscription), $this->profileid, 'PROFILEID');
+            $memCacheObject  = JsMemcache::getInstance();
+            if ($memCacheObject) {
+                $memCacheObject->remove($this->profileid . '_MEM_NAME');
+                $memCacheObject->remove($this->profileid . "_MEM_OCB_MESSAGE_API17");
+                $memCacheObject->remove($this->profileid . "_MEM_HAMB_MESSAGE");
+                $memCacheObject->remove($this->profileid . "_MEM_SUBSTATUS_ARRAY");
+            }
+            $this->jprofileDet       = $jprofileObj->get($this->profileid, 'PROFILEID', 'USERNAME, PROFILEID, SUBSCRIPTION');
+            $this->serStatDet   = $billingServStatObj->fetchAllServiceDetailsForBillid($this->billid);
+            $this->detailedView = 1;
+        }
+    }
 }
