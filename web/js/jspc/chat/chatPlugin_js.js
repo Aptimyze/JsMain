@@ -1867,7 +1867,7 @@ JsChat.prototype = {
     //append chat history in chat box
     _appendChatHistory: function (selfJID, otherJID, communication,requestType) {
         //console.log("self message");
-        //console.log("_appendChatHistory"+requestType);
+        console.log("_appendChatHistory"+requestType);
         var self_id = selfJID.split("@")[0],
             other_id = otherJID.split("@")[0],
             latestMsgId="",
@@ -1886,6 +1886,7 @@ JsChat.prototype = {
                 latestMsgId = logObj["ID"];
                 //console.log(logObj);
                 if (parseInt(logObj["SENDER"]) == self_id) {
+                    logObj["CHATID"] = generateChatHistoryID("sent");
                     if(curElem._checkForDefaultEoiMsg == false || logObj["MESSAGE"].indexOf(defaultEoiSentMsg) == -1){
                         //append self sent message
                         logObj["MESSAGE"] = logObj["MESSAGE"].replace(/\&lt;br \/\&gt;/g, "<br />");
@@ -1896,6 +1897,7 @@ JsChat.prototype = {
                         });
                     }
                 } else if (parseInt(logObj["SENDER"]) == other_id) {
+                    logObj["CHATID"] = generateChatHistoryID("received");
                     //check for default eoi message,remove after monday JSI release
                     if(curElem._checkForDefaultEoiMsg == false || logObj["MESSAGE"].indexOf(defaultEoiRecMsg) == -1){
                         //console.log("done"+removeFreeMemMsg);
@@ -1994,6 +1996,7 @@ JsChat.prototype = {
             }
             if(appendMsg == true){
                 message = message.replace(/\&lt;br \/\&gt;/g, "<br />");
+                console.log("append msg1");
                 //adding mege in chat area
                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="clearfix"><div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText received" data-msgid=' + uniqueId + '>' + message + '</div></div></div>');
             }

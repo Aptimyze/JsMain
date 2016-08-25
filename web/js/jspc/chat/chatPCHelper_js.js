@@ -284,6 +284,20 @@ function getChatHistory(apiParams,key) {
    // }
 }
 
+/*generateChatHistoryID
+* @inputs: key("self"/"other")
+*/
+function generateChatHistoryID(key){
+    var msg_id = strophieWrapper.getUniqueId();
+    if(key == "sent"){
+        msg_id = msg_id + "_self";
+    }
+    else{
+        msg_id = msg_id + "_other";
+    }
+    return msg_id;
+}
+
 /*
  * request self name
  * @inputs none
