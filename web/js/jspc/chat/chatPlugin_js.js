@@ -2114,12 +2114,15 @@ JsChat.prototype = {
         if (typeof msg_state != "undefined") {
             if (msg_state == 'composing') {
                 //localStorage.setItem("status_"+userId, $('chat-box[user-id="' + userId + '"] .onlineStatus').html());
+                /*
                 if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
                     //this._chatLoggerPlugin("yess", $('chat-box[user-id="' + userId + '"] .downBarUserName'))
                     $('chat-box[user-id="' + userId + '"] .downBarUserName').html('<div class="onlineStatus f11 opa50 mt4">typing...</div>');
+                
                 } else {
+                */
                     $('chat-box[user-id="' + userId + '"] .onlineStatus').html("typing...");
-                }
+              //  }
             } else if (msg_state == 'paused' || msg_state == 'gone') {
                 var idStatus = "",
                     groupId = $('chat-box[user-id="' + userId + '"]').attr("group-id");
@@ -2129,6 +2132,8 @@ JsChat.prototype = {
                 } else {
                     idStatus = "offline";
                 }
+                $('chat-box[user-id="' + userId + '"] .onlineStatus').html(idStatus);
+                /*
                 if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
                     var userName = $(".chatlist li[id='" + userId + "_" + groupId + "'] div").html();
                     $('chat-box[user-id="' + userId + '"] .downBarUserName').html(userName + '<div class="onlineStatus f11 opa50 mt4 colrw">' + idStatus + '</div>');
@@ -2136,6 +2141,7 @@ JsChat.prototype = {
                 } else {
                     $('chat-box[user-id="' + userId + '"] .onlineStatus').html(idStatus);
                 }
+                */
             }
         }
     },
