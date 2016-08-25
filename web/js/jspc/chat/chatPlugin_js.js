@@ -1743,6 +1743,9 @@ JsChat.prototype = {
             if ($(curElem._chatBottomPanelID).css("bottom") == "-300px") {
                 $(curElem._chatBottomPanelID).css("bottom", "0px");
             }
+            if ($(".js-minpanel").length != 0) {
+                  $(curElem._chatBottomPanelID).hide();  
+            }
         }
         if ($('chat-box[user-id="' + userId + '"]').length == 0) {
             var bodyWidth = curElem._bottomPanelWidth,
@@ -1985,10 +1988,12 @@ JsChat.prototype = {
             if ($('chat-box[user-id="' + userId + '"]').length == 0) {
                 appendMsg = false; //as this msg already exists in history
                 $(".profileIcon[id^='" + userId + "']")[0].click();
-                if ($(".js-minpanel").length != 0) {
-                    appendMsg = true;
-                    $('chat-box[user-id="' + userId + '"] .nchatic_2').click();
-                }
+                setTimeout(function(){
+                    if ($(".js-minpanel").length != 0) {
+                        appendMsg = true;
+                        $('chat-box[user-id="' + userId + '"] .nchatic_2').click();
+                    }
+                },50);
 
             }
             curEle._enableChatAfterPaidInitiates(userId);
@@ -2052,7 +2057,7 @@ JsChat.prototype = {
                     }
                     curEle._scrollToBottom(userId);
                     //this.storeMessagesInLocalHistory(selfJID, userId, newMsg, 'receive');
-                },1000);
+                },500);
             }
     },
     
