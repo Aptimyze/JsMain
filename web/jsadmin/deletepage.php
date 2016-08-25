@@ -41,7 +41,7 @@ if(authenticated($cid))
 				$res_act = mysql_query_decide($sql_act) or die(mysql_error_js());
 				$row_act = mysql_fetch_array($res_act);
 				//added by sriram.
-				if($row_act['HAVEPHOTO']=="U" || $row_act['HAVE_PHOTO']=="Y")
+				if($row_act['HAVEPHOTO']=="U" || $row_act['HAVEPHOTO']=="Y")
 				{
 					$profileObj = new LoggedInProfile('',$pid);
 					$profileObj->getDetail('', '', '*');
