@@ -1490,7 +1490,7 @@ JsChat.prototype = {
         //this._chatLoggerPlugin(curElem);
         switch (chatBoxType) {
         case curElem._contactStatusMapping["pg_interest_pending"]["key"]:
-            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="sendInterest cursp sendDiv pos-abs color5 mt10 wid70p txtc"><i class="nchatspr nchatic_6 "></i><span class="vertTexBtm"> Send Interest</span></div><div id="sentDiv" class="sendDiv disp-none pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
+            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="sendInterest cursp sendDiv pos-abs color5 mt10 wid70p txtc"><i class="nchatspr nchatic_6 "></i><span class="vertTexBtm"> Send Interest</span></div><div id="sentDiv" class="canShowBlock sendDiv disp-none pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
             //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
             $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="initiateText" class="color5 pos-rel txtc fullwid nchatm85 mb20">Initiating chat will also send your interest</div>');
             $('chat-box[user-id="' + userId + '"] #sendInt').on("click", function () {
@@ -1530,7 +1530,7 @@ JsChat.prototype = {
         case curElem._contactStatusMapping["pog_acceptance_pending"]["key"]:
             $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sendInt,#restrictMessgTxt,#initiateText,#chatBoxErr").remove();
             if($('chat-box[user-id="' + userId + '"] .chatMessage').find("#interestSent").length == 0){
-                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
+                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="canShowBlock sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
 
                 //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
             }
@@ -1538,7 +1538,7 @@ JsChat.prototype = {
         case curElem._contactStatusMapping["pg_acceptance_pending"]["key"]:
             $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sendInt,#restrictMessgTxt,#initiateText,#chatBoxErr").remove();
             if($('chat-box[user-id="' + userId + '"] .chatMessage #acceptDeclineDiv').length ==0) {
-                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="pos-rel wid90p txtc colorGrey padall-10 notSendInterestDiv">The member wants to chat</div><div id="acceptDeclineDiv" class="pos-rel fullwid txtc colorGrey mt20"><div id="accept" class="acceptInterest padall-10 color5 disp_ib cursp">Accept</div><div id="decline" class="acceptInterest padall-10 color5 disp_ib cursp">Decline</div></div><div id="acceptTxt" class="pos-rel fullwid txtc color5 mt1">Accept interest to continue chat</div><div id="sentDiv" class="fullwid pos-rel disp-none mt10 color5 txtc notSendInterestDiv">Interest Accepted continue chat</div><div id="declineDiv" class="sendDiv txtc disp-none pos-abs wid80p mt10 color5 declineSent notSendInterestDiv">Interest Declined, you can\'t chat with this user anymore</div>');
+                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="pos-rel wid90p txtc colorGrey padall-10 notSendInterestDiv">The member wants to chat</div><div id="acceptDeclineDiv" class="pos-rel fullwid txtc colorGrey mt20"><div id="accept" class="acceptInterest padall-10 color5 disp_ib cursp">Accept</div><div id="decline" class="acceptInterest padall-10 color5 disp_ib cursp">Decline</div></div><div id="acceptTxt" class="pos-rel fullwid txtc color5 mt1">Accept interest to continue chat</div><div id="sentDiv" class="fullwid pos-rel disp-none mt10 color5 txtc notSendInterestDiv">Interest Accepted continue chat</div><div id="declineDiv" class="sendDiv txtc disp-none pos-abs wid80p mt10 color5 declineSent notSendInterestDiv canShowBlock">Interest Declined, you can\'t chat with this user anymore</div>');
             }
             //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
             $('chat-box[user-id="' + userId + '"] #accept').on("click", function () {
@@ -2065,10 +2065,10 @@ JsChat.prototype = {
     _disableChatPanelsBox:function(userId){
         var curElem = this;
         if($('chat-box[user-id="' + userId + '"]').length != 0){
-            if($('chat-box[user-id="' + userId + '"] .chatMessage #sentDiv').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage .acceptRec').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage .declineSent').length == 0){
+            if($('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage .acceptRec').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage .declineSent').length == 0){
                 console.log("disabling","ankita1");
                 setTimeout(function(){
-                    if($('chat-box[user-id="' + userId + '"] .chatMessage #sentDiv').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage .acceptRec').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage .declineSent').length == 0){
+                    if($('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage .acceptRec').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage .declineSent').length == 0){
                        console.log("disabling","ankita2");
                         var found = false;
                         $.each(curElem._rosterGroups,function(key,groupId){
