@@ -712,8 +712,11 @@ var strophieWrapper = {
             if (typeof body != "undefined" && body.length > 0) {
                 outputObj["body"] = Strophe.getText(body[0]);
                 var msg_type = msg.getElementsByTagName("msg_type");
-                if(msg_type){
-                    outputObj["msg_type"] = msg_type;
+                if(typeof msg_type != "undefined" && msg_type.length > 0){
+                    outputObj["msg_type"] = Strophe.getText(msg_type[0]);
+                }
+                else{
+                    outputObj["msg_type"] = null;
                 }
             }
             else {
