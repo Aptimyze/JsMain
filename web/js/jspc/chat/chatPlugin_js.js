@@ -1698,7 +1698,7 @@ JsChat.prototype = {
                 }
             }
             else{
-                curElem._manageFreeMemCase("hide",userId,chatBoxType);
+                curElem._manageFreeMemCase("hide",userId,chatBoxType,"true");
             }
         }  
     },
