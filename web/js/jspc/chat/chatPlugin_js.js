@@ -1252,6 +1252,20 @@ JsChat.prototype = {
                     curElem._addDataExtraPopup(data);
                     curElem._bindExtraPopupUserClose($("#extra_" + data + " .nchatic_4"));
                 }
+                var bubbleData = [];
+                if(localStorage.getItem("bubbleData")) {
+                    bubbleData = JSON.parse(localStorage.getItem("bubbleData"));
+                }
+                var indexToBeRemoved;
+                $.each(bubbleData, function(index, elem){
+                    if(elem.userId == username) {
+                        indexToBeRemoved = index;
+                    }
+                });
+                if(indexToBeRemoved != undefined) {
+                    bubbleData.splice(indexToBeRemoved,1);
+                }
+                localStorage.setItem("bubbleData", JSON.stringify(bubbleData));
             } else {
                 $(this).next().click();
             }
