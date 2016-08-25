@@ -2056,6 +2056,22 @@ JsChat.prototype = {
                         if($('#extra_'+userId).length == 0){
                             //$('chat-box[user-id="' + userId + '"] .chatMessage').find('#text_' + userId + '_' + uniqueId).addClass("received");
                             curEle._handleUnreadMessages($('chat-box[user-id="' + userId + '"]'));
+                            var bubbleData = [];
+                            if(localStorage.getItem("bubbleData")) {
+                                bubbleData = JSON.parse(localStorage.getItem("bubbleData"));
+                            }
+                            var dataPresent = false;
+                            $.each(bubbleData, function(index, elem){
+                                if(elem.userId == userId) {
+                                    elem.bCount = val;
+                                    dataPresent = true;
+                                }
+                            });
+                            if(dataPresent == false){
+                                var obj = {userId:userId,bCount:val};
+                                bubbleData.push(obj);
+                            }
+                            localStorage.setItem("bubbleData", JSON.stringify(bubbleData));
                         }
                     }
                     //adding bubble for side tab
