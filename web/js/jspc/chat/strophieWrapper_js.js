@@ -579,20 +579,34 @@ var strophieWrapper = {
         }
     },
     //sending Message
-    sendMessage: function (message, to) {
+    sendMessage: function (message, to,is_eoi,msg_id) {
         var outputObj,messageId;
         try {
             if (message && to && strophieWrapper.getCurrentConnStatus()) {
-            	messageId = strophieWrapper.connectionObj.getUniqueId();
+                if(typeof msg_id!= "undefined"){
+                    messageId = msg_id;
+                }
+                else{
+            	   messageId = strophieWrapper.connectionObj.getUniqueId();
+                }
                 console.log("sent",messageId);
-                var reply = $msg({
+                var reply,msg_type;
+                if(typeof is_eoi!= "undefined" && is_eoi == true){
+                   msg_type = "eoi"; 
+                }
+                else{
+                    msg_type = "accept";
+                }
+                
+                reply = $msg({
                     from: strophieWrapper.getSelfJID(),
                     to: to,
                     type: 'chat',
                     id:messageId
-                }).t('eoi').cnode(Strophe.xmlElement('body', message)).up().c('active', {
-                    xmlns: "http://jabber.org/protocol/chatstates"
-                });
+                    }).cnode(Strophe.xmlElement('msg_type', msg_type)).up().cnode(Strophe.xmlElement('body', message)).up().c('active', {
+                        xmlns: "http://jabber.org/protocol/chatstates"
+                    });
+                console.log(reply);
                 strophieWrapper.connectionObj.send(reply);
                 if (strophieWrapper.syncMessageForSessions == true) {
                     // Forward the message, so that other connected resources are also aware of it.
@@ -697,6 +711,10 @@ var strophieWrapper = {
             ////strophieWrapper.stropheLoggerPC(body);
             if (typeof body != "undefined" && body.length > 0) {
                 outputObj["body"] = Strophe.getText(body[0]);
+                var msg_type = msg.getElementsByTagName("msg_type");
+                if(msg_type){
+                    outputObj["msg_type"] = msg_type;
+                }
             }
             else {
                 outputObj["body"] = null;

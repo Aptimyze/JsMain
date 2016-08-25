@@ -651,7 +651,7 @@ function invokePluginReceivedMsgHandler(msgObj) {
     if (typeof msgObj["from"] != "undefined") {
         if (typeof msgObj["body"] != "undefined" && msgObj["body"] != "" && msgObj["body"] != null && msgObj['msg_state'] != strophieWrapper.msgStates["FORWARDED"]) {
             ////console.log("appending RECEIVED");
-            objJsChat._appendRecievedMessage(msgObj["body"], msgObj["from"], msgObj["msg_id"]);
+            objJsChat._appendRecievedMessage(msgObj["body"], msgObj["from"], msgObj["msg_id"],msgObj["msg_type"]);
         }
         if (typeof msgObj["msg_state"] != "undefined") {
             switch (msgObj['msg_state']) {
@@ -813,12 +813,14 @@ function handlePreAcceptChat(apiParams,receivedJId) {
                             outputData["cansend"] = true;
                             outputData["sent"] = true;
                             outputData["msg_id"] = strophieWrapper.getUniqueId();
-                            strophieWrapper.sendMessage(apiParams.postParams.chatMessage,receivedJId);
+                            strophieWrapper.sendMessage(apiParams.postParams.chatMessage,receivedJId,true,outputData["msg_id"]);
                         }
                     } else {
                         outputData = response;
                         outputData["msg_id"] = strophieWrapper.getUniqueId();
-                        strophieWrapper.sendMessage(apiParams.postParams.chatMessage,receivedJId);
+                        if(response["sent"] == true){
+                            strophieWrapper.sendMessage(apiParams.postParams.chatMessage,receivedJId,true,outputData["msg_id"]);
+                        }
                     }
                 }
                 else{

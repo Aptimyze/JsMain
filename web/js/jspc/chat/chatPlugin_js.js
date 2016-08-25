@@ -1604,6 +1604,7 @@ JsChat.prototype = {
                                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
                                 $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
                                 $('chat-box[user-id="' + userId + '"]').attr("group-id", chatConfig.Params.categoryNames["none_applicable"]);
+                                curElem._enableChatTextArea(new_contact_state, userId, getMembershipStatus());
                             }
                         } else {
                             $(this).html(response.actiondetails.errmsglabel);
@@ -1689,7 +1690,9 @@ JsChat.prototype = {
         else if(type == "show"){
             $('chat-box[user-id="' + userId + '"] #initiateText').remove();
             if($('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).length == 0){
-                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="chat_freeMemMsg_'+userId+'" class="pos-abs fullwid txtc colorGrey mt120">Only paid members can start chat<div  class="becomePaidMember_chat color5 cursp"><a href="/profile/mem_comparison.php" class = "cursp js-colorParent">Become a Paid Member</a></div></div>');
+                if($('chat-box[user-id="' + userId + '"] #acceptDeclineDiv').length == 0){
+                    $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="chat_freeMemMsg_'+userId+'" class="pos-abs fullwid txtc colorGrey mt120">Only paid members can start chat<div  class="becomePaidMember_chat color5 cursp"><a href="/profile/mem_comparison.php" class = "cursp js-colorParent">Become a Paid Member</a></div></div>');
+                }
                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
             }
         }
@@ -1958,7 +1961,7 @@ JsChat.prototype = {
     },
 
     //add meesage recieved from another user
-    _appendRecievedMessage: function (message, userId, uniqueId) {
+    _appendRecievedMessage: function (message, userId, uniqueId,msg_type) {
         var curEle = this,
             that = this;
         var selfJID = getConnectedUserJID(); 
@@ -1986,8 +1989,9 @@ JsChat.prototype = {
                 }
 
             }
-            curEle._enableChatAfterPaidInitiates(userId);
-            
+            if(typeof msg_type != "undefined" && msg_type == "accept"){
+                curEle._enableChatAfterPaidInitiates(userId);
+            }
             if(appendMsg == true){
                 message = message.replace(/\&lt;br \/\&gt;/g, "<br />");
                 //adding mege in chat area
@@ -2635,6 +2639,7 @@ JsChat.prototype = {
 						$("#extra_"+elem1+" .nchatic_4").click();
 					}
 					else {
+                        console.log("closing on chat-box change manvi_check");
 						$('chat-box[user-id="' + elem1 + '"] .nchatic_1').click();
 					}
 				}	
