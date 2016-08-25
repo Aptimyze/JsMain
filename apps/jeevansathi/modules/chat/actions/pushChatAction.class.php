@@ -50,7 +50,7 @@ class pushChatAction extends sfAction
 				$data['chatid'] = $chatID;
 				$data['ip'] = $ip;
 				$date = date("Y-m-d H:i:s");
-				$data['ip'] = $date;
+				$data['date'] = $date;
 				$js_communication=new JS_Communication($sender,$receiver,$communicationType,$message,$chatID,$ip,$date);
 
 				if($js_communication->validateChat()) {
