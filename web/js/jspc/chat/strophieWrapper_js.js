@@ -343,6 +343,8 @@ var strophieWrapper = {
     },
     //executed after presence has been fetched
     onPresenceReceived: function (presence) {
+        console.log("onPresenceReceived from- ",$(presence).attr('from'));
+        console.log(presence);
         var presence_type = $(presence).attr('type'),
             chat_status = "offline"; // unavailable, subscribed, etc...
         var from = $(presence).attr('from'),
@@ -693,8 +695,12 @@ var strophieWrapper = {
         if (outputObj["type"] == "chat") {
             var body = msg.getElementsByTagName("body");
             ////strophieWrapper.stropheLoggerPC(body);
-            if (typeof body != "undefined" && body.length > 0) outputObj["body"] = Strophe.getText(body[0]);
-            else outputObj["body"] = null;
+            if (typeof body != "undefined" && body.length > 0) {
+                outputObj["body"] = Strophe.getText(body[0]);
+            }
+            else {
+                outputObj["body"] = null;
+            }
         } /*else if (msg_state == strophieWrapper.msgStates["RECEIVED"]) {
             var rec = received[0];
             if (typeof rec != "undefined") {
