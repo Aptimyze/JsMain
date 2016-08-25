@@ -2720,7 +2720,7 @@ JsChat.prototype = {
 						$("#extra_"+elem1+" .nchatic_4").click();
 					}
 					else {
-                        //console.log("closing on chat-box change manvi_check");
+                        console.log("closing on chat-box change manvi_check");
 						$('chat-box[user-id="' + elem1 + '"] .nchatic_1').click();
 					}
 				}	
