@@ -2697,10 +2697,12 @@ JsChat.prototype = {
         if(localStorage.getItem("bubbleData")) {
             bubbleData = JSON.parse(localStorage.getItem("bubbleData"));
         }
+        console.log(bubbleData);
         //console.log(bubbleData);
         setTimeout(function() {
             $.each(bubbleData, function(index,elem) {
                 //confirm manvi
+                console.log($('chat-box[user-id="'+elem.userId+'"]'));
                 if($('chat-box[user-id="'+elem.userId+'"]').attr("pos-state") != "open"){
                     console.log("manvi_check",$('chat-box[user-id="'+elem.userId+'"] .pinkBubble2'));
                     $('chat-box[user-id="'+elem.userId+'"] .pinkBubble2 span').html(elem.bCount);
