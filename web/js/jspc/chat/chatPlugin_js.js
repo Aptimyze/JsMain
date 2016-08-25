@@ -674,6 +674,7 @@ JsChat.prototype = {
                 $('div.' + groupID + ' ul.' + status).prepend(contactHTML);
                 //upadte status in list
                 if(status && (operation == "update_status" || operation == "removeCall1")){
+                     console.log("updating 2",chat_status);
                     $(".chatlist li[id='" + contactID + "_" + groupID + "']").attr("data-status",status);
                 }
                 done = true;
@@ -1726,6 +1727,7 @@ JsChat.prototype = {
         //this._chatLoggerPlugin("_updateStatusInChatBox for "+userId+"-"+chat_status+"--"+$('chat-box[user-id="' + userId + '"]').length);
         var groupId = $('chat-box[user-id="' + userId + '"]').attr("group-id");
         if ($(".chatlist li[id='" + userId + "_" + groupId + "']").length != 0) {
+            console.log("updating 1",chat_status);
             $(".chatlist li[id='" + userId + "_" + groupId + "']").attr("data-status", chat_status);
         }
         if ($('chat-box[user-id="' + userId + '"]').length != 0) {
