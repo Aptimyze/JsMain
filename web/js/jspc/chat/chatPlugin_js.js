@@ -1625,7 +1625,7 @@ JsChat.prototype = {
                                 //$(this).remove();
                                 new_contact_state = curElem._contactStatusMapping["pg_interest_declined"]["key"];
                                 //TODO: fire query for accepting request
-                                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+                                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
                                 $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
                                 $('chat-box[user-id="' + userId + '"]').attr("group-id", chatConfig.Params.categoryNames["none_applicable"]);
                                 curElem._enableChatTextArea(new_contact_state, userId, getMembershipStatus());
@@ -1678,34 +1678,29 @@ JsChat.prototype = {
     _enableChatTextArea: function (chatBoxType, userId, membership) {
         var curElem = this;
         //check for membership status of logged in user
-        if($('chat-box[user-id="' + userId + '"] .declineSent').length! = 0 && $('chat-box[user-id="' + userId + '"] .declineSent').hasClass("disp-none") == false){
-            $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
-        }
-        else{
-            if (membership == "Paid") {
-                if (curElem._contactStatusMapping[chatBoxType]["enableChat"] == true) {
-                    $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+        if (membership == "Paid") {
+            if (curElem._contactStatusMapping[chatBoxType]["enableChat"] == true) {
+                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+            }
+            else {
+                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+            }
+        } else if (membership == "Free") {
+            var checkForPaidInitiation = curElem._contactStatusMapping[chatBoxType]["checkForPaidInitiation"];
+            if(checkForPaidInitiation == true){
+                var hasPaidIntiated = $('chat-box[user-id="' + userId + '"]').attr("data-paidInitiated");
+                //console.log("hasPaidIntiated"+hasPaidIntiated);
+                if(hasPaidIntiated == "false"){
+                    curElem._manageFreeMemCase("show",userId,chatBoxType);
                 }
-                else {
-                    $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+                else if(hasPaidIntiated == "true"){
+                    curElem._manageFreeMemCase("hide",userId,chatBoxType); 
                 }
-            } else if (membership == "Free") {
-                var checkForPaidInitiation = curElem._contactStatusMapping[chatBoxType]["checkForPaidInitiation"];
-                if(checkForPaidInitiation == true){
-                    var hasPaidIntiated = $('chat-box[user-id="' + userId + '"]').attr("data-paidInitiated");
-                    //console.log("hasPaidIntiated"+hasPaidIntiated);
-                    if(hasPaidIntiated == "false"){
-                        curElem._manageFreeMemCase("show",userId,chatBoxType);
-                    }
-                    else if(hasPaidIntiated == "true"){
-                        curElem._manageFreeMemCase("hide",userId,chatBoxType); 
-                    }
-                }
-                else{
-                    curElem._manageFreeMemCase("hide",userId,chatBoxType);
-                }
-            } 
-        } 
+            }
+            else{
+                curElem._manageFreeMemCase("hide",userId,chatBoxType);
+            }
+        }  
     },
 
     //show/hide free mem msg
@@ -2124,10 +2119,10 @@ JsChat.prototype = {
     _disableChatPanelsBox:function(userId){
         var curElem = this;
         if($('chat-box[user-id="' + userId + '"]').length != 0){
-            if($('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage .acceptRec').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage .declineSent').length == 0){
+            if($('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage .acceptRec').length == 0){
                 //console.log("disabling","ankita1");
                 setTimeout(function(){
-                    if($('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage .acceptRec').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage .declineSent').length == 0){
+                    if($('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage .acceptRec').length == 0){
                        //console.log("disabling","ankita2");
                         var found = false;
                         $.each(curElem._rosterGroups,function(key,groupId){
