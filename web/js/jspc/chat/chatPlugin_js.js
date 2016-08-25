@@ -2121,7 +2121,7 @@ JsChat.prototype = {
                 
                 } else {
                 */
-                    $('chat-box[user-id="' + userId + '"] .onlineStatus').html("typing...");
+                    $('chat-box[user-id="' + userId + '"] .onlineStatus').html("typing...").show();
               //  }
             } else if (msg_state == 'paused' || msg_state == 'gone') {
                 var idStatus = "",
@@ -2133,6 +2133,9 @@ JsChat.prototype = {
                     idStatus = "offline";
                 }
                 $('chat-box[user-id="' + userId + '"] .onlineStatus').html(idStatus);
+                 if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
+                    $('chat-box[user-id="' + userId + '"] .onlineStatus').hide(); 
+                 }
                 /*
                 if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
                     var userName = $(".chatlist li[id='" + userId + "_" + groupId + "'] div").html();
