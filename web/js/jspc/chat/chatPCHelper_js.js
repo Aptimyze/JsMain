@@ -587,6 +587,8 @@ function checkNewLogin(profileid) {
             eraseCookie('chatEncrypt');
             createCookie('chatEncrypt', computedChatEncrypt);
             clearChatMsgFromLS();
+            localStorage.removeItem('chatBoxData');
+            localStorage.removeItem('lastUId');
         }
     } else {
         createCookie('chatEncrypt', computedChatEncrypt);
