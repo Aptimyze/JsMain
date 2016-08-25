@@ -173,8 +173,8 @@ var strophieWrapper = {
     onRosterUpdate: function (iq) {
         //strophieWrapper.Roster = strophieWrapper.Roster.filter(function(n){ return n != undefined }); 
         //strophieWrapper.stropheLoggerPC("in onRosterPush");
-        //console.log("onRosterUpdate");
-        //console.log(iq);
+        console.log("onRosterUpdate");
+        console.log(iq);
         //strophieWrapper.stropheLoggerPC(iq);
         var nodeObj = xmlToJson(iq);
         rosterObj = strophieWrapper.formatRosterObj(nodeObj["query"]["item"]);
