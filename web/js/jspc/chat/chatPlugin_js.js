@@ -1213,12 +1213,18 @@ JsChat.prototype = {
             }, 100);
             var username = $(this).closest(".extraChatList").attr("id").split("_")[1],
                 originalElem = $('chat-box[user-id="' + username + '"]'),
-                status = $("chat-box[user-id='" + username + "'] .chatBoxBar .onlineStatus").html(),
+                //status = $("chat-box[user-id='" + username + "'] .chatBoxBar .onlineStatus").html(),
                 chatHtml = $(originalElem).find(".chatMessage").html(),
                 jid = $('chat-box[user-id="' + username + '"]').attr("data-jid");
             pcheckSum = $('chat-box[user-id="' + username + '"]').attr("data-checks"),
                 groupId = $('chat-box[user-id="' + username + '"]').attr("group-id");
                 curElem._changeLocalStorage("remove",username,"","");
+            var status = "offline";
+            if($("#"+username+"_"+groupId).length != 0) {
+                if($("#"+username+"_"+groupId+" .nchatic5").length != 0){
+                    status = "online";
+                }
+            }
             if($("#"+username+"_"+groupId).length != 0 ) {
                 curElem._appendChatBox(username, status, jid, pcheckSum, groupId,"noHis");
                 $(originalElem).remove();
