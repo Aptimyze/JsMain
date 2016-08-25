@@ -290,7 +290,7 @@ chatConfig.Params = {
             "intrec": 50,
             "shortlist": 50,
             "intsent":50,
-            "acceptance":100
+            "acceptance":400
         },
         storeMsgInLocalStorage:false,
         maxMsgLimit:1000,
