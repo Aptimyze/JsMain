@@ -343,8 +343,8 @@ var strophieWrapper = {
     },
     //executed after presence has been fetched
     onPresenceReceived: function (presence) {
-        console.log("onPresenceReceived from- ",$(presence).attr('from'));
-        console.log(presence);
+        //console.log("onPresenceReceived from- ",$(presence).attr('from'));
+        //console.log(presence);
         var presence_type = $(presence).attr('type'),
             chat_status = "offline"; // unavailable, subscribed, etc...
         var from = $(presence).attr('from'),
