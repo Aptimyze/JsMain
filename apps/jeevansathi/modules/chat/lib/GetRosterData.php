@@ -54,7 +54,7 @@ class GetRosterData
 			$monthGap = mktime(0, 0, 0, date("m")- self::LOGIN_MONTHS_GAP, date("d"),   date("Y"));
 			$dateAfterMonthGap = date("Y-m-d",$monthGap);
 			$greaterThanEqualArrayWithoutQuote["LAST_LOGIN_DT"] = "'".$dateAfterMonthGap."'";
-			$orderBy = "FIELD('PROFILEID',$whereArr[PROFILEID])";
+			$orderBy = "FIELD(PROFILEID,$whereArr[PROFILEID])";
 
 			$profArrObj                = new ProfileArray();
 			$usernameArray = $profArrObj->getResultsBasedOnJprofileFields($whereArr, '', '', implode(',',Array("PROFILEID", "USERNAME")),'JPROFILE',"newjs_bmsSlave","",$greaterThanEqualArrayWithoutQuote,$orderBy,$limit);
@@ -100,6 +100,7 @@ class GetRosterData
 			$condition["WHERE"]["GREATER_THAN_EQUAL"]["TIME"] = "$back_90_days 00:00:00";
 		}
 		if ($limit) $condition["LIMIT"] = "$limit";
+		$condition["ORDER"] = "TIME";
 		return $condition;
 	}
 

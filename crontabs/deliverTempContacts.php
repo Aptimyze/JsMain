@@ -16,7 +16,9 @@
         include_once($_SERVER['DOCUMENT_ROOT']."/profile/contact.inc");
 include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
-ini_set("memory_limit","512M"); 
+include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
+$deliverCounts=array("delivered"=>0,"error"=>0);
+ini_set("memory_limit","512M");
         // connect to database
         
 		$slave=connect_slave();
@@ -102,6 +104,10 @@ ini_set("memory_limit","512M");
 				$receiver_details = get_profile_details($receiver_profileid);
 				$contactDelivered = deliverContact($sender_profileid, $receiver_profileid, $sender_details, $receiver_details, $draft_name, $draft_message, $custmessage, $stype);
 				setDeliveredInTempContacts($sender_profileid,$receiver_profileid,$contactDelivered["ERROR"],$db);
+				if($contactDelivered["ERROR"])
+					$deliverCounts["error"]++;
+				else
+					$deliverCounts["delivered"]++;
 			}
 		
 	}
@@ -112,7 +118,11 @@ unset($notDeliveredProfilesError);
 
 		}
 	}
-
+$cc='nitesh.s@jeevansathi.com';
+			$to='nitesh.s@jeevansathi.com';
+                       echo  $subject="Temp Contacts --- Delivered = ".$deliverCounts["delivered"]." --Error--".$deliverCounts["error"]."<EOM>";
+                        $msg='';
+                        send_email($to,$msg,$subject,"",$cc);
 	//If not delivered temporary contacts are available, deliver them and mark DELIVERED
 	
 
@@ -127,11 +137,13 @@ unset($notDeliveredProfilesError);
                 if($error)
                 {
 			$sql = "UPDATE CONTACTS_TEMP SET DELIVERED='E', DELIVER_TIME=now(), COMMENTS='$error' WHERE SENDER  = '$sender' AND RECEIVER='$receiver' AND DELIVERED ='N'";
+			
 			mysql_query($sql,$db);
                 }
 		else
                 {
 			$sql = "UPDATE CONTACTS_TEMP SET DELIVERED='Y', DELIVER_TIME=now() WHERE SENDER ='$sender' AND RECEIVER='$receiver' AND DELIVERED='N'";
+			
 			mysql_query($sql,$db);
                 }
 	}
