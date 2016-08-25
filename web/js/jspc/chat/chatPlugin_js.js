@@ -1746,8 +1746,14 @@ JsChat.prototype = {
             groupId = output["groupID"];
         }
         if ($(".chatlist li[id='" + userId + "_" + groupId + "']").length != 0) {
-            status = $(".chatlist li[id='" + userId + "_" + groupId + "']").attr("data-status");
+            if($(".chatlist li[id='" + userId + "_" + groupId + "'] .nchatspr").length != 0){
+                status = "online";
+            }
+            else{
+                status = "offline";
+            }
         }
+
         var heightPlus = false,
             bodyWidth = $("body").width();
         /*if ($(curElem._chatBottomPanelID).length == 0) {
