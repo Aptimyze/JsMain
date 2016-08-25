@@ -69,7 +69,7 @@ class JS_Communication
 				$this->contactObj = new Contacts($loginProfileObj, $otherProfileObj);
 				//$type=$this->contactObj->getTYPE();
 				$msgDbObj= new NEWJS_MESSAGE_LOG($dbName1);
-				$eoiArray= $msgDbObj->getEOIMessages(array($this->loginProfile),array($this->otherProfile));
+				$eoiArray= $msgDbObj->getEOIMessagesForChat(array($this->loginProfile),array($this->otherProfile));
 
 				$mergeArray=$eoiArray[0];
 				$mergeArray["CHATID"]="";				
