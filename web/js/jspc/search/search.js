@@ -1012,105 +1012,45 @@ function getGunaScore(response)
 	profChecksumCheckArr = profilechecksumArr;
 	//The profileChecksumArr contains profilechecksum of both profiles and featured profiles on a particular page
 	profilechecksumArr = profilechecksumArr.join(",");
+	if(searchBasedParam == 'kundlialerts')
+	{		
+		if(profileLength == 0)
+		{
+			if(searchResponse.page_index < searchResponse.paginationArray.length)
+			{
+					loadPage(parseInt(searchResponse.page_index) + 1);
+			}
+			else
+			{
+					setTimeout(function(){
+					$("#zeroPageHeading").html(searchResponse.result_count);
+					$("#zeroPageMsg").html(searchResponse.DefaultZeroMsg);
+					$("#js-searchContainer").hide();
+					$("#zeroResultSection").show();
+				}, 0.1);
+			}
+		}
+			
+	}
+				
 	$.myObj.ajax({
 		showError: false, 
 		method: "POST",
 		url : '/api/v1/search/gunaScore?profilechecksumArr='+profilechecksumArr+'&diffGender='+diffGender,
 		data : ({dataType:"json"}),
-		async: (searchBasedParam == 'kundlialerts') ? false : true,
+		async: true,
 		timeout:20000,
 		success:function(response){
 			gunaScoreArr = response.gunaScores;
-			if(Array.isArray(gunaScoreArr))
-			{
-				if(searchBasedParam == 'kundlialerts')
-				{
-					$.each(profChecksumCheckArr, function(index, value){
-						var flag = false;
-						$.each(gunaScoreArr, function(key,val){	
-							$.each(val, function(profchecksum,gunaScore){
-								if(value === profchecksum)
-								{
-									flag = true;
-								}
-							});	
-						});
-						if(flag == false)
-						{
-							deleteChecksumArr.push(value);
-						}
-					});
-					
-
-
-					$.each(gunaScoreArr, function(key,val){	
-						$.each(val, function(profchecksum,gunaScore){
-							if(gunaScore <= searchResponse.minAcceptedGunaScore)
-							{
-								deleteChecksumArr.push(profchecksum);
-							}
-						});	
-					});
-
-					if(profileLength != 0)
-					{
-						kundliAlertListingHandling(searchResponse,profileLength,'profiles',deleteChecksumArr);
-					}
-								
-					if((searchResponse.profiles.length == 0))
-					{
-						if(searchResponse.page_index < searchResponse.paginationArray.length)
-						{
-								loadPage(parseInt(searchResponse.page_index) + 1);
-						}
-						else
-						{
-							setTimeout(function(){
-							$("#zeroPageHeading").html(searchResponse.result_count);
-							$("#zeroPageMsg").html(searchResponse.DefaultZeroMsg);
-							$("#js-searchContainer").hide();
-							$("#zeroResultSection").show();
-						}, 0.1);
-						}
-
-						
-						
-					}
-				
-					setTimeout(function(){
-						setGunaScoreOnListing(gunaScoreArr);
-					}, 100);
-				}
-				else
-				{
-					setGunaScoreOnListing(gunaScoreArr);
-				}	
+			if(Array.isArray(gunaScoreArr)){
+				$.each(gunaScoreArr, function(key,val){	
+					$.each(val, function(profchecksum,gunaScore){
+						$(".gunaScore-"+profchecksum).html("Guna "+gunaScore+"/36");
+					});	
+				});
 			}
 		}
 	});
 
 }
 
-//This function is used to delete profiles from profiles array whose guna is less than a mininum accepted value
-function kundliAlertListingHandling(searchResponse,length,profileType,deleteChecksumArr)
-{
-	while(length)
-	{
-		length--;
-		if(jQuery.inArray(searchResponse[profileType][length].profilechecksum, deleteChecksumArr) !== -1)
-		{	
-			searchResponse[profileType].splice(length,1);
-		}
-
-	}
-}
-
-//This function sets the Guna score on search tuples corresponnding to their id's
-function setGunaScoreOnListing(gunaScoreArr)
-{
-	$.each(gunaScoreArr, function(key,val){	
-		$.each(val, function(profchecksum,gunaScore){
-			$(".gunaScore-"+profchecksum).html("Guna "+gunaScore+"/36");
-		});	
-	});
-}

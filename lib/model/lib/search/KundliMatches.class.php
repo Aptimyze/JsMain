@@ -7,6 +7,7 @@
 class KundliMatches extends PartnerProfile
 {
     
+			private $MIN_GUNA = 18;
        /**
         * Constructor function.
         * @constructor
@@ -27,8 +28,8 @@ class KundliMatches extends PartnerProfile
 					
 					$this->getDppCriteria();
 					$channel =  SearchChannelFactory::getChannel();
-          $this->stype =  $channel::getSearchTypeMembersLookingForMe();
-					$this->setSEARCH_TYPE($this->stype);
+					$this->stype =  $channel::getSearchTypeKundliMatches();
+          $this->setSEARCH_TYPE($this->stype);
 					$this->setHOROSCOPE('Y'); // Horoscope should be present for all the profiles
 					if($this->loggedInProfileObj->getBTIME()=="" || $this->loggedInProfileObj->getCITY_BIRTH()=="" || $this->loggedInProfileObj->getCOUNTRY_BIRTH()=="")
           {
@@ -52,7 +53,7 @@ class KundliMatches extends PartnerProfile
 							{
 									foreach($v as $pid=>$guna)
 									{
-										if($guna>=18)
+										if($guna>=$this->MIN_GUNA)
 											$finalSearchPidsArr[]=$pid;
 									}
 							}
@@ -73,7 +74,7 @@ class KundliMatches extends PartnerProfile
 							$SearchResponseObj->setresultsArr(array());
 						}
 					}
-					//print_r($SearchResponseObj); die;
+					
 					return $SearchResponseObj;
 				}
 
