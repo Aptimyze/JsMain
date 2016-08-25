@@ -727,7 +727,9 @@ JsChat.prototype = {
             },0, function () {
                 $(elem.find(".nchatic_2")[0]).hide();
                 $(elem.find(".nchatic_3")[0]).hide();
-                elem.find(".onlineStatus").hide();
+                if(elem.find(".onlineStatus").html() != "typing..."){
+                    elem.find(".onlineStatus").hide();
+                }
                 if (elem.find(".pinkBubble2 span").html() != 0) {
                     elem.find(".pinkBubble2").show();
                 }
