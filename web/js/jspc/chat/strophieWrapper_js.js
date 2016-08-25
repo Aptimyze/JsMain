@@ -448,9 +448,9 @@ var strophieWrapper = {
                     if (subscription == "to") {
                     	//console.log("subscribe to -"+jid);
                         strophieWrapper.subscribe(jid, listObj[strophieWrapper.rosterDetailsKey]["nick"]);
-                    	setTimeout(function () {
+                    	/*setTimeout(function () {
 		                  strophieWrapper.sendPresence();
-		                }, 5000);
+		                }, 5000);*/
                     }
                 }
             }
