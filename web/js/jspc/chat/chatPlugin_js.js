@@ -1912,14 +1912,11 @@ JsChat.prototype = {
                 //console.log("setting");
                 $('chat-box[user-id="' + other_id + '"]').find("#moreHistory_"+other_id).attr("data-latestMsgId",latestMsgId);
             }
-            
-            /*
-            var height = document.getElementById("chatHistory_" + other_id).scrollHeight;
-            console.log("history height" + height);
-            $('chat-box[user-id="' + other_id + '"] .chatMessage').animate({
-                scrollTop: height
-            }, 500);
-            }*/
+            setTimeout(function(){
+                if(requestType == "first_history"){
+                    curElem.preventSiteScroll(other_id);
+                }  
+            },1000);
         }
     },
     //append self sent message on opening window again
@@ -2669,7 +2666,7 @@ JsChat.prototype = {
             $.each(bubbleData, function(index,elem) {
                 //confirm manvi
                 if($('chat-box[user-id="'+elem.userId+'"]').attr("pos-state") != "open"){
-                    //console.log("manvi_check",$('chat-box[user-id="'+elem.userId+'"] .pinkBubble2'));
+                    console.log("manvi_check",$('chat-box[user-id="'+elem.userId+'"] .pinkBubble2'));
                     $('chat-box[user-id="'+elem.userId+'"] .pinkBubble2 span').html(elem.bCount);
                     if(elem.bCount != 0){
                         $('chat-box[user-id="'+elem.userId+'"] .pinkBubble2').show();
@@ -2721,6 +2718,24 @@ JsChat.prototype = {
         });
         delete that;
     },
+    preventSiteScroll:function(userId){
+        var inside = false, current;
+        $('chat-box[user-id="' + userId + '"] .chatMessage').on('mouseenter',function(){
+            console.log("mouse enter");
+            inside = true;
+            current = $(document).scrollTop();
+            $(document).scroll(function(e,d){
+                if(!$(e).hasClass('.chatMessage') && inside == true) {
+                    $(window).scrollTop(current);
+                }
+            });
+            $('chat-box[user-id="' + userId + '"] .chatMessage').on('mouseleave',function(){
+                console.log("mouse leave");
+                inside = false;
+            });
+        });
+    },
+
     //manage chat loader
     manageChatLoader: function (type) {
         if (type == "hide") {
