@@ -719,7 +719,7 @@ margin-top: 220px;
     border-right-color: transparent;
     border-radius: 50%;}
 .extraPopup {
-max-height: 500px;
+max-height: 460px;
 overflow-x: hidden;
 overflow-y: auto;
 }
