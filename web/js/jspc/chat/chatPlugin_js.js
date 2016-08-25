@@ -2011,7 +2011,7 @@ JsChat.prototype = {
             //adding bubble for minimized tab
                 setTimeout(function(){
                     
-                console.log("InTimeout",$('chat-box[user-id="' + userId + '"] .chatBoxBar img'));
+                console.log("InTimeout",$('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin"));
                     if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
                         val = parseInt($('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html()) + 1;
                         $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html(val);
@@ -2094,6 +2094,7 @@ JsChat.prototype = {
     _onlineUserMsgMe: function () {
         var noOfInputs = 0;
         $("chat-box .chatBoxBar .pinkBubble2").each(function (index, element) {
+            console.log(element);
             if ($(this).find(".noOfMessg").html() != 0) {
                 noOfInputs++;
             }
