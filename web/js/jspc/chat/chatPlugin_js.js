@@ -2009,9 +2009,6 @@ JsChat.prototype = {
             }
             var val;
             //adding bubble for minimized tab
-            var chatBrowser = navigator.userAgent;
-            if (chatBrowser.indexOf("Firefox") > -1) {
-                setTimeout(function(){
                     if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
                         val = parseInt($('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html()) + 1;
                         $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html(val);
@@ -2052,51 +2049,7 @@ JsChat.prototype = {
                     }
                     curEle._scrollToBottom(userId);
                     //this.storeMessagesInLocalHistory(selfJID, userId, newMsg, 'receive');
-                },50);
             }
-            else{
-                if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
-                    val = parseInt($('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html()) + 1;
-                    $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html(val);
-                    $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2').show();
-                    //$('chat-box[user-id="' + userId + '"] .chatMessage').find('#text_' + userId + '_' + uniqueId).addClass("received");
-                    var bubbleData = [];
-                    if(localStorage.getItem("bubbleData")) {
-                        bubbleData = JSON.parse(localStorage.getItem("bubbleData"));
-                    }
-                    var dataPresent = false;
-                    $.each(bubbleData, function(index, elem){
-                        if(elem.userId == userId) {
-                            elem.bCount = val;
-                            dataPresent = true;
-                        }
-                    });
-                    if(dataPresent == false){
-                        var obj = {userId:userId,bCount:val};
-                        bubbleData.push(obj);
-                    }
-                    localStorage.setItem("bubbleData", JSON.stringify(bubbleData));
-                } else {
-                    if($('#extra_'+userId).length == 0){
-                        //$('chat-box[user-id="' + userId + '"] .chatMessage').find('#text_' + userId + '_' + uniqueId).addClass("received");
-                        curEle._handleUnreadMessages($('chat-box[user-id="' + userId + '"]'));
-                    }
-                }
-                //adding bubble for side tab
-                if ($("#extra_" + userId + " .pinkBubble").length != 0) {
-                    val = parseInt($("#extra_" + userId + " .pinkBubble span").html());
-                    $("#extra_" + userId + " .pinkBubble span").html(val + 1);
-                    $("#extra_" + userId + " .pinkBubble").show();
-                }
-                //change count of online matches panel
-                if ($(".js-minpanel").length != 0) {
-                    var count = curEle._onlineUserMsgMe();
-                    //that._chatLoggerPlugin("count - " + count);
-                }
-                curEle._scrollToBottom(userId);
-                //this.storeMessagesInLocalHistory(selfJID, userId, newMsg, 'receive');
-            }
-        }
     },
     
     //disable chat box on roster item deletion
