@@ -1709,8 +1709,9 @@ JsChat.prototype = {
         if(type == "hide"){
             if($('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).length != 0){
                     $('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).remove();
-                    $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                   
                 }
+                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
                 //console.log("hidden");
         }
         else if(type == "show"){
