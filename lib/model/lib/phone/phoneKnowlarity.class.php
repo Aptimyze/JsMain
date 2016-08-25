@@ -15,8 +15,9 @@ public function __construct($profileObject,$phoneType)
 		{
 
 			
-			if (!$profileObject || !$phoneType)
-				throw new Exception("No phoneType or profileObject", 1);
+			if (!$profileObject || !$phoneType){
+				throw new jsException('',"No phoneType or profileObject", 1);
+			}
 				$this->profileObject=$profileObject;
 				$this->phoneType=$phoneType;
 				switch($phoneType)
@@ -37,7 +38,7 @@ public function __construct($profileObject,$phoneType)
 				}
 
 	
-
+			
 		}
 		catch(Exception $e)
 		{

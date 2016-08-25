@@ -158,7 +158,7 @@ BUTTON1_URL_ANDROID=>"/common/criticalActionLayerTracking?layerR=$layerid&button
 BUTTON2_URL_IOS=>"common/criticalActionLayerTracking?layerR=$layerid&button=B2",
 BUTTON2_URL_ANDROID=>"/common/criticalActionLayerTracking?layerR=$layerid&button=B2",
 BUTTON1_PAGEID_IOS=>"",
-BUTTON1_PAGEID_ANDROID=>"",
+BUTTON1_PAGEID_ANDROID=>"105",
 BUTTON2_PAGEID_IOS=>"",
 BUTTON2_PAGEID_ANDROID=>"",
 
