@@ -173,8 +173,8 @@ var strophieWrapper = {
     onRosterUpdate: function (iq) {
         //strophieWrapper.Roster = strophieWrapper.Roster.filter(function(n){ return n != undefined }); 
         //strophieWrapper.stropheLoggerPC("in onRosterPush");
-        console.log("onRosterUpdate");
-        console.log(iq);
+        //console.log("onRosterUpdate");
+        //console.log(iq);
         //strophieWrapper.stropheLoggerPC(iq);
         var nodeObj = xmlToJson(iq);
         rosterObj = strophieWrapper.formatRosterObj(nodeObj["query"]["item"]);
@@ -468,8 +468,8 @@ var strophieWrapper = {
     //executed on msg receipt
     onMessage: function (iq) {
         //strophieWrapper.stropheLoggerPC("got message");
-        console.log("in onMessage");
-        console.log(iq);
+        //console.log("in onMessage");
+        //console.log(iq);
         //strophieWrapper.stropheLoggerPC(iq);
         var msgObject = strophieWrapper.formatMsgObj(iq);
         //strophieWrapper.stropheLoggerPC(msgObject);
@@ -589,7 +589,7 @@ var strophieWrapper = {
                 else{
             	   messageId = strophieWrapper.connectionObj.getUniqueId();
                 }
-                console.log("sent",messageId);
+                //console.log("sent",messageId);
                 var reply,msg_type;
                 if(typeof is_eoi!= "undefined" && is_eoi == true){
                    msg_type = "eoi"; 
@@ -606,7 +606,7 @@ var strophieWrapper = {
                     }).cnode(Strophe.xmlElement('msg_type', msg_type)).up().cnode(Strophe.xmlElement('body', message)).up().c('active', {
                         xmlns: "http://jabber.org/protocol/chatstates"
                 });
-                console.log(reply);
+                //console.log(reply);
                 strophieWrapper.connectionObj.send(reply);
                 if (strophieWrapper.syncMessageForSessions == true) {
                     // Forward the message, so that other connected resources are also aware of it.
