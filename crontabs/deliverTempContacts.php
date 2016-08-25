@@ -104,6 +104,10 @@ ini_set("memory_limit","512M");
 				$receiver_details = get_profile_details($receiver_profileid);
 				$contactDelivered = deliverContact($sender_profileid, $receiver_profileid, $sender_details, $receiver_details, $draft_name, $draft_message, $custmessage, $stype);
 				setDeliveredInTempContacts($sender_profileid,$receiver_profileid,$contactDelivered["ERROR"],$db);
+				if($contactDelivered["ERROR"])
+					$deliverCounts["error"]++;
+				else
+					$deliverCounts["delivered"]++;
 			}
 		
 	}
@@ -133,13 +137,13 @@ $cc='nitesh.s@jeevansathi.com';
                 if($error)
                 {
 			$sql = "UPDATE CONTACTS_TEMP SET DELIVERED='E', DELIVER_TIME=now(), COMMENTS='$error' WHERE SENDER  = '$sender' AND RECEIVER='$receiver' AND DELIVERED ='N'";
-			$deliverCounts["error"]++;
+			
 			mysql_query($sql,$db);
                 }
 		else
                 {
 			$sql = "UPDATE CONTACTS_TEMP SET DELIVERED='Y', DELIVER_TIME=now() WHERE SENDER ='$sender' AND RECEIVER='$receiver' AND DELIVERED='N'";
-			$deliverCounts["delivered"]++;
+			
 			mysql_query($sql,$db);
                 }
 	}
