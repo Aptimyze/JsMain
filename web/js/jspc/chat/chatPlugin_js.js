@@ -672,6 +672,10 @@ JsChat.prototype = {
                 //this._chatLoggerPlugin(contactHTML);
                 elem._removeHiddenNode(contactID);
                 $('div.' + groupID + ' ul.' + status).prepend(contactHTML);
+                //upadte status in list
+                if(status && (operation == "update_status" || operation == "removeCall1")){
+                    $(".chatlist li[id='" + contactID + "_" + groupID + "']").attr("data-status",status);
+                }
                 done = true;
             }
             else if(totalNodes >= upperLimit && status == "online"){
