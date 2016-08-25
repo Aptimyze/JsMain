@@ -1435,9 +1435,11 @@ JsChat.prototype = {
             //this._chatLoggerPlugin("in _updateChatPanelsBox for " + userId);
             //console.log("in _updateChatPanelsBox");
             $('chat-box[user-id="' + userId + '"] #rosterDeleteMsg_'+ userId + '').remove();
+            /*
             if($("#chatHistory_"+userId).length != 0){
                 $("#chatHistory_"+userId).show();
             }
+            */
             var chatBoxType = curElem._getChatBoxType(userId, newGroupId, "updateChatBoxType");
             curElem._setChatBoxInnerDiv(userId, chatBoxType,"chatBoxUpdate");
             curElem._enableChatTextArea(chatBoxType, userId, membership);
@@ -2066,12 +2068,12 @@ JsChat.prototype = {
                             }
                             if(found == false){
                                 if($('chat-box[user-id="' + userId + '"]').length != 0){
-                                    if($("#chatHistory_"+userId).length != 0){
+                                   /* if($("#chatHistory_"+userId).length != 0){
                                         $("#chatHistory_"+userId).hide();
                                     }
-                                    else{
+                                    else{*/
                                         $('chat-box[user-id="' + userId + '"] .chatMessage').html("");
-                                    }
+                                    //}
                                     if($('chat-box[user-id="' + userId + '"] #rosterDeleteMsg_'+ userId + '').length == 0)
                                         $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="rosterDeleteMsg_'+userId+'" class="pt20 txtc color5">'+curElem._rosterDeleteChatBoxMsg+'</div>');
                                     $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
