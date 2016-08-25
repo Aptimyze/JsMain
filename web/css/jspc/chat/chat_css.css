@@ -645,7 +645,7 @@ wid165 {
     width: 147px;
 }
 .extraUsername {    
-	width: 70px;
+	width: 65px;
     text-overflow: ellipsis;
     overflow: hidden;
     height: 8px;
