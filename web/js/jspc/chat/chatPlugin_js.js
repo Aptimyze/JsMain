@@ -2068,8 +2068,8 @@ JsChat.prototype = {
                     }
                     //adding bubble for side tab
                     if ($("#extra_" + userId + " .pinkBubble").length != 0) {
-                        val = parseInt($("#extra_" + userId + " .pinkBubble span").html());
-                        $("#extra_" + userId + " .pinkBubble span").html(val + 1);
+                        val = parseInt($("#extra_" + userId + " .pinkBubble span").html())+1;
+                        $("#extra_" + userId + " .pinkBubble span").html(val);
                         $("#extra_" + userId + " .pinkBubble").show();
                          var bubbleData = [];
                             if(localStorage.getItem("bubbleData")) {
