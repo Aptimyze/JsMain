@@ -783,7 +783,7 @@ function clearLocalStorage() {
  * @input: apiParams
  * @output: response
  */
-function handlePreAcceptChat(apiParams) {
+function handlePreAcceptChat(apiParams,receivedJId) {
     
     var outputData = {};
     if (typeof apiParams != "undefined") {
@@ -813,10 +813,12 @@ function handlePreAcceptChat(apiParams) {
                             outputData["cansend"] = true;
                             outputData["sent"] = true;
                             outputData["msg_id"] = strophieWrapper.getUniqueId();
+                            strophieWrapper.sendMessage(apiParams.postParams.chatMessage,receivedJId);
                         }
                     } else {
                         outputData = response;
                         outputData["msg_id"] = strophieWrapper.getUniqueId();
+                        strophieWrapper.sendMessage(apiParams.postParams.chatMessage,receivedJId);
                     }
                 }
                 else{
@@ -1176,7 +1178,7 @@ $(document).ready(function () {
                             });
                         }
                        
-                        output = handlePreAcceptChat(apiParams);
+                        output = handlePreAcceptChat(apiParams,receivedJId);
                        
                     }
                 } else {
