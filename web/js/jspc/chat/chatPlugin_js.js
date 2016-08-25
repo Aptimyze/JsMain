@@ -2708,6 +2708,10 @@ JsChat.prototype = {
                     $('chat-box[user-id="'+elem.userId+'"] .pinkBubble2 span').html(elem.bCount);
                     if(elem.bCount != 0){
                         $('chat-box[user-id="'+elem.userId+'"] .pinkBubble2').show();
+                        if($('#extra_'+elem.userId).length != 0){
+                            $('#extra_'+elem.userId+' .pinkBubble span').html(elem.bCount);
+                            $('#extra_'+elem.userId+' .pinkBubble').show();
+                        }
                     }
                 }
             });
