@@ -5471,6 +5471,10 @@ EditApp = function(){
         if(fieldServerError == "Provide your email in proper format, e.g. raj1984@gmail.com"){
           fieldServerError = "Invalid format";
         }
+        if(fieldServerError == "This Email is banned due to terms of use violation"){
+          fieldServerError = "Email Banned";
+          $('#emailParent').find('.avaliableTop').text("Not Available").removeClass('colorAva').addClass('color5').addClass(dispNone);
+        }
       }
       
       if(fieldServerError == "Please provide valid country isd"){
@@ -5479,6 +5483,10 @@ EditApp = function(){
       
       if(fieldServerError == "Provide a valid landline number."){
         fieldServerError = "Invalid";
+      }
+      
+      if(fieldServerError == "This Phone is banned due to terms of use violation"){
+        fieldServerError = "Phone no. Banned";
       }
       
       return fieldServerError;

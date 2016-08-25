@@ -43,26 +43,23 @@ class incentive_NEGATIVE_PROFILE_LIST extends TABLE
                 }
                 return $data;
 	}
-        public function checkEmailOrPhone($type,$value){
-                try
-                {
-			if(!$value)
-				return false;
-                            $sql = "SELECT ID from incentive.NEGATIVE_PROFILE_LIST WHERE $type =:value";
+        public function getProfileDetails($typeStr)
+        {
+                try{
+                        $sql = "SELECT PROFILEID ,EMAIL,MOBILE ,ISD,STD_CODE,LANDLINE from incentive.NEGATIVE_PROFILE_LIST WHERE TYPE IN($typeStr)";
                         $prep = $this->db->prepare($sql);
-                        $prep->bindValue(":value",$value,PDO::PARAM_STR);
+                        $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_STR);
                         $prep->execute();
-                        if($prep->fetch(PDO::FETCH_ASSOC))
-                          return true;
-                        else
-                          return false;
-
+                        while($result=$prep->fetch(PDO::FETCH_ASSOC)){
+                                $data[]=$result;
+                        }
                 }
                 catch(Exception $e)
                 {
                         throw new jsException($e);
                 }
-                
+                return $data;
         }
+
 }
 ?>
