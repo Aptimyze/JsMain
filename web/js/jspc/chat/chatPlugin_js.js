@@ -1628,7 +1628,7 @@ JsChat.prototype = {
                                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
                                 $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
                                 $('chat-box[user-id="' + userId + '"]').attr("group-id", chatConfig.Params.categoryNames["none_applicable"]);
-                                //curElem._enableChatTextArea(new_contact_state, userId, getMembershipStatus());
+                                curElem._enableChatTextArea(new_contact_state, userId, getMembershipStatus());
                             }
                         } else {
                             $(this).html(response.actiondetails.errmsglabel);
@@ -1678,29 +1678,34 @@ JsChat.prototype = {
     _enableChatTextArea: function (chatBoxType, userId, membership) {
         var curElem = this;
         //check for membership status of logged in user
-        if (membership == "Paid") {
-            if (curElem._contactStatusMapping[chatBoxType]["enableChat"] == true) {
-                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-            }
-            else {
-                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
-            }
-        } else if (membership == "Free") {
-            var checkForPaidInitiation = curElem._contactStatusMapping[chatBoxType]["checkForPaidInitiation"];
-            if(checkForPaidInitiation == true){
-                var hasPaidIntiated = $('chat-box[user-id="' + userId + '"]').attr("data-paidInitiated");
-                //console.log("hasPaidIntiated"+hasPaidIntiated);
-                if(hasPaidIntiated == "false"){
-                    curElem._manageFreeMemCase("show",userId,chatBoxType);
+        if($('chat-box[user-id="' + userId + '"] .declineSent').length! = 0 && ($('chat-box[user-id="' + userId + '"] .declineSent').hasClass("disp-none") == false){
+            $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+        }
+        else{
+            if (membership == "Paid") {
+                if (curElem._contactStatusMapping[chatBoxType]["enableChat"] == true) {
+                    $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
                 }
-                else if(hasPaidIntiated == "true"){
-                    curElem._manageFreeMemCase("hide",userId,chatBoxType); 
+                else {
+                    $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
                 }
-            }
-            else{
-                curElem._manageFreeMemCase("hide",userId,chatBoxType);
-            }
-        }  
+            } else if (membership == "Free") {
+                var checkForPaidInitiation = curElem._contactStatusMapping[chatBoxType]["checkForPaidInitiation"];
+                if(checkForPaidInitiation == true){
+                    var hasPaidIntiated = $('chat-box[user-id="' + userId + '"]').attr("data-paidInitiated");
+                    //console.log("hasPaidIntiated"+hasPaidIntiated);
+                    if(hasPaidIntiated == "false"){
+                        curElem._manageFreeMemCase("show",userId,chatBoxType);
+                    }
+                    else if(hasPaidIntiated == "true"){
+                        curElem._manageFreeMemCase("hide",userId,chatBoxType); 
+                    }
+                }
+                else{
+                    curElem._manageFreeMemCase("hide",userId,chatBoxType);
+                }
+            } 
+        } 
     },
 
     //show/hide free mem msg
