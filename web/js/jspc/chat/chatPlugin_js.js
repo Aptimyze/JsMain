@@ -1678,7 +1678,7 @@ JsChat.prototype = {
     _enableChatTextArea: function (chatBoxType, userId, membership) {
         var curElem = this;
         //check for membership status of logged in user
-        if($('chat-box[user-id="' + userId + '"] .declineSent').length! = 0 && ($('chat-box[user-id="' + userId + '"] .declineSent').hasClass("disp-none") == false){
+        if($('chat-box[user-id="' + userId + '"] .declineSent').length! = 0 && $('chat-box[user-id="' + userId + '"] .declineSent').hasClass("disp-none") == false){
             $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
         }
         else{
