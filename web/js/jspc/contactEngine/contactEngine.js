@@ -774,6 +774,10 @@ function cEButtonActionCalling(elementObj)
 		if(elementObj.attr('data') && elementObj.hasClass('OnlineChat'))
 		{
 			var data=elementObj.attr('data').split(',');
+
+                        if($("chat-box[user-id='"+data[1]+"'] .downBarUserName").length)
+                                $("chat-box[user-id='"+data[1]+"'] .downBarUserName").click()
+
 			if(data[0]!="undefined" && data[1]!="undefined")
 			{
 				if($('#js-chatLogin').length)

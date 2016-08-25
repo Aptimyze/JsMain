@@ -590,7 +590,7 @@ var strophieWrapper = {
                     to: to,
                     type: 'chat',
                     id:messageId
-                }).cnode(Strophe.xmlElement('body', message)).up().c('active', {
+                }).t('eoi').cnode(Strophe.xmlElement('body', message)).up().c('active', {
                     xmlns: "http://jabber.org/protocol/chatstates"
                 });
                 strophieWrapper.connectionObj.send(reply);
