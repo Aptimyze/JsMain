@@ -45,28 +45,37 @@ class KundliMatches extends PartnerProfile
 				{
 					if(is_array($SearchResponseObj->getsearchResultsPidArr()))
 					{
+						
 						$gunaScoreObj = new gunaScore();
 						$gunaData = $gunaScoreObj->getGunaScore($this->loggedInProfileObj->getPROFILEID(),$this->loggedInProfileObj->getCASTE(),implode(",",$SearchResponseObj->getsearchResultsPidArr()),$this->loggedInProfileObj->getGENDER(),'1');
+					
 						if(is_array($gunaData))
 						{
+							$finalSearchPidsArr=array();
+							$finalSearchPids=array();
 							foreach($gunaData as $i=>$v)
 							{
 									foreach($v as $pid=>$guna)
 									{
 										if($guna>=$this->MIN_GUNA)
-											$finalSearchPidsArr[]=$pid;
+											$finalSearchPidsArr[$pid]=$guna;
+											$finalSearchPids[]=$pid;
 									}
 							}
 						
-							$SearchResponseObj->setsearchResultsPidArr(array_values(array_intersect($SearchResponseObj->getsearchResultsPidArr(),$finalSearchPidsArr)));
+							$SearchResponseObj->setsearchResultsPidArr(array_values(array_intersect($SearchResponseObj->getsearchResultsPidArr(),$finalSearchPids)));
 						
 							$searchResultsArr = $SearchResponseObj->getresultsArr();
 							foreach($searchResultsArr as $i=>$value)
 							{
-								if(!in_array($value["id"],$finalSearchPidsArr))
+								if(!array_key_exists($value["id"],$finalSearchPidsArr))
 									unset($searchResultsArr[$i]);
+								else
+									$searchResultsArr[$i]["GUNASCORE"]=$finalSearchPidsArr[$value["id"]];
 							}
 							$SearchResponseObj->setresultsArr(array_values($searchResultsArr));
+							unset($finalSearchPidsArr);
+							unset($finalSearchPids);
 						}
 						else
 						{

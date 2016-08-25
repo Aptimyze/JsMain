@@ -515,13 +515,13 @@ $("body").delegate('.js-removeProfile, .js-search-undoRemoveProfile','click', fu
 			 }
 			 else{
 			     //alert(response.responseMessage);
-				console.log("error2");// LATER
+				//console.log("error2");// LATER
 			 }
 
 		    },
 		    error: function(xhr) {
 		      //alert("error");
-			console.log("error3");// LATER
+			//console.log("error3");// LATER
 		    }
 		  });
 	}
@@ -913,7 +913,7 @@ $("body").delegate('.changeListingLogic','click', function() {
                         setTimeout(function(){ $(".popsrp2").css("display",""); }, 3000);
 		    },
 		    error: function(xhr) {
-			console.log("error5");// LATER
+			//console.log("error5");// LATER
 		      //alert("error");
 		    }
 		  });	
@@ -981,7 +981,7 @@ function getGunaScore(response)
 	var searchResponse = response;
 	var profileLength = 0;
 	var featureProfileLength = 0;
-
+	var gunaScoreArr = new Array();
 	//Length of profiles array in response
 	if('profiles' in searchResponse && Array.isArray(searchResponse.profiles))
 	{
@@ -1000,6 +1000,10 @@ function getGunaScore(response)
 			$.each(val, function(key1, val1)
 			{
 				profilechecksumArr.push(val1.profilechecksum);
+				var obj = {};
+				obj[val1.profilechecksum] = val1.gunascore;
+				gunaScoreArr.push(obj);
+			
 			});
 		}
 		if(key  == 'featuredProfiles' && val!==null){
@@ -1030,27 +1034,42 @@ function getGunaScore(response)
 				}, 0.1);
 			}
 		}
-			
-	}
-				
-	$.myObj.ajax({
-		showError: false, 
-		method: "POST",
-		url : '/api/v1/search/gunaScore?profilechecksumArr='+profilechecksumArr+'&diffGender='+diffGender,
-		data : ({dataType:"json"}),
-		async: true,
-		timeout:20000,
-		success:function(response){
-			gunaScoreArr = response.gunaScores;
-			if(Array.isArray(gunaScoreArr)){
-				$.each(gunaScoreArr, function(key,val){	
-					$.each(val, function(profchecksum,gunaScore){
-						$(".gunaScore-"+profchecksum).html("Guna "+gunaScore+"/36");
-					});	
-				});
-			}
+		else
+		{
+			setTimeout(function(){
+						setGunaScoreOnListing(gunaScoreArr);
+					}, 100);
 		}
-	});
+	}
+	else
+	{	
+		$.myObj.ajax({
+			showError: false, 
+			method: "POST",
+			url : '/api/v1/search/gunaScore?profilechecksumArr='+profilechecksumArr+'&diffGender='+diffGender,
+			data : ({dataType:"json"}),
+			async: true,
+			timeout:20000,
+			success:function(response){
+				gunaScoreArr=null;
+				gunaScoreArr = response.gunaScores;
+				setGunaScoreOnListing(gunaScoreArr);
+			}
+		});
+	}
+}
 
+
+//This function sets the Guna score on search tuples corresponnding to their id's
+function setGunaScoreOnListing(gunaScoreArr)
+{
+	if(Array.isArray(gunaScoreArr))
+	{
+			$.each(gunaScoreArr, function(key,val){	
+				$.each(val, function(profchecksum,gunaScore){
+					$(".gunaScore-"+profchecksum).html("Guna "+gunaScore+"/36");
+				});	
+			});
+	}
 }
 
