@@ -2711,7 +2711,7 @@ JsChat.prototype = {
                     }
                 }
             });
-        }, 1000);
+        }, 2000);
 		localStorage.setItem("lastUId",$(".tabUId").attr("id"));
 	},    
     
