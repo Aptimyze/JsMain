@@ -24,7 +24,6 @@ if (!defined('ClickTale_Root'))
 require_once(ClickTale_Root."/ClickTale.Settings.php");
 require_once(ClickTale_Root."/ClickTale.inc.php");
 require_once(ClickTale_Root."/ClickTale.Logger.php");
-
 ?>
 
 <?php

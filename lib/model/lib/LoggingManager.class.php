@@ -18,7 +18,8 @@ class LoggingManager
 
 	private $baseLogPath = null;
 	/**
-	 * Const of File Base Path
+	 *  Directory Path of Log file
+	 * @var null|String
 	 */
 	private $logDirPath = null;
 
