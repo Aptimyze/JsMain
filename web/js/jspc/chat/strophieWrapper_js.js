@@ -132,9 +132,9 @@ var strophieWrapper = {
         //binding event for presence update in roster
         strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
         //binding event for message receive event
-        if(messageBinding)
+        /*if(messageBinding)
             strophieWrapper.connectionObj.deleteHandler(messageBinding);
-        messageBinding = strophieWrapper.connectionObj.addHandler(strophieWrapper.onMessage, null, 'message', null, null, null);
+        messageBinding = */strophieWrapper.connectionObj.addHandler(strophieWrapper.onMessage, null, 'message', null, null, null);
         //binding event for new node push in roster
         strophieWrapper.connectionObj.addHandler(strophieWrapper.onRosterUpdate, Strophe.NS.ROSTER, 'iq', 'set');
         //binding event for message receipts
@@ -583,9 +583,9 @@ var strophieWrapper = {
     },
     //sending Message
     sendMessage: function (message, to,is_eoi,msg_id) {
-        if(messageBinding)
+        /*if(messageBinding)
             strophieWrapper.connectionObj.deleteHandler(messageBinding);
-        messageBinding = strophieWrapper.connectionObj.addHandler(strophieWrapper.onMessage, null, 'message', null, null, null);
+        messageBinding = */strophieWrapper.connectionObj.addHandler(strophieWrapper.onMessage, null, 'message', null, null, null);
 
         var outputObj,messageId;
         try {
