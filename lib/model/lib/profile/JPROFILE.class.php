@@ -212,7 +212,7 @@ class JPROFILE
 
     public function getArray($valueArray = "", $excludeArray = "", $greaterThanArray = "", $fields = "PROFILEID", $lessThanArray = "", $orderby = "", $limit = "", $greaterThanEqualArrayWithoutQuote = "", $lessThanEqualArrayWithoutQuote = "", $like = "", $nolike = "", $addWhereText = "")
     {
-      if(count($valueArray) && $valueArray['PROFILEID']) {      
+      if(is_array($valueArray) && count($valueArray) && $valueArray['PROFILEID']) {      
         $this->logProfileIDs($valueArray['PROFILEID']);
       }
         return self::$objProfileMysql->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
