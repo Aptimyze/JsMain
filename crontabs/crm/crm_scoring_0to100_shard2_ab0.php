@@ -158,7 +158,7 @@ for($t=0;$t<count($ptype_arr);$t++)
                                         if($ptype=="C")
                                         {
                                                 $flag = "RENHIT";
-                                          	$response = sendPostData("http://10.10.18.111:2211/jsScore",$newmodelJson);
+                                          	$response = sendPostData("http://172.10.18.111:2211/jsScore",$newmodelJson);
                                         }
                                         else
                                         {
