@@ -2371,7 +2371,7 @@ function clearUgDegree(){
                                         $("#showText").html("Show to All");
                                 }
                                 else {
-                                        $("#showText").html("Don<92>t show my name");
+                                        $("#showText").html("Don't show my name");
                                 }
 				var displayNameVal = $(this).attr('data-fieldVal');
 				inputData['displayname']=displayNameVal;

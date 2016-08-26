@@ -111,7 +111,7 @@
 		<ul id="optionDrop" class="optionDrop pos-abs disp-none" data-toSave="displayName">
 		    <li class="selected" id="showYes" data-fieldVal='Y'>Show my name to all
 		    </li>
-		    <li id="showNo" data-fieldVal="N">Don<92>t show my name<br> ( You will not be able to see names of other members )
+		    <li id="showNo" data-fieldVal="N">Don't show my name<br> ( You will not be able to see names of other members )
 		    </li>
 		</ul>
 	    </div>
