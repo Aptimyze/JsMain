@@ -1928,19 +1928,23 @@ JsChat.prototype = {
                 defaultEoiRecMsg = "Jeevansathi member with profile id "+ other_username +" likes your profile. Please 'Accept' to show that you like this profile.";
             }
             var now_mark_read = false,read_class="nchatic_10";
+            if(curElem._setLastReadMsgStorage == false){
+                now_mark_read = true;
+                read_class = "nchatic_9";
+            }
             $.each(communication, function (key, logObj) {
                
                 latestMsgId = logObj["ID"];
                 //console.log(logObj);
                 if (parseInt(logObj["SENDER"]) == self_id) {
-                    if(logObj["CHATID"] == ""){
+                    if(logObj["CHATID"] == "" && now_mark_read == false){
                         logObj["CHATID"] = generateChatHistoryID("sent");
                         now_mark_read = true;
                         read_class = "nchatic_9";
-                        
+
                     }
-                    var last_read_msg = fetchLastReadMsgFromStorage();
-                    if(last_read_msg == logObj["CHATID"]){
+                    var last_read_msg = fetchLastReadMsgFromStorage(other_id);
+                    if(last_read_msg == logObj["CHATID"] && now_mark_read == false){
                         now_mark_read = true;
                         read_class = "nchatic_9";
                     }
@@ -1954,7 +1958,9 @@ JsChat.prototype = {
                         });
                     }
                 } else if (parseInt(logObj["SENDER"]) == other_id) {
-                    logObj["CHATID"] = generateChatHistoryID("received");
+                    if(logObj["CHATID"] == ""){
+                        logObj["CHATID"] = generateChatHistoryID("received");
+                    }
                     //check for default eoi message,remove after monday JSI release
                     if(curElem._checkForDefaultEoiMsg == false || logObj["MESSAGE"].indexOf(defaultEoiRecMsg) == -1){
                         //console.log("done"+removeFreeMemMsg);
@@ -2247,13 +2253,24 @@ JsChat.prototype = {
                 setTimeout(function () {
                     $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_10 nchatic_8").addClass("nchatic_9");
                     if(curElem._setLastReadMsgStorage == true){
-                        setLastReadMsgStorage(messgId);
+                        setLastReadMsgStorage(userId,messgId);
                     }
+                    //mark all unread msgs as read
+                    curElem._handlePreUnreadMessages(userId);
                 }, 500);
 
             }
         }
     },
+    //handle all pre sent and unread msgs as read
+    _handlePreUnreadMessages:function(userId){
+        if($('chat-box[user-id="' + userId + '"]').length != 0){
+            $('chat-box[user-id="' + userId + '"]').find(".nchatic_10").each(function () {
+                $(this).removeClass("nchatic_10").addClass("nchatic_9");
+            });
+        }
+    },
+
     onEnterToChatPreClick: null,
     onChatLoginSuccess: null, //function triggered after successful chat login
     //start:login screen

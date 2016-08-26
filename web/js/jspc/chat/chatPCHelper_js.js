@@ -699,14 +699,20 @@ function invokePluginReceivedMsgHandler(msgObj) {
     }
 }
 
-function setLastReadMsgStorage(msg_id){
+/*update last read msg in localstorage
+ * @params:user_id,msg_id
+ */
+function setLastReadMsgStorage(user_id,msg_id){
     if(typeof msg_id != "undefined"){
-        localStorage.setItem("last_read_msg",msg_id);
+        localStorage.setItem("last_read_msg_"+user_id,msg_id);
     }
 }
 
-function fetchLastReadMsgFromStorage(){
-    var last_id = localStorage.getItem("last_read_msg");
+/*fetch last read msg id from localstorage
+ * @params:user_id
+ */
+function fetchLastReadMsgFromStorage(user_id){
+    var last_id = localStorage.getItem("last_read_msg_"+user_id);
     if(last_id && last_id!= "")
         return last_id;
     else
