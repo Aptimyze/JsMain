@@ -885,6 +885,9 @@ function searchResultMaping(val,noPhotoDiv,val1,profileNoId,defaultImage,key){
 	if(key=='featuredProfiles')
 		subscriptionOrFeatured = 'Featured';
 		
+        if(val1.name_of_user!='' && val1.name_of_user!=null){
+                val1.username = val1.name_of_user;
+        }
 	var mapping={
 			
 			'{noPhotoDiv}':removeNull(noPhotoDiv),
