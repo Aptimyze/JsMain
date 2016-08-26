@@ -3,7 +3,7 @@
                 <div class="padd1015 f15 fontlig brdr15">Name Privacy Setting</div>
         <div id="showName" class="changeSetting padd22 hgt75 fontlig brdr15" rel="Y">
                 <div class="pt8 f15">Show my name to all</div>
-            <i class="fr iconTick {{tickSelectedShow}} iconSprite"></i>
+            <i class="fr iconTick {{tickSelectedShow}}"></i>
         </div>
         <div id="dontShowName" class="changeSetting padd22 hgt75 fontlig brdr15" rel="N">
                 <div class="f15">Don't show my name</div>
@@ -16,7 +16,7 @@
 <script>
 function CalloverlayName(thisObject){
         var selectedVal = $(thisObject).attr("rel");
-        var tickSelectedShow = "tickSelected";
+        var tickSelectedShow = "tickSelected iconSprite";
         var tickSelectedNoShow = "";
         if(selectedVal == 'N'){
              tickSelectedNoShow = tickSelectedShow;
