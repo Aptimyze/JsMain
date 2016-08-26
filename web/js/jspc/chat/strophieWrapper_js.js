@@ -580,6 +580,9 @@ var strophieWrapper = {
     },
     //sending Message
     sendMessage: function (message, to,is_eoi,msg_id) {
+
+        strophieWrapper.connectionObj.addHandler(strophieWrapper.onMessage, null, 'message', null, null, null);
+
         var outputObj,messageId;
         try {
             if (message && to && strophieWrapper.getCurrentConnStatus()) {
