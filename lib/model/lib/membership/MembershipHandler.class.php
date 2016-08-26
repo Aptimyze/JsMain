@@ -1436,11 +1436,11 @@ class MembershipHandler
     }
     
     public function addVariableDiscountProfiles() {
-        $vdDurationObj 		= new billing_VARIABLE_DISCOUNT_DURATION("newjs_slave");
-        $vdPoolTechObj 		= new billing_VARIABLE_DISCOUNT_POOL_TECH("newjs_slave");
+        $vdDurationObj 		= new billing_VARIABLE_DISCOUNT_DURATION("newjs_masterRep");
+        $vdPoolTechObj 		= new billing_VARIABLE_DISCOUNT_POOL_TECH("newjs_masterRep");
         $vdObj 			= new billing_VARIABLE_DISCOUNT();
         $vdOfferDurationObj 	= new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
-	$vdDurationPoolTechObj 	= new billing_VARIABLE_DISCOUNT_DURATION_POOL_TECH("newjs_slave");
+	$vdDurationPoolTechObj 	= new billing_VARIABLE_DISCOUNT_DURATION_POOL_TECH("newjs_masterRep");
 	$jprofileObj 		= new JPROFILE('newjs_slave');
         $vdProfilesArr 		= array();
 
