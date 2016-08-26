@@ -312,6 +312,10 @@ class chatActions extends sfActions
 			if ($this->userProfile) {
 				$this->Profile = new Profile();
 				$profileid = JsCommon::getProfileFromChecksum($this->userProfile);
+				$date = date("Y-m-d H:i:s");
+				$ip = FetchClientIP();
+				$chatid = $request->getParameter('chat_id');
+				$chatMessage = $request->getParameter('chatMessage')."--".$date."--".$ip."--".$chatid;
 				$this->Profile->getDetail($profileid, "PROFILEID");
 				$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
 				$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,'I',ContactHandler::POST);
@@ -328,11 +332,6 @@ class chatActions extends sfActions
 						$message = $messageLogObj->getEOIMessagesForChat($this->loginProfile->getPROFILEID(), array($profileid));
 						$msgText = $message[0]["MESSAGE"];
 						$forCount = explode("||", $msgText);
-						$date = date("Y-m-d H:i:s");
-						$ip = FetchClientIP();
-						$chatid = $request->getParameter('chat_id');
-						$chatMessage = $request->getParameter('chatMessage')."--".$date."--".$ip."--".$chatid;
-
 						$count = count($forCount);
 						if ($count >= 3) {
 							$response["cansend"] = false;
@@ -366,6 +365,7 @@ class chatActions extends sfActions
 					$request->setParameter('INTERNAL', 1);
 					$request->setParameter("actionName","postEOI");
 					$request->setParameter("moduleName","contacts");
+					$request->getParameter('chatMessage',$chatMessage);
 					$data = sfContext::getInstance()->getController()->getPresentationFor('contacts', 'postEOIv2');
 					$output = ob_get_contents();
 					ob_end_clean();
