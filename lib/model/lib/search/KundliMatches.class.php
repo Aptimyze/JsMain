@@ -43,9 +43,9 @@ class KundliMatches extends PartnerProfile
 				
 				public function getGunaMatches($SearchResponseObj)
 				{
+					
 					if(is_array($SearchResponseObj->getsearchResultsPidArr()))
 					{
-						
 						$gunaScoreObj = new gunaScore();
 						$gunaData = $gunaScoreObj->getGunaScore($this->loggedInProfileObj->getPROFILEID(),$this->loggedInProfileObj->getCASTE(),implode(",",$SearchResponseObj->getsearchResultsPidArr()),$this->loggedInProfileObj->getGENDER(),'1');
 					
@@ -58,14 +58,17 @@ class KundliMatches extends PartnerProfile
 									foreach($v as $pid=>$guna)
 									{
 										if($guna>=$this->MIN_GUNA)
+										{
 											$finalSearchPidsArr[$pid]=$guna;
 											$finalSearchPids[]=$pid;
+										}
 									}
 							}
 						
 							$SearchResponseObj->setsearchResultsPidArr(array_values(array_intersect($SearchResponseObj->getsearchResultsPidArr(),$finalSearchPids)));
 						
 							$searchResultsArr = $SearchResponseObj->getresultsArr();
+							
 							foreach($searchResultsArr as $i=>$value)
 							{
 								if(!array_key_exists($value["id"],$finalSearchPidsArr))
@@ -74,6 +77,7 @@ class KundliMatches extends PartnerProfile
 									$searchResultsArr[$i]["GUNASCORE"]=$finalSearchPidsArr[$value["id"]];
 							}
 							$SearchResponseObj->setresultsArr(array_values($searchResultsArr));
+							
 							unset($finalSearchPidsArr);
 							unset($finalSearchPids);
 						}
@@ -83,7 +87,7 @@ class KundliMatches extends PartnerProfile
 							$SearchResponseObj->setresultsArr(array());
 						}
 					}
-					
+				
 					return $SearchResponseObj;
 				}
 

@@ -335,6 +335,9 @@ function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults)
 						<span class="f12 white padl10">\
 							{userloginstatus}\
 						</span>\
+						<span class="f12 white padr10">\
+							{gunascore}\
+						</span>\
 				</div>\
 				<div class="fullwidth f14 fontlig white">\
 					<div class="clearfix">\
@@ -581,7 +584,8 @@ function showLoaderToScreen()
 function generateParams(page)
 {
 	var searchid = firstResponse.searchid;
-	var temp = "results_orAnd_cluster=onlyResults&searchId="+searchid+"&currentPage="
+	var sbPar = removeNull(firstResponse.searchBasedParam);
+	var temp = "results_orAnd_cluster=onlyResults&searchBasedParam="+sbPar+"&searchId="+searchid+"&currentPage="
 	temp = $.addReplaceParam(temp,'currentPage',page)
 	return temp;
 }
@@ -878,6 +882,10 @@ function searchResultMaping(val,noPhotoDiv,val1,profileNoId,defaultImage,key){
 		val1.photo.label=1;
 	else
 		val1.photo.label=0;
+	if(val1.gunascore!=null)
+		gunascore="Guna "+val1.gunascore+"/36";
+	else
+		gunascore=null;
 	if(typeof val1.religion=='undefined')
 		val1.religion = '';
 	var isNewProfile = (val1.seen=="N")?"New":"";
@@ -898,6 +906,7 @@ function searchResultMaping(val,noPhotoDiv,val1,profileNoId,defaultImage,key){
 			'{album_count}':removeNull(val1.album_count),
 			'{username}':removeNull(val1.username),
 			'{userloginstatus}':removeNull(setPriority(val1.userloginstatus,val1.timetext)),
+			'{gunascore}':removeNull(gunascore),
 			'{isNewProfile}':isNewProfile,
 			'{age}':removeNull(val1.age),
 			'{height}':removeNull(val1.height),
@@ -991,7 +1000,8 @@ function addTupleToPages(tuplesOfOnePage,arr1,ifPrepend){
 				$("div.loaderBottomDiv").remove();
 				var pageAct = parseInt($("div.tupleOuterDiv").last().attr("id").replace(/[^-\d\.]/g, ''))+1;
 				pageAct = "idd"+pageAct;
-				var newAction = "/search/perform/?searchId="+firstResponse.searchid+"&page="+pageAct+"&currentPage=1";
+				var sbPar = removeNull(firstResponse.searchBasedParam);
+				var newAction = "/search/perform/?searchBasedParam="+sbPar+"&searchId="+firstResponse.searchid+"&page="+pageAct+"&currentPage=1";
 				bottomErrorMsg('<a href="'+newAction+'" class="color2 txtc">Load More Profiles.</a>','','');
 			}
 		}

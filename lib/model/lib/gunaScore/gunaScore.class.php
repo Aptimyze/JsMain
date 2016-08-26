@@ -120,6 +120,7 @@ class gunaScore
         //This is a third party vendor call where a curl request is made to fetch guna scores corresponding to the data supplied which is then converted into desired form and returned in $gunaData
         public function thirdPartyVendorCall($logged_astro_details,$compstring)
         {	
+					$gunaData = array();
         	$compstring = implode(",",$compstring);
         	$url = "http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?".$logged_astro_details."&".$compstring;
         	$fresult = CommonUtility::sendCurlGetRequest($url,4000);
