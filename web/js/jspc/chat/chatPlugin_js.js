@@ -558,7 +558,7 @@ JsChat.prototype = {
                                             setTimeout(function(){
                                                $("#"+currentID+"_hover").css("visibility","hidden"); 
                                             },100);
-                                            setTtimeout(function(){
+                                            setTimeout(function(){
                                                 elem._chatPanelsBox(currentID, statusArr[currentID], $(this).attr("data-jid"), $(this).attr("data-checks"), $(this).attr("id").split("_")[1]);
                                                 console.log("Timeouttocreatechatbox");
                                             },200);
