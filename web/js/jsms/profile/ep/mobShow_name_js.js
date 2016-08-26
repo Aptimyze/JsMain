@@ -16,6 +16,10 @@ $("document").ready(function () {
                 }
                 $("#showAll").attr('rel',selectedVal);
                 NameOverLayerAnimation(1);
+                var originalVal = $("#showAll").attr('orel');
+                if(originalVal == submitObj.editFieldArray['DISPLAYNAME']){
+                     submitObj.pop("DISPLAYNAME");
+                }
         });
 });
 function NameOverLayerAnimation(close)
