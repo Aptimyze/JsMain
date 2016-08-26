@@ -178,7 +178,7 @@ for($t=0;$t<count($ptype_arr);$t++)
                                                 $score1 =round($score1,0);
 					}
                                         // temporary_logging   
-                                        $hit_log = $flag."#".$profileid."#".$score1;
+                                        $hit_log = $flag."#".$profileid."#".$score1."#".$newmodelJson;
                                         $fileName ="score_hit_log".$date.".txt";
                                         passthru("echo '$hit_log' >>/tmp/$fileName");
                                 }
