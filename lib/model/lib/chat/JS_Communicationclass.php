@@ -82,7 +82,9 @@ class JS_Communication
 					for($j=($eoiMsgCount-1);$j>=0;$j--)
 					//foreach($messageArr as $key=>$val)
 					{
-						$mergeArray["MESSAGE"]=$messageArr[$j];
+						$splitmessage = explode("--",$messageArr[$j]);
+						$mergeArray["MESSAGE"]=$splitmessage[0];
+						$mergeArray["CHATID"] = $splitmessage[3];
 						$mergeArray["IS_EOI"] = true;
 						$result[$i]=$mergeArray;
 						$i++;
