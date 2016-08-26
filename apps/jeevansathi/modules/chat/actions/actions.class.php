@@ -365,7 +365,7 @@ class chatActions extends sfActions
 					$request->setParameter('INTERNAL', 1);
 					$request->setParameter("actionName","postEOI");
 					$request->setParameter("moduleName","contacts");
-					$request->getParameter('chatMessage',$chatMessage);
+					$request->setParameter('chatMessage',$chatMessage);
 					$data = sfContext::getInstance()->getController()->getPresentationFor('contacts', 'postEOIv2');
 					$output = ob_get_contents();
 					ob_end_clean();
