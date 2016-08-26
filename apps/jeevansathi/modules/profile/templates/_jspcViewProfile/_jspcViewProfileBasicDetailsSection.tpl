@@ -20,21 +20,31 @@
           <!--end:we talk for you added-->
           ~/if`
               <div class="prfp3">
+                
                 <div class="clearfix prfbr1 pb2">
-                  <div class="fl fontlig color11">
-		     ~if $nameOfUser`
-			<span class="disp_ib fixWidthOverflow f24">
-				~$nameOfUser`
-			</span>
-			<span class="f15 vertSuper">(~$apiData['about']['username']`)</span>
-		     ~else`
-			<span class="disp_ib f24">
-				~$apiData['about']['username']`
-			</span>
-		     ~/if`
-			<span class="disp_ib fr f12 opa50 pl10 mt10">~$apiData['about']['last_active']`</span>
-		  </div>
-                </div>
+
+
+                  <div class="clearfix fontlig color11">
+		               
+              			<div class="fl fixWidthOverflow f24 wd300">
+                       ~if $nameOfUser`
+              				<span class="disp_ib textTru wd200">~$nameOfUser`</span>
+                       <span class="f15 vertSuper">(~$apiData['about']['username']`)</span>
+                        ~else`
+                        <span class="disp_ib f24">
+                         ~$apiData['about']['username']`
+                       </span>
+                       ~/if`
+              			</div>		             
+		               
+              			<div class="fr f12 opa50 pl10 mt10">~$apiData['about']['last_active']`</div>
+    		           
+
+                    </div>
+
+
+
+              </div>
                 <div class="pos-rel mt10 color11 fontlig pos-rel textTru">
                   <div class="pos-abs f12 colr5 prfpos3">~$apiData['about']['subscription_icon']`</div>
                   <ul class="prfdesc f14 clearfix">
@@ -51,7 +61,7 @@
                     ~/if`
                   </ul> 
                 </div>
-                  <div class="fr mt5"> 
+                  <div class="mt26"> 
 
                                           <span class="disp_ib pos-rel communicationToolTip">
                     ~if !$loginProfileId`

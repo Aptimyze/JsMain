@@ -402,7 +402,6 @@ class SearchApiStrategyV1
 							{
 								$name = $nameOfUserObj->getNameStr($value,$loggedInProfileObj->getSUBSCRIPTION());
 							}
-
 							$this->output[$profileKey][$i][$fieldName]=$name;
 						}
                                                 else

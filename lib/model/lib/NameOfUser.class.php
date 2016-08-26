@@ -21,10 +21,10 @@ class NameOfUser
         $nameObj = new incentive_NAME_OF_USER();
         return $nameData = $nameObj->getArray(array("PROFILEID"=>$profileid),'','','*');
     }
-    public function insertName($name,$display)
+    public function insertName($profileid,$name,$display)
     {
 	$name_pdo = new incentive_NAME_OF_USER();
-	$name_pdo->insertNameInfo($this->profileid,$name,$display);    
+	$name_pdo->insertNameInfo($profileid,$name,$display);    
 	$validNameListObj = new newjs_ValidNameList();
 	$nameInScreenList = $validNameListObj->haveName($name);
 	if($nameInScreenList)
