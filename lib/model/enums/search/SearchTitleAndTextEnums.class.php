@@ -65,6 +65,7 @@ class SearchTitleAndTextEnums
                 self::$HEADING_MAPPING["V1"]["APP"]["justJoinedMatches"] = "Just Joined Matches (<cnt>)";
                 self::$HEADING_MAPPING["V1"]["APP"]["verifiedMatches"] = "Verified Matches <cnt>";
 		self::$HEADING_MAPPING["V1"]["APP"]["matchalerts"] = "Match Alerts <cnt>";
+								self::$HEADING_MAPPING["V1"]["APP"]["kundlialerts"] = "Kundli Matches";
                 self::$HEADING_MAPPING["V1"]["JSMS"]["DEFAULT"] = "<cnt> Match<es>";
                 self::$HEADING_MAPPING["V1"]["JSMS"]["reverseDpp"] = "Members Lookin.. <cnt>";
                 self::$HEADING_MAPPING["V1"]["JSMS"]["partnermatches"] = "My Matches <cnt>";
@@ -72,6 +73,7 @@ class SearchTitleAndTextEnums
                 self::$HEADING_MAPPING["V1"]["JSMS"]["justJoinedMatches"] = "Just Joined <cnt>";
                 self::$HEADING_MAPPING["V1"]["JSMS"]["verifiedMatches"] = "Verified Matches <cnt>";
 		self::$HEADING_MAPPING["V1"]["JSMS"]["matchalerts"] = "Match Alerts <cnt>";
+								self::$HEADING_MAPPING["V1"]["JSMS"]["kundlialerts"] = "Kundli Matches";
                 
                 
                 self::$SUBHEADING_MAPPING["V1"]["PC"]["DEFAULT"] = "";
