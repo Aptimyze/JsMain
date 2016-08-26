@@ -289,12 +289,12 @@ function getChatHistory(apiParams,key) {
 */
 function generateChatHistoryID(key){
     var msg_id = strophieWrapper.getUniqueId();
-    if(key == "sent"){
+    /*if(key == "sent"){
         msg_id = msg_id + "_self";
     }
     else{
         msg_id = msg_id + "_other";
-    }
+    }*/
     return msg_id;
 }
 
@@ -698,6 +698,21 @@ function invokePluginReceivedMsgHandler(msgObj) {
         }
     }
 }
+
+function setLastReadMsgStorage(msg_id){
+    if(typeof msg_id != "undefined"){
+        localStorage.setItem("last_read_msg",msg_id);
+    }
+}
+
+function fetchLastReadMsgFromStorage(){
+    var last_id = localStorage.getItem("last_read_msg");
+    if(last_id && last_id!= "")
+        return last_id;
+    else
+        return null;
+}
+
 /*send typing state to receiver through openfire
  * @params:from,to,typing_state
  */
@@ -1071,7 +1086,8 @@ $(document).ready(function () {
             maxMsgLimit:chatConfig.Params[device].maxMsgLimit,
             rosterDeleteChatBoxMsg:chatConfig.Params[device].rosterDeleteChatBoxMsg,
             rosterGroups:chatConfig.Params[device].rosterGroups,
-            checkForDefaultEoiMsg:chatConfig.Params[device].checkForDefaultEoiMsg
+            checkForDefaultEoiMsg:chatConfig.Params[device].checkForDefaultEoiMsg,
+            setLastReadMsgStorage:chatConfig.Params[device].setLastReadMsgStorage
         });
         
         objJsChat.onEnterToChatPreClick = function () {

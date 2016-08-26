@@ -38,6 +38,7 @@ JsChat.prototype = {
     _rosterDeleteChatBoxMsg:"",
     _rosterGroups:[],
     _checkForDefaultEoiMsg:false,
+    _setLastReadMsgStorage:true,
 
     _chatLoggerPlugin: function (msgOrObj) {
         if (this._loggingEnabledPlugin) {
@@ -120,6 +121,9 @@ JsChat.prototype = {
         }
         if (arguments[1][0].checkForDefaultEoiMsg) {
             this._checkForDefaultEoiMsg = arguments[1][0].checkForDefaultEoiMsg;
+        }
+        if (arguments[1][0].setLastReadMsgStorage) {
+            this._setLastReadMsgStorage = arguments[1][0].setLastReadMsgStorage;
         }
     },
     //start:get screen height
@@ -1923,15 +1927,27 @@ JsChat.prototype = {
                 defaultEoiSentMsg = "Jeevansathi member with profile id "+ self_username +" likes your profile. Please 'Accept' to show that you like this profile.";
                 defaultEoiRecMsg = "Jeevansathi member with profile id "+ other_username +" likes your profile. Please 'Accept' to show that you like this profile.";
             }
+            var now_mark_read = false,read_class="nchatic_10";
             $.each(communication, function (key, logObj) {
+               
                 latestMsgId = logObj["ID"];
                 //console.log(logObj);
                 if (parseInt(logObj["SENDER"]) == self_id) {
-                    logObj["CHATID"] = generateChatHistoryID("sent");
+                    if(logObj["CHATID"] == ""){
+                        logObj["CHATID"] = generateChatHistoryID("sent");
+                        now_mark_read = true;
+                        read_class = "nchatic_9";
+                        
+                    }
+                    var last_read_msg = fetchLastReadMsgFromStorage();
+                    if(last_read_msg == logObj["CHATID"]){
+                        now_mark_read = true;
+                        read_class = "nchatic_9";
+                    }
                     if(curElem._checkForDefaultEoiMsg == false || logObj["MESSAGE"].indexOf(defaultEoiSentMsg) == -1){
                         //append self sent message
                         logObj["MESSAGE"] = logObj["MESSAGE"].replace(/\&lt;br \/\&gt;/g, "<br />");
-                        $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["CHATID"] + '" class="talkText" data-msgid='+logObj["CHATID"]+'>' + logObj["MESSAGE"] + '</div><i class="nchatspr nchatic_9 fr vertM"></i></div>').promise().done(function(){
+                        $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["CHATID"] + '" class="talkText" data-msgid='+logObj["CHATID"]+'>' + logObj["MESSAGE"] + '</div><i class="nchatspr '+read_class+' fr vertM"></i></div>').promise().done(function(){
                                 var len = $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["CHATID"]).height();
                                     
                                 $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["CHATID"]).next().css("margin-top",len);
@@ -2220,6 +2236,7 @@ JsChat.prototype = {
     },
     //change from sending status to sent or received read
     _changeStatusOfMessg: function (messgId, userId, newStatus) {
+        var curElem = this;
         if (messgId) {
             //this._chatLoggerPlugin("Change status" + newStatus);
             if (newStatus == "recieved") {
@@ -2229,7 +2246,11 @@ JsChat.prototype = {
                 $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_8").addClass("nchatic_10");
                 setTimeout(function () {
                     $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_10 nchatic_8").addClass("nchatic_9");
+                    if(curElem._setLastReadMsgStorage == true){
+                        setLastReadMsgStorage(messgId);
+                    }
                 }, 500);
+
             }
         }
     },
