@@ -1,8 +1,6 @@
 <?php
 
 include_once("connect.inc");
-$msg = print_r($_SERVER,true);
-mail("kunal.test02@gmail.com"," web/profile/UnsubscribePromoMailers.php in USE",$msg);
 include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 $protect_obj=new protect;
 $db=connect_db();
@@ -20,9 +18,19 @@ $db=connect_db();
 			{
 				$today=date("Y-m-d");
 				$promo_mails='U';					
-				$sql="UPDATE newjs.JPROFILE SET UDATE=".$today.", PROMO_MAILS='U' WHERE PROFILEID=".$profileid;
-				mysql_query_decide($sql) or logError($errorMsg,"$sql","ShowErrTemplate");
-                JProfileUpdateLib::getInstance()->removeCache($profileid);
+//				$sql="UPDATE newjs.JPROFILE SET UDATE=".$today.", PROMO_MAILS='U' WHERE PROFILEID=".$profileid;
+//				mysql_query_decide($sql) or logError($errorMsg,"$sql","ShowErrTemplate");
+        
+        $objUpdate = JProfileUpdateLib::getInstance();
+        $result = $objUpdate->editJPROFILE(array('UDATE'=>$today, 'PROMO_MAILS'=>'U'),$profileid,'PROFILEID');
+        if(false === $result) {
+          $msg = print_r($_SERVER,true);
+          mail("kunal.test02@gmail.com","Error in web/profile/UnsubscribePromoMailers.php while updating",$msg);
+          
+          $sql="UPDATE newjs.JPROFILE SET UDATE=".$today.", PROMO_MAILS='U' WHERE PROFILEID=".$profileid;
+          logError($errorMsg,"$sql","ShowErrTemplate");
+        }
+        
 				if ($_GET[flag]=='U')
 					$smarty->display('Promo_Unsubscribe.html');
 				else
