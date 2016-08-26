@@ -558,7 +558,11 @@ JsChat.prototype = {
                                             setTimeout(function(){
                                                $("#"+currentID+"_hover").css("visibility","hidden"); 
                                             },100);
-                                            elem._chatPanelsBox(currentID, statusArr[currentID], $(this).attr("data-jid"), $(this).attr("data-checks"), $(this).attr("id").split("_")[1]);
+                                            setTtimeout(function(){
+                                                elem._chatPanelsBox(currentID, statusArr[currentID], $(this).attr("data-jid"), $(this).attr("data-checks"), $(this).attr("id").split("_")[1]);
+                                                console.log("Timeouttocreatechatbox");
+                                            },200);
+                                            
                                         });
                                     }
                                 }
@@ -2644,6 +2648,7 @@ JsChat.prototype = {
         //console.log("inside function",type,userId,groupId,newState);
         var thisElem = this;
         var data = [];
+        //var reAdd = true;
         if(localStorage.getItem("chatBoxData")) {
             data = JSON.parse(localStorage.getItem("chatBoxData"));
         }
@@ -2686,9 +2691,12 @@ JsChat.prototype = {
             });
             if(type == "changeOrAddGroup" && found == false){
                 thisElem._changeLocalStorage("add",userId,groupId,newState);
+                //reAdd = false;
             }
         }
-        localStorage.setItem("chatBoxData", JSON.stringify(data));
+        //if(reAdd == true){
+            localStorage.setItem("chatBoxData", JSON.stringify(data));
+        //}
     },
     
     _updateChatStructure:function(type) {
