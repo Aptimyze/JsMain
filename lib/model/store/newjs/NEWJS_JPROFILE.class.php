@@ -1647,7 +1647,7 @@ $time->sub(date_interval_create_from_date_string($lastLoginWithIn));
 
         try{
             $sql =  <<<SQL
-            SELECT *
+            SELECT PROFILEID
             FROM  newjs.`JPROFILE`
             WHERE LAST_LOGIN_DT  >=  :LAST_LOGIN_DT
             AND activatedKey=1

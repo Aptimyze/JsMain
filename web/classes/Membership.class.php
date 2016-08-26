@@ -1711,7 +1711,7 @@ class Membership
 
     function getSpecialDiscount($profile) {
         $today = date('Y-m-d');
-        $billingVarDiscObj = new billing_VARIABLE_DISCOUNT('newjs_slave');
+        $billingVarDiscObj = new billing_VARIABLE_DISCOUNT('newjs_masterRep');
         $row = $billingVarDiscObj->getDiscountDetails($profile);
         if ($row['DISCOUNT']) {
             $data['DISCOUNT'] = $row['DISCOUNT'];
