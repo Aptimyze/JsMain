@@ -170,7 +170,7 @@ for($t=0;$t<count($ptype_arr);$t++)
                                         $score1 = json_decode($response,true);
                                         if(!is_numeric($score1)){
                                                 $score1 ='NULL';
-                                                $hit_log1 =$profileid;
+                                                $hit_log1 =$profileid."#".$newmodelJson;
                                                 $fileName1 ="score_hit_log_for_nullResponse".$date.".txt";
                                                 passthru("echo '$hit_log1' >>/tmp/$fileName1");
 					}	
