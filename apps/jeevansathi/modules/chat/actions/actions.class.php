@@ -328,6 +328,11 @@ class chatActions extends sfActions
 						$message = $messageLogObj->getEOIMessagesForChat($this->loginProfile->getPROFILEID(), array($profileid));
 						$msgText = $message[0]["MESSAGE"];
 						$forCount = explode("||", $msgText);
+						$date = date("Y-m-d H:i:s");
+						$ip = FetchClientIP();
+						$chatid = $request->getParameter('chat_id');
+						$chatMessage = $request->getParameter('chatMessage')."--".$date."--".$ip."--".$chatid;
+
 						$count = count($forCount);
 						if ($count >= 3) {
 							$response["cansend"] = false;
@@ -335,9 +340,9 @@ class chatActions extends sfActions
 							$response["errorMsg"] = "You can send more messages if user replies";
 						} else {
 							if ($msgText)
-								$msgText = $msgText . "||" . $request->getParameter('chatMessage');
+								$msgText = $msgText . "||" . $chatMessage;
 							else {
-								$msgText = $request->getParameter('chatMessage');
+								$msgText = $chatMessage;
 							}
 							$_GET["messageid"] = $message[0]["ID"];
 							sfContext::getInstance()->getRequest()->setParameter("messageid", $message[0]["ID"]);
