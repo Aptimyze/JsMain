@@ -147,13 +147,6 @@ for($t=0;$t<count($ptype_arr);$t++)
 					$score=0;
 				else
                                 {
-					if($ptype=="C")
-                                        {
-                                                $ptype = "R";
-                                                $change = 1;
-                                        }
-                                        else
-                                                $change = 0;
                                         $scorevars = new Scoring_ab($profileid,$myDb,$shDb,$parameter,$ptype,$globalParamsObj);
                                         foreach($scorevars->newmodel as $key=>$val){
                                                 if(!$val)
@@ -162,13 +155,10 @@ for($t=0;$t<count($ptype_arr);$t++)
                                         }
                                         $newmodelJson=json_encode($scorevars->newmodel,true);
                                         $flag = "";
-                                        if($change)
-                                                $ptype="C";
                                         if($ptype=="C")
                                         {
                                                 $flag = "RENHIT";
-                                                //$response = sendPostData("http://10.10.18.111:2211/jsScore",$newmodelJson);
-                                                $response = sendPostData("http://172.10.18.111:3777/jsScore",$newmodelJson);
+                                        	$response = sendPostData("http://10.10.18.111:2211/jsScore",$newmodelJson);
                                         }
                                         else
                                         {
