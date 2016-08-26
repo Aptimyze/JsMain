@@ -534,7 +534,7 @@ $js_arr[]=array("jspc/utility/chosen/docsupport/prism"    => "1");
 $js_arr[]=array("jspc/logout/hpjs"      => "3");
 $js_arr[]=array("jspc/common/hslider"    => "1");
 $js_arr[]=array("jspc/common/test1"    => "1");
-$js_arr[]=array("jspc/common/AjaxWrapper"       => "4");
+$js_arr[]=array("jspc/common/AjaxWrapper"        => "5");
 $js_arr[]=array("jspc/phone/phone_js"     => "2");
 $js_arr[]=array("jspc/common/colorbox"    => "1");
 $js_arr[]=array("jspc/common/phoneVeriLayers_js"       => "5");

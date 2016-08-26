@@ -147,13 +147,6 @@ for($t=0;$t<count($ptype_arr);$t++)
 					$score=0;
 				else
                                 {
-					if($ptype=="C")
-                                        {
-                                                $ptype = "R";
-                                                $change = 1;
-                                        }
-                                        else
-                                                $change = 0;
                                         $scorevars = new Scoring_ab($profileid,$myDb,$shDb,$parameter,$ptype,$globalParamsObj);
                                         foreach($scorevars->newmodel as $key=>$val){
                                                 if(!$val)
@@ -162,13 +155,10 @@ for($t=0;$t<count($ptype_arr);$t++)
                                         }
                                         $newmodelJson=json_encode($scorevars->newmodel,true);
                                         $flag = "";
-                                        if($change)
-                                                $ptype="C";
                                         if($ptype=="C")
                                         {
                                                 $flag = "RENHIT";
-                                                //$response = sendPostData("http://10.10.18.111:2211/jsScore",$newmodelJson);
-                                                $response = sendPostData("http://172.10.18.111:3777/jsScore",$newmodelJson);
+                                        	$response = sendPostData("http://172.10.18.111:2211/jsScore",$newmodelJson);
                                         }
                                         else
                                         {
@@ -180,7 +170,7 @@ for($t=0;$t<count($ptype_arr);$t++)
                                         $score1 = json_decode($response,true);
                                         if(!is_numeric($score1)){
                                                 $score1 ='NULL';
-                                                $hit_log1 =$profileid;
+                                                $hit_log1 =$profileid."#".$newmodelJson;
                                                 $fileName1 ="score_hit_log_for_nullResponse".$date.".txt";
                                                 passthru("echo '$hit_log1' >>/tmp/$fileName1");
 					}
@@ -188,7 +178,7 @@ for($t=0;$t<count($ptype_arr);$t++)
                                                 $score1 =round($score1,0);
 					}
                                         // temporary_logging   
-                                        $hit_log = $flag."#".$profileid."#".$score1;
+                                        $hit_log = $flag."#".$profileid."#".$score1."#".$newmodelJson;
                                         $fileName ="score_hit_log".$date.".txt";
                                         passthru("echo '$hit_log' >>/tmp/$fileName");
                                 }

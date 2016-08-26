@@ -13,7 +13,7 @@ class VariableDiscount
     */
     public function getDiscDetails($profileid)
     {
-        $vdObj = new billing_VARIABLE_DISCOUNT;
+        $vdObj = new billing_VARIABLE_DISCOUNT();
         $output = $vdObj->getDiscountDetails($profileid);
         unset($vdObj);
         return $output;
@@ -21,7 +21,7 @@ class VariableDiscount
     
     public function getSlabForProfile($profileid)
     {
-        $variableObj = new newjs_ANALYTICS_VARIABLE_DISCOUNT;
+        $variableObj = new newjs_ANALYTICS_VARIABLE_DISCOUNT();
         $output = $variableObj->getSlabForProfile($profileid);
         return $output;
     }
@@ -50,7 +50,7 @@ class VariableDiscount
 	public function getAllDiscountWithService($profileid)
 	{
 		$discountNewArr =array();
-		$vdOfferDurationObj =new billing_VARIABLE_DISCOUNT_OFFER_DURATION('newjs_slave');
+		$vdOfferDurationObj =new billing_VARIABLE_DISCOUNT_OFFER_DURATION('newjs_masterRep');
 		$discountDetails =$vdOfferDurationObj->getDiscountDetailsForProfile($profileid);
 		if(count($discountDetails)>0){
                 	foreach($discountDetails as $key=>$val){
@@ -88,7 +88,7 @@ class VariableDiscount
     // get VD Discount Labels 
     public function getPreviousVdLogDetails($profileid)
     {
-	$vdLogObj =new billing_VARIABLE_DISCOUNT_OFFER_DURATION_LOG('newjs_slave');
+	$vdLogObj =new billing_VARIABLE_DISCOUNT_OFFER_DURATION_LOG('newjs_masterRep');
         $vdLogDetailsArr =$vdLogObj->getDiscountDetails($profileid);
         $lastVdExpiryDate =$vdLogDetailsArr[0]['EDATE'];
 	if($lastVdExpiryDate){
@@ -127,7 +127,7 @@ class VariableDiscount
 	if(!is_array($durationArr)){
 		$durationArr =$this->getActiveDurations();
 	}
-        $vdOfferDurationObj =new billing_VARIABLE_DISCOUNT_OFFER_DURATION('newjs_slave');
+        $vdOfferDurationObj =new billing_VARIABLE_DISCOUNT_OFFER_DURATION('newjs_masterRep');
         $discountDetails =$vdOfferDurationObj->getDiscountDetailsForProfile($profileid);
 	if(is_array($discountDetails)){
         foreach($discountDetails as $key=>$val){
@@ -150,12 +150,12 @@ class VariableDiscount
     }
 
     public function getVdProfilesForMailer(){
-    	$vdObj =new billing_VARIABLE_DISCOUNT('newjs_slave');
+    	$vdObj =new billing_VARIABLE_DISCOUNT('newjs_masterRep');
         $profilesArr =$vdObj->getVdProfilesForMailer();
         return $profilesArr;
     }
     public function getVDProfilesActivatedForDate($profileStr,$startDate=''){
-        $vdObj =new billing_VARIABLE_DISCOUNT('newjs_slave');
+        $vdObj =new billing_VARIABLE_DISCOUNT('newjs_masterRep');
         $profilesArr =$vdObj->getDiscount($profileStr,$startDate);
         return $profilesArr;
     }
@@ -187,7 +187,7 @@ class VariableDiscount
     
     public function getCashDiscountDispText($profileid='',$caseType)
     {
-		$cashDiscountOfferObj 	=new billing_DISCOUNT_OFFER('newjs_slave');
+		$cashDiscountOfferObj 	=new billing_DISCOUNT_OFFER('newjs_masterRep');
         $flatDiscount           =$cashDiscountOfferObj->checkFlatDiscount();
         //$discountLimitText      =VariableParams::$discountLimitText;
 		$discountTextVal        =$this->getDiscountCaseTypeText($caseType, $flatDiscount);
@@ -208,7 +208,7 @@ class VariableDiscount
        */ 
     public function activateVDForProfile($profileid,$discountDetails,$serviceArr,$sendMail=false,$sendSMS=false)
     {
-        $vdObj1 = new billing_VARIABLE_DISCOUNT('newjs_slave');
+        $vdObj1 = new billing_VARIABLE_DISCOUNT('newjs_masterRep');
         $SENT_MAIL = 'Y';  //$SENT_MAIL = 'Y' specifies no mail to be sent
         $SENT_SMS = 'Y'; //$SENT_SMS = 'Y' specifies no sms to be sent
         if($sendMail==true)
@@ -296,7 +296,7 @@ class VariableDiscount
     
     public function generateVDImpactReport()
     {
-        $variableDiscountObj = new billing_VARIABLE_DISCOUNT("newjs_slave");
+        $variableDiscountObj = new billing_VARIABLE_DISCOUNT("newjs_masterRep");
         $vdData = $variableDiscountObj->getVDProfilesEndingYesterday();
         //$vdData = $variableDiscountObj->getVariableDiscountProfilesEndingYesterday();
         if(count($vdData) > 150000)
@@ -428,7 +428,7 @@ class VariableDiscount
     }
     public function populateRemainingRecordsFromVDTemp($entryDate,$sendAlert=false)
     {
-        $VDTempObj = new billing_VARIABLE_DISCOUNT_TEMP('newjs_slave');
+        $VDTempObj = new billing_VARIABLE_DISCOUNT_TEMP('newjs_masterRep');
         $VDDuartionObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
         $VDObj = new billing_VARIABLE_DISCOUNT();
         $profileArr =array();
@@ -529,7 +529,7 @@ class VariableDiscount
         	$durationsArr =unserialize($memCacheObject->get($keyMain));
         }
 	 else{
-        	$serviceObj = new billing_SERVICES('newjs_slave'); 
+        	$serviceObj = new billing_SERVICES('newjs_masterRep'); 
 		$durationsArr =$serviceObj->getOnlineActiveDurations();
 		foreach($durationsArr as $key=>$val){
 			if($val=='1188'){
@@ -548,7 +548,7 @@ class VariableDiscount
         if(!is_array($durationArr)){
                 $durationArr =$this->getActiveDurations();
         }
-        $vdOfferDurationObj =new billing_VARIABLE_DISCOUNT_DURATION_POOL_TECH('newjs_slave');
+        $vdOfferDurationObj =new billing_VARIABLE_DISCOUNT_DURATION_POOL_TECH('newjs_masterRep');
         $discountDetails =$vdOfferDurationObj->getDiscountArr($profileid);
         if(is_array($discountDetails)){
         foreach($discountDetails as $key=>$val){
