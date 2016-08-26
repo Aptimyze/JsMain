@@ -845,16 +845,16 @@ function handlePreAcceptChat(apiParams,receivedJId) {
                             outputData["cansend"] = outputData["cansend"] || false;
                             outputData["sent"] = false;
                             outputData["errorMsg"] = response["actiondetails"]["errmsglabel"];
-                            outputData["msg_id"] = strophieWrapper.getUniqueId();
+                            outputData["msg_id"] = apiParams["postParams"]["chat_id"];
                         } else {
                             outputData["cansend"] = true;
                             outputData["sent"] = true;
-                            outputData["msg_id"] = strophieWrapper.getUniqueId();
+                            outputData["msg_id"] = apiParams["postParams"]["chat_id"];
                             strophieWrapper.sendMessage(apiParams.postParams.chatMessage,receivedJId,true,outputData["msg_id"]);
                         }
                     } else {
                         outputData = response;
-                        outputData["msg_id"] = strophieWrapper.getUniqueId();
+                        outputData["msg_id"] = apiParams["postParams"]["chat_id"];
                         if(response["sent"] == true){
                             strophieWrapper.sendMessage(apiParams.postParams.chatMessage,receivedJId,true,outputData["msg_id"]);
                         }
@@ -1208,7 +1208,8 @@ $(document).ready(function () {
                             "url": chatConfig.Params.preAcceptChat["apiUrl"],
                             "postParams": {
                                 "profilechecksum": receiverProfileChecksum,
-                                "chatMessage": message
+                                "chatMessage": message,
+                                "chat_id":strophieWrapper.getUniqueId()
                             }
                         };
                         if (typeof chatConfig.Params.preAcceptChat["extraParams"] != "undefined") {
