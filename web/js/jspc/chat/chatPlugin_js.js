@@ -474,6 +474,11 @@ JsChat.prototype = {
                                     if(addedFlag == true){
                                         $("#" + runID + "_" + val).on("click", function () {
                                             currentID = $(this).attr("id").split("_")[0];
+                                            console.log("A",currentID);
+                                            console.log("B",status);
+                                            console.log("C",$(this).attr("data-jid"));
+                                            console.log("D",$(this).attr("data-checks"));
+                                            console.log("E",$(this).attr("id").split("_")[1]);
                                             curElem._chatPanelsBox(currentID, status, $(this).attr("data-jid"), $(this).attr("data-checks"), $(this).attr("id").split("_")[1]);
                                         });
                                     }
