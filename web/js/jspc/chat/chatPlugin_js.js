@@ -2074,6 +2074,8 @@ JsChat.prototype = {
                 $('chat-box[user-id="' + userId + '"] .chatMessage').find("#restrictMessgTxt").remove();
                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
             }
+            //mark all unread msgs as read
+            curEle._handlePreUnreadMessages(userId);
             var val;
             //adding bubble for minimized tab
                 setTimeout(function(){
@@ -2138,6 +2140,8 @@ JsChat.prototype = {
                     //this.storeMessagesInLocalHistory(selfJID, userId, newMsg, 'receive');
                 },500);
             }
+            
+
     },
     
     //disable chat box on roster item deletion
@@ -2255,8 +2259,6 @@ JsChat.prototype = {
                     if(curElem._setLastReadMsgStorage == true){
                         setLastReadMsgStorage(userId,messgId);
                     }
-                    //mark all unread msgs as read
-                    curElem._handlePreUnreadMessages(userId);
                 }, 500);
 
             }
