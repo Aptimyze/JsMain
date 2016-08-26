@@ -246,7 +246,15 @@ class DetailedViewApi
 		$this->m_arrOut['occupation'] = $objProfile->getDecoratedOccupation();
                 $this->m_arrOut['education'] = $objProfile->getDecoratedEducation();
 		$this->m_arrOut['educationOnSummary'] = $this->getAllEducationFields();
-		
+                
+		$nameOfUserObj = new NameOfUser;
+                $name = $nameOfUserObj->showNameToProfiles($this->m_actionObject->loginProfile->getPROFILEID(), array($objProfile->getPROFILEID()), $this->m_actionObject->loginProfile->getSUBSCRIPTION());
+                if(is_array($name) && $name[$objProfile->getPROFILEID()]['SHOW']=="1" && $name[$objProfile->getPROFILEID()]['NAME']!='')
+                {
+                        $this->m_arrOut['name_of_user'] = $nameOfUserObj->getNameStr($name[$objProfile->getPROFILEID()]['NAME'],$this->m_actionObject->loginProfile->getSUBSCRIPTION());
+                }
+                unset($nameOfUserObj);
+                
 		$szInc_Lvl = $objProfile->getDecoratedIncomeLevel();
 		$this->m_arrOut['income'] = (strtolower($szInc_Lvl) == "no income") ?$szInc_Lvl :($szInc_Lvl." per Annum") ;
 		if($objProfile->getDecoratedCountry()=="India" || ($objProfile->getDecoratedCountry()=="United States" && $objProfile->getDecoratedCity()!=""))

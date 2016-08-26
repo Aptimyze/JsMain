@@ -309,7 +309,7 @@ class viewSimilarProfileAction extends sfActions
 		if(MobileCommon::isDesktop())
 		{
 			$vspObj = new ViewSimilarProfile();
-			$transformedResponse = $vspObj->transformVSPResponseForPC($this->finalResultsArray,$this->Username,$this->similarPageShow,$this->userGender,$stype);
+			$transformedResponse = $vspObj->transformVSPResponseForPC($this->finalResultsArray,$this->Username,$this->similarPageShow,$this->userGender,$stype,$this->loginProfile);
 			$this->defaultImage = $transformedResponse["defaultImage"];
 			$this->firstResponse = json_encode($transformedResponse);
 			

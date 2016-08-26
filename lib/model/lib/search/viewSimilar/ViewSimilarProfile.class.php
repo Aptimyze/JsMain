@@ -431,13 +431,15 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
          * @param - vspArray,$contactedUsername,$similarPageShow,$userGender
          * @return - new array
          */
-        public function transformVSPResponseForPC($vspArray,$contactedUsername,$similarPageShow,$userGender,$stype='V')
+        public function transformVSPResponseForPC($vspArray,$contactedUsername,$similarPageShow,$userGender,$stype='V',$loggedInProfileObj)
         {
             if($userGender=="She")
                 $gender = 'F';
             else
                 $gender = 'M';
             $key = 0;
+            $nameOfUserObj = new NameOfUser;
+            $nameData = $nameOfUserObj->getNameData($loggedInProfileObj->getPROFILEID());
             foreach($vspArray as $profileid=>$detailsArray)
             {
                 //$key = $detailsArray["OFFSET"]-1;
@@ -454,6 +456,15 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
   			$searchApiObj = new SearchApiStrategyV1();
                         $jspcVSPArray["profiles"][$key][$searchField]= $searchApiObj->handlingSpecialCasesForSearch($searchField,$detailsArray[$vspField],$detailsArray["PHOTO_REQUESTED"],$gender);                        
                         unset($searchApiObj);
+                    }  
+                    else if($searchField == "name_of_user")
+                    {
+  			if(is_array($nameData)&& $nameData[0]['DISPLAY']=="Y" && $nameData[0]['NAME']!='')
+                        {
+                                $name = $nameOfUserObj->getNameStr($detailsArray[$vspField],$loggedInProfileObj->getSUBSCRIPTION());
+                        }
+
+                        $jspcVSPArray["profiles"][$key][$searchField]=$name;
                     }  
                     elseif(in_array($searchField,array("pg_college","college","company_name")))
                     {
