@@ -1199,9 +1199,9 @@ JsChat.prototype = {
                                 console.log("Nits","in else");
                                 if (msgSendOutput["sent"] == true) {
                                     console.log("nits",$(superParent));
-                                    if ($(superParent).find("#sendInt").length != 0) {
+                                    if ($(superParent).find("#sendInt").length != 0 || msgSendOutput['eoi_sent'] == true) {
                                         //console.log("appending intsent msg ankita");
-                                        if($(superParent).find("#sendInt").hasClass("notSendInterestDiv") == false){
+                                        if($(superParent).find("#sendInt").hasClass("notSendInterestDiv") == false || msgSendOutput['eoi_sent'] == true){
                                             console.log("Append yourinterest has been sent");
                                             $(superParent).find(".chatMessage").append("<div  class='inline_txt pos-rel fr pr10' id='interestSent'>Your interest has been sent</div>");
                                         }
@@ -1481,10 +1481,8 @@ JsChat.prototype = {
             }*/
             var chatBoxType = curElem._getChatBoxType(userId, newGroupId, "updateChatBoxType");
             console.log("From updatechatepanelsbox");
-            setTimeout(function(){
-                curElem._setChatBoxInnerDiv(userId, chatBoxType,"chatBoxUpdate");
+            curElem._setChatBoxInnerDiv(userId, chatBoxType,"chatBoxUpdate");
             curElem._enableChatTextArea(chatBoxType, userId, membership);
-            },50);
         }
     },
     //update contact status and enable/disable chat in chat box on basis of membership and contact status
