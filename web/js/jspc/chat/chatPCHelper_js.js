@@ -847,22 +847,27 @@ function handlePreAcceptChat(apiParams,receivedJId) {
             success: function (response) {
                 
                 if (response["responseStatusCode"] == "0") {
+                    console.log(response);
                     if (response["actiondetails"]) {
                         if (response["actiondetails"]["errmsglabel"]) {
                             outputData["cansend"] = outputData["cansend"] || false;
                             outputData["sent"] = false;
                             outputData["errorMsg"] = response["actiondetails"]["errmsglabel"];
                             outputData["msg_id"] = apiParams["postParams"]["chat_id"];
+                            console.log("A");
                         } else {
                             outputData["cansend"] = true;
                             outputData["sent"] = true;
                             outputData["msg_id"] = apiParams["postParams"]["chat_id"];
+                            console.log("B");
                             strophieWrapper.sendMessage(apiParams.postParams.chatMessage,receivedJId,true,outputData["msg_id"]);
                         }
                     } else {
                         outputData = response;
                         outputData["msg_id"] = apiParams["postParams"]["chat_id"];
+                        console.log("C");
                         if(response["sent"] == true){
+                            console.log("D");
                             strophieWrapper.sendMessage(apiParams.postParams.chatMessage,receivedJId,true,outputData["msg_id"]);
                         }
                     }
