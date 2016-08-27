@@ -1432,6 +1432,7 @@ JsChat.prototype = {
         var chatBoxType = curElem._getChatBoxType(userId, $('chat-box[user-id="' + userId + '"]').attr("group-id"));
         curElem._changeLocalStorage("add",userId,$('chat-box[user-id="' + userId + '"]').attr("group-id"),"open");
         //setTimeout(function() {
+        console.log("From postChatPanelsBox");
         curElem._setChatBoxInnerDiv(userId, chatBoxType);
         curElem._enableChatTextArea($('chat-box[user-id="' + userId + '"]').attr("data-contact"), userId, membership);
         if ($('chat-box[user-id="' + userId + '"] .spinner').length != 0) $('chat-box[user-id="' + userId + '"] .spinner').hide();
@@ -1479,6 +1480,7 @@ JsChat.prototype = {
                 $("#chatHistory_"+userId).show();
             }*/
             var chatBoxType = curElem._getChatBoxType(userId, newGroupId, "updateChatBoxType");
+            console.log("From updatechatepanelsbox");
             curElem._setChatBoxInnerDiv(userId, chatBoxType,"chatBoxUpdate");
             curElem._enableChatTextArea(chatBoxType, userId, membership);
         }
@@ -1567,10 +1569,8 @@ JsChat.prototype = {
             });
             break;
         case curElem._contactStatusMapping["pog_acceptance_pending"]["key"]:
-            console.log("In case:");
             $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sendInt,#restrictMessgTxt,#initiateText,#chatBoxErr").remove();
             if($('chat-box[user-id="' + userId + '"] .chatMessage').find("#interestSent").length == 0){
-                console.log("In if");
                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="canShowBlock sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
 
                 //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
