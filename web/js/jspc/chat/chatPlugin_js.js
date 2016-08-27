@@ -1200,8 +1200,10 @@ JsChat.prototype = {
                                     if ($(superParent).find("#sendInt").length != 0) {
                                         //console.log("appending intsent msg ankita");
                                         if($(superParent).find("#sendInt").hasClass("notSendInterestDiv") == false){
+                                            console.log("Append yourinterest has been sent");
                                             $(superParent).find(".chatMessage").append("<div  class='inline_txt pos-rel fr pr10' id='interestSent'>Your interest has been sent</div>");
                                         }
+                                        console.log("Remove sentDiv");
                                         $(superParent).find(".chatMessage").find("#sentDiv").remove();
                                         //console.log("yesssssssssssssssss");
                                         //$(superParent).find("#initiateText,#chatBoxErr").remove();
