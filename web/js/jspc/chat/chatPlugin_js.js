@@ -449,7 +449,7 @@ JsChat.prototype = {
                 if (typeof data[key]["rosterDetails"]["groups"] != "undefined" && data[key]["rosterDetails"]["groups"].length > 0) {
                     $.each(data[key]["rosterDetails"]["groups"], function (index, val) {
                         //check for no roster listing
-                        var alreadyExistingNode = checkForNodePresence(runID).exists;
+                        var alreadyExistingNode = curElem.checkForNodePresence(runID).exists;
                         console.log("HiddenNode",alreadyExistingNode);
                         if (alreadyExistingNode == false) {
                             var List = '',
