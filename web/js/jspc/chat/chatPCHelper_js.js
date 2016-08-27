@@ -1040,7 +1040,7 @@ function globalSleep(milliseconds) {
     }
 }
 $(document).ready(function () {
-    
+    console.log("Doc ready");
     if(typeof loggedInJspcUser!= "undefined")
         checkNewLogin(loggedInJspcUser);
     var checkDiv = $("#chatOpenPanel").length;
