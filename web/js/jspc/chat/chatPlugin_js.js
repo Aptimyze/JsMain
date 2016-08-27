@@ -1539,6 +1539,7 @@ JsChat.prototype = {
                         "receiverJID": $('chat-box[user-id="' + userId + '"]').attr("data-jid"),
                         "nick": nick
                     });
+                    console.log("SendInt",response);
                     if (response != false) {
                         if (response.responseMessage != "Successful") {
                             //curElem._chatLoggerPlugin($(this));
