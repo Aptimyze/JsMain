@@ -1198,7 +1198,7 @@ JsChat.prototype = {
                             } else {
                                 console.log("Nits","in else");
                                 if (msgSendOutput["sent"] == true) {
-                                    console.log("nits",$(superParent).find("#sendInt"));
+                                    console.log("nits",$(superParent));
                                     if ($(superParent).find("#sendInt").length != 0) {
                                         //console.log("appending intsent msg ankita");
                                         if($(superParent).find("#sendInt").hasClass("notSendInterestDiv") == false){
