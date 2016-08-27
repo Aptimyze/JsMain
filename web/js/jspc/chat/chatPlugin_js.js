@@ -2199,11 +2199,11 @@ JsChat.prototype = {
             }
         });
         //console.log("noOfInputs",noOfInputs);
-        $(".extraChatList .pinkBubble").each(function (index, element) {
+        /*$(".extraChatList .pinkBubble").each(function (index, element) {
             if ($(this).find(".noOfMessg").html() != 0) {
                 noOfInputs++;
             }
-        });
+        });*/
         if ($('.showcountmin').hasClass('vishid')) {
             //this._chatLoggerPlugin('no exist');
             //noOfInputs = 5;
