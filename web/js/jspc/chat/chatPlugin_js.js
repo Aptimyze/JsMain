@@ -1502,7 +1502,7 @@ JsChat.prototype = {
         if (checkSum) {
             nick = nick + "|" + checkSum;
         }
-        //console.log("chatBoxType"+chatBoxType);
+        console.log("chatBoxType"+chatBoxType);
         if (curElem._contactStatusMapping[chatBoxType]["showHistory"] == true) {
             //console.log("setting moreHistory_");
             $("#moreHistory_"+userId).val("1");
