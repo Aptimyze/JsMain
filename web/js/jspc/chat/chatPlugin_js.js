@@ -1148,7 +1148,7 @@ JsChat.prototype = {
                                 $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + messageId);
                             }
                             //console.log("sent");
-                            //console.log(msgSendOutput);
+                            console.log(msgSendOutput);
                             var newMsg = {
                                 'SENDER': selfJID.split('@')[0],
                                 'RECEIVER': userId,
