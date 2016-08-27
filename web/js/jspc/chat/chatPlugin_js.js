@@ -449,7 +449,9 @@ JsChat.prototype = {
                 if (typeof data[key]["rosterDetails"]["groups"] != "undefined" && data[key]["rosterDetails"]["groups"].length > 0) {
                     $.each(data[key]["rosterDetails"]["groups"], function (index, val) {
                         //check for no roster listing
-                        if ($('#' + runID + "_" + val).length == 0) {
+                        var alreadyExistingNode = checkForNodePresence(runID).exists;
+                        console.log("HiddenNode",alreadyExistingNode);
+                        if (alreadyExistingNode == false) {
                             var List = '',
                                 fullname = data[key]["rosterDetails"]["fullname"],
                                 //tabShowStatus = $('div.' + val).attr('data-showuser'),
