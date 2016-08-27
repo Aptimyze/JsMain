@@ -1481,8 +1481,10 @@ JsChat.prototype = {
             }*/
             var chatBoxType = curElem._getChatBoxType(userId, newGroupId, "updateChatBoxType");
             console.log("From updatechatepanelsbox");
-            curElem._setChatBoxInnerDiv(userId, chatBoxType,"chatBoxUpdate");
+            setTimeout(function(){
+                curElem._setChatBoxInnerDiv(userId, chatBoxType,"chatBoxUpdate");
             curElem._enableChatTextArea(chatBoxType, userId, membership);
+            },50);
         }
     },
     //update contact status and enable/disable chat in chat box on basis of membership and contact status
