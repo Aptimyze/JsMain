@@ -597,8 +597,10 @@ function checkNewLogin(profileid) {
 
 function checkAuthentication(timer,loginType) {
     var auth;
+    var d = new Date();
+    var n = d.getTime();
     $.ajax({
-        url: "/api/v1/chat/chatUserAuthentication",
+        url: "/api/v1/chat/chatUserAuthentication?p="+n,
         async: false,
         success: function (data) {
             if (data.responseStatusCode == "0") {
