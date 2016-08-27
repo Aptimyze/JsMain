@@ -1567,7 +1567,7 @@ JsChat.prototype = {
             });
             break;
         case curElem._contactStatusMapping["pog_acceptance_pending"]["key"]:
-            console.log("In case:"+key);
+            console.log("In case:");
             $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sendInt,#restrictMessgTxt,#initiateText,#chatBoxErr").remove();
             if($('chat-box[user-id="' + userId + '"] .chatMessage').find("#interestSent").length == 0){
                 console.log("In if");
