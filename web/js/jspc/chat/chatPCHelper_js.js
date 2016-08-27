@@ -599,6 +599,7 @@ function checkAuthentication(timer,loginType) {
     var auth;
     var d = new Date();
     var n = d.getTime();
+    console.log("timestamp",n);
     $.ajax({
         url: "/api/v1/chat/chatUserAuthentication?p="+n,
         async: false,
