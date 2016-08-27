@@ -84,7 +84,7 @@ function minify_get_javascripts($response, $minify, $placement)
   foreach($minify_files as $options => $files)
   {
     $options = unserialize($options);
-    $options['src'] = sfConfig::get("app_img_url")."/min/?f=".join($files, ',');
+    $options['src'] = sfConfig::get("app_img_url")."/min/?debug=1&f=".join($files, ',');
     $html   .= content_tag('script', '', $options)."\n";
   }
 
@@ -190,7 +190,7 @@ function minify_get_stylesheets($response, $minify ,$placement='')
   foreach($minify_files as $options => $files)
   {
     $options = unserialize($options);
-    $options['href'] = sfConfig::get("app_img_url")."/min/?f=".join($files, ',');
+    $options['href'] = sfConfig::get("app_img_url")."/min/?debug=1&f=".join($files, ',');
     $html .= tag('link', $options)."\n";
   }
   return $html;
@@ -279,12 +279,12 @@ function minify_get_mobile($which="js",$placement="",$newMobileSite="")
 					
 					if($which=="js")
 					{
-						$options['src'] = sfConfig::get("app_img_url")."/min/?f=".join($files, ',');
+						$options['src'] = sfConfig::get("app_img_url")."/min/?debug=1&f=".join($files, ',');
 						$html   .= content_tag('script', '', $options)."\n";
 					}			
 					else
 					{
-						$options['href'] = sfConfig::get("app_img_url")."/min/?f=".join($files, ',');
+						$options['href'] = sfConfig::get("app_img_url")."/min/?debug=1&f=".join($files, ',');
 						$html .= tag('link', $options)."\n";		
 					}			
 			}
@@ -355,7 +355,7 @@ function minify_get_module_javascripts($placement=""){
   foreach($minify_files as $options => $files)
   {
     $options = unserialize($options);
-    $options['src'] = sfConfig::get("app_img_url")."/min/?f=".join($files, ',');
+    $options['src'] = sfConfig::get("app_img_url")."/min/?debug=1&f=".join($files, ',');
     $html   .= content_tag('script', '', $options)."\n";
   }
   }
@@ -444,7 +444,7 @@ function minify_get_module_stylesheets(){
   foreach($minify_files as $options => $files)
   {
     $options = unserialize($options);
-    $options['href'] = sfConfig::get("app_img_url")."/min/?f=".join($files, ',');
+    $options['href'] = sfConfig::get("app_img_url")."/min/?debug=1&f=".join($files, ',');
     $html .= tag('link', $options)."\n";
   }
   }
