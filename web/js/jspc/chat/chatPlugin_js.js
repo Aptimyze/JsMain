@@ -1567,8 +1567,10 @@ JsChat.prototype = {
             });
             break;
         case curElem._contactStatusMapping["pog_acceptance_pending"]["key"]:
+            console.log("In case:"+key);
             $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sendInt,#restrictMessgTxt,#initiateText,#chatBoxErr").remove();
             if($('chat-box[user-id="' + userId + '"] .chatMessage').find("#interestSent").length == 0){
+                console.log("In if");
                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sentDiv" class="canShowBlock sendDiv pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
 
                 //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
