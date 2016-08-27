@@ -356,7 +356,6 @@ class chatActions extends sfActions
 								$response["errorMsg"] = "You can send more messages if user replies";
 							}
 							$response['sent'] = true;
-                            $response['eoi_sent'] = true;
 							$response["messageid"] = $message[0]["ID"];
 						}
 					}
@@ -373,7 +372,6 @@ class chatActions extends sfActions
 					$response = json_decode($output, true);
 					$response["cansend"] = true;
 					$response['sent'] = true;
-                    $response['eoi_sent'] = true;
 
 				}
 			}

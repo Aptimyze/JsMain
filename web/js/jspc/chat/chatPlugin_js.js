@@ -2164,6 +2164,7 @@ JsChat.prototype = {
     
     //disable chat box on roster item deletion
     _disableChatPanelsBox:function(userId){
+        console.log("in disablechatPanelsBox");
         var curElem = this;
         if($('chat-box[user-id="' + userId + '"]').length != 0){
             if($('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage .acceptRec').length == 0){
