@@ -2715,6 +2715,7 @@ JsChat.prototype = {
     
     _updateChatStructure:function(type) {
 		//console.log("inside update function",type);
+        console.log("In updateCHatstructure");
 		var data = [];
 		var currentUserId = [];
 		var localId = [],pageId = [];
