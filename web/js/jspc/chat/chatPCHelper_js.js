@@ -858,14 +858,14 @@ function handlePreAcceptChat(apiParams,receivedJId) {
                             outputData["cansend"] = true;
                             outputData["sent"] = true;
                             outputData["msg_id"] = apiParams["postParams"]["chat_id"];
-                            outputData["eoi_sent"] = true;
+                            outputData['eoi_sent'] = response['eoi_sent'];
                             strophieWrapper.sendMessage(apiParams.postParams.chatMessage,receivedJId,true,outputData["msg_id"]);
                         }
                     } else {
                         outputData = response;
                         outputData["msg_id"] = apiParams["postParams"]["chat_id"];
                         if(response["sent"] == true){
-                            console.log("sentEoi");
+                            outputData['eoi_sent'] = response['eoi_sent'];
                             strophieWrapper.sendMessage(apiParams.postParams.chatMessage,receivedJId,true,outputData["msg_id"]);
                         }
                     }
