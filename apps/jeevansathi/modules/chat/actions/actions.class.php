@@ -372,6 +372,7 @@ class chatActions extends sfActions
 					$response = json_decode($output, true);
 					$response["cansend"] = true;
 					$response['sent'] = true;
+                    $response['eoi_sent'] = true;
 
 				}
 			}
