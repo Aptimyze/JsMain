@@ -1,4 +1,4 @@
-var getaTop;
+var getaTop,commLayerPageIndex=1;
 var kundliResponseArr = {"F":"You cannot request horoscope as you don’t match this profile's filters","G":"You cannot request horoscope to a person of the same gender"};
 
 $(function(){
@@ -473,6 +473,9 @@ var layerObj=$("#commHistoryOverlay-layer");
 var commDiv=layerObj.find('#commDiv');
 var newHtml="";
 var historyResponse=resp.history;
+
+//if(resp.nextpage=='false')
+  //  commHistoryAbsent
 layerObj.find('.otherProfilePic').attr('src',resp.viewed);
 layerObj.find(".js-usernameCC").html(resp.label);
 
@@ -514,7 +517,11 @@ layerObj.find('#mainDiv').html(newHtml);
 }
 
 $('.js-overlay').eq(0).fadeIn(200,"linear",function(){$('#commHistoryOverlay-layer').fadeIn(300,"linear",function(){
-	$(this).find(".cEcontent").mCustomScrollbar();
+	$(this).find("#commLayerScroller").mCustomScrollbar({
+							callbacks:{
+								onTotalScrollBack:function(){}
+							}
+				});
 
 })}); 
 
@@ -538,7 +545,7 @@ showCommonLoader();
           ajaxConfig= {};
           ajaxConfig.type= "POST";
           ajaxConfig.dataType="json";
-          ajaxConfig.url='/contacts/CommunicationHistoryV1';
+          ajaxConfig.url='/contacts/CommunicationHistoryV1?pageNo'+(commLayerPageIndex++);
           ajaxConfig.data={'profilechecksum':profileChecksum};
           ajaxConfig.context= this;
           ajaxConfig.success=function(response) {
