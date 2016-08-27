@@ -68,6 +68,7 @@ class postEOIv2Action extends sfAction
 		}
 		if (is_array($responseArray)) {
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+            $responseArray["eoi_sent"] = true;
 			$apiObj->setResponseBody($responseArray);
 			$apiObj->generateResponse();
 		}
