@@ -512,7 +512,7 @@ class VariableDiscount
     // Check Paid Condition
     public function checkPaidProfile($profileid)
     {
-        $jprofileObj = new JPROFILE('newjs_slave');
+        $jprofileObj = new JPROFILE('newjs_masterRep');
 	$subscription =$jprofileObj->getProfileSubscription($profileid);	
         if((strstr($subscription,"F")!="")||(strstr($subscription,"D")!=""))
 		$paid =true;
