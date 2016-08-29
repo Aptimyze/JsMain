@@ -478,11 +478,15 @@ function xmlToJson(xml) {
 function invokePluginLoginHandler(state) {
     if (state == "success") {
         createCookie("chatAuth", "true");
-        objJsChat._appendLoggedHTML();
+        if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
+            objJsChat._appendLoggedHTML();
+        }
     } else if (state == "failure") {
         eraseCookie("chatAuth");
-        objJsChat.addLoginHTML(true);
-        objJsChat.manageLoginLoader();
+        if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
+            objJsChat.addLoginHTML(true);
+            objJsChat.manageLoginLoader();
+        }
     } else if (state == "session_sync") {
         if ($(objJsChat._logoutChat).length != 0 && readCookie('chatAuth') != "true") {
             $(objJsChat._logoutChat).click();
@@ -509,7 +513,7 @@ function invokePluginManagelisting(listObject, key, user_id) {
         if (key == "add_node") {
             var newGroupId = listObject[user_id][strophieWrapper.rosterDetailsKey]["groups"][0];
             //update chat box content if opened
-            //console.log("adding ankita4");
+            console.log("adding ankita4",newGroupId);
             objJsChat._updateChatPanelsBox(user_id, newGroupId);
             
         }
@@ -597,8 +601,11 @@ function checkNewLogin(profileid) {
 
 function checkAuthentication(timer,loginType) {
     var auth;
+    var d = new Date();
+    var n = d.getTime();
+    console.log("timestamp",n);
     $.ajax({
-        url: "/api/v1/chat/chatUserAuthentication",
+        url: "/api/v1/chat/chatUserAuthentication?p="+n,
         async: false,
         success: function (data) {
             if (data.responseStatusCode == "0") {
@@ -840,6 +847,7 @@ function handlePreAcceptChat(apiParams,receivedJId) {
             success: function (response) {
                 
                 if (response["responseStatusCode"] == "0") {
+                    console.log(response);
                     if (response["actiondetails"]) {
                         if (response["actiondetails"]["errmsglabel"]) {
                             outputData["cansend"] = outputData["cansend"] || false;
@@ -850,12 +858,14 @@ function handlePreAcceptChat(apiParams,receivedJId) {
                             outputData["cansend"] = true;
                             outputData["sent"] = true;
                             outputData["msg_id"] = apiParams["postParams"]["chat_id"];
+                            outputData['eoi_sent'] = response['eoi_sent'];
                             strophieWrapper.sendMessage(apiParams.postParams.chatMessage,receivedJId,true,outputData["msg_id"]);
                         }
                     } else {
                         outputData = response;
                         outputData["msg_id"] = apiParams["postParams"]["chat_id"];
                         if(response["sent"] == true){
+                            outputData['eoi_sent'] = response['eoi_sent'];
                             strophieWrapper.sendMessage(apiParams.postParams.chatMessage,receivedJId,true,outputData["msg_id"]);
                         }
                     }
@@ -1033,7 +1043,7 @@ function globalSleep(milliseconds) {
     }
 }
 $(document).ready(function () {
-    
+    console.log("Doc ready");
     if(typeof loggedInJspcUser!= "undefined")
         checkNewLogin(loggedInJspcUser);
     var checkDiv = $("#chatOpenPanel").length;
