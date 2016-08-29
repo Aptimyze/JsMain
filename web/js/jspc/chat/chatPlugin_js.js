@@ -1621,8 +1621,16 @@ JsChat.prototype = {
                                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
                                 $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
                                 $('chat-box[user-id="' + userId + '"]').attr("group-id", chatConfig.Params.categoryNames["Acceptance"]);
+                                //console.log("334");
                                 curElem._enableChatTextArea(new_contact_state, userId, getMembershipStatus());
+                                
+                                
                             }
+                            //console.log("123");
+                            setTimeout(function(){
+                                //console.log("bhgxgs");
+                                curElem._scrollToBottom(userId,"noAnimate");
+                            },1000);
                         } else {
                             $(this).html(response.actiondetails.errmsglabel);
                             $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
@@ -2762,7 +2770,8 @@ JsChat.prototype = {
                     $("#"+elem["userId"]+"_"+elem["group"]).click();
 					if(elem["state"] == "min") {
                         var chatBrowser = navigator.userAgent;
-                        if (chatBrowser.indexOf("Firefox") > -1) {
+                        //console.log("chatBrowser",chatBrowser);
+                        if (chatBrowser.indexOf("Firefox") > -1 || chatBrowser.indexOf("Mozilla") > -1) {
                             setTimeout(function(){
                                 $('chat-box[user-id="' + elem["userId"] + '"] .nchatic_2').click();
                             },50);
@@ -2789,7 +2798,7 @@ JsChat.prototype = {
 				}
 				if(!$('chat-box[user-id="' + elem["userId"] + '"] img').hasClass("downBarPicMin") && elem["state"] == "min") {
                     var chatBrowser = navigator.userAgent;
-                    if (chatBrowser.indexOf("Firefox") > -1) {
+                    if (chatBrowser.indexOf("Firefox") > -1 || chatBrowser.indexOf("Mozilla") > -1) {
                         setTimeout(function(){
                             $('chat-box[user-id="' + elem["userId"] + '"] .nchatic_2').click();
                             //console.log("timeout");
