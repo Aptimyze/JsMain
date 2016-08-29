@@ -454,9 +454,6 @@ var strophieWrapper = {
                     if (subscription == "to") {
                     	//console.log("subscribe to -"+jid);
                         strophieWrapper.subscribe(jid, listObj[strophieWrapper.rosterDetailsKey]["nick"]);
-                    	/*setTimeout(function () {
-		                  strophieWrapper.sendPresence();
-		                }, 5000);*/
                     }
                 }
             }
@@ -468,6 +465,9 @@ var strophieWrapper = {
         //strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
         invokePluginManagelisting(strophieWrapper.Roster, "create_list");
         strophieWrapper.setRosterStorage(strophieWrapper.Roster);
+        /*setTimeout(function () {
+          strophieWrapper.sendPresence();
+        }, 1000);*/
         strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
     	//strophieWrapper.sendPresence();
    	},

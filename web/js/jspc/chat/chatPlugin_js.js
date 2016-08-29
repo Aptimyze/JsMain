@@ -560,11 +560,11 @@ JsChat.prototype = {
                                             setTimeout(function(){
                                                $("#"+currentID+"_hover").css("visibility","hidden"); 
                                             },100);
-                                            console.log("A",currentID);
-                                            console.log("B",statusArr[currentID]);
-                                            console.log("C",$(this).attr("data-jid"));
-                                            console.log("D",$(this).attr("data-checks"));
-                                            console.log("E",$(this).attr("id").split("_")[1]);
+                                            //console.log("A",currentID);
+                                            //console.log("B",statusArr[currentID]);
+                                            //console.log("C",$(this).attr("data-jid"));
+                                            //console.log("D",$(this).attr("data-checks"));
+                                            //console.log("E",$(this).attr("id").split("_")[1]);
                                             //setTimeout(function(){
                                                 elem._chatPanelsBox(currentID, statusArr[currentID], $(this).attr("data-jid"), $(this).attr("data-checks"), $(this).attr("id").split("_")[1]);
                                             //    console.log("Timeouttocreatechatbox");
@@ -878,7 +878,7 @@ JsChat.prototype = {
     },
     //bind clicking close icon
     _bindClose: function (elem) {
-        console.log("in _bindClose ankita");
+        //console.log("in _bindClose ankita");
         var curElem = this;
         $(elem).off("click").on("click", function () {
             curElem._scrollDown($(this).closest("chat-box"), "remove");
@@ -1017,13 +1017,15 @@ JsChat.prototype = {
                                 });
                                 if (response != false) {
                                     if (response.responseMessage == "Successful") {
-                                        $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                                        //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
                                         enableClose = false;
                                         var htmlStr = sessionStorage.getItem("htmlStr_" + userId);
                                         $('chat-box[user-id="' + userId + '"] .chatMessage').html(htmlStr);
                                         if($('chat-box[user-id="' + userId + '"] #rosterDeleteMsg_'+ userId + '').length != 0){
                                             $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
                                         }
+                                        
+                                        curElem._enableChatTextArea($('chat-box[user-id="' + userId + '"]').attr("data-contact"),userId,getMembershipStatus());
                                         $('chat-box[user-id="' + userId + '"] .nchatic_3').css('pointer-events', "auto");
                                     } else {
                                         $('chat-box[user-id="' + userId + '"] #undoBlock').html(response.responseMessage);
@@ -1148,7 +1150,7 @@ JsChat.prototype = {
                                 $("#tempText_" + userId + "_" + timeLog).attr("id", "text_" + userId + "_" + messageId);
                             }
                             //console.log("sent");
-                            console.log(msgSendOutput);
+                            //console.log(msgSendOutput);
                             var newMsg = {
                                 'SENDER': selfJID.split('@')[0],
                                 'RECEIVER': userId,
@@ -1196,16 +1198,16 @@ JsChat.prototype = {
                                     $(curElem).prop("disabled", true);
                                 }
                             } else {
-                                console.log("Nits","in else");
+                                //console.log("Nits","in else");
                                 if (msgSendOutput["sent"] == true) {
-                                    console.log("nits",$(superParent));
+                                    //console.log("nits",$(superParent));
                                     if ($(superParent).find("#sendInt").length != 0 || msgSendOutput['eoi_sent'] == true) {
                                         //console.log("appending intsent msg ankita");
                                         if($(superParent).find("#sendInt").hasClass("notSendInterestDiv") == false || msgSendOutput['eoi_sent'] == true){
-                                            console.log("Append yourinterest has been sent");
+                                            //console.log("Append yourinterest has been sent");
                                             $(superParent).find(".chatMessage").append("<div  class='inline_txt pos-rel fr pr10' id='interestSent'>Your interest has been sent</div>");
                                         }
-                                        console.log("Remove sentDiv");
+                                        //console.log("Remove sentDiv");
                                         $(superParent).find(".chatMessage").find("#sentDiv").remove();
                                         //console.log("yesssssssssssssssss");
                                         //$(superParent).find("#initiateText,#chatBoxErr").remove();
@@ -1337,7 +1339,7 @@ JsChat.prototype = {
     },
     //append chat box on page
     _appendChatBox: function (userId, status, jid, pcheckSum, groupId,hisStatus) {
-        var strHtm = '<chat-box group-id="' + groupId + '" pos-state="open" data-paidInitiated="false" data-jid="' + jid + '" status-user="' + status + '" user-id="' + userId + '" data-checks="' + pcheckSum+'"';
+        var strHtm = '<chat-box group-id="' + groupId + '" pos-state="open" data-nodeMigrated="false" data-paidInitiated="false" data-jid="' + jid + '" status-user="' + status + '" user-id="' + userId + '" data-checks="' + pcheckSum+'"';
         if(hisStatus == "noHis"){
             strHtm += 'his-status="not"';
         }
@@ -1432,7 +1434,7 @@ JsChat.prototype = {
         var chatBoxType = curElem._getChatBoxType(userId, $('chat-box[user-id="' + userId + '"]').attr("group-id"));
         curElem._changeLocalStorage("add",userId,$('chat-box[user-id="' + userId + '"]').attr("group-id"),"open");
         //setTimeout(function() {
-        console.log("From postChatPanelsBox");
+        //console.log("From postChatPanelsBox");
         curElem._setChatBoxInnerDiv(userId, chatBoxType);
         curElem._enableChatTextArea($('chat-box[user-id="' + userId + '"]').attr("data-contact"), userId, membership);
         if ($('chat-box[user-id="' + userId + '"] .spinner').length != 0) $('chat-box[user-id="' + userId + '"] .spinner').hide();
@@ -1473,6 +1475,9 @@ JsChat.prototype = {
     _updateChatPanelsBox: function (userId, newGroupId) {
         var curElem = this,membership=getMembershipStatus();
         if ($('chat-box[user-id="' + userId + '"]').length != 0) {
+            $('chat-box[user-id="' + userId + '"]').attr("data-nodeMigrated","true");
+            //console.log("setting falg 2",$('chat-box[user-id="' + userId + '"]').attr("data-nodeMigrated"));
+            
             //this._chatLoggerPlugin("in _updateChatPanelsBox for " + userId);
             //console.log("in _updateChatPanelsBox");
             $('chat-box[user-id="' + userId + '"] #rosterDeleteMsg_'+ userId + '').remove();
@@ -1480,7 +1485,7 @@ JsChat.prototype = {
                 $("#chatHistory_"+userId).show();
             }*/
             var chatBoxType = curElem._getChatBoxType(userId, newGroupId, "updateChatBoxType");
-            console.log("From updatechatepanelsbox");
+            //console.log("From updatechatepanelsbox");
             curElem._setChatBoxInnerDiv(userId, chatBoxType,"chatBoxUpdate");
             curElem._enableChatTextArea(chatBoxType, userId, membership);
         }
@@ -1502,7 +1507,7 @@ JsChat.prototype = {
         if (checkSum) {
             nick = nick + "|" + checkSum;
         }
-        console.log("chatBoxType"+chatBoxType);
+        //console.log("chatBoxType"+chatBoxType);
         if (curElem._contactStatusMapping[chatBoxType]["showHistory"] == true) {
             //console.log("setting moreHistory_");
             $("#moreHistory_"+userId).val("1");
@@ -1543,7 +1548,7 @@ JsChat.prototype = {
                         "receiverJID": $('chat-box[user-id="' + userId + '"]').attr("data-jid"),
                         "nick": nick
                     });
-                    console.log("SendInt",response);
+                    //console.log("SendInt",response);
                     if (response != false) {
                         if (response.responseMessage != "Successful") {
                             //curElem._chatLoggerPlugin($(this));
@@ -1702,6 +1707,7 @@ JsChat.prototype = {
         //check for membership status of logged in user
         if (membership == "Paid") {
             if (curElem._contactStatusMapping[chatBoxType]["enableChat"] == true) {
+                //console.log("333");
                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
             }
             else {
@@ -1734,6 +1740,7 @@ JsChat.prototype = {
                    
                 }
                 if(typeof hasPaidIntiated != "undefined" && hasPaidIntiated == "true"){
+                    //console.log("444");
                     $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
                 }
                 //console.log("hidden");
@@ -1745,6 +1752,7 @@ JsChat.prototype = {
                 if($('chat-box[user-id="' + userId + '"] #acceptDeclineDiv').length == 0){
                     $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="chat_freeMemMsg_'+userId+'" class="pos-abs fullwid txtc colorGrey mt120">Only paid members can start chat<div  class="becomePaidMember_chat color5 cursp"><a href="/profile/mem_comparison.php" class = "cursp js-colorParent">Become a Paid Member</a></div></div>');
                 }
+                //console.log("232");
                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
             }
             //console.log("show 2");
@@ -2040,6 +2048,7 @@ JsChat.prototype = {
             //console.log("removing");
             $('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).remove();
         }
+        //console.log("222");
         $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
     },
 
@@ -2090,6 +2099,7 @@ JsChat.prototype = {
             //check for 3 messages and remove binding
             if ($('chat-box[user-id="' + userId + '"] .chatMessage').hasClass("restrictMessg2")) {
                 $('chat-box[user-id="' + userId + '"] .chatMessage').find("#restrictMessgTxt").remove();
+                //console.log("11");
                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
             }
             //mark all unread msgs as read
@@ -2164,14 +2174,14 @@ JsChat.prototype = {
     
     //disable chat box on roster item deletion
     _disableChatPanelsBox:function(userId){
-        console.log("in disablechatPanelsBox");
+        //console.log("in disablechatPanelsBox");
         var curElem = this;
         if($('chat-box[user-id="' + userId + '"]').length != 0){
-            if($('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage .acceptRec').length == 0){
-                //console.log("disabling","ankita1");
+            if($('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"]').attr("data-nodeMigrated") == "false"){
+                //console.log("disabling1",$('chat-box[user-id="' + userId + '"]').attr("data-nodeMigrated"));
                 setTimeout(function(){
-                    if($('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"] .chatMessage .acceptRec').length == 0){
-                       //console.log("disabling","ankita2");
+                    if($('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"]').attr("data-nodeMigrated") == "false"){
+                       //console.log("disabling2",$('chat-box[user-id="' + userId + '"]').attr("data-nodeMigrated"));
                         var found = false;
                         $.each(curElem._rosterGroups,function(key,groupId){
                             if($(".chatlist li[id='" + userId + "_" + groupId + "']").length != 0){
@@ -2194,6 +2204,8 @@ JsChat.prototype = {
                     }  
                 },1000);
             }
+            //console.log("setting migrated",$('chat-box[user-id="' + userId + '"]').attr("data-nodeMigrated"));
+            $('chat-box[user-id="' + userId + '"]').attr("data-nodeMigrated","false");
         }
     },
 
@@ -2209,11 +2221,11 @@ JsChat.prototype = {
         //console.log("noOfInputs",noOfInputs);
        $(".extraChatList .pinkBubble").each(function (index, element) {
            var userId = $(this).parent().attr("id").split("_")[1];
-           console.log("userManvi",userId);
-           console.log("htmlManvi",$('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html());
+           //console.log("userManvi",userId);
+           //console.log("htmlManvi",$('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html());
            if ($(this).find(".noOfMessg").html() != 0 && $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html() == 0) {
                 noOfInputs++;
-                console.log("yessss");
+                //console.log("yessss");
            }
         });
         if ($('.showcountmin').hasClass('vishid')) {
@@ -2720,7 +2732,7 @@ JsChat.prototype = {
     
     _updateChatStructure:function(type) {
 		//console.log("inside update function",type);
-        console.log("In updateCHatstructure");
+       // console.log("In updateCHatstructure");
 		var data = [];
 		var currentUserId = [];
 		var localId = [],pageId = [];
@@ -2769,7 +2781,7 @@ JsChat.prototype = {
                     if (chatBrowser.indexOf("Firefox") > -1) {
                         setTimeout(function(){
                             $('chat-box[user-id="' + elem["userId"] + '"] .nchatic_2').click();
-                            console.log("timeout");
+                            //console.log("timeout");
                         },50);
                     }
                     else{
@@ -2790,7 +2802,7 @@ JsChat.prototype = {
 						$("#extra_"+elem1+" .nchatic_4").click();
 					}
 					else {
-                        console.log("closing on chat-box change manvi_check");
+                        //console.log("closing on chat-box change manvi_check");
 						$('chat-box[user-id="' + elem1 + '"] .nchatic_1').click();
 					}
 				}	
