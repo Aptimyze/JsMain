@@ -766,6 +766,8 @@ var CryptoJSAesJson = {
 function getProfileImage() {
     var imageUrl = localStorage.getItem('userImg'),
         flag = true;
+    var d = new Date();
+    var n = d.getTime();
     if (imageUrl) {
         var data = JSON.parse(imageUrl);
         var user = data['user'];
@@ -776,7 +778,7 @@ function getProfileImage() {
     }
     if (flag) {
         $.ajax({
-            url: chatConfig.Params.photoUrl + "?photoType=ProfilePic120Url",
+            url: chatConfig.Params.photoUrl + "?photoType=ProfilePic120Url&t="+n,
             async: false,
             success: function (data) {
                 if (data.statusCode == "0") {
