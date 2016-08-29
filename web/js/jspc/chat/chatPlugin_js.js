@@ -1621,8 +1621,16 @@ JsChat.prototype = {
                                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
                                 $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
                                 $('chat-box[user-id="' + userId + '"]').attr("group-id", chatConfig.Params.categoryNames["Acceptance"]);
+                                //console.log("334");
                                 curElem._enableChatTextArea(new_contact_state, userId, getMembershipStatus());
+                                
+                                
                             }
+                            //console.log("123");
+                            setTimeout(function(){
+                                //console.log("bhgxgs");
+                                curElem._scrollToBottom(userId,"noAnimate");
+                            },1000);
                         } else {
                             $(this).html(response.actiondetails.errmsglabel);
                             $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
