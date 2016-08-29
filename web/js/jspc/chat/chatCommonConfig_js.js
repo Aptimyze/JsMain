@@ -120,7 +120,7 @@ chatConfig.Params = {
                         "group_name":"Search Results",
                         "show_group_name":false,
                         "hide_offline_users":false,
-			"nonRosterGroup" : true
+                        "nonRosterGroup" : true
                     }
                 ]
             },
@@ -293,11 +293,11 @@ chatConfig.Params = {
             "acceptance":400
         },
         storeMsgInLocalStorage:false,
-        maxMsgLimit:1000,
-        moreMsgChunk: 20,
-        loginRetryTimeOut: 500,
+        maxMsgLimit:1000, //upper limit on no of characters in msg that user can type
+        moreMsgChunk: 20, //pagination count for msg history
+        loginRetryTimeOut: 500,    
         appendRetryLimit: 1000,
-        checkForDefaultEoiMsg:false,
+        checkForDefaultEoiMsg:false,    //check for default eoi msg in chat history while append
         setLastReadMsgStorage:true,
         rosterDeleteChatBoxMsg:"This profile has been removed from list,so you cannot chat with this profile."
     }
