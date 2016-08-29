@@ -154,7 +154,7 @@ JsChat.prototype = {
         //this._chatLoggerPlugin($(this._maxChatBarOut));
         $("chat-box").each(function (index, element) {
             if ($(this).attr("pos-state") == "open") {
-                curEle._scrollUp($(this), "297px","noAnimate");
+                curEle._scrollUp($(this), "297px","noAnimate",true);
             }
         });
         $(this._maxChatBarOut).remove();
@@ -777,7 +777,7 @@ JsChat.prototype = {
         
     },
     //scrolling up chat box
-    _scrollUp: function (elem, btmValue,type) {
+    _scrollUp: function (elem, btmValue,type,notRead) {
         var curEle = this;
         elem.animate({
             bottom: btmValue
@@ -803,7 +803,10 @@ JsChat.prototype = {
             
             $(elem).attr("pos-state", "open");
         });
-        curEle._handleUnreadMessages(elem);
+        if(typeof notRead == "undefined" || notRead == false){
+            
+            curEle._handleUnreadMessages(elem);
+        }
     },
     //handle unread messages or mark specified message as read
     _handleUnreadMessages: function (elem,msgParams) {
