@@ -88,7 +88,7 @@ class LoggingManager
 	/**
 	 * __destruct
 	 */
-	private function __destruct() {
+	public function __destruct() {
 		self::$instance = null;
 	}
 

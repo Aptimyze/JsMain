@@ -560,12 +560,11 @@ class InboxMobileAppV1
 		else
 			$finalResponse["title"] = $displayObj[$infoKey]["TITLE"];
 		$finalResponse["infotype"] = $infoKey;
-		if($infoKey!="MY_MESSAGE")
-		{
-			$finalResponse["currentPage"] = $displayObj[$infoKey]["CURRENT_NAV"];
-			$finalResponse["newCount"] = $displayObj[$infoKey]["NEW_COUNT"]?$displayObj[$infoKey]["NEW_COUNT"]:'0';
-			$finalResponse["nextPossible"] = $displayObj[$infoKey]["SHOW_NEXT"]?"true":"false";
-		}
+		
+		$finalResponse["currentPage"] = $displayObj[$infoKey]["CURRENT_NAV"];
+		$finalResponse["newCount"] = $displayObj[$infoKey]["NEW_COUNT"]?$displayObj[$infoKey]["NEW_COUNT"]:'0';
+		$finalResponse["nextPossible"] = $displayObj[$infoKey]["SHOW_NEXT"]?"true":"false";
+		
 		$finalResponse["contact_id"] = $displayObj[$infoKey]["contact_id"];
 		$temp= $displayObj[$infoKey]['VIEW_ALL_COUNT']?$displayObj[$infoKey]['VIEW_ALL_COUNT']:"0";	
 		$finalResponse["total"]="$temp";

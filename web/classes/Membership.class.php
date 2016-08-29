@@ -690,6 +690,8 @@ class Membership
         if(empty($this->device) || $this->device == ''){
             $this->device = 'desktop';
         }
+        $billingDropSrcObj = new billing_DROPOFF_SOURCE_TRACKING();
+        $billingDropSrcObj->deleteSourceTracking($this->profileid, $this->device);
     }
 
     function generateInvoiceNo(){
@@ -1711,7 +1713,7 @@ class Membership
 
     function getSpecialDiscount($profile) {
         $today = date('Y-m-d');
-        $billingVarDiscObj = new billing_VARIABLE_DISCOUNT('newjs_slave');
+        $billingVarDiscObj = new billing_VARIABLE_DISCOUNT('newjs_masterRep');
         $row = $billingVarDiscObj->getDiscountDetails($profile);
         if ($row['DISCOUNT']) {
             $data['DISCOUNT'] = $row['DISCOUNT'];

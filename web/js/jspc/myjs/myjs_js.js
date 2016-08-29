@@ -226,6 +226,7 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking)
             	else{
 	            	if(type=="interest")
 	            	{
+				callAfterContact();
 	            		$("#"+div).find("div.sendintr").html("Interest Sent");
 	            		$("#"+div).find("div.sendintr").removeClass("myjs-block sendintr").addClass("myjs-block-after");
 	            	}

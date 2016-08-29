@@ -513,7 +513,7 @@ function invokePluginManagelisting(listObject, key, user_id) {
         if (key == "add_node") {
             var newGroupId = listObject[user_id][strophieWrapper.rosterDetailsKey]["groups"][0];
             //update chat box content if opened
-            console.log("adding ankita4",newGroupId);
+            //console.log("adding ankita4",newGroupId);
             objJsChat._updateChatPanelsBox(user_id, newGroupId);
             
         }
@@ -537,6 +537,7 @@ function invokePluginManagelisting(listObject, key, user_id) {
         if (typeof user_id != "undefined") {
             
             objJsChat._removeFromListing('delete_node', listObject);
+            objJsChat.setListMigratedFlag(user_id);
             objJsChat._disableChatPanelsBox(user_id);
             $('#' + user_id + '_hover').remove();
         }
@@ -603,7 +604,7 @@ function checkAuthentication(timer,loginType) {
     var auth;
     var d = new Date();
     var n = d.getTime();
-    console.log("timestamp",n);
+    //console.log("timestamp",n);
     $.ajax({
         url: "/api/v1/chat/chatUserAuthentication?p="+n,
         async: false,
@@ -765,6 +766,8 @@ var CryptoJSAesJson = {
 function getProfileImage() {
     var imageUrl = localStorage.getItem('userImg'),
         flag = true;
+    var d = new Date();
+    var n = d.getTime();
     if (imageUrl) {
         var data = JSON.parse(imageUrl);
         var user = data['user'];
@@ -775,7 +778,7 @@ function getProfileImage() {
     }
     if (flag) {
         $.ajax({
-            url: chatConfig.Params.photoUrl + "?photoType=ProfilePic120Url",
+            url: chatConfig.Params.photoUrl + "?photoType=ProfilePic120Url&t="+n,
             async: false,
             success: function (data) {
                 if (data.statusCode == "0") {
@@ -847,7 +850,7 @@ function handlePreAcceptChat(apiParams,receivedJId) {
             success: function (response) {
                 
                 if (response["responseStatusCode"] == "0") {
-                    console.log(response);
+                   // console.log(response);
                     if (response["actiondetails"]) {
                         if (response["actiondetails"]["errmsglabel"]) {
                             outputData["cansend"] = outputData["cansend"] || false;
@@ -1043,7 +1046,7 @@ function globalSleep(milliseconds) {
     }
 }
 $(document).ready(function () {
-    console.log("Doc ready");
+    //console.log("Doc ready");
     if(typeof loggedInJspcUser!= "undefined")
         checkNewLogin(loggedInJspcUser);
     var checkDiv = $("#chatOpenPanel").length;
@@ -1054,6 +1057,13 @@ $(document).ready(function () {
             ////console.log("Logout clicked");
             localStorage.removeItem("self_subcription");
            $(objJsChat._logoutChat).click(); 
+        });
+        
+        $("#HideID").on('click',function(){
+            /*
+             * Check added as on hide profile user is deleted from openfire and if cookie is set then cant reconnect
+             */
+            eraseCookie("chatAuth");
         });
         
         $(window).focus(function() {

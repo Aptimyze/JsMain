@@ -154,7 +154,7 @@ JsChat.prototype = {
         //this._chatLoggerPlugin($(this._maxChatBarOut));
         $("chat-box").each(function (index, element) {
             if ($(this).attr("pos-state") == "open") {
-                curEle._scrollUp($(this), "297px","noAnimate");
+                curEle._scrollUp($(this), "297px","noAnimate",true);
             }
         });
         $(this._maxChatBarOut).remove();
@@ -450,7 +450,7 @@ JsChat.prototype = {
                     $.each(data[key]["rosterDetails"]["groups"], function (index, val) {
                         //check for no roster listing
                         var alreadyExistingNode = curElem.checkForNodePresence(runID).exists;
-                        console.log("HiddenNode",alreadyExistingNode);
+                        //console.log("HiddenNode",alreadyExistingNode);
                         if (alreadyExistingNode == false) {
                             var List = '',
                                 fullname = data[key]["rosterDetails"]["fullname"],
@@ -777,7 +777,7 @@ JsChat.prototype = {
         
     },
     //scrolling up chat box
-    _scrollUp: function (elem, btmValue,type) {
+    _scrollUp: function (elem, btmValue,type,notRead) {
         var curEle = this;
         elem.animate({
             bottom: btmValue
@@ -791,7 +791,9 @@ JsChat.prototype = {
             elem.find(".downBarPic").removeClass("downBarPicMin");
             elem.find(".downBarUserName").removeClass("downBarUserNameMin");
             //console.log("type in _scrollUp",type);
+            //console.log("manvi1",$(elem).attr("user-id"));
             if($(elem).attr("user-id") != undefined){
+                //console.log("manvi2",type);
                 if(type == undefined){
                     //console.log("scrolling down");
                     curEle._scrollToBottom($(elem).attr("user-id"));
@@ -803,7 +805,10 @@ JsChat.prototype = {
             
             $(elem).attr("pos-state", "open");
         });
-        curEle._handleUnreadMessages(elem);
+        if(typeof notRead == "undefined" || notRead == false){
+            
+            curEle._handleUnreadMessages(elem);
+        }
     },
     //handle unread messages or mark specified message as read
     _handleUnreadMessages: function (elem,msgParams) {
@@ -1003,6 +1008,7 @@ JsChat.prototype = {
                         }, 5000);
                         $('chat-box[user-id="' + userId + '"] #undoBlock').off("click").on("click", function () {
                             //var profileChecksum = $(".chatlist li[id*='" + userId + "']").attr("data-checks");
+                            //console.log("undo done");
                             if (curElem.onChatBoxContactButtonsClick && typeof curElem.onChatBoxContactButtonsClick == 'function') {
                                 var response = curElem.onChatBoxContactButtonsClick({
                                     "buttonType": "UNBLOCK",
@@ -1925,14 +1931,12 @@ JsChat.prototype = {
                 scrollTop: len
             }, 1000);   
         } else if(type == "noAnimate") {
-            //console.log("aaaaaaaaa",$('chat-box[user-id="' + userId + '"]').length)
             setTimeout(function () {
-                //console.log("bbbbbbb",$('chat-box[user-id="' + userId + '"]').length)
                 var len = document.getElementById("chatMessage_"+userId).scrollHeight;
-                    $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
-                        scrollTop: len
-                    }, 0);
-            }, 500);
+                $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
+                    scrollTop: len
+                }, 0);
+            }, 100);    
         }
     },
     //append chat history in chat box
@@ -1970,7 +1974,9 @@ JsChat.prototype = {
 
                     }
                     var last_read_msg = fetchLastReadMsgFromStorage(other_id);
+                    //console.log("last_read",last_read_msg);
                     if(last_read_msg == logObj["CHATID"] && now_mark_read == false){
+                        //console.log("set done");
                         now_mark_read = true;
                         read_class = "nchatic_9";
                     }
@@ -2206,6 +2212,12 @@ JsChat.prototype = {
             }
             //console.log("setting migrated",$('chat-box[user-id="' + userId + '"]').attr("data-nodeMigrated"));
             $('chat-box[user-id="' + userId + '"]').attr("data-nodeMigrated","false");
+        }
+    },
+
+    setListMigratedFlag :function(user_id){
+        if($('chat-box[user-id="' + user_id + '"]').length != 0){
+            $('chat-box[user-id="' + user_id + '"]').attr("data-nodeMigrated","false");
         }
     },
 

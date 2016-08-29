@@ -464,5 +464,33 @@ class JsMemcache extends sfMemcacheCache{
 			}
 		}
   }
+  
+  /**
+   * getMultiHashByPipleline
+   * @param type $arrKey
+   * @return type
+   */
+  public function getMultiHashByPipleline($arrKey)
+  {
+    if(self::isRedis())
+		{
+			if($this->client)
+			{
+				try{
+          $pipe = $this->client->pipeline();
+          
+          foreach($arrKey as $key) {
+            $pipe->hgetall($key);
+          }
+          $arrResponse = $pipe->execute();
+          return $arrResponse;
+				}
+				catch (Exception $e)
+				{
+					jsException::log("HG-redisClusters getMultiHashByPipleline".$e->getMessage());
+				}
+			}
+		}
+  }
 }
 ?>

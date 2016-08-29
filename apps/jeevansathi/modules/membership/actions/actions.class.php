@@ -1100,11 +1100,13 @@ class membershipActions extends sfActions
         {
             if ($this->profileid) 
             {
-                $bodyFields = $profileObj->getDetail($this->profileid, 'PROFILEID', "USERNAME,EMAIL,PHONE_MOB,PHONE_WITH_STD");
+                $bodyFields = $profileObj->getDetail($this->profileid, 'PROFILEID', "USERNAME,EMAIL,PHONE_MOB,PHONE_WITH_STD,AGE,GENDER");
                 $Username = $bodyFields['USERNAME'];
                 $email = $bodyFields['EMAIL'];
                 $mobile1 = $bodyFields['PHONE_MOB'];
                 $phone_with_std = $bodyFields['PHONE_WITH_STD'];
+		$age =$bodyFields['AGE'];
+		$gender =$bodyFields['GENDER'];		
                 
                 if ($mobile1 == '') $contact_str = "$phone_with_std";
                 else $contact_str = "$mobile1";
@@ -1212,7 +1214,9 @@ class membershipActions extends sfActions
                 } 
                 else {
                 	//if (!$this->profileid) {
-                    	$memHandlerObj->sendEmailForCallback($subject, $msgBody);
+			if($this->profileid && $gender=='M' && $age<=23){}
+			else
+	                    	$memHandlerObj->sendEmailForCallback($subject, $msgBody);
                     //}
                 }
                 if (MobileCommon::isMobile() || isset($this->device)) {

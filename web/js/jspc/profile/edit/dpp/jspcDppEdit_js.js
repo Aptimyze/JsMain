@@ -370,7 +370,7 @@ function fillTextAreaValues(sectionId){
 
 //to save fields in a particular section with api call
 function saveSectionsFields(sectionId){
- 
+  callAfterDppChange();
   var editFieldArr = {};
   $('.'+sectionId+" .prehide").each(function(){  
   });
@@ -515,7 +515,7 @@ function onCountry(values){
 function onMarital(values){
   
   
-  if(values instanceof Array !== false && 
+  if((values instanceof Array !== false || (values != '' && values != null)) && 
      (values.length > 1 || values.indexOf("N") === -1)
     ){
     showHideField(hasChildrenField,true);

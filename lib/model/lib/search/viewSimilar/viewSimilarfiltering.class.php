@@ -14,6 +14,7 @@ class viewSimilarfiltering extends SearchParamters
 	CONST femaleProfile  = 'F';
 	CONST maleProfile = 'M';
 	CONST removeFilteredForAllPrivacy='X';
+        CONST AgeConstantToBeSub=5;
         
         private $PARTNER_CASTE;
         private $PARTNER_RELIGION;
@@ -57,6 +58,7 @@ class viewSimilarfiltering extends SearchParamters
 				$this->setGENDER(self::maleProfile);
 			else
 				$this->setGENDER(self::femaleProfile);
+                        $this->setFilterForAge();
 			$this->setShowFilteredProfiles(self::removeFilteredForAllPrivacy);
                     }
                     else{
@@ -194,5 +196,21 @@ class viewSimilarfiltering extends SearchParamters
         public function setPARTNER_HANDICAPPED($x) { $this->PARTNER_HANDICAPPED = $x; }
         public function getPARTNER_MANGLIK() { return $this->PARTNER_MANGLIK; }
         public function setPARTNER_MANGLIK($x) { $this->PARTNER_MANGLIK = $x; }
+        
+        //this function is to set age filter on profiles
+        private function setFilterForAge(){
+            $selfAge = $this->loggedInProfileObj->getAGE();
+            $othersAge = $this->ProfileObj->getAGE();
+            if($this->loggedInProfileObj->getGENDER()==self::maleProfile){
+                $LAgeToSet = min($selfAge-self::AgeConstantToBeSub,$othersAge);
+                $HAgeToSet = max($selfAge,$othersAge);
+            }
+            else{
+                $LAgeToSet = min($selfAge,$othersAge);
+                $HAgeToSet = max($selfAge+self::AgeConstantToBeSub,$othersAge);
+            }
+            $this->setLAGE($LAgeToSet);
+            $this->setHAGE($HAgeToSet);
+        }
 }
 ?>
