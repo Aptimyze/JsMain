@@ -2208,14 +2208,13 @@ JsChat.prototype = {
         });
         //console.log("noOfInputs",noOfInputs);
        $(".extraChatList .pinkBubble").each(function (index, element) {
-           console.log("elemManvi",$(this).parent().attr("id"));
            var userId = $(this).parent().attr("id").split("_")[1];
            console.log("userManvi",userId);
            console.log("htmlManvi",$('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html());
-         
-           //if ($(this).find(".noOfMessg").html() != 0) {
-                //noOfInputs++;
-            //}
+           if ($(this).find(".noOfMessg").html() != 0 && $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html() == 0) {
+                noOfInputs++;
+                console.log("yessss");
+           }
         });
         if ($('.showcountmin').hasClass('vishid')) {
             //this._chatLoggerPlugin('no exist');
