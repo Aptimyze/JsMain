@@ -465,9 +465,9 @@ var strophieWrapper = {
         //strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
         invokePluginManagelisting(strophieWrapper.Roster, "create_list");
         strophieWrapper.setRosterStorage(strophieWrapper.Roster);
-        /*setTimeout(function () {
+        setTimeout(function () {
           strophieWrapper.sendPresence();
-        }, 1000);*/
+        }, 1000);
         strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
     	//strophieWrapper.sendPresence();
    	},
