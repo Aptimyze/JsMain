@@ -36,6 +36,8 @@ class MyJsMobileAppV1
 
         public function getJsonAppV1($displayObj,$profileInfo='')
 	{
+
+		LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "class MyJsMobileAppV1 getJsonAppV1 hit");
 $className = get_class($this);
 			$className::init();
 			

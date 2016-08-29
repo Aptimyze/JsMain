@@ -1,4 +1,5 @@
 var clickEventType="click", cssBrowserAnimProperty=null;
+
 function topSliderInt(param){
 	if(param=="init")
 	{	
@@ -600,9 +601,9 @@ function generateFaceCard(Object)
 				$("#dailyMatchesCountTotal").html(totalCount);
 				$("#dailyMatchesCountBar").removeClass("disp-none");
 				$("#dailyMatchesCountBar > .disp-tbl").addClass("bounceIn animated");
-				//setBellCountHTML(newEngagementArray);
+				setBellCountHTML(newEngagementArray);
 				bellCountStatus++;
-				//createTotalBellCounts(newEngagementArray["DAILY_MATCHES_NEW"]);				
+				createTotalBellCounts(newEngagementArray["DAILY_MATCHES_NEW"]);				
 			}
 			else if(Object.name=="JUSTJOINED")
 			{
@@ -610,9 +611,9 @@ function generateFaceCard(Object)
 				$("#justJoinedCountTotal").html(totalCount);
 				$("#justJoinedCountBar").removeClass("disp-none");
 				$("#justJoinedCountBar > .disp-tbl").addClass("bounceIn animated");
-				//setBellCountHTML(newEngagementArray);
+				setBellCountHTML(newEngagementArray);
 				bellCountStatus++;
-				//createTotalBellCounts(newEngagementArray["NEW_MATCHES"]);
+				createTotalBellCounts(newEngagementArray["NEW_MATCHES"]);
 			}
 		
 			

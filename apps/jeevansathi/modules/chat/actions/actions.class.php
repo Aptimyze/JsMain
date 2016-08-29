@@ -170,7 +170,7 @@ class chatActions extends sfActions
 		$type = $request->getParameter("type");
 		$limit = $request->getParameter("limit");
 		$profileObj = new Profile("",$profileid);
-		$profileObj->getDetail("USERNAME");
+		$profileObj->getDetail($profileid, "PROFILEID", "USERNAME");
 		$getRosterDataObj = new GetRosterData($profileid);
 		$getData["profiles"] = $getRosterDataObj->getRosterDataByType($type, $limit);
 		$getData["count"] = count($getData["profiles"]);
