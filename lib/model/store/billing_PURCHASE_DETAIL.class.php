@@ -90,5 +90,25 @@ class billing_PURCHASE_DETAIL extends TABLE
             throw new jsException($e);
         }
     }
+
+    public function updateActivationDates($billid, $serviceid, $start_date, $end_date)
+    {
+        try
+        {
+            $sql="UPDATE billing.PURCHASE_DETAIL SET START_DATE=:START_DATE, SUBSCRIPTION_START_DATE=:SUBSCRIPTION_START_DATE, END_DATE=:END_DATE, SUBSCRIPTION_END_DATE=:SUBSCRIPTION_END_DATE WHERE BILLID=:BILLID AND SERVICEID=:SERVICEID LIMIT 1;";
+            $prep=$this->db->prepare($sql);
+            $prep->bindValue(":START_DATE",$start_date,PDO::PARAM_STR);
+            $prep->bindValue(":SUBSCRIPTION_START_DATE",$start_date,PDO::PARAM_STR);
+            $prep->bindValue(":END_DATE",$end_date,PDO::PARAM_STR);
+            $prep->bindValue(":SUBSCRIPTION_END_DATE",$end_date,PDO::PARAM_STR);
+            $prep->bindValue(":BILLID",$billid,PDO::PARAM_INT);
+            $prep->bindValue(":SERVICEID",$serviceid,PDO::PARAM_STR);   
+            $prep->execute();
+        }
+        catch(PDOException $e)
+        {
+            throw new jsException($e);
+        }
+    }
 }
 ?>
