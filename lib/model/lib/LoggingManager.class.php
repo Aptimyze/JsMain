@@ -221,7 +221,7 @@ class LoggingManager
 		$uniqueSubId = $this->getLogUniqueSubId($logArray);
 		$statusCode = $this->getLogStatusCode($exception,$logArray);
 		$typeOfError = $this->getLogTypeOfError($exception,$logArray);
-		$headers = getallheaders();
+		//$headers = getallheaders();
 		$logData = array();
 
 		if ( $time != "")
