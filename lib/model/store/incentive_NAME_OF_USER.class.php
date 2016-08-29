@@ -211,7 +211,7 @@ d in the result
 						$resUpdateName->bindValue(":DISPLAY", $display);
                                         $resUpdateName->execute();
 
-                                        if(!$resUpdateName->rowCount())
+                                        if(!$resUpdateName->rowCount() && $name!='')
                                         {
                                                         $sql="REPLACE INTO incentive.NAME_OF_USER(PROFILEID,NAME,DISPLAY) VALUES(:PROFILEID,:NAME,:DISPLAY)";
                                                         $resSelectDetail = $this->db->prepare($sql);

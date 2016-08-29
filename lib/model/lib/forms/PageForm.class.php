@@ -221,7 +221,7 @@ class PageForm extends sfForm
            if(count($nameOfUserArr)){
 			$nameOfUserArr[PROFILEID]=$id;
 			$nameOfUserObj = new incentive_NAME_OF_USER;
-			$nameOfUserObj->insertName($nameOfUserArr[PROFILEID],$nameOfUserArr[NAME]);
+			$nameOfUserObj->insertNameInfo($nameOfUserArr[PROFILEID],$nameOfUserArr[NAME],$nameOfUserArr[DISPLAY]);
 	  }
 	  return $id;
 	}
