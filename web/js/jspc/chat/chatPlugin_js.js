@@ -2208,7 +2208,8 @@ JsChat.prototype = {
         });
         //console.log("noOfInputs",noOfInputs);
        $(".extraChatList .pinkBubble").each(function (index, element) {
-           var userId = $(element).attr("id").split("_")[1];
+           console.log("elemManvi",$(this).parent().attr("id"));
+           var userId = $(this).parent().attr("id").split("_")[1];
            console.log("userManvi",userId);
            console.log("htmlManvi",$('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html());
          
