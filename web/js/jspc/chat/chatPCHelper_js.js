@@ -1059,6 +1059,13 @@ $(document).ready(function () {
            $(objJsChat._logoutChat).click(); 
         });
         
+        $("#HideID").on('click',function(){
+            /*
+             * Check added as on hide profile user is deleted from openfire and if cookie is set then cant reconnect
+             */
+            eraseCookie("chatAuth");
+        });
+        
         $(window).focus(function() {
             invokePluginLoginHandler("manageLogout");
             if(strophieWrapper.synchronize_selfPresence == true){
