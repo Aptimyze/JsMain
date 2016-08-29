@@ -2212,6 +2212,12 @@ JsChat.prototype = {
         }
     },
 
+    setListMigratedFlag :function(user_id){
+        if($('chat-box[user-id="' + user_id + '"]').length == 0){
+            $('chat-box[user-id="' + user_id + '"]').attr("data-nodeMigrated","false");
+        }
+    },
+
     //get count of minimized chat boxes with unread messages
     _onlineUserMsgMe: function () {
         var noOfInputs = 0;

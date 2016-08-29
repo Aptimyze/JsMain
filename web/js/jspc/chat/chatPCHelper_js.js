@@ -537,6 +537,7 @@ function invokePluginManagelisting(listObject, key, user_id) {
         if (typeof user_id != "undefined") {
             
             objJsChat._removeFromListing('delete_node', listObject);
+            objJsChat.setListMigratedFlag(user_id);
             objJsChat._disableChatPanelsBox(user_id);
             $('#' + user_id + '_hover').remove();
         }
