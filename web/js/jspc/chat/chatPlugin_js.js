@@ -2770,7 +2770,7 @@ JsChat.prototype = {
                     $("#"+elem["userId"]+"_"+elem["group"]).click();
 					if(elem["state"] == "min") {
                         var chatBrowser = navigator.userAgent;
-                        console.log("chatBrowser",chatBrowser);
+                        //console.log("chatBrowser",chatBrowser);
                         if (chatBrowser.indexOf("Firefox") > -1 || chatBrowser.indexOf("Mozilla") > -1) {
                             setTimeout(function(){
                                 $('chat-box[user-id="' + elem["userId"] + '"] .nchatic_2').click();
