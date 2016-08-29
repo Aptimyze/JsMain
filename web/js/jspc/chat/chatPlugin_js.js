@@ -2225,7 +2225,6 @@ JsChat.prototype = {
            //console.log("htmlManvi",$('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html());
            if ($(this).find(".noOfMessg").html() != 0 && $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html() == 0) {
                 noOfInputs++;
-                //console.log("yessss");
            }
         });
         if ($('.showcountmin').hasClass('vishid')) {
@@ -2679,7 +2678,7 @@ JsChat.prototype = {
         //console.log("inside function",type,userId,groupId,newState);
         var thisElem = this;
         var data = [];
-        //var reAdd = true;
+        var reAdd = true;
         if(localStorage.getItem("chatBoxData")) {
             data = JSON.parse(localStorage.getItem("chatBoxData"));
         }
@@ -2722,12 +2721,12 @@ JsChat.prototype = {
             });
             if(type == "changeOrAddGroup" && found == false){
                 thisElem._changeLocalStorage("add",userId,groupId,newState);
-                //reAdd = false;
+                reAdd = false;
             }
         }
-        //if(reAdd == true){
+        if(reAdd == true){
             localStorage.setItem("chatBoxData", JSON.stringify(data));
-        //}
+        }
     },
     
     _updateChatStructure:function(type) {
