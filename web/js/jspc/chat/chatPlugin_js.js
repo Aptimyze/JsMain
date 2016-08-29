@@ -2770,7 +2770,8 @@ JsChat.prototype = {
                     $("#"+elem["userId"]+"_"+elem["group"]).click();
 					if(elem["state"] == "min") {
                         var chatBrowser = navigator.userAgent;
-                        if (chatBrowser.indexOf("Firefox") > -1) {
+                        console.log("chatBrowser",chatBrowser);
+                        if (chatBrowser.indexOf("Firefox") > -1 || chatBrowser.indexOf("Mozilla") > -1) {
                             setTimeout(function(){
                                 $('chat-box[user-id="' + elem["userId"] + '"] .nchatic_2').click();
                             },50);
@@ -2797,7 +2798,7 @@ JsChat.prototype = {
 				}
 				if(!$('chat-box[user-id="' + elem["userId"] + '"] img').hasClass("downBarPicMin") && elem["state"] == "min") {
                     var chatBrowser = navigator.userAgent;
-                    if (chatBrowser.indexOf("Firefox") > -1) {
+                    if (chatBrowser.indexOf("Firefox") > -1 || chatBrowser.indexOf("Mozilla") > -1) {
                         setTimeout(function(){
                             $('chat-box[user-id="' + elem["userId"] + '"] .nchatic_2').click();
                             //console.log("timeout");
