@@ -72,7 +72,25 @@ class CommunicationHistory
 				$message_log[$value['DATE']]["type"]  = $type . $side;
 				$message_log[$value['DATE']]["who"]     = $who;
 				if($value['MESSAGE']){
-					$value['MESSAGE']=str_replace("||","</br>",$value['MESSAGE']);
+					if(strpos($value['MESSAGE'],"||")!==false)
+					{
+						$messageArr=explode("||",$value['MESSAGE']);
+						$eoiMsgCount = count($messageArr);
+						$i=0;
+						for($j=0;$j<$eoiMsgCount;$j++)
+						{
+							$splitmessage = explode("--",$messageArr[$j]);
+							if($i==0)
+								$eoiMessages=$splitmessage[0];
+							else
+								$eoiMessages.="</br>".$splitmessage[0];
+							$i++;							
+						}
+						if($eoiMessages)
+							$value['MESSAGE']=$eoiMessages;
+						else
+							$value['MESSAGE']="";
+					}
 					$message_log[$value['DATE']]["message"] = $value['MESSAGE'];
 				}
 				else
