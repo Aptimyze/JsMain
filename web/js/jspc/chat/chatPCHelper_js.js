@@ -513,7 +513,7 @@ function invokePluginManagelisting(listObject, key, user_id) {
         if (key == "add_node") {
             var newGroupId = listObject[user_id][strophieWrapper.rosterDetailsKey]["groups"][0];
             //update chat box content if opened
-            console.log("adding ankita4",newGroupId);
+            //console.log("adding ankita4",newGroupId);
             objJsChat._updateChatPanelsBox(user_id, newGroupId);
             
         }
@@ -604,7 +604,7 @@ function checkAuthentication(timer,loginType) {
     var auth;
     var d = new Date();
     var n = d.getTime();
-    console.log("timestamp",n);
+    //console.log("timestamp",n);
     $.ajax({
         url: "/api/v1/chat/chatUserAuthentication?p="+n,
         async: false,
@@ -848,7 +848,7 @@ function handlePreAcceptChat(apiParams,receivedJId) {
             success: function (response) {
                 
                 if (response["responseStatusCode"] == "0") {
-                    console.log(response);
+                   // console.log(response);
                     if (response["actiondetails"]) {
                         if (response["actiondetails"]["errmsglabel"]) {
                             outputData["cansend"] = outputData["cansend"] || false;
@@ -1044,7 +1044,7 @@ function globalSleep(milliseconds) {
     }
 }
 $(document).ready(function () {
-    console.log("Doc ready");
+    //console.log("Doc ready");
     if(typeof loggedInJspcUser!= "undefined")
         checkNewLogin(loggedInJspcUser);
     var checkDiv = $("#chatOpenPanel").length;

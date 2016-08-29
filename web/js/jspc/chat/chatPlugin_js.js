@@ -450,7 +450,7 @@ JsChat.prototype = {
                     $.each(data[key]["rosterDetails"]["groups"], function (index, val) {
                         //check for no roster listing
                         var alreadyExistingNode = curElem.checkForNodePresence(runID).exists;
-                        console.log("HiddenNode",alreadyExistingNode);
+                        //console.log("HiddenNode",alreadyExistingNode);
                         if (alreadyExistingNode == false) {
                             var List = '',
                                 fullname = data[key]["rosterDetails"]["fullname"],
@@ -791,7 +791,9 @@ JsChat.prototype = {
             elem.find(".downBarPic").removeClass("downBarPicMin");
             elem.find(".downBarUserName").removeClass("downBarUserNameMin");
             //console.log("type in _scrollUp",type);
+            //console.log("manvi1",$(elem).attr("user-id"));
             if($(elem).attr("user-id") != undefined){
+                //console.log("manvi2",type);
                 if(type == undefined){
                     //console.log("scrolling down");
                     curEle._scrollToBottom($(elem).attr("user-id"));
@@ -1006,6 +1008,7 @@ JsChat.prototype = {
                         }, 5000);
                         $('chat-box[user-id="' + userId + '"] #undoBlock').off("click").on("click", function () {
                             //var profileChecksum = $(".chatlist li[id*='" + userId + "']").attr("data-checks");
+                            //console.log("undo done");
                             if (curElem.onChatBoxContactButtonsClick && typeof curElem.onChatBoxContactButtonsClick == 'function') {
                                 var response = curElem.onChatBoxContactButtonsClick({
                                     "buttonType": "UNBLOCK",
@@ -1973,7 +1976,9 @@ JsChat.prototype = {
 
                     }
                     var last_read_msg = fetchLastReadMsgFromStorage(other_id);
+                    //console.log("last_read",last_read_msg);
                     if(last_read_msg == logObj["CHATID"] && now_mark_read == false){
+                        //console.log("set done");
                         now_mark_read = true;
                         read_class = "nchatic_9";
                     }
