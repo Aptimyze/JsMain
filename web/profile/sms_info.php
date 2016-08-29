@@ -3,8 +3,6 @@ include("connect.inc");
 include("sms_service.inc");
 $db = connect_db();
 $data = authenticated($checksum);
-$msg = print_r($_SERVER,true);
-mail("kunal.test02@gmail.com"," web/profile/sms_info.php in USE",$msg);
 /*************************************Portion of Code added for display of Banners*******************************/
 $smarty->assign("data",$data["PROFILEID"]);
 $smarty->assign("bms_topright",18);
@@ -30,9 +28,17 @@ if($data)
 		}
 		else   // Update mobile number in newjs.JPROFILE and check service availability
 		{
-			$sql = "Update newjs.JPROFILE set PHONE_MOB = '$mobile' where profileid = '$profileid'  and  activatedKey=1 ";
-			$result = mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
-			JProfileUpdateLib::getInstance()->removeCache($profileid);
+      $objUpdate = JProfileUpdateLib::getInstance();
+      $result = $objUpdate->editJPROFILE(array('PHONE_MOB'=>$mobile),$profileid,'PROFILEID',"activatedKey=1");
+      if(false === $result) {
+        $msg = print_r($_SERVER,true);
+        mail("kunal.test02@gmail.com","Error in web/profile/sms_info.php while updating",$msg);
+
+        $sql = "Update newjs.JPROFILE set PHONE_MOB = '$mobile' where profileid = '$profileid'  and  activatedKey=1 ";
+        logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+      }
+//			$sql = "Update newjs.JPROFILE set PHONE_MOB = '$mobile' where profileid = '$profileid'  and  activatedKey=1 ";
+//			$result = mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 			if(check_sms_service($mobile))
 				$smarty->assign("SERVICE_AVAILABLE",'1');
 			else

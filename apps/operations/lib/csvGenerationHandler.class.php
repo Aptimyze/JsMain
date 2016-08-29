@@ -1489,37 +1489,37 @@ class csvGenerationHandler
 	public function getDataObj($processName)		
 	{
 		if($processName=="ftaRegular")
-			$csvDataObj=new incentive_FTA_CSV_DATA('newjs_slave');
+			$csvDataObj=new incentive_FTA_CSV_DATA('newjs_masterRep');
 		elseif($processName=="PHONE_DIALER")
-			$csvDataObj = new incentive_PHONE_OPS_DIALER_DATA('newjs_slave');
+			$csvDataObj = new incentive_PHONE_OPS_DIALER_DATA('newjs_masterRep');
 		elseif($processName=="salesRegularNoida")
-			$csvDataObj=new incentive_SALES_CSV_DATA_NOIDA('newjs_slave');
+			$csvDataObj=new incentive_SALES_CSV_DATA_NOIDA('newjs_masterRep');
 		elseif($processName=="salesRegularDelhi")
-			$csvDataObj=new incentive_SALES_CSV_DATA_DELHI('newjs_slave');
+			$csvDataObj=new incentive_SALES_CSV_DATA_DELHI('newjs_masterRep');
 		elseif($processName=="salesRegularMumbai")
-			$csvDataObj=new incentive_SALES_CSV_DATA_MUMBAI('newjs_slave');
+			$csvDataObj=new incentive_SALES_CSV_DATA_MUMBAI('newjs_masterRep');
 		elseif($processName=="salesRegularPune")
-			$csvDataObj=new incentive_SALES_CSV_DATA_PUNE('newjs_slave');
+			$csvDataObj=new incentive_SALES_CSV_DATA_PUNE('newjs_masterRep');
 		elseif($processName=="salesRegularNri")	
-			$csvDataObj=new incentive_SALES_CSV_DATA_NRI('newjs_slave');
+			$csvDataObj=new incentive_SALES_CSV_DATA_NRI('newjs_masterRep');
 		elseif($processName=="salesRegistration")
-			$csvDataObj=new incentive_SALES_REGISTRATION_CSV_DATA('newjs_slave');
+			$csvDataObj=new incentive_SALES_REGISTRATION_CSV_DATA('newjs_masterRep');
 		elseif($processName=="sugarcrmLtf")
-			$csvDataObj=new incentive_SUGARCRM_LTF_CSV_DATA('newjs_slave');
+			$csvDataObj=new incentive_SUGARCRM_LTF_CSV_DATA('newjs_masterRep');
 		elseif($processName=="MOBILE_APP_REGISTRATIONS")
-			$csvDataObj=new incentive_SALES_CSV_DATA_MOBILE_APP_REGISTRATIONS('newjs_slave');
+			$csvDataObj=new incentive_SALES_CSV_DATA_MOBILE_APP_REGISTRATIONS('newjs_masterRep');
                 elseif($processName=="failedPaymentInDialer")
                         $csvDataObj=new incentive_SALES_CSV_DATA_FAILED_PAYMENT();
                 elseif($processName=="upsellProcessInDialer")
-                        $csvDataObj=new incentive_SALES_CSV_DATA_UPSELL('newjs_slave');
+                        $csvDataObj=new incentive_SALES_CSV_DATA_UPSELL('newjs_masterRep');
 		elseif($processName=="renewalProcessInDialer")
-			$csvDataObj=new incentive_SALES_CSV_DATA_RENEWAL('newjs_slave');
+			$csvDataObj=new incentive_SALES_CSV_DATA_RENEWAL('newjs_masterRep');
                 elseif($processName=="DAILY_GHARPAY")
-                        $csvDataObj=new incentive_GHARPAY_CSV_DATA('newjs_slave');
+                        $csvDataObj=new incentive_GHARPAY_CSV_DATA('newjs_masterRep');
                 elseif($processName=="QA_ONLINE")
-                        $csvDataObj=new incentive_QA_ONLINE_CSV_DATA('newjs_slave');
+                        $csvDataObj=new incentive_QA_ONLINE_CSV_DATA('newjs_masterRep');
                 elseif($processName == "VDImpactReport")
-                        $csvDataObj = new billing_VARIABLE_DISCOUNT_REPORT('newjs_slave');
+                        $csvDataObj = new billing_VARIABLE_DISCOUNT_REPORT('newjs_masterRep');
                 else
 			die("Not a Process !!");
 		return $csvDataObj;

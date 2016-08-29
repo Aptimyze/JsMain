@@ -73,12 +73,20 @@ this.maxCount=maxCountArray[this.name];
 this.innerHtml=containerBarObj.getInnerHtml();
 }
 component.prototype.request = function() {
-         //ele = this
-
+        //ele = this
+	if(this.name=='JUSTJOINED' || this.name=='VERIFIEDMATCHES')
+	{
+        	var myLurl =  getUrlForHeaderCaching(urlArray[this.name]);
+	}
+	else
+	{
+	        var myLurl =  urlArray[this.name];
+	}
          $.myObj.ajax({
-          type: "POST",
+          type: "GET",
           dataType: "json",
-          url: urlArray[this.name],
+	  cache: true,
+          url: myLurl,
           context: this,
           success: function(response,data) {
 				data.data = response;
