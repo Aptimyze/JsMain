@@ -558,7 +558,9 @@
             createCookie('mainMemDur', '~$data.subscription_duration`', 0);
             ~/if`
             ~if $data.paymentOptionsData.tracking_params.vasImpression`
-            createCookie('selectedVas', '~$data.paymentOptionsData.tracking_params.vasImpression`', 0);
+                ~if $data.subscription_id neq 'ESP' and $data.subscription_id neq 'NCP'`
+                    createCookie('selectedVas', '~$data.paymentOptionsData.tracking_params.vasImpression`', 0);
+                ~/if`
             ~/if`
             if(window.top.location.href != window.location.href){
                 window.top.location.href = window.location.href;

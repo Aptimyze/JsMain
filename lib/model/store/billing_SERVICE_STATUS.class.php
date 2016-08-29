@@ -784,4 +784,68 @@ class BILLING_SERVICE_STATUS extends TABLE {
         }
     }
 
+    public function updateActivationDates($billid, $serviceid, $start_date, $end_date)
+    {
+        try
+        {
+            $sql  = "UPDATE billing.SERVICE_STATUS SET ACTIVATE_ON='0000-00-00', ACTIVATED_ON=:ACTIVATED_ON, EXPIRY_DT=:EXPIRY_DT WHERE BILLID=:BILLID AND SERVICEID=:SERVICEID LIMIT 1";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":ACTIVATED_ON", $start_date, PDO::PARAM_STR);
+            $prep->bindValue(":EXPIRY_DT", $end_date, PDO::PARAM_STR);
+            $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
+            $prep->bindValue(":SERVICEID", $serviceid, PDO::PARAM_STR);
+            $prep->execute();
+        } catch (PDOException $e) {
+            throw new jsException($e);
+        }
+    }
+
+    public function updateActiveStatusForBillidAndServiceid($billid, $serviceid, $status)
+    {
+        try
+        {
+            $sql  = "UPDATE billing.SERVICE_STATUS SET ACTIVE=:STATUS WHERE BILLID=:BILLID AND SERVICEID=:SERVICEID";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":STATUS", $status, PDO::PARAM_STR);
+            $prep->bindValue(":SERVICEID", $serviceid, PDO::PARAM_STR);
+            $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
+            $prep->execute();
+        } catch (PDOException $e) {
+            throw new jsException($e);
+        }
+    }
+
+    public function getProfileidForBillid($billid)
+    {
+        try
+        {
+            $sql  = "SELECT PROFILEID FROM billing.SERVICE_STATUS WHERE BILLID=:BILLID LIMIT 1";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
+            $prep->execute();
+            if ($row = $prep->fetch(PDO::FETCH_ASSOC)) {
+                $output = $row['PROFILEID'];
+            }
+            return $output;
+        } catch (PDOException $e) {
+            throw new jsException($e);
+        }
+    }
+
+    public function getActiveServeFor($profileid)
+    {
+        try
+        {
+            $sql  = "SELECT ID, SERVEFOR FROM billing.SERVICE_STATUS WHERE PROFILEID=:PROFILEID AND ACTIVE='Y' AND ACTIVATED='Y'";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
+            $prep->execute();
+            while ($row = $prep->fetch(PDO::FETCH_ASSOC)) {
+                $output[] = $row['SERVEFOR'];
+            }
+            return implode(",",$output);
+        } catch (PDOException $e) {
+            throw new jsException($e);
+        }
+    }
 }

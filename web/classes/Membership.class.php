@@ -690,6 +690,8 @@ class Membership
         if(empty($this->device) || $this->device == ''){
             $this->device = 'desktop';
         }
+        $billingDropSrcObj = new billing_DROPOFF_SOURCE_TRACKING();
+        $billingDropSrcObj->deleteSourceTracking($this->profileid, $this->device);
     }
 
     function generateInvoiceNo(){

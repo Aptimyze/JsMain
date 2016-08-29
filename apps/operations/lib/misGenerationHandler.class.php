@@ -23,15 +23,15 @@ class misGenerationhandler
 		elseif($processName=='CRM_HANDLED_REVENUE')
 		{
 			$method 		=$processObj->getMethod();
-			$paymentDetailsObj      =new BILLING_PAYMENT_DETAIL('newjs_slave');
+			$paymentDetailsObj      =new BILLING_PAYMENT_DETAIL('newjs_masterRep');
 			if($method=='NEW_PROFILES'){
-				$monthlyIncentiveObj 	=new incentive_MONTHLY_INCENTIVE_ELIGIBILITY('newjs_slave');	
+				$monthlyIncentiveObj 	=new incentive_MONTHLY_INCENTIVE_ELIGIBILITY('newjs_masterRep');	
 				$receiptId 		=$monthlyIncentiveObj->getMaxReceiptId();
 				$profiles 		=$paymentDetailsObj->getPaidProfiles($receiptId);
 			}
 			elseif($method=='MANUAL_ALLOT'){
-				$lastHandledDtObj	=new incentive_LAST_HANDLED_DATE('newjs_slave');				
-				$manualAllotObj		=new MANUAL_ALLOT('newjs_slave');
+				$lastHandledDtObj	=new incentive_LAST_HANDLED_DATE('newjs_masterRep');				
+				$manualAllotObj		=new MANUAL_ALLOT('newjs_masterRep');
 				$id                     =$processObj->getIdAllot();
 				$lastManualEntryDt	=$lastHandledDtObj->getHandledDate($id);
 				$profilesArr 		=$manualAllotObj->getManualAllotedProfiles($lastManualEntryDt);
@@ -59,7 +59,7 @@ class misGenerationhandler
 		{
 			$method		  =$processObj->getMethod();
 			$manualEntryDt 	  =$processObj->getStartDate();	
-			$crmDailyAllotObj =new CRM_DAILY_ALLOT('newjs_slave');
+			$crmDailyAllotObj =new CRM_DAILY_ALLOT('newjs_masterRep');
 			foreach($profiles as $key=>$dataArr)
 			{
 				$profileid	=$dataArr['PROFILEID'];
@@ -110,7 +110,7 @@ class misGenerationhandler
                 		$manualEntryDt 		=$processObj->getStartDate();
                 		$lastHandledDtObj       =new incentive_LAST_HANDLED_DATE();
                 		$monthlyIncentiveObj    =new incentive_MONTHLY_INCENTIVE_ELIGIBILITY();
-                		$pswrdsObj		=new jsadmin_PSWRDS('newjs_slave'); 
+                		$pswrdsObj		=new jsadmin_PSWRDS('newjs_masterRep'); 
                 		$profilesCount 		=count($profiles);
                 		for($i=0; $i<$profilesCount; $i++)
                 		{
@@ -311,8 +311,8 @@ class misGenerationhandler
 	}
 	public function handleMonthlyIncentivePool($processObj)
 	{
-		$deAllocationTrackObj	=new incentive_DEALLOCATION_TRACK('newjs_slave');
-		$lastHandledDtObj       =new incentive_LAST_HANDLED_DATE('newjs_slave');
+		$deAllocationTrackObj	=new incentive_DEALLOCATION_TRACK('newjs_masterRep');
+		$lastHandledDtObj       =new incentive_LAST_HANDLED_DATE('newjs_masterRep');
 		$lastHandledDtSetObj    =new incentive_LAST_HANDLED_DATE();
 		$monthlyIncentiveObj    =new incentive_MONTHLY_INCENTIVE_ELIGIBILITY();		
 
@@ -333,7 +333,7 @@ class misGenerationhandler
 			$lastHandledDtSetObj->setHandledDate($id, $deAllocationDt);			
 
 		// filter Payment Refund/Cancel Status profiles
-		$paymentDetailsObj      =new BILLING_PAYMENT_DETAIL('newjs_slave');
+		$paymentDetailsObj      =new BILLING_PAYMENT_DETAIL('newjs_masterRep');
 		$billDetails 		=$paymentDetailsObj->getLast30DaysCancelledBill();
 		if(count($billDetails)>0){
 			foreach($billDetails as $key=>$dataArr)
@@ -665,8 +665,11 @@ class misGenerationhandler
         $date = $saleDetails["DATE"];
         $amount = $saleDetails["AMOUNT"];
         //This if checks if the agent has the basic privilage 'ExcSl'
-        if($priv){
-            if(strpos($priv, 'ExcDIb') !== false){
+        if($priv){            
+            if(strpos($priv, 'ExcWL') !== false || strpos($priv, 'SUPWL') !== false ){
+                $processWiseSale[$date]['RCB_TELE']+= $amount;
+            }
+            else if(strpos($priv, 'ExcDIb') !== false){
                 $processWiseSale[$date]['INBOUND_TELE']+= $amount;
             }
             else if(strpos($priv, 'ExcBSD') !== false || strpos($priv, 'ExcBID') !== false){

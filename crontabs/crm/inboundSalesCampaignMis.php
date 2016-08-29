@@ -33,7 +33,7 @@ mail($to,$sub,$profileStr,$from);
 // Add Campaign Details
 function addCampaignDetails($campaignName, $count, $entryDt,$db_master)
 {
-        $sql= "INSERT INTO incentive.INBOUND_SALES_LOG(`CAMPAIGN_NAME`,`CALL_COUNT`,`ENTRY_DT`) VALUES($campaignName,$count,$entryDt)";
+        $sql= "INSERT INTO incentive.INBOUND_SALES_LOG(`CAMPAIGN_NAME`,`CALL_COUNT`,`ENTRY_DT`) VALUES('$campaignName','$count','$entryDt')";
         $res=mysql_query($sql,$db_master) or die($sql.mysql_error($db_master));
 }
 ?>

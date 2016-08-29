@@ -46,23 +46,23 @@
 						<option value="~$k`">~$v`</option>
 						~/foreach`
 					</select>
-					<br>
-					Select Year : &nbsp;
+					<br><br>
+					Select Year : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<select name="selectedYear" >
 						~foreach from=$yearDropDown key=k item=v`
 						<option value="~$k`">~$v`</option>
 						~/foreach`
 					</select>
-					<br>
-					Select Month : &nbsp;
+					<br><br>
+					Select Month : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<select name="selectedMonth" >
 						~foreach from=$monthDropDown key=k item=v`
 						<option value="~$k`">~$v`</option>
 						~/foreach`
 					</select>
 					(only required if Day View is selected in Report Format)
-					<br>
-					Select Campaign : &nbsp;
+					<br><br>
+					Select Campaign :  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<select name="campaignSelection" >
 						~foreach from=$campaignDropDown key=k item=v`
 						<option value="~$k`">~$v`</option>
@@ -94,13 +94,16 @@
 			        	</tr>
 			        	<tr class=formhead style="background-color:LightOrange;font-weight:500;font-size:12px;line-height:2">
 			        	~foreach from=$dateDropDown key=kk item=vv`
+			        		~assign var=tempFlag value=0`
 			        		~foreach from=$date key=kkk item=vvv`
 					        	~if $vv eq $kkk`
+					        		~assign var=tempFlag value=1`
 					        		<td align=center>~$vvv`</td>
-					        	~else`
-					        		<td align=center></td>
 					        	~/if`
 					        ~/foreach`
+					        ~if $tempFlag eq 0`
+					        	<td align=center>0</td>
+					        ~/if`
 					    ~/foreach`
 					    </tr>
 		        	~/foreach`
@@ -118,13 +121,16 @@
 			        	</tr>
 			        	<tr class=formhead style="background-color:LightOrange;font-weight:500;font-size:12px;line-height:2">
 			        	~foreach from=$quarterArr key=kk item=vv`
+			        		~assign var=tempFlag value=0`
 			        		~foreach from=$quarter key=kkk item=vvv`
 					        	~if $vv eq $kkk`
+					        		~assign var=tempFlag value=1`
 					        		<td align=center>~$vvv`</td>
-					        	~else`
-					        		<td align=center></td>
 					        	~/if`
 					        ~/foreach`
+					        ~if $tempFlag eq 0`
+					        	<td align=center>0</td>
+					        ~/if`
 					    ~/foreach`
 					    </tr>
 		        	~/foreach`
@@ -150,7 +156,7 @@
 					        	~/if`
 					        ~/foreach`
 					        ~if $tempFlag eq 0`
-					        	<td align=center></td>
+					        	<td align=center>0</td>
 					        ~/if`
 					    ~/foreach`
 					    </tr>

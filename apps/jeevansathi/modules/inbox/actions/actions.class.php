@@ -152,10 +152,11 @@ class inboxActions extends sfActions
 						}
 						else
 						{
+							$contactRObj=new EoiViewLog();
+							$contactRObj->setEoiViewedForAReceiver($pid,'N');
 							$contactsObj = new ContactsRecords();
 							$contactsObj->makeAllContactSeen($pid,ContactHandler::INITIATED);
-                                                        $contactRObj=new EoiViewLog();
-                                                        $contactRObj->setEoiViewedForAReceiver($pid,'N');
+                                                        
 						}
 						$profileMemcacheObj->update("AWAITING_RESPONSE_NEW",-$currentCount);
 						$profileMemcacheObj->updateMemcache();
@@ -230,10 +231,11 @@ class inboxActions extends sfActions
                                                 }
                                                 else
                                                 {
+													 $contactRObj=new EoiViewLog();
+                                                        $contactRObj->setEoiViewedForAReceiver($pid,'Y');
 							$contactsObj = new ContactsRecords();
 							$contactsObj->makeAllContactSeen($pid,ContactHandler::FILTERED);
-                                                        $contactRObj=new EoiViewLog();
-                                                        $contactRObj->setEoiViewedForAReceiver($pid,'Y');
+                                                       
                                                 }
 						$profileMemcacheObj->update("FILTERED_NEW",-$currentCount);
 						$profileMemcacheObj->updateMemcache();
@@ -514,10 +516,11 @@ public function executePerformV2(sfWebRequest $request)
                                                 }
                                                 else
                                                 {
+													 $contactRObj=new EoiViewLog();
+                                                        $contactRObj->setEoiViewedForAReceiver($pid,'N');
 							$contactsObj = new ContactsRecords();
 							$contactsObj->makeAllContactSeen($pid,ContactHandler::INITIATED);
-                                                        $contactRObj=new EoiViewLog();
-                                                        $contactRObj->setEoiViewedForAReceiver($pid,'N');
+                                                       
 						}
 						$profileMemcacheObj = new ProfileMemcacheService($profileObj);
 						$currentCount =  $profileMemcacheObj->get("AWAITING_RESPONSE_NEW");
@@ -660,10 +663,11 @@ public function executePerformV2(sfWebRequest $request)
 							}
 							else
 							{
+								 $contactRObj=new EoiViewLog();
+                                                                $contactRObj->setEoiViewedForAReceiver($pid,'Y');
 								$contactsObj = new ContactsRecords();
 								$contactsObj->makeAllContactSeen($pid,ContactHandler::FILTERED);
-                                                                $contactRObj=new EoiViewLog();
-                                                                $contactRObj->setEoiViewedForAReceiver($pid,'Y');
+                                                               
 							}
 							$profileMemcacheObj->update("FILTERED_NEW",-$currentCount);
 							$profileMemcacheObj->updateMemcache();

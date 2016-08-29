@@ -518,6 +518,9 @@ class MembershipHandler
         if ($fromSource) {
             $billingPaySrcObj = new billing_PAYMENT_SOURCE_TRACKING();
             $billingPaySrcObj->addSourceTracking($profileid, $pgNo, $fromSource);
+            $billingDropSrcObj = new billing_DROPOFF_SOURCE_TRACKING();
+            $geoIpCountry = $_SERVER['GEOIP_COUNTRY_CODE'];
+            $billingDropSrcObj->addSourceTracking($profileid, $pgNo, $fromSource, $geoIpCountry);
         }
         unset($billingPaySrcObj);
         unset($billingPaymentHitsObj);
@@ -1450,7 +1453,8 @@ class MembershipHandler
         $activationDt 	= $vdDatesArr['ENTRY_DT'];
         $todayDate 	= date("Y-m-d");
         
-        if(strtotime($endDate) >= strtotime($todayDate)){
+        //if(strtotime($endDate) >= strtotime($todayDate)){
+	if(strtotime($startDate) == strtotime($todayDate)){	
             $vdProfilesArr = $vdPoolTechObj->fetchVdPoolTechProfiles();
             foreach ($vdProfilesArr as $key => $profileid){
 		
