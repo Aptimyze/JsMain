@@ -1050,6 +1050,14 @@ $(document).ready(function () {
     if(typeof loggedInJspcUser!= "undefined")
         checkNewLogin(loggedInJspcUser);
     var checkDiv = $("#chatOpenPanel").length;
+    $("#HideID").on('click',function(){
+        /*
+         * Check added as on hide profile user is deleted from openfire and if cookie is set then cant reconnect
+         */
+        console.log("Deleted cookie");
+        eraseCookie("chatAuth");
+        console.log(readCookie('chatAuth'));
+    });
     if (showChat && (checkDiv != 0)) {
         var chatLoggedIn = readCookie('chatAuth');
         var loginStatus;
@@ -1057,13 +1065,6 @@ $(document).ready(function () {
             ////console.log("Logout clicked");
             localStorage.removeItem("self_subcription");
            $(objJsChat._logoutChat).click(); 
-        });
-        
-        $("#HideID").on('click',function(){
-            /*
-             * Check added as on hide profile user is deleted from openfire and if cookie is set then cant reconnect
-             */
-            eraseCookie("chatAuth");
         });
         
         $(window).focus(function() {
