@@ -1931,7 +1931,7 @@ JsChat.prototype = {
                 scrollTop: len
             }, 1000);   
         } else if(type == "noAnimate") {
-            console.log("once");
+            console.log("once",document.getElementById("chatMessage_"+userId));
             if(('chat-box[user-id="' + userId + '"] .chatMessage').length != 0){
                 var len = document.getElementById("chatMessage_"+userId).scrollHeight;
                 $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
