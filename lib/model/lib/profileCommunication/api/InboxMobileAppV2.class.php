@@ -1200,7 +1200,25 @@ class InboxMobileAppV2
 			$messageCmp = trim(html_entity_decode($message,ENT_QUOTES));
 			if(!in_array($messageCmp,$presetMessage))
 			{
-				$message=str_replace("||","\n",$message);
+				if(strpos($message,"||")!==false)
+				{
+					$messageArr=explode("||",$message);
+					$eoiMsgCount = count($messageArr);
+					$i=0;
+					for($j=($eoiMsgCount-1);$j>=0;$j--)
+					{
+						$splitmessage = explode("--",$messageArr[$j]);
+						if($i==0)
+							$eoiMessages=$splitmessage[0];
+						else
+							$eoiMessages.="\n".$splitmessage[0];
+						$i++;							
+					}
+					if($eoiMessages)
+						$message=$eoiMessages;
+					else
+						$message="";
+				}
 				$message= nl2br($message);
 				$message =addslashes(htmlspecialchars_decode($message));
 			}
