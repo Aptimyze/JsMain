@@ -1931,24 +1931,12 @@ JsChat.prototype = {
                 scrollTop: len
             }, 1000);   
         } else if(type == "noAnimate") {
-            console.log("once",document.getElementById("chatMessage_"+userId));
-            if(('chat-box[user-id="' + userId + '"] .chatMessage').length != 0){
+            setTimeout(function () {
                 var len = document.getElementById("chatMessage_"+userId).scrollHeight;
                 $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
                     scrollTop: len
-                }, 0);    
-            } else {
-                console.log("twice");
-                setTimeout(function () {
-                    //console.log("bbbbbbb",$('chat-box[user-id="' + userId + '"]').length)
-                    var len = document.getElementById("chatMessage_"+userId).scrollHeight;
-                    $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
-                        scrollTop: len
-                    }, 0);
-                }, 500);    
-            }
-            //console.log("aaaaaaaaa",$('chat-box[user-id="' + userId + '"]').length)
-            
+                }, 0);
+            }, 100);    
         }
     },
     //append chat history in chat box
