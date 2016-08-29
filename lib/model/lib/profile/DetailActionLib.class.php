@@ -131,12 +131,20 @@ class DetailActionLib
 	 */
 	public static function Update_ViewCount(&$refProfileObj)
 	{
+                if($refProfileObj->getGENDER()=='M')
+                    $queueName = 'nTimesMaleQueue';
+                else
+                    $queueName = 'nTimesFemaleQueue';
+                $memcacheObj = JsMemcache::getInstance();
+                $memcacheObj->lpush($queueName,$refProfileObj->getPROFILEID());
+                /*
 		include(sfConfig::get("sf_web_dir")."/profile/ntimes_function.php");
 		
 		if($refProfileObj->getPROFILEID()){
                     $jpNtimesObj = new NEWJS_JP_NTIMES();
                     $jpNtimesObj->updateProfileViews($refProfileObj->getPROFILEID());
                 }
+                */
 	}
 	
 	/**

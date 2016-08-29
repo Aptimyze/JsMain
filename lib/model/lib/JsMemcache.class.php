@@ -446,5 +446,60 @@ class JsMemcache extends sfMemcacheCache{
 			}
 		}
 	}
+        
+        //this function is a wrapper for lpush function for redis
+        public function lpush($key,$value)
+	{
+		if(self::isRedis())
+		{
+			if($this->client)
+			{
+				try
+				{
+					$this->client->lpush($key,$value);
+				}
+				catch (Exception $e)
+				{
+					jsException::log("Ntimes-redis push".$e->getMessage());
+				}
+			}
+		}
+	}
+        
+        public function pipeline()
+	{
+		if(self::isRedis())
+		{
+			if($this->client)
+			{
+				try
+				{
+					return $this->client->pipeline();
+				}
+				catch (Exception $e)
+				{
+					jsException::log("redis pipeline".$e->getMessage());
+				}
+			}
+		}
+	}
+        
+        public function getLengthOfQueue($key)
+	{
+		if(self::isRedis())
+		{
+			if($this->client)
+			{
+				try
+				{
+					return $this->client->llen($key);
+				}
+				catch (Exception $e)
+				{
+					jsException::log("redis getLength".$e->getMessage());
+				}
+			}
+		}
+	}
 }
 ?>
