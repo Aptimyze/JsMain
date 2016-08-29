@@ -1,7 +1,7 @@
 <?php
 include_once("connect.inc");
 include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
-require_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 if(authenticated($cid))
 {
@@ -37,11 +37,27 @@ if(authenticated($cid))
 					$preactivated=$row_sel['PREACTIVATED'];
 				}
 				//added by sriram.
-				$sql_act = "SELECT USERNAME,ACTIVATED,SUBSCRIPTION,MSTATUS  FROM newjs.JPROFILE WHERE PROFILEID='$pid'";
+				$sql_act = "SELECT USERNAME,ACTIVATED,SUBSCRIPTION,MSTATUS,HAVEPHOTO  FROM newjs.JPROFILE WHERE PROFILEID='$pid'";
 				$res_act = mysql_query_decide($sql_act) or die(mysql_error_js());
 				$row_act = mysql_fetch_array($res_act);
 				//added by sriram.
-				
+				if($row_act['HAVEPHOTO']=="U" || $row_act['HAVEPHOTO']=="Y")
+				{
+					$profileObj = new LoggedInProfile('',$pid);
+					$profileObj->getDetail('', '', '*');
+					$pictureServiceObj = new PictureService($profileObj);
+					$PICTURE_FOR_SCREEN_NEW = new NonScreenedPicture();
+					$whereCondition["PROFILEID"] = $pid;
+					$pics=$PICTURE_FOR_SCREEN_NEW->get($whereCondition);
+					foreach($pics as $k=>$v)
+					{
+						if($k==0)
+							continue;
+						$pictureid = $v['PICTUREID'];
+						$pictureServiceObj->deletePhoto($pictureid,$pid);
+					}
+					$pictureServiceObj->deletePhoto($pics[0]['PICTUREID'],$pid);
+				}		
 				$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
 				$jprofileUpdateObj->updateJProfileForArchive($pid);
 						

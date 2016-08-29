@@ -1585,5 +1585,46 @@ return $result;
 				throw new jsException($e);
 			}
 	}
+	
+	public function getMessageHistoryPagination($viewer,$viewed,$limit="",$msgId="")
+		{
+			try
+			{
+				if(!$viewer && !$viewed)
+				{
+					throw new jsException("","profile ids are not specified in  funcion getMessageHistory OF newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					if($limit)
+						$limitStr= " limit :limit ";
+					else
+						$limitStr="";
+						
+					if($msgId)	
+						$paginationStr=" AND MESSAGE_LOG.ID<:MSG_ID ";
+					else
+						$paginationStr="";
+					$sql = "SELECT SENDER,RECEIVER, DATE, MESSAGE,MESSAGE_LOG.ID FROM  `MESSAGE_LOG` JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER ))AND IS_MSG =  'Y' AND TYPE = 'R' ".$paginationStr." ORDER BY DATE Desc ".$limitStr;
+					$prep=$this->db->prepare($sql);
+					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
+					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);
+					if($msgId)
+						$prep->bindValue(":MSG_ID",$msgId,PDO::PARAM_INT);
+					if($limit)
+						$prep->bindValue(":limit",$limit,PDO::PARAM_INT);
+					$prep->execute();
+					while($row = $prep->fetch(PDO::FETCH_ASSOC))
+					{
+						$output[] = $row;
+					}
+				}
+			}
+			catch (PDOException $e)
+			{
+				throw new jsException($e);
+			}
+			return $output;
+		}
 }
 	?>
