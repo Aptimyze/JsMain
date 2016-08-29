@@ -582,7 +582,7 @@ function checkEmptyOrNull(item) {
         return false;
     }
 }
-
+ 
 function checkNewLogin(profileid) {
     var computedChatEncrypt = CryptoJS.MD5(profileid);
     if (checkEmptyOrNull(readCookie('chatEncrypt'))) {
