@@ -1054,9 +1054,7 @@ $(document).ready(function () {
         /*
          * Check added as on hide profile user is deleted from openfire and if cookie is set then cant reconnect
          */
-        console.log("Deleted cookie");
         eraseCookie("chatAuth");
-        console.log(readCookie('chatAuth'));
     });
     if (showChat && (checkDiv != 0)) {
         var chatLoggedIn = readCookie('chatAuth');
