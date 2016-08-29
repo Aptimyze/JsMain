@@ -77,7 +77,7 @@ class CommunicationHistory
 						$messageArr=explode("||",$value['MESSAGE']);
 						$eoiMsgCount = count($messageArr);
 						$i=0;
-						for($j=($eoiMsgCount-1);$j>=0;$j--)
+						for($j=0;$j<$eoiMsgCount;$j++)
 						{
 							$splitmessage = explode("--",$messageArr[$j]);
 							if($i==0)
@@ -91,8 +91,7 @@ class CommunicationHistory
 						else
 							$value['MESSAGE']="";
 					}
-					else
-						$message_log[$value['DATE']]["message"] = $value['MESSAGE'];
+					$message_log[$value['DATE']]["message"] = $value['MESSAGE'];
 				}
 				else
 					$message_log[$value['DATE']]["message"] = ""; //inserting space to prevent null exception in various channels

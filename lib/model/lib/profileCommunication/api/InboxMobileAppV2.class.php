@@ -1205,7 +1205,8 @@ class InboxMobileAppV2
 					$messageArr=explode("||",$message);
 					$eoiMsgCount = count($messageArr);
 					$i=0;
-					for($j=($eoiMsgCount-1);$j>=0;$j--)
+					
+					for($j=0;$j<$eoiMsgCount;$j++)
 					{
 						$splitmessage = explode("--",$messageArr[$j]);
 						if($i==0)
