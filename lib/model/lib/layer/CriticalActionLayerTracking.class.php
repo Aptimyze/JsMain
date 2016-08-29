@@ -205,7 +205,18 @@ return 0;
                       }
                     
                     break;            
-                              
+
+                    case '8': 
+                      
+                      if(!MobileCommon::isApp())
+                      {
+                      $negativeObj=new INCENTIVE_NEGATIVE_TREATMENT_LIST();
+                      if($negativeObj->isFtoDuplicate($profileid))
+                          $show=1;
+                      }
+                    
+                    break;            
+
           default : return false;
         }
         /*check if this layer is to be displayed
