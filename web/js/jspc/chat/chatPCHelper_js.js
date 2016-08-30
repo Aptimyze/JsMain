@@ -353,7 +353,14 @@ function checkForSiteLoggedOutMode(response){
 */
 function getMembershipStatus(){
     var membership = localStorage.getItem("self_subcription");
-    //confirm check
+    //console.log("membership",membership);
+    if(!membership){
+        //console.log("not exists");
+        if(self_subcription){
+            localStorage.setItem("self_subcription",self_subcription);
+            membership = self_subcription;
+        }
+    }
     if(membership && membership!= "Free"){
         return "Paid";
     }
