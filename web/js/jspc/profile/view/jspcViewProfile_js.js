@@ -531,7 +531,7 @@ $('.js-overlay').eq(0).fadeIn(200,"linear",function(){$('#commHistoryOverlay-lay
 								onTotalScrollBack:function(){if(commHistoryFullLoaded || commHistoryLoading) return;$("#commHistoryLoader").css('visibility','visible');communicationLayerAjax();}
 							}
 				});
-        $(this).find("#commLayerScroller").mCustomScrollbar('scrollTo','bottom');
+        $(this).find("#commLayerScroller").mCustomScrollbar('scrollTo','bottom',{scrollInertia:0});
         
                                 
 })}); 

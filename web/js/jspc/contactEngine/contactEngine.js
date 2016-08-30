@@ -876,7 +876,7 @@ $(document).ready(function() {
   	// binding for viewprofilepage for the communication history page
 $('.communicationParent').bind('click',
 			function () {	
-					communicationLayerAjax();
+					communicationLayerAjax(1);
 			});	
  })
 
