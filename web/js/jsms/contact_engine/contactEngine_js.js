@@ -426,12 +426,12 @@ function bindActions(index, action, enableButton, buttonDetailsOthers)
   } 
 }
 
-function performAction(action, params, index,isPrime,fromButton)
+function performAction(action, tempParams, index,isPrime,fromButton)
 {
         
 	if((writeMessageAction=="INITIATE" || writeMessageAction=="REMINDER")&&action=="MESSAGE"){
 		aUrl="/api/v1/contacts/MessageHandle";
-		params['actionName']            ="MessageHandle";
+		tempParams['actionName']            ="MessageHandle";
 	}
 	else{
 		aUrl = actionUrl[action];
@@ -452,9 +452,9 @@ function performAction(action, params, index,isPrime,fromButton)
   postParams='';
      dim='';
      if(action=='WRITE_MESSAGE'){
-         paramsForMsgWindow=params;
+         paramsForMsgWindow=tempParams;
          indexForMsgWindow=index;
-         params['pagination']=1;
+         tempParams['pagination']=1;
          if((typeof fromButton !='undefined')  && fromButton==1) 
          {
              msgWindowMSGID='';
@@ -463,17 +463,17 @@ function performAction(action, params, index,isPrime,fromButton)
              
          }
          else msgWindowOn=1; 
-         params['MSGID']=msgWindowMSGID;params['CHATID']=msgWindowCHATID;}
+         tempParams['MSGID']=msgWindowMSGID;tempParams['CHATID']=msgWindowCHATID;}
      if ((action=="ACCEPT_MYJS")||(action=="DECLINE_MYJS")) {
-         params["responseTracking"]=responseTrackingno;
+         tempParams["responseTracking"]=responseTrackingno;
          
     $("#eoituple_"+index+" .contactLoader").css("display","block");
     
 }
     else if(action=="INITIATE_MYJS")
     {
-                params["fromJSMS_MYJS"]='1';
-                params["stype"]='WMM';
+                tempParams["fromJSMS_MYJS"]='1';
+                tempParams["stype"]='WMM';
         
          $("#matchAlerttuple_"+index+" .contactLoader").css("display","block");
         
@@ -496,7 +496,7 @@ function performAction(action, params, index,isPrime,fromButton)
             
     url: aUrl,
     type: "POST",
-    data: params,
+    data: tempParams,
     //crossDomain: true,
     success: function(result){
                     if ((action=="ACCEPT_MYJS")||(action=="DECLINE_MYJS") || (action=="INITIATE_MYJS"))
@@ -804,9 +804,9 @@ function writeMessage(result, action, index){
             {
             if(MsgWindowLoading)return;
             MsgWindowLoading=1;
-            var params=paramsForMsgWindow;
-            var index=indexForMsgWindow;
-            performAction(params["actionName"], params, index,true,0);
+            var tempParams=paramsForMsgWindow;
+            var tempIndex=indexForMsgWindow;
+            performAction(tempParams["actionName"], tempParams, tempIndex,true,0);
             }
         });
     }
