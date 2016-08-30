@@ -273,36 +273,19 @@ Onscroll = function()
 
 displayComHistory = function()
 {
+        $(comMessage).unbind('scroll');
         $("#commHistoryScroller #commHistoryLoader").show();
         commLayerPageIndex=1;
         commHistoryLoading=0;
-        $(comMessage).unbind('scroll').scroll(function()
-        {
-            
-
-            if($(this).scrollTop()==0)
-            {
-            if(commHistoryLoading)return;    
-            commHistoryLoading=1;    
-            getCommHistory().success(function(data,textStatus,jqXHR){
-            commHistoryJson = data;
-            bakeCommHistory();
-            disableLoader();
-    }).error(function(jqXHR,textStatus,errorThrown){
-        //Something went wrong use old commHistoryJson
-        bakeCommHistory('show error message');
-        CommonErrorHandling();
-        disableLoader();
-    });}});
 	$(profileContent).css('display','none');
 	$(comHistoryOverlay).css('display','block');
 	$(comHistoryOverlay).css('overflow','hidden');
     $(comHistoryOverlay).removeClass('vpro_dn');
 	$(mainContent).addClass('posrel');
-	$(comHistoryOverlay).css('height',$(window).innerHeight()+'px');
+	$(comHistoryOverlay).css('height',$(window).height()+'px');
 	$(sendInterestBtn).addClass('vpro_dn');
 	var com_msgHgt = $(window).innerHeight() - $('#comm_header').outerHeight();
-	$(comMessage).css({'height':com_msgHgt,'overflow':'auto'});
+	$(comMessage).css({'height':com_msgHgt,'overflow-y':'auto','overflow-x':'hidden'});
     enableLoader();
     getCommHistory().success(function(data,textStatus,jqXHR){
        commHistoryJson = data;
@@ -332,7 +315,7 @@ hideComHistory = function()
 
 bakeCommHistory = function(bShowError)
 {
-        
+        var commHScrollHeight=0;
 	if((!commHistoryJson || typeof commHistoryJson !== "object" ) && typeof bShowError == "undefined")
 	{
 		return;
@@ -341,7 +324,7 @@ bakeCommHistory = function(bShowError)
     if(bShowError)
     {
         message = "<div class='disptbl hgtInherit'><div class='dispcell vertmid white txtc'> Something went wrong. Please try in some time.</div></div>"
-		$(comMessage).append(message);
+        $(comMessage).append(message);
         setTimeout(popBrowserStack,200);
         return;
     }
@@ -349,7 +332,7 @@ bakeCommHistory = function(bShowError)
         var commLoader=$("#commHistoryScroller #commHistoryLoader");
         if(commHistoryJson.history)
 	{
-        commHScrollHeight=$(comMessage)[0].scrollHeight;    
+        commHScrollHeight=$(comMessage)[0].scrollHeight;  
         if(commHistoryJson.nextPage=='false')
         {
             $(comMessage).unbind('scroll');
@@ -404,6 +387,31 @@ bakeCommHistory = function(bShowError)
 	}
         $(comMessage).scrollTop($(comMessage)[0].scrollHeight-commHScrollHeight);
         commHistoryLoading=0;
+        
+        if(commHistoryJson.nextPage=='false')
+        {
+            $(comMessage).unbind('scroll');
+            commLoader.hide();
+            commHistoryFullLoaded = 1; 
+        }
+        else
+         $(comMessage).unbind('scroll').scroll(function()
+        {
+            
+            if($(this).scrollTop()==0)
+            {
+            if(commHistoryLoading)return;    
+            commHistoryLoading=1;    
+            getCommHistory().success(function(data,textStatus,jqXHR){
+            commHistoryJson = data;
+            bakeCommHistory();
+            disableLoader();
+    }).error(function(jqXHR,textStatus,errorThrown){
+        //Something went wrong use old commHistoryJson
+        bakeCommHistory('show error message');
+        CommonErrorHandling();
+        disableLoader();
+    });}});
 
 }
 

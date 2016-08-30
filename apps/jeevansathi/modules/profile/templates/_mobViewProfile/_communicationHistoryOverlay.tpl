@@ -9,7 +9,7 @@
 	<div class="txtc f19 white pt10">~$username`</div>
   </div>
 </div>
-  <div id='commHistoryPreLoad'>
+  <div id='commHistoryPreLoad' style="display:none;">
   <div class="fullwid pad18 txtc f16 opa80 fontlig white pt10" id="commHistoryLoader" style=" display:none">
 <img style='height:40px;width:40px;' src="/images/jsms/commonImg/loader.gif"  class="mr6">
 </div>
