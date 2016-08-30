@@ -529,13 +529,15 @@ class ProfileCacheLib
      */
     public function removeCache($Var)
     {
+        $status = true;
         if (is_array($Var)) {
             foreach($Var as $k => $iProfileID) {
-                $this->purge($iProfileID);
+              $status = $status && $this->purge($iProfileID);
             }
         } else {
-            $this->purge($Var);
+            $status = $this->purge($Var);
         }
+        return $status;
     }
 
     /**
@@ -590,6 +592,43 @@ class ProfileCacheLib
 
         $key .= '::'.date('H');
         JsMemcache::getInstance()->incrCount($key);
+    }
+    
+    /**
+     * This function will be used to check profile data
+     * @param type $iProfileId
+     * @param type $fields
+     * @return type
+     */
+    public function checkProfileData($iProfileId,$fields="")
+    {
+      $data = JsMemcache::getInstance()->getHashAllValue(ProfileCacheConstants::PROFILE_CACHE_PREFIX.$iProfileId);
+      $allowedFields = explode(",", $fields);
+      $bAllFields = false;
+      if(count($allowedFields) && in_array('ALL',$allowedFields)){
+        $bAllFields = true;
+      }
+      $arrOut = array();
+      if(0 === count($data)) {
+        $arrOut['msg'] = "Redis data does not exist for profileid : {$iProfileId}";
+      }
+      
+      $len = count($data);
+      if($len){
+        $arrOut['msg'] = "No of columns exist for profileid: {$iProfileId} is {$len}";
+      }
+      
+      if (false === $bAllFields && $len) {
+        foreach ($allowedFields as $key) {
+          if(strlen($key))
+            $arrOut[$key] = $data[$key];
+        }
+      }
+      else if($len){
+        $arrOut = $data;
+      }
+
+    return $arrOut;
     }
 }
 ?>
