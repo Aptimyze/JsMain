@@ -8,9 +8,12 @@ class newjs_ValidNameList extends TABLE{
          * @param $dbName - Database to which the connection would be made
          */
 
-        public function __construct($dbname="")
+        public function __construct($dbname="",$gender)
         {
 			parent::__construct($dbname);
+			if(!$gender ||!in_array($gender,array("M","F")))
+				throw new jsException("", "gender not provided in names table");
+			$this->tableName = "newjs.ValidNameList_".$gender;
         }
 
         public function haveName($nameArr)
@@ -22,7 +25,7 @@ class newjs_ValidNameList extends TABLE{
 		foreach($nameArr as $k=>$v)
 			$queryArr[]=":NAME".$k;
 		$queryStr = implode(",",$queryArr);
-                $sql="SELECT * from newjs.ValidNameList where NAME IN (".$queryStr.")";
+                $sql="SELECT * from ".$this->tableName." where NAME IN (".$queryStr.")";
                 $resSelectDetail = $this->db->prepare($sql);
 		foreach($nameArr as $k=>$v)
 			$resSelectDetail->bindValue(":NAME".$k, $v);

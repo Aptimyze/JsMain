@@ -28,17 +28,17 @@ class NameOfUser
     }
     public function filterName($name)
     {
-        $name = preg_replace('/[^A-Za-z\ ]/', '', $name);
-        $name = preg_replace('/\s\s+/', ' ',$name);
-	$name = ucwords($name);
 	return $name;
     }
     public function isNameAutoScreened($name,$gender)
     {
+        $name = preg_replace('/[^A-Za-z\ ]/', '', $name);
+        $name = preg_replace('/\s\s+/', ' ',$name);
+	$name = strtolower($name);
 	$nameArr = explode(" ",$name);
 	if(count($nameArr)>3)
 		return false;
-	$validNameListObj = new newjs_ValidNameList();
+	$validNameListObj = new newjs_ValidNameList($dbName="",$gender);
 	$nameCountInScreenedList = $validNameListObj->haveName($nameArr);
 	if($nameCountInScreenedList!=0 && (count($nameArr)==$nameCountInScreenedList))
 		return true;
@@ -75,13 +75,24 @@ class NameOfUser
     {
 	if($selfsubscription!='')
 	{
-		$name = $othername;
+		$name = ucwords($othername);
 	}
 	else
 	{
 		$nameArr = explode(" ",$othername);
-		$name = $nameArr[0];
+		foreach($nameArr as $k=>$v)
+		{
+			if(count($v)>2)
+			{
+				$finalName = ucfirst($v);
+				break;
+			}
+		}
+		if($finalName=='')
+		{
+			$finalName = ucfirst($v);
+		}
 	}
-	return $name;
+	return $finalName;
     }
 }
