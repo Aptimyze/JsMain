@@ -2065,9 +2065,9 @@ class crmMisActions extends sfActions
                  $end_date 		=$formArr["yearValue"]."-".$formArr["monthValue"]."-".date("t",strtotime($start_date));
                  $this->displayDate 	=date("F Y",strtotime($start_date));
 
-		 $dailyScheduledLog =new MOBILE_API_DAILY_NOTIFICATION_COUNT_LOG('newjs_slave');
+		 $dailyScheduledLog =new MOBILE_API_DAILY_NOTIFICATION_COUNT_LOG('newjs_masterRep');
 
-		 $appNotificationsObj =new MOBILE_API_APP_NOTIFICATIONS('newjs_slave');
+		 $appNotificationsObj =new MOBILE_API_APP_NOTIFICATIONS('newjs_masterRep');
 		 $scheduledNotificaionArr =$appNotificationsObj->getScheduledNotifications();
 		 $scheduledNotificaionStr ="'".implode("','", $scheduledNotificaionArr)."'";
 	
@@ -2139,7 +2139,7 @@ class crmMisActions extends sfActions
                   foreach(array_keys($dateArr) as $key=>$value)
                           $this->yearArr[] = array('NAME'=>$value, 'VALUE'=>$value);
 
-                  $appNotificationObj =new MOBILE_API_APP_NOTIFICATIONS('newjs_slave');
+                  $appNotificationObj =new MOBILE_API_APP_NOTIFICATIONS('newjs_masterRep');
 		  $fields ='NOTIFICATION_KEY,FREQUENCY';
                   $notificationArrTemp =$appNotificationObj->getActiveNotifications($fields);
 		  foreach($notificationArrTemp as $key=>$value){
