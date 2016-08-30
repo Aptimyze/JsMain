@@ -3,6 +3,14 @@
 ~include_Partial("search/photoAlbum")`
 
 <div id='commHistoryOverlay-layer' class="pos_fix layersZ setshare disp-none">
+    <li id='commDiv' class="commDiv disp-none clearfix">
+                                  <div class="prfwid18 prfm2" style='margin-top:0px;'><img src="" border="0" class="js-profilePic prfdim14 prfrad vtop"></div>
+                                    <div class="pl10 prfwid19">
+                                      <p class="f15 js-commHeading"></p>
+                                        <p class="js-commMessage disp-none pt7 color2 f13"></p>
+                                        <p class="js-commTime pt10 f12 color12"></p>
+                                    </div>
+                                </li>
       <div class="prfwid16 fontlig">
         <div class="prfbg6">
                 <!--start:div-->          
@@ -21,19 +29,12 @@
                     </div>
 
                      <!--start:form-->
-                     <img src="/images/jspc/commonimg/loader.gif" style="margin: 0 auto;height: 22px;display: block;">
+                     <img id='commHistoryLoader' src="/images/jspc/commonimg/loader.gif" style="visibility:hidden;margin: 0 auto;height: 22px;display: block;">
                      <div id='commHistory' class="f13 comhp1">
                         
                           <div id='commLayerScroller' class="cEcontent">                        
                             <ul id='mainDiv' class="listnone comhis fontlig color11">
-                              <li id='commDiv' class="commDiv disp-none clearfix">
-                                  <div class="prfwid18 prfm2" style='margin-top:0px;'><img src="" border="0" class="js-profilePic prfdim14 prfrad vtop"></div>
-                                    <div class="pl10 prfwid19">
-                                      <p class="f15 js-commHeading"></p>
-                                        <p class="js-commMessage disp-none pt7 color2 f13"></p>
-                                        <p class="js-commTime pt10 f12 color12"></p>
-                                    </div>
-                                </li>
+                              
                                       
                                                          
                             </ul>
