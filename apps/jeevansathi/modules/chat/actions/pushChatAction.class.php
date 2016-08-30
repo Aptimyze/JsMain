@@ -46,7 +46,7 @@ class pushChatAction extends sfAction
 				$data["receiver"] = $receiver;
 				$data["communicationType"] = $communicationType;
 				$data["message"] = $message;
-				$data['chatid'] = $chatID;
+				$data['id'] = $chatID;
 				$js_communication=new JS_Communication($sender,$receiver,$communicationType,$message,$chatID);
 
 				if($js_communication->validateChat()) {

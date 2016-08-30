@@ -26,23 +26,22 @@ class JS_Communication
 			$dbName1 = JsDbSharding::getShardNo($this->loginProfile);
 			$dbName2 = JsDbSharding::getShardNo($this->otherProfile);
 			
-			$chatIdObj=new NEWJS_CHAT_LOG_GET_ID();
-			$id=$chatIdObj->getAutoIncrementMessageId();
+		//	$chatIdObj=new NEWJS_CHAT_LOG_GET_ID();
+			//$id=$chatIdObj->getAutoIncrementMessageId();
 			
 			if($this->communicationType="C"){
 				$dbObj = new newjs_CHAT_LOG($dbName1);
-				$dbObj->insertIntoChatLog($id,$this->loginProfile,$this->otherProfile,$type,'N',$this->chatID);//sfContext::getInstance()->getRequest()->getParameter("chatID"));
-				
+				$dbObj->insertIntoChatLog($this->loginProfile,$this->otherProfile,$type,'N',$this->chatID);//sfContext::getInstance()->getRequest()->getParameter("chatID"));
 				$dbObjMessage = new NEWJS_CHATS($dbName1);
-				$dbObjMessage->insertSingleMessage($id,$this->message);
+				$dbObjMessage->insertSingleMessage($this->chatID,$this->message);
 			
 				if($dbName1 != $dbName2)
 				{							
 					$dbObj = new newjs_CHAT_LOG($dbName2);
 				
-					$dbObj->insertIntoChatLog($id,$this->loginProfile,$this->otherProfile,$type,'N',$this->chatID);	
+					$dbObj->insertIntoChatLog($this->loginProfile,$this->otherProfile,$type,'N',$this->chatID);	
 					$dbObjMessage = new NEWJS_CHATS($dbName2);
-					$dbObjMessage->insertSingleMessage($id,$this->message);
+					$dbObjMessage->insertSingleMessage($this->chatID,$this->message);
 				}
 				return $id;
 			}
@@ -70,8 +69,8 @@ class JS_Communication
 				$eoiArray= $msgDbObj->getEOIMessages(array($this->loginProfile),array($this->otherProfile));
 
 				$mergeArray=$eoiArray[0];
-				$mergeArray["CHATID"]="";				
-				$mergeArray["ID"]="";	
+				$mergeArray["CHATID"]="";
+				$mergeArray["ID"]="";
 				$messageArr=explode("||",$mergeArray['MESSAGE']);
 				$eoiMsgCount = count($messageArr);
 				//print_r($messageArr);die;
