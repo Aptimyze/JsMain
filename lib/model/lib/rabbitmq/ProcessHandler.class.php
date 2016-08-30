@@ -151,8 +151,8 @@ class ProcessHandler
      switch($type)
      {
          case "PUSH":
-             $sender = $body["sender"];
-             $receiver = $body["receiver"];
+             $sender = $body["from"];
+             $receiver = $body["to"];
              $communicationType = $body["communicationType"];
              $message = $body["message"];
              $chatId = $body["chatid"];
