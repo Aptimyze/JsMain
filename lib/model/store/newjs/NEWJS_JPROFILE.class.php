@@ -323,7 +323,7 @@ class NEWJS_JPROFILE extends TABLE
                 foreach ($numberArray as $k => $num) {
                     if ($k != 0)
                         $valueArrayM['PHONE_MOB'] .= ", ";
-                    $valueArrayM['PHONE_MOB'] .= "'" . $num . "', '0" . $num . "', '" . $isd . $num . "', '+" . $isd . $num . "', '0" . $isd . $num . "'";
+                    $valueArrayM['PHONE_MOB'] .= "'" . $num . "'";
                 }
             }
             if ($valueArrayM) {
@@ -396,6 +396,7 @@ class NEWJS_JPROFILE extends TABLE
                     }
                 }
             }
+            
             $sqlSelectDetail = "SELECT $fields FROM newjs.JPROFILE WHERE ";
             $count = 1;
             if (is_array($valueArray)) {
@@ -484,7 +485,7 @@ class NEWJS_JPROFILE extends TABLE
 
             if ($fields == 'returnOnlySql')
                 return $sqlSelectDetail;
-
+    
             $resSelectDetail = $this->db->prepare($sqlSelectDetail);
 
             /*
@@ -494,6 +495,7 @@ class NEWJS_JPROFILE extends TABLE
             }
             */
             $resSelectDetail->execute();
+            $this->logGetArrayCount();
             while ($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)) {
                 $detailArr[] = $rowSelectDetail;
             }
@@ -785,32 +787,14 @@ class NEWJS_JPROFILE extends TABLE
 
     public function updateSubscriptionStatus($subscription, $profileid)
     {
-        if ($this->dbName == "newjs_masterRep")
-            $this->setConnection("newjs_master");
-        try {
-            $sql = "UPDATE newjs.JPROFILE SET SUBSCRIPTION=:SUBSCRIPTION WHERE PROFILEID=:PROFILEID";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
-            $prep->bindValue(":SUBSCRIPTION", $subscription, PDO::PARAM_STR);
-            $prep->execute();
-        } catch (PDOException $e) {
-            throw new jsException($e);
-        }
+        $paramArr = array('SUBSCRIPTION'=>$subscription);
+        return $this->updateRecord($paramArr, $profileid, 'PROFILEID');
     }
 
     public function updatePrivacy($privacy, $profileid)
     {
-        if ($this->dbName == "newjs_masterRep")
-            $this->setConnection("newjs_master");
-        try {
-            $sql = "UPDATE newjs.JPROFILE SET PRIVACY=:PRIVACY , MOD_DT=now() WHERE PROFILEID=:PROFILEID and activatedKey=1";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
-            $prep->bindValue(":PRIVACY", $privacy, PDO::PARAM_STR);
-            $prep->execute();
-        } catch (PDOException $e) {
-            throw new jsException($e);
-        }
+        $paramArr = array('PRIVACY'=>$privacy, 'MOD_DT'=>date('Y-m-d H:i:s'));
+        return $this->updateRecord($paramArr, $profileid, "PROFILEID","activatedKey=1");
     }
 
     public function SelectPrivacy($profileId)
@@ -876,9 +860,11 @@ class NEWJS_JPROFILE extends TABLE
         if ($this->dbName == "newjs_masterRep")
             $this->setConnection("newjs_master");
         try {
-            $sql = "update JPROFILE set ACTIVATED=PREACTIVATED where PROFILEID=:PROFILEID";
+            $now = date('Y-m-d');
+            $sql = "update JPROFILE set ACTIVATED=PREACTIVATED, ACTIVATE_ON=:ACT_ON where PROFILEID=:PROFILEID";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
+            $prep->bindValue(":ACT_ON", $now, PDO::PARAM_STR);
             //$prep->bindValue(":PRIVACY", $privacy, PDO::PARAM_STR);
             $prep->execute();
         } catch (PDOException $e) {
@@ -1644,6 +1630,47 @@ class NEWJS_JPROFILE extends TABLE
         }
     }
 
+    
+    
+    public function getActiveProfiles($totalScript=1,$currentScript=0,$lastLoginWithIn='6 months',$limitProfiles=0)
+    {
+        if(!is_numeric(intval($totalScript)) || !$totalScript)
+        {
+            throw new jsException("","totalScript is not numeric in getUncomputedProfiles OF PROFILE_PROFILE_COMPLETION_SCORE.class.php");
+        }
+
+        if(!is_numeric(intval($currentScript)))
+        {
+            throw new jsException("","currentScript is not numeric in getUncomputedProfiles OF PROFILE_PROFILE_COMPLETION_SCORE.class.php");
+        }
+
+        $time = new DateTime();
+$time->sub(date_interval_create_from_date_string($lastLoginWithIn));
+
+        try{
+            $sql =  <<<SQL
+            SELECT PROFILEID
+            FROM  newjs.`JPROFILE`
+            WHERE LAST_LOGIN_DT  >=  :LAST_LOGIN_DT
+            AND activatedKey=1
+            AND PROFILEID MOD :T_SCRIPT = :CUR_SCRIPT
+            AND ACTIVATED = 'Y'
+SQL;
+            if($limitProfiles)
+                $sql .= ' LIMIT '. $limitProfiles;
+
+            $pdoStatement = $this->db->prepare($sql);
+            $pdoStatement->bindValue(":LAST_LOGIN_DT",$time->format('Y-m-d'),PDO::PARAM_STR);
+            $pdoStatement->bindValue(":T_SCRIPT",$totalScript,PDO::PARAM_STR);
+            $pdoStatement->bindValue(":CUR_SCRIPT",$currentScript,PDO::PARAM_STR);
+            $pdoStatement->execute();
+
+            return $pdoStatement->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
+
     /**
      *  //Function to log Select Query Count
      */
@@ -1655,6 +1682,19 @@ class NEWJS_JPROFILE extends TABLE
         $key .= '::'.date('H');
         JsMemcache::getInstance()->incrCount($key);
     }
+    
+    /**
+     *  //Function to log Select Query Count
+     */
+    private function logGetArrayCount()
+    {
+        $key = 'getArrayCount_'.date('Y-m-d');
+        JsMemcache::getInstance()->incrCount($key);
+
+        $key .= '::'.date('H');
+        JsMemcache::getInstance()->incrCount($key);
+    }
+    
 }
 
 ?>

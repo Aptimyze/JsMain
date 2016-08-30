@@ -217,11 +217,16 @@ class Inbox implements Module
 		$countObj     = $this->getCount('',$infoTypeNav,$fromGetDisplayFunction);
 		$tupleService = new TupleService();
 		$tupleService->setLoginProfile($this->profileObj->getPROFILEID());
-		$config = $this->configurations[$infoTypeNav["PAGE"]];
 		$key = $this->profileObj->getPROFILEID()."_".$infoTypeNav["PAGE"];
 		$keyCount = $key."_COUNT"; 
 		$infoType = $infoTypeNav["PAGE"];
-		
+		// Set limit too high as pagination not implemented in channels others than desktop for messages
+		if(!MobileCommon::isDesktop() && ($infoType == "MESSAGE_RECEIVED" || $infoType == "MY_MESSAGE" || $infoType == "MY_MESSAGE_RECEIVED") && ($infoTypeNav["NUMBER"]==null || MobileCommon::isApp()==null))
+		{
+						$this->configurations[$infoType]["COUNT"]=10000;
+
+		}
+		$config = $this->configurations[$infoTypeNav["PAGE"]];
 		if ($infoTypeNav && $config) {
 				$tuple       = $config["TUPLE"];
 				$displayFlag = 1;
@@ -284,7 +289,7 @@ class Inbox implements Module
 						$conditionArray = $this->getCondition($infoType, $page);
 						$profilesArray = $infoTypeAdapter->getProfiles($conditionArray, $skipArray,$this->profileObj->getSUBSCRIPTION());
 					 	if(!empty($memdata) && is_array($data) && is_array($profilesArray))
-							$data = array_merge($data,$profilesArray);
+							$data = $data+$profilesArray;
 						else if(is_array($profilesArray))
 							$data = $profilesArray;
 						JsMemcache::getInstance()->set($key,serialize($data),1800);
@@ -461,9 +466,6 @@ class Inbox implements Module
 			$limit      = ceil(($this->configurations[$infoType]["COUNT"]*$nav)/self::$profileCount)*self::$profileCount;
 		else
 			$limit = $this->configurations[$infoType]["COUNT"];
-		if(!MobileCommon::isDesktop() && ($infoType == "MESSAGE_RECEIVED" || $infoType == "MY_MESSAGE" || $infoType == "MY_MESSAGE_RECEIVED"))
-			$limit= '100000'; // Set limit too high as pagination not implemented in channels others than desktop for messages
-		
 		if ($infoType != "MATCH_ALERT" && $infoType != "VISITORS") {
 			//$condition["WHERE"]["NOT_IN"]["SEEN"] = "Y";
 			if ($infoType == "INTEREST_RECEIVED") {

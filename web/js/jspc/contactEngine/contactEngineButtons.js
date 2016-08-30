@@ -65,6 +65,8 @@ ajaxData=this.makePostDataForAjax(this.profileChecksum);
           data:ajaxData,
           context: this,
           success: function(response,data) {
+                if(data.name=='INITIATE')
+			callAfterContact();
 		if(data.name=="ACCEPT")
 		{
 			$('.js-showDetail'+data.profileChecksum).find(".showText").each(function(index, element) {

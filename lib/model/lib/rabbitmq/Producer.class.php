@@ -120,6 +120,12 @@ class Producer
 			$this->channel->queue_declare(MQ::BUFFER_INSTANT_NOTIFICATION_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::DELETE_RETRIEVE_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::UPDATE_SEEN_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+
+			$this->channel->queue_declare(MQ::CHAT_MESSAGE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+
+			$this->channel->queue_declare(MQ::DUPLICATE_LOG_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+			$this->channel->queue_declare(MQ::PROFILE_CACHE_Q_DELETE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+
 		} catch (Exception $exception) {
 			$str = "\nRabbitMQ Error in producer, Unable to" . " declare queues : " . $exception->getMessage() . "\tLine:" . __LINE__;
 			RabbitmqHelper::sendAlert($str, "default");
@@ -161,7 +167,7 @@ class Producer
 					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::DELETE_RETRIEVE_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
 					break;
 				case "CHATROSTERS":
-					if (JsConstants::$jsChatFlag > 1) {
+					if (JsConstants::$jsChatFlag >= 1) {
 						$data = $msgdata['data'];
 						$msg = new AMQPMessage(json_encode($data), array('delivery_mode' => MQ::DELIVERYMODE));
 						$this->channel->basic_publish($msg, MQ::CHATEXCHANGE, "roster");
@@ -171,14 +177,14 @@ class Producer
 					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::UPDATE_SEEN_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
 					break;
 				case "USERCREATION":
-					if (JsConstants::$jsChatFlag > 1) {
+					if (JsConstants::$jsChatFlag >= 1) {
 						$data = $msgdata['data'];
 						$msg = new AMQPMessage($data, array('delivery_mode' => MQ::DELIVERYMODE));
 						$this->channel->basic_publish($msg, MQ::CHATEXCHANGE, "profile_created");
 					}
 					break;
 				case "USERLOGIN":
-					if (JsConstants::$jsChatFlag > 1) {
+					if (JsConstants::$jsChatFlag >= 1) {
 						$data = $msgdata['data'];
 						$msg = new AMQPMessage($data, array('delivery_mode' => MQ::DELIVERYMODE));
 						$this->channel->basic_publish($msg, MQ::CHATEXCHANGE, "profile_created");
@@ -188,12 +194,29 @@ class Producer
 					    $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::DUPLICATE_LOG_QUEUE,MQ::MANDATORY,MQ::IMMEDIATE);
 					    break;
 				case "USER_DELETE":
-					if (JsConstants::$jsChatFlag > 1) {
+					if (JsConstants::$jsChatFlag >= 1) {
 						$data = $msgdata['data'];
 						$msg = new AMQPMessage($data, array('delivery_mode' => MQ::DELIVERYMODE));
 						$this->channel->basic_publish($msg, MQ::CHATEXCHANGE, "profile_deleted");
 					}
+					break;				
+				case "CHATMESSAGE":
+					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::CHAT_MESSAGE, MQ::MANDATORY, MQ::IMMEDIATE);
 					break;
+
+				case "ROSTERCREATION":
+					$data = $msgdata['data'];
+					$msg = new AMQPMessage($data, array('delivery_mode' => MQ::DELIVERYMODE));
+					$this->channel->basic_publish($msg, MQ::CHATEXCHANGE,"roster_created");
+					break;
+				case "DUPLICATE_LOG":
+                    $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::DUPLICATE_LOG_QUEUE,MQ::MANDATORY,MQ::IMMEDIATE);
+                    break;
+
+				case MQ::PROCESS_PROFILE_CACHE_DELETE:
+          $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::PROFILE_CACHE_Q_DELETE,MQ::MANDATORY,MQ::IMMEDIATE);
+					break;
+
 			}
 		} catch (Exception $exception) {
 			$str = "\nRabbitMQ Error in producer, Unable to publish message : " . $exception->getMessage() . "\tLine:" . __LINE__;
@@ -201,6 +224,7 @@ class Producer
 			return;
 		}
 	}
+
 
 	/**
 	 *
@@ -236,6 +260,7 @@ class Producer
 	{
 		return $this->isRabbitMQServerConnected;
 	}
+
 }
 
 ?>

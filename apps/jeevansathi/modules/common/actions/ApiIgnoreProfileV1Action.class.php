@@ -101,33 +101,38 @@ class ApiIgnoreProfileV1Action extends sfActions
 						$this->m_arrOut["buttondetails"] = $button;
 					$this->m_iResponseStatus = ResponseHandlerConfig::$SUCCESS;
 					$this->m_arrOut=array_merge($this->m_arrOut,array('status'=>"0",'message'=>null,'button_after_action'=>$button));
-					$this->contactObj = new Contacts($this->loginProfile,$this->ignoreProfile);
-					if($this->contactObj->getTYPE() == ContactHandler::ACCEPT)
-					{
-						$type = "ACCEPTANCE";
-					}
-					if($this->contactObj->getTYPE() == ContactHandler::INITIATED)
-					{
-						$type = "INITIATE";
-					}
-					if($type) {
-						if ($this->contactObj->getSenderObj()->getPROFILEID() == $this->loginProfile->getPROFILEID()) {
-							$sender = $this->loginProfile;
-							$receiver = $this->ignoreProfile;
-						}
-						//Entry in Chat Roster
-						try {
-							$producerObj = new Producer();
-							if ($producerObj->getRabbitMQServerConnected()) {
-								$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => $type, 'body' => array('sender' => array('profileid' => $sender->getPROFILEID(), 'checksum' => JsAuthentication::jsEncryptProfilechecksum($sender->getPROFILEID()), 'username' => $sender->getUSERNAME()), 'receiver' => array('profileid' => $receiver->getPROFILEID(), 'checksum' => JsAuthentication::jsEncryptProfilechecksum($receiver->getPROFILEID()), "username" => $receiver->getUSERNAME()))), 'redeliveryCount' => 0);
-								$producerObj->sendMessage($chatData);
-							}
-							unset($producerObj);
-						} catch (Exception $e) {
-							throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
-						}
+					$isIgnored = $ignore_Store_Obj->isIgnored($ignoredProfileid,$profileID);
 
-						//End
+					if(!$isIgnored) {
+						$this->contactObj = new Contacts($this->loginProfile, $this->ignoreProfile);
+						if ($this->contactObj->getTYPE() == ContactHandler::ACCEPT) {
+							$type = "ACCEPTANCE";
+						}
+						if ($this->contactObj->getTYPE() == ContactHandler::INITIATED) {
+							$type = "INITIATE";
+						}
+						if ($type) {
+							if ($this->contactObj->getSenderObj()->getPROFILEID() == $this->loginProfile->getPROFILEID()) {
+								$sender = $this->loginProfile;
+								$receiver = $this->ignoreProfile;
+							} else {
+								$receiver = $this->loginProfile;
+								$sender = $this->ignoreProfile;
+							}
+							//Entry in Chat Roster
+							try {
+								$producerObj = new Producer();
+								if ($producerObj->getRabbitMQServerConnected()) {
+									$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => $type, 'body' => array('sender' => array('profileid' => $sender->getPROFILEID(), 'checksum' => JsAuthentication::jsEncryptProfilechecksum($sender->getPROFILEID()), 'username' => $sender->getUSERNAME()), 'receiver' => array('profileid' => $receiver->getPROFILEID(), 'checksum' => JsAuthentication::jsEncryptProfilechecksum($receiver->getPROFILEID()), "username" => $receiver->getUSERNAME()))), 'redeliveryCount' => 0);
+									$producerObj->sendMessage($chatData);
+								}
+								unset($producerObj);
+							} catch (Exception $e) {
+								throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
+							}
+
+							//End
+						}
 					}
 					break;
 

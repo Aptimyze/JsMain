@@ -486,7 +486,7 @@ else {
 	layerObj.find('#commHistory').removeClass('disp-none');
 	layerObj.find('#commHistoryAbsent').addClass('disp-none');
 
-for(i=historyResponse.length-1;i>=0;i--)
+for(i=0;i<historyResponse.length;i++)
 {
 var tempDiv=commDiv.clone();
 tempDiv.removeClass('disp-none');
@@ -508,7 +508,7 @@ tempDiv.addClass('setl');
 
 }
 
-newHtml+=tempDiv.outerHtml();
+newHtml=tempDiv.outerHtml()+newHtml;
 }
 layerObj.find('#mainDiv').html(newHtml);
 }

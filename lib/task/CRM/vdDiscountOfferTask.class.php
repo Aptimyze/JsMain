@@ -34,8 +34,9 @@ EOF;
 		$status = $vdDiscountSmsLog->checkVDStatus($entry_dt);
 		if($status){
 			$sms = new ScheduleSms;
+			//$sms->processData("VD1",$entry_dt);
+			//$sms->processData("VD2",$entry_dt);
 			$sms->processData("VD1",$entry_dt);
-			$sms->processData("VD2",$entry_dt);
 		}
 	}
 }

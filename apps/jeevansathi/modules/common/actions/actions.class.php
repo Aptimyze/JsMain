@@ -278,7 +278,7 @@ class commonActions extends sfActions
                                             if(MobileCommon::isNewMobileSite())
                                             {
                                                 $request->setParameter("expired","1");
-                                                $this->forward("static","resetPass");
+                                                $this->forward("static","resetPass",0);
                                             }
                                             else
                                             {
@@ -296,7 +296,7 @@ class commonActions extends sfActions
                                         if(MobileCommon::isNewMobileSite())
                                         {
                                             $request->setParameter("success","1");
-                                            $this->forward("static","resetPass");
+                                            $this->forward("static","resetPass",0);
                                         }
                                         else
                                         {
@@ -325,7 +325,7 @@ class commonActions extends sfActions
                                             $request->setParameter("d",$this->d);
                                             $request->setParameter("h",$this->h);
                                             $request->setParameter("emailStr", $profileData[0]['EMAIL']);
-                                            $this->forward("static","resetPass");
+                                            $this->forward("static","resetPass",0);
                                     }    
                                     else
                                             $this->setTemplate("mobile/mobileResetPassword");
@@ -338,7 +338,7 @@ class commonActions extends sfActions
                                         if(MobileCommon::isNewMobileSite())
                                         {
                                             $request->setParameter("expired","1");
-                                            $this->forward("static","resetPass");
+                                            $this->forward("static","resetPass",0);
                                         }
                                         else
                                         {
@@ -410,7 +410,7 @@ class commonActions extends sfActions
 				$finalresponseArray["actiondetails"] = null;
 				$finalresponseArray["buttondetails"] = ButtonResponse::buttonDetailsMerge($array);
 				$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
-				if($this->contactObj->getTYPE() == "N") {
+				if($this->contactObj->getTYPE() == "N" && $this->loginProfile->getGENDER() != $this->Profile->getGENDER()) {
 					//Entry in Chat Roster
 					try {
 						$producerObj = new Producer();
@@ -440,7 +440,7 @@ class commonActions extends sfActions
 				$finalresponseArray["buttondetails"] = ButtonResponse::buttonDetailsMerge($array);
 				//Entry in Chat Roster
 				$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
-				if($this->contactObj->getTYPE() == "N") {
+				if($this->contactObj->getTYPE() == "N" && $this->loginProfile->getGENDER() != $this->Profile->getGENDER()) {
 					try {
 						$producerObj = new Producer();
 						if ($producerObj->getRabbitMQServerConnected()) {
@@ -586,7 +586,7 @@ class commonActions extends sfActions
             }
         }
                 
-        $this->forward("seo", "404");        
+        $this->forward("seo", "404",0);        
         return sfView::NONE;
     }
 

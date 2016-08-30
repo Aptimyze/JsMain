@@ -193,7 +193,9 @@ include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 		}
 		else
 		{
-			throw new sfException(sprintf(' Jpartner object is not present  %s::%s.', get_class($this), $method));
+			$ex = new sfException(sprintf(' Jpartner object is not present  %s::%s.', get_class($this), $method));
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,$ex);
+			throw $ex;
 		}
 		return $DPP_PARAMETERS;
 	}
@@ -459,7 +461,9 @@ include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 		}
 		else
 		{
-			throw new sfException(sprintf(' No profile class object send with profileid  %s::%s.', get_class($actionObj), $method));
+			$ex = new sfException(sprintf(' No profile class object send with profileid  %s::%s.', get_class($actionObj), $method));
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, $ex);
+			throw $ex;
 		}
 		return $dpp_parameters;
 	}
@@ -730,8 +734,11 @@ include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 			$actObj->profilechecksum=$jc->profilechecksum;
 			$actObj->SHOW_NEXT_PREV=$jc->SHOW_NEXT_PREV;
 			$actObj->other_params=$jc->other_params;
-			$actObj->SHOW_PREV=$jc->SHOW_PREV;
-			$actObj->SHOW_NEXT=$jc->SHOW_NEXT;
+			if($actObj->stype != SearchTypesEnums::KundliAlerts)
+			{
+				$actObj->SHOW_PREV=$jc->SHOW_PREV;
+				$actObj->SHOW_NEXT=$jc->SHOW_NEXT;
+			}
 			
 			$actObj->next_prev_prof=$jc->next_prev_prof;
 			

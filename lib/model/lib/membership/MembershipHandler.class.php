@@ -518,6 +518,9 @@ class MembershipHandler
         if ($fromSource) {
             $billingPaySrcObj = new billing_PAYMENT_SOURCE_TRACKING();
             $billingPaySrcObj->addSourceTracking($profileid, $pgNo, $fromSource);
+            $billingDropSrcObj = new billing_DROPOFF_SOURCE_TRACKING();
+            $geoIpCountry = $_SERVER['GEOIP_COUNTRY_CODE'];
+            $billingDropSrcObj->addSourceTracking($profileid, $pgNo, $fromSource, $geoIpCountry);
         }
         unset($billingPaySrcObj);
         unset($billingPaymentHitsObj);
@@ -1436,11 +1439,11 @@ class MembershipHandler
     }
     
     public function addVariableDiscountProfiles() {
-        $vdDurationObj 		= new billing_VARIABLE_DISCOUNT_DURATION("newjs_slave");
-        $vdPoolTechObj 		= new billing_VARIABLE_DISCOUNT_POOL_TECH("newjs_slave");
+        $vdDurationObj 		= new billing_VARIABLE_DISCOUNT_DURATION("newjs_masterRep");
+        $vdPoolTechObj 		= new billing_VARIABLE_DISCOUNT_POOL_TECH("newjs_masterRep");
         $vdObj 			= new billing_VARIABLE_DISCOUNT();
         $vdOfferDurationObj 	= new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
-	$vdDurationPoolTechObj 	= new billing_VARIABLE_DISCOUNT_DURATION_POOL_TECH("newjs_slave");
+	$vdDurationPoolTechObj 	= new billing_VARIABLE_DISCOUNT_DURATION_POOL_TECH("newjs_masterRep");
 	$jprofileObj 		= new JPROFILE('newjs_slave');
         $vdProfilesArr 		= array();
 
@@ -1450,7 +1453,8 @@ class MembershipHandler
         $activationDt 	= $vdDatesArr['ENTRY_DT'];
         $todayDate 	= date("Y-m-d");
         
-        if(strtotime($endDate) >= strtotime($todayDate)){
+        //if(strtotime($endDate) >= strtotime($todayDate)){
+	if(strtotime($startDate) == strtotime($todayDate)){	
             $vdProfilesArr = $vdPoolTechObj->fetchVdPoolTechProfiles();
             foreach ($vdProfilesArr as $key => $profileid){
 		
