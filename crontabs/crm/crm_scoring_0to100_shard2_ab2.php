@@ -35,7 +35,7 @@ mysql_query('set session wait_timeout=50000',$shDb);
 //Pool set of today
 $pro_arrLogin =array();
 $last_15day = date("Y-m-d",time()-15*86400);
-$sql = "SELECT DISTINCT(PROFILEID) FROM LOGIN_HISTORY WHERE LOGIN_DT>='$last_15day' AND PROFILEID%3=2";
+$sql = "SELECT DISTINCT(PROFILEID) FROM LOGIN_HISTORY WHERE LOGIN_DT>='$last_15day' AND PROFILEID%9=8";
 $res = mysql_query_decide($sql,$shDb) or die($sql.mysql_error($shDb));
 while($row = mysql_fetch_array($res))
 	$pro_arrLogin[] = $row['PROFILEID'];
