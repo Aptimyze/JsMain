@@ -299,7 +299,7 @@ chatConfig.Params = {
         appendRetryLimit: 1000,
         checkForDefaultEoiMsg:false,    //check for default eoi msg in chat history while append
         setLastReadMsgStorage:true,
-        rosterDeleteChatBoxMsg:"This profile has been removed from list,so you cannot chat with this profile."
+        rosterDeleteChatBoxMsg:"You can no longer chat, as the other user has blocked you/declined your interest"
     }
 };
 chatConfig.Params.pc.rosterGroups = [ /*chatConfig.Params.categoryNames['Desired Partner Matches'],*/ chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members'],chatConfig.Params.categoryNames['Search Results']];

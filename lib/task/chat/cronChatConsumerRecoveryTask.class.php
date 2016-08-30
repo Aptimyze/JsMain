@@ -57,7 +57,7 @@ EOF;
         foreach($resultQueues as $arr)
         {
           $queue_data=$arr;
-          print_r($queue_data->name."----");
+          //print_r($queue_data->name."----");
           if(in_array($queue_data->name, $queuesArr)){
             
             if(MessageQueues::$upperMessageLimitPerQueue[$queue_data->name])
