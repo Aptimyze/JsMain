@@ -539,12 +539,12 @@ class CommunicationHistory
 				case "OR":
 					
 					if(!$value["message"]){
-						$result[$count]["message"]=$value["who"]." sent a Message through chat";
+						$result[$count]["message"]=$value["who"]." sent a Message";
 						$result[$count]["header"] = " ";
 					}
 					else{
 						$result[$count]["message"] = $value["message"];
-						$result[$count]["header"] = $value["who"]." sent a Message through chat";
+						$result[$count]["header"] = $value["who"]." sent a Message";
 					}
 					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
 					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
@@ -554,12 +554,12 @@ class CommunicationHistory
 				case "OS":
 					
 					if(!$value["message"]){
-						$result[$count]["message"]="You sent a Message through chat";
+						$result[$count]["message"]="You sent a Message";
 						$result[$count]["header"] = " ";
 					}
 					else{
 						$result[$count]["message"] = $value["message"];
-						$result[$count]["header"] = "You sent a Message through chat";
+						$result[$count]["header"] = "You sent a Message";
 					}
 					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
 					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
