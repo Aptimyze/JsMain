@@ -2360,6 +2360,8 @@ function clearUgDegree(){
   
 })();
     $(document).ready(function(e) {
+	if(pageId=="JSPCR1")
+	{
 	inputData['displayname']="Y";
         $(".optionDrop li").each(function(index, element) {
             $(this).on("click",function(){
@@ -2377,5 +2379,6 @@ function clearUgDegree(){
 				inputData['displayname']=displayNameVal;
                         });
         });
+    }
     });
 

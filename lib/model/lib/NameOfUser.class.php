@@ -25,14 +25,24 @@ class NameOfUser
     {
 	$name_pdo = new incentive_NAME_OF_USER();
 	$name_pdo->insertNameInfo($profileid,$name,$display);    
+    }
+    public function filterName($name)
+    {
+        $name = preg_replace('/[^A-Za-z\ ]/', '', $name);
+        $name = preg_replace('/\s\s+/', ' ',$name);
+	$name = ucwords($name);
+	return $name;
+    }
+    public function isNameAutoScreened($name,$gender)
+    {
+	$nameArr = explode(" ",$name);
+	if(count($nameArr)>3)
+		return false;
 	$validNameListObj = new newjs_ValidNameList();
-	$nameInScreenList = $validNameListObj->haveName($name);
-	if($nameInScreenList)
-	{
-		$flagObj = new Flag;
-		$screenVal = $flagObj->setFlag($FLAGID="name",$this->profile->getSCREENING());
-		$updateScreenValNow;
-	}
+	$nameCountInScreenedList = $validNameListObj->haveName($nameArr);
+	if($nameCountInScreenedList!=0 && (count($nameArr)==$nameCountInScreenedList))
+		return true;
+	return false;
     }
     public function showNameToProfiles($selfProfileid,$otherProfilesArr,$selfProfileSubscription='')
     {

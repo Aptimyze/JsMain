@@ -792,7 +792,7 @@
 					$field->setLabel("");
 					$field->setBlankValue("");
 					$field->setBlankLabel("");
-					$field->setTableName("NAME_OF_USER");
+					$field->setTableName("NAME_OF_USER:NAME");
 					$page_obj->setField(67,"","",$field);
 					break;
 				case "DISPLAYNAME":
@@ -804,7 +804,7 @@
                                         $field->setLabel("");
                                         $field->setBlankValue("");
                                         $field->setBlankLabel("");
-                                        $field->setTableName("NAME_OF_USER");
+                                        $field->setTableName("NAME_OF_USER:DISPLAY");
                                         $page_obj->setField(127,"","",$field);
 					break;
 				case "SAMPRADAY":

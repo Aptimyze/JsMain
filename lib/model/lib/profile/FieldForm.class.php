@@ -115,7 +115,7 @@ class FieldForm extends sfForm
                                          $jpJainArr[$column_name]=$value;
                                   break;
                                 case "NAME_OF_USER":
-                                         $incentiveUsernameArr[$column_name]=$value;
+                                         $incentiveUsernameArr[$column_name]=trim($value);
                                   break;
                                 case "NATIVE_PLACE":
 						$nativePlaceArr[$column_name] = $value;
@@ -291,26 +291,32 @@ class FieldForm extends sfForm
             }
 					}
 				}
+			  }
+                                if($bSet_NativePlaceBit)
+                                {
+                                        $jprofileFieldArr["ANCESTRAL_ORIGIN"]="";//Set ANCESTRAL_ORIGIN to NULL
+                                        $screen_flag = Flag::setFlag("ANCESTRAL_ORIGIN", $screen_flag);
+                                }
+                                if(count($incentiveUsernameArr) && array_key_exists("NAME",$incentiveUsernameArr))
+                                {
+                                     if($incentiveUsernameArr['NAME'])
+                                     {
+                                      $nameOfUserObj = new NameOfUser();
+                                      $nameOfUserArr['NAME']=$nameOfUserObj->filterName($incentiveUsernameArr['NAME']);
+                                      $isNameAutoScreened  = $nameOfUserObj->isNameAutoScreened($incentiveUsernameArr['NAME'],$this->loggedInObj->getGENDER());
+                                        if($isNameAutoScreened)
+                                        {
+                                                $jprofileFieldArr['SCREENING'] = Flag::setFlag($FLAGID="name",$screen_flag);
+                                        }
+                                      }
+                                      if(!$incentiveUsernameArr['NAME'] || !$isNameAutoScreened)
+                                      {
+                                                $screen_flag = Flag::removeFlag($FLAGID="name", $screen_flag);
+                                      }
+                                }
         
-				if($bSet_NativePlaceBit)
-				{
-					$jprofileFieldArr["ANCESTRAL_ORIGIN"]="";//Set ANCESTRAL_ORIGIN to NULL
-					$screen_flag = Flag::setFlag("ANCESTRAL_ORIGIN", $screen_flag);
-				}	
-				
-				if(count($incentiveUsernameArr))
-				{
-					foreach($incentiveUsernameArr as $field=>$value){
-						if($value){
-							if(in_array(strtolower($field),$flag_arr)){
-								$screen_flag = Flag::removeFlag($field, $screen_flag);
-							}
-						}
-					}
-				}
 				if($screen_flag!=$this->loggedInObj->getSCREENING())
 					$jprofileFieldArr['SCREENING']=$screen_flag;
-			  }
 
 			//Logging array for edit profiles
 				$editLogArr=array();
@@ -430,8 +436,8 @@ class FieldForm extends sfForm
 			//NAME OF USER (INCENTIVE TABLE)
 			if(count($incentiveUsernameArr) && $this->checkForChange($incentiveUsernameArr,'NameUser'))
 			{
-				$dbIncentive=new incentive_NAME_OF_USER();
-				$dbIncentive->insertNameInfo($profileid,$incentiveUsernameArr[NAME],$incentiveUsernameArr[DISPLAY]);
+				$nameOfUserObj = new NameOfUser();
+				$nameOfUserObj->insertName($profileid,$incentiveUsernameArr[NAME],$incentiveUsernameArr[DISPLAY]);
 			}
 			//incomplete users 
 			$now = date("Y-m-d H:i:s");
