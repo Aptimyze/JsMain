@@ -17,6 +17,7 @@
     ~minify_include_javascripts('top')`
     ~if sfConfig::get("mod_"|cat:$sf_context->getModuleName()|cat:"_"|cat:$sf_context->getActionName()|cat:"_enable_google_analytics") neq 'off'`
     <script>
+    var _rID = "~sfContext::getInstance()->getRequest()->getAttribute('REQUEST_ID_FOR_TRACKING')`";
         var domainCode={};
         domainCode[".hindijeevansathi.in"]="UA-20942264-1";
         domainCode[".jeevansathi.co.in"]="UA-20941176-1";

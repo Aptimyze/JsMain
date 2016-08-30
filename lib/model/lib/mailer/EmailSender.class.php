@@ -321,7 +321,7 @@ class EmailSender{
     if($this->email_tpl)
       return $this->email_tpl;
     else{
-      throw new Exception("Please call setTemplate first");
+      throw new jsException('',"Please call setTemplate first");
     }
   }
 

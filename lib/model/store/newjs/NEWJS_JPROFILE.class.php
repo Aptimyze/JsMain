@@ -323,7 +323,7 @@ class NEWJS_JPROFILE extends TABLE
                 foreach ($numberArray as $k => $num) {
                     if ($k != 0)
                         $valueArrayM['PHONE_MOB'] .= ", ";
-                    $valueArrayM['PHONE_MOB'] .= "'" . $num . "', '0" . $num . "', '" . $isd . $num . "', '+" . $isd . $num . "', '0" . $isd . $num . "'";
+                    $valueArrayM['PHONE_MOB'] .= "'" . $num . "'";
                 }
             }
             if ($valueArrayM) {
@@ -1649,7 +1649,7 @@ $time->sub(date_interval_create_from_date_string($lastLoginWithIn));
 
         try{
             $sql =  <<<SQL
-            SELECT *
+            SELECT PROFILEID
             FROM  newjs.`JPROFILE`
             WHERE LAST_LOGIN_DT  >=  :LAST_LOGIN_DT
             AND activatedKey=1

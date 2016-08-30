@@ -3,7 +3,8 @@ $TOUT = 14400;
 include_once(JsConstants::$smartyDir);
 //include_once("../jsadmin/handleCrmLogin.php");
 
-
+// include wrapper for logging
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 $smarty=new Smarty;
 $smarty->setTemplateDir(JsConstants::$alertDocRoot."/mmmjs/templates");
 $smarty->setCompileDir(JsConstants::$alertDocRoot."/mmmjs/templates_c");
@@ -1281,6 +1282,7 @@ function label_select($columnname,$value,$database="")
 
 function logError($message,$query="",$critical="exit", $sendmailto="NO")
 {
+		LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($message));
         global $db, $smarty, $checksum;
         ob_start();
         var_dump($_SERVER);

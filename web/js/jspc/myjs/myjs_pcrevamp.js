@@ -269,7 +269,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
 	}
 	dailyMatches.prototype.noResultCase = function() {
 		bellCountStatus++;
-		//createTotalBellCounts(newEngagementArray["DAILY_MATCHES_NEW"]);
+		createTotalBellCounts(newEngagementArray["DAILY_MATCHES_NEW"]);
 		noResultFaceCard(this);		
 	}
 
@@ -298,7 +298,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
 	}
 	justJoinedMatches.prototype.noResultCase = function() {
 		bellCountStatus++;
-		//createTotalBellCounts(newEngagementArray["NEW_MATCHES"]);
+		createTotalBellCounts(newEngagementArray["NEW_MATCHES"]);
 		noResultFaceCard(this);		
 				
 	}
