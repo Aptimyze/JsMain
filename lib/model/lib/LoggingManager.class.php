@@ -113,6 +113,14 @@ class LoggingManager
 			$className =  __CLASS__;
 			self::$instance = new $className;
 		}
+		if ($basePath == null)
+		{
+			self::$instance->flexDir = false;
+		}
+		else
+		{
+			self::$instance->flexDir = true;
+		}
 		self::$instance->szLogPath = $basePath;
 		return self::$instance;
 	}
@@ -221,7 +229,7 @@ class LoggingManager
 		$uniqueSubId = $this->getLogUniqueSubId($logArray);
 		$statusCode = $this->getLogStatusCode($exception,$logArray);
 		$typeOfError = $this->getLogTypeOfError($exception,$logArray);
-		$headers = getallheaders();
+		//$headers = getallheaders();
 		$logData = array();
 
 		if ( $time != "")
@@ -279,7 +287,7 @@ class LoggingManager
 
 		if($this->canWriteTrace($this->moduleName))
 		{
-			$logData[LoggingEnums::LOG_EXCEPTION] = $exception;
+			$logData[LoggingEnums::LOG_EXCEPTION] = $exception->getTrace();
 		}
 		return $logData;
 	}
@@ -552,10 +560,6 @@ class LoggingManager
 		if($this->szLogPath == null)
 		{
 			$this->szLogPath = $this->moduleName;
-		}
-		else
-		{
-			$this->flexDir = true;
 		}
 		// check if config is on, if yes then check if module can log
 		$toLog = (LoggingEnums::CONFIG_ON ? LoggingConfig::getInstance()->logStatus($this->moduleName) : true);

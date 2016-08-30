@@ -35,7 +35,7 @@ mysql_query('set session wait_timeout=50000',$shDb);
 //Pool set of today
 $pro_arrLogin =array();
 $last_15day = date("Y-m-d",time()-15*86400);
-$sql = "SELECT DISTINCT(PROFILEID) FROM LOGIN_HISTORY WHERE LOGIN_DT>='$last_15day' AND PROFILEID%3=1";
+$sql = "SELECT DISTINCT(PROFILEID) FROM LOGIN_HISTORY WHERE LOGIN_DT>='$last_15day' AND PROFILEID%3=2";
 $res = mysql_query_decide($sql,$shDb) or die($sql.mysql_error($shDb));
 while($row = mysql_fetch_array($res))
 	$pro_arrLogin[] = $row['PROFILEID'];
@@ -158,7 +158,7 @@ for($t=0;$t<count($ptype_arr);$t++)
                                         if($ptype=="C")
                                         {
                                                 $flag = "RENHIT";
-                                        	$response = sendPostData("http://172.10.18.111:2211/jsScore",$newmodelJson);
+                                                $response = sendPostData("http://172.10.18.111:2211/jsScore",$newmodelJson);
                                         }
                                         else
                                         {
@@ -170,9 +170,9 @@ for($t=0;$t<count($ptype_arr);$t++)
                                         $score1 = json_decode($response,true);
                                         if(!is_numeric($score1)){
                                                 $score1 ='NULL';
-                                                $hit_log1 =$profileid."#".$newmodelJson;
-                                                $fileName1 ="score_hit_log_for_nullResponse".$date.".txt";
-                                                passthru("echo '$hit_log1' >>/tmp/$fileName1");
+                                        	$hit_log1 =$profileid."#".$newmodelJson;
+                                        	$fileName1 ="score_hit_log_for_nullResponse".$date.".txt";
+                                        	passthru("echo '$hit_log1' >>/tmp/$fileName1");
 					}
                                         else{
                                                 $score1 =round($score1,0);

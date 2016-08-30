@@ -8,7 +8,7 @@ include($_SERVER['DOCUMENT_ROOT']."/classes/Mysql.class.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Scoring100_ab.class.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/ScoringGlobalParams_ab.class.php");
 
-$activeServerId=1;
+$activeServerId=0;
 //Sent mail for daily tracking
 $msg="\nShard $activeServerId # Start Time=".date("Y-m-d H:i:s");
 $to="vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
@@ -35,7 +35,7 @@ mysql_query('set session wait_timeout=50000',$shDb);
 //Pool set of today
 $pro_arrLogin =array();
 $last_15day = date("Y-m-d",time()-15*86400);
-$sql = "SELECT DISTINCT(PROFILEID) FROM LOGIN_HISTORY WHERE LOGIN_DT>='$last_15day' AND PROFILEID%3=1";
+$sql = "SELECT DISTINCT(PROFILEID) FROM LOGIN_HISTORY WHERE LOGIN_DT>='$last_15day' AND PROFILEID%3=2";
 $res = mysql_query_decide($sql,$shDb) or die($sql.mysql_error($shDb));
 while($row = mysql_fetch_array($res))
 	$pro_arrLogin[] = $row['PROFILEID'];
@@ -158,7 +158,7 @@ for($t=0;$t<count($ptype_arr);$t++)
                                         if($ptype=="C")
                                         {
                                                 $flag = "RENHIT";
-                                        	$response = sendPostData("http://172.10.18.111:2211/jsScore",$newmodelJson);
+                                                $response = sendPostData("http://172.10.18.111:2211/jsScore",$newmodelJson);
                                         }
                                         else
                                         {
@@ -166,7 +166,7 @@ for($t=0;$t<count($ptype_arr);$t++)
                                                 $response = sendPostData("http://jsscoring.analytics.resdex.com:9000/jsScore",$newmodelJson);
                                         }
                                         $score = round(json_decode($response,true),0);
-					// temporary_logging
+                                        // temporary_logging
                                         $score1 = json_decode($response,true);
                                         if(!is_numeric($score1)){
                                                 $score1 ='NULL';
@@ -211,10 +211,10 @@ function updateScoreLog($profileid, $score, $ptype) {
 		$model = 'RENEWAL';
         elseif($ptype =='Z')
                 $model = 'NO_API';
-        elseif($ptype=='F')
-                $model = 'NEVER_PAID';
-        elseif($ptype=='R')
-                $model = 'EVER_PAID';
+	elseif($ptype=='F')
+		$model = 'NEVER_PAID';
+	elseif($ptype=='R')
+		$model = 'EVER_PAID';
 
 	global $maDb;
 	$sql_up = "INSERT INTO incentive.`SCORE_UPDATE_LOG_NEW_MODEL` VALUES ('',  '".$profileid."',  '".$score."', '".$model."',  NOW())";
