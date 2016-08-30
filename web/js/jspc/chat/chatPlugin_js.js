@@ -1770,6 +1770,11 @@ JsChat.prototype = {
         }  
     },
 
+    _disableChatTextArea:function(userId){
+        $('chat-box[user-id="' + userId + '"]').attr("data-paidInitiated","false");
+        $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);   
+    },
+
     //show/hide free mem msg
     _manageFreeMemCase:function(type,userId,chatBoxType,hasPaidIntiated){
         //console.log("in _manageFreeMemCase",type);
@@ -1971,7 +1976,7 @@ JsChat.prototype = {
         }
     },
     //append chat history in chat box
-    _appendChatHistory: function (selfJID, otherJID, communication,requestType) {
+    _appendChatHistory: function (selfJID, otherJID, communication,requestType,canChatMore) {
         //console.log("self message");
         //console.log("_appendChatHistory"+requestType);
         var self_id = selfJID.split("@")[0],
@@ -2048,6 +2053,10 @@ JsChat.prototype = {
             if(latestMsgId != ""){
                 //console.log("setting");
                 $('chat-box[user-id="' + other_id + '"]').find("#moreHistory_"+other_id).attr("data-latestMsgId",latestMsgId);
+            }
+            if(typeof canChatMore != "undefined" && canChatMore == "false"){
+                //console.log("set as free");
+                curElem._disableChatTextArea(other_id);
             }
             setTimeout(function(){
                 if(requestType == "first_history"){

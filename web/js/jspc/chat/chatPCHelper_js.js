@@ -263,7 +263,7 @@ function getChatHistory(apiParams,key) {
                         }
                         manageHistoryLoader(bare_to_jid,"hide");
                         //call plugin function to append history in div
-                        objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], $.parseJSON(response["Message"]),key);
+                        objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], $.parseJSON(response["Message"]),key,response["canChat"]);
                         //objJsChat.storeMessagesInLocalHistory(apiParams["extraParams"]["from"].split('@')[0],apiParams["extraParams"]["to"].split('@')[0],$.parseJSON(response["Message"]),'history');
                     }
                     else{
