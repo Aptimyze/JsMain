@@ -65,15 +65,10 @@ class ApiProfileCacheV1Action extends sfAction
     switch(strtolower(trim($command)))
     {
       case "flushall":
-        $allowedMethod = JsConstants::$whichMachine == 'prod' ? "POST" : "GET";
-        $valid = ($this->request->isMethod($allowedMethod) && JsConstants::$whichMachine != "prod") ? true : false;
+        $valid = (JsConstants::$whichMachine != "prod") ? true : false;
       break;
       case "flush":
-        $allowedMethod = JsConstants::$whichMachine == 'prod' ? "POST" : "GET";
         $valid = ($this->request->hasParameter("profileid")) ? true : false;
-        if(JsConstants::$whichMachine == 'prod' && $valid){
-          $valid = $valid && $this->request->isMethod($allowedMethod);
-        }
       break;
       default :
         $valid = false;
