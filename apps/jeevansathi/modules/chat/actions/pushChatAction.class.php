@@ -43,8 +43,8 @@ class pushChatAction extends sfAction
 			$output = $inputValidateObj->getResponse();
 			if($output["statusCode"]==ResponseHandlerConfig::$SUCCESS["statusCode"])
 			{
-				$data["sender"] = $sender;
-				$data["receiver"] = $receiver;
+				$data["from"] = $sender;
+				$data["to"] = $receiver;
 				$data["communicationType"] = $communicationType;
 				$data["message"] = $message;
 				$data['chatid'] = $chatID;
