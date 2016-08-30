@@ -263,7 +263,7 @@ function getChatHistory(apiParams,key) {
                         }
                         manageHistoryLoader(bare_to_jid,"hide");
                         //call plugin function to append history in div
-                        objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], $.parseJSON(response["Message"]),key);
+                        objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], $.parseJSON(response["Message"]),key,response["canChat"]);
                         //objJsChat.storeMessagesInLocalHistory(apiParams["extraParams"]["from"].split('@')[0],apiParams["extraParams"]["to"].split('@')[0],$.parseJSON(response["Message"]),'history');
                     }
                     else{
@@ -353,7 +353,14 @@ function checkForSiteLoggedOutMode(response){
 */
 function getMembershipStatus(){
     var membership = localStorage.getItem("self_subcription");
-    //confirm check
+    //console.log("membership",membership);
+    if(!membership){
+        //console.log("not exists");
+        if(self_subcription){
+            localStorage.setItem("self_subcription",self_subcription);
+            membership = self_subcription;
+        }
+    }
     if(membership && membership!= "Free"){
         return "Paid";
     }

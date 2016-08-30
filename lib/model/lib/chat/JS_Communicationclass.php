@@ -60,14 +60,6 @@ class JS_Communication
 			$result= $dbObj->getMessageHistory($this->loginProfile,$this->otherProfile,self::$RESULTS_PER_PAGE_CHAT,$msgIdNo);
 			if(count($result)<20)
 			{
-				$loginProfileObj = new Profile();
-				$loginProfileObj->getDetail($this->loginProfile, "PROFILEID", "*");
-				
-				$otherProfileObj = new Profile();
-				$otherProfileObj->getDetail($this->otherProfile, "PROFILEID", "*");
-
-				$this->contactObj = new Contacts($loginProfileObj, $otherProfileObj);
-				//$type=$this->contactObj->getTYPE();
 				$msgDbObj= new NEWJS_MESSAGE_LOG($dbName1);
 				$eoiArray= $msgDbObj->getEOIMessagesForChat(array($this->loginProfile),array($this->otherProfile));
 				
@@ -92,7 +84,7 @@ class JS_Communication
 				}
 				
 					//print_r($result);die;			
-			}		
+			}
 		}
 		else
 		{			
