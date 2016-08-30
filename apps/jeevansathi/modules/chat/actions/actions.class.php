@@ -200,7 +200,7 @@ class chatActions extends sfActions
 			//Photo logic
 			$pidArr["PROFILEID"] = $profileid;
 			//$photoType = 'MainPicUrl';
-            $photoType = 'ProfilePic120Url';
+            $photoType = 'ProfilePic235Url';
 			$profileObj = LoggedInProfile::getInstance('newjs_master', $loginData["PROFILEID"]);
 			$multipleProfileObj = new ProfileArray();
 			$profileDetails = $multipleProfileObj->getResultsBasedOnJprofileFields($pidArr);
