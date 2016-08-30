@@ -44,7 +44,7 @@ EOF;
     if(!$status_result || strtolower($status_result->status)!=="ok")
     {
       $str="\nRabbitmq Error Alert: Rabbitmq Server with host: ".JsConstants::$rabbitmqConfig[$serverid]['HOST']." is down.";
-      //RabbitmqHelper::sendAlert($str,"default");
+      RabbitmqHelper::sendChatConsumerAlert($str);
     }
     else
     {
@@ -76,7 +76,7 @@ EOF;
             if($serverid=="FIRST_SERVER" && $queue_data->messages_ready>$messageLimit)
             {
               $str="\nRabbitmq Error Alert: Number of unconsumed messages pending in {$queue_data->name} is  {$queue_data->messages_ready} on first server";
-              //RabbitmqHelper::sendAlert($str,"default");
+              RabbitmqHelper::sendChatConsumerAlert($str);
             } 
            
             if($serverid=="FIRST_SERVER" && $queue_data->messages_unacknowledged>$messageLimit)
@@ -96,7 +96,7 @@ EOF;
                 passthru(JsConstants::$php5path." ".MessageQueues::CRONCHAT_CONSUMER_STARTCOMMAND." > /dev/null &");
               }
 
-              //RabbitmqHelper::sendAlert($str,"default");
+              RabbitmqHelper::sendChatConsumerAlert($str);
             }
           }
         }
@@ -138,11 +138,8 @@ EOF;
     $inactiveInstancesNum=$totalInstancesNum - $activeInstancesNum;    
     if($inactiveInstancesNum > 0)
     {
-      if($sendAlertTo=="browserNotification")
-        $str="\nError Alert: ".$inactiveInstancesNum." notification consumer instances are not running due to some error, restarting instances....";
-      else
-        $str="\nError Alert: ".$inactiveInstancesNum." consumer instances are not running due to some error, restarting instances....";
-      //RabbitmqHelper::sendAlert($str,$sendAlertTo);
+      $str="\nError Alert: ".$inactiveInstancesNum." consumer instances are not running due to some error, restarting instances....";
+      RabbitmqHelper::sendChatConsumerAlert($str);
       while($inactiveInstancesNum > 0)
       {
         passthru(JsConstants::$php5path." ".$CONSUMER_STARTCOMMAND." > /dev/null &"); 
