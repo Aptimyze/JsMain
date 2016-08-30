@@ -70,7 +70,7 @@ class NEWJS_CHAT_LOG extends TABLE{
 				else
 				{
 					if($pagination)
-						$whrStr="AND M.ID < ".$pagination;
+						$whrStr="AND M.ID < :pagination";
 					else
 						$whrStr="";
 					if($limit)
@@ -84,6 +84,8 @@ class NEWJS_CHAT_LOG extends TABLE{
 					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);
 					if($limit)
 						$prep->bindValue(":limit",$limit,PDO::PARAM_INT);
+					if($pagination)
+						$prep->bindValue(":pagination",$pagination,PDO::PARAM_INT);
 					$prep->execute();
 					while($row = $prep->fetch(PDO::FETCH_ASSOC))
 					{
@@ -110,13 +112,15 @@ class NEWJS_CHAT_LOG extends TABLE{
 				else
 				{
 					if($pagination)
-						$whrStr="AND M.ID < ".$pagination;
+						$whrStr="AND M.ID < :pagination";
 					else
 						$whrStr="";
 					$sql = "SELECT count(*) as CNT FROM  `CHAT_LOG`  WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER ))";
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);
+					if($pagination)
+						$prep->bindValue(":pagination",$pagination,PDO::PARAM_INT);
 					$prep->execute();
 					while($row = $prep->fetch(PDO::FETCH_ASSOC))
 					{

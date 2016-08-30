@@ -212,6 +212,9 @@ class JPROFILE
 
     public function getArray($valueArray = "", $excludeArray = "", $greaterThanArray = "", $fields = "PROFILEID", $lessThanArray = "", $orderby = "", $limit = "", $greaterThanEqualArrayWithoutQuote = "", $lessThanEqualArrayWithoutQuote = "", $like = "", $nolike = "", $addWhereText = "")
     {
+      if(is_array($valueArray) && count($valueArray) && $valueArray['PROFILEID']) {      
+       // $this->logProfileIDs($valueArray['PROFILEID']);
+      }
         return self::$objProfileMysql->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
     }
 
@@ -672,6 +675,20 @@ class JPROFILE
 
         $key .= '::'.date('H');
         JsMemcache::getInstance()->incrCount($key);
+    }
+    
+    /**
+     * 
+     * @param type $Var
+     */
+    private function logProfileIDs($Var)
+    {
+      if(is_array($Var)) {
+        $Var = implode(',',$Var);
+      }
+      
+      $now = time();//date('Y-m-d H:i:s').':'.uniqid();
+      JsMemcache::getInstance()->zAdd('JPROFILE_GET_ARRAY', $now, $Var);
     }
 }
 
