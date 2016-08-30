@@ -793,7 +793,7 @@ function writeMessage(result, action, index){
     var msgWindowHeight;
     msgWindowMSGID=typeof result['MSGID'] !='undefined' ? result['MSGID'] : '' ;
     msgWindowCHATID=typeof result['CHATID'] !='undefined' ? result['CHATID'] : '' ;
-    $("#msgId").unbind('scroll');console.log(result.hasNext);
+    $("#msgId").unbind('scroll');
     if(result.hasNext==true)
     {
         $("#msgId").scroll(function()
