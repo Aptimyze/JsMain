@@ -1358,17 +1358,19 @@ JsChat.prototype = {
             }
         }
         
-        $(".extraPopup").append('<div id="extra_' + data + '" class="extraChatList pad08"><div class="extraUsername cursp colrw minWid65 disp_ib pad8_new fontlig f14">' + userShowName + '</div><i class="nchatspr fr nchatic_4 cursp disp_ib mt6 ml10"></i><div class="pinkBubble scir disp_ib padall-10 fr"><span class="noOfMessg f13 pos-abs">1</span></div></div>');
+        $(".extraPopup").append('<div id="extra_' + data + '" class="extraChatList pad08"><div class="extraUsername cursp colrw minWid65 disp_ib pad8_new fontlig f14">' + userShowName + '</div><i class="nchatspr fr nchatic_4 cursp disp_ib mt6 ml10"></i><div class="pinkBubble scir disp_ib padall-10 fr disp-none"><span class="noOfMessg f13 pos-abs">1</span></div></div>');
+        //$("#extra_" + data + " .pinkBubble").hide();
         curElem._bindExtraUserNameBox(data);
         setTimeout(function () {
            var bubbleNumber = $('chat-box[user-id="' + data + '"] .chatBoxBar .pinkBubble2 span').html();
             $("#extra_" + data + " .pinkBubble span").html(bubbleNumber);
-            if ($("#extra_" + data + " .pinkBubble span").html() == 0) {
-                $("#extra_" + data + " .pinkBubble").hide();
+            if ($("#extra_" + data + " .pinkBubble span").html() > 0) {
+                $("#extra_" + data + " .pinkBubble").removeClass("disp-none");
             } 
         }, 500);
         
     },
+
     //append chat box on page
     _appendChatBox: function (userId, status, jid, pcheckSum, groupId,hisStatus) {
         var strHtm = '<chat-box group-id="' + groupId + '" pos-state="open" data-nodeMigrated="false" data-paidInitiated="false" data-jid="' + jid + '" status-user="' + status + '" user-id="' + userId + '" data-checks="' + pcheckSum+'"';
