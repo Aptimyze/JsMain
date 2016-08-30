@@ -1238,9 +1238,9 @@ JsChat.prototype = {
         delete that;
     },
     //binding click on extra popup username listing
-    _bindExtraUserNameBox: function () {
+    _bindExtraUserNameBox: function (userId) {
         var curElem = this;
-        $('body').on('click', '.extraUsername', function () {
+        $('#extra_'+userId+" .extraUsername").on("click", function () {
             curElem._scrollDown($(".extraPopup"), "retain_extra");
             setTimeout(function () {
                 $(".extraChats").css("padding-top", "0px");
@@ -1260,13 +1260,28 @@ JsChat.prototype = {
                 }
             }
             if($("#"+username+"_"+groupId).length != 0 ) {
+                //console.log("append call after click event _bindExtraUserNameBox");
                 curElem._appendChatBox(username, status, jid, pcheckSum, groupId,"noHis");
                 $(originalElem).remove();
-                $("chat-box[user-id='" + username + "'] .chatMessage").html("");
-                //curElem._postChatPanelsBox(username);
-                $("chat-box[user-id='" + username + "'] .chatMessage").html(chatHtml);
-                $(this).closest(".extraChatList").remove();
-                curElem._scrollUp($('chat-box[user-id="' + username + '"]'), "297px","noAnimate");
+                var chatBrowser = navigator.userAgent;
+                if (chatBrowser.indexOf("Firefox") > -1 || chatBrowser.indexOf("Mozilla") > -1) {
+                    setTimeout(function(){
+                        $("chat-box[user-id='" + username + "'] .chatMessage").html("");
+                        $("chat-box[user-id='" + username + "'] .chatMessage").html(chatHtml);
+                        //console.log("chatHtml",chatHtml);
+                        $("#extra_"+username).remove();
+                        //$(this).closest(".extraChatList").remove();
+                        curElem._scrollUp($('chat-box[user-id="' + username + '"]'), "297px","noAnimate");
+                    },50);
+                }
+                else{
+                    $("chat-box[user-id='" + username + "'] .chatMessage").html("");
+                    $("chat-box[user-id='" + username + "'] .chatMessage").html(chatHtml);
+                    //console.log("chatHtml",chatHtml);
+                    $("#extra_"+username).remove();
+                    curElem._scrollUp($('chat-box[user-id="' + username + '"]'), "297px","noAnimate");
+                }
+                
                 
                 //adding data in extra popup 
                 var len = $("chat-box").length,
@@ -1334,6 +1349,7 @@ JsChat.prototype = {
         }
         
         $(".extraPopup").append('<div id="extra_' + data + '" class="extraChatList pad08"><div class="extraUsername cursp colrw minWid65 disp_ib pad8_new fontlig f14">' + userShowName + '</div><i class="nchatspr fr nchatic_4 cursp disp_ib mt6 ml10"></i><div class="pinkBubble scir disp_ib padall-10 fr"><span class="noOfMessg f13 pos-abs">1</span></div></div>');
+        curElem._bindExtraUserNameBox(data);
         setTimeout(function () {
            var bubbleNumber = $('chat-box[user-id="' + data + '"] .chatBoxBar .pinkBubble2 span').html();
             $("#extra_" + data + " .pinkBubble span").html(bubbleNumber);
@@ -1429,14 +1445,11 @@ JsChat.prototype = {
     },
     _postChatPanelsBox: function (userId) {
         //console.log("in _postChatPanelsBox");
-        //console.log("manviiiii", $('chat-box[user-id="' + userId + '"]'));
         var groupId = $('chat-box[user-id="' + userId + '"]').attr("group-id");
         var data = [];
         var dataPresent = false;
         
         var curElem = this,membership = getMembershipStatus(); //get membership status
-        //this._chatLoggerPlugin("in _postChatPanelsBox");
-       
         var chatBoxType = curElem._getChatBoxType(userId, $('chat-box[user-id="' + userId + '"]').attr("group-id"));
         curElem._changeLocalStorage("add",userId,$('chat-box[user-id="' + userId + '"]').attr("group-id"),"open");
         //setTimeout(function() {
@@ -1518,8 +1531,8 @@ JsChat.prototype = {
             //console.log("setting moreHistory_");
             $("#moreHistory_"+userId).val("1");
             if(typeof operation == "undefined" || operation != "chatBoxUpdate"){
+                //console.log("getting first history",hisStatus);
                 if(hisStatus == undefined && hisStatus != "not"){
-                    //console.log("ankita_get hisStatus");
                     //fetch msg history
                     getChatHistory({
                         "extraParams": {
@@ -1790,7 +1803,7 @@ JsChat.prototype = {
     //appending chat box
     _chatPanelsBox: function (userId, status, jid, pcheckSum, groupId) {
         //this._chatLoggerPlugin("pcheckSum", pcheckSum);
-        //console.log("_chatPanelsBox");
+        //console.log("in _chatPanelsBox");
         var curElem = this;
         var output = curElem.checkForNodePresence(userId);
         if(output && output["exists"] == true && output["groupID"]){
@@ -1838,8 +1851,9 @@ JsChat.prototype = {
                     curElem._updateSideChatBox();
                 }
                 curElem._bindExtraPopupUserClose($(".nchatic_4"));
-                curElem._bindExtraUserNameBox();
+                //curElem._bindExtraUserNameBox();
             }
+            //console.log("append call after click event main click");
             curElem._appendChatBox(userId, status, jid, pcheckSum, groupId);
         } else {
             $(".extraChatList").each(function (index, element) {
@@ -1856,10 +1870,7 @@ JsChat.prototype = {
                         value = parseInt($(".extraNumber").text().split("+")[1]),
                         data = $($("chat-box")[len - 1 - value]).attr("user-id"),
                         chatHtml = $(originalElem).find(".chatMessage").html();
-                    //curElem._appendChatBox(username, status, jid, pcheckSum, groupId);
-                    //originalElem.remove();
-                    //$("chat-box[user-id='" + username + "'] .chatMessage").html("");
-                    //curElem._postChatPanelsBox(username);
+                    //console.log("append call after click event listing click");
                     curElem._appendChatBox(username, status, jid, pcheckSum, groupId,"noHis");
                     originalElem.remove();
                     $("chat-box[user-id='" + username + "'] .chatMessage").html("").html(chatHtml);
