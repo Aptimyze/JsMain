@@ -276,6 +276,8 @@ class DetailedViewApi
 		
         $this->m_arrOut['gender'] = $objProfile->getDecoratedGender();
 		$this->m_arrOut['m_status']  = $objProfile->getDecoratedMaritalStatus();
+                if( $objProfile->getMSTATUS() != "N")
+                    $this->m_arrOut['have_child']  = ApiViewConstants::$hasChildren[$objProfile->getHAVECHILD()];
 	}
 	
 	/**
@@ -1016,6 +1018,9 @@ class DetailedViewApi
 				$this->m_arrOut[strtolower($key)] = $value;
 			}
 		}
+                //have children
+                if($jPartnerObj->getPARTNER_MSTATUS() != "'N'")
+                    $this->m_arrOut['dpp_have_child'] = $jPartnerObj->getDecoratedCHILDREN();
 		//Small Community Labels for DPP Mtongue
         if($this->m_arrOut['dpp_mtongue'] && strlen($jPartnerObj->getPARTNER_MTONGUE()))
         {
