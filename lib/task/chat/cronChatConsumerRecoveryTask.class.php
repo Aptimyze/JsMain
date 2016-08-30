@@ -65,8 +65,7 @@ EOF;
             else
               $messageLimit = MessageQueues::$upperMessageLimitPerQueue["default"];
        
-            //keep some specific queues out of msg upper limit
-            if($queue_data->name==="aliveness-test" || in_array($queue_data->name, MessageQueues::$queuesWithoutMsgCountLimit))
+            if($queue_data->name==="aliveness-test")
             {
                 continue;
             }
