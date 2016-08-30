@@ -4,7 +4,7 @@ This php script checks if RabbitMQ is working,number of active consumer instance
 present in queues on the second server.
 */
 
-class cronChatConsumerRecovery extends sfBaseTask
+class cronChatConsumerRecoveryTask extends sfBaseTask
 {
   /**
    * 
@@ -78,7 +78,7 @@ EOF;
               $str="\nRabbitmq Error Alert: Number of unconsumed messages pending in {$queue_data->name} is  {$queue_data->messages_ready} on first server";
               //RabbitmqHelper::sendAlert($str,"default");
             } 
-            exec("ps aux | grep \"MessageQueues::CRONCONSUMER_STARTCOMMAND\" | grep -v grep | awk '{ print $2 }'", $out);
+           
             if($serverid=="FIRST_SERVER" && $queue_data->messages_unacknowledged>$messageLimit)
             {
               $str="\nRabbitmq Error Alert: Number of unacknowledged messages pending in {$queue_data->name} is  {$queue_data->messages_unacknowledged} on first server. Restarting the consumers";
