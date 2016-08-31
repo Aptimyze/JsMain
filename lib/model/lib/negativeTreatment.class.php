@@ -62,9 +62,11 @@ class negativeTreatment{
 			unset($emailArrNew);
 			$emailArr =$this->oldEmailObj->getEmailList($profileidArr);
 			// jprofile condition for email
-			$jemailArr =$this->jprofileEmailObj->getProfileSelectedDetails($profileidArr,'EMAIL');
-			if(is_array($jemailArr))
-				$jemailArr =array_keys($jemailArr);
+			$jemailArr1 =$this->jprofileEmailObj->getProfileSelectedDetails($profileidArr,'EMAIL');
+			if(is_array($jemailArr1)){
+				foreach($jemailArr1 as $key=>$val)
+				$jemailArr[] =$val['EMAIL'];
+			}
 			if(is_array($emailArr) && is_array($jemailArr))
 				$emailArr =array_merge($emailArr, $jemailArr);
 			elseif(is_array($jemailArr))
