@@ -44,7 +44,7 @@ function compute_eligible_in_array($db_js,$dnc_array,$renewal='')
 			$table ='incentive.RENEWAL_IN_DIALER';
 		else
 			$table ='incentive.IN_DIALER';
-		$sql_vd="select PROFILEID from ".$table." PROFILEID IN ($profileid_str) AND ELIGIBLE!='N'";	
+		$sql_vd="select PROFILEID from ".$table." WHERE PROFILEID IN ($profileid_str) AND ELIGIBLE!='N'";	
                 $res_vd = mysql_query($sql_vd,$db_js) or die("$sql_vd".mysql_error($db_js));
                 while($row_vd = mysql_fetch_array($res_vd))
                         $eligible_profiles[] = $row_vd["PROFILEID"];
