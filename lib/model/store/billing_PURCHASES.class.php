@@ -489,6 +489,37 @@ class BILLING_PURCHASES extends TABLE{
         return $output;
     }
 
+    /*function : fetchPaymentCount
+    * returns the count of previous main membership payments by profile with reference to  * given billid
+    *@params: $profileid,$currentBillId
+    * @return: count
+    */
+    public function fetchPaymentCount($profileid,$currentBillId){
+        try 
+        {
+            if(!$profileid || !$currentBillId){
+                return 0;
+            } else {
+                $sql = "SELECT COUNT( DISTINCT BILLID ) AS CNT FROM billing.PURCHASES WHERE PROFILEID =:PROFILEID AND BILLID < :BILLID AND STATUS = :STATUS AND MEMBERSHIP = :MEMBERSHIP";
+                $prep=$this->db->prepare($sql);
+                $prep->bindValue(":BILLID",$currentBillId,PDO::PARAM_INT);
+                $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+                $prep->bindValue(":STATUS","DONE",PDO::PARAM_INT);
+                $prep->bindValue(":MEMBERSHIP",'Y',PDO::PARAM_INT);
+                $prep->execute();
+                if($result=$prep->fetch(PDO::FETCH_ASSOC)){
+                    return $result['CNT'];
+                }
+                else{
+                    return 0;
+                }
+            }
+        } 
+        catch (Exception $e){
+            throw new jsException($e);
+        }
+    }
+
     public function fetchAllDataForBillidArr($billIdArr){
         try 
         {
