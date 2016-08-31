@@ -799,7 +799,7 @@
                                         $field=new Field(127);
                                         $field->setName("DISPLAYNAME");
                                         $field->setFieldType("dropdown");
-                                        $field->setConstraintClass("dropdown_req");
+                                        $field->setConstraintClass("dropdown_not_req");
                                         $field->setDependentField("");
                                         $field->setLabel("");
                                         $field->setBlankValue("");

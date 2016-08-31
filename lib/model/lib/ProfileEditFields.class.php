@@ -1195,7 +1195,7 @@ case 'CITY_INDIA':
 case "DISPLAYNAME":
 					$field=new Field('','DISPLAYNAME');
 					$field->setFieldType("dropdown");
-                                        $field->setConstraintClass("dropdown_req");
+                                        $field->setConstraintClass("dropdown_not_req");
                                         $field->setTableName("NAME_OF_USER:DISPLAY");
 				break;
 }
