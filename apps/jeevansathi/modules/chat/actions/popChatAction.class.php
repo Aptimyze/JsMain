@@ -67,7 +67,7 @@ class popChatAction extends sfAction
 
 				$otherProfileObj = new Profile();
 				$otherProfileObj->getDetail($input['to'], "PROFILEID", "*");
-				if(!$otherProfileObj->getPROFILE_STATE()->getPaymentStates()->isPAID() || !$loginProfileObj->getPROFILE_STATE()->getPaymentStates()->isPAID()) {
+				if(!$otherProfileObj->getPROFILE_STATE()->getPaymentStates()->isPAID() && !$loginProfileObj->getPROFILE_STATE()->getPaymentStates()->isPAID()) {
 					$responseArray["canChat"] = "false";
 				}
 			}
