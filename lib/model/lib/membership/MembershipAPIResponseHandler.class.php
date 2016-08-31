@@ -2156,9 +2156,11 @@ class MembershipAPIResponseHandler {
             $redirectTo = 'r4';
         } 
         else if (($apiObj->paymentMode == "CR" && ($apiObj->cardType == 'card2' || $apiObj->cardType == 'card3')) || ($apiObj->paymentMode == "DR" && ($apiObj->cardType == 'card2' || $apiObj->cardType == 'card3' || $apiObj->cardType == 'card4'))) {
-            if($defaultGatewayRedirection == "payu"){
+			//if(SelectGatewayRedirect::setDefaultGatewayRedirect == "payu"){            
+			if($defaultGatewayRedirection == "payu"){
                 $redirectTo = 'payu';
             }
+			//else if(SelectGatewayRedirect::setDefaultGatewayRedirect == "ccavenue"){
             else if($defaultGatewayRedirection == "ccavenue"){
                 $redirectTo = 'ccavenue';
             }
@@ -2168,9 +2170,11 @@ class MembershipAPIResponseHandler {
         } 
         else if ($apiObj->paymentMode == "CR" || $apiObj->paymentMode == "DR") {
         	if ($apiObj->currency == "DOL") {
+				//if(SelectGatewayRedirect::setDefaultGatewayRedirect == "payu"){
                 if($defaultGatewayRedirection == "payu"){
                     $redirectTo = 'payu';
                 }
+				//else if(SelectGatewayRedirect::setDefaultGatewayRedirect == "ccavenue"){
                 else if($defaultGatewayRedirection == "ccavenue"){
                     $redirectTo = 'ccavenue';
                 }
@@ -2182,9 +2186,11 @@ class MembershipAPIResponseHandler {
                     //Redirection for AMEX irrespective of the option selected
                     $redirectTo = 'ccavenue';
                 }
+				//else if(SelectGatewayRedirect::setDefaultGatewayRedirect == "payu"){
                 else if($defaultGatewayRedirection == "payu"){
                     $redirectTo = 'payu';
                 }
+				//else if(SelectGatewayRedirect::setDefaultGatewayRedirect == "ccavenue"){
                 else if($defaultGatewayRedirection == "ccavenue"){
                     $redirectTo = 'ccavenue';
                 }
