@@ -20,12 +20,13 @@ class negativeTreatment{
 
 		$this->phoneLogObj    		=new PHONE_VERIFIED_LOG('newjs_local111');
 		$this->oldEmailObj    		=new newjs_OLDEMAIL('newjs_local111');
+		$this->jprofileEmailObj		=new JPROFILE('newjs_local111');
 		$this->cnt=1;
     	}
 
 	public function getProfileId($username)
 	{
-		$jProfileObj =new JPROFILE('newjs_local111');
+		$jProfileObj 	=$this->jprofileEmailObj;
         	$jProfileDetails=$jProfileObj->get($username,"USERNAME",$this->fields);
                 $profileid      =$jProfileDetails['PROFILEID'];
 		return $profileid;
@@ -60,7 +61,18 @@ class negativeTreatment{
 			unset($emailArr);
 			unset($emailArrNew);
 			$emailArr =$this->oldEmailObj->getEmailList($profileidArr);
+			// jprofile condition for email
+			$jemailArr =$this->jprofileEmailObj->getProfileSelectedDetails($profileidArr,'EMAIL');
+			if(is_array($jemailArr))
+				$jemailArr =array_keys($jemailArr);
+			if(is_array($emailArr) && is_array($jemailArr))
+				$emailArr =array_merge($emailArr, $jemailArr);
+			elseif(is_array($jemailArr))
+				$emailArr =$jemailArr;
+			// jprofile condition for email end
+
 			if(is_array($emailArr))
+				$emailArr =array_unique($emailArr);
 				$emailArrNew 	=array_diff($emailArr,$this->emailNegArr);
 			if(is_array($emailArrNew)){
 				$this->addEmailToNegative($emailArrNew);
@@ -106,8 +118,24 @@ class negativeTreatment{
 			unset($profileArr);
 			unset($profileArrNew);
 	                $profileArr =$this->oldEmailObj->getEmailProfiles($emailArr);
-			if(is_array($profileArr))
+
+			// jprofile condition for email
+			$valueArray['EMAIL']="'".implode("','",$emailArr)."'";
+			$jprofileArr1 =$this->jprofileEmailObj->getArray($valueArray,'','','PROFILEID');
+			if(is_array($jprofileArr1)){
+				foreach($jprofileArr1 as $key=>$val)
+					$jprofileArr[] =$val['PROFILEID'];	
+			}	
+			if(is_array($profileArr) && is_array($jprofileArr))
+				$profileArr =array_merge($profileArr,$jprofileArr);
+			elseif(is_array($jprofileArr))
+				$profileArr =$jprofileArr;
+			// jprofile condition for email end
+
+			if(is_array($profileArr)){
+				$profileArr =array_unique($profileArr);
 				$profileArrNew 	=array_diff($profileArr,$this->profileNegArrForEmail);
+			}
 			/*echo "Profiles for Email:"; 
 			print_r($profileArrNew);*/
 			if(is_array($profileArrNew)){
@@ -139,9 +167,9 @@ class negativeTreatment{
 		$this->profileNegArrForPhone 	=array_unique($this->profileNegArrForPhone);
 		$this->profileNegArrForEmail 	=array_unique($this->profileNegArrForEmail);
 		$this->profileArr 		=array_merge($this->profileNegArrForPhone,$this->profileNegArrForEmail);
-		$this->profileArr		=array_unique($this->profileArr);
-		$this->phoneNegArr 		=array_unique($this->phoneNegArr);
-		$this->emailNegArr 		=array_unique($this->emailNegArr);
+		$this->profileArr		=array_filter(array_unique($this->profileArr));
+		$this->phoneNegArr 		=array_filter(array_unique($this->phoneNegArr));
+		$this->emailNegArr 		=array_filter(array_unique($this->emailNegArr));
 		$insertArr 			=array("PROFILEID"=>$this->profileArr,"PHONE_NUM"=>$this->phoneNegArr,"EMAIL"=>$this->emailNegArr);
 		$this->insertIntoNegative($insertArr);
 
