@@ -398,7 +398,7 @@ class SearchApiStrategyV1
                                                 }
 						elseif($fieldName=="name_of_user")
 						{
-							if(is_array($nameData)&& $nameData[0]['DISPLAY']=="Y" && $nameData[0]['NAME']!='')
+							if(is_array($nameData)&& $nameData[$loggedInProfileObj->getPROFILEID()]['DISPLAY']=="Y" && $nameData[$loggedInProfileObj->getPROFILEID()]['NAME']!='')
 							{
 								$name = $nameOfUserObj->getNameStr($value,$loggedInProfileObj->getSUBSCRIPTION());
 							}

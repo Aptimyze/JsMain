@@ -98,6 +98,7 @@ print_r($returnArr);die;
     }
     public function getNameStr($othername,$selfsubscription)
     {
+        $othername = strtolower($othername);
 	if($selfsubscription!='')
 	{
 		$finalName = ucwords($othername);
