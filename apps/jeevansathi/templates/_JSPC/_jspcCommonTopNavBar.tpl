@@ -193,8 +193,8 @@ window.onload=function(){
                                     <div class="clearfix topnavp1">
                                         <div class="fl">Photo Requests</div>
                                         <div class="fr">
-                                            <div id="membersAcceptedMeCountParent" class="disp-tbl countBell txtc" style="display:none">
-                                                <div id="membersAcceptedMeCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
+                                            <div id="photoRequestsCountParent" class="disp-tbl countBell txtc" style="display:none">
+                                                <div id="photoRequestsCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
                                             </div>
                                         </div>
                                     </div>

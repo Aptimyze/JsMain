@@ -29,19 +29,19 @@ $this->addOptions(array(
 		$entryDate	=date("Y-m-d");
 
 		// get data from Notification Log
-                $notificationsLogObj = new MOBILE_API_NOTIFICATION_LOG('newjs_slave'); 
+                $notificationsLogObj = new MOBILE_API_NOTIFICATION_LOG('newjs_local111'); 
 		$logData =$notificationsLogObj->getDataCountForRange($startDate,$endDate);
 
 		// get data from Gcm Response Log
-		$gcmLogObj = new MOBILE_API_GCM_RESPONSE_LOG('newjs_slave');
+		$gcmLogObj = new MOBILE_API_GCM_RESPONSE_LOG('newjs_local111');
 		$gcmLogData =$gcmLogObj->getDataCountForRange($startDate,$endDate);
 
 		// get Notification Keys
-		$appNotificationObj =new MOBILE_API_APP_NOTIFICATIONS('newjs_slave');			
+		$appNotificationObj =new MOBILE_API_APP_NOTIFICATIONS('newjs_local111');			
 		$notificationArr =$appNotificationObj->getActiveNotifications();
 
                 // get Local Notification Api Hit 
-                $localNotififObj =new MOBILE_API_LOCAL_NOTIFICATION_LOG('newjs_slave');
+                $localNotififObj =new MOBILE_API_LOCAL_NOTIFICATION_LOG('newjs_local111');
                 $localNotifData =$localNotififObj->getDataCountForRange($startDate,$endDate);
                 //$localNotifData =$localNotififObj->getDataCountForDate($startDate,$endDate);
 
@@ -51,7 +51,7 @@ $this->addOptions(array(
 		$notificationsLogObj->createTempTablePool($startDate, $endDate);
 	
 		// create Temp Table for Login Tracking
-		$misLoginTrackingObj =new MIS_LOGIN_TRACKING('newjs_slave');
+		$misLoginTrackingObj =new MIS_LOGIN_TRACKING('newjs_local111');
 		$misLoginTrackingObj->createTempTablePool($datePrev6day, $endDate);	
 
 		// get 7 days Active Profiles
@@ -61,14 +61,14 @@ $this->addOptions(array(
                 $activeProfileCountDay =$notificationsLogObj->getActiveProfileCount($startDate, $endDate);
 
 		// get Total IOS Request Failed
-		$iosResponseLog =new MOBILE_API_IOS_RESPONSE_LOG('newjs_slave'); 
+		$iosResponseLog =new MOBILE_API_IOS_RESPONSE_LOG('newjs_local111'); 
 		$totalIosFailed =$iosResponseLog->getDataCountForRange($startDate, $endDate);
 		
 		// object of Daily Scheduled Log
 		$dailyScheduledLog =new MOBILE_API_DAILY_NOTIFICATION_COUNT_LOG;
 
 		// Browser notification Data
-		$browserNotificationObj =new MOBILE_API_BROWSER_NOTIFICATION('newjs_slave');
+		$browserNotificationObj =new MOBILE_API_BROWSER_NOTIFICATION('newjs_local111');
 		$browserNotificationData =$browserNotificationObj->getDataCountForRange($startDate, $endDate);
 
 		foreach($notificationArr as $key=>$notificationKeyArr){
