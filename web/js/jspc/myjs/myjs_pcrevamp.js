@@ -377,7 +377,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
 		noShortCards(this);
 }
 
-  //DESRIED PARTNER MATCHES
+  //DESIRED PARTNER MATCHES
   var desiredPartnerMatches = function() {
     this.name = "DESIREDPARTNERMATCHES";
     this.containerName = this.name+"_Container";
