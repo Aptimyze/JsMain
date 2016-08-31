@@ -349,6 +349,7 @@ $js_arr[]=array("jspc/crm/requestFieldVisit_js"     => "2");
 $js_arr[]=array("jspc/crm/dateSelectionField_js"     => "2");
 $js_arr[]=array("jspc/crm/exclusiveMemAllocation_js"       => "4");
 $js_arr[]=array("jspc/crm/loader_js"      => "3");
+$js_arr[]=array("jspc/crm/exclusiveServicingII_js"      => "1");
 $js_arr[]=array("jquery_cookie_js"    => "4");
 $js_arr[]=array("registration_revamp_js"   => "15");
 $js_arr[]=array("jquery_validate_js"  => "2");
