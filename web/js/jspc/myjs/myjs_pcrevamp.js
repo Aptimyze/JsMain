@@ -462,7 +462,7 @@ var CALayerShow=$("#CALayerShow").val();
 if(typeof(CALayerShow)=='undefined' ||  !CALayerShow) return;
 if(CALayerShow!='0')
   {
-
+      
     var layer=$("#CALayerShow").val();
     var url="/static/criticalActionLayerDisplay";
  var ajaxData={'layerId':layer};
@@ -473,6 +473,7 @@ if(CALayerShow!='0')
 ajaxConfig.success=function(response){
 $('body').prepend(response);
   showLayerCommon('criticalAction-layer'); 
+  if(CALayerShow==9) $('.js-overlay').bind('click',function(){$(this).unbind();criticalLayerButtonsAction('close','B2');});
   $('.js-overlay').unbind('click');
 }
 

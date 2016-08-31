@@ -344,6 +344,12 @@ class staticActions extends sfActions
    * also it is called for tracking when user hits any of the button*/
   public function executeCriticalActionLayerDisplay(sfWebRequest $request) {
     $layerToShow = $request->getParameter("layerId");
+    if($layerToShow==9)
+    {
+        $profileId=LoggedInProfile::getInstance()->getPROFILEID();
+        $this->nameOfUser=(new incentive_NAME_OF_USER())->getName($profileId);
+        
+    }
     $layerData=CriticalActionLayerDataDisplay::getDataValue($layerToShow);
     $this->layerId = $layerData[LAYERID];
     $this->titleText = $layerData[TITLE];
