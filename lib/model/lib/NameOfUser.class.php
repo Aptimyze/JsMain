@@ -82,10 +82,15 @@ echo "subscription".$selfProfileObj->getSUBSCRIPTION();
 die;
 */
 
-				if(!is_array($nameData[$otherProfileid]) || $nameData[$otherProfileid]['DISPLAY']!="Y" || $nameData[$otherProfileid]['NAME']==''|| !$isOtherScreened)
-					$returnArr[$otherProfileid]=array("SHOW"=>false,"REASON"=>$v->getUSERNAME()." has decided not to show name to other members");
-				elseif($nameData[$selfProfileid]['DISPLAY']!="Y"||$nameData[$selfProfileid]['NAME']==""||!$isSelfScreened)
-					$returnArr[$otherProfileid]=array("SHOW"=>false,"REASON"=>"Please change the privacy of your name to 'Show to all members' to see the name of ".$v->getUSERNAME());
+				if(!is_array($nameData[$otherProfileid]) || $nameData[$otherProfileid]['DISPLAY']!="Y" || $nameData[$otherProfileid]['NAME']=='')
+					$returnArr[$otherProfileid]=array("SHOW"=>false,"REASON"=>$v->getUSERNAME()." has not mentioned a name or has decided to not show name to other members");
+				elseif(!$isOtherScreened)
+					$returnArr[$otherProfileid]=array("SHOW"=>false,"REASON"=>$v->getUSERNAME()."'s name is under screening");
+				elseif($nameData[$selfProfileid]['DISPLAY']!="Y"||$nameData[$selfProfileid]['NAME']=="")
+					$returnArr[$otherProfileid]=array("SHOW"=>false,"REASON"=>"Please add your name and change its privacy to 'Show to all members' to see the name of ".$v->getUSERNAME());
+				elseif(!$isSelfScreened)
+					$returnArr[$otherProfileid]=array("SHOW"=>false,"REASON"=>"Your name is under screening, you will be able to see other members' names as soon as it gets screened");
+				
 				else
 				{
 					$name = $this->getNameStr($nameData[$otherProfileid]['NAME'],$selfProfileObj->getSUBSCRIPTION());
