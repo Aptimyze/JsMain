@@ -2377,6 +2377,8 @@ function clearUgDegree(){
                                 }
 				var displayNameVal = $(this).attr('data-fieldVal');
 				inputData['displayname']=displayNameVal;
+				$("#optionDrop").removeClass("optionDrop");
+				setTimeout(function(){ $("#optionDrop").addClass("optionDrop");}, 500);
                         });
         });
     }

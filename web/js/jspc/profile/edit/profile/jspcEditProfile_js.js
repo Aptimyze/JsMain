@@ -6156,6 +6156,8 @@ $('.js-previewAlbum').click(function(){
 				else
 					var value = "N";
 				storeFieldChangeValue(fieldObject,value);
+				$("#optionDrop").removeClass("optionDrop");
+				setTimeout(function(){ $("#optionDrop").addClass("optionDrop");}, 500);
                         });
         });
 	}
