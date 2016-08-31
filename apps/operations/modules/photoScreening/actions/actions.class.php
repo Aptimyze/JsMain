@@ -139,7 +139,7 @@ class photoScreeningActions extends sfActions {
                         if (($this->source!=PictureStaticVariablesEnum::$SOURCE["MASTER"] && !$photoData["nonScreened"] && !$photoData["profilePic"]) || ($this->source==PictureStaticVariablesEnum::$SOURCE["MASTER"] && !$photoData["screened"] && !$photoData["nonScreened"] && !$photoData["profilePic"])) { //if no profiles are under screening, show the message that no profiles found
                                 $this->noPhotosFound = 1;
                                 $arrDevelopersEmail = PictureStaticVariablesEnum::$arrPHOTO_SCREEN_DEVELOPERS;
-                                //JsTrackingHelper::sendDeveloperTrackMail($arrDevelopersEmail,"No Photo Found for ".$profileDetails["profileData"]["PROFILEID"]);
+                                JsTrackingHelper::sendDeveloperTrackMail($arrDevelopersEmail,"No Photo Found for ".$profileDetails["profileData"]["PROFILEID"]);
                                 $profileAllotedObj->reNewProfileForPreprocess($profileDetails["profileData"]["PROFILEID"]);
                                 $this->redirect(JsConstants::$siteUrl."/operations.php/photoScreening/screen?name=".$name."&cid=".$this->cid."&source=".$this->source);
                         }
