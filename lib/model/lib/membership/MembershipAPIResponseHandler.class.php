@@ -2129,6 +2129,7 @@ class MembershipAPIResponseHandler {
         if(!in_array($defaultGatewayRedirection,$gatewayOption) || $defaultGatewayRedirection == ''){
             $billingSelectedGateway = new billing_CURRENT_GATEWAY();
             $defaultGatewayRedirection = $billingSelectedGateway->fetchCurrentGateway();
+            JsMemcache::getInstance()->set('JS_PAYMENT_GATEWAY',$defaultGatewayRedirection);
         }
         if ($apiObj->paymentMode == 'CSH' && array_key_exists("$apiObj->cardType", $walletTypeArr)) {
             $apiObj->walletSelected = 1;
