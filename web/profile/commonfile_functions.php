@@ -515,7 +515,7 @@ $js_arr[]=array("jspc/search/jspcSuccessStory_js"    => "1");
 $js_arr[]=array("jspc/inbox/contactCenter"                 => "14");
 $js_arr[]=array("jspc/common/jqueryRangeSlider"     => "2");
 $js_arr[]=array("jspc/search/inview"   => "1");
-$js_arr[]=array("jspc/photo/photoRequest_js"    => "1");
+$js_arr[]=array("jspc/photo/photoRequest_js"     => "2");
 $js_arr[]=array("jspc/common/jquery_equalheights"   => "1");
 $js_arr[]=array("jspc/common/photoAlbum"   => "1");
 $js_arr[]=array("jspc/search/saveSearch"   => "1");
