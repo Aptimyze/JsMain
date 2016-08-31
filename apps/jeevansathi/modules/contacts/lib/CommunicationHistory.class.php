@@ -176,12 +176,22 @@ class CommunicationHistory
 						$side = "R";
 					}
 				//	$previousStatus                            = 'A';
+				if(array_key_exists($val['DATE'],$message_log)){
+					if($val['MESSAGE'])
+						$message_log[$val['DATE']]["message"] = $message_log[$val['DATE']]["message"]."</br>".$val['MESSAGE'];
+					else
+						$message_log[$val['DATE']]["message"] = ""; //inserting space to prevent null exception in various channels
+				}
+				else
+				{
 					$message_log[$val['DATE']]["type"]  = 'O'. $side;
 					$message_log[$val['DATE']]["who"]     = $who;
 					if($val['MESSAGE'])
 						$message_log[$val['DATE']]["message"] = $val['MESSAGE'];
 					else
 						$message_log[$val['DATE']]["message"] = ""; //inserting space to prevent null exception in various channels
+				}
+					
 			}
 		}	
 		if (is_array($message_log))
