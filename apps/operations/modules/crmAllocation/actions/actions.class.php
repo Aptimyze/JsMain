@@ -884,23 +884,39 @@ class crmAllocationActions extends sfActions
     public function executeProcessExclusiveServicingIISubmit(sfWebRequest $request){
     	$inputArr = $request->getParameterHolder()->getAll();
         $exclusiveEmail = trim($inputArr["exclusiveEmail"]);
-        $profileUsernameList = $inputArr["profileUsernameList"];
-    	//print_r($inputArr);die;
+        $profileUsernameListParsed = $inputArr["profileUsernameListParsed"];
+    	$invalidCustomer = 0;
     	if($exclusiveEmail) 
 		{
 			$profileObj = new Operator;
 			$profileObj->getDetail($exclusiveEmail,"EMAIL",'PROFILEID');
 			$pid = $profileObj->getPROFILEID();
+			
 			unset($profileObj);
 			if(!$pid){
-				$this->forwardTo("crmAllocation","exclusiveServicingII?ERROR=INVALID_EXCLUSIVE_CUSTOMER");
+				$invalidCustomer = 1;
 			}
 			else{
-				//successful entry case
-		    	$this->forwardTo("crmAllocation","exclusiveServicingII?SUCCESS=REQUEST_PROCESSED");
+				$billingObj = new billing_SERVICE_STATUS("newjs_slave");
+				$exclusiveMemDetails = $billingObj->getActiveJsExclusiveServiceID($pid);
+				//print_r($exclusiveMemDetails);die("ankita");
+				unset($billingObj);
+				if($exclusiveMemDetails){
+					if($profileUsernameListParsed){
+						
+					}
+					//successful entry case
+			    	$this->forwardTo("crmAllocation","exclusiveServicingII?SUCCESS=REQUEST_PROCESSED");
+				}
+				else{
+					$invalidCustomer = 1;
+			    }
 		    }
 		}
 		else{
+			$invalidCustomer = 1;
+		}
+		if($invalidCustomer == 1){
 			$this->forwardTo("crmAllocation","exclusiveServicingII?ERROR=INVALID_EXCLUSIVE_CUSTOMER");
 		}
 	}
