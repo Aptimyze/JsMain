@@ -459,7 +459,7 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
                     }  
                     else if($searchField == "name_of_user")
                     {
-  			if(is_array($nameData)&& $nameData[0]['DISPLAY']=="Y" && $nameData[0]['NAME']!='')
+  			if(is_array($nameData)&& $nameData[$loggedInProfileObj->getPROFILEID()]['DISPLAY']=="Y" && $nameData[$loggedInProfileObj->getPROFILEID()]['NAME']!='')
                         {
                                 $name = $nameOfUserObj->getNameStr($detailsArray[$vspField],$loggedInProfileObj->getSUBSCRIPTION());
                         }

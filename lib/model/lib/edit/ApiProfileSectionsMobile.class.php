@@ -463,10 +463,10 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		$nameOfUserObj = new NameOfUser;
                 $nameData = $nameOfUserObj->getNameData($this->profile->getPROFILEID());
                 $dispStr = "Show to All";
-                if($nameData[0]["DISPLAY"] == "N"){
+                if($nameData[$this->profile->getPROFILEID()]["DISPLAY"] == "N"){
                    $dispStr = "Don't Show";
                 }
-                $settingData = array("display_string"=>$dispStr,"displayValue"=>$nameData[0]["DISPLAY"],'callbackoverlay'=>"CalloverlayName");
+                $settingData = array("display_string"=>$dispStr,"displayValue"=>$nameData[$this->profile->getPROFILEID()]["DISPLAY"],'callbackoverlay'=>"CalloverlayName");
 		$basicArr[basic][outerSectionName]="Basic Details";
 		$basicArr[basic][outerSectionKey]="BasicDetails";
 		$basicArr[basic][singleKey]=0;
@@ -474,7 +474,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 //			$basicArr[basic][OnClick][]=$this->getApiFormatArray("NAME","Groom's Name"  ,$name,"",$this->getApiScreeningField("NAME"),$this->text);
 //		else
 //			$basicArr[basic][OnClick][]=$this->getApiFormatArray("NAME","Bride's Name"  ,$name,"",$this->getApiScreeningField("NAME"),$this->text);
-		$basicArr[basic][OnClick][]=$this->getApiFormatArray("NAME","Name",$nameData[0]["NAME"],"",$this->getApiScreeningField("NAME"),$this->text,"","","","",1,$settingData);
+		$basicArr[basic][OnClick][]=$this->getApiFormatArray("NAME","Name",$nameData[$this->profile->getPROFILEID()]["NAME"],"",$this->getApiScreeningField("NAME"),$this->text,"","","","",1,$settingData);
 		//country
 		$value=$this->profile->getCOUNTRY_RES();
 		$label=$this->profile->getDecoratedCountry();

@@ -315,9 +315,9 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 //			$basicArr[]=$this->getApiFormatArray("NAME","Groom's Name"  ,$name,"",$this->getApiScreeningField("NAME"));
 //		else
 //			$basicArr[]=$this->getApiFormatArray("NAME","Bride's Name"  ,$name,"",$this->getApiScreeningField("NAME"));
-		$name = $nameData[0]['NAME'];
+		$name = $nameData[$this->profile->getPROFILEID()]['NAME'];
 		$basicArr[]=$this->getApiFormatArray("NAME","Name"  ,$name,$name,$this->getApiScreeningField("NAME"));
-		$basicArr[]=$this->getApiFormatArray("DISPLAYNAME","DISPLAYNAME",'',$nameData[0]['DISPLAY'],'','Y');
+		$basicArr[]=$this->getApiFormatArray("DISPLAYNAME","DISPLAYNAME",'',$nameData[$this->profile->getPROFILEID()]['DISPLAY'],'','Y');
 		//gender
 		$basicArr[]=$this->getApiFormatArray("GENDER","Gender",$this->profile->getDecoratedGender(),$this->profile->getGender(),$this->getApiScreeningField("GENDER"),"N");
 		

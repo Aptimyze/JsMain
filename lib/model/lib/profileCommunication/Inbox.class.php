@@ -304,7 +304,7 @@ class Inbox implements Module
 						$fields                 = array_merge($fields, $tupleFields);
 						$nameOfUserObj = new NameOfUser;
 						$profileNameData = $nameOfUserObj->getNameData($this->profileObj->getPROFILEID());
-						if($profileNameData[0]['DISPLAY']=="Y")
+						if($profileNameData[$this->profileObj->getPROFILEID()]['DISPLAY']=="Y")
 						{
 							$fields[]="NAME_OF_USER";
 						}
