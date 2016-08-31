@@ -506,6 +506,7 @@ $("body").delegate('.js-removeProfile, .js-search-undoRemoveProfile','click', fu
                            showCommonLoader();
                     },
 		    success: function(response) {
+					callAfterContact();
                         hideCommonLoader();
 			if(response.status==1 && blockOrUnblock==1){
 			    blockProfileOnSRP(srpTuple,profileCheckSum,usernameOfProfile);
