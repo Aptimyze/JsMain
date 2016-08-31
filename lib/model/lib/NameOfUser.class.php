@@ -19,7 +19,12 @@ class NameOfUser
     public function getNameData($profileid)
     {
         $nameObj = new incentive_NAME_OF_USER();
-        return $nameData = $nameObj->getArray(array("PROFILEID"=>$profileid),'','','*');
+        $nameData = $nameObj->getArray(array("PROFILEID"=>$profileid),'','','*');
+	foreach($nameData as $k=>$v)
+	{
+		$finalData[$v['PROFILEID']]=$v;
+	}
+	return $finalData;
     }
     public function insertName($profileid,$name,$display)
     {
@@ -44,29 +49,30 @@ class NameOfUser
 		return true;
 	return false;
     }
-    public function showNameToProfiles($selfProfileid,$otherProfilesArr,$selfProfileSubscription='')
+    public function showNameToProfiles($selfProfileObj,$otherProfileObjArr)
     {
-	$profileStr = "'".implode("','",$otherProfilesArr)."'";
-	$profileStr.=",'".$selfProfileid."'";
+	foreach($otherProfileObjArr as $k=>$v)
+	{
+		$profileArr[]=$v->getPROFILEID();
+	}
+	$profileArr[]=$selfProfileObj->getPROFILEID();
+	$profileStr = "'".implode("','",$profileArr)."'";
 	$nameData = $this->getNameData($profileStr);
 	if(is_array($nameData))
 	{
-		foreach($nameData as $k=>$v)
-                {
-                        if($v['PROFILEID']==$selfProfileid)
-                                $nameDataSelf =$v;
-                        elseif(in_array($v['PROFILEID'],$otherProfilesArr))
-                                $nameDataOther[$v['PROFILEID']] = $v;
-		}
-		foreach($otherProfilesArr as $k=>$v)
+		$selfProfileid = $selfProfileObj->getPROFILEID();
+		foreach($otherProfileObjArr as $k=>$v)
 		{
-			if(is_array($nameDataSelf) && is_array($nameDataOther[$v])  && $nameDataOther[$v]['DISPLAY']=="Y" && $nameDataSelf['DISPLAY']=="Y")
-			{
-				$name = $this->getNameStr($nameDataOther[$v]['NAME'],$selfProfileSubscription);
-				$returnArr[$v]=array("SHOW"=>true,"NAME"=>$name);
-			}
-			else
-				$returnArr[$v]=array("SHOW"=>false);
+				$otherProfileid = $v->getPROFILEID();
+				if(!is_array($nameData[$otherProfileid]) || $nameData[$otherProfileid]['DISPLAY']!="Y" || $nameData[$otherProfileid]['NAME']=='')
+					$returnArr[$otherProfileid]=array("SHOW"=>false,"REASON"=>$v->getUSERNAME()." has decided not to show name to other members");
+				elseif($nameData[$selfProfileid]['DISPLAY']!="Y"||$nameData[$selfProfileid]['NAME']=="")
+					$returnArr[$otherProfileid]=array("SHOW"=>false,"REASON"=>"Please change the privacy of your name to 'Show to all members' to see the name of ".$v->getUSERNAME());
+				else
+				{
+					$name = $this->getNameStr($nameData[$otherProfileid]['NAME'],$selfProfileObj->getSUBSCRIPTION());
+					$returnArr[$otherProfileid]=array("SHOW"=>true,"NAME"=>$name);
+				}
 		}
 	}
 	return $returnArr;
@@ -82,7 +88,7 @@ class NameOfUser
 		$nameArr = explode(" ",$othername);
 		foreach($nameArr as $k=>$v)
 		{
-			if(count($v)>2)
+			if(strlen($v)>2)
 			{
 				$finalName = ucfirst($v);
 				break;

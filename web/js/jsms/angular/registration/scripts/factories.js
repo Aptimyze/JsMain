@@ -1156,7 +1156,7 @@
 		var invalidDomainArr = new Array("jeevansathi", "dontreg","mailinator","mailinator2","sogetthis","mailin8r","spamherelots","thisisnotmyrealemail","jsxyz","jndhnd");
 		var email_regex = /^([A-Za-z0-9._%+-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i;
 	        var isd_regex = /^[+]?[0-9]+$/;
-	        var name_regex = /^[A-z]+$/;
+	        var name_regex = /^[A-z ]+$/;
 	        var isdCodes = ["0", "91","+91"];
 		// auto correct email array
 		var corrections =Constants.getEmailCorrections();
