@@ -1,0 +1,2 @@
+use billing;
+CREATE TABLE  billing.`CURRENT_GATEWAY` ( `GATEWAY` VARCHAR( 10 ) NOT NULL);

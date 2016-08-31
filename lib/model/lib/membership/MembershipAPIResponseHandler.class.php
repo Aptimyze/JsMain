@@ -2124,7 +2124,12 @@ class MembershipAPIResponseHandler {
         $paymentRedirectPageArr = paymentOption::$paymentRedirectPage;
         $apiObj->card_option = '';
         $apiObj->pageRedirectTo = '';
-        
+        $defaultGatewayRedirection = JsMemcache::getInstance()->get('JS_PAYMENT_GATEWAY');
+        $gatewayOption = SelectGatewayRedirect::$gatewayOptions;
+        if(!in_array($defaultGatewayRedirection,$gatewayOption) || $defaultGatewayRedirection == ''){
+            $billingSelectedGateway = new billing_CURRENT_GATEWAY();
+            $defaultGatewayRedirection = $billingSelectedGateway->fetchCurrentGateway();
+        }
         if ($apiObj->paymentMode == 'CSH' && array_key_exists("$apiObj->cardType", $walletTypeArr)) {
             $apiObj->walletSelected = 1;
             $apiObj->card_option = 'CCRD';
@@ -2151,10 +2156,10 @@ class MembershipAPIResponseHandler {
             $redirectTo = 'r4';
         } 
         else if (($apiObj->paymentMode == "CR" && ($apiObj->cardType == 'card2' || $apiObj->cardType == 'card3')) || ($apiObj->paymentMode == "DR" && ($apiObj->cardType == 'card2' || $apiObj->cardType == 'card3' || $apiObj->cardType == 'card4'))) {
-            if(SelectGatewayRedirect::setDefaultGatewayRedirect == "payu"){
+            if($defaultGatewayRedirection == "payu"){
                 $redirectTo = 'payu';
             }
-            else if(SelectGatewayRedirect::setDefaultGatewayRedirect == "ccavenue"){
+            else if($defaultGatewayRedirection == "ccavenue"){
                 $redirectTo = 'ccavenue';
             }
             else{
@@ -2163,10 +2168,10 @@ class MembershipAPIResponseHandler {
         } 
         else if ($apiObj->paymentMode == "CR" || $apiObj->paymentMode == "DR") {
         	if ($apiObj->currency == "DOL") {
-                if(SelectGatewayRedirect::setDefaultGatewayRedirect == "payu"){
+                if($defaultGatewayRedirection == "payu"){
                     $redirectTo = 'payu';
                 }
-                else if(SelectGatewayRedirect::setDefaultGatewayRedirect == "ccavenue"){
+                else if($defaultGatewayRedirection == "ccavenue"){
                     $redirectTo = 'ccavenue';
                 }
                 else{
@@ -2177,10 +2182,10 @@ class MembershipAPIResponseHandler {
                     //Redirection for AMEX irrespective of the option selected
                     $redirectTo = 'ccavenue';
                 }
-                else if(SelectGatewayRedirect::setDefaultGatewayRedirect == "payu"){
+                else if($defaultGatewayRedirection == "payu"){
                     $redirectTo = 'payu';
                 }
-                else if(SelectGatewayRedirect::setDefaultGatewayRedirect == "ccavenue"){
+                else if($defaultGatewayRedirection == "ccavenue"){
                     $redirectTo = 'ccavenue';
                 }
                 else{
