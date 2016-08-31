@@ -468,8 +468,6 @@ if(CALayerShow!='0')
  var ajaxData={'layerId':layer};
  var ajaxConfig={'data':ajaxData,'url':url,'dataType':'html'};
 
-
-
 ajaxConfig.success=function(response){
 $('body').prepend(response);
   showLayerCommon('criticalAction-layer');
