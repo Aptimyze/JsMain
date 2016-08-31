@@ -472,9 +472,11 @@ if(CALayerShow!='0')
 
 ajaxConfig.success=function(response){
 $('body').prepend(response);
-  showLayerCommon('criticalAction-layer'); 
-  if(CALayerShow==9) $('.js-overlay').bind('click',function(){$(this).unbind();criticalLayerButtonsAction('close','B2');});
-  $('.js-overlay').unbind('click');
+  showLayerCommon('criticalAction-layer');
+  if(CALayerShow==9) 
+      $('.js-overlay').bind('click',function(){$(this).unbind();criticalLayerButtonsAction('close','B2');closeCurrentLayerCommon();});
+  else
+    $('.js-overlay').unbind('click');
 }
 
 $.myObj.ajax(ajaxConfig);
@@ -655,7 +657,6 @@ else {
 
    $('#videoCloseID').bind('click', function(e)
   {
-    console.log("jhsgcbjk");
     videoLinkRequest(profileid);
   });
 

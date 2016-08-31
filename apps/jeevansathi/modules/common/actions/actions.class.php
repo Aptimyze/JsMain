@@ -643,8 +643,20 @@ class commonActions extends sfActions
 		}
 
     else if($request->getParameter("button") && ($request->getParameter("layerR") || $request->getParameter("layerId"))) {
+        $button=$request->getParameter("button");
     	$layerToShow=$request->getParameter("layerR") ? $request->getParameter("layerR") : $request->getParameter("layerId"); 
- 		CriticalActionLayerTracking::insertLayerType($loginData['PROFILEID'],$layerToShow,$request->getParameter("button"));
+        
+        if($layerToShow==9 && $button=='B1'){
+            
+            $namePrivacy=$request->getParameter('namePrivacy');
+            $newName=$request->getParameter('newNameOfUser');
+            
+            if($namePrivacy=='Y' || $namePrivacy=='N')
+            (new NameOfUser())->insertName($loginData['PROFILEID'], $newName, $namePrivacy);
+            
+            
+        }
+ 		CriticalActionLayerTracking::insertLayerType($loginData['PROFILEID'],$layerToShow,$button);
 	 }
 	 	
 	 	$apiResponseHandlerObj = ApiResponseHandler::getInstance();
@@ -661,8 +673,16 @@ class commonActions extends sfActions
 
         $calObject=$request->getAttribute('calObject');
         if (!$calObject) sfContext::getInstance()->getController()->redirect('/');
-		$this->calObject=$calObject;
-		$this->gender=$request->getAttribute('gender');
+        $this->calObject=$calObject;
+        $this->gender=$request->getAttribute('gender');
+        if($calObject['LAYERID']==9)
+        {
+            $profileId=LoggedInProfile::getInstance()->getPROFILEID();
+            $nameData=(new NameOfUser())->getNameData($profileId);
+            $this->nameOfUser=$nameData[$profileId]['NAME'];
+            $this->namePrivacy=$nameData[$profileId]['DISPLAY'];
+        }
+                
 		if($calObject['LAYERID']==1)
 			$this->showPhoto='1';
 		else

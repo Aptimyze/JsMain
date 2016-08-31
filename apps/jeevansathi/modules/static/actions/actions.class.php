@@ -346,9 +346,11 @@ class staticActions extends sfActions
     $layerToShow = $request->getParameter("layerId");
     if($layerToShow==9)
     {
-        $profileId=LoggedInProfile::getInstance()->getPROFILEID();
-        $this->nameOfUser=(new incentive_NAME_OF_USER())->getName($profileId);
-        
+           $profileId=LoggedInProfile::getInstance()->getPROFILEID();
+           $nameData=(new NameOfUser())->getNameData($profileId);
+           $this->nameOfUser=$nameData[$profileId]['NAME'];
+           $this->namePrivacy=$nameData[$profileId]['DISPLAY'];
+
     }
     $layerData=CriticalActionLayerDataDisplay::getDataValue($layerToShow);
     $this->layerId = $layerData[LAYERID];
