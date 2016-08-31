@@ -390,10 +390,11 @@ pre {
   color:#999;
 }
         .quesIcon {
-            background-image: url(file:///C|/wamp/www/JSPC/Matches/ques.png);
+            background-image: url(IMG_URL/images/jspc/commonimg/iconSpriteNameSetting.png);
             height: 23px;
             width: 20px;
             background-repeat: no-repeat;
+	    background-position:-5px -30px;
         }
                 .blueColor {
             color: #34495E

@@ -26,14 +26,21 @@
 
                   <div class="clearfix fontlig color11">
 		               
-              			<div class="fl fixWidthOverflow f24 wd300">
+              			<div class="fl f24 wd300">
                        ~if $nameOfUser`
-              				<span class="disp_ib textTru wd200">~$nameOfUser`</span>
+              				<span class="disp_ib textTru fixWidthOverflow">~$nameOfUser`</span>
                        <span class="f15 vertSuper">(~$apiData['about']['username']`)</span>
                         ~else`
                         <span class="disp_ib f24">
                          ~$apiData['about']['username']`
                        </span>
+<span class="verified">
+<i class="quesIcon"></i>
+<span class="hoverDiv">
+<div class="f14 fontreg blueColor">~$dontShowNameReason`
+</div>
+</span>
+</span>
                        ~/if`
               			</div>		             
 		               

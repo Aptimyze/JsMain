@@ -434,7 +434,8 @@ class FieldForm extends sfForm
 			
 			
 			//NAME OF USER (INCENTIVE TABLE)
-			if(count($incentiveUsernameArr) && $this->checkForChange($incentiveUsernameArr,'NameUser'))
+
+			if(count($incentiveUsernameArr) && $this->checkForChange($incentiveUsernameArr,'NameUser') &&($incentiveUsernameArr['NAME']!=''||$incentiveUsernameArr['DISPLAY']!=''))
 			{
 				$nameOfUserObj = new NameOfUser();
 				$nameOfUserObj->insertName($profileid,$incentiveUsernameArr[NAME],$incentiveUsernameArr[DISPLAY]);
