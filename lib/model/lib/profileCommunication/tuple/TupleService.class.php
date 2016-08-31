@@ -369,7 +369,7 @@ class TupleService
 		if(!empty($profileIds))
 		{
 			$nameOfUserObj = new NameOfUser();
-			$showNameData = $nameOfUserObj->showNameToProfiles($this->getLoginProfileObj()->getPROFILEID(),$profileIds,$this->getLoginProfileObj()->getSUBSCRIPTION());
+			$showNameData = $nameOfUserObj->showNameToProfiles($this->getLoginProfileObj(),$this->profileDetailsArray);
 			foreach($showNameData as $k=>$v)
 			{
 				if($v['SHOW']==true)

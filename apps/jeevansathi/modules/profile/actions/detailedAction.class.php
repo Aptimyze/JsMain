@@ -105,7 +105,7 @@ class detailedAction extends sfAction
        $this->onlineStatus();
     }
 	$nameOfUserObj = new NameOfUser();
-	$showNameData = $nameOfUserObj->showNameToProfiles($this->loginProfile->getPROFILEID(),array($this->profile->getPROFILEID()),$this->loginProfile->getSUBSCRIPTION());
+	$showNameData = $nameOfUserObj->showNameToProfiles($this->loginProfile,array($this->profile));
 	if($showNameData[$this->profile->getPROFILEID()]['SHOW']=true)
 	{
 		$this->nameOfUser = $showNameData[$this->profile->getPROFILEID()]['NAME'];

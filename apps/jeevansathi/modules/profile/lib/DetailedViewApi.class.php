@@ -248,7 +248,7 @@ class DetailedViewApi
 		$this->m_arrOut['educationOnSummary'] = $this->getAllEducationFields();
                 
 		$nameOfUserObj = new NameOfUser;
-                $name = $nameOfUserObj->showNameToProfiles($this->m_actionObject->loginProfile->getPROFILEID(), array($objProfile->getPROFILEID()), $this->m_actionObject->loginProfile->getSUBSCRIPTION());
+                $name = $nameOfUserObj->showNameToProfiles($this->m_actionObject->loginProfile, array($objProfile));
                 if(is_array($name) && $name[$objProfile->getPROFILEID()]['SHOW']=="1" && $name[$objProfile->getPROFILEID()]['NAME']!='')
                 {
                         $this->m_arrOut['name_of_user'] = $nameOfUserObj->getNameStr($name[$objProfile->getPROFILEID()]['NAME'],$this->m_actionObject->loginProfile->getSUBSCRIPTION());
