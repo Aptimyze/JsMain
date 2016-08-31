@@ -504,8 +504,8 @@ class BILLING_PURCHASES extends TABLE{
                 $prep=$this->db->prepare($sql);
                 $prep->bindValue(":BILLID",$currentBillId,PDO::PARAM_INT);
                 $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
-                $prep->bindValue(":STATUS","DONE",PDO::PARAM_INT);
-                $prep->bindValue(":MEMBERSHIP",'Y',PDO::PARAM_INT);
+                $prep->bindValue(":STATUS","DONE",PDO::PARAM_STR);
+                $prep->bindValue(":MEMBERSHIP",'Y',PDO::PARAM_STR);
                 $prep->execute();
                 if($result=$prep->fetch(PDO::FETCH_ASSOC)){
                     return $result['CNT'];
