@@ -225,29 +225,40 @@ class TopSearchBandPopulate
 									
 										
                         if($param["CITY_INDIA"])
-                                $this->selectedCity_Country = $param["CITY_INDIA"].",".$param["COUNTRY_RES"];
-                        elseif($param["CITY_RES"])
-                                $this->selectedCity_Country = $param["CITY_RES"].",".$param["COUNTRY_RES"];
-                        elseif($param["STATE"])
-                                $this->selectedCity_Country = $param["STATE"].",".$param["COUNTRY_RES"];
-                        else
-														$this->selectedCity_Country = $param["COUNTRY_RES"];
-                        if($param["CITY_INDIA"] || $param["CITY_RES"] || $param["STATE"])
-                                $this->selectedCity_Country = str_replace("51","",$this->selectedCity_Country); // India any city remove
+                                $this->selectedCity_Country[] = $param["CITY_INDIA"];
+                        
+                        if($param["CITY_RES"])
+                                $this->selectedCity_Country[] = $param["CITY_RES"];
+                        
+                        if($param["STATE"])
+                                $this->selectedCity_Country[] = $param["STATE"];
+                        
+                        $this->selectedCity_Country[] = $param["COUNTRY_RES"];
+                        
+                        $this->selectedCity_Country = implode(",",$this->selectedCity_Country);
+                        
+                       // if($param["CITY_INDIA"] || $param["CITY_RES"] || $param["STATE"])
+                                //$this->selectedCity_Country = str_replace("51","",$this->selectedCity_Country); // India any city remove
                         $this->selectedCity_Country = trim($this->selectedCity_Country,",");
                 }
 		else
 		{
 			if(in_array($param["CITY_INDIA"],TopSearchBandConfig::$cities) || self::if_two_string_contains_same_values($param["CITY_INDIA"],TopSearchBandConfig::$mumbaiRegion) || self::if_two_string_contains_same_values($param["CITY_INDIA"],implode(",",FieldMap::getFieldLabel("delhiNcrCities",1,1))))
-				$this->selectedCity_Country = $param["CITY_INDIA"];
-			elseif(in_array($param["CITY_RES"],TopSearchBandConfig::$cities) || self::if_two_string_contains_same_values($param["CITY_RES"],TopSearchBandConfig::$mumbaiRegion) || self::if_two_string_contains_same_values($param["CITY_RES"],implode(",",FieldMap::getFieldLabel("delhiNcrCities",1,1))))
-				$this->selectedCity_Country = $param["CITY_RES"];
-			elseif(in_array($param["COUNTRY_RES"],TopSearchBandConfig::$countries))
-				$this->selectedCity_Country = $param["COUNTRY_RES"];
-			else
-				$this->selectedCity_Country = $param["CITY_INDIA"];
-		}
+				$this->selectedCity_Country[] = $param["CITY_INDIA"];
 			
+                        if(in_array($param["CITY_RES"],TopSearchBandConfig::$cities) || self::if_two_string_contains_same_values($param["CITY_RES"],TopSearchBandConfig::$mumbaiRegion) || self::if_two_string_contains_same_values($param["CITY_RES"],implode(",",FieldMap::getFieldLabel("delhiNcrCities",1,1))))
+				$this->selectedCity_Country[] = $param["CITY_RES"];
+			
+                        if(in_array($param["COUNTRY_RES"],TopSearchBandConfig::$countries))
+				$this->selectedCity_Country[] = $param["COUNTRY_RES"];
+                        
+                        if(array_key_exists($param["STATE"],FieldMap::getFieldLabel("state_india",1,1)))
+				$this->selectedCity_Country[] = $param["STATE"];
+			//else
+				//$this->selectedCity_Country[] = $param["CITY_INDIA"];
+                        $this->selectedCity_Country = implode(",",$this->selectedCity_Country);
+		}
+                
 		
 		if($param["HAVEPHOTO"])
 			$this->selectedHavePhoto = $param["HAVEPHOTO"];
@@ -422,6 +433,7 @@ class TopSearchBandPopulate
 			$this->dataArray["religion"] = $this->populateReligionJSMS();
 			$this->dataArray["caste"] = $this->populateCasteJSMS();
 			$this->dataArray["location"] = $this->populateCityCountryJSMS();
+			$this->dataArray["location_cities"] = $this->populateCitiesJSMS();
 			$this->dataArray["income"] = $this->populateIncome(1,1);
 			$this->dataArray["income_dol"] = $this->populateIncomeDollar();
 			$this->dataArray["manglik"] = $this->populateManglik();
@@ -1169,90 +1181,61 @@ class TopSearchBandPopulate
 		foreach(TopSearchBandConfig::$countriesApp as $k=>$v)
 		{
 			$output[$i]["VALUE"] = (string) $v;
-			if($v==51)
-				$output[$i]["LABEL"] = FieldMap::getFieldLabel("country",$v)." - Any City";
-			else
 			
-				$output[$i]["LABEL"] = FieldMap::getFieldLabel("country",$v);
+                        $output[$i]["LABEL"] = FieldMap::getFieldLabel("country",$v);
 			$output[$i]["ISGROUP"] = "";
 			$output[$i]["IN_GROUP"] = "" ;
 			$output[$i]["IS_GROUP_HEADING"] ="";
 			
-			$i++;
-		}
-		$topCitiesValues = implode(",",TopSearchBandConfig::$metroCities).",".implode(",",FieldMap::getFieldLabel("delhiNcrCities",1,1)).",".TopSearchBandConfig::$mumbaiRegion;
-		$output[$i]["VALUE"] = $topCitiesValues;
-		$output[$i]["LABEL"] = "Metro Cities";
-		$output[$i]["ISGROUP"] = "";
-		$output[$i]["IN_GROUP"] = "" ;
-		$output[$i]["IS_GROUP_HEADING"] ="Y";
-		$output[$i]["GROUP"] = $topCitiesValues;
-		$i++;
-		$output[$i]["VALUE"] = $topCitiesValues;
-		$output[$i]["LABEL"] = "Metro Cities - All";
-		$output[$i]["ISGROUP"] = "Y";
-		$output[$i]["IN_GROUP"] = "" ;
-		$output[$i]["IS_GROUP_HEADING"] ="";
-		$output[$i]["GROUP"] = $topCitiesValues;
-		$i++;
-		$majorCities = explode(",",FieldMap::getFieldLabel("topindia_city",1,1)["51"]);
-		foreach(TopSearchBandConfig::$metroCities as $k=>$v)
-		{
-			if($v=="DE00")
-			{
-				$output[$i]["VALUE"] = implode(",",FieldMap::getFieldLabel("delhiNcrCities",1,1));
-				$output[$i]["LABEL"] = TopSearchBandConfig::$ncrLabel;
-			}
-			elseif($v=="MH04")
-			{
-				$output[$i]["VALUE"] = TopSearchBandConfig::$mumbaiRegion;
-				$output[$i]["LABEL"] = TopSearchBandConfig::$mumbaiRegionLabel;
-			}
-			else
-			{
-				$output[$i]["VALUE"] = $v;
-				$output[$i]["LABEL"] = FieldMap::getFieldLabel("city",$v);
-			}
-			$output[$i]["ISGROUP"] = "";
-			$output[$i]["IN_GROUP"] = "Y" ;
-			$output[$i]["IS_GROUP_HEADING"] ="";
-			$output[$i]["GROUP"] = $topCitiesValues;
 			$i++;
 		}
 		
-		$cities = explode(",",FieldMap::getFieldLabel("country_city",1,1)["51"]);
-		foreach($cities as $k=>$v)
+		foreach(FieldMap::getFieldLabel("country",'',1) as $s=>$l)
 		{
-			$state = substr($v, 0, 2);	
-			$stateCities[$state][]=$v;
+                        $output[$i]["VALUE"] = $s;
+                        $output[$i]["LABEL"] = $l;
+                        $output[$i]["ISGROUP"] = "";
+                        $output[$i]["IN_GROUP"] = "" ;
+                        $output[$i]["IS_GROUP_HEADING"] ="";
+                        $i++;
 		}
-		foreach(FieldMap::getFieldLabel("state_india",1,1) as $s=>$l)
+		return $output;
+	}
+	public function populateCitiesJSMS()
+	{
+		$i=0;
+                foreach(TopSearchBandConfig::$topCities as $k=>$v){
+                        $output[$i]["VALUE"] = $v;
+                        $output[$i]["LABEL"] = FieldMap::getFieldLabel("city_india",$v);
+                        $i++;
+                }
+                $output[$i]["VALUE"] = implode(",",FieldMap::getFieldLabel("delhiNcrCities",1,1));
+                $output[$i]["LABEL"] = TopSearchBandConfig::$ncrLabel;
+                $i++;
+                
+                $output[$i]["VALUE"] = TopSearchBandConfig::$mumbaiRegion;
+                $output[$i]["LABEL"] = TopSearchBandConfig::$mumbaiRegionLabel;
+                $i++;
+                
+                $output[$i]["VALUE"] = "";
+                $output[$i]["LABEL"] = "States";
+                $output[$i]["IS_LIST_HEADING"] ="Y";
+                $i++;
+                foreach(FieldMap::getFieldLabel("state_india",1,1) as $s=>$l)
 		{
-			$output[$i]["VALUE"] = $s;
-			$output[$i]["LABEL"] = $l;
-			$output[$i]["ISGROUP"] = "";
-			$output[$i]["IN_GROUP"] = "" ;
-			$output[$i]["IS_GROUP_HEADING"] ="Y";
-			$output[$i]["GROUP"] = $s;
-			$i++;
-			$output[$i]["VALUE"] = $s=="DE"?$s:implode(",",$stateCities[$s]); // Delhi All handling
-			
-			$output[$i]["LABEL"] = $l . " - All";
-			$output[$i]["ISGROUP"] = "Y";
-			$output[$i]["IN_GROUP"] = "" ;
-			$output[$i]["IS_GROUP_HEADING"] ="";
-			$output[$i]["GROUP"] = $s;
-			$i++;
-			foreach($stateCities[$s] as $c=>$v)
-			{
-				$output[$i]["VALUE"] = $v;
-				$output[$i]["LABEL"] = FieldMap::getFieldLabel("city",$v);;
-				$output[$i]["ISGROUP"] = "";
-				$output[$i]["IN_GROUP"] = "Y" ;
-				$output[$i]["IS_GROUP_HEADING"] ="";
-				$output[$i]["GROUP"] = $s;
-				$i++;
-			}
+                        $output[$i]["VALUE"] = $s;
+                        $output[$i]["LABEL"] = $l;
+                        $i++;
+                }
+                $output[$i]["VALUE"] = "";
+                $output[$i]["LABEL"] = "Cities";
+                $output[$i]["IS_LIST_HEADING"] ="Y";
+                $i++;
+		foreach(FieldMap::getFieldLabel("city_india",1,1) as $s=>$l)
+		{
+                                $output[$i]["VALUE"] = $s;
+                                $output[$i]["LABEL"] = $l;
+                                $i++;
 		}
 		return $output;
 	}
@@ -2508,57 +2491,123 @@ class TopSearchBandPopulate
 
 		if($this->selectedCity_Country!="")
 		{
-			
-			$output["location"] = $this->selectedCity_Country;
-			
-			if(count(array_intersect(TopSearchBandConfig::$metroCities,explode(",",$this->selectedCity_Country)))== sizeOf(TopSearchBandConfig::$metroCities))
-			{
-				$output["location_label"] = "Metro Cities - All";
-				$metroCities = array_merge(TopSearchBandConfig::$metroCities,FieldMap::getFieldLabel("delhiNcrCities",1,1),explode(",",TopSearchBandConfig::$mumbaiRegion));
-				$location = array_diff(explode(",",$this->selectedCity_Country),$metroCities);
-				$locationSize = sizeOf($location);
-				
-			}
-			elseif(count(array_intersect(FieldMap::getFieldLabel("delhiNcrCities",1,1),explode(",",$this->selectedCity_Country))) == sizeOf(FieldMap::getFieldLabel("delhiNcrCities",1,1)))
-			{
-				$output["location_label"] = TopSearchBandConfig::$ncrLabel;
-				$location = array_diff(explode(",",$this->selectedCity_Country),FieldMap::getFieldLabel("delhiNcrCities",1,1));
-				$locationSize = sizeOf($location);
-				
-			}
-			elseif(count(array_intersect(explode(",",$this->selectedCity_Country),explode(",",TopSearchBandConfig::$mumbaiRegion))) == sizeOf(explode(",",TopSearchBandConfig::$mumbaiRegion)))
-			{
-				$output["location_label"] = TopSearchBandConfig::$mumbaiRegionLabel;
-				$location = array_diff(explode(",",$this->selectedCity_Country),explode(",",TopSearchBandConfig::$mumbaiRegion));
-				$locationSize = sizeOf($location);
-				
-			}
-			else
-			{
-				$locationArray = explode(",",$this->selectedCity_Country);
-				if(is_numeric($locationArray[0]))
-					$tempField ="country";
-				elseif(ctype_alpha($this->selectedCity_Country))
-					$tempField ="state_india";
+                        $output["location_cities"] = '';
+                        $output["location"] = '';
+                        $city_country_resArr = explode(",",$this->selectedCity_Country);
+        	        foreach($city_country_resArr as $v)
+                	{
+	                        if(is_numeric($v))
+					$tempCountry[] = $v;
+				elseif(ctype_alpha($v))
+					$tempState[] = $v;
 				else
-					$tempField ="city_india";
-				$output["location_label"] = FieldMap::getFieldLabel($tempField,$locationArray[0]);
-				$locationSize = sizeOf($locationArray)-1;
+					$tempCity[] = $v;
+                	}
+                        
+                        if($tempCountry){
+                                $countryArr = array();
+                                foreach($tempCountry as $country){
+                                        $countryArr[] = FieldMap::getFieldLabel("country",$country);
+                                }
+                                $output["location"] = implode(",",$tempCountry); 
+                                if(count($countryArr)>1){
+                                    $output["location_label"] = $countryArr[0]; 
+                                    $output["location_label_dep"] = " +".(count($countryArr) - 1)." more"; 
+                                }else{
+                                    $output["location_label"] = $countryArr[0]; 
+                                    $output["location_label_dep"] = "";     
+                                }
+                        }
+                        if($tempState){
+                                $output["location_cities"] = implode(",",$tempState);
+                        }
+                        if($tempCity){
+                                if($output["location_cities"] != ''){
+                                        $output["location_cities"] .= ",";
+                                }
+                                $output["location_cities"] .= implode(",",$tempCity);
+                        }
+			if(count(array_intersect(TopSearchBandConfig::$metroCities,$tempCity))== sizeOf(TopSearchBandConfig::$metroCities))
+			{
+				$output["location_cities_label"] = "Metro Cities - All";
+				$metroCities = array_merge(TopSearchBandConfig::$metroCities,FieldMap::getFieldLabel("delhiNcrCities",1,1),explode(",",TopSearchBandConfig::$mumbaiRegion));
+				$location = array_diff($tempCity,$metroCities);
+				$locationSize = sizeOf($location);
+				
 			}
-			if($locationSize>1)
-				$output["location_label_dep"] = "+".($locationSize)." more";
+			elseif(count(array_intersect(FieldMap::getFieldLabel("delhiNcrCities",1,1),$tempCity)) == sizeOf(FieldMap::getFieldLabel("delhiNcrCities",1,1)))
+			{
+				$output["location_cities_label"] = TopSearchBandConfig::$ncrLabel;
+				$location = array_diff($tempCity,FieldMap::getFieldLabel("delhiNcrCities",1,1));
+				$locationSize = sizeOf($location);
+				
+			}
+			elseif(count(array_intersect($tempCity,explode(",",TopSearchBandConfig::$mumbaiRegion))) == sizeOf(explode(",",TopSearchBandConfig::$mumbaiRegion)))
+			{
+				$output["location_cities_label"] = TopSearchBandConfig::$mumbaiRegionLabel;
+				$location = array_diff($tempCity,explode(",",TopSearchBandConfig::$mumbaiRegion));
+				$locationSize = sizeOf($location);
+				
+			}
 			else
-				$output["location_label_dep"] = NULL;
-					
-			
+			{
+				if(!empty($tempState)){
+					$tempField ="state_india";
+                                        $locationArray = $tempState;
+                                }elseif(!empty($tempCity)){
+					$tempField ="city_india";
+                                        $locationArray = $tempCity;
+                                }else{
+                                       $output["location_cities"] = NULL;
+                                       $output["location_cities_label"] ="Any State/City";
+                                       $output["location_cities_label_dep"] = NULL; 
+                                }
+                                
+                                if(!empty($tempState) || !empty($tempCity)){
+                                        if(!empty($tempState)){
+                                                $output["location_cities"] = explode(',',$output["location_cities"]);
+                                                foreach($tempState as $s){
+                                                        $cities = FieldMap::getFieldLabel("state_CITY",$s).",".$s."000";
+                                                        $stateCities = explode(",",$cities);
+                                                        $selectedValues = array_intersect($tempCity,$stateCities);
+                                                        if(count($stateCities) == count(array_unique($selectedValues))){
+                                                             $tempCity = array_diff($tempCity,$stateCities);
+                                                             $output["location_cities"] = array_diff($output["location_cities"],$stateCities);
+                                                        }else{
+                                                                if($selectedValues && ($key = array_search($s, $output["location_cities"])) !== false) {
+                                                                        unset($output["location_cities"][$key]);
+                                                                }
+                                                        }
+                                                }
+                                                $output["location_cities"] = implode(",",array_unique($output["location_cities"]));
+                                                $output["location_cities_label"] = FieldMap::getFieldLabel($tempField,$locationArray[0]);
+                                                $locationSize = (sizeOf(explode(',',$output["location_cities"])))-1;
+                                        }else{
+                                                $output["location_cities_label"] = FieldMap::getFieldLabel($tempField,$locationArray[0]);
+                                                $locationSize = (sizeOf($tempState) + sizeOf($tempCity))-1;
+                                        }
+                                }
+			}
+			if($locationSize>=1)
+				$output["location_cities_label_dep"] = "+".($locationSize)." more";
+			else
+				$output["location_cities_label_dep"] = NULL;
+
+                        
 		}
 		else
 		{
 			$output["location"] = NULL;
 			$output["location_label"] ="Any Country";
 			$output["location_label_dep"] = NULL;
+                        
+                        
+                        $output["location_cities"] = NULL;
+                        $output["location_cities_label"] ="Any State/City";
+                        $output["location_cities_label_dep"] = NULL;
 			
 		}
+                        
                 if($this->selectedOccupationJSMS!="")
 		{
                   $output["occupation"] = $this->selectedOccupationJSMS;

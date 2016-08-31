@@ -113,6 +113,13 @@ class QuickSearchBand extends SearchParamters
 		{
                   $searchParamsSetter['OCCUPATION'] = $jsonArr["OCCUPATION"];
                 }
+                
+                if($jsonArr["LOCATION"]){
+                        $jsonArr["LOCATION"] .= ",".$jsonArr["LOCATION_CITIES"];
+                }else{
+                        $jsonArr["LOCATION"] = $jsonArr["LOCATION_CITIES"];
+                }
+                
 		if($jsonArr["LOCATION"] && $jsonArr["LOCATION"]!=self::blankValue)
 		{
 			$city_country_resArr = explode(",",$jsonArr["LOCATION"]);
@@ -129,7 +136,7 @@ class QuickSearchBand extends SearchParamters
 		                $searchParamsSetter['COUNTRY_RES'] = implode(",",$tempCountry);
 			if($tempCity)
 			{
-				$searchParamsSetter['CITY_INDIA'] = implode(",",$tempCity);
+				$searchParamsSetter['CITY_RES'] = implode(",",$tempCity);
 				$searchParamsSetter['COUNTRY_RES'] = 51;
 			}
 			if($tempState)
