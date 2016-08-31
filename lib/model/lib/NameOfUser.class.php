@@ -18,6 +18,8 @@ class NameOfUser
     
     public function getNameData($profileid)
     {
+        if($profileid=='')
+                return;
         $nameObj = new incentive_NAME_OF_USER();
         $nameData = $nameObj->getArray(array("PROFILEID"=>$profileid),'','','*');
 	foreach($nameData as $k=>$v)
