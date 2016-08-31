@@ -29,7 +29,6 @@ function CalloverlayName(thisObject){
         $("#nameSettingOverlay").append(overlayNameTemplate);
         $("#nameSettingOverlay").removeClass('dn');
         $("#nameSettingOverlay").css("min-height",screen.height);
-        $("#nameSettingOverlay").addClass("web_dialog_overlay");
         NameOverLayerAnimation();
 }
 </script>

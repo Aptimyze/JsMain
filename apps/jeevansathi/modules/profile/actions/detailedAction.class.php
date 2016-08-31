@@ -106,10 +106,12 @@ class detailedAction extends sfAction
     }
 	$nameOfUserObj = new NameOfUser();
 	$showNameData = $nameOfUserObj->showNameToProfiles($this->loginProfile,array($this->profile));
-	if($showNameData[$this->profile->getPROFILEID()]['SHOW']=true)
+	if($showNameData[$this->profile->getPROFILEID()]['SHOW']==true)
 	{
 		$this->nameOfUser = $showNameData[$this->profile->getPROFILEID()]['NAME'];
 	}
+	else
+		$this->dontShowNameReason = $showNameData[$this->profile->getPROFILEID()]['REASON'];
     //Assings variables required in template, handling legacy.
 		$this->smartyAssign();
 
