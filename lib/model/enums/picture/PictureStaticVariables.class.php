@@ -65,9 +65,7 @@ class PictureStaticVariablesEnum
 		const PHOTO_SCREEN_OPERATION_FACEDETECTION_CRON		= 2;
 		
 		public static $arrPHOTO_SCREEN_DEVELOPERS = array(
-													'lavesh.rawat@gmail.com',
-													'akashkumardtu@gmail.com',
-													'reshu.rajput@gmail.com',
+													'reshu.rajput@gmail.com'
 													);
 
 		//variables for photo albums import vertical bar(limit and height)
