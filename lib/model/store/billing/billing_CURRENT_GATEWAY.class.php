@@ -26,7 +26,7 @@ class billing_CURRENT_GATEWAY extends TABLE
     
     public function setCurrentGateway($gateway){
         try{
-            $sql = "INSERT INTO billing.CURRENT_GATEWAY (GATEWAY) VALUES(:GATEWAY)";
+            $sql = "UPDATE billing.CURRENT_GATEWAY SET GATEWAY=:GATEWAY";
             $res = $this->db->prepare($sql);
             $res->bindValue(":GATEWAY",$gateway,PDO::PARAM_STR);
             $res->execute();
