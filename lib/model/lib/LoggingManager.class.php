@@ -329,7 +329,7 @@ class LoggingManager
 		{
 			$statusCode = $logArray[LoggingEnums::STATUS_CODE];
 		}
-		return $statusCode;
+		return strval($statusCode);
 	}
 
 	/**
