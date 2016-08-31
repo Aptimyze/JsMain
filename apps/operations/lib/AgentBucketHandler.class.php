@@ -9,7 +9,7 @@ class AgentBucketHandler
                 $method=$processObj->getMethod();
                 if($subMethod=="LIMIT_EXCEED")
                 {
-                        $processObj->setLimit(150);
+                        $processObj->setLimit(125);
                         $msg=$this->deAllocateDisp($processObj,$agentAllocDetailsObj,$agentDeAllocObj);
                 }
 		elseif($subMethod=="RELEASE_PROFILE")
