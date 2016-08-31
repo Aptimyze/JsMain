@@ -863,7 +863,7 @@ class crmAllocationActions extends sfActions
     die();
   }
 
-    /*interface to request field sales visit for user
+    /*exclusive service phase 2 form action
     *@param : $request 
     */
     public function executeExclusiveServicingII(sfWebRequest $request)
@@ -872,31 +872,38 @@ class crmAllocationActions extends sfActions
     	$this->cid = $request->getParameter("cid");
     	
     	//show error message for invalid username
-		if($request->getParameter("ERROR")=="INVALID_USERNAME")
-			$this->errorMsg = "Invalid username !!!!";
+		if($request->getParameter("ERROR")=="INVALID_EXCLUSIVE_CUSTOMER")
+			$this->errorMsg = "Invalid email id,no such exclusive customer exists !!!!";
 		if($request->getParameter("SUCCESS")=="REQUEST_PROCESSED")
 			$this->successMsg = "Mail has been sent successfully."; 
     }
 
-    /*save the field request visit submitted by agent for profile
+    /*executes exclusive servicing form II request
     * @param : $request
     */
     public function executeProcessExclusiveServicingIISubmit(sfWebRequest $request){
     	$inputArr = $request->getParameterHolder()->getAll();
-        $username = trim($inputArr["exclusiveEmail"]);
+        $exclusiveEmail = trim($inputArr["exclusiveEmail"]);
         $profileUsernameList = $inputArr["profileUsernameList"];
-    	
-    	if($request->getParameter("ERROR")=="INVALID_USERNAME")
-        {
-          //invalid username case
-          $this->forwardTo("crmAllocation","exclusiveServicingII?ERROR=INVALID_USERNAME");
-        }
-        else
-        {
-          //successful entry case
-          $this->forwardTo("crmAllocation","exclusiveServicingII?SUCCESS=REQUEST_PROCESSED");
-        }
-    }
+    	//print_r($inputArr);die;
+    	if($exclusiveEmail) 
+		{
+			$profileObj = new Operator;
+			$profileObj->getDetail($exclusiveEmail,"EMAIL",'PROFILEID');
+			$pid = $profileObj->getPROFILEID();
+			unset($profileObj);
+			if(!$pid){
+				$this->forwardTo("crmAllocation","exclusiveServicingII?ERROR=INVALID_EXCLUSIVE_CUSTOMER");
+			}
+			else{
+				//successful entry case
+		    	$this->forwardTo("crmAllocation","exclusiveServicingII?SUCCESS=REQUEST_PROCESSED");
+		    }
+		}
+		else{
+			$this->forwardTo("crmAllocation","exclusiveServicingII?ERROR=INVALID_EXCLUSIVE_CUSTOMER");
+		}
+	}
 
     /*forwards the request to given module action
       * @param : $module,$action
