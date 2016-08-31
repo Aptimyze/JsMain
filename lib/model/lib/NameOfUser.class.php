@@ -64,9 +64,25 @@ class NameOfUser
 		foreach($otherProfileObjArr as $k=>$v)
 		{
 				$otherProfileid = $v->getPROFILEID();
-				if(!is_array($nameData[$otherProfileid]) || $nameData[$otherProfileid]['DISPLAY']!="Y" || $nameData[$otherProfileid]['NAME']=='')
+				$isSelfScreened = Flag::isFlagSet($FLAGID="name",$value=$selfProfileObj->getSCREENING());
+				$isOtherScreened = Flag::isFlagSet($FLAGID="name",$value=$v->getSCREENING());
+/*
+print_r($nameData);
+echo "self".$selfProfileid."\n";
+echo "other".$otherProfileid."\n";
+echo "self screened";
+var_dump($isSelfScreened);
+echo "\n";
+echo "other screened";
+var_dump($isOtherScreened);
+echo "\n";
+echo "subscription".$selfProfileObj->getSUBSCRIPTION();
+die;
+*/
+
+				if(!is_array($nameData[$otherProfileid]) || $nameData[$otherProfileid]['DISPLAY']!="Y" || $nameData[$otherProfileid]['NAME']==''|| !$isOtherScreened)
 					$returnArr[$otherProfileid]=array("SHOW"=>false,"REASON"=>$v->getUSERNAME()." has decided not to show name to other members");
-				elseif($nameData[$selfProfileid]['DISPLAY']!="Y"||$nameData[$selfProfileid]['NAME']=="")
+				elseif($nameData[$selfProfileid]['DISPLAY']!="Y"||$nameData[$selfProfileid]['NAME']==""||!$isSelfScreened)
 					$returnArr[$otherProfileid]=array("SHOW"=>false,"REASON"=>"Please change the privacy of your name to 'Show to all members' to see the name of ".$v->getUSERNAME());
 				else
 				{
@@ -75,13 +91,16 @@ class NameOfUser
 				}
 		}
 	}
+/*
+print_r($returnArr);die;
+*/
 	return $returnArr;
     }
     public function getNameStr($othername,$selfsubscription)
     {
 	if($selfsubscription!='')
 	{
-		$name = ucwords($othername);
+		$finalName = ucwords($othername);
 	}
 	else
 	{
