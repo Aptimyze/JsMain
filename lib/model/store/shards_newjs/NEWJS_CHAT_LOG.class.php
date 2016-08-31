@@ -37,16 +37,16 @@ class NEWJS_CHAT_LOG extends TABLE{
 							$ip = $ip_new[1];
 						}*/
 					}
-					$sql="INSERT INTO CHAT_LOG (ID,SENDER,RECEIVER,DATE,IP,TYPE,SEEN, CHATID) VALUES (:GENERATEDID,:VIEWERID,:VIEWEDID,:DATE,:IP,:TYPE,:SEEN, :CHATID) ";
+					$sql="INSERT INTO CHAT_LOG (SENDER,RECEIVER,DATE,IP,TYPE,SEEN, CHATID) VALUES (:VIEWERID,:VIEWEDID,:DATE,:IP,:TYPE,:SEEN, :CHATID) ";
 					$prep=$this->db->prepare($sql);
-					$prep->bindValue(":GENERATEDID",$generatedId,PDO::PARAM_INT);
+					//$prep->bindValue(":GENERATEDID",$generatedId,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWERID",$sender,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWEDID",$receiver,PDO::PARAM_INT);
 					$prep->bindValue(":DATE",$date,PDO::PARAM_STR);
 					$prep->bindValue(":IP",$ip,PDO::PARAM_STR);
 					$prep->bindValue(":TYPE",$type,PDO::PARAM_STR);
 					$prep->bindValue(":SEEN",$seen,PDO::PARAM_STR);
-					$prep->bindValue(":CHATID",$chatId,PDO::PARAM_INT);
+					$prep->bindValue(":CHATID",$chatId,PDO::PARAM_STR);
 					$prep->execute();
 					
 					return true;
@@ -115,16 +115,12 @@ class NEWJS_CHAT_LOG extends TABLE{
 				}
 				else
 				{
-					if($pagination)
-						$whrStr="AND M.ID < :pagination";
-					else
-						$whrStr="";
+					
 					$sql = "SELECT count(*) as CNT FROM  `CHAT_LOG`  WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER ))";
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);
-					if($pagination)
-						$prep->bindValue(":pagination",$pagination,PDO::PARAM_INT);
+					
 					$prep->execute();
 					while($row = $prep->fetch(PDO::FETCH_ASSOC))
 					{
