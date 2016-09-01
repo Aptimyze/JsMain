@@ -1850,6 +1850,17 @@ break;
 break;
   case "APP1":
 					$page_obj=new PageFields("APP1");
+                                        $field=new Field(82);
+                                        $field->setName("MANGLIK");
+                                        $field->setFieldType("radio");
+                                        $field->setConstraintClass("dropdown_not_req");
+                                        $field->setJsValidation("");
+                                        $field->setDependentField("");
+                                        $field->setLabel("Manglik :");
+                                        $field->setBlankValue("");
+                                        $field->setBlankLabel("");
+                                        $field->setTableName("JPROFILE:MANGLIK");
+                                        $page_obj->setField(82,"","",$field);
 
 					$field=new Field(3);
 					$field->setName("RELATIONSHIP");
@@ -2469,7 +2480,7 @@ case 'MP4':
 						$field_array=array('YOURINFO');
 					break;
 case 'APP1':
-						$field_array=array('RELATIONSHIP','GENDER','DTOFBIRTH','HEIGHT','COUNTRY_RES','CITY_RES','PINCODE','MSTATUS','HAVECHILD','MTONGUE','RELIGION','CASTE','EDU_LEVEL_NEW','OCCUPATION','INCOME','EMAIL','PASSWORD','PHONE_MOB','SOURCE','OTHER_UG_DEGREE','OTHER_PG_DEGREE','PG_COLLEGE','EDUCATION','DEGREE_UG','DEGREE_PG','COLLEGE','NAME_OF_USER','HOROSCOPE_MATCH');
+						$field_array=array('RELATIONSHIP','GENDER','DTOFBIRTH','HEIGHT','COUNTRY_RES','CITY_RES','PINCODE','MSTATUS','HAVECHILD','MTONGUE','RELIGION','CASTE','EDU_LEVEL_NEW','OCCUPATION','INCOME','EMAIL','PASSWORD','PHONE_MOB','SOURCE','OTHER_UG_DEGREE','OTHER_PG_DEGREE','PG_COLLEGE','EDUCATION','DEGREE_UG','DEGREE_PG','COLLEGE','NAME_OF_USER','HOROSCOPE_MATCH',"MANGLIK");
 					break;
 case 'APP2':
 						$field_array=array('YOURINFO');

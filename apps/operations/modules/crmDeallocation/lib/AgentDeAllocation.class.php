@@ -114,9 +114,9 @@ class AgentDeAllocation
         $fetchProfilesEndDate = date('Y-m-d', strtotime("-$nextDay day",  strtotime($curDate)))." 23:59:59";
         $dispStartDate = $fetchProfilesStDate;
         $dispEndDate = date('Y-m-d', strtotime('-1 day',  strtotime($curDate)))." 23:59:59";
-        $mainAdminObj = new incentive_MAIN_ADMIN("newjs_slave");
+        $mainAdminObj = new incentive_MAIN_ADMIN("newjs_masterRep");
         $allotedProfiles = $mainAdminObj->getAllotedProfilesForAgentWithinDates($agents, $fetchProfilesStDate, $fetchProfilesEndDate);
-        $historyObj = new incentive_HISTORY("newjs_slave");
+        $historyObj = new incentive_HISTORY("newjs_masterRep");
         $profileIds = implode(",",array_keys($allotedProfiles));
         $dispositionArr = $historyObj->getHistoryForProfileIds($profileIds, $dispStartDate, $dispEndDate);
         foreach($allotedProfiles as $pid => $allotTime){

@@ -489,6 +489,37 @@ class BILLING_PURCHASES extends TABLE{
         return $output;
     }
 
+    /*function : fetchPaymentCount
+    * returns the count of previous main membership payments by profile with reference to  * given billid
+    *@params: $profileid,$currentBillId
+    * @return: count
+    */
+    public function fetchPaymentCount($profileid,$currentBillId){
+        try 
+        {
+            if(!$profileid || !$currentBillId){
+                return 0;
+            } else {
+                $sql = "SELECT COUNT( DISTINCT BILLID ) AS CNT FROM billing.PURCHASES WHERE PROFILEID =:PROFILEID AND BILLID < :BILLID AND STATUS = :STATUS AND MEMBERSHIP = :MEMBERSHIP";
+                $prep=$this->db->prepare($sql);
+                $prep->bindValue(":BILLID",$currentBillId,PDO::PARAM_INT);
+                $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+                $prep->bindValue(":STATUS","DONE",PDO::PARAM_STR);
+                $prep->bindValue(":MEMBERSHIP",'Y',PDO::PARAM_STR);
+                $prep->execute();
+                if($result=$prep->fetch(PDO::FETCH_ASSOC)){
+                    return $result['CNT'];
+                }
+                else{
+                    return 0;
+                }
+            }
+        } 
+        catch (Exception $e){
+            throw new jsException($e);
+        }
+    }
+
     public function fetchAllDataForBillidArr($billIdArr){
         try 
         {
@@ -547,6 +578,25 @@ class BILLING_PURCHASES extends TABLE{
             }
         }
         catch(PDOException $e)
+        {
+            throw new jsException($e);
+        }
+    }
+
+    public function fetchFinanceData ($startDt, $endDt) {
+        try {
+            $sql = "SELECT pd.ENTRY_DT,pd.BILLID,pd.RECEIPTID,pd.PROFILEID,p.USERNAME,pur_d.SERVICEID,pur_d.START_DATE,pur_d.END_DATE,pur_d.CUR_TYPE,ROUND(((pd.AMOUNT*pur_d.SHARE)/100),2) AS AMOUNT,pur_d.DEFERRABLE FROM billing.PAYMENT_DETAIL pd,billing.PURCHASE_DETAIL pur_d,billing.PURCHASES p WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0 ORDER BY BILLID ASC";
+            $prep=$this->db->prepare($sql);
+            $prep->bindValue(":START_DATE",$startDt,PDO::PARAM_STR);
+            $prep->bindValue(":END_DATE",$endDt,PDO::PARAM_STR);
+            $prep->execute();
+            while($result = $prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $profiles[] = $result;
+            }
+            return $profiles;
+        } 
+        catch (PDOException $e) 
         {
             throw new jsException($e);
         }

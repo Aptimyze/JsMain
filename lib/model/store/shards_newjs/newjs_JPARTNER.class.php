@@ -210,7 +210,7 @@ class newjs_JPARTNER extends TABLE
 		try{
 			$sql = "SELECT DPP FROM newjs.JPARTNER where PROFILEID=:PROFILEID";
 			$res = $this->db->prepare($sql);
-			$res->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+			$res->bindValue(":PROFILEID",$profileId,PDO::PARAM_INT);
 			$res->execute();
 			if($row = $res->fetch(PDO::FETCH_ASSOC)){
 				$output = $row['DPP'];

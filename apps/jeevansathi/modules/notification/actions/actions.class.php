@@ -292,6 +292,20 @@ class notificationActions extends sfActions
         $apiResponseHandlerObj->generateResponse();
         die;
     }
-
-   
+    
+    public function executeMonitoringNotificationsKeyV1(sfWebRequest $request)
+    {
+        $respObj = ApiResponseHandler::getInstance();
+        $notificationKey = $request->getParameter('notificationKey');
+        if ($notificationKey) {
+            $mobApiNotMsgLogObj = new MOBILE_API_NOTIFICATION_MESSAGE_LOG('newjs_slave');
+            $output = $mobApiNotMsgLogObj->fetchNotificationKeyLatestEntry($notificationKey);
+        } else {
+            $output = array('error'=>"Please pass param 'notificationKey'");
+        }
+        $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+        $respObj->setResponseBody($output);
+        $respObj->generateResponse();
+        die;
+    }   
 }

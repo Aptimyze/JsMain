@@ -1,8 +1,8 @@
 function dropdown() {
-    $(".dropdown dt").click(function() {
+    $(".dropdown dt").click(function () {
         $(".dropdown dd ul").toggle();
     });
-    $(".dropdown dd ul li").click(function() {
+    $(".dropdown dd ul li").click(function () {
         var text = $(this).html();
         $(".dropdown dt span").html(text);
         $(".dropdown dd ul").hide();
@@ -12,20 +12,18 @@ function dropdown() {
     function getSelectedValue(id) {
         return $("#" + id).find("dt span.value").html();
     }
-    $(document).bind('click', function(e) {
+    $(document).bind('click', function (e) {
         var $clicked = $(e.target);
         if (!$clicked.parents().hasClass("dropdown")) $(".dropdown dd ul").hide();
     });
 }
 
-function jsMemExpandAnimate(closeView)
-{
+function jsMemExpandAnimate(closeView) {
     $('.js-expand').animate({
         height: "toggle"
-    }, 1000, function() {
+    }, 1000, function () {
         changeclass();
-        if(closeView==true)
-            $('.js-closeview ').css('display', 'block');
+        if (closeView == true) $('.js-closeview ').css('display', 'block');
     });
 }
 
@@ -39,10 +37,16 @@ function changeTabContent(param1, param2, timeout) {
     $('.mem-wid12t').animate({
         "left": contWidth
     }, timeout);
-    $(".planfeat").each(function() {
+    $(".planfeat").each(function () {
         $(this).css('display', 'none');
     });
     $('.list-' + param1).slideDown(timeout);
+    var currentTab = $('.planlist ul.tabs').find('li.active').attr('mainMemTab');
+    var selectedMem = $('#tab_' + currentTab).find('.plansel');
+    var m = $(selectedMem).attr('mainMem'),
+        d = $(selectedMem).attr('mainMemDur');
+    c = $(selectedMem).attr('mainMemContact');
+    managePriceStrike(m, d);
 }
 
 function createCookie(name, value, days) {
@@ -58,7 +62,8 @@ function createCookie(name, value, days) {
 }
 
 function readCookie(name) {
-    var nameEQ = escape(name) + "=",ca = document.cookie.split(';');
+    var nameEQ = escape(name) + "=",
+        ca = document.cookie.split(';');
     for (var i = 0; i < ca.length; i++) {
         var c = ca[i];
         while (c.charAt(0) === ' ') c = c.substring(1, c.length);
@@ -112,7 +117,7 @@ function trackVasCookie(vasKey, vasId) {
         }
         if (tempArr.length > 0) {
             // remove all other vas which start with supplied character except currently selected
-            tempArr.forEach(function(item, index) {
+            tempArr.forEach(function (item, index) {
                 if (item.substring(0, 1) == vasKey && item != vasId) {
                     tempArr.splice(index, 1);
                 }
@@ -149,7 +154,7 @@ function manageVasOverlay(vasKey) {
         }
         if (tempArr.length > 0) {
             // remove passed vasId
-            tempArr.forEach(function(item, index) {
+            tempArr.forEach(function (item, index) {
                 if (item.substring(0, 1) == vasKey) {
                     if ($("#" + vasKey + "_overlay").hasClass('disp-none')) {
                         $("#" + vasKey + "_overlay").removeClass('disp-none');
@@ -186,8 +191,13 @@ function updateVasPageCart() {
         }
         if (tempArr.length > 0) {
             // remove passed vasId
-            tempArr.forEach(function(item, index) {
-                var vasKey = item.substring(0, 1),vasId = item,vasName = $("#" + vasKey + "_name").html(),vasDuration = $("#" + vasId + "_duration").html(),vasPrice = $("#" + vasId + "_price span.prc").html(),vasPriceStrike = $("#" + vasId + "_price_strike span.prc").html();
+            tempArr.forEach(function (item, index) {
+                var vasKey = item.substring(0, 1),
+                    vasId = item,
+                    vasName = $("#" + vasKey + "_name").html(),
+                    vasDuration = $("#" + vasId + "_duration").html(),
+                    vasPrice = $("#" + vasId + "_price span.prc").html(),
+                    vasPriceStrike = $("#" + vasId + "_price_strike span.prc").html();
                 if (!checkEmptyOrNull(vasPriceStrike)) {
                     vasPriceStrike = '';
                 }
@@ -196,24 +206,27 @@ function updateVasPageCart() {
         }
     }
     $("#vasServices").append(newHTML);
-    var mainPrice = 0,mainPriceStrike = 0,vasPriceTotal = 0,vasPriceStrikeTotal = 0;
+    var mainPrice = 0,
+        mainPriceStrike = 0,
+        vasPriceTotal = 0,
+        vasPriceStrikeTotal = 0;
     if ($("#mainPlanPrice").length > 0) {
         mainPrice = parseFloat($("#mainPlanPrice").html().replace(',', ''));
     }
     if ($("#mainPlanStrikePrice").length > 0) {
         mainPriceStrike = parseFloat($("#mainPlanStrikePrice").html().replace(',', ''));
     }
-    $(".vasPlanPrice").each(function() {
+    $(".vasPlanPrice").each(function () {
         vasPriceTotal += parseFloat($(this).html().replace(',', ''));
     });
-    $(".vasPlanPriceStrike").each(function() {
+    $(".vasPlanPriceStrike").each(function () {
         vasPriceStrikeTotal += parseFloat($(this).html().replace(',', ''));
     });
     var totalPrice = mainPrice + vasPriceTotal;
-    if(isNaN(vasPriceStrikeTotal)){
-      var totalPriceStrike = mainPriceStrike + vasPriceTotal - totalPrice;
+    if (isNaN(vasPriceStrikeTotal)) {
+        var totalPriceStrike = mainPriceStrike + vasPriceTotal - totalPrice;
     } else {
-      var totalPriceStrike = mainPriceStrike + vasPriceStrikeTotal - totalPrice;
+        var totalPriceStrike = mainPriceStrike + vasPriceStrikeTotal - totalPrice;
     }
     totalPrice = totalPrice.toFixed(2);
     totalPriceStrike = totalPriceStrike.toFixed(2);
@@ -234,7 +247,7 @@ function updateVasPageCart() {
         $('#payNowBtn').addClass('bg_greyed');
     }
     $("#totalPrice").append(removeZeroInDecimal(commaSeparateNumber(totalPrice)));
-    $(".removeVasBtn").on('click', function() {
+    $(".removeVasBtn").on('click', function () {
         var vasId = $(this).attr('vasId');
         var vasKey = $(this).attr('vasKey');
         removeCommand(vasKey, vasId);
@@ -246,17 +259,18 @@ function preSelectVas() {
     if (dur == 'L') {
         dur = 12;
     }
-    var index = 0,vasDur,vasKey,newSelectedVas = new Array();
+    var index = 0,
+        vasDur, vasKey, newSelectedVas = new Array();
     var PSVAS = preSelectVasGlobal.split(',');
-    $('#VASdiv ul li').each(function() {
+    $('#VASdiv ul li').each(function () {
         if (index < 6) {
             var loopVal = 0;
             flag = 0
-            $(this).find(".vascell").each(function() {
+            $(this).find(".vascell").each(function () {
                 vasDur = $(this).attr('id');
                 vasKey = vasDur.substring(0, 1);
                 vasDur = vasDur.replace(/[^0-9]/g, '');
-                if(inArray(vasKey,PSVAS)){
+                if (inArray(vasKey, PSVAS)) {
                     if (vasKey == 'I' && flag != 1) {
                         dur = dur + '0';
                         flag = 1;
@@ -280,15 +294,14 @@ function preSelectVas() {
 
 function inArray(needle, haystack) {
     var length = haystack.length;
-    for(var i = 0; i < length; i++) {
-        if(haystack[i] == needle) return true;
+    for (var i = 0; i < length; i++) {
+        if (haystack[i] == needle) return true;
     }
     return false;
 }
 
 function updateAlreadySelectedVas() {
     var currentVas = readCookie('selectedVas');
-
     if (currentVas.indexOf(",") > -1) {
         // case when more than one vas was selected
         var tempArr = currentVas.split(",");
@@ -297,38 +310,40 @@ function updateAlreadySelectedVas() {
         var tempArr = [currentVas];
     }
     var mainMem = readCookie('mainMem');
-    var memBasedFilteredVas = JSON.parse(filteredVasServices.replace(/&quot;/g,'"'));
+    var memBasedFilteredVas = JSON.parse(filteredVasServices.replace(/&quot;/g, '"'));
     var newVasArr = [];
     if (tempArr.length > 0) {
         // remove all other vas which start with supplied character except currently selected
-        tempArr.forEach(function(item, index) {
-                var vasKey = item.substring(0, 1);
-                //filter out vas for eAdvantage if present in selected vas
-                $("#" + item).addClass('mem-vas-active');
-                if ($("#" + vasKey + "_overlay").hasClass('disp-none')) {
-                    if(memBasedFilteredVas[mainMem]=== "undefined" || $.inArray(vasKey,memBasedFilteredVas[mainMem])===-1)
-                    {
-                        newVasArr.push(item);
-                    }
-                    $("#" + vasKey + "_overlay").removeClass('disp-none');
-                    $("#" + item + "_overlay").removeClass('disp-none');
-                } else {
-                    if(memBasedFilteredVas[mainMem]=== "undefined" || $.inArray(vasKey,memBasedFilteredVas[mainMem])===-1)
-                    {
-                        newVasArr.push(item);
-                    }
-                    $("#" + vasKey + "_overlay").addClass('disp-none');
-                    $("#" + item + "_overlay").addClass('disp-none');
+        tempArr.forEach(function (item, index) {
+            var vasKey = item.substring(0, 1);
+            //filter out vas for eAdvantage if present in selected vas
+            $("#" + item).addClass('mem-vas-active');
+            if ($("#" + vasKey + "_overlay").hasClass('disp-none')) {
+                if (memBasedFilteredVas[mainMem] === "undefined" || $.inArray(vasKey, memBasedFilteredVas[mainMem]) === -1) {
+                    newVasArr.push(item);
                 }
+                $("#" + vasKey + "_overlay").removeClass('disp-none');
+                $("#" + item + "_overlay").removeClass('disp-none');
+            } else {
+                if (memBasedFilteredVas[mainMem] === "undefined" || $.inArray(vasKey, memBasedFilteredVas[mainMem]) === -1) {
+                    newVasArr.push(item);
+                }
+                $("#" + vasKey + "_overlay").addClass('disp-none');
+                $("#" + item + "_overlay").addClass('disp-none');
+            }
         });
         currentVas = newVasArr.join(",");
-        createCookie('selectedVas',currentVas,0);
+        createCookie('selectedVas', currentVas, 0);
     }
 }
 
 function updateTimeSpan(countdown) {
-    var span1 = document.getElementById('bannerExpandedTimer'),span2 = document.getElementById('bannerMinimizedTimer'),span3 = document.getElementById('bannerTimerVas');
-    var d = new Date(countdown),t = new Date(),ms,s, m, h;
+    // var span1 = document.getElementById('bannerExpandedTimer');
+    var span2 = document.getElementById('bannerMinimizedTimer'),
+        span3 = document.getElementById('bannerTimerVas');
+    var d = new Date(countdown),
+        t = new Date(),
+        ms, s, m, h;
     // get the difference between right now and expiry date
     ms = d - t;
     // get the days between now and then
@@ -343,17 +358,17 @@ function updateTimeSpan(countdown) {
     // get seconds
     s = parseInt(ms / 1000);
     if (h <= 0 && m <= 0 && s <= 0) {
-        span1.innerHTML = " <span class='disp_ib f20'>00<span class='f10 pl2'>H</span></span> <span class='disp_ib f20 pl10'>00<span class='f10 pl2'>M</span></span> <span class='disp_ib f20 pl10'>00<span class='f10 pl2'>S</span></span> ";
-        span2.innerHTML = "<ul class='pt10'><li>00<span>H</span></li><li>00<span>M</span></li><li>00<span>S</span></li></ul>";
+        // span1.innerHTML = " <span class='disp_ib f20'>00<span class='f10 pl2'>H</span></span> <span class='disp_ib f20 pl10'>00<span class='f10 pl2'>M</span></span> <span class='disp_ib f20 pl10'>00<span class='f10 pl2'>S</span></span> ";
+        span2.innerHTML = "<ul class='pt5'><li>00<span>H</span></li><li>00<span>M</span></li><li>00<span>S</span></li></ul>";
         span3.innerHTML = " <span class='disp_ib f20'>00<span class='f10 pl2'>H</span></span> <span class='disp_ib f20 pl10'>00<span class='f10 pl2'>M</span></span> <span class='disp_ib f20 pl10'>00<span class='f10 pl2'>S</span></span> ";
     } else {
         h = leftPad(h, 2);
         m = leftPad(m, 2);
         s = leftPad(s, 2);
-        span1.innerHTML = " <span class='disp_ib f20'>" + h + "<span class='f10 pl2'>H</span></span> <span class='disp_ib f20 pl10'>" + m + "<span class='f10 pl2'>M</span></span> <span class='disp_ib f20 pl10'>" + s + "<span class='f10 pl2'>S</span></span> ";
-        span2.innerHTML = "<ul class='pt10'><li>" + h + "<span>H</span></li><li>" + m + "<span>M</span></li><li>" + s + "<span>S</span></li></ul>";
+        // span1.innerHTML = " <span class='disp_ib f20'>" + h + "<span class='f10 pl2'>H</span></span> <span class='disp_ib f20 pl10'>" + m + "<span class='f10 pl2'>M</span></span> <span class='disp_ib f20 pl10'>" + s + "<span class='f10 pl2'>S</span></span> ";
+        span2.innerHTML = "<ul class='pt5'><li>" + h + "<span>H</span></li><li>" + m + "<span>M</span></li><li>" + s + "<span>S</span></li></ul>";
         span3.innerHTML = " <span class='disp_ib f20'>" + h + "<span class='f10 pl2'>H</span></span> <span class='disp_ib f20 pl10'>" + m + "<span class='f10 pl2'>M</span></span> <span class='disp_ib f20 pl10'>" + s + "<span class='f10 pl2'>S</span></span> ";
-        setTimeout(function() {
+        setTimeout(function () {
             updateTimeSpan(countdown)
         }, 100);
     }
@@ -376,7 +391,9 @@ function checkEmptyOrNull(item) {
 }
 
 function managePriceStrike(m, d) {
-    var strikePrice = $("#" + m + d + "_price_strike").text().trim().replace(',', ''),actualPrice = $("#" + m + d + "_price").text().trim().replace(',', ''),difference = (strikePrice - actualPrice);
+    var strikePrice = $("#" + m + d + "_price_strike").text().trim().replace(',', ''),
+        actualPrice = $("#" + m + d + "_price").text().trim().replace(',', ''),
+        difference = (strikePrice - actualPrice);
     if (strikePrice.length != 0) {
         $('.overflowPinkRipple').css('margin-top', '0px');
         $('#' + m + "_savings_container").show();
@@ -386,26 +403,42 @@ function managePriceStrike(m, d) {
         $('.overflowPinkRipple').css('margin-top', '20px');
         $('#tab_X .overflowPinkRipple').css('margin-top', '20px');
     }
+    if ($("#main_" + m).hasClass("active")) {
+        if (profileid) {
+            $(".list-main_" + m + " #finalMemTab_" + m).html($($("#main_" + m + " span")[1]).html() + ' - ');
+            $(".list-main_" + m + " #finalMemDuration_" + m).html($("#" + m + d + "_duration").text() + ' for ');
+            $(".list-main_" + m + " #finalMemPrice_" + m).html($("#" + m + d + "_price").html());
+        } else {
+            $(".list-main_" + m + " #finalMemTab_" + m).html($($("#main_" + m + " span")[1]).html() + ' starts @ ');
+            $(".list-main_" + m + " #finalMemDuration_" + m).html();
+            $(".list-main_" + m + " #finalMemPrice_" + m).html($("#tab_" + m + "_startingPrice").html());
+        }
+    }
     $('#' + m + "_final_price").html(removeZeroInDecimal(commaSeparateNumber(actualPrice)));
 }
 
 function initializeMembershipPage() {
     $(".planlist li").eq(0).addClass('active').trigger('click');
     $(".benefits div").eq(0).removeClass('disp-none');
-    $('#sliderContainer div').find('.plansel').each(function() {
-        var m = $(this).attr('mainMem'),d = $(this).attr('mainMemDur');
+    $('#sliderContainer div').find('.plansel').each(function () {
+        var m = $(this).attr('mainMem'),
+            d = $(this).attr('mainMemDur');
         managePriceStrike(m, d);
     });
-    $('#exclusiveContainer div').find('.active').each(function() {
-        var m = $(this).attr('mainMem'),d = $(this).attr('mainMemDur');
+    $('#exclusiveContainer div').find('.active').each(function () {
+        var m = $(this).attr('mainMem'),
+            d = $(this).attr('mainMemDur');
         managePriceStrike(m, d);
     });
     if (checkEmptyOrNull(readCookie('mainMemTab')) && readCookie('mainMem') != "X") {
         $("ul.tabs li.active").removeClass('active');
         $("ul.tabs li[mainMemTab=" + readCookie('mainMemTab') + "]").addClass('active');
-        var tabNum = $("ul.tabs li.active").index(),getTabId = $("ul.tabs li.active").attr('id');
+        var tabNum = $("ul.tabs li.active").index(),
+            getTabId = $("ul.tabs li.active").attr('id');
         changeTabContent(getTabId, tabNum, 0);
-        var m = readCookie('mainMem'),d = readCookie('mainMemDur'),c = readCookie('mainMemContact');
+        var m = readCookie('mainMem'),
+            d = readCookie('mainMemDur'),
+            c = readCookie('mainMemContact');
         if (checkEmptyOrNull(m) && checkEmptyOrNull(d)) {
             $("#tab_" + m + " .plansel").removeClass('plansel');
             $("#" + m + d).addClass('plansel');
@@ -414,7 +447,8 @@ function initializeMembershipPage() {
     }
     if (readCookie('mainMem') == "X") {
         $(".jsxDur.active").removeClass('active');
-        var m = readCookie('mainMem'),d = readCookie('mainMemDur');
+        var m = readCookie('mainMem'),
+            d = readCookie('mainMemDur');
         $("#" + m + d).addClass('active');
         managePriceStrike(m, d);
     }
@@ -422,7 +456,8 @@ function initializeMembershipPage() {
 //function to format numbers in display as comma seperated
 function commaSeparateNumber(val) {
     val = val.replace(',', '');
-    var array = val.split(''),index = -3;
+    var array = val.split(''),
+        index = -3;
     while (array.length + index > 0) {
         array.splice(index, 0, ',');
         index -= 4;
@@ -432,8 +467,8 @@ function commaSeparateNumber(val) {
     return finalNo;
 };
 
-function removeZeroInDecimal(val){
-    return val.replace(".00","");
+function removeZeroInDecimal(val) {
+    return val.replace(".00", "");
 }
 
 function numberWithCommas(x) {
@@ -441,7 +476,7 @@ function numberWithCommas(x) {
 }
 
 function removeCommand(vasKey, vasId) {
-    $("#" + vasKey + " .vascell").each(function(e) {
+    $("#" + vasKey + " .vascell").each(function (e) {
         if ($(this).hasClass('mem-vas-active')) {
             $(this).removeClass('mem-vas-active');
         }
@@ -452,12 +487,12 @@ function removeCommand(vasKey, vasId) {
 }
 
 function bindEscapeKey() {
-    $(document).keyup(function(e) {
+    $(document).keyup(function (e) {
         if (e.keyCode == 27) {
             closeAllOverlays();
         }
     });
-    $(document).click(function(e) {
+    $(document).click(function (e) {
         if ($(e.target).attr('class') == 'overlay1') {
             closeAllOverlays();
         }
@@ -482,46 +517,46 @@ function closeAllOverlays() {
 }
 
 function manageSelectedItem() {
-    var paymentOption,selectedName,selectedCardType;
-    $("a.accordion-section-title").each(function() {
+    var paymentOption, selectedName, selectedCardType;
+    $("a.accordion-section-title").each(function () {
         if ($(this).hasClass('active')) {
             paymentOption = $(this).attr('paymentSel');
             if (checkEmptyOrNull(paymentOption)) {
                 selectedName = $("#accordion-" + paymentOption).find('.selectedValue').html();
                 var index = 0;
-                $("#accordion-" + paymentOption + " .selectListInnerWrap dd").each(function() {
+                $("#accordion-" + paymentOption + " .selectListInnerWrap dd").each(function () {
                     if ($(this).html() == selectedName) {
                         if (index != 0) {
                             selectedCardType = $("#accordion-" + paymentOption + " select.custom option").eq(index).attr('cardType');
-                            if(selectedCardType == 'OTHER' && paymentOption == 'NB'){
-                                paymentOption = 'CR';
-                                selectedCardType = 'card5';
-                            } 
-                            createCookie("paymentMode", paymentOption);
-                            createCookie("cardType", selectedCardType);
-                            clearSelectedIcons(paymentOption);
-                            $("#"+paymentOption+"-"+index).find('.cursp').removeClass('memn-nosel').addClass('memnp-sel');
-                        } else if (index == 0){
-                          clearSelectedIcons(paymentOption);
-                        }
-                    } else {
-                        index++;
-                    }
-                });
-                $("#accordion-" + paymentOption + " .defaultScrollbar dd").each(function() {
-                    if ($(this).html() == selectedName) {
-                        if (index != 0) {
-                            selectedCardType = $("#accordion-" + paymentOption + " select.custom option").eq(index).attr('cardType');
-                            if(selectedCardType == 'OTHER' && paymentOption == 'NB'){
+                            if (selectedCardType == 'OTHER' && paymentOption == 'NB') {
                                 paymentOption = 'CR';
                                 selectedCardType = 'card5';
                             }
                             createCookie("paymentMode", paymentOption);
                             createCookie("cardType", selectedCardType);
                             clearSelectedIcons(paymentOption);
-                            $("#"+paymentOption+"-"+index).find('.cursp').removeClass('memn-nosel').addClass('memnp-sel');
-                        } else if (index == 0){
-                          clearSelectedIcons(paymentOption);
+                            $("#" + paymentOption + "-" + index).find('.cursp').removeClass('memn-nosel').addClass('memnp-sel');
+                        } else if (index == 0) {
+                            clearSelectedIcons(paymentOption);
+                        }
+                    } else {
+                        index++;
+                    }
+                });
+                $("#accordion-" + paymentOption + " .defaultScrollbar dd").each(function () {
+                    if ($(this).html() == selectedName) {
+                        if (index != 0) {
+                            selectedCardType = $("#accordion-" + paymentOption + " select.custom option").eq(index).attr('cardType');
+                            if (selectedCardType == 'OTHER' && paymentOption == 'NB') {
+                                paymentOption = 'CR';
+                                selectedCardType = 'card5';
+                            }
+                            createCookie("paymentMode", paymentOption);
+                            createCookie("cardType", selectedCardType);
+                            clearSelectedIcons(paymentOption);
+                            $("#" + paymentOption + "-" + index).find('.cursp').removeClass('memn-nosel').addClass('memnp-sel');
+                        } else if (index == 0) {
+                            clearSelectedIcons(paymentOption);
                         }
                     } else {
                         index++;
@@ -541,8 +576,8 @@ function manageSelectedItem() {
     }
 }
 
-function clearSelectedIcons(paymentOption){
-    $("#"+paymentOption+"-iconList li").find('.cursp').each(function(){
+function clearSelectedIcons(paymentOption) {
+    $("#" + paymentOption + "-iconList li").find('.cursp').each(function () {
         $(this).removeClass('memnp-sel').addClass('memn-nosel');
     });
 }
@@ -551,10 +586,10 @@ function payAtBranchesTransition() {
     currentSelectedCity = $('#city').val();
     if (currentSelectedCity == "Select City") $('#instructionsText').addClass("disp-none");
     else $('#instructionsText').removeClass("disp-none");
-    $(".branch").each(function(index, element) {
+    $(".branch").each(function (index, element) {
         $(this).addClass("disp-none");
     });
-    $(".branch").each(function(index, element) {
+    $(".branch").each(function (index, element) {
         if ($(this).attr("branch_id") == currentSelectedCity + "_branch") $(this).removeClass("disp-none");
     });
 }
@@ -562,7 +597,7 @@ function payAtBranchesTransition() {
 function manageCartPaymentButtonTextChange() {
     var activeFlag;
     $("#cartPaymentSpan").html("Pay Now");
-    $("a.accordion-section-title").each(function() {
+    $("a.accordion-section-title").each(function () {
         if ($(this).hasClass('active')) {
             activeFlag = 1;
             if ($(this).attr('id') == 'payAtBranches') {
@@ -602,7 +637,7 @@ function enablePayNowButtonCartPage() {
 
 function showPreferredDatesDropDown(day, month, year) {
     var select = document.getElementById("preferredDateDay");
-    day.forEach(function(item, index) {
+    day.forEach(function (item, index) {
         var el = document.createElement("option");
         el.textContent = item;
         el.value = item;
@@ -616,14 +651,14 @@ function showPreferredDatesDropDown(day, month, year) {
             dispMonth.push(monthsInOrder[i]);
         }
     }
-    dispMonth.forEach(function(item, index) {
+    dispMonth.forEach(function (item, index) {
         var el = document.createElement("option");
         el.textContent = item;
         el.value = item;
         select.appendChild(el);
     });
     var select = document.getElementById("preferredDateYear");
-    year.forEach(function(item, index) {
+    year.forEach(function (item, index) {
         var el = document.createElement("option");
         el.textContent = item;
         el.value = item;
@@ -669,7 +704,7 @@ function applyCouponOnCart(couponID, paramStr, priceToBeDiscouted, originalPrice
     $.myObj.ajax({
         type: 'POST',
         url: url,
-        success: function(data) {
+        success: function (data) {
             respose = data;
             if (data.success_code != 1) {
                 setCouponCodeField(data.message);
@@ -760,7 +795,6 @@ function removeCoupon(e) {
         eraseCookie('couponID');
     }
 };
-
 //$(document).bind("keydown", removeCoupon);
 $(document).on("keydown", removeCoupon);
 
@@ -776,18 +810,18 @@ function setCouponCodeField(msg) {
 function setCardTypeField(cardType) {
     var cardTypeValue = '';
     switch (cardType) {
-        case 'DR':
-            cardTypeValue = 'Debit Card';
-            break;
-        case 'CR':
-            cardTypeValue = 'Credit Card';
-            break;
-        case 'CSH':
-            cardTypeValue = 'Wallet';
-            break;
-        case 'NB':
-            cardTypeValue = 'Net Banking';
-            break;
+    case 'DR':
+        cardTypeValue = 'Debit Card';
+        break;
+    case 'CR':
+        cardTypeValue = 'Credit Card';
+        break;
+    case 'CSH':
+        cardTypeValue = 'Wallet';
+        break;
+    case 'NB':
+        cardTypeValue = 'Net Banking';
+        break;
     }
     return cardTypeValue;
 }
@@ -860,11 +894,10 @@ function checkLogoutCase(profileid) {
         createCookie('vasppid', computedVasppid);
     }
 }
-
 $.extend({
-    redirectPost: function(location, args) {
+    redirectPost: function (location, args) {
         var form = '';
-        $.each(args, function(key, value) {
+        $.each(args, function (key, value) {
             form += '<input type="hidden" name="' + key + '" value="' + value + '">';
         });
         $('<form action="' + location + '" method="POST">' + form + '</form>').appendTo('body').submit();

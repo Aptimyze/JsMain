@@ -166,7 +166,7 @@ return 0;
                     $show=1;
                     break;
           case '6': 
-                  if(!MobileCommon::isApp())
+                  if(MobileCommon::isApp()!='I')
                     {
                       
                       $loggedInUser=LoggedInProfile::getInstance();

@@ -763,9 +763,9 @@ function FlushChangedJson()
 function CBoxFields(field)
 {   
     var Cboxarr={
-        "DIET":{V:"Vegetarian",N:"Non Vegetarian",J:"Jain",E:"Eggetarian"},
-        "SMOKE":{Y:"Yes",N:"No",O:"Occasionally"},
-        "DRINK":{Y:"Yes",N:"No",O:"Occasionally"},
+        "DIET":{"0":"Select",V:"Vegetarian",N:"Non Vegetarian",J:"Jain",E:"Eggetarian"},
+        "SMOKE":{"0":"Select",Y:"Yes",N:"No",O:"Occasionally"},
+        "DRINK":{"0":"Select",Y:"Yes",N:"No",O:"Occasionally"},
         "OPEN_TO_PET":{Y:"Yes",N:"No"},
         "OWN_HOUSE":{Y:"Yes",N:"No"},
         "HAVE_CAR":{Y:"Yes",N:"No"},
