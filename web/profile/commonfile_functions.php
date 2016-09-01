@@ -207,6 +207,7 @@ $css_arr[]=array("operations/showStatViewProfile_css"  => "1");
 $css_arr[]=array("operations/help_module"   => "1");
 $css_arr[]=array("jspc/help/JSPCHelp_css"     => "3");
 $css_arr[]=array("jsms/help/JSMSHelp_css"     => "3");
+$css_arr[]=array("jsms/myjs/CALJSMS_css"     => "1");
 return $css_arr;
 }
 /* JavaScript File */
@@ -500,7 +501,7 @@ $js_arr[]=array("registration_pg1"     => "3");
 $js_arr[]=array("jsms/contactus/contactus_js"     => "1");
 $js_arr[]=array("jsms/common/sly"      => "2");
 $js_arr[]=array("jspc/myjs/myjs_js"              => "14");
-$js_arr[]=array("jspc/myjs/myjs_pcrevamp"                 => "17");
+$js_arr[]=array("jspc/myjs/myjs_pcrevamp"                 => "18");
 $js_arr[]=array("jspc/myjs/engBarJs_js"           => "10");
 $js_arr[]=array("jspc/common/nano"     => "1");
 $js_arr[]=array("jspc/common/commonJspc_js"                     => "20");
@@ -601,6 +602,7 @@ $js_arr[]=array("jspc/help/JSPCHelp_js"     => "3");
 $js_arr[]=array("jsms/help/JSMSHelp_js"     => "3");
 $js_arr[]=array("jsms/help/jsmsPostQuery_js"     => "3");
 $js_arr[]=array("jsms/help/autoPopulateFreshdesk_js"     => "3");
+$js_arr[]=array("jsms/myjs/CALJSMS_js"     => "1");
 return $js_arr;
 }
 function getJavascript(){

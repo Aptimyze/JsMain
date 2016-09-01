@@ -1,56 +1,6 @@
 <script>
-$(document).ready(function() {
-	$('body').css('background-color','#09090b');
-} )
-    var CALButtonClicked=0;
-    
-        function validateUserName(name){
-        if(!name)return false;
-        
-        var arr=name.split('');
-        if(/^[a-zA-Z' .]*$/.test(name) == false)return false;
-        return true;
-     
-    }
-    function criticalLayerButtonsAction(clickAction,button) {
-        if(CALButtonClicked)return;
-        CALButtonClicked=1;
-        var CALParams='';
-        var layerId= $("#CriticalActionlayerId").val();
-        if(layerId==9 && button=='B1')
-                    {   
-                        var newNameOfUser='',privacyShowName='';
-                        newNameOfUser = ($("#nameInpCAL").val()).trim();
-                        
-                        if(!validateUserName(newNameOfUser))
-                        {
-                            showError();
-                            CALButtonClicked=0;
-                            return;
-                        }
-                        CALParams="&namePrivacy="+namePrivacy+"&newNameOfUser="+newNameOfUser;
-                    }
-
-        
-                                   window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button+CALParams; 
-                               
-        }
-            
+    var namePrivacy=~if $namePrivacy neq 'N'`'Y'~else`'N'~/if`;
 </script>
-<style>
-.pad18Incomplete{padding:5% 0 8% 0;}
-
- @media (min-width: 280px) {
- 	.image_incomplete{ width:80px; height:80px; margin-top: 4px; margin-left: 4px; z-index:3; position:relative; border-radius:100%;}
- }
-@media (min-width: 321px) {
-.image_incomplete{ width:80px; height:80px;  z-index:3;  border-radius:100%; }
-}
-
-.pdt15{
-	padding-top:15%;
-	}
-</style>
 
 <input type="hidden" id="CriticalActionlayerId" value="~$calObject.LAYERID`">
 
@@ -90,42 +40,6 @@ $(document).ready(function() {
   </div>
   
   ~else`
-      <script>
-          
-        $( document ).ready(function() {
-            if($("#submitName").offset().top-$("#skipBtn").offset().top-70 >0){
-		$("#skipBtn").css("margin-top",$("#submitName").offset().top-$("#skipBtn").offset().top-70);
-            }
-	});
-          var namePrivacy=~if $namePrivacy neq 'N'`'Y'~else`'N'~/if`;
-          function switchColors(id1,id2){
-              
-              $(id1).css('background-color','#d9475c');
-              $(id2).css('background-color','#C6C6C6');
-          }
-          function showError()
-          {
-              	$( "#validation_error" ).slideDown( "slow", function() {}).delay( 800 );
-		$( "#validation_error" ).slideUp( "slow", function() {});
-
-              
-          }
-          
-      </script>
-      <style>
-   .darkBackgrnd {overflow:auto;background-color:#282828; position:fixed; top:0; right:0; bottom:0; left:0;margin:0; padding:0px 0px 60px 0px; z-index:102;}          
-   .pad_new{padding:40px 20px 0px 20px}
-   .pad_new2{padding:10px 20px 10px 20px}
-   .mt30{margin-top:30px}
-   .lh60{line-height:60px}
-   .colr8A{color:#8A8A8A}
-   .brdrRad2{border-radius:2px}
-   .mlNeg2{margin-left:-2px}
-   .bgBtnGrey{background-color:#C6C6C6}
-   .pt35p{padding-top:15px}
-   .hgt90{height: 90px;}
-   #skipBtn{display: inline-block;position: relative;left: 50%;transform: translate(-50%,0);-Webkit-transform: translate(-50%,0);-Moz-transform: translate(-50%,0);-O-transform: translate(-50%,0); -ms-transform: translate(-50%,0);}
-      </style>
       <div class="txtc pad12 white fullwid f13 posabs dispnone" id="validation_error"  style="top: 0px;background-color: rgba(102, 102, 102, 0.5);z-index:104;">Please provide a valid name.</div>
 
       <div class="darkBackgrnd">

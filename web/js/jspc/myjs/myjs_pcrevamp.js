@@ -773,3 +773,55 @@ else {
 }
 }
 });
+// cal scripts
+var buttonClicked=0;
+    function validateUserName(name){
+        if(!name)return false;
+        
+        var arr=name.split('');
+        if(/^[a-zA-Z' .]*$/.test(name) == false)return false;
+        return true;
+        
+    }
+    function criticalLayerButtonsAction(clickAction,button) {
+
+
+                if(buttonClicked)return;    
+                buttonClicked=1;
+                var layerId= $("#CriticalActionlayerId").val();
+                
+                    var newNameOfUser='',namePrivacy='';
+                    if(layerId==9 && button=='B1')
+                    {   
+                        
+                        newNameOfUser = ($("#nameInpCAL").val()).trim();
+                        if(!validateUserName(newNameOfUser))
+                        {
+                            $("#CALNameErr").show();buttonClicked=0;
+                            return;
+                        }
+                        namePrivacy = $('input[ID="CALPrivacyShow"]').is(':checked') ? 'Y' : 'N';
+                        
+                      }
+                    if(clickAction=="close" || clickAction=='RCB') {
+                    var URL="/common/criticalActionLayerTracking";
+                    $.ajax({
+                        url: URL,
+                        type: "POST",
+                        data: {"button":button,"layerId":layerId,"namePrivacy":namePrivacy,"newNameOfUser":newNameOfUser},
+                    });
+
+                    closeCurrentLayerCommon();
+                    if(clickAction=='RCB')
+                    {
+                        toggleRequestCallBackOverlay(1, 'RCB_CAL');
+                        $('.js-dd ul li[value="M"]').trigger('click');
+                    }
+                
+                }
+                else {
+                window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
+                }
+                
+        }
+
