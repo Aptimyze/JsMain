@@ -368,9 +368,9 @@ bakeCommHistory = function(bShowError)
 			if(addBrdr)
 			{
 				if(msgType === 1)
-					$(comMessage).append("<div class='vpro_padr'><div class='brdr4'></div></div>");
+					msg+=("<div class='vpro_padr'><div class='brdr4'></div></div>");
 				else if(msgType === 2 )	
-					$(comMessage).append("<div class='vpro_padl'><div class='brdr4'></div></div>");
+					msg+=("<div class='vpro_padl'><div class='brdr4'></div></div>");
 				addBrdr = false;
                 
 			}
