@@ -163,27 +163,16 @@ class myjsActions extends sfActions
                          if(MobileCommon::isApp() == "I"){
                          	$appV1DisplayJson['membership_message'] = NULL;
                          } 
-//cal layer added by palash                       
-        ob_start();
-    	sfContext::getInstance()->getController()->getPresentationFor("common", "ApiCALayerV1");
-    	$layerData = ob_get_contents();
-    	ob_end_clean();
-    	$layerData=json_decode($layerData,true);
-        $appV1DisplayJson['calObject']=$layerData['calObject']?$layerData['calObject']:null;
-////////////////////////////////////////////////
-
 				////cal layer added by palash                       
 			    ob_start();
     			sfContext::getInstance()->getController()->getPresentationFor("common", "ApiCALayerV1");
     			$layerData = ob_get_contents();
     			ob_end_clean();
     			$layerData=json_decode($layerData,true);
-				//////////////////////////////////
-                    
         		$appV1DisplayJson['calObject']=$layerData['calObject']?$layerData['calObject']:null;
+//////////////////////////////////
 
-
-		$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+        $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
         $respObj->setResponseBody($appV1DisplayJson);
 
 		}
