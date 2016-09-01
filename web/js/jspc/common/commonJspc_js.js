@@ -385,14 +385,14 @@ function setBellCountHTML(data) {
                 $("#totalBellCount").text("9+");
             }
         }
-        /*if (parseInt(data.NEW_MATCHES)) {
+        if (parseInt(data.NEW_MATCHES)) {
             $("#justJoinedCountParent").css('display', 'block');
             if (data.NEW_MATCHES < 10) {
                 $("#justJoinedCount").text(data.NEW_MATCHES);
             } else {
                 $("#justJoinedCount").text("9+");
             }
-        }*/
+        }
         if (parseInt(data.MESSAGE_NEW)) {
             $("#messagesCountParent").css('display', 'block');
             if (data.MESSAGE_NEW < 10) {
@@ -425,15 +425,15 @@ function setBellCountHTML(data) {
                 $("#membersAcceptedMeCount").text("9+");
             }
         }
-        /*if (parseInt(data.DAILY_MATCHES_NEW)) {
+        if (parseInt(data.DAILY_MATCHES_NEW)) {
             $("#membersDailyMatchesCountParent").css('display', 'block');
             if (data.DAILY_MATCHES_NEW < 10) {
                 $("#membersDailyMatchesCount").text(data.DAILY_MATCHES_NEW);
             } else {
                 $("#membersDailyMatchesCount").text("9+");
             }
-        }*/
-        if (parseInt(data.FILTERED_NEW)) {
+        }
+	if (parseInt(data.FILTERED_NEW)) {
             $("#membersFilteredInterestCountParent").css('display', 'block');
             if (data.FILTERED_NEW < 10) {
                 $("#FilteredInterstsCount").text(data.FILTERED_NEW);
@@ -613,6 +613,23 @@ function logOutCheck(param,upgradeFromTopNavBar){
     return true; 
 }
 
+function isStorageExist()
+{
+    var bVal = true;
+    if(typeof(Storage)=='undefined')
+        bVal = false;
+
+    try{
+        localStorage.setItem('testLS',"true");
+        localStorage.getItem('testLS');
+        localStorage.removeItem('testLS');
+    }catch(e)
+    {
+        bVal = false;
+    }
+    return bVal;
+}
+
 var timeToCache = 3600; // Time in seconds
 
 function getSearchCacheLocalStorageData(profileid,label)
@@ -688,7 +705,3 @@ function callAfterDppChange()
 		setSearchCacheLocalStorageData(loggedInJspcUser,'lastDppChangedActionTimestamp',now);
 	}
 }
-
-
-
-

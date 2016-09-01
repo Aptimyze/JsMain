@@ -6,6 +6,7 @@
  * @package    jeevansathi
  * @author     Hemant Agrawal
  */
+ini_set('memory_limit','256M');
 class APSendEOITask extends sfBaseTask
 {
 	private $errorMsg;

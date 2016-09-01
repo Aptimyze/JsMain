@@ -38,7 +38,7 @@ class ChatLibrary
 		$url = JsConstants::$communicationServiceUrl."/communication/v1/presence"; 
 		if($profileIdStr)
 			$url.= "?pfids=$profileIdStr"; 
-		$out = CommonUtility::sendCurlPostRequest($url);
+		$out = CommonUtility::sendCurlPostRequest($url,'',1);
 		$out1 = (array)json_decode($out);
 		$arr = $out1["data"];
 		return $arr;

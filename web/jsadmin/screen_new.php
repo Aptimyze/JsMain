@@ -399,6 +399,8 @@ if (authenticated($cid)) {
           else {
             $updateFTOState = 0;
           }
+					$addInUserCreation = 1; //Adding entry in chat user
+
 					//Adding entry to bot_jeevansathi.MAIL_INVITE table if email of gmail
 					//Required to give them gmail chat invite
 					//if(strstr($to_notify,'@gmail.com') && $service_mes=='S')
@@ -436,6 +438,7 @@ if (authenticated($cid)) {
           $action = FTOStateUpdateReason::SCREEN;
           $profileObj->getPROFILE_STATE()->updateFTOState($profileObj,$action);
         }
+
 				//Log modified values
 				$log_name = $name;
 				$log_val = array();

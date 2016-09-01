@@ -32,8 +32,15 @@ EOF;
 		{
 			sfContext::createInstance($this->configuration);
 		}
-    
-   
+    	$profileid = 99400941;
+   		$memCacheObject = JsMemcache::getInstance();
+        if ($memCacheObject->get($profileid . "_MEM_NAME")) {
+            $output = unserialize($memCacheObject->get($profileid . "_MEM_NAME"));
+            $output = json_encode($output);
+            $output = str_replace('"','', $output);
+        } 
+        print_r($output);die;
+
 		//send eoi reminder notification with default reminder message
     $instantNotificationObj =new InstantAppNotification("EOI_REMINDER");
     $instantNotificationObj->sendReminderInstantAppNotification("bassi",1,702,"testing script"); 

@@ -27,6 +27,7 @@ class MyJs implements Module
          */
         public function getConfiguration($module)
         {
+        	LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "class Myjs getConfiguration hit ");
                 $configObj            = new ProfileInformationModuleMap();
 		if((MobileCommon::isApp() == "I")||(MobileCommon::isNewMobileSite()))
 			$this->configurations = $configObj->getConfiguration($module,'',"IOS");
@@ -180,6 +181,8 @@ class MyJs implements Module
 	*/
         public function getDisplay($infoTypeNav = null,$params = null)
         {
+        	LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "class Myjs getDisplay hit ");
+
                 $fields       = Array();
                 $profiles     = Array();
                 $tupleService = new TupleService();
@@ -378,6 +381,7 @@ class MyJs implements Module
          */
         public function getSkipProfiles($infoType)
 	{
+		LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "class MyJs skipProfiles hit ");
 		switch ($infoType) 
 		{
 			case 'HOROSCOPE_REQUEST_RECEIVED':

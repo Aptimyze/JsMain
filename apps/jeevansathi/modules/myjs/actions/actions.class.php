@@ -100,9 +100,9 @@ class myjsActions extends sfActions
         * Mobile Api version 1.0 action class
         */
         public function executePerformV1(sfWebRequest $request)	
-        {                
-
-                               
+        {          //for logging       
+        	LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs api v1 hit"); 
+          
 		$module= "MYJSAPP";
 		$inputValidateObj = ValidateInputFactory::getModuleObject("myjs");
 		$respObj = ApiResponseHandler::getInstance();
@@ -118,9 +118,10 @@ class myjsActions extends sfActions
                 	$pageNo = $request->getParameter("pageNo");
 			$params["profileList"] = $request->getParameter("profileList");
 			if((MobileCommon::isApp() == "I")||MobileCommon::isNewMobileSite())
-			{
+			{  
 				$Apptype="IOS";
 				$appV1obj = new MyJsIOSV1();
+
                                 
 			}
 			else{
@@ -198,7 +199,8 @@ class myjsActions extends sfActions
                 die;
 	}
 	public function executeJsmsPerform(sfWebRequest $request)
-	{
+	{			//myjs jsms action hit for logging  
+				LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs jsms action"); 
             	$this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMYJSUrl);
                 $this->loginData=$request->getAttribute("loginData");
                 $this->profile=Profile::getInstance();
@@ -236,6 +238,7 @@ class myjsActions extends sfActions
                    $this->setTemplate("jsmsPerform");
                    $request->setParameter('INTERNAL',1);
 				$request->setParameter('getMembershipMessage',1);
+//looging for flow
  	}
 
  	public function executeJspcPerform(sfWebRequest $request)
@@ -252,6 +255,7 @@ class myjsActions extends sfActions
 		$entryDate = $this->loginProfile->getENTRY_DT();
 		$CITY_RES_pixel = $this->loginProfile->getCITY_RES();
 		$this->profilePic = $this->loginProfile->getHAVEPHOTO();
+	
 		if (empty($this->profilePic))
 			$this->profilePic="N";
 		$this->username = $this->loginProfile->getUSERNAME();
@@ -259,7 +263,7 @@ class myjsActions extends sfActions
 		//New Membership 
 		$memHandlerObj = new MembershipHandler();
 		$this->membershipStatus = $memHandlerObj->getRealMembershipName($this->profileid);
-		
+			
 		if($this->profilePic!="N"){
 			$pictureServiceObj=new PictureService($this->loginProfile);
 			$profilePicObj = $pictureServiceObj->getProfilePic();
@@ -273,6 +277,7 @@ class myjsActions extends sfActions
 				
 			$this->ThumbailUrl=$profilePicObj->getThumbailUrl();
 			}
+			
 		}
    		else{
 			$this->photoUrl=$this->ThumbailUrl=PictureFunctions::getNoPhotoJSMS($this->gender,'ProfilePic120Url');
@@ -477,5 +482,6 @@ return $staticCardArr;
 
 
 	} 
+
 }
  

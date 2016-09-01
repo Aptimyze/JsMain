@@ -16,7 +16,7 @@ class NEWJS_CHAT_LOG extends TABLE{
         }
 		
 		
-	public function insertIntoChatLog($generatedId,$sender,$receiver,$type,$seen='',$chatId='')
+	public function insertIntoChatLog($generatedId,$sender,$receiver,$type,$seen='',$chatId='',$ip='',$date)
 	{
 		
 		try 
@@ -27,22 +27,26 @@ class NEWJS_CHAT_LOG extends TABLE{
 				}
 				else
 				{
-					$ip=FetchClientIP();
-					if(strstr($ip, ","))    
-					{                       
-						$ip_new = explode(",",$ip);
-						$ip = $ip_new[1];
+					if(!$ip)
+					{
+						$ip='192.168.192.168';
+						/*$ip=FetchClientIP();
+						if(strstr($ip, ","))    
+						{                       
+							$ip_new = explode(",",$ip);
+							$ip = $ip_new[1];
+						}*/
 					}
-					$sql="INSERT INTO CHAT_LOG (ID,SENDER,RECEIVER,DATE,IP,TYPE,SEEN, CHATID) VALUES (:GENERATEDID,:VIEWERID,:VIEWEDID,:DATE,:IP,:TYPE,:SEEN, :CHATID) ";
+					$sql="INSERT INTO CHAT_LOG (SENDER,RECEIVER,DATE,IP,TYPE,SEEN, CHATID) VALUES (:VIEWERID,:VIEWEDID,:DATE,:IP,:TYPE,:SEEN, :CHATID) ";
 					$prep=$this->db->prepare($sql);
-					$prep->bindValue(":GENERATEDID",$generatedId,PDO::PARAM_INT);
+					//$prep->bindValue(":GENERATEDID",$generatedId,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWERID",$sender,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWEDID",$receiver,PDO::PARAM_INT);
-					$prep->bindValue(":DATE",date("Y-m-d H:i:s"),PDO::PARAM_STR);
+					$prep->bindValue(":DATE",$date,PDO::PARAM_STR);
 					$prep->bindValue(":IP",$ip,PDO::PARAM_STR);
 					$prep->bindValue(":TYPE",$type,PDO::PARAM_STR);
 					$prep->bindValue(":SEEN",$seen,PDO::PARAM_STR);
-					$prep->bindValue(":CHATID",$chatId,PDO::PARAM_INT);
+					$prep->bindValue(":CHATID",$chatId,PDO::PARAM_STR);
 					$prep->execute();
 					
 					return true;
@@ -70,7 +74,7 @@ class NEWJS_CHAT_LOG extends TABLE{
 				else
 				{
 					if($pagination)
-						$whrStr="AND M.ID < ".$pagination;
+						$whrStr="AND M.ID < :pagination";
 					else
 						$whrStr="";
 					if($limit)
@@ -78,12 +82,14 @@ class NEWJS_CHAT_LOG extends TABLE{
 					else
 						$limitStr="";
 						
-					$sql = "SELECT SENDER,RECEIVER, DATE, MESSAGE ,CHATID,C.ID FROM  `CHAT_LOG` AS C JOIN CHATS AS M ON ( M.ID = C.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER )) ".$whrStr." ORDER BY DATE DESC ".$limitStr;
+					$sql = "SELECT SENDER,RECEIVER, DATE, MESSAGE ,CHATID,C.ID FROM  `CHAT_LOG` AS C JOIN CHATS AS M ON ( M.ID = C.CHATID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER )) ".$whrStr." ORDER BY DATE DESC,ID DESC ".$limitStr;
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);
 					if($limit)
 						$prep->bindValue(":limit",$limit,PDO::PARAM_INT);
+					if($pagination)
+						$prep->bindValue(":pagination",$pagination,PDO::PARAM_INT);
 					$prep->execute();
 					while($row = $prep->fetch(PDO::FETCH_ASSOC))
 					{
@@ -109,14 +115,12 @@ class NEWJS_CHAT_LOG extends TABLE{
 				}
 				else
 				{
-					if($pagination)
-						$whrStr="AND M.ID < ".$pagination;
-					else
-						$whrStr="";
+					
 					$sql = "SELECT count(*) as CNT FROM  `CHAT_LOG`  WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER ))";
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);
+					
 					$prep->execute();
 					while($row = $prep->fetch(PDO::FETCH_ASSOC))
 					{
