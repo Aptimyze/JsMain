@@ -837,9 +837,13 @@ class FieldForm extends sfForm
     }
     elseif($table == 'NameUser')
     {
-       $storeObj = new incentive_NAME_OF_USER;
-       $arrResult = array();
-       $arrResult['NAME'] = $storeObj->getName($this->loggedInObj->getPROFILEID());
+        $nameObj= new NameOfUser;
+        $nameData = $nameObj->getNameData($this->loginProfile->getPROFILEID());
+        $arrResult = array();
+        $arrResult['NAME'] = null;
+        if(!empty($nameData))
+        $arrResult['NAME'] = $nameData[$this->loginProfile->getPROFILEID()]["NAME"];
+        
        //if($orgiValue['NAME'])
        foreach ($paramArray as $key => $value) {
         $orig_value = $arrResult[$key];
@@ -849,7 +853,7 @@ class FieldForm extends sfForm
           $oriValueArr[$key] = $orig_value;
 				}
 			}
-      unset($storeObj);
+      unset($nameObj);
     }
 		else
 		{

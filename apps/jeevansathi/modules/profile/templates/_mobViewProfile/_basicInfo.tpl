@@ -1,13 +1,7 @@
 <!--start:content-->
 <div class="pad5 bg4 fontlig color3 clearfix f14">
     <div class="hgt10"></div>
-  <div class="fl"> <span class="f18" id="vpro_username" >
-                  ~if $arrData.name_of_user neq '' && $arrData.name_of_user neq null` 
-                                        ~$arrData.name_of_user`
-                                ~else` 
-                                        ~$arrData.username`
-                   ~/if`
-                </span>&nbsp;<span class="f11 color13" id="vpro_last_active" >~$arrData.last_active`</span> </div>
+  <div class="fl"> <span class="f18" id="vpro_username" >~$arrData.username`</span>&nbsp;<span class="f11 color13" id="vpro_last_active" >~$arrData.last_active`</span> </div>
   ~if isset($arrData.subscription_icon)`
 	<div class="fr color2 f14 pt5 fontrobbold" id="vpro_subscription" >
         ~if $arrData.subscription_icon eq evalue`
