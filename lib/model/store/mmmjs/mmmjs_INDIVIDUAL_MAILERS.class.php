@@ -86,7 +86,8 @@ class mmmjs_INDIVIDUAL_MAILERS extends TABLE
 		try
 		{
 			$sql = "TRUNCATE TABLE $tableName";
-                        $res = $this->db->prepare($sql);
+						$ddl_obj = parent::__construct('newjs_masterDDL');
+                        $res = $ddl_obj->db->prepare($sql);
                         $res->execute();
 		}
 		catch(PDOException $e)

@@ -36,7 +36,8 @@ class newjs_HIDDEN_DELETED_PROFILES extends TABLE
                         }else{
                               $sql = "TRUNCATE TABLE newjs.HIDDEN_DELETED_PROFILES";
                         }
-			$res = $this->db->prepare($sql);
+            $ddl_obj = parent::__construct('newjs_masterDDL');            
+			$res = $ddl_obj->db->prepare($sql);
 			$res->execute();
 		}
 		catch(PDOException $e)

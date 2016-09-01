@@ -72,7 +72,8 @@ class MAIL_YesNoMail extends TABLE
 	                {//print_r($pid);die;
 	                	
 						$sql = "TRUNCATE TABLE MAIL.YesNoMail";
-						$res = $this->db->prepare($sql);
+						$ddl_obj = parent::__construct('newjs_masterDDL');
+						$res = $ddl_obj->db->prepare($sql);
                 		$res->execute();       
 	                }
 	                catch(PDOException $e)

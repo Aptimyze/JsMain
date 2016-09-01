@@ -33,7 +33,8 @@ class MAIL_contactViewers extends TABLE
 	                {//print_r($pid);die;
 	                	
 						$sql = "TRUNCATE TABLE MAIL.contactViewersMail";
-						$res = $this->db->prepare($sql);
+						$ddl_obj = parent::__construct('newjs_masterDDL');
+						$res = $ddl_obj->db->prepare($sql);
                 		$res->execute();       
 	                }
 	                catch(PDOException $e)
