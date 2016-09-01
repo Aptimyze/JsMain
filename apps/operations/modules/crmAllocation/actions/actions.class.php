@@ -896,9 +896,9 @@ class crmAllocationActions extends sfActions
 			}
 			//validate profile
 			$profileObj = new Operator;
-			$profileObj->getDetail($exclusiveEmail,"EMAIL",'PROFILEID');
+			$profileObj->getDetail($exclusiveEmail,"EMAIL",'PROFILEID,USERNAME');
 			$pid = $profileObj->getPROFILEID();
-			unset($profileObj);
+			//unset($profileObj);
 			if(!$pid){
 				$invalidCustomer = 1;
 			}
@@ -909,25 +909,20 @@ class crmAllocationActions extends sfActions
 				//print_r($exclusiveMemDetails);die;
 				unset($billingObj);
 				if($exclusiveMemDetails){
-					$listArr = explode("||", $profileUsernameListParsed);
-					foreach ($listArr as $key => $username) {
-						$otherProfileObj = new Operator;
-						$otherProfileObj->getDetail($username,"USERNAME",'PROFILEID');
-						$otherPid = $otherProfileObj->getPROFILEID();
-						unset($otherProfileObj);
-						if($otherPid){
-							$profilePageLinkArr[$username] = JsConstants::$siteUrl."/profile/viewprofile.php?profilechecksum=".JsAuthentication::jsEncryptProfilechecksum($otherPid)."&stype=A";
-						}
-					}
-					if($profilePageLinkArr && is_array($profilePageLinkArr)){
-						
-					}
+					$profileDetails["usernameListArr"] = explode("||", $profileUsernameListParsed);
+					unset($profileUsernameListParsed);
+					$profileDetails["USERNAME"] = $profileObj->getUSERNAME();
+            		$profileDetails["PROFILEID"] = $pid;
+            		$memMailerObj = new MembershipMailer();
+            		$memMailerObj->sendExclusiveServiceIIMailer($profileDetails);
+            		unset($memMailerObj);
 					//successful entry case
 			    	$this->forwardTo("crmAllocation","exclusiveServicingII?SUCCESS=REQUEST_PROCESSED");
 				}
 				else{
 					$invalidCustomer = 1;
 			    }
+			    unset($profileObj);
 		    }
 		}
 		else{

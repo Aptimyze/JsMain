@@ -626,6 +626,30 @@ class MembershipMailer {
 
     }
 
+    /*sendExclusiveServiceIIMailer
+    * function to send exclusive servicing phase II mailer
+    * @params: $profileDetails
+    */
+    public function sendExclusiveServiceIIMailer($profileDetails){
+        $mailId = '';
+        foreach ($profileDetails["usernameListArr"] as $key => $username) {
+            $otherProfileObj = new Operator;
+            $otherProfileObj->getDetail($username,"USERNAME",'PROFILEID');
+            $otherPid = $otherProfileObj->getPROFILEID();
+            unset($otherProfileObj);
+            if($otherPid){
+                $profilePageLinkArr[$username] = JsConstants::$siteUrl."/profile/viewprofile.php?profilechecksum=".JsAuthentication::jsEncryptProfilechecksum($otherPid)."&stype=A";
+            }
+        }
+        if($profilePageLinkArr && is_array($profilePageLinkArr)){
+            $profileDetails["USERNAMELIST"] = $profilePageLinkArr;
+            $memHandlerObj = new MembershipHandler();
+            $memHandlerObj->sendExclusiveServiceIIMailer($profileDetails);
+            unset($memHandlerObj);
+        }
+        $this->sendServiceActivationMail($mailId, $profileDetails);
+    }
+
 }
 
 ?>
