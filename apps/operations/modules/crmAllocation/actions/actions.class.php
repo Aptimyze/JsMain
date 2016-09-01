@@ -874,8 +874,11 @@ class crmAllocationActions extends sfActions
     	//show error message for invalid username
 		if($request->getParameter("ERROR")=="INVALID_EXCLUSIVE_CUSTOMER")
 			$this->errorMsg = "Invalid email id,no such exclusive customer exists !!!!";
+		if($request->getParameter("ERROR")=="INVALID_USERNAME_LIST")
+			$this->errorMsg = "Please enter valid list of usernames !!!!";
 		if($request->getParameter("SUCCESS")=="REQUEST_PROCESSED")
 			$this->successMsg = "Mail has been sent successfully."; 
+
     }
 
     /*executes exclusive servicing form II request
@@ -888,21 +891,35 @@ class crmAllocationActions extends sfActions
     	$invalidCustomer = 0;
     	if($exclusiveEmail) 
 		{
+			if($profileUsernameListParsed==""){
+				$this->forwardTo("crmAllocation","exclusiveServicingII?ERROR=INVALID_USERNAME_LIST");
+			}
+			//validate profile
 			$profileObj = new Operator;
 			$profileObj->getDetail($exclusiveEmail,"EMAIL",'PROFILEID');
 			$pid = $profileObj->getPROFILEID();
-			
 			unset($profileObj);
 			if(!$pid){
 				$invalidCustomer = 1;
 			}
 			else{
+				//check if profile has active JS sxclusive membership
 				$billingObj = new billing_SERVICE_STATUS("newjs_slave");
 				$exclusiveMemDetails = $billingObj->getActiveJsExclusiveServiceID($pid);
-				//print_r($exclusiveMemDetails);die("ankita");
+				//print_r($exclusiveMemDetails);die;
 				unset($billingObj);
 				if($exclusiveMemDetails){
-					if($profileUsernameListParsed){
+					$listArr = explode("||", $profileUsernameListParsed);
+					foreach ($listArr as $key => $username) {
+						$otherProfileObj = new Operator;
+						$otherProfileObj->getDetail($username,"USERNAME",'PROFILEID');
+						$otherPid = $otherProfileObj->getPROFILEID();
+						unset($otherProfileObj);
+						if($otherPid){
+							$profilePageLinkArr[$username] = JsConstants::$siteUrl."/profile/viewprofile.php?profilechecksum=".JsAuthentication::jsEncryptProfilechecksum($otherPid)."&stype=A";
+						}
+					}
+					if($profilePageLinkArr && is_array($profilePageLinkArr)){
 						
 					}
 					//successful entry case
