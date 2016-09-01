@@ -390,7 +390,7 @@ class AgentBucketHandler
 	}
         public function deAllocateDisp($processObj,$agentAllocDetailsObj,$agentDeAllocObj)	
         {
-		$jprofileObj=new JPROFILE('newjs_slave');
+		$jprofileObj=new JPROFILE('newjs_masterRep');
                 $limit=$processObj->getLimit();
 		$subMethod=$processObj->getSubMethod();
                 $disp_order_arr=$agentAllocDetailsObj->fetchDispositionOrder();

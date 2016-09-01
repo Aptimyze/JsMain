@@ -49,14 +49,17 @@ if(authenticated($cid))
 					$PICTURE_FOR_SCREEN_NEW = new NonScreenedPicture();
 					$whereCondition["PROFILEID"] = $pid;
 					$pics=$PICTURE_FOR_SCREEN_NEW->get($whereCondition);
-					foreach($pics as $k=>$v)
+					if(is_array($pics))
 					{
-						if($k==0)
-							continue;
-						$pictureid = $v['PICTUREID'];
-						$pictureServiceObj->deletePhoto($pictureid,$pid);
+						foreach($pics as $k=>$v)
+						{
+							if($k==0)
+								continue;
+							$pictureid = $v['PICTUREID'];
+							$pictureServiceObj->deletePhoto($pictureid,$pid);
+						}
+						$pictureServiceObj->deletePhoto($pics[0]['PICTUREID'],$pid);
 					}
-					$pictureServiceObj->deletePhoto($pics[0]['PICTUREID'],$pid);
 				}		
 				$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
 				$jprofileUpdateObj->updateJProfileForArchive($pid);

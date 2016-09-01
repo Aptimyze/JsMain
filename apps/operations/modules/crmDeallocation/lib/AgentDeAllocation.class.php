@@ -54,7 +54,7 @@ class AgentDeAllocation
 	}
         public function trackFromCrmDailyAllot($processObj)
         {
-                $crmDailyObj		=new CRM_DAILY_ALLOT('newjs_slave');
+                $crmDailyObj		=new CRM_DAILY_ALLOT('newjs_masterRep');
 		$crmDailyTrackObj	=new CRM_DAILY_ALLOT_TRACK();
                 if($processObj->getSubMethod()=="NO_LONGER_WORKING")
                 {
