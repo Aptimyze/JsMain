@@ -95,7 +95,7 @@ ajaxData=this.makePostDataForAjax(this.profileChecksum);
 					messageCount = messageCount+1;
 					$("#list-"+data.profileChecksum).html($("#list-"+data.profileChecksum).html()+mymessage);
 				}
-				$(".cEcontent").mCustomScrollbar("scrollTo","bottom");
+				$("#msgListScroller-"+data.profileChecksum).mCustomScrollbar("scrollTo","bottom");
 				$( "#"+messageKeyName+"-cEMessageText" ).css('height', 'auto')
 				$( "#"+messageKeyName+"-cEMessageText" ).val("")
 				$("#"+messageKeyName).html("Send Message")

@@ -103,7 +103,7 @@
 						</li>
 					</ul>
                                         <img id="msgHistoryLoader" src="/images/jspc/commonimg/loader.gif" style="visibility:hidden;margin: 0 auto;height: 22px;display: block;">
-					<div id='msgListScroller-{profilechecksum}' lass="ccp7 ccbrdb1 cEcontent" style="height:200px">
+					<div id='msgListScroller-{profilechecksum}' class="ccp7 ccbrdb1 cEcontent" style="height:200px">
 						<ul class="msglist2 listnone" id="list-{profilechecksum}">
 							                 
 						</ul>
