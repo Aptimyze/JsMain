@@ -166,7 +166,7 @@ return 0;
                     $show=1;
                     break;
           case '6': 
-                  if(!MobileCommon::isApp())
+                  if(MobileCommon::isApp()!='I')
                     {
                       
                       $loggedInUser=LoggedInProfile::getInstance();
@@ -221,8 +221,9 @@ return 0;
                       
                       if(!MobileCommon::isApp())
                       {
-//
-                          
+                      $nameArr=(new NameOfUser())->getNameData($profileid);
+                      if(!is_array($nameArr[$profileid]) || !$nameArr[$profileid]['DISPLAY'] || !$nameArr[$profileid]['NAME'])
+                          $show=1;
                       }
                     
                     break;  

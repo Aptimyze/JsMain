@@ -16,17 +16,17 @@ var buttonClicked=0;
                 buttonClicked=1;
                 var layerId= $("#CriticalActionlayerId").val();
                 
-                    var newNameOfUser='',privacyShowName='';
-                    if(layerId==9)
+                    var newNameOfUser='',namePrivacy='';
+                    if(layerId==9 && button=='B1')
                     {   
                         
                         newNameOfUser = ($("#nameInpCAL").val()).trim();
                         if(!validateUserName(newNameOfUser))
                         {
-                            $("#CALNameErr").show();buttonClicked=1;
+                            $("#CALNameErr").show();buttonClicked=0;
                             return;
                         }
-                        privacyShowName = $('input[ID="CALPrivacyShow"]').is(':checked') ? 'Y' : 'N';
+                        namePrivacy = $('input[ID="CALPrivacyShow"]').is(':checked') ? 'Y' : 'N';
                         
                       }
                     if(clickAction=="close" || clickAction=='RCB') {
@@ -34,7 +34,7 @@ var buttonClicked=0;
                     $.ajax({
                         url: URL,
                         type: "POST",
-                        data: {"button":button,"layerId":layerId,"privacyShowName":privacyShowName,"newNameOfUser":newNameOfUser},
+                        data: {"button":button,"layerId":layerId,"namePrivacy":namePrivacy,"newNameOfUser":newNameOfUser},
                     });
 
                     closeCurrentLayerCommon();
@@ -63,8 +63,8 @@ var buttonClicked=0;
             </div>
         </div>
         <div class="clearfix">
-            <button id='CALButtonB1'  onclick="criticalLayerButtonsAction('~$action1`','B1');" class="cursp bg_pink f18 colrw txtc fontreg lh61 brdr-0 calwid2 fl">~$button1Text`</button>
-            <button id='CALButtonB2'  id='closeButtonCALayer' onclick="criticalLayerButtonsAction('~$action2`','B2');" class="cursp bg6 f18 colrw txtc fontreg lh61 brdr-0 calwid2 fl">~$button2Text`</button>
+            ~if $button1Text neq ''`<button id='CALButtonB1'  onclick="criticalLayerButtonsAction('~$action1`','B1');" class="cursp bg_pink f18 colrw txtc fontreg lh61 brdr-0 calwid2 fl">~$button1Text`</button>~/if`
+            <button id='CALButtonB2'  id='closeButtonCALayer' onclick="criticalLayerButtonsAction('~$action2`','B2');" class="cursp ~if $button1Text eq ''`bg_pink calwid1~else` bg6 calwid2 ~/if` f18 colrw txtc fontreg lh61 brdr-0 fl">~$button2Text`</button>
         </div>
     </div>
 ~else`
@@ -148,7 +148,7 @@ var buttonClicked=0;
                 <div class="fontlig" id="changeNameDiv">
                     <div class="f17 color11 fontreg bordrBtmGrey padWidget">Provide Your Name</div>
                     <div class="padWidget bordrBtmGrey">
-                         <div class="txtc fontreg colrGrey f17">Now you can choose to show your name and see the names of other members</div>
+                         <div class="txtc fontreg colrGrey f17">~$contentText`</div>
                         <div style='margin-top:25px;'>
                          <div class="wid500 txtl color5 f12 disp-none" style="position: absolute;top: 114px;" id="CALNameErr">Please provide  a valid name</div>
                         <input type="text" id="nameInpCAL" class="f15 wid90p pa2" value='~$nameOfUser`' placeholder="Your name here" style="">
@@ -156,10 +156,10 @@ var buttonClicked=0;
                         <div class="f13 colrGrey mt5 txtc">This field will be screened</div>
                         <div class="radOption f15 color11 mt20">
                             <div class="disp_ib ml30">
-                                <input type="radio" id='CALPrivacyShow' name="optionSelect" value="showAll" checked=""><i></i> Show my name to all
+                                <input type="radio" id='CALPrivacyShow' name="optionSelect" value="showAll" ~if $namePrivacy neq 'N'`checked=""~/if`><i></i> Show my name to all
                             </div>
                             <div class="disp_ib ml30">
-                                <input type="radio" id='CALPrivacyShow2' name="optionSelect" value="dontShow"><i></i> Don’t show my name
+                                <input type="radio" id='CALPrivacyShow2' name="optionSelect" value="dontShow" ~if $namePrivacy eq 'N'`checked=""~/if`><i></i> Don’t show my name
                             </div>
                         </div>
                         <div id='CALPrivacyInfo' class="disp-none f12 mt15 color11 txtc">You will also not be able to see names of other members</div>

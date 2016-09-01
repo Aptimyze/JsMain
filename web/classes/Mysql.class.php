@@ -7,6 +7,8 @@
 */
 
 //require_once("mysqlConnections.php");
+// include wrapper for logging
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 
 class Mysql
 {
@@ -148,7 +150,7 @@ class Mysql
 					$dbPasswd = MysqlDbConstants::$viewLogRep[PASS];
 					$dbName = MysqlDbConstants::$viewLogRep[DEFAULT_DB];
 					break;
-                                case '111Slave_shard1' :
+                                case '112Slave_shard1' :
                                         $dbHost = MysqlDbConstants::$shard1Slave112[HOST].":".MysqlDbConstants::$shard1Slave112[PORT];
                                         $dbUser = MysqlDbConstants::$shard1Slave112[USER];
                                         $dbPasswd = MysqlDbConstants::$shard1Slave112[PASS];
@@ -382,6 +384,7 @@ class Mysql
 	*/
 	public function logError($sql,$backend="")
 	{
+		LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql));
 		global $smarty,$ajax_error;
 
 		$errorString = "\n".date("Y-m-d G:i:s",time() + 37800)."\nMysql Error: ".addslashes($this->error())."\nMysql Error Number:".$this->errNo()."\nSQL: $sql\nUser Agent : ".$_SERVER['HTTP_USER_AGENT']."\nReferer : ".$_SERVER['HTTP_REFERER']."\nSelf : ".$_SERVER['PHP_SELF']."\nUri : ".$_SERVER['REQUEST_URI']."\nMethod : ".$_SERVER['REQUEST_METHOD']."\n";

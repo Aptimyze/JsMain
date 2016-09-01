@@ -210,7 +210,8 @@ class SearchApiDisplay
 		}
 
 		//get users online on gtalk
-		$gtalkUsers = $chatObj->getIfUserIsOnlineInGtalk($this->profileIdStr,1);
+		//$gtalkUsers = $chatObj->getIfUserIsOnlineInGtalk($this->profileIdStr,1);
+		
 
 		//get users online on JS chat
 		$jsChatUsers = $chatObj->getIfUserIsOnlineInJSChat($this->profileIdStr,1);
@@ -606,22 +607,16 @@ class SearchApiDisplay
 			return NULL;
                 else
 		{
-			if(MobileCommon::isDesktop() || MobileCommon::isMobile())
-			{
-									 if(MobileCommon::isApp()!='A')
-                   {
-                         if(count($SearchResponseObj->getFeturedProfileArr())>0){
-        	                        $featuredProfileArr=$SearchResponseObj->getFeturedProfileArr();
-                	                foreach($featuredProfileArr as $k=>$v){
-                        	                $featuredProfileArrNew[$v["id"]]=$v;
-                                	        $this->profileids[] = $v["id"];
-                                	        
-                                        	$this->searchResultsData[] = $v;
-	                                }
-													}
-										}
+			if(count($SearchResponseObj->getFeturedProfileArr())>0){
+				$featuredProfileArr=$SearchResponseObj->getFeturedProfileArr();
+				foreach($featuredProfileArr as $k=>$v){
+								$featuredProfileArrNew[$v["id"]]=$v;
+								$this->profileids[] = $v["id"];
 								
-        }   
+								$this->searchResultsData[] = $v;
+				}
+			}
+										   
     }
 
 		$this->profileIdStr = trim(implode(",",$this->profileids),",");

@@ -23,9 +23,9 @@ class ApiCALayerV1Action extends sfActions
 	{
 
 
+		LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "In ApiCALayer");
 
 		$loginData=$request->getAttribute("loginData");
-
 
 	if(!$loginData['PROFILEID'])
 		{
@@ -50,7 +50,17 @@ class ApiCALayerV1Action extends sfActions
 			
 		}
 		$layerData=CriticalActionLayerDataDisplay::getDataValue($layerToShow);
+                if($layerToShow==9)
+                {
+                    $profileId=$this->loginProfile->getPROFILEID();
+                    $nameData=(new NameOfUser())->getNameData($profileId);
+                    $nameOfUser=$nameData[$profileId]['NAME'];
+                    $namePrivacy=$nameData[$profileId]['DISPLAY'];
+
+                }
 		$this->m_arrOut=$layerData;
+                $this->m_arrOut['nameofuser']=$nameOfUser;
+                $this->m_arrOut['nameprivacy']=$namePrivacy;
 	    }
 		//Api Response Object
 		$apiResponseHandlerObj = ApiResponseHandler::getInstance();

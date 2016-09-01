@@ -73,12 +73,20 @@ this.maxCount=maxCountArray[this.name];
 this.innerHtml=containerBarObj.getInnerHtml();
 }
 component.prototype.request = function() {
-         //ele = this
-
+        //ele = this
+	if(this.name=='JUSTJOINED' || this.name=='VERIFIEDMATCHES')
+	{
+        	var myLurl =  getUrlForHeaderCaching(urlArray[this.name]);
+	}
+	else
+	{
+	        var myLurl =  urlArray[this.name];
+	}
          $.myObj.ajax({
-          type: "POST",
+          type: "GET",
           dataType: "json",
-          url: urlArray[this.name],
+	  cache: true,
+          url: myLurl,
           context: this,
           success: function(response,data) {
 				data.data = response;
@@ -261,7 +269,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
 	}
 	dailyMatches.prototype.noResultCase = function() {
 		bellCountStatus++;
-		//createTotalBellCounts(newEngagementArray["DAILY_MATCHES_NEW"]);
+		createTotalBellCounts(newEngagementArray["DAILY_MATCHES_NEW"]);
 		noResultFaceCard(this);		
 	}
 
@@ -290,7 +298,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
 	}
 	justJoinedMatches.prototype.noResultCase = function() {
 		bellCountStatus++;
-		//createTotalBellCounts(newEngagementArray["NEW_MATCHES"]);
+		createTotalBellCounts(newEngagementArray["NEW_MATCHES"]);
 		noResultFaceCard(this);		
 				
 	}
@@ -377,7 +385,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
 		noShortCards(this);
 }
 
-  //DESRIED PARTNER MATCHES
+  //DESIRED PARTNER MATCHES
   var desiredPartnerMatches = function() {
     this.name = "DESIREDPARTNERMATCHES";
     this.containerName = this.name+"_Container";
@@ -468,13 +476,13 @@ if(CALayerShow!='0')
  var ajaxData={'layerId':layer};
  var ajaxConfig={'data':ajaxData,'url':url,'dataType':'html'};
 
-
-
 ajaxConfig.success=function(response){
 $('body').prepend(response);
-  showLayerCommon('criticalAction-layer'); 
-  if(CALayerShow==9) $('.js-overlay').bind('click',function(){$(this).unbind();criticalLayerButtonsAction('close','B2');});
-  $('.js-overlay').unbind('click');
+  showLayerCommon('criticalAction-layer');
+  if(CALayerShow==9) 
+      $('.js-overlay').bind('click',function(){$(this).unbind();criticalLayerButtonsAction('close','B2');closeCurrentLayerCommon();});
+  else
+    $('.js-overlay').unbind('click');
 }
 
 $.myObj.ajax(ajaxConfig);
@@ -655,7 +663,6 @@ else {
 
    $('#videoCloseID').bind('click', function(e)
   {
-    console.log("jhsgcbjk");
     videoLinkRequest(profileid);
   });
 

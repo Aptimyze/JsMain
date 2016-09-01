@@ -50,6 +50,7 @@ class billing_VARIABLE_DISCOUNT_TEMP extends TABLE{
         try
         {
             $sql = "SELECT vdt.* FROM billing.VARIABLE_DISCOUNT_TEMP vdt left join billing.VARIABLE_DISCOUNT vd on vdt.PROFILEID=vd.PROFILEID WHERE vdt.EDATE >=:TODAY AND vd.PROFILEID IS NULL"; 
+	    //$sql = "SELECT vdt.* FROM billing.VARIABLE_DISCOUNT_TEMP vdt WHERE vdt.EDATE >=:TODAY";	
             $res = $this->db->prepare($sql);
             $res->bindValue(":TODAY",$entryDate, PDO::PARAM_STR);
             $res->execute();

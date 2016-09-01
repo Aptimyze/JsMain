@@ -1,4 +1,6 @@
 <?php
+// including for logging purpose
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 if(!function_exists('db_set_active'))
 {
 	function db_set_active($name = 'master', $dburl,$dbuser,$dbpassword)
@@ -87,6 +89,7 @@ if(!function_exists('mysql_error_js'))
 	function mysql_error_js()
 	{
 		global $active_db;
+		LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(@mysql_error($active_db)));
 		return @mysql_error($active_db);
 	}
 }

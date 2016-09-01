@@ -76,6 +76,7 @@ class Tuple {
 		public $ANCESTRAL_ORIGIN;
 		public $NATIVE_CITY;
 		public $NATIVE_STATE;
+        public $EMAIL;
 
     //Getters and setter of all the base class as well as child class fields
         
@@ -145,6 +146,9 @@ class Tuple {
     public function getACTIVATED() {
 		return $this->ACTIVATED;
 	}
+     public function getEMAIL() {
+        return $this->EMAIL;
+    }
     public function getVERIFICATION_SEAL()
     {
         $verificationSealObj=new VerificationSealLib($this->profileObject,'1');
@@ -444,6 +448,10 @@ public function getPIC_ID($x="") {
 	{
 		$this->LAST_LOGIN_DT = $string;
 	}
+    public function setEMAIL($string)
+    {
+        $this->EMAIL = $string;
+    }
 	public function getsubscription_icon()
 	{
             $subscription=$this->getSUBSCRIPTION();              // JSExclusive.... excluded for app as it is not implemented in app yet. 

@@ -3585,13 +3585,19 @@ EditApp = function(){
       var nativeStateField  = editAppObject[FAMILY]["NATIVE_STATE"];
       var nativeCityField   = editAppObject[FAMILY]["NATIVE_CITY"];
       var ancestralOrigin   = editAppObject[FAMILY]["ANCESTRAL_ORIGIN"];
-      
+      if(nativeStateValue!=0)
+      {
       showHideField(nativeCityField,"show",true);
       showHideField(ancestralOrigin,"hide",true);
       showHideUnderScreeningMsg(ancestralOrigin,"hide");
       
       var data = JSON.parse(getDataFromStaticTables(nativeCityField.key));
       updateFieldUI(nativeCityField,data[nativeStateValue]);
+      }
+      else
+      {
+      showHideField(nativeCityField,"hide",true);
+      }
     }
     
     /*

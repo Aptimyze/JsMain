@@ -67,6 +67,25 @@
                     <li class="textTru">~$apiData['about']['have_child']`</li>
                     ~/if`
                   </ul> 
+                ~if $apiData['about']['verification_value'] neq "0"`
+                <div class="pt10 fontlig">
+                  <a href="/static/agentinfo">
+                    <div class="f15 colr2 clearfix"> <i class="fl icons prfic7"></i>
+                      <div class="fl pt1">Verified by visit</div>
+                    </div>
+                      ~if $apiData['about']['verification_value'] neq "1"`
+                    <div class="color11 opa70 f12 pt5"> Documents provided: ~$apiData['about']['verification_value']` </div>
+                    ~/if`
+                  </a>
+                </div>
+                ~/if`
+                ~if $apiData['about']['verification_value'] eq "0"`
+                <div class="pt10 fontlig">
+                  <div class="f15 colr2 clearfix">
+                    <div class="fl pt1"></div>
+                  </div>
+                </div>
+                ~/if`
                 </div>
                   <div class="mt26"> 
 
