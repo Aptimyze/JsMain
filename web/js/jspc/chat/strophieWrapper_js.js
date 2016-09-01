@@ -233,7 +233,7 @@ var strophieWrapper = {
                     }
                     strophieWrapper.Roster[user_id] = rosterObj;
                     if (subscription == "to") {
-                        console.log("subcribing");
+                        //console.log("subcribing");
                         strophieWrapper.subscribe(rosterObj[strophieWrapper.rosterDetailsKey]["jid"], rosterObj[strophieWrapper.rosterDetailsKey]["nick"]);
                     }
                     setTimeout(function () {
