@@ -3,7 +3,7 @@ include_once("connect.inc");
 include_once("../profile/pg/functions.php");
 include("../profile/arrays.php");
 
-$db=connect_misdb();
+$db=connect_rep();
 
 if(authenticated($cid))
 {

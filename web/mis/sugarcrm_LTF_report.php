@@ -4,7 +4,7 @@ include("connect.inc");
 include_once("user_hierarchy.php");
 
 $data		=authenticated($cid);
-$db		=connect_misdb();
+$db		=connect_rep(); //connect_misdb();
 $name 		=trim(getname($cid));
 $privilage	=getprivilage($cid);
 $priv		=explode("+",$privilage);

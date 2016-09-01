@@ -71,8 +71,32 @@ class CommunicationHistory
 				$previousStatus                            = $value['TYPE'];
 				$message_log[$value['DATE']]["type"]  = $type . $side;
 				$message_log[$value['DATE']]["who"]     = $who;
-				if($value['MESSAGE'])
+				if($value['MESSAGE']){
+					if(strpos($value['MESSAGE'],"||")!==false)
+					{
+						$messageArr=explode("||",$value['MESSAGE']);
+						$eoiMsgCount = count($messageArr);
+						$i=0;
+						for($j=0;$j<$eoiMsgCount;$j++)
+						{
+							$splitmessage = explode("--",$messageArr[$j]);
+							if($i==0)
+								$eoiMessages=$splitmessage[0];
+							else{
+								if(!MobileCommon::isApp())
+										$eoiMessages.="</br>".$splitmessage[0];
+								else
+										$eoiMessages.="\n".$splitmessage[0];
+							}
+							$i++;							
+						}
+						if($eoiMessages)
+							$value['MESSAGE']=$eoiMessages;
+						else
+							$value['MESSAGE']="";
+					}
 					$message_log[$value['DATE']]["message"] = $value['MESSAGE'];
+				}
 				else
 					$message_log[$value['DATE']]["message"] = ""; //inserting space to prevent null exception in various channels
 			} //$messagelog as $key => $value
@@ -156,12 +180,27 @@ class CommunicationHistory
 						$side = "R";
 					}
 				//	$previousStatus                            = 'A';
+				if(array_key_exists($val['DATE'],$message_log)){
+					if($val['MESSAGE']){
+						if(!MobileCommon::isApp())
+								$message_log[$val['DATE']]["message"] = $message_log[$val['DATE']]["message"]."</br> ".$val['MESSAGE'];
+						else
+								$message_log[$val['DATE']]["message"] = $message_log[$val['DATE']]["message"]."\n".$val['MESSAGE'];
+
+					}
+					else
+						$message_log[$val['DATE']]["message"] = ""; //inserting space to prevent null exception in various channels
+				}
+				else
+				{
 					$message_log[$val['DATE']]["type"]  = 'O'. $side;
 					$message_log[$val['DATE']]["who"]     = $who;
 					if($val['MESSAGE'])
 						$message_log[$val['DATE']]["message"] = $val['MESSAGE'];
 					else
 						$message_log[$val['DATE']]["message"] = ""; //inserting space to prevent null exception in various channels
+				}
+					
 			}
 		}	
 		if (is_array($message_log))
@@ -519,12 +558,12 @@ class CommunicationHistory
 				case "OR":
 					
 					if(!$value["message"]){
-						$result[$count]["message"]=$value["who"]." sent a Message through chat";
+						$result[$count]["message"]=$value["who"]." sent a Message";
 						$result[$count]["header"] = " ";
 					}
 					else{
 						$result[$count]["message"] = $value["message"];
-						$result[$count]["header"] = $value["who"]." sent a Message through chat";
+						$result[$count]["header"] = $value["who"]." sent a Message";
 					}
 					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
 					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
@@ -534,12 +573,12 @@ class CommunicationHistory
 				case "OS":
 					
 					if(!$value["message"]){
-						$result[$count]["message"]="You sent a Message through chat";
+						$result[$count]["message"]="You sent a Message";
 						$result[$count]["header"] = " ";
 					}
 					else{
 						$result[$count]["message"] = $value["message"];
-						$result[$count]["header"] = "You sent a Message through chat";
+						$result[$count]["header"] = "You sent a Message";
 					}
 					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
 					$result[$count]["ismine"] = $value["who"]=="You"?true:false;

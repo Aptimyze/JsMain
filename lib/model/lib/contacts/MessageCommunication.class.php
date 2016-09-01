@@ -206,10 +206,10 @@ class MessageCommunication
 		else
 		{
 			$this->SENDER = $profileid;
-			$messagePostParameters = sfContext::getInstance()->getRequest()->getPostParameters()?sfContext::getInstance()->getRequest()->getPostParameters():sfContext::getInstance()->getRequest()->getGetParameters();			
+			$messagePostParameters = sfContext::getInstance()->getRequest()->getPostParameters()?sfContext::getInstance()->getRequest()->getPostParameters():sfContext::getInstance()->getRequest()->getGetParameters();
 			$this->ID = $messagePostParameters["messageid"]?$messagePostParameters["messageid"]:$_GET["messageid"];
 			$this->setValue();
-			$this->MESSAGE = htmlentities($messagePostParameters["draft"]);
+			$this->MESSAGE = htmlentities($messagePostParameters["draft"])?htmlentities($messagePostParameters["draft"]):htmlentities($_GET["chatMessage"]);
 			$this->IS_MSG = MessageCommunication::YES;	
 			$this->UPDATE = true;
 		}

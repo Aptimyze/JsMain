@@ -34,7 +34,7 @@ function checkFlash()
 
         if (flashinstalled == 1 || version < 9)
         {
-                parent.location.href= "/profile/intermediate.php?parentUrl=/social/compUploadNoFlash";
+                parent.location.href= "/social/compUploadNoFlash";
         }
 }
 

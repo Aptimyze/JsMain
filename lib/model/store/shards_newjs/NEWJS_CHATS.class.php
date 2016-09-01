@@ -22,14 +22,15 @@ class NEWJS_CHATS extends TABLE{
 			{
 				if($id && $msg)
 				{ 
-					$sql="INSERT INTO CHATS VALUES (:GENERATEDID,:CUSTOMMESSAGE)  ";
+					$sql="INSERT INTO CHATS  (ID,MESSAGE) VALUES (:GENERATEDID,:CUSTOMMESSAGE)  ";
 					$prep=$this->db->prepare($sql);
-					$prep->bindValue(":GENERATEDID",$id,PDO::PARAM_INT);
+					$prep->bindValue(":GENERATEDID",$id,PDO::PARAM_STR);
 					$prep->bindValue(":CUSTOMMESSAGE",$msg,PDO::PARAM_STR);
 					$prep->execute();
 					
 				}
 				else{
+					
 					throw new jsException("","VALUE OR TYPE IS BLANK IN insertSingleMessage() of NEWJS_CHATS.class.php");
 				}
 			}
