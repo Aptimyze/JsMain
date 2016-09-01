@@ -476,5 +476,20 @@ class billing_SERVICES extends TABLE
             throw new jsException($e);
         }
     }
+
+    public function getPreviousExpiryDetails($profileid, $rights){
+        try{
+            $sql = "SELECT EXPIRY_DT, SERVICEID, BILLID FROM billing.SERVICE_STATUS WHERE PROFILEID=:PROFILEID AND SERVEFOR LIKE '%$rights%' AND ACTIVE='Y' ORDER BY ID DESC LIMIT 1,1";
+            $resSelectDetail = $this->db->prepare($sql);
+            $resSelectDetail->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
+            $resSelectDetail->execute();
+            if ($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)) {
+                $previous_expiry = $rowSelectDetail;
+            }
+        } catch(Exception $e) {
+            throw new jsException($e);
+        }
+        return $previous_expiry;
+    }
 }
 

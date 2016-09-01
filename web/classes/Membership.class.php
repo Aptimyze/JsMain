@@ -874,7 +874,74 @@ class Membership
         $billingServStatObj = new BILLING_SERVICE_STATUS();
         $billingDetails = $billingServStatObj->fetchAllServiceDetailsForBillid($this->billid);
         $billingPurDetObj = new billing_PURCHASE_DETAIL();
+        $constantYears = 2;
         foreach ($billingDetails as $key=>$row) {
+            // ASSD / ASED logic start
+            $duration = $serviceObj->getDuration($row['SERVICEID']);
+            $rights_str = @implode(",", $serviceObj->getRights($row['SERVICEID']));
+            if(strstr($this->serviceid, 'NCP') && strstr($row['SERVICEID'], 'C')){
+                $rights_str .= ",N";
+            }
+            $pExpiry = $billingServObj->getPreviousExpiryDetails($this->profileid, $rights_str);
+            if ($pExpiry) {
+                list($yy, $mm, $dd) = @explode("-", $pExpiry["EXPIRY_DATE"]);
+                if ($yy == '2099' && $mm == '01') { // previous expiry is 2099 i.e. already unlimited running
+                    if ($duration == '35640') { // current is also unlimited duration
+                        $actual_start_date = date("Y-m-d", time());
+                        $actual_end_date = date("Y-m-d", time()+($constantYears*(365*24*60*60)));
+                    } 
+                    else // current is not unlimited duration 
+                    {
+                        $actual_start_date = date("Y-m-d", time()); 
+                        $actual_end_date = date("Y-m-d", time()+($duration*(24*60*60))); 
+                    }
+                } 
+                elseif ($yy >= '2099')  // Case when membership bought after unlimited plan
+                {
+                    $serviceDates = $billingPurDetObj->selectActualDates($pExpiry['BILLID'], $pExpiry['SERVICEID']);
+                    $actual_start_date = $serviceDates['SUBSCRIPTION_END_DATE'];
+                    if ($actual_start_date == '0000-00-00') {
+                        $actual_start_date = $row['ACTIVATE_ON'];
+                    }
+                    if ($duration == '35640') { // current is unlimited duration
+                        $actual_end_date = date("Y-m-d", strtotime($actual_start_date)+($constantYears*(24*60*60)));
+                    } 
+                    else // current is not unlimited duration 
+                    {
+                        $actual_end_date = date("Y-m-d", strtotime($actual_start_date)+($duration*(24*60*60)));
+                    }
+                }
+                else // previous expiry is not unlimited plan
+                {
+                    if ($duration == '35640') { // current is unlimited duration
+                        $actual_start_date = $row['ACTIVATED_ON'];
+                        if ($actual_start_date == '0000-00-00') {
+                            $actual_start_date = $row['ACTIVATE_ON'];
+                        }
+                        $actual_end_date = date("Y-m-d", time()+($constantYears*(365*24*60*60)));
+                    } 
+                    else // current is not unlimited duration
+                    {    // Here we pick the SUBSCRIPTION_END_DATE of previous service with similar rights
+                         // and use that as SUBSCRIPTION_START_DATE for next service
+                         // instead of referring to SERVICE_STATUS TABLE
+                        $serviceDates = $billingPurDetObj->selectActualDates($pExpiry['BILLID'], $pExpiry['SERVICEID']);
+                        $actual_start_date = $serviceDates['SUBSCRIPTION_END_DATE'];
+                        if ($actual_start_date == '0000-00-00') {
+                            $actual_start_date = $row['ACTIVATE_ON'];
+                        }
+                        $actual_end_date = date("Y-m-d", strtotime($actual_start_date)+($duration*(24*60*60)));
+                    }
+                }
+            } 
+            else // no previous membership with current subscription rights
+            {
+                $actual_start_date = $row['ACTIVATED_ON'];
+                if ($actual_start_date == '0000-00-00') {
+                    $actual_start_date = $row['ACTIVATE_ON'];
+                }
+                $actual_end_date = $row['EXPIRY_DT'];
+            }
+            // ASSD / ASED logic end
             $price = $amount[$row['SERVICEID']];
             $net_price = $amount_net[$row['SERVICEID']];
             $discount = $price - $net_price;
@@ -903,7 +970,7 @@ class Membership
 
 
             $paramsPDStr = "BILLID,SERVICEID,CUR_TYPE,PRICE,DISCOUNT,NET_AMOUNT,START_DATE,END_DATE,SUBSCRIPTION_START_DATE,SUBSCRIPTION_END_DATE,SHARE,PROFILEID,STATUS,DEFERRABLE";
-            $valuesPDStr = "$this->billid,'" . $row['SERVICEID'] . "','$this->curtype','$price','$discount','$net_price','$start_date','$end_date','$start_date','$end_date','$share','" . $row['PROFILEID'] . "','$this->status','$deferrable'";
+            $valuesPDStr = "$this->billid,'" . $row['SERVICEID'] . "','$this->curtype','$price','$discount','$net_price','$start_date','$end_date','$actual_start_date','$actual_end_date','$share','" . $row['PROFILEID'] . "','$this->status','$deferrable'";
             $billingPurDetObj->genericPurchaseDetailInsert($paramsPDStr, $valuesPDStr);
             unset($paramsPDStr);
             unset($valuesPDStr);
