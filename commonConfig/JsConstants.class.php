@@ -162,8 +162,8 @@ class JsConstants
         public static $ifSingleRedis = 'tcp://172.10.18.65:6379';
         
     /***openfire config for chat**/
-    public static $openfireConfig = array('HOST'=>'localhost','PORT'=>'9090','WSPORT'=>'7070','SERVER_NAME'=>'localhost');
-    public static $openfireConfigInternal = array('HOST'=>'localhost','PORT'=>'9090','WSPORT'=>'7070','SERVER_NAME'=>'localhost');
+    public static $openfireConfig = array('HOST'=>'localhost','WSPORT'=>'7070','SERVER_NAME'=>'localhost');
+    public static $openfireConfigInternal = array('HOST'=>'localhost','PORT'=>'9090','SERVER_NAME'=>'localhost');
     public static $openfireRestAPIKey = "MhXPRu3f4Aw07EbR";
 		/*public static $ifSingleRedis = array(
 		'scheme'   => 'tcp',
