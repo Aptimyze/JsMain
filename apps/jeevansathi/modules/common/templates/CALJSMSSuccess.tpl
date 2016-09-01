@@ -92,6 +92,11 @@ $(document).ready(function() {
   ~else`
       <script>
           
+        $( document ).ready(function() {
+            if($("#submitName").offset().top-$("#skipBtn").offset().top-70 >0){
+		$("#skipBtn").css("margin-top",$("#submitName").offset().top-$("#skipBtn").offset().top-70);
+            }
+	});
           var namePrivacy=~if $namePrivacy neq 'N'`'Y'~else`'N'~/if`;
           function switchColors(id1,id2){
               
@@ -108,8 +113,7 @@ $(document).ready(function() {
           
       </script>
       <style>
-          
-   .darkBackgrnd {background-color:#282828; position:fixed; top:0; right:0; bottom:0; left:0;margin:0; padding:0; z-index:102;}
+   .darkBackgrnd {overflow:auto;background-color:#282828; position:fixed; top:0; right:0; bottom:0; left:0;margin:0; padding:0px 0px 60px 0px; z-index:102;}          
    .pad_new{padding:40px 20px 0px 20px}
    .pad_new2{padding:10px 20px 10px 20px}
    .mt30{margin-top:30px}
@@ -119,8 +123,8 @@ $(document).ready(function() {
    .mlNeg2{margin-left:-2px}
    .bgBtnGrey{background-color:#C6C6C6}
    .pt35p{padding-top:15px}
-   .hgt110{height: 110px;}
-   
+   .hgt90{height: 90px;}
+   #skipBtn{display: inline-block;position: relative;left: 50%;transform: translate(-50%,0);-Webkit-transform: translate(-50%,0);-Moz-transform: translate(-50%,0);-O-transform: translate(-50%,0); -ms-transform: translate(-50%,0);}
       </style>
       <div class="txtc pad12 white fullwid f13 posabs dispnone" id="validation_error"  style="top: 0px;background-color: rgba(102, 102, 102, 0.5);z-index:104;">Please provide a valid name.</div>
 
@@ -130,15 +134,17 @@ $(document).ready(function() {
         <div class="pad_new2 app_clrw f14 txtc ">~$calObject.TEXT`</div>
 		<input id='nameInpCAL' value='~$nameOfUser`' type="text" class="bg4 lh60 fontthin mt30 f24 fullwid txtc" placeholder="Your name here">
         <div class="pt10 f15 fontlig fullwid txtc colr8A">This field will be screened</div>
-        <div class="mt30 pad_new2 hgt110">
+        <div class="mt30 pad_new2 hgt90">
             <div id='CALPrivacy1' onclick="switchColors('#CALPrivacy1','#CALPrivacy2');$('#hideShowText').hide();namePrivacy='Y';" type="submit" class="dispibl f14 txtc fontlig wid49p brdrRad2 ~if $namePrivacy neq 'N'`bg7~else`bgBtnGrey~/if` lh40 app_clrw">Show my name to all</div>
             <div id='CALPrivacy2' onclick="switchColors('#CALPrivacy2','#CALPrivacy1');$('#hideShowText').show();namePrivacy='N';" type="submit" class="dispibl f14 txtc fontlig wid49p brdrRad2 ~if $namePrivacy neq 'N'`bgBtnGrey~else`bg7~/if` lh40 app_clrw mlNeg2">Don't show my name</div>
             <div id="hideShowText" style="display:none" class="pt10 f15 fontlig fullwid txtc colr8A">You will not be able to see names of other members.</div>
         </div>
-        <div id="skipBtn" onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');" style='display: inline-block;position: relative;left: 50%;' class="f14 fontlig txtc app_clrw pt35p">~$calObject.BUTTON2`</div>
+        <div id="skipBtn" onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');"  class="f14 fontlig txtc app_clrw pt35p">~$calObject.BUTTON2`</div>
         <div onclick="criticalLayerButtonsAction('~$calObject.ACTION1`','B1');" type="submit" id="submitName" class="fullwid dispbl lh50 txtc f18 btmo posfix bg7 white">~$calObject.BUTTON1`</div>
     </div>
 	
 </div>
       
       ~/if`
+
+    
