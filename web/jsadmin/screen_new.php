@@ -199,7 +199,7 @@ if (authenticated($cid)) {
 							*/
 							else {
 								$str.= $NAME[$i] . " = '" . addslashes(stripslashes($_POST[$NAME[$i]])) . "' ,";
-								$arrProfileUpdateParams[$NAME[$i]] = addslashes(stripslashes($_POST[$NAME[$i]]));
+								$arrProfileUpdateParams[$NAME[$i]] = $_POST[$NAME[$i]];
 							}
 						}
 						if ($NAME[$i] == "YOURINFO") {
