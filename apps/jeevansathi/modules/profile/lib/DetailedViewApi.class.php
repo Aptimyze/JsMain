@@ -1019,8 +1019,10 @@ class DetailedViewApi
 			}
 		}
                 //have children
-                if($jPartnerObj->getPARTNER_MSTATUS() != "'N'")
-                    $this->m_arrOut['dpp_have_child'] = $jPartnerObj->getDecoratedCHILDREN();
+                if($jPartnerObj->getPARTNER_MSTATUS() != "'N'"){
+                    if($jPartnerObj->getDecoratedCHILDREN())
+                        $this->m_arrOut['dpp_have_child'] = $jPartnerObj->getDecoratedCHILDREN();
+                }
 		//Small Community Labels for DPP Mtongue
         if($this->m_arrOut['dpp_mtongue'] && strlen($jPartnerObj->getPARTNER_MTONGUE()))
         {
