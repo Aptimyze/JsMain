@@ -9,9 +9,13 @@ class AgentBucketHandler
                 $method=$processObj->getMethod();
                 if($subMethod=="LIMIT_EXCEED")
                 {
-                        $processObj->setLimit(150);
+                        $processObj->setLimit(125);
                         $msg=$this->deAllocateDisp($processObj,$agentAllocDetailsObj,$agentDeAllocObj);
                 }
+		elseif($subMethod=="LIMIT_EXCEED_RENEWAL"){
+                        $processObj->setLimit(125);
+                        $msg=$this->deAllocateDisp($processObj,$agentAllocDetailsObj,$agentDeAllocObj);
+		}
 		elseif($subMethod=="RELEASE_PROFILE")
 			$msg=$this->removeProfiles($processObj,$agentAllocDetailsObj,$agentDeAllocObj);
 		elseif($method=="FTA_FTO"||$subMethod=="UPSELL" || $method == "REALLOCATION")
@@ -402,16 +406,20 @@ class AgentBucketHandler
                         $processObj->setUsername($exe);
                         $profiles=$agentAllocDetailsObj->fetchProfiles($processObj);
 			$profiles=$agentAllocDetailsObj->fetchHistoryOfProfiles($profiles);
-                        //$processObj->setProfiles($profiles);
 			for($h=0;$h<count($profiles);$h++)
                         {
-				$profileid=$profiles[$h]["PROFILEID"];
-				$profilesDetails=$jprofileObj->get($profileid,"PROFILEID","SUBSCRIPTION");
-                                $subscription=$profilesDetails['SUBSCRIPTION'];
-                                if((strstr($subscription,"F")!="")||(strstr($subscription,"D")!=""))
-                                                continue;
-                                else
-                               		$profilesForInsertion[]=$profiles[$h];
+				if($subMethod=='LIMIT_EXCEED_RENEWAL'){
+					$profilesForInsertion[]=$profiles[$h];
+				}
+				else{
+					$profileid=$profiles[$h]["PROFILEID"];
+					$profilesDetails=$jprofileObj->get($profileid,"PROFILEID","SUBSCRIPTION");
+                                	$subscription=$profilesDetails['SUBSCRIPTION'];
+                                	if((strstr($subscription,"F")!="")||(strstr($subscription,"D")!=""))
+                                	                continue;
+                                	else
+                               			$profilesForInsertion[]=$profiles[$h];
+				}	
                         }
 			$processObj->setProfiles($profilesForInsertion);
                         $agentDeAllocObj->insertProfilesTemp($processObj);
