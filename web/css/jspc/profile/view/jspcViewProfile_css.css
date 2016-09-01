@@ -409,10 +409,12 @@ pre {
     list-style-type: none;
 }
         .fixWidthOverflow {
-        width: 100px;
+        max-width: 185px;
     display: inline-block;
     overflow: hidden;
-    text-overflow: ellipsis;}
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    }
         .vertSuper{    vertical-align: super}
         .hoverDiv:hover {
             display: block;
