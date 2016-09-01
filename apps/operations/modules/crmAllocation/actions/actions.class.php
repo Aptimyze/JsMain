@@ -913,6 +913,7 @@ class crmAllocationActions extends sfActions
 					unset($profileUsernameListParsed);
 					$profileDetails["USERNAME"] = $profileObj->getUSERNAME();
             		$profileDetails["PROFILEID"] = $pid;
+            		$profileDetails["EMAIL"] = $exclusiveEmail;
             		$memMailerObj = new MembershipMailer();
             		$memMailerObj->sendExclusiveServiceIIMailer($profileDetails);
             		unset($memMailerObj);

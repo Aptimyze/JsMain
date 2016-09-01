@@ -631,7 +631,7 @@ class MembershipMailer {
     * @params: $profileDetails
     */
     public function sendExclusiveServiceIIMailer($profileDetails){
-        $mailId = '';
+        $mailId = '1808';
         foreach ($profileDetails["usernameListArr"] as $key => $username) {
             $otherProfileObj = new Operator;
             $otherProfileObj->getDetail($username,"USERNAME",'PROFILEID');
