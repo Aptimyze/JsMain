@@ -23,7 +23,7 @@ class Chat {
         try{
             $producerObj = new Producer();
             if ($producerObj->getRabbitMQServerConnected()) {
-                $chatData = array('process' => 'ROSTERCREATION', 'data' => ($profileid), 'redeliveryCount' => 0);
+                $chatData = array('process' => 'USERCREATION', 'data' => ($profileid), 'redeliveryCount' => 0);
                 $producerObj->sendMessage($chatData);
             }
         }

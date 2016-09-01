@@ -163,7 +163,7 @@ and dependencies (minified).
 				when end of scrolling is reached 
 				values: boolean
 				*/
-				preventDefault:false,
+				preventDefault:true,
 				/*
 				the reported mouse-wheel delta value. The number of lines (translated to pixels) one wheel notch scrolls.  
 				values: "auto", integer 

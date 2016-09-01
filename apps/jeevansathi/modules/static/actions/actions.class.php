@@ -507,6 +507,7 @@ public function executeCALRedirection($request){
       $this->RELOGIN="Y";
     }
     $this->chat_hide = 1;
+    $this->logoutChat = 1;
     $request->setAttribute('loginData', '');
 	$request->setAttribute('login', false);
 	$this->setTemplate("logoutPage");

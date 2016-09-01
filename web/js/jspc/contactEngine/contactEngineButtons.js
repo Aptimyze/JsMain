@@ -292,7 +292,7 @@ else if(this.buttonDetails.button!=null){
 //Bottom Ignore layer on VDP 
 if(this.name=="IGNORE" && this.pageName=="VDP" )
 {
-	
+	callAfterContact();
 	if(ignoreLayerOpened==1){
 		
 		if(this.data.message!=undefined && this.data.message!=null)
