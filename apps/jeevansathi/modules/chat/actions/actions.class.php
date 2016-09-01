@@ -44,7 +44,7 @@ class chatActions extends sfActions
 				//$pass = EncryptPassword::generatePassword("test".$username);
 				//$pass = "test".$username;
 
-				$url = JsConstants::$openfireConfig['HOST'] . ":" . JsConstants::$openfireConfig['PORT'] . "/plugins/restapi/v1/users/" . $username;
+				$url = JsConstants::$openfireConfigInternal['HOST'] . ":" . JsConstants::$openfireConfigInternal['PORT'] . "/plugins/restapi/v1/users/" . $username;
 				//$url = "http://localhost:9090/plugins/restapi/v1/users/".$username;
 				$ch = curl_init();
 				curl_setopt($ch, CURLOPT_URL, $url);
