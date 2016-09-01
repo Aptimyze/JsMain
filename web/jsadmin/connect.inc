@@ -5,6 +5,9 @@ if ($smarty_flag != 'n')
 include_once("handleCrmLogin.php");
 include_once(JsConstants::$docRoot."/commonFiles/crmLoginFunctions.php");
 include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
+
+// include wrapper for logging
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 $TOUT = 14400;
 
 if($_SERVER['DOCUMENT_ROOT'])
@@ -1124,6 +1127,7 @@ if(!function_exists("logError"))
 {
 function logError($message,$query="",$critical="exit", $sendmailto="NO")
 {
+	LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($message));
 	global $db, $smarty, $checksum;
         ob_start();
         var_dump($_SERVER);

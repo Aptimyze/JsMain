@@ -40,6 +40,10 @@
 			~$num++`.&nbsp;&nbsp;<a href="/operations.php/crmInterface/extendVdOffer?name=~$name`&cid=~$cid`">Extend Variable Discount Offer Date</a>
 		</div>
 		<br>
+                <div>
+                        ~$num++`.&nbsp;&nbsp;<a href="/operations.php/crmInterface/preProcessMiniVd?name=~$name`&cid=~$cid`">Pre-Process Mini VD Data</a>
+                </div>
+		<br>
 		<div>
 			~$num++`.&nbsp;&nbsp;<a href="/operations.php/commoninterface/uploadVD?name=~$name`&cid=~$cid`">Upload Mini VD Data</a>
 		</div>

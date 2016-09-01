@@ -25,6 +25,7 @@ class staticActions extends sfActions
   //Find more information in http://devjs.infoedge.com/mediawiki/index.php/Social_Project#404_Error_page
   public function executePage404(sfWebRequest $request)
   {
+  LoggingManager::getInstance(LoggingEnums::EX404)->logThis(LoggingEnums::LOG_ERROR, new Exception("404 page encountered"), array('message' => $request->getUri(), 'moduleName' => '404'));
 	if(MobileCommon::isNewMobileSite())
 	{
 		if(MobileCommon::isAppWebView()){
@@ -108,7 +109,7 @@ class staticActions extends sfActions
   //Find more information in http://devjs.infoedge.com/mediawiki/index.php/Social_Project#500_Internal_Server_Error_page
   public function executePage500(sfWebRequest $request)
   {
-
+  LoggingManager::getInstance(LoggingEnums::EX500)->logThis(LoggingEnums::LOG_ERROR, new Exception("500 page encountered"), array('message' => $request->getUri(), 'moduleName' => '500'));
   $request->setParameter("blockOldConnection500",1);
 	if(MobileCommon::isNewMobileSite()){
 		if(MobileCommon::isAppWebView()){
@@ -427,6 +428,14 @@ public function executeCALRedirection($request){
 			$this->fromSignout=1;
 		else
 			$this->fromSignout=0;
+		if(MobileCommon::isMobile() && $request->getParameter("homepageRedirect")){
+				$this->getResponse()->addMeta('title', "Matrimony, Marriage, Matrimonial Sites, Match Making");
+				$this->getResponse()->addMeta('description', "Most trusted Indian matrimonials website. Lakhs of verified matrimony profiles. Search by caste and community. Register now for FREE at Jeevansathi.com");
+			}
+		else{
+			$this->getResponse()->addMeta('title', "Logout - Jeevansathi");
+			$this->getResponse()->addMeta('description', "Logout - Jeevansathi");
+		}
     if(MobileCommon::isMobile())
       {
 		  $this->getResponse()->addMeta('theme-color', "#6b6b6b");
@@ -777,12 +786,42 @@ public function executeAppredirect(sfWebRequest $request)
 				$outData[$val] = $this->getFieldMapData($val);
 			  else//As in case of reg_caste_ , we are getting array of caste as per religion for optimising calls
 			  	$outData = array_merge($outData,$this->getFieldMapData($val));
+			if($val=="family_income")
+			{
+				$optionalArr[0] = array("0"=>array("0"=>"Select"));
+				foreach($outData['family_income'] as $x=>$y)
+				{
+					$mergedArr = array_merge($optionalArr,$y);
+					$outData['family_income'][$x]=$mergedArr;
+				}
+			}
+			if($val=="state_india" || $val=="native_country")
+			{
+				$optionalArr = array("0"=>array("0"=>"Select"));
+				$mergedArr = array_merge($optionalArr,$outData[$val][0]);
+				$outData[$val][0]=$mergedArr;
+			}
 		  }
 		  echo json_encode($outData);
 	  }
 	  else if($k)
 	  {
 		  $output = $this->getFieldMapData($k);
+			if($k=="family_income")
+			{
+                                $optionalArr[0] = array("0"=>array("0"=>"Select"));
+                                foreach($output as $x=>$y)
+                                {
+                                        $mergedArr = array_merge($optionalArr,$y);
+                                        $output[$x]=$mergedArr;
+                                }
+			}
+                        if($k=="state_india" || $k=="native_country")
+                        {
+                                $optionalArr = array("0"=>array("0"=>"Select"));
+                                $mergedArr = array_merge($optionalArr,$output[0]);
+                                $output[0]=$mergedArr;
+                        }
 		  echo json_encode($output,JSON_FORCE_OBJECT);
 	  }	
 	  
@@ -1802,6 +1841,7 @@ public function executeAppredirect(sfWebRequest $request)
    */
   private function getJsmsNativeState(){
     $arr=FieldMap::getFieldLabel("state_india",'',1);
+    $Arr[0][] = array("0"=>"Select");
     $Arr[0][] = array("NI"=>"Outside India");
 	  foreach($arr as $key=>$val)
 			$Arr[0][]=array($key=>$val);
@@ -1818,6 +1858,7 @@ public function executeAppredirect(sfWebRequest $request)
     $Arr[1]=Array("-1"=>"--More");
     $Arr[2]=FieldMap::getFieldLabel("country",'',1);
 		
+    $output[] = array("0"=>"Select");
     $output[] = array("FI"=>"From India");
     foreach($Arr as $key=>$val)
     {

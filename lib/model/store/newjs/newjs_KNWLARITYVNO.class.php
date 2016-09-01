@@ -100,7 +100,9 @@ class newjs_KNWLARITYVNO extends TABLE{
 
 	public function insertNewVno($profileid,$phoneNo,$vNo)
 	{
-		if (!$profileid || !$phoneNo || !$vNo) throw new Exception("either of phoneNo, profileid, virtual No not passed in arguements in function getDetailsFromProfileId in newjs_KNWLARITYVNO", 1);
+		if (!$profileid || !$phoneNo || !$vNo){
+		 throw new jsException('',"either of phoneNo, profileid, virtual No not passed in arguements in function getDetailsFromProfileId in newjs_KNWLARITYVNO", 1);
+		}
 		try
 		{
 			$sql = "INSERT IGNORE INTO newjs.KNWLARITYVNO VALUES ('',:PROFILEID,:PHONENO,:VNO)";
@@ -120,7 +122,9 @@ class newjs_KNWLARITYVNO extends TABLE{
 public function getVnoFromPhone($phoneNo)
 	{
 
-		if (!$phoneNo) throw new Exception("no phoneNo passed in arguements in function getVnoFromPhone in newjs_KNWLARITYVNO", 1);
+		if (!$phoneNo){
+		 throw new jsException('',"no phoneNo passed in arguements in function getVnoFromPhone in newjs_KNWLARITYVNO", 1);
+		}
 		
 		try
 		{

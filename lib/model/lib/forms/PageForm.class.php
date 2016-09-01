@@ -181,6 +181,11 @@ class PageForm extends sfForm
 					}
 					$jprofileFieldArr['SCREENING']=$screen_flag;
 			  }
+                                if(in_array("ANCESTRAL_ORIGIN",array_keys($jprofileFieldArr)) && $jprofileFieldArr['ANCESTRAL_ORIGIN']=='')
+                                {       
+                                        $screen_flag = Flag::setFlag('ANCESTRAL_ORIGIN',$screen_flag);
+                                        $jprofileFieldArr['SCREENING']=$screen_flag;
+                                } 
 			  //For nakshatra we save label in JPROFILE
 			  if(isset($jprofileFieldArr['NAKSHATRA']))
 				  $jprofileFieldArr['NAKSHATRA']=FieldMap::getFieldLabel('nakshatra',$jprofileFieldArr['NAKSHATRA']);

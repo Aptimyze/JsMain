@@ -44,7 +44,7 @@ class PredefinedSearchFactory
                                 $object = new MatchAlertsSearch($loggedInProfileObj);
                                 break;
                         case 'KundliAlertsSearch' :
-                                $object = new KundliAlertsSearch($loggedInProfileObj);
+                                $object = new KundliMatches($loggedInProfileObj);
                                 break;
                         case 'verifiedMatches' :
                                 $object = new verifiedMatches($loggedInProfileObj);

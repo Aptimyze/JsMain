@@ -8,6 +8,8 @@
 include_once("/usr/local/scripts/DocRoot.php");
 include_once("$docRoot/crontabs/connect.inc");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Mysql.class.php");
+// including for logging purpose
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 
 
 class ScoringGlobalParams_ab
@@ -29,7 +31,7 @@ class ScoringGlobalParams_ab
 
                 //SEARCHES_14_cap
                 $sql1 = "SELECT COUNT(1) AS CNT,PROFILEID FROM MIS.SEARCHQUERY WHERE PROFILEID IN ($this->total_profiles) AND DATE >= '$lim_14_dt' GROUP BY PROFILEID";
-                $res1 = mysql_query_decide($sql1,$myDb) or die($sql1.mysql_error($myDb));
+                $res1 = mysql_query_decide($sql1,$myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql1.mysql_error($myDb)));
                 while($row1 = mysql_fetch_array($res1)){
                         $this->searchParams[$row1["PROFILEID"]] = $row1["CNT"];
                     }

@@ -1,7 +1,7 @@
 <table width="100%" border="0" cellspacing="0" cellpadding="0" height="52">
         <tr>
           <td width="440" style="padding-left:10px; padding-right:10px;" height="52">
-          	<div style="width:100%"><a href='~$SITE_URL`' target="_blank"><img src="~$IMG_URL`/images/mailer/revampMailer/logo.gif" alt="Jeevansathi.com" align="left" border="0" vspace="0" hspace="0" style="max-width:204px; width:inherit;max-height:52px;"></a></div>
+          	<div style="width:100%"><a href='~$SITE_URL`' target="_blank"><img src="~$IMG_URL`/images/jspc/commonimg/logo1.png" alt="Jeevansathi.com" align="left" border="0" vspace="0" hspace="0" style="max-width:204px; width:inherit;max-height:52px;"></a></div>
           </td>
           <td width="189" valign="middle" style="padding-right:10px;"><table cellspacing="0" cellpadding="0" border="0" align="right" width="189">
               <tr>

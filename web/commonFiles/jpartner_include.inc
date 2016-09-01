@@ -1070,7 +1070,7 @@ function check_filter($jpartnerObj,$mysqlObj,$myDb,$profileid='',$filter='')
 	$db=connect_db();	
 
 	$sql1= "SELECT SOURCE FROM newjs.JPROFILE WHERE  activatedKey=1 and PROFILEID='$profileid'";
-        $res1= mysql_query_decide($sql1) or die(logErrror($ERROR_STRING,$sql1,"ShowErrTemplate"));
+        $res1= mysql_query_decide($sql1) or die(logError($ERROR_STRING,$sql1,"ShowErrTemplate"));
         $row1= mysql_fetch_assoc($res1);
         $source=$row1["SOURCE"];
 

@@ -10,7 +10,7 @@ class DialerHandler
 	public function getRenewalEligibleProfiles($x)
 	{
 		$sql = "SELECT PROFILEID FROM incentive.RENEWAL_IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE!='N'";
-		$res = mysql_query($sql,$this->db_js) or die("$sql".mysql_error($this->db_js));
+		$res = mysql_query($sql,$this->db_js_157) or die("$sql".mysql_error($this->db_js));
 		while($row = mysql_fetch_array($res))
 			$eligible_array[] = $row["PROFILEID"];
 		return $eligible_array;
@@ -18,7 +18,7 @@ class DialerHandler
 	public function getRenewalInEligibleProfiles($x)
 	{
 		$sql = "SELECT PROFILEID FROM incentive.RENEWAL_IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE='N'";
-		$res = mysql_query($sql,$this->db_js) or die("$sql".mysql_error($this->db_js));
+		$res = mysql_query($sql,$this->db_js_157) or die("$sql".mysql_error($this->db_js));
 		while($row = mysql_fetch_array($res))
 			$ignore_array[] = $row["PROFILEID"];
 		return $ignore_array;
@@ -29,7 +29,7 @@ class DialerHandler
 		$profileid_str = @implode(",",$profiles_array);
 		if($profileid_str){
 			$sql_vd="select PROFILEID,DISCOUNT from billing.RENEWAL_DISCOUNT WHERE PROFILEID IN ($profileid_str)";
-			$res_vd = mysql_query($sql_vd,$this->db_js) or die("$sql_vd".mysql_error($this->db_js));
+			$res_vd = mysql_query($sql_vd,$this->db_js_157) or die("$sql_vd".mysql_error($this->db_js));
 			while($row_vd = mysql_fetch_array($res_vd)){
 				$pid = $row_vd["PROFILEID"];
 				$vd_profiles[$pid] = $row_vd["DISCOUNT"];
@@ -271,7 +271,7 @@ class DialerHandler
 		if($campaignName=='OB_JS_PAID')
 			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE='$csvEntryDate'";
 		elseif($campaignName=='OB_JS_RCB')
-			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE>'$startDt'";
+			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE>'$startDt' ORDER BY ID";
 		else
 			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE='$csvEntryDate' ORDER BY PRIORITY DESC,ANALYTIC_SCORE DESC,LAST_LOGIN_DATE DESC";
                 $res = mysql_query($sql,$this->db_master) or die("$sql".mysql_error($this->db_master));
@@ -338,7 +338,9 @@ class DialerHandler
 			if($key!='Phone1' && $key!='Phone2'){
 			if(in_array($key1,$phoneFieldsArr)){
 				$field =$dataArr[$key1];
-				$field ='0'.$field;
+				if($field){
+					$field ='0'.$field;
+				}
 				$dataArr[$key1] =$field;	
 			}}
 			$dataSet[$key] =$dataArr[$key1];	

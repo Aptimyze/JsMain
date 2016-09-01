@@ -61,6 +61,10 @@ class FieldForm extends sfForm
 	  $bExecuteNative_PlaceUpdate = false;
 	  $this->formValues=$this->getValues();
 	  foreach($this->formValues as $field_name=>$value){
+		if(in_array($field_name,ProfileEnums::$saveBlankIfZeroForFields) && $value=="0")
+		{
+			$value = "";
+		}
 		 // if($value!==null){
 		  $field_name=strtoupper($field_name);
 		  $field_obj=$this->fieldObjArr[$field_name];

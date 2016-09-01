@@ -35,6 +35,7 @@ else
 	if(!is_numeric($profileid))
 		$logError=3;
 }
+
 $mainDb = connect_db();
 $slaveDb = connect_slave();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$mainDb);
@@ -82,6 +83,8 @@ for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
  $dbDeletedMessageLogObj1=new NEWJS_DELETED_MESSAGE_LOG("shard1_master");
  $dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG("shard2_master");
  $dbDeletedMessageLogObj3=new NEWJS_DELETED_MESSAGE_LOG("shard3_master");
+
+
 
 
 
@@ -143,6 +146,8 @@ if(count($myDbarr))
 $mainDb = connect_db();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$mainDb);
 $sql="BEGIN"; 
+$dupLogObj=new DUPLICATE_PROFILE_LOG();
+$dupLogObj->startTransaction();
 mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
 delFromTables('DELETED_BOOKMARKS','BOOKMARKS',$mainDb,$profileid,"BOOKMARKER");
 delFromTables('DELETED_BOOKMARKS','BOOKMARKS',$mainDb,$profileid,"BOOKMARKEE");
@@ -158,6 +163,9 @@ delFromTables('DELETED_OFFLINE_NUDGE_LOG','OFFLINE_NUDGE_LOG',$mainDb,$profileid
 
 delFromTables('DELETED_VIEW_CONTACTS_LOG','VIEW_CONTACTS_LOG',$mainDb,$profileid,"VIEWER",'jsadmin');
 delFromTables('DELETED_VIEW_CONTACTS_LOG','VIEW_CONTACTS_LOG',$mainDb,$profileid,"VIEWED",'jsadmin');
+
+markProfilesAsNonDuplicate($profileid,$dupLogObj);
+
 /****  Transaction for master tables started here . ****/
 
 
@@ -189,6 +197,7 @@ foreach($myDbarr as $key=>$value)
 /** mainDb committed **/
 $sql="COMMIT";
 mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
+$dupLogObj->commitTransaction();
 
 $sql_del = "DELETE FROM newjs.CONTACTS_STATUS WHERE PROFILEID='$profileid'";
 mysql_query($sql_del,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql_del);
@@ -545,4 +554,103 @@ function sendCurlDeleteRequest($url)
 	curl_close($ch);
 
 	return $result;
+}
+
+function markProfilesAsNonDuplicate($profileid,$dupLogObj){
+    
+    $dupArray = $dupLogObj->fetchLogForAProfile($profileid);
+    foreach ($dupArray as $key => $value) 
+    {
+        if($value['PROFILE1']==$profileid) $profile2=$value['PROFILE2'];
+        else $profile2=$value['PROFILE1'];
+        
+        if(!$profileArray[$profile2]['ENTRY_DATE'])
+        {
+                $profileArray[$profile2]['ENTRY_DATE']=$value['ENTRY_DATE'];
+                $profileArray[$profile2]['FLAG']=$value['IS_DUPLICATE'];
+        }
+            if(JSstrToTime($profileArray[$profile2]['ENTRY_DATE']) < JSstrToTime($value['ENTRY_DATE']))
+        {
+                $profileArray[$profile2]['ENTRY_DATE']=$value['ENTRY_DATE'];
+                $profileArray[$profile2]['FLAG']=$value['IS_DUPLICATE'];
+        }
+
+        
+    }
+    
+    $rawDuplicateObj=new RawDuplicate();
+    $rawDuplicateObj->setReason(REASON::NONE); 
+    $rawDuplicateObj->setIsDuplicate(IS_DUPLICATE::NO); 
+    $rawDuplicateObj->addExtension('MARKED_BY','SYSTEM');
+    $rawDuplicateObj->setScreenAction(SCREEN_ACTION::NONE);
+    $rawDuplicateObj->addExtension('IDENTIFIED_ON',date('Y-m-d H:i:s'));
+    $rawDuplicateObj->setComments("Profile Deleted");
+    $rawDuplicateObj->setProfileid1($profileid);
+    $negativeObj=new INCENTIVE_NEGATIVE_TREATMENT_LIST();
+            
+    foreach($profileArray as $key => $value)
+    {
+        
+        if($value['FLAG']=='YES')
+        {
+              $rawDuplicateObj->setProfileid2($key);
+              DuplicateHandler::DuplicateProfilelog($rawDuplicateObj); 
+              
+              $tempArray=$dupLogObj->fetchLogForAProfile($key);
+              foreach($tempArray as $key1 => $value1)   
+              {
+
+              		  if($value1['PROFILE2']==$profileid || $value1['PROFILE1']==$profileid) continue;
+                      	
+                      if($value1['PROFILE1']==$key) $tempProfile2=$value1['PROFILE2'];
+                      else $tempProfile2=$value1['PROFILE1'];
+
+                      if(!$tempProfileArray[$tempProfile2]['ENTRY_DATE'])
+                      {
+                              $tempProfileArray[$tempProfile2]['ENTRY_DATE']=$value1['ENTRY_DATE'];
+                              $tempProfileArray[$tempProfile2]['FLAG']=$value1['IS_DUPLICATE'];
+                      }
+                      if(JSstrToTime($tempProfileArray[$tempProfile2]['ENTRY_DATE']) < JSstrToTime($value1['ENTRY_DATE']))
+                      {
+                              $tempProfileArray[$tempProfile2]['ENTRY_DATE']=$value1['ENTRY_DATE'];
+                              $tempProfileArray[$tempProfile2]['FLAG']=$value1['IS_DUPLICATE'];
+                      }
+                  
+                      
+                  
+              }
+              
+              $tempFlag=0;
+              foreach($tempProfileArray as $key3 => $value3)
+              {
+                  
+                        if($value3['FLAG']=='YES')
+                        {
+                           $tempFlag=1;
+                           break;
+                        }  
+              }    
+
+              if($tempFlag==0)
+              {
+              
+                  $negativeObj->deleteRecord($key);
+                  (new NEWJS_SWAP_JPROFILE())->insert($key);
+                  $dp=new DUPLICATES_PROFILES();
+				  $dp->removeProfileAsDuplicate($key);
+                  
+              }
+              unset($tempArray);
+              unset($tempProfileArray);
+              
+              
+              
+            
+        }
+        
+        
+    }
+    
+    
+    
 }

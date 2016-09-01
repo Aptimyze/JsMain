@@ -1,5 +1,5 @@
 <?php
-/* This task is used to send new matchalert mailer 
+/* This task is used to send saved search mailer 
  *@author : Sanyam Chopra
  *created on : 24 June 2016 
  */

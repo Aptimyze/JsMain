@@ -73,7 +73,7 @@ class RenewalDialer {
         $method =$processObj->getMethod();
         if($method=='IN_RENEWAL_DIALER_ELIGIBILITY')
         {
-            $inRenewDialerObj = new incentive_RENEWAL_IN_DIALER_TEMP_POOL('newjs_slave');
+            $inRenewDialerObj = new incentive_RENEWAL_IN_DIALER_TEMP_POOL();
             $profiles = $inRenewDialerObj->fetchProfiles();
         }
         return $profiles;
