@@ -5,6 +5,8 @@
  */
 class NameOfUser
 {
+    // name to be stored in cache for 4 hours i.e. 4 * 3600
+    private $cacheLifeTime = 14400; // 4 hours
     /**
      */
      
@@ -20,18 +22,42 @@ class NameOfUser
     {
         if($profileid=='')
                 return;
-        $nameObj = new incentive_NAME_OF_USER();
-        $nameData = $nameObj->getArray(array("PROFILEID"=>$profileid),'','','*');
-	foreach($nameData as $k=>$v)
-	{
-		$finalData[$v['PROFILEID']]=$v;
-	}
+        
+        if(!is_array($profileid)){
+                $profileid = array($profileid);
+        }
+        $pData = $this->getNameFromCache($profileid);
+        $noCache = array();
+        if(!empty($pData)){
+                foreach($profileid as $pid){
+                      if(array_key_exists($pid, $pData)) {
+                                $finalData[$pid]=$pData[$pid];
+                      }else{
+                                $noCache[]      = $pid;
+                      }
+                }
+        }else{
+               $noCache =  $profileid;
+        }
+        //print_r($noCache);die;
+        if(!empty($noCache)){
+                $nameObj = new incentive_NAME_OF_USER();
+                $profileid = "'".implode("','",$noCache)."'";
+                $nameData = $nameObj->getArray(array("PROFILEID"=>$profileid),'','','*');
+                foreach($nameData as $k=>$v)
+                {
+                        $this->setNameInCache($v['PROFILEID'],$v);
+                        $finalData[$v['PROFILEID']]=$v;
+                }
+        }
+       // print_r($finalData);die;
 	return $finalData;
     }
     public function insertName($profileid,$name,$display)
     {
 	$name_pdo = new incentive_NAME_OF_USER();
-	$name_pdo->insertNameInfo($profileid,$name,$display);    
+	$name_pdo->insertNameInfo($profileid,$name,$display);  
+        $this->setNameInCache($profileid,array("NAME"=>$name,"DISPLAY"=>$display,"PROFILEID"=>$profileid));
     }
     public function filterName($name)
     {
@@ -58,8 +84,7 @@ class NameOfUser
 		$profileArr[]=$v->getPROFILEID();
 	}
 	$profileArr[]=$selfProfileObj->getPROFILEID();
-	$profileStr = "'".implode("','",$profileArr)."'";
-	$nameData = $this->getNameData($profileStr);
+	$nameData = $this->getNameData($profileArr);
 	if(is_array($nameData))
 	{
 		$selfProfileid = $selfProfileObj->getPROFILEID();
@@ -127,5 +152,27 @@ print_r($returnArr);die;
 		}
 	}
 	return $finalName;
+    }
+    public function setNameInCache($profileId,$nameData){
+            $memObject=JsMemcache::getInstance();
+            $memObject->set('NAME_OF_USER_'.$profileId,serialize($nameData),$this->cacheLifeTime);
+    }
+    public function removeNameFromCache($profileId){
+            $memObject=JsMemcache::getInstance();
+            $memObject->remove('NAME_OF_USER_'.$profileId);
+    }
+    public function getNameFromCache($profileIds){
+        $profileCache = array();
+        $memObject=JsMemcache::getInstance();
+        if(!is_array($profileIds)){
+                $profileIds = array($profileIds);
+        }
+        foreach($profileIds as $pid){
+                $nameData=$memObject->get('NAME_OF_USER_'.$pid);
+                if(!empty($nameData)){
+                        $profileCache[$pid] = unserialize($nameData);     
+                }
+        }
+        return $profileCache;
     }
 }
