@@ -82,8 +82,12 @@ class CommunicationHistory
 							$splitmessage = explode("--",$messageArr[$j]);
 							if($i==0)
 								$eoiMessages=$splitmessage[0];
-							else
-								$eoiMessages.="</br>".$splitmessage[0];
+							else{
+								if(!MobileCommon::isApp())
+										$eoiMessages.="</br>".$splitmessage[0];
+								else
+										$eoiMessages.="\n".$splitmessage[0];
+							}
 							$i++;							
 						}
 						if($eoiMessages)
@@ -177,8 +181,13 @@ class CommunicationHistory
 					}
 				//	$previousStatus                            = 'A';
 				if(array_key_exists($val['DATE'],$message_log)){
-					if($val['MESSAGE'])
-						$message_log[$val['DATE']]["message"] = $message_log[$val['DATE']]["message"]."</br>".$val['MESSAGE'];
+					if($val['MESSAGE']){
+						if(!MobileCommon::isApp())
+								$message_log[$val['DATE']]["message"] = $message_log[$val['DATE']]["message"]."</br> ".$val['MESSAGE'];
+						else
+								$message_log[$val['DATE']]["message"] = $message_log[$val['DATE']]["message"]."\n".$val['MESSAGE'];
+
+					}
 					else
 						$message_log[$val['DATE']]["message"] = ""; //inserting space to prevent null exception in various channels
 				}
