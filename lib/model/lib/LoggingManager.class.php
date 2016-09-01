@@ -287,7 +287,10 @@ class LoggingManager
 
 		if($this->canWriteTrace($this->moduleName))
 		{
-			$logData[LoggingEnums::LOG_EXCEPTION] = $exception->getTrace();
+			if ( $exception instanceof Exception)
+			{
+				$logData[LoggingEnums::LOG_EXCEPTION] = $exception->getTrace();
+			}
 		}
 		return $logData;
 	}
