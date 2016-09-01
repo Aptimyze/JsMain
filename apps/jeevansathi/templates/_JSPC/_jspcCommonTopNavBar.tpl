@@ -112,14 +112,14 @@ window.onload=function(){
                         <li tabindex="1"><a id="homepageLink" href="~if $loggedIn`/myjs/jspcPerform~else`/~/if`">HOME</a></li>
                         <li tabindex="1" class="ml13"> <a class="drop" href="/search/index">MATCHES</a>
                             <ul class="menushadowGNB">
-                                <li><a class="disp_b" href="/search/matchalerts"> Match Alerts</a></li>
-                                <li><a class="disp_b" href="/search/partnermatches">Desired Partner Matches</a></li>
-                                <li><a class="disp_b" href="/search/justjoined">Just Joined Matches</a></li>
-                                <li><a class="disp_b" href="/search/verifiedMatches">Matches verified by Visit</a></li>
-                                <li><a class="disp_b" href="/search/twoway">Mutual Matches</a></li>
-                                <li><a class="disp_b" href="/search/reverseDpp">People Looking for me</a></li>
+                                <li><a class="disp_b js-gnbsearchLists" data="matchalerts"> Match Alerts</a></li>
+                                <li><a class="disp_b js-gnbsearchLists" data="partnermatches">Desired Partner Matches</a></li>
+                                <li><a class="disp_b js-gnbsearchLists" data="justjoined">Just Joined Matches</a></li>
+                                <li><a class="disp_b js-gnbsearchLists" data="verifiedMatches">Matches verified by Visit</a></li>
+                                <li><a class="disp_b js-gnbsearchLists" data="twoway">Mutual Matches</a></li>
+                                <li><a class="disp_b js-gnbsearchLists" data="reverseDpp">People Looking for me</a></li>
                                 ~if $showKundliList eq '1'`
-                                <li><a class="disp_b" href="/search/kundlialerts">Kundli Matches<div class="fr"><div class="bg_pink mr15 mt10"><div style="line-height:10px;" class="colrw disp_b padall-6">New</div></div></div></a></li>
+                                <li><a class="disp_b js-gnbsearchLists" data="kundlialerts">Kundli Matches<div class="fr"><div class="bg_pink mr15 mt10"><div style="line-height:10px;" class="colrw disp_b padall-6">New</div></div></div></a></li>
                                 ~/if`
                                 <li><a class="disp_b" href="/search/shortlisted">Shortlisted members</a></li>
                                 <li><a class="disp_b" href="/search/visitors">Recent Profile Visitors</a></li>
@@ -193,8 +193,8 @@ window.onload=function(){
                                     <div class="clearfix topnavp1">
                                         <div class="fl">Photo Requests</div>
                                         <div class="fr">
-                                            <div id="membersAcceptedMeCountParent" class="disp-tbl countBell txtc" style="display:none">
-                                                <div id="membersAcceptedMeCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
+                                            <div id="photoRequestsCountParent" class="disp-tbl countBell txtc" style="display:none">
+                                                <div id="photoRequestsCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
                                             </div>
                                         </div>
                                     </div>
@@ -275,7 +275,7 @@ window.onload=function(){
                                         ~/if`
                                     </div>
                                 </li>
-                                <li><div class="topnavp1 txtc"><a class="disp_b cursp" onclick="javascript:logOutCheck('/static/logoutPage?fromSignout=1'); return true;">Sign out</a></div></li>
+                                <li><div class="topnavp1 txtc"><a class="disp_b cursp" onclick="javascript:logOutCheck('/static/logoutPage?fromSignout=1'); return true;" id="jspcChatout">Sign out</a></div></li>
                             </ul>
                             <!--end:submenu-->
                         </li>

@@ -47,7 +47,7 @@ EOF;
          */
         if ($fortnight == "H1" || $fortnight == "H2") {
             $fortnightValue = substr($fortnight, 1);
-            $file_path = "/var/www/html_public/web/uploads/crmRevenue.csv";
+            $file_path = "/var/www/html/web/uploads/crmRevenue.csv";
             $fp = fopen($file_path, "w");
 
             if ($fortnight == "H1") {
@@ -71,8 +71,8 @@ EOF;
             // $last_inserted_id = $jsadminConnectObj->createLoginSessionForAgent($params);
             // $cid = Encrypt_Decrypt::encryptIDUsingMD5($last_inserted_id);
             $tuCurl = curl_init();
-            $curlURL = "http://crm.jeevansathi.com/operations.php/crmMis/crmHandledRevenueCsvGenerate?fromMisCron=1&monthValue=" . $month . "&yearValue=" . $year . "&fortnightValue=" . $fortnightValue . "&report_type=TEAM&report_content=REVENUE&report_format=XLS&dialer_check=1&cid=eba0dc302bcd9a273f8bbb72be3a687bi484";
-            print_r($curlURL);
+            $curlURL = "http://staging.jeevansathi.com/operations.php/crmMis/crmHandledRevenueCsvGenerate?fromMisCron=1&monthValue=" . $month . "&yearValue=" . $year . "&fortnightValue=" . $fortnightValue . "&report_type=TEAM&report_content=REVENUE&report_format=XLS&dialer_check=1&cid=eba0dc302bcd9a273f8bbb72be3a687bi484";
+           // print_r($curlURL);
             curl_setopt($tuCurl, CURLOPT_URL, $curlURL);
             /**
              * curl_setopt($tuCurl, CURLOPT_RETURNTRANSFER, 1);

@@ -42,7 +42,7 @@ class AgentAllocationDetails
 		}
 		else
 		{
-			$mainAdminObj=new incentive_MAIN_ADMIN('newjs_slave');
+			$mainAdminObj=new incentive_MAIN_ADMIN('newjs_masterRep');
 			$agents=$mainAdminObj->fetchAgentsForDisp($processObj);
 			$subMethod=$processObj->getSubMethod();
 			if($subMethod=="LIMIT_EXCEED")
@@ -177,7 +177,7 @@ public function fetchProfiles($processObj)
 {	
 	if($processObj->getProcessName()=="DeAllocation")
 	{
-		$mainAdminObj=new incentive_MAIN_ADMIN('newjs_slave');
+		$mainAdminObj=new incentive_MAIN_ADMIN('newjs_masterRep');
 		$subMethod=$processObj->getSubMethod();
 		if($subMethod=="NEGATIVE_LIST")
 		{
@@ -220,9 +220,9 @@ public function fetchProfiles($processObj)
 			$startDt = $processObj->getStartDate();
 			$endDt = $processObj->getEndDate();
 			foreach($fsAgents as $key=>$val){
-				$mainAdminObj = new incentive_MAIN_ADMIN('newjs_slave');
+				$mainAdminObj = new incentive_MAIN_ADMIN('newjs_masterRep');
 				$profileList = $mainAdminObj->getAllotedProfilesWithAllotTimeForAgent($val);
-				$paymentDetailObj = new BILLING_PAYMENT_DETAIL('newjs_slave');
+				$paymentDetailObj = new BILLING_PAYMENT_DETAIL('newjs_masterRep');
 				foreach($profileList as $profileid=>$allotDate){
 					// IF RETURN IS TRUE, WE ADD IT TO THE LIST OF PROFILES FOR FURTHER PROCESSING
 					if($paymentDetailObj->getPaidStatusForProfileInRange($profileid, $allotDate, $startDt, $endDt)){
@@ -239,7 +239,7 @@ public function fetchProfiles($processObj)
 			$startDt 	=date('Y-m-d',time()-86400)." 00:00:00";			
 			$endDate 	=date('Y-m-d H:i:s');
 			$status 	='D';	
-			$jprofileObj 	=new JPROFILE('newjs_slave');			
+			$jprofileObj 	=new JPROFILE('newjs_masterRep');			
 			$profileDetails =$jprofileObj->getProfilesForDateRange($startDt, $endDate, $status);
 			$profiles 	=array_keys($profileDetails);
 			$processObj->setUsername($profileDetails);
@@ -252,9 +252,9 @@ public function fetchProfiles($processObj)
             $profiles = array();
             $profilesFVD = array();
             $processId = $processObj->getIdAllot();
-            $agentsObj = new jsadmin_PSWRDS("newjs_slave");
+            $agentsObj = new jsadmin_PSWRDS("newjs_masterRep");
             $agents = $agentsObj->fetchAgentsWithPriviliges("%ExcFld%");
-            $lastHandledDateObj = new incentive_LAST_HANDLED_DATE("newjs_slave");
+            $lastHandledDateObj = new incentive_LAST_HANDLED_DATE("newjs_masterRep");
             $lastHandledDate = $lastHandledDateObj->getHandledDate($processId);
             $curDate = date('Y-m-d');
             $lastHandledDate = $lastHandledDate?$lastHandledDate:date('Y-m-d',  strtotime('-1 day', strtotime($curDate)));

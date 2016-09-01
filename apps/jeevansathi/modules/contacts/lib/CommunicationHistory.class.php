@@ -71,8 +71,32 @@ class CommunicationHistory
 				$previousStatus                            = $value['TYPE'];
 				$message_log[$value['DATE']]["type"]  = $type . $side;
 				$message_log[$value['DATE']]["who"]     = $who;
-				if($value['MESSAGE'])
+				if($value['MESSAGE']){
+					if(strpos($value['MESSAGE'],"||")!==false)
+					{
+						$messageArr=explode("||",$value['MESSAGE']);
+						$eoiMsgCount = count($messageArr);
+						$i=0;
+						for($j=0;$j<$eoiMsgCount;$j++)
+						{
+							$splitmessage = explode("--",$messageArr[$j]);
+							if($i==0)
+								$eoiMessages=$splitmessage[0];
+							else{
+								if(!MobileCommon::isApp())
+										$eoiMessages.="</br>".$splitmessage[0];
+								else
+										$eoiMessages.="\n".$splitmessage[0];
+							}
+							$i++;							
+						}
+						if($eoiMessages)
+							$value['MESSAGE']=$eoiMessages;
+						else
+							$value['MESSAGE']="";
+					}
 					$message_log[$value['DATE']]["message"] = $value['MESSAGE'];
+				}
 				else
 					$message_log[$value['DATE']]["message"] = ""; //inserting space to prevent null exception in various channels
 			} //$messagelog as $key => $value
@@ -139,8 +163,49 @@ class CommunicationHistory
 					//$message_log[$value['DATE']]["message"] = "You requested " . $himher . " for Photo";
 				}
 			}
+			
+		$dbName = JsDbSharding::getShardNo($this->loginProfile->getPROFILEID());
+		$chatLogObj = new NEWJS_CHAT_LOG($dbName);
+		$chatDetailsArr = $chatLogObj->getMessageHistory($this->loginProfile->getPROFILEID(),$this->otherProfile->getPROFILEID());
+		//print_r($chatDetailsArr);die;
+		if(is_array($chatDetailsArr)){
+			foreach($chatDetailsArr as $key=>$val)
+			{
+				if ($val["SENDER"] == $this->loginProfile->getPROFILEID()) {
+						$who  = "You";
+						$side = "S";
+					} //$value["SENDER"] == $logged_pid
+					else {
+						$who  = "They";
+						$side = "R";
+					}
+				//	$previousStatus                            = 'A';
+				if(array_key_exists($val['DATE'],$message_log)){
+					if($val['MESSAGE']){
+						if(!MobileCommon::isApp())
+								$message_log[$val['DATE']]["message"] = $message_log[$val['DATE']]["message"]."</br> ".$val['MESSAGE'];
+						else
+								$message_log[$val['DATE']]["message"] = $message_log[$val['DATE']]["message"]."\n".$val['MESSAGE'];
+
+					}
+					else
+						$message_log[$val['DATE']]["message"] = ""; //inserting space to prevent null exception in various channels
+				}
+				else
+				{
+					$message_log[$val['DATE']]["type"]  = 'O'. $side;
+					$message_log[$val['DATE']]["who"]     = $who;
+					if($val['MESSAGE'])
+						$message_log[$val['DATE']]["message"] = $val['MESSAGE'];
+					else
+						$message_log[$val['DATE']]["message"] = ""; //inserting space to prevent null exception in various channels
+				}
+					
+			}
+		}	
 		if (is_array($message_log))
 			krsort($message_log);
+		//print_r($message_log);die;
 		$start = 0;
 		if (is_array($message_log))
 			foreach ($message_log as $key => $val) {
@@ -155,6 +220,7 @@ class CommunicationHistory
 			} else {
 			return false;
 		}
+		//print_r($CON_HISTORY);die;
 		$CON_HISTORY = array_reverse($CON_HISTORY);
 		if($page && (count($CON_HISTORY)>self::$RESULTS_PER_PAGE_APP))
 			$memObject->set('commHistory_'.$this->otherProfile->getPROFILEID().'_'.$this->loginProfile->getPROFILEID(),$CON_HISTORY);
@@ -164,7 +230,10 @@ class CommunicationHistory
 
 		if($page)
 		{
-		    
+		    if(MobileCommon::IsApp()=="I")
+			{
+				$CON_HISTORY = array_reverse($CON_HISTORY);
+			}
 			$this->pageNo=$page;
 			$offset=(intval($page)-1)*self::$RESULTS_PER_PAGE_APP;
 			$limit=self::$RESULTS_PER_PAGE_APP;
@@ -174,9 +243,13 @@ class CommunicationHistory
 				$this->nextPage='false';
 	
 			$CON_HISTORY = array_slice($CON_HISTORY, $offset,$limit);
+			if(MobileCommon::IsApp()=="I")
+			{
+				$CON_HISTORY = array_reverse($CON_HISTORY);
+			}
 		}
 		else $this->nextPage="";
-
+//print_r($CON_HISTORY);die;
 /////////////////////////////////////
 
 
@@ -468,6 +541,36 @@ class CommunicationHistory
 					$count++;
 					break;
 				case "MS":
+					
+					if(!$value["message"]){
+						$result[$count]["message"]="You sent a Message";
+						$result[$count]["header"] = " ";
+					}
+					else{
+						$result[$count]["message"] = $value["message"];
+						$result[$count]["header"] = "You sent a Message";
+					}
+					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
+					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
+					$result[$count]["button"] = null;
+					$count++;
+					break;
+				case "OR":
+					
+					if(!$value["message"]){
+						$result[$count]["message"]=$value["who"]." sent a Message";
+						$result[$count]["header"] = " ";
+					}
+					else{
+						$result[$count]["message"] = $value["message"];
+						$result[$count]["header"] = $value["who"]." sent a Message";
+					}
+					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
+					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
+					$result[$count]["button"] = null;
+					$count++;
+					break;
+				case "OS":
 					
 					if(!$value["message"]){
 						$result[$count]["message"]="You sent a Message";

@@ -31,6 +31,7 @@ class pushChatAction extends sfAction
 				$receiver=substr($input['to'],0,strrpos($input['to'] ,"@"));
 				$message=addslashes(stripslashes(htmlspecialchars($input['msg'],ENT_QUOTES)));
 				$chatID=$input['id'];
+				$ip=$input['ip'];
 				$request->setParameter("communicationType",'C');
 				$request->setParameter("chatID",$chatID);
 				$communicationType='C';
@@ -42,12 +43,15 @@ class pushChatAction extends sfAction
 			$output = $inputValidateObj->getResponse();
 			if($output["statusCode"]==ResponseHandlerConfig::$SUCCESS["statusCode"])
 			{
-				$data["sender"] = $sender;
-				$data["receiver"] = $receiver;
+				$data["from"] = $sender;
+				$data["to"] = $receiver;
 				$data["communicationType"] = $communicationType;
 				$data["message"] = $message;
 				$data['chatid'] = $chatID;
-				$js_communication=new JS_Communication($sender,$receiver,$communicationType,$message,$chatID);
+				$data['ip'] = $ip;
+				$date = date("Y-m-d H:i:s");
+				$data['date'] = $date;
+				$js_communication=new JS_Communication($sender,$receiver,$communicationType,$message,$chatID,$ip,$date);
 
 				if($js_communication->validateChat()) {
 					try {
@@ -60,7 +64,6 @@ class pushChatAction extends sfAction
 						} else {
 							//echo $sender."--".$receiver."--".$message;die;
 							//Contains logined Profile information;
-							$js_communication = new JS_Communication($sender, $receiver, $communicationType, $message, $chatID);
 							$js_communication->storeCommunication();
 						}
 						unset($producerObj);

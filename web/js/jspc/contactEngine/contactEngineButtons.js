@@ -65,6 +65,8 @@ ajaxData=this.makePostDataForAjax(this.profileChecksum);
           data:ajaxData,
           context: this,
           success: function(response,data) {
+                if(data.name=='INITIATE')
+			callAfterContact();
 		if(data.name=="ACCEPT")
 		{
 			$('.js-showDetail'+data.profileChecksum).find(".showText").each(function(index, element) {
@@ -290,7 +292,7 @@ else if(this.buttonDetails.button!=null){
 //Bottom Ignore layer on VDP 
 if(this.name=="IGNORE" && this.pageName=="VDP" )
 {
-	
+	callAfterContact();
 	if(ignoreLayerOpened==1){
 		
 		if(this.data.message!=undefined && this.data.message!=null)

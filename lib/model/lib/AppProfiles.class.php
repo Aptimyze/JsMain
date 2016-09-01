@@ -10,7 +10,7 @@ class AppProfilesHandler
 			return;
 		if((!isset(self::$res[$notificationKey][$currentScript]))|| $restart)
 		{
-			$regIdObj = new MOBILE_API_REGISTRATION_ID('newjs_slave');
+			$regIdObj = new MOBILE_API_REGISTRATION_ID('newjs_masterRep');
 			if(array_key_exists($notificationKey, NotificationEnums::$appVersionCheck))
 			{
 				$appVersion = NotificationEnums::$appVersionCheck[$notificationKey];
