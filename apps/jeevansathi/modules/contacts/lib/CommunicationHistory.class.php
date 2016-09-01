@@ -83,7 +83,7 @@ class CommunicationHistory
 							if($i==0)
 								$eoiMessages=$splitmessage[0];
 							else
-								$eoiMessages.="</br>".$splitmessage[0];
+								$eoiMessages.=" ".$splitmessage[0];
 							$i++;							
 						}
 						if($eoiMessages)
@@ -178,7 +178,7 @@ class CommunicationHistory
 				//	$previousStatus                            = 'A';
 				if(array_key_exists($val['DATE'],$message_log)){
 					if($val['MESSAGE'])
-						$message_log[$val['DATE']]["message"] = $message_log[$val['DATE']]["message"]."</br>".$val['MESSAGE'];
+						$message_log[$val['DATE']]["message"] = $message_log[$val['DATE']]["message"]." ".$val['MESSAGE'];
 					else
 						$message_log[$val['DATE']]["message"] = ""; //inserting space to prevent null exception in various channels
 				}
