@@ -453,13 +453,12 @@ left: 60px;
 }
         #hoverDiv {
             padding-Bottom: 16px;
-	    width: 146px;
         }
         .mt12{margin-top:12px;}
         .optionDrop {
-            width: 186px;
+            width: 338px;
             list-style-type: none;
-            left: -46px;
+            left: -6px;
         }
 
         .optionDrop li {
@@ -473,6 +472,7 @@ left: 60px;
             padding: 10px;
             z-index: 9;
             position: relative;
+	    line-height:17px;
         }
         .optionDrop .selected {
             background-color: #d9475c;
