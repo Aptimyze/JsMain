@@ -37,7 +37,7 @@ $this->addOptions(array(
 		$negativeTreatmentObj   =new negativeTreatment();
 		// get All profiles
 
-		$typeArr =array('Abusive Chat with other members','Criminal','Detective','Escorts','Fraud','Massage Parlour','Spammer');
+		$typeArr =array('Abusive Chat with other members','Criminal','Detective','Escorts','Fraud','Massage Parlor','Spammer');
 		$typeStr ="'".implode("','",$typeArr)."'";
 
 		$negativeProfileObj =new incentive_NEGATIVE_PROFILE_LIST('newjs_slave');
