@@ -239,18 +239,19 @@ class DialerHandler
 		}
 
 		//INITIAL PRIORITY UPDATE 
-	        $priority='';
-        	if($alloted_to=='')
-	        {
-        	        if($score>=81 && $score<=100)
-                	        $priority='2';
-	                elseif($score>=41 && $score<=80)
-        	                $priority='1';
-                	else
-                        	$priority='0';
-	        }
-        	else
-                	$priority='0';
+		$priority=0;
+		if($score>=81 && $score<=100)
+			$priority='5';
+		elseif($score>=61 && $score<=80)
+			$priority='4';
+		elseif($score>=41 && $score<=60)
+			$priority='3';
+		elseif($score>=21 and $score<=40)
+			$priority='2';
+		elseif($score>=11 and $score<=20)
+			$priority='1';
+		elseif($score>=1 and $score<=10)
+			$priority='0';
 		
 		if($priority!=$dialer_data['initialPriority']){
 			$update_str[] 	="old_priority='$priority'";

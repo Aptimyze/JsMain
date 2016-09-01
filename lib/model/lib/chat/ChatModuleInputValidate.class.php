@@ -26,7 +26,7 @@ class ChatModuleInputValidate extends ValidationHandler
 			$ip = $ip_new[1];
 		}
 		$validIp=array("10.10.18.61","10.10.18.62","10.10.18.63","10.10.18.64","10.10.18.65","10.10.18.67","10.10.18.75");
-		if(in_array($ip,$validIp))
+		if(in_array($ip,$validIp) || JsConstants::$whichMachine != 'live')
 			$whitelistedIp=true;
 		else
 			$whitelistedIp=false;

@@ -10,6 +10,12 @@
           objConfig.headers['RID_AJAX'] = _rID;
           var str=_rID + " is the Request id and the ajax header id is " + objConfig['RID_AJAX'] + "\n";
       }
+      /*
+       * Done for chat because of undefined _rID erroron hide profile page.
+       */
+      if(typeof _rID == "undefined"){
+          _rID = '';
+      }
       $.ajax({
         type: objConfig.type, 
         url: objConfig.url,

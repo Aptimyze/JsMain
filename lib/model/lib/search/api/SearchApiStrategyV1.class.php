@@ -474,6 +474,7 @@ class SearchApiStrategyV1
                                             //"LOGIN"=>$this->output["profiles"][$i]["userloginstatus"]);
                                             "LOGIN"=>$userloggedin,
                                             "IGNORE"=>0,
+	                                            "CHAT_GROUP"=>$contactState?$contactState:"N"
                                             );
                                            // print_r($params);die;
                                             $this->output[$profileKey][$i]['buttonDetailsJSMS'] = ButtonResponseFinal::getListingButtons("S",$source,"",$contactState,$params);

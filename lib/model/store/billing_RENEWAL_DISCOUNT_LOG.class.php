@@ -9,7 +9,7 @@ class billing_RENEWAL_DISCOUNT_LOG extends TABLE {
     {
         try
         {
-                $sql="INSERT IGNORE INTO billing.RENEWAL_DISCOUNT_LOG VALUES(:PROFILEID, :DISCOUNT, :START_DT, :EXPIRY_DT)";
+                $sql="INSERT INTO billing.RENEWAL_DISCOUNT_LOG VALUES(:PROFILEID, :DISCOUNT, :START_DT, :EXPIRY_DT)";
                 $prep = $this->db->prepare($sql);
                 $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
                 $prep->bindValue(":DISCOUNT",$discount,PDO::PARAM_INT);
