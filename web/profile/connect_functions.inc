@@ -9136,6 +9136,7 @@ function stat_name($PROFILEID,$username)
 
 function send_chat_request_email($profileid,$gmail,$username)
 {
+return;
 		global $smarty;
         $mypid=$profileid;
         $email=$gmail;
