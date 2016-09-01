@@ -104,7 +104,7 @@ class photoScreeningActions extends sfActions {
                 $interfaceArr=ProfilePicturesTypeEnum::$INTERFACE;
                  
                 // Memcache for Refresh
-                photoScreeningService::avoidRefresh($name,$interfaceArr["1"],$_GET['skipMemcache'],self::DEFAULT_AVOID_REFRESH_TIME);
+                //photoScreeningService::avoidRefresh($name,$interfaceArr["1"],$_GET['skipMemcache'],self::DEFAULT_AVOID_REFRESH_TIME);
                 
                 $arr = $request->getParameterHolder()->getAll();
                 
