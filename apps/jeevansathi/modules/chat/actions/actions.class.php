@@ -76,10 +76,14 @@ class chatActions extends sfActions
 					$apiResponseHandlerObj->setHttpArray(ChatEnum::$addedToQueue);
                     $type="new";
 				}
-                
-                $chatLoggingObj = new Chat();
-                $chatLoggingObj->storeLoggedInUserContacts($username,$type);
-                unset($chatLoggingObj);
+                $memcacheKey = JsMemcache::getInstance()->get($username.'_CHAT_USER');
+                if(!$memcacheKey)
+                {
+                    $chatLoggingObj = new Chat();
+                    $chatLoggingObj->storeLoggedInUserContacts($username,$type);
+                    unset($chatLoggingObj);
+                    JsMemcache::getInstance()->set($username.'_CHAT_USER',"1",36000);
+                }
 			}
 			else{
 				$response = "Logged Out Profile";
