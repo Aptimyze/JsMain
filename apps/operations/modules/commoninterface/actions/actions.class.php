@@ -394,7 +394,7 @@ class commoninterfaceActions extends sfActions
         //$newContent = (str_replace($this->preSelectedGateway, $this->newGateway, $content));
         //file_put_contents($path, htmlspecialchars_decode($newContent));
         $billingSelectedGateway = new billing_CURRENT_GATEWAY();
-        $billingSelectedGateway->setCurrentGateway($this->newGateway);
+        $billingSelectedGateway->setCurrentGateway($this->newGateway,$this->name);
         JsMemcache::getInstance()->set('JS_PAYMENT_GATEWAY',$this->newGateway);
         $this->preSelectedGateway = $this->newGateway;
         $this->message = "Gateway changed to ".$this->newGateway;
