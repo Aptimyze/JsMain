@@ -312,7 +312,7 @@ $js_arr[]=array("ajaxMultiThreading"    => "4");
 $js_arr[]=array("compUpload_js"    => "4");
 $js_arr[]=array("mootools-core-1-3-2-full-compat"    => "4");
 $js_arr[]=array("compUploadNoFlash_js"    => "4");
-$js_arr[]=array("contact_engine_js"    => "11");
+$js_arr[]=array("contact_engine_js"    => "12");
 $js_arr[]=array("profile_album_js"     => "10");
 $js_arr[]=array("profile_tab_js"       => "14");
 $js_arr[]=array("header_js"       => "14");
