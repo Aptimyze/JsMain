@@ -884,7 +884,7 @@ class Membership
             }
             $pExpiry = $billingServObj->getPreviousExpiryDetails($this->profileid, $rights_str);
             if ($pExpiry) {
-                list($yy, $mm, $dd) = @explode("-", $pExpiry["EXPIRY_DATE"]);
+                list($yy, $mm, $dd) = @explode("-", $pExpiry["EXPIRY_DT"]);
                 if ($yy == '2099' && $mm == '01') { // previous expiry is 2099 i.e. already unlimited running
                     if ($duration == '35640') { // current is also unlimited duration
                         $actual_start_date = date("Y-m-d", time());
@@ -896,15 +896,12 @@ class Membership
                         $actual_end_date = date("Y-m-d", time()+($duration*(24*60*60))); 
                     }
                 } 
-                elseif ($yy >= '2099')  // Case when membership bought after unlimited plan
+                else if ($yy >= '2099')  // Case when another membership is already bought after unlimited plan
                 {
                     $serviceDates = $billingPurDetObj->selectActualDates($pExpiry['BILLID'], $pExpiry['SERVICEID']);
                     $actual_start_date = $serviceDates['SUBSCRIPTION_END_DATE'];
-                    if ($actual_start_date == '0000-00-00') {
-                        $actual_start_date = $row['ACTIVATE_ON'];
-                    }
                     if ($duration == '35640') { // current is unlimited duration
-                        $actual_end_date = date("Y-m-d", strtotime($actual_start_date)+($constantYears*(24*60*60)));
+                        $actual_end_date = date("Y-m-d", strtotime($actual_start_date)+($constantYears*(365*24*60*60)));
                     } 
                     else // current is not unlimited duration 
                     {
@@ -918,7 +915,7 @@ class Membership
                         if ($actual_start_date == '0000-00-00') {
                             $actual_start_date = $row['ACTIVATE_ON'];
                         }
-                        $actual_end_date = date("Y-m-d", time()+($constantYears*(365*24*60*60)));
+                        $actual_end_date = date("Y-m-d", strtotime($actual_start_date)+($constantYears*(365*24*60*60)));
                     } 
                     else // current is not unlimited duration
                     {    // Here we pick the SUBSCRIPTION_END_DATE of previous service with similar rights

@@ -479,12 +479,20 @@ class billing_SERVICES extends TABLE
 
     public function getPreviousExpiryDetails($profileid, $rights){
         try{
-            $sql = "SELECT EXPIRY_DT, SERVICEID, BILLID FROM billing.SERVICE_STATUS WHERE PROFILEID=:PROFILEID AND SERVEFOR LIKE '%$rights%' AND ACTIVE='Y' ORDER BY ID DESC LIMIT 1,1";
+            $sql = "SELECT COUNT(*) as CNT FROM billing.SERVICE_STATUS WHERE PROFILEID=:PROFILEID AND SERVEFOR LIKE '%$rights%' AND ACTIVE='Y' ORDER BY ID DESC";
             $resSelectDetail = $this->db->prepare($sql);
             $resSelectDetail->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             $resSelectDetail->execute();
-            if ($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)) {
-                $previous_expiry = $rowSelectDetail;
+            if ($row = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){
+                if ($row['CNT'] >= 2 ) {
+                    $sql1 = "SELECT EXPIRY_DT, SERVICEID, BILLID FROM billing.SERVICE_STATUS WHERE PROFILEID=:PROFILEID AND SERVEFOR LIKE '%$rights%' AND ACTIVE='Y' ORDER BY ID DESC LIMIT 1,1";
+                    $resSelectDetail1 = $this->db->prepare($sql1);
+                    $resSelectDetail1->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
+                    $resSelectDetail1->execute();
+                    if ($rowSelectDetail1 = $resSelectDetail1->fetch(PDO::FETCH_ASSOC)) {
+                        $previous_expiry = $rowSelectDetail1;
+                    }   
+                }
             }
         } catch(Exception $e) {
             throw new jsException($e);
