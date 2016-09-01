@@ -540,7 +540,7 @@
 						}
 						
 					} 
-					if(this.type=="location_cities")
+					if(this.type=="location_cities" || this.type=="location")
 					{
                                              $(this.ulOption).children('li').each(function(i, obj) {
 							if($(this).attr("value") == inputv)
@@ -783,8 +783,12 @@
                                 if(myData in tvalArr == false){
                                         temp[myData]=$(this).attr("value");
                                         tvalArr[myData]=$(this).attr("value");
-                                        ele.output.push(temp);
-                                        tempOutput = tempOutput +","+ $(this).attr("value");
+                                        if(!checkIfExists($(this).attr("value"),tempOutput))
+                                        {
+                                                tempOutput = tempOutput +","+ $(this).attr("value");
+                                                temp[$(this).attr("data")]=$(this).attr("value");
+                                                ele.output.push(temp);
+                                        }
                                 }
 				if(ele.realType=="lincome")
 				{
@@ -806,7 +810,6 @@
 				}
 				
 			});
-			
 			ele.output = JSON.stringify(ele.output);
 			
 		};
