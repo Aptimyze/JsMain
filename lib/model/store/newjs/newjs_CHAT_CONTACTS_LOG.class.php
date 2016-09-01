@@ -31,7 +31,7 @@ class newjs_CHAT_CONTACTS_LOG extends TABLE {
             $prep->bindValue(":TYPE",$paramsArr["TYPE"],PDO::PARAM_STR);
             $prep->execute();
         } catch (Exception $ex) {
-            throw new jsException($ex);
+            //throw new jsException($ex);
         }
     }
 }
