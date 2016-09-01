@@ -230,7 +230,7 @@ class CommunicationHistory
 
 		if($page)
 		{
-		    if(MobileCommon::IsApp()=="I")
+		    if(MobileCommon::IsApp()!="A")
 			{
 				$CON_HISTORY = array_reverse($CON_HISTORY);
 			}
