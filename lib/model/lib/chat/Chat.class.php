@@ -31,4 +31,19 @@ class Chat {
             throw new jsException($ex);
         }
     }
+    
+    public function storeLoggedInUserContacts($profileid,$type){
+        if($profileid){
+            $memcacheObj = new ProfileMemcacheService($profileid);
+            $paramsArr['PROFILEID'] = $profileid;
+            $paramsArr['ACC_BY_ME'] = $memcacheObj->get('ACC_BY_ME');
+            $paramsArr['ACC_ME'] = $memcacheObj->get('ACC_ME');
+            $paramsArr['AWAITING_RESPONSE'] = $memcacheObj->get('AWAITING_RESPONSE');
+            $paramsArr['BOOKMARK'] = $memcacheObj->get('BOOKMARK');
+            $paramsArr['TYPE'] = $type;
+            $chatContactsLogObj = new newjs_CHAT_CONTACTS_LOG();
+            $chatContactsLogObj->insert($paramsArr);
+        }
+    }
+
 }
