@@ -5,6 +5,8 @@
  */
 class NameOfUser
 {
+    // name to be stored in cache for 4 hours i.e. 4 * 3600
+    private $cacheLifeTime = 14400; // 4 hours
     /**
      */
      
@@ -153,7 +155,7 @@ print_r($returnArr);die;
     }
     public function setNameInCache($profileId,$nameData){
             $memObject=JsMemcache::getInstance();
-            $memObject->set('NAME_OF_USER_'.$profileId,serialize($nameData));
+            $memObject->set('NAME_OF_USER_'.$profileId,serialize($nameData),$this->cacheLifeTime);
     }
     public function removeNameFromCache($profileId){
             $memObject=JsMemcache::getInstance();
