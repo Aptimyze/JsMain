@@ -1464,6 +1464,7 @@ class photoScreeningService
 	{
           
            $albumList = explode(",", $formArr['pictureIDs']);
+           
                 if(stristr($formArr["set_profile_pic"],"screened")){
                         $profilePic = str_replace("screened", "", $formArr["set_profile_pic"]);
                         if(is_array($formArr["screenedPicDelete"]) && in_array($profilePic,$formArr["screenedPicDelete"])){
@@ -1476,7 +1477,8 @@ class photoScreeningService
                 }
                 if(array_key_exists("profilePic_".$formArr["set_profile_pic"],$formArr) && $formArr["profilePic_".$formArr["set_profile_pic"]]=="DELETE")
                 {
-									return "error0";
+									if(sizeof(explode(",",$formArr["pictureIDs"]))==1 && sizeof(explode(",",$formArr["screenedPictureIDs"]))==0)
+										return "error0";
 								}
                 $approvCount = 0;
                 $edit = 0;
