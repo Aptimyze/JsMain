@@ -16,7 +16,7 @@ class NEWJS_CHAT_LOG extends TABLE{
         }
 		
 		
-	public function insertIntoChatLog($sender,$receiver,$type,$seen='',$chatId='')
+	public function insertIntoChatLog($generatedId,$sender,$receiver,$type,$seen='',$chatId='',$ip='',$date)
 	{
 		
 		try 
@@ -27,18 +27,22 @@ class NEWJS_CHAT_LOG extends TABLE{
 				}
 				else
 				{
-					$ip=FetchClientIP();
-					if(strstr($ip, ","))    
-					{                       
-						$ip_new = explode(",",$ip);
-						$ip = $ip_new[1];
+					if(!$ip)
+					{
+						$ip='192.168.192.168';
+						/*$ip=FetchClientIP();
+						if(strstr($ip, ","))    
+						{                       
+							$ip_new = explode(",",$ip);
+							$ip = $ip_new[1];
+						}*/
 					}
 					$sql="INSERT INTO CHAT_LOG (SENDER,RECEIVER,DATE,IP,TYPE,SEEN, CHATID) VALUES (:VIEWERID,:VIEWEDID,:DATE,:IP,:TYPE,:SEEN, :CHATID) ";
 					$prep=$this->db->prepare($sql);
 					//$prep->bindValue(":GENERATEDID",$generatedId,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWERID",$sender,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWEDID",$receiver,PDO::PARAM_INT);
-					$prep->bindValue(":DATE",date("Y-m-d H:i:s"),PDO::PARAM_STR);
+					$prep->bindValue(":DATE",$date,PDO::PARAM_STR);
 					$prep->bindValue(":IP",$ip,PDO::PARAM_STR);
 					$prep->bindValue(":TYPE",$type,PDO::PARAM_STR);
 					$prep->bindValue(":SEEN",$seen,PDO::PARAM_STR);
@@ -78,7 +82,7 @@ class NEWJS_CHAT_LOG extends TABLE{
 					else
 						$limitStr="";
 						
-					$sql = "SELECT SENDER,RECEIVER, DATE, MESSAGE ,CHATID,C.ID FROM  `CHAT_LOG` AS C JOIN CHATS AS M ON ( M.ID = C.CHATID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER )) ".$whrStr." ORDER BY DATE DESC ".$limitStr;
+					$sql = "SELECT SENDER,RECEIVER, DATE, MESSAGE ,CHATID,C.ID FROM  `CHAT_LOG` AS C JOIN CHATS AS M ON ( M.ID = C.CHATID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER )) ".$whrStr." ORDER BY DATE DESC,ID DESC ".$limitStr;
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);

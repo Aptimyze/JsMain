@@ -666,6 +666,7 @@ class JPROFILE
 
         $key .= '::'.date('H');
         JsMemcache::getInstance()->incrCount($key);
+
     }
 
     private function totalQueryCount()

@@ -61,6 +61,15 @@ class popChatAction extends sfAction
 				}
 				else
 					$responseArray["pagination"] = 0;
+
+				$loginProfileObj = new Profile();
+				$loginProfileObj->getDetail($input['from'], "PROFILEID", "*");
+
+				$otherProfileObj = new Profile();
+				$otherProfileObj->getDetail($input['to'], "PROFILEID", "*");
+				if(!$otherProfileObj->getPROFILE_STATE()->getPaymentStates()->isPAID() && !$loginProfileObj->getPROFILE_STATE()->getPaymentStates()->isPAID()) {
+					$responseArray["canChat"] = "false";
+				}
 			}
 		}
 		if (is_array($responseArray)) {

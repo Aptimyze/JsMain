@@ -9,13 +9,15 @@ class JS_Communication
 	private $message;
 	private $chatID;
 	
-	public function __construct($loginProfile, $otherProfile,$communicationType,$message,$chatID=0)
+	public function __construct($loginProfile, $otherProfile,$communicationType,$message,$chatID=0,$ip='',$date)
 	{
 		$this->loginProfile = $loginProfile;
 		$this->otherProfile = $otherProfile;
 		$this->communicationType=$communicationType;
 		$this->message=$message;
 		$this->chatID=$chatID;
+		$this->ip=$ip;
+		$this->date=$date;
 	}
 
 	public function storeCommunication()
@@ -31,7 +33,8 @@ class JS_Communication
 			
 			if($this->communicationType="C"){
 				$dbObj = new newjs_CHAT_LOG($dbName1);
-				$dbObj->insertIntoChatLog($this->loginProfile,$this->otherProfile,$type,'N',$this->chatID);//sfContext::getInstance()->getRequest()->getParameter("chatID"));
+				$dbObj->insertIntoChatLog($id,$this->loginProfile,$this->otherProfile,$type,'N',$this->chatID,$this->ip,$this->date);//sfContext::getInstance()->getRequest()->getParameter("chatID"));
+				
 				$dbObjMessage = new NEWJS_CHATS($dbName1);
 				$dbObjMessage->insertSingleMessage($this->chatID,$this->message);
 			
@@ -39,7 +42,7 @@ class JS_Communication
 				{							
 					$dbObj = new newjs_CHAT_LOG($dbName2);
 				
-					$dbObj->insertIntoChatLog($this->loginProfile,$this->otherProfile,$type,'N',$this->chatID);	
+					$dbObj->insertIntoChatLog($id,$this->loginProfile,$this->otherProfile,$type,'N',$this->chatID,$this->ip,$this->date);	
 					$dbObjMessage = new NEWJS_CHATS($dbName2);
 					$dbObjMessage->insertSingleMessage($this->chatID,$this->message);
 				}
@@ -57,33 +60,32 @@ class JS_Communication
 			$result= $dbObj->getMessageHistory($this->loginProfile,$this->otherProfile,self::$RESULTS_PER_PAGE_CHAT,$msgIdNo);
 			if(count($result)<20)
 			{
-				$loginProfileObj = new Profile();
-				$loginProfileObj->getDetail($this->loginProfile, "PROFILEID", "*");
-				
-				$otherProfileObj = new Profile();
-				$otherProfileObj->getDetail($this->otherProfile, "PROFILEID", "*");
-
-				$this->contactObj = new Contacts($loginProfileObj, $otherProfileObj);
-				//$type=$this->contactObj->getTYPE();
 				$msgDbObj= new NEWJS_MESSAGE_LOG($dbName1);
-				$eoiArray= $msgDbObj->getEOIMessages(array($this->loginProfile),array($this->otherProfile));
-
+				$eoiArray= $msgDbObj->getEOIMessagesForChat(array($this->loginProfile),array($this->otherProfile));
+				
 				$mergeArray=$eoiArray[0];
-				$mergeArray["CHATID"]="";
-				$mergeArray["ID"]="";
-				$messageArr=explode("||",$mergeArray['MESSAGE']);
-				$eoiMsgCount = count($messageArr);
-				//print_r($messageArr);die;
-				$i=count($result);
-				for($j=($eoiMsgCount-1);$j>=0;$j--)
-				//foreach($messageArr as $key=>$val)
-				{
-					$mergeArray["MESSAGE"]=$messageArr[$j];
-					$result[$i]=$mergeArray;
-					$i++;
+				if($mergeArray['MESSAGE']){
+					$mergeArray["CHATID"]="";				
+					$mergeArray["ID"]="";	
+					$messageArr=explode("||",$mergeArray['MESSAGE']);
+					$eoiMsgCount = count($messageArr);
+					//print_r($messageArr);die;
+					$i=count($result);
+					for($j=($eoiMsgCount-1);$j>=0;$j--)
+					//foreach($messageArr as $key=>$val)
+					{
+						$splitmessage = explode("--",$messageArr[$j]);
+						$mergeArray["MESSAGE"]=$splitmessage[0];
+						$mergeArray["CHATID"] = $splitmessage[3];
+						$mergeArray["IS_EOI"] = true;
+						$result[$i]=$mergeArray;
+						$i++;
+					}
+
 				}
+				
 					//print_r($result);die;			
-			}		
+			}
 		}
 		else
 		{			
