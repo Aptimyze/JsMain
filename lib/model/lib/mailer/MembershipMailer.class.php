@@ -643,11 +643,9 @@ class MembershipMailer {
         }
         if($profilePageLinkArr && is_array($profilePageLinkArr)){
             $profileDetails["USERNAMELIST"] = $profilePageLinkArr;
-            $memHandlerObj = new MembershipHandler();
-            $memHandlerObj->sendExclusiveServiceIIMailer($profileDetails);
-            unset($memHandlerObj);
-        }
-        $this->sendServiceActivationMail($mailId, $profileDetails);
+            //$this->sendServiceActivationMail($mailId, $profileDetails);
+        } 
+        print_r($profileDetails);die;
     }
 
 }
