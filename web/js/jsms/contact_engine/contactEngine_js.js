@@ -375,7 +375,7 @@ function bindActions(index, action, enableButton, buttonDetailsOthers)
 					params["profilechecksum"] =$("#buttonInput"+index).val();
 					params["actionName"] = actionDetail[action];
 					$('#'+action+"_"+index).unbind( "click");
-					performAction(action, params, index,false);
+					performAction(action, params, index,false,1);
 					return false;
 				});
 		}
@@ -428,7 +428,6 @@ function bindActions(index, action, enableButton, buttonDetailsOthers)
 
 function performAction(action, tempParams, index,isPrime,fromButton)
 {
-        
 	if((writeMessageAction=="INITIATE" || writeMessageAction=="REMINDER")&&action=="MESSAGE"){
 		aUrl="/api/v1/contacts/MessageHandle";
 		tempParams['actionName']            ="MessageHandle";
@@ -806,7 +805,7 @@ function writeMessage(result, action, index){
             MsgWindowLoading=1;
             var tempParams=paramsForMsgWindow;
             var tempIndex=indexForMsgWindow;
-            performAction(tempParams["actionName"], tempParams, tempIndex,true,0);
+                performAction("WRITE_MESSAGE", tempParams, tempIndex,false,0);
             }
         });
     }
