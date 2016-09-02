@@ -2585,10 +2585,14 @@ class TopSearchBandPopulate
                                                                 if($selectedValues && ($key = array_search($s, $output["location_cities"])) !== false) {
                                                                         unset($output["location_cities"][$key]);
                                                                 }
+                                                                if($selectedValues && ($key = array_search($s, $tempState)) !== false) {
+                                                                        unset($tempState[$key]);
+                                                                }
                                                         }
                                                 }
+                                                $tempCity = array_unique($tempCity);
                                                 $output["location_cities_label"] = FieldMap::getFieldLabel($tempField,$locationArray[0]);
-                                                $locationSize = (sizeOf(explode(',',$output["location_cities"])))-1;
+                                                $locationSize = (sizeOf($tempState) + sizeOf($tempCity))-1;
                                         }else{
                                                 $output["location_cities_label"] = FieldMap::getFieldLabel($tempField,$locationArray[0]);
                                                 $locationSize = (sizeOf($tempState) + sizeOf($tempCity))-1;
@@ -2601,7 +2605,7 @@ class TopSearchBandPopulate
 			else
 				$output["location_cities_label_dep"] = NULL;
 
-                        //echo '<pre>';print_r($output);die;
+                        
 		}
 		else
 		{
