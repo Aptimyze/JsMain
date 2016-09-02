@@ -1,3 +1,10 @@
+~assign var=module value= $sf_request->getParameter('module')`
+~assign var=loggedIn value= $sf_request->getAttribute('login')`
+~assign var=action value= $sf_context->getActionName()`
+~assign var=subscription value= CommonFunction::getMembershipName($sf_request->getAttribute('profileid'))`
+~if JsConstants::$jsChatFlag eq "1"`
+    ~assign var=showChat value= CommonUtility::checkChatPanelCondition($loggedIn,$module,$action,$sf_request->getAttribute('activated'))`
+~/if`
 <!DOCTYPE html>
 <head>
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
@@ -53,8 +60,37 @@
                return false;
             }
         }
-        var loggedInJspcUser="~$sf_request->getAttribute('profileid')`";
+        
     </script>
+    ~/if`
+    <script>
+        var loggedInJspcUser="~$sf_request->getAttribute('profileid')`";
+        var showChat = "~$showChat`";
+        var loggedInJspcGender = "~$sf_request->getAttribute('gender')|decodevar`";
+        var self_checksum = "~$sf_request->getAttribute('profilechecksum')`";
+        var self_username = "~$sf_request->getAttribute('username')`";
+        var my_action = "~$action`";
+        var moduleChat = "~$module`";
+        var self_subcription = "~$subscription`";
+        
+        localStorage.removeItem("self_subcription");
+        localStorage.setItem("self_subcription","~$subscription`");
+        //console.log("ankita_localstorage",localStorage.getItem("self_subcription"));
+        //console.log("in ...2");
+    </script>
+    ~if $showChat`
+        <script>
+            //console.log("in ...3");
+            var openfireUrl= "~JsConstants::$openfireConfig['HOST']`:~JsConstants::$openfireConfig['WSPORT']`";
+            var openfireServerName = "~JsConstants::$openfireConfig['SERVER_NAME']`";
+            //var my_action = "~$action`";
+            //var moduleChat = "~$module`";
+        </script>
+    ~else`
+        <script>
+            //console.log("in ...4");
+            var openfireUrl= "",openfireServerName="";
+        </script>
     ~/if`
 </head>
 ~if get_slot('optionaljsb9Key')|count_characters neq 0`
@@ -65,11 +101,20 @@
         You have not enabled Javascript on your browser, please enable it to use the website
     </div>
 </noscript>
-<body >
+~if $showChat`
+    <body>
+    <!--start:chat panel-->
+        <div id="chatOpenPanel"> 
+        </div>
+    <!--end:chat panel-->
+~else if`
+    <body>
+~/if`
+
     <div id="clickHolderCE" onclick="javascript:updateClickHolderCE(false,event)" style="height:0px;width:0px">&nbsp;</div>
     <div id="clickHolder" onclick="javascript:updateClickHolder(false,event)" style="height:0px;width:0px" >&nbsp;</div><div id="commonOverlay" class="jspcOverlay js-overlay overlayZ disp-none"></div>
     <!--start:error layer-->
-<div class="pos_fix fullwid z6" style="background-color:#fdfdfd; display:none;" id="commonError">
+<div class="pos_fix fullwid z7" style="background-color:#fdfdfd; display:none;" id="commonError">
     <div class="container errwid2 pt10 pb10">
         <div class="fl">
             <i class="sprite2 erric1"></i>
@@ -93,7 +138,6 @@
 <script>var SSL_SITE_URL='~JsConstants::$ssl_siteUrl`';
 if (window.location.protocol == "https:")
 	    window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
-
 </script>
 ~if !get_slot('disableFbRemarketing')`
 <script>(function() {
@@ -111,5 +155,6 @@ _fbq.push(['addPixelId', '569447716516417']);
 window._fbq = window._fbq || [];
 window._fbq.push(['track', 'PixelInitialized', {}]);
 </script>
+<script type="text/javascript" language="Javascript" src="~JsConstants::$siteUrl`/min/?f=/js/jspc/chat/enc-base64-min.js,/js/jspc/chat/aes.js,/js/jspc/chat/core.js,/js/jspc/chat/enc-utf16.js"></script>
 <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=569447716516417&amp;ev=PixelInitialized" /></noscript>
 ~/if`

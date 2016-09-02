@@ -804,7 +804,7 @@ class BILLING_SERVICE_STATUS extends TABLE {
     {
         try
         {
-            $sql  = "UPDATE billing.SERVICE_STATUS SET ACTIVE=:STATUS WHERE BILLID=:BILLID AND SERVICEID=:SERVICEID";
+            $sql  = "UPDATE billing.SERVICE_STATUS SET ACTIVE=:STATUS, ACTIVATED='Y' WHERE BILLID=:BILLID AND SERVICEID=:SERVICEID";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":STATUS", $status, PDO::PARAM_STR);
             $prep->bindValue(":SERVICEID", $serviceid, PDO::PARAM_STR);

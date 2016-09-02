@@ -287,7 +287,10 @@ class LoggingManager
 
 		if($this->canWriteTrace($this->moduleName))
 		{
-			$logData[LoggingEnums::LOG_EXCEPTION] = $exception->getTrace();
+			if ( $exception instanceof Exception)
+			{
+				$logData[LoggingEnums::LOG_EXCEPTION] = $exception->getTrace();
+			}
 		}
 		return $logData;
 	}
@@ -329,7 +332,7 @@ class LoggingManager
 		{
 			$statusCode = $logArray[LoggingEnums::STATUS_CODE];
 		}
-		return $statusCode;
+		return strval($statusCode);
 	}
 
 	/**
@@ -450,8 +453,8 @@ class LoggingManager
 				if ( $exception instanceof Exception)
 				{
 					$exceptionLiesIn = $exception->getTrace()[0]['file'];
-					$module_action = str_replace(JsConstants::$docRoot, "", $exceptionLiesIn);
-					$moduleName = explode('/', $module_action)[1];
+					$arrExplodedPath = explode('/', $exceptionLiesIn);
+					$moduleName = $arrExplodedPath[count($arrExplodedPath)-2];
 				}
 			}
 		}
@@ -470,6 +473,7 @@ class LoggingManager
 	 */
 	private function getLogActionName($isSymfony = true,$exception = null,$logArray = array())
 	{
+		$actionName = "";
 		if ( !isset($logArray[LoggingEnums::ACTION_NAME]))
 		{
 			if ( $isSymfony )
@@ -478,12 +482,11 @@ class LoggingManager
 			}
 			else
 			{
-				$actionName = "";
 				if ( $exception instanceof Exception)
 				{
 					$exceptionLiesIn = $exception->getTrace()[0]['file'];
-					$module_action = str_replace(JsConstants::$docRoot, "", $exceptionLiesIn);
-					$actionName = explode('/', $module_action)[2];
+					$arrExplodedPath = explode('/', $exceptionLiesIn);
+					$actionName = $arrExplodedPath[count($arrExplodedPath)-1];
 				}
 			}
 		}

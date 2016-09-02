@@ -90,6 +90,20 @@ class MessageLog
 		}
 		return $message;
 	}
+	public function getEOIMessagesForChat($loginProfile,$profileArray)
+	{
+
+		$dbName = JsDbSharding::getShardNo($loginProfile);
+		$messageLogObj = new NEWJS_MESSAGE_LOG($dbName);
+		$messageArray = $messageLogObj->getEOIMessagesForChat(array($loginProfile),$profileArray);
+		foreach($messageArray as $key=>$value)
+		{
+			$breaks = array("&lt;br&gt;","<br>","</br>","<br/>");
+			$value["MESSAGE"] = str_ireplace($breaks,"\r\n",$value["MESSAGE"]);
+			$message[$key] = $value;
+		}
+		return $message;
+	}
 	public function getMessageListing($loginProfile,$condition,$skipArray)
 	{
 		$dbName = JsDbSharding::getShardNo($loginProfile);

@@ -160,7 +160,6 @@ Abstract class ApiAuthentication
 			$this->loginData=$this->IsAlive($loginData,$gcm);
 			if($this->loginData)
 			{
-				
 				if($this->trackLogin)
 				{
 					$this->loginData[AUTHCHECKSUM]=$this->encryptAppendTime($this->createAuthChecksum());
@@ -256,7 +255,7 @@ Abstract class ApiAuthentication
 
 			$loginData["EMAIL"]=$loggedInProfileObj->getEMAIL();
 			$loginData["PHONE_MOB"]=$loggedInProfileObj->getPHONE_MOB();
-
+            $loginData["ACTIVATED"]=$loggedInProfileObj->getACTIVATED();
 			return $loginData;
 		}
                 
@@ -505,6 +504,7 @@ Abstract class ApiAuthentication
 			else
 				$dbObj=new userplane_recentusers("newjs_master");
 			$dbObj->replacedata($pid);
+
 		}
 
 		// Add Online-User

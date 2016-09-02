@@ -62,6 +62,7 @@ class RequestHandlerConfig
 		"deletePhoto"=>array("v1"=>"SelfPhotoFunctionalityV1","v2"=>"","v3"=>"SelfPhotoFunctionalityV1"),
 		"setProfilePhoto"=>array("v1"=>"SelfPhotoFunctionalityV1","v2"=>"","v3"=>"SelfPhotoFunctionalityV1"), 
 		"getProfilePhoto"=>array("v1"=>"GetProfilePicV1","v2"=>"","v3"=>""), 
+		"getMultiUserPhoto"=>array("v1"=>"GetMultiUserPhotoV1","v2"=>"","v3"=>""), 
 		"saveCroppedProfilePic"=>array("v1"=>"SelfPhotoFunctionalityV1","v2"=>"","v3"=>"SelfPhotoFunctionalityV1"),
 		"changePhotoPrivacy"=>array("v1"=>"changePhotoPrivacyV1","v2"=>"","v3"=>"changePhotoPrivacyV1"),		
 		"getAlbum"=>array("v1"=>"GetAlbumV1","v2"=>"","v3"=>"GetAlbumV1"),
